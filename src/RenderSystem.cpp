@@ -64,6 +64,11 @@ namespace April
 	{
 		mAlphaMultiplier=1.0f;
 		mUpdateCallback=0;
+		mMouseDownCallback=0;
+		mMouseUpCallback=0;
+		mMouseMoveCallback=0;
+		mKeyDownCallback=0;
+		mKeyUpCallback=0;
 	}
 
 	void RenderSystem::drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a)
@@ -82,10 +87,27 @@ namespace April
 		
 	}
 	
-	void RenderSystem::registerUpdateCallback(bool (*update)(float))
+	void RenderSystem::registerUpdateCallback(bool (*callback)(float))
 	{
-		mUpdateCallback=update;
+		mUpdateCallback=callback;
 	}
+
+	void RenderSystem::registerMouseCallbacks(void (*mouse_dn)(float,float,int),
+								              void (*mouse_up)(float,float,int),
+								              void (*mouse_move)(float,float,int))
+	{
+			mMouseDownCallback=mouse_dn;
+			mMouseUpCallback=mouse_up;
+			mMouseMoveCallback=mouse_move;
+			
+	}
+	void RenderSystem::registerKeyboardCallbacks(void (*key_dn)(unsigned int,unsigned int),
+								                 void (*key_up)(unsigned int,unsigned int))
+	{
+		mKeyDownCallback=key_dn;
+		mKeyUpCallback=key_up;
+	}
+
 /*********************************************************************************/
 	
 	

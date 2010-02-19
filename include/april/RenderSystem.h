@@ -85,6 +85,13 @@ namespace April
 		float mAlphaMultiplier;
 		
 		bool (*mUpdateCallback)(float);
+		void (*mMouseDownCallback)(float,float,int);
+		void (*mMouseUpCallback)(float,float,int);
+		void (*mMouseMoveCallback)(float,float,int);
+		void (*mKeyDownCallback)(unsigned int,unsigned int);
+		void (*mKeyUpCallback)(unsigned int,unsigned int);
+		
+		
 	public:
 		virtual std::string getName()=0;
 
@@ -125,7 +132,12 @@ namespace April
 		virtual void presentFrame()=0;
 		virtual void enterMainLoop()=0;
 	
-		void registerUpdateCallback(bool (*update)(float));
+		void registerUpdateCallback(bool (*callback)(float));
+		void registerMouseCallbacks(void (*mouse_dn)(float,float,int),
+									void (*mouse_up)(float,float,int),
+									void (*mouse_move)(float,float,int));
+		void registerKeyboardCallbacks(void (*key_dn)(unsigned int,unsigned int),
+									   void (*key_up)(unsigned int,unsigned int));
 	};
 	
 	void init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title);
