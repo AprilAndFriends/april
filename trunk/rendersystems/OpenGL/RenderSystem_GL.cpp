@@ -245,8 +245,8 @@ namespace April
 		if (!mTexCoordsEnabled) { glEnableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=true; }
 		if (mColorEnabled) { glColor4f(1,1,1,mAlphaMultiplier); glDisableClientState(GL_COLOR_ARRAY); mColorEnabled=false; }
 
-		glVertexPointer(2, GL_FLOAT, sizeof(TexturedVertex), v);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), (char*) v+2*sizeof(float));
+		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
+		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), (char*) v+3*sizeof(float));
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 
@@ -258,8 +258,8 @@ namespace April
 		if (!mColorEnabled) { mColorEnabled=true; glDisableClientState(GL_COLOR_ARRAY); }    
 		glColor4f(r,g,b,a*mAlphaMultiplier);
 		
-		glVertexPointer(2, GL_FLOAT, sizeof(TexturedVertex), v);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), (char*) v+2*sizeof(float));
+		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
+		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), (char*) v+3*sizeof(float));
 
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
@@ -270,7 +270,7 @@ namespace April
 		if (mTexCoordsEnabled) { glBindTexture(GL_TEXTURE_2D,0); glDisableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=false; }
 		if (mColorEnabled) { glColor4f(1,1,1,mAlphaMultiplier); glDisableClientState(GL_COLOR_ARRAY); mColorEnabled=false; }
 
-		glVertexPointer(2, GL_FLOAT, sizeof(PlainVertex), v);
+		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
@@ -281,7 +281,7 @@ namespace April
 		if (!mColorEnabled) { mColorEnabled=true; glDisableClientState(GL_COLOR_ARRAY);}
 
 		glColor4f(r,g,b,a*mAlphaMultiplier);
-		glVertexPointer(2, GL_FLOAT, sizeof(PlainVertex), v);
+		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
@@ -291,9 +291,9 @@ namespace April
 		if (mTexCoordsEnabled) { glBindTexture(GL_TEXTURE_2D,0); glDisableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=false; }
 		if (!mColorEnabled) { mColorEnabled=true; }
 		glEnableClientState(GL_COLOR_ARRAY);
-		glVertexPointer(2, GL_FLOAT, sizeof(ColoredVertex), v);
+		glVertexPointer(3, GL_FLOAT, sizeof(ColoredVertex), v);
 		glColor4f(1,1,1,mAlphaMultiplier);
-		glColorPointer(4, GL_UNSIGNED_BYTE,sizeof(ColoredVertex), (char*) v+2*sizeof(float));
+		glColorPointer(4, GL_UNSIGNED_BYTE,sizeof(ColoredVertex), (char*) v+3*sizeof(float));
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
