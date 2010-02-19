@@ -320,6 +320,55 @@ namespace April
 	{
 		return mUpdateCallback(time_increase);
 	}
+	
+	bool GLRenderSystem::triggerKeyEvent(bool down,unsigned int keycode,unsigned int charcode)
+	{
+		if (down) { if (mKeyDownCallback) mKeyDownCallback(keycode,charcode); }
+		else      { if (mKeyUpCallback)   mKeyUpCallback(keycode,charcode); }
+	}
+	
+	bool GLRenderSystem::triggerMouseEvent(int event,float x,float y,int button)
+	{
+		if      (event == 0) { if (mMouseDownCallback) mMouseDownCallback(x,y,button); }
+		else if (event == 1) { if (mMouseUpCallback)   mMouseUpCallback(x,y,button); }
+		else                 { if (mMouseMoveCallback) mMouseMoveCallback(x,y,button); } 
+	}
+
+
+/***************************************************/
+
+	void keyboard_up_handler(unsigned char key, int x, int y)
+	{
+		((GLRenderSystem*) rendersys)->triggerKeyEvent(0,key,key);
+	}
+
+	void keyboard_handler(unsigned char key, int x, int y)
+	{
+		if (key == 27) //esc
+		{
+			destroy();
+			exit(0);
+		}
+		((GLRenderSystem*) rendersys)->triggerKeyEvent(1,key,key);
+	}
+
+	void special_handler(int key, int x, int y)
+	{
+		((GLRenderSystem*) rendersys)->triggerKeyEvent(1,key,key);
+	}
+
+	void mouse_click_handler(int button, int state, int x,int y)
+	{
+		if (state == GLUT_DOWN)
+			((GLRenderSystem*) rendersys)->triggerMouseEvent(0,x,y,button);
+		else
+			((GLRenderSystem*) rendersys)->triggerMouseEvent(1,x,y,button);
+	}
+
+	void mouse_move_handler(int x,int y)
+	{
+		((GLRenderSystem*) rendersys)->triggerMouseEvent(2,x,y,0);
+	}
 
 	void gl_draw()
 	{
@@ -345,14 +394,14 @@ namespace April
 		SetFocus(hWnd);
 
 		glutDisplayFunc(gl_draw);
-//		glutMouseFunc(mouse_click_handler);
-//		glutKeyboardFunc(keyboard_handler);
-//		glutKeyboardUpFunc(keyboard_up_handler);
-//		glutMotionFunc(mouse_move_handler);
+		glutMouseFunc(mouse_click_handler);
+		glutKeyboardFunc(keyboard_handler);
+		glutKeyboardUpFunc(keyboard_up_handler);
+		glutMotionFunc(mouse_move_handler);
 		
-//		glutSpecialFunc(special_handler);
-		//glutSpecialFunc(arrow_keys);
-//		glutIdleFunc(platform_draw);
+		glutSpecialFunc(special_handler);
+
+		glutIdleFunc(gl_draw);
 
 		ilInit();
 		ilutRenderer(ILUT_OPENGL);
