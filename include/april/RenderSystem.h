@@ -22,6 +22,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define RENDERSYSTEM_H
 
 #include <string>
+#include "AprilExport.h"
 
 // render operations
 #define TRIANGLE_LIST 1
@@ -33,24 +34,24 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace April
 {
-	class Vector
+	class AprilExport Vector
 	{
 	public:
 		float x,y,z;
 	};
 	
-	class TexturedVertex : public Vector
+	class AprilExport TexturedVertex : public Vector
 	{
 	public:
 		float u,v;
 	};
 
-	struct PlainVertex : public Vector
+	struct AprilExport PlainVertex : public Vector
 	{
 	public:
 	};
 
-	struct ColoredVertex : public Vector
+	struct AprilExport ColoredVertex : public Vector
 	{
 	public:
 		unsigned int color;
@@ -63,7 +64,7 @@ namespace April
 		DEFAULT
 	};
 
-	struct Color
+	struct AprilExport Color
 	{
 		unsigned char r,g,b,a;
 		Color(float r,float g,float b,float a=1);
@@ -79,7 +80,7 @@ namespace April
 	};
 
 
-	class Texture
+	class AprilExport Texture
 	{
 	protected:
 		bool mDynamic;
@@ -99,7 +100,7 @@ namespace April
 		std::string getFilename() { return mFilename; }
 	};
 
-	class RenderSystem
+	class AprilExport RenderSystem
 	{
 	protected:
 		float mAlphaMultiplier;
@@ -160,11 +161,11 @@ namespace April
 									   void (*key_up)(unsigned int,unsigned int));
 	};
 	
-	void init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title);
-	void destroy();
+	void AprilExport init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title);
+	void AprilExport destroy();
 
 }
 // global rendersys shortcut variable
-extern April::RenderSystem* rendersys;
+extern AprilExport April::RenderSystem* rendersys;
 
 #endif
