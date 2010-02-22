@@ -1,5 +1,5 @@
 /************************************************************************************
-This source file is part of the Advanced Text Rendering System
+This source file is part of the Awesome Portable Rendering Interface Library
 For latest info, see http://libatres.sourceforge.net/
 *************************************************************************************
 Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)
