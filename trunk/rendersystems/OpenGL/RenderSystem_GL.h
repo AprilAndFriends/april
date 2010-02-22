@@ -66,11 +66,11 @@ namespace April
 		// rendering
 		void clear(bool color,bool depth);
 		void setTexture(Texture* t);
-		void render(int renderOp,TexturedVertex* v,int nVertices);
-		void render(int renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a);
-		void render(int renderOp,PlainVertex* v,int nVertices);
-		void render(int renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a);
-		void render(int renderOp,ColoredVertex* v,int nVertices);
+		void render(RenderOp renderOp,TexturedVertex* v,int nVertices);
+		void render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a);
+		void render(RenderOp renderOp,PlainVertex* v,int nVertices);
+		void render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a);
+		void render(RenderOp renderOp,ColoredVertex* v,int nVertices);
 
 		void setAlphaMultiplier(float value);
 		void presentFrame();
