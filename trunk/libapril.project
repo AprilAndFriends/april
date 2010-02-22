@@ -14,6 +14,7 @@
   <VirtualDirectory Name="include">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.h"/>
     <File Name="include/april/RenderSystem.h"/>
+    <File Name="include/april/AprilExport.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
   <Settings Type="Dynamic Library">
@@ -79,7 +80,7 @@
         <IncludePath Value="./include/april"/>
         <IncludePath Value="./rendersystems/OpenGL"/>
         <Preprocessor Value="_WIN32"/>
-        <Preprocessor Value="libapril_EXPORTS"/>
+        <Preprocessor Value="APRIL_EXPORTS"/>
       </Compiler>
       <Linker Options="">
         <LibraryPath Value="./lib"/>
