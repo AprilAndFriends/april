@@ -34,7 +34,7 @@ bool render(float time_increase)
 	v[2].x=0;   v[2].y=600; v[2].z=0; v[2].u=0; v[2].v=1;
 	v[3].x=800; v[3].y=600; v[3].z=0; v[3].u=1; v[3].v=1;
 	
-	rendersys->render(TRIANGLE_STRIP,v,4);
+	rendersys->render(April::TriangleStrip,v,4);
 	return true;
 }
 

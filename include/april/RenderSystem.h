@@ -24,16 +24,19 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <string>
 #include "AprilExport.h"
 
-// render operations
-#define TRIANGLE_LIST 1
-#define TRIANGLE_STRIP 2
-#define TRIANGLE_FAN 3
-#define LINE_LIST 4
-#define LINE_STRIP 5
-#define LINE_LOOP 6
-
 namespace April
 {
+	// render operations
+	enum RenderOp
+	{
+		TriangleList=1,
+		TriangleStrip=2,
+		TriangleFan=3,
+		LineList=4,
+		LineStrip=5,
+		LineLoop=6,
+	};
+	
 	class AprilExport Vector
 	{
 	public:
@@ -137,11 +140,11 @@ namespace April
 		// rendering
 		virtual void clear(bool color=true,bool depth=false)=0;
 		virtual void setTexture(Texture* t)=0;
-		virtual void render(int renderOp,TexturedVertex* v,int nVertices)=0;
-		virtual void render(int renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)=0;
-		virtual void render(int renderOp,PlainVertex* v,int nVertices)=0;
-		virtual void render(int renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a)=0;
-		virtual void render(int renderOp,ColoredVertex* v,int nVertices)=0;
+		virtual void render(RenderOp renderOp,TexturedVertex* v,int nVertices)=0;
+		virtual void render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)=0;
+		virtual void render(RenderOp renderOp,PlainVertex* v,int nVertices)=0;
+		virtual void render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a)=0;
+		virtual void render(RenderOp renderOp,ColoredVertex* v,int nVertices)=0;
 		
 		void drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a=1);
 		

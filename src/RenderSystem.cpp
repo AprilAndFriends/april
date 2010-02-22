@@ -99,7 +99,7 @@ namespace April
 		v[2].x=x;   v[2].y=y+h;
 		v[3].x=x+w; v[3].y=y+h;
 		
-		render(TRIANGLE_STRIP,v,4,r,g,b,a);
+		render(TriangleStrip,v,4,r,g,b,a);
 	}
 	
 	void RenderSystem::logMessage(std::string message)
