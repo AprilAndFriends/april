@@ -21,17 +21,19 @@ http://www.gnu.org/copyleft/lesser.txt.
 #ifndef APRIL_EXPORT_H
 #define APRIL_EXPORT_H
 
-#ifdef _WIN32
-#ifdef APRIL_EXPORTS
-#define AprilExport __declspec(dllexport)
-#else
-#define AprilExport __declspec(dllimport)
-#endif
-#else
-
-#define AprilExport __attribute__ ((visibility("default")))
-
-#endif
+	#ifdef _STATICLIB
+		#define AprilExport
+	#else
+		#ifdef _WIN32
+			#ifdef APRIL_EXPORTS
+				#define AprilExport __declspec(dllexport)
+			#else
+				#define AprilExport __declspec(dllimport)
+			#endif
+		#else
+			#define AprilExport __attribute__ ((visibility("default")))
+		#endif
+	#endif
 
 #endif
 
