@@ -339,19 +339,22 @@ namespace April
 	bool GLRenderSystem::triggerUpdate(float time_increase)
 	{
 		return mUpdateCallback(time_increase);
+		return 1;
 	}
 	
 	bool GLRenderSystem::triggerKeyEvent(bool down,unsigned int keycode,unsigned int charcode)
 	{
 		if (down) { if (mKeyDownCallback) mKeyDownCallback(keycode,charcode); }
 		else      { if (mKeyUpCallback)   mKeyUpCallback(keycode,charcode); }
+		return 1;
 	}
 	
 	bool GLRenderSystem::triggerMouseEvent(int event,float x,float y,int button)
 	{
 		if      (event == 0) { if (mMouseDownCallback) mMouseDownCallback(x,y,button); }
 		else if (event == 1) { if (mMouseUpCallback)   mMouseUpCallback(x,y,button); }
-		else                 { if (mMouseMoveCallback) mMouseMoveCallback(x,y,button); } 
+		else                 { if (mMouseMoveCallback) mMouseMoveCallback(x,y,button); }
+		return 1;
 	}
 
 
