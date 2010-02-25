@@ -398,7 +398,7 @@ namespace April
 		static unsigned long x=GetTickCount();
 		float k=(GetTickCount()-x)/1000.0f;
 		x=GetTickCount();
-		if (!((GLRenderSystem*) rendersys)->triggerUpdate(x)) throw "done";
+		if (!((GLRenderSystem*) rendersys)->triggerUpdate(k)) throw "done";
 		rendersys->presentFrame();
 	}
 
