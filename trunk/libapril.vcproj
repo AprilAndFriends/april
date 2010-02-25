@@ -161,6 +161,10 @@
 				RelativePath=".\rendersystems\OpenGL\RenderSystem_GL.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\Texture.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -173,6 +177,10 @@
 			</File>
 			<File
 				RelativePath=".\include\april\RenderSystem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\april\Texture.h"
 				>
 			</File>
 		</Filter>
