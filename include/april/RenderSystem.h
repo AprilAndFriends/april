@@ -111,7 +111,7 @@ namespace April
 		bool (*mUpdateCallback)(float);
 		void (*mMouseDownCallback)(float,float,int);
 		void (*mMouseUpCallback)(float,float,int);
-		void (*mMouseMoveCallback)(float,float,int);
+		void (*mMouseMoveCallback)(float,float);
 		void (*mKeyDownCallback)(unsigned int,unsigned int);
 		void (*mKeyUpCallback)(unsigned int,unsigned int);
 		
@@ -159,7 +159,7 @@ namespace April
 		void registerUpdateCallback(bool (*callback)(float));
 		void registerMouseCallbacks(void (*mouse_dn)(float,float,int),
 									void (*mouse_up)(float,float,int),
-									void (*mouse_move)(float,float,int));
+									void (*mouse_move)(float,float));
 		void registerKeyboardCallbacks(void (*key_dn)(unsigned int,unsigned int),
 									   void (*key_up)(unsigned int,unsigned int));
 	};

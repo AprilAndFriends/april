@@ -353,7 +353,7 @@ namespace April
 	{
 		if      (event == 0) { if (mMouseDownCallback) mMouseDownCallback(x,y,button); }
 		else if (event == 1) { if (mMouseUpCallback)   mMouseUpCallback(x,y,button); }
-		else                 { if (mMouseMoveCallback) mMouseMoveCallback(x,y,button); }
+		else                 { if (mMouseMoveCallback) mMouseMoveCallback(x,y); }
 		return 1;
 	}
 
