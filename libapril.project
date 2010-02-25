@@ -10,11 +10,13 @@
   <VirtualDirectory Name="src">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.cpp"/>
     <File Name="src/RenderSystem.cpp"/>
+    <File Name="src/Texture.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.h"/>
     <File Name="include/april/RenderSystem.h"/>
     <File Name="include/april/AprilExport.h"/>
+    <File Name="include/april/Texture.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
   <Settings Type="Dynamic Library">
@@ -88,8 +90,6 @@
         <Library Value="libglu32"/>
         <Library Value="libglut32"/>
         <Library Value="libDevIL"/>
-        <Library Value="libILU"/>
-        <Library Value="libILUT"/>
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>

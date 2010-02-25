@@ -21,6 +21,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <stdio.h>
 #include "RenderSystem.h"
 #include "RenderSystem_GL.h"
+#include "Texture.h"
+#include <IL/ilut.h>
 
 April::RenderSystem* rendersys;
 
@@ -94,10 +96,10 @@ namespace April
 	void RenderSystem::drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a)
 	{
 		PlainVertex v[4];
-		v[0].x=x;   v[0].y=y;
-		v[1].x=x+w; v[1].y=y;
-		v[2].x=x;   v[2].y=y+h;
-		v[3].x=x+w; v[3].y=y+h;
+		v[0].x=x;   v[0].y=y;   v[0].z=0;
+		v[1].x=x+w; v[1].y=y;   v[1].z=0;
+		v[2].x=x;   v[2].y=y+h; v[2].z=0;
+		v[3].x=x+w; v[3].y=y+h; v[3].z=0;
 		
 		render(TriangleStrip,v,4,r,g,b,a);
 	}
@@ -134,6 +136,8 @@ namespace April
 	
 	void init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title)
 	{
+		ilInit();
+	//	ilutRenderer(ILUT_OPENGL);
 		createGLRenderSystem(w,h,fullscreen,title);
 	}
 	

@@ -19,6 +19,7 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 *************************************************************************************/
 #include "RenderSystem_GL.h"
+#include "Texture.h"
 #ifdef IPHONE_PLATFORM
 #include <OpenGLES/ES1/gl.h>
 #else
@@ -26,34 +27,25 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
-#include <IL/ilut.h>
 
 namespace April
 {
 	unsigned int platformLoadGLTexture(const char* name,int* w,int* h)
 	{
-		unsigned int texid,image,success;
-		ilGenImages(1, &texid);
-		ilBindImage(texid);
-
-		std::string filename=name;
-		success = ilLoadImage(name);
-		if (success)
-		{
-			success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-		}
-		else throw "can't load image";
-		*w=ilGetInteger(IL_IMAGE_WIDTH);
-		*h=ilGetInteger(IL_IMAGE_HEIGHT);
-		glGenTextures(1, &image);
-		glBindTexture(GL_TEXTURE_2D, image);
+		unsigned int texid;
+		ImageSource* img=loadTexture(name);
+		if (!img) return 0;
+		*w=img->w; *h=img->h;
+		glGenTextures(1, &texid);
+		glBindTexture(GL_TEXTURE_2D, texid);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), *w,*h, 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE,ilGetData());
-		ilDeleteImages(1, &texid);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, img->bpp, img->w,img->h, 0, img->format, GL_UNSIGNED_BYTE,img->data);
+		delete img;
 
 
-		return image;
+		return texid;
 	}
 	
 	void win_mat_invert()
@@ -105,6 +97,7 @@ namespace April
 	GLTexture::~GLTexture()
 	{
 		unload();
+		glDeleteTextures(1,&mTexId);
 	}
 
 	void GLTexture::load()
@@ -416,6 +409,7 @@ namespace April
 		HWND hWnd = FindWindow("GLUT", title.c_str());
 		SetFocus(hWnd);
 
+		glEnable(GL_TEXTURE_2D);
 		glutDisplayFunc(gl_draw);
 		glutMouseFunc(mouse_click_handler);
 		glutKeyboardFunc(keyboard_handler);
@@ -426,8 +420,14 @@ namespace April
 
 		glutIdleFunc(gl_draw);
 
-		ilInit();
-		ilutRenderer(ILUT_OPENGL);
+		// DevIL defaults
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
 		rendersys=new GLRenderSystem(w,h);
 	}
 
