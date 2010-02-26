@@ -34,8 +34,9 @@ namespace April
 		GLTexture(unsigned char* rgba,int w,int h);
 		~GLTexture();
 		
-		void load();
+		bool load();
 		void unload();
+		bool isLoaded();
 		int getSizeInBytes();
 	};
 
