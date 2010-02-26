@@ -106,7 +106,7 @@ namespace April
 	
 	void RenderSystem::logMessage(std::string message)
 	{
-		
+		printf("%s\n",message.c_str());
 	}
 	
 	void RenderSystem::registerUpdateCallback(bool (*callback)(float))

@@ -100,11 +100,21 @@ namespace April
 		glDeleteTextures(1,&mTexId);
 	}
 
-	void GLTexture::load()
+	bool GLTexture::load()
 	{
 		rendersys->logMessage("loading GL texture '"+mFilename+"'");
 		mTexId=platformLoadGLTexture(mFilename.c_str(),&mWidth,&mHeight);
-		if (!mTexId) throw mFilename+"not found";
+		if (!mTexId)
+		{
+			rendersys->logMessage("Failed to load texture: "+mFilename);
+			return 0;
+		}
+		return 1;
+	}
+
+	bool GLTexture::isLoaded()
+	{
+		return mTexId != 0;
 	}
 
 	void GLTexture::unload()
@@ -175,7 +185,14 @@ namespace April
 		
 		if (dynamic) rendersys->logMessage("creating dynamic GL texture '"+filename+"'");
 		GLTexture* t=new GLTexture(filename,dynamic);
-		if (!dynamic) t->load();
+		if (!dynamic)
+		{
+			if (!t->load())
+			{
+				delete t;
+				return 0;
+			}
+		}
 		return t;
 	}
 
@@ -436,3 +453,4 @@ namespace April
 		
 	}
 }
+

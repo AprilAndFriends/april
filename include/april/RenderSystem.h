@@ -100,6 +100,7 @@ namespace April
 		/// only used with dynamic textures since at chapter load you need it's dimensions for images, but you don't know them yet
 		void _setDimensions(int w,int h) { mWidth=w; mHeight=h; }
 		bool isDynamic() { return mDynamic; }
+		virtual bool isLoaded()=0;
 		std::string getFilename() { return mFilename; }
 	};
 
