@@ -97,7 +97,6 @@ namespace April
 	GLTexture::~GLTexture()
 	{
 		unload();
-		glDeleteTextures(1,&mTexId);
 	}
 
 	bool GLTexture::load()
