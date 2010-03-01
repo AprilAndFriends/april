@@ -79,6 +79,7 @@
     <GlobalSettings>
       <Compiler Options="">
         <IncludePath Value="./include"/>
+        <IncludePath Value="../include"/>
         <IncludePath Value="./include/april"/>
         <IncludePath Value="./rendersystems/OpenGL"/>
         <Preprocessor Value="_WIN32"/>
@@ -86,6 +87,7 @@
       </Compiler>
       <Linker Options="">
         <LibraryPath Value="./lib"/>
+        <LibraryPath Value="../lib"/>
         <Library Value="libOpenGL32"/>
         <Library Value="libglu32"/>
         <Library Value="libglut32"/>
