@@ -91,6 +91,7 @@ namespace April
 		mMouseMoveCallback=0;
 		mKeyDownCallback=0;
 		mKeyUpCallback=0;
+		mDynamicLoading=0;
 	}
 
 	void RenderSystem::drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a)

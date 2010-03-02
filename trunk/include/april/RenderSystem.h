@@ -108,6 +108,7 @@ namespace April
 	{
 	protected:
 		float mAlphaMultiplier;
+		bool mDynamicLoading;
 		
 		bool (*mUpdateCallback)(float);
 		void (*mMouseDownCallback)(float,float,int);
@@ -166,6 +167,9 @@ namespace April
 									void (*mouse_move)(float,float));
 		void registerKeyboardCallbacks(void (*key_dn)(unsigned int,unsigned int),
 									   void (*key_up)(unsigned int,unsigned int));
+									   
+		void forceDynamicLoading(bool value) { mDynamicLoading=value; }
+		bool isDynamicLoadingForced() { return mDynamicLoading; }
 	};
 	
 	void AprilExport init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title);
