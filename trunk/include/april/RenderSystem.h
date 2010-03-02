@@ -153,6 +153,9 @@ namespace April
 		
 		virtual void setAlphaMultiplier(float value)=0;
 		float getAlphaMultiplier() { return mAlphaMultiplier; }
+		
+		virtual int getWindowWidth()=0;
+		virtual int getWindowHeight()=0;
 
 		virtual void presentFrame()=0;
 		virtual void enterMainLoop()=0;
