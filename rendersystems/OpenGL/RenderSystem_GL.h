@@ -74,6 +74,10 @@ namespace April
 		void render(RenderOp renderOp,ColoredVertex* v,int nVertices);
 
 		void setAlphaMultiplier(float value);
+
+		int getWindowWidth();
+		int getWindowHeight();
+		
 		void presentFrame();
 		
 		bool triggerUpdate(float time_increase);

@@ -314,6 +314,16 @@ namespace April
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
+	
+	int GLRenderSystem::getWindowWidth()
+	{
+		return glutGet(GLUT_WINDOW_WIDTH);
+	}
+	
+	int GLRenderSystem::getWindowHeight()
+	{
+		return glutGet(GLUT_WINDOW_HEIGHT);
+	}
 
 	void GLRenderSystem::render(RenderOp renderOp,ColoredVertex* v,int nVertices)
 	{
