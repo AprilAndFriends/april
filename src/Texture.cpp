@@ -19,7 +19,8 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 *************************************************************************************/
 #include "Texture.h"
-#include <IL/ilut.h>
+#include "RenderSystem.h"
+#include <IL/il.h>
 
 namespace April
 {
@@ -31,6 +32,30 @@ namespace April
 	ImageSource::~ImageSource()
 	{
 		ilDeleteImages(1, &mImageId);
+	}
+	
+	Color ImageSource::getColorAtPoint(float x,float y)
+	{
+		if (x < 0 || y < 0 || x > this->w || y > this->h) return Color();
+		
+		Color c;
+		int index=(((int) y)*this->w+((int) x));
+		if (this->bpp == 3) // RGB
+		{
+			c.r=this->data[index*3];
+			c.g=this->data[index*3+1];
+			c.b=this->data[index*3+2];
+			c.a=1;
+		}
+		else if (this->bpp == 4) // RGBA
+		{
+			c.r=this->data[index*4];
+			c.g=this->data[index*4+1];
+			c.b=this->data[index*4+2];
+			c.a=this->data[index*4+3];;
+		}
+		
+		return c;
 	}
 	
 	ImageSource* loadTexture(std::string filename)
@@ -47,5 +72,5 @@ namespace April
 		img->data=ilGetData();
 		
 		return img;
-	}	
+	}
 }
