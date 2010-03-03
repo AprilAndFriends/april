@@ -26,13 +26,17 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace April
 {
-	class ImageSource
+	class Color;
+	
+	class AprilExport ImageSource
 	{
 		unsigned int mImageId;
 	public:
 		ImageSource();
 		~ImageSource();
 		unsigned int getImageId() { return mImageId; };
+		
+		Color getColorAtPoint(float x,float y);
 		
 		unsigned char* data;
 		int w,h,bpp,format;
