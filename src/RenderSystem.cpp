@@ -54,7 +54,7 @@ namespace April
 		}
 		else throw "Color format must be either 0xAARRGGBB or 0xRRGGBB";
 	}
-		
+/*****************************************************************************************/
 	Color::Color(float r,float g,float b,float a)
 	{
 		this->r=r*255; this->g=g*255; this->b=b*255; this->a=a*255;
@@ -70,7 +70,7 @@ namespace April
 		// this is going to bite me in the arse on a little endian system...
 		hexstr_to_argb(hex,&a,&r,&g,&b);
 	}
-
+/*****************************************************************************************/
 	Texture::Texture()
 	{
 		
@@ -81,7 +81,7 @@ namespace April
 	{
 		
 	}
-
+/*****************************************************************************************/
 	RenderSystem::RenderSystem()
 	{
 		mAlphaMultiplier=1.0f;
@@ -92,6 +92,11 @@ namespace April
 		mKeyDownCallback=0;
 		mKeyUpCallback=0;
 		mDynamicLoading=0;
+	}
+	
+	RenderSystem::~RenderSystem()
+	{
+		
 	}
 
 	void RenderSystem::drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a)

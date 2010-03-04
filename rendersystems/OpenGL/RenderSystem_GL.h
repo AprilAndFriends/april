@@ -74,6 +74,9 @@ namespace April
 		void render(RenderOp renderOp,ColoredVertex* v,int nVertices);
 
 		void setAlphaMultiplier(float value);
+		
+		void setWindowTitle(std::string title);
+		Vector getCursorPos();
 
 		int getWindowWidth();
 		int getWindowHeight();
