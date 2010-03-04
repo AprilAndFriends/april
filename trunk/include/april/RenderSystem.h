@@ -67,8 +67,9 @@ namespace April
 		DEFAULT
 	};
 
-	struct AprilExport Color
+	class AprilExport Color
 	{
+	public:
 		unsigned char r,g,b,a;
 		Color(float r,float g,float b,float a=1);
 		Color();
