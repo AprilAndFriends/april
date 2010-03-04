@@ -366,13 +366,17 @@ namespace April
 		glutSwapBuffers();
 	}
 	
-	void GLRenderSystem::enterMainLoop()
+	void GLRenderSystem::terminateMainLoop()
 	{
-		try
-		{ glutMainLoop(); }
-		catch (void*) {}
+		destroy();
+		exit(0);
 	}
 	
+	void GLRenderSystem::enterMainLoop()
+	{
+		glutMainLoop();
+	}
+
 	bool GLRenderSystem::triggerUpdate(float time_increase)
 	{
 		return mUpdateCallback(time_increase);
@@ -406,8 +410,7 @@ namespace April
 	{
 		if (key == 27) //esc
 		{
-			destroy();
-			exit(0);
+			rendersys->terminateMainLoop();
 		}
 		((GLRenderSystem*) rendersys)->triggerKeyEvent(1,key,key);
 	}

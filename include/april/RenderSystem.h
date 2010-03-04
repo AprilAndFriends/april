@@ -174,6 +174,8 @@ namespace April
 									   
 		void forceDynamicLoading(bool value) { mDynamicLoading=value; }
 		bool isDynamicLoadingForced() { return mDynamicLoading; }
+		
+		virtual void terminateMainLoop()=0;
 	};
 	
 	void AprilExport init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title);

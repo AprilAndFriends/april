@@ -88,6 +88,7 @@ namespace April
 		bool triggerMouseEvent(int event,float x,float y,int button);
 		
 		void enterMainLoop();
+		void terminateMainLoop();
 	};
 
 	void createGLRenderSystem(int w,int h,bool fullscreen,std::string title);
