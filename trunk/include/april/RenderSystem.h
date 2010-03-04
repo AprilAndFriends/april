@@ -122,6 +122,7 @@ namespace April
 		virtual std::string getName()=0;
 
 		RenderSystem();
+		virtual ~RenderSystem();
 
 		// object creation
 		virtual Texture* loadTexture(std::string filename,bool dynamic=false)=0;
@@ -157,6 +158,9 @@ namespace April
 		
 		virtual int getWindowWidth()=0;
 		virtual int getWindowHeight()=0;
+		
+		virtual void setWindowTitle(std::string title)=0;
+		virtual Vector getCursorPos()=0;
 
 		virtual void presentFrame()=0;
 		virtual void enterMainLoop()=0;

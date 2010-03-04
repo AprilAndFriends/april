@@ -30,6 +30,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace April
 {
+	HWND hWnd;
+	
 	unsigned int platformLoadGLTexture(const char* name,int* w,int* h)
 	{
 		unsigned int texid;
@@ -343,6 +345,22 @@ namespace April
 		glColor4f(1,1,1,value);
 	}
 
+	void GLRenderSystem::setWindowTitle(std::string title)
+	{
+		glutSetWindowTitle(title.c_str());
+	}
+	
+	Vector GLRenderSystem::getCursorPos()
+	{
+		POINT pt;
+		GetCursorPos(&pt);
+		ScreenToClient(hWnd,&pt);
+		
+		Vector v;
+		v.x=pt.x; v.y=pt.y; v.z=0;
+		return v;
+	}
+
 	void GLRenderSystem::presentFrame()
 	{
 		glutSwapBuffers();
@@ -432,7 +450,7 @@ namespace April
 		glutInitWindowPosition(_w/2-w/2,_h/2-h/2);
 		glutInitWindowSize(w,h);
 		glutCreateWindow(title.c_str());
-		HWND hWnd = FindWindow("GLUT", title.c_str());
+		hWnd = FindWindow("GLUT", title.c_str());
 		SetFocus(hWnd);
 
 		glEnable(GL_TEXTURE_2D);
