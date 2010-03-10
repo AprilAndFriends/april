@@ -91,6 +91,7 @@ namespace April
 		bool mDynamic;
 		std::string mFilename;
 		int mWidth,mHeight;
+		float mUnusedTimer;
 	public:
 		Texture();
 		virtual ~Texture();
@@ -106,6 +107,8 @@ namespace April
 		void _setDimensions(int w,int h) { mWidth=w; mHeight=h; }
 		bool isDynamic() { return mDynamic; }
 		virtual bool isLoaded()=0;
+		
+		void update(float time_increase);
 		std::string getFilename() { return mFilename; }
 	};
 	
@@ -129,6 +132,7 @@ namespace April
 	{
 	protected:
 		float mAlphaMultiplier;
+		float mIdleUnloadTime;
 		bool mDynamicLoading;
 		
 		bool (*mUpdateCallback)(float);
@@ -172,6 +176,9 @@ namespace April
 		virtual void render(RenderOp renderOp,ColoredVertex* v,int nVertices)=0;
 		
 		void drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a=1);
+
+		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
+		void setIdleTextureUnloadTime(float time) { mIdleUnloadTime=time; }
 
 		void logMessage(std::string message);
 
