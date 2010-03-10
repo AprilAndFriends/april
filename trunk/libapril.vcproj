@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="libapril"
-	ProjectGUID="{A1E808A0-FE36-47FE-9E3B-CF195EA31F0A}"
+	ProjectGUID="{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}"
 	RootNamespace="libapril"
 	TargetFrameworkVersion="196613"
 	>
@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="2"
@@ -151,6 +151,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\ImageSource.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\RenderSystem.cpp"
 				>
 			</File>
@@ -160,10 +164,6 @@
 			</File>
 			<File
 				RelativePath=".\rendersystems\OpenGL\RenderSystem_GL.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Texture.cpp"
 				>
 			</File>
 		</Filter>
@@ -177,11 +177,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\april\RenderSystem.h"
+				RelativePath=".\include\april\ImageSource.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\april\Texture.h"
+				RelativePath=".\include\april\RenderSystem.h"
 				>
 			</File>
 		</Filter>
