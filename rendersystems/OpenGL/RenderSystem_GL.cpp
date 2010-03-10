@@ -103,6 +103,7 @@ namespace April
 
 	bool GLTexture::load()
 	{
+		mUnusedTimer=0;
 		rendersys->logMessage("loading GL texture '"+mFilename+"'");
 		mTexId=platformLoadGLTexture(mFilename.c_str(),&mWidth,&mHeight);
 		if (!mTexId)
@@ -216,6 +217,7 @@ namespace April
 			{
 				glt->load();
 			}
+			glt->resetUnusedTimer();
 			glBindTexture(GL_TEXTURE_2D,glt->mTexId);
 		}
 	}

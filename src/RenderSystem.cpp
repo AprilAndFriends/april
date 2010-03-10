@@ -73,9 +73,8 @@ namespace April
 /*****************************************************************************************/
 	Texture::Texture()
 	{
-		
+		mUnusedTimer=0;
 	}
-
 
 	Texture::~Texture()
 	{
@@ -90,6 +89,19 @@ namespace April
 	Color Texture::getInterpolatedPixel(float x,float y)
 	{
 		return Color(0,0,0,0);
+	}
+	
+	void Texture::update(float time_increase)
+	{
+		if (mDynamic && isLoaded())
+		{
+			float max_time=rendersys->getIdleTextureUnloadTime();
+			if (max_time > 0)
+			{
+				if (mUnusedTimer > max_time) unload();
+				mUnusedTimer+=time_increase;
+			}
+		}
 	}
 /*****************************************************************************************/
 	RAMTexture::RAMTexture(std::string filename,bool dynamic)
@@ -109,6 +121,7 @@ namespace April
 	{
 		if (!mBuffer)
 		{
+			rendersys->logMessage("loading RAM texture '"+mFilename+"'");
 			mBuffer=loadImage(mFilename);
 			mWidth=mBuffer->w;
 			mHeight=mBuffer->h;
@@ -119,6 +132,7 @@ namespace April
 	{
 		if (mBuffer)
 		{
+			rendersys->logMessage("unloading RAM texture '"+mFilename+"'");
 			delete mBuffer;
 			mBuffer=0;
 		}
@@ -132,12 +146,14 @@ namespace April
 	Color RAMTexture::getPixel(int x,int y)
 	{
 		if (!mBuffer) load();
+		mUnusedTimer=0;
 		return mBuffer->getPixel(x,y);
 	}
 	
 	Color RAMTexture::getInterpolatedPixel(float x,float y)
 	{
 		if (!mBuffer) load();
+		mUnusedTimer=0;
 		return mBuffer->getInterpolatedPixel(x,y);
 	}
 	
@@ -156,6 +172,7 @@ namespace April
 		mKeyDownCallback=0;
 		mKeyUpCallback=0;
 		mDynamicLoading=0;
+		mIdleUnloadTime=0;
 	}
 	
 	RenderSystem::~RenderSystem()
