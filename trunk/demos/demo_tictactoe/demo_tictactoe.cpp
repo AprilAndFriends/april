@@ -29,7 +29,16 @@ void draw_symbol(int x, int y, std::string symbol)
 {
 	int x1, x2, x3, x4, y1, y2, y3, y4;
 	
-	switch (x)
+	x1 = x*250 - 250 + (x-1)*25;
+	x2 = x*250 + (x-1)*25;
+	x3 = x*250 - 250 + (x-1)*25;
+	x4 = x*250 + (x-1)*25;
+	y1 = y*185 - 185 + (y-1)*25;
+	y2 = y*185 - 185 + (y-1)*25;
+	y3 = y*185 + (y-1)*25;
+	y4 = y*185 + (y-1)*25;
+	
+	/*switch (x)
 	{
 		case 1:
 			x1 = 0;
@@ -46,9 +55,9 @@ void draw_symbol(int x, int y, std::string symbol)
 		break;
 		
 		case 3:
-			x1 = 575;
+			x1 = 550;
 			x2 = 800;
-			x3 = 575;
+			x3 = 550;
 			x4 = 800;
 		break;
 		
@@ -83,7 +92,7 @@ void draw_symbol(int x, int y, std::string symbol)
 		default:
 			printf("Wrong parameter 'y'!");
 		break;
-	}
+	}*/
 	
 	if(symbol == "x_symbol")
 		rendersys->setTexture(x_symbol);
@@ -115,7 +124,7 @@ bool render(float time_increase)
 	
 	rendersys->setTexture(0);
 	rendersys->drawColoredQuad(250,0,25,600,1,1,0,1);
-	rendersys->drawColoredQuad(550,0,25,600,1,1,0,1);
+	rendersys->drawColoredQuad(525,0,25,600,1,1,0,1);
 	rendersys->drawColoredQuad(0,185,800,25,1,1,0,1);
 	rendersys->drawColoredQuad(0,390,800,25,1,1,0,1);
 	
