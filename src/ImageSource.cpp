@@ -18,32 +18,64 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 *************************************************************************************/
-#ifndef APRIL_TEXTURE_H
-#define APRIL_TEXTURE_H
-
-#include <string>
-#include "AprilExport.h"
+#include "ImageSource.h"
+#include "RenderSystem.h"
+#include <IL/il.h>
 
 namespace April
 {
-	class Color;
-	
-	class AprilExport ImageSource
+	ImageSource::ImageSource()
 	{
-		unsigned int mImageId;
-	public:
-		ImageSource();
-		~ImageSource();
-		unsigned int getImageId() { return mImageId; };
-		
-		Color getColorAtPoint(float x,float y);
-		
-		unsigned char* data;
-		int w,h,bpp,format;
-		
-	};
+		ilGenImages(1, &mImageId);
+	}
 	
-	ImageSource* loadTexture(std::string filename);
-}
+	ImageSource::~ImageSource()
+	{
+		ilDeleteImages(1, &mImageId);
+	}
+	
+	Color ImageSource::getPixel(int x,int y)
+	{
+		if (x < 0 || y < 0 || x > this->w || y > this->h) return Color(1,1,1,1);
+		
+		Color c;
+		int index=(y*this->w+x);
+		if (this->bpp == 3) // RGB
+		{
+			c.r=this->data[index*3];
+			c.g=this->data[index*3+1];
+			c.b=this->data[index*3+2];
+			c.a=1;
+		}
+		else if (this->bpp == 4) // RGBA
+		{
+			c.r=this->data[index*4];
+			c.g=this->data[index*4+1];
+			c.b=this->data[index*4+2];
+			c.a=this->data[index*4+3];;
+		}
+		
+		return c;
+	}
+	
+	Color ImageSource::getInterpolatedPixel(float x,float y)
+	{
+		return getPixel(x,y);
+	}
+	
+	ImageSource* loadImage(std::string filename)
+	{
+		ImageSource* img=new ImageSource();
+		ilBindImage(img->getImageId());
 
-#endif
+		int success = ilLoadImage(filename.c_str());
+		if (!success) { delete img; return 0; }
+		img->w=ilGetInteger(IL_IMAGE_WIDTH);
+		img->h=ilGetInteger(IL_IMAGE_HEIGHT);
+		img->bpp=ilGetInteger(IL_IMAGE_BPP);
+		img->format=ilGetInteger(IL_IMAGE_FORMAT);
+		img->data=ilGetData();
+		
+		return img;
+	}
+}

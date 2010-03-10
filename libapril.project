@@ -10,13 +10,13 @@
   <VirtualDirectory Name="src">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.cpp"/>
     <File Name="src/RenderSystem.cpp"/>
-    <File Name="src/Texture.cpp"/>
+    <File Name="src/ImageSource.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.h"/>
     <File Name="include/april/RenderSystem.h"/>
     <File Name="include/april/AprilExport.h"/>
-    <File Name="include/april/Texture.h"/>
+    <File Name="include/april/ImageSource.h"/>
   </VirtualDirectory>
   <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">

@@ -21,7 +21,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <stdio.h>
 #include "RenderSystem.h"
 #include "RenderSystem_GL.h"
-#include "Texture.h"
+#include "ImageSource.h"
 #include <IL/ilut.h>
 
 April::RenderSystem* rendersys;
@@ -81,6 +81,70 @@ namespace April
 	{
 		
 	}
+	
+	Color Texture::getPixel(int x,int y)
+	{
+		return Color(0,0,0,0);
+	}
+	
+	Color Texture::getInterpolatedPixel(float x,float y)
+	{
+		return Color(0,0,0,0);
+	}
+/*****************************************************************************************/
+	RAMTexture::RAMTexture(std::string filename,bool dynamic)
+	{
+		mFilename=filename;
+		mBuffer=0;
+		if (!dynamic) load();
+	}
+
+
+	RAMTexture::~RAMTexture()
+	{
+		unload();
+	}
+	
+	void RAMTexture::load()
+	{
+		if (!mBuffer)
+		{
+			mBuffer=loadImage(mFilename);
+			mWidth=mBuffer->w;
+			mHeight=mBuffer->h;
+		}
+	}
+	
+	void RAMTexture::unload()
+	{
+		if (mBuffer)
+		{
+			delete mBuffer;
+			mBuffer=0;
+		}
+	}
+	
+	bool RAMTexture::isLoaded()
+	{
+		return mBuffer != 0;
+	}
+	
+	Color RAMTexture::getPixel(int x,int y)
+	{
+		if (!mBuffer) load();
+		return mBuffer->getPixel(x,y);
+	}
+	
+	Color RAMTexture::getInterpolatedPixel(float x,float y)
+	{
+		if (!mBuffer) load();
+		return mBuffer->getInterpolatedPixel(x,y);
+	}
+	
+	int RAMTexture::getSizeInBytes()
+	{
+		return 0;
+	}
 /*****************************************************************************************/
 	RenderSystem::RenderSystem()
 	{
@@ -135,21 +199,17 @@ namespace April
 		mKeyDownCallback=key_dn;
 		mKeyUpCallback=key_up;
 	}
-
+	
+	Texture* RenderSystem::loadRAMTexture(std::string filename,bool dynamic)
+	{
+		return new RAMTexture(filename,dynamic);
+	}
 /*********************************************************************************/
-	
-	
-	
 	void init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title)
 	{
 		ilInit();
 	//	ilutRenderer(ILUT_OPENGL);
 		createGLRenderSystem(w,h,fullscreen,title);
-	}
-	
-	void enterMainLoop()
-	{
-		
 	}
 	
 	void destroy()

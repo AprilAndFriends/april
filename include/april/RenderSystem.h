@@ -26,6 +26,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace April
 {
+	
+	class ImageSource;
 	// render operations
 	enum RenderOp
 	{
@@ -83,7 +85,6 @@ namespace April
 
 	};
 
-
 	class AprilExport Texture
 	{
 	protected:
@@ -96,6 +97,9 @@ namespace April
 		virtual void unload()=0;
 		virtual int getSizeInBytes()=0;
 		
+		virtual Color getPixel(int x,int y);
+		virtual Color getInterpolatedPixel(float x,float y);
+		
 		int getWidth() { return mWidth; };
 		int getHeight() { return mHeight; };
 		/// only used with dynamic textures since at chapter load you need it's dimensions for images, but you don't know them yet
@@ -103,6 +107,22 @@ namespace April
 		bool isDynamic() { return mDynamic; }
 		virtual bool isLoaded()=0;
 		std::string getFilename() { return mFilename; }
+	};
+	
+	class AprilExport RAMTexture : public Texture
+	{
+	protected:
+		ImageSource* mBuffer;
+	public:
+		RAMTexture(std::string filename,bool dynamic);
+		virtual ~RAMTexture();
+		void load();
+		void unload();
+		bool isLoaded();
+		Color getPixel(int x,int y);
+		Color getInterpolatedPixel(float x,float y);
+		int getSizeInBytes();
+		
 	};
 
 	class AprilExport RenderSystem
@@ -127,6 +147,7 @@ namespace April
 
 		// object creation
 		virtual Texture* loadTexture(std::string filename,bool dynamic=false)=0;
+		Texture* loadRAMTexture(std::string filename,bool dynamic=false);
 		virtual Texture* createTextureFromMemory(unsigned char* rgba,int w,int h)=0;
 
 		// modelview matrix transformation
@@ -151,37 +172,36 @@ namespace April
 		virtual void render(RenderOp renderOp,ColoredVertex* v,int nVertices)=0;
 		
 		void drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a=1);
-		
+
 		void logMessage(std::string message);
-		
+
 		virtual void setAlphaMultiplier(float value)=0;
 		float getAlphaMultiplier() { return mAlphaMultiplier; }
-		
+
 		virtual int getWindowWidth()=0;
 		virtual int getWindowHeight()=0;
-		
+
 		virtual void setWindowTitle(std::string title)=0;
 		virtual Vector getCursorPos()=0;
 
 		virtual void presentFrame()=0;
 		virtual void enterMainLoop()=0;
-	
+
 		void registerUpdateCallback(bool (*callback)(float));
 		void registerMouseCallbacks(void (*mouse_dn)(float,float,int),
 									void (*mouse_up)(float,float,int),
 									void (*mouse_move)(float,float));
 		void registerKeyboardCallbacks(void (*key_dn)(unsigned int,unsigned int),
 									   void (*key_up)(unsigned int,unsigned int));
-									   
+
 		void forceDynamicLoading(bool value) { mDynamicLoading=value; }
 		bool isDynamicLoadingForced() { return mDynamicLoading; }
-		
+
 		virtual void terminateMainLoop()=0;
 	};
-	
+
 	void AprilExport init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title);
 	void AprilExport destroy();
-
 }
 // global rendersys shortcut variable
 extern AprilExport April::RenderSystem* rendersys;

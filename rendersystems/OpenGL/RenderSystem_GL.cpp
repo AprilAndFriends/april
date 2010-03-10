@@ -19,7 +19,7 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 *************************************************************************************/
 #include "RenderSystem_GL.h"
-#include "Texture.h"
+#include "ImageSource.h"
 #ifdef IPHONE_PLATFORM
 #include <OpenGLES/ES1/gl.h>
 #else
@@ -35,7 +35,7 @@ namespace April
 	unsigned int platformLoadGLTexture(const char* name,int* w,int* h)
 	{
 		unsigned int texid;
-		ImageSource* img=loadTexture(name);
+		ImageSource* img=loadImage(name);
 		if (!img) return 0;
 		*w=img->w; *h=img->h;
 		glGenTextures(1, &texid);
