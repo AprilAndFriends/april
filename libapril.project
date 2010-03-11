@@ -2,7 +2,7 @@
 <CodeLite_Project Name="libapril" InternalType="Library">
   <Plugins>
     <Plugin Name="qmake">
-      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
+      <![CDATA[00030001N0005Debug0000000000000001N0011Linux_Debug0000000000000001N0007Release000000000000]]>
     </Plugin>
   </Plugins>
   <Description/>
@@ -18,14 +18,56 @@
     <File Name="include/april/AprilExport.h"/>
     <File Name="include/april/ImageSource.h"/>
   </VirtualDirectory>
+  <Dependencies Name="Release"/>
+  <Dependencies Name="Debug"/>
   <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
+        <Preprocessor Value="_WIN32"/>
       </Compiler>
-      <Linker Options="" Required="yes"/>
+      <Linker Options="" Required="yes">
+        <Library Value="libOpenGL32"/>
+        <Library Value="libglu32"/>
+        <Library Value="libglut32"/>
+        <Library Value="libDevIL"/>
+      </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/libapril_d.dll" IntermediateDirectory="./bin/Debug" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Linux_Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g" Required="yes" PreCompiledHeader="">
+        <IncludePath Value="."/>
+        <Preprocessor Value="_UNIX"/>
+      </Compiler>
+      <Linker Options="" Required="yes">
+        <Library Value="libGL"/>
+        <Library Value="libGLU"/>
+        <Library Value="libglut"/>
+        <Library Value="libIL"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/libapril_d.so" IntermediateDirectory="./bin/Linux_Debug" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
         <StartupCommands/>
@@ -50,6 +92,7 @@
     <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
+        <Preprocessor Value="_WIN32"/>
       </Compiler>
       <Linker Options="-O2" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
@@ -81,20 +124,14 @@
         <IncludePath Value="../include"/>
         <IncludePath Value="./include/april"/>
         <IncludePath Value="./rendersystems/OpenGL"/>
-        <Preprocessor Value="_WIN32"/>
         <Preprocessor Value="APRIL_EXPORTS"/>
       </Compiler>
       <Linker Options="">
         <LibraryPath Value="./lib"/>
         <LibraryPath Value="../lib"/>
-        <Library Value="libOpenGL32"/>
-        <Library Value="libglu32"/>
-        <Library Value="libglut32"/>
-        <Library Value="libDevIL"/>
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
-  <Dependencies Name="Release"/>
-  <Dependencies Name="Debug"/>
+  <Dependencies Name="Linux_Debug"/>
 </CodeLite_Project>

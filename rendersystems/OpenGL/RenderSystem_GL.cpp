@@ -23,15 +23,30 @@ http://www.gnu.org/copyleft/lesser.txt.
 #ifdef IPHONE_PLATFORM
 #include <OpenGLES/ES1/gl.h>
 #else
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
 
 namespace April
 {
+#ifdef _WIN32
 	HWND hWnd;
-	
+#else
+	#include <sys/time.h>
+	unsigned GetTickCount()
+	{
+			struct timeval tv;
+			if(gettimeofday(&tv, NULL) != 0)
+					return 0;
+
+			return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	}
+
+#endif
+
 	unsigned int platformLoadGLTexture(const char* name,int* w,int* h)
 	{
 		unsigned int texid;
@@ -354,6 +369,7 @@ namespace April
 	
 	Vector GLRenderSystem::getCursorPos()
 	{
+#ifdef _WIN32
 		POINT pt;
 		GetCursorPos(&pt);
 		ScreenToClient(hWnd,&pt);
@@ -361,6 +377,10 @@ namespace April
 		Vector v;
 		v.x=pt.x; v.y=pt.y; v.z=0;
 		return v;
+#else
+		Vector v; v.x=v.y=v.z=0;
+        return v;
+#endif
 	}
 
 	void GLRenderSystem::presentFrame()
@@ -455,9 +475,10 @@ namespace April
 		glutInitWindowPosition(_w/2-w/2,_h/2-h/2);
 		glutInitWindowSize(w,h);
 		glutCreateWindow(title.c_str());
+#ifdef _WIN32
 		hWnd = FindWindow("GLUT", title.c_str());
 		SetFocus(hWnd);
-
+#endif
 		glEnable(GL_TEXTURE_2D);
 		glutDisplayFunc(gl_draw);
 		glutMouseFunc(mouse_click_handler);
