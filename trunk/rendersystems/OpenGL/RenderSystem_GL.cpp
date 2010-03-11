@@ -47,6 +47,8 @@ namespace April
 
 #endif
 
+	float cursor_x=0,cursor_y=0;
+
 	unsigned int platformLoadGLTexture(const char* name,int* w,int* h)
 	{
 		unsigned int texid;
@@ -369,18 +371,9 @@ namespace April
 	
 	Vector GLRenderSystem::getCursorPos()
 	{
-#ifdef _WIN32
-		POINT pt;
-		GetCursorPos(&pt);
-		ScreenToClient(hWnd,&pt);
-		
 		Vector v;
-		v.x=pt.x; v.y=pt.y; v.z=0;
+		v.x=cursor_x; v.y=cursor_y; v.z=0;
 		return v;
-#else
-		Vector v; v.x=v.y=v.z=0;
-        return v;
-#endif
 	}
 
 	void GLRenderSystem::presentFrame()
@@ -444,6 +437,7 @@ namespace April
 
 	void mouse_click_handler(int button, int state, int x,int y)
 	{
+		cursor_x=x; cursor_y=y;
 		if (state == GLUT_DOWN)
 			((GLRenderSystem*) rendersys)->triggerMouseEvent(0,x,y,button);
 		else
@@ -452,6 +446,7 @@ namespace April
 
 	void mouse_move_handler(int x,int y)
 	{
+		cursor_x=x; cursor_y=y;
 		((GLRenderSystem*) rendersys)->triggerMouseEvent(2,x,y,0);
 	}
 
@@ -485,6 +480,7 @@ namespace April
 		glutKeyboardFunc(keyboard_handler);
 		glutKeyboardUpFunc(keyboard_up_handler);
 		glutMotionFunc(mouse_move_handler);
+		glutPassiveMotionFunc(mouse_move_handler);
 		
 		glutSpecialFunc(special_handler);
 
