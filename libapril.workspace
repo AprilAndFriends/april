@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Workspace Name="libapril" Database="./libapril.tags">
   <Project Name="libapril" Path="libapril.project" Active="No"/>
-  <Project Name="demo_simple" Path="demos/demo_simple/demo_simple.project" Active="Yes"/>
-  <Project Name="tictactoe" Path="demos/demo_tictactoe/tictactoe.project" Active="No"/>
+  <Project Name="demo_simple" Path="demos/demo_simple/demo_simple.project" Active="No"/>
+  <Project Name="tictactoe" Path="demos/demo_tictactoe/tictactoe.project" Active="Yes"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="no">
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Project Name="tictactoe" ConfigName="Debug"/>
       <Project Name="libapril" ConfigName="Debug"/>
       <Project Name="demo_simple" ConfigName="Debug"/>
@@ -14,7 +14,7 @@
       <Project Name="demo_simple" ConfigName="Release"/>
       <Project Name="tictactoe" ConfigName="Release"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Linux_Debug" Selected="yes">
+    <WorkspaceConfiguration Name="Linux_Debug" Selected="no">
       <Project Name="tictactoe" ConfigName="Debug"/>
       <Project Name="libapril" ConfigName="Linux_Debug"/>
       <Project Name="demo_simple" ConfigName="Linux_Debug"/>

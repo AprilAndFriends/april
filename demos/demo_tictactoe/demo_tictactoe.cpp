@@ -24,6 +24,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 April::Texture* background;
 April::Texture* x_symbol;
 April::Texture* o_symbol;
+bool temp = 0;
 
 void draw_symbol(int x, int y, std::string symbol)
 {
@@ -128,34 +129,42 @@ bool render(float time_increase)
 	rendersys->drawColoredQuad(0,185,800,25,1,1,0,1);
 	rendersys->drawColoredQuad(0,390,800,25,1,1,0,1);
 	
-	draw_symbol(1,1,"x_symbol");
-	draw_symbol(1,2,"x_symbol");
-	draw_symbol(1,3,"x_symbol");
-	draw_symbol(2,1,"x_symbol");
-	draw_symbol(2,2,"x_symbol");
-	draw_symbol(2,3,"x_symbol");
-	draw_symbol(3,1,"x_symbol");
-	draw_symbol(3,2,"x_symbol");
-	draw_symbol(3,3,"x_symbol");
-	
-	draw_symbol(1,1,"o_symbol");
-	draw_symbol(1,2,"o_symbol");
-	draw_symbol(1,3,"o_symbol");
-	draw_symbol(2,1,"o_symbol");
-	draw_symbol(2,2,"o_symbol");
-	draw_symbol(2,3,"o_symbol");
-	draw_symbol(3,1,"o_symbol");
-	draw_symbol(3,2,"o_symbol");
-	draw_symbol(3,3,"o_symbol");
+	if (temp)
+	{
+		draw_symbol(1,1,"x_symbol");
+		draw_symbol(1,2,"x_symbol");
+		draw_symbol(1,3,"x_symbol");
+		draw_symbol(2,1,"x_symbol");
+		draw_symbol(2,2,"x_symbol");
+		draw_symbol(2,3,"x_symbol");
+		draw_symbol(3,1,"x_symbol");
+		draw_symbol(3,2,"x_symbol");
+		draw_symbol(3,3,"x_symbol");
+		
+		draw_symbol(1,1,"o_symbol");
+		draw_symbol(1,2,"o_symbol");
+		draw_symbol(1,3,"o_symbol");
+		draw_symbol(2,1,"o_symbol");
+		draw_symbol(2,2,"o_symbol");
+		draw_symbol(2,3,"o_symbol");
+		draw_symbol(3,1,"o_symbol");
+		draw_symbol(3,2,"o_symbol");
+		draw_symbol(3,3,"o_symbol");
+	}
 	
 	return true;
+}
+
+void OnMouseUp(float x,float y,int button)
+{
+	temp = 1;
 }
 
 int main()
 {
 	April::init("OpenGL",800,600,0,"demo_tictactoe");
 	rendersys->registerUpdateCallback(render);
-
+	rendersys->registerMouseCallbacks(0,OnMouseUp,0);
 	background=rendersys->loadTexture("../media/texture.jpg");
 	x_symbol=rendersys->loadTexture("../media/x.png");
 	o_symbol=rendersys->loadTexture("../media/o.png");
