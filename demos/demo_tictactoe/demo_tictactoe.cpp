@@ -24,7 +24,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 April::Texture* background;
 April::Texture* x_symbol;
 April::Texture* o_symbol;
-bool temp = 0;
+int temp = 0;
+bool player = 0;
+
 
 void draw_symbol(int x, int y, std::string symbol)
 {
@@ -112,7 +114,7 @@ void draw_symbol(int x, int y, std::string symbol)
 }
 
 bool render(float time_increase)
-{
+{	
 	rendersys->setViewport(800,600);
 	
 	rendersys->setTexture(background);
@@ -129,35 +131,89 @@ bool render(float time_increase)
 	rendersys->drawColoredQuad(0,185,800,25,1,1,0,1);
 	rendersys->drawColoredQuad(0,390,800,25,1,1,0,1);
 	
-	if (temp)
-	{
-		draw_symbol(1,1,"x_symbol");
-		draw_symbol(1,2,"x_symbol");
-		draw_symbol(1,3,"x_symbol");
-		draw_symbol(2,1,"x_symbol");
-		draw_symbol(2,2,"x_symbol");
-		draw_symbol(2,3,"x_symbol");
-		draw_symbol(3,1,"x_symbol");
-		draw_symbol(3,2,"x_symbol");
-		draw_symbol(3,3,"x_symbol");
-		
+	
+	if (temp == 110)
 		draw_symbol(1,1,"o_symbol");
+	if (temp == 120)
 		draw_symbol(1,2,"o_symbol");
+	if (temp == 130)
 		draw_symbol(1,3,"o_symbol");
+	if (temp == 210)
 		draw_symbol(2,1,"o_symbol");
+	if (temp == 220)
 		draw_symbol(2,2,"o_symbol");
+	if (temp == 230)
 		draw_symbol(2,3,"o_symbol");
+	if (temp == 310)
 		draw_symbol(3,1,"o_symbol");
+	if (temp == 320)
 		draw_symbol(3,2,"o_symbol");
+	if (temp == 330)
 		draw_symbol(3,3,"o_symbol");
-	}
+		
+	if (temp == 111)
+		draw_symbol(1,1,"x_symbol");
+	if (temp == 121)
+		draw_symbol(1,2,"x_symbol");
+	if (temp == 131)
+		draw_symbol(1,3,"x_symbol");
+	if (temp == 211)
+		draw_symbol(2,1,"x_symbol");
+	if (temp == 221)
+		draw_symbol(2,2,"x_symbol");
+	if (temp == 231)
+		draw_symbol(2,3,"x_symbol");
+	if (temp == 311)
+		draw_symbol(3,1,"x_symbol");
+	if (temp == 321)
+		draw_symbol(3,2,"x_symbol");
+	if (temp == 331)
+		draw_symbol(3,3,"x_symbol");
 	
 	return true;
 }
 
 void OnMouseUp(float x,float y,int button)
 {
-	temp = 1;
+	if (x >= 0 && x <= 250 && y >= 0 && y <= 185 && !player)
+	temp = 110;
+	if (x >= 0 && x <= 250 && y >= 210 && y <= 390 && !player)
+	temp = 120;
+	if (x >= 0 && x <= 250 && y >= 415 && y <= 600 && !player)
+	temp = 130;
+	if (x >= 275 && x <= 525 && y >= 0 && y <= 185 && !player)
+	temp = 210;
+	if (x >= 275 && x <= 525 && y >= 210 && y <= 390 && !player)
+	temp = 220;
+	if (x >= 275 && x <= 525 && y >= 415 && y <= 600 && !player)
+	temp = 230;
+	if (x >= 550 && x <= 800 && y >= 0 && y <= 185 && !player)
+	temp = 310;
+	if (x >= 550 && x <= 800 && y >= 210 && y <= 390 && !player)
+	temp = 320;
+	if (x >= 550 && x <= 800 && y >= 415 && y <= 600 && !player)
+	temp = 330;
+	
+	if (x >= 0 && x <= 250 && y >= 0 && y <= 185 && player)
+	temp = 111;
+	if (x >= 0 && x <= 250 && y >= 210 && y <= 390 && player)
+	temp = 121;
+	if (x >= 0 && x <= 250 && y >= 415 && y <= 600 && player)
+	temp = 131;
+	if (x >= 275 && x <= 525 && y >= 0 && y <= 185 && player)
+	temp = 211;
+	if (x >= 275 && x <= 525 && y >= 210 && y <= 390 && player)
+	temp = 221;
+	if (x >= 275 && x <= 525 && y >= 415 && y <= 600 && player)
+	temp = 231;
+	if (x >= 550 && x <= 800 && y >= 0 && y <= 185 && player)
+	temp = 311;
+	if (x >= 550 && x <= 800 && y >= 210 && y <= 390 && player)
+	temp = 321;
+	if (x >= 550 && x <= 800 && y >= 415 && y <= 600 && player)
+	temp = 331;	
+	
+	player = !player;
 }
 
 int main()
