@@ -14,7 +14,7 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+this program; if not, write to the Free Software Foundation, Inc., 59 positionsle
 Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 *************************************************************************************/
@@ -24,8 +24,14 @@ http://www.gnu.org/copyleft/lesser.txt.
 April::Texture* background;
 April::Texture* x_symbol;
 April::Texture* o_symbol;
-int temp = 0;
+April::Texture* line_hor;
+April::Texture* line_vert;
+April::Texture* line45;
+April::Texture* line315;
+int positions[3][3] = {{0,0,0},{0,0,0},{0,0,0}};
+int victory = 0;
 bool player = 0;
+
 
 
 void draw_symbol(int x, int y, std::string symbol)
@@ -113,6 +119,43 @@ void draw_symbol(int x, int y, std::string symbol)
 	rendersys->render(April::TriangleStrip,v,4);
 }
 
+
+void draw_line(int x_start, int y_start, int x_end, int y_end, std::string symbol)
+{
+	int x1, x2, x3, x4, y1, y2, y3, y4;
+	
+	x1 = x_start*250 + (x_start+1)*25;
+	x2 = x_end*250 + 250 + (x_start+1)*25;
+	x3 = x_start*250 + (x_start+1)*25;
+	x4 = x_end*250 + 250 + (x_start-1)*25;
+	y1 = y_start*185 + (y_start+1)*25;
+	y2 = y_start*185 + (y_start+1)*25;
+	y3 = y_end*185 + 185 + (y_start+1)*25;
+	y4 = y_end*185 + 185 + (y_start+1)*25;
+	
+	
+	if(symbol == "line_hor")
+		rendersys->setTexture(line_hor);
+	else if(symbol == "line_vert")
+		rendersys->setTexture(line_vert);
+	else if(symbol == "line45")
+		rendersys->setTexture(line45);
+	else if(symbol == "line315")
+		rendersys->setTexture(line315);
+	else
+		printf("Wrong parameter 'symbol'!");
+
+	
+	April::TexturedVertex v[4];
+	v[0].x=x1; v[0].y=y1; v[0].z=0; v[0].u=0; v[0].v=0;
+	v[1].x=x2; v[1].y=y2; v[1].z=0; v[1].u=1; v[1].v=0;
+	v[2].x=x3; v[2].y=y3; v[2].z=0; v[2].u=0; v[2].v=1;
+	v[3].x=x4; v[3].y=y4; v[3].z=0; v[3].u=1; v[3].v=1;
+	rendersys->render(April::TriangleStrip,v,4);
+}
+
+
+
 bool render(float time_increase)
 {	
 	rendersys->setViewport(800,600);
@@ -131,89 +174,240 @@ bool render(float time_increase)
 	rendersys->drawColoredQuad(0,185,800,25,1,1,0,1);
 	rendersys->drawColoredQuad(0,390,800,25,1,1,0,1);
 	
-	
-	if (temp == 110)
+		
+	if (positions[0][0] == 1)
+		draw_symbol(1,1,"x_symbol");
+	if (positions[0][1] == 1)
+		draw_symbol(1,2,"x_symbol");
+	if (positions[0][2] == 1)
+		draw_symbol(1,3,"x_symbol");
+	if (positions[1][0] == 1)
+		draw_symbol(2,1,"x_symbol");
+	if (positions[1][1] == 1)
+		draw_symbol(2,2,"x_symbol");
+	if (positions[1][2] == 1)
+		draw_symbol(2,3,"x_symbol");
+	if (positions[2][0] == 1)
+		draw_symbol(3,1,"x_symbol");
+	if (positions[2][1] == 1)
+		draw_symbol(3,2,"x_symbol");
+	if (positions[2][2] == 1)
+		draw_symbol(3,3,"x_symbol");
+		
+	if (positions[0][0] == 2)
 		draw_symbol(1,1,"o_symbol");
-	if (temp == 120)
+	if (positions[0][1] == 2)
 		draw_symbol(1,2,"o_symbol");
-	if (temp == 130)
+	if (positions[0][2] == 2)
 		draw_symbol(1,3,"o_symbol");
-	if (temp == 210)
+	if (positions[1][0] == 2)
 		draw_symbol(2,1,"o_symbol");
-	if (temp == 220)
+	if (positions[1][1] == 2)
 		draw_symbol(2,2,"o_symbol");
-	if (temp == 230)
+	if (positions[1][2] == 2)
 		draw_symbol(2,3,"o_symbol");
-	if (temp == 310)
+	if (positions[2][0] == 2)
 		draw_symbol(3,1,"o_symbol");
-	if (temp == 320)
+	if (positions[2][1] == 2)
 		draw_symbol(3,2,"o_symbol");
-	if (temp == 330)
+	if (positions[2][2] == 2)
 		draw_symbol(3,3,"o_symbol");
 		
-	if (temp == 111)
-		draw_symbol(1,1,"x_symbol");
-	if (temp == 121)
-		draw_symbol(1,2,"x_symbol");
-	if (temp == 131)
-		draw_symbol(1,3,"x_symbol");
-	if (temp == 211)
-		draw_symbol(2,1,"x_symbol");
-	if (temp == 221)
-		draw_symbol(2,2,"x_symbol");
-	if (temp == 231)
-		draw_symbol(2,3,"x_symbol");
-	if (temp == 311)
-		draw_symbol(3,1,"x_symbol");
-	if (temp == 321)
-		draw_symbol(3,2,"x_symbol");
-	if (temp == 331)
-		draw_symbol(3,3,"x_symbol");
+		
+	if (victory == 1)
+		draw_line(0,0,0,2,"line_hor");
+	if (victory == 2)
+		draw_line(1,0,1,2,"line_hor");
+	if (victory == 3)
+		draw_line(2,0,2,2,"line_hor");
+	if (victory == 4)
+		draw_line(0,0,2,0,"line_vert");
+	if (victory == 5)
+		draw_line(0,1,2,1,"line_vert");
+	if (victory == 6)
+		draw_line(0,2,2,2,"line_vert");
+	if (victory == 7)
+		draw_line(0,0,2,2,"line45");
+	if (victory == 8)
+		draw_line(0,0,2,2,"line315");
 	
 	return true;
 }
 
+
+
 void OnMouseUp(float x,float y,int button)
 {
-	if (x >= 0 && x <= 250 && y >= 0 && y <= 185 && !player)
-	temp = 110;
-	if (x >= 0 && x <= 250 && y >= 210 && y <= 390 && !player)
-	temp = 120;
-	if (x >= 0 && x <= 250 && y >= 415 && y <= 600 && !player)
-	temp = 130;
-	if (x >= 275 && x <= 525 && y >= 0 && y <= 185 && !player)
-	temp = 210;
-	if (x >= 275 && x <= 525 && y >= 210 && y <= 390 && !player)
-	temp = 220;
-	if (x >= 275 && x <= 525 && y >= 415 && y <= 600 && !player)
-	temp = 230;
-	if (x >= 550 && x <= 800 && y >= 0 && y <= 185 && !player)
-	temp = 310;
-	if (x >= 550 && x <= 800 && y >= 210 && y <= 390 && !player)
-	temp = 320;
-	if (x >= 550 && x <= 800 && y >= 415 && y <= 600 && !player)
-	temp = 330;
+	if (x >= 0 && x <= 250 && y >= 0 && y <= 185 && !player && positions[0][0] == 0)
+	{
+		positions[0][0] = 1;
+		player = !player;
+	}
+	if (x >= 0 && x <= 250 && y >= 210 && y <= 390 && !player && positions[0][1] == 0)
+	{
+		positions[0][1] = 1;
+		player = !player;
+	}
+	if (x >= 0 && x <= 250 && y >= 415 && y <= 600 && !player && positions[0][2] == 0)
+	{
+		positions[0][2] = 1;
+		player = !player;
+	}
+	if (x >= 275 && x <= 525 && y >= 0 && y <= 185 && !player && positions[1][0] == 0)
+	{
+		positions[1][0] = 1;
+		player = !player;
+	}
+	if (x >= 275 && x <= 525 && y >= 210 && y <= 390 && !player && positions[1][1] == 0)
+	{
+		positions[1][1] = 1;
+		player = !player;
+	}
+	if (x >= 275 && x <= 525 && y >= 415 && y <= 600 && !player && positions[1][2] == 0)
+	{
+		positions[1][2] = 1;
+		player = !player;
+	}
+	if (x >= 550 && x <= 800 && y >= 0 && y <= 185 && !player && positions[2][0] == 0)
+	{
+		positions[2][0] = 1;
+		player = !player;
+	}
+	if (x >= 550 && x <= 800 && y >= 210 && y <= 390 && !player && positions[2][1] == 0)
+	{
+		positions[2][1] = 1;
+		player = !player;
+	}
+	if (x >= 550 && x <= 800 && y >= 415 && y <= 600 && !player && positions[2][2] == 0)
+	{
+		positions[2][2] = 1;
+		player = !player;
+	}
 	
-	if (x >= 0 && x <= 250 && y >= 0 && y <= 185 && player)
-	temp = 111;
-	if (x >= 0 && x <= 250 && y >= 210 && y <= 390 && player)
-	temp = 121;
-	if (x >= 0 && x <= 250 && y >= 415 && y <= 600 && player)
-	temp = 131;
-	if (x >= 275 && x <= 525 && y >= 0 && y <= 185 && player)
-	temp = 211;
-	if (x >= 275 && x <= 525 && y >= 210 && y <= 390 && player)
-	temp = 221;
-	if (x >= 275 && x <= 525 && y >= 415 && y <= 600 && player)
-	temp = 231;
-	if (x >= 550 && x <= 800 && y >= 0 && y <= 185 && player)
-	temp = 311;
-	if (x >= 550 && x <= 800 && y >= 210 && y <= 390 && player)
-	temp = 321;
-	if (x >= 550 && x <= 800 && y >= 415 && y <= 600 && player)
-	temp = 331;	
 	
-	player = !player;
+	if (x >= 0 && x <= 250 && y >= 0 && y <= 185 && player && positions[0][0] == 0)
+	{
+		positions[0][0] = 2;
+		player = !player;
+	}
+	if (x >= 0 && x <= 250 && y >= 210 && y <= 390 && player && positions[0][1] == 0)
+	{
+		positions[0][1] = 2;
+		player = !player;
+	}
+	if (x >= 0 && x <= 250 && y >= 415 && y <= 600 && player && positions[0][2] == 0)
+	{
+		positions[0][2] = 2;
+		player = !player;
+	}
+	if (x >= 275 && x <= 525 && y >= 0 && y <= 185 && player && positions[1][0] == 0)
+	{
+		positions[1][0] = 2;
+		player = !player;
+	}
+	if (x >= 275 && x <= 525 && y >= 210 && y <= 390 && player && positions[1][1] == 0)
+	{
+		positions[1][1] = 2;
+		player = !player;
+	}
+	if (x >= 275 && x <= 525 && y >= 415 && y <= 600 && player && positions[1][2] == 0)
+	{
+		positions[1][2] = 2;
+		player = !player;
+	}
+	if (x >= 550 && x <= 800 && y >= 0 && y <= 185 && player && positions[2][0] == 0)
+	{
+		positions[2][0] = 2;
+		player = !player;
+	}
+	if (x >= 550 && x <= 800 && y >= 210 && y <= 390 && player && positions[2][1] == 0)
+	{
+		positions[2][1] = 2;
+		player = !player;
+	}
+	if (x >= 550 && x <= 800 && y >= 415 && y <= 600 && player && positions[2][2] == 0)
+	{
+		positions[2][2] = 2;	
+		player = !player;
+	}
+	
+	
+	if (positions[0][0] == 1 && positions[0][1] == 1 && positions[0][2] == 1)
+		victory = 1;
+	if (positions[1][0] == 1 && positions[1][1] == 1 && positions[1][2] == 1)
+		victory = 2;
+	if (positions[2][0] == 1 && positions[2][1] == 1 && positions[2][2] == 1)
+		victory = 3;
+	if (positions[0][0] == 1 && positions[1][0] == 1 && positions[2][0] == 1)
+		victory = 4;
+	if (positions[0][1] == 1 && positions[1][1] == 1 && positions[2][1] == 1)
+		victory = 5;
+	if (positions[0][2] == 1 && positions[1][2] == 1 && positions[2][2] == 1)
+		victory = 6;
+	if (positions[0][0] == 1 && positions[1][1] == 1 && positions[2][2] == 1)
+		victory = 7;
+	if (positions[0][2] == 1 && positions[1][1] == 1 && positions[2][0] == 1)
+		victory = 8;
+		
+	if (positions[0][0] == 2 && positions[0][1] == 2 && positions[0][2] == 2)
+		victory = 1;
+	if (positions[1][0] == 2 && positions[1][1] == 2 && positions[1][2] == 2)
+		victory = 2;
+	if (positions[2][0] == 2 && positions[2][1] == 2 && positions[2][2] == 2)
+		victory = 3;
+	if (positions[0][0] == 2 && positions[1][0] == 2 && positions[2][0] == 2)
+		victory = 4;
+	if (positions[0][1] == 2 && positions[1][1] == 2 && positions[2][1] == 2)
+		victory = 5;
+	if (positions[0][2] == 2 && positions[1][2] == 2 && positions[2][2] == 2)
+		victory = 6;
+	if (positions[0][0] == 2 && positions[1][1] == 2 && positions[2][2] == 2)
+		victory = 7;
+	if (positions[0][2] == 2 && positions[1][1] == 2 && positions[2][0] == 2)
+		victory = 8;
+	
+	
+	/*
+	if (positions[0][0] == 1 && positions[0][1] == 1 && positions[0][2] == 1 ||
+	positions[1][0] == 1 && positions[1][1] == 1 && positions[1][2] == 1 ||
+	positions[2][0] == 1 && positions[2][1] == 1 && positions[2][2] == 1 ||
+	positions[0][0] == 1 && positions[1][0] == 1 && positions[2][0] == 1 ||
+	positions[0][1] == 1 && positions[1][1] == 1 && positions[2][1] == 1 ||
+	positions[0][2] == 1 && positions[1][2] == 1 && positions[2][2] == 1 ||
+	positions[0][0] == 1 && positions[1][1] == 1 && positions[2][2] == 1 ||
+	positions[0][2] == 1 && positions[1][1] == 1 && positions[2][0] == 1)	
+	{
+		positions[0][0] = 1;
+		positions[0][1] = 1;
+		positions[0][2] = 1;
+		positions[1][0] = 1;
+		positions[1][1] = 1;
+		positions[1][2] = 1;
+		positions[2][0] = 1;
+		positions[2][1] = 1;
+		positions[2][2] = 1;
+	}
+	
+	if (positions[0][0] == 2 && positions[0][1] == 2 && positions[0][2] == 2 ||
+	positions[1][0] == 2 && positions[1][1] == 2 && positions[1][2] == 2 ||
+	positions[2][0] == 2 && positions[2][1] == 2 && positions[2][2] == 2 ||
+	positions[0][0] == 2 && positions[1][0] == 2 && positions[2][0] == 2 ||
+	positions[0][1] == 2 && positions[1][1] == 2 && positions[2][1] == 2 ||
+	positions[0][2] == 2 && positions[1][2] == 2 && positions[2][2] == 2 ||
+	positions[0][0] == 2 && positions[1][1] == 2 && positions[2][2] == 2 ||
+	positions[0][2] == 2 && positions[1][1] == 2 && positions[2][0] == 2)
+	{
+		positions[0][0] = 2;
+		positions[0][1] = 2;
+		positions[0][2] = 2;
+		positions[1][0] = 2;
+		positions[1][1] = 2;
+		positions[1][2] = 2;
+		positions[2][0] = 2;
+		positions[2][1] = 2;
+		positions[2][2] = 2;
+	}
+	*/
 }
 
 int main()
@@ -224,6 +418,10 @@ int main()
 	background=rendersys->loadTexture("../media/texture.jpg");
 	x_symbol=rendersys->loadTexture("../media/x.png");
 	o_symbol=rendersys->loadTexture("../media/o.png");
+	line_hor=rendersys->loadTexture("../media/line_hor.png");
+	line_vert=rendersys->loadTexture("../media/line_vert.png");
+	line45=rendersys->loadTexture("../media/line45.png");
+	line315=rendersys->loadTexture("../media/line315.png");
 
 	rendersys->enterMainLoop();
 	April::destroy();
