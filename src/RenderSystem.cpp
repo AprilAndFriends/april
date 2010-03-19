@@ -19,6 +19,7 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 *************************************************************************************/
 #include <stdio.h>
+#include <algorithm>
 #include "RenderSystem.h"
 #include "RenderSystem_GL.h"
 #include "ImageSource.h"
@@ -78,7 +79,9 @@ namespace April
 
 	Texture::~Texture()
 	{
-		
+		std::vector<Texture*>::iterator it=mDynamicLinks.begin();
+		for(;it!=mDynamicLinks.end();it++)
+			(*it)->removeDynamicLink(this);
 	}
 	
 	Color Texture::getPixel(int x,int y)
@@ -101,6 +104,31 @@ namespace April
 				if (mUnusedTimer > max_time) unload();
 				mUnusedTimer+=time_increase;
 			}
+		}
+	}
+	
+	void Texture::addDynamicLink(Texture* lnk)
+	{
+		if (find(mDynamicLinks.begin(),mDynamicLinks.end(),lnk) != mDynamicLinks.end()) return;
+		mDynamicLinks.push_back(lnk);
+		lnk->addDynamicLink(this);
+	}
+	
+	void Texture::removeDynamicLink(Texture* lnk)
+	{
+		std::vector<Texture*>::iterator it=find(mDynamicLinks.begin(),mDynamicLinks.end(),lnk);
+		if (it == mDynamicLinks.end()) return;
+		mDynamicLinks.erase(it);
+	}
+	
+	void  Texture::_resetUnusedTimer(bool recursive)
+	{
+		mUnusedTimer=0;
+		if (recursive)
+		{
+			std::vector<Texture*>::iterator it=mDynamicLinks.begin();
+			for(;it!=mDynamicLinks.end();it++)
+				(*it)->_resetUnusedTimer(0);
 		}
 	}
 /*****************************************************************************************/

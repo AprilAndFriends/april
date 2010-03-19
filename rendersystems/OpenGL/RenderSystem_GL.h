@@ -34,7 +34,6 @@ namespace April
 		GLTexture(unsigned char* rgba,int w,int h);
 		~GLTexture();
 		
-		void resetUnusedTimer() { mUnusedTimer=0; }
 		bool load();
 		void unload();
 		bool isLoaded();
