@@ -121,6 +121,7 @@ namespace April
 	bool GLTexture::load()
 	{
 		mUnusedTimer=0;
+		if (mTexId) return 1;
 		rendersys->logMessage("loading GL texture '"+mFilename+"'");
 		mTexId=platformLoadGLTexture(mFilename.c_str(),&mWidth,&mHeight);
 		if (!mTexId)
@@ -128,6 +129,11 @@ namespace April
 			rendersys->logMessage("Failed to load texture: "+mFilename);
 			return 0;
 		}
+
+		std::vector<Texture*>::iterator it=mDynamicLinks.begin();
+		for(;it!=mDynamicLinks.end();it++)
+			((GLTexture*)(*it))->load();
+
 		return 1;
 	}
 
@@ -234,7 +240,7 @@ namespace April
 			{
 				glt->load();
 			}
-			glt->resetUnusedTimer();
+			glt->_resetUnusedTimer();
 			glBindTexture(GL_TEXTURE_2D,glt->mTexId);
 		}
 	}

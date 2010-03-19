@@ -22,6 +22,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define RENDERSYSTEM_H
 
 #include <string>
+#include <vector>
 #include "AprilExport.h"
 
 namespace April
@@ -92,6 +93,7 @@ namespace April
 		std::string mFilename;
 		int mWidth,mHeight;
 		float mUnusedTimer;
+		std::vector<Texture*> mDynamicLinks;
 	public:
 		Texture();
 		virtual ~Texture();
@@ -100,6 +102,10 @@ namespace April
 		
 		virtual Color getPixel(int x,int y);
 		virtual Color getInterpolatedPixel(float x,float y);
+		
+		void addDynamicLink(Texture* lnk);
+		void removeDynamicLink(Texture* lnk);
+		void _resetUnusedTimer(bool recursive=1);
 		
 		int getWidth() { return mWidth; };
 		int getHeight() { return mHeight; };
