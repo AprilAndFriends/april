@@ -36,7 +36,10 @@ namespace April
 	
 	Color ImageSource::getPixel(int x,int y)
 	{
-		if (x < 0 || y < 0 || x > this->w || y > this->h) return Color(1,1,1,1);
+		if (x < 0) x=0;
+		if (y < 0) y=0;
+		if (x > w-1) x=w-1;
+		if (y > h-1) y=h-1;
 		
 		Color c;
 		int index=(y*this->w+x);
