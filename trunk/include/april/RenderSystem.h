@@ -75,9 +75,13 @@ namespace April
 	public:
 		unsigned char r,g,b,a;
 		Color(float r,float g,float b,float a=1);
+		Color(unsigned int color);
+		Color(std::string hex);
 		Color();
 
-		void setHex(std::string hex);
+		void setColor(float r,float g,float b,float a=1);
+		void setColor(unsigned int color);
+		void setColor(std::string hex);
 
 		float r_float() { return (float) r/255.0f; }
 		float g_float() { return (float) g/255.0f; }

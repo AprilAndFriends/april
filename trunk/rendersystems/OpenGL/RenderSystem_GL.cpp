@@ -458,7 +458,7 @@ namespace April
 
 	void gl_draw()
 	{
-		static unsigned long x=GetTickCount();
+		static unsigned int x=GetTickCount();
 		float k=(GetTickCount()-x)/1000.0f;
 		x=GetTickCount();
 		if (!((GLRenderSystem*) rendersys)->triggerUpdate(k)) throw "done";

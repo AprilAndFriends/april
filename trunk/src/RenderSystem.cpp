@@ -56,17 +56,37 @@ namespace April
 		else throw "Color format must be either 0xAARRGGBB or 0xRRGGBB";
 	}
 /*****************************************************************************************/
-	Color::Color(float r,float g,float b,float a)
+	Color::Color(float a,float r,float g,float b)
 	{
-		this->r=r*255; this->g=g*255; this->b=b*255; this->a=a*255;
+		setColor(a,r,g,b);
+	}
+
+	Color::Color(unsigned int color)
+	{
+		setColor(color);
+	}
+
+	Color::Color(std::string hex)
+	{
+		setColor(hex);
 	}
 
 	Color::Color()
 	{
-		r=g=b=a=1;
+		r=g=b=a=255;
 	}
 
-	void Color::setHex(std::string hex)
+	void Color::setColor(float a,float r,float g,float b)
+	{
+		this->a=a*255; this->r=r*255; this->g=g*255; this->b=b*255;
+	}
+
+	void Color::setColor(unsigned int color)
+	{
+		this->a=color/256/256/256; this->r=color/256/256%256; this->g=color/256%256; this->b=color%256;
+	}
+
+	void Color::setColor(std::string hex)
 	{
 		// this is going to bite me in the arse on a little endian system...
 		hexstr_to_argb(hex,&a,&r,&g,&b);
