@@ -26,6 +26,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #ifdef _WIN32
 #include <windows.h>
 #endif
+#include <stdlib.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>

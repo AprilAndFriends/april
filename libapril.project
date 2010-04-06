@@ -20,10 +20,12 @@
   </VirtualDirectory>
   <Dependencies Name="Release"/>
   <Dependencies Name="Debug"/>
+  <Dependencies Name="Linux_Debug"/>
   <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
+        <IncludePath Value="../include"/>
         <Preprocessor Value="_WIN32"/>
       </Compiler>
       <Linker Options="" Required="yes">
@@ -121,7 +123,6 @@
     <GlobalSettings>
       <Compiler Options="">
         <IncludePath Value="./include"/>
-        <IncludePath Value="../include"/>
         <IncludePath Value="./include/april"/>
         <IncludePath Value="./rendersystems/OpenGL"/>
         <Preprocessor Value="APRIL_EXPORTS"/>
@@ -133,5 +134,4 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
-  <Dependencies Name="Linux_Debug"/>
 </CodeLite_Project>
