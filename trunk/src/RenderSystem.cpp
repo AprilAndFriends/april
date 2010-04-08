@@ -32,7 +32,7 @@ namespace April
 	int hexstr_to_int(std::string s)
 	{
 		int i;
-		sscanf_s(s.c_str(),"%x",&i);
+		sscanf(s.c_str(),"%x",&i);
 		return i;
 	}
 	
