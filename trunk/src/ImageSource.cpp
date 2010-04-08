@@ -63,7 +63,7 @@ namespace April
 	
 	Color ImageSource::getInterpolatedPixel(float x,float y)
 	{
-		return getPixel(x,y);
+		return getPixel((int)x,(int)y);
 	}
 	
 	ImageSource* loadImage(std::string filename)

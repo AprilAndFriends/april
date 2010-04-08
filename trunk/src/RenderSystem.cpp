@@ -32,7 +32,7 @@ namespace April
 	int hexstr_to_int(std::string s)
 	{
 		int i;
-		sscanf(s.c_str(),"%x",&i);
+		sscanf_s(s.c_str(),"%x",&i);
 		return i;
 	}
 	
@@ -78,7 +78,8 @@ namespace April
 
 	void Color::setColor(float a,float r,float g,float b)
 	{
-		this->a=a*255; this->r=r*255; this->g=g*255; this->b=b*255;
+		this->a=(unsigned char)a*255; this->r=(unsigned char)r*255;
+		this->g=(unsigned char)g*255; this->b=(unsigned char)b*255;
 	}
 
 	void Color::setColor(unsigned int color)
