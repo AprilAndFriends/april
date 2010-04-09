@@ -190,7 +190,8 @@ namespace April
 		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
 		void setIdleTextureUnloadTime(float time) { mIdleUnloadTime=time; }
 
-		void logMessage(std::string message);
+		void logMessage(std::string message,std::string prefix="[april] ");
+		void setLogFunction(void (*fnptr)(std::string));
 
 		virtual void setAlphaMultiplier(float value)=0;
 		float getAlphaMultiplier() { return mAlphaMultiplier; }
