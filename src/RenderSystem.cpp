@@ -28,7 +28,14 @@ http://www.gnu.org/copyleft/lesser.txt.
 April::RenderSystem* rendersys;
 
 namespace April
-{
+{	
+	void april_writelog(std::string message)
+	{
+		printf("%s\n",message.c_str());		
+	}
+	
+	void (*g_logFunction)(std::string)=april_writelog;
+	
 	int hexstr_to_int(std::string s)
 	{
 		int i;
@@ -240,9 +247,14 @@ namespace April
 		render(TriangleStrip,v,4,r,g,b,a);
 	}
 	
-	void RenderSystem::logMessage(std::string message)
+	void RenderSystem::logMessage(std::string message,std::string prefix)
 	{
-		printf("%s\n",message.c_str());
+		g_logFunction(prefix+message);
+	}
+	
+	void setLogFunction(void (*fnptr)(std::string))
+	{
+		g_logFunction=fnptr;
 	}
 	
 	void RenderSystem::registerUpdateCallback(bool (*callback)(float))
