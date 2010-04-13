@@ -85,8 +85,8 @@ namespace April
 
 	void Color::setColor(float a,float r,float g,float b)
 	{
-		this->a=(unsigned char)a*255; this->r=(unsigned char)r*255;
-		this->g=(unsigned char)g*255; this->b=(unsigned char)b*255;
+		this->a=(unsigned char)(a*255); this->r=(unsigned char)(r*255);
+		this->g=(unsigned char)(g*255); this->b=(unsigned char)(b*255);
 	}
 
 	void Color::setColor(unsigned int color)
