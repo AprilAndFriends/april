@@ -381,6 +381,18 @@ namespace April
 		return gtypes::Vector2(cursor_x,cursor_y);
 	}
 
+	void GLRenderSystem::showSystemCursor(bool b)
+	{
+		if (b) glutSetCursor(GLUT_CURSOR_INHERIT);
+		else   glutSetCursor(GLUT_CURSOR_NONE);
+	}
+	
+	bool GLRenderSystem::isSystemCursorShown()
+	{
+		int cursor=glutGet(GLUT_WINDOW_CURSOR);
+		return (cursor == GLUT_CURSOR_NONE) ? 0 : 1;
+	}
+
 	void GLRenderSystem::presentFrame()
 	{
 		glutSwapBuffers();
