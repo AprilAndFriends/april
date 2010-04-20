@@ -376,11 +376,9 @@ namespace April
 		glutSetWindowTitle(title.c_str());
 	}
 	
-	Vector GLRenderSystem::getCursorPos()
+	gtypes::Vector2 GLRenderSystem::getCursorPos()
 	{
-		Vector v;
-		v.x=cursor_x; v.y=cursor_y; v.z=0;
-		return v;
+		return gtypes::Vector2(cursor_x,cursor_y);
 	}
 
 	void GLRenderSystem::presentFrame()

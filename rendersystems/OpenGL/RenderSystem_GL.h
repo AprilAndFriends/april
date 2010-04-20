@@ -76,7 +76,7 @@ namespace April
 		void setAlphaMultiplier(float value);
 		
 		void setWindowTitle(std::string title);
-		Vector getCursorPos();
+		gtypes::Vector2 getCursorPos();
 
 		int getWindowWidth();
 		int getWindowHeight();
