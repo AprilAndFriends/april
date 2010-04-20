@@ -197,6 +197,8 @@ namespace April
 
 		virtual void setWindowTitle(std::string title)=0;
 		virtual gtypes::Vector2 getCursorPos()=0;
+		virtual void showSystemCursor(bool b)=0;
+		virtual bool isSystemCursorShown()=0;
 
 		virtual void presentFrame()=0;
 		virtual void enterMainLoop()=0;

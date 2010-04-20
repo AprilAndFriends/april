@@ -77,6 +77,8 @@ namespace April
 		
 		void setWindowTitle(std::string title);
 		gtypes::Vector2 getCursorPos();
+		void showSystemCursor(bool b);
+		bool isSystemCursorShown();
 
 		int getWindowWidth();
 		int getWindowHeight();
