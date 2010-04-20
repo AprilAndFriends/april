@@ -19,6 +19,8 @@
     <File Name="include/april/ImageSource.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
+  <Dependencies Name="Linux_Debug"/>
+  <Dependencies Name="Debug"/>
   <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
@@ -27,6 +29,8 @@
         <Preprocessor Value="_WIN32"/>
       </Compiler>
       <Linker Options="" Required="yes">
+        <LibraryPath Value="../gtypes/bin/Debug"/>
+        <Library Value="libgtypes_d"/>
         <Library Value="libOpenGL32"/>
         <Library Value="libglu32"/>
         <Library Value="libglut32"/>
@@ -61,6 +65,8 @@
         <Preprocessor Value="_UNIX"/>
       </Compiler>
       <Linker Options="" Required="yes">
+        <LibraryPath Value="../gtypes/bin/Linux_Debug"/>
+        <Library Value="libgtypes_d"/>
         <Library Value="libGL"/>
         <Library Value="libGLU"/>
         <Library Value="libglut"/>
@@ -120,9 +126,10 @@
     </Configuration>
     <GlobalSettings>
       <Compiler Options="">
-        <IncludePath Value="./include"/>
-        <IncludePath Value="./include/april"/>
-        <IncludePath Value="./rendersystems/OpenGL"/>
+        <IncludePath Value="include"/>
+        <IncludePath Value="include/april"/>
+        <IncludePath Value="rendersystems/OpenGL"/>
+        <IncludePath Value="../gtypes/include"/>
         <Preprocessor Value="APRIL_EXPORTS"/>
       </Compiler>
       <Linker Options="">
@@ -132,6 +139,4 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
-  <Dependencies Name="Linux_Debug"/>
-  <Dependencies Name="Debug"/>
 </CodeLite_Project>

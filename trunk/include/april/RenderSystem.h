@@ -23,6 +23,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <string>
 #include <vector>
+#include <gtypes/Vector2.h>
+#include <gtypes/Vector3.h>
 #include "AprilExport.h"
 
 namespace April
@@ -40,24 +42,18 @@ namespace April
 		LineLoop=6,
 	};
 	
-	class AprilExport Vector
-	{
-	public:
-		float x,y,z;
-	};
-	
-	class AprilExport TexturedVertex : public Vector
+	class AprilExport TexturedVertex : public gtypes::Vector3
 	{
 	public:
 		float u,v;
 	};
 
-	struct AprilExport PlainVertex : public Vector
+	struct AprilExport PlainVertex : public gtypes::Vector3
 	{
 	public:
 	};
 
-	struct AprilExport ColoredVertex : public Vector
+	struct AprilExport ColoredVertex : public gtypes::Vector3
 	{
 	public:
 		unsigned int color;
@@ -200,7 +196,7 @@ namespace April
 		virtual int getWindowHeight()=0;
 
 		virtual void setWindowTitle(std::string title)=0;
-		virtual Vector getCursorPos()=0;
+		virtual gtypes::Vector2 getCursorPos()=0;
 
 		virtual void presentFrame()=0;
 		virtual void enterMainLoop()=0;
