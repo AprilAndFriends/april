@@ -30,6 +30,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#include <gtypes/Vector2.h>
 
 namespace April
 {
