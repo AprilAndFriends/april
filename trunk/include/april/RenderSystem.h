@@ -23,9 +23,13 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <string>
 #include <vector>
-#include <gtypes/Vector2.h>
 #include <gtypes/Vector3.h>
 #include "AprilExport.h"
+
+namespace gtypes
+{
+	class Vector2;
+}
 
 namespace April
 {
