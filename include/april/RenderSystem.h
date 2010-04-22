@@ -209,10 +209,10 @@ namespace April
 		virtual void terminateMainLoop()=0;
 	};
 
-	void AprilExport init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title);
-	void AprilExport destroy();
+	AprilFnExport void init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title);
+	AprilFnExport void destroy();
 }
 // global rendersys shortcut variable
-extern AprilExport April::RenderSystem* rendersys;
+AprilFnExport extern April::RenderSystem* rendersys;
 
 #endif

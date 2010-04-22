@@ -16,11 +16,14 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 		#ifdef _WIN32
 			#ifdef APRIL_EXPORTS
 				#define AprilExport __declspec(dllexport)
+				#define AprilFnExport __declspec(dllexport)
 			#else
 				#define AprilExport __declspec(dllimport)
+				#define AprilFnExport __declspec(dllimport)
 			#endif
 		#else
 			#define AprilExport __attribute__ ((visibility("default")))
+			#define AprilFnExport
 		#endif
 	#endif
 

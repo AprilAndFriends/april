@@ -16,10 +16,10 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="$(ProjectDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			Name="win32_Debug|Win32"
+			OutputDirectory="$(ProjectDir)\bin\$(ConfigurationName)"
+			IntermediateDirectory="bin\$(ConfigurationName)"
+			ConfigurationType="2"
 			CharacterSet="2"
 			>
 			<Tool
@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../include;include/april;rendersystems/OpenGL;include"
-				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;_WIN32"
+				AdditionalIncludeDirectories="../include;include/april;rendersystems/OpenGL;include;../gtypes/include"
+				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;_WIN32;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -58,12 +58,16 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\$(ProjectName)_d.lib"
-				AdditionalLibraryDirectories="../lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="libgtypes_d.lib libatres_d.lib DevIL.lib"
+				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
+				AdditionalLibraryDirectories="..\lib;..\gtypes\bin\win32_Debug;..\atres\bin\win32_Debug"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -75,14 +79,17 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			Name="win32_Release|Win32"
+			OutputDirectory="$(SolutionDir)\bin\$(ConfigurationName)"
+			IntermediateDirectory="bin\$(ConfigurationName)"
+			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -105,7 +112,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="include/april;rendersystems/OpenGL;include"
+				AdditionalIncludeDirectories="../include;include/april;rendersystems/OpenGL;include;../gtypes/include"
 				PreprocessorDefinitions="APRIL_EXPORTS;_WIN32"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -122,11 +129,15 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\$(ProjectName)_d.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies="libgtypes.lib libatres.lib DevIL.lib"
+				AdditionalLibraryDirectories="..\lib;..\gtypes\bin\win32_Release;..\atres\bin\win32_Release"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -136,6 +147,9 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -184,12 +198,6 @@
 				RelativePath=".\include\april\RenderSystem.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
 		</Filter>
 	</Files>
 	<Globals>
