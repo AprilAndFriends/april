@@ -17,9 +17,9 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			Name="win32_Debug|Win32"
+			OutputDirectory="$(SolutionDir)\bin\$(ConfigurationName)"
+			IntermediateDirectory="..\..\bin\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_STATICLIB"
+				AdditionalIncludeDirectories="../../include;../../../gtypes/include;../../../include"
+				PreprocessorDefinitions="_WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libapril_d.lib DevIL.lib ILU.lib ILUT.lib"
+				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libapril_d.lib libgtypes_d.lib DevIL.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../lib;../../Debug"
+				AdditionalLibraryDirectories="../../bin/win32_Debug;../../../lib;../../../gtypes/bin/win32_Debug"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -91,9 +91,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			Name="win32_Release|Win32"
+			OutputDirectory="$(SolutionDir)\bin\$(ConfigurationName)"
+			IntermediateDirectory="..\..\bin\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -117,7 +117,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_STATICLIB"
+				AdditionalIncludeDirectories="../../include;../../../gtypes/include;../../../include"
+				PreprocessorDefinitions="_WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -135,9 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libapril.lib"
+				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libapril.lib libgtypes.lib DevIL.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../lib;../../Release"
+				AdditionalLibraryDirectories="../../bin/win32_Release;../../../lib;../../../gtypes/bin/win32_Release"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
