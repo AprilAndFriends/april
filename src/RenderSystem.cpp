@@ -9,10 +9,10 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 \************************************************************************************/
 #include <stdio.h>
 #include <algorithm>
+#include <IL/il.h>
 #include "RenderSystem.h"
 #include "RenderSystem_GL.h"
 #include "ImageSource.h"
-#include <IL/ilut.h>
 
 April::RenderSystem* rendersys;
 
@@ -275,7 +275,6 @@ namespace April
 	void init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title)
 	{
 		ilInit();
-	//	ilutRenderer(ILUT_OPENGL);
 		createGLRenderSystem(w,h,fullscreen,title);
 	}
 	
