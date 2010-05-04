@@ -51,6 +51,13 @@ namespace April
 		}
 		else throw "Color format must be either 0xAARRGGBB or 0xRRGGBB";
 	}
+/*****************************************************************************************/	
+	void PlainVertex::operator=(const gtypes::Vector3& v)
+	{
+		this->x=v.x;
+		this->y=v.y;
+		this->z=v.z;
+	}
 /*****************************************************************************************/
 	Color::Color(float a,float r,float g,float b)
 	{

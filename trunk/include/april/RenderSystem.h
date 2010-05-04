@@ -35,21 +35,22 @@ namespace April
 		LineLoop=6,
 	};
 	
-	class AprilExport TexturedVertex : public gtypes::Vector3
-	{
-	public:
-		float u,v;
-	};
-
 	struct AprilExport PlainVertex : public gtypes::Vector3
 	{
 	public:
+		void operator=(const gtypes::Vector3& v);
 	};
 
-	struct AprilExport ColoredVertex : public gtypes::Vector3
+	struct AprilExport ColoredVertex : public PlainVertex
 	{
 	public:
 		unsigned int color;
+	};
+
+	class AprilExport TexturedVertex : public PlainVertex
+	{
+	public:
+		float u,v;
 	};
 
 	enum BlendMode
