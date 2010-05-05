@@ -24,8 +24,6 @@
   <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
-        <IncludePath Value="."/>
-        <IncludePath Value="../include"/>
         <Preprocessor Value="_WIN32"/>
       </Compiler>
       <Linker Options="" Required="yes">
@@ -37,7 +35,7 @@
         <Library Value="libDevIL"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/libapril_d.dll" IntermediateDirectory="./bin/Debug" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)_d.dll" IntermediateDirectory="./bin/Debug" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
         <StartupCommands/>
@@ -100,9 +98,16 @@
         <IncludePath Value="."/>
         <Preprocessor Value="_WIN32"/>
       </Compiler>
-      <Linker Options="-O2" Required="yes"/>
+      <Linker Options="-O2" Required="yes">
+        <LibraryPath Value="../gtypes/bin/Release"/>
+        <Library Value="libgtypes"/>
+        <Library Value="libOpenGL32"/>
+        <Library Value="libglu32"/>
+        <Library Value="libglut32"/>
+        <Library Value="libDevIL"/>
+      </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/libatres.dll" IntermediateDirectory="./bin/Release" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName).dll" IntermediateDirectory="./bin/Release" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
         <StartupCommands/>
@@ -130,6 +135,7 @@
         <IncludePath Value="include/april"/>
         <IncludePath Value="rendersystems/OpenGL"/>
         <IncludePath Value="../gtypes/include"/>
+        <IncludePath Value="../include"/>
         <Preprocessor Value="APRIL_EXPORTS"/>
       </Compiler>
       <Linker Options="">
