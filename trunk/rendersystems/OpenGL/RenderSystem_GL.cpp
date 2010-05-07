@@ -157,13 +157,6 @@ namespace April
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		
-	#ifdef IPHONE_PLATFORM
-		setViewport(1152,768,0,0);
-	#else
-		
-	#endif
-		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
