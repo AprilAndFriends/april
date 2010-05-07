@@ -149,19 +149,6 @@ namespace April
 	}
 
 
-	void GLRenderSystem::setViewport(float w,float h,float x_offset,float y_offset)
-	{
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		
-		// iphone has inverted x & y due to landscape
-		float mat[]={2/w,0,0,0,  0,-2/h,0,0,  0,0,-2,0 ,-1-x_offset*2/w,1+y_offset*2/h,1,1}; // warning: matrix is transposed
-		glMultMatrixf(mat);
-
-		glMatrixMode(GL_MODELVIEW);
-
-	}
-
 	GLRenderSystem::GLRenderSystem(int w,int h) :
 		mTexCoordsEnabled(0), mColorEnabled(0)
 	{
@@ -245,34 +232,16 @@ namespace April
 		
 	}
 
-	void GLRenderSystem::setIdentityTransform()
+	void GLRenderSystem::_setModelviewMatrix(const gtypes::Matrix4& matrix)
 	{
-		glLoadIdentity();
+		glLoadMatrixf(matrix.mat);
 	}
 
-	void GLRenderSystem::translate(float x,float y)
+	void GLRenderSystem::_setProjectionMatrix(const gtypes::Matrix4& matrix)
 	{
-		glTranslatef(x,y,0);
-	}
-
-	void GLRenderSystem::rotate(float angle)
-	{
-		glRotatef(angle,0,0,1);
-	}
-
-	void GLRenderSystem::scale(float s)
-	{
-		glScalef(s,s,s);
-	}
-				  
-	void GLRenderSystem::pushTransform()
-	{
-		glPushMatrix();
-	}
-
-	void GLRenderSystem::popTransform()
-	{
-		glPopMatrix();
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(matrix.mat);
+		glMatrixMode(GL_MODELVIEW);
 	}
 
 	void GLRenderSystem::setBlendMode(BlendMode mode)

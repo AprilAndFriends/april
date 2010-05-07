@@ -32,6 +32,8 @@ namespace April
 	class GLRenderSystem : public RenderSystem
 	{
 		bool mTexCoordsEnabled,mColorEnabled;
+		void _setModelviewMatrix(const gtypes::Matrix4& matrix);
+		void _setProjectionMatrix(const gtypes::Matrix4& matrix);
 	public:
 		GLRenderSystem(int w,int h);
 		~GLRenderSystem();
@@ -42,17 +44,8 @@ namespace April
 		Texture* createTextureFromMemory(unsigned char* rgba,int w,int h);
 
 		// modelview matrix transformation
-		void setIdentityTransform();
-		void translate(float x,float y);
-		void rotate(float angle); // degrees!
-		void scale(float s);
-		void pushTransform();
-		void popTransform();
 		void setBlendMode(BlendMode mode);
 
-		// projection matrix transformation
-		void setViewport(float w,float h,float x_offset,float y_offset);
-		
 		// rendering
 		void clear(bool color,bool depth);
 		void setTexture(Texture* t);
