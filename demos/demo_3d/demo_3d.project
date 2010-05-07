@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CodeLite_Project Name="demo_simple" InternalType="Console">
+<CodeLite_Project Name="demo_3d" InternalType="Console">
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00010001N0011Linux_Debug000000000000]]>
@@ -8,7 +8,7 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
-    <File Name="demo_simple.cpp"/>
+    <File Name="demo_3d.cpp"/>
   </VirtualDirectory>
   <Dependencies Name="Release">
     <Project Name="libapril"/>

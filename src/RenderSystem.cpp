@@ -278,6 +278,75 @@ namespace April
 	{
 		return new RAMTexture(filename,dynamic);
 	}
+	
+	void RenderSystem::setIdentityTransform()
+	{
+		mModelviewMatrix.setIdentity();
+		_setModelviewMatrix(mModelviewMatrix);
+	}
+	
+	void RenderSystem::translate(float x,float y,float z)
+	{
+		mModelviewMatrix.translate(x,y,z);
+		_setModelviewMatrix(mModelviewMatrix);
+	}
+	
+	void RenderSystem::rotate(float angle,float ax,float ay,float az)
+	{
+		mModelviewMatrix.rotate(ax,ay,az,angle);
+		_setModelviewMatrix(mModelviewMatrix);
+	}
+	
+	void RenderSystem::scale(float s)
+	{
+		mModelviewMatrix.scale(s);
+		_setModelviewMatrix(mModelviewMatrix);
+	}
+	
+	void RenderSystem::scale(float sx,float sy,float sz)
+	{
+		mModelviewMatrix.scale(sx,sy,sz);
+		_setModelviewMatrix(mModelviewMatrix);
+	}
+	
+	void RenderSystem::lookAt(const gtypes::Vector3 &eye, const gtypes::Vector3 &direction, const gtypes::Vector3 &up)
+	{
+		mModelviewMatrix.lookAt(eye,direction,up);
+		_setModelviewMatrix(mModelviewMatrix);
+	}
+		
+	void RenderSystem::setOrthoProjection(float w,float h,float x_offset,float y_offset)
+	{
+		mProjectionMatrix.ortho(w,h,x_offset,y_offset);
+		_setProjectionMatrix(mProjectionMatrix);
+	}
+	
+	void RenderSystem::setPerspective(float fov, float aspect, float near, float far)
+	{
+		mProjectionMatrix.perspective(fov,aspect,near,far);
+		_setProjectionMatrix(mProjectionMatrix);
+	}
+	
+	void RenderSystem::setModelviewMatrix(const gtypes::Matrix4& matrix)
+	{
+		mModelviewMatrix=matrix;
+		_setModelviewMatrix(matrix);
+	}
+	void RenderSystem::setProjectionMatrix(const gtypes::Matrix4& matrix)
+	{
+		mProjectionMatrix=matrix;
+		_setProjectionMatrix(matrix);
+	}
+	
+	const gtypes::Matrix4& RenderSystem::getModelviewMatrix()
+	{
+		return mModelviewMatrix;
+	}
+	
+	const gtypes::Matrix4& RenderSystem::getProjectionMatrix()
+	{
+		return mProjectionMatrix;
+	}
 /*********************************************************************************/
 	void init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title)
 	{

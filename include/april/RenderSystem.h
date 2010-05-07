@@ -13,6 +13,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <string>
 #include <vector>
 #include <gtypes/Vector3.h>
+#include <gtypes/Matrix4.h>
 #include "AprilExport.h"
 
 namespace gtypes
@@ -142,7 +143,10 @@ namespace April
 		void (*mKeyDownCallback)(unsigned int,unsigned int);
 		void (*mKeyUpCallback)(unsigned int,unsigned int);
 		
-		
+		gtypes::Matrix4 mModelviewMatrix,mProjectionMatrix;
+
+		virtual void _setModelviewMatrix(const gtypes::Matrix4& matrix)=0;
+		virtual void _setProjectionMatrix(const gtypes::Matrix4& matrix)=0;
 	public:
 		virtual std::string getName()=0;
 
@@ -155,16 +159,25 @@ namespace April
 		virtual Texture* createTextureFromMemory(unsigned char* rgba,int w,int h)=0;
 
 		// modelview matrix transformation
-		virtual void setIdentityTransform()=0;
-		virtual void translate(float x,float y)=0;
-		virtual void rotate(float angle)=0; // degrees!
-		virtual void scale(float s)=0;
-		virtual void pushTransform()=0;
-		virtual void popTransform()=0;
+		void setIdentityTransform();
+		void translate(float x,float y,float z=0);
+		void rotate(float angle,float ax=0,float ay=0,float az=-1);
+		void scale(float s);
+		void scale(float sx,float sy,float sz);
+		// camera functions
+		void lookAt(const gtypes::Vector3 &eye, const gtypes::Vector3 &direction, const gtypes::Vector3 &up);
+		// projection matrix tronsformation
+		void setOrthoProjection(float w,float h,float x_offset=0,float y_offset=0);
+		void setPerspective(float fov, float aspect, float near, float far);
+		// rendersys matrix operations
+		void setModelviewMatrix(const gtypes::Matrix4& matrix);
+		void setProjectionMatrix(const gtypes::Matrix4& matrix);
+		
+		const gtypes::Matrix4& getModelviewMatrix();
+		const gtypes::Matrix4& getProjectionMatrix();
+		// render state
 		virtual void setBlendMode(BlendMode mode)=0;
 		
-		// projection matrix tronsformation
-		virtual void setViewport(float w,float h,float x_offset=0,float y_offset=0)=0;
 		
 		// rendering
 		virtual void clear(bool color=true,bool depth=false)=0;

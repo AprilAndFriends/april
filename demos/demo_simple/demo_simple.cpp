@@ -13,7 +13,7 @@ April::Texture* tex;
 
 bool render(float time_increase)
 {
-	rendersys->setViewport(800,600);
+	rendersys->setOrthoProjection(800,600);
 	rendersys->setTexture(tex);
 	
 	April::TexturedVertex v[4];
@@ -29,7 +29,7 @@ bool render(float time_increase)
 
 int main()
 {
-	April::init("OpenGL",800,600,0,"demo_simple");
+	April::init("OpenGL",800,600,0,"April: Simple Demo");
 	rendersys->registerUpdateCallback(render);
 
 	tex=rendersys->loadTexture("../media/texture.jpg");
