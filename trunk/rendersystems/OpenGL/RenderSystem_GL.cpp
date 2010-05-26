@@ -443,6 +443,7 @@ namespace April
 		hWnd = FindWindow("GLUT", title.c_str());
 		SetFocus(hWnd);
 #endif
+		if (fullscreen) glutFullScreen();
 		glEnable(GL_TEXTURE_2D);
 		glutDisplayFunc(gl_draw);
 		glutMouseFunc(mouse_click_handler);
