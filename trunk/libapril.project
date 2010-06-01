@@ -11,12 +11,14 @@
     <File Name="rendersystems/OpenGL/RenderSystem_GL.cpp"/>
     <File Name="src/RenderSystem.cpp"/>
     <File Name="src/ImageSource.cpp"/>
+    <File Name="rendersystems/DirectX9/RenderSystem_DirectX9.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.h"/>
     <File Name="include/april/RenderSystem.h"/>
     <File Name="include/april/AprilExport.h"/>
     <File Name="include/april/ImageSource.h"/>
+    <File Name="rendersystems/DirectX9/RenderSystem_DirectX9.h"/>
   </VirtualDirectory>
   <Dependencies Name="Linux_Debug"/>
   <Dependencies Name="Debug">
@@ -180,6 +182,7 @@
         <IncludePath Value="include"/>
         <IncludePath Value="include/april"/>
         <IncludePath Value="rendersystems/OpenGL"/>
+        <IncludePath Value="rendersystems/DirectX9"/>
         <IncludePath Value="../gtypes/include"/>
         <IncludePath Value="../include"/>
         <Preprocessor Value="APRIL_EXPORTS"/>

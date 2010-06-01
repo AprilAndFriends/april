@@ -170,7 +170,7 @@ namespace April
 
 	GLRenderSystem::~GLRenderSystem()
 	{
-
+		rendersys->logMessage("Destroying OpenGL RenderSystem");
 	}
 
 	std::string GLRenderSystem::getName()
@@ -469,10 +469,6 @@ namespace April
 		rendersys=new GLRenderSystem(w,h);
 	}
 
-	void destroyGLRenderSystem()
-	{
-		
-	}
 }
 
 #endif

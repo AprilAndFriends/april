@@ -77,8 +77,6 @@ namespace April
 	};
 
 	void createGLRenderSystem(int w,int h,bool fullscreen,std::string title);
-
-	void destroyGLRenderSystem();
 }
 #endif
 #endif
