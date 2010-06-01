@@ -11,7 +11,11 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <algorithm>
 #include <IL/il.h>
 #include "RenderSystem.h"
+#ifdef _OPENGL
 #include "RenderSystem_GL.h"
+#else
+#include "RenderSystem_DirectX9.h"
+#endif
 #include "ImageSource.h"
 
 April::RenderSystem* rendersys;
@@ -351,12 +355,16 @@ namespace April
 	void init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title)
 	{
 		ilInit();
-		createGLRenderSystem(w,h,fullscreen,title);
+		#ifdef _OPENGL
+			createGLRenderSystem(w,h,fullscreen,title);
+		#else
+			createDX9RenderSystem(w,h,fullscreen,title);
+		#endif
 	}
 	
 	void destroy()
 	{
-		destroyGLRenderSystem();
+		delete rendersys;
 	}
 
 }
