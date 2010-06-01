@@ -6,26 +6,33 @@
   <Project Name="libgtypes" Path="../gtypes/libgtypes.project" Active="No"/>
   <Project Name="demo_3d" Path="demos/demo_3d/demo_3d.project" Active="Yes"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="yes">
-      <Project Name="tictactoe" ConfigName="Debug"/>
-      <Project Name="libapril" ConfigName="Debug"/>
-      <Project Name="demo_simple" ConfigName="Debug"/>
-      <Project Name="libgtypes" ConfigName="Debug"/>
-      <Project Name="demo_3d" ConfigName="Debug"/>
-    </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="yes">
-      <Project Name="libapril" ConfigName="Release"/>
-      <Project Name="demo_simple" ConfigName="Release"/>
-      <Project Name="tictactoe" ConfigName="Release"/>
-      <Project Name="libgtypes" ConfigName="Release"/>
-      <Project Name="demo_3d" ConfigName="Release"/>
-    </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Linux_Debug" Selected="yes">
+    <WorkspaceConfiguration Name="Linux_Debug" Selected="no">
       <Project Name="tictactoe" ConfigName="Debug"/>
       <Project Name="libapril" ConfigName="Linux_Debug"/>
       <Project Name="demo_simple" ConfigName="Linux_Debug"/>
       <Project Name="libgtypes" ConfigName="Linux_Debug"/>
       <Project Name="demo_3d" ConfigName="Linux_Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="OpenGL_Debug" Selected="yes">
+      <Project Name="tictactoe" ConfigName="Debug"/>
+      <Project Name="libgtypes" ConfigName="Debug"/>
+      <Project Name="libapril" ConfigName="OpenGL_Debug"/>
+      <Project Name="demo_simple" ConfigName="Debug"/>
+      <Project Name="demo_3d" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="OpenGL_Release" Selected="no">
+      <Project Name="tictactoe" ConfigName="Release"/>
+      <Project Name="libgtypes" ConfigName="Release_Win32"/>
+      <Project Name="libapril" ConfigName="OpenGL_Release"/>
+      <Project Name="demo_simple" ConfigName="Release"/>
+      <Project Name="demo_3d" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="DirectX9_Debug" Selected="no">
+      <Project Name="tictactoe" ConfigName="Debug"/>
+      <Project Name="libgtypes" ConfigName="Debug"/>
+      <Project Name="libapril" ConfigName="DirectX_Debug"/>
+      <Project Name="demo_simple" ConfigName="Debug"/>
+      <Project Name="demo_3d" ConfigName="Debug"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

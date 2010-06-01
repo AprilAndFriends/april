@@ -8,6 +8,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 #ifndef RENDERSYSTEM_GL_H
+#ifdef _OPENGL
 #define RENDERSYSTEM_GL_H
 
 #include "RenderSystem.h"
@@ -79,4 +80,5 @@ namespace April
 
 	void destroyGLRenderSystem();
 }
+#endif
 #endif

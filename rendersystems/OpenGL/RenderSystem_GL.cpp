@@ -7,6 +7,8 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
+#ifdef _OPENGL
+
 #include "RenderSystem_GL.h"
 #include "ImageSource.h"
 #ifdef IPHONE_PLATFORM
@@ -473,3 +475,4 @@ namespace April
 	}
 }
 
+#endif
