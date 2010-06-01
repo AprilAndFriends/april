@@ -2,7 +2,7 @@
 <CodeLite_Project Name="demo_3d" InternalType="Console">
   <Plugins>
     <Plugin Name="qmake">
-      <![CDATA[00010001N0011Linux_Debug000000000000]]>
+      <![CDATA[00020001N0005Debug0000000000000001N0011Linux_Debug000000000000]]>
     </Plugin>
   </Plugins>
   <Description/>
@@ -24,12 +24,13 @@
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="" Required="yes">
-        <LibraryPath Value="../../bin/Debug"/>
+        <LibraryPath Value="../../bin/"/>
+        <LibraryPath Value="../../../gtypes/bin/Debug"/>
         <Library Value="libapril_d"/>
         <Library Value="libgtypes_d"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/Debug" Command="../../bin/Debug/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/$(ConfigurationName)" Command="../../bin/$(ConfigurationName)/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
         <StartupCommands/>
@@ -37,6 +38,7 @@
       <PreBuild/>
       <PostBuild>
         <Command Enabled="yes">copy ..\..\..\gtypes\bin\Debug\*.dll ..\..\bin\Debug</Command>
+        <Command Enabled="yes">copy ..\..\bin\libapril_d.dll ..\..\bin\Debug</Command>
       </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
