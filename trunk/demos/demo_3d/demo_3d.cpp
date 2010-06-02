@@ -35,7 +35,7 @@ bool render(float time_increase)
 
 int main()
 {
-	April::init("OpenGL",800,600,0,"April: 3D Demo");
+	April::init("April",800,600,0,"April: 3D Demo");
 	rendersys->registerUpdateCallback(render);
 
 	tex=rendersys->loadTexture("../media/texture.jpg");
