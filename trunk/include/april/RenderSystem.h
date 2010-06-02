@@ -194,7 +194,6 @@ namespace April
 		void setIdleTextureUnloadTime(float time) { mIdleUnloadTime=time; }
 
 		void logMessage(std::string message,std::string prefix="[april] ");
-		void setLogFunction(void (*fnptr)(std::string));
 
 		virtual void setAlphaMultiplier(float value)=0;
 		float getAlphaMultiplier() { return mAlphaMultiplier; }
@@ -223,6 +222,7 @@ namespace April
 		virtual void terminateMainLoop()=0;
 	};
 
+	AprilFnExport void setLogFunction(void (*fnptr)(std::string));
 	AprilFnExport void init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title);
 	AprilFnExport void destroy();
 }

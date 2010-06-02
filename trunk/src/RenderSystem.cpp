@@ -252,11 +252,6 @@ namespace April
 		g_logFunction(prefix+message);
 	}
 	
-	void setLogFunction(void (*fnptr)(std::string))
-	{
-		g_logFunction=fnptr;
-	}
-	
 	void RenderSystem::registerUpdateCallback(bool (*callback)(float))
 	{
 		mUpdateCallback=callback;
@@ -360,6 +355,11 @@ namespace April
 		#else
 			createDX9RenderSystem(w,h,fullscreen,title);
 		#endif
+	}
+	
+	void setLogFunction(void (*fnptr)(std::string))
+	{
+		g_logFunction=fnptr;
 	}
 	
 	void destroy()

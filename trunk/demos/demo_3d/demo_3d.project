@@ -19,6 +19,16 @@
     <Project Name="libapril"/>
   </Dependencies>
   <Settings Type="Executable">
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="../../include"/>
+        <IncludePath Value="../../../gtypes/include"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="../../lib"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
@@ -117,15 +127,5 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
-    <GlobalSettings>
-      <Compiler Options="">
-        <IncludePath Value="../../include"/>
-        <IncludePath Value="../../../gtypes/include"/>
-      </Compiler>
-      <Linker Options="">
-        <LibraryPath Value="../../lib"/>
-      </Linker>
-      <ResourceCompiler Options=""/>
-    </GlobalSettings>
   </Settings>
 </CodeLite_Project>

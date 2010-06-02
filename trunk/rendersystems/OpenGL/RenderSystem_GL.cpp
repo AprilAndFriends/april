@@ -25,6 +25,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace April
 {
+	extern void (*g_logFunction)(std::string);
 #ifdef _WIN32
 	HWND hWnd;
 #else
@@ -175,7 +176,7 @@ namespace April
 
 	std::string GLRenderSystem::getName()
 	{
-		return "OpenGL Render System";
+		return "OpenGL";
 	}
 
 	Texture* GLRenderSystem::loadTexture(std::string filename,bool dynamic)
@@ -432,6 +433,7 @@ namespace April
 
 	void createGLRenderSystem(int w,int h,bool fullscreen,std::string title)
 	{
+		g_logFunction("Creating OpenGL Rendersystem");
 		const char *argv[] = {"program"};
 		int argc=1;
 		glutInit(&argc,(char**) argv);
