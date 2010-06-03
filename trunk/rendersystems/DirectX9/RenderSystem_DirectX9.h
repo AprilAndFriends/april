@@ -15,21 +15,6 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace April
 {
-	class Directx9Texture : public Texture
-	{
-	public:
-		unsigned int mTexId;
-		
-		Directx9Texture(std::string filename,bool dynamic);
-		Directx9Texture(unsigned char* rgba,int w,int h);
-		~Directx9Texture();
-		
-		bool load();
-		void unload();
-		bool isLoaded();
-		int getSizeInBytes();
-	};
-
 	class DirectX9RenderSystem : public RenderSystem
 	{
 		bool mAppRunning;
