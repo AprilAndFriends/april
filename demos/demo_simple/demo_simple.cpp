@@ -26,6 +26,10 @@ bool render(float time_increase)
 	v[3].x=800; v[3].y=600; v[3].z=0; v[3].u=1; v[3].v=1;
 	
 	rendersys->render(April::TriangleStrip,v,4);
+	
+//	April::PlainVertex pv[3];
+//	pv[0].set(-1,0,0); pv[1].set(0,1,0); pv[2].set(1,0,0);
+//	rendersys->render(April::TriangleList,pv,3);
 	return true;
 }
 

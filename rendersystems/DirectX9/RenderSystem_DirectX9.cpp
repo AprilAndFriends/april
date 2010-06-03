@@ -14,73 +14,99 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <d3dx9.h>
 #include <gtypes/Vector2.h>
 
+#define PLAIN_FVF D3DFVF_XYZ
+#define COLORED_FVF D3DFVF_XYZ | D3DFVF_DIFFUSE
+#define TEX_FVF D3DFVF_XYZ | D3DFVF_TEX1
+
+
 namespace April
 {
 	IDirect3D9* d3d=0;
 	IDirect3DDevice9* d3dDevice=0;
 	HWND hWnd;
+	class DirectX9Texture;
+	DirectX9Texture* active_texture=0;
 
-	unsigned int platformLoadDirectx9Texture(const char* name,int* w,int* h)
+	D3DPRIMITIVETYPE dx9_render_ops[]=
 	{
-		unsigned int texid;
-		ImageSource* img=loadImage(name);
-		if (!img) return 0;
-		*w=img->w; *h=img->h;
+		D3DPT_FORCE_DWORD,
+		D3DPT_TRIANGLELIST,  // ROP_TRIANGLE_LIST
+		D3DPT_TRIANGLESTRIP, // ROP_TRIANGLE_STRIP
+		D3DPT_TRIANGLEFAN,   // ROP_TRIANGLE_FAN
+		D3DPT_LINELIST,      // ROP_LINE_LIST
+		D3DPT_LINESTRIP,     // ROP_LINE_STRIP
+	};
 
-		delete img;
-
-
-		return texid;
+	unsigned int numPrimitives(RenderOp rop,int nVertices)
+	{
+		if (rop == TriangleList)  return nVertices/3;
+		if (rop == TriangleStrip) return nVertices-2;
+		if (rop == TriangleFan)   return nVertices-1;
+		if (rop == LineList)      return nVertices/2;
+		if (rop == LineStrip)     return nVertices-1;
+		return 0;
 	}
 
-	Directx9Texture::Directx9Texture(std::string filename,bool dynamic)
+	class DirectX9Texture : public Texture
 	{
-		mFilename=filename;
-		mDynamic=dynamic;
-		mTexId=0; mWidth=mHeight=0;
-	}
-
-	Directx9Texture::Directx9Texture(unsigned char* rgba,int w,int h)
-	{
-		mWidth=w; mHeight=h;
-		mDynamic=0;
-		mFilename="UserTexture";
-	}
-
-	Directx9Texture::~Directx9Texture()
-	{
-		unload();
-	}
-
-	bool Directx9Texture::load()
-	{
-		mUnusedTimer=0;
-		if (mTexId) return 1;
-		rendersys->logMessage("loading DX9 texture '"+mFilename+"'");
-
-
-		return 1;
-	}
-
-	bool Directx9Texture::isLoaded()
-	{
-		return mTexId != 0;
-	}
-
-	void Directx9Texture::unload()
-	{
-		if (mTexId)
+	public:
+		IDirect3DTexture9* mTexture;
+		DirectX9Texture(std::string filename,bool dynamic)
 		{
-			rendersys->logMessage("unloading DX9 texture '"+mFilename+"'");
-
-			mTexId=0;
+			mFilename=filename;
+			mDynamic=dynamic;
+			mTexture=0;
+			if (mDynamic)
+			{
+				mWidth=mHeight=0;
+			}
+			else
+			{
+				load();
+			}
 		}
-	}
 
-	int Directx9Texture::getSizeInBytes()
-	{
-		return mWidth*mHeight*3;
-	}
+		DirectX9Texture(unsigned char* rgba,int w,int h)
+		{
+			mWidth=w; mHeight=h;
+			mDynamic=0;
+			mFilename="UserTexture";
+		}
+
+		~DirectX9Texture()
+		{
+			unload();
+		}
+
+		bool load()
+		{
+			mUnusedTimer=0;
+			if (mTexture) return 1;
+			rendersys->logMessage("loading DX9 texture '"+mFilename+"'");
+			HRESULT hr=D3DXCreateTextureFromFile(d3dDevice,mFilename.c_str(),&mTexture);
+			if (hr != D3D_OK) rendersys->logMessage("Failed to load DX9 texture!");
+			return 1;
+		}
+
+		bool isLoaded()
+		{
+			return mTexture != 0 || mFilename == "UserTexture";
+		}
+
+		void unload()
+		{
+			if (mTexture)
+			{
+				rendersys->logMessage("unloading DX9 texture '"+mFilename+"'");
+				mTexture->Release();
+			}
+		}
+
+		int getSizeInBytes()
+		{
+			return mWidth*mHeight*3;
+		}
+	};
 /**********************************************************************************************/
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -143,6 +169,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dpp.hDeviceWindow = hWnd;
 		HRESULT hr=d3d->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,hWnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING,&d3dpp,&d3dDevice);
 		if (hr != D3D_OK) throw "Unable to create Direct3D Device!";
+		// device config
+		d3dDevice->SetRenderState(D3DRS_LIGHTING,false);
+		d3dDevice->SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
+		d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+		d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+
+
 	}
 	DirectX9RenderSystem::~DirectX9RenderSystem()
 	{
@@ -162,7 +195,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		if (mDynamicLoading) dynamic=1;
 		if (dynamic) rendersys->logMessage("creating dynamic DX9 texture '"+filename+"'");
-		Directx9Texture* t=new Directx9Texture(filename,dynamic);
+		DirectX9Texture* t=new DirectX9Texture(filename,dynamic);
 		if (!dynamic)
 		{
 			if (!t->load())
@@ -176,16 +209,18 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	Texture* DirectX9RenderSystem::createTextureFromMemory(unsigned char* rgba,int w,int h)
 	{
-		
 		rendersys->logMessage("creating user-defined DX9 texture");
-		Directx9Texture* t=new Directx9Texture(rgba,w,h);
+		DirectX9Texture* t=new DirectX9Texture(rgba,w,h);
 		return t;
-
 	}
 
 	void DirectX9RenderSystem::setTexture(Texture* t)
 	{
-
+		active_texture=(DirectX9Texture*) t;
+		if (active_texture)
+			d3dDevice->SetTexture(0,active_texture->mTexture);
+		else
+			d3dDevice->SetTexture(0,0);
 	}
 
 	void DirectX9RenderSystem::clear(bool color,bool depth)
@@ -199,12 +234,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void DirectX9RenderSystem::_setModelviewMatrix(const gtypes::Matrix4& matrix)
 	{
-
+		d3dDevice->SetTransform(D3DTS_VIEW,(D3DMATRIX*) matrix.mat);
 	}
 
 	void DirectX9RenderSystem::_setProjectionMatrix(const gtypes::Matrix4& matrix)
 	{
-		
+		d3dDevice->SetTransform(D3DTS_PROJECTION,(D3DMATRIX*) matrix.mat);
 	}
 
 	void DirectX9RenderSystem::setBlendMode(BlendMode mode)
@@ -213,24 +248,35 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void DirectX9RenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices)
 	{
-
-
+		d3dDevice->SetFVF(TEX_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(TexturedVertex));
 	}
 
 	void DirectX9RenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)
 	{
-		int i;
-		i=0;
+		
 	}
 
+	ColoredVertex static_cv[100];
 	void DirectX9RenderSystem::render(RenderOp renderOp,PlainVertex* v,int nVertices)
 	{
-	
+		ColoredVertex* cv=(nVertices <= 100) ? static_cv : new ColoredVertex[nVertices];
+		ColoredVertex* p=cv;
+		for (int i=0;i<nVertices;i++,p++,v++)
+		{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=0xFFFFFFFF; }
+		render(renderOp,cv,nVertices);
+		if (nVertices > 100) delete [] cv;
 	}
 
 	void DirectX9RenderSystem::render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a)
 	{
-
+		DWORD color=D3DCOLOR_ARGB((int) (a*255.0f),(int) (r*255.0f),(int) (g*255.0f),(int) (b*255.0f));
+		ColoredVertex* cv=(nVertices <= 100) ? static_cv : new ColoredVertex[nVertices];
+		ColoredVertex* p=cv;
+		for (int i=0;i<nVertices;i++,p++,v++)
+		{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=color; }
+		render(renderOp,cv,nVertices);
+		if (nVertices > 100) delete [] cv;
 	}
 	
 	int DirectX9RenderSystem::getWindowWidth()
@@ -245,7 +291,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void DirectX9RenderSystem::render(RenderOp renderOp,ColoredVertex* v,int nVertices)
 	{
-
+			if (active_texture) setTexture(0);
+		d3dDevice->SetFVF(COLORED_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(ColoredVertex));
 	}
 
 	void DirectX9RenderSystem::setAlphaMultiplier(float value)
