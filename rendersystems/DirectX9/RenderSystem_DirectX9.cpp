@@ -84,7 +84,10 @@ namespace April
 			if (mTexture) return 1;
 			rendersys->logMessage("loading DX9 texture '"+mFilename+"'");
 			HRESULT hr=D3DXCreateTextureFromFile(d3dDevice,mFilename.c_str(),&mTexture);
-			if (hr != D3D_OK) rendersys->logMessage("Failed to load DX9 texture!");
+			if (hr != D3D_OK) { rendersys->logMessage("Failed to load DX9 texture!"); return 0; }
+			D3DSURFACE_DESC desc;
+			mTexture->GetLevelDesc(0,&desc);
+			mWidth=desc.Width; mHeight=desc.Height;
 			return 1;
 		}
 
@@ -170,10 +173,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		HRESULT hr=d3d->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,hWnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING,&d3dpp,&d3dDevice);
 		if (hr != D3D_OK) throw "Unable to create Direct3D Device!";
 		// device config
-		d3dDevice->SetRenderState(D3DRS_LIGHTING,false);
+		d3dDevice->SetRenderState(D3DRS_LIGHTING,0);
 		d3dDevice->SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
+		d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,1);
 		d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 		d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+		d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 
 	}
@@ -218,7 +224,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		active_texture=(DirectX9Texture*) t;
 		if (active_texture)
+		{
+			if (active_texture->mTexture == 0 && active_texture->isDynamic())
+				active_texture->load();
+			active_texture->_resetUnusedTimer();
 			d3dDevice->SetTexture(0,active_texture->mTexture);
+		}
 		else
 			d3dDevice->SetTexture(0,0);
 	}
@@ -254,7 +265,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void DirectX9RenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)
 	{
-		
+		d3dDevice->SetFVF(TEX_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(TexturedVertex));		
 	}
 
 	ColoredVertex static_cv[100];
@@ -319,7 +331,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	
 	bool DirectX9RenderSystem::isSystemCursorShown()
 	{
-
+		return 0;
 	}
 
 	void DirectX9RenderSystem::presentFrame()
