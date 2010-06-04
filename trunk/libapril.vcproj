@@ -16,7 +16,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="win32_Debug|Win32"
+			Name="win32_OpenGL_Debug|Win32"
 			OutputDirectory="bin\$(ConfigurationName)"
 			IntermediateDirectory="bin\$(ConfigurationName)"
 			ConfigurationType="2"
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../win32/include;../include;include/april;rendersystems/OpenGL;include;../gtypes/include"
-				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;_WIN32;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;_WIN32;_CRT_SECURE_NO_WARNINGS;_OPENGL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -60,9 +60,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libgtypes_d.lib DevIL.lib"
+				AdditionalDependencies="libgtypes_d.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="..\lib;..\win32\lib;..\gtypes\bin\win32_Debug"
+				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\gtypes\bin\win32_Debug"
+				GenerateDebugInformation="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -84,10 +85,11 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril_d.lib $(ProjectDir)\bin"
 			/>
 		</Configuration>
 		<Configuration
-			Name="win32_Release|Win32"
+			Name="win32_OpenGL_Release|Win32"
 			OutputDirectory="bin\$(ConfigurationName)"
 			IntermediateDirectory="bin\$(ConfigurationName)"
 			ConfigurationType="2"
@@ -132,8 +134,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libgtypes.lib DevIL.lib"
-				AdditionalLibraryDirectories="..\lib;..\win32\lib;..\gtypes\bin\win32_Release"
+				AdditionalDependencies="libgtypes.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib"
+				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\gtypes\bin\win32_Release"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -155,6 +157,152 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril.lib $(ProjectDir)\bin"
+			/>
+		</Configuration>
+		<Configuration
+			Name="win32_DirectX9_Debug|Win32"
+			OutputDirectory="bin\$(ConfigurationName)"
+			IntermediateDirectory="bin\$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../gtypes/include"
+				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;_WIN32;_CRT_SECURE_NO_WARNINGS;_DIRECTX9"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4251"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libgtypes_d.lib d3d9.lib d3dx9.lib DevIL.lib"
+				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
+				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\gtypes\bin\win32_Debug"
+				GenerateDebugInformation="true"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril_d.lib $(ProjectDir)\bin"
+			/>
+		</Configuration>
+		<Configuration
+			Name="win32_DirectX9_Release|Win32"
+			OutputDirectory="bin\$(ConfigurationName)"
+			IntermediateDirectory="bin\$(ConfigurationName)"
+			ConfigurationType="2"
+			CharacterSet="2"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="../win32/include;../include;include/april;rendersystems/OpenGL;include;../gtypes/include"
+				PreprocessorDefinitions="APRIL_EXPORTS;_WIN32;_DIRECTX9"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4251"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libgtypes.lib DevIL.lib"
+				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\gtypes\bin\win32_Release"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril.lib $(ProjectDir)\bin"
 			/>
 		</Configuration>
 	</Configurations>
@@ -172,6 +320,10 @@
 			</File>
 			<File
 				RelativePath=".\src\RenderSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\rendersystems\DirectX9\RenderSystem_DirectX9.cpp"
 				>
 			</File>
 			<File
@@ -198,6 +350,10 @@
 			</File>
 			<File
 				RelativePath=".\include\april\RenderSystem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\rendersystems\DirectX9\RenderSystem_DirectX9.h"
 				>
 			</File>
 		</Filter>
