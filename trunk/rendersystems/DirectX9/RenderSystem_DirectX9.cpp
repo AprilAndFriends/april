@@ -29,6 +29,7 @@ namespace April
 	class DirectX9Texture;
 	DirectX9Texture* active_texture=0;
 	gtypes::Vector2 cursorpos;
+	bool cursor_visible=1;
 
 	D3DPRIMITIVETYPE dx9_render_ops[]=
 	{
@@ -174,14 +175,24 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 							  "april_d3d_window",    // name of the window class
 							  title.c_str(),   // title of the window
 							  WS_OVERLAPPEDWINDOW,    // window style
-							  300,    // x-position of the window
-							  300,    // y-position of the window
-							  800,    // width of the window
-							  600,    // height of the window
+							  (GetSystemMetrics(SM_CXSCREEN)-w)/2,    // x-position of the window
+							  (GetSystemMetrics(SM_CYSCREEN)-h)/2,    // y-position of the window
+							  w,    // width of the window
+							  h,    // height of the window
 							  NULL,    // we have no parent window, NULL
 							  NULL,    // we aren't using menus, NULL
 							  hinst,    // application handle
 							  NULL);    // used with multiple windows, NULL
+
+		RECT rcClient, rcWindow;
+		POINT ptDiff;
+		GetClientRect(hWnd, &rcClient);
+		GetWindowRect(hWnd, &rcWindow);
+		ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
+		ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
+		MoveWindow(hWnd,rcWindow.left, rcWindow.top, w + ptDiff.x, h + ptDiff.y, TRUE);
+
+
 
 		// display the window on the screen
 		ShowWindow(hWnd, 1);
@@ -283,14 +294,19 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void DirectX9RenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices)
 	{
-		d3dDevice->SetFVF(TEX_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(TexturedVertex));
+		if (mAlphaMultiplier == 1.0f)
+		{
+			d3dDevice->SetFVF(TEX_FVF);
+			d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(TexturedVertex));
+		}
+		else
+			render(renderOp,v,nVertices,1,1,1,1);
 	}
 
 	ColoredTexturedVertex static_ctv[100];
 	void DirectX9RenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)
 	{
-		DWORD color=D3DCOLOR_ARGB((int) (a*255.0f),(int) (r*255.0f),(int) (g*255.0f),(int) (b*255.0f));
+		DWORD color=D3DCOLOR_ARGB((int) (a*mAlphaMultiplier*255.0f),(int) (r*255.0f),(int) (g*255.0f),(int) (b*255.0f));
 		ColoredTexturedVertex* cv=(nVertices <= 100) ? static_ctv : new ColoredTexturedVertex[nVertices];
 		ColoredTexturedVertex* p=cv;
 		for (int i=0;i<nVertices;i++,p++,v++)
@@ -305,15 +321,16 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		ColoredVertex* cv=(nVertices <= 100) ? static_cv : new ColoredVertex[nVertices];
 		ColoredVertex* p=cv;
+		DWORD color=D3DCOLOR_ARGB((int) (mAlphaMultiplier*255),255,255,255);
 		for (int i=0;i<nVertices;i++,p++,v++)
-		{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=0xFFFFFFFF; }
+		{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=color; }
 		render(renderOp,cv,nVertices);
 		if (nVertices > 100) delete [] cv;
 	}
 
 	void DirectX9RenderSystem::render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a)
 	{
-		DWORD color=D3DCOLOR_ARGB((int) (a*255.0f),(int) (r*255.0f),(int) (g*255.0f),(int) (b*255.0f));
+		DWORD color=D3DCOLOR_ARGB((int) (a*mAlphaMultiplier*255.0f),(int) (r*255.0f),(int) (g*255.0f),(int) (b*255.0f));
 		ColoredVertex* cv=(nVertices <= 100) ? static_cv : new ColoredVertex[nVertices];
 		ColoredVertex* p=cv;
 		for (int i=0;i<nVertices;i++,p++,v++)
@@ -324,30 +341,47 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	
 	int DirectX9RenderSystem::getWindowWidth()
 	{
-		return 800;
+		RECT rc;
+		GetClientRect(hWnd, &rc);
+		return rc.right-rc.left;
 	}
 	
 	int DirectX9RenderSystem::getWindowHeight()
 	{
-		return 600;
+		RECT rc;
+		GetClientRect(hWnd, &rc);
+		return rc.bottom-rc.top;
 	}
 
 	void DirectX9RenderSystem::render(RenderOp renderOp,ColoredVertex* v,int nVertices)
 	{
-			if (active_texture) setTexture(0);
+		if (active_texture) setTexture(0);
 		d3dDevice->SetFVF(COLORED_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(ColoredVertex));
+		if (mAlphaMultiplier)
+		{
+			
+			d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(ColoredVertex));
+		}
+		else
+		{
+			DWORD a=((int) (mAlphaMultiplier*255)) << 24;
+			ColoredVertex* cv=(nVertices <= 100) ? static_cv : new ColoredVertex[nVertices];
+			ColoredVertex* p=cv;
+			for (int i=0;i<nVertices;i++,p++,v++)
+			{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=(v->color & 0xFFFFFF) | a; }
+			d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),cv,sizeof(ColoredVertex));
+			if (nVertices > 100) delete [] cv;
+		}
 	}
 
 	void DirectX9RenderSystem::setAlphaMultiplier(float value)
 	{
 		mAlphaMultiplier=value;
-	//	glColor4f(1,1,1,value);
 	}
 
 	void DirectX9RenderSystem::setWindowTitle(std::string title)
 	{
-
+		SetWindowText(hWnd,title.c_str());
 	}
 	
 	gtypes::Vector2 DirectX9RenderSystem::getCursorPos()
@@ -358,12 +392,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void DirectX9RenderSystem::showSystemCursor(bool b)
 	{
-
+		ShowCursor(b);
+		cursor_visible=b;
 	}
 	
 	bool DirectX9RenderSystem::isSystemCursorShown()
 	{
-		return 0;
+		return cursor_visible;
 	}
 
 	void DirectX9RenderSystem::presentFrame()
