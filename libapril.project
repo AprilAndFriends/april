@@ -19,6 +19,7 @@
     <File Name="include/april/AprilExport.h"/>
     <File Name="include/april/ImageSource.h"/>
     <File Name="rendersystems/DirectX9/RenderSystem_DirectX9.h"/>
+    <File Name="include/april/Keys.h"/>
   </VirtualDirectory>
   <Dependencies Name="Linux_Debug"/>
   <Dependencies Name="Debug">

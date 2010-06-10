@@ -17,6 +17,8 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #define PLAIN_FVF D3DFVF_XYZ
 #define COLORED_FVF D3DFVF_XYZ | D3DFVF_DIFFUSE
 #define TEX_FVF D3DFVF_XYZ | D3DFVF_TEX1
+#define TEX_COLOR_FVF D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE
+
 
 
 namespace April
@@ -103,6 +105,7 @@ namespace April
 			{
 				rendersys->logMessage("unloading DX9 texture '"+mFilename+"'");
 				mTexture->Release();
+				mTexture=0;
 			}
 		}
 
@@ -125,7 +128,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_KEYDOWN:
 			dx9rs->triggerKeyEvent(1,wParam);
 			break;
-		case WM_KEYUP:
+		case WM_KEYUP: 
 			dx9rs->triggerKeyEvent(0,wParam);
 			break;
 		case WM_CHAR:
@@ -202,6 +205,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	}
 	DirectX9RenderSystem::~DirectX9RenderSystem()
 	{
@@ -283,10 +287,17 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(TexturedVertex));
 	}
 
+	ColoredTexturedVertex static_ctv[100];
 	void DirectX9RenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)
 	{
-		d3dDevice->SetFVF(TEX_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(TexturedVertex));		
+		DWORD color=D3DCOLOR_ARGB((int) (a*255.0f),(int) (r*255.0f),(int) (g*255.0f),(int) (b*255.0f));
+		ColoredTexturedVertex* cv=(nVertices <= 100) ? static_ctv : new ColoredTexturedVertex[nVertices];
+		ColoredTexturedVertex* p=cv;
+		for (int i=0;i<nVertices;i++,p++,v++)
+		{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=color; p->u=v->u; p->v=v->v; }
+		d3dDevice->SetFVF(TEX_COLOR_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),cv,sizeof(ColoredTexturedVertex));
+		if (nVertices > 100) delete [] cv;
 	}
 
 	ColoredVertex static_cv[100];
@@ -368,9 +379,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	void DirectX9RenderSystem::triggerKeyEvent(bool down,unsigned int keycode)
 	{
 		if (down)
-			if (mKeyDownCallback) mKeyDownCallback(keycode);
+		{ if (mKeyDownCallback) mKeyDownCallback(keycode); }
 		else
-			if (mKeyUpCallback) mKeyUpCallback(keycode);
+		{ if (mKeyUpCallback) mKeyUpCallback(keycode); }
 	}
 	
 	void DirectX9RenderSystem::triggerCharEvent(unsigned int chr)
@@ -404,7 +415,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			GetCursorPos(&w32_cursorpos);
 			ScreenToClient(hWnd,&w32_cursorpos);
 			cursorpos.set(w32_cursorpos.x,w32_cursorpos.y);
-				
+
 			if (PeekMessage(&msg,hWnd,0,0,PM_REMOVE))
 			{
 				TranslateMessage(&msg);
