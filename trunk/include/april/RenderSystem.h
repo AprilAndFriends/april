@@ -53,6 +53,13 @@ namespace April
 		float u,v;
 	};
 
+	class AprilExport ColoredTexturedVertex : public PlainVertex
+	{
+	public:
+		unsigned int color;
+		float u,v;
+	};
+
 	enum BlendMode
 	{
 		ALPHA_BLEND,
