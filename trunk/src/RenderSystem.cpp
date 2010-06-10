@@ -227,6 +227,7 @@ namespace April
 		mMouseMoveCallback=0;
 		mKeyDownCallback=0;
 		mKeyUpCallback=0;
+		mCharCallback=0;
 		mDynamicLoading=0;
 		mIdleUnloadTime=0;
 	}
@@ -266,11 +267,13 @@ namespace April
 			mMouseMoveCallback=mouse_move;
 			
 	}
-	void RenderSystem::registerKeyboardCallbacks(void (*key_dn)(unsigned int,unsigned int),
-								                 void (*key_up)(unsigned int,unsigned int))
+	void RenderSystem::registerKeyboardCallbacks(void (*key_dn)(unsigned int),
+								                 void (*key_up)(unsigned int),
+												 void (*char_callback)(unsigned int))
 	{
 		mKeyDownCallback=key_dn;
 		mKeyUpCallback=key_up;
+		mCharCallback=char_callback;
 	}
 	
 	Texture* RenderSystem::loadRAMTexture(std::string filename,bool dynamic)

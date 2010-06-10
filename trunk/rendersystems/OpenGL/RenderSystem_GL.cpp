@@ -369,10 +369,10 @@ namespace April
 		return 1;
 	}
 	
-	bool GLRenderSystem::triggerKeyEvent(bool down,unsigned int keycode,unsigned int charcode)
+	bool GLRenderSystem::triggerKeyEvent(bool down,unsigned int keycode)
 	{
-		if (down) { if (mKeyDownCallback) mKeyDownCallback(keycode,charcode); }
-		else      { if (mKeyUpCallback)   mKeyUpCallback(keycode,charcode); }
+		if (down) { if (mKeyDownCallback) mKeyDownCallback(keycode); }
+		else      { if (mKeyUpCallback)   mKeyUpCallback(keycode); }
 		return 1;
 	}
 	
@@ -389,7 +389,7 @@ namespace April
 
 	void keyboard_up_handler(unsigned char key, int x, int y)
 	{
-		((GLRenderSystem*) rendersys)->triggerKeyEvent(0,key,key);
+		((GLRenderSystem*) rendersys)->triggerKeyEvent(0,key);
 	}
 
 	void keyboard_handler(unsigned char key, int x, int y)
@@ -398,12 +398,12 @@ namespace April
 		{
 			rendersys->terminateMainLoop();
 		}
-		((GLRenderSystem*) rendersys)->triggerKeyEvent(1,key,key);
+		((GLRenderSystem*) rendersys)->triggerKeyEvent(1,key);
 	}
 
 	void special_handler(int key, int x, int y)
 	{
-		((GLRenderSystem*) rendersys)->triggerKeyEvent(1,key,key);
+		((GLRenderSystem*) rendersys)->triggerKeyEvent(1,key);
 	}
 
 	void mouse_click_handler(int button, int state, int x,int y)

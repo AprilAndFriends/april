@@ -26,6 +26,7 @@ namespace April
 	HWND hWnd;
 	class DirectX9Texture;
 	DirectX9Texture* active_texture=0;
+	gtypes::Vector2 cursorpos;
 
 	D3DPRIMITIVETYPE dx9_render_ops[]=
 	{
@@ -113,6 +114,7 @@ namespace April
 /**********************************************************************************************/
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	DirectX9RenderSystem *dx9rs=(DirectX9RenderSystem*) rendersys;
     switch(message)
     {
         case WM_DESTROY:
@@ -120,6 +122,26 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			rendersys->terminateMainLoop();
 			return 0;
 			break;
+		case WM_KEYDOWN:
+			dx9rs->triggerKeyEvent(1,wParam);
+			break;
+		case WM_KEYUP:
+			dx9rs->triggerKeyEvent(0,wParam);
+			break;
+		case WM_CHAR:
+			dx9rs->triggerCharEvent(wParam);
+			break;
+		case WM_LBUTTONDOWN:
+			dx9rs->triggerMouseDownEvent(0);break;
+		case WM_RBUTTONDOWN:
+			dx9rs->triggerMouseDownEvent(1);break;
+		case WM_LBUTTONUP:
+			dx9rs->triggerMouseUpEvent(0);break;
+		case WM_RBUTTONUP:
+			dx9rs->triggerMouseUpEvent(1);break;
+		case WM_MOUSEMOVE:
+			dx9rs->triggerMouseMoveEvent();break;
+		
     }
     return DefWindowProc(hWnd, message, wParam, lParam);
 } 
@@ -180,8 +202,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
-
 	}
 	DirectX9RenderSystem::~DirectX9RenderSystem()
 	{
@@ -321,7 +341,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	
 	gtypes::Vector2 DirectX9RenderSystem::getCursorPos()
 	{
-		return gtypes::Vector2(0,0);
+		
+		return gtypes::Vector2(cursorpos.x,cursorpos.y);
 	}
 
 	void DirectX9RenderSystem::showSystemCursor(bool b)
@@ -344,18 +365,52 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		mAppRunning=0;
 	}
 	
+	void DirectX9RenderSystem::triggerKeyEvent(bool down,unsigned int keycode)
+	{
+		if (down)
+			if (mKeyDownCallback) mKeyDownCallback(keycode);
+		else
+			if (mKeyUpCallback) mKeyUpCallback(keycode);
+	}
+	
+	void DirectX9RenderSystem::triggerCharEvent(unsigned int chr)
+	{
+		if (mCharCallback) mCharCallback(chr);
+	}
+	
+	void DirectX9RenderSystem::triggerMouseUpEvent(int button)
+	{
+		if (mMouseUpCallback) mMouseUpCallback(cursorpos.x,cursorpos.y,button);
+	}
+	
+	void DirectX9RenderSystem::triggerMouseDownEvent(int button)
+	{
+		if (mMouseDownCallback) mMouseDownCallback(cursorpos.x,cursorpos.y,button);
+	}
+	
+	void DirectX9RenderSystem::triggerMouseMoveEvent()
+	{
+		if (mMouseMoveCallback) mMouseMoveCallback(cursorpos.x,cursorpos.y);
+	}
+	
 	void DirectX9RenderSystem::enterMainLoop()
 	{
 		MSG msg;
 		DWORD time=GetTickCount(),t;
+		POINT w32_cursorpos;
 		while (mAppRunning)
 		{
+			// mouse position
+			GetCursorPos(&w32_cursorpos);
+			ScreenToClient(hWnd,&w32_cursorpos);
+			cursorpos.set(w32_cursorpos.x,w32_cursorpos.y);
+				
 			if (PeekMessage(&msg,hWnd,0,0,PM_REMOVE))
 			{
-			//	GetMessage(&msg, NULL, 0, 0));
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
+			// rendering
 			d3dDevice->BeginScene();
 			
 			t=GetTickCount();

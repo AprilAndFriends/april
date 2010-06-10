@@ -54,6 +54,12 @@ namespace April
 		
 		void presentFrame();
 		
+		void triggerKeyEvent(bool down,unsigned int keycode);
+		void triggerCharEvent(unsigned int chr);
+	
+		void triggerMouseUpEvent(int button);
+		void triggerMouseDownEvent(int button);
+		void triggerMouseMoveEvent();
 		
 		void enterMainLoop();
 		void terminateMainLoop();
