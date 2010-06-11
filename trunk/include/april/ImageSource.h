@@ -27,6 +27,7 @@ namespace April
 		
 		Color getPixel(int x,int y);
 		Color getInterpolatedPixel(float x,float y);
+		void copyPixels(void* output,int format);
 		
 		unsigned char* data;
 		int w,h,bpp,format;

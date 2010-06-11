@@ -11,7 +11,8 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 #include "RenderSystem_DirectX9.h"
 #include "ImageSource.h"
-#include <d3dx9.h>
+#include <d3d9.h>
+#include <IL/il.h>
 #include <gtypes/Vector2.h>
 
 #define PLAIN_FVF D3DFVF_XYZ
@@ -87,11 +88,19 @@ namespace April
 			mUnusedTimer=0;
 			if (mTexture) return 1;
 			rendersys->logMessage("loading DX9 texture '"+mFilename+"'");
-			HRESULT hr=D3DXCreateTextureFromFile(d3dDevice,mFilename.c_str(),&mTexture);
-			if (hr != D3D_OK) { rendersys->logMessage("Failed to load DX9 texture!"); return 0; }
-			D3DSURFACE_DESC desc;
-			mTexture->GetLevelDesc(0,&desc);
-			mWidth=desc.Width; mHeight=desc.Height;
+			ImageSource* img=loadImage(mFilename);
+			if (!img) { rendersys->logMessage("Failed to load texture '"+mFilename+"'!"); return 0; }
+			mWidth=img->w; mHeight=img->h;
+			HRESULT hr=d3dDevice->CreateTexture(mWidth,mHeight,1,0,(img->bpp == 3) ? D3DFMT_X8R8G8B8 : D3DFMT_A8R8G8B8,D3DPOOL_MANAGED,&mTexture,0);
+			if (hr != D3D_OK) { rendersys->logMessage("Failed to load DX9 texture!"); delete img; return 0; }
+			// write texels
+			D3DLOCKED_RECT rect;
+			mTexture->LockRect(0,&rect,NULL,D3DLOCK_DISCARD);
+			img->copyPixels(rect.pBits,IL_BGRA);
+			//memcpy(rect.pBits,img->data,mWidth*mHeight*img->bpp);
+			mTexture->UnlockRect(0);
+
+			delete img;
 			return 1;
 		}
 

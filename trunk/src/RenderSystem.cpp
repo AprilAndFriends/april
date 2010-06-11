@@ -367,6 +367,7 @@ namespace April
 	
 	void destroy()
 	{
+		
 		delete rendersys;
 	}
 

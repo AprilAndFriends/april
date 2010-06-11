@@ -55,6 +55,11 @@ namespace April
 		return getPixel((int)x,(int)y);
 	}
 	
+	void ImageSource::copyPixels(void* output,int format)
+	{
+		ilCopyPixels(0,0,0,w,h,1,format,IL_UNSIGNED_BYTE,output);
+	}
+	
 	ImageSource* loadImage(std::string filename)
 	{
 		ImageSource* img=new ImageSource();
