@@ -43,7 +43,6 @@
         <Library Value="libgtypes_d"/>
         <Library Value="libDevIL"/>
         <Library Value="d3d9"/>
-        <Library Value="d3dx9"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)_d.dll" IntermediateDirectory="bin/$(ConfigurationName)" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
