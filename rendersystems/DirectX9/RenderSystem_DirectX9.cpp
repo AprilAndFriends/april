@@ -127,6 +127,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			return 0;
 			break;
 		case WM_KEYDOWN:
+		    if (wParam == VK_ESCAPE) { rendersys->terminateMainLoop(); return 0; }
 			dx9rs->triggerKeyEvent(1,wParam);
 			break;
 		case WM_KEYUP: 
@@ -148,7 +149,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		
     }
     return DefWindowProc(hWnd, message, wParam, lParam);
-} 
+}
 /**********************************************************************************************/
 	DirectX9RenderSystem::DirectX9RenderSystem(int w,int h,bool fullscreen,std::string title) :
 		mTexCoordsEnabled(0), mColorEnabled(0)
@@ -190,7 +191,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		GetWindowRect(hWnd, &rcWindow);
 		ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
 		ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
-		MoveWindow(hWnd,rcWindow.left, rcWindow.top, w + ptDiff.x, h + ptDiff.y, TRUE);
+		if (!fullscreen)
+			MoveWindow(hWnd,rcWindow.left, rcWindow.top, w + ptDiff.x, h + ptDiff.y, TRUE);
 
 
 
@@ -203,7 +205,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		D3DPRESENT_PARAMETERS d3dpp;
 
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
-		d3dpp.Windowed = 1;
+		d3dpp.Windowed = !fullscreen;
+		d3dpp.BackBufferWidth   = w;
+		d3dpp.BackBufferHeight  = h;
+		d3dpp.BackBufferFormat  = D3DFMT_X8R8G8B8;
+
 		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 		d3dpp.hDeviceWindow = hWnd;
 		HRESULT hr=d3d->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,hWnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING,&d3dpp,&d3dDevice);
@@ -290,6 +296,14 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void DirectX9RenderSystem::setBlendMode(BlendMode mode)
 	{
+		if (mode == ALPHA_BLEND || mode == DEFAULT)
+		{
+			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_INVSRCALPHA);
+		}
+		else if (mode == ADD)
+		{
+			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+		}
 	}
 
 	void DirectX9RenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices)
@@ -359,7 +373,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dDevice->SetFVF(COLORED_FVF);
 		if (mAlphaMultiplier)
 		{
-			
 			d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(ColoredVertex));
 		}
 		else
@@ -446,7 +459,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		POINT w32_cursorpos;
 		while (mAppRunning)
 		{
-			// mouse position
+			// mouse positio
 			GetCursorPos(&w32_cursorpos);
 			ScreenToClient(hWnd,&w32_cursorpos);
 			cursorpos.set(w32_cursorpos.x,w32_cursorpos.y);
