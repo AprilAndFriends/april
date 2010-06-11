@@ -10,6 +10,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #ifdef _OPENGL
 
 #include "RenderSystem_GL.h"
+#include "Keys.h"
 #include "ImageSource.h"
 #ifdef IPHONE_PLATFORM
 #include <OpenGLES/ES1/gl.h>
@@ -371,6 +372,9 @@ namespace April
 	
 	bool GLRenderSystem::triggerKeyEvent(bool down,unsigned int keycode)
 	{
+		if (keycode == 9) keycode=AK_TAB;
+		else if (keycode >= 1 && keycode <= 12) keycode+=0x6F; // function keys
+		
 		if (down) { if (mKeyDownCallback) mKeyDownCallback(keycode); }
 		else      { if (mKeyUpCallback)   mKeyUpCallback(keycode); }
 		return 1;
@@ -382,7 +386,7 @@ namespace April
 		else if (event == 1) { if (mMouseUpCallback)   mMouseUpCallback(x,y,button); }
 		else                 { if (mMouseMoveCallback) mMouseMoveCallback(x,y); }
 		return 1;
-	}
+	}		
 
 
 /***************************************************/
