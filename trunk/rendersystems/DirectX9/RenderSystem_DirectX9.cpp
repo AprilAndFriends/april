@@ -31,6 +31,7 @@ namespace April
 	DirectX9Texture* active_texture=0;
 	gtypes::Vector2 cursorpos;
 	bool cursor_visible=1;
+	D3DPRESENT_PARAMETERS d3dpp;
 
 	D3DPRIMITIVETYPE dx9_render_ops[]=
 	{
@@ -180,39 +181,28 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		wc.lpszClassName = "april_d3d_window";
 
 		RegisterClassEx(&wc);
+		float x=(fullscreen) ? 0 : (GetSystemMetrics(SM_CXSCREEN)-w)/2,
+			  y=(fullscreen) ? 0 : (GetSystemMetrics(SM_CYSCREEN)-w)/2;
+		
+		hWnd = CreateWindowEx(NULL,"april_d3d_window",title.c_str(),WS_OVERLAPPEDWINDOW,x,y,w,h,NULL,NULL,hinst,NULL);
 
-		hWnd = CreateWindowEx(NULL,
-							  "april_d3d_window",    // name of the window class
-							  title.c_str(),   // title of the window
-							  WS_OVERLAPPEDWINDOW,    // window style
-							  (GetSystemMetrics(SM_CXSCREEN)-w)/2,    // x-position of the window
-							  (GetSystemMetrics(SM_CYSCREEN)-h)/2,    // y-position of the window
-							  w,    // width of the window
-							  h,    // height of the window
-							  NULL,    // we have no parent window, NULL
-							  NULL,    // we aren't using menus, NULL
-							  hinst,    // application handle
-							  NULL);    // used with multiple windows, NULL
-
-		RECT rcClient, rcWindow;
-		POINT ptDiff;
-		GetClientRect(hWnd, &rcClient);
-		GetWindowRect(hWnd, &rcWindow);
-		ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
-		ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
 		if (!fullscreen)
+		{
+			RECT rcClient, rcWindow;
+			POINT ptDiff;
+			GetClientRect(hWnd, &rcClient);
+			GetWindowRect(hWnd, &rcWindow);
+			ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
+			ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
 			MoveWindow(hWnd,rcWindow.left, rcWindow.top, w + ptDiff.x, h + ptDiff.y, TRUE);
-
-
-
+		}
+ 
 		// display the window on the screen
 		ShowWindow(hWnd, 1);
 		// DIRECT3D
 		d3d=Direct3DCreate9(D3D_SDK_VERSION);
 		if (!d3d) throw "Unable to create Direct3D9 object!";
 		
-		D3DPRESENT_PARAMETERS d3dpp;
-
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !fullscreen;
 		d3dpp.BackBufferWidth   = w;
@@ -224,6 +214,14 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		HRESULT hr=d3d->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,hWnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING,&d3dpp,&d3dDevice);
 		if (hr != D3D_OK) throw "Unable to create Direct3D Device!";
 		// device config
+		configureDevice();
+		clear(1,0);
+		presentFrame();
+	}
+	
+	void DirectX9RenderSystem::configureDevice()
+	{
+		// calls on init and device reset
 		d3dDevice->SetRenderState(D3DRS_LIGHTING,0);
 		d3dDevice->SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
 		d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,1);
@@ -233,6 +231,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	}
+	
 	DirectX9RenderSystem::~DirectX9RenderSystem()
 	{
 		logMessage("Destroying DirectX9 Rendersystem");
@@ -425,7 +424,39 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void DirectX9RenderSystem::presentFrame()
 	{
-		d3dDevice->Present(NULL, NULL, NULL, NULL);
+		HRESULT hr=d3dDevice->Present(NULL, NULL, NULL, NULL);
+		if (hr == D3DERR_DEVICELOST)
+		{
+			MSG msg;
+			int i;
+			logMessage("Direct3D9 Device lost, attempting to restore...");
+			while (mAppRunning)
+			{
+				for (i=0;i<10;i++)
+				{
+					if (PeekMessage(&msg,hWnd,0,0,PM_REMOVE))
+					{
+						TranslateMessage(&msg);
+						DispatchMessage(&msg);
+					}
+					Sleep(100);
+				}
+				hr=d3dDevice->TestCooperativeLevel();
+				if (hr == D3D_OK) break;
+				if (hr == D3DERR_DEVICENOTRESET)
+				{
+					hr=d3dDevice->Reset(&d3dpp);
+					if (hr == D3D_OK) break;
+					else
+						logMessage("Failed to reset device!");
+				}
+			}
+			_setModelviewMatrix(mModelviewMatrix);
+			_setProjectionMatrix(mProjectionMatrix);
+			configureDevice();
+			logMessage("Direct3D9 Device restored");
+		}
+		
 	}
 	
 	void DirectX9RenderSystem::terminateMainLoop()
@@ -466,6 +497,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		MSG msg;
 		DWORD time=GetTickCount(),t;
 		POINT w32_cursorpos;
+		float k;
 		while (mAppRunning)
 		{
 			// mouse positio
@@ -482,7 +514,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			d3dDevice->BeginScene();
 			
 			t=GetTickCount();
-			if (mUpdateCallback) mUpdateCallback((t-time)/1000.0f);
+			k=(t-time)/1000.0f;
+			if (k > 0.5f) k=0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
+			if (mUpdateCallback) mUpdateCallback(k);
 			time=t;
 			
 			d3dDevice->EndScene();
