@@ -25,6 +25,7 @@ namespace April
 		DirectX9RenderSystem(int w,int h,bool fullscreen,std::string title);
 		~DirectX9RenderSystem();
 		std::string getName();
+		void configureDevice();
 		
 		// object creation
 		Texture* loadTexture(std::string filename,bool dynamic);
