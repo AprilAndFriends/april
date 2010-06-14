@@ -21,6 +21,7 @@ namespace April
 		bool mTexCoordsEnabled,mColorEnabled;
 		void _setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void _setProjectionMatrix(const gtypes::Matrix4& matrix);
+		std::string mTitle;
 	public:
 		DirectX9RenderSystem(int w,int h,bool fullscreen,std::string title);
 		~DirectX9RenderSystem();
