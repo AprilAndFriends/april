@@ -233,8 +233,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dpp.BackBufferWidth   = w;
 		d3dpp.BackBufferHeight  = h;
 		d3dpp.BackBufferFormat  = D3DFMT_X8R8G8B8;
+		d3dpp.PresentationInterval=D3DPRESENT_INTERVAL_ONE;
 
-		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+		d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 		d3dpp.hDeviceWindow = hWnd;
 		HRESULT hr=d3d->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,hWnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING,&d3dpp,&d3dDevice);
 		if (hr != D3D_OK) throw "Unable to create Direct3D Device!";
