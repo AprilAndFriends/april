@@ -37,6 +37,7 @@
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="_WIN32"/>
         <Preprocessor Value="_DIRECTX9"/>
+        <Preprocessor Value="_DEBUG"/>
       </Compiler>
       <Linker Options="" Required="yes">
         <LibraryPath Value="../gtypes/bin/Debug"/>
@@ -148,6 +149,7 @@
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="_WIN32"/>
         <Preprocessor Value="_OPENGL"/>
+        <Preprocessor Value="_DEBUG"/>
       </Compiler>
       <Linker Options="" Required="yes">
         <LibraryPath Value="../gtypes/bin/Debug"/>

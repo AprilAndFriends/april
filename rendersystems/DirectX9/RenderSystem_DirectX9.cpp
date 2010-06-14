@@ -32,6 +32,9 @@ namespace April
 	gtypes::Vector2 cursorpos;
 	bool cursor_visible=1;
 	D3DPRESENT_PARAMETERS d3dpp;
+#ifdef _DEBUG
+	char fpstitle[1024]=" [FPS:0]";
+#endif
 
 	D3DPRIMITIVETYPE dx9_render_ops[]=
 	{
@@ -77,6 +80,27 @@ namespace April
 			mWidth=w; mHeight=h;
 			mDynamic=0;
 			mFilename="UserTexture";
+			mUnusedTimer=0;
+
+			rendersys->logMessage("Creating user-defined DX9 texture");
+			HRESULT hr=d3dDevice->CreateTexture(mWidth,mHeight,1,0,D3DFMT_A8R8G8B8,D3DPOOL_MANAGED,&mTexture,0);
+			if (hr != D3D_OK) { rendersys->logMessage("Failed to create user-defined DX9 texture!"); return; }
+			// write texels
+			D3DLOCKED_RECT rect;
+			mTexture->LockRect(0,&rect,NULL,D3DLOCK_DISCARD);
+			int x,y;
+			unsigned char* p=(unsigned char*) rect.pBits;
+			for (y=0;y<h;y++)
+			{
+				for (x=0;x<w;x++,p+=4,rgba+=4)
+				{
+					p[0]=rgba[2];
+					p[1]=rgba[1];
+					p[2]=rgba[0];
+					p[3]=rgba[3];
+				}
+			}
+			mTexture->UnlockRect(0);
 		}
 
 		~DirectX9Texture()
@@ -167,8 +191,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		logMessage("Creating DirectX9 Rendersystem");
 		mAppRunning=1;
 		// WINDOW
+		mTitle=title;
 		WNDCLASSEX wc;
-
 		ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
 		HINSTANCE hinst=GetModuleHandle(0);
@@ -179,12 +203,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
 		wc.lpszClassName = "april_d3d_window";
+		wc.hIcon=(HICON) LoadImage(0,"game.ico",IMAGE_ICON,0,0,LR_LOADFROMFILE);
 
 		RegisterClassEx(&wc);
 		float x=(fullscreen) ? 0 : (GetSystemMetrics(SM_CXSCREEN)-w)/2,
-			  y=(fullscreen) ? 0 : (GetSystemMetrics(SM_CYSCREEN)-w)/2;
+			  y=(fullscreen) ? 0 : (GetSystemMetrics(SM_CYSCREEN)-h)/2;
 		
-		hWnd = CreateWindowEx(NULL,"april_d3d_window",title.c_str(),WS_OVERLAPPEDWINDOW,x,y,w,h,NULL,NULL,hinst,NULL);
+		hWnd = CreateWindowEx(NULL,"april_d3d_window",title.c_str(),WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,x,y,w,h,NULL,NULL,hinst,NULL);
 
 		if (!fullscreen)
 		{
@@ -402,8 +427,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void DirectX9RenderSystem::setWindowTitle(std::string title)
 	{
+		mTitle=title;
+#ifdef _DEBUG
+		SetWindowText(hWnd,(title+fpstitle).c_str());
+#else
 		SetWindowText(hWnd,title.c_str());
-	}
+#endif
+}
 	
 	gtypes::Vector2 DirectX9RenderSystem::getCursorPos()
 	{
@@ -496,6 +526,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		MSG msg;
 		DWORD time=GetTickCount(),t;
+#ifdef _DEBUG
+		static DWORD fpsTimer=GetTickCount(),fps=0;
+#endif
 		POINT w32_cursorpos;
 		float k;
 		while (mAppRunning)
@@ -519,7 +552,18 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (mUpdateCallback) mUpdateCallback(k);
 			time=t;
 			
+#ifdef _DEBUG
+			if (time-fpsTimer > 1000)
+			{
+				sprintf(fpstitle," [FPS: %d]",fps);
+				setWindowTitle(mTitle);
+				fps=0;
+				fpsTimer=time;
+			}
+			else fps++;
+#endif			
 			d3dDevice->EndScene();
+
 
 			presentFrame();
 		}
