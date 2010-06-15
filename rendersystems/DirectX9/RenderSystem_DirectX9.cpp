@@ -11,9 +11,10 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 #include "RenderSystem_DirectX9.h"
 #include "ImageSource.h"
-#include <d3d9.h>
+#include "Keys.h"
 #include <IL/il.h>
 #include <gtypes/Vector2.h>
+#include <d3d9.h>
 
 #define PLAIN_FVF D3DFVF_XYZ
 #define COLORED_FVF D3DFVF_XYZ | D3DFVF_DIFFUSE
@@ -171,13 +172,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			dx9rs->triggerCharEvent(wParam);
 			break;
 		case WM_LBUTTONDOWN:
-			dx9rs->triggerMouseDownEvent(0);break;
+			dx9rs->triggerMouseDownEvent(AK_LBUTTON);break;
 		case WM_RBUTTONDOWN:
-			dx9rs->triggerMouseDownEvent(1);break;
+			dx9rs->triggerMouseDownEvent(AK_RBUTTON);break;
 		case WM_LBUTTONUP:
-			dx9rs->triggerMouseUpEvent(0);break;
+			dx9rs->triggerMouseUpEvent(AK_LBUTTON);break;
 		case WM_RBUTTONUP:
-			dx9rs->triggerMouseUpEvent(1);break;
+			dx9rs->triggerMouseUpEvent(AK_RBUTTON);break;
 		case WM_MOUSEMOVE:
 			dx9rs->triggerMouseMoveEvent();break;
 		

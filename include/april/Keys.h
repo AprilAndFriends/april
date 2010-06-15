@@ -1,8 +1,8 @@
 #ifndef APRIL_KEYS
 #define APRIL_KEYS
 
-#define AK_LBUTTON	1
-#define AK_RBUTTON	2
+#define AK_LBUTTON	0
+#define AK_RBUTTON	1
 #define AK_CANCEL	3
 #define AK_MBUTTON	4
 #define AK_XBUTTON1	5
