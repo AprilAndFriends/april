@@ -204,6 +204,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
 		wc.lpszClassName = "april_d3d_window";
 		wc.hIcon=(HICON) LoadImage(0,"game.ico",IMAGE_ICON,0,0,LR_LOADFROMFILE);
+		wc.hbrBackground=(HBRUSH)GetStockObject(BLACK_BRUSH);
 
 		RegisterClassEx(&wc);
 		float x=(fullscreen) ? 0 : (GetSystemMetrics(SM_CXSCREEN)-w)/2,
@@ -224,6 +225,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
  
 		// display the window on the screen
 		ShowWindow(hWnd, 1);
+		UpdateWindow(hWnd);
 		// DIRECT3D
 		d3d=Direct3DCreate9(D3D_SDK_VERSION);
 		if (!d3d) throw "Unable to create Direct3D9 object!";
