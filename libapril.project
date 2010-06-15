@@ -41,6 +41,7 @@
       </Compiler>
       <Linker Options="" Required="yes">
         <LibraryPath Value="../gtypes/bin/Debug"/>
+        <Library Value="gdi32"/>
         <Library Value="libgtypes_d"/>
         <Library Value="libDevIL"/>
         <Library Value="d3d9"/>
