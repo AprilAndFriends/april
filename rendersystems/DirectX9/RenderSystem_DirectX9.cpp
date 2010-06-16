@@ -33,7 +33,7 @@ namespace April
 	gtypes::Vector2 cursorpos;
 	bool cursor_visible=1;
 	D3DPRESENT_PARAMETERS d3dpp;
-	bool window_active=1;
+	bool window_active=1,wnd_fullscreen=0;
 	
 #ifdef _DEBUG
 	char fpstitle[1024]=" [FPS:0]";
@@ -183,20 +183,29 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			dx9rs->triggerCharEvent(wParam);
 			break;
 		case WM_LBUTTONDOWN:
-			dx9rs->triggerMouseDownEvent(AK_LBUTTON);break;
+			dx9rs->triggerMouseDownEvent(AK_LBUTTON);
+			if (!wnd_fullscreen) SetCapture(hWnd);
+			break;
 		case WM_RBUTTONDOWN:
-			dx9rs->triggerMouseDownEvent(AK_RBUTTON);break;
+			dx9rs->triggerMouseDownEvent(AK_RBUTTON);
+			if (!wnd_fullscreen) SetCapture(hWnd);
+			break;
 		case WM_LBUTTONUP:
-			dx9rs->triggerMouseUpEvent(AK_LBUTTON);break;
+			dx9rs->triggerMouseUpEvent(AK_LBUTTON);
+			if (!wnd_fullscreen) ReleaseCapture();
+			break;
 		case WM_RBUTTONUP:
-			dx9rs->triggerMouseUpEvent(AK_RBUTTON);break;
+			dx9rs->triggerMouseUpEvent(AK_RBUTTON);
+			if (!wnd_fullscreen) ReleaseCapture();
+			break;
 		case WM_MOUSEMOVE:
 			dx9rs->triggerMouseMoveEvent();break;
+		case WM_SETCURSOR:
+			return 1;
 		case WM_ACTIVATE:
 			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
 			{
 				window_active=1;
-				SetCapture(hWnd);
 				rendersys->logMessage("Window activated");
 			}
 			else
@@ -214,6 +223,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		logMessage("Creating DirectX9 Rendersystem");
 		mAppRunning=1;
+		wnd_fullscreen=fullscreen;
 		// WINDOW
 		mTitle=title;
 		WNDCLASSEX wc;
@@ -250,7 +260,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		// display the window on the screen
 		ShowWindow(hWnd, 1);
 		UpdateWindow(hWnd);
-		SetCapture(hWnd);
+		
 		SetCursor(LoadCursor(0,IDC_ARROW));
 		// DIRECT3D
 		d3d=Direct3DCreate9(D3D_SDK_VERSION);
@@ -472,7 +482,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void DirectX9RenderSystem::showSystemCursor(bool b)
 	{
-		ShowCursor(b);
+		if (b) SetCursor(LoadCursor(0,IDC_ARROW));
+		else   SetCursor(0);
 		cursor_visible=b;
 	}
 	
@@ -557,6 +568,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	void DirectX9RenderSystem::enterMainLoop()
 	{
 		DWORD time=GetTickCount(),t;
+		bool cvisible=cursor_visible;
 #ifdef _DEBUG
 		static DWORD fpsTimer=GetTickCount(),fps=0;
 #endif
@@ -564,13 +576,24 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		float k;
 		while (mAppRunning)
 		{
-			// mouse positio
+			// mouse position
 			GetCursorPos(&w32_cursorpos);
 			ScreenToClient(hWnd,&w32_cursorpos);
 			cursorpos.set(w32_cursorpos.x,w32_cursorpos.y);
-
+			if (!cursor_visible && !wnd_fullscreen)
+			{
+				if (cursorpos.y < 0)
+				{
+					if (!cvisible) { cvisible=1; SetCursor(LoadCursor(0,IDC_ARROW)); }
+				}
+				else
+				{
+					if (cvisible) { cvisible=0; SetCursor(0); }
+				}
+			}
 			doWindowEvents();
 			t=GetTickCount();
+
 			if (t == time) continue; // don't redraw frames which won't change
 			k=(t-time)/1000.0f;
 			if (k > 0.5f) k=0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
