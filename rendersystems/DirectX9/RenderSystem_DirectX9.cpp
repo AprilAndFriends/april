@@ -33,6 +33,8 @@ namespace April
 	gtypes::Vector2 cursorpos;
 	bool cursor_visible=1;
 	D3DPRESENT_PARAMETERS d3dpp;
+	bool window_active=1;
+	
 #ifdef _DEBUG
 	char fpstitle[1024]=" [FPS:0]";
 #endif
@@ -46,7 +48,16 @@ namespace April
 		D3DPT_LINELIST,      // ROP_LINE_LIST
 		D3DPT_LINESTRIP,     // ROP_LINE_STRIP
 	};
-
+	
+	void doWindowEvents()
+	{
+		MSG msg;
+		if (PeekMessage(&msg,hWnd,0,0,PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
 	unsigned int numPrimitives(RenderOp rop,int nVertices)
 	{
 		if (rop == TriangleList)  return nVertices/3;
@@ -181,7 +192,19 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			dx9rs->triggerMouseUpEvent(AK_RBUTTON);break;
 		case WM_MOUSEMOVE:
 			dx9rs->triggerMouseMoveEvent();break;
-		
+		case WM_ACTIVATE:
+			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
+			{
+				window_active=1;
+				SetCapture(hWnd);
+				rendersys->logMessage("Window activated");
+			}
+			else
+			{
+				window_active=0;
+				rendersys->logMessage("Window deactivated");
+			}
+			break;
     }
     return DefWindowProc(hWnd, message, wParam, lParam);
 }
@@ -227,6 +250,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		// display the window on the screen
 		ShowWindow(hWnd, 1);
 		UpdateWindow(hWnd);
+		SetCapture(hWnd);
+		SetCursor(LoadCursor(0,IDC_ARROW));
 		// DIRECT3D
 		d3d=Direct3DCreate9(D3D_SDK_VERSION);
 		if (!d3d) throw "Unable to create Direct3D9 object!";
@@ -461,18 +486,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		HRESULT hr=d3dDevice->Present(NULL, NULL, NULL, NULL);
 		if (hr == D3DERR_DEVICELOST)
 		{
-			MSG msg;
 			int i;
 			logMessage("Direct3D9 Device lost, attempting to restore...");
 			while (mAppRunning)
 			{
 				for (i=0;i<10;i++)
 				{
-					if (PeekMessage(&msg,hWnd,0,0,PM_REMOVE))
-					{
-						TranslateMessage(&msg);
-						DispatchMessage(&msg);
-					}
+					doWindowEvents();
 					Sleep(100);
 				}
 				hr=d3dDevice->TestCooperativeLevel();
@@ -490,7 +510,15 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			configureDevice();
 			logMessage("Direct3D9 Device restored");
 		}
-		
+		else if (hr == D3DERR_WASSTILLDRAWING)
+		{
+			for (int i=0;i<10;i++)
+			{
+				Sleep(1);
+				hr=d3dDevice->Present(NULL, NULL, NULL, NULL);
+				if (hr == D3D_OK) break;
+			}
+		}
 	}
 	
 	void DirectX9RenderSystem::terminateMainLoop()
@@ -528,7 +556,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	
 	void DirectX9RenderSystem::enterMainLoop()
 	{
-		MSG msg;
 		DWORD time=GetTickCount(),t;
 #ifdef _DEBUG
 		static DWORD fpsTimer=GetTickCount(),fps=0;
@@ -542,19 +569,24 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			ScreenToClient(hWnd,&w32_cursorpos);
 			cursorpos.set(w32_cursorpos.x,w32_cursorpos.y);
 
-			if (PeekMessage(&msg,hWnd,0,0,PM_REMOVE))
+			doWindowEvents();
+			t=GetTickCount();
+			if (t == time) continue; // don't redraw frames which won't change
+			k=(t-time)/1000.0f;
+			if (k > 0.5f) k=0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
+			time=t;
+			if (!window_active)
 			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+				k=0;
+				for (int i=0;i<5;i++)
+				{
+					doWindowEvents();
+					Sleep(40);
+				}
 			}
 			// rendering
 			d3dDevice->BeginScene();
-			
-			t=GetTickCount();
-			k=(t-time)/1000.0f;
-			if (k > 0.5f) k=0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
 			if (mUpdateCallback) mUpdateCallback(k);
-			time=t;
 			
 #ifdef _DEBUG
 			if (time-fpsTimer > 1000)
