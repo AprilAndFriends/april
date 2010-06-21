@@ -85,7 +85,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril_d.lib $(ProjectDir)\bin"
+				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril_d.lib $(ProjectDir)\bin&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -157,7 +157,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril.lib $(ProjectDir)\bin"
+				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril.lib $(ProjectDir)\bin&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -205,7 +205,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libgtypes_d.lib d3d9.lib d3dx9.lib DevIL.lib"
+				AdditionalDependencies="libgtypes_d.lib d3d9.lib DevIL.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\gtypes\bin\win32_Debug"
 				GenerateDebugInformation="true"
@@ -230,7 +230,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril_d.lib $(ProjectDir)\bin"
+				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril_d.lib $(ProjectDir)\bin&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -260,7 +260,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../win32/include;../include;include/april;rendersystems/OpenGL;include;../gtypes/include"
+				AdditionalIncludeDirectories="../win32/include;../include;include/april;rendersystems/OpenGL;include;../gtypes/include;rendersystems/DirectX9"
 				PreprocessorDefinitions="APRIL_EXPORTS;_WIN32;_DIRECTX9"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -279,7 +279,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libgtypes.lib DevIL.lib"
+				AdditionalDependencies="libgtypes.lib d3d9.lib DevIL.lib"
 				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\gtypes\bin\win32_Release"
 			/>
 			<Tool
@@ -302,7 +302,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril.lib $(ProjectDir)\bin"
+				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril.lib $(ProjectDir)\bin&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
