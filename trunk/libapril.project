@@ -29,7 +29,27 @@
   <Dependencies Name="DirectX_Debug">
     <Project Name="libgtypes"/>
   </Dependencies>
+  <Dependencies Name="OpenGL_Debug">
+    <Project Name="libgtypes"/>
+  </Dependencies>
   <Settings Type="Dynamic Library">
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="include"/>
+        <IncludePath Value="include/april"/>
+        <IncludePath Value="rendersystems/OpenGL"/>
+        <IncludePath Value="rendersystems/DirectX9"/>
+        <IncludePath Value="../hltypes/include"/>
+        <IncludePath Value="../gtypes/include"/>
+        <IncludePath Value="../include"/>
+        <Preprocessor Value="APRIL_EXPORTS"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="./lib"/>
+        <LibraryPath Value="../lib"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
     <Configuration Name="DirectX_Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="_WIN32"/>
@@ -231,25 +251,5 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
-    <GlobalSettings>
-      <Compiler Options="">
-        <IncludePath Value="include"/>
-        <IncludePath Value="include/april"/>
-        <IncludePath Value="rendersystems/OpenGL"/>
-        <IncludePath Value="rendersystems/DirectX9"/>
-        <IncludePath Value="../hltypes/include"/>
-        <IncludePath Value="../gtypes/include"/>
-        <IncludePath Value="../include"/>
-        <Preprocessor Value="APRIL_EXPORTS"/>
-      </Compiler>
-      <Linker Options="">
-        <LibraryPath Value="./lib"/>
-        <LibraryPath Value="../lib"/>
-      </Linker>
-      <ResourceCompiler Options=""/>
-    </GlobalSettings>
   </Settings>
-  <Dependencies Name="OpenGL_Debug">
-    <Project Name="libgtypes"/>
-  </Dependencies>
 </CodeLite_Project>
