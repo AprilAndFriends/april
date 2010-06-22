@@ -49,10 +49,10 @@ namespace April
 		}
 		else if (value.size() == 10)
 		{
+			*a=hexstr_to_int(value(2,2));
 			*r=hexstr_to_int(value(4,2));
 			*g=hexstr_to_int(value(6,2));
 			*b=hexstr_to_int(value(8,2));
-			*a=hexstr_to_int(value(2,2));
 		}
 		else throw "Color format must be either 0xAARRGGBB or 0xRRGGBB";
 	}
