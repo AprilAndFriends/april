@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libapril", "libapril.vcproj", "{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA} = {9C043B29-DB40-48D5-97D8-1BC44128E3BA}
+		{5AE7D4CC-55AD-4F4C-8FAA-3EB0F3F40529} = {5AE7D4CC-55AD-4F4C-8FAA-3EB0F3F40529}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_simple", "demos\demo_simple\demo_simple.vcproj", "{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}"
@@ -13,10 +14,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_simple", "demos\demo_s
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_3d", "demos\demo_3d\demo_3d.vcproj", "{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}"
 	ProjectSection(ProjectDependencies) = postProject
+		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3} = {8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9} = {2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libgtypes", "..\gtypes\libgtypes.vcproj", "{9C043B29-DB40-48D5-97D8-1BC44128E3BA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhltypes", "..\hltypes\libhltypes.vcproj", "{5AE7D4CC-55AD-4F4C-8FAA-3EB0F3F40529}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,10 +28,10 @@ Global
 		win32_Release|Win32 = win32_Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.win32_Debug|Win32.ActiveCfg = win32_Debug|Win32
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.win32_Debug|Win32.Build.0 = win32_Debug|Win32
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.win32_Release|Win32.ActiveCfg = win32_DirectX9_Debug|Win32
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.win32_Release|Win32.Build.0 = win32_DirectX9_Debug|Win32
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.win32_Debug|Win32.ActiveCfg = win32_DirectX9_Debug|Win32
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.win32_Debug|Win32.Build.0 = win32_DirectX9_Debug|Win32
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.win32_Release|Win32.ActiveCfg = win32_DirectX9_Release|Win32
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.win32_Release|Win32.Build.0 = win32_DirectX9_Release|Win32
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.win32_Debug|Win32.ActiveCfg = win32_Debug|Win32
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.win32_Debug|Win32.Build.0 = win32_Debug|Win32
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.win32_Release|Win32.ActiveCfg = win32_Release|Win32
@@ -40,6 +44,10 @@ Global
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.win32_Debug|Win32.Build.0 = win32_Debug|Win32
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.win32_Release|Win32.ActiveCfg = win32_Release|Win32
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.win32_Release|Win32.Build.0 = win32_Release|Win32
+		{5AE7D4CC-55AD-4F4C-8FAA-3EB0F3F40529}.win32_Debug|Win32.ActiveCfg = win32_Debug|Win32
+		{5AE7D4CC-55AD-4F4C-8FAA-3EB0F3F40529}.win32_Debug|Win32.Build.0 = win32_Debug|Win32
+		{5AE7D4CC-55AD-4F4C-8FAA-3EB0F3F40529}.win32_Release|Win32.ActiveCfg = win32_Release|Win32
+		{5AE7D4CC-55AD-4F4C-8FAA-3EB0F3F40529}.win32_Release|Win32.Build.0 = win32_Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

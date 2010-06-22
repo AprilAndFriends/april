@@ -26,7 +26,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace April
 {
-	extern void (*g_logFunction)(std::string);
+	extern void (*g_logFunction)(chstr);
 #ifdef _WIN32
 	HWND hWnd;
 #else
@@ -87,7 +87,7 @@ namespace April
 
 
 
-	GLTexture::GLTexture(std::string filename,bool dynamic)
+	GLTexture::GLTexture(chstr filename,bool dynamic)
 	{
 		mFilename=filename;
 		mDynamic=dynamic;
@@ -123,9 +123,8 @@ namespace April
 			rendersys->logMessage("Failed to load texture: "+mFilename);
 			return 0;
 		}
-
-		std::vector<Texture*>::iterator it=mDynamicLinks.begin();
-		for(;it!=mDynamicLinks.end();it++)
+		
+		for (Texture** it=mDynamicLinks.iter();it;it=mDynamicLinks.next())
 			((GLTexture*)(*it))->load();
 
 		return 1;
@@ -174,12 +173,12 @@ namespace April
 		rendersys->logMessage("Destroying OpenGL Rendersystem");
 	}
 
-	std::string GLRenderSystem::getName()
+	hstr GLRenderSystem::getName()
 	{
 		return "OpenGL";
 	}
 
-	Texture* GLRenderSystem::loadTexture(std::string filename,bool dynamic)
+	Texture* GLRenderSystem::loadTexture(chstr filename,bool dynamic)
 	{
 		if (mDynamicLoading) dynamic=1;
 		if (dynamic) rendersys->logMessage("creating dynamic GL texture '"+filename+"'");
@@ -326,7 +325,7 @@ namespace April
 		glColor4f(1,1,1,value);
 	}
 
-	void GLRenderSystem::setWindowTitle(std::string title)
+	void GLRenderSystem::setWindowTitle(chstr title)
 	{
 		glutSetWindowTitle(title.c_str());
 	}
@@ -434,7 +433,7 @@ namespace April
 		rendersys->presentFrame();
 	}
 
-	void createGLRenderSystem(int w,int h,bool fullscreen,std::string title)
+	void createGLRenderSystem(int w,int h,bool fullscreen,chstr title)
 	{
 		g_logFunction("Creating OpenGL Rendersystem");
 		const char *argv[] = {"program"};

@@ -10,7 +10,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #ifndef APRIL_IMAGE_SOURCE_H
 #define APRIL_IMAGE_SOURCE_H
 
-#include <string>
+#include <hltypes/hstring.h>
 #include "AprilExport.h"
 
 namespace April
@@ -34,7 +34,7 @@ namespace April
 		
 	};
 	
-	ImageSource* loadImage(std::string filename);
+	ImageSource* loadImage(chstr filename);
 }
 
 #endif

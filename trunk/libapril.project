@@ -26,9 +26,6 @@
     <Project Name="libgtypes"/>
   </Dependencies>
   <Dependencies Name="Release"/>
-  <Dependencies Name="OpenGL_Debug">
-    <Project Name="libgtypes"/>
-  </Dependencies>
   <Dependencies Name="DirectX_Debug">
     <Project Name="libgtypes"/>
   </Dependencies>
@@ -40,8 +37,10 @@
         <Preprocessor Value="_DEBUG"/>
       </Compiler>
       <Linker Options="" Required="yes">
+        <LibraryPath Value="../hltypes/bin/Debug"/>
         <LibraryPath Value="../gtypes/bin/Debug"/>
         <Library Value="gdi32"/>
+        <Library Value="libhltypes_d"/>
         <Library Value="libgtypes_d"/>
         <Library Value="libDevIL"/>
         <Library Value="d3d9"/>
@@ -78,8 +77,10 @@
         <Preprocessor Value="_DIRECTX9"/>
       </Compiler>
       <Linker Options="-O2" Required="yes">
+        <LibraryPath Value="../hltypes/bin/Release_Win32"/>
         <LibraryPath Value="../gtypes/bin/Release_Win32"/>
         <Library Value="gdi32"/>
+        <Library Value="libhltypes"/>
         <Library Value="libgtypes"/>
         <Library Value="libDevIL"/>
         <Library Value="d3d9"/>
@@ -116,7 +117,9 @@
         <Preprocessor Value="_OPENGL"/>
       </Compiler>
       <Linker Options="" Required="yes">
+        <LibraryPath Value="../hltypes/bin/Linux_Debug"/>
         <LibraryPath Value="../gtypes/bin/Linux_Debug"/>
+        <Library Value="libhltypes_d"/>
         <Library Value="libgtypes_d"/>
         <Library Value="libGL"/>
         <Library Value="libGLU"/>
@@ -153,7 +156,9 @@
         <Preprocessor Value="_DEBUG"/>
       </Compiler>
       <Linker Options="" Required="yes">
+        <LibraryPath Value="../hltypes/bin/Debug"/>
         <LibraryPath Value="../gtypes/bin/Debug"/>
+        <Library Value="libhltypes_d"/>
         <Library Value="libgtypes_d"/>
         <Library Value="libOpenGL32"/>
         <Library Value="libglu32"/>
@@ -192,7 +197,9 @@
         <Preprocessor Value="_OPENGL"/>
       </Compiler>
       <Linker Options="-O2" Required="yes">
+        <LibraryPath Value="../hltypes/bin/Release_Win32"/>
         <LibraryPath Value="../gtypes/bin/Release_Win32"/>
+        <Library Value="libhltypes"/>
         <Library Value="libgtypes"/>
         <Library Value="libOpenGL32"/>
         <Library Value="libglu32"/>
@@ -230,6 +237,7 @@
         <IncludePath Value="include/april"/>
         <IncludePath Value="rendersystems/OpenGL"/>
         <IncludePath Value="rendersystems/DirectX9"/>
+        <IncludePath Value="../hltypes/include"/>
         <IncludePath Value="../gtypes/include"/>
         <IncludePath Value="../include"/>
         <Preprocessor Value="APRIL_EXPORTS"/>
@@ -241,4 +249,7 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
+  <Dependencies Name="OpenGL_Debug">
+    <Project Name="libgtypes"/>
+  </Dependencies>
 </CodeLite_Project>
