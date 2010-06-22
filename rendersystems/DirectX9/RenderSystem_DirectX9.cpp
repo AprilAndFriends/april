@@ -72,7 +72,7 @@ namespace April
 	{
 	public:
 		IDirect3DTexture9* mTexture;
-		DirectX9Texture(std::string filename,bool dynamic)
+		DirectX9Texture(chstr filename,bool dynamic)
 		{
 			mFilename=filename;
 			mDynamic=dynamic;
@@ -218,7 +218,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     return DefWindowProc(hWnd, message, wParam, lParam);
 }
 /**********************************************************************************************/
-	DirectX9RenderSystem::DirectX9RenderSystem(int w,int h,bool fullscreen,std::string title) :
+	DirectX9RenderSystem::DirectX9RenderSystem(int w,int h,bool fullscreen,chstr title) :
 		mTexCoordsEnabled(0), mColorEnabled(0)
 	{
 		logMessage("Creating DirectX9 Rendersystem");
@@ -305,12 +305,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3d=0; d3dDevice=0;
 	}
 
-	std::string DirectX9RenderSystem::getName()
+	hstr DirectX9RenderSystem::getName()
 	{
 		return "DirectX9";
 	}
 
-	Texture* DirectX9RenderSystem::loadTexture(std::string filename,bool dynamic)
+	Texture* DirectX9RenderSystem::loadTexture(chstr filename,bool dynamic)
 	{
 		if (mDynamicLoading) dynamic=1;
 		if (dynamic) rendersys->logMessage("creating dynamic DX9 texture '"+filename+"'");
@@ -464,7 +464,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		mAlphaMultiplier=value;
 	}
 
-	void DirectX9RenderSystem::setWindowTitle(std::string title)
+	void DirectX9RenderSystem::setWindowTitle(chstr title)
 	{
 		mTitle=title;
 #ifdef _DEBUG
@@ -629,7 +629,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	}
 
 
-	void createDX9RenderSystem(int w,int h,bool fullscreen,std::string title)
+	void createDX9RenderSystem(int w,int h,bool fullscreen,chstr title)
 	{
 		rendersys=new DirectX9RenderSystem(w,h,fullscreen,title);
 	}

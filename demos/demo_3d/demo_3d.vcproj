@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include;../../../gtypes/include;../../../include"
+				AdditionalIncludeDirectories="../../include;../../../hltypes/include;../../../gtypes/include;../../../include"
 				PreprocessorDefinitions="_WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libapril_d.lib libgtypes_d.lib DevIL.lib"
+				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libapril_d.lib libgtypes_d.lib libhltypes_d.lib DevIL.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../bin/win32_Debug;../../../lib;../../../gtypes/bin/win32_Debug;../../../win32/lib"
+				AdditionalLibraryDirectories="../../bin;../../../lib;../../../hltypes/bin/win32_Debug;../../../gtypes/bin/win32_Debug;../../../win32/lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -88,7 +88,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\gtypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug"
+				CommandLine="copy ..\..\..\hltypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug"
 			/>
 		</Configuration>
 		<Configuration
@@ -118,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../include;../../../gtypes/include;../../../include"
+				AdditionalIncludeDirectories="../../include;../../../hltypes/include;../../../gtypes/include;../../../include"
 				PreprocessorDefinitions="_WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -137,9 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libapril.lib libgtypes.lib DevIL.lib"
+				AdditionalDependencies="OpenGL32.lib glu32.lib glut32.lib libapril.lib libhltypes.lib libgtypes.lib DevIL.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../bin/win32_Release;../../../lib;../../../gtypes/bin/win32_Release;../../../win32/lib"
+				AdditionalLibraryDirectories="../../bin;../../../lib;../../../hltypes/bin/win32_Release;../../../gtypes/bin/win32_Release;../../../win32/lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -166,7 +166,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\gtypes\bin\win32_Release\*.dll ..\..\bin\win32_Release"
+				CommandLine="copy ..\..\..\hltypes\bin\win32_Release\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Release\*.dll ..\..\bin\win32_Release"
 			/>
 		</Configuration>
 	</Configurations>

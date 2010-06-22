@@ -20,7 +20,7 @@ namespace April
 	public:
 		unsigned int mTexId;
 		
-		GLTexture(std::string filename,bool dynamic);
+		GLTexture(chstr filename,bool dynamic);
 		GLTexture(unsigned char* rgba,int w,int h);
 		~GLTexture();
 		
@@ -38,10 +38,10 @@ namespace April
 	public:
 		GLRenderSystem(int w,int h);
 		~GLRenderSystem();
-		std::string getName();
+		hstr getName();
 		
 		// object creation
-		Texture* loadTexture(std::string filename,bool dynamic);
+		Texture* loadTexture(chstr filename,bool dynamic);
 		Texture* createTextureFromMemory(unsigned char* rgba,int w,int h);
 
 		// modelview matrix transformation
@@ -58,7 +58,7 @@ namespace April
 
 		void setAlphaMultiplier(float value);
 		
-		void setWindowTitle(std::string title);
+		void setWindowTitle(chstr title);
 		gtypes::Vector2 getCursorPos();
 		void showSystemCursor(bool b);
 		bool isSystemCursorShown();
@@ -77,7 +77,7 @@ namespace April
 		void terminateMainLoop();
 	};
 
-	void createGLRenderSystem(int w,int h,bool fullscreen,std::string title);
+	void createGLRenderSystem(int w,int h,bool fullscreen,chstr title);
 }
 #endif
 #endif

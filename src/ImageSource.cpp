@@ -60,7 +60,7 @@ namespace April
 		ilCopyPixels(0,0,0,w,h,1,format,IL_UNSIGNED_BYTE,output);
 	}
 	
-	ImageSource* loadImage(std::string filename)
+	ImageSource* loadImage(chstr filename)
 	{
 		ImageSource* img=new ImageSource();
 		ilBindImage(img->getImageId());

@@ -10,34 +10,29 @@
   <VirtualDirectory Name="src">
     <File Name="demo_simple.cpp"/>
   </VirtualDirectory>
-  <Dependencies Name="Release">
-    <Project Name="libapril"/>
-  </Dependencies>
-  <Dependencies Name="Linux_Debug"/>
-  <Dependencies Name="Debug">
-    <Project Name="libgtypes"/>
-    <Project Name="libapril"/>
-  </Dependencies>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="" Required="yes">
-        <LibraryPath Value="../../bin/Debug"/>
+        <LibraryPath Value="../../../hltypes/bin/Debug"/>
+        <LibraryPath Value="../../../gtypes/bin/Debug"/>
         <Library Value="libapril_d"/>
+        <Library Value="libhltypes_d"/>
         <Library Value="libgtypes_d"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/Debug" Command="../../bin/Debug/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/$(ConfigurationName)" Command="../../bin/$(ConfigurationName)/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
         <StartupCommands/>
       </Debugger>
       <PreBuild/>
       <PostBuild>
+        <Command Enabled="yes">copy ..\..\bin\*.dll ..\..\bin\Debug</Command>
+        <Command Enabled="yes">copy ..\..\..\hltypes\bin\Debug\*.dll ..\..\bin\Debug</Command>
         <Command Enabled="yes">copy ..\..\..\gtypes\bin\Debug\*.dll ..\..\bin\Debug</Command>
-        <Command Enabled="yes">copy ..\..\bin\libapril_d.dll ..\..\bin\Debug</Command>
       </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
@@ -59,7 +54,6 @@
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="" Required="yes">
-        <LibraryPath Value="../../bin/Linux_Debug"/>
         <Library Value="libapril_d"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
@@ -90,8 +84,11 @@
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="-O2" Required="yes">
-        <LibraryPath Value="../../bin/Release"/>
-        <Library Value="libatres"/>
+        <LibraryPath Value="../../../hltypes/bin/Win32_Release"/>
+        <LibraryPath Value="../../../gtypes/bin/Win32_Release"/>
+        <Library Value="libapril"/>
+        <Library Value="libhltypes"/>
+        <Library Value="libgtypes"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/Release" Command="./$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
@@ -100,7 +97,11 @@
         <StartupCommands/>
       </Debugger>
       <PreBuild/>
-      <PostBuild/>
+      <PostBuild>
+        <Command Enabled="yes">copy ..\..\bin\*.dll ..\..\bin\Win32_Release</Command>
+        <Command Enabled="yes">copy ..\..\..\hltypes\bin\Debug\*.dll ..\..\bin\Win32_Release</Command>
+        <Command Enabled="yes">copy ..\..\..\gtypes\bin\Debug\*.dll ..\..\bin\Win32_Release</Command>
+      </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
         <CleanCommand/>
@@ -119,12 +120,29 @@
     <GlobalSettings>
       <Compiler Options="">
         <IncludePath Value="../../include"/>
+        <IncludePath Value="../../../hltypes/include"/>
         <IncludePath Value="../../../gtypes/include"/>
       </Compiler>
       <Linker Options="">
         <LibraryPath Value="../../lib"/>
+        <LibraryPath Value="../../bin"/>
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
+  <Dependencies Name="Debug">
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libhltypes"/>
+  </Dependencies>
+  <Dependencies Name="Release">
+    <Project Name="libapril"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+  </Dependencies>
+  <Dependencies Name="Linux_Debug">
+    <Project Name="libapril"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+  </Dependencies>
 </CodeLite_Project>

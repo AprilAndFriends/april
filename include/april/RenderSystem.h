@@ -10,8 +10,8 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #ifndef RENDERSYSTEM_H
 #define RENDERSYSTEM_H
 
-#include <string>
-#include <vector>
+#include <hltypes/hstring.h>
+#include <hltypes/harray.h>
 #include <gtypes/Vector3.h>
 #include <gtypes/Matrix4.h>
 #include "AprilExport.h"
@@ -73,17 +73,17 @@ namespace April
 		unsigned char r,g,b,a;
 		Color(float r,float g,float b,float a=1);
 		Color(unsigned int color);
-		Color(std::string hex);
+		Color(chstr hex);
 		Color();
 
 		void setColor(float r,float g,float b,float a=1);
 		void setColor(unsigned int color);
-		void setColor(std::string hex);
+		void setColor(chstr hex);
 
-		float r_float() { return (float) r/255.0f; }
-		float g_float() { return (float) g/255.0f; }
-		float b_float() { return (float) b/255.0f; }
-		float a_float() { return (float) a/255.0f; }
+		float r_float() { return r/255.0f; }
+		float g_float() { return g/255.0f; }
+		float b_float() { return b/255.0f; }
+		float a_float() { return a/255.0f; }
 
 	};
 
@@ -91,10 +91,10 @@ namespace April
 	{
 	protected:
 		bool mDynamic;
-		std::string mFilename;
+		hstr mFilename;
 		int mWidth,mHeight;
 		float mUnusedTimer;
-		std::vector<Texture*> mDynamicLinks;
+		harray<Texture*> mDynamicLinks;
 	public:
 		Texture();
 		virtual ~Texture();
@@ -116,7 +116,7 @@ namespace April
 		virtual bool isLoaded()=0;
 		
 		void update(float time_increase);
-		std::string getFilename() { return mFilename; }
+		hstr getFilename() { return mFilename; }
 	};
 	
 	class AprilExport RAMTexture : public Texture
@@ -124,7 +124,7 @@ namespace April
 	protected:
 		ImageSource* mBuffer;
 	public:
-		RAMTexture(std::string filename,bool dynamic);
+		RAMTexture(chstr filename,bool dynamic);
 		virtual ~RAMTexture();
 		void load();
 		void unload();
@@ -155,14 +155,14 @@ namespace April
 		virtual void _setModelviewMatrix(const gtypes::Matrix4& matrix)=0;
 		virtual void _setProjectionMatrix(const gtypes::Matrix4& matrix)=0;
 	public:
-		virtual std::string getName()=0;
+		virtual hstr getName()=0;
 
 		RenderSystem();
 		virtual ~RenderSystem();
 
 		// object creation
-		virtual Texture* loadTexture(std::string filename,bool dynamic=false)=0;
-		Texture* loadRAMTexture(std::string filename,bool dynamic=false);
+		virtual Texture* loadTexture(chstr filename,bool dynamic=false)=0;
+		Texture* loadRAMTexture(chstr filename,bool dynamic=false);
 		virtual Texture* createTextureFromMemory(unsigned char* rgba,int w,int h)=0;
 
 		// modelview matrix transformation
@@ -200,7 +200,7 @@ namespace April
 		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
 		void setIdleTextureUnloadTime(float time) { mIdleUnloadTime=time; }
 
-		void logMessage(std::string message,std::string prefix="[april] ");
+		void logMessage(chstr message,chstr prefix="[april] ");
 
 		virtual void setAlphaMultiplier(float value)=0;
 		float getAlphaMultiplier() { return mAlphaMultiplier; }
@@ -208,7 +208,7 @@ namespace April
 		virtual int getWindowWidth()=0;
 		virtual int getWindowHeight()=0;
 
-		virtual void setWindowTitle(std::string title)=0;
+		virtual void setWindowTitle(chstr title)=0;
 		virtual gtypes::Vector2 getCursorPos()=0;
 		virtual void showSystemCursor(bool b)=0;
 		virtual bool isSystemCursorShown()=0;
@@ -230,8 +230,8 @@ namespace April
 		virtual void terminateMainLoop()=0;
 	};
 
-	AprilFnExport void setLogFunction(void (*fnptr)(std::string));
-	AprilFnExport void init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title);
+	AprilFnExport void setLogFunction(void (*fnptr)(chstr));
+	AprilFnExport void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title);
 	AprilFnExport void destroy();
 }
 // global rendersys shortcut variable

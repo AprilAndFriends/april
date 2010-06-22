@@ -22,36 +22,37 @@ April::RenderSystem* rendersys;
 
 namespace April
 {	
-	void april_writelog(std::string message)
+	void april_writelog(chstr message)
 	{
 		printf("%s\n",message.c_str());		
 	}
 	
-	void (*g_logFunction)(std::string)=april_writelog;
+	void (*g_logFunction)(chstr)=april_writelog;
 	
-	int hexstr_to_int(std::string s)
+	int hexstr_to_int(chstr s)
 	{
 		int i;
 		sscanf(s.c_str(),"%x",&i);
 		return i;
 	}
 	
-	void hexstr_to_argb(std::string& hex,unsigned char* a,unsigned char* r,unsigned char* g,unsigned char* b)
+	void hexstr_to_argb(chstr hex,unsigned char* a,unsigned char* r,unsigned char* g,unsigned char* b)
 	{
-		if (hex.substr(0,2) != "0x") hex="0x"+hex;
-		if (hex.size() == 8)
+		hstr value = hex;
+		if (value(0,2) != "0x") value="0x"+value;
+		if (value.size() == 8)
 		{
-			*r=hexstr_to_int(hex.substr(2,2));
-			*g=hexstr_to_int(hex.substr(4,2));
-			*b=hexstr_to_int(hex.substr(6,2));
+			*r=hexstr_to_int(value(2,2));
+			*g=hexstr_to_int(value(4,2));
+			*b=hexstr_to_int(value(6,2));
 			*a=255;
 		}
-		else if (hex.size() == 10)
+		else if (value.size() == 10)
 		{
-			*r=hexstr_to_int(hex.substr(4,2));
-			*g=hexstr_to_int(hex.substr(6,2));
-			*b=hexstr_to_int(hex.substr(8,2));
-			*a=hexstr_to_int(hex.substr(2,2));
+			*r=hexstr_to_int(value(4,2));
+			*g=hexstr_to_int(value(6,2));
+			*b=hexstr_to_int(value(8,2));
+			*a=hexstr_to_int(value(2,2));
 		}
 		else throw "Color format must be either 0xAARRGGBB or 0xRRGGBB";
 	}
@@ -73,14 +74,14 @@ namespace April
 		setColor(color);
 	}
 
-	Color::Color(std::string hex)
+	Color::Color(chstr hex)
 	{
 		setColor(hex);
 	}
 
 	Color::Color()
 	{
-		r=g=b=a=255;
+		a=r=g=b=255;
 	}
 
 	void Color::setColor(float a,float r,float g,float b)
@@ -94,7 +95,7 @@ namespace April
 		this->a=color/256/256/256; this->r=color/256/256%256; this->g=color/256%256; this->b=color%256;
 	}
 
-	void Color::setColor(std::string hex)
+	void Color::setColor(chstr hex)
 	{
 		// this is going to bite me in the arse on a little endian system...
 		hexstr_to_argb(hex,&a,&r,&g,&b);
@@ -102,13 +103,13 @@ namespace April
 /*****************************************************************************************/
 	Texture::Texture()
 	{
+		mFilename="";
 		mUnusedTimer=0;
 	}
 
 	Texture::~Texture()
 	{
-		std::vector<Texture*>::iterator it=mDynamicLinks.begin();
-		for(;it!=mDynamicLinks.end();it++)
+		for (Texture** it=mDynamicLinks.iter();it;it=mDynamicLinks.next())
 			(*it)->removeDynamicLink(this);
 	}
 	
@@ -137,16 +138,15 @@ namespace April
 	
 	void Texture::addDynamicLink(Texture* lnk)
 	{
-		if (find(mDynamicLinks.begin(),mDynamicLinks.end(),lnk) != mDynamicLinks.end()) return;
-		mDynamicLinks.push_back(lnk);
+		if (mDynamicLinks.contains(lnk)) return;
+		mDynamicLinks+=lnk;
 		lnk->addDynamicLink(this);
 	}
 	
 	void Texture::removeDynamicLink(Texture* lnk)
 	{
-		std::vector<Texture*>::iterator it=find(mDynamicLinks.begin(),mDynamicLinks.end(),lnk);
-		if (it == mDynamicLinks.end()) return;
-		mDynamicLinks.erase(it);
+		if (mDynamicLinks.contains(lnk))
+			mDynamicLinks-=lnk;
 	}
 	
 	void  Texture::_resetUnusedTimer(bool recursive)
@@ -154,13 +154,12 @@ namespace April
 		mUnusedTimer=0;
 		if (recursive)
 		{
-			std::vector<Texture*>::iterator it=mDynamicLinks.begin();
-			for(;it!=mDynamicLinks.end();it++)
+			for (Texture** it=mDynamicLinks.iter();it;it=mDynamicLinks.next())
 				(*it)->_resetUnusedTimer(0);
 		}
 	}
 /*****************************************************************************************/
-	RAMTexture::RAMTexture(std::string filename,bool dynamic)
+	RAMTexture::RAMTexture(chstr filename,bool dynamic)
 	{
 		mFilename=filename;
 		mBuffer=0;
@@ -248,7 +247,7 @@ namespace April
 		render(TriangleStrip,v,4,r,g,b,a);
 	}
 	
-	void RenderSystem::logMessage(std::string message,std::string prefix)
+	void RenderSystem::logMessage(chstr message,chstr prefix)
 	{
 		g_logFunction(prefix+message);
 	}
@@ -276,7 +275,7 @@ namespace April
 		mCharCallback=char_callback;
 	}
 	
-	Texture* RenderSystem::loadRAMTexture(std::string filename,bool dynamic)
+	Texture* RenderSystem::loadRAMTexture(chstr filename,bool dynamic)
 	{
 		return new RAMTexture(filename,dynamic);
 	}
@@ -350,7 +349,7 @@ namespace April
 		return mProjectionMatrix;
 	}
 /*********************************************************************************/
-	void init(std::string rendersystem_name,int w,int h,bool fullscreen,std::string title)
+	void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title)
 	{
 		ilInit();
 		#ifdef _OPENGL
@@ -360,14 +359,13 @@ namespace April
 		#endif
 	}
 	
-	void setLogFunction(void (*fnptr)(std::string))
+	void setLogFunction(void (*fnptr)(chstr))
 	{
 		g_logFunction=fnptr;
 	}
 	
 	void destroy()
 	{
-		
 		delete rendersys;
 	}
 

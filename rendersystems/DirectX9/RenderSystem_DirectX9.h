@@ -21,15 +21,15 @@ namespace April
 		bool mTexCoordsEnabled,mColorEnabled;
 		void _setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void _setProjectionMatrix(const gtypes::Matrix4& matrix);
-		std::string mTitle;
+		hstr mTitle;
 	public:
-		DirectX9RenderSystem(int w,int h,bool fullscreen,std::string title);
+		DirectX9RenderSystem(int w,int h,bool fullscreen,chstr title);
 		~DirectX9RenderSystem();
-		std::string getName();
+		hstr getName();
 		void configureDevice();
 		
 		// object creation
-		Texture* loadTexture(std::string filename,bool dynamic);
+		Texture* loadTexture(chstr filename,bool dynamic);
 		Texture* createTextureFromMemory(unsigned char* rgba,int w,int h);
 
 		// modelview matrix transformation
@@ -46,7 +46,7 @@ namespace April
 
 		void setAlphaMultiplier(float value);
 		
-		void setWindowTitle(std::string title);
+		void setWindowTitle(chstr title);
 		gtypes::Vector2 getCursorPos();
 		void showSystemCursor(bool b);
 		bool isSystemCursorShown();
@@ -67,7 +67,7 @@ namespace April
 		void terminateMainLoop();
 	};
 
-	void createDX9RenderSystem(int w,int h,bool fullscreen,std::string title);
+	void createDX9RenderSystem(int w,int h,bool fullscreen,chstr title);
 }
 #endif
 #endif
