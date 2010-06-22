@@ -2,7 +2,7 @@
 <CodeLite_Project Name="demo_simple" InternalType="Console">
   <Plugins>
     <Plugin Name="qmake">
-      <![CDATA[00020001N0005Debug0000000000000001N0011Linux_Debug000000000000]]>
+      <![CDATA[00030001N0005Debug0000000000000001N0011Linux_Debug0000000000000001N0007Release000000000000]]>
     </Plugin>
   </Plugins>
   <Description/>
@@ -30,9 +30,9 @@
       </Debugger>
       <PreBuild/>
       <PostBuild>
-        <Command Enabled="yes">copy ..\..\bin\*.dll ..\..\bin\Debug</Command>
-        <Command Enabled="yes">copy ..\..\..\hltypes\bin\Debug\*.dll ..\..\bin\Debug</Command>
-        <Command Enabled="yes">copy ..\..\..\gtypes\bin\Debug\*.dll ..\..\bin\Debug</Command>
+        <Command Enabled="yes">copy ..\..\bin\*.dll ..\..\bin\$(ConfigurationName)</Command>
+        <Command Enabled="yes">copy ..\..\..\hltypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
+        <Command Enabled="yes">copy ..\..\..\gtypes\bin\$(ConfigurationName)\*.dll ..\..\bin\$(ConfigurationName)</Command>
       </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
@@ -98,9 +98,9 @@
       </Debugger>
       <PreBuild/>
       <PostBuild>
-        <Command Enabled="yes">copy ..\..\bin\*.dll ..\..\bin\Win32_Release</Command>
-        <Command Enabled="yes">copy ..\..\..\hltypes\bin\Debug\*.dll ..\..\bin\Win32_Release</Command>
-        <Command Enabled="yes">copy ..\..\..\gtypes\bin\Debug\*.dll ..\..\bin\Win32_Release</Command>
+        <Command Enabled="yes">copy ..\..\bin\*.dll ..\..\bin\$(ConfigurationName)</Command>
+        <Command Enabled="yes">copy ..\..\..\hltypes\bin\Win32_Release\*.dll ..\..\bin\$(ConfigurationName)</Command>
+        <Command Enabled="yes">copy ..\..\..\gtypes\bin\Win32_Release\*.dll ..\..\bin\$(ConfigurationName)</Command>
       </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
@@ -131,18 +131,18 @@
     </GlobalSettings>
   </Settings>
   <Dependencies Name="Debug">
+    <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
     <Project Name="libapril"/>
-    <Project Name="libhltypes"/>
-  </Dependencies>
-  <Dependencies Name="Release">
-    <Project Name="libapril"/>
-    <Project Name="libgtypes"/>
-    <Project Name="libhltypes"/>
   </Dependencies>
   <Dependencies Name="Linux_Debug">
-    <Project Name="libapril"/>
-    <Project Name="libgtypes"/>
     <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
+  <Dependencies Name="Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
   </Dependencies>
 </CodeLite_Project>

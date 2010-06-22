@@ -10,10 +10,26 @@
   <VirtualDirectory Name="src">
     <File Name="demo_tictactoe.cpp"/>
   </VirtualDirectory>
+  <Dependencies Name="Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
   <Dependencies Name="Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
     <Project Name="libapril"/>
   </Dependencies>
   <Settings Type="Executable">
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="../../include"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="../../lib"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
@@ -76,17 +92,5 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
-    <GlobalSettings>
-      <Compiler Options="">
-        <IncludePath Value="../../include"/>
-      </Compiler>
-      <Linker Options="">
-        <LibraryPath Value="../../lib"/>
-      </Linker>
-      <ResourceCompiler Options=""/>
-    </GlobalSettings>
   </Settings>
-  <Dependencies Name="Debug">
-    <Project Name="libapril"/>
-  </Dependencies>
 </CodeLite_Project>

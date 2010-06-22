@@ -131,18 +131,18 @@
     </GlobalSettings>
   </Settings>
   <Dependencies Name="Debug">
+    <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
     <Project Name="libapril"/>
-    <Project Name="libhltypes"/>
-  </Dependencies>
-  <Dependencies Name="Release">
-    <Project Name="libapril"/>
-    <Project Name="libgtypes"/>
-    <Project Name="libhltypes"/>
   </Dependencies>
   <Dependencies Name="Linux_Debug">
-    <Project Name="libapril"/>
-    <Project Name="libgtypes"/>
     <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
+  <Dependencies Name="Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
   </Dependencies>
 </CodeLite_Project>
