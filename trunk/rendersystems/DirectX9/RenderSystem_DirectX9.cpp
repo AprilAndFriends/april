@@ -370,10 +370,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		if (mode == ALPHA_BLEND || mode == DEFAULT)
 		{
-			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_INVSRCALPHA);
+			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		}
 		else if (mode == ADD)
 		{
+			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 		}
 	}
