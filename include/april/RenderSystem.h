@@ -21,6 +21,18 @@ namespace gtypes
 	class Vector2;
 }
 
+enum TextureType
+{
+	AT_NORMAL=1,
+	AT_RENDER_TARGET=2
+};
+
+enum TextureFormat
+{
+	AT_X8R8G8B8=1,
+	AT_A8R8G8B8=2
+};
+
 namespace April
 {
 	
@@ -149,7 +161,7 @@ namespace April
 		void (*mKeyDownCallback)(unsigned int);
 		void (*mCharCallback)(unsigned int);
 		void (*mKeyUpCallback)(unsigned int);
-		
+
 		gtypes::Matrix4 mModelviewMatrix,mProjectionMatrix;
 
 		virtual void _setModelviewMatrix(const gtypes::Matrix4& matrix)=0;
@@ -164,6 +176,7 @@ namespace April
 		virtual Texture* loadTexture(chstr filename,bool dynamic=false)=0;
 		Texture* loadRAMTexture(chstr filename,bool dynamic=false);
 		virtual Texture* createTextureFromMemory(unsigned char* rgba,int w,int h)=0;
+		virtual Texture* createEmptyTexture(int w,int h,TextureFormat fmt=AT_X8R8G8B8,TextureType type=AT_NORMAL)=0;
 
 		// modelview matrix transformation
 		void setIdentityTransform();
@@ -190,10 +203,13 @@ namespace April
 		virtual void clear(bool color=true,bool depth=false)=0;
 		virtual void setTexture(Texture* t)=0;
 		virtual void render(RenderOp renderOp,TexturedVertex* v,int nVertices)=0;
+		virtual void render(RenderOp renderOp,ColoredTexturedVertex* v,int nVertices)=0;
 		virtual void render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)=0;
 		virtual void render(RenderOp renderOp,PlainVertex* v,int nVertices)=0;
 		virtual void render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a)=0;
 		virtual void render(RenderOp renderOp,ColoredVertex* v,int nVertices)=0;
+		
+		virtual void setRenderTarget(Texture* source)=0;
 		
 		void drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a=1);
 

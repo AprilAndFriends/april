@@ -13,8 +13,12 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 #include "RenderSystem.h"
 
+class IDirect3DSurface9;
+
 namespace April
 {
+	class DirectX9Texture;
+
 	class DirectX9RenderSystem : public RenderSystem
 	{
 		bool mAppRunning;
@@ -22,6 +26,8 @@ namespace April
 		void _setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void _setProjectionMatrix(const gtypes::Matrix4& matrix);
 		hstr mTitle;
+		DirectX9Texture* mRenderTarget;
+		IDirect3DSurface9* mBackBuffer;
 	public:
 		DirectX9RenderSystem(int w,int h,bool fullscreen,chstr title);
 		~DirectX9RenderSystem();
@@ -31,6 +37,7 @@ namespace April
 		// object creation
 		Texture* loadTexture(chstr filename,bool dynamic);
 		Texture* createTextureFromMemory(unsigned char* rgba,int w,int h);
+		Texture* createEmptyTexture(int w,int h,TextureFormat fmt,TextureType type);
 
 		// modelview matrix transformation
 		void setBlendMode(BlendMode mode);
@@ -38,11 +45,14 @@ namespace April
 		// rendering
 		void clear(bool color,bool depth);
 		void setTexture(Texture* t);
+		void render(RenderOp renderOp,ColoredTexturedVertex* v,int nVertices);
 		void render(RenderOp renderOp,TexturedVertex* v,int nVertices);
 		void render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a);
 		void render(RenderOp renderOp,PlainVertex* v,int nVertices);
 		void render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a);
 		void render(RenderOp renderOp,ColoredVertex* v,int nVertices);
+
+		void setRenderTarget(Texture* source);
 
 		void setAlphaMultiplier(float value);
 		
