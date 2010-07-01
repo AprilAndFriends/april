@@ -245,10 +245,6 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
-  <Dependencies Name="DirectX_Debug">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-  </Dependencies>
   <Dependencies Name="DirectX_Release">
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
@@ -262,6 +258,10 @@
     <Project Name="libgtypes"/>
   </Dependencies>
   <Dependencies Name="OpenGL_Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="DirectX_Debug">
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
   </Dependencies>

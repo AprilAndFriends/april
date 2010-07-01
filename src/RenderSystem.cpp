@@ -247,6 +247,17 @@ namespace April
 		render(TriangleStrip,v,4,r,g,b,a);
 	}
 	
+	void RenderSystem::drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw,float sh)
+	{
+		TexturedVertex v[4];
+		v[0].x=x;   v[0].y=y;   v[0].z=0; v[0].u=sx;    v[0].v=sy;
+		v[1].x=x+w; v[1].y=y;   v[1].z=0; v[1].u=sx+sw; v[1].v=sy;
+		v[2].x=x;   v[2].y=y+h; v[2].z=0; v[2].u=sx;    v[2].v=sy+sh;
+		v[3].x=x+w; v[3].y=y+h; v[3].z=0; v[3].u=sx+sw; v[3].v=sy+sh;
+		
+		render(TriangleStrip,v,4);		
+	}
+	
 	void RenderSystem::logMessage(chstr message,chstr prefix)
 	{
 		g_logFunction(prefix+message);

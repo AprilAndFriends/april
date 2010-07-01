@@ -73,7 +73,7 @@ namespace April
 		mFilename="UserTexture";			
 		rendersys->logMessage("creating empty DX9 texture [ "+hstr(w)+"x"+hstr(h)+" ]");
 		D3DFORMAT d3dfmt=D3DFMT_X8R8G8B8;
-		if (fmt == AT_A8R8G8B8) d3dfmt=D3DFMT_A8R8G8B8;
+		if (fmt == AT_ARGB) d3dfmt=D3DFMT_A8R8G8B8;
 		D3DPOOL d3dpool=D3DPOOL_MANAGED;
 		DWORD d3dusage=0;
 		if (type == AT_RENDER_TARGET)
