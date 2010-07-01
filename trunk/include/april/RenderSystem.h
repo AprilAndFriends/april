@@ -29,13 +29,13 @@ enum TextureType
 
 enum TextureFormat
 {
-	AT_X8R8G8B8=1,
-	AT_A8R8G8B8=2
+	AT_XRGB=1,
+	AT_ARGB=2
 };
 
 namespace April
 {
-	
+		
 	class ImageSource;
 	// render operations
 	enum RenderOp
@@ -176,7 +176,7 @@ namespace April
 		virtual Texture* loadTexture(chstr filename,bool dynamic=false)=0;
 		Texture* loadRAMTexture(chstr filename,bool dynamic=false);
 		virtual Texture* createTextureFromMemory(unsigned char* rgba,int w,int h)=0;
-		virtual Texture* createEmptyTexture(int w,int h,TextureFormat fmt=AT_X8R8G8B8,TextureType type=AT_NORMAL)=0;
+		virtual Texture* createEmptyTexture(int w,int h,TextureFormat fmt=AT_XRGB,TextureType type=AT_NORMAL)=0;
 
 		// modelview matrix transformation
 		void setIdentityTransform();
@@ -212,7 +212,9 @@ namespace April
 		virtual void setRenderTarget(Texture* source)=0;
 		
 		void drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a=1);
+		void drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw,float sh);
 
+		
 		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
 		void setIdleTextureUnloadTime(float time) { mIdleUnloadTime=time; }
 
