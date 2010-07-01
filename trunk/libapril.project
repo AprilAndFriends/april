@@ -12,6 +12,7 @@
     <File Name="src/RenderSystem.cpp"/>
     <File Name="src/ImageSource.cpp"/>
     <File Name="rendersystems/DirectX9/RenderSystem_DirectX9.cpp"/>
+    <File Name="rendersystems/DirectX9/dx9Texture.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.h"/>
@@ -20,6 +21,7 @@
     <File Name="include/april/ImageSource.h"/>
     <File Name="rendersystems/DirectX9/RenderSystem_DirectX9.h"/>
     <File Name="include/april/Keys.h"/>
+    <File Name="rendersystems/DirectX9/dx9Texture.h"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="libgtypes"/>

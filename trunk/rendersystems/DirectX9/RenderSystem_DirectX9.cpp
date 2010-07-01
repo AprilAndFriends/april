@@ -10,11 +10,13 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #ifdef _DIRECTX9
 
 #include "RenderSystem_DirectX9.h"
+
 #include "ImageSource.h"
 #include "Keys.h"
-#include <IL/il.h>
 #include <gtypes/Vector2.h>
 #include <d3d9.h>
+#include "dx9Texture.h"
+#include <stdio.h>
 
 #define PLAIN_FVF D3DFVF_XYZ
 #define COLORED_FVF D3DFVF_XYZ | D3DFVF_DIFFUSE
@@ -28,7 +30,6 @@ namespace April
 	IDirect3D9* d3d=0;
 	IDirect3DDevice9* d3dDevice=0;
 	HWND hWnd;
-	class DirectX9Texture;
 	DirectX9Texture* active_texture=0;
 	gtypes::Vector2 cursorpos;
 	bool cursor_visible=1;
@@ -67,100 +68,6 @@ namespace April
 		if (rop == LineStrip)     return nVertices-1;
 		return 0;
 	}
-
-	class DirectX9Texture : public Texture
-	{
-	public:
-		IDirect3DTexture9* mTexture;
-		DirectX9Texture(chstr filename,bool dynamic)
-		{
-			mFilename=filename;
-			mDynamic=dynamic;
-			mTexture=0;
-			if (mDynamic)
-			{
-				mWidth=mHeight=0;
-			}
-			else
-			{
-				load();
-			}
-		}
-
-		DirectX9Texture(unsigned char* rgba,int w,int h)
-		{
-			mWidth=w; mHeight=h;
-			mDynamic=0;
-			mFilename="UserTexture";
-			mUnusedTimer=0;
-
-			rendersys->logMessage("Creating user-defined DX9 texture");
-			HRESULT hr=d3dDevice->CreateTexture(mWidth,mHeight,1,0,D3DFMT_A8R8G8B8,D3DPOOL_MANAGED,&mTexture,0);
-			if (hr != D3D_OK) { rendersys->logMessage("Failed to create user-defined DX9 texture!"); return; }
-			// write texels
-			D3DLOCKED_RECT rect;
-			mTexture->LockRect(0,&rect,NULL,D3DLOCK_DISCARD);
-			int x,y;
-			unsigned char* p=(unsigned char*) rect.pBits;
-			for (y=0;y<h;y++)
-			{
-				for (x=0;x<w;x++,p+=4,rgba+=4)
-				{
-					p[0]=rgba[2];
-					p[1]=rgba[1];
-					p[2]=rgba[0];
-					p[3]=rgba[3];
-				}
-			}
-			mTexture->UnlockRect(0);
-		}
-
-		~DirectX9Texture()
-		{
-			unload();
-		}
-
-		bool load()
-		{
-			mUnusedTimer=0;
-			if (mTexture) return 1;
-			rendersys->logMessage("loading DX9 texture '"+mFilename+"'");
-			ImageSource* img=loadImage(mFilename);
-			if (!img) { rendersys->logMessage("Failed to load texture '"+mFilename+"'!"); return 0; }
-			mWidth=img->w; mHeight=img->h;
-			HRESULT hr=d3dDevice->CreateTexture(mWidth,mHeight,1,0,(img->bpp == 3) ? D3DFMT_X8R8G8B8 : D3DFMT_A8R8G8B8,D3DPOOL_MANAGED,&mTexture,0);
-			if (hr != D3D_OK) { rendersys->logMessage("Failed to load DX9 texture!"); delete img; return 0; }
-			// write texels
-			D3DLOCKED_RECT rect;
-			mTexture->LockRect(0,&rect,NULL,D3DLOCK_DISCARD);
-			img->copyPixels(rect.pBits,IL_BGRA);
-			//memcpy(rect.pBits,img->data,mWidth*mHeight*img->bpp);
-			mTexture->UnlockRect(0);
-
-			delete img;
-			return 1;
-		}
-
-		bool isLoaded()
-		{
-			return mTexture != 0 || mFilename == "UserTexture";
-		}
-
-		void unload()
-		{
-			if (mTexture)
-			{
-				rendersys->logMessage("unloading DX9 texture '"+mFilename+"'");
-				mTexture->Release();
-				mTexture=0;
-			}
-		}
-
-		int getSizeInBytes()
-		{
-			return mWidth*mHeight*3;
-		}
-	};
 /**********************************************************************************************/
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -281,6 +188,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		configureDevice();
 		clear(1,0);
 		presentFrame();
+		d3dDevice->GetRenderTarget(0,&mBackBuffer);
+		mRenderTarget=0;
 	}
 	
 	void DirectX9RenderSystem::configureDevice()
@@ -328,9 +237,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	Texture* DirectX9RenderSystem::createTextureFromMemory(unsigned char* rgba,int w,int h)
 	{
-		rendersys->logMessage("creating user-defined DX9 texture");
-		DirectX9Texture* t=new DirectX9Texture(rgba,w,h);
-		return t;
+		return new DirectX9Texture(rgba,w,h);
+	}
+	
+	Texture* DirectX9RenderSystem::createEmptyTexture(int w,int h,TextureFormat fmt,TextureType type)
+	{
+		return new DirectX9Texture(w,h,fmt,type);
 	}
 
 	void DirectX9RenderSystem::setTexture(Texture* t)
@@ -379,6 +291,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 		}
 	}
+	void DirectX9RenderSystem::render(RenderOp renderOp,ColoredTexturedVertex* v,int nVertices)
+	{
+		d3dDevice->SetFVF(TEX_COLOR_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(ColoredTexturedVertex));
+
+	}
 
 	void DirectX9RenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices)
 	{
@@ -399,8 +317,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		ColoredTexturedVertex* p=cv;
 		for (int i=0;i<nVertices;i++,p++,v++)
 		{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=color; p->u=v->u; p->v=v->v; }
-		d3dDevice->SetFVF(TEX_COLOR_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),cv,sizeof(ColoredTexturedVertex));
+		render(renderOp,cv,nVertices);
 		if (nVertices > 100) delete [] cv;
 	}
 
@@ -425,6 +342,19 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=color; }
 		render(renderOp,cv,nVertices);
 		if (nVertices > 100) delete [] cv;
+	}
+	
+	void DirectX9RenderSystem::setRenderTarget(Texture* source)
+	{
+		if (mRenderTarget) d3dDevice->EndScene();
+		if (!source)
+		{
+			d3dDevice->SetRenderTarget(0,mBackBuffer);
+		}
+		else
+			d3dDevice->SetRenderTarget(0,((DirectX9Texture*) source)->getSurface());
+		if (mRenderTarget) d3dDevice->BeginScene();
+		mRenderTarget=(DirectX9Texture*) source;
 	}
 	
 	int DirectX9RenderSystem::getWindowWidth()
@@ -521,6 +451,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			_setModelviewMatrix(mModelviewMatrix);
 			_setProjectionMatrix(mProjectionMatrix);
 			configureDevice();
+			d3dDevice->GetRenderTarget(0,&mBackBuffer); // update backbuffer pointer
 			logMessage("Direct3D9 Device restored");
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)

@@ -315,6 +315,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\rendersystems\DirectX9\dx9Texture.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\ImageSource.cpp"
 				>
 			</File>
@@ -342,6 +346,10 @@
 			>
 			<File
 				RelativePath=".\include\april\AprilExport.h"
+				>
+			</File>
+			<File
+				RelativePath=".\rendersystems\DirectX9\dx9Texture.h"
 				>
 			</File>
 			<File
