@@ -231,6 +231,7 @@ namespace April
 		virtual void showSystemCursor(bool b)=0;
 		virtual bool isSystemCursorShown()=0;
 
+		virtual void beginFrame()=0;
 		virtual void presentFrame()=0;
 		virtual void enterMainLoop()=0;
 
