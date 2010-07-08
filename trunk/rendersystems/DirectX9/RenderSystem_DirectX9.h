@@ -64,6 +64,7 @@ namespace April
 		int getWindowWidth();
 		int getWindowHeight();
 		
+		void beginFrame();
 		void presentFrame();
 		
 		void triggerKeyEvent(bool down,unsigned int keycode);

@@ -190,6 +190,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		presentFrame();
 		d3dDevice->GetRenderTarget(0,&mBackBuffer);
 		mRenderTarget=0;
+		d3dDevice->BeginScene();
 	}
 	
 	void DirectX9RenderSystem::configureDevice()
@@ -423,9 +424,15 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		return cursor_visible;
 	}
+	
+	void DirectX9RenderSystem::beginFrame()
+	{
+		d3dDevice->BeginScene();
+	}
 
 	void DirectX9RenderSystem::presentFrame()
 	{
+		d3dDevice->EndScene();
 		HRESULT hr=d3dDevice->Present(NULL, NULL, NULL, NULL);
 		if (hr == D3DERR_DEVICELOST)
 		{
@@ -463,6 +470,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				if (hr == D3D_OK) break;
 			}
 		}
+		d3dDevice->BeginScene();
 	}
 	
 	void DirectX9RenderSystem::terminateMainLoop()
@@ -541,7 +549,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				}
 			}
 			// rendering
-			d3dDevice->BeginScene();
+			//d3dDevice->BeginScene();
 			if (mUpdateCallback) mUpdateCallback(k);
 			
 #ifdef _DEBUG
@@ -554,7 +562,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			}
 			else fps++;
 #endif			
-			d3dDevice->EndScene();
+			//d3dDevice->EndScene();
 
 
 			presentFrame();
