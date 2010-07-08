@@ -213,6 +213,7 @@ namespace April
 		
 		void drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a=1);
 		void drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw,float sh);
+		void drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw,float sh,float r,float g,float b,float a);
 
 		
 		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
