@@ -43,6 +43,8 @@ namespace April
 		// object creation
 		Texture* loadTexture(chstr filename,bool dynamic);
 		Texture* createTextureFromMemory(unsigned char* rgba,int w,int h);
+		Texture* createEmptyTexture(int w,int h,TextureFormat fmt,TextureType type);
+
 
 		// modelview matrix transformation
 		void setBlendMode(BlendMode mode);
@@ -51,12 +53,15 @@ namespace April
 		void clear(bool color,bool depth);
 		void setTexture(Texture* t);
 		void render(RenderOp renderOp,TexturedVertex* v,int nVertices);
+		void render(RenderOp renderOp,ColoredTexturedVertex* v,int nVertices);
 		void render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a);
 		void render(RenderOp renderOp,PlainVertex* v,int nVertices);
 		void render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a);
 		void render(RenderOp renderOp,ColoredVertex* v,int nVertices);
 
 		void setAlphaMultiplier(float value);
+		void setRenderTarget(Texture* source);
+		void beginFrame();
 		
 		void setWindowTitle(chstr title);
 		gtypes::Vector2 getCursorPos();
