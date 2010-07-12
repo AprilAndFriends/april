@@ -2,7 +2,8 @@
 This source file is part of the Awesome Portable Rendering Interface Library         *
 For latest info, see http://libapril.sourceforge.net/                                *
 **************************************************************************************
-Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                                  *
+Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                                 *
+                   Ivan Vucica (ivan@vucica.net)                                     *
 *                                                                                    *
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
@@ -19,9 +20,17 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <windows.h>
 #endif
 #include <stdlib.h>
+
+#ifndef __APPLE__
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#else // __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#endif // __APPLE__
+
 #include <gtypes/Vector2.h>
 
 namespace April

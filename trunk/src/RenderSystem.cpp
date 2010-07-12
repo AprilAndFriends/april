@@ -2,14 +2,19 @@
 This source file is part of the Awesome Portable Rendering Interface Library         *
 For latest info, see http://libapril.sourceforge.net/                                *
 **************************************************************************************
-Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                                  *
+Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                                 *
+                     Ivan Vucica (ivan@vucica.net)                                   *
 *                                                                                    *
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 #include <stdio.h>
 #include <algorithm>
+
+#ifdef USE_IL
 #include <IL/il.h>
+#endif
+
 #include "RenderSystem.h"
 #ifdef _OPENGL
 #include "RenderSystem_GL.h"
@@ -373,7 +378,10 @@ namespace April
 /*********************************************************************************/
 	void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title)
 	{
-		ilInit();
+		#ifdef USE_IL
+			ilInit();
+		#endif
+		
 		#ifdef _OPENGL
 			createGLRenderSystem(w,h,fullscreen,title);
 		#else
