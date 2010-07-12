@@ -200,7 +200,11 @@ namespace April
 		rendersys->logMessage("creating user-defined GL texture");
 		GLTexture* t=new GLTexture(rgba,w,h);
 		return t;
-
+	}
+	
+	Texture* GLRenderSystem::createEmptyTexture(int w,int h,TextureFormat fmt,TextureType type)
+	{
+		return 0; //todo
 	}
 
 	void GLRenderSystem::setTexture(Texture* t)
@@ -317,6 +321,21 @@ namespace April
 		glColorPointer(4, GL_UNSIGNED_BYTE,sizeof(ColoredVertex), (char*) v+3*sizeof(float));
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
+	}
+	
+	void GLRenderSystem::render(RenderOp renderOp,ColoredTexturedVertex* v,int nVertices)
+	{
+		// TODO
+	}
+	
+	void GLRenderSystem::setRenderTarget(Texture* source)
+	{
+		// TODO
+	}
+	
+	void GLRenderSystem::beginFrame()
+	{
+		// TODO
 	}
 
 	void GLRenderSystem::setAlphaMultiplier(float value)
