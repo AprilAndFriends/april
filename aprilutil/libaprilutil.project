@@ -39,6 +39,22 @@
     <Project Name="libgtypes"/>
   </Dependencies>
   <Settings Type="Dynamic Library">
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="."/>
+        <IncludePath Value="include"/>
+        <IncludePath Value="include/aprilutil"/>
+        <IncludePath Value="../include"/>
+        <IncludePath Value="../../hltypes/include"/>
+        <IncludePath Value="../../gtypes/include"/>
+        <Preprocessor Value="APRILUTIL_EXPORTS"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="./lib"/>
+        <LibraryPath Value="../lib"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="_WIN32"/>
@@ -114,21 +130,5 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
-    <GlobalSettings>
-      <Compiler Options="">
-        <IncludePath Value="."/>
-        <IncludePath Value="include"/>
-        <IncludePath Value="include/aprilutil"/>
-        <IncludePath Value="../include"/>
-        <IncludePath Value="../../hltypes/include"/>
-        <IncludePath Value="../../gtypes/include"/>
-        <Preprocessor Value="APRILUTIL_EXPORTS"/>
-      </Compiler>
-      <Linker Options="">
-        <LibraryPath Value="./lib"/>
-        <LibraryPath Value="../lib"/>
-      </Linker>
-      <ResourceCompiler Options=""/>
-    </GlobalSettings>
   </Settings>
 </CodeLite_Project>

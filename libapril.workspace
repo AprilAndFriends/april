@@ -6,6 +6,7 @@
   <Project Name="libgtypes" Path="../gtypes/libgtypes.project" Active="No"/>
   <Project Name="demo_3d" Path="demos/demo_3d/demo_3d.project" Active="No"/>
   <Project Name="libhltypes" Path="../hltypes/libhltypes.project" Active="No"/>
+  <Project Name="libaprilutil" Path="aprilutil/libaprilutil.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Linux_Debug" Selected="no">
       <Project Name="tictactoe" ConfigName="Debug"/>
@@ -14,6 +15,7 @@
       <Project Name="libgtypes" ConfigName="Linux_Debug"/>
       <Project Name="demo_3d" ConfigName="Linux_Debug"/>
       <Project Name="libhltypes" ConfigName="Linux_Debug"/>
+      <Project Name="libaprilutil" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="OpenGL_Debug" Selected="no">
       <Project Name="tictactoe" ConfigName="Debug"/>
@@ -22,6 +24,7 @@
       <Project Name="demo_simple" ConfigName="Debug"/>
       <Project Name="demo_3d" ConfigName="Debug"/>
       <Project Name="libhltypes" ConfigName="Debug"/>
+      <Project Name="libaprilutil" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="OpenGL_Release" Selected="no">
       <Project Name="tictactoe" ConfigName="Release"/>
@@ -30,6 +33,7 @@
       <Project Name="libapril" ConfigName="OpenGL_Release"/>
       <Project Name="demo_simple" ConfigName="Release"/>
       <Project Name="demo_3d" ConfigName="Release"/>
+      <Project Name="libaprilutil" ConfigName="Debug"/>
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="DirectX9_Debug" Selected="yes">
       <Project Name="tictactoe" ConfigName="Debug"/>
@@ -38,6 +42,7 @@
       <Project Name="demo_simple" ConfigName="Debug"/>
       <Project Name="demo_3d" ConfigName="Debug"/>
       <Project Name="libhltypes" ConfigName="Debug"/>
+      <Project Name="libaprilutil" ConfigName="Debug"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>
