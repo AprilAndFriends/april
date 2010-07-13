@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../win32/include;../include;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;_WIN32;_CRT_SECURE_NO_WARNINGS;_OPENGL"
+				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;USE_IL;_WIN32;_CRT_SECURE_NO_WARNINGS;_OPENGL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -116,7 +116,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="../win32/include;../include;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="APRIL_EXPORTS;_WIN32"
+				PreprocessorDefinitions="APRIL_EXPORTS;USE_IL;_WIN32"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -186,7 +186,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;_WIN32;_CRT_SECURE_NO_WARNINGS;_DIRECTX9"
+				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;USE_IL;_WIN32;_CRT_SECURE_NO_WARNINGS;_DIRECTX9"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -261,7 +261,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="../win32/include;../include;include/april;rendersystems/OpenGL;include;../hltypes/include;;../gtypes/include;rendersystems/DirectX9"
-				PreprocessorDefinitions="APRIL_EXPORTS;_WIN32;_DIRECTX9"
+				PreprocessorDefinitions="APRIL_EXPORTS;USE_IL;_WIN32;_DIRECTX9"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -319,7 +319,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\ImageSource.cpp"
+				RelativePath=".\src\ImageSourceIL.cpp"
 				>
 			</File>
 			<File
