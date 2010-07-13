@@ -10,9 +10,9 @@
   <VirtualDirectory Name="src">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.cpp"/>
     <File Name="src/RenderSystem.cpp"/>
-    <File Name="src/ImageSource.cpp"/>
     <File Name="rendersystems/DirectX9/RenderSystem_DirectX9.cpp"/>
     <File Name="rendersystems/DirectX9/dx9Texture.cpp"/>
+    <File Name="src/ImageSourceIL.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.h"/>
@@ -237,6 +237,7 @@
         <IncludePath Value="../gtypes/include"/>
         <IncludePath Value="../include"/>
         <Preprocessor Value="APRIL_EXPORTS"/>
+        <Preprocessor Value="USE_IL"/>
       </Compiler>
       <Linker Options="">
         <LibraryPath Value="./lib"/>
