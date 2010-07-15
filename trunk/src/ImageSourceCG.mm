@@ -22,13 +22,13 @@ namespace April
 	ImageSource::ImageSource()
 	{
 		mImageId = 0; // unused in CG
-		img->data = NULL;
-		img->w = img->h = img->bpp = img->format = 0;
+		this->data = NULL;
+		this->w = this->h = this->bpp = this->format = 0;
 	}
 	
 	ImageSource::~ImageSource()
 	{
-		free(img->data);
+		free(this->data);
 	}
 	
 	Color ImageSource::getPixel(int x,int y)
