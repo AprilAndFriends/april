@@ -13,7 +13,7 @@
 		7F42F7A811EB178C00B1C1DF /* RenderSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A411EB178C00B1C1DF /* RenderSystem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F42F7AC11EB179A00B1C1DF /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */; };
 		7F42F7B111EB187100B1C1DF /* RenderSystem_GL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AF11EB187100B1C1DF /* RenderSystem_GL.cpp */; };
-		7F42F7B211EB187100B1C1DF /* RenderSystem_GL.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7B011EB187100B1C1DF /* RenderSystem_GL.h */; };
+		7F42F7B211EB187100B1C1DF /* RenderSystem_GL.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7B011EB187100B1C1DF /* RenderSystem_GL.h */; settings = {ATTRIBUTES = (); }; };
 		7F42F83211EB1A9700B1C1DF /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42F83111EB1A9700B1C1DF /* gtypes.framework */; };
 		7F42F83411EB1A9700B1C1DF /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42F83311EB1A9700B1C1DF /* hltypes.framework */; };
 		7F42FACB11EB341E00B1C1DF /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42FACA11EB341E00B1C1DF /* GLUT.framework */; };
@@ -170,7 +170,6 @@
 				8DC2EF520486A6940098B216 /* Resources */,
 				8DC2EF540486A6940098B216 /* Sources */,
 				8DC2EF560486A6940098B216 /* Frameworks */,
-				7F42FCE411EB459C00B1C1DF /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -210,22 +209,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		7F42FCE411EB459C00B1C1DF /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "rm -rf /Library/Frameworks/april.framework\ncp -R build/Debug/april.framework /Library/Frameworks/april.framework\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		8DC2EF540486A6940098B216 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -258,7 +241,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = _OPENGL;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -268,17 +250,15 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Library/Frameworks\"",
-				);
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = _OPENGL;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
