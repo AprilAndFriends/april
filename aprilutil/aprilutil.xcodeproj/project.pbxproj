@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F21927D11F07DAA00660245 /* AprilUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F21927B11F07DAA00660245 /* AprilUtilExport.h */; };
+		7F21927E11F07DAA00660245 /* BlurManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F21927C11F07DAA00660245 /* BlurManager.h */; };
 		7FE9C55511EDC6DF008EF582 /* BlurManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FE9C55411EDC6DF008EF582 /* BlurManager.cpp */; };
-		7FE9C55811EDC6EC008EF582 /* AprilUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FE9C55611EDC6EC008EF582 /* AprilUtilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7FE9C55911EDC6EC008EF582 /* BlurManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FE9C55711EDC6EC008EF582 /* BlurManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FE9C55F11EDC71A008EF582 /* april.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FE9C55E11EDC71A008EF582 /* april.framework */; };
 		7FE9C56A11EDC72E008EF582 /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FE9C56911EDC72E008EF582 /* gtypes.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7F21927B11F07DAA00660245 /* AprilUtilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AprilUtilExport.h; path = include/aprilutil/AprilUtilExport.h; sourceTree = "<group>"; };
+		7F21927C11F07DAA00660245 /* BlurManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlurManager.h; path = include/aprilutil/BlurManager.h; sourceTree = "<group>"; };
 		7FE9C55411EDC6DF008EF582 /* BlurManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BlurManager.cpp; path = src/BlurManager.cpp; sourceTree = "<group>"; };
-		7FE9C55611EDC6EC008EF582 /* AprilUtilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AprilUtilExport.h; path = include/aprilutil/AprilUtilExport.h; sourceTree = "<group>"; };
-		7FE9C55711EDC6EC008EF582 /* BlurManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlurManager.h; path = include/aprilutil/BlurManager.h; sourceTree = "<group>"; };
 		7FE9C55E11EDC71A008EF582 /* april.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = april.framework; path = Library/Frameworks/april.framework; sourceTree = SDKROOT; };
 		7FE9C56911EDC72E008EF582 /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = Library/Frameworks/gtypes.framework; sourceTree = SDKROOT; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -101,8 +101,8 @@
 		7FE9C55311EDC6D4008EF582 /* Includes */ = {
 			isa = PBXGroup;
 			children = (
-				7FE9C55611EDC6EC008EF582 /* AprilUtilExport.h */,
-				7FE9C55711EDC6EC008EF582 /* BlurManager.h */,
+				7F21927B11F07DAA00660245 /* AprilUtilExport.h */,
+				7F21927C11F07DAA00660245 /* BlurManager.h */,
 			);
 			name = Includes;
 			sourceTree = "<group>";
@@ -114,8 +114,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7FE9C55811EDC6EC008EF582 /* AprilUtilExport.h in Headers */,
-				7FE9C55911EDC6EC008EF582 /* BlurManager.h in Headers */,
+				7F21927D11F07DAA00660245 /* AprilUtilExport.h in Headers */,
+				7F21927E11F07DAA00660245 /* BlurManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
