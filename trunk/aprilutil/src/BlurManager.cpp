@@ -47,7 +47,7 @@ namespace April
 	void BlurManager::end()
 	{
 		if (mEnable)
-		{	
+		{
 			int i,j;
 			float inc;
 			April::Texture* temp;
