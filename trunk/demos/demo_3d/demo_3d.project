@@ -130,17 +130,17 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
-  <Dependencies Name="Debug">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-    <Project Name="libapril"/>
-  </Dependencies>
   <Dependencies Name="Linux_Debug">
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
     <Project Name="libapril"/>
   </Dependencies>
   <Dependencies Name="Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
+  <Dependencies Name="Debug">
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
     <Project Name="libapril"/>

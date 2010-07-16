@@ -11,8 +11,8 @@
     <File Name="src/BlurManager.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
-    <File Name="include/aprilutil/BlurManager.h"/>
-    <File Name="include/aprilutil/AprilUtilExport.h"/>
+    <File Name="include/april/AprilUtilExport.h"/>
+    <File Name="include/april/BlurManager.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
   <Dependencies Name="DirectX_Debug">
@@ -35,26 +35,7 @@
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
   </Dependencies>
-  <Dependencies Name="Debug">
-    <Project Name="libgtypes"/>
-  </Dependencies>
   <Settings Type="Dynamic Library">
-    <GlobalSettings>
-      <Compiler Options="">
-        <IncludePath Value="."/>
-        <IncludePath Value="include"/>
-        <IncludePath Value="include/aprilutil"/>
-        <IncludePath Value="../include"/>
-        <IncludePath Value="../../hltypes/include"/>
-        <IncludePath Value="../../gtypes/include"/>
-        <Preprocessor Value="APRILUTIL_EXPORTS"/>
-      </Compiler>
-      <Linker Options="">
-        <LibraryPath Value="./lib"/>
-        <LibraryPath Value="../lib"/>
-      </Linker>
-      <ResourceCompiler Options=""/>
-    </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="_WIN32"/>
@@ -92,7 +73,7 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
-    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Release_Win32" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="_WIN32"/>
         <Preprocessor Value="_DIRECTX9"/>
@@ -130,5 +111,25 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="."/>
+        <IncludePath Value="include"/>
+        <IncludePath Value="include/april"/>
+        <IncludePath Value="../include"/>
+        <IncludePath Value="../../hltypes/include"/>
+        <IncludePath Value="../../gtypes/include"/>
+        <Preprocessor Value="APRILUTIL_EXPORTS"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="./lib"/>
+        <LibraryPath Value="../lib"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
   </Settings>
+  <Dependencies Name="Debug">
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
 </CodeLite_Project>

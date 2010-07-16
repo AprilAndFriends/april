@@ -10,11 +10,6 @@
   <VirtualDirectory Name="src">
     <File Name="demo_tictactoe.cpp"/>
   </VirtualDirectory>
-  <Dependencies Name="Debug">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-    <Project Name="libapril"/>
-  </Dependencies>
   <Dependencies Name="Release">
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
@@ -93,4 +88,9 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
+  <Dependencies Name="Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
 </CodeLite_Project>
