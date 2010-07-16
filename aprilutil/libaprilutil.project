@@ -35,6 +35,10 @@
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
   </Dependencies>
+  <Dependencies Name="Debug">
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
   <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
@@ -115,7 +119,7 @@
       <Compiler Options="">
         <IncludePath Value="."/>
         <IncludePath Value="include"/>
-        <IncludePath Value="include/april"/>
+        <IncludePath Value="include/aprilutil"/>
         <IncludePath Value="../include"/>
         <IncludePath Value="../../hltypes/include"/>
         <IncludePath Value="../../gtypes/include"/>
@@ -128,8 +132,4 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
-  <Dependencies Name="Debug">
-    <Project Name="libgtypes"/>
-    <Project Name="libapril"/>
-  </Dependencies>
 </CodeLite_Project>
