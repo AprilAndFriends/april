@@ -11,8 +11,8 @@
     <File Name="src/BlurManager.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
-    <File Name="include/april/AprilUtilExport.h"/>
-    <File Name="include/april/BlurManager.h"/>
+    <File Name="include/aprilutil/BlurManager.h"/>
+    <File Name="include/aprilutil/AprilUtilExport.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
   <Dependencies Name="DirectX_Debug">
