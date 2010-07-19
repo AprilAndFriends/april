@@ -55,7 +55,7 @@ namespace April
 
 	unsigned int platformLoadGLTexture(const char* name,int* w,int* h)
 	{
-		unsigned int texid;
+		GLuint texid;
 		ImageSource* img=loadImage(name);
 		if (!img) return 0;
 		*w=img->w; *h=img->h;

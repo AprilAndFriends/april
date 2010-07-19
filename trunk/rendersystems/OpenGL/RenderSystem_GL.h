@@ -13,12 +13,18 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 #include "RenderSystem.h"
 
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
+
 namespace April
 {
 	class GLTexture : public Texture
 	{
 	public:
-		unsigned int mTexId;
+		GLuint mTexId;
 		
 		GLTexture(chstr filename,bool dynamic);
 		GLTexture(unsigned char* rgba,int w,int h);

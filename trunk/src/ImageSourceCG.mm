@@ -14,6 +14,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 **/
 
 #include <Cocoa/Cocoa.h>
+#include <OpenGL/gl.h>
 #include "ImageSource.h"
 #include "RenderSystem.h"
 
@@ -79,8 +80,11 @@ namespace April
 		// file:  file:///Applications/appname/bin/appname.app/../../media/hello.jpg
 		// url: file:///Applications/appname/media/hello.jpg 
 		
-		NSURL * bundle = [[NSBundle mainBundle] bundleURL];
-		NSURL * file = [NSURL URLWithString:[NSString stringWithFormat:@"../%s", filename.c_str()] relativeToURL:bundle];
+		NSString * bundle = [[[NSBundle mainBundle] bundlePath] stringByAppendingString:@"/"];
+		NSString * bundleURLString = [[@"file://" stringByAppendingString:bundle] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+		NSURL * bundleURL = [NSURL URLWithString:bundleURLString];
+		NSURL * file = [NSURL URLWithString:[NSString stringWithFormat:@"../%s", filename.c_str()] 
+							  relativeToURL:bundleURL];
 		NSURL * url = [file absoluteURL];
 		
 		/*
@@ -114,7 +118,7 @@ namespace April
 		
 		// alloc img, set attributes
 		ImageSource* img=new ImageSource();
-		img->format=GL_RGBA; //ilGetInteger(IL_IMAGE_FORMAT); // not used
+		img->format = GL_RGBA; //ilGetInteger(IL_IMAGE_FORMAT); // not used
 		img->w = CGImageGetWidth(imageRef);
 		img->h = CGImageGetHeight(imageRef);
 		int bitsPerComponent = CGImageGetBitsPerComponent(imageRef); // almost always 8
