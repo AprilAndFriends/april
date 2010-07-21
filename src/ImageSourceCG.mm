@@ -18,6 +18,63 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include "ImageSource.h"
 #include "RenderSystem.h"
 
+static NSURL* _getFileURL(chstr filename)
+{
+	
+	// consider that "filename" is "../media/hello.jpg" and "appname" is 
+	// installed in "/Applications/appname/bin/". then:
+	
+	// bundle: file:///Applications/appname/bin/appname.app/
+	// file:  file:///Applications/appname/bin/appname.app/../../media/hello.jpg
+	// url: file:///Applications/appname/media/hello.jpg 
+	
+	
+#if defined(__MAC_10_6)
+	
+	NSString* cdp = [[[[NSFileManager alloc] init] autorelease] currentDirectoryPath];
+	NSString* file = [NSString stringWithFormat:@"%@/%s", cdp, filename.c_str()];
+	NSURL* url = [NSURL fileURLWithPath:file];
+	url = [url absoluteURL];
+	
+	[cdp release];
+	[file release]; 
+#else
+	
+	NSString * bundle = [[[[NSBundle mainBundle] bundlePath] stringByAppendingString:@"/"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+	NSURL * bundleURL = [NSURL URLWithString:[@"file://" stringByAppendingString:bundle]];
+	NSURL * file = [NSURL URLWithString:[NSString stringWithFormat:@"../%s", filename.c_str()] 
+						  relativeToURL:bundleURL];
+	NSURL * url = [file absoluteURL];
+	
+#endif
+	NSLog(@"_getFileURL: %@", url);
+	return url;
+	
+}
+
+
+static NSURL* _getFileURLAsResource(chstr filename)
+{
+	
+	// consider that "filename" is "data/media/hello.jpg" and "appname" is 
+	// installed in "/Applications/". then:
+	
+	// resources:  /Applications/appname.app/Contents/Resources/
+	// file:       /Applications/appname.app/Contents/Resources/data/media/hello.jpg
+	// url: file:///Applications/appname.app/Contents/Resources/data/media/hello.jpg
+	
+	NSString * resources = [[NSBundle mainBundle] resourcePath];
+	NSString * file = [resources stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
+	NSURL * url = [NSURL URLWithString:[@"file://" stringByAppendingString:[file stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] ]];
+	
+	NSLog(@"_getFileURLAsResource: %@", url);
+	return url;
+	
+}
+
+
+
+
 namespace April
 {
 	ImageSource::ImageSource()
@@ -73,30 +130,7 @@ namespace April
 	{
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
 		
-		// consider that "filename" is "../media/hello.jpg" and "appname" is 
-		// installed in "/Applications/appname/bin/". then:
 		
-		// bundle: file:///Applications/appname/bin/appname.app/
-		// file:  file:///Applications/appname/bin/appname.app/../../media/hello.jpg
-		// url: file:///Applications/appname/media/hello.jpg 
-		
-		NSString * bundle = [[[NSBundle mainBundle] bundlePath] stringByAppendingString:@"/"];
-		NSString * bundleURLString = [[@"file://" stringByAppendingString:bundle] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-		NSURL * bundleURL = [NSURL URLWithString:bundleURLString];
-		NSURL * file = [NSURL URLWithString:[NSString stringWithFormat:@"../%s", filename.c_str()] 
-							  relativeToURL:bundleURL];
-		NSURL * url = [file absoluteURL];
-		
-		/*
-		NSString* cdp = [[[[NSFileManager alloc] init] autorelease] currentDirectoryPath];
-		NSString* file = [NSString stringWithFormat:@"%@/%s", cdp, filename.c_str()];
-		NSURL* url = [NSURL fileURLWithPath:file];
-		url = [url absoluteURL];
-		
-		
-		[cdp release];
-		[file release]; 
-		*/
 		
 		// TODO check for memory leak!
 		// according to:
@@ -104,13 +138,19 @@ namespace April
 		// here might be a memory leak and we might wanna switch to
 		// CGImageSourceCreateFromData(). bug in cocoa present
 		// as late as 2007!
-		CGImageSourceRef imageSource = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
+		
+		CGImageSourceRef imageSource = CGImageSourceCreateWithURL((CFURLRef)_getFileURLAsResource(filename), NULL);
         
         if(!imageSource){
 			//CFRelease(imageSource);
-			NSLog(@"Failed to load %@", url);
-			[arp release];
-			return NULL;
+			
+			imageSource = CGImageSourceCreateWithURL((CFURLRef)_getFileURL(filename), NULL);
+			
+			if (!imageSource){
+				NSLog(@"Failed to load %@", filename.c_str());
+				[arp release];
+				return NULL;
+			}
 		}
 		
 		CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
