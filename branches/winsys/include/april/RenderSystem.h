@@ -35,7 +35,7 @@ enum TextureFormat
 
 namespace April
 {
-		
+	class Window;
 	class ImageSource;
 	// render operations
 	enum RenderOp
@@ -150,23 +150,17 @@ namespace April
 	class AprilExport RenderSystem
 	{
 	protected:
+		Window* mWindow;
 		float mAlphaMultiplier;
 		float mIdleUnloadTime;
 		bool mDynamicLoading;
 		
-		bool (*mUpdateCallback)(float);
-		void (*mMouseDownCallback)(float,float,int);
-		void (*mMouseUpCallback)(float,float,int);
-		void (*mMouseMoveCallback)(float,float);
-		void (*mKeyDownCallback)(unsigned int);
-		void (*mCharCallback)(unsigned int);
-		void (*mKeyUpCallback)(unsigned int);
-
 		gtypes::Matrix4 mModelviewMatrix,mProjectionMatrix;
 
 		virtual void _setModelviewMatrix(const gtypes::Matrix4& matrix)=0;
 		virtual void _setProjectionMatrix(const gtypes::Matrix4& matrix)=0;
 	public:
+		
 		virtual hstr getName()=0;
 
 		RenderSystem();
@@ -224,17 +218,8 @@ namespace April
 		virtual void setAlphaMultiplier(float value)=0;
 		float getAlphaMultiplier() { return mAlphaMultiplier; }
 
-		virtual int getWindowWidth()=0;
-		virtual int getWindowHeight()=0;
-
-		virtual void setWindowTitle(chstr title)=0;
-		virtual gtypes::Vector2 getCursorPos()=0;
-		virtual void showSystemCursor(bool b)=0;
-		virtual bool isSystemCursorShown()=0;
 
 		virtual void beginFrame()=0;
-		virtual void presentFrame()=0;
-		virtual void enterMainLoop()=0;
 
 		void registerUpdateCallback(bool (*callback)(float));
 		void registerMouseCallbacks(void (*mouse_dn)(float,float,int),
@@ -243,11 +228,16 @@ namespace April
 		void registerKeyboardCallbacks(void (*key_dn)(unsigned int),
 									   void (*key_up)(unsigned int),
 									   void (*char_callback)(unsigned int));
+		
 
 		void forceDynamicLoading(bool value) { mDynamicLoading=value; }
 		bool isDynamicLoadingForced() { return mDynamicLoading; }
 
-		virtual void terminateMainLoop()=0;
+		
+		
+		
+		virtual void enterMainLoop()  __attribute__((deprecated)) { logMessage("RenderSystem::enterMainLoop() is deprecated"); }
+
 	};
 
 	AprilFnExport void setLogFunction(void (*fnptr)(chstr));

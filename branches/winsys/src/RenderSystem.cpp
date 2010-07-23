@@ -22,6 +22,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include "RenderSystem_DirectX9.h"
 #endif
 #include "ImageSource.h"
+#include "Window.h"
 
 April::RenderSystem* rendersys;
 
@@ -225,13 +226,6 @@ namespace April
 	RenderSystem::RenderSystem()
 	{
 		mAlphaMultiplier=1.0f;
-		mUpdateCallback=0;
-		mMouseDownCallback=0;
-		mMouseUpCallback=0;
-		mMouseMoveCallback=0;
-		mKeyDownCallback=0;
-		mKeyUpCallback=0;
-		mCharCallback=0;
 		mDynamicLoading=0;
 		mIdleUnloadTime=0;
 	}
@@ -281,25 +275,26 @@ namespace April
 	
 	void RenderSystem::registerUpdateCallback(bool (*callback)(float))
 	{
-		mUpdateCallback=callback;
+		mWindow->setUpdateCallback(callback);
+		
+		logMessage("RenderSystem::registerUpdateCallback() is deprecated");
 	}
 
 	void RenderSystem::registerMouseCallbacks(void (*mouse_dn)(float,float,int),
 								              void (*mouse_up)(float,float,int),
 								              void (*mouse_move)(float,float))
 	{
-			mMouseDownCallback=mouse_dn;
-			mMouseUpCallback=mouse_up;
-			mMouseMoveCallback=mouse_move;
-			
+		mWindow->setMouseCallbacks(mouse_dn,mouse_up,mouse_move);
+		
+		logMessage("RenderSystem::registerMouseCallbacks() is deprecated");
 	}
+	
 	void RenderSystem::registerKeyboardCallbacks(void (*key_dn)(unsigned int),
 								                 void (*key_up)(unsigned int),
 												 void (*char_callback)(unsigned int))
 	{
-		mKeyDownCallback=key_dn;
-		mKeyUpCallback=key_up;
-		mCharCallback=char_callback;
+		mWindow->setKeyboardCallbacks(key_dn, key_up, char_callback);
+		logMessage("RenderSystem::registerKeyboardCallbacks() is deprecated");
 	}
 	
 	Texture* RenderSystem::loadRAMTexture(chstr filename,bool dynamic)
@@ -382,8 +377,9 @@ namespace April
 			ilInit();
 		#endif
 		
+		Window* window = createAprilWindow("GLUT", w, h, fullscreen, title);
 		#ifdef _OPENGL
-			createGLRenderSystem(w,h,fullscreen,title);
+			createGLRenderSystem(window);
 		#else
 			createDX9RenderSystem(w,h,fullscreen,title);
 		#endif

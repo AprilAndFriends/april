@@ -42,7 +42,7 @@ namespace April
 		void _setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void _setProjectionMatrix(const gtypes::Matrix4& matrix);
 	public:
-		GLRenderSystem(int w,int h);
+		GLRenderSystem(Window* window);
 		~GLRenderSystem();
 		hstr getName();
 		
@@ -69,26 +69,10 @@ namespace April
 		void setRenderTarget(Texture* source);
 		void beginFrame();
 		
-		void setWindowTitle(chstr title);
-		gtypes::Vector2 getCursorPos();
-		void showSystemCursor(bool b);
-		bool isSystemCursorShown();
-
-		int getWindowWidth();
-		int getWindowHeight();
-		
-		void presentFrame();
-		
-		bool triggerUpdate(float time_increase);
-		bool triggerKeyEvent(bool down,unsigned int keycode);
-
-		bool triggerMouseEvent(int event,float x,float y,int button);
-		
-		void enterMainLoop();
-		void terminateMainLoop();
+		void enterMainLoop() __attribute__((deprecated));
 	};
 
-	void createGLRenderSystem(int w,int h,bool fullscreen,chstr title);
+	void createGLRenderSystem(Window* window);
 }
 #endif
 #endif
