@@ -335,11 +335,15 @@ namespace April
 		glColor4f(1,1,1,value);
 	}
 
-
 	void GLRenderSystem::enterMainLoop()
 	{
 		mWindow->enterMainLoop();
 	}
+	
+	gtypes::Vector2 GLRenderSystem::getCursorPos() {
+		return mWindow->getCursorPos();
+	}
+	
 
 /***************************************************/
 

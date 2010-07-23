@@ -195,7 +195,7 @@ namespace April
 		float k=(GetTickCount()-x)/1000.0f;
 		x=GetTickCount();
 		
-		GLUTWindow::_instance->performUpdate(x);
+		GLUTWindow::_instance->performUpdate(k);
 		GLUTWindow::_instance->presentFrame();
 	}
 	

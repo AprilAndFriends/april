@@ -232,11 +232,11 @@ namespace April
 
 		void forceDynamicLoading(bool value) { mDynamicLoading=value; }
 		bool isDynamicLoadingForced() { return mDynamicLoading; }
-
 		
+		Window* getWindow() { return mWindow; }
 		
-		
-		virtual void enterMainLoop()  __attribute__((deprecated)) { logMessage("RenderSystem::enterMainLoop() is deprecated"); }
+		virtual void enterMainLoop() __attribute__((deprecated)) { logMessage("RenderSystem::enterMainLoop() is deprecated"); }
+		virtual gtypes::Vector2 getCursorPos() __attribute__((deprecated)) = 0;
 
 	};
 

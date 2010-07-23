@@ -20,7 +20,7 @@
 		7F42FACD11EB341E00B1C1DF /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42FACC11EB341E00B1C1DF /* OpenGL.framework */; };
 		7F42FAD511EB342900B1C1DF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42FAD411EB342900B1C1DF /* Cocoa.framework */; };
 		7F42FD7711EB632E00B1C1DF /* ImageSourceCG.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */; };
-		7FA3ED1811F9817A001D1DDD /* Window.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA3ED1711F9817A001D1DDD /* Window.h */; };
+		7FA3ED1811F9817A001D1DDD /* Window.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA3ED1711F9817A001D1DDD /* Window.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
 		7FA3EDB311F997FC001D1DDD /* GLUTWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3EDB211F997FC001D1DDD /* GLUTWindow.cpp */; };
 		7FA3EEB511F9C6BE001D1DDD /* GLUTWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA3EEB411F9C6BE001D1DDD /* GLUTWindow.h */; };

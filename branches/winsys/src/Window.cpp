@@ -71,10 +71,23 @@ namespace April
 	void Window::handleMouseEvent(MouseEventType event,float x,float y, MouseButton button)
 	{
 		
-		if      (event == 0) { if (mMouseDownCallback) mMouseDownCallback(x,y,button); }
-		else if (event == 1) { if (mMouseUpCallback)   mMouseUpCallback(x,y,button); }
-		else                 { if (mMouseMoveCallback) mMouseMoveCallback(x,y); }
-	}		
+		switch (event) {
+			case AMOUSEEVT_DOWN:
+				if (mMouseDownCallback) 
+					mMouseDownCallback(x,y,button);
+				
+				break;
+			case AMOUSEEVT_UP:
+				if (mMouseUpCallback)   
+					mMouseUpCallback(x,y,button);
+				break;
+
+			case AMOUSEEVT_MOVE:
+				if (mMouseMoveCallback) 
+					mMouseMoveCallback(x,y);
+				break;
+		}
+	}
 	
 	
 	
