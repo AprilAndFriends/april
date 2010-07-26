@@ -8,6 +8,10 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 
+#include "GLUTWindow.h"
+#ifdef HAVE_SDL
+#include "SDLWindow.h"
+#endif
 #include "Window.h"
 #include "Keys.h"
 
@@ -89,7 +93,18 @@ namespace April
 		}
 	}
 	
+	///////////////////////
+	// non members
+	///////////////////////
 	
+	Window* createAprilWindow(chstr winsysname, int w, int h, bool fullscreen, chstr title)
+	{
+		if (winsysname=="SDL") {
+			return new SDLWindow(w,h,fullscreen,title);
+		}
+		return new GLUTWindow(w,h,fullscreen,title);
+		
+	}
 	
 	
 }

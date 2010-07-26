@@ -201,14 +201,5 @@ namespace April
 	
 
 	
-	////////////////////////////
-	// non members
-	////////////////////////////
-	
-	Window* createAprilWindow(chstr winsysname, int w, int h, bool fullscreen, chstr title)
-	{
-		// stub
-		return new GLUTWindow(w,h,fullscreen,title);
 
-	}
 }
