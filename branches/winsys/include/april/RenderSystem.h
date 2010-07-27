@@ -186,6 +186,8 @@ namespace April
 		// rendersys matrix operations
 		void setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void setProjectionMatrix(const gtypes::Matrix4& matrix);
+		virtual bool isFullscreen() { return false; } //2DO - implement in derived classes
+		virtual void setFullscreen(bool fullscreen) { } //2DO - implement in derived classes
 		
 		const gtypes::Matrix4& getModelviewMatrix();
 		const gtypes::Matrix4& getProjectionMatrix();
