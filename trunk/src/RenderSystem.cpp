@@ -276,7 +276,7 @@ namespace April
 	
 	void RenderSystem::logMessage(chstr message,chstr prefix)
 	{
-		g_logFunction(prefix+message);
+	//	g_logFunction(prefix+message);
 	}
 	
 	void RenderSystem::registerUpdateCallback(bool (*callback)(float))
