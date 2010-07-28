@@ -115,6 +115,8 @@ namespace April
 		mTexture->UnlockRect(0);
 
 		delete img;
+		for (Texture** it=mDynamicLinks.iter();it;it=mDynamicLinks.next())
+			if (!(*it)->isLoaded()) ((DirectX9Texture*) (*it))->load();
 		return 1;
 	}
 
