@@ -60,7 +60,6 @@ namespace April
 		
 		while (mRunning) {
 			SDL_Event event;
-			int beginticks  = SDL_GetTicks();
 			
 			//first process sdl events
 			while (SDL_PollEvent(&event)) {
@@ -80,13 +79,33 @@ namespace April
 						break;
 						
 					case SDL_KEYDOWN:
-						//g_game->keyPress(event);
+						
+						
+						break;
+						
+					case SDL_MOUSEMOTION:
+						_handleMouseMove(event.motion.x, event.motion.y);
 						break;
 						
 					case SDL_MOUSEBUTTONUP:
+						
+						SDLWindow::_instance->mCursorX=event.button.x; 
+						SDLWindow::_instance->mCursorY=event.button.y;
+						
+						
+						handleMouseEvent(AMOUSEEVT_UP, 
+										 event.button.x, event.button.y,
+										 event.button.button == SDL_BUTTON_LEFT ? AMOUSEBTN_LEFT : AMOUSEBTN_RIGHT);
+						break;
+
 					case SDL_MOUSEBUTTONDOWN:
-					case SDL_MOUSEMOTION:
-						//g_game->mouseEvent(event);
+						SDLWindow::_instance->mCursorX=event.button.x; 
+						SDLWindow::_instance->mCursorY=event.button.y;
+						
+						
+						handleMouseEvent(AMOUSEEVT_DOWN, 
+										 event.button.x, event.button.y,
+										 event.button.button == SDL_BUTTON_LEFT ? AMOUSEBTN_LEFT : AMOUSEBTN_RIGHT);
 						break;
 						
 					default:
@@ -141,14 +160,12 @@ namespace April
 	
 	int SDLWindow::getWindowWidth()
 	{
-		//return glutGet(GLUT_WINDOW_WIDTH);
-		return 640;
+		return SDL_GetVideoInfo()->current_w;
 	}
 	
 	int SDLWindow::getWindowHeight()
 	{
-		//return glutGet(GLUT_WINDOW_HEIGHT);
-		return 480;
+		return SDL_GetVideoInfo()->current_h;
 	}
 	
 	
@@ -199,12 +216,10 @@ namespace April
 	
 	void SDLWindow::_handleMouseButton(int button, int state, int x,int y)
 	{
-		SDLWindow::_instance->mCursorX=x; 
-		SDLWindow::_instance->mCursorY=y;
 		/*if (state == GLUT_DOWN)
-			SDLWindow::_instance->handleMouseEvent(Window::AMOUSEEVT_DOWN, x, y, (Window::MouseButton)button);
+			handleMouseEvent(Window::AMOUSEEVT_DOWN, x, y, (Window::MouseButton)button);
 		else
-			SDLWindow::_instance->handleMouseEvent(Window::AMOUSEEVT_UP, x, y, (Window::MouseButton)button);*/
+			handleMouseEvent(Window::AMOUSEEVT_UP, x, y, (Window::MouseButton)button);*/
 	}
 	
 	void SDLWindow::_handleMouseMove(int x,int y)
@@ -217,7 +232,7 @@ namespace April
 		// this is because glutMotionFunc() also calls it, and we may want to know which button is active.
 		
 		SDLWindow::_instance->handleMouseEvent(Window::AMOUSEEVT_MOVE, x, y, (Window::MouseButton)0);
-		
+
 	}
 	
 	void SDLWindow::_handleDisplayAndUpdate()

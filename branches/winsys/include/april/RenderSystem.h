@@ -239,7 +239,8 @@ namespace April
 		
 		virtual void enterMainLoop() __attribute__((deprecated)) { logMessage("RenderSystem::enterMainLoop() is deprecated"); }
 		virtual gtypes::Vector2 getCursorPos() __attribute__((deprecated)) = 0;
-
+		virtual int getWindowWidth() __attribute__((deprecated));
+		virtual int getWindowHeight() __attribute__((deprecated));
 	};
 
 	AprilFnExport void setLogFunction(void (*fnptr)(chstr));

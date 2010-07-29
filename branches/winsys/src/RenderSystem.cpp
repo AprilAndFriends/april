@@ -370,6 +370,21 @@ namespace April
 	{
 		return mProjectionMatrix;
 	}
+	
+/*********************************************************************************/
+
+/* deprecated funcs	*/
+
+	int RenderSystem::getWindowWidth() 
+	{ 
+		return getWindow()->getWindowWidth(); 
+	}
+	
+	int RenderSystem::getWindowHeight() 
+	{ 
+		return getWindow()->getWindowHeight(); 
+	}
+
 /*********************************************************************************/
 	void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title)
 	{
@@ -377,7 +392,7 @@ namespace April
 			ilInit();
 		#endif
 		
-		Window* window = createAprilWindow("GLUT", w, h, fullscreen, title);
+		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);
 		#ifdef _OPENGL
 			createGLRenderSystem(window);
 		#else

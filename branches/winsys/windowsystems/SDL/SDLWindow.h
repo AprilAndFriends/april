@@ -24,10 +24,10 @@ namespace April
 		static void _handleKeyDown(unsigned char key, int x, int y);
 		static void _handleKeySpecial(int key, int x, int y);
 		
-		static void _handleMouseButton(int button, int state, int x,int y);		
+		void _handleMouseButton(int button, int state, int x,int y);		
 		static void _handleMouseMove(int x,int y);
 		
-		static void _handleDisplayAndUpdate();
+		void _handleDisplayAndUpdate();
 		
 		SDL_Surface *mScreen;
 		bool mRunning;
