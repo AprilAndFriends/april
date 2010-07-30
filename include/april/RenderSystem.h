@@ -159,8 +159,8 @@ namespace April
 		void (*mMouseUpCallback)(float,float,int);
 		void (*mMouseMoveCallback)(float,float);
 		void (*mKeyDownCallback)(unsigned int);
-		void (*mCharCallback)(unsigned int);
 		void (*mKeyUpCallback)(unsigned int);
+		void (*mCharCallback)(unsigned int);
 
 		gtypes::Matrix4 mModelviewMatrix,mProjectionMatrix;
 
