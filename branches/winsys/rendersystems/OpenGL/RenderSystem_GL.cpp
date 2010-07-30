@@ -334,15 +334,8 @@ namespace April
 		mAlphaMultiplier=value;
 		glColor4f(1,1,1,value);
 	}
-
-	void GLRenderSystem::enterMainLoop()
-	{
-		mWindow->enterMainLoop();
-	}
 	
-	gtypes::Vector2 GLRenderSystem::getCursorPos() {
-		return mWindow->getCursorPos();
-	}
+	
 	
 
 /***************************************************/
@@ -361,7 +354,7 @@ namespace April
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
-		rendersys=new GLRenderSystem(window);
+		April::rendersys=::rendersys=new GLRenderSystem(window);
 	}
 
 }

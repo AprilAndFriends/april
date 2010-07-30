@@ -69,8 +69,6 @@ namespace April
 		void setRenderTarget(Texture* source);
 		void beginFrame();
 		
-		void enterMainLoop() __attribute__((deprecated));
-		gtypes::Vector2 getCursorPos() __attribute__((deprecated));
 	};
 
 	void createGLRenderSystem(Window* window);

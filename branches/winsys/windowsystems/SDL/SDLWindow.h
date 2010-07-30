@@ -14,20 +14,15 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include "AprilExport.h"
 
 struct SDL_Surface;
-
+union SDL_Event;
 namespace April
 {
 	class SDLWindow : public Window
 	{
 	private:
-		static void _handleKeyUp(unsigned char key, int x, int y);
-		static void _handleKeyDown(unsigned char key, int x, int y);
-		static void _handleKeySpecial(int key, int x, int y);
-		
-		void _handleMouseButton(int button, int state, int x,int y);		
-		static void _handleMouseMove(int x,int y);
-		
+				
 		void _handleDisplayAndUpdate();
+		void _handleMouseEvent(SDL_Event &evt);
 		
 		SDL_Surface *mScreen;
 		bool mRunning;

@@ -54,7 +54,8 @@ namespace April
 		
 		enum MouseButton
 		{
-			AMOUSEBTN_LEFT=0,
+			AMOUSEBTN_NONE=0,
+			AMOUSEBTN_LEFT,
 			AMOUSEBTN_RIGHT,
 			AMOUSEBTN_MIDDLE
 		};

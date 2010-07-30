@@ -24,10 +24,12 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include "ImageSource.h"
 #include "Window.h"
 
-April::RenderSystem* rendersys;
+April::RenderSystem* rendersys __attribute__((deprecated));
 
 namespace April
-{	
+{
+	April::RenderSystem* rendersys;
+
 	void april_writelog(chstr message)
 	{
 		printf("%s\n",message.c_str());		
@@ -70,9 +72,9 @@ namespace April
 		this->z=v.z;
 	}
 /*****************************************************************************************/
-	Color::Color(float a,float r,float g,float b)
+	Color::Color(float _a,float _r,float _g,float _b)
 	{
-		setColor(a,r,g,b);
+		setColor(_a,_r,_g,_b);
 	}
 
 	Color::Color(unsigned int color)
@@ -90,10 +92,10 @@ namespace April
 		a=r=g=b=255;
 	}
 
-	void Color::setColor(float a,float r,float g,float b)
+	void Color::setColor(float _a,float _r,float _g,float _b)
 	{
-		this->a=(unsigned char)(a*255); this->r=(unsigned char)(r*255);
-		this->g=(unsigned char)(g*255); this->b=(unsigned char)(b*255);
+		this->a=(unsigned char)(_a*255); this->r=(unsigned char)(_r*255);
+		this->g=(unsigned char)(_g*255); this->b=(unsigned char)(_b*255);
 	}
 
 	void Color::setColor(unsigned int color)
@@ -384,7 +386,24 @@ namespace April
 	{ 
 		return getWindow()->getWindowHeight(); 
 	}
+	
+	void RenderSystem::enterMainLoop()
+	{
+		logMessage("RenderSystem::enterMainLoop() is deprecated"); 
+		getWindow()->enterMainLoop(); 
+	}
 
+	void RenderSystem::terminateMainLoop()
+	{
+		logMessage("RenderSystem::enterMainLoop() is deprecated"); 
+		getWindow()->terminateMainLoop(); 
+	}
+	gtypes::Vector2 RenderSystem::getCursorPos()
+	{
+		return getWindow()->getCursorPos();
+	}
+
+	
 /*********************************************************************************/
 	void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title)
 	{
@@ -407,7 +426,12 @@ namespace April
 	
 	void destroy()
 	{
+		if (!rendersys) {
+			return;
+		}
+		delete rendersys->getWindow();
 		delete rendersys;
+		rendersys = 0;
 	}
 
 }

@@ -121,7 +121,7 @@ namespace April
 		return getPixel((int)x,(int)y);
 	}
 	
-	void ImageSource::copyPixels(void* output,int format)
+	void ImageSource::copyPixels(void* output,int _format)
 	{
 		memcpy(output, this->data, this->w * this->h * this->bpp);
 	}

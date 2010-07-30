@@ -12,6 +12,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <SDL/SDL.h>
 #include "SDLWindow.h"
 #include "Keys.h"
+#include "RenderSystem.h"
 
 namespace April
 {
@@ -58,6 +59,8 @@ namespace April
 	{
 		mRunning = true;
 		
+		SDL_EnableUNICODE(1);
+		
 		while (mRunning) {
 			SDL_Event event;
 			
@@ -74,39 +77,18 @@ namespace April
 						break;
 						
 					case SDL_KEYUP:
-						//g_game->keyRelease(event);
-						
-						break;
-						
 					case SDL_KEYDOWN:
-						
-						
-						break;
-						
-					case SDL_MOUSEMOTION:
-						_handleMouseMove(event.motion.x, event.motion.y);
+						handleKeyEvent(event.type == SDL_KEYUP ? AKEYEVT_UP : AKEYEVT_DOWN,
+									   event.key.keysym.scancode, 
+									   event.key.keysym.unicode);
 						break;
 						
 					case SDL_MOUSEBUTTONUP:
-						
-						SDLWindow::_instance->mCursorX=event.button.x; 
-						SDLWindow::_instance->mCursorY=event.button.y;
-						
-						
-						handleMouseEvent(AMOUSEEVT_UP, 
-										 event.button.x, event.button.y,
-										 event.button.button == SDL_BUTTON_LEFT ? AMOUSEBTN_LEFT : AMOUSEBTN_RIGHT);
-						break;
-
 					case SDL_MOUSEBUTTONDOWN:
-						SDLWindow::_instance->mCursorX=event.button.x; 
-						SDLWindow::_instance->mCursorY=event.button.y;
-						
-						
-						handleMouseEvent(AMOUSEEVT_DOWN, 
-										 event.button.x, event.button.y,
-										 event.button.button == SDL_BUTTON_LEFT ? AMOUSEBTN_LEFT : AMOUSEBTN_RIGHT);
+					case SDL_MOUSEMOTION:
+						_handleMouseEvent(event);
 						break;
+						
 						
 					default:
 						break;
@@ -118,13 +100,12 @@ namespace April
 			
 			
 		}
-		
+				
 	}
 	
 	void SDLWindow::terminateMainLoop()
 	{
-		//destroy(); // TODO
-		exit(0);
+		mRunning = false;
 	}
 	
 	
@@ -184,56 +165,63 @@ namespace April
 			if (keycode >= GLUT_KEY_F1 && keycode <= GLUT_KEY_F12)  // function keys
 				keycode+=0x6F;
 		*/
-		
+		printf("keycode %d unicode %d (%c)\n", keycode, unicode, unicode);
 		Window::handleKeyEvent(type, keycode, unicode);
 	}
 	
 	//////////////////////
 	// private parts
 	//////////////////////
-
-	void SDLWindow::_handleKeyUp(unsigned char key, int x, int y)
-	{
-		SDLWindow::_instance->handleKeyEvent(Window::AKEYEVT_UP, key, key>=' ' ? key : 0);
-	}
 	
-	void SDLWindow::_handleKeyDown(unsigned char key, int x, int y)
+	void SDLWindow::_handleMouseEvent(SDL_Event &event)
 	{
-		/*
-		if (key == 27) //esc
+		mCursorX=event.button.x; 
+		mCursorY=event.button.y;
+		
+		Window::MouseEventType mouseevt;
+		Window::MouseButton mousebtn = AMOUSEBTN_NONE;
+		
+		if(event.type == SDL_MOUSEBUTTONUP ||
+		   event.type == SDL_MOUSEBUTTONDOWN)
 		{
-			rendersys->terminateMainLoop();
+			switch (event.button.button) {
+				case SDL_BUTTON_LEFT:
+					mousebtn = AMOUSEBTN_LEFT;
+					break;
+				case SDL_BUTTON_RIGHT:
+					mousebtn = AMOUSEBTN_RIGHT;
+					break;
+				case SDL_BUTTON_MIDDLE:
+					mousebtn = AMOUSEBTN_MIDDLE;
+					break;
+				default:
+					mousebtn = AMOUSEBTN_NONE;
+					break;
+			}
 		}
-		 */
 		
-		SDLWindow::_instance->handleKeyEvent(Window::AKEYEVT_DOWN, key, key>=' ' ? key : 0);
+		switch (event.type) {
+			case SDL_MOUSEBUTTONUP:
+				mouseevt = AMOUSEEVT_UP;
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				mouseevt = AMOUSEEVT_DOWN;
+				break;
+			case SDL_MOUSEMOTION:
+				mouseevt = AMOUSEEVT_MOVE;
+				break;
+			default:
+				break;
+		}
+		
+		
+		handleMouseEvent(mouseevt, 
+						 event.button.x, event.button.y,
+						 mousebtn);
+		
+		
 	}
 	
-	void SDLWindow::_handleKeySpecial(int key, int x, int y)
-	{
-		SDLWindow::_instance->handleKeyEvent(Window::AKEYEVT_DOWN, key, 0);
-	}
-	
-	void SDLWindow::_handleMouseButton(int button, int state, int x,int y)
-	{
-		/*if (state == GLUT_DOWN)
-			handleMouseEvent(Window::AMOUSEEVT_DOWN, x, y, (Window::MouseButton)button);
-		else
-			handleMouseEvent(Window::AMOUSEEVT_UP, x, y, (Window::MouseButton)button);*/
-	}
-	
-	void SDLWindow::_handleMouseMove(int x,int y)
-	{
-		
-		SDLWindow::_instance->mCursorX=x; 
-		SDLWindow::_instance->mCursorY=y;
-		
-		// TODO last argument should be button, as remembered from _handleMouseButton
-		// this is because glutMotionFunc() also calls it, and we may want to know which button is active.
-		
-		SDLWindow::_instance->handleMouseEvent(Window::AMOUSEEVT_MOVE, x, y, (Window::MouseButton)0);
-
-	}
 	
 	void SDLWindow::_handleDisplayAndUpdate()
 	{

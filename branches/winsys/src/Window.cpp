@@ -63,6 +63,12 @@ namespace April
 			case AKEYEVT_DOWN:
 				if (mKeyDownCallback) 
 					mKeyDownCallback(keycode);
+
+				if(unicode && mCharCallback)
+				{
+					printf("Press char: %c\n", unicode);
+					mCharCallback(unicode);
+				}
 				break;
 			case AKEYEVT_UP:
 				if (mKeyUpCallback)

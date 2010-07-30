@@ -237,17 +237,22 @@ namespace April
 		
 		Window* getWindow() { return mWindow; }
 		
-		virtual void enterMainLoop() __attribute__((deprecated)) { logMessage("RenderSystem::enterMainLoop() is deprecated"); }
-		virtual gtypes::Vector2 getCursorPos() __attribute__((deprecated)) = 0;
+		virtual void enterMainLoop() __attribute__((deprecated));
+		virtual void terminateMainLoop() __attribute__((deprecated));
+		virtual gtypes::Vector2 getCursorPos() __attribute__((deprecated));
 		virtual int getWindowWidth() __attribute__((deprecated));
 		virtual int getWindowHeight() __attribute__((deprecated));
+
 	};
 
 	AprilFnExport void setLogFunction(void (*fnptr)(chstr));
 	AprilFnExport void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title);
 	AprilFnExport void destroy();
+	
+	// global rendersys shortcut variable
+	AprilFnExport extern April::RenderSystem* rendersys;
 }
-// global rendersys shortcut variable
-AprilFnExport extern April::RenderSystem* rendersys;
+// old, now deprecated, global rendersys shortcut variable
+AprilFnExport extern April::RenderSystem* rendersys __attribute__((deprecated));
 
 #endif
