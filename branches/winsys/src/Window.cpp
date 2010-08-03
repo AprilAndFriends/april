@@ -14,6 +14,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #endif
 #include "Window.h"
 #include "Keys.h"
+#include "RenderSystem.h"
 
 namespace April
 {
@@ -57,21 +58,24 @@ namespace April
 		return mUpdateCallback(time_increase);
 	}
 	
-	void Window::handleKeyEvent(KeyEventType type, unsigned int keycode, unsigned int unicode)
+	void Window::handleKeyEvent(KeyEventType type, KeySyms keycode, unsigned int unicode)
 	{
+		if(keycode == AK_UNKNOWN)
+		{
+			mRenderSystem->logMessage("key event on unknown key");
+			keycode = AK_NONE;
+		}
+		
 		switch (type) {
 			case AKEYEVT_DOWN:
-				if (mKeyDownCallback) 
+				if (mKeyDownCallback && keycode != AK_NONE) 
 					mKeyDownCallback(keycode);
 
 				if(unicode && mCharCallback)
-				{
-					printf("Press char: %c\n", unicode);
 					mCharCallback(unicode);
-				}
 				break;
 			case AKEYEVT_UP:
-				if (mKeyUpCallback)
+				if (mKeyUpCallback && keycode != AK_NONE)
 					mKeyUpCallback(keycode);
 			default:
 				break;

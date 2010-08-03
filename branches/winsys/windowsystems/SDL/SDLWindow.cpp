@@ -79,7 +79,7 @@ namespace April
 					case SDL_KEYUP:
 					case SDL_KEYDOWN:
 						handleKeyEvent(event.type == SDL_KEYUP ? AKEYEVT_UP : AKEYEVT_DOWN,
-									   event.key.keysym.scancode, 
+									   event.key.keysym.sym, 
 									   event.key.keysym.unicode);
 						break;
 						
@@ -157,16 +157,62 @@ namespace April
 	// overrides
 	/////////////////////////
 	
-	void SDLWindow::handleKeyEvent(Window::KeyEventType type, unsigned int keycode, unsigned int unicode)
+	void SDLWindow::handleKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
 	{
-		/*if (keycode == 9) 
-			keycode=AK_TAB;
-		else 
-			if (keycode >= GLUT_KEY_F1 && keycode <= GLUT_KEY_F12)  // function keys
-				keycode+=0x6F;
-		*/
-		printf("keycode %d unicode %d (%c)\n", keycode, unicode, unicode);
-		Window::handleKeyEvent(type, keycode, unicode);
+		April::KeySyms akeysym = AK_UNKNOWN;
+	
+		#define _s2a(sdlk,ak) case sdlk: akeysym = ak; break; 
+		#define s2a(sdlk,ak) _s2a(SDLK_##sdlk, AK_##ak)
+		#define sea(key) s2a(key,key)
+		
+		switch (keysym) {
+				// control character keys
+				s2a(BACKSPACE,BACK);
+#ifdef __APPLE__
+				s2a(DELETE,BACK);
+#else
+				sea(DELETE);
+#endif
+				sea(TAB)
+				sea(RETURN);
+				s2a(KP_ENTER,RETURN);
+				
+				// cursor keys
+				sea(LEFT);
+				sea(RIGHT);
+				sea(UP);
+				sea(DOWN);
+				
+				// function keys
+				sea(F1);
+				sea(F2);
+				sea(F3);
+				sea(F4);
+				sea(F5);
+				sea(F6);
+				sea(F7);
+				sea(F8);
+				sea(F9);
+				sea(F10);
+				sea(F11);
+				sea(F12);
+				
+				// keypad keys
+				s2a(KP0, NUMPAD0);
+				s2a(KP1, NUMPAD1);
+				s2a(KP2, NUMPAD2);
+				s2a(KP3, NUMPAD3);
+				s2a(KP4, NUMPAD4);
+				s2a(KP5, NUMPAD5);
+				s2a(KP6, NUMPAD6);
+				s2a(KP7, NUMPAD7);
+				s2a(KP8, NUMPAD8);
+				s2a(KP9, NUMPAD9);
+			default:
+				break;
+		}
+		//printf("keycode %d unicode %d (%c)\n", keycode, unicode, unicode);
+		Window::handleKeyEvent(type, akeysym, unicode);
 	}
 	
 	//////////////////////

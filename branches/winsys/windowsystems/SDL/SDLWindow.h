@@ -10,11 +10,13 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 
 
 #include <hltypes/hstring.h>
+#include <SDL/SDL_keysym.h>
 #include "Window.h"
 #include "AprilExport.h"
 
 struct SDL_Surface;
 union SDL_Event;
+
 namespace April
 {
 	class SDLWindow : public Window
@@ -23,7 +25,6 @@ namespace April
 				
 		void _handleDisplayAndUpdate();
 		void _handleMouseEvent(SDL_Event &evt);
-		
 		SDL_Surface *mScreen;
 		bool mRunning;
 		bool mCursorVisible;
@@ -42,8 +43,7 @@ namespace April
 		gtypes::Vector2 getCursorPos();
 		void presentFrame();
 		
-		// override functions
-		void handleKeyEvent(Window::KeyEventType type, unsigned int keycode, unsigned int unicode);
+		void handleKeyEvent(Window::KeyEventType type, SDLKey keycode, unsigned int unicode);
 		
 		
 		

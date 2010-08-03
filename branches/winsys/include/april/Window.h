@@ -12,13 +12,13 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 
 #include <hltypes/hstring.h>
 #include <gtypes/Vector2.h>
+#include "Keys.h"
 #include "AprilExport.h"
 
 namespace April
 {
 	
-	class RenderSystem;
-	
+	class RenderSystem;	
 	class AprilExport Window 
 	{
 	protected:		
@@ -86,7 +86,7 @@ namespace April
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
-		virtual void handleKeyEvent(KeyEventType type, unsigned int keycode, unsigned int unicode);
+		virtual void handleKeyEvent(KeyEventType type, KeySyms keycode, unsigned int unicode);
 		virtual bool performUpdate(float time_increase);
 
 	};

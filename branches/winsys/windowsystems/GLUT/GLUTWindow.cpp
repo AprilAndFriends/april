@@ -137,7 +137,7 @@ namespace April
 				keycode+=0x6F;
 		
 		
-		Window::handleKeyEvent(type, keycode, unicode);
+		Window::handleKeyEvent(type, (KeySyms)keycode, unicode);
 	}
 	
 	//////////////////////
