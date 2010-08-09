@@ -8,6 +8,8 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 
+#ifndef APRIL_GLUTWINDOW_H_INCLUDED
+#define APRIL_GLUTWINDOW_H_INCLUDED
 
 #include <hltypes/hstring.h>
 #include "Window.h"
@@ -51,3 +53,5 @@ namespace April
 		float mCursorX, mCursorY; // TODO turn into private
 	};
 }
+
+#endif

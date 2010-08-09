@@ -14,7 +14,14 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include "RenderSystem.h"
 
 #ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+
+
+#if defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
 #include <OpenGL/gl.h>
+#elif defined(TARGET_OS_IPHONE)
+#include <OpenGLES/ES1/gl.h>
 #else
 #include <GL/gl.h>
 #endif

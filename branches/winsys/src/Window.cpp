@@ -8,10 +8,20 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+
+#if !defined(__APPLE__) || defined(__APPLE__) && defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
 #include "GLUTWindow.h"
 #ifdef HAVE_SDL
 #include "SDLWindow.h"
 #endif
+#elif defined(TARGET_OS_IPHONE)
+#include "iOSWindow.h"
+#endif
+
+
 #include "Window.h"
 #include "Keys.h"
 #include "RenderSystem.h"
@@ -41,7 +51,6 @@ namespace April
 		mMouseDownCallback=mouse_dn;
 		mMouseUpCallback=mouse_up;
 		mMouseMoveCallback=mouse_move;
-		
 	}
 	void Window::setKeyboardCallbacks(void (*key_dn)(unsigned int),
 									  void (*key_up)(unsigned int),
@@ -109,11 +118,18 @@ namespace April
 	
 	Window* createAprilWindow(chstr winsysname, int w, int h, bool fullscreen, chstr title)
 	{
+#if !defined(__APPLE__) || defined(__APPLE__) && defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
+		// desktop
+#ifdef HAVE_SDL
 		if (winsysname=="SDL") {
 			return new SDLWindow(w,h,fullscreen,title);
 		}
+#endif
 		return new GLUTWindow(w,h,fullscreen,title);
-		
+#elif defined(TARGET_OS_IPHONE)
+		// iOS
+		return new iOSWindow(w,h,fullscreen,title);
+#endif
 	}
 	
 	

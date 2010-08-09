@@ -11,6 +11,10 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include <stdio.h>
 #include <algorithm>
 
+#ifdef __APPLE__
+#define _OPENGL
+#endif
+
 #ifdef USE_IL
 #include <IL/il.h>
 #endif

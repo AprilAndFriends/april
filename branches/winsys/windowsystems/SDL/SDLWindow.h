@@ -8,6 +8,8 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 
+#ifndef APRIL_SDLWINDOW_H_INCLUDED
+#define APRIL_SDLWINDOW_H_INCLUDED
 
 #include <hltypes/hstring.h>
 #include <SDL/SDL_keysym.h>
@@ -22,7 +24,8 @@ namespace April
 	class SDLWindow : public Window
 	{
 	private:
-				
+		
+		void _handleKeyEvent(Window::KeyEventType type, SDLKey keycode, unsigned int unicode);
 		void _handleDisplayAndUpdate();
 		void _handleMouseEvent(SDL_Event &evt);
 		SDL_Surface *mScreen;
@@ -43,12 +46,12 @@ namespace April
 		gtypes::Vector2 getCursorPos();
 		void presentFrame();
 		
-		void handleKeyEvent(Window::KeyEventType type, SDLKey keycode, unsigned int unicode);
 		
 		
 		
-		static SDLWindow *_instance;
 
 		float mCursorX, mCursorY; // TODO turn into private
 	};
 }
+
+#endif

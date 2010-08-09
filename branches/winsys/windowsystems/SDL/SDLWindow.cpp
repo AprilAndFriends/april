@@ -3,7 +3,6 @@ This source file is part of the Awesome Portable Rendering Interface Library    
 For latest info, see http://libapril.sourceforge.net/                                *
 **************************************************************************************
 Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                     *
-Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                                  *
 *                                                                                    *
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
@@ -19,7 +18,7 @@ namespace April
 
 	
 	
-	SDLWindow* SDLWindow::_instance;
+
 	
 	SDLWindow::SDLWindow(int w, int h, bool fullscreen, chstr title)
 	{
@@ -48,7 +47,6 @@ namespace April
 		// we are not running yet
 		mRunning = false;
 		
-		_instance = this;
 	}
 	
 	//////////////////////
@@ -78,7 +76,7 @@ namespace April
 						
 					case SDL_KEYUP:
 					case SDL_KEYDOWN:
-						handleKeyEvent(event.type == SDL_KEYUP ? AKEYEVT_UP : AKEYEVT_DOWN,
+						_handleKeyEvent(event.type == SDL_KEYUP ? AKEYEVT_UP : AKEYEVT_DOWN,
 									   event.key.keysym.sym, 
 									   event.key.keysym.unicode);
 						break;
@@ -149,15 +147,11 @@ namespace April
 		return SDL_GetVideoInfo()->current_h;
 	}
 	
+	//////////////////////
+	// private parts
+	//////////////////////	
 	
-	
-	
-	
-	/////////////////////////
-	// overrides
-	/////////////////////////
-	
-	void SDLWindow::handleKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
+	void SDLWindow::_handleKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
 	{
 		April::KeySyms akeysym = AK_UNKNOWN;
 	
@@ -184,7 +178,7 @@ namespace April
 				sea(END);
 				sea(INSERT);
 				// delete already defined under control chars
-				// this is because on mac, delete == backspace
+				// this is because on mac sdl, delete == backspace
 				// for some reason
 				
 				// cursor keys
@@ -233,11 +227,7 @@ namespace April
 		//printf("keycode %d unicode %d (%c)\n", keycode, unicode, unicode);
 		Window::handleKeyEvent(type, akeysym, unicode);
 	}
-	
-	//////////////////////
-	// private parts
-	//////////////////////
-	
+		
 	void SDLWindow::_handleMouseEvent(SDL_Event &event)
 	{
 		mCursorX=event.button.x; 
@@ -294,8 +284,8 @@ namespace April
 		float k=(SDL_GetTicks()-x)/1000.0f;
 		x=SDL_GetTicks();
 		
-		SDLWindow::_instance->performUpdate(k);
-		SDLWindow::_instance->presentFrame();
+		performUpdate(k);
+		presentFrame();
 	}
 	
 

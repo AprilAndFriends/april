@@ -13,8 +13,20 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
   Useful only on Mac and iPhone.
 **/
 
-#include <Cocoa/Cocoa.h>
-#include <OpenGL/gl.h>
+
+#import <TargetConditionals.h>
+
+#if defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
+#import <Cocoa/Cocoa.h>
+#import <OpenGL/gl.h>
+#elif TARGET_OS_IPHONE
+//#import <UIKit/UIKit.h>
+#import <UIKit/UIImage.h>
+#import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
+
+#import <OpenGLES/ES1/gl.h>
+#endif
 #include "ImageSource.h"
 #include "RenderSystem.h"
 
@@ -62,7 +74,7 @@ static NSURL* _getFileURLAsResource(chstr filename)
 	// resources:  /Applications/appname.app/Contents/Resources/
 	// file:       /Applications/appname.app/Contents/Resources/data/media/hello.jpg
 	// url: file:///Applications/appname.app/Contents/Resources/data/media/hello.jpg
-	
+		
 	NSString * resources = [[NSBundle mainBundle] resourcePath];
 	NSString * file = [resources stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
 	NSURL * url = [NSURL URLWithString:[@"file://" stringByAppendingString:[file stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] ]];
@@ -130,7 +142,7 @@ namespace April
 	{
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
 		
-		
+#if !defined(TARGET_OS_IPHONE)
 		
 		// TODO check for memory leak!
 		// according to:
@@ -155,6 +167,12 @@ namespace April
 		
 		CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
 		CFRelease(imageSource);
+		
+#else
+		UIImage* uiimg = [[UIImage alloc] initWithContentsOfFile:[_getFileURLAsResource(filename) path]];
+		
+		CGImageRef imageRef = [uiimg CGImage];
+#endif
 		
 		// alloc img, set attributes
 		ImageSource* img=new ImageSource();
@@ -181,8 +199,12 @@ namespace April
 		
 		CGContextDrawImage(bitmapContext,CGRectMake(0.0, 0.0, (float)img->w, (float)img->h),imageRef);
 		CGContextRelease(bitmapContext);
-		CGImageRelease(imageRef);
 		
+#if !defined(TARGET_OS_IPHONE)
+		CGImageRelease(imageRef);
+#else
+		[uiimg release];
+#endif
 		
 		[arp release];
 
