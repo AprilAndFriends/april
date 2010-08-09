@@ -151,7 +151,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		float x=(fullscreen) ? 0 : (GetSystemMetrics(SM_CXSCREEN)-w)/2,
 			  y=(fullscreen) ? 0 : (GetSystemMetrics(SM_CYSCREEN)-h)/2;
 		
-		hWnd = CreateWindowEx(NULL,"april_d3d_window",title.c_str(),WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,x,y,w,h,NULL,NULL,hinst,NULL);
+		DWORD style=(fullscreen) ? WS_EX_TOPMOST|WS_POPUP : WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX;
+		hWnd = CreateWindowEx(NULL,"april_d3d_window",title.c_str(),style,x,y,w,h,NULL,NULL,hinst,NULL);
 
 		if (!fullscreen)
 		{
