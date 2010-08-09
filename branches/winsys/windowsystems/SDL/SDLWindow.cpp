@@ -177,6 +177,16 @@ namespace April
 				sea(RETURN);
 				s2a(KP_ENTER,RETURN);
 				
+				// control keys above cursor keys
+				s2a(PAGEUP, PRIOR);
+				s2a(PAGEDOWN, NEXT);
+				sea(HOME);
+				sea(END);
+				sea(INSERT);
+				// delete already defined under control chars
+				// this is because on mac, delete == backspace
+				// for some reason
+				
 				// cursor keys
 				sea(LEFT);
 				sea(RIGHT);
@@ -211,6 +221,15 @@ namespace April
 			default:
 				break;
 		}
+		
+		// number keys
+		if(keysym >= '0' && keysym <= '9')
+			akeysym = (KeySyms)keysym;
+		
+		// letters
+		if(keysym >= 'a' && keysym <= 'z') // sdl letter keys are ascii's small letters
+			akeysym = (KeySyms)(keysym-32); // april letter keys are ascii's capital letters
+		
 		//printf("keycode %d unicode %d (%c)\n", keycode, unicode, unicode);
 		Window::handleKeyEvent(type, akeysym, unicode);
 	}
