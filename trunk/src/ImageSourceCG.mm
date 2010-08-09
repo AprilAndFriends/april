@@ -28,7 +28,6 @@ static NSURL* _getFileURL(chstr filename)
 	// file:  file:///Applications/appname/bin/appname.app/../../media/hello.jpg
 	// url: file:///Applications/appname/media/hello.jpg 
 	
-	
 #if defined(__MAC_10_6)
 	
 	NSString* cdp = [[[[NSFileManager alloc] init] autorelease] currentDirectoryPath];
@@ -44,10 +43,11 @@ static NSURL* _getFileURL(chstr filename)
 	NSURL * bundleURL = [NSURL URLWithString:[@"file://" stringByAppendingString:bundle]];
 	NSURL * file = [NSURL URLWithString:[NSString stringWithFormat:@"../%s", filename.c_str()] 
 						  relativeToURL:bundleURL];
-	NSURL * url = [file absoluteURL];
+	NSURL * url = [[file absoluteURL] retain];
 	
 #endif
-	NSLog(@"_getFileURL: %@", url);
+	//NSLog(@"_getFileURL: %@", url);
+	
 	return url;
 	
 }
@@ -67,7 +67,7 @@ static NSURL* _getFileURLAsResource(chstr filename)
 	NSString * file = [resources stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
 	NSURL * url = [NSURL URLWithString:[@"file://" stringByAppendingString:[file stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] ]];
 	
-	NSLog(@"_getFileURLAsResource: %@", url);
+	//NSLog(@"_getFileURLAsResource: %@", url);
 	return url;
 	
 }
