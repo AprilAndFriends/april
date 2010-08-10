@@ -161,6 +161,7 @@ namespace April
 		void (*mKeyDownCallback)(unsigned int);
 		void (*mKeyUpCallback)(unsigned int);
 		void (*mCharCallback)(unsigned int);
+		bool (*mQuitCallback)(bool can_cancel);
 
 		gtypes::Matrix4 mModelviewMatrix,mProjectionMatrix;
 
@@ -245,6 +246,7 @@ namespace April
 		void registerKeyboardCallbacks(void (*key_dn)(unsigned int),
 									   void (*key_up)(unsigned int),
 									   void (*char_callback)(unsigned int));
+		void registerQuitCallback(bool (*quit_callback)(bool can_cancel)) { mQuitCallback = quit_callback; }
 
 		void forceDynamicLoading(bool value) { mDynamicLoading=value; }
 		bool isDynamicLoadingForced() { return mDynamicLoading; }

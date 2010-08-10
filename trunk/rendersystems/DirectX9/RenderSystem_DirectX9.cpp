@@ -75,9 +75,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     switch(message)
     {
         case WM_DESTROY:
-			PostQuitMessage(0);
-			rendersys->terminateMainLoop();
-			return 0;
+			if(dx9rs->triggerQuitEvent())
+			{
+				PostQuitMessage(0);
+				rendersys->terminateMainLoop();
+				return 0;
+			}
 			break;
 		case WM_KEYDOWN:
 		    if (wParam == VK_ESCAPE) { rendersys->terminateMainLoop(); return 0; }
@@ -477,6 +480,15 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	void DirectX9RenderSystem::terminateMainLoop()
 	{
 		mAppRunning=0;
+	}
+	
+	bool DirectX9RenderSystem::triggerQuitEvent()
+	{
+		if(mQuitCallback)
+		{
+			return mQuitCallback(false);
+		}
+		return true;
 	}
 	
 	void DirectX9RenderSystem::triggerKeyEvent(bool down,unsigned int keycode)

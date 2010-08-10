@@ -36,8 +36,9 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 namespace April
 {
 	extern void (*g_logFunction)(chstr);
+	static int windowId;
 #ifdef _WIN32
-	HWND hWnd;
+	static HWND hWnd;
 #else
 	#include <sys/time.h>
 	unsigned GetTickCount()
@@ -162,7 +163,7 @@ namespace April
 
 	GLRenderSystem::GLRenderSystem(int w,int h) :
 		mTexCoordsEnabled(0), mColorEnabled(0)
-	{
+	{		
 		glViewport(0,0,w,h);
 		glClearColor(0,0,0,1);
 		glMatrixMode(GL_MODELVIEW);
@@ -452,6 +453,22 @@ namespace April
 		((GLRenderSystem*) rendersys)->triggerMouseEvent(2,x,y,0);
 	}
 
+	void quit_handler()
+	{
+		((GLRenderSystem*) rendersys)->triggerQuitEvent();
+	}
+	void GLRenderSystem::triggerQuitEvent()
+	{
+		if(mQuitCallback)
+		{
+			if(mQuitCallback(true))
+			{
+				glutDestroyWindow(windowId);
+				terminateMainLoop();
+			}
+		}
+	}
+	
 	void gl_draw()
 	{
 		static unsigned int x=GetTickCount();
@@ -472,7 +489,7 @@ namespace April
 		int _h=glutGet(GLUT_SCREEN_HEIGHT);
 		glutInitWindowPosition(_w/2-w/2,_h/2-h/2);
 		glutInitWindowSize(w,h);
-		glutCreateWindow(title.c_str());
+		windowId = glutCreateWindow(title.c_str());
 #ifdef _WIN32
 		hWnd = FindWindow("GLUT", title.c_str());
 		SetFocus(hWnd);
@@ -485,6 +502,9 @@ namespace April
 		glutKeyboardUpFunc(keyboard_up_handler);
 		glutMotionFunc(mouse_move_handler);
 		glutPassiveMotionFunc(mouse_move_handler);
+#if (GLUT_MACOSX_IMPLEMENTATION >= 2)
+		glutWMCloseFunc(quit_handler);
+#endif
 		
 		glutSpecialFunc(special_handler);
 

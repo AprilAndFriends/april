@@ -81,7 +81,7 @@ namespace April
 		
 		bool triggerUpdate(float time_increase);
 		bool triggerKeyEvent(bool down,unsigned int keycode);
-
+		void triggerQuitEvent();
 		bool triggerMouseEvent(int event,float x,float y,int button);
 		
 		void enterMainLoop();
