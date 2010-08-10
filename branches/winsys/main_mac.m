@@ -18,6 +18,8 @@ static char** gArgv;
 static BOOL gFinderLaunch=NO;
 static int(*gRealMain)(int argc, char** argv);
 
+int gAprilShouldInvokeQuitCallback;
+
 /* For some reaon, Apple removed setAppleMenu from the headers in 10.4,
  but the method still is there and works. To avoid warnings, we declare
  it ourselves here. */
@@ -36,10 +38,7 @@ static int(*gRealMain)(int argc, char** argv);
 /* Invoked from the Quit menu item */
 - (void)terminate:(id)sender
 {
-    /* Post a SDL_QUIT event */
-    //SDL_Event event;
-    //event.type = SDL_QUIT;
-    //SDL_PushEvent(&event);
+	
 }
 @end
 
@@ -198,6 +197,8 @@ int april_main (int(*real_main)(int argc, char** argv), int argc, char **argv)
     /* Copy the arguments into a global variable */
     /* This is passed if we are launched by double-clicking */
     
+	gAprilShouldInvokeQuitCallback = 0;
+	
 	gRealMain = real_main;
 	if ( argc >= 2 && strncmp (argv[1], "-psn", 4) == 0 ) {
         gArgv = (char **) malloc(sizeof (char *) * 2);

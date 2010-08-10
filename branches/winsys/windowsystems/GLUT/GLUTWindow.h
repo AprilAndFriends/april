@@ -28,6 +28,8 @@ namespace April
 		
 		static void _handleDisplayAndUpdate();
 		
+		static void _handleQuitRequest();
+		
 	public:
 		
 		GLUTWindow(int w, int h, bool fullscreen, chstr title);

@@ -13,12 +13,10 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include "Keys.h"
 #include "RenderSystem.h"
 
+extern "C" int gAprilShouldInvokeQuitCallback;
+
 namespace April
 {
-
-	
-	
-
 	
 	SDLWindow::SDLWindow(int w, int h, bool fullscreen, chstr title)
 	{
@@ -62,6 +60,14 @@ namespace April
 		while (mRunning) {
 			SDL_Event event;
 			
+			//check if we should quit...
+			if(gAprilShouldInvokeQuitCallback)
+			{
+				SDL_Event event;
+				event.type = SDL_QUIT;
+				SDL_PushEvent(&event);				
+			}
+			
 			//first process sdl events
 			while (SDL_PollEvent(&event)) {
 				switch (event.type) {
@@ -71,7 +77,10 @@ namespace April
 						break;
 						
 					case SDL_QUIT:
-						mRunning = false;
+						if(handleQuitRequest(true))
+						{
+							mRunning = false;
+						}
 						break;
 						
 					case SDL_KEYUP:

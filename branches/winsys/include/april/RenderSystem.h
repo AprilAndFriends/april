@@ -223,14 +223,14 @@ namespace April
 
 		virtual void beginFrame()=0;
 
-		void registerUpdateCallback(bool (*callback)(float));
+		void registerUpdateCallback(bool (*callback)(float)) __attribute__((deprecated));
 		void registerMouseCallbacks(void (*mouse_dn)(float,float,int),
 									void (*mouse_up)(float,float,int),
-									void (*mouse_move)(float,float));
+									void (*mouse_move)(float,float)) __attribute__((deprecated));
 		void registerKeyboardCallbacks(void (*key_dn)(unsigned int),
 									   void (*key_up)(unsigned int),
-									   void (*char_callback)(unsigned int));
-		
+									   void (*char_callback)(unsigned int)) __attribute__((deprecated));
+		void registerQuitCallback(bool (*quit_callback)(bool can_cancel)) __attribute__((deprecated));
 
 		void forceDynamicLoading(bool value) { mDynamicLoading=value; }
 		bool isDynamicLoadingForced() { return mDynamicLoading; }

@@ -31,6 +31,7 @@ namespace April
 		void (*mKeyDownCallback)(unsigned int);
 		void (*mCharCallback)(unsigned int);
 		void (*mKeyUpCallback)(unsigned int);
+		bool (*mQuitCallback)(bool can_reject);
 		
 		Window();
 		
@@ -71,7 +72,7 @@ namespace April
 		void setKeyboardCallbacks(void (*key_dn)(unsigned int),
 								  void (*key_up)(unsigned int),
 								  void (*char_callback)(unsigned int));
-		
+		void setQuitCallback(bool (*quit_callback)(bool can_reject));
 		
 		// misc virtuals and pure virtuals
 		virtual void enterMainLoop()=0;
@@ -87,6 +88,7 @@ namespace April
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
 		virtual void handleKeyEvent(KeyEventType type, KeySyms keycode, unsigned int unicode);
+		virtual bool handleQuitRequest(bool can_reject);
 		virtual bool performUpdate(float time_increase);
 
 	};

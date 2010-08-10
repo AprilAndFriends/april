@@ -11,7 +11,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include <stdio.h>
 #include <algorithm>
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(_OPENGL)
 #define _OPENGL
 #endif
 
@@ -301,6 +301,12 @@ namespace April
 	{
 		mWindow->setKeyboardCallbacks(key_dn, key_up, char_callback);
 		logMessage("RenderSystem::registerKeyboardCallbacks() is deprecated");
+	}
+	
+	void RenderSystem::registerQuitCallback(bool (*quit_callback)(bool can_reject))
+	{
+		mWindow->setQuitCallback(quit_callback);
+		logMessage("RenderSystem::registerQuitCallback() is deprecated");
 	}
 	
 	Texture* RenderSystem::loadRAMTexture(chstr filename,bool dynamic)

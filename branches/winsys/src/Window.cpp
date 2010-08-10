@@ -37,6 +37,7 @@ namespace April
 		mKeyDownCallback=0;
 		mKeyUpCallback=0;
 		mCharCallback=0;
+		mQuitCallback=0;
 	}
 	
 	void Window::setUpdateCallback(bool (*callback)(float))
@@ -59,6 +60,10 @@ namespace April
 		mKeyDownCallback=key_dn;
 		mKeyUpCallback=key_up;
 		mCharCallback=char_callback;
+	}
+	void Window::setQuitCallback(bool (*quit_callback)(bool))
+	{
+		mQuitCallback = quit_callback;
 	}
 	
 	
@@ -112,6 +117,16 @@ namespace April
 		}
 	}
 	
+	bool Window::handleQuitRequest(bool can_reject)
+	{
+		// returns whether or not the windowing system is permitted to close the window
+		if(mQuitCallback)
+		{
+			return mQuitCallback(can_reject);
+		}
+		return true;
+	}
+	
 	///////////////////////
 	// non members
 	///////////////////////
@@ -120,12 +135,14 @@ namespace April
 	{
 #if !defined(__APPLE__) || defined(__APPLE__) && defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
 		// desktop
-#ifdef HAVE_SDL
+	#ifdef HAVE_SDL
 		if (winsysname=="SDL") {
 			return new SDLWindow(w,h,fullscreen,title);
 		}
-#endif
+	#endif
 		return new GLUTWindow(w,h,fullscreen,title);
+		
+		
 #elif defined(TARGET_OS_IPHONE)
 		// iOS
 		return new iOSWindow(w,h,fullscreen,title);

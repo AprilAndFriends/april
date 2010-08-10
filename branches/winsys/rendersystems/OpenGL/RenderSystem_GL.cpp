@@ -39,7 +39,6 @@ namespace April
 {
 	extern void (*g_logFunction)(chstr);
 
-
 	float cursor_x=0,cursor_y=0;
 
 	unsigned int platformLoadGLTexture(const char* name,int* w,int* h)
@@ -151,7 +150,7 @@ namespace April
 
 	GLRenderSystem::GLRenderSystem(Window* window) :
 		mTexCoordsEnabled(0), mColorEnabled(0)
-	{
+	{		
 		mWindow = window;
 		
 		glViewport(0,0,window->getWindowWidth(),window->getWindowHeight());
@@ -354,7 +353,7 @@ namespace April
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
-		April::rendersys=::rendersys=new GLRenderSystem(window);
+		April::rendersys = ::rendersys = new GLRenderSystem(window);
 	}
 
 }

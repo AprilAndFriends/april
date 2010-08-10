@@ -15,6 +15,9 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace April
 {
+	void destroy(); // defined in RenderSystem
+	
+	int windowIdGlut = 0;
 #ifdef _WIN32
 	HWND hWnd;
 #else
@@ -44,7 +47,7 @@ namespace April
 		int _h=glutGet(GLUT_SCREEN_HEIGHT);
 		glutInitWindowPosition(_w/2-w/2,_h/2-h/2);
 		glutInitWindowSize(w,h);
-		glutCreateWindow(title.c_str());
+		windowIdGlut = glutCreateWindow(title.c_str());
 #ifdef _WIN32
 		hWnd = FindWindow("GLUT", title.c_str());
 		SetFocus(hWnd);
@@ -62,6 +65,10 @@ namespace April
 		glutKeyboardUpFunc(		_handleKeyUp);
 		glutSpecialFunc(		_handleKeySpecial);
 		
+#ifdef __APPLE__
+		glutWMCloseFunc(		_handleQuitRequest);
+#endif
+		
 		_instance = this;
 	}
 	
@@ -76,7 +83,7 @@ namespace April
 	
 	void GLUTWindow::terminateMainLoop()
 	{
-		//destroy(); // TODO
+		destroy(); 
 		exit(0);
 	}
 	
@@ -183,7 +190,7 @@ namespace April
 		GLUTWindow::_instance->mCursorY=y;
 		
 		// TODO last argument should be button, as remembered from _handleMouseButton
-		// this is because glutMotionFunc() also calls it, and we may want to know which button is active.
+		// this is because glutMotionFunc() also calls this func, and we may want to know which button is active.
 		
 		GLUTWindow::_instance->handleMouseEvent(Window::AMOUSEEVT_MOVE, x, y, (Window::MouseButton)0);
 		
@@ -197,6 +204,15 @@ namespace April
 		
 		GLUTWindow::_instance->performUpdate(k);
 		GLUTWindow::_instance->presentFrame();
+	}
+	
+	void GLUTWindow::_handleQuitRequest()
+	{
+		if(GLUTWindow::_instance->handleQuitRequest(true))
+		{
+			glutDestroyWindow(windowIdGlut);
+			GLUTWindow::_instance->terminateMainLoop();
+		}
 	}
 	
 
