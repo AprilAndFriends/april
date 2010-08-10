@@ -38,7 +38,7 @@ int gAprilShouldInvokeQuitCallback;
 /* Invoked from the Quit menu item */
 - (void)terminate:(id)sender
 {
-	
+	gAprilShouldInvokeQuitCallback = 1;
 }
 @end
 

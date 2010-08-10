@@ -65,7 +65,8 @@ namespace April
 			{
 				SDL_Event event;
 				event.type = SDL_QUIT;
-				SDL_PushEvent(&event);				
+				SDL_PushEvent(&event);	
+				gAprilShouldInvokeQuitCallback = 0;
 			}
 			
 			//first process sdl events
