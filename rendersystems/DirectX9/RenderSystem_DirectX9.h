@@ -73,7 +73,7 @@ namespace April
 		void triggerMouseUpEvent(int button);
 		void triggerMouseDownEvent(int button);
 		void triggerMouseMoveEvent();
-		void triggerQuitEvent();
+		bool triggerQuitEvent();
 		
 		void enterMainLoop();
 		void terminateMainLoop();
