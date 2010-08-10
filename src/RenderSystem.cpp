@@ -232,6 +232,7 @@ namespace April
 		mKeyDownCallback=0;
 		mKeyUpCallback=0;
 		mCharCallback=0;
+		mQuitCallback=0;
 		mDynamicLoading=0;
 		mIdleUnloadTime=0;
 	}
