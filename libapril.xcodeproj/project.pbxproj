@@ -20,6 +20,7 @@
 		7F42FACD11EB341E00B1C1DF /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42FACC11EB341E00B1C1DF /* OpenGL.framework */; };
 		7F42FAD511EB342900B1C1DF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42FAD411EB342900B1C1DF /* Cocoa.framework */; };
 		7F42FD7711EB632E00B1C1DF /* ImageSourceCG.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */; };
+		7FD5DC3712115724003BAE6A /* main.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FD5DC3612115724003BAE6A /* main.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		7F42FACC11EB341E00B1C1DF /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		7F42FAD411EB342900B1C1DF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImageSourceCG.mm; path = src/ImageSourceCG.mm; sourceTree = "<group>"; };
+		7FD5DC3612115724003BAE6A /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = include/april/main.h; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -127,6 +129,7 @@
 		7F42F7A011EB177F00B1C1DF /* Includes */ = {
 			isa = PBXGroup;
 			children = (
+				7FD5DC3612115724003BAE6A /* main.h */,
 				7F42F7A111EB178C00B1C1DF /* AprilExport.h */,
 				7F42F7A211EB178C00B1C1DF /* ImageSource.h */,
 				7F42F7A311EB178C00B1C1DF /* Keys.h */,
@@ -156,6 +159,7 @@
 				7F42F7A711EB178C00B1C1DF /* Keys.h in Headers */,
 				7F42F7A811EB178C00B1C1DF /* RenderSystem.h in Headers */,
 				7F42F7B211EB187100B1C1DF /* RenderSystem_GL.h in Headers */,
+				7FD5DC3712115724003BAE6A /* main.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
