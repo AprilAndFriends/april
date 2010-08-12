@@ -218,5 +218,11 @@ namespace April
 
 // temporary and deprecated; dont depend on it
 #define AK_BACK April::AK_BACK
+#define AK_LEFT April::AK_LEFT
+#define AK_RIGHT April::AK_RIGHT
+#define AK_DELETE April::AK_DELETE
+#define AK_HOME April::AK_HOME
+#define AK_END April::AK_END
+#define AK_CONTROL April::AK_CONTROL
 
 #endif

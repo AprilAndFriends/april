@@ -45,6 +45,8 @@ namespace April
 		// we are not running yet
 		mRunning = false;
 		
+		// key repeat
+		SDL_EnableKeyRepeat(100, 50);
 	}
 	
 	//////////////////////
@@ -86,9 +88,24 @@ namespace April
 						
 					case SDL_KEYUP:
 					case SDL_KEYDOWN:
-						_handleKeyEvent(event.type == SDL_KEYUP ? AKEYEVT_UP : AKEYEVT_DOWN,
-									   event.key.keysym.sym, 
-									   event.key.keysym.unicode);
+						
+#ifdef __APPLE__
+						// on mac os, we need to handle command+q
+						if(SDL_GetModState() & KMOD_META && event.key.keysym.sym == SDLK_q)
+						{
+							if(handleQuitRequest(true))
+							{
+								mRunning = false;
+							}
+						}
+						else
+#endif
+						{
+							_handleKeyEvent(event.type == SDL_KEYUP ? AKEYEVT_UP : AKEYEVT_DOWN,
+											event.key.keysym.sym, 
+											event.key.keysym.unicode);
+						}
+
 						break;
 						
 					case SDL_MOUSEBUTTONUP:
