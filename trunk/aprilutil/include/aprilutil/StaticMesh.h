@@ -29,9 +29,9 @@ namespace April
     class AprilUtilExport Polygon
     {
     public:
-        int m_vertind[3];
-        int m_norind[3];
-        int m_texind[3];
+        int mVertind[3];
+        int mNorind[3];
+        int mTexind[3];
     };
     
     
@@ -41,18 +41,18 @@ namespace April
 	{
     
     public:
-        hltypes::Array<gtypes::Vector3> m_vertices;
-        hltypes::Array<Polygon> m_polygons;
-        hltypes::Array<gtypes::Vector3> m_normals;
-        hltypes::Array<gtypes::Vector2> m_textureCoordinates;
+        hltypes::Array<gtypes::Vector3> mVertices;
+        hltypes::Array<Polygon> mPolygons;
+        hltypes::Array<gtypes::Vector3> mNormals;
+        hltypes::Array<gtypes::Vector2> mTextureCoordinates;
         
-        hstr m_meshName;
+        hstr mMeshName;
         
-        April::TexturedVertex *m_vertexArray;
-        int m_numVertices;
+        April::TexturedVertex *mVertexArray;
+        int mNumVertices;
         
         
-        April::Texture *m_texture;
+        April::Texture *mTexture;
         
     public:
 		StaticMesh();
@@ -61,7 +61,7 @@ namespace April
 
 		//void recalculateNormals();
         //void setTexture(April::Texture *texture);
-        void setMashName(hstr meshName);
+        void setMeshName(hstr meshName);
         
         void convertToVertexArray();
         void loadFromFile(hstr meshPath);
