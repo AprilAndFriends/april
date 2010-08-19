@@ -350,9 +350,9 @@ namespace April
 		_setProjectionMatrix(mProjectionMatrix);
 	}
 	
-	void RenderSystem::setPerspective(float fov, float aspect, float near, float far)
+    void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
 	{
-		mProjectionMatrix.perspective(fov,aspect,near,far);
+		mProjectionMatrix.perspective(fov,aspect,nearClip,farClip);
 		_setProjectionMatrix(mProjectionMatrix);
 	}
 	

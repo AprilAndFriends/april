@@ -12,6 +12,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #define RENDERSYSTEM_GL_H
 
 #include "RenderSystem.h"
+#include "Timer.h"
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -21,6 +22,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace April
 {
+    
 	class GLTexture : public Texture
 	{
 	public:
@@ -41,6 +43,7 @@ namespace April
 		bool mTexCoordsEnabled,mColorEnabled;
 		void _setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void _setProjectionMatrix(const gtypes::Matrix4& matrix);
+        
 	public:
 		GLRenderSystem(int w,int h);
 		~GLRenderSystem();

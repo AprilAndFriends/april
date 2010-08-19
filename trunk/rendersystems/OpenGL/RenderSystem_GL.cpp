@@ -33,6 +33,8 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 
 #include <gtypes/Vector2.h>
 
+April::Timer globalTimer;
+
 namespace April
 {
 	extern void (*g_logFunction)(chstr);
@@ -174,8 +176,11 @@ namespace April
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
 
-		
-		glDisable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
+        //glDepthFunc(GL_GREATER);
+        //glClearDepth(1.0f);
+        
+		glEnable(GL_CULL_FACE);
 	}
 
 	GLRenderSystem::~GLRenderSystem()
@@ -471,9 +476,9 @@ namespace April
 	
 	void gl_draw()
 	{
-		static unsigned int x=GetTickCount();
-		float k=(GetTickCount()-x)/1000.0f;
-		x=GetTickCount();
+		static unsigned int x = globalTimer.getTime();
+		float k =(globalTimer.getTime()-x)/1000.0f;
+		x = globalTimer.getTime();
 		if (!((GLRenderSystem*) rendersys)->triggerUpdate(k)) throw "done";
 		rendersys->presentFrame();
 	}
@@ -493,6 +498,7 @@ namespace April
 #ifdef _WIN32
 		hWnd = FindWindow("GLUT", title.c_str());
 		SetFocus(hWnd);
+        //timeBeginPeriod(25);
 #endif
 		if (fullscreen) glutFullScreen();
 		glEnable(GL_TEXTURE_2D);
