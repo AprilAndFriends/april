@@ -17,13 +17,14 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <d3d9.h>
 #include "dx9Texture.h"
 #include <stdio.h>
+#include "Timer.h"
 
 #define PLAIN_FVF D3DFVF_XYZ
 #define COLORED_FVF D3DFVF_XYZ | D3DFVF_DIFFUSE
 #define TEX_FVF D3DFVF_XYZ | D3DFVF_TEX1
 #define TEX_COLOR_FVF D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE
 
-
+April::Timer globalTimer;
 
 namespace April
 {
@@ -522,10 +523,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	
 	void DirectX9RenderSystem::enterMainLoop()
 	{
-		DWORD time=GetTickCount(),t;
+		DWORD time=globalTimer.getTime(),t;
 		bool cvisible=cursor_visible;
 #ifdef _DEBUG
-		static DWORD fpsTimer=GetTickCount(),fps=0;
+		static DWORD fpsTimer=globalTimer.getTime(),fps=0;
 #endif
 		POINT w32_cursorpos;
 		float k;
@@ -547,7 +548,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				}
 			}
 			doWindowEvents();
-			t=GetTickCount();
+			t=globalTimer.getTime();
 
 			if (t == time) continue; // don't redraw frames which won't change
 			k=(t-time)/1000.0f;

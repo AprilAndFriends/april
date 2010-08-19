@@ -71,6 +71,31 @@ namespace April
 		unsigned int color;
 		float u,v;
 	};
+    
+    class AprilExport ColoredTexturedNormalVertex : public PlainVertex
+    {
+    public:
+        float u,v;
+        unsigned int color;
+        gtypes::Vector3 normal;
+        
+    };
+    
+    class AprilExport TexturedNormalVertex : public PlainVertex
+    {
+    public:
+        float u,v;
+        gtypes::Vector3 normal;
+        
+    };
+    
+    class AprilExport ColoredNormalVertex : public PlainVertex
+    {
+    public:
+        unsigned int color;
+        gtypes::Vector3 normal;
+        
+    };
 
 	enum BlendMode
 	{
@@ -189,7 +214,7 @@ namespace April
 		void lookAt(const gtypes::Vector3 &eye, const gtypes::Vector3 &direction, const gtypes::Vector3 &up);
 		// projection matrix tronsformation
 		void setOrthoProjection(float w,float h,float x_offset=0,float y_offset=0);
-		void setPerspective(float fov, float aspect, float near, float far);
+		void setPerspective(float fov, float aspect, float nearClip, float farClip);
 		// rendersys matrix operations
 		void setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void setProjectionMatrix(const gtypes::Matrix4& matrix);

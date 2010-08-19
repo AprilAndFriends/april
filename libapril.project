@@ -13,6 +13,7 @@
     <File Name="rendersystems/DirectX9/RenderSystem_DirectX9.cpp"/>
     <File Name="rendersystems/DirectX9/dx9Texture.cpp"/>
     <File Name="src/ImageSourceIL.cpp"/>
+    <File Name="src/WinTimer.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.h"/>
@@ -22,11 +23,32 @@
     <File Name="rendersystems/DirectX9/RenderSystem_DirectX9.h"/>
     <File Name="include/april/Keys.h"/>
     <File Name="rendersystems/DirectX9/dx9Texture.h"/>
+    <File Name="include/april/Timer.h"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="libgtypes"/>
   </Dependencies>
   <Dependencies Name="Release"/>
+  <Dependencies Name="DirectX_Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="Linux_Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="OpenGL_Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="DirectX_Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="OpenGL_Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
   <Settings Type="Dynamic Library">
     <Configuration Name="DirectX_Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
@@ -42,6 +64,7 @@
         <Library Value="libgtypes_d"/>
         <Library Value="libDevIL"/>
         <Library Value="d3d9"/>
+        <Library Value="libwinmm"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)_d.dll" IntermediateDirectory="bin/$(ConfigurationName)" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
@@ -160,6 +183,7 @@
         <Library Value="libglu32"/>
         <Library Value="libglut32"/>
         <Library Value="libDevIL"/>
+        <Library Value="libwinmm"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)_d.dll" IntermediateDirectory="bin/$(ConfigurationName)" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
@@ -246,24 +270,4 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
-  <Dependencies Name="DirectX_Release">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-  </Dependencies>
-  <Dependencies Name="Linux_Debug">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-  </Dependencies>
-  <Dependencies Name="OpenGL_Release">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-  </Dependencies>
-  <Dependencies Name="DirectX_Debug">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-  </Dependencies>
-  <Dependencies Name="OpenGL_Debug">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-  </Dependencies>
 </CodeLite_Project>
