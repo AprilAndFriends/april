@@ -24,6 +24,8 @@
     <File Name="include/april/Keys.h"/>
     <File Name="rendersystems/DirectX9/dx9Texture.h"/>
     <File Name="include/april/Timer.h"/>
+    <File Name="include/april/TimerWin.h"/>
+    <File Name="include/april/TimerLinux.h"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="libgtypes"/>
