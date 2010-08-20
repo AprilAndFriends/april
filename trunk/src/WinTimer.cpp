@@ -8,6 +8,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 #include "Timer.h"
+#include "RenderSystem.h"
 
 namespace April
 {
@@ -26,7 +27,7 @@ namespace April
         
         if (!QueryPerformanceFrequency((LARGE_INTEGER *) &mFrequency))
         {
-            printf("[april] performance timer not available, multimedia timer will be used instead!\n");
+            rendersys->logMessage("performance timer not available, multimedia timer will be used instead!");
             mPerformanceTimer	= FALSE;
             mMmTimerStart	    = timeGetTime();
             mResolution		    = 1.0f/1000.0f;
@@ -35,7 +36,6 @@ namespace April
         }
         else
         {
-            printf("[april] performance timer will be used.\n");
             QueryPerformanceCounter((LARGE_INTEGER *) &mPerformanceTimerStart);
             mPerformanceTimer		    = TRUE;
             mResolution				    = (float) (((double)1.0f)/((double)mFrequency));
