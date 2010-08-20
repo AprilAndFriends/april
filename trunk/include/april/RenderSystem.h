@@ -193,7 +193,7 @@ namespace April
 		virtual void _setModelviewMatrix(const gtypes::Matrix4& matrix)=0;
 		virtual void _setProjectionMatrix(const gtypes::Matrix4& matrix)=0;
 	public:
-		virtual hstr getName()=0;
+		
 
 		RenderSystem();
 		virtual ~RenderSystem();
@@ -225,8 +225,9 @@ namespace April
 		const gtypes::Matrix4& getProjectionMatrix();
 		// render state
 		virtual void setBlendMode(BlendMode mode)=0;
-		
-		
+		// caps
+		virtual float getPixelOffset()=0;
+		virtual hstr getName()=0;
 		// rendering
 		virtual void clear(bool color=true,bool depth=false)=0;
 		virtual void setTexture(Texture* t)=0;

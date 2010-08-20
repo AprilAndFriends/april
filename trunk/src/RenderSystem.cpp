@@ -324,7 +324,7 @@ namespace April
 	{
 		mModelviewMatrix.rotate(ax,ay,az,angle);
 		_setModelviewMatrix(mModelviewMatrix);
-	}
+	}	
 	
 	void RenderSystem::scale(float s)
 	{
@@ -346,7 +346,8 @@ namespace April
 		
 	void RenderSystem::setOrthoProjection(float w,float h,float x_offset,float y_offset)
 	{
-		mProjectionMatrix.ortho(w,h,x_offset,y_offset);
+		float t=getPixelOffset(),wnd_w=getWindowWidth(),wnd_h=getWindowHeight();
+		mProjectionMatrix.ortho(w,h,x_offset+t*w/wnd_w,y_offset+t*t/wnd_h);
 		_setProjectionMatrix(mProjectionMatrix);
 	}
 	

@@ -225,6 +225,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		return "DirectX9";
 	}
+	
+	float DirectX9RenderSystem::getPixelOffset()
+	{
+		return 0.5f;
+	}
 
 	Texture* DirectX9RenderSystem::loadTexture(chstr filename,bool dynamic)
 	{
