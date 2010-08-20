@@ -19,7 +19,7 @@ namespace April
 {
 	extern IDirect3DDevice9* d3dDevice;
 
-	DirectX9Texture::DirectX9Texture(chstr filename,bool dynamic)
+	DirectX9Texture::DirectX9Texture(chstr filename,bool dynamic) : Texture()
 	{
 		mFilename=filename;
 		mDynamic=dynamic;
@@ -35,7 +35,7 @@ namespace April
 		}
 	}
 
-	DirectX9Texture::DirectX9Texture(unsigned char* rgba,int w,int h)
+	DirectX9Texture::DirectX9Texture(unsigned char* rgba,int w,int h) : Texture()
 	{
 		mWidth=w; mHeight=h;
 		mDynamic=0;
@@ -64,7 +64,7 @@ namespace April
 		mTexture->UnlockRect(0);
 	}
 	
-	DirectX9Texture::DirectX9Texture(int w,int h,TextureFormat fmt,TextureType type)
+	DirectX9Texture::DirectX9Texture(int w,int h,TextureFormat fmt,TextureType type) : Texture()
 	{
 		mWidth=w; mHeight=h;
 		mDynamic=0;

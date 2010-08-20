@@ -205,11 +205,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dDevice->SetRenderState(D3DRS_LIGHTING,0);
 		d3dDevice->SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
 		d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,1);
-		d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-		d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		setTextureFilter(mTextureFilter);
 	}
 	
 	DirectX9RenderSystem::~DirectX9RenderSystem()
@@ -256,6 +255,23 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		return new DirectX9Texture(w,h,fmt,type);
 	}
+	
+	void DirectX9RenderSystem::setTextureFilter(TextureFilter filter)
+	{
+		if (filter == Linear)
+		{
+			d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+			d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+		}
+		else if (filter == Nearest)
+		{
+			d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+			d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+		}
+		else
+			logMessage("trying to set unsupported texture filter!");
+		mTextureFilter=filter;
+	}
 
 	void DirectX9RenderSystem::setTexture(Texture* t)
 	{
@@ -266,6 +282,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				active_texture->load();
 			active_texture->_resetUnusedTimer();
 			d3dDevice->SetTexture(0,active_texture->mTexture);
+			
+			TextureFilter filter=t->getTextureFilter();
+			if (filter != mTextureFilter)
+				setTextureFilter(filter);
 		}
 		else
 			d3dDevice->SetTexture(0,0);
