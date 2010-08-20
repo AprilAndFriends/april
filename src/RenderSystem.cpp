@@ -110,7 +110,6 @@ namespace April
 	{
 		mFilename="";
 		mUnusedTimer=0;
-		if (rand()%2)
 		mTextureFilter=Linear;
 	}
 
