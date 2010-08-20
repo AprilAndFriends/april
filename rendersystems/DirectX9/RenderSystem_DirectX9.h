@@ -39,8 +39,8 @@ namespace April
 		Texture* createTextureFromMemory(unsigned char* rgba,int w,int h);
 		Texture* createEmptyTexture(int w,int h,TextureFormat fmt,TextureType type);
 
-		// modelview matrix transformation
 		void setBlendMode(BlendMode mode);
+		void setTextureFilter(TextureFilter filter);
 		// caps
 		float getPixelOffset();
 		hstr getName();

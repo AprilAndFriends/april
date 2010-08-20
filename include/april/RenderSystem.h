@@ -47,6 +47,19 @@ namespace April
 		LineStrip=5,
 	};
 	
+	enum TextureFilter
+	{
+		Nearest=1,
+		Linear=2
+	};
+	
+	enum BlendMode
+	{
+		ALPHA_BLEND,
+		ADD,
+		DEFAULT
+	};
+	
 	struct AprilExport PlainVertex : public gtypes::Vector3
 	{
 	public:
@@ -97,13 +110,6 @@ namespace April
         
     };
 
-	enum BlendMode
-	{
-		ALPHA_BLEND,
-		ADD,
-		DEFAULT
-	};
-
 	class AprilExport Color
 	{
 	public:
@@ -131,6 +137,7 @@ namespace April
 		hstr mFilename;
 		int mWidth,mHeight;
 		float mUnusedTimer;
+		TextureFilter mTextureFilter;
 		harray<Texture*> mDynamicLinks;
 	public:
 		Texture();
@@ -154,6 +161,9 @@ namespace April
 		
 		void update(float time_increase);
 		hstr getFilename() { return mFilename; }
+		
+		void setTextureFilter(TextureFilter filter) { mTextureFilter=filter; }
+		TextureFilter getTextureFilter() { return mTextureFilter; }
 	};
 	
 	class AprilExport RAMTexture : public Texture
@@ -178,6 +188,7 @@ namespace April
 		float mAlphaMultiplier;
 		float mIdleUnloadTime;
 		bool mDynamicLoading;
+		TextureFilter mTextureFilter;
 		
 		bool (*mUpdateCallback)(float);
 		void (*mMouseDownCallback)(float,float,int);
