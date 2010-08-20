@@ -31,7 +31,7 @@ namespace April
 	public:
 		DirectX9RenderSystem(int w,int h,bool fullscreen,chstr title);
 		~DirectX9RenderSystem();
-		hstr getName();
+		
 		void configureDevice();
 		
 		// object creation
@@ -41,7 +41,9 @@ namespace April
 
 		// modelview matrix transformation
 		void setBlendMode(BlendMode mode);
-
+		// caps
+		float getPixelOffset();
+		hstr getName();
 		// rendering
 		void clear(bool color,bool depth);
 		void setTexture(Texture* t);

@@ -47,7 +47,6 @@ namespace April
 	public:
 		GLRenderSystem(int w,int h);
 		~GLRenderSystem();
-		hstr getName();
 		
 		// object creation
 		Texture* loadTexture(chstr filename,bool dynamic);
@@ -57,6 +56,9 @@ namespace April
 
 		// modelview matrix transformation
 		void setBlendMode(BlendMode mode);
+		// caps
+		float getPixelOffset();
+		hstr getName();
 
 		// rendering
 		void clear(bool color,bool depth);

@@ -192,6 +192,11 @@ namespace April
 	{
 		return "OpenGL";
 	}
+	
+	float GLRenderSystem::getPixelOffset()
+	{
+		return 0.0f;
+	}
 
 	Texture* GLRenderSystem::loadTexture(chstr filename,bool dynamic)
 	{
