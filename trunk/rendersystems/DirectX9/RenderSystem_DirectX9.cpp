@@ -85,7 +85,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			return 0;
 			break;
 		case WM_KEYDOWN:
+#ifdef _DEBUG //2DO - should be removed completely
 		    if (wParam == VK_ESCAPE) { rendersys->terminateMainLoop(); return 0; }
+#endif
 			dx9rs->triggerKeyEvent(1,wParam);
 			break;
 		case WM_KEYUP: 
