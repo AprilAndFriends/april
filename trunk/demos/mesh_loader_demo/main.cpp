@@ -23,7 +23,7 @@ bool render(float time_increase)
 	static float angle=0;
 	angle+=time_increase*90;
     
-	rendersys->setPerspective(60,1680/1050.,0.1f,100.0f);
+	rendersys->setPerspective(60,800/600.,0.1f,100.0f);
 	rendersys->setTexture(tex);
 	
 	rendersys->lookAt(gtypes::Vector3(2,2,-5),gtypes::Vector3(0,0,0),gtypes::Vector3(0,1,0));
@@ -36,7 +36,7 @@ bool render(float time_increase)
 
 int main()
 {
-	April::init("April",1680,1050,1,"April: 3D Demo");
+	April::init("April",800,600,0,"April: 3D Demo");
 	rendersys->registerUpdateCallback(render);
 
     mMesh = new April::StaticMesh("../media/testobject.obj");
