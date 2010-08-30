@@ -64,6 +64,7 @@ namespace April
 		*w=img->w; *h=img->h;
 		glGenTextures(1, &texid);
 		glBindTexture(GL_TEXTURE_2D, texid);
+		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -175,7 +176,7 @@ namespace April
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
-
+		mTextureFilter=Linear;
         //glEnable(GL_DEPTH_TEST);
         //glDepthFunc(GL_GREATER);
         //glClearDepth(1.0f);
@@ -239,6 +240,10 @@ namespace April
 			}
 			glt->_resetUnusedTimer();
 			glBindTexture(GL_TEXTURE_2D,glt->mTexId);
+			
+			TextureFilter filter=t->getTextureFilter();
+			if (filter != mTextureFilter)
+				setTextureFilter(filter);
 		}
 	}
 
@@ -273,6 +278,23 @@ namespace April
 		{
 			glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 		}
+	}
+	
+	void GLRenderSystem::setTextureFilter(TextureFilter filter)
+	{
+		if (filter == Linear)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		}
+		else if (filter == Nearest)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		}
+		else
+			logMessage("trying to set unsupported texture filter!");
+		mTextureFilter=filter;
 	}
 
 	void GLRenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices)
@@ -393,7 +415,6 @@ namespace April
 	
 	void GLRenderSystem::terminateMainLoop()
 	{
-		destroy();
 		exit(0);
 	}
 	
@@ -439,6 +460,7 @@ namespace April
 		if (key == 27) //esc
 		{
 			rendersys->terminateMainLoop();
+			return;
 		}
 		((GLRenderSystem*) rendersys)->triggerKeyEvent(1,key);
 	}
