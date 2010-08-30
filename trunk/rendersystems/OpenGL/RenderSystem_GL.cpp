@@ -176,11 +176,11 @@ namespace April
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
 
-        glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_DEPTH_TEST);
         //glDepthFunc(GL_GREATER);
         //glClearDepth(1.0f);
         
-		glEnable(GL_CULL_FACE);
+		//glEnable(GL_CULL_FACE);
 	}
 
 	GLRenderSystem::~GLRenderSystem()
@@ -356,18 +356,18 @@ namespace April
 	void GLRenderSystem::beginFrame()
 	{
 		// TODO
-	}
+		}
 
-	void GLRenderSystem::setAlphaMultiplier(float value)
-	{
-		mAlphaMultiplier=value;
-		glColor4f(1,1,1,value);
-	}
+		void GLRenderSystem::setAlphaMultiplier(float value)
+		{
+			mAlphaMultiplier=value;
+			glColor4f(1,1,1,value);
+		}
 
-	void GLRenderSystem::setWindowTitle(chstr title)
-	{
-		glutSetWindowTitle(title.c_str());
-	}
+		void GLRenderSystem::setWindowTitle(chstr title)
+		{
+			glutSetWindowTitle(title.c_str());
+		}
 	
 	gtypes::Vector2 GLRenderSystem::getCursorPos()
 	{
@@ -503,7 +503,6 @@ namespace April
 #ifdef _WIN32
 		hWnd = FindWindow("GLUT", title.c_str());
 		SetFocus(hWnd);
-        //timeBeginPeriod(25);
 #endif
 		if (fullscreen) glutFullScreen();
 		glEnable(GL_TEXTURE_2D);
