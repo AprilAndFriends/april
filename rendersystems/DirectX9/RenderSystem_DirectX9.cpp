@@ -14,6 +14,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include "ImageSource.h"
 #include "Keys.h"
 #include <gtypes/Vector2.h>
+#include <hltypes/exception.h>
 #include <d3d9.h>
 #include "dx9Texture.h"
 #include <stdio.h>
@@ -179,7 +180,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		SetCursor(LoadCursor(0,IDC_ARROW));
 		// DIRECT3D
 		d3d=Direct3DCreate9(D3D_SDK_VERSION);
-		if (!d3d) throw "Unable to create Direct3D9 object!";
+		if (!d3d) throw hl_exception("Unable to create Direct3D9 object!");
 		
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !fullscreen;
@@ -191,7 +192,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 		d3dpp.hDeviceWindow = hWnd;
 		HRESULT hr=d3d->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,hWnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING,&d3dpp,&d3dDevice);
-		if (hr != D3D_OK) throw "Unable to create Direct3D Device!";
+		if (hr != D3D_OK) throw hl_exception("Unable to create Direct3D Device!");
 		// device config
 		configureDevice();
 		clear(1,0);
@@ -471,6 +472,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		{
 			int i;
 			logMessage("Direct3D9 Device lost, attempting to restore...");
+			mBackBuffer->Release(); mBackBuffer=0;
 			while (mAppRunning)
 			{
 				for (i=0;i<10;i++)
@@ -480,13 +482,16 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				}
 				hr=d3dDevice->TestCooperativeLevel();
 				if (hr == D3D_OK) break;
-				if (hr == D3DERR_DEVICENOTRESET)
+				else if (hr == D3DERR_DEVICENOTRESET)
 				{
 					hr=d3dDevice->Reset(&d3dpp);
 					if (hr == D3D_OK) break;
+					else if (hr == D3DERR_DRIVERINTERNALERROR) throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
+					else if (hr == D3DERR_OUTOFVIDEOMEMORY)    throw hl_exception("Unable to reset Direct3D device, Out of Video Memory!");
 					else
 						logMessage("Failed to reset device!");
 				}
+				else if (hr == D3DERR_DRIVERINTERNALERROR) throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
 			}
 			_setModelviewMatrix(mModelviewMatrix);
 			_setProjectionMatrix(mProjectionMatrix);
@@ -496,7 +501,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)
 		{
-			for (int i=0;i<10;i++)
+			for (int i=0;i<100;i++)
 			{
 				Sleep(1);
 				hr=d3dDevice->Present(NULL, NULL, NULL, NULL);
