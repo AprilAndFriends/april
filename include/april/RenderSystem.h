@@ -138,6 +138,7 @@ namespace April
 		int mWidth,mHeight;
 		float mUnusedTimer;
 		TextureFilter mTextureFilter;
+		bool mTextureWrapping;
 		harray<Texture*> mDynamicLinks;
 	public:
 		Texture();
@@ -163,6 +164,8 @@ namespace April
 		hstr getFilename() { return mFilename; }
 		
 		void setTextureFilter(TextureFilter filter) { mTextureFilter=filter; }
+		void setTextureWrapping(bool wrap) { mTextureWrapping=1; }
+		bool isTextureWrappingEnabled() { return mTextureWrapping; }
 		TextureFilter getTextureFilter() { return mTextureFilter; }
 	};
 	
@@ -189,6 +192,7 @@ namespace April
 		float mIdleUnloadTime;
 		bool mDynamicLoading;
 		TextureFilter mTextureFilter;
+		bool mTextureWrapping;
 		
 		bool (*mUpdateCallback)(float);
 		void (*mMouseDownCallback)(float,float,int);

@@ -43,7 +43,6 @@ namespace April
 		bool mTexCoordsEnabled,mColorEnabled;
 		void _setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void _setProjectionMatrix(const gtypes::Matrix4& matrix);
-        TextureFilter mTextureFilter;	
 	public:
 		GLRenderSystem(int w,int h);
 		~GLRenderSystem();

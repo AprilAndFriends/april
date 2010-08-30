@@ -111,6 +111,7 @@ namespace April
 		mFilename="";
 		mUnusedTimer=0;
 		mTextureFilter=Linear;
+		mTextureWrapping=1;
 	}
 
 	Texture::~Texture()
@@ -237,6 +238,7 @@ namespace April
 		mDynamicLoading=0;
 		mIdleUnloadTime=0;
 		mTextureFilter=Linear;
+		mTextureWrapping=1;
 	}
 	
 	RenderSystem::~RenderSystem()

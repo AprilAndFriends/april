@@ -165,7 +165,7 @@ namespace April
 
 
 	GLRenderSystem::GLRenderSystem(int w,int h) :
-		mTexCoordsEnabled(0), mColorEnabled(0)
+		mTexCoordsEnabled(0), mColorEnabled(0) : RenderSystem()
 	{		
 		glViewport(0,0,w,h);
 		glClearColor(0,0,0,1);
@@ -176,7 +176,6 @@ namespace April
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
-		mTextureFilter=Linear;
         //glEnable(GL_DEPTH_TEST);
         //glDepthFunc(GL_GREATER);
         //glClearDepth(1.0f);

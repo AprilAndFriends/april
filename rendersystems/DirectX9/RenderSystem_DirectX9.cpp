@@ -134,7 +134,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 }
 /**********************************************************************************************/
 	DirectX9RenderSystem::DirectX9RenderSystem(int w,int h,bool fullscreen,chstr title) :
-		mTexCoordsEnabled(0), mColorEnabled(0)
+		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
 		logMessage("Creating DirectX9 Rendersystem");
 		mAppRunning=1;
@@ -276,6 +276,21 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		mTextureFilter=filter;
 	}
 
+	void DirectX9RenderSystem::setTextureWrapping(bool wrap)
+	{
+		if (wrap)
+		{
+			d3dDevice->SetSamplerState(0,D3DSAMP_ADDRESSU,D3DTADDRESS_WRAP);
+			d3dDevice->SetSamplerState(0,D3DSAMP_ADDRESSV,D3DTADDRESS_WRAP);
+		}
+		else
+		{
+			d3dDevice->SetSamplerState(0,D3DSAMP_ADDRESSU,D3DTADDRESS_CLAMP);
+			d3dDevice->SetSamplerState(0,D3DSAMP_ADDRESSV,D3DTADDRESS_CLAMP);
+		}
+		mTextureWrapping=wrap;
+	}
+
 	void DirectX9RenderSystem::setTexture(Texture* t)
 	{
 		active_texture=(DirectX9Texture*) t;
@@ -285,10 +300,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				active_texture->load();
 			active_texture->_resetUnusedTimer();
 			d3dDevice->SetTexture(0,active_texture->mTexture);
-			
+
 			TextureFilter filter=t->getTextureFilter();
 			if (filter != mTextureFilter)
 				setTextureFilter(filter);
+
+			bool wrapping=t->isTextureWrappingEnabled();
+			if (mTextureWrapping != wrapping) setTextureWrapping(wrapping);
 		}
 		else
 			d3dDevice->SetTexture(0,0);
