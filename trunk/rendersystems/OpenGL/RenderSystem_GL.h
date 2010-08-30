@@ -56,6 +56,7 @@ namespace April
 		// modelview matrix transformation
 		void setBlendMode(BlendMode mode);
 		void setTextureFilter(TextureFilter filter);
+		void setTextureWrapping(bool wrap);
 		// caps
 		float getPixelOffset();
 		hstr getName();

@@ -165,7 +165,7 @@ namespace April
 
 
 	GLRenderSystem::GLRenderSystem(int w,int h) :
-		mTexCoordsEnabled(0), mColorEnabled(0) : RenderSystem()
+		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{		
 		glViewport(0,0,w,h);
 		glClearColor(0,0,0,1);
@@ -243,6 +243,8 @@ namespace April
 			TextureFilter filter=t->getTextureFilter();
 			if (filter != mTextureFilter)
 				setTextureFilter(filter);
+			bool wrapping=t->isTextureWrappingEnabled();
+			if (mTextureWrapping != wrapping) setTextureWrapping(wrapping);
 		}
 	}
 
@@ -294,6 +296,21 @@ namespace April
 		else
 			logMessage("trying to set unsupported texture filter!");
 		mTextureFilter=filter;
+	}
+
+	void GLRenderSystem::setTextureWrapping(bool wrap)
+	{
+		if (wrap)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
+		else	
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		}
+		mTextureWrapping=wrap;
 	}
 
 	void GLRenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices)
