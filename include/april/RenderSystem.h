@@ -164,7 +164,7 @@ namespace April
 		hstr getFilename() { return mFilename; }
 		
 		void setTextureFilter(TextureFilter filter) { mTextureFilter=filter; }
-		void setTextureWrapping(bool wrap) { mTextureWrapping=1; }
+		void setTextureWrapping(bool wrap) { mTextureWrapping=wrap; }
 		bool isTextureWrappingEnabled() { return mTextureWrapping; }
 		TextureFilter getTextureFilter() { return mTextureFilter; }
 	};
