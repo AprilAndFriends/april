@@ -131,7 +131,10 @@ namespace April
 		float g_float() { return g/255.0f; }
 		float b_float() { return b/255.0f; }
 		float a_float() { return a/255.0f; }
-
+		
+		bool operator==(Color& other);
+		bool operator!=(Color& other);
+		
 	};
 
 	class AprilExport Texture
