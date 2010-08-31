@@ -50,6 +50,29 @@ namespace April
 		return c;
 	}
 	
+	void ImageSource::setPixel(int x,int y,Color c)
+	{
+		if (x < 0) x=0;
+		if (y < 0) y=0;
+		if (x > w-1) x=w-1;
+		if (y > h-1) y=h-1;
+		
+		int index=(y*this->w+x);
+		if (this->bpp == 3) // RGB
+		{
+			this->data[index*3]=c.r;
+			this->data[index*3+1]=c.g;
+			this->data[index*3+2]=c.b;
+		}
+		else if (this->bpp == 4) // RGBA
+		{
+			this->data[index*4]=c.r;
+			this->data[index*4+1]=c.g;
+			this->data[index*4+2]=c.b;
+			this->data[index*4+3]=c.a;
+		}
+	}
+	
 	Color ImageSource::getInterpolatedPixel(float x,float y)
 	{
 		return getPixel((int)x,(int)y);

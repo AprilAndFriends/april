@@ -74,6 +74,16 @@ namespace April
 		setColor(a,r,g,b);
 	}
 
+	Color::Color(int a,int r,int g,int b)
+	{
+		setColor(a,r,g,b);
+	}
+
+	Color::Color(unsigned char a,unsigned char r,unsigned char g,unsigned char b)
+	{
+		setColor(a,r,g,b);
+	}
+
 	Color::Color(unsigned int color)
 	{
 		setColor(color);
@@ -93,6 +103,17 @@ namespace April
 	{
 		this->a=(unsigned char)(a*255); this->r=(unsigned char)(r*255);
 		this->g=(unsigned char)(g*255); this->b=(unsigned char)(b*255);
+	}
+
+	void Color::setColor(int a,int r,int g,int b)
+	{
+		this->a=(unsigned char)a; this->r=(unsigned char)r;
+		this->g=(unsigned char)g; this->b=(unsigned char)b;
+	}
+
+	void Color::setColor(unsigned char a,unsigned char r,unsigned char g,unsigned char b)
+	{
+		this->a=a; this->r=r; this->g=g; this->b=b;
 	}
 
 	void Color::setColor(unsigned int color)
@@ -210,6 +231,13 @@ namespace April
 		if (!mBuffer) load();
 		mUnusedTimer=0;
 		return mBuffer->getPixel(x,y);
+	}
+	
+	void RAMTexture::setPixel(int x,int y,Color c)
+	{
+		if (!mBuffer) load();
+		mUnusedTimer=0;
+		mBuffer->setPixel(x,y,c);
 	}
 	
 	Color RAMTexture::getInterpolatedPixel(float x,float y)

@@ -114,12 +114,16 @@ namespace April
 	{
 	public:
 		unsigned char r,g,b,a;
-		Color(float r,float g,float b,float a=1);
+		Color(float a,float r,float g,float b);
+		Color(int a,int r,int g,int b);
+		Color(unsigned char a,unsigned char r,unsigned char g,unsigned char b);
 		Color(unsigned int color);
 		Color(chstr hex);
 		Color();
 
-		void setColor(float r,float g,float b,float a=1);
+		void setColor(float a,float r,float g,float b);
+		void setColor(int a,int r,int g,int b);
+		void setColor(unsigned char a,unsigned char r,unsigned char g,unsigned char b);
 		void setColor(unsigned int color);
 		void setColor(chstr hex);
 
@@ -180,6 +184,7 @@ namespace April
 		void unload();
 		bool isLoaded();
 		Color getPixel(int x,int y);
+		void setPixel(int x,int y,Color c);
 		Color getInterpolatedPixel(float x,float y);
 		int getSizeInBytes();
 		

@@ -26,6 +26,7 @@ namespace April
 		unsigned int getImageId() { return mImageId; };
 		
 		Color getPixel(int x,int y);
+		void setPixel(int x,int y,Color c);
 		Color getInterpolatedPixel(float x,float y);
 		void copyPixels(void* output,int format);
 		
