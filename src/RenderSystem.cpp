@@ -126,6 +126,16 @@ namespace April
 		// this is going to bite me in the arse on a little endian system...
 		hexstr_to_argb(hex,&a,&r,&g,&b);
 	}
+
+	bool Color::operator==(Color& other)
+	{
+		return (this->r == other.r && this->g == other.g && this->b == other.b && this->a == other.a);
+	}
+
+	bool Color::operator!=(Color& other)
+	{
+		return !(*this == other);
+	}
 /*****************************************************************************************/
 	Texture::Texture()
 	{
