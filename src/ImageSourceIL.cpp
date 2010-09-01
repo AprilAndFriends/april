@@ -44,7 +44,7 @@ namespace April
 			c.r=this->data[index*4];
 			c.g=this->data[index*4+1];
 			c.b=this->data[index*4+2];
-			c.a=this->data[index*4+3];;
+			c.a=this->data[index*4+3];
 		}
 		
 		return c;
