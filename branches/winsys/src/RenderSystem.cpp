@@ -81,6 +81,16 @@ namespace April
 		setColor(_a,_r,_g,_b);
 	}
 
+	Color::Color(int _a,int _r,int _g,int _b)
+	{
+		setColor(_a,_r,_g,_b);
+	}
+
+	Color::Color(unsigned char _a,unsigned char _r,unsigned char _g,unsigned char _b)
+	{
+		setColor(_a,_r,_g,_b);
+	}
+
 	Color::Color(unsigned int color)
 	{
 		setColor(color);
@@ -102,6 +112,17 @@ namespace April
 		this->g=(unsigned char)(_g*255); this->b=(unsigned char)(_b*255);
 	}
 
+	void Color::setColor(int _a,int _r,int _g,int _b)
+	{
+		this->a=(unsigned char)_a; this->r=(unsigned char)_r;
+		this->g=(unsigned char)_g; this->b=(unsigned char)_b;
+	}
+
+	void Color::setColor(unsigned char _a,unsigned char _r,unsigned char _g,unsigned char _b)
+	{
+		this->a=_a; this->r=_r; this->g=_g; this->b=_b;
+	}
+
 	void Color::setColor(unsigned int color)
 	{
 		this->a=color/256/256/256; this->r=color/256/256%256; this->g=color/256%256; this->b=color%256;
@@ -112,11 +133,23 @@ namespace April
 		// this is going to bite me in the arse on a little endian system...
 		hexstr_to_argb(hex,&a,&r,&g,&b);
 	}
+
+	bool Color::operator==(Color& other)
+	{
+		return (this->r == other.r && this->g == other.g && this->b == other.b && this->a == other.a);
+	}
+
+	bool Color::operator!=(Color& other)
+	{
+		return !(*this == other);
+	}
 /*****************************************************************************************/
 	Texture::Texture()
 	{
 		mFilename="";
 		mUnusedTimer=0;
+		mTextureFilter=Linear;
+		mTextureWrapping=1;
 	}
 
 	Texture::~Texture()
@@ -217,6 +250,13 @@ namespace April
 		return mBuffer->getPixel(x,y);
 	}
 	
+	void RAMTexture::setPixel(int x,int y,Color c)
+	{
+		if (!mBuffer) load();
+		mUnusedTimer=0;
+		mBuffer->setPixel(x,y,c);
+	}
+	
 	Color RAMTexture::getInterpolatedPixel(float x,float y)
 	{
 		if (!mBuffer) load();
@@ -234,6 +274,8 @@ namespace April
 		mAlphaMultiplier=1.0f;
 		mDynamicLoading=0;
 		mIdleUnloadTime=0;
+		mTextureFilter=Linear;
+		mTextureWrapping=1;
 	}
 	
 	RenderSystem::~RenderSystem()
@@ -330,7 +372,7 @@ namespace April
 	{
 		mModelviewMatrix.rotate(ax,ay,az,angle);
 		_setModelviewMatrix(mModelviewMatrix);
-	}
+	}	
 	
 	void RenderSystem::scale(float s)
 	{
@@ -352,13 +394,14 @@ namespace April
 		
 	void RenderSystem::setOrthoProjection(float w,float h,float x_offset,float y_offset)
 	{
-		mProjectionMatrix.ortho(w,h,x_offset,y_offset);
+		float t=getPixelOffset(),wnd_w=getWindowWidth(),wnd_h=getWindowHeight();
+		mProjectionMatrix.ortho(w,h,x_offset+t*w/wnd_w,y_offset+t*h/wnd_h);
 		_setProjectionMatrix(mProjectionMatrix);
 	}
 	
-	void RenderSystem::setPerspective(float fov, float aspect, float near, float far)
+    void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
 	{
-		mProjectionMatrix.perspective(fov,aspect,near,far);
+		mProjectionMatrix.perspective(fov,aspect,nearClip,farClip);
 		_setProjectionMatrix(mProjectionMatrix);
 	}
 	
@@ -412,7 +455,12 @@ namespace April
 	{
 		return getWindow()->getCursorPos();
 	}
-
+	
+	void RenderSystem::setWindowTitle(chstr title)
+	{
+		logMessage("RenderSystem::setWindowTitle() is deprecated");
+		getWindow()->setWindowTitle(title);
+	}
 	
 /*********************************************************************************/
 	void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title)

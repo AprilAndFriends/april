@@ -3,9 +3,9 @@ This source file is part of the Awesome Portable Rendering Interface Library    
 For latest info, see http://libapril.sourceforge.net/                                *
 **************************************************************************************
 Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                     *
-Heavily based on SDLMain.m                                                           *
- by Darrell Walisser <dwaliss1@purdue.edu>                                           *
- and Max Horn <max@quendi.de>                                                        *
+ Heavily based on SDLMain.m                                                          *
+  by Darrell Walisser <dwaliss1@purdue.edu>                                          *
+  and Max Horn <max@quendi.de>                                                       *
 *                                                                                    *
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *

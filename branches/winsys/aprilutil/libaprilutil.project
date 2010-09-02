@@ -9,10 +9,12 @@
   <Dependencies/>
   <VirtualDirectory Name="src">
     <File Name="src/BlurManager.cpp"/>
+    <File Name="src/StaticMesh.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/aprilutil/BlurManager.h"/>
     <File Name="include/aprilutil/AprilUtilExport.h"/>
+    <File Name="include/aprilutil/StaticMesh.h"/>
   </VirtualDirectory>
   <Dependencies Name="Release"/>
   <Dependencies Name="DirectX_Debug">

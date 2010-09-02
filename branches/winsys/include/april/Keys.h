@@ -224,5 +224,6 @@ namespace April
 #define AK_HOME April::AK_HOME
 #define AK_END April::AK_END
 #define AK_CONTROL April::AK_CONTROL
+#define AK_MENU April::AK_MENU
 
 #endif

@@ -12,6 +12,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #define RENDERSYSTEM_GL_H
 
 #include "RenderSystem.h"
+#include "Timer.h"
 
 #ifdef __APPLE__
 #include <TargetConditionals.h>
@@ -28,6 +29,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace April
 {
+    
 	class GLTexture : public Texture
 	{
 	public:
@@ -51,7 +53,6 @@ namespace April
 	public:
 		GLRenderSystem(Window* window);
 		~GLRenderSystem();
-		hstr getName();
 		
 		// object creation
 		Texture* loadTexture(chstr filename,bool dynamic);
@@ -61,6 +62,11 @@ namespace April
 
 		// modelview matrix transformation
 		void setBlendMode(BlendMode mode);
+		void setTextureFilter(TextureFilter filter);
+		void setTextureWrapping(bool wrap);
+		// caps
+		float getPixelOffset();
+		hstr getName();
 
 		// rendering
 		void clear(bool color,bool depth);

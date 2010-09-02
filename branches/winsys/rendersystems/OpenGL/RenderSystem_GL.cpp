@@ -34,6 +34,9 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include <gtypes/Vector2.h>
 
 #include "Window.h"
+#include "Timer.h"
+
+April::Timer globalTimer;
 
 namespace April
 {
@@ -49,6 +52,7 @@ namespace April
 		*w=img->w; *h=img->h;
 		glGenTextures(1, &texid);
 		glBindTexture(GL_TEXTURE_2D, texid);
+		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -149,7 +153,7 @@ namespace April
 
 
 	GLRenderSystem::GLRenderSystem(Window* window) :
-		mTexCoordsEnabled(0), mColorEnabled(0)
+		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{		
 		mWindow = window;
 		
@@ -162,9 +166,11 @@ namespace April
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
-
-		
-		glDisable(GL_CULL_FACE);
+        //glEnable(GL_DEPTH_TEST);
+        //glDepthFunc(GL_GREATER);
+        //glClearDepth(1.0f);
+        
+		//glEnable(GL_CULL_FACE);
 	}
 
 	GLRenderSystem::~GLRenderSystem()
@@ -175,6 +181,11 @@ namespace April
 	hstr GLRenderSystem::getName()
 	{
 		return "OpenGL";
+	}
+	
+	float GLRenderSystem::getPixelOffset()
+	{
+		return 0.0f;
 	}
 
 	Texture* GLRenderSystem::loadTexture(chstr filename,bool dynamic)
@@ -218,6 +229,12 @@ namespace April
 			}
 			glt->_resetUnusedTimer();
 			glBindTexture(GL_TEXTURE_2D,glt->mTexId);
+			
+			TextureFilter filter=t->getTextureFilter();
+			if (filter != mTextureFilter)
+				setTextureFilter(filter);
+			bool wrapping=t->isTextureWrappingEnabled();
+			if (mTextureWrapping != wrapping) setTextureWrapping(wrapping);
 		}
 	}
 
@@ -252,6 +269,38 @@ namespace April
 		{
 			glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 		}
+	}
+	
+	void GLRenderSystem::setTextureFilter(TextureFilter filter)
+	{
+		if (filter == Linear)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		}
+		else if (filter == Nearest)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		}
+		else
+			logMessage("trying to set unsupported texture filter!");
+		mTextureFilter=filter;
+	}
+
+	void GLRenderSystem::setTextureWrapping(bool wrap)
+	{
+		if (wrap)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
+		else	
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		}
+		mTextureWrapping=wrap;
 	}
 
 	void GLRenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices)
@@ -333,7 +382,6 @@ namespace April
 		mAlphaMultiplier=value;
 		glColor4f(1,1,1,value);
 	}
-	
 	
 	
 

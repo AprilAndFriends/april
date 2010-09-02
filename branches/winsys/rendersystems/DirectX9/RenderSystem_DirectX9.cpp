@@ -14,16 +14,18 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include "ImageSource.h"
 #include "Keys.h"
 #include <gtypes/Vector2.h>
+#include <hltypes/exception.h>
 #include <d3d9.h>
 #include "dx9Texture.h"
 #include <stdio.h>
+#include "Timer.h"
 
 #define PLAIN_FVF D3DFVF_XYZ
 #define COLORED_FVF D3DFVF_XYZ | D3DFVF_DIFFUSE
 #define TEX_FVF D3DFVF_XYZ | D3DFVF_TEX1
 #define TEX_COLOR_FVF D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE
 
-
+April::Timer globalTimer;
 
 namespace April
 {
@@ -75,15 +77,18 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     switch(message)
     {
         case WM_DESTROY:
+		case WM_CLOSE:
 			if(dx9rs->triggerQuitEvent())
 			{
 				PostQuitMessage(0);
 				rendersys->terminateMainLoop();
-				return 0;
 			}
+			return 0;
 			break;
 		case WM_KEYDOWN:
+#ifdef _DEBUG //2DO - should be removed completely
 		    if (wParam == VK_ESCAPE) { rendersys->terminateMainLoop(); return 0; }
+#endif
 			dx9rs->triggerKeyEvent(1,wParam);
 			break;
 		case WM_KEYUP: 
@@ -129,7 +134,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 }
 /**********************************************************************************************/
 	DirectX9RenderSystem::DirectX9RenderSystem(int w,int h,bool fullscreen,chstr title) :
-		mTexCoordsEnabled(0), mColorEnabled(0)
+		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
 		logMessage("Creating DirectX9 Rendersystem");
 		mAppRunning=1;
@@ -175,7 +180,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		SetCursor(LoadCursor(0,IDC_ARROW));
 		// DIRECT3D
 		d3d=Direct3DCreate9(D3D_SDK_VERSION);
-		if (!d3d) throw "Unable to create Direct3D9 object!";
+		if (!d3d) throw hl_exception("Unable to create Direct3D9 object!");
 		
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !fullscreen;
@@ -187,7 +192,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 		d3dpp.hDeviceWindow = hWnd;
 		HRESULT hr=d3d->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,hWnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING,&d3dpp,&d3dDevice);
-		if (hr != D3D_OK) throw "Unable to create Direct3D Device!";
+		if (hr != D3D_OK) throw hl_exception("Unable to create Direct3D Device!");
 		// device config
 		configureDevice();
 		clear(1,0);
@@ -203,11 +208,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dDevice->SetRenderState(D3DRS_LIGHTING,0);
 		d3dDevice->SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
 		d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,1);
-		d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-		d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		setTextureFilter(mTextureFilter);
 	}
 	
 	DirectX9RenderSystem::~DirectX9RenderSystem()
@@ -222,6 +226,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	hstr DirectX9RenderSystem::getName()
 	{
 		return "DirectX9";
+	}
+	
+	float DirectX9RenderSystem::getPixelOffset()
+	{
+		return 0.5f;
 	}
 
 	Texture* DirectX9RenderSystem::loadTexture(chstr filename,bool dynamic)
@@ -249,6 +258,38 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		return new DirectX9Texture(w,h,fmt,type);
 	}
+	
+	void DirectX9RenderSystem::setTextureFilter(TextureFilter filter)
+	{
+		if (filter == Linear)
+		{
+			d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+			d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+		}
+		else if (filter == Nearest)
+		{
+			d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+			d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+		}
+		else
+			logMessage("trying to set unsupported texture filter!");
+		mTextureFilter=filter;
+	}
+
+	void DirectX9RenderSystem::setTextureWrapping(bool wrap)
+	{
+		if (wrap)
+		{
+			d3dDevice->SetSamplerState(0,D3DSAMP_ADDRESSU,D3DTADDRESS_WRAP);
+			d3dDevice->SetSamplerState(0,D3DSAMP_ADDRESSV,D3DTADDRESS_WRAP);
+		}
+		else
+		{
+			d3dDevice->SetSamplerState(0,D3DSAMP_ADDRESSU,D3DTADDRESS_CLAMP);
+			d3dDevice->SetSamplerState(0,D3DSAMP_ADDRESSV,D3DTADDRESS_CLAMP);
+		}
+		mTextureWrapping=wrap;
+	}
 
 	void DirectX9RenderSystem::setTexture(Texture* t)
 	{
@@ -259,6 +300,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				active_texture->load();
 			active_texture->_resetUnusedTimer();
 			d3dDevice->SetTexture(0,active_texture->mTexture);
+
+			TextureFilter filter=t->getTextureFilter();
+			if (filter != mTextureFilter)
+				setTextureFilter(filter);
+
+			bool wrapping=t->isTextureWrappingEnabled();
+			if (mTextureWrapping != wrapping) setTextureWrapping(wrapping);
 		}
 		else
 			d3dDevice->SetTexture(0,0);
@@ -442,6 +490,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		{
 			int i;
 			logMessage("Direct3D9 Device lost, attempting to restore...");
+			mBackBuffer->Release(); mBackBuffer=0;
 			while (mAppRunning)
 			{
 				for (i=0;i<10;i++)
@@ -451,13 +500,16 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				}
 				hr=d3dDevice->TestCooperativeLevel();
 				if (hr == D3D_OK) break;
-				if (hr == D3DERR_DEVICENOTRESET)
+				else if (hr == D3DERR_DEVICENOTRESET)
 				{
 					hr=d3dDevice->Reset(&d3dpp);
 					if (hr == D3D_OK) break;
+					else if (hr == D3DERR_DRIVERINTERNALERROR) throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
+					else if (hr == D3DERR_OUTOFVIDEOMEMORY)    throw hl_exception("Unable to reset Direct3D device, Out of Video Memory!");
 					else
 						logMessage("Failed to reset device!");
 				}
+				else if (hr == D3DERR_DRIVERINTERNALERROR) throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
 			}
 			_setModelviewMatrix(mModelviewMatrix);
 			_setProjectionMatrix(mProjectionMatrix);
@@ -467,7 +519,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)
 		{
-			for (int i=0;i<10;i++)
+			for (int i=0;i<100;i++)
 			{
 				Sleep(1);
 				hr=d3dDevice->Present(NULL, NULL, NULL, NULL);
@@ -486,7 +538,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		if(mQuitCallback)
 		{
-			return mQuitCallback(false);
+			return mQuitCallback(true);
 		}
 		return true;
 	}
@@ -521,10 +573,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	
 	void DirectX9RenderSystem::enterMainLoop()
 	{
-		DWORD time=GetTickCount(),t;
+		DWORD time=globalTimer.getTime(),t;
 		bool cvisible=cursor_visible;
 #ifdef _DEBUG
-		static DWORD fpsTimer=GetTickCount(),fps=0;
+		static DWORD fpsTimer=globalTimer.getTime(),fps=0;
 #endif
 		POINT w32_cursorpos;
 		float k;
@@ -546,7 +598,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 				}
 			}
 			doWindowEvents();
-			t=GetTickCount();
+			t=globalTimer.getTime();
 
 			if (t == time) continue; // don't redraw frames which won't change
 			k=(t-time)/1000.0f;

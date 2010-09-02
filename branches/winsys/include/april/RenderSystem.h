@@ -47,6 +47,19 @@ namespace April
 		LineStrip=5,
 	};
 	
+	enum TextureFilter
+	{
+		Nearest=1,
+		Linear=2
+	};
+	
+	enum BlendMode
+	{
+		ALPHA_BLEND,
+		ADD,
+		DEFAULT
+	};
+	
 	struct AprilExport PlainVertex : public gtypes::Vector3
 	{
 	public:
@@ -71,24 +84,46 @@ namespace April
 		unsigned int color;
 		float u,v;
 	};
-
-	enum BlendMode
-	{
-		ALPHA_BLEND,
-		ADD,
-		DEFAULT
-	};
+    
+    class AprilExport ColoredTexturedNormalVertex : public PlainVertex
+    {
+    public:
+        float u,v;
+        unsigned int color;
+        gtypes::Vector3 normal;
+        
+    };
+    
+    class AprilExport TexturedNormalVertex : public PlainVertex
+    {
+    public:
+        float u,v;
+        gtypes::Vector3 normal;
+        
+    };
+    
+    class AprilExport ColoredNormalVertex : public PlainVertex
+    {
+    public:
+        unsigned int color;
+        gtypes::Vector3 normal;
+        
+    };
 
 	class AprilExport Color
 	{
 	public:
 		unsigned char r,g,b,a;
-		Color(float r,float g,float b,float a=1);
+		Color(float a,float r,float g,float b);
+		Color(int a,int r,int g,int b);
+		Color(unsigned char a,unsigned char r,unsigned char g,unsigned char b);
 		Color(unsigned int color);
 		Color(chstr hex);
 		Color();
 
-		void setColor(float r,float g,float b,float a=1);
+		void setColor(float a,float r,float g,float b);
+		void setColor(int a,int r,int g,int b);
+		void setColor(unsigned char a,unsigned char r,unsigned char g,unsigned char b);
 		void setColor(unsigned int color);
 		void setColor(chstr hex);
 
@@ -96,7 +131,10 @@ namespace April
 		float g_float() { return g/255.0f; }
 		float b_float() { return b/255.0f; }
 		float a_float() { return a/255.0f; }
-
+		
+		bool operator==(Color& other);
+		bool operator!=(Color& other);
+		
 	};
 
 	class AprilExport Texture
@@ -106,6 +144,8 @@ namespace April
 		hstr mFilename;
 		int mWidth,mHeight;
 		float mUnusedTimer;
+		TextureFilter mTextureFilter;
+		bool mTextureWrapping;
 		harray<Texture*> mDynamicLinks;
 	public:
 		Texture();
@@ -129,6 +169,11 @@ namespace April
 		
 		void update(float time_increase);
 		hstr getFilename() { return mFilename; }
+		
+		void setTextureFilter(TextureFilter filter) { mTextureFilter=filter; }
+		void setTextureWrapping(bool wrap) { mTextureWrapping=wrap; }
+		bool isTextureWrappingEnabled() { return mTextureWrapping; }
+		TextureFilter getTextureFilter() { return mTextureFilter; }
 	};
 	
 	class AprilExport RAMTexture : public Texture
@@ -142,6 +187,7 @@ namespace April
 		void unload();
 		bool isLoaded();
 		Color getPixel(int x,int y);
+		void setPixel(int x,int y,Color c);
 		Color getInterpolatedPixel(float x,float y);
 		int getSizeInBytes();
 		
@@ -154,6 +200,8 @@ namespace April
 		float mAlphaMultiplier;
 		float mIdleUnloadTime;
 		bool mDynamicLoading;
+		TextureFilter mTextureFilter;
+		bool mTextureWrapping;
 		
 		gtypes::Matrix4 mModelviewMatrix,mProjectionMatrix;
 
@@ -161,8 +209,6 @@ namespace April
 		virtual void _setProjectionMatrix(const gtypes::Matrix4& matrix)=0;
 	public:
 		
-		virtual hstr getName()=0;
-
 		RenderSystem();
 		virtual ~RenderSystem();
 
@@ -182,7 +228,7 @@ namespace April
 		void lookAt(const gtypes::Vector3 &eye, const gtypes::Vector3 &direction, const gtypes::Vector3 &up);
 		// projection matrix tronsformation
 		void setOrthoProjection(float w,float h,float x_offset=0,float y_offset=0);
-		void setPerspective(float fov, float aspect, float near, float far);
+		void setPerspective(float fov, float aspect, float nearClip, float farClip);
 		// rendersys matrix operations
 		void setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void setProjectionMatrix(const gtypes::Matrix4& matrix);
@@ -193,8 +239,9 @@ namespace April
 		const gtypes::Matrix4& getProjectionMatrix();
 		// render state
 		virtual void setBlendMode(BlendMode mode)=0;
-		
-		
+		// caps
+		virtual float getPixelOffset()=0;
+		virtual hstr getName()=0;
 		// rendering
 		virtual void clear(bool color=true,bool depth=false)=0;
 		virtual void setTexture(Texture* t)=0;
@@ -242,6 +289,7 @@ namespace April
 		virtual gtypes::Vector2 getCursorPos() __attribute__((deprecated));
 		virtual int getWindowWidth() __attribute__((deprecated));
 		virtual int getWindowHeight() __attribute__((deprecated));
+		virtual void setWindowTitle(chstr title) __attribute__((deprecated));
 
 	};
 
