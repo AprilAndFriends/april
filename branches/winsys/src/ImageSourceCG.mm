@@ -215,14 +215,23 @@ namespace April
 		
 		// draw CG image to a byte array
 		CGContextRef bitmapContext = CGBitmapContextCreate(img->data,
-															img->w, img->h,
-															bitsPerComponent, 
-															bytesPerRow,
-															space,
-															kCGImageAlphaPremultipliedLast);
+														   img->w, img->h,
+														   bitsPerComponent, 
+														   bytesPerRow,
+														   space,
+														   kCGImageAlphaPremultipliedLast);
 		
 		CGContextDrawImage(bitmapContext,CGRectMake(0.0, 0.0, (float)img->w, (float)img->h),imageRef);
 		CGContextRelease(bitmapContext);
+		
+		// let's undo premultiplication
+		for(int i=0; i < bytesPerRow * img->h; i+=4)
+		{
+			for(int j=0; j<3; j++)
+			{
+				img->data[i+j] = img->data[i+j] / (img->data[i+3]/255.);
+			}
+		}
 		
 #if !defined(TARGET_OS_IPHONE)
 		CGImageRelease(imageRef);

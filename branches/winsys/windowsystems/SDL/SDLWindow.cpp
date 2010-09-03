@@ -31,6 +31,7 @@ namespace April
 		
 		// set up opengl attributes desired for the context
 		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+		SDL_GL_SetAttribute( SDL_GL_SWAP_CONTROL, 1 ); 
 		
 		// set up display with width w, height h, any bpp, opengl, and optionally fullscreen
 		mScreen = SDL_SetVideoMode(w, h, 0, SDL_OPENGL|(fullscreen ? SDL_FULLSCREEN : 0));
