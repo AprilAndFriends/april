@@ -12,6 +12,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 #include <hltypes/hstring.h>
 #include <hltypes/harray.h>
+#include <gtypes/Vector2.h>
 #include <gtypes/Vector3.h>
 #include <gtypes/Matrix4.h>
 #include "AprilExport.h"
@@ -303,6 +304,7 @@ namespace April
 		virtual void terminateMainLoop()=0;
 	};
 
+	gtypes::Vector2 getDesktopResolution();
 	AprilFnExport void setLogFunction(void (*fnptr)(chstr));
 	AprilFnExport void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title);
 	AprilFnExport void destroy();
