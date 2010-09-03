@@ -526,6 +526,16 @@ namespace April
 		rendersys->presentFrame();
 	}
 
+	gtypes::Vector2 getDesktopResolution()
+	{
+#ifdef _WIN32
+		return gtypes::Vector2(GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
+#else
+		return gtypes::Vector2(1024,768);
+#endif
+	}
+
+
 	void createGLRenderSystem(int w,int h,bool fullscreen,chstr title)
 	{
 		g_logFunction("Creating OpenGL Rendersystem");

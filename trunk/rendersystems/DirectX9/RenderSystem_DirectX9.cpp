@@ -635,6 +635,14 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	}
 
 
+
+
+
+	gtypes::Vector2 getDesktopResolution()
+	{
+		return gtypes::Vector2(GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
+	}
+
 	void createDX9RenderSystem(int w,int h,bool fullscreen,chstr title)
 	{
 		rendersys=new DirectX9RenderSystem(w,h,fullscreen,title);
