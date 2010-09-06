@@ -465,6 +465,10 @@ namespace April
 	{
 		getWindow()->presentFrame();
 	}
+	void RenderSystem::showSystemCursor(bool visible)
+	{
+		getWindow()->showSystemCursor(visible);
+	}
 	
 /*********************************************************************************/
 	void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title)

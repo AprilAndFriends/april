@@ -12,9 +12,11 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 #include <hltypes/hstring.h>
 #include <hltypes/harray.h>
+#include <gtypes/Vector2.h>
 #include <gtypes/Vector3.h>
 #include <gtypes/Matrix4.h>
 #include "AprilExport.h"
+
 
 namespace gtypes
 {
@@ -291,6 +293,7 @@ namespace April
 		virtual int getWindowHeight() __attribute__((deprecated));
 		virtual void setWindowTitle(chstr title) __attribute__((deprecated));
 		virtual void presentFrame() __attribute__((deprecated));
+		virtual void showSystemCursor(bool visible) __attribute__((deprecated));
 
 	};
 

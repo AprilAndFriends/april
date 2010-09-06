@@ -150,4 +150,14 @@ namespace April
 	}
 	
 	
+	
+	gtypes::Vector2 getDesktopResolution()
+	{
+#ifdef _WIN32
+		return gtypes::Vector2(GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
+#else
+		return gtypes::Vector2(1024,768);
+#endif
+	}
+	
 }

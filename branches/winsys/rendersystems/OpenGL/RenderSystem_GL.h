@@ -29,7 +29,6 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 
 namespace April
 {
-    
 	class GLTexture : public Texture
 	{
 	public:

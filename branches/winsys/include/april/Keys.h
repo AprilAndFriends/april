@@ -226,4 +226,8 @@ namespace April
 #define AK_CONTROL April::AK_CONTROL
 #define AK_MENU April::AK_MENU
 
+// deprecated names for mouse buttons:
+#define AK_LBUTTON 1 // April::AMOUSEBTN_LEFT
+#define AK_RBUTTON 2 // April::AMOUSEBTN_RIGH
+
 #endif
