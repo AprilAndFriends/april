@@ -461,6 +461,10 @@ namespace April
 		logMessage("RenderSystem::setWindowTitle() is deprecated");
 		getWindow()->setWindowTitle(title);
 	}
+	void RenderSystem::presentFrame()
+	{
+		getWindow()->presentFrame();
+	}
 	
 /*********************************************************************************/
 	void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title)

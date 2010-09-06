@@ -290,6 +290,7 @@ namespace April
 		virtual int getWindowWidth() __attribute__((deprecated));
 		virtual int getWindowHeight() __attribute__((deprecated));
 		virtual void setWindowTitle(chstr title) __attribute__((deprecated));
+		virtual void presentFrame() __attribute__((deprecated));
 
 	};
 
