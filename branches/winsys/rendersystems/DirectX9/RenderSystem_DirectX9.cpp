@@ -19,6 +19,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include "dx9Texture.h"
 #include <stdio.h>
 #include "Timer.h"
+#include "Window.h"
 
 #define PLAIN_FVF D3DFVF_XYZ
 #define COLORED_FVF D3DFVF_XYZ | D3DFVF_DIFFUSE
@@ -31,7 +32,7 @@ namespace April
 {
 	IDirect3D9* d3d=0;
 	IDirect3DDevice9* d3dDevice=0;
-	HWND hWnd;
+	static HWND hWnd;
 	DirectX9Texture* active_texture=0;
 	gtypes::Vector2 cursorpos;
 	bool cursor_visible=1;
@@ -71,6 +72,7 @@ namespace April
 		return 0;
 	}
 /**********************************************************************************************/
+/*
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	DirectX9RenderSystem *dx9rs=(DirectX9RenderSystem*) rendersys;
@@ -131,13 +133,15 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			break;
     }
     return DefWindowProc(hWnd, message, wParam, lParam);
-}
+}*/
 /**********************************************************************************************/
-	DirectX9RenderSystem::DirectX9RenderSystem(int w,int h,bool fullscreen,chstr title) :
+	DirectX9RenderSystem::DirectX9RenderSystem(Window* window) : //int w,int h,bool fullscreen,chstr title) :
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
+		mWindow = window;
+		
 		logMessage("Creating DirectX9 Rendersystem");
-		mAppRunning=1;
+		/*mAppRunning=1;
 		wnd_fullscreen=fullscreen;
 		// WINDOW
 		mTitle=title;
@@ -178,14 +182,18 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		UpdateWindow(hWnd);
 		
 		SetCursor(LoadCursor(0,IDC_ARROW));
+		*/
+		
+		hWnd = (HWND)getWindow()->getIDFromBackend();
+		
 		// DIRECT3D
 		d3d=Direct3DCreate9(D3D_SDK_VERSION);
 		if (!d3d) throw hl_exception("Unable to create Direct3D9 object!");
 		
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
-		d3dpp.Windowed = !fullscreen;
-		d3dpp.BackBufferWidth   = w;
-		d3dpp.BackBufferHeight  = h;
+		d3dpp.Windowed = 1; //!fullscreen;
+		d3dpp.BackBufferWidth   = getWindow()->getWindowWidth(); //w;
+		d3dpp.BackBufferHeight  = getWindow()->getWindowHeight(); //h;
 		d3dpp.BackBufferFormat  = D3DFMT_X8R8G8B8;
 		d3dpp.PresentationInterval=D3DPRESENT_INTERVAL_ONE;
 
@@ -409,7 +417,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		if (mRenderTarget) d3dDevice->BeginScene();
 		mRenderTarget=(DirectX9Texture*) source;
 	}
-	
+	/*
 	int DirectX9RenderSystem::getWindowWidth()
 	{
 		RECT rc;
@@ -423,7 +431,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		GetClientRect(hWnd, &rc);
 		return rc.bottom-rc.top;
 	}
-
+	*/
 	void DirectX9RenderSystem::render(RenderOp renderOp,ColoredVertex* v,int nVertices)
 	{
 		if (active_texture) setTexture(0);
@@ -448,7 +456,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		mAlphaMultiplier=value;
 	}
-
+/*
 	void DirectX9RenderSystem::setWindowTitle(chstr title)
 	{
 		mTitle=title;
@@ -476,7 +484,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		return cursor_visible;
 	}
-	
+*/	
 	void DirectX9RenderSystem::beginFrame()
 	{
 		d3dDevice->BeginScene();
@@ -529,11 +537,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dDevice->BeginScene();
 	}
 	
-	void DirectX9RenderSystem::terminateMainLoop()
+	/*void DirectX9RenderSystem::terminateMainLoop()
 	{
 		mAppRunning=0;
 	}
-	
+	 
 	bool DirectX9RenderSystem::triggerQuitEvent()
 	{
 		if(mQuitCallback)
@@ -634,7 +642,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 	}
 
-
+	
 
 
 
@@ -642,10 +650,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		return gtypes::Vector2(GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
 	}
-
-	void createDX9RenderSystem(int w,int h,bool fullscreen,chstr title)
+*/
+	void createDX9RenderSystem(Window* window) //int w,int h,bool fullscreen,chstr title)
 	{
-		rendersys=new DirectX9RenderSystem(w,h,fullscreen,title);
+		rendersys=new DirectX9RenderSystem(window); //w,h,fullscreen,title);
 	}
 
 }

@@ -23,6 +23,7 @@ namespace April
 	{
 	protected:		
 		RenderSystem* mRenderSystem;
+		hstr mTitle;
 
 		bool (*mUpdateCallback)(float);
 		void (*mMouseDownCallback)(float,float,int);
@@ -84,6 +85,7 @@ namespace April
 		virtual void setWindowTitle(chstr title)=0;
 		virtual gtypes::Vector2 getCursorPos()=0;
 		virtual void presentFrame()=0;
+		virtual void* getIDFromBackend()=0;
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);

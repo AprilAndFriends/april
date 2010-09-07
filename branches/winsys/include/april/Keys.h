@@ -225,6 +225,21 @@ namespace April
 #define AK_END April::AK_END
 #define AK_CONTROL April::AK_CONTROL
 #define AK_MENU April::AK_MENU
+#define AK_F2 April::AK_F2
+#define AK_F3 April::AK_F3
+#define AK_F5 April::AK_F5
+#define AK_F8 April::AK_F8
+#define AK_SPACE April::AK_SPACE
+#define AK_RETURN April::AK_RETURN
+#define AK_TAB April::AK_TAB
+#define AK_1 April::AK_1
+#define AK_2 April::AK_2
+#define AK_3 April::AK_3
+#define AK_4 April::AK_4
+#define AK_5 April::AK_5
+#define AK_6 April::AK_6
+#define AK_7 April::AK_7
+//#define AK_ April::AK_
 
 // deprecated names for mouse buttons:
 #define AK_LBUTTON 1 // April::AMOUSEBTN_LEFT

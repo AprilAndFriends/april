@@ -9,7 +9,16 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#ifndef __APPLE__
+#include <GL/glut.h>
+#else
 #include <GLUT/glut.h>
+#endif
 #include "GLUTWindow.h"
 #include "Keys.h"
 
@@ -19,7 +28,7 @@ namespace April
 	
 	int windowIdGlut = 0;
 #ifdef _WIN32
-	HWND hWnd;
+	static HWND hWnd;
 #else
 #include <sys/time.h>
 	unsigned GetTickCount()
@@ -52,6 +61,7 @@ namespace April
 		hWnd = FindWindow("GLUT", title.c_str());
 		SetFocus(hWnd);
 #endif
+		mTitle = title;
 		if (fullscreen) glutFullScreen();
 		
 		glutDisplayFunc(		_handleDisplayAndUpdate);
@@ -127,7 +137,17 @@ namespace April
 		return glutGet(GLUT_WINDOW_HEIGHT);
 	}
 	
-	
+	void* GLUTWindow::getIDFromBackend()
+	{
+		// implemented only for win32 :/
+#ifdef _WIN32
+		//HWND hwnd = FindWindow( "GLUT", title.c_str() );
+		//return hwnd;
+		return (void*)hWnd;
+#else
+		return 0;
+#endif
+	}
 	
 	
 	

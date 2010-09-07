@@ -292,7 +292,7 @@ namespace April
 		virtual int getWindowWidth() __attribute__((deprecated));
 		virtual int getWindowHeight() __attribute__((deprecated));
 		virtual void setWindowTitle(chstr title) __attribute__((deprecated));
-		virtual void presentFrame() __attribute__((deprecated));
+		virtual void presentFrame(); // __attribute__((deprecated)); -- not deprecated because directx has its own way of presenting stuff.
 		virtual void showSystemCursor(bool visible) __attribute__((deprecated));
 
 	};

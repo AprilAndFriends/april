@@ -12,6 +12,10 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include <TargetConditionals.h>
 #endif
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #if !defined(__APPLE__) || defined(__APPLE__) && defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
 #include "GLUTWindow.h"
 #ifdef HAVE_SDL

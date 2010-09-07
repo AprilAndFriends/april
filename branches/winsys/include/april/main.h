@@ -14,6 +14,8 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 extern "C" {
 #endif
 
+#ifdef __APPLE__
+
 int april_real_main(int argc, char** argv);
 int april_main(int(*real_main)(int argc, char** argv), int argc, char** argv);
 int main(int argc, char** argv)
@@ -22,6 +24,11 @@ int main(int argc, char** argv)
 }
 
 #define main april_real_main
+
+#else
+
+#endif
+
 
 #ifdef __cplusplus
 } // extern C

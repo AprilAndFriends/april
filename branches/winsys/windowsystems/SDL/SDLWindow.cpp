@@ -28,6 +28,7 @@ namespace April
 		// and immediately set window title
 		SDL_Init(SDL_INIT_VIDEO);
 		SDL_WM_SetCaption(title.c_str(), title.c_str());
+		mTitle = title;
 		
 		// set up opengl attributes desired for the context
 		SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
@@ -158,6 +159,7 @@ namespace April
 	void SDLWindow::setWindowTitle(chstr title)
 	{
 		SDL_WM_SetCaption(title.c_str(), title.c_str());
+		mTitle = title;
 	}
 	
 	gtypes::Vector2 SDLWindow::getCursorPos()
@@ -316,5 +318,11 @@ namespace April
 		presentFrame();
 	}
 	
+	void* getIDFromBackend()
+	{
+		SDL_SysWMinfo wmInfo;
+		SDL_GetWMInfo(&wmInfo);
+		return (void*)wmInfo.window;
+	}
 
 }

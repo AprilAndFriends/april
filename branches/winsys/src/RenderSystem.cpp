@@ -477,11 +477,11 @@ namespace April
 			ilInit();
 		#endif
 		
-		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);
+		Window* window = createAprilWindow(/*"SDL"*/ "GLUT", w, h, fullscreen, title);
 		#ifdef _OPENGL
 			createGLRenderSystem(window);
 		#else
-			createDX9RenderSystem(w,h,fullscreen,title);
+			createDX9RenderSystem(window); //w,h,fullscreen,title);
 		#endif
 	}
 	
