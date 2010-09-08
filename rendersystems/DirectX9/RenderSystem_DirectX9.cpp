@@ -50,6 +50,7 @@ namespace April
 		D3DPT_TRIANGLEFAN,   // ROP_TRIANGLE_FAN
 		D3DPT_LINELIST,      // ROP_LINE_LIST
 		D3DPT_LINESTRIP,     // ROP_LINE_STRIP
+		D3DPT_POINTLIST,     // ROP_POINT_LIST
 	};
 	
 	void doWindowEvents()
@@ -68,6 +69,7 @@ namespace April
 		if (rop == TriangleFan)   return nVertices-1;
 		if (rop == LineList)      return nVertices/2;
 		if (rop == LineStrip)     return nVertices-1;
+		if (rop == PointList)     return nVertices;
 		return 0;
 	}
 /**********************************************************************************************/

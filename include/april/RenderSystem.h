@@ -46,6 +46,7 @@ namespace April
 		TriangleFan=3,
 		LineList=4,
 		LineStrip=5,
+		PointList=6,
 	};
 	
 	enum TextureFilter
