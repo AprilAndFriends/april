@@ -9,6 +9,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 \************************************************************************************/
 
 #include <SDL/SDL.h>
+#include <SDL/SDL_syswm.h>
 #include "SDLWindow.h"
 #include "Keys.h"
 #include "RenderSystem.h"
@@ -20,6 +21,8 @@ namespace April
 	
 	SDLWindow::SDLWindow(int w, int h, bool fullscreen, chstr title)
 	{
+		rendersys->logMessage("Creating SDL Windowsystem");
+		
 		// we want a centered sdl window
 		putenv("SDL_VIDEO_WINDOW_POS");
 		putenv("SDL_VIDEO_CENTERED=1");
@@ -195,7 +198,7 @@ namespace April
 #ifdef __APPLE__
 				s2a(DELETE,BACK);
 #else
-				sea(DELETE);
+				case SDLK_DELETE: akeysym = AK_DELETE; //sea(DELETE);
 #endif
 				sea(TAB)
 				sea(RETURN);
@@ -315,10 +318,11 @@ namespace April
 		x=SDL_GetTicks();
 		
 		performUpdate(k);
-		presentFrame();
+		//presentFrame();
+		rendersys->presentFrame();
 	}
 	
-	void* getIDFromBackend()
+	void* SDLWindow::getIDFromBackend()
 	{
 		SDL_SysWMinfo wmInfo;
 		SDL_GetWMInfo(&wmInfo);

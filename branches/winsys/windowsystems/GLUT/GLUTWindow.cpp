@@ -21,6 +21,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #endif
 #include "GLUTWindow.h"
 #include "Keys.h"
+#include "RenderSystem.h"
 
 namespace April
 {
@@ -47,6 +48,7 @@ namespace April
 	
 	GLUTWindow::GLUTWindow(int w, int h, bool fullscreen, chstr title)
 	{
+		rendersys->logMessage("Creating GLUT Windowsystem");
 		
 		const char *argv[] = {"program"};
 		int argc=1;
@@ -223,7 +225,8 @@ namespace April
 		x=GetTickCount();
 		
 		GLUTWindow::_instance->performUpdate(k);
-		GLUTWindow::_instance->presentFrame();
+		//GLUTWindow::_instance->presentFrame();
+		rendersys->presentFrame();
 	}
 	
 	void GLUTWindow::_handleQuitRequest()

@@ -17,6 +17,7 @@
     <File Name="windowsystems/GLUT/GLUTWindow.cpp"/>
     <File Name="src/Window.cpp"/>
     <File Name="main_win32.cpp"/>
+    <File Name="windowsystems/SDL/SDLWindow.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.h"/>
@@ -32,6 +33,7 @@
     <File Name="windowsystems/GLUT/GLUTWindow.h"/>
     <File Name="include/april/Window.h"/>
     <File Name="include/april/main.h"/>
+    <File Name="windowsystems/SDL/SDLWindow.h"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="libgtypes"/>
@@ -63,6 +65,7 @@
         <Preprocessor Value="_WIN32"/>
         <Preprocessor Value="_DIRECTX9"/>
         <Preprocessor Value="_DEBUG"/>
+        <Preprocessor Value="HAVE_SDL"/>
       </Compiler>
       <Linker Options="" Required="yes">
         <LibraryPath Value="../hltypes/bin/Debug"/>
@@ -74,6 +77,7 @@
         <Library Value="d3d9"/>
         <Library Value="libwinmm"/>
         <Library Value="glut32"/>
+        <Library Value="SDL"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)_d.dll" IntermediateDirectory="bin/$(ConfigurationName)" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
@@ -269,6 +273,7 @@
         <IncludePath Value="rendersystems/OpenGL"/>
         <IncludePath Value="rendersystems/DirectX9"/>
         <IncludePath Value="windowsystems/GLUT"/>
+        <IncludePath Value="windowsystems/SDL"/>
         <IncludePath Value="../hltypes/include"/>
         <IncludePath Value="../gtypes/include"/>
         <IncludePath Value="../include"/>

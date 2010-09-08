@@ -653,7 +653,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 */
 	void createDX9RenderSystem(Window* window) //int w,int h,bool fullscreen,chstr title)
 	{
-		rendersys=new DirectX9RenderSystem(window); //w,h,fullscreen,title);
+		April::rendersys = ::rendersys = new DirectX9RenderSystem(window); //w,h,fullscreen,title);
 	}
 
 }

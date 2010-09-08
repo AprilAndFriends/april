@@ -140,6 +140,7 @@ namespace April
 #if !defined(__APPLE__) || defined(__APPLE__) && defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
 		// desktop
 	#ifdef HAVE_SDL
+	#warning USING SDL
 		if (winsysname=="SDL") {
 			return new SDLWindow(w,h,fullscreen,title);
 		}
