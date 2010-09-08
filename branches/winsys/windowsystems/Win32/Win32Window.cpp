@@ -23,6 +23,7 @@ namespace April
 	static bool cursor_visible=1;
 	static bool window_active=1,wnd_fullscreen=0;
 	static April::Timer globalTimer;
+	static Win32Window* instance;
 	
 #ifdef _DEBUG
 	static char fpstitle[1024]=" [FPS:0]";
@@ -40,7 +41,7 @@ namespace April
 /**********************************************************************************************/
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	Win32Window *ws=(Win32Window*) rendersys->getWindow();
+	Win32Window *ws=(Win32Window*) instance;
     switch(message)
     {
         case WM_DESTROY:
@@ -103,7 +104,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	Win32Window::Win32Window(int w,int h,bool fullscreen,chstr title) //:
 		/*mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()*/
 	{
-		rendersys->logMessage("Creating Win32 Windowsystem");
+		if(rendersys) rendersys->logMessage("Creating Win32 Windowsystem");
+		
+		instance = this;
+		
 		mRunning=true;
 		wnd_fullscreen=fullscreen;
 		// WINDOW
@@ -121,15 +125,15 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		wc.lpszClassName = "april_win32_window";
 		wc.hIcon=(HICON) LoadImage(0,"game.ico",IMAGE_ICON,0,0,LR_LOADFROMFILE);
 		wc.hbrBackground=(HBRUSH)GetStockObject(BLACK_BRUSH);
-		HLBREAKPT
+		
 		RegisterClassEx(&wc);
 		int x=(fullscreen) ? 0 : (GetSystemMetrics(SM_CXSCREEN)-w)/2,
 			y=(fullscreen) ? 0 : (GetSystemMetrics(SM_CYSCREEN)-h)/2;
-		HLBREAKPT
+		
 		DWORD style=(fullscreen) ? WS_EX_TOPMOST|WS_POPUP : WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX;
 		printf("title: %s %d %d %d %d inst: %d\n", title.c_str(), x, y, w, h, hinst);
 		hWnd = CreateWindowEx(NULL,"april_win32_window",title.c_str(),style,x,y,w,h,NULL,NULL,hinst,NULL);
-		HLBREAKPT
+		
 		if (!fullscreen)
 		{
 			RECT rcClient, rcWindow;
@@ -146,7 +150,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		UpdateWindow(hWnd);
 		
 		SetCursor(LoadCursor(0,IDC_ARROW));
-		HLBREAKPT
 	}
 	
 	Win32Window::~Win32Window()
@@ -312,7 +315,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			//d3dDevice->EndScene();
 
 
-			presentFrame();
+			rendersys->presentFrame();
 		}
 	}
 
