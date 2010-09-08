@@ -67,7 +67,6 @@
         <Preprocessor Value="_WIN32"/>
         <Preprocessor Value="_DIRECTX9"/>
         <Preprocessor Value="_DEBUG"/>
-        <Preprocessor Value="HAVE_SDL"/>
       </Compiler>
       <Linker Options="" Required="yes">
         <LibraryPath Value="../hltypes/bin/Debug"/>
@@ -78,7 +77,6 @@
         <Library Value="d3d9"/>
         <Library Value="libwinmm"/>
         <Library Value="glut32"/>
-        <Library Value="SDL"/>
         <Library Value="opengl32"/>
         <Library Value="glu32"/>
         <Library Value="gdi32"/>

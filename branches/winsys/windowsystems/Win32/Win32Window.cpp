@@ -132,7 +132,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		
 		DWORD style=(fullscreen) ? WS_EX_TOPMOST|WS_POPUP : WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX;
 		printf("title: %s %d %d %d %d inst: %d\n", title.c_str(), x, y, w, h, hinst);
-		hWnd = CreateWindowEx(NULL,"april_win32_window",title.c_str(),style,x,y,w,h,NULL,NULL,hinst,NULL);
+		hWnd = CreateWindowEx(0,"april_win32_window",title.c_str(),style,x,y,w,h,NULL,NULL,hinst,NULL);
 		
 		if (!fullscreen)
 		{
@@ -258,10 +258,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	
 	void Win32Window::enterMainLoop()
 	{
-		DWORD time=globalTimer.getTime(),t;
+		float time=globalTimer.getTime(),t;
 		bool cvisible=cursor_visible;
 #ifdef _DEBUG
-		static DWORD fpsTimer=globalTimer.getTime(),fps=0;
+		static float fpsTimer=globalTimer.getTime(),fps=0;
 #endif
 		POINT w32_cursorpos;
 		float k;

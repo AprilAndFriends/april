@@ -11,6 +11,8 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #ifndef APRIL_SDLWINDOW_H_INCLUDED
 #define APRIL_SDLWINDOW_H_INCLUDED
 
+#ifdef HAVE_SDL
+
 #include <hltypes/hstring.h>
 #include <SDL/SDL_keysym.h>
 #include "Window.h"
@@ -53,5 +55,7 @@ namespace April
 		float mCursorX, mCursorY; // TODO turn into private
 	};
 }
+
+#endif
 
 #endif

@@ -8,6 +8,8 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 
+#ifdef HAVE_SDL
+
 #include <SDL/SDL.h>
 #include <SDL/SDL_syswm.h>
 #include "SDLWindow.h"
@@ -328,3 +330,5 @@ namespace April
 	}
 
 }
+
+#endif
