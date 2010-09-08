@@ -26,7 +26,6 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #define TEX_FVF D3DFVF_XYZ | D3DFVF_TEX1
 #define TEX_COLOR_FVF D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE
 
-April::Timer globalTimer;
 
 namespace April
 {
@@ -53,15 +52,7 @@ namespace April
 		D3DPT_LINESTRIP,     // ROP_LINE_STRIP
 	};
 	
-	void doWindowEvents()
-	{
-		MSG msg;
-		if (PeekMessage(&msg,hWnd,0,0,PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-	}
+
 	unsigned int numPrimitives(RenderOp rop,int nVertices)
 	{
 		if (rop == TriangleList)  return nVertices/3;
@@ -225,7 +216,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	DirectX9RenderSystem::~DirectX9RenderSystem()
 	{
 		logMessage("Destroying DirectX9 Rendersystem");
-		UnregisterClass("april_d3d_window",GetModuleHandle(0));
 		if (d3dDevice) d3dDevice->Release();
 		if (d3d) d3d->Release();
 		d3d=0; d3dDevice=0;
@@ -503,7 +493,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			{
 				for (i=0;i<10;i++)
 				{
-					doWindowEvents();
+					//doWindowEvents(); // FIXME would be trivial to just call Win32's doWindowEvents(), but this should work for SDL too -- separate event handling in SDL into separate function, too
 					Sleep(100);
 				}
 				hr=d3dDevice->TestCooperativeLevel();

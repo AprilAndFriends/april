@@ -21,7 +21,7 @@ namespace April
 	
 	SDLWindow::SDLWindow(int w, int h, bool fullscreen, chstr title)
 	{
-		rendersys->logMessage("Creating SDL Windowsystem");
+		//rendersys->logMessage("Creating SDL Windowsystem");
 		
 		// we want a centered sdl window
 		putenv("SDL_VIDEO_WINDOW_POS");
@@ -307,7 +307,6 @@ namespace April
 						 event.button.x, event.button.y,
 						 mousebtn);
 		
-		
 	}
 	
 	
@@ -318,7 +317,6 @@ namespace April
 		x=SDL_GetTicks();
 		
 		performUpdate(k);
-		//presentFrame();
 		rendersys->presentFrame();
 	}
 	

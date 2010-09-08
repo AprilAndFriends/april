@@ -17,12 +17,15 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #endif
 
 #if !defined(__APPLE__) || defined(__APPLE__) && defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
-#include "GLUTWindow.h"
-#ifdef HAVE_SDL
-#include "SDLWindow.h"
-#endif
+	#include "GLUTWindow.h"
+	#ifdef HAVE_SDL
+		#include "SDLWindow.h"
+	#endif
+	#ifdef _WIN32
+		#include "Win32Window.h"
+	#endif
 #elif defined(TARGET_OS_IPHONE)
-#include "iOSWindow.h"
+	#include "iOSWindow.h"
 #endif
 
 
@@ -140,9 +143,13 @@ namespace April
 #if !defined(__APPLE__) || defined(__APPLE__) && defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
 		// desktop
 	#ifdef HAVE_SDL
-	#warning USING SDL
 		if (winsysname=="SDL") {
 			return new SDLWindow(w,h,fullscreen,title);
+		}
+	#endif
+	#ifdef _WIN32
+		if(winsysname=="Win32") {
+			return new Win32Window(w,h,fullscreen,title);
 		}
 	#endif
 		return new GLUTWindow(w,h,fullscreen,title);
