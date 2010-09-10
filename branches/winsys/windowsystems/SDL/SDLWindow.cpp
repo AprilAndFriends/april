@@ -11,6 +11,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #ifdef HAVE_SDL
 
 #include <SDL/SDL.h>
+#include <ctype.h> // tolower()
 #include <SDL/SDL_syswm.h>
 #include "SDLWindow.h"
 #include "Keys.h"
@@ -98,7 +99,7 @@ namespace April
 						
 #ifdef __APPLE__
 						// on mac os, we need to handle command+q
-						if(SDL_GetModState() & KMOD_META && event.key.keysym.sym == SDLK_q)
+						if(SDL_GetModState() & KMOD_META && (tolower(event.key.keysym.unicode) == 'q' || event.key.keysym.sym == SDLK_q))
 						{
 							if(handleQuitRequest(true))
 							{
