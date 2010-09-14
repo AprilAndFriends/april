@@ -275,6 +275,7 @@ namespace April
 		mQuitCallback=0;
 		mDynamicLoading=0;
 		mIdleUnloadTime=0;
+		mFocusCallback=0;
 		mTextureFilter=Linear;
 		mTextureWrapping=1;
 	}

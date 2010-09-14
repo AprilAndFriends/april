@@ -118,17 +118,20 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_MOUSEMOVE:
 			dx9rs->triggerMouseMoveEvent();break;
 		case WM_SETCURSOR:
+			dx9rs->handleCursorVisibility();
 			return 1;
 		case WM_ACTIVATE:
 			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
 			{
 				window_active=1;
-				rendersys->logMessage("Window activated");
+				dx9rs->triggerFocusCallback(true);
+				dx9rs->logMessage("Window activated");
 			}
 			else
 			{
 				window_active=0;
-				rendersys->logMessage("Window deactivated");
+				dx9rs->triggerFocusCallback(false);
+				dx9rs->logMessage("Window deactivated");
 			}
 			break;
     }
@@ -139,6 +142,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
 		logMessage("Creating DirectX9 Rendersystem");
+		rendersys=this;
 		mAppRunning=1;
 		wnd_fullscreen=fullscreen;
 		// WINDOW
@@ -536,6 +540,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		mAppRunning=0;
 	}
 	
+	void DirectX9RenderSystem::triggerFocusCallback(bool focused)
+	{
+		if (mFocusCallback) mFocusCallback(focused);
+	}
+	
 	bool DirectX9RenderSystem::triggerQuitEvent()
 	{
 		if(mQuitCallback)
@@ -573,6 +582,17 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		if (mMouseMoveCallback) mMouseMoveCallback(cursorpos.x,cursorpos.y);
 	}
 	
+	void DirectX9RenderSystem::handleCursorVisibility()
+	{
+		if (!cursor_visible)
+		{
+			if (cursorpos.x >= 0 && cursorpos.y >= 0 && cursorpos.x <= getWindowWidth() && cursorpos.y <= getWindowHeight())
+				SetCursor(0);
+			else
+				SetCursor(LoadCursor(0,IDC_ARROW));
+		}
+	}
+	
 	void DirectX9RenderSystem::enterMainLoop()
 	{
 		DWORD time=globalTimer.getTime(),t;
@@ -588,17 +608,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			GetCursorPos(&w32_cursorpos);
 			ScreenToClient(hWnd,&w32_cursorpos);
 			cursorpos.set(w32_cursorpos.x,w32_cursorpos.y);
-			if (!cursor_visible && !wnd_fullscreen)
-			{
-				if (cursorpos.y < 0)
-				{
-					if (!cvisible) { cvisible=1; SetCursor(LoadCursor(0,IDC_ARROW)); }
-				}
-				else
-				{
-					if (cvisible) { cvisible=0; SetCursor(0); }
-				}
-			}
 			doWindowEvents();
 			t=globalTimer.getTime();
 
@@ -647,7 +656,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void createDX9RenderSystem(int w,int h,bool fullscreen,chstr title)
 	{
-		rendersys=new DirectX9RenderSystem(w,h,fullscreen,title);
+		new DirectX9RenderSystem(w,h,fullscreen,title);
 	}
 
 }
