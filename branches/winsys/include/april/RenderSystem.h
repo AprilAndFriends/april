@@ -47,6 +47,7 @@ namespace April
 		TriangleFan=3,
 		LineList=4,
 		LineStrip=5,
+		PointList=6,
 	};
 	
 	enum TextureFilter
@@ -205,6 +206,16 @@ namespace April
 		TextureFilter mTextureFilter;
 		bool mTextureWrapping;
 		
+		bool (*mUpdateCallback)(float);
+		void (*mMouseDownCallback)(float,float,int);
+		void (*mMouseUpCallback)(float,float,int);
+		void (*mMouseMoveCallback)(float,float);
+		void (*mKeyDownCallback)(unsigned int);
+		void (*mKeyUpCallback)(unsigned int);
+		void (*mCharCallback)(unsigned int);
+		bool (*mQuitCallback)(bool);
+		void (*mFocusCallback)(bool);
+
 		gtypes::Matrix4 mModelviewMatrix,mProjectionMatrix;
 
 		virtual void _setModelviewMatrix(const gtypes::Matrix4& matrix)=0;
@@ -279,7 +290,8 @@ namespace April
 		void registerKeyboardCallbacks(void (*key_dn)(unsigned int),
 									   void (*key_up)(unsigned int),
 									   void (*char_callback)(unsigned int)) __attribute__((deprecated));
-		void registerQuitCallback(bool (*quit_callback)(bool can_cancel)) __attribute__((deprecated));
+		void registerQuitCallback(bool (*quit_callback)(bool)) __attribute__((deprecated));
+		void registerWindowFocusCallback(void (*focus_callback)(bool)) __attribute__((deprecated));
 
 		void forceDynamicLoading(bool value) { mDynamicLoading=value; }
 		bool isDynamicLoadingForced() { return mDynamicLoading; }
@@ -297,6 +309,7 @@ namespace April
 
 	};
 
+	AprilFnExport gvec2 getDesktopResolution();
 	AprilFnExport void setLogFunction(void (*fnptr)(chstr));
 	AprilFnExport void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title);
 	AprilFnExport void destroy();

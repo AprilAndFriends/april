@@ -84,6 +84,7 @@ namespace April
 		GL_TRIANGLE_FAN,   // ROP_TRIANGLE_FAN
 		GL_LINES,          // ROP_LINE_LIST
 		GL_LINE_STRIP,     // ROP_LINE_STRIP
+		GL_POINTS,         // ROP_POINTS
 	};
 
 

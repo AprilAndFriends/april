@@ -274,6 +274,7 @@ namespace April
 		mAlphaMultiplier=1.0f;
 		mDynamicLoading=0;
 		mIdleUnloadTime=0;
+		mFocusCallback=0;
 		mTextureFilter=Linear;
 		mTextureWrapping=1;
 	}
@@ -349,6 +350,12 @@ namespace April
 	{
 		mWindow->setQuitCallback(quit_callback);
 		logMessage("RenderSystem::registerQuitCallback() is deprecated");
+	}
+	
+	void RenderSystem::registerWindowFocusCallback(void (*focus_callback)(bool current_focus))
+	{
+		//2DO - needs to be implemented
+		logMessage("RenderSystem::registerFocusCallback() is deprecated");
 	}
 	
 	Texture* RenderSystem::loadRAMTexture(chstr filename,bool dynamic)

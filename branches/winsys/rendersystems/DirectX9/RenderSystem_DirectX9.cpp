@@ -50,6 +50,7 @@ namespace April
 		D3DPT_TRIANGLEFAN,   // ROP_TRIANGLE_FAN
 		D3DPT_LINELIST,      // ROP_LINE_LIST
 		D3DPT_LINESTRIP,     // ROP_LINE_STRIP
+		D3DPT_POINTLIST,     // ROP_POINT_LIST
 	};
 	
 
@@ -60,6 +61,7 @@ namespace April
 		if (rop == TriangleFan)   return nVertices-1;
 		if (rop == LineList)      return nVertices/2;
 		if (rop == LineStrip)     return nVertices-1;
+		if (rop == PointList)     return nVertices;
 		return 0;
 	}
 /**********************************************************************************************/
@@ -109,17 +111,20 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_MOUSEMOVE:
 			dx9rs->triggerMouseMoveEvent();break;
 		case WM_SETCURSOR:
+			dx9rs->handleCursorVisibility();
 			return 1;
 		case WM_ACTIVATE:
 			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
 			{
 				window_active=1;
-				rendersys->logMessage("Window activated");
+				dx9rs->triggerFocusCallback(true);
+				dx9rs->logMessage("Window activated");
 			}
 			else
 			{
 				window_active=0;
-				rendersys->logMessage("Window deactivated");
+				dx9rs->triggerFocusCallback(false);
+				dx9rs->logMessage("Window deactivated");
 			}
 			break;
     }
@@ -532,6 +537,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		mAppRunning=0;
 	}
 	 
+	void DirectX9RenderSystem::triggerFocusCallback(bool focused)
+	{
+		if (mFocusCallback) mFocusCallback(focused);
+	}
+	
 	bool DirectX9RenderSystem::triggerQuitEvent()
 	{
 		if(mQuitCallback)
@@ -569,6 +579,17 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		if (mMouseMoveCallback) mMouseMoveCallback(cursorpos.x,cursorpos.y);
 	}
 	
+	void DirectX9RenderSystem::handleCursorVisibility()
+	{
+		if (!cursor_visible)
+		{
+			if (cursorpos.x >= 0 && cursorpos.y >= 0 && cursorpos.x <= getWindowWidth() && cursorpos.y <= getWindowHeight())
+				SetCursor(0);
+			else
+				SetCursor(LoadCursor(0,IDC_ARROW));
+		}
+	}
+	
 	void DirectX9RenderSystem::enterMainLoop()
 	{
 		DWORD time=globalTimer.getTime(),t;
@@ -584,17 +605,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			GetCursorPos(&w32_cursorpos);
 			ScreenToClient(hWnd,&w32_cursorpos);
 			cursorpos.set(w32_cursorpos.x,w32_cursorpos.y);
-			if (!cursor_visible && !wnd_fullscreen)
-			{
-				if (cursorpos.y < 0)
-				{
-					if (!cvisible) { cvisible=1; SetCursor(LoadCursor(0,IDC_ARROW)); }
-				}
-				else
-				{
-					if (cvisible) { cvisible=0; SetCursor(0); }
-				}
-			}
 			doWindowEvents();
 			t=globalTimer.getTime();
 
