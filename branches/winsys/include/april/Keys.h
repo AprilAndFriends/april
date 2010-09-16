@@ -239,6 +239,7 @@ namespace April
 #define AK_5 April::AK_5
 #define AK_6 April::AK_6
 #define AK_7 April::AK_7
+#define AK_ESCAPE April::AK_ESCAPE
 //#define AK_ April::AK_
 
 // deprecated names for mouse buttons:
