@@ -484,7 +484,11 @@ namespace April
 			ilInit();
 		#endif
 		
+		#ifdef _WIN32
 		Window* window = createAprilWindow("Win32", w, h, fullscreen, title);
+		#else
+		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);
+		#endif
 		#ifdef _OPENGL
 			createGLRenderSystem(window);
 		#else

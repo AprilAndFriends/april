@@ -325,9 +325,14 @@ namespace April
 	
 	void* SDLWindow::getIDFromBackend()
 	{
+#ifdef _WIN32
 		SDL_SysWMinfo wmInfo;
 		SDL_GetWMInfo(&wmInfo);
 		return (void*)wmInfo.window;
+#else
+		// unimplemented
+		return NULL;
+#endif
 	}
 
 }
