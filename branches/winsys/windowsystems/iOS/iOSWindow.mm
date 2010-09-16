@@ -53,5 +53,9 @@ namespace April
     {
         
     }
+	void* getIDFromBackend()
+	{
+		return NULL;
+	}
 
 }

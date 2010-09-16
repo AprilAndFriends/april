@@ -37,6 +37,7 @@ namespace April
 		void setWindowTitle(chstr title);
 		gtypes::Vector2 getCursorPos();
 		void presentFrame();
+		void* getIDFromBackend();
 		
 
 	};

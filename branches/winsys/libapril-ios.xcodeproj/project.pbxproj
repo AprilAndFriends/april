@@ -24,6 +24,8 @@
 		7F33B64F12102385004B5E89 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B64E12102385004B5E89 /* CoreFoundation.framework */; };
 		7F33B68512102987004B5E89 /* iOSWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F33B68412102987004B5E89 /* iOSWindow.h */; };
 		7F33B68712102995004B5E89 /* iOSWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F33B68612102995004B5E89 /* iOSWindow.mm */; };
+		7FA1AAE8124229F7004689AE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA1AAE4124229F7004689AE /* Timer.h */; };
+		7FA1ABA212422C03004689AE /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA1ABA112422C03004689AE /* TimerPosix.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +49,8 @@
 		7F4D0FE911FEE6C500F2F9F5 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = include/april/main.h; sourceTree = "<group>"; };
 		7F5A5D2511FD9CAB003C05A4 /* SDLWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDLWindow.cpp; path = windowsystems/SDL/SDLWindow.cpp; sourceTree = "<group>"; };
 		7F5A5D2611FD9CAB003C05A4 /* SDLWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDLWindow.h; path = windowsystems/SDL/SDLWindow.h; sourceTree = "<group>"; };
+		7FA1AAE4124229F7004689AE /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
+		7FA1ABA112422C03004689AE /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/TimerPosix.cpp; sourceTree = "<group>"; };
 		7FA3ED1711F9817A001D1DDD /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Window.h; path = include/april/Window.h; sourceTree = "<group>"; };
 		7FA3ED2611F98BAE001D1DDD /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Window.cpp; path = src/Window.cpp; sourceTree = "<group>"; };
 		7FA3EDB211F997FC001D1DDD /* GLUTWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLUTWindow.cpp; path = windowsystems/GLUT/GLUTWindow.cpp; sourceTree = "<group>"; };
@@ -141,6 +145,7 @@
 		7F42F79F11EB177B00B1C1DF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7FA1ABA112422C03004689AE /* TimerPosix.cpp */,
 				7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */,
 				7F42F7A911EB179A00B1C1DF /* ImageSourceIL.cpp */,
 				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
@@ -153,6 +158,7 @@
 		7F42F7A011EB177F00B1C1DF /* Includes */ = {
 			isa = PBXGroup;
 			children = (
+				7FA1AAE4124229F7004689AE /* Timer.h */,
 				7F4D0FE911FEE6C500F2F9F5 /* main.h */,
 				7F42F7A111EB178C00B1C1DF /* AprilExport.h */,
 				7F42F7A211EB178C00B1C1DF /* ImageSource.h */,
@@ -214,6 +220,7 @@
 				7F33B5801210130C004B5E89 /* RenderSystem.h in Headers */,
 				7F33B5811210130C004B5E89 /* Window.h in Headers */,
 				7F33B68512102987004B5E89 /* iOSWindow.h in Headers */,
+				7FA1AAE8124229F7004689AE /* Timer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,7 +251,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "libapril-ios" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* libapril */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
@@ -265,6 +279,7 @@
 				7F33B5841210131D004B5E89 /* RenderSystem.cpp in Sources */,
 				7F33B5851210131D004B5E89 /* Window.cpp in Sources */,
 				7F33B68712102995004B5E89 /* iOSWindow.mm in Sources */,
+				7FA1ABA212422C03004689AE /* TimerPosix.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,7 +300,7 @@
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = april;
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos4.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -302,7 +317,7 @@
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = april;
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos4.1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
