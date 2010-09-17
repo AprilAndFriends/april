@@ -1,146 +1,252 @@
+/************************************************************************************\
+This source file is part of the Awesome Portable Rendering Interface Library         *
+For latest info, see http://libapril.sourceforge.net/                                *
+**************************************************************************************
+Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                                  *
+*                                                                                    *
+* This program is free software; you can redistribute it and/or modify it under      *
+* the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
+\************************************************************************************/
+
 #ifndef APRIL_KEYS
 #define APRIL_KEYS
 
-#define AK_LBUTTON	0
-#define AK_RBUTTON	1
-#define AK_CANCEL	3
-#define AK_MBUTTON	4
-#define AK_XBUTTON1	5
-#define AK_XBUTTON2	6
-#define AK_BACK	8
-#define AK_TAB	9
-#define AK_CLEAR	12
-#define AK_RETURN	13
-#define AK_SHIFT	16
-#define AK_CONTROL	17
-#define AK_MENU	18
-#define AK_PAUSE	19
-#define AK_CAPITAL	20
-#define AK_KANA	0x15
-#define AK_HANGEUL	0x15
-#define AK_HANGUL	0x15
-#define AK_JUNJA	0x17
-#define AK_FINAL	0x18
-#define AK_HANJA	0x19
-#define AK_KANJI	0x19
-#define AK_ESCAPE	0x1B
-#define AK_CONVERT	0x1C
-#define AK_NONCONVERT	0x1D
-#define AK_ACCEPT	0x1E
-#define AK_MODECHANGE	0x1F
-#define AK_SPACE	32
-#define AK_PRIOR	33
-#define AK_NEXT	34
-#define AK_END	35
-#define AK_HOME	36
-#define AK_LEFT	37
-#define AK_UP	38
-#define AK_RIGHT	39
-#define AK_DOWN	40
-#define AK_SELECT	41
-#define AK_PRINT	42
-#define AK_EXECUTE	43
-#define AK_SNAPSHOT	44
-#define AK_INSERT	45
-#define AK_DELETE	46
-#define AK_HELP	47
-#define AK_LWIN	0x5B
-#define AK_RWIN	0x5C
-#define AK_APPS	0x5D
-#define AK_SLEEP	0x5F
-#define AK_NUMPAD0	0x60
-#define AK_NUMPAD1	0x61
-#define AK_NUMPAD2	0x62
-#define AK_NUMPAD3	0x63
-#define AK_NUMPAD4	0x64
-#define AK_NUMPAD5	0x65
-#define AK_NUMPAD6	0x66
-#define AK_NUMPAD7	0x67
-#define AK_NUMPAD8	0x68
-#define AK_NUMPAD9	0x69
-#define AK_MULTIPLY	0x6A
-#define AK_ADD	0x6B
-#define AK_SEPARATOR	0x6C
-#define AK_SUBTRACT	0x6D
-#define AK_DECIMAL	0x6E
-#define AK_DIVIDE	0x6F
-#define AK_0    '0'
-#define AK_1    '1'
-#define AK_2    '2'
-#define AK_3    '3'
-#define AK_4    '4'
-#define AK_5    '5'
-#define AK_6    '6'
-#define AK_7    '7'
-#define AK_8    '8'
-#define AK_9    '9'
-#define AK_F1	0x70
-#define AK_F2	0x71
-#define AK_F3	0x72
-#define AK_F4	0x73
-#define AK_F5	0x74
-#define AK_F6	0x75
-#define AK_F7	0x76
-#define AK_F8	0x77
-#define AK_F9	0x78
-#define AK_F10	0x79
-#define AK_F11	0x7A
-#define AK_F12	0x7B
-#define AK_F13	0x7C
-#define AK_F14	0x7D
-#define AK_F15	0x7E
-#define AK_F16	0x7F
-#define AK_F17	0x80
-#define AK_F18	0x81
-#define AK_F19	0x82
-#define AK_F20	0x83
-#define AK_F21	0x84
-#define AK_F22	0x85
-#define AK_F23	0x86
-#define AK_F24	0x87
-#define AK_NUMLOCK	0x90
-#define AK_SCROLL	0x91
-#define AK_LSHIFT	0xA0
-#define AK_RSHIFT	0xA1
-#define AK_LCONTROL	0xA2
-#define AK_RCONTROL	0xA3
-#define AK_LMENU	0xA4
-#define AK_RMENU	0xA5
-#define AK_BROWSER_BACK	0xA6
-#define AK_BROWSER_FORWARD	0xA7
-#define AK_BROWSER_REFRESH	0xA8
-#define AK_BROWSER_STOP	0xA9
-#define AK_BROWSER_SEARCH	0xAA
-#define AK_BROWSER_FAVORITES	0xAB
-#define AK_BROWSER_HOME	0xAC
-#define AK_VOLUME_MUTE	0xAD
-#define AK_VOLUME_DOWN	0xAE
-#define AK_VOLUME_UP	0xAF
-#define AK_MEDIA_NEXT_TRACK	0xB0
-#define AK_MEDIA_PREV_TRACK	0xB1
-#define AK_MEDIA_STOP	0xB2
-#define AK_MEDIA_PLAY_PAUSE	0xB3
-#define AK_LAUNCH_MAIL	0xB4
-#define AK_LAUNCH_MEDIA_SELECT	0xB5
-#define AK_LAUNCH_APP1	0xB6
-#define AK_LAUNCH_APP2	0xB7
-#define AK_OEM_2	0xBF
-#define AK_OEM_3	0xC0
-#define AK_OEM_4	0xDB
-#define AK_OEM_5	0xDC
-#define AK_OEM_6	0xDD
-#define AK_OEM_7	0xDE
-#define AK_OEM_8	0xDF
-#define AK_OEM_102	0xE2
-#define AK_PACKET	0xE7
-#define AK_ATTN	0xF6
-#define AK_CRSEL	0xF7
-#define AK_EXSEL	0xF8
-#define AK_EREOF	0xF9
-#define AK_PLAY	0xFA
-#define AK_ZOOM	0xFB
-#define AK_NONAME	0xFC
-#define AK_PA1	0xFD
-#define AK_OEM_CLEAR	0xFE
+namespace April
+{
+	// this enum defines Windows-specific virtual keys
+	// however, these are mostly nicely defined, so let's use them
+	// on other platforms too
+	enum KeySyms {
+		AK_UNKNOWN = -1,
+		AK_NONE = 0,
+	
+		// first several VKs are unneeded
+		// they are mouse related, or ctrl+break
+		//AK_LBUTTON = 0,
+		//AK_RBUTTON = 1,
+		//AK_CANCEL = 3,
+		//AK_MBUTTON = 4,
+		//AK_XBUTTON1 = 5,
+		//AK_XBUTTON2 = 6,
+
+		// mostly common keys
+		AK_BACK = 8,
+		AK_TAB = 9,
+		AK_CLEAR = 12,
+		AK_RETURN = 13,
+		AK_SHIFT = 16,
+		AK_CONTROL = 17,
+		AK_MENU = 18, // alt key 
+		AK_PAUSE = 19, // multimedia pause key 
+		AK_CAPITAL = 20, // caps lock
+
+		// various keys needed for asian keyboards
+		AK_KANA = 0x15, 
+		AK_HANGEUL = 0x15,
+		AK_HANGUL = 0x15,
+		AK_JUNJA = 0x17,
+		AK_FINAL = 0x18,
+		AK_HANJA = 0x19,
+		AK_KANJI = 0x19,
+		AK_ESCAPE = 0x1B,
+		AK_CONVERT = 0x1C,
+		AK_NONCONVERT = 0x1D,
+		AK_ACCEPT = 0x1E,
+		AK_MODECHANGE = 0x1F,
+
+		// space
+		AK_SPACE = 0x20,
+
+		// right side of the "control block"
+		// commonly above cursor keys
+		AK_PRIOR = 0x21, // page up
+		AK_NEXT = 0x22, // page down
+		AK_END = 0x23, 
+		AK_HOME = 0x24,
+
+		// cursor keys
+		AK_LEFT = 0x25,
+		AK_UP = 0x26,
+		AK_RIGHT = 0x27,
+		AK_DOWN = 0x28,
+
+		// some less common keys
+		AK_SELECT = 0x29, // select key
+		AK_PRINT = 0x2A, // print key
+		AK_EXECUTE = 0x2B, // execute key
+		AK_SNAPSHOT = 0x2C, // print screen key
+
+		// left side of "control block" commonly
+		// above cursor keys, plus the help key
+		// help key is NOT f1
+		AK_INSERT = 0x2D,
+		AK_DELETE = 0x2E,
+		AK_HELP = 0x2F,
+	
+
+
+		// 0x30-0x39 -- '0'-'9'
+		AK_0 = '0',
+		AK_1 = '1',
+		AK_2 = '2',
+		AK_3 = '3',
+		AK_4 = '4',
+		AK_5 = '5',
+		AK_6 = '6',
+		AK_7 = '7',
+		AK_8 = '8',
+		AK_9 = '9',
+
+		// 0x3A-0x40 -- undefined
+		// 0x41-0x5A -- 'A'-'Z'	
+		
+		// special but mostly common VKs
+		AK_LWIN = 0x5B,
+		AK_RWIN = 0x5C,
+		AK_APPS = 0x5D,
+		AK_SLEEP = 0x5F,
+
+		// numpad
+		AK_NUMPAD0 = 0x60,
+		AK_NUMPAD1 = 0x61,
+		AK_NUMPAD2 = 0x62,
+		AK_NUMPAD3 = 0x63,
+		AK_NUMPAD4 = 0x64,
+		AK_NUMPAD5 = 0x65,
+		AK_NUMPAD6 = 0x66,
+		AK_NUMPAD7 = 0x67,
+		AK_NUMPAD8 = 0x68,
+		AK_NUMPAD9 = 0x69,
+		AK_MULTIPLY = 0x6A,
+		AK_ADD = 0x6B,
+		AK_SEPARATOR = 0x6C,
+		AK_SUBTRACT = 0x6D,
+		AK_DECIMAL = 0x6E,
+		AK_DIVIDE = 0x6F,
+		
+		// f-keys
+		AK_F1 = 0x70,
+		AK_F2 = 0x71,
+		AK_F3 = 0x72,
+		AK_F4 = 0x73,
+		AK_F5 = 0x74,
+		AK_F6 = 0x75,
+		AK_F7 = 0x76,
+		AK_F8 = 0x77,
+		AK_F9 = 0x78,
+		AK_F10 = 0x79,
+		AK_F11 = 0x7A,
+		AK_F12 = 0x7B,
+		AK_F13 = 0x7C,
+		AK_F14 = 0x7D,
+		AK_F15 = 0x7E,
+		AK_F16 = 0x7F,
+		AK_F17 = 0x80,
+		AK_F18 = 0x81,
+		AK_F19 = 0x82,
+		AK_F20 = 0x83,
+		AK_F21 = 0x84,
+		AK_F22 = 0x85,
+		AK_F23 = 0x86,
+		AK_F24 = 0x87,
+
+		// some more lock keys
+		AK_NUMLOCK = 0x90,
+		AK_SCROLL = 0x91,
+
+		// specific left-and-right-shift keys
+		AK_LSHIFT = 0xA0,
+		AK_RSHIFT = 0xA1,
+		AK_LCONTROL = 0xA2,
+		AK_RCONTROL = 0xA3,
+		AK_LMENU = 0xA4,
+		AK_RMENU = 0xA5,
+		
+		// browser control keys
+		AK_BROWSER_BACK = 0xA6,
+		AK_BROWSER_FORWARD = 0xA7,
+		AK_BROWSER_REFRESH = 0xA8,
+		AK_BROWSER_STOP = 0xA9,
+		AK_BROWSER_SEARCH = 0xAA,
+		AK_BROWSER_FAVORITES = 0xAB,
+		AK_BROWSER_HOME = 0xAC,
+
+		// volume keys
+		AK_VOLUME_MUTE = 0xAD,
+		AK_VOLUME_DOWN = 0xAE,
+		AK_VOLUME_UP = 0xAF,
+
+		// more multimedia keys
+		AK_MEDIA_NEXT_TRACK = 0xB0,
+		AK_MEDIA_PREV_TRACK = 0xB1,
+		AK_MEDIA_STOP = 0xB2,
+		AK_MEDIA_PLAY_PAUSE = 0xB3,
+
+		// app launching keys
+		AK_LAUNCH_MAIL = 0xB4,
+		AK_LAUNCH_MEDIA_SELECT = 0xB5,
+		AK_LAUNCH_APP1 = 0xB6,
+		AK_LAUNCH_APP2 = 0xB7,
+
+		// oem keys
+		AK_OEM_2 = 0xBF,
+		AK_OEM_3 = 0xC0,
+		AK_OEM_4 = 0xDB,
+		AK_OEM_5 = 0xDC,
+		AK_OEM_6 = 0xDD,
+		AK_OEM_7 = 0xDE,
+		AK_OEM_8 = 0xDF,
+		AK_OEM_102 = 0xE2,
+
+		// uncommon keys
+		AK_PACKET = 0xE7,
+		AK_ATTN = 0xF6,
+		AK_CRSEL = 0xF7,
+		AK_EXSEL = 0xF8,
+		AK_EREOF = 0xF9,
+
+		// multimedia keys
+		AK_PLAY = 0xFA,
+		AK_ZOOM = 0xFB,
+
+		// uncommon and oem keys
+		AK_NONAME = 0xFC,
+		AK_PA1 = 0xFD,
+		AK_OEM_CLEAR = 0xFE
+	};
+}
+
+// temporary and deprecated; dont depend on it
+#define AK_BACK April::AK_BACK
+#define AK_LEFT April::AK_LEFT
+#define AK_RIGHT April::AK_RIGHT
+#define AK_DELETE April::AK_DELETE
+#define AK_HOME April::AK_HOME
+#define AK_END April::AK_END
+#define AK_CONTROL April::AK_CONTROL
+#define AK_MENU April::AK_MENU
+#define AK_F2 April::AK_F2
+#define AK_F3 April::AK_F3
+#define AK_F4 April::AK_F4
+#define AK_F5 April::AK_F5
+#define AK_F6 April::AK_F6
+#define AK_F8 April::AK_F8
+#define AK_F12 April::AK_F12
+#define AK_SPACE April::AK_SPACE
+#define AK_RETURN April::AK_RETURN
+#define AK_TAB April::AK_TAB
+#define AK_1 April::AK_1
+#define AK_2 April::AK_2
+#define AK_3 April::AK_3
+#define AK_4 April::AK_4
+#define AK_5 April::AK_5
+#define AK_6 April::AK_6
+#define AK_7 April::AK_7
+#define AK_ESCAPE April::AK_ESCAPE
+//#define AK_ April::AK_
+
+// deprecated names for mouse buttons:
+#define AK_LBUTTON 1 // April::AMOUSEBTN_LEFT
+#define AK_RBUTTON 2 // April::AMOUSEBTN_RIGH
 
 #endif

@@ -33,26 +33,14 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 
 #include <gtypes/Vector2.h>
 
+#include "Window.h"
+#include "Timer.h"
+
 April::Timer globalTimer;
 
 namespace April
 {
 	extern void (*g_logFunction)(chstr);
-	static int windowId;
-#ifdef _WIN32
-	static HWND hWnd;
-#else
-	#include <sys/time.h>
-	unsigned GetTickCount()
-	{
-			struct timeval tv;
-			if(gettimeofday(&tv, NULL) != 0)
-					return 0;
-
-			return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-	}
-
-#endif
 
 	float cursor_x=0,cursor_y=0;
 
@@ -96,7 +84,7 @@ namespace April
 		GL_TRIANGLE_FAN,   // ROP_TRIANGLE_FAN
 		GL_LINES,          // ROP_LINE_LIST
 		GL_LINE_STRIP,     // ROP_LINE_STRIP
-		GL_POINT_LIST,     // ROP_POINT_LIST
+		GL_POINTS,         // ROP_POINTS
 	};
 
 
@@ -165,10 +153,12 @@ namespace April
 	}
 
 
-	GLRenderSystem::GLRenderSystem(int w,int h) :
+	GLRenderSystem::GLRenderSystem(Window* window) :
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{		
-		glViewport(0,0,w,h);
+		mWindow = window;
+		
+		glViewport(0,0,window->getWindowWidth(),window->getWindowHeight());
 		glClearColor(0,0,0,1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
@@ -360,15 +350,6 @@ namespace April
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 	
-	int GLRenderSystem::getWindowWidth()
-	{
-		return glutGet(GLUT_WINDOW_WIDTH);
-	}
-	
-	int GLRenderSystem::getWindowHeight()
-	{
-		return glutGet(GLUT_WINDOW_HEIGHT);
-	}
 
 	void GLRenderSystem::render(RenderOp renderOp,ColoredVertex* v,int nVertices)
 	{
@@ -395,179 +376,23 @@ namespace April
 	void GLRenderSystem::beginFrame()
 	{
 		// TODO
-		}
-
-		void GLRenderSystem::setAlphaMultiplier(float value)
-		{
-			mAlphaMultiplier=value;
-			glColor4f(1,1,1,value);
-		}
-
-		void GLRenderSystem::setWindowTitle(chstr title)
-		{
-			glutSetWindowTitle(title.c_str());
-		}
-	
-	gtypes::Vector2 GLRenderSystem::getCursorPos()
-	{
-		return gtypes::Vector2(cursor_x,cursor_y);
 	}
 
-	void GLRenderSystem::showSystemCursor(bool b)
+	void GLRenderSystem::setAlphaMultiplier(float value)
 	{
-		if (b) glutSetCursor(GLUT_CURSOR_INHERIT);
-		else   glutSetCursor(GLUT_CURSOR_NONE);
+		mAlphaMultiplier=value;
+		glColor4f(1,1,1,value);
 	}
 	
-	bool GLRenderSystem::isSystemCursorShown()
-	{
-		int cursor=glutGet(GLUT_WINDOW_CURSOR);
-		return (cursor == GLUT_CURSOR_NONE) ? 0 : 1;
-	}
-
-	void GLRenderSystem::presentFrame()
-	{
-		glutSwapBuffers();
-	}
 	
-	void GLRenderSystem::terminateMainLoop()
-	{
-		exit(0);
-	}
-	
-	void GLRenderSystem::enterMainLoop()
-	{
-		glutMainLoop();
-	}
-
-	bool GLRenderSystem::triggerUpdate(float time_increase)
-	{
-		return mUpdateCallback(time_increase);
-		return 1;
-	}
-	
-	bool GLRenderSystem::triggerKeyEvent(bool down,unsigned int keycode)
-	{
-		if (keycode == 9) keycode=AK_TAB;
-		else if (keycode >= 1 && keycode <= 12) keycode+=0x6F; // function keys
-		
-		if (down) { if (mKeyDownCallback) mKeyDownCallback(keycode); }
-		else      { if (mKeyUpCallback)   mKeyUpCallback(keycode); }
-		return 1;
-	}
-	
-	bool GLRenderSystem::triggerMouseEvent(int event,float x,float y,int button)
-	{
-		if      (event == 0) { if (mMouseDownCallback) mMouseDownCallback(x,y,button); }
-		else if (event == 1) { if (mMouseUpCallback)   mMouseUpCallback(x,y,button); }
-		else                 { if (mMouseMoveCallback) mMouseMoveCallback(x,y); }
-		return 1;
-	}		
-
 
 /***************************************************/
 
-	void keyboard_up_handler(unsigned char key, int x, int y)
-	{
-		((GLRenderSystem*) rendersys)->triggerKeyEvent(0,key);
-	}
-
-	void keyboard_handler(unsigned char key, int x, int y)
-	{
-		if (key == 27) //esc
-		{
-			rendersys->terminateMainLoop();
-			return;
-		}
-		((GLRenderSystem*) rendersys)->triggerKeyEvent(1,key);
-	}
-
-	void special_handler(int key, int x, int y)
-	{
-		((GLRenderSystem*) rendersys)->triggerKeyEvent(1,key);
-	}
-
-	void mouse_click_handler(int button, int state, int x,int y)
-	{
-		cursor_x=x; cursor_y=y;
-		if (state == GLUT_DOWN)
-			((GLRenderSystem*) rendersys)->triggerMouseEvent(0,x,y,button);
-		else
-			((GLRenderSystem*) rendersys)->triggerMouseEvent(1,x,y,button);
-	}
-
-	void mouse_move_handler(int x,int y)
-	{
-		cursor_x=x; cursor_y=y;
-		((GLRenderSystem*) rendersys)->triggerMouseEvent(2,x,y,0);
-	}
-
-	void quit_handler()
-	{
-		((GLRenderSystem*) rendersys)->triggerQuitEvent();
-	}
-	void GLRenderSystem::triggerQuitEvent()
-	{
-		if(mQuitCallback)
-		{
-			if(mQuitCallback(true))
-			{
-				glutDestroyWindow(windowId);
-				terminateMainLoop();
-			}
-		}
-	}
-	
-	void gl_draw()
-	{
-		static unsigned int x = globalTimer.getTime();
-		float k =(globalTimer.getTime()-x)/1000.0f;
-		x = globalTimer.getTime();
-		if (!((GLRenderSystem*) rendersys)->triggerUpdate(k)) throw "done";
-		rendersys->presentFrame();
-	}
-
-	gtypes::Vector2 getDesktopResolution()
-	{
-#ifdef _WIN32
-		return gtypes::Vector2(GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
-#else
-		return gtypes::Vector2(1024,768);
-#endif
-	}
-
-
-	void createGLRenderSystem(int w,int h,bool fullscreen,chstr title)
+	void createGLRenderSystem(Window* window)
 	{
 		g_logFunction("Creating OpenGL Rendersystem");
-		const char *argv[] = {"program"};
-		int argc=1;
-		glutInit(&argc,(char**) argv);
-		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
-		int _w=glutGet(GLUT_SCREEN_WIDTH);
-		int _h=glutGet(GLUT_SCREEN_HEIGHT);
-		glutInitWindowPosition(_w/2-w/2,_h/2-h/2);
-		glutInitWindowSize(w,h);
-		windowId = glutCreateWindow(title.c_str());
-#ifdef _WIN32
-		hWnd = FindWindow("GLUT", title.c_str());
-		SetFocus(hWnd);
-#endif
-		if (fullscreen) glutFullScreen();
-		glEnable(GL_TEXTURE_2D);
-		glutDisplayFunc(gl_draw);
-		glutMouseFunc(mouse_click_handler);
-		glutKeyboardFunc(keyboard_handler);
-		glutKeyboardUpFunc(keyboard_up_handler);
-		glutMotionFunc(mouse_move_handler);
-		glutPassiveMotionFunc(mouse_move_handler);
-#if (GLUT_MACOSX_IMPLEMENTATION >= 2)
-		glutWMCloseFunc(quit_handler);
-#endif
-		
-		glutSpecialFunc(special_handler);
 
-		glutIdleFunc(gl_draw);
+		glEnable(GL_TEXTURE_2D);
 
 		// DevIL defaults
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -577,7 +402,7 @@ namespace April
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
-		rendersys=new GLRenderSystem(w,h);
+		April::rendersys = ::rendersys = new GLRenderSystem(window);
 	}
 
 }

@@ -19,19 +19,19 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include "dx9Texture.h"
 #include <stdio.h>
 #include "Timer.h"
+#include "Window.h"
 
 #define PLAIN_FVF D3DFVF_XYZ
 #define COLORED_FVF D3DFVF_XYZ | D3DFVF_DIFFUSE
 #define TEX_FVF D3DFVF_XYZ | D3DFVF_TEX1
 #define TEX_COLOR_FVF D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE
 
-April::Timer globalTimer;
 
 namespace April
 {
 	IDirect3D9* d3d=0;
 	IDirect3DDevice9* d3dDevice=0;
-	HWND hWnd;
+	static HWND hWnd;
 	DirectX9Texture* active_texture=0;
 	gtypes::Vector2 cursorpos;
 	bool cursor_visible=1;
@@ -53,15 +53,7 @@ namespace April
 		D3DPT_POINTLIST,     // ROP_POINT_LIST
 	};
 	
-	void doWindowEvents()
-	{
-		MSG msg;
-		if (PeekMessage(&msg,hWnd,0,0,PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-	}
+
 	unsigned int numPrimitives(RenderOp rop,int nVertices)
 	{
 		if (rop == TriangleList)  return nVertices/3;
@@ -73,6 +65,7 @@ namespace April
 		return 0;
 	}
 /**********************************************************************************************/
+/*
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	DirectX9RenderSystem *dx9rs=(DirectX9RenderSystem*) rendersys;
@@ -136,14 +129,15 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			break;
     }
     return DefWindowProc(hWnd, message, wParam, lParam);
-}
+}*/
 /**********************************************************************************************/
-	DirectX9RenderSystem::DirectX9RenderSystem(int w,int h,bool fullscreen,chstr title) :
+	DirectX9RenderSystem::DirectX9RenderSystem(Window* window) : //int w,int h,bool fullscreen,chstr title) :
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
+		mWindow = window;
+		
 		logMessage("Creating DirectX9 Rendersystem");
-		rendersys=this;
-		mAppRunning=1;
+		/*mAppRunning=1;
 		wnd_fullscreen=fullscreen;
 		// WINDOW
 		mTitle=title;
@@ -184,14 +178,18 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		UpdateWindow(hWnd);
 		
 		SetCursor(LoadCursor(0,IDC_ARROW));
+		*/
+		
+		hWnd = (HWND)getWindow()->getIDFromBackend();
+		
 		// DIRECT3D
 		d3d=Direct3DCreate9(D3D_SDK_VERSION);
 		if (!d3d) throw hl_exception("Unable to create Direct3D9 object!");
 		
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
-		d3dpp.Windowed = !fullscreen;
-		d3dpp.BackBufferWidth   = w;
-		d3dpp.BackBufferHeight  = h;
+		d3dpp.Windowed = 1; //!fullscreen;
+		d3dpp.BackBufferWidth   = getWindow()->getWindowWidth(); //w;
+		d3dpp.BackBufferHeight  = getWindow()->getWindowHeight(); //h;
 		d3dpp.BackBufferFormat  = D3DFMT_X8R8G8B8;
 		d3dpp.PresentationInterval=D3DPRESENT_INTERVAL_ONE;
 
@@ -223,7 +221,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	DirectX9RenderSystem::~DirectX9RenderSystem()
 	{
 		logMessage("Destroying DirectX9 Rendersystem");
-		UnregisterClass("april_d3d_window",GetModuleHandle(0));
 		if (d3dDevice) d3dDevice->Release();
 		if (d3d) d3d->Release();
 		d3d=0; d3dDevice=0;
@@ -415,7 +412,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		if (mRenderTarget) d3dDevice->BeginScene();
 		mRenderTarget=(DirectX9Texture*) source;
 	}
-	
+	/*
 	int DirectX9RenderSystem::getWindowWidth()
 	{
 		RECT rc;
@@ -429,7 +426,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		GetClientRect(hWnd, &rc);
 		return rc.bottom-rc.top;
 	}
-
+	*/
 	void DirectX9RenderSystem::render(RenderOp renderOp,ColoredVertex* v,int nVertices)
 	{
 		if (active_texture) setTexture(0);
@@ -454,7 +451,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		mAlphaMultiplier=value;
 	}
-
+/*
 	void DirectX9RenderSystem::setWindowTitle(chstr title)
 	{
 		mTitle=title;
@@ -482,7 +479,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		return cursor_visible;
 	}
-	
+*/	
 	void DirectX9RenderSystem::beginFrame()
 	{
 		d3dDevice->BeginScene();
@@ -501,7 +498,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			{
 				for (i=0;i<10;i++)
 				{
-					doWindowEvents();
+					//doWindowEvents(); // FIXME would be trivial to just call Win32's doWindowEvents(), but this should work for SDL too -- separate event handling in SDL into separate function, too
 					Sleep(100);
 				}
 				hr=d3dDevice->TestCooperativeLevel();
@@ -535,11 +532,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		d3dDevice->BeginScene();
 	}
 	
-	void DirectX9RenderSystem::terminateMainLoop()
+	/*void DirectX9RenderSystem::terminateMainLoop()
 	{
 		mAppRunning=0;
 	}
-	
+	 
 	void DirectX9RenderSystem::triggerFocusCallback(bool focused)
 	{
 		if (mFocusCallback) mFocusCallback(focused);
@@ -645,7 +642,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 	}
 
-
+	
 
 
 
@@ -653,10 +650,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	{
 		return gtypes::Vector2(GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
 	}
-
-	void createDX9RenderSystem(int w,int h,bool fullscreen,chstr title)
+*/
+	void createDX9RenderSystem(Window* window) //int w,int h,bool fullscreen,chstr title)
 	{
-		new DirectX9RenderSystem(w,h,fullscreen,title);
+		April::rendersys = ::rendersys = new DirectX9RenderSystem(window); //w,h,fullscreen,title);
 	}
 
 }

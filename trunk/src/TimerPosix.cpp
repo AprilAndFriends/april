@@ -3,15 +3,19 @@ This source file is part of the Awesome Portable Rendering Interface Library    
 For latest info, see http://libapril.sourceforge.net/                                *
 **************************************************************************************
 Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                                  *
+Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                     *
 *                                                                                    *
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
+#include <sys/time.h>
 #include "Timer.h"
 #include "RenderSystem.h"
 
 namespace April
 {
+	
+
     Timer::Timer()
     {
         mDt = 0;
@@ -19,29 +23,21 @@ namespace April
         mTd = 0;
         mFrequency = 0;
         mPerformanceTimerStart = 0;
-        mResolution = 0;
+        mResolution = 0; // unused in SDL timer
         mMmTimerStart = 0;
         mMmTimerElapsed = 0;
         mPerformanceTimerElapsed = 0;
         mPerformanceTimer = 0;
         
-        if (!QueryPerformanceFrequency((LARGE_INTEGER *) &mFrequency))
-        {
-            rendersys->logMessage("performance timer not available, multimedia timer will be used instead!");
-            mPerformanceTimer	= FALSE;
-            mMmTimerStart	    = timeGetTime();
-            mResolution		    = 1.0f/1000.0f;
-            mFrequency			= 1000;
-            mMmTimerElapsed	    = mMmTimerStart;
-        }
-        else
-        {
-            QueryPerformanceCounter((LARGE_INTEGER *) &mPerformanceTimerStart);
-            mPerformanceTimer		    = TRUE;
-            mResolution				    = (float) (((double)1.0f)/((double)mFrequency));
-            mPerformanceTimerElapsed	= mPerformanceTimerStart;
-        }
-            
+		// for posix:
+		timeval tv = { 0, 0 };
+		gettimeofday(&tv, NULL);
+		
+		mPerformanceTimer	= 0; 
+		mMmTimerStart	    = ((uint64_t(tv.tv_sec)) << 32) + int64_t(tv.tv_usec);
+		mFrequency			= 1;
+		mMmTimerElapsed	    = mMmTimerStart;
+		
         
     }
     
@@ -52,16 +48,13 @@ namespace April
     
     float Timer::getTime()
     {
-        __int64 time;
-        if (mPerformanceTimer)
-        {
-            QueryPerformanceCounter((LARGE_INTEGER *) &time);
-            return ( (float) ( time - mPerformanceTimerStart) * mResolution)*1000.0f;
-        }
-        else
-        {
-            return( (float) ( timeGetTime() - mMmTimerStart) * mResolution)*1000.0f;
-        }
+		timeval tv = { 0, 0 };
+		timeval init_tv = { mMmTimerStart >> 32, mMmTimerStart & 0xFFFFFFFF };
+		gettimeofday(&tv, NULL);
+		
+		
+		return	(tv.tv_usec - init_tv.tv_usec) / 1000 +  // microsecs into millisecs
+				(tv.tv_sec - init_tv.tv_sec) * 1000;
     }
     
     float Timer::diff(bool update)

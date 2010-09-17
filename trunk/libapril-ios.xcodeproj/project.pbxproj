@@ -1,0 +1,373 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7F33B57C1210130C004B5E89 /* main.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F4D0FE911FEE6C500F2F9F5 /* main.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F33B57D1210130C004B5E89 /* AprilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A111EB178C00B1C1DF /* AprilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F33B57E1210130C004B5E89 /* ImageSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A211EB178C00B1C1DF /* ImageSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F33B57F1210130C004B5E89 /* Keys.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A311EB178C00B1C1DF /* Keys.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F33B5801210130C004B5E89 /* RenderSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A411EB178C00B1C1DF /* RenderSystem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F33B5811210130C004B5E89 /* Window.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA3ED1711F9817A001D1DDD /* Window.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F33B5821210131D004B5E89 /* ImageSourceCG.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */; };
+		7F33B5841210131D004B5E89 /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */; };
+		7F33B5851210131D004B5E89 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
+		7F33B58912101333004B5E89 /* RenderSystem_GL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AF11EB187100B1C1DF /* RenderSystem_GL.cpp */; };
+		7F33B594121013F8004B5E89 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B593121013F8004B5E89 /* OpenGLES.framework */; };
+		7F33B59A12101441004B5E89 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B59912101441004B5E89 /* CoreGraphics.framework */; };
+		7F33B63412102277004B5E89 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B63312102277004B5E89 /* UIKit.framework */; };
+		7F33B6491210235D004B5E89 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B6481210235D004B5E89 /* Foundation.framework */; };
+		7F33B64F12102385004B5E89 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B64E12102385004B5E89 /* CoreFoundation.framework */; };
+		7F33B68512102987004B5E89 /* iOSWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F33B68412102987004B5E89 /* iOSWindow.h */; };
+		7F33B68712102995004B5E89 /* iOSWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F33B68612102995004B5E89 /* iOSWindow.mm */; };
+		7FA1AAE8124229F7004689AE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA1AAE4124229F7004689AE /* Timer.h */; };
+		7FA1ABA212422C03004689AE /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA1ABA112422C03004689AE /* TimerPosix.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		7F33B283120FEDE2004B5E89 /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7F33B593121013F8004B5E89 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		7F33B59912101441004B5E89 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		7F33B63312102277004B5E89 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		7F33B6481210235D004B5E89 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		7F33B64E12102385004B5E89 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		7F33B68412102987004B5E89 /* iOSWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iOSWindow.h; path = windowsystems/iOS/iOSWindow.h; sourceTree = "<group>"; };
+		7F33B68612102995004B5E89 /* iOSWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOSWindow.mm; path = windowsystems/iOS/iOSWindow.mm; sourceTree = "<group>"; };
+		7F42F7A111EB178C00B1C1DF /* AprilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AprilExport.h; path = include/april/AprilExport.h; sourceTree = "<group>"; };
+		7F42F7A211EB178C00B1C1DF /* ImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageSource.h; path = include/april/ImageSource.h; sourceTree = "<group>"; };
+		7F42F7A311EB178C00B1C1DF /* Keys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Keys.h; path = include/april/Keys.h; sourceTree = "<group>"; };
+		7F42F7A411EB178C00B1C1DF /* RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderSystem.h; path = include/april/RenderSystem.h; sourceTree = "<group>"; };
+		7F42F7A911EB179A00B1C1DF /* ImageSourceIL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSourceIL.cpp; path = src/ImageSourceIL.cpp; sourceTree = "<group>"; };
+		7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderSystem.cpp; path = src/RenderSystem.cpp; sourceTree = "<group>"; };
+		7F42F7AF11EB187100B1C1DF /* RenderSystem_GL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderSystem_GL.cpp; path = rendersystems/OpenGL/RenderSystem_GL.cpp; sourceTree = "<group>"; };
+		7F42F7B011EB187100B1C1DF /* RenderSystem_GL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderSystem_GL.h; path = rendersystems/OpenGL/RenderSystem_GL.h; sourceTree = "<group>"; };
+		7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImageSourceCG.mm; path = src/ImageSourceCG.mm; sourceTree = "<group>"; };
+		7F4D0FE911FEE6C500F2F9F5 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = include/april/main.h; sourceTree = "<group>"; };
+		7F5A5D2511FD9CAB003C05A4 /* SDLWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDLWindow.cpp; path = windowsystems/SDL/SDLWindow.cpp; sourceTree = "<group>"; };
+		7F5A5D2611FD9CAB003C05A4 /* SDLWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDLWindow.h; path = windowsystems/SDL/SDLWindow.h; sourceTree = "<group>"; };
+		7FA1AAE4124229F7004689AE /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
+		7FA1ABA112422C03004689AE /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/TimerPosix.cpp; sourceTree = "<group>"; };
+		7FA3ED1711F9817A001D1DDD /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Window.h; path = include/april/Window.h; sourceTree = "<group>"; };
+		7FA3ED2611F98BAE001D1DDD /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Window.cpp; path = src/Window.cpp; sourceTree = "<group>"; };
+		7FA3EDB211F997FC001D1DDD /* GLUTWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLUTWindow.cpp; path = windowsystems/GLUT/GLUTWindow.cpp; sourceTree = "<group>"; };
+		7FA3EEB411F9C6BE001D1DDD /* GLUTWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLUTWindow.h; path = windowsystems/GLUT/GLUTWindow.h; sourceTree = "<group>"; };
+		7FCD394312018BD300608217 /* main_mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main_mac.m; sourceTree = "<group>"; };
+		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7F33B281120FEDE2004B5E89 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7F33B594121013F8004B5E89 /* OpenGLES.framework in Frameworks */,
+				7F33B59A12101441004B5E89 /* CoreGraphics.framework in Frameworks */,
+				7F33B63412102277004B5E89 /* UIKit.framework in Frameworks */,
+				7F33B6491210235D004B5E89 /* Foundation.framework in Frameworks */,
+				7F33B64F12102385004B5E89 /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7F33B283120FEDE2004B5E89 /* libapril.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* libapril */ = {
+			isa = PBXGroup;
+			children = (
+				7FA3ED1111F9813E001D1DDD /* Window Systems */,
+				7F42F7AE11EB185F00B1C1DF /* Render Systems */,
+				7F42F7A011EB177F00B1C1DF /* Includes */,
+				7F42F79F11EB177B00B1C1DF /* Sources */,
+				089C1665FE841158C02AAC07 /* Resources */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DFFF38A50411DB9C8B /* Products */,
+				7F33B593121013F8004B5E89 /* OpenGLES.framework */,
+				7F33B59912101441004B5E89 /* CoreGraphics.framework */,
+				7F33B63312102277004B5E89 /* UIKit.framework */,
+				7F33B6481210235D004B5E89 /* Foundation.framework */,
+				7F33B64E12102385004B5E89 /* CoreFoundation.framework */,
+			);
+			name = libapril;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
+				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C1665FE841158C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8DC2EF5A0486A6940098B216 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		7F33B6831210294D004B5E89 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				7F33B68412102987004B5E89 /* iOSWindow.h */,
+				7F33B68612102995004B5E89 /* iOSWindow.mm */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		7F42F79F11EB177B00B1C1DF /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				7FA1ABA112422C03004689AE /* TimerPosix.cpp */,
+				7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */,
+				7F42F7A911EB179A00B1C1DF /* ImageSourceIL.cpp */,
+				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
+				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
+				7FCD394312018BD300608217 /* main_mac.m */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		7F42F7A011EB177F00B1C1DF /* Includes */ = {
+			isa = PBXGroup;
+			children = (
+				7FA1AAE4124229F7004689AE /* Timer.h */,
+				7F4D0FE911FEE6C500F2F9F5 /* main.h */,
+				7F42F7A111EB178C00B1C1DF /* AprilExport.h */,
+				7F42F7A211EB178C00B1C1DF /* ImageSource.h */,
+				7F42F7A311EB178C00B1C1DF /* Keys.h */,
+				7F42F7A411EB178C00B1C1DF /* RenderSystem.h */,
+				7FA3ED1711F9817A001D1DDD /* Window.h */,
+			);
+			name = Includes;
+			sourceTree = "<group>";
+		};
+		7F42F7AE11EB185F00B1C1DF /* Render Systems */ = {
+			isa = PBXGroup;
+			children = (
+				7F42F7AF11EB187100B1C1DF /* RenderSystem_GL.cpp */,
+				7F42F7B011EB187100B1C1DF /* RenderSystem_GL.h */,
+			);
+			name = "Render Systems";
+			sourceTree = "<group>";
+		};
+		7FA3ED1111F9813E001D1DDD /* Window Systems */ = {
+			isa = PBXGroup;
+			children = (
+				7F33B6831210294D004B5E89 /* iOS */,
+				7FA3ED1311F98148001D1DDD /* GLUT */,
+				7FA3ED1211F98145001D1DDD /* SDL */,
+			);
+			name = "Window Systems";
+			sourceTree = "<group>";
+		};
+		7FA3ED1211F98145001D1DDD /* SDL */ = {
+			isa = PBXGroup;
+			children = (
+				7F5A5D2511FD9CAB003C05A4 /* SDLWindow.cpp */,
+				7F5A5D2611FD9CAB003C05A4 /* SDLWindow.h */,
+			);
+			name = SDL;
+			sourceTree = "<group>";
+		};
+		7FA3ED1311F98148001D1DDD /* GLUT */ = {
+			isa = PBXGroup;
+			children = (
+				7FA3EEB411F9C6BE001D1DDD /* GLUTWindow.h */,
+				7FA3EDB211F997FC001D1DDD /* GLUTWindow.cpp */,
+			);
+			name = GLUT;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		7F33B27F120FEDE2004B5E89 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7F33B57C1210130C004B5E89 /* main.h in Headers */,
+				7F33B57D1210130C004B5E89 /* AprilExport.h in Headers */,
+				7F33B57E1210130C004B5E89 /* ImageSource.h in Headers */,
+				7F33B57F1210130C004B5E89 /* Keys.h in Headers */,
+				7F33B5801210130C004B5E89 /* RenderSystem.h in Headers */,
+				7F33B5811210130C004B5E89 /* Window.h in Headers */,
+				7F33B68512102987004B5E89 /* iOSWindow.h in Headers */,
+				7FA1AAE8124229F7004689AE /* Timer.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		7F33B282120FEDE2004B5E89 /* april-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7F33B28F120FEE09004B5E89 /* Build configuration list for PBXNativeTarget "april-iOS" */;
+			buildPhases = (
+				7F33B27F120FEDE2004B5E89 /* Headers */,
+				7F33B280120FEDE2004B5E89 /* Sources */,
+				7F33B281120FEDE2004B5E89 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "april-iOS";
+			productName = april;
+			productReference = 7F33B283120FEDE2004B5E89 /* libapril.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "libapril-ios" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 0867D691FE84028FC02AAC07 /* libapril */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7F33B282120FEDE2004B5E89 /* april-iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7F33B280120FEDE2004B5E89 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7F33B58912101333004B5E89 /* RenderSystem_GL.cpp in Sources */,
+				7F33B5821210131D004B5E89 /* ImageSourceCG.mm in Sources */,
+				7F33B5841210131D004B5E89 /* RenderSystem.cpp in Sources */,
+				7F33B5851210131D004B5E89 /* Window.cpp in Sources */,
+				7F33B68712102995004B5E89 /* iOSWindow.mm in Sources */,
+				7FA1ABA212422C03004689AE /* TimerPosix.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91B208733DA50010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ADDITIONAL_SDKS = "$(USER_LIBRARY_DIR)/SDKs/hltypesSDK/$(PLATFORM_NAME).sdk $(USER_LIBRARY_DIR)/SDKs/gtypesSDK/$(PLATFORM_NAME).sdk";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = april;
+				SDKROOT = iphoneos4.1;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1DEB91B308733DA50010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ADDITIONAL_SDKS = "$(USER_LIBRARY_DIR)/SDKs/hltypesSDK/$(PLATFORM_NAME).sdk $(USER_LIBRARY_DIR)/SDKs/gtypesSDK/$(PLATFORM_NAME).sdk";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				PREBINDING = NO;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = april;
+				SDKROOT = iphoneos4.1;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7F33B284120FEDE3004B5E89 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PREBINDING = NO;
+				PRODUCT_NAME = april;
+			};
+			name = Debug;
+		};
+		7F33B285120FEDE3004B5E89 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PREBINDING = NO;
+				PRODUCT_NAME = april;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "libapril-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91B208733DA50010E9CD /* Debug */,
+				1DEB91B308733DA50010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7F33B28F120FEE09004B5E89 /* Build configuration list for PBXNativeTarget "april-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7F33B284120FEDE3004B5E89 /* Debug */,
+				7F33B285120FEDE3004B5E89 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

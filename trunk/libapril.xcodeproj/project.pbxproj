@@ -20,7 +20,20 @@
 		7F42FACD11EB341E00B1C1DF /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42FACC11EB341E00B1C1DF /* OpenGL.framework */; };
 		7F42FAD511EB342900B1C1DF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42FAD411EB342900B1C1DF /* Cocoa.framework */; };
 		7F42FD7711EB632E00B1C1DF /* ImageSourceCG.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */; };
-		7FD5DC3712115724003BAE6A /* main.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FD5DC3612115724003BAE6A /* main.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F4D0FEA11FEE6C500F2F9F5 /* main.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F4D0FE911FEE6C500F2F9F5 /* main.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F5A5D2711FD9CAB003C05A4 /* SDLWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F5A5D2511FD9CAB003C05A4 /* SDLWindow.cpp */; };
+		7F5A5D2811FD9CAB003C05A4 /* SDLWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F5A5D2611FD9CAB003C05A4 /* SDLWindow.h */; };
+		7F5A5D2E11FD9DEB003C05A4 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F5A5D2D11FD9DEB003C05A4 /* SDL.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		7FA3ED1811F9817A001D1DDD /* Window.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA3ED1711F9817A001D1DDD /* Window.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
+		7FA3EDB311F997FC001D1DDD /* GLUTWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3EDB211F997FC001D1DDD /* GLUTWindow.cpp */; };
+		7FA3EEB511F9C6BE001D1DDD /* GLUTWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA3EEB411F9C6BE001D1DDD /* GLUTWindow.h */; };
+		7FC8FA29122FA58F0092964C /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8FA28122FA58F0092964C /* Timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7FC8FA5F122FABE80092964C /* TimerLinux.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8FA5D122FABE80092964C /* TimerLinux.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7FC8FA60122FABE80092964C /* TimerSDL.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8FA5E122FABE80092964C /* TimerSDL.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7FC8FA6C122FAC2E0092964C /* TimerWin.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8FA6B122FAC2E0092964C /* TimerWin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8FA75122FACA30092964C /* TimerSDL.cpp */; };
+		7FCD394412018BD300608217 /* main_mac.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FCD394312018BD300608217 /* main_mac.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,7 +51,20 @@
 		7F42FACC11EB341E00B1C1DF /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		7F42FAD411EB342900B1C1DF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImageSourceCG.mm; path = src/ImageSourceCG.mm; sourceTree = "<group>"; };
-		7FD5DC3612115724003BAE6A /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = include/april/main.h; sourceTree = "<group>"; };
+		7F4D0FE911FEE6C500F2F9F5 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = include/april/main.h; sourceTree = "<group>"; };
+		7F5A5D2511FD9CAB003C05A4 /* SDLWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDLWindow.cpp; path = windowsystems/SDL/SDLWindow.cpp; sourceTree = "<group>"; };
+		7F5A5D2611FD9CAB003C05A4 /* SDLWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDLWindow.h; path = windowsystems/SDL/SDLWindow.h; sourceTree = "<group>"; };
+		7F5A5D2D11FD9DEB003C05A4 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = Library/Frameworks/SDL.framework; sourceTree = SDKROOT; };
+		7FA3ED1711F9817A001D1DDD /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Window.h; path = include/april/Window.h; sourceTree = "<group>"; };
+		7FA3ED2611F98BAE001D1DDD /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Window.cpp; path = src/Window.cpp; sourceTree = "<group>"; };
+		7FA3EDB211F997FC001D1DDD /* GLUTWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLUTWindow.cpp; path = windowsystems/GLUT/GLUTWindow.cpp; sourceTree = "<group>"; };
+		7FA3EEB411F9C6BE001D1DDD /* GLUTWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLUTWindow.h; path = windowsystems/GLUT/GLUTWindow.h; sourceTree = "<group>"; };
+		7FC8FA28122FA58F0092964C /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
+		7FC8FA5D122FABE80092964C /* TimerLinux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimerLinux.h; path = include/april/TimerLinux.h; sourceTree = "<group>"; };
+		7FC8FA5E122FABE80092964C /* TimerSDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimerSDL.h; path = include/april/TimerSDL.h; sourceTree = "<group>"; };
+		7FC8FA6B122FAC2E0092964C /* TimerWin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimerWin.h; path = include/april/TimerWin.h; sourceTree = "<group>"; };
+		7FC8FA75122FACA30092964C /* TimerSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerSDL.cpp; path = src/TimerSDL.cpp; sourceTree = "<group>"; };
+		7FCD394312018BD300608217 /* main_mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main_mac.m; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -53,6 +79,7 @@
 				7F42FACB11EB341E00B1C1DF /* GLUT.framework in Frameworks */,
 				7F42FACD11EB341E00B1C1DF /* OpenGL.framework in Frameworks */,
 				7F42FAD511EB342900B1C1DF /* Cocoa.framework in Frameworks */,
+				7F5A5D2E11FD9DEB003C05A4 /* SDL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +97,7 @@
 		0867D691FE84028FC02AAC07 /* libapril */ = {
 			isa = PBXGroup;
 			children = (
+				7FA3ED1111F9813E001D1DDD /* Window Systems */,
 				7F42F7AE11EB185F00B1C1DF /* Render Systems */,
 				7F42F7A011EB177F00B1C1DF /* Includes */,
 				7F42F79F11EB177B00B1C1DF /* Sources */,
@@ -105,6 +133,7 @@
 				7F42FAD411EB342900B1C1DF /* Cocoa.framework */,
 				7F42F83111EB1A9700B1C1DF /* gtypes.framework */,
 				7F42F83311EB1A9700B1C1DF /* hltypes.framework */,
+				7F5A5D2D11FD9DEB003C05A4 /* SDL.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -119,9 +148,12 @@
 		7F42F79F11EB177B00B1C1DF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7FC8FA75122FACA30092964C /* TimerSDL.cpp */,
 				7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */,
 				7F42F7A911EB179A00B1C1DF /* ImageSourceIL.cpp */,
 				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
+				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
+				7FCD394312018BD300608217 /* main_mac.m */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
@@ -129,11 +161,16 @@
 		7F42F7A011EB177F00B1C1DF /* Includes */ = {
 			isa = PBXGroup;
 			children = (
-				7FD5DC3612115724003BAE6A /* main.h */,
+				7FC8FA6B122FAC2E0092964C /* TimerWin.h */,
+				7FC8FA5D122FABE80092964C /* TimerLinux.h */,
+				7FC8FA5E122FABE80092964C /* TimerSDL.h */,
+				7FC8FA28122FA58F0092964C /* Timer.h */,
+				7F4D0FE911FEE6C500F2F9F5 /* main.h */,
 				7F42F7A111EB178C00B1C1DF /* AprilExport.h */,
 				7F42F7A211EB178C00B1C1DF /* ImageSource.h */,
 				7F42F7A311EB178C00B1C1DF /* Keys.h */,
 				7F42F7A411EB178C00B1C1DF /* RenderSystem.h */,
+				7FA3ED1711F9817A001D1DDD /* Window.h */,
 			);
 			name = Includes;
 			sourceTree = "<group>";
@@ -145,6 +182,33 @@
 				7F42F7B011EB187100B1C1DF /* RenderSystem_GL.h */,
 			);
 			name = "Render Systems";
+			sourceTree = "<group>";
+		};
+		7FA3ED1111F9813E001D1DDD /* Window Systems */ = {
+			isa = PBXGroup;
+			children = (
+				7FA3ED1311F98148001D1DDD /* GLUT */,
+				7FA3ED1211F98145001D1DDD /* SDL */,
+			);
+			name = "Window Systems";
+			sourceTree = "<group>";
+		};
+		7FA3ED1211F98145001D1DDD /* SDL */ = {
+			isa = PBXGroup;
+			children = (
+				7F5A5D2511FD9CAB003C05A4 /* SDLWindow.cpp */,
+				7F5A5D2611FD9CAB003C05A4 /* SDLWindow.h */,
+			);
+			name = SDL;
+			sourceTree = "<group>";
+		};
+		7FA3ED1311F98148001D1DDD /* GLUT */ = {
+			isa = PBXGroup;
+			children = (
+				7FA3EEB411F9C6BE001D1DDD /* GLUTWindow.h */,
+				7FA3EDB211F997FC001D1DDD /* GLUTWindow.cpp */,
+			);
+			name = GLUT;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,7 +223,14 @@
 				7F42F7A711EB178C00B1C1DF /* Keys.h in Headers */,
 				7F42F7A811EB178C00B1C1DF /* RenderSystem.h in Headers */,
 				7F42F7B211EB187100B1C1DF /* RenderSystem_GL.h in Headers */,
-				7FD5DC3712115724003BAE6A /* main.h in Headers */,
+				7FA3ED1811F9817A001D1DDD /* Window.h in Headers */,
+				7FA3EEB511F9C6BE001D1DDD /* GLUTWindow.h in Headers */,
+				7F5A5D2811FD9CAB003C05A4 /* SDLWindow.h in Headers */,
+				7F4D0FEA11FEE6C500F2F9F5 /* main.h in Headers */,
+				7FC8FA29122FA58F0092964C /* Timer.h in Headers */,
+				7FC8FA5F122FABE80092964C /* TimerLinux.h in Headers */,
+				7FC8FA60122FABE80092964C /* TimerSDL.h in Headers */,
+				7FC8FA6C122FAC2E0092964C /* TimerWin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,7 +263,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "libapril" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* libapril */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
@@ -221,6 +299,11 @@
 				7F42F7AC11EB179A00B1C1DF /* RenderSystem.cpp in Sources */,
 				7F42F7B111EB187100B1C1DF /* RenderSystem_GL.cpp in Sources */,
 				7F42FD7711EB632E00B1C1DF /* ImageSourceCG.mm in Sources */,
+				7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */,
+				7FA3EDB311F997FC001D1DDD /* GLUTWindow.cpp in Sources */,
+				7F5A5D2711FD9CAB003C05A4 /* SDLWindow.cpp in Sources */,
+				7FCD394412018BD300608217 /* main_mac.m in Sources */,
+				7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,7 +326,13 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = _OPENGL;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					_OPENGL,
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
 				INFOPLIST_FILE = Info.plist;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -260,7 +349,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
-				GCC_PREPROCESSOR_DEFINITIONS = _OPENGL;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					_OPENGL,
+				);
 				INFOPLIST_FILE = Info.plist;
 				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = framework;
@@ -273,6 +365,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_SDL;
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -288,6 +381,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = HAVE_SDL;
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;

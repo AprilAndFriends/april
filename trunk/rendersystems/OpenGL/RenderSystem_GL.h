@@ -15,7 +15,14 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include "Timer.h"
 
 #ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+
+
+#if defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
 #include <OpenGL/gl.h>
+#elif defined(TARGET_OS_IPHONE)
+#include <OpenGLES/ES1/gl.h>
 #else
 #include <GL/gl.h>
 #endif
@@ -43,7 +50,7 @@ namespace April
 		void _setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void _setProjectionMatrix(const gtypes::Matrix4& matrix);
 	public:
-		GLRenderSystem(int w,int h);
+		GLRenderSystem(Window* window);
 		~GLRenderSystem();
 		
 		// object creation
@@ -74,26 +81,9 @@ namespace April
 		void setRenderTarget(Texture* source);
 		void beginFrame();
 		
-		void setWindowTitle(chstr title);
-		gtypes::Vector2 getCursorPos();
-		void showSystemCursor(bool b);
-		bool isSystemCursorShown();
-
-		int getWindowWidth();
-		int getWindowHeight();
-		
-		void presentFrame();
-		
-		bool triggerUpdate(float time_increase);
-		bool triggerKeyEvent(bool down,unsigned int keycode);
-		void triggerQuitEvent();
-		bool triggerMouseEvent(int event,float x,float y,int button);
-		
-		void enterMainLoop();
-		void terminateMainLoop();
 	};
 
-	void createGLRenderSystem(int w,int h,bool fullscreen,chstr title);
+	void createGLRenderSystem(Window* window);
 }
 #endif
 #endif

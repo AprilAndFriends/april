@@ -18,6 +18,7 @@ class IDirect3DSurface9;
 namespace April
 {
 	class DirectX9Texture;
+	class Window;
 
 	class DirectX9RenderSystem : public RenderSystem
 	{
@@ -29,7 +30,7 @@ namespace April
 		DirectX9Texture* mRenderTarget;
 		IDirect3DSurface9* mBackBuffer;
 	public:
-		DirectX9RenderSystem(int w,int h,bool fullscreen,chstr title);
+		DirectX9RenderSystem(Window* window); //int w,int h,bool fullscreen,chstr title);
 		~DirectX9RenderSystem();
 		
 		void configureDevice();
@@ -58,7 +59,7 @@ namespace April
 		void setRenderTarget(Texture* source);
 
 		void setAlphaMultiplier(float value);
-		
+		/*
 		void setWindowTitle(chstr title);
 		gtypes::Vector2 getCursorPos();
 		void showSystemCursor(bool b);
@@ -66,10 +67,11 @@ namespace April
 
 		int getWindowWidth();
 		int getWindowHeight();
-		
+		*/
 		void beginFrame();
-		void presentFrame();
 		
+		void presentFrame();
+		/*
 		void triggerKeyEvent(bool down,unsigned int keycode);
 		void triggerCharEvent(unsigned int chr);
 	
@@ -83,9 +85,10 @@ namespace April
 		
 		void enterMainLoop();
 		void terminateMainLoop();
+		*/
 	};
 
-	void createDX9RenderSystem(int w,int h,bool fullscreen,chstr title);
+	void createDX9RenderSystem(Window* window); //int w,int h,bool fullscreen,chstr title);
 }
 #endif
 #endif
