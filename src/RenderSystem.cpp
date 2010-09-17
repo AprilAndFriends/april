@@ -464,7 +464,9 @@ namespace April
 	
 	void RenderSystem::setWindowTitle(chstr title)
 	{
-		logMessage("RenderSystem::setWindowTitle() is deprecated");
+		static bool done=0;
+		
+		if (!done) { done=1; logMessage("RenderSystem::setWindowTitle() is deprecated"); }
 		getWindow()->setWindowTitle(title);
 	}
 	void RenderSystem::presentFrame()
