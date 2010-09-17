@@ -11,6 +11,10 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include <stdio.h>
 #include <algorithm>
 
+#if defined(__APPLE__) && !defined(_OPENGL)
+#define _OPENGL
+#endif
+
 #ifdef USE_IL
 #include <IL/il.h>
 #endif
@@ -22,11 +26,14 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include "RenderSystem_DirectX9.h"
 #endif
 #include "ImageSource.h"
+#include "Window.h"
 
-April::RenderSystem* rendersys;
+April::RenderSystem* rendersys __attribute__((deprecated));
 
 namespace April
-{	
+{
+	April::RenderSystem* rendersys;
+
 	void april_writelog(chstr message)
 	{
 		printf("%s\n",message.c_str());		
@@ -69,19 +76,19 @@ namespace April
 		this->z=v.z;
 	}
 /*****************************************************************************************/
-	Color::Color(float a,float r,float g,float b)
+	Color::Color(float _a,float _r,float _g,float _b)
 	{
-		setColor(a,r,g,b);
+		setColor(_a,_r,_g,_b);
 	}
 
-	Color::Color(int a,int r,int g,int b)
+	Color::Color(int _a,int _r,int _g,int _b)
 	{
-		setColor(a,r,g,b);
+		setColor(_a,_r,_g,_b);
 	}
 
-	Color::Color(unsigned char a,unsigned char r,unsigned char g,unsigned char b)
+	Color::Color(unsigned char _a,unsigned char _r,unsigned char _g,unsigned char _b)
 	{
-		setColor(a,r,g,b);
+		setColor(_a,_r,_g,_b);
 	}
 
 	Color::Color(unsigned int color)
@@ -99,21 +106,21 @@ namespace April
 		a=r=g=b=255;
 	}
 
-	void Color::setColor(float a,float r,float g,float b)
+	void Color::setColor(float _a,float _r,float _g,float _b)
 	{
-		this->a=(unsigned char)(a*255); this->r=(unsigned char)(r*255);
-		this->g=(unsigned char)(g*255); this->b=(unsigned char)(b*255);
+		this->a=(unsigned char)(_a*255); this->r=(unsigned char)(_r*255);
+		this->g=(unsigned char)(_g*255); this->b=(unsigned char)(_b*255);
 	}
 
-	void Color::setColor(int a,int r,int g,int b)
+	void Color::setColor(int _a,int _r,int _g,int _b)
 	{
-		this->a=(unsigned char)a; this->r=(unsigned char)r;
-		this->g=(unsigned char)g; this->b=(unsigned char)b;
+		this->a=(unsigned char)_a; this->r=(unsigned char)_r;
+		this->g=(unsigned char)_g; this->b=(unsigned char)_b;
 	}
 
-	void Color::setColor(unsigned char a,unsigned char r,unsigned char g,unsigned char b)
+	void Color::setColor(unsigned char _a,unsigned char _r,unsigned char _g,unsigned char _b)
 	{
-		this->a=a; this->r=r; this->g=g; this->b=b;
+		this->a=_a; this->r=_r; this->g=_g; this->b=_b;
 	}
 
 	void Color::setColor(unsigned int color)
@@ -265,14 +272,6 @@ namespace April
 	RenderSystem::RenderSystem()
 	{
 		mAlphaMultiplier=1.0f;
-		mUpdateCallback=0;
-		mMouseDownCallback=0;
-		mMouseUpCallback=0;
-		mMouseMoveCallback=0;
-		mKeyDownCallback=0;
-		mKeyUpCallback=0;
-		mCharCallback=0;
-		mQuitCallback=0;
 		mDynamicLoading=0;
 		mIdleUnloadTime=0;
 		mFocusCallback=0;
@@ -325,25 +324,38 @@ namespace April
 	
 	void RenderSystem::registerUpdateCallback(bool (*callback)(float))
 	{
-		mUpdateCallback=callback;
+		mWindow->setUpdateCallback(callback);
+		
+		logMessage("RenderSystem::registerUpdateCallback() is deprecated");
 	}
 
 	void RenderSystem::registerMouseCallbacks(void (*mouse_dn)(float,float,int),
 								              void (*mouse_up)(float,float,int),
 								              void (*mouse_move)(float,float))
 	{
-			mMouseDownCallback=mouse_dn;
-			mMouseUpCallback=mouse_up;
-			mMouseMoveCallback=mouse_move;
-			
+		mWindow->setMouseCallbacks(mouse_dn,mouse_up,mouse_move);
+		
+		logMessage("RenderSystem::registerMouseCallbacks() is deprecated");
 	}
+	
 	void RenderSystem::registerKeyboardCallbacks(void (*key_dn)(unsigned int),
 								                 void (*key_up)(unsigned int),
 												 void (*char_callback)(unsigned int))
 	{
-		mKeyDownCallback=key_dn;
-		mKeyUpCallback=key_up;
-		mCharCallback=char_callback;
+		mWindow->setKeyboardCallbacks(key_dn, key_up, char_callback);
+		logMessage("RenderSystem::registerKeyboardCallbacks() is deprecated");
+	}
+	
+	void RenderSystem::registerQuitCallback(bool (*quit_callback)(bool can_reject))
+	{
+		mWindow->setQuitCallback(quit_callback);
+		logMessage("RenderSystem::registerQuitCallback() is deprecated");
+	}
+	
+	void RenderSystem::registerWindowFocusCallback(void (*focus_callback)(bool current_focus))
+	{
+		mWindow->setWindowFocusCallback(focus_callback);		
+		logMessage("RenderSystem::registerFocusCallback() is deprecated");
 	}
 	
 	Texture* RenderSystem::loadRAMTexture(chstr filename,bool dynamic)
@@ -420,6 +432,51 @@ namespace April
 	{
 		return mProjectionMatrix;
 	}
+	
+/*********************************************************************************/
+
+/* deprecated funcs	*/
+
+	int RenderSystem::getWindowWidth() 
+	{ 
+		return getWindow()->getWindowWidth(); 
+	}
+	
+	int RenderSystem::getWindowHeight() 
+	{ 
+		return getWindow()->getWindowHeight(); 
+	}
+	
+	void RenderSystem::enterMainLoop()
+	{
+		logMessage("RenderSystem::enterMainLoop() is deprecated"); 
+		getWindow()->enterMainLoop(); 
+	}
+
+	void RenderSystem::terminateMainLoop()
+	{
+		logMessage("RenderSystem::enterMainLoop() is deprecated"); 
+		getWindow()->terminateMainLoop(); 
+	}
+	gtypes::Vector2 RenderSystem::getCursorPos()
+	{
+		return getWindow()->getCursorPos();
+	}
+	
+	void RenderSystem::setWindowTitle(chstr title)
+	{
+		logMessage("RenderSystem::setWindowTitle() is deprecated");
+		getWindow()->setWindowTitle(title);
+	}
+	void RenderSystem::presentFrame()
+	{
+		getWindow()->presentFrame();
+	}
+	void RenderSystem::showSystemCursor(bool visible)
+	{
+		getWindow()->showSystemCursor(visible);
+	}
+	
 /*********************************************************************************/
 	void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title)
 	{
@@ -427,10 +484,15 @@ namespace April
 			ilInit();
 		#endif
 		
-		#ifdef _OPENGL
-			createGLRenderSystem(w,h,fullscreen,title);
+		#ifdef _WIN32
+		Window* window = createAprilWindow("Win32", w, h, fullscreen, title);
 		#else
-			createDX9RenderSystem(w,h,fullscreen,title);
+		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);
+		#endif
+		#ifdef _OPENGL
+			createGLRenderSystem(window);
+		#else
+			createDX9RenderSystem(window);
 		#endif
 	}
 	
@@ -441,7 +503,12 @@ namespace April
 	
 	void destroy()
 	{
+		if (!rendersys) {
+			return;
+		}
+		delete rendersys->getWindow();
 		delete rendersys;
+		rendersys = 0;
 	}
 
 }

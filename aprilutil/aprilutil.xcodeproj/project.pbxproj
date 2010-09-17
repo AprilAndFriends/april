@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7F21927D11F07DAA00660245 /* AprilUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F21927B11F07DAA00660245 /* AprilUtilExport.h */; };
-		7F21927E11F07DAA00660245 /* BlurManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F21927C11F07DAA00660245 /* BlurManager.h */; };
+		7F21927D11F07DAA00660245 /* AprilUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F21927B11F07DAA00660245 /* AprilUtilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F21927E11F07DAA00660245 /* BlurManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F21927C11F07DAA00660245 /* BlurManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FE9C55511EDC6DF008EF582 /* BlurManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FE9C55411EDC6DF008EF582 /* BlurManager.cpp */; };
 		7FE9C55F11EDC71A008EF582 /* april.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FE9C55E11EDC71A008EF582 /* april.framework */; };
 		7FE9C56A11EDC72E008EF582 /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FE9C56911EDC72E008EF582 /* gtypes.framework */; };

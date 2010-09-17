@@ -17,6 +17,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <gtypes/Matrix4.h>
 #include "AprilExport.h"
 
+
 namespace gtypes
 {
 	class Vector2;
@@ -36,7 +37,7 @@ enum TextureFormat
 
 namespace April
 {
-		
+	class Window;
 	class ImageSource;
 	// render operations
 	enum RenderOp
@@ -198,6 +199,7 @@ namespace April
 	class AprilExport RenderSystem
 	{
 	protected:
+		Window* mWindow;
 		float mAlphaMultiplier;
 		float mIdleUnloadTime;
 		bool mDynamicLoading;
@@ -220,7 +222,6 @@ namespace April
 		virtual void _setProjectionMatrix(const gtypes::Matrix4& matrix)=0;
 	public:
 		
-
 		RenderSystem();
 		virtual ~RenderSystem();
 
@@ -279,40 +280,44 @@ namespace April
 		virtual void setAlphaMultiplier(float value)=0;
 		float getAlphaMultiplier() { return mAlphaMultiplier; }
 
-		virtual int getWindowWidth()=0;
-		virtual int getWindowHeight()=0;
-
-		virtual void setWindowTitle(chstr title)=0;
-		virtual gtypes::Vector2 getCursorPos()=0;
-		virtual void showSystemCursor(bool b)=0;
-		virtual bool isSystemCursorShown()=0;
 
 		virtual void beginFrame()=0;
-		virtual void presentFrame()=0;
-		virtual void enterMainLoop()=0;
 
-		void registerUpdateCallback(bool (*callback)(float));
+		void registerUpdateCallback(bool (*callback)(float)) __attribute__((deprecated));
 		void registerMouseCallbacks(void (*mouse_dn)(float,float,int),
 									void (*mouse_up)(float,float,int),
-									void (*mouse_move)(float,float));
+									void (*mouse_move)(float,float)) __attribute__((deprecated));
 		void registerKeyboardCallbacks(void (*key_dn)(unsigned int),
 									   void (*key_up)(unsigned int),
-									   void (*char_callback)(unsigned int));
-		void registerQuitCallback(bool (*quit_callback)(bool)) { mQuitCallback = quit_callback; }
-		void registerWindowFocusCallback(void (*focus_callback)(bool)) { mFocusCallback=focus_callback; }
+									   void (*char_callback)(unsigned int)) __attribute__((deprecated));
+		void registerQuitCallback(bool (*quit_callback)(bool)) __attribute__((deprecated));
+		void registerWindowFocusCallback(void (*focus_callback)(bool)) __attribute__((deprecated));
 
 		void forceDynamicLoading(bool value) { mDynamicLoading=value; }
 		bool isDynamicLoadingForced() { return mDynamicLoading; }
+		
+		Window* getWindow() { return mWindow; }
+		
+		virtual void enterMainLoop() __attribute__((deprecated));
+		virtual void terminateMainLoop() __attribute__((deprecated));
+		virtual gtypes::Vector2 getCursorPos() __attribute__((deprecated));
+		virtual int getWindowWidth() __attribute__((deprecated));
+		virtual int getWindowHeight() __attribute__((deprecated));
+		virtual void setWindowTitle(chstr title) __attribute__((deprecated));
+		virtual void presentFrame(); // __attribute__((deprecated)); -- not deprecated because directx has its own way of presenting stuff.
+		virtual void showSystemCursor(bool visible) __attribute__((deprecated));
 
-		virtual void terminateMainLoop()=0;
 	};
 
 	AprilFnExport gvec2 getDesktopResolution();
 	AprilFnExport void setLogFunction(void (*fnptr)(chstr));
 	AprilFnExport void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title);
 	AprilFnExport void destroy();
+	
+	// global rendersys shortcut variable
+	AprilFnExport extern April::RenderSystem* rendersys;
 }
-// global rendersys shortcut variable
-AprilFnExport extern April::RenderSystem* rendersys;
+// old, now deprecated, global rendersys shortcut variable
+AprilFnExport extern April::RenderSystem* rendersys __attribute__((deprecated));
 
 #endif
