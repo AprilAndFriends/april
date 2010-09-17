@@ -154,7 +154,7 @@ namespace April
 
 	Texture::~Texture()
 	{
-		for (Texture** it=mDynamicLinks.iter();it;it=mDynamicLinks.next())
+		foreach (Texture*, it, mDynamicLinks)
 			(*it)->removeDynamicLink(this);
 	}
 	
@@ -199,7 +199,7 @@ namespace April
 		mUnusedTimer=0;
 		if (recursive)
 		{
-			for (Texture** it=mDynamicLinks.iter();it;it=mDynamicLinks.next())
+			foreach (Texture*, it, mDynamicLinks)
 				(*it)->_resetUnusedTimer(0);
 		}
 	}
