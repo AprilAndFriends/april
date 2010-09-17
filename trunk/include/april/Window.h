@@ -33,7 +33,8 @@ namespace April
 		void (*mCharCallback)(unsigned int);
 		void (*mKeyUpCallback)(unsigned int);
 		bool (*mQuitCallback)(bool can_reject);
-		
+		void (*mFocusCallback)(bool);
+
 		Window();
 		
 	public:
@@ -74,6 +75,7 @@ namespace April
 								  void (*key_up)(unsigned int),
 								  void (*char_callback)(unsigned int));
 		void setQuitCallback(bool (*quit_callback)(bool can_reject));
+		void setWindowFocusCallback(void (*focus_callback)(bool));
 		
 		// misc virtuals and pure virtuals
 		virtual void enterMainLoop()=0;

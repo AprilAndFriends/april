@@ -27,6 +27,7 @@ namespace April
 		//SDL_Surface *mScreen;
 		bool mRunning;
 		//bool mCursorVisible;
+		
 	public:
 		
 		Win32Window(int w, int h, bool fullscreen, chstr title);
@@ -52,6 +53,7 @@ namespace April
 		void triggerMouseDownEvent(int button);
 		void triggerMouseMoveEvent();
 		bool triggerQuitEvent();
+		void triggerFocusCallback(bool focused);
 		
 		
 

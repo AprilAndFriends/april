@@ -84,16 +84,25 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_MOUSEMOVE:
 			ws->triggerMouseMoveEvent();break;
 		case WM_SETCURSOR:
+			if (!cursor_visible)
+			{
+				if (cursorpos.x >= 0 && cursorpos.y >= 0 && cursorpos.x <= ws->getWindowWidth() && cursorpos.y <= ws->getWindowHeight())
+					SetCursor(0);
+				else
+					SetCursor(LoadCursor(0,IDC_ARROW));
+			}
 			return 1;
 		case WM_ACTIVATE:
 			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
 			{
 				window_active=1;
+				ws->triggerFocusCallback(true);
 				rendersys->logMessage("Window activated");
 			}
 			else
 			{
 				window_active=0;
+				ws->triggerFocusCallback(false);
 				rendersys->logMessage("Window deactivated");
 			}
 			break;
@@ -256,6 +265,12 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		if (mMouseMoveCallback) mMouseMoveCallback(cursorpos.x,cursorpos.y);
 	}
 	
+	void Win32Window::triggerFocusCallback(bool focused)
+	{
+		if (mFocusCallback) mFocusCallback(focused);
+	}
+	
+	
 	void Win32Window::enterMainLoop()
 	{
 		float time=globalTimer.getTime(),t;
@@ -271,17 +286,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			GetCursorPos(&w32_cursorpos);
 			ScreenToClient(hWnd,&w32_cursorpos);
 			cursorpos.set(w32_cursorpos.x,w32_cursorpos.y);
-			if (!cursor_visible && !wnd_fullscreen)
-			{
-				if (cursorpos.y < 0)
-				{
-					if (!cvisible) { cvisible=1; SetCursor(LoadCursor(0,IDC_ARROW)); }
-				}
-				else
-				{
-					if (cvisible) { cvisible=0; SetCursor(0); }
-				}
-			}
 			doWindowEvents();
 			t=globalTimer.getTime();
 
