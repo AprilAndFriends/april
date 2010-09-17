@@ -274,7 +274,6 @@ namespace April
 		mAlphaMultiplier=1.0f;
 		mDynamicLoading=0;
 		mIdleUnloadTime=0;
-		mFocusCallback=0;
 		mTextureFilter=Linear;
 		mTextureWrapping=1;
 	}

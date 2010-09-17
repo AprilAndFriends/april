@@ -205,7 +205,7 @@ namespace April
 		bool mDynamicLoading;
 		TextureFilter mTextureFilter;
 		bool mTextureWrapping;
-		
+		/*
 		bool (*mUpdateCallback)(float);
 		void (*mMouseDownCallback)(float,float,int);
 		void (*mMouseUpCallback)(float,float,int);
@@ -215,7 +215,7 @@ namespace April
 		void (*mCharCallback)(unsigned int);
 		bool (*mQuitCallback)(bool);
 		void (*mFocusCallback)(bool);
-
+		*/
 		gtypes::Matrix4 mModelviewMatrix,mProjectionMatrix;
 
 		virtual void _setModelviewMatrix(const gtypes::Matrix4& matrix)=0;

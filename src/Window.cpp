@@ -45,6 +45,7 @@ namespace April
 		mKeyUpCallback=0;
 		mCharCallback=0;
 		mQuitCallback=0;
+		mFocusCallback=0;
 	}
 	
 	void Window::setUpdateCallback(bool (*callback)(float))
@@ -71,6 +72,10 @@ namespace April
 	void Window::setQuitCallback(bool (*quit_callback)(bool))
 	{
 		mQuitCallback = quit_callback;
+	}
+	void Window::setWindowFocusCallback(void (*focus_callback)(bool))
+	{
+		mFocusCallback = focus_callback;
 	}
 	
 	
