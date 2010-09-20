@@ -16,7 +16,7 @@ namespace April
 	// this enum defines Windows-specific virtual keys
 	// however, these are mostly nicely defined, so let's use them
 	// on other platforms too
-	enum KeySyms {
+	enum KeySym {
 		AK_UNKNOWN = -1,
 		AK_NONE = 0,
 	
@@ -242,6 +242,8 @@ namespace April
 #define AK_5 April::AK_5
 #define AK_6 April::AK_6
 #define AK_7 April::AK_7
+#define AK_8 April::AK_8
+#define AK_9 April::AK_9
 #define AK_ESCAPE April::AK_ESCAPE
 //#define AK_ April::AK_
 

@@ -84,7 +84,7 @@ namespace April
 		return mUpdateCallback(time_increase);
 	}
 	
-	void Window::handleKeyEvent(KeyEventType type, KeySyms keycode, unsigned int unicode)
+	void Window::handleKeyEvent(KeyEventType type, KeySym keycode, unsigned int unicode)
 	{
 		if(keycode == AK_UNKNOWN)
 		{
