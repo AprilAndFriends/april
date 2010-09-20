@@ -28,7 +28,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include "ImageSource.h"
 #include "Window.h"
 
-April::RenderSystem* rendersys __attribute__((deprecated));
+April::RenderSystem* rendersys DEPRECATED_ATTRIBUTE;
 
 namespace April
 {

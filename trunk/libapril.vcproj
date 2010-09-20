@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../win32/include;../include;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
+				AdditionalIncludeDirectories="windowsystems/Win32;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
 				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;USE_IL;_WIN32;_CRT_SECURE_NO_WARNINGS;_OPENGL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -115,7 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../win32/include;../include;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
+				AdditionalIncludeDirectories="windowsystems/Win32;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
 				PreprocessorDefinitions="APRIL_EXPORTS;USE_IL;_WIN32"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -185,7 +185,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
+				AdditionalIncludeDirectories="windowsystems/Win32;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
 				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;USE_IL;_WIN32;_CRT_SECURE_NO_WARNINGS;_DIRECTX9"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -260,7 +260,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../win32/include;../include;include/april;rendersystems/OpenGL;include;../hltypes/include;;../gtypes/include;rendersystems/DirectX9"
+				AdditionalIncludeDirectories="windowsystems/Win32;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
 				PreprocessorDefinitions="APRIL_EXPORTS;USE_IL;_WIN32;_DIRECTX9"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -335,7 +335,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\WinTimer.cpp"
+				RelativePath=".\src\TimerWin.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\windowsystems\Win32\Win32Window.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Window.cpp"
 				>
 			</File>
 		</Filter>
@@ -382,6 +390,14 @@
 			</File>
 			<File
 				RelativePath=".\include\april\TimerWin.h"
+				>
+			</File>
+			<File
+				RelativePath=".\windowsystems\Win32\Win32Window.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\april\Window.h"
 				>
 			</File>
 		</Filter>

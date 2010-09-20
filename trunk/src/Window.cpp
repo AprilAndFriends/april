@@ -17,7 +17,9 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #endif
 
 #if !defined(__APPLE__) || defined(__APPLE__) && defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
-	#include "GLUTWindow.h"
+	#ifdef HAVE_GLUT
+		#include "GLUTWindow.h"
+	#endif
 	#ifdef HAVE_SDL
 		#include "SDLWindow.h"
 	#endif
@@ -157,15 +159,15 @@ namespace April
 			return new Win32Window(w,h,fullscreen,title);
 		}
 	#endif
+	#ifdef HAVE_GLUT
 		return new GLUTWindow(w,h,fullscreen,title);
-		
+	#endif
 		
 #elif defined(TARGET_OS_IPHONE)
 		// iOS
 		return new iOSWindow(w,h,fullscreen,title);
 #endif
 	}
-	
 	
 	
 	gtypes::Vector2 getDesktopResolution()
