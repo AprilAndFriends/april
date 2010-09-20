@@ -126,7 +126,7 @@ namespace April
 			return 0;
 		}
 		
-		for (Texture** it=mDynamicLinks.iter();it;it=mDynamicLinks.next())
+		foreach (Texture*, it, mDynamicLinks)
 			((GLTexture*)(*it))->load();
 
 		return 1;
