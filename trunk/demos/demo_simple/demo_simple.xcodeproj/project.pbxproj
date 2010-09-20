@@ -130,7 +130,7 @@
 		7F42FB3311EB34D600B1C1DF /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 7F42FB3611EB34D600B1C1DF /* Build configuration list for PBXProject "demo_simple" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -251,6 +251,7 @@
 		7FF495FA12476AC900A22D50 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ADDITIONAL_SDKS = "$(USER_LIBRARY_DIR)/SDKs/hltypesSDK/$(PLATFORM_NAME).sdk $(USER_LIBRARY_DIR)/SDKs/aprilSDK/$(PLATFORM_NAME).sdk $(USER_LIBRARY_DIR)/SDKs/gtypesSDK/$(PLATFORM_NAME).sdk";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
@@ -275,6 +276,7 @@
 		7FF495FB12476AC900A22D50 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ADDITIONAL_SDKS = "$(USER_LIBRARY_DIR)/SDKs/hltypesSDK/$(PLATFORM_NAME).sdk $(USER_LIBRARY_DIR)/SDKs/aprilSDK/$(PLATFORM_NAME).sdk $(USER_LIBRARY_DIR)/SDKs/gtypesSDK/$(PLATFORM_NAME).sdk";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;

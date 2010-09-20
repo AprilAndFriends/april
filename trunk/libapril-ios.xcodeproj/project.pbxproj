@@ -29,6 +29,8 @@
 		7FF4960A12476B9800A22D50 /* iOSWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF4960812476B9800A22D50 /* iOSWindow.mm */; };
 		7FF4961712476BED00A22D50 /* EAGLView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF4961512476BED00A22D50 /* EAGLView.h */; };
 		7FF4961812476BED00A22D50 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF4961612476BED00A22D50 /* EAGLView.mm */; };
+		7FF4970012478C9100A22D50 /* AprilUIKitDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF496FE12478C9100A22D50 /* AprilUIKitDelegate.h */; };
+		7FF4970112478C9100A22D50 /* AprilUIKitDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FF496FF12478C9100A22D50 /* AprilUIKitDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +64,8 @@
 		7FF4960812476B9800A22D50 /* iOSWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = iOSWindow.mm; sourceTree = "<group>"; };
 		7FF4961512476BED00A22D50 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
 		7FF4961612476BED00A22D50 /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EAGLView.mm; sourceTree = "<group>"; };
+		7FF496FE12478C9100A22D50 /* AprilUIKitDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AprilUIKitDelegate.h; sourceTree = "<group>"; };
+		7FF496FF12478C9100A22D50 /* AprilUIKitDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AprilUIKitDelegate.m; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -146,6 +150,8 @@
 				7FF4961612476BED00A22D50 /* EAGLView.mm */,
 				7FF4960712476B9800A22D50 /* iOSWindow.h */,
 				7FF4960812476B9800A22D50 /* iOSWindow.mm */,
+				7FF496FE12478C9100A22D50 /* AprilUIKitDelegate.h */,
+				7FF496FF12478C9100A22D50 /* AprilUIKitDelegate.m */,
 			);
 			name = iOS;
 			path = windowsystems/iOS;
@@ -232,6 +238,7 @@
 				7FA1AAE8124229F7004689AE /* Timer.h in Headers */,
 				7FF4960912476B9800A22D50 /* iOSWindow.h in Headers */,
 				7FF4961712476BED00A22D50 /* EAGLView.h in Headers */,
+				7FF4970012478C9100A22D50 /* AprilUIKitDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,6 +252,8 @@
 				7F33B27F120FEDE2004B5E89 /* Headers */,
 				7F33B280120FEDE2004B5E89 /* Sources */,
 				7F33B281120FEDE2004B5E89 /* Frameworks */,
+				7FF498CC1247932F00A22D50 /* Add SDKSettings */,
+				7FF498CE1247934F00A22D50 /* Deploy to HOME-Library-SDKs */,
 			);
 			buildRules = (
 			);
@@ -280,6 +289,37 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7FF498CC1247932F00A22D50 /* Add SDKSettings */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Add SDKSettings";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#echo IN:     $SRCROOT/iOS/${PLATFORM_NAME}.sdk/SDKSettings.plist\n#echo OUT:    $DSTROOT/SDKSettings.plist\n\nsed -e \"s/%PROJECT%/$PROJECT/g\" \\\n    -e \"s/%VERS%/$VERS/g\" \\\n    -e \"s/%IPHONE_SDK%/$IPHONE_SDK/g\" \\\n    $SRCROOT/iOS/${PLATFORM_NAME}.sdk/SDKSettings.plist > $DSTROOT/SDKSettings.plist || exit 1    \n";
+		};
+		7FF498CE1247934F00A22D50 /* Deploy to HOME-Library-SDKs */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Deploy to HOME-Library-SDKs";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\nrm -rf \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/${PLATFORM_NAME}.sdk\"\n\necho \"Deploying to ${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\n\ncp -R \"${CONFIGURATION_BUILD_DIR}/${PRODUCT_NAME}SDK/${PLATFORM_NAME}.sdk\" \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		7F33B280120FEDE2004B5E89 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -293,6 +333,7 @@
 				7FF494E31247603F00A22D50 /* main_ios.m in Sources */,
 				7FF4960A12476B9800A22D50 /* iOSWindow.mm in Sources */,
 				7FF4961812476BED00A22D50 /* EAGLView.mm in Sources */,
+				7FF4970112478C9100A22D50 /* AprilUIKitDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,10 +381,13 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = NO;
+				DSTROOT = "$(CONFIGURATION_BUILD_DIR)/$(PRODUCT_NAME)SDK/$(PLATFORM_NAME).sdk";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				PREBINDING = NO;
 				PRODUCT_NAME = april;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -352,9 +396,12 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "$(CONFIGURATION_BUILD_DIR)/$(PRODUCT_NAME)SDK/$(PLATFORM_NAME).sdk";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				PREBINDING = NO;
 				PRODUCT_NAME = april;
+				SKIP_INSTALL = NO;
 				ZERO_LINK = NO;
 			};
 			name = Release;
