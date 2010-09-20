@@ -17,7 +17,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 
 namespace April
 {
-	class Win32Window : public Window
+	class AprilExport Win32Window : public Window
 	{
 	private:
 		

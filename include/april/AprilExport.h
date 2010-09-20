@@ -27,7 +27,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 		#endif
 	#endif
 	#ifndef DEPRECATED_ATTRIBUTE
-		#ifdef _MSCVER
+		#ifdef _MSC_VER
 			#define DEPRECATED_ATTRIBUTE
 		#else
 			#define DEPRECATED_ATTRIBUTE __attribute__((deprecated))

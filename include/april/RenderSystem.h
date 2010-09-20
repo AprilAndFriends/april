@@ -309,7 +309,6 @@ namespace April
 
 	};
 
-	AprilFnExport gvec2 getDesktopResolution();
 	AprilFnExport void setLogFunction(void (*fnptr)(chstr));
 	AprilFnExport void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title);
 	AprilFnExport void destroy();

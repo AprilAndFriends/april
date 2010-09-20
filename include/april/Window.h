@@ -98,8 +98,7 @@ namespace April
 	};
 	
 	Window* createAprilWindow(chstr window_system_name, int w, int h, bool fullscreen, chstr title);
-	gtypes::Vector2 getDesktopResolution();
-
+	AprilFnExport gtypes::Vector2 getDesktopResolution();
 }
 
 
