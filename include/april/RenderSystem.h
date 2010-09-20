@@ -283,29 +283,29 @@ namespace April
 
 		virtual void beginFrame()=0;
 
-		void registerUpdateCallback(bool (*callback)(float)) __attribute__((deprecated));
+		void registerUpdateCallback(bool (*callback)(float)) DEPRECATED_ATTRIBUTE;
 		void registerMouseCallbacks(void (*mouse_dn)(float,float,int),
 									void (*mouse_up)(float,float,int),
-									void (*mouse_move)(float,float)) __attribute__((deprecated));
+									void (*mouse_move)(float,float)) DEPRECATED_ATTRIBUTE;
 		void registerKeyboardCallbacks(void (*key_dn)(unsigned int),
 									   void (*key_up)(unsigned int),
-									   void (*char_callback)(unsigned int)) __attribute__((deprecated));
-		void registerQuitCallback(bool (*quit_callback)(bool)) __attribute__((deprecated));
-		void registerWindowFocusCallback(void (*focus_callback)(bool)) __attribute__((deprecated));
+									   void (*char_callback)(unsigned int)) DEPRECATED_ATTRIBUTE;
+		void registerQuitCallback(bool (*quit_callback)(bool)) DEPRECATED_ATTRIBUTE;
+		void registerWindowFocusCallback(void (*focus_callback)(bool)) DEPRECATED_ATTRIBUTE;
 
 		void forceDynamicLoading(bool value) { mDynamicLoading=value; }
 		bool isDynamicLoadingForced() { return mDynamicLoading; }
 		
 		Window* getWindow() { return mWindow; }
 		
-		virtual void enterMainLoop() __attribute__((deprecated));
-		virtual void terminateMainLoop() __attribute__((deprecated));
-		virtual gtypes::Vector2 getCursorPos() __attribute__((deprecated));
-		virtual int getWindowWidth() __attribute__((deprecated));
-		virtual int getWindowHeight() __attribute__((deprecated));
-		virtual void setWindowTitle(chstr title) __attribute__((deprecated));
-		virtual void presentFrame(); // __attribute__((deprecated)); -- not deprecated because directx has its own way of presenting stuff.
-		virtual void showSystemCursor(bool visible) __attribute__((deprecated));
+		virtual void enterMainLoop() DEPRECATED_ATTRIBUTE;
+		virtual void terminateMainLoop() DEPRECATED_ATTRIBUTE;
+		virtual gtypes::Vector2 getCursorPos() DEPRECATED_ATTRIBUTE;
+		virtual int getWindowWidth() DEPRECATED_ATTRIBUTE;
+		virtual int getWindowHeight() DEPRECATED_ATTRIBUTE;
+		virtual void setWindowTitle(chstr title) DEPRECATED_ATTRIBUTE;
+		virtual void presentFrame(); // DEPRECATED_ATTRIBUTE; -- not deprecated because directx has its own way of presenting stuff.
+		virtual void showSystemCursor(bool visible) DEPRECATED_ATTRIBUTE;
 
 	};
 
@@ -318,6 +318,6 @@ namespace April
 	AprilFnExport extern April::RenderSystem* rendersys;
 }
 // old, now deprecated, global rendersys shortcut variable
-AprilFnExport extern April::RenderSystem* rendersys __attribute__((deprecated));
+AprilFnExport extern April::RenderSystem* rendersys DEPRECATED_ATTRIBUTE;
 
 #endif

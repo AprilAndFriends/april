@@ -26,6 +26,11 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 			#define AprilFnExport
 		#endif
 	#endif
-
-#endif
+	#ifndef DEPRECATED_ATTRIBUTE
+		#ifdef _MSCVER
+			#define DEPRECATED_ATTRIBUTE
+		#else
+			#define DEPRECATED_ATTRIBUTE __attribute__((deprecated))
+		#endif
+	#endif
 
