@@ -15,12 +15,10 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 
 
 #import <TargetConditionals.h>
-
-#if defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
 #import <Cocoa/Cocoa.h>
 #import <OpenGL/gl.h>
 #elif TARGET_OS_IPHONE
-//#import <UIKit/UIKit.h>
 #import <UIKit/UIImage.h>
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
@@ -166,13 +164,13 @@ namespace April
 	{
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
 		
-#if !defined(TARGET_OS_IPHONE)
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
 		
 		// TODO check for memory leak!
 		// according to:
 		// http://www.cocoabuilder.com/archive/cocoa/194282-imagekit-gc-nogo-or-better-how.html
 		// here might be a memory leak and we might wanna switch to
-		// CGImageSourceCreateFromData(). bug in cocoa present
+		// CGImageSourceCreateWithData(). bug in cocoa present
 		// as late as 2007!
 		
 		CGImageSourceRef imageSource = CGImageSourceCreateWithURL((CFURLRef)_getFileURLAsResource(filename), NULL);
@@ -233,7 +231,7 @@ namespace April
 			}
 		}
 		
-#if !defined(TARGET_OS_IPHONE)
+#if TARGET_OS_MAC
 		CGImageRelease(imageRef);
 #else
 		[uiimg release];
