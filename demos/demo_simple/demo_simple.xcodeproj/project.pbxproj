@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 45;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -22,6 +22,8 @@
 		7F42FB6011EB358900B1C1DF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		7F42FB6E11EB35D700B1C1DF /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = /Library/Frameworks/gtypes.framework; sourceTree = "<absolute>"; };
 		7F42FB7011EB35DC00B1C1DF /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = /Library/Frameworks/hltypes.framework; sourceTree = "<absolute>"; };
+		7FF495F712476AC800A22D50 /* demo_simple-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "demo_simple-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7FF495F912476AC800A22D50 /* demo_simple-ios-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "demo_simple-ios-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +35,13 @@
 				7F42FB6111EB358900B1C1DF /* Cocoa.framework in Frameworks */,
 				7F42FB6F11EB35D700B1C1DF /* gtypes.framework in Frameworks */,
 				7F42FB7111EB35DC00B1C1DF /* hltypes.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7FF495F512476AC800A22D50 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,6 +59,7 @@
 				7F42FB6011EB358900B1C1DF /* Cocoa.framework */,
 				7F42FB6E11EB35D700B1C1DF /* gtypes.framework */,
 				7F42FB7011EB35DC00B1C1DF /* hltypes.framework */,
+				7FF495F912476AC800A22D50 /* demo_simple-ios-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				7F42FB4B11EB352D00B1C1DF /* April Simple Demo.app */,
+				7FF495F712476AC800A22D50 /* demo_simple-ios.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -96,6 +107,23 @@
 			productReference = 7F42FB4B11EB352D00B1C1DF /* April Simple Demo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7FF495F612476AC800A22D50 /* demo_simple-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7FF495FC12476AC900A22D50 /* Build configuration list for PBXNativeTarget "demo_simple-ios" */;
+			buildPhases = (
+				7FF495F312476AC800A22D50 /* Resources */,
+				7FF495F412476AC800A22D50 /* Sources */,
+				7FF495F512476AC800A22D50 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "demo_simple-ios";
+			productName = "demo_simple-ios";
+			productReference = 7FF495F712476AC800A22D50 /* demo_simple-ios.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -103,19 +131,34 @@
 			isa = PBXProject;
 			buildConfigurationList = 7F42FB3611EB34D600B1C1DF /* Build configuration list for PBXProject "demo_simple" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 7F42FB3111EB34D600B1C1DF;
 			productRefGroup = 7F42FB4C11EB352D00B1C1DF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				7F42FB4A11EB352D00B1C1DF /* demo_simple */,
+				7FF495F612476AC800A22D50 /* demo_simple-ios */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7F42FB4711EB352D00B1C1DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7FF495F312476AC800A22D50 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -133,15 +176,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7FF495F412476AC800A22D50 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
 		7F42FB3411EB34D600B1C1DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ONLY_ACTIVE_ARCH_PRE_XCODE_3_1)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
-				ONLY_ACTIVE_ARCH_PRE_XCODE_3_1 = "$(NATIVE_ARCH)";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "April Simple Demo";
 			};
 			name = Debug;
@@ -149,8 +199,7 @@
 		7F42FB3511EB34D600B1C1DF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				PRODUCT_NAME = "April Simple Demo";
 			};
@@ -199,6 +248,55 @@
 			};
 			name = Release;
 		};
+		7FF495FA12476AC900A22D50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
+				INFOPLIST_FILE = "demo_simple-ios-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "demo_simple-ios";
+				SDKROOT = iphoneos4.1;
+			};
+			name = Debug;
+		};
+		7FF495FB12476AC900A22D50 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
+				INFOPLIST_FILE = "demo_simple-ios-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "demo_simple-ios";
+				SDKROOT = iphoneos4.1;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -216,6 +314,15 @@
 			buildConfigurations = (
 				7F42FB4F11EB352E00B1C1DF /* Debug */,
 				7F42FB5011EB352E00B1C1DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7FF495FC12476AC900A22D50 /* Build configuration list for PBXNativeTarget "demo_simple-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7FF495FA12476AC900A22D50 /* Debug */,
+				7FF495FB12476AC900A22D50 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
