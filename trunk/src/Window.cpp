@@ -167,6 +167,7 @@ namespace April
 		// iOS
 		return new iOSWindow(w,h,fullscreen,title);
 #endif
+		return 0;
 	}
 	
 	
