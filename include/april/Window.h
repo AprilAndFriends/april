@@ -91,7 +91,7 @@ namespace April
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
-		virtual void handleKeyEvent(KeyEventType type, KeySyms keycode, unsigned int unicode);
+		virtual void handleKeyEvent(KeyEventType type, KeySym keycode, unsigned int unicode);
 		virtual bool handleQuitRequest(bool can_reject);
 		virtual bool performUpdate(float time_increase);
 

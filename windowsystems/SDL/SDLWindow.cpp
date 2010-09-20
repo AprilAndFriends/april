@@ -189,7 +189,7 @@ namespace April
 	
 	void SDLWindow::_handleKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
 	{
-		April::KeySyms akeysym = AK_UNKNOWN;
+		April::KeySym akeysym = AK_UNKNOWN;
 	
 		#define _s2a(sdlk,ak) case sdlk: akeysym = ak; break; 
 		#define s2a(sdlk,ak) _s2a(SDLK_##sdlk, AK_##ak)
@@ -254,11 +254,11 @@ namespace April
 		
 		// number keys
 		if(keysym >= '0' && keysym <= '9')
-			akeysym = (KeySyms)keysym;
+			akeysym = (KeySym)keysym;
 		
 		// letters
 		if(keysym >= 'a' && keysym <= 'z') // sdl letter keys are ascii's small letters
-			akeysym = (KeySyms)(keysym-32); // april letter keys are ascii's capital letters
+			akeysym = (KeySym)(keysym-32); // april letter keys are ascii's capital letters
 		
 		//printf("keycode %d unicode %d (%c)\n", keycode, unicode, unicode);
 		Window::handleKeyEvent(type, akeysym, unicode);
