@@ -9,13 +9,32 @@
  \************************************************************************************/
 
 #import "AprilUIKitDelegate.h"
-
+#import "main.h"
 
 @implementation AprilUIKitDelegate
 
 @synthesize window;
 
+extern int(*april_RealMain)(int argc, char** argv);
+
+- (void)runMain:(id)sender
+{
+	// thanks to Kyle Poole for this trick
+	char *argv[] = {"april_ios"};
+	int status = april_RealMain (1, argv); //gArgc, gArgv);
+	status;
+}
+
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
-	NSLog(@"Launched april app");
+	
+	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
+	
+	// thanks to Kyle Poole for this trick
+	// also used in latest SDL
+	// quote:
+	// KP: using a selector gets around the "failed to launch application in time" if the startup code takes too long
+	// This is easy to see if running with Valgrind
+
+	[self performSelector:@selector(runMain:) withObject:nil afterDelay:0.2f];
 }
 @end

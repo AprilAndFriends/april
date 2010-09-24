@@ -15,10 +15,10 @@
 #import <OpenGLES/EAGLDrawable.h>
 
 #import "EAGLView.h"
+#import "iOSWindow.h"
 
 
 #define USE_DEPTH_BUFFER 0
-
 
 
 
@@ -40,7 +40,7 @@
 @synthesize context;
 @synthesize animationTimer;
 @synthesize animationInterval;
-
+@synthesize aprilWindow;
 
 // You must implement this method
 + (Class)layerClass {
@@ -71,10 +71,9 @@
 	//OnTapEnd(location.y,location.x);
 }
 
-//The GL view is stored in the nib file. When it's unarchived it's sent -initWithCoder:
-- (id)initWithCoder:(NSCoder*)coder {
-    
-    if ((self = [super initWithCoder:coder])) {
+- (id)initWithFrame:(CGRect)frame
+{
+    if ((self = [super initWithFrame:frame])) {
         // Get the layer
         CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
 	
@@ -105,13 +104,27 @@
     [EAGLContext setCurrentContext:context];
 	
 	//mydraw();
-    
+	((April::iOSWindow*)aprilWindow)->handleDisplayAndUpdate();
+	NSLog(@"drawn");
+	
 
-    
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
-    [context presentRenderbuffer:GL_RENDERBUFFER_OES];
+
+    [self swapBuffers];
 }
 
+
+-(void)_paintRect:(GLfloat[])vertices
+{
+	
+}
+
+
+- (void)swapBuffers
+{
+	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+    [context presentRenderbuffer:GL_RENDERBUFFER_OES];
+
+}
 
 - (void)layoutSubviews {
     [EAGLContext setCurrentContext:context];

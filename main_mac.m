@@ -218,3 +218,9 @@ int april_main (int(*real_main)(int argc, char** argv), int argc, char **argv)
     CustomApplicationMain (argc, argv);
     return 0;
 }
+
+#undef main
+int main(int argc, char** argv)
+{
+	return april_main(april_real_main, argc, argv);
+}
