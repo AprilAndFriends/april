@@ -26,9 +26,14 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include <GL/glu.h>
 #include <GL/glut.h>
 #else // __APPLE__
+#include <TargetConditionals.h>
+#if TARGET_OS_IPHONE
+#include <OpenGLES/ES1/gl.h>
+#else
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <GLUT/glut.h>
+#endif
 #endif // __APPLE__
 
 #include <gtypes/Vector2.h>
@@ -159,7 +164,7 @@ namespace April
 		mWindow = window;
 		
 		glViewport(0,0,window->getWindowWidth(),window->getWindowHeight());
-		glClearColor(0,0,0,1);
+		glClearColor(0, 0, 0, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -244,12 +249,14 @@ namespace April
 		GLbitfield mask=0;
 		if (color) mask |= GL_COLOR_BUFFER_BIT;
 		if (depth) mask |= GL_DEPTH_BUFFER_BIT;
+		
 		glClear(mask);
 		
 	}
 
 	void GLRenderSystem::_setModelviewMatrix(const gtypes::Matrix4& matrix)
 	{
+		glMatrixMode(GL_MODELVIEW);
 		glLoadMatrixf(matrix.mat);
 	}
 
@@ -298,8 +305,12 @@ namespace April
 		}
 		else	
 		{
+#if !(TARGET_OS_IPHONE)
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+#else
+#warning Compiling for iPhone, setTextureWrapping cannot use GL_CLAMP
+#endif
 		}
 		mTextureWrapping=wrap;
 	}
@@ -396,10 +407,12 @@ namespace April
 
 		// DevIL defaults
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+#if !(TARGET_OS_IPHONE)
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
+#endif
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
 		April::rendersys = ::rendersys = new GLRenderSystem(window);

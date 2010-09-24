@@ -8,54 +8,100 @@
  * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
  \************************************************************************************/
 
+#import <UIKit/UIKit.h>
+#import "EAGLView.h"
 #include "iOSWindow.h"
+#include "RenderSystem.h"
+
+static UIWindow *window;
+static EAGLView *glview;
 
 namespace April
 {
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
-        // stub
+		window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+		if(fullscreen)
+			[UIApplication sharedApplication].statusBarHidden = YES;
+		else
+			[UIApplication sharedApplication].statusBarHidden = NO;
+		
+		[window setBackgroundColor:[UIColor blueColor]];
+		[window makeKeyAndVisible];
+		
+		glview = [[[EAGLView alloc] initWithFrame:[window bounds]] autorelease];
+		glview.aprilWindow = this;
+		[window addSubview:glview];
+
+		
+		mRunning = true;
     }
     
-    void enterMainLoop()
+    void iOSWindow::enterMainLoop()
     {
-        
+		while (mRunning) 
+		{
+			// parse UIKit events
+			SInt32 result;
+			do {
+				result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE);
+			} while(result == kCFRunLoopRunHandledSource);
+		
+			handleDisplayAndUpdate();
+		}
     }
-    void terminateMainLoop()
+	
+	
+    void iOSWindow::terminateMainLoop()
     {
-        
+        mRunning = false;
     }
-    void showSystemCursor(bool visible)
+    void iOSWindow::showSystemCursor(bool visible)
     {
-        
+        // no effect on iOS
     }
-    bool isSystemCursorShown()
+    bool iOSWindow::isSystemCursorShown()
     {
-        
+        return false; // iOS never shows system cursor
     }
-    int getWindowWidth()
+    int iOSWindow::getWindowWidth()
     {
-        
+        return window.bounds.size.width;
     }
-    int getWindowHeight()
+    int iOSWindow::getWindowHeight()
     {
-        
+        return window.bounds.size.height;
     }
-    void setWindowTitle(chstr title)
+    void iOSWindow::setWindowTitle(chstr title)
     {
-        
+        // no effect on iOS
     }
-    gtypes::Vector2 getCursorPos()
+    gtypes::Vector2 iOSWindow::getCursorPos()
     {
-        
+        return gtypes::Vector2(0,0);
     }
-    void presentFrame()
+    void iOSWindow::presentFrame()
     {
-        
+        // dummy
+		
+//		[glview setNeedsDisplay];
+		[glview swapBuffers];
     }
-	void* getIDFromBackend()
+	void* iOSWindow::getIDFromBackend()
 	{
-		return NULL;
+		return window;
 	}
 
+	
+		//////////////
+	void iOSWindow::handleDisplayAndUpdate()
+	{
+		//static unsigned int x=SDL_GetTicks();
+		//float k=(SDL_GetTicks()-x)/1000.0f;
+		//x=SDL_GetTicks();
+		performUpdate(mTimer.diff(true));
+		rendersys->presentFrame();
+	}
+	
+	
 }

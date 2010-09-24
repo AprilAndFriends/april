@@ -12,17 +12,17 @@
 #define APRIL_IOSWINDOW_H_INCLUDED
 
 #include "Window.h"
-
+#include "Timer.h"
 namespace April
 {
 	class iOSWindow : public Window
 	{
 	private:
 		
-		void _handleDisplayAndUpdate();
-
 		bool mRunning;
 		bool mCursorVisible;
+		Timer mTimer;
+		
 	public:
 		
 		iOSWindow(int w, int h, bool fullscreen, chstr title);
@@ -39,6 +39,8 @@ namespace April
 		void presentFrame();
 		void* getIDFromBackend();
 		
+		
+		void handleDisplayAndUpdate();
 
 	};
 }
