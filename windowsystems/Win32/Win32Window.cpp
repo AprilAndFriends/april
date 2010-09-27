@@ -21,23 +21,12 @@ namespace April
 	static HWND hWnd;
 	static gtypes::Vector2 cursorpos;
 	static bool cursor_visible=1;
-	static bool window_active=1,wnd_fullscreen=0;
 	static April::Timer globalTimer;
 	static Win32Window* instance;
 	
 #ifdef _DEBUG
 	static char fpstitle[1024]=" [FPS:0]";
 #endif
-	
-	void doWindowEvents()
-	{
-		MSG msg;
-		if (PeekMessage(&msg,hWnd,0,0,PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-	}
 /**********************************************************************************************/
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -67,19 +56,19 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			break;
 		case WM_LBUTTONDOWN:
 			ws->triggerMouseDownEvent(AK_LBUTTON);
-			if (!wnd_fullscreen) SetCapture(hWnd);
+			if (!instance->isFullscreen()) SetCapture(hWnd);
 			break;
 		case WM_RBUTTONDOWN:
 			ws->triggerMouseDownEvent(AK_RBUTTON);
-			if (!wnd_fullscreen) SetCapture(hWnd);
+			if (!instance->isFullscreen()) SetCapture(hWnd);
 			break;
 		case WM_LBUTTONUP:
 			ws->triggerMouseUpEvent(AK_LBUTTON);
-			if (!wnd_fullscreen) ReleaseCapture();
+			if (!instance->isFullscreen()) ReleaseCapture();
 			break;
 		case WM_RBUTTONUP:
 			ws->triggerMouseUpEvent(AK_RBUTTON);
-			if (!wnd_fullscreen) ReleaseCapture();
+			if (!instance->isFullscreen()) ReleaseCapture();
 			break;
 		case WM_MOUSEMOVE:
 			ws->triggerMouseMoveEvent();break;
@@ -95,13 +84,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		case WM_ACTIVATE:
 			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
 			{
-				window_active=1;
+				instance->_setActive(1);
 				ws->triggerFocusCallback(true);
 				rendersys->logMessage("Window activated");
 			}
 			else
 			{
-				window_active=0;
+				instance->_setActive(0);
 				ws->triggerFocusCallback(false);
 				rendersys->logMessage("Window deactivated");
 			}
@@ -117,8 +106,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		
 		instance = this;
 		
-		mRunning=true;
-		wnd_fullscreen=fullscreen;
+		mRunning=mActive=true;
+		mFullscreen=fullscreen;
 		// WINDOW
 		mTitle=title;
 		WNDCLASSEX wc;
@@ -217,6 +206,20 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		return cursor_visible;
 	}
 	
+	void Win32Window::doEvents()
+	{
+		MSG msg;
+		if (PeekMessage(&msg,hWnd,0,0,PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
+	
+	bool Win32Window::isFullscreen()
+	{
+		return mFullscreen;
+	}
 
 	void Win32Window::presentFrame()
 	{
@@ -286,19 +289,19 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			GetCursorPos(&w32_cursorpos);
 			ScreenToClient(hWnd,&w32_cursorpos);
 			cursorpos.set(w32_cursorpos.x,w32_cursorpos.y);
-			doWindowEvents();
+			doEvents();
 			t=globalTimer.getTime();
 
 			if (t == time) continue; // don't redraw frames which won't change
 			k=(t-time)/1000.0f;
 			if (k > 0.5f) k=0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
 			time=t;
-			if (!window_active)
+			if (!mActive)
 			{
 				k=0;
 				for (int i=0;i<5;i++)
 				{
-					doWindowEvents();
+					doEvents();
 					Sleep(40);
 				}
 			}

@@ -88,6 +88,8 @@ namespace April
 		virtual gtypes::Vector2 getCursorPos()=0;
 		virtual void presentFrame()=0;
 		virtual void* getIDFromBackend()=0;
+		virtual bool isFullscreen()=0;
+		virtual void doEvents()=0;
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
