@@ -19,7 +19,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include "dx9Texture.h"
 #include <stdio.h>
 #include "Timer.h"
-#include "Window.h"
+#include "Win32Window.h"
 
 #define PLAIN_FVF D3DFVF_XYZ
 #define COLORED_FVF D3DFVF_XYZ | D3DFVF_DIFFUSE
@@ -386,7 +386,7 @@ namespace April
 			int i;
 			logMessage("Direct3D9 Device lost, attempting to restore...");
 			mBackBuffer->Release(); mBackBuffer=0;
-			while (mAppRunning)
+			while (((Win32Window*) mWindow)->isRunning())
 			{
 				for (i=0;i<10;i++)
 				{
@@ -397,6 +397,7 @@ namespace April
 				if (hr == D3D_OK) break;
 				else if (hr == D3DERR_DEVICENOTRESET)
 				{
+					logMessage("Resetting device...");
 					hr=d3dDevice->Reset(&d3dpp);
 					if (hr == D3D_OK) break;
 					else if (hr == D3DERR_DRIVERINTERNALERROR) throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
@@ -410,7 +411,7 @@ namespace April
 			_setProjectionMatrix(mProjectionMatrix);
 			configureDevice();
 			d3dDevice->GetRenderTarget(0,&mBackBuffer); // update backbuffer pointer
-			logMessage("Direct3D9 Device restored");
+				logMessage("Direct3D9 Device restored");
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)
 		{
