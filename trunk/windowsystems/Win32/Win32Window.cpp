@@ -121,7 +121,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
 		wc.lpszClassName = "april_win32_window";
-		wc.hIcon=(HICON) LoadImage(0,"game.ico",IMAGE_ICON,0,0,LR_LOADFROMFILE);
+		wc.hIcon=(HICON) LoadImage(hinst,MAKEINTRESOURCE(1),IMAGE_ICON,0,0,LR_DEFAULTCOLOR);
 		wc.hbrBackground=(HBRUSH)GetStockObject(BLACK_BRUSH);
 		
 		RegisterClassEx(&wc);
