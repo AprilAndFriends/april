@@ -22,7 +22,6 @@ namespace April
 
 	class DirectX9RenderSystem : public RenderSystem
 	{
-		bool mAppRunning;
 		bool mTexCoordsEnabled,mColorEnabled;
 		void _setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void _setProjectionMatrix(const gtypes::Matrix4& matrix);
