@@ -111,7 +111,7 @@ namespace April
 	
 	void GLUTWindow::doEvents()
 	{
-		printf("%s: stub!\n", __PRETTY_FUNCTION__);
+		rendersys->logMessage("%s: stub!\n", __PRETTY_FUNCTION__);
 	}
 	
 	
