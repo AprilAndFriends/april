@@ -36,6 +36,7 @@ namespace April
 	public:
 		
 		SDLWindow(int w, int h, bool fullscreen, chstr title);
+		~SDLWindow();
 		
 		// implementations
 		void enterMainLoop();
@@ -48,6 +49,7 @@ namespace April
 		gtypes::Vector2 getCursorPos();
 		void presentFrame();
 		void* getIDFromBackend();
+		void doEvents();
 		
 		
 		

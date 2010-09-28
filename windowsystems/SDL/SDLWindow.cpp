@@ -41,7 +41,21 @@ namespace April
 		SDL_GL_SetAttribute( SDL_GL_SWAP_CONTROL, 1 ); 
 		
 		// set up display with width w, height h, any bpp, opengl, and optionally fullscreen
+		mFullscreen = fullscreen;
 		mScreen = SDL_SetVideoMode(w, h, 0, SDL_OPENGL|(fullscreen ? SDL_FULLSCREEN : 0));
+		if(!mScreen)
+		{
+#ifdef __APPLE__
+#if !TARGET_OS_IPHONE
+			// TODO elsewhere, add support for platform-specific msgbox code
+			//NSRunAlertPanel(@"Could not open display", @"Game could not set the screen resolution. Perhaps resetting game configuration will help.", @"Ok", nil, nil);
+			
+			
+#endif
+			rendersys->logMessage("Requested display mode could not be provided");
+			exit(0);
+#endif
+		}
 		
 		/*
 		 #ifdef _WIN32
@@ -68,7 +82,6 @@ namespace April
 		SDL_EnableUNICODE(1);
 		
 		while (mRunning) {
-			SDL_Event event;
 			
 			//check if we should quit...
 			if(gAprilShouldInvokeQuitCallback)
@@ -80,60 +93,72 @@ namespace April
 			}
 			
 			//first process sdl events
-			while (SDL_PollEvent(&event)) {
-				switch (event.type) {
-					case SDL_VIDEORESIZE:
-						// do a SetVideoMode here, if we really want this
-						//g_game->doResize(event.resize.w, event.resize.h);
-						break;
-						
-					case SDL_QUIT:
-						if(handleQuitRequest(true))
-						{
-							mRunning = false;
-						}
-						break;
-						
-					case SDL_KEYUP:
-					case SDL_KEYDOWN:
-						
-#ifdef __APPLE__
-						// on mac os, we need to handle command+q
-						if(SDL_GetModState() & KMOD_META && (tolower(event.key.keysym.unicode) == 'q' || event.key.keysym.sym == SDLK_q))
-						{
-							if(handleQuitRequest(true))
-							{
-								mRunning = false;
-							}
-						}
-						else
-#endif
-						{
-							_handleKeyEvent(event.type == SDL_KEYUP ? AKEYEVT_UP : AKEYEVT_DOWN,
-											event.key.keysym.sym, 
-											event.key.keysym.unicode);
-						}
-
-						break;
-						
-					case SDL_MOUSEBUTTONUP:
-					case SDL_MOUSEBUTTONDOWN:
-					case SDL_MOUSEMOTION:
-						_handleMouseEvent(event);
-						break;
-						
-						
-					default:
-						break;
-				}
-			}
-			
+			doEvents();
 			
 			_handleDisplayAndUpdate();
 			
 			
 		}
 				
+	}
+	
+	void SDLWindow::doEvents()
+	{
+		SDL_Event event;
+
+		while (SDL_PollEvent(&event)) {
+			switch (event.type) {
+				case SDL_VIDEORESIZE:
+					// do a SetVideoMode here, if we really want this
+					//g_game->doResize(event.resize.w, event.resize.h);
+					break;
+					
+				case SDL_QUIT:
+					if(handleQuitRequest(true))
+					{
+						mRunning = false;
+					}
+					break;
+					
+				case SDL_KEYUP:
+				case SDL_KEYDOWN:
+					
+#ifdef __APPLE__
+					// on mac os, we need to handle command+q
+					if(SDL_GetModState() & KMOD_META && (tolower(event.key.keysym.unicode) == 'q' || event.key.keysym.sym == SDLK_q))
+					{
+						if(handleQuitRequest(true))
+						{
+							mRunning = false;
+						}
+					}
+					else
+#endif
+					{
+						_handleKeyEvent(event.type == SDL_KEYUP ? AKEYEVT_UP : AKEYEVT_DOWN,
+										event.key.keysym.sym, 
+										event.key.keysym.unicode);
+					}
+					
+					break;
+					
+				case SDL_MOUSEBUTTONUP:
+				case SDL_MOUSEBUTTONDOWN:
+				case SDL_MOUSEMOTION:
+					_handleMouseEvent(event);
+					break;
+					
+					
+				default:
+					break;
+			}
+		}
+		
+	}
+	
+	SDLWindow::~SDLWindow()
+	{
+		SDL_Quit();
 	}
 	
 	void SDLWindow::terminateMainLoop()

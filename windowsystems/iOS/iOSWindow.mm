@@ -25,6 +25,7 @@ namespace April
 			[UIApplication sharedApplication].statusBarHidden = YES;
 		else
 			[UIApplication sharedApplication].statusBarHidden = NO;
+		mFullscreen = fullscreen;
 		
 		[window setBackgroundColor:[UIColor blueColor]];
 		[window makeKeyAndVisible];

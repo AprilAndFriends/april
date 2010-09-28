@@ -47,9 +47,9 @@ namespace April
         
     }
     
-    float Timer::diff(bool update)
+    float Timer::diff(bool doUpdate)
     {
-        if(update)
+        if(doUpdate)
         {
             this->update();
             return mDt;

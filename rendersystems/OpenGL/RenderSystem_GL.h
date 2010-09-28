@@ -12,7 +12,6 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #define RENDERSYSTEM_GL_H
 
 #include "RenderSystem.h"
-#include "Timer.h"
 
 #ifdef __APPLE__
 #include <TargetConditionals.h>
