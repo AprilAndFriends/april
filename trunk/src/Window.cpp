@@ -80,6 +80,10 @@ namespace April
 		mFocusCallback = focus_callback;
 	}
 	
+	bool Window::isFullscreen()
+	{
+		return mFullscreen;
+	}
 	
 	bool Window::performUpdate(float time_increase)
 	{

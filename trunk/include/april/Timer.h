@@ -41,7 +41,7 @@ namespace April
         ~Timer();
         
         float getTime();
-        float diff(bool update = true);
+        float diff(bool doUpdate = true);
         
         void update();
     };

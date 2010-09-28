@@ -216,10 +216,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		}
 	}
 	
-	bool Win32Window::isFullscreen()
-	{
-		return mFullscreen;
-	}
 
 	void Win32Window::presentFrame()
 	{

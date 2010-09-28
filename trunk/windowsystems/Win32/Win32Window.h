@@ -27,7 +27,7 @@ namespace April
 		//SDL_Surface *mScreen;
 		bool mRunning;
 		//bool mCursorVisible;
-		bool mActive,mFullscreen;
+		bool mActive;
 	public:
 		
 		Win32Window(int w, int h, bool fullscreen, chstr title);
@@ -47,7 +47,6 @@ namespace April
 		gtypes::Vector2 getCursorPos();
 		void presentFrame();
 		void* getIDFromBackend();
-		bool isFullscreen();
 		void doEvents();
 		
 		// event handlers

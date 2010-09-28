@@ -24,6 +24,7 @@ namespace April
 	protected:		
 		RenderSystem* mRenderSystem;
 		hstr mTitle;
+		bool mFullscreen;
 
 		bool (*mUpdateCallback)(float);
 		void (*mMouseDownCallback)(float,float,int);
@@ -77,7 +78,7 @@ namespace April
 		void setQuitCallback(bool (*quit_callback)(bool can_reject));
 		void setWindowFocusCallback(void (*focus_callback)(bool));
 		
-		// misc virtuals and pure virtuals
+		// misc pure virtuals
 		virtual void enterMainLoop()=0;
 		virtual void terminateMainLoop()=0;
 		virtual void showSystemCursor(bool b)=0;
@@ -88,8 +89,11 @@ namespace April
 		virtual gtypes::Vector2 getCursorPos()=0;
 		virtual void presentFrame()=0;
 		virtual void* getIDFromBackend()=0;
-		virtual bool isFullscreen()=0;
 		virtual void doEvents()=0;
+		
+		// misc virtuals
+		virtual bool isFullscreen();
+
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);

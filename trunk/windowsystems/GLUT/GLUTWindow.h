@@ -45,6 +45,7 @@ namespace April
 		gtypes::Vector2 getCursorPos();
 		void presentFrame();
 		void* getIDFromBackend();
+		void doEvents();
 		
 		// override functions
 		void handleKeyEvent(Window::KeyEventType type, unsigned int keycode, unsigned int unicode);

@@ -64,6 +64,7 @@ namespace April
 		SetFocus(hWnd);
 #endif
 		mTitle = title;
+		mFullscreen = fullscreen;
 		if (fullscreen) glutFullScreen();
 		
 		glutDisplayFunc(		_handleDisplayAndUpdate);
@@ -95,6 +96,9 @@ namespace April
 	
 	void GLUTWindow::terminateMainLoop()
 	{
+#ifdef FREEGLUT_VERSION_2_0
+		glutLeaveMainLoop();
+#endif
 		destroy(); 
 		exit(0);
 	}
@@ -103,6 +107,11 @@ namespace April
 	void GLUTWindow::presentFrame()
 	{
 		glutSwapBuffers();
+	}
+	
+	void GLUTWindow::doEvents()
+	{
+		printf("%s: stub!\n", __PRETTY_FUNCTION__);
 	}
 	
 	
