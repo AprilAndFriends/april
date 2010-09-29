@@ -56,15 +56,15 @@ namespace April
         
     public:
 		StaticMesh();
-        StaticMesh(hstr meshPath);
+        StaticMesh(chstr meshPath);
 		~StaticMesh();
 
 		//void recalculateNormals();
         //void setTexture(April::Texture *texture);
-        void setMeshName(hstr meshName);
+        void setMeshName(chstr meshName);
         
         void convertToVertexArray();
-        void loadFromFile(hstr meshPath);
+        void loadFromFile(chstr meshPath);
         
         void draw(April::RenderOp renderOp);
         

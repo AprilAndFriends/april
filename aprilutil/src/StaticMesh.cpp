@@ -20,7 +20,7 @@ namespace April
 
     }
     
-    StaticMesh::StaticMesh(hstr meshPath)
+    StaticMesh::StaticMesh(chstr meshPath)
     {
         loadFromFile(meshPath);
         convertToVertexArray();
@@ -61,7 +61,7 @@ namespace April
         mNumVertices = 3*mPolygons.size();
     }
     
-    void StaticMesh::loadFromFile(hstr meshPath)
+    void StaticMesh::loadFromFile(chstr meshPath)
     {
         FILE *fp;
         char buffer[256];
@@ -206,7 +206,7 @@ namespace April
         }
     }
     
-    void StaticMesh::setMeshName(hstr meshName)
+    void StaticMesh::setMeshName(chstr meshName)
     {
         mMeshName = meshName;
     }
