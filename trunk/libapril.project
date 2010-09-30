@@ -203,6 +203,7 @@
         <Library Value="libglut32"/>
         <Library Value="libDevIL"/>
         <Library Value="libwinmm"/>
+        <Library Value="gdi32"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)_d.dll" IntermediateDirectory="bin/$(ConfigurationName)" Command="" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
