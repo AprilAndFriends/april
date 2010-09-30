@@ -13,7 +13,6 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include <TargetConditionals.h>
 #endif
 
-
 #if TARGET_OS_IPHONE
 #include <OpenGLES/ES1/gl.h>
 #endif

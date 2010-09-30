@@ -257,13 +257,24 @@ namespace April
 	void GLRenderSystem::_setModelviewMatrix(const gtypes::Matrix4& matrix)
 	{
 		glMatrixMode(GL_MODELVIEW);
+		
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+		glLoadIdentity();
+		glMultMatrixf(matrix.mat);
+#else
 		glLoadMatrixf(matrix.mat);
+#endif
 	}
 
 	void GLRenderSystem::_setProjectionMatrix(const gtypes::Matrix4& matrix)
 	{
 		glMatrixMode(GL_PROJECTION);
+#if defined(__APPLE__) && TARGET_OS_IPHONE
+		glLoadIdentity();
+		glMultMatrixf(matrix.mat);
+#else
 		glLoadMatrixf(matrix.mat);
+#endif
 		glMatrixMode(GL_MODELVIEW);
 	}
 

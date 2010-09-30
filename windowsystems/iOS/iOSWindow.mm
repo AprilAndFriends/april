@@ -43,11 +43,7 @@ namespace April
 		while (mRunning) 
 		{
 			// parse UIKit events
-			SInt32 result;
-			do {
-				result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE);
-			} while(result == kCFRunLoopRunHandledSource);
-		
+			doEvents();
 			handleDisplayAndUpdate();
 		}
     }
@@ -91,6 +87,13 @@ namespace April
 	void* iOSWindow::getIDFromBackend()
 	{
 		return window;
+	}
+	void iOSWindow::doEvents()
+	{
+		SInt32 result;
+		do {
+			result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE);
+		} while(result == kCFRunLoopRunHandledSource);
 	}
 
 	

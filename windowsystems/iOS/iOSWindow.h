@@ -38,6 +38,7 @@ namespace April
 		gtypes::Vector2 getCursorPos();
 		void presentFrame();
 		void* getIDFromBackend();
+		void doEvents();
 		
 		
 		void handleDisplayAndUpdate();

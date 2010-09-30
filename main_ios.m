@@ -15,11 +15,6 @@
 
 int(*april_RealMain)(int argc, char** argv);
 
-#undef main
-int main(int argc, char** argv)
-{
-	return april_main(april_real_main, argc, argv);
-}
 
 int april_main (int(*real_main)(int argc, char** argv), int argc, char **argv)
 {
