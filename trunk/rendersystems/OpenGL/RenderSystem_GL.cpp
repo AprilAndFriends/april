@@ -257,24 +257,13 @@ namespace April
 	void GLRenderSystem::_setModelviewMatrix(const gtypes::Matrix4& matrix)
 	{
 		glMatrixMode(GL_MODELVIEW);
-		
-#if defined(__APPLE__) && TARGET_OS_IPHONE
-		glLoadIdentity();
-		glMultMatrixf(matrix.mat);
-#else
 		glLoadMatrixf(matrix.mat);
-#endif
 	}
 
 	void GLRenderSystem::_setProjectionMatrix(const gtypes::Matrix4& matrix)
 	{
 		glMatrixMode(GL_PROJECTION);
-#if defined(__APPLE__) && TARGET_OS_IPHONE
-		glLoadIdentity();
-		glMultMatrixf(matrix.mat);
-#else
 		glLoadMatrixf(matrix.mat);
-#endif
 		glMatrixMode(GL_MODELVIEW);
 	}
 
@@ -341,8 +330,10 @@ namespace April
 	void GLRenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)
 	{
 		if (!mTexCoordsEnabled) { glEnableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=true; }
-		if (!mColorEnabled) { mColorEnabled=true; glDisableClientState(GL_COLOR_ARRAY); }    
+		if (!mColorEnabled) { mColorEnabled=true; glDisableClientState(GL_COLOR_ARRAY); }   
+#if !(TARGET_OS_IPHONE)
 		glColor4f(r,g,b,a*mAlphaMultiplier);
+#endif
 		
 		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), (char*) v+3*sizeof(float));
@@ -366,23 +357,28 @@ namespace April
 		if (mTexCoordsEnabled) { glBindTexture(GL_TEXTURE_2D,0); glDisableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=false; }
 		if (!mColorEnabled) { mColorEnabled=true; glDisableClientState(GL_COLOR_ARRAY);}
 
+#if !(TARGET_OS_IPHONE)
 		glColor4f(r,g,b,a*mAlphaMultiplier);
+#endif
 		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 	
-
 	void GLRenderSystem::render(RenderOp renderOp,ColoredVertex* v,int nVertices)
 	{
 		if (mTexCoordsEnabled) { glBindTexture(GL_TEXTURE_2D,0); glDisableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=false; }
 		if (!mColorEnabled) { mColorEnabled=true; }
 		glEnableClientState(GL_COLOR_ARRAY);
 		glVertexPointer(3, GL_FLOAT, sizeof(ColoredVertex), v);
+		
+#if !(TARGET_OS_IPHONE)
 		glColor4f(1,1,1,mAlphaMultiplier);
+#endif
 		glColorPointer(4, GL_UNSIGNED_BYTE,sizeof(ColoredVertex), (char*) v+3*sizeof(float));
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
+		
 	}
 	
 	void GLRenderSystem::render(RenderOp renderOp,ColoredTexturedVertex* v,int nVertices)

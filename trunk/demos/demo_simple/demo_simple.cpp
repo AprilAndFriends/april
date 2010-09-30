@@ -28,7 +28,7 @@ void paintRect(GLfloat vertices[])
 	
 	
 	
-	float r=1,g=1,b=1,a=0.4;
+	float r=0.5,g=1,b=1,a=0.4;
 	
 	GLfloat colors[] = {
 		r,g,b,a,
@@ -53,7 +53,7 @@ void paintRect(GLfloat vertices[])
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	
 	glDisable(GL_BLEND);
-	
+	glDisableClientState(GL_COLOR_ARRAY);
 	
 	glEnable(GL_TEXTURE_2D);
 	
@@ -65,12 +65,16 @@ bool render(float time_increase)
 {
 	// always pick up the window width and height
 	// iOS has different size than what is requested
-	int w = rendersys->getWindowWidth(), h = rendersys->getWindowHeight();
+	float w = rendersys->getWindowWidth(), h = rendersys->getWindowHeight();
 		
 	rendersys->setOrthoProjection(w,h);
 	rendersys->setTexture(tex);
 	
 	rendersys->clear();
+	
+	static float off=0;
+	off+=time_increase;
+
 	
 	April::TexturedVertex v[4];
 	
@@ -79,25 +83,22 @@ bool render(float time_increase)
 	v[2].x=0;   v[2].y=h;   v[2].z=0; v[2].u=0; v[2].v=1;
 	v[3].x=w;   v[3].y=h;   v[3].z=0; v[3].u=1; v[3].v=1;
 	
+	glEnable(GL_TEXTURE_2D);
 	rendersys->render(April::TriangleStrip,v,4);
-	
-//	April::PlainVertex pv[3];
-//	pv[0].set(-1,0,0); pv[1].set(0,1,0); pv[2].set(1,0,0);
-//	rendersys->render(April::TriangleList,pv,3);
-	
 	
 	
 #if TARGET_OS_IPHONE
 	// testing painting on iOS
+	w=100; h=100;
 	GLfloat vertices[] = {	
-		0, 0, 0,
-		0, h, 0,
-		w, 0, 0,
+		off+0, off+0, 0,
+		off+0, off+h, 0,
+		off+w, off+0, 0,
 		
-		0, h, 0,
-		w, h, 0,
-		w, 0, 0};
-	//paintRect(vertices);
+		off+0, off+h, 0,
+		off+w, off+h, 0,
+		off+w, off+0, 0};
+	paintRect(vertices);
 	
 #endif
 	
