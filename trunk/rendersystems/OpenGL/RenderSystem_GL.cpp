@@ -61,7 +61,8 @@ namespace April
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, img->bpp, img->w,img->h, 0, img->format, GL_UNSIGNED_BYTE,img->data);
+		// TODO check why the third argument was img->bpp
+		glTexImage2D(GL_TEXTURE_2D, 0, img->format, img->w,img->h, 0, img->format, GL_UNSIGNED_BYTE,img->data);
 		delete img;
 
 
