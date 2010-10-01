@@ -263,10 +263,14 @@ namespace April
 	void GLRenderSystem::_setProjectionMatrix(const gtypes::Matrix4& matrix)
 	{
 		glMatrixMode(GL_PROJECTION);
+#if TARGET_OS_IPHONE // TODO dont rotate if display is in portrait mode
+		glLoadIdentity();
+		glRotatef(90, 0, 0, -1);
+		glMultMatrixf(matrix.mat);
+#else
 		glLoadMatrixf(matrix.mat);
-#if TARGET_OS_IPHONE // FIXME should expose ability to disable this rotation
-		glRotatef(90, 0, 0, 1);
 #endif
+		
 		glMatrixMode(GL_MODELVIEW);
 	}
 

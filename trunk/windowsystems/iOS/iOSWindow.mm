@@ -63,11 +63,13 @@ namespace April
     }
     int iOSWindow::getWindowWidth()
     {
-        return window.bounds.size.width;
+		// TODO dont swap width and height in case display is in portrait mode
+        return window.bounds.size.height;
     }
     int iOSWindow::getWindowHeight()
     {
-        return window.bounds.size.height;
+		// TODO dont swap width and height in case display is in portrait mode
+        return window.bounds.size.width;
     }
     void iOSWindow::setWindowTitle(chstr title)
     {
