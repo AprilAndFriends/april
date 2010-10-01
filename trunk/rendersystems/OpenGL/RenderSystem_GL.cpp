@@ -264,6 +264,9 @@ namespace April
 	{
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(matrix.mat);
+#if TARGET_OS_IPHONE // FIXME should expose ability to disable this rotation
+		glRotatef(90, 0, 0, 1);
+#endif
 		glMatrixMode(GL_MODELVIEW);
 	}
 
