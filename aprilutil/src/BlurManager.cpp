@@ -48,7 +48,7 @@ namespace April
 	{
 		if (mEnable)
 		{
-			int i,j;
+			int i;
 			float inc;
 			April::Texture* temp;
 			April::ColoredTexturedVertex av[6*4];
