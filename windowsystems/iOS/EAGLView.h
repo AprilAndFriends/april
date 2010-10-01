@@ -48,5 +48,5 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 - (void)startAnimation;
 - (void)stopAnimation;
 - (void)drawView;
-
+- (void)swapBuffers;
 @end
