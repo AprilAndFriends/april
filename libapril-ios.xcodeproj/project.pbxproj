@@ -221,9 +221,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		7F33B282120FEDE2004B5E89 /* april-iOS */ = {
+		7F33B282120FEDE2004B5E89 /* libapril-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7F33B28F120FEE09004B5E89 /* Build configuration list for PBXNativeTarget "april-iOS" */;
+			buildConfigurationList = 7F33B28F120FEE09004B5E89 /* Build configuration list for PBXNativeTarget "libapril-iOS" */;
 			buildPhases = (
 				7F33B27F120FEDE2004B5E89 /* Headers */,
 				7F33B280120FEDE2004B5E89 /* Sources */,
@@ -235,7 +235,7 @@
 			);
 			dependencies = (
 			);
-			name = "april-iOS";
+			name = "libapril-iOS";
 			productName = april;
 			productReference = 7F33B283120FEDE2004B5E89 /* libapril.a */;
 			productType = "com.apple.product-type.library.static";
@@ -260,7 +260,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7F33B282120FEDE2004B5E89 /* april-iOS */,
+				7F33B282120FEDE2004B5E89 /* libapril-iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -272,9 +272,11 @@
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/iOS/$(PLATFORM_NAME).sdk/SDKSettings.plist",
 			);
 			name = "Add SDKSettings";
 			outputPaths = (
+				"$(DSTROOT)/SDKSettings.plist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -282,15 +284,17 @@
 		};
 		7FF498CE1247934F00A22D50 /* Deploy to HOME-Library-SDKs */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
+				"$(CONFIGURATION_BUILD_DIR)/$(PRODUCT_NAME)SDK/$(PLATFORM_NAME).sdk",
 			);
 			name = "Deploy to HOME-Library-SDKs";
 			outputPaths = (
+				"$(USER_LIBRARY_DIR)/SDKs/$(PRODUCT_NAME)SDK/",
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "mkdir -p \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\nrm -rf \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/${PLATFORM_NAME}.sdk\"\n\necho \"Deploying to ${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\n\ncp -R \"${CONFIGURATION_BUILD_DIR}/${PRODUCT_NAME}SDK/${PLATFORM_NAME}.sdk\" \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\n";
 		};
@@ -402,7 +406,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7F33B28F120FEE09004B5E89 /* Build configuration list for PBXNativeTarget "april-iOS" */ = {
+		7F33B28F120FEE09004B5E89 /* Build configuration list for PBXNativeTarget "libapril-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7F33B284120FEDE3004B5E89 /* Debug */,
