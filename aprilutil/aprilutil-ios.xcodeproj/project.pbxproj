@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		7FEAD2911255DCF900450392 /* BlurManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FEAD28F1255DCF900450392 /* BlurManager.cpp */; };
 		7FEAD2921255DCF900450392 /* StaticMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FEAD2901255DCF900450392 /* StaticMesh.cpp */; };
-		7FEAD2961255DD0300450392 /* AprilUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FEAD2931255DD0300450392 /* AprilUtilExport.h */; };
-		7FEAD2971255DD0300450392 /* BlurManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FEAD2941255DD0300450392 /* BlurManager.h */; };
-		7FEAD2981255DD0300450392 /* StaticMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FEAD2951255DD0300450392 /* StaticMesh.h */; };
+		7FEAD2961255DD0300450392 /* AprilUtilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FEAD2931255DD0300450392 /* AprilUtilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7FEAD2971255DD0300450392 /* BlurManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FEAD2941255DD0300450392 /* BlurManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7FEAD2981255DD0300450392 /* StaticMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FEAD2951255DD0300450392 /* StaticMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -106,6 +106,8 @@
 				D2AAC07A0554694100DB518D /* Headers */,
 				D2AAC07B0554694100DB518D /* Sources */,
 				D2AAC07C0554694100DB518D /* Frameworks */,
+				7FF23E491255E45A000C729A /* Add SDKSettings */,
+				7FF23E4B1255E46C000C729A /* Deploy to HOME-Library-SDKs */,
 			);
 			buildRules = (
 			);
@@ -140,6 +142,37 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7FF23E491255E45A000C729A /* Add SDKSettings */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Add SDKSettings";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#echo IN:     $SRCROOT/iOS/${PLATFORM_NAME}.sdk/SDKSettings.plist\n#echo OUT:    $DSTROOT/SDKSettings.plist\n\nsed -e \"s/%PROJECT%/$PROJECT/g\" \\\n    -e \"s/%VERS%/$VERS/g\" \\\n    -e \"s/%IPHONE_SDK%/$IPHONE_SDK/g\" \\\n    $SRCROOT/iOS/${PLATFORM_NAME}.sdk/SDKSettings.plist > $DSTROOT/SDKSettings.plist || exit 1    \n";
+		};
+		7FF23E4B1255E46C000C729A /* Deploy to HOME-Library-SDKs */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Deploy to HOME-Library-SDKs";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\nrm -rf \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/${PLATFORM_NAME}.sdk\"\n\necho \"Deploying to ${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\n\ncp -R \"${CONFIGURATION_BUILD_DIR}/${PRODUCT_NAME}SDK/${PLATFORM_NAME}.sdk\" \"${USER_LIBRARY_DIR}/SDKs/${PRODUCT_NAME}SDK/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D2AAC07B0554694100DB518D /* Sources */ = {
