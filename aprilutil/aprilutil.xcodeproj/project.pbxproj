@@ -12,6 +12,8 @@
 		7FE9C55511EDC6DF008EF582 /* BlurManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FE9C55411EDC6DF008EF582 /* BlurManager.cpp */; };
 		7FE9C55F11EDC71A008EF582 /* april.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FE9C55E11EDC71A008EF582 /* april.framework */; };
 		7FE9C56A11EDC72E008EF582 /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FE9C56911EDC72E008EF582 /* gtypes.framework */; };
+		7FEAD2A81255DD4900450392 /* StaticMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FEAD2A71255DD4900450392 /* StaticMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7FEAD2AA1255DD6000450392 /* StaticMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FEAD2A91255DD6000450392 /* StaticMesh.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +22,8 @@
 		7FE9C55411EDC6DF008EF582 /* BlurManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BlurManager.cpp; path = src/BlurManager.cpp; sourceTree = "<group>"; };
 		7FE9C55E11EDC71A008EF582 /* april.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = april.framework; path = Library/Frameworks/april.framework; sourceTree = SDKROOT; };
 		7FE9C56911EDC72E008EF582 /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = Library/Frameworks/gtypes.framework; sourceTree = SDKROOT; };
+		7FEAD2A71255DD4900450392 /* StaticMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StaticMesh.h; path = include/aprilutil/StaticMesh.h; sourceTree = "<group>"; };
+		7FEAD2A91255DD6000450392 /* StaticMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaticMesh.cpp; path = src/StaticMesh.cpp; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* aprilutil.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = aprilutil.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -93,6 +97,7 @@
 		7FE9C55211EDC6D1008EF582 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7FEAD2A91255DD6000450392 /* StaticMesh.cpp */,
 				7FE9C55411EDC6DF008EF582 /* BlurManager.cpp */,
 			);
 			name = Sources;
@@ -101,6 +106,7 @@
 		7FE9C55311EDC6D4008EF582 /* Includes */ = {
 			isa = PBXGroup;
 			children = (
+				7FEAD2A71255DD4900450392 /* StaticMesh.h */,
 				7F21927B11F07DAA00660245 /* AprilUtilExport.h */,
 				7F21927C11F07DAA00660245 /* BlurManager.h */,
 			);
@@ -116,6 +122,7 @@
 			files = (
 				7F21927D11F07DAA00660245 /* AprilUtilExport.h in Headers */,
 				7F21927E11F07DAA00660245 /* BlurManager.h in Headers */,
+				7FEAD2A81255DD4900450392 /* StaticMesh.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,6 +189,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FE9C55511EDC6DF008EF582 /* BlurManager.cpp in Sources */,
+				7FEAD2AA1255DD6000450392 /* StaticMesh.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
