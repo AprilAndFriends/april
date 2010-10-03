@@ -34,6 +34,7 @@ namespace April
     void StaticMesh::convertToVertexArray()
     {
         mVertexArray = new April::TexturedVertex[3*mPolygons.size()];
+        bool tex=mTextureCoordinates.size() > 0;
         
         for(int i = 0; i < mPolygons.size(); ++i)
         {
@@ -41,21 +42,27 @@ namespace April
             mVertexArray[3*i + 0].x = mVertices[mPolygons[i].mVertind[0]].x;
             mVertexArray[3*i + 0].y = mVertices[mPolygons[i].mVertind[0]].y;
             mVertexArray[3*i + 0].z = mVertices[mPolygons[i].mVertind[0]].z;
-            mVertexArray[3*i + 0].u = mTextureCoordinates[mPolygons[i].mTexind[0]].x;
-            mVertexArray[3*i + 0].v = mTextureCoordinates[mPolygons[i].mTexind[0]].y;
-            
+            if (tex)
+            {
+                mVertexArray[3*i + 0].u = mTextureCoordinates[mPolygons[i].mTexind[0]].x;
+                mVertexArray[3*i + 0].v = mTextureCoordinates[mPolygons[i].mTexind[0]].y;
+            }
             mVertexArray[3*i + 1].x = mVertices[mPolygons[i].mVertind[1]].x;
             mVertexArray[3*i + 1].y = mVertices[mPolygons[i].mVertind[1]].y;
             mVertexArray[3*i + 1].z = mVertices[mPolygons[i].mVertind[1]].z;
-            mVertexArray[3*i + 1].u = mTextureCoordinates[mPolygons[i].mTexind[1]].x;
-            mVertexArray[3*i + 1].v = mTextureCoordinates[mPolygons[i].mTexind[1]].y;
-            
+            if (tex)
+            {
+                mVertexArray[3*i + 1].u = mTextureCoordinates[mPolygons[i].mTexind[1]].x;
+                mVertexArray[3*i + 1].v = mTextureCoordinates[mPolygons[i].mTexind[1]].y;
+            }
             mVertexArray[3*i + 2].x = mVertices[mPolygons[i].mVertind[2]].x;
             mVertexArray[3*i + 2].y = mVertices[mPolygons[i].mVertind[2]].y;
             mVertexArray[3*i + 2].z = mVertices[mPolygons[i].mVertind[2]].z;
-            mVertexArray[3*i + 2].u = mTextureCoordinates[mPolygons[i].mTexind[2]].x;
-            mVertexArray[3*i + 2].v = mTextureCoordinates[mPolygons[i].mTexind[2]].y;
-            
+            if (tex)
+            {
+                mVertexArray[3*i + 2].u = mTextureCoordinates[mPolygons[i].mTexind[2]].x;
+                mVertexArray[3*i + 2].v = mTextureCoordinates[mPolygons[i].mTexind[2]].y;
+            }
         }
         
         mNumVertices = 3*mPolygons.size();
