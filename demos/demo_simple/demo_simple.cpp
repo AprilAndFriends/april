@@ -21,6 +21,8 @@ April::Texture* tex;
 
 #if TARGET_OS_IPHONE
 
+float offx=0, offy=0;
+
 void paintRect(GLfloat vertices[])
 {
 	// temp: testing render on iOS
@@ -72,16 +74,14 @@ bool render(float time_increase)
 	
 	rendersys->clear();
 	
-	static float off=0;
-	off+=time_increase;
 
 	
 	April::TexturedVertex v[4];
 	
 	v[0].x=0;   v[0].y=0;   v[0].z=0; v[0].u=0; v[0].v=0;
-	v[1].x=w;   v[1].y=0;   v[1].z=0; v[1].u=1; v[1].v=0;
-	v[2].x=0;   v[2].y=h;   v[2].z=0; v[2].u=0; v[2].v=1;
-	v[3].x=w;   v[3].y=h;   v[3].z=0; v[3].u=1; v[3].v=1;
+	v[1].x=offx;   v[1].y=0;   v[1].z=0; v[1].u=1; v[1].v=0;
+	v[2].x=0;   v[2].y=offy;   v[2].z=0; v[2].u=0; v[2].v=1;
+	v[3].x=offx;   v[3].y=offy;   v[3].z=0; v[3].u=1; v[3].v=1;
 	
 	glEnable(GL_TEXTURE_2D);
 	rendersys->render(April::TriangleStrip,v,4);
@@ -89,15 +89,18 @@ bool render(float time_increase)
 	
 #if TARGET_OS_IPHONE
 	// testing painting on iOS
-	w=100; h=100;
+	
+	offx+=time_increase;
+	offy+=time_increase;
+	w=10; h=10;
 	GLfloat vertices[] = {	
-		off+0, off+0, 0,
-		off+0, off+h, 0,
-		off+w, off+0, 0,
+		offx+0, offy+0, 0,
+		offx+0, offy+h, 0,
+		offx+w, offy+0, 0,
 		
-		off+0, off+h, 0,
-		off+w, off+h, 0,
-		off+w, off+0, 0};
+		offx+0, offy+h, 0,
+		offx+w, offy+h, 0,
+		offx+w, offy+0, 0};
 	paintRect(vertices);
 	
 #endif
@@ -107,12 +110,18 @@ bool render(float time_increase)
 }
 
 
+void mousedn(float x,float y,int btn)
+{
+	printf("x: %g y: %g btn: %d\n", x, y, btn);
+	offx = x; offy = y;
+}
+
 
 int main(int argc, char** argv)
 {
 	April::init("April",800,600,0,"April: Simple Demo");
 	April::rendersys->registerUpdateCallback(render);
-	
+	April::rendersys->registerMouseCallbacks(mousedn, mouseup, mousemove);
 #if !TARGET_OS_IPHONE
 	tex=April::rendersys->loadTexture("../media/texture.jpg");
 #else
