@@ -24,6 +24,8 @@ namespace April
 		Timer mTimer;
 		float mCursorX, mCursorY;
 		
+		void _convertTouchesToCoordinates(void* touches);
+
 	public:
 		
 		iOSWindow(int w, int h, bool fullscreen, chstr title);
@@ -45,7 +47,10 @@ namespace April
 		void handleDisplayAndUpdate();
 		
 		void touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent);
-		
+		void touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent);
+		void touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent);
+		void touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent);
+
 
 	};
 }

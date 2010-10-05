@@ -56,7 +56,20 @@
 // Handles the end of a touch event when the touch is a tap.
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	//aprilWindow->touchesEnded_withEvent_(touches, event);
+	aprilWindow->touchesEnded_withEvent_(touches, event);
+}
+
+// Called if touches are cancelled and need to be undone. 
+// On iPhone, happens when 5 fingers are pressed.
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	aprilWindow->touchesCancelled_withEvent_(touches, event);
+}
+
+// Handles the movement of a touch event. 
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	aprilWindow->touchesMoved_withEvent_(touches, event);
 }
 
 - (id)initWithFrame:(CGRect)frame
