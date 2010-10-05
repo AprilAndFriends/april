@@ -325,8 +325,9 @@ namespace April
 	void GLRenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices)
 	{
 		if (!mTexCoordsEnabled) { glEnableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=true; }
-		if (mColorEnabled) { glColor4f(1,1,1,mAlphaMultiplier); glDisableClientState(GL_COLOR_ARRAY); mColorEnabled=false; }
+		if (mColorEnabled) { glDisableClientState(GL_COLOR_ARRAY); mColorEnabled=false; }
 
+		glColor4f(1,1,1,mAlphaMultiplier); 
 		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), &v->u);
 
@@ -365,8 +366,11 @@ namespace April
 	void GLRenderSystem::render(RenderOp renderOp,PlainVertex* v,int nVertices)
 	{
 		if (mTexCoordsEnabled) { glBindTexture(GL_TEXTURE_2D,0); glDisableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=false; }
-		if (mColorEnabled) { glColor4f(1,1,1,mAlphaMultiplier); glDisableClientState(GL_COLOR_ARRAY); mColorEnabled=false; }
-
+		if (mColorEnabled) { glDisableClientState(GL_COLOR_ARRAY); mColorEnabled=false; }
+		
+#if !(TARGET_OS_IPHONE)
+		glColor4f(1,1,1,mAlphaMultiplier);
+#endif
 		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
@@ -390,7 +394,7 @@ namespace April
 		{
 			colors[i] = color;
 		}
-		glColorPointer(4, GL_UNSIGNED_BYTE, 4, colors);
+		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(color), colors);
 #endif
 		
 		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
@@ -401,14 +405,15 @@ namespace April
 	void GLRenderSystem::render(RenderOp renderOp,ColoredVertex* v,int nVertices)
 	{
 		if (mTexCoordsEnabled) { glBindTexture(GL_TEXTURE_2D,0); glDisableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=false; }
-		if (!mColorEnabled) { mColorEnabled=true; }
+		if (!mColorEnabled) { glEnableClientState(GL_COLOR_ARRAY); mColorEnabled=true; }
+		
 		glEnableClientState(GL_COLOR_ARRAY);
 		glVertexPointer(3, GL_FLOAT, sizeof(ColoredVertex), v);
 		
 #if !(TARGET_OS_IPHONE)
 		glColor4f(1,1,1,mAlphaMultiplier);
 #endif
-		glColorPointer(4, GL_UNSIGNED_BYTE,sizeof(ColoredVertex), (char*) v+3*sizeof(float));
+		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(ColoredVertex), &v->color);
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 		
