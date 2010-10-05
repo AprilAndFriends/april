@@ -19,7 +19,7 @@
 
 
 #define USE_DEPTH_BUFFER 0
-
+#define aprilWindow ((April::iOSWindow*)aprilWindowVoid)
 
 
 // A class extension to declare private methods
@@ -40,7 +40,7 @@
 @synthesize context;
 @synthesize animationTimer;
 @synthesize animationInterval;
-@synthesize aprilWindow;
+@synthesize aprilWindowVoid;
 
 // You must implement this method
 + (Class)layerClass {
@@ -50,25 +50,13 @@
 // Handles the start of a touch
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	CGRect				bounds = [self bounds];
-    UITouch*	touch = [[event touchesForView:self] anyObject];
-	//Convert touch point from UIView referential to OpenGL one (upside-down flip)
-	CGPoint location = [touch locationInView:self];
-	location.y = bounds.size.height - location.y;
-	
-	//OnTapBegin(location.y,location.x);
+	aprilWindow->touchesBegan_withEvent_(touches, event);
 }
 
 // Handles the end of a touch event when the touch is a tap.
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	CGRect				bounds = [self bounds];
-    UITouch*	touch = [[event touchesForView:self] anyObject];
-	//Convert touch point from UIView referential to OpenGL one (upside-down flip)
-	CGPoint location = [touch locationInView:self];
-	location.y = bounds.size.height - location.y;
-
-	//OnTapEnd(location.y,location.x);
+	//aprilWindow->touchesEnded_withEvent_(touches, event);
 }
 
 - (id)initWithFrame:(CGRect)frame

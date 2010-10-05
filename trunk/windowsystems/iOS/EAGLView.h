@@ -39,11 +39,11 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
     NSTimeInterval animationInterval;
 	
 	/* C++ class iOSWindow */
-	void *aprilWindow;
+	void *aprilWindowVoid;
 }
 
 @property NSTimeInterval animationInterval;
-@property (assign) void *aprilWindow;
+@property (assign) void *aprilWindowVoid;
 
 - (void)startAnimation;
 - (void)stopAnimation;

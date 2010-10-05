@@ -22,6 +22,7 @@ namespace April
 		bool mRunning;
 		bool mCursorVisible;
 		Timer mTimer;
+		float mCursorX, mCursorY;
 		
 	public:
 		
@@ -42,6 +43,9 @@ namespace April
 		
 		
 		void handleDisplayAndUpdate();
+		
+		void touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent);
+		
 
 	};
 }

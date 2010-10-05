@@ -350,7 +350,7 @@
 					"$(USER_LIBRARY_DIR)/SDKs/aprilSDK/$(PLATFORM_NAME).sdk/usr/local/lib",
 				);
 				OTHER_LDFLAGS = (
-					"-Objc",
+					"-ObjC",
 					"-lapril",
 					"-lgtypes",
 					"-lhltypes",

@@ -31,7 +31,8 @@ namespace April
 		[window makeKeyAndVisible];
 		
 		glview = [[[EAGLView alloc] initWithFrame:[window bounds]] autorelease];
-		glview.aprilWindow = this;
+		glview.aprilWindowVoid = this;
+
 		[window addSubview:glview];
 
 		
@@ -98,6 +99,31 @@ namespace April
 		} while(result == kCFRunLoopRunHandledSource);
 	}
 
+	
+	void iOSWindow::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
+	{
+		//UIEvent* event = (UIEvent*)uieventEvent;
+		NSSet* touches = (NSSet*)nssetTouches;
+		
+		UITouch* touch = touches.anyObject; 
+		float width = glview.bounds.size.width;
+		float height = glview.bounds.size.height;
+		
+		CGPoint location = [touch locationInView:glview];
+
+		//For "primary" landscape orientation
+		mCursorX=location.y; 
+		mCursorY=width-location.x;
+		
+		Window::MouseEventType mouseevt = AMOUSEEVT_DOWN;
+		Window::MouseButton mousebtn = AMOUSEBTN_LEFT;
+		
+		handleMouseEvent(mouseevt, 
+						 mCursorX, mCursorY,
+						 mousebtn);
+		
+	}
+	
 	
 		//////////////
 	void iOSWindow::handleDisplayAndUpdate()
