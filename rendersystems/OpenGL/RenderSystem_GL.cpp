@@ -328,7 +328,7 @@ namespace April
 		if (mColorEnabled) { glColor4f(1,1,1,mAlphaMultiplier); glDisableClientState(GL_COLOR_ARRAY); mColorEnabled=false; }
 
 		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), (char*) v+3*sizeof(float));
+		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), &v->u);
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 
@@ -337,9 +337,22 @@ namespace April
 	void GLRenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)
 	{
 		if (!mTexCoordsEnabled) { glEnableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=true; }
-		if (!mColorEnabled) { mColorEnabled=true; glDisableClientState(GL_COLOR_ARRAY); }   
 #if !(TARGET_OS_IPHONE)
+		if (mColorEnabled) { glDisableClientState(GL_COLOR_ARRAY); mColorEnabled=false; }   
 		glColor4f(r,g,b,a*mAlphaMultiplier);
+#else
+		if(!mColorEnabled) { glEnableClientState(GL_COLOR_ARRAY); mColorEnabled=true; }
+		
+		GLuint colors[nVertices];
+		GLbyte rB = r*255, gB = g*255, bB = b*255, aB = a*255;
+		GLbyte colorB[4] = {rB, gB, bB, aB};
+		GLuint color = *(GLuint*)colorB;
+		for(int i=0; i<nVertices; i++)
+		{
+			colors[i] = color;
+		}
+		glColorPointer(4, GL_UNSIGNED_BYTE, 4, colors);
+		
 #endif
 		
 		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
@@ -362,11 +375,24 @@ namespace April
 	void GLRenderSystem::render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a)
 	{
 		if (mTexCoordsEnabled) { glBindTexture(GL_TEXTURE_2D,0); glDisableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=false; }
-		if (!mColorEnabled) { mColorEnabled=true; glDisableClientState(GL_COLOR_ARRAY);}
 
 #if !(TARGET_OS_IPHONE)
+		if (mColorEnabled) { mColorEnabled=false; glDisableClientState(GL_COLOR_ARRAY); }
 		glColor4f(r,g,b,a*mAlphaMultiplier);
+#else
+		if(!mColorEnabled) { glEnableClientState(GL_COLOR_ARRAY); mColorEnabled=true; }
+
+		GLuint colors[nVertices];
+		GLbyte rB = r*255, gB = g*255, bB = b*255, aB = a*mAlphaMultiplier*255;
+		GLbyte colorB[4] = {rB, gB, bB, aB};
+		GLuint color = *(GLuint*)colorB;
+		for(int i=0; i<nVertices; i++)
+		{
+			colors[i] = color;
+		}
+		glColorPointer(4, GL_UNSIGNED_BYTE, 4, colors);
 #endif
+		
 		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
 
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
@@ -390,7 +416,18 @@ namespace April
 	
 	void GLRenderSystem::render(RenderOp renderOp,ColoredTexturedVertex* v,int nVertices)
 	{
-		// TODO
+		if (!mTexCoordsEnabled) { glEnableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=true; }
+		if (!mColorEnabled) { mColorEnabled=true; glEnableClientState(GL_COLOR_ARRAY); }
+#if !(TARGET_OS_IPHONE)
+		glColor4f(1,1,1,mAlphaMultiplier);
+#endif
+		
+		glVertexPointer(3, GL_FLOAT, sizeof(ColoredTexturedVertex), v);
+		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(ColoredTexturedVertex), &v->color);
+		glTexCoordPointer(2, GL_FLOAT, sizeof(ColoredTexturedVertex), &v->u);
+		
+		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
+		
 	}
 	
 	void GLRenderSystem::setRenderTarget(Texture* source)
