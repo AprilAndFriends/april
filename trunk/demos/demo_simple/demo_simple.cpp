@@ -112,7 +112,17 @@ bool render(float time_increase)
 
 void mousedn(float x,float y,int btn)
 {
-	printf("x: %g y: %g btn: %d\n", x, y, btn);
+	printf("dn x: %g y: %g btn: %d\n", x, y, btn);
+	offx = x; offy = y;
+}
+void mouseup(float x,float y,int btn)
+{
+	printf("up x: %g y: %g btn: %d\n", x, y, btn);
+	offx = x; offy = y;
+}
+void mousemove(float x,float y)
+{
+	printf("mv x: %g y: %g\n", x, y);
 	offx = x; offy = y;
 }
 

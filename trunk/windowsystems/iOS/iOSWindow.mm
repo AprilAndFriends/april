@@ -100,9 +100,10 @@ namespace April
 	}
 
 	
-	void iOSWindow::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
+	void iOSWindow::_convertTouchesToCoordinates(void* nssetTouches)
 	{
-		//UIEvent* event = (UIEvent*)uieventEvent;
+		// return value stored in mCursorX and mCursorY
+		
 		NSSet* touches = (NSSet*)nssetTouches;
 		
 		UITouch* touch = touches.anyObject; 
@@ -110,13 +111,62 @@ namespace April
 		float height = glview.bounds.size.height;
 		
 		CGPoint location = [touch locationInView:glview];
-
-		//For "primary" landscape orientation
+		
+		
+		//For "primary" landscape orientation, this is how we calc it
 		mCursorX=location.y; 
 		mCursorY=width-location.x;
+
+		
+	}
+	
+	void iOSWindow::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
+	{
+		_convertTouchesToCoordinates(nssetTouches);
 		
 		Window::MouseEventType mouseevt = AMOUSEEVT_DOWN;
 		Window::MouseButton mousebtn = AMOUSEBTN_LEFT;
+		
+		handleMouseEvent(mouseevt, 
+						 mCursorX, mCursorY,
+						 mousebtn);
+		
+	}
+	void iOSWindow::touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent)
+	{
+		_convertTouchesToCoordinates(nssetTouches);
+		
+		Window::MouseEventType mouseevt = AMOUSEEVT_UP;
+		Window::MouseButton mousebtn = AMOUSEBTN_LEFT;
+		
+		handleMouseEvent(mouseevt, 
+						 mCursorX, mCursorY,
+						 mousebtn);
+		
+	}
+	
+	
+	void iOSWindow::touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent)
+	{
+		// FIXME needs to cancel touches, not treat them as "release"
+		_convertTouchesToCoordinates(nssetTouches);
+		
+		Window::MouseEventType mouseevt = AMOUSEEVT_UP;
+		Window::MouseButton mousebtn = AMOUSEBTN_LEFT;
+		
+		handleMouseEvent(mouseevt, 
+						 mCursorX, mCursorY,
+						 mousebtn);
+		
+	}
+	
+	
+	void iOSWindow::touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent)
+	{
+		_convertTouchesToCoordinates(nssetTouches);
+		
+		Window::MouseEventType mouseevt = AMOUSEEVT_MOVE;
+		Window::MouseButton mousebtn = AMOUSEBTN_NONE;
 		
 		handleMouseEvent(mouseevt, 
 						 mCursorX, mCursorY,
