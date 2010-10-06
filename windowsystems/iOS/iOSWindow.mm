@@ -132,7 +132,6 @@ namespace April
 			mCursorX *= [caeagllayer contentsScale];
 			mCursorY *= [caeagllayer contentsScale];
 		}
-		NSLog(@"mouse event at %g %g", mCursorX, mCursorY);
 	}
 	
 	void iOSWindow::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
