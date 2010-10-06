@@ -78,11 +78,20 @@
         // Get the layer
         CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
 	
+		if ([eaglLayer respondsToSelector:@selector(setContentsScale:)])
+		{
+			// FIXME better check for iPhone4
+			UIDevice* thisDevice = [UIDevice currentDevice];
+			if(thisDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+			{
+				eaglLayer.contentsScale = 2;
+			}
+		}
 		
         eaglLayer.opaque = YES;
         eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
                                         [NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
-        
+		
         context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
         
         if (!context || ![EAGLContext setCurrentContext:context]) {

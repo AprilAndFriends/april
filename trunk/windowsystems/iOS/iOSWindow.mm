@@ -9,6 +9,7 @@
  \************************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/CAEAGLLayer.h>
 #import "EAGLView.h"
 #include "iOSWindow.h"
 #include "RenderSystem.h"
@@ -65,11 +66,21 @@ namespace April
     int iOSWindow::getWindowWidth()
     {
 		// TODO dont swap width and height in case display is in portrait mode
+		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
+		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
+			return window.bounds.size.height * caeagllayer.contentsScale;
+		}
+		
         return window.bounds.size.height;
     }
     int iOSWindow::getWindowHeight()
     {
 		// TODO dont swap width and height in case display is in portrait mode
+		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
+		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
+			return window.bounds.size.width * caeagllayer.contentsScale;
+		}
+		
         return window.bounds.size.width;
     }
     void iOSWindow::setWindowTitle(chstr title)
@@ -112,12 +123,16 @@ namespace April
 		
 		CGPoint location = [touch locationInView:glview];
 		
-		
 		//For "primary" landscape orientation, this is how we calc it
 		mCursorX=location.y; 
 		mCursorY=width-location.x;
 
-		
+		CAEAGLLayer* caeagllayer = [glview layer];
+		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
+			mCursorX *= [caeagllayer contentsScale];
+			mCursorY *= [caeagllayer contentsScale];
+		}
+		NSLog(@"mouse event at %g %g", mCursorX, mCursorY);
 	}
 	
 	void iOSWindow::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
