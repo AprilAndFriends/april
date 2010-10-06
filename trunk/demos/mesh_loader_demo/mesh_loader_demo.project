@@ -88,4 +88,16 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
+  <Dependencies Name="Debug">
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libaprilutil"/>
+  </Dependencies>
+  <Dependencies Name="Release">
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libaprilutil"/>
+  </Dependencies>
 </CodeLite_Project>
