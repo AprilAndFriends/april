@@ -65,6 +65,8 @@ namespace April
 		// caps
 		float getPixelOffset();
 		hstr getName();
+        
+        ImageSource* grabScreenshot();
 
 		// rendering
 		void clear(bool color,bool depth);
