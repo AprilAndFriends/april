@@ -72,7 +72,7 @@ namespace April
     void Timer::update()
     {
         mTd2 = getTime();
-        mDt = (mTd2-mTd) * 0.1f;
+        mDt = (mTd2-mTd) * 0.001f;
         mTd = mTd2;
     }
 }
