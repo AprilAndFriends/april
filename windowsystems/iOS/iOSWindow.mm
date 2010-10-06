@@ -78,7 +78,7 @@ namespace April
     }
     gtypes::Vector2 iOSWindow::getCursorPos()
     {
-        return gtypes::Vector2(0,0);
+        return gtypes::Vector2(mCursorX,mCursorY);
     }
     void iOSWindow::presentFrame()
     {
