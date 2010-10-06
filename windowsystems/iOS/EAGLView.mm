@@ -91,6 +91,15 @@
         }
         
         animationInterval = 1.0 / 60.0;
+		
+		
+		CGRect textFrame = frame;
+		textFrame.origin.x += frame.size.width;
+		textField = [[UITextField alloc] initWithFrame:textFrame];
+		textField.delegate = self;
+		textField.text = @" "; // something to be able to catch text edit
+		[self addSubview:textField];
+		
     }
 	
     return self;
@@ -215,6 +224,21 @@
     
     [context release];  
     [super dealloc];
+}
+
+- (void)beginKeyboardHandling
+{
+	[textField becomeFirstResponder];
+}
+- (void)terminateKeyboardHandling
+{
+	[textField endEditing:YES];
+}
+
+- (BOOL)textField:(UITextField *)_textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string   // return NO to not change text
+{
+	
+	return aprilWindow->textField_shouldChangeCharactersInRange_replacementString_(_textField, range.location, range.length, chstr([string UTF8String]));
 }
 
 @end

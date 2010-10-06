@@ -145,6 +145,17 @@ namespace April
 		return true;
 	}
 	
+	void Window::beginKeyboardHandling()
+	{
+		// ignore by default
+		// used only for softkeyboards, e.g. iOS
+	}
+	void Window::terminateKeyboardHandling()
+	{
+		// ignore by default
+		// used only for softkeyboards, e.g. iOS
+	}
+	
 	///////////////////////
 	// non members
 	///////////////////////

@@ -174,6 +174,39 @@ namespace April
 		
 	}
 	
+	void iOSWindow::beginKeyboardHandling()
+	{
+		[glview beginKeyboardHandling];
+	}
+	void iOSWindow::terminateKeyboardHandling()
+	{
+		[glview terminateKeyboardHandling];
+	}
+	
+	bool iOSWindow::textField_shouldChangeCharactersInRange_replacementString_(void* uitextfieldTextField, int nsrangeLocation, int nsrangeLength, chstr str)
+	{
+		
+		if (nsrangeLocation==0 && str.size()==0) {
+			// deploy backspace
+			handleKeyEvent(AKEYEVT_DOWN, AK_BACK, 8);
+		}
+		else if (str.size())
+		{
+			int inputChar = str[0];
+
+			if(isalnum(inputChar) || inputChar == ' ')
+			{
+				// deploy keypress
+				April::KeySym keycode = AK_NONE; // FIXME incorrect, might cause a nasty bug. 
+												 // however, writing a translation table atm 
+												 // isn't the priority.
+			
+				handleKeyEvent(AKEYEVT_DOWN, keycode, inputChar);
+				handleKeyEvent(AKEYEVT_UP, keycode, inputChar);
+			}
+		}
+		return NO;
+	}
 	
 		//////////////
 	void iOSWindow::handleDisplayAndUpdate()
