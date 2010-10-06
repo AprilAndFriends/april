@@ -20,7 +20,7 @@ This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView sub
 The view content is basically an EAGL surface you render your OpenGL scene into.
 Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
 */
-@interface EAGLView : UIView {
+@interface EAGLView : UIView <UITextFieldDelegate> {
     
 @private
     /* The pixel dimensions of the backbuffer */
@@ -38,6 +38,9 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
     NSTimer *animationTimer;
     NSTimeInterval animationInterval;
 	
+	/* Textfield */
+	UITextField *textField;
+	
 	/* C++ class iOSWindow */
 	void *aprilWindowVoid;
 }
@@ -49,4 +52,6 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 - (void)stopAnimation;
 - (void)drawView;
 - (void)swapBuffers;
+- (void)beginKeyboardHandling;
+- (void)terminateKeyboardHandling;
 @end

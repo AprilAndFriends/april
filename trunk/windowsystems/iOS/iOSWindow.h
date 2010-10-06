@@ -42,7 +42,8 @@ namespace April
 		void presentFrame();
 		void* getIDFromBackend();
 		void doEvents();
-		
+		void beginKeyboardHandling();
+		void terminateKeyboardHandling();
 		
 		void handleDisplayAndUpdate();
 		
@@ -50,7 +51,8 @@ namespace April
 		void touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent);
 		void touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent);
 		void touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent);
-
+		
+		bool textField_shouldChangeCharactersInRange_replacementString_(void* uitextfieldTextField, int nsrangeLocation, int nsrangeLength, chstr str);
 
 	};
 }
