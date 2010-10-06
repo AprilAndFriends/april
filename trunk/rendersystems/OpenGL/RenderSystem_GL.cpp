@@ -260,9 +260,18 @@ namespace April
         int w=mWindow->getWindowWidth(),h=mWindow->getWindowHeight();
         ImageSource* img=new ImageSource();
         img->w=w; img->h=h; img->bpp=3; img->format=AT_RGB;
-        img->data=(unsigned char*) malloc(w*h*4); // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
+        img->data=(unsigned char*) malloc(w*(h+1)*4); // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
+        unsigned char* temp=img->data+w*h*4;
         
         glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, img->data);
+        
+        for (int y=0;y<h/2;y++)
+        {
+            memcpy(temp, img->data+y*w*3, w*3);
+            memcpy(img->data+y*w*3, img->data+(h-y-1)*w*3, w*3);
+            memcpy(img->data+(h-y-1)*w*3, temp, w*3);
+
+        }
         return img;
     }
 
