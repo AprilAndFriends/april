@@ -218,7 +218,59 @@ namespace April
 	
 	ImageSource* DirectX9RenderSystem::grabScreenshot()
     {
-    	return 0;
+		logMessage("grabbing screenshot");
+		D3DSURFACE_DESC desc;
+		mBackBuffer->GetDesc(&desc);
+		if (desc.Format != D3DFMT_X8R8G8B8)
+		{
+			logMessage("failed to grab screenshot, backbuffer format not supported, expeted X8R8G8B8, got: "+hstr(desc.Format));
+			return 0;
+		}
+		
+		IDirect3DSurface9* buffer;
+		HRESULT hr = d3dDevice->CreateOffscreenPlainSurface(desc.Width,desc.Height,desc.Format,D3DPOOL_SYSTEMMEM,&buffer,NULL);
+		if (hr != D3D_OK)
+		{
+			logMessage("failed to grab screenshot, CreateOffscreenPlainSurface() call failed");
+			return 0;
+		}
+		hr=d3dDevice->GetRenderTargetData(mBackBuffer,buffer);
+		if (hr != D3D_OK)
+		{
+			logMessage("failed to grab screenshot, GetRenderTargetData() call failed");
+			buffer->Release();
+			return 0;
+		}		
+		D3DLOCKED_RECT rect;
+		hr = buffer->LockRect(&rect,NULL, D3DLOCK_DONOTWAIT);
+		if (hr != D3D_OK)
+		{
+			logMessage("failed to grab screenshot, surface lock failed");
+			buffer->Release();
+			return 0;
+		}
+		
+		ImageSource* img=new ImageSource();
+		img->w=desc.Width; img->h=desc.Height;img->bpp=3; img->format=AT_RGB;
+		img->data=(unsigned char*) malloc(img->w*img->h*4);
+		unsigned char *p=img->data,*src=(unsigned char*) rect.pBits;
+		int x,y;
+		for (y=0;y<img->h;y++)
+		{
+			for (x=0;x<img->w*4;x+=4,p+=3)
+			{
+				p[0]=src[x];
+				p[1]=src[x+1];
+				p[2]=src[x+2];
+			}
+			src+=rect.Pitch;
+		}
+		
+		
+		buffer->UnlockRect();
+		buffer->Release();
+		
+    	return img;
 	}
 	
 	void DirectX9RenderSystem::_setModelviewMatrix(const gtypes::Matrix4& matrix)
