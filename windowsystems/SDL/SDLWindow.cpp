@@ -106,8 +106,10 @@ namespace April
 	{
 		SDL_Event event;
 
-		while (SDL_PollEvent(&event)) {
-			switch (event.type) {
+		while (SDL_PollEvent(&event))
+        {
+			switch (event.type)
+            {
 				case SDL_VIDEORESIZE:
 					// do a SetVideoMode here, if we really want this
 					//g_game->doResize(event.resize.w, event.resize.h);
@@ -220,7 +222,8 @@ namespace April
 		#define s2a(sdlk,ak) _s2a(SDLK_##sdlk, AK_##ak)
 		#define sea(key) s2a(key,key)
 		
-		switch (keysym) {
+		switch (keysym)
+        {
 				// control character keys
 				s2a(BACKSPACE,BACK);
 #ifdef __APPLE__
@@ -247,6 +250,9 @@ namespace April
 				sea(RIGHT);
 				sea(UP);
 				sea(DOWN);
+                
+                // space
+                sea(SPACE);
 				
 				// function keys
 				sea(F1);
