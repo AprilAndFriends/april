@@ -20,7 +20,7 @@
       <Project Name="mesh_loader_demo" ConfigName="Debug"/>
       <Project Name="wintTickTest" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="OpenGL_Debug" Selected="yes">
+    <WorkspaceConfiguration Name="OpenGL_Debug" Selected="no">
       <Project Name="tictactoe" ConfigName="Debug"/>
       <Project Name="libhltypes" ConfigName="Debug"/>
       <Project Name="libgtypes" ConfigName="Debug"/>
@@ -42,7 +42,7 @@
       <Project Name="mesh_loader_demo" ConfigName="Debug"/>
       <Project Name="wintTickTest" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="DirectX9_Debug" Selected="no">
+    <WorkspaceConfiguration Name="DirectX9_Debug" Selected="yes">
       <Project Name="tictactoe" ConfigName="Debug"/>
       <Project Name="libhltypes" ConfigName="Debug"/>
       <Project Name="libgtypes" ConfigName="Debug"/>

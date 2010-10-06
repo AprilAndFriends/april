@@ -11,7 +11,6 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com)                             
 #include "april/Timer.h"
 #include "aprilutil/StaticMesh.h"
 
-
 #include <iostream>
 
 April::Texture* tex;
@@ -19,15 +18,15 @@ April::StaticMesh *mMesh;
 
 bool render(float time_increase)
 {
-	rendersys->clear(true, true);
+	April::rendersys->clear(true, true);
 	static float angle=0;
 	angle+=time_increase*90;
     
-	rendersys->setPerspective(60,800/600.,0.1f,100.0f);
-	rendersys->setTexture(tex);
+	April::rendersys->setPerspective(60,800/600.,0.1f,100.0f);
+	April::rendersys->setTexture(tex);
 	
-	rendersys->lookAt(gtypes::Vector3(2,2,-5),gtypes::Vector3(0,0,0),gtypes::Vector3(0,1,0));
-	rendersys->rotate(angle,0,1,0);
+	April::rendersys->lookAt(gtypes::Vector3(2,2,-5),gtypes::Vector3(0,0,0),gtypes::Vector3(0,1,0));
+	April::rendersys->rotate(angle,0,1,0);
 	
     mMesh->draw(April::TriangleList);
     
@@ -37,12 +36,12 @@ bool render(float time_increase)
 int main()
 {
 	April::init("April",800,600,0,"April: 3D Demo");
-	rendersys->registerUpdateCallback(render);
+	April::rendersys->registerUpdateCallback(render);
 
     mMesh = new April::StaticMesh("../media/testobject.obj");
-	tex = rendersys->loadTexture("../media/texture.jpg");
+	tex = April::rendersys->loadTexture("../media/texture.jpg");
     
-	rendersys->enterMainLoop();
+	April::rendersys->enterMainLoop();
     
     delete mMesh;
     

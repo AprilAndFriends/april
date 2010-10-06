@@ -13,14 +13,14 @@ April::Texture* tex;
 
 bool render(float time_increase)
 {
-	rendersys->clear(true, true);
+	April::rendersys->clear(true, true);
 	static float angle=0;
 	angle+=time_increase*90;
-	rendersys->setPerspective(60,800/600.,1,1000);
-	rendersys->setTexture(tex);
+	April::rendersys->setPerspective(60,800/600.,1,1000);
+	April::rendersys->setTexture(tex);
 	
-	rendersys->lookAt(gtypes::Vector3(2,2,-5),gtypes::Vector3(0,0,0),gtypes::Vector3(0,1,0));
-	rendersys->rotate(angle,0,1,0);
+	April::rendersys->lookAt(gtypes::Vector3(2,2,-5),gtypes::Vector3(0,0,0),gtypes::Vector3(0,1,0));
+	April::rendersys->rotate(angle,0,1,0);
 	
 	April::TexturedVertex v[4];
 	
@@ -29,18 +29,18 @@ bool render(float time_increase)
 	v[2].x=-1;   v[2].y=-1; v[2].z=0; v[2].u=0; v[2].v=1;
 	v[3].x=1; v[3].y=-1; v[3].z=0; v[3].u=1; v[3].v=1;
 	
-	rendersys->render(April::TriangleStrip,v,4);
+	April::rendersys->render(April::TriangleStrip,v,4);
 	return true;
 }
 
 int main()
 {
 	April::init("April",800,600,0,"April: 3D Demo");
-	rendersys->registerUpdateCallback(render);
+	April::rendersys->registerUpdateCallback(render);
 
-	tex=rendersys->loadTexture("../media/texture.jpg");
+	tex=April::rendersys->loadTexture("../media/texture.jpg");
 
-	rendersys->enterMainLoop();
+	April::rendersys->enterMainLoop();
 	April::destroy();
 	return 0;
 }
