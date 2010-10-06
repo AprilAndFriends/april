@@ -32,7 +32,8 @@ enum TextureType
 enum TextureFormat
 {
 	AT_XRGB=1,
-	AT_ARGB=2
+	AT_ARGB=2,
+    AT_RGB=3
 };
 
 namespace April
@@ -298,6 +299,8 @@ namespace April
 		
 		Window* getWindow() { return mWindow; }
 		
+        virtual ImageSource* grabScreenshot()=0;
+        
 		virtual void enterMainLoop() DEPRECATED_ATTRIBUTE;
 		virtual void terminateMainLoop() DEPRECATED_ATTRIBUTE;
 		virtual gtypes::Vector2 getCursorPos() DEPRECATED_ATTRIBUTE;

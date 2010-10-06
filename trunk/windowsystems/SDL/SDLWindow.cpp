@@ -81,8 +81,8 @@ namespace April
 		
 		SDL_EnableUNICODE(1);
 		
-		while (mRunning) {
-			
+		while (mRunning)
+        {
 			//check if we should quit...
 			if(gAprilShouldInvokeQuitCallback)
 			{
@@ -96,8 +96,6 @@ namespace April
 			doEvents();
 			
 			_handleDisplayAndUpdate();
-			
-			
 		}
 				
 	}

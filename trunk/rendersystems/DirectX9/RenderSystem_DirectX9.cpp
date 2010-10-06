@@ -215,7 +215,12 @@ namespace April
 		if (depth) flags |= D3DCLEAR_ZBUFFER;
 		d3dDevice->Clear(0, NULL, flags, D3DCOLOR_XRGB(0,0,0), 1.0f, 0);
 	}
-
+	
+	ImageSource* DirectX9RenderSystem::grabScreenshot()
+    {
+    	return 0;
+	}
+	
 	void DirectX9RenderSystem::_setModelviewMatrix(const gtypes::Matrix4& matrix)
 	{
 		d3dDevice->SetTransform(D3DTS_VIEW,(D3DMATRIX*) matrix.mat);

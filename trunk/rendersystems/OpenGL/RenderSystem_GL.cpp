@@ -253,6 +253,18 @@ namespace April
 		glClear(mask);
 		
 	}
+    
+    ImageSource* GLRenderSystem::grabScreenshot()
+    {
+        logMessage("grabbing screenshot");
+        int w=mWindow->getWindowWidth(),h=mWindow->getWindowHeight();
+        ImageSource* img=new ImageSource();
+        img->w=w; img->h=h; img->bpp=3; img->format=AT_RGB;
+        img->data=(unsigned char*) malloc(w*h*4); // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
+        
+        glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE, img->data);
+        return img;
+    }
 
 	void GLRenderSystem::_setModelviewMatrix(const gtypes::Matrix4& matrix)
 	{
