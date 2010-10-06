@@ -259,9 +259,9 @@ namespace April
 		{
 			for (x=0;x<img->w*4;x+=4,p+=3)
 			{
-				p[0]=src[x];
+				p[0]=src[x+2];
 				p[1]=src[x+1];
-				p[2]=src[x+2];
+				p[2]=src[x];
 			}
 			src+=rect.Pitch;
 		}
