@@ -33,6 +33,8 @@ namespace April
 		unsigned char* data;
 		int w,h,bpp,format;
 		
+		int compressedLength;
+		
 	};
 	
 	ImageSource* loadImage(chstr filename);

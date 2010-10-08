@@ -80,11 +80,8 @@
 	
 		if ([eaglLayer respondsToSelector:@selector(setContentsScale:)])
 		{
-			// FIXME better check for iPhone4
-			UIDevice* thisDevice = [UIDevice currentDevice];
-			if(thisDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-			{
-				eaglLayer.contentsScale = 2;
+			if ([[UIScreen mainScreen] respondsToSelector:@selector(scale:)]) {
+				eaglLayer.contentsScale = [[UIScreen mainScreen] scale];
 			}
 		}
 		

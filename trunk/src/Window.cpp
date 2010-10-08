@@ -16,7 +16,8 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include <windows.h>
 #endif
 
-#if !defined(__APPLE__) || defined(__APPLE__) && defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
+
+#if !defined(__APPLE__) || defined(__APPLE__) && (TARGET_OS_MAC) && !(TARGET_OS_IPHONE)
 	#ifdef HAVE_GLUT
 		#include "GLUTWindow.h"
 	#endif
@@ -26,7 +27,8 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 	#ifdef _WIN32
 		#include "Win32Window.h"
 	#endif
-#elif defined(TARGET_OS_IPHONE)
+#elif (TARGET_OS_IPHONE)
+	#import <UIKit/UIKit.h>
 	#include "iOSWindow.h"
 #endif
 
@@ -162,7 +164,7 @@ namespace April
 	
 	Window* createAprilWindow(chstr winsysname, int w, int h, bool fullscreen, chstr title)
 	{
-#if !defined(__APPLE__) || defined(__APPLE__) && defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
+#if !defined(__APPLE__) || defined(__APPLE__) && (TARGET_OS_MAC) && !(TARGET_OS_IPHONE)
 		// desktop
 	#ifdef HAVE_SDL
 		if (winsysname=="SDL") {
@@ -178,7 +180,7 @@ namespace April
 		return new GLUTWindow(w,h,fullscreen,title);
 	#endif
 		
-#elif defined(TARGET_OS_IPHONE)
+#elif (TARGET_OS_IPHONE)
 		// iOS
 		return new iOSWindow(w,h,fullscreen,title);
 #endif
@@ -190,6 +192,21 @@ namespace April
 	{
 #ifdef _WIN32
 		return gtypes::Vector2(GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
+#elif (TARGET_OS_IPHONE)
+		
+		UIScreen* mainScreen = [UIScreen mainScreen];
+		float scale=1;
+		
+		if ([mainScreen respondsToSelector:@selector(scale:)]) {
+			scale = [mainScreen scale];
+		}
+		
+		
+		
+		// TODO dont flip width and height when in portrait mode
+		int w = [UIScreen mainScreen].bounds.size.height * scale;
+		int h = [UIScreen mainScreen].bounds.size.width * scale;
+		return gtypes::Vector2(w, h);
 #else
 		return gtypes::Vector2(1024,768);
 #endif

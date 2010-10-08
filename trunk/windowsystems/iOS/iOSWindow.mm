@@ -127,7 +127,7 @@ namespace April
 		mCursorX=location.y; 
 		mCursorY=width-location.x;
 
-		CAEAGLLayer* caeagllayer = [glview layer];
+		CAEAGLLayer* caeagllayer = (CAEAGLLayer*)[glview layer];
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
 			mCursorX *= [caeagllayer contentsScale];
 			mCursorY *= [caeagllayer contentsScale];

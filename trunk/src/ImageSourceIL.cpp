@@ -16,6 +16,7 @@ namespace April
 	ImageSource::ImageSource()
 	{
 		ilGenImages(1, &mImageId);
+		this->compressedLength = 0;
 	}
 	
 	ImageSource::~ImageSource()
