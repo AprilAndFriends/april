@@ -24,6 +24,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #import <CoreGraphics/CoreGraphics.h>
 
 #import <OpenGLES/ES1/gl.h>
+#import "PVRTexture.h"
 #endif
 #include "ImageSource.h"
 #include "RenderSystem.h"
@@ -92,6 +93,7 @@ namespace April
 		mImageId = 0; // unused in CG
 		this->data = NULL;
 		this->w = this->h = this->bpp = this->format = 0;
+		this->compressedLength = 0;
 	}
 	
 	ImageSource::~ImageSource()
@@ -159,10 +161,54 @@ namespace April
 		}
 	}
 	
+	ImageSource* _tryLoadingPVR(chstr filename)
+	{
+		NSString *pvrfilename = [NSString stringWithUTF8String:filename.c_str()];
+		pvrfilename = [pvrfilename substringToIndex:pvrfilename.length-pvrfilename.pathExtension.length];
+		pvrfilename = [pvrfilename stringByAppendingPathExtension:@"pvr"];
+		
+		PVRTexture* pvrtex = [PVRTexture pvrTextureWithContentsOfURL:(NSURL*)_getFileURLAsResource(pvrfilename.UTF8String)];
+		if(!pvrtex)
+		{
+			pvrtex = [PVRTexture pvrTextureWithContentsOfFile:pvrfilename];
+				
+			if(!pvrtex)
+			{
+				return NULL;
+			}
+		}
+		
+		ImageSource* img=new ImageSource();
+		img->format = pvrtex.internalFormat; //ilGetInteger(IL_IMAGE_FORMAT); // not used
+		img->w = pvrtex.width;
+		img->h = pvrtex.height;
+		img->bpp = 4;
+		
+		NSData* data = [pvrtex.imageData objectAtIndex:0];
+		img->data = (unsigned char*) malloc(data.length);
+		memcpy(img->data,data.bytes,data.length);
+		img->compressedLength = data.length;
+		
+		return img;
+		
+	}
+	
+	
 	
 	ImageSource* loadImage(chstr filename)
 	{
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
+		
+		
+#if TARGET_OS_IPHONE
+		ImageSource *pvrimg;
+		if(pvrimg=_tryLoadingPVR(filename))
+		{
+			[arp release];
+			return pvrimg;
+		}
+		
+#endif
 		
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 		
@@ -173,6 +219,8 @@ namespace April
 		// CGImageSourceCreateWithData(). bug in cocoa present
 		// as late as 2007!
 		
+		
+		/*
 		CGImageSourceRef imageSource = CGImageSourceCreateWithURL((CFURLRef)_getFileURLAsResource(filename), NULL);
         
         if(!imageSource){
@@ -181,7 +229,9 @@ namespace April
 			imageSource = CGImageSourceCreateWithURL((CFURLRef)_getFileURL(filename), NULL);
 			
 			if (!imageSource){
-				
+		*/		
+		
+		
 				imageSource = CGImageSourceCreateWithData((CFDataRef)[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]], NULL);
 				
 				if(!imageSource){
@@ -189,9 +239,9 @@ namespace April
 					[arp release];
 					return NULL;
 				}
-			}
+		/*	}
 		}
-		
+		*/
 		CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
 		CFRelease(imageSource);
 		

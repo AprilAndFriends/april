@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F27ED47125F7E8D00EF4AFB /* PVRTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F27ED45125F7E8D00EF4AFB /* PVRTexture.h */; };
+		7F27ED48125F7E8D00EF4AFB /* PVRTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F27ED46125F7E8D00EF4AFB /* PVRTexture.m */; };
 		7F33B57C1210130C004B5E89 /* main.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F4D0FE911FEE6C500F2F9F5 /* main.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F33B57D1210130C004B5E89 /* AprilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A111EB178C00B1C1DF /* AprilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F33B57E1210130C004B5E89 /* ImageSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A211EB178C00B1C1DF /* ImageSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -34,6 +36,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7F27ED45125F7E8D00EF4AFB /* PVRTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTexture.h; sourceTree = "<group>"; };
+		7F27ED46125F7E8D00EF4AFB /* PVRTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PVRTexture.m; sourceTree = "<group>"; };
 		7F33B283120FEDE2004B5E89 /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F33B593121013F8004B5E89 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		7F33B59912101441004B5E89 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -53,7 +57,7 @@
 		7FA1AAE4124229F7004689AE /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
 		7FA1ABA112422C03004689AE /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/TimerPosix.cpp; sourceTree = "<group>"; };
 		7FA3ED1711F9817A001D1DDD /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Window.h; path = include/april/Window.h; sourceTree = "<group>"; };
-		7FA3ED2611F98BAE001D1DDD /* Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Window.cpp; path = src/Window.cpp; sourceTree = "<group>"; };
+		7FA3ED2611F98BAE001D1DDD /* Window.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Window.cpp; path = src/Window.cpp; sourceTree = "<group>"; };
 		7FCD394312018BD300608217 /* main_mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main_mac.m; sourceTree = "<group>"; };
 		7FF494E21247603F00A22D50 /* main_ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main_ios.m; sourceTree = "<group>"; };
 		7FF4960712476B9800A22D50 /* iOSWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSWindow.h; sourceTree = "<group>"; };
@@ -142,6 +146,8 @@
 		7F33B6831210294D004B5E89 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				7F27ED45125F7E8D00EF4AFB /* PVRTexture.h */,
+				7F27ED46125F7E8D00EF4AFB /* PVRTexture.m */,
 				7FF4961512476BED00A22D50 /* EAGLView.h */,
 				7FF4961612476BED00A22D50 /* EAGLView.mm */,
 				7FF4960712476B9800A22D50 /* iOSWindow.h */,
@@ -215,6 +221,7 @@
 				7FF4960912476B9800A22D50 /* iOSWindow.h in Headers */,
 				7FF4961712476BED00A22D50 /* EAGLView.h in Headers */,
 				7FF4970012478C9100A22D50 /* AprilUIKitDelegate.h in Headers */,
+				7F27ED47125F7E8D00EF4AFB /* PVRTexture.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +319,7 @@
 				7FF4960A12476B9800A22D50 /* iOSWindow.mm in Sources */,
 				7FF4961812476BED00A22D50 /* EAGLView.mm in Sources */,
 				7FF4970112478C9100A22D50 /* AprilUIKitDelegate.m in Sources */,
+				7F27ED48125F7E8D00EF4AFB /* PVRTexture.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

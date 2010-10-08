@@ -29,6 +29,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include <TargetConditionals.h>
 #if TARGET_OS_IPHONE
 #include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
 #else
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -60,8 +61,23 @@ namespace April
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		
+		switch (img->format) {
+#if TARGET_OS_IPHONE
+			case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
+			case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
+			{
+				int mipmaplevel = 0;
+				glCompressedTexImage2D(GL_TEXTURE_2D, mipmaplevel, img->format, img->w, img->h, 0, img->compressedLength, img->data);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, img->bpp == 4 ? GL_RGBA : GL_RGB, img->w,img->h, 0, img->format, GL_UNSIGNED_BYTE,img->data);
+				break;
+			}
+#endif
+			default:
+				glTexImage2D(GL_TEXTURE_2D, 0, img->bpp == 4 ? GL_RGBA : GL_RGB, img->w,img->h, 0, img->format, GL_UNSIGNED_BYTE,img->data);
+
+				break;
+		}
 		delete img;
 
 
