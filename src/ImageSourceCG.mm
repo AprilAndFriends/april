@@ -164,8 +164,8 @@ namespace April
 	ImageSource* _tryLoadingPVR(chstr filename)
 	{
 		NSString *pvrfilename = [NSString stringWithUTF8String:filename.c_str()];
-		pvrfilename = [pvrfilename substringToIndex:pvrfilename.length-pvrfilename.pathExtension.length];
-		pvrfilename = [pvrfilename stringByAppendingPathExtension:@"pvr"];
+		//pvrfilename = [pvrfilename substringToIndex:pvrfilename.length-pvrfilename.pathExtension.length];
+		//pvrfilename = [pvrfilename stringByAppendingPathExtension:@"pvr"];
 		
 		PVRTexture* pvrtex = [PVRTexture pvrTextureWithContentsOfURL:(NSURL*)_getFileURLAsResource(pvrfilename.UTF8String)];
 		if(!pvrtex)
