@@ -265,6 +265,7 @@ namespace April
 				sea(F10);
 				sea(F11);
 				sea(F12);
+                s2a(ESCAPE,ESCAPE);
 				
 				// keypad keys
 				s2a(KP0, NUMPAD0);
@@ -277,6 +278,8 @@ namespace April
 				s2a(KP7, NUMPAD7);
 				s2a(KP8, NUMPAD8);
 				s2a(KP9, NUMPAD9);
+                
+                s2a(LCTRL,LCONTROL);
 			default:
 				break;
 		}

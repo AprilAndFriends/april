@@ -43,9 +43,6 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			return 0;
 			break;
 		case WM_KEYDOWN:
-#ifdef _DEBUG //2DO - should be removed completely
-		    if (wParam == VK_ESCAPE) { ws->terminateMainLoop(); return 0; }
-#endif
 			ws->triggerKeyEvent(1,wParam);
 			break;
 		case WM_KEYUP: 
