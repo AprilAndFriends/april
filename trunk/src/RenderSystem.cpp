@@ -19,6 +19,11 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #define _OPENGL
 #endif
 
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
+
+
 #ifdef USE_IL
 #include <IL/il.h>
 #endif
@@ -516,7 +521,7 @@ namespace April
 		#endif
 		extensions+=".png";
 		extensions+=".jpg";
-#ifdef TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE
 		extensions+=".pvr";
 #endif
 	}
