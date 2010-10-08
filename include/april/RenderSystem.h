@@ -227,6 +227,7 @@ namespace April
 		virtual ~RenderSystem();
 
 		// object creation
+		hstr findTextureFile(chstr filename);
 		virtual Texture* loadTexture(chstr filename,bool dynamic=false)=0;
 		Texture* loadRAMTexture(chstr filename,bool dynamic=false);
 		virtual Texture* createTextureFromMemory(unsigned char* rgba,int w,int h)=0;
@@ -315,6 +316,7 @@ namespace April
 	AprilFnExport void setLogFunction(void (*fnptr)(chstr));
 	AprilFnExport void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title);
 	AprilFnExport void destroy();
+	AprilFnExport void addTextureExtension(chstr extension);
 	
 	// global rendersys shortcut variable
 	AprilFnExport extern April::RenderSystem* rendersys;
