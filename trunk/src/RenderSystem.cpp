@@ -11,6 +11,10 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include <stdio.h>
 #include <algorithm>
 
+#include <hltypes/harray.h>
+#include <hltypes/hfile.h>
+#include <hltypes/hstring.h>
+
 #if defined(__APPLE__) && !defined(_OPENGL)
 #define _OPENGL
 #endif
@@ -33,6 +37,7 @@ April::RenderSystem* rendersys DEPRECATED_ATTRIBUTE;
 namespace April
 {
 	April::RenderSystem* rendersys;
+	harray<hstr> extensions;
 
 	void april_writelog(chstr message)
 	{
@@ -316,6 +321,18 @@ namespace April
 		render(TriangleStrip,v,4,r,g,b,a);	
 	}
 	
+	hstr RenderSystem::findTextureFile(chstr filename)
+	{
+		if (hfile::exists(filename)) return filename;
+		hstr name;
+		foreach (hstr, it, extensions)
+		{
+			name=filename+(*it);
+			if (hfile::exists(name)) return name;
+		}
+		return "";
+	}
+	
 	void RenderSystem::logMessage(chstr message,chstr prefix)
 	{
 		g_logFunction(prefix+message);
@@ -359,7 +376,9 @@ namespace April
 	
 	Texture* RenderSystem::loadRAMTexture(chstr filename,bool dynamic)
 	{
-		return new RAMTexture(filename,dynamic);
+		hstr name=findTextureFile(filename);
+		if (name=="") return 0;
+		return new RAMTexture(name,dynamic);
 	}
 	
 	void RenderSystem::setIdentityTransform()
@@ -495,6 +514,11 @@ namespace April
 		#else
 			createDX9RenderSystem(window);
 		#endif
+		extensions+=".png";
+		extensions+=".jpg";
+#ifdef TARGET_OS_IPHONE
+		extensions+=".pvr";
+#endif
 	}
 	
 	void setLogFunction(void (*fnptr)(chstr))
@@ -510,6 +534,11 @@ namespace April
 		delete rendersys->getWindow();
 		delete rendersys;
 		rendersys = 0;
+	}
+	
+	void addTextureExtension(chstr extension)
+	{
+		extensions+=extension;
 	}
 
 }

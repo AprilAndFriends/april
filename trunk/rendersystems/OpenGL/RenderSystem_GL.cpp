@@ -196,9 +196,11 @@ namespace April
 
 	Texture* GLRenderSystem::loadTexture(chstr filename,bool dynamic)
 	{
+		hstr name=findTextureFile(filename);
+		if (name=="") return 0;
 		if (mDynamicLoading) dynamic=1;
-		if (dynamic) rendersys->logMessage("creating dynamic GL texture '"+filename+"'");
-		GLTexture* t=new GLTexture(filename,dynamic);
+		if (dynamic) rendersys->logMessage("creating dynamic GL texture '"+name+"'");
+		GLTexture* t=new GLTexture(name,dynamic);
 		if (!dynamic)
 		{
 			if (!t->load())

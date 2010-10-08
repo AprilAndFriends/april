@@ -130,9 +130,11 @@ namespace April
 
 	Texture* DirectX9RenderSystem::loadTexture(chstr filename,bool dynamic)
 	{
+		hstr name=findTextureFile(filename);
+		if (name=="") return 0;
 		if (mDynamicLoading) dynamic=1;
-		if (dynamic) rendersys->logMessage("creating dynamic DX9 texture '"+filename+"'");
-		DirectX9Texture* t=new DirectX9Texture(filename,dynamic);
+		if (dynamic) rendersys->logMessage("creating dynamic DX9 texture '"+name+"'");
+		DirectX9Texture* t=new DirectX9Texture(name,dynamic);
 		if (!dynamic)
 		{
 			if (!t->load())
