@@ -163,6 +163,7 @@ namespace April
 	
 	ImageSource* _tryLoadingPVR(chstr filename)
 	{
+#if TARGET_OS_IPHONE
 		NSString *pvrfilename = [NSString stringWithUTF8String:filename.c_str()];
 		//pvrfilename = [pvrfilename substringToIndex:pvrfilename.length-pvrfilename.pathExtension.length];
 		//pvrfilename = [pvrfilename stringByAppendingPathExtension:@"pvr"];
@@ -190,7 +191,9 @@ namespace April
 		img->compressedLength = data.length;
 		
 		return img;
-		
+#else
+		return NULL;
+#endif
 	}
 	
 	
@@ -231,7 +234,7 @@ namespace April
 			if (!imageSource){
 		*/		
 		
-		
+		CGImageSourceRef
 				imageSource = CGImageSourceCreateWithData((CFDataRef)[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]], NULL);
 				
 				if(!imageSource){
