@@ -65,6 +65,7 @@ namespace April
 		};
 		
 		
+		
 		// simple setters
 		void setRenderSystem(RenderSystem* rs) { mRenderSystem = rs; }
 		
@@ -102,11 +103,36 @@ namespace April
 		virtual bool handleQuitRequest(bool can_reject);
 		virtual void handleFocusEvent(bool has_focus);
 		virtual bool performUpdate(float time_increase);
-
 	};
 	
-	Window* createAprilWindow(chstr window_system_name, int w, int h, bool fullscreen, chstr title);
+	enum MessageBoxButton
+	{
+		AMSGBTN_OK=1,
+		AMSGBTN_CANCEL=2,
+		AMSGBTN_YES=4,
+		AMSGBTN_NO=8,
+		
+		AMSGBTN_OKCANCEL=AMSGBTN_OK|AMSGBTN_CANCEL,
+		AMSGBTN_YESNO=AMSGBTN_YES|AMSGBTN_NO,
+		AMSGBTN_YESNOCANCEL=AMSGBTN_YESNO|AMSGBTN_CANCEL
+	};
+	
+	enum MessageBoxStyle
+	{
+		AMSGSTYLE_PLAIN=0,
+		
+		AMSGSTYLE_INFORMATION=1,
+		AMSGSTYLE_WARNING=2,
+		AMSGSTYLE_CRITICAL=3,
+		AMSGSTYLE_QUESTION=4,
+		
+		AMSGSTYLE_MODAL=8
+	};
+	
+	AprilFnExport Window* createAprilWindow(chstr window_system_name, int w, int h, bool fullscreen, chstr title);
 	AprilFnExport gtypes::Vector2 getDesktopResolution();
+	AprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask=AMSGBTN_OK, MessageBoxStyle style=AMSGSTYLE_PLAIN);
+
 }
 
 

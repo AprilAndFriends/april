@@ -33,7 +33,9 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #endif
 
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
+	#import <Foundation/NSString.h>
 	#import <AppKit/NSScreen.h>
+	#import <AppKit/NSPanel.h>
 #endif
 
 
@@ -171,6 +173,7 @@ namespace April
 		// used only for softkeyboards, e.g. iOS
 	}
 	
+	
 	///////////////////////
 	// non members
 	///////////////////////
@@ -229,5 +232,132 @@ namespace April
 		return gtypes::Vector2(1024,768);
 #endif
 	}
+	
+	
+	MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style)
+	{
+	
+#if _WIN32
+		HWND wnd = 0;
+		if(rendersys && rendersys->getWindow() && style & AMSGSTYLE_MODAL)
+		{
+			wnd = (HWND)rendersys->getWindow()->getIDFromBackend();
+		}
+		int type = 0;
+		
+		if(buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
+			type |= MB_OKCANCEL;
+		else if(buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
+			type |= MB_YESNOCANCEL;
+		else if(buttonMask & AMSGBTN_OK)
+			type |= MB_OK;
+		else if(buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
+			type |= MB_YESNO;
+		
+		if(style & AMSGSTYLE_INFORMATION)
+			type |= MB_ICONINFORMATION;
+		else if(style & AMSGSTYLE_WARNING)
+			type |= MB_ICONWARNING;
+		else if(style & AMSGSTYLE_CRITICAL)
+			type |= MB_ICONSTOP;
+		else if(style & AMSGSTYLE_QUESTION)
+			type |= MB_ICONQUESTION;
+		
+		
+		MessageBox(wnd, title.c_str(), text.c_str(), 
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
+		// fugly implementation of showing messagebox on mac os
+		// ideas:
+		// * display as a sheet attached on top of the current window
+		// * prioritize buttons and automatically assign slots
+		// * use constants for button captions
+		// * use an array with constants for button captions etc
+		
+		NSString *buttons[]={@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+		
+		if(buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
+		{
+			buttons[0] = @"Ok";
+			buttons[1] = @"Cancel";
+		}
+		else if(buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
+		{
+			buttons[0] = @"Yes";
+			buttons[1] = @"No";
+			buttons[2] = @"Cancel";
+		}
+		else if(buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
+		{
+			buttons[0] = @"Yes";
+			buttons[1] = @"No";
+		}
+		else if(buttonMask & AMSGBTN_CANCEL)
+		{
+			buttons[0] = @"Cancel";
+		}
+		else if(buttonMask & AMSGBTN_OK)
+		{
+			buttons[0] = @"Ok";
+		}
+		else if(buttonMask & AMSGBTN_YES)
+		{
+			buttons[0] = @"Yes";
+		}
+		else if(buttonMask & AMSGBTN_NO)
+		{
+			buttons[0] = @"No";
+		}
+		
+				   
+		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
+		NSString *textns = [NSString stringWithUTF8String:text.c_str()];
+		
+		int clicked = NSRunAlertPanel(titlens, textns, buttons[0], buttons[1], buttons[2]);
+		switch(clicked)
+		{
+			case NSAlertDefaultReturn:
+				clicked=0;
+				break;
+			case NSAlertAlternateReturn:
+				clicked=1;
+				break;
+			case NSAlertOtherReturn:
+				clicked=2;
+				break;
+		}
+		if([buttons[clicked] isEqualToString:@"Ok" ])
+			return AMSGBTN_OK;
+		if([buttons[clicked] isEqualToString:@"Cancel" ])
+			return AMSGBTN_CANCEL;
+		if([buttons[clicked] isEqualToString:@"Yes" ])
+			return AMSGBTN_YES;
+		if([buttons[clicked] isEqualToString:@"No" ])
+			return AMSGBTN_NO;
+		
+		return AMSGBTN_OK;
+#else
+		
+		rendersys->logMessagef("== %s ==", title.c_str());
+		rendersys->logMessagef("%s", text.c_str());
+		rendersys->logMessagef("Button mask: %c%c%c%c", 
+							   buttonMask & AMSGBTN_OK ? '+' : '-', 
+							   buttonMask & AMSGBTN_CANCEL ? '+' : '-',
+							   buttonMask & AMSGBTN_YES ? '+' : '-',
+							   buttonMask & AMSGBTN_NO ? '+' : '-');
+		
+		// some dummy returnvalues
+		if(buttonMask & AMSGBTN_CANCEL)
+			return AMSGBTN_CANCEL;
+		if(buttonMask & AMSGBTN_OK)
+			return AMSGBTN_OK;
+		if(buttonMask & AMSGBTN_NO)
+			return AMSGBTN_NO;
+		if(buttonMask & AMSGBTN_YES)
+			return AMSGBTN_YES;
+		
+		return AMSGBTN_OK;
+#endif
+	}
+
 	
 }
