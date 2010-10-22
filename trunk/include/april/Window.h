@@ -100,6 +100,7 @@ namespace April
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
 		virtual void handleKeyEvent(KeyEventType type, KeySym keycode, unsigned int unicode);
 		virtual bool handleQuitRequest(bool can_reject);
+		virtual void handleFocusEvent(bool has_focus);
 		virtual bool performUpdate(float time_increase);
 
 	};
