@@ -264,7 +264,19 @@ namespace April
 			type |= MB_ICONQUESTION;
 		
 		
-		MessageBox(wnd, title.c_str(), text.c_str(), 
+		int btn = MessageBox(wnd, text.c_str(), title.c_str(), type);
+		switch(btn)
+		{
+		case IDOK:
+			return AMSGBTN_OK;
+		case IDYES:
+			return AMSGBTN_YES;
+		case IDNO:
+			return AMSGBTN_NO;
+		case IDCANCEL:
+			return AMSGBTN_CANCEL;
+		}
+		return AMSGBTN_OK;
 #elif TARGET_OS_MAC && !TARGET_OS_IPHONE
 		// fugly implementation of showing messagebox on mac os
 		// ideas:
