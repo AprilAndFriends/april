@@ -154,15 +154,6 @@ namespace April
 	
 	void Window::handleFocusEvent(bool has_focus)
 	{
-		if(has_focus)
-		{
-			printf("GAINED FOCUS\n");
-		}
-		else 
-		{
-			printf("LOST FOCUS\n");
-		}
-
 		if(mFocusCallback)
 		{
 			mFocusCallback(has_focus);
