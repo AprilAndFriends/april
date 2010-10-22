@@ -148,6 +148,10 @@ namespace April
 					_handleMouseEvent(event);
 					break;
 					
+				case SDL_ACTIVEEVENT:
+					if(event.active.state & SDL_APPINPUTFOCUS)
+						handleFocusEvent(event.active.gain);
+					break;
 					
 				default:
 					break;

@@ -238,7 +238,7 @@ namespace April
 				imageSource = CGImageSourceCreateWithData((CFDataRef)[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]], NULL);
 				
 				if(!imageSource){
-					NSLog(@"Failed to load %@", filename.c_str());
+					NSLog(@"Failed to load %@", filename.c_str()); // FIXME should use logFunction!
 					[arp release];
 					return NULL;
 				}
