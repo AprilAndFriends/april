@@ -37,7 +37,7 @@ Copyright (c) 2010 Kresimir Spes (kreso@cateia.com),                            
 #include "ImageSource.h"
 #include "Window.h"
 
-April::RenderSystem* rendersys DEPRECATED_ATTRIBUTE;
+April::RenderSystem* rendersys DEPRECATED_ATTRIBUTE = 0;
 
 namespace April
 {
@@ -336,6 +336,14 @@ namespace April
 			if (hfile::exists(name)) return name;
 		}
 		return "";
+	}
+	
+	void RenderSystem::logMessagef(chstr message, ...)
+	{
+		va_list vl;
+		va_start(vl, message);
+		logMessage(hvsprintf(message.c_str(), vl));;
+		va_end(vl);
 	}
 	
 	void RenderSystem::logMessage(chstr message,chstr prefix)

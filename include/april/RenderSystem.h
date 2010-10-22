@@ -277,6 +277,7 @@ namespace April
 		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
 		void setIdleTextureUnloadTime(float time) { mIdleUnloadTime=time; }
 
+		void logMessagef(chstr message, ...);
 		void logMessage(chstr message,chstr prefix="[april] ");
 
 		virtual void setAlphaMultiplier(float value)=0;
