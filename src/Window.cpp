@@ -32,6 +32,10 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 	#include "iOSWindow.h"
 #endif
 
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
+	#import <AppKit/NSScreen.h>
+#endif
+
 
 #include "Window.h"
 #include "Keys.h"
@@ -222,9 +226,14 @@ namespace April
 		
 		
 		// TODO dont flip width and height when in portrait mode
-		int w = [UIScreen mainScreen].bounds.size.height * scale;
-		int h = [UIScreen mainScreen].bounds.size.width * scale;
+		int w = mainScreen.bounds.size.height * scale;
+		int h = mainScreen.bounds.size.width * scale;
 		return gtypes::Vector2(w, h);
+#elif (TARGET_OS_MAC)
+		NSScreen* mainScreen = [NSScreen mainScreen];
+		
+		NSRect rect = [mainScreen frame];
+		return gtypes::Vector2(rect.size.width, rect.size.height);
 #else
 		return gtypes::Vector2(1024,768);
 #endif
