@@ -47,11 +47,11 @@
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
   </Dependencies>
-  <Dependencies Name="OpenGL_Release">
+  <Dependencies Name="OpenGL_Debug">
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
   </Dependencies>
-  <Dependencies Name="OpenGL_Debug">
+  <Dependencies Name="OpenGL_Release">
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
   </Dependencies>
