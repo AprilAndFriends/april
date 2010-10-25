@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Project Name="mesh_loader_demo" InternalType="Console">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00010001N0005Debug000000000000]]>
+    </Plugin>
+  </Plugins>
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
     <File Name="main.cpp"/>
   </VirtualDirectory>
+  <Dependencies Name="Debug">
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libaprilutil"/>
+  </Dependencies>
+  <Dependencies Name="Release">
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+    <Project Name="libapril"/>
+    <Project Name="libaprilutil"/>
+  </Dependencies>
   <Settings Type="Executable">
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="../../include"/>
+        <IncludePath Value="../../../hltypes/include"/>
+        <IncludePath Value="../../../gtypes/include"/>
+        <IncludePath Value="../../aprilutil/include"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="../../lib"/>
+        <LibraryPath Value="../../bin"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
@@ -74,30 +104,5 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
-    <GlobalSettings>
-      <Compiler Options="">
-        <IncludePath Value="../../include"/>
-        <IncludePath Value="../../../hltypes/include"/>
-        <IncludePath Value="../../../gtypes/include"/>
-        <IncludePath Value="../../aprilutil/include"/>
-      </Compiler>
-      <Linker Options="">
-        <LibraryPath Value="../../lib"/>
-        <LibraryPath Value="../../bin"/>
-      </Linker>
-      <ResourceCompiler Options=""/>
-    </GlobalSettings>
   </Settings>
-  <Dependencies Name="Debug">
-    <Project Name="libgtypes"/>
-    <Project Name="libhltypes"/>
-    <Project Name="libapril"/>
-    <Project Name="libaprilutil"/>
-  </Dependencies>
-  <Dependencies Name="Release">
-    <Project Name="libgtypes"/>
-    <Project Name="libhltypes"/>
-    <Project Name="libapril"/>
-    <Project Name="libaprilutil"/>
-  </Dependencies>
 </CodeLite_Project>
