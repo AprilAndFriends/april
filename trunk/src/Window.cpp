@@ -12,6 +12,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include <TargetConditionals.h>
 #endif
 
+
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -36,6 +37,11 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 	#import <Foundation/NSString.h>
 	#import <AppKit/NSScreen.h>
 	#import <AppKit/NSPanel.h>
+
+	#import <AppKit/NSApplication.h>
+	#import <AppKit/NSWindow.h>
+	#import <AppKit/NSEvent.h>
+	#import <AppKit/NSCursor.h>
 #endif
 
 
@@ -171,6 +177,43 @@ namespace April
 	{
 		// ignore by default
 		// used only for softkeyboards, e.g. iOS
+	}
+	
+	void Window::_platformCursorVisibilityUpdate(bool visible)
+	{
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
+		NSWindow* window = [[NSApplication sharedApplication] keyWindow];
+		bool shouldShow;
+		
+		if(!visible)
+		{
+			
+			//NSPoint 	mouseLoc = [window convertScreenToBase:[NSEvent mouseLocation]];
+			//[window frame]
+			
+			id hideInsideView; // either NSView or NSWindow; both implement "frame" method
+			/*if([window contentView])
+				hideInsideView = [window contentView];
+			else*/
+				hideInsideView = window;
+
+			if(hideInsideView)
+				shouldShow = !NSPointInRect([NSEvent mouseLocation], [hideInsideView frame]);
+			else // no view? let's presume we are in fullscreen where we should blindly honor the requests from the game
+				shouldShow = false;
+
+		}
+		else
+		{			
+			shouldShow = true;
+		}
+		
+		if(!shouldShow && CGCursorIsVisible())
+			CGDisplayHideCursor(kCGDirectMainDisplay);
+		else if (shouldShow && !CGCursorIsVisible())
+			CGDisplayShowCursor(kCGDirectMainDisplay);
+#endif
+		
 	}
 	
 	

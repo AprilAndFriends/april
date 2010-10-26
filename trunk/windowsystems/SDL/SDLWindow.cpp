@@ -67,6 +67,9 @@ namespace April
 		// we are not running yet
 		mRunning = false;
 		
+		// cursor is visible by default
+		mCursorVisible = true;
+		
 		// key repeat
 		SDL_EnableKeyRepeat(100, 50);
 	}
@@ -151,12 +154,17 @@ namespace April
 				case SDL_ACTIVEEVENT:
 					if(event.active.state & SDL_APPINPUTFOCUS)
 						handleFocusEvent(event.active.gain);
+					if(event.active.state & SDL_APPMOUSEFOCUS && event.active.gain && this->isSystemCursorShown() && !mCursorVisible)
+						SDL_ShowCursor(0);
 					break;
 					
 				default:
 					break;
 			}
 		}
+		// mac only: extra visibility handling
+		this->_platformCursorVisibilityUpdate(mCursorVisible);
+
 		
 	}
 	
@@ -179,15 +187,24 @@ namespace April
 	
 	void SDLWindow::showSystemCursor(bool b)
 	{
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
+		// intentionally do nothing; let the platform specific code take over
+		// if sdl-hidden mouse goes over the dock, then it will show again,
+		// and won't be hidden again
+#else
+		// on other platforms, SDL does a good enough job
 		SDL_ShowCursor(b ? 1 : 0);
+#endif
+		mCursorVisible = b;
 	}
 	
 	bool SDLWindow::isSystemCursorShown()
 	{
-		//SDL_Sh
-		//int cursor=glutGet(GLUT_WINDOW_CURSOR);
-		//return (cursor == GLUT_CURSOR_NONE) ? 0 : 1;
-		return true;
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
+		return CGCursorIsVisible();
+#else
+		return SDL_ShowCursor(SDL_QUERY);
+#endif
 	}
 	
 	
@@ -302,6 +319,7 @@ namespace April
 		
 	void SDLWindow::_handleMouseEvent(SDL_Event &event)
 	{
+		
 		mCursorX=event.button.x; 
 		mCursorY=event.button.y;
 		
@@ -340,14 +358,12 @@ namespace April
 			default:
 				break;
 		}
-		
-		
+				
 		handleMouseEvent(mouseevt, 
 						 event.button.x, event.button.y,
 						 mousebtn);
 		
 	}
-	
 	
 	void SDLWindow::_handleDisplayAndUpdate()
 	{

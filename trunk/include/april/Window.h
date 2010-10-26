@@ -64,6 +64,10 @@ namespace April
 			AMOUSEBTN_MIDDLE
 		};
 		
+		// utility funcs
+		void _platformCursorVisibilityUpdate(bool visible);
+
+		
 		
 		
 		// simple setters
