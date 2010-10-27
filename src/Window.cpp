@@ -185,20 +185,29 @@ namespace April
 		NSWindow* window = [[NSApplication sharedApplication] keyWindow];
 		bool shouldShow;
 		
-		if(!visible)
+		if(!visible && window)
 		{
 			
 			//NSPoint 	mouseLoc = [window convertScreenToBase:[NSEvent mouseLocation]];
 			//[window frame]
 			
+			
+			NSPoint mouseLoc;
+			
 			id hideInsideView; // either NSView or NSWindow; both implement "frame" method
-			/*if([window contentView])
+			if([window contentView])
+			{
 				hideInsideView = [window contentView];
-			else*/
+				mouseLoc = [window convertScreenToBase:[NSEvent mouseLocation]];
+			}
+			else
+			{
 				hideInsideView = window;
-
+				mouseLoc = [NSEvent mouseLocation];
+			}
+			
 			if(hideInsideView)
-				shouldShow = !NSPointInRect([NSEvent mouseLocation], [hideInsideView frame]);
+				shouldShow = !NSPointInRect(mouseLoc, [hideInsideView frame]);
 			else // no view? let's presume we are in fullscreen where we should blindly honor the requests from the game
 				shouldShow = false;
 
