@@ -200,7 +200,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	
 	bool Win32Window::isSystemCursorShown()
 	{
-		return cursor_visible;
+		if(cursor_visible)
+			return true;
+			
+		return !(cursorpos.x >= 0 && cursorpos.y >= 0 && cursorpos.x < getWindowWidth() && cursorpos.y < getWindowHeight());
 	}
 	
 	void Win32Window::doEvents()
