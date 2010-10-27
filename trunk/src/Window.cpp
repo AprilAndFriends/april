@@ -185,7 +185,7 @@ namespace April
 		NSWindow* window = [[NSApplication sharedApplication] keyWindow];
 		bool shouldShow;
 		
-		if(!visible && window)
+		if(!visible)
 		{
 			
 			//NSPoint 	mouseLoc = [window convertScreenToBase:[NSEvent mouseLocation]];

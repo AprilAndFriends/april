@@ -10,6 +10,16 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 
 #ifdef HAVE_SDL
 
+
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
+#include <ApplicationServices/ApplicationServices.h>
+#endif
+#endif
+
+
+
 #include <SDL/SDL.h>
 #include <ctype.h> // tolower()
 #include <SDL/SDL_syswm.h>
