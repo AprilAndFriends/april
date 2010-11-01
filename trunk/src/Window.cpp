@@ -62,6 +62,7 @@ namespace April
 		mCharCallback=0;
 		mQuitCallback=0;
 		mFocusCallback=0;
+		mVKeyboardCallback=0;
 	}
 	
 	void Window::setUpdateCallback(bool (*callback)(float))
@@ -92,6 +93,10 @@ namespace April
 	void Window::setWindowFocusCallback(void (*focus_callback)(bool))
 	{
 		mFocusCallback = focus_callback;
+	}
+	void Window::setVirtualKeyboardCallback(void (*vk_callback)(bool))
+	{
+		mVKeyboardCallback = vk_callback;
 	}
 	
 	bool Window::isFullscreen()

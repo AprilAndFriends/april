@@ -29,6 +29,14 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include "ImageSource.h"
 #include "RenderSystem.h"
 
+// fix for NSURL not working on iPad Simulator
+#ifndef __GNUC__
+#define __asm__ asm
+#endif
+
+__asm__(".weak_reference _OBJC_CLASS_$_NSURL");
+// end iPad Simulator fix
+
 static NSURL* _getFileURL(chstr filename)
 {
 	

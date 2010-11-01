@@ -99,17 +99,45 @@
         animationInterval = 1.0 / 60.0;
 		
 		
+		// fake textbox
 		CGRect textFrame = frame;
 		textFrame.origin.x += frame.size.width;
 		textField = [[UITextField alloc] initWithFrame:textFrame];
 		textField.delegate = self;
 		textField.text = @" "; // something to be able to catch text edit
 		[self addSubview:textField];
+
+		// tracking of keyboard appearance/disappearance
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(keyboardWasShown:)
+													 name:UIKeyboardDidShowNotification object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(keyboardWasHidden:)
+													 name:UIKeyboardDidHideNotification object:nil];
+		
 		
     }
 	
     return self;
 }
+
+
+
+
+// we'll also use this objc class for getting notifications
+// on virtual keyboard's appearance and disappearance
+
+- (void)keyboardWasShown:(id)sender
+{
+	aprilWindow->keyboardWasShown();
+}
+
+- (void)keyboardWasHidden:(id)sender
+{
+	aprilWindow->keyboardWasHidden();
+}
+
 
 - (void)drawView {
     
