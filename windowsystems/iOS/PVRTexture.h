@@ -51,6 +51,15 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 #import <OpenGLES/ES1/gl.h>
 #import <OpenGLES/ES1/glext.h>
 
+// fix for NSURL not working on iPad Simulator
+#ifndef __GNUC__
+#define __asm__ asm
+#endif
+
+__asm__(".weak_reference _OBJC_CLASS_$_NSURL");
+// end iPad Simulator fix
+
+
 @interface PVRTexture : NSObject
 {
 	NSMutableArray *_imageData;

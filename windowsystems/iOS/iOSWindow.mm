@@ -222,7 +222,18 @@ namespace April
 		return NO;
 	}
 	
-		//////////////
+	void iOSWindow::keyboardWasShown()
+	{
+		if(mVKeyboardCallback)
+			mVKeyboardCallback(true);
+	}
+	void iOSWindow::keyboardWasHidden()
+	{
+		if(mVKeyboardCallback)
+			mVKeyboardCallback(false);
+	}
+	
+	//////////////
 	void iOSWindow::handleDisplayAndUpdate()
 	{
 		//static unsigned int x=SDL_GetTicks();

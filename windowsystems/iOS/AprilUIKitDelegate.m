@@ -18,6 +18,7 @@
 
 extern int(*april_RealMain)(int argc, char** argv);
 
+
 - (void)runMain:(id)sender
 {	
 	// thanks to Kyle Poole for this trick
@@ -38,5 +39,6 @@ extern int(*april_RealMain)(int argc, char** argv);
 
 	[self performSelector:@selector(runMain:) withObject:nil afterDelay:0.2f];
 }
+
 
 @end

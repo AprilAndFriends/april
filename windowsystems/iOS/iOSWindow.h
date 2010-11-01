@@ -44,6 +44,8 @@ namespace April
 		void doEvents();
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
+		void keyboardWasShown();
+		void keyboardWasHidden();
 		
 		void handleDisplayAndUpdate();
 		
