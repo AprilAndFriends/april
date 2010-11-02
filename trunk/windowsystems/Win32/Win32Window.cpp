@@ -68,7 +68,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			if (!instance->isFullscreen()) ReleaseCapture();
 			break;
 		case WM_MOUSEMOVE:
-			ws->triggerMouseMoveEvent();break;
+			ws->triggerMouseMoveEvent();
+			break;
 		case WM_SETCURSOR:
 			if (!cursor_visible)
 			{
