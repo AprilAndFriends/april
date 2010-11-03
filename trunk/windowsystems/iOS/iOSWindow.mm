@@ -203,12 +203,14 @@ namespace April
 		if (nsrangeLocation==0 && str.size()==0) {
 			// deploy backspace
 			handleKeyEvent(AKEYEVT_DOWN, AK_BACK, 8);
+			handleKeyEvent(AKEYEVT_UP, AK_BACK, 8);
 		}
 		else if (str.size())
 		{
 			int inputChar = str[0];
 
-			if(isalnum(inputChar) || inputChar == ' ')
+			//if(isalnum(inputChar) || inputChar == ' ')
+			if(inputChar >= 32 && inputChar <= 127)
 			{
 				// deploy keypress
 				April::KeySym keycode = AK_NONE; // FIXME incorrect, might cause a nasty bug. 
