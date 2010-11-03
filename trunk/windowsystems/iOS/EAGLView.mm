@@ -154,8 +154,7 @@
     [EAGLContext setCurrentContext:context];
 	
 	//mydraw();
-	((April::iOSWindow*)aprilWindow)->handleDisplayAndUpdate();
-	NSLog(@"drawn");
+	//((April::iOSWindow*)aprilWindow)->handleDisplayAndUpdate();
 	
 
 
@@ -177,6 +176,10 @@
 }
 
 - (void)layoutSubviews {
+	CGRect textFrame = textField.frame;
+	textFrame.origin.x += textFrame.size.width;
+	textField.frame = textFrame;
+	
     [EAGLContext setCurrentContext:context];
     [self destroyFramebuffer];
     [self createFramebuffer];

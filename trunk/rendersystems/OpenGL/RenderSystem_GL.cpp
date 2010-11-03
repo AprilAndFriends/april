@@ -304,7 +304,7 @@ namespace April
 		glMatrixMode(GL_PROJECTION);
 #if TARGET_OS_IPHONE // TODO dont rotate if display is in portrait mode
 		glLoadIdentity();
-		glRotatef(90, 0, 0, -1);
+		//glRotatef(90, 0, 0, -1);
 		glMultMatrixf(matrix.mat);
 #else
 		glLoadMatrixf(matrix.mat);
