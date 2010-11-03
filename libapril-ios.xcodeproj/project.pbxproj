@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F0726C712817CDE00600ACA /* AprilViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F0726C512817CDE00600ACA /* AprilViewController.h */; };
+		7F0726C812817CDE00600ACA /* AprilViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F0726C612817CDE00600ACA /* AprilViewController.m */; };
 		7F27ED47125F7E8D00EF4AFB /* PVRTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F27ED45125F7E8D00EF4AFB /* PVRTexture.h */; };
 		7F27ED48125F7E8D00EF4AFB /* PVRTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F27ED46125F7E8D00EF4AFB /* PVRTexture.m */; };
 		7F33B57C1210130C004B5E89 /* main.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F4D0FE911FEE6C500F2F9F5 /* main.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -36,6 +38,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7F0726C512817CDE00600ACA /* AprilViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AprilViewController.h; sourceTree = "<group>"; };
+		7F0726C612817CDE00600ACA /* AprilViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AprilViewController.m; sourceTree = "<group>"; };
 		7F27ED45125F7E8D00EF4AFB /* PVRTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTexture.h; sourceTree = "<group>"; };
 		7F27ED46125F7E8D00EF4AFB /* PVRTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PVRTexture.m; sourceTree = "<group>"; };
 		7F33B283120FEDE2004B5E89 /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +158,8 @@
 				7FF4960812476B9800A22D50 /* iOSWindow.mm */,
 				7FF496FE12478C9100A22D50 /* AprilUIKitDelegate.h */,
 				7FF496FF12478C9100A22D50 /* AprilUIKitDelegate.m */,
+				7F0726C512817CDE00600ACA /* AprilViewController.h */,
+				7F0726C612817CDE00600ACA /* AprilViewController.m */,
 			);
 			name = iOS;
 			path = windowsystems/iOS;
@@ -222,6 +228,7 @@
 				7FF4961712476BED00A22D50 /* EAGLView.h in Headers */,
 				7FF4970012478C9100A22D50 /* AprilUIKitDelegate.h in Headers */,
 				7F27ED47125F7E8D00EF4AFB /* PVRTexture.h in Headers */,
+				7F0726C712817CDE00600ACA /* AprilViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +327,7 @@
 				7FF4961812476BED00A22D50 /* EAGLView.mm in Sources */,
 				7FF4970112478C9100A22D50 /* AprilUIKitDelegate.m in Sources */,
 				7F27ED48125F7E8D00EF4AFB /* PVRTexture.m in Sources */,
+				7F0726C812817CDE00600ACA /* AprilViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

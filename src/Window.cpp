@@ -106,7 +106,12 @@ namespace April
 	
 	bool Window::performUpdate(float time_increase)
 	{
-		return mUpdateCallback(time_increase);
+		// returning true: continue execution
+		// returning false: abort execution
+		if(mUpdateCallback)
+			return mUpdateCallback(time_increase);
+		else
+			return true;
 	}
 	
 	void Window::handleKeyEvent(KeyEventType type, KeySym keycode, unsigned int unicode)
@@ -276,7 +281,7 @@ namespace April
 		
 		
 		
-		// TODO dont flip width and height when in portrait mode
+		// flipped width and height, to get a 4:3 ratio instead of 3:4
 		int w = mainScreen.bounds.size.height * scale;
 		int h = mainScreen.bounds.size.width * scale;
 		return gtypes::Vector2(w, h);

@@ -11,11 +11,14 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/CAEAGLLayer.h>
 #import "EAGLView.h"
-#include "iOSWindow.h"
-#include "RenderSystem.h"
+#import "AprilViewController.h"
+#import "iOSWindow.h"
+#import "RenderSystem.h"
+#import <hltypes/exception.h>
 
 static UIWindow *window;
 static EAGLView *glview;
+static AprilViewController *viewcontroller;
 
 namespace April
 {
@@ -29,11 +32,15 @@ namespace April
 		mFullscreen = fullscreen;
 		
 		[window setBackgroundColor:[UIColor blueColor]];
-		[window makeKeyAndVisible];
+		[window makeKeyAndVisible]; // FIXME do this after rendering first frame!
 		
-		glview = [[[EAGLView alloc] initWithFrame:[window bounds]] autorelease];
+		
+		viewcontroller = [[AprilViewController alloc] initWithWindow:window];
+		glview = (EAGLView*)viewcontroller.view;
+		if(!glview)
+			throw hl_exception("iOSWindow failed to create glview");
 		glview.aprilWindowVoid = this;
-
+		
 		[window addSubview:glview];
 
 		
@@ -124,8 +131,8 @@ namespace April
 		CGPoint location = [touch locationInView:glview];
 		
 		//For "primary" landscape orientation, this is how we calc it
-		mCursorX=location.y; 
-		mCursorY=width-location.x;
+		mCursorX=location.x; 
+		mCursorY=location.y;
 
 		CAEAGLLayer* caeagllayer = (CAEAGLLayer*)[glview layer];
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
