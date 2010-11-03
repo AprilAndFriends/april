@@ -105,6 +105,12 @@
 		textField = [[UITextField alloc] initWithFrame:textFrame];
 		textField.delegate = self;
 		textField.text = @" "; // something to be able to catch text edit
+		textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+		textField.autocorrectionType = UITextAutocorrectionTypeNo;
+		textField.keyboardAppearance = UIKeyboardAppearanceDefault;
+		textField.keyboardType = UIKeyboardTypeDefault;
+		textField.returnKeyType = UIReturnKeyDefault;
+		textField.secureTextEntry = NO;
 		[self addSubview:textField];
 
 		// tracking of keyboard appearance/disappearance
