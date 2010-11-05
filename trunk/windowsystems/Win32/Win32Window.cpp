@@ -18,7 +18,7 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 namespace April
 {
 	static HWND hWnd;
-	static gtypes::Vector2 cursorpos;
+	static gvec2 cursorpos;
 	static bool cursor_visible=1;
 	static April::Timer globalTimer;
 	static Win32Window* instance;
@@ -185,10 +185,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 #endif
 	}
 	
-	gtypes::Vector2 Win32Window::getCursorPos()
+	gvec2 Win32Window::getCursorPos()
 	{
 		
-		return gtypes::Vector2(cursorpos.x,cursorpos.y);
+		return gvec2(cursorpos.x,cursorpos.y);
 	}
 
 	void Win32Window::showSystemCursor(bool b)
@@ -326,9 +326,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 /*
 
-	gtypes::Vector2 getDesktopResolution()
+	gvec2 getDesktopResolution()
 	{
-		return gtypes::Vector2(GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
+		return gvec2(GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
 	}
 	*/
 	void* Win32Window::getIDFromBackend()
