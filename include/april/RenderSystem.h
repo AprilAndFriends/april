@@ -139,6 +139,19 @@ namespace April
 		bool operator==(Color& other);
 		bool operator!=(Color& other);
 		
+		Color operator+(Color& other);
+		Color operator-(Color& other);
+		Color operator*(Color& other);
+		Color operator/(Color& other);
+		Color operator*(float value);
+		Color operator/(float value);
+		bool operator+=(Color& other);
+		bool operator-=(Color& other);
+		bool operator*=(Color& other);
+		bool operator/=(Color& other);
+		bool operator*=(float value);
+		bool operator/=(float value);
+		
 	};
 
 	class AprilExport Texture

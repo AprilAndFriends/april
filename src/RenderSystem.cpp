@@ -13,6 +13,7 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include <hltypes/harray.h>
 #include <hltypes/hfile.h>
 #include <hltypes/hstring.h>
+#include <hltypes/util.h>
 
 #if defined(__APPLE__) && !defined(_OPENGL)
 #define _OPENGL
@@ -152,6 +153,97 @@ namespace April
 	{
 		return !(*this == other);
 	}
+	
+	Color Color::operator+(Color& other)
+	{
+		Color result;
+		result += other;
+		return result;
+	}
+
+	Color Color::operator-(Color& other)
+	{
+		Color result;
+		result -= other;
+		return result;
+	}
+
+	Color Color::operator*(Color& other)
+	{
+		Color result;
+		result *= other;
+		return result;
+	}
+
+	Color Color::operator/(Color& other)
+	{
+		Color result;
+		result /= other;
+		return result;
+	}
+
+	Color Color::operator*(float value)
+	{
+		Color result;
+		result *= value;
+		return result;
+	}
+
+	Color Color::operator/(float value)
+	{
+		Color result;
+		result /= value;
+		return result;
+	}
+
+	bool Color::operator+=(Color& other)
+	{
+		this->r = hclamp(this->r + other.r, 0, 255);
+		this->g = hclamp(this->g + other.g, 0, 255);
+		this->b = hclamp(this->b + other.b, 0, 255);
+		this->a = hclamp(this->a + other.a, 0, 255);
+	}
+
+	bool Color::operator-=(Color& other)
+	{
+		this->r = hclamp(this->r - other.r, 0, 255);
+		this->g = hclamp(this->g - other.g, 0, 255);
+		this->b = hclamp(this->b - other.b, 0, 255);
+		this->a = hclamp(this->a - other.a, 0, 255);
+	}
+
+	bool Color::operator*=(Color& other)
+	{
+		this->r = hclamp((int)(this->r * other.r_float()), 0, 255);
+		this->g = hclamp((int)(this->g * other.g_float()), 0, 255);
+		this->b = hclamp((int)(this->b * other.b_float()), 0, 255);
+		this->a = hclamp((int)(this->a * other.a_float()), 0, 255);
+	}
+
+	bool Color::operator/=(Color& other)
+	{
+		this->r = hclamp((int)(this->r / other.r_float()), 0, 255);
+		this->g = hclamp((int)(this->g / other.g_float()), 0, 255);
+		this->b = hclamp((int)(this->b / other.b_float()), 0, 255);
+		this->a = hclamp((int)(this->a / other.a_float()), 0, 255);
+	}
+
+	bool Color::operator*=(float value)
+	{
+		this->r = hclamp((int)(this->r * value), 0, 255);
+		this->g = hclamp((int)(this->g * value), 0, 255);
+		this->b = hclamp((int)(this->b * value), 0, 255);
+		this->a = hclamp((int)(this->a * value), 0, 255);
+	}
+
+	bool Color::operator/=(float value)
+	{
+		this->r = hclamp((int)(this->r / value), 0, 255);
+		this->g = hclamp((int)(this->g / value), 0, 255);
+		this->b = hclamp((int)(this->b / value), 0, 255);
+		this->a = hclamp((int)(this->a / value), 0, 255);
+	}
+
 /*****************************************************************************************/
 	Texture::Texture()
 	{
@@ -431,7 +523,7 @@ namespace April
 		
 	void RenderSystem::setOrthoProjection(float w,float h,float x_offset,float y_offset)
 	{
-		float t=getPixelOffset(),wnd_w=getWindowWidth(),wnd_h=getWindowHeight();
+		float t=getPixelOffset(),wnd_w=getWindow()->getWindowWidth(),wnd_h=getWindow()->getWindowHeight();
 		mProjectionMatrix.ortho(w,h,x_offset+t*w/wnd_w,y_offset+t*h/wnd_h);
 		_setProjectionMatrix(mProjectionMatrix);
 	}
