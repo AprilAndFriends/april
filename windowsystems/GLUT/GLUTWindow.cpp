@@ -132,9 +132,9 @@ namespace April
 		glutSetWindowTitle(title.c_str());
 	}
 	
-	gtypes::Vector2 GLUTWindow::getCursorPos()
+	gvec2 GLUTWindow::getCursorPos()
 	{
-		return gtypes::Vector2(mCursorX,mCursorY);
+		return gvec2(mCursorX,mCursorY);
 	}
 	
 	int GLUTWindow::getWindowWidth()

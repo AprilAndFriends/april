@@ -61,7 +61,7 @@ namespace April
 		void setAlphaMultiplier(float value);
 		/*
 		void setWindowTitle(chstr title);
-		gtypes::Vector2 getCursorPos();
+		gvec2 getCursorPos();
 		void showSystemCursor(bool b);
 		bool isSystemCursorShown();
 

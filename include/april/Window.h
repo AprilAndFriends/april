@@ -93,7 +93,7 @@ namespace April
 		virtual int getWindowWidth()=0;
 		virtual int getWindowHeight()=0;
 		virtual void setWindowTitle(chstr title)=0;
-		virtual gtypes::Vector2 getCursorPos()=0;
+		virtual gvec2 getCursorPos()=0;
 		virtual void presentFrame()=0;
 		virtual void* getIDFromBackend()=0;
 		virtual void doEvents()=0;
@@ -136,7 +136,7 @@ namespace April
 	};
 	
 	AprilFnExport Window* createAprilWindow(chstr window_system_name, int w, int h, bool fullscreen, chstr title);
-	AprilFnExport gtypes::Vector2 getDesktopResolution();
+	AprilFnExport gvec2 getDesktopResolution();
 	AprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask=AMSGBTN_OK, MessageBoxStyle style=AMSGSTYLE_PLAIN);
 
 }

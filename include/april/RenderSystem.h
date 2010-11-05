@@ -318,7 +318,7 @@ namespace April
         
 		virtual void enterMainLoop() DEPRECATED_ATTRIBUTE;
 		virtual void terminateMainLoop() DEPRECATED_ATTRIBUTE;
-		virtual gtypes::Vector2 getCursorPos() DEPRECATED_ATTRIBUTE;
+		virtual gvec2 getCursorPos() DEPRECATED_ATTRIBUTE;
 		virtual int getWindowWidth() DEPRECATED_ATTRIBUTE;
 		virtual int getWindowHeight() DEPRECATED_ATTRIBUTE;
 		virtual void setWindowTitle(chstr title) DEPRECATED_ATTRIBUTE;

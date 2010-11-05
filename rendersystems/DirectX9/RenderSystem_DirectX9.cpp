@@ -33,7 +33,7 @@ namespace April
 	IDirect3DDevice9* d3dDevice=0;
 	static HWND hWnd;
 	DirectX9Texture* active_texture=0;
-	gtypes::Vector2 cursorpos;
+	gvec2 cursorpos;
 	bool cursor_visible=1;
 	D3DPRESENT_PARAMETERS d3dpp;
 	bool window_active=1;
@@ -413,10 +413,10 @@ namespace April
 #endif
 }
 	
-	gtypes::Vector2 DirectX9RenderSystem::getCursorPos()
+	gvec2 DirectX9RenderSystem::getCursorPos()
 	{
 		
-		return gtypes::Vector2(cursorpos.x,cursorpos.y);
+		return gvec2(cursorpos.x,cursorpos.y);
 	}
 
 	void DirectX9RenderSystem::showSystemCursor(bool b)

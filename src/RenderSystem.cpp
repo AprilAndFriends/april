@@ -580,7 +580,7 @@ namespace April
 		logMessage("RenderSystem::enterMainLoop() is deprecated"); 
 		getWindow()->terminateMainLoop(); 
 	}
-	gtypes::Vector2 RenderSystem::getCursorPos()
+	gvec2 RenderSystem::getCursorPos()
 	{
 		return getWindow()->getCursorPos();
 	}

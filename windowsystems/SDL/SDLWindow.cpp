@@ -224,9 +224,9 @@ namespace April
 		mTitle = title;
 	}
 	
-	gtypes::Vector2 SDLWindow::getCursorPos()
+	gvec2 SDLWindow::getCursorPos()
 	{
-		return gtypes::Vector2(mCursorX,mCursorY);
+		return gvec2(mCursorX,mCursorY);
 	}
 	
 	int SDLWindow::getWindowWidth()

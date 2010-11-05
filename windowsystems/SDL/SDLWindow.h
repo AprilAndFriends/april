@@ -46,7 +46,7 @@ namespace April
 		int getWindowWidth();
 		int getWindowHeight();
 		void setWindowTitle(chstr title);
-		gtypes::Vector2 getCursorPos();
+		gvec2 getCursorPos();
 		void presentFrame();
 		void* getIDFromBackend();
 		void doEvents();

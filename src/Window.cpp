@@ -266,10 +266,10 @@ namespace April
 	}
 	
 	
-	gtypes::Vector2 getDesktopResolution()
+	gvec2 getDesktopResolution()
 	{
 #ifdef _WIN32
-		return gtypes::Vector2(GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
+		return gvec2(GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN));
 #elif (TARGET_OS_IPHONE)
 		
 		UIScreen* mainScreen = [UIScreen mainScreen];
@@ -284,14 +284,14 @@ namespace April
 		// flipped width and height, to get a 4:3 ratio instead of 3:4
 		int w = mainScreen.bounds.size.height * scale;
 		int h = mainScreen.bounds.size.width * scale;
-		return gtypes::Vector2(w, h);
+		return gvec2(w, h);
 #elif (TARGET_OS_MAC)
 		NSScreen* mainScreen = [NSScreen mainScreen];
 		
 		NSRect rect = [mainScreen frame];
-		return gtypes::Vector2(rect.size.width, rect.size.height);
+		return gvec2(rect.size.width, rect.size.height);
 #else
-		return gtypes::Vector2(1024,768);
+		return gvec2(1024,768);
 #endif
 	}
 	
