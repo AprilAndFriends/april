@@ -77,13 +77,15 @@
     if ((self = [super initWithFrame:frame])) {
         // Get the layer
         CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
-	
+		
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		if ([eaglLayer respondsToSelector:@selector(setContentsScale:)])
 		{
 			if ([[UIScreen mainScreen] respondsToSelector:@selector(scale:)]) {
 				eaglLayer.contentsScale = [[UIScreen mainScreen] scale];
 			}
 		}
+#endif
 		
         eaglLayer.opaque = YES;
         eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
