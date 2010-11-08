@@ -274,11 +274,13 @@ namespace April
 		
 		UIScreen* mainScreen = [UIScreen mainScreen];
 		float scale=1;
-		
+
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
+
 		if ([mainScreen respondsToSelector:@selector(scale:)]) {
 			scale = [mainScreen scale];
 		}
-		
+#endif
 		
 		
 		// flipped width and height, to get a 4:3 ratio instead of 3:4

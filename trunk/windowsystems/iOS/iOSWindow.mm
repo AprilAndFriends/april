@@ -73,21 +73,24 @@ namespace April
     int iOSWindow::getWindowWidth()
     {
 		// TODO dont swap width and height in case display is in portrait mode
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
 			return window.bounds.size.height * caeagllayer.contentsScale;
 		}
+#endif
 		
         return window.bounds.size.height;
     }
     int iOSWindow::getWindowHeight()
     {
 		// TODO dont swap width and height in case display is in portrait mode
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
 			return window.bounds.size.width * caeagllayer.contentsScale;
 		}
-		
+#endif
         return window.bounds.size.width;
     }
     void iOSWindow::setWindowTitle(chstr title)
@@ -133,12 +136,14 @@ namespace April
 		//For "primary" landscape orientation, this is how we calc it
 		mCursorX=location.x; 
 		mCursorY=location.y;
-
+		
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer* caeagllayer = (CAEAGLLayer*)[glview layer];
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
 			mCursorX *= [caeagllayer contentsScale];
 			mCursorY *= [caeagllayer contentsScale];
 		}
+#endif
 	}
 	
 	void iOSWindow::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
