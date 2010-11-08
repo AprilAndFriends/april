@@ -196,7 +196,7 @@ namespace April
 		return result;
 	}
 
-	bool Color::operator+=(Color& other)
+	void Color::operator+=(Color& other)
 	{
 		this->r = hclamp(this->r + other.r, 0, 255);
 		this->g = hclamp(this->g + other.g, 0, 255);
@@ -204,7 +204,7 @@ namespace April
 		this->a = hclamp(this->a + other.a, 0, 255);
 	}
 
-	bool Color::operator-=(Color& other)
+	void Color::operator-=(Color& other)
 	{
 		this->r = hclamp(this->r - other.r, 0, 255);
 		this->g = hclamp(this->g - other.g, 0, 255);
@@ -212,7 +212,7 @@ namespace April
 		this->a = hclamp(this->a - other.a, 0, 255);
 	}
 
-	bool Color::operator*=(Color& other)
+	void Color::operator*=(Color& other)
 	{
 		this->r = hclamp((int)(this->r * other.r_float()), 0, 255);
 		this->g = hclamp((int)(this->g * other.g_float()), 0, 255);
@@ -220,7 +220,7 @@ namespace April
 		this->a = hclamp((int)(this->a * other.a_float()), 0, 255);
 	}
 
-	bool Color::operator/=(Color& other)
+	void Color::operator/=(Color& other)
 	{
 		this->r = hclamp((int)(this->r / other.r_float()), 0, 255);
 		this->g = hclamp((int)(this->g / other.g_float()), 0, 255);
@@ -228,7 +228,7 @@ namespace April
 		this->a = hclamp((int)(this->a / other.a_float()), 0, 255);
 	}
 
-	bool Color::operator*=(float value)
+	void Color::operator*=(float value)
 	{
 		this->r = hclamp((int)(this->r * value), 0, 255);
 		this->g = hclamp((int)(this->g * value), 0, 255);
@@ -236,7 +236,7 @@ namespace April
 		this->a = hclamp((int)(this->a * value), 0, 255);
 	}
 
-	bool Color::operator/=(float value)
+	void Color::operator/=(float value)
 	{
 		this->r = hclamp((int)(this->r / value), 0, 255);
 		this->g = hclamp((int)(this->g / value), 0, 255);

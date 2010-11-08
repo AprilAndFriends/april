@@ -145,12 +145,12 @@ namespace April
 		Color operator/(Color& other);
 		Color operator*(float value);
 		Color operator/(float value);
-		bool operator+=(Color& other);
-		bool operator-=(Color& other);
-		bool operator*=(Color& other);
-		bool operator/=(Color& other);
-		bool operator*=(float value);
-		bool operator/=(float value);
+		void operator+=(Color& other);
+		void operator-=(Color& other);
+		void operator*=(Color& other);
+		void operator/=(Color& other);
+		void operator*=(float value);
+		void operator/=(float value);
 		
 	};
 
