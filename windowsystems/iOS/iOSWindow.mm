@@ -14,8 +14,10 @@
 #import "AprilViewController.h"
 #import "iOSWindow.h"
 #import "RenderSystem.h"
+#import "AprilUIKitDelegate.h"
 #import <hltypes/exception.h>
 
+static AprilUIKitDelegate *appDelegate;
 static UIWindow *window;
 static EAGLView *glview;
 static AprilViewController *viewcontroller;
@@ -24,16 +26,17 @@ namespace April
 {
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
-		window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+		appDelegate = ((AprilUIKitDelegate*)[[UIApplication sharedApplication] delegate]);
+		window = [appDelegate window];
 		if(fullscreen)
 			[UIApplication sharedApplication].statusBarHidden = YES;
 		else
 			[UIApplication sharedApplication].statusBarHidden = NO;
 		mFullscreen = fullscreen;
 		
-		[window setBackgroundColor:[UIColor blueColor]];
-		[window makeKeyAndVisible]; // FIXME do this after rendering first frame!
+		[window setBackgroundColor:[UIColor blackColor]];
 		
+		mFirstFrameDrawn = false; // show window after drawing first frame
 		
 		viewcontroller = [[AprilViewController alloc] initWithWindow:window];
 		glview = (EAGLView*)viewcontroller.view;
@@ -41,9 +44,8 @@ namespace April
 			throw hl_exception("iOSWindow failed to create glview");
 		glview.aprilWindowVoid = this;
 		
-		[window addSubview:glview];
+		[window insertSubview:glview atIndex:window.subviews.count];
 
-		
 		mRunning = true;
     }
     
@@ -93,21 +95,44 @@ namespace April
 #endif
         return window.bounds.size.width;
     }
+
     void iOSWindow::setWindowTitle(chstr title)
     {
         // no effect on iOS
     }
+	
     gtypes::Vector2 iOSWindow::getCursorPos()
     {
         return gtypes::Vector2(mCursorX,mCursorY);
     }
+	
     void iOSWindow::presentFrame()
     {
-        // dummy
-		
-//		[glview setNeedsDisplay];
-		[glview swapBuffers];
+		if(mFirstFrameDrawn)
+		{
+			[glview swapBuffers];
+		}
+		else
+		{
+			[glview setNeedsDisplay];
+			[glview swapBuffers];
+
+			doEvents();
+
+			if([[window subviews] count])
+			{
+				id defaultImageView = [[window subviews] objectAtIndex:0];
+				if(defaultImageView && [defaultImageView isKindOfClass:[UIImageView class]])
+				{
+					[defaultImageView removeFromSuperview];
+				}
+			}
+			mFirstFrameDrawn = true;
+			
+			
+		}
     }
+
 	void* iOSWindow::getIDFromBackend()
 	{
 		return window;
@@ -130,6 +155,8 @@ namespace April
 		UITouch* touch = touches.anyObject; 
 		float width = glview.bounds.size.width;
 		float height = glview.bounds.size.height;
+		
+		width;height;
 		
 		CGPoint location = [touch locationInView:glview];
 		

@@ -23,6 +23,7 @@ namespace April
 		bool mCursorVisible;
 		Timer mTimer;
 		float mCursorX, mCursorY;
+		bool mFirstFrameDrawn;
 		
 		void _convertTouchesToCoordinates(void* touches);
 
