@@ -32,15 +32,36 @@ extern int(*april_RealMain)(int argc, char** argv);
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
 	
 	// create a window.
-	// early creation so it can be displayed while we're waiting for 
+	// early creation so Default.png can be displayed while we're waiting for 
 	// game initialization
-	
 	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	UIImageView *iv = [[[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Default" ofType:@"png"] ]] autorelease];
+	
+	NSString *defaultPngName = @"Default";
+	if([UIScreen mainScreen].bounds.size.width == 1024)
+	{
+		defaultPngName = @"Default-Landscape";
+	}
+	
+	UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"] ];
+	UIImageView *iv = [[[UIImageView alloc] initWithImage:image] autorelease];
 	[window addSubview:iv];
+
+	
+	// add animated spinner
+#if 0
+	// FIXME needs to be optional
+	UIActivityIndicatorView *aiv = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite] autorelease];
+	
+	[aiv setCenter:CGPointMake(iv.bounds.size.width / 2 - aiv.bounds.size.width/2, 
+							   iv.bounds.size.height - aiv.bounds.size.height)];
+	[iv addSubview:aiv];
+	[aiv startAnimating];
+#endif
+	
+	// display the window
 	[window makeKeyAndVisible];
 
-	NSLog(@"Added default imageview");
+	NSLog(@"Created window");
 	//////////
 	
 	
