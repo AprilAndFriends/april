@@ -149,7 +149,6 @@
 
 - (void)drawView {
     
-
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
     glViewport(0, 0, backingWidth, backingHeight);
     
@@ -160,7 +159,7 @@
 	
 
 
-    [self swapBuffers];
+    //[self swapBuffers];
 }
 
 
@@ -186,6 +185,7 @@
     [self destroyFramebuffer];
     [self createFramebuffer];
     [self drawView];
+	NSLog(@"%s", __PRETTY_FUNCTION__);
 }
 
 

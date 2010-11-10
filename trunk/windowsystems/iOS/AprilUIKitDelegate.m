@@ -31,6 +31,19 @@ extern int(*april_RealMain)(int argc, char** argv);
 	
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
 	
+	// create a window.
+	// early creation so it can be displayed while we're waiting for 
+	// game initialization
+	
+	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	UIImageView *iv = [[[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Default" ofType:@"png"] ]] autorelease];
+	[window addSubview:iv];
+	[window makeKeyAndVisible];
+
+	NSLog(@"Added default imageview");
+	//////////
+	
+	
 	// thanks to Kyle Poole for this trick
 	// also used in latest SDL
 	// quote:
@@ -39,6 +52,5 @@ extern int(*april_RealMain)(int argc, char** argv);
 
 	[self performSelector:@selector(runMain:) withObject:nil afterDelay:0.2f];
 }
-
 
 @end
