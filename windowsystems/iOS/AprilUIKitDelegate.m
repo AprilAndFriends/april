@@ -37,13 +37,20 @@ extern int(*april_RealMain)(int argc, char** argv);
 	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	
 	NSString *defaultPngName = @"Default";
-	if([UIScreen mainScreen].bounds.size.width == 1024)
+	if([UIScreen mainScreen].bounds.size.height == 1024)
 	{
 		defaultPngName = @"Default-Landscape";
 	}
 	
 	UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"] ];
 	UIImageView *iv = [[[UIImageView alloc] initWithImage:image] autorelease];
+	if([UIScreen mainScreen].bounds.size.height == 1024)
+	{
+		iv.transform = CGAffineTransformRotate(iv.transform, 3.14159/2.);
+		iv.transform = CGAffineTransformTranslate(iv.transform, 240, 320);
+	}
+	
+	
 	[window addSubview:iv];
 
 	
