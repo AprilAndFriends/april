@@ -33,7 +33,7 @@
 		7FF4960A12476B9800A22D50 /* iOSWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF4960812476B9800A22D50 /* iOSWindow.mm */; };
 		7FF4961712476BED00A22D50 /* EAGLView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF4961512476BED00A22D50 /* EAGLView.h */; };
 		7FF4961812476BED00A22D50 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF4961612476BED00A22D50 /* EAGLView.mm */; };
-		7FF4970012478C9100A22D50 /* AprilUIKitDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF496FE12478C9100A22D50 /* AprilUIKitDelegate.h */; };
+		7FF4970012478C9100A22D50 /* AprilUIKitDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF496FE12478C9100A22D50 /* AprilUIKitDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FF4970112478C9100A22D50 /* AprilUIKitDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FF496FF12478C9100A22D50 /* AprilUIKitDelegate.m */; };
 /* End PBXBuildFile section */
 

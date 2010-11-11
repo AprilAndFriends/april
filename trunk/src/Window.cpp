@@ -411,6 +411,73 @@ namespace April
 			return AMSGBTN_NO;
 		
 		return AMSGBTN_OK;
+#elif TARGET_OS_IPHONE
+		
+		NSString *buttons[]={@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+		
+		if(buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
+		{
+			buttons[0] = @"Ok";
+			buttons[1] = @"Cancel";
+		}
+		else if(buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
+		{
+			buttons[0] = @"Yes";
+			buttons[1] = @"No";
+			buttons[2] = @"Cancel";
+		}
+		else if(buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
+		{
+			buttons[0] = @"Yes";
+			buttons[1] = @"No";
+		}
+		else if(buttonMask & AMSGBTN_CANCEL)
+		{
+			buttons[0] = @"Cancel";
+		}
+		else if(buttonMask & AMSGBTN_OK)
+		{
+			buttons[0] = @"Ok";
+		}
+		else if(buttonMask & AMSGBTN_YES)
+		{
+			buttons[0] = @"Yes";
+		}
+		else if(buttonMask & AMSGBTN_NO)
+		{
+			buttons[0] = @"No";
+		}
+		
+		
+		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
+		NSString *textns = [NSString stringWithUTF8String:text.c_str()];
+		
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens
+														message:textns
+													   delegate:nil 
+											  cancelButtonTitle:buttons[0]
+											  otherButtonTitles:buttons[1], buttons[2], nil];
+		[alert show];
+		[alert release];
+		
+		// FIXME alerts might not block the main thread of execution! check this!
+		
+		// FIXME does not return proper values! 
+		//       we would need to implement a delegate.
+		
+		
+		// some dummy returnvalues
+		if(buttonMask & AMSGBTN_CANCEL)
+			return AMSGBTN_CANCEL;
+		if(buttonMask & AMSGBTN_OK)
+			return AMSGBTN_OK;
+		if(buttonMask & AMSGBTN_NO)
+			return AMSGBTN_NO;
+		if(buttonMask & AMSGBTN_YES)
+			return AMSGBTN_YES;
+
+		return AMSGBTN_OK;
+
 #else
 		
 		rendersys->logMessagef("== %s ==", title.c_str());

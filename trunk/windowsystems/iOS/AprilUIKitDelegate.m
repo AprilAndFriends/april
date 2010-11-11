@@ -15,7 +15,8 @@
 @implementation AprilUIKitDelegate
 
 @synthesize window;
-
+@synthesize onSuccess;
+@synthesize onFailure;
 extern int(*april_RealMain)(int argc, char** argv);
 
 
@@ -79,6 +80,31 @@ extern int(*april_RealMain)(int argc, char** argv);
 	// This is easy to see if running with Valgrind
 
 	[self performSelector:@selector(runMain:) withObject:nil afterDelay:0.2f];
+}
+
+
+///////////////////////////
+// utils and handlers for apps 
+// that need push notifications
+///////////////////////////
+#pragma mark Push notifications
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+	if(onSuccess)
+		onSuccess(deviceToken);
+}
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+	if(onFailure)
+		onFailure(error);
+}
+
+
+- (void)dealloc
+{
+	[super dealloc];
+	self.window = nil;
 }
 
 @end
