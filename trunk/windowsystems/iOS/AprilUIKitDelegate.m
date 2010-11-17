@@ -44,7 +44,7 @@ extern int(*april_RealMain)(int argc, char** argv);
 	}
 	
 	UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"] ];
-	UIImageView *iv = [[[UIImageView alloc] initWithImage:image] autorelease];
+	UIImageView *iv = [[[[UIImageView alloc] initWithImage:image] autorelease] retain];
 	if([UIScreen mainScreen].bounds.size.height == 1024)
 	{
 		iv.transform = CGAffineTransformRotate(iv.transform, 3.14159/2.);

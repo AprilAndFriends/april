@@ -75,7 +75,7 @@ namespace April
     int iOSWindow::getWindowWidth()
     {
 		// TODO dont swap width and height in case display is in portrait mode
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
+#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
 			return window.bounds.size.height * caeagllayer.contentsScale;
@@ -87,7 +87,7 @@ namespace April
     int iOSWindow::getWindowHeight()
     {
 		// TODO dont swap width and height in case display is in portrait mode
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
+#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
 			return window.bounds.size.width * caeagllayer.contentsScale;
@@ -164,7 +164,7 @@ namespace April
 		mCursorX=location.x; 
 		mCursorY=location.y;
 		
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
+#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer* caeagllayer = (CAEAGLLayer*)[glview layer];
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
 			mCursorX *= [caeagllayer contentsScale];
