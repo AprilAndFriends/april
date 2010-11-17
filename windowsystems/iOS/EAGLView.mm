@@ -78,9 +78,10 @@
         // Get the layer
         CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
 		
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
+#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		if ([eaglLayer respondsToSelector:@selector(setContentsScale:)])
 		{
+			NSLog(@"Setting hires scale: %g", [[UIScreen mainScreen] scale]);
 			if ([[UIScreen mainScreen] respondsToSelector:@selector(scale:)]) {
 				eaglLayer.contentsScale = [[UIScreen mainScreen] scale];
 			}
