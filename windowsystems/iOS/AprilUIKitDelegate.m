@@ -47,10 +47,14 @@ extern int(*april_RealMain)(int argc, char** argv);
 	UIImageView *iv = [[[[UIImageView alloc] initWithImage:image] autorelease] retain];
 	if([UIScreen mainScreen].bounds.size.height == 1024)
 	{
+		iv.center = CGPointMake([UIScreen mainScreen].bounds.size.width/2, 
+								[UIScreen mainScreen].bounds.size.height/2);
+		
 		iv.transform = CGAffineTransformRotate(iv.transform, 3.14159/2.);
-		iv.transform = CGAffineTransformTranslate(iv.transform, 240, 320);
+		//iv.transform = CGAffineTransformTranslate(iv.transform, 240, 320);
 	}
 	
+
 	
 	[window addSubview:iv];
 
@@ -69,6 +73,10 @@ extern int(*april_RealMain)(int argc, char** argv);
 	// display the window
 	[window makeKeyAndVisible];
 
+	
+	
+	
+	
 	NSLog(@"Created window");
 	//////////
 	
@@ -82,6 +90,11 @@ extern int(*april_RealMain)(int argc, char** argv);
 	[self performSelector:@selector(runMain:) withObject:nil afterDelay:0.2f];
 }
 
+
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
+{
+	NSLog(@"April-based application received memory warning!");
+}
 
 ///////////////////////////
 // utils and handlers for apps 

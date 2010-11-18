@@ -30,6 +30,7 @@
 	{
 		window = w; // just assign, to avoid circular references
 
+		
 	}
 	return self;
 }
