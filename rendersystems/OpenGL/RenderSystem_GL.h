@@ -18,9 +18,9 @@ Copyright (c) 2010 Kresimir Spes                                                
 #endif
 
 
-#if defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE)
+#if (TARGET_OS_MAC) && !(TARGET_OS_IPHONE)
 #include <OpenGL/gl.h>
-#elif defined(TARGET_OS_IPHONE)
+#elif (TARGET_OS_IPHONE)
 #include <OpenGLES/ES1/gl.h>
 #else
 #include <GL/gl.h>
