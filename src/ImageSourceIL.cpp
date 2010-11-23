@@ -38,7 +38,7 @@ namespace April
 			c.r=this->data[index*3];
 			c.g=this->data[index*3+1];
 			c.b=this->data[index*3+2];
-			c.a=1;
+			c.a=255;
 		}
 		else if (this->bpp == 4) // RGBA
 		{
