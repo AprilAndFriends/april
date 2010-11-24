@@ -409,7 +409,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = i386;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEPLOYMENT_LOCATION = YES;
 				DSTROOT = /;
@@ -422,7 +421,6 @@
 					_OPENGL,
 				);
 				INFOPLIST_FILE = Info.plist;
-				SDKROOT = macosx10.6;
 				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = framework;
 			};
