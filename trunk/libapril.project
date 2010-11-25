@@ -90,7 +90,6 @@
       <PreBuild/>
       <PostBuild>
         <Command Enabled="yes">copy bin\$(ConfigurationName)\*.dll bin</Command>
-        <Command Enabled="yes">copy bin\$(ConfigurationName)\*.lib bin</Command>
       </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
@@ -136,7 +135,6 @@
       <PreBuild/>
       <PostBuild>
         <Command Enabled="yes">copy bin\$(ConfigurationName)\*.dll bin</Command>
-        <Command Enabled="yes">copy bin\$(ConfigurationName)\*.lib bin</Command>
       </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
@@ -220,7 +218,6 @@
       <PreBuild/>
       <PostBuild>
         <Command Enabled="yes">copy bin\$(ConfigurationName)\*.dll bin</Command>
-        <Command Enabled="yes">copy bin\$(ConfigurationName)\*.lib bin</Command>
       </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
@@ -263,7 +260,6 @@
       <PreBuild/>
       <PostBuild>
         <Command Enabled="yes">copy bin\$(ConfigurationName)\*.dll bin</Command>
-        <Command Enabled="yes">copy bin\$(ConfigurationName)\*.lib bin</Command>
       </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
