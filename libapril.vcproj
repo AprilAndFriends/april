@@ -85,7 +85,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril_d.lib $(ProjectDir)\bin&#x0D;&#x0A;"
+				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
 			/>
 		</Configuration>
 		<Configuration
@@ -157,7 +157,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril.lib $(ProjectDir)\bin&#x0D;&#x0A;"
+				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
 			/>
 		</Configuration>
 		<Configuration
@@ -230,7 +230,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril_d.lib $(ProjectDir)\bin&#x0D;&#x0A;"
+				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
 			/>
 		</Configuration>
 		<Configuration
@@ -302,7 +302,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy $(TargetPath) $(ProjectDir)\bin&#x0D;&#x0A;copy $(TargetDir)\libapril.lib $(ProjectDir)\bin&#x0D;&#x0A;"
+				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
 			/>
 		</Configuration>
 	</Configurations>
