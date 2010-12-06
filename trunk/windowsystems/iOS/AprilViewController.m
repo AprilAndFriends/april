@@ -28,9 +28,7 @@
 {
 	if(self=[super init])
 	{
-		window = w; // just assign, to avoid circular references
-
-		
+		window = w; // just assign, to avoid circular references		
 	}
 	return self;
 }
@@ -38,17 +36,54 @@
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {	
 	[super loadView];
-	EAGLView* glview = [[[EAGLView alloc] initWithFrame:[window bounds]] autorelease];
-	self.view = glview;
+	NSLog(@"%s", __PRETTY_FUNCTION__);
+
+	
+	NSString *defaultPngName = @"Default";
+	if([UIScreen mainScreen].bounds.size.height == 1024)
+	{
+		defaultPngName = @"Default-Landscape";
+	}
+	
+	UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"] ];
+	UIImageView *iv = [[[[UIImageView alloc] initWithImage:image] autorelease] retain];
+	if([UIScreen mainScreen].bounds.size.height == 1024)
+	{
+		iv.center = CGPointMake([UIScreen mainScreen].bounds.size.width/2, 
+								[UIScreen mainScreen].bounds.size.height/2);
+		
+		iv.transform = CGAffineTransformRotate(iv.transform, 3.14159/2.);
+		//iv.transform = CGAffineTransformTranslate(iv.transform, 240, 320);
+	}
+	
+	
+	// add animated spinner
+#if 0
+	// FIXME needs to be optional
+	UIActivityIndicatorView *aiv = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite] autorelease];
+	
+	[aiv setCenter:CGPointMake(iv.bounds.size.width / 2 - aiv.bounds.size.width/2, 
+							   iv.bounds.size.height - aiv.bounds.size.height)];
+	[iv addSubview:aiv];
+	[aiv startAnimating];
+#endif
+	
+	self.view = iv;
+	
+	[window addSubview:iv];
+	
+	
+	NSLog(@"Displayed iv");
 }
 
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+	NSLog(@"%s", __PRETTY_FUNCTION__);
 }
-*/
+
 
 
 // Override to allow orientations other than the default portrait orientation.
