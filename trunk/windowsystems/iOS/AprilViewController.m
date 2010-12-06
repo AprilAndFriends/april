@@ -40,23 +40,20 @@
 
 	
 	NSString *defaultPngName = @"Default";
-	if([UIScreen mainScreen].bounds.size.height == 1024)
+	if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 	{
 		defaultPngName = @"Default-Landscape";
 	}
 	
 	UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"] ];
-	UIImageView *iv = [[[[UIImageView alloc] initWithImage:image] autorelease] retain];
-	if([UIScreen mainScreen].bounds.size.height == 1024)
+	;
+	if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
 	{
-		iv.center = CGPointMake([UIScreen mainScreen].bounds.size.width/2, 
-								[UIScreen mainScreen].bounds.size.height/2);
-		
-		iv.transform = CGAffineTransformRotate(iv.transform, 3.14159/2.);
-		//iv.transform = CGAffineTransformTranslate(iv.transform, 240, 320);
+		// default.png is incorrectly rotated on iphone
+		image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationLeft];
 	}
-	
-	
+	UIImageView *iv = [[[[UIImageView alloc] initWithImage:image] autorelease] retain];
+
 	// add animated spinner
 #if 0
 	// FIXME needs to be optional
