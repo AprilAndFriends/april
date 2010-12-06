@@ -42,11 +42,11 @@ extern int(*april_RealMain)(int argc, char** argv);
 	viewController = [[AprilViewController alloc] initWithWindow:window];
 	[viewController loadView];
 	
+	// set window color
+	[window setBackgroundColor:[UIColor blackColor]];
+
 	// display the window
 	[window makeKeyAndVisible];
-
-	
-	
 	
 	
 	NSLog(@"Created window");
