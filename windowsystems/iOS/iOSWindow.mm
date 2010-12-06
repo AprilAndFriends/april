@@ -39,7 +39,12 @@ namespace April
 		
 		mFirstFrameDrawn = false; // show window after drawing first frame
 		
-		glview = [[[EAGLView alloc] initWithFrame:CGRectMake(0,0,100,100)] autorelease];
+		CGRect frame = window.frame;
+		float wi = frame.size.height;
+		float hi = frame.size.width;
+		frame.size.width = wi;
+		frame.size.height = hi;
+		glview = [[[EAGLView alloc] initWithFrame:frame] autorelease];
 				   
 				   
 				   //(window.bounds.size.height/2 - w/2, window.bounds.size.width/2 - h/2, h, w)] autorelease]; // FIXME on portrait orientations don't flip window.bounds.size.width and window.bounds.size.height
