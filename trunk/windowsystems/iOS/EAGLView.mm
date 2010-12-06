@@ -47,6 +47,7 @@
     return [CAEAGLLayer class];
 }
 
+
 // Handles the start of a touch
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {

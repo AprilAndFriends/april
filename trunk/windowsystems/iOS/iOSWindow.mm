@@ -131,12 +131,16 @@ namespace April
 			doEvents();
 
 			if([[window subviews] count])
-			{/*
+			{
 				id defaultImageView = [[window subviews] objectAtIndex:0];
 				if(defaultImageView && [defaultImageView isKindOfClass:[UIImageView class]])
 				{
+					[glview removeFromSuperview];
 					[defaultImageView removeFromSuperview];
-				}*/
+					
+					[viewcontroller setView:glview];
+					[window addSubview:glview];
+				}
 			}
 			mFirstFrameDrawn = true;
 			
