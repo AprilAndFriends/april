@@ -34,9 +34,7 @@ namespace April
 		else
 			[UIApplication sharedApplication].statusBarHidden = NO;
 		mFullscreen = fullscreen;
-		
-		[window setBackgroundColor:[UIColor blackColor]];
-		
+				
 		mFirstFrameDrawn = false; // show window after drawing first frame
 		
 		CGRect frame = window.frame;

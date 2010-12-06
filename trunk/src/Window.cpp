@@ -277,7 +277,7 @@ namespace April
 
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 
-		if ([mainScreen respondsToSelector:@selector(scale:)]) {
+		if ([mainScreen respondsToSelector:@selector(scale)]) {
 			scale = [mainScreen scale];
 		}
 #endif

@@ -28,6 +28,8 @@
 		7F33B64F12102385004B5E89 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B64E12102385004B5E89 /* CoreFoundation.framework */; };
 		7FA1AAE8124229F7004689AE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA1AAE4124229F7004689AE /* Timer.h */; };
 		7FA1ABA212422C03004689AE /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA1ABA112422C03004689AE /* TimerPosix.cpp */; };
+		7FD37C1812AD2C070007A403 /* WBImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FD37C1612AD2C070007A403 /* WBImage.h */; };
+		7FD37C1912AD2C070007A403 /* WBImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FD37C1712AD2C070007A403 /* WBImage.m */; };
 		7FF494E31247603F00A22D50 /* main_ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FF494E21247603F00A22D50 /* main_ios.m */; };
 		7FF4960912476B9800A22D50 /* iOSWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF4960712476B9800A22D50 /* iOSWindow.h */; };
 		7FF4960A12476B9800A22D50 /* iOSWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF4960812476B9800A22D50 /* iOSWindow.mm */; };
@@ -63,6 +65,8 @@
 		7FA3ED1711F9817A001D1DDD /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Window.h; path = include/april/Window.h; sourceTree = "<group>"; };
 		7FA3ED2611F98BAE001D1DDD /* Window.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Window.cpp; path = src/Window.cpp; sourceTree = "<group>"; };
 		7FCD394312018BD300608217 /* main_mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main_mac.m; sourceTree = "<group>"; };
+		7FD37C1612AD2C070007A403 /* WBImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBImage.h; sourceTree = "<group>"; };
+		7FD37C1712AD2C070007A403 /* WBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBImage.m; sourceTree = "<group>"; };
 		7FF494E21247603F00A22D50 /* main_ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main_ios.m; sourceTree = "<group>"; };
 		7FF4960712476B9800A22D50 /* iOSWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSWindow.h; sourceTree = "<group>"; };
 		7FF4960812476B9800A22D50 /* iOSWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = iOSWindow.mm; sourceTree = "<group>"; };
@@ -160,6 +164,8 @@
 				7FF496FF12478C9100A22D50 /* AprilUIKitDelegate.m */,
 				7F0726C512817CDE00600ACA /* AprilViewController.h */,
 				7F0726C612817CDE00600ACA /* AprilViewController.m */,
+				7FD37C1612AD2C070007A403 /* WBImage.h */,
+				7FD37C1712AD2C070007A403 /* WBImage.m */,
 			);
 			name = iOS;
 			path = windowsystems/iOS;
@@ -229,6 +235,7 @@
 				7FF4970012478C9100A22D50 /* AprilUIKitDelegate.h in Headers */,
 				7F27ED47125F7E8D00EF4AFB /* PVRTexture.h in Headers */,
 				7F0726C712817CDE00600ACA /* AprilViewController.h in Headers */,
+				7FD37C1812AD2C070007A403 /* WBImage.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +335,7 @@
 				7FF4970112478C9100A22D50 /* AprilUIKitDelegate.m in Sources */,
 				7F27ED48125F7E8D00EF4AFB /* PVRTexture.m in Sources */,
 				7F0726C812817CDE00600ACA /* AprilViewController.m in Sources */,
+				7FD37C1912AD2C070007A403 /* WBImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
