@@ -27,6 +27,7 @@ namespace April
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
 		appDelegate = ((AprilUIKitDelegate*)[[UIApplication sharedApplication] delegate]);
+		viewcontroller = [appDelegate viewController];
 		window = [appDelegate window];
 		if(fullscreen)
 			[UIApplication sharedApplication].statusBarHidden = YES;
@@ -38,14 +39,19 @@ namespace April
 		
 		mFirstFrameDrawn = false; // show window after drawing first frame
 		
-		viewcontroller = [[AprilViewController alloc] initWithWindow:window];
-		glview = (EAGLView*)viewcontroller.view;
+		glview = [[[EAGLView alloc] initWithFrame:CGRectMake(0,0,100,100)] autorelease];
+				   
+				   
+				   //(window.bounds.size.height/2 - w/2, window.bounds.size.width/2 - h/2, h, w)] autorelease]; // FIXME on portrait orientations don't flip window.bounds.size.width and window.bounds.size.height
 		if(!glview)
 			throw hl_exception("iOSWindow failed to create glview");
+		glview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		glview.aprilWindowVoid = this;
 		
-		[window insertSubview:glview atIndex:window.subviews.count];
-
+		
+		
+		[viewcontroller.view addSubview:glview];
+		
 		mRunning = true;
     }
     
@@ -120,12 +126,12 @@ namespace April
 			doEvents();
 
 			if([[window subviews] count])
-			{
+			{/*
 				id defaultImageView = [[window subviews] objectAtIndex:0];
 				if(defaultImageView && [defaultImageView isKindOfClass:[UIImageView class]])
 				{
 					[defaultImageView removeFromSuperview];
-				}
+				}*/
 			}
 			mFirstFrameDrawn = true;
 			

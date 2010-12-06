@@ -25,14 +25,17 @@
 //       C-based handlers? 
 typedef void*(*AprilRemoteNotificationsHandler_t)(void *data);
 
+@class AprilViewController;
 
 @interface AprilUIKitDelegate : NSObject<UIApplicationDelegate> {
 	UIWindow *window;
-	AprilRemoteNotificationsHandler_t onSuccess;
-	AprilRemoteNotificationsHandler_t onFailure;
+	AprilViewController *viewController;
+	AprilRemoteNotificationsHandler_t onPushRegistrationSuccess;
+	AprilRemoteNotificationsHandler_t onPushRegistrationFailure;
 }
 
 @property (nonatomic, retain) UIWindow *window;
-@property (nonatomic, assign) AprilRemoteNotificationsHandler_t onSuccess;
-@property (nonatomic, assign) AprilRemoteNotificationsHandler_t onFailure;
+@property (nonatomic, retain) AprilViewController *viewController;
+@property (nonatomic, assign) AprilRemoteNotificationsHandler_t onPushRegistrationSuccess;
+@property (nonatomic, assign) AprilRemoteNotificationsHandler_t onPushRegistrationFailure;
 @end
