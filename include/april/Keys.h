@@ -22,12 +22,12 @@ namespace April
 	
 		// first several VKs are unneeded
 		// they are mouse related, or ctrl+break
-		//AK_LBUTTON = 0,
-		//AK_RBUTTON = 1,
-		//AK_CANCEL = 3,
-		//AK_MBUTTON = 4,
-		//AK_XBUTTON1 = 5,
-		//AK_XBUTTON2 = 6,
+		AK_LBUTTON = 0,
+		AK_RBUTTON = 1,
+		AK_CANCEL = 3,
+		AK_MBUTTON = 4,
+		AK_XBUTTON1 = 5,
+		AK_XBUTTON2 = 6,
 
 		// mostly common keys
 		AK_BACK = 8,
@@ -215,46 +215,5 @@ namespace April
 		AK_OEM_CLEAR = 0xFE
 	};
 }
-
-// temporary and deprecated; dont depend on it
-#define AK_BACK April::AK_BACK
-#define AK_LEFT April::AK_LEFT
-#define AK_RIGHT April::AK_RIGHT
-#define AK_DELETE April::AK_DELETE
-#define AK_HOME April::AK_HOME
-#define AK_END April::AK_END
-#define AK_CONTROL April::AK_CONTROL
-#define AK_MENU April::AK_MENU
-#define AK_F1 April::AK_F1
-#define AK_F2 April::AK_F2
-#define AK_F3 April::AK_F3
-#define AK_F4 April::AK_F4
-#define AK_F5 April::AK_F5
-#define AK_F6 April::AK_F6
-#define AK_F7 April::AK_F7
-#define AK_F8 April::AK_F8
-#define AK_F9 April::AK_F9
-#define AK_F10 April::AK_F10
-#define AK_F11 April::AK_F11
-#define AK_F12 April::AK_F12
-#define AK_SPACE April::AK_SPACE
-#define AK_RETURN April::AK_RETURN
-#define AK_TAB April::AK_TAB
-#define AK_1 April::AK_1
-#define AK_2 April::AK_2
-#define AK_3 April::AK_3
-#define AK_4 April::AK_4
-#define AK_5 April::AK_5
-#define AK_6 April::AK_6
-#define AK_7 April::AK_7
-#define AK_8 April::AK_8
-#define AK_9 April::AK_9
-#define AK_ESCAPE April::AK_ESCAPE
-//#define AK_ April::AK_
-#define AK_SPACE April::AK_SPACE
-
-// deprecated names for mouse buttons:
-#define AK_LBUTTON 1 // April::AMOUSEBTN_LEFT
-#define AK_RBUTTON 2 // April::AMOUSEBTN_RIGH
 
 #endif
