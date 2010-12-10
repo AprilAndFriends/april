@@ -248,6 +248,35 @@ namespace April
 	{
 		[glview terminateKeyboardHandling];
 	}
+	float iOSWindow::prefixRotationAngle()
+	{
+		// this function needs updating if we want
+		// support for truly portrait-rendered apps
+		
+		// currently, in the same way as is the case
+		// in rest of april for iOS, we only provide
+		// support for landscape orientations
+		
+		switch (viewcontroller.interfaceOrientation) {
+			case UIInterfaceOrientationPortrait:
+				NSLog(@"Portrait");
+				return 90.0f; // simulate left landscape orientation (needed only until we transform into a landscape orientation on earlier iOS)
+			case UIInterfaceOrientationLandscapeLeft:
+				NSLog(@"Left"); return 0;
+			case UIInterfaceOrientationLandscapeRight:
+				NSLog(@"Right");
+				return 0; // any landscape orientation will be well supported elsewhere
+				
+			case UIInterfaceOrientationPortraitUpsideDown:
+				NSLog(@"UpsideDown");
+				return -90.0f; // this shouldn't occur except if someone plays with shouldAutorotateToInterfaceOrientation in AprilViewController
+				
+			default:
+				NSLog(@"Some other");
+				break;
+		}
+		return 0;
+	}
 	
 	bool iOSWindow::textField_shouldChangeCharactersInRange_replacementString_(void* uitextfieldTextField, int nsrangeLocation, int nsrangeLength, chstr str)
 	{

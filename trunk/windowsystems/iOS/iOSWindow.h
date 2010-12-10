@@ -47,6 +47,7 @@ namespace April
 		void terminateKeyboardHandling();
 		void keyboardWasShown();
 		void keyboardWasHidden();
+		float prefixRotationAngle();
 		
 		void handleDisplayAndUpdate();
 		

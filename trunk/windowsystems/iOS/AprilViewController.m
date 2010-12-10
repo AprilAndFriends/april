@@ -175,7 +175,7 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	
 	UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"] ];
 	;
-	if(idiom == UIUserInterfaceIdiomPhone)
+	if(idiom == UIUserInterfaceIdiomPhone && self.interfaceOrientation != UIInterfaceOrientationPortrait)
 	{
 		// default.png is incorrectly rotated on iphone
 		// this sadly doesnt work on <4.0:
@@ -183,8 +183,7 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 		
 		// hence we added rotation implementation using WBImage by Allen Brunson and Kevin Lohman:
 		// http://www.platinumball.net/blog/2010/01/31/iphone-uiimage-rotation-and-scaling/
-		image = [self rotate:image to:UIImageOrientationLeft]; // for some reason using WBImage category of UIImage did not work! code therefore copypasted
-		NSLog(@"image: %@ size: %g %g", image, image.size.width, image.size.height);
+		image = [self rotate:image to:UIImageOrientationRight]; // for some reason using WBImage category of UIImage did not work! code therefore copypasted to this class and called via self
 		
 	}
 	UIImageView *iv = [[[UIImageView alloc] initWithImage:image] autorelease];
@@ -203,8 +202,8 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	self.view = iv;
 	
 	[window addSubview:iv];
+	//window.transform = CGAffineTransformRotate(window.transform, 3.14159/2);
 	
-
 	iv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	/*CGRect frame = window.frame;
 	float wi = frame.size.height;
@@ -230,6 +229,18 @@ static inline CGSize swapWidthAndHeight(CGSize size)
     return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
+-(void)willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation duration:(NSTimeInterval)duration
+{
+	/*
+	CGRect frame = self.view.frame; //[[UIScreen mainScreen] bounds];
+	float wi = frame.size.height;
+	float hi = frame.size.width;
+	frame.size.width = wi;
+	frame.size.height = hi;
+	
+	self.view.frame = frame;*/
+	//window.transform = CGAffineTransformIdentity;
+}
 
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
