@@ -102,6 +102,7 @@ namespace April
 		virtual bool isFullscreen();
 		virtual void beginKeyboardHandling();
 		virtual void terminateKeyboardHandling();
+		virtual float prefixRotationAngle();
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);

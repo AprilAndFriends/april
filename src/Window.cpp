@@ -188,6 +188,17 @@ namespace April
 		// ignore by default
 		// used only for softkeyboards, e.g. iOS
 	}
+	float Window::prefixRotationAngle()
+	{
+		// some platforms such as iOS may need extra 
+		// rotation before they can render anything
+		// with certain orientations.
+		
+		// earlier versions of iOS always launch with
+		// portrait orientation and require us to
+		// manually rotate
+		return 0;
+	}
 	
 	void Window::_platformCursorVisibilityUpdate(bool visible)
 	{
