@@ -259,20 +259,15 @@ namespace April
 		
 		switch (viewcontroller.interfaceOrientation) {
 			case UIInterfaceOrientationPortrait:
-				NSLog(@"Portrait");
 				return 90.0f; // simulate left landscape orientation (needed only until we transform into a landscape orientation on earlier iOS)
 			case UIInterfaceOrientationLandscapeLeft:
-				NSLog(@"Left"); return 0;
 			case UIInterfaceOrientationLandscapeRight:
-				NSLog(@"Right");
 				return 0; // any landscape orientation will be well supported elsewhere
 				
 			case UIInterfaceOrientationPortraitUpsideDown:
-				NSLog(@"UpsideDown");
 				return -90.0f; // this shouldn't occur except if someone plays with shouldAutorotateToInterfaceOrientation in AprilViewController
 				
 			default:
-				NSLog(@"Some other");
 				break;
 		}
 		return 0;
