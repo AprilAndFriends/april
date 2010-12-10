@@ -22,8 +22,8 @@ namespace April
 	
 		// first several VKs are unneeded
 		// they are mouse related, or ctrl+break
-		AK_LBUTTON = 0,
-		AK_RBUTTON = 1,
+		AK_LBUTTON = 1,
+		AK_RBUTTON = 2,
 		AK_CANCEL = 3,
 		AK_MBUTTON = 4,
 		AK_XBUTTON1 = 5,
