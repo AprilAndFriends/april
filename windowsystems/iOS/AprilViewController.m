@@ -226,7 +226,24 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+	
+	// detect pre-3.2 devices
+	if (![[UIScreen mainScreen] respondsToSelector:@selector(scale)])
+	{
+		// hack due to odd behavior of these devices.
+		// view controller believes the UI was transformed properly,
+		// yet it's improperly placed on screen.
+		// after first rotation everything works.
+		
+		static BOOL firstRotation = YES;
+		if(firstRotation)
+		{
+			NSLog(@"First rotation");
+			firstRotation = NO;
+			return NO;
+		}
+	}
+	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
 -(void)willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation duration:(NSTimeInterval)duration
