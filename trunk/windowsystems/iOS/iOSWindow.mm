@@ -40,10 +40,15 @@ namespace April
 		CGRect frame = window.frame;
 		float wi = frame.size.height;
 		float hi = frame.size.width;
-		frame.size.width = wi;
-		frame.size.height = hi;
+		
+		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
+		{
+			frame.size.width = wi;
+			frame.size.height = hi;
+		}
+		
 		glview = [[[EAGLView alloc] initWithFrame:frame] autorelease];
-				   
+		
 				   
 				   //(window.bounds.size.height/2 - w/2, window.bounds.size.width/2 - h/2, h, w)] autorelease]; // FIXME on portrait orientations don't flip window.bounds.size.width and window.bounds.size.height
 		if(!glview)
@@ -256,7 +261,7 @@ namespace April
 		// currently, in the same way as is the case
 		// in rest of april for iOS, we only provide
 		// support for landscape orientations
-		
+		NSLog(@"Orientation: %d", viewcontroller.interfaceOrientation);
 		switch (viewcontroller.interfaceOrientation) {
 			case UIInterfaceOrientationPortrait:
 				return 90.0f; // simulate left landscape orientation (needed only until we transform into a landscape orientation on earlier iOS)
