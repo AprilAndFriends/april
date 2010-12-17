@@ -138,11 +138,11 @@ namespace april
 	{
 		mUnusedTimer=0;
 		if (mTexId) return 1;
-		rendersys->logMessage("loading GL texture '"+mFilename+"'");
+		april::log("loading GL texture '"+mFilename+"'");
 		mTexId=platformLoadGLTexture(mFilename.c_str(),&mWidth,&mHeight);
 		if (!mTexId)
 		{
-			rendersys->logMessage("Failed to load texture: "+mFilename);
+			april::log("Failed to load texture: "+mFilename);
 			return 0;
 		}
 		
@@ -161,7 +161,7 @@ namespace april
 	{
 		if (mTexId)
 		{
-			rendersys->logMessage("unloading GL texture '"+mFilename+"'");
+			april::log("unloading GL texture '"+mFilename+"'");
 			glDeleteTextures(1, &mTexId);
 			mTexId=0;
 		}
@@ -196,7 +196,7 @@ namespace april
 
 	GLRenderSystem::~GLRenderSystem()
 	{
-		rendersys->logMessage("Destroying OpenGL Rendersystem");
+		april::log("Destroying OpenGL Rendersystem");
 	}
 
 	hstr GLRenderSystem::getName()
@@ -214,7 +214,7 @@ namespace april
 		hstr name=findTextureFile(filename);
 		if (name=="") return 0;
 		if (mDynamicLoading) dynamic=1;
-		if (dynamic) rendersys->logMessage("creating dynamic GL texture '"+name+"'");
+		if (dynamic) april::log("creating dynamic GL texture '"+name+"'");
 		GLTexture* t=new GLTexture(name,dynamic);
 		if (!dynamic)
 		{
@@ -230,7 +230,7 @@ namespace april
 	Texture* GLRenderSystem::createTextureFromMemory(unsigned char* rgba,int w,int h)
 	{
 		
-		rendersys->logMessage("creating user-defined GL texture");
+		april::log("creating user-defined GL texture");
 		GLTexture* t=new GLTexture(rgba,w,h);
 		return t;
 	}
@@ -273,7 +273,7 @@ namespace april
     
     ImageSource* GLRenderSystem::grabScreenshot()
     {
-        logMessage("grabbing screenshot");
+        log("grabbing screenshot");
         int w=mWindow->getWindowWidth(),h=mWindow->getWindowHeight();
         ImageSource* img=new ImageSource();
         img->w=w; img->h=h; img->bpp=3; img->format=AT_RGB;
@@ -338,7 +338,7 @@ namespace april
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		}
 		else
-			logMessage("trying to set unsupported texture filter!");
+			log("trying to set unsupported texture filter!");
 		mTextureFilter=filter;
 	}
 

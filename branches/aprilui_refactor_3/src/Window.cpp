@@ -118,7 +118,7 @@ namespace april
 	{
 		if(keycode == AK_UNKNOWN)
 		{
-			mRenderSystem->logMessage("key event on unknown key");
+			april::log("key event on unknown key");
 			keycode = AK_NONE;
 		}
 		
@@ -491,9 +491,9 @@ namespace april
 
 #else
 		
-		rendersys->logMessagef("== %s ==", title.c_str());
-		rendersys->logMessagef("%s", text.c_str());
-		rendersys->logMessagef("Button mask: %c%c%c%c", 
+		april::logf("== %s ==", title.c_str());
+		april::logf("%s", text.c_str());
+		april::logf("Button mask: %c%c%c%c", 
 							   buttonMask & AMSGBTN_OK ? '+' : '-', 
 							   buttonMask & AMSGBTN_CANCEL ? '+' : '-',
 							   buttonMask & AMSGBTN_YES ? '+' : '-',

@@ -304,9 +304,6 @@ namespace april
 		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
 		void setIdleTextureUnloadTime(float time) { mIdleUnloadTime=time; }
 
-		void logMessagef(chstr message, ...);
-		void logMessage(chstr message,chstr prefix="[april] ");
-
 		virtual void setAlphaMultiplier(float value)=0;
 		float getAlphaMultiplier() { return mAlphaMultiplier; }
 
@@ -345,6 +342,8 @@ namespace april
 	aprilFnExport void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title);
 	aprilFnExport void destroy();
 	aprilFnExport void addTextureExtension(chstr extension);
+	aprilFnExport void log(chstr message,chstr prefix="[april] ");
+	aprilFnExport void logf(chstr message, ...);
 	
 	// global rendersys shortcut variable
 	aprilFnExport extern april::RenderSystem* rendersys;

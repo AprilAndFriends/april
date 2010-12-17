@@ -51,6 +51,19 @@ namespace april
 	
 	void (*g_logFunction)(chstr)=april_writelog;
 	
+	void logf(chstr message, ...)
+	{
+		va_list vl;
+		va_start(vl, message);
+		log(hvsprintf(("[april] " + message).c_str(), vl));;
+		va_end(vl);
+	}
+	
+	void log(chstr message,chstr prefix)
+	{
+		g_logFunction(prefix+message);
+	}
+	
 	int hexstr_to_int(chstr s)
 	{
 		int i;
@@ -333,7 +346,7 @@ namespace april
 	{
 		if (!mBuffer)
 		{
-			rendersys->logMessage("loading RAM texture '"+mFilename+"'");
+			april::log("loading RAM texture '"+mFilename+"'");
 			mBuffer=loadImage(mFilename);
 			mWidth=mBuffer->w;
 			mHeight=mBuffer->h;
@@ -344,7 +357,7 @@ namespace april
 	{
 		if (mBuffer)
 		{
-			rendersys->logMessage("unloading RAM texture '"+mFilename+"'");
+			april::log("unloading RAM texture '"+mFilename+"'");
 			delete mBuffer;
 			mBuffer=0;
 		}
@@ -440,24 +453,11 @@ namespace april
 		return "";
 	}
 	
-	void RenderSystem::logMessagef(chstr message, ...)
-	{
-		va_list vl;
-		va_start(vl, message);
-		logMessage(hvsprintf(message.c_str(), vl));;
-		va_end(vl);
-	}
-	
-	void RenderSystem::logMessage(chstr message,chstr prefix)
-	{
-		g_logFunction(prefix+message);
-	}
-	
 	void RenderSystem::registerUpdateCallback(bool (*callback)(float))
 	{
 		mWindow->setUpdateCallback(callback);
 		
-		logMessage("RenderSystem::registerUpdateCallback() is deprecated");
+		log("RenderSystem::registerUpdateCallback() is deprecated");
 	}
 
 	void RenderSystem::registerMouseCallbacks(void (*mouse_dn)(float,float,int),
@@ -466,7 +466,7 @@ namespace april
 	{
 		mWindow->setMouseCallbacks(mouse_dn,mouse_up,mouse_move);
 		
-		logMessage("RenderSystem::registerMouseCallbacks() is deprecated");
+		log("RenderSystem::registerMouseCallbacks() is deprecated");
 	}
 	
 	void RenderSystem::registerKeyboardCallbacks(void (*key_dn)(unsigned int),
@@ -474,19 +474,19 @@ namespace april
 												 void (*char_callback)(unsigned int))
 	{
 		mWindow->setKeyboardCallbacks(key_dn, key_up, char_callback);
-		logMessage("RenderSystem::registerKeyboardCallbacks() is deprecated");
+		log("RenderSystem::registerKeyboardCallbacks() is deprecated");
 	}
 	
 	void RenderSystem::registerQuitCallback(bool (*quit_callback)(bool can_reject))
 	{
 		mWindow->setQuitCallback(quit_callback);
-		logMessage("RenderSystem::registerQuitCallback() is deprecated");
+		log("RenderSystem::registerQuitCallback() is deprecated");
 	}
 	
 	void RenderSystem::registerWindowFocusCallback(void (*focus_callback)(bool current_focus))
 	{
 		mWindow->setWindowFocusCallback(focus_callback);		
-		logMessage("RenderSystem::registerFocusCallback() is deprecated");
+		log("RenderSystem::registerFocusCallback() is deprecated");
 	}
 	
 	Texture* RenderSystem::loadRAMTexture(chstr filename,bool dynamic)
@@ -582,13 +582,13 @@ namespace april
 	
 	void RenderSystem::enterMainLoop()
 	{
-		logMessage("RenderSystem::enterMainLoop() is deprecated"); 
+		log("RenderSystem::enterMainLoop() is deprecated"); 
 		getWindow()->enterMainLoop(); 
 	}
 
 	void RenderSystem::terminateMainLoop()
 	{
-		logMessage("RenderSystem::enterMainLoop() is deprecated"); 
+		log("RenderSystem::enterMainLoop() is deprecated"); 
 		getWindow()->terminateMainLoop(); 
 	}
 	gvec2 RenderSystem::getCursorPos()
@@ -600,7 +600,7 @@ namespace april
 	{
 		static bool done=0;
 		
-		if (!done) { done=1; logMessage("RenderSystem::setWindowTitle() is deprecated"); }
+		if (!done) { done=1; log("RenderSystem::setWindowTitle() is deprecated"); }
 		getWindow()->setWindowTitle(title);
 	}
 	void RenderSystem::presentFrame()

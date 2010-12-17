@@ -70,7 +70,7 @@ namespace april
 	{
 		mWindow = window;
 		
-		logMessage("Creating DirectX9 Rendersystem");
+		log("Creating DirectX9 Rendersystem");
 		
 		hWnd = (HWND)getWindow()->getIDFromBackend();
 		
@@ -112,7 +112,7 @@ namespace april
 	
 	DirectX9RenderSystem::~DirectX9RenderSystem()
 	{
-		logMessage("Destroying DirectX9 Rendersystem");
+		log("Destroying DirectX9 Rendersystem");
 		if (d3dDevice) d3dDevice->Release();
 		if (d3d) d3d->Release();
 		d3d=0; d3dDevice=0;
@@ -133,7 +133,7 @@ namespace april
 		hstr name=findTextureFile(filename);
 		if (name=="") return 0;
 		if (mDynamicLoading) dynamic=1;
-		if (dynamic) rendersys->logMessage("creating dynamic DX9 texture '"+name+"'");
+		if (dynamic) april::log("creating dynamic DX9 texture '"+name+"'");
 		DirectX9Texture* t=new DirectX9Texture(name,dynamic);
 		if (!dynamic)
 		{
@@ -169,7 +169,7 @@ namespace april
 			d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 		}
 		else
-			logMessage("trying to set unsupported texture filter!");
+			log("trying to set unsupported texture filter!");
 		mTextureFilter=filter;
 	}
 
@@ -220,12 +220,12 @@ namespace april
 	
 	ImageSource* DirectX9RenderSystem::grabScreenshot()
     {
-		logMessage("grabbing screenshot");
+		log("grabbing screenshot");
 		D3DSURFACE_DESC desc;
 		mBackBuffer->GetDesc(&desc);
 		if (desc.Format != D3DFMT_X8R8G8B8)
 		{
-			logMessage("failed to grab screenshot, backbuffer format not supported, expeted X8R8G8B8, got: "+hstr(desc.Format));
+			log("failed to grab screenshot, backbuffer format not supported, expeted X8R8G8B8, got: "+hstr(desc.Format));
 			return 0;
 		}
 		
@@ -233,13 +233,13 @@ namespace april
 		HRESULT hr = d3dDevice->CreateOffscreenPlainSurface(desc.Width,desc.Height,desc.Format,D3DPOOL_SYSTEMMEM,&buffer,NULL);
 		if (hr != D3D_OK)
 		{
-			logMessage("failed to grab screenshot, CreateOffscreenPlainSurface() call failed");
+			log("failed to grab screenshot, CreateOffscreenPlainSurface() call failed");
 			return 0;
 		}
 		hr=d3dDevice->GetRenderTargetData(mBackBuffer,buffer);
 		if (hr != D3D_OK)
 		{
-			logMessage("failed to grab screenshot, GetRenderTargetData() call failed");
+			log("failed to grab screenshot, GetRenderTargetData() call failed");
 			buffer->Release();
 			return 0;
 		}		
@@ -247,7 +247,7 @@ namespace april
 		hr = buffer->LockRect(&rect,NULL, D3DLOCK_DONOTWAIT);
 		if (hr != D3D_OK)
 		{
-			logMessage("failed to grab screenshot, surface lock failed");
+			log("failed to grab screenshot, surface lock failed");
 			buffer->Release();
 			return 0;
 		}
@@ -443,7 +443,7 @@ namespace april
 		if (hr == D3DERR_DEVICELOST)
 		{
 			int i;
-			logMessage("Direct3D9 Device lost, attempting to restore...");
+			log("Direct3D9 Device lost, attempting to restore...");
 			mBackBuffer->Release(); mBackBuffer=0;
 			while (((Win32Window*) mWindow)->isRunning())
 			{
@@ -456,13 +456,13 @@ namespace april
 				if (hr == D3D_OK) break;
 				else if (hr == D3DERR_DEVICENOTRESET)
 				{
-					logMessage("Resetting device...");
+					log("Resetting device...");
 					hr=d3dDevice->Reset(&d3dpp);
 					if (hr == D3D_OK) break;
 					else if (hr == D3DERR_DRIVERINTERNALERROR) throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
 					else if (hr == D3DERR_OUTOFVIDEOMEMORY)    throw hl_exception("Unable to reset Direct3D device, Out of Video Memory!");
 					else
-						logMessage("Failed to reset device!");
+						log("Failed to reset device!");
 				}
 				else if (hr == D3DERR_DRIVERINTERNALERROR) throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
 			}
@@ -470,7 +470,7 @@ namespace april
 			_setProjectionMatrix(mProjectionMatrix);
 			configureDevice();
 			d3dDevice->GetRenderTarget(0,&mBackBuffer); // update backbuffer pointer
-				logMessage("Direct3D9 Device restored");
+				log("Direct3D9 Device restored");
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)
 		{

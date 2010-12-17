@@ -83,13 +83,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			{
 				instance->_setActive(1);
 				ws->triggerFocusCallback(true);
-				rendersys->logMessage("Window activated");
+				april::log("Window activated");
 			}
 			else
 			{
 				instance->_setActive(0);
 				ws->triggerFocusCallback(false);
-				rendersys->logMessage("Window deactivated");
+				april::log("Window deactivated");
 			}
 			break;
     }
@@ -99,7 +99,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	Win32Window::Win32Window(int w,int h,bool fullscreen,chstr title) //:
 		/*mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()*/
 	{
-		if(rendersys) rendersys->logMessage("Creating Win32 Windowsystem");
+		if(rendersys) april::log("Creating Win32 Windowsystem");
 		
 		instance = this;
 		
@@ -149,7 +149,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	
 	Win32Window::~Win32Window()
 	{
-		//logMessage("Destroying Win32 Windowsystem");
+		//log("Destroying Win32 Windowsystem");
 		UnregisterClass("april_win32_window",GetModuleHandle(0));
 	}
 

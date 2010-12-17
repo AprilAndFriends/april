@@ -47,7 +47,7 @@ namespace april
 	
 	GLUTWindow::GLUTWindow(int w, int h, bool fullscreen, chstr title)
 	{
-		//rendersys->logMessage("Creating GLUT Windowsystem");
+		//april::log("Creating GLUT Windowsystem");
 		
 		const char *argv[] = {"program"};
 		int argc=1;
@@ -110,7 +110,7 @@ namespace april
 	
 	void GLUTWindow::doEvents()
 	{
-		rendersys->logMessage("%s: stub!\n", __PRETTY_FUNCTION__);
+		april::log("%s: stub!\n", __PRETTY_FUNCTION__);
 	}
 	
 	
