@@ -10,13 +10,13 @@ Copyright (c) 2010 Kresimir Spes                                                
 #ifndef BLUR_MANAGER_H
 #define BLUR_MANAGER_H
 
-#include "AprilUtilExport.h"
+#include "aprilutilExport.h"
 
-namespace April
+namespace april
 {
 	class Texture;
 	
-	class AprilUtilExport BlurManager
+	class aprilutilExport BlurManager
 	{
 		Texture *mTex1,*mTex2;
 		int mNumLevels;

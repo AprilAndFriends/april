@@ -15,12 +15,12 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 
 #include <hltypes/util.h>
 
-namespace April
+namespace april
 {
 	static HWND hWnd;
 	static gvec2 cursorpos;
 	static bool cursor_visible=1;
-	static April::Timer globalTimer;
+	static april::Timer globalTimer;
 	static Win32Window* instance;
 	
 #ifdef _DEBUG

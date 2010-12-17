@@ -27,7 +27,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 #define TEX_COLOR_FVF D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE
 
 
-namespace April
+namespace april
 {
 	IDirect3D9* d3d=0;
 	IDirect3DDevice9* d3dDevice=0;
@@ -486,7 +486,7 @@ namespace April
 
 	void createDX9RenderSystem(Window* window) //int w,int h,bool fullscreen,chstr title)
 	{
-		April::rendersys = new DirectX9RenderSystem(window); //w,h,fullscreen,title);
+		april::rendersys = new DirectX9RenderSystem(window); //w,h,fullscreen,title);
 	}
 
 }

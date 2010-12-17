@@ -10,7 +10,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include "Timer.h"
 #include "RenderSystem.h"
 
-namespace April
+namespace april
 {
     Timer::Timer()
     {

@@ -10,13 +10,13 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include <stdio.h>
 #include "april/RenderSystem.h"
 
-April::Texture* background;
-April::Texture* x_symbol;
-April::Texture* o_symbol;
-April::Texture* line_hor;
-April::Texture* line_vert;
-April::Texture* line45;
-April::Texture* line315;
+april::Texture* background;
+april::Texture* x_symbol;
+april::Texture* o_symbol;
+april::Texture* line_hor;
+april::Texture* line_vert;
+april::Texture* line45;
+april::Texture* line315;
 int positions[3][3] = {{0,0,0},{0,0,0},{0,0,0}};
 int victory = 0;
 bool player = 0;
@@ -100,12 +100,12 @@ void draw_symbol(int x, int y, std::string symbol)
 		printf("Wrong parameter 'symbol'!");
 
 	
-	April::TexturedVertex v[4];
+	april::TexturedVertex v[4];
 	v[0].x=x1; v[0].y=y1; v[0].z=0; v[0].u=0; v[0].v=0;
 	v[1].x=x2; v[1].y=y2; v[1].z=0; v[1].u=1; v[1].v=0;
 	v[2].x=x3; v[2].y=y3; v[2].z=0; v[2].u=0; v[2].v=1;
 	v[3].x=x4; v[3].y=y4; v[3].z=0; v[3].u=1; v[3].v=1;
-	rendersys->render(April::TriangleStrip,v,4);
+	rendersys->render(april::TriangleStrip,v,4);
 }
 
 
@@ -135,12 +135,12 @@ void draw_line(int x_start, int y_start, int x_end, int y_end, std::string symbo
 		printf("Wrong parameter 'symbol'!");
 
 	
-	April::TexturedVertex v[4];
+	april::TexturedVertex v[4];
 	v[0].x=x1; v[0].y=y1; v[0].z=0; v[0].u=0; v[0].v=0;
 	v[1].x=x2; v[1].y=y2; v[1].z=0; v[1].u=1; v[1].v=0;
 	v[2].x=x3; v[2].y=y3; v[2].z=0; v[2].u=0; v[2].v=1;
 	v[3].x=x4; v[3].y=y4; v[3].z=0; v[3].u=1; v[3].v=1;
-	rendersys->render(April::TriangleStrip,v,4);
+	rendersys->render(april::TriangleStrip,v,4);
 }
 
 
@@ -150,12 +150,12 @@ bool render(float time_increase)
 	rendersys->setViewport(800,600);
 	
 	rendersys->setTexture(background);
-	April::TexturedVertex v[4];
+	april::TexturedVertex v[4];
 	v[0].x=0;   v[0].y=0;   v[0].z=0; v[0].u=0; v[0].v=0;
 	v[1].x=800; v[1].y=0;   v[1].z=0; v[1].u=1; v[1].v=0;
 	v[2].x=0;   v[2].y=600; v[2].z=0; v[2].u=0; v[2].v=1;
 	v[3].x=800; v[3].y=600; v[3].z=0; v[3].u=1; v[3].v=1;
-	rendersys->render(April::TriangleStrip,v,4);
+	rendersys->render(april::TriangleStrip,v,4);
 	
 	rendersys->setTexture(0);
 	rendersys->drawColoredQuad(250,0,25,600,1,1,0,1);
@@ -401,7 +401,7 @@ void OnMouseUp(float x,float y,int button)
 
 int main()
 {
-	April::init("OpenGL",800,600,0,"demo_tictactoe");
+	april::init("OpenGL",800,600,0,"demo_tictactoe");
 	rendersys->registerUpdateCallback(render);
 	rendersys->registerMouseCallbacks(0,OnMouseUp,0);
 	background=rendersys->loadTexture("../media/texture.jpg");
@@ -413,6 +413,6 @@ int main()
 	line315=rendersys->loadTexture("../media/line315.png");
 
 	rendersys->enterMainLoop();
-	April::destroy();
+	april::destroy();
 	return 0;
 }

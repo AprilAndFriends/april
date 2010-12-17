@@ -23,7 +23,6 @@
   <VirtualDirectory Name="include">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.h"/>
     <File Name="include/april/RenderSystem.h"/>
-    <File Name="include/april/AprilExport.h"/>
     <File Name="include/april/ImageSource.h"/>
     <File Name="rendersystems/DirectX9/RenderSystem_DirectX9.h"/>
     <File Name="include/april/Keys.h"/>
@@ -34,6 +33,7 @@
     <File Name="include/april/main.h"/>
     <File Name="windowsystems/SDL/SDLWindow.h"/>
     <File Name="windowsystems/Win32/Win32Window.h"/>
+    <File Name="include/april/aprilExport.h"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="libgtypes"/>

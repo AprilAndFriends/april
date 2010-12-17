@@ -13,13 +13,13 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include <hltypes/hstring.h>
 #include <gtypes/Vector2.h>
 #include "Keys.h"
-#include "AprilExport.h"
+#include "aprilExport.h"
 
-namespace April
+namespace april
 {
 	
 	class RenderSystem;	
-	class AprilExport Window 
+	class aprilExport Window 
 	{
 	protected:		
 		RenderSystem* mRenderSystem;
@@ -136,9 +136,9 @@ namespace April
 		AMSGSTYLE_MODAL=8
 	};
 	
-	AprilFnExport Window* createAprilWindow(chstr window_system_name, int w, int h, bool fullscreen, chstr title);
-	AprilFnExport gvec2 getDesktopResolution();
-	AprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask=AMSGBTN_OK, MessageBoxStyle style=AMSGSTYLE_PLAIN);
+	aprilFnExport Window* createAprilWindow(chstr window_system_name, int w, int h, bool fullscreen, chstr title);
+	aprilFnExport gvec2 getDesktopResolution();
+	aprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask=AMSGBTN_OK, MessageBoxStyle style=AMSGSTYLE_PLAIN);
 
 }
 

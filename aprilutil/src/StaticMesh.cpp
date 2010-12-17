@@ -12,7 +12,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 
 #include <iostream>
 
-namespace April
+namespace april
 {
     
     StaticMesh::StaticMesh()
@@ -33,7 +33,7 @@ namespace April
     
     void StaticMesh::convertToVertexArray()
     {
-        mVertexArray = new April::TexturedVertex[3*mPolygons.size()];
+        mVertexArray = new april::TexturedVertex[3*mPolygons.size()];
         bool tex=mTextureCoordinates.size() > 0;
         
         for(int i = 0; i < mPolygons.size(); ++i)
@@ -218,7 +218,7 @@ namespace April
         mMeshName = meshName;
     }
     
-    void StaticMesh::draw(April::RenderOp renderOp)
+    void StaticMesh::draw(april::RenderOp renderOp)
     {
         rendersys->render(renderOp, mVertexArray, mNumVertices);
     }

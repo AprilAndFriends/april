@@ -15,7 +15,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 class IDirect3DTexture9;
 class IDirect3DSurface9;
 
-namespace April
+namespace april
 {
 	class DirectX9Texture : public Texture
 	{

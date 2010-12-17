@@ -8,43 +8,44 @@ Copyright (c) 2010 Kresimir Spes                                                
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 #include "april/RenderSystem.h"
+#include "april/Window.h"
 #include "april/Timer.h"
 #include "aprilutil/StaticMesh.h"
 
 #include <iostream>
 
-April::Texture* tex;
-April::StaticMesh *mMesh;
+april::Texture* tex;
+april::StaticMesh *mMesh;
 
 bool render(float time_increase)
 {
-	April::rendersys->clear(true, true);
+	april::rendersys->clear(true, true);
 	static float angle=0;
 	angle+=time_increase*90;
     
-	April::rendersys->setPerspective(60,800/600.,0.1f,100.0f);
-	April::rendersys->setTexture(tex);
+	april::rendersys->setPerspective(60,800/600.,0.1f,100.0f);
+	april::rendersys->setTexture(tex);
 	
-	April::rendersys->lookAt(gtypes::Vector3(2,2,-5),gtypes::Vector3(0,0,0),gtypes::Vector3(0,1,0));
-	April::rendersys->rotate(angle,0,1,0);
+	april::rendersys->lookAt(gtypes::Vector3(2,2,-5),gtypes::Vector3(0,0,0),gtypes::Vector3(0,1,0));
+	april::rendersys->rotate(angle,0,1,0);
 	
-    mMesh->draw(April::TriangleList);
+    mMesh->draw(april::TriangleList);
     
 	return true;
 }
 
 int main()
 {
-	April::init("April",800,600,0,"April: 3D Demo");
-	April::rendersys->registerUpdateCallback(render);
+	april::init("april",800,600,0,"april: 3D Demo");
+	april::rendersys->getWindow()->setUpdateCallback(render);
 
-    mMesh = new April::StaticMesh("../media/testobject.obj");
-	tex = April::rendersys->loadTexture("../media/texture.jpg");
+    mMesh = new april::StaticMesh("../media/testobject.obj");
+	tex = april::rendersys->loadTexture("../media/texture.jpg");
     
-	April::rendersys->enterMainLoop();
+	april::rendersys->getWindow()->enterMainLoop();
     
     delete mMesh;
     
-	April::destroy();
+	april::destroy();
 	return 0;
 }

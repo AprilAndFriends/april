@@ -37,11 +37,11 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include "ImageSource.h"
 #include "Window.h"
 
-April::RenderSystem* rendersys DEPRECATED_ATTRIBUTE = 0;
+april::RenderSystem* rendersys DEPRECATED_ATTRIBUTE = 0;
 
-namespace April
+namespace april
 {
-	April::RenderSystem* rendersys;
+	april::RenderSystem* rendersys;
 	harray<hstr> extensions;
 
 	void april_writelog(chstr message)

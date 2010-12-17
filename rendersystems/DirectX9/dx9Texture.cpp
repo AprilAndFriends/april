@@ -15,7 +15,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include <d3d9.h>
 #include <IL/il.h>
 
-namespace April
+namespace april
 {
 	extern IDirect3DDevice9* d3dDevice;
 
