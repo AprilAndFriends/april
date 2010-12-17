@@ -58,7 +58,7 @@ namespace April
 		return i;
 	}
 	
-	void hexstr_to_argb(chstr hex,unsigned char* a,unsigned char* r,unsigned char* g,unsigned char* b)
+	void hexstr_to_rgba(chstr hex,unsigned char* r,unsigned char* g,unsigned char* b,unsigned char* a)
 	{
 		hstr value = hex;
 		if (value(0,2) != "0x") value="0x"+value;
@@ -71,12 +71,12 @@ namespace April
 		}
 		else if (value.size() == 10)
 		{
-			*a=hexstr_to_int(value(2,2));
-			*r=hexstr_to_int(value(4,2));
-			*g=hexstr_to_int(value(6,2));
-			*b=hexstr_to_int(value(8,2));
+			*r=hexstr_to_int(value(2,2));
+			*g=hexstr_to_int(value(4,2));
+			*b=hexstr_to_int(value(6,2));
+			*a=hexstr_to_int(value(8,2));
 		}
-		else throw "Color format must be either 0xAARRGGBB or 0xRRGGBB";
+		else throw "Color format must be either 0xRRGGBBAA or 0xRRGGBB";
 	}
 /*****************************************************************************************/	
 	void PlainVertex::operator=(const gtypes::Vector3& v)
@@ -86,62 +86,67 @@ namespace April
 		this->z=v.z;
 	}
 /*****************************************************************************************/
-	Color::Color(float _a,float _r,float _g,float _b)
+	Color::Color(float _r,float _g,float _b,float _a)
 	{
-		setColor(_a,_r,_g,_b);
+		set(_r,_g,_b,_a);
 	}
 
-	Color::Color(int _a,int _r,int _g,int _b)
+	Color::Color(int _r,int _g,int _b,int _a)
 	{
-		setColor(_a,_r,_g,_b);
+		set(_r,_g,_b,_a);
 	}
 
-	Color::Color(unsigned char _a,unsigned char _r,unsigned char _g,unsigned char _b)
+	Color::Color(unsigned char _r,unsigned char _g,unsigned char _b,unsigned char _a)
 	{
-		setColor(_a,_r,_g,_b);
+		set(_r,_g,_b,_a);
 	}
 
 	Color::Color(unsigned int color)
 	{
-		setColor(color);
+		set(color);
 	}
 
 	Color::Color(chstr hex)
 	{
-		setColor(hex);
+		set(hex);
 	}
 
 	Color::Color()
 	{
-		a=r=g=b=255;
+		r=g=b=a=255;
 	}
 
-	void Color::setColor(float _a,float _r,float _g,float _b)
+	void Color::set(float _r,float _g,float _b,float _a)
 	{
-		this->a=(unsigned char)(_a*255); this->r=(unsigned char)(_r*255);
-		this->g=(unsigned char)(_g*255); this->b=(unsigned char)(_b*255);
+		this->r=(unsigned char)(_r*255); this->g=(unsigned char)(_g*255);
+		this->b=(unsigned char)(_b*255); this->a=(unsigned char)(_a*255);
 	}
 
-	void Color::setColor(int _a,int _r,int _g,int _b)
+	void Color::set(int _r,int _g,int _b,int _a)
 	{
-		this->a=(unsigned char)_a; this->r=(unsigned char)_r;
-		this->g=(unsigned char)_g; this->b=(unsigned char)_b;
+		this->r=(unsigned char)_r; this->g=(unsigned char)_g;
+		this->b=(unsigned char)_b; this->a=(unsigned char)_a;
 	}
 
-	void Color::setColor(unsigned char _a,unsigned char _r,unsigned char _g,unsigned char _b)
+	void Color::set(unsigned char _r,unsigned char _g,unsigned char _b,unsigned char _a)
 	{
-		this->a=_a; this->r=_r; this->g=_g; this->b=_b;
+		this->r=_r; this->g=_g; this->b=_b; this->a=_a;
 	}
 
-	void Color::setColor(unsigned int color)
+	void Color::set(unsigned int color)
 	{
-		this->a=color/256/256/256; this->r=color/256/256%256; this->g=color/256%256; this->b=color%256;
+		this->r=(color>>24)&0xFF; this->g=(color>>16)&0xFF; this->b=(color>>8)&0xFF; this->a=color&0xFF;
 	}
 
-	void Color::setColor(chstr hex)
+	void Color::set(chstr hex)
 	{
 		// this is going to bite me in the arse on a little endian system...
-		hexstr_to_argb(hex,&a,&r,&g,&b);
+		hexstr_to_rgba(hex,&r,&g,&b,&a);
+	}
+	
+	hstr Color::hex()
+	{
+		return hsprintf("%02x%02x%02x%02x",this->r,this->g,this->b,this->a);
 	}
 
 	bool Color::operator==(Color& other)
@@ -196,52 +201,58 @@ namespace April
 		return result;
 	}
 
-	void Color::operator+=(Color& other)
+	Color Color::operator+=(Color& other)
 	{
 		this->r = hclamp(this->r + other.r, 0, 255);
 		this->g = hclamp(this->g + other.g, 0, 255);
 		this->b = hclamp(this->b + other.b, 0, 255);
 		this->a = hclamp(this->a + other.a, 0, 255);
+		return (*this);
 	}
 
-	void Color::operator-=(Color& other)
+	Color Color::operator-=(Color& other)
 	{
 		this->r = hclamp(this->r - other.r, 0, 255);
 		this->g = hclamp(this->g - other.g, 0, 255);
 		this->b = hclamp(this->b - other.b, 0, 255);
 		this->a = hclamp(this->a - other.a, 0, 255);
+		return (*this);
 	}
 
-	void Color::operator*=(Color& other)
+	Color Color::operator*=(Color& other)
 	{
 		this->r = hclamp((int)(this->r_float() * other.r), 0, 255);
 		this->g = hclamp((int)(this->g_float() * other.g), 0, 255);
 		this->b = hclamp((int)(this->b_float() * other.b), 0, 255);
 		this->a = hclamp((int)(this->a_float() * other.a), 0, 255);
+		return (*this);
 	}
 
-	void Color::operator/=(Color& other)
+	Color Color::operator/=(Color& other)
 	{
 		this->r = hclamp((int)(this->r_float() / other.r), 0, 255);
 		this->g = hclamp((int)(this->g_float() / other.g), 0, 255);
 		this->b = hclamp((int)(this->b_float() / other.b), 0, 255);
 		this->a = hclamp((int)(this->a_float() / other.a), 0, 255);
+		return (*this);
 	}
 
-	void Color::operator*=(float value)
+	Color Color::operator*=(float value)
 	{
 		this->r = hclamp((int)(this->r * value), 0, 255);
 		this->g = hclamp((int)(this->g * value), 0, 255);
 		this->b = hclamp((int)(this->b * value), 0, 255);
 		this->a = hclamp((int)(this->a * value), 0, 255);
+		return (*this);
 	}
 
-	void Color::operator/=(float value)
+	Color Color::operator/=(float value)
 	{
 		this->r = hclamp((int)(this->r / value), 0, 255);
 		this->g = hclamp((int)(this->g / value), 0, 255);
 		this->b = hclamp((int)(this->b / value), 0, 255);
 		this->a = hclamp((int)(this->a / value), 0, 255);
+		return (*this);
 	}
 
 /*****************************************************************************************/
