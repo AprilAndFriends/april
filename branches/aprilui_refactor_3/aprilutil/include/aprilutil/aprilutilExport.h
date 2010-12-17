@@ -11,19 +11,19 @@ Copyright (c) 2010 Kresimir Spes                                                
 #define APRILUTIL_EXPORT_H
 
 	#ifdef _STATICLIB
-		#define AprilExport
+		#define aprilExport
 	#else
 		#ifdef _WIN32
 			#ifdef APRILUTIL_EXPORTS
-				#define AprilUtilExport __declspec(dllexport)
-				#define AprilUtilFnExport __declspec(dllexport)
+				#define aprilutilExport __declspec(dllexport)
+				#define aprilutilFnExport __declspec(dllexport)
 			#else
-				#define AprilUtilExport __declspec(dllimport)
-				#define AprilUtilFnExport __declspec(dllimport)
+				#define aprilutilExport __declspec(dllimport)
+				#define aprilutilFnExport __declspec(dllimport)
 			#endif
 		#else
-			#define AprilUtilExport __attribute__ ((visibility("default")))
-			#define AprilUtilFnExport
+			#define aprilutilExport __attribute__ ((visibility("default")))
+			#define aprilutilFnExport
 		#endif
 	#endif
 

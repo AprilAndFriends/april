@@ -22,7 +22,7 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include "Keys.h"
 #include "RenderSystem.h"
 
-namespace April
+namespace april
 {
 	void destroy(); // defined in RenderSystem
 	

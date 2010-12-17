@@ -29,7 +29,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 
 extern "C" int gAprilShouldInvokeQuitCallback;
 
-namespace April
+namespace april
 {
 	
 	SDLWindow::SDLWindow(int w, int h, bool fullscreen, chstr title)
@@ -245,7 +245,7 @@ namespace April
 	
 	void SDLWindow::_handleKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
 	{
-		April::KeySym akeysym = AK_UNKNOWN;
+		april::KeySym akeysym = AK_UNKNOWN;
 	
 		#define _s2a(sdlk,ak) case sdlk: akeysym = ak; break; 
 		#define s2a(sdlk,ak) _s2a(SDLK_##sdlk, AK_##ak)

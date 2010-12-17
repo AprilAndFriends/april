@@ -16,12 +16,12 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include <hltypes/hstring.h>
 #include <SDL/SDL_keysym.h>
 #include "Window.h"
-#include "AprilExport.h"
+#include "aprilExport.h"
 
 struct SDL_Surface;
 union SDL_Event;
 
-namespace April
+namespace april
 {
 	class SDLWindow : public Window
 	{

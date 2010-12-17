@@ -41,9 +41,9 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include "Window.h"
 #include "Timer.h"
 
-April::Timer globalTimer;
+april::Timer globalTimer;
 
-namespace April
+namespace april
 {
 	extern void (*g_logFunction)(chstr);
 
@@ -510,7 +510,7 @@ namespace April
 #endif
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
-		April::rendersys = ::rendersys = new GLRenderSystem(window);
+		april::rendersys = ::rendersys = new GLRenderSystem(window);
 	}
 
 }

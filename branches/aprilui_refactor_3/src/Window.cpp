@@ -49,7 +49,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include "Keys.h"
 #include "RenderSystem.h"
 
-namespace April
+namespace april
 {
 	Window::Window()
 	{
