@@ -43,9 +43,9 @@ namespace april
 		mUnusedTimer=0;
 		mSurface=0;
 
-		rendersys->logMessage("Creating user-defined DX9 texture");
+		april::log("Creating user-defined DX9 texture");
 		HRESULT hr=d3dDevice->CreateTexture(mWidth,mHeight,1,0,D3DFMT_A8R8G8B8,D3DPOOL_MANAGED,&mTexture,0);
-		if (hr != D3D_OK) { rendersys->logMessage("Failed to create user-defined DX9 texture!"); return; }
+		if (hr != D3D_OK) { april::log("Failed to create user-defined DX9 texture!"); return; }
 		// write texels
 		D3DLOCKED_RECT rect;
 		mTexture->LockRect(0,&rect,NULL,D3DLOCK_DISCARD);
@@ -71,7 +71,7 @@ namespace april
 		mUnusedTimer=0;
 		mSurface=0;
 		mFilename="UserTexture";			
-		rendersys->logMessage("creating empty DX9 texture [ "+hstr(w)+"x"+hstr(h)+" ]");
+		april::log("creating empty DX9 texture [ "+hstr(w)+"x"+hstr(h)+" ]");
 		D3DFORMAT d3dfmt=D3DFMT_X8R8G8B8;
 		if (fmt == AT_ARGB) d3dfmt=D3DFMT_A8R8G8B8;
 		D3DPOOL d3dpool=D3DPOOL_MANAGED;
@@ -83,7 +83,7 @@ namespace april
 		}
 
 		HRESULT hr=d3dDevice->CreateTexture(mWidth,mHeight,1,d3dusage,d3dfmt,d3dpool,&mTexture,0);
-		if (hr != D3D_OK) { rendersys->logMessage("Failed to create user-defined DX9 texture!"); return; }
+		if (hr != D3D_OK) { april::log("Failed to create user-defined DX9 texture!"); return; }
 	}
 	
 	IDirect3DSurface9* DirectX9Texture::getSurface()
@@ -101,12 +101,12 @@ namespace april
 	{
 		mUnusedTimer=0;
 		if (mTexture) return 1;
-		rendersys->logMessage("loading DX9 texture '"+mFilename+"'");
+		april::log("loading DX9 texture '"+mFilename+"'");
 		ImageSource* img=loadImage(mFilename);
-		if (!img) { rendersys->logMessage("Failed to load texture '"+mFilename+"'!"); return 0; }
+		if (!img) { april::log("Failed to load texture '"+mFilename+"'!"); return 0; }
 		mWidth=img->w; mHeight=img->h;
 		HRESULT hr=d3dDevice->CreateTexture(mWidth,mHeight,1,0,(img->bpp == 3) ? D3DFMT_X8R8G8B8 : D3DFMT_A8R8G8B8,D3DPOOL_MANAGED,&mTexture,0);
-		if (hr != D3D_OK) { rendersys->logMessage("Failed to load DX9 texture!"); delete img; return 0; }
+		if (hr != D3D_OK) { april::log("Failed to load DX9 texture!"); delete img; return 0; }
 		// write texels
 		D3DLOCKED_RECT rect;
 		mTexture->LockRect(0,&rect,NULL,D3DLOCK_DISCARD);
@@ -129,7 +129,7 @@ namespace april
 	{
 		if (mTexture)
 		{
-			rendersys->logMessage("unloading DX9 texture '"+mFilename+"'");
+			april::log("unloading DX9 texture '"+mFilename+"'");
 			mTexture->Release();
 			mTexture=0;
 			if (mSurface) { mSurface->Release(); mSurface=0; }

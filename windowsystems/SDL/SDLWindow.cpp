@@ -34,7 +34,7 @@ namespace april
 	
 	SDLWindow::SDLWindow(int w, int h, bool fullscreen, chstr title)
 	{
-		//rendersys->logMessage("Creating SDL Windowsystem");
+		//april::log("Creating SDL Windowsystem");
 		
 		// we want a centered sdl window
 		putenv("SDL_VIDEO_WINDOW_POS");
@@ -62,7 +62,7 @@ namespace april
 			
 			
 #endif
-			rendersys->logMessage("Requested display mode could not be provided");
+			april::log("Requested display mode could not be provided");
 			exit(0);
 #endif
 		}

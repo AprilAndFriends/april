@@ -27,7 +27,7 @@ namespace april
         
         if (!QueryPerformanceFrequency((LARGE_INTEGER *) &mFrequency))
         {
-            rendersys->logMessage("performance timer not available, multimedia timer will be used instead!");
+            april::log("performance timer not available, multimedia timer will be used instead!");
             mPerformanceTimer	= FALSE;
             mMmTimerStart	    = timeGetTime();
             mResolution		    = 1.0f/1000.0f;
