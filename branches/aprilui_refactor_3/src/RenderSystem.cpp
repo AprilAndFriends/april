@@ -272,12 +272,12 @@ namespace april
 	
 	Color Texture::getPixel(int x,int y)
 	{
-		return Color(0,0,0,0);
+		return Color::CLEAR;
 	}
 	
 	Color Texture::getInterpolatedPixel(float x,float y)
 	{
-		return Color(0,0,0,0);
+		return Color::CLEAR;
 	}
 	
 	void Texture::update(float time_increase)
