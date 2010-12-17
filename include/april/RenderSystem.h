@@ -175,6 +175,7 @@ namespace april
 		#define WHITE		Color(255, 255, 255)
 		#define GREY		Color(127, 127, 127)
 		#define BLACK		Color(  0,   0,   0)
+		#define CLEAR		Color(  0,   0,   0,   0)
 		
 	};
 
