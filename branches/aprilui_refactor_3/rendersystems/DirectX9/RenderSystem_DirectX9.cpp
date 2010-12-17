@@ -486,7 +486,7 @@ namespace April
 
 	void createDX9RenderSystem(Window* window) //int w,int h,bool fullscreen,chstr title)
 	{
-		April::rendersys = ::rendersys = new DirectX9RenderSystem(window); //w,h,fullscreen,title);
+		April::rendersys = new DirectX9RenderSystem(window); //w,h,fullscreen,title);
 	}
 
 }
