@@ -51,9 +51,9 @@ namespace april
 		void setTexture(Texture* t);
 		void render(RenderOp renderOp,ColoredTexturedVertex* v,int nVertices);
 		void render(RenderOp renderOp,TexturedVertex* v,int nVertices);
-		void render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a);
+		void render(RenderOp renderOp,TexturedVertex* v,int nVertices,Color color);
 		void render(RenderOp renderOp,PlainVertex* v,int nVertices);
-		void render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a);
+		void render(RenderOp renderOp,PlainVertex* v,int nVertices,Color color);
 		void render(RenderOp renderOp,ColoredVertex* v,int nVertices);
 
 		void setRenderTarget(Texture* source);

@@ -313,17 +313,17 @@ namespace april
 			d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp],numPrimitives(renderOp,nVertices),v,sizeof(TexturedVertex));
 		}
 		else
-			render(renderOp,v,nVertices,1,1,1,1);
+			render(renderOp,v,nVertices,Color::WHITE);
 	}
 
 	ColoredTexturedVertex static_ctv[100];
-	void DirectX9RenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)
+	void DirectX9RenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices,Color color)
 	{
-		DWORD color=D3DCOLOR_ARGB((int) (a*mAlphaMultiplier*255.0f),(int) (r*255.0f),(int) (g*255.0f),(int) (b*255.0f));
+		DWORD colorDx9=D3DCOLOR_ARGB((int)(color.a*mAlphaMultiplier),(int)color.r,(int)color.g,(int)color.b);
 		ColoredTexturedVertex* cv=(nVertices <= 100) ? static_ctv : new ColoredTexturedVertex[nVertices];
 		ColoredTexturedVertex* p=cv;
 		for (int i=0;i<nVertices;i++,p++,v++)
-		{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=color; p->u=v->u; p->v=v->v; }
+		{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=colorDx9; p->u=v->u; p->v=v->v; }
 		render(renderOp,cv,nVertices);
 		if (nVertices > 100) delete [] cv;
 	}
@@ -340,13 +340,13 @@ namespace april
 		if (nVertices > 100) delete [] cv;
 	}
 
-	void DirectX9RenderSystem::render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a)
+	void DirectX9RenderSystem::render(RenderOp renderOp,PlainVertex* v,int nVertices,Color color)
 	{
-		DWORD color=D3DCOLOR_ARGB((int) (a*mAlphaMultiplier*255.0f),(int) (r*255.0f),(int) (g*255.0f),(int) (b*255.0f));
+		DWORD colorDx9=D3DCOLOR_ARGB((int) (color.a*mAlphaMultiplier),(int)color.r,(int)color.g,(int)color.b);
 		ColoredVertex* cv=(nVertices <= 100) ? static_cv : new ColoredVertex[nVertices];
 		ColoredVertex* p=cv;
 		for (int i=0;i<nVertices;i++,p++,v++)
-		{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=color; }
+		{ p->x=v->x; p->y=v->y; p->z=v->z; p->color=colorDx9; }
 		render(renderOp,cv,nVertices);
 		if (nVertices > 100) delete [] cv;
 	}
@@ -363,21 +363,7 @@ namespace april
 		if (mRenderTarget) d3dDevice->BeginScene();
 		mRenderTarget=(DirectX9Texture*) source;
 	}
-	/*
-	int DirectX9RenderSystem::getWindowWidth()
-	{
-		RECT rc;
-		GetClientRect(hWnd, &rc);
-		return rc.right-rc.left;
-	}
 	
-	int DirectX9RenderSystem::getWindowHeight()
-	{
-		RECT rc;
-		GetClientRect(hWnd, &rc);
-		return rc.bottom-rc.top;
-	}
-	*/
 	void DirectX9RenderSystem::render(RenderOp renderOp,ColoredVertex* v,int nVertices)
 	{
 		if (active_texture) setTexture(0);
@@ -402,35 +388,7 @@ namespace april
 	{
 		mAlphaMultiplier=value;
 	}
-/*
-	void DirectX9RenderSystem::setWindowTitle(chstr title)
-	{
-		mTitle=title;
-#ifdef _DEBUG
-		SetWindowText(hWnd,(title+fpstitle).c_str());
-#else
-		SetWindowText(hWnd,title.c_str());
-#endif
-}
 	
-	gvec2 DirectX9RenderSystem::getCursorPos()
-	{
-		
-		return gvec2(cursorpos.x,cursorpos.y);
-	}
-
-	void DirectX9RenderSystem::showSystemCursor(bool b)
-	{
-		if (b) SetCursor(LoadCursor(0,IDC_ARROW));
-		else   SetCursor(0);
-		cursor_visible=b;
-	}
-	
-	bool DirectX9RenderSystem::isSystemCursorShown()
-	{
-		return cursor_visible;
-	}
-*/	
 	void DirectX9RenderSystem::beginFrame()
 	{
 		d3dDevice->BeginScene();
@@ -484,9 +442,9 @@ namespace april
 		d3dDevice->BeginScene();
 	}
 
-	void createDX9RenderSystem(Window* window) //int w,int h,bool fullscreen,chstr title)
+	void createDX9RenderSystem(Window* window)
 	{
-		april::rendersys = new DirectX9RenderSystem(window); //w,h,fullscreen,title);
+		april::rendersys = new DirectX9RenderSystem(window);
 	}
 
 }

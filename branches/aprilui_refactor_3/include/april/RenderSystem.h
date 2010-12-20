@@ -12,6 +12,7 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 
 #include <hltypes/hstring.h>
 #include <hltypes/harray.h>
+#include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <gtypes/Vector3.h>
 #include <gtypes/Matrix4.h>
@@ -289,16 +290,16 @@ namespace april
 		virtual void setTexture(Texture* t)=0;
 		virtual void render(RenderOp renderOp,TexturedVertex* v,int nVertices)=0;
 		virtual void render(RenderOp renderOp,ColoredTexturedVertex* v,int nVertices)=0;
-		virtual void render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)=0;
+		virtual void render(RenderOp renderOp,TexturedVertex* v,int nVertices,Color color)=0;
 		virtual void render(RenderOp renderOp,PlainVertex* v,int nVertices)=0;
-		virtual void render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a)=0;
+		virtual void render(RenderOp renderOp,PlainVertex* v,int nVertices,Color color)=0;
 		virtual void render(RenderOp renderOp,ColoredVertex* v,int nVertices)=0;
 		
 		virtual void setRenderTarget(Texture* source)=0;
 		
-		void drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a=1);
-		void drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw,float sh);
-		void drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw,float sh,float r,float g,float b,float a);
+		void drawColoredQuad(grect rect,Color color);
+		void drawTexturedQuad(grect rect,grect src);
+		void drawTexturedQuad(grect rect,grect src,Color color);
 
 		
 		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
