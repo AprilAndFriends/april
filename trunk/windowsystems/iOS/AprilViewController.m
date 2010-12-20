@@ -235,6 +235,9 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 		// yet it's improperly placed on screen.
 		// after first rotation everything works.
 		
+		// FIXME nevertheless we always return NO
+		return NO;
+		
 		static BOOL firstRotation = YES;
 		if(firstRotation)
 		{
