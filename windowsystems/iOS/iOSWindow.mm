@@ -138,6 +138,7 @@ namespace April
 				id defaultImageView = [[window subviews] objectAtIndex:0];
 				if(defaultImageView && [defaultImageView isKindOfClass:[UIImageView class]])
 				{
+					NSLog(@"removing from superview");
 					[glview removeFromSuperview];
 					[defaultImageView removeFromSuperview];
 					
@@ -174,13 +175,25 @@ namespace April
 		float width = glview.bounds.size.width;
 		float height = glview.bounds.size.height;
 		
-		width;height;
+#pragma unused(width)
+#pragma unused(height)
 		
 		CGPoint location = [touch locationInView:glview];
 		
 		//For "primary" landscape orientation, this is how we calc it
 		mCursorX=location.x; 
 		mCursorY=location.y;
+		
+		// detect pre-3.2 devices
+		if (![[UIScreen mainScreen] respondsToSelector:@selector(scale)])
+		{
+			// ... except on pre-3.2 devices where we did a
+			// FIXME hack with locking orientation, and the
+			// gui stays incorrectly rotated.
+			mCursorX = height-location.y;
+			mCursorY = location.x;
+		}
+		
 		
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer* caeagllayer = (CAEAGLLayer*)[glview layer];
