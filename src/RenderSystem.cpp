@@ -70,27 +70,6 @@ namespace april
 		sscanf(s.c_str(),"%x",&i);
 		return i;
 	}
-	
-	void hexstr_to_rgba(chstr hex,unsigned char* r,unsigned char* g,unsigned char* b,unsigned char* a)
-	{
-		hstr value = hex;
-		if (value(0,2) != "0x") value="0x"+value;
-		if (value.size() == 8)
-		{
-			*r=hexstr_to_int(value(2,2));
-			*g=hexstr_to_int(value(4,2));
-			*b=hexstr_to_int(value(6,2));
-			*a=255;
-		}
-		else if (value.size() == 10)
-		{
-			*r=hexstr_to_int(value(2,2));
-			*g=hexstr_to_int(value(4,2));
-			*b=hexstr_to_int(value(6,2));
-			*a=hexstr_to_int(value(8,2));
-		}
-		else throw "Color format must be either 0xRRGGBBAA or 0xRRGGBB";
-	}
 /*****************************************************************************************/	
 	void PlainVertex::operator=(const gtypes::Vector3& v)
 	{
@@ -153,8 +132,23 @@ namespace april
 
 	void Color::set(chstr hex)
 	{
-		// this is going to bite me in the arse on a little endian system...
-		hexstr_to_rgba(hex,&r,&g,&b,&a);
+		hstr value = hex;
+		if (value(0,2) != "0x") value="0x"+value;
+		if (value.size() == 8)
+		{
+			this->r=hexstr_to_int(value(2,2));
+			this->g=hexstr_to_int(value(4,2));
+			this->b=hexstr_to_int(value(6,2));
+			this->a=255;
+		}
+		else if (value.size() == 10)
+		{
+			this->r=hexstr_to_int(value(2,2));
+			this->g=hexstr_to_int(value(4,2));
+			this->b=hexstr_to_int(value(6,2));
+			this->a=hexstr_to_int(value(8,2));
+		}
+		else throw "Color format must be either 0xRRGGBBAA or 0xRRGGBB";
 	}
 	
 	hstr Color::hex()
@@ -408,37 +402,37 @@ namespace april
 		
 	}
 
-	void RenderSystem::drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a)
+	void RenderSystem::drawColoredQuad(grect rect,Color color)
 	{
 		PlainVertex v[4];
-		v[0].x=x;   v[0].y=y;   v[0].z=0;
-		v[1].x=x+w; v[1].y=y;   v[1].z=0;
-		v[2].x=x;   v[2].y=y+h; v[2].z=0;
-		v[3].x=x+w; v[3].y=y+h; v[3].z=0;
+		v[0].x=rect.x;        v[0].y=rect.y;        v[0].z=0;
+		v[1].x=rect.x+rect.w; v[1].y=rect.y;        v[1].z=0;
+		v[2].x=rect.x;        v[2].y=rect.y+rect.h; v[2].z=0;
+		v[3].x=rect.x+rect.w; v[3].y=rect.y+rect.h; v[3].z=0;
 		
-		render(TriangleStrip,v,4,r,g,b,a);
+		render(TriangleStrip,v,4,color);
 	}
 	
-	void RenderSystem::drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw,float sh)
+	void RenderSystem::drawTexturedQuad(grect rect,grect src)
 	{
 		TexturedVertex v[4];
-		v[0].x=x;   v[0].y=y;   v[0].z=0; v[0].u=sx;    v[0].v=sy;
-		v[1].x=x+w; v[1].y=y;   v[1].z=0; v[1].u=sx+sw; v[1].v=sy;
-		v[2].x=x;   v[2].y=y+h; v[2].z=0; v[2].u=sx;    v[2].v=sy+sh;
-		v[3].x=x+w; v[3].y=y+h; v[3].z=0; v[3].u=sx+sw; v[3].v=sy+sh;
+		v[0].x=rect.x;        v[0].y=rect.y;        v[0].z=0; v[0].u=src.x;       v[0].v=src.y;
+		v[1].x=rect.x+rect.w; v[1].y=rect.y;        v[1].z=0; v[1].u=src.x+src.w; v[1].v=src.y;
+		v[2].x=rect.x;        v[2].y=rect.y+rect.h; v[2].z=0; v[2].u=src.x;       v[2].v=src.y+src.h;
+		v[3].x=rect.x+rect.w; v[3].y=rect.y+rect.h; v[3].z=0; v[3].u=src.x+src.w; v[3].v=src.y+src.h;
 
 		render(TriangleStrip,v,4);		
 	}
 	
-	void RenderSystem::drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw,float sh,float r,float g,float b,float a)
+	void RenderSystem::drawTexturedQuad(grect rect,grect src,Color color)
 	{
 		TexturedVertex v[4];
-		v[0].x=x;   v[0].y=y;   v[0].z=0; v[0].u=sx;    v[0].v=sy;
-		v[1].x=x+w; v[1].y=y;   v[1].z=0; v[1].u=sx+sw; v[1].v=sy;
-		v[2].x=x;   v[2].y=y+h; v[2].z=0; v[2].u=sx;    v[2].v=sy+sh;
-		v[3].x=x+w; v[3].y=y+h; v[3].z=0; v[3].u=sx+sw; v[3].v=sy+sh;
+		v[0].x=rect.x;        v[0].y=rect.y;        v[0].z=0; v[0].u=src.x;       v[0].v=src.y;
+		v[1].x=rect.x+rect.w; v[1].y=rect.y;        v[1].z=0; v[1].u=src.x+src.w; v[1].v=src.y;
+		v[2].x=rect.x;        v[2].y=rect.y+rect.h; v[2].z=0; v[2].u=src.x;       v[2].v=src.y+src.h;
+		v[3].x=rect.x+rect.w; v[3].y=rect.y+rect.h; v[3].z=0; v[3].u=src.x+src.w; v[3].v=src.y+src.h;
 		
-		render(TriangleStrip,v,4,r,g,b,a);	
+		render(TriangleStrip,v,4,color);
 	}
 	
 	hstr RenderSystem::findTextureFile(chstr filename)

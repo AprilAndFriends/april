@@ -374,18 +374,17 @@ namespace april
 
 	}
 
-	void GLRenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices,float r,float g,float b,float a)
+	void GLRenderSystem::render(RenderOp renderOp,TexturedVertex* v,int nVertices,Color color)
 	{
 		if (!mTexCoordsEnabled) { glEnableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=true; }
 #if !(TARGET_OS_IPHONE)
 		if (mColorEnabled) { glDisableClientState(GL_COLOR_ARRAY); mColorEnabled=false; }   
-		glColor4f(r,g,b,a*mAlphaMultiplier);
+		glColor4f(color.r_float(),color.g_float(),color.b_float(),color.a_float()*mAlphaMultiplier);
 #else
 		if(!mColorEnabled) { glEnableClientState(GL_COLOR_ARRAY); mColorEnabled=true; }
 		
 		GLuint colors[nVertices];
-		GLbyte rB = r*255, gB = g*255, bB = b*255, aB = a*255;
-		GLbyte colorB[4] = {rB, gB, bB, aB};
+		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)color.a};
 		GLuint color = *(GLuint*)colorB;
 		for(int i=0; i<nVertices; i++)
 		{
@@ -415,19 +414,18 @@ namespace april
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 
-	void GLRenderSystem::render(RenderOp renderOp,PlainVertex* v,int nVertices,float r,float g,float b,float a)
+	void GLRenderSystem::render(RenderOp renderOp,PlainVertex* v,int nVertices,Color color)
 	{
 		if (mTexCoordsEnabled) { glBindTexture(GL_TEXTURE_2D,0); glDisableClientState(GL_TEXTURE_COORD_ARRAY); mTexCoordsEnabled=false; }
 
 #if !(TARGET_OS_IPHONE)
 		if (mColorEnabled) { mColorEnabled=false; glDisableClientState(GL_COLOR_ARRAY); }
-		glColor4f(r,g,b,a*mAlphaMultiplier);
+		glColor4f(color.r_float(),color.g_float(),color.b_float(),color.a_float()*mAlphaMultiplier);
 #else
 		if(!mColorEnabled) { glEnableClientState(GL_COLOR_ARRAY); mColorEnabled=true; }
 
 		GLuint colors[nVertices];
-		GLbyte rB = r*255, gB = g*255, bB = b*255, aB = a*mAlphaMultiplier*255;
-		GLbyte colorB[4] = {rB, gB, bB, aB};
+		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)(color.a*mAlphaMultiplier};
 		GLuint color = *(GLuint*)colorB;
 		for(int i=0; i<nVertices; i++)
 		{
@@ -510,7 +508,7 @@ namespace april
 #endif
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
-		april::rendersys = ::rendersys = new GLRenderSystem(window);
+		april::rendersys = new GLRenderSystem(window);
 	}
 
 }
