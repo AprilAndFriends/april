@@ -104,6 +104,11 @@ namespace April
 		return mFullscreen;
 	}
 	
+	float Window::getWindowAspectRatio()
+	{
+		return (float) getWindowWidth()/(float) getWindowHeight();
+	}
+	
 	bool Window::performUpdate(float time_increase)
 	{
 		// returning true: continue execution

@@ -92,6 +92,7 @@ namespace April
 		virtual bool isSystemCursorShown()=0;
 		virtual int getWindowWidth()=0;
 		virtual int getWindowHeight()=0;
+		float getWindowAspectRatio();
 		virtual void setWindowTitle(chstr title)=0;
 		virtual gvec2 getCursorPos()=0;
 		virtual void presentFrame()=0;
