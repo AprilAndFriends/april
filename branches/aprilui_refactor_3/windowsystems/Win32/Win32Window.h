@@ -2,16 +2,16 @@
 This source file is part of the Awesome Portable Rendering Interface Library         *
 For latest info, see http://libapril.sourceforge.net/                                *
 **************************************************************************************
-Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                     *
+Copyright (c) 2010 Ivan Vucica                                                       *
 *                                                                                    *
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-
-#ifndef APRIL_WIN32WINDOW_H_INCLUDED
-#define APRIL_WIN32WINDOW_H_INCLUDED
+#ifndef APRIL_WIN32_WINDOW_H
+#define APRIL_WIN32_WINDOW_H
 
 #include <hltypes/hstring.h>
+
 #include "Window.h"
 #include "aprilExport.h"
 
@@ -19,21 +19,11 @@ namespace april
 {
 	class aprilExport Win32Window : public Window
 	{
-	private:
-		
-		//void _handleKeyEvent(Window::KeyEventType type, SDLKey keycode, unsigned int unicode);
-		//void _handleDisplayAndUpdate();
-		//void _handleMouseEvent(SDL_Event &evt);
-		//SDL_Surface *mScreen;
-		bool mRunning;
-		//bool mCursorVisible;
-		bool mActive;
 	public:
-		
 		Win32Window(int w, int h, bool fullscreen, chstr title);
 		~Win32Window();
 		
-		void _setActive(bool active) { mActive=active; }
+		void _setActive(bool active) { mActive = active; }
 		
 		// implementations
 		void enterMainLoop();
@@ -50,7 +40,7 @@ namespace april
 		void doEvents();
 		
 		// event handlers
-		void triggerKeyEvent(bool down,unsigned int keycode);
+		void triggerKeyEvent(bool down, unsigned int keycode);
 		void triggerCharEvent(unsigned int chr);
 	
 		void triggerMouseUpEvent(int button);
@@ -59,9 +49,13 @@ namespace april
 		bool triggerQuitEvent();
 		void triggerFocusCallback(bool focused);
 		
+		float mCursorX; // TODO turn into private
+		float mCursorY; // TODO turn into private
 		
-
-		float mCursorX, mCursorY; // TODO turn into private
+	private:
+		bool mRunning;
+		bool mActive;
+		
 	};
 }
 

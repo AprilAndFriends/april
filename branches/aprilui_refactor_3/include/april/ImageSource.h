@@ -11,6 +11,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 #define APRIL_IMAGE_SOURCE_H
 
 #include <hltypes/hstring.h>
+
 #include "aprilExport.h"
 
 namespace april
@@ -19,25 +20,31 @@ namespace april
 	
 	class aprilExport ImageSource
 	{
-		unsigned int mImageId;
 	public:
 		ImageSource();
 		~ImageSource();
-		unsigned int getImageId() { return mImageId; };
 		
-		Color getPixel(int x,int y);
-		void setPixel(int x,int y,Color c);
-		Color getInterpolatedPixel(float x,float y);
-		void copyPixels(void* output,int format);
+		unsigned int getImageId() { return mImageId; };
+		Color getPixel(int x, int y);
+		void setPixel(int x, int y, Color c);
+		Color getInterpolatedPixel(float x, float y);
+		void copyPixels(void* output, int format);
 		
 		unsigned char* data;
-		int w,h,bpp,format;
+		int w;
+		int h;
+		int bpp;
+		int format;
 		
 		int compressedLength;
+		
+	protected:
+		unsigned int mImageId;
 		
 	};
 	
 	ImageSource* loadImage(chstr filename);
+	
 }
 
 #endif

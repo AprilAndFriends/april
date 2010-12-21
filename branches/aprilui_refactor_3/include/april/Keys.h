@@ -7,7 +7,6 @@ Copyright (c) 2010 Kresimir Spes                                                
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-
 #ifndef APRIL_KEYS
 #define APRIL_KEYS
 
@@ -83,8 +82,6 @@ namespace april
 		AK_DELETE = 0x2E,
 		AK_HELP = 0x2F,
 	
-
-
 		// 0x30-0x39 -- '0'-'9'
 		AK_0 = '0',
 		AK_1 = '1',
