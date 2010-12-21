@@ -130,10 +130,10 @@ namespace april
 		void set(unsigned int color);
 		void set(chstr hex);
 
-		float r_float() { return r / 255.0f; }
-		float g_float() { return g / 255.0f; }
-		float b_float() { return b / 255.0f; }
-		float a_float() { return a / 255.0f; }
+		float r_f() { return r / 255.0f; }
+		float g_f() { return g / 255.0f; }
+		float b_f() { return b / 255.0f; }
+		float a_f() { return a / 255.0f; }
 		
 		hstr hex();
 		

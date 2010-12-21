@@ -219,19 +219,19 @@ namespace april
 
 	Color Color::operator*=(Color& other)
 	{
-		this->r = hclamp((int)(this->r_float() * other.r), 0, 255);
-		this->g = hclamp((int)(this->g_float() * other.g), 0, 255);
-		this->b = hclamp((int)(this->b_float() * other.b), 0, 255);
-		this->a = hclamp((int)(this->a_float() * other.a), 0, 255);
+		this->r = hclamp((int)(this->r_f() * other.r), 0, 255);
+		this->g = hclamp((int)(this->g_f() * other.g), 0, 255);
+		this->b = hclamp((int)(this->b_f() * other.b), 0, 255);
+		this->a = hclamp((int)(this->a_f() * other.a), 0, 255);
 		return (*this);
 	}
 
 	Color Color::operator/=(Color& other)
 	{
-		this->r = hclamp((int)(this->r_float() / other.r), 0, 255);
-		this->g = hclamp((int)(this->g_float() / other.g), 0, 255);
-		this->b = hclamp((int)(this->b_float() / other.b), 0, 255);
-		this->a = hclamp((int)(this->a_float() / other.a), 0, 255);
+		this->r = hclamp((int)(this->r_f() / other.r), 0, 255);
+		this->g = hclamp((int)(this->g_f() / other.g), 0, 255);
+		this->b = hclamp((int)(this->b_f() / other.b), 0, 255);
+		this->a = hclamp((int)(this->a_f() / other.a), 0, 255);
 		return (*this);
 	}
 
