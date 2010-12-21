@@ -16,34 +16,35 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include <stdint.h>
 #define __int64 uint64_t
 #endif
-
 #include <stdio.h>
+
 #include "aprilExport.h"
 
 namespace april
 {
     class aprilExport Timer
     {
-        
-        float mDt, mTd, mTd2;
-        __int64       mFrequency;
-        float         mResolution;
-        __int64	      mMmTimerStart;
-        unsigned long mMmTimerElapsed;
-        bool		  mPerformanceTimer;
-        __int64       mPerformanceTimerStart;
-        __int64       mPerformanceTimerElapsed;
-        
-        
     public:
-        
         Timer();
         ~Timer();
         
         float getTime();
-        float diff(bool doUpdate = true);
+        float diff(bool update = true);
         
         void update();
+		
+	protected:
+        float mDt;
+		float mTd;
+		float mTd2;
+        __int64 mFrequency;
+        float mResolution;
+        __int64 mMmTimerStart;
+        unsigned long mMmTimerElapsed;
+        bool mPerformanceTimer;
+        __int64 mPerformanceTimerStart;
+        __int64 mPerformanceTimerElapsed;
+        
     };
 }
 
