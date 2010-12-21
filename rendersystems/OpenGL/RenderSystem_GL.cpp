@@ -422,7 +422,7 @@ namespace april
 			glDisableClientState(GL_COLOR_ARRAY);
 			mColorEnabled = false;
 		}
-		glColor4f(color.r_float(), color.g_float(), color.b_float(), color.a_float() * mAlphaMultiplier);
+		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f() * mAlphaMultiplier);
 #else
 		if (!mColorEnabled)
 		{
@@ -477,7 +477,7 @@ namespace april
 			mColorEnabled = false;
 			glDisableClientState(GL_COLOR_ARRAY);
 		}
-		glColor4f(color.r_float(), color.g_float(), color.b_float(), color.a_float() * mAlphaMultiplier);
+		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f() * mAlphaMultiplier);
 #else
 		if (!mColorEnabled)
 		{
