@@ -202,7 +202,7 @@ namespace april
 		mTitle = title;
 	}
 	
-	gvec2 SDLWindow::getCursorPos()
+	gvec2 SDLWindow::getCursorPosition()
 	{
 		return gvec2(mCursorX,mCursorY);
 	}

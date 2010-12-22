@@ -93,7 +93,7 @@ namespace april
 		{
 			float k=0.5/1024.0f;
 			rendersys->setTexture(mTex1);
-			rendersys->drawTexturedQuad(0,0,w,h,k,k,1,1);
+			rendersys->drawTexturedQuad(grect(0,0,w,h),grect(k,k,1,1));
 		}
 	}
 }

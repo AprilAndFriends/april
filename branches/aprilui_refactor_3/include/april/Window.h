@@ -70,7 +70,8 @@ namespace april
 		virtual int getWindowWidth() = 0;
 		virtual int getWindowHeight() = 0;
 		virtual void setWindowTitle(chstr title) = 0;
-		virtual gvec2 getCursorPos() = 0;
+		gvec2 getCursorPos() DEPRECATED_ATTRIBUTE { return getCursorPosition(); }
+		virtual gvec2 getCursorPosition() = 0;
 		virtual void presentFrame() = 0;
 		virtual void* getIDFromBackend() = 0;
 		virtual void doEvents() = 0;

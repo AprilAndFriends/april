@@ -194,7 +194,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 #endif
 	}
 	
-	gvec2 Win32Window::getCursorPos()
+	gvec2 Win32Window::getCursorPosition()
 	{
 		return cursorPosition;
 	}
