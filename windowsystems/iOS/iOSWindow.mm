@@ -274,7 +274,7 @@ namespace April
 		// currently, in the same way as is the case
 		// in rest of april for iOS, we only provide
 		// support for landscape orientations
-		NSLog(@"Orientation: %d", viewcontroller.interfaceOrientation);
+		//NSLog(@"Orientation: %d", viewcontroller.interfaceOrientation);
 		switch (viewcontroller.interfaceOrientation) {
 			case UIInterfaceOrientationPortrait:
 				return 90.0f; // simulate left landscape orientation (needed only until we transform into a landscape orientation on earlier iOS)
