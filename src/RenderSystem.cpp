@@ -147,6 +147,16 @@ namespace april
 		return hsprintf("%02x%02x%02x%02x", this->r, this->g, this->b, this->a);
 	}
 
+	unsigned int Color::uint()
+	{
+		unsigned int i;
+		i |= this->r << 24;
+		i |= this->r << 16;
+		i |= this->r << 8;
+		i |= this->a;
+		return i;
+	}
+
 	bool Color::operator==(Color& other)
 	{
 		return (this->r == other.r && this->g == other.g && this->b == other.b && this->a == other.a);

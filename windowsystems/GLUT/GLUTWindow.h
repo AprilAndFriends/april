@@ -30,7 +30,6 @@ namespace april
 		int getWindowWidth();
 		int getWindowHeight();
 		void setWindowTitle(chstr title);
-		gvec2 getCursorPos() DEPRECATED_ATTRIBUTE;
 		gvec2 getCursorPosition();
 		void presentFrame();
 		void* getIDFromBackend();

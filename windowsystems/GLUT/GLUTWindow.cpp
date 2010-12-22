@@ -128,11 +128,6 @@ namespace april
 		glutSetWindowTitle(title.c_str());
 	}
 	
-	gvec2 GLUTWindow::getCursorPos()
-	{
-		return getCursorPosition();
-	}
-	
 	gvec2 GLUTWindow::getCursorPosition()
 	{
 		return gvec2(mCursorX, mCursorY);

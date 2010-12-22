@@ -136,6 +136,7 @@ namespace april
 		float a_f() { return a / 255.0f; }
 		
 		hstr hex();
+		unsigned int uint();
 		
 		bool operator==(Color& other);
 		bool operator!=(Color& other);
