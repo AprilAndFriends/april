@@ -149,10 +149,10 @@ namespace april
 
 	unsigned int Color::uint()
 	{
-		unsigned int i;
+		unsigned int i = 0;
 		i |= this->r << 24;
-		i |= this->r << 16;
-		i |= this->r << 8;
+		i |= this->g << 16;
+		i |= this->b << 8;
 		i |= this->a;
 		return i;
 	}
