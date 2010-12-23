@@ -417,8 +417,9 @@ namespace April
 		render(TriangleStrip,v,4,r,g,b,a);	
 	}
 	
-	hstr RenderSystem::findTextureFile(chstr filename)
+	hstr RenderSystem::findTextureFile(chstr _filename)
 	{
+		hstr filename = _filename;
 		if (hfile::exists(filename)) return filename;
 		hstr name;
 		foreach (hstr, it, extensions)
@@ -426,6 +427,15 @@ namespace April
 			name=filename+(*it);
 			if (hfile::exists(name)) return name;
 		}
+		if (filename.rfind(".") != -1) {
+			filename = filename.substr(0, filename.rfind("."));
+			foreach (hstr, it, extensions)
+			{
+				name=filename+(*it);
+				if (hfile::exists(name)) return name;
+			}
+		}
+
 		return "";
 	}
 	
