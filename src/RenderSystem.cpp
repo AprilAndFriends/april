@@ -46,17 +46,17 @@ namespace april
 	
 	void (*g_logFunction)(chstr) = april_writelog;
 	
-	void logf(chstr message, ...)
-	{
-		va_list vl;
-		va_start(vl, message);
-		april::log(hvsprintf(message.c_str(), vl));;
-		va_end(vl);
-	}
-	
 	void log(chstr message, chstr prefix)
 	{
 		g_logFunction(prefix + message);
+	}
+	
+	void logf(chstr message, ...)
+	{
+		va_list args;
+		va_start(args, message);
+		april::log(hvsprintf(message.c_str(), args));
+		va_end(args);
 	}
 	
 	int hexstr_to_int(chstr s)
