@@ -148,6 +148,15 @@
 	aprilWindow->keyboardWasHidden();
 }
 
+// we'll also use this objc class for getting notifications
+// when device orientation changes
+
+-(void)deviceOrientationDidChange:(id)sender
+{
+	aprilWindow->deviceOrientationDidChange();
+}
+
+// ok, now other functionality of this class
 
 - (void)drawView {
     
@@ -287,5 +296,7 @@
 	
 	return aprilWindow->textField_shouldChangeCharactersInRange_replacementString_(_textField, range.location, range.length, chstr([string UTF8String]));
 }
+
+
 
 @end

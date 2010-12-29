@@ -21,27 +21,7 @@ namespace April
 	class RenderSystem;	
 	class AprilExport Window 
 	{
-	protected:		
-		RenderSystem* mRenderSystem;
-		hstr mTitle;
-		bool mFullscreen;
-
-		bool (*mUpdateCallback)(float);
-		void (*mMouseDownCallback)(float,float,int);
-		void (*mMouseUpCallback)(float,float,int);
-		void (*mMouseMoveCallback)(float,float);
-		void (*mKeyDownCallback)(unsigned int);
-		void (*mCharCallback)(unsigned int);
-		void (*mKeyUpCallback)(unsigned int);
-		bool (*mQuitCallback)(bool can_reject);
-		void (*mFocusCallback)(bool);
-		void (*mVKeyboardCallback)(bool);
-
-		Window();
-		
 	public:
-		
-		
 		// data types
 		
 		enum MouseEventType
@@ -64,6 +44,40 @@ namespace April
 			AMOUSEBTN_RIGHT,
 			AMOUSEBTN_MIDDLE
 		};
+		enum DeviceOrientation
+		{
+			ADEVICEORIENTATION_NONE=0,
+			ADEVICEORIENTATION_PORTRAIT,
+			ADEVICEORIENTATION_PORTRAIT_UPSIDEDOWN,
+			ADEVICEORIENTATION_LANDSCAPE_LEFT, // bottom of device is on the left
+			ADEVICEORIENTATION_LANDSCAPE_RIGHT, // bottom of device is on the right
+			ADEVICEORIENTATION_FACE_DOWN, // screen is facing the ground
+			ADEVICEORIENTATION_FACE_UP // screen is facing the sky
+		};
+		
+	protected:		
+		RenderSystem* mRenderSystem;
+		hstr mTitle;
+		bool mFullscreen;
+
+		bool (*mUpdateCallback)(float);
+		void (*mMouseDownCallback)(float,float,int);
+		void (*mMouseUpCallback)(float,float,int);
+		void (*mMouseMoveCallback)(float,float);
+		void (*mKeyDownCallback)(unsigned int);
+		void (*mCharCallback)(unsigned int);
+		void (*mKeyUpCallback)(unsigned int);
+		bool (*mQuitCallback)(bool can_reject);
+		void (*mFocusCallback)(bool);
+		void (*mVKeyboardCallback)(bool);
+		void (*mDeviceOrientationCallback)(DeviceOrientation);
+
+		Window();
+		
+	public:
+		
+		
+		
 		
 		// utility funcs
 		void _platformCursorVisibilityUpdate(bool visible);
@@ -84,6 +98,7 @@ namespace April
 		void setQuitCallback(bool (*quit_callback)(bool can_reject));
 		void setWindowFocusCallback(void (*focus_callback)(bool));
 		void setVirtualKeyboardCallback(void (*vk_callback)(bool));
+		virtual void setDeviceOrientationCallback(void (*vk_callback)(DeviceOrientation)); 
 		
 		// misc pure virtuals
 		virtual void enterMainLoop()=0;

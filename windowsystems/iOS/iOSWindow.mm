@@ -55,9 +55,8 @@ namespace April
 			throw hl_exception("iOSWindow failed to create glview");
 		glview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		glview.aprilWindowVoid = this;
-		
-		
-		
+
+
 		[viewcontroller.view addSubview:glview];
 		
 		mRunning = true;
@@ -274,13 +273,20 @@ namespace April
 		// currently, in the same way as is the case
 		// in rest of april for iOS, we only provide
 		// support for landscape orientations
+		
+		if (![[UIScreen mainScreen] respondsToSelector:@selector(scale)])
+		{
+			// pre-3.2 devices use a hack
+			return 90.0f;
+		}
+		
 		//NSLog(@"Orientation: %d", viewcontroller.interfaceOrientation);
 		switch (viewcontroller.interfaceOrientation) {
 			case UIInterfaceOrientationPortrait:
 				return 90.0f; // simulate left landscape orientation (needed only until we transform into a landscape orientation on earlier iOS)
 			case UIInterfaceOrientationLandscapeLeft:
 			case UIInterfaceOrientationLandscapeRight:
-				return 0; // any landscape orientation will be well supported elsewhere
+				return 0.0f; // any landscape orientation will be well supported elsewhere
 				
 			case UIInterfaceOrientationPortraitUpsideDown:
 				return -90.0f; // this shouldn't occur except if someone plays with shouldAutorotateToInterfaceOrientation in AprilViewController
@@ -329,6 +335,43 @@ namespace April
 			mVKeyboardCallback(false);
 	}
 	
+	void iOSWindow::setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation))
+	{
+			
+		if(do_callback)
+		{
+			// register for device orientation notifications
+			if(!mDeviceOrientationCallback)
+			{
+				// previously not registered in notification center?
+				// add as observer
+				[[NSNotificationCenter defaultCenter] addObserver:glview // we'll abuse app delegate for this, too
+														 selector:@selector(deviceOrientationDidChange:)
+															 name:UIDeviceOrientationDidChangeNotification 
+														   object:nil];
+			}
+			[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+			
+		}
+		else
+		{
+			// unregister
+			if(mDeviceOrientationCallback)
+			{
+				// previously was registered?
+				// remove us as observer
+				[[NSNotificationCenter defaultCenter] removeObserver:glview
+																name:UIDeviceOrientationDidChangeNotification
+															  object:nil];
+			}
+			[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+		}
+		
+		// update mDeviceOrientationCallback
+		Window::setDeviceOrientationCallback(do_callback);
+		
+	}
+	
 	//////////////
 	void iOSWindow::handleDisplayAndUpdate()
 	{
@@ -339,5 +382,33 @@ namespace April
 		rendersys->presentFrame();
 	}
 	
+	void iOSWindow::deviceOrientationDidChange()
+	{
+		if(mDeviceOrientationCallback)
+		{
+			DeviceOrientation newOrientation;
+			switch ([[UIDevice currentDevice] orientation]) {
+				case UIDeviceOrientationUnknown:
+					newOrientation = ADEVICEORIENTATION_NONE;
+				case UIDeviceOrientationPortrait:
+					newOrientation = ADEVICEORIENTATION_PORTRAIT;
+				case UIDeviceOrientationPortraitUpsideDown:
+					newOrientation = ADEVICEORIENTATION_PORTRAIT_UPSIDEDOWN;
+				case UIDeviceOrientationLandscapeLeft:
+					newOrientation = ADEVICEORIENTATION_LANDSCAPE_LEFT;
+				case UIDeviceOrientationLandscapeRight:
+					newOrientation = ADEVICEORIENTATION_LANDSCAPE_RIGHT;
+				case UIDeviceOrientationFaceUp:
+					newOrientation = ADEVICEORIENTATION_FACE_UP;
+				case UIDeviceOrientationFaceDown:
+					newOrientation = ADEVICEORIENTATION_FACE_DOWN;
+				// not adding default, so we get a warning in case
+				// a new orientation is added to backing API
+			}
+			newOrientation = ADEVICEORIENTATION_NONE;
+			mDeviceOrientationCallback(newOrientation);
+		}
+	}
+
 	
 }

@@ -56,5 +56,6 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 - (void)terminateKeyboardHandling;
 - (void)keyboardWasShown:(id)sender;
 - (void)keyboardWasHidden:(id)sender;
+- (void)deviceOrientationDidChange:(id)sender;
 
 @end
