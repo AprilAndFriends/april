@@ -340,30 +340,10 @@ namespace April
 			
 		if(do_callback)
 		{
-			// register for device orientation notifications
-			if(!mDeviceOrientationCallback)
-			{
-				// previously not registered in notification center?
-				// add as observer
-				[[NSNotificationCenter defaultCenter] addObserver:glview // we'll abuse app delegate for this, too
-														 selector:@selector(deviceOrientationDidChange:)
-															 name:UIDeviceOrientationDidChangeNotification 
-														   object:nil];
-			}
 			[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-			
 		}
 		else
 		{
-			// unregister
-			if(mDeviceOrientationCallback)
-			{
-				// previously was registered?
-				// remove us as observer
-				[[NSNotificationCenter defaultCenter] removeObserver:glview
-																name:UIDeviceOrientationDidChangeNotification
-															  object:nil];
-			}
 			[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 		}
 		
