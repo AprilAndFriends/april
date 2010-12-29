@@ -126,6 +126,13 @@
 												 selector:@selector(keyboardWasHidden:)
 													 name:UIKeyboardDidHideNotification object:nil];
 		
+		// tracking of device orientation change
+		// we call UIDevice's beginGeneratingDeviceOrientationNotifications
+		// in window itself 
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(deviceOrientationDidChange:)
+													 name:UIDeviceOrientationDidChangeNotification 
+												   object:nil];
 		
     }
 	
