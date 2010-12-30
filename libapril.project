@@ -19,6 +19,7 @@
     <File Name="main_win32.cpp"/>
     <File Name="windowsystems/SDL/SDLWindow.cpp"/>
     <File Name="windowsystems/Win32/Win32Window.cpp"/>
+    <File Name="src/TimerPosix.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="rendersystems/OpenGL/RenderSystem_GL.h"/>
@@ -155,6 +156,7 @@
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="_UNIX"/>
         <Preprocessor Value="_OPENGL"/>
+        <Preprocessor Value="HAVE_SDL"/>
       </Compiler>
       <Linker Options="" Required="yes">
         <LibraryPath Value="../hltypes/bin/Linux_Debug"/>
