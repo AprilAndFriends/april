@@ -95,10 +95,10 @@ namespace april
 
 	Color::Color()
 	{
-		r = 255;
-		g = 255;
-		b = 255;
-		a = 255;
+		this->r = 255;
+		this->g = 255;
+		this->b = 255;
+		this->a = 255;
 	}
 
 	void Color::set(int r, int g, int b, int a)
@@ -142,12 +142,17 @@ namespace april
 		this->a = (value.size() == 10 ? hexstr_to_int(value(8, 2)) : 255);
 	}
 	
-	hstr Color::hex()
+	hstr Color::hex(bool rgbOnly)
 	{
-		return hsprintf("%02x%02x%02x%02x", this->r, this->g, this->b, this->a);
+		hstr result = hsprintf("%02x%02x%02x", this->r, this->g, this->b);
+		if (!rgbOnly)
+		{
+			result += hsprintf("%02x", this->a);
+		}
+		return result;
 	}
 
-	unsigned int Color::uint()
+	Color::operator unsigned int() const
 	{
 		unsigned int i = 0;
 		i |= this->r << 24;
@@ -156,7 +161,7 @@ namespace april
 		i |= this->a;
 		return i;
 	}
-
+	
 	bool Color::operator==(Color& other)
 	{
 		return (this->r == other.r && this->g == other.g && this->b == other.b && this->a == other.a);
@@ -490,8 +495,9 @@ namespace april
 		render(TriangleStrip, v, 4, color);
 	}
 	
-	hstr RenderSystem::findTextureFile(chstr filename)
+	hstr RenderSystem::findTextureFile(chstr _filename)
 	{
+		hstr filename = _filename;
 		if (hfile::exists(filename))
 		{
 			return filename;
@@ -503,6 +509,19 @@ namespace april
 			if (hfile::exists(name))
 			{
 				return name;
+			}
+		}
+		int index = filename.rfind(".");
+		if (index >= 0)
+		{
+			hstr filename = filename.substr(0, index);
+			foreach (hstr, it, extensions)
+			{
+				name = filename + (*it);
+				if (hfile::exists(name))
+				{
+					return name;
+				}
 			}
 		}
 		return "";

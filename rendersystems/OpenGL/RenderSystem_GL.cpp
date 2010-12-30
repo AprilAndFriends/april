@@ -331,7 +331,7 @@ namespace april
 #if TARGET_OS_IPHONE
 		glLoadIdentity();
 		glRotatef(getWindow()->prefixRotationAngle(), 0, 0, 1);
-		printf("rotationangle %g\n", getWindow()->prefixRotationAngle());
+		//printf("rotationangle %g\n", getWindow()->prefixRotationAngle());
 		glMultMatrixf(matrix.mat);
 #else
 		glLoadMatrixf(matrix.mat);

@@ -57,6 +57,9 @@ namespace April
 		void touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent);
 		
 		bool textField_shouldChangeCharactersInRange_replacementString_(void* uitextfieldTextField, int nsrangeLocation, int nsrangeLength, chstr str);
+		
+		void setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation));
+		void deviceOrientationDidChange();
 
 	};
 }

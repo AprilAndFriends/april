@@ -209,8 +209,7 @@ namespace April
 	ImageSource* loadImage(chstr filename)
 	{
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
-		
-		
+				
 #if TARGET_OS_IPHONE
 		ImageSource *pvrimg;
 		if(pvrimg=_tryLoadingPVR(filename))

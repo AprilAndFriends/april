@@ -79,35 +79,28 @@ namespace april
 		float v;
 	};
 
-	class aprilExport ColoredTexturedVertex : public PlainVertex
+	class aprilExport ColoredTexturedVertex : public ColoredVertex
 	{
 	public:
-		unsigned int color;
 		float u;
 		float v;
 	};
     
-    class aprilExport ColoredTexturedNormalVertex : public PlainVertex
+    class aprilExport ColoredTexturedNormalVertex : public ColoredTexturedVertex
     {
     public:
-        unsigned int color;
-		float u;
-		float v;
         gvec3 normal;
     };
     
-    class aprilExport TexturedNormalVertex : public PlainVertex
+    class aprilExport TexturedNormalVertex : public TexturedVertex
     {
     public:
-		float u;
-		float v;
         gvec3 normal;
     };
     
-    class aprilExport ColoredNormalVertex : public PlainVertex
+    class aprilExport ColoredNormalVertex : public ColoredVertex
     {
     public:
-        unsigned int color;
         gvec3 normal;
     };
 
@@ -135,8 +128,9 @@ namespace april
 		float b_f() { return b / 255.0f; }
 		float a_f() { return a / 255.0f; }
 		
-		hstr hex();
-		unsigned int uint();
+		hstr hex(bool rgbOnly = false); // careful when using rgbOnly!
+		
+		operator unsigned int() const;
 		
 		bool operator==(Color& other);
 		bool operator!=(Color& other);
