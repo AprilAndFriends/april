@@ -17,6 +17,9 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #else
 #ifdef _WIN32
 #include <windows.h>
+#else
+#include <stdio.h>
+#include <cstring>
 #endif
 #include <stdlib.h>
 
