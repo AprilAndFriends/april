@@ -55,9 +55,8 @@ namespace April
 			throw hl_exception("iOSWindow failed to create glview");
 		glview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		glview.aprilWindowVoid = this;
-		
-		
-		
+
+
 		[viewcontroller.view addSubview:glview];
 		
 		mRunning = true;
@@ -138,6 +137,7 @@ namespace April
 				id defaultImageView = [[window subviews] objectAtIndex:0];
 				if(defaultImageView && [defaultImageView isKindOfClass:[UIImageView class]])
 				{
+					NSLog(@"removing from superview");
 					[glview removeFromSuperview];
 					[defaultImageView removeFromSuperview];
 					
@@ -174,13 +174,25 @@ namespace April
 		float width = glview.bounds.size.width;
 		float height = glview.bounds.size.height;
 		
-		width;height;
+#pragma unused(width)
+#pragma unused(height)
 		
 		CGPoint location = [touch locationInView:glview];
 		
 		//For "primary" landscape orientation, this is how we calc it
 		mCursorX=location.x; 
 		mCursorY=location.y;
+		
+		// detect pre-3.2 devices
+		if (![[UIScreen mainScreen] respondsToSelector:@selector(scale)])
+		{
+			// ... except on pre-3.2 devices where we did a
+			// FIXME hack with locking orientation, and the
+			// gui stays incorrectly rotated.
+			mCursorX = height-location.y;
+			mCursorY = location.x;
+		}
+		
 		
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer* caeagllayer = (CAEAGLLayer*)[glview layer];
@@ -261,13 +273,20 @@ namespace April
 		// currently, in the same way as is the case
 		// in rest of april for iOS, we only provide
 		// support for landscape orientations
-		NSLog(@"Orientation: %d", viewcontroller.interfaceOrientation);
+		
+		if (![[UIScreen mainScreen] respondsToSelector:@selector(scale)])
+		{
+			// pre-3.2 devices use a hack
+			return 90.0f;
+		}
+		
+		//NSLog(@"Orientation: %d", viewcontroller.interfaceOrientation);
 		switch (viewcontroller.interfaceOrientation) {
 			case UIInterfaceOrientationPortrait:
 				return 90.0f; // simulate left landscape orientation (needed only until we transform into a landscape orientation on earlier iOS)
 			case UIInterfaceOrientationLandscapeLeft:
 			case UIInterfaceOrientationLandscapeRight:
-				return 0; // any landscape orientation will be well supported elsewhere
+				return 0.0f; // any landscape orientation will be well supported elsewhere
 				
 			case UIInterfaceOrientationPortraitUpsideDown:
 				return -90.0f; // this shouldn't occur except if someone plays with shouldAutorotateToInterfaceOrientation in AprilViewController
@@ -316,6 +335,23 @@ namespace April
 			mVKeyboardCallback(false);
 	}
 	
+	void iOSWindow::setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation))
+	{
+			
+		if(do_callback)
+		{
+			[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+		}
+		else
+		{
+			[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+		}
+		
+		// update mDeviceOrientationCallback
+		Window::setDeviceOrientationCallback(do_callback);
+		
+	}
+	
 	//////////////
 	void iOSWindow::handleDisplayAndUpdate()
 	{
@@ -326,5 +362,33 @@ namespace April
 		rendersys->presentFrame();
 	}
 	
+	void iOSWindow::deviceOrientationDidChange()
+	{
+		if(mDeviceOrientationCallback)
+		{
+			DeviceOrientation newOrientation;
+			switch ([[UIDevice currentDevice] orientation]) {
+				case UIDeviceOrientationUnknown:
+					newOrientation = ADEVICEORIENTATION_NONE;
+				case UIDeviceOrientationPortrait:
+					newOrientation = ADEVICEORIENTATION_PORTRAIT;
+				case UIDeviceOrientationPortraitUpsideDown:
+					newOrientation = ADEVICEORIENTATION_PORTRAIT_UPSIDEDOWN;
+				case UIDeviceOrientationLandscapeLeft:
+					newOrientation = ADEVICEORIENTATION_LANDSCAPE_LEFT;
+				case UIDeviceOrientationLandscapeRight:
+					newOrientation = ADEVICEORIENTATION_LANDSCAPE_RIGHT;
+				case UIDeviceOrientationFaceUp:
+					newOrientation = ADEVICEORIENTATION_FACE_UP;
+				case UIDeviceOrientationFaceDown:
+					newOrientation = ADEVICEORIENTATION_FACE_DOWN;
+				// not adding default, so we get a warning in case
+				// a new orientation is added to backing API
+			}
+			newOrientation = ADEVICEORIENTATION_NONE;
+			mDeviceOrientationCallback(newOrientation);
+		}
+	}
+
 	
 }

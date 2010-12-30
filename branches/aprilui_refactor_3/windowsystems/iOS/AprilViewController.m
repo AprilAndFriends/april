@@ -235,6 +235,9 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 		// yet it's improperly placed on screen.
 		// after first rotation everything works.
 		
+		// FIXME nevertheless we always return NO for anything but portrait
+		return interfaceOrientation == UIInterfaceOrientationLandscapeLeft; //UIInterfaceOrientationPortrait;
+		
 		static BOOL firstRotation = YES;
 		if(firstRotation)
 		{
@@ -244,19 +247,6 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 		}
 	}
 	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
-}
-
--(void)willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation duration:(NSTimeInterval)duration
-{
-	/*
-	CGRect frame = self.view.frame; //[[UIScreen mainScreen] bounds];
-	float wi = frame.size.height;
-	float hi = frame.size.width;
-	frame.size.width = wi;
-	frame.size.height = hi;
-	
-	self.view.frame = frame;*/
-	//window.transform = CGAffineTransformIdentity;
 }
 
 - (void)didReceiveMemoryWarning {

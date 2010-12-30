@@ -44,6 +44,16 @@ namespace april
 			AMOUSEBTN_RIGHT,
 			AMOUSEBTN_MIDDLE
 		};
+		enum DeviceOrientation
+		{
+			ADEVICEORIENTATION_NONE=0,
+			ADEVICEORIENTATION_PORTRAIT,
+			ADEVICEORIENTATION_PORTRAIT_UPSIDEDOWN,
+			ADEVICEORIENTATION_LANDSCAPE_LEFT, // bottom of device is on the left
+			ADEVICEORIENTATION_LANDSCAPE_RIGHT, // bottom of device is on the right
+			ADEVICEORIENTATION_FACE_DOWN, // screen is facing the ground
+			ADEVICEORIENTATION_FACE_UP // screen is facing the sky
+		};
 		
 		// utility funcs
 		void _platformCursorVisibilityUpdate(bool visible);
@@ -61,6 +71,7 @@ namespace april
 		void setQuitCallback(bool (*quit_callback)(bool can_reject));
 		void setWindowFocusCallback(void (*focus_callback)(bool));
 		void setVirtualKeyboardCallback(void (*vk_callback)(bool));
+		virtual void setDeviceOrientationCallback(void (*vk_callback)(DeviceOrientation)); 
 		
 		// misc pure virtuals
 		virtual void enterMainLoop() = 0;
@@ -75,6 +86,7 @@ namespace april
 		virtual void presentFrame() = 0;
 		virtual void* getIDFromBackend() = 0;
 		virtual void doEvents() = 0;
+		float getWindowAspectRatio();
 		
 		// misc virtuals
 		virtual bool isFullscreen();
@@ -104,6 +116,7 @@ namespace april
 		bool (*mQuitCallback)(bool can_reject);
 		void (*mFocusCallback)(bool);
 		void (*mVKeyboardCallback)(bool);
+		void (*mDeviceOrientationCallback)(DeviceOrientation);
 		
 		Window();
 		
