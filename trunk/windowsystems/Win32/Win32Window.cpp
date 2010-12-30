@@ -7,6 +7,7 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
+#ifdef _WIN32
 
 #include "Win32Window.h"
 #include <windows.h>
@@ -337,3 +338,5 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	}
 
 }
+
+#endif
