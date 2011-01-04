@@ -55,30 +55,6 @@ namespace april
 			ADEVICEORIENTATION_FACE_UP // screen is facing the sky
 		};
 		
-	protected:		
-		RenderSystem* mRenderSystem;
-		hstr mTitle;
-		bool mFullscreen;
-
-		bool (*mUpdateCallback)(float);
-		void (*mMouseDownCallback)(float,float,int);
-		void (*mMouseUpCallback)(float,float,int);
-		void (*mMouseMoveCallback)(float,float);
-		void (*mKeyDownCallback)(unsigned int);
-		void (*mCharCallback)(unsigned int);
-		void (*mKeyUpCallback)(unsigned int);
-		bool (*mQuitCallback)(bool can_reject);
-		void (*mFocusCallback)(bool);
-		void (*mVKeyboardCallback)(bool);
-		void (*mDeviceOrientationCallback)(DeviceOrientation);
-
-		Window();
-		
-	public:
-		
-		
-		
-		
 		// utility funcs
 		void _platformCursorVisibilityUpdate(bool visible);
 		

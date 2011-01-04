@@ -59,7 +59,6 @@ namespace april
 		mFocusCallback = NULL;
 		mVKeyboardCallback = NULL;
 		mDeviceOrientationCallback=0;
-		mDeviceOrientationCallback=0;
 	}
 	
 	void Window::setUpdateCallback(bool (*callback)(float))
