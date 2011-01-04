@@ -27,9 +27,9 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 
 #include "RenderSystem.h"
 #ifdef _OPENGL
-#include "RenderSystem_GL.h"
+#include "OpenGL_RenderSystem.h"
 #else
-#include "RenderSystem_DirectX9.h"
+#include "DirectX9_RenderSystem.h"
 #endif
 #include "ImageSource.h"
 #include "Window.h"
@@ -628,9 +628,9 @@ namespace april
 		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);
 #endif
 #ifdef _OPENGL
-		createGLRenderSystem(window);
+		createOpenGL_RenderSystem(window);
 #else
-		createDX9RenderSystem(window);
+		createDirectX9_RenderSystem(window);
 #endif
 		extensions += ".png";
 		extensions += ".jpg";

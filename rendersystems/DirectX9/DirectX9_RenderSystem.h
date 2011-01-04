@@ -8,8 +8,8 @@ Copyright (c) 2010 Kresimir Spes                                                
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 #ifdef _DIRECTX9
-#ifndef APRIL_RENDERSYSTEM_DX9_H
-#define APRIL_RENDERSYSTEM_DX9_H
+#ifndef APRIL_DIRECTX9_RENDERSYSTEM_H
+#define APRIL_DIRECTX9_RENDERSYSTEM_H
 
 #include "RenderSystem.h"
 
@@ -17,14 +17,14 @@ class IDirect3DSurface9;
 
 namespace april
 {
-	class DirectX9Texture;
+	class DirectX9_Texture;
 	class Window;
 
-	class DirectX9RenderSystem : public RenderSystem
+	class DirectX9_RenderSystem : public RenderSystem
 	{
 	public:
-		DirectX9RenderSystem(Window* window);
-		~DirectX9RenderSystem();
+		DirectX9_RenderSystem(Window* window);
+		~DirectX9_RenderSystem();
 		
 		void configureDevice();
 		
@@ -63,12 +63,12 @@ namespace april
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
 		hstr mTitle;
-		DirectX9Texture* mRenderTarget;
+		DirectX9_Texture* mRenderTarget;
 		IDirect3DSurface9* mBackBuffer;
 		
 	};
 
-	void createDX9RenderSystem(Window* window);
+	void createDirectX9_RenderSystem(Window* window);
 	
 }
 #endif

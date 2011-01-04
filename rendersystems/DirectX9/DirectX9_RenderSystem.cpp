@@ -15,11 +15,11 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
 
-#include "dx9Texture.h"
 #include "ImageSource.h"
 #include "Keys.h"
 #include "RenderSystem_DirectX9.h"
 #include "Timer.h"
+#include "Texture_DirectX9.h"
 #include "Win32Window.h"
 
 #define PLAIN_FVF (D3DFVF_XYZ)
@@ -32,7 +32,7 @@ namespace april
 	IDirect3D9* d3d = NULL;
 	IDirect3DDevice9* d3dDevice = NULL;
 	static HWND hWnd;
-	DirectX9Texture* activeTexture = NULL;
+	DirectX9_Texture* activeTexture = NULL;
 	D3DPRESENT_PARAMETERS d3dpp;
 	
 #ifdef _DEBUG
@@ -70,7 +70,7 @@ namespace april
 		return 0;
 	}
 /**********************************************************************************************/
-	DirectX9RenderSystem::DirectX9RenderSystem(Window* window) :
+	DirectX9_RenderSystem::DirectX9_RenderSystem(Window* window) :
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
 		mWindow = window;
@@ -107,7 +107,7 @@ namespace april
 		d3dDevice->BeginScene();
 	}
 	
-	void DirectX9RenderSystem::configureDevice()
+	void DirectX9_RenderSystem::configureDevice()
 	{
 		// calls on init and device reset
 		d3dDevice->SetRenderState(D3DRS_LIGHTING, 0);
@@ -119,7 +119,7 @@ namespace april
 		setTextureFilter(mTextureFilter);
 	}
 	
-	DirectX9RenderSystem::~DirectX9RenderSystem()
+	DirectX9_RenderSystem::~DirectX9_RenderSystem()
 	{
 		april::log("Destroying DirectX9 Rendersystem");
 		if (d3dDevice)
@@ -134,17 +134,17 @@ namespace april
 		d3d = NULL;
 	}
 
-	hstr DirectX9RenderSystem::getName()
+	hstr DirectX9_RenderSystem::getName()
 	{
 		return "DirectX9";
 	}
 	
-	float DirectX9RenderSystem::getPixelOffset()
+	float DirectX9_RenderSystem::getPixelOffset()
 	{
 		return 0.5f;
 	}
 
-	Texture* DirectX9RenderSystem::loadTexture(chstr filename, bool dynamic)
+	Texture* DirectX9_RenderSystem::loadTexture(chstr filename, bool dynamic)
 	{
 		hstr name = findTextureFile(filename);
 		if (name == "")
@@ -159,7 +159,7 @@ namespace april
 		{
 			april::log("creating dynamic DX9 texture '" + name + "'");
 		}
-		DirectX9Texture* t = new DirectX9Texture(name, dynamic);
+		DirectX9_Texture* t = new DirectX9_Texture(name, dynamic);
 		if (!dynamic && !t->load())
 		{
 			delete t;
@@ -168,17 +168,17 @@ namespace april
 		return t;
 	}
 
-	Texture* DirectX9RenderSystem::createTextureFromMemory(unsigned char* rgba, int w, int h)
+	Texture* DirectX9_RenderSystem::createTextureFromMemory(unsigned char* rgba, int w, int h)
 	{
-		return new DirectX9Texture(rgba, w, h);
+		return new DirectX9_Texture(rgba, w, h);
 	}
 	
-	Texture* DirectX9RenderSystem::createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type)
+	Texture* DirectX9_RenderSystem::createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type)
 	{
-		return new DirectX9Texture(w, h, fmt, type);
+		return new DirectX9_Texture(w, h, fmt, type);
 	}
 	
-	void DirectX9RenderSystem::setTextureFilter(TextureFilter filter)
+	void DirectX9_RenderSystem::setTextureFilter(TextureFilter filter)
 	{
 		if (filter == Linear)
 		{
@@ -197,7 +197,7 @@ namespace april
 		mTextureFilter = filter;
 	}
 
-	void DirectX9RenderSystem::setTextureWrapping(bool wrap)
+	void DirectX9_RenderSystem::setTextureWrapping(bool wrap)
 	{
 		if (wrap)
 		{
@@ -212,9 +212,9 @@ namespace april
 		mTextureWrapping = wrap;
 	}
 
-	void DirectX9RenderSystem::setTexture(Texture* t)
+	void DirectX9_RenderSystem::setTexture(Texture* t)
 	{
-		activeTexture = (DirectX9Texture*)t;
+		activeTexture = (DirectX9_Texture*)t;
 		if (activeTexture)
 		{
 			if (activeTexture->mTexture == 0 && activeTexture->isDynamic())
@@ -240,7 +240,7 @@ namespace april
 		}
 	}
 
-	void DirectX9RenderSystem::clear(bool color, bool depth)
+	void DirectX9_RenderSystem::clear(bool color, bool depth)
 	{
 		DWORD flags = 0;
 		if (color)
@@ -254,7 +254,7 @@ namespace april
 		d3dDevice->Clear(0, NULL, flags, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	}
 	
-	ImageSource* DirectX9RenderSystem::grabScreenshot()
+	ImageSource* DirectX9_RenderSystem::grabScreenshot()
     {
 		april::log("grabbing screenshot");
 		D3DSURFACE_DESC desc;
@@ -311,17 +311,17 @@ namespace april
     	return img;
 	}
 	
-	void DirectX9RenderSystem::_setModelviewMatrix(const gmat4& matrix)
+	void DirectX9_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
 		d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)matrix.mat);
 	}
 
-	void DirectX9RenderSystem::_setProjectionMatrix(const gmat4& matrix)
+	void DirectX9_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
 		d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)matrix.mat);
 	}
 
-	void DirectX9RenderSystem::setBlendMode(BlendMode mode)
+	void DirectX9_RenderSystem::setBlendMode(BlendMode mode)
 	{
 		if (mode == ALPHA_BLEND || mode == DEFAULT)
 		{
@@ -334,13 +334,13 @@ namespace april
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 		}
 	}
-	void DirectX9RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
+	void DirectX9_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
 		d3dDevice->SetFVF(TEX_COLOR_FVF);
 		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), v, sizeof(ColoredTexturedVertex));
 	}
 
-	void DirectX9RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
+	void DirectX9_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
 	{
 		if (mAlphaMultiplier == 1.0f)
 		{
@@ -354,7 +354,7 @@ namespace april
 	}
 
 	ColoredTexturedVertex static_ctv[100];
-	void DirectX9RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
+	void DirectX9_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
 	{
 		DWORD colorDx9 = D3DCOLOR_ARGB((int)(mAlphaMultiplier * color.a), (int)color.r, (int)color.g, (int)color.b);
 		ColoredTexturedVertex* cv = (nVertices <= 100) ? static_ctv : new ColoredTexturedVertex[nVertices];
@@ -376,7 +376,7 @@ namespace april
 	}
 
 	ColoredVertex static_cv[100];
-	void DirectX9RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
+	void DirectX9_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
 	{
 		DWORD colorDx9 = D3DCOLOR_ARGB((int)(mAlphaMultiplier * 255), 255, 255, 255);
 		ColoredVertex* cv = (nVertices <= 100) ? static_cv : new ColoredVertex[nVertices];
@@ -395,7 +395,7 @@ namespace april
 		}
 	}
 
-	void DirectX9RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
+	void DirectX9_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
 	{
 		DWORD colorDx9 = D3DCOLOR_ARGB((int)(mAlphaMultiplier * color.a), (int)color.r, (int)color.g, (int)color.b);
 		ColoredVertex* cv = (nVertices <= 100) ? static_cv : new ColoredVertex[nVertices];
@@ -414,7 +414,7 @@ namespace april
 		}
 	}
 	
-	void DirectX9RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
+	void DirectX9_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
 	{
 		if (activeTexture)
 		{
@@ -445,7 +445,7 @@ namespace april
 		}
 	}
 
-	void DirectX9RenderSystem::setRenderTarget(Texture* source)
+	void DirectX9_RenderSystem::setRenderTarget(Texture* source)
 	{
 		if (mRenderTarget)
 		{
@@ -457,26 +457,26 @@ namespace april
 		}
 		else
 		{
-			d3dDevice->SetRenderTarget(0, ((DirectX9Texture*)source)->getSurface());
+			d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)source)->getSurface());
 		}
 		if (mRenderTarget)
 		{
 			d3dDevice->BeginScene();
 		}
-		mRenderTarget = (DirectX9Texture*)source;
+		mRenderTarget = (DirectX9_Texture*)source;
 	}
 	
-	void DirectX9RenderSystem::setAlphaMultiplier(float value)
+	void DirectX9_RenderSystem::setAlphaMultiplier(float value)
 	{
 		mAlphaMultiplier = value;
 	}
 	
-	void DirectX9RenderSystem::beginFrame()
+	void DirectX9_RenderSystem::beginFrame()
 	{
 		d3dDevice->BeginScene();
 	}
 
-	void DirectX9RenderSystem::presentFrame()
+	void DirectX9_RenderSystem::presentFrame()
 	{
 		d3dDevice->EndScene();
 		HRESULT hr = d3dDevice->Present(NULL, NULL, NULL, NULL);
@@ -545,9 +545,9 @@ namespace april
 		d3dDevice->BeginScene();
 	}
 
-	void createDX9RenderSystem(Window* window)
+	void createDirectX9_RenderSystem(Window* window)
 	{
-		april::rendersys = new DirectX9RenderSystem(window);
+		april::rendersys = new DirectX9_RenderSystem(window);
 	}
 
 }

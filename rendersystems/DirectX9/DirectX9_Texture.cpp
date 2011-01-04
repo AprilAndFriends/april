@@ -12,15 +12,15 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include <d3d9.h>
 #include <IL/il.h>
 
-#include "dx9Texture.h"
 #include "ImageSource.h"
 #include "RenderSystem_DirectX9.h"
+#include "Texture_DirectX9.h"
 
 namespace april
 {
 	extern IDirect3DDevice9* d3dDevice;
 
-	DirectX9Texture::DirectX9Texture(chstr filename, bool dynamic) : Texture()
+	DirectX9_Texture::DirectX9_Texture(chstr filename, bool dynamic) : Texture()
 	{
 		mFilename = filename;
 		mDynamic = dynamic;
@@ -34,7 +34,7 @@ namespace april
 		}
 	}
 
-	DirectX9Texture::DirectX9Texture(unsigned char* rgba, int w, int h) : Texture()
+	DirectX9_Texture::DirectX9_Texture(unsigned char* rgba, int w, int h) : Texture()
 	{
 		mWidth = w;
 		mHeight = h;
@@ -68,7 +68,7 @@ namespace april
 		mTexture->UnlockRect(0);
 	}
 	
-	DirectX9Texture::DirectX9Texture(int w, int h, TextureFormat fmt, TextureType type) : Texture()
+	DirectX9_Texture::DirectX9_Texture(int w, int h, TextureFormat fmt, TextureType type) : Texture()
 	{
 		mWidth = w;
 		mHeight = h;
@@ -98,7 +98,7 @@ namespace april
 		}
 	}
 	
-	IDirect3DSurface9* DirectX9Texture::getSurface()
+	IDirect3DSurface9* DirectX9_Texture::getSurface()
 	{
 		if (!mSurface)
 		{
@@ -107,12 +107,12 @@ namespace april
 		return mSurface;
 	}
 
-	DirectX9Texture::~DirectX9Texture()
+	DirectX9_Texture::~DirectX9_Texture()
 	{
 		unload();
 	}
 
-	bool DirectX9Texture::load()
+	bool DirectX9_Texture::load()
 	{
 		mUnusedTimer = 0;
 		if (mTexture)
@@ -147,18 +147,18 @@ namespace april
 		{
 			if (!(*it)->isLoaded())
 			{
-				((DirectX9Texture*)(*it))->load();
+				((DirectX9_Texture*)(*it))->load();
 			}
 		}
 		return true;
 	}
 
-	bool DirectX9Texture::isLoaded()
+	bool DirectX9_Texture::isLoaded()
 	{
 		return (mTexture != NULL || mFilename == "UserTexture");
 	}
 
-	void DirectX9Texture::unload()
+	void DirectX9_Texture::unload()
 	{
 		if (mTexture)
 		{
@@ -173,7 +173,7 @@ namespace april
 		}
 	}
 
-	int DirectX9Texture::getSizeInBytes()
+	int DirectX9_Texture::getSizeInBytes()
 	{
 		return (mWidth * mHeight * 3);
 	}
