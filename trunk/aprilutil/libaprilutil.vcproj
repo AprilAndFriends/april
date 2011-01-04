@@ -173,6 +173,10 @@
 				RelativePath=".\src\BlurManager.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\src\StaticMesh.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -180,11 +184,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\include\aprilutil\AprilUtilExport.h"
+				RelativePath=".\include\aprilutil\aprilutilExport.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\aprilutil\BlurManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\aprilutil\StaticMesh.h"
 				>
 			</File>
 		</Filter>

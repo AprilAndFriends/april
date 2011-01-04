@@ -7,31 +7,25 @@ Copyright (c) 2010 Kresimir Spes                                                
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#ifndef BLUR_MANAGER_H
-#define BLUR_MANAGER_H
+#ifndef APRILUTIL_EXPORT_H
+#define APRILUTIL_EXPORT_H
 
-#include "aprilutilExport.h"
-
-namespace april
-{
-	class Texture;
-	
-	class aprilutilExport BlurManager
-	{
-		Texture *mTex1,*mTex2;
-		int mNumLevels;
-		bool mEnable;
-		float mInc;
-	public:
-		BlurManager();
-		~BlurManager();
-
-		void begin(int nLevels,float inc);
-		void end();
-		void draw(int w,int h);
-		
-	};
-
-}
+	#ifdef _STATICLIB
+		#define aprilExport
+	#else
+		#ifdef _WIN32
+			#ifdef APRILUTIL_EXPORTS
+				#define aprilutilExport __declspec(dllexport)
+				#define aprilutilFnExport __declspec(dllexport)
+			#else
+				#define aprilutilExport __declspec(dllimport)
+				#define aprilutilFnExport __declspec(dllimport)
+			#endif
+		#else
+			#define aprilutilExport __attribute__ ((visibility("default")))
+			#define aprilutilFnExport
+		#endif
+	#endif
 
 #endif
+
