@@ -315,11 +315,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\rendersystems\DirectX9\DirectX9_RenderSystem.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\rendersystems\DirectX9\DirectX9_Texture.cpp"
+				RelativePath=".\src\Color.cpp"
 				>
 			</File>
 			<File
@@ -327,15 +323,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\rendersystems\OpenGL\OpenGL_RenderSystem.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\rendersystems\OpenGL\OpenGL_Texture.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\RenderSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Texture.cpp"
 				>
 			</File>
 			<File
@@ -343,13 +335,37 @@
 				>
 			</File>
 			<File
-				RelativePath=".\windowsystems\Win32\Win32Window.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Window.cpp"
 				>
 			</File>
+			<Filter
+				Name="windowsystems"
+				>
+				<File
+					RelativePath=".\windowsystems\Win32\Win32Window.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="rendersystems"
+				>
+				<File
+					RelativePath=".\rendersystems\DirectX9\DirectX9_RenderSystem.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\rendersystems\DirectX9\DirectX9_Texture.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\rendersystems\OpenGL\OpenGL_RenderSystem.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\rendersystems\OpenGL\OpenGL_Texture.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -361,11 +377,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\rendersystems\DirectX9\DirectX9_RenderSystem.h"
-				>
-			</File>
-			<File
-				RelativePath=".\rendersystems\DirectX9\DirectX9_Texture.h"
+				RelativePath=".\include\april\Color.h"
 				>
 			</File>
 			<File
@@ -377,15 +389,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\rendersystems\OpenGL\OpenGL_RenderSystem.h"
-				>
-			</File>
-			<File
-				RelativePath=".\rendersystems\OpenGL\OpenGL_Texture.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\april\RenderSystem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\april\Texture.h"
 				>
 			</File>
 			<File
@@ -393,13 +401,37 @@
 				>
 			</File>
 			<File
-				RelativePath=".\windowsystems\Win32\Win32Window.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\april\Window.h"
 				>
 			</File>
+			<Filter
+				Name="windowsystems"
+				>
+				<File
+					RelativePath=".\windowsystems\Win32\Win32Window.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="rendersystems"
+				>
+				<File
+					RelativePath=".\rendersystems\DirectX9\DirectX9_RenderSystem.h"
+					>
+				</File>
+				<File
+					RelativePath=".\rendersystems\DirectX9\DirectX9_Texture.h"
+					>
+				</File>
+				<File
+					RelativePath=".\rendersystems\OpenGL\OpenGL_RenderSystem.h"
+					>
+				</File>
+				<File
+					RelativePath=".\rendersystems\OpenGL\OpenGL_Texture.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

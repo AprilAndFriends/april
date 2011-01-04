@@ -12,9 +12,9 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include <d3d9.h>
 #include <IL/il.h>
 
+#include "DirectX9_RenderSystem.h"
+#include "DirectX9_Texture.h"
 #include "ImageSource.h"
-#include "RenderSystem_DirectX9.h"
-#include "Texture_DirectX9.h"
 
 namespace april
 {

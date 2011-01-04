@@ -15,11 +15,11 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
 
+#include "DirectX9_RenderSystem.h"
+#include "DirectX9_Texture.h"
 #include "ImageSource.h"
 #include "Keys.h"
-#include "RenderSystem_DirectX9.h"
 #include "Timer.h"
-#include "Texture_DirectX9.h"
 #include "Win32Window.h"
 
 #define PLAIN_FVF (D3DFVF_XYZ)
