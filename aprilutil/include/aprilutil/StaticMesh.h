@@ -10,7 +10,7 @@ Copyright (c) 2010 Kresimir Spes, Domagoj Cerjan                                
 #ifndef MESH_LOADER_H
 #define MESH_LOADER_H
 
-#include "AprilUtilExport.h"
+#include "aprilutilExport.h"
 
 #include "hltypes/harray.h"
 #include "hltypes/hstring.h"
@@ -22,10 +22,10 @@ Copyright (c) 2010 Kresimir Spes, Domagoj Cerjan                                
 
 #include <stdio.h>
 
-namespace April
+namespace april
 {
 
-    class AprilUtilExport Polygon
+    class aprilutilExport Polygon
     {
     public:
         int mVertind[3];
@@ -36,7 +36,7 @@ namespace April
     
     /////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
-    class AprilUtilExport StaticMesh
+    class aprilutilExport StaticMesh
 	{
     
     public:
@@ -47,11 +47,11 @@ namespace April
         
         hstr mMeshName;
         
-        April::TexturedVertex *mVertexArray;
+        april::TexturedVertex *mVertexArray;
         int mNumVertices;
         
         
-        April::Texture *mTexture;
+        april::Texture *mTexture;
         
     public:
 		StaticMesh();
@@ -59,13 +59,13 @@ namespace April
 		~StaticMesh();
 
 		//void recalculateNormals();
-        //void setTexture(April::Texture *texture);
+        //void setTexture(april::Texture *texture);
         void setMeshName(chstr meshName);
         
         void convertToVertexArray();
         void loadFromFile(chstr meshPath);
         
-        void draw(April::RenderOp renderOp);
+        void draw(april::RenderOp renderOp);
         
 
     };
@@ -73,7 +73,7 @@ namespace April
     
     /////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
-    class AprilUtilExport _faulty_obj_file : public hltypes::exception
+    class aprilutilExport _faulty_obj_file : public hltypes::exception
 	{
 	public:
 		_faulty_obj_file(chstr filename, const char* source_file, int line);

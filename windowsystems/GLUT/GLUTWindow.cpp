@@ -7,22 +7,20 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-
-
 #ifdef _WIN32
 #include <windows.h>
 #endif
-
 #ifndef __APPLE__
 #include <GL/glut.h>
 #else
 #include <GLUT/glut.h>
 #endif
+
 #include "GLUTWindow.h"
 #include "Keys.h"
 #include "RenderSystem.h"
 
-namespace April
+namespace april
 {
 	void destroy(); // defined in RenderSystem
 	
@@ -34,29 +32,28 @@ namespace April
 	unsigned GetTickCount()
 	{
 		struct timeval tv;
-		if(gettimeofday(&tv, NULL) != 0)
+		if (gettimeofday(&tv, NULL) != 0)
+		{
 			return 0;
-		
+		}
 		return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	}
-	
 #endif
-	
 	
 	GLUTWindow* GLUTWindow::_instance;
 	
 	GLUTWindow::GLUTWindow(int w, int h, bool fullscreen, chstr title)
 	{
-		//rendersys->logMessage("Creating GLUT Windowsystem");
+		//april::log("Creating GLUT Windowsystem");
 		
 		const char *argv[] = {"program"};
-		int argc=1;
-		glutInit(&argc,(char**) argv);
-		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
-		int _w=glutGet(GLUT_SCREEN_WIDTH);
-		int _h=glutGet(GLUT_SCREEN_HEIGHT);
-		glutInitWindowPosition(_w/2-w/2,_h/2-h/2);
-		glutInitWindowSize(w,h);
+		int argc = 1;
+		glutInit(&argc, (char**)argv);
+		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+		int _w = glutGet(GLUT_SCREEN_WIDTH);
+		int _h = glutGet(GLUT_SCREEN_HEIGHT);
+		glutInitWindowPosition(_w / 2 - w / 2, _h / 2 - h / 2);
+		glutInitWindowSize(w, h);
 		windowIdGlut = glutCreateWindow(title.c_str());
 #ifdef _WIN32
 		hWnd = FindWindow("GLUT", title.c_str());
@@ -64,7 +61,10 @@ namespace April
 #endif
 		mTitle = title;
 		mFullscreen = fullscreen;
-		if (fullscreen) glutFullScreen();
+		if (fullscreen)
+		{
+			glutFullScreen();
+		}
 		
 		glutDisplayFunc(		_handleDisplayAndUpdate);
 		glutIdleFunc(			_handleDisplayAndUpdate);
@@ -102,7 +102,6 @@ namespace April
 		exit(0);
 	}
 	
-	
 	void GLUTWindow::presentFrame()
 	{
 		glutSwapBuffers();
@@ -110,31 +109,28 @@ namespace April
 	
 	void GLUTWindow::doEvents()
 	{
-		rendersys->logMessage("%s: stub!\n", __PRETTY_FUNCTION__);
+		april::log("%s: stub!\n", __PRETTY_FUNCTION__);
 	}
-	
 	
 	void GLUTWindow::showSystemCursor(bool b)
 	{
-		if (b) glutSetCursor(GLUT_CURSOR_INHERIT);
-		else   glutSetCursor(GLUT_CURSOR_NONE);
+		b ? glutSetCursor(GLUT_CURSOR_INHERIT) : glutSetCursor(GLUT_CURSOR_NONE);
 	}
 	
 	bool GLUTWindow::isSystemCursorShown()
 	{
-		int cursor=glutGet(GLUT_WINDOW_CURSOR);
-		return (cursor == GLUT_CURSOR_NONE) ? 0 : 1;
+		int cursor = glutGet(GLUT_WINDOW_CURSOR);
+		return (cursor != GLUT_CURSOR_NONE);
 	}
-	
 	
 	void GLUTWindow::setWindowTitle(chstr title)
 	{
 		glutSetWindowTitle(title.c_str());
 	}
 	
-	gvec2 GLUTWindow::getCursorPos()
+	gvec2 GLUTWindow::getCursorPosition()
 	{
-		return gvec2(mCursorX,mCursorY);
+		return gvec2(mCursorX, mCursorY);
 	}
 	
 	int GLUTWindow::getWindowWidth()
@@ -159,22 +155,21 @@ namespace April
 #endif
 	}
 	
-	
-	
 	/////////////////////////
 	// overrides
 	/////////////////////////
 	
 	void GLUTWindow::handleKeyEvent(Window::KeyEventType type, unsigned int keycode, unsigned int unicode)
 	{
-		if (keycode == 9) 
-			keycode=AK_TAB;
-		else 
-			if (keycode >= GLUT_KEY_F1 && keycode <= GLUT_KEY_F12)  // function keys
-				keycode+=0x6F;
-		
-		
-		Window::handleKeyEvent(type, (KeySym) keycode, unicode);
+		if (keycode == 9)
+		{
+			keycode = AK_TAB;
+		}
+		else if (keycode >= GLUT_KEY_F1 && keycode <= GLUT_KEY_F12)  // function keys
+		{
+			keycode += 0x6F;
+		}
+		Window::handleKeyEvent(type, (KeySym)keycode, unicode);
 	}
 	
 	//////////////////////
@@ -183,19 +178,12 @@ namespace April
 
 	void GLUTWindow::_handleKeyUp(unsigned char key, int x, int y)
 	{
-		GLUTWindow::_instance->handleKeyEvent(Window::AKEYEVT_UP, key, key>=' ' ? key : 0);
+		GLUTWindow::_instance->handleKeyEvent(Window::AKEYEVT_UP, key, (key >= ' ' ? key : 0));
 	}
 	
 	void GLUTWindow::_handleKeyDown(unsigned char key, int x, int y)
 	{
-		/*
-		if (key == 27) //esc
-		{
-			rendersys->terminateMainLoop();
-		}
-		 */
-		
-		GLUTWindow::_instance->handleKeyEvent(Window::AKEYEVT_DOWN, key, key>=' ' ? key : 0);
+		GLUTWindow::_instance->handleKeyEvent(Window::AKEYEVT_DOWN, key, (key >= ' ' ? key : 0));
 	}
 	
 	void GLUTWindow::_handleKeySpecial(int key, int x, int y)
@@ -203,35 +191,34 @@ namespace April
 		GLUTWindow::_instance->handleKeyEvent(Window::AKEYEVT_DOWN, key, 0);
 	}
 	
-	void GLUTWindow::_handleMouseButton(int button, int state, int x,int y)
+	void GLUTWindow::_handleMouseButton(int button, int state, int x, int y)
 	{
-		GLUTWindow::_instance->mCursorX=x; 
-		GLUTWindow::_instance->mCursorY=y;
+		GLUTWindow::_instance->mCursorX = x; 
+		GLUTWindow::_instance->mCursorY = y;
 		if (state == GLUT_DOWN)
+		{
 			GLUTWindow::_instance->handleMouseEvent(Window::AMOUSEEVT_DOWN, x, y, (Window::MouseButton)button);
+		}
 		else
+		{
 			GLUTWindow::_instance->handleMouseEvent(Window::AMOUSEEVT_UP, x, y, (Window::MouseButton)button);
+		}
 	}
 	
-	void GLUTWindow::_handleMouseMove(int x,int y)
+	void GLUTWindow::_handleMouseMove(int x, int y)
 	{
-		
-		GLUTWindow::_instance->mCursorX=x; 
-		GLUTWindow::_instance->mCursorY=y;
-		
+		GLUTWindow::_instance->mCursorX = x;
+		GLUTWindow::_instance->mCursorY = y;
 		// TODO last argument should be button, as remembered from _handleMouseButton
 		// this is because glutMotionFunc() also calls this func, and we may want to know which button is active.
-		
 		GLUTWindow::_instance->handleMouseEvent(Window::AMOUSEEVT_MOVE, x, y, (Window::MouseButton)0);
-		
 	}
 	
 	void GLUTWindow::_handleDisplayAndUpdate()
 	{
-		static unsigned int x=GetTickCount();
-		float k=(GetTickCount()-x)/1000.0f;
-		x=GetTickCount();
-		
+		static unsigned int x = GetTickCount();
+		float k = (GetTickCount() - x) / 1000.0f;
+		x = GetTickCount();
 		GLUTWindow::_instance->performUpdate(k);
 		//GLUTWindow::_instance->presentFrame();
 		rendersys->presentFrame();
@@ -239,14 +226,11 @@ namespace April
 	
 	void GLUTWindow::_handleQuitRequest()
 	{
-		if(GLUTWindow::_instance->handleQuitRequest(true))
+		if (GLUTWindow::_instance->handleQuitRequest(true))
 		{
 			glutDestroyWindow(windowIdGlut);
 			GLUTWindow::_instance->terminateMainLoop();
 		}
 	}
 	
-
-	
-
 }

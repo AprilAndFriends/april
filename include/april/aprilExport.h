@@ -1,5 +1,5 @@
 /************************************************************************************\
-This source file is part of the APRIL Utility library                                *
+This source file is part of the Awesome Portable Rendering Interface Library         *
 For latest info, see http://libapril.sourceforge.net/                                *
 **************************************************************************************
 Copyright (c) 2010 Kresimir Spes                                                     *
@@ -7,25 +7,31 @@ Copyright (c) 2010 Kresimir Spes                                                
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#ifndef APRILUTIL_EXPORT_H
-#define APRILUTIL_EXPORT_H
+#ifndef APRIL_EXPORT_H
+#define APRIL_EXPORT_H
 
 	#ifdef _STATICLIB
-		#define AprilExport
+		#define aprilExport
 	#else
 		#ifdef _WIN32
-			#ifdef APRILUTIL_EXPORTS
-				#define AprilUtilExport __declspec(dllexport)
-				#define AprilUtilFnExport __declspec(dllexport)
+			#ifdef APRIL_EXPORTS
+				#define aprilExport __declspec(dllexport)
+				#define aprilFnExport __declspec(dllexport)
 			#else
-				#define AprilUtilExport __declspec(dllimport)
-				#define AprilUtilFnExport __declspec(dllimport)
+				#define aprilExport __declspec(dllimport)
+				#define aprilFnExport __declspec(dllimport)
 			#endif
 		#else
-			#define AprilUtilExport __attribute__ ((visibility("default")))
-			#define AprilUtilFnExport
+			#define aprilExport __attribute__ ((visibility("default")))
+			#define aprilFnExport
+		#endif
+	#endif
+	#ifndef DEPRECATED_ATTRIBUTE
+		#ifdef _MSC_VER
+			#define DEPRECATED_ATTRIBUTE
+		#else
+			#define DEPRECATED_ATTRIBUTE __attribute__((deprecated))
 		#endif
 	#endif
 
 #endif
-

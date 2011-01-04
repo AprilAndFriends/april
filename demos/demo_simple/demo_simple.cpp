@@ -17,7 +17,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include <OpenGLES/ES1/gl.h>
 #endif
 
-April::Texture* tex;
+april::Texture* tex;
 
 #if TARGET_OS_IPHONE
 
@@ -76,7 +76,7 @@ bool render(float time_increase)
 	
 
 	
-	April::TexturedVertex v[4];
+	april::TexturedVertex v[4];
 	
 	v[0].x=0;   v[0].y=0;   v[0].z=0; v[0].u=0; v[0].v=0;
 	v[1].x=offx;   v[1].y=0;   v[1].z=0; v[1].u=1; v[1].v=0;
@@ -84,7 +84,7 @@ bool render(float time_increase)
 	v[3].x=offx;   v[3].y=offy;   v[3].z=0; v[3].u=1; v[3].v=1;
 	
 	glEnable(GL_TEXTURE_2D);
-	rendersys->render(April::TriangleStrip,v,4);
+	rendersys->render(april::TriangleStrip,v,4);
 	
 	
 #if TARGET_OS_IPHONE
@@ -129,16 +129,16 @@ void mousemove(float x,float y)
 
 int main(int argc, char** argv)
 {
-	April::init("April",800,600,0,"April: Simple Demo");
-	April::rendersys->registerUpdateCallback(render);
-	April::rendersys->registerMouseCallbacks(mousedn, mouseup, mousemove);
+	april::init("april",800,600,0,"april: Simple Demo");
+	april::rendersys->registerUpdateCallback(render);
+	april::rendersys->registerMouseCallbacks(mousedn, mouseup, mousemove);
 #if !TARGET_OS_IPHONE
-	tex=April::rendersys->loadTexture("../media/texture.jpg");
+	tex=april::rendersys->loadTexture("../media/texture.jpg");
 #else
-	tex=April::rendersys->loadTexture("media/texture.jpg");
+	tex=april::rendersys->loadTexture("media/texture.jpg");
 #endif
 	
 	rendersys->enterMainLoop();
-	April::destroy();
+	april::destroy();
 	return 0;
 }

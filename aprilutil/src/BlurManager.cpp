@@ -12,7 +12,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include "BlurManager.h"
 #include <memory.h>
 
-namespace April
+namespace april
 {
 	BlurManager::BlurManager()
 	{
@@ -50,8 +50,8 @@ namespace April
 		{
 			int i;
 			float inc;
-			April::Texture* temp;
-			April::ColoredTexturedVertex av[6*4];
+			april::Texture* temp;
+			april::ColoredTexturedVertex av[6*4];
 			gtypes::Matrix4 mat=rendersys->getProjectionMatrix();
 			rendersys->setOrthoProjection(1024,1024);
 			float k=0.5/1024.0f;
@@ -62,11 +62,11 @@ namespace April
 			av[4].x=1024; av[4].y=1024;  av[4].u=1+k; av[4].v=1+k;
 			av[5].x=0;    av[5].y=1024;  av[5].u=k;   av[5].v=1+k;
 			av[0].color=av[1].color=av[2].color=av[3].color=av[4].color=av[5].color=0xFF404040;
-			memcpy(&av[ 6],&av[0],6*sizeof(April::ColoredTexturedVertex));
-			memcpy(&av[12],&av[0],6*sizeof(April::ColoredTexturedVertex));
-			memcpy(&av[18],&av[0],6*sizeof(April::ColoredTexturedVertex));
+			memcpy(&av[ 6],&av[0],6*sizeof(april::ColoredTexturedVertex));
+			memcpy(&av[12],&av[0],6*sizeof(april::ColoredTexturedVertex));
+			memcpy(&av[18],&av[0],6*sizeof(april::ColoredTexturedVertex));
 			
-			rendersys->setBlendMode(April::ADD);
+			rendersys->setBlendMode(april::ADD);
 			for (int j=0;j<mNumLevels;j++)
 			{
 				rendersys->setRenderTarget(mTex2);
@@ -79,9 +79,9 @@ namespace April
 				for (i= 6;i<12;i++) av[i].v+=inc*k;
 				for (i=12;i<18;i++) av[i].u-=inc*k;
 				for (i=18;i<24;i++) av[i].u+=inc*k;
-				rendersys->render(April::TriangleList,av,24);
+				rendersys->render(april::TriangleList,av,24);
 			}
-			rendersys->setBlendMode(April::ALPHA_BLEND);
+			rendersys->setBlendMode(april::ALPHA_BLEND);
 			rendersys->setRenderTarget(0);
 			rendersys->setProjectionMatrix(mat);
 		}
@@ -93,7 +93,7 @@ namespace April
 		{
 			float k=0.5/1024.0f;
 			rendersys->setTexture(mTex1);
-			rendersys->drawTexturedQuad(0,0,w,h,k,k,1,1);
+			rendersys->drawTexturedQuad(grect(0,0,w,h),grect(k,k,1,1));
 		}
 	}
 }

@@ -10,23 +10,20 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include <stdio.h>
 #include <algorithm>
 
+#if defined(__APPLE__) && !defined(_OPENGL)
+#define _OPENGL
+#endif
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+#endif
+#ifdef USE_IL
+#include <IL/il.h>
+#endif
+
 #include <hltypes/harray.h>
 #include <hltypes/hfile.h>
 #include <hltypes/hstring.h>
 #include <hltypes/util.h>
-
-#if defined(__APPLE__) && !defined(_OPENGL)
-#define _OPENGL
-#endif
-
-#if defined(__APPLE__)
-#include <TargetConditionals.h>
-#endif
-
-
-#ifdef USE_IL
-#include <IL/il.h>
-#endif
 
 #include "RenderSystem.h"
 #ifdef _OPENGL
@@ -37,113 +34,134 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include "ImageSource.h"
 #include "Window.h"
 
-April::RenderSystem* rendersys DEPRECATED_ATTRIBUTE = 0;
-
-namespace April
+namespace april
 {
-	April::RenderSystem* rendersys;
+	april::RenderSystem* rendersys;
 	harray<hstr> extensions;
 
 	void april_writelog(chstr message)
 	{
-		printf("%s\n",message.c_str());		
+		printf("%s\n", message.c_str());		
 	}
 	
-	void (*g_logFunction)(chstr)=april_writelog;
+	void (*g_logFunction)(chstr) = april_writelog;
+	
+	void log(chstr message, chstr prefix)
+	{
+		g_logFunction(prefix + message);
+	}
+	
+	void logf(chstr message, ...)
+	{
+		va_list args;
+		va_start(args, message);
+		april::log(hvsprintf(message.c_str(), args));
+		va_end(args);
+	}
 	
 	int hexstr_to_int(chstr s)
 	{
 		int i;
-		sscanf(s.c_str(),"%x",&i);
+		sscanf(s.c_str(), "%x", &i);
 		return i;
 	}
-	
-	void hexstr_to_argb(chstr hex,unsigned char* a,unsigned char* r,unsigned char* g,unsigned char* b)
-	{
-		hstr value = hex;
-		if (value(0,2) != "0x") value="0x"+value;
-		if (value.size() == 8)
-		{
-			*r=hexstr_to_int(value(2,2));
-			*g=hexstr_to_int(value(4,2));
-			*b=hexstr_to_int(value(6,2));
-			*a=255;
-		}
-		else if (value.size() == 10)
-		{
-			*a=hexstr_to_int(value(2,2));
-			*r=hexstr_to_int(value(4,2));
-			*g=hexstr_to_int(value(6,2));
-			*b=hexstr_to_int(value(8,2));
-		}
-		else throw "Color format must be either 0xAARRGGBB or 0xRRGGBB";
-	}
 /*****************************************************************************************/	
-	void PlainVertex::operator=(const gtypes::Vector3& v)
+	void PlainVertex::operator=(const gvec3& v)
 	{
-		this->x=v.x;
-		this->y=v.y;
-		this->z=v.z;
+		this->x = v.x;
+		this->y = v.y;
+		this->z = v.z;
 	}
 /*****************************************************************************************/
-	Color::Color(float _a,float _r,float _g,float _b)
+	Color::Color(int r, int g, int b, int a)
 	{
-		setColor(_a,_r,_g,_b);
+		set(r, g, b, a);
 	}
 
-	Color::Color(int _a,int _r,int _g,int _b)
+	Color::Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 	{
-		setColor(_a,_r,_g,_b);
-	}
-
-	Color::Color(unsigned char _a,unsigned char _r,unsigned char _g,unsigned char _b)
-	{
-		setColor(_a,_r,_g,_b);
+		set(r, g, b, a);
 	}
 
 	Color::Color(unsigned int color)
 	{
-		setColor(color);
+		set(color);
 	}
 
 	Color::Color(chstr hex)
 	{
-		setColor(hex);
+		set(hex);
 	}
 
 	Color::Color()
 	{
-		a=r=g=b=255;
+		this->r = 255;
+		this->g = 255;
+		this->b = 255;
+		this->a = 255;
 	}
 
-	void Color::setColor(float _a,float _r,float _g,float _b)
+	void Color::set(int r, int g, int b, int a)
 	{
-		this->a=(unsigned char)(_a*255); this->r=(unsigned char)(_r*255);
-		this->g=(unsigned char)(_g*255); this->b=(unsigned char)(_b*255);
+		this->r = (unsigned char)r;
+		this->g = (unsigned char)g;
+		this->b = (unsigned char)b;
+		this->a = (unsigned char)a;
 	}
 
-	void Color::setColor(int _a,int _r,int _g,int _b)
+	void Color::set(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 	{
-		this->a=(unsigned char)_a; this->r=(unsigned char)_r;
-		this->g=(unsigned char)_g; this->b=(unsigned char)_b;
+		this->r = r;
+		this->g = g;
+		this->b = b;
+		this->a = a;
 	}
 
-	void Color::setColor(unsigned char _a,unsigned char _r,unsigned char _g,unsigned char _b)
+	void Color::set(unsigned int color)
 	{
-		this->a=_a; this->r=_r; this->g=_g; this->b=_b;
+		this->r = (unsigned char)((color >> 24) & 0xFF);
+		this->g = (unsigned char)((color >> 16) & 0xFF);
+		this->b = (unsigned char)((color >> 8) & 0xFF);
+		this->a = (unsigned char)(color & 0xFF);
 	}
 
-	void Color::setColor(unsigned int color)
+	void Color::set(chstr hex)
 	{
-		this->a=color/256/256/256; this->r=color/256/256%256; this->g=color/256%256; this->b=color%256;
+		hstr value = hex;
+		if (value(0, 2) != "0x")
+		{
+			value = "0x" + value;
+		}
+		if (value.size() != 8 && value.size() != 10)
+		{
+			throw "Color format must be either 0xRRGGBBAA or 0xRRGGBB";
+		}
+		this->r = hexstr_to_int(value(2, 2));
+		this->g = hexstr_to_int(value(4, 2));
+		this->b = hexstr_to_int(value(6, 2));
+		this->a = (value.size() == 10 ? hexstr_to_int(value(8, 2)) : 255);
 	}
-
-	void Color::setColor(chstr hex)
+	
+	hstr Color::hex(bool rgbOnly)
 	{
-		// this is going to bite me in the arse on a little endian system...
-		hexstr_to_argb(hex,&a,&r,&g,&b);
+		hstr result = hsprintf("%02x%02x%02x", this->r, this->g, this->b);
+		if (!rgbOnly)
+		{
+			result += hsprintf("%02x", this->a);
+		}
+		return result;
 	}
 
+	Color::operator unsigned int() const
+	{
+		unsigned int i = 0;
+		i |= this->r << 24;
+		i |= this->g << 16;
+		i |= this->b << 8;
+		i |= this->a;
+		return i;
+	}
+	
 	bool Color::operator==(Color& other)
 	{
 		return (this->r == other.r && this->g == other.g && this->b == other.b && this->a == other.a);
@@ -196,122 +214,173 @@ namespace April
 		return result;
 	}
 
-	void Color::operator+=(Color& other)
+	Color Color::operator+=(Color& other)
 	{
 		this->r = hclamp(this->r + other.r, 0, 255);
 		this->g = hclamp(this->g + other.g, 0, 255);
 		this->b = hclamp(this->b + other.b, 0, 255);
 		this->a = hclamp(this->a + other.a, 0, 255);
+		return (*this);
 	}
 
-	void Color::operator-=(Color& other)
+	Color Color::operator-=(Color& other)
 	{
 		this->r = hclamp(this->r - other.r, 0, 255);
 		this->g = hclamp(this->g - other.g, 0, 255);
 		this->b = hclamp(this->b - other.b, 0, 255);
 		this->a = hclamp(this->a - other.a, 0, 255);
+		return (*this);
 	}
 
-	void Color::operator*=(Color& other)
+	Color Color::operator*=(Color& other)
 	{
-		this->r = hclamp((int)(this->r_float() * other.r), 0, 255);
-		this->g = hclamp((int)(this->g_float() * other.g), 0, 255);
-		this->b = hclamp((int)(this->b_float() * other.b), 0, 255);
-		this->a = hclamp((int)(this->a_float() * other.a), 0, 255);
+		this->r = hclamp((int)(this->r_f() * other.r), 0, 255);
+		this->g = hclamp((int)(this->g_f() * other.g), 0, 255);
+		this->b = hclamp((int)(this->b_f() * other.b), 0, 255);
+		this->a = hclamp((int)(this->a_f() * other.a), 0, 255);
+		return (*this);
 	}
 
-	void Color::operator/=(Color& other)
+	Color Color::operator/=(Color& other)
 	{
-		this->r = hclamp((int)(this->r_float() / other.r), 0, 255);
-		this->g = hclamp((int)(this->g_float() / other.g), 0, 255);
-		this->b = hclamp((int)(this->b_float() / other.b), 0, 255);
-		this->a = hclamp((int)(this->a_float() / other.a), 0, 255);
+		this->r = hclamp((int)(this->r_f() / other.r), 0, 255);
+		this->g = hclamp((int)(this->g_f() / other.g), 0, 255);
+		this->b = hclamp((int)(this->b_f() / other.b), 0, 255);
+		this->a = hclamp((int)(this->a_f() / other.a), 0, 255);
+		return (*this);
 	}
 
-	void Color::operator*=(float value)
+	Color Color::operator*=(float value)
 	{
 		this->r = hclamp((int)(this->r * value), 0, 255);
 		this->g = hclamp((int)(this->g * value), 0, 255);
 		this->b = hclamp((int)(this->b * value), 0, 255);
 		this->a = hclamp((int)(this->a * value), 0, 255);
+		return (*this);
 	}
 
-	void Color::operator/=(float value)
+	Color Color::operator/=(float value)
 	{
 		this->r = hclamp((int)(this->r / value), 0, 255);
 		this->g = hclamp((int)(this->g / value), 0, 255);
 		this->b = hclamp((int)(this->b / value), 0, 255);
 		this->a = hclamp((int)(this->a / value), 0, 255);
+		return (*this);
 	}
 
 /*****************************************************************************************/
+	// DEPRECATED
+	Color::Color(float r, float g, float b, float a)
+	{
+		this->r = (unsigned char)(r * 255);
+		this->g = (unsigned char)(g * 255);
+		this->b = (unsigned char)(b * 255);
+		this->a = (unsigned char)(a * 255);
+	}
+	void Color::setColor(float r, float g, float b, float a)
+	{
+		this->r = (unsigned char)(r * 255);
+		this->g = (unsigned char)(g * 255);
+		this->b = (unsigned char)(b * 255);
+		this->a = (unsigned char)(a * 255);
+	}
+	void Color::setColor(int r, int g, int b, int a)
+	{
+		set(r, g, b, a);
+	}
+	void Color::setColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+	{
+		set(r, g, b, a);
+	}
+	void Color::setColor(unsigned int color)
+	{
+		set(color);
+	}
+	void Color::setColor(chstr hex)
+	{
+		set(hex);
+	}
+/*****************************************************************************************/
 	Texture::Texture()
 	{
-		mFilename="";
-		mUnusedTimer=0;
-		mTextureFilter=Linear;
-		mTextureWrapping=1;
+		mFilename = "";
+		mUnusedTimer = 0;
+		mTextureFilter = Linear;
+		mTextureWrapping = true;
 	}
 
 	Texture::~Texture()
 	{
 		foreach (Texture*, it, mDynamicLinks)
+		{
 			(*it)->removeDynamicLink(this);
+		}
 	}
 	
-	Color Texture::getPixel(int x,int y)
+	Color Texture::getPixel(int x, int y)
 	{
-		return Color(0,0,0,0);
+		return Color::CLEAR;
 	}
 	
-	Color Texture::getInterpolatedPixel(float x,float y)
+	Color Texture::getInterpolatedPixel(float x, float y)
 	{
-		return Color(0,0,0,0);
+		return Color::CLEAR; // TODO
 	}
 	
 	void Texture::update(float time_increase)
 	{
 		if (mDynamic && isLoaded())
 		{
-			float max_time=rendersys->getIdleTextureUnloadTime();
+			float max_time = rendersys->getIdleTextureUnloadTime();
 			if (max_time > 0)
 			{
-				if (mUnusedTimer > max_time) unload();
-				mUnusedTimer+=time_increase;
+				if (mUnusedTimer > max_time)
+				{
+					unload();
+				}
+				mUnusedTimer += time_increase;
 			}
 		}
 	}
 	
 	void Texture::addDynamicLink(Texture* lnk)
 	{
-		if (mDynamicLinks.contains(lnk)) return;
-		mDynamicLinks+=lnk;
-		lnk->addDynamicLink(this);
+		if (!mDynamicLinks.contains(lnk))
+		{
+			mDynamicLinks += lnk;
+			lnk->addDynamicLink(this);
+		}
 	}
 	
 	void Texture::removeDynamicLink(Texture* lnk)
 	{
 		if (mDynamicLinks.contains(lnk))
-			mDynamicLinks-=lnk;
+		{
+			mDynamicLinks -= lnk;
+		}
 	}
 	
 	void  Texture::_resetUnusedTimer(bool recursive)
 	{
-		mUnusedTimer=0;
+		mUnusedTimer = 0;
 		if (recursive)
 		{
 			foreach (Texture*, it, mDynamicLinks)
+			{
 				(*it)->_resetUnusedTimer(0);
+			}
 		}
 	}
 /*****************************************************************************************/
-	RAMTexture::RAMTexture(chstr filename,bool dynamic)
+	RAMTexture::RAMTexture(chstr filename, bool dynamic)
 	{
-		mFilename=filename;
-		mBuffer=0;
-		if (!dynamic) load();
+		mFilename = filename;
+		mBuffer = NULL;
+		if (!dynamic)
+		{
+			load();
+		}
 	}
-
 
 	RAMTexture::~RAMTexture()
 	{
@@ -322,10 +391,10 @@ namespace April
 	{
 		if (!mBuffer)
 		{
-			rendersys->logMessage("loading RAM texture '"+mFilename+"'");
-			mBuffer=loadImage(mFilename);
-			mWidth=mBuffer->w;
-			mHeight=mBuffer->h;
+			april::log("loading RAM texture '" + mFilename + "'");
+			mBuffer = loadImage(mFilename);
+			mWidth = mBuffer->w;
+			mHeight = mBuffer->h;
 		}
 	}
 	
@@ -333,50 +402,59 @@ namespace April
 	{
 		if (mBuffer)
 		{
-			rendersys->logMessage("unloading RAM texture '"+mFilename+"'");
+			april::log("unloading RAM texture '" + mFilename + "'");
 			delete mBuffer;
-			mBuffer=0;
+			mBuffer = NULL;
 		}
 	}
 	
 	bool RAMTexture::isLoaded()
 	{
-		return mBuffer != 0;
+		return (mBuffer != NULL);
 	}
 	
-	Color RAMTexture::getPixel(int x,int y)
+	Color RAMTexture::getPixel(int x, int y)
 	{
-		if (!mBuffer) load();
-		mUnusedTimer=0;
-		return mBuffer->getPixel(x,y);
+		if (!mBuffer)
+		{
+			load();
+		}
+		mUnusedTimer = 0;
+		return mBuffer->getPixel(x, y);
 	}
 	
-	void RAMTexture::setPixel(int x,int y,Color c)
+	void RAMTexture::setPixel(int x, int y, Color c)
 	{
-		if (!mBuffer) load();
-		mUnusedTimer=0;
-		mBuffer->setPixel(x,y,c);
+		if (!mBuffer)
+		{
+			load();
+		}
+		mUnusedTimer = 0;
+		mBuffer->setPixel(x, y, c);
 	}
 	
-	Color RAMTexture::getInterpolatedPixel(float x,float y)
+	Color RAMTexture::getInterpolatedPixel(float x, float y)
 	{
-		if (!mBuffer) load();
-		mUnusedTimer=0;
-		return mBuffer->getInterpolatedPixel(x,y);
+		if (!mBuffer)
+		{
+			load();
+		}
+		mUnusedTimer = 0;
+		return mBuffer->getInterpolatedPixel(x, y);
 	}
 	
 	int RAMTexture::getSizeInBytes()
 	{
-		return 0;
+		return (mWidth * mHeight * 3);
 	}
 /*****************************************************************************************/
 	RenderSystem::RenderSystem()
 	{
-		mAlphaMultiplier=1.0f;
-		mDynamicLoading=0;
-		mIdleUnloadTime=0;
-		mTextureFilter=Linear;
-		mTextureWrapping=1;
+		mAlphaMultiplier = 1.0f;
+		mDynamicLoading = false;
+		mIdleUnloadTime = 0;
+		mTextureFilter = Linear;
+		mTextureWrapping = true;
 	}
 	
 	RenderSystem::~RenderSystem()
@@ -384,114 +462,78 @@ namespace April
 		
 	}
 
-	void RenderSystem::drawColoredQuad(float x,float y,float w,float h,float r,float g,float b,float a)
+	void RenderSystem::drawColoredQuad(grect rect, Color color)
 	{
 		PlainVertex v[4];
-		v[0].x=x;   v[0].y=y;   v[0].z=0;
-		v[1].x=x+w; v[1].y=y;   v[1].z=0;
-		v[2].x=x;   v[2].y=y+h; v[2].z=0;
-		v[3].x=x+w; v[3].y=y+h; v[3].z=0;
+		v[0].x = rect.x;          v[0].y = rect.y;          v[0].z = 0;
+		v[1].x = rect.x + rect.w; v[1].y = rect.y;          v[1].z = 0;
+		v[2].x = rect.x;          v[2].y = rect.y + rect.h; v[2].z = 0;
+		v[3].x = rect.x + rect.w; v[3].y = rect.y + rect.h; v[3].z = 0;
 		
-		render(TriangleStrip,v,4,r,g,b,a);
+		render(TriangleStrip, v, 4, color);
 	}
 	
-	void RenderSystem::drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw,float sh)
+	void RenderSystem::drawTexturedQuad(grect rect, grect src)
 	{
 		TexturedVertex v[4];
-		v[0].x=x;   v[0].y=y;   v[0].z=0; v[0].u=sx;    v[0].v=sy;
-		v[1].x=x+w; v[1].y=y;   v[1].z=0; v[1].u=sx+sw; v[1].v=sy;
-		v[2].x=x;   v[2].y=y+h; v[2].z=0; v[2].u=sx;    v[2].v=sy+sh;
-		v[3].x=x+w; v[3].y=y+h; v[3].z=0; v[3].u=sx+sw; v[3].v=sy+sh;
+		v[0].x = rect.x;          v[0].y = rect.y;          v[0].z = 0; v[0].u = src.x;         v[0].v = src.y;
+		v[1].x = rect.x + rect.w; v[1].y = rect.y;          v[1].z = 0; v[1].u = src.x + src.w; v[1].v = src.y;
+		v[2].x = rect.x;          v[2].y = rect.y + rect.h; v[2].z = 0; v[2].u = src.x;         v[2].v = src.y + src.h;
+		v[3].x = rect.x + rect.w; v[3].y = rect.y + rect.h; v[3].z = 0; v[3].u = src.x + src.w; v[3].v = src.y + src.h;
 
-		render(TriangleStrip,v,4);		
+		render(TriangleStrip, v, 4);		
 	}
 	
-	void RenderSystem::drawTexturedQuad(float x,float y,float w,float h,float sx,float sy,float sw,float sh,float r,float g,float b,float a)
+	void RenderSystem::drawTexturedQuad(grect rect, grect src, Color color)
 	{
 		TexturedVertex v[4];
-		v[0].x=x;   v[0].y=y;   v[0].z=0; v[0].u=sx;    v[0].v=sy;
-		v[1].x=x+w; v[1].y=y;   v[1].z=0; v[1].u=sx+sw; v[1].v=sy;
-		v[2].x=x;   v[2].y=y+h; v[2].z=0; v[2].u=sx;    v[2].v=sy+sh;
-		v[3].x=x+w; v[3].y=y+h; v[3].z=0; v[3].u=sx+sw; v[3].v=sy+sh;
+		v[0].x = rect.x;          v[0].y = rect.y;          v[0].z = 0; v[0].u = src.x;         v[0].v = src.y;
+		v[1].x = rect.x + rect.w; v[1].y = rect.y;          v[1].z = 0; v[1].u = src.x + src.w; v[1].v = src.y;
+		v[2].x = rect.x;          v[2].y = rect.y + rect.h; v[2].z = 0; v[2].u = src.x;         v[2].v = src.y + src.h;
+		v[3].x = rect.x + rect.w; v[3].y = rect.y + rect.h; v[3].z = 0; v[3].u = src.x + src.w; v[3].v = src.y + src.h;
 		
-		render(TriangleStrip,v,4,r,g,b,a);	
+		render(TriangleStrip, v, 4, color);
 	}
 	
 	hstr RenderSystem::findTextureFile(chstr _filename)
 	{
 		hstr filename = _filename;
-		if (hfile::exists(filename)) return filename;
+		if (hfile::exists(filename))
+		{
+			return filename;
+		}
 		hstr name;
 		foreach (hstr, it, extensions)
 		{
-			name=filename+(*it);
-			if (hfile::exists(name)) return name;
-		}
-		if (filename.rfind(".") != -1) {
-			filename = filename.substr(0, filename.rfind("."));
-			foreach (hstr, it, extensions)
+			name = filename + (*it);
+			if (hfile::exists(name))
 			{
-				name=filename+(*it);
-				if (hfile::exists(name)) return name;
+				return name;
 			}
 		}
-
+		int index = filename.rfind(".");
+		if (index >= 0)
+		{
+			hstr filename = filename.substr(0, index);
+			foreach (hstr, it, extensions)
+			{
+				name = filename + (*it);
+				if (hfile::exists(name))
+				{
+					return name;
+				}
+			}
+		}
 		return "";
 	}
 	
-	void RenderSystem::logMessagef(chstr message, ...)
+	Texture* RenderSystem::loadRAMTexture(chstr filename, bool dynamic)
 	{
-		va_list vl;
-		va_start(vl, message);
-		logMessage(hvsprintf(message.c_str(), vl));;
-		va_end(vl);
-	}
-	
-	void RenderSystem::logMessage(chstr message,chstr prefix)
-	{
-		g_logFunction(prefix+message);
-	}
-	
-	void RenderSystem::registerUpdateCallback(bool (*callback)(float))
-	{
-		mWindow->setUpdateCallback(callback);
-		
-		logMessage("RenderSystem::registerUpdateCallback() is deprecated");
-	}
-
-	void RenderSystem::registerMouseCallbacks(void (*mouse_dn)(float,float,int),
-								              void (*mouse_up)(float,float,int),
-								              void (*mouse_move)(float,float))
-	{
-		mWindow->setMouseCallbacks(mouse_dn,mouse_up,mouse_move);
-		
-		logMessage("RenderSystem::registerMouseCallbacks() is deprecated");
-	}
-	
-	void RenderSystem::registerKeyboardCallbacks(void (*key_dn)(unsigned int),
-								                 void (*key_up)(unsigned int),
-												 void (*char_callback)(unsigned int))
-	{
-		mWindow->setKeyboardCallbacks(key_dn, key_up, char_callback);
-		logMessage("RenderSystem::registerKeyboardCallbacks() is deprecated");
-	}
-	
-	void RenderSystem::registerQuitCallback(bool (*quit_callback)(bool can_reject))
-	{
-		mWindow->setQuitCallback(quit_callback);
-		logMessage("RenderSystem::registerQuitCallback() is deprecated");
-	}
-	
-	void RenderSystem::registerWindowFocusCallback(void (*focus_callback)(bool current_focus))
-	{
-		mWindow->setWindowFocusCallback(focus_callback);		
-		logMessage("RenderSystem::registerFocusCallback() is deprecated");
-	}
-	
-	Texture* RenderSystem::loadRAMTexture(chstr filename,bool dynamic)
-	{
-		hstr name=findTextureFile(filename);
-		if (name=="") return 0;
+		hstr name = findTextureFile(filename);
+		if (name == "")
+		{
+			return 0;
+		}
 		return new RAMTexture(name,dynamic);
 	}
 	
@@ -501,15 +543,15 @@ namespace April
 		_setModelviewMatrix(mModelviewMatrix);
 	}
 	
-	void RenderSystem::translate(float x,float y,float z)
+	void RenderSystem::translate(float x, float y, float z)
 	{
-		mModelviewMatrix.translate(x,y,z);
+		mModelviewMatrix.translate(x, y, z);
 		_setModelviewMatrix(mModelviewMatrix);
 	}
 	
-	void RenderSystem::rotate(float angle,float ax,float ay,float az)
+	void RenderSystem::rotate(float angle, float ax, float ay, float az)
 	{
-		mModelviewMatrix.rotate(ax,ay,az,angle);
+		mModelviewMatrix.rotate(ax, ay, az, angle);
 		_setModelviewMatrix(mModelviewMatrix);
 	}	
 	
@@ -519,140 +561,102 @@ namespace April
 		_setModelviewMatrix(mModelviewMatrix);
 	}
 	
-	void RenderSystem::scale(float sx,float sy,float sz)
+	void RenderSystem::scale(float sx, float sy, float sz)
 	{
-		mModelviewMatrix.scale(sx,sy,sz);
+		mModelviewMatrix.scale(sx, sy, sz);
 		_setModelviewMatrix(mModelviewMatrix);
 	}
 	
-	void RenderSystem::lookAt(const gtypes::Vector3 &eye, const gtypes::Vector3 &direction, const gtypes::Vector3 &up)
+	void RenderSystem::lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up)
 	{
-		mModelviewMatrix.lookAt(eye,direction,up);
+		mModelviewMatrix.lookAt(eye, direction, up);
 		_setModelviewMatrix(mModelviewMatrix);
 	}
 		
-	void RenderSystem::setOrthoProjection(float w,float h,float x_offset,float y_offset)
+	void RenderSystem::setOrthoProjection(float w, float h, float x_offset, float y_offset)
 	{
-		float t=getPixelOffset(),wnd_w=getWindow()->getWindowWidth(),wnd_h=getWindow()->getWindowHeight();
-		mProjectionMatrix.ortho(w,h,x_offset+t*w/wnd_w,y_offset+t*h/wnd_h);
+		float t = getPixelOffset();
+		float wnd_w = getWindow()->getWindowWidth();
+		float wnd_h = getWindow()->getWindowHeight();
+		mProjectionMatrix.ortho(w, h, x_offset + t * w / wnd_w, y_offset + t * h / wnd_h);
 		_setProjectionMatrix(mProjectionMatrix);
 	}
 	
     void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
 	{
-		mProjectionMatrix.perspective(fov,aspect,nearClip,farClip);
+		mProjectionMatrix.perspective(fov, aspect, nearClip, farClip);
 		_setProjectionMatrix(mProjectionMatrix);
 	}
 	
-	void RenderSystem::setModelviewMatrix(const gtypes::Matrix4& matrix)
+	void RenderSystem::setModelviewMatrix(const gmat4& matrix)
 	{
-		mModelviewMatrix=matrix;
+		mModelviewMatrix = matrix;
 		_setModelviewMatrix(matrix);
 	}
-	void RenderSystem::setProjectionMatrix(const gtypes::Matrix4& matrix)
+	void RenderSystem::setProjectionMatrix(const gmat4& matrix)
 	{
-		mProjectionMatrix=matrix;
+		mProjectionMatrix = matrix;
 		_setProjectionMatrix(matrix);
 	}
 	
-	const gtypes::Matrix4& RenderSystem::getModelviewMatrix()
+	const gmat4& RenderSystem::getModelviewMatrix()
 	{
 		return mModelviewMatrix;
 	}
 	
-	const gtypes::Matrix4& RenderSystem::getProjectionMatrix()
+	const gmat4& RenderSystem::getProjectionMatrix()
 	{
 		return mProjectionMatrix;
 	}
 	
 /*********************************************************************************/
 
-/* deprecated funcs	*/
-
-	int RenderSystem::getWindowWidth() 
-	{ 
-		return getWindow()->getWindowWidth(); 
-	}
-	
-	int RenderSystem::getWindowHeight() 
-	{ 
-		return getWindow()->getWindowHeight(); 
-	}
-	
-	void RenderSystem::enterMainLoop()
-	{
-		logMessage("RenderSystem::enterMainLoop() is deprecated"); 
-		getWindow()->enterMainLoop(); 
-	}
-
-	void RenderSystem::terminateMainLoop()
-	{
-		logMessage("RenderSystem::enterMainLoop() is deprecated"); 
-		getWindow()->terminateMainLoop(); 
-	}
-	gvec2 RenderSystem::getCursorPos()
-	{
-		return getWindow()->getCursorPos();
-	}
-	
-	void RenderSystem::setWindowTitle(chstr title)
-	{
-		static bool done=0;
-		
-		if (!done) { done=1; logMessage("RenderSystem::setWindowTitle() is deprecated"); }
-		getWindow()->setWindowTitle(title);
-	}
 	void RenderSystem::presentFrame()
 	{
 		getWindow()->presentFrame();
 	}
-	void RenderSystem::showSystemCursor(bool visible)
-	{
-		getWindow()->showSystemCursor(visible);
-	}
 	
 /*********************************************************************************/
-	void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title)
+	void init(chstr rendersystem_name, int w, int h, bool fullscreen, chstr title)
 	{
-		#ifdef USE_IL
-			ilInit();
-		#endif
-		
-		#ifdef _WIN32
+#ifdef USE_IL
+		ilInit();
+#endif
+#ifdef _WIN32
 		Window* window = createAprilWindow("Win32", w, h, fullscreen, title);
-		#else
+#else
 		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);
-		#endif
-		#ifdef _OPENGL
-			createGLRenderSystem(window);
-		#else
-			createDX9RenderSystem(window);
-		#endif
-		extensions+=".png";
-		extensions+=".jpg";
+#endif
+#ifdef _OPENGL
+		createGLRenderSystem(window);
+#else
+		createDX9RenderSystem(window);
+#endif
+		extensions += ".png";
+		extensions += ".jpg";
 #if TARGET_OS_IPHONE
-		extensions+=".pvr";
+		extensions += ".pvr";
 #endif
 	}
 	
 	void setLogFunction(void (*fnptr)(chstr))
 	{
-		g_logFunction=fnptr;
+		g_logFunction = fnptr;
 	}
 	
 	void destroy()
 	{
-		if (!rendersys) {
-			return;
+		if (rendersys)
+		{
+			delete rendersys->getWindow();
+			delete rendersys;
+			rendersys = NULL;
 		}
-		delete rendersys->getWindow();
-		delete rendersys;
-		rendersys = 0;
 	}
 	
 	void addTextureExtension(chstr extension)
 	{
-		extensions+=extension;
+		extensions += extension;
 	}
 
 }

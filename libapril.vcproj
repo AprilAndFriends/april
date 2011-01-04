@@ -85,7 +85,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
+				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -157,7 +157,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
+				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -230,7 +230,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
+				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -302,7 +302,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
+				CommandLine="copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -353,7 +353,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\include\april\AprilExport.h"
+				RelativePath=".\include\april\aprilExport.h"
 				>
 			</File>
 			<File
