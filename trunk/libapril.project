@@ -9,33 +9,45 @@
   <Dependencies/>
   <VirtualDirectory Name="src">
     <File Name="src/RenderSystem.cpp"/>
-    <File Name="src/ImageSourceIL.cpp"/>
     <File Name="src/TimerWin.cpp"/>
-    <File Name="windowsystems/GLUT/GLUTWindow.cpp"/>
     <File Name="src/Window.cpp"/>
+    <VirtualDirectory Name="rendersystems">
+      <File Name="rendersystems/DirectX9/DirectX9_RenderSystem.cpp"/>
+      <File Name="rendersystems/DirectX9/DirectX9_Texture.cpp"/>
+      <File Name="rendersystems/OpenGL/OpenGL_RenderSystem.cpp"/>
+      <File Name="rendersystems/OpenGL/OpenGL_Texture.cpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="windowsystems">
+      <File Name="windowsystems/GLUT/GLUTWindow.cpp"/>
+      <File Name="windowsystems/SDL/SDLWindow.cpp"/>
+      <File Name="windowsystems/Win32/Win32Window.cpp"/>
+    </VirtualDirectory>
     <File Name="main_win32.cpp"/>
-    <File Name="windowsystems/SDL/SDLWindow.cpp"/>
-    <File Name="windowsystems/Win32/Win32Window.cpp"/>
-    <File Name="rendersystems/DirectX9/DirectX9_Texture.cpp"/>
-    <File Name="rendersystems/DirectX9/DirectX9_RenderSystem.cpp"/>
-    <File Name="rendersystems/OpenGL/OpenGL_Texture.cpp"/>
-    <File Name="rendersystems/OpenGL/OpenGL_RenderSystem.cpp"/>
+    <File Name="src/ImageSourceIL.cpp"/>
+    <File Name="src/Color.cpp"/>
+    <File Name="src/Texture.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/april/RenderSystem.h"/>
     <File Name="include/april/ImageSource.h"/>
     <File Name="include/april/Keys.h"/>
     <File Name="include/april/Timer.h"/>
-    <File Name="windowsystems/GLUT/GLUTWindow.h"/>
     <File Name="include/april/Window.h"/>
     <File Name="include/april/main.h"/>
-    <File Name="windowsystems/SDL/SDLWindow.h"/>
-    <File Name="windowsystems/Win32/Win32Window.h"/>
     <File Name="include/april/aprilExport.h"/>
-    <File Name="rendersystems/DirectX9/DirectX9_RenderSystem.h"/>
-    <File Name="rendersystems/DirectX9/DirectX9_Texture.h"/>
-    <File Name="rendersystems/OpenGL/OpenGL_Texture.h"/>
-    <File Name="rendersystems/OpenGL/OpenGL_RenderSystem.h"/>
+    <VirtualDirectory Name="rendersystems">
+      <File Name="rendersystems/DirectX9/DirectX9_RenderSystem.h"/>
+      <File Name="rendersystems/DirectX9/DirectX9_Texture.h"/>
+      <File Name="rendersystems/OpenGL/OpenGL_RenderSystem.h"/>
+      <File Name="rendersystems/OpenGL/OpenGL_Texture.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="windowsystems">
+      <File Name="windowsystems/Win32/Win32Window.h"/>
+      <File Name="windowsystems/SDL/SDLWindow.h"/>
+      <File Name="windowsystems/GLUT/GLUTWindow.h"/>
+    </VirtualDirectory>
+    <File Name="include/april/Color.h"/>
+    <File Name="include/april/Texture.h"/>
   </VirtualDirectory>
   <Dependencies Name="Debug">
     <Project Name="libgtypes"/>

@@ -15,7 +15,6 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #ifdef _WIN32
 #include <windows.h>
 #endif
-#include <stdlib.h>
 
 #ifndef __APPLE__
 #include <GL/gl.h>
@@ -33,8 +32,7 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #endif
 #endif // __APPLE__
 
-#include <gtypes/Vector2.h>
-#include <hltypes/util.h>
+#include <hltypes/hstring.h>
 
 #include "ImageSource.h"
 #include "OpenGL_Texture.h"
@@ -97,7 +95,6 @@ namespace april
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
-
 	}
 
 	OpenGL_Texture::~OpenGL_Texture()
