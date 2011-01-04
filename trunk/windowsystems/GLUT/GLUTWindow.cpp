@@ -95,7 +95,7 @@ namespace april
 	
 	void GLUTWindow::terminateMainLoop()
 	{
-#if defined(FREEGLUT_VERSION_2_0) && defined(_WIN32)
+#ifdef FREEGLUT_VERSION_2_0
 		glutLeaveMainLoop();
 #endif
 		destroy(); 

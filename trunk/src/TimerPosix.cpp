@@ -8,9 +8,6 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-
-#ifdef _UNIX
-
 #include <sys/time.h>
 #include "Timer.h"
 #include "RenderSystem.h"
@@ -79,5 +76,3 @@ namespace April
         mTd = mTd2;
     }
 }
-
-#endif
