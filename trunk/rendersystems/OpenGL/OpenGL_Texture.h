@@ -7,38 +7,42 @@ Copyright (c) 2010 Kresimir Spes                                                
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#ifdef _DIRECTX9
-#ifndef DX9_TEXTURE_H
-#define DX9_TEXTURE_H
+#ifdef _OPENGL
+#ifndef APRIL_OPENGL_TEXTURE_H
+#define APRIL_OPENGL_TEXTURE_H
+
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+#if (TARGET_OS_MAC) && !(TARGET_OS_IPHONE)
+#include <OpenGL/gl.h>
+#elif (TARGET_OS_IPHONE)
+#include <OpenGLES/ES1/gl.h>
+#else
+#include <GL/gl.h>
+#endif
 
 #include "RenderSystem.h"
 
-class IDirect3DTexture9;
-class IDirect3DSurface9;
-
 namespace april
 {
-	class DirectX9Texture : public Texture
+	class OpenGL_Texture : public Texture
 	{
 	public:
-		IDirect3DTexture9* mTexture;
+		GLuint mTexId;
 		
-		DirectX9Texture(chstr filename, bool dynamic);
-		DirectX9Texture(unsigned char* rgba, int w, int h);
-		DirectX9Texture(int w, int h, TextureFormat fmt, TextureType type);
-		~DirectX9Texture();
+		OpenGL_Texture(chstr filename, bool dynamic);
+		OpenGL_Texture(unsigned char* rgba, int w, int h);
+		~OpenGL_Texture();
 		
-		IDirect3DSurface9* getSurface();
 		bool load();
-		bool isLoaded();
 		void unload();
+		bool isLoaded();
 		int getSizeInBytes();
 		
-	protected:
-		IDirect3DSurface9* mSurface;
-		
 	};
+
 }
-            
+
 #endif
 #endif

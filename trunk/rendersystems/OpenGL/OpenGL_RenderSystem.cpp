@@ -38,7 +38,8 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 
 #include "ImageSource.h"
 #include "Keys.h"
-#include "RenderSystem_GL.h"
+#include "OpenGL_RenderSystem.h"
+#include "OpenGL_Texture.h"
 #include "Timer.h"
 #include "Window.h"
 
@@ -48,51 +49,14 @@ namespace april
 {
 	extern void (*g_logFunction)(chstr);
 
-	float cursor_x = 0.0f;
-	float cursor_y = 0.0f;
-
-	unsigned int platformLoadGLTexture(const char* name, int* w, int* h)
-	{
-		GLuint texid;
-		ImageSource* img = loadImage(name);
-		if (!img)
-		{
-			return 0;
-		}
-		*w = img->w;
-		*h = img->h;
-		glGenTextures(1, &texid);
-		glBindTexture(GL_TEXTURE_2D, texid);
-		
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		
-		switch (img->format)
-		{
-#if TARGET_OS_IPHONE
-		case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
-		case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-			int mipmaplevel = 0;
-			glCompressedTexImage2D(GL_TEXTURE_2D, mipmaplevel, img->format, img->w, img->h, 0, img->compressedLength, img->data);
-			break;
-#endif
-		default:
-			glTexImage2D(GL_TEXTURE_2D, 0, img->bpp == 4 ? GL_RGBA : GL_RGB, img->w,img->h, 0, img->format, GL_UNSIGNED_BYTE,img->data);
-			break;
-		}
-		delete img;
-		
-		return texid;
-	}
-	
 	void win_mat_invert()
 	{
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		float mat[16];
 		glGetFloatv(GL_PROJECTION_MATRIX, mat);
-		hswap(&mat[1], &mat[0]);
-		hswap(&mat[4], &mat[5]);
+		hswap(mat[1], mat[0]);
+		hswap(mat[4], mat[5]);
 		mat[5] = -mat[5];
 		mat[13] = -mat[13];
 		glLoadMatrixf(mat);
@@ -110,77 +74,7 @@ namespace april
 		GL_POINTS,         // ROP_POINTS
 	};
 	
-	GLTexture::GLTexture(chstr filename, bool dynamic)
-	{
-		mWidth = 0;
-		mHeight = 0;
-		mFilename = filename;
-		mDynamic = dynamic;
-		mTexId = 0;
-	}
-
-	GLTexture::GLTexture(unsigned char* rgba, int w, int h)
-	{
-		mWidth = w;
-		mHeight = h;
-		mDynamic = 0;
-		mFilename = "UserTexture";
-		glGenTextures(1, &mTexId);
-		glBindTexture(GL_TEXTURE_2D, mTexId);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
-
-	}
-
-	GLTexture::~GLTexture()
-	{
-		unload();
-	}
-
-	bool GLTexture::load()
-	{
-		mUnusedTimer = 0;
-		if (mTexId)
-		{
-			return true;
-		}
-		april::log("loading GL texture '" + mFilename + "'");
-		mTexId = platformLoadGLTexture(mFilename.c_str(), &mWidth, &mHeight);
-		if (!mTexId)
-		{
-			april::log("Failed to load texture: " + mFilename);
-			return false;
-		}
-		foreach (Texture*, it, mDynamicLinks)
-		{
-			((GLTexture*)(*it))->load();
-		}
-		return true;
-	}
-
-	bool GLTexture::isLoaded()
-	{
-		return (mTexId != 0);
-	}
-
-	void GLTexture::unload()
-	{
-		if (mTexId != 0)
-		{
-			april::log("unloading GL texture '" + mFilename + "'");
-			glDeleteTextures(1, &mTexId);
-			mTexId = 0;
-		}
-	}
-
-	int GLTexture::getSizeInBytes()
-	{
-		return (mWidth * mHeight * 3);
-	}
-
-
-	GLRenderSystem::GLRenderSystem(Window* window) :
+	OpenGL_RenderSystem::OpenGL_RenderSystem(Window* window) :
 		mTexCoordsEnabled(false), mColorEnabled(false), RenderSystem()
 	{		
 		mWindow = window;
@@ -201,22 +95,22 @@ namespace april
 		//glEnable(GL_CULL_FACE);
 	}
 
-	GLRenderSystem::~GLRenderSystem()
+	OpenGL_RenderSystem::~OpenGL_RenderSystem()
 	{
 		april::log("Destroying OpenGL Rendersystem");
 	}
 
-	hstr GLRenderSystem::getName()
+	hstr OpenGL_RenderSystem::getName()
 	{
 		return "OpenGL";
 	}
 	
-	float GLRenderSystem::getPixelOffset()
+	float OpenGL_RenderSystem::getPixelOffset()
 	{
 		return 0.0f;
 	}
 
-	Texture* GLRenderSystem::loadTexture(chstr filename, bool dynamic)
+	Texture* OpenGL_RenderSystem::loadTexture(chstr filename, bool dynamic)
 	{
 		hstr name = findTextureFile(filename);
 		if (name == "")
@@ -231,7 +125,7 @@ namespace april
 		{
 			april::log("creating dynamic GL texture '" + name + "'");
 		}
-		GLTexture* t = new GLTexture(name, dynamic);
+		OpenGL_Texture* t = new OpenGL_Texture(name, dynamic);
 		if (!dynamic && !t->load())
 		{
 			delete t;
@@ -240,21 +134,21 @@ namespace april
 		return t;
 	}
 
-	Texture* GLRenderSystem::createTextureFromMemory(unsigned char* rgba, int w, int h)
+	Texture* OpenGL_RenderSystem::createTextureFromMemory(unsigned char* rgba, int w, int h)
 	{
 		april::log("creating user-defined GL texture");
-		GLTexture* t = new GLTexture(rgba, w, h);
+		OpenGL_Texture* t = new OpenGL_Texture(rgba, w, h);
 		return t;
 	}
 	
-	Texture* GLRenderSystem::createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type)
+	Texture* OpenGL_RenderSystem::createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type)
 	{
 		return NULL; // TODO
 	}
 
-	void GLRenderSystem::setTexture(Texture* t)
+	void OpenGL_RenderSystem::setTexture(Texture* t)
 	{
-		GLTexture* glt = (GLTexture*)t;
+		OpenGL_Texture* glt = (OpenGL_Texture*)t;
 		if (t == NULL)
 		{
 			glBindTexture(GL_TEXTURE_2D, 0);
@@ -281,7 +175,7 @@ namespace april
 		}
 	}
 
-	void GLRenderSystem::clear(bool color, bool depth)
+	void OpenGL_RenderSystem::clear(bool color, bool depth)
 	{
 		GLbitfield mask = 0;
 		if (color)
@@ -295,7 +189,7 @@ namespace april
 		glClear(mask);
 	}
     
-    ImageSource* GLRenderSystem::grabScreenshot()
+    ImageSource* OpenGL_RenderSystem::grabScreenshot()
     {
         april::log("grabbing screenshot");
         int w = mWindow->getWindowWidth();
@@ -319,13 +213,13 @@ namespace april
         return img;
     }
 
-	void GLRenderSystem::_setModelviewMatrix(const gmat4& matrix)
+	void OpenGL_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glLoadMatrixf(matrix.mat);
 	}
 
-	void GLRenderSystem::_setProjectionMatrix(const gmat4& matrix)
+	void OpenGL_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
 		glMatrixMode(GL_PROJECTION);
 #if TARGET_OS_IPHONE
@@ -339,7 +233,7 @@ namespace april
 		glMatrixMode(GL_MODELVIEW);
 	}
 
-	void GLRenderSystem::setBlendMode(BlendMode mode)
+	void OpenGL_RenderSystem::setBlendMode(BlendMode mode)
 	{
 		if (mode == ALPHA_BLEND || mode == DEFAULT)
 		{
@@ -351,7 +245,7 @@ namespace april
 		}
 	}
 	
-	void GLRenderSystem::setTextureFilter(TextureFilter filter)
+	void OpenGL_RenderSystem::setTextureFilter(TextureFilter filter)
 	{
 		if (filter == Linear)
 		{
@@ -370,7 +264,7 @@ namespace april
 		mTextureFilter=filter;
 	}
 
-	void GLRenderSystem::setTextureWrapping(bool wrap)
+	void OpenGL_RenderSystem::setTextureWrapping(bool wrap)
 	{
 		if (wrap)
 		{
@@ -389,7 +283,7 @@ namespace april
 		mTextureWrapping = wrap;
 	}
 
-	void GLRenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
+	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
 	{
 		if (!mTexCoordsEnabled)
 		{
@@ -409,7 +303,7 @@ namespace april
 
 	}
 
-	void GLRenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
+	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
 	{
 		if (!mTexCoordsEnabled)
 		{
@@ -443,7 +337,7 @@ namespace april
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 
-	void GLRenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
+	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
 	{
 		if (mTexCoordsEnabled)
 		{
@@ -463,7 +357,7 @@ namespace april
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 
-	void GLRenderSystem::render(RenderOp renderOp,PlainVertex* v, int nVertices, Color color)
+	void OpenGL_RenderSystem::render(RenderOp renderOp,PlainVertex* v, int nVertices, Color color)
 	{
 		if (mTexCoordsEnabled)
 		{
@@ -497,7 +391,7 @@ namespace april
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 	
-	void GLRenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
+	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
 	{
 		if (mTexCoordsEnabled)
 		{
@@ -519,7 +413,7 @@ namespace april
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 	
-	void GLRenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
+	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
 		if (!mTexCoordsEnabled)
 		{
@@ -540,17 +434,17 @@ namespace april
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 	
-	void GLRenderSystem::setRenderTarget(Texture* source)
+	void OpenGL_RenderSystem::setRenderTarget(Texture* source)
 	{
 		// TODO
 	}
 	
-	void GLRenderSystem::beginFrame()
+	void OpenGL_RenderSystem::beginFrame()
 	{
 		// TODO
 	}
 
-	void GLRenderSystem::setAlphaMultiplier(float value)
+	void OpenGL_RenderSystem::setAlphaMultiplier(float value)
 	{
 		mAlphaMultiplier = value;
 		glColor4f(1, 1, 1, value);
@@ -558,9 +452,9 @@ namespace april
 	
 /***************************************************/
 
-	void createGLRenderSystem(Window* window)
+	void createOpenGL_RenderSystem(Window* window)
 	{
-		g_logFunction("Creating OpenGL Rendersystem");
+		april::log("Creating OpenGL Rendersystem");
 		glEnable(GL_TEXTURE_2D);
 		// DevIL defaults
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -571,7 +465,7 @@ namespace april
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 #endif
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		april::rendersys = new GLRenderSystem(window);
+		april::rendersys = new OpenGL_RenderSystem(window);
 	}
 
 }

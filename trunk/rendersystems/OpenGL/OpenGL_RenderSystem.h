@@ -8,8 +8,8 @@ Copyright (c) 2010 Kresimir Spes                                                
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 #ifdef _OPENGL
-#ifndef APRIL_RENDERSYSTEM_GL_H
-#define APRIL_RENDERSYSTEM_GL_H
+#ifndef APRIL_OPENGL_RENDERSYSTEM_H
+#define APRIL_OPNEGL_RENDERSYSTEM_H
 
 #ifdef __APPLE__
 #include <TargetConditionals.h>
@@ -26,29 +26,14 @@ Copyright (c) 2010 Kresimir Spes                                                
 
 namespace april
 {
-	class GLTexture : public Texture
+	class OpenGL_RenderSystem : public RenderSystem
 	{
 	public:
-		GLuint mTexId;
-		
-		GLTexture(chstr filename, bool dynamic);
-		GLTexture(unsigned char* rgba, int w, int h);
-		~GLTexture();
-		
-		bool load();
-		void unload();
-		bool isLoaded();
-		int getSizeInBytes();
-	};
-
-	class GLRenderSystem : public RenderSystem
-	{
-	public:
-		GLRenderSystem(Window* window);
-		~GLRenderSystem();
+		OpenGL_RenderSystem(Window* window);
+		~OpenGL_RenderSystem();
 		
 		// object creation
-		Texture* loadTexture(chstr filename,bool dynamic);
+		Texture* loadTexture(chstr filename, bool dynamic);
 		Texture* createTextureFromMemory(unsigned char* rgba, int w, int h);
 		Texture* createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type);
 
@@ -85,7 +70,7 @@ namespace april
 		
 	};
 
-	void createGLRenderSystem(Window* window);
+	void createOpenGL_RenderSystem(Window* window);
 	
 }
 
