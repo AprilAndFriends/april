@@ -187,7 +187,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
 	void Win32Window::setWindowTitle(chstr title)
 	{
-		mTitle  =title;
+		mTitle = title;
 #ifdef _DEBUG
 		SetWindowText(hWnd, (title + fpstitle).c_str());
 #else
