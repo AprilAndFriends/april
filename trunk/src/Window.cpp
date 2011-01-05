@@ -107,7 +107,7 @@ namespace april
 		return mFullscreen;
 	}
 	
-	float Window::getWindowAspectRatio()
+	float Window::getAspectRatio()
 	{
 		return ((float)getWidth() / getHeight());
 	}
