@@ -109,7 +109,7 @@ namespace april
 	
 	float Window::getWindowAspectRatio()
 	{
-		return ((float)getWindowWidth() / getWindowHeight());
+		return ((float)getWidth() / getHeight());
 	}
 	
 	bool Window::performUpdate(float time_increase)

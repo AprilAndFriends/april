@@ -207,12 +207,12 @@ namespace april
 		return gvec2(mCursorX,mCursorY);
 	}
 	
-	int SDLWindow::getWindowWidth()
+	int SDLWindow::getWidth()
 	{
 		return SDL_GetVideoInfo()->current_w;
 	}
 	
-	int SDLWindow::getWindowHeight()
+	int SDLWindow::getHeight()
 	{
 		return SDL_GetVideoInfo()->current_h;
 	}
