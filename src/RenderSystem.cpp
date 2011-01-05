@@ -194,9 +194,27 @@ namespace april
 	void RenderSystem::setOrthoProjection(float w, float h, float x_offset, float y_offset)
 	{
 		float t = getPixelOffset();
-		float wnd_w = getWindow()->getWidth();
-		float wnd_h = getWindow()->getHeight();
+		float wnd_w = mWindow->getWidth();
+		float wnd_h = mWindow->getHeight();
 		mProjectionMatrix.ortho(w, h, x_offset + t * w / wnd_w, y_offset + t * h / wnd_h);
+		_setProjectionMatrix(mProjectionMatrix);
+	}
+	
+	void RenderSystem::setOrthoProjection(gvec2 size)
+	{
+		float t = getPixelOffset();
+		float wnd_w = mWindow->getWidth();
+		float wnd_h = mWindow->getHeight();
+		mProjectionMatrix.ortho(size.x, size.y, t * size.x / wnd_w, t * size.y / wnd_h);
+		_setProjectionMatrix(mProjectionMatrix);
+	}
+	
+	void RenderSystem::setOrthoProjection(grect rect)
+	{
+		float t = getPixelOffset();
+		float wnd_w = mWindow->getWidth();
+		float wnd_h = mWindow->getHeight();
+		mProjectionMatrix.ortho(rect.w, rect.h, -rect.x + t * rect.w / wnd_w, -rect.y + t * rect.h / wnd_h);
 		_setProjectionMatrix(mProjectionMatrix);
 	}
 	

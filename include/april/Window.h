@@ -88,7 +88,8 @@ namespace april
 		virtual void presentFrame() = 0;
 		virtual void* getIDFromBackend() = 0;
 		virtual void doEvents() = 0;
-		float getWindowAspectRatio();
+		float getAspectRatio();
+		float getWindowAspectRatio() DEPRECATED_ATTRIBUTE { return getAspectRatio(); }
 		
 		// misc virtuals
 		virtual bool isFullscreen();
