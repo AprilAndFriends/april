@@ -108,7 +108,7 @@ namespace april
 		void scale(float sx, float sy, float sz);
 		// camera functions
 		void lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up);
-		// projection matrix tronsformation
+		// projection matrix transformation
 		void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f) DEPRECATED_ATTRIBUTE;
 		void setOrthoProjection(gvec2 size);
 		void setOrthoProjection(grect rect);
@@ -116,8 +116,8 @@ namespace april
 		// rendersys matrix operations
 		void setModelviewMatrix(const gmat4& matrix);
 		void setProjectionMatrix(const gmat4& matrix);
-		virtual bool isFullscreen() { return false; } //2DO - implement in derived classes
-		virtual void setFullscreen(bool fullscreen) { } //2DO - implement in derived classes
+		virtual bool isFullscreen() { return false; } //TODO - implement in derived classes
+		virtual void setFullscreen(bool fullscreen) { } //TODO - implement in derived classes
 		
 		const gmat4& getModelviewMatrix();
 		const gmat4& getProjectionMatrix();
