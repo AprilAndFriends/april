@@ -77,7 +77,6 @@ namespace april
 	
 	RenderSystem::~RenderSystem()
 	{
-		
 	}
 
 	void RenderSystem::drawColoredQuad(grect rect, Color color)

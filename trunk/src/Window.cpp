@@ -58,29 +58,30 @@ namespace april
 		mQuitCallback = NULL;
 		mFocusCallback = NULL;
 		mVKeyboardCallback = NULL;
-		mDeviceOrientationCallback=0;
+		mDeviceOrientationCallback = NULL;
 	}
 	
 	void Window::setUpdateCallback(bool (*callback)(float))
 	{
-		mUpdateCallback=callback;
+		mUpdateCallback = callback;
 	}
 
 	void Window::setMouseCallbacks(void (*mouse_dn)(float, float, int),
-										void (*mouse_up)(float, float, int),
-										void (*mouse_move)(float, float))
+								   void (*mouse_up)(float, float, int),
+								   void (*mouse_move)(float, float))
 	{
-		mMouseDownCallback=mouse_dn;
-		mMouseUpCallback=mouse_up;
-		mMouseMoveCallback=mouse_move;
+		mMouseDownCallback = mouse_dn;
+		mMouseUpCallback = mouse_up;
+		mMouseMoveCallback = mouse_move;
 	}
+	
 	void Window::setKeyboardCallbacks(void (*key_dn)(unsigned int),
 									  void (*key_up)(unsigned int),
 									  void (*char_callback)(unsigned int))
 	{
-		mKeyDownCallback=key_dn;
-		mKeyUpCallback=key_up;
-		mCharCallback=char_callback;
+		mKeyDownCallback = key_dn;
+		mKeyUpCallback = key_up;
+		mCharCallback = char_callback;
 	}
 	
 	void Window::setQuitCallback(bool (*quit_callback)(bool))
@@ -244,7 +245,7 @@ namespace april
 				mouseLoc = [NSEvent mouseLocation];
 			}
 			
-			if(hideInsideView)
+			if (hideInsideView)
 			{
 				shouldShow = !NSPointInRect(mouseLoc, [hideInsideView frame]);
 			}
@@ -267,9 +268,7 @@ namespace april
 			CGDisplayShowCursor(kCGDirectMainDisplay);
 		}
 #endif
-		
 	}
-	
 	
 	///////////////////////
 	// non members
@@ -321,7 +320,6 @@ namespace april
 		return gvec2(w, h);
 #elif (TARGET_OS_MAC)
 		NSScreen* mainScreen = [NSScreen mainScreen];
-		
 		NSRect rect = [mainScreen frame];
 		return gvec2(rect.size.width, rect.size.height);
 #else
@@ -559,6 +557,5 @@ namespace april
 		return AMSGBTN_OK;
 #endif
 	}
-
 	
 }

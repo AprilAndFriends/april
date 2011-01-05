@@ -114,8 +114,8 @@ namespace april
 		void (*mMouseUpCallback)(float, float, int);
 		void (*mMouseMoveCallback)(float, float);
 		void (*mKeyDownCallback)(unsigned int);
-		void (*mCharCallback)(unsigned int);
 		void (*mKeyUpCallback)(unsigned int);
+		void (*mCharCallback)(unsigned int);
 		bool (*mQuitCallback)(bool can_reject);
 		void (*mFocusCallback)(bool);
 		void (*mVKeyboardCallback)(bool);
