@@ -78,11 +78,13 @@ namespace april
 		virtual void terminateMainLoop() = 0;
 		virtual void showSystemCursor(bool b) = 0;
 		virtual bool isSystemCursorShown() = 0;
-		virtual int getWindowWidth() = 0;
-		virtual int getWindowHeight() = 0;
+		virtual int getWidth() = 0;
+		virtual int getHeight() = 0;
+		int getWindowWidth() DEPRECATED_ATTRIBUTE { return getWidth(); }
+		int getWindowHeight() DEPRECATED_ATTRIBUTE { return getHeight(); }
 		virtual void setWindowTitle(chstr title) = 0;
-		gvec2 getCursorPos() DEPRECATED_ATTRIBUTE { return getCursorPosition(); }
 		virtual gvec2 getCursorPosition() = 0;
+		gvec2 getCursorPos() DEPRECATED_ATTRIBUTE { return getCursorPosition(); }
 		virtual void presentFrame() = 0;
 		virtual void* getIDFromBackend() = 0;
 		virtual void doEvents() = 0;

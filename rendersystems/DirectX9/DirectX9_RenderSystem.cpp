@@ -86,8 +86,8 @@ namespace april
 		
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !window->isFullscreen();
-		d3dpp.BackBufferWidth = getWindow()->getWindowWidth();
-		d3dpp.BackBufferHeight = getWindow()->getWindowHeight();
+		d3dpp.BackBufferWidth = mWindow->getWidth();
+		d3dpp.BackBufferHeight = mWindow->getHeight();
 		d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 

@@ -84,7 +84,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	case WM_SETCURSOR:
 		if (!cursorVisible)
 		{
-			if (cursorPosition.x >= 0 && cursorPosition.y >= 0 && cursorPosition.x <= ws->getWindowWidth() && cursorPosition.y <= ws->getWindowHeight())
+			if (cursorPosition.x >= 0 && cursorPosition.y >= 0 && cursorPosition.x <= ws->getWidth() && cursorPosition.y <= ws->getHeight())
 			{
 				SetCursor(0);
 			}
@@ -171,14 +171,14 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		UnregisterClass("april_win32_window", GetModuleHandle(0));
 	}
 
-	int Win32Window::getWindowWidth()
+	int Win32Window::getWidth()
 	{
 		RECT rc;
 		GetClientRect(hWnd, &rc);
 		return (rc.right - rc.left);
 	}
 	
-	int Win32Window::getWindowHeight()
+	int Win32Window::getHeight()
 	{
 		RECT rc;
 		GetClientRect(hWnd, &rc);
@@ -212,7 +212,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		{
 			return true;
 		}
-		return !(cursorPosition.x >= 0 && cursorPosition.y >= 0 && cursorPosition.x < getWindowWidth() && cursorPosition.y < getWindowHeight());
+		return !(cursorPosition.x >= 0 && cursorPosition.y >= 0 && cursorPosition.x < getWidth() && cursorPosition.y < getHeight());
 	}
 	
 	void Win32Window::doEvents()

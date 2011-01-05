@@ -79,7 +79,7 @@ namespace april
 	{		
 		mWindow = window;
 		
-		glViewport(0, 0, window->getWindowWidth(), window->getWindowHeight());
+		glViewport(0, 0, window->getWidth(), window->getHeight());
 		glClearColor(0, 0, 0, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
@@ -192,8 +192,8 @@ namespace april
     ImageSource* OpenGL_RenderSystem::grabScreenshot()
     {
         april::log("grabbing screenshot");
-        int w = mWindow->getWindowWidth();
-		int h = mWindow->getWindowHeight();
+        int w = mWindow->getWidth();
+		int h = mWindow->getHeight();
         ImageSource* img = new ImageSource();
         img->w = w;
 		img->h = h;

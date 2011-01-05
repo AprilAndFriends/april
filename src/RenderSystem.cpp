@@ -194,8 +194,8 @@ namespace april
 	void RenderSystem::setOrthoProjection(float w, float h, float x_offset, float y_offset)
 	{
 		float t = getPixelOffset();
-		float wnd_w = getWindow()->getWindowWidth();
-		float wnd_h = getWindow()->getWindowHeight();
+		float wnd_w = getWindow()->getWidth();
+		float wnd_h = getWindow()->getHeight();
 		mProjectionMatrix.ortho(w, h, x_offset + t * w / wnd_w, y_offset + t * h / wnd_h);
 		_setProjectionMatrix(mProjectionMatrix);
 	}

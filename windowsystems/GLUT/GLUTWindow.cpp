@@ -133,12 +133,12 @@ namespace april
 		return gvec2(mCursorX, mCursorY);
 	}
 	
-	int GLUTWindow::getWindowWidth()
+	int GLUTWindow::getWidth()
 	{
 		return glutGet(GLUT_WINDOW_WIDTH);
 	}
 	
-	int GLUTWindow::getWindowHeight()
+	int GLUTWindow::getHeight()
 	{
 		return glutGet(GLUT_WINDOW_HEIGHT);
 	}

@@ -27,8 +27,8 @@ namespace april
 		void terminateMainLoop();
 		void showSystemCursor(bool visible);
 		bool isSystemCursorShown();
-		int getWindowWidth();
-		int getWindowHeight();
+		int getWidth();
+		int getHeight();
 		void setWindowTitle(chstr title);
 		gvec2 getCursorPosition();
 		void presentFrame();
