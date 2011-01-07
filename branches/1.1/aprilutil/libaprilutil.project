@@ -33,10 +33,6 @@
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
   </Dependencies>
-  <Dependencies Name="Debug">
-    <Project Name="libgtypes"/>
-    <Project Name="libapril"/>
-  </Dependencies>
   <Settings Type="Dynamic Library">
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" Required="yes" PreCompiledHeader="">
@@ -172,6 +168,10 @@
   </Settings>
   <Dependencies Name="Linux_Debug">
     <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
+  <Dependencies Name="Debug">
     <Project Name="libgtypes"/>
     <Project Name="libapril"/>
   </Dependencies>
