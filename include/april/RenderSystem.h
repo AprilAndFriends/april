@@ -335,7 +335,5 @@ namespace April
 	// global rendersys shortcut variable
 	AprilFnExport extern April::RenderSystem* rendersys;
 }
-// old, now deprecated, global rendersys shortcut variable
-AprilFnExport extern April::RenderSystem* rendersys DEPRECATED_ATTRIBUTE;
 
 #endif
