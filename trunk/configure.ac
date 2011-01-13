@@ -1,5 +1,5 @@
 AC_INIT(libapril, 1.2, ivan@vucica.net)
-AC_CONFIG_SRCDIR(src/window.cpp)
+AC_CONFIG_SRCDIR(src/Window.cpp)
 
 PACKAGE=libapril
 VERSION=1.2.0
