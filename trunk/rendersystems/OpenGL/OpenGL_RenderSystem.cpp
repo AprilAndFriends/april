@@ -16,11 +16,14 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include <windows.h>
 #endif
 #include <stdlib.h>
+#include <string.h>
 
 #ifndef __APPLE__
 #include <GL/gl.h>
 #include <GL/glu.h>
+#if HAVE_GLUT
 #include <GL/glut.h>
+#endif
 #else // __APPLE__
 #include <TargetConditionals.h>
 #if TARGET_OS_IPHONE
