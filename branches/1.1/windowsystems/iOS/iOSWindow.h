@@ -61,6 +61,8 @@ namespace April
 		void setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation));
 		void deviceOrientationDidChange();
 
+		void applicationWillResignActive();
+		void applicationDidBecomeActive();
 	};
 }
 
