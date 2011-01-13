@@ -11,6 +11,7 @@
 #import "AprilUIKitDelegate.h"
 #import "main.h"
 #import "AprilViewController.h"
+#import "EAGLView.h"
 
 @implementation AprilUIKitDelegate
 
@@ -67,6 +68,24 @@ extern int(*april_RealMain)(int argc, char** argv);
 {
 	NSLog(@"April-based application received memory warning!");
 }
+
+
+
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+	if ([viewController.view respondsToSelector:@selector(applicationWillResignActive:)]) {
+		[(EAGLView*)viewController.view applicationWillResignActive:application];
+	}
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+	if ([viewController.view respondsToSelector:@selector(applicationDidBecomeActive:)]) {
+		[(EAGLView*)viewController.view applicationDidBecomeActive:application];
+	}
+}
+
+
 
 ///////////////////////////
 // utils and handlers for apps 

@@ -10,8 +10,8 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/CAEAGLLayer.h>
-#import "EAGLView.h"
 #import "AprilViewController.h"
+#import "EAGLView.h"
 #import "iOSWindow.h"
 #import "RenderSystem.h"
 #import "AprilUIKitDelegate.h"
@@ -389,6 +389,17 @@ namespace April
 			mDeviceOrientationCallback(newOrientation);
 		}
 	}
-
+	void iOSWindow::applicationWillResignActive()
+	{
+		if (mFocusCallback) {
+			mFocusCallback(false);
+		}
+	}
+	void iOSWindow::applicationDidBecomeActive()
+	{
+		if (mFocusCallback) {
+			mFocusCallback(true);
+		}
+	}
 	
 }

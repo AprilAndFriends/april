@@ -203,7 +203,6 @@
     [self destroyFramebuffer];
     [self createFramebuffer];
     [self drawView];
-	NSLog(@"%s", __PRETTY_FUNCTION__);
 }
 
 
@@ -304,6 +303,15 @@
 	return aprilWindow->textField_shouldChangeCharactersInRange_replacementString_(_textField, range.location, range.length, chstr([string UTF8String]));
 }
 
+
+-(void)applicationDidBecomeActive:(UIApplication*)app
+{
+	aprilWindow->applicationDidBecomeActive();
+}
+-(void)applicationWillResignActive:(UIApplication*)app
+{
+	aprilWindow->applicationWillResignActive();
+}
 
 
 @end

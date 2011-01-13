@@ -69,7 +69,7 @@
 		7FD37C1712AD2C070007A403 /* WBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBImage.m; sourceTree = "<group>"; };
 		7FF494E21247603F00A22D50 /* main_ios.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main_ios.m; sourceTree = "<group>"; };
 		7FF4960712476B9800A22D50 /* iOSWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iOSWindow.h; sourceTree = "<group>"; };
-		7FF4960812476B9800A22D50 /* iOSWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = iOSWindow.mm; sourceTree = "<group>"; };
+		7FF4960812476B9800A22D50 /* iOSWindow.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = iOSWindow.mm; sourceTree = "<group>"; };
 		7FF4961512476BED00A22D50 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
 		7FF4961612476BED00A22D50 /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EAGLView.mm; sourceTree = "<group>"; };
 		7FF496FE12478C9100A22D50 /* AprilUIKitDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AprilUIKitDelegate.h; sourceTree = "<group>"; };
@@ -351,6 +351,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					BUILDING_APRIL,
 					_OPENGL,
+					_UNIX,
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -377,6 +378,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					BUILDING_APRIL,
 					_OPENGL,
+					_UNIX,
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
