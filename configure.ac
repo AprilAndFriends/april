@@ -1,37 +1,36 @@
-AC_PREREQ(2.61)
 
-AC_INIT(libapril, 1.2, ivan@vucica.net)
+AC_PREREQ(2.61)
+#AC_CONFIG_MACRO_DIR([m4] # despite being recommended by libtool, this breaks configure script
 AC_CONFIG_SRCDIR(src/Window.cpp)
 
-PACKAGE=libapril
-VERSION=1.2.0
+AC_INIT(libapril, 1.2, ivan@vucica.net)
 
-
-
-APRIL_RELEASE=1:2:0
-APRIL_LIBRARY_VERSION=0:0:0
-#                     | | |
-#              +------+ | +---+
-#              |        |     |
-#            current:revision:age
-#              |        |     |
-#              |        |     +- increment if interfaces have been added
-#              |        |        set to zero if interfaces have been removed
-#              |        |        or changed
-#              |        +- increment if source code has changed
-#              |           set to zero if current is incremented
-#              +- increment if interfaces have been added, removed or changed
-
-
-
-#AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
-AM_INIT_AUTOMAKE([foreign])
+#LT_VERSION has nothing to do with VERSION.
+#It is used in versioning of .so (as part of .so's filename), but
+#it is unrelated to VERSION.
+#
+# +1 : ? : +1  == new interface that does not break old one
+# +1 : ? : 0   == new interface that breaks old one
+#  ? : ? : 0   == no new interfaces, but breaks apps
+#  ? :+1 : ?   == just some internal changes, nothing breaks but might work
+#                 better
+# CURRENT : REVISION : AGE
+LT_VERSION=0:0:0
+AC_SUBST(LT_VERSION)
 
 
 AC_PROG_CC
 AC_PROG_CXX
-AC_PROG_RANLIB
 AC_LANG(C++)
+
+
+AM_INIT_AUTOMAKE([foreign])
+
+LT_PREREQ([2.2])
+LT_INIT #([disable-shared])
+AC_SUBST([LIBTOOL_DEPS])
+
+
 
 AC_HEADER_STDC
 
