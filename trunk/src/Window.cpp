@@ -304,7 +304,7 @@ namespace april
 	gvec2 getDesktopResolution()
 	{
 #ifdef _WIN32
-		return gvec2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+		return gvec2((float)GetSystemMetrics(SM_CXSCREEN), (float)GetSystemMetrics(SM_CYSCREEN));
 #elif (TARGET_OS_IPHONE)
 		UIScreen* mainScreen = [UIScreen mainScreen];
 		float scale = 1;

@@ -13,8 +13,8 @@ Copyright (c) 2010 Kresimir Spes                                                
 
 #include "RenderSystem.h"
 
-class IDirect3DTexture9;
-class IDirect3DSurface9;
+struct IDirect3DTexture9;
+struct IDirect3DSurface9;
 
 namespace april
 {
