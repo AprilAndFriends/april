@@ -69,10 +69,6 @@
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
   </Dependencies>
-  <Dependencies Name="DirectX_Debug">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-  </Dependencies>
   <Settings Type="Dynamic Library">
     <GlobalSettings>
       <Compiler Options="" C_Options="">
@@ -313,4 +309,8 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
+  <Dependencies Name="DirectX_Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
 </CodeLite_Project>
