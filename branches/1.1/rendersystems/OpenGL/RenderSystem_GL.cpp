@@ -513,7 +513,7 @@ namespace April
 #endif
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
-		April::rendersys = ::rendersys = new GLRenderSystem(window);
+		April::rendersys = new GLRenderSystem(window);
 	}
 
 }
