@@ -318,7 +318,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			// mouse position
 			GetCursorPos(&w32_cursorPosition);
 			ScreenToClient(hWnd, &w32_cursorPosition);
-			cursorPosition.set(w32_cursorPosition.x, w32_cursorPosition.y);
+			cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
 			doEvents();
 			t = globalTimer.getTime();
 

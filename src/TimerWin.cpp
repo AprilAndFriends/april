@@ -32,7 +32,7 @@ namespace april
 			mMmTimerStart = timeGetTime();
 			mResolution = 1.0f / 1000.0f;
 			mFrequency = 1000;
-			mMmTimerElapsed = mMmTimerStart;
+			mMmTimerElapsed = (unsigned long)mMmTimerStart;
 		}
 		else
 		{
