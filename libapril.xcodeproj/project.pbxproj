@@ -7,13 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7F42F7A511EB178C00B1C1DF /* AprilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A111EB178C00B1C1DF /* AprilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F1B521012E470B200E958D8 /* OpenGL_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520C12E470B200E958D8 /* OpenGL_RenderSystem.cpp */; };
+		7F1B521112E470B200E958D8 /* OpenGL_RenderSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B520D12E470B200E958D8 /* OpenGL_RenderSystem.h */; settings = {ATTRIBUTES = (); }; };
+		7F1B521212E470B200E958D8 /* OpenGL_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520E12E470B200E958D8 /* OpenGL_Texture.cpp */; };
+		7F1B521312E470B200E958D8 /* OpenGL_Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B520F12E470B200E958D8 /* OpenGL_Texture.h */; settings = {ATTRIBUTES = (); }; };
+		7F1B522A12E4710D00E958D8 /* aprilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B522712E4710D00E958D8 /* aprilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F1B522B12E4710D00E958D8 /* Color.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B522812E4710D00E958D8 /* Color.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F1B522C12E4710D00E958D8 /* Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B522912E4710D00E958D8 /* Texture.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F1B523012E4713600E958D8 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522E12E4713600E958D8 /* Color.cpp */; };
+		7F1B523112E4713600E958D8 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522F12E4713600E958D8 /* Texture.cpp */; };
 		7F42F7A611EB178C00B1C1DF /* ImageSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A211EB178C00B1C1DF /* ImageSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F42F7A711EB178C00B1C1DF /* Keys.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A311EB178C00B1C1DF /* Keys.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F42F7A811EB178C00B1C1DF /* RenderSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A411EB178C00B1C1DF /* RenderSystem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F42F7AC11EB179A00B1C1DF /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */; };
-		7F42F7B111EB187100B1C1DF /* RenderSystem_GL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AF11EB187100B1C1DF /* RenderSystem_GL.cpp */; };
-		7F42F7B211EB187100B1C1DF /* RenderSystem_GL.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7B011EB187100B1C1DF /* RenderSystem_GL.h */; settings = {ATTRIBUTES = (); }; };
 		7F42F83211EB1A9700B1C1DF /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42F83111EB1A9700B1C1DF /* gtypes.framework */; };
 		7F42F83411EB1A9700B1C1DF /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42F83311EB1A9700B1C1DF /* hltypes.framework */; };
 		7F42FACB11EB341E00B1C1DF /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42FACA11EB341E00B1C1DF /* GLUT.framework */; };
@@ -34,14 +40,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7F42F7A111EB178C00B1C1DF /* AprilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AprilExport.h; path = include/april/AprilExport.h; sourceTree = "<group>"; };
+		7F1B520C12E470B200E958D8 /* OpenGL_RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGL_RenderSystem.cpp; path = rendersystems/OpenGL/OpenGL_RenderSystem.cpp; sourceTree = "<group>"; };
+		7F1B520D12E470B200E958D8 /* OpenGL_RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGL_RenderSystem.h; path = rendersystems/OpenGL/OpenGL_RenderSystem.h; sourceTree = "<group>"; };
+		7F1B520E12E470B200E958D8 /* OpenGL_Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGL_Texture.cpp; path = rendersystems/OpenGL/OpenGL_Texture.cpp; sourceTree = "<group>"; };
+		7F1B520F12E470B200E958D8 /* OpenGL_Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGL_Texture.h; path = rendersystems/OpenGL/OpenGL_Texture.h; sourceTree = "<group>"; };
+		7F1B522712E4710D00E958D8 /* aprilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = aprilExport.h; path = include/april/aprilExport.h; sourceTree = "<group>"; };
+		7F1B522812E4710D00E958D8 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Color.h; path = include/april/Color.h; sourceTree = "<group>"; };
+		7F1B522912E4710D00E958D8 /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Texture.h; path = include/april/Texture.h; sourceTree = "<group>"; };
+		7F1B522E12E4713600E958D8 /* Color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Color.cpp; path = src/Color.cpp; sourceTree = "<group>"; };
+		7F1B522F12E4713600E958D8 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Texture.cpp; path = src/Texture.cpp; sourceTree = "<group>"; };
 		7F42F7A211EB178C00B1C1DF /* ImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageSource.h; path = include/april/ImageSource.h; sourceTree = "<group>"; };
 		7F42F7A311EB178C00B1C1DF /* Keys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Keys.h; path = include/april/Keys.h; sourceTree = "<group>"; };
 		7F42F7A411EB178C00B1C1DF /* RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderSystem.h; path = include/april/RenderSystem.h; sourceTree = "<group>"; };
 		7F42F7A911EB179A00B1C1DF /* ImageSourceIL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSourceIL.cpp; path = src/ImageSourceIL.cpp; sourceTree = "<group>"; };
 		7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderSystem.cpp; path = src/RenderSystem.cpp; sourceTree = "<group>"; };
-		7F42F7AF11EB187100B1C1DF /* RenderSystem_GL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderSystem_GL.cpp; path = rendersystems/OpenGL/RenderSystem_GL.cpp; sourceTree = "<group>"; };
-		7F42F7B011EB187100B1C1DF /* RenderSystem_GL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderSystem_GL.h; path = rendersystems/OpenGL/RenderSystem_GL.h; sourceTree = "<group>"; };
 		7F42F83111EB1A9700B1C1DF /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = Library/Frameworks/gtypes.framework; sourceTree = SDKROOT; };
 		7F42F83311EB1A9700B1C1DF /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = Library/Frameworks/hltypes.framework; sourceTree = SDKROOT; };
 		7F42FACA11EB341E00B1C1DF /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
@@ -142,6 +154,8 @@
 		7F42F79F11EB177B00B1C1DF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7F1B522E12E4713600E958D8 /* Color.cpp */,
+				7F1B522F12E4713600E958D8 /* Texture.cpp */,
 				7FC8FA75122FACA30092964C /* TimerSDL.cpp */,
 				7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */,
 				7F42F7A911EB179A00B1C1DF /* ImageSourceIL.cpp */,
@@ -155,9 +169,11 @@
 		7F42F7A011EB177F00B1C1DF /* Includes */ = {
 			isa = PBXGroup;
 			children = (
+				7F1B522712E4710D00E958D8 /* aprilExport.h */,
+				7F1B522812E4710D00E958D8 /* Color.h */,
+				7F1B522912E4710D00E958D8 /* Texture.h */,
 				7FC8FA28122FA58F0092964C /* Timer.h */,
 				7F4D0FE911FEE6C500F2F9F5 /* main.h */,
-				7F42F7A111EB178C00B1C1DF /* AprilExport.h */,
 				7F42F7A211EB178C00B1C1DF /* ImageSource.h */,
 				7F42F7A311EB178C00B1C1DF /* Keys.h */,
 				7F42F7A411EB178C00B1C1DF /* RenderSystem.h */,
@@ -169,8 +185,10 @@
 		7F42F7AE11EB185F00B1C1DF /* Render Systems */ = {
 			isa = PBXGroup;
 			children = (
-				7F42F7AF11EB187100B1C1DF /* RenderSystem_GL.cpp */,
-				7F42F7B011EB187100B1C1DF /* RenderSystem_GL.h */,
+				7F1B520C12E470B200E958D8 /* OpenGL_RenderSystem.cpp */,
+				7F1B520D12E470B200E958D8 /* OpenGL_RenderSystem.h */,
+				7F1B520E12E470B200E958D8 /* OpenGL_Texture.cpp */,
+				7F1B520F12E470B200E958D8 /* OpenGL_Texture.h */,
 			);
 			name = "Render Systems";
 			sourceTree = "<group>";
@@ -209,16 +227,19 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F42F7A511EB178C00B1C1DF /* AprilExport.h in Headers */,
 				7F42F7A611EB178C00B1C1DF /* ImageSource.h in Headers */,
 				7F42F7A711EB178C00B1C1DF /* Keys.h in Headers */,
 				7F42F7A811EB178C00B1C1DF /* RenderSystem.h in Headers */,
-				7F42F7B211EB187100B1C1DF /* RenderSystem_GL.h in Headers */,
 				7FA3ED1811F9817A001D1DDD /* Window.h in Headers */,
 				7FA3EEB511F9C6BE001D1DDD /* GLUTWindow.h in Headers */,
 				7F5A5D2811FD9CAB003C05A4 /* SDLWindow.h in Headers */,
 				7F4D0FEA11FEE6C500F2F9F5 /* main.h in Headers */,
 				7FC8FA29122FA58F0092964C /* Timer.h in Headers */,
+				7F1B521112E470B200E958D8 /* OpenGL_RenderSystem.h in Headers */,
+				7F1B521312E470B200E958D8 /* OpenGL_Texture.h in Headers */,
+				7F1B522A12E4710D00E958D8 /* aprilExport.h in Headers */,
+				7F1B522B12E4710D00E958D8 /* Color.h in Headers */,
+				7F1B522C12E4710D00E958D8 /* Texture.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,13 +306,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F42F7AC11EB179A00B1C1DF /* RenderSystem.cpp in Sources */,
-				7F42F7B111EB187100B1C1DF /* RenderSystem_GL.cpp in Sources */,
 				7F42FD7711EB632E00B1C1DF /* ImageSourceCG.mm in Sources */,
 				7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */,
 				7FA3EDB311F997FC001D1DDD /* GLUTWindow.cpp in Sources */,
 				7F5A5D2711FD9CAB003C05A4 /* SDLWindow.cpp in Sources */,
 				7FCD394412018BD300608217 /* main_mac.m in Sources */,
 				7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */,
+				7F1B521012E470B200E958D8 /* OpenGL_RenderSystem.cpp in Sources */,
+				7F1B521212E470B200E958D8 /* OpenGL_Texture.cpp in Sources */,
+				7F1B523012E4713600E958D8 /* Color.cpp in Sources */,
+				7F1B523112E4713600E958D8 /* Texture.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

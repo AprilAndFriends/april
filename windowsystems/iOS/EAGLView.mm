@@ -19,7 +19,7 @@
 
 
 #define USE_DEPTH_BUFFER 0
-#define aprilWindow ((April::iOSWindow*)aprilWindowVoid)
+#define aprilWindow ((april::iOSWindow*)aprilWindowVoid)
 
 
 // A class extension to declare private methods
