@@ -9,10 +9,18 @@
 /* Begin PBXBuildFile section */
 		7F0726C712817CDE00600ACA /* AprilViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F0726C512817CDE00600ACA /* AprilViewController.h */; };
 		7F0726C812817CDE00600ACA /* AprilViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F0726C612817CDE00600ACA /* AprilViewController.m */; };
+		7F1B545B12E47BB500E958D8 /* OpenGL_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B545712E47BB500E958D8 /* OpenGL_RenderSystem.cpp */; };
+		7F1B545C12E47BB500E958D8 /* OpenGL_RenderSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B545812E47BB500E958D8 /* OpenGL_RenderSystem.h */; };
+		7F1B545D12E47BB500E958D8 /* OpenGL_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B545912E47BB500E958D8 /* OpenGL_Texture.cpp */; };
+		7F1B545E12E47BB500E958D8 /* OpenGL_Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B545A12E47BB500E958D8 /* OpenGL_Texture.h */; };
+		7F1B546212E47C4700E958D8 /* aprilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B545F12E47C4700E958D8 /* aprilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F1B546312E47C4700E958D8 /* Color.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B546012E47C4700E958D8 /* Color.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F1B546412E47C4700E958D8 /* Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B546112E47C4700E958D8 /* Texture.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F1B546712E47C5900E958D8 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B546512E47C5900E958D8 /* Color.cpp */; };
+		7F1B546812E47C5900E958D8 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B546612E47C5900E958D8 /* Texture.cpp */; };
 		7F27ED47125F7E8D00EF4AFB /* PVRTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F27ED45125F7E8D00EF4AFB /* PVRTexture.h */; };
 		7F27ED48125F7E8D00EF4AFB /* PVRTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F27ED46125F7E8D00EF4AFB /* PVRTexture.m */; };
 		7F33B57C1210130C004B5E89 /* main.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F4D0FE911FEE6C500F2F9F5 /* main.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7F33B57D1210130C004B5E89 /* AprilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A111EB178C00B1C1DF /* AprilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F33B57E1210130C004B5E89 /* ImageSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A211EB178C00B1C1DF /* ImageSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F33B57F1210130C004B5E89 /* Keys.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A311EB178C00B1C1DF /* Keys.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F33B5801210130C004B5E89 /* RenderSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F42F7A411EB178C00B1C1DF /* RenderSystem.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -20,13 +28,12 @@
 		7F33B5821210131D004B5E89 /* ImageSourceCG.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */; };
 		7F33B5841210131D004B5E89 /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */; };
 		7F33B5851210131D004B5E89 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
-		7F33B58912101333004B5E89 /* RenderSystem_GL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AF11EB187100B1C1DF /* RenderSystem_GL.cpp */; };
 		7F33B594121013F8004B5E89 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B593121013F8004B5E89 /* OpenGLES.framework */; };
 		7F33B59A12101441004B5E89 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B59912101441004B5E89 /* CoreGraphics.framework */; };
 		7F33B63412102277004B5E89 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B63312102277004B5E89 /* UIKit.framework */; };
 		7F33B6491210235D004B5E89 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B6481210235D004B5E89 /* Foundation.framework */; };
 		7F33B64F12102385004B5E89 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B64E12102385004B5E89 /* CoreFoundation.framework */; };
-		7FA1AAE8124229F7004689AE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA1AAE4124229F7004689AE /* Timer.h */; };
+		7FA1AAE8124229F7004689AE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA1AAE4124229F7004689AE /* Timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FA1ABA212422C03004689AE /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA1ABA112422C03004689AE /* TimerPosix.cpp */; };
 		7FD37C1812AD2C070007A403 /* WBImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FD37C1612AD2C070007A403 /* WBImage.h */; };
 		7FD37C1912AD2C070007A403 /* WBImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FD37C1712AD2C070007A403 /* WBImage.m */; };
@@ -42,6 +49,15 @@
 /* Begin PBXFileReference section */
 		7F0726C512817CDE00600ACA /* AprilViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AprilViewController.h; sourceTree = "<group>"; };
 		7F0726C612817CDE00600ACA /* AprilViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AprilViewController.m; sourceTree = "<group>"; };
+		7F1B545712E47BB500E958D8 /* OpenGL_RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGL_RenderSystem.cpp; path = rendersystems/OpenGL/OpenGL_RenderSystem.cpp; sourceTree = "<group>"; };
+		7F1B545812E47BB500E958D8 /* OpenGL_RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGL_RenderSystem.h; path = rendersystems/OpenGL/OpenGL_RenderSystem.h; sourceTree = "<group>"; };
+		7F1B545912E47BB500E958D8 /* OpenGL_Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGL_Texture.cpp; path = rendersystems/OpenGL/OpenGL_Texture.cpp; sourceTree = "<group>"; };
+		7F1B545A12E47BB500E958D8 /* OpenGL_Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGL_Texture.h; path = rendersystems/OpenGL/OpenGL_Texture.h; sourceTree = "<group>"; };
+		7F1B545F12E47C4700E958D8 /* aprilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = aprilExport.h; path = include/april/aprilExport.h; sourceTree = "<group>"; };
+		7F1B546012E47C4700E958D8 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Color.h; path = include/april/Color.h; sourceTree = "<group>"; };
+		7F1B546112E47C4700E958D8 /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Texture.h; path = include/april/Texture.h; sourceTree = "<group>"; };
+		7F1B546512E47C5900E958D8 /* Color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Color.cpp; path = src/Color.cpp; sourceTree = "<group>"; };
+		7F1B546612E47C5900E958D8 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Texture.cpp; path = src/Texture.cpp; sourceTree = "<group>"; };
 		7F27ED45125F7E8D00EF4AFB /* PVRTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTexture.h; sourceTree = "<group>"; };
 		7F27ED46125F7E8D00EF4AFB /* PVRTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PVRTexture.m; sourceTree = "<group>"; };
 		7F33B283120FEDE2004B5E89 /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,14 +66,11 @@
 		7F33B63312102277004B5E89 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7F33B6481210235D004B5E89 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7F33B64E12102385004B5E89 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
-		7F42F7A111EB178C00B1C1DF /* AprilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AprilExport.h; path = include/april/AprilExport.h; sourceTree = "<group>"; };
 		7F42F7A211EB178C00B1C1DF /* ImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageSource.h; path = include/april/ImageSource.h; sourceTree = "<group>"; };
 		7F42F7A311EB178C00B1C1DF /* Keys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Keys.h; path = include/april/Keys.h; sourceTree = "<group>"; };
 		7F42F7A411EB178C00B1C1DF /* RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderSystem.h; path = include/april/RenderSystem.h; sourceTree = "<group>"; };
 		7F42F7A911EB179A00B1C1DF /* ImageSourceIL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSourceIL.cpp; path = src/ImageSourceIL.cpp; sourceTree = "<group>"; };
 		7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderSystem.cpp; path = src/RenderSystem.cpp; sourceTree = "<group>"; };
-		7F42F7AF11EB187100B1C1DF /* RenderSystem_GL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderSystem_GL.cpp; path = rendersystems/OpenGL/RenderSystem_GL.cpp; sourceTree = "<group>"; };
-		7F42F7B011EB187100B1C1DF /* RenderSystem_GL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderSystem_GL.h; path = rendersystems/OpenGL/RenderSystem_GL.h; sourceTree = "<group>"; };
 		7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImageSourceCG.mm; path = src/ImageSourceCG.mm; sourceTree = "<group>"; };
 		7F4D0FE911FEE6C500F2F9F5 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = include/april/main.h; sourceTree = "<group>"; };
 		7FA1AAE4124229F7004689AE /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
@@ -174,6 +187,8 @@
 		7F42F79F11EB177B00B1C1DF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7F1B546512E47C5900E958D8 /* Color.cpp */,
+				7F1B546612E47C5900E958D8 /* Texture.cpp */,
 				7FA1ABA112422C03004689AE /* TimerPosix.cpp */,
 				7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */,
 				7F42F7A911EB179A00B1C1DF /* ImageSourceIL.cpp */,
@@ -188,9 +203,11 @@
 		7F42F7A011EB177F00B1C1DF /* Includes */ = {
 			isa = PBXGroup;
 			children = (
+				7F1B545F12E47C4700E958D8 /* aprilExport.h */,
+				7F1B546012E47C4700E958D8 /* Color.h */,
+				7F1B546112E47C4700E958D8 /* Texture.h */,
 				7FA1AAE4124229F7004689AE /* Timer.h */,
 				7F4D0FE911FEE6C500F2F9F5 /* main.h */,
-				7F42F7A111EB178C00B1C1DF /* AprilExport.h */,
 				7F42F7A211EB178C00B1C1DF /* ImageSource.h */,
 				7F42F7A311EB178C00B1C1DF /* Keys.h */,
 				7F42F7A411EB178C00B1C1DF /* RenderSystem.h */,
@@ -202,8 +219,10 @@
 		7F42F7AE11EB185F00B1C1DF /* Render Systems */ = {
 			isa = PBXGroup;
 			children = (
-				7F42F7AF11EB187100B1C1DF /* RenderSystem_GL.cpp */,
-				7F42F7B011EB187100B1C1DF /* RenderSystem_GL.h */,
+				7F1B545712E47BB500E958D8 /* OpenGL_RenderSystem.cpp */,
+				7F1B545812E47BB500E958D8 /* OpenGL_RenderSystem.h */,
+				7F1B545912E47BB500E958D8 /* OpenGL_Texture.cpp */,
+				7F1B545A12E47BB500E958D8 /* OpenGL_Texture.h */,
 			);
 			name = "Render Systems";
 			sourceTree = "<group>";
@@ -224,7 +243,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F33B57C1210130C004B5E89 /* main.h in Headers */,
-				7F33B57D1210130C004B5E89 /* AprilExport.h in Headers */,
 				7F33B57E1210130C004B5E89 /* ImageSource.h in Headers */,
 				7F33B57F1210130C004B5E89 /* Keys.h in Headers */,
 				7F33B5801210130C004B5E89 /* RenderSystem.h in Headers */,
@@ -236,6 +254,11 @@
 				7F27ED47125F7E8D00EF4AFB /* PVRTexture.h in Headers */,
 				7F0726C712817CDE00600ACA /* AprilViewController.h in Headers */,
 				7FD37C1812AD2C070007A403 /* WBImage.h in Headers */,
+				7F1B545C12E47BB500E958D8 /* OpenGL_RenderSystem.h in Headers */,
+				7F1B545E12E47BB500E958D8 /* OpenGL_Texture.h in Headers */,
+				7F1B546212E47C4700E958D8 /* aprilExport.h in Headers */,
+				7F1B546312E47C4700E958D8 /* Color.h in Headers */,
+				7F1B546412E47C4700E958D8 /* Texture.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,7 +347,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F33B58912101333004B5E89 /* RenderSystem_GL.cpp in Sources */,
 				7F33B5821210131D004B5E89 /* ImageSourceCG.mm in Sources */,
 				7F33B5841210131D004B5E89 /* RenderSystem.cpp in Sources */,
 				7F33B5851210131D004B5E89 /* Window.cpp in Sources */,
@@ -336,6 +358,10 @@
 				7F27ED48125F7E8D00EF4AFB /* PVRTexture.m in Sources */,
 				7F0726C812817CDE00600ACA /* AprilViewController.m in Sources */,
 				7FD37C1912AD2C070007A403 /* WBImage.m in Sources */,
+				7F1B545B12E47BB500E958D8 /* OpenGL_RenderSystem.cpp in Sources */,
+				7F1B545D12E47BB500E958D8 /* OpenGL_Texture.cpp in Sources */,
+				7F1B546712E47C5900E958D8 /* Color.cpp in Sources */,
+				7F1B546812E47C5900E958D8 /* Texture.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

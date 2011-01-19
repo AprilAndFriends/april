@@ -328,10 +328,10 @@ namespace april
 		}
 		GLuint colors[nVertices];
 		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)color.a};
-		GLuint color = *(GLuint*)colorB;
+		GLuint _color = *(GLuint*)colorB;
 		for (int i = 0; i < nVertices; i++)
 		{
-			colors[i] = color;
+			colors[i] = _color;
 		}
 		glColorPointer(4, GL_UNSIGNED_BYTE, 4, colors);
 #endif
@@ -382,11 +382,11 @@ namespace april
 			mColorEnabled = true;
 		}
 		GLuint colors[nVertices];
-		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)(color.a * mAlphaMultiplier};
-		GLuint color = *(GLuint*)colorB;
+		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)(color.a * mAlphaMultiplier)};
+		GLuint _color = *(GLuint*)colorB;
 		for (int i = 0; i < nVertices; i++)
 		{
-			colors[i] = color;
+			colors[i] = _color;
 		}
 		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(color), colors);
 #endif

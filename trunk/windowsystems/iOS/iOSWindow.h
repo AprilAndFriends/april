@@ -13,7 +13,7 @@
 
 #include "Window.h"
 #include "Timer.h"
-namespace April
+namespace april
 {
 	class iOSWindow : public Window
 	{
@@ -36,10 +36,10 @@ namespace April
 		void terminateMainLoop();
 		void showSystemCursor(bool visible);
 		bool isSystemCursorShown();
-		int getWindowWidth();
-		int getWindowHeight();
+		int getWidth();
+		int getHeight();
 		void setWindowTitle(chstr title);
-		gtypes::Vector2 getCursorPos();
+		gtypes::Vector2 getCursorPosition();
 		void presentFrame();
 		void* getIDFromBackend();
 		void doEvents();

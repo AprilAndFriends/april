@@ -22,7 +22,7 @@ static UIWindow *window;
 static EAGLView *glview;
 static AprilViewController *viewcontroller;
 
-namespace April
+namespace april
 {
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
@@ -85,7 +85,7 @@ namespace April
     {
         return false; // iOS never shows system cursor
     }
-    int iOSWindow::getWindowWidth()
+    int iOSWindow::getWidth()
     {
 		// TODO dont swap width and height in case display is in portrait mode
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
@@ -97,7 +97,7 @@ namespace April
 		
         return window.bounds.size.height;
     }
-    int iOSWindow::getWindowHeight()
+    int iOSWindow::getHeight()
     {
 		// TODO dont swap width and height in case display is in portrait mode
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
@@ -114,7 +114,7 @@ namespace April
         // no effect on iOS
     }
 	
-    gtypes::Vector2 iOSWindow::getCursorPos()
+    gtypes::Vector2 iOSWindow::getCursorPosition()
     {
         return gtypes::Vector2(mCursorX,mCursorY);
     }
@@ -313,7 +313,7 @@ namespace April
 			if(inputChar >= 32 && inputChar <= 127)
 			{
 				// deploy keypress
-				April::KeySym keycode = AK_NONE; // FIXME incorrect, might cause a nasty bug. 
+				april::KeySym keycode = AK_NONE; // FIXME incorrect, might cause a nasty bug. 
 												 // however, writing a translation table atm 
 												 // isn't the priority.
 			
