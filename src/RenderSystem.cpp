@@ -247,6 +247,7 @@ namespace april
 	void init(chstr rendersystem_name, int w, int h, bool fullscreen, chstr title)
 	{
 #ifdef USE_IL
+		log("Initializing IL");
 		ilInit();
 #endif
 #ifdef _WIN32
