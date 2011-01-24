@@ -46,6 +46,20 @@ AC_CHECK_LIB(GL, glLoadIdentity,
 			[AC_MSG_ERROR("*** OpenGL library not found.")])
 ])
 
+#check SDL
+SDL_VERSION=1.2.0
+AM_PATH_SDL($SDL_VERSION, :, AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!]))
+CFLAGS="$CFLAGS $SDL_CFLAGS -DHAVE_SDL"
+CXXFLAGS="$CXXFLAGS $SDL_CFLAGS -DHAVE_SDL"
+LIBS="$LIBS $SDL_LIBS"
+AC_SUBST(SDL_LIBS)
+
+#check devil
+AC_CHECK_HEADERS([IL/il.h], ,[AC_MSG_ERROR("*** devil headers not found.")])
+LIBS="$LIBS -lIL"
+CFLAGS="$CFLAGS -DHAVE_IL=1 -DUSE_IL=1"
+CXXFLAGS="$CXXFLAGS -DHAVE_IL=1 -DUSE_IL=1"
+
 # check for hltypes
 AC_CHECK_HEADERS(hltypes/exception.h, ,[AC_MSG_ERROR("*** hltypes headers not found.")])
 #SAVED_LDFLAGS=$LDFLAGS

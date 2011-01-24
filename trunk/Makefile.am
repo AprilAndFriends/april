@@ -8,5 +8,5 @@ libapril_la_LIBADD =  $(LIBOBJS) \
 	src/libapril_src.la \
 	rendersystems/OpenGL/libapril_rendersystems_opengl.la \
 	windowsystems/SDL/libapril_windowsystems_sdl.la
-libapril_la_LDFLAGS = -version-info @LT_VERSION@
+libapril_la_LDFLAGS = -version-info @LT_VERSION@ -lhltypes -lgtypes
 
