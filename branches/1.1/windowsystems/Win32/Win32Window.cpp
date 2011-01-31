@@ -31,8 +31,36 @@ namespace April
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	Win32Window *ws=(Win32Window*) instance;
+	static bool touch_down=0;
+	static bool doubletap_down=0;
+	static int nMouseMoveMsgs=0;
+
     switch(message)
     {
+		case 0x0119: // WM_GESTURE (win7+ only)
+			if      (wParam == 1) // GID_BEGIN
+				touch_down=1;
+			else if (wParam == 2) // GID_END
+			{
+				if (doubletap_down)
+				{ 
+					doubletap_down=0;
+					ws->triggerMouseUpEvent(AK_DOUBLETAP);
+				}
+				touch_down=0;
+			}
+			else if (wParam == 6) // GID_TWOFINGERTAP
+			{
+				doubletap_down=1;
+				ws->triggerMouseDownEvent(AK_DOUBLETAP);
+			}
+			//rendersys->logMessage("WM_GESTURE ( wParam = "+hstr(wParam)+", lParam = "+hstr(lParam)+" )");
+			break;
+		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
+			touch_down=1;
+			ws->triggerTouchscreenCallback(1);
+		//	rendersys->logMessage("WM_GESTURENOTIFY ( wParam = "+hstr(wParam)+", lParam = "+hstr(lParam)+" )");
+			break;
         case WM_DESTROY:
 		case WM_CLOSE:
 			if(ws->triggerQuitEvent())
@@ -52,22 +80,36 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 			ws->triggerCharEvent(wParam);
 			break;
 		case WM_LBUTTONDOWN:
+			touch_down=1;
+			nMouseMoveMsgs=0;
 			ws->triggerMouseDownEvent(AK_LBUTTON);
 			if (!instance->isFullscreen()) SetCapture(hWnd);
 			break;
 		case WM_RBUTTONDOWN:
+			touch_down=1;
+			nMouseMoveMsgs=0;
 			ws->triggerMouseDownEvent(AK_RBUTTON);
 			if (!instance->isFullscreen()) SetCapture(hWnd);
 			break;
 		case WM_LBUTTONUP:
+			touch_down=0;
 			ws->triggerMouseUpEvent(AK_LBUTTON);
 			if (!instance->isFullscreen()) ReleaseCapture();
 			break;
 		case WM_RBUTTONUP:
+			touch_down=0;
 			ws->triggerMouseUpEvent(AK_RBUTTON);
 			if (!instance->isFullscreen()) ReleaseCapture();
 			break;
 		case WM_MOUSEMOVE:
+			if (!touch_down)
+			{
+				if (nMouseMoveMsgs >= 10)
+					ws->triggerTouchscreenCallback(0);
+				else
+					nMouseMoveMsgs++;
+			}
+			else nMouseMoveMsgs=0;
 			ws->triggerMouseMoveEvent();
 			break;
 		case WM_SETCURSOR:
@@ -104,6 +146,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		
 		instance = this;
 		
+		mTouchEnabled=0;
+
 		mRunning=mActive=true;
 		mFullscreen=fullscreen;
 		// WINDOW
@@ -270,6 +314,14 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		if (mFocusCallback) mFocusCallback(focused);
 	}
 	
+	void Win32Window::triggerTouchscreenCallback(bool enabled)
+	{
+		if (mTouchEnabledCallback && mTouchEnabled != enabled)
+		{
+			mTouchEnabled=enabled;
+			mTouchEnabledCallback(enabled);
+		}
+	}
 	
 	void Win32Window::enterMainLoop()
 	{

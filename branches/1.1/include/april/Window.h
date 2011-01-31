@@ -72,6 +72,8 @@ namespace April
 		void (*mVKeyboardCallback)(bool);
 		void (*mDeviceOrientationCallback)(DeviceOrientation);
 
+		void (*mTouchEnabledCallback)(bool);
+
 		Window();
 		
 	public:
@@ -98,7 +100,8 @@ namespace April
 		void setQuitCallback(bool (*quit_callback)(bool can_reject));
 		void setWindowFocusCallback(void (*focus_callback)(bool));
 		void setVirtualKeyboardCallback(void (*vk_callback)(bool));
-		virtual void setDeviceOrientationCallback(void (*vk_callback)(DeviceOrientation)); 
+		void setTouchscreenEnabledCallback(void (*te_callback)(bool));
+		virtual void setDeviceOrientationCallback(void (*vk_callback)(DeviceOrientation));
 		
 		// misc pure virtuals
 		virtual void enterMainLoop()=0;

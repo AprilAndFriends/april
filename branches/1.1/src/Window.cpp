@@ -64,6 +64,12 @@ namespace April
 		mFocusCallback=0;
 		mVKeyboardCallback=0;
 		mDeviceOrientationCallback=0;
+		mTouchEnabledCallback=0;
+	}
+
+	void Window::setTouchscreenEnabledCallback(void (*te_callback)(bool))
+	{
+		mTouchEnabledCallback=te_callback;
 	}
 	
 	void Window::setUpdateCallback(bool (*callback)(float))

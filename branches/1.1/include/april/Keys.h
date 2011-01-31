@@ -28,6 +28,7 @@ namespace April
 		AK_MBUTTON = 4,
 		AK_XBUTTON1 = 5,
 		AK_XBUTTON2 = 6,
+		AK_DOUBLETAP = 7, // touchscreen only
 
 		// mostly common keys
 		AK_BACK = 8,
