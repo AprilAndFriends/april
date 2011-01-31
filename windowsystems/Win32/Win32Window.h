@@ -28,6 +28,8 @@ namespace April
 		bool mRunning;
 		//bool mCursorVisible;
 		bool mActive;
+
+		bool mTouchEnabled; //! Wheter or not a win7+ touchscreen was detected
 	public:
 		
 		Win32Window(int w, int h, bool fullscreen, chstr title);
@@ -58,6 +60,8 @@ namespace April
 		void triggerMouseMoveEvent();
 		bool triggerQuitEvent();
 		void triggerFocusCallback(bool focused);
+
+		void triggerTouchscreenCallback(bool enabled);
 		
 		
 
