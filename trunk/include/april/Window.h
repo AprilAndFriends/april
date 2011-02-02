@@ -46,7 +46,7 @@ namespace april
 		};
 		enum DeviceOrientation
 		{
-			ADEVICEORIENTATION_NONE=0,
+			ADEVICEORIENTATION_NONE = 0,
 			ADEVICEORIENTATION_PORTRAIT,
 			ADEVICEORIENTATION_PORTRAIT_UPSIDEDOWN,
 			ADEVICEORIENTATION_LANDSCAPE_LEFT, // bottom of device is on the left
@@ -71,6 +71,7 @@ namespace april
 		void setQuitCallback(bool (*quit_callback)(bool can_reject));
 		void setWindowFocusCallback(void (*focus_callback)(bool));
 		void setVirtualKeyboardCallback(void (*vk_callback)(bool));
+		void setTouchscreenEnabledCallback(void (*te_callback)(bool));
 		virtual void setDeviceOrientationCallback(void (*vk_callback)(DeviceOrientation)); 
 		
 		// misc pure virtuals
@@ -105,6 +106,8 @@ namespace april
 		virtual bool performUpdate(float time_increase);
 		
 	protected:		
+		Window();
+		
 		RenderSystem* mRenderSystem;
 		hstr mTitle;
 		bool mFullscreen;
@@ -119,9 +122,8 @@ namespace april
 		bool (*mQuitCallback)(bool can_reject);
 		void (*mFocusCallback)(bool);
 		void (*mVKeyboardCallback)(bool);
+		void (*mTouchEnabledCallback)(bool);
 		void (*mDeviceOrientationCallback)(DeviceOrientation);
-		
-		Window();
 		
 	};
 	

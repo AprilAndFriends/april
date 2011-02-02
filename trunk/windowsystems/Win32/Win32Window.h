@@ -19,6 +19,8 @@ namespace april
 {
 	class aprilExport Win32Window : public Window
 	{
+
+		bool mTouchEnabled; //! Wheter or not a win7+ touchscreen was detected
 	public:
 		Win32Window(int w, int h, bool fullscreen, chstr title);
 		~Win32Window();
@@ -48,6 +50,8 @@ namespace april
 		void triggerMouseMoveEvent();
 		bool triggerQuitEvent();
 		void triggerFocusCallback(bool focused);
+
+		void triggerTouchscreenCallback(bool enabled);
 		
 		float mCursorX; // TODO turn into private
 		float mCursorY; // TODO turn into private

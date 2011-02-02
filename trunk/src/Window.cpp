@@ -59,8 +59,9 @@ namespace april
 		mFocusCallback = NULL;
 		mVKeyboardCallback = NULL;
 		mDeviceOrientationCallback = NULL;
+		mTouchEnabledCallback = NULL;
 	}
-	
+
 	void Window::setUpdateCallback(bool (*callback)(float))
 	{
 		mUpdateCallback = callback;
@@ -98,6 +99,12 @@ namespace april
 	{
 		mVKeyboardCallback = vk_callback;
 	}
+	
+	void Window::setTouchscreenEnabledCallback(void (*te_callback)(bool))
+	{
+		mTouchEnabledCallback = te_callback;
+	}
+	
 	void Window::setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation))
 	{
 		mDeviceOrientationCallback = do_callback;
@@ -219,7 +226,7 @@ namespace april
 		// earlier versions of iOS always launch with
 		// portrait orientation and require us to
 		// manually rotate
-		return 0;
+		return 0.0f;
 	}
 	
 	void Window::_platformCursorVisibilityUpdate(bool visible)
