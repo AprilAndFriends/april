@@ -132,6 +132,12 @@
   </Settings>
   <Dependencies Name="Debug">
     <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
+  <Dependencies Name="Release_Win32">
+    <Project Name="libgtypes"/>
+    <Project Name="libhltypes"/>
     <Project Name="libapril"/>
   </Dependencies>
 </CodeLite_Project>
