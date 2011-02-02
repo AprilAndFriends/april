@@ -33,7 +33,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	static bool doubleTapDown = false;
 	static int nMouseMoveMessages = 0;
 	Win32Window *ws = (Win32Window*) instance;
-    switch(message)
+    switch (message)
     {
 	case 0x0119: // WM_GESTURE (win7+ only)
 		if (wParam == 1) // GID_BEGIN
@@ -61,7 +61,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		break;
 	case WM_DESTROY:
 	case WM_CLOSE:
-		if(ws->triggerQuitEvent())
+		if (ws->triggerQuitEvent())
 		{
 			PostQuitMessage(0);
 			ws->terminateMainLoop();
@@ -69,10 +69,10 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 		return 0;
 		break;
 	case WM_KEYDOWN:
-		ws->triggerKeyEvent(1, wParam);
+		ws->triggerKeyEvent(true, wParam);
 		break;
 	case WM_KEYUP: 
-		ws->triggerKeyEvent(0, wParam);
+		ws->triggerKeyEvent(false, wParam);
 		break;
 	case WM_CHAR:
 		ws->triggerCharEvent(wParam);
@@ -145,13 +145,13 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	case WM_ACTIVATE:
 		if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
 		{
-			instance->_setActive(1);
+			instance->_setActive(true);
 			ws->triggerFocusCallback(true);
 			april::log("Window activated");
 		}
 		else
 		{
-			instance->_setActive(0);
+			instance->_setActive(false);
 			ws->triggerFocusCallback(false);
 			april::log("Window deactivated");
 		}
