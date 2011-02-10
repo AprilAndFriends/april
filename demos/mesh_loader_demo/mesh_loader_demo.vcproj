@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="demo_3d"
-	ProjectGUID="{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}"
+	Name="mesh_loader_demo"
+	ProjectGUID="{4010E50F-E96F-43DC-9356-0103C722F0E4}"
 	RootNamespace="demo_3d"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include;../../../hltypes/include;../../../gtypes/include;../../../include"
+				AdditionalIncludeDirectories="../../include;../../aprilutil/include;../../../hltypes/include;../../../gtypes/include;../../../include"
 				PreprocessorDefinitions="_WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -88,7 +88,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\hltypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;copy ..\..\bin\*.dll ..\..\bin\win32_Debug"
+				CommandLine="copy ..\..\..\hltypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;copy ..\..\bin\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -118,7 +118,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../include;../../../hltypes/include;../../../gtypes/include;../../../include"
+				AdditionalIncludeDirectories="../../include;../../aprilutil/include;../../../hltypes/include;../../../gtypes/include;../../../include"
 				PreprocessorDefinitions="_WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -166,7 +166,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\hltypes\bin\win32_Release\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Release\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;copy ..\..\bin\*.dll ..\..\bin\win32_Release"
+				CommandLine="copy ..\..\..\hltypes\bin\win32_Release\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Release\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;copy ..\..\bin\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -179,7 +179,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\demo_3d.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 		</Filter>
