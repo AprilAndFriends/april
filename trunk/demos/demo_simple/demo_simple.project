@@ -10,20 +10,48 @@
   <VirtualDirectory Name="src">
     <File Name="demo_simple.cpp"/>
   </VirtualDirectory>
+  <Dependencies Name="Linux_Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
+  <Dependencies Name="Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
+  <Dependencies Name="Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+    <Project Name="libapril"/>
+  </Dependencies>
   <Settings Type="Executable">
+    <GlobalSettings>
+      <Compiler Options="" C_Options="">
+        <IncludePath Value="../../include"/>
+        <IncludePath Value="../../../hltypes/include"/>
+        <IncludePath Value="../../../gtypes/include"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="../../lib"/>
+        <LibraryPath Value="../../bin"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g" Required="yes" PreCompiledHeader="">
+      <Compiler Options="-g" C_Options="-g" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="" Required="yes">
         <LibraryPath Value="../../../hltypes/bin/Debug"/>
         <LibraryPath Value="../../../gtypes/bin/Debug"/>
-        <Library Value="libapril_d"/>
         <Library Value="libhltypes_d"/>
         <Library Value="libgtypes_d"/>
+        <Library Value="libapril_d"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/$(ConfigurationName)" Command="../../bin/$(ConfigurationName)/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/$(ConfigurationName)" Command="../../bin/$(ConfigurationName)/$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
         <StartupCommands/>
@@ -50,14 +78,15 @@
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Linux_Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g" Required="yes" PreCompiledHeader="">
+      <Compiler Options="-g" C_Options="-g" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="" Required="yes">
         <Library Value="libapril_d"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/Linux_Debug" Command="$(IntermediateDirectory)/$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/Linux_Debug" Command="$(IntermediateDirectory)/$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
         <StartupCommands/>
@@ -80,18 +109,19 @@
       </AdditionalRules>
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="" Required="yes" PreCompiledHeader="">
+      <Compiler Options="" C_Options="" Required="yes" PreCompiledHeader="">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="-O2" Required="yes">
-        <LibraryPath Value="../../../hltypes/bin/Win32_Release"/>
-        <LibraryPath Value="../../../gtypes/bin/Win32_Release"/>
-        <Library Value="libapril"/>
+        <LibraryPath Value="../../../hltypes/bin/Release_Win32"/>
+        <LibraryPath Value="../../../gtypes/bin/Release_Win32"/>
         <Library Value="libhltypes"/>
         <Library Value="libgtypes"/>
+        <Library Value="libapril"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/Release" Command="./$(ProjectName)" CommandArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="../../bin/Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(ProjectPath)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
         <StartupCommands/>
@@ -117,32 +147,5 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
-    <GlobalSettings>
-      <Compiler Options="">
-        <IncludePath Value="../../include"/>
-        <IncludePath Value="../../../hltypes/include"/>
-        <IncludePath Value="../../../gtypes/include"/>
-      </Compiler>
-      <Linker Options="">
-        <LibraryPath Value="../../lib"/>
-        <LibraryPath Value="../../bin"/>
-      </Linker>
-      <ResourceCompiler Options=""/>
-    </GlobalSettings>
   </Settings>
-  <Dependencies Name="Linux_Debug">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-    <Project Name="libapril"/>
-  </Dependencies>
-  <Dependencies Name="Release">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-    <Project Name="libapril"/>
-  </Dependencies>
-  <Dependencies Name="Debug">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-    <Project Name="libapril"/>
-  </Dependencies>
 </CodeLite_Project>

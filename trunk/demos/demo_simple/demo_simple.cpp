@@ -2,143 +2,72 @@
 This source file is part of the Awesome Portable Rendering Interface Library         *
 For latest info, see http://libapril.sourceforge.net/                                *
 **************************************************************************************
-Copyright (c) 2010 Kresimir Spes                                                     *
+Copyright (c) 2010 Kresimir Spes, Boris Mikic                                        *
 *                                                                                    *
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
+#include <stdio.h>
+
 #include <april/RenderSystem.h>
+#include <april/Window.h>
 #include <april/main.h>
-#ifdef __APPLE__
-#include <TargetConditionals.h>
-#endif
+#include <gtypes/Rectangle.h>
+#include <gtypes/Vector2.h>
 
-#if TARGET_OS_IPHONE
-#include <OpenGLES/ES1/gl.h>
-#endif
+april::Texture* texture;
+april::TexturedVertex v[4];
+grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+gvec2 offset(drawRect.w / 2, drawRect.h / 2);
+gvec2 size;
+bool mousePressed = false;
 
-april::Texture* tex;
-
-#if TARGET_OS_IPHONE
-
-float offx=0, offy=0;
-
-void paintRect(GLfloat vertices[])
+bool update(float k)
 {
-	// temp: testing render on iOS
-	glDisable(GL_TEXTURE_2D);
-	
-	
-	
-	float r=0.5,g=1,b=1,a=0.4;
-	
-	GLfloat colors[] = {
-		r,g,b,a,
-		r,g,b,a,
-		r,g,b,a,
-		
-		r,g,b,a,
-		r,g,b,a,
-		r,g,b,a};
-	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
-	//	glEnable(GL_POLYGON_SMOOTH);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
-	
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
-	glColorPointer(4, GL_FLOAT, 0, colors);
-	
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	
-	glDisable(GL_BLEND);
-	glDisableClientState(GL_COLOR_ARRAY);
-	
-	glEnable(GL_TEXTURE_2D);
-	
-}
-
-#endif
-
-bool render(float time_increase)
-{
-	// always pick up the window width and height
-	// iOS has different size than what is requested
-	float w = rendersys->getWindowWidth(), h = rendersys->getWindowHeight();
-		
-	rendersys->setOrthoProjection(w,h);
-	rendersys->setTexture(tex);
-	
-	rendersys->clear();
-	
-
-	
-	april::TexturedVertex v[4];
-	
-	v[0].x=0;   v[0].y=0;   v[0].z=0; v[0].u=0; v[0].v=0;
-	v[1].x=offx;   v[1].y=0;   v[1].z=0; v[1].u=1; v[1].v=0;
-	v[2].x=0;   v[2].y=offy;   v[2].z=0; v[2].u=0; v[2].v=1;
-	v[3].x=offx;   v[3].y=offy;   v[3].z=0; v[3].u=1; v[3].v=1;
-	
-	glEnable(GL_TEXTURE_2D);
-	rendersys->render(april::TriangleStrip,v,4);
-	
-	
-#if TARGET_OS_IPHONE
-	// testing painting on iOS
-	
-	offx+=time_increase;
-	offy+=time_increase;
-	w=10; h=10;
-	GLfloat vertices[] = {	
-		offx+0, offy+0, 0,
-		offx+0, offy+h, 0,
-		offx+w, offy+0, 0,
-		
-		offx+0, offy+h, 0,
-		offx+w, offy+h, 0,
-		offx+w, offy+0, 0};
-	paintRect(vertices);
-	
-#endif
-	
-	rendersys->presentFrame();
+	april::rendersys->clear();
+	april::rendersys->setOrthoProjection(drawRect);
+	april::rendersys->setTexture(texture);
+	v[0].x = offset.x - size.x;	v[0].y = offset.y - size.y;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
+	v[1].x = offset.x + size.x;	v[1].y = offset.y - size.y;	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
+	v[2].x = offset.x - size.x;	v[2].y = offset.y + size.y;	v[2].z = 0.0f;	v[2].u = 0.0f;	v[2].v = 1.0f;
+	v[3].x = offset.x + size.x;	v[3].y = offset.y + size.y;	v[3].z = 0.0f;	v[3].u = 1.0f;	v[3].v = 1.0f;
+	april::rendersys->render(april::TriangleStrip, v, 4);
 	return true;
 }
 
-
-void mousedn(float x,float y,int btn)
+void onMouseDown(float x, float y, int button)
 {
-	printf("dn x: %g y: %g btn: %d\n", x, y, btn);
-	offx = x; offy = y;
-}
-void mouseup(float x,float y,int btn)
-{
-	printf("up x: %g y: %g btn: %d\n", x, y, btn);
-	offx = x; offy = y;
-}
-void mousemove(float x,float y)
-{
-	printf("mv x: %g y: %g\n", x, y);
-	offx = x; offy = y;
+	printf("dn x: %4.0f y: %4.0f button: %d\n", x, y, button);
+	mousePressed = true;
+	offset.x = x;
+	offset.y = y;
 }
 
+void onMouseUp(float x, float y, int button)
+{
+	printf("up x: %4.0f y: %4.0f button: %d\n", x, y, button);
+	mousePressed = false;
+}
+
+void onMouseMove(float x, float y)
+{
+	printf("mv x: %4.0f y: %4.0f\n", x, y);
+	if (mousePressed)
+	{
+		offset.x = x;
+		offset.y = y;
+	}
+}
 
 int main(int argc, char** argv)
 {
-	april::init("april",800,600,0,"april: Simple Demo");
-	april::rendersys->registerUpdateCallback(render);
-	april::rendersys->registerMouseCallbacks(mousedn, mouseup, mousemove);
-#if !TARGET_OS_IPHONE
-	tex=april::rendersys->loadTexture("../media/texture.jpg");
-#else
-	tex=april::rendersys->loadTexture("media/texture.jpg");
-#endif
-	
-	rendersys->enterMainLoop();
+	april::init("april", drawRect.w, drawRect.h, false, "april: Simple Demo");
+	april::rendersys->getWindow()->setUpdateCallback(update);
+	april::rendersys->getWindow()->setMouseCallbacks(onMouseDown, onMouseUp, onMouseMove);
+	texture = april::rendersys->loadTexture("../media/texture.jpg");
+	size.x = texture->getWidth() / 4;
+	size.y = texture->getHeight() / 4;
+	april::rendersys->getWindow()->enterMainLoop();
 	april::destroy();
 	return 0;
 }

@@ -2,12 +2,13 @@
 This source file is part of the Awesome Portable Rendering Interface Library         *
 For latest info, see http://libapril.sourceforge.net/                                *
 **************************************************************************************
-Copyright (c) 2010 Kresimir Spes                                                     *
+Copyright (c) 2010 Kresimir Spes, Boris Mikic                                        *
 *                                                                                    *
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#include "april/RenderSystem.h"
+#include <april/RenderSystem.h>
+#include <april/Window.h>
 
 april::Texture* tex;
 
@@ -36,11 +37,11 @@ bool render(float time_increase)
 int main()
 {
 	april::init("april",800,600,0,"april: 3D Demo");
-	april::rendersys->registerUpdateCallback(render);
+	april::rendersys->getWindow()->setUpdateCallback(render);
 
 	tex=april::rendersys->loadTexture("../media/texture.jpg");
 
-	april::rendersys->enterMainLoop();
+	april::rendersys->getWindow()->enterMainLoop();
 	april::destroy();
 	return 0;
 }
