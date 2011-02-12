@@ -58,7 +58,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libgtypes_d.lib;libhltypes_d.lib;libapril_d.lib;libaprilutil_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libgtypes.lib;libhltypes.lib;libapril.lib;libaprilutil.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../bin;../../../lib;../../../hltypes/bin/win32_Debug;../../../gtypes/bin/win32_Debug;../../../lib/msvc;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
