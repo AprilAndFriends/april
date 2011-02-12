@@ -58,7 +58,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libhltypes_d.lib;libgtypes_d.lib;libapril_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libapril.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.;../../bin;../../../lib;../../../hltypes/bin/win32_Debug;../../../gtypes/bin/win32_Debug;../../../lib/msvc;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -101,7 +101,7 @@ copy ..\..\bin\*.dll ..\..\bin\win32_Release
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="demo_simple.cpp" />
+    <ClCompile Include="demo_tictactoe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\gtypes\libgtypes.vcxproj">
