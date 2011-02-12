@@ -10,11 +10,11 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include <stdio.h>
 #include <algorithm>
 
-#if defined(__APPLE__) && !defined(_OPENGL)
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#ifndef _OPENGL
 #define _OPENGL
 #endif
-#if defined(__APPLE__)
-#include <TargetConditionals.h>
 #endif
 #ifdef USE_IL
 #include <IL/il.h>
@@ -26,10 +26,10 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include <hltypes/util.h>
 
 #include "RenderSystem.h"
-#ifdef _OPENGL
-#include "OpenGL_RenderSystem.h"
-#else
+#ifndef _OPENGL
 #include "DirectX9_RenderSystem.h"
+#else
+#include "OpenGL_RenderSystem.h"
 #endif
 #include "ImageSource.h"
 #include "Window.h"
@@ -55,7 +55,7 @@ namespace april
 	{
 		va_list args;
 		va_start(args, message);
-		april::log(hvsprintf(message.c_str(), args));
+		//april::log(hvsprintf(message.c_str(), args));
 		va_end(args);
 	}
 /*****************************************************************************************/
