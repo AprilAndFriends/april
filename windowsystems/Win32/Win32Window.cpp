@@ -26,140 +26,140 @@ namespace april
 #ifdef _DEBUG
 	static char fpstitle[1024] = " [FPS:0]";
 #endif
-/**********************************************************************************************/
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	static bool touchDown = false;
-	static bool doubleTapDown = false;
-	static int nMouseMoveMessages = 0;
-	Win32Window *ws = (Win32Window*) instance;
-    switch (message)
-    {
-	case 0x0119: // WM_GESTURE (win7+ only)
-		if (wParam == 1) // GID_BEGIN
+/************************************************************************************/
+	LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	{
+		static bool touchDown = false;
+		static bool doubleTapDown = false;
+		static int nMouseMoveMessages = 0;
+		Win32Window *ws = (Win32Window*) instance;
+		switch (message)
 		{
+		case 0x0119: // WM_GESTURE (win7+ only)
+			if (wParam == 1) // GID_BEGIN
+			{
+				touchDown = true;
+			}
+			else if (wParam == 2) // GID_END
+			{
+				if (doubleTapDown)
+				{ 
+					doubleTapDown = false;
+					ws->triggerMouseUpEvent(AK_DOUBLETAP);
+				}
+				touchDown = false;
+			}
+			else if (wParam == 6) // GID_TWOFINGERTAP
+			{
+				doubleTapDown = true;
+				ws->triggerMouseDownEvent(AK_DOUBLETAP);
+			}
+			break;
+		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
 			touchDown = true;
-		}
-		else if (wParam == 2) // GID_END
-		{
-			if (doubleTapDown)
-			{ 
-				doubleTapDown = false;
-				ws->triggerMouseUpEvent(AK_DOUBLETAP);
-			}
-			touchDown = false;
-		}
-		else if (wParam == 6) // GID_TWOFINGERTAP
-		{
-			doubleTapDown = true;
-			ws->triggerMouseDownEvent(AK_DOUBLETAP);
-		}
-		break;
-	case 0x011A: // WM_GESTURENOTIFY (win7+ only)
-		touchDown = true;
-		ws->triggerTouchscreenCallback(true);
-		break;
-	case WM_DESTROY:
-	case WM_CLOSE:
-		if (ws->triggerQuitEvent())
-		{
-			PostQuitMessage(0);
-			ws->terminateMainLoop();
-		}
-		return 0;
-		break;
-	case WM_KEYDOWN:
-		ws->triggerKeyEvent(true, wParam);
-		break;
-	case WM_KEYUP: 
-		ws->triggerKeyEvent(false, wParam);
-		break;
-	case WM_CHAR:
-		ws->triggerCharEvent(wParam);
-		break;
-	case WM_LBUTTONDOWN:
-		touchDown = true;
-		nMouseMoveMessages = 0;
-		ws->triggerMouseDownEvent(AK_LBUTTON);
-		if (!instance->isFullscreen())
-		{
-			SetCapture(hWnd);
-		}
-		break;
-	case WM_RBUTTONDOWN:
-		touchDown = true;
-		nMouseMoveMessages = 0;
-		ws->triggerMouseDownEvent(AK_RBUTTON);
-		if (!instance->isFullscreen())
-		{
-			SetCapture(hWnd);
-		}
-		break;
-	case WM_LBUTTONUP:
-		touchDown = false;
-		ws->triggerMouseUpEvent(AK_LBUTTON);
-		if (!instance->isFullscreen())
-		{
-			ReleaseCapture();
-		}
-		break;
-	case WM_RBUTTONUP:
-		touchDown = false;
-		ws->triggerMouseUpEvent(AK_RBUTTON);
-		if (!instance->isFullscreen())
-		{
-			ReleaseCapture();
-		}
-		break;
-	case WM_MOUSEMOVE:
-		if (!touchDown)
-		{
-			if (nMouseMoveMessages >= 10)
+			ws->triggerTouchscreenCallback(true);
+			break;
+		case WM_DESTROY:
+		case WM_CLOSE:
+			if (ws->triggerQuitEvent())
 			{
-				ws->triggerTouchscreenCallback(false);
+				PostQuitMessage(0);
+				ws->terminateMainLoop();
 			}
-			else
-			{
-				nMouseMoveMessages++;
-			}
-		}
-		else
-		{
+			return 0;
+			break;
+		case WM_KEYDOWN:
+			ws->triggerKeyEvent(true, wParam);
+			break;
+		case WM_KEYUP: 
+			ws->triggerKeyEvent(false, wParam);
+			break;
+		case WM_CHAR:
+			ws->triggerCharEvent(wParam);
+			break;
+		case WM_LBUTTONDOWN:
+			touchDown = true;
 			nMouseMoveMessages = 0;
-		}
-		ws->triggerMouseMoveEvent();
-		break;
-	case WM_SETCURSOR:
-		if (!cursorVisible)
-		{
-			if (cursorPosition.x >= 0 && cursorPosition.y >= 0 && cursorPosition.x <= ws->getWidth() && cursorPosition.y <= ws->getHeight())
+			ws->triggerMouseDownEvent(AK_LBUTTON);
+			if (!instance->isFullscreen())
 			{
-				SetCursor(0);
+				SetCapture(hWnd);
+			}
+			break;
+		case WM_RBUTTONDOWN:
+			touchDown = true;
+			nMouseMoveMessages = 0;
+			ws->triggerMouseDownEvent(AK_RBUTTON);
+			if (!instance->isFullscreen())
+			{
+				SetCapture(hWnd);
+			}
+			break;
+		case WM_LBUTTONUP:
+			touchDown = false;
+			ws->triggerMouseUpEvent(AK_LBUTTON);
+			if (!instance->isFullscreen())
+			{
+				ReleaseCapture();
+			}
+			break;
+		case WM_RBUTTONUP:
+			touchDown = false;
+			ws->triggerMouseUpEvent(AK_RBUTTON);
+			if (!instance->isFullscreen())
+			{
+				ReleaseCapture();
+			}
+			break;
+		case WM_MOUSEMOVE:
+			if (!touchDown)
+			{
+				if (nMouseMoveMessages >= 10)
+				{
+					ws->triggerTouchscreenCallback(false);
+				}
+				else
+				{
+					nMouseMoveMessages++;
+				}
 			}
 			else
 			{
-				SetCursor(LoadCursor(0,IDC_ARROW));
+				nMouseMoveMessages = 0;
 			}
+			ws->triggerMouseMoveEvent();
+			break;
+		case WM_SETCURSOR:
+			if (!cursorVisible)
+			{
+				if (cursorPosition.x >= 0 && cursorPosition.y >= 0 && cursorPosition.x <= ws->getWidth() && cursorPosition.y <= ws->getHeight())
+				{
+					SetCursor(0);
+				}
+				else
+				{
+					SetCursor(LoadCursor(0,IDC_ARROW));
+				}
+			}
+			return 1;
+		case WM_ACTIVATE:
+			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
+			{
+				instance->_setActive(true);
+				ws->triggerFocusCallback(true);
+				april::log("Window activated");
+			}
+			else
+			{
+				instance->_setActive(false);
+				ws->triggerFocusCallback(false);
+				april::log("Window deactivated");
+			}
+			break;
 		}
-		return 1;
-	case WM_ACTIVATE:
-		if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
-		{
-			instance->_setActive(true);
-			ws->triggerFocusCallback(true);
-			april::log("Window activated");
-		}
-		else
-		{
-			instance->_setActive(false);
-			ws->triggerFocusCallback(false);
-			april::log("Window deactivated");
-		}
-		break;
-    }
-    return DefWindowProc(hWnd, message, wParam, lParam);
-}
-/**********************************************************************************************/
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+/************************************************************************************/
 	Win32Window::Win32Window(int w, int h, bool fullscreen, chstr title) //:
 		/*mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()*/
 	{
