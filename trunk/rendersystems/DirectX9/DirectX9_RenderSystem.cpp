@@ -69,7 +69,7 @@ namespace april
 		}
 		return 0;
 	}
-/**********************************************************************************************/
+/************************************************************************************/
 	DirectX9_RenderSystem::DirectX9_RenderSystem(Window* window) :
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
