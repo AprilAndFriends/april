@@ -185,6 +185,12 @@ namespace april
 			break;
 		}
 	}
+
+	bool Window::isCursorInside()
+	{
+		gvec2 v=getCursorPosition();
+		return (v.x >=0 && v.y >= 0 && v.x <= getWidth() && v.y <= getHeight());
+	}
 	
 	bool Window::handleQuitRequest(bool can_reject)
 	{
