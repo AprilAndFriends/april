@@ -27,7 +27,7 @@ bool update(float k)
 	angle += k * 90;
 	april::rendersys->setPerspective(60, drawRect.getAspect(), 0.1f, 100.0f);
 	april::rendersys->setTexture(texture);
-	april::rendersys->lookAt(gvec3(2, 2, -5), gvec3(0, 0, 0), gvec3(0, 1, 0));
+	april::rendersys->lookAt(gvec3(2, 2, -5), gvec3(), gvec3(0, 1, 0));
 	april::rendersys->rotate(angle, 0, 1, 0);
     mesh->draw(april::TriangleList);
 	return true;
@@ -35,7 +35,7 @@ bool update(float k)
 
 int main()
 {
-	april::init("april", drawRect.w, drawRect.h, false, "april: 3D Demo");
+	april::init("april", (int)drawRect.w, (int)drawRect.h, false, "april: 3D Demo");
 	april::rendersys->getWindow()->setUpdateCallback(update);
     mesh = new april::StaticMesh("../media/testobject.obj");
 	texture = april::rendersys->loadTexture("../media/texture.jpg");
