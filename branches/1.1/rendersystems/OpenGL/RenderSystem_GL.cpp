@@ -298,7 +298,7 @@ namespace April
 	void GLRenderSystem::_setModelviewMatrix(const gtypes::Matrix4& matrix)
 	{
 		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(matrix.mat);
+		glLoadMatrixf(matrix.data);
 	}
 
 	void GLRenderSystem::_setProjectionMatrix(const gtypes::Matrix4& matrix)
@@ -308,9 +308,9 @@ namespace April
 		glLoadIdentity();
 		glRotatef(getWindow()->prefixRotationAngle(), 0, 0, 1);
 		//printf("rotationangle %g\n", getWindow()->prefixRotationAngle());
-		glMultMatrixf(matrix.mat);
+		glMultMatrixf(matrix.data);
 #else
-		glLoadMatrixf(matrix.mat);
+		glLoadMatrixf(matrix.data);
 #endif
 		
 		glMatrixMode(GL_MODELVIEW);
