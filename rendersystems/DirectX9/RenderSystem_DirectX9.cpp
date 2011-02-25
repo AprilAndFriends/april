@@ -277,12 +277,12 @@ namespace April
 	
 	void DirectX9RenderSystem::_setModelviewMatrix(const gtypes::Matrix4& matrix)
 	{
-		d3dDevice->SetTransform(D3DTS_VIEW,(D3DMATRIX*) matrix.mat);
+		d3dDevice->SetTransform(D3DTS_VIEW,(D3DMATRIX*) matrix.data);
 	}
 
 	void DirectX9RenderSystem::_setProjectionMatrix(const gtypes::Matrix4& matrix)
 	{
-		d3dDevice->SetTransform(D3DTS_PROJECTION,(D3DMATRIX*) matrix.mat);
+		d3dDevice->SetTransform(D3DTS_PROJECTION,(D3DMATRIX*) matrix.data);
 	}
 
 	void DirectX9RenderSystem::setBlendMode(BlendMode mode)
