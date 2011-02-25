@@ -134,7 +134,7 @@ typedef struct _PVRTexHeader
 		gPVRTexIdentifier[2] != ((pvrTag >> 16) & 0xff) ||
 		gPVRTexIdentifier[3] != ((pvrTag >> 24) & 0xff))
 	{
-		NSLog(@"Unknown header - pvr tag is %c%c%c%c", pvrTag & 0xff, (pvrTag >> 8) & 0xff, (pvrTag >> 16) & 0xff, (pvrTag >> 24) & 0xff);
+		//NSLog(@"Unknown header - pvr tag is %c%c%c%c", pvrTag & 0xff, (pvrTag >> 8) & 0xff, (pvrTag >> 16) & 0xff, (pvrTag >> 24) & 0xff);
 		return FALSE;
 	}
 	
