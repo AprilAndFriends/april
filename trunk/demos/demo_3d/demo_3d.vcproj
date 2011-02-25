@@ -49,6 +49,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4251"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -88,7 +89,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\hltypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;copy ..\..\bin\*.dll ..\..\bin\win32_Debug"
+				CommandLine="copy ..\..\..\hltypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;copy ..\..\bin\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -125,6 +126,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4251"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -166,7 +168,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\hltypes\bin\win32_Release\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Release\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;copy ..\..\bin\*.dll ..\..\bin\win32_Release"
+				CommandLine="copy ..\..\..\hltypes\bin\win32_Release\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Release\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;copy ..\..\bin\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>

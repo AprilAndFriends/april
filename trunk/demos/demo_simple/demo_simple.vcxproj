@@ -56,6 +56,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libapril.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -83,6 +84,7 @@ copy ..\..\bin\*.dll ..\..\bin\win32_Debug
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libapril.lib;%(AdditionalDependencies)</AdditionalDependencies>
