@@ -7,10 +7,9 @@ Copyright (c) 2010 Kresimir Spes                                                
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
+#include <iostream>
 
 #include "StaticMesh.h"
-
-#include <iostream>
 
 namespace april
 {

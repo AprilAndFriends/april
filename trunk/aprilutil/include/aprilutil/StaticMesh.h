@@ -10,17 +10,16 @@ Copyright (c) 2010 Kresimir Spes, Domagoj Cerjan                                
 #ifndef MESH_LOADER_H
 #define MESH_LOADER_H
 
-#include "aprilutilExport.h"
-
-#include "hltypes/harray.h"
-#include "hltypes/hstring.h"
-#include "hltypes/exception.h"
-#include "gtypes/Vector2.h"
-#include "gtypes/Vector3.h"
-
-#include "april/RenderSystem.h"
-
 #include <stdio.h>
+
+#include <april/RenderSystem.h>
+#include <gtypes/Vector2.h>
+#include <gtypes/Vector3.h>
+#include <hltypes/harray.h>
+#include <hltypes/hstring.h>
+#include <hltypes/exception.h>
+
+#include "aprilutilExport.h"
 
 namespace april
 {
@@ -40,10 +39,10 @@ namespace april
 	{
     
     public:
-        hltypes::Array<gtypes::Vector3> mVertices;
+        hltypes::Array<gvec3> mVertices;
         hltypes::Array<Polygon> mPolygons;
-        hltypes::Array<gtypes::Vector3> mNormals;
-        hltypes::Array<gtypes::Vector2> mTextureCoordinates;
+        hltypes::Array<gvec3> mNormals;
+        hltypes::Array<gvec2> mTextureCoordinates;
         
         hstr mMeshName;
         

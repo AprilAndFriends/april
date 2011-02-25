@@ -18,18 +18,21 @@ namespace april
 	
 	class aprilutilExport BlurManager
 	{
-		Texture *mTex1,*mTex2;
-		int mNumLevels;
-		bool mEnable;
-		float mInc;
 	public:
 		BlurManager();
 		~BlurManager();
 
-		void begin(int nLevels,float inc);
+		void begin(int nLevels, float inc);
 		void end();
-		void draw(int w,int h);
+		void draw(int w, int h);
 		
+	protected:
+		Texture* mTex1;
+		Texture* mTex2;
+		int mNumLevels;
+		bool mEnable;
+		float mInc;
+
 	};
 
 }
