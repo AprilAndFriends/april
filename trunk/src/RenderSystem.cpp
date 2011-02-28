@@ -205,7 +205,9 @@ namespace april
 		float t = getPixelOffset();
 		float wnd_w = (float)mWindow->getWidth();
 		float wnd_h = (float)mWindow->getHeight();
-		mProjectionMatrix.ortho(rect.w, rect.h, -rect.x + t * rect.w / wnd_w, -rect.y + t * rect.h / wnd_h);
+		rect.x -= t * rect.w / wnd_w;
+		rect.y -= t * rect.h / wnd_h;
+		mProjectionMatrix.ortho(rect);
 		_setProjectionMatrix(mProjectionMatrix);
 	}
 	
