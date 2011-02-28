@@ -14,6 +14,7 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include <hltypes/hfile.h>
 #include <hltypes/hstring.h>
 #include <hltypes/util.h>
+#include <gtypes/Rectangle.h>
 
 #if defined(__APPLE__) && !defined(_OPENGL)
 #define _OPENGL
@@ -534,7 +535,8 @@ namespace April
 	void RenderSystem::setOrthoProjection(float w,float h,float x_offset,float y_offset)
 	{
 		float t=getPixelOffset(),wnd_w=getWindow()->getWindowWidth(),wnd_h=getWindow()->getWindowHeight();
-		mProjectionMatrix.ortho(w,h,x_offset+t*w/wnd_w,y_offset+t*h/wnd_h);
+		grect rect(x_offset+t*w/wnd_w,y_offset+t*h/wnd_h,w,h);
+		mProjectionMatrix.ortho(rect);
 		_setProjectionMatrix(mProjectionMatrix);
 	}
 	
