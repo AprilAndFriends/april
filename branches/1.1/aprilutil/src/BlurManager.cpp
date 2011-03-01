@@ -53,7 +53,7 @@ namespace April
 			April::Texture* temp;
 			April::ColoredTexturedVertex av[6*4];
 			gtypes::Matrix4 mat=rendersys->getProjectionMatrix();
-			rendersys->setOrthoProjection(1024,1024);
+			rendersys->setOrthoProjection(gvec2(1024,1024));
 			float k=0.5/1024.0f;
 			av[0].x=0;    av[0].y=0;     av[0].u=k;   av[0].v=k;
 			av[1].x=1024; av[1].y=0;     av[1].u=1+k; av[1].v=k;
