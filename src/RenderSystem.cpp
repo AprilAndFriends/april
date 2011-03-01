@@ -190,14 +190,14 @@ namespace april
 		_setModelviewMatrix(mModelviewMatrix);
 	}
 		
-	void RenderSystem::setOrthoProjection(float w, float h, float x_offset, float y_offset)
+	void RenderSystem::setOrthoProjection(float x, float y, float w, float h)
 	{
-		setOrthoProjection(grect(-x_offset, -y_offset, w, h));
+		setOrthoProjection(grect(x, y, w, h));
 	}
 	
 	void RenderSystem::setOrthoProjection(gvec2 size)
 	{
-		setOrthoProjection(grect(0, 0, size));
+		setOrthoProjection(grect(0.0f, 0.0f, size));
 	}
 	
 	void RenderSystem::setOrthoProjection(grect rect)
