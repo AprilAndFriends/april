@@ -12,6 +12,7 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 
 #include <hltypes/hstring.h>
 #include <hltypes/harray.h>
+#include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <gtypes/Vector3.h>
 #include <gtypes/Matrix4.h>
