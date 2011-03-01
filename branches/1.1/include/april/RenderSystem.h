@@ -255,7 +255,9 @@ namespace April
 		// camera functions
 		void lookAt(const gtypes::Vector3 &eye, const gtypes::Vector3 &direction, const gtypes::Vector3 &up);
 		// projection matrix tronsformation
-		void setOrthoProjection(float w,float h,float x_offset=0,float y_offset=0);
+		void setOrthoProjection(float x,float y,float w,float h);
+		void setOrthoProjection(gvec2 size);
+		void setOrthoProjection(grect rect);
 		void setPerspective(float fov, float aspect, float nearClip, float farClip);
 		// rendersys matrix operations
 		void setModelviewMatrix(const gtypes::Matrix4& matrix);
