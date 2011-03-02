@@ -543,13 +543,13 @@ namespace april
 		}
 		return AMSGBTN_OK;
 #else
-		april::logf("== %s ==", title.c_str());
-		april::logf("%s", text.c_str());
-		april::logf("Button mask: %c%c%c%c", 
+		april::log(hsprintf("== %s ==", title.c_str()));
+		april::log(text);
+		april::log(hsprintf(("Button mask: %c%c%c%c", 
 							   buttonMask & AMSGBTN_OK ? '+' : '-', 
 							   buttonMask & AMSGBTN_CANCEL ? '+' : '-',
 							   buttonMask & AMSGBTN_YES ? '+' : '-',
-							   buttonMask & AMSGBTN_NO ? '+' : '-');
+							   buttonMask & AMSGBTN_NO ? '+' : '-'));
 		// some dummy returnvalues
 		if (buttonMask & AMSGBTN_CANCEL)
 		{

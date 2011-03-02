@@ -193,7 +193,6 @@ namespace april
 		int y = (fullscreen ? 0 : (GetSystemMetrics(SM_CYSCREEN) - h) / 2);
 		
 		DWORD style = (fullscreen ? WS_EX_TOPMOST | WS_POPUP : WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
-		//april::logf("title: %s %d %d %d %d inst: %d", title.c_str(), x, y, w, h, hinst);
 		april::log(hsprintf("title: %s %d %d %d %d inst: %d", title.c_str(), x, y, w, h, hinst));
 		hWnd = CreateWindowEx(0, "april_win32_window", title.c_str(), style, x, y, w, h, NULL, NULL, hinst, NULL);
 		

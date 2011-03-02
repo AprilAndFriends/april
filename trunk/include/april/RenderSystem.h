@@ -180,8 +180,7 @@ namespace april
 	aprilFnExport void init(chstr rendersystem_name, int w, int h, bool fullscreen, chstr title);
 	aprilFnExport void destroy();
 	aprilFnExport void addTextureExtension(chstr extension);
-	aprilFnExport void log(chstr message,chstr prefix = "[april] ");
-	aprilFnExport void logf(chstr message, ...);
+	aprilFnExport void log(chstr message, chstr prefix = "[april] ");
 	
 	// global rendersys shortcut variable
 	aprilFnExport extern april::RenderSystem* rendersys;
