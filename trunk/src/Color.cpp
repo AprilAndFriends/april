@@ -23,32 +23,37 @@ namespace april
 		return i;
 	}
 	
-	Color::Color(int r, int g, int b, int a)
-	{
-		set(r, g, b, a);
-	}
-
-	Color::Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
-	{
-		set(r, g, b, a);
-	}
-
-	Color::Color(unsigned int color)
-	{
-		set(color);
-	}
-
-	Color::Color(chstr hex)
-	{
-		set(hex);
-	}
-
 	Color::Color()
 	{
 		this->r = 255;
 		this->g = 255;
 		this->b = 255;
 		this->a = 255;
+	}
+
+	Color::Color(int r, int g, int b, int a)
+	{
+		this->set(r, g, b, a);
+	}
+
+	Color::Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+	{
+		this->set(r, g, b, a);
+	}
+
+	Color::Color(unsigned int color)
+	{
+		this->set(color);
+	}
+
+	Color::Color(chstr hex)
+	{
+		this->set(hex);
+	}
+
+	Color::Color(Color color, unsigned char a)
+	{
+		this->set(color, a);
 	}
 
 	void Color::set(int r, int g, int b, int a)
@@ -92,6 +97,14 @@ namespace april
 		this->a = (value.size() == 10 ? hexstr_to_int(value(8, 2)) : 255);
 	}
 	
+	void Color::set(Color color, unsigned char a)
+	{
+		this->r = color.r;
+		this->g = color.g;
+		this->b = color.b;
+		this->a = a;
+	}
+
 	hstr Color::hex(bool rgbOnly)
 	{
 		hstr result = hsprintf("%02x%02x%02x", this->r, this->g, this->b);
@@ -216,39 +229,6 @@ namespace april
 		this->b = hclamp((int)(this->b / value), 0, 255);
 		this->a = hclamp((int)(this->a / value), 0, 255);
 		return (*this);
-	}
-
-/************************************************************************************/
-	// DEPRECATED
-	Color::Color(float r, float g, float b, float a)
-	{
-		this->r = (unsigned char)(r * 255);
-		this->g = (unsigned char)(g * 255);
-		this->b = (unsigned char)(b * 255);
-		this->a = (unsigned char)(a * 255);
-	}
-	void Color::setColor(float r, float g, float b, float a)
-	{
-		this->r = (unsigned char)(r * 255);
-		this->g = (unsigned char)(g * 255);
-		this->b = (unsigned char)(b * 255);
-		this->a = (unsigned char)(a * 255);
-	}
-	void Color::setColor(int r, int g, int b, int a)
-	{
-		set(r, g, b, a);
-	}
-	void Color::setColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
-	{
-		set(r, g, b, a);
-	}
-	void Color::setColor(unsigned int color)
-	{
-		set(color);
-	}
-	void Color::setColor(chstr hex)
-	{
-		set(hex);
 	}
 	
 }
