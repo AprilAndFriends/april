@@ -11,9 +11,12 @@ Copyright (c) 2010 Ivan Vucica                                                  
 
 #ifdef __APPLE__
 #include <TargetConditionals.h>
+#include <OpenGL/gl.h>
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 #include <ApplicationServices/ApplicationServices.h>
 #endif
+#else
+#include <GL/gl.h>
 #endif
 
 #include <SDL/SDL.h>
@@ -50,6 +53,8 @@ namespace april
 		// set up display with width w, height h, any bpp, opengl, and optionally fullscreen
 		mFullscreen = fullscreen;
 		mScreen = SDL_SetVideoMode(w, h, 0, SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0));
+		glClear(GL_COLOR_BUFFER_BIT);
+		presentFrame();
 		if (!mScreen)
 		{
 #ifdef __APPLE__
