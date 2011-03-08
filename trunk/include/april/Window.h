@@ -12,6 +12,7 @@ Copyright (c) 2010 Ivan Vucica                                                  
 
 #include <gtypes/Vector2.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hmap.h>
 
 #include "aprilExport.h"
 #include "Keys.h"
@@ -155,7 +156,7 @@ namespace april
 	
 	aprilFnExport Window* createAprilWindow(chstr window_system_name, int w, int h, bool fullscreen, chstr title);
 	aprilFnExport gvec2 getDesktopResolution();
-	aprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN);
+	aprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN, hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL);
 
 }
 
