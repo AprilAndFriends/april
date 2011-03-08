@@ -340,7 +340,7 @@ namespace april
 #endif
 	}
 	
-	MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style)
+	MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 #if _WIN32
 		HWND wnd = 0;
@@ -405,38 +405,53 @@ namespace april
 		// * use an array with constants for button captions etc
 		
 		NSString *buttons[] = {@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
-		
+		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, 0, 0};
+        
 		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[0] = @"Ok";
-			buttons[1] = @"Cancel";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
+            
+            buttonTypes[0] = AMSGBTN_OK;
+            buttonTypes[1] = AMSGBTN_CANCEL;
 		}
 		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[0] = @"Yes";
-			buttons[1] = @"No";
-			buttons[2] = @"Cancel";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
+			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
+            
+            buttonTypes[0] = AMSGBTN_YES;
+            buttonTypes[1] = AMSGBTN_NO;
+            buttonTypes[2] = AMSGBTN_CANCEL;
 		}
 		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
 		{
-			buttons[0] = @"Yes";
-			buttons[1] = @"No";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
+            
+            buttonTypes[0] = AMSGBTN_YES;
+            buttonTypes[1] = AMSGBTN_NO;
 		}
 		else if (buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[0] = @"Cancel";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
+            buttonTypes[0] = AMSGBTN_CANCEL;
 		}
 		else if (buttonMask & AMSGBTN_OK)
 		{
-			buttons[0] = @"Ok";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+            buttonTypes[0] = AMSGBTN_OK;
 		}
 		else if (buttonMask & AMSGBTN_YES)
 		{
-			buttons[0] = @"Yes";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
+            buttonTypes[0] = AMSGBTN_YES;
 		}
 		else if (buttonMask & AMSGBTN_NO)
 		{
-			buttons[0] = @"No";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
+            buttonTypes[0] = AMSGBTN_NO;
 		}
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
@@ -455,58 +470,59 @@ namespace april
 			clicked = 2;
 			break;
 		}
-		if ([buttons[clicked] isEqualToString:@"Ok"])
-		{
-			return AMSGBTN_OK;
-		}
-		if ([buttons[clicked] isEqualToString:@"Cancel"])
-		{
-			return AMSGBTN_CANCEL;
-		}
-		if ([buttons[clicked] isEqualToString:@"Yes"])
-		{
-			return AMSGBTN_YES;
-		}
-		if ([buttons[clicked] isEqualToString:@"No"])
-		{
-			return AMSGBTN_NO;
-		}
-		return AMSGBTN_OK;
+        
+        return buttonTypes[clicked];
+        
 #elif TARGET_OS_IPHONE
 		
-		NSString *buttons[] = {@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
-		
+        NSString *buttons[] = {@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, (MessageBoxButton)0, (MessageBoxButton)0};
+        
 		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[0] = @"Ok";
-			buttons[1] = @"Cancel";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
+            
+            buttonTypes[0] = AMSGBTN_OK;
+            buttonTypes[1] = AMSGBTN_CANCEL;
 		}
 		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[0] = @"Yes";
-			buttons[1] = @"No";
-			buttons[2] = @"Cancel";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
+			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
+            
+            buttonTypes[0] = AMSGBTN_YES;
+            buttonTypes[1] = AMSGBTN_NO;
+            buttonTypes[2] = AMSGBTN_CANCEL;
 		}
 		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
 		{
-			buttons[0] = @"Yes";
-			buttons[1] = @"No";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
+            
+            buttonTypes[0] = AMSGBTN_YES;
+            buttonTypes[1] = AMSGBTN_NO;
 		}
-		else if(buttonMask & AMSGBTN_CANCEL)
+		else if (buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[0] = @"Cancel";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
+            buttonTypes[0] = AMSGBTN_CANCEL;
 		}
 		else if (buttonMask & AMSGBTN_OK)
 		{
-			buttons[0] = @"Ok";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+            buttonTypes[0] = AMSGBTN_OK;
 		}
 		else if (buttonMask & AMSGBTN_YES)
 		{
-			buttons[0] = @"Yes";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
+            buttonTypes[0] = AMSGBTN_YES;
 		}
 		else if (buttonMask & AMSGBTN_NO)
 		{
-			buttons[0] = @"No";
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
+            buttonTypes[0] = AMSGBTN_NO;
 		}
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
@@ -550,23 +566,35 @@ namespace april
 							   buttonMask & AMSGBTN_CANCEL ? '+' : '-',
 							   buttonMask & AMSGBTN_YES ? '+' : '-',
 							   buttonMask & AMSGBTN_NO ? '+' : '-'));
+                   
 		// some dummy returnvalues
 		if (buttonMask & AMSGBTN_CANCEL)
 		{
+            if (callback)
+                callback(AMSGBTN_CANCEL);
 			return AMSGBTN_CANCEL;
 		}
 		if (buttonMask & AMSGBTN_OK)
 		{
+            if (callback)
+                callback(AMSGBTN_OK);
 			return AMSGBTN_OK;
 		}
 		if (buttonMask & AMSGBTN_NO)
 		{
+            if (callback)
+                callback(AMSGBTN_NO);
 			return AMSGBTN_NO;
 		}
 		if (buttonMask & AMSGBTN_YES)
 		{
+            if (callback)
+                callback(AMSGBTN_YES);
 			return AMSGBTN_YES;
 		}
+                   
+        if (callback)
+            callback(AMSGBTN_OK);
 		return AMSGBTN_OK;
 #endif
 	}
