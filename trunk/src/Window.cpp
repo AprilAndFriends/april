@@ -44,6 +44,36 @@ Copyright (c) 2010 Ivan Vucica                                                  
 #include "Keys.h"
 #include "RenderSystem.h"
 
+
+#if TARGET_OS_IPHONE
+@interface AprilMessageBoxDelegate : NSObject<UIAlertViewDelegate> {
+    void(*callback)(april::MessageBoxButton);
+    april::MessageBoxButton buttonTypes[3];
+}
+@property (nonatomic, assign) void(*callback)(april::MessageBoxButton);
+@property (nonatomic, assign) april::MessageBoxButton *buttonTypes;
+@end
+@implementation AprilMessageBoxDelegate
+@synthesize callback;
+-(april::MessageBoxButton*)buttonTypes
+{
+    return buttonTypes;
+}
+-(void)setButtonTypes:(april::MessageBoxButton*)_buttonTypes
+{
+    memcpy(buttonTypes, _buttonTypes, sizeof(buttonTypes));
+}
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (callback) 
+    {
+        callback(buttonTypes[buttonIndex]);
+    }
+}
+@end
+
+#endif
+
 namespace april
 {
 	Window::Window()
@@ -387,12 +417,20 @@ namespace april
 		switch(btn)
 		{
 		case IDOK:
+            if(callback)
+                callback(AMSGBTN_OK);
 			return AMSGBTN_OK;
 		case IDYES:
+            if(callback)
+                callback(AMSGBTN_YES);
 			return AMSGBTN_YES;
 		case IDNO:
+            if(callback)
+                callback(AMSGBTN_NO);
 			return AMSGBTN_NO;
 		case IDCANCEL:
+            if(callback)
+                callback(AMSGBTN_CANCEL);
 			return AMSGBTN_CANCEL;
 		}
 		return AMSGBTN_OK;
@@ -424,6 +462,7 @@ namespace april
             buttonTypes[0] = AMSGBTN_YES;
             buttonTypes[1] = AMSGBTN_NO;
             buttonTypes[2] = AMSGBTN_CANCEL;
+
 		}
 		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
 		{
@@ -471,38 +510,42 @@ namespace april
 			break;
 		}
         
+        if (callback) 
+        {
+            callback(buttonTypes[clicked]);
+        }
         return buttonTypes[clicked];
         
 #elif TARGET_OS_IPHONE
-		
+
         NSString *buttons[] = {@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
-		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, (MessageBoxButton)0, (MessageBoxButton)0};
+		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, AMSGBTN_NULL, AMSGBTN_NULL};
         
 		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
             
-            buttonTypes[0] = AMSGBTN_OK;
-            buttonTypes[1] = AMSGBTN_CANCEL;
-		}
+            buttonTypes[1] = AMSGBTN_OK;
+            buttonTypes[0] = AMSGBTN_CANCEL;
+        }
 		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
-			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
+			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
             
-            buttonTypes[0] = AMSGBTN_YES;
-            buttonTypes[1] = AMSGBTN_NO;
-            buttonTypes[2] = AMSGBTN_CANCEL;
+            buttonTypes[1] = AMSGBTN_YES;
+            buttonTypes[2] = AMSGBTN_NO;
+            buttonTypes[0] = AMSGBTN_CANCEL;
 		}
 		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
             
-            buttonTypes[0] = AMSGBTN_YES;
-            buttonTypes[1] = AMSGBTN_NO;
+            buttonTypes[1] = AMSGBTN_YES;
+            buttonTypes[0] = AMSGBTN_NO;
 		}
 		else if (buttonMask & AMSGBTN_CANCEL)
 		{
@@ -528,9 +571,13 @@ namespace april
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
 		NSString *textns = [NSString stringWithUTF8String:text.c_str()];
 		
+        AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] init] autorelease];
+        mbd.callback = callback;
+        mbd.buttonTypes = buttonTypes;
+        
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens
 														message:textns
-													   delegate:nil 
+													   delegate:mbd 
 											  cancelButtonTitle:buttons[0]
 											  otherButtonTitles:buttons[1], buttons[2], nil];
 		[alert show];
