@@ -132,6 +132,7 @@ namespace april
 	
 	enum MessageBoxButton
 	{
+		AMSGBTN_NULL = 0,
 		AMSGBTN_OK = 1,
 		AMSGBTN_CANCEL = 2,
 		AMSGBTN_YES = 4,
