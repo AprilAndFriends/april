@@ -37,28 +37,26 @@ namespace april
 				
 		mFirstFrameDrawn = false; // show window after drawing first frame
 		
-		CGRect frame = window.frame;
-		float wi = frame.size.height;
-		float hi = frame.size.width;
-		
-		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
-		{
-			frame.size.width = wi;
-			frame.size.height = hi;
-		}
+		CGRect frame = viewcontroller.view.frame;
+		float wi = frame.size.width;
+		float hi = frame.size.height;
+        frame.size.width = hi;
+        frame.size.height = wi;
 		
 		glview = [[[EAGLView alloc] initWithFrame:frame] autorelease];
-		
 				   
-				   //(window.bounds.size.height/2 - w/2, window.bounds.size.width/2 - h/2, h, w)] autorelease]; // FIXME on portrait orientations don't flip window.bounds.size.width and window.bounds.size.height
+        glview.transform = CGAffineTransformRotate(glview.transform, -M_PI/2);
+        glview.center = viewcontroller.view.center;
+        
 		if(!glview)
 			throw hl_exception("iOSWindow failed to create glview");
-		glview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		glview.aprilWindowVoid = this;
-
-
+        glview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+        NSLog(@"viewcontroller is oriented to %d", viewcontroller.interfaceOrientation);
 		[viewcontroller.view addSubview:glview];
-		
+        
+        
 		mRunning = true;
     }
     
@@ -182,16 +180,6 @@ namespace april
 		mCursorX=location.x; 
 		mCursorY=location.y;
 		
-		// detect pre-3.2 devices
-		if (![[UIScreen mainScreen] respondsToSelector:@selector(scale)])
-		{
-			// ... except on pre-3.2 devices where we did a
-			// FIXME hack with locking orientation, and the
-			// gui stays incorrectly rotated.
-			mCursorX = height-location.y;
-			mCursorY = location.x;
-		}
-		
 		
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer* caeagllayer = (CAEAGLLayer*)[glview layer];
@@ -272,12 +260,6 @@ namespace april
 		// currently, in the same way as is the case
 		// in rest of april for iOS, we only provide
 		// support for landscape orientations
-		
-		if (![[UIScreen mainScreen] respondsToSelector:@selector(scale)])
-		{
-			// pre-3.2 devices use a hack
-			return 90.0f;
-		}
 		
 		//NSLog(@"Orientation: %d", viewcontroller.interfaceOrientation);
 		switch (viewcontroller.interfaceOrientation) {

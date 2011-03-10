@@ -13,6 +13,24 @@
 #import "AprilViewController.h"
 #import "EAGLView.h"
 
+
+@interface AprilDummyViewController : UIViewController
+@end
+@implementation AprilDummyViewController
+- (void)loadView
+{
+    self.view = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 480, 320)] autorelease];
+    self.view.autoresizesSubviews = YES;    
+}
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
+{
+    //return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+    return YES;
+}
+@end
+
+
+
 @implementation AprilUIKitDelegate
 
 @synthesize window;
@@ -23,7 +41,7 @@ extern int(*april_RealMain)(int argc, char** argv);
 
 
 - (void)runMain:(id)sender
-{	
+{
 	// thanks to Kyle Poole for this trick
 	char *argv[] = {"april_ios"};
 	int status = april_RealMain (1, argv); //gArgc, gArgv);
@@ -33,23 +51,29 @@ extern int(*april_RealMain)(int argc, char** argv);
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 	
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
-	
+    [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight animated:NO];
+
 	// create a window.
 	// early creation so Default.png can be displayed while we're waiting for 
 	// game initialization
 	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
+    window.autoresizesSubviews = YES;
+    
+    // add dummy view controller, so that shouldAutorotate is respected on old devices
+    dummyViewController = [[UIViewController alloc] init];
+    [window addSubview:dummyViewController.view];
+    
 	// viewcontroller will automatically add imageview
-	viewController = [[AprilViewController alloc] initWithWindow:window];
-	[viewController loadView];
-	
+	viewController = [[[AprilViewController alloc] init] autorelease];
+    [dummyViewController presentModalViewController:viewController animated:NO];
+    [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight animated:NO];
+
 	// set window color
 	[window setBackgroundColor:[UIColor blackColor]];
 
 	// display the window
 	[window makeKeyAndVisible];
-	
-	
+
 	NSLog(@"Created window");
 	//////////
 	
