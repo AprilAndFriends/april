@@ -11,6 +11,7 @@
 #import "AprilViewController.h"
 #import "EAGLView.h"
 #import "WBImage.h"
+#import "AprilUIKitDelegate.h"
 
 @implementation AprilViewController
 
@@ -24,15 +25,6 @@
 }
 */
 
-
-- (id)initWithWindow:(UIWindow*)w
-{
-	if(self=[super init])
-	{
-		window = w; // just assign, to avoid circular references		
-	}
-	return self;
-}
 
 #pragma mark -
 #pragma mark Portions of WBImage
@@ -155,8 +147,7 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {	
-	[super loadView];
-	
+    	
 	UIUserInterfaceIdiom idiom = UIUserInterfaceIdiomPhone;
 	if ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom:)]) 
 	{
@@ -199,19 +190,14 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	[aiv startAnimating];
 #endif
 	
-	self.view = iv;
-	
-	[window addSubview:iv];
-	//window.transform = CGAffineTransformRotate(window.transform, 3.14159/2);
-	
 	iv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	/*CGRect frame = window.frame;
-	float wi = frame.size.height;
-	float hi = frame.size.width;
-	frame.size.width = wi;
-	frame.size.height = hi;
-	iv.frame = frame;
-	*/
+    iv.autoresizesSubviews = YES;
+    self.view = iv;
+    
+    
+    self.view.transform = CGAffineTransformMakeRotation(M_PI / 2.0); 
+	[self.view setCenter:[[(AprilUIKitDelegate*)[[UIApplication sharedApplication] delegate] window] center]];
+    
 }
 
 
@@ -221,31 +207,9 @@ static inline CGSize swapWidthAndHeight(CGSize size)
     [super viewDidLoad];
 }
 
-
-
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
-	
-	// detect pre-3.2 devices
-	if (![[UIScreen mainScreen] respondsToSelector:@selector(scale)])
-	{
-		// hack due to odd behavior of these devices.
-		// view controller believes the UI was transformed properly,
-		// yet it's improperly placed on screen.
-		// after first rotation everything works.
-		
-		// FIXME nevertheless we always return NO for anything but portrait
-		return interfaceOrientation == UIInterfaceOrientationLandscapeLeft; //UIInterfaceOrientationPortrait;
-		
-		static BOOL firstRotation = YES;
-		if(firstRotation)
-		{
-			NSLog(@"First rotation");
-			firstRotation = NO;
-			return NO;
-		}
-	}
 	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 

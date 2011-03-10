@@ -29,6 +29,7 @@ typedef void*(*AprilRemoteNotificationsHandler_t)(void *data);
 
 @interface AprilUIKitDelegate : NSObject<UIApplicationDelegate> {
 	UIWindow *window;
+    UIViewController *dummyViewController;
 	AprilViewController *viewController;
 	AprilRemoteNotificationsHandler_t onPushRegistrationSuccess;
 	AprilRemoteNotificationsHandler_t onPushRegistrationFailure;

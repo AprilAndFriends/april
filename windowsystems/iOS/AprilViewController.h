@@ -11,7 +11,5 @@
 #import <UIKit/UIKit.h>
 
 @interface AprilViewController : UIViewController {
-	UIWindow* window;
 }
-- (id)initWithWindow:(UIWindow*)w;
 @end
