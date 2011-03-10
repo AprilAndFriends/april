@@ -137,7 +137,6 @@ namespace april
 				id defaultImageView = [[window subviews] objectAtIndex:0];
 				if(defaultImageView && [defaultImageView isKindOfClass:[UIImageView class]])
 				{
-					NSLog(@"removing from superview");
 					[glview removeFromSuperview];
 					[defaultImageView removeFromSuperview];
 					

@@ -83,7 +83,6 @@
 		if ([eaglLayer respondsToSelector:@selector(setContentsScale:)])
 		{
 			if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) { // iphone 4
-				NSLog(@"Setting hires scale: %g", [[UIScreen mainScreen] scale]);
 				eaglLayer.contentsScale = [[UIScreen mainScreen] scale];
 			}
 		}
