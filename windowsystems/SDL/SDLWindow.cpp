@@ -37,8 +37,8 @@ namespace april
 		//april::log("Creating SDL Windowsystem");
 		
 		// we want a centered sdl window
-		putenv("SDL_VIDEO_WINDOW_POS");
-		putenv("SDL_VIDEO_CENTERED=1");
+		putenv((char*) "SDL_VIDEO_WINDOW_POS");
+		putenv((char*) "SDL_VIDEO_CENTERED=1");
 		
 		// initialize SDL subsystems, such as video, audio, timer, ...
 		// and immediately set window title

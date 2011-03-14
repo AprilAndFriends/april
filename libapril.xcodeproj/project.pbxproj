@@ -22,7 +22,6 @@
 		7F42F7AC11EB179A00B1C1DF /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */; };
 		7F42F83211EB1A9700B1C1DF /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42F83111EB1A9700B1C1DF /* gtypes.framework */; };
 		7F42F83411EB1A9700B1C1DF /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42F83311EB1A9700B1C1DF /* hltypes.framework */; };
-		7F42FACB11EB341E00B1C1DF /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42FACA11EB341E00B1C1DF /* GLUT.framework */; };
 		7F42FACD11EB341E00B1C1DF /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42FACC11EB341E00B1C1DF /* OpenGL.framework */; };
 		7F42FAD511EB342900B1C1DF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42FAD411EB342900B1C1DF /* Cocoa.framework */; };
 		7F42FD7711EB632E00B1C1DF /* ImageSourceCG.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */; };
@@ -32,8 +31,6 @@
 		7F5A5D2E11FD9DEB003C05A4 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F5A5D2D11FD9DEB003C05A4 /* SDL.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		7FA3ED1811F9817A001D1DDD /* Window.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA3ED1711F9817A001D1DDD /* Window.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
-		7FA3EDB311F997FC001D1DDD /* GLUTWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3EDB211F997FC001D1DDD /* GLUTWindow.cpp */; };
-		7FA3EEB511F9C6BE001D1DDD /* GLUTWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA3EEB411F9C6BE001D1DDD /* GLUTWindow.h */; };
 		7FC8FA29122FA58F0092964C /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8FA28122FA58F0092964C /* Timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8FA75122FACA30092964C /* TimerSDL.cpp */; };
 		7FCD394412018BD300608217 /* main_mac.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FCD394312018BD300608217 /* main_mac.m */; };
@@ -66,8 +63,6 @@
 		7F5A5D2D11FD9DEB003C05A4 /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = Library/Frameworks/SDL.framework; sourceTree = SDKROOT; };
 		7FA3ED1711F9817A001D1DDD /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Window.h; path = include/april/Window.h; sourceTree = "<group>"; };
 		7FA3ED2611F98BAE001D1DDD /* Window.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Window.cpp; path = src/Window.cpp; sourceTree = "<group>"; };
-		7FA3EDB211F997FC001D1DDD /* GLUTWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLUTWindow.cpp; path = windowsystems/GLUT/GLUTWindow.cpp; sourceTree = "<group>"; };
-		7FA3EEB411F9C6BE001D1DDD /* GLUTWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLUTWindow.h; path = windowsystems/GLUT/GLUTWindow.h; sourceTree = "<group>"; };
 		7FC8FA28122FA58F0092964C /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
 		7FC8FA75122FACA30092964C /* TimerSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerSDL.cpp; path = src/TimerSDL.cpp; sourceTree = "<group>"; };
 		7FCD394312018BD300608217 /* main_mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main_mac.m; sourceTree = "<group>"; };
@@ -82,7 +77,6 @@
 			files = (
 				7F42F83211EB1A9700B1C1DF /* gtypes.framework in Frameworks */,
 				7F42F83411EB1A9700B1C1DF /* hltypes.framework in Frameworks */,
-				7F42FACB11EB341E00B1C1DF /* GLUT.framework in Frameworks */,
 				7F42FACD11EB341E00B1C1DF /* OpenGL.framework in Frameworks */,
 				7F42FAD511EB342900B1C1DF /* Cocoa.framework in Frameworks */,
 				7F5A5D2E11FD9DEB003C05A4 /* SDL.framework in Frameworks */,
@@ -196,7 +190,6 @@
 		7FA3ED1111F9813E001D1DDD /* Window Systems */ = {
 			isa = PBXGroup;
 			children = (
-				7FA3ED1311F98148001D1DDD /* GLUT */,
 				7FA3ED1211F98145001D1DDD /* SDL */,
 			);
 			name = "Window Systems";
@@ -211,15 +204,6 @@
 			name = SDL;
 			sourceTree = "<group>";
 		};
-		7FA3ED1311F98148001D1DDD /* GLUT */ = {
-			isa = PBXGroup;
-			children = (
-				7FA3EEB411F9C6BE001D1DDD /* GLUTWindow.h */,
-				7FA3EDB211F997FC001D1DDD /* GLUTWindow.cpp */,
-			);
-			name = GLUT;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -231,7 +215,6 @@
 				7F42F7A711EB178C00B1C1DF /* Keys.h in Headers */,
 				7F42F7A811EB178C00B1C1DF /* RenderSystem.h in Headers */,
 				7FA3ED1811F9817A001D1DDD /* Window.h in Headers */,
-				7FA3EEB511F9C6BE001D1DDD /* GLUTWindow.h in Headers */,
 				7F5A5D2811FD9CAB003C05A4 /* SDLWindow.h in Headers */,
 				7F4D0FEA11FEE6C500F2F9F5 /* main.h in Headers */,
 				7FC8FA29122FA58F0092964C /* Timer.h in Headers */,
@@ -308,7 +291,6 @@
 				7F42F7AC11EB179A00B1C1DF /* RenderSystem.cpp in Sources */,
 				7F42FD7711EB632E00B1C1DF /* ImageSourceCG.mm in Sources */,
 				7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */,
-				7FA3EDB311F997FC001D1DDD /* GLUTWindow.cpp in Sources */,
 				7F5A5D2711FD9CAB003C05A4 /* SDLWindow.cpp in Sources */,
 				7FCD394412018BD300608217 /* main_mac.m in Sources */,
 				7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */,
@@ -382,7 +364,6 @@
 					_UNIX,
 					BUILDING_APRIL,
 					HAVE_SDL,
-					HAVE_GLUT,
 				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -397,13 +378,15 @@
 		1DEB91B308733DA50010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					i386,
+					ppc,
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_UNIX,
 					BUILDING_APRIL,
 					HAVE_SDL,
-					HAVE_GLUT,
 				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -423,7 +406,6 @@
 					_UNIX,
 					BUILDING_APRIL,
 					HAVE_SDL,
-					HAVE_GLUT,
 				);
 				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -456,6 +438,96 @@
 			};
 			name = "App Store";
 		};
+		C981CCB7132AEAE20072B5A9 /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_UNIX,
+					BUILDING_APRIL,
+					HAVE_SDL,
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				PRODUCT_NAME = april;
+				SDKROOT = macosx10.6;
+			};
+			name = "Debug-LLVM";
+		};
+		C981CCB8132AEAE20072B5A9 /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					_OPENGL,
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				INFOPLIST_FILE = Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				SKIP_INSTALL = NO;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = "Debug-LLVM";
+		};
+		C981CCB9132AEAEA0072B5A9 /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_UNIX,
+					BUILDING_APRIL,
+					HAVE_SDL,
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				PRODUCT_NAME = april;
+				SDKROOT = macosx10.6;
+			};
+			name = "Release-LLVM";
+		};
+		C981CCBA132AEAEA0072B5A9 /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = /;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					_OPENGL,
+				);
+				INFOPLIST_FILE = Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
+				SKIP_INSTALL = NO;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = "Release-LLVM";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -463,7 +535,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB91AE08733DA50010E9CD /* Debug */,
+				C981CCB8132AEAE20072B5A9 /* Debug-LLVM */,
 				1DEB91AF08733DA50010E9CD /* Release */,
+				C981CCBA132AEAEA0072B5A9 /* Release-LLVM */,
 				7FC8A8A91296C768003D3931 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -473,7 +547,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB91B208733DA50010E9CD /* Debug */,
+				C981CCB7132AEAE20072B5A9 /* Debug-LLVM */,
 				1DEB91B308733DA50010E9CD /* Release */,
+				C981CCB9132AEAEA0072B5A9 /* Release-LLVM */,
 				7FC8A8A81296C768003D3931 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
