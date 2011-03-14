@@ -131,7 +131,7 @@ namespace april
 		int index = filename.rfind(".");
 		if (index >= 0)
 		{
-			hstr filename = filename.substr(0, index);
+			filename = filename.substr(0, index);
 			foreach (hstr, it, extensions)
 			{
 				name = filename + (*it);
