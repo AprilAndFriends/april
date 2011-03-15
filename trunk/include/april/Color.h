@@ -25,17 +25,17 @@ namespace april
 		unsigned char a;
 		
 		Color();
-		Color(int _r, int _g, int _b, int _a = 255);
-		Color(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 255);
+		Color(int r, int g, int b, int a = 255);
+		Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255);
 		Color(unsigned int color);
 		Color(chstr hex);
-		Color(Color color, unsigned char _a);
+		Color(Color color, unsigned char a);
 
-		void set(int _r, int _g, int _b, int _a = 255);
-		void set(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 255);
+		void set(int r, int g, int b, int a = 255);
+		void set(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255);
 		void set(unsigned int color);
 		void set(chstr hex);
-		void set(Color color, unsigned char _a);
+		void set(Color color, unsigned char a);
 
 		float r_f() { return r / 255.0f; }
 		float g_f() { return g / 255.0f; }
