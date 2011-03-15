@@ -79,37 +79,36 @@ namespace april
 	{
 	}
 
+	PlainVertex pVertices[4];
 	void RenderSystem::drawColoredQuad(grect rect, Color color)
 	{
-		PlainVertex v[4];
-		v[0].x = rect.x;          v[0].y = rect.y;          v[0].z = 0;
-		v[1].x = rect.x + rect.w; v[1].y = rect.y;          v[1].z = 0;
-		v[2].x = rect.x;          v[2].y = rect.y + rect.h; v[2].z = 0;
-		v[3].x = rect.x + rect.w; v[3].y = rect.y + rect.h; v[3].z = 0;
+		pVertices[0].x = rect.x;          pVertices[0].y = rect.y;          pVertices[0].z = 0;
+		pVertices[1].x = rect.x + rect.w; pVertices[1].y = rect.y;          pVertices[1].z = 0;
+		pVertices[2].x = rect.x;          pVertices[2].y = rect.y + rect.h; pVertices[2].z = 0;
+		pVertices[3].x = rect.x + rect.w; pVertices[3].y = rect.y + rect.h; pVertices[3].z = 0;
 		
-		render(TriangleStrip, v, 4, color);
+		render(TriangleStrip, pVertices, 4, color);
 	}
 	
+	TexturedVertex tVertices[4];
 	void RenderSystem::drawTexturedQuad(grect rect, grect src)
 	{
-		TexturedVertex v[4];
-		v[0].x = rect.x;          v[0].y = rect.y;          v[0].z = 0; v[0].u = src.x;         v[0].v = src.y;
-		v[1].x = rect.x + rect.w; v[1].y = rect.y;          v[1].z = 0; v[1].u = src.x + src.w; v[1].v = src.y;
-		v[2].x = rect.x;          v[2].y = rect.y + rect.h; v[2].z = 0; v[2].u = src.x;         v[2].v = src.y + src.h;
-		v[3].x = rect.x + rect.w; v[3].y = rect.y + rect.h; v[3].z = 0; v[3].u = src.x + src.w; v[3].v = src.y + src.h;
+		tVertices[0].x = rect.x;          tVertices[0].y = rect.y;          tVertices[0].z = 0; tVertices[0].u = src.x;         tVertices[0].v = src.y;
+		tVertices[1].x = rect.x + rect.w; tVertices[1].y = rect.y;          tVertices[1].z = 0; tVertices[1].u = src.x + src.w; tVertices[1].v = src.y;
+		tVertices[2].x = rect.x;          tVertices[2].y = rect.y + rect.h; tVertices[2].z = 0; tVertices[2].u = src.x;         tVertices[2].v = src.y + src.h;
+		tVertices[3].x = rect.x + rect.w; tVertices[3].y = rect.y + rect.h; tVertices[3].z = 0; tVertices[3].u = src.x + src.w; tVertices[3].v = src.y + src.h;
 
-		render(TriangleStrip, v, 4);		
+		render(TriangleStrip, tVertices, 4);		
 	}
 	
 	void RenderSystem::drawTexturedQuad(grect rect, grect src, Color color)
 	{
-		TexturedVertex v[4];
-		v[0].x = rect.x;          v[0].y = rect.y;          v[0].z = 0; v[0].u = src.x;         v[0].v = src.y;
-		v[1].x = rect.x + rect.w; v[1].y = rect.y;          v[1].z = 0; v[1].u = src.x + src.w; v[1].v = src.y;
-		v[2].x = rect.x;          v[2].y = rect.y + rect.h; v[2].z = 0; v[2].u = src.x;         v[2].v = src.y + src.h;
-		v[3].x = rect.x + rect.w; v[3].y = rect.y + rect.h; v[3].z = 0; v[3].u = src.x + src.w; v[3].v = src.y + src.h;
+		tVertices[0].x = rect.x;          tVertices[0].y = rect.y;          tVertices[0].z = 0; tVertices[0].u = src.x;         tVertices[0].v = src.y;
+		tVertices[1].x = rect.x + rect.w; tVertices[1].y = rect.y;          tVertices[1].z = 0; tVertices[1].u = src.x + src.w; tVertices[1].v = src.y;
+		tVertices[2].x = rect.x;          tVertices[2].y = rect.y + rect.h; tVertices[2].z = 0; tVertices[2].u = src.x;         tVertices[2].v = src.y + src.h;
+		tVertices[3].x = rect.x + rect.w; tVertices[3].y = rect.y + rect.h; tVertices[3].z = 0; tVertices[3].u = src.x + src.w; tVertices[3].v = src.y + src.h;
 		
-		render(TriangleStrip, v, 4, color);
+		render(TriangleStrip, tVertices, 4, color);
 	}
 	
 	hstr RenderSystem::findTextureFile(chstr _filename)
