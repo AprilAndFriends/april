@@ -31,14 +31,14 @@ namespace april
 		this->a = 255;
 	}
 
-	Color::Color(int _r, int _g, int _b, int _a)
+	Color::Color(int r, int g, int b, int a)
 	{
-		this->set(_r, _g, _b, _a);
+		this->set(r, g, b, a);
 	}
 
-	Color::Color(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
+	Color::Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 	{
-		this->set(_r, _g, _b, _a);
+		this->set(r, g, b, a);
 	}
 
 	Color::Color(unsigned int color)
@@ -51,25 +51,25 @@ namespace april
 		this->set(hex);
 	}
 
-	Color::Color(Color color, unsigned char _a)
+	Color::Color(Color color, unsigned char a)
 	{
-		this->set(color, _a);
+		this->set(color, a);
 	}
 
-	void Color::set(int _r, int _g, int _b, int _a)
+	void Color::set(int r, int g, int b, int a)
 	{
-		this->r = (unsigned char) _r;
-		this->g = (unsigned char) _g;
-		this->b = (unsigned char) _b;
-		this->a = (unsigned char) _a;
+		this->r = (unsigned char)r;
+		this->g = (unsigned char)g;
+		this->b = (unsigned char)b;
+		this->a = (unsigned char)a;
 	}
 
-	void Color::set(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
+	void Color::set(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 	{
-		this->r = _r;
-		this->g = _g;
-		this->b = _b;
-		this->a = _a;
+		this->r = r;
+		this->g = g;
+		this->b = b;
+		this->a = a;
 	}
 
 	void Color::set(unsigned int color)
@@ -97,12 +97,12 @@ namespace april
 		this->a = (value.size() == 10 ? hexstr_to_int(value(8, 2)) : 255);
 	}
 	
-	void Color::set(Color color, unsigned char _a)
+	void Color::set(Color color, unsigned char a)
 	{
 		this->r = color.r;
 		this->g = color.g;
 		this->b = color.b;
-		this->a = _a;
+		this->a = a;
 	}
 
 	hstr Color::hex(bool rgbOnly)
