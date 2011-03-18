@@ -51,7 +51,7 @@ extern int(*april_RealMain)(int argc, char** argv);
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 	
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
-    [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight animated:NO];
+    [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeLeft animated:NO];
 
 	// create a window.
 	// early creation so Default.png can be displayed while we're waiting for 
@@ -66,7 +66,7 @@ extern int(*april_RealMain)(int argc, char** argv);
 	// viewcontroller will automatically add imageview
 	viewController = [[[AprilViewController alloc] init] autorelease];
     [dummyViewController presentModalViewController:viewController animated:NO];
-    [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeRight animated:NO];
+    [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeLeft animated:NO];
 
 	// set window color
 	[window setBackgroundColor:[UIColor blackColor]];
