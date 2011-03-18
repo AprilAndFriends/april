@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\windowsystems">
+      <UniqueIdentifier>{89a33cfd-9923-463b-8900-b6ec0c384d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems">
+      <UniqueIdentifier>{3bb5863e-68d7-4150-9cdb-7ad981c4596a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\windowsystems">
+      <UniqueIdentifier>{f31eac1f-9820-4ea3-8fea-773ecc1f6167}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems">
+      <UniqueIdentifier>{2cbdabf4-1f5a-41ba-afef-961f8d5343c8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImageSourceIL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TimerWin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\Win32\Win32Window.cpp">
+      <Filter>Source Files\windowsystems</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_Texture.cpp">
+      <Filter>Source Files\rendersystems</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp">
+      <Filter>Source Files\rendersystems</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\april\aprilExport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\ImageSource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Keys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\RenderSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\Win32\Win32Window.h">
+      <Filter>Header Files\windowsystems</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_RenderSystem.h">
+      <Filter>Header Files\rendersystems</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_Texture.h">
+      <Filter>Header Files\rendersystems</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h">
+      <Filter>Header Files\rendersystems</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h">
+      <Filter>Header Files\rendersystems</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
