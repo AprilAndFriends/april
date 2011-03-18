@@ -14,10 +14,10 @@
 #import "EAGLView.h"
 #import "iOSWindow.h"
 #import "RenderSystem.h"
-#import "AprilUIKitDelegate.h"
+#import "ApriliOSAppDelegate.h"
 #import <hltypes/exception.h>
 
-static AprilUIKitDelegate *appDelegate;
+static ApriliOSAppDelegate *appDelegate;
 static UIWindow *window;
 static EAGLView *glview;
 static AprilViewController *viewcontroller;
@@ -26,7 +26,7 @@ namespace april
 {
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
-		appDelegate = ((AprilUIKitDelegate*)[[UIApplication sharedApplication] delegate]);
+		appDelegate = ((ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate]);
 		viewcontroller = [appDelegate viewController];
 		window = [appDelegate window];
 		if(fullscreen)
@@ -53,9 +53,7 @@ namespace april
 		glview.aprilWindowVoid = this;
         glview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
-        NSLog(@"viewcontroller is oriented to %d", viewcontroller.interfaceOrientation);
 		[viewcontroller.view addSubview:glview];
-        
         
 		mRunning = true;
     }

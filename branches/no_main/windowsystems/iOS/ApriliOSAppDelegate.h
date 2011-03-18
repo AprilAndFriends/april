@@ -27,7 +27,7 @@ typedef void*(*AprilRemoteNotificationsHandler_t)(void *data);
 
 @class AprilViewController;
 
-@interface AprilUIKitDelegate : NSObject<UIApplicationDelegate> {
+@interface ApriliOSAppDelegate : NSObject<UIApplicationDelegate> {
 	UIWindow *window;
     UIViewController *dummyViewController;
 	AprilViewController *viewController;

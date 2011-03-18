@@ -10,32 +10,16 @@ Copyright (c) 2010 Ivan Vucica                                                  
 #ifndef APRIL_MAIN_H
 #define APRIL_MAIN_H
 
-#ifdef __cplusplus
-extern "C" {
+#include <hltypes/hstring.h>
+#include <hltypes/harray.h>
+
+#ifndef BUILDING_APRIL
+#define main __ STOP_USING_MAIN___DEPRECATED_IN_APRIL
 #endif
+    
+extern void april_init(const harray<hstr>& argv);
+extern void april_destroy();
 
-#ifdef __APPLE__
-
-int april_real_main(int argc, char** argv);
-int april_main(int(*real_main)(int argc, char** argv), int argc, char** argv);
-	
-#ifdef BUILDING_APRIL
-int main(int argc, char** argv);
-#else
-int main(int argc, char** argv)
-{
-	return april_main(april_real_main, argc, argv);
-}
-#endif
-	
-#define main april_real_main
-
-#else
-
-#endif
-
-#ifdef __cplusplus
-} // extern C
-#endif
+#define APRIL_NO_MAIN 1
 	
 #endif
