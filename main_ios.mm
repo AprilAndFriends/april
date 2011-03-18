@@ -11,16 +11,10 @@
 #import <UIKit/UIKit.h>
 #import "main.h"
 
-//int main(int argc, char *argv[]) {
-
-int(*april_RealMain)(int argc, char** argv);
-
-
-int april_main (int(*real_main)(int argc, char** argv), int argc, char **argv)
+int main (int argc, char **argv)
 {
-	april_RealMain = real_main;
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-	int retVal = UIApplicationMain(argc, argv, nil, @"AprilUIKitDelegate");
+	int retVal = UIApplicationMain(argc, argv, nil, @"ApriliOSAppDelegate");
     [pool release];
     return retVal;
 }

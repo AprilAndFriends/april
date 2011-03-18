@@ -11,7 +11,7 @@
 #import "AprilViewController.h"
 #import "EAGLView.h"
 #import "WBImage.h"
-#import "AprilUIKitDelegate.h"
+#import "ApriliOSAppDelegate.h"
 
 @implementation AprilViewController
 
@@ -196,7 +196,7 @@ static inline CGSize swapWidthAndHeight(CGSize size)
     
     
     self.view.transform = CGAffineTransformMakeRotation(M_PI / 2.0); 
-	[self.view setCenter:[[(AprilUIKitDelegate*)[[UIApplication sharedApplication] delegate] window] center]];
+	[self.view setCenter:[[(ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate] window] center]];
     
 }
 

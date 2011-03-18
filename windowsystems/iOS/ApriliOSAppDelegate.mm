@@ -8,7 +8,7 @@
  * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
  \************************************************************************************/
 
-#import "AprilUIKitDelegate.h"
+#import "ApriliOSAppDelegate.h"
 #import "main.h"
 #import "AprilViewController.h"
 #import "EAGLView.h"
@@ -31,22 +31,12 @@
 
 
 
-@implementation AprilUIKitDelegate
+@implementation ApriliOSAppDelegate
 
 @synthesize window;
 @synthesize viewController;
 @synthesize onPushRegistrationSuccess;
 @synthesize onPushRegistrationFailure;
-extern int(*april_RealMain)(int argc, char** argv);
-
-
-- (void)runMain:(id)sender
-{
-	// thanks to Kyle Poole for this trick
-	char *argv[] = {"april_ios"};
-	int status = april_RealMain (1, argv); //gArgc, gArgv);
-#pragma unused(status)
-}
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 	
@@ -78,13 +68,7 @@ extern int(*april_RealMain)(int argc, char** argv);
 	//////////
 	
 	
-	// thanks to Kyle Poole for this trick
-	// also used in latest SDL
-	// quote:
-	// KP: using a selector gets around the "failed to launch application in time" if the startup code takes too long
-	// This is easy to see if running with Valgrind
-
-	[self performSelector:@selector(runMain:) withObject:nil afterDelay:0.2f];
+    april_init(harray<hstr>());
 }
 
 
@@ -93,6 +77,10 @@ extern int(*april_RealMain)(int argc, char** argv);
 	NSLog(@"April-based application received memory warning!");
 }
 
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+    april_destroy();
+}
 
 
 - (void)applicationWillResignActive:(UIApplication *)application
