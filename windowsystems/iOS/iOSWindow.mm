@@ -60,18 +60,15 @@ namespace april
     
     void iOSWindow::enterMainLoop()
     {
-		while (mRunning) 
-		{
-			// parse UIKit events
-			doEvents();
-			handleDisplayAndUpdate();
-		}
+        NSLog(@"Fatal error: Using enterMainLoop on iOS!");
+        exit(-1);
     }
 	
 	
     void iOSWindow::terminateMainLoop()
     {
-        mRunning = false;
+        NSLog(@"Fatal error: Using terminateMainLoop on iOS!");
+        exit(-2);
     }
     void iOSWindow::showSystemCursor(bool visible)
     {
@@ -117,6 +114,7 @@ namespace april
 	
     void iOSWindow::presentFrame()
     {
+
 		if(mFirstFrameDrawn)
 		{
 			[glview swapBuffers];

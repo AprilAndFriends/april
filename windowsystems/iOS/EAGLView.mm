@@ -172,7 +172,7 @@
     [EAGLContext setCurrentContext:context];
 	
 	//mydraw();
-	//((April::iOSWindow*)aprilWindow)->handleDisplayAndUpdate();
+	((april::iOSWindow*)aprilWindow)->handleDisplayAndUpdate();
 	
 
 
