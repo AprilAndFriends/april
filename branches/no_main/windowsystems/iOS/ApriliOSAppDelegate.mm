@@ -65,12 +65,27 @@
 	[window makeKeyAndVisible];
 
 	NSLog(@"Created window");
-	//////////
 	
-	
-    april_init(harray<hstr>());
+    //////////
+	// thanks to Kyle Poole for this trick
+    // also used in latest SDL
+    // quote:
+    // KP: using a selector gets around the "failed to launch application in time" if the startup code takes too long
+    // This is easy to see if running with Valgrind
+	[self performSelector:@selector(performInit:) withObject:nil afterDelay:0.2f];
+    
 }
 
+- (void)performInit:(id)object
+{
+    
+    april_init(harray<hstr>());
+    //if ([[viewController.view subviews] count]) 
+    //{
+    //    EAGLView* glview = [[viewController.view subviews] objectAtIndex:0];
+    //    [glview startAnimation];
+    //}
+}
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
@@ -79,22 +94,42 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+    if (![[viewController.view subviews] count]) 
+    {
+        return;
+    }
+    EAGLView* glview = [[viewController.view subviews] objectAtIndex:0];
+    [glview stopAnimation];
     april_destroy();
 }
 
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-	if ([viewController.view respondsToSelector:@selector(applicationWillResignActive:)]) {
-		[(EAGLView*)viewController.view applicationWillResignActive:application];
+    if (![[viewController.view subviews] count]) 
+    {
+        return;
+    }
+    EAGLView* glview = [[viewController.view subviews] objectAtIndex:0];
+    if ([glview respondsToSelector:@selector(applicationWillResignActive:)]) 
+    {
+		[glview applicationWillResignActive:application];
 	}
+    [glview stopAnimation];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-	if ([viewController.view respondsToSelector:@selector(applicationDidBecomeActive:)]) {
-		[(EAGLView*)viewController.view applicationDidBecomeActive:application];
+    if (![[viewController.view subviews] count]) 
+    {
+        return;
+    }
+    EAGLView* glview = [[viewController.view subviews] objectAtIndex:0];
+    if ([glview respondsToSelector:@selector(applicationDidBecomeActive:)]) 
+    {
+		[glview applicationDidBecomeActive:application];
 	}
+    [glview startAnimation];
 }
 
 

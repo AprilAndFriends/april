@@ -39,7 +39,7 @@
 		7FA1ABA212422C03004689AE /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA1ABA112422C03004689AE /* TimerPosix.cpp */; };
 		7FD37C1812AD2C070007A403 /* WBImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FD37C1612AD2C070007A403 /* WBImage.h */; };
 		7FD37C1912AD2C070007A403 /* WBImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FD37C1712AD2C070007A403 /* WBImage.m */; };
-		7FE15353133392C1006C443A /* ApriliOSAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FE15351133392C1006C443A /* ApriliOSAppDelegate.h */; };
+		7FE15353133392C1006C443A /* ApriliOSAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FE15351133392C1006C443A /* ApriliOSAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FF4960912476B9800A22D50 /* iOSWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF4960712476B9800A22D50 /* iOSWindow.h */; };
 		7FF4960A12476B9800A22D50 /* iOSWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF4960812476B9800A22D50 /* iOSWindow.mm */; };
 		7FF4961712476BED00A22D50 /* EAGLView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF4961512476BED00A22D50 /* EAGLView.h */; };
