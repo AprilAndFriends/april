@@ -80,11 +80,11 @@
 {
     
     april_init(harray<hstr>());
-    //if ([[viewController.view subviews] count]) 
-    //{
-    //    EAGLView* glview = [[viewController.view subviews] objectAtIndex:0];
-    //    [glview startAnimation];
-    //}
+    if ([[viewController.view subviews] count]) 
+    {
+        EAGLView* glview = [[viewController.view subviews] objectAtIndex:0];
+        [glview startAnimation];
+    }
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
@@ -98,8 +98,15 @@
     {
         return;
     }
-    EAGLView* glview = [[viewController.view subviews] objectAtIndex:0];
-    [glview stopAnimation];
+    for (EAGLView *glview in [viewController.view subviews]) 
+    {
+        if ([glview isKindOfClass:[EAGLView class]]) 
+        {
+            [glview stopAnimation];
+            
+            return;
+        }
+    }
     april_destroy();
 }
 
@@ -110,12 +117,16 @@
     {
         return;
     }
-    EAGLView* glview = [[viewController.view subviews] objectAtIndex:0];
-    if ([glview respondsToSelector:@selector(applicationWillResignActive:)]) 
+    for (EAGLView *glview in [viewController.view subviews]) 
     {
-		[glview applicationWillResignActive:application];
-	}
-    [glview stopAnimation];
+        if ([glview isKindOfClass:[EAGLView class]]) 
+        {
+            [glview applicationWillResignActive:application];
+            [glview stopAnimation];
+
+            return;
+        }
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -124,12 +135,17 @@
     {
         return;
     }
-    EAGLView* glview = [[viewController.view subviews] objectAtIndex:0];
-    if ([glview respondsToSelector:@selector(applicationDidBecomeActive:)]) 
+    for (EAGLView *glview in [viewController.view subviews]) 
     {
-		[glview applicationDidBecomeActive:application];
-	}
-    [glview startAnimation];
+        if ([glview isKindOfClass:[EAGLView class]]) 
+        {
+            [glview applicationDidBecomeActive:application];
+            [glview startAnimation];
+            
+            return;
+        }
+    }
+
 }
 
 
