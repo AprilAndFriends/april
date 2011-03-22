@@ -41,11 +41,19 @@ int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)
 
 #ifndef BUILDING_APRIL
 //{
+#if !defined(_WIN32) || defined(_CONSOLE)
 int main (int argc, char **argv)
 {
     april_main(april_init, april_destroy, argc, argv);
     return 0;
 }
+#else
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+    april_main(april_init, april_destroy, 0, NULL);
+    return 0;
+}
+#endif
 #define main __ STOP_USING_MAIN___DEPRECATED_IN_APRIL
 //}
 #endif
