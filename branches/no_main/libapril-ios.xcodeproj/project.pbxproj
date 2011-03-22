@@ -186,7 +186,6 @@
 		7F42F79F11EB177B00B1C1DF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				7F8DA51313339EA8008FA71C /* main_ios.mm */,
 				7F1B546512E47C5900E958D8 /* Color.cpp */,
 				7F1B546612E47C5900E958D8 /* Texture.cpp */,
 				7FA1ABA112422C03004689AE /* TimerPosix.cpp */,
@@ -194,6 +193,7 @@
 				7F42F7A911EB179A00B1C1DF /* ImageSourceIL.cpp */,
 				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
 				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
+				7F8DA51313339EA8008FA71C /* main_ios.mm */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
