@@ -13,6 +13,8 @@
 #include <hltypes/hstring.h>
 #include <hltypes/harray.h>
 
+#include "aprilExport.h"
+
 /**
  * \file main.h
  *
@@ -37,7 +39,7 @@
 extern void april_init(const harray<hstr>& argv);
 extern void april_destroy();
 
-int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char **argv);
+aprilExport int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char **argv);
 
 #ifndef BUILDING_APRIL
 //{
