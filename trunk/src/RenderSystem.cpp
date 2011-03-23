@@ -143,7 +143,7 @@ namespace april
 		return "";
 	}
 	
-	Texture* RenderSystem::loadRAMTexture(chstr filename, bool dynamic)
+	RAMTexture* RenderSystem::loadRAMTexture(chstr filename, bool dynamic)
 	{
 		hstr name = findTextureFile(filename);
 		if (name == "")
