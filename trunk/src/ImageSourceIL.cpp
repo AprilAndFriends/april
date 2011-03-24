@@ -84,4 +84,22 @@ namespace april
 		img->data = ilGetData();
 		return img;
 	}
+
+	ImageSource* createEmptyImage(int w, int h)
+	{
+		ImageSource* img = new ImageSource();
+		ilBindImage(img->getImageId());
+		int size = w * h * 4 * sizeof(unsigned char);
+		unsigned char* data = new unsigned char[size];
+		memset(data, 0, size);
+		ilTexImage(w, h, 1, 4, IL_RGBA, IL_UNSIGNED_BYTE, data);
+		delete [] data;
+		img->w = ilGetInteger(IL_IMAGE_WIDTH);
+		img->h = ilGetInteger(IL_IMAGE_HEIGHT);
+		img->bpp = ilGetInteger(IL_IMAGE_BPP);
+		img->format = ilGetInteger(IL_IMAGE_FORMAT);
+		img->data = ilGetData();
+		return img;
+	}
+
 }

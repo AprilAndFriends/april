@@ -85,6 +85,7 @@ namespace april
 	{
 	public:
 		RAMTexture(chstr filename, bool dynamic);
+		RAMTexture(int w, int h);
 		virtual ~RAMTexture();
 		void load();
 		void unload();
