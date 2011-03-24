@@ -608,7 +608,7 @@ namespace april
 #else
 		april::log(hsprintf("== %s ==", title.c_str()));
 		april::log(text);
-		april::log(hsprintf(("Button mask: %c%c%c%c", 
+		april::log(hsprintf("Button mask: %c%c%c%c", 
 							   buttonMask & AMSGBTN_OK ? '+' : '-', 
 							   buttonMask & AMSGBTN_CANCEL ? '+' : '-',
 							   buttonMask & AMSGBTN_YES ? '+' : '-',
