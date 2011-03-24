@@ -43,7 +43,8 @@ namespace april
 		
 	};
 	
-	ImageSource* loadImage(chstr filename);
+	aprilFnExport ImageSource* loadImage(chstr filename);
+	aprilFnExport ImageSource* createEmptyImage(int w, int h);
 	
 }
 

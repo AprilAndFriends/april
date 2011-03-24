@@ -150,7 +150,12 @@ namespace april
 		{
 			return 0;
 		}
-		return new RAMTexture(name,dynamic);
+		return new RAMTexture(name, dynamic);
+	}
+	
+	RAMTexture* RenderSystem::createEmptyRAMTexture(int w, int h)
+	{
+		return new RAMTexture(w, h);
 	}
 	
 	void RenderSystem::setIdentityTransform()
