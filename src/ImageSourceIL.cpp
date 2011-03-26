@@ -31,8 +31,8 @@ namespace april
 	{
 		x = hclamp(x, 0, w - 1);
 		y = hclamp(y, 0, h - 1);
-		Color c;
-		int index = y * w + x;
+		Color c = Color::WHITE;
+		int index = x + y * w;
 		c.r = this->data[index * this->bpp];
 		c.g = this->data[index * this->bpp + 1];
 		c.b = this->data[index * this->bpp + 2];
@@ -47,7 +47,7 @@ namespace april
 	{
 		x = hclamp(x, 0, w - 1);
 		y = hclamp(y, 0, h - 1);
-		int index = y * w + x;
+		int index = x + y * w;
 		this->data[index * this->bpp] = c.r;
 		this->data[index * this->bpp + 1] = c.g;
 		this->data[index * this->bpp + 2] = c.b;
@@ -70,11 +70,14 @@ namespace april
 	void ImageSource::setPixels(int x, int y, int w, int h, Color c)
 	{
 		int size = w * h;
+		int baseSize = this->bpp * sizeof(unsigned char);
 		unsigned char color[4] = {c.r, c.g, c.b, c.a};
 		unsigned char* data = new unsigned char[size * this->bpp];
-		for (int i = 0; i < size; i++)
+		// using memory duplication instead of linear copying
+		memcpy(data, color, baseSize);
+		for (int i = 1; i < size; i *= 2)
 		{
-			memcpy(&data[i * this->bpp], color, this->bpp * sizeof(unsigned char));
+			memcpy(&data[i * this->bpp], data, hmin(i, size - i) * baseSize);
 		}
 		ilSetPixels(x, y, 0, w, h, 1, IL_RGBA, IL_UNSIGNED_BYTE, data);
 		delete [] data;
