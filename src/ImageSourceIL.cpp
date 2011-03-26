@@ -110,9 +110,9 @@ namespace april
 				c = &this->data[((x + i) + (y + j) * this->w) * this->bpp];
 				sc = &other->data[((sx + i) + (sy + j) * other->w) * other->bpp];
 				a = sc[3] * alpha / 255;
-				c[0] = (sc[0] * a + (255 - a) * c[0] * c[3] / 255) / 255;
-				c[1] = (sc[1] * a + (255 - a) * c[1] * c[3] / 255) / 255;
-				c[2] = (sc[2] * a + (255 - a) * c[2] * c[3] / 255) / 255;
+				c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
+				c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
+				c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
 				c[3] = hmax(c[3], a);
 			}
 		}
