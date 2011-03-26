@@ -56,7 +56,7 @@ namespace april
 			this->data[index * 4 + 3] = c.a;
 		}
 	}
-	
+
 	Color ImageSource::getInterpolatedPixel(float x, float y)
 	{
 		return getPixel((int)x, (int)y); // TODO
@@ -67,6 +67,19 @@ namespace april
 		ilCopyPixels(0, 0, 0, w, h, 1, format, IL_UNSIGNED_BYTE, output);
 	}
 	
+	void ImageSource::setPixels(int x, int y, int w, int h, Color c)
+	{
+		int size = w * h;
+		unsigned char color[4] = {c.r, c.g, c.b, c.a};
+		unsigned char* data = new unsigned char[size * this->bpp];
+		for (int i = 0; i < size; i++)
+		{
+			memcpy(&data[i * this->bpp], color, this->bpp * sizeof(unsigned char));
+		}
+		ilSetPixels(x, y, 0, w, h, 1, IL_RGBA, IL_UNSIGNED_BYTE, data);
+		delete [] data;
+	}
+
 	ImageSource* loadImage(chstr filename)
 	{
 		ImageSource* img = new ImageSource();

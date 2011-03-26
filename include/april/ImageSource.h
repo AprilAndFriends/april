@@ -29,6 +29,7 @@ namespace april
 		void setPixel(int x, int y, Color c);
 		Color getInterpolatedPixel(float x, float y);
 		void copyPixels(void* output, int format);
+		void setPixels(int x, int y, int w, int h, Color c);
 		
 		unsigned char* data;
 		int w;
