@@ -30,6 +30,8 @@ namespace april
 		Color getInterpolatedPixel(float x, float y);
 		void copyPixels(void* output, int format);
 		void setPixels(int x, int y, int w, int h, Color c);
+		void copyImage(ImageSource* other);
+		void blit(int x, int y, ImageSource* other, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		
 		unsigned char* data;
 		int w;
