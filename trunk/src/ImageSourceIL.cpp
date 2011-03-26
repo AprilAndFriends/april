@@ -64,11 +64,13 @@ namespace april
 	
 	void ImageSource::copyPixels(void* output, int format)
 	{
+		ilBindImage(this->getImageId());
 		ilCopyPixels(0, 0, 0, w, h, 1, format, IL_UNSIGNED_BYTE, output);
 	}
 	
 	void ImageSource::setPixels(int x, int y, int w, int h, Color c)
 	{
+		ilBindImage(this->getImageId());
 		w = hmax(w, 1);
 		h = hmax(h, 1);
 		int size = w * h;
@@ -83,6 +85,37 @@ namespace april
 		}
 		ilSetPixels(x, y, 0, w, h, 1, IL_RGBA, IL_UNSIGNED_BYTE, data);
 		delete [] data;
+	}
+
+	void ImageSource::copyImage(ImageSource* other)
+	{
+		memcpy(this->data, other->data, this->w * this->h * this->bpp * sizeof(unsigned char));
+	}
+
+	void ImageSource::blit(int x, int y, ImageSource* other, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		x = hclamp(x, 0, this->w - 1);
+		y = hclamp(y, 0, this->h - 1);
+		sx = hclamp(sx, 0, other->w - 1);
+		sy = hclamp(sy, 0, other->h - 1);
+		sw = hmin(sw, hmin(this->w - x, other->w - sx));
+		sh = hmin(sh, hmin(this->h - y, other->h - sy));
+		unsigned char* c;
+		unsigned char* sc;
+		unsigned char a;
+		for (int j = 0; j < sh; j++)
+		{
+			for (int i = 0; i < sw; i++)
+			{
+				c = &this->data[((x + i) + (y + j) * this->w) * this->bpp];
+				sc = &other->data[((sx + i) + (sy + j) * other->w) * other->bpp];
+				a = sc[3] * alpha / 255;
+				c[0] = (sc[0] * a + (255 - a) * c[0] * c[3] / 255) / 255;
+				c[1] = (sc[1] * a + (255 - a) * c[1] * c[3] / 255) / 255;
+				c[2] = (sc[2] * a + (255 - a) * c[2] * c[3] / 255) / 255;
+				c[3] = hmax(c[3], sc[3]);
+			}
+		}
 	}
 
 	ImageSource* loadImage(chstr filename)
@@ -107,9 +140,9 @@ namespace april
 	{
 		ImageSource* img = new ImageSource();
 		ilBindImage(img->getImageId());
-		int size = w * h * 4 * sizeof(unsigned char);
+		int size = w * h * 4;
 		unsigned char* data = new unsigned char[size];
-		memset(data, 0, size);
+		memset(data, 0, size * sizeof(unsigned char));
 		ilTexImage(w, h, 1, 4, IL_RGBA, IL_UNSIGNED_BYTE, data);
 		delete [] data;
 		img->w = ilGetInteger(IL_IMAGE_WIDTH);
