@@ -69,6 +69,8 @@ namespace april
 	
 	void ImageSource::setPixels(int x, int y, int w, int h, Color c)
 	{
+		w = hmax(w, 1);
+		h = hmax(h, 1);
 		int size = w * h;
 		int baseSize = this->bpp * sizeof(unsigned char);
 		unsigned char color[4] = {c.r, c.g, c.b, c.a};
