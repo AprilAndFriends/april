@@ -34,6 +34,7 @@
 		7FC8FA29122FA58F0092964C /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8FA28122FA58F0092964C /* Timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8FA75122FACA30092964C /* TimerSDL.cpp */; };
 		7FCD394412018BD300608217 /* main_mac.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FCD394312018BD300608217 /* main_mac.m */; };
+		C9A8520D134AF97000B455BE /* ImageSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9A8520C134AF97000B455BE /* ImageSource.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,7 +50,6 @@
 		7F42F7A211EB178C00B1C1DF /* ImageSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageSource.h; path = include/april/ImageSource.h; sourceTree = "<group>"; };
 		7F42F7A311EB178C00B1C1DF /* Keys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Keys.h; path = include/april/Keys.h; sourceTree = "<group>"; };
 		7F42F7A411EB178C00B1C1DF /* RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderSystem.h; path = include/april/RenderSystem.h; sourceTree = "<group>"; };
-		7F42F7A911EB179A00B1C1DF /* ImageSourceIL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSourceIL.cpp; path = src/ImageSourceIL.cpp; sourceTree = "<group>"; };
 		7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderSystem.cpp; path = src/RenderSystem.cpp; sourceTree = "<group>"; };
 		7F42F83111EB1A9700B1C1DF /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = Library/Frameworks/gtypes.framework; sourceTree = SDKROOT; };
 		7F42F83311EB1A9700B1C1DF /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = Library/Frameworks/hltypes.framework; sourceTree = SDKROOT; };
@@ -68,6 +68,7 @@
 		7FCD394312018BD300608217 /* main_mac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main_mac.m; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9A8520C134AF97000B455BE /* ImageSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSource.cpp; path = src/ImageSource.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,8 +152,8 @@
 				7F1B522E12E4713600E958D8 /* Color.cpp */,
 				7F1B522F12E4713600E958D8 /* Texture.cpp */,
 				7FC8FA75122FACA30092964C /* TimerSDL.cpp */,
+				C9A8520C134AF97000B455BE /* ImageSource.cpp */,
 				7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */,
-				7F42F7A911EB179A00B1C1DF /* ImageSourceIL.cpp */,
 				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
 				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
 				7FCD394312018BD300608217 /* main_mac.m */,
@@ -298,6 +299,7 @@
 				7F1B521212E470B200E958D8 /* OpenGL_Texture.cpp in Sources */,
 				7F1B523012E4713600E958D8 /* Color.cpp in Sources */,
 				7F1B523112E4713600E958D8 /* Texture.cpp in Sources */,
+				C9A8520D134AF97000B455BE /* ImageSource.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,7 +480,7 @@
 					_OPENGL,
 				);
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
-				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SHADOW = NO;
 				GCC_WARN_UNUSED_VALUE = YES;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
