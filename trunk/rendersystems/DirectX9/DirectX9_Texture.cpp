@@ -138,7 +138,7 @@ namespace april
 		// write texels
 		D3DLOCKED_RECT rect;
 		mTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
-		img->copyPixels(rect.pBits, IL_BGRA);
+		img->copyPixels(rect.pBits, AF_BGRA);
 		//memcpy(rect.pBits,img->data,mWidth*mHeight*img->bpp);
 		mTexture->UnlockRect(0);
 

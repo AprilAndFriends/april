@@ -8,6 +8,9 @@ Copyright (c) 2010 Kresimir Spes                                                
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
 #include <hltypes/util.h>
+#ifdef _WIN32
+#include <IL/il.h>
+#endif
 
 #include "ImageSource.h"
 #include "RenderSystem.h"
@@ -49,9 +52,25 @@ namespace april
 		return getPixel((int)x, (int)y); // TODO
 	}
 	
-	void ImageSource::copyPixels(void* output,int _format)
+	void ImageSource::copyPixels(void* output,ImageFormat _format)
 	{
-		memcpy(output, this->data, this->w * this->h * this->bpp);
+		if (_format == AF_BGRA) // todo, unify formats, this is a temp hack
+		{
+			int x,y;
+			unsigned char *o=(unsigned char*) output,*i=data;
+			for (y=0;y<h;y++)
+			{
+				for (x=0;x<w;x++,o+=4,i+=4)
+				{
+					o[0]=i[2];
+					o[1]=i[1];
+					o[2]=i[0];
+					o[3]=i[3];
+				}
+			}
+		}
+		else
+			memcpy(output, this->data, this->w * this->h * this->bpp);
 	}
 	
 	void ImageSource::setPixels(int x, int y, int w, int h, Color c)
@@ -114,8 +133,8 @@ namespace april
 		delete [] data;
 		img->w = w;
 		img->h = h;
-		img->bpp = 4;
-		img->format = 4;
+		img->bpp = 4; // IL temp hack
+		img->format = 6408; // IL temp hack
 		img->data = data;
 		return img;
 	}

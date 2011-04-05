@@ -319,6 +319,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\ImageSource.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\ImageSourceIL.cpp"
 				>
 			</File>
