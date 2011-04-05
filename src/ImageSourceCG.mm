@@ -108,67 +108,7 @@ namespace april
 	{
 		free(this->data);
 	}
-	
-	Color ImageSource::getPixel(int x,int y)
-	{
-		if (x < 0) x=0;
-		if (y < 0) y=0;
-		if (x > w-1) x=w-1;
-		if (y > h-1) y=h-1;
 		
-		Color c;
-		int index=(y*this->w+x);
-		if (this->bpp == 3) // RGB
-		{
-			c.r=this->data[index*3];
-			c.g=this->data[index*3+1];
-			c.b=this->data[index*3+2];
-			c.a=1;
-		}
-		else if (this->bpp == 4) // RGBA
-		{
-			c.r=this->data[index*4];
-			c.g=this->data[index*4+1];
-			c.b=this->data[index*4+2];
-			c.a=this->data[index*4+3];;
-		}
-		
-		return c;
-	}
-	
-	Color ImageSource::getInterpolatedPixel(float x,float y)
-	{
-		return getPixel((int)x,(int)y);
-	}
-	
-	void ImageSource::copyPixels(void* output,int _format)
-	{
-		memcpy(output, this->data, this->w * this->h * this->bpp);
-	}
-	
-	void ImageSource::setPixel(int x,int y,Color c)
-	{
-		if (x < 0) x=0;
-		if (y < 0) y=0;
-		if (x > w-1) x=w-1;
-		if (y > h-1) y=h-1;
-		
-		int index=(y*this->w+x);
-		if (this->bpp == 3) // RGB
-		{
-			this->data[index*3]=c.r;
-			this->data[index*3+1]=c.g;
-			this->data[index*3+2]=c.b;
-		}
-		else if (this->bpp == 4) // RGBA
-		{
-			this->data[index*4]=c.r;
-			this->data[index*4+1]=c.g;
-			this->data[index*4+2]=c.b;
-			this->data[index*4+3]=c.a;
-		}
-	}
-	
 	ImageSource* _tryLoadingPVR(chstr filename)
 	{
 #if TARGET_OS_IPHONE
