@@ -164,6 +164,7 @@ copy bin\$(Configuration)\*.lib bin
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp" />
+    <ClCompile Include="src\ImageSource.cpp" />
     <ClCompile Include="src\ImageSourceIL.cpp" />
     <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\Texture.cpp" />

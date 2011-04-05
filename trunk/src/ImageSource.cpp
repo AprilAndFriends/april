@@ -7,10 +7,12 @@ Copyright (c) 2010 Kresimir Spes                                                
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#include <hltypes/util.h>
+#include <string.h>
 #ifdef _WIN32
 #include <IL/il.h>
 #endif
+
+#include <hltypes/util.h>
 
 #include "ImageSource.h"
 #include "RenderSystem.h"
@@ -52,25 +54,28 @@ namespace april
 		return getPixel((int)x, (int)y); // TODO
 	}
 	
-	void ImageSource::copyPixels(void* output,ImageFormat _format)
+	void ImageSource::copyPixels(void* output, ImageFormat _format)
 	{
 		if (_format == AF_BGRA) // todo, unify formats, this is a temp hack
 		{
-			int x,y;
-			unsigned char *o=(unsigned char*) output,*i=data;
-			for (y=0;y<h;y++)
+			int x, y;
+			unsigned char* o = (unsigned char*)output;
+			unsigned char* i = data;
+			for (y = 0; y < h; y++)
 			{
-				for (x=0;x<w;x++,o+=4,i+=4)
+				for (x = 0; x < w; x++, o += 4, i += 4)
 				{
-					o[0]=i[2];
-					o[1]=i[1];
-					o[2]=i[0];
-					o[3]=i[3];
+					o[0] = i[2];
+					o[1] = i[1];
+					o[2] = i[0];
+					o[3] = i[3];
 				}
 			}
 		}
 		else
+		{
 			memcpy(output, this->data, this->w * this->h * this->bpp);
+		}
 	}
 	
 	void ImageSource::setPixels(int x, int y, int w, int h, Color c)
@@ -138,4 +143,5 @@ namespace april
 		img->data = data;
 		return img;
 	}
+	
 }
