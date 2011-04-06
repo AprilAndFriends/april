@@ -44,4 +44,5 @@ namespace april
 		img->data = ilGetData();
 		return img;
 	}
+
 }

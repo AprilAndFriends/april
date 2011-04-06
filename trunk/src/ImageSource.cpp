@@ -80,23 +80,22 @@ namespace april
 	
 	void ImageSource::setPixels(int x, int y, int w, int h, Color c)
 	{
-#ifdef _WIN32
-		ilBindImage(this->getImageId());
-		w = hmax(w, 1);
-		h = hmax(h, 1);
-		int size = w * h;
-		int baseSize = this->bpp * sizeof(unsigned char);
-		unsigned char color[4] = {c.r, c.g, c.b, c.a};
-		unsigned char* data = new unsigned char[size * this->bpp];
-		// using memory duplication instead of linear copying
-		memcpy(data, color, baseSize);
-		for (int i = 1; i < size; i *= 2)
+		x = hclamp(x, 0, this->w - 1);
+		y = hclamp(y, 0, this->h - 1);
+		w = hclamp(w, 1, this->w - x);
+		h = hclamp(h, 1, this->h - y);
+		unsigned char* ptr;
+		for (int j = 0; j < h; j++)
 		{
-			memcpy(&data[i * this->bpp], data, hmin(i, size - i) * baseSize);
+			for (int i = 0; i < w; i++)
+			{
+				ptr = &this->data[((x + i) + (y + j) * this->w) * this->bpp];
+				ptr[0] = c.r;
+				ptr[1] = c.g;
+				ptr[2] = c.b;
+				ptr[3] = c.a;
+			}
 		}
-		ilSetPixels(x, y, 0, w, h, 1, IL_RGBA, IL_UNSIGNED_BYTE, data);
-		delete [] data;
-#endif
 	}
 
 	void ImageSource::copyImage(ImageSource* other)
