@@ -134,7 +134,6 @@ namespace april
 		ImageSource* img = new ImageSource();
 		unsigned char* data = new unsigned char[w * h * 4];
 		memset(data, 0, w * h * 4 * sizeof(unsigned char));
-		delete [] data;
 		img->w = w;
 		img->h = h;
 		img->bpp = 4; // IL temp hack
