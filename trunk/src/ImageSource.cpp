@@ -56,7 +56,8 @@ namespace april
 	
 	void ImageSource::copyPixels(void* output, ImageFormat _format)
 	{
-		if (_format == AF_BGRA) // todo, unify formats, this is a temp hack
+		// todo: hacky. input and output formats can be different, fix this in the future
+		if (_format == AF_BGRA)
 		{
 			int x, y;
 			unsigned char* o = (unsigned char*)output;
@@ -69,6 +70,22 @@ namespace april
 					o[1] = i[1];
 					o[2] = i[0];
 					o[3] = i[3];
+				}
+			}
+		}
+		else if (_format == AF_BGR)
+		{
+			int x, y;
+			unsigned char* o = (unsigned char*)output;
+			unsigned char* i = data;
+			for (y = 0; y < h; y++)
+			{
+				for (x = 0; x < w; x++, o += 4, i += 3)
+				{
+					o[0] = i[2];
+					o[1] = i[1];
+					o[2] = i[0];
+				//	o[3] = i[3];
 				}
 			}
 		}
