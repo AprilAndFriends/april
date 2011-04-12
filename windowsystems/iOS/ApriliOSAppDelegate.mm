@@ -117,8 +117,10 @@
     {
         return;
     }
-    for (EAGLView *glview in [viewController.view subviews]) 
+
+    //for (EAGLView *glview in [viewController.view subviews]) 
     {
+		EAGLView *glview = viewController.view;
         if ([glview isKindOfClass:[EAGLView class]]) 
         {
             [glview applicationWillResignActive:application];
@@ -128,15 +130,21 @@
         }
     }
 }
-
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+	// for our purposes, we don't need to differentiate entering background
+	// from resigning activity
+	[self applicationWillResignActive:application];
+}
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     if (![[viewController.view subviews] count]) 
     {
         return;
     }
-    for (EAGLView *glview in [viewController.view subviews]) 
+    //for (EAGLView *glview in [viewController.view subviews]) 
     {
+		EAGLView *glview = viewController.view;
         if ([glview isKindOfClass:[EAGLView class]]) 
         {
             [glview applicationDidBecomeActive:application];
@@ -145,7 +153,12 @@
             return;
         }
     }
-
+}
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+	// for our purposes, we don't need to differentiate entering foreground
+	// from becoming active
+	[self applicationDidBecomeActive:application];
 }
 
 

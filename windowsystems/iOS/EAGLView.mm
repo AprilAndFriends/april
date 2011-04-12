@@ -165,7 +165,10 @@
 // ok, now other functionality of this class
 
 - (void)drawView {
-    
+    if (!self.animationTimer) {
+		NSLog(@"Called drawview while in background!");
+		return;
+	}
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
     glViewport(0, 0, backingWidth, backingHeight);
     
@@ -188,6 +191,10 @@
 
 - (void)swapBuffers
 {
+	if (!self.animationTimer) {
+		NSLog(@"Swapbuffers while in background! Skipping");
+		return;
+	}
 	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];
 
