@@ -49,7 +49,10 @@ int gAprilShouldInvokeQuitCallback;
 
 
 
-@interface AprilAppDelegate : NSObject<NSApplicationDelegate>
+@interface AprilAppDelegate : NSObject
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4
+<NSApplicationDelegate>
+#endif
 @end
 
 
