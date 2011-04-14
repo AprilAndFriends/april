@@ -41,6 +41,7 @@ namespace april
 		void presentFrame();
 		void* getIDFromBackend();
 		void doEvents();
+		bool isCursorInside();
 
 		float mCursorX; // TODO turn into private
 		float mCursorY; // TODO turn into private
@@ -49,9 +50,11 @@ namespace april
 		void _handleKeyEvent(Window::KeyEventType type, SDLKey keycode, unsigned int unicode);
 		void _handleDisplayAndUpdate();
 		void _handleMouseEvent(SDL_Event &evt);
+		
 		SDL_Surface *mScreen;
 		bool mRunning;
 		bool mCursorVisible;
+		bool mCursorInside;
 		
 	};
 }

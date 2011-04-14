@@ -153,8 +153,14 @@ namespace april
 					{
 						handleFocusEvent(event.active.gain);
 					}
-					if (event.active.state & SDL_APPMOUSEFOCUS && event.active.gain && this->isSystemCursorShown() && !mCursorVisible)
-						SDL_ShowCursor(0);
+					if (event.active.state & SDL_APPMOUSEFOCUS)
+					{
+						if (event.active.gain && this->isSystemCursorShown() && !mCursorVisible)
+						{
+							SDL_ShowCursor(0);
+						}
+						mCursorInside = event.active.gain;
+					}
 					break;
 				default:
 					break;
@@ -220,6 +226,11 @@ namespace april
 	int SDLWindow::getHeight()
 	{
 		return SDL_GetVideoInfo()->current_h;
+	}
+	
+	bool SDLWindow::isCursorInside()
+	{
+		return mCursorInside;
 	}
 	
 	//////////////////////
@@ -365,7 +376,7 @@ namespace april
 		performUpdate(k);
 		rendersys->presentFrame();
 	}
-	
+		
 	void* SDLWindow::getIDFromBackend()
 	{
 #ifdef _WIN32
