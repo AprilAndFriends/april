@@ -330,7 +330,7 @@ namespace April
 	
 #if _WIN32
 		HWND wnd = 0;
-		if(rendersys && rendersys->getWindow() && style & AMSGSTYLE_MODAL)
+		if(rendersys && rendersys->getWindow())
 		{
 			wnd = (HWND)rendersys->getWindow()->getIDFromBackend();
 		}
@@ -354,7 +354,10 @@ namespace April
 		else if(style & AMSGSTYLE_QUESTION)
 			type |= MB_ICONQUESTION;
 		
-		
+		if (wnd != 0 && rendersys->getWindow()->isFullscreen())
+		{
+			ShowWindow(wnd,SW_MINIMIZE);
+		}
 		int btn = MessageBox(wnd, text.c_str(), title.c_str(), type);
 		switch(btn)
 		{
