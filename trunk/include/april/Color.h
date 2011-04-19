@@ -62,26 +62,26 @@ namespace april
 		Color operator*=(float value);
 		Color operator/=(float value);
 		
-		// predefined colors
-		#define RED			Color(255,   0,   0)
-		#define GREEN		Color(  0, 255,   0)
-		#define BLUE		Color(  0,   0, 255)
-		#define YELLOW		Color(255, 255,   0)
-		#define MANGENTA	Color(255,   0, 255)
-		#define CYAN		Color(  0, 255, 255)
-		#define ORANGE		Color(255, 127,   0)
-		#define PINK		Color(255,   0, 127)
-		#define TEAL		Color(  0, 255, 127)
-		#define NEON		Color(127, 255,   0)
-		#define PURPLE		Color(127,   0, 255)
-		#define AQUA		Color(  0, 127, 255)
-		#define WHITE		Color(255, 255, 255)
-		#define GREY		Color(127, 127, 127)
-		#define BLACK		Color(  0,   0,   0)
-		#define CLEAR		Color(  0,   0,   0,   0)
-		
 	};
 
 }
 
+// predefined colors
+#define APRIL_COLOR_RED			april::Color(255,   0,   0)
+#define APRIL_COLOR_GREEN		april::Color(  0, 255,   0)
+#define APRIL_COLOR_BLUE		april::Color(  0,   0, 255)
+#define APRIL_COLOR_YELLOW		april::Color(255, 255,   0)
+#define APRIL_COLOR_MANGENTA	april::Color(255,   0, 255)
+#define APRIL_COLOR_CYAN		april::Color(  0, 255, 255)
+#define APRIL_COLOR_ORANGE		april::Color(255, 127,   0)
+#define APRIL_COLOR_PINK		april::Color(255,   0, 127)
+#define APRIL_COLOR_TEAL		april::Color(  0, 255, 127)
+#define APRIL_COLOR_NEON		april::Color(127, 255,   0)
+#define APRIL_COLOR_PURPLE		april::Color(127,   0, 255)
+#define APRIL_COLOR_AQUA		april::Color(  0, 127, 255)
+#define APRIL_COLOR_WHITE		april::Color(255, 255, 255)
+#define APRIL_COLOR_GREY		april::Color(127, 127, 127)
+#define APRIL_COLOR_BLACK		april::Color(  0,   0,   0)
+#define APRIL_COLOR_CLEAR		april::Color(  0,   0,   0,   0)
+		
 #endif
