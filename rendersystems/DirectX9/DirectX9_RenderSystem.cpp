@@ -349,7 +349,7 @@ namespace april
 		}
 		else
 		{
-			render(renderOp, v, nVertices, Color::WHITE);
+			render(renderOp, v, nVertices, APRIL_COLOR_WHITE);
 		}
 	}
 

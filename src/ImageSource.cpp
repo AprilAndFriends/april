@@ -23,7 +23,7 @@ namespace april
 	{
 		x = hclamp(x, 0, w - 1);
 		y = hclamp(y, 0, h - 1);
-		Color c = WHITE;
+		Color c = APRIL_COLOR_WHITE;
 		int index = x + y * w;
 		c.r = this->data[index * this->bpp];
 		c.g = this->data[index * this->bpp + 1];
