@@ -52,6 +52,7 @@ namespace april
 		
 		// set up display with width w, height h, any bpp, opengl, and optionally fullscreen
 		mFullscreen = fullscreen;
+        mCursorInside=1;
 		mScreen = SDL_SetVideoMode(w, h, 0, SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0));
 		glClear(GL_COLOR_BUFFER_BIT);
 		presentFrame();
