@@ -120,6 +120,11 @@ namespace april
 		memcpy(this->data, other->data, this->w * this->h * this->bpp * sizeof(unsigned char));
 	}
 
+	void ImageSource::clear()
+	{
+		memset(this->data, 0, this->w * this->h * this->bpp * sizeof(unsigned char));
+	}
+
 	void ImageSource::blit(int x, int y, ImageSource* other, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		x = hclamp(x, 0, this->w - 1);
@@ -142,6 +147,98 @@ namespace april
 				c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
 				c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
 				c[3] = hmax(c[3], a);
+			}
+		}
+	}
+
+	void ImageSource::stretch_blit(int x, int y, int w, int h, ImageSource* other, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		x = hclamp(x, 0, this->w - 1);
+		y = hclamp(y, 0, this->h - 1);
+		w = hmin(w, this->w - x);
+		h = hmin(h, this->h - y);
+		sx = hclamp(sx, 0, other->w - 1);
+		sy = hclamp(sy, 0, other->h - 1);
+		sw = hmin(sw, other->w - sx);
+		sh = hmin(sh, other->h - sy);
+		float fw = (float)sw / w;
+		float fh = (float)sh / h;
+		unsigned char* c;
+		unsigned char* sc;
+		int a0;
+		int a1;
+		unsigned char color[4] = {0};
+		unsigned char* ctl;
+		unsigned char* ctr;
+		unsigned char* cbl;
+		unsigned char* cbr;
+		float cx;
+		float cy;
+		float rx0;
+		float ry0;
+		float rx1;
+		float ry1;
+		int x0;
+		int y0;
+		int x1;
+		int y1;
+		for (int j = 0; j < h; j++)
+		{
+			for (int i = 0; i < w; i++)
+			{
+				c = &this->data[((x + i) + (y + j) * this->w) * this->bpp];
+				cx = sx + i * fw;
+				cy = sy + j * fh;
+				x0 = (int)cx;
+				y0 = (int)cy;
+				x1 = hmin((int)cx + 1, other->w - 1);
+				y1 = hmin((int)cy + 1, other->h - 1);
+				rx0 = cx - x0;
+				ry0 = cy - y0;
+				rx1 = 1.0f - rx0;
+				ry1 = 1.0f - ry0;
+				if (rx0 != 0.0f || ry0 != 0.0f)
+				{
+					ctl = &other->data[(x0 + y0 * other->w) * other->bpp];
+					ctr = &other->data[(x1 + y0 * other->w) * other->bpp];
+					cbl = &other->data[(x0 + y1 * other->w) * other->bpp];
+					cbr = &other->data[(x1 + y1 * other->w) * other->bpp];
+					color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+					color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+					color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+					color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
+					sc = color;
+				}
+				else if (rx0 != 0.0f)
+				{
+					ctl = &other->data[(x0 + y0 * other->w) * other->bpp];
+					ctr = &other->data[(x1 + y0 * other->w) * other->bpp];
+					color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+					color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+					color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+					color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
+					sc = color;
+				}
+				else if (ry0 != 0.0f)
+				{
+					ctl = &other->data[(x0 + y0 * other->w) * other->bpp];
+					cbl = &other->data[(x0 + y1 * other->w) * other->bpp];
+					color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+					color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+					color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+					color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
+					sc = color;
+				}
+				else
+				{
+					sc = &other->data[(x0 + y0 * other->w) * other->bpp];
+				}
+				a0 = sc[3] * (int)alpha / 255;
+				a1 = 255 - a0;
+				c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+				c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+				c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+				c[3] = (unsigned char)hmax((int)c[3], a0);
 			}
 		}
 	}

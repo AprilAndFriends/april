@@ -20,10 +20,10 @@ namespace april
 
 	enum ImageFormat
 	{
-		AF_RGB=1,
-		AF_RGBA=2,
-		AF_BGR=3,
-		AF_BGRA=4
+		AF_RGB = 1,
+		AF_RGBA = 2,
+		AF_BGR = 3,
+		AF_BGRA = 4
 	};
 	
 	class aprilExport ImageSource
@@ -39,7 +39,10 @@ namespace april
 		void copyPixels(void* output, ImageFormat format);
 		void setPixels(int x, int y, int w, int h, Color c);
 		void copyImage(ImageSource* other);
+		void copyImage(ImageSource* other, int bpp);
+		void clear();
 		void blit(int x, int y, ImageSource* other, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void stretch_blit(int x, int y, int w, int h, ImageSource* other, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		
 		unsigned char* data;
 		int w;

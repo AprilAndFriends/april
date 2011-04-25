@@ -27,6 +27,12 @@ namespace april
 		ilDeleteImages(1, &mImageId);
 	}
 
+	void ImageSource::copyImage(ImageSource* other, int bpp)
+	{
+		ilBindImage(other->getImageId());
+		ilCopyPixels(0, 0, 0, this->w, this->h, 1, this->format, IL_UNSIGNED_BYTE, this->data);
+	}
+
 	ImageSource* loadImage(chstr filename)
 	{
 		ImageSource* img = new ImageSource();
