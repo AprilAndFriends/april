@@ -334,6 +334,7 @@ namespace april
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 		}
 	}
+
 	void DirectX9_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
 		d3dDevice->SetFVF(TEX_COLOR_FVF);
