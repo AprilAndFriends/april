@@ -61,7 +61,7 @@ Copyright (c) 2010 Ivan Vucica                                                  
 }
 -(void)setButtonTypes:(april::MessageBoxButton*)_buttonTypes
 {
-    memcpy(buttonTypes, _buttonTypes, sizeof(buttonTypes));
+    memcpy(buttonTypes, _buttonTypes, sizeof(april::MessageBoxButton)*3);
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -69,6 +69,7 @@ Copyright (c) 2010 Ivan Vucica                                                  
     {
         callback(buttonTypes[buttonIndex]);
     }
+	[self release];
 }
 @end
 
@@ -570,22 +571,39 @@ namespace april
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
 		NSString *textns = [NSString stringWithUTF8String:text.c_str()];
-		
+
         AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] init] autorelease];
         mbd.callback = callback;
         mbd.buttonTypes = buttonTypes;
-        
+		[mbd retain];
+
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens
 														message:textns
 													   delegate:mbd 
 											  cancelButtonTitle:buttons[0]
 											  otherButtonTitles:buttons[1], buttons[2], nil];
 		[alert show];
+		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && buttons[2]) 
+		{
+			
+			// landscape sucks on phones when we have three buttons.
+			// it doesnt show hint message.
+			// unless we hack.
+			
+			UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 30.0f, alert.bounds.size.width, 40.0f)]; 
+			label.backgroundColor = [UIColor clearColor]; 
+			label.textColor = [UIColor whiteColor]; 
+			label.font = [UIFont systemFontOfSize:14.0f]; 
+			label.textAlignment = UITextAlignmentCenter;
+			label.text = textns; 
+			label.tag = 1; 
+			[alert addSubview:label]; 
+			[label release];
+		}
 		[alert release];
 		
-		// FIXME alerts might not block the main thread of execution! check this!
-		// FIXME does not return proper values! 
-		//       we would need to implement a delegate.
+		// NOTE: does not return proper values! 
+		//       you need to implement a delegate.
 		
 		// some dummy returnvalues
 		if (buttonMask & AMSGBTN_CANCEL)
