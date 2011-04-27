@@ -71,6 +71,39 @@ Copyright (c) 2010 Ivan Vucica                                                  
     }
 	[self release];
 }
+- (void)willPresentAlertView:(UIAlertView*)alertView
+{
+	
+	NSString *reqSysVer = @"4.0";
+	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+	BOOL isFourOh = ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending);
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && buttonTypes[2] && isFourOh) 
+	{
+		// landscape sucks on 4.0+ phones when we have three buttons.
+		// it doesnt show hint message.
+		// unless we hack.
+		
+		float w = alertView.bounds.size.width;
+		if(w < 5.)
+		{
+			april::log("In messageBox()'s label hack, width override took place");
+			w = 400; // hardcoded width! seems to work ok
+			
+		}
+		
+		
+		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 30.0f, alertView.bounds.size.width, 40.0f)]; 
+		label.backgroundColor = [UIColor clearColor]; 
+		label.textColor = [UIColor whiteColor]; 
+		label.font = [UIFont systemFontOfSize:14.0f]; 
+		label.textAlignment = UITextAlignmentCenter;
+		label.text = alertView.message; 
+		[alertView addSubview:label]; 
+		[label release];
+	}
+	
+}
 @end
 
 #endif
@@ -583,23 +616,6 @@ namespace april
 											  cancelButtonTitle:buttons[0]
 											  otherButtonTitles:buttons[1], buttons[2], nil];
 		[alert show];
-		if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && buttons[2]) 
-		{
-			
-			// landscape sucks on phones when we have three buttons.
-			// it doesnt show hint message.
-			// unless we hack.
-			
-			UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 30.0f, alert.bounds.size.width, 40.0f)]; 
-			label.backgroundColor = [UIColor clearColor]; 
-			label.textColor = [UIColor whiteColor]; 
-			label.font = [UIFont systemFontOfSize:14.0f]; 
-			label.textAlignment = UITextAlignmentCenter;
-			label.text = textns; 
-			label.tag = 1; 
-			[alert addSubview:label]; 
-			[label release];
-		}
 		[alert release];
 		
 		// NOTE: does not return proper values! 
