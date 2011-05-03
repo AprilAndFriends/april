@@ -62,7 +62,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes_d.lib libgtypes_d.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib winmm.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\hltypes\bin\win32_Debug;..\gtypes\bin\win32_Debug"
+				AdditionalLibraryDirectories="..\lib\msvc90;..\hltypes\bin\win32_Debug;..\gtypes\bin\win32_Debug"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -135,7 +135,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib winmm.lib"
-				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\hltypes\bin\win32_Release;..\gtypes\bin\win32_Release"
+				AdditionalLibraryDirectories="..\lib\msvc90;..\hltypes\bin\win32_Release;..\gtypes\bin\win32_Release"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -207,7 +207,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes_d.lib libgtypes_d.lib d3d9.lib DevIL.lib winmm.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\hltypes\bin\win32_Debug;..\gtypes\bin\win32_Debug"
+				AdditionalLibraryDirectories="..\lib\msvc90;..\hltypes\bin\win32_Debug;..\gtypes\bin\win32_Debug"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -280,7 +280,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib d3d9.lib DevIL.lib winmm.lib"
-				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\hltypes\bin\win32_Release;..\gtypes\bin\win32_Release"
+				AdditionalLibraryDirectories="..\lib\msvc90;..\hltypes\bin\win32_Release;..\gtypes\bin\win32_Release"
 			/>
 			<Tool
 				Name="VCALinkTool"
