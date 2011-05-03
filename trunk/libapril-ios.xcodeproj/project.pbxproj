@@ -33,6 +33,7 @@
 		7F33B63412102277004B5E89 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B63312102277004B5E89 /* UIKit.framework */; };
 		7F33B6491210235D004B5E89 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B6481210235D004B5E89 /* Foundation.framework */; };
 		7F33B64F12102385004B5E89 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F33B64E12102385004B5E89 /* CoreFoundation.framework */; };
+		7F6809581370254600A7EF64 /* ImageSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F6809571370254600A7EF64 /* ImageSource.cpp */; };
 		7FA1AAE8124229F7004689AE /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA1AAE4124229F7004689AE /* Timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FA1ABA212422C03004689AE /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA1ABA112422C03004689AE /* TimerPosix.cpp */; };
 		7FD37C1812AD2C070007A403 /* WBImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FD37C1612AD2C070007A403 /* WBImage.h */; };
@@ -73,6 +74,7 @@
 		7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderSystem.cpp; path = src/RenderSystem.cpp; sourceTree = "<group>"; };
 		7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImageSourceCG.mm; path = src/ImageSourceCG.mm; sourceTree = "<group>"; };
 		7F4D0FE911FEE6C500F2F9F5 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = include/april/main.h; sourceTree = "<group>"; };
+		7F6809571370254600A7EF64 /* ImageSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSource.cpp; path = src/ImageSource.cpp; sourceTree = "<group>"; };
 		7FA1AAE4124229F7004689AE /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
 		7FA1ABA112422C03004689AE /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/TimerPosix.cpp; sourceTree = "<group>"; };
 		7FA3ED1711F9817A001D1DDD /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Window.h; path = include/april/Window.h; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 		7F42F79F11EB177B00B1C1DF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7F6809571370254600A7EF64 /* ImageSource.cpp */,
 				7F1B546512E47C5900E958D8 /* Color.cpp */,
 				7F1B546612E47C5900E958D8 /* Texture.cpp */,
 				7FA1ABA112422C03004689AE /* TimerPosix.cpp */,
@@ -362,6 +365,7 @@
 				7F1B545D12E47BB500E958D8 /* OpenGL_Texture.cpp in Sources */,
 				7F1B546712E47C5900E958D8 /* Color.cpp in Sources */,
 				7F1B546812E47C5900E958D8 /* Texture.cpp in Sources */,
+				7F6809581370254600A7EF64 /* ImageSource.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
