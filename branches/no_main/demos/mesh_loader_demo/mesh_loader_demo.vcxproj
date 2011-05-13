@@ -60,7 +60,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>libgtypes.lib;libhltypes.lib;libapril.lib;libaprilutil.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../../bin;../../../lib;../../../hltypes/bin/win32_Debug;../../../gtypes/bin/win32_Debug;../../../lib/msvc;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../../bin;../../../lib;../../../hltypes/bin/win32_Debug;../../../gtypes/bin/win32_Debug;../../../lib/msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -88,7 +88,7 @@ copy ..\..\bin\*.dll ..\..\bin\win32_Debug
     </ClCompile>
     <Link>
       <AdditionalDependencies>libgtypes.lib;libhltypes.lib;libapril.lib;libaprilutil.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.;../../bin;../../../lib;../../../hltypes/bin/win32_Release;../../../gtypes/bin/win32_Release;../../../lib/msvc;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.;../../bin;../../../lib;../../../hltypes/bin/win32_Release;../../../gtypes/bin/win32_Release;../../../lib/msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
