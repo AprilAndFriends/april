@@ -35,10 +35,6 @@ namespace april
 	DirectX9_Texture* activeTexture = NULL;
 	D3DPRESENT_PARAMETERS d3dpp;
 	
-#ifdef _DEBUG
-	char fpstitle[1024] = " [FPS:0]";
-#endif
-
 	D3DPRIMITIVETYPE dx9_render_ops[]=
 	{
 		D3DPT_FORCE_DWORD,
