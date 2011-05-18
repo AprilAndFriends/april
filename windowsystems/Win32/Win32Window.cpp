@@ -24,7 +24,7 @@ namespace april
 	static Win32Window* instance;
 	
 #ifdef _DEBUG
-	static char fpstitle[1024] = " [FPS:0]";
+	static char fpstitle[1024] = " [FPS: 0]";
 #endif
 /************************************************************************************/
 	LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -366,7 +366,7 @@ namespace april
 		bool cVisible = cursorVisible;
 #ifdef _DEBUG
 		static float fpsTimer = globalTimer.getTime();
-		static float fps = 0;
+		static int fps = 0;
 #endif
 		POINT w32_cursorPosition;
 		float k;
@@ -378,7 +378,6 @@ namespace april
 			cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
 			doEvents();
 			t = globalTimer.getTime();
-
 			if (t == time)
 			{
 				continue; // don't redraw frames which won't change
@@ -388,6 +387,7 @@ namespace april
 			{
 				k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
 			}
+
 			time = t;
 			if (!mActive)
 			{
