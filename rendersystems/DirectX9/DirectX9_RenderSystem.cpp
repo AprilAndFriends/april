@@ -254,7 +254,7 @@ namespace april
 		d3dDevice->Clear(0, NULL, flags, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	}
 	
-	ImageSource* DirectX9_RenderSystem::grabScreenshot()
+	ImageSource* DirectX9_RenderSystem::grabScreenshot(int bpp)
     {
 		april::log("grabbing screenshot");
 		D3DSURFACE_DESC desc;
@@ -290,19 +290,23 @@ namespace april
 		ImageSource* img = new ImageSource();
 		img->w = desc.Width;
 		img->h = desc.Height;
-		img->bpp = 3;
-		img->format = AT_RGB;
+		img->bpp = bpp;
+		img->format = (bpp == 4 ? AT_RGBA : AT_RGB);
 		img->data = (unsigned char*)malloc(img->w * img->h * 4);
 		unsigned char* p = img->data;
 		unsigned char* src = (unsigned char*)rect.pBits;
 		int x;
 		for (int y = 0; y < img->h; y++)
 		{
-			for (x = 0; x < img->w * 4; x += 4, p += 3)
+			for (x = 0; x < img->w * 4; x += 4, p += bpp)
 			{
 				p[0] = src[x + 2];
 				p[1] = src[x + 1];
 				p[2] = src[x];
+				if (bpp == 4)
+				{
+					p[3] = 255;
+				}
 			}
 			src += rect.Pitch;
 		}

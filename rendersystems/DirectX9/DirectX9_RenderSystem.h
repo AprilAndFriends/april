@@ -41,7 +41,7 @@ namespace april
 		hstr getName();
 		// rendering
 		void clear(bool color, bool depth);
-		ImageSource* grabScreenshot();
+		ImageSource* grabScreenshot(int bpp = 3);
 		void setTexture(Texture* t);
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);

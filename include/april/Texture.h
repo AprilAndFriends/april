@@ -26,7 +26,8 @@ enum TextureFormat
 {
 	AT_XRGB = 1,
 	AT_ARGB = 2,
-    AT_RGB = 3
+    AT_RGB = 3,
+	AT_RGBA = 4
 };
 
 namespace april
