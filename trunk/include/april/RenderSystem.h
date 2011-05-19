@@ -157,7 +157,7 @@ namespace april
 		
 		Window* getWindow() { return mWindow; }
 		
-        virtual ImageSource* grabScreenshot() = 0;
+        virtual ImageSource* grabScreenshot(int bpp = 3) = 0;
         
 		virtual void presentFrame();
 
