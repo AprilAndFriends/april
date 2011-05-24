@@ -267,7 +267,8 @@
 
 
 - (void)setAnimationTimer:(NSTimer *)newTimer {
-    [animationTimer invalidate];
+    if(animationTimer != newTimer)
+		[animationTimer invalidate];
     animationTimer = newTimer;
 }
 
