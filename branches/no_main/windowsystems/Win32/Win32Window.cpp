@@ -216,6 +216,11 @@ namespace april
 	Win32Window::~Win32Window()
 	{
 		//log("Destroying Win32 Windowsystem");
+	}
+
+	void Win32Window::destroyWindow()
+	{
+		DestroyWindow(hWnd);
 		UnregisterClass("april_win32_window", GetModuleHandle(0));
 	}
 
