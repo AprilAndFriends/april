@@ -176,6 +176,11 @@ namespace april
 		SDL_Quit();
 	}
 	
+	void SDLWindow::destroyWindow()
+	{
+		SDL_Quit();
+	}
+	
 	void SDLWindow::terminateMainLoop()
 	{
 		mRunning = false;
