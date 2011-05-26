@@ -49,12 +49,29 @@ Copyright (c) 2010 Ivan Vucica                                                  
 @interface AprilMessageBoxDelegate : NSObject<UIAlertViewDelegate> {
     void(*callback)(april::MessageBoxButton);
     april::MessageBoxButton buttonTypes[3];
+	
+	CFRunLoopRef runLoop;
+	BOOL isModal;
+	april::MessageBoxButton selectedButton;
 }
 @property (nonatomic, assign) void(*callback)(april::MessageBoxButton);
 @property (nonatomic, assign) april::MessageBoxButton *buttonTypes;
+@property (nonatomic, readonly) april::MessageBoxButton selectedButton;
 @end
 @implementation AprilMessageBoxDelegate
 @synthesize callback;
+@synthesize selectedButton;
+@dynamic buttonTypes;
+-(id)initWithModality:(BOOL)_isModal
+{
+	self = [super init];
+	if(self)
+	{
+		runLoop = CFRunLoopGetCurrent();
+		isModal = _isModal;
+	}
+	return self;
+}
 -(april::MessageBoxButton*)buttonTypes
 {
     return buttonTypes;
@@ -65,10 +82,17 @@ Copyright (c) 2010 Ivan Vucica                                                  
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (callback) 
+    if (callback)
     {
         callback(buttonTypes[buttonIndex]);
     }
+	if (isModal)
+	{
+		CFRunLoopStop(runLoop);
+	}
+	
+	selectedButton = buttonTypes[buttonIndex];
+	
 	[self release];
 }
 - (void)willPresentAlertView:(UIAlertView*)alertView
@@ -404,7 +428,7 @@ namespace april
 #endif
 	}
 	
-	MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	static MessageBoxButton messageBox_impl(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 #if _WIN32
 		HWND wnd = 0;
@@ -605,7 +629,7 @@ namespace april
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
 		NSString *textns = [NSString stringWithUTF8String:text.c_str()];
 
-        AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] init] autorelease];
+        AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:(style & AMSGSTYLE_MODAL)] autorelease];
         mbd.callback = callback;
         mbd.buttonTypes = buttonTypes;
 		[mbd retain];
@@ -616,10 +640,22 @@ namespace april
 											  cancelButtonTitle:buttons[0]
 											  otherButtonTitles:buttons[1], buttons[2], nil];
 		[alert show];
+		if (style & AMSGSTYLE_MODAL) 
+		{
+			CFRunLoopRun();
+		}
 		[alert release];
 		
-		// NOTE: does not return proper values! 
+		// We're modal?
+		// If so, we know what to return!
+		if (style & AMSGSTYLE_MODAL)
+		{
+			return mbd.selectedButton;
+		}
+		
+		// NOTE: does not return proper values unless modal! 
 		//       you need to implement a delegate.
+		
 		
 		// some dummy returnvalues
 		if (buttonMask & AMSGBTN_CANCEL)
@@ -679,5 +715,28 @@ namespace april
 		return AMSGBTN_OK;
 #endif
 	}
+	MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	{
+		MessageBoxStyle passedStyle = style;
+		
+		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
+		{
+#if !TARGET_OS_IPHONE
+			rendersys->getWindow()->terminateMainLoop();
+			rendersys->getWindow()->destroyWindow();
+#endif
+			passedStyle = (MessageBoxStyle)(passedStyle & AMSGSTYLE_MODAL);
+		}
+		MessageBoxButton returnValue = messageBox_impl(title, text, buttonMask, passedStyle, customButtonTitles, callback);
+		if(style & AMSGSTYLE_TERMINATEAPPONDISPLAY)
+		{
+			exit(1);
+		}
+		else
+		{
+			return returnValue;
+		}
+	}
+	
 	
 }

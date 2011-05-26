@@ -70,6 +70,12 @@ namespace april
         NSLog(@"Fatal error: Using terminateMainLoop on iOS!");
         exit(-2);
     }
+	void iOSWindow::destroyWindow()
+	{
+		// just stopping the animation on iOS
+		[glview stopAnimation];
+	}
+	
     void iOSWindow::showSystemCursor(bool visible)
     {
         // no effect on iOS
