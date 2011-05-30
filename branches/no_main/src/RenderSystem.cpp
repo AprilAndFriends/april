@@ -237,6 +237,10 @@ namespace april
 		return mProjectionMatrix;
 	}
 	
+	bool RenderSystem::isFullscreen()
+	{
+		return mWindow->isFullscreen();
+	}
 /************************************************************************************/
 
 	void RenderSystem::presentFrame()

@@ -50,6 +50,7 @@ int main (int argc, char **argv)
     return 0;
 }
 #else
+#include <windows.h>
 int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     april_main(april_init, april_destroy, 0, NULL);
