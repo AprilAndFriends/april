@@ -79,6 +79,7 @@ namespace april
 		mCursorVisible = true;
 		// key repeat
 		SDL_EnableKeyRepeat(100, 50);
+        SDL_EnableUNICODE(1);
 	}
 	
 	//////////////////////
@@ -88,7 +89,6 @@ namespace april
 	void SDLWindow::enterMainLoop()
 	{
 		mRunning = true;
-		SDL_EnableUNICODE(1);
 		
 		while (mRunning)
         {
