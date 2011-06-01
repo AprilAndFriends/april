@@ -728,7 +728,7 @@ namespace april
 			passedStyle = (MessageBoxStyle)(passedStyle & AMSGSTYLE_MODAL);
 		}
 		MessageBoxButton returnValue = messageBox_impl(title, text, buttonMask, passedStyle, customButtonTitles, callback);
-		if(style & AMSGSTYLE_TERMINATEAPPONDISPLAY)
+		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY)
 		{
 			exit(1);
 		}
