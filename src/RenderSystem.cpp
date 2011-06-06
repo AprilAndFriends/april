@@ -143,14 +143,14 @@ namespace april
 		return "";
 	}
 	
-	RAMTexture* RenderSystem::loadRAMTexture(chstr filename, bool dynamic)
+	Texture* RenderSystem::loadRAMTexture(chstr filename, bool dynamic)
 	{
 		hstr name = findTextureFile(filename);
 		if (name == "")
 		{
 			return 0;
 		}
-		return new RAMTexture(name, dynamic);
+		return new RAMTexture(name,dynamic);
 	}
 	
 	void RenderSystem::setIdentityTransform()
@@ -237,6 +237,10 @@ namespace april
 		return mProjectionMatrix;
 	}
 	
+	bool RenderSystem::isFullscreen()
+	{
+		return mWindow->isFullscreen();
+	}
 /************************************************************************************/
 
 	void RenderSystem::presentFrame()

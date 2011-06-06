@@ -56,7 +56,7 @@
     <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp">
       <Filter>Source Files\rendersystems</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImageSource.cpp">
+    <ClCompile Include="main_win32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -99,6 +99,9 @@
     </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h">
       <Filter>Header Files\rendersystems</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\main.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

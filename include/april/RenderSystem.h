@@ -96,7 +96,7 @@ namespace april
 		// object creation
 		hstr findTextureFile(chstr filename);
 		virtual Texture* loadTexture(chstr filename, bool dynamic = false) = 0;
-		RAMTexture* loadRAMTexture(chstr filename, bool dynamic = false);
+		Texture* loadRAMTexture(chstr filename, bool dynamic = false);
 		virtual Texture* createTextureFromMemory(unsigned char* rgba, int w, int h) = 0;
 		virtual Texture* createEmptyTexture(int w, int h, TextureFormat fmt = AT_XRGB, TextureType type = AT_NORMAL) = 0;
 
@@ -116,7 +116,7 @@ namespace april
 		// rendersys matrix operations
 		void setModelviewMatrix(const gmat4& matrix);
 		void setProjectionMatrix(const gmat4& matrix);
-		virtual bool isFullscreen() { return false; } //TODO - implement in derived classes
+		virtual bool isFullscreen();
 		virtual void setFullscreen(bool fullscreen) { } //TODO - implement in derived classes
 		
 		const gmat4& getModelviewMatrix();
@@ -157,7 +157,7 @@ namespace april
 		
 		Window* getWindow() { return mWindow; }
 		
-        virtual ImageSource* grabScreenshot(int bpp = 3) = 0;
+        virtual ImageSource* grabScreenshot() = 0;
         
 		virtual void presentFrame();
 

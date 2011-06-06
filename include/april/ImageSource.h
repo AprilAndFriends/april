@@ -17,14 +17,6 @@ Copyright (c) 2010 Kresimir Spes                                                
 namespace april
 {
 	class Color;
-
-	enum ImageFormat
-	{
-		AF_RGB = 1,
-		AF_RGBA = 2,
-		AF_BGR = 3,
-		AF_BGRA = 4
-	};
 	
 	class aprilExport ImageSource
 	{
@@ -36,13 +28,7 @@ namespace april
 		Color getPixel(int x, int y);
 		void setPixel(int x, int y, Color c);
 		Color getInterpolatedPixel(float x, float y);
-		void copyPixels(void* output, ImageFormat format);
-		void setPixels(int x, int y, int w, int h, Color c);
-		void copyImage(ImageSource* other);
-		void copyImage(ImageSource* other, int bpp);
-		void clear();
-		void blit(int x, int y, ImageSource* other, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		void stretch_blit(int x, int y, int w, int h, ImageSource* other, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void copyPixels(void* output, int format);
 		
 		unsigned char* data;
 		int w;
@@ -57,8 +43,7 @@ namespace april
 		
 	};
 	
-	aprilFnExport ImageSource* loadImage(chstr filename);
-	aprilFnExport ImageSource* createEmptyImage(int w, int h);
+	ImageSource* loadImage(chstr filename);
 	
 }
 

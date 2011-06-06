@@ -8,7 +8,7 @@
  * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
  \************************************************************************************/
 
-#import "AprilUIKitDelegate.h"
+#import "ApriliOSAppDelegate.h"
 #import "main.h"
 #import "AprilViewController.h"
 #import "EAGLView.h"
@@ -31,22 +31,12 @@
 
 
 
-@implementation AprilUIKitDelegate
+@implementation ApriliOSAppDelegate
 
 @synthesize window;
 @synthesize viewController;
 @synthesize onPushRegistrationSuccess;
 @synthesize onPushRegistrationFailure;
-extern int(*april_RealMain)(int argc, char** argv);
-
-
-- (void)runMain:(id)sender
-{
-	// thanks to Kyle Poole for this trick
-	char *argv[] = {"april_ios"};
-	int status = april_RealMain (1, argv); //gArgc, gArgv);
-#pragma unused(status)
-}
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 	
@@ -75,38 +65,100 @@ extern int(*april_RealMain)(int argc, char** argv);
 	[window makeKeyAndVisible];
 
 	NSLog(@"Created window");
-	//////////
 	
-	
+    //////////
 	// thanks to Kyle Poole for this trick
-	// also used in latest SDL
-	// quote:
-	// KP: using a selector gets around the "failed to launch application in time" if the startup code takes too long
-	// This is easy to see if running with Valgrind
-
-	[self performSelector:@selector(runMain:) withObject:nil afterDelay:0.2f];
+    // also used in latest SDL
+    // quote:
+    // KP: using a selector gets around the "failed to launch application in time" if the startup code takes too long
+    // This is easy to see if running with Valgrind
+	[self performSelector:@selector(performInit:) withObject:nil afterDelay:0.2f];
+    
 }
 
+- (void)performInit:(id)object
+{
+    
+    april_init(harray<hstr>());
+    if ([[viewController.view subviews] count]) 
+    {
+        EAGLView* glview = [[viewController.view subviews] objectAtIndex:0];
+        [glview startAnimation];
+    }
+}
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
 	NSLog(@"April-based application received memory warning!");
 }
 
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+    if (![[viewController.view subviews] count]) 
+    {
+        return;
+    }
+    for (EAGLView *glview in [viewController.view subviews]) 
+    {
+        if ([glview isKindOfClass:[EAGLView class]]) 
+        {
+            [glview stopAnimation];
+            
+            return;
+        }
+    }
+    april_destroy();
+}
 
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-	if ([viewController.view respondsToSelector:@selector(applicationWillResignActive:)]) {
-		[(EAGLView*)viewController.view applicationWillResignActive:application];
-	}
-}
+    if (![[viewController.view subviews] count]) 
+    {
+        return;
+    }
 
+    //for (EAGLView *glview in [viewController.view subviews]) 
+    {
+		EAGLView *glview = viewController.view;
+        if ([glview isKindOfClass:[EAGLView class]]) 
+        {
+            [glview applicationWillResignActive:application];
+            [glview stopAnimation];
+
+            return;
+        }
+    }
+}
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+	// for our purposes, we don't need to differentiate entering background
+	// from resigning activity
+	[self applicationWillResignActive:application];
+}
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-	if ([viewController.view respondsToSelector:@selector(applicationDidBecomeActive:)]) {
-		[(EAGLView*)viewController.view applicationDidBecomeActive:application];
-	}
+    if (![[viewController.view subviews] count]) 
+    {
+        return;
+    }
+    //for (EAGLView *glview in [viewController.view subviews]) 
+    {
+		EAGLView *glview = viewController.view;
+        if ([glview isKindOfClass:[EAGLView class]]) 
+        {
+            [glview applicationDidBecomeActive:application];
+            [glview startAnimation];
+            
+            return;
+        }
+    }
+}
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+	// for our purposes, we don't need to differentiate entering foreground
+	// from becoming active
+	[self applicationDidBecomeActive:application];
 }
 
 

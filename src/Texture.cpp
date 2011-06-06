@@ -103,14 +103,6 @@ namespace april
 		}
 	}
 
-	RAMTexture::RAMTexture(int w, int h)
-	{
-		mWidth = w;
-		mHeight = h;
-		mBuffer = createEmptyImage(w, h);
-		mFilename = "";
-	}
-
 	RAMTexture::~RAMTexture()
 	{
 		unload();

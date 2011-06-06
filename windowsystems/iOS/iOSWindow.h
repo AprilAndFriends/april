@@ -34,6 +34,7 @@ namespace april
 		// implementations
 		void enterMainLoop();
 		void terminateMainLoop();
+		void destroyWindow();
 		void showSystemCursor(bool visible);
 		bool isSystemCursorShown();
 		int getWidth();

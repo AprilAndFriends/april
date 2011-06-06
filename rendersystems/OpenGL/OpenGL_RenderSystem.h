@@ -46,7 +46,7 @@ namespace april
 		float getPixelOffset();
 		hstr getName();
         
-        ImageSource* grabScreenshot(int bpp = 3);
+        ImageSource* grabScreenshot();
 
 		// rendering
 		void clear(bool color, bool depth);

@@ -26,8 +26,7 @@ enum TextureFormat
 {
 	AT_XRGB = 1,
 	AT_ARGB = 2,
-    AT_RGB = 3,
-	AT_RGBA = 4
+    AT_RGB = 3
 };
 
 namespace april
@@ -86,7 +85,6 @@ namespace april
 	{
 	public:
 		RAMTexture(chstr filename, bool dynamic);
-		RAMTexture(int w, int h);
 		virtual ~RAMTexture();
 		void load();
 		void unload();

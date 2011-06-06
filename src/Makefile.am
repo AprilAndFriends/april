@@ -6,7 +6,7 @@ noinst_LTLIBRARIES = libapril_src.la
 libapril_src_la_SOURCES =  \
 Color.cpp	   TimerPosix.cpp  Window.cpp \
 ImageSourceCG.mm   RenderSystem.cpp  \
-ImageSourceIL.cpp  Texture.cpp ImageSource.cpp 
+ImageSourceIL.cpp  Texture.cpp	     
 
 
 

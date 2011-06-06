@@ -1,10 +1,10 @@
-
-# initialize autoconf
-AC_INIT(libapril, 1.2, ivan@vucica.net)
-
 # autoconf configuration
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Window.cpp)
+#AC_CONFIG_MACRO_DIR([m4]
+
+# initialize autoconf
+AC_INIT(libapril, 1.2, ivan@vucica.net)
 
 # libtool configuration
 #  LT_VERSION has nothing to do with VERSION.
@@ -29,9 +29,8 @@ AC_LANG(C++)
 AM_INIT_AUTOMAKE([foreign])
 
 # more libtool setup
-AC_PROG_LIBTOOL # pre-2.2 libtool
-#LT_PREREQ([2.2]) # post-2.2 libtool
-#LT_INIT #([disable-shared])
+LT_PREREQ([2.2])
+LT_INIT #([disable-shared])
 AC_SUBST([LIBTOOL_DEPS])
 
 # begin checks

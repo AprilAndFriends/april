@@ -26,13 +26,47 @@ namespace april
 	{
 		ilDeleteImages(1, &mImageId);
 	}
-
-	void ImageSource::copyImage(ImageSource* other, int bpp)
+	
+	Color ImageSource::getPixel(int x, int y)
 	{
-		ilBindImage(other->getImageId());
-		ilCopyPixels(0, 0, 0, this->w, this->h, 1, this->format, IL_UNSIGNED_BYTE, this->data);
+		x = hclamp(x, 0, w - 1);
+		y = hclamp(y, 0, h - 1);
+		Color c;
+		int index = y * w + x;
+		c.r = this->data[index * this->bpp];
+		c.g = this->data[index * this->bpp + 1];
+		c.b = this->data[index * this->bpp + 2];
+		if (this->bpp == 4) // RGBA
+		{
+			c.a = this->data[index * this->bpp + 3];
+		}
+		return c;
 	}
-
+	
+	void ImageSource::setPixel(int x, int y, Color c)
+	{
+		x = hclamp(x, 0, w - 1);
+		y = hclamp(y, 0, h - 1);
+		int index = y * w + x;
+		this->data[index * this->bpp] = c.r;
+		this->data[index * this->bpp + 1] = c.g;
+		this->data[index * this->bpp + 2] = c.b;
+		if (this->bpp == 4) // RGBA
+		{
+			this->data[index * 4 + 3] = c.a;
+		}
+	}
+	
+	Color ImageSource::getInterpolatedPixel(float x, float y)
+	{
+		return getPixel((int)x, (int)y); // TODO
+	}
+	
+	void ImageSource::copyPixels(void* output, int format)
+	{
+		ilCopyPixels(0, 0, 0, w, h, 1, format, IL_UNSIGNED_BYTE, output);
+	}
+	
 	ImageSource* loadImage(chstr filename)
 	{
 		ImageSource* img = new ImageSource();
@@ -50,5 +84,4 @@ namespace april
 		img->data = ilGetData();
 		return img;
 	}
-
 }

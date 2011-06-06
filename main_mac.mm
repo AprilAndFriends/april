@@ -12,12 +12,15 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 \************************************************************************************/
 
 #import <Cocoa/Cocoa.h>
+#import "RenderSystem.h"
+#import "Window.h"
 #import "main.h"
 
 static int gArgc=0;
 static char** gArgv;
 static BOOL gFinderLaunch=NO;
-static int(*gRealMain)(int argc, char** argv);
+static void (*gAprilInit)(const harray<hstr>&);
+static void (*gAprilDestroy)();
 
 int gAprilShouldInvokeQuitCallback;
 
@@ -47,11 +50,11 @@ int gAprilShouldInvokeQuitCallback;
 
 
 @interface AprilAppDelegate : NSObject
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_4
+<NSApplicationDelegate>
+#endif
 @end
 
-
-/* The main class of the application, the application's delegate */
-@implementation AprilAppDelegate
 
 static NSString *getApplicationName(void)
 {
@@ -177,30 +180,50 @@ static void CustomApplicationMain (int argc, char **argv)
 }
 
 
+/* The main class of the application, the application's delegate */
+@implementation AprilAppDelegate
+
 /* Called when the internal event loop has just started running */
 - (void) applicationDidFinishLaunching: (NSNotification *) note
 {
-    int status;
+    int status = 0;
 	
     /* Hand off to main application code */
     //gCalledAppMainline = TRUE;
-    status = gRealMain (gArgc, gArgv);
+    harray<hstr> argv;
+    for (int i = 0; i < gArgc; i++) 
+    {
+        argv.push_back(gArgv[i]);
+    }
+    /*status = */
+    gAprilInit(argv);
 	
+    april::rendersys->getWindow()->enterMainLoop();
+    
     /* We're done, thank you for playing */
+    gAprilDestroy();
     exit(status);
 }
+
+- (void) applicationWillTerminate: (NSNotification *) note
+{
+    gAprilDestroy();
+}
+
 @end
 
 
 /* Main entry point to executable - should *not* be SDL_main! */
-int april_main (int(*real_main)(int argc, char** argv), int argc, char **argv)
+int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char **argv)
 {
     /* Copy the arguments into a global variable */
     /* This is passed if we are launched by double-clicking */
     
 	gAprilShouldInvokeQuitCallback = 0;
 	
-	gRealMain = real_main;
+    gAprilInit = anAprilInit;
+    gAprilDestroy = anAprilDestroy;
+    
 	if ( argc >= 2 && strncmp (argv[1], "-psn", 4) == 0 ) {
         gArgv = (char **) malloc(sizeof (char *) * 2);
         gArgv[0] = argv[0];

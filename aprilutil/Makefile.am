@@ -1,3 +1,4 @@
+ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src include/aprilutil
 EXTRA_DIST = autogen.sh
 

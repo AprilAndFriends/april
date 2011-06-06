@@ -57,12 +57,12 @@ static NSURL* _getFileURL(chstr filename)
 	[cdp release];
 	[file release]; 
 #else
-	
+	// FIXME use NSURL fileURLWithPath:
 	NSString * bundle = [[[[NSBundle mainBundle] bundlePath] stringByAppendingString:@"/"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 	NSURL * bundleURL = [NSURL URLWithString:[@"file://" stringByAppendingString:bundle]];
 	NSURL * file = [NSURL URLWithString:[NSString stringWithFormat:@"../%s", filename.c_str()] 
 						  relativeToURL:bundleURL];
-	NSURL * url = [[file absoluteURL] retain];
+	NSURL * url = [file absoluteURL];
 	
 #endif
 	//NSLog(@"_getFileURL: %@", url);
@@ -81,7 +81,8 @@ static NSURL* _getFileURLAsResource(chstr filename)
 	// resources:  /Applications/appname.app/Contents/Resources/
 	// file:       /Applications/appname.app/Contents/Resources/data/media/hello.jpg
 	// url: file:///Applications/appname.app/Contents/Resources/data/media/hello.jpg
-		
+    
+    // FIXME use NSURL fileURLWithPath:
 	NSString * resources = [[NSBundle mainBundle] resourcePath];
 	NSString * file = [resources stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
 	NSURL * url = [NSURL URLWithString:[@"file://" stringByAppendingString:[file stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] ]];
@@ -108,13 +109,71 @@ namespace april
 	{
 		free(this->data);
 	}
+	
+	Color ImageSource::getPixel(int x,int y)
+	{
+		if (x < 0) x=0;
+		if (y < 0) y=0;
+		if (x > w-1) x=w-1;
+		if (y > h-1) y=h-1;
 		
+		Color c;
+		int index=(y*this->w+x);
+		if (this->bpp == 3) // RGB
+		{
+			c.r=this->data[index*3];
+			c.g=this->data[index*3+1];
+			c.b=this->data[index*3+2];
+			c.a=1;
+		}
+		else if (this->bpp == 4) // RGBA
+		{
+			c.r=this->data[index*4];
+			c.g=this->data[index*4+1];
+			c.b=this->data[index*4+2];
+			c.a=this->data[index*4+3];;
+		}
+		
+		return c;
+	}
+	
+	Color ImageSource::getInterpolatedPixel(float x,float y)
+	{
+		return getPixel((int)x,(int)y);
+	}
+	
+	void ImageSource::copyPixels(void* output,int _format)
+	{
+		memcpy(output, this->data, this->w * this->h * this->bpp);
+	}
+	
+	void ImageSource::setPixel(int x,int y,Color c)
+	{
+		if (x < 0) x=0;
+		if (y < 0) y=0;
+		if (x > w-1) x=w-1;
+		if (y > h-1) y=h-1;
+		
+		int index=(y*this->w+x);
+		if (this->bpp == 3) // RGB
+		{
+			this->data[index*3]=c.r;
+			this->data[index*3+1]=c.g;
+			this->data[index*3+2]=c.b;
+		}
+		else if (this->bpp == 4) // RGBA
+		{
+			this->data[index*4]=c.r;
+			this->data[index*4+1]=c.g;
+			this->data[index*4+2]=c.b;
+			this->data[index*4+3]=c.a;
+		}
+	}
+	
 	ImageSource* _tryLoadingPVR(chstr filename)
 	{
 #if TARGET_OS_IPHONE
 		NSString *pvrfilename = [NSString stringWithUTF8String:filename.c_str()];
-		//pvrfilename = [pvrfilename substringToIndex:pvrfilename.length-pvrfilename.pathExtension.length];
-		//pvrfilename = [pvrfilename stringByAppendingPathExtension:@"pvr"];
 		
 		PVRTexture* pvrtex = [PVRTexture pvrTextureWithContentsOfURL:(NSURL*)_getFileURLAsResource(pvrfilename.UTF8String)];
 		if(!pvrtex)
@@ -149,10 +208,10 @@ namespace april
 	ImageSource* loadImage(chstr filename)
 	{
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
-				
+        
 #if TARGET_OS_IPHONE
 		ImageSource *pvrimg;
-		if(pvrimg=_tryLoadingPVR(filename))
+		if((pvrimg=_tryLoadingPVR(filename)))
 		{
 			[arp release];
 			return pvrimg;
@@ -192,15 +251,17 @@ namespace april
 		/*	}
 		}
 		*/
+
 		CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
 		CFRelease(imageSource);
 		
 #else
+
 		UIImage* uiimg = [[UIImage alloc] initWithContentsOfFile:[_getFileURLAsResource(filename) path]];
 		
 		CGImageRef imageRef = [uiimg CGImage];
 #endif
-		
+
 		// alloc img, set attributes
 		ImageSource* img=new ImageSource();
 		img->format = GL_RGBA; //ilGetInteger(IL_IMAGE_FORMAT); // not used
@@ -223,7 +284,7 @@ namespace april
 														   bytesPerRow,
 														   space,
 														   kCGImageAlphaPremultipliedLast);
-		
+        
 		CGContextDrawImage(bitmapContext,CGRectMake(0.0, 0.0, (float)img->w, (float)img->h),imageRef);
 		CGContextRelease(bitmapContext);
 		
@@ -235,15 +296,14 @@ namespace april
 				img->data[i+j] = img->data[i+j] / (img->data[i+3]/255.);
 			}
 		}
-		
+        
 #if TARGET_OS_MAC
 		CGImageRelease(imageRef);
 #else
 		[uiimg release];
 #endif
-		
 		[arp release];
-
+        
 		return img;
 	}
 }
