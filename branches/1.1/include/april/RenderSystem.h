@@ -265,7 +265,7 @@ namespace April
 		void setProjectionMatrix(const gtypes::Matrix4& matrix);
 		virtual bool isFullscreen() { return false; } //2DO - implement in derived classes
 		virtual void setFullscreen(bool fullscreen) { } //2DO - implement in derived classes
-		virtual void setResolution(int w, int g);
+		virtual void setResolution(int w, int h);
 		
 		const gtypes::Matrix4& getModelviewMatrix();
 		const gtypes::Matrix4& getProjectionMatrix();
