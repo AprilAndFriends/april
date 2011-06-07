@@ -16,7 +16,7 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 #include <gtypes/Vector2.h>
 #include <gtypes/Vector3.h>
 #include <gtypes/Matrix4.h>
-#include "AprilExport.h"
+#include "aprilExport.h"
 
 
 namespace gtypes
@@ -37,7 +37,7 @@ enum TextureFormat
     AT_RGB=3
 };
 
-namespace April
+namespace april
 {
 	class Window;
 	class ImageSource;
@@ -65,32 +65,32 @@ namespace April
 		DEFAULT
 	};
 	
-	struct AprilExport PlainVertex : public gtypes::Vector3
+	struct aprilExport PlainVertex : public gtypes::Vector3
 	{
 	public:
 		void operator=(const gtypes::Vector3& v);
 	};
 
-	struct AprilExport ColoredVertex : public PlainVertex
+	struct aprilExport ColoredVertex : public PlainVertex
 	{
 	public:
 		unsigned int color;
 	};
 
-	class AprilExport TexturedVertex : public PlainVertex
+	class aprilExport TexturedVertex : public PlainVertex
 	{
 	public:
 		float u,v;
 	};
 
-	class AprilExport ColoredTexturedVertex : public PlainVertex
+	class aprilExport ColoredTexturedVertex : public PlainVertex
 	{
 	public:
 		unsigned int color;
 		float u,v;
 	};
     
-    class AprilExport ColoredTexturedNormalVertex : public PlainVertex
+    class aprilExport ColoredTexturedNormalVertex : public PlainVertex
     {
     public:
         float u,v;
@@ -99,7 +99,7 @@ namespace April
         
     };
     
-    class AprilExport TexturedNormalVertex : public PlainVertex
+    class aprilExport TexturedNormalVertex : public PlainVertex
     {
     public:
         float u,v;
@@ -107,7 +107,7 @@ namespace April
         
     };
     
-    class AprilExport ColoredNormalVertex : public PlainVertex
+    class aprilExport ColoredNormalVertex : public PlainVertex
     {
     public:
         unsigned int color;
@@ -115,7 +115,7 @@ namespace April
         
     };
 
-	class AprilExport Color
+	class aprilExport Color
 	{
 	public:
 		unsigned char r,g,b,a;
@@ -155,7 +155,7 @@ namespace April
 		
 	};
 
-	class AprilExport Texture
+	class aprilExport Texture
 	{
 	protected:
 		bool mDynamic;
@@ -194,7 +194,7 @@ namespace April
 		TextureFilter getTextureFilter() { return mTextureFilter; }
 	};
 	
-	class AprilExport RAMTexture : public Texture
+	class aprilExport RAMTexture : public Texture
 	{
 	protected:
 		ImageSource* mBuffer;
@@ -211,7 +211,7 @@ namespace April
 		
 	};
 
-	class AprilExport RenderSystem
+	class aprilExport RenderSystem
 	{
 	protected:
 		Window* mWindow;
@@ -331,13 +331,13 @@ namespace April
 
 	};
 
-	AprilFnExport void setLogFunction(void (*fnptr)(chstr));
-	AprilFnExport void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title);
-	AprilFnExport void destroy();
-	AprilFnExport void addTextureExtension(chstr extension);
+	aprilFnExport void setLogFunction(void (*fnptr)(chstr));
+	aprilFnExport void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title);
+	aprilFnExport void destroy();
+	aprilFnExport void addTextureExtension(chstr extension);
 	
 	// global rendersys shortcut variable
-	AprilFnExport extern April::RenderSystem* rendersys;
+	aprilFnExport extern april::RenderSystem* rendersys;
 }
 
 #endif
