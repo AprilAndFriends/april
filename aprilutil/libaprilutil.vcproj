@@ -173,6 +173,10 @@
 				RelativePath=".\src\BlurManager.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\src\StaticMesh.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -185,6 +189,10 @@
 			</File>
 			<File
 				RelativePath=".\include\aprilutil\BlurManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\aprilutil\StaticMesh.h"
 				>
 			</File>
 		</Filter>
