@@ -22,7 +22,7 @@ static UIWindow *window;
 static EAGLView *glview;
 static AprilViewController *viewcontroller;
 
-namespace April
+namespace april
 {
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
@@ -313,7 +313,7 @@ namespace April
 			if(inputChar >= 32 && inputChar <= 127)
 			{
 				// deploy keypress
-				April::KeySym keycode = AK_NONE; // FIXME incorrect, might cause a nasty bug. 
+				april::KeySym keycode = AK_NONE; // FIXME incorrect, might cause a nasty bug. 
 												 // however, writing a translation table atm 
 												 // isn't the priority.
 			

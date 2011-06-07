@@ -13,7 +13,7 @@
 
 #include "Window.h"
 #include "Timer.h"
-namespace April
+namespace april
 {
 	class iOSWindow : public Window
 	{

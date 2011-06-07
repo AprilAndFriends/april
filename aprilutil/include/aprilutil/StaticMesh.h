@@ -22,10 +22,10 @@ Copyright (c) 2010 Kresimir Spes, Domagoj Cerjan                                
 
 #include <stdio.h>
 
-namespace April
+namespace april
 {
 
-    class AprilUtilExport Polygon
+    class aprilUtilExport Polygon
     {
     public:
         int mVertind[3];
@@ -36,7 +36,7 @@ namespace April
     
     /////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
-    class AprilUtilExport StaticMesh
+    class aprilUtilExport StaticMesh
 	{
     
     public:
@@ -47,11 +47,11 @@ namespace April
         
         hstr mMeshName;
         
-        April::TexturedVertex *mVertexArray;
+        april::TexturedVertex *mVertexArray;
         int mNumVertices;
         
         
-        April::Texture *mTexture;
+        april::Texture *mTexture;
         
     public:
 		StaticMesh();
@@ -65,7 +65,7 @@ namespace April
         void convertToVertexArray();
         void loadFromFile(chstr meshPath);
         
-        void draw(April::RenderOp renderOp);
+        void draw(april::RenderOp renderOp);
         
 
     };
@@ -73,7 +73,7 @@ namespace April
     
     /////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
-    class AprilUtilExport _faulty_obj_file : public hltypes::exception
+    class aprilUtilExport _faulty_obj_file : public hltypes::exception
 	{
 	public:
 		_faulty_obj_file(chstr filename, const char* source_file, int line);

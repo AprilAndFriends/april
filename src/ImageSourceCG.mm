@@ -94,7 +94,7 @@ static NSURL* _getFileURLAsResource(chstr filename)
 
 
 
-namespace April
+namespace april
 {
 	ImageSource::ImageSource()
 	{
