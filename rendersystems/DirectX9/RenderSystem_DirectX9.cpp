@@ -209,9 +209,9 @@ namespace April
 			d3dDevice->SetTexture(0,0);
 	}
 
-	void DirectX9RenderSystem::setResolution(int w, int g)
+	void DirectX9RenderSystem::setResolution(int w, int h)
 	{
-		RenderSystem::setResolution(w, g);
+		RenderSystem::setResolution(w, h);
 		mBackBuffer->Release();
 		mBackBuffer=0;
 		HRESULT hr;
