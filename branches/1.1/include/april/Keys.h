@@ -11,7 +11,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 #ifndef APRIL_KEYS
 #define APRIL_KEYS
 
-namespace April
+namespace april
 {
 	// this enum defines Windows-specific virtual keys
 	// however, these are mostly nicely defined, so let's use them

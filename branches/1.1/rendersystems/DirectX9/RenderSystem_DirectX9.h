@@ -15,7 +15,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 
 class IDirect3DSurface9;
 
-namespace April
+namespace april
 {
 	class DirectX9Texture;
 	class Window;

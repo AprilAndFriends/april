@@ -26,7 +26,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include <GL/gl.h>
 #endif
 
-namespace April
+namespace april
 {
 	class GLTexture : public Texture
 	{

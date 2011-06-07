@@ -18,11 +18,11 @@ Copyright (c) 2010 Kresimir Spes                                                
 #endif
 
 #include <stdio.h>
-#include "AprilExport.h"
+#include "aprilExport.h"
 
-namespace April
+namespace april
 {
-    class AprilExport Timer
+    class aprilExport Timer
     {
         
         float mDt, mTd, mTd2;

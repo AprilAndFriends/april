@@ -12,11 +12,11 @@ Copyright (c) 2010 Kresimir Spes                                                
 
 #include "AprilUtilExport.h"
 
-namespace April
+namespace april
 {
 	class Texture;
 	
-	class AprilUtilExport BlurManager
+	class aprilUtilExport BlurManager
 	{
 		Texture *mTex1,*mTex2;
 		int mNumLevels;

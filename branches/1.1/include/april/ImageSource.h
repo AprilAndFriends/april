@@ -11,13 +11,13 @@ Copyright (c) 2010 Kresimir Spes                                                
 #define APRIL_IMAGE_SOURCE_H
 
 #include <hltypes/hstring.h>
-#include "AprilExport.h"
+#include "aprilExport.h"
 
-namespace April
+namespace april
 {
 	class Color;
 	
-	class AprilExport ImageSource
+	class aprilExport ImageSource
 	{
 		unsigned int mImageId;
 	public:

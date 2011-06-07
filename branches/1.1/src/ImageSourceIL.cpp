@@ -11,7 +11,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include "RenderSystem.h"
 #include <IL/il.h>
 
-namespace April
+namespace april
 {
 	ImageSource::ImageSource()
 	{
