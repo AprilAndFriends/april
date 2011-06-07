@@ -570,6 +570,12 @@ namespace April
 		_setProjectionMatrix(matrix);
 	}
 	
+	void RenderSystem::setResolution(int w, int h)
+	{
+		logMessage(hsprintf("changing resolution: %d x %d", w, h));
+		mWindow->_setResolution(w, h);
+	}
+
 	const gtypes::Matrix4& RenderSystem::getModelviewMatrix()
 	{
 		return mModelviewMatrix;

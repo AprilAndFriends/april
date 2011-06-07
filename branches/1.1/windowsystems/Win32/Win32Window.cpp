@@ -230,9 +230,32 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 #endif
 	}
 	
+	void Win32Window::_setResolution(int w, int h)
+	{
+		int x=(mFullscreen) ? 0 : (GetSystemMetrics(SM_CXSCREEN)-w)/2,
+			y=(mFullscreen) ? 0 : (GetSystemMetrics(SM_CYSCREEN)-h)/2;
+		
+		DWORD style=(mFullscreen) ? WS_EX_TOPMOST|WS_POPUP : WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX;
+		
+		if (!mFullscreen)
+		{
+			RECT rcClient, rcWindow;
+			POINT ptDiff;
+			GetClientRect(hWnd, &rcClient);
+			GetWindowRect(hWnd, &rcWindow);
+			ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
+			ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
+			MoveWindow(hWnd,rcWindow.left, rcWindow.top, w + ptDiff.x, h + ptDiff.y, TRUE);
+		}
+ 
+		// display the window on the screen
+		ShowWindow(hWnd, 1);
+		UpdateWindow(hWnd);
+		
+	}
+	
 	gvec2 Win32Window::getCursorPos()
 	{
-		
 		return gvec2(cursorpos.x,cursorpos.y);
 	}
 

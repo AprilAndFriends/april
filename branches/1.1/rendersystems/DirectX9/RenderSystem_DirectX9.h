@@ -42,6 +42,7 @@ namespace April
 		void setBlendMode(BlendMode mode);
 		void setTextureFilter(TextureFilter filter);
 		void setTextureWrapping(bool wrap);
+		void setResolution(int w, int g);
 		// caps
 		float getPixelOffset();
 		hstr getName();

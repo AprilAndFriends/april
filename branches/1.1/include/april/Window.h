@@ -102,6 +102,7 @@ namespace April
 		void setVirtualKeyboardCallback(void (*vk_callback)(bool));
 		void setTouchscreenEnabledCallback(void (*te_callback)(bool));
 		virtual void setDeviceOrientationCallback(void (*vk_callback)(DeviceOrientation));
+		virtual void _setResolution(int w, int h) { }
 		
 		// misc pure virtuals
 		virtual void enterMainLoop()=0;
