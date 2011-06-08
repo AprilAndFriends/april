@@ -214,29 +214,13 @@ namespace april
 		RenderSystem::setResolution(w, h);
 		mBackBuffer->Release();
 		mBackBuffer=0;
-		HRESULT hr;
-		int i;
-		while (((Win32Window*)mWindow)->isRunning())
-		{
-			for (i=0;i<10;i++)
-			{
-				mWindow->doEvents();
-				Sleep(100);
-			}
-			hr=d3dDevice->TestCooperativeLevel();
-			if (hr == D3D_OK) break;
-			else if (hr == D3DERR_DEVICENOTRESET)
-			{
-				logMessage("Resetting device...");
-				hr=d3dDevice->Reset(&d3dpp);
-				if (hr == D3D_OK) break;
-				else if (hr == D3DERR_DRIVERINTERNALERROR) throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
-				else if (hr == D3DERR_OUTOFVIDEOMEMORY)    throw hl_exception("Unable to reset Direct3D device, Out of Video Memory!");
-				else
-					logMessage("Failed to reset device!");
-			}
-			else if (hr == D3DERR_DRIVERINTERNALERROR) throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
-		}
+		d3dpp.BackBufferWidth=mWindow->getWindowWidth();
+		d3dpp.BackBufferHeight=mWindow->getWindowHeight();
+		logMessage("Resetting device...");
+		HRESULT hr=d3dDevice->Reset(&d3dpp);
+		if (hr == D3DERR_DRIVERINTERNALERROR) throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
+		else if (hr == D3DERR_OUTOFVIDEOMEMORY)    throw hl_exception("Unable to reset Direct3D device, Out of Video Memory!");
+		else if (hr != D3D_OK)	logMessage("Failed to reset device!");
 		_setModelviewMatrix(mModelviewMatrix);
 		_setProjectionMatrix(mProjectionMatrix);
 		configureDevice();
