@@ -216,7 +216,7 @@ namespace april
 		mBackBuffer=0;
 		d3dpp.BackBufferWidth=mWindow->getWindowWidth();
 		d3dpp.BackBufferHeight=mWindow->getWindowHeight();
-		logMessage("Resetting device...");
+		logMessage(hsprintf("Resetting device for %d x %d...", mWindow->getWindowWidth(), mWindow->getWindowHeight()));
 		HRESULT hr=d3dDevice->Reset(&d3dpp);
 		if (hr == D3DERR_DRIVERINTERNALERROR) throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
 		else if (hr == D3DERR_OUTOFVIDEOMEMORY)    throw hl_exception("Unable to reset Direct3D device, Out of Video Memory!");
@@ -226,11 +226,11 @@ namespace april
 		configureDevice();
 		d3dDevice->GetRenderTarget(0,&mBackBuffer); // update backbuffer pointer
 		logMessage("Direct3D9 Device restored");
+		d3dDevice->BeginScene();
 	}
 
 	void DirectX9RenderSystem::clear(bool color,bool depth)
 	{
-		
 		DWORD flags=0;
 		if (color) flags |= D3DCLEAR_TARGET;
 		if (depth) flags |= D3DCLEAR_ZBUFFER;
@@ -489,7 +489,7 @@ namespace april
 			_setProjectionMatrix(mProjectionMatrix);
 			configureDevice();
 			d3dDevice->GetRenderTarget(0,&mBackBuffer); // update backbuffer pointer
-				logMessage("Direct3D9 Device restored");
+			logMessage("Direct3D9 Device restored");
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)
 		{
