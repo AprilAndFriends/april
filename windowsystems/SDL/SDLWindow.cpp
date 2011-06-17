@@ -247,6 +247,10 @@ namespace april
 	{
 		april::KeySym akeysym = AK_UNKNOWN;
 	
+		// sdl-to-april macros
+		// _s2a(): helper macro defining a "case" for our "switch"
+		// s2a(): actually used macro that prepends SDLK_ and AK_ before using _s2a()
+		// sea(): actually used macro that shortens situations where sdl key name equals april key name
 		#define _s2a(sdlk,ak) case sdlk: akeysym = ak; break; 
 		#define s2a(sdlk,ak) _s2a(SDLK_##sdlk, AK_##ak)
 		#define sea(key) s2a(key,key)
@@ -255,11 +259,7 @@ namespace april
         {
 			// control character keys
 			s2a(BACKSPACE, BACK);
-#ifdef __APPLE__
-			s2a(DELETE, BACK);
-#else
-		case SDLK_DELETE: akeysym = AK_DELETE; //sea(DELETE);
-#endif
+			sea(DELETE);
 			sea(TAB)
 			sea(RETURN);
 			s2a(KP_ENTER, RETURN);
@@ -324,7 +324,22 @@ namespace april
 		{
 			akeysym = (KeySym)(keysym - 32); // april letter keys are ascii's capital letters
 		}
-		//printf("keycode %d unicode %d (%c)\n", keycode, unicode, unicode);
+		
+		// for debugging keypresses
+		//printf("keycode %d unicode %d (%c)\n", keysym, unicode, unicode);
+		
+		// hacks for special situations
+		if (keysym == 8 && unicode == 127)
+		{
+			// on SDL, at least for Mac, backspace 
+			// generates keysym 8 + unicode 127.
+			// keysym 8 is backspace (also, unicode for backspace).
+			// unicode 127 is character for key "delete".
+			//
+			// passing this along would be a bug.
+			unicode = 0;
+		}
+		
 		Window::handleKeyEvent(type, akeysym, unicode);
 	}
 		
