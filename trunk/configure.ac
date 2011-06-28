@@ -39,19 +39,42 @@ AC_SUBST([LIBTOOL_DEPS])
 AC_HEADER_STDC
 
 # check for opengl
-AC_CHECK_HEADERS(GL/gl.h, ,[AC_MSG_ERROR("*** OpenGL headers not found.")])
-AC_CHECK_LIB(GL, glLoadIdentity, 	
-	[CFLAGS="$CFLAGS -D_OPENGL"] [CXXFLAGS="$CXXFLAGS -D_OPENGL"], 
-	[AC_CHECK_LIB(opengl32, glLoadIdentity, 
-			[CFLAGS="$CFLAGS -D_OPENGL"] [CXXFLAGS="$CXXFLAGS -D_OPENGL"], 
-			[AC_MSG_ERROR("*** OpenGL library not found.")])
-])
+AC_CHECK_HEADERS(GL/gl.h, 
+	AC_CHECK_LIB(GL, glLoadIdentity, 	
+		[CFLAGS="$CFLAGS -D_OPENGL=1"] [CXXFLAGS="$CXXFLAGS -D_OPENGL=1"], 
+		[AC_CHECK_LIB(opengl32, glLoadIdentity, 
+				[CFLAGS="$CFLAGS -D_OPENGL=1"] [CXXFLAGS="$CXXFLAGS -D_OPENGL=1"], 
+				[AC_MSG_ERROR("*** OpenGL library not found.")]
+		)]
+	)
+	, 
+	[AC_CHECK_HEADERS(GLES/gl.h,
+		[AC_CHECK_LIB(GLES_CM, glClear,
+			[CFLAGS="$CFLAGS -D_OPENGLES1=1"] [CXXFLAGS="$CXXFLAGS -D_OPENGLES1=1"],
+			[AC_MSG_ERROR("*** OpenGLES1 common profile libraries not found.")]
+		)]
+
+		[AC_CHECK_HEADERS(SDL/SDL_gles.h,
+##			[CFLAGS="$CFLAGS -D_SDLGLES=1"] [CXXFLAGS="$CXXFLAGS -D_SDLGLES=1"]
+			,
+			[AC_MSG_ERROR("*** SDL_gles not found.")]
+			,
+			[#include <SDL/SDL.h>
+			]
+		
+		)]
+		,
+
+
+		[AC_MSG_ERROR("*** OpenGLES1 headers not found")]
+	)]
+)
 
 #check SDL
 SDL_VERSION=1.2.0
 AM_PATH_SDL($SDL_VERSION, :, AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!]))
-CFLAGS="$CFLAGS $SDL_CFLAGS -DHAVE_SDL"
-CXXFLAGS="$CXXFLAGS $SDL_CFLAGS -DHAVE_SDL"
+CFLAGS="$CFLAGS $SDL_CFLAGS -DHAVE_SDL=1"
+CXXFLAGS="$CXXFLAGS $SDL_CFLAGS -DHAVE_SDL=1"
 LIBS="$LIBS $SDL_LIBS"
 AC_SUBST(SDL_LIBS)
 
