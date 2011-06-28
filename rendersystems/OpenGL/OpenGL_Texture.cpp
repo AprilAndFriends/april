@@ -10,29 +10,32 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #ifdef _OPENGL
 
 #ifdef IPHONE_PLATFORM
-#include <OpenGLES/ES1/gl.h>
+ #include <OpenGLES/ES1/gl.h>
+#elif _OPENGLES1
+ #include <GLES/gl.h>
 #else
-#ifdef _WIN32
-#include <windows.h>
-#endif
+ #ifdef _WIN32
+  #include <windows.h>
+ #endif
 
-#ifndef __APPLE__
-#include <GL/gl.h>
-#include <GL/glu.h>
-#if HAVE_GLUT
-#include <GL/glut.h>
+ #ifndef __APPLE__
+  #include <GL/gl.h>
+  #include <GL/glu.h>
+  #if HAVE_GLUT
+   #include <GL/glut.h>
+  #endif
+ #else // __APPLE__
+  #include <TargetConditionals.h>
+  #if TARGET_OS_IPHONE
+   #include <OpenGLES/ES1/gl.h>
+   #include <OpenGLES/ES1/glext.h>
+  #else
+   #include <OpenGL/gl.h>
+   #include <OpenGL/glu.h>
+   #include <GLUT/glut.h>
+  #endif
+ #endif // __APPLE__
 #endif
-#else // __APPLE__
-#include <TargetConditionals.h>
-#if TARGET_OS_IPHONE
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES1/glext.h>
-#else
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <GLUT/glut.h>
-#endif
-#endif // __APPLE__
 
 #include <hltypes/hstring.h>
 
@@ -77,7 +80,6 @@ namespace april
 		return texid;
 	}
 	
-#endif
 	
 	OpenGL_Texture::OpenGL_Texture(chstr filename, bool dynamic)
 	{

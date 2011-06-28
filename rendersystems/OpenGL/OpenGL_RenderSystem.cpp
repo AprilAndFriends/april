@@ -10,31 +10,34 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #ifdef _OPENGL
 
 #ifdef IPHONE_PLATFORM
-#include <OpenGLES/ES1/gl.h>
+ #include <OpenGLES/ES1/gl.h>
+#elif _OPENGLES1
+ #include <GLES/gl.h>
 #else
-#ifdef _WIN32
-#include <windows.h>
-#endif
-#include <stdlib.h>
-#include <string.h>
+ #ifdef _WIN32
+  #include <windows.h>
+ #endif
+ #include <stdlib.h>
+ #include <string.h>
 
-#ifndef __APPLE__
-#include <GL/gl.h>
-#include <GL/glu.h>
-#if HAVE_GLUT
-#include <GL/glut.h>
-#endif
-#else // __APPLE__
-#include <TargetConditionals.h>
-#if TARGET_OS_IPHONE
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES1/glext.h>
-#else
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <GLUT/glut.h>
-#endif
-#endif // __APPLE__
+ #ifndef __APPLE__
+  #include <GL/gl.h>
+  #include <GL/glu.h>
+  #if HAVE_GLUT
+   #include <GL/glut.h>
+  #endif
+ #else // __APPLE__
+  #include <TargetConditionals.h>
+  #if TARGET_OS_IPHONE
+   #include <OpenGLES/ES1/gl.h>
+   #include <OpenGLES/ES1/glext.h>
+  #else
+   #include <OpenGL/gl.h>
+   #include <OpenGL/glu.h>
+   #include <GLUT/glut.h>
+  #endif // TARGET_OS_IPHONE
+ #endif // __APPLE__
+#endif // IPHONE_PLATFORM, _OPENGLES1, ...
 
 #include <gtypes/Vector2.h>
 #include <hltypes/util.h>
@@ -64,7 +67,7 @@ namespace april
 		mat[13] = -mat[13];
 		glLoadMatrixf(mat);
 	}
-#endif
+	
 	// translation from abstract render ops to gl's render ops
 	int gl_render_ops[]=
 	{
@@ -192,7 +195,7 @@ namespace april
 		glClear(mask);
 	}
     
-    ImageSource* OpenGL_RenderSystem::grabScreenshot()
+    ImageSource* OpenGL_RenderSystem::grabScreenshot(int bpp)
     {
         april::log("grabbing screenshot");
         int w = mWindow->getWidth();
@@ -224,7 +227,7 @@ namespace april
 	void OpenGL_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
 		glMatrixMode(GL_PROJECTION);
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || _OPENGLES1
 		glLoadIdentity();
 		glRotatef(getWindow()->prefixRotationAngle(), 0, 0, 1);
 		//printf("rotationangle %g\n", getWindow()->prefixRotationAngle());
@@ -275,11 +278,11 @@ namespace april
 		}
 		else	
 		{
-#if !(TARGET_OS_IPHONE)
+#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 #else
-#warning Compiling for iPhone, setTextureWrapping cannot use GL_CLAMP
+#warning Compiling for an OpenGL ES target, setTextureWrapping cannot use GL_CLAMP
 #endif
 		}
 		mTextureWrapping = wrap;
@@ -312,7 +315,7 @@ namespace april
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			mTexCoordsEnabled = true;
 		}
-#if !(TARGET_OS_IPHONE)
+#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 		if (mColorEnabled)
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
@@ -352,7 +355,7 @@ namespace april
 			glDisableClientState(GL_COLOR_ARRAY);
 			mColorEnabled = false;
 		}
-#if !(TARGET_OS_IPHONE)
+#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 		glColor4f(1, 1, 1, mAlphaMultiplier);
 #endif
 		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
@@ -367,7 +370,7 @@ namespace april
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 			mTexCoordsEnabled = false;
 		}
-#if !(TARGET_OS_IPHONE)
+#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 		if (mColorEnabled)
 		{
 			mColorEnabled = false;
@@ -408,7 +411,7 @@ namespace april
 		}
 		glEnableClientState(GL_COLOR_ARRAY);
 		glVertexPointer(3, GL_FLOAT, sizeof(ColoredVertex), v);
-#if !(TARGET_OS_IPHONE)
+#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 		glColor4f(1, 1, 1, mAlphaMultiplier);
 #endif
 		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(ColoredVertex), &v->color);
@@ -427,7 +430,7 @@ namespace april
 			mColorEnabled = true;
 			glEnableClientState(GL_COLOR_ARRAY);
 		}
-#if !(TARGET_OS_IPHONE)
+#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 		glColor4f(1, 1, 1, mAlphaMultiplier);
 #endif
 		glVertexPointer(3, GL_FLOAT, sizeof(ColoredTexturedVertex), v);
@@ -460,7 +463,7 @@ namespace april
 		glEnable(GL_TEXTURE_2D);
 		// DevIL defaults
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-#if !(TARGET_OS_IPHONE)
+#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
