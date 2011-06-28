@@ -7,9 +7,9 @@ Copyright (c) 2010 Kresimir Spes                                                
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#ifdef _OPENGL
+#if defined(_OPENGL) || (_OPENGLES1)
 #ifndef APRIL_OPENGL_RENDERSYSTEM_H
-#define APRIL_OPNEGL_RENDERSYSTEM_H
+#define APRIL_OPENGL_RENDERSYSTEM_H
 
 #ifdef __APPLE__
 #include <TargetConditionals.h>
@@ -18,6 +18,8 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include <OpenGL/gl.h>
 #elif (TARGET_OS_IPHONE)
 #include <OpenGLES/ES1/gl.h>
+#elif (_OPENGLES1)
+#include <GLES/gl.h>
 #else
 #include <GL/gl.h>
 #endif

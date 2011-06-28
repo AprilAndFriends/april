@@ -15,6 +15,11 @@ Copyright (c) 2010 Ivan Vucica                                                  
 #include <SDL/SDL_keysym.h>
 #include <hltypes/hstring.h>
 
+#if _SDLGLES
+#include <SDL/SDL.h>
+#include <SDL/SDL_gles.h>
+#endif
+
 #include "aprilExport.h"
 #include "Window.h"
 
@@ -55,7 +60,9 @@ namespace april
 		bool mRunning;
 		bool mCursorVisible;
 		bool mCursorInside;
-		
+#if _SDLGLES
+		SDL_GLES_Context *mGLESContext;
+#endif
 	};
 }
 

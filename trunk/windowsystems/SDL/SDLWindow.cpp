@@ -15,6 +15,8 @@ Copyright (c) 2010 Ivan Vucica                                                  
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 #include <ApplicationServices/ApplicationServices.h>
 #endif
+#elif _OPENGLES1
+#include <GLES/gl.h>
 #else
 #include <GL/gl.h>
 #endif
@@ -46,13 +48,24 @@ namespace april
 		SDL_WM_SetCaption(title.c_str(), title.c_str());
 		mTitle = title;
 		
+#if !_SDLGLES
 		// set up opengl attributes desired for the context
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-		
+#else
+		SDL_GLES_Init(SDL_GLES_VERSION_1_1);
+#endif
+
 		// set up display with width w, height h, any bpp, opengl, and optionally fullscreen
 		mFullscreen = fullscreen;
+#if !_SDLGLES
 		mScreen = SDL_SetVideoMode(w, h, 0, SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0));
+#else
+		mScreen = SDL_SetVideoMode(0, 0, 16, SDL_SWSURFACE);
+		mGLESContext = SDL_GLES_CreateContext();
+		SDL_GLES_MakeCurrent(mGLESContext);
+#endif
+		
 		glClear(GL_COLOR_BUFFER_BIT);
 		presentFrame();
 		if (!mScreen)
@@ -62,9 +75,9 @@ namespace april
 			// TODO elsewhere, add support for platform-specific msgbox code
 			//NSRunAlertPanel(@"Could not open display", @"Game could not set the screen resolution. Perhaps resetting game configuration will help.", @"Ok", nil, nil);
 #endif
+#endif
 			april::log("Requested display mode could not be provided");
 			exit(0);
-#endif
 		}
 		/*
 		#ifdef _WIN32
@@ -90,7 +103,7 @@ namespace april
 		SDL_EnableUNICODE(1);
 		
 		while (mRunning)
-        {
+		{
 			//check if we should quit...
 			if (gAprilShouldInvokeQuitCallback)
 			{
@@ -172,6 +185,8 @@ namespace april
 	
 	SDLWindow::~SDLWindow()
 	{
+		SDL_GLES_DeleteContext(mGLESContext);
+		SDL_GLES_Quit();
 		SDL_Quit();
 	}
 	
@@ -182,7 +197,11 @@ namespace april
 	
 	void SDLWindow::presentFrame()
 	{
+#if !_SDLGLES
 		SDL_GL_SwapBuffers();
+#else
+		SDL_GLES_SwapBuffers();
+#endif
 	}
 	
 	void SDLWindow::showSystemCursor(bool b)

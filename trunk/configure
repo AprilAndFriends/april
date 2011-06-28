@@ -15310,7 +15310,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_GLES_CM_glClear" >&5
 $as_echo "$ac_cv_lib_GLES_CM_glClear" >&6; }
 if test "x$ac_cv_lib_GLES_CM_glClear" = xyes; then :
-  CFLAGS="$CFLAGS -D_OPENGLES1=1" CXXFLAGS="$CXXFLAGS -D_OPENGLES1=1"
+  CFLAGS="$CFLAGS -D_OPENGL=1 -D_OPENGLES1=1" CXXFLAGS="$CXXFLAGS -D_OPENGL=1 -D_OPENGLES1=1"
 else
   as_fn_error $? "\"*** OpenGLES1 common profile libraries not found.\"" "$LINENO" 5
 
@@ -15328,7 +15328,7 @@ if test "x$ac_cv_header_SDL_SDL_gles_h" = xyes; then :
   cat >>confdefs.h <<_ACEOF
 #define HAVE_SDL_SDL_GLES_H 1
 _ACEOF
- ##			[CFLAGS="$CFLAGS -D_SDLGLES=1"] [CXXFLAGS="$CXXFLAGS -D_SDLGLES=1"]
+ CFLAGS="$CFLAGS -D_SDLGLES=1" CXXFLAGS="$CXXFLAGS -D_SDLGLES=1"
 
 else
   as_fn_error $? "\"*** SDL_gles not found.\"" "$LINENO" 5
