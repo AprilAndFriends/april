@@ -195,6 +195,11 @@ namespace april
 		mRunning = false;
 	}
 	
+	void SDLWindow::destroyWindow()
+	{
+		SDL_Quit();
+	}
+	
 	void SDLWindow::presentFrame()
 	{
 #if !_SDLGLES

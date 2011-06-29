@@ -49,26 +49,84 @@ Copyright (c) 2010 Ivan Vucica                                                  
 @interface AprilMessageBoxDelegate : NSObject<UIAlertViewDelegate> {
     void(*callback)(april::MessageBoxButton);
     april::MessageBoxButton buttonTypes[3];
+	
+	CFRunLoopRef runLoop;
+	BOOL isModal;
+	april::MessageBoxButton selectedButton;
 }
 @property (nonatomic, assign) void(*callback)(april::MessageBoxButton);
 @property (nonatomic, assign) april::MessageBoxButton *buttonTypes;
+@property (nonatomic, readonly) april::MessageBoxButton selectedButton;
 @end
 @implementation AprilMessageBoxDelegate
 @synthesize callback;
+@synthesize selectedButton;
+@dynamic buttonTypes;
+-(id)initWithModality:(BOOL)_isModal
+{
+	self = [super init];
+	if(self)
+	{
+		runLoop = CFRunLoopGetCurrent();
+		isModal = _isModal;
+	}
+	return self;
+}
 -(april::MessageBoxButton*)buttonTypes
 {
     return buttonTypes;
 }
 -(void)setButtonTypes:(april::MessageBoxButton*)_buttonTypes
 {
-    memcpy(buttonTypes, _buttonTypes, sizeof(buttonTypes));
+    memcpy(buttonTypes, _buttonTypes, sizeof(april::MessageBoxButton)*3);
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (callback) 
+    if (callback)
     {
         callback(buttonTypes[buttonIndex]);
     }
+	if (isModal)
+	{
+		CFRunLoopStop(runLoop);
+	}
+	
+	selectedButton = buttonTypes[buttonIndex];
+	
+	[self release];
+}
+- (void)willPresentAlertView:(UIAlertView*)alertView
+{
+	
+	NSString *reqSysVer = @"4.0";
+	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+	BOOL isFourOh = ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending);
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && buttonTypes[2] && isFourOh) 
+	{
+		// landscape sucks on 4.0+ phones when we have three buttons.
+		// it doesnt show hint message.
+		// unless we hack.
+		
+		float w = alertView.bounds.size.width;
+		if(w < 5.)
+		{
+			april::log("In messageBox()'s label hack, width override took place");
+			w = 400; // hardcoded width! seems to work ok
+			
+		}
+		
+		
+		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 30.0f, alertView.bounds.size.width, 40.0f)]; 
+		label.backgroundColor = [UIColor clearColor]; 
+		label.textColor = [UIColor whiteColor]; 
+		label.font = [UIFont systemFontOfSize:14.0f]; 
+		label.textAlignment = UITextAlignmentCenter;
+		label.text = alertView.message; 
+		[alertView addSubview:label]; 
+		[label release];
+	}
+	
 }
 @end
 
@@ -370,7 +428,7 @@ namespace april
 #endif
 	}
 	
-	MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	static MessageBoxButton messageBox_impl(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 #if _WIN32
 		HWND wnd = 0;
@@ -570,22 +628,34 @@ namespace april
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
 		NSString *textns = [NSString stringWithUTF8String:text.c_str()];
-		
-        AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] init] autorelease];
+
+        AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:(style & AMSGSTYLE_MODAL)] autorelease];
         mbd.callback = callback;
         mbd.buttonTypes = buttonTypes;
-        
+		[mbd retain];
+
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens
 														message:textns
 													   delegate:mbd 
 											  cancelButtonTitle:buttons[0]
 											  otherButtonTitles:buttons[1], buttons[2], nil];
 		[alert show];
+		if (style & AMSGSTYLE_MODAL) 
+		{
+			CFRunLoopRun();
+		}
 		[alert release];
 		
-		// FIXME alerts might not block the main thread of execution! check this!
-		// FIXME does not return proper values! 
-		//       we would need to implement a delegate.
+		// We're modal?
+		// If so, we know what to return!
+		if (style & AMSGSTYLE_MODAL)
+		{
+			return mbd.selectedButton;
+		}
+		
+		// NOTE: does not return proper values unless modal! 
+		//       you need to implement a delegate.
+		
 		
 		// some dummy returnvalues
 		if (buttonMask & AMSGBTN_CANCEL)
@@ -645,5 +715,28 @@ namespace april
 		return AMSGBTN_OK;
 #endif
 	}
+	MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	{
+		MessageBoxStyle passedStyle = style;
+		
+		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
+		{
+#if !TARGET_OS_IPHONE
+			rendersys->getWindow()->terminateMainLoop();
+			rendersys->getWindow()->destroyWindow();
+#endif
+			passedStyle = (MessageBoxStyle)(passedStyle & AMSGSTYLE_MODAL);
+		}
+		MessageBoxButton returnValue = messageBox_impl(title, text, buttonMask, passedStyle, customButtonTitles, callback);
+		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY)
+		{
+			exit(1);
+		}
+		else
+		{
+			return returnValue;
+		}
+	}
+	
 	
 }
