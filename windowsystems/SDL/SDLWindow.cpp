@@ -185,8 +185,10 @@ namespace april
 	
 	SDLWindow::~SDLWindow()
 	{
+#if _SDLGLES
 		SDL_GLES_DeleteContext(mGLESContext);
 		SDL_GLES_Quit();
+#endif
 		SDL_Quit();
 	}
 	
