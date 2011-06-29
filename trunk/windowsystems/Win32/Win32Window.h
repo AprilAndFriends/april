@@ -30,6 +30,7 @@ namespace april
 		// implementations
 		void enterMainLoop();
 		void terminateMainLoop();
+		void destroyWindow();
 		bool isRunning() { return mRunning; }
 		void showSystemCursor(bool visible);
 		bool isSystemCursorShown();

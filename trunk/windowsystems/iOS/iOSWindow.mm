@@ -14,10 +14,10 @@
 #import "EAGLView.h"
 #import "iOSWindow.h"
 #import "RenderSystem.h"
-#import "AprilUIKitDelegate.h"
+#import "ApriliOSAppDelegate.h"
 #import <hltypes/exception.h>
 
-static AprilUIKitDelegate *appDelegate;
+static ApriliOSAppDelegate *appDelegate;
 static UIWindow *window;
 static EAGLView *glview;
 static AprilViewController *viewcontroller;
@@ -26,7 +26,7 @@ namespace april
 {
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
-		appDelegate = ((AprilUIKitDelegate*)[[UIApplication sharedApplication] delegate]);
+		appDelegate = ((ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate]);
 		viewcontroller = [appDelegate viewController];
 		window = [appDelegate window];
 		if(fullscreen)
@@ -53,28 +53,29 @@ namespace april
 		glview.aprilWindowVoid = this;
         glview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
-        NSLog(@"viewcontroller is oriented to %d", viewcontroller.interfaceOrientation);
 		[viewcontroller.view addSubview:glview];
-        
         
 		mRunning = true;
     }
     
     void iOSWindow::enterMainLoop()
     {
-		while (mRunning) 
-		{
-			// parse UIKit events
-			doEvents();
-			handleDisplayAndUpdate();
-		}
+        NSLog(@"Fatal error: Using enterMainLoop on iOS!");
+        exit(-1);
     }
 	
 	
     void iOSWindow::terminateMainLoop()
     {
-        mRunning = false;
+        NSLog(@"Fatal error: Using terminateMainLoop on iOS!");
+        exit(-2);
     }
+	void iOSWindow::destroyWindow()
+	{
+		// just stopping the animation on iOS
+		[glview stopAnimation];
+	}
+	
     void iOSWindow::showSystemCursor(bool visible)
     {
         // no effect on iOS
@@ -119,6 +120,7 @@ namespace april
 	
     void iOSWindow::presentFrame()
     {
+
 		if(mFirstFrameDrawn)
 		{
 			[glview swapBuffers];
@@ -372,12 +374,14 @@ namespace april
 	}
 	void iOSWindow::applicationWillResignActive()
 	{
+		[glview stopAnimation];
 		if (mFocusCallback) {
 			mFocusCallback(false);
 		}
 	}
 	void iOSWindow::applicationDidBecomeActive()
 	{
+		[glview startAnimation];
 		if (mFocusCallback) {
 			mFocusCallback(true);
 		}

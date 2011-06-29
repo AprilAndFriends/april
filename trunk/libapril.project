@@ -71,28 +71,6 @@
     <Project Name="libgtypes"/>
   </Dependencies>
   <Settings Type="Dynamic Library">
-    <GlobalSettings>
-      <Compiler Options="" C_Options="">
-        <IncludePath Value="."/>
-        <IncludePath Value="include"/>
-        <IncludePath Value="include/april"/>
-        <IncludePath Value="rendersystems/OpenGL"/>
-        <IncludePath Value="rendersystems/DirectX9"/>
-        <IncludePath Value="windowsystems/GLUT"/>
-        <IncludePath Value="windowsystems/SDL"/>
-        <IncludePath Value="windowsystems/Win32"/>
-        <IncludePath Value="../hltypes/include"/>
-        <IncludePath Value="../gtypes/include"/>
-        <IncludePath Value="../include"/>
-        <Preprocessor Value="APRIL_EXPORTS"/>
-        <Preprocessor Value="USE_IL"/>
-      </Compiler>
-      <Linker Options="">
-        <LibraryPath Value="./lib"/>
-        <LibraryPath Value="../lib"/>
-      </Linker>
-      <ResourceCompiler Options=""/>
-    </GlobalSettings>
     <Configuration Name="DirectX_Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" C_Options="-g" Required="yes" PreCompiledHeader="">
         <Preprocessor Value="_WIN32"/>
@@ -309,6 +287,29 @@
         <CustomPreBuild/>
       </AdditionalRules>
     </Configuration>
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="."/>
+        <IncludePath Value="include"/>
+        <IncludePath Value="include/april"/>
+        <IncludePath Value="rendersystems/OpenGL"/>
+        <IncludePath Value="rendersystems/DirectX9"/>
+        <IncludePath Value="windowsystems/GLUT"/>
+        <IncludePath Value="windowsystems/SDL"/>
+        <IncludePath Value="windowsystems/Win32"/>
+        <IncludePath Value="../hltypes/include"/>
+        <IncludePath Value="../gtypes/include"/>
+        <IncludePath Value="../include"/>
+        <Preprocessor Value="APRIL_EXPORTS"/>
+        <Preprocessor Value="USE_IL"/>
+        <Preprocessor Value="BUILDING_APRIL"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="./lib"/>
+        <LibraryPath Value="../lib"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
   </Settings>
   <Dependencies Name="DirectX_Debug">
     <Project Name="libhltypes"/>

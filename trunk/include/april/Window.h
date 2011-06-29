@@ -78,6 +78,7 @@ namespace april
 		// misc pure virtuals
 		virtual void enterMainLoop() = 0;
 		virtual void terminateMainLoop() = 0;
+		virtual void destroyWindow() = 0;
 		virtual void showSystemCursor(bool b) = 0;
 		virtual bool isSystemCursorShown() = 0;
 		virtual int getWidth() = 0;
@@ -140,7 +141,7 @@ namespace april
 		
 		AMSGBTN_OKCANCEL = AMSGBTN_OK | AMSGBTN_CANCEL,
 		AMSGBTN_YESNO = AMSGBTN_YES | AMSGBTN_NO,
-		AMSGBTN_YESNOCANCEL = AMSGBTN_YESNO | AMSGBTN_CANCEL
+		AMSGBTN_YESNOCANCEL = AMSGBTN_YESNO | AMSGBTN_CANCEL,
 	};
 	
 	enum MessageBoxStyle
@@ -152,7 +153,8 @@ namespace april
 		AMSGSTYLE_CRITICAL = 3,
 		AMSGSTYLE_QUESTION = 4,
 		
-		AMSGSTYLE_MODAL = 8
+		AMSGSTYLE_MODAL = 8,
+		AMSGSTYLE_TERMINATEAPPONDISPLAY = 16, 
 	};
 	
 	aprilFnExport Window* createAprilWindow(chstr window_system_name, int w, int h, bool fullscreen, chstr title);

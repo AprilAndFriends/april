@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="windowsystems/Win32;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;USE_IL;_WIN32;_CRT_SECURE_NO_WARNINGS;_OPENGL"
+				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;USE_IL;_WIN32;_CRT_SECURE_NO_WARNINGS;_OPENGL;BUILDING_APRIL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,7 +62,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes_d.lib libgtypes_d.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib winmm.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\hltypes\bin\win32_Debug;..\gtypes\bin\win32_Debug"
+				AdditionalLibraryDirectories="..\lib\msvc90;..\hltypes\bin\win32_Debug;..\gtypes\bin\win32_Debug"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -116,7 +116,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="windowsystems/Win32;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="APRIL_EXPORTS;USE_IL;_WIN32"
+				PreprocessorDefinitions="APRIL_EXPORTS;USE_IL;_WIN32;BUILDING_APRIL"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -135,7 +135,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib winmm.lib"
-				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\hltypes\bin\win32_Release;..\gtypes\bin\win32_Release"
+				AdditionalLibraryDirectories="..\lib\msvc90;..\hltypes\bin\win32_Release;..\gtypes\bin\win32_Release"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -186,7 +186,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="windowsystems/Win32;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;USE_IL;_WIN32;_CRT_SECURE_NO_WARNINGS;_DIRECTX9"
+				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;USE_IL;_WIN32;_CRT_SECURE_NO_WARNINGS;_DIRECTX9;BUILDING_APRIL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -207,7 +207,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes_d.lib libgtypes_d.lib d3d9.lib DevIL.lib winmm.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\hltypes\bin\win32_Debug;..\gtypes\bin\win32_Debug"
+				AdditionalLibraryDirectories="..\lib\msvc90;..\hltypes\bin\win32_Debug;..\gtypes\bin\win32_Debug"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -261,7 +261,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="windowsystems/Win32;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="APRIL_EXPORTS;USE_IL;_WIN32;_DIRECTX9"
+				PreprocessorDefinitions="APRIL_EXPORTS;USE_IL;_WIN32;_DIRECTX9;BUILDING_APRIL"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -280,7 +280,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib d3d9.lib DevIL.lib winmm.lib"
-				AdditionalLibraryDirectories="..\lib\msvc;..\win32\lib;..\hltypes\bin\win32_Release;..\gtypes\bin\win32_Release"
+				AdditionalLibraryDirectories="..\lib\msvc90;..\hltypes\bin\win32_Release;..\gtypes\bin\win32_Release"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -324,6 +324,10 @@
 			</File>
 			<File
 				RelativePath=".\src\ImageSourceIL.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\main_win32.cpp"
 				>
 			</File>
 			<File
@@ -390,6 +394,10 @@
 			</File>
 			<File
 				RelativePath=".\include\april\Keys.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\april\main.h"
 				>
 			</File>
 			<File
