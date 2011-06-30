@@ -12,7 +12,7 @@
 #import "main.h"
 
 int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char **argv)
-{
+{	
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	int retVal = UIApplicationMain(argc, argv, nil, @"ApriliOSAppDelegate");
     [pool release];

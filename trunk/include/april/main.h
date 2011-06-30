@@ -36,6 +36,12 @@
  * april_main()) are actually for internal use only.
  **/
 
+#ifndef BUILDING_APRIL
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+#endif
+
 extern void april_init(const harray<hstr>& argv);
 extern void april_destroy();
 
@@ -46,6 +52,28 @@ aprilExport int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anA
 #if !defined(_WIN32) || defined(_CONSOLE)
 int main (int argc, char **argv)
 {
+#if TARGET_IPHONE_SIMULATOR
+	/* trick for running valgrind in iphone simulator
+	 * http://landonf.bikemonkey.org/code/iphone/iPhone_Simulator_Valgrind.20081224.html
+	 * original code requires that code is not executed with -valgrind.
+	 * since we're a lib, we'll include the reexec code,
+	 * allow redefining of valgrind path and force using -valgrind
+	 * to specify relaunching requirement. 
+	 * we'll also include this only on iPhone Simulator code,
+	 * instead of requiring manually defining that we want this code.
+	 */
+	#ifndef VALGRIND
+		#define VALGRIND "/usr/local/bin/valgrind"
+	#endif
+	/* Using the valgrind build config, reexec this program
+	 * in valgrind */
+	if (argc >= 2 && strcmp(argv[1], "-valgrind") == 0) {
+		printf("Relaunching with valgrind\n");
+		execl(VALGRIND, VALGRIND, "--leak-check=full", "--error-limit=no", argv[0],
+			  NULL);
+	}
+#endif
+	
     april_main(april_init, april_destroy, argc, argv);
     return 0;
 }
