@@ -49,7 +49,7 @@ int gAprilShouldInvokeQuitCallback;
 
 
 
-@interface AprilAppDelegate : NSObject<NSApplicationDelegate>
+@interface AprilAppDelegate : NSObject //<NSApplicationDelegate>
 @end
 
 
