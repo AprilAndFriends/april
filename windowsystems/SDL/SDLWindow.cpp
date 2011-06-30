@@ -47,6 +47,7 @@ namespace april
 		SDL_Init(SDL_INIT_VIDEO);
 		SDL_WM_SetCaption(title.c_str(), title.c_str());
 		mTitle = title;
+        mCursorInside = true;
 		
 #if !_SDLGLES
 		// set up opengl attributes desired for the context
