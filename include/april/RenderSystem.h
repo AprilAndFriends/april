@@ -64,6 +64,13 @@ namespace april
 		ADD,
 		DEFAULT
 	};
+
+	struct aprilExport DisplayMode
+	{
+		int width;
+		int height;
+		int refreshRate;
+	};
 	
 	struct aprilExport PlainVertex : public gtypes::Vector3
 	{
@@ -240,6 +247,8 @@ namespace april
 		RenderSystem();
 		virtual ~RenderSystem();
 
+		virtual void assignWindow(Window* window)=0;
+
 		// object creation
 		hstr findTextureFile(chstr filename);
 		virtual Texture* loadTexture(chstr filename,bool dynamic=false)=0;
@@ -328,11 +337,14 @@ namespace april
 		virtual void setWindowTitle(chstr title) DEPRECATED_ATTRIBUTE;
 		virtual void presentFrame(); // DEPRECATED_ATTRIBUTE; -- not deprecated because directx has its own way of presenting stuff.
 		virtual void showSystemCursor(bool visible) DEPRECATED_ATTRIBUTE;
+		virtual harray<DisplayMode> getSupportedDisplayModes()=0;
 
 	};
 
 	aprilFnExport void setLogFunction(void (*fnptr)(chstr));
-	aprilFnExport void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title);
+	aprilFnExport void init();
+	aprilFnExport void createRenderSystem(chstr rendersystem_name);
+	aprilFnExport void createRenderTarget(int w,int h,bool fullscreen,chstr title);
 	aprilFnExport void destroy();
 	aprilFnExport void addTextureExtension(chstr extension);
 	

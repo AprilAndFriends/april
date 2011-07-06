@@ -49,9 +49,11 @@ namespace april
 		void _setModelviewMatrix(const gtypes::Matrix4& matrix);
 		void _setProjectionMatrix(const gtypes::Matrix4& matrix);
 	public:
-		GLRenderSystem(Window* window);
+		GLRenderSystem();
 		~GLRenderSystem();
 		
+		void assignWindow(Window* window);
+
 		// object creation
 		Texture* loadTexture(chstr filename,bool dynamic);
 		Texture* createTextureFromMemory(unsigned char* rgba,int w,int h);
@@ -81,10 +83,11 @@ namespace april
 		void setAlphaMultiplier(float value);
 		void setRenderTarget(Texture* source);
 		void beginFrame();
+		harray<DisplayMode> getSupportedDisplayModes();
 		
 	};
 
-	void createGLRenderSystem(Window* window);
+	void createGLRenderSystem();
 }
 #endif
 #endif

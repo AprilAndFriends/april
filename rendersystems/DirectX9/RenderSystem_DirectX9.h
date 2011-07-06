@@ -29,8 +29,10 @@ namespace april
 		DirectX9Texture* mRenderTarget;
 		IDirect3DSurface9* mBackBuffer;
 	public:
-		DirectX9RenderSystem(Window* window); //int w,int h,bool fullscreen,chstr title);
+		DirectX9RenderSystem();
 		~DirectX9RenderSystem();
+
+		void assignWindow(Window* window);
 		
 		void configureDevice();
 		
@@ -72,6 +74,7 @@ namespace april
 		void beginFrame();
 		
 		void presentFrame();
+		harray<DisplayMode> getSupportedDisplayModes();
 		/*
 		void triggerKeyEvent(bool down,unsigned int keycode);
 		void triggerCharEvent(unsigned int chr);
@@ -89,7 +92,7 @@ namespace april
 		*/
 	};
 
-	void createDX9RenderSystem(Window* window); //int w,int h,bool fullscreen,chstr title);
+	void createDX9RenderSystem();
 }
 #endif
 #endif

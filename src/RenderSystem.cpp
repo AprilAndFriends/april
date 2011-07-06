@@ -633,27 +633,35 @@ namespace april
 	}
 	
 /*********************************************************************************/
-	void init(chstr rendersystem_name,int w,int h,bool fullscreen,chstr title)
+	void init()
 	{
-		#ifdef USE_IL
-			ilInit();
-		#endif
-		
-		#ifdef _WIN32
-		Window* window = createAprilWindow("Win32", w, h, fullscreen, title);
-		#else
-		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);
-		#endif
-		#ifdef _OPENGL
-			createGLRenderSystem(window);
-		#else
-			createDX9RenderSystem(window);
-		#endif
+#ifdef USE_IL
+		ilInit();
+#endif
 		extensions+=".png";
 		extensions+=".jpg";
 #if TARGET_OS_IPHONE
 		extensions+=".pvr";
 #endif
+	}
+	
+	void createRenderSystem(chstr rendersystem_name)
+	{
+#ifdef _OPENGL
+		createGLRenderSystem();
+#else
+		createDX9RenderSystem();
+#endif
+	}
+	
+	void createRenderTarget(int w,int h,bool fullscreen,chstr title)
+	{
+#ifdef _WIN32
+		Window* window = createAprilWindow("Win32", w, h, fullscreen, title);
+#else
+		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);
+#endif
+		april::rendersys->assignWindow(window);
 	}
 	
 	void setLogFunction(void (*fnptr)(chstr))
