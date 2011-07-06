@@ -65,18 +65,20 @@ namespace april
 		return 0;
 	}
 /**********************************************************************************************/
-	DirectX9RenderSystem::DirectX9RenderSystem(Window* window) : //int w,int h,bool fullscreen,chstr title) :
+	DirectX9RenderSystem::DirectX9RenderSystem() :
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
-		mWindow = window;
-		
 		logMessage("Creating DirectX9 Rendersystem");
-		
-		hWnd = (HWND)getWindow()->getIDFromBackend();
-		
 		// DIRECT3D
 		d3d=Direct3DCreate9(D3D_SDK_VERSION);
 		if (!d3d) throw hl_exception("Unable to create Direct3D9 object!");
+	}
+
+	void DirectX9RenderSystem::assignWindow(Window* window)
+	{
+		mWindow = window;
+		
+		hWnd = (HWND)getWindow()->getIDFromBackend();
 		
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !window->isFullscreen();
@@ -503,9 +505,32 @@ namespace april
 		d3dDevice->BeginScene();
 	}
 
-	void createDX9RenderSystem(Window* window) //int w,int h,bool fullscreen,chstr title)
+	harray<DisplayMode> DirectX9RenderSystem::getSupportedDisplayModes()
 	{
-		april::rendersys = new DirectX9RenderSystem(window); //w,h,fullscreen,title);
+		// TODO - optimize to enumerate only once and then reuse
+		harray<DisplayMode> result;
+		unsigned int modecount = d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
+		HRESULT hr;
+		for (unsigned int i = 0; i < modecount; i++)
+		{
+			D3DDISPLAYMODE displayMode;
+			hr = d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
+			if (!FAILED(hr)) 
+			{
+				DisplayMode mode;
+				mode.width = displayMode.Width;
+				mode.height = displayMode.Height;
+				mode.refreshRate = displayMode.RefreshRate;
+				result += mode;
+			}
+		}
+		return result;
+	}
+
+
+	void createDX9RenderSystem()
+	{
+		april::rendersys = new DirectX9RenderSystem();
 	}
 
 }

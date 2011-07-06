@@ -176,9 +176,18 @@ namespace april
 	}
 
 
-	GLRenderSystem::GLRenderSystem(Window* window) :
+	GLRenderSystem::GLRenderSystem() :
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{		
+	}
+
+	GLRenderSystem::~GLRenderSystem()
+	{
+		rendersys->logMessage("Destroying OpenGL Rendersystem");
+	}
+
+	void GLRenderSystem::assignWindow(Window* window)
+	{
 		mWindow = window;
 		
 		glViewport(0,0,window->getWindowWidth(),window->getWindowHeight());
@@ -195,11 +204,6 @@ namespace april
         //glClearDepth(1.0f);
         
 		//glEnable(GL_CULL_FACE);
-	}
-
-	GLRenderSystem::~GLRenderSystem()
-	{
-		rendersys->logMessage("Destroying OpenGL Rendersystem");
 	}
 
 	hstr GLRenderSystem::getName()
@@ -492,12 +496,15 @@ namespace april
 		mAlphaMultiplier=value;
 		glColor4f(1,1,1,value);
 	}
-	
-	
+
+	harray<DisplayMode> GLRenderSystem::getSupportedDisplayModes()
+	{
+		return harray<DisplayMode>();
+	}
 
 /***************************************************/
 
-	void createGLRenderSystem(Window* window)
+	void createGLRenderSystem()
 	{
 		g_logFunction("Creating OpenGL Rendersystem");
 
@@ -513,7 +520,7 @@ namespace april
 #endif
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
-		april::rendersys = new GLRenderSystem(window);
+		april::rendersys = new GLRenderSystem();
 	}
 
 }
