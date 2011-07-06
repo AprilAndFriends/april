@@ -70,6 +70,16 @@ namespace april
 		int width;
 		int height;
 		int refreshRate;
+
+		bool operator==(const DisplayMode& other)
+		{
+			return (this->width == other.width && this->height == other.height && this->refreshRate == other.refreshRate);
+		}
+
+		bool operator!=(const DisplayMode& other)
+		{
+			return !(*this == other);
+		}
 	};
 	
 	struct aprilExport PlainVertex : public gtypes::Vector3
