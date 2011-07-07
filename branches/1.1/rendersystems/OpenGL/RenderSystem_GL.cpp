@@ -128,7 +128,7 @@ namespace april
 		glBindTexture(GL_TEXTURE_2D, mTexId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, 4, w,h, 0, GL_RGBA, GL_UNSIGNED_BYTE,rgba);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,rgba);
 
 	}
 
@@ -199,6 +199,18 @@ namespace april
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
+        
+		glEnable(GL_TEXTURE_2D);
+        
+		// DevIL defaults
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+#if !(TARGET_OS_IPHONE)
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
+#endif
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
         //glEnable(GL_DEPTH_TEST);
         //glDepthFunc(GL_GREATER);
         //glClearDepth(1.0f);
@@ -507,18 +519,6 @@ namespace april
 	void createGLRenderSystem()
 	{
 		g_logFunction("Creating OpenGL Rendersystem");
-
-		glEnable(GL_TEXTURE_2D);
-
-		// DevIL defaults
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-#if !(TARGET_OS_IPHONE)
-		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
-#endif
-		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
 		april::rendersys = new GLRenderSystem();
 	}

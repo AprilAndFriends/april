@@ -211,8 +211,8 @@ namespace april
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
 				
 #if TARGET_OS_IPHONE
-		ImageSource *pvrimg;
-		if(pvrimg=_tryLoadingPVR(filename))
+		ImageSource *pvrimg=_tryLoadingPVR(filename);
+		if (pvrimg)
 		{
 			[arp release];
 			return pvrimg;

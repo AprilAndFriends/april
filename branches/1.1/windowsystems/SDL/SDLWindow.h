@@ -21,7 +21,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 struct SDL_Surface;
 union SDL_Event;
 
-namespace April
+namespace april
 {
 	class SDLWindow : public Window
 	{
