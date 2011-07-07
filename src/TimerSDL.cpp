@@ -12,7 +12,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include "Timer.h"
 #include "RenderSystem.h"
 
-namespace April
+namespace april
 {
     Timer::Timer()
     {

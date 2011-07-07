@@ -14,7 +14,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #include <hltypes/hstring.h>
 #include "Window.h"
 #include "AprilExport.h"
-namespace April
+namespace april
 {
 	class GLUTWindow : public Window
 	{
