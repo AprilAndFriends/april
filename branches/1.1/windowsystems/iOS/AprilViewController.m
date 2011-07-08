@@ -201,7 +201,10 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	
 	self.view = iv;
 	
-	[window addSubview:iv];
+	if ([window respondsToSelector:@selector(setRootViewController:)])
+		[window setRootViewController:self];
+	else
+		[window addSubview:iv];
 	//window.transform = CGAffineTransformRotate(window.transform, 3.14159/2);
 	
 	iv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
