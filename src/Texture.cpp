@@ -53,6 +53,16 @@ namespace april
 		// TODO
 	}
 	
+	void Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		// TODO
+	}
+
+	void Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		// TODO
+	}
+
 	void Texture::fillRect(grect rect, Color color)
 	{
 		fillRect((float)rect.x, (float)rect.y, (float)rect.w, (float)rect.h, color);
@@ -60,7 +70,40 @@ namespace april
 	
 	Color Texture::getInterpolatedPixel(float x, float y)
 	{
-		return APRIL_COLOR_CLEAR; // TODO
+		Color result;
+		int x0 = (int)x;
+		int y0 = (int)x;
+		int x1 = x0 + 1;
+		int y1 = y0 + 1;
+		float rx0 = x - x0;
+		float ry0 = y - y0;
+		float rx1 = 1.0f - rx0;
+		float ry1 = 1.0f - ry0;
+		if (rx0 != 0.0f && ry0 != 0.0f)
+		{
+			Color tl = this->getPixel(x0, y0);
+			Color tr = this->getPixel(x1, y0);
+			Color bl = this->getPixel(x0, y1);
+			Color br = this->getPixel(x1, y1);
+			result = (tl * ry1 + bl * ry0) * rx1 + (tr * ry1 + br * ry0) * rx0;
+		}
+		else if (rx0 != 0.0f)
+		{
+			Color tl = this->getPixel(x0, y0);
+			Color tr = this->getPixel(x1, y0);
+			result = tl * rx1 + tr * rx0;
+		}
+		else if (ry0 != 0.0f)
+		{
+			Color tl = this->getPixel(x0, y0);
+			Color bl = this->getPixel(x0, y1);
+			result = tl * ry1 + bl * ry0;
+		}
+		else
+		{
+			result = this->getPixel(x0, y0);
+		}
+		return result;
 	}
 	
 	void Texture::update(float time_increase)
