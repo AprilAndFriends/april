@@ -9,6 +9,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 \************************************************************************************/
 #include <stdio.h>
 
+#include <april/main.h>
 #include <april/RenderSystem.h>
 #include <april/Window.h>
 #include <gtypes/Rectangle.h>
@@ -29,16 +30,16 @@ april::TexturedVertex v[4];
 
 void draw_symbol(int x, int y, chstr symbol)
 {
-	int x1, x2, x3, x4, y1, y2, y3, y4;
+	float x1, x2, x3, x4, y1, y2, y3, y4;
 	
-	x1 = x * 250 - 250 + (x - 1) * 25;
-	x2 = x * 250 + (x - 1) * 25;
-	x3 = x * 250 - 250 + (x - 1) * 25;
-	x4 = x * 250 + (x - 1) * 25;
-	y1 = y * 185 - 185 + (y - 1) * 25;
-	y2 = y * 185 - 185 + (y - 1) * 25;
-	y3 = y * 185 + (y - 1) * 25;
-	y4 = y * 185 + (y - 1) * 25;
+	x1 = x * 250.0f - 250 + (x - 1) * 25;
+	x2 = x * 250.0f + (x - 1) * 25;
+	x3 = x * 250.0f - 250 + (x - 1) * 25;
+	x4 = x * 250.0f + (x - 1) * 25;
+	y1 = y * 185.0f - 185 + (y - 1) * 25;
+	y2 = y * 185.0f - 185 + (y - 1) * 25;
+	y3 = y * 185.0f + (y - 1) * 25;
+	y4 = y * 185.0f + (y - 1) * 25;
 	
 	if (symbol == "x_symbol")
 	{
@@ -63,16 +64,16 @@ void draw_symbol(int x, int y, chstr symbol)
 
 void draw_line(int x_start, int y_start, int x_end, int y_end, std::string symbol)
 {
-	int x1, x2, x3, x4, y1, y2, y3, y4;
+	float x1, x2, x3, x4, y1, y2, y3, y4;
 	
-	x1 = x_start * 250 + (x_start + 1) * 25;
-	x2 = x_end * 250 + 250 + (x_start - 1) * 25;
-	x3 = x_start * 250 + (x_start + 1) * 25;
-	x4 = x_end * 250 + 250 + (x_start - 1) * 25;
-	y1 = y_start * 185 + (y_start + 1) * 25;
-	y2 = y_start * 185 + (y_start + 1) * 25;
-	y3 = y_end * 185 + 185 + (y_start - 1) * 25;
-	y4 = y_end * 185 + 185 + (y_start - 1) * 25;
+	x1 = x_start * 250.0f + (x_start + 1) * 25;
+	x2 = x_end * 250.0f + 250 + (x_start - 1) * 25;
+	x3 = x_start * 250.0f + (x_start + 1) * 25;
+	x4 = x_end * 250.0f + 250 + (x_start - 1) * 25;
+	y1 = y_start * 185.0f + (y_start + 1) * 25;
+	y2 = y_start * 185.0f + (y_start + 1) * 25;
+	y3 = y_end * 185.0f + 185 + (y_start - 1) * 25;
+	y4 = y_end * 185.0f + 185 + (y_start - 1) * 25;
 	
 	if (symbol == "line_horz")
 	{
@@ -115,10 +116,10 @@ bool update(float k)
 	april::rendersys->render(april::TriangleStrip, v, 4);
 	
 	april::rendersys->setTexture(0);
-	april::rendersys->drawColoredQuad(grect(250, 0, 25, 600), april::Color::MANGENTA);
-	april::rendersys->drawColoredQuad(grect(525, 0, 25, 600), april::Color::MANGENTA);
-	april::rendersys->drawColoredQuad(grect(0, 185, 800, 25), april::Color::MANGENTA);
-	april::rendersys->drawColoredQuad(grect(0, 390, 800, 25), april::Color::MANGENTA);
+	april::rendersys->drawColoredQuad(grect(250, 0, 25, 600), APRIL_COLOR_MANGENTA);
+	april::rendersys->drawColoredQuad(grect(525, 0, 25, 600), APRIL_COLOR_MANGENTA);
+	april::rendersys->drawColoredQuad(grect(0, 185, 800, 25), APRIL_COLOR_MANGENTA);
+	april::rendersys->drawColoredQuad(grect(0, 390, 800, 25), APRIL_COLOR_MANGENTA);
 	
 	for (int j = 0; j < 3; j++)
 	{
@@ -340,9 +341,9 @@ void OnMouseUp(float x,float y,int button)
 	*/
 }
 
-int main()
+void april_init(const harray<hstr>& args)
 {
-	april::init("renderer", drawRect.w, drawRect.h, false, "demo_tictactoe");
+	april::init("", (int)drawRect.w, (int)drawRect.h, false, "demo_tictactoe");
 	april::rendersys->getWindow()->setUpdateCallback(update);
 	april::rendersys->getWindow()->setMouseCallbacks(NULL, OnMouseUp, NULL);
 	background = april::rendersys->loadTexture("../media/texture.jpg");
@@ -352,7 +353,9 @@ int main()
 	line_vert = april::rendersys->loadTexture("../media/line_vert.png");
 	line45 = april::rendersys->loadTexture("../media/line45.png");
 	line315 = april::rendersys->loadTexture("../media/line315.png");
-	april::rendersys->getWindow()->enterMainLoop();
+}
+
+void april_destroy()
+{
 	april::destroy();
-	return 0;
 }

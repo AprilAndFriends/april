@@ -29,6 +29,11 @@ namespace april
 		~DirectX9_Texture();
 		
 		IDirect3DSurface9* getSurface();
+
+		Color getPixel(int x, int y);
+		void setPixel(int x, int y, Color color);
+		void fillRect(int x, int y, int w, int h, Color color);
+
 		bool load();
 		bool isLoaded();
 		void unload();

@@ -48,8 +48,11 @@ namespace april
 		virtual void unload() = 0;
 		virtual int getSizeInBytes() = 0;
 		
-		virtual Color getPixel(int x, int y);
 		virtual Color getInterpolatedPixel(float x, float y);
+		virtual Color getPixel(int x, int y);
+		virtual void setPixel(int x, int y, Color color);
+		virtual void fillRect(int x, int y, int w, int h, Color color);
+		void fillRect(grect rect, Color color);
 		
 		void addDynamicLink(Texture* lnk);
 		void removeDynamicLink(Texture* lnk);
