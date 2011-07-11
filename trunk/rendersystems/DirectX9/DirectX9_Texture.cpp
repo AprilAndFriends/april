@@ -98,6 +98,94 @@ namespace april
 		}
 	}
 	
+	Color DirectX9_Texture::getPixel(int x, int y)
+	{
+		Color result;
+		D3DLOCKED_RECT lockRect;
+		RECT rect;
+		rect.left = x;
+		rect.right = x;
+		rect.top = y;
+		rect.bottom = y;
+		mTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		result.r = p[2];
+		result.g = p[1];
+		result.b = p[0];
+		result.a = p[3];
+		mTexture->UnlockRect(0);
+		
+		return result;
+	}
+
+	void DirectX9_Texture::setPixel(int x, int y, Color color)
+	{
+		x = hclamp(x, 0, this->mWidth - 1);
+		y = hclamp(y, 0, this->mHeight - 1);
+		D3DLOCKED_RECT lockRect;
+		RECT rect;
+		rect.left = x;
+		rect.right = x;
+		rect.top = y;
+		rect.bottom = y;
+		HRESULT result = mTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
+		if (result == D3D_OK)
+		{
+			unsigned char* p = (unsigned char*)lockRect.pBits;
+			p[2] = color.r;
+			p[1] = color.g;
+			p[0] = color.b;
+			p[3] = color.a;
+			mTexture->UnlockRect(0);
+		}
+		else
+		{
+			// TODO - throw error here?
+		}
+	}
+
+	void DirectX9_Texture::fillRect(int x, int y, int w, int h, Color color)
+	{
+		x = hclamp(x, 0, this->mWidth - 1);
+		y = hclamp(y, 0, this->mHeight - 1);
+		w = hclamp(w, 1, this->mWidth - x);
+		h = hclamp(h, 1, this->mHeight - y);
+		if (w == 1 && h == 1)
+		{
+			this->setPixel(x, y, color);
+			return;
+		}
+		D3DLOCKED_RECT lockRect;
+		RECT rect;
+		rect.left = x;
+		rect.right = x + w - 1;
+		rect.top = y;
+		rect.bottom = y + h - 1;
+		HRESULT result = mTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
+		if (result == D3D_OK)
+		{
+			unsigned char* p = (unsigned char*)lockRect.pBits;
+			int i = 0;
+			int offset;
+			for (int j = 0; j < h; j++)
+			{
+				for (i = 0; i < w; i++)
+				{
+					offset = (j * mWidth + i) * 4;
+					p[offset + 2] = color.r;
+					p[offset + 1] = color.g;
+					p[offset + 0] = color.b;
+					p[offset + 3] = color.a;
+				}
+			}
+			mTexture->UnlockRect(0);
+		}
+		else
+		{
+			// TODO - throw error here?
+		}
+	}
+
 	IDirect3DSurface9* DirectX9_Texture::getSurface()
 	{
 		if (!mSurface)

@@ -9,6 +9,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 \************************************************************************************/
 #include <iostream>
 
+#include <april/main.h>
 #include <april/RenderSystem.h>
 #include <april/Window.h>
 #include <april/Timer.h>
@@ -33,14 +34,16 @@ bool update(float k)
 	return true;
 }
 
-int main()
+void april_init(const harray<hstr>& args)
 {
 	april::init("april", (int)drawRect.w, (int)drawRect.h, false, "april: 3D Demo");
 	april::rendersys->getWindow()->setUpdateCallback(update);
     mesh = new april::StaticMesh("../media/testobject.obj");
 	texture = april::rendersys->loadTexture("../media/texture.jpg");
-	april::rendersys->getWindow()->enterMainLoop();
+}
+
+void april_destroy()
+{
     delete mesh;
 	april::destroy();
-	return 0;
 }

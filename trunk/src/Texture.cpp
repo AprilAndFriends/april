@@ -40,7 +40,22 @@ namespace april
 	
 	Color Texture::getPixel(int x, int y)
 	{
-		return APRIL_COLOR_CLEAR;
+		return APRIL_COLOR_CLEAR; // TODO
+	}
+	
+	void Texture::setPixel(int x, int y, Color color)
+	{
+		// TODO
+	}
+	
+	void Texture::fillRect(int x, int y, int w, int h, Color color)
+	{
+		// TODO
+	}
+	
+	void Texture::fillRect(grect rect, Color color)
+	{
+		fillRect((float)rect.x, (float)rect.y, (float)rect.w, (float)rect.h, color);
 	}
 	
 	Color Texture::getInterpolatedPixel(float x, float y)
