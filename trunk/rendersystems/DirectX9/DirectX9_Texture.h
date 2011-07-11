@@ -29,10 +29,13 @@ namespace april
 		~DirectX9_Texture();
 		
 		IDirect3DSurface9* getSurface();
+		IDirect3DTexture9* getTexture() { return mTexture; }
 
 		Color getPixel(int x, int y);
 		void setPixel(int x, int y, Color color);
 		void fillRect(int x, int y, int w, int h, Color color);
+		void blit(int x, int y, Texture* other, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void stretchBlit(int x, int y, int w, int h, Texture* other, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 
 		bool load();
 		bool isLoaded();
@@ -40,6 +43,7 @@ namespace april
 		int getSizeInBytes();
 		
 	protected:
+		int mBpp;
 		IDirect3DSurface9* mSurface;
 		
 	};

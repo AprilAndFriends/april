@@ -29,7 +29,6 @@ bool update(float k)
 {
 	april::rendersys->clear();
 	april::rendersys->setOrthoProjection(drawRect);
-	//manualTexture->setPixel(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), april::Color(hrand(255), hrand(255), hrand(255)));
 	manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 	april::rendersys->setTexture(manualTexture);
 	v[0].x = 0.0f;			v[0].y = 0.0f;
@@ -82,6 +81,8 @@ void april_init(const harray<hstr>& args)
 	april::rendersys->getWindow()->setMouseCallbacks(onMouseDown, onMouseUp, onMouseMove);
 	texture = april::rendersys->loadTexture("../media/texture.jpg");
 	manualTexture = april::rendersys->createEmptyTexture((int)drawRect.w, (int)drawRect.h);
+	manualTexture->blit(100, 100, texture, 0, 0, texture->getWidth(), texture->getHeight());
+	manualTexture->stretchBlit(0, 100, 900, 200, texture, 0, 0, texture->getWidth() / 2, texture->getHeight() / 2);
 	size.x = texture->getWidth() / 4.0f;
 	size.y = texture->getHeight() / 4.0f;
 }

@@ -28,6 +28,7 @@ namespace april
 		mSurface = NULL;
 		mWidth = 0;
 		mHeight = 0;
+		mBpp = 3;
 		if (!mDynamic)
 		{
 			load();
@@ -38,6 +39,7 @@ namespace april
 	{
 		mWidth = w;
 		mHeight = h;
+		mBpp = 4;
 		mDynamic = false;
 		mFilename = "UserTexture";
 		mUnusedTimer = 0;
@@ -78,9 +80,11 @@ namespace april
 		mFilename = "UserTexture";			
 		april::log("creating empty DX9 texture [ " + hstr(w) + "x" + hstr(h) + " ]");
 		D3DFORMAT d3dfmt = D3DFMT_X8R8G8B8;
+		mBpp = 3;
 		if (fmt == AT_ARGB)
 		{
 			d3dfmt = D3DFMT_A8R8G8B8;
+			mBpp = 4;
 		}
 		D3DPOOL d3dpool = D3DPOOL_MANAGED;
 		DWORD d3dusage = 0;
@@ -107,14 +111,13 @@ namespace april
 		rect.right = x;
 		rect.top = y;
 		rect.bottom = y;
-		mTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
+		mTexture->LockRect(0, &lockRect, &rect, (D3DLOCK_DISCARD | D3DLOCK_READONLY | D3DLOCK_NO_DIRTY_UPDATE));
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		result.r = p[2];
 		result.g = p[1];
 		result.b = p[0];
 		result.a = p[3];
 		mTexture->UnlockRect(0);
-		
 		return result;
 	}
 
@@ -135,7 +138,7 @@ namespace april
 			p[2] = color.r;
 			p[1] = color.g;
 			p[0] = color.b;
-			p[3] = color.a;
+			p[3] = (mBpp == 4 ? color.a : 255);
 			mTexture->UnlockRect(0);
 		}
 		else
@@ -165,17 +168,33 @@ namespace april
 		if (result == D3D_OK)
 		{
 			unsigned char* p = (unsigned char*)lockRect.pBits;
-			int i = 0;
+			int i;
 			int offset;
-			for (int j = 0; j < h; j++)
+			if (mBpp == 4)
 			{
-				for (i = 0; i < w; i++)
+				for (int j = 0; j < h; j++)
 				{
-					offset = (j * mWidth + i) * 4;
-					p[offset + 2] = color.r;
-					p[offset + 1] = color.g;
-					p[offset + 0] = color.b;
-					p[offset + 3] = color.a;
+					for (i = 0; i < w; i++)
+					{
+						offset = (j * mWidth + i) * 4;
+						p[offset + 2] = color.r;
+						p[offset + 1] = color.g;
+						p[offset + 0] = color.b;
+						p[offset + 3] = color.a;
+					}
+				}
+			}
+			else
+			{
+				for (int j = 0; j < h; j++)
+				{
+					for (i = 0; i < w; i++)
+					{
+						offset = (i + j * mWidth) * 4;
+						p[offset + 2] = color.r;
+						p[offset + 1] = color.g;
+						p[offset + 0] = color.b;
+					}
 				}
 			}
 			mTexture->UnlockRect(0);
@@ -183,6 +202,406 @@ namespace april
 		else
 		{
 			// TODO - throw error here?
+		}
+	}
+
+	void DirectX9_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		DirectX9_Texture* other = (DirectX9_Texture*)texture;
+		x = hclamp(x, 0, mWidth - 1);
+		y = hclamp(y, 0, mHeight - 1);
+		sx = hclamp(sx, 0, other->mWidth - 1);
+		sy = hclamp(sy, 0, other->mHeight - 1);
+		sw = hmin(sw, hmin(mWidth - x, other->mWidth - sx));
+		sh = hmin(sh, hmin(mHeight - y, other->mHeight - sy));
+		if (sw == 1 && sh == 1)
+		{
+			this->setPixel(x, y, other->getPixel(sx, sy));
+			return;
+		}
+		D3DLOCKED_RECT lockRect;
+		RECT rect;
+		rect.left = x;
+		rect.right = x + sw;
+		rect.top = y;
+		rect.bottom = y + sh;
+		HRESULT result = mTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
+		//HRESULT result = mTexture->LockRect(0, &lockRect, NULL, D3DLOCK_DISCARD);
+		if (result == D3D_OK)
+		{
+			D3DLOCKED_RECT otherLockRect;
+			rect.left = sx;
+			rect.right = sx + sw - 1;
+			rect.top = sy;
+			rect.bottom = sy + sh - 1;
+			result = other->getTexture()->LockRect(0, &otherLockRect, &rect, (D3DLOCK_DISCARD | D3DLOCK_READONLY | D3DLOCK_NO_DIRTY_UPDATE));
+			if (result == D3D_OK)
+			{
+				unsigned char* thisData = (unsigned char*)lockRect.pBits;
+				unsigned char* otherData = (unsigned char*)otherLockRect.pBits;
+				unsigned char* c;
+				unsigned char* sc;
+				unsigned char a;
+				int i;
+				// the following iteration blocks are very similar, but for performance reasons they
+				// have been duplicated instead of putting everything into one block with if branches
+				if (mBpp == 4 && other->mBpp == 4)
+				{
+					for (int j = 0; j < sh; j++)
+					{
+						for (i = 0; i < sw; i++)
+						{
+							c = &thisData[(i + j * mWidth) * 4];
+							sc = &otherData[(i + j * other->mWidth) * 4];
+							a = sc[3] * alpha / 255;
+							c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
+							c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
+							c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
+							c[3] = hmax(c[3], a);
+						}
+					}
+				}
+				else if (other->mBpp == 4)
+				{
+					for (int j = 0; j < sh; j++)
+					{
+						for (i = 0; i < sw; i++)
+						{
+							c = &thisData[(i + j * mWidth) * 4];
+							sc = &otherData[(i + j * other->mWidth) * 4];
+							a = sc[3] * alpha / 255;
+							c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
+							c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
+							c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
+						}
+					}
+				}
+				else if (alpha < 255)
+				{
+					a = alpha;
+					for (int j = 0; j < sh; j++)
+					{
+						for (i = 0; i < sw; i++)
+						{
+							c = &thisData[(i + j * mWidth) * 4];
+							sc = &otherData[(i + j * other->mWidth) * 4];
+							c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
+							c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
+							c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
+						}
+					}
+				}
+				else
+				{
+					for (int j = 0; j < sh; j++)
+					{
+						for (i = 0; i < sw; i++)
+						{
+							c = &thisData[(i + j * mWidth) * 4];
+							sc = &otherData[(i + j * other->mWidth) * 4];
+							c[2] = sc[2];
+							c[1] = sc[1];
+							c[0] = sc[0];
+						}
+					}
+				}
+				other->getTexture()->UnlockRect(0);
+			}
+			mTexture->UnlockRect(0);
+		}
+	}
+
+	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		DirectX9_Texture* other = (DirectX9_Texture*)texture;
+		x = hclamp(x, 0, this->mWidth - 1);
+		y = hclamp(y, 0, this->mHeight - 1);
+		w = hmin(w, this->mWidth - x);
+		h = hmin(h, this->mHeight - y);
+		sx = hclamp(sx, 0, other->mWidth - 1);
+		sy = hclamp(sy, 0, other->mHeight - 1);
+		sw = hmin(sw, other->mWidth - sx);
+		sh = hmin(sh, other->mHeight - sy);
+		D3DLOCKED_RECT lockRect;
+		RECT rect;
+		rect.left = x;
+		rect.right = x + w - 1;
+		rect.top = y;
+		rect.bottom = y + h - 1;
+		HRESULT result = mTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
+		if (result == D3D_OK)
+		{
+			D3DLOCKED_RECT otherLockRect;
+			result = other->getTexture()->LockRect(0, &otherLockRect, NULL, D3DLOCK_DISCARD);
+			if (result == D3D_OK)
+			{
+				unsigned char* thisData = (unsigned char*)lockRect.pBits;
+				unsigned char* otherData = (unsigned char*)otherLockRect.pBits;
+				float fw = (float)sw / w;
+				float fh = (float)sh / h;
+				unsigned char* c;
+				unsigned char* sc;
+				int a0;
+				int a1;
+				unsigned char color[4] = {0};
+				unsigned char* ctl;
+				unsigned char* ctr;
+				unsigned char* cbl;
+				unsigned char* cbr;
+				float cx;
+				float cy;
+				float rx0;
+				float ry0;
+				float rx1;
+				float ry1;
+				int x0;
+				int y0;
+				int x1;
+				int y1;
+				int i;
+				// the following iteration blocks are very similar, but for performance reasons they
+				// have been duplicated instead of putting everything into one block with if branches
+				if (mBpp == 4 && other->mBpp == 4)
+				{
+					for (int j = 0; j < h; j++)
+					{
+						for (i = 0; i < w; i++)
+						{
+							c = &thisData[(i + j * mWidth) * 4];
+							cx = sx + i * fw;
+							cy = sy + j * fh;
+							x0 = (int)cx;
+							y0 = (int)cy;
+							x1 = hmin((int)cx + 1, other->mWidth - 1);
+							y1 = hmin((int)cy + 1, other->mHeight - 1);
+							rx0 = cx - x0;
+							ry0 = cy - y0;
+							rx1 = 1.0f - rx0;
+							ry1 = 1.0f - ry0;
+							if (rx0 != 0.0f || ry0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
+								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
+								cbr = &otherData[(x1 + y1 * other->mWidth) * 4];
+								color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+								color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+								color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+								color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
+								sc = color;
+							}
+							else if (rx0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
+								color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+								color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+								color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+								color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
+								sc = color;
+							}
+							else if (ry0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
+								color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+								color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+								color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+								color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
+								sc = color;
+							}
+							else
+							{
+								sc = &otherData[(x0 + y0 * other->mWidth) * 4];
+							}
+							a0 = sc[3] * (int)alpha / 255;
+							a1 = 255 - a0;
+							c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+							c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+							c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+							c[3] = (unsigned char)hmax((int)c[3], a0);
+						}
+					}
+				}
+				else if (other->mBpp == 4)
+				{
+					for (int j = 0; j < h; j++)
+					{
+						for (i = 0; i < w; i++)
+						{
+							c = &thisData[(i + j * mWidth) * 4];
+							cx = sx + i * fw;
+							cy = sy + j * fh;
+							x0 = (int)cx;
+							y0 = (int)cy;
+							x1 = hmin((int)cx + 1, other->mWidth - 1);
+							y1 = hmin((int)cy + 1, other->mHeight - 1);
+							rx0 = cx - x0;
+							ry0 = cy - y0;
+							rx1 = 1.0f - rx0;
+							ry1 = 1.0f - ry0;
+							if (rx0 != 0.0f || ry0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
+								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
+								cbr = &otherData[(x1 + y1 * other->mWidth) * 4];
+								color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+								color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+								color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+								color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
+								sc = color;
+							}
+							else if (rx0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
+								color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+								color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+								color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+								color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
+								sc = color;
+							}
+							else if (ry0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
+								color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+								color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+								color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+								color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
+								sc = color;
+							}
+							else
+							{
+								sc = &otherData[(x0 + y0 * other->mWidth) * 4];
+							}
+							a0 = sc[3] * (int)alpha / 255;
+							a1 = 255 - a0;
+							c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+							c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+							c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+						}
+					}
+				}
+				else if (alpha < 255)
+				{
+					a0 = alpha;
+					a1 = 255 - a0;
+					for (int j = 0; j < h; j++)
+					{
+						for (i = 0; i < w; i++)
+						{
+							c = &thisData[(i + j * mWidth) * 4];
+							cx = sx + i * fw;
+							cy = sy + j * fh;
+							x0 = (int)cx;
+							y0 = (int)cy;
+							x1 = hmin((int)cx + 1, other->mWidth - 1);
+							y1 = hmin((int)cy + 1, other->mHeight - 1);
+							rx0 = cx - x0;
+							ry0 = cy - y0;
+							rx1 = 1.0f - rx0;
+							ry1 = 1.0f - ry0;
+							if (rx0 != 0.0f || ry0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
+								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
+								cbr = &otherData[(x1 + y1 * other->mWidth) * 4];
+								color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+								color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+								color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+								sc = color;
+							}
+							else if (rx0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
+								color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+								color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+								color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+								sc = color;
+							}
+							else if (ry0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
+								color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+								color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+								color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+								sc = color;
+							}
+							else
+							{
+								sc = &otherData[(x0 + y0 * other->mWidth) * 4];
+							}
+							c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+							c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+							c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+						}
+					}
+				}
+				else
+				{
+					for (int j = 0; j < h; j++)
+					{
+						for (i = 0; i < w; i++)
+						{
+							c = &thisData[(i + j * mWidth) * 4];
+							cx = sx + i * fw;
+							cy = sy + j * fh;
+							x0 = (int)cx;
+							y0 = (int)cy;
+							x1 = hmin((int)cx + 1, other->mWidth - 1);
+							y1 = hmin((int)cy + 1, other->mHeight - 1);
+							rx0 = cx - x0;
+							ry0 = cy - y0;
+							rx1 = 1.0f - rx0;
+							ry1 = 1.0f - ry0;
+							if (rx0 != 0.0f || ry0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
+								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
+								cbr = &otherData[(x1 + y1 * other->mWidth) * 4];
+								color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+								color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+								color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+								sc = color;
+							}
+							else if (rx0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
+								color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+								color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+								color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+								sc = color;
+							}
+							else if (ry0 != 0.0f)
+							{
+								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
+								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
+								color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+								color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+								color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+								sc = color;
+							}
+							else
+							{
+								sc = &otherData[(x0 + y0 * other->mWidth) * 4];
+							}
+							c[2] = sc[2];
+							c[1] = sc[1];
+							c[0] = sc[0];
+						}
+					}
+				}
+
+				other->getTexture()->UnlockRect(0);
+			}
+			mTexture->UnlockRect(0);
 		}
 	}
 
@@ -216,6 +635,7 @@ namespace april
 		}
 		mWidth = img->w;
 		mHeight = img->h;
+		mBpp = img->bpp;
 		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, (img->bpp == 3) ? D3DFMT_X8R8G8B8 : D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, 0);
 		if (hr != D3D_OK)
 		{
@@ -263,7 +683,7 @@ namespace april
 
 	int DirectX9_Texture::getSizeInBytes()
 	{
-		return (mWidth * mHeight * 3);
+		return (mWidth * mHeight * mBpp);
 	}
 }
 
