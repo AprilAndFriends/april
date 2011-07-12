@@ -221,91 +221,103 @@ namespace april
 		}
 		D3DLOCKED_RECT lockRect;
 		RECT rect;
+		rect.left = sx;
+		rect.right = sx + sw - 1;
+		rect.top = sy;
+		rect.bottom = sy + sh - 1;
+		HRESULT result = other->getTexture()->LockRect(0, &lockRect, &rect, (D3DLOCK_DISCARD | D3DLOCK_READONLY | D3DLOCK_NO_DIRTY_UPDATE));
+		if (result == D3D_OK)
+		{
+			blit(x, y, (unsigned char*)lockRect.pBits, other->mWidth, other->mHeight, other->mBpp, sx, sy, sw, sh, alpha);
+			other->getTexture()->UnlockRect(0);
+		}
+		mTexture->UnlockRect(0);
+	}
+
+	void DirectX9_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		x = hclamp(x, 0, mWidth - 1);
+		y = hclamp(y, 0, mHeight - 1);
+		sx = hclamp(sx, 0, dataWidth - 1);
+		sy = hclamp(sy, 0, dataHeight - 1);
+		sw = hmin(sw, hmin(mWidth - x, dataWidth - sx));
+		sh = hmin(sh, hmin(mHeight - y, dataHeight - sy));
+		D3DLOCKED_RECT lockRect;
+		RECT rect;
 		rect.left = x;
 		rect.right = x + sw;
 		rect.top = y;
 		rect.bottom = y + sh;
 		HRESULT result = mTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
-		//HRESULT result = mTexture->LockRect(0, &lockRect, NULL, D3DLOCK_DISCARD);
 		if (result == D3D_OK)
 		{
-			D3DLOCKED_RECT otherLockRect;
-			rect.left = sx;
-			rect.right = sx + sw - 1;
-			rect.top = sy;
-			rect.bottom = sy + sh - 1;
-			result = other->getTexture()->LockRect(0, &otherLockRect, &rect, (D3DLOCK_DISCARD | D3DLOCK_READONLY | D3DLOCK_NO_DIRTY_UPDATE));
-			if (result == D3D_OK)
+			unsigned char* thisData = (unsigned char*)lockRect.pBits;
+			unsigned char* otherData = data;
+			unsigned char* c;
+			unsigned char* sc;
+			unsigned char a;
+			int i;
+			// the following iteration blocks are very similar, but for performance reasons they
+			// have been duplicated instead of putting everything into one block with if branches
+			if (mBpp == 4 && dataBpp == 4)
 			{
-				unsigned char* thisData = (unsigned char*)lockRect.pBits;
-				unsigned char* otherData = (unsigned char*)otherLockRect.pBits;
-				unsigned char* c;
-				unsigned char* sc;
-				unsigned char a;
-				int i;
-				// the following iteration blocks are very similar, but for performance reasons they
-				// have been duplicated instead of putting everything into one block with if branches
-				if (mBpp == 4 && other->mBpp == 4)
+				for (int j = 0; j < sh; j++)
 				{
-					for (int j = 0; j < sh; j++)
+					for (i = 0; i < sw; i++)
 					{
-						for (i = 0; i < sw; i++)
-						{
-							c = &thisData[(i + j * mWidth) * 4];
-							sc = &otherData[(i + j * other->mWidth) * 4];
-							a = sc[3] * alpha / 255;
-							c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
-							c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
-							c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
-							c[3] = hmax(c[3], a);
-						}
+						c = &thisData[(i + j * mWidth) * 4];
+						sc = &otherData[(i + j * dataWidth) * 4];
+						a = sc[3] * alpha / 255;
+						c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
+						c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
+						c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
+						c[3] = hmax(c[3], a);
 					}
 				}
-				else if (other->mBpp == 4)
+			}
+			else if (dataBpp == 4)
+			{
+				for (int j = 0; j < sh; j++)
 				{
-					for (int j = 0; j < sh; j++)
+					for (i = 0; i < sw; i++)
 					{
-						for (i = 0; i < sw; i++)
-						{
-							c = &thisData[(i + j * mWidth) * 4];
-							sc = &otherData[(i + j * other->mWidth) * 4];
-							a = sc[3] * alpha / 255;
-							c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
-							c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
-							c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
-						}
+						c = &thisData[(i + j * mWidth) * 4];
+						sc = &otherData[(i + j * dataWidth) * 4];
+						a = sc[3] * alpha / 255;
+						c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
+						c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
+						c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
 					}
 				}
-				else if (alpha < 255)
+			}
+			else if (alpha < 255)
+			{
+				a = alpha;
+				for (int j = 0; j < sh; j++)
 				{
-					a = alpha;
-					for (int j = 0; j < sh; j++)
+					for (i = 0; i < sw; i++)
 					{
-						for (i = 0; i < sw; i++)
-						{
-							c = &thisData[(i + j * mWidth) * 4];
-							sc = &otherData[(i + j * other->mWidth) * 4];
-							c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
-							c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
-							c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
-						}
+						c = &thisData[(i + j * mWidth) * 4];
+						sc = &otherData[(i + j * dataWidth) * 4];
+						c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
+						c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
+						c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
 					}
 				}
-				else
+			}
+			else
+			{
+				for (int j = 0; j < sh; j++)
 				{
-					for (int j = 0; j < sh; j++)
+					for (i = 0; i < sw; i++)
 					{
-						for (i = 0; i < sw; i++)
-						{
-							c = &thisData[(i + j * mWidth) * 4];
-							sc = &otherData[(i + j * other->mWidth) * 4];
-							c[2] = sc[2];
-							c[1] = sc[1];
-							c[0] = sc[0];
-						}
+						c = &thisData[(i + j * mWidth) * 4];
+						sc = &otherData[(i + j * dataWidth) * 4];
+						c[2] = sc[2];
+						c[1] = sc[1];
+						c[0] = sc[0];
 					}
 				}
-				other->getTexture()->UnlockRect(0);
 			}
 			mTexture->UnlockRect(0);
 		}
@@ -323,6 +335,25 @@ namespace april
 		sw = hmin(sw, other->mWidth - sx);
 		sh = hmin(sh, other->mHeight - sy);
 		D3DLOCKED_RECT lockRect;
+		HRESULT result = other->getTexture()->LockRect(0, &lockRect, NULL, D3DLOCK_DISCARD);
+		if (result == D3D_OK)
+		{
+			stretchBlit(x, y, w, h, (unsigned char*)lockRect.pBits, other->mWidth, other->mHeight, other->mBpp, sx, sy, sw, sh, alpha);
+			other->getTexture()->UnlockRect(0);
+		}
+	}
+
+	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		x = hclamp(x, 0, mWidth - 1);
+		y = hclamp(y, 0, mHeight - 1);
+		w = hmin(w, mWidth - x);
+		h = hmin(h, mHeight - y);
+		sx = hclamp(sx, 0, dataWidth - 1);
+		sy = hclamp(sy, 0, dataHeight - 1);
+		sw = hmin(sw, dataWidth - sx);
+		sh = hmin(sh, dataHeight - sy);
+		D3DLOCKED_RECT lockRect;
 		RECT rect;
 		rect.left = x;
 		rect.right = x + w - 1;
@@ -331,275 +362,268 @@ namespace april
 		HRESULT result = mTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
 		if (result == D3D_OK)
 		{
-			D3DLOCKED_RECT otherLockRect;
-			result = other->getTexture()->LockRect(0, &otherLockRect, NULL, D3DLOCK_DISCARD);
-			if (result == D3D_OK)
+			unsigned char* thisData = (unsigned char*)lockRect.pBits;
+			unsigned char* otherData = data;
+			float fw = (float)sw / w;
+			float fh = (float)sh / h;
+			unsigned char* c;
+			unsigned char* sc;
+			int a0;
+			int a1;
+			unsigned char color[4] = {0};
+			unsigned char* ctl;
+			unsigned char* ctr;
+			unsigned char* cbl;
+			unsigned char* cbr;
+			float cx;
+			float cy;
+			float rx0;
+			float ry0;
+			float rx1;
+			float ry1;
+			int x0;
+			int y0;
+			int x1;
+			int y1;
+			int i;
+			// the following iteration blocks are very similar, but for performance reasons they
+			// have been duplicated instead of putting everything into one block with if branches
+			if (mBpp == 4 && dataBpp == 4)
 			{
-				unsigned char* thisData = (unsigned char*)lockRect.pBits;
-				unsigned char* otherData = (unsigned char*)otherLockRect.pBits;
-				float fw = (float)sw / w;
-				float fh = (float)sh / h;
-				unsigned char* c;
-				unsigned char* sc;
-				int a0;
-				int a1;
-				unsigned char color[4] = {0};
-				unsigned char* ctl;
-				unsigned char* ctr;
-				unsigned char* cbl;
-				unsigned char* cbr;
-				float cx;
-				float cy;
-				float rx0;
-				float ry0;
-				float rx1;
-				float ry1;
-				int x0;
-				int y0;
-				int x1;
-				int y1;
-				int i;
-				// the following iteration blocks are very similar, but for performance reasons they
-				// have been duplicated instead of putting everything into one block with if branches
-				if (mBpp == 4 && other->mBpp == 4)
+				for (int j = 0; j < h; j++)
 				{
-					for (int j = 0; j < h; j++)
+					for (i = 0; i < w; i++)
 					{
-						for (i = 0; i < w; i++)
+						c = &thisData[(i + j * mWidth) * 4];
+						cx = sx + i * fw;
+						cy = sy + j * fh;
+						x0 = (int)cx;
+						y0 = (int)cy;
+						x1 = hmin((int)cx + 1, dataWidth - 1);
+						y1 = hmin((int)cy + 1, dataHeight - 1);
+						rx0 = cx - x0;
+						ry0 = cy - y0;
+						rx1 = 1.0f - rx0;
+						ry1 = 1.0f - ry0;
+						if (rx0 != 0.0f || ry0 != 0.0f)
 						{
-							c = &thisData[(i + j * mWidth) * 4];
-							cx = sx + i * fw;
-							cy = sy + j * fh;
-							x0 = (int)cx;
-							y0 = (int)cy;
-							x1 = hmin((int)cx + 1, other->mWidth - 1);
-							y1 = hmin((int)cy + 1, other->mHeight - 1);
-							rx0 = cx - x0;
-							ry0 = cy - y0;
-							rx1 = 1.0f - rx0;
-							ry1 = 1.0f - ry0;
-							if (rx0 != 0.0f || ry0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
-								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
-								cbr = &otherData[(x1 + y1 * other->mWidth) * 4];
-								color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-								color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-								color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-								color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
-								sc = color;
-							}
-							else if (rx0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
-								color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-								color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-								color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-								color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
-								sc = color;
-							}
-							else if (ry0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
-								color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-								color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-								color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-								color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
-								sc = color;
-							}
-							else
-							{
-								sc = &otherData[(x0 + y0 * other->mWidth) * 4];
-							}
-							a0 = sc[3] * (int)alpha / 255;
-							a1 = 255 - a0;
-							c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
-							c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-							c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
-							c[3] = (unsigned char)hmax((int)c[3], a0);
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							ctr = &otherData[(x1 + y0 * dataWidth) * 4];
+							cbl = &otherData[(x0 + y1 * dataWidth) * 4];
+							cbr = &otherData[(x1 + y1 * dataWidth) * 4];
+							color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+							color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+							color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+							color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
+							sc = color;
 						}
+						else if (rx0 != 0.0f)
+						{
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							ctr = &otherData[(x1 + y0 * dataWidth) * 4];
+							color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+							color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+							color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+							color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
+							sc = color;
+						}
+						else if (ry0 != 0.0f)
+						{
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							cbl = &otherData[(x0 + y1 * dataWidth) * 4];
+							color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+							color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+							color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+							color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
+							sc = color;
+						}
+						else
+						{
+							sc = &otherData[(x0 + y0 * dataWidth) * 4];
+						}
+						a0 = sc[3] * (int)alpha / 255;
+						a1 = 255 - a0;
+						c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+						c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+						c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+						c[3] = (unsigned char)hmax((int)c[3], a0);
 					}
 				}
-				else if (other->mBpp == 4)
+			}
+			else if (dataBpp == 4)
+			{
+				for (int j = 0; j < h; j++)
 				{
-					for (int j = 0; j < h; j++)
+					for (i = 0; i < w; i++)
 					{
-						for (i = 0; i < w; i++)
+						c = &thisData[(i + j * mWidth) * 4];
+						cx = sx + i * fw;
+						cy = sy + j * fh;
+						x0 = (int)cx;
+						y0 = (int)cy;
+						x1 = hmin((int)cx + 1, dataWidth - 1);
+						y1 = hmin((int)cy + 1, dataHeight - 1);
+						rx0 = cx - x0;
+						ry0 = cy - y0;
+						rx1 = 1.0f - rx0;
+						ry1 = 1.0f - ry0;
+						if (rx0 != 0.0f || ry0 != 0.0f)
 						{
-							c = &thisData[(i + j * mWidth) * 4];
-							cx = sx + i * fw;
-							cy = sy + j * fh;
-							x0 = (int)cx;
-							y0 = (int)cy;
-							x1 = hmin((int)cx + 1, other->mWidth - 1);
-							y1 = hmin((int)cy + 1, other->mHeight - 1);
-							rx0 = cx - x0;
-							ry0 = cy - y0;
-							rx1 = 1.0f - rx0;
-							ry1 = 1.0f - ry0;
-							if (rx0 != 0.0f || ry0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
-								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
-								cbr = &otherData[(x1 + y1 * other->mWidth) * 4];
-								color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-								color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-								color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-								color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
-								sc = color;
-							}
-							else if (rx0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
-								color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-								color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-								color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-								color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
-								sc = color;
-							}
-							else if (ry0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
-								color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-								color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-								color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-								color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
-								sc = color;
-							}
-							else
-							{
-								sc = &otherData[(x0 + y0 * other->mWidth) * 4];
-							}
-							a0 = sc[3] * (int)alpha / 255;
-							a1 = 255 - a0;
-							c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
-							c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-							c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							ctr = &otherData[(x1 + y0 * dataWidth) * 4];
+							cbl = &otherData[(x0 + y1 * dataWidth) * 4];
+							cbr = &otherData[(x1 + y1 * dataWidth) * 4];
+							color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+							color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+							color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+							color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
+							sc = color;
 						}
+						else if (rx0 != 0.0f)
+						{
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							ctr = &otherData[(x1 + y0 * dataWidth) * 4];
+							color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+							color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+							color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+							color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
+							sc = color;
+						}
+						else if (ry0 != 0.0f)
+						{
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							cbl = &otherData[(x0 + y1 * dataWidth) * 4];
+							color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+							color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+							color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+							color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
+							sc = color;
+						}
+						else
+						{
+							sc = &otherData[(x0 + y0 * dataWidth) * 4];
+						}
+						a0 = sc[3] * (int)alpha / 255;
+						a1 = 255 - a0;
+						c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+						c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+						c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
 					}
 				}
-				else if (alpha < 255)
+			}
+			else if (alpha < 255)
+			{
+				a0 = alpha;
+				a1 = 255 - a0;
+				for (int j = 0; j < h; j++)
 				{
-					a0 = alpha;
-					a1 = 255 - a0;
-					for (int j = 0; j < h; j++)
+					for (i = 0; i < w; i++)
 					{
-						for (i = 0; i < w; i++)
+						c = &thisData[(i + j * mWidth) * 4];
+						cx = sx + i * fw;
+						cy = sy + j * fh;
+						x0 = (int)cx;
+						y0 = (int)cy;
+						x1 = hmin((int)cx + 1, dataWidth - 1);
+						y1 = hmin((int)cy + 1, dataHeight - 1);
+						rx0 = cx - x0;
+						ry0 = cy - y0;
+						rx1 = 1.0f - rx0;
+						ry1 = 1.0f - ry0;
+						if (rx0 != 0.0f || ry0 != 0.0f)
 						{
-							c = &thisData[(i + j * mWidth) * 4];
-							cx = sx + i * fw;
-							cy = sy + j * fh;
-							x0 = (int)cx;
-							y0 = (int)cy;
-							x1 = hmin((int)cx + 1, other->mWidth - 1);
-							y1 = hmin((int)cy + 1, other->mHeight - 1);
-							rx0 = cx - x0;
-							ry0 = cy - y0;
-							rx1 = 1.0f - rx0;
-							ry1 = 1.0f - ry0;
-							if (rx0 != 0.0f || ry0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
-								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
-								cbr = &otherData[(x1 + y1 * other->mWidth) * 4];
-								color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-								color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-								color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-								sc = color;
-							}
-							else if (rx0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
-								color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-								color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-								color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-								sc = color;
-							}
-							else if (ry0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
-								color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-								color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-								color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-								sc = color;
-							}
-							else
-							{
-								sc = &otherData[(x0 + y0 * other->mWidth) * 4];
-							}
-							c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
-							c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-							c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							ctr = &otherData[(x1 + y0 * dataWidth) * 4];
+							cbl = &otherData[(x0 + y1 * dataWidth) * 4];
+							cbr = &otherData[(x1 + y1 * dataWidth) * 4];
+							color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+							color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+							color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+							sc = color;
 						}
+						else if (rx0 != 0.0f)
+						{
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							ctr = &otherData[(x1 + y0 * dataWidth) * 4];
+							color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+							color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+							color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+							sc = color;
+						}
+						else if (ry0 != 0.0f)
+						{
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							cbl = &otherData[(x0 + y1 * dataWidth) * 4];
+							color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+							color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+							color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+							sc = color;
+						}
+						else
+						{
+							sc = &otherData[(x0 + y0 * dataWidth) * 4];
+						}
+						c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+						c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+						c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
 					}
 				}
-				else
+			}
+			else
+			{
+				for (int j = 0; j < h; j++)
 				{
-					for (int j = 0; j < h; j++)
+					for (i = 0; i < w; i++)
 					{
-						for (i = 0; i < w; i++)
+						c = &thisData[(i + j * mWidth) * 4];
+						cx = sx + i * fw;
+						cy = sy + j * fh;
+						x0 = (int)cx;
+						y0 = (int)cy;
+						x1 = hmin((int)cx + 1, dataWidth - 1);
+						y1 = hmin((int)cy + 1, dataHeight - 1);
+						rx0 = cx - x0;
+						ry0 = cy - y0;
+						rx1 = 1.0f - rx0;
+						ry1 = 1.0f - ry0;
+						if (rx0 != 0.0f || ry0 != 0.0f)
 						{
-							c = &thisData[(i + j * mWidth) * 4];
-							cx = sx + i * fw;
-							cy = sy + j * fh;
-							x0 = (int)cx;
-							y0 = (int)cy;
-							x1 = hmin((int)cx + 1, other->mWidth - 1);
-							y1 = hmin((int)cy + 1, other->mHeight - 1);
-							rx0 = cx - x0;
-							ry0 = cy - y0;
-							rx1 = 1.0f - rx0;
-							ry1 = 1.0f - ry0;
-							if (rx0 != 0.0f || ry0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
-								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
-								cbr = &otherData[(x1 + y1 * other->mWidth) * 4];
-								color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-								color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-								color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-								sc = color;
-							}
-							else if (rx0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								ctr = &otherData[(x1 + y0 * other->mWidth) * 4];
-								color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-								color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-								color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-								sc = color;
-							}
-							else if (ry0 != 0.0f)
-							{
-								ctl = &otherData[(x0 + y0 * other->mWidth) * 4];
-								cbl = &otherData[(x0 + y1 * other->mWidth) * 4];
-								color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-								color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-								color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-								sc = color;
-							}
-							else
-							{
-								sc = &otherData[(x0 + y0 * other->mWidth) * 4];
-							}
-							c[2] = sc[2];
-							c[1] = sc[1];
-							c[0] = sc[0];
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							ctr = &otherData[(x1 + y0 * dataWidth) * 4];
+							cbl = &otherData[(x0 + y1 * dataWidth) * 4];
+							cbr = &otherData[(x1 + y1 * dataWidth) * 4];
+							color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+							color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+							color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+							sc = color;
 						}
+						else if (rx0 != 0.0f)
+						{
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							ctr = &otherData[(x1 + y0 * dataWidth) * 4];
+							color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+							color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+							color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+							sc = color;
+						}
+						else if (ry0 != 0.0f)
+						{
+							ctl = &otherData[(x0 + y0 * dataWidth) * 4];
+							cbl = &otherData[(x0 + y1 * dataWidth) * 4];
+							color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+							color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+							color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+							sc = color;
+						}
+						else
+						{
+							sc = &otherData[(x0 + y0 * dataWidth) * 4];
+						}
+						c[2] = sc[2];
+						c[1] = sc[1];
+						c[0] = sc[0];
 					}
 				}
-
-				other->getTexture()->UnlockRect(0);
 			}
 			mTexture->UnlockRect(0);
 		}
