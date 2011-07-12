@@ -17,22 +17,22 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 #include "Color.h"
 #include "aprilExport.h"
 
-enum TextureType
-{
-	AT_NORMAL = 1,
-	AT_RENDER_TARGET = 2
-};
-
-enum TextureFormat
-{
-	AT_XRGB = 1,
-	AT_ARGB = 2,
-    AT_RGB = 3,
-	AT_RGBA = 4
-};
-
 namespace april
 {
+	enum TextureType
+	{
+		AT_NORMAL = 1,
+		AT_RENDER_TARGET = 2
+	};
+
+	enum TextureFormat
+	{
+		AT_XRGB = 1,
+		AT_ARGB = 2,
+		AT_RGB = 3,
+		AT_RGBA = 4
+	};
+
 	class ImageSource;
 	
 	enum TextureFilter
@@ -53,7 +53,9 @@ namespace april
 		virtual void setPixel(int x, int y, Color color);
 		virtual void fillRect(int x, int y, int w, int h, Color color);
 		virtual void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		virtual void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		virtual void stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void fillRect(grect rect, Color color);
 		virtual Color getInterpolatedPixel(float x, float y);
 		

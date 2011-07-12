@@ -153,6 +153,13 @@ namespace april
 		return new RAMTexture(name, dynamic);
 	}
 	
+	Texture* RenderSystem::createBlankTexture(int w, int h, TextureFormat fmt, TextureType type)
+	{
+		Texture* texture = this->createEmptyTexture(w, h, fmt, type);
+		texture->fillRect(0, 0, w, h, april::Color(APRIL_COLOR_WHITE, 0));
+		return texture;
+	}
+	
 	void RenderSystem::setIdentityTransform()
 	{
 		mModelviewMatrix.setIdentity();
