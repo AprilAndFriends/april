@@ -256,4 +256,18 @@ namespace april
 		return img;
 	}
 	
+	ImageSource* createBlankImage(int w, int h)
+	{
+		ImageSource* img = new ImageSource();
+		unsigned char* data = new unsigned char[w * h * 4];
+		memset(data, 0, w * h * 4 * sizeof(unsigned char));
+		img->w = w;
+		img->h = h;
+		img->bpp = 4; // IL temp hack
+		img->format = 6408; // IL temp hack
+		img->data = data;
+		img->setPixels(0, 0, w, h, april::Color(APRIL_COLOR_WHITE, 0));
+		return img;
+	}
+	
 }
