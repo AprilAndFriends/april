@@ -27,6 +27,7 @@
     <File Name="src/Color.cpp"/>
     <File Name="src/Texture.cpp"/>
     <File Name="src/ImageSource.cpp"/>
+    <File Name="fileproperties.rc"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/april/RenderSystem.h"/>

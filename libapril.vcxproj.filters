@@ -21,6 +21,9 @@
     <Filter Include="Header Files\rendersystems">
       <UniqueIdentifier>{2cbdabf4-1f5a-41ba-afef-961f8d5343c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{bc3abb83-0c68-456a-ae46-f6fe13ebf76e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -106,5 +109,10 @@
     <ClInclude Include="include\april\main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="fileproperties.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
