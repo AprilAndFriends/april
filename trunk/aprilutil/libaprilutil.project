@@ -10,6 +10,7 @@
   <VirtualDirectory Name="src">
     <File Name="src/BlurManager.cpp"/>
     <File Name="src/StaticMesh.cpp"/>
+    <File Name="fileproperties.rc"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/aprilutil/BlurManager.h"/>
