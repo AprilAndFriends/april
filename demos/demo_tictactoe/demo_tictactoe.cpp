@@ -343,7 +343,9 @@ void OnMouseUp(float x,float y,int button)
 
 void april_init(const harray<hstr>& args)
 {
-	april::init("", (int)drawRect.w, (int)drawRect.h, false, "demo_tictactoe");
+	april::init();
+	april::createRenderSystem("");
+	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "demo_tictactoe");
 	april::rendersys->getWindow()->setUpdateCallback(update);
 	april::rendersys->getWindow()->setMouseCallbacks(NULL, OnMouseUp, NULL);
 	background = april::rendersys->loadTexture("../media/texture.jpg");

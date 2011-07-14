@@ -37,6 +37,7 @@ namespace april
 		int getWidth();
 		int getHeight();
 		void setWindowTitle(chstr title);
+		void _setResolution(int w, int h);
 		gvec2 getCursorPosition();
 		void presentFrame();
 		void* getIDFromBackend();

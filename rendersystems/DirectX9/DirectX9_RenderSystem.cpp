@@ -70,40 +70,38 @@ namespace april
 		return 0;
 	}
 /************************************************************************************/
-	DirectX9_RenderSystem::DirectX9_RenderSystem(Window* window) :
+	DirectX9_RenderSystem::DirectX9_RenderSystem() :
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
-		mWindow = window;
-		april::log("Creating DirectX9 Rendersystem");
-		hWnd = (HWND)getWindow()->getIDFromBackend();
-		
+		log("Creating DirectX9 Rendersystem");
 		// DIRECT3D
-		d3d = Direct3DCreate9(D3D_SDK_VERSION);
-		if (!d3d)
-		{
-			throw hl_exception("Unable to create Direct3D9 object!");
-		}
+		d3d=Direct3DCreate9(D3D_SDK_VERSION);
+		if (!d3d) throw hl_exception("Unable to create Direct3D9 object!");
+	}
+
+	void DirectX9_RenderSystem::assignWindow(Window* window)
+	{
+		mWindow = window;
+		
+		hWnd = (HWND)mWindow->getIDFromBackend();
 		
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !window->isFullscreen();
-		d3dpp.BackBufferWidth = mWindow->getWidth();
-		d3dpp.BackBufferHeight = mWindow->getHeight();
-		d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
-		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
+		d3dpp.BackBufferWidth   = getWindow()->getWindowWidth(); //w;
+		d3dpp.BackBufferHeight  = getWindow()->getWindowHeight(); //h;
+		d3dpp.BackBufferFormat  = D3DFMT_X8R8G8B8;
+		d3dpp.PresentationInterval=D3DPRESENT_INTERVAL_ONE;
 
 		d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 		d3dpp.hDeviceWindow = hWnd;
-		HRESULT hr = d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
-		if (hr != D3D_OK)
-		{
-			throw hl_exception("Unable to create Direct3D Device!");
-		}
+		HRESULT hr=d3d->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,hWnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING,&d3dpp,&d3dDevice);
+		if (hr != D3D_OK) throw hl_exception("Unable to create Direct3D Device!");
 		// device config
 		configureDevice();
-		clear(1, 0);
+		clear(1,0);
 		presentFrame();
-		d3dDevice->GetRenderTarget(0, &mBackBuffer);
-		mRenderTarget = 0;
+		d3dDevice->GetRenderTarget(0,&mBackBuffer);
+		mRenderTarget=0;
 		d3dDevice->BeginScene();
 	}
 	
@@ -238,6 +236,35 @@ namespace april
 		{
 			d3dDevice->SetTexture(0, 0);
 		}
+	}
+
+	void DirectX9_RenderSystem::setResolution(int w, int h)
+	{
+		RenderSystem::setResolution(w, h);
+		mBackBuffer->Release();
+		mBackBuffer = NULL;
+		d3dpp.BackBufferWidth = mWindow->getWindowWidth();
+		d3dpp.BackBufferHeight = mWindow->getWindowHeight();
+		log(hsprintf("Resetting device for %d x %d...", mWindow->getWindowWidth(), mWindow->getWindowHeight()));
+		HRESULT hr=d3dDevice->Reset(&d3dpp);
+		if (hr == D3DERR_DRIVERINTERNALERROR)
+		{
+			throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
+		}
+		else if (hr == D3DERR_OUTOFVIDEOMEMORY)
+		{
+			throw hl_exception("Unable to reset Direct3D device, Out of Video Memory!");
+		}
+		else if (hr != D3D_OK)
+		{
+			log("Failed to reset device!");
+		}
+		_setModelviewMatrix(mModelviewMatrix);
+		_setProjectionMatrix(mProjectionMatrix);
+		configureDevice();
+		d3dDevice->GetRenderTarget(0, &mBackBuffer); // update backbuffer pointer
+		log("Direct3D9 Device restored");
+		d3dDevice->BeginScene();
 	}
 
 	void DirectX9_RenderSystem::clear(bool color, bool depth)
@@ -550,9 +577,31 @@ namespace april
 		d3dDevice->BeginScene();
 	}
 
-	void createDirectX9_RenderSystem(Window* window)
+	harray<DisplayMode> DirectX9_RenderSystem::getSupportedDisplayModes()
 	{
-		april::rendersys = new DirectX9_RenderSystem(window);
+		// TODO - optimize to enumerate only once and then reuse
+		harray<DisplayMode> result;
+		unsigned int modecount = d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
+		HRESULT hr;
+		for (unsigned int i = 0; i < modecount; i++)
+		{
+			D3DDISPLAYMODE displayMode;
+			hr = d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
+			if (!FAILED(hr)) 
+			{
+				DisplayMode mode;
+				mode.width = displayMode.Width;
+				mode.height = displayMode.Height;
+				mode.refreshRate = displayMode.RefreshRate;
+				result += mode;
+			}
+		}
+		return result;
+	}
+
+	DirectX9_RenderSystem* DirectX9_RenderSystem::create()
+	{
+		return new DirectX9_RenderSystem();
 	}
 
 }

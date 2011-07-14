@@ -19,6 +19,7 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 
 april::Texture* texture;
 april::Texture* manualTexture;
+april::TexturedVertex dv[4];
 april::TexturedVertex v[4];
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 gvec2 offset(drawRect.w / 2, drawRect.h / 2);
@@ -31,11 +32,7 @@ bool update(float k)
 	april::rendersys->setOrthoProjection(drawRect);
 	manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 	april::rendersys->setTexture(manualTexture);
-	v[0].x = 0.0f;			v[0].y = 0.0f;
-	v[1].x = drawRect.w;	v[1].y = 0.0f;
-	v[2].x = 0.0f;			v[2].y = drawRect.h;
-	v[3].x = drawRect.w;	v[3].y = drawRect.h;
-	april::rendersys->render(april::TriangleStrip, v, 4);
+	april::rendersys->render(april::TriangleStrip, dv, 4);
 	april::rendersys->setTexture(texture);
 	v[0].x = offset.x - size.x;	v[0].y = offset.y - size.y;
 	v[1].x = offset.x + size.x;	v[1].y = offset.y - size.y;
@@ -72,11 +69,17 @@ void onMouseMove(float x, float y)
 void april_init(const harray<hstr>& args)
 {
 	srand((unsigned int)time(NULL));
+	dv[0].x = 0.0f;			dv[0].y = 0.0f;			dv[0].z = 0.0f;	dv[0].u = 0.0f;	dv[0].v = 0.0f;
+	dv[1].x = drawRect.w;	dv[1].y = 0.0f;			dv[1].z = 0.0f;	dv[1].u = 1.0f;	dv[1].v = 0.0f;
+	dv[2].x = 0.0f;			dv[2].y = drawRect.h;	dv[2].z = 0.0f;	dv[2].u = 0.0f;	dv[2].v = 1.0f;
+	dv[3].x = drawRect.w;	dv[3].y = drawRect.h;	dv[3].z = 0.0f;	dv[3].u = 1.0f;	dv[3].v = 1.0f;
 	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
 	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
 	v[2].z = 0.0f;	v[2].u = 0.0f;	v[2].v = 1.0f;
 	v[3].z = 0.0f;	v[3].u = 1.0f;	v[3].v = 1.0f;
-	april::init("", (int)drawRect.w, (int)drawRect.h, false, "april: Simple Demo");
+	april::init();
+	april::createRenderSystem("");
+	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "april: Simple Demo");
 	april::rendersys->getWindow()->setUpdateCallback(update);
 	april::rendersys->getWindow()->setMouseCallbacks(onMouseDown, onMouseUp, onMouseMove);
 	texture = april::rendersys->loadTexture("../media/texture.jpg");

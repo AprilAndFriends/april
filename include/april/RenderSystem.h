@@ -42,6 +42,23 @@ namespace april
 		ADD,
 		DEFAULT
 	};
+
+	struct aprilExport DisplayMode
+	{
+		int width;
+		int height;
+		int refreshRate;
+
+		bool operator==(const DisplayMode& other)
+		{
+			return (this->width == other.width && this->height == other.height && this->refreshRate == other.refreshRate);
+		}
+
+		bool operator!=(const DisplayMode& other)
+		{
+			return !(*this == other);
+		}
+	};
 	
 	struct aprilExport PlainVertex : public gvec3
 	{
@@ -93,6 +110,8 @@ namespace april
 		RenderSystem();
 		virtual ~RenderSystem();
 
+		virtual void assignWindow(Window* window)=0;
+
 		// object creation
 		hstr findTextureFile(chstr filename);
 		virtual Texture* loadTexture(chstr filename, bool dynamic = false) = 0;
@@ -119,6 +138,7 @@ namespace april
 		void setProjectionMatrix(const gmat4& matrix);
 		virtual bool isFullscreen();
 		virtual void setFullscreen(bool fullscreen) { } //TODO - implement in derived classes
+		virtual void setResolution(int w, int h);
 		
 		const gmat4& getModelviewMatrix();
 		const gmat4& getProjectionMatrix();
@@ -161,6 +181,7 @@ namespace april
         virtual ImageSource* grabScreenshot(int bpp = 3) = 0;
         
 		virtual void presentFrame();
+		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
 
 	protected:
 		Window* mWindow;
@@ -178,7 +199,9 @@ namespace april
 	};
 
 	aprilFnExport void setLogFunction(void (*fnptr)(chstr));
-	aprilFnExport void init(chstr rendersystem_name, int w, int h, bool fullscreen, chstr title);
+	aprilFnExport void init();
+	aprilFnExport void createRenderSystem(chstr rendersystem_name);
+	aprilFnExport void createRenderTarget(int w, int h, bool fullscreen, chstr title);
 	aprilFnExport void destroy();
 	aprilFnExport void addTextureExtension(chstr extension);
 	aprilFnExport void log(chstr message, chstr prefix = "[april] ");
