@@ -481,6 +481,12 @@ namespace april
 		april::log("Creating OpenGL Rendersystem");
 		return new OpenGL_RenderSystem();
 	}
+	
+	void OpenGL_RenderSystem::setResolution(int w, int h)
+	{
+#warning TODO: OpenGL_RenderSystem::setResolution()
+		april::log("WARNING: %s ignored!", __PRETTY_FUNCTION__);
+	}
 
 }
 
