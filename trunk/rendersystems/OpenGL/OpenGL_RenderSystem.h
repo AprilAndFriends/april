@@ -31,8 +31,10 @@ namespace april
 	class OpenGL_RenderSystem : public RenderSystem
 	{
 	public:
-		OpenGL_RenderSystem(Window* window);
+		OpenGL_RenderSystem();
 		~OpenGL_RenderSystem();
+
+		void assignWindow(Window* window);
 		
 		// object creation
 		Texture* loadTexture(chstr filename, bool dynamic);
@@ -44,6 +46,7 @@ namespace april
 		void setBlendMode(BlendMode mode);
 		void setTextureFilter(TextureFilter filter);
 		void setTextureWrapping(bool wrap);
+		void setResolution(int w, int h);
 		// caps
 		float getPixelOffset();
 		hstr getName();
@@ -63,7 +66,11 @@ namespace april
 		void setAlphaMultiplier(float value);
 		void setRenderTarget(Texture* source);
 		void beginFrame();
+
+		harray<DisplayMode> getSupportedDisplayModes();
 		
+		static OpenGL_RenderSystem* create();
+
 	protected:
 		bool mTexCoordsEnabled;
 		bool mColorEnabled;
@@ -71,8 +78,6 @@ namespace april
 		void _setProjectionMatrix(const gmat4& matrix);
 		
 	};
-
-	void createOpenGL_RenderSystem(Window* window);
 	
 }
 

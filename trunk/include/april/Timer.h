@@ -24,28 +24,28 @@ namespace april
 {
     class aprilExport Timer
     {
-    public:
-        Timer();
-        ~Timer();
-        
-        float getTime();
-        float diff(bool update = true);
+	public:
+		Timer();
+		~Timer();
+		
+		float getTime();
+		float diff(bool update = true);
         
         void update();
 		
 	protected:
-        float mDt;
+		float mDt;
 		float mTd;
 		float mTd2;
-        __int64 mFrequency;
-        float mResolution;
-        __int64 mMmTimerStart;
-        unsigned long mMmTimerElapsed;
-        bool mPerformanceTimer;
-        __int64 mPerformanceTimerStart;
-        __int64 mPerformanceTimerElapsed;
-        
-    };
+		__int64 mFrequency;
+		float mResolution;
+		__int64 mMmTimerStart;
+		unsigned long mMmTimerElapsed;
+		bool mPerformanceTimer;
+		__int64 mPerformanceTimerStart;
+		__int64 mPerformanceTimerElapsed;
+		
+	};
 }
 
 #endif

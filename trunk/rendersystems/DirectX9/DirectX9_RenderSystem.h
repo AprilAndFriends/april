@@ -23,8 +23,10 @@ namespace april
 	class DirectX9_RenderSystem : public RenderSystem
 	{
 	public:
-		DirectX9_RenderSystem(Window* window);
+		DirectX9_RenderSystem();
 		~DirectX9_RenderSystem();
+
+		void assignWindow(Window* window);
 		
 		void configureDevice();
 		
@@ -36,6 +38,7 @@ namespace april
 		void setBlendMode(BlendMode mode);
 		void setTextureFilter(TextureFilter filter);
 		void setTextureWrapping(bool wrap);
+		void setResolution(int w, int h);
 		// caps
 		float getPixelOffset();
 		hstr getName();
@@ -56,6 +59,9 @@ namespace april
 		void beginFrame();
 		
 		void presentFrame();
+		harray<DisplayMode> getSupportedDisplayModes();
+
+		static DirectX9_RenderSystem* create();
 		
 	protected:
 		bool mTexCoordsEnabled;
@@ -68,8 +74,6 @@ namespace april
 		
 	};
 
-	void createDirectX9_RenderSystem(Window* window);
-	
 }
 #endif
 #endif

@@ -234,6 +234,12 @@ namespace april
 		_setProjectionMatrix(matrix);
 	}
 	
+	void RenderSystem::setResolution(int w, int h)
+	{
+		log(hsprintf("changing resolution: %d x %d", w, h));
+		mWindow->_setResolution(w, h);
+	}
+
 	const gmat4& RenderSystem::getModelviewMatrix()
 	{
 		return mModelviewMatrix;
@@ -255,28 +261,36 @@ namespace april
 		getWindow()->presentFrame();
 	}
 	
-/************************************************************************************/
-	void init(chstr rendersystem_name, int w, int h, bool fullscreen, chstr title)
+/*********************************************************************************/
+	void init()
 	{
 #ifdef USE_IL
-		log("Initializing IL");
 		ilInit();
-#endif
-#ifdef _WIN32
-		Window* window = createAprilWindow("Win32", w, h, fullscreen, title);
-#else
-		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);
-#endif
-#ifdef _OPENGL
-		createOpenGL_RenderSystem(window);
-#else
-		createDirectX9_RenderSystem(window);
 #endif
 		extensions += ".png";
 		extensions += ".jpg";
 #if TARGET_OS_IPHONE
 		extensions += ".pvr";
 #endif
+	}
+	
+	void createRenderSystem(chstr rendersystem_name)
+	{
+#ifdef _OPENGL
+		april::rendersys = OpenGL_RenderSystem::create();
+#else
+		april::rendersys = DirectX9_RenderSystem::create();
+#endif
+	}
+	
+	void createRenderTarget(int w,int h,bool fullscreen,chstr title)
+	{
+#ifdef _WIN32
+		Window* window = createAprilWindow("Win32", w, h, fullscreen, title);
+#else
+		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);
+#endif
+		april::rendersys->assignWindow(window);
 	}
 	
 	void setLogFunction(void (*fnptr)(chstr))

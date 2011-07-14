@@ -80,9 +80,18 @@ namespace april
 		GL_POINTS,         // ROP_POINTS
 	};
 	
-	OpenGL_RenderSystem::OpenGL_RenderSystem(Window* window) :
-		mTexCoordsEnabled(false), mColorEnabled(false), RenderSystem()
+	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(),
+		mTexCoordsEnabled(false), mColorEnabled(false)
 	{		
+	}
+
+	OpenGL_RenderSystem::~OpenGL_RenderSystem()
+	{
+		april::log("Destroying OpenGL Rendersystem");
+	}
+
+	void OpenGL_RenderSystem::assignWindow(Window* window)
+	{
 		mWindow = window;
 		
 		glViewport(0, 0, window->getWidth(), window->getHeight());
@@ -94,16 +103,23 @@ namespace april
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
+        
+		glEnable(GL_TEXTURE_2D);
+        
+		// DevIL defaults
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+#if !(TARGET_OS_IPHONE)
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
+#endif
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
         //glEnable(GL_DEPTH_TEST);
         //glDepthFunc(GL_GREATER);
         //glClearDepth(1.0f);
         
 		//glEnable(GL_CULL_FACE);
-	}
-
-	OpenGL_RenderSystem::~OpenGL_RenderSystem()
-	{
-		april::log("Destroying OpenGL Rendersystem");
 	}
 
 	hstr OpenGL_RenderSystem::getName()
@@ -455,22 +471,15 @@ namespace april
 		glColor4f(1, 1, 1, value);
 	}
 	
-/***************************************************/
+	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
+	{
+		return harray<DisplayMode>();
+	}
 
-	void createOpenGL_RenderSystem(Window* window)
+	OpenGL_RenderSystem* OpenGL_RenderSystem::create()
 	{
 		april::log("Creating OpenGL Rendersystem");
-		glEnable(GL_TEXTURE_2D);
-		// DevIL defaults
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
-		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
-#endif
-		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		april::rendersys = new OpenGL_RenderSystem(window);
+		return new OpenGL_RenderSystem();
 	}
 
 }
