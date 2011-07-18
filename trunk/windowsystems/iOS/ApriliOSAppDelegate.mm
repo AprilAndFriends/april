@@ -78,13 +78,26 @@
 
 - (void)performInit:(id)object
 {
-    
+    NSAutoreleasePool *pool = [NSAutoreleasePool new];
     april_init(harray<hstr>());
-    if ([[viewController.view subviews] count]) 
+	[pool drain];
+	NSLog(@"VIEW CONTROLLER'S VIEW: %@", viewController.view);
+	NSLog(@"VIEW CONTROLLER'S VIEW'S SUBVIEWS: %@", viewController.view.subviews);
+    if ([viewController.view isKindOfClass:[EAGLView class]]) 
+	{
+		[(EAGLView*)viewController.view startAnimation];
+	}
+	if ([[viewController.view subviews] count]) 
     {
-        EAGLView* glview = [[viewController.view subviews] objectAtIndex:0];
-        [glview startAnimation];
+		for (EAGLView* glview in viewController.view.subviews) 
+		{
+			if ([glview isKindOfClass:[EAGLView class]]) 
+			{
+				[glview startAnimation];
+			}
+		}
     }
+	[pool release];
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
@@ -118,17 +131,26 @@
         return;
     }
 
-    //for (EAGLView *glview in [viewController.view subviews]) 
-    {
-		EAGLView *glview = viewController.view;
-        if ([glview isKindOfClass:[EAGLView class]]) 
-        {
-            [glview applicationWillResignActive:application];
-            [glview stopAnimation];
+	if ([viewController.view isKindOfClass:[EAGLView class]]) 
+	{
+		EAGLView *glview = (EAGLView*)viewController.view;
+		
+		[glview applicationWillResignActive:application];
+		[glview stopAnimation];
 
-            return;
-        }
+	}
+	if ([[viewController.view subviews] count]) 
+    {
+		for (EAGLView* glview in viewController.view.subviews) 
+		{
+			if ([glview isKindOfClass:[EAGLView class]]) 
+			{
+				[glview applicationWillResignActive:application];
+				[glview stopAnimation];
+			}
+		}
     }
+	
 }
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
@@ -142,16 +164,26 @@
     {
         return;
     }
-    //for (EAGLView *glview in [viewController.view subviews]) 
+	
+	
+	if ([viewController.view isKindOfClass:[EAGLView class]]) 
+	{
+		EAGLView *glview = (EAGLView*)viewController.view;
+		
+		[glview applicationDidBecomeActive:application];
+		[glview startAnimation];
+		
+	}
+	if ([[viewController.view subviews] count]) 
     {
-		EAGLView *glview = viewController.view;
-        if ([glview isKindOfClass:[EAGLView class]]) 
-        {
-            [glview applicationDidBecomeActive:application];
-            [glview startAnimation];
-            
-            return;
-        }
+		for (EAGLView* glview in viewController.view.subviews) 
+		{
+			if ([glview isKindOfClass:[EAGLView class]]) 
+			{
+				[glview applicationDidBecomeActive:application];
+				[glview startAnimation];
+			}
+		}
     }
 }
 - (void)applicationWillEnterForeground:(UIApplication *)application
