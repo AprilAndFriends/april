@@ -433,6 +433,7 @@
 				DSTROOT = "$(CONFIGURATION_BUILD_DIR)/$(PRODUCT_NAME)SDK/$(PLATFORM_NAME).sdk";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include/april;
 				SKIP_INSTALL = NO;
 			};
