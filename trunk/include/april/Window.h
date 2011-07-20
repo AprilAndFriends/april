@@ -73,6 +73,7 @@ namespace april
 		void setWindowFocusCallback(void (*focus_callback)(bool));
 		void setVirtualKeyboardCallback(void (*vk_callback)(bool));
 		void setTouchscreenEnabledCallback(void (*te_callback)(bool));
+		void setLowMemoryCallback(void (*lowmem_callback)());
 		virtual void setDeviceOrientationCallback(void (*vk_callback)(DeviceOrientation)); 
 		virtual void _setResolution(int w, int h) { }
 		
@@ -109,6 +110,7 @@ namespace april
 		virtual bool handleQuitRequest(bool can_reject);
 		virtual void handleFocusEvent(bool has_focus);
 		virtual bool performUpdate(float time_increase);
+		void handleLowMemoryWarning();
 		
 	protected:		
 		Window();
@@ -117,6 +119,7 @@ namespace april
 		hstr mTitle;
 		bool mFullscreen;
 		
+		void (*mLowMemoryCallback)();
 		bool (*mUpdateCallback)(float);
 		void (*mMouseDownCallback)(float, float, int);
 		void (*mMouseUpCallback)(float, float, int);

@@ -12,6 +12,9 @@
 #import "main.h"
 #import "AprilViewController.h"
 #import "EAGLView.h"
+#include "RenderSystem.h"
+#include "Window.h"
+
 
 
 @interface AprilDummyViewController : UIViewController
@@ -100,7 +103,8 @@
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
-	NSLog(@"April-based application received memory warning!");
+	NSLog(@"Received iOS memory warning!");
+	april::rendersys->getWindow()->handleLowMemoryWarning();
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

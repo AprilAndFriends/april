@@ -148,6 +148,7 @@ namespace april
 		mVKeyboardCallback = NULL;
 		mDeviceOrientationCallback = NULL;
 		mTouchEnabledCallback = NULL;
+		mLowMemoryCallback = NULL;
 	}
 
 	void Window::setUpdateCallback(bool (*callback)(float))
@@ -171,6 +172,16 @@ namespace april
 		mKeyDownCallback = key_dn;
 		mKeyUpCallback = key_up;
 		mCharCallback = char_callback;
+	}
+	
+	void Window::setLowMemoryCallback(void (*lowmem_callback)())
+	{
+		mLowMemoryCallback=lowmem_callback;
+	}
+	
+	void Window::handleLowMemoryWarning()
+	{
+		if (mLowMemoryCallback) mLowMemoryCallback();
 	}
 	
 	void Window::setQuitCallback(bool (*quit_callback)(bool))
