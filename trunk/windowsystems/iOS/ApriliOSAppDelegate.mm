@@ -81,8 +81,6 @@
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
     april_init(harray<hstr>());
 	[pool drain];
-	NSLog(@"VIEW CONTROLLER'S VIEW: %@", viewController.view);
-	NSLog(@"VIEW CONTROLLER'S VIEW'S SUBVIEWS: %@", viewController.view.subviews);
     if ([viewController.view isKindOfClass:[EAGLView class]]) 
 	{
 		[(EAGLView*)viewController.view startAnimation];
