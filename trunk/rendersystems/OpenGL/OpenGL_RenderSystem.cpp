@@ -478,7 +478,6 @@ namespace april
 
 	OpenGL_RenderSystem* OpenGL_RenderSystem::create()
 	{
-		april::log("Creating OpenGL Rendersystem");
 		return new OpenGL_RenderSystem();
 	}
 	
