@@ -73,7 +73,6 @@ namespace april
 	DirectX9_RenderSystem::DirectX9_RenderSystem() :
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
-		log("Creating DirectX9 Rendersystem");
 		// DIRECT3D
 		d3d=Direct3DCreate9(D3D_SDK_VERSION);
 		if (!d3d) throw hl_exception("Unable to create Direct3D9 object!");
