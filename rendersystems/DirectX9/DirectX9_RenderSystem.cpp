@@ -86,8 +86,8 @@ namespace april
 		
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !window->isFullscreen();
-		d3dpp.BackBufferWidth   = getWindow()->getWindowWidth(); //w;
-		d3dpp.BackBufferHeight  = getWindow()->getWindowHeight(); //h;
+		d3dpp.BackBufferWidth   = getWindow()->getWidth(); //w;
+		d3dpp.BackBufferHeight  = getWindow()->getHeight(); //h;
 		d3dpp.BackBufferFormat  = D3DFMT_X8R8G8B8;
 		d3dpp.PresentationInterval=D3DPRESENT_INTERVAL_ONE;
 
@@ -242,9 +242,9 @@ namespace april
 		RenderSystem::setResolution(w, h);
 		mBackBuffer->Release();
 		mBackBuffer = NULL;
-		d3dpp.BackBufferWidth = mWindow->getWindowWidth();
-		d3dpp.BackBufferHeight = mWindow->getWindowHeight();
-		log(hsprintf("Resetting device for %d x %d...", mWindow->getWindowWidth(), mWindow->getWindowHeight()));
+		d3dpp.BackBufferWidth = mWindow->getWidth();
+		d3dpp.BackBufferHeight = mWindow->getHeight();
+		log(hsprintf("Resetting device for %d x %d...", mWindow->getWidth(), mWindow->getHeight()));
 		HRESULT hr=d3dDevice->Reset(&d3dpp);
 		if (hr == D3DERR_DRIVERINTERNALERROR)
 		{
