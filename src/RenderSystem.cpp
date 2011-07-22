@@ -51,13 +51,6 @@ namespace april
 		g_logFunction(prefix + message);
 	}
 	
-	void logf(chstr message, ...)
-	{
-		va_list args;
-		va_start(args, message);
-		april::log(hvsprintf(message.c_str(), args));
-		va_end(args);
-	}
 /************************************************************************************/
 	void PlainVertex::operator=(const gvec3& v)
 	{
