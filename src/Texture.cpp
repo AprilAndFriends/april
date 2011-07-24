@@ -26,6 +26,7 @@ namespace april
 	{
 		mFilename = "";
 		mUnusedTimer = 0;
+		mBpp = 3;
 		mTextureFilter = Linear;
 		mTextureWrapping = true;
 	}
@@ -69,6 +70,11 @@ namespace april
 	}
 
 	void Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		// TODO
+	}
+
+	void Texture::clear()
 	{
 		// TODO
 	}

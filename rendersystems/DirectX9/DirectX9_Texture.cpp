@@ -28,7 +28,6 @@ namespace april
 		mSurface = NULL;
 		mWidth = 0;
 		mHeight = 0;
-		mBpp = 3;
 		if (!mDynamic)
 		{
 			load();
@@ -629,6 +628,24 @@ namespace april
 		}
 	}
 
+	void DirectX9_Texture::clear()
+	{
+		int w = getWidth();
+		int h = getHeight();
+		D3DLOCKED_RECT lockRect;
+		RECT rect;
+		rect.left = 0;
+		rect.right = w - 1;
+		rect.top = 0;
+		rect.bottom = h - 1;
+		HRESULT result = mTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
+		if (result == D3D_OK)
+		{
+			memset(lockRect.pBits, 0, w * h * 4 * sizeof(unsigned char));
+			mTexture->UnlockRect(0);
+		}
+	}
+
 	IDirect3DSurface9* DirectX9_Texture::getSurface()
 	{
 		if (!mSurface)
@@ -659,7 +676,7 @@ namespace april
 		}
 		mWidth = img->w;
 		mHeight = img->h;
-		mBpp = img->bpp;
+		mBpp = (img->bpp == 3 ? 3 : 4);
 		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, (img->bpp == 3) ? D3DFMT_X8R8G8B8 : D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, 0);
 		if (hr != D3D_OK)
 		{
@@ -670,8 +687,21 @@ namespace april
 		// write texels
 		D3DLOCKED_RECT rect;
 		mTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
-		img->copyPixels(rect.pBits, img->bpp == 3 ? AF_BGR : AF_BGRA);
-		//memcpy(rect.pBits,img->data,mWidth*mHeight*img->bpp);
+		if (img->bpp == 4)
+		{
+			img->copyPixels(rect.pBits, AF_BGRA);
+		}
+		else if (img->bpp == 3)
+		{
+			img->copyPixels(rect.pBits, AF_BGR);
+		}
+		else
+		{
+			ImageSource* tempImg = april::createEmptyImage(img->w, img->h);
+			tempImg->copyImage(img, 4);
+			tempImg->copyPixels(rect.pBits, AF_BGRA);
+			delete tempImg;
+		}
 		mTexture->UnlockRect(0);
 
 		delete img;

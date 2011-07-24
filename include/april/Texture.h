@@ -56,6 +56,7 @@ namespace april
 		virtual void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		virtual void clear();
 		void fillRect(grect rect, Color color);
 		virtual Color getInterpolatedPixel(float x, float y);
 		
@@ -65,6 +66,7 @@ namespace april
 		
 		int getWidth() { return mWidth; };
 		int getHeight() { return mHeight; };
+		int getBpp() { return mBpp; }
 		/// only used with dynamic textures since at chapter load you need it's dimensions for images, but you don't know them yet
 		void _setDimensions(int w, int h) { mWidth = w; mHeight = h; }
 		bool isDynamic() { return mDynamic; }
@@ -83,6 +85,7 @@ namespace april
 		hstr mFilename;
 		int mWidth;
 		int mHeight;
+		int mBpp;
 		float mUnusedTimer;
 		TextureFilter mTextureFilter;
 		bool mTextureWrapping;
