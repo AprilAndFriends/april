@@ -129,7 +129,7 @@ namespace april
 		// camera functions
 		void lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up);
 		// projection matrix transformation
-		void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f) DEPRECATED_ATTRIBUTE;
+		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f);
 		void setOrthoProjection(gvec2 size);
 		void setOrthoProjection(grect rect);
 		void setPerspective(float fov, float aspect, float nearClip, float farClip);
