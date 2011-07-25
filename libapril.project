@@ -55,22 +55,6 @@
     <Project Name="libgtypes"/>
   </Dependencies>
   <Dependencies Name="Release"/>
-  <Dependencies Name="DirectX_Release">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-  </Dependencies>
-  <Dependencies Name="Linux_Debug">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-  </Dependencies>
-  <Dependencies Name="OpenGL_Debug">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-  </Dependencies>
-  <Dependencies Name="OpenGL_Release">
-    <Project Name="libhltypes"/>
-    <Project Name="libgtypes"/>
-  </Dependencies>
   <Settings Type="Dynamic Library">
     <Configuration Name="DirectX_Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g" C_Options="-g" Required="yes" PreCompiledHeader="">
@@ -312,6 +296,22 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
   </Settings>
+  <Dependencies Name="DirectX_Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="Linux_Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="OpenGL_Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="OpenGL_Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
   <Dependencies Name="DirectX_Debug">
     <Project Name="libhltypes"/>
     <Project Name="libgtypes"/>
