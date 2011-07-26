@@ -70,6 +70,7 @@ namespace april
 	{
 	public:
 		unsigned int color;
+		void operator=(const gvec3& v);
 	};
 
 	class aprilExport TexturedVertex : public PlainVertex
@@ -77,6 +78,7 @@ namespace april
 	public:
 		float u;
 		float v;
+		void operator=(const gvec3& v);
 	};
 
 	class aprilExport ColoredTexturedVertex : public ColoredVertex
@@ -84,24 +86,28 @@ namespace april
 	public:
 		float u;
 		float v;
+		void operator=(const gvec3& v);
 	};
     
     class aprilExport ColoredTexturedNormalVertex : public ColoredTexturedVertex
     {
     public:
         gvec3 normal;
+		void operator=(const gvec3& v);
     };
     
     class aprilExport TexturedNormalVertex : public TexturedVertex
     {
     public:
         gvec3 normal;
+		void operator=(const gvec3& v);
     };
     
     class aprilExport ColoredNormalVertex : public ColoredVertex
     {
     public:
         gvec3 normal;
+		void operator=(const gvec3& v);
     };
 
 	class aprilExport RenderSystem
@@ -110,7 +116,7 @@ namespace april
 		RenderSystem();
 		virtual ~RenderSystem();
 
-		virtual void assignWindow(Window* window)=0;
+		virtual void assignWindow(Window* window) = 0;
 
 		// object creation
 		hstr findTextureFile(chstr filename);
