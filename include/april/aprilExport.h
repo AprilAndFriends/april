@@ -12,6 +12,7 @@ Copyright (c) 2010 Kresimir Spes                                                
 
 	#ifdef _STATICLIB
 		#define aprilExport
+		#define aprilFnExport
 	#else
 		#ifdef _WIN32
 			#ifdef APRIL_EXPORTS
