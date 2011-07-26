@@ -91,10 +91,10 @@ namespace april
 		{
 			throw "Color format must be either 0xRRGGBBAA or 0xRRGGBB";
 		}
-		this->r = hexstr_to_int(value(2, 2));
-		this->g = hexstr_to_int(value(4, 2));
-		this->b = hexstr_to_int(value(6, 2));
-		this->a = (value.size() == 10 ? hexstr_to_int(value(8, 2)) : 255);
+		this->r = (unsigned char)hexstr_to_int(value(2, 2));
+		this->g = (unsigned char)hexstr_to_int(value(4, 2));
+		this->b = (unsigned char)hexstr_to_int(value(6, 2));
+		this->a = (value.size() == 10 ? (unsigned char)hexstr_to_int(value(8, 2)) : 255);
 	}
 	
 	void Color::set(Color color, unsigned char a)

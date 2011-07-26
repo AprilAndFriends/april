@@ -58,6 +58,48 @@ namespace april
 		this->y = v.y;
 		this->z = v.z;
 	}
+
+	void ColoredVertex::operator=(const gvec3& v)
+	{
+		this->x = v.x;
+		this->y = v.y;
+		this->z = v.z;
+	}
+
+	void TexturedVertex::operator=(const gvec3& v)
+	{
+		this->x = v.x;
+		this->y = v.y;
+		this->z = v.z;
+	}
+
+	void ColoredTexturedVertex::operator=(const gvec3& v)
+	{
+		this->x = v.x;
+		this->y = v.y;
+		this->z = v.z;
+	}
+
+	void ColoredTexturedNormalVertex::operator=(const gvec3& v)
+	{
+		this->x = v.x;
+		this->y = v.y;
+		this->z = v.z;
+	}
+
+	void TexturedNormalVertex::operator=(const gvec3& v)
+	{
+		this->x = v.x;
+		this->y = v.y;
+		this->z = v.z;
+	}
+
+	void ColoredNormalVertex::operator=(const gvec3& v)
+	{
+		this->x = v.x;
+		this->y = v.y;
+		this->z = v.z;
+	}
 /************************************************************************************/
 	RenderSystem::RenderSystem()
 	{
