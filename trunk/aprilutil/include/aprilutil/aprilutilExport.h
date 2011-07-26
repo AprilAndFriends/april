@@ -11,7 +11,8 @@ Copyright (c) 2010 Kresimir Spes                                                
 #define APRILUTIL_EXPORT_H
 
 	#ifdef _STATICLIB
-		#define aprilExport
+		#define aprilutilExport
+		#define aprilutilFnExport
 	#else
 		#ifdef _WIN32
 			#ifdef APRILUTIL_EXPORTS
@@ -26,6 +27,12 @@ Copyright (c) 2010 Kresimir Spes                                                
 			#define aprilutilFnExport
 		#endif
 	#endif
+	#ifndef DEPRECATED_ATTRIBUTE
+		#ifdef _MSC_VER
+			#define DEPRECATED_ATTRIBUTE __declspec(deprecated("function is deprecated"))
+		#else
+			#define DEPRECATED_ATTRIBUTE __attribute__((deprecated))
+		#endif
+	#endif
 
 #endif
-
