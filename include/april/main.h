@@ -19,7 +19,6 @@
  * \file main.h
  *
  * This file is primarily used to change entry and exit points
- * 
  * from main() to april_init() and april_destroy(). These will
  * be called transparently from main() which we will guarantee
  * to define correctly in platform-specific way. Then, we will
