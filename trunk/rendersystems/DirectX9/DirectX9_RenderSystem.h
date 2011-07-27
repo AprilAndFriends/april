@@ -46,16 +46,15 @@ namespace april
 		void clear(bool color, bool depth);
 		ImageSource* grabScreenshot(int bpp = 3);
 		void setTexture(Texture* t);
-		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
+		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
+		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color);
 		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
+		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 
 		void setRenderTarget(Texture* source);
 
-		void setAlphaMultiplier(float value);
 		void beginFrame();
 		
 		void presentFrame();

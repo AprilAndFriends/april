@@ -23,9 +23,11 @@ Copyright (c) 2010 Kresimir Spes                                                
 #include "Win32Window.h"
 
 #define PLAIN_FVF (D3DFVF_XYZ)
-#define COLORED_FVF (D3DFVF_XYZ | D3DFVF_DIFFUSE)
+#define COLOR_FVF (D3DFVF_XYZ | D3DFVF_DIFFUSE)
 #define TEX_FVF (D3DFVF_XYZ | D3DFVF_TEX1)
 #define TEX_COLOR_FVF (D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE)
+#define VERTICES_BUFFER_COUNT 8192
+#define UINT_RGBA_TO_ARGB(c) ((((c) >> 8) & 0xFFFFFF) | (((c) & 0xFF) << 24))
 
 namespace april
 {
@@ -49,6 +51,9 @@ namespace april
 		D3DPT_LINESTRIP,     // ROP_LINE_STRIP
 		D3DPT_POINTLIST,     // ROP_POINT_LIST
 	};
+
+	ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
+	ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
 
 	unsigned int numPrimitives(RenderOp rop, int nVertices)
 	{
@@ -74,8 +79,11 @@ namespace april
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
 		// DIRECT3D
-		d3d=Direct3DCreate9(D3D_SDK_VERSION);
-		if (!d3d) throw hl_exception("Unable to create Direct3D9 object!");
+		d3d = Direct3DCreate9(D3D_SDK_VERSION);
+		if (!d3d)
+		{
+			throw hl_exception("Unable to create Direct3D9 object!");
+		}
 	}
 
 	void DirectX9_RenderSystem::assignWindow(Window* window)
@@ -86,21 +94,24 @@ namespace april
 		
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !window->isFullscreen();
-		d3dpp.BackBufferWidth   = getWindow()->getWidth(); //w;
-		d3dpp.BackBufferHeight  = getWindow()->getHeight(); //h;
-		d3dpp.BackBufferFormat  = D3DFMT_X8R8G8B8;
-		d3dpp.PresentationInterval=D3DPRESENT_INTERVAL_ONE;
+		d3dpp.BackBufferWidth = getWindow()->getWidth();
+		d3dpp.BackBufferHeight = getWindow()->getHeight();
+		d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
+		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 
 		d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 		d3dpp.hDeviceWindow = hWnd;
-		HRESULT hr=d3d->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,hWnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING,&d3dpp,&d3dDevice);
-		if (hr != D3D_OK) throw hl_exception("Unable to create Direct3D Device!");
+		HRESULT hr = d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
+		if (hr != D3D_OK)
+		{
+			throw hl_exception("Unable to create Direct3D Device!");
+		}
 		// device config
 		configureDevice();
-		clear(1,0);
+		clear(true, false);
 		presentFrame();
-		d3dDevice->GetRenderTarget(0,&mBackBuffer);
-		mRenderTarget=0;
+		d3dDevice->GetRenderTarget(0, &mBackBuffer);
+		mRenderTarget = NULL;
 		d3dDevice->BeginScene();
 	}
 	
@@ -119,12 +130,12 @@ namespace april
 	DirectX9_RenderSystem::~DirectX9_RenderSystem()
 	{
 		april::log("Destroying DirectX9 Rendersystem");
-		if (d3dDevice)
+		if (d3dDevice != NULL)
 		{
 			d3dDevice->Release();
 		}
 		d3dDevice = NULL;
-		if (d3d)
+		if (d3d != NULL)
 		{
 			d3d->Release();
 		}
@@ -365,31 +376,51 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
+	void DirectX9_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
 	{
-		d3dDevice->SetFVF(TEX_COLOR_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), v, sizeof(ColoredTexturedVertex));
+		if (activeTexture != NULL)
+		{
+			setTexture(NULL);
+		}
+		d3dDevice->SetFVF(PLAIN_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), v, sizeof(PlainVertex));
 	}
 
+	void DirectX9_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
+	{
+		if (activeTexture != NULL)
+		{
+			setTexture(NULL);
+		}
+		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
+		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
+		ColoredVertex* p = cv;
+		for (int i = 0; i < nVertices; i++, p++, v++)
+		{
+			p->x = v->x;
+			p->y = v->y;
+			p->z = v->z;
+			p->color = colorDx9;
+		}
+		d3dDevice->SetFVF(COLOR_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
+		if (nVertices > VERTICES_BUFFER_COUNT)
+		{
+			delete [] cv;
+		}
+	}
+	
 	void DirectX9_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
 	{
-		if (mAlphaMultiplier == 1.0f)
-		{
-			d3dDevice->SetFVF(TEX_FVF);
-			d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), v, sizeof(TexturedVertex));
-		}
-		else
-		{
-			render(renderOp, v, nVertices, APRIL_COLOR_WHITE);
-		}
+		d3dDevice->SetFVF(TEX_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), v, sizeof(TexturedVertex));
 	}
 
-	ColoredTexturedVertex static_ctv[100];
 	void DirectX9_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
 	{
-		DWORD colorDx9 = D3DCOLOR_ARGB((int)(mAlphaMultiplier * color.a), (int)color.r, (int)color.g, (int)color.b);
-		ColoredTexturedVertex* cv = (nVertices <= 100) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		ColoredTexturedVertex* p = cv;
+		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
+		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
+		ColoredTexturedVertex* p = ctv;
 		for (int i = 0; i < nVertices; i++, p++, v++)
 		{
 			p->x = v->x;
@@ -399,80 +430,55 @@ namespace april
 			p->v = v->v;
 			p->color = colorDx9;
 		}
-		render(renderOp, cv, nVertices);
-		if (nVertices > 100)
+		d3dDevice->SetFVF(TEX_COLOR_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
+		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
-			delete [] cv;
+			delete [] ctv;
 		}
 	}
 
-	ColoredVertex static_cv[100];
-	void DirectX9_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
-	{
-		DWORD colorDx9 = D3DCOLOR_ARGB((int)(mAlphaMultiplier * 255), 255, 255, 255);
-		ColoredVertex* cv = (nVertices <= 100) ? static_cv : new ColoredVertex[nVertices];
-		ColoredVertex* p = cv;
-		for (int i = 0; i < nVertices; i++, p++, v++)
-		{
-			p->x = v->x;
-			p->y = v->y;
-			p->z = v->z;
-			p->color = colorDx9;
-		}
-		render(renderOp, cv, nVertices);
-		if (nVertices > 100)
-		{
-			delete [] cv;
-		}
-	}
-
-	void DirectX9_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
-	{
-		DWORD colorDx9 = D3DCOLOR_ARGB((int)(mAlphaMultiplier * color.a), (int)color.r, (int)color.g, (int)color.b);
-		ColoredVertex* cv = (nVertices <= 100) ? static_cv : new ColoredVertex[nVertices];
-		ColoredVertex* p = cv;
-		for (int i = 0; i < nVertices; i++, p++, v++)
-		{
-			p->x = v->x;
-			p->y = v->y;
-			p->z = v->z;
-			p->color = colorDx9;
-		}
-		render(renderOp, cv, nVertices);
-		if (nVertices > 100)
-		{
-			delete [] cv;
-		}
-	}
-	
 	void DirectX9_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
 	{
-		if (activeTexture)
+		if (activeTexture != NULL)
 		{
-			setTexture(0);
+			setTexture(NULL);
 		}
-		d3dDevice->SetFVF(COLORED_FVF);
-		if (mAlphaMultiplier)
+		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
+		ColoredVertex* p = cv;
+		for (int i = 0; i < nVertices; i++, p++, v++)
 		{
-			d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), v, sizeof(ColoredVertex));
+			p->x = v->x;
+			p->y = v->y;
+			p->z = v->z;
+			p->color = UINT_RGBA_TO_ARGB(v->color);
 		}
-		else
+		d3dDevice->SetFVF(COLOR_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
+		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
-			DWORD a = ((int)(mAlphaMultiplier * 255)) << 24;
-			ColoredVertex* cv = (nVertices <= 100) ? static_cv : new ColoredVertex[nVertices];
-			ColoredVertex* p = cv;
-			for (int i = 0; i < nVertices; i++, p++, v++)
-			{
-				p->x = v->x;
-				p->y = v->y;
-				p->z = v->z;
-				p->color = (v->color & 0xFFFFFF) | a;
-			}
-			d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
-			if (nVertices > 100)
-			{
-				delete [] cv;
-			}
+			delete [] cv;
+		}
+	}
+
+	void DirectX9_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
+	{
+		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
+		ColoredTexturedVertex* p = ctv;
+		for (int i = 0; i < nVertices; i++, p++, v++)
+		{
+			p->x = v->x;
+			p->y = v->y;
+			p->z = v->z;
+			p->u = v->u;
+			p->v = v->v;
+			p->color = UINT_RGBA_TO_ARGB(v->color);
+		}
+		d3dDevice->SetFVF(TEX_COLOR_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
+		if (nVertices > VERTICES_BUFFER_COUNT)
+		{
+			delete [] ctv;
 		}
 	}
 
@@ -495,11 +501,6 @@ namespace april
 			d3dDevice->BeginScene();
 		}
 		mRenderTarget = (DirectX9_Texture*)source;
-	}
-	
-	void DirectX9_RenderSystem::setAlphaMultiplier(float value)
-	{
-		mAlphaMultiplier = value;
 	}
 	
 	void DirectX9_RenderSystem::beginFrame()
