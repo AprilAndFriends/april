@@ -156,12 +156,12 @@ namespace april
 		// rendering
 		virtual void clear(bool color = true, bool depth = false) = 0;
 		virtual void setTexture(Texture* t) = 0;
-		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices) = 0;
-		virtual void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices) = 0;
-		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices,Color color) = 0;
 		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices) = 0;
-		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices,Color color) = 0;
+		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color) = 0;
+		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices) = 0;
+		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color) = 0;
 		virtual void render(RenderOp renderOp, ColoredVertex* v, int nVertices) = 0;
+		virtual void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices) = 0;
 		
 		virtual void setRenderTarget(Texture* source) = 0;
 		
@@ -169,13 +169,8 @@ namespace april
 		void drawTexturedQuad(grect rect, grect src);
 		void drawTexturedQuad(grect rect, grect src, Color color);
 
-		
 		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
 		void setIdleTextureUnloadTime(float time) { mIdleUnloadTime = time; }
-
-		virtual void setAlphaMultiplier(float value) = 0;
-		float getAlphaMultiplier() { return mAlphaMultiplier; }
-
 
 		virtual void beginFrame() = 0;
 
@@ -191,7 +186,6 @@ namespace april
 
 	protected:
 		Window* mWindow;
-		float mAlphaMultiplier;
 		float mIdleUnloadTime;
 		bool mDynamicLoading;
 		TextureFilter mTextureFilter;

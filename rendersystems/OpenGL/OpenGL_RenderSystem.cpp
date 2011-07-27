@@ -316,7 +316,7 @@ namespace april
 			glDisableClientState(GL_COLOR_ARRAY);
 			mColorEnabled = false;
 		}
-		glColor4f(1, 1, 1, mAlphaMultiplier); 
+		glColor4f(1, 1, 1, 1); 
 		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), &v->u);
 
@@ -337,7 +337,7 @@ namespace april
 			glDisableClientState(GL_COLOR_ARRAY);
 			mColorEnabled = false;
 		}
-		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f() * mAlphaMultiplier);
+		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
 #else
 		if (!mColorEnabled)
 		{
@@ -372,7 +372,7 @@ namespace april
 			mColorEnabled = false;
 		}
 #if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
-		glColor4f(1, 1, 1, mAlphaMultiplier);
+		glColor4f(1, 1, 1, 1);
 #endif
 		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
@@ -392,7 +392,7 @@ namespace april
 			mColorEnabled = false;
 			glDisableClientState(GL_COLOR_ARRAY);
 		}
-		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f() * mAlphaMultiplier);
+		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
 #else
 		if (!mColorEnabled)
 		{
@@ -400,7 +400,7 @@ namespace april
 			mColorEnabled = true;
 		}
 		GLuint colors[nVertices];
-		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)(color.a * mAlphaMultiplier)};
+		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)color.a};
 		GLuint _color = *(GLuint*)colorB;
 		for (int i = 0; i < nVertices; i++)
 		{
@@ -428,7 +428,7 @@ namespace april
 		glEnableClientState(GL_COLOR_ARRAY);
 		glVertexPointer(3, GL_FLOAT, sizeof(ColoredVertex), v);
 #if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
-		glColor4f(1, 1, 1, mAlphaMultiplier);
+		glColor4f(1, 1, 1, 1);
 #endif
 		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(ColoredVertex), &v->color);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
@@ -447,7 +447,7 @@ namespace april
 			glEnableClientState(GL_COLOR_ARRAY);
 		}
 #if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
-		glColor4f(1, 1, 1, mAlphaMultiplier);
+		glColor4f(1, 1, 1, 1);
 #endif
 		glVertexPointer(3, GL_FLOAT, sizeof(ColoredTexturedVertex), v);
 		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(ColoredTexturedVertex), &v->color);
@@ -465,12 +465,6 @@ namespace april
 		// TODO
 	}
 
-	void OpenGL_RenderSystem::setAlphaMultiplier(float value)
-	{
-		mAlphaMultiplier = value;
-		glColor4f(1, 1, 1, value);
-	}
-	
 	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
 	{
 		return harray<DisplayMode>();
