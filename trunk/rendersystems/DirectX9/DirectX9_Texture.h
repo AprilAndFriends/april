@@ -39,6 +39,7 @@ namespace april
 		void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void clear();
+		void rotateHue(float degrees);
 
 		bool load();
 		bool isLoaded();

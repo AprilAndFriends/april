@@ -46,37 +46,34 @@ namespace april
 	
 	void Texture::setPixel(int x, int y, Color color)
 	{
-		// TODO
 	}
 	
 	void Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		// TODO
 	}
 	
 	void Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO
 	}
 
 	void Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO
 	}
 
 	void Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO
 	}
 
 	void Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO
 	}
 
 	void Texture::clear()
 	{
-		// TODO
+	}
+
+	void Texture::rotateHue(float degrees)
+	{
 	}
 
 	void Texture::fillRect(grect rect, Color color)
