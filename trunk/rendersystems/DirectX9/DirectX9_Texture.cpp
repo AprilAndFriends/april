@@ -45,7 +45,7 @@ namespace april
 		mSurface = NULL;
 
 		april::log("Creating user-defined DX9 texture");
-		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, 0);
+		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, NULL);
 		if (hr != D3D_OK)
 		{
 			april::log("Failed to create user-defined DX9 texture!");
@@ -93,7 +93,7 @@ namespace april
 			d3dpool = D3DPOOL_DEFAULT;
 		}
 
-		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, d3dusage, d3dfmt, d3dpool, &mTexture, 0);
+		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, d3dusage, d3dfmt, d3dpool, &mTexture, NULL);
 		if (hr != D3D_OK)
 		{
 			april::log("Failed to create user-defined DX9 texture!");
@@ -630,25 +630,18 @@ namespace april
 
 	void DirectX9_Texture::clear()
 	{
-		int w = getWidth();
-		int h = getHeight();
 		D3DLOCKED_RECT lockRect;
-		RECT rect;
-		rect.left = 0;
-		rect.right = w - 1;
-		rect.top = 0;
-		rect.bottom = h - 1;
-		HRESULT result = mTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
+		HRESULT result = mTexture->LockRect(0, &lockRect, NULL, D3DLOCK_DISCARD);
 		if (result == D3D_OK)
 		{
-			memset(lockRect.pBits, 0, w * h * 4 * sizeof(unsigned char));
+			memset(lockRect.pBits, 0, getWidth() * getHeight() * 4 * sizeof(unsigned char));
 			mTexture->UnlockRect(0);
 		}
 	}
 
 	IDirect3DSurface9* DirectX9_Texture::getSurface()
 	{
-		if (!mSurface)
+		if (mSurface == NULL)
 		{
 			mTexture->GetSurfaceLevel(0, &mSurface);
 		}
@@ -677,7 +670,7 @@ namespace april
 		mWidth = img->w;
 		mHeight = img->h;
 		mBpp = (img->bpp == 3 ? 3 : 4);
-		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, (img->bpp == 3) ? D3DFMT_X8R8G8B8 : D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, 0);
+		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, (img->bpp == 3) ? D3DFMT_X8R8G8B8 : D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, NULL);
 		if (hr != D3D_OK)
 		{
 			april::log("Failed to load DX9 texture!");
@@ -722,12 +715,12 @@ namespace april
 
 	void DirectX9_Texture::unload()
 	{
-		if (mTexture)
+		if (mTexture != NULL)
 		{
 			april::log("unloading DX9 texture '" + mFilename + "'");
 			mTexture->Release();
 			mTexture = NULL;
-			if (mSurface)
+			if (mSurface != NULL)
 			{
 				mSurface->Release();
 				mSurface = NULL;

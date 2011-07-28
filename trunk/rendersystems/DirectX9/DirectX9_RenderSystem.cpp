@@ -225,7 +225,7 @@ namespace april
 		activeTexture = (DirectX9_Texture*)t;
 		if (activeTexture)
 		{
-			if (activeTexture->mTexture == 0 && activeTexture->isDynamic())
+			if (activeTexture->mTexture == NULL && activeTexture->isDynamic())
 			{
 				activeTexture->load();
 			}
@@ -484,23 +484,24 @@ namespace april
 
 	void DirectX9_RenderSystem::setRenderTarget(Texture* source)
 	{
-		if (mRenderTarget)
+		if (mRenderTarget != NULL)
 		{
 			d3dDevice->EndScene();
 		}
-		if (!source)
+		DirectX9_Texture* texture = dynamic_cast<DirectX9_Texture*>(source);
+		if (texture == NULL)
 		{
 			d3dDevice->SetRenderTarget(0, mBackBuffer);
 		}
 		else
 		{
-			d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)source)->getSurface());
+			d3dDevice->SetRenderTarget(0, texture->getSurface());
 		}
-		if (mRenderTarget)
+		mRenderTarget = texture;
+		if (mRenderTarget != NULL)
 		{
 			d3dDevice->BeginScene();
 		}
-		mRenderTarget = (DirectX9_Texture*)source;
 	}
 	
 	void DirectX9_RenderSystem::beginFrame()
