@@ -288,7 +288,7 @@ namespace april
 		{
 			flags |= D3DCLEAR_ZBUFFER;
 		}
-		d3dDevice->Clear(0, NULL, flags, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+		d3dDevice->Clear(0, NULL, flags, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
 	
 	ImageSource* DirectX9_RenderSystem::grabScreenshot(int bpp)
