@@ -115,9 +115,9 @@ namespace april
 		}
 	}
 
-	void ImageSource::copyImage(ImageSource* other)
+	void ImageSource::copyImage(ImageSource* source)
 	{
-		memcpy(this->data, other->data, this->w * this->h * this->bpp * sizeof(unsigned char));
+		memcpy(this->data, source->data, this->w * this->h * this->bpp * sizeof(unsigned char));
 	}
 
 	void ImageSource::clear()
