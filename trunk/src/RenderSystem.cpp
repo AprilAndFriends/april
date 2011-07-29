@@ -26,10 +26,13 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 #include <hltypes/util.h>
 
 #include "RenderSystem.h"
-#ifndef _OPENGL
-#include "DirectX9_RenderSystem.h"
-#else
+#if defined(_OPENGL)
 #include "OpenGL_RenderSystem.h"
+#elif defined(HAVE_MARMELADE)
+#include <s3e.h>
+#include "Marmelade_RenderSystem.h"
+#else
+#include "DirectX9_RenderSystem.h"
 #endif
 #include "ImageSource.h"
 #include "Window.h"
@@ -308,8 +311,11 @@ namespace april
 	
 	void createRenderSystem(chstr rendersystem_name)
 	{
-#ifdef _OPENGL
+
+#if defined(_OPENGL)
 		april::rendersys = OpenGL_RenderSystem::create();
+#elif defined(HAVE_MARMELADE)
+		april::rendersys = Marmelade_RenderSystem::create();
 #else
 		april::rendersys = DirectX9_RenderSystem::create();
 #endif
@@ -317,7 +323,9 @@ namespace april
 	
 	void createRenderTarget(int w,int h,bool fullscreen,chstr title)
 	{
-#ifdef _WIN32
+#if defined(HAVE_MARMELADE)
+		Window* window = createAprilWindow("Marmelade", w, h, fullscreen, title);
+#elif defined(_WIN32)
 		Window* window = createAprilWindow("Win32", w, h, fullscreen, title);
 #else
 		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);

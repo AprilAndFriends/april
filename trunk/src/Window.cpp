@@ -24,6 +24,9 @@ Copyright (c) 2010 Ivan Vucica                                                  
 	#ifdef _WIN32
 		#include "Win32Window.h"
 	#endif
+	#ifdef HAVE_MARMELADE
+		#include "MarmeladeWindow.h"
+	#endif
 #elif (TARGET_OS_IPHONE)
 	#import <UIKit/UIKit.h>
 	#include "iOSWindow.h"
@@ -405,6 +408,9 @@ namespace april
 	#ifdef HAVE_GLUT
 		return new GLUTWindow(w, h, fullscreen, title);
 	#endif
+	#ifdef HAVE_MARMELADE
+		return new MarmeladeWindow(w, h, fullscreen, title);
+	#endif
 		
 #elif (TARGET_OS_IPHONE)
 		// iOS
@@ -434,6 +440,8 @@ namespace april
 		NSScreen* mainScreen = [NSScreen mainScreen];
 		NSRect rect = [mainScreen frame];
 		return gvec2(rect.size.width, rect.size.height);
+#elif HAVE_MARMELADE
+		return gvec2(s3eSurfaceGetInt(S3E_SURFACE_WIDTH), s3eSurfaceGetInt(S3E_SURFACE_HEIGHT));
 #else
 		return gvec2(1024, 768);
 #endif

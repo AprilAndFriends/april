@@ -1,0 +1,64 @@
+option lib
+
+define HAVE_MARMELADE
+define _STATICLIB
+
+package
+{
+	zlib
+	libpng
+	libjpeg
+}
+
+options
+{
+	lib
+	module_path_append="./aprilutil/"
+	module_path_append="./aprilutil/lib/arm"
+	enable-exceptions
+	
+	module_path_append="../gtypes"
+	module_path_append="../gtypes/include"
+	module_path_append="../gtypes/lib/arm"
+	
+	module_path_append="../hltypes"
+	module_path_append="../hltypes/lib/arm"
+	module_path_append="../hltypes/include"
+}
+
+
+subprojects
+{
+	zlib
+	libpng
+	libjpeg
+
+	april
+	gtypes
+	hltypes
+}
+
+files
+{
+	(src)
+	Color.cpp
+	ImageSource.cpp
+	ImageSourceMarmelade.cpp
+	RenderSystem.cpp
+	Texture.cpp
+	TimerPosix.cpp
+	Window.cpp
+	
+	(rendersystems/MarmeladeGLES)
+	Marmelade_Texture.cpp
+	Marmelade_RenderSystem.cpp
+	
+	(windowsystems/Marmelade)
+	MarmeladeWindow.cpp
+	
+}
+
+assets
+{
+
+}

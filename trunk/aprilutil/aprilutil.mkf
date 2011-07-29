@@ -1,0 +1,15 @@
+includepath include/aprilutil
+
+library
+{
+	".,aprilutil"
+}
+
+
+files
+{
+	(include/aprilutil)
+	aprilutilExport.h
+	BlurManager.h
+	StaticMesh.h
+}
