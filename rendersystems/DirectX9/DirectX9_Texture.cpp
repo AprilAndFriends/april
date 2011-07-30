@@ -266,11 +266,21 @@ namespace april
 					{
 						c = &thisData[(i + j * mWidth) * 4];
 						sc = &otherData[(i + j * dataWidth) * 4];
-						a = sc[3] * alpha / 255;
-						c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
-						c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
-						c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
-						c[3] = hmax(c[3], a);
+						if (c[3] > 0)
+						{
+							a = sc[3] * alpha / 255;
+							c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
+							c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
+							c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
+							c[3] = hmax(c[3], a);
+						}
+						else
+						{
+							c[2] = sc[2];
+							c[1] = sc[1];
+							c[0] = sc[0];
+							c[3] = sc[3] * alpha / 255;
+						}
 					}
 				}
 			}
@@ -440,12 +450,22 @@ namespace april
 						{
 							sc = &otherData[(x0 + y0 * dataWidth) * 4];
 						}
-						a0 = sc[3] * (int)alpha / 255;
-						a1 = 255 - a0;
-						c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
-						c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-						c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
-						c[3] = (unsigned char)hmax((int)c[3], a0);
+						if (c[3] > 0)
+						{
+							a0 = sc[3] * (int)alpha / 255;
+							a1 = 255 - a0;
+							c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+							c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+							c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+							c[3] = (unsigned char)hmax((int)c[3], a0);
+						}
+						else
+						{
+							c[2] = sc[2];
+							c[1] = sc[1];
+							c[0] = sc[0];
+							c[3] = sc[3] * (int)alpha / 255;
+						}
 					}
 				}
 			}
