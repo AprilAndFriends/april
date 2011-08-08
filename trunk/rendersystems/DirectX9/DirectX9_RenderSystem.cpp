@@ -277,10 +277,10 @@ namespace april
 		d3dDevice->BeginScene();
 	}
 
-	void DirectX9_RenderSystem::clear(bool color, bool depth)
+	void DirectX9_RenderSystem::clear(bool useColor, bool depth)
 	{
 		DWORD flags = 0;
-		if (color)
+		if (useColor)
 		{
 			flags |= D3DCLEAR_TARGET;
 		}
@@ -289,6 +289,25 @@ namespace april
 			flags |= D3DCLEAR_ZBUFFER;
 		}
 		d3dDevice->Clear(0, NULL, flags, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
+	}
+	
+	void DirectX9_RenderSystem::clear(bool useColor, bool depth, grect rect, Color color)
+	{
+		DWORD flags = 0;
+		if (useColor)
+		{
+			flags |= D3DCLEAR_TARGET;
+		}
+		if (depth)
+		{
+			flags |= D3DCLEAR_ZBUFFER;
+		}
+		D3DRECT area;
+		area.x1 = (int)rect.x;
+		area.y1 = (int)rect.y;
+		area.x2 = (int)(rect.x + rect.w) - 1;
+		area.y2 = (int)(rect.y + rect.h) - 1;
+		d3dDevice->Clear(1, &area, flags, D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b), 1.0f, 0);
 	}
 	
 	ImageSource* DirectX9_RenderSystem::grabScreenshot(int bpp)

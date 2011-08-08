@@ -155,7 +155,8 @@ namespace april
 		virtual float getPixelOffset() = 0;
 		virtual hstr getName() = 0;
 		// rendering
-		virtual void clear(bool color = true, bool depth = false) = 0;
+		virtual void clear(bool useColor = true, bool depth = false) = 0;
+		virtual void clear(bool useColor, bool depth, grect rect, Color color = APRIL_COLOR_CLEAR) = 0;
 		virtual void setTexture(Texture* t) = 0;
 		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices) = 0;
 		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color) = 0;
