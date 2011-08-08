@@ -166,6 +166,11 @@ namespace april
 			}
 		}
 	}
+
+	void Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	{
+	}
+
 /************************************************************************************/
 	RAMTexture::RAMTexture(chstr filename, bool dynamic)
 	{

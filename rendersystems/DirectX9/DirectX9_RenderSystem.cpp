@@ -364,15 +364,29 @@ namespace april
 
 	void DirectX9_RenderSystem::setBlendMode(BlendMode mode)
 	{
-		if (mode == ALPHA_BLEND || mode == DEFAULT)
+		d3dDevice->SetRenderState(D3DRS_ALPHAREF, 224);
+		d3dDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_LESS);
+		switch (mode)
 		{
+		case DEFAULT:
+		case ALPHA_BLEND:
 			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		}
-		else if (mode == ADD)
-		{
+			break;
+		case ADD:
 			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+			break;
+		case SUBTRACT:
+			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_SRCCOLOR);
+			break;
+		/*
+		case ADD:
+			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+			break;
+		*/
 		}
 	}
 

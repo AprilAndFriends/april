@@ -80,6 +80,8 @@ namespace april
 		void setTextureWrapping(bool wrap) { mTextureWrapping = wrap; }
 		bool isTextureWrappingEnabled() { return mTextureWrapping; }
 		TextureFilter getTextureFilter() { return mTextureFilter; }
+
+		virtual void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 		
 	protected:
 		bool mDynamic;

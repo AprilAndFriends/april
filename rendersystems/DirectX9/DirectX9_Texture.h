@@ -46,6 +46,8 @@ namespace april
 		void unload();
 		int getSizeInBytes();
 		
+		void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
+
 	protected:
 		IDirect3DSurface9* mSurface;
 		
