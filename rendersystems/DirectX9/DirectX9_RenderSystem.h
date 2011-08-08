@@ -43,7 +43,8 @@ namespace april
 		float getPixelOffset();
 		hstr getName();
 		// rendering
-		void clear(bool color, bool depth);
+		void clear(bool useColor = true, bool depth = false);
+		void clear(bool useColor, bool depth, grect rect, Color color = APRIL_COLOR_CLEAR);
 		ImageSource* grabScreenshot(int bpp = 3);
 		void setTexture(Texture* t);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices);

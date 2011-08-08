@@ -7,18 +7,18 @@ Copyright (c) 2010 Kresimir Spes                                                
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#if defined(_OPENGL) || (_OPENGLES1)
+#if defined(_OPENGL) || _OPENGLES1
 #ifndef APRIL_OPENGL_RENDERSYSTEM_H
 #define APRIL_OPENGL_RENDERSYSTEM_H
 
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
-#if (TARGET_OS_MAC) && !(TARGET_OS_IPHONE)
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
 #include <OpenGL/gl.h>
-#elif (TARGET_OS_IPHONE)
+#elif TARGET_OS_IPHONE
 #include <OpenGLES/ES1/gl.h>
-#elif (_OPENGLES1)
+#elif _OPENGLES1
 #include <GLES/gl.h>
 #else
 #include <GL/gl.h>
@@ -54,7 +54,8 @@ namespace april
         ImageSource* grabScreenshot(int bpp = 3);
 
 		// rendering
-		void clear(bool color, bool depth);
+		void clear(bool useColor = true, bool depth = false);
+		void clear(bool useColor, bool depth, grect rect, Color color = APRIL_COLOR_CLEAR);
 		void setTexture(Texture* t);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);

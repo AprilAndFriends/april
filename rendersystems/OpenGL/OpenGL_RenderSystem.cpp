@@ -197,10 +197,10 @@ namespace april
 		}
 	}
 
-	void OpenGL_RenderSystem::clear(bool color, bool depth)
+	void OpenGL_RenderSystem::clear(bool useColor, bool depth)
 	{
 		GLbitfield mask = 0;
-		if (color)
+		if (useColor)
 		{
 			mask |= GL_COLOR_BUFFER_BIT;
 		}
@@ -209,6 +209,11 @@ namespace april
 			mask |= GL_DEPTH_BUFFER_BIT;
 		}
 		glClear(mask);
+	}
+
+	void OpenGL_RenderSystem::clear(bool useColor, bool depth, grect rect, Color color)
+	{
+		// TODO
 	}
     
     ImageSource* OpenGL_RenderSystem::grabScreenshot(int bpp)
