@@ -836,6 +836,58 @@ namespace april
 	{
 		return (mWidth * mHeight * mBpp);
 	}
+
+	void DirectX9_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	{
+		if (mWidth != texture->getWidth() || mHeight != texture->getHeight() || mBpp != 4)
+		{
+			return;
+		}
+		DirectX9_Texture* source = (DirectX9_Texture*)texture;
+		D3DLOCKED_RECT lockRect;
+		HRESULT result = mTexture->LockRect(0, &lockRect, NULL, D3DLOCK_DISCARD);
+		if (result == D3D_OK)
+		{
+			D3DLOCKED_RECT sourceLockRect;
+			result = source->getTexture()->LockRect(0, &sourceLockRect, NULL, D3DLOCK_DISCARD);
+			if (result == D3D_OK)
+			{
+				unsigned char* thisData = (unsigned char*)lockRect.pBits;
+				unsigned char* srcData = (unsigned char*)sourceLockRect.pBits;
+				unsigned char* c;
+				unsigned char* sc;
+				int i;
+				int alpha;
+				//if (ambiguity )
+				int min = (int)median - ambiguity / 2;
+				int max = (int)median + ambiguity / 2;
+				for (int j = 0; j < mHeight; j++)
+				{
+					for (i = 0; i < mWidth; i++)
+					{
+						c = &thisData[(i + j * mWidth) * 4];
+						sc = &srcData[(i + j * mWidth) * 4];
+						alpha = (sc[0] + sc[1] + sc[2]) / 3;
+						if (alpha < min)
+						{
+							c[3] = 255;
+						}
+						else if (alpha >= max)
+						{
+							c[3] = 0;
+						}
+						else
+						{
+							c[3] = (max - alpha) * 255 / ambiguity;
+						}
+					}
+				}
+				source->getTexture()->UnlockRect(0);
+			}
+			mTexture->UnlockRect(0);
+		}
+	}
+
 }
 
 #endif
