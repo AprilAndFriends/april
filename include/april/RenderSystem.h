@@ -165,6 +165,7 @@ namespace april
 		virtual void render(RenderOp renderOp, ColoredVertex* v, int nVertices) = 0;
 		virtual void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices) = 0;
 		
+		virtual Texture* getRenderTarget() = 0;
 		virtual void setRenderTarget(Texture* source) = 0;
 		
 		void drawColoredQuad(grect rect, Color color);

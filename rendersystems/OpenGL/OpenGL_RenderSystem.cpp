@@ -460,6 +460,12 @@ namespace april
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 	
+	Texture* OpenGL_RenderSystem::getRenderTarget()
+	{
+		// TODO
+		return NULL;
+	}
+	
 	void OpenGL_RenderSystem::setRenderTarget(Texture* source)
 	{
 		// TODO
