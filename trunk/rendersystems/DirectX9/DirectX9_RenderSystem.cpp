@@ -317,7 +317,7 @@ namespace april
 		mBackBuffer->GetDesc(&desc);
 		if (desc.Format != D3DFMT_X8R8G8B8)
 		{
-			april::log("failed to grab screenshot, backbuffer format not supported, expeted X8R8G8B8, got: " + hstr(desc.Format));
+			april::log("failed to grab screenshot, backbuffer format not supported, expected X8R8G8B8, got: " + hstr(desc.Format));
 			return NULL;
 		}
 		IDirect3DSurface9* buffer;
@@ -352,6 +352,7 @@ namespace april
 		unsigned char* p = img->data;
 		unsigned char* src = (unsigned char*)rect.pBits;
 		int x;
+		memset(p, 255, img->w * img->h * 4 * sizeof(unsigned char));
 		for (int y = 0; y < img->h; y++)
 		{
 			for (x = 0; x < img->w * 4; x += 4, p += bpp)
@@ -359,10 +360,6 @@ namespace april
 				p[0] = src[x + 2];
 				p[1] = src[x + 1];
 				p[2] = src[x];
-				if (bpp == 4)
-				{
-					p[3] = 255;
-				}
 			}
 			src += rect.Pitch;
 		}
@@ -515,6 +512,11 @@ namespace april
 		}
 	}
 
+	Texture* DirectX9_RenderSystem::getRenderTarget()
+	{
+		return mRenderTarget;
+	}
+	
 	void DirectX9_RenderSystem::setRenderTarget(Texture* source)
 	{
 		if (mRenderTarget != NULL)

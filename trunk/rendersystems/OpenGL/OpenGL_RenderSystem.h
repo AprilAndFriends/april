@@ -64,6 +64,7 @@ namespace april
 		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 
+		Texture* getRenderTarget();
 		void setRenderTarget(Texture* source);
 		void beginFrame();
 
