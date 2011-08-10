@@ -101,7 +101,7 @@ namespace april
 
 		d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 		d3dpp.hDeviceWindow = hWnd;
-		HRESULT hr = d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
+		HRESULT hr = d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
 		if (hr != D3D_OK)
 		{
 			throw hl_exception("Unable to create Direct3D Device!");
@@ -397,12 +397,6 @@ namespace april
 			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_SRCCOLOR);
 			break;
-		/*
-		case ADD:
-			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-			break;
-		*/
 		}
 	}
 
