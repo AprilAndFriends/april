@@ -380,8 +380,6 @@ namespace april
 
 	void DirectX9_RenderSystem::setBlendMode(BlendMode mode)
 	{
-		d3dDevice->SetRenderState(D3DRS_ALPHAREF, 224);
-		d3dDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_LESS);
 		switch (mode)
 		{
 		case DEFAULT:
@@ -395,7 +393,7 @@ namespace april
 			break;
 		case SUBTRACT:
 			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_SRCCOLOR);
+			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVDESTALPHA);
 			break;
 		}
 	}
