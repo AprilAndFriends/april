@@ -256,7 +256,7 @@ namespace april
 		d3dpp.BackBufferWidth = mWindow->getWidth();
 		d3dpp.BackBufferHeight = mWindow->getHeight();
 		log(hsprintf("Resetting device for %d x %d...", mWindow->getWidth(), mWindow->getHeight()));
-		HRESULT hr=d3dDevice->Reset(&d3dpp);
+		HRESULT hr = d3dDevice->Reset(&d3dpp);
 		if (hr == D3DERR_DRIVERINTERNALERROR)
 		{
 			throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
