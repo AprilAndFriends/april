@@ -549,7 +549,7 @@ namespace april
 			int i;
 			april::log("Direct3D9 Device lost, attempting to restore...");
 			mBackBuffer->Release();
-			mBackBuffer = 0;
+			mBackBuffer = NULL;
 			while (((Win32Window*)mWindow)->isRunning())
 			{
 				for (i = 0; i < 10; i++)
