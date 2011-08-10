@@ -101,10 +101,14 @@ namespace april
 
 		d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 		d3dpp.hDeviceWindow = hWnd;
-		HRESULT hr = d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
-		if (hr != D3D_OK)
+		HRESULT result = d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
+		if (result != D3D_OK)
 		{
-			throw hl_exception("Unable to create Direct3D Device!");
+			result = d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
+			if (result != D3D_OK)
+			{
+				throw hl_exception("Unable to create Direct3D Device!");
+			}
 		}
 		// device config
 		configureDevice();
@@ -355,7 +359,7 @@ namespace april
 		memset(p, 255, img->w * img->h * 4 * sizeof(unsigned char));
 		for (int y = 0; y < img->h; y++)
 		{
-			for (x = 0; x < img->w * 4; x += 4, p += bpp)
+			for (x = 0; x < img->w * bpp; x += bpp, p += bpp)
 			{
 				p[0] = src[x + 2];
 				p[1] = src[x + 1];

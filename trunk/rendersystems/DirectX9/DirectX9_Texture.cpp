@@ -103,21 +103,53 @@ namespace april
 	
 	Color DirectX9_Texture::getPixel(int x, int y)
 	{
-		Color result;
+		Color color;
 		D3DLOCKED_RECT lockRect;
 		RECT rect;
 		rect.left = x;
-		rect.right = x;
 		rect.top = y;
+		rect.right = x;
 		rect.bottom = y;
-		mTexture->LockRect(0, &lockRect, &rect, (D3DLOCK_DISCARD | D3DLOCK_READONLY | D3DLOCK_NO_DIRTY_UPDATE));
+		HRESULT result = mTexture->LockRect(0, &lockRect, &rect, D3DLOCK_READONLY);
+		if (result == D3D_OK)
+		{
+			unsigned char* p = (unsigned char*)lockRect.pBits;
+			color.r = p[2];
+			color.g = p[1];
+			color.b = p[0];
+			color.a = p[3];
+			mTexture->UnlockRect(0);
+			return color;
+		}
+		// could be a render target
+		IDirect3DSurface9* buffer;
+		result = d3dDevice->CreateOffscreenPlainSurface(mWidth, mHeight,
+			(mBpp == 4 ? D3DFMT_A8R8G8B8 : D3DFMT_X8R8G8B8), D3DPOOL_SYSTEMMEM, &buffer, NULL);
+		if (result != D3D_OK)
+		{
+			april::log("failed to get pixel data, CreateOffscreenPlainSurface() call failed");
+			return color;
+		}
+		result = d3dDevice->GetRenderTargetData(getSurface(), buffer);
+		if (result != D3D_OK)
+		{
+			april::log("failed to get pixel data, GetRenderTargetData() call failed");
+			return color;
+		}
+		result = buffer->LockRect(&lockRect, &rect, D3DLOCK_READONLY);
+		if (result != D3D_OK)
+		{
+			april::log("failed to get pixel data, surface lock failed");
+			return color;
+		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
-		result.r = p[2];
-		result.g = p[1];
-		result.b = p[0];
-		result.a = p[3];
-		mTexture->UnlockRect(0);
-		return result;
+		color.r = p[2];
+		color.g = p[1];
+		color.b = p[0];
+		color.a = p[3];
+		buffer->UnlockRect();
+		buffer->Release();
+		return color;
 	}
 
 	void DirectX9_Texture::setPixel(int x, int y, Color color)
