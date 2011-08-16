@@ -368,6 +368,12 @@ namespace april
 			case SDL_BUTTON_MIDDLE:
 				mousebtn = AMOUSEBTN_MIDDLE;
 				break;
+			case SDL_BUTTON_WHEELUP:
+				mousebtn = event.type == SDL_MOUSEBUTTONDOWN ? AMOUSEBTN_WHEELUP : AMOUSEBTN_NONE;
+				break;
+			case SDL_BUTTON_WHEELDOWN:
+				mousebtn = event.type == SDL_MOUSEBUTTONDOWN ? AMOUSEBTN_WHEELDN : AMOUSEBTN_NONE;
+				break;
 			default:
 				mousebtn = AMOUSEBTN_NONE;
 				break;
