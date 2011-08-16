@@ -43,7 +43,9 @@ namespace april
 			AMOUSEBTN_NONE = 0,
 			AMOUSEBTN_LEFT,
 			AMOUSEBTN_RIGHT,
-			AMOUSEBTN_MIDDLE
+			AMOUSEBTN_MIDDLE,
+			AMOUSEBTN_WHEELUP,
+			AMOUSEBTN_WHEELDN
 		};
 		enum DeviceOrientation
 		{
@@ -73,6 +75,7 @@ namespace april
 		void setWindowFocusCallback(void (*focus_callback)(bool));
 		void setVirtualKeyboardCallback(void (*vk_callback)(bool));
 		void setTouchscreenEnabledCallback(void (*te_callback)(bool));
+		void setTouchEventCallback(void (*t_callback)(harray<gvec2>&));
 		void setLowMemoryCallback(void (*lowmem_callback)());
 		virtual void setDeviceOrientationCallback(void (*vk_callback)(DeviceOrientation)); 
 		virtual void _setResolution(int w, int h) { }
@@ -85,6 +88,7 @@ namespace april
 		virtual bool isSystemCursorShown() = 0;
 		virtual int getWidth() = 0;
 		virtual int getHeight() = 0;
+		gvec2 getDimensions();
 		DEPRECATED_ATTRIBUTE int getWindowWidth() { return getWidth(); }
 		DEPRECATED_ATTRIBUTE int getWindowHeight() { return getHeight(); }
 		virtual void setWindowTitle(chstr title) = 0;
@@ -131,6 +135,7 @@ namespace april
 		void (*mFocusCallback)(bool);
 		void (*mVKeyboardCallback)(bool);
 		void (*mTouchEnabledCallback)(bool);
+		void (*mTouchCallback)(harray<gvec2>&);
 		void (*mDeviceOrientationCallback)(DeviceOrientation);
 		
 	};

@@ -24,9 +24,9 @@ namespace april
 		AK_LBUTTON = 1,
 		AK_RBUTTON = 2,
 		AK_CANCEL = 3,
-		AK_MBUTTON = 4,
-		AK_XBUTTON1 = 5,
-		AK_XBUTTON2 = 6,
+		AK_MBUTTON = 6,
+		AK_WHEELUP = 4,
+		AK_WHEELDN = 5,
 		AK_DOUBLETAP = 7, // touchscreen only
 
 		// mostly common keys

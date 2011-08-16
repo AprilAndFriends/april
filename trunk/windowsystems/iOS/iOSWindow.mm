@@ -26,6 +26,7 @@ namespace april
 {
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
+		mMultiTouchActive = false;
 		appDelegate = ((ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate]);
 		viewcontroller = [appDelegate viewController];
 		window = [appDelegate window];
@@ -117,7 +118,7 @@ namespace april
     {
         return gtypes::Vector2(mCursorX,mCursorY);
     }
-	
+
     void iOSWindow::presentFrame()
     {
 
@@ -154,6 +155,7 @@ namespace april
 	{
 		return window;
 	}
+
 	void iOSWindow::doEvents()
 	{
 		SInt32 result;
@@ -161,74 +163,120 @@ namespace april
 			result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE);
 		} while(result == kCFRunLoopRunHandledSource);
 	}
-
 	
-	void iOSWindow::_convertTouchesToCoordinates(void* nssetTouches)
+	void iOSWindow::callTouchCallback()
 	{
-		// return value stored in mCursorX and mCursorY
+		if (!mTouchCallback) return;
+		harray<gvec2> lst;
+		gvec2 vec;
+		CGPoint pt;
+		float scale = _getTouchScale();
 		
-		NSSet* touches = (NSSet*)nssetTouches;
-		
-		UITouch* touch = touches.anyObject; 
-		float width = glview.bounds.size.width;
-		float height = glview.bounds.size.height;
-		
-#pragma unused(width)
-#pragma unused(height)
-		
-		CGPoint location = [touch locationInView:glview];
-		
-		//For "primary" landscape orientation, this is how we calc it
-		mCursorX=location.x; 
-		mCursorY=location.y;
-		
-		
-#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
-		CAEAGLLayer* caeagllayer = (CAEAGLLayer*)[glview layer];
-		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
-			mCursorX *= [caeagllayer contentsScale];
-			mCursorY *= [caeagllayer contentsScale];
+		foreach(UITouch*, it, mTouches)
+		{
+			pt = [*it locationInView:glview];
+			vec.x = pt.x * scale;
+			vec.y = pt.y * scale;
+			lst += vec;
 		}
+		mTouchCallback(lst);
+	}
+	
+	float iOSWindow::_getTouchScale()
+	{
+#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
+		static float scale = -1;
+		if (scale == -1)
+		{
+			CAEAGLLayer* caeagllayer = (CAEAGLLayer*)[glview layer];
+			if ([caeagllayer respondsToSelector:@selector(contentsScale)]) scale = [caeagllayer contentsScale];
+		}
+		return scale;
+#else
+		return 1;
 #endif
+	}
+
+	harray<UITouch*> iOSWindow::_convertTouchesToCoordinates(void* nssetTouches)
+	{
+		float scale = _getTouchScale();
+		// return value stored in mCursorX and mCursorY
+		harray<UITouch*> lst;
+		NSSet* touches = (NSSet*)nssetTouches;
+
+		UITouch* touch;
+		int len = [touches count];
+
+		if (len == 1)
+		{
+			touch = touches.anyObject;
+			CGPoint location = [touch locationInView:glview];
+			//For "primary" landscape orientation, this is how we calc it
+			mCursorX = location.x * scale;
+			mCursorY = location.y * scale;
+			lst += touch;
+		}
+		else
+		{
+			for (touch in touches)
+			{
+				lst += touch;
+			}
+		}
+		
+		return lst;
 	}
 	
 	void iOSWindow::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		_convertTouchesToCoordinates(nssetTouches);
+		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
 		
-		Window::MouseEventType mouseevt = AMOUSEEVT_DOWN;
-		Window::MouseButton mousebtn = AMOUSEBTN_LEFT;
-		
-		handleMouseEvent(mouseevt, 
-						 mCursorX, mCursorY,
-						 mousebtn);
-		
+		mTouches += touches;
+		if (mTouches.size() > 1)
+		{
+			if (!mMultiTouchActive && mTouches.size() == 1)
+			{
+				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
+				handleMouseEvent(AMOUSEEVT_UP, -10000, -10000, AMOUSEBTN_LEFT);
+			}
+			mMultiTouchActive = true;
+		}
+		else
+		{
+			Window::MouseEventType mouseevt = AMOUSEEVT_DOWN;
+			Window::MouseButton mousebtn = AMOUSEBTN_LEFT;
+			
+			handleMouseEvent(mouseevt, mCursorX, mCursorY, mousebtn);
+		}
+		callTouchCallback();
 	}
+
 	void iOSWindow::touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		_convertTouchesToCoordinates(nssetTouches);
+		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
+		int num_touches = mTouches.size();
+		foreach(UITouch*, it, touches)
+			mTouches.remove(*it);
 		
-		Window::MouseEventType mouseevt = AMOUSEEVT_UP;
-		Window::MouseButton mousebtn = AMOUSEBTN_LEFT;
-		
-		handleMouseEvent(mouseevt, 
-						 mCursorX, mCursorY,
-						 mousebtn);
-		
+		if (mMultiTouchActive)
+		{
+			if (num_touches == touches.size()) mMultiTouchActive = false;
+		}
+		else
+		{
+			Window::MouseEventType mouseevt = AMOUSEEVT_UP;
+			Window::MouseButton mousebtn = AMOUSEBTN_LEFT;
+			
+			handleMouseEvent(mouseevt, mCursorX, mCursorY, mousebtn);
+		}
+		callTouchCallback();
 	}
 	
 	
 	void iOSWindow::touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
 		// FIXME needs to cancel touches, not treat them as "release"
-		_convertTouchesToCoordinates(nssetTouches);
-		
-		Window::MouseEventType mouseevt = AMOUSEEVT_UP;
-		Window::MouseButton mousebtn = AMOUSEBTN_LEFT;
-		
-		handleMouseEvent(mouseevt, 
-						 mCursorX, mCursorY,
-						 mousebtn);
+		touchesEnded_withEvent_(nssetTouches, uieventEvent);
 		
 	}
 	
@@ -240,10 +288,9 @@ namespace april
 		Window::MouseEventType mouseevt = AMOUSEEVT_MOVE;
 		Window::MouseButton mousebtn = AMOUSEBTN_NONE;
 		
-		handleMouseEvent(mouseevt, 
-						 mCursorX, mCursorY,
-						 mousebtn);
+		handleMouseEvent(mouseevt,mCursorX, mCursorY,mousebtn);
 		
+		callTouchCallback();
 	}
 	
 	void iOSWindow::beginKeyboardHandling()

@@ -151,6 +151,7 @@ namespace april
 		mVKeyboardCallback = NULL;
 		mDeviceOrientationCallback = NULL;
 		mTouchEnabledCallback = NULL;
+		mTouchCallback = NULL;
 		mLowMemoryCallback = NULL;
 	}
 
@@ -205,6 +206,11 @@ namespace april
 	void Window::setTouchscreenEnabledCallback(void (*te_callback)(bool))
 	{
 		mTouchEnabledCallback = te_callback;
+	}
+	
+	void Window::setTouchEventCallback(void (*t_callback)(harray<gvec2>&))
+	{
+		mTouchCallback = t_callback;
 	}
 	
 	void Window::setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation))
@@ -288,6 +294,12 @@ namespace april
 		}
 	}
 
+	gvec2 Window::getDimensions()
+	{
+		return gvec2(getWidth(), getHeight());
+	}
+
+	
 	bool Window::isCursorInside()
 	{
 		gvec2 v=getCursorPosition();

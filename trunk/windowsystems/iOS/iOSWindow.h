@@ -18,15 +18,17 @@ namespace april
 	class iOSWindow : public Window
 	{
 	private:
-		
 		bool mRunning;
 		bool mCursorVisible;
 		Timer mTimer;
 		float mCursorX, mCursorY;
 		bool mFirstFrameDrawn;
 		
-		void _convertTouchesToCoordinates(void* touches);
-
+		float _getTouchScale();
+		harray<UITouch*> _convertTouchesToCoordinates(void* touches);
+		void callTouchCallback();
+		harray<UITouch*> mTouches;
+		bool mMultiTouchActive;
 	public:
 		
 		iOSWindow(int w, int h, bool fullscreen, chstr title);
