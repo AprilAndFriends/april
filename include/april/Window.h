@@ -77,6 +77,7 @@ namespace april
 		void setTouchscreenEnabledCallback(void (*te_callback)(bool));
 		void setTouchEventCallback(void (*t_callback)(harray<gvec2>&));
 		void setLowMemoryCallback(void (*lowmem_callback)());
+		void setHandleURLCallback(bool (*url_callback)(chstr));
 		virtual void setDeviceOrientationCallback(void (*vk_callback)(DeviceOrientation)); 
 		virtual void _setResolution(int w, int h) { }
 		
@@ -113,6 +114,7 @@ namespace april
 		virtual void handleKeyEvent(KeyEventType type, KeySym keycode, unsigned int unicode);
 		virtual bool handleQuitRequest(bool can_reject);
 		virtual void handleFocusEvent(bool has_focus);
+		bool handleURL(chstr url);
 		virtual bool performUpdate(float time_increase);
 		void handleLowMemoryWarning();
 		
@@ -137,6 +139,7 @@ namespace april
 		void (*mTouchEnabledCallback)(bool);
 		void (*mTouchCallback)(harray<gvec2>&);
 		void (*mDeviceOrientationCallback)(DeviceOrientation);
+		bool (*mHandleURLCallback)(chstr);
 		
 	};
 	

@@ -153,6 +153,7 @@ namespace april
 		mTouchEnabledCallback = NULL;
 		mTouchCallback = NULL;
 		mLowMemoryCallback = NULL;
+		mHandleURLCallback = NULL;
 	}
 
 	void Window::setUpdateCallback(bool (*callback)(float))
@@ -181,6 +182,11 @@ namespace april
 	void Window::setLowMemoryCallback(void (*lowmem_callback)())
 	{
 		mLowMemoryCallback=lowmem_callback;
+	}
+	
+	void Window::setHandleURLCallback(bool (*url_callback)(chstr))
+	{
+		mHandleURLCallback = url_callback;
 	}
 	
 	void Window::handleLowMemoryWarning()
@@ -323,6 +329,11 @@ namespace april
 		{
 			mFocusCallback(has_focus);
 		}
+	}
+	
+	bool Window::handleURL(chstr url)
+	{
+		return (mHandleURLCallback) ? (mHandleURLCallback)(url) : false;
 	}
 	
 	void Window::beginKeyboardHandling()
