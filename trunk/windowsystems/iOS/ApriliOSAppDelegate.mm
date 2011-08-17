@@ -125,6 +125,13 @@
     april_destroy();
 }
 
+- (BOOL) application:(UIApplication*) application handleOpenURL:(NSURL *)url
+{
+	NSString* str = [url absoluteString];
+	hstr urlstr = [str UTF8String];
+	[str release];
+	return april::rendersys->getWindow()->handleURL(urlstr) ? YES : NO;
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
