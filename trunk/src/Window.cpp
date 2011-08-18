@@ -302,14 +302,13 @@ namespace april
 
 	gvec2 Window::getDimensions()
 	{
-		return gvec2(getWidth(), getHeight());
+		return gvec2((float)getWidth(), (float)getHeight());
 	}
-
 	
 	bool Window::isCursorInside()
 	{
-		gvec2 v=getCursorPosition();
-		return (v.x >=0 && v.y >= 0 && v.x <= getWidth() && v.y <= getHeight());
+		gvec2 v = getCursorPosition();
+		return (v.x >= 0.0f && v.y >= 0.0f && v.x < (float)getWidth() && v.y < (float)getHeight());
 	}
 	
 	bool Window::handleQuitRequest(bool can_reject)

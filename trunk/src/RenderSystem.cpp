@@ -191,7 +191,7 @@ namespace april
 	Texture* RenderSystem::createBlankTexture(int w, int h, TextureFormat fmt, TextureType type)
 	{
 		Texture* texture = this->createEmptyTexture(w, h, fmt, type);
-		texture->fillRect(0, 0, w, h, april::Color(APRIL_COLOR_WHITE, 0));
+		texture->fillRect(0, 0, w, h, APRIL_COLOR_BLANK);
 		return texture;
 	}
 	
@@ -321,7 +321,7 @@ namespace april
 #endif
 	}
 	
-	void createRenderTarget(int w,int h,bool fullscreen,chstr title)
+	void createRenderTarget(int w, int h, bool fullscreen, chstr title)
 	{
 #if defined(HAVE_MARMELADE)
 		Window* window = createAprilWindow("Marmelade", w, h, fullscreen, title);
