@@ -227,7 +227,7 @@ namespace april
 	void DirectX9_RenderSystem::setTexture(Texture* t)
 	{
 		activeTexture = (DirectX9_Texture*)t;
-		if (activeTexture)
+		if (activeTexture != NULL)
 		{
 			if (activeTexture->mTexture == NULL && activeTexture->isDynamic())
 			{
@@ -248,7 +248,7 @@ namespace april
 		}
 		else
 		{
-			d3dDevice->SetTexture(0, 0);
+			d3dDevice->SetTexture(0, NULL);
 		}
 	}
 
@@ -309,8 +309,8 @@ namespace april
 		D3DRECT area;
 		area.x1 = (int)rect.x;
 		area.y1 = (int)rect.y;
-		area.x2 = (int)(rect.x + rect.w) - 1;
-		area.y2 = (int)(rect.y + rect.h) - 1;
+		area.x2 = (int)(rect.x + rect.w);
+		area.y2 = (int)(rect.y + rect.h);
 		d3dDevice->Clear(1, &area, flags, D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b), 1.0f, 0);
 	}
 	
@@ -395,7 +395,11 @@ namespace april
 			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 			break;
-		case SUBTRACT:
+		case POSITIVE:
+			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_DESTALPHA);
+			break;
+		case NEGATIVE:
 			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVDESTALPHA);
 			break;
@@ -519,7 +523,7 @@ namespace april
 		{
 			d3dDevice->EndScene();
 		}
-		DirectX9_Texture* texture = dynamic_cast<DirectX9_Texture*>(source);
+		DirectX9_Texture* texture = (DirectX9_Texture*)source;
 		if (texture == NULL)
 		{
 			d3dDevice->SetRenderTarget(0, mBackBuffer);

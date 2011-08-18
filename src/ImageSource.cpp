@@ -266,7 +266,7 @@ namespace april
 		img->bpp = 4; // IL temp hack
 		img->format = 6408; // IL temp hack
 		img->data = data;
-		img->setPixels(0, 0, w, h, april::Color(APRIL_COLOR_WHITE, 0));
+		img->setPixels(0, 0, w, h, APRIL_COLOR_BLANK);
 		return img;
 	}
 	
