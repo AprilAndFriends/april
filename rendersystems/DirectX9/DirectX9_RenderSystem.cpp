@@ -127,7 +127,14 @@ namespace april
 		d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, 1);
 		d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		// separate alpha blending to use proper alpha blending
+		d3dDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, 1);
+		d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
+		d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
+		d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
+		// vertex color blending
 		d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		setTextureFilter(mTextureFilter);
 	}
 	
