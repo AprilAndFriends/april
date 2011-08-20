@@ -125,6 +125,7 @@ namespace april
 		d3dDevice->SetRenderState(D3DRS_LIGHTING, 0);
 		d3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 		d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, 1);
+		d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 		d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		// separate alpha blending to use proper alpha blending
@@ -395,24 +396,24 @@ namespace april
 		{
 		case DEFAULT:
 		case ALPHA_BLEND:
+			d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 			break;
 		case ADD:
+			d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+			break;
+		case SUBTRACT:
+			d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT);
 			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 			break;
 		case OVERWRITE:
+			d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
-			break;
-		case POSITIVE:
-			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-			break;
-		case NEGATIVE:
-			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVDESTALPHA);
 			break;
 		}
 	}
