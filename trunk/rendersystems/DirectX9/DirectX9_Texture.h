@@ -50,7 +50,17 @@ namespace april
 
 	protected:
 		IDirect3DSurface9* mSurface;
-		
+
+		enum LOCK_RESULT
+		{
+			LR_LOCKED,
+			LR_RENDERTARGET,
+			LR_FAILED
+		};
+
+		LOCK_RESULT _tryLock(IDirect3DSurface9** buffer, D3DLOCKED_RECT* lockRect, RECT* rect);
+		void _unlock(IDirect3DSurface9* buffer, LOCK_RESULT lock, bool update);
+
 	};
 }
 
