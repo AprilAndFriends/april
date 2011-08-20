@@ -42,8 +42,8 @@ namespace april
 		void copyImage(ImageSource* source);
 		void copyImage(ImageSource* source, int bpp);
 		void clear();
-		void blit(int x, int y, ImageSource* other, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		void stretchBlit(int x, int y, int w, int h, ImageSource* other, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void blit(int x, int y, ImageSource* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void stretchBlit(int x, int y, int w, int h, ImageSource* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		
 		unsigned char* data;
 		int w;

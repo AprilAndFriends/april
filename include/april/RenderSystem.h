@@ -40,6 +40,7 @@ namespace april
 	{
 		ALPHA_BLEND,
 		ADD,
+		OVERWRITE,
 		POSITIVE,
 		NEGATIVE,
 		DEFAULT
