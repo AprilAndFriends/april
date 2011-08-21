@@ -24,8 +24,47 @@ static AprilViewController *viewcontroller;
 
 namespace april
 {
+	InputEvent::InputEvent(Window* wnd)
+	{
+		mWindow = wnd;
+	}
+
+	class MouseInputEvent : public InputEvent
+	{
+		float mX, mY;
+		Window::MouseButton mButton;
+		Window::MouseEventType mEvent;
+	public:
+		MouseInputEvent(Window* wnd, float x, float y, Window::MouseButton button, Window::MouseEventType event) : InputEvent(wnd)
+		{
+			mX = x; mY = y; mButton = button; mEvent = event;
+		}
+		
+		void execute()
+		{
+			mWindow->handleMouseEvent(mEvent, mX, mY, mButton);
+		}
+	};
+	
+	class TouchInputEvent : public InputEvent
+	{
+		harray<gvec2> mTouches;
+	public:
+		TouchInputEvent(Window* wnd, harray<gvec2>& touches) : InputEvent(wnd)
+		{
+			mTouches = touches;
+		}
+		
+		void execute()
+		{
+			mWindow->handleTouchEvent(mTouches);
+		}
+	};
+	
+	
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
+		mInputEventsMutex = false;
 		mMultiTouchActive = false;
 		appDelegate = ((ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate]);
 		viewcontroller = [appDelegate viewController];
@@ -81,6 +120,26 @@ namespace april
     {
         // no effect on iOS
     }
+	
+	void iOSWindow::addInputEvent(InputEvent* event)
+	{
+		while (mInputEventsMutex); // wait it out
+		mInputEventsMutex = true;
+		mInputEvents += event;
+		mInputEventsMutex = false;
+	}
+
+	InputEvent* iOSWindow::popInputEvent()
+	{
+		while (mInputEventsMutex); // wait it out
+		if (mInputEvents.size() == 0) return 0;
+		mInputEventsMutex = true;
+		InputEvent* e = mInputEvents.front();
+		mInputEvents.pop_front();
+		mInputEventsMutex = false;
+		return e;
+	}
+
     bool iOSWindow::isSystemCursorShown()
     {
         return false; // iOS never shows system cursor
@@ -179,7 +238,7 @@ namespace april
 			vec.y = pt.y * scale;
 			lst += vec;
 		}
-		mTouchCallback(lst);
+		mInputEvents += new TouchInputEvent(this, lst);
 	}
 	
 	float iOSWindow::_getTouchScale()
@@ -237,7 +296,7 @@ namespace april
 			if (!mMultiTouchActive && mTouches.size() == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				handleMouseEvent(AMOUSEEVT_UP, -10000, -10000, AMOUSEBTN_LEFT);
+				addInputEvent(new MouseInputEvent(this, -10000, -10000, AMOUSEBTN_LEFT, AMOUSEEVT_UP));
 			}
 			mMultiTouchActive = true;
 		}
@@ -246,7 +305,7 @@ namespace april
 			Window::MouseEventType mouseevt = AMOUSEEVT_DOWN;
 			Window::MouseButton mousebtn = AMOUSEBTN_LEFT;
 			
-			handleMouseEvent(mouseevt, mCursorX, mCursorY, mousebtn);
+			addInputEvent(new MouseInputEvent(this, mCursorX, mCursorY, mousebtn, mouseevt));
 		}
 		callTouchCallback();
 	}
@@ -266,8 +325,7 @@ namespace april
 		{
 			Window::MouseEventType mouseevt = AMOUSEEVT_UP;
 			Window::MouseButton mousebtn = AMOUSEBTN_LEFT;
-			
-			handleMouseEvent(mouseevt, mCursorX, mCursorY, mousebtn);
+			addInputEvent(new MouseInputEvent(this, mCursorX, mCursorY, mousebtn, mouseevt));
 		}
 		callTouchCallback();
 	}
@@ -288,7 +346,7 @@ namespace april
 		Window::MouseEventType mouseevt = AMOUSEEVT_MOVE;
 		Window::MouseButton mousebtn = AMOUSEBTN_NONE;
 		
-		handleMouseEvent(mouseevt,mCursorX, mCursorY,mousebtn);
+		addInputEvent(new MouseInputEvent(this, mCursorX, mCursorY, mousebtn, mouseevt));
 		
 		callTouchCallback();
 	}
@@ -385,9 +443,13 @@ namespace april
 	//////////////
 	void iOSWindow::handleDisplayAndUpdate()
 	{
-		//static unsigned int x=SDL_GetTicks();
-		//float k=(SDL_GetTicks()-x)/1000.0f;
-		//x=SDL_GetTicks();
+		// call input events
+		InputEvent* e;
+		while ((e = popInputEvent()) != 0)
+		{
+			e->execute();
+			delete e;
+		}
 		performUpdate(mTimer.diff(true));
 		rendersys->presentFrame();
 	}

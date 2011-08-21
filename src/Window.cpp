@@ -299,6 +299,11 @@ namespace april
 			break;
 		}
 	}
+	
+	void Window::handleTouchEvent(harray<gvec2>& touches)
+	{
+		if (mTouchCallback) mTouchCallback(touches);
+	}
 
 	gvec2 Window::getDimensions()
 	{
