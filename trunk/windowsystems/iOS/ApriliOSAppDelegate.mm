@@ -129,7 +129,7 @@
 {
 	NSString* str = [url absoluteString];
 	hstr urlstr = [str UTF8String];
-	[str release];
+
 	return april::rendersys->getWindow()->handleURL(urlstr) ? YES : NO;
 }
 
