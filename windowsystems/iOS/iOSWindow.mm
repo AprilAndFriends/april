@@ -249,6 +249,7 @@ namespace april
 		{
 			CAEAGLLayer* caeagllayer = (CAEAGLLayer*)[glview layer];
 			if ([caeagllayer respondsToSelector:@selector(contentsScale)]) scale = [caeagllayer contentsScale];
+			else scale = 1; // prior to ios 3.2
 		}
 		return scale;
 #else
