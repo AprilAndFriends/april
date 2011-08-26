@@ -2,7 +2,7 @@
  This source file is part of the Awesome Portable Rendering Interface Library         *
  For latest info, see http://libapril.sourceforge.net/                                *
  **************************************************************************************
- Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                     *
+ * Copyright (c) 2010 Kresimir Spes (kspes@cateia.com), Ivan Vucica (ivan@vucica.net) *
  *                                                                                    *
  * This program is free software; you can redistribute it and/or modify it under      *
  * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
@@ -20,7 +20,8 @@ This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView sub
 The view content is basically an EAGL surface you render your OpenGL scene into.
 Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
 */
-@interface EAGLView : UIView <UITextFieldDelegate> {
+@interface EAGLView : UIView <UITextFieldDelegate>
+{
     
 @private
     /* The pixel dimensions of the backbuffer */
