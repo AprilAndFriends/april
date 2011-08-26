@@ -177,6 +177,16 @@ namespace april
 		}
 		glClear(mask);
 	}
+
+	void Marmelade_RenderSystem::clear(bool useColor, bool depth, grect rect, Color color)
+	{
+		// TODO
+	}
+
+	Texture* Marmelade_RenderSystem::getRenderTarget()
+	{
+		// TODO
+	}
     
     ImageSource* Marmelade_RenderSystem::grabScreenshot(int bpp)
     {
@@ -291,7 +301,7 @@ namespace april
 			glDisableClientState(GL_COLOR_ARRAY);
 			mColorEnabled = false;
 		}
-		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f() * mAlphaMultiplier);
+		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
 		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), (char*)v + 3 * sizeof(float));
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
@@ -315,7 +325,7 @@ namespace april
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 
-	void Marmelade_RenderSystem::render(RenderOp renderOp,PlainVertex* v, int nVertices, Color color)
+	void Marmelade_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
 	{
 		if (mTexCoordsEnabled)
 		{
@@ -328,7 +338,7 @@ namespace april
 			mColorEnabled = false;
 			glDisableClientState(GL_COLOR_ARRAY);
 		}
-		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f() * mAlphaMultiplier);
+		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
 		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
@@ -391,6 +401,20 @@ namespace april
 		return harray<DisplayMode>();
 	}
 
+	void clear(bool useColor, bool depth)
+	{
+		GLbitfield mask = 0;
+		if (useColor)
+		{
+			mask |= GL_COLOR_BUFFER_BIT;
+		}
+		if (depth)
+		{
+			mask |= GL_DEPTH_BUFFER_BIT;
+		}
+		glClear(mask);
+	}
+	
 	Marmelade_RenderSystem* Marmelade_RenderSystem::create()
 	{
 		return new Marmelade_RenderSystem();

@@ -17,10 +17,14 @@ Copyright (c) 2010 Ivan Vucica                                                  
 #include "aprilExport.h"
 #include "Keys.h"
 
+#ifdef HAVE_MARMELADE
+#include <s3e.h>
+#endif
+
 namespace april
 {
 	class RenderSystem;
-	
+
 	class aprilExport Window 
 	{
 	public:
@@ -141,6 +145,8 @@ namespace april
 		void (*mTouchCallback)(harray<gvec2>&);
 		void (*mDeviceOrientationCallback)(DeviceOrientation);
 		bool (*mHandleURLCallback)(chstr);
+
+		bool mRunning;
 		
 	};
 	

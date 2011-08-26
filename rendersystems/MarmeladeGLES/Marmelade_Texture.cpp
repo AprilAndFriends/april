@@ -32,7 +32,7 @@ namespace april
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		
-		switch (img->format)
+		/*switch (img->format)
 		{
 			glTexImage2D(GL_TEXTURE_2D,
 				0,
@@ -44,7 +44,18 @@ namespace april
 				GL_UNSIGNED_BYTE,
 				img->data);
 			break;
-		}
+		}*/
+
+		glTexImage2D(GL_TEXTURE_2D,
+				0,
+				GL_RGBA,
+				img->w,
+				img->h, 
+				0, 
+				GL_RGBA, 
+				GL_UNSIGNED_BYTE,
+				img->data);
+
 		delete img;
 		
 		return texid;
