@@ -119,7 +119,8 @@ typedef struct _PVRTexHeader
 	for (int i = 0; i < sizeof(PVRTexHeader); i++)
 	{
 		unsigned char c = ((unsigned char*)[data bytes])[i];
-		if (c < 32 || c > 127) {
+		if (c < 32 || c > 127)
+	    {
 			c='.';
 		}
 		printf("%c", c);

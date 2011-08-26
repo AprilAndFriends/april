@@ -2,7 +2,7 @@
  This source file is part of the Awesome Portable Rendering Interface Library         *
  For latest info, see http://libapril.sourceforge.net/                                *
  **************************************************************************************
- Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                     *
+* Copyright (c) 2010 Kresimir Spes (kspes@cateia.com), Ivan Vucica (ivan@vucica.net) *
  *                                                                                    *
  * This program is free software; you can redistribute it and/or modify it under      *
  * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
@@ -73,7 +73,7 @@ namespace april
 			[UIApplication sharedApplication].statusBarHidden = YES;
 		else
 			[UIApplication sharedApplication].statusBarHidden = NO;
-		mFullscreen = fullscreen;
+		mFullscreen = true; // iOS apps are always fullscreen
 				
 		mFirstFrameDrawn = false; // show window after drawing first frame
 		
@@ -85,7 +85,16 @@ namespace april
 		
 		glview = [[[EAGLView alloc] initWithFrame:frame] autorelease];
 				   
-        glview.transform = CGAffineTransformRotate(glview.transform, -M_PI/2);
+		if ([UIApplication sharedApplication].statusBarOrientation ==  UIInterfaceOrientationLandscapeLeft)
+		{
+			glview.transform = CGAffineTransformRotate(glview.transform, -M_PI/2);
+			NSLog(@"initial device orientation: Left");
+		}
+		else
+		{
+			glview.transform = CGAffineTransformRotate(glview.transform, M_PI/2);
+			NSLog(@"initial device orientation: Right");
+        }
         glview.center = viewcontroller.view.center;
         
 		if(!glview)
@@ -103,13 +112,13 @@ namespace april
         NSLog(@"Fatal error: Using enterMainLoop on iOS!");
         exit(-1);
     }
-	
-	
+
     void iOSWindow::terminateMainLoop()
-    {
+	{
         NSLog(@"Fatal error: Using terminateMainLoop on iOS!");
         exit(-2);
     }
+	
 	void iOSWindow::destroyWindow()
 	{
 		// just stopping the animation on iOS
@@ -144,12 +153,14 @@ namespace april
     {
         return false; // iOS never shows system cursor
     }
+	
     int iOSWindow::getWidth()
     {
 		// TODO dont swap width and height in case display is in portrait mode
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
-		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
+		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
+		{
 			return window.bounds.size.height * caeagllayer.contentsScale;
 		}
 #endif
@@ -161,7 +172,8 @@ namespace april
 		// TODO dont swap width and height in case display is in portrait mode
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
-		if ([caeagllayer respondsToSelector:@selector(contentsScale)]) {
+		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
+		{
 			return window.bounds.size.width * caeagllayer.contentsScale;
 		}
 #endif
@@ -218,7 +230,8 @@ namespace april
 	void iOSWindow::doEvents()
 	{
 		SInt32 result;
-		do {
+		do
+		{
 			result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE);
 		} while(result == kCFRunLoopRunHandledSource);
 	}
@@ -370,7 +383,8 @@ namespace april
 		// support for landscape orientations
 		
 		//NSLog(@"Orientation: %d", viewcontroller.interfaceOrientation);
-		switch (viewcontroller.interfaceOrientation) {
+		switch (viewcontroller.interfaceOrientation)
+		{
 			case UIInterfaceOrientationPortrait:
 				return 90.0f; // simulate left landscape orientation (needed only until we transform into a landscape orientation on earlier iOS)
 			case UIInterfaceOrientationLandscapeLeft:
@@ -389,7 +403,8 @@ namespace april
 	bool iOSWindow::textField_shouldChangeCharactersInRange_replacementString_(void* uitextfieldTextField, int nsrangeLocation, int nsrangeLength, chstr str)
 	{
 		
-		if (nsrangeLocation==0 && str.size()==0) {
+		if (nsrangeLocation==0 && str.size()==0)
+		{
 			// deploy backspace
 			handleKeyEvent(AKEYEVT_DOWN, AK_BACK, 8);
 			handleKeyEvent(AKEYEVT_UP, AK_BACK, 8);
@@ -460,7 +475,8 @@ namespace april
 		if(mDeviceOrientationCallback)
 		{
 			DeviceOrientation newOrientation;
-			switch ([[UIDevice currentDevice] orientation]) {
+			switch ([[UIDevice currentDevice] orientation])
+			{
 				case UIDeviceOrientationUnknown:
 					newOrientation = ADEVICEORIENTATION_NONE;
 				case UIDeviceOrientationPortrait:
@@ -485,14 +501,16 @@ namespace april
 	void iOSWindow::applicationWillResignActive()
 	{
 		[glview stopAnimation];
-		if (mFocusCallback) {
+		if (mFocusCallback)
+		{
 			mFocusCallback(false);
 		}
 	}
 	void iOSWindow::applicationDidBecomeActive()
 	{
 		[glview startAnimation];
-		if (mFocusCallback) {
+		if (mFocusCallback)
+		{
 			mFocusCallback(true);
 		}
 	}

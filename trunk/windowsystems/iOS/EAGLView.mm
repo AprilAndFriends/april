@@ -2,8 +2,8 @@
  This source file is part of the Awesome Portable Rendering Interface Library         *
  For latest info, see http://libapril.sourceforge.net/                                *
  **************************************************************************************
- Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                     *
- Based on Apple's code                                                                *
+ * Copyright (c) 2010 Kresimir Spes (kspes@cateia.com), Ivan Vucica (ivan@vucica.net) *
+ *                                                                                    *
  *                                                                                    *
  * This program is free software; you can redistribute it and/or modify it under      *
  * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
@@ -43,7 +43,8 @@
 @synthesize aprilWindowVoid;
 
 // You must implement this method
-+ (Class)layerClass {
++ (Class)layerClass
+{
     return [CAEAGLLayer class];
 }
 
@@ -75,14 +76,16 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    if ((self = [super initWithFrame:frame])) {
+    if ((self = [super initWithFrame:frame]))
+	{
         // Get the layer
         CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
 		
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		if ([eaglLayer respondsToSelector:@selector(setContentsScale:)])
 		{
-			if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) { // iphone 4
+			if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
+			{ // iphone 4
 				eaglLayer.contentsScale = [[UIScreen mainScreen] scale];
 			}
 		}
@@ -94,7 +97,8 @@
 		
         context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
         
-        if (!context || ![EAGLContext setCurrentContext:context]) {
+        if (!context || ![EAGLContext setCurrentContext:context])
+		{
             [self release];
             return nil;
         }
@@ -164,8 +168,10 @@
 
 // ok, now other functionality of this class
 
-- (void)drawView {
-    if (!self.animationTimer) {
+- (void)drawView
+{
+    if (!self.animationTimer)
+	{
 		NSLog(@"Called drawview while in background!");
 		return;
 	}
@@ -191,7 +197,8 @@
 
 - (void)swapBuffers
 {
-	if (!self.animationTimer) {
+	if (!self.animationTimer)
+	{
 		NSLog(@"Swapbuffers while in background! Skipping");
 		return;
 	}
@@ -200,7 +207,8 @@
 
 }
 
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
 	CGRect textFrame = textField.frame;
 	textFrame.origin.x += textFrame.size.width;
 	textField.frame = textFrame;
@@ -212,7 +220,8 @@
 }
 
 
-- (BOOL)createFramebuffer {
+- (BOOL)createFramebuffer
+{
     
     glGenFramebuffersOES(1, &viewFramebuffer);
     glGenRenderbuffersOES(1, &viewRenderbuffer);
@@ -225,14 +234,16 @@
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
     
-    if (USE_DEPTH_BUFFER) {
+    if (USE_DEPTH_BUFFER)
+	{
         glGenRenderbuffersOES(1, &depthRenderbuffer);
         glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
         glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
         glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
     }
     
-    if(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES) {
+    if(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
+	{
         NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
         return NO;
     }
@@ -242,52 +253,61 @@
 }
 
 
-- (void)destroyFramebuffer {
+- (void)destroyFramebuffer
+{
     
     glDeleteFramebuffersOES(1, &viewFramebuffer);
     viewFramebuffer = 0;
     glDeleteRenderbuffersOES(1, &viewRenderbuffer);
     viewRenderbuffer = 0;
     
-    if(depthRenderbuffer) {
+    if(depthRenderbuffer)
+	{
         glDeleteRenderbuffersOES(1, &depthRenderbuffer);
         depthRenderbuffer = 0;
     }
 }
 
 
-- (void)startAnimation {
+- (void)startAnimation
+{
     self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:animationInterval target:self selector:@selector(drawView) userInfo:nil repeats:YES];
 }
 
 
-- (void)stopAnimation {
+- (void)stopAnimation
+{
     self.animationTimer = nil;
 }
 
 
-- (void)setAnimationTimer:(NSTimer *)newTimer {
+- (void)setAnimationTimer:(NSTimer *)newTimer
+{
     if(animationTimer != newTimer)
 		[animationTimer invalidate];
     animationTimer = newTimer;
 }
 
 
-- (void)setAnimationInterval:(NSTimeInterval)interval {
+- (void)setAnimationInterval:(NSTimeInterval)interval
+{
     
     animationInterval = interval;
-    if (animationTimer) {
+    if (animationTimer)
+	{
         [self stopAnimation];
         [self startAnimation];
     }
 }
 
 
-- (void)dealloc {
+- (void)dealloc
+{
     
     [self stopAnimation];
     
-    if ([EAGLContext currentContext] == context) {
+    if ([EAGLContext currentContext] == context)
+	{
         [EAGLContext setCurrentContext:nil];
     }
     
@@ -310,11 +330,11 @@
 	return aprilWindow->textField_shouldChangeCharactersInRange_replacementString_(_textField, range.location, range.length, chstr([string UTF8String]));
 }
 
-
 -(void)applicationDidBecomeActive:(UIApplication*)app
 {
 	aprilWindow->applicationDidBecomeActive();
 }
+
 -(void)applicationWillResignActive:(UIApplication*)app
 {
 	aprilWindow->applicationWillResignActive();

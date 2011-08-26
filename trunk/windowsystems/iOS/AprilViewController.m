@@ -2,7 +2,7 @@
  This source file is part of the Awesome Portable Rendering Interface Library         *
  For latest info, see http://libapril.sourceforge.net/                                *
  **************************************************************************************
- Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                     *
+ * Copyright (c) 2010 Kresimir Spes (kspes@cateia.com), Ivan Vucica (ivan@vucica.net) *
  *                                                                                    *
  * This program is free software; you can redistribute it and/or modify it under      *
  * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
@@ -146,7 +146,8 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView {	
+- (void)loadView
+{	
     	
 	UIUserInterfaceIdiom idiom = UIUserInterfaceIdiomPhone;
 	if ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom:)]) 
@@ -165,7 +166,7 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	}
 	
 	UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"] ];
-	;
+
 	if(idiom == UIUserInterfaceIdiomPhone && self.interfaceOrientation != UIInterfaceOrientationPortrait)
 	{
 		if ([UIImage instancesRespondToSelector:@selector(initWithCGImage:scale:orientation:)]) 
@@ -174,66 +175,58 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 			// this sadly doesnt work on <4.0:
 			
 			// if UIImage responds to instance method, it will respond to the class method too.
-			image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationRight];
+			image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationLeft];
 		}
 		else
 		{
 			// hence we added rotation implementation using WBImage by Allen Brunson and Kevin Lohman:
 			// http://www.platinumball.net/blog/2010/01/31/iphone-uiimage-rotation-and-scaling/
-			image = [self rotate:image to:UIImageOrientationRight]; // for some reason using WBImage category of UIImage did not work! code therefore copypasted to this class and called via self
+			image = [self rotate:image to:UIImageOrientationLeft]; // for some reason using WBImage category of UIImage did not work! code therefore copypasted to this class and called via self
 		}
 		
 	}
 	UIImageView *iv = [[[UIImageView alloc] initWithImage:image] autorelease];
-	
-	// add animated spinner
-#if 0
-	// FIXME needs to be optional
-	UIActivityIndicatorView *aiv = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite] autorelease];
-	
-	[aiv setCenter:CGPointMake(iv.bounds.size.width / 2 - aiv.bounds.size.width/2, 
-							   iv.bounds.size.height - aiv.bounds.size.height)];
-	[iv addSubview:aiv];
-	[aiv startAnimating];
-#endif
 	
 	iv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     iv.autoresizesSubviews = YES;
     self.view = iv;
     
     
-    self.view.transform = CGAffineTransformMakeRotation(M_PI / 2.0); 
+		self.view.transform = CGAffineTransformMakeRotation(M_PI / 2.0); 
 	[self.view setCenter:[[(ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate] window] center]];
 
 }
 
-
-
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
 }
 
 // Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
     // Return YES for supported orientations
-	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);// || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
     // Release any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload
+{
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     [super dealloc];
 }
 
