@@ -326,7 +326,6 @@ namespace april
 		return true;
 	}
 	
-	
 	void Window::handleFocusEvent(bool has_focus)
 	{
 		if (mFocusCallback)
@@ -363,6 +362,7 @@ namespace april
 		// manually rotate
 		return 0.0f;
 	}
+
 	
 	void Window::_platformCursorVisibilityUpdate(bool visible)
 	{
@@ -721,6 +721,8 @@ namespace april
 			return AMSGBTN_YES;
 		}
 		return AMSGBTN_OK;
+//#elif HAVE_MARMLADE
+// TODO
 #else
 		april::log(hsprintf("== %s ==", title.c_str()));
 		april::log(text);

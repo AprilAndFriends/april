@@ -2,40 +2,32 @@
 This source file is part of the Awesome Portable Rendering Interface Library         *
 For latest info, see http://libapril.sourceforge.net/                                *
 **************************************************************************************
-Copyright (c) 2010 Kresimir Spes                                                     *
+Copyright (c) 2011 Ivan Vucica (ivan@vucica.net)                                     *
 *                                                                                    *
 * This program is free software; you can redistribute it and/or modify it under      *
 * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
 \************************************************************************************/
-#if defined(HAVE_MARMELADE)
-#ifndef APRIL_MARMELADE_TEXTURE_H
-#define APRIL_MARMELADE_TEXTURE_H
-
 #include <s3e.h>
-#include <GLES/gl.h>
-#include <GLES/egl.h>
 
+#include "main.h"
 #include "RenderSystem.h"
+#include "Window.h"
 
-namespace april
+bool gAprilShouldInvokeQuitCallback = false;
+
+int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int _argc, char **_argv)
 {
-	class Marmelade_Texture : public Texture
+    harray<hstr> argv;
+	if(_argv)
 	{
-	public:
-		GLuint mTexId;
-		
-		Marmelade_Texture(chstr filename, bool dynamic);
-		Marmelade_Texture(unsigned char* rgba, int w, int h);
-		~Marmelade_Texture();
-		
-		bool load();
-		void unload();
-		bool isLoaded();
-		int getSizeInBytes();
-		
-	};
-
+		for (int i = 0; i < _argc; i++) 
+		{
+			argv.push_back(_argv[i]);
+		}
+	}
+	
+	anAprilInit(argv);
+    april::rendersys->getWindow()->enterMainLoop();
+	anAprilDestroy();
+	return 0;
 }
-
-#endif
-#endif

@@ -46,6 +46,7 @@ namespace april
 
 		// rendering
 		void clear(bool color, bool depth);
+		void clear(bool useColor, bool depth, grect rect, Color color = APRIL_COLOR_CLEAR);
 		void setTexture(Texture* t);
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
@@ -57,6 +58,7 @@ namespace april
 		void setAlphaMultiplier(float value);
 		void setRenderTarget(Texture* source);
 		void beginFrame();
+		Texture* getRenderTarget();
 
 		harray<DisplayMode> getSupportedDisplayModes();
 		

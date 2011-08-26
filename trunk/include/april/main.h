@@ -48,7 +48,7 @@ aprilExport int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anA
 
 #ifndef BUILDING_APRIL
 //{
-#if !defined(_WIN32) || defined(_CONSOLE)
+#if !defined(_WIN32) || defined(_CONSOLE) || defined(HAVE_MARMELADE)
 int main (int argc, char **argv)
 {
 #if TARGET_IPHONE_SIMULATOR
