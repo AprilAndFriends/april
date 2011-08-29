@@ -84,8 +84,9 @@ namespace april
         frame.size.height = wi;
 		
 		glview = [[[EAGLView alloc] initWithFrame:frame] autorelease];
-				   
-		if ([UIApplication sharedApplication].statusBarOrientation ==  UIInterfaceOrientationLandscapeLeft)
+			
+		UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+		if (orientation ==  UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationPortrait)
 		{
 			glview.transform = CGAffineTransformRotate(glview.transform, -M_PI/2);
 			NSLog(@"initial device orientation: Left");
