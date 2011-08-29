@@ -175,16 +175,16 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 			// this sadly doesnt work on <4.0:
 			
 			// if UIImage responds to instance method, it will respond to the class method too.
-			image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationLeft];
+			image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationRight];
 		}
 		else
 		{
 			// hence we added rotation implementation using WBImage by Allen Brunson and Kevin Lohman:
 			// http://www.platinumball.net/blog/2010/01/31/iphone-uiimage-rotation-and-scaling/
-			image = [self rotate:image to:UIImageOrientationLeft]; // for some reason using WBImage category of UIImage did not work! code therefore copypasted to this class and called via self
+			image = [self rotate:image to:UIImageOrientationRight]; // for some reason using WBImage category of UIImage did not work! code therefore copypasted to this class and called via self
 		}
-		
 	}
+
 	UIImageView *iv = [[[UIImageView alloc] initWithImage:image] autorelease];
 	
 	iv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -192,7 +192,7 @@ static inline CGSize swapWidthAndHeight(CGSize size)
     self.view = iv;
     
     
-		self.view.transform = CGAffineTransformMakeRotation(M_PI / 2.0); 
+	self.view.transform = CGAffineTransformMakeRotation(M_PI / 2.0); 
 	[self.view setCenter:[[(ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate] window] center]];
 
 }
