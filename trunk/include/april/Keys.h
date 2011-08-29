@@ -221,9 +221,15 @@ namespace april
 	
 		// first several VKs are unneeded
 		// they are mouse related, or ctrl+break
+		AK_CANCEL = 230,
+		AK_CLEAR = 231,
+		AK_SHIFT = 232,
+		AK_CONTROL = 233,
+		//AK_MENU = 234,
+
+
 		AK_LBUTTON = 223,
 		AK_RBUTTON = 224,
-		//AK_CANCEL = 3,
 		AK_MBUTTON = 225,
 		AK_WHEELUP = 226,
 		AK_WHEELDN = 227,
@@ -236,23 +242,18 @@ namespace april
 		AK_ESCAPE = 1,
 		AK_CAPITAL = 114, // caps lock
 
-		//AK_CLEAR = 12,
-		//AK_SHIFT = 16,
-		//AK_CONTROL = 17,
-		//AK_MENU = 18, // alt key 
-
 		// various keys needed for asian keyboards
-		//AK_KANA = 0x15, 
-		//AK_HANGEUL = 0x15,
-		//AK_HANGUL = 0x15,
-		//AK_JUNJA = 0x17,
-		//AK_FINAL = 0x18,
-		//AK_HANJA = 0x19,
-		//AK_KANJI = 0x19,
-		//AK_CONVERT = 0x1C,
-		//AK_NONCONVERT = 0x1D,
-		//AK_ACCEPT = 0x1E,
-		//AK_MODECHANGE = 0x1F,
+		AK_KANA = 235, 
+		AK_HANGEUL = 236,
+		AK_HANGUL = 237,
+		AK_JUNJA = 238,
+		AK_FINAL = 239,
+		AK_HANJA = 240,
+		AK_KANJI = 241,
+		AK_CONVERT = 242,
+		AK_NONCONVERT = 243,
+		AK_ACCEPT = 244,
+		AK_MODECHANGE = 245,
 
 		// space
 		AK_SPACE = 8,
