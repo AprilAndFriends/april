@@ -1,10 +1,5 @@
 option lib
 
-define HAVE_MARMELADE
-define _STATICLIB
-define BUILDING_APRIL
-define _DEBUG_OUTPUT
-
 package
 {
 	zlib
@@ -15,17 +10,7 @@ package
 options
 {
 	lib
-	module_path_append="./aprilutil/"
-	module_path_append="./aprilutil/lib/arm"
 	enable-exceptions
-	
-	module_path_append="../gtypes"
-	module_path_append="../gtypes/include"
-	module_path_append="../gtypes/lib/arm"
-	
-	module_path_append="../hltypes"
-	module_path_append="../hltypes/lib/arm"
-	module_path_append="../hltypes/include"
 }
 
 
