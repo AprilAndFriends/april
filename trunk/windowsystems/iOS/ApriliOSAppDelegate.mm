@@ -14,7 +14,7 @@
 #import "EAGLView.h"
 #include "RenderSystem.h"
 #include "Window.h"
-
+#import <AVFoundation/AVFoundation.h>
 
 
 @interface AprilDummyViewController : UIViewController
@@ -41,10 +41,11 @@
 @synthesize onPushRegistrationSuccess;
 @synthesize onPushRegistrationFailure;
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application {
-	
+- (void)applicationDidFinishLaunching:(UIApplication *)application
+{	
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
     [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeLeft animated:NO];
+	[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:NULL];
 
 	// create a window.
 	// early creation so Default.png can be displayed while we're waiting for 
