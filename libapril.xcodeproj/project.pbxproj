@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -35,6 +35,32 @@
 		7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8FA75122FACA30092964C /* TimerSDL.cpp */; };
 		7FCD394412018BD300608217 /* main_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FCD394312018BD300608217 /* main_mac.mm */; };
 		C9A8520D134AF97000B455BE /* ImageSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9A8520C134AF97000B455BE /* ImageSource.cpp */; };
+		D1981C42140F82B00057C3AF /* OpenGL_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520C12E470B200E958D8 /* OpenGL_RenderSystem.cpp */; };
+		D1981C43140F82B00057C3AF /* OpenGL_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520E12E470B200E958D8 /* OpenGL_Texture.cpp */; };
+		D1981C44140F82B00057C3AF /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522E12E4713600E958D8 /* Color.cpp */; };
+		D1981C45140F82B00057C3AF /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522F12E4713600E958D8 /* Texture.cpp */; };
+		D1981C47140F82B00057C3AF /* ImageSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9A8520C134AF97000B455BE /* ImageSource.cpp */; };
+		D1981C48140F82B00057C3AF /* ImageSourceCG.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */; };
+		D1981C49140F82B00057C3AF /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */; };
+		D1981C4A140F82B00057C3AF /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
+		D1981C4F140F849A0057C3AF /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1981C4E140F849A0057C3AF /* OpenGLES.framework */; };
+		D1981C51140F84A10057C3AF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1981C50140F84A10057C3AF /* UIKit.framework */; };
+		D1981C53140F84AA0057C3AF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1981C52140F84AA0057C3AF /* CoreGraphics.framework */; };
+		D1981C55140F84B00057C3AF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1981C54140F84B00057C3AF /* Foundation.framework */; };
+		D1981C57140F84B60057C3AF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1981C56140F84B60057C3AF /* CoreFoundation.framework */; };
+		D1981C65140F85350057C3AF /* ApriliOSAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1981C59140F85350057C3AF /* ApriliOSAppDelegate.h */; };
+		D1981C67140F85350057C3AF /* AprilViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D1981C5B140F85350057C3AF /* AprilViewController.h */; };
+		D1981C69140F85350057C3AF /* EAGLView.h in Headers */ = {isa = PBXBuildFile; fileRef = D1981C5D140F85350057C3AF /* EAGLView.h */; };
+		D1981C6B140F85350057C3AF /* iOSWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = D1981C5F140F85350057C3AF /* iOSWindow.h */; };
+		D1981C6D140F85350057C3AF /* PVRTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = D1981C61140F85350057C3AF /* PVRTexture.h */; };
+		D1981C6F140F85350057C3AF /* WBImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D1981C63140F85350057C3AF /* WBImage.h */; };
+		D1981C73140F858F0057C3AF /* ApriliOSAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1981C5A140F85350057C3AF /* ApriliOSAppDelegate.mm */; };
+		D1981C75140F858F0057C3AF /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1981C5E140F85350057C3AF /* EAGLView.mm */; };
+		D1981C76140F858F0057C3AF /* iOSWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1981C60140F85350057C3AF /* iOSWindow.mm */; };
+		D1981C77140F858F0057C3AF /* PVRTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = D1981C62140F85350057C3AF /* PVRTexture.m */; };
+		D1981C78140F858F0057C3AF /* WBImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D1981C64140F85350057C3AF /* WBImage.m */; };
+		D1981C79140F858F0057C3AF /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1981C71140F856B0057C3AF /* TimerPosix.cpp */; };
+		D1981C7A140F87060057C3AF /* AprilViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D1981C5C140F85350057C3AF /* AprilViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,7 +79,6 @@
 		7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderSystem.cpp; path = src/RenderSystem.cpp; sourceTree = "<group>"; };
 		7F42F83111EB1A9700B1C1DF /* gtypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtypes.framework; path = Library/Frameworks/gtypes.framework; sourceTree = SDKROOT; };
 		7F42F83311EB1A9700B1C1DF /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = Library/Frameworks/hltypes.framework; sourceTree = SDKROOT; };
-		7F42FACA11EB341E00B1C1DF /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		7F42FACC11EB341E00B1C1DF /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		7F42FAD411EB342900B1C1DF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImageSourceCG.mm; path = src/ImageSourceCG.mm; sourceTree = "<group>"; };
@@ -69,6 +94,25 @@
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9A8520C134AF97000B455BE /* ImageSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSource.cpp; path = src/ImageSource.cpp; sourceTree = "<group>"; };
+		D1981C30140F824B0057C3AF /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1981C4E140F849A0057C3AF /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
+		D1981C50140F84A10057C3AF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		D1981C52140F84AA0057C3AF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
+		D1981C54140F84B00057C3AF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		D1981C56140F84B60057C3AF /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		D1981C59140F85350057C3AF /* ApriliOSAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApriliOSAppDelegate.h; path = windowsystems/iOS/ApriliOSAppDelegate.h; sourceTree = "<group>"; };
+		D1981C5A140F85350057C3AF /* ApriliOSAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ApriliOSAppDelegate.mm; path = windowsystems/iOS/ApriliOSAppDelegate.mm; sourceTree = "<group>"; };
+		D1981C5B140F85350057C3AF /* AprilViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AprilViewController.h; path = windowsystems/iOS/AprilViewController.h; sourceTree = "<group>"; };
+		D1981C5C140F85350057C3AF /* AprilViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AprilViewController.m; path = windowsystems/iOS/AprilViewController.m; sourceTree = "<group>"; };
+		D1981C5D140F85350057C3AF /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EAGLView.h; path = windowsystems/iOS/EAGLView.h; sourceTree = "<group>"; };
+		D1981C5E140F85350057C3AF /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EAGLView.mm; path = windowsystems/iOS/EAGLView.mm; sourceTree = "<group>"; };
+		D1981C5F140F85350057C3AF /* iOSWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iOSWindow.h; path = windowsystems/iOS/iOSWindow.h; sourceTree = "<group>"; };
+		D1981C60140F85350057C3AF /* iOSWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOSWindow.mm; path = windowsystems/iOS/iOSWindow.mm; sourceTree = "<group>"; };
+		D1981C61140F85350057C3AF /* PVRTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PVRTexture.h; path = windowsystems/iOS/PVRTexture.h; sourceTree = "<group>"; };
+		D1981C62140F85350057C3AF /* PVRTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PVRTexture.m; path = windowsystems/iOS/PVRTexture.m; sourceTree = "<group>"; };
+		D1981C63140F85350057C3AF /* WBImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WBImage.h; path = windowsystems/iOS/WBImage.h; sourceTree = "<group>"; };
+		D1981C64140F85350057C3AF /* WBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WBImage.m; path = windowsystems/iOS/WBImage.m; sourceTree = "<group>"; };
+		D1981C71140F856B0057C3AF /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/TimerPosix.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +128,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D1981C2D140F824B0057C3AF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1981C57140F84B60057C3AF /* CoreFoundation.framework in Frameworks */,
+				D1981C55140F84B00057C3AF /* Foundation.framework in Frameworks */,
+				D1981C53140F84AA0057C3AF /* CoreGraphics.framework in Frameworks */,
+				D1981C51140F84A10057C3AF /* UIKit.framework in Frameworks */,
+				D1981C4F140F849A0057C3AF /* OpenGLES.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -91,6 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				8DC2EF5B0486A6940098B216 /* april.framework */,
+				D1981C30140F824B0057C3AF /* libapril.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -98,70 +155,68 @@
 		0867D691FE84028FC02AAC07 /* libapril */ = {
 			isa = PBXGroup;
 			children = (
+				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				7FA3ED1111F9813E001D1DDD /* Window Systems */,
 				7F42F7AE11EB185F00B1C1DF /* Render Systems */,
-				7F42F7A011EB177F00B1C1DF /* Includes */,
-				7F42F79F11EB177B00B1C1DF /* Sources */,
-				089C1665FE841158C02AAC07 /* Resources */,
-				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				7F42F7A011EB177F00B1C1DF /* include */,
+				7F42F79F11EB177B00B1C1DF /* src */,
+				0867D69AFE84028FC02AAC07 /* Frameworks */,
+				D1981C31140F824B0057C3AF /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
 			name = libapril;
 			sourceTree = "<group>";
 		};
-		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
-				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
+				1058C7B0FEA5585E11CA2CBB /* Mac */,
+				1058C7B2FEA5585E11CA2CBB /* iOS */,
 			);
-			name = "External Frameworks and Libraries";
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		089C1665FE841158C02AAC07 /* Resources */ = {
+		1058C7B0FEA5585E11CA2CBB /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				8DC2EF5A0486A6940098B216 /* Info.plist */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				7F42FACC11EB341E00B1C1DF /* OpenGL.framework */,
-				7F42FACA11EB341E00B1C1DF /* GLUT.framework */,
 				7F42FAD411EB342900B1C1DF /* Cocoa.framework */,
+				7F42FACC11EB341E00B1C1DF /* OpenGL.framework */,
 				7F42F83111EB1A9700B1C1DF /* gtypes.framework */,
 				7F42F83311EB1A9700B1C1DF /* hltypes.framework */,
 				7F5A5D2D11FD9DEB003C05A4 /* SDL.framework */,
 			);
-			name = "Linked Frameworks";
+			name = Mac;
 			sourceTree = "<group>";
 		};
-		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
+		1058C7B2FEA5585E11CA2CBB /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				D1981C56140F84B60057C3AF /* CoreFoundation.framework */,
+				D1981C54140F84B00057C3AF /* Foundation.framework */,
+				D1981C52140F84AA0057C3AF /* CoreGraphics.framework */,
+				D1981C50140F84A10057C3AF /* UIKit.framework */,
+				D1981C4E140F849A0057C3AF /* OpenGLES.framework */,
 			);
-			name = "Other Frameworks";
+			name = iOS;
 			sourceTree = "<group>";
 		};
-		7F42F79F11EB177B00B1C1DF /* Sources */ = {
+		7F42F79F11EB177B00B1C1DF /* src */ = {
 			isa = PBXGroup;
 			children = (
+				D1981C71140F856B0057C3AF /* TimerPosix.cpp */,
+				7FC8FA75122FACA30092964C /* TimerSDL.cpp */,
 				7F1B522E12E4713600E958D8 /* Color.cpp */,
 				7F1B522F12E4713600E958D8 /* Texture.cpp */,
-				7FC8FA75122FACA30092964C /* TimerSDL.cpp */,
 				C9A8520C134AF97000B455BE /* ImageSource.cpp */,
 				7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */,
 				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
 				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
 				7FCD394312018BD300608217 /* main_mac.mm */,
 			);
-			name = Sources;
+			name = src;
 			sourceTree = "<group>";
 		};
-		7F42F7A011EB177F00B1C1DF /* Includes */ = {
+		7F42F7A011EB177F00B1C1DF /* include */ = {
 			isa = PBXGroup;
 			children = (
 				7F1B522712E4710D00E958D8 /* aprilExport.h */,
@@ -174,7 +229,7 @@
 				7F42F7A411EB178C00B1C1DF /* RenderSystem.h */,
 				7FA3ED1711F9817A001D1DDD /* Window.h */,
 			);
-			name = Includes;
+			name = include;
 			sourceTree = "<group>";
 		};
 		7F42F7AE11EB185F00B1C1DF /* Render Systems */ = {
@@ -191,6 +246,7 @@
 		7FA3ED1111F9813E001D1DDD /* Window Systems */ = {
 			isa = PBXGroup;
 			children = (
+				D1981C58140F85050057C3AF /* iOS */,
 				7FA3ED1211F98145001D1DDD /* SDL */,
 			);
 			name = "Window Systems";
@@ -203,6 +259,32 @@
 				7F5A5D2611FD9CAB003C05A4 /* SDLWindow.h */,
 			);
 			name = SDL;
+			sourceTree = "<group>";
+		};
+		D1981C31140F824B0057C3AF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D1981C58140F85050057C3AF /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				D1981C59140F85350057C3AF /* ApriliOSAppDelegate.h */,
+				D1981C5A140F85350057C3AF /* ApriliOSAppDelegate.mm */,
+				D1981C5B140F85350057C3AF /* AprilViewController.h */,
+				D1981C5C140F85350057C3AF /* AprilViewController.m */,
+				D1981C5D140F85350057C3AF /* EAGLView.h */,
+				D1981C5E140F85350057C3AF /* EAGLView.mm */,
+				D1981C5F140F85350057C3AF /* iOSWindow.h */,
+				D1981C60140F85350057C3AF /* iOSWindow.mm */,
+				D1981C61140F85350057C3AF /* PVRTexture.h */,
+				D1981C62140F85350057C3AF /* PVRTexture.m */,
+				D1981C63140F85350057C3AF /* WBImage.h */,
+				D1981C64140F85350057C3AF /* WBImage.m */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -224,6 +306,19 @@
 				7F1B522A12E4710D00E958D8 /* aprilExport.h in Headers */,
 				7F1B522B12E4710D00E958D8 /* Color.h in Headers */,
 				7F1B522C12E4710D00E958D8 /* Texture.h in Headers */,
+				D1981C65140F85350057C3AF /* ApriliOSAppDelegate.h in Headers */,
+				D1981C67140F85350057C3AF /* AprilViewController.h in Headers */,
+				D1981C69140F85350057C3AF /* EAGLView.h in Headers */,
+				D1981C6B140F85350057C3AF /* iOSWindow.h in Headers */,
+				D1981C6D140F85350057C3AF /* PVRTexture.h in Headers */,
+				D1981C6F140F85350057C3AF /* WBImage.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1981C2E140F824B0057C3AF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,13 +344,33 @@
 			productReference = 8DC2EF5B0486A6940098B216 /* april.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		D1981C2F140F824B0057C3AF /* libapril-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1981C3F140F824B0057C3AF /* Build configuration list for PBXNativeTarget "libapril-ios" */;
+			buildPhases = (
+				D1981C2C140F824B0057C3AF /* Sources */,
+				D1981C2D140F824B0057C3AF /* Frameworks */,
+				D1981C2E140F824B0057C3AF /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "libapril-ios";
+			productName = "libapril-ios";
+			productReference = D1981C30140F824B0057C3AF /* libapril.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0410;
+			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "libapril" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -270,6 +385,7 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* libapril */,
+				D1981C2F140F824B0057C3AF /* libapril-ios */,
 			);
 		};
 /* End PBXProject section */
@@ -300,6 +416,28 @@
 				7F1B523012E4713600E958D8 /* Color.cpp in Sources */,
 				7F1B523112E4713600E958D8 /* Texture.cpp in Sources */,
 				C9A8520D134AF97000B455BE /* ImageSource.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1981C2C140F824B0057C3AF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1981C7A140F87060057C3AF /* AprilViewController.m in Sources */,
+				D1981C73140F858F0057C3AF /* ApriliOSAppDelegate.mm in Sources */,
+				D1981C75140F858F0057C3AF /* EAGLView.mm in Sources */,
+				D1981C76140F858F0057C3AF /* iOSWindow.mm in Sources */,
+				D1981C77140F858F0057C3AF /* PVRTexture.m in Sources */,
+				D1981C78140F858F0057C3AF /* WBImage.m in Sources */,
+				D1981C79140F858F0057C3AF /* TimerPosix.cpp in Sources */,
+				D1981C42140F82B00057C3AF /* OpenGL_RenderSystem.cpp in Sources */,
+				D1981C43140F82B00057C3AF /* OpenGL_Texture.cpp in Sources */,
+				D1981C44140F82B00057C3AF /* Color.cpp in Sources */,
+				D1981C45140F82B00057C3AF /* Texture.cpp in Sources */,
+				D1981C47140F82B00057C3AF /* ImageSource.cpp in Sources */,
+				D1981C48140F82B00057C3AF /* ImageSourceCG.mm in Sources */,
+				D1981C49140F82B00057C3AF /* RenderSystem.cpp in Sources */,
+				D1981C4A140F82B00057C3AF /* Window.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,6 +510,11 @@
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../hltypes/include",
+					"${SRCROOT}/../gtypes/include",
+					"${SRCROOT}/include",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = april;
@@ -395,6 +538,11 @@
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../hltypes/include",
+					"${SRCROOT}/../gtypes/include",
+					"${SRCROOT}/include",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = april;
 				SDKROOT = macosx10.4;
@@ -414,6 +562,11 @@
 				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../hltypes/include",
+					"${SRCROOT}/../gtypes/include",
+					"${SRCROOT}/include",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = april;
 				SDKROOT = macosx10.6;
@@ -457,6 +610,11 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../hltypes/include",
+					"${SRCROOT}/../gtypes/include",
+					"${SRCROOT}/include",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = april;
@@ -506,6 +664,11 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../hltypes/include",
+					"${SRCROOT}/../gtypes/include",
+					"${SRCROOT}/include",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = april;
 				SDKROOT = macosx10.6;
@@ -535,6 +698,138 @@
 			};
 			name = "Release-LLVM";
 		};
+		D1981C3A140F824B0057C3AF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/libapril_ios.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					_DEBUG,
+					_UNIX,
+					BUILDING_APRIL,
+					HAVE_SDL,
+				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = april;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D1981C3B140F824B0057C3AF /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/libapril_ios.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					_DEBUG,
+					_UNIX,
+					BUILDING_APRIL,
+					HAVE_SDL,
+				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = april;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = "Debug-LLVM";
+		};
+		D1981C3C140F824B0057C3AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libapril_ios.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = april;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D1981C3D140F824B0057C3AF /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libapril_ios.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = april;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-LLVM";
+		};
+		D1981C3E140F824B0057C3AF /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libapril_ios.dst;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_LDFLAGS = "-ObjC";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = april;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "App Store";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -561,6 +856,17 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		D1981C3F140F824B0057C3AF /* Build configuration list for PBXNativeTarget "libapril-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1981C3A140F824B0057C3AF /* Debug */,
+				D1981C3B140F824B0057C3AF /* Debug-LLVM */,
+				D1981C3C140F824B0057C3AF /* Release */,
+				D1981C3D140F824B0057C3AF /* Release-LLVM */,
+				D1981C3E140F824B0057C3AF /* App Store */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
