@@ -28,6 +28,7 @@ namespace april
 	class iOSWindow : public Window
 	{
 	protected:
+		bool mFocused;
 		bool mRunning;
 		bool mCursorVisible;
 		Timer mTimer;
@@ -65,6 +66,8 @@ namespace april
 		float prefixRotationAngle();
 		
 		void handleDisplayAndUpdate();
+	
+		SystemInfo getSystemInfo();
 		
 		void touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent);
 		void touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent);
