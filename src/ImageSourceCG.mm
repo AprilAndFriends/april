@@ -229,14 +229,16 @@ namespace april
 		CGContextRelease(bitmapContext);
 		
 		// let's undo premultiplication
-		for(int i=0; i < bytesPerRow * img->h; i+=4)
+		unsigned char* p = img->data;
+		unsigned char* end = p + (bytesPerRow * img->h);
+		float f;
+		for (;p != end; p+= 4)
 		{
-			for(int j=0; j<3; j++)
-			{
-				img->data[i+j] = img->data[i+j] / (img->data[i+3]/255.);
-			}
+			f = p[3]/255.0f;
+			p[0] /= f;
+			p[1] /= f;
+			p[2] /= f;
 		}
-        
 #if TARGET_OS_MAC
 		CGImageRelease(imageRef);
 #else

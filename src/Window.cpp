@@ -234,6 +234,13 @@ namespace april
 		return ((float)getWidth() / getHeight());
 	}
 	
+	SystemInfo Window::getSystemInfo()
+	{
+		SystemInfo info;
+		info.ram=1024;
+		return info;
+	}
+	
 	bool Window::performUpdate(float time_increase)
 	{
 		// returning true: continue execution

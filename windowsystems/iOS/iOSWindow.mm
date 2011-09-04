@@ -16,6 +16,7 @@
 #import "RenderSystem.h"
 #import "ApriliOSAppDelegate.h"
 #import <hltypes/exception.h>
+#include <sys/sysctl.h>
 
 static ApriliOSAppDelegate *appDelegate;
 static UIWindow *window;
@@ -64,6 +65,7 @@ namespace april
 	
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
+		mFocused = true;
 		mInputEventsMutex = false;
 		mMultiTouchActive = false;
 		appDelegate = ((ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate]);
@@ -440,6 +442,84 @@ namespace april
 			mVKeyboardCallback(false);
 	}
 	
+	SystemInfo iOSWindow::getSystemInfo()
+	{
+		static SystemInfo info;
+		if (info.name == "")
+		{
+			size_t size=255;
+			char cname[256];
+			sysctlbyname("hw.machine", cname, &size, NULL, 0);
+			hstr name = cname;
+			
+			info.name = name; // defaults for unknown devices
+			info.ram = 1024; // defaults
+
+			if (name.starts_with("iPad"))
+			{
+				if (name.starts_with("iPad1"))
+				{
+					info.name = "iPad1";
+					info.ram = 256;
+				}
+				else if (name.starts_with("iPad2"))
+				{
+					info.name = "iPad2";
+					info.ram = 512;
+				}
+			}
+			else if (name.starts_with("iPhone"))
+			{
+				if (name == "iPhone1,1")
+				{
+					info.name = "iPhone2G";
+					info.ram = 128;
+				}
+				else if (name == "iPhone1,2")
+				{
+					info.name = "iPhone3G";
+					info.ram = 128;
+				}
+				else if (name == "iPhone2,1")
+				{
+					info.name = "iPhone3GS";
+					info.ram = 256;
+				}
+				else if (name.starts_with("iPhone3"))
+				{
+					info.name = "iPhone4";
+					info.ram = 512;
+				}
+			}
+			else if (name.starts_with("iPod"))
+			{
+				if (name == "iPod1,1")
+				{
+					info.name = "iPod1";
+					info.ram = 128;
+				}
+				else if (name == "iPod2,1")
+				{
+					info.name = "iPod2";
+					info.ram = 128;
+				}
+				else if (name == "iPod3,1")
+				{
+					info.name = "iPod3";
+					info.ram = 256;
+				}
+				else if (name == "iPod4,1")
+				{
+					info.name = "iPod4";
+					info.ram = 256;
+				}
+			}
+			//else: i386 (iphone simulator) and possible future device types
+		}
+		return info;
+	}
+
+	
 	void iOSWindow::setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation))
 	{
 			
@@ -501,18 +581,27 @@ namespace april
 	}
 	void iOSWindow::applicationWillResignActive()
 	{
-		[glview stopAnimation];
-		if (mFocusCallback)
+		if (mFocused)
 		{
-			mFocusCallback(false);
+			mFocused = false;
+			[glview stopAnimation];
+			if (mFocusCallback)
+			{
+				mFocusCallback(false);
+			}
 		}
 	}
 	void iOSWindow::applicationDidBecomeActive()
 	{
-		[glview startAnimation];
-		if (mFocusCallback)
+		if (!mFocused)
 		{
-			mFocusCallback(true);
+			mFocused = true;
+			[glview startAnimation];
+			if (mFocusCallback)
+			{
+				mFocusCallback(true);
+			}
+			
 		}
 	}
 	

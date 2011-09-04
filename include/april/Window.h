@@ -25,6 +25,12 @@ namespace april
 {
 	class RenderSystem;
 
+	struct SystemInfo
+	{
+		hstr name;
+		int ram; // how many MB's of ram does the host system have in total
+	};
+	
 	class aprilExport Window 
 	{
 	public:
@@ -112,6 +118,8 @@ namespace april
 		virtual void beginKeyboardHandling();
 		virtual void terminateKeyboardHandling();
 		virtual float prefixRotationAngle();
+		
+		virtual SystemInfo getSystemInfo();
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);

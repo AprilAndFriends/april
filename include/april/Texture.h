@@ -64,6 +64,7 @@ namespace april
 		void addDynamicLink(Texture* lnk);
 		void removeDynamicLink(Texture* lnk);
 		void _resetUnusedTimer(bool recursive = true);
+		float getUnusedTime() { return mUnusedTimer; }
 		
 		int getWidth() { return mWidth; };
 		int getHeight() { return mHeight; };
