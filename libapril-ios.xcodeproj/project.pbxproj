@@ -45,6 +45,7 @@
 		7FF4960A12476B9800A22D50 /* iOSWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF4960812476B9800A22D50 /* iOSWindow.mm */; };
 		7FF4961712476BED00A22D50 /* EAGLView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF4961512476BED00A22D50 /* EAGLView.h */; };
 		7FF4961812476BED00A22D50 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FF4961612476BED00A22D50 /* EAGLView.mm */; };
+		D1B47AB714143A7C00DA7E55 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1B47AB614143A7C00DA7E55 /* ImageIO.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,6 +90,7 @@
 		7FF4961512476BED00A22D50 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
 		7FF4961612476BED00A22D50 /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EAGLView.mm; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D1B47AB614143A7C00DA7E55 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1B47AB714143A7C00DA7E55 /* ImageIO.framework in Frameworks */,
 				7F33B594121013F8004B5E89 /* OpenGLES.framework in Frameworks */,
 				7F33B59A12101441004B5E89 /* CoreGraphics.framework in Frameworks */,
 				7F33B63412102277004B5E89 /* UIKit.framework in Frameworks */,
@@ -118,6 +121,7 @@
 		0867D691FE84028FC02AAC07 /* libapril */ = {
 			isa = PBXGroup;
 			children = (
+				D1B47AB614143A7C00DA7E55 /* ImageIO.framework */,
 				7FA3ED1111F9813E001D1DDD /* Window Systems */,
 				7F42F7AE11EB185F00B1C1DF /* Render Systems */,
 				7F42F7A011EB177F00B1C1DF /* Includes */,
