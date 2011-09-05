@@ -22,6 +22,7 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 #import <UIKit/UIImage.h>
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
+//#import <ImageIO/CGImageSource.h>
 
 #import <OpenGLES/ES1/gl.h>
 #import "PVRTexture.h"
@@ -148,7 +149,6 @@ namespace april
 	ImageSource* loadImage(chstr filename)
 	{
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
-        
 #if TARGET_OS_IPHONE
 		ImageSource *pvrimg=_tryLoadingPVR(filename);
 		if (pvrimg)
@@ -158,7 +158,7 @@ namespace april
 		}
 		
 #endif
-		
+
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 		
 		// TODO check for memory leak!
@@ -168,29 +168,15 @@ namespace april
 		// CGImageSourceCreateWithData(). bug in cocoa present
 		// as late as 2007!
 		
-		
-		/*
-		CGImageSourceRef imageSource = CGImageSourceCreateWithURL((CFURLRef)_getFileURLAsResource(filename), NULL);
-        
-        if(!imageSource){
-			//CFRelease(imageSource);
-			
-			imageSource = CGImageSourceCreateWithURL((CFURLRef)_getFileURL(filename), NULL);
-			
-			if (!imageSource){
-		*/		
-		
 		CGImageSourceRef
 				imageSource = CGImageSourceCreateWithData((CFDataRef)[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]], NULL);
 				
-				if(!imageSource){
+				if(!imageSource)
+				{
 					NSLog(@"Failed to load %@", filename.c_str()); // FIXME should use logFunction!
 					[arp release];
 					return NULL;
 				}
-		/*	}
-		}
-		*/
 
 		CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
 		CFRelease(imageSource);
@@ -245,7 +231,46 @@ namespace april
 		[uiimg release];
 #endif
 		[arp release];
-        
-		return img;
+        return img;
+ /*
+		
+		ImageSource* img=new ImageSource();
+		CGImageSourceRef myImageSourceRef = CGImageSourceCreateWithData((CFDataRef)[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]], NULL);
+		CGImageRef myImageRef = CGImageSourceCreateImageAtIndex (myImageSourceRef, 0, NULL);
+		CFDataRef data = CGDataProviderCopyData(CGImageGetDataProvider(myImageRef));
+		img->w = CGImageGetWidth(myImageRef);
+		img->h = CGImageGetHeight(myImageRef);
+		img->bpp = CGImageGetBitsPerPixel(myImageRef)/8;
+		img->format = img->bpp == 4 ? GL_RGBA : GL_RGB;
+		img->data = (unsigned char*) CFDataGetBytePtr(data);
+		[arp release];
+		
+		//CFRelease(data);
+		CGImageRelease(myImageRef);
+		CFRelease(myImageSourceRef);
+		return img;*/
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
