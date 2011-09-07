@@ -199,7 +199,7 @@
 {
 	if (!self.animationTimer)
 	{
-		NSLog(@"Swapbuffers while in background! Skipping");
+		NSLog(@"Warning: OpenGL swapBuffers while app in background, ignoring!");
 		return;
 	}
 	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
