@@ -584,11 +584,11 @@ namespace april
 		if (mFocused)
 		{
 			mFocused = false;
-			[glview stopAnimation];
 			if (mFocusCallback)
 			{
 				mFocusCallback(false);
 			}
+			[glview stopAnimation];
 		}
 	}
 	void iOSWindow::applicationDidBecomeActive()
