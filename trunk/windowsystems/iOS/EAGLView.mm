@@ -172,7 +172,7 @@
 {
     if (!self.animationTimer)
 	{
-		NSLog(@"Called drawview while in background!");
+		NSLog(@"Called drawView while in background!");
 		return;
 	}
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);

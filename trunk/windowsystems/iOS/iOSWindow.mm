@@ -105,7 +105,7 @@ namespace april
 		glview.aprilWindowVoid = this;
         glview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
-		[viewcontroller.view addSubview:glview];
+		//[viewcontroller.view addSubview:glview];
         
 		mRunning = true;
     }
