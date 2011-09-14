@@ -266,7 +266,7 @@ namespace april
 			{
 				mKeyDownCallback(keycode);
 			}
-			if (unicode && mCharCallback)
+			if (unicode && mCharCallback && unicode != 127) // hack for sdl on mac, backspace induces character
 			{
 				mCharCallback(unicode);
 			}
