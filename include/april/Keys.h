@@ -98,8 +98,35 @@ namespace april
 		AK_9 = '9',
 
 		// 0x3A-0x40 -- undefined
+
 		// 0x41-0x5A -- 'A'-'Z'	
-		
+		AK_A = 'A',
+		AK_B = 'B',
+		AK_C = 'C',
+		AK_D = 'D',
+		AK_E = 'E',
+		AK_F = 'F',
+		AK_G = 'G',
+		AK_H = 'H',
+		AK_I = 'I',
+		AK_J = 'J',
+		AK_K = 'K',
+		AK_L = 'L',
+		AK_M = 'M',
+		AK_N = 'N',
+		AK_O = 'O',
+		AK_P = 'P',
+		AK_Q = 'Q',
+		AK_R = 'R',
+		AK_S = 'S',
+		AK_T = 'T',
+		AK_U = 'U',
+		AK_V = 'V',
+		AK_W = 'W',
+		AK_X = 'X',
+		AK_Y = 'Y',
+		AK_Z = 'Z',
+
 		// special but mostly common VKs
 		AK_LWIN = 0x5B,
 		AK_RWIN = 0x5C,
@@ -357,7 +384,7 @@ namespace april
 		AK_S = 41,
 		AK_T = 42,
 		AK_U = 43,
-		AK_v = 44,
+		AK_V = 44,
 		AK_W = 45,
 		AK_X = 46,
 		AK_Y = 47,
