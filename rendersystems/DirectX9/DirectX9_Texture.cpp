@@ -738,7 +738,7 @@ namespace april
 			return;
 		}
 		int size = getWidth() * getHeight() * 4;
-		float range = (degrees >= 0.0f ? fmod(degrees, 360.0f) : 360.0f - fmod(-degrees, 360.0f)) / 360.0f;
+		float range = hmodf(degrees, 360.0f) / 360.0f;
 		float h;
 		float s;
 		float l;
