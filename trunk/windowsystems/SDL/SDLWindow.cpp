@@ -421,7 +421,17 @@ namespace april
 		return NULL;
 #endif
 	}
-
+	
+	SystemInfo& getSystemInfo()
+	{
+		static SystemInfo info;
+		if (info.locale == "")
+		{
+			info.ram = 1024;
+			info.locale = "en";
+		}
+		return info;
+	}
 }
 
 #endif
