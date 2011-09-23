@@ -28,7 +28,8 @@ namespace april
 	struct SystemInfo
 	{
 		hstr name;
-		int ram; // how many MB's of ram does the host system have in total
+		int ram; //! how many MB's of ram does the host system have in total
+		hstr locale; //! current system locale code
 	};
 	
 	class aprilExport Window 
@@ -119,8 +120,6 @@ namespace april
 		virtual void terminateKeyboardHandling();
 		virtual float prefixRotationAngle();
 		
-		virtual SystemInfo getSystemInfo();
-		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
 		void handleTouchEvent(harray<gvec2>& touches);
@@ -186,6 +185,7 @@ namespace april
 	
 	aprilFnExport Window* createAprilWindow(chstr window_system_name, int w, int h, bool fullscreen, chstr title);
 	aprilFnExport gvec2 getDesktopResolution();
+	SystemInfo& getSystemInfo();
 	aprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN, hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL);
 
 }

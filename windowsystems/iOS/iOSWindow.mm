@@ -442,84 +442,6 @@ namespace april
 			mVKeyboardCallback(false);
 	}
 	
-	SystemInfo iOSWindow::getSystemInfo()
-	{
-		static SystemInfo info;
-		if (info.name == "")
-		{
-			size_t size=255;
-			char cname[256];
-			sysctlbyname("hw.machine", cname, &size, NULL, 0);
-			hstr name = cname;
-			
-			info.name = name; // defaults for unknown devices
-			info.ram = 1024; // defaults
-
-			if (name.starts_with("iPad"))
-			{
-				if (name.starts_with("iPad1"))
-				{
-					info.name = "iPad1";
-					info.ram = 256;
-				}
-				else if (name.starts_with("iPad2"))
-				{
-					info.name = "iPad2";
-					info.ram = 512;
-				}
-			}
-			else if (name.starts_with("iPhone"))
-			{
-				if (name == "iPhone1,1")
-				{
-					info.name = "iPhone2G";
-					info.ram = 128;
-				}
-				else if (name == "iPhone1,2")
-				{
-					info.name = "iPhone3G";
-					info.ram = 128;
-				}
-				else if (name == "iPhone2,1")
-				{
-					info.name = "iPhone3GS";
-					info.ram = 256;
-				}
-				else if (name.starts_with("iPhone3"))
-				{
-					info.name = "iPhone4";
-					info.ram = 512;
-				}
-			}
-			else if (name.starts_with("iPod"))
-			{
-				if (name == "iPod1,1")
-				{
-					info.name = "iPod1";
-					info.ram = 128;
-				}
-				else if (name == "iPod2,1")
-				{
-					info.name = "iPod2";
-					info.ram = 128;
-				}
-				else if (name == "iPod3,1")
-				{
-					info.name = "iPod3";
-					info.ram = 256;
-				}
-				else if (name == "iPod4,1")
-				{
-					info.name = "iPod4";
-					info.ram = 256;
-				}
-			}
-			//else: i386 (iphone simulator) and possible future device types
-		}
-		return info;
-	}
-
-	
 	void iOSWindow::setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation))
 	{
 			
@@ -604,5 +526,84 @@ namespace april
 			
 		}
 	}
-	
+
+	SystemInfo& getSystemInfo()
+	{
+		static SystemInfo info;
+		if (info.name == "")
+		{
+			info.locale = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];
+			
+			size_t size=255;
+			char cname[256];
+			sysctlbyname("hw.machine", cname, &size, NULL, 0);
+			hstr name = cname;
+			
+			info.name = name; // defaults for unknown devices
+			info.ram = 1024; // defaults
+			
+			if (name.starts_with("iPad"))
+			{
+				if (name.starts_with("iPad1"))
+				{
+					info.name = "iPad1";
+					info.ram = 256;
+				}
+				else if (name.starts_with("iPad2"))
+				{
+					info.name = "iPad2";
+					info.ram = 512;
+				}
+			}
+			else if (name.starts_with("iPhone"))
+			{
+				if (name == "iPhone1,1")
+				{
+					info.name = "iPhone2G";
+					info.ram = 128;
+				}
+				else if (name == "iPhone1,2")
+				{
+					info.name = "iPhone3G";
+					info.ram = 128;
+				}
+				else if (name == "iPhone2,1")
+				{
+					info.name = "iPhone3GS";
+					info.ram = 256;
+				}
+				else if (name.starts_with("iPhone3"))
+				{
+					info.name = "iPhone4";
+					info.ram = 512;
+				}
+			}
+			else if (name.starts_with("iPod"))
+			{
+				if (name == "iPod1,1")
+				{
+					info.name = "iPod1";
+					info.ram = 128;
+				}
+				else if (name == "iPod2,1")
+				{
+					info.name = "iPod2";
+					info.ram = 128;
+				}
+				else if (name == "iPod3,1")
+				{
+					info.name = "iPod3";
+					info.ram = 256;
+				}
+				else if (name == "iPod4,1")
+				{
+					info.name = "iPod4";
+					info.ram = 256;
+				}
+			}
+			//else: i386 (iphone simulator) and possible future device types
+		}
+		return info;
+	}
+
 }

@@ -66,8 +66,6 @@ namespace april
 		float prefixRotationAngle();
 		
 		void handleDisplayAndUpdate();
-	
-		SystemInfo getSystemInfo();
 		
 		void touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent);
 		void touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent);

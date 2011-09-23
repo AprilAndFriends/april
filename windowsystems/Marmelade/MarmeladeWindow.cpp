@@ -616,6 +616,16 @@ namespace april
 		s3eDeviceYield(0);
 	}
 
+	SystemInfo& getSystemInfo()
+	{
+		static SystemInfo info;
+		if (info.locale == "")
+		{
+			info.ram = 1024;
+			info.locale = "en";
+		}
+		return info;
+	}
 }
 
 #endif
