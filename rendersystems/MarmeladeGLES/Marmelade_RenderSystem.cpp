@@ -415,7 +415,7 @@ namespace april
 		glClear(mask);
 	}
 	
-	Marmelade_RenderSystem* Marmelade_RenderSystem::create()
+	Marmelade_RenderSystem* Marmelade_RenderSystem::create(chstr options)
 	{
 		return new Marmelade_RenderSystem();
 	}

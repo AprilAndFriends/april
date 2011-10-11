@@ -62,7 +62,7 @@ namespace april
 
 		harray<DisplayMode> getSupportedDisplayModes();
 		
-		static Marmelade_RenderSystem* create();
+		static Marmelade_RenderSystem* create(chstr options);
 
 	protected:
 		bool mTexCoordsEnabled;

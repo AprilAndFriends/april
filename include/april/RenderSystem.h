@@ -204,7 +204,7 @@ namespace april
 
 	aprilFnExport void setLogFunction(void (*fnptr)(chstr));
 	aprilFnExport void init();
-	aprilFnExport void createRenderSystem(chstr rendersystem_name);
+	aprilFnExport void createRenderSystem(chstr options);
 	aprilFnExport void createRenderTarget(int w, int h, bool fullscreen, chstr title);
 	aprilFnExport void destroy();
 	aprilFnExport void addTextureExtension(chstr extension);

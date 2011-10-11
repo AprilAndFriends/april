@@ -75,9 +75,10 @@ namespace april
 		return 0;
 	}
 /************************************************************************************/
-	DirectX9_RenderSystem::DirectX9_RenderSystem() :
+	DirectX9_RenderSystem::DirectX9_RenderSystem(chstr options) :
 		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
 	{
+		mZBufferEnabled = options.contains("zbuffer");
 		// DIRECT3D
 		d3d = Direct3DCreate9(D3D_SDK_VERSION);
 		if (!d3d)
@@ -89,16 +90,20 @@ namespace april
 	void DirectX9_RenderSystem::assignWindow(Window* window)
 	{
 		mWindow = window;
-		
+
 		hWnd = (HWND)mWindow->getIDFromBackend();
-		
+
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !window->isFullscreen();
 		d3dpp.BackBufferWidth = getWindow()->getWidth();
 		d3dpp.BackBufferHeight = getWindow()->getHeight();
 		d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
-
+		if (mZBufferEnabled)
+		{
+			d3dpp.EnableAutoDepthStencil = TRUE;
+			d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
+		}
 		d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 		d3dpp.hDeviceWindow = hWnd;
 		HRESULT result = d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
@@ -296,7 +301,7 @@ namespace april
 		{
 			flags |= D3DCLEAR_TARGET;
 		}
-		if (depth)
+		if (depth && mZBufferEnabled)
 		{
 			flags |= D3DCLEAR_ZBUFFER;
 		}
@@ -647,9 +652,9 @@ namespace april
 		return result;
 	}
 
-	DirectX9_RenderSystem* DirectX9_RenderSystem::create()
+	DirectX9_RenderSystem* DirectX9_RenderSystem::create(chstr options)
 	{
-		return new DirectX9_RenderSystem();
+		return new DirectX9_RenderSystem(options);
 	}
 
 }
