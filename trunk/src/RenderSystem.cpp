@@ -309,15 +309,15 @@ namespace april
 #endif
 	}
 	
-	void createRenderSystem(chstr rendersystem_name)
+	void createRenderSystem(chstr options)
 	{
 
 #if defined(_OPENGL)
-		april::rendersys = OpenGL_RenderSystem::create();
+		april::rendersys = OpenGL_RenderSystem::create(options);
 #elif defined(HAVE_MARMELADE)
-		april::rendersys = Marmelade_RenderSystem::create();
+		april::rendersys = Marmelade_RenderSystem::create(options);
 #else
-		april::rendersys = DirectX9_RenderSystem::create();
+		april::rendersys = DirectX9_RenderSystem::create(options);
 #endif
 	}
 	

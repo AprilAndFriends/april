@@ -481,7 +481,7 @@ namespace april
 		return harray<DisplayMode>();
 	}
 
-	OpenGL_RenderSystem* OpenGL_RenderSystem::create()
+	OpenGL_RenderSystem* OpenGL_RenderSystem::create(chstr options)
 	{
 		return new OpenGL_RenderSystem();
 	}

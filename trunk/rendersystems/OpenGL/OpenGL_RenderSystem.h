@@ -70,7 +70,7 @@ namespace april
 
 		harray<DisplayMode> getSupportedDisplayModes();
 		
-		static OpenGL_RenderSystem* create();
+		static OpenGL_RenderSystem* create(chstr options);
 
 	protected:
 		bool mTexCoordsEnabled;

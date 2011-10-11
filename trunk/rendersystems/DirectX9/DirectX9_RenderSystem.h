@@ -22,8 +22,9 @@ namespace april
 
 	class DirectX9_RenderSystem : public RenderSystem
 	{
+		bool mZBufferEnabled;
 	public:
-		DirectX9_RenderSystem();
+		DirectX9_RenderSystem(chstr options);
 		~DirectX9_RenderSystem();
 
 		void assignWindow(Window* window);
@@ -62,7 +63,7 @@ namespace april
 		void presentFrame();
 		harray<DisplayMode> getSupportedDisplayModes();
 
-		static DirectX9_RenderSystem* create();
+		static DirectX9_RenderSystem* create(chstr options);
 		
 	protected:
 		bool mTexCoordsEnabled;
