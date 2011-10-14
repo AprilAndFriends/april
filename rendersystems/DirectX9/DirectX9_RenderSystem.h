@@ -68,7 +68,7 @@ namespace april
 	protected:
 		bool mTexCoordsEnabled;
 		bool mColorEnabled;
-		void _setModelviewMatrix(const gmat4& matrix);
+		void _setModelViewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
 		hstr mTitle;
 		DirectX9_Texture* mRenderTarget;

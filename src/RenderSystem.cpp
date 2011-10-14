@@ -197,38 +197,38 @@ namespace april
 	
 	void RenderSystem::setIdentityTransform()
 	{
-		mModelviewMatrix.setIdentity();
-		_setModelviewMatrix(mModelviewMatrix);
+		mModelViewMatrix.setIdentity();
+		_setModelViewMatrix(mModelViewMatrix);
 	}
 	
 	void RenderSystem::translate(float x, float y, float z)
 	{
-		mModelviewMatrix.translate(x, y, z);
-		_setModelviewMatrix(mModelviewMatrix);
+		mModelViewMatrix.translate(x, y, z);
+		_setModelViewMatrix(mModelViewMatrix);
 	}
 	
 	void RenderSystem::rotate(float angle, float ax, float ay, float az)
 	{
-		mModelviewMatrix.rotate(ax, ay, az, angle);
-		_setModelviewMatrix(mModelviewMatrix);
+		mModelViewMatrix.rotate(ax, ay, az, angle);
+		_setModelViewMatrix(mModelViewMatrix);
 	}	
 	
 	void RenderSystem::scale(float s)
 	{
-		mModelviewMatrix.scale(s);
-		_setModelviewMatrix(mModelviewMatrix);
+		mModelViewMatrix.scale(s);
+		_setModelViewMatrix(mModelViewMatrix);
 	}
 	
 	void RenderSystem::scale(float sx, float sy, float sz)
 	{
-		mModelviewMatrix.scale(sx, sy, sz);
-		_setModelviewMatrix(mModelviewMatrix);
+		mModelViewMatrix.scale(sx, sy, sz);
+		_setModelViewMatrix(mModelViewMatrix);
 	}
 	
 	void RenderSystem::lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up)
 	{
-		mModelviewMatrix.lookAt(eye, direction, up);
-		_setModelviewMatrix(mModelviewMatrix);
+		mModelViewMatrix.lookAt(eye, direction, up);
+		_setModelViewMatrix(mModelViewMatrix);
 	}
 		
 	void RenderSystem::setOrthoProjection(float x, float y, float w, float h)
@@ -258,10 +258,10 @@ namespace april
 		_setProjectionMatrix(mProjectionMatrix);
 	}
 	
-	void RenderSystem::setModelviewMatrix(const gmat4& matrix)
+	void RenderSystem::setModelViewMatrix(const gmat4& matrix)
 	{
-		mModelviewMatrix = matrix;
-		_setModelviewMatrix(matrix);
+		mModelViewMatrix = matrix;
+		_setModelViewMatrix(matrix);
 	}
 	void RenderSystem::setProjectionMatrix(const gmat4& matrix)
 	{
@@ -275,9 +275,9 @@ namespace april
 		mWindow->_setResolution(w, h);
 	}
 
-	const gmat4& RenderSystem::getModelviewMatrix()
+	const gmat4& RenderSystem::getModelViewMatrix()
 	{
-		return mModelviewMatrix;
+		return mModelViewMatrix;
 	}
 	
 	const gmat4& RenderSystem::getProjectionMatrix()
