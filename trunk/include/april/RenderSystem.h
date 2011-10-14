@@ -137,18 +137,17 @@ namespace april
 		// camera functions
 		void lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up);
 		// projection matrix transformation
-		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f);
 		void setOrthoProjection(gvec2 size);
 		void setOrthoProjection(grect rect);
 		void setPerspective(float fov, float aspect, float nearClip, float farClip);
 		// rendersys matrix operations
-		void setModelviewMatrix(const gmat4& matrix);
+		void setModelViewMatrix(const gmat4& matrix);
 		void setProjectionMatrix(const gmat4& matrix);
 		virtual bool isFullscreen();
 		virtual void setFullscreen(bool fullscreen) { } //TODO - implement in derived classes
 		virtual void setResolution(int w, int h);
 		
-		const gmat4& getModelviewMatrix();
+		const gmat4& getModelViewMatrix();
 		const gmat4& getProjectionMatrix();
 		// render state
 		virtual void setBlendMode(BlendMode mode) = 0;
@@ -188,16 +187,20 @@ namespace april
 		virtual void presentFrame();
 		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
 
+		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f);
+		DEPRECATED_ATTRIBUTE const gmat4& getModelviewMatrix() { return getModelViewMatrix(); }
+		DEPRECATED_ATTRIBUTE void setModelviewMatrix(const gmat4& matrix) { setModelViewMatrix(matrix); }
+
 	protected:
 		Window* mWindow;
 		float mIdleUnloadTime;
 		bool mDynamicLoading;
 		TextureFilter mTextureFilter;
 		bool mTextureWrapping;
-		gmat4 mModelviewMatrix;
+		gmat4 mModelViewMatrix;
 		gmat4 mProjectionMatrix;
 		
-		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
+		virtual void _setModelViewMatrix(const gmat4& matrix) = 0;
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;
 		
 	};
