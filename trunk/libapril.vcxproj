@@ -83,13 +83,15 @@
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;DevIL.lib;OpenGL32.lib;glu32.lib;glut32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>..\lib\msvc100;..\hltypes\bin\win32_Debug;..\gtypes\bin\win32_Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin\lib\msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy bin\$(Configuration)\*.dll bin
-copy bin\$(Configuration)\*.lib bin
-</Command>
+      <Command>mkdir $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.dll $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.lib $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.dll bin
+copy bin\$(Configuration)\*.lib bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Release|Win32'">
@@ -106,12 +108,14 @@ copy bin\$(Configuration)\*.lib bin
     </ClCompile>
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;DevIL.lib;OpenGL32.lib;glu32.lib;glut32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\lib\msvc100;..\hltypes\bin\win32_Release;..\gtypes\bin\win32_Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin\lib\msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy bin\$(Configuration)\*.dll bin
-copy bin\$(Configuration)\*.lib bin
-</Command>
+      <Command>mkdir $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.dll $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.lib $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.dll bin
+copy bin\$(Configuration)\*.lib bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Debug|Win32'">
@@ -131,13 +135,15 @@ copy bin\$(Configuration)\*.lib bin
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;d3d9.lib;DevIL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>..\lib\msvc100;..\hltypes\bin\win32_Debug;..\gtypes\bin\win32_Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin\lib\msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy bin\$(Configuration)\*.dll bin
-copy bin\$(Configuration)\*.lib bin
-</Command>
+      <Command>mkdir $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.dll $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.lib $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.dll bin
+copy bin\$(Configuration)\*.lib bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Release|Win32'">
@@ -154,12 +160,14 @@ copy bin\$(Configuration)\*.lib bin
     </ClCompile>
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;d3d9.lib;DevIL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\lib\msvc100;..\hltypes\bin\win32_Release;..\gtypes\bin\win32_Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin\lib\msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>copy bin\$(Configuration)\*.dll bin
-copy bin\$(Configuration)\*.lib bin
-</Command>
+      <Command>mkdir $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.dll $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.lib $(SolutionDir)bin\lib\msvc100
+copy bin\$(Configuration)\*.dll bin
+copy bin\$(Configuration)\*.lib bin</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
