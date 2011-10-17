@@ -424,12 +424,12 @@ namespace april
 	
 	Window::DeviceType SDLWindow::getDeviceType()
 	{
-	#ifdef TARGET_OS_MAC
-		return Window::MAC_PC;
+	#if TARGET_OS_MAC
+		return DEVICE_MAC_PC;
 	#elif defined(_WIN32)
-		return Window::WINDOWS_PC;
+		return DEVICE_WINDOWS_PC;
 	#else
-		return Window::LINUX_PC;
+		return DEVICE_LINUX_PC;
 	#endif
 	}
 	
