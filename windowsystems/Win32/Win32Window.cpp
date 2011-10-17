@@ -455,6 +455,11 @@ namespace april
 		return hWnd;
 	}
 
+	Window::DeviceType Win32Window::getDeviceType()
+	{
+		return Window::DEVICE_WINDOWS_PC;
+	}
+
 	SystemInfo& getSystemInfo()
 	{
 		static SystemInfo info;
