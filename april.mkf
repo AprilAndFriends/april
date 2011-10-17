@@ -1,6 +1,6 @@
 define HAVE_MARMELADE
 define _STATICLIB
-define BUILDING_APRIL
+#define BUILDING_APRIL
 define _DEBUG_OUTPUT
 
 includepaths

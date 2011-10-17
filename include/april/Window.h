@@ -36,6 +36,25 @@ namespace april
 	{
 	public:
 		// data types
+
+		enum DeviceType
+		{
+			DEVICE_IPHONE = 0,
+			DEVICE_IPAD,
+			DEVICE_IPOD,
+			DEVICE_ANDROID_PHONE,
+			DEVICE_ANDROID_TABLET,
+			DEVICE_WINDOWS_PC,
+			DEVICE_LINUX_PC,
+			DEVICE_MAC_PC,
+			DEVICE_WINDOWS_PHONE,
+			DEVICE_WINDOWS_TABLET,
+			DEVICE_UNKNOWN_LARGE,
+			DEVICE_UNKNOWN_MEDIUM,
+			DEVICE_UNKNOWN_SMALL,
+			DEVICE_UNKNOWN
+		};
+
 		enum MouseEventType
 		{
 			AMOUSEEVT_UP = 0,
@@ -111,6 +130,7 @@ namespace april
 		virtual void presentFrame() = 0;
 		virtual void* getIDFromBackend() = 0;
 		virtual void doEvents() = 0;
+		virtual DeviceType getDeviceType() = 0;
 		float getAspectRatio();
 		DEPRECATED_ATTRIBUTE float getWindowAspectRatio() { return getAspectRatio(); }
 		
@@ -134,6 +154,7 @@ namespace april
 		Window();
 		
 		RenderSystem* mRenderSystem;
+		DeviceType mDeviceType;
 		hstr mTitle;
 		bool mFullscreen;
 		

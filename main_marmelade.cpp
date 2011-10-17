@@ -27,6 +27,7 @@ int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)
 	}
 	
 	anAprilInit(argv);
+	april::rendersys->getWindow()->getDeviceType();
     april::rendersys->getWindow()->enterMainLoop();
 	anAprilDestroy();
 	return 0;

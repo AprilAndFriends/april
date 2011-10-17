@@ -72,7 +72,8 @@ namespace april
 		// w,h and fullscreen ignored since this is a mobile device build
 		//april::log("Creating Marmelade Windowsystem");
 		fprintf(stderr, "Creating Marmelade Windowsystem\n");
-		
+		mDeviceType = (april::Window::DeviceType)-1;
+
 		// set the name of the window to title.c_str() // ignored for mobile devices
 
 		mTitle = title;
@@ -245,6 +246,25 @@ namespace april
 	//////////////////////
 	// implementations
 	//////////////////////
+
+	april::Window::DeviceType MarmeladeWindow::getDeviceType()
+	{
+		//hstr os(s3eDeviceGetString(S3E_DEVICE_OS));
+		//hstr os_version(s3eDeviceGetString(S3E_DEVICE_OS_VERSION));
+		//hstr id(s3eDeviceGetString(S3E_DEVICE_UNIQUE_ID));
+		hstr cls(s3eDeviceGetString(S3E_DEVICE_CLASS));
+		//hstr chipset(s3eDeviceGetString(S3E_DEVICE_CHIPSET));
+		/*
+		fprintf(stderr, "OS: %s [%s]\n ID: %s\n class: %s\n chipset: %s\n", os.c_str(), os_version.c_str(),
+			id.c_str(), cls.c_str(), chipset.c_str());*/
+		april::Window::DeviceType t;
+		t = april::Window::DEVICE_UNKNOWN;
+		if(cls == "ANDROID_EMBED") t = april::Window::DEVICE_ANDROID_PHONE;
+		else if(cls == "") t = april::Window::DEVICE_UNKNOWN;
+
+		mDeviceType == -1 ? (mDeviceType = t), mDeviceType : mDeviceType;
+		return mDeviceType;
+	}
 
 	void* MarmeladeWindow::getIDFromBackend()
 	{
