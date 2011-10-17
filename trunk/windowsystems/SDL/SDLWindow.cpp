@@ -422,6 +422,17 @@ namespace april
 #endif
 	}
 	
+	Window::DeviceType SDLWindow::getDeviceType()
+	{
+	#ifdef TARGET_OS_MAC
+		return Window::MAC_PC;
+	#elif defined(_WIN32)
+		return Window::WINDOWS_PC;
+	#else
+		return Window::LINUX_PC;
+	#endif
+	}
+	
 	SystemInfo& getSystemInfo()
 	{
 		static SystemInfo info;

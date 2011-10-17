@@ -34,7 +34,7 @@
  * being publicly available, and other functions (such as
  * april_main()) are actually for internal use only.
  **/
-//#define BUILDING_APRIL
+#define BUILDING_APRIL
 #ifndef BUILDING_APRIL
 #ifdef __APPLE__
 #include <TargetConditionals.h>

@@ -54,6 +54,8 @@ namespace april
 		void triggerFocusCallback(bool focused);
 
 		void triggerTouchscreenCallback(bool enabled);
+
+		DeviceType getDeviceType();
 		
 		float mCursorX; // TODO turn into private
 		float mCursorY; // TODO turn into private

@@ -48,6 +48,8 @@ namespace april
 		void* getIDFromBackend();
 		void doEvents();
 		bool isCursorInside();
+		
+		DeviceType getDeviceType():
 
 		float mCursorX; // TODO turn into private
 		float mCursorY; // TODO turn into private
