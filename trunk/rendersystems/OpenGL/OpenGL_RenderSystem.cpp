@@ -239,7 +239,7 @@ namespace april
         return img;
     }
 
-	void OpenGL_RenderSystem::_setModelViewMatrix(const gmat4& matrix)
+	void OpenGL_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
 		glMatrixMode(GL_MODELVIEW);
 		glLoadMatrixf(matrix.data);

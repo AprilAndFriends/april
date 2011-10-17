@@ -286,7 +286,7 @@ namespace april
 		{
 			log("Failed to reset device!");
 		}
-		_setModelViewMatrix(mModelViewMatrix);
+		_setModelviewMatrix(mModelviewMatrix);
 		_setProjectionMatrix(mProjectionMatrix);
 		configureDevice();
 		d3dDevice->GetRenderTarget(0, &mBackBuffer); // update backbuffer pointer
@@ -385,7 +385,7 @@ namespace april
     	return img;
 	}
 	
-	void DirectX9_RenderSystem::_setModelViewMatrix(const gmat4& matrix)
+	void DirectX9_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
 		d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)matrix.data);
 	}
@@ -609,7 +609,7 @@ namespace april
 					throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
 				}
 			}
-			_setModelViewMatrix(mModelViewMatrix);
+			_setModelviewMatrix(mModelviewMatrix);
 			_setProjectionMatrix(mProjectionMatrix);
 			configureDevice();
 			d3dDevice->GetRenderTarget(0, &mBackBuffer); // update backbuffer pointer

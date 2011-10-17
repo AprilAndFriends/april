@@ -75,7 +75,7 @@ namespace april
 	protected:
 		bool mTexCoordsEnabled;
 		bool mColorEnabled;
-		void _setModelViewMatrix(const gmat4& matrix);
+		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
 		
 	};
