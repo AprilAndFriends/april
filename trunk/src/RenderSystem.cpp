@@ -302,8 +302,12 @@ namespace april
 #ifdef USE_IL
 		ilInit();
 #endif
+#ifdef HAVE_MARMELADE
+		extensions += ".png";
+#else
 		extensions += ".png";
 		extensions += ".jpg";
+#endif
 #if TARGET_OS_IPHONE
 		extensions += ".pvr";
 #endif

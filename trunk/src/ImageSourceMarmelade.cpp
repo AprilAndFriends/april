@@ -60,8 +60,14 @@ namespace april
 		int width, height;
 		unsigned char color_type;
 		unsigned char bit_depth;
+		hstr tmp;
+#ifdef NO_FS_TREE
+		tmp = filename.replace("/", "___");
+#else
+		tmp = filename;
+#endif
 
-		if(filename.ends_with(".png"))
+		if(tmp.ends_with(".png"))
 		{
 
 			png_structp png_ptr;
@@ -72,7 +78,7 @@ namespace april
 			char header[8];    // 8 is the maximum size that can be checked
 
 			/* open file and test for it being a png */
-			FILE *fp = fopen(filename.c_str(), "rb");
+			FILE *fp = fopen(tmp.c_str(), "rb");
 			if (!fp)
 					abort();
 					//abort_("[read_png_file] File %s could not be opened for reading", filename.c_str());
@@ -119,7 +125,7 @@ namespace april
 
 			row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
 
-			fprintf(stderr, "Img [%s] : \n", filename.c_str());
+			fprintf(stderr, "Img [%s] : \n", tmp.c_str());
 			fprintf(stderr, " -> depth [%d]\n", png_ptr->bit_depth);
 			fprintf(stderr, " -> channels [%d]\n", png_ptr->channels);
 			fprintf(stderr, " -> width [%d]\n", png_ptr->width);

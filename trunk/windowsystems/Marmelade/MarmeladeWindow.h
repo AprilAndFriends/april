@@ -129,6 +129,8 @@ namespace april
 		static int32 unpauseHandler(void *sys, void *args);
 		static void update();
 
+		DeviceType getDeviceType();
+
 		float mCursorX; // TODO turn into private
 		float mCursorY; // TODO turn into private
 
