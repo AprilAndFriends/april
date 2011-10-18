@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="win32_Debug|Win32"
-			OutputDirectory="..\bin"
-			IntermediateDirectory="bin\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -61,8 +61,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes_d.lib libgtypes_d.lib libapril_d.lib"
-				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="../../hltypes/bin/Win32_Debug;../../gtypes/bin/Win32_Debug;../bin"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				AdditionalLibraryDirectories="$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -90,8 +90,8 @@
 		</Configuration>
 		<Configuration
 			Name="win32_Release|Win32"
-			OutputDirectory="..\bin"
-			IntermediateDirectory="bin\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin"
 			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -135,7 +135,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib libapril.lib"
-				AdditionalLibraryDirectories="../../hltypes/bin/win32_Release;../../gtypes/bin/Win32_Release;../bin"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				AdditionalLibraryDirectories="$(SolutionDir)bin"
 			/>
 			<Tool
 				Name="VCALinkTool"
