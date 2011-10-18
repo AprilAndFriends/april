@@ -45,7 +45,7 @@ namespace april
 	public:
 		
 		iOSWindow(int w, int h, bool fullscreen, chstr title);
-		
+		DeviceType getDeviceType();
 		// implementations
 		void enterMainLoop();
 		void terminateMainLoop();
