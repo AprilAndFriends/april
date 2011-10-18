@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="win32_OpenGL_Debug|Win32"
-			OutputDirectory="bin\$(ConfigurationName)"
-			IntermediateDirectory="bin\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -60,9 +60,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes_d.lib libgtypes_d.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib winmm.lib"
-				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="../lib/msvc90;$(SolutionDir)bin/lib/msvc90"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib winmm.lib"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -85,13 +85,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="mkdir $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.dll $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
 			Name="win32_OpenGL_Release|Win32"
-			OutputDirectory="bin\$(ConfigurationName)"
-			IntermediateDirectory="bin\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -135,7 +135,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib winmm.lib"
-				AdditionalLibraryDirectories="../lib/msvc90;$(SolutionDir)bin/lib/msvc90"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -157,13 +158,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="mkdir $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.dll $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
 			Name="win32_DirectX9_Debug|Win32"
-			OutputDirectory="bin\$(ConfigurationName)"
-			IntermediateDirectory="bin\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -205,9 +206,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes_d.lib libgtypes_d.lib d3d9.lib DevIL.lib winmm.lib"
-				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
-				AdditionalLibraryDirectories="../lib/msvc90;$(SolutionDir)bin/lib/msvc90"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib d3d9.lib DevIL.lib winmm.lib"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -230,13 +231,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="mkdir $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.dll $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
 			Name="win32_DirectX9_Release|Win32"
-			OutputDirectory="bin\$(ConfigurationName)"
-			IntermediateDirectory="bin\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -280,7 +281,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib d3d9.lib DevIL.lib winmm.lib"
-				AdditionalLibraryDirectories="../lib/msvc90;$(SolutionDir)bin/lib/msvc90"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -302,7 +304,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="mkdir $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.dll $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib $(SolutionDir)bin\lib\msvc90&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.dll bin&#x0D;&#x0A;copy bin\$(ConfigurationName)\*.lib bin"
+				CommandLine=""
 			/>
 		</Configuration>
 	</Configurations>

@@ -59,14 +59,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Debug|Win32'">bin\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Debug|Win32'">bin\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Release|Win32'">bin\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Release|Win32'">bin\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Debug|Win32'">bin\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Debug|Win32'">bin\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Release|Win32'">bin\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Release|Win32'">bin\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Debug|Win32'">$(SolutionDir)bin\lib\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Debug|Win32'">$(SolutionDir)bin\lib\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Release|Win32'">$(SolutionDir)bin\lib\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Release|Win32'">$(SolutionDir)bin\lib\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Debug|Win32'">$(SolutionDir)bin\lib\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Debug|Win32'">$(SolutionDir)bin\lib\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Release|Win32'">$(SolutionDir)bin\lib\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Release|Win32'">$(SolutionDir)bin\lib\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Debug|Win32'">
     <ClCompile>
@@ -82,16 +82,14 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;DevIL.lib;OpenGL32.lib;glu32.lib;glut32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin\lib\msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>$(SolutionDir)bin\$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(SolutionDir)bin\$(TargetName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.dll $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.lib $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.dll bin
-copy bin\$(Configuration)\*.lib bin</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Release|Win32'">
@@ -108,14 +106,13 @@ copy bin\$(Configuration)\*.lib bin</Command>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;DevIL.lib;OpenGL32.lib;glu32.lib;glut32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin\lib\msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>$(SolutionDir)bin\$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>$(SolutionDir)bin\$(TargetName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.dll $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.lib $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.dll bin
-copy bin\$(Configuration)\*.lib bin</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Debug|Win32'">
@@ -134,16 +131,14 @@ copy bin\$(Configuration)\*.lib bin</Command>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;d3d9.lib;DevIL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin\lib\msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>$(SolutionDir)bin\$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>$(SolutionDir)bin\$(TargetName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.dll $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.lib $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.dll bin
-copy bin\$(Configuration)\*.lib bin</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Release|Win32'">
@@ -160,14 +155,13 @@ copy bin\$(Configuration)\*.lib bin</Command>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;d3d9.lib;DevIL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin\lib\msvc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OutputFile>$(SolutionDir)bin\$(TargetName)$(TargetExt)</OutputFile>
+      <ImportLibrary>$(SolutionDir)bin\$(TargetName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.dll $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.lib $(SolutionDir)bin\lib\msvc100
-copy bin\$(Configuration)\*.dll bin
-copy bin\$(Configuration)\*.lib bin</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
