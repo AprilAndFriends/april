@@ -109,6 +109,14 @@ namespace april
         
 		mRunning = true;
     }
+	
+	Window::DeviceType iOSWindow::getDeviceType()
+	{
+		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+			return DEVICE_IPHONE;
+		else
+			return DEVICE_IPAD;
+	}
     
     void iOSWindow::enterMainLoop()
     {
