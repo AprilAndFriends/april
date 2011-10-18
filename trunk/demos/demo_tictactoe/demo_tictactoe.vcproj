@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="win32_Debug|Win32"
-			OutputDirectory="$(SolutionDir)\bin\$(ConfigurationName)"
-			IntermediateDirectory="..\..\bin\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -62,9 +62,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes_d.lib libgtypes_d.lib libapril_d.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libapril.lib"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=".;../../bin;../../../lib;../../../hltypes/bin/win32_Debug;../../../gtypes/bin/win32_Debug;../../../lib/msvc90"
+				AdditionalLibraryDirectories="external\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -89,13 +90,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\hltypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Debug\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;copy ..\..\bin\*.dll ..\..\bin\win32_Debug&#x0D;&#x0A;"
+				CommandLine="copy $(SolutionDir)..\lib\msvc90\*.dll $(SolutionDir)bin"
 			/>
 		</Configuration>
 		<Configuration
 			Name="win32_Release|Win32"
-			OutputDirectory="$(SolutionDir)\bin\$(ConfigurationName)"
-			IntermediateDirectory="..\..\bin\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -140,8 +141,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib libapril.lib"
+				OutputFile="$(SolutionDir)bin\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories=".;../../bin;../../../lib;../../../hltypes/bin/win32_Release;../../../gtypes/bin/win32_Release;../../../lib/msvc90"
+				AdditionalLibraryDirectories="external\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -168,7 +170,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\hltypes\bin\win32_Release\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;copy ..\..\..\gtypes\bin\win32_Release\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;copy ..\..\bin\*.dll ..\..\bin\win32_Release&#x0D;&#x0A;"
+				CommandLine="copy $(SolutionDir)..\lib\msvc90\*.dll $(SolutionDir)bin"
 			/>
 		</Configuration>
 	</Configurations>

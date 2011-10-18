@@ -60,7 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes_d.lib libgtypes_d.lib libapril_d.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libapril.lib"
 				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
 				AdditionalLibraryDirectories="$(SolutionDir)bin"
 				GenerateDebugInformation="true"
