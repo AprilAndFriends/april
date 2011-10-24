@@ -67,7 +67,10 @@
       <OutputFile>$(SolutionDir)bin\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)..\lib\msvc100\*.dll $(SolutionDir)bin</Command>
+      <Command>xcopy $(SolutionDir)..\lib\msvc100\*.dll $(SolutionDir)bin\ /d /y
+xcopy $(SolutionDir)bin\*.exe $(SolutionDir)bin\$(Configuration)\ /d /y
+xcopy $(SolutionDir)bin\*.dll $(SolutionDir)bin\$(Configuration)\ /d /y
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_Release|Win32'">
@@ -95,7 +98,10 @@
       <OutputFile>$(SolutionDir)bin\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)..\lib\msvc100\*.dll $(SolutionDir)bin</Command>
+      <Command>xcopy $(SolutionDir)..\lib\msvc100\*.dll $(SolutionDir)bin\ /d /y
+xcopy $(SolutionDir)bin\*.exe $(SolutionDir)bin\$(Configuration)\ /d /y
+xcopy $(SolutionDir)bin\*.dll $(SolutionDir)bin\$(Configuration)\ /d /y
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
