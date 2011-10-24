@@ -64,11 +64,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <OutputFile>$(SolutionDir)bin\$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)..\lib\msvc100\*.dll $(SolutionDir)bin\ /d /y
-xcopy $(SolutionDir)bin\*.exe $(SolutionDir)bin\$(Configuration)\ /d /y
 xcopy $(SolutionDir)bin\*.dll $(SolutionDir)bin\$(Configuration)\ /d /y
 </Command>
     </PostBuildEvent>
@@ -95,11 +94,10 @@ xcopy $(SolutionDir)bin\*.dll $(SolutionDir)bin\$(Configuration)\ /d /y
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <OutputFile>$(SolutionDir)bin\$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)..\lib\msvc100\*.dll $(SolutionDir)bin\ /d /y
-xcopy $(SolutionDir)bin\*.exe $(SolutionDir)bin\$(Configuration)\ /d /y
 xcopy $(SolutionDir)bin\*.dll $(SolutionDir)bin\$(Configuration)\ /d /y
 </Command>
     </PostBuildEvent>
