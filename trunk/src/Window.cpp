@@ -313,7 +313,7 @@ namespace april
 	bool Window::isCursorInside()
 	{
 		gvec2 v = getCursorPosition();
-		return (v.x >= 0.0f && v.y >= 0.0f && v.x < (float)getWidth() && v.y < (float)getHeight());
+		return (is_in_range(v.x, 0.0f, (float)getWidth()) && is_in_range(v.y, 0.0f, (float)getHeight()));
 	}
 	
 	bool Window::handleQuitRequest(bool can_reject)

@@ -132,13 +132,13 @@ namespace april
 		case WM_SETCURSOR:
 			if (!cursorVisible)
 			{
-				if (cursorPosition.x >= 0 && cursorPosition.y >= 0 && cursorPosition.x <= ws->getWidth() && cursorPosition.y <= ws->getHeight())
+				if (is_between(cursorPosition.x, 0.0f, (float)ws->getWidth()) && is_between(cursorPosition.y, 0.0f, (float)ws->getHeight()))
 				{
 					SetCursor(0);
 				}
 				else
 				{
-					SetCursor(LoadCursor(0,IDC_ARROW));
+					SetCursor(LoadCursor(0, IDC_ARROW));
 				}
 			}
 			return 1;
@@ -288,7 +288,7 @@ namespace april
 		{
 			return true;
 		}
-		return !(cursorPosition.x >= 0 && cursorPosition.y >= 0 && cursorPosition.x < getWidth() && cursorPosition.y < getHeight());
+		return !(is_in_range(cursorPosition.x, 0.0f, (float)getWidth()) && is_in_range(cursorPosition.y, 0.0f, (float)getHeight()));
 	}
 	
 	void Win32Window::doEvents()
