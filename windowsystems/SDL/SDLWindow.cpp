@@ -36,8 +36,7 @@ namespace april
 	
 	SDLWindow::SDLWindow(int w, int h, bool fullscreen, chstr title)
 	{
-		//april::log("Creating SDL Windowsystem");
-		
+		log("Creating SDL Window");
 		// we want a centered sdl window
 		putenv((char*) "SDL_VIDEO_WINDOW_POS");
 		putenv((char*) "SDL_VIDEO_CENTERED=1");
@@ -92,6 +91,7 @@ namespace april
 		mCursorVisible = true;
 		// key repeat
 		SDL_EnableKeyRepeat(100, 50);
+		doEvents();
 	}
 	
 	//////////////////////
