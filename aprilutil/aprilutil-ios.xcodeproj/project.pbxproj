@@ -200,7 +200,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include/aprilutil;
 				SKIP_INSTALL = NO;
 			};
@@ -213,6 +213,7 @@
 				DEPLOYMENT_LOCATION = YES;
 				DSTROOT = "$(CONFIGURATION_BUILD_DIR)/$(PRODUCT_NAME)SDK/$(PLATFORM_NAME).sdk";
 				GCC_MODEL_TUNING = G5;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include/aprilutil;
 				SKIP_INSTALL = NO;
 			};
