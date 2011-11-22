@@ -76,6 +76,10 @@ namespace april
 	{
 	}
 
+	void Texture::saturate(float value)
+	{
+	}
+
 	void Texture::fillRect(grect rect, Color color)
 	{
 		fillRect((int)rect.x, (int)rect.y, (int)rect.w, (int)rect.h, color);

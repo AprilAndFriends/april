@@ -756,6 +756,29 @@ namespace april
 		_unlock(buffer, result, true);
 	}
 
+	void DirectX9_Texture::saturate(float factor)
+	{
+		D3DLOCKED_RECT lockRect;
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT result = _tryLock(&buffer, &lockRect, NULL);
+		if (result == LR_FAILED)
+		{
+			return;
+		}
+		int size = getWidth() * getHeight() * 4;
+		float h;
+		float s;
+		float l;
+		unsigned char* data = (unsigned char*)lockRect.pBits;
+		for (int i = 0; i < size; i += mBpp)
+		{
+			rgb2hsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
+			s *= factor;
+			hsl2rgb(h, s, l, &data[i + 2], &data[i + 1], &data[i]);
+		}
+		_unlock(buffer, result, true);
+	}
+
 	IDirect3DSurface9* DirectX9_Texture::getSurface()
 	{
 		if (mSurface == NULL)
