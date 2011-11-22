@@ -45,6 +45,13 @@ namespace april
 		DEFAULT
 	};
 
+	enum ColorMode
+	{
+		MULTIPLY,
+		LERP,
+		NORMAL
+	};
+
 	struct aprilExport DisplayMode
 	{
 		int width;
@@ -151,6 +158,7 @@ namespace april
 		const gmat4& getProjectionMatrix();
 		// render state
 		virtual void setBlendMode(BlendMode mode) = 0;
+		virtual void setColorMode(ColorMode mode, unsigned char alpha = 255) = 0;
 		// caps
 		virtual float getPixelOffset() = 0;
 		virtual hstr getName() = 0;
