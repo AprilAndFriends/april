@@ -58,6 +58,7 @@ namespace april
 		virtual void stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void clear();
 		virtual void rotateHue(float degrees);
+		virtual void saturate(float factor);
 		void fillRect(grect rect, Color color);
 		virtual Color getInterpolatedPixel(float x, float y);
 		
