@@ -44,6 +44,7 @@ namespace april
 
 		// modelview matrix transformation
 		void setBlendMode(BlendMode mode);
+		void setColorMode(ColorMode mode);
 		void setTextureFilter(TextureFilter filter);
 		void setTextureWrapping(bool wrap);
 		void setResolution(int w, int h);

@@ -267,8 +267,13 @@ namespace april
 		}
 		else if (mode == ADD)
 		{
-			glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		}
+	}
+	
+	void OpenGL_RenderSystem::setColorMode(ColorMode mode)
+	{
+		throw "NOT IMPLEMENTED";
 	}
 	
 	void OpenGL_RenderSystem::setTextureFilter(TextureFilter filter)

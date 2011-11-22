@@ -37,6 +37,7 @@ namespace april
 		Texture* createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type);
 
 		void setBlendMode(BlendMode mode);
+		void setColorMode(ColorMode mode, unsigned char alpha = 255);
 		void setTextureFilter(TextureFilter filter);
 		void setTextureWrapping(bool wrap);
 		void setResolution(int w, int h);
