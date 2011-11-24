@@ -485,18 +485,21 @@ namespace april
 	{
 		return harray<DisplayMode>();
 	}
-
-	OpenGL_RenderSystem* OpenGL_RenderSystem::create(chstr options)
-	{
-		return new OpenGL_RenderSystem();
-	}
 	
 	void OpenGL_RenderSystem::setResolution(int w, int h)
 	{
 // TODO: OpenGL_RenderSystem::setResolution()
 		april::log("WARNING: %s ignored!", __PRETTY_FUNCTION__);
 	}
-
+	void OpenGL_RenderSystem::setColorMode(ColorMode mode, unsigned char alpha)
+	{
+		// TODO not implemented in OpenGL yet
+	}
+	
+	OpenGL_RenderSystem* OpenGL_RenderSystem::create(chstr options)
+	{
+		return new OpenGL_RenderSystem();
+	}
 }
 
 #endif
