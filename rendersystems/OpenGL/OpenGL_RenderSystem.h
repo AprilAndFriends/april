@@ -48,6 +48,7 @@ namespace april
 		void setTextureFilter(TextureFilter filter);
 		void setTextureWrapping(bool wrap);
 		void setResolution(int w, int h);
+		void setColorMode(ColorMode mode, unsigned char alpha);
 		// caps
 		float getPixelOffset();
 		hstr getName();
@@ -64,7 +65,7 @@ namespace april
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color);
 		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
-
+		
 		Texture* getRenderTarget();
 		void setRenderTarget(Texture* source);
 		void beginFrame();
