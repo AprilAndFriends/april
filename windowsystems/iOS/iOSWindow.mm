@@ -511,6 +511,12 @@ namespace april
 	}
 	void iOSWindow::applicationWillResignActive()
 	{
+		if (!mFirstFrameDrawn)
+		{
+			log("April iOS Window: received app suspend request before first frame was drawn, quitting app.");
+			destroy();
+			exit(0);
+		}
 		if (mFocused)
 		{
 			mFocused = false;
