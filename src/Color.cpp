@@ -107,10 +107,10 @@ namespace april
 
 	hstr Color::hex(bool rgbOnly)
 	{
-		hstr result = hsprintf("%02x%02x%02x", this->r, this->g, this->b);
+		hstr result = hsprintf("%02X%02X%02X", this->r, this->g, this->b);
 		if (!rgbOnly)
 		{
-			result += hsprintf("%02x", this->a);
+			result += hsprintf("%02X", this->a);
 		}
 		return result;
 	}
