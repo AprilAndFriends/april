@@ -315,8 +315,11 @@ namespace april
 	
 	void createRenderSystem(chstr options)
 	{
-
-#if defined(_OPENGL)
+#if TARGET_OS_IPHONE
+		if (options == "create_eagl")
+			april::rendersys = OpenGL_RenderSystem::create(options);
+		//else do nothing, rendersys was created ahead
+#elif defined(_OPENGL)
 		april::rendersys = OpenGL_RenderSystem::create(options);
 #elif defined(HAVE_MARMELADE)
 		april::rendersys = Marmelade_RenderSystem::create(options);
@@ -327,12 +330,15 @@ namespace april
 	
 	void createRenderTarget(int w, int h, bool fullscreen, chstr title)
 	{
-#if defined(HAVE_MARMELADE)
-		Window* window = createAprilWindow("Marmelade", w, h, fullscreen, title);
+		Window* window = 0;
+#if TARGET_OS_IPHONE
+		return;
+#elif defined(HAVE_MARMELADE)
+		window = createAprilWindow("Marmelade", w, h, fullscreen, title);
 #elif defined(_WIN32)
-		Window* window = createAprilWindow("Win32", w, h, fullscreen, title);
+		window = createAprilWindow("Win32", w, h, fullscreen, title);
 #else
-		Window* window = createAprilWindow("SDL", w, h, fullscreen, title);
+		window = createAprilWindow("SDL", w, h, fullscreen, title);
 #endif
 		april::rendersys->assignWindow(window);
 	}

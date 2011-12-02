@@ -16,24 +16,6 @@
 #include "Window.h"
 #import <AVFoundation/AVFoundation.h>
 
-
-@interface AprilDummyViewController : UIViewController
-@end
-@implementation AprilDummyViewController
-- (void)loadView
-{
-    self.view = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 480, 320)] autorelease];
-    self.view.autoresizesSubviews = YES;    
-}
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
-{
-    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);// || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
-    //return YES;
-}
-@end
-
-
-
 @implementation ApriliOSAppDelegate
 
 @synthesize window;
@@ -42,9 +24,9 @@
 @synthesize onPushRegistrationFailure;
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application
-{	
+{
+	NSLog(@"Creating iOS window");
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
-    [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeLeft animated:NO];
 	[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:NULL];
 
 	// create a window.
@@ -52,24 +34,33 @@
 	// game initialization
 	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     window.autoresizesSubviews = YES;
-    
-    // add dummy view controller, so that shouldAutorotate is respected on old devices
-    dummyViewController = [[UIViewController alloc] init];
-    [window addSubview:dummyViewController.view];
-    
+
 	// viewcontroller will automatically add imageview
-	viewController = [[[AprilViewController alloc] init] autorelease];
-    [dummyViewController presentModalViewController:viewController animated:NO];
-    [[UIApplication sharedApplication] setStatusBarOrientation: UIInterfaceOrientationLandscapeLeft animated:NO];
+	viewController = [[AprilViewController alloc] init];
+    [window addSubview:viewController.view];
 
 	// set window color
 	[window setBackgroundColor:[UIColor blackColor]];
-
 	// display the window
 	[window makeKeyAndVisible];
-
-	NSLog(@"Created window");
 	
+//	[(EAGLView*)viewController.view beginRender];
+
+	//glClearColor(1, 1, 0, 1);
+	//glClear(GL_COLOR_BUFFER_BIT);
+
+/*
+	april::Texture* tex = april::rendersys->loadTexture("data/loading_screen_iphone_hd.png");
+	april::rendersys->setTexture(tex);
+	gmat4 ident; ident.setIdentity();
+	april::rendersys->setProjectionMatrix(ident);
+	april::rendersys->setModelviewMatrix(ident);
+	
+	april::rendersys->drawTexturedQuad(grect(-1,1,2,-2), grect(0,0,0.9375f,0.625f));
+	*/
+	//[(EAGLView*)viewController.view swapBuffers];
+	//delete tex;
+
     //////////
 	// thanks to Kyle Poole for this trick
     // also used in latest SDL
@@ -85,21 +76,12 @@
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
     april_init(harray<hstr>());
 	[pool drain];
-    if ([viewController.view isKindOfClass:[EAGLView class]]) 
-	{
-		[(EAGLView*)viewController.view startAnimation];
-	}
-	if ([[viewController.view subviews] count]) 
-    {
-		for (EAGLView* glview in viewController.view.subviews) 
-		{
-			if ([glview isKindOfClass:[EAGLView class]]) 
-			{
-				[glview startAnimation];
-			}
-		}
-    }
+
+	((EAGLView*) viewController.view)->app_started = 1;
+	[(EAGLView*)viewController.view startAnimation];
+
 	[pool release];
+	
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
@@ -184,17 +166,7 @@
 		[glview startAnimation];
 		
 	}
-	if ([[viewController.view subviews] count]) 
-    {
-		for (EAGLView* glview in viewController.view.subviews) 
-		{
-			if ([glview isKindOfClass:[EAGLView class]]) 
-			{
-				[glview applicationDidBecomeActive:application];
-				[glview startAnimation];
-			}
-		}
-    }
+
 }
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
@@ -226,6 +198,11 @@
 - (void)dealloc
 {
 	[super dealloc];
+	if (viewController)
+	{
+		[viewController release];
+		viewController = nil;
+	}
 	self.window = nil;
 }
 

@@ -19,8 +19,8 @@
 #include <sys/sysctl.h>
 
 static ApriliOSAppDelegate *appDelegate;
-static UIWindow *window;
-static EAGLView *glview;
+static UIWindow *window = 0;
+EAGLView *glview = 0;
 static AprilViewController *viewcontroller;
 
 namespace april
@@ -76,37 +76,9 @@ namespace april
 		else
 			[UIApplication sharedApplication].statusBarHidden = NO;
 		mFullscreen = true; // iOS apps are always fullscreen
-				
+
 		mFirstFrameDrawn = false; // show window after drawing first frame
-		
-		CGRect frame = viewcontroller.view.frame;
-		float wi = frame.size.width;
-		float hi = frame.size.height;
-        frame.size.width = hi;
-        frame.size.height = wi;
-		
-		glview = [[[EAGLView alloc] initWithFrame:frame] autorelease];
-			
-		UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-		if (orientation ==  UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationPortrait)
-		{
-			glview.transform = CGAffineTransformRotate(glview.transform, -M_PI/2);
-			NSLog(@"initial device orientation: Left");
-		}
-		else
-		{
-			glview.transform = CGAffineTransformRotate(glview.transform, M_PI/2);
-			NSLog(@"initial device orientation: Right");
-        }
-        glview.center = viewcontroller.view.center;
-        
-		if(!glview)
-			throw hl_exception("iOSWindow failed to create glview");
-		glview.aprilWindowVoid = this;
-        glview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
-		[viewcontroller.view addSubview:glview];
-        
+
 		mRunning = true;
     }
 	
@@ -203,7 +175,15 @@ namespace april
 
     void iOSWindow::presentFrame()
     {
-
+		if (mFirstFrameDrawn)
+			[glview swapBuffers];
+		else
+		{
+			doEvents();
+			[viewcontroller removeImageView];
+			mFirstFrameDrawn = true;
+		}
+		return;
 		if(mFirstFrameDrawn)
 		{
 			[glview swapBuffers];

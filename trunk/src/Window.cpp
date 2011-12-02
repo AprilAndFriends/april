@@ -137,6 +137,8 @@ Copyright (c) 2010 Ivan Vucica                                                  
 
 namespace april
 {
+	Window* Window::mSingleton = NULL;
+
 	Window::Window()
 	{
 		mUpdateCallback = NULL;
@@ -154,6 +156,7 @@ namespace april
 		mTouchCallback = NULL;
 		mLowMemoryCallback = NULL;
 		mHandleURLCallback = NULL;
+		mSingleton = this;
 	}
 
 	void Window::setUpdateCallback(bool (*callback)(float))
@@ -441,7 +444,7 @@ namespace april
 		
 #elif (TARGET_OS_IPHONE)
 		// iOS
-		return new iOSWindow(w, h, fullscreen, title);
+		return Window::getSingleton();
 #endif
 		return NULL;
 	}
