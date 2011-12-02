@@ -44,6 +44,8 @@ namespace april
 		bool mMultiTouchActive;
 	public:
 		
+		static iOSWindow* getSingleton() { return (iOSWindow*) mSingleton; }
+		
 		iOSWindow(int w, int h, bool fullscreen, chstr title);
 		DeviceType getDeviceType();
 		// implementations

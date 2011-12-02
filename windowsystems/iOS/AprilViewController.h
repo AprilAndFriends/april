@@ -13,4 +13,5 @@
 @interface AprilViewController : UIViewController
 {
 }
+- (void)removeImageView;
 @end

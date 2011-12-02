@@ -27,7 +27,8 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
     /* The pixel dimensions of the backbuffer */
     GLint backingWidth;
     GLint backingHeight;
-    
+	
+	
     EAGLContext *context;
     
     /* OpenGL names for the renderbuffer and framebuffers used to render to this view */
@@ -44,6 +45,8 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 	
 	/* C++ class iOSWindow */
 	void *aprilWindowVoid;
+@public
+    bool app_started;
 }
 
 @property NSTimeInterval animationInterval;
@@ -51,6 +54,7 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 
 - (void)startAnimation;
 - (void)stopAnimation;
+- (void)beginRender;
 - (void)drawView;
 - (void)swapBuffers;
 - (void)beginKeyboardHandling;

@@ -13,17 +13,16 @@
 #import "WBImage.h"
 #import "ApriliOSAppDelegate.h"
 
+extern EAGLView *glview;
+static UIImageView *mImageView;
 @implementation AprilViewController
 
-/*
- // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
-        // Custom initialization
-    }
-    return self;
+-(id)init
+{
+	self = [super init];
+	self.wantsFullScreenLayout = YES;
+	return self;
 }
-*/
 
 
 #pragma mark -
@@ -148,7 +147,10 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView
 {	
-    	
+	glview = [[[EAGLView alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+	self.view = glview;
+	
+	
 	UIUserInterfaceIdiom idiom = UIUserInterfaceIdiomPhone;
 	if ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom:)]) 
 	{
@@ -166,16 +168,20 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	}
 	
 	UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"] ];
-
+	
 	if(idiom == UIUserInterfaceIdiomPhone && self.interfaceOrientation != UIInterfaceOrientationPortrait)
 	{
 		if ([UIImage instancesRespondToSelector:@selector(initWithCGImage:scale:orientation:)]) 
 		{
+			float s = 1;
+			if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] &&
+				[[UIScreen mainScreen] scale] == 2) s = 2;
+			
 			// default.png is incorrectly rotated on iphone
 			// this sadly doesnt work on <4.0:
 			
 			// if UIImage responds to instance method, it will respond to the class method too.
-			image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationRight];
+			image = [UIImage imageWithCGImage:image.CGImage scale:s orientation:UIImageOrientationRight];
 		}
 		else
 		{
@@ -184,17 +190,16 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 			image = [self rotate:image to:UIImageOrientationRight]; // for some reason using WBImage category of UIImage did not work! code therefore copypasted to this class and called via self
 		}
 	}
-
-	UIImageView *iv = [[[UIImageView alloc] initWithImage:image] autorelease];
 	
-	iv.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    iv.autoresizesSubviews = YES;
-    self.view = iv;
-    
-    
-	self.view.transform = CGAffineTransformMakeRotation(M_PI / 2.0); 
-	[self.view setCenter:[[(ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate] window] center]];
+	mImageView = [[UIImageView alloc] initWithImage:image];
+	[self.view addSubview:mImageView];
+}
 
+- (void)removeImageView
+{
+	NSLog(@"Removing Loading screen UIImageView from View Controller");
+	[mImageView removeFromSuperview];
+	[mImageView release];
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.

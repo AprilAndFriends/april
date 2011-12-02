@@ -34,9 +34,12 @@ namespace april
 	
 	class aprilExport Window 
 	{
+	protected:
+		static Window* mSingleton;
 	public:
 		// data types
-
+		static Window* getSingleton() { return mSingleton; };
+		
 		enum DeviceType
 		{
 			DEVICE_IPHONE = 0,

@@ -15,11 +15,12 @@
 #import <OpenGLES/EAGLDrawable.h>
 
 #import "EAGLView.h"
-#import "iOSWindow.h"
+#include "iOSWindow.h"
+#include "RenderSystem.h"
 
 
 #define USE_DEPTH_BUFFER 0
-#define aprilWindow ((april::iOSWindow*)aprilWindowVoid)
+#define aprilWindow april::iOSWindow::getSingleton()
 
 
 // A class extension to declare private methods
@@ -78,6 +79,7 @@
 {
     if ((self = [super initWithFrame:frame]))
 	{
+		app_started = 0;
         // Get the layer
         CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
 		
@@ -137,6 +139,9 @@
 													 name:UIDeviceOrientationDidChangeNotification 
 												   object:nil];
 		
+		// create ios window object
+		april::createRenderSystem("create_eagl");
+		april::rendersys->assignWindow(new april::iOSWindow(0,0,1,"iOS Window"));
     }
 	
     return self;
@@ -168,7 +173,7 @@
 
 // ok, now other functionality of this class
 
-- (void)drawView
+- (void)beginRender
 {
     if (!self.animationTimer)
 	{
@@ -179,6 +184,11 @@
     glViewport(0, 0, backingWidth, backingHeight);
     
     [EAGLContext setCurrentContext:context];
+}
+
+- (void)drawView
+{
+    [self beginRender];
 	
 	//mydraw();
 	((april::iOSWindow*)aprilWindow)->handleDisplayAndUpdate();
@@ -216,13 +226,11 @@
     [EAGLContext setCurrentContext:context];
     [self destroyFramebuffer];
     [self createFramebuffer];
-    [self drawView];
 }
 
 
 - (BOOL)createFramebuffer
 {
-    
     glGenFramebuffersOES(1, &viewFramebuffer);
     glGenRenderbuffersOES(1, &viewRenderbuffer);
     
@@ -247,15 +255,12 @@
         NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
         return NO;
     }
-    
-	//init();
     return YES;
 }
 
 
 - (void)destroyFramebuffer
 {
-    
     glDeleteFramebuffersOES(1, &viewFramebuffer);
     viewFramebuffer = 0;
     glDeleteRenderbuffersOES(1, &viewRenderbuffer);
@@ -271,6 +276,7 @@
 
 - (void)startAnimation
 {
+	if (!app_started) return;
     self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:animationInterval target:self selector:@selector(drawView) userInfo:nil repeats:YES];
 }
 
