@@ -23,6 +23,8 @@ static UIWindow *window = 0;
 EAGLView *glview = 0;
 static AprilViewController *viewcontroller;
 
+extern bool g_wnd_rotating;
+
 namespace april
 {
 	InputEvent::InputEvent(Window* wnd)
@@ -183,34 +185,6 @@ namespace april
 			[viewcontroller removeImageView];
 			mFirstFrameDrawn = true;
 		}
-		return;
-		if(mFirstFrameDrawn)
-		{
-			[glview swapBuffers];
-		}
-		else
-		{
-			[glview setNeedsDisplay];
-			[glview swapBuffers];
-
-			doEvents();
-
-			if([[window subviews] count])
-			{
-				id defaultImageView = [[window subviews] objectAtIndex:0];
-				if(defaultImageView && [defaultImageView isKindOfClass:[UIImageView class]])
-				{
-					[glview removeFromSuperview];
-					[defaultImageView removeFromSuperview];
-					
-					[viewcontroller setView:glview];
-					[window addSubview:glview];
-				}
-			}
-			mFirstFrameDrawn = true;
-			
-			
-		}
     }
 
 	void* iOSWindow::getIDFromBackend()
@@ -243,6 +217,11 @@ namespace april
 			lst += vec;
 		}
 		mInputEvents += new TouchInputEvent(this, lst);
+	}
+	
+	bool iOSWindow::isRotating()
+	{
+		return g_wnd_rotating;
 	}
 	
 	float iOSWindow::_getTouchScale()

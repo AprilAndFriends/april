@@ -142,6 +142,9 @@ namespace april
 		virtual void terminateKeyboardHandling();
 		virtual float prefixRotationAngle();
 		
+		virtual bool isRotating() { return false; } // iOS/Android devices for example
+
+		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
 		void handleTouchEvent(harray<gvec2>& touches);

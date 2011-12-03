@@ -67,6 +67,8 @@ namespace april
 		void keyboardWasHidden();
 		float prefixRotationAngle();
 		
+		bool isRotating();
+		
 		void handleDisplayAndUpdate();
 		
 		void touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent);
