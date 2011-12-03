@@ -16,6 +16,7 @@
 extern EAGLView *glview;
 static UIImageView *mImageView;
 @implementation AprilViewController
+bool g_wnd_rotating = 0;
 
 -(id)init
 {
@@ -173,15 +174,9 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	{
 		if ([UIImage instancesRespondToSelector:@selector(initWithCGImage:scale:orientation:)]) 
 		{
-			float s = 1;
-			if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] &&
-				[[UIScreen mainScreen] scale] == 2) s = 2;
-			
-			// default.png is incorrectly rotated on iphone
-			// this sadly doesnt work on <4.0:
-			
+
 			// if UIImage responds to instance method, it will respond to the class method too.
-			image = [UIImage imageWithCGImage:image.CGImage scale:s orientation:UIImageOrientationRight];
+			image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationRight];
 		}
 		else
 		{
@@ -192,6 +187,7 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	}
 	
 	mImageView = [[UIImageView alloc] initWithImage:image];
+	mImageView.frame = CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width);
 	[self.view addSubview:mImageView];
 }
 
@@ -206,6 +202,18 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+	NSLog(@"Window started rotating");
+	g_wnd_rotating = 1;
+}
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+	NSLog(@"Window finished rotating");
+	g_wnd_rotating = 0;
 }
 
 // Override to allow orientations other than the default portrait orientation.

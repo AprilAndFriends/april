@@ -144,6 +144,7 @@
     }
 	
 }
+
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
 	// for our purposes, we don't need to differentiate entering background
