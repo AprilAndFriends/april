@@ -42,6 +42,8 @@ namespace april
 		void callTouchCallback();
 		harray<UITouch*> mTouches;
 		bool mMultiTouchActive;
+		
+		bool mRetainLoadingOverlay;
 	public:
 		
 		static iOSWindow* getSingleton() { return (iOSWindow*) mSingleton; }
@@ -68,6 +70,8 @@ namespace april
 		float prefixRotationAngle();
 		
 		bool isRotating();
+		hstr getParam(chstr param);
+		void setParam(chstr param, chstr value);
 		
 		void handleDisplayAndUpdate();
 		

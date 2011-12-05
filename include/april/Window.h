@@ -143,7 +143,9 @@ namespace april
 		virtual float prefixRotationAngle();
 		
 		virtual bool isRotating() { return false; } // iOS/Android devices for example
-
+		virtual hstr getParam(chstr param) { return ""; }
+		virtual void setParam(chstr param, chstr value) { }
+		
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);

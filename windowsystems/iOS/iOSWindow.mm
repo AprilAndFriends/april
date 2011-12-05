@@ -67,6 +67,7 @@ namespace april
 	
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
+		mRetainLoadingOverlay = false;
 		mFocused = true;
 		mInputEventsMutex = false;
 		mMultiTouchActive = false;
@@ -182,7 +183,8 @@ namespace april
 		else
 		{
 			doEvents();
-			[viewcontroller removeImageView];
+			if (!mRetainLoadingOverlay)
+				[viewcontroller removeImageView];
 			mFirstFrameDrawn = true;
 		}
     }
@@ -224,6 +226,26 @@ namespace april
 		return g_wnd_rotating;
 	}
 	
+	hstr iOSWindow::getParam(chstr param)
+	{
+		if (param == "retain_loading_overlay")
+			return mRetainLoadingOverlay ? "1" : "0";
+		else return "";
+	}
+	
+	void iOSWindow::setParam(chstr param, chstr value)
+	{
+		if (param == "retain_loading_overlay")
+		{
+			bool prev = mRetainLoadingOverlay;
+			mRetainLoadingOverlay = (value == "1");
+			if (mRetainLoadingOverlay == false && prev == true && mFirstFrameDrawn)
+			{
+				[viewcontroller removeImageView];
+			}
+		}
+	}
+
 	float iOSWindow::_getTouchScale()
 	{
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
