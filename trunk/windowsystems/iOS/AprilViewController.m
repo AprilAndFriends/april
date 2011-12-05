@@ -193,9 +193,13 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 
 - (void)removeImageView
 {
-	NSLog(@"Removing Loading screen UIImageView from View Controller");
-	[mImageView removeFromSuperview];
-	[mImageView release];
+	if (mImageView != nil)
+	{
+		NSLog(@"Removing Loading screen UIImageView from View Controller");
+		[mImageView removeFromSuperview];
+		[mImageView release];
+		mImageView = nil;
+	}
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
