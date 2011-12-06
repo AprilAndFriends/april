@@ -163,7 +163,6 @@
 				7F42F7A011EB177F00B1C1DF /* include */,
 				7F42F79F11EB177B00B1C1DF /* src */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
-				D1981C31140F824B0057C3AF /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
 			name = libapril;
@@ -262,13 +261,6 @@
 				7F5A5D2611FD9CAB003C05A4 /* SDLWindow.h */,
 			);
 			name = SDL;
-			sourceTree = "<group>";
-		};
-		D1981C31140F824B0057C3AF /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		D1981C58140F85050057C3AF /* iOS */ = {
