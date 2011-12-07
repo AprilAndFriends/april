@@ -242,7 +242,10 @@
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
     
-    if (USE_DEPTH_BUFFER)
+	
+	NSString *depth = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"april_depth_buffer"];
+	
+    if (depth != nil)
 	{
         glGenRenderbuffersOES(1, &depthRenderbuffer);
         glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);

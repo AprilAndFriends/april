@@ -176,6 +176,10 @@ namespace april
 		virtual Texture* getRenderTarget() = 0;
 		virtual void setRenderTarget(Texture* source) = 0;
 		
+		virtual void setParam(chstr name, chstr value) {  }
+		virtual hstr getParam(chstr name) { return ""; }
+
+		
 		void drawColoredQuad(grect rect, Color color);
 		void drawTexturedQuad(grect rect, grect src);
 		void drawTexturedQuad(grect rect, grect src, Color color);

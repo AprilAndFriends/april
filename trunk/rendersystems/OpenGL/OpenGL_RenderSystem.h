@@ -30,8 +30,9 @@ namespace april
 {
 	class OpenGL_RenderSystem : public RenderSystem
 	{
+		hstr mParams;
 	public:
-		OpenGL_RenderSystem();
+		OpenGL_RenderSystem(hstr params);
 		~OpenGL_RenderSystem();
 
 		void assignWindow(Window* window);
@@ -41,7 +42,8 @@ namespace april
 		Texture* createTextureFromMemory(unsigned char* rgba, int w, int h);
 		Texture* createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type);
 
-
+		void setParam(chstr name, chstr value);
+		
 		// modelview matrix transformation
 		void setBlendMode(BlendMode mode);
 		void setColorMode(ColorMode mode);

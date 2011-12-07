@@ -15,6 +15,8 @@
 		7FEAD2A81255DD4900450392 /* StaticMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FEAD2A71255DD4900450392 /* StaticMesh.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FEAD2AA1255DD6000450392 /* StaticMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FEAD2A91255DD6000450392 /* StaticMesh.cpp */; };
 		7FF23D9D1255E06E000C729A /* hltypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FF23D9C1255E06E000C729A /* hltypes.framework */; };
+		D168890C14902428004FD97F /* StaticMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FEAD2A91255DD6000450392 /* StaticMesh.cpp */; };
+		D168890D14902428004FD97F /* BlurManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FE9C55411EDC6DF008EF582 /* BlurManager.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		7FF23D9C1255E06E000C729A /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = Library/Frameworks/hltypes.framework; sourceTree = SDKROOT; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* aprilutil.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = aprilutil.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D16888FC149023D8004FD97F /* libaprilutil-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libaprilutil-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D16888FE149023D8004FD97F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +45,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D16888F9149023D8004FD97F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -48,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				8DC2EF5B0486A6940098B216 /* aprilutil.framework */,
+				D16888FC149023D8004FD97F /* libaprilutil-ios.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -59,6 +71,7 @@
 				7FE9C55211EDC6D1008EF582 /* Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				D16888FD149023D8004FD97F /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
 			name = aprilutil;
@@ -117,6 +130,14 @@
 			name = Includes;
 			sourceTree = "<group>";
 		};
+		D16888FD149023D8004FD97F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D16888FE149023D8004FD97F /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -127,6 +148,13 @@
 				7F21927D11F07DAA00660245 /* AprilUtilExport.h in Headers */,
 				7F21927E11F07DAA00660245 /* BlurManager.h in Headers */,
 				7FEAD2A81255DD4900450392 /* StaticMesh.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D16888FA149023D8004FD97F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,6 +180,23 @@
 			productReference = 8DC2EF5B0486A6940098B216 /* aprilutil.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		D16888FB149023D8004FD97F /* aprilutil-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1688906149023D8004FD97F /* Build configuration list for PBXNativeTarget "aprilutil-ios" */;
+			buildPhases = (
+				D16888F8149023D8004FD97F /* Sources */,
+				D16888F9149023D8004FD97F /* Frameworks */,
+				D16888FA149023D8004FD97F /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "aprilutil-ios";
+			productName = "aprilutil-ios";
+			productReference = D16888FC149023D8004FD97F /* libaprilutil-ios.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -173,6 +218,7 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* aprilutil */,
+				D16888FB149023D8004FD97F /* aprilutil-ios */,
 			);
 		};
 /* End PBXProject section */
@@ -197,6 +243,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D16888F8149023D8004FD97F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D168890C14902428004FD97F /* StaticMesh.cpp in Sources */,
+				D168890D14902428004FD97F /* BlurManager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -214,7 +269,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = 4.0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				SKIP_INSTALL = YES;
@@ -238,7 +293,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
-				GCC_VERSION = 4.0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				SKIP_INSTALL = YES;
@@ -256,6 +311,11 @@
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../include",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = aprilutil;
@@ -271,6 +331,11 @@
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../include",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = aprilutil;
 				SDKROOT = macosx10.4;
@@ -285,6 +350,11 @@
 				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../include",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = aprilutil;
 				SDKROOT = macosx10.6;
@@ -321,6 +391,11 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../include",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = aprilutil;
@@ -342,7 +417,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				SDKROOT = macosx10.6;
@@ -360,6 +435,11 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../../hltypes/include",
+					"${SRCROOT}/../../gtypes/include",
+					"${SRCROOT}/../include",
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = aprilutil;
 				SDKROOT = macosx10.6;
@@ -377,7 +457,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				SDKROOT = macosx10.6;
@@ -386,6 +466,126 @@
 				WRAPPER_EXTENSION = framework;
 			};
 			name = "Release-LLVM";
+		};
+		D1688907149023D8004FD97F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/aprilutil_ios.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D1688908149023D8004FD97F /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/aprilutil_ios.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = "";
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = "Debug-LLVM";
+		};
+		D1688909149023D8004FD97F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/aprilutil_ios.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D168890A149023D8004FD97F /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/aprilutil_ios.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_VERSION = "";
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-LLVM";
+		};
+		D168890B149023D8004FD97F /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/aprilutil_ios.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "App Store";
 		};
 /* End XCBuildConfiguration section */
 
@@ -413,6 +613,17 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		D1688906149023D8004FD97F /* Build configuration list for PBXNativeTarget "aprilutil-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1688907149023D8004FD97F /* Debug */,
+				D1688908149023D8004FD97F /* Debug-LLVM */,
+				D1688909149023D8004FD97F /* Release */,
+				D168890A149023D8004FD97F /* Release-LLVM */,
+				D168890B149023D8004FD97F /* App Store */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
