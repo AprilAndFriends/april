@@ -40,6 +40,7 @@ namespace april
 		bool load();
 		void unload();
 		bool isLoaded();
+		void saturate(float factor);
 		int getSizeInBytes();
 		
 	};
