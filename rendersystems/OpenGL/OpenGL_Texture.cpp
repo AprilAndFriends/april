@@ -108,6 +108,11 @@ namespace april
 		unload();
 	}
 
+	void OpenGL_Texture::saturate(float factor)
+	{
+		// TODO
+	}
+	
 	bool OpenGL_Texture::load()
 	{
 		mUnusedTimer = 0;
