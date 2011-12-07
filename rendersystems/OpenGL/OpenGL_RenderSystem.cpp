@@ -81,9 +81,10 @@ namespace april
 		GL_POINTS,         // ROP_POINTS
 	};
 	
-	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(),
+	OpenGL_RenderSystem::OpenGL_RenderSystem(hstr params) : RenderSystem(),
 		mTexCoordsEnabled(false), mColorEnabled(false)
-	{		
+	{
+		mParams = params;
 	}
 
 	OpenGL_RenderSystem::~OpenGL_RenderSystem()
@@ -116,16 +117,26 @@ namespace april
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 #endif
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-        //glEnable(GL_DEPTH_TEST);
-        //glDepthFunc(GL_GREATER);
-        //glClearDepth(1.0f);
-        
-		//glEnable(GL_CULL_FACE);
+		
+		if (mParams == "zbuffer")
+		{
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+		}
 	}
 
 	hstr OpenGL_RenderSystem::getName()
 	{
 		return "OpenGL";
+	}
+	
+	void OpenGL_RenderSystem::setParam(chstr name, chstr value)
+	{
+		if (name == "zbuffer")
+		{
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+		}
 	}
 	
 	float OpenGL_RenderSystem::getPixelOffset()
@@ -499,7 +510,7 @@ namespace april
 	
 	OpenGL_RenderSystem* OpenGL_RenderSystem::create(chstr options)
 	{
-		return new OpenGL_RenderSystem();
+		return new OpenGL_RenderSystem(options);
 	}
 }
 

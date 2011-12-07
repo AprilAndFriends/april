@@ -318,6 +318,8 @@ namespace april
 #if TARGET_OS_IPHONE
 		if (options == "create_eagl")
 			april::rendersys = OpenGL_RenderSystem::create(options);
+		else
+			april::rendersys->setParam(options, "");
 		//else do nothing, rendersys was created ahead
 #elif defined(_OPENGL)
 		april::rendersys = OpenGL_RenderSystem::create(options);

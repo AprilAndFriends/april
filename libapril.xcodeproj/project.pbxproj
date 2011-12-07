@@ -450,7 +450,7 @@
 					"$(inherited)",
 					_OPENGL,
 				);
-				GCC_VERSION = 4.0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_SHADOW = NO;
 				GCC_WARN_UNUSED_VALUE = YES;
@@ -477,7 +477,7 @@
 					"$(inherited)",
 					_OPENGL,
 				);
-				GCC_VERSION = 4.0;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				SKIP_INSTALL = YES;
@@ -503,7 +503,7 @@
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../hltypes/include",
 					"${SRCROOT}/../gtypes/include",
-					"${SRCROOT}/include",
+					"${SRCROOT}/include/april",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
@@ -531,7 +531,7 @@
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../hltypes/include",
 					"${SRCROOT}/../gtypes/include",
-					"${SRCROOT}/include",
+					"${SRCROOT}/include/april",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = april;
@@ -555,7 +555,7 @@
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../hltypes/include",
 					"${SRCROOT}/../gtypes/include",
-					"${SRCROOT}/include",
+					"${SRCROOT}/include/april",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = april;
@@ -605,7 +605,7 @@
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../hltypes/include",
 					"${SRCROOT}/../gtypes/include",
-					"${SRCROOT}/include",
+					"${SRCROOT}/include/april",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
@@ -632,6 +632,7 @@
 					"$(inherited)",
 					_OPENGL,
 				);
+				GCC_VERSION = "";
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_SHADOW = NO;
 				GCC_WARN_UNUSED_VALUE = YES;
@@ -659,7 +660,7 @@
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../hltypes/include",
 					"${SRCROOT}/../gtypes/include",
-					"${SRCROOT}/include",
+					"${SRCROOT}/include/april",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = april;
@@ -682,6 +683,7 @@
 					"$(inherited)",
 					_OPENGL,
 				);
+				GCC_VERSION = "";
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				SKIP_INSTALL = YES;
