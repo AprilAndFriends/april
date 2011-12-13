@@ -724,7 +724,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = april;
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -760,7 +760,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = april;
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 			};
 			name = "Debug-LLVM";
 		};
@@ -793,7 +793,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = april;
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -827,7 +827,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = april;
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "Release-LLVM";
@@ -861,7 +861,7 @@
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = april;
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = "App Store";
