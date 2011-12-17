@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="libapril"
 	ProjectGUID="{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}"
 	RootNamespace="libapril"
@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="win32_OpenGL_Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\"
 			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
@@ -61,7 +61,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib winmm.lib"
-				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 			/>
@@ -90,7 +90,7 @@
 		</Configuration>
 		<Configuration
 			Name="win32_OpenGL_Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\"
 			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
@@ -135,7 +135,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib winmm.lib"
-				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 			/>
 			<Tool
@@ -163,7 +163,7 @@
 		</Configuration>
 		<Configuration
 			Name="win32_DirectX9_Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\"
 			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
@@ -207,7 +207,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib d3d9.lib DevIL.lib winmm.lib"
-				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
 			/>
@@ -236,7 +236,7 @@
 		</Configuration>
 		<Configuration
 			Name="win32_DirectX9_Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)bin\"
 			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
@@ -281,7 +281,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib d3d9.lib DevIL.lib winmm.lib"
-				OutputFile="$(SolutionDir)bin\$(ProjectName).dll"
+				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 			/>
 			<Tool
