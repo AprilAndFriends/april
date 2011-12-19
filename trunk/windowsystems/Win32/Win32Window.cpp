@@ -157,7 +157,7 @@ namespace april
 			}
 			break;
 		}
-		return DefWindowProc(hWnd, message, wParam, lParam);
+		return DefWindowProcW(hWnd, message, wParam, lParam);
 	}
 /************************************************************************************/
 	Win32Window::Win32Window(int w, int h, bool fullscreen, chstr title) //:
@@ -174,7 +174,7 @@ namespace april
 		mTouchEnabled = false;
 		// WINDOW
 		mTitle = title;
-		WNDCLASSEX wc;
+		WNDCLASSEXW wc;
 		ZeroMemory(&wc, sizeof(WNDCLASSEX));
 		
 		HINSTANCE hinst = GetModuleHandle(0);
@@ -184,17 +184,20 @@ namespace april
 		wc.hInstance = hinst;
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-		wc.lpszClassName = "april_win32_window";
+		wc.lpszClassName = L"april_win32_window";
 		wc.hIcon = (HICON)LoadImage(hinst, MAKEINTRESOURCE(1), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
 		wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		
-		RegisterClassEx(&wc);
+		RegisterClassExW(&wc);
 		int x = (fullscreen ? 0 : (GetSystemMetrics(SM_CXSCREEN) - w) / 2);
 		int y = (fullscreen ? 0 : (GetSystemMetrics(SM_CYSCREEN) - h) / 2);
 		
+		WCHAR wtitle[256] = {0};
+		for (int i = 0; i < title.size(); i++) wtitle[i] = title[i];
+
 		DWORD style = (fullscreen ? WS_EX_TOPMOST | WS_POPUP : WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 		april::log(hsprintf("title: %s %d %d %d %d inst: %d", title.c_str(), x, y, w, h, hinst));
-		hWnd = CreateWindowEx(0, "april_win32_window", title.c_str(), style, x, y, w, h, NULL, NULL, hinst, NULL);
+		hWnd = CreateWindowExW(0, L"april_win32_window", wtitle, style, x, y, w, h, NULL, NULL, hinst, NULL);
 		
 		if (!fullscreen)
 		{
@@ -242,10 +245,14 @@ namespace april
 	{
 		mTitle = title;
 #ifdef _DEBUG
-		SetWindowText(hWnd, (title + fpstitle).c_str());
+		hstr t = title + fpstitle;
 #else
-		SetWindowText(hWnd, title.c_str());
+		chstr t = title;
 #endif
+		WCHAR wtitle[256] = {0};
+		for (int i = 0; i < t.size(); i++) wtitle[i] = t[i];
+
+		SetWindowTextW(hWnd, wtitle);
 	}
 	
 	void Win32Window::_setResolution(int w, int h)
@@ -294,10 +301,10 @@ namespace april
 	void Win32Window::doEvents()
 	{
 		MSG msg;
-		if (PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE))
+		if (PeekMessageW(&msg, hWnd, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			DispatchMessageW(&msg);
 		}
 	}
 
