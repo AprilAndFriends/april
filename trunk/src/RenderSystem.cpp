@@ -39,8 +39,8 @@ Copyright (c) 2010 Kresimir Spes, Ivan Vucica                                   
 
 namespace april
 {
-	PlainVertex pv[4];
-	TexturedVertex tv[4];
+	PlainVertex pv[16];
+	TexturedVertex tv[16];
 
 	april::RenderSystem* rendersys;
 	harray<hstr> extensions;
@@ -117,6 +117,16 @@ namespace april
 	
 	RenderSystem::~RenderSystem()
 	{
+	}
+
+	void RenderSystem::drawQuad(grect rect, Color color)
+	{
+		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
+		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
+		pv[2].x = rect.x + rect.w;	pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
+		pv[3].x = rect.x;			pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
+		pv[4].x = rect.x;			pv[4].y = rect.y;			pv[4].z = 0.0f;
+		render(LineStrip, pv, 5, color);
 	}
 
 	void RenderSystem::drawColoredQuad(grect rect, Color color)
