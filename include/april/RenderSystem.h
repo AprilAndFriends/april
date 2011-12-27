@@ -180,6 +180,7 @@ namespace april
 		virtual hstr getParam(chstr name) { return ""; }
 
 		
+		void drawQuad(grect rect, Color color);
 		void drawColoredQuad(grect rect, Color color);
 		void drawTexturedQuad(grect rect, grect src);
 		void drawTexturedQuad(grect rect, grect src, Color color);
