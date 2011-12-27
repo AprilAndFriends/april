@@ -25,6 +25,8 @@ Copyright (c) 2010 Ivan Vucica                                                  
 #include <ctype.h> // tolower()
 #include <SDL/SDL_syswm.h>
 
+#include <hltypes/hthread.h>
+
 #include "SDLWindow.h"
 #include "Keys.h"
 #include "RenderSystem.h"
@@ -47,6 +49,7 @@ namespace april
 		SDL_WM_SetCaption(title.c_str(), title.c_str());
 		mTitle = title;
         mCursorInside = true;
+		mWindowFocused = true;
 		
 #if !_SDLGLES
 		// set up opengl attributes desired for the context
@@ -165,6 +168,7 @@ namespace april
 				case SDL_ACTIVEEVENT:
 					if (event.active.state & SDL_APPINPUTFOCUS)
 					{
+						mWindowFocused = event.active.gain;
 						handleFocusEvent(event.active.gain);
 					}
 					if (event.active.state & SDL_APPMOUSEFOCUS)
@@ -406,6 +410,7 @@ namespace april
 		float k = (SDL_GetTicks() - x) / 1000.0f;
 		x = SDL_GetTicks();
 		
+		if (!mWindowFocused) hthread::sleep(100);
 		performUpdate(k);
 		rendersys->presentFrame();
 	}

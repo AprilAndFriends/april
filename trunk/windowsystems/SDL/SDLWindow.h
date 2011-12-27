@@ -63,6 +63,7 @@ namespace april
 		bool mRunning;
 		bool mCursorVisible;
 		bool mCursorInside;
+		bool mWindowFocused;
 #if _SDLGLES
 		SDL_GLES_Context *mGLESContext;
 #endif
