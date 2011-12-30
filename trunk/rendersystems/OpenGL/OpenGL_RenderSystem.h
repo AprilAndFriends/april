@@ -1,15 +1,19 @@
-/************************************************************************************\
-This source file is part of the Awesome Portable Rendering Interface Library         *
-For latest info, see http://libapril.sourceforge.net/                                *
-**************************************************************************************
-Copyright (c) 2010 Kresimir Spes                                                     *
-*                                                                                    *
-* This program is free software; you can redistribute it and/or modify it under      *
-* the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
-\************************************************************************************/
+/// @file
+/// @author  Kresimir Spes
+/// @version 1.31
+/// 
+/// @section LICENSE
+/// 
+/// This program is free software; you can redistribute it and/or modify it under
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+/// 
+/// @section DESCRIPTION
+/// 
+/// Defines an OpenGL render system.
+
 #if defined(_OPENGL) || _OPENGLES1
-#ifndef APRIL_OPENGL_RENDERSYSTEM_H
-#define APRIL_OPENGL_RENDERSYSTEM_H
+#ifndef APRIL_OPENGL_RENDER_SYSTEM_H
+#define APRIL_OPENGL_RENDER_SYSTEM_H
 
 #ifdef __APPLE__
 #include <TargetConditionals.h>

@@ -1,18 +1,16 @@
-/************************************************************************************\
-This source file is part of the Awesome Portable Rendering Interface Library         *
-For latest info, see http://libapril.sourceforge.net/                                *
-**************************************************************************************
-Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                     *
-*                                                                                    *
-* This program is free software; you can redistribute it and/or modify it under      *
-* the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
-\************************************************************************************/
+/// @file
+/// @author  Ivan Vucica
+/// @version 1.31
+/// 
+/// @section LICENSE
+/// 
+/// This program is free software; you can redistribute it and/or modify it under
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 /**
   CoreGraphics based image source.
   Useful only on Mac and iPhone.
 **/
-
 
 #import <TargetConditionals.h>
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE

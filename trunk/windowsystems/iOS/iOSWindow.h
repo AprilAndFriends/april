@@ -1,18 +1,22 @@
-/************************************************************************************\
- This source file is part of the Awesome Portable Rendering Interface Library         *
- For latest info, see http://libapril.sourceforge.net/                                *
- **************************************************************************************
- Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                     *
- *                                                                                    *
- * This program is free software; you can redistribute it and/or modify it under      *
- * the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
- \************************************************************************************/
+/// @file
+/// @author  Ivan Vucica
+/// @version 1.31
+/// 
+/// @section LICENSE
+/// 
+/// This program is free software; you can redistribute it and/or modify it under
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+/// 
+/// @section DESCRIPTION
+/// 
+/// Defines an iOS window.
 
-#ifndef APRIL_IOSWINDOW_H_INCLUDED
-#define APRIL_IOSWINDOW_H_INCLUDED
+#ifndef APRIL_IOS_WINDOW_H
+#define APRIL_IOS_WINDOW_H
 
-#include "Window.h"
 #include "Timer.h"
+#include "Window.h"
+
 namespace april
 {
 	// We're using input event queuing so we can dispatch them on the main thread

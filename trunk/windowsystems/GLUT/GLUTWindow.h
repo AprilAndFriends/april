@@ -1,12 +1,16 @@
-/************************************************************************************\
-This source file is part of the Awesome Portable Rendering Interface Library         *
-For latest info, see http://libapril.sourceforge.net/                                *
-**************************************************************************************
-Copyright (c) 2010 Ivan Vucica                                                       *
-*                                                                                    *
-* This program is free software; you can redistribute it and/or modify it under      *
-* the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
-\************************************************************************************/
+/// @file
+/// @author  Ivan Vucica
+/// @version 1.31
+/// 
+/// @section LICENSE
+/// 
+/// This program is free software; you can redistribute it and/or modify it under
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+/// 
+/// @section DESCRIPTION
+/// 
+/// Defines a GLUT window.
+
 #ifndef APRIL_GLUT_WINDOW_H
 #define APRIL_GLUT_WINDOW_H
 

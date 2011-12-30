@@ -1,12 +1,17 @@
-/************************************************************************************\
-This source file is part of the Awesome Portable Rendering Interface Library         *
-For latest info, see http://libapril.sourceforge.net/                                *
-**************************************************************************************
-Copyright (c) 2010 Kresimir Spes                                                     *
-*                                                                                    *
-* This program is free software; you can redistribute it and/or modify it under      *
-* the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
-\************************************************************************************/
+/// @file
+/// @author  Kresimir Spes
+/// @author  Boris Mikic
+/// @version 1.31
+/// 
+/// @section LICENSE
+/// 
+/// This program is free software; you can redistribute it and/or modify it under
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+/// 
+/// @section DESCRIPTION
+/// 
+/// Defines macros for DLL exports/imports.
+
 #ifndef APRIL_EXPORT_H
 #define APRIL_EXPORT_H
 
