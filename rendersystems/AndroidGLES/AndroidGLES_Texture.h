@@ -1,12 +1,16 @@
-/************************************************************************************\
-This source file is part of the Awesome Portable Rendering Interface Library         *
-For latest info, see http://libapril.sourceforge.net/                                *
-**************************************************************************************
-Copyright (c) 2011 Domagoj Cerjan                                                    *
-*                                                                                    *
-* This program is free software; you can redistribute it and/or modify it under      *
-* the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
-\************************************************************************************/
+/// @file
+/// @author  Domagoj Cerjan
+/// @version 1.31
+/// 
+/// @section LICENSE
+/// 
+/// This program is free software; you can redistribute it and/or modify it under
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+/// 
+/// @section DESCRIPTION
+/// 
+/// Defines an Android specific OpenGLES texture.
+
 #ifndef APRIL_ANDROID_GLES_TEXTURE_H
 #define APRIL_ANDROID_GLES_TEXTURE_H
 

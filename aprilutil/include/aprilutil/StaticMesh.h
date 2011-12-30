@@ -1,14 +1,19 @@
-/************************************************************************************\
-This source file is part of the APRIL Utility library                                *
-For latest info, see http://libapril.sourceforge.net/                                *
-**************************************************************************************
-Copyright (c) 2010 Kresimir Spes, Domagoj Cerjan                                     *
-*                                                                                    *
-* This program is free software; you can redistribute it and/or modify it under      *
-* the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
-\************************************************************************************/
-#ifndef MESH_LOADER_H
-#define MESH_LOADER_H
+/// @file
+/// @author  Kresimir Spes
+/// @author  Domagoj Cerjan
+/// @version 1.31
+/// 
+/// @section LICENSE
+/// 
+/// This program is free software; you can redistribute it and/or modify it under
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+/// 
+/// @section DESCRIPTION
+/// 
+/// Defines a static mesh.
+
+#ifndef APRILUTIL_MESH_LOADER_H
+#define APRILUTIL_MESH_LOADER_H
 
 #include <stdio.h>
 
