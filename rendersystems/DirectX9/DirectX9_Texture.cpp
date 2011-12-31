@@ -731,6 +731,10 @@ namespace april
 
 	void DirectX9_Texture::rotateHue(float degrees)
 	{
+		if (degrees == 0.0f)
+		{
+			return;
+		}
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
 		LOCK_RESULT result = _tryLock(&buffer, &lockRect, NULL);
