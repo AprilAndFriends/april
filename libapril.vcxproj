@@ -67,6 +67,14 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Debug|Win32'">$(SolutionDir)bin\lib\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Release|Win32'">$(SolutionDir)bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Release|Win32'">$(SolutionDir)bin\lib\$(ProjectName)\$(Configuration)\</IntDir>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Release|Win32'">$(IncludePath);$(DXSDK_DIR)Include</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Debug|Win32'">$(IncludePath);$(DXSDK_DIR)Include</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Debug|Win32'">$(IncludePath);$(DXSDK_DIR)Include</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Release|Win32'">$(IncludePath);$(DXSDK_DIR)Include</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Debug|Win32'">$(LibraryPath);$(DXSDK_DIR)Lib\x86</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='win32_DirectX9_Release|Win32'">$(LibraryPath);$(DXSDK_DIR)Lib\x86</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Debug|Win32'">$(LibraryPath);$(DXSDK_DIR)Lib\x86</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Release|Win32'">$(LibraryPath);$(DXSDK_DIR)Lib\x86</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='win32_OpenGL_Debug|Win32'">
     <ClCompile>
@@ -130,7 +138,7 @@
       </FunctionLevelLinking>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;d3d9.lib;DevIL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;d3d9.lib;d3dx9.lib;DevIL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -154,7 +162,7 @@
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;d3d9.lib;DevIL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;d3d9.lib;d3dx9.lib;DevIL.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\lib\msvc100;$(SolutionDir)bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <ImportLibrary>$(SolutionDir)bin\$(TargetName).lib</ImportLibrary>
@@ -166,12 +174,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main_win32.cpp" />
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_PixelShader.cpp" />
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_VertexShader.cpp" />
     <ClCompile Include="src\Color.cpp" />
     <ClCompile Include="src\ImageSource.cpp" />
     <ClCompile Include="src\ImageSourceIL.cpp" />
+    <ClCompile Include="src\PixelShader.cpp" />
     <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\TimerWin.cpp" />
+    <ClCompile Include="src\VertexShader.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="windowsystems\Win32\Win32Window.cpp" />
     <ClCompile Include="rendersystems\DirectX9\DirectX9_RenderSystem.cpp" />
@@ -185,10 +197,14 @@
     <ClInclude Include="include\april\ImageSource.h" />
     <ClInclude Include="include\april\Keys.h" />
     <ClInclude Include="include\april\main.h" />
+    <ClInclude Include="include\april\PixelShader.h" />
     <ClInclude Include="include\april\RenderSystem.h" />
     <ClInclude Include="include\april\Texture.h" />
     <ClInclude Include="include\april\Timer.h" />
+    <ClInclude Include="include\april\VertexShader.h" />
     <ClInclude Include="include\april\Window.h" />
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_PixelShader.h" />
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_VertexShader.h" />
     <ClInclude Include="windowsystems\Win32\Win32Window.h" />
     <ClInclude Include="rendersystems\DirectX9\DirectX9_RenderSystem.h" />
     <ClInclude Include="rendersystems\DirectX9\DirectX9_Texture.h" />
