@@ -29,6 +29,9 @@ namespace april
 		void load(chstr filename);
 		bool compile();
 		virtual bool compile(chstr shaderCode) = 0;
+		virtual void setConstantsB(const int* quadVectors, unsigned int quadCount) = 0;
+		virtual void setConstantsI(const int* quadVectors, unsigned int quadCount) = 0;
+		virtual void setConstantsF(const float* quadVectors, unsigned int quadCount) = 0;
 
 	protected:
 		hstr mShaderCode;

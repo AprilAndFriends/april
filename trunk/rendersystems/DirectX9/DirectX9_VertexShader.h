@@ -30,6 +30,9 @@ namespace april
 		~DirectX9_VertexShader();
 
 		bool compile(chstr shaderCode);
+		void setConstantsB(const int* quadVectors, unsigned int quadCount);
+		void setConstantsI(const int* quadVectors, unsigned int quadCount);
+		void setConstantsF(const float* quadVectors, unsigned int quadCount);
 
 	};
 

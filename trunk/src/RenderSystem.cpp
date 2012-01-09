@@ -158,15 +158,6 @@ namespace april
 		render(TriangleStrip, tv, 4, color);
 	}
 	
-	void RenderSystem::drawTexturedQuad(grect rect, grect src, Color color, Color tone)
-	{
-		tv[0].x = rect.x;			tv[0].y = rect.y;			tv[0].z = 0.0f;	tv[0].u = src.x;			tv[0].v = src.y;
-		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
-		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
-		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
-		render(TriangleStrip, tv, 4, color, tone);
-	}
-	
 	hstr RenderSystem::findTextureFile(chstr _filename)
 	{
 		hstr filename = _filename;

@@ -56,7 +56,6 @@ namespace april
 		D3DPT_POINTLIST,     // ROP_POINT_LIST
 	};
 
-	ColoredTonedTexturedVertex static_cttv[VERTICES_BUFFER_COUNT];
 	ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
 	ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
 
@@ -560,30 +559,6 @@ namespace april
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete [] ctv;
-		}
-	}
-
-	void DirectX9_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color, Color tone)
-	{
-		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
-		unsigned int toneDx9 = D3DCOLOR_ARGB((int)tone.a, (int)tone.r, (int)tone.g, (int)tone.b);
-		ColoredTonedTexturedVertex* cttv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cttv : new ColoredTonedTexturedVertex[nVertices];
-		ColoredTonedTexturedVertex* p = cttv;
-		for (int i = 0; i < nVertices; i++, p++, v++)
-		{
-			p->x = v->x;
-			p->y = v->y;
-			p->z = v->z;
-			p->u = v->u;
-			p->v = v->v;
-			p->color = colorDx9;
-			p->tone = toneDx9;
-		}
-		d3dDevice->SetFVF(TEX_COLOR_TONE_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), cttv, sizeof(ColoredTonedTexturedVertex));
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete [] cttv;
 		}
 	}
 
