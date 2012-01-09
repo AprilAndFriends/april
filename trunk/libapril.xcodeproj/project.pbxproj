@@ -35,6 +35,12 @@
 		7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8FA75122FACA30092964C /* TimerSDL.cpp */; };
 		7FCD394412018BD300608217 /* main_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FCD394312018BD300608217 /* main_mac.mm */; };
 		C9A8520D134AF97000B455BE /* ImageSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9A8520C134AF97000B455BE /* ImageSource.cpp */; };
+		C9C04F8B14BB106F005BD333 /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
+		C9C04F8C14BB106F005BD333 /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
+		C9C04F9014BB1091005BD333 /* PixelShader.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C04F8E14BB1091005BD333 /* PixelShader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C9C04F9114BB1091005BD333 /* VertexShader.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C04F8F14BB1091005BD333 /* VertexShader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C9C04F9314BB109B005BD333 /* VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F9214BB109B005BD333 /* VertexShader.cpp */; };
+		C9C04F9414BB109B005BD333 /* VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F9214BB109B005BD333 /* VertexShader.cpp */; };
 		D1981C42140F82B00057C3AF /* OpenGL_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520C12E470B200E958D8 /* OpenGL_RenderSystem.cpp */; };
 		D1981C43140F82B00057C3AF /* OpenGL_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520E12E470B200E958D8 /* OpenGL_Texture.cpp */; };
 		D1981C44140F82B00057C3AF /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522E12E4713600E958D8 /* Color.cpp */; };
@@ -95,6 +101,10 @@
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9A8520C134AF97000B455BE /* ImageSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSource.cpp; path = src/ImageSource.cpp; sourceTree = "<group>"; };
+		C9C04F8A14BB106F005BD333 /* PixelShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PixelShader.cpp; path = src/PixelShader.cpp; sourceTree = "<group>"; };
+		C9C04F8E14BB1091005BD333 /* PixelShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelShader.h; path = include/april/PixelShader.h; sourceTree = "<group>"; };
+		C9C04F8F14BB1091005BD333 /* VertexShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VertexShader.h; path = include/april/VertexShader.h; sourceTree = "<group>"; };
+		C9C04F9214BB109B005BD333 /* VertexShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VertexShader.cpp; path = src/VertexShader.cpp; sourceTree = "<group>"; };
 		D1981C30140F824B0057C3AF /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1981C4E140F849A0057C3AF /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		D1981C50140F84A10057C3AF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -205,6 +215,8 @@
 			isa = PBXGroup;
 			children = (
 				D1E0E277140FA68B00422D84 /* main_ios.mm */,
+				C9C04F8A14BB106F005BD333 /* PixelShader.cpp */,
+				C9C04F9214BB109B005BD333 /* VertexShader.cpp */,
 				D1981C71140F856B0057C3AF /* TimerPosix.cpp */,
 				7FC8FA75122FACA30092964C /* TimerSDL.cpp */,
 				7F1B522E12E4713600E958D8 /* Color.cpp */,
@@ -221,6 +233,8 @@
 		7F42F7A011EB177F00B1C1DF /* include */ = {
 			isa = PBXGroup;
 			children = (
+				C9C04F8E14BB1091005BD333 /* PixelShader.h */,
+				C9C04F8F14BB1091005BD333 /* VertexShader.h */,
 				7F1B522712E4710D00E958D8 /* aprilExport.h */,
 				7F1B522812E4710D00E958D8 /* Color.h */,
 				7F1B522912E4710D00E958D8 /* Texture.h */,
@@ -297,6 +311,8 @@
 				7F4D0FEA11FEE6C500F2F9F5 /* main.h in Headers */,
 				7FC8FA29122FA58F0092964C /* Timer.h in Headers */,
 				7F1B521112E470B200E958D8 /* OpenGL_RenderSystem.h in Headers */,
+				C9C04F9014BB1091005BD333 /* PixelShader.h in Headers */,
+				C9C04F9114BB1091005BD333 /* VertexShader.h in Headers */,
 				7F1B521312E470B200E958D8 /* OpenGL_Texture.h in Headers */,
 				7F1B522A12E4710D00E958D8 /* aprilExport.h in Headers */,
 				7F1B522B12E4710D00E958D8 /* Color.h in Headers */,
@@ -403,6 +419,8 @@
 				7F1B523012E4713600E958D8 /* Color.cpp in Sources */,
 				7F1B523112E4713600E958D8 /* Texture.cpp in Sources */,
 				C9A8520D134AF97000B455BE /* ImageSource.cpp in Sources */,
+				C9C04F8B14BB106F005BD333 /* PixelShader.cpp in Sources */,
+				C9C04F9314BB109B005BD333 /* VertexShader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,6 +444,8 @@
 				D1981C48140F82B00057C3AF /* ImageSourceCG.mm in Sources */,
 				D1981C49140F82B00057C3AF /* RenderSystem.cpp in Sources */,
 				D1981C4A140F82B00057C3AF /* Window.cpp in Sources */,
+				C9C04F8C14BB106F005BD333 /* PixelShader.cpp in Sources */,
+				C9C04F9414BB109B005BD333 /* VertexShader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
