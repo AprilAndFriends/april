@@ -76,7 +76,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>windowsystems/Win32;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;APRIL_EXPORTS;BUILDING_APRIL;USE_IL;_WIN32;_OPENGL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;APRIL_EXPORTS;BUILDING_APRIL;USE_IL;_WIN32;_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>

@@ -11,31 +11,30 @@
 #ifdef _OPENGL
 
 #ifdef IPHONE_PLATFORM
- #include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/gl.h>
 #elif _OPENGLES1
- #include <GLES/gl.h>
+#include <GLES/gl.h>
 #else
- #ifdef _WIN32
-  #include <windows.h>
- #endif
-
- #ifndef __APPLE__
-  #include <GL/gl.h>
-  #include <GL/glu.h>
-  #if HAVE_GLUT
-   #include <GL/glut.h>
-  #endif
- #else // __APPLE__
-  #include <TargetConditionals.h>
-  #if TARGET_OS_IPHONE
-   #include <OpenGLES/ES1/gl.h>
-   #include <OpenGLES/ES1/glext.h>
-  #else
-   #include <OpenGL/gl.h>
-   #include <OpenGL/glu.h>
-   #include <GLUT/glut.h>
-  #endif
- #endif // __APPLE__
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#ifndef __APPLE__
+#if HAVE_GLUT
+#include <gl/GLUT.h>
+#endif
+#include <gl/GL.h>
+#include <gl/GLU.h>
+#else // __APPLE__
+#include <TargetConditionals.h>
+#if TARGET_OS_IPHONE
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
+#else
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#endif
+#endif // __APPLE__
 #endif
 
 #include <hltypes/hstring.h>
@@ -93,6 +92,7 @@ namespace april
 
 	OpenGL_Texture::OpenGL_Texture(unsigned char* rgba, int w, int h)
 	{
+		april::log("Creating user-defined GL texture");
 		mWidth = w;
 		mHeight = h;
 		mDynamic = 0;
@@ -102,6 +102,19 @@ namespace april
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+	}
+
+	OpenGL_Texture::OpenGL_Texture(int w, int h)
+	{
+		april::log("Creating empty GL texture");
+		mWidth = w;
+		mHeight = h;
+		mDynamic = 0;
+		mFilename = "UserTexture";
+		glGenTextures(1, &mTexId);
+		glBindTexture(GL_TEXTURE_2D, mTexId);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	}
 
 	OpenGL_Texture::~OpenGL_Texture()

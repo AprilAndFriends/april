@@ -39,6 +39,7 @@ namespace april
 		
 		OpenGL_Texture(chstr filename, bool dynamic);
 		OpenGL_Texture(unsigned char* rgba, int w, int h);
+		OpenGL_Texture(int w, int h);
 		~OpenGL_Texture();
 		
 		bool load();

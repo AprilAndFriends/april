@@ -1,7 +1,8 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 1.32
 /// 
 /// @section LICENSE
 /// 
@@ -11,33 +12,33 @@
 #ifdef _OPENGL
 
 #ifdef IPHONE_PLATFORM
- #include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/gl.h>
 #elif _OPENGLES1
- #include <GLES/gl.h>
+#include <GLES/gl.h>
 #else
- #ifdef _WIN32
-  #include <windows.h>
- #endif
- #include <stdlib.h>
- #include <string.h>
-
- #ifndef __APPLE__
-  #include <GL/gl.h>
-  #include <GL/glu.h>
-  #if HAVE_GLUT
-   #include <GL/glut.h>
-  #endif
- #else // __APPLE__
-  #include <TargetConditionals.h>
-  #if TARGET_OS_IPHONE
-   #include <OpenGLES/ES1/gl.h>
-   #include <OpenGLES/ES1/glext.h>
-  #else
-   #include <OpenGL/gl.h>
-   #include <OpenGL/glu.h>
-   #include <GLUT/glut.h>
-  #endif // TARGET_OS_IPHONE
- #endif // __APPLE__
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#ifndef __APPLE__
+#if HAVE_GLUT
+#include <gl/GLUT.h>
+#endif
+#include <gl/GL.h>
+#include <gl/GLU.h>
+#else // __APPLE__
+#include <TargetConditionals.h>
+#if TARGET_OS_IPHONE
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
+#else
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#endif // TARGET_OS_IPHONE
+#endif // __APPLE__
 #endif // IPHONE_PLATFORM, _OPENGLES1, ...
 
 #include <gtypes/Vector2.h>
@@ -94,7 +95,7 @@ namespace april
 
 	void OpenGL_RenderSystem::assignWindow(Window* window)
 	{
-		mWindow = window;
+ 		mWindow = window;
 		
 		glViewport(0, 0, window->getWidth(), window->getHeight());
 		glClearColor(0, 0, 0, 1);
@@ -170,14 +171,12 @@ namespace april
 
 	Texture* OpenGL_RenderSystem::createTextureFromMemory(unsigned char* rgba, int w, int h)
 	{
-		april::log("creating user-defined GL texture");
-		OpenGL_Texture* t = new OpenGL_Texture(rgba, w, h);
-		return t;
+		return new OpenGL_Texture(rgba, w, h);
 	}
 	
 	Texture* OpenGL_RenderSystem::createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type)
 	{
-		return NULL; // TODO
+		return new OpenGL_Texture(w, h);
 	}
 
 	VertexShader* OpenGL_RenderSystem::createVertexShader()
@@ -525,7 +524,7 @@ namespace april
 	void OpenGL_RenderSystem::setResolution(int w, int h)
 	{
 // TODO: OpenGL_RenderSystem::setResolution()
-		april::log("WARNING: %s ignored!", __PRETTY_FUNCTION__);
+		april::log("WARNING: setResolution ignored!");
 	}
 	void OpenGL_RenderSystem::setColorMode(ColorMode mode, unsigned char alpha)
 	{

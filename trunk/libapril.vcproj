@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="windowsystems/Win32;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;USE_IL;_WIN32;_OPENGL;_CRT_SECURE_NO_WARNINGS;BUILDING_APRIL"
+				PreprocessorDefinitions="_DEBUG;APRIL_EXPORTS;USE_IL;_WIN32;_OPENGL;_CRT_SECURE_NO_WARNINGS;BUILDING_APRIL;WIN32;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

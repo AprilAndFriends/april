@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.31
+/// @version 1.32
 /// 
 /// @section LICENSE
 /// 
@@ -353,7 +353,7 @@ namespace april
 	
 	void createRenderTarget(int w, int h, bool fullscreen, chstr title)
 	{
-		Window* window = 0;
+		Window* window = NULL;
 #if TARGET_OS_IPHONE
 		return;
 #elif defined(HAVE_MARMELADE)
