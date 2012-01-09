@@ -105,15 +105,6 @@ namespace april
 		void operator=(const gvec3& v);
 	};
     
-	class aprilExport ColoredTonedTexturedVertex : public ColoredVertex
-	{
-	public:
-		unsigned int tone;
-		float u;
-		float v;
-		void operator=(const gvec3& v);
-	};
-    
     class aprilExport ColoredTexturedNormalVertex : public ColoredTexturedVertex
     {
     public:
@@ -191,7 +182,6 @@ namespace april
 		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color) = 0;
 		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices) = 0;
 		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color) = 0;
-		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color, Color tone) = 0;
 		virtual void render(RenderOp renderOp, ColoredVertex* v, int nVertices) = 0;
 		virtual void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices) = 0;
 		
@@ -206,7 +196,6 @@ namespace april
 		void drawColoredQuad(grect rect, Color color);
 		void drawTexturedQuad(grect rect, grect src);
 		void drawTexturedQuad(grect rect, grect src, Color color);
-		void drawTexturedQuad(grect rect, grect src, Color color, Color tone);
 
 		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
 		void setIdleTextureUnloadTime(float time) { mIdleUnloadTime = time; }

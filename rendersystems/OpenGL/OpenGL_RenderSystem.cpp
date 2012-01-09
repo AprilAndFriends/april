@@ -397,12 +397,6 @@ namespace april
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 
-	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color, Color tone)
-	{
-		// TODO
-		render(renderOp, v, nVertices, color);
-	}
-
 	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
 	{
 		if (mTexCoordsEnabled)

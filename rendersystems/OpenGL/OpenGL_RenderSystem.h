@@ -66,7 +66,6 @@ namespace april
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color, Color tone);
 		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 		
