@@ -1,6 +1,8 @@
 /// @file
 /// @author  Kresimir Spes
-/// @version 1.31
+/// @author  Ivan Vucica
+/// @author  Boris Mikic
+/// @version 1.32
 /// 
 /// @section LICENSE
 /// 
@@ -18,15 +20,6 @@
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
-#if TARGET_OS_MAC && !TARGET_OS_IPHONE
-#include <OpenGL/gl.h>
-#elif TARGET_OS_IPHONE
-#include <OpenGLES/ES1/gl.h>
-#elif _OPENGLES1
-#include <GLES/gl.h>
-#else
-#include <GL/gl.h>
-#endif
 
 #include "RenderSystem.h"
 
@@ -34,7 +27,6 @@ namespace april
 {
 	class OpenGL_RenderSystem : public RenderSystem
 	{
-		hstr mParams;
 	public:
 		OpenGL_RenderSystem(hstr params);
 		~OpenGL_RenderSystem();
@@ -87,6 +79,7 @@ namespace april
 		static OpenGL_RenderSystem* create(chstr options);
 
 	protected:
+		hstr mParams;
 		bool mTexCoordsEnabled;
 		bool mColorEnabled;
 		void _setModelviewMatrix(const gmat4& matrix);
