@@ -23,7 +23,9 @@
 #include <gtypes/Matrix4.h>
 
 #include "Color.h"
+#include "PixelShader.h"
 #include "Texture.h"
+#include "VertexShader.h"
 #include "aprilExport.h"
 
 namespace april
@@ -103,6 +105,15 @@ namespace april
 		void operator=(const gvec3& v);
 	};
     
+	class aprilExport ColoredTonedTexturedVertex : public ColoredVertex
+	{
+	public:
+		unsigned int tone;
+		float u;
+		float v;
+		void operator=(const gvec3& v);
+	};
+    
     class aprilExport ColoredTexturedNormalVertex : public ColoredTexturedVertex
     {
     public:
@@ -140,6 +151,11 @@ namespace april
 		virtual Texture* createEmptyTexture(int w, int h, TextureFormat fmt = AT_XRGB, TextureType type = AT_NORMAL) = 0;
 		Texture* createBlankTexture(int w, int h, TextureFormat fmt = AT_XRGB, TextureType type = AT_NORMAL);
 
+		virtual VertexShader* createVertexShader() = 0;
+		virtual PixelShader* createPixelShader() = 0;
+		virtual void setVertexShader(VertexShader* vertexShader) = 0;
+		virtual void setPixelShader(PixelShader* pixelShader) = 0;
+
 		// modelview matrix transformation
 		void setIdentityTransform();
 		void translate(float x, float y, float z = 0.0f);
@@ -175,6 +191,7 @@ namespace april
 		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color) = 0;
 		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices) = 0;
 		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color) = 0;
+		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color, Color tone) = 0;
 		virtual void render(RenderOp renderOp, ColoredVertex* v, int nVertices) = 0;
 		virtual void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices) = 0;
 		
@@ -189,6 +206,7 @@ namespace april
 		void drawColoredQuad(grect rect, Color color);
 		void drawTexturedQuad(grect rect, grect src);
 		void drawTexturedQuad(grect rect, grect src, Color color);
+		void drawTexturedQuad(grect rect, grect src, Color color, Color tone);
 
 		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
 		void setIdleTextureUnloadTime(float time) { mIdleUnloadTime = time; }

@@ -180,6 +180,24 @@ namespace april
 		return NULL; // TODO
 	}
 
+	VertexShader* OpenGL_RenderSystem::createVertexShader()
+	{
+		return NULL;
+	}
+
+	PixelShader* OpenGL_RenderSystem::createPixelShader()
+	{
+		return NULL;
+	}
+
+	void OpenGL_RenderSystem::setVertexShader(VertexShader* vertexShader)
+	{
+	}
+
+	void OpenGL_RenderSystem::setPixelShader(PixelShader* pixelShader)
+	{
+	}
+
 	void OpenGL_RenderSystem::setTexture(Texture* t)
 	{
 		OpenGL_Texture* glt = (OpenGL_Texture*)t;
@@ -378,6 +396,12 @@ namespace april
 		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), (char*)v + 3 * sizeof(float));
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
+	}
+
+	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color, Color tone)
+	{
+		// TODO
+		render(renderOp, v, nVertices, color);
 	}
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
