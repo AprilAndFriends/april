@@ -16,8 +16,10 @@
 #include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
 
+#include "DirectX9_PixelShader.h"
 #include "DirectX9_RenderSystem.h"
 #include "DirectX9_Texture.h"
+#include "DirectX9_VertexShader.h"
 #include "ImageSource.h"
 #include "Keys.h"
 #include "Timer.h"
@@ -27,6 +29,7 @@
 #define COLOR_FVF (D3DFVF_XYZ | D3DFVF_DIFFUSE)
 #define TEX_FVF (D3DFVF_XYZ | D3DFVF_TEX1)
 #define TEX_COLOR_FVF (D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE)
+#define TEX_COLOR_TONE_FVF (D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_SPECULAR)
 #define VERTICES_BUFFER_COUNT 8192
 #define UINT_RGBA_TO_ARGB(c) ((((c) >> 8) & 0xFFFFFF) | (((c) & 0xFF) << 24))
 
@@ -53,6 +56,7 @@ namespace april
 		D3DPT_POINTLIST,     // ROP_POINT_LIST
 	};
 
+	ColoredTonedTexturedVertex static_cttv[VERTICES_BUFFER_COUNT];
 	ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
 	ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
 
@@ -204,6 +208,42 @@ namespace april
 		return new DirectX9_Texture(w, h, fmt, type);
 	}
 	
+	VertexShader* DirectX9_RenderSystem::createVertexShader()
+	{
+		return new DirectX9_VertexShader();
+	}
+
+	PixelShader* DirectX9_RenderSystem::createPixelShader()
+	{
+		return new DirectX9_PixelShader();
+	}
+
+	void DirectX9_RenderSystem::setVertexShader(VertexShader* vertexShader)
+	{
+		DirectX9_VertexShader* shader = (DirectX9_VertexShader*)vertexShader;
+		if (shader != NULL)
+		{
+			d3dDevice->SetVertexShader(shader->mShader);
+		}
+		else
+		{
+			d3dDevice->SetVertexShader(NULL);
+		}
+	}
+
+	void DirectX9_RenderSystem::setPixelShader(PixelShader* pixelShader)
+	{
+		DirectX9_PixelShader* shader = (DirectX9_PixelShader*)pixelShader;
+		if (shader != NULL)
+		{
+			d3dDevice->SetPixelShader(shader->mShader);
+		}
+		else
+		{
+			d3dDevice->SetPixelShader(NULL);
+		}
+	}
+
 	void DirectX9_RenderSystem::setTextureFilter(TextureFilter filter)
 	{
 		if (filter == Linear)
@@ -520,6 +560,30 @@ namespace april
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete [] ctv;
+		}
+	}
+
+	void DirectX9_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color, Color tone)
+	{
+		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
+		unsigned int toneDx9 = D3DCOLOR_ARGB((int)tone.a, (int)tone.r, (int)tone.g, (int)tone.b);
+		ColoredTonedTexturedVertex* cttv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cttv : new ColoredTonedTexturedVertex[nVertices];
+		ColoredTonedTexturedVertex* p = cttv;
+		for (int i = 0; i < nVertices; i++, p++, v++)
+		{
+			p->x = v->x;
+			p->y = v->y;
+			p->z = v->z;
+			p->u = v->u;
+			p->v = v->v;
+			p->color = colorDx9;
+			p->tone = toneDx9;
+		}
+		d3dDevice->SetFVF(TEX_COLOR_TONE_FVF);
+		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), cttv, sizeof(ColoredTonedTexturedVertex));
+		if (nVertices > VERTICES_BUFFER_COUNT)
+		{
+			delete [] cttv;
 		}
 	}
 

@@ -46,6 +46,11 @@ namespace april
 		Texture* createTextureFromMemory(unsigned char* rgba, int w, int h);
 		Texture* createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type);
 
+		VertexShader* createVertexShader();
+		PixelShader* createPixelShader();
+		void setVertexShader(VertexShader* vertexShader);
+		void setPixelShader(PixelShader* pixelShader);
+
 		void setParam(chstr name, chstr value);
 		
 		// modelview matrix transformation
@@ -69,6 +74,7 @@ namespace april
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color);
+		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color, Color tone);
 		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 		

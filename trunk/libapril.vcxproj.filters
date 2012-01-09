@@ -24,6 +24,24 @@
     <Filter Include="Resource Files">
       <UniqueIdentifier>{bc3abb83-0c68-456a-ae46-f6fe13ebf76e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\rendersystems\DirectX9">
+      <UniqueIdentifier>{dfe5826f-1d2c-4f6d-8d5f-656d36961488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL">
+      <UniqueIdentifier>{43b75f5a-a897-45bc-a6cd-0f649765424b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX9">
+      <UniqueIdentifier>{edfbadb8-e07f-4516-9ad6-479af740625c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL">
+      <UniqueIdentifier>{67c8116e-f076-46fd-94f7-0c597f17b27f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\windowsystems\Win32">
+      <UniqueIdentifier>{fc3c2db0-d18e-4947-a5ff-518b26111c1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\windowsystems\Win32">
+      <UniqueIdentifier>{ca32f0eb-a1ce-4b6d-9803-4dcbec60d895}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -44,26 +62,38 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\Win32\Win32Window.cpp">
-      <Filter>Source Files\windowsystems</Filter>
-    </ClCompile>
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_RenderSystem.cpp">
-      <Filter>Source Files\rendersystems</Filter>
-    </ClCompile>
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_Texture.cpp">
-      <Filter>Source Files\rendersystems</Filter>
-    </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp">
-      <Filter>Source Files\rendersystems</Filter>
-    </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp">
-      <Filter>Source Files\rendersystems</Filter>
-    </ClCompile>
     <ClCompile Include="src\ImageSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main_win32.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PixelShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_PixelShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\DirectX9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_Texture.cpp">
+      <Filter>Source Files\rendersystems\DirectX9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_VertexShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\Win32\Win32Window.cpp">
+      <Filter>Source Files\windowsystems\Win32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,23 +121,35 @@
     <ClInclude Include="include\april\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\Win32\Win32Window.h">
-      <Filter>Header Files\windowsystems</Filter>
-    </ClInclude>
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_RenderSystem.h">
-      <Filter>Header Files\rendersystems</Filter>
-    </ClInclude>
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_Texture.h">
-      <Filter>Header Files\rendersystems</Filter>
-    </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h">
-      <Filter>Header Files\rendersystems</Filter>
-    </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h">
-      <Filter>Header Files\rendersystems</Filter>
-    </ClInclude>
     <ClInclude Include="include\april\main.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\PixelShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\VertexShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_PixelShader.h">
+      <Filter>Header Files\rendersystems\DirectX9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_RenderSystem.h">
+      <Filter>Header Files\rendersystems\DirectX9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_Texture.h">
+      <Filter>Header Files\rendersystems\DirectX9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_VertexShader.h">
+      <Filter>Header Files\rendersystems\DirectX9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\Win32\Win32Window.h">
+      <Filter>Header Files\windowsystems\Win32</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
