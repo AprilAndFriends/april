@@ -26,9 +26,12 @@ namespace april
 {
 	Texture::Texture()
 	{
+		mDynamic = false;
 		mFilename = "";
-		mUnusedTimer = 0;
+		mWidth = 0;
+		mHeight = 0;
 		mBpp = 3;
+		mUnusedTimer = 0.0f;
 		mTextureFilter = Linear;
 		mTextureWrapping = true;
 	}
