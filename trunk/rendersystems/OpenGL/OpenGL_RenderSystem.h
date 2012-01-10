@@ -72,7 +72,6 @@ namespace april
 		Texture* getRenderTarget();
 		void setRenderTarget(Texture* source);
 		void beginFrame();
-		void presentFrame();
 		harray<DisplayMode> getSupportedDisplayModes();
 		
 		static OpenGL_RenderSystem* create(chstr options);

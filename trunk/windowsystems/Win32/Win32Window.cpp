@@ -24,6 +24,10 @@ namespace april
 	static bool cursorVisible = true;
 	static april::Timer globalTimer;
 	static Win32Window* instance;
+
+#ifdef _OPENGL
+	extern HDC hDC;
+#endif
 	
 #ifdef _DEBUG
 	hstr fpsTitle = " [FPS: 0]";
@@ -327,7 +331,9 @@ namespace april
 
 	void Win32Window::presentFrame()
 	{
-		// TODO will do opengl's swapbuffer here
+#ifdef _OPENGL
+		SwapBuffers(hDC);
+#endif
 	}
 	
 	void Win32Window::terminateMainLoop()
