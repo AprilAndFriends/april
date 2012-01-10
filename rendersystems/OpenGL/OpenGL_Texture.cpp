@@ -149,7 +149,28 @@ namespace april
 
 	void OpenGL_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO
+		unsigned char* writeData = new unsigned char[sw * sh * 4];
+		memset(writeData, 0, sizeof(unsigned char) * sw * sh * 4);
+		for (int j = 0; j < sh; j++)
+		{
+			for (int i = 0; i < sw; i++)
+			{
+				for (int k = 0; k < dataBpp; k++)
+				{
+					writeData[(i + j * sw) * 4 + k] = data[(sx + i + (sy + j * dataWidth)) * dataBpp + k];
+				}
+				if (dataBpp < 4)
+				{
+					writeData[(i + j * sw) * 4 + 3] = alpha;
+				}
+				else
+				{
+					writeData[(i + j * sw) * 4 + 3] = alpha * writeData[(i + j * sw) * 4 + 3] / 255;
+				}
+			}
+		}
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
+		delete writeData;
 	}
 
 	void OpenGL_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
