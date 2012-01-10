@@ -26,7 +26,7 @@ namespace april
 	static Win32Window* instance;
 	
 #ifdef _DEBUG
-	static char fpstitle[1024] = " [FPS: 0]";
+	hstr fpsTitle = " [FPS: 0]";
 #endif
 /************************************************************************************/
 	LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -181,18 +181,22 @@ namespace april
 		
 		HINSTANCE hinst = GetModuleHandle(0);
 		wc.cbSize = sizeof(WNDCLASSEX);
-		wc.style = CS_HREDRAW | CS_VREDRAW;
+		wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 		wc.lpfnWndProc = WindowProc;
 		wc.hInstance = hinst;
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
 		wc.lpszClassName = L"april_win32_window";
 		wc.hIcon = (HICON)LoadImage(hinst, MAKEINTRESOURCE(1), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
 		wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		
 		RegisterClassExW(&wc);
-		int x = (fullscreen ? 0 : (GetSystemMetrics(SM_CXSCREEN) - w) / 2);
-		int y = (fullscreen ? 0 : (GetSystemMetrics(SM_CYSCREEN) - h) / 2);
+		int x = 0;
+		int y = 0;
+		if (!fullscreen)
+		{
+			x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2;
+			y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
+		}
 		
 		WCHAR wtitle[256] = {0};
 		for (int i = 0; i < title.size(); i++) wtitle[i] = title[i];
@@ -215,7 +219,6 @@ namespace april
 		// display the window on the screen
 		ShowWindow(hWnd, 1);
 		UpdateWindow(hWnd);
-		SetCursor(LoadCursor(0, IDC_ARROW));
 	}
 	
 	Win32Window::~Win32Window()
@@ -225,8 +228,12 @@ namespace april
 
 	void Win32Window::destroyWindow()
 	{
-		DestroyWindow(hWnd);
-		UnregisterClass("april_win32_window", GetModuleHandle(0));
+		if (hWnd != 0)
+		{
+			DestroyWindow(hWnd);
+			UnregisterClassW(L"april_win32_window", GetModuleHandle(0));
+			hWnd = 0;
+		}
 	}
 
 	int Win32Window::getWidth()
@@ -247,22 +254,30 @@ namespace april
 	{
 		mTitle = title;
 #ifdef _DEBUG
-		hstr t = title + fpstitle;
+		hstr t = title + fpsTitle;
 #else
 		chstr t = title;
 #endif
 		WCHAR wtitle[256] = {0};
-		for (int i = 0; i < t.size(); i++) wtitle[i] = t[i];
+		for (int i = 0; i < t.size(); i++)
+		{
+			wtitle[i] = t[i];
+		}
 
 		SetWindowTextW(hWnd, wtitle);
 	}
 	
 	void Win32Window::_setResolution(int w, int h)
 	{
-		int x=(mFullscreen) ? 0 : (GetSystemMetrics(SM_CXSCREEN)-w)/2,
-			y=(mFullscreen) ? 0 : (GetSystemMetrics(SM_CYSCREEN)-h)/2;
-		
-		DWORD style=(mFullscreen) ? WS_EX_TOPMOST|WS_POPUP : WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX;
+		int x = 0;
+		int y = 0;
+		DWORD style = WS_EX_TOPMOST | WS_POPUP;
+		if (!mFullscreen)
+		{
+			x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2,
+			y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
+			style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+		}
 		
 		if (!mFullscreen)
 		{
@@ -333,14 +348,14 @@ namespace april
 	{
 		if (down)
 		{
-			if (mKeyDownCallback)
+			if (mKeyDownCallback != NULL)
 			{
 				mKeyDownCallback(keycode);
 			}
 		}
 		else
 		{
-			if (mKeyUpCallback)
+			if (mKeyUpCallback != NULL)
 			{
 				mKeyUpCallback(keycode);
 			}
@@ -349,7 +364,7 @@ namespace april
 	
 	void Win32Window::triggerCharEvent(unsigned int chr)
 	{
-		if (mCharCallback)
+		if (mCharCallback != NULL)
 		{
 			mCharCallback(chr);
 		}
@@ -357,7 +372,7 @@ namespace april
 	
 	void Win32Window::triggerMouseUpEvent(int button)
 	{
-		if (mMouseUpCallback)
+		if (mMouseUpCallback != NULL)
 		{
 			mMouseUpCallback(cursorPosition.x, cursorPosition.y, button);
 		}
@@ -365,7 +380,7 @@ namespace april
 	
 	void Win32Window::triggerMouseDownEvent(int button)
 	{
-		if (mMouseDownCallback)
+		if (mMouseDownCallback != NULL)
 		{
 			mMouseDownCallback(cursorPosition.x, cursorPosition.y, button);
 		}
@@ -373,7 +388,7 @@ namespace april
 	
 	void Win32Window::triggerMouseMoveEvent()
 	{
-		if (mMouseMoveCallback)
+		if (mMouseMoveCallback != NULL)
 		{
 			mMouseMoveCallback(cursorPosition.x, cursorPosition.y);
 		}
@@ -381,7 +396,7 @@ namespace april
 	
 	void Win32Window::triggerFocusCallback(bool focused)
 	{
-		if (mFocusCallback)
+		if (mFocusCallback != NULL)
 		{
 			mFocusCallback(focused);
 		}
@@ -389,7 +404,7 @@ namespace april
 	
 	void Win32Window::triggerTouchscreenCallback(bool enabled)
 	{
-		if (mTouchEnabledCallback && mTouchEnabled != enabled)
+		if (mTouchEnabledCallback != NULL && mTouchEnabled != enabled)
 		{
 			mTouchEnabled = enabled;
 			mTouchEnabledCallback(enabled);
@@ -441,10 +456,12 @@ namespace april
 			{
 				mUpdateCallback(k);
 			}
-#ifdef _DEBUG
+#ifndef _DEBUG
+			setWindowTitle(mTitle);
+#else
 			if (time - fpsTimer > 1000)
 			{
-				sprintf(fpstitle, " [FPS: %d]", fps);
+				fpsTitle = hsprintf(" [FPS: %d]", fps);
 				setWindowTitle(mTitle);
 				fps = 0;
 				fpsTimer = time;

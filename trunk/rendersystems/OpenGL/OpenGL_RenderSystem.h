@@ -72,7 +72,7 @@ namespace april
 		Texture* getRenderTarget();
 		void setRenderTarget(Texture* source);
 		void beginFrame();
-
+		void presentFrame();
 		harray<DisplayMode> getSupportedDisplayModes();
 		
 		static OpenGL_RenderSystem* create(chstr options);
@@ -81,8 +81,12 @@ namespace april
 		hstr mParams;
 		bool mTexCoordsEnabled;
 		bool mColorEnabled;
+
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
+#ifdef _WIN32
+		void _releaseWindow();
+#endif
 		
 	};
 	

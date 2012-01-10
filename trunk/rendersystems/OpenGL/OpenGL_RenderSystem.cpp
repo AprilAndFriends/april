@@ -55,7 +55,11 @@ april::Timer globalTimer;
 
 namespace april
 {
-	extern void (*g_logFunction)(chstr);
+#ifdef _WIN32
+	static HWND hWnd = 0;
+	static HDC hDC = 0;
+	static HGLRC hRC = 0;
+#endif
 
 	void win_mat_invert()
 	{
@@ -91,14 +95,99 @@ namespace april
 	OpenGL_RenderSystem::~OpenGL_RenderSystem()
 	{
 		april::log("Destroying OpenGL Rendersystem");
+#ifdef _WIN32
+		_releaseWindow();
+#endif
 	}
+
+#ifdef _WIN32
+	void OpenGL_RenderSystem::_releaseWindow()
+	{
+		if (hRC != 0)
+		{
+			wglMakeCurrent(NULL, NULL);
+			wglDeleteContext(hRC);
+			hRC = 0;
+		}
+		if (hDC != 0)
+		{
+			ReleaseDC(hWnd, hDC);
+			hDC = 0;
+		}
+	}
+#endif
 
 	void OpenGL_RenderSystem::assignWindow(Window* window)
 	{
  		mWindow = window;
-		
+#ifdef _WIN32
+		hWnd = (HWND)mWindow->getIDFromBackend();
+
+		PIXELFORMATDESCRIPTOR pfd;
+		memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
+		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+		pfd.nVersion = 1;
+		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL |	PFD_DOUBLEBUFFER;
+		pfd.iPixelType = PFD_TYPE_RGBA;
+		pfd.cColorBits = 24;
+		pfd.cStencilBits = 16;
+		pfd.dwLayerMask = PFD_MAIN_PLANE;
+
+		hDC = GetDC(hWnd);
+		if (hDC == 0)
+		{
+			april::log("can't create a GL device context");
+			return;
+		}
+		GLuint pixelFormat = ChoosePixelFormat(hDC, &pfd);
+		if (pixelFormat == 0)
+		{
+			april::log("can't find a suitable pixel format");
+			_releaseWindow();
+			return;
+		}
+		if (SetPixelFormat(hDC, pixelFormat, &pfd) == 0)
+		{
+			april::log("can't set the pixel format");
+			_releaseWindow();
+			return;
+		}
+		hRC = wglCreateContext(hDC);
+		if (hRC == 0)
+		{
+			april::log("can't create a GL rendering context");
+			_releaseWindow();
+			return;
+		}
+		if (wglMakeCurrent(hDC, hRC) == 0)
+		{
+			april::log("can't activate the GL rendering context");
+			_releaseWindow();
+			return;
+		}
+		//ShowWindow(hWnd, 1);
+		//SetForegroundWindow(hWnd);
+		//SetFocus(hWnd);
+		//ReSizeGLScene(mWindow->getWidth(), mWindow->getHeight());
+
+		/*
+	glViewport(0,0,width,height);						// Reset The Current Viewport
+
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+
+	// Calculate The Aspect Ratio Of The Window
+	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,0.1f,100.0f);
+
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+	*/
+
+#endif
 		glViewport(0, 0, window->getWidth(), window->getHeight());
 		glClearColor(0, 0, 0, 1);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -119,7 +208,7 @@ namespace april
 #endif
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 		
-		if (mParams == "zbuffer")
+		if (mParams.contains("zbuffer"))
 		{
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
@@ -321,7 +410,7 @@ namespace april
 		{
 			april::log("trying to set unsupported texture filter!");
 		}
-		mTextureFilter=filter;
+		mTextureFilter = filter;
 	}
 
 	void OpenGL_RenderSystem::setTextureWrapping(bool wrap)
@@ -507,17 +596,25 @@ namespace april
 	
 	void OpenGL_RenderSystem::beginFrame()
 	{
-		// TODO
+		// TODO ?
+	}
+
+	void OpenGL_RenderSystem::presentFrame()
+	{
+#ifdef _WIN32
+		SwapBuffers(hDC);
+#endif
 	}
 
 	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
 	{
+		// TODO
 		return harray<DisplayMode>();
 	}
 	
 	void OpenGL_RenderSystem::setResolution(int w, int h)
 	{
-// TODO: OpenGL_RenderSystem::setResolution()
+		// TODO: OpenGL_RenderSystem::setResolution()
 		april::log("WARNING: setResolution ignored!");
 	}
 	void OpenGL_RenderSystem::setColorMode(ColorMode mode, unsigned char alpha)

@@ -27,7 +27,6 @@ namespace april
 
 	class DirectX9_RenderSystem : public RenderSystem
 	{
-		bool mZBufferEnabled;
 	public:
 		DirectX9_RenderSystem(chstr options);
 		~DirectX9_RenderSystem();
@@ -77,13 +76,15 @@ namespace april
 		static DirectX9_RenderSystem* create(chstr options);
 		
 	protected:
+		bool mZBufferEnabled;
 		bool mTexCoordsEnabled;
 		bool mColorEnabled;
-		void _setModelviewMatrix(const gmat4& matrix);
-		void _setProjectionMatrix(const gmat4& matrix);
 		hstr mTitle;
 		DirectX9_Texture* mRenderTarget;
 		IDirect3DSurface9* mBackBuffer;
+
+		void _setModelviewMatrix(const gmat4& matrix);
+		void _setProjectionMatrix(const gmat4& matrix);
 		
 	};
 
