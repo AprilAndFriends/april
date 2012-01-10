@@ -506,7 +506,7 @@ namespace april
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 
-	void OpenGL_RenderSystem::render(RenderOp renderOp,PlainVertex* v, int nVertices, Color color)
+	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
 	{
 		if (mTexCoordsEnabled)
 		{
@@ -524,8 +524,8 @@ namespace april
 #else
 		if (!mColorEnabled)
 		{
-			glEnableClientState(GL_COLOR_ARRAY);
 			mColorEnabled = true;
+			glEnableClientState(GL_COLOR_ARRAY);
 		}
 		GLuint colors[nVertices];
 		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)color.a};
@@ -576,8 +576,22 @@ namespace april
 		}
 #if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 		glColor4f(1, 1, 1, 1);
+#else
+		GLuint colors[nVertices];
+		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)color.a};
+		GLuint _color = *(GLuint*)colorB;
+		for (int i = 0; i < nVertices; i++)
+		{
+			colors[i] = _color;
+		}
+		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(color), colors);
 #endif
 		glVertexPointer(3, GL_FLOAT, sizeof(ColoredTexturedVertex), v);
+		for (int i = 0; i < nVertices; i++)
+		{
+			// making sure this is in AGBR order
+			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
+		}
 		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(ColoredTexturedVertex), &v->color);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(ColoredTexturedVertex), &v->u);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
