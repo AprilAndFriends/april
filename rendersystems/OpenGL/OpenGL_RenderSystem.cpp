@@ -57,8 +57,8 @@ namespace april
 {
 #ifdef _WIN32
 	static HWND hWnd = 0;
-	static HDC hDC = 0;
 	static HGLRC hRC = 0;
+	HDC hDC = 0;
 #endif
 
 	void win_mat_invert()
@@ -611,13 +611,6 @@ namespace april
 	void OpenGL_RenderSystem::beginFrame()
 	{
 		// TODO ?
-	}
-
-	void OpenGL_RenderSystem::presentFrame()
-	{
-#ifdef _WIN32
-		SwapBuffers(hDC);
-#endif
 	}
 
 	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
