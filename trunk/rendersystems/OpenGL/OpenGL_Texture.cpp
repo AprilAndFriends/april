@@ -46,7 +46,7 @@ namespace april
 {
 	unsigned int platformLoadOpenGL_Texture(const char* name, int* w, int* h)
 	{
-		GLuint texid;
+		GLuint texid = 0;
 		ImageSource* img = loadImage(name);
 		if (!img)
 		{
@@ -72,7 +72,7 @@ namespace april
 		}
 #endif
 		default:
-			glTexImage2D(GL_TEXTURE_2D, 0, img->bpp == 4 ? GL_RGBA : GL_RGB, img->w,img->h, 0, img->format, GL_UNSIGNED_BYTE,img->data);
+			glTexImage2D(GL_TEXTURE_2D, 0, img->bpp == 4 ? GL_RGBA : GL_RGB, img->w, img->h, 0, img->format, GL_UNSIGNED_BYTE, img->data);
 			break;
 		}
 		delete img;
@@ -81,7 +81,7 @@ namespace april
 	}
 	
 	
-	OpenGL_Texture::OpenGL_Texture(chstr filename, bool dynamic)
+	OpenGL_Texture::OpenGL_Texture(chstr filename, bool dynamic) : Texture()
 	{
 		mWidth = 0;
 		mHeight = 0;
@@ -90,12 +90,12 @@ namespace april
 		mTexId = 0;
 	}
 
-	OpenGL_Texture::OpenGL_Texture(unsigned char* rgba, int w, int h)
+	OpenGL_Texture::OpenGL_Texture(unsigned char* rgba, int w, int h) : Texture()
 	{
 		april::log("Creating user-defined GL texture");
 		mWidth = w;
 		mHeight = h;
-		mDynamic = 0;
+		mDynamic = false;
 		mFilename = "UserTexture";
 		glGenTextures(1, &mTexId);
 		glBindTexture(GL_TEXTURE_2D, mTexId);
@@ -104,17 +104,21 @@ namespace april
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
 	}
 
-	OpenGL_Texture::OpenGL_Texture(int w, int h)
+	OpenGL_Texture::OpenGL_Texture(int w, int h) : Texture()
 	{
 		april::log("Creating empty GL texture");
 		mWidth = w;
 		mHeight = h;
-		mDynamic = 0;
+		mDynamic = false;
 		mFilename = "UserTexture";
 		glGenTextures(1, &mTexId);
 		glBindTexture(GL_TEXTURE_2D, mTexId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		unsigned char* clearColor = new unsigned char[w * h * 4];
+		memset(clearColor, 0, sizeof(unsigned char) * w * h * 4);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, clearColor);
+		delete clearColor;
 	}
 
 	OpenGL_Texture::~OpenGL_Texture()

@@ -17,8 +17,8 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 #include <gtypes/Vector2.h>
 #include <hltypes/util.h>
 
-april::Texture* texture;
-april::Texture* manualTexture;
+april::Texture* texture = NULL;
+april::Texture* manualTexture = NULL;
 april::TexturedVertex dv[4];
 april::TexturedVertex v[4];
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
