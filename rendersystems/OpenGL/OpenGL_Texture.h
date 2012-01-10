@@ -45,9 +45,18 @@ namespace april
 		bool load();
 		void unload();
 		bool isLoaded();
+		Color getPixel(int x, int y);
+		void setPixel(int x, int y, Color color);
+		void fillRect(int x, int y, int w, int h, Color color);
+		void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void clear();
+		void rotateHue(float degrees);
 		void saturate(float factor);
 		int getSizeInBytes();
-		
+
 	};
 
 }

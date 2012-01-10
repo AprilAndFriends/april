@@ -54,16 +54,16 @@ namespace april
 		virtual void unload() = 0;
 		virtual int getSizeInBytes() = 0;
 		
-		virtual Color getPixel(int x, int y);
-		virtual void setPixel(int x, int y, Color color);
-		virtual void fillRect(int x, int y, int w, int h, Color color);
-		virtual void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		virtual void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		virtual void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		virtual void stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		virtual void clear();
-		virtual void rotateHue(float degrees);
-		virtual void saturate(float factor);
+		virtual Color getPixel(int x, int y) { return APRIL_COLOR_CLEAR; }
+		virtual void setPixel(int x, int y, Color color) { }
+		virtual void fillRect(int x, int y, int w, int h, Color color) { }
+		virtual void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255) { }
+		virtual void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255) { }
+		virtual void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255) { }
+		virtual void stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255) { }
+		virtual void clear() { }
+		virtual void rotateHue(float degrees) { }
+		virtual void saturate(float factor) { }
 		void fillRect(grect rect, Color color);
 		virtual Color getInterpolatedPixel(float x, float y);
 		

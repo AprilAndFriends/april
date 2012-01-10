@@ -39,6 +39,7 @@ bool update(float k)
 	v[2].x = offset.x - size.x;	v[2].y = offset.y + size.y;
 	v[3].x = offset.x + size.x;	v[3].y = offset.y + size.y;
 	april::rendersys->render(april::TriangleStrip, v, 4);
+	april::rendersys->drawColoredQuad(grect(600, 450, 100, 75), APRIL_COLOR_RED);
 	return true;
 }
 

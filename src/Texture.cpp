@@ -41,47 +41,6 @@ namespace april
 		}
 	}
 	
-	Color Texture::getPixel(int x, int y)
-	{
-		return APRIL_COLOR_CLEAR; // TODO
-	}
-	
-	void Texture::setPixel(int x, int y, Color color)
-	{
-	}
-	
-	void Texture::fillRect(int x, int y, int w, int h, Color color)
-	{
-	}
-	
-	void Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-	}
-
-	void Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-	}
-
-	void Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-	}
-
-	void Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-	}
-
-	void Texture::clear()
-	{
-	}
-
-	void Texture::rotateHue(float degrees)
-	{
-	}
-
-	void Texture::saturate(float value)
-	{
-	}
-
 	void Texture::fillRect(grect rect, Color color)
 	{
 		fillRect((int)rect.x, (int)rect.y, (int)rect.w, (int)rect.h, color);
