@@ -165,24 +165,6 @@ namespace april
 			_releaseWindow();
 			return;
 		}
-		//ShowWindow(hWnd, 1);
-		//SetForegroundWindow(hWnd);
-		//SetFocus(hWnd);
-		//ReSizeGLScene(mWindow->getWidth(), mWindow->getHeight());
-
-		/*
-	glViewport(0,0,width,height);						// Reset The Current Viewport
-
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
-
-	// Calculate The Aspect Ratio Of The Window
-	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,0.1f,100.0f);
-
-	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	glLoadIdentity();									// Reset The Modelview Matrix
-	*/
-
 #endif
 		glViewport(0, 0, window->getWidth(), window->getHeight());
 		glClearColor(0, 0, 0, 1);
