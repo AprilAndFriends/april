@@ -20,7 +20,7 @@
 #include <windows.h>
 #endif
 #ifndef __APPLE__
-#if HAVE_GLUT
+#ifdef HAVE_GLUT
 #include <gl/GLUT.h>
 #endif
 #include <gl/GL.h>

@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <string.h>
 #ifndef __APPLE__
-#if HAVE_GLUT
+#ifdef HAVE_GLUT
 #include <gl/GLUT.h>
 #endif
 #include <gl/GL.h>
