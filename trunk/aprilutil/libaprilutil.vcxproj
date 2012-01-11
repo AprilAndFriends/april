@@ -35,7 +35,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='win32_Debug|Win32'">$(SolutionDir)bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='win32_Debug|Win32'">$(SolutionDir)bin\lib\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='win32_Release|Win32'">$(SolutionDir)bin\</OutDir>
@@ -58,7 +58,6 @@
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>$(SolutionDir)bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ImportLibrary>$(SolutionDir)bin\$(TargetName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -79,9 +78,8 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libapril.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <ImportLibrary>$(SolutionDir)bin\$(TargetName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -98,6 +96,9 @@
     <ClInclude Include="include\aprilutil\StaticMesh.h" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="fileproperties.rc" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\gtypes\libgtypes.vcxproj">
       <Project>{9c043b29-db40-48d5-97d8-1bc44128e3ba}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
@@ -110,9 +111,6 @@
       <Project>{2d053cda-686b-4b36-80eb-1da5f0cef8f9}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="fileproperties.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
