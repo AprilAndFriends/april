@@ -472,7 +472,7 @@ namespace april
 		NSScreen* mainScreen = [NSScreen mainScreen];
 		NSRect rect = [mainScreen frame];
 		return gvec2(rect.size.width, rect.size.height);
-#elif HAVE_MARMELADE
+#elif defined(HAVE_MARMELADE)
 		return gvec2(s3eSurfaceGetInt(S3E_SURFACE_WIDTH), s3eSurfaceGetInt(S3E_SURFACE_HEIGHT));
 #else
 		return gvec2(1024, 768);
@@ -481,7 +481,7 @@ namespace april
 	
 	static MessageBoxButton messageBox_impl(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
-#if _WIN32
+#ifdef _WIN32
 		HWND wnd = 0;
 		if(rendersys && rendersys->getWindow() && style & AMSGSTYLE_MODAL)
 		{
@@ -726,7 +726,7 @@ namespace april
 			return AMSGBTN_YES;
 		}
 		return AMSGBTN_OK;
-//#elif HAVE_MARMLADE
+//#elif defined(HAVE_MARMLADE)
 // TODO
 #else
 		april::log(hsprintf("== %s ==", title.c_str()));
