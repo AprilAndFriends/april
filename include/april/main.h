@@ -92,7 +92,6 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
     char*  arg;
     int    index;
-    int    result;
 
     // count the arguments
     
