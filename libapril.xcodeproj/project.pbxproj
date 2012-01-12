@@ -735,6 +735,7 @@
 					BUILDING_APRIL,
 					HAVE_SDL,
 					_OPENGL,
+					_OPENGLES1,
 				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -771,6 +772,7 @@
 					BUILDING_APRIL,
 					HAVE_SDL,
 					_OPENGL,
+					_OPENGLES1,
 				);
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -804,6 +806,7 @@
 					BUILDING_APRIL,
 					HAVE_SDL,
 					_OPENGL,
+					_OPENGLES1,
 				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -838,6 +841,7 @@
 					BUILDING_APRIL,
 					HAVE_SDL,
 					_OPENGL,
+					_OPENGLES1,
 				);
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -872,6 +876,7 @@
 					BUILDING_APRIL,
 					HAVE_SDL,
 					_OPENGL,
+					_OPENGLES1,
 				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;

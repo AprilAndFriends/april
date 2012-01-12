@@ -41,7 +41,7 @@
 
 @synthesize context;
 @synthesize animationTimer;
-@synthesize animationInterval;
+//@synthesize animationInterval;
 @synthesize aprilWindowVoid;
 
 // You must implement this method
@@ -310,6 +310,10 @@
     }
 }
 
+- (NSTimeInterval)setAnimationInterval
+{
+	return animationInterval;
+}
 
 - (void)dealloc
 {

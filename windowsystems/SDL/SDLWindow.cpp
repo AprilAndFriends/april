@@ -82,12 +82,6 @@ namespace april
 			april::log("Requested display mode could not be provided");
 			exit(0);
 		}
-		/*
-		#ifdef _WIN32
-		hWnd = FindWindow("GLUT", title.c_str());
-		SetFocus(hWnd);
-		#endif
-		*/
 		// we are not running yet
 		mRunning = false;
 		// cursor is visible by default
