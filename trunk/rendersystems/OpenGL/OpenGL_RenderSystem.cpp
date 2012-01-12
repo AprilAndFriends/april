@@ -15,6 +15,7 @@
 #include <OpenGLES/ES1/gl.h>
 #elif _OPENGLES1
 #include <GLES/gl.h>
+#include <EGL/egl.h>
 #else
 #ifdef _WIN32
 #include <windows.h>
@@ -57,8 +58,16 @@ namespace april
 {
 #ifdef _WIN32
 	static HWND hWnd = 0;
-	static HGLRC hRC = 0;
 	HDC hDC = 0;
+#ifndef _OPENGLES1
+	static HGLRC hRC = 0;
+#else
+	static EGLDisplay eglDisplay = 0;
+	static EGLConfig eglConfig	= 0;
+	static EGLSurface eglSurface = 0;
+	static EGLContext eglContext = 0;
+	static EGLint pi32ConfigAttribs[128] = {EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE, 8, EGL_ALPHA_SIZE, 0, EGL_SURFACE_TYPE, EGL_WINDOW_BIT, EGL_NONE};
+#endif
 #endif
 
 	void win_mat_invert()
@@ -103,12 +112,21 @@ namespace april
 #ifdef _WIN32
 	void OpenGL_RenderSystem::_releaseWindow()
 	{
+#ifndef _OPENGLES1
 		if (hRC != 0)
 		{
 			wglMakeCurrent(NULL, NULL);
 			wglDeleteContext(hRC);
 			hRC = 0;
 		}
+#else
+		if (eglDisplay != 0)
+		{
+			eglMakeCurrent(eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+			eglTerminate(eglDisplay);
+			eglDisplay = 0;
+		}
+#endif
 		if (hDC != 0)
 		{
 			ReleaseDC(hWnd, hDC);
@@ -122,7 +140,6 @@ namespace april
  		mWindow = window;
 #ifdef _WIN32
 		hWnd = (HWND)mWindow->getIDFromBackend();
-
 		PIXELFORMATDESCRIPTOR pfd;
 		memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
 		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
@@ -152,6 +169,7 @@ namespace april
 			_releaseWindow();
 			return;
 		}
+#ifndef _OPENGLES1
 		hRC = wglCreateContext(hDC);
 		if (hRC == 0)
 		{
@@ -165,6 +183,57 @@ namespace april
 			_releaseWindow();
 			return;
 		}
+#else
+		eglDisplay = eglGetDisplay((NativeDisplayType)hDC);
+		if (eglDisplay == EGL_NO_DISPLAY)
+		{
+			 eglDisplay = eglGetDisplay((NativeDisplayType)EGL_DEFAULT_DISPLAY);
+		}
+		if (eglDisplay == EGL_NO_DISPLAY)
+		{
+			april::log("can't get EGL display");
+			_releaseWindow();
+			return;
+		}
+		EGLint majorVersion;
+		EGLint minorVersion;
+		if (!eglInitialize(eglDisplay, &majorVersion, &minorVersion))
+		{
+			april::log("can't initialize EGL");
+			_releaseWindow();
+			return;
+		}
+		EGLint configs;
+		EGLBoolean result = eglChooseConfig(eglDisplay, pi32ConfigAttribs, &eglConfig, 1, &configs);
+		if (!result || configs == 0)
+		{
+			april::log("can't choose EGL config");
+			_releaseWindow();
+			return;
+		}
+
+		eglSurface = eglCreateWindowSurface(eglDisplay, eglConfig, (NativeWindowType)hWnd, NULL);
+		if (eglGetError() != EGL_SUCCESS)
+		{
+			april::log("can't create window surface");
+			_releaseWindow();
+			return;
+		}
+		eglContext = eglCreateContext(eglDisplay, eglConfig, EGL_NO_CONTEXT, NULL);
+		if (eglGetError() != EGL_SUCCESS)
+		{
+			april::log("can't create EGL context");
+			_releaseWindow();
+			return;
+		}
+		eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
+		if (eglGetError() != EGL_SUCCESS)
+		{
+			april::log("can't make context current");
+			_releaseWindow();
+			return;
+		}
+#endif
 #endif
 		glViewport(0, 0, window->getWidth(), window->getHeight());
 		glClearColor(0, 0, 0, 1);
@@ -182,7 +251,7 @@ namespace april
         
 		// DevIL defaults
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-#if !(TARGET_OS_IPHONE)
+#ifndef _OPENGLES1
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
@@ -313,7 +382,8 @@ namespace april
 
 	void OpenGL_RenderSystem::clear(bool useColor, bool depth, grect rect, Color color)
 	{
-		// TODO
+		glClearColor(color.r_f(), color.b_f(), color.g_f(), color.a_f());
+		clear(useColor, depth);
 	}
     
     ImageSource* OpenGL_RenderSystem::grabScreenshot(int bpp)
@@ -348,7 +418,7 @@ namespace april
 	void OpenGL_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
 		glMatrixMode(GL_PROJECTION);
-#if TARGET_OS_IPHONE || _OPENGLES1
+#ifdef _OPENGLES1
 		glLoadIdentity();
 		glRotatef(getWindow()->prefixRotationAngle(), 0, 0, 1);
 		//printf("rotationangle %g\n", getWindow()->prefixRotationAngle());
@@ -404,7 +474,7 @@ namespace april
 		}
 		else	
 		{
-#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
+#ifndef _OPENGLES1
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 #else
@@ -441,28 +511,12 @@ namespace april
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			mTexCoordsEnabled = true;
 		}
-#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 		if (mColorEnabled)
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
 			mColorEnabled = false;
 		}
 		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
-#else
-		if (!mColorEnabled)
-		{
-			glEnableClientState(GL_COLOR_ARRAY);
-			mColorEnabled = true;
-		}
-		GLuint colors[nVertices];
-		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)color.a};
-		GLuint _color = *(GLuint*)colorB;
-		for (int i = 0; i < nVertices; i++)
-		{
-			colors[i] = _color;
-		}
-		glColorPointer(4, GL_UNSIGNED_BYTE, 4, colors);
-#endif
 		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), (char*)v + 3 * sizeof(float));
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
@@ -481,9 +535,7 @@ namespace april
 			glDisableClientState(GL_COLOR_ARRAY);
 			mColorEnabled = false;
 		}
-#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 		glColor4f(1, 1, 1, 1);
-#endif
 		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
@@ -496,28 +548,12 @@ namespace april
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 			mTexCoordsEnabled = false;
 		}
-#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 		if (mColorEnabled)
 		{
-			mColorEnabled = false;
 			glDisableClientState(GL_COLOR_ARRAY);
+			mColorEnabled = false;
 		}
 		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
-#else
-		if (!mColorEnabled)
-		{
-			mColorEnabled = true;
-			glEnableClientState(GL_COLOR_ARRAY);
-		}
-		GLuint colors[nVertices];
-		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)color.a};
-		GLuint _color = *(GLuint*)colorB;
-		for (int i = 0; i < nVertices; i++)
-		{
-			colors[i] = _color;
-		}
-		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(color), colors);
-#endif
 		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
@@ -537,9 +573,7 @@ namespace april
 		}
 		glEnableClientState(GL_COLOR_ARRAY);
 		glVertexPointer(3, GL_FLOAT, sizeof(ColoredVertex), v);
-#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
 		glColor4f(1, 1, 1, 1);
-#endif
 		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(ColoredVertex), &v->color);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
@@ -556,24 +590,12 @@ namespace april
 			mColorEnabled = true;
 			glEnableClientState(GL_COLOR_ARRAY);
 		}
-#if !(TARGET_OS_IPHONE) && !(_OPENGLES1)
-		glColor4f(1, 1, 1, 1);
-#else
-		GLuint colors[nVertices];
-		GLbyte colorB[4] = {(GLbyte)color.r, (GLbyte)color.g, (GLbyte)color.b, (GLbyte)color.a};
-		GLuint _color = *(GLuint*)colorB;
-		for (int i = 0; i < nVertices; i++)
-		{
-			colors[i] = _color;
-		}
-		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(color), colors);
-#endif
-		glVertexPointer(3, GL_FLOAT, sizeof(ColoredTexturedVertex), v);
 		for (int i = 0; i < nVertices; i++)
 		{
 			// making sure this is in AGBR order
 			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
 		}
+		glVertexPointer(3, GL_FLOAT, sizeof(ColoredTexturedVertex), v);
 		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(ColoredTexturedVertex), &v->color);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(ColoredTexturedVertex), &v->u);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);

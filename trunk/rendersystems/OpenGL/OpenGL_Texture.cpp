@@ -135,21 +135,48 @@ namespace april
 
 	void OpenGL_Texture::setPixel(int x, int y, Color color)
 	{
-		// TODO
+		unsigned char writeData[4] = {color.r, color.g, color.b, color.a};
+		glBindTexture(GL_TEXTURE_2D, mTexId);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
 	}
 	
 	void OpenGL_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		// TODO
+		// TODO - find a better and faster way to do this
+		unsigned char* writeData = new unsigned char[w * h * 4];
+		memset(writeData, 0, sizeof(unsigned char) * w * h * 4);
+		for (int j = 0; j < h; j++)
+		{
+			for (int i = 0; i < w; i++)
+			{
+				writeData[(i + j * w) * 4 + 0] = color.r;
+				writeData[(i + j * w) * 4 + 1] = color.g;
+				writeData[(i + j * w) * 4 + 2] = color.b;
+				writeData[(i + j * w) * 4 + 3] = color.a;
+			}
+		}
+		glBindTexture(GL_TEXTURE_2D, mTexId);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
+		delete writeData;
 	}
 	
 	void OpenGL_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO
+		// TODO - find a better and faster way to do this
+		/*
+		glBindTexture(GL_TEXTURE_2D, ((OpenGL_Texture*)texture)->mTexId);
+		glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sx, sy, sw, sh);
+		unsigned char* writeData = new unsigned char[sw * sh * 4];
+		glReadPixels(0, 0, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
+		glBindTexture(GL_TEXTURE_2D, mTexId);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
+		delete writeData;
+		*/
 	}
 
 	void OpenGL_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
+		// TODO - find a better and faster way to do this
 		unsigned char* writeData = new unsigned char[sw * sh * 4];
 		memset(writeData, 0, sizeof(unsigned char) * sw * sh * 4);
 		for (int j = 0; j < sh; j++)
@@ -170,6 +197,7 @@ namespace april
 				}
 			}
 		}
+		glBindTexture(GL_TEXTURE_2D, mTexId);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
 		delete writeData;
 	}
