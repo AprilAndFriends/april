@@ -11,31 +11,26 @@
 
 #ifdef _OPENGL
 
-#ifdef IPHONE_PLATFORM
-#include <OpenGLES/ES1/gl.h>
-#elif _OPENGLES1
-#include <GLES/gl.h>
-#else
-#ifdef _WIN32
-#include <windows.h>
-#endif
-#ifndef __APPLE__
-#ifdef HAVE_GLUT
-#include <gl/GLUT.h>
-#endif
-#include <gl/GL.h>
-#include <gl/GLU.h>
-#else // __APPLE__
+#ifdef __APPLE__
 #include <TargetConditionals.h>
-#if TARGET_OS_IPHONE
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES1/glext.h>
-#else
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <GLUT/glut.h>
 #endif
-#endif // __APPLE__
+
+#if TARGET_OS_IPHONE
+	#include <OpenGLES/ES1/gl.h>
+	#include <OpenGLES/ES1/glext.h>
+#elif _OPENGLES1
+	#include <GLES/gl.h>
+#else
+	#ifdef _WIN32
+		#include <windows.h>
+	#endif
+	#ifndef __APPLE__
+		#include <gl/GL.h>
+		#include <gl/GLU.h>
+	#else // mac
+		#include <OpenGL/gl.h>
+		#include <OpenGL/glu.h>
+	#endif // mac
 #endif
 
 #include <hltypes/hstring.h>

@@ -17,9 +17,6 @@
 #endif
 
 #if !defined(__APPLE__) || defined(__APPLE__) && (TARGET_OS_MAC) && !(TARGET_OS_IPHONE)
-	#ifdef HAVE_GLUT
-		#include "GLUTWindow.h"
-	#endif
 	#ifdef HAVE_SDL
 		#include "SDLWindow.h"
 	#endif
@@ -436,9 +433,6 @@ namespace april
 		{
 			return new Win32Window(w, h, fullscreen, title);
 		}
-	#endif
-	#ifdef HAVE_GLUT
-		return new GLUTWindow(w, h, fullscreen, title);
 	#endif
 	#ifdef HAVE_MARMELADE
 		return new MarmeladeWindow(w, h, fullscreen, title);

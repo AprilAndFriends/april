@@ -51,7 +51,6 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
     bool app_started;
 }
 
-@property NSTimeInterval animationInterval;
 @property (assign) void *aprilWindowVoid;
 
 - (void)startAnimation;
@@ -66,5 +65,8 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 - (void)deviceOrientationDidChange:(id)sender;
 - (void)applicationDidBecomeActive:(UIApplication*)app;
 - (void)applicationWillResignActive:(UIApplication*)app;
+- (void)setAnimationInterval:(NSTimeInterval)interval;
+- (NSTimeInterval)setAnimationInterval;
+
 
 @end
