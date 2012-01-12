@@ -188,7 +188,7 @@ namespace april
 		wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 		wc.lpfnWndProc = WindowProc;
 		wc.hInstance = hinst;
-		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wc.hCursor = LoadCursor(0, IDC_ARROW);
 		wc.lpszClassName = L"april_win32_window";
 		wc.hIcon = (HICON)LoadImage(hinst, MAKEINTRESOURCE(1), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
 		wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
@@ -223,6 +223,7 @@ namespace april
 		// display the window on the screen
 		ShowWindow(hWnd, 1);
 		UpdateWindow(hWnd);
+		SetCursor(wc.hCursor);
 	}
 	
 	Win32Window::~Win32Window()
