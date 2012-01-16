@@ -18,8 +18,9 @@
 #if TARGET_OS_IPHONE
 	#include <OpenGLES/ES1/gl.h>
 	#include <OpenGLES/ES1/glext.h>
-#elif _OPENGLES1
+#elif defined(_OPENGLES1)
 	#include <GLES/gl.h>
+	#include <EGL/egl.h>
 #else
 	#ifdef _WIN32
 		#include <windows.h>
