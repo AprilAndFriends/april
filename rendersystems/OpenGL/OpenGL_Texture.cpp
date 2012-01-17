@@ -26,10 +26,9 @@
 	#endif
 	#ifndef __APPLE__
 		#include <gl/GL.h>
-		#include <gl/GLU.h>
 	#else // mac
 		#include <OpenGL/gl.h>
-		#include <OpenGL/glu.h>
+
 	#endif // mac
 #endif
 

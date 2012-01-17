@@ -30,10 +30,8 @@
 		#include <string.h>
 	#ifndef __APPLE__
 		#include <gl/GL.h>
-		#include <gl/GLU.h>
 	#else
 		#include <OpenGL/gl.h>
-		#include <OpenGL/glu.h>
 	#endif
 #endif
 
