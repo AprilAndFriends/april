@@ -60,7 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib glu32.lib glut32.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 			/>
@@ -352,7 +352,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib libGLES_CM.lib glu32.lib glut32.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib libGLES_CM.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 				GenerateDebugInformation="true"
@@ -426,7 +426,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib libGLES_CM.lib glu32.lib glut32.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib libGLES_CM.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
 			/>
