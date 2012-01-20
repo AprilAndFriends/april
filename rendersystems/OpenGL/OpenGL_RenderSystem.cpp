@@ -257,6 +257,7 @@ namespace april
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 		}
+		mOrthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
 	}
 
 	hstr OpenGL_RenderSystem::getName()
@@ -328,6 +329,17 @@ namespace april
 
 	void OpenGL_RenderSystem::setPixelShader(PixelShader* pixelShader)
 	{
+	}
+
+	grect OpenGL_RenderSystem::getViewport()
+	{
+		// TODO
+		return grect(0.0f, 0.0f, 1.0f, 1.0f);
+	}
+
+	void OpenGL_RenderSystem::setViewport(grect rect)
+	{
+		// TODO
 	}
 
 	void OpenGL_RenderSystem::setTexture(Texture* t)

@@ -146,7 +146,9 @@ namespace april
 		virtual PixelShader* createPixelShader() = 0;
 		virtual void setVertexShader(VertexShader* vertexShader) = 0;
 		virtual void setPixelShader(PixelShader* pixelShader) = 0;
-
+		virtual grect getViewport() = 0;
+		virtual void setViewport(grect rect) = 0;
+		
 		// modelview matrix transformation
 		void setIdentityTransform();
 		void translate(float x, float y, float z = 0.0f);
@@ -156,6 +158,7 @@ namespace april
 		// camera functions
 		void lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up);
 		// projection matrix transformation
+		grect getOrthoProjection() { return mOrthoProjection; }
 		void setOrthoProjection(gvec2 size);
 		void setOrthoProjection(grect rect);
 		void setPerspective(float fov, float aspect, float nearClip, float farClip);
@@ -220,8 +223,11 @@ namespace april
 		bool mDynamicLoading;
 		TextureFilter mTextureFilter;
 		bool mTextureWrapping;
+		grect mClipRect;
+		bool mClip;
 		gmat4 mModelviewMatrix;
 		gmat4 mProjectionMatrix;
+		grect mOrthoProjection;
 		
 		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;

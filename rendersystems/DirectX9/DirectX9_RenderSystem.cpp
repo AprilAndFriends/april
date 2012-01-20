@@ -11,6 +11,7 @@
 #ifdef _DIRECTX9
 
 #include <d3d9.h>
+#include <d3dx9math.h>
 #include <stdio.h>
 
 #include <gtypes/Vector2.h>
@@ -99,8 +100,8 @@ namespace april
 
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !window->isFullscreen();
-		d3dpp.BackBufferWidth = getWindow()->getWidth();
-		d3dpp.BackBufferHeight = getWindow()->getHeight();
+		d3dpp.BackBufferWidth = window->getWidth();
+		d3dpp.BackBufferHeight = window->getHeight();
 		d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 		if (mZBufferEnabled)
@@ -126,6 +127,7 @@ namespace april
 		d3dDevice->GetRenderTarget(0, &mBackBuffer);
 		mRenderTarget = NULL;
 		d3dDevice->BeginScene();
+		mOrthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
 	}
 	
 	void DirectX9_RenderSystem::configureDevice()
@@ -241,6 +243,25 @@ namespace april
 		{
 			d3dDevice->SetPixelShader(NULL);
 		}
+	}
+
+	grect DirectX9_RenderSystem::getViewport()
+	{
+		D3DVIEWPORT9 viewport;
+		d3dDevice->GetViewport(&viewport);
+		return grect((float)viewport.X, (float)viewport.Y, (float)viewport.Width, (float)viewport.Height);
+	}
+
+	void DirectX9_RenderSystem::setViewport(grect rect)
+	{
+		D3DVIEWPORT9 viewport;
+		viewport.MinZ = 0.0f;
+		viewport.MaxZ = 1.0f;
+		viewport.X = (int)rect.x;
+		viewport.Y = (int)rect.y;
+		viewport.Width = (int)rect.w;
+		viewport.Height = (int)rect.h;
+		d3dDevice->SetViewport(&viewport);
 	}
 
 	void DirectX9_RenderSystem::setTextureFilter(TextureFilter filter)
