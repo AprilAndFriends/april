@@ -255,6 +255,7 @@ namespace april
 	
 	void RenderSystem::setOrthoProjection(grect rect)
 	{
+		mOrthoProjection = rect;
 		float t = getPixelOffset();
 		float wnd_w = (float)mWindow->getWidth();
 		float wnd_h = (float)mWindow->getHeight();
@@ -301,6 +302,7 @@ namespace april
 	{
 		return mWindow->isFullscreen();
 	}
+
 /************************************************************************************/
 
 	void RenderSystem::presentFrame()

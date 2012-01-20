@@ -44,6 +44,8 @@ namespace april
 		PixelShader* createPixelShader();
 		void setVertexShader(VertexShader* vertexShader);
 		void setPixelShader(PixelShader* pixelShader);
+		grect getViewport();
+		void setViewport(grect rect);
 
 		void setBlendMode(BlendMode mode);
 		void setColorMode(ColorMode mode, unsigned char alpha = 255);

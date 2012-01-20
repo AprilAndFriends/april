@@ -13,7 +13,7 @@
 /// 
 /// Defines an OpenGL render system.
 
-#if defined(_OPENGL) || _OPENGLES1
+#if defined(_OPENGL) || defined(_OPENGLES1)
 #ifndef APRIL_OPENGL_RENDER_SYSTEM_H
 #define APRIL_OPENGL_RENDER_SYSTEM_H
 
@@ -42,7 +42,9 @@ namespace april
 		PixelShader* createPixelShader();
 		void setVertexShader(VertexShader* vertexShader);
 		void setPixelShader(PixelShader* pixelShader);
-
+		grect getViewport();
+		void setViewport(grect rect);
+		
 		void setParam(chstr name, chstr value);
 		
 		// modelview matrix transformation
