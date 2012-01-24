@@ -11,7 +11,7 @@
 
 #include <april/RenderSystem.h>
 #include <gtypes/Matrix4.h>
-#include <hltypes/util.h>
+#include <hltypes/hltypesUtil.h>
 
 #include "BlurManager.h"
 
