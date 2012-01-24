@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="libaprilutil"
 	ProjectGUID="{2D053CDA-686C-4B36-80EB-1DA5F0CEF8F9}"
 	RootNamespace="libaprilutil"
@@ -16,9 +16,9 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="win32_Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\"
-			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -62,7 +62,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib libapril.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
-				AdditionalLibraryDirectories="$(SolutionDir)bin"
+				AdditionalLibraryDirectories="$(SolutionDir)bin\$(PlatformName)"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -89,9 +89,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="win32_Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\"
-			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -136,7 +136,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib libapril.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
-				AdditionalLibraryDirectories="$(SolutionDir)bin"
+				AdditionalLibraryDirectories="$(SolutionDir)bin\$(PlatformName)"
 			/>
 			<Tool
 				Name="VCALinkTool"
