@@ -10,8 +10,8 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 #include <stdio.h>
 
+#include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
-#include <hltypes/util.h>
 
 #include "Color.h"
 

@@ -13,7 +13,7 @@
 #include <IL/il.h>
 #endif
 
-#include <hltypes/util.h>
+#include <hltypes/hltypesUtil.h>
 
 #include "ImageSource.h"
 #include "RenderSystem.h"
