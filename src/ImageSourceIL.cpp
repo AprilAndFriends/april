@@ -9,7 +9,7 @@
 
 #include <IL/il.h>
 
-#include <hltypes/util.h>
+#include <hltypes/hltypesUtil.h>
 
 #include "ImageSource.h"
 #include "RenderSystem.h"

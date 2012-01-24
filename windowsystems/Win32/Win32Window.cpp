@@ -11,7 +11,7 @@
 
 #include <windows.h>
 
-#include <hltypes/util.h>
+#include <hltypes/hltypesUtil.h>
 
 #include "RenderSystem.h"
 #include "Timer.h"

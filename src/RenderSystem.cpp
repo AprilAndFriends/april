@@ -24,8 +24,8 @@
 
 #include <hltypes/harray.h>
 #include <hltypes/hfile.h>
+#include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
-#include <hltypes/util.h>
 
 #include "RenderSystem.h"
 #if defined(_OPENGL)
