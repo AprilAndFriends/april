@@ -16,9 +16,9 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="win32_OpenGL_Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\"
-			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			Name="Debug_OpenGL|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -62,7 +62,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
-				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -89,9 +89,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="win32_OpenGL_Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\"
-			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			Name="Release_OpenGL|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -136,7 +136,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
-				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -162,9 +162,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="win32_DirectX9_Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\"
-			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			Name="Debug_DirectX9|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -208,7 +208,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib d3d9.lib d3dx9.lib DevIL.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
-				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -235,9 +235,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="win32_DirectX9_Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\"
-			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			Name="Release_DirectX9|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -282,7 +282,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib d3d9.lib d3dx9.lib DevIL.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
-				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -308,9 +308,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="win32_OpenGLES1_Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\"
-			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			Name="Debug_OpenGLES1|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -354,7 +354,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib libGLES_CM.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
-				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -381,9 +381,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="win32_OpenGLES1_Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\"
-			IntermediateDirectory="$(SolutionDir)bin\lib\$(ProjectName)\$(ConfigurationName)"
+			Name="Release_OpenGLES1|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -428,7 +428,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib libGLES_CM.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
-				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 			/>
 			<Tool
 				Name="VCALinkTool"
