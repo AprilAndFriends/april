@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug_OpenGL|Win32"
 			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
-			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -91,7 +91,7 @@
 		<Configuration
 			Name="Release_OpenGL|Win32"
 			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
-			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -164,7 +164,7 @@
 		<Configuration
 			Name="Debug_DirectX9|Win32"
 			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
-			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -237,7 +237,7 @@
 		<Configuration
 			Name="Release_DirectX9|Win32"
 			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
-			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -310,7 +310,7 @@
 		<Configuration
 			Name="Debug_OpenGLES1|Win32"
 			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
-			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
@@ -383,7 +383,7 @@
 		<Configuration
 			Name="Release_OpenGLES1|Win32"
 			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
-			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
