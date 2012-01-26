@@ -7,6 +7,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#ifdef _WIN32
 #include <windows.h>
 
 #include "main.h"
@@ -30,3 +31,4 @@ int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)
 	anAprilDestroy();
 	return 0;
 }
+#endif
