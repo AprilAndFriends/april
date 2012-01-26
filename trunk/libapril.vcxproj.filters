@@ -95,6 +95,12 @@
     <ClCompile Include="windowsystems\Win32\Win32Window.cpp">
       <Filter>Source Files\windowsystems\Win32</Filter>
     </ClCompile>
+    <ClCompile Include="src\TimerPosix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImageSourceAndroid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">

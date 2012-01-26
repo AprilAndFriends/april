@@ -1,17 +1,19 @@
 /// @file
 /// @author  Domagoj Cerjan
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#ifdef _ANDROID
 #include <jpeglib.h>
 #include <png.h>
-#include <s3e.h>
+//#include <s3e.h>
 
-#include <hltypes/util.h>
+#include <hltypes/hltypesUtil.h>
 
 #include "ImageSource.h"
 #include "RenderSystem.h"
@@ -66,7 +68,7 @@ namespace april
 		tmp = filename;
 #endif
 
-		if(tmp.ends_with(".png"))
+		if (tmp.ends_with(".png"))
 		{
 
 			png_structp png_ptr;
@@ -174,3 +176,4 @@ namespace april
 	}
 
 }
+#endif
