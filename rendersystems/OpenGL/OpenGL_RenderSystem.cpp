@@ -333,13 +333,15 @@ namespace april
 
 	grect OpenGL_RenderSystem::getViewport()
 	{
-		// TODO
-		return grect(0.0f, 0.0f, 1.0f, 1.0f);
+		static float params[4];
+		glGetFloatv(GL_VIEWPORT, params);
+		return grect(params[0], mWindow->getHeight() - params[3] - params[1], params[2], params[3]);
 	}
 
 	void OpenGL_RenderSystem::setViewport(grect rect)
 	{
-		// TODO
+		// because GL has to defy screen logic and has (0,0) in the bottom left corner
+		glViewport((int)rect.x, (int)(mWindow->getHeight() - rect.h - rect.y), (int)rect.w, (int)rect.h);
 	}
 
 	void OpenGL_RenderSystem::setTexture(Texture* t)
