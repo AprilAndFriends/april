@@ -16,23 +16,25 @@
 #endif
 
 #if TARGET_OS_IPHONE
-	#include <OpenGLES/ES1/gl.h>
-	#include <OpenGLES/ES1/glext.h>
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
 #elif defined(_OPENGLES1)
-	#include <GLES/gl.h>
-	#include <EGL/egl.h>
+#include <GLES/gl.h>
+#ifndef _ANDROID
+#include <EGL/egl.h>
+#endif
 #else
-	#ifdef _WIN32
-		#include <windows.h>
-	#endif
-		#include <stdlib.h>
-		#include <stdio.h>
-		#include <string.h>
-	#ifndef __APPLE__
-		#include <gl/GL.h>
-	#else
-		#include <OpenGL/gl.h>
-	#endif
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#ifndef __APPLE__
+#include <gl/GL.h>
+#else
+#include <OpenGL/gl.h>
+#endif
 #endif
 
 #include <gtypes/Vector2.h>
