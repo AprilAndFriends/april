@@ -15,7 +15,7 @@ Copyright (c) 2010 Kresimir Spes, Boris Mikic                                   
 #include <april/Window.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
-#include <hltypes/util.h>
+#include <hltypes/hltypesUtil.h>
 
 april::Texture* texture = NULL;
 april::Texture* manualTexture = NULL;

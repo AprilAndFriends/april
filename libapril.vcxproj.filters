@@ -101,6 +101,9 @@
     <ClCompile Include="src\ImageSourceAndroid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main_android.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">

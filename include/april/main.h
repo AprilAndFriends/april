@@ -70,10 +70,10 @@ int main (int argc, char **argv)
 	#endif
 	/* Using the valgrind build config, reexec this program
 	 * in valgrind */
-	if (argc >= 2 && strcmp(argv[1], "-valgrind") == 0) {
+	if (argc >= 2 && strcmp(argv[1], "-valgrind") == 0)
+	{
 		printf("Relaunching with valgrind\n");
-		execl(VALGRIND, VALGRIND, "--leak-check=full", "--error-limit=no", argv[0],
-			  NULL);
+		execl(VALGRIND, VALGRIND, "--leak-check=full", "--error-limit=no", argv[0], NULL);
 	}
 #endif
 	

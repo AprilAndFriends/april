@@ -1,5 +1,4 @@
 /// @file
-/// @author  Ivan Vucica
 /// @author  Boris Mikic
 /// @version 1.4
 /// 
@@ -8,7 +7,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _WIN32
+#ifdef _ANDROID
 #include <windows.h>
 
 #include <hltypes/harray.h>

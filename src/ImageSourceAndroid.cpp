@@ -9,8 +9,10 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _ANDROID
-#include <jpeglib.h>
-#include <png.h>
+//#include <jpeglib.h>
+#include <libpng/png.h>
+#include <libpng/pngpriv.h>
+#include <libpng/pngstruct.h>
 //#include <s3e.h>
 
 #include <hltypes/hltypesUtil.h>
