@@ -240,6 +240,9 @@ namespace april
 	aprilFnExport void createRenderTarget(int w, int h, bool fullscreen, chstr title);
 	aprilFnExport void destroy();
 	aprilFnExport void addTextureExtension(chstr extension);
+	aprilFnExport harray<hstr> getTextureExtensions();
+	aprilFnExport void setTextureExtensions(const harray<hstr>& exts);
+	aprilFnExport void setTextureExtensions(hstr comma_seperated_exts);
 	aprilFnExport void log(chstr message, chstr prefix = "[april] ");
 	
 	// global rendersys shortcut variable

@@ -379,4 +379,19 @@ namespace april
 		extensions += extension;
 	}
 
+	harray<hstr> getTextureExtensions()
+	{
+		return extensions;
+	}
+	
+	void setTextureExtensions(const harray<hstr>& exts)
+	{
+		extensions = exts;
+	}
+	
+	void setTextureExtensions(hstr comma_seperated_exts)
+	{
+		harray<hstr> exts = comma_seperated_exts.split(",");
+		setTextureExtensions(exts);
+	}
 }
