@@ -32,8 +32,9 @@
 		7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
 		7FC8FA29122FA58F0092964C /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8FA28122FA58F0092964C /* Timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8FA75122FACA30092964C /* TimerSDL.cpp */; };
-		7FCD394412018BD300608217 /* main_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7FCD394312018BD300608217 /* main_mac.mm */; };
 		C9506D1814C59147004464FC /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9506D1714C59147004464FC /* SDL.framework */; };
+		C960EBE114EAA47700B8B30D /* main_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = C960EBE014EAA47700B8B30D /* main_mac.mm */; };
+		C960EBE314EAA47F00B8B30D /* main_ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = C960EBE214EAA47F00B8B30D /* main_ios.mm */; };
 		C9A8520D134AF97000B455BE /* ImageSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9A8520C134AF97000B455BE /* ImageSource.cpp */; };
 		C9C04F8B14BB106F005BD333 /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
 		C9C04F8C14BB106F005BD333 /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
@@ -67,7 +68,6 @@
 		D1981C78140F858F0057C3AF /* WBImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D1981C64140F85350057C3AF /* WBImage.m */; };
 		D1981C79140F858F0057C3AF /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1981C71140F856B0057C3AF /* TimerPosix.cpp */; };
 		D1981C7A140F87060057C3AF /* AprilViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D1981C5C140F85350057C3AF /* AprilViewController.m */; };
-		D1E0E27A140FA6D000422D84 /* main_ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1E0E277140FA68B00422D84 /* main_ios.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,10 +96,11 @@
 		7FA3ED2611F98BAE001D1DDD /* Window.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Window.cpp; path = src/Window.cpp; sourceTree = "<group>"; };
 		7FC8FA28122FA58F0092964C /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
 		7FC8FA75122FACA30092964C /* TimerSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerSDL.cpp; path = src/TimerSDL.cpp; sourceTree = "<group>"; };
-		7FCD394312018BD300608217 /* main_mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main_mac.mm; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9506D1714C59147004464FC /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../lib/mac/SDL.framework; sourceTree = "<group>"; };
+		C960EBE014EAA47700B8B30D /* main_mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main_mac.mm; path = src/main_mac.mm; sourceTree = "<group>"; };
+		C960EBE214EAA47F00B8B30D /* main_ios.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main_ios.mm; path = src/main_ios.mm; sourceTree = "<group>"; };
 		C9A8520C134AF97000B455BE /* ImageSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSource.cpp; path = src/ImageSource.cpp; sourceTree = "<group>"; };
 		C9C04F8A14BB106F005BD333 /* PixelShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PixelShader.cpp; path = src/PixelShader.cpp; sourceTree = "<group>"; };
 		C9C04F8E14BB1091005BD333 /* PixelShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelShader.h; path = include/april/PixelShader.h; sourceTree = "<group>"; };
@@ -124,7 +125,6 @@
 		D1981C63140F85350057C3AF /* WBImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WBImage.h; path = windowsystems/iOS/WBImage.h; sourceTree = "<group>"; };
 		D1981C64140F85350057C3AF /* WBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WBImage.m; path = windowsystems/iOS/WBImage.m; sourceTree = "<group>"; };
 		D1981C71140F856B0057C3AF /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/TimerPosix.cpp; sourceTree = "<group>"; };
-		D1E0E277140FA68B00422D84 /* main_ios.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main_ios.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,7 +214,6 @@
 		7F42F79F11EB177B00B1C1DF /* src */ = {
 			isa = PBXGroup;
 			children = (
-				D1E0E277140FA68B00422D84 /* main_ios.mm */,
 				C9C04F8A14BB106F005BD333 /* PixelShader.cpp */,
 				C9C04F9214BB109B005BD333 /* VertexShader.cpp */,
 				D1981C71140F856B0057C3AF /* TimerPosix.cpp */,
@@ -225,7 +224,8 @@
 				7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */,
 				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
 				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
-				7FCD394312018BD300608217 /* main_mac.mm */,
+				C960EBE014EAA47700B8B30D /* main_mac.mm */,
+				C960EBE214EAA47F00B8B30D /* main_ios.mm */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -412,7 +412,6 @@
 				7F42FD7711EB632E00B1C1DF /* ImageSourceCG.mm in Sources */,
 				7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */,
 				7F5A5D2711FD9CAB003C05A4 /* SDLWindow.cpp in Sources */,
-				7FCD394412018BD300608217 /* main_mac.mm in Sources */,
 				7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */,
 				7F1B521012E470B200E958D8 /* OpenGL_RenderSystem.cpp in Sources */,
 				7F1B521212E470B200E958D8 /* OpenGL_Texture.cpp in Sources */,
@@ -421,6 +420,7 @@
 				C9A8520D134AF97000B455BE /* ImageSource.cpp in Sources */,
 				C9C04F8B14BB106F005BD333 /* PixelShader.cpp in Sources */,
 				C9C04F9314BB109B005BD333 /* VertexShader.cpp in Sources */,
+				C960EBE114EAA47700B8B30D /* main_mac.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,7 +428,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1E0E27A140FA6D000422D84 /* main_ios.mm in Sources */,
 				D1981C7A140F87060057C3AF /* AprilViewController.m in Sources */,
 				D1981C73140F858F0057C3AF /* ApriliOSAppDelegate.mm in Sources */,
 				D1981C75140F858F0057C3AF /* EAGLView.mm in Sources */,
@@ -446,6 +445,7 @@
 				D1981C4A140F82B00057C3AF /* Window.cpp in Sources */,
 				C9C04F8C14BB106F005BD333 /* PixelShader.cpp in Sources */,
 				C9C04F9414BB109B005BD333 /* VertexShader.cpp in Sources */,
+				C960EBE314EAA47F00B8B30D /* main_ios.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
