@@ -1,12 +1,19 @@
-/************************************************************************************\
-This source file is part of the Awesome Portable Rendering Interface Library         *
-For latest info, see http://libapril.sourceforge.net/                                *
-**************************************************************************************
-Copyright (c) 2010 Kresimir Spes, Boris Mikic                                        *
-*                                                                                    *
-* This program is free software; you can redistribute it and/or modify it under      *
-* the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php   *
-\************************************************************************************/
+/// @file
+/// @author  Kresimir Spes
+/// @author  Boris Mikic
+/// @version 1.4
+/// 
+/// @section LICENSE
+/// 
+/// This program is free software; you can redistribute it and/or modify it under
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+
+#ifdef _ANDROID
+#define APRIL_ANDROID_LAUNCH_ACTIVITY_NAME "com/example/april/demoSimple/AprilActivity"
+#endif
+
+#ifndef _ANDROID // TODO - remove
+
 #include <stdio.h>
 #include <time.h>
 
@@ -21,7 +28,11 @@ april::Texture* texture = NULL;
 april::Texture* manualTexture = NULL;
 april::TexturedVertex dv[4];
 april::TexturedVertex v[4];
+#ifndef _ANDROID
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+#else
+grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
+#endif
 gvec2 offset(drawRect.w / 2, drawRect.h / 2);
 gvec2 size;
 bool mousePressed = false;
@@ -97,3 +108,4 @@ void april_destroy()
 	delete manualTexture;
 	april::destroy();
 }
+#endif // TODO - remove

@@ -42,6 +42,9 @@
     <Filter Include="Header Files\windowsystems\Win32">
       <UniqueIdentifier>{ca32f0eb-a1ce-4b6d-9803-4dcbec60d895}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Android">
+      <UniqueIdentifier>{245873a7-69f7-41e3-8a21-fadb5624b9d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -65,7 +68,7 @@
     <ClCompile Include="src\ImageSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main_win32.cpp">
+    <ClCompile Include="src\main_win32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PixelShader.cpp">
@@ -101,7 +104,7 @@
     <ClCompile Include="src\ImageSourceAndroid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main_android.cpp">
+    <ClCompile Include="src\main_android.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

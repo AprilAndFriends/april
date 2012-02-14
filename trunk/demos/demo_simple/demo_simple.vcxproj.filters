@@ -13,6 +13,32 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="AndroidApk">
+      <UniqueIdentifier>{419bdca5-3fca-476d-9de2-8ec9fcee831c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AndroidApk\JavaSource">
+      <UniqueIdentifier>{bb852c8e-b9fc-4daf-af29-52263f8ee928}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="android\AndroidManifest.xml">
+      <Filter>AndroidApk</Filter>
+    </None>
+    <None Include="android\build.xml">
+      <Filter>AndroidApk</Filter>
+    </None>
+    <None Include="android\local.properties">
+      <Filter>AndroidApk</Filter>
+    </None>
+    <None Include="android\project.properties">
+      <Filter>AndroidApk</Filter>
+    </None>
+    <None Include="android\src\april\demoSimple\AprilActivity.java">
+      <Filter>AndroidApk\JavaSource</Filter>
+    </None>
+    <None Include="android\res\layout\main.xml">
+      <Filter>AndroidApk</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo_simple.cpp">

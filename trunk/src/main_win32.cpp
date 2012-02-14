@@ -1,4 +1,5 @@
 /// @file
+/// @author  Ivan Vucica
 /// @author  Boris Mikic
 /// @version 1.4
 /// 
@@ -7,7 +8,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _ANDROID
+#ifdef _WIN32
 #include <windows.h>
 
 #include <hltypes/harray.h>
@@ -19,17 +20,16 @@
 
 bool gAprilShouldInvokeQuitCallback = false;
 
-int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int _argc, char **_argv)
+int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {
     harray<hstr> args;
-	if(_argv)
+	if (argv != NULL)
 	{
-		for (int i = 0; i < _argc; i++) 
+		for (int i = 0; i < argc; i++)
 		{
-			args += _argv[i];
+			args += argv[i];
 		}
 	}
-	
 	anAprilInit(args);
     april::rendersys->getWindow()->enterMainLoop();
 	anAprilDestroy();

@@ -475,7 +475,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\main_win32.cpp"
+				RelativePath=".\src\main_win32.cpp"
 				>
 			</File>
 			<File
