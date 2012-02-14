@@ -1,6 +1,7 @@
 /// @file
 /// @author  Ivan Vucica
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 1.4
 /// 
 /// @section LICENSE
 /// 
@@ -33,6 +34,10 @@
  *   (typically main.cpp); it MUST be included somewhere
  * - define just april_init() and april_destroy()
  * - do not worry about other functionality in this header
+ * - if you are using Android with JNI, make sure to define
+ *   APRIL_ANDROID_LAUNCH_ACTIVITY_NAME as a fully-qualified
+ *   name of the launch activity of implement JNI_OnLoad
+ *   yourself
  *
  * No other functionality defined in main.h should be seen as
  * being publicly available, and other functions (such as
@@ -43,17 +48,29 @@
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
+#ifdef _ANDROID
+#include <jni.h>
+#include <string.h>
+#endif
 #endif
 
-extern void april_init(const harray<hstr>& argv);
+extern void april_init(const harray<hstr>& args);
 extern void april_destroy();
 
-aprilExport int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char **argv);
+aprilExport int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv);
 
 #ifndef BUILDING_APRIL
 //{
-#if !defined(_WIN32) || defined(_CONSOLE) || defined(HAVE_MARMELADE)
-int main (int argc, char **argv)
+#ifdef _ANDROID
+jint april_JNI_OnLoad(JavaVM* vm, void* reserved, const char* launchActivityName);
+#ifdef APRIL_ANDROID_LAUNCH_ACTIVITY_NAME
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
+{
+	return april_JNI_OnLoad(vm, reserved, APRIL_ANDROID_LAUNCH_ACTIVITY_NAME);
+}
+#endif
+#elif !defined(_WIN32) || defined(_CONSOLE) || defined(HAVE_MARMELADE)
+int main (int argc, char** argv)
 {
 #if TARGET_IPHONE_SIMULATOR
 	/* trick for running valgrind in iphone simulator
@@ -100,15 +117,17 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     
     while (arg[0] != 0) 
 	{
-
         while (arg[0] != 0 && arg[0] == ' ')
+		{
 		    arg++;
-        
+		}
         if (arg[0] != 0) 
 		{
             argc++;
             while (arg[0] != 0 && arg[0] != ' ')
+			{
                 arg++;
+			}
         }
     }    
     
@@ -119,17 +138,18 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
     while (arg[0] != 0) 
 	{
-        while (arg[0] != 0 && arg[0] == ' ') 
+        while (arg[0] != 0 && arg[0] == ' ')
+		{
             arg++;
-
+		}
         if (arg[0] != 0) 
 		{
             argv[index] = arg;
             index++;
-        
-            while (arg[0] != 0 && arg[0] != ' ') 
+            while (arg[0] != 0 && arg[0] != ' ')
+			{
                 arg++;
-        
+			}
             if (arg[0] != 0) 
 			{
                 arg[0] = 0;    
