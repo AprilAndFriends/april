@@ -353,6 +353,8 @@ namespace april
 		window = createAprilWindow("Marmelade", w, h, fullscreen, title);
 #elif defined(_WIN32)
 		window = createAprilWindow("Win32", w, h, fullscreen, title);
+#elif defined(_ANDROID)
+		window = createAprilWindow("AndroidJNI", w, h, fullscreen, title);
 #else
 		window = createAprilWindow("SDL", w, h, fullscreen, title);
 #endif

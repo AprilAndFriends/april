@@ -35,7 +35,7 @@
  * - define just april_init() and april_destroy()
  * - do not worry about other functionality in this header
  * - if you are using Android with JNI, make sure to define
- *   APRIL_ANDROID_LAUNCH_ACTIVITY_NAME as a fully-qualified
+ *   APRIL_ANDROID_ACTIVITY_NAME as a fully-qualified
  *   name of the launch activity of implement JNI_OnLoad
  *   yourself
  *
@@ -54,23 +54,30 @@
 #endif
 #endif
 
+#ifndef _ANDROID
+aprilExport int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv);
+#else
+#include <hltypes/hstring.h>
+namespace april
+{
+	aprilExport jint JNI_OnLoad(JavaVM* vm, void* reserved, chstr packageName);
+}
+#endif
+
 extern void april_init(const harray<hstr>& args);
 extern void april_destroy();
-
-aprilExport int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv);
 
 #ifndef BUILDING_APRIL
 //{
 #ifdef _ANDROID
-jint april_JNI_OnLoad(JavaVM* vm, void* reserved, const char* launchActivityName);
-#ifdef APRIL_ANDROID_LAUNCH_ACTIVITY_NAME
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
+#ifdef APRIL_ANDROID_PACKAGE_NAME
+extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
-	return april_JNI_OnLoad(vm, reserved, APRIL_ANDROID_LAUNCH_ACTIVITY_NAME);
+	return april::JNI_OnLoad(vm, reserved, APRIL_ANDROID_PACKAGE_NAME);
 }
 #endif
 #elif !defined(_WIN32) || defined(_CONSOLE) || defined(HAVE_MARMELADE)
-int main (int argc, char** argv)
+int main(int argc, char** argv)
 {
 #if TARGET_IPHONE_SIMULATOR
 	/* trick for running valgrind in iphone simulator
@@ -82,9 +89,9 @@ int main (int argc, char** argv)
 	 * we'll also include this only on iPhone Simulator code,
 	 * instead of requiring manually defining that we want this code.
 	 */
-	#ifndef VALGRIND
-		#define VALGRIND "/usr/local/bin/valgrind"
-	#endif
+#ifndef VALGRIND
+#define VALGRIND "/usr/local/bin/valgrind"
+#endif
 	/* Using the valgrind build config, reexec this program
 	 * in valgrind */
 	if (argc >= 2 && strcmp(argv[1], "-valgrind") == 0)

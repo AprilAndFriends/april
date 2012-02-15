@@ -45,6 +45,12 @@
     <Filter Include="Android">
       <UniqueIdentifier>{245873a7-69f7-41e3-8a21-fadb5624b9d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\windowsystems\AndroidJNI">
+      <UniqueIdentifier>{cde54747-2548-4ec6-9652-7e8739c55149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\windowsystems\AndroidJNI">
+      <UniqueIdentifier>{3bb5b83b-c0e7-420e-b268-2972cb7c22a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -107,6 +113,9 @@
     <ClCompile Include="src\main_android.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="windowsystems\AndroidJni\AndroidJNIWindow.cpp">
+      <Filter>Source Files\windowsystems\AndroidJNI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -162,6 +171,9 @@
     </ClInclude>
     <ClInclude Include="windowsystems\Win32\Win32Window.h">
       <Filter>Header Files\windowsystems\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\AndroidJni\AndroidJNIWindow.h">
+      <Filter>Header Files\windowsystems\AndroidJNI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

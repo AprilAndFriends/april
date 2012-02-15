@@ -23,6 +23,9 @@
 	#ifdef _WIN32
 		#include "Win32Window.h"
 	#endif
+	#ifdef _ANDROID
+		#include "AndroidJNIWindow.h"
+	#endif
 	#ifdef HAVE_MARMELADE
 		#include "MarmeladeWindow.h"
 	#endif
@@ -432,6 +435,12 @@ namespace april
 		if (winsysname == "Win32")
 		{
 			return new Win32Window(w, h, fullscreen, title);
+		}
+	#endif
+	#ifdef _ANDROID
+		if (winsysname == "AndroidJNI")
+		{
+			return new AndroidJNIWindow(w, h, fullscreen, title);
 		}
 	#endif
 	#ifdef HAVE_MARMELADE

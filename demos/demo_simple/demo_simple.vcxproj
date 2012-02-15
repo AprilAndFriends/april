@@ -124,7 +124,8 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>-lpng;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lapril;-lpng%(AdditionalDependencies)</AdditionalDependencies>
+      <AndroidSystemLibs>c;m;log;gcc;GLESv1_CM;z;</AndroidSystemLibs>
     </Link>
     <PostBuildEvent />
     <AntBuild>
@@ -187,7 +188,8 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>-lpng;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lapril;-lpng%(AdditionalDependencies)</AdditionalDependencies>
+      <AndroidSystemLibs>c;m;log;gcc;GLESv1_CM;z;</AndroidSystemLibs>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -206,7 +208,6 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
     </None>
     <None Include="android\local.properties" />
     <None Include="android\project.properties" />
-    <None Include="android\res\layout\main.xml" />
     <None Include="android\src\april\demoSimple\AprilActivity.java" />
   </ItemGroup>
   <ItemGroup>
