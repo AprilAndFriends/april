@@ -13,6 +13,7 @@
 #include <windows.h>
 
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hthread.h>
 
 #include "RenderSystem.h"
 #include "Timer.h"
@@ -167,10 +168,9 @@ namespace april
 		return DefWindowProcW(hWnd, message, wParam, lParam);
 	}
 /************************************************************************************/
-	Win32Window::Win32Window(int w, int h, bool fullscreen, chstr title) //:
-		/*mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()*/
+	Win32Window::Win32Window(int w, int h, bool fullscreen, chstr title) : Window()
 	{
-		if (april::rendersys)
+		if (april::rendersys != NULL)
 		{
 			april::log("Creating Win32 Windowsystem");
 		}
@@ -455,14 +455,14 @@ namespace april
 				for (int i = 0; i < 5; i++)
 				{
 					doEvents();
-					Sleep(40);
+					hthread::sleep(40.0f);
 				}
 			}
 			// rendering
 			//d3dDevice->BeginScene();
-			if (mUpdateCallback)
+			if (mUpdateCallback != NULL)
 			{
-				mUpdateCallback(k);
+				(*mUpdateCallback)(k);
 			}
 #ifndef _DEBUG
 			setWindowTitle(mTitle);

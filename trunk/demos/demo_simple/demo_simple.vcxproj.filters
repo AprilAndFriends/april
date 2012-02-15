@@ -36,9 +36,6 @@
     <None Include="android\src\april\demoSimple\AprilActivity.java">
       <Filter>AndroidApk\JavaSource</Filter>
     </None>
-    <None Include="android\res\layout\main.xml">
-      <Filter>AndroidApk</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo_simple.cpp">

@@ -8,11 +8,15 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _ANDROID
-#define APRIL_ANDROID_LAUNCH_ACTIVITY_NAME "com/example/april/demoSimple/AprilActivity"
-#endif
+#include <hltypes/harray.h>
+#include <hltypes/hstring.h>
 
-#ifndef _ANDROID // TODO - remove
+#ifdef _ANDROID
+#define APRIL_ANDROID_PACKAGE_NAME "com/example/april/demoSimple"
+#define RESOURCE_PATH "./res/"
+#else
+#define RESOURCE_PATH "../media/"
+#endif
 
 #include <stdio.h>
 #include <time.h>
@@ -41,6 +45,7 @@ bool update(float k)
 {
 	april::rendersys->clear();
 	april::rendersys->setOrthoProjection(drawRect);
+#ifndef _ADNROID
 	manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 	april::rendersys->setTexture(manualTexture);
 	april::rendersys->render(april::TriangleStrip, dv, 4);
@@ -50,7 +55,8 @@ bool update(float k)
 	v[2].x = offset.x - size.x;	v[2].y = offset.y + size.y;
 	v[3].x = offset.x + size.x;	v[3].y = offset.y + size.y;
 	april::rendersys->render(april::TriangleStrip, v, 4);
-	april::rendersys->drawColoredQuad(grect(600, 450, 100, 75), APRIL_COLOR_YELLOW);
+#endif
+	april::rendersys->drawColoredQuad(grect(0.0f, 0.0f, 100.0f, 75.0f), APRIL_COLOR_YELLOW);
 	return true;
 }
 
@@ -94,12 +100,16 @@ void april_init(const harray<hstr>& args)
 	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "april: Simple Demo");
 	april::rendersys->getWindow()->setUpdateCallback(update);
 	april::rendersys->getWindow()->setMouseCallbacks(onMouseDown, onMouseUp, onMouseMove);
-	texture = april::rendersys->loadTexture("../media/texture.jpg");
+	texture = april::rendersys->loadTexture("../media/texture.jpg"); // TODO - revert this
+
+	//texture = april::rendersys->loadTexture(RESOURCE_PATH "line45.png"); // TODO - revert this
+#ifndef _ADNROID
 	manualTexture = april::rendersys->createEmptyTexture((int)drawRect.w, (int)drawRect.h);
 	manualTexture->blit(100, 100, texture, 0, 0, texture->getWidth(), texture->getHeight());
 	manualTexture->stretchBlit(0, 100, 900, 200, texture, 0, 0, texture->getWidth() / 2, texture->getHeight() / 2);
 	size.x = texture->getWidth() / 4.0f;
 	size.y = texture->getHeight() / 4.0f;
+#endif
 }
 
 void april_destroy()
@@ -108,4 +118,3 @@ void april_destroy()
 	delete manualTexture;
 	april::destroy();
 }
-#endif // TODO - remove
