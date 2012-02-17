@@ -45,7 +45,8 @@ namespace april
 	public:
 		// data types
 		static Window* getSingleton() { return mSingleton; };
-		
+		virtual ~Window();
+
 		enum DeviceType
 		{
 			DEVICE_IPHONE = 0,
