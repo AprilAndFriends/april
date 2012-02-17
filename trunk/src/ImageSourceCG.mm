@@ -188,7 +188,7 @@ namespace april
 
 		// alloc img, set attributes
 		ImageSource* img=new ImageSource();
-		img->format = GL_RGBA; //ilGetInteger(IL_IMAGE_FORMAT); // not used
+		img->format = AF_RGBA; //ilGetInteger(IL_IMAGE_FORMAT); // not used
 		img->w = CGImageGetWidth(imageRef);
 		img->h = CGImageGetHeight(imageRef);
 		int bitsPerComponent = CGImageGetBitsPerComponent(imageRef); // almost always 8

@@ -252,7 +252,7 @@ namespace april
 		img->w = w;
 		img->h = h;
 		img->bpp = 4; // IL temp hack
-		img->format = 6408; // IL temp hack, coincides with GL_RGBA
+		img->format = AF_RGBA; // IL temp hack, coincides with GL_RGBA
 		img->data = data;
 		return img;
 	}
@@ -265,7 +265,7 @@ namespace april
 		img->w = w;
 		img->h = h;
 		img->bpp = 4; // IL temp hack
-		img->format = 6408; // IL temp hack, coincides with GL_RGBA
+		img->format = AF_RGBA; // IL temp hack, coincides with GL_RGBA
 		img->data = data;
 		img->setPixels(0, 0, w, h, APRIL_COLOR_BLANK);
 		return img;

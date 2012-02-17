@@ -160,6 +160,11 @@ namespace april
 		mHandleURLCallback = NULL;
 		mSingleton = this;
 	}
+	
+	Window::~Window()
+	{
+	
+	}
 
 	void Window::setUpdateCallback(bool (*callback)(float))
 	{
