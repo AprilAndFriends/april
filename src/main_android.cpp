@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.4
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
@@ -9,8 +9,10 @@
 
 #ifdef _ANDROID
 #include <jni.h>
+#include <android/log.h>
 
 #include <hltypes/harray.h>
+#include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
 #include "main.h"
@@ -19,6 +21,8 @@
 
 namespace april
 {
+	hstr packageName;
+
 	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args)
 	{
 		harray<hstr> args;
@@ -32,6 +36,7 @@ namespace april
 			args += hstr(str);
 			env->ReleaseStringUTFChars(arg, str);
 		}
+		hresource::setArchive(args[0]);
 		april_init(args);
 	}
 
@@ -53,9 +58,10 @@ namespace april
 		{"destroy",	"()V",						(void*)&april::_JNI_destroy	},
 		{"render",	"()V",						(void*)&april::_JNI_render	}
 	};
-
+	
 	jint JNI_OnLoad(JavaVM* vm, void* reserved, chstr packageName)
 	{
+		april::packageName = packageName;
 		JNIEnv* env;
 		if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK)
 		{

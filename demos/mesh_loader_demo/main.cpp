@@ -1,14 +1,19 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.4
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#include <iostream>
+#ifdef _ANDROID
+#define APRIL_ANDROID_PACKAGE_NAME "com/example/april/demoMesh"
+#define RESOURCE_PATH "./"
+#else
+#define RESOURCE_PATH "../media/"
+#endif
 
 #include <april/main.h>
 #include <april/RenderSystem.h>

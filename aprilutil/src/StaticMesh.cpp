@@ -76,7 +76,7 @@ namespace april
         
         std::cerr << "[aprilutil] loading mesh '" << meshPath << "'" << std::endl;
         
-        fp=fopen(meshPath.c_str(), "r");
+        fp=fopen(meshPath.c_str(), "rb");
         if( fp == NULL )
             throw file_not_found(meshPath);
             

@@ -163,7 +163,7 @@ namespace april
 		unload();
 	}
 	
-	void RAMTexture::load()
+	bool RAMTexture::load()
 	{
 		if (!mBuffer)
 		{
@@ -171,7 +171,9 @@ namespace april
 			mBuffer = loadImage(mFilename);
 			mWidth = mBuffer->w;
 			mHeight = mBuffer->h;
+			return true;
 		}
+		return false;
 	}
 	
 	void RAMTexture::unload()

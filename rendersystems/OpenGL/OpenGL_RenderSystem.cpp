@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.33
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
@@ -339,7 +339,7 @@ namespace april
 		glGetFloatv(GL_VIEWPORT, params);
 		return grect(params[0], mWindow->getHeight() - params[3] - params[1], params[2], params[3]);
 	}
-
+	
 	void OpenGL_RenderSystem::setViewport(grect rect)
 	{
 		// because GL has to defy screen logic and has (0,0) in the bottom left corner
@@ -348,26 +348,25 @@ namespace april
 
 	void OpenGL_RenderSystem::setTexture(Texture* t)
 	{
-		OpenGL_Texture* glt = (OpenGL_Texture*)t;
-		if (t == NULL)
+		OpenGL_Texture* texture = (OpenGL_Texture*)t;
+		if (texture == NULL)
 		{
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 		else
 		{
-			if (glt->mTexId == 0 && glt->isDynamic())
+			if (texture->mTexId == 0 && texture->isDynamic())
 			{
-				glt->load();
+				texture->load();
 			}
-			glt->_resetUnusedTimer();
-			glBindTexture(GL_TEXTURE_2D, glt->mTexId);
-			
-			TextureFilter filter = t->getTextureFilter();
+			texture->_resetUnusedTimer();
+			glBindTexture(GL_TEXTURE_2D, texture->mTexId);
+			TextureFilter filter = texture->getTextureFilter();
 			if (filter != mTextureFilter)
 			{
 				setTextureFilter(filter);
 			}
-			bool wrapping = t->isTextureWrappingEnabled();
+			bool wrapping = texture->isTextureWrappingEnabled();
 			if (mTextureWrapping != wrapping)
 			{
 				setTextureWrapping(wrapping);
@@ -508,9 +507,7 @@ namespace april
 		glColor4f(1, 1, 1, 1); 
 		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), &v->u);
-
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
-
 	}
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)

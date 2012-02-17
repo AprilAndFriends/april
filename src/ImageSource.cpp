@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.31
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
@@ -9,7 +9,7 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #include <string.h>
-#ifdef _WIN32
+#ifdef USE_IL
 #include <IL/il.h>
 #endif
 
@@ -252,7 +252,7 @@ namespace april
 		img->w = w;
 		img->h = h;
 		img->bpp = 4; // IL temp hack
-		img->format = 6408; // IL temp hack
+		img->format = 6408; // IL temp hack, coincides with GL_RGBA
 		img->data = data;
 		return img;
 	}
@@ -265,7 +265,7 @@ namespace april
 		img->w = w;
 		img->h = h;
 		img->bpp = 4; // IL temp hack
-		img->format = 6408; // IL temp hack
+		img->format = 6408; // IL temp hack, coincides with GL_RGBA
 		img->data = data;
 		img->setPixels(0, 0, w, h, APRIL_COLOR_BLANK);
 		return img;

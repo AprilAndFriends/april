@@ -124,8 +124,8 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lapril;-lpng%(AdditionalDependencies)</AdditionalDependencies>
-      <AndroidSystemLibs>c;m;log;gcc;GLESv1_CM;z;</AndroidSystemLibs>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lapril;-lpng;-lzip;%(AdditionalDependencies)</AdditionalDependencies>
+      <AndroidSystemLibs>c;m;log;gcc;z;GLESv1_CM</AndroidSystemLibs>
     </Link>
     <PostBuildEvent />
     <AntBuild>
@@ -134,6 +134,9 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       </AdbRunAddCmdLine>
     </AntBuild>
     <ProjectReference />
+    <PreLinkEvent>
+      <Command>xcopy ..\media\*.* android\assets\ /d /y</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -188,8 +191,8 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lapril;-lpng%(AdditionalDependencies)</AdditionalDependencies>
-      <AndroidSystemLibs>c;m;log;gcc;GLESv1_CM;z;</AndroidSystemLibs>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lapril;-lpng;-lzip;%(AdditionalDependencies)</AdditionalDependencies>
+      <AndroidSystemLibs>c;m;log;gcc;z;GLESv1_CM</AndroidSystemLibs>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -198,17 +201,16 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
     <AntBuild>
       <AntBuildPath>$(ProjectDir)android</AntBuildPath>
     </AntBuild>
+    <PreLinkEvent>
+      <Command>xcopy ..\media\*.* android\assets\ /d /y</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="android\AndroidManifest.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="android\build.xml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="android\local.properties" />
     <None Include="android\project.properties" />
-    <None Include="android\src\april\demoSimple\AprilActivity.java" />
+    <None Include="android\src\AprilActivity.java" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\gtypes\libgtypes.vcxproj">

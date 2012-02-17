@@ -21,10 +21,14 @@
 #ifdef USE_IL
 #include <IL/il.h>
 #endif
+#ifdef _ANDROID
+#include <android/log.h>
+#endif
 
 #include <hltypes/harray.h>
 #include <hltypes/hfile.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
 #include "RenderSystem.h"
@@ -49,7 +53,11 @@ namespace april
 
 	void april_writelog(chstr message)
 	{
-		printf("%s\n", message.c_str());		
+#ifndef _ANDROID
+		printf("%s\n", message.c_str());
+#else
+		__android_log_print(ANDROID_LOG_INFO, "april", "%s", message.c_str());
+#endif
 	}
 	
 	void (*g_logFunction)(chstr) = april_writelog;
@@ -161,7 +169,7 @@ namespace april
 	hstr RenderSystem::findTextureFile(chstr _filename)
 	{
 		hstr filename = _filename;
-		if (hfile::exists(filename))
+		if (hresource::exists(filename))
 		{
 			return filename;
 		}
@@ -169,7 +177,7 @@ namespace april
 		foreach (hstr, it, extensions)
 		{
 			name = filename + (*it);
-			if (hfile::exists(name))
+			if (hresource::exists(name))
 			{
 				return name;
 			}
@@ -181,7 +189,7 @@ namespace april
 			foreach (hstr, it, extensions)
 			{
 				name = filename + (*it);
-				if (hfile::exists(name))
+				if (hresource::exists(name))
 				{
 					return name;
 				}
