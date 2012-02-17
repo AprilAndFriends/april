@@ -128,9 +128,8 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <AndroidSystemLibs>c;m;log;gcc;z;GLESv1_CM</AndroidSystemLibs>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)..\lib\msvc100\*.dll $(SolutionDir)bin\$(Platform)\ /d /y
-xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Configuration)\ /d /y
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>xcopy ..\media\*.* android\assets\ /d /y</Command>
@@ -196,9 +195,8 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <AndroidSystemLibs>c;m;log;gcc;z;GLESv1_CM</AndroidSystemLibs>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)..\lib\msvc100\*.dll $(SolutionDir)bin\$(Platform)\ /d /y
-xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Configuration)\ /d /y
-</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>xcopy ..\media\*.* android\assets\ /d /y</Command>
@@ -218,6 +216,9 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
     <ProjectReference Include="..\..\..\hltypes\libhltypes.vcxproj">
       <Project>{e4d373bf-e227-48b9-99e6-84987e8674ec}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\aprilutil\libaprilutil.vcxproj">
+      <Project>{2d053cda-686c-4b36-80eb-1da5f0cef8f9}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\libapril.vcxproj">
       <Project>{2d053cda-686b-4b36-80eb-1da5f0cef8f9}</Project>

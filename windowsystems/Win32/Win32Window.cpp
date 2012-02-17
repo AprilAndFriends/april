@@ -480,8 +480,13 @@ namespace april
 			}
 #endif			
 			//d3dDevice->EndScene();
-			rendersys->presentFrame();
+			april::rendersys->presentFrame();
 		}
+	}
+
+	void Win32Window::updateOneFrame()
+	{
+		// TODO
 	}
 	
 	void* Win32Window::getIDFromBackend()

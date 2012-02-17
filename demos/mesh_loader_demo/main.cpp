@@ -25,8 +25,12 @@
 
 april::Texture* texture;
 april::StaticMesh* mesh;
-grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 float angle = 0;
+#ifndef _ANDROID
+grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+#else
+grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
+#endif
 
 bool update(float k)
 {
@@ -44,10 +48,10 @@ void april_init(const harray<hstr>& args)
 {
 	april::init();
 	april::createRenderSystem("");
-	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "april: 3D Demo");
+	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "april: Mesh Demo");
 	april::rendersys->getWindow()->setUpdateCallback(update);
-	mesh = new april::StaticMesh("../media/testobject.obj");
-	texture = april::rendersys->loadTexture("../media/texture.jpg");
+	mesh = new april::StaticMesh(RESOURCE_PATH "testobject.obj");
+	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture.png");
 }
 
 void april_destroy()

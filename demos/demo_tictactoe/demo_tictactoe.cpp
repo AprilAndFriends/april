@@ -23,31 +23,37 @@
 #include <gtypes/Rectangle.h>
 #include <hltypes/hstring.h>
 
-april::Texture* background;
-april::Texture* x_symbol;
-april::Texture* o_symbol;
-april::Texture* line_horz;
-april::Texture* line_vert;
-april::Texture* line45;
-april::Texture* line315;
-grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+april::Texture* background = NULL;
+april::Texture* x_symbol = NULL;
+april::Texture* o_symbol = NULL;
+april::Texture* line_horz = NULL;
+april::Texture* line_vert = NULL;
+april::Texture* line20 = NULL;
+april::Texture* line315 = NULL;
 int positions[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
 int victory = 0;
 bool player = 0;
 april::TexturedVertex v[4];
 
+#ifndef _ANDROID
+grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+#else
+grect drawRect(0.0f, 0.0f, 480.0f, 310.0f);
+#endif
+gvec2 size = drawRect.getSize() * 5 / 16;
+
 void draw_symbol(int x, int y, chstr symbol)
 {
 	float x1, x2, x3, x4, y1, y2, y3, y4;
 	
-	x1 = x * 250.0f - 250 + (x - 1) * 25;
-	x2 = x * 250.0f + (x - 1) * 25;
-	x3 = x * 250.0f - 250 + (x - 1) * 25;
-	x4 = x * 250.0f + (x - 1) * 25;
-	y1 = y * 185.0f - 185 + (y - 1) * 25;
-	y2 = y * 185.0f - 185 + (y - 1) * 25;
-	y3 = y * 185.0f + (y - 1) * 25;
-	y4 = y * 185.0f + (y - 1) * 25;
+	x1 = x * size.x - size.x + (x - 1) * 10;
+	x2 = x * size.x + (x - 1) * 10;
+	x3 = x * size.x - size.x + (x - 1) * 10;
+	x4 = x * size.x + (x - 1) * 10;
+	y1 = y * size.y - size.y + (y - 1) * 10;
+	y2 = y * size.y - size.y + (y - 1) * 10;
+	y3 = y * size.y + (y - 1) * 10;
+	y4 = y * size.y + (y - 1) * 10;
 	
 	if (symbol == "x_symbol")
 	{
@@ -74,14 +80,14 @@ void draw_line(int x_start, int y_start, int x_end, int y_end, std::string symbo
 {
 	float x1, x2, x3, x4, y1, y2, y3, y4;
 	
-	x1 = x_start * 250.0f + (x_start + 1) * 25;
-	x2 = x_end * 250.0f + 250 + (x_start - 1) * 25;
-	x3 = x_start * 250.0f + (x_start + 1) * 25;
-	x4 = x_end * 250.0f + 250 + (x_start - 1) * 25;
-	y1 = y_start * 185.0f + (y_start + 1) * 25;
-	y2 = y_start * 185.0f + (y_start + 1) * 25;
-	y3 = y_end * 185.0f + 185 + (y_start - 1) * 25;
-	y4 = y_end * 185.0f + 185 + (y_start - 1) * 25;
+	x1 = x_start * size.x + (x_start + 1) * 10;
+	x2 = x_end * size.x + size.x + (x_start - 1) * 10;
+	x3 = x_start * size.x + (x_start + 1) * 10;
+	x4 = x_end * size.x + size.x + (x_start - 1) * 10;
+	y1 = y_start * size.y + (y_start + 1) * 10;
+	y2 = y_start * size.y + (y_start + 1) * 10;
+	y3 = y_end * size.y + size.y + (y_start - 1) * 10;
+	y4 = y_end * size.y + size.y + (y_start - 1) * 10;
 	
 	if (symbol == "line_horz")
 	{
@@ -91,9 +97,9 @@ void draw_line(int x_start, int y_start, int x_end, int y_end, std::string symbo
 	{
 		april::rendersys->setTexture(line_vert);
 	}
-	else if (symbol == "line45")
+	else if (symbol == "line20")
 	{
-		april::rendersys->setTexture(line45);
+		april::rendersys->setTexture(line20);
 	}
 	else if (symbol == "line315")
 	{
@@ -117,17 +123,17 @@ bool update(float k)
 	april::rendersys->setOrthoProjection(drawRect);
 	
 	april::rendersys->setTexture(background);
-	v[0].x = 0;   v[0].y = 0;   v[0].z = 0; v[0].u = 0; v[0].v = 0;
-	v[1].x = 800; v[1].y = 0;   v[1].z = 0; v[1].u = 1; v[1].v = 0;
-	v[2].x = 0;   v[2].y = 600; v[2].z = 0; v[2].u = 0; v[2].v = 1;
-	v[3].x = 800; v[3].y = 600; v[3].z = 0; v[3].u = 1; v[3].v = 1;
+	v[0].x = 0;				v[0].y = 0;				v[0].z = 0;	v[0].u = 0;	v[0].v = 0;
+	v[1].x = drawRect.w;	v[1].y = 0;				v[1].z = 0;	v[1].u = 1;	v[1].v = 0;
+	v[2].x = 0;				v[2].y = drawRect.h;	v[2].z = 0;	v[2].u = 0;	v[2].v = 1;
+	v[3].x = drawRect.w;	v[3].y = drawRect.h;	v[3].z = 0;	v[3].u = 1;	v[3].v = 1;
 	april::rendersys->render(april::TriangleStrip, v, 4);
 	
-	april::rendersys->setTexture(0);
-	april::rendersys->drawColoredQuad(grect(250, 0, 25, 600), APRIL_COLOR_MANGENTA);
-	april::rendersys->drawColoredQuad(grect(525, 0, 25, 600), APRIL_COLOR_MANGENTA);
-	april::rendersys->drawColoredQuad(grect(0, 185, 800, 25), APRIL_COLOR_MANGENTA);
-	april::rendersys->drawColoredQuad(grect(0, 390, 800, 25), APRIL_COLOR_MANGENTA);
+	april::rendersys->setTexture(NULL);
+	april::rendersys->drawColoredQuad(grect(size.x, 0, 10, drawRect.h), APRIL_COLOR_MANGENTA);
+	april::rendersys->drawColoredQuad(grect(size.x * 2 + 10, 0, 10, drawRect.h), APRIL_COLOR_MANGENTA);
+	april::rendersys->drawColoredQuad(grect(0, size.y, drawRect.w, 10), APRIL_COLOR_MANGENTA);
+	april::rendersys->drawColoredQuad(grect(0, size.y * 2 + 10, drawRect.w, 10), APRIL_COLOR_MANGENTA);
 	
 	for (int j = 0; j < 3; j++)
 	{
@@ -165,7 +171,7 @@ bool update(float k)
 		draw_line(0, 2, 2, 2, "line_vert");
 		break;
 	case 7:
-		draw_line(0, 0, 2, 2, "line45");
+		draw_line(0, 0, 2, 2, "line20");
 		break;
 	case 8:
 		draw_line(0, 0, 2, 2, "line315");
@@ -177,94 +183,94 @@ bool update(float k)
 
 void OnMouseUp(float x,float y,int button)
 {
-	if (x >= 0 && x <= 250 && y >= 0 && y <= 185 && !player && positions[0][0] == 0)
+	if (x >= 0 && x <= size.x && y >= 0 && y <= size.y && !player && positions[0][0] == 0)
 	{
 		positions[0][0] = 1;
 		player = !player;
 	}
-	if (x >= 0 && x <= 250 && y >= 210 && y <= 390 && !player && positions[0][1] == 0)
+	if (x >= 0 && x <= size.x && y >= size.x - 40 && y <= size.y * 2 + 10 && !player && positions[0][1] == 0)
 	{
 		positions[0][1] = 1;
 		player = !player;
 	}
-	if (x >= 0 && x <= 250 && y >= 415 && y <= 600 && !player && positions[0][2] == 0)
+	if (x >= 0 && x <= size.x && y >= size.y + 20 && y <= drawRect.h && !player && positions[0][2] == 0)
 	{
 		positions[0][2] = 1;
 		player = !player;
 	}
-	if (x >= 275 && x <= 525 && y >= 0 && y <= 185 && !player && positions[1][0] == 0)
+	if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= 0 && y <= size.y && !player && positions[1][0] == 0)
 	{
 		positions[1][0] = 1;
 		player = !player;
 	}
-	if (x >= 275 && x <= 525 && y >= 210 && y <= 390 && !player && positions[1][1] == 0)
+	if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y + 10 && y <= size.x * 2 + 10 && !player && positions[1][1] == 0)
 	{
 		positions[1][1] = 1;
 		player = !player;
 	}
-	if (x >= 275 && x <= 525 && y >= 415 && y <= 600 && !player && positions[1][2] == 0)
+	if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y * 2 + 20 && y <= drawRect.h && !player && positions[1][2] == 0)
 	{
 		positions[1][2] = 1;
 		player = !player;
 	}
-	if (x >= 550 && x <= 800 && y >= 0 && y <= 185 && !player && positions[2][0] == 0)
+	if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= 0 && y <= size.y && !player && positions[2][0] == 0)
 	{
 		positions[2][0] = 1;
 		player = !player;
 	}
-	if (x >= 550 && x <= 800 && y >= 210 && y <= 390 && !player && positions[2][1] == 0)
+	if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y + 10 && y <= size.y * 2 + 10 && !player && positions[2][1] == 0)
 	{
 		positions[2][1] = 1;
 		player = !player;
 	}
-	if (x >= 550 && x <= 800 && y >= 415 && y <= 600 && !player && positions[2][2] == 0)
+	if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y * 2 + 20 && y <= drawRect.h && !player && positions[2][2] == 0)
 	{
 		positions[2][2] = 1;
 		player = !player;
 	}
 	
 	
-	if (x >= 0 && x <= 250 && y >= 0 && y <= 185 && player && positions[0][0] == 0)
+	if (x >= 0 && x <= size.x && y >= 0 && y <= size.y && player && positions[0][0] == 0)
 	{
 		positions[0][0] = 2;
 		player = !player;
 	}
-	if (x >= 0 && x <= 250 && y >= 210 && y <= 390 && player && positions[0][1] == 0)
+	if (x >= 0 && x <= size.x && y >= size.y + 10 && y <= size.x * 2 + 10 && player && positions[0][1] == 0)
 	{
 		positions[0][1] = 2;
 		player = !player;
 	}
-	if (x >= 0 && x <= 250 && y >= 415 && y <= 600 && player && positions[0][2] == 0)
+	if (x >= 0 && x <= size.x && y >= size.y * 2 + 20 && y <= drawRect.h && player && positions[0][2] == 0)
 	{
 		positions[0][2] = 2;
 		player = !player;
 	}
-	if (x >= 275 && x <= 525 && y >= 0 && y <= 185 && player && positions[1][0] == 0)
+	if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= 0 && y <= size.y && player && positions[1][0] == 0)
 	{
 		positions[1][0] = 2;
 		player = !player;
 	}
-	if (x >= 275 && x <= 525 && y >= 210 && y <= 390 && player && positions[1][1] == 0)
+	if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y + 10 && y <= size.y * 2 + 10 && player && positions[1][1] == 0)
 	{
 		positions[1][1] = 2;
 		player = !player;
 	}
-	if (x >= 275 && x <= 525 && y >= 415 && y <= 600 && player && positions[1][2] == 0)
+	if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y * 2 + 20 && y <= drawRect.h && player && positions[1][2] == 0)
 	{
 		positions[1][2] = 2;
 		player = !player;
 	}
-	if (x >= 550 && x <= 800 && y >= 0 && y <= 185 && player && positions[2][0] == 0)
+	if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= 0 && y <= size.y && player && positions[2][0] == 0)
 	{
 		positions[2][0] = 2;
 		player = !player;
 	}
-	if (x >= 550 && x <= 800 && y >= 210 && y <= 390 && player && positions[2][1] == 0)
+	if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y + 10 && y <= size.y * 2 + 10 && player && positions[2][1] == 0)
 	{
 		positions[2][1] = 2;
 		player = !player;
 	}
-	if (x >= 550 && x <= 800 && y >= 415 && y <= 600 && player && positions[2][2] == 0)
+	if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y * 2 + 20 && y <= drawRect.h && player && positions[2][2] == 0)
 	{
 		positions[2][2] = 2;	
 		player = !player;
@@ -353,19 +359,26 @@ void april_init(const harray<hstr>& args)
 {
 	april::init();
 	april::createRenderSystem("");
-	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "demo_tictactoe");
+	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "Demo Tic Tac Toe");
 	april::rendersys->getWindow()->setUpdateCallback(update);
 	april::rendersys->getWindow()->setMouseCallbacks(NULL, OnMouseUp, NULL);
-	background = april::rendersys->loadTexture(RESOURCE_PATH "texture");
+	background = april::rendersys->loadTexture(RESOURCE_PATH "texture.png");
 	x_symbol = april::rendersys->loadTexture(RESOURCE_PATH "x");
 	o_symbol = april::rendersys->loadTexture(RESOURCE_PATH "o");
 	line_horz = april::rendersys->loadTexture(RESOURCE_PATH "line_horz");
 	line_vert = april::rendersys->loadTexture(RESOURCE_PATH "line_vert");
-	line45 = april::rendersys->loadTexture(RESOURCE_PATH "line45");
+	line20 = april::rendersys->loadTexture(RESOURCE_PATH "line20");
 	line315 = april::rendersys->loadTexture(RESOURCE_PATH "line315");
 }
 
 void april_destroy()
 {
+	delete background;
+	delete x_symbol;
+	delete o_symbol;
+	delete line_horz;
+	delete line_vert;
+	delete line20;
+	delete line315;
 	april::destroy();
 }
