@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+		package="com.example.april.demoTicTacToe"
+		android:versionCode="1"
+		android:versionName="1.5">
+	<uses-feature android:name="android.hardware.screen.landscape"/>
+	<application android:label="Demo Tic Tac Toe">
+		<activity android:name=".AprilActivity"
+				android:label="Demo Tic Tac Toe"
+				android:screenOrientation="landscape"
+				android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+	</application>
+	<uses-sdk android:minSdkVersion="7"/>
+</manifest> 

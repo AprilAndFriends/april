@@ -1,4 +1,4 @@
-package com.example.april.demoSimple;
+package com.example.april.demoTicTacToe;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -13,7 +13,7 @@ class AprilJNI
 {
 	static
 	{
-		System.loadLibrary("demo_simple");
+		System.loadLibrary("demo_tictactoe");
 	}
 	
 	public static String ApkPath;

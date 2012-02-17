@@ -7,8 +7,8 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
-#include <hltypes/hfile.h>
 
 #include "VertexShader.h"
 
@@ -24,7 +24,7 @@ namespace april
 
 	void VertexShader::load(chstr filename)
 	{
-		mShaderCode = hfile::hread(filename);
+		mShaderCode = hresource::hread(filename);
 		compile();
 	}
 	

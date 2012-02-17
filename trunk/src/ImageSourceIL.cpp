@@ -48,7 +48,7 @@ namespace april
 		img->w = ilGetInteger(IL_IMAGE_WIDTH);
 		img->h = ilGetInteger(IL_IMAGE_HEIGHT);
 		img->bpp = ilGetInteger(IL_IMAGE_BPP);
-		img->format = ilGetInteger(IL_IMAGE_FORMAT);
+		img->format = (ilGetInteger(IL_IMAGE_FORMAT) == 6408 ? AF_RGBA : AF_RGB);
 		img->data = ilGetData();
 		return img;
 	}

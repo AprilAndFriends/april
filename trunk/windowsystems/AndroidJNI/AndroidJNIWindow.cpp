@@ -27,6 +27,7 @@ namespace april
 
 	static gvec2 cursorPosition;
 	static april::Timer globalTimer;
+	static float lastTime = 0.0f;
 
 	AndroidJNIWindow::AndroidJNIWindow(int w, int h, bool fullscreen, chstr title) : Window()
 	{
@@ -51,49 +52,42 @@ namespace april
 
 	void AndroidJNIWindow::enterMainLoop()
 	{
-		float time = globalTimer.getTime();
-		float t;
-		//bool cVisible = cursorVisible;
-		//POINT w32_cursorPosition;
-		float k = 0.0f;
-		//while (mRunning)
+	}
+	
+	void AndroidJNIWindow::updateOneFrame()
+	{
+		if (lastTime == 0.0f)
 		{
-			// mouse position
-			//GetCursorPos(&w32_cursorPosition);
-			//ScreenToClient(hWnd, &w32_cursorPosition);
-			//cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
-			//*
-			doEvents();
-			t = globalTimer.getTime();
-			if (t == time)
-			{
-				return; // don't redraw frames which won't change
-			}
-			k = (t - time) / 1000.0f;
-			if (k > 0.5f)
-			{
-				k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
-			}
-
-			time = t;
-			if (!mActive)
-			{
-				k = 0;
-				for (int i = 0; i < 5; i++)
-				{
-					doEvents();
-					hthread::sleep(40);
-					//Sleep(40);
-				}
-			}
-			//*/
-			// rendering
-			if (mUpdateCallback != NULL)
-			{
-				(*mUpdateCallback)(k);
-			}
-			rendersys->presentFrame();
+			lastTime = globalTimer.getTime();
 		}
+		float t;
+		doEvents();
+		t = globalTimer.getTime();
+		if (t == lastTime)
+		{
+			return; // don't redraw frames which won't change
+		}
+		float k = (t - lastTime) / 1000.0f;
+		if (k > 0.5f)
+		{
+			k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
+		}
+
+		lastTime = t;
+		if (!mActive)
+		{
+			k = 0;
+			for (int i = 0; i < 5; i++)
+			{
+				doEvents();
+				hthread::sleep(40);
+			}
+		}
+		if (mUpdateCallback != NULL)
+		{
+			(*mUpdateCallback)(k);
+		}
+		april::rendersys->presentFrame();
 	}
 	
 	void AndroidJNIWindow::terminateMainLoop()

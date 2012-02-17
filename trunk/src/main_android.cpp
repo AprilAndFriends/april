@@ -48,7 +48,7 @@ namespace april
 	void JNICALL _JNI_render(JNIEnv* env, jclass classe)
 	{
 		// TODO
-		april::rendersys->getWindow()->enterMainLoop(); // this does not really enter a loop in AndroidJNIWindow
+		april::rendersys->getWindow()->updateOneFrame(); // this does not really enter a loop in AndroidJNIWindow
 	}
 
 #define METHOD_COUNT 3 // make sure this fits
