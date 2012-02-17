@@ -51,6 +51,7 @@ namespace april
 	public:
 		Texture();
 		virtual ~Texture();
+		virtual bool load() = 0;
 		virtual void unload() = 0;
 		virtual int getSizeInBytes() = 0;
 		
@@ -109,7 +110,7 @@ namespace april
 		RAMTexture(chstr filename, bool dynamic);
 		RAMTexture(int w, int h);
 		virtual ~RAMTexture();
-		void load();
+		bool load();
 		void unload();
 		bool isLoaded();
 		Color getPixel(int x, int y);

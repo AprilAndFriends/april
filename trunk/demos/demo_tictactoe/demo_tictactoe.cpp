@@ -1,12 +1,19 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.4
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+
+#ifdef _ANDROID
+#define APRIL_ANDROID_PACKAGE_NAME "com/example/april/demoTicTacToe"
+#define RESOURCE_PATH "./"
+#else
+#define RESOURCE_PATH "../media/"
+#endif
 
 #include <stdio.h>
 
@@ -349,13 +356,13 @@ void april_init(const harray<hstr>& args)
 	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "demo_tictactoe");
 	april::rendersys->getWindow()->setUpdateCallback(update);
 	april::rendersys->getWindow()->setMouseCallbacks(NULL, OnMouseUp, NULL);
-	background = april::rendersys->loadTexture("../media/texture.jpg");
-	x_symbol = april::rendersys->loadTexture("../media/x.png");
-	o_symbol = april::rendersys->loadTexture("../media/o.png");
-	line_horz = april::rendersys->loadTexture("../media/line_horz.png");
-	line_vert = april::rendersys->loadTexture("../media/line_vert.png");
-	line45 = april::rendersys->loadTexture("../media/line45.png");
-	line315 = april::rendersys->loadTexture("../media/line315.png");
+	background = april::rendersys->loadTexture(RESOURCE_PATH "texture");
+	x_symbol = april::rendersys->loadTexture(RESOURCE_PATH "x");
+	o_symbol = april::rendersys->loadTexture(RESOURCE_PATH "o");
+	line_horz = april::rendersys->loadTexture(RESOURCE_PATH "line_horz");
+	line_vert = april::rendersys->loadTexture(RESOURCE_PATH "line_vert");
+	line45 = april::rendersys->loadTexture(RESOURCE_PATH "line45");
+	line315 = april::rendersys->loadTexture(RESOURCE_PATH "line315");
 }
 
 void april_destroy()

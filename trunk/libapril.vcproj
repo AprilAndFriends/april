@@ -475,6 +475,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\ImageSourcePng.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ImageSourceJpg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\main_win32.cpp"
 				>
 			</File>

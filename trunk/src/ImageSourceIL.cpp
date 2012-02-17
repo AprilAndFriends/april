@@ -1,13 +1,14 @@
 /// @file
 /// @author  Kresimir Spes
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _WIN32
+#ifdef USE_IL
 #include <IL/il.h>
 
 #include <hltypes/hltypesUtil.h>

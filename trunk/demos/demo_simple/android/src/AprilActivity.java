@@ -8,7 +8,6 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.MotionEvent;
-import com.example.april.demoSimple.R;
 
 public class AprilActivity extends Activity
 {
@@ -17,12 +16,14 @@ public class AprilActivity extends Activity
 		System.loadLibrary("demo_simple");
 	}
 	
+	static public String ApkPath;
 	private GLSurfaceView glView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		ApkPath = this.getPackageResourcePath();
 		this.glView = new AprilGLSurfaceView(this);
 		this.setContentView(this.glView);
 	}
@@ -31,7 +32,7 @@ public class AprilActivity extends Activity
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		//AprilJNI.destroy();
+		AprilJNI.destroy();
 	}
 	
 	@Override
@@ -84,7 +85,7 @@ class AprilRenderer implements GLSurfaceView.Renderer
 {
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
-		String args[] = {System.getProperty("user.dir")}; // adding cwd
+		String args[] = {AprilActivity.ApkPath}; // adding argv[0]
 		AprilJNI.init(args);
 	}
 

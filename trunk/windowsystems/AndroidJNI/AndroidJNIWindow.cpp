@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.4
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
@@ -62,7 +62,7 @@ namespace april
 			//GetCursorPos(&w32_cursorPosition);
 			//ScreenToClient(hWnd, &w32_cursorPosition);
 			//cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
-			/*
+			//*
 			doEvents();
 			t = globalTimer.getTime();
 			if (t == time)
@@ -86,7 +86,7 @@ namespace april
 					//Sleep(40);
 				}
 			}
-			*/
+			//*/
 			// rendering
 			if (mUpdateCallback != NULL)
 			{

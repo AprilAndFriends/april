@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.33
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
@@ -16,20 +16,19 @@
 #endif
 
 #if TARGET_OS_IPHONE
-	#include <OpenGLES/ES1/gl.h>
-	#include <OpenGLES/ES1/glext.h>
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
 #elif _OPENGLES1
-	#include <GLES/gl.h>
+#include <GLES/gl.h>
 #else
-	#ifdef _WIN32
-		#include <windows.h>
-	#endif
-	#ifndef __APPLE__
-		#include <gl/GL.h>
-	#else // mac
-		#include <OpenGL/gl.h>
-
-	#endif // mac
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#ifndef __APPLE__
+#include <gl/GL.h>
+#else
+#include <OpenGL/gl.h>
+#endif
 #endif
 
 #include <hltypes/hstring.h>
@@ -39,22 +38,23 @@
 
 namespace april
 {
-	unsigned int platformLoadOpenGL_Texture(const char* name, int* w, int* h)
+	unsigned int platformLoadOpenGL_Texture(chstr name, int* w, int* h)
 	{
-		GLuint texid = 0;
+		GLuint textureId = 0;
 		ImageSource* img = loadImage(name);
-		if (!img)
+		if (img == NULL)
 		{
 			return 0;
 		}
 		*w = img->w;
 		*h = img->h;
-		glGenTextures(1, &texid);
-		glBindTexture(GL_TEXTURE_2D, texid);
+		glGenTextures(1, &textureId);
+		glBindTexture(GL_TEXTURE_2D, textureId);
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		
+
 		switch (img->format)
 		{
 #if TARGET_OS_IPHONE
@@ -67,12 +67,11 @@ namespace april
 		}
 #endif
 		default:
-			glTexImage2D(GL_TEXTURE_2D, 0, img->bpp == 4 ? GL_RGBA : GL_RGB, img->w, img->h, 0, img->format, GL_UNSIGNED_BYTE, img->data);
+			glTexImage2D(GL_TEXTURE_2D, 0, img->bpp == 4 ? GL_RGBA : GL_RGB, img->w, img->h, 0, img->format == AF_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, img->data);
 			break;
 		}
 		delete img;
-		
-		return texid;
+		return textureId;
 	}
 	
 	
@@ -165,7 +164,7 @@ namespace april
 		glBindTexture(GL_TEXTURE_2D, mTexId);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
 		delete writeData;
-		*/
+		//*/
 	}
 
 	void OpenGL_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
@@ -224,20 +223,20 @@ namespace april
 	bool OpenGL_Texture::load()
 	{
 		mUnusedTimer = 0;
-		if (mTexId)
+		if (mTexId != 0)
 		{
 			return true;
 		}
 		april::log("loading GL texture '" + mFilename + "'");
-		mTexId = platformLoadOpenGL_Texture(mFilename.c_str(), &mWidth, &mHeight);
-		if (!mTexId)
+		mTexId = platformLoadOpenGL_Texture(mFilename, &mWidth, &mHeight);
+		if (mTexId == 0)
 		{
 			april::log("Failed to load texture: " + mFilename);
 			return false;
 		}
 		foreach (Texture*, it, mDynamicLinks)
 		{
-			((OpenGL_Texture*)(*it))->load();
+			(*it)->load();
 		}
 		return true;
 	}
