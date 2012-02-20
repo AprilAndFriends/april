@@ -227,8 +227,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
   </ItemGroup>
   <ItemGroup>
     <None Include="android\AndroidManifest.xml" />
-    <None Include="android\project.properties" />
-    <None Include="android\src\AprilActivity.java" />
+    <None Include="android\src\Demo3d.java" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

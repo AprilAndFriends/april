@@ -26,10 +26,7 @@
     <None Include="android\AndroidManifest.xml">
       <Filter>AndroidApk</Filter>
     </None>
-    <None Include="android\project.properties">
-      <Filter>AndroidApk</Filter>
-    </None>
-    <None Include="android\src\AprilActivity.java">
+    <None Include="android\src\DemoTicTacToe.java">
       <Filter>AndroidApk</Filter>
     </None>
   </ItemGroup>
