@@ -47,16 +47,33 @@ namespace april
 
 	void JNICALL _JNI_render(JNIEnv* env, jclass classe)
 	{
-		// TODO
-		april::rendersys->getWindow()->updateOneFrame(); // this does not really enter a loop in AndroidJNIWindow
+		april::rendersys->getWindow()->updateOneFrame();
 	}
 
-#define METHOD_COUNT 3 // make sure this fits
+	void JNICALL _JNI_onMouseDown(JNIEnv* env, jclass classe, jfloat x, jfloat y, jint button)
+	{
+		april::rendersys->getWindow()->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT);
+	}
+
+	void JNICALL _JNI_onMouseUp(JNIEnv* env, jclass classe, jfloat x, jfloat y, jint button)
+	{
+		april::rendersys->getWindow()->handleMouseEvent(april::Window::AMOUSEEVT_UP, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT);
+	}
+
+	void JNICALL _JNI_onMouseMove(JNIEnv* env, jclass classe, jfloat x, jfloat y)
+	{
+		april::rendersys->getWindow()->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT);
+	}
+
+#define METHOD_COUNT 6 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
-		{"init",	"([Ljava/lang/String;)V",	(void*)&april::_JNI_init	},
-		{"destroy",	"()V",						(void*)&april::_JNI_destroy	},
-		{"render",	"()V",						(void*)&april::_JNI_render	}
+		{"init",		"([Ljava/lang/String;)V",	(void*)&april::_JNI_init		},
+		{"destroy",		"()V",						(void*)&april::_JNI_destroy		},
+		{"render",		"()V",						(void*)&april::_JNI_render		},
+		{"onMouseDown",	"(FFI)V",					(void*)&april::_JNI_onMouseDown	},
+		{"onMouseUp",	"(FFI)V",					(void*)&april::_JNI_onMouseUp	},
+		{"onMouseMove",	"(FF)V",					(void*)&april::_JNI_onMouseMove	}
 	};
 	
 	jint JNI_OnLoad(JavaVM* vm, void* reserved, chstr packageName)
@@ -67,7 +84,7 @@ namespace april
 		{
 			return -1;
 		}
-		jclass classe = env->FindClass((packageName + "/AprilJNI").c_str());
+		jclass classe = env->FindClass("net/sourceforge/april/AprilJNI");
 		if (env->RegisterNatives(classe, methods, METHOD_COUNT) != 0)
 		{
 			return -1;

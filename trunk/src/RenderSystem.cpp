@@ -31,11 +31,8 @@
 #include <hltypes/hstring.h>
 
 #include "RenderSystem.h"
-#if defined(_OPENGL)
+#ifdef _OPENGL
 #include "OpenGL_RenderSystem.h"
-#elif defined(HAVE_MARMELADE)
-#include <s3e.h>
-#include "Marmelade_RenderSystem.h"
 #else
 #include "DirectX9_RenderSystem.h"
 #endif
@@ -323,12 +320,8 @@ namespace april
 #ifdef USE_IL
 		ilInit();
 #endif
-#ifdef HAVE_MARMELADE
-		extensions += ".png";
-#else
 		extensions += ".png";
 		extensions += ".jpg";
-#endif
 #if TARGET_OS_IPHONE
 		extensions += ".pvr";
 #endif
@@ -344,8 +337,6 @@ namespace april
 		//else do nothing, rendersys was created ahead
 #elif defined(_OPENGL)
 		april::rendersys = OpenGL_RenderSystem::create(options);
-#elif defined(HAVE_MARMELADE)
-		april::rendersys = Marmelade_RenderSystem::create(options);
 #else
 		april::rendersys = DirectX9_RenderSystem::create(options);
 #endif
@@ -356,8 +347,6 @@ namespace april
 		Window* window = NULL;
 #if TARGET_OS_IPHONE
 		return;
-#elif defined(HAVE_MARMELADE)
-		window = createAprilWindow("Marmelade", w, h, fullscreen, title);
 #elif defined(_WIN32)
 		window = createAprilWindow("Win32", w, h, fullscreen, title);
 #elif defined(_ANDROID)

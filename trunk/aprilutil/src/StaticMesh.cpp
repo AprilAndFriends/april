@@ -34,15 +34,15 @@ namespace april
     void StaticMesh::convertToVertexArray()
     {
         mVertexArray = new april::TexturedVertex[3*mPolygons.size()];
-        bool tex = mTextureCoordinates.size() > 0;
+        bool tex = (mTextureCoordinates.size() > 0);
         
-        for(int i = 0; i < mPolygons.size(); ++i)
+        for (int i = 0; i < mPolygons.size(); ++i)
         {
             
             mVertexArray[3 * i + 0].x = mVertices[mPolygons[i].mVertind[0]].x;
             mVertexArray[3 * i + 0].y = mVertices[mPolygons[i].mVertind[0]].y;
             mVertexArray[3 * i + 0].z = mVertices[mPolygons[i].mVertind[0]].z;
-            if (tex != NULL)
+            if (tex)
             {
                 mVertexArray[3 * i + 0].u = mTextureCoordinates[mPolygons[i].mTexind[0]].x;
                 mVertexArray[3 * i + 0].v = mTextureCoordinates[mPolygons[i].mTexind[0]].y;
@@ -50,7 +50,7 @@ namespace april
             mVertexArray[3 * i + 1].x = mVertices[mPolygons[i].mVertind[1]].x;
             mVertexArray[3 * i + 1].y = mVertices[mPolygons[i].mVertind[1]].y;
             mVertexArray[3 * i + 1].z = mVertices[mPolygons[i].mVertind[1]].z;
-            if (tex != NULL)
+            if (tex)
             {
                 mVertexArray[3 * i + 1].u = mTextureCoordinates[mPolygons[i].mTexind[1]].x;
                 mVertexArray[3 * i + 1].v = mTextureCoordinates[mPolygons[i].mTexind[1]].y;
@@ -58,7 +58,7 @@ namespace april
             mVertexArray[3 * i + 2].x = mVertices[mPolygons[i].mVertind[2]].x;
             mVertexArray[3 * i + 2].y = mVertices[mPolygons[i].mVertind[2]].y;
             mVertexArray[3 * i + 2].z = mVertices[mPolygons[i].mVertind[2]].z;
-            if (tex != NULL)
+            if (tex)
             {
                 mVertexArray[3 * i + 2].u = mTextureCoordinates[mPolygons[i].mTexind[2]].x;
                 mVertexArray[3 * i + 2].v = mTextureCoordinates[mPolygons[i].mTexind[2]].y;

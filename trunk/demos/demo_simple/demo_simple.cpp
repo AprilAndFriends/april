@@ -42,9 +42,11 @@ bool update(float k)
 {
 	april::rendersys->clear();
 	april::rendersys->setOrthoProjection(drawRect);
+	/*
 	manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 	april::rendersys->setTexture(manualTexture);
 	april::rendersys->render(april::TriangleStrip, dv, 4);
+	*/
 	april::rendersys->setTexture(texture);
 	april::rendersys->drawTexturedQuad(textureRect + offset, src);
 	april::rendersys->drawColoredQuad(grect(0.0f, 0.0f, 100.0f, 75.0f), APRIL_COLOR_YELLOW);

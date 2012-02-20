@@ -47,7 +47,7 @@ void april_init(const harray<hstr>& args)
 	april::createRenderSystem("");
 	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, 0, "april: Simple 3D");
 	april::rendersys->getWindow()->setUpdateCallback(render);
-	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture.png");
+	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture");
 	v[0].x = -1.0f;	v[0].y = 1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
 	v[1].x = 1.0f;	v[1].y = 1.0f;	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
 	v[2].x = -1.0f;	v[2].y = -1.0f;	v[2].z = 0.0f;	v[2].u = 0.0f;	v[2].v = 1.0f;

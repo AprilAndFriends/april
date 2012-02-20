@@ -26,9 +26,6 @@
 	#ifdef _ANDROID
 		#include "AndroidJNIWindow.h"
 	#endif
-	#ifdef HAVE_MARMELADE
-		#include "MarmeladeWindow.h"
-	#endif
 #elif (TARGET_OS_IPHONE)
 	#import <UIKit/UIKit.h>
 	#include "iOSWindow.h"
@@ -287,6 +284,7 @@ namespace april
 	
 	void Window::handleMouseEvent(MouseEventType event, float x, float y, MouseButton button)
 	{
+		april::log("HANDLING MOUSE");
 		switch (event)
 		{
 		case AMOUSEEVT_DOWN:
@@ -448,9 +446,6 @@ namespace april
 			return new AndroidJNIWindow(w, h, fullscreen, title);
 		}
 	#endif
-	#ifdef HAVE_MARMELADE
-		return new MarmeladeWindow(w, h, fullscreen, title);
-	#endif
 		
 #elif (TARGET_OS_IPHONE)
 		// iOS
@@ -480,8 +475,6 @@ namespace april
 		NSScreen* mainScreen = [NSScreen mainScreen];
 		NSRect rect = [mainScreen frame];
 		return gvec2(rect.size.width, rect.size.height);
-#elif defined(HAVE_MARMELADE)
-		return gvec2(s3eSurfaceGetInt(S3E_SURFACE_WIDTH), s3eSurfaceGetInt(S3E_SURFACE_HEIGHT));
 #else
 		return gvec2(1024, 768);
 #endif
