@@ -39,6 +39,7 @@ namespace april
 		~SDLWindow();
 		
 		// implementations
+		void updateOneFrame();
 		void enterMainLoop();
 		void terminateMainLoop();
 		void destroyWindow();

@@ -56,6 +56,7 @@ namespace april
 		DeviceType getDeviceType();
 		// implementations
 		void enterMainLoop();
+		void updateOneFrame();
 		void terminateMainLoop();
 		void destroyWindow();
 		void showSystemCursor(bool visible);

@@ -98,6 +98,18 @@ namespace april
         NSLog(@"Fatal error: Using enterMainLoop on iOS!");
         exit(-1);
     }
+	
+	void iOSWindow::updateOneFrame()
+	{
+		// call input events
+		InputEvent* e;
+		while ((e = popInputEvent()) != 0)
+		{
+			e->execute();
+			delete e;
+		}
+		performUpdate(mTimer.diff(true));	
+	}
 
     void iOSWindow::terminateMainLoop()
 	{
@@ -451,14 +463,7 @@ namespace april
 	//////////////
 	void iOSWindow::handleDisplayAndUpdate()
 	{
-		// call input events
-		InputEvent* e;
-		while ((e = popInputEvent()) != 0)
-		{
-			e->execute();
-			delete e;
-		}
-		performUpdate(mTimer.diff(true));
+		updateOneFrame();
 		rendersys->presentFrame();
 	}
 	
