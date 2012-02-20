@@ -89,6 +89,7 @@ namespace april
 		// key repeat
 		SDL_EnableKeyRepeat(100, 50);
 		doEvents();
+		SDL_EnableUNICODE(1);
 	}
 	
 	//////////////////////
@@ -98,24 +99,29 @@ namespace april
 	void SDLWindow::enterMainLoop()
 	{
 		mRunning = true;
-		SDL_EnableUNICODE(1);
 		
 		while (mRunning)
 		{
-			//check if we should quit...
-			if (gAprilShouldInvokeQuitCallback)
-			{
-				SDL_Event event;
-				event.type = SDL_QUIT;
-				SDL_PushEvent(&event);	
-				gAprilShouldInvokeQuitCallback = 0;
-			}
-			//first process sdl events
-			doEvents();
-			_handleDisplayAndUpdate();
+			updateOneFrame();
 		}
 				
 	}
+	
+	void SDLWindow::updateOneFrame()
+	{
+		//check if we should quit...
+		if (gAprilShouldInvokeQuitCallback)
+		{
+			SDL_Event event;
+			event.type = SDL_QUIT;
+			SDL_PushEvent(&event);	
+			gAprilShouldInvokeQuitCallback = 0;
+		}
+		//first process sdl events
+		doEvents();
+		_handleDisplayAndUpdate();
+	}
+
 	
 	void SDLWindow::doEvents()
 	{
