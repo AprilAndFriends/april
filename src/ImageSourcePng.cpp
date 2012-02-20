@@ -8,10 +8,14 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifndef USE_IL
-//#include <jpeglib.h>
-#include <libpng/png.h>
-#include <libpng/pngpriv.h>
-#include <libpng/pngstruct.h>
+#include <stdio.h>
+extern "C"
+{
+	#include <jpeg/jpeglib.h>
+}
+#include <png/png.h>
+#include <png/pngpriv.h>
+#include <png/pngstruct.h>
 
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
@@ -19,14 +23,14 @@
 #include "ImageSource.h"
 #include "RenderSystem.h"
 
-void _pngZipRead(png_structp png, png_bytep data, png_size_t size)
-{
-	hresource* file = (hresource*)png->io_ptr;
-	file->read_raw(data, size);
-}
-
 namespace april
 {
+	void _pngZipRead(png_structp png, png_bytep data, png_size_t size)
+	{
+		hresource* file = (hresource*)png->io_ptr;
+		file->read_raw(data, size);
+	}
+
 	ImageSource::ImageSource()
 	{
 		this->data = NULL;
@@ -98,7 +102,35 @@ namespace april
 		}
 		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
 		{
-
+			// first read the whole data from the resource file
+			hresource file(filename);
+			int compressedSize = file.size();
+			unsigned char* compressedData = new unsigned char[compressedSize];
+			file.read_raw(compressedData, compressedSize);
+			file.close();
+			// read JPEG image from file data
+			struct jpeg_decompress_struct cInfo;
+			struct jpeg_error_mgr jErr;
+			unsigned char* imageData;
+			cInfo.err = jpeg_std_error(&jErr);
+			jpeg_create_decompress(&cInfo);
+			jpeg_mem_src(&cInfo, compressedData, compressedSize);
+			jpeg_read_header(&cInfo, TRUE);
+			jpeg_start_decompress(&cInfo);
+			imageData = new unsigned char[cInfo.output_width * cInfo.output_height * 3]; // JPEG is always RGB
+			unsigned char* ptr;
+			for (unsigned int i = 0; i < cInfo.output_height; i++)
+			{
+				ptr = imageData + i * 3 * cInfo.output_width;
+				jpeg_read_scanlines(&cInfo, &ptr, 1);
+			}
+			delete[] compressedData;
+			// assign ImageSource data
+			img->data = imageData;
+			img->w = cInfo.output_width;
+			img->h = cInfo.output_height;
+			img->bpp = 3; // JPEG is always RGB
+			img->format = AF_RGB; // JPEG is always RGB
 		}
 		return img;
 
