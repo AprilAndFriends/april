@@ -76,7 +76,7 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 	return april::JNI_OnLoad(vm, reserved, APRIL_ANDROID_PACKAGE_NAME);
 }
 #endif
-#elif !defined(_WIN32) || defined(_CONSOLE) || defined(HAVE_MARMELADE)
+#elif !defined(_WIN32) || defined(_CONSOLE)
 int main(int argc, char** argv)
 {
 #if TARGET_IPHONE_SIMULATOR

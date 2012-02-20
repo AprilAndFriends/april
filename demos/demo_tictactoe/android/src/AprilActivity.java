@@ -1,4 +1,4 @@
-package com.example.april.demoTicTacToe;
+package net.sourceforge.april;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -11,15 +11,13 @@ import android.view.MotionEvent;
 
 class AprilJNI
 {
-	static
-	{
-		System.loadLibrary("demo_tictactoe");
-	}
-	
 	public static String ApkPath;
 	public static native void init(String[] args);
 	public static native void render();
 	public static native void destroy();
+	public static native void onMouseDown(float x, float y, int button);
+	public static native void onMouseUp(float x, float y, int button);
+	public static native void onMouseMove(float x, float y);
 	
 }
 
@@ -70,14 +68,22 @@ class AprilGLSurfaceView extends GLSurfaceView
 		this.setRenderer(this.renderer);
 	}
 
-	public boolean onTouchEvent(final MotionEvent event)
+    public boolean onTouchEvent(final MotionEvent event)
 	{
-		if (event.getAction() == MotionEvent.ACTION_DOWN)
+        if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{
-			//this.nativePause();
-		}
-		return true;
-	}
+			AprilJNI.onMouseDown(event.getX(), event.getY(), 0);
+        }
+        else if (event.getAction() == MotionEvent.ACTION_UP)
+		{
+			AprilJNI.onMouseUp(event.getX(), event.getY(), 0);
+        }
+        else if (event.getAction() == MotionEvent.ACTION_MOVE)
+		{
+			AprilJNI.onMouseMove(event.getX(), event.getY());
+        }
+        return true;
+    }
 
 }
 

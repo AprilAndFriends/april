@@ -51,7 +51,7 @@ void april_init(const harray<hstr>& args)
 	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "april: Mesh Demo");
 	april::rendersys->getWindow()->setUpdateCallback(update);
 	mesh = new april::StaticMesh(RESOURCE_PATH "testobject.obj");
-	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture.png");
+	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture");
 }
 
 void april_destroy()

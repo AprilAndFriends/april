@@ -5,7 +5,7 @@
 		android:versionName="1.5">
 	<uses-feature android:name="android.hardware.screen.landscape"/>
 	<application android:label="Demo Mesh">
-		<activity android:name=".AprilActivity"
+		<activity android:name=".DemoMesh"
 				android:label="Demo Mesh"
 				android:screenOrientation="landscape"
 				android:theme="@android:style/Theme.NoTitleBar.Fullscreen">

@@ -53,8 +53,9 @@ namespace april
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		april::log("FORMAT: " + hstr(img->format));
+		april::log("BPP: " + hstr(img->bpp));
 		
-
 		switch (img->format)
 		{
 #if TARGET_OS_IPHONE

@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.31
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
@@ -22,10 +22,6 @@
 
 #include "aprilExport.h"
 #include "Keys.h"
-
-#ifdef HAVE_MARMELADE
-#include <s3e.h>
-#endif
 
 namespace april
 {
