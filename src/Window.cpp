@@ -284,7 +284,6 @@ namespace april
 	
 	void Window::handleMouseEvent(MouseEventType event, float x, float y, MouseButton button)
 	{
-		april::log("HANDLING MOUSE");
 		switch (event)
 		{
 		case AMOUSEEVT_DOWN:
