@@ -5,7 +5,7 @@
 		android:versionName="1.5">
 	<uses-feature android:name="android.hardware.screen.landscape"/>
 	<application android:label="--YOUR_APP_NAME--">
-		<activity android:name="com.example.aprilExample.ExampleActivity"
+		<activity android:name=".ExampleActivity"
 				android:label="--YOUR_APP_NAME--"
 				android:screenOrientation="landscape"
 				android:theme="@android:style/Theme.NoTitleBar.Fullscreen">

@@ -224,6 +224,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
   </ItemGroup>
   <ItemGroup>
     <None Include="android\AndroidManifest.xml" />
+    <None Include="android\build.xml" />
     <None Include="android\src\DemoTicTacToe.java" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

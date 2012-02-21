@@ -58,6 +58,8 @@ namespace april
 
 		//void triggerTouchscreenCallback(bool enabled);
 
+		void handleMouseEvent(MouseEventType event, float x, float y, MouseButton button);
+
 		DeviceType getDeviceType();
 		
 	protected:
