@@ -11,7 +11,6 @@
 
 #include <stdio.h>
 #include <algorithm>
-
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #ifndef _OPENGL
