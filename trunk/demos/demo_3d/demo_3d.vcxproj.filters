@@ -29,5 +29,8 @@
     <None Include="android\src\Demo3d.java">
       <Filter>AndroidApk</Filter>
     </None>
+    <None Include="android\build.xml">
+      <Filter>AndroidApk</Filter>
+    </None>
   </ItemGroup>
 </Project>

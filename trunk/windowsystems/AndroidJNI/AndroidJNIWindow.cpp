@@ -139,6 +139,12 @@ namespace april
 	{
 	}
 
+	void AndroidJNIWindow::handleMouseEvent(MouseEventType event, float x, float y, MouseButton button)
+	{
+		cursorPosition.set(x, y);
+		Window::handleMouseEvent(event, x, y, button);
+	}
+
 	Window::DeviceType AndroidJNIWindow::getDeviceType()
 	{
 		return Window::DEVICE_ANDROID_PHONE;

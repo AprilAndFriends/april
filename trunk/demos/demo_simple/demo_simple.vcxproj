@@ -209,6 +209,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
     <None Include="android\AndroidManifest.xml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="android\build.xml" />
     <None Include="android\src\DemoSimple.java" />
   </ItemGroup>
   <ItemGroup>
