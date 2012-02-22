@@ -45,6 +45,7 @@ namespace april
 
 	april::RenderSystem* rendersys;
 	harray<hstr> extensions;
+	hstr systemPath = ".";
 
 	void april_writelog(chstr message)
 	{

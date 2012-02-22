@@ -30,6 +30,8 @@
 
 namespace april
 {
+	extern hstr systemPath;
+
 	class Window;
 	class ImageSource;
 	// render operations

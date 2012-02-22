@@ -60,7 +60,7 @@ aprilExport int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAp
 #include <hltypes/hstring.h>
 namespace april
 {
-	aprilExport jint JNI_OnLoad(JavaVM* vm, void* reserved, chstr packageName);
+	aprilExport jint JNI_OnLoad(JavaVM* vm, void* reserved);
 }
 #endif
 
@@ -70,14 +70,10 @@ extern void april_destroy();
 #ifndef BUILDING_APRIL
 //{
 #ifdef _ANDROID
-#ifdef APRIL_ANDROID_PACKAGE_NAME
 extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
-	return april::JNI_OnLoad(vm, reserved, APRIL_ANDROID_PACKAGE_NAME);
+	return april::JNI_OnLoad(vm, reserved);
 }
-#else
-#warning APRIL_ANDROID_PACKAGE_NAME undefined!
-#endif
 #elif !defined(_WIN32) || defined(_CONSOLE)
 int main(int argc, char** argv)
 {

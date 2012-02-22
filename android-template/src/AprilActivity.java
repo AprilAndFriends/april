@@ -12,7 +12,8 @@ import android.view.MotionEvent;
 class AprilJNI
 {
 	public static String ApkPath;
-	public static native void init(String[] args);
+	public static String SystemPath;
+	public static native void init(String[] args, String path);
 	public static native void render();
 	public static native void destroy();
 	public static native void onMouseDown(float x, float y, int button);
@@ -30,6 +31,7 @@ public class AprilActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		AprilJNI.ApkPath = this.getPackageResourcePath();
+		AprilJNI.SystemPath = this.getFilesDir().getAbsolutePath();
 		this.glView = new AprilGLSurfaceView(this);
 		this.setContentView(this.glView);
 	}
@@ -92,7 +94,7 @@ class AprilRenderer implements GLSurfaceView.Renderer
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
 		String args[] = {AprilJNI.ApkPath}; // adding argv[0]
-		AprilJNI.init(args);
+		AprilJNI.init(args, AprilJNI.SystemPath);
 	}
 
 	public void onSurfaceChanged(GL10 gl, int w, int h)
