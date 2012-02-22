@@ -135,7 +135,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
     </AntBuild>
     <ProjectReference />
     <PreLinkEvent>
-      <Command>xcopy ..\media\*.* android\assets\ /d /y</Command>
+      <Command>xcopy ..\media android\assets\ /d /y /s /e</Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -202,7 +202,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <AntBuildPath>$(ProjectDir)android</AntBuildPath>
     </AntBuild>
     <PreLinkEvent>
-      <Command>xcopy ..\media\*.* android\assets\ /d /y</Command>
+      <Command>xcopy ..\media android\assets\ /d /y /s /e</Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

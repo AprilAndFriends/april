@@ -17,14 +17,6 @@
 
 namespace april
 {
-	/*
-	static HWND hWnd;
-	static gvec2 cursorPosition;
-	static bool cursorVisible = true;
-	static april::Timer globalTimer;
-	static Win32Window* instance;
-	*/
-
 	static gvec2 cursorPosition;
 	static april::Timer globalTimer;
 	static float lastTime = 0.0f;
@@ -37,7 +29,7 @@ namespace april
 		}
 		mWidth = w;
 		mHeight = h;
-		//mRunning = true;
+		mRunning = true;
 		mActive = true;
 		mFullscreen = fullscreen;
 		//mTouchEnabled = false;
@@ -92,6 +84,7 @@ namespace april
 	
 	void AndroidJNIWindow::terminateMainLoop()
 	{
+		mRunning = false;
 	}
 
 	void AndroidJNIWindow::destroyWindow()
@@ -128,6 +121,7 @@ namespace april
 
 	void AndroidJNIWindow::presentFrame()
 	{
+		// not needed as Android Java Activity takes case of this
 	}
 
 	void* AndroidJNIWindow::getIDFromBackend()
@@ -143,6 +137,11 @@ namespace april
 	{
 		cursorPosition.set(x, y);
 		Window::handleMouseEvent(event, x, y, button);
+		// TODO
+		if (event == AMOUSEEVT_UP)
+		{
+			cursorPosition.set(-10000.0f, -10000.0f);
+		}
 	}
 
 	Window::DeviceType AndroidJNIWindow::getDeviceType()

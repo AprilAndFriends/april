@@ -287,21 +287,21 @@ namespace april
 		switch (event)
 		{
 		case AMOUSEEVT_DOWN:
-			if (mMouseDownCallback) 
+			if (mMouseDownCallback != NULL)
 			{
-				mMouseDownCallback(x, y, button);
+				(*mMouseDownCallback)(x, y, button);
 			}
 			break;
 		case AMOUSEEVT_UP:
-			if (mMouseUpCallback)
+			if (mMouseUpCallback != NULL)
 			{
-				mMouseUpCallback(x, y, button);
+				(*mMouseUpCallback)(x, y, button);
 			}
 			break;
 		case AMOUSEEVT_MOVE:
-			if (mMouseMoveCallback)
+			if (mMouseMoveCallback != NULL)
 			{
-				mMouseMoveCallback(x, y);
+				(*mMouseMoveCallback)(x, y);
 			}
 			break;
 		}
