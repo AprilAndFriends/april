@@ -132,7 +132,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       </Command>
     </PostBuildEvent>
     <PreLinkEvent>
-      <Command>xcopy ..\media\*.* android\assets\ /d /y</Command>
+      <Command>xcopy ..\media android\assets\ /d /y /s /e</Command>
     </PreLinkEvent>
     <AntBuild>
       <AntBuildPath>$(ProjectDir)android</AntBuildPath>
@@ -199,7 +199,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       </Command>
     </PostBuildEvent>
     <PreLinkEvent>
-      <Command>xcopy ..\media\*.* android\assets\ /d /y</Command>
+      <Command>xcopy ..\media android\assets\ /d /y /s /e</Command>
     </PreLinkEvent>
     <AntBuild>
       <AntBuildPath>$(ProjectDir)android</AntBuildPath>

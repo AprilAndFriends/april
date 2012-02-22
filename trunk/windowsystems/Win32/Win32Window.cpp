@@ -345,9 +345,9 @@ namespace april
 	
 	bool Win32Window::triggerQuitEvent()
 	{
-		if (mQuitCallback)
+		if (mQuitCallback != NULL)
 		{
-			return mQuitCallback(true);
+			return (*mQuitCallback)(true);
 		}
 		return true;
 	}
@@ -358,14 +358,14 @@ namespace april
 		{
 			if (mKeyDownCallback != NULL)
 			{
-				mKeyDownCallback(keycode);
+				(*mKeyDownCallback)(keycode);
 			}
 		}
 		else
 		{
 			if (mKeyUpCallback != NULL)
 			{
-				mKeyUpCallback(keycode);
+				(*mKeyUpCallback)(keycode);
 			}
 		}
 	}
@@ -374,7 +374,7 @@ namespace april
 	{
 		if (mCharCallback != NULL)
 		{
-			mCharCallback(chr);
+			(*mCharCallback)(chr);
 		}
 	}
 	
@@ -382,7 +382,7 @@ namespace april
 	{
 		if (mMouseUpCallback != NULL)
 		{
-			mMouseUpCallback(cursorPosition.x, cursorPosition.y, button);
+			(*mMouseUpCallback)(cursorPosition.x, cursorPosition.y, button);
 		}
 	}
 	
@@ -390,7 +390,7 @@ namespace april
 	{
 		if (mMouseDownCallback != NULL)
 		{
-			mMouseDownCallback(cursorPosition.x, cursorPosition.y, button);
+			(*mMouseDownCallback)(cursorPosition.x, cursorPosition.y, button);
 		}
 	}
 	
@@ -398,7 +398,7 @@ namespace april
 	{
 		if (mMouseMoveCallback != NULL)
 		{
-			mMouseMoveCallback(cursorPosition.x, cursorPosition.y);
+			(*mMouseMoveCallback)(cursorPosition.x, cursorPosition.y);
 		}
 	}
 	
@@ -406,7 +406,7 @@ namespace april
 	{
 		if (mFocusCallback != NULL)
 		{
-			mFocusCallback(focused);
+			(*mFocusCallback)(focused);
 		}
 	}
 	
@@ -415,7 +415,7 @@ namespace april
 		if (mTouchEnabledCallback != NULL && mTouchEnabled != enabled)
 		{
 			mTouchEnabled = enabled;
-			mTouchEnabledCallback(enabled);
+			(*mTouchEnabledCallback)(enabled);
 		}
 	}
 	
@@ -509,5 +509,6 @@ namespace april
 		}
 		return info;
 	}
+
 }
 #endif
