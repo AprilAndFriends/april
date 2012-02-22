@@ -21,9 +21,7 @@
 
 namespace april
 {
-	hstr packageName;
-
-	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args)
+	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args, jstring path)
 	{
 		harray<hstr> args;
 		jstring arg;
@@ -36,6 +34,9 @@ namespace april
 			args += hstr(str);
 			env->ReleaseStringUTFChars(arg, str);
 		}
+		str = env->GetStringUTFChars(path, NULL);
+		april::systemPath = hstr(str);
+		env->ReleaseStringUTFChars(path, str);
 		hresource::setArchive(args[0]);
 		april_init(args);
 	}
@@ -68,17 +69,16 @@ namespace april
 #define METHOD_COUNT 6 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
-		{"init",		"([Ljava/lang/String;)V",	(void*)&april::_JNI_init		},
-		{"destroy",		"()V",						(void*)&april::_JNI_destroy		},
-		{"render",		"()V",						(void*)&april::_JNI_render		},
-		{"onMouseDown",	"(FFI)V",					(void*)&april::_JNI_onMouseDown	},
-		{"onMouseUp",	"(FFI)V",					(void*)&april::_JNI_onMouseUp	},
-		{"onMouseMove",	"(FF)V",					(void*)&april::_JNI_onMouseMove	}
+		{"init",		"([Ljava/lang/String;Ljava/lang/String;)V",	(void*)&april::_JNI_init		},
+		{"destroy",		"()V",										(void*)&april::_JNI_destroy		},
+		{"render",		"()V",										(void*)&april::_JNI_render		},
+		{"onMouseDown",	"(FFI)V",									(void*)&april::_JNI_onMouseDown	},
+		{"onMouseUp",	"(FFI)V",									(void*)&april::_JNI_onMouseUp	},
+		{"onMouseMove",	"(FF)V",									(void*)&april::_JNI_onMouseMove	}
 	};
 	
-	jint JNI_OnLoad(JavaVM* vm, void* reserved, chstr packageName)
+	jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	{
-		april::packageName = packageName;
 		JNIEnv* env;
 		if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK)
 		{
