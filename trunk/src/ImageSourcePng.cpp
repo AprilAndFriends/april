@@ -65,40 +65,42 @@ namespace april
 			setjmp(png_jmpbuf(pngPtr));
 			png_set_read_fn(pngPtr, &file, &_pngZipRead);
 			png_read_info(pngPtr, infoPtr);
-			int bpp = infoPtr->pixel_depth / 8;
-			int width;
-			int height;
-			int bitDepth;
-			int colorType;
-			png_get_IHDR(pngPtr, infoPtr, (unsigned int*)&width, (unsigned int*)&height, &bitDepth, &colorType, NULL, NULL, NULL);
+			png_get_IHDR(pngPtr, infoPtr, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+			png_set_interlace_handling(pngPtr);
+			int bpp = pngPtr->channels;
+			if (pngPtr->color_type == PNG_COLOR_TYPE_PALETTE)
+			{
+				png_set_palette_to_rgb(pngPtr);
+				bpp = 3;
+			}
+			if (png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS))
+			{
+				png_set_tRNS_to_alpha(pngPtr);
+				bpp++;
+			}
+			if (pngPtr->bit_depth == 16)
+			{
+				png_set_strip_16(pngPtr);
+			}
 			png_read_update_info(pngPtr, infoPtr);
 			int rowBytes = png_get_rowbytes(pngPtr, infoPtr);
-			png_byte* imageData = new png_byte[rowBytes * height];
-			png_bytep* rowPointers = new png_bytep[height];
-			for (int i = 0; i < height; i++)
+			png_byte* imageData = new png_byte[rowBytes * pngPtr->height];
+			png_bytep* rowPointers = new png_bytep[pngPtr->height];
+			for (unsigned int i = 0; i < pngPtr->height; i++)
 			{
 				rowPointers[i] = imageData + i * rowBytes;
 			}
 			png_read_image(pngPtr, rowPointers);
-			png_destroy_read_struct(&pngPtr, &infoPtr, &endInfo);
-			delete[] rowPointers;
+			png_read_end(pngPtr, infoPtr);
 			// assign ImageSource data
 			img->data = imageData;
-			img->w = width;
-			img->h = height;
+			img->w = pngPtr->width;
+			img->h = pngPtr->height;
 			img->bpp = bpp;
-			switch (colorType)
-			{
-			case PNG_COLOR_TYPE_RGBA:
-				img->format = AF_RGBA;
-				break;
-			case PNG_COLOR_TYPE_RGB:
-				img->format = AF_RGB;
-				break;
-			default:
-				img->format = AF_RGBA;
-				break;
-			}
+			img->format = (img->bpp == 4 ? AF_RGBA : AF_RGB);
+			// clean up
+			png_destroy_read_struct(&pngPtr, &infoPtr, &endInfo);
+			delete[] rowPointers;
 		}
 		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
 		{
