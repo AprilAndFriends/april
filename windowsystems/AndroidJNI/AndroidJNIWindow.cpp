@@ -140,7 +140,7 @@ namespace april
 		// TODO
 		if (event == AMOUSEEVT_UP)
 		{
-			cursorPosition.set(-10000.0f, -10000.0f);
+			//cursorPosition.set(-10000.0f, -10000.0f);
 		}
 	}
 
