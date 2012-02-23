@@ -119,7 +119,7 @@
 		textField.autocorrectionType = UITextAutocorrectionTypeNo;
 		textField.keyboardAppearance = UIKeyboardAppearanceDefault;
 		textField.keyboardType = UIKeyboardTypeDefault;
-		textField.returnKeyType = UIReturnKeyDefault;
+		textField.returnKeyType = UIReturnKeyDone;
 		textField.secureTextEntry = NO;
 		[self addSubview:textField];
 
@@ -131,7 +131,6 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(keyboardWasHidden:)
 													 name:UIKeyboardDidHideNotification object:nil];
-		
 		// tracking of device orientation change
 		// we call UIDevice's beginGeneratingDeviceOrientationNotifications
 		// in window itself 
@@ -140,6 +139,9 @@
 													 name:UIDeviceOrientationDidChangeNotification 
 												   object:nil];
 		
+		[textField addTarget:self
+						   action:@selector(textFieldFinished:)
+							forControlEvents:UIControlEventEditingDidEndOnExit];
 		// create ios window object
 		april::createRenderSystem("create_eagl");
 		april::rendersys->assignWindow(new april::iOSWindow(0,0,1,"iOS Window"));
@@ -148,8 +150,11 @@
     return self;
 }
 
-
-
+- (BOOL)textFieldShouldReturn:(UITextField *)aTextField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
 
 // we'll also use this objc class for getting notifications
 // on virtual keyboard's appearance and disappearance
