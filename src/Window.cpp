@@ -241,13 +241,13 @@ namespace april
 		return ((float)getWidth() / getHeight());
 	}
 	
-	bool Window::performUpdate(float time_increase)
+	bool Window::performUpdate(float k)
 	{
 		// returning true: continue execution
 		// returning false: abort execution
-		if (mUpdateCallback)
+		if (mUpdateCallback != NULL)
 		{
-			return mUpdateCallback(time_increase);
+			return (*mUpdateCallback)(k);
 		}
 		return true;
 	}
@@ -262,19 +262,19 @@ namespace april
 		switch (type)
 		{
 		case AKEYEVT_DOWN:
-			if (mKeyDownCallback && keycode != AK_NONE)
+			if (mKeyDownCallback != NULL && keycode != AK_NONE)
 			{
-				mKeyDownCallback(keycode);
+				(*mKeyDownCallback)(keycode);
 			}
-			if (unicode && mCharCallback && unicode != 127) // hack for sdl on mac, backspace induces character
+			if (unicode != 0 && mCharCallback != NULL && unicode != 127) // hack for sdl on mac, backspace induces character
 			{
-				mCharCallback(unicode);
+				(*mCharCallback)(unicode);
 			}
 			break;
 		case AKEYEVT_UP:
-			if (mKeyUpCallback && keycode != AK_NONE)
+			if (mKeyUpCallback != NULL && keycode != AK_NONE)
 			{
-				mKeyUpCallback(keycode);
+				(*mKeyUpCallback)(keycode);
 			}
 			break;
 		default:
@@ -309,7 +309,10 @@ namespace april
 	
 	void Window::handleTouchEvent(harray<gvec2>& touches)
 	{
-		if (mTouchCallback) mTouchCallback(touches);
+		if (mTouchCallback != NULL)
+		{
+			(*mTouchCallback)(touches);
+		}
 	}
 
 	gvec2 Window::getDimensions()
@@ -326,24 +329,24 @@ namespace april
 	bool Window::handleQuitRequest(bool can_reject)
 	{
 		// returns whether or not the windowing system is permitted to close the window
-		if (mQuitCallback)
+		if (mQuitCallback != NULL)
 		{
-			return mQuitCallback(can_reject);
+			return (*mQuitCallback)(can_reject);
 		}
 		return true;
 	}
 	
 	void Window::handleFocusEvent(bool has_focus)
 	{
-		if (mFocusCallback)
+		if (mFocusCallback != NULL)
 		{
-			mFocusCallback(has_focus);
+			(*mFocusCallback)(has_focus);
 		}
 	}
 	
 	bool Window::handleURL(chstr url)
 	{
-		return (mHandleURLCallback) ? (mHandleURLCallback)(url) : false;
+		return (mHandleURLCallback != NULL && (*mHandleURLCallback)(url));
 	}
 	
 	void Window::beginKeyboardHandling()
@@ -483,7 +486,7 @@ namespace april
 	{
 #ifdef _WIN32
 		HWND wnd = 0;
-		if(rendersys && rendersys->getWindow() && style & AMSGSTYLE_MODAL)
+		if (rendersys && rendersys->getWindow() && style & AMSGSTYLE_MODAL)
 		{
 			wnd = (HWND)rendersys->getWindow()->getIDFromBackend();
 		}
@@ -526,20 +529,28 @@ namespace april
 		switch(btn)
 		{
 		case IDOK:
-            if(callback)
-                callback(AMSGBTN_OK);
+            if (callback != NULL)
+			{
+                (*callback)(AMSGBTN_OK);
+			}
 			return AMSGBTN_OK;
 		case IDYES:
-            if(callback)
-                callback(AMSGBTN_YES);
+            if (callback != NULL)
+			{
+                (*callback)(AMSGBTN_YES);
+			}
 			return AMSGBTN_YES;
 		case IDNO:
-            if(callback)
-                callback(AMSGBTN_NO);
+            if (callback != NULL)
+			{
+                (*callback)(AMSGBTN_NO);
+			}
 			return AMSGBTN_NO;
 		case IDCANCEL:
-            if(callback)
-                callback(AMSGBTN_CANCEL);
+            if (callback != NULL)
+			{
+                (*callback)(AMSGBTN_CANCEL);
+			}
 			return AMSGBTN_CANCEL;
 		}
 		return AMSGBTN_OK;
@@ -619,9 +630,9 @@ namespace april
 			break;
 		}
         
-        if (callback) 
+        if (callback != NULL)
         {
-            callback(buttonTypes[clicked]);
+            (*callback)(buttonTypes[clicked]);
         }
         return buttonTypes[clicked];
         
@@ -740,38 +751,48 @@ namespace april
 		// some dummy returnvalues
 		if (buttonMask & AMSGBTN_CANCEL)
 		{
-            if (callback)
-                callback(AMSGBTN_CANCEL);
+            if (callback != NULL)
+			{
+                (*callback)(AMSGBTN_CANCEL);
+			}
 			return AMSGBTN_CANCEL;
 		}
 		if (buttonMask & AMSGBTN_OK)
 		{
-            if (callback)
-                callback(AMSGBTN_OK);
+            if (callback != NULL)
+			{
+                (*callback)(AMSGBTN_OK);
+			}
 			return AMSGBTN_OK;
 		}
 		if (buttonMask & AMSGBTN_NO)
 		{
-            if (callback)
-                callback(AMSGBTN_NO);
+            if (callback != NULL)
+			{
+                (*callback)(AMSGBTN_NO);
+			}
 			return AMSGBTN_NO;
 		}
 		if (buttonMask & AMSGBTN_YES)
 		{
-            if (callback)
-                callback(AMSGBTN_YES);
+            if (callback != NULL)
+			{
+                (*callback)(AMSGBTN_YES);
+			}
 			return AMSGBTN_YES;
 		}
                    
-        if (callback)
-            callback(AMSGBTN_OK);
+        if (callback != NULL)
+		{
+            (*callback)(AMSGBTN_OK);
+		}
 		return AMSGBTN_OK;
 #endif
 	}
+
 	MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		MessageBoxStyle passedStyle = style;
-		
 		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
 		{
 #if !TARGET_OS_IPHONE
@@ -785,10 +806,7 @@ namespace april
 		{
 			exit(1);
 		}
-		else
-		{
-			return returnValue;
-		}
+		return returnValue;
 	}
 	
 	
