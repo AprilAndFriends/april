@@ -24,7 +24,8 @@ namespace april
 	{
 	public:
 		Window* mWindow;
-		
+		InputEvent();
+		virtual ~InputEvent();
 		InputEvent(Window* wnd);
 		virtual void execute() = 0;
 	};

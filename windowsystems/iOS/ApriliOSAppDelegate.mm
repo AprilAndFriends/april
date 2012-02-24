@@ -100,12 +100,14 @@
     {
         return;
     }
-    for (EAGLView *glview in [viewController.view subviews]) 
+	
+	april::rendersys->getWindow()->handleFocusEvent(0);
+	
+    for (EAGLView *glview in [viewController.view subviews])
     {
         if ([glview isKindOfClass:[EAGLView class]]) 
         {
             [glview stopAnimation];
-            
             return;
         }
     }
