@@ -21,7 +21,7 @@
 #include "aprilExport.h"
 
 /**
- * \file main.h
+ * @file main.h
  *
  * This file is primarily used to change entry and exit points
  * from main() to april_init() and april_destroy(). These will
@@ -57,7 +57,6 @@
 #ifndef _ANDROID
 aprilExport int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv);
 #else
-#include <hltypes/hstring.h>
 namespace april
 {
 	aprilExport jint JNI_OnLoad(JavaVM* vm, void* reserved);
