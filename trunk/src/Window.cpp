@@ -352,13 +352,13 @@ namespace april
 	void Window::beginKeyboardHandling()
 	{
 		// ignore by default
-		// used only for softkeyboards, e.g. iOS
+		// used only for softkeyboards, e.g. iOS or Android
 	}
 	
 	void Window::terminateKeyboardHandling()
 	{
 		// ignore by default
-		// used only for softkeyboards, e.g. iOS
+		// used only for softkeyboards, e.g. iOS or Android
 	}
 	
 	float Window::prefixRotationAngle()

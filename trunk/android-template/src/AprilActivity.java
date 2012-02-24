@@ -19,6 +19,12 @@ class AprilJNI
 	public static native void onMouseDown(float x, float y, int button);
 	public static native void onMouseUp(float x, float y, int button);
 	public static native void onMouseMove(float x, float y);
+	/*
+	public static native boolean onKeyDown(int keyCode);
+	public static native boolean onKeyUp(int keyCode);
+	*/
+	public static native void onFocusChange(boolean focused);
+	public static native void onLowMemory();
 	
 }
 
@@ -34,6 +40,7 @@ public class AprilActivity extends Activity
 		AprilJNI.SystemPath = this.getFilesDir().getAbsolutePath();
 		this.glView = new AprilGLSurfaceView(this);
 		this.setContentView(this.glView);
+		this.setDefaultKeyMode(DEFAULT_KEYS_DISABLE);
 	}
 	
 	@Override
@@ -46,8 +53,8 @@ public class AprilActivity extends Activity
 	@Override
 	protected void onPause()
 	{
-		super.onPause();
 		this.glView.onPause();
+		super.onPause();
 	}
 
 	@Override
@@ -56,7 +63,41 @@ public class AprilActivity extends Activity
 		super.onResume();
 		this.glView.onResume();
 	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		// prevents accidental pressing of back key to mess with the application
+	}
+	
+	/*
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		return AprilJNI.onKeyDown(keyCode);
+	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event)
+	{
+		return AprilJNI.onKeyUp(keyCode);
+	}
+	*/
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus)
+	{
+		super.onWindowFocusChanged(hasFocus);
+		AprilJNI.onFocusChange(hasFocus);
+	}
 
+	@Override
+	public void onLowMemory()
+	{
+		super.onLowMemory();
+		AprilJNI.onLowMemory();
+	}
+	
 }
 
 class AprilGLSurfaceView extends GLSurfaceView
@@ -69,7 +110,7 @@ class AprilGLSurfaceView extends GLSurfaceView
 		this.renderer = new AprilRenderer();
 		this.setRenderer(this.renderer);
 	}
-
+	
     public boolean onTouchEvent(final MotionEvent event)
 	{
         if (event.getAction() == MotionEvent.ACTION_DOWN)
@@ -86,7 +127,7 @@ class AprilGLSurfaceView extends GLSurfaceView
         }
         return true;
     }
-
+	
 }
 
 class AprilRenderer implements GLSurfaceView.Renderer
@@ -96,7 +137,7 @@ class AprilRenderer implements GLSurfaceView.Renderer
 		String args[] = {AprilJNI.ApkPath}; // adding argv[0]
 		AprilJNI.init(args, AprilJNI.SystemPath);
 	}
-
+	
 	public void onSurfaceChanged(GL10 gl, int w, int h)
 	{
 		//gl.glViewport(0, 0, w, h);
