@@ -27,6 +27,16 @@ extern bool g_wnd_rotating;
 
 namespace april
 {
+	InputEvent::InputEvent()
+	{
+	
+	}
+	
+	InputEvent::~InputEvent()
+	{
+	
+	}
+
 	InputEvent::InputEvent(Window* wnd)
 	{
 		mWindow = wnd;
