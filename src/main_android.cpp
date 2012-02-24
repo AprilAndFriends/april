@@ -19,6 +19,12 @@
 #include "RenderSystem.h"
 #include "Window.h"
 
+#define PROTECTED_RENDERSYS_GET_WINDOW(methodCall) \
+	if (april::rendersys != NULL && april::rendersys->getWindow() != NULL) \
+	{ \
+		return april::rendersys->getWindow()->methodCall;\
+	} \
+
 namespace april
 {
 	extern void* javaVM;
@@ -50,33 +56,63 @@ namespace april
 
 	void JNICALL _JNI_render(JNIEnv* env, jclass classe)
 	{
-		april::rendersys->getWindow()->updateOneFrame();
+		PROTECTED_RENDERSYS_GET_WINDOW(updateOneFrame());
 	}
 
 	void JNICALL _JNI_onMouseDown(JNIEnv* env, jclass classe, jfloat x, jfloat y, jint button)
 	{
-		april::rendersys->getWindow()->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT);
+		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_DOWN, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT));
 	}
 
 	void JNICALL _JNI_onMouseUp(JNIEnv* env, jclass classe, jfloat x, jfloat y, jint button)
 	{
-		april::rendersys->getWindow()->handleMouseEvent(april::Window::AMOUSEEVT_UP, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT);
+		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_UP, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT));
 	}
 
 	void JNICALL _JNI_onMouseMove(JNIEnv* env, jclass classe, jfloat x, jfloat y)
 	{
-		april::rendersys->getWindow()->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT);
+		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_MOVE, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT));
 	}
 
-#define METHOD_COUNT 6 // make sure this fits
+	/*
+	bool JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode)
+	{
+		PROTECTED_RENDERSYS_GET_WINDOW(handleKeyEvent(april::Window::AKEYEVT_DOWN, (unsigned int)keyCode, 0));
+		return false;
+	}
+
+	bool JNICALL _JNI_onKeyUp(JNIEnv* env, jclass classe, jint keyCode)
+	{
+		PROTECTED_RENDERSYS_GET_WINDOW(handleKeyEvent(april::Window::AKEYEVT_UP, (unsigned int)keyCode, 0));
+		return false;
+	}
+	*/
+
+	void JNICALL _JNI_onFocusChange(JNIEnv* env, jclass classe, jboolean has_focus)
+	{
+		PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent((bool)has_focus));
+	}
+
+	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
+	{
+		PROTECTED_RENDERSYS_GET_WINDOW(handleLowMemoryWarning());
+	}
+
+#define METHOD_COUNT 8 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
-		{"init",		"([Ljava/lang/String;Ljava/lang/String;)V",	(void*)&april::_JNI_init		},
-		{"destroy",		"()V",										(void*)&april::_JNI_destroy		},
-		{"render",		"()V",										(void*)&april::_JNI_render		},
-		{"onMouseDown",	"(FFI)V",									(void*)&april::_JNI_onMouseDown	},
-		{"onMouseUp",	"(FFI)V",									(void*)&april::_JNI_onMouseUp	},
-		{"onMouseMove",	"(FF)V",									(void*)&april::_JNI_onMouseMove	}
+		{"init",			"([Ljava/lang/String;Ljava/lang/String;)V",	(void*)&april::_JNI_init			},
+		{"destroy",			"()V",										(void*)&april::_JNI_destroy			},
+		{"render",			"()V",										(void*)&april::_JNI_render			},
+		{"onMouseDown",		"(FFI)V",									(void*)&april::_JNI_onMouseDown		},
+		{"onMouseUp",		"(FFI)V",									(void*)&april::_JNI_onMouseUp		},
+		{"onMouseMove",		"(FF)V",									(void*)&april::_JNI_onMouseMove		},
+		/*
+		{"onKeyDown",		"(I)Z",										(bool*)&april::_JNI_onKeyDown		},
+		{"onKeyUp",			"(I)Z",										(bool*)&april::_JNI_onKeyUp			},
+		*/
+		{"onFocusChange",	"(Z)V",										(void*)&april::_JNI_onFocusChange	},
+		{"onLowMemory",		"()V",										(void*)&april::_JNI_onLowMemory		}
 	};
 	
 	jint JNI_OnLoad(JavaVM* vm, void* reserved)

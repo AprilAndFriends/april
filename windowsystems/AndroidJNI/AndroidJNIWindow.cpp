@@ -122,7 +122,7 @@ namespace april
 
 	void AndroidJNIWindow::presentFrame()
 	{
-		// not needed as Android Java Activity takes case of this
+		// not needed as Android Java Activity takes care of this
 	}
 
 	void* AndroidJNIWindow::getIDFromBackend()
@@ -134,15 +134,20 @@ namespace april
 	{
 	}
 
+	void AndroidJNIWindow::beginKeyboardHandling()
+	{
+		// TODO - implement
+	}
+	
+	void AndroidJNIWindow::terminateKeyboardHandling()
+	{
+		// TODO - implement
+	}
+	
 	void AndroidJNIWindow::handleMouseEvent(MouseEventType event, float x, float y, MouseButton button)
 	{
 		cursorPosition.set(x, y);
 		Window::handleMouseEvent(event, x, y, button);
-		// TODO
-		if (event == AMOUSEEVT_UP)
-		{
-			//cursorPosition.set(-10000.0f, -10000.0f);
-		}
 	}
 
 	Window::DeviceType AndroidJNIWindow::getDeviceType()
