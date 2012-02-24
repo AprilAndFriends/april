@@ -17,6 +17,7 @@
 
 namespace april
 {
+	void* javaVM = NULL;
 	static gvec2 cursorPosition;
 	static april::Timer globalTimer;
 	static float lastTime = 0.0f;
@@ -126,7 +127,7 @@ namespace april
 
 	void* AndroidJNIWindow::getIDFromBackend()
 	{
-		return NULL;
+		return javaVM;
 	}
 
 	void AndroidJNIWindow::doEvents()

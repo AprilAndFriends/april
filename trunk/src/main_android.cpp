@@ -21,6 +21,8 @@
 
 namespace april
 {
+	extern void* javaVM;
+
 	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args, jstring path)
 	{
 		harray<hstr> args;
@@ -80,6 +82,7 @@ namespace april
 	jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	{
 		JNIEnv* env;
+		april::javaVM = (void*)vm;
 		if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK)
 		{
 			return -1;
