@@ -188,7 +188,7 @@ namespace april
 	
 	void Window::setLowMemoryCallback(void (*lowmem_callback)())
 	{
-		mLowMemoryCallback=lowmem_callback;
+		mLowMemoryCallback = lowmem_callback;
 	}
 	
 	void Window::setHandleURLCallback(bool (*url_callback)(chstr))
@@ -198,7 +198,10 @@ namespace april
 	
 	void Window::handleLowMemoryWarning()
 	{
-		if (mLowMemoryCallback) mLowMemoryCallback();
+		if (mLowMemoryCallback != NULL)
+		{
+			(*mLowMemoryCallback)();
+		}
 	}
 	
 	void Window::setQuitCallback(bool (*quit_callback)(bool))
@@ -346,7 +349,11 @@ namespace april
 	
 	bool Window::handleURL(chstr url)
 	{
-		return (mHandleURLCallback != NULL && (*mHandleURLCallback)(url));
+		if (mHandleURLCallback != NULL)
+		{
+			return (*mHandleURLCallback)(url);
+		}
+		return false;
 	}
 	
 	void Window::beginKeyboardHandling()

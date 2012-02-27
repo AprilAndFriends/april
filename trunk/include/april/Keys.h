@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.31
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
@@ -24,6 +24,7 @@ namespace april
 
 	enum KeySym
 	{
+#ifndef _ANDROID
 		AK_UNKNOWN = -1,
 		AK_NONE = 0,
 	
@@ -49,7 +50,7 @@ namespace april
 		AK_CAPITAL = 20, // caps lock
 
 		// various keys needed for asian keyboards
-		AK_KANA = 0x15, 
+		AK_KANA = 0x15,
 		AK_HANGEUL = 0x15,
 		AK_HANGUL = 0x15,
 		AK_JUNJA = 0x17,
@@ -91,7 +92,7 @@ namespace april
 		AK_DELETE = 0x2E,
 		AK_HELP = 0x2F,
 	
-		// 0x30-0x39 -- '0'-'9'
+		// '0'-'9'
 		AK_0 = '0',
 		AK_1 = '1',
 		AK_2 = '2',
@@ -103,9 +104,7 @@ namespace april
 		AK_8 = '8',
 		AK_9 = '9',
 
-		// 0x3A-0x40 -- undefined
-
-		// 0x41-0x5A -- 'A'-'Z'	
+		// 'A'-'Z'	
 		AK_A = 'A',
 		AK_B = 'B',
 		AK_C = 'C',
@@ -157,7 +156,7 @@ namespace april
 		AK_DECIMAL = 0x6E,
 		AK_DIVIDE = 0x6F,
 		
-		// f-keys
+		// F-keys
 		AK_F1 = 0x70,
 		AK_F2 = 0x71,
 		AK_F3 = 0x72,
@@ -246,6 +245,227 @@ namespace april
 		AK_NONAME = 0xFC,
 		AK_PA1 = 0xFD,
 		AK_OEM_CLEAR = 0xFE
+#else
+		// codes obtained from http://developer.android.com/reference/android/view/KeyEvent.html#KEYCODE_0
+		AK_UNKNOWN = -1,
+		AK_NONE = 0,
+	
+		// LBUTTON and RBUTTON are necessary
+		AK_LBUTTON = 1,
+		AK_RBUTTON = 2,
+		// these mostly don't exist on Android
+		AK_CANCEL = 0,
+		AK_MBUTTON = 0,
+		AK_WHEELUP = 168, // ZOOM_IN
+		AK_WHEELDN = 169, // ZOOM_OUT
+		AK_DOUBLETAP = 0,
+
+		// mostly common keys, some not supported
+		AK_BACK = 67,
+		AK_TAB = 61,
+		AK_CLEAR = 28,
+		AK_RETURN = 66,
+		AK_SHIFT = 0,
+		AK_CONTROL = 0,
+		AK_MENU = 82,
+		AK_PAUSE = 0,
+		AK_CAPITAL = 115,
+
+		// various keys for asian keyboards not supported
+		AK_KANA = 0,
+		AK_HANGEUL = 0,
+		AK_HANGUL = 0,
+		AK_JUNJA = 0,
+		AK_FINAL = 0,
+		AK_HANJA = 0,
+		AK_KANJI = 0,
+		AK_ESCAPE = 0,
+		AK_CONVERT = 0,
+		AK_NONCONVERT = 0,
+		AK_ACCEPT = 0,
+		AK_MODECHANGE = 0,
+
+		// space
+		AK_SPACE = 62,
+
+		// don't exist on Android
+		AK_PRIOR = 0,
+		AK_NEXT = 0,
+		AK_END = 0,
+		AK_HOME = 0,
+
+		// don't exist on Android
+		AK_LEFT = 0,
+		AK_UP = 0,
+		AK_RIGHT = 0,
+		AK_DOWN = 0,
+
+		// don't exist on Android
+		AK_SELECT = 0,
+		AK_PRINT = 0,
+		AK_EXECUTE = 0,
+		AK_SNAPSHOT = 0,
+
+		// some more keys
+		AK_INSERT = 124,
+		AK_DELETE = 112,
+		AK_HELP = 0,
+	
+		// '0'-'9'
+		AK_0 = 7,
+		AK_1 = 8,
+		AK_2 = 9,
+		AK_3 = 10,
+		AK_4 = 11,
+		AK_5 = 12,
+		AK_6 = 13,
+		AK_7 = 14,
+		AK_8 = 15,
+		AK_9 = 16,
+
+		// 'A'-'Z'	
+		AK_A = 29,
+		AK_B = 30,
+		AK_C = 31,
+		AK_D = 32,
+		AK_E = 33,
+		AK_F = 34,
+		AK_G = 35,
+		AK_H = 36,
+		AK_I = 37,
+		AK_J = 38,
+		AK_K = 39,
+		AK_L = 40,
+		AK_M = 41,
+		AK_N = 42,
+		AK_O = 43,
+		AK_P = 44,
+		AK_Q = 45,
+		AK_R = 46,
+		AK_S = 47,
+		AK_T = 48,
+		AK_U = 49,
+		AK_V = 50,
+		AK_W = 51,
+		AK_X = 52,
+		AK_Y = 53,
+		AK_Z = 54,
+
+		// don't exist on Android
+		AK_LWIN = 0,
+		AK_RWIN = 0,
+		AK_APPS = 0,
+		AK_SLEEP = 0,
+
+		// numpad
+		AK_NUMPAD0 = 144,
+		AK_NUMPAD1 = 145,
+		AK_NUMPAD2 = 146,
+		AK_NUMPAD3 = 147,
+		AK_NUMPAD4 = 148,
+		AK_NUMPAD5 = 149,
+		AK_NUMPAD6 = 150,
+		AK_NUMPAD7 = 151,
+		AK_NUMPAD8 = 152,
+		AK_NUMPAD9 = 153,
+		AK_MULTIPLY = 155,
+		AK_ADD = 157,
+		AK_SEPARATOR = 159,
+		AK_SUBTRACT = 156,
+		AK_DECIMAL = 158,
+		AK_DIVIDE = 154,
+		
+		// F-keys
+		AK_F1 = 131,
+		AK_F2 = 132,
+		AK_F3 = 133,
+		AK_F4 = 134,
+		AK_F5 = 135,
+		AK_F6 = 136,
+		AK_F7 = 137,
+		AK_F8 = 138,
+		AK_F9 = 139,
+		AK_F10 = 140,
+		AK_F11 = 141,
+		AK_F12 = 142,
+		// don't exist on Android
+		AK_F13 = 0,
+		AK_F14 = 0,
+		AK_F15 = 0,
+		AK_F16 = 0,
+		AK_F17 = 0,
+		AK_F18 = 0,
+		AK_F19 = 0,
+		AK_F20 = 0,
+		AK_F21 = 0,
+		AK_F22 = 0,
+		AK_F23 = 0,
+		AK_F24 = 0,
+
+		// don't exist on Android
+		AK_NUMLOCK = 143,
+		AK_SCROLL = 116,
+
+		// specific left-and-right-shift keys
+		AK_LSHIFT = 59,
+		AK_RSHIFT = 60,
+		AK_LCONTROL = 113,
+		AK_RCONTROL = 114,
+		AK_LMENU = 57,
+		AK_RMENU = 58,
+		
+		// browser control keys
+		AK_BROWSER_BACK = 4,
+		AK_BROWSER_FORWARD = 125,
+		AK_BROWSER_REFRESH = 0,
+		AK_BROWSER_STOP = 0,
+		AK_BROWSER_SEARCH = 84,
+		AK_BROWSER_FAVORITES = 0,
+		AK_BROWSER_HOME = 0,
+
+		// volume keys
+		AK_VOLUME_MUTE = 164,
+		AK_VOLUME_DOWN = 25,
+		AK_VOLUME_UP = 24,
+
+		// don't exist on Android
+		AK_MEDIA_NEXT_TRACK = 0,
+		AK_MEDIA_PREV_TRACK = 0,
+		AK_MEDIA_STOP = 0,
+		AK_MEDIA_PLAY_PAUSE = 0,
+
+		// don't exist on Android
+		AK_LAUNCH_MAIL = 0,
+		AK_LAUNCH_MEDIA_SELECT = 0,
+		AK_LAUNCH_APP1 = 0,
+		AK_LAUNCH_APP2 = 0,
+
+		// don't exist on Android
+		AK_OEM_2 = 0,
+		AK_OEM_3 = 0,
+		AK_OEM_4 = 0,
+		AK_OEM_5 = 0,
+		AK_OEM_6 = 0,
+		AK_OEM_7 = 0,
+		AK_OEM_8 = 0,
+		AK_OEM_102 = 0,
+
+		// don't exist on Android
+		AK_PACKET = 0,
+		AK_ATTN = 0,
+		AK_CRSEL = 0,
+		AK_EXSEL = 0,
+		AK_EREOF = 0,
+
+		// don't exist on Android
+		AK_PLAY = 0,
+		AK_ZOOM = 0,
+
+		// don't exist on Android
+		AK_NONAME = 0,
+		AK_PA1 = 0,
+		AK_OEM_CLEAR = 0
+#endif
 	};
 
 }
