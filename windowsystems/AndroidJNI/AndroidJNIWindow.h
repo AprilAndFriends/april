@@ -26,7 +26,7 @@ namespace april
 	public:
 		AndroidJNIWindow(int w, int h, bool fullscreen, chstr title);
 		~AndroidJNIWindow();
-
+		
 		//void _setActive(bool active) { mActive = active; }
 		
 		// implementations
@@ -49,27 +49,29 @@ namespace april
 		// event handlers
 		//void triggerKeyEvent(bool down, unsigned int keycode);
 		//void triggerCharEvent(unsigned int chr);
-	
+		
 		//void triggerMouseUpEvent(int button);
 		//void triggerMouseDownEvent(int button);
 		//void triggerMouseMoveEvent();
 		//bool triggerQuitEvent();
 		//void triggerFocusCallback(bool focused);
-
+		
 		//void triggerTouchscreenCallback(bool enabled);
-
+		
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
 		void handleMouseEvent(MouseEventType event, float x, float y, MouseButton button);
-
+		
 		DeviceType getDeviceType();
 		
 	protected:
 		float mWidth;
 		float mHeight;
 		bool mActive;
-		
 		//bool mRunning;
+		
+		// using void** so that jni.h doesn't have to be included in this header
+		void _getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView);
 		
 	};
 }

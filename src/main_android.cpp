@@ -15,6 +15,7 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
+#include "Keys.h"
 #include "main.h"
 #include "RenderSystem.h"
 #include "Window.h"
@@ -22,15 +23,17 @@
 #define PROTECTED_RENDERSYS_GET_WINDOW(methodCall) \
 	if (april::rendersys != NULL && april::rendersys->getWindow() != NULL) \
 	{ \
-		return april::rendersys->getWindow()->methodCall;\
-	} \
+		april::rendersys->getWindow()->methodCall; \
+	}
 
 namespace april
 {
 	extern void* javaVM;
+	extern jobject aprilActivity;
 
-	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args, jstring path)
+	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobject activity, jobjectArray _args, jstring path)
 	{
+		aprilActivity = activity;
 		harray<hstr> args;
 		jstring arg;
 		const char* str;
@@ -73,20 +76,18 @@ namespace april
 	{
 		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_MOVE, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT));
 	}
-
-	/*
-	bool JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode)
+	
+	bool JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleKeyEvent(april::Window::AKEYEVT_DOWN, (unsigned int)keyCode, 0));
-		return false;
+		PROTECTED_RENDERSYS_GET_WINDOW(handleKeyEvent(april::Window::AKEYEVT_DOWN, (KeySym)(int)keyCode, (unsigned int)charCode));
+		return true;
 	}
 
 	bool JNICALL _JNI_onKeyUp(JNIEnv* env, jclass classe, jint keyCode)
 	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleKeyEvent(april::Window::AKEYEVT_UP, (unsigned int)keyCode, 0));
-		return false;
+		PROTECTED_RENDERSYS_GET_WINDOW(handleKeyEvent(april::Window::AKEYEVT_UP, (KeySym)(int)keyCode, 0));
+		return true;
 	}
-	*/
 
 	void JNICALL _JNI_onFocusChange(JNIEnv* env, jclass classe, jboolean has_focus)
 	{
@@ -98,21 +99,19 @@ namespace april
 		PROTECTED_RENDERSYS_GET_WINDOW(handleLowMemoryWarning());
 	}
 
-#define METHOD_COUNT 8 // make sure this fits
+#define METHOD_COUNT 10 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
-		{"init",			"([Ljava/lang/String;Ljava/lang/String;)V",	(void*)&april::_JNI_init			},
-		{"destroy",			"()V",										(void*)&april::_JNI_destroy			},
-		{"render",			"()V",										(void*)&april::_JNI_render			},
-		{"onMouseDown",		"(FFI)V",									(void*)&april::_JNI_onMouseDown		},
-		{"onMouseUp",		"(FFI)V",									(void*)&april::_JNI_onMouseUp		},
-		{"onMouseMove",		"(FF)V",									(void*)&april::_JNI_onMouseMove		},
-		/*
-		{"onKeyDown",		"(I)Z",										(bool*)&april::_JNI_onKeyDown		},
-		{"onKeyUp",			"(I)Z",										(bool*)&april::_JNI_onKeyUp			},
-		*/
-		{"onFocusChange",	"(Z)V",										(void*)&april::_JNI_onFocusChange	},
-		{"onLowMemory",		"()V",										(void*)&april::_JNI_onLowMemory		}
+		{"init",			"(Ljava/lang/Object;[Ljava/lang/String;Ljava/lang/String;)V",	(void*)&april::_JNI_init			},
+		{"destroy",			"()V",															(void*)&april::_JNI_destroy			},
+		{"render",			"()V",															(void*)&april::_JNI_render			},
+		{"onMouseDown",		"(FFI)V",														(void*)&april::_JNI_onMouseDown		},
+		{"onMouseUp",		"(FFI)V",														(void*)&april::_JNI_onMouseUp		},
+		{"onMouseMove",		"(FF)V",														(void*)&april::_JNI_onMouseMove		},
+		{"onKeyDown",		"(II)Z",														(bool*)&april::_JNI_onKeyDown		},
+		{"onKeyUp",			"(I)Z",															(bool*)&april::_JNI_onKeyUp			},
+		{"onFocusChange",	"(Z)V",															(void*)&april::_JNI_onFocusChange	},
+		{"onLowMemory",		"()V",															(void*)&april::_JNI_onLowMemory		}
 	};
 	
 	jint JNI_OnLoad(JavaVM* vm, void* reserved)
