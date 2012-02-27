@@ -141,10 +141,6 @@ namespace april
 	{
 		JNIEnv* env = NULL;
 		((JavaVM*)javaVM)->GetEnv((void**)&env, JNI_VERSION_1_6);
-		JavaVMAttachArgs javaVMAttachArgs;
-		javaVMAttachArgs.version = JNI_VERSION_1_6;
-		javaVMAttachArgs.name = "NativeThread";
-		javaVMAttachArgs.group = NULL;
 		jclass classAprilActivity = env->GetObjectClass(aprilActivity);
 		jclass classContext = env->FindClass("android/content/Context");
 		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
@@ -168,6 +164,7 @@ namespace april
 		jobject inputMethodManager = NULL;
 		jobject decorView = NULL;
 		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&decorView);
+		// show virtual keyboard
 		jmethodID methodShowSoftInput = env->GetMethodID(classInputMethodManager, "showSoftInput", "(Landroid/view/View;I)Z");
 		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, decorView, 0);
 	}
@@ -179,6 +176,7 @@ namespace april
 		jobject inputMethodManager = NULL;
 		jobject decorView = NULL;
 		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&decorView);
+		// hide virtual keyboard
 		jclass classView = env->FindClass("android/view/View");
 		jmethodID methodGetWindowToken = env->GetMethodID(classView, "getWindowToken", "()Landroid/os/IBinder;");
 		jobject binder = env->CallObjectMethod(decorView, methodGetWindowToken);
