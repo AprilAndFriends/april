@@ -21,6 +21,38 @@
 
 namespace april
 {
+	struct MouseInputEvent
+	{
+		Window::MouseEventType type;
+		float x;
+		float y;
+		Window::MouseButton button;
+
+		MouseInputEvent(Window::MouseEventType _type, float _x, float _y, Window::MouseButton _button)
+		{
+			type = _type;
+			x = _x;
+			y = _y;
+			button = _button;
+		}
+
+	};
+
+	struct KeyInputEvent
+	{
+		Window::KeyEventType type;
+		KeySym keyCode;
+		unsigned int charCode;
+
+		KeyInputEvent(Window::KeyEventType _type, KeySym _keyCode, unsigned int _charCode)
+		{
+			type = _type;
+			keyCode = _keyCode;
+			charCode = _charCode;
+		}
+
+	};
+
 	class aprilExport AndroidJNIWindow : public Window
 	{
 	public:
@@ -60,7 +92,8 @@ namespace april
 		
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
-		void handleMouseEvent(MouseEventType event, float x, float y, MouseButton button);
+		void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
+		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
 		
 		DeviceType getDeviceType();
 		
@@ -69,6 +102,8 @@ namespace april
 		float mHeight;
 		bool mActive;
 		//bool mRunning;
+		harray<MouseInputEvent> mMouseEvents;
+		harray<KeyInputEvent> mKeyEvents;
 		
 		// using void** so that jni.h doesn't have to be included in this header
 		void _getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView);

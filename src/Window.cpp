@@ -255,29 +255,29 @@ namespace april
 		return true;
 	}
 	
-	void Window::handleKeyEvent(KeyEventType type, KeySym keycode, unsigned int unicode)
+	void Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
 	{
-		if (keycode == AK_UNKNOWN)
+		if (keyCode == AK_UNKNOWN)
 		{
 			april::log("key event on unknown key");
-			keycode = AK_NONE;
+			keyCode = AK_NONE;
 		}
 		switch (type)
 		{
 		case AKEYEVT_DOWN:
-			if (mKeyDownCallback != NULL && keycode != AK_NONE)
+			if (mKeyDownCallback != NULL && keyCode != AK_NONE)
 			{
-				(*mKeyDownCallback)(keycode);
+				(*mKeyDownCallback)(keyCode);
 			}
-			if (unicode != 0 && mCharCallback != NULL && unicode != 127) // hack for sdl on mac, backspace induces character
+			if (charCode != 0 && mCharCallback != NULL && charCode != 127) // hack for sdl on mac, backspace induces character
 			{
-				(*mCharCallback)(unicode);
+				(*mCharCallback)(charCode);
 			}
 			break;
 		case AKEYEVT_UP:
-			if (mKeyUpCallback != NULL && keycode != AK_NONE)
+			if (mKeyUpCallback != NULL && keyCode != AK_NONE)
 			{
-				(*mKeyUpCallback)(keycode);
+				(*mKeyUpCallback)(keyCode);
 			}
 			break;
 		default:
@@ -285,9 +285,9 @@ namespace april
 		}
 	}
 	
-	void Window::handleMouseEvent(MouseEventType event, float x, float y, MouseButton button)
+	void Window::handleMouseEvent(MouseEventType type, float x, float y, MouseButton button)
 	{
-		switch (event)
+		switch (type)
 		{
 		case AMOUSEEVT_DOWN:
 			if (mMouseDownCallback != NULL)
