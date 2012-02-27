@@ -75,7 +75,8 @@ namespace april
 			k = 0;
 			for (int i = 0; i < 5; i++)
 			{
-				doEvents();
+				mMouseEvents.clear();
+				mKeyEvents.clear();
 				hthread::sleep(40);
 			}
 		}
@@ -135,6 +136,17 @@ namespace april
 
 	void AndroidJNIWindow::doEvents()
 	{
+		while (mMouseEvents.size() > 0)
+		{
+			MouseInputEvent e = mMouseEvents.pop_first();
+			cursorPosition.set(e.x, e.y);
+			Window::handleMouseEvent(e.type, e.x, e.y, e.button);
+		}
+		while (mKeyEvents.size() > 0)
+		{
+			KeyInputEvent e = mKeyEvents.pop_first();
+			Window::handleKeyEvent(e.type, e.keyCode, e.charCode);
+		}
 	}
 
 	void AndroidJNIWindow::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView)
@@ -184,10 +196,14 @@ namespace april
 		env->CallBooleanMethod(inputMethodManager, methodHideSoftInput, binder, 0);
 	}
 
-	void AndroidJNIWindow::handleMouseEvent(MouseEventType event, float x, float y, MouseButton button)
+	void AndroidJNIWindow::handleMouseEvent(MouseEventType type, float x, float y, MouseButton button)
 	{
-		cursorPosition.set(x, y);
-		Window::handleMouseEvent(event, x, y, button);
+		mMouseEvents += MouseInputEvent(type, x, y, button);
+	}
+
+	void AndroidJNIWindow::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
+	{
+		mKeyEvents += KeyInputEvent(type, keyCode, charCode);
 	}
 
 	Window::DeviceType AndroidJNIWindow::getDeviceType()

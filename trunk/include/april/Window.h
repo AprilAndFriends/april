@@ -154,7 +154,7 @@ namespace april
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
 		void handleTouchEvent(harray<gvec2>& touches);
-		virtual void handleKeyEvent(KeyEventType type, KeySym keycode, unsigned int unicode);
+		virtual void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
 		virtual bool handleQuitRequest(bool can_reject);
 		virtual void handleFocusEvent(bool has_focus);
 		bool handleURL(chstr url);
