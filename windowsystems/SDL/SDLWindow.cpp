@@ -102,7 +102,7 @@ namespace april
 		
 		while (mRunning)
 		{
-			if !(updateOneFrame())
+			if (!updateOneFrame())
 			{
 				mRunning = false;
 			}
@@ -415,7 +415,7 @@ namespace april
 		
 		if (!mWindowFocused)
 			hthread::sleep(100);
-		result = performUpdate(k);
+		bool result = performUpdate(k);
 		rendersys->presentFrame();
 		return result;
 	}
