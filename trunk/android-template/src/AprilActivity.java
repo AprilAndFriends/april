@@ -19,6 +19,7 @@ class AprilJNI
 	public static native void init(Object activity, String[] args, String path);
 	public static native void render();
 	public static native void destroy();
+	public static native void onRestart();
 	public static native void onMouseDown(float x, float y, int button);
 	public static native void onMouseUp(float x, float y, int button);
 	public static native void onMouseMove(float x, float y);
@@ -53,10 +54,10 @@ public class AprilActivity extends Activity
 	}
 	
 	@Override
-	protected void onPause()
+	protected void onRestart()
 	{
-		super.onPause();
-		this.glView.onPause();
+		super.onRestart();
+		AprilJNI.onRestart();
 	}
 
 	@Override
@@ -66,6 +67,13 @@ public class AprilActivity extends Activity
 		this.glView.onResume();
 	}
 	
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		this.glView.onPause();
+	}
+
 	@Override
 	public void onBackPressed()
 	{

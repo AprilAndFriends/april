@@ -2,16 +2,12 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.33
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
-
-#ifdef USE_IL
-#include <IL/il.h>
-#endif
 
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
@@ -19,6 +15,8 @@
 
 #include "Color.h"
 #include "ImageSource.h"
+#include "Texture.h"
+#include "TextureManager.h"
 #include "RenderSystem.h"
 
 namespace april
@@ -33,6 +31,7 @@ namespace april
 		mUnusedTimer = 0.0f;
 		mTextureFilter = Linear;
 		mTextureWrapping = true;
+		april::rendersys->getTextureManager()->registerTexture(this);
 	}
 
 	Texture::~Texture()
@@ -41,6 +40,7 @@ namespace april
 		{
 			(*it)->removeDynamicLink(this);
 		}
+		april::rendersys->getTextureManager()->unregisterTexture(this);
 	}
 	
 	void Texture::fillRect(grect rect, Color color)
@@ -139,7 +139,7 @@ namespace april
 	}
 
 /************************************************************************************/
-	RAMTexture::RAMTexture(chstr filename, bool dynamic)
+	RAMTexture::RAMTexture(chstr filename, bool dynamic) : Texture()
 	{
 		mFilename = filename;
 		mBuffer = NULL;
@@ -149,7 +149,7 @@ namespace april
 		}
 	}
 
-	RAMTexture::RAMTexture(int w, int h)
+	RAMTexture::RAMTexture(int w, int h) : Texture()
 	{
 		mWidth = w;
 		mHeight = h;

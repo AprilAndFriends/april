@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.31
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
@@ -32,8 +32,9 @@ namespace april
 {
 	extern hstr systemPath;
 
-	class Window;
 	class ImageSource;
+	class TextureManager;
+	class Window;
 	// render operations
 	enum RenderOp
 	{
@@ -195,7 +196,6 @@ namespace april
 		
 		virtual void setParam(chstr name, chstr value) {  }
 		virtual hstr getParam(chstr name) { return ""; }
-
 		
 		void drawQuad(grect rect, Color color);
 		void drawColoredQuad(grect rect, Color color);
@@ -211,6 +211,7 @@ namespace april
 		bool isDynamicLoadingForced() { return mDynamicLoading; }
 		
 		Window* getWindow() { return mWindow; }
+		TextureManager* getTextureManager() { return mTextureManager; }
 		
         virtual ImageSource* grabScreenshot(int bpp = 3) = 0;
         
@@ -221,6 +222,7 @@ namespace april
 
 	protected:
 		Window* mWindow;
+		TextureManager* mTextureManager;
 		float mIdleUnloadTime;
 		bool mDynamicLoading;
 		TextureFilter mTextureFilter;

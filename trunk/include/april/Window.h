@@ -34,7 +34,7 @@ namespace april
 		hstr locale; //! current system locale code
 	};
 	
-	class aprilExport Window 
+	class aprilExport Window
 	{
 	protected:
 		static Window* mSingleton;
@@ -161,7 +161,7 @@ namespace april
 		virtual bool performUpdate(float time_increase);
 		void handleLowMemoryWarning();
 		
-	protected:		
+	protected:
 		Window();
 		
 		RenderSystem* mRenderSystem;
