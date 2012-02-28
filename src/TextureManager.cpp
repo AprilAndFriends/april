@@ -9,6 +9,7 @@
 
 #include <hltypes/harray.h>
 
+#include "RenderSystem.h"
 #include "Texture.h"
 #include "TextureManager.h"
 

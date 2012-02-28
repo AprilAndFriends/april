@@ -376,8 +376,11 @@ namespace april
 	
 	void destroy()
 	{
-		delete april::rendersys;
-		april::rendersys = NULL;
+		if (april::rendersys != NULL)
+		{
+			delete april::rendersys;
+			april::rendersys = NULL;
+		}
 	}
 	
 	void addTextureExtension(chstr extension)
@@ -400,4 +403,5 @@ namespace april
 		harray<hstr> exts = comma_seperated_exts.split(",");
 		setTextureExtensions(exts);
 	}
+
 }

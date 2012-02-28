@@ -58,9 +58,22 @@ namespace april
 		april_destroy();
 	}
 
-	void JNICALL _JNI_render(JNIEnv* env, jclass classe)
+	bool JNICALL _JNI_render(JNIEnv* env, jclass classe)
 	{
-		PROTECTED_RENDERSYS_GET_WINDOW(updateOneFrame());
+		if (april::rendersys != NULL && april::rendersys->getWindow() != NULL)
+		{
+			return april::rendersys->getWindow()->updateOneFrame();
+		}
+		return true;
+	}
+
+	bool JNICALL _JNI_onQuit(JNIEnv* env, jclass classe)
+	{
+		if (april::rendersys != NULL && april::rendersys->getWindow() != NULL)
+		{
+			return april::rendersys->getWindow()->handleQuitRequest(true);
+		}
+		return true;
 	}
 
 	void JNICALL _JNI_onRestart(JNIEnv* env, jclass classe)
@@ -108,12 +121,13 @@ namespace april
 		PROTECTED_RENDERSYS_GET_WINDOW(handleLowMemoryWarning());
 	}
 
-#define METHOD_COUNT 11 // make sure this fits
+#define METHOD_COUNT 12 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"init",			"(Ljava/lang/Object;[Ljava/lang/String;Ljava/lang/String;)V",	(void*)&april::_JNI_init			},
 		{"destroy",			"()V",															(void*)&april::_JNI_destroy			},
-		{"render",			"()V",															(void*)&april::_JNI_render			},
+		{"render",			"()Z",															(void*)&april::_JNI_render			},
+		{"onQuit",			"()Z",															(void*)&april::_JNI_onQuit			},
 		{"onRestart",		"()V",															(void*)&april::_JNI_onRestart		},
 		{"onMouseDown",		"(FFI)V",														(void*)&april::_JNI_onMouseDown		},
 		{"onMouseUp",		"(FFI)V",														(void*)&april::_JNI_onMouseUp		},

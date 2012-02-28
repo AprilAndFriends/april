@@ -102,12 +102,15 @@ namespace april
 		
 		while (mRunning)
 		{
-			updateOneFrame();
+			if !(updateOneFrame())
+			{
+				mRunning = false;
+			}
 		}
 				
 	}
 	
-	void SDLWindow::updateOneFrame()
+	bool SDLWindow::updateOneFrame()
 	{
 		//check if we should quit...
 		if (gAprilShouldInvokeQuitCallback)
@@ -119,7 +122,7 @@ namespace april
 		}
 		//first process sdl events
 		doEvents();
-		_handleDisplayAndUpdate();
+		return _handleDisplayAndUpdate();
 	}
 
 	
@@ -404,15 +407,17 @@ namespace april
 						 mousebtn);
 	}
 	
-	void SDLWindow::_handleDisplayAndUpdate()
+	bool SDLWindow::_handleDisplayAndUpdate()
 	{
 		static unsigned int x = SDL_GetTicks();
 		float k = (SDL_GetTicks() - x) / 1000.0f;
 		x = SDL_GetTicks();
 		
-		if (!mWindowFocused) hthread::sleep(100);
-		performUpdate(k);
+		if (!mWindowFocused)
+			hthread::sleep(100);
+		result = performUpdate(k);
 		rendersys->presentFrame();
+		return result;
 	}
 		
 	void* SDLWindow::getIDFromBackend()

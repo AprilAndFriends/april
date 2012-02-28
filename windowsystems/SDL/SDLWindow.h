@@ -39,7 +39,7 @@ namespace april
 		~SDLWindow();
 		
 		// implementations
-		void updateOneFrame();
+		bool updateOneFrame();
 		void enterMainLoop();
 		void terminateMainLoop();
 		void destroyWindow();
@@ -61,7 +61,7 @@ namespace april
 		
 	private:
 		void _handleKeyEvent(Window::KeyEventType type, SDLKey keycode, unsigned int unicode);
-		void _handleDisplayAndUpdate();
+		bool _handleDisplayAndUpdate();
 		void _handleMouseEvent(SDL_Event &evt);
 		
 		SDL_Surface *mScreen;

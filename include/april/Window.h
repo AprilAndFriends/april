@@ -118,7 +118,7 @@ namespace april
 		
 		// misc pure virtuals
 		virtual void enterMainLoop() = 0;
-		virtual void updateOneFrame() = 0;
+		virtual bool updateOneFrame() = 0;
 		virtual void terminateMainLoop() = 0;
 		virtual void destroyWindow() = 0;
 		virtual void showSystemCursor(bool b) = 0;

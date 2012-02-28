@@ -50,7 +50,7 @@ namespace april
 	{
 	}
 	
-	void AndroidJNIWindow::updateOneFrame()
+	bool AndroidJNIWindow::updateOneFrame()
 	{
 		if (lastTime == 0.0f)
 		{
@@ -61,7 +61,7 @@ namespace april
 		t = globalTimer.getTime();
 		if (t == lastTime)
 		{
-			return; // don't redraw frames which won't change
+			return true; // don't redraw frames which won't change
 		}
 		float k = (t - lastTime) / 1000.0f;
 		if (k > 0.5f)
@@ -80,11 +80,13 @@ namespace april
 				hthread::sleep(40);
 			}
 		}
+		bool result = true;
 		if (mUpdateCallback != NULL)
 		{
-			(*mUpdateCallback)(k);
+			result = (*mUpdateCallback)(k);
 		}
 		april::rendersys->presentFrame();
+		return result;
 	}
 	
 	void AndroidJNIWindow::terminateMainLoop()
