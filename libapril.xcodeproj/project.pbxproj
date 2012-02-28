@@ -32,6 +32,9 @@
 		7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
 		7FC8FA29122FA58F0092964C /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8FA28122FA58F0092964C /* Timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8FA75122FACA30092964C /* TimerSDL.cpp */; };
+		C9391E4B14FCCA5100C14F41 /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9391E4A14FCCA5100C14F41 /* TextureManager.cpp */; };
+		C9391E4C14FCCA5100C14F41 /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9391E4A14FCCA5100C14F41 /* TextureManager.cpp */; };
+		C9391E4E14FCCA7300C14F41 /* TextureManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C9391E4D14FCCA7300C14F41 /* TextureManager.h */; };
 		C960EBE114EAA47700B8B30D /* main_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = C960EBE014EAA47700B8B30D /* main_mac.mm */; };
 		C960EBE314EAA47F00B8B30D /* main_ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = C960EBE214EAA47F00B8B30D /* main_ios.mm */; };
 		C9A8520D134AF97000B455BE /* ImageSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9A8520C134AF97000B455BE /* ImageSource.cpp */; };
@@ -50,11 +53,6 @@
 		D1981C48140F82B00057C3AF /* ImageSourceCG.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7F42FD7611EB632E00B1C1DF /* ImageSourceCG.mm */; };
 		D1981C49140F82B00057C3AF /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */; };
 		D1981C4A140F82B00057C3AF /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
-		D1981C4F140F849A0057C3AF /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1981C4E140F849A0057C3AF /* OpenGLES.framework */; };
-		D1981C51140F84A10057C3AF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1981C50140F84A10057C3AF /* UIKit.framework */; };
-		D1981C53140F84AA0057C3AF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1981C52140F84AA0057C3AF /* CoreGraphics.framework */; };
-		D1981C55140F84B00057C3AF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1981C54140F84B00057C3AF /* Foundation.framework */; };
-		D1981C57140F84B60057C3AF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1981C56140F84B60057C3AF /* CoreFoundation.framework */; };
 		D1981C65140F85350057C3AF /* ApriliOSAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1981C59140F85350057C3AF /* ApriliOSAppDelegate.h */; };
 		D1981C67140F85350057C3AF /* AprilViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D1981C5B140F85350057C3AF /* AprilViewController.h */; };
 		D1981C69140F85350057C3AF /* EAGLView.h in Headers */ = {isa = PBXBuildFile; fileRef = D1981C5D140F85350057C3AF /* EAGLView.h */; };
@@ -98,7 +96,8 @@
 		7FC8FA75122FACA30092964C /* TimerSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerSDL.cpp; path = src/TimerSDL.cpp; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C9506D1714C59147004464FC /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../lib/mac/SDL.framework; sourceTree = "<group>"; };
+		C9391E4A14FCCA5100C14F41 /* TextureManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureManager.cpp; path = src/TextureManager.cpp; sourceTree = "<group>"; };
+		C9391E4D14FCCA7300C14F41 /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureManager.h; path = include/april/TextureManager.h; sourceTree = "<group>"; };
 		C960EBE014EAA47700B8B30D /* main_mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main_mac.mm; path = src/main_mac.mm; sourceTree = "<group>"; };
 		C960EBE214EAA47F00B8B30D /* main_ios.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main_ios.mm; path = src/main_ios.mm; sourceTree = "<group>"; };
 		C9A8520C134AF97000B455BE /* ImageSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSource.cpp; path = src/ImageSource.cpp; sourceTree = "<group>"; };
@@ -141,18 +140,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D1981C2D140F824B0057C3AF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D1981C57140F84B60057C3AF /* CoreFoundation.framework in Frameworks */,
-				D1981C55140F84B00057C3AF /* Foundation.framework in Frameworks */,
-				D1981C53140F84AA0057C3AF /* CoreGraphics.framework in Frameworks */,
-				D1981C51140F84A10057C3AF /* UIKit.framework in Frameworks */,
-				D1981C4F140F849A0057C3AF /* OpenGLES.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -168,7 +155,6 @@
 		0867D691FE84028FC02AAC07 /* libapril */ = {
 			isa = PBXGroup;
 			children = (
-				D186222214F957B800639D7C /* SDL.framework */,
 				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				7FA3ED1111F9813E001D1DDD /* Window Systems */,
 				7F42F7AE11EB185F00B1C1DF /* Render Systems */,
@@ -192,7 +178,7 @@
 		1058C7B0FEA5585E11CA2CBB /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				C9506D1714C59147004464FC /* SDL.framework */,
+				D186222214F957B800639D7C /* SDL.framework */,
 				7F42FAD411EB342900B1C1DF /* Cocoa.framework */,
 				7F42FACC11EB341E00B1C1DF /* OpenGL.framework */,
 				7F42F83111EB1A9700B1C1DF /* gtypes.framework */,
@@ -216,6 +202,7 @@
 		7F42F79F11EB177B00B1C1DF /* src */ = {
 			isa = PBXGroup;
 			children = (
+				C9391E4A14FCCA5100C14F41 /* TextureManager.cpp */,
 				C9C04F8A14BB106F005BD333 /* PixelShader.cpp */,
 				C9C04F9214BB109B005BD333 /* VertexShader.cpp */,
 				D1981C71140F856B0057C3AF /* TimerPosix.cpp */,
@@ -235,6 +222,7 @@
 		7F42F7A011EB177F00B1C1DF /* include */ = {
 			isa = PBXGroup;
 			children = (
+				C9391E4D14FCCA7300C14F41 /* TextureManager.h */,
 				C9C04F8E14BB1091005BD333 /* PixelShader.h */,
 				C9C04F8F14BB1091005BD333 /* VertexShader.h */,
 				7F1B522712E4710D00E958D8 /* aprilExport.h */,
@@ -325,6 +313,7 @@
 				D1981C6B140F85350057C3AF /* iOSWindow.h in Headers */,
 				D1981C6D140F85350057C3AF /* PVRTexture.h in Headers */,
 				D1981C6F140F85350057C3AF /* WBImage.h in Headers */,
+				C9391E4E14FCCA7300C14F41 /* TextureManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,9 +324,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "libapril" */;
 			buildPhases = (
-				8DC2EF500486A6940098B216 /* Headers */,
-				8DC2EF520486A6940098B216 /* Resources */,
 				8DC2EF540486A6940098B216 /* Sources */,
+				8DC2EF500486A6940098B216 /* Headers */,
 				8DC2EF560486A6940098B216 /* Frameworks */,
 			);
 			buildRules = (
@@ -355,7 +343,6 @@
 			buildConfigurationList = D1981C3F140F824B0057C3AF /* Build configuration list for PBXNativeTarget "libapril-ios" */;
 			buildPhases = (
 				D1981C2C140F824B0057C3AF /* Sources */,
-				D1981C2D140F824B0057C3AF /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -395,16 +382,6 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		8DC2EF520486A6940098B216 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		8DC2EF540486A6940098B216 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -423,6 +400,7 @@
 				C9C04F8B14BB106F005BD333 /* PixelShader.cpp in Sources */,
 				C9C04F9314BB109B005BD333 /* VertexShader.cpp in Sources */,
 				C960EBE114EAA47700B8B30D /* main_mac.mm in Sources */,
+				C9391E4B14FCCA5100C14F41 /* TextureManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,6 +426,7 @@
 				C9C04F8C14BB106F005BD333 /* PixelShader.cpp in Sources */,
 				C9C04F9414BB109B005BD333 /* VertexShader.cpp in Sources */,
 				C960EBE314EAA47F00B8B30D /* main_ios.mm in Sources */,
+				C9391E4C14FCCA5100C14F41 /* TextureManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
