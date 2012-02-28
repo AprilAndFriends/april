@@ -4,11 +4,11 @@
 		android:versionCode="1"
 		android:versionName="1.5">
 	<uses-feature android:name="android.hardware.screen.landscape"/>
-	<application android:label="Demo Tic Tac Toe">
+	<application android:label="Demo Tic Tac Toe"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 		<activity android:name=".DemoTicTacToe"
 				android:label="Demo Tic Tac Toe"
-				android:screenOrientation="landscape"
-				android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+				android:screenOrientation="landscape">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>

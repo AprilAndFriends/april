@@ -42,10 +42,16 @@ public class AprilActivity extends Activity
 		AprilJNI.SystemPath = this.getFilesDir().getAbsolutePath();
 		AprilJNI.Activity = this;
 		this.glView = new AprilGLSurfaceView(this);
-		this.setContentView(this.glView);
 		this.setDefaultKeyMode(DEFAULT_KEYS_DISABLE);
 	}
 	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		this.setContentView(this.glView);
+	}
+
 	@Override
 	protected void onRestart()
 	{
