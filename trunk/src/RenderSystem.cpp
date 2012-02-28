@@ -120,11 +120,16 @@ namespace april
 		mIdleUnloadTime = 0;
 		mTextureFilter = Linear;
 		mTextureWrapping = true;
+		mWindow = NULL;
 		mTextureManager = new TextureManager();
 	}
 	
 	RenderSystem::~RenderSystem()
 	{
+		if (mWindow != NULL)
+		{
+			delete mWindow;
+		}
 		delete mTextureManager;
 	}
 
@@ -334,9 +339,13 @@ namespace april
 	{
 #if TARGET_OS_IPHONE
 		if (options == "create_eagl")
+		{
 			april::rendersys = OpenGL_RenderSystem::create(options);
+		}
 		else
+		{
 			april::rendersys->setParam(options, "");
+		}
 		//else do nothing, rendersys was created ahead
 #elif defined(_OPENGL)
 		april::rendersys = OpenGL_RenderSystem::create(options);
@@ -367,12 +376,8 @@ namespace april
 	
 	void destroy()
 	{
-		if (rendersys)
-		{
-			delete rendersys->getWindow();
-			delete rendersys;
-			rendersys = NULL;
-		}
+		delete april::rendersys;
+		april::rendersys = NULL;
 	}
 	
 	void addTextureExtension(chstr extension)
