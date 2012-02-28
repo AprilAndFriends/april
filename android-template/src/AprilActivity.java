@@ -47,19 +47,19 @@ public class AprilActivity extends Activity
 	}
 	
 	@Override
-	protected void onDestroy()
-	{
-		AprilJNI.destroy();
-		super.onDestroy();
-	}
-	
-	@Override
 	protected void onRestart()
 	{
 		super.onRestart();
 		AprilJNI.onRestart();
 	}
 
+	@Override
+	protected void onStop()
+	{
+		AprilJNI.destroy();
+		super.onStop();
+	}
+	
 	@Override
 	protected void onResume()
 	{
