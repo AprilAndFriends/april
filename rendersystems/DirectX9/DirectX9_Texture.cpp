@@ -102,6 +102,11 @@ namespace april
 		}
 	}
 	
+	DirectX9_Texture::~DirectX9_Texture()
+	{
+		unload();
+	}
+
 	Color DirectX9_Texture::getPixel(int x, int y)
 	{
 		Color color;
@@ -791,11 +796,6 @@ namespace april
 			mTexture->GetSurfaceLevel(0, &mSurface);
 		}
 		return mSurface;
-	}
-
-	DirectX9_Texture::~DirectX9_Texture()
-	{
-		unload();
 	}
 
 	bool DirectX9_Texture::load()

@@ -475,11 +475,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\ImageSourcePng.cpp"
+				RelativePath=".\src\ImageSourceJpg.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\ImageSourceJpg.cpp"
+				RelativePath=".\src\ImageSourcePng.cpp"
 				>
 			</File>
 			<File
@@ -496,6 +496,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Texture.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TextureManager.cpp"
 				>
 			</File>
 			<File
@@ -594,6 +598,10 @@
 			</File>
 			<File
 				RelativePath=".\include\april\Texture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\april\TextureManager.h"
 				>
 			</File>
 			<File

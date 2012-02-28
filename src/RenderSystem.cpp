@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.32
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
@@ -36,6 +36,7 @@
 #include "DirectX9_RenderSystem.h"
 #endif
 #include "ImageSource.h"
+#include "TextureManager.h"
 #include "Window.h"
 
 namespace april
@@ -119,10 +120,12 @@ namespace april
 		mIdleUnloadTime = 0;
 		mTextureFilter = Linear;
 		mTextureWrapping = true;
+		mTextureManager = new TextureManager();
 	}
 	
 	RenderSystem::~RenderSystem()
 	{
+		delete mTextureManager;
 	}
 
 	void RenderSystem::drawQuad(grect rect, Color color)

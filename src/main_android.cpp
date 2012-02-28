@@ -18,6 +18,7 @@
 #include "Keys.h"
 #include "main.h"
 #include "RenderSystem.h"
+#include "TextureManager.h"
 #include "Window.h"
 
 #define PROTECTED_RENDERSYS_GET_WINDOW(methodCall) \
@@ -62,6 +63,14 @@ namespace april
 		PROTECTED_RENDERSYS_GET_WINDOW(updateOneFrame());
 	}
 
+	void JNICALL _JNI_onRestart(JNIEnv* env, jclass classe)
+	{
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->getTextureManager()->unloadTextures();
+		}
+	}
+
 	void JNICALL _JNI_onMouseDown(JNIEnv* env, jclass classe, jfloat x, jfloat y, jint button)
 	{
 		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_DOWN, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT));
@@ -99,12 +108,13 @@ namespace april
 		PROTECTED_RENDERSYS_GET_WINDOW(handleLowMemoryWarning());
 	}
 
-#define METHOD_COUNT 10 // make sure this fits
+#define METHOD_COUNT 11 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"init",			"(Ljava/lang/Object;[Ljava/lang/String;Ljava/lang/String;)V",	(void*)&april::_JNI_init			},
 		{"destroy",			"()V",															(void*)&april::_JNI_destroy			},
 		{"render",			"()V",															(void*)&april::_JNI_render			},
+		{"onRestart",		"()V",															(void*)&april::_JNI_onRestart		},
 		{"onMouseDown",		"(FFI)V",														(void*)&april::_JNI_onMouseDown		},
 		{"onMouseUp",		"(FFI)V",														(void*)&april::_JNI_onMouseUp		},
 		{"onMouseMove",		"(FF)V",														(void*)&april::_JNI_onMouseMove		},

@@ -116,6 +116,9 @@
     <ClCompile Include="src\ImageSourcePng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\TextureManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -174,6 +177,9 @@
     </ClInclude>
     <ClInclude Include="windowsystems\AndroidJni\AndroidJNIWindow.h">
       <Filter>Header Files\windowsystems\AndroidJNI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\TextureManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
