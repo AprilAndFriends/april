@@ -459,11 +459,7 @@ namespace april
 				}
 			}
 			// rendering
-			//d3dDevice->BeginScene();
-			if (mUpdateCallback != NULL)
-			{
-				(*mUpdateCallback)(k);
-			}
+			bool result = performUpdate(k);
 #ifndef _DEBUG
 			setWindowTitle(mTitle);
 #else
@@ -479,14 +475,14 @@ namespace april
 				fps++;
 			}
 #endif			
-			//d3dDevice->EndScene();
 			april::rendersys->presentFrame();
 		}
 	}
 
-	void Win32Window::updateOneFrame()
+	bool Win32Window::updateOneFrame()
 	{
 		// TODO
+		return true;
 	}
 	
 	void* Win32Window::getIDFromBackend()

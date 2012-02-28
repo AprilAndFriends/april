@@ -35,7 +35,7 @@ namespace april
 		
 		// implementations
 		void enterMainLoop();
-		void updateOneFrame();
+		bool updateOneFrame();
 		void terminateMainLoop();
 		void destroyWindow();
 		bool isRunning() { return mRunning; }

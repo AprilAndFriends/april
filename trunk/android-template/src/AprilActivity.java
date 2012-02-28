@@ -1,5 +1,7 @@
 package net.sourceforge.april;
 
+// version 1.5
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -17,8 +19,9 @@ class AprilJNI
 	public static String SystemPath;
 	public static AprilActivity Activity;
 	public static native void init(Object activity, String[] args, String path);
-	public static native void render();
+	public static native boolean render();
 	public static native void destroy();
+	public static native boolean onQuit();
 	public static native void onRestart();
 	public static native void onMouseDown(float x, float y, int button);
 	public static native void onMouseUp(float x, float y, int button);
@@ -57,6 +60,7 @@ public class AprilActivity extends Activity
 	{
 		super.onRestart();
 		AprilJNI.onRestart();
+		this.setContentView(null);
 	}
 
 	@Override
@@ -79,12 +83,6 @@ public class AprilActivity extends Activity
 		super.onPause();
 		this.glView.onPause();
 	}
-
-	@Override
-	public void onBackPressed()
-	{
-		// prevents accidental pressing of back key to mess with the application
-	}
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -99,10 +97,24 @@ public class AprilActivity extends Activity
 	}
 	
 	@Override
+	public boolean dispatchKeyEvent(KeyEvent event)
+	{
+		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && AprilJNI.onQuit())
+		{
+			this.finish();
+			return false;    
+		}
+        return super.dispatchKeyEvent(event);
+	}
+	
+	@Override
 	public void onWindowFocusChanged(boolean hasFocus)
 	{
 		super.onWindowFocusChanged(hasFocus);
-		AprilJNI.onFocusChange(hasFocus);
+		if (!this.isFinishing())
+		{
+			AprilJNI.onFocusChange(hasFocus);
+		}
 	}
 
 	@Override
@@ -160,7 +172,10 @@ class AprilRenderer implements GLSurfaceView.Renderer
 	
 	public void onDrawFrame(GL10 gl)
 	{
-		AprilJNI.render();
+		if (!AprilJNI.render())
+		{
+			AprilJNI.Activity.finish();
+		}
 	}
 	
 }

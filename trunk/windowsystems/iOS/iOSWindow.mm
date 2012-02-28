@@ -109,7 +109,7 @@ namespace april
         exit(-1);
     }
 	
-	void iOSWindow::updateOneFrame()
+	bool iOSWindow::updateOneFrame()
 	{
 		// call input events
 		InputEvent* e;
@@ -118,7 +118,7 @@ namespace april
 			e->execute();
 			delete e;
 		}
-		performUpdate(mTimer.diff(true));	
+		return performUpdate(mTimer.diff(true));	
 	}
 
     void iOSWindow::terminateMainLoop()
