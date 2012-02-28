@@ -20,6 +20,10 @@ namespace april
 
 	TextureManager::~TextureManager()
 	{
+		while (mTextures.size() > 0)
+		{
+			delete mTextures[0];
+		}
 	}
 
 	void TextureManager::registerTexture(Texture* texture)
