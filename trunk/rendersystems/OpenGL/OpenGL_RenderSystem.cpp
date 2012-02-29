@@ -38,6 +38,7 @@
 #endif
 
 #include <gtypes/Vector2.h>
+#include <hltypes/exception.h>
 #include <hltypes/hltypesUtil.h>
 
 #include "ImageSource.h"
@@ -451,7 +452,7 @@ namespace april
 	
 	void OpenGL_RenderSystem::setColorMode(ColorMode mode)
 	{
-		throw "NOT IMPLEMENTED";
+		throw hl_exception("NOT IMPLEMENTED");
 	}
 	
 	void OpenGL_RenderSystem::setTextureFilter(TextureFilter filter)
