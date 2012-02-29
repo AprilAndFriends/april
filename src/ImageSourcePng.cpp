@@ -44,7 +44,7 @@ namespace april
 	{
 		if (this->data != NULL)
 		{
-			delete[] this->data;
+			delete [] this->data;
 		}
 	}
 
@@ -100,7 +100,7 @@ namespace april
 			img->format = (img->bpp == 4 ? AF_RGBA : AF_RGB);
 			// clean up
 			png_destroy_read_struct(&pngPtr, &infoPtr, &endInfo);
-			delete[] rowPointers;
+			delete [] rowPointers;
 		}
 		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
 		{
@@ -126,7 +126,7 @@ namespace april
 				ptr = imageData + i * 3 * cInfo.output_width;
 				jpeg_read_scanlines(&cInfo, &ptr, 1);
 			}
-			delete[] compressedData;
+			delete [] compressedData;
 			// assign ImageSource data
 			img->data = imageData;
 			img->w = cInfo.output_width;
