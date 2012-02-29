@@ -437,24 +437,24 @@ namespace april
 	{
 #if !defined(__APPLE__) || defined(__APPLE__) && (TARGET_OS_MAC) && !(TARGET_OS_IPHONE)
 		// desktop
-	#ifdef HAVE_SDL
+#ifdef HAVE_SDL
 		if (winsysname == "SDL")
 		{
 			return new SDLWindow(w, h, fullscreen, title);
 		}
-	#endif
-	#ifdef _WIN32
+#endif
+#ifdef _WIN32
 		if (winsysname == "Win32")
 		{
 			return new Win32Window(w, h, fullscreen, title);
 		}
-	#endif
-	#ifdef _ANDROID
+#endif
+#ifdef _ANDROID
 		if (winsysname == "AndroidJNI")
 		{
 			return new AndroidJNIWindow(w, h, fullscreen, title);
 		}
-	#endif
+#endif
 		
 #elif (TARGET_OS_IPHONE)
 		// iOS

@@ -360,7 +360,11 @@ namespace april
 #if TARGET_OS_IPHONE
 		return;
 #elif defined(_WIN32)
+#ifndef HAVE_SDL
 		window = createAprilWindow("Win32", w, h, fullscreen, title);
+#else
+		window = createAprilWindow("SDL", w, h, fullscreen, title);
+#endif
 #elif defined(_ANDROID)
 		window = createAprilWindow("AndroidJNI", w, h, fullscreen, title);
 #else

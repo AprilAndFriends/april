@@ -48,6 +48,12 @@
     <Filter Include="Header Files\windowsystems\AndroidJNI">
       <UniqueIdentifier>{3bb5b83b-c0e7-420e-b268-2972cb7c22a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\windowsystems\SDL">
+      <UniqueIdentifier>{5291bb52-c4ba-4f97-b7f4-7dab7d77151b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\windowsystems\SDL">
+      <UniqueIdentifier>{5f7b44b9-42a2-42b2-8ae7-6324083d850c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -119,6 +125,9 @@
     <ClCompile Include="src\TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="windowsystems\SDL\SDLWindow.cpp">
+      <Filter>Source Files\windowsystems\SDL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -180,6 +189,9 @@
     </ClInclude>
     <ClInclude Include="include\april\TextureManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\SDL\SDLWindow.h">
+      <Filter>Header Files\windowsystems\SDL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
