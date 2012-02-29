@@ -32,7 +32,7 @@
 		7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
 		7FC8FA29122FA58F0092964C /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8FA28122FA58F0092964C /* Timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FC8FA76122FACA30092964C /* TimerSDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC8FA75122FACA30092964C /* TimerSDL.cpp */; };
-		C9313D5914FE5EE9003BC7AB /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9313D4C14FE5CC8003BC7AB /* SDL.framework */; };
+		C9313EB914FE64CE003BC7AB /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9313EB814FE64CE003BC7AB /* SDL.framework */; };
 		C9391E4B14FCCA5100C14F41 /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9391E4A14FCCA5100C14F41 /* TextureManager.cpp */; };
 		C9391E4C14FCCA5100C14F41 /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9391E4A14FCCA5100C14F41 /* TextureManager.cpp */; };
 		C9391E4E14FCCA7300C14F41 /* TextureManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C9391E4D14FCCA7300C14F41 /* TextureManager.h */; };
@@ -96,8 +96,7 @@
 		7FC8FA75122FACA30092964C /* TimerSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerSDL.cpp; path = src/TimerSDL.cpp; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C9313D4A14FE5C7A003BC7AB /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../lib/macosx/SDL.framework; sourceTree = "<group>"; };
-		C9313D4C14FE5CC8003BC7AB /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../lib/mac/SDL.framework; sourceTree = "<group>"; };
+		C9313EB814FE64CE003BC7AB /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../lib/mac/SDL.framework; sourceTree = "<group>"; };
 		C9391E4A14FCCA5100C14F41 /* TextureManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureManager.cpp; path = src/TextureManager.cpp; sourceTree = "<group>"; };
 		C9391E4D14FCCA7300C14F41 /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureManager.h; path = include/april/TextureManager.h; sourceTree = "<group>"; };
 		C960EBE014EAA47700B8B30D /* main_mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main_mac.mm; path = src/main_mac.mm; sourceTree = "<group>"; };
@@ -107,7 +106,6 @@
 		C9C04F8E14BB1091005BD333 /* PixelShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelShader.h; path = include/april/PixelShader.h; sourceTree = "<group>"; };
 		C9C04F8F14BB1091005BD333 /* VertexShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VertexShader.h; path = include/april/VertexShader.h; sourceTree = "<group>"; };
 		C9C04F9214BB109B005BD333 /* VertexShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VertexShader.cpp; path = src/VertexShader.cpp; sourceTree = "<group>"; };
-		D186222214F957B800639D7C /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = "../../../Library/Developer/Xcode/DerivedData/Strix-avprgfkxwbppfxhiluxmiwiuhmgi/Build/Products/Debug-LLVM/SDL.framework"; sourceTree = "<group>"; };
 		D1981C30140F824B0057C3AF /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1981C4E140F849A0057C3AF /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		D1981C50140F84A10057C3AF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -134,7 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9313D5914FE5EE9003BC7AB /* SDL.framework in Frameworks */,
+				C9313EB914FE64CE003BC7AB /* SDL.framework in Frameworks */,
 				7F42F83211EB1A9700B1C1DF /* gtypes.framework in Frameworks */,
 				7F42F83411EB1A9700B1C1DF /* hltypes.framework in Frameworks */,
 				7F42FACD11EB341E00B1C1DF /* OpenGL.framework in Frameworks */,
@@ -157,8 +155,6 @@
 		0867D691FE84028FC02AAC07 /* libapril */ = {
 			isa = PBXGroup;
 			children = (
-				C9313D4C14FE5CC8003BC7AB /* SDL.framework */,
-				C9313D4A14FE5C7A003BC7AB /* SDL.framework */,
 				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				7FA3ED1111F9813E001D1DDD /* Window Systems */,
 				7F42F7AE11EB185F00B1C1DF /* Render Systems */,
@@ -182,7 +178,7 @@
 		1058C7B0FEA5585E11CA2CBB /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				D186222214F957B800639D7C /* SDL.framework */,
+				C9313EB814FE64CE003BC7AB /* SDL.framework */,
 				7F42FAD411EB342900B1C1DF /* Cocoa.framework */,
 				7F42FACC11EB341E00B1C1DF /* OpenGL.framework */,
 				7F42F83111EB1A9700B1C1DF /* gtypes.framework */,
