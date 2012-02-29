@@ -164,7 +164,7 @@ namespace april
 	
 	bool RAMTexture::load()
 	{
-		if (!mBuffer)
+		if (mBuffer == NULL)
 		{
 			april::log("loading RAM texture '" + mFilename + "'");
 			mBuffer = loadImage(mFilename);
@@ -177,7 +177,7 @@ namespace april
 	
 	void RAMTexture::unload()
 	{
-		if (mBuffer)
+		if (mBuffer != NULL)
 		{
 			april::log("unloading RAM texture '" + mFilename + "'");
 			delete mBuffer;
@@ -192,7 +192,7 @@ namespace april
 	
 	Color RAMTexture::getPixel(int x, int y)
 	{
-		if (!mBuffer)
+		if (mBuffer == NULL)
 		{
 			load();
 		}
@@ -202,7 +202,7 @@ namespace april
 	
 	void RAMTexture::setPixel(int x, int y, Color c)
 	{
-		if (!mBuffer)
+		if (mBuffer == NULL)
 		{
 			load();
 		}
@@ -212,7 +212,7 @@ namespace april
 	
 	Color RAMTexture::getInterpolatedPixel(float x, float y)
 	{
-		if (!mBuffer)
+		if (mBuffer == NULL)
 		{
 			load();
 		}
@@ -222,7 +222,7 @@ namespace april
 	
 	int RAMTexture::getSizeInBytes()
 	{
-		return (mWidth * mHeight * 3);
+		return (mWidth * mHeight * 3); // TODO - should use BPP instead of 3?
 	}
 
 }

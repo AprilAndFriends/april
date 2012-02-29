@@ -111,7 +111,7 @@ namespace april
 		unsigned char* clearColor = new unsigned char[w * h * 4];
 		memset(clearColor, 0, sizeof(unsigned char) * w * h * 4);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, clearColor);
-		delete clearColor;
+		delete [] clearColor;
 	}
 
 	OpenGL_Texture::~OpenGL_Texture()
@@ -149,7 +149,7 @@ namespace april
 		}
 		glBindTexture(GL_TEXTURE_2D, mTexId);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
-		delete writeData;
+		delete [] writeData;
 	}
 	
 	void OpenGL_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
@@ -162,7 +162,7 @@ namespace april
 		glReadPixels(0, 0, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
 		glBindTexture(GL_TEXTURE_2D, mTexId);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
-		delete writeData;
+		delete [] writeData;
 		//*/
 	}
 
@@ -191,7 +191,7 @@ namespace april
 		}
 		glBindTexture(GL_TEXTURE_2D, mTexId);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
-		delete writeData;
+		delete [] writeData;
 	}
 
 	void OpenGL_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
