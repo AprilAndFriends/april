@@ -2,14 +2,16 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.31
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+
 #include <stdio.h>
 
+#include <hltypes/exception.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
@@ -90,7 +92,7 @@ namespace april
 		}
 		if (value.size() != 8 && value.size() != 10)
 		{
-			throw "Color format must be either 0xRRGGBBAA or 0xRRGGBB";
+			throw hl_exception("Color format must be either 0xRRGGBBAA or 0xRRGGBB");
 		}
 		this->r = (unsigned char)hexstr_to_int(value(2, 2));
 		this->g = (unsigned char)hexstr_to_int(value(4, 2));
