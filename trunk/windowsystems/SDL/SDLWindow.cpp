@@ -18,7 +18,13 @@
 #elif _OPENGLES1
 #include <GLES/gl.h>
 #else
-#include <GL/gl.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <gl/GL.h>
 #endif
 
 #include <SDL/SDL.h>
