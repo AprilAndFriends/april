@@ -467,6 +467,8 @@ namespace april
 	{
 #ifdef _WIN32
 		return gvec2((float)GetSystemMetrics(SM_CXSCREEN), (float)GetSystemMetrics(SM_CYSCREEN));
+#elif defined(_ANDROID)
+		return gvec2(480.0f, 320.0f); // TODO
 #elif (TARGET_OS_IPHONE)
 		UIScreen* mainScreen = [UIScreen mainScreen];
 		float scale = 1;
@@ -484,9 +486,8 @@ namespace april
 		NSScreen* mainScreen = [NSScreen mainScreen];
 		NSRect rect = [mainScreen frame];
 		return gvec2(rect.size.width, rect.size.height);
-#else
-		return gvec2(1024, 768);
 #endif
+		return gvec2(1024.0f, 768.0f);
 	}
 	
 	static MessageBoxButton messageBox_impl(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))

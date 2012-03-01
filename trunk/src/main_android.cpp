@@ -49,7 +49,17 @@ namespace april
 		str = env->GetStringUTFChars(path, NULL);
 		april::systemPath = hstr(str);
 		env->ReleaseStringUTFChars(path, str);
-		hresource::setArchive(args[0]);
+		if (!hresource::hasZip()) // if not using APK as data file archive
+		{
+			// set the resources CWD
+			hstr packageName = get_basedir(april::systemPath).split("/", -1, true).pop_last();
+			hresource::setCwd("/mnt/sdcard/Android/data/" + packageName); // I am so going to hell for this one
+		}
+		else
+		{
+			// using current APK file as archive
+			hresource::setArchive(args[0]);
+		}
 		april_init(args);
 	}
 
