@@ -14,6 +14,7 @@
 #define RESOURCE_PATH "../media/"
 #endif
 
+#include <april/april.h>
 #include <april/main.h>
 #include <april/RenderSystem.h>
 #include <april/Window.h>
@@ -44,7 +45,7 @@ void april_init(const harray<hstr>& args)
 {
 	april::init();
 	april::createRenderSystem("");
-	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, 0, "april: Simple 3D");
+	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "april: Simple 3D");
 	april::rendersys->getWindow()->setUpdateCallback(render);
 	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture");
 	v[0].x = -1.0f;	v[0].y = 1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;

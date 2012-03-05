@@ -14,10 +14,11 @@
 #define RESOURCE_PATH "../media/"
 #endif
 
+#include <april/april.h>
 #include <april/main.h>
 #include <april/RenderSystem.h>
-#include <april/Window.h>
 #include <april/Timer.h>
+#include <april/Window.h>
 #include <aprilutil/StaticMesh.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector3.h>
