@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 1.51
 /// 
 /// @section LICENSE
 /// 
@@ -30,8 +30,6 @@
 
 namespace april
 {
-	extern hstr systemPath;
-
 	class ImageSource;
 	class TextureManager;
 	class Window;
@@ -238,17 +236,6 @@ namespace april
 		
 	};
 
-	aprilFnExport void setLogFunction(void (*fnptr)(chstr));
-	aprilFnExport void init();
-	aprilFnExport void createRenderSystem(chstr options);
-	aprilFnExport void createRenderTarget(int w, int h, bool fullscreen, chstr title);
-	aprilFnExport void destroy();
-	aprilFnExport void addTextureExtension(chstr extension);
-	aprilFnExport harray<hstr> getTextureExtensions();
-	aprilFnExport void setTextureExtensions(const harray<hstr>& exts);
-	aprilFnExport void setTextureExtensions(hstr comma_seperated_exts);
-	aprilFnExport void log(chstr message, chstr prefix = "[april] ");
-	
 	// global rendersys shortcut variable
 	aprilFnExport extern april::RenderSystem* rendersys;
 	

@@ -21,6 +21,7 @@ namespace april
 {
 	void* javaVM = NULL;
 	jobject aprilActivity = NULL;
+	gvec2 androidResolution;
 	static gvec2 cursorPosition;
 	static april::Timer globalTimer;
 	static float lastTime = 0.0f;
@@ -29,7 +30,7 @@ namespace april
 	{
 		if (april::rendersys != NULL)
 		{
-			april::log("Creating Android JNI Windowsystem");
+			april::log("Creating Android JNI Windowsystem (" + hstr(w) + ", " + hstr(h) + ")");
 		}
 		mWidth = w;
 		mHeight = h;

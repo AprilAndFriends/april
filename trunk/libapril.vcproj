@@ -463,6 +463,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\april.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Color.cpp"
 				>
 			</File>
@@ -480,10 +484,6 @@
 			</File>
 			<File
 				RelativePath=".\src\ImageSourcePng.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\main_win32.cpp"
 				>
 			</File>
 			<File
@@ -562,12 +562,28 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="platforms"
+				>
+				<File
+					RelativePath=".\platforms\main_win32.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\platforms\platform_win32.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\include\april\april.h"
+				>
+			</File>
 			<File
 				RelativePath=".\include\april\aprilExport.h"
 				>
@@ -590,6 +606,10 @@
 			</File>
 			<File
 				RelativePath=".\include\april\PixelShader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\april\Platform.h"
 				>
 			</File>
 			<File

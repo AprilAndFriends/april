@@ -13,6 +13,7 @@
 #include <d3d9.h>
 #include <IL/il.h>
 
+#include "april.h"
 #include "DirectX9_RenderSystem.h"
 #include "DirectX9_Texture.h"
 #include "ImageSource.h"

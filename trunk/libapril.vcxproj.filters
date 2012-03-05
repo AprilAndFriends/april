@@ -54,6 +54,9 @@
     <Filter Include="Source Files\windowsystems\SDL">
       <UniqueIdentifier>{5f7b44b9-42a2-42b2-8ae7-6324083d850c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\platforms">
+      <UniqueIdentifier>{4849144f-915b-416b-955e-a300028d705b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -75,9 +78,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ImageSource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main_win32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PixelShader.cpp">
@@ -110,9 +110,6 @@
     <ClCompile Include="src\TimerPosix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\main_android.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="windowsystems\AndroidJni\AndroidJNIWindow.cpp">
       <Filter>Source Files\windowsystems\AndroidJNI</Filter>
     </ClCompile>
@@ -127,6 +124,21 @@
     </ClCompile>
     <ClCompile Include="windowsystems\SDL\SDLWindow.cpp">
       <Filter>Source Files\windowsystems\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\main_android.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\main_win32.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\platform_android.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\platform_win32.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="src\april.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +204,12 @@
     </ClInclude>
     <ClInclude Include="windowsystems\SDL\SDLWindow.h">
       <Filter>Header Files\windowsystems\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\april.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

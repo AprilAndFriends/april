@@ -9,6 +9,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#include <april/april.h>
 #include <hltypes/hresource.h>
 
 #include "StaticMesh.h"
@@ -74,7 +75,7 @@ namespace april
         char buffer[256];
         hstr command;
         
-        april::log("[aprilutil] loading mesh '" + meshPath + "'");
+        april::log("[aprilutil] loading mesh '" + meshPath + "'", "[aprilutil] ");
         
 		//hresource file(meshPath);
         fp = fopen(meshPath.c_str(), "rb");
@@ -232,4 +233,5 @@ namespace april
 	    exception("'" + filename + "' is faulty wavefront file!", source_file, line)
 	{
 	}
+
 }

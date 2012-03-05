@@ -14,7 +14,6 @@
 #if __APPLE__
 #include <TargetConditionals.h>
 #endif
-
 #if TARGET_OS_IPHONE
 #include <OpenGLES/ES1/gl.h>
 #include <OpenGLES/ES1/glext.h>
@@ -41,6 +40,7 @@
 #include <hltypes/exception.h>
 #include <hltypes/hltypesUtil.h>
 
+#include "april.h"
 #include "ImageSource.h"
 #include "Keys.h"
 #include "OpenGL_RenderSystem.h"

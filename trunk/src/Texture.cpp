@@ -13,6 +13,7 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
+#include "april.h"
 #include "Color.h"
 #include "ImageSource.h"
 #include "Texture.h"

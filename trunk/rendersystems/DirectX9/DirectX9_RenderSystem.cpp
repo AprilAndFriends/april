@@ -17,6 +17,7 @@
 #include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
 
+#include "april.h"
 #include "DirectX9_PixelShader.h"
 #include "DirectX9_RenderSystem.h"
 #include "DirectX9_Texture.h"
