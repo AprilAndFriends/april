@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.5
+/// @version 1.51
 /// 
 /// @section LICENSE
 /// 
@@ -216,7 +216,7 @@ namespace april
 	};
 	
 	aprilFnExport Window* createAprilWindow(chstr window_system_name, int w, int h, bool fullscreen, chstr title);
-	aprilFnExport gvec2 getDesktopResolution();
+	aprilFnExport DEPRECATED_ATTRIBUTE gvec2 getDesktopResolution();
 	aprilFnExport SystemInfo& getSystemInfo();
 	aprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN, hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL);
 

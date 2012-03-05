@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.inputmethod.InputMethodManager;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -18,11 +19,10 @@ class AprilJNI
 	public static String ApkPath;
 	public static String SystemPath;
 	public static AprilActivity Activity;
-	public static native void init(Object activity, String[] args, String path);
+	public static native void init(Object activity, String[] args, String path, int width, int height);
 	public static native boolean render();
 	public static native void destroy();
 	public static native boolean onQuit();
-	public static native void onRestart();
 	public static native void onMouseDown(float x, float y, int button);
 	public static native void onMouseUp(float x, float y, int button);
 	public static native void onMouseMove(float x, float y);
@@ -30,6 +30,14 @@ class AprilJNI
 	public static native boolean onKeyUp(int keyCode);
 	public static native void onFocusChange(boolean focused);
 	public static native void onLowMemory();
+	
+	public static native void activityOnCreate();
+	public static native void activityOnStart();
+	public static native void activityOnResume();
+	public static native void activityOnPause();
+	public static native void activityOnStop();
+	public static native void activityOnDestroy();
+	public static native void activityOnRestart();
 	
 }
 
@@ -46,6 +54,7 @@ public class AprilActivity extends Activity
 		AprilJNI.Activity = this;
 		this.glView = new AprilGLSurfaceView(this);
 		this.setDefaultKeyMode(DEFAULT_KEYS_DISABLE);
+		AprilJNI.activityOnCreate();
 	}
 	
 	@Override
@@ -53,28 +62,15 @@ public class AprilActivity extends Activity
 	{
 		super.onStart();
 		this.setContentView(this.glView);
+		AprilJNI.activityOnStart();
 	}
 
-	@Override
-	protected void onRestart()
-	{
-		super.onRestart();
-		AprilJNI.onRestart();
-		this.setContentView(null);
-	}
-
-	@Override
-	protected void onStop()
-	{
-		AprilJNI.destroy();
-		super.onStop();
-	}
-	
 	@Override
 	protected void onResume()
 	{
 		super.onResume();
 		this.glView.onResume();
+		AprilJNI.activityOnResume();
 	}
 	
 	@Override
@@ -82,8 +78,32 @@ public class AprilActivity extends Activity
 	{
 		super.onPause();
 		this.glView.onPause();
+		AprilJNI.activityOnPause();
 	}
 	
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		AprilJNI.activityOnStop();
+		AprilJNI.destroy();
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		AprilJNI.activityOnDestroy();
+	}
+	
+	@Override
+	protected void onRestart()
+	{
+		super.onRestart();
+		AprilJNI.activityOnRestart();
+		//this.setContentView(null);
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
@@ -161,7 +181,9 @@ class AprilRenderer implements GLSurfaceView.Renderer
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
 		String args[] = {AprilJNI.ApkPath}; // adding argv[0]
-		AprilJNI.init(AprilJNI.Activity, args, AprilJNI.SystemPath);
+		DisplayMetrics metrics = new DisplayMetrics();
+		AprilJNI.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        AprilJNI.init(AprilJNI.Activity, args, AprilJNI.SystemPath, metrics.widthPixels, metrics.heightPixels);
 	}
 	
 	public void onSurfaceChanged(GL10 gl, int w, int h)

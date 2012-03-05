@@ -8,6 +8,8 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _WIN32
+
+#include "april.h"
 #include "RenderSystem.h"
 #include "Timer.h"
 

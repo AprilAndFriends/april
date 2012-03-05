@@ -12,6 +12,7 @@
 #include <d3d9.h>
 #include <d3dx9shader.h>
 
+#include "april.h"
 #include "DirectX9_PixelShader.h"
 #include "DirectX9_RenderSystem.h"
 

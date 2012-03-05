@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.31
+/// @version 1.5
 /// 
 /// @section LICENSE
 /// 
@@ -14,6 +14,9 @@
 #endif
 #ifdef _WIN32
 #include <windows.h>
+#endif
+#ifdef _ANDROID
+#include <jni.h>
 #endif
 
 #if !defined(__APPLE__) || defined(__APPLE__) && (TARGET_OS_MAC) && !(TARGET_OS_IPHONE)
@@ -42,9 +45,20 @@
 	#import <AppKit/NSCursor.h>
 #endif
 
-#include "Window.h"
+#include "april.h"
 #include "Keys.h"
+#include "Platform.h"
 #include "RenderSystem.h"
+#include "Window.h"
+
+#ifdef _ANDROID
+namespace april
+{
+	extern void* javaVM;
+	extern jobject aprilActivity;
+	extern gvec2 androidResolution;
+}
+#endif
 
 
 #if TARGET_OS_IPHONE
@@ -160,7 +174,6 @@ namespace april
 	
 	Window::~Window()
 	{
-	
 	}
 
 	void Window::setUpdateCallback(bool (*callback)(float))
@@ -465,29 +478,7 @@ namespace april
 	
 	gvec2 getDesktopResolution()
 	{
-#ifdef _WIN32
-		return gvec2((float)GetSystemMetrics(SM_CXSCREEN), (float)GetSystemMetrics(SM_CYSCREEN));
-#elif defined(_ANDROID)
-		return gvec2(480.0f, 320.0f); // TODO
-#elif (TARGET_OS_IPHONE)
-		UIScreen* mainScreen = [UIScreen mainScreen];
-		float scale = 1;
-#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
-		if ([mainScreen respondsToSelector:@selector(scale)])
-		{
-			scale = [mainScreen scale];
-		}
-#endif
-		// flipped width and height, to get a 4:3 ratio instead of 3:4
-		int w = mainScreen.bounds.size.height * scale;
-		int h = mainScreen.bounds.size.width * scale;
-		return gvec2(w, h);
-#elif (TARGET_OS_MAC)
-		NSScreen* mainScreen = [NSScreen mainScreen];
-		NSRect rect = [mainScreen frame];
-		return gvec2(rect.size.width, rect.size.height);
-#endif
-		return gvec2(1024.0f, 768.0f);
+		return april::getDisplayResolution();
 	}
 	
 	static MessageBoxButton messageBox_impl(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
@@ -745,8 +736,6 @@ namespace april
 			return AMSGBTN_YES;
 		}
 		return AMSGBTN_OK;
-//#elif defined(HAVE_MARMLADE)
-// TODO
 #else
 		april::log(hsprintf("== %s ==", title.c_str()));
 		april::log(text);
@@ -756,7 +745,7 @@ namespace april
 							   buttonMask & AMSGBTN_YES ? '+' : '-',
 							   buttonMask & AMSGBTN_NO ? '+' : '-'));
                    
-		// some dummy returnvalues
+		// some dummy return values
 		if (buttonMask & AMSGBTN_CANCEL)
 		{
             if (callback != NULL)

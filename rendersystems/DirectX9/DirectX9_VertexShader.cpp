@@ -11,6 +11,7 @@
 
 #include <d3dx9shader.h>
 
+#include "april.h"
 #include "DirectX9_RenderSystem.h"
 #include "DirectX9_VertexShader.h"
 

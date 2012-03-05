@@ -15,6 +15,7 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hthread.h>
 
+#include "april.h"
 #include "RenderSystem.h"
 #include "Timer.h"
 #include "Win32Window.h"
