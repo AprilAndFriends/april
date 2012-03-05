@@ -1,6 +1,6 @@
 package net.sourceforge.april;
 
-// version 1.5
+// version 1.51
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -16,9 +16,10 @@ import android.view.MotionEvent;
 
 class AprilJNI
 {
-	public static String ApkPath;
-	public static String SystemPath;
-	public static AprilActivity Activity;
+	public static String ApkPath = "";
+	public static String SystemPath = ".";
+	public static AprilActivity Activity = null;
+	public static boolean Running = false;
 	public static native void init(Object activity, String[] args, String path, int width, int height);
 	public static native boolean render();
 	public static native void destroy();
@@ -48,6 +49,11 @@ public class AprilActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		if (AprilJNI.Running)
+		{
+			AprilJNI.destroy(); // possibly from a previous onPause/onStop
+		}
+		AprilJNI.Running = false;
 		super.onCreate(savedInstanceState);
 		AprilJNI.ApkPath = this.getPackageResourcePath();
 		AprilJNI.SystemPath = this.getFilesDir().getAbsolutePath();
@@ -76,24 +82,26 @@ public class AprilActivity extends Activity
 	@Override
 	protected void onPause()
 	{
-		super.onPause();
 		this.glView.onPause();
 		AprilJNI.activityOnPause();
+		super.onPause();
 	}
 	
 	@Override
 	protected void onStop()
 	{
-		super.onStop();
 		AprilJNI.activityOnStop();
-		AprilJNI.destroy();
+		super.onStop();
 	}
 	
 	@Override
 	public void onDestroy()
 	{
-		super.onDestroy();
 		AprilJNI.activityOnDestroy();
+		AprilJNI.destroy();
+		super.onDestroy();
+		System.runFinalizersOnExit(true);
+		System.exit(0);
 	}
 	
 	@Override
@@ -140,8 +148,8 @@ public class AprilActivity extends Activity
 	@Override
 	public void onLowMemory()
 	{
-		super.onLowMemory();
 		AprilJNI.onLowMemory();
+		super.onLowMemory();
 	}
 	
 }
@@ -180,10 +188,11 @@ class AprilRenderer implements GLSurfaceView.Renderer
 {
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
-		String args[] = {AprilJNI.ApkPath}; // adding argv[0]
 		DisplayMetrics metrics = new DisplayMetrics();
 		AprilJNI.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        AprilJNI.init(AprilJNI.Activity, args, AprilJNI.SystemPath, metrics.widthPixels, metrics.heightPixels);
+		String args[] = {AprilJNI.ApkPath}; // adding argv[0]
+		AprilJNI.init(AprilJNI.Activity, args, AprilJNI.SystemPath, metrics.widthPixels, metrics.heightPixels);
+		AprilJNI.Running = true;
 	}
 	
 	public void onSurfaceChanged(GL10 gl, int w, int h)

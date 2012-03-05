@@ -13,9 +13,10 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hthread.h>
 
+#include "AndroidJniWindow.h"
+#include "april.h"
 #include "RenderSystem.h"
 #include "Timer.h"
-#include "AndroidJniWindow.h"
 
 namespace april
 {
