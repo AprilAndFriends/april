@@ -14,6 +14,7 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
+#include "april.h"
 #include "Keys.h"
 #include "main.h"
 #include "RenderSystem.h"
@@ -60,7 +61,7 @@ namespace april
 			// using current APK file as archive
 			hresource::setArchive(args[0]);
 		}
-		april::androidResolution.set((float)hmax((int)width, (int)height), (float)hmin((int)width, (int)height));
+		april::androidResolution.set((float)hmax(width, height), (float)hmin(width, height));
 		april_init(args);
 	}
 
@@ -150,6 +151,10 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android ActivityOnPause()");
 #endif
+		if (april::rendersys != NULL)
+		{
+			//april::rendersys->getTextureManager()->unloadTextures();
+		}
 	}
 
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
@@ -171,10 +176,6 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android ActivityOnRestart()");
 #endif
-		if (april::rendersys != NULL)
-		{
-			april::rendersys->getTextureManager()->unloadTextures();
-		}
 	}
 
 #define METHOD_COUNT 18 // make sure this fits
@@ -202,6 +203,9 @@ namespace april
 	
 	jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	{
+#ifdef _DEBUG
+		april::log("running JNI_OnLoad");
+#endif
 		april::javaVM = (void*)vm;
 		JNIEnv* env;
 		if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK)
@@ -213,6 +217,9 @@ namespace april
 		{
 			return -1;
 		}
+#ifdef _DEBUG
+		april::log("finished JNI_OnLoad");
+#endif
 		return JNI_VERSION_1_6;
 	}
 }
