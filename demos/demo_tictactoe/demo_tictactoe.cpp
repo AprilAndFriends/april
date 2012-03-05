@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 
+#include <april/april.h>
 #include <april/main.h>
 #include <april/RenderSystem.h>
 #include <april/Window.h>
@@ -307,7 +308,6 @@ void OnMouseUp(float x, float y, int button)
 		victory = 7;
 	if (positions[0][2] == 2 && positions[1][1] == 2 && positions[2][0] == 2)
 		victory = 8;
-	
 }
 
 void april_init(const harray<hstr>& args)
