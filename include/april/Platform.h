@@ -21,7 +21,6 @@
 namespace april
 {
 	aprilFnExport gvec2 getDisplayResolution();
-
 }
 
 #endif

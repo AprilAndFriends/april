@@ -12,9 +12,9 @@ Copyright (c) 2010 Ivan Vucica (ivan@vucica.net)                                
 \************************************************************************************/
 
 #import <Cocoa/Cocoa.h>
-#import "RenderSystem.h"
-#import "Window.h"
-#import "main.h"
+#include "RenderSystem.h"
+#include "Window.h"
+#include "main.h"
 
 static int gArgc=0;
 static char** gArgv;
