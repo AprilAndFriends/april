@@ -10,13 +10,14 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/CAEAGLLayer.h>
+#import <hltypes/exception.h>
+#include <sys/sysctl.h>
 #import "AprilViewController.h"
 #import "EAGLView.h"
 #import "iOSWindow.h"
 #import "RenderSystem.h"
 #import "ApriliOSAppDelegate.h"
-#import <hltypes/exception.h>
-#include <sys/sysctl.h>
+#include "april.h"
 
 static ApriliOSAppDelegate *appDelegate;
 static UIWindow *window = 0;

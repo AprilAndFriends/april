@@ -18,6 +18,7 @@
 #import "EAGLView.h"
 #include "iOSWindow.h"
 #include "RenderSystem.h"
+#include "april.h"
 
 
 #define USE_DEPTH_BUFFER 0

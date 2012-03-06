@@ -36,6 +36,7 @@
 #include "SDLWindow.h"
 #include "Keys.h"
 #include "RenderSystem.h"
+#include "april.h"
 
 extern "C" int gAprilShouldInvokeQuitCallback;
 
