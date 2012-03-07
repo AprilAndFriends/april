@@ -409,7 +409,7 @@ namespace april
         unsigned char* temp = img->data + w * h * 4;
         
 	    glReadPixels(0, 0, w, h, (bpp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img->data);
-		for (int y = 0; y < h / 2; y++)
+		for_iter (y, 0, h / 2);
 		{
 			memcpy(temp, img->data + y * w * bpp, w * bpp);
 			memcpy(img->data + y * w * bpp, img->data + (h - y - 1) * w * bpp, w * bpp);
@@ -597,7 +597,7 @@ namespace april
 			mColorEnabled = true;
 			glEnableClientState(GL_COLOR_ARRAY);
 		}
-		for (int i = 0; i < nVertices; i++)
+		for_iter (i, 0, nVertices)
 		{
 			// making sure this is in AGBR order
 			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
