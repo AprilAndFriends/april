@@ -60,10 +60,10 @@ namespace april
 		// todo: hacky. input and output formats can be different, fix this in the future
 		if (_format == AF_BGRA)
 		{
-			int x, y;
 			unsigned char* o = (unsigned char*)output;
 			unsigned char* i = data;
-			for (y = 0; y < h; y++)
+			int x;
+			for_iter (y, 0, h)
 			{
 				for (x = 0; x < w; x++, o += 4, i += 4)
 				{
@@ -76,10 +76,10 @@ namespace april
 		}
 		else if (_format == AF_BGR)
 		{
-			int x, y;
 			unsigned char* o = (unsigned char*)output;
 			unsigned char* i = data;
-			for (y = 0; y < h; y++)
+			int x;
+			for_iter (y, 0, h)
 			{
 				for (x = 0; x < w; x++, o += 4, i += 3)
 				{
@@ -103,9 +103,10 @@ namespace april
 		w = hclamp(w, 1, this->w - x);
 		h = hclamp(h, 1, this->h - y);
 		unsigned char* ptr;
-		for (int j = 0; j < h; j++)
+		int i;
+		for_iter (j, 0, h)
 		{
-			for (int i = 0; i < w; i++)
+			for_iterx (i, 0, w)
 			{
 				ptr = &this->data[((x + i) + (y + j) * this->w) * this->bpp];
 				ptr[0] = c.r;
@@ -137,9 +138,10 @@ namespace april
 		unsigned char* c;
 		unsigned char* sc;
 		unsigned char a;
-		for (int j = 0; j < sh; j++)
+		int i;
+		for_iter (j, 0, sh)
 		{
-			for (int i = 0; i < sw; i++)
+			for_iterx (i, 0, sw)
 			{
 				c = &this->data[((x + i) + (y + j) * this->w) * this->bpp];
 				sc = &source->data[((sx + i) + (sy + j) * source->w) * source->bpp];
@@ -183,9 +185,10 @@ namespace april
 		int y0;
 		int x1;
 		int y1;
-		for (int j = 0; j < h; j++)
+		int i;
+		for_iter (j, 0, h)
 		{
-			for (int i = 0; i < w; i++)
+			for_iterx (i, 0, w)
 			{
 				c = &this->data[((x + i) + (y + j) * this->w) * this->bpp];
 				cx = sx + i * fw;

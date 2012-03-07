@@ -432,13 +432,13 @@ namespace april
 		unsigned char* src = (unsigned char*)rect.pBits;
 		int x;
 		memset(p, 255, img->w * img->h * 4 * sizeof(unsigned char));
-		for (int y = 0; y < img->h; y++)
+		for_iter (y, 0, img->h)
 		{
-			for (x = 0; x < img->w * bpp; x += bpp, p += bpp)
+			for_iterx_step (x, 0, img->w * bpp, bpp)
 			{
-				p[0] = src[x + 2];
-				p[1] = src[x + 1];
-				p[2] = src[x];
+				p[x] = src[x + 2];
+				p[x + 1] = src[x + 1];
+				p[x + 2] = src[x];
 			}
 			src += rect.Pitch;
 		}
@@ -541,12 +541,12 @@ namespace april
 		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
 		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
 		ColoredVertex* p = cv;
-		for (int i = 0; i < nVertices; i++, p++, v++)
+		for_iter (i, 0, nVertices)
 		{
-			p->x = v->x;
-			p->y = v->y;
-			p->z = v->z;
-			p->color = colorDx9;
+			p[i].x = v[i].x;
+			p[i].y = v[i].y;
+			p[i].z = v[i].z;
+			p[i].color = colorDx9;
 		}
 		d3dDevice->SetFVF(COLOR_FVF);
 		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
@@ -567,14 +567,14 @@ namespace april
 		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
 		ColoredTexturedVertex* p = ctv;
-		for (int i = 0; i < nVertices; i++, p++, v++)
+		for_iter (i, 0, nVertices)
 		{
-			p->x = v->x;
-			p->y = v->y;
-			p->z = v->z;
-			p->u = v->u;
-			p->v = v->v;
-			p->color = colorDx9;
+			p[i].x = v[i].x;
+			p[i].y = v[i].y;
+			p[i].z = v[i].z;
+			p[i].u = v[i].u;
+			p[i].v = v[i].v;
+			p[i].color = colorDx9;
 		}
 		d3dDevice->SetFVF(TEX_COLOR_FVF);
 		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
@@ -592,12 +592,12 @@ namespace april
 		}
 		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
 		ColoredVertex* p = cv;
-		for (int i = 0; i < nVertices; i++, p++, v++)
+		for_iter (i, 0, nVertices)
 		{
-			p->x = v->x;
-			p->y = v->y;
-			p->z = v->z;
-			p->color = UINT_RGBA_TO_ARGB(v->color);
+			p[i].x = v[i].x;
+			p[i].y = v[i].y;
+			p[i].z = v[i].z;
+			p[i].color = UINT_RGBA_TO_ARGB(v[i].color);
 		}
 		d3dDevice->SetFVF(COLOR_FVF);
 		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
@@ -611,14 +611,14 @@ namespace april
 	{
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
 		ColoredTexturedVertex* p = ctv;
-		for (int i = 0; i < nVertices; i++, p++, v++)
+		for_iter (i, 0, nVertices)
 		{
-			p->x = v->x;
-			p->y = v->y;
-			p->z = v->z;
-			p->u = v->u;
-			p->v = v->v;
-			p->color = UINT_RGBA_TO_ARGB(v->color);
+			p[i].x = v[i].x;
+			p[i].y = v[i].y;
+			p[i].z = v[i].z;
+			p[i].u = v[i].u;
+			p[i].v = v[i].v;
+			p[i].color = UINT_RGBA_TO_ARGB(v[i].color);
 		}
 		d3dDevice->SetFVF(TEX_COLOR_FVF);
 		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
@@ -672,7 +672,7 @@ namespace april
 			mBackBuffer = NULL;
 			while (((Win32Window*)mWindow)->isRunning())
 			{
-				for (i = 0; i < 10; i++)
+				for_iterx (i, 0, 10)
 				{
 					mWindow->doEvents();
 					Sleep(100);
@@ -716,7 +716,7 @@ namespace april
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)
 		{
-			for (int i = 0; i < 100; i++)
+			for_iter (i, 0, 100)
 			{
 				Sleep(1);
 				hr = d3dDevice->Present(NULL, NULL, NULL, NULL);
@@ -733,9 +733,9 @@ namespace april
 	{
 		// TODO - optimize to enumerate only once and then reuse
 		harray<DisplayMode> result;
-		unsigned int modecount = d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
+		unsigned int modeCount = d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
 		HRESULT hr;
-		for (unsigned int i = 0; i < modecount; i++)
+		for_itert (unsigned int, i, 0, modeCount)
 		{
 			D3DDISPLAYMODE displayMode;
 			hr = d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);

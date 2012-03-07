@@ -63,7 +63,7 @@ namespace april
 
 	void DirectX9_PixelShader::setConstantsB(const int* quadVectors, unsigned int quadCount)
 	{
-		for (unsigned int i = 0; i < quadCount; i++)
+		for_itert (unsigned int, i, 0, quadCount)
 		{
 			d3dDevice->SetPixelShaderConstantB(i, quadVectors + i * 4, 1);
 		}
@@ -71,7 +71,7 @@ namespace april
 
 	void DirectX9_PixelShader::setConstantsI(const int* quadVectors, unsigned int quadCount)
 	{
-		for (unsigned int i = 0; i < quadCount; i++)
+		for_itert (unsigned int, i, 0, quadCount)
 		{
 			d3dDevice->SetPixelShaderConstantI(i, quadVectors + i * 4, 1);
 		}
@@ -79,7 +79,7 @@ namespace april
 
 	void DirectX9_PixelShader::setConstantsF(const float* quadVectors, unsigned int quadCount)
 	{
-		for (unsigned int i = 0; i < quadCount; i++)
+		for_itert (unsigned int, i, 0, quadCount)
 		{
 			d3dDevice->SetPixelShaderConstantF(i, quadVectors + i * 4, 1);
 		}

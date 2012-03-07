@@ -1,7 +1,7 @@
 /// @file
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 1.51
 /// 
 /// @section LICENSE
 /// 
@@ -12,6 +12,7 @@
 #include <windows.h>
 
 #include <hltypes/harray.h>
+#include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
 #include "main.h"
@@ -25,7 +26,7 @@ int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(
     harray<hstr> args;
 	if (argv != NULL)
 	{
-		for (int i = 0; i < argc; i++)
+		for_iter (i, 0, argc)
 		{
 			args += argv[i];
 		}

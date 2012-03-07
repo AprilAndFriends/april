@@ -62,7 +62,7 @@ namespace april
 
 	void DirectX9_VertexShader::setConstantsB(const int* quadVectors, unsigned int quadCount)
 	{
-		for (unsigned int i = 0; i < quadCount; i++)
+		for_itert (unsigned int, i, 0, quadCount)
 		{
 			d3dDevice->SetVertexShaderConstantB(i, quadVectors + i * 4, 1);
 		}
@@ -70,7 +70,7 @@ namespace april
 
 	void DirectX9_VertexShader::setConstantsI(const int* quadVectors, unsigned int quadCount)
 	{
-		for (unsigned int i = 0; i < quadCount; i++)
+		for_itert (unsigned int, i, 0, quadCount)
 		{
 			d3dDevice->SetVertexShaderConstantI(i, quadVectors + i * 4, 1);
 		}
@@ -78,7 +78,7 @@ namespace april
 
 	void DirectX9_VertexShader::setConstantsF(const float* quadVectors, unsigned int quadCount)
 	{
-		for (unsigned int i = 0; i < quadCount; i++)
+		for_itert (unsigned int, i, 0, quadCount)
 		{
 			d3dDevice->SetVertexShaderConstantF(i, quadVectors + i * 4, 1);
 		}

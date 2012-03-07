@@ -205,7 +205,10 @@ namespace april
 		}
 		
 		WCHAR wtitle[256] = {0};
-		for (int i = 0; i < title.size(); i++) wtitle[i] = title[i];
+		for_iter (i, 0, title.size())
+		{
+			wtitle[i] = title[i];
+		}
 
 		DWORD style = (fullscreen ? WS_EX_TOPMOST | WS_POPUP : WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 		april::log(hsprintf("title: %s %d %d %d %d inst: %d", title.c_str(), x, y, w, h, hinst));
@@ -266,7 +269,7 @@ namespace april
 		chstr t = title;
 #endif
 		WCHAR wtitle[256] = {0};
-		for (int i = 0; i < t.size(); i++)
+		for_iter (i, 0, t.size())
 		{
 			wtitle[i] = t[i];
 		}
@@ -453,7 +456,7 @@ namespace april
 			if (!mActive)
 			{
 				k = 0;
-				for (int i = 0; i < 5; i++)
+				for_iter (i, 0, 5)
 				{
 					doEvents();
 					hthread::sleep(40.0f);

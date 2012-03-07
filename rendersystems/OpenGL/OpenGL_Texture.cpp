@@ -137,9 +137,9 @@ namespace april
 		// TODO - find a better and faster way to do this
 		unsigned char* writeData = new unsigned char[w * h * 4];
 		memset(writeData, 0, sizeof(unsigned char) * w * h * 4);
-		for (int j = 0; j < h; j++)
+		for_iter (j, 0, h)
 		{
-			for (int i = 0; i < w; i++)
+			for_iter (i, 0, w)
 			{
 				writeData[(i + j * w) * 4 + 0] = color.r;
 				writeData[(i + j * w) * 4 + 1] = color.g;
@@ -171,11 +171,11 @@ namespace april
 		// TODO - find a better and faster way to do this
 		unsigned char* writeData = new unsigned char[sw * sh * 4];
 		memset(writeData, 0, sizeof(unsigned char) * sw * sh * 4);
-		for (int j = 0; j < sh; j++)
+		for_iter (j, 0, sh)
 		{
-			for (int i = 0; i < sw; i++)
+			for_iter (i, 0, sw)
 			{
-				for (int k = 0; k < dataBpp; k++)
+				for_iter (k, 0, dataBpp)
 				{
 					writeData[(i + j * sw) * 4 + k] = data[(sx + i + (sy + j * dataWidth)) * dataBpp + k];
 				}

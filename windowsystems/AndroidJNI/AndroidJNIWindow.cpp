@@ -75,7 +75,7 @@ namespace april
 		if (!mActive)
 		{
 			k = 0;
-			for (int i = 0; i < 5; i++)
+			for_iter (i, 0, 5)
 			{
 				mMouseEvents.clear();
 				mKeyEvents.clear();

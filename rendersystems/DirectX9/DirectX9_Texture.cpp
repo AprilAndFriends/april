@@ -58,14 +58,14 @@ namespace april
 		mTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
 		int x;
 		unsigned char* p = (unsigned char*)rect.pBits;
-		for (int y = 0; y < h; y++)
+		for_iter (y, 0, h)
 		{
-			for (x = 0; x < w; x++, p += 4, rgba += 4)
+			for_iterx (x, 0, w)
 			{
-				p[0] = rgba[2];
-				p[1] = rgba[1];
-				p[2] = rgba[0];
-				p[3] = rgba[3];
+				p[x * 4 + 0] = rgba[x * 4 + 2];
+				p[x * 4 + 1] = rgba[x * 4 + 1];
+				p[x * 4 + 2] = rgba[x * 4 + 0];
+				p[x * 4 + 3] = rgba[x * 4 + 3];
 			}
 		}
 		mTexture->UnlockRect(0);
@@ -184,9 +184,9 @@ namespace april
 		int offset;
 		if (mBpp == 4)
 		{
-			for (int j = 0; j < h; j++)
+			for_iter (j, 0, h)
 			{
-				for (i = 0; i < w; i++)
+				for_iterx (i, 0, w)
 				{
 					offset = (j * mWidth + i) * 4;
 					p[offset + 2] = color.r;
@@ -198,9 +198,9 @@ namespace april
 		}
 		else
 		{
-			for (int j = 0; j < h; j++)
+			for_iter (j, 0, h)
 			{
-				for (i = 0; i < w; i++)
+				for_iterx (i, 0, w)
 				{
 					offset = (i + j * mWidth) * 4;
 					p[offset + 2] = color.r;
@@ -273,9 +273,9 @@ namespace april
 		// have been duplicated instead of putting everything into one block with if branches
 		if (mBpp == 4 && dataBpp == 4)
 		{
-			for (int j = 0; j < sh; j++)
+			for_iter (j, 0, sh)
 			{
-				for (i = 0; i < sw; i++)
+				for_iterx (i, 0, sw)
 				{
 					c = &thisData[(i + j * mWidth) * 4];
 					sc = &srcData[(i + j * dataWidth) * 4];
@@ -300,9 +300,9 @@ namespace april
 		}
 		else if (dataBpp == 4)
 		{
-			for (int j = 0; j < sh; j++)
+			for_iter (j, 0, sh)
 			{
-				for (i = 0; i < sw; i++)
+				for_iterx (i, 0, sw)
 				{
 					c = &thisData[(i + j * mWidth) * 4];
 					sc = &srcData[(i + j * dataWidth) * 4];
@@ -318,9 +318,9 @@ namespace april
 		{
 			a0 = alpha;
 			a1 = 255 - a0;
-			for (int j = 0; j < sh; j++)
+			for_iter (j, 0, sh)
 			{
-				for (i = 0; i < sw; i++)
+				for_iterx (i, 0, sw)
 				{
 					c = &thisData[(i + j * mWidth) * 4];
 					sc = &srcData[(i + j * dataWidth) * 4];
@@ -332,9 +332,9 @@ namespace april
 		}
 		else
 		{
-			for (int j = 0; j < sh; j++)
+			for_iter (j, 0, sh)
 			{
-				for (i = 0; i < sw; i++)
+				for_iterx (i, 0, sw)
 				{
 					c = &thisData[(i + j * mWidth) * 4];
 					sc = &srcData[(i + j * dataWidth) * 4];
@@ -417,9 +417,9 @@ namespace april
 		// have been duplicated instead of putting everything into one block with if branches
 		if (mBpp == 4 && dataBpp == 4)
 		{
-			for (int j = 0; j < h; j++)
+			for_iter (j, 0, h)
 			{
-				for (i = 0; i < w; i++)
+				for_iterx (i, 0, w)
 				{
 					c = &thisData[(i + j * mWidth) * 4];
 					cx = sx + i * fw;
@@ -489,9 +489,9 @@ namespace april
 		}
 		else if (dataBpp == 4)
 		{
-			for (int j = 0; j < h; j++)
+			for_iter (j, 0, h)
 			{
-				for (i = 0; i < w; i++)
+				for_iterx (i, 0, w)
 				{
 					c = &thisData[(i + j * mWidth) * 4];
 					cx = sx + i * fw;
@@ -552,9 +552,9 @@ namespace april
 		{
 			a0 = alpha;
 			a1 = 255 - a0;
-			for (int j = 0; j < h; j++)
+			for_iter (j, 0, h)
 			{
-				for (i = 0; i < w; i++)
+				for_iterx (i, 0, w)
 				{
 					c = &thisData[(i + j * mWidth) * 4];
 					cx = sx + i * fw;
@@ -608,9 +608,9 @@ namespace april
 		}
 		else
 		{
-			for (int j = 0; j < h; j++)
+			for_iter (j, 0, h)
 			{
-				for (i = 0; i < w; i++)
+				for_iterx (i, 0, w)
 				{
 					c = &thisData[(i + j * mWidth) * 4];
 					cx = sx + i * fw;
@@ -754,7 +754,7 @@ namespace april
 		float s;
 		float l;
 		unsigned char* data = (unsigned char*)lockRect.pBits;
-		for (int i = 0; i < size; i += mBpp)
+		for_iter_step(i, 0, size, mBpp)
 		{
 			rgb2hsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
 			h += range;
@@ -781,7 +781,7 @@ namespace april
 		float s;
 		float l;
 		unsigned char* data = (unsigned char*)lockRect.pBits;
-		for (int i = 0; i < size; i += mBpp)
+		for_iter_step(i, 0, size, mBpp)
 		{
 			rgb2hsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
 			s *= factor;
@@ -908,9 +908,9 @@ namespace april
 		int alpha;
 		int min = (int)median - ambiguity / 2;
 		int max = (int)median + ambiguity / 2;
-		for (int j = 0; j < mHeight; j++)
+		for_iter (j, 0, mHeight)
 		{
-			for (i = 0; i < mWidth; i++)
+			for_iterx (i, 0, mWidth)
 			{
 				c = &thisData[(i + j * mWidth) * 4];
 				sc = &srcData[(i + j * mWidth) * 4];
