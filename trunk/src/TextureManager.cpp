@@ -9,6 +9,7 @@
 
 #include <hltypes/harray.h>
 
+#include "april.h"
 #include "RenderSystem.h"
 #include "Texture.h"
 #include "TextureManager.h"
@@ -39,6 +40,9 @@ namespace april
 
 	void TextureManager::unloadTextures()
 	{
+#ifdef _DEBUG
+		april::log("Unloading all textures");
+#endif
 		foreach (Texture*, it, mTextures)
 		{
 			(*it)->unload();
