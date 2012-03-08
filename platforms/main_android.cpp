@@ -152,6 +152,10 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android ActivityOnPause()");
 #endif
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->getTextureManager()->unloadTextures();
+		}
 	}
 
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)

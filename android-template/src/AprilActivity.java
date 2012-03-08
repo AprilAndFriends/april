@@ -44,22 +44,21 @@ class AprilJNI
 
 public class AprilActivity extends Activity
 {
-	private GLSurfaceView glView;
+	private AprilGLSurfaceView glView = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		if (AprilJNI.Running)
-		{
-			AprilJNI.destroy(); // possibly from a previous onPause/onStop
-		}
-		AprilJNI.Running = false;
+		//AprilJNI.Running = false;
 		super.onCreate(savedInstanceState);
 		AprilJNI.ApkPath = this.getPackageResourcePath();
 		AprilJNI.SystemPath = this.getFilesDir().getAbsolutePath();
 		AprilJNI.Activity = this;
-		this.glView = new AprilGLSurfaceView(this);
 		this.setDefaultKeyMode(DEFAULT_KEYS_DISABLE);
+		if (this.glView == null)
+		{
+			this.glView = new AprilGLSurfaceView(this);
+		}
 		AprilJNI.activityOnCreate();
 	}
 	
@@ -74,8 +73,8 @@ public class AprilActivity extends Activity
 	@Override
 	protected void onResume()
 	{
-		super.onResume();
 		this.glView.onResume();
+		super.onResume();
 		AprilJNI.activityOnResume();
 	}
 	
@@ -109,7 +108,6 @@ public class AprilActivity extends Activity
 	{
 		super.onRestart();
 		AprilJNI.activityOnRestart();
-		//this.setContentView(null);
 	}
 
 	@Override
@@ -188,11 +186,14 @@ class AprilRenderer implements GLSurfaceView.Renderer
 {
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
-		DisplayMetrics metrics = new DisplayMetrics();
-		AprilJNI.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		String args[] = {AprilJNI.ApkPath}; // adding argv[0]
-		AprilJNI.init(AprilJNI.Activity, args, AprilJNI.SystemPath, metrics.widthPixels, metrics.heightPixels);
-		AprilJNI.Running = true;
+		if (!AprilJNI.Running)
+		{
+			DisplayMetrics metrics = new DisplayMetrics();
+			AprilJNI.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			String args[] = {AprilJNI.ApkPath}; // adding argv[0]
+			AprilJNI.init(AprilJNI.Activity, args, AprilJNI.SystemPath, metrics.widthPixels, metrics.heightPixels);
+			AprilJNI.Running = true;
+		}
 	}
 	
 	public void onSurfaceChanged(GL10 gl, int w, int h)

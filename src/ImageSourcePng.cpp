@@ -86,7 +86,7 @@ namespace april
 			int rowBytes = png_get_rowbytes(pngPtr, infoPtr);
 			png_byte* imageData = new png_byte[rowBytes * pngPtr->height];
 			png_bytep* rowPointers = new png_bytep[pngPtr->height];
-			for_itert (unsigned int, i, 0, pngPtr->height);
+			for_itert (unsigned int, i, 0, pngPtr->height)
 			{
 				rowPointers[i] = imageData + i * rowBytes;
 			}
@@ -121,7 +121,7 @@ namespace april
 			jpeg_start_decompress(&cInfo);
 			imageData = new unsigned char[cInfo.output_width * cInfo.output_height * 3]; // JPEG is always RGB
 			unsigned char* ptr;
-			for_itert (unsigned int, i, 0, cInfo.output_height);
+			for_itert (unsigned int, i, 0, cInfo.output_height)
 			{
 				ptr = imageData + i * 3 * cInfo.output_width;
 				jpeg_read_scanlines(&cInfo, &ptr, 1);

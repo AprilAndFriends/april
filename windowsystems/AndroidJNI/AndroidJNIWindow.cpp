@@ -47,7 +47,6 @@ namespace april
 		//log("Destroying Android JNI Windowsystem");
 	}
 
-
 	void AndroidJNIWindow::enterMainLoop()
 	{
 	}
