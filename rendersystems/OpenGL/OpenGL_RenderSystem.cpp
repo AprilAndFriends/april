@@ -409,7 +409,7 @@ namespace april
         unsigned char* temp = img->data + w * h * 4;
         
 	    glReadPixels(0, 0, w, h, (bpp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img->data);
-		for_iter (y, 0, h / 2);
+		for_iter (y, 0, h / 2)
 		{
 			memcpy(temp, img->data + y * w * bpp, w * bpp);
 			memcpy(img->data + y * w * bpp, img->data + (h - y - 1) * w * bpp, w * bpp);
