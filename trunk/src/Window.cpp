@@ -381,6 +381,11 @@ namespace april
 		// used only for softkeyboards, e.g. iOS or Android
 	}
 	
+	bool Window::isKeyboardVisible()
+	{
+		return 0;
+	}
+
 	float Window::prefixRotationAngle()
 	{
 		// some platforms such as iOS may need extra 

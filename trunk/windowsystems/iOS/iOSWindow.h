@@ -36,6 +36,7 @@ namespace april
 		bool mFocused;
 		bool mRunning;
 		bool mCursorVisible;
+		int mKeyboardRequest;
 		Timer mTimer;
 		float mCursorX, mCursorY;
 		bool mFirstFrameDrawn;
@@ -69,6 +70,7 @@ namespace april
 		void presentFrame();
 		void* getIDFromBackend();
 		void doEvents();
+		bool isKeyboardVisible();
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
 		void keyboardWasShown();

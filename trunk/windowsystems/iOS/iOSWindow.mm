@@ -78,6 +78,7 @@ namespace april
 	
     iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title)
     {
+		mKeyboardRequest = 0;
 		mRetainLoadingOverlay = false;
 		mFocused = true;
 		mInputEventsMutex = false;
@@ -118,6 +119,13 @@ namespace april
 		{
 			e->execute();
 			delete e;
+		}
+		if (mKeyboardRequest != 0 && mTouches.size() == 0) // only process keyboard when there is no interaction with the screen
+		{
+			bool visible = isKeyboardVisible();
+			if      (visible && mKeyboardRequest == -1) [glview terminateKeyboardHandling];
+			else if (!visible && mKeyboardRequest == 1) [glview beginKeyboardHandling];
+			mKeyboardRequest = 0;
 		}
 		return performUpdate(mTimer.diff(true));	
 	}
@@ -380,13 +388,18 @@ namespace april
 		callTouchCallback();
 	}
 	
+	bool iOSWindow::isKeyboardVisible()
+	{
+		return [glview isKeyboardActive];
+	}
+	
 	void iOSWindow::beginKeyboardHandling()
 	{
-		[glview beginKeyboardHandling];
+		mKeyboardRequest = 1;
 	}
 	void iOSWindow::terminateKeyboardHandling()
 	{
-		[glview terminateKeyboardHandling];
+		mKeyboardRequest = -1;
 	}
 	float iOSWindow::prefixRotationAngle()
 	{
