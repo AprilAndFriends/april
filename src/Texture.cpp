@@ -226,4 +226,9 @@ namespace april
 		return (mWidth * mHeight * 3); // TODO - should use BPP instead of 3?
 	}
 
+	bool RAMTexture::isValid()
+	{
+		return (mBuffer != NULL);
+	}
+
 }

@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.31
+/// @version 1.51
 /// 
 /// @section LICENSE
 /// 
@@ -876,6 +876,11 @@ namespace april
 	int DirectX9_Texture::getSizeInBytes()
 	{
 		return (mWidth * mHeight * mBpp);
+	}
+
+	bool DirectX9_Texture::isValid()
+	{
+		return (mTexture == NULL);
 	}
 
 	void DirectX9_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)

@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.33
+/// @version 1.51
 /// 
 /// @section LICENSE
 /// 
@@ -57,6 +57,7 @@ namespace april
 		void rotateHue(float degrees);
 		void saturate(float factor);
 		int getSizeInBytes();
+		bool isValid();
 
 	};
 

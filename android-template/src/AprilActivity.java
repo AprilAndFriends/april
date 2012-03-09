@@ -31,6 +31,7 @@ class AprilJNI
 	public static native boolean onKeyUp(int keyCode);
 	public static native void onFocusChange(boolean focused);
 	public static native void onLowMemory();
+	public static native void onSurfaceCreated();
 	
 	public static native void activityOnCreate();
 	public static native void activityOnStart();
@@ -186,6 +187,7 @@ class AprilRenderer implements GLSurfaceView.Renderer
 {
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
+		AprilJNI.onSurfaceCreated();
 		if (!AprilJNI.Running)
 		{
 			DisplayMetrics metrics = new DisplayMetrics();

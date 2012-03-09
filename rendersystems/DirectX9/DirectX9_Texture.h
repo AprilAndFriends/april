@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.31
+/// @version 1.51
 /// 
 /// @section LICENSE
 /// 
@@ -51,6 +51,7 @@ namespace april
 		bool isLoaded();
 		void unload();
 		int getSizeInBytes();
+		bool isValid();
 		
 		void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 

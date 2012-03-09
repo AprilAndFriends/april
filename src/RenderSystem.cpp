@@ -37,7 +37,7 @@ namespace april
 	PlainVertex pv[16];
 	TexturedVertex tv[16];
 
-	april::RenderSystem* rendersys;
+	april::RenderSystem* rendersys = NULL;
 
 /************************************************************************************/
 	void PlainVertex::operator=(const gvec3& v)
@@ -106,6 +106,11 @@ namespace april
 			delete mWindow;
 		}
 		delete mTextureManager;
+	}
+
+	void RenderSystem::restore()
+	{
+		april::log("restoring rendersystem");
 	}
 
 	void RenderSystem::drawQuad(grect rect, Color color)

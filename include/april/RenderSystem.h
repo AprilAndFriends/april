@@ -134,6 +134,7 @@ namespace april
 		virtual ~RenderSystem();
 
 		virtual void assignWindow(Window* window) = 0;
+		virtual void restore();
 
 		// object creation
 		hstr findTextureFile(chstr filename);
