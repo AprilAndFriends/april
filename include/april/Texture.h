@@ -102,6 +102,8 @@ namespace april
 		TextureFilter mTextureFilter;
 		bool mTextureWrapping;
 		harray<Texture*> mDynamicLinks;
+
+		hstr _getInternalName();
 		
 	};
 	

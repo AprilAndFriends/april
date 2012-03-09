@@ -93,7 +93,7 @@ namespace april
 		mWidth = w;
 		mHeight = h;
 		mDynamic = false;
-		mFilename = "UserTexture";
+		mFilename = "";
 		glGenTextures(1, &mTexId);
 		glBindTexture(GL_TEXTURE_2D, mTexId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -107,7 +107,7 @@ namespace april
 		mWidth = w;
 		mHeight = h;
 		mDynamic = false;
-		mFilename = "UserTexture";
+		mFilename = "";
 		glGenTextures(1, &mTexId);
 		glBindTexture(GL_TEXTURE_2D, mTexId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -230,11 +230,19 @@ namespace april
 		{
 			return true;
 		}
-		april::log("loading GL texture '" + mFilename + "'");
-		mTexId = platformLoadOpenGL_Texture(mFilename, &mWidth, &mHeight);
+		if (mFilename != "")
+		{
+			april::log("loading GL texture '" + _getInternalName() + "'");
+			mTexId = platformLoadOpenGL_Texture(mFilename, &mWidth, &mHeight);
+		}
+		else
+		{
+			april::log("Creating user-defined GL texture");
+			glGenTextures(1, &mTexId);
+		}
 		if (mTexId == 0)
 		{
-			april::log("Failed to load texture: " + mFilename);
+			april::log("Failed to load texture: " + _getInternalName());
 			return false;
 		}
 		foreach (Texture*, it, mDynamicLinks)
@@ -253,7 +261,7 @@ namespace april
 	{
 		if (mTexId != 0)
 		{
-			april::log("unloading GL texture '" + mFilename + "'");
+			april::log("unloading GL texture '" + _getInternalName() + "'");
 			glDeleteTextures(1, &mTexId);
 			mTexId = 0;
 		}
@@ -266,7 +274,7 @@ namespace april
 
 	bool OpenGL_Texture::isValid()
 	{
-		return (mTexId == 0);
+		return (mTexId != 0);
 	}
 
 }

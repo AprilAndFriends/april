@@ -43,6 +43,11 @@ namespace april
 		}
 		april::rendersys->getTextureManager()->unregisterTexture(this);
 	}
+
+	hstr Texture::_getInternalName()
+	{
+		return (mFilename != "" ? mFilename : "UserTexture");
+	}
 	
 	void Texture::fillRect(grect rect, Color color)
 	{
@@ -162,12 +167,12 @@ namespace april
 	{
 		unload();
 	}
-	
+
 	bool RAMTexture::load()
 	{
 		if (mBuffer == NULL)
 		{
-			april::log("loading RAM texture '" + mFilename + "'");
+			april::log("loading RAM texture '" + _getInternalName() + "'");
 			mBuffer = loadImage(mFilename);
 			mWidth = mBuffer->w;
 			mHeight = mBuffer->h;
@@ -180,7 +185,7 @@ namespace april
 	{
 		if (mBuffer != NULL)
 		{
-			april::log("unloading RAM texture '" + mFilename + "'");
+			april::log("unloading RAM texture '" + _getInternalName() + "'");
 			delete mBuffer;
 			mBuffer = NULL;
 		}
