@@ -40,9 +40,6 @@ namespace april
 
 	void TextureManager::unloadTextures()
 	{
-#ifdef _DEBUG
-		april::log("unloading all textures");
-#endif
 		foreach (Texture*, it, mTextures)
 		{
 			(*it)->unload();

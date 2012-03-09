@@ -42,7 +42,7 @@ namespace april
 		mHeight = h;
 		mBpp = 4;
 		mDynamic = false;
-		mFilename = "UserTexture";
+		mFilename = "";
 		mUnusedTimer = 0;
 		mSurface = NULL;
 
@@ -78,7 +78,7 @@ namespace april
 		mDynamic = false;
 		mUnusedTimer = 0;
 		mSurface = NULL;
-		mFilename = "UserTexture";			
+		mFilename = "";			
 		april::log("creating empty DX9 texture [ " + hstr(w) + "x" + hstr(h) + " ]");
 		D3DFORMAT d3dfmt = D3DFMT_X8R8G8B8;
 		mBpp = 3;
@@ -806,11 +806,11 @@ namespace april
 		{
 			return true;
 		}
-		april::log("loading DX9 texture '" + mFilename + "'");
+		april::log("loading DX9 texture '" + _getInternalName() + "'");
 		ImageSource* img = loadImage(mFilename);
 		if (!img)
 		{
-			april::log("Failed to load texture '" + mFilename + "'!");
+			april::log("Failed to load texture '" + _getInternalName() + "'!");
 			return false;
 		}
 		mWidth = img->w;
@@ -847,7 +847,7 @@ namespace april
 		{
 			if (!(*it)->isLoaded())
 			{
-				((DirectX9_Texture*)(*it))->load();
+				(*it)->load();
 			}
 		}
 		return true;
@@ -855,14 +855,14 @@ namespace april
 
 	bool DirectX9_Texture::isLoaded()
 	{
-		return (mTexture != NULL || mFilename == "UserTexture");
+		return (mTexture != NULL);
 	}
 
 	void DirectX9_Texture::unload()
 	{
 		if (mTexture != NULL)
 		{
-			april::log("unloading DX9 texture '" + mFilename + "'");
+			april::log("unloading DX9 texture '" + _getInternalName() + "'");
 			mTexture->Release();
 			mTexture = NULL;
 			if (mSurface != NULL)
