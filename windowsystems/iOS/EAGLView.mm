@@ -19,6 +19,7 @@
 #include "iOSWindow.h"
 #include "RenderSystem.h"
 #include "april.h"
+#include "Keys.h"
 
 
 #define USE_DEPTH_BUFFER 0
@@ -154,6 +155,8 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)aTextField
 {
     [textField resignFirstResponder];
+	aprilWindow->handleKeyEvent(april::Window::AKEYEVT_DOWN, april::AK_RETURN, 0);
+	aprilWindow->handleKeyEvent(april::Window::AKEYEVT_UP, april::AK_RETURN, 0);
     return YES;
 }
 
@@ -339,6 +342,12 @@
 {
 	[textField becomeFirstResponder];
 }
+
+- (BOOL)isKeyboardActive
+{
+	return [textField isFirstResponder];
+}
+
 - (void)terminateKeyboardHandling
 {
 	[textField endEditing:YES];

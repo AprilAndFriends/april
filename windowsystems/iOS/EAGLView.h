@@ -60,6 +60,7 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 - (void)swapBuffers;
 - (void)beginKeyboardHandling;
 - (void)terminateKeyboardHandling;
+- (BOOL)isKeyboardActive;
 - (void)keyboardWasShown:(id)sender;
 - (void)keyboardWasHidden:(id)sender;
 - (BOOL)textFieldShouldReturn:(UITextField *)aTextField;
