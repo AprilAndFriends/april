@@ -50,16 +50,12 @@ public class AprilActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		//AprilJNI.Running = false;
 		super.onCreate(savedInstanceState);
 		AprilJNI.ApkPath = this.getPackageResourcePath();
 		AprilJNI.SystemPath = this.getFilesDir().getAbsolutePath();
 		AprilJNI.Activity = this;
 		this.setDefaultKeyMode(DEFAULT_KEYS_DISABLE);
-		if (this.glView == null)
-		{
-			this.glView = new AprilGLSurfaceView(this);
-		}
+		this.glView = new AprilGLSurfaceView(this);
 		AprilJNI.activityOnCreate();
 	}
 	
@@ -74,9 +70,9 @@ public class AprilActivity extends Activity
 	@Override
 	protected void onResume()
 	{
-		this.glView.onResume();
 		super.onResume();
 		AprilJNI.activityOnResume();
+		this.glView.onResume();
 	}
 	
 	@Override
