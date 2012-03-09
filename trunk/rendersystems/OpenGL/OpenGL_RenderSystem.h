@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.33
+/// @version 1.51
 /// 
 /// @section LICENSE
 /// 
@@ -32,6 +32,7 @@ namespace april
 		~OpenGL_RenderSystem();
 
 		void assignWindow(Window* window);
+		void restore();
 		
 		// object creation
 		Texture* loadTexture(chstr filename, bool dynamic);

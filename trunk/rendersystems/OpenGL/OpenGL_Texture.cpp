@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 1.51
 /// 
 /// @section LICENSE
 /// 
@@ -81,6 +81,10 @@ namespace april
 		mFilename = filename;
 		mDynamic = dynamic;
 		mTexId = 0;
+		if (!dynamic)
+		{
+			load();
+		}
 	}
 
 	OpenGL_Texture::OpenGL_Texture(unsigned char* rgba, int w, int h) : Texture()
@@ -221,7 +225,7 @@ namespace april
 	
 	bool OpenGL_Texture::load()
 	{
-		mUnusedTimer = 0;
+		mUnusedTimer = 0.0f;
 		if (mTexId != 0)
 		{
 			return true;
@@ -258,6 +262,11 @@ namespace april
 	int OpenGL_Texture::getSizeInBytes()
 	{
 		return (mWidth * mHeight * 3);
+	}
+
+	bool OpenGL_Texture::isValid()
+	{
+		return (mTexId == 0);
 	}
 
 }

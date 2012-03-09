@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.33
+/// @version 1.51
 /// 
 /// @section LICENSE
 /// 
@@ -54,6 +54,7 @@ namespace april
 		virtual bool load() = 0;
 		virtual void unload() = 0;
 		virtual int getSizeInBytes() = 0;
+		virtual bool isValid() = 0;
 		
 		virtual Color getPixel(int x, int y) { return APRIL_COLOR_CLEAR; }
 		virtual void setPixel(int x, int y, Color color) { }
@@ -117,6 +118,7 @@ namespace april
 		void setPixel(int x, int y, Color c);
 		Color getInterpolatedPixel(float x, float y);
 		int getSizeInBytes();
+		bool isValid();
 		
 	protected:
 		ImageSource* mBuffer;

@@ -126,6 +126,17 @@ namespace april
 		PROTECTED_RENDERSYS_GET_WINDOW(handleLowMemoryWarning());
 	}
 
+	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
+	{
+#ifdef _DEBUG
+		april::log("Android onSurfaceCreated");
+#endif
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->restore();
+		}
+	}
+
 	void JNICALL _JNI_activityOnCreate(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
@@ -177,13 +188,9 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android ActivityOnRestart()");
 #endif
-		if (april::rendersys != NULL)
-		{
-			//april::rendersys->getTextureManager()->unloadTextures();
-		}
 	}
 
-#define METHOD_COUNT 18 // make sure this fits
+#define METHOD_COUNT 19 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"init",				"(Ljava/lang/Object;[Ljava/lang/String;Ljava/lang/String;II)V",	(void*)&april::_JNI_init				},
@@ -197,6 +204,7 @@ namespace april
 		{"onKeyUp",				"(I)Z",															(bool*)&april::_JNI_onKeyUp				},
 		{"onFocusChange",		"(Z)V",															(void*)&april::_JNI_onFocusChange		},
 		{"onLowMemory",			"()V",															(void*)&april::_JNI_onLowMemory			},
+		{"onSurfaceCreated",	"()V",															(void*)&april::_JNI_onSurfaceCreated	},
 		{"activityOnCreate",	"()V",															(void*)&april::_JNI_activityOnCreate	},
 		{"activityOnStart",		"()V",															(void*)&april::_JNI_activityOnStart		},
 		{"activityOnResume",	"()V",															(void*)&april::_JNI_activityOnResume	},

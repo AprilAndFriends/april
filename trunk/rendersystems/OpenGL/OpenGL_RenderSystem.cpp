@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 1.51
 /// 
 /// @section LICENSE
 /// 
@@ -231,7 +231,7 @@ namespace april
 		}
 #endif
 #endif
-		glViewport(0, 0, window->getWidth(), window->getHeight());
+		glViewport(0, 0, mWindow->getWidth(), mWindow->getHeight());
 		glClearColor(0, 0, 0, 1);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -254,13 +254,33 @@ namespace april
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 #endif
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		if (mParams.contains("zbuffer"))
+		{
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+		}
+		mOrthoProjection.setSize((float)mWindow->getWidth(), (float)mWindow->getHeight());
+	}
+
+	void OpenGL_RenderSystem::restore()
+	{
+		RenderSystem::restore();
+		mTexCoordsEnabled = false;
+		mColorEnabled = false;
+		// GL defaults
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
 		
 		if (mParams.contains("zbuffer"))
 		{
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 		}
-		mOrthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
 	}
 
 	hstr OpenGL_RenderSystem::getName()
@@ -356,7 +376,7 @@ namespace april
 		}
 		else
 		{
-			if (texture->mTexId == 0 && texture->isDynamic())
+			if (texture->mTexId == 0)// && texture->isDynamic())
 			{
 				texture->load();
 			}
