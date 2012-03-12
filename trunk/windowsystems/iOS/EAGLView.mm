@@ -268,6 +268,9 @@
         NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
         return NO;
     }
+	// clear crap from previous renders. I often got a magenta colored initial screen without this
+	glClearColor(0, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
     return YES;
 }
 

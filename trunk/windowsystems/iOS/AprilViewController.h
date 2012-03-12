@@ -18,4 +18,5 @@
 {
 }
 - (void)removeImageView;
+- (void)update:(float)k;
 @end
