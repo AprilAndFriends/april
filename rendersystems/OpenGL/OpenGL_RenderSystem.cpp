@@ -265,8 +265,12 @@ namespace april
 	void OpenGL_RenderSystem::restore()
 	{
 		RenderSystem::restore();
-		mTexCoordsEnabled = false;
-		mColorEnabled = false;
+		glViewport(0, 0, mWindow->getWidth(), mWindow->getHeight());
+		glClearColor(0, 0, 0, 1);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 		// GL defaults
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -275,7 +279,9 @@ namespace april
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_COLOR_ARRAY);
-		
+		// other
+		mTexCoordsEnabled = false;
+		mColorEnabled = false;
 		if (mParams.contains("zbuffer"))
 		{
 			glEnable(GL_DEPTH_TEST);
@@ -376,7 +382,7 @@ namespace april
 		}
 		else
 		{
-			if (texture->mTexId == 0)// && texture->isDynamic())
+			if (texture->mTexId == 0)
 			{
 				texture->load();
 			}
@@ -449,7 +455,7 @@ namespace april
 		glMatrixMode(GL_PROJECTION);
 #ifdef _OPENGLES1
 		glLoadIdentity();
-		glRotatef(getWindow()->prefixRotationAngle(), 0, 0, 1);
+		glRotatef(mWindow->prefixRotationAngle(), 0, 0, 1);
 		//printf("rotationangle %g\n", getWindow()->prefixRotationAngle());
 		glMultMatrixf(matrix.data);
 #else
@@ -655,6 +661,7 @@ namespace april
 		// TODO: OpenGL_RenderSystem::setResolution()
 		april::log("WARNING: setResolution ignored!");
 	}
+
 	void OpenGL_RenderSystem::setColorMode(ColorMode mode, unsigned char alpha)
 	{
 		// TODO not implemented in OpenGL yet
@@ -664,6 +671,7 @@ namespace april
 	{
 		return new OpenGL_RenderSystem(options);
 	}
+
 }
 
 #endif

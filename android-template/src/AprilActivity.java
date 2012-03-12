@@ -46,6 +46,7 @@ class AprilJNI
 public class AprilActivity extends Activity
 {
 	private AprilGLSurfaceView glView = null;
+	private boolean viewAlreadySet = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -63,7 +64,12 @@ public class AprilActivity extends Activity
 	protected void onStart()
 	{
 		super.onStart();
-		this.setContentView(this.glView);
+		// this allows for a proper splash screen
+		if (!this.viewAlreadySet)
+		{
+			this.setContentView(this.glView);
+			this.viewAlreadySet = true;
+		}
 		AprilJNI.activityOnStart();
 	}
 
@@ -156,10 +162,37 @@ class AprilGLSurfaceView extends GLSurfaceView
 	public AprilGLSurfaceView(Context context)
 	{
 		super(context);
+		this.setEGLConfigChooser(false);
 		this.renderer = new AprilRenderer();
 		this.setRenderer(this.renderer);
 	}
 	
+    public boolean onTouchEvent(final MotionEvent event)
+	{
+		queueEvent
+		(
+			new Runnable()
+			{
+				public void run()
+				{
+					if (event.getAction() == MotionEvent.ACTION_DOWN)
+					{
+						AprilJNI.onMouseDown(event.getX(), event.getY(), 0);
+					}
+					else if (event.getAction() == MotionEvent.ACTION_UP)
+					{
+						AprilJNI.onMouseUp(event.getX(), event.getY(), 0);
+					}
+					else if (event.getAction() == MotionEvent.ACTION_MOVE)
+					{
+						AprilJNI.onMouseMove(event.getX(), event.getY());
+					}
+				}
+			}
+		);
+		return true;
+	}	
+	/*
     public boolean onTouchEvent(final MotionEvent event)
 	{
         if (event.getAction() == MotionEvent.ACTION_DOWN)
@@ -176,6 +209,7 @@ class AprilGLSurfaceView extends GLSurfaceView
         }
         return true;
     }
+	*/
 	
 }
 
