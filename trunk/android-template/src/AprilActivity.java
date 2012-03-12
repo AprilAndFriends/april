@@ -169,7 +169,7 @@ class AprilGLSurfaceView extends GLSurfaceView
 	
     public boolean onTouchEvent(final MotionEvent event)
 	{
-		queueEvent
+		this.queueEvent
 		(
 			new Runnable()
 			{
@@ -192,24 +192,6 @@ class AprilGLSurfaceView extends GLSurfaceView
 		);
 		return true;
 	}	
-	/*
-    public boolean onTouchEvent(final MotionEvent event)
-	{
-        if (event.getAction() == MotionEvent.ACTION_DOWN)
-		{
-			AprilJNI.onMouseDown(event.getX(), event.getY(), 0);
-        }
-        else if (event.getAction() == MotionEvent.ACTION_UP)
-		{
-			AprilJNI.onMouseUp(event.getX(), event.getY(), 0);
-        }
-        else if (event.getAction() == MotionEvent.ACTION_MOVE)
-		{
-			AprilJNI.onMouseMove(event.getX(), event.getY());
-        }
-        return true;
-    }
-	*/
 	
 }
 
