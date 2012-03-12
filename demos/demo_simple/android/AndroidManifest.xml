@@ -10,8 +10,7 @@
 	
 	<application android:label="Demo Simple"
 			android:icon="@drawable/icon"
-			android:theme="@style/AprilSplashScreen"
-			android:hardwareAccelerated="true">
+			android:theme="@style/AprilSplashScreen">
 		<activity android:name=".DemoSimple"
 				android:label="Demo Simple"
 				android:screenOrientation="landscape"
