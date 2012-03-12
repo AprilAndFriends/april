@@ -880,7 +880,7 @@ namespace april
 
 	bool DirectX9_Texture::isValid()
 	{
-		return (mTexture == NULL);
+		return (mTexture != NULL);
 	}
 
 	void DirectX9_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
