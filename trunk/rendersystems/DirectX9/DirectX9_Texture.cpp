@@ -60,12 +60,12 @@ namespace april
 		unsigned char* p = (unsigned char*)rect.pBits;
 		for_iter (y, 0, h)
 		{
-			for_iterx (x, 0, w)
+			for (x = 0; x < w; x++, p += 4, rgba += 4)
 			{
-				p[x * 4 + 0] = rgba[x * 4 + 2];
-				p[x * 4 + 1] = rgba[x * 4 + 1];
-				p[x * 4 + 2] = rgba[x * 4 + 0];
-				p[x * 4 + 3] = rgba[x * 4 + 3];
+				p[0] = rgba[2];
+				p[1] = rgba[1];
+				p[2] = rgba[0];
+				p[3] = rgba[3];
 			}
 		}
 		mTexture->UnlockRect(0);
