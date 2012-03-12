@@ -119,7 +119,7 @@ namespace april
 		{
 			e->execute();
 			delete e;
-		}
+		}	
 		if (mKeyboardRequest != 0 && mTouches.size() == 0) // only process keyboard when there is no interaction with the screen
 		{
 			bool visible = isKeyboardVisible();
@@ -127,7 +127,10 @@ namespace april
 			else if (!visible && mKeyboardRequest == 1) [glview beginKeyboardHandling];
 			mKeyboardRequest = 0;
 		}
-		return performUpdate(mTimer.diff(true));	
+		
+		float k = mTimer.diff(true);
+		[viewcontroller update:k]; // iOS specific
+		return performUpdate(k);	
 	}
 
     void iOSWindow::terminateMainLoop()

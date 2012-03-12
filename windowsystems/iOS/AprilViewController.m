@@ -12,6 +12,7 @@
 #import "EAGLView.h"
 #import "WBImage.h"
 #import "ApriliOSAppDelegate.h"
+#import <QuartzCore/CALayer.h>
 
 extern EAGLView *glview;
 static UIImageView *mImageView;
@@ -189,16 +190,35 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	mImageView = [[UIImageView alloc] initWithImage:image];
 	mImageView.frame = CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width);
 	[self.view addSubview:mImageView];
+	mImageView.layer.zPosition = 1;
 }
 
 - (void)removeImageView
 {
 	if (mImageView != nil)
 	{
-		NSLog(@"Removing Loading screen UIImageView from View Controller");
-		[mImageView removeFromSuperview];
-		[mImageView release];
-		mImageView = nil;
+		NSLog(@"Performing fadeout of loading screen's UIImageView");
+
+		[UIView beginAnimations:@"FadeOut" context:nil];
+		[UIView setAnimationDuration:1];
+		mImageView.alpha = 0;
+		[UIView commitAnimations];
+	}
+}
+
+- (void)update:(float)k
+{
+	static float timer = 0;
+	if (mImageView != nil && mImageView.alpha == 0)
+	{
+		timer += k;
+		if (timer > 1.5f)
+		{
+			NSLog(@"Removing loading screen UIImageView from View Controller");
+			[mImageView removeFromSuperview];
+			[mImageView release];
+			mImageView = nil;
+		}
 	}
 }
 
