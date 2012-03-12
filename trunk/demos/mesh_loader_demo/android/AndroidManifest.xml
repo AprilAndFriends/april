@@ -12,8 +12,7 @@
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 		<activity android:name=".DemoMesh"
 				android:label="Demo Mesh"
-				android:screenOrientation="landscape"
-				android:hardwareAccelerated="true">
+				android:screenOrientation="landscape">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
