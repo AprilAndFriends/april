@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 1.52
 /// 
 /// @section LICENSE
 /// 
@@ -27,6 +27,7 @@
 	{ \
 		april::rendersys->getWindow()->methodCall; \
 	}
+#define _JSTR_TO_HSTR(string) _jstringToHstr(env, string)
 
 namespace april
 {
@@ -34,33 +35,49 @@ namespace april
 	extern jobject aprilActivity;
 	extern gvec2 androidResolution;
 
-	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobject activity, jobjectArray _args, jstring path, jint width, jint height)
+	hstr _jstringToHstr(JNIEnv* env, jstring string)
 	{
-		aprilActivity = activity;
-		harray<hstr> args;
-		jstring arg;
-		const char* str;
-		int length = env->GetArrayLength(_args);
-		for_iter (i, 0, length)
-		{
-			arg = (jstring)env->GetObjectArrayElement(_args, i);
-			str = env->GetStringUTFChars(arg, NULL);
-			args += hstr(str);
-			env->ReleaseStringUTFChars(arg, str);
-		}
-		str = env->GetStringUTFChars(path, NULL);
-		april::systemPath = hstr(str);
-		env->ReleaseStringUTFChars(path, str);
+		const char* chars = env->GetStringUTFChars(string, NULL);
+		hstr result(chars);
+		env->ReleaseStringUTFChars(string, chars);
+		return result;
+	}
+
+	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jobject activity,
+		jstring jSystemPath, jstring jSharedPath, jstring jPackageName, jstring jVersionCode, jstring jForceArchivePath)
+	{
+		april::aprilActivity = activity;
+		april::systemPath = _JSTR_TO_HSTR(jSystemPath);
+		hstr archivePath = _JSTR_TO_HSTR(jForceArchivePath);
+		hstr packageName = _JSTR_TO_HSTR(jPackageName);
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
 			// set the resources CWD
-			hstr packageName = get_basedir(april::systemPath).split("/", -1, true).pop_last();
-			hresource::setCwd("/mnt/sdcard/Android/data/" + packageName); // I am so going to hell for this one
+			hresource::setCwd(_JSTR_TO_HSTR(jSharedPath) + "/Android/data/" + packageName);
+			hresource::setArchive(""); // not used anyway when hasZip() returns false
+		}
+		else if (archivePath != "")
+		{
+			// using APK file as archive
+			hresource::setCwd("assets");
+			hresource::setArchive(archivePath);
 		}
 		else
 		{
-			// using current APK file as archive
-			hresource::setArchive(args[0]);
+			// using OBB file as archive
+			hresource::setCwd(".");
+			hstr archiveName = "main." + _JSTR_TO_HSTR(jVersionCode) + "." + packageName + ".obb"; // using Google Play's "Expansion File" system
+			hresource::setArchive(_JSTR_TO_HSTR(jSharedPath) + "/Android/obb/" + packageName + "/" + archiveName);
+		}
+	}
+
+	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args, jint width, jint height)
+	{
+		harray<hstr> args;
+		int length = env->GetArrayLength(_args);
+		for_iter (i, 0, length)
+		{
+			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
 		}
 		april::androidResolution.set((float)hmax(width, height), (float)hmin(width, height));
 		april_init(args);
@@ -190,28 +207,38 @@ namespace april
 #endif
 	}
 
-#define METHOD_COUNT 19 // make sure this fits
+#define _JARGS(returnType, arguments) "(" arguments ")" returnType
+#define _JARR(str) "[" str
+#define _JOBJ "Ljava/lang/Object;"
+#define _JSTR "Ljava/lang/String;"
+#define _JINT "I"
+#define _JBOOL "Z"
+#define _JFLOAT "F"
+#define _JVOID "V"
+
+#define METHOD_COUNT 20 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
-		{"init",				"(Ljava/lang/Object;[Ljava/lang/String;Ljava/lang/String;II)V",	(void*)&april::_JNI_init				},
-		{"destroy",				"()V",															(void*)&april::_JNI_destroy				},
-		{"render",				"()Z",															(void*)&april::_JNI_render				},
-		{"onQuit",				"()Z",															(void*)&april::_JNI_onQuit				},
-		{"onMouseDown",			"(FFI)V",														(void*)&april::_JNI_onMouseDown			},
-		{"onMouseUp",			"(FFI)V",														(void*)&april::_JNI_onMouseUp			},
-		{"onMouseMove",			"(FF)V",														(void*)&april::_JNI_onMouseMove			},
-		{"onKeyDown",			"(II)Z",														(bool*)&april::_JNI_onKeyDown			},
-		{"onKeyUp",				"(I)Z",															(bool*)&april::_JNI_onKeyUp				},
-		{"onFocusChange",		"(Z)V",															(void*)&april::_JNI_onFocusChange		},
-		{"onLowMemory",			"()V",															(void*)&april::_JNI_onLowMemory			},
-		{"onSurfaceCreated",	"()V",															(void*)&april::_JNI_onSurfaceCreated	},
-		{"activityOnCreate",	"()V",															(void*)&april::_JNI_activityOnCreate	},
-		{"activityOnStart",		"()V",															(void*)&april::_JNI_activityOnStart		},
-		{"activityOnResume",	"()V",															(void*)&april::_JNI_activityOnResume	},
-		{"activityOnPause",		"()V",															(void*)&april::_JNI_activityOnPause		},
-		{"activityOnStop",		"()V",															(void*)&april::_JNI_activityOnStop		},
-		{"activityOnDestroy",	"()V",															(void*)&april::_JNI_activityOnDestroy	},
-		{"activityOnRestart",	"()V",															(void*)&april::_JNI_activityOnRestart	},
+		{"setVariables",		_JARGS(_JVOID, _JOBJ _JSTR _JSTR _JSTR _JSTR _JSTR),	(void*)&april::_JNI_setVariables		},
+		{"init",				_JARGS(_JVOID, _JARR(_JSTR) _JINT _JINT),				(void*)&april::_JNI_init				},
+		{"destroy",				_JARGS(_JVOID, ),										(void*)&april::_JNI_destroy				},
+		{"render",				_JARGS(_JBOOL, ),										(void*)&april::_JNI_render				},
+		{"onQuit",				_JARGS(_JBOOL, ),										(void*)&april::_JNI_onQuit				},
+		{"onMouseDown",			_JARGS(_JVOID, _JFLOAT _JFLOAT _JINT),					(void*)&april::_JNI_onMouseDown			},
+		{"onMouseUp",			_JARGS(_JVOID, _JFLOAT _JFLOAT _JINT),					(void*)&april::_JNI_onMouseUp			},
+		{"onMouseMove",			_JARGS(_JVOID, _JFLOAT _JFLOAT),						(void*)&april::_JNI_onMouseMove			},
+		{"onKeyDown",			_JARGS(_JBOOL, _JINT _JINT),							(bool*)&april::_JNI_onKeyDown			},
+		{"onKeyUp",				_JARGS(_JBOOL, _JINT),									(bool*)&april::_JNI_onKeyUp				},
+		{"onFocusChange",		_JARGS(_JVOID, _JBOOL),									(void*)&april::_JNI_onFocusChange		},
+		{"onLowMemory",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onLowMemory			},
+		{"onSurfaceCreated",	_JARGS(_JVOID, ),										(void*)&april::_JNI_onSurfaceCreated	},
+		{"activityOnCreate",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnCreate	},
+		{"activityOnStart",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnStart		},
+		{"activityOnResume",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnResume	},
+		{"activityOnPause",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnPause		},
+		{"activityOnStop",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnStop		},
+		{"activityOnDestroy",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnDestroy	},
+		{"activityOnRestart",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnRestart	}
 	};
 	
 	jint JNI_OnLoad(JavaVM* vm, void* reserved)

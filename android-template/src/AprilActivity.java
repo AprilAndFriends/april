@@ -1,14 +1,17 @@
 package net.sourceforge.april;
 
-// version 1.51
+// version 1.52
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.inputmethod.InputMethodManager;
 import android.view.KeyEvent;
@@ -16,11 +19,16 @@ import android.view.MotionEvent;
 
 class AprilJNI
 {
-	public static String ApkPath = "";
-	public static String SystemPath = ".";
 	public static AprilActivity Activity = null;
 	public static boolean Running = false;
-	public static native void init(Object activity, String[] args, String path, int width, int height);
+	public static String ArchivePath = "";
+	public static String SystemPath = ".";
+	public static String SharedPath = ".";
+	public static String PackageName = "";
+	public static String VersionCode = "";
+	
+	public static native void setVariables(Object activity, String systemPath, String sharedPath, String packageName, String versionCode, String forceArchivePath);
+	public static native void init(String[] args, int width, int height);
 	public static native boolean render();
 	public static native void destroy();
 	public static native boolean onQuit();
@@ -48,13 +56,26 @@ public class AprilActivity extends Activity
 	private AprilGLSurfaceView glView = null;
 	private boolean viewAlreadySet = false;
 	
+	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
+	{
+		AprilJNI.ArchivePath = archivePath;
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		AprilJNI.ApkPath = this.getPackageResourcePath();
-		AprilJNI.SystemPath = this.getFilesDir().getAbsolutePath();
 		AprilJNI.Activity = this;
+		AprilJNI.SharedPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+		AprilJNI.SystemPath = this.getFilesDir().getAbsolutePath();
+		AprilJNI.PackageName = this.getPackageName();
+		try
+		{
+			AprilJNI.VersionCode = Integer.toString(this.getPackageManager().getPackageInfo(AprilJNI.PackageName, 0).versionCode);
+		}
+		catch (NameNotFoundException e)
+		{
+		}
 		this.setDefaultKeyMode(DEFAULT_KEYS_DISABLE);
 		this.glView = new AprilGLSurfaceView(this);
 		AprilJNI.activityOnCreate();
@@ -112,7 +133,7 @@ public class AprilActivity extends Activity
 		super.onRestart();
 		AprilJNI.activityOnRestart();
 	}
-
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
@@ -167,7 +188,7 @@ class AprilGLSurfaceView extends GLSurfaceView
 		this.setRenderer(this.renderer);
 	}
 	
-    public boolean onTouchEvent(final MotionEvent event)
+	public boolean onTouchEvent(final MotionEvent event)
 	{
 		this.queueEvent
 		(
@@ -191,7 +212,7 @@ class AprilGLSurfaceView extends GLSurfaceView
 			}
 		);
 		return true;
-	}	
+	}
 	
 }
 
@@ -202,18 +223,17 @@ class AprilRenderer implements GLSurfaceView.Renderer
 		AprilJNI.onSurfaceCreated();
 		if (!AprilJNI.Running)
 		{
+			AprilJNI.setVariables(AprilJNI.Activity, AprilJNI.SystemPath, AprilJNI.SharedPath, AprilJNI.PackageName, AprilJNI.VersionCode, AprilJNI.ArchivePath);
 			DisplayMetrics metrics = new DisplayMetrics();
 			AprilJNI.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-			String args[] = {AprilJNI.ApkPath}; // adding argv[0]
-			AprilJNI.init(AprilJNI.Activity, args, AprilJNI.SystemPath, metrics.widthPixels, metrics.heightPixels);
+			String args[] = {AprilJNI.ArchivePath}; // adding argv[0]
+			AprilJNI.init(args, metrics.widthPixels, metrics.heightPixels);
 			AprilJNI.Running = true;
 		}
 	}
 	
 	public void onSurfaceChanged(GL10 gl, int w, int h)
 	{
-		//gl.glViewport(0, 0, w, h);
-		//nativeResize(w, h);
 	}
 	
 	public void onDrawFrame(GL10 gl)
