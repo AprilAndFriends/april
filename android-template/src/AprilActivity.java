@@ -25,7 +25,7 @@ class AprilJNI
 	public static String SystemPath = ".";
 	public static String SharedPath = ".";
 	public static String PackageName = "";
-	public static String VersionCode = "";
+	public static String VersionCode = "0";
 	
 	public static native void setVariables(Object activity, String systemPath, String sharedPath, String packageName, String versionCode, String forceArchivePath);
 	public static native void init(String[] args, int width, int height);
@@ -54,11 +54,14 @@ class AprilJNI
 public class AprilActivity extends Activity
 {
 	private AprilGLSurfaceView glView = null;
-	private boolean viewAlreadySet = false;
 	
 	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
 	{
 		AprilJNI.ArchivePath = archivePath;
+	}
+	
+	public void postInit() // supposed to be overriden
+	{
 	}
 	
 	@Override
@@ -76,8 +79,8 @@ public class AprilActivity extends Activity
 		catch (NameNotFoundException e)
 		{
 		}
-		this.setDefaultKeyMode(DEFAULT_KEYS_DISABLE);
 		this.glView = new AprilGLSurfaceView(this);
+		this.setContentView(this.glView);
 		AprilJNI.activityOnCreate();
 	}
 	
@@ -85,12 +88,6 @@ public class AprilActivity extends Activity
 	protected void onStart()
 	{
 		super.onStart();
-		// this allows for a proper splash screen
-		if (!this.viewAlreadySet)
-		{
-			this.setContentView(this.glView);
-			this.viewAlreadySet = true;
-		}
 		AprilJNI.activityOnStart();
 	}
 
@@ -228,6 +225,7 @@ class AprilRenderer implements GLSurfaceView.Renderer
 			AprilJNI.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 			String args[] = {AprilJNI.ArchivePath}; // adding argv[0]
 			AprilJNI.init(args, metrics.widthPixels, metrics.heightPixels);
+			AprilJNI.Activity.postInit();
 			AprilJNI.Running = true;
 		}
 	}
