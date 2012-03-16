@@ -59,6 +59,9 @@ namespace april
 		int getSizeInBytes();
 		bool isValid();
 
+	protected:
+		unsigned char* mManualData;
+
 	};
 
 }

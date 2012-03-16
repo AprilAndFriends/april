@@ -267,10 +267,8 @@ namespace april
 		RenderSystem::restore();
 		glViewport(0, 0, mWindow->getWidth(), mWindow->getHeight());
 		glClearColor(0, 0, 0, 1);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
+		_setModelviewMatrix(mModelviewMatrix);
+		_setProjectionMatrix(mProjectionMatrix);
 		// GL defaults
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
