@@ -20,6 +20,8 @@
 
 namespace april
 {
+	class Texture;
+
 	class aprilExport TextureManager
 	{
 	public:

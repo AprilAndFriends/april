@@ -135,7 +135,7 @@ namespace april
 
 	void JNICALL _JNI_onFocusChange(JNIEnv* env, jclass classe, jboolean has_focus)
 	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent((bool)has_focus));
+		//PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent((bool)has_focus));
 	}
 
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
@@ -173,13 +173,15 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android ActivityOnResume()");
 #endif
+		PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent(true));
 	}
-
+	
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
 		april::log("Android ActivityOnPause()");
 #endif
+		PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent(false));
 		if (april::rendersys != NULL)
 		{
 			april::rendersys->getTextureManager()->unloadTextures();

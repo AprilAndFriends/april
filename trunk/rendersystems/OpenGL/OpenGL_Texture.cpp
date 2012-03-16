@@ -81,6 +81,7 @@ namespace april
 		mFilename = filename;
 		mDynamic = dynamic;
 		mTexId = 0;
+		mManualData = NULL;
 		if (!dynamic)
 		{
 			load();
@@ -89,11 +90,16 @@ namespace april
 
 	OpenGL_Texture::OpenGL_Texture(unsigned char* rgba, int w, int h) : Texture()
 	{
-		april::log("Creating user-defined GL texture");
+		april::log("creating user-defined GL texture");
 		mWidth = w;
 		mHeight = h;
 		mDynamic = false;
 		mFilename = "";
+		mManualData = NULL;
+#ifdef _ANDROID // currently user texture caching works for Android only
+		mManualData = new unsigned char[w * h * 4];
+		memcpy(mManualData, rgba, w * h * 4 * sizeof(unsigned char));
+#endif
 		glGenTextures(1, &mTexId);
 		glBindTexture(GL_TEXTURE_2D, mTexId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -103,11 +109,12 @@ namespace april
 
 	OpenGL_Texture::OpenGL_Texture(int w, int h) : Texture()
 	{
-		april::log("Creating empty GL texture");
+		april::log("creating empty GL texture [ " + hstr(w) + "x" + hstr(h) + " ]");
 		mWidth = w;
 		mHeight = h;
 		mDynamic = false;
 		mFilename = "";
+		mManualData = NULL;
 		glGenTextures(1, &mTexId);
 		glBindTexture(GL_TEXTURE_2D, mTexId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -121,6 +128,10 @@ namespace april
 	OpenGL_Texture::~OpenGL_Texture()
 	{
 		unload();
+		if (mManualData != NULL)
+		{
+			delete [] mManualData;
+		}
 	}
 
 	Color OpenGL_Texture::getPixel(int x, int y)
@@ -237,8 +248,15 @@ namespace april
 		}
 		else
 		{
-			april::log("Creating user-defined GL texture");
+			april::log("creating user-defined GL texture");
 			glGenTextures(1, &mTexId);
+			glBindTexture(GL_TEXTURE_2D, mTexId);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			if (mManualData != NULL)
+			{
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, mManualData);
+			}
 		}
 		if (mTexId == 0)
 		{
@@ -269,7 +287,7 @@ namespace april
 
 	int OpenGL_Texture::getSizeInBytes()
 	{
-		return (mWidth * mHeight * 3);
+		return (mWidth * mHeight * 3); // TODO
 	}
 
 	bool OpenGL_Texture::isValid()

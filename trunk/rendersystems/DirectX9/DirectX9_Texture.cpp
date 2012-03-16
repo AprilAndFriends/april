@@ -46,11 +46,11 @@ namespace april
 		mUnusedTimer = 0;
 		mSurface = NULL;
 
-		april::log("Creating user-defined DX9 texture");
+		april::log("creating user-defined DX9 texture");
 		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, NULL);
 		if (hr != D3D_OK)
 		{
-			april::log("Failed to create user-defined DX9 texture!");
+			april::log("failed to create user-defined DX9 texture!");
 			return;
 		}
 		// write texels
@@ -98,7 +98,7 @@ namespace april
 		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, d3dusage, d3dfmt, d3dpool, &mTexture, NULL);
 		if (hr != D3D_OK)
 		{
-			april::log("Failed to create user-defined DX9 texture!");
+			april::log("failed to create user-defined DX9 texture!");
 			return;
 		}
 	}
