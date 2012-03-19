@@ -1,0 +1,1 @@
+bool gAprilShouldInvokeQuitCallback = false;

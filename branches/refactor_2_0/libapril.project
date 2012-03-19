@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="libapril" InternalType="Library">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00080001N0005Debug0000000000000001N0013DirectX_Debug0000000000000001N0015DirectX_Release0000000000000001N0011Linux_Debug0000000000000001N0012OpenGL_Debug0000000000000001N0014OpenGL_Release0000000000000001N0007Release0000000000000001N0013Release_Win32000000000000]]>
+    </Plugin>
+  </Plugins>
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="src">
+    <File Name="src/RenderSystem.cpp"/>
+    <File Name="src/TimerWin.cpp"/>
+    <File Name="src/Window.cpp"/>
+    <VirtualDirectory Name="rendersystems">
+      <File Name="rendersystems/DirectX9/DirectX9_RenderSystem.cpp"/>
+      <File Name="rendersystems/DirectX9/DirectX9_Texture.cpp"/>
+      <File Name="rendersystems/OpenGL/OpenGL_RenderSystem.cpp"/>
+      <File Name="rendersystems/OpenGL/OpenGL_Texture.cpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="windowsystems">
+      <File Name="windowsystems/GLUT/GLUTWindow.cpp"/>
+      <File Name="windowsystems/SDL/SDLWindow.cpp"/>
+      <File Name="windowsystems/Win32/Win32Window.cpp"/>
+    </VirtualDirectory>
+    <File Name="main_win32.cpp"/>
+    <File Name="src/ImageSourceIL.cpp"/>
+    <File Name="src/Color.cpp"/>
+    <File Name="src/Texture.cpp"/>
+    <File Name="src/ImageSource.cpp"/>
+    <File Name="fileproperties.rc"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="include">
+    <File Name="include/april/RenderSystem.h"/>
+    <File Name="include/april/ImageSource.h"/>
+    <File Name="include/april/Keys.h"/>
+    <File Name="include/april/Timer.h"/>
+    <File Name="include/april/Window.h"/>
+    <File Name="include/april/main.h"/>
+    <File Name="include/april/aprilExport.h"/>
+    <VirtualDirectory Name="rendersystems">
+      <File Name="rendersystems/DirectX9/DirectX9_RenderSystem.h"/>
+      <File Name="rendersystems/DirectX9/DirectX9_Texture.h"/>
+      <File Name="rendersystems/OpenGL/OpenGL_RenderSystem.h"/>
+      <File Name="rendersystems/OpenGL/OpenGL_Texture.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="windowsystems">
+      <File Name="windowsystems/Win32/Win32Window.h"/>
+      <File Name="windowsystems/SDL/SDLWindow.h"/>
+      <File Name="windowsystems/GLUT/GLUTWindow.h"/>
+    </VirtualDirectory>
+    <File Name="include/april/Color.h"/>
+    <File Name="include/april/Texture.h"/>
+  </VirtualDirectory>
+  <Dependencies Name="Debug">
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="Release"/>
+  <Settings Type="Dynamic Library">
+    <Configuration Name="DirectX_Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g" C_Options="-g" Required="yes" PreCompiledHeader="">
+        <Preprocessor Value="_WIN32"/>
+        <Preprocessor Value="_DIRECTX9"/>
+        <Preprocessor Value="_DEBUG"/>
+      </Compiler>
+      <Linker Options="" Required="yes">
+        <LibraryPath Value="../hltypes/bin/Debug"/>
+        <LibraryPath Value="../gtypes/bin/Debug"/>
+        <Library Value="libhltypes_d"/>
+        <Library Value="libgtypes_d"/>
+        <Library Value="libDevIL"/>
+        <Library Value="d3d9"/>
+        <Library Value="libwinmm"/>
+        <Library Value="glut32"/>
+        <Library Value="opengl32"/>
+        <Library Value="glu32"/>
+        <Library Value="gdi32"/>
+        <Library Value="winmm"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)_d.dll" IntermediateDirectory="bin/$(ConfigurationName)" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild>
+        <Command Enabled="yes">copy bin\$(ConfigurationName)\*.dll bin</Command>
+      </PostBuild>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="DirectX_Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g" C_Options="-g" Required="yes" PreCompiledHeader="">
+        <Preprocessor Value="_WIN32"/>
+        <Preprocessor Value="_DIRECTX9"/>
+      </Compiler>
+      <Linker Options="-O2" Required="yes">
+        <LibraryPath Value="../hltypes/bin/Release_Win32"/>
+        <LibraryPath Value="../gtypes/bin/Release_Win32"/>
+        <Library Value="libhltypes"/>
+        <Library Value="libgtypes"/>
+        <Library Value="libDevIL"/>
+        <Library Value="d3d9"/>
+        <Library Value="libwinmm"/>
+        <Library Value="glut32"/>
+        <Library Value="opengl32"/>
+        <Library Value="glu32"/>
+        <Library Value="gdi32"/>
+        <Library Value="winmm"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName).dll" IntermediateDirectory="bin/$(ConfigurationName)" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild>
+        <Command Enabled="yes">copy bin\$(ConfigurationName)\*.dll bin</Command>
+      </PostBuild>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Linux_Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g" C_Options="-g" Required="yes" PreCompiledHeader="">
+        <Preprocessor Value="_UNIX"/>
+        <Preprocessor Value="_OPENGL"/>
+      </Compiler>
+      <Linker Options="" Required="yes">
+        <LibraryPath Value="../hltypes/bin/Linux_Debug"/>
+        <LibraryPath Value="../gtypes/bin/Linux_Debug"/>
+        <Library Value="libhltypes_d"/>
+        <Library Value="libgtypes_d"/>
+        <Library Value="libGL"/>
+        <Library Value="libGLU"/>
+        <Library Value="libglut"/>
+        <Library Value="libIL"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/libapril_d.so" IntermediateDirectory="./bin/Linux_Debug" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="OpenGL_Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g" C_Options="-g" Required="yes" PreCompiledHeader="">
+        <Preprocessor Value="_WIN32"/>
+        <Preprocessor Value="_OPENGL"/>
+        <Preprocessor Value="_DEBUG"/>
+      </Compiler>
+      <Linker Options="" Required="yes">
+        <LibraryPath Value="../hltypes/bin/Debug"/>
+        <LibraryPath Value="../gtypes/bin/Debug"/>
+        <Library Value="libhltypes_d"/>
+        <Library Value="libgtypes_d"/>
+        <Library Value="libOpenGL32"/>
+        <Library Value="libglu32"/>
+        <Library Value="libglut32"/>
+        <Library Value="libDevIL"/>
+        <Library Value="libwinmm"/>
+        <Library Value="gdi32"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)_d.dll" IntermediateDirectory="bin/$(ConfigurationName)" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild>
+        <Command Enabled="yes">copy bin\$(ConfigurationName)\*.dll bin</Command>
+      </PostBuild>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="OpenGL_Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" C_Options="" Required="yes" PreCompiledHeader="">
+        <Preprocessor Value="_WIN32"/>
+        <Preprocessor Value="_OPENGL"/>
+      </Compiler>
+      <Linker Options="-O2" Required="yes">
+        <LibraryPath Value="../hltypes/bin/Release_Win32"/>
+        <LibraryPath Value="../gtypes/bin/Release_Win32"/>
+        <Library Value="libhltypes"/>
+        <Library Value="libgtypes"/>
+        <Library Value="libOpenGL32"/>
+        <Library Value="libglu32"/>
+        <Library Value="libglut32"/>
+        <Library Value="libDevIL"/>
+        <Library Value="libwinmm"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName).dll" IntermediateDirectory="bin/$(ConfigurationName)" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild>
+        <Command Enabled="yes">copy bin\$(ConfigurationName)\*.dll bin</Command>
+      </PostBuild>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="."/>
+        <IncludePath Value="include"/>
+        <IncludePath Value="include/april"/>
+        <IncludePath Value="rendersystems/OpenGL"/>
+        <IncludePath Value="rendersystems/DirectX9"/>
+        <IncludePath Value="windowsystems/GLUT"/>
+        <IncludePath Value="windowsystems/SDL"/>
+        <IncludePath Value="windowsystems/Win32"/>
+        <IncludePath Value="../hltypes/include"/>
+        <IncludePath Value="../gtypes/include"/>
+        <IncludePath Value="../include"/>
+        <Preprocessor Value="APRIL_EXPORTS"/>
+        <Preprocessor Value="USE_IL"/>
+        <Preprocessor Value="BUILDING_APRIL"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="./lib"/>
+        <LibraryPath Value="../lib"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+  </Settings>
+  <Dependencies Name="DirectX_Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="Linux_Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="OpenGL_Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="OpenGL_Release">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+  <Dependencies Name="DirectX_Debug">
+    <Project Name="libhltypes"/>
+    <Project Name="libgtypes"/>
+  </Dependencies>
+</CodeLite_Project>
