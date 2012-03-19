@@ -31,7 +31,6 @@ class AprilJNI
 	public static native void init(String[] args, int width, int height);
 	public static native boolean render();
 	public static native void destroy();
-	public static native boolean onQuit();
 	public static native void onMouseDown(float x, float y, int button);
 	public static native void onMouseUp(float x, float y, int button);
 	public static native void onMouseMove(float x, float y);
@@ -141,17 +140,6 @@ public class AprilActivity extends Activity
 	public boolean onKeyUp(int keyCode, KeyEvent event)
 	{
 		return AprilJNI.onKeyUp(event.getKeyCode());
-	}
-	
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent event)
-	{
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && AprilJNI.onQuit())
-		{
-			this.finish();
-			return false;    
-		}
-        return super.dispatchKeyEvent(event);
 	}
 	
 	@Override
