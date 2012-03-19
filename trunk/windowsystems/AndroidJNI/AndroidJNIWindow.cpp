@@ -166,10 +166,10 @@ namespace april
 		jclass classWindow = env->FindClass("android/view/Window");
 		jmethodID methodGetDecorView = env->GetMethodID(classWindow, "getDecorView", "()Landroid/view/View;");
 		// output
-		*javaEnv = env;
-		*javaClassInputMethodManager = env->FindClass("android/view/inputmethod/InputMethodManager");
-		*javaInputMethodManager = env->CallObjectMethod(aprilActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
-		*javaDecorView = env->CallObjectMethod(window, methodGetDecorView);
+		*javaEnv = (void*)env;
+		*javaClassInputMethodManager = (void*)env->FindClass("android/view/inputmethod/InputMethodManager");
+		*javaInputMethodManager = (void*)env->CallObjectMethod(aprilActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
+		*javaDecorView = (void*)env->CallObjectMethod(window, methodGetDecorView);
 	}
 	
 	void AndroidJNIWindow::beginKeyboardHandling()
