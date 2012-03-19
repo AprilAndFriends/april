@@ -38,7 +38,7 @@ namespace april
 		AK_WHEELDN = 5,
 		AK_DOUBLETAP = 7, // touchscreen only
 
-		// mostly common keys
+		// most common keys
 		AK_BACK = 8,
 		AK_TAB = 9,
 		AK_CLEAR = 12,
@@ -260,7 +260,7 @@ namespace april
 		AK_WHEELDN = 169, // ZOOM_OUT
 		AK_DOUBLETAP = 0,
 
-		// mostly common keys, some not supported
+		// most common keys, some not supported
 		AK_BACK = 67,
 		AK_TAB = 61,
 		AK_CLEAR = 28,
