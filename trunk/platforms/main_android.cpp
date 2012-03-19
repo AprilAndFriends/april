@@ -124,11 +124,6 @@ namespace april
 		return true;
 	}
 
-	void JNICALL _JNI_onFocusChange(JNIEnv* env, jclass classe, jboolean has_focus)
-	{
-		//PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent((bool)has_focus));
-	}
-
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
 	{
 		PROTECTED_RENDERSYS_GET_WINDOW(handleLowMemoryWarning());
@@ -136,9 +131,6 @@ namespace april
 
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
 	{
-#ifdef _DEBUG
-		april::log("Android onSurfaceCreated");
-#endif
 		if (april::rendersys != NULL)
 		{
 			april::rendersys->restore();
@@ -209,7 +201,7 @@ namespace april
 #define _JFLOAT "F"
 #define _JVOID "V"
 
-#define METHOD_COUNT 19 // make sure this fits
+#define METHOD_COUNT 18 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"setVariables",		_JARGS(_JVOID, _JOBJ _JSTR _JSTR _JSTR _JSTR _JSTR),	(void*)&april::_JNI_setVariables		},
@@ -221,7 +213,6 @@ namespace april
 		{"onMouseMove",			_JARGS(_JVOID, _JFLOAT _JFLOAT),						(void*)&april::_JNI_onMouseMove			},
 		{"onKeyDown",			_JARGS(_JBOOL, _JINT _JINT),							(bool*)&april::_JNI_onKeyDown			},
 		{"onKeyUp",				_JARGS(_JBOOL, _JINT),									(bool*)&april::_JNI_onKeyUp				},
-		{"onFocusChange",		_JARGS(_JVOID, _JBOOL),									(void*)&april::_JNI_onFocusChange		},
 		{"onLowMemory",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onLowMemory			},
 		{"onSurfaceCreated",	_JARGS(_JVOID, ),										(void*)&april::_JNI_onSurfaceCreated	},
 		{"activityOnCreate",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnCreate	},

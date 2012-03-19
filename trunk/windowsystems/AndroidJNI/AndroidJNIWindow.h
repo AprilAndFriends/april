@@ -53,6 +53,17 @@ namespace april
 
 	};
 
+	struct TouchInputEvent
+	{
+		harray<gvec2> touches;
+
+		TouchInputEvent(harray<gvec2>& _touches)
+		{
+			touches = _touches;
+		}
+
+	};
+
 	class aprilExport AndroidJNIWindow : public Window
 	{
 	public:
@@ -101,9 +112,11 @@ namespace april
 		float mWidth;
 		float mHeight;
 		bool mActive;
+		bool mAlreadyTouched;
 		//bool mRunning;
 		harray<MouseInputEvent> mMouseEvents;
 		harray<KeyInputEvent> mKeyEvents;
+		harray<TouchInputEvent> mTouchEvents;
 		
 		// using void** so that jni.h doesn't have to be included in this header
 		void _getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView);
