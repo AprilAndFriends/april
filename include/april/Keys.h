@@ -19,8 +19,8 @@
 namespace april
 {
 	// this enum defines Windows-specific virtual keys
-	// however, these are mostly nicely defined, so let's use them
-	// on other platforms too
+	// however, these are mostly nicely defined so they can be used
+	// on other platforms as well
 
 	enum KeySym
 	{
