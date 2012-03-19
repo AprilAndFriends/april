@@ -97,15 +97,6 @@ namespace april
 		return true;
 	}
 
-	bool JNICALL _JNI_onQuit(JNIEnv* env, jclass classe)
-	{
-		if (april::rendersys != NULL && april::rendersys->getWindow() != NULL)
-		{
-			return april::rendersys->getWindow()->handleQuitRequest(true);
-		}
-		return true;
-	}
-
 	void JNICALL _JNI_onMouseDown(JNIEnv* env, jclass classe, jfloat x, jfloat y, jint button)
 	{
 		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_DOWN, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT));
@@ -218,14 +209,13 @@ namespace april
 #define _JFLOAT "F"
 #define _JVOID "V"
 
-#define METHOD_COUNT 20 // make sure this fits
+#define METHOD_COUNT 19 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"setVariables",		_JARGS(_JVOID, _JOBJ _JSTR _JSTR _JSTR _JSTR _JSTR),	(void*)&april::_JNI_setVariables		},
 		{"init",				_JARGS(_JVOID, _JARR(_JSTR) _JINT _JINT),				(void*)&april::_JNI_init				},
 		{"destroy",				_JARGS(_JVOID, ),										(void*)&april::_JNI_destroy				},
 		{"render",				_JARGS(_JBOOL, ),										(void*)&april::_JNI_render				},
-		{"onQuit",				_JARGS(_JBOOL, ),										(void*)&april::_JNI_onQuit				},
 		{"onMouseDown",			_JARGS(_JVOID, _JFLOAT _JFLOAT _JINT),					(void*)&april::_JNI_onMouseDown			},
 		{"onMouseUp",			_JARGS(_JVOID, _JFLOAT _JFLOAT _JINT),					(void*)&april::_JNI_onMouseUp			},
 		{"onMouseMove",			_JARGS(_JVOID, _JFLOAT _JFLOAT),						(void*)&april::_JNI_onMouseMove			},

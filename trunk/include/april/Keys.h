@@ -279,7 +279,7 @@ namespace april
 		AK_FINAL = 0,
 		AK_HANJA = 0,
 		AK_KANJI = 0,
-		AK_ESCAPE = 0,
+		AK_ESCAPE = 4, // using Android's back button for this
 		AK_CONVERT = 0,
 		AK_NONCONVERT = 0,
 		AK_ACCEPT = 0,
