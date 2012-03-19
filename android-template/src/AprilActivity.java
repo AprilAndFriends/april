@@ -36,7 +36,6 @@ class AprilJNI
 	public static native void onMouseMove(float x, float y);
 	public static native boolean onKeyDown(int keyCode, int charCode);
 	public static native boolean onKeyUp(int keyCode);
-	public static native void onFocusChange(boolean focused);
 	public static native void onLowMemory();
 	public static native void onSurfaceCreated();
 	
@@ -143,16 +142,6 @@ public class AprilActivity extends Activity
 	}
 	
 	@Override
-	public void onWindowFocusChanged(boolean hasFocus)
-	{
-		super.onWindowFocusChanged(hasFocus);
-		if (!this.isFinishing())
-		{
-			AprilJNI.onFocusChange(hasFocus);
-		}
-	}
-
-	@Override
 	public void onLowMemory()
 	{
 		AprilJNI.onLowMemory();
@@ -181,17 +170,25 @@ class AprilGLSurfaceView extends GLSurfaceView
 			{
 				public void run()
 				{
-					if (event.getAction() == MotionEvent.ACTION_DOWN)
+					final int action = event.getAction();
+					switch (action & MotionEvent.ACTION_MASK)
 					{
+					case MotionEvent.ACTION_DOWN:
 						AprilJNI.onMouseDown(event.getX(), event.getY(), 0);
-					}
-					else if (event.getAction() == MotionEvent.ACTION_UP)
-					{
+						break;
+					case MotionEvent.ACTION_UP:
 						AprilJNI.onMouseUp(event.getX(), event.getY(), 0);
-					}
-					else if (event.getAction() == MotionEvent.ACTION_MOVE)
-					{
+						break;
+					case MotionEvent.ACTION_MOVE:
 						AprilJNI.onMouseMove(event.getX(), event.getY());
+						break;
+					// this part should handle multi touch properly
+					case MotionEvent.ACTION_POINTER_DOWN:
+						AprilJNI.onMouseDown(event.getX(), event.getY(), 0);
+						break;
+					case MotionEvent.ACTION_POINTER_UP:
+						AprilJNI.onMouseUp(event.getX(), event.getY(), 0);
+						break;
 					}
 				}
 			}

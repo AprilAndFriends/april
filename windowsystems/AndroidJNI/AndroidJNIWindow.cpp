@@ -37,6 +37,7 @@ namespace april
 		mHeight = h;
 		mRunning = true;
 		mActive = true;
+		mAlreadyTouched = false;
 		mFullscreen = fullscreen;
 		//mTouchEnabled = false;
 		mTitle = title;
@@ -78,6 +79,7 @@ namespace april
 			{
 				mMouseEvents.clear();
 				mKeyEvents.clear();
+				mTouchEvents.clear();
 				hthread::sleep(40);
 			}
 		}
@@ -150,6 +152,11 @@ namespace april
 			KeyInputEvent e = mKeyEvents.pop_first();
 			Window::handleKeyEvent(e.type, e.keyCode, e.charCode);
 		}
+		while (mTouchEvents.size() > 0)
+		{
+			TouchInputEvent e = mTouchEvents.pop_first();
+			Window::handleTouchEvent(e.touches);
+		}
 	}
 
 	void AndroidJNIWindow::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView)
@@ -201,7 +208,50 @@ namespace april
 
 	void AndroidJNIWindow::handleMouseEvent(MouseEventType type, float x, float y, MouseButton button)
 	{
-		mMouseEvents += MouseInputEvent(type, x, y, button);
+		//* // TODO - potential multitouch handling
+#ifdef _DEBUG
+		april::log("    - MOUSE EVENT -> " + hstr(type == AMOUSEEVT_UP ? "UP" : (type == AMOUSEEVT_DOWN ? "DOWN" : "MOV")));
+#endif
+		if (type == AMOUSEEVT_DOWN && mAlreadyTouched)
+		{
+#ifdef _DEBUG
+			april::log("    - TOUCH " + hstr(x) + " " + hstr(y));
+#endif
+			mAlreadyTouched = false;
+			mMouseEvents += MouseInputEvent(AMOUSEEVT_UP, x, y, button);
+			harray<gvec2> touches;
+			touches += cursorPosition;
+			touches += gvec2(x, y);
+			mTouchEvents += TouchInputEvent(touches);
+		}
+		else if (type == AMOUSEEVT_DOWN)
+		{
+#ifdef _DEBUG
+			april::log("    - DOWN " + hstr(x) + " " + hstr(y));
+#endif
+			mAlreadyTouched = true;
+			mMouseEvents += MouseInputEvent(type, x, y, button);
+		}
+		else if (type == AMOUSEEVT_MOVE)
+		{
+#ifdef _DEBUG
+			april::log("    - MOV " + hstr(x) + " " + hstr(y));
+#endif
+			mMouseEvents += MouseInputEvent(type, x, y, button);
+		}
+		else if (type == AMOUSEEVT_UP)
+		{
+			if (mAlreadyTouched)
+			{
+				mAlreadyTouched = false;
+				mMouseEvents += MouseInputEvent(type, x, y, button);
+#ifdef _DEBUG
+				april::log("    - UP " + hstr(x) + " " + hstr(y));
+#endif
+			}
+		}
+		//*/
+		//mMouseEvents += MouseInputEvent(type, x, y, button);
 	}
 
 	void AndroidJNIWindow::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
