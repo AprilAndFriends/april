@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.52
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -24,15 +24,13 @@ namespace april
 	struct MouseInputEvent
 	{
 		Window::MouseEventType type;
-		float x;
-		float y;
+		gvec2 position;
 		Window::MouseButton button;
 
-		MouseInputEvent(Window::MouseEventType _type, float _x, float _y, Window::MouseButton _button)
+		MouseInputEvent(Window::MouseEventType _type, gvec2 _position, Window::MouseButton _button)
 		{
 			type = _type;
-			x = _x;
-			y = _y;
+			position = _position;
 			button = _button;
 		}
 
@@ -53,11 +51,11 @@ namespace april
 
 	};
 
-	class aprilExport AndroidJNIWindow : public Window
+	class aprilExport AndroidJNI_Window : public Window
 	{
 	public:
-		AndroidJNIWindow(int w, int h, bool fullscreen, chstr title);
-		~AndroidJNIWindow();
+		AndroidJNI_Window(int w, int h, bool fullscreen, chstr title);
+		~AndroidJNI_Window();
 		
 		//void _setActive(bool active) { mActive = active; }
 		
@@ -92,10 +90,8 @@ namespace april
 		
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
-		void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
+		void handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button);
 		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
-		
-		DeviceType getDeviceType();
 		
 	protected:
 		float mWidth;

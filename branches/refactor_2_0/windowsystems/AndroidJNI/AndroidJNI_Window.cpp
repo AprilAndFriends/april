@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.52
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -27,7 +27,7 @@ namespace april
 	static april::Timer globalTimer;
 	static float lastTime = 0.0f;
 
-	AndroidJNIWindow::AndroidJNIWindow(int w, int h, bool fullscreen, chstr title) : Window()
+	AndroidJNI_Window::AndroidJNI_Window(int w, int h, bool fullscreen, chstr title) : Window()
 	{
 		if (april::rendersys != NULL)
 		{
@@ -42,16 +42,16 @@ namespace april
 		mTitle = title;
 	}
 	
-	AndroidJNIWindow::~AndroidJNIWindow()
+	AndroidJNI_Window::~AndroidJNI_Window()
 	{
 		//log("Destroying Android JNI Windowsystem");
 	}
 
-	void AndroidJNIWindow::enterMainLoop()
+	void AndroidJNI_Window::enterMainLoop()
 	{
 	}
 	
-	bool AndroidJNIWindow::updateOneFrame()
+	bool AndroidJNI_Window::updateOneFrame()
 	{
 		if (lastTime == 0.0f)
 		{
@@ -90,60 +90,60 @@ namespace april
 		return result;
 	}
 	
-	void AndroidJNIWindow::terminateMainLoop()
+	void AndroidJNI_Window::terminateMainLoop()
 	{
 		mRunning = false;
 	}
 
-	void AndroidJNIWindow::destroyWindow()
+	void AndroidJNI_Window::destroyWindow()
 	{
 	}
 
-	void AndroidJNIWindow::showSystemCursor(bool visible)
+	void AndroidJNI_Window::showSystemCursor(bool visible)
 	{
 	}
 
-	bool AndroidJNIWindow::isSystemCursorShown()
+	bool AndroidJNI_Window::isSystemCursorShown()
 	{
 		return false;
 	}
 
-	int AndroidJNIWindow::getWidth()
+	int AndroidJNI_Window::getWidth()
 	{
 		return mWidth;
 	}
 
-	int AndroidJNIWindow::getHeight()
+	int AndroidJNI_Window::getHeight()
 	{
 		return mHeight;
 	}
 
-	void AndroidJNIWindow::setWindowTitle(chstr title)
+	void AndroidJNI_Window::setWindowTitle(chstr title)
 	{
 	}
 
-	gvec2 AndroidJNIWindow::getCursorPosition()
+	gvec2 AndroidJNI_Window::getCursorPosition()
 	{
 		return cursorPosition;
 	}
 
-	void AndroidJNIWindow::presentFrame()
+	void AndroidJNI_Window::presentFrame()
 	{
 		// not needed as Android Java Activity takes care of this
 	}
 
-	void* AndroidJNIWindow::getIDFromBackend()
+	void* AndroidJNI_Window::getIDFromBackend()
 	{
 		return javaVM;
 	}
 
-	void AndroidJNIWindow::doEvents()
+	void AndroidJNI_Window::doEvents()
 	{
 		while (mMouseEvents.size() > 0)
 		{
 			MouseInputEvent e = mMouseEvents.pop_first();
-			cursorPosition.set(e.x, e.y);
-			Window::handleMouseEvent(e.type, e.x, e.y, e.button);
+			cursorPosition = e.position;
+			Window::handleMouseEvent(e.type, e.position, e.button);
 		}
 		while (mKeyEvents.size() > 0)
 		{
@@ -152,7 +152,7 @@ namespace april
 		}
 	}
 
-	void AndroidJNIWindow::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView)
+	void AndroidJNI_Window::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView)
 	{
 		JNIEnv* env = NULL;
 		((JavaVM*)javaVM)->GetEnv((void**)&env, JNI_VERSION_1_6);
@@ -172,7 +172,7 @@ namespace april
 		*javaDecorView = env->CallObjectMethod(window, methodGetDecorView);
 	}
 	
-	void AndroidJNIWindow::beginKeyboardHandling()
+	void AndroidJNI_Window::beginKeyboardHandling()
 	{
 		JNIEnv* env = NULL;
 		jclass classInputMethodManager = NULL;
@@ -184,7 +184,7 @@ namespace april
 		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, decorView, 0);
 	}
 	
-	void AndroidJNIWindow::terminateKeyboardHandling()
+	void AndroidJNI_Window::terminateKeyboardHandling()
 	{
 		JNIEnv* env = NULL;
 		jclass classInputMethodManager = NULL;
@@ -199,19 +199,14 @@ namespace april
 		env->CallBooleanMethod(inputMethodManager, methodHideSoftInput, binder, 0);
 	}
 
-	void AndroidJNIWindow::handleMouseEvent(MouseEventType type, float x, float y, MouseButton button)
+	void AndroidJNI_Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
 	{
-		mMouseEvents += MouseInputEvent(type, x, y, button);
+		mMouseEvents += MouseInputEvent(type, position, button);
 	}
 
-	void AndroidJNIWindow::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
+	void AndroidJNI_Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
 	{
 		mKeyEvents += KeyInputEvent(type, keyCode, charCode);
-	}
-
-	Window::DeviceType AndroidJNIWindow::getDeviceType()
-	{
-		return Window::DEVICE_ANDROID_PHONE;
 	}
 
 }
