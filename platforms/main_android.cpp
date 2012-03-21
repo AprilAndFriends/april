@@ -32,7 +32,7 @@
 namespace april
 {
 	extern void* javaVM;
-	extern jobject aprilActivity;
+	extern jobject jActivity;
 	extern gvec2 androidResolution;
 
 	hstr _jstringToHstr(JNIEnv* env, jstring string)
@@ -46,7 +46,7 @@ namespace april
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jobject activity,
 		jstring jSystemPath, jstring jSharedPath, jstring jPackageName, jstring jVersionCode, jstring jForceArchivePath)
 	{
-		april::aprilActivity = activity;
+		april::jActivity = activity;
 		april::systemPath = _JSTR_TO_HSTR(jSystemPath);
 		hstr archivePath = _JSTR_TO_HSTR(jForceArchivePath);
 		hstr packageName = _JSTR_TO_HSTR(jPackageName);

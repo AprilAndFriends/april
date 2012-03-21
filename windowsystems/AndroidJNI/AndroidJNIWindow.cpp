@@ -21,7 +21,7 @@
 namespace april
 {
 	void* javaVM = NULL;
-	jobject aprilActivity = NULL;
+	jobject jActivity = NULL;
 	gvec2 androidResolution;
 	static gvec2 cursorPosition;
 	static april::Timer globalTimer;
@@ -163,19 +163,19 @@ namespace april
 	{
 		JNIEnv* env = NULL;
 		((JavaVM*)javaVM)->GetEnv((void**)&env, JNI_VERSION_1_6);
-		jclass classAprilActivity = env->GetObjectClass(aprilActivity);
+		jclass classAprilActivity = env->GetObjectClass(jActivity);
 		jclass classContext = env->FindClass("android/content/Context");
 		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
 		jobject INPUT_METHOD_SERVICE = env->GetStaticObjectField(classContext, fieldINPUT_METHOD_SERVICE);
 		jmethodID methodGetSystemService = env->GetMethodID(classAprilActivity, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
 		jmethodID methodGetWindow = env->GetMethodID(classAprilActivity, "getWindow", "()Landroid/view/Window;");
-		jobject window = env->CallObjectMethod(aprilActivity, methodGetWindow);
+		jobject window = env->CallObjectMethod(jActivity, methodGetWindow);
 		jclass classWindow = env->FindClass("android/view/Window");
 		jmethodID methodGetDecorView = env->GetMethodID(classWindow, "getDecorView", "()Landroid/view/View;");
 		// output
 		*javaEnv = (void*)env;
 		*javaClassInputMethodManager = (void*)env->FindClass("android/view/inputmethod/InputMethodManager");
-		*javaInputMethodManager = (void*)env->CallObjectMethod(aprilActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
+		*javaInputMethodManager = (void*)env->CallObjectMethod(jActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
 		*javaDecorView = (void*)env->CallObjectMethod(window, methodGetDecorView);
 	}
 	
