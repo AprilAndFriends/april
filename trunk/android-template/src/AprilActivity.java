@@ -58,10 +58,6 @@ public class AprilActivity extends Activity
 		AprilJNI.ArchivePath = archivePath;
 	}
 	
-	public void postInit() // supposed to be overriden
-	{
-	}
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -210,7 +206,6 @@ class AprilRenderer implements GLSurfaceView.Renderer
 			AprilJNI.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 			String args[] = {AprilJNI.ArchivePath}; // adding argv[0]
 			AprilJNI.init(args, metrics.widthPixels, metrics.heightPixels);
-			AprilJNI.Activity.postInit();
 			AprilJNI.Running = true;
 		}
 	}

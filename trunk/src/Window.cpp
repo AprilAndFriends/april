@@ -55,7 +55,7 @@
 namespace april
 {
 	extern void* javaVM;
-	extern jobject aprilActivity;
+	extern jobject jActivity;
 	extern gvec2 androidResolution;
 }
 #endif
