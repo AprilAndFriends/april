@@ -29,8 +29,10 @@ namespace april
 	class aprilExport Win32_Window : public Window
 	{
 	public:
-		Win32_Window(int width, int height, bool fullscreen, chstr title);
+		Win32_Window();
 		~Win32_Window();
+		bool create(int width, int height, bool fullscreen, chstr title);
+		bool destroy();
 
 		void setTitle(chstr title);
 		bool isCursorVisible();
@@ -39,13 +41,12 @@ namespace april
 		int getHeight();
 		bool isTouchEnabled() { return this->touchEnabled; }
 		void setTouchEnabled(bool value) { this->touchEnabled = value; }
-		void* getIdFromBackend();
+		void* getBackendId();
 		void _setResolution(int width, int height);
 
 		void enterMainLoop();
 		bool updateOneFrame();
 		void terminateMainLoop();
-		void destroyWindow();
 		void presentFrame();
 		void checkEvents();
 
@@ -56,12 +57,7 @@ namespace april
 		april::Timer globalTimer;
 		bool touchEnabled; // whether or not a Win7+ touchscreen was detected
 		
-		LRESULT _processEvents(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
 	private:
-		bool _touchDown;
-		bool _doubleTapDown;
-		int _mouseMoveMessagesCount;
 		float _lastTime;
 		hstr _fpsTitle;
 		float _fpsTimer;

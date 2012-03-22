@@ -91,19 +91,41 @@ namespace april
 		GL_POINTS,         // ROP_POINTS
 	};
 	
-	OpenGL_RenderSystem::OpenGL_RenderSystem(hstr params) : RenderSystem(),
-		mTexCoordsEnabled(false), mColorEnabled(false)
+	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem()
 	{
-		mParams = params;
-		glClearColor(0, 0, 0, 1);
+		this->name = APRIL_RS_OPENGL;
+		mTexCoordsEnabled = false;
+		mColorEnabled = false;
 	}
 
 	OpenGL_RenderSystem::~OpenGL_RenderSystem()
 	{
-		april::log("Destroying OpenGL Rendersystem");
+		this->destroy();
+	}
+
+	bool OpenGL_RenderSystem::create(chstr options)
+	{
+		if (!RenderSystem::create(options))
+		{
+			return false;
+		}
+		mTexCoordsEnabled = false;
+		mColorEnabled = false;
+		mOptions = options;
+		glClearColor(0, 0, 0, 1);
+		return true;
+	}
+
+	bool OpenGL_RenderSystem::destroy()
+	{
+		if (!RenderSystem::destroy())
+		{
+			return false;
+		}
 #ifdef _WIN32
 		_releaseWindow();
 #endif
+		return true;
 	}
 
 #ifdef _WIN32
@@ -135,7 +157,7 @@ namespace april
 	void OpenGL_RenderSystem::assignWindow(Window* window)
 	{
 #ifdef _WIN32
-		hWnd = (HWND)april::window->getIdFromBackend();
+		hWnd = (HWND)april::window->getBackendId();
 		PIXELFORMATDESCRIPTOR pfd;
 		memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
 		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
@@ -254,7 +276,7 @@ namespace april
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 #endif
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		if (mParams.contains("zbuffer"))
+		if (mOptions.contains("zbuffer"))
 		{
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
@@ -280,18 +302,13 @@ namespace april
 		// other
 		mTexCoordsEnabled = false;
 		mColorEnabled = false;
-		if (mParams.contains("zbuffer"))
+		if (mOptions.contains("zbuffer"))
 		{
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 		}
 	}
 
-	hstr OpenGL_RenderSystem::getName()
-	{
-		return "OpenGL";
-	}
-	
 	void OpenGL_RenderSystem::setParam(chstr name, chstr value)
 	{
 		if (name == "zbuffer")
@@ -663,13 +680,9 @@ namespace april
 	void OpenGL_RenderSystem::setColorMode(ColorMode mode, unsigned char alpha)
 	{
 		// TODO not implemented in OpenGL yet
+		april::log("WARNING: setColorMode ignored!");
 	}
 	
-	OpenGL_RenderSystem* OpenGL_RenderSystem::create(chstr options)
-	{
-		return new OpenGL_RenderSystem(options);
-	}
-
 }
 
 #endif

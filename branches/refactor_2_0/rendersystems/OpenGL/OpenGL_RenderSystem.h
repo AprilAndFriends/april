@@ -28,8 +28,10 @@ namespace april
 	class OpenGL_RenderSystem : public RenderSystem
 	{
 	public:
-		OpenGL_RenderSystem(hstr params);
+		OpenGL_RenderSystem();
 		~OpenGL_RenderSystem();
+		bool create(chstr options);
+		bool destroy();
 
 		void assignWindow(Window* window);
 		void restore();
@@ -57,7 +59,6 @@ namespace april
 		void setColorMode(ColorMode mode, unsigned char alpha);
 		// caps
 		float getPixelOffset();
-		hstr getName();
         
         ImageSource* grabScreenshot(int bpp = 3);
 
@@ -77,10 +78,8 @@ namespace april
 		void beginFrame();
 		harray<DisplayMode> getSupportedDisplayModes();
 		
-		static OpenGL_RenderSystem* create(chstr options);
-
 	protected:
-		hstr mParams;
+		hstr mOptions;
 		bool mTexCoordsEnabled;
 		bool mColorEnabled;
 

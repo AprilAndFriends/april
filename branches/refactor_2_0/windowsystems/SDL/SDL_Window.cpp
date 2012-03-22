@@ -45,15 +45,31 @@ extern int gAprilShouldInvokeQuitCallback;
 
 namespace april
 {
-	SDL_Window::SDL_Window(int width, int height, bool fullscreen, chstr title)
+	SDL_Window::SDL_Window() : Window()
 	{
-		log("Creating SDL Window");
-		// we want a centered sdl window
+		this->name = "SDL";
+		// centered SDL window
 		SDL_putenv("SDL_VIDEO_WINDOW_POS");
 		SDL_putenv("SDL_VIDEO_CENTERED=1");
-		this->title = title;
         this->cursorInside = true;
-		this->fullscreen = fullscreen;
+		this->screen = NULL;
+#ifdef _OPENGLES1
+		this->glesContext = NULL;
+#endif
+	}
+	
+	SDL_Window::~SDL_Window()
+	{
+		this->destroy();
+	}
+	
+	bool SDL_Window::create(int width, int height, bool fullscreen, chstr title)
+	{
+		if (!Window::create(width, height, fullscreen, title))
+		{
+			return false;
+		}
+        this->cursorInside = true;
 		// initialize only SDL video subsystem
 		SDL_Init(SDL_INIT_VIDEO);
 		// and immediately set window title
@@ -77,7 +93,7 @@ namespace april
 			//NSRunAlertPanel(@"Could not open display", @"Game could not set the screen resolution. Perhaps resetting game configuration will help.", @"Ok", nil, nil);
 #endif
 #endif
-			april::log("Requested display mode could not be provided");
+			april::log("SDL: requested display mode could not be provided");
 			exit(0);
 		}
 #ifndef _WIN32
@@ -85,7 +101,7 @@ namespace april
 		april::rendersys->presentFrame();
 #endif
 		SDL_FillRect(SDL_GetVideoSurface(), NULL, 0);
-		// we are not running yet
+		// not running yet
 		this->running = false;
 		// cursor is visible by default
 		this->cursorVisible = true;
@@ -93,15 +109,21 @@ namespace april
 		SDL_EnableKeyRepeat(100, 50);
 		this->checkEvents();
 		SDL_EnableUNICODE(1);
+		return true;
 	}
 	
-	SDL_Window::~SDL_Window()
+	bool SDL_Window::destroy()
 	{
+		if (!Window::destroy())
+		{
+			return false;
+		}
 #ifdef _OPENGLES1
 		SDL_GLES_DeleteContext(this->glesContext);
 		SDL_GLES_Quit();
 #endif
-		this->destroyWindow();
+		SDL_Quit();
+		return true;
 	}
 	
 	void SDL_Window::setTitle(chstr value)
@@ -142,7 +164,7 @@ namespace april
 		return SDL_GetVideoInfo()->current_h;
 	}
 	
-	void* SDL_Window::getIdFromBackend()
+	void* SDL_Window::getBackendId()
 	{
 #ifdef _WIN32
 		SDL_SysWMinfo wmInfo;
@@ -173,11 +195,6 @@ namespace april
 	void SDL_Window::terminateMainLoop()
 	{
 		this->running = false;
-	}
-	
-	void SDL_Window::destroyWindow()
-	{
-		SDL_Quit();
 	}
 	
 	void SDL_Window::checkEvents()

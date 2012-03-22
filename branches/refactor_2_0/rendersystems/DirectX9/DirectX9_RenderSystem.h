@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.31
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -28,8 +28,10 @@ namespace april
 	class DirectX9_RenderSystem : public RenderSystem
 	{
 	public:
-		DirectX9_RenderSystem(chstr options);
+		DirectX9_RenderSystem();
 		~DirectX9_RenderSystem();
+		bool create(chstr options);
+		bool destroy();
 
 		void assignWindow(Window* window);
 		
@@ -75,8 +77,6 @@ namespace april
 		void presentFrame();
 		harray<DisplayMode> getSupportedDisplayModes();
 
-		static DirectX9_RenderSystem* create(chstr options);
-		
 	protected:
 		bool mZBufferEnabled;
 		bool mTexCoordsEnabled;

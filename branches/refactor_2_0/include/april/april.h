@@ -20,12 +20,39 @@
 
 #include "aprilExport.h"
 
+#define APRIL_RS_OPENGL "OpenGL"
+#define APRIL_RS_DIRECTX9 "DirectX9"
+#define APRIL_RS_DEFAULT ""
+
+#define APRIL_WS_WIN32 "Win32"
+#define APRIL_WS_SDL "SDL"
+#define APRIL_WS_ANDROIDJNI "AndroidJNI"
+#define APRIL_WS_IOS "iOS"
+#define APRIL_WS_DEFAULT ""
+
 namespace april
 {
+	enum RenderSystemType
+	{
+		RS_DEFAULT = 0,
+		RS_DIRECTX9 = 1,
+		RS_OPENGL = 2
+	};
+
+	enum WindowSystemType
+	{
+		WS_DEFAULT = 0,
+		WS_WIN32 = 1,
+		WS_SDL = 2,
+		WS_IOS = 3,
+		WS_ANDROIDJNI = 4
+	};
+
 	extern hstr systemPath;
 
 	aprilFnExport void setLogFunction(void (*fnptr)(chstr));
-	aprilFnExport void init();
+	aprilFnExport void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType);
+	aprilFnExport void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType, chstr renderSystemOptions, int width, int height, bool fullscreen, chstr title);
 	aprilFnExport void createRenderSystem(chstr options);
 	aprilFnExport void createWindow(int width, int height, bool fullscreen, chstr title);
 	aprilFnExport void destroy();

@@ -37,8 +37,10 @@ namespace april
 	class SDL_Window : public Window
 	{
 	public:
-		SDL_Window(int width, int height, bool fullscreen, chstr title);
+		SDL_Window();
 		~SDL_Window();
+		bool create(int width, int height, bool fullscreen, chstr title);
+		bool destroy();
 		
 		void setTitle(chstr title);
 		bool isCursorVisible();
@@ -49,18 +51,16 @@ namespace april
 		bool isTouchEnabled() { return false; }
 		void setTouchEnabled(bool value) { }
 		gvec2 getCursorPosition();
-		void* getIdFromBackend();
+		void* getBackendId();
 
 		bool updateOneFrame();
 		void terminateMainLoop();
-		void destroyWindow();
-
 		void presentFrame();
 		void checkEvents();
 		
 	protected:
-		SDL_Surface* screen;
 		bool cursorInside;
+		SDL_Surface* screen;
 #ifdef _OPENGLES1
 		SDL_GLES_Context* glesContext;
 #endif

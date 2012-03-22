@@ -89,18 +89,44 @@ namespace april
 		this->z = v.z;
 	}
 /************************************************************************************/
-	RenderSystem::RenderSystem()
+	RenderSystem::RenderSystem() : created(false)
 	{
+		this->name = "Generic";
 		mDynamicLoading = false;
 		mIdleUnloadTime = 0;
 		mTextureFilter = Linear;
 		mTextureWrapping = true;
-		mTextureManager = new TextureManager();
+		mTextureManager = NULL;
 	}
 	
 	RenderSystem::~RenderSystem()
 	{
-		delete mTextureManager;
+		this->destroy();
+	}
+
+	bool RenderSystem::create(chstr options)
+	{
+		if (!this->created)
+		{
+			april::log(hsprintf("creating rendersystem '%s' (options: '%s')", this->name.c_str(), options.c_str()));
+			mTextureManager = new TextureManager();
+			this->created = true;
+			return true;
+		}
+		return false;
+	}
+	
+	bool RenderSystem::destroy()
+	{
+		if (this->created)
+		{
+			april::log(hsprintf("destroying rendersystem '%s'", this->name.c_str()));
+			delete mTextureManager;
+			mTextureManager = NULL;
+			this->created = false;
+			return true;
+		}
+		return false;
 	}
 
 	void RenderSystem::restore()

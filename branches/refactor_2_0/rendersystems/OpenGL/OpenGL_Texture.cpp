@@ -73,7 +73,6 @@ namespace april
 		return textureId;
 	}
 	
-	
 	OpenGL_Texture::OpenGL_Texture(chstr filename, bool dynamic) : Texture()
 	{
 		mWidth = 0;

@@ -45,8 +45,8 @@ namespace april
 		bool updateOneFrame();
 		void terminateMainLoop();
 		void destroyWindow();
-		void showSystemCursor(bool visible);
-		bool isSystemCursorShown();
+		void setCursorVisible(bool value);
+		bool isCursorVisible();
 		int getWidth();
 		int getHeight();
 		void setTitle(chstr value);
@@ -83,8 +83,6 @@ namespace april
 		void applicationDidBecomeActive();
 		
 	protected:
-		bool focused;
-		bool cursorVisible;
 		int keyboardRequest;
 		Timer timer;
 		bool firstFrameDrawn;

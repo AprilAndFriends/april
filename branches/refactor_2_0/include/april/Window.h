@@ -65,9 +65,14 @@ namespace april
 			ADEVICEORIENTATION_FACE_UP // screen is facing the sky
 		};
 		
+		Window();
 		virtual ~Window();
+		virtual bool create(int width, int height, bool fullscreen, chstr title);
+		virtual bool destroy();
 
 		// generic getters/setters
+		hstr getName() { return this->name; }
+		bool isCreated() { return this->created; }
 		hstr getTitle() { return this->title; }
 		bool isFullscreen() { return this->fullscreen; }
 		bool isFocused() { return this->focused; }
@@ -107,7 +112,7 @@ namespace april
 		virtual int getHeight() = 0;
 		virtual void setTouchEnabled(bool value) = 0;
 		virtual bool isTouchEnabled() = 0;
-		virtual void* getIdFromBackend() = 0;
+		virtual void* getBackendId() = 0;
 
 		// additional callback setters
 		void setMouseCallbacks(void (*mouseDownCallback)(float, float, int),
@@ -120,7 +125,6 @@ namespace april
 		// pure virtual methods (window system dependent)
 		virtual bool updateOneFrame() = 0;
 		virtual void terminateMainLoop() = 0;
-		virtual void destroyWindow() = 0;
 		virtual void presentFrame() = 0;
 		virtual void checkEvents() = 0;
 
@@ -143,6 +147,9 @@ namespace april
 		virtual bool handleUrl(chstr url);
 		virtual void handleLowMemoryWarning();
 
+		void handleKeyOnlyEvent(KeyEventType type, KeySym keyCode);
+		void handleCharOnlyEvent(unsigned int charCode);
+
 		virtual void enterMainLoop();
 		virtual bool performUpdate(float k);
 		
@@ -156,11 +163,11 @@ namespace april
 		DEPRECATED_ATTRIBUTE void showSystemCursor(bool value) { this->setCursorVisible(value); }
 		DEPRECATED_ATTRIBUTE bool isSystemCursorShown() { return this->isCursorVisible(); }
 		DEPRECATED_ATTRIBUTE void handleFocusEvent(bool focused) { this->handleFocusChangeEvent(focused); }
-		DEPRECATED_ATTRIBUTE void* getIDFromBackend() { return this->getIdFromBackend(); }
+		DEPRECATED_ATTRIBUTE void* getIDFromBackend() { return this->getBackendId(); }
 
 	protected:
-		Window();
-		
+		bool created;
+		hstr name;
 		hstr title;
 		bool fullscreen;
 		bool focused;
@@ -183,9 +190,6 @@ namespace april
 		void (*virtualKeyboardCallback)(bool);
 		bool (*handleUrlCallback)(chstr);
 		void (*lowMemoryCallback)();
-
-		void _handleKeyOnlyEvent(KeyEventType type, KeySym keyCode);
-		void _handleCharOnlyEvent(unsigned int charCode);
 
 	};
 

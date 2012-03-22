@@ -25,25 +25,30 @@ namespace april
 	jobject jActivity = NULL;
 	gvec2 androidResolution;
 
-	AndroidJNI_Window::AndroidJNI_Window(int width, int height, bool fullscreen, chstr title) : Window()
+	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), alreadyTouched(false), _lastTime(0.0f)
 	{
-		if (april::rendersys != NULL)
+		this->name = "Android JNI";
+	}
+
+	AndroidJNI_Window::~AndroidJNI_Window()
+	{
+		this->destroy();
+	}
+
+	bool AndroidJNI_Window::create(int width, int height, bool fullscreen, chstr title)
+	{
+		if (!Window::create(width, height, true, title))
 		{
-			april::log("Creating Android JNI Windowsystem (" + hstr(width) + ", " + hstr(height) + ")");
+			return false;
 		}
 		this->width = width;
 		this->height = height;
-		this->fullscreen = true;
-		this->title = title;
+		this->alreadyTouched = false;
 		this->_lastTime = 0.0f;
+		return true;
 	}
 	
-	AndroidJNI_Window::~AndroidJNI_Window()
-	{
-		//log("Destroying Android JNI Windowsystem");
-	}
-
-	void* AndroidJNI_Window::getIdFromBackend()
+	void* AndroidJNI_Window::getBackendId()
 	{
 		return javaVM;
 	}
@@ -83,10 +88,6 @@ namespace april
 	void AndroidJNI_Window::terminateMainLoop()
 	{
 		this->running = false;
-	}
-
-	void AndroidJNI_Window::destroyWindow()
-	{
 	}
 
 	void AndroidJNI_Window::presentFrame()

@@ -25,7 +25,7 @@ namespace april
 		{
 #if !TARGET_OS_IPHONE
 			april::window->terminateMainLoop();
-			april::window->destroyWindow();
+			april::window->destroy();
 #endif
 			passedStyle = (MessageBoxStyle)(passedStyle & AMSGSTYLE_MODAL);
 		}

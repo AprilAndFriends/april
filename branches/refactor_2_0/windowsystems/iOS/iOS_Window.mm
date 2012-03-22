@@ -85,8 +85,27 @@ namespace april
 	};
 	
 	
-    iOSWindow::iOSWindow(int w, int h, bool fullscreen, chstr title) : Window()
+    iOSWindow::iOSWindow() : Window()
     {
+		this->name = "iOS";
+		this->keyboardRequest = 0;
+		this->retainLoadingOverlay = false;
+		this->inputEventsMutex = false;
+		this->multiTouchActive = false;
+		this->firstFrameDrawn = false; // show window after drawing first frame
+	}
+	
+	iOSWindow::~iOSWindow()
+	{
+		destroy();
+	}
+	
+    bool iOSWindow::create(int width, int height, bool fullscreen, chstr title)
+    {
+		if (!Window::create(width, height, fullscreen, title))
+		{
+			return false;
+		}
 		this->keyboardRequest = 0;
 		this->retainLoadingOverlay = false;
 		this->focused = true;
@@ -106,11 +125,8 @@ namespace april
 		this->fullscreen = true; // iOS apps are always fullscreen
 		this->firstFrameDrawn = false; // show window after drawing first frame
 		this->running = true;
+		return true;
     }
-	
-	iOSWindow::~iOSWindow()
-	{
-	}
 	
     void iOSWindow::enterMainLoop()
     {
@@ -158,7 +174,7 @@ namespace april
 		[glview stopAnimation];
 	}
 	
-    void iOSWindow::showSystemCursor(bool visible)
+    void iOSWindow::setCursorVisible(bool visible)
     {
         // no effect on iOS
     }
@@ -186,7 +202,7 @@ namespace april
 		return e;
 	}
 
-    bool iOSWindow::isSystemCursorShown()
+    bool iOSWindow::isCursorVisible()
     {
         return false; // iOS never shows system cursor
     }

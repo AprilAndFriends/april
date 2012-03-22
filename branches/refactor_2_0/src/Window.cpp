@@ -57,9 +57,10 @@ namespace april
 {
 	Window* window = NULL;
 	
-	Window::Window() : fullscreen(true), focused(true), running(true), cursorVisible(false)
+	Window::Window() : created(false), fullscreen(true), focused(true), running(true), cursorVisible(false)
 	{
 		april::window = this;
+		this->name = "Generic";
 		this->updateCallback = NULL;
 		this->mouseDownCallback = NULL;
 		this->mouseUpCallback = NULL;
@@ -79,6 +80,31 @@ namespace april
 	
 	Window::~Window()
 	{
+		this->destroy();
+	}
+
+	bool Window::create(int width, int height, bool fullscreen, chstr title)
+	{
+		if (!this->created)
+		{
+			april::log(hsprintf("creating window '%s' (%d, %d), '%s' fullscreen : %s", this->name.c_str(), width, height, title.c_str(), fullscreen ? "yes" : "no"));
+			this->fullscreen = fullscreen;
+			this->title = title;
+			this->created = true;
+			return true;
+		}
+		return false;
+	}
+	
+	bool Window::destroy()
+	{
+		if (this->created)
+		{
+			april::log(hsprintf("destroying window '%s'", this->name.c_str()));
+			this->created = false;
+			return true;
+		}
+		return false;
 	}
 	
 	gvec2 Window::getSize()
@@ -139,14 +165,14 @@ namespace april
 	
 	void Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
 	{
-		this->_handleKeyOnlyEvent(type, keyCode);
+		this->handleKeyOnlyEvent(type, keyCode);
 		if (type == AKEYEVT_DOWN)
 		{
-			this->_handleCharOnlyEvent(charCode);
+			this->handleCharOnlyEvent(charCode);
 		}
 	}
 	
-	void Window::_handleKeyOnlyEvent(KeyEventType type, KeySym keyCode)
+	void Window::handleKeyOnlyEvent(KeyEventType type, KeySym keyCode)
 	{
 		if (keyCode == AK_UNKNOWN)
 		{
@@ -172,7 +198,7 @@ namespace april
 		}
 	}
 	
-	void Window::_handleCharOnlyEvent(unsigned int charCode)
+	void Window::handleCharOnlyEvent(unsigned int charCode)
 	{
 		if (charCode > 0 && this->charCallback != NULL && charCode != 127) // special hack, backspace induces a character in some implementations
 		{

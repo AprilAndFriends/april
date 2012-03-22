@@ -135,9 +135,13 @@ namespace april
 	public:
 		RenderSystem();
 		virtual ~RenderSystem();
+		virtual bool create(chstr options);
+		virtual bool destroy();
 
 		virtual void assignWindow(Window* window) = 0;
 		virtual void restore();
+
+		hstr getName() { return this->name; }
 
 		// object creation
 		hstr findTextureFile(chstr filename);
@@ -181,7 +185,6 @@ namespace april
 		virtual void setColorMode(ColorMode mode, unsigned char alpha = 255) = 0;
 		// caps
 		virtual float getPixelOffset() = 0;
-		virtual hstr getName() = 0;
 		// rendering
 		virtual void clear(bool useColor = true, bool depth = false) = 0;
 		virtual void clear(bool useColor, bool depth, grect rect, Color color = APRIL_COLOR_CLEAR) = 0;
@@ -223,6 +226,8 @@ namespace april
 		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f);
 
 	protected:
+		hstr name;
+		bool created;
 		TextureManager* mTextureManager;
 		float mIdleUnloadTime;
 		bool mDynamicLoading;

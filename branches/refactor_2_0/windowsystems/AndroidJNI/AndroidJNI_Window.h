@@ -67,8 +67,9 @@ namespace april
 	class aprilExport AndroidJNI_Window : public Window
 	{
 	public:
-		AndroidJNI_Window(int width, int height, bool fullscreen, chstr title);
+		AndroidJNI_Window();
 		~AndroidJNI_Window();
+		bool create(int width, int height, bool fullscreen, chstr title);
 		
 		void setTitle(chstr title) { }
 		bool isCursorVisible() { return false; }
@@ -77,12 +78,11 @@ namespace april
 		int getHeight() { return this->height; }
 		void setTouchEnabled(bool value) { }
 		bool isTouchEnabled() { return true; }
-		void* getIdFromBackend();
+		void* getBackendId();
 		
 		void enterMainLoop();
 		bool updateOneFrame();
 		void terminateMainLoop();
-		void destroyWindow();
 		void presentFrame();
 		void checkEvents();
 		

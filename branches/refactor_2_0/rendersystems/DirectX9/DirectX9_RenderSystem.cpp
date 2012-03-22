@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.31
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -80,21 +80,60 @@ namespace april
 		return 0;
 	}
 /************************************************************************************/
-	DirectX9_RenderSystem::DirectX9_RenderSystem(chstr options) :
-		mTexCoordsEnabled(0), mColorEnabled(0), RenderSystem()
+	DirectX9_RenderSystem::DirectX9_RenderSystem() : RenderSystem()
 	{
+		this->name = APRIL_RS_DIRECTX9;
+		mZBufferEnabled = false;
+		mTexCoordsEnabled = false;
+		mColorEnabled = false;
+	}
+
+	DirectX9_RenderSystem::~DirectX9_RenderSystem()
+	{
+		this->destroy();
+	}
+
+	bool DirectX9_RenderSystem::create(chstr options)
+	{
+		if (!RenderSystem::create(options))
+		{
+			return false;
+		}
 		mZBufferEnabled = options.contains("zbuffer");
+		mTexCoordsEnabled = 0;
+		mColorEnabled = 0;
 		// DIRECT3D
 		d3d = Direct3DCreate9(D3D_SDK_VERSION);
-		if (!d3d)
+		if (d3d == NULL)
 		{
+			this->destroy();
 			throw hl_exception("unable to create Direct3D9 object!");
 		}
+		return true;
+	}
+
+	bool DirectX9_RenderSystem::destroy()
+	{
+		if (!RenderSystem::destroy())
+		{
+			return false;
+		}
+		if (d3dDevice != NULL)
+		{
+			d3dDevice->Release();
+		}
+		d3dDevice = NULL;
+		if (d3d != NULL)
+		{
+			d3d->Release();
+		}
+		d3d = NULL;
+		return true;
 	}
 
 	void DirectX9_RenderSystem::assignWindow(Window* window)
 	{
-		hWnd = (HWND)april::window->getIdFromBackend();
+		hWnd = (HWND)april::window->getBackendId();
 
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !window->isFullscreen();
@@ -148,21 +187,6 @@ namespace april
 		setTextureFilter(mTextureFilter);
 	}
 	
-	DirectX9_RenderSystem::~DirectX9_RenderSystem()
-	{
-		april::log("Destroying DirectX9 Rendersystem");
-		if (d3dDevice != NULL)
-		{
-			d3dDevice->Release();
-		}
-		d3dDevice = NULL;
-		if (d3d != NULL)
-		{
-			d3d->Release();
-		}
-		d3d = NULL;
-	}
-
 	hstr DirectX9_RenderSystem::getName()
 	{
 		return "DirectX9";
@@ -746,11 +770,6 @@ namespace april
 			}
 		}
 		return result;
-	}
-
-	DirectX9_RenderSystem* DirectX9_RenderSystem::create(chstr options)
-	{
-		return new DirectX9_RenderSystem(options);
 	}
 
 }
