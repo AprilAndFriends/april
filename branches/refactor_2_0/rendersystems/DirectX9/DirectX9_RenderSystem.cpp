@@ -94,7 +94,7 @@ namespace april
 
 	void DirectX9_RenderSystem::assignWindow(Window* window)
 	{
-		hWnd = (HWND)april::window->getIDFromBackend();
+		hWnd = (HWND)april::window->getIdFromBackend();
 
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !window->isFullscreen();
@@ -671,7 +671,7 @@ namespace april
 			{
 				for_iterx (i, 0, 10)
 				{
-					april::window->doEvents();
+					april::window->checkEvents();
 					Sleep(100);
 				}
 				hr = d3dDevice->TestCooperativeLevel();

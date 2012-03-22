@@ -26,9 +26,16 @@
 #include "DirectX9_RenderSystem.h"
 #include "OpenGL_RenderSystem.h"
 #include "RenderSystem.h"
-#include "SDL_Window.h"
-#include "Win32_Window.h"
 #include "Window.h"
+#ifdef _ANDROID
+#include "AndroidJNI_Window.h"
+#endif
+#ifdef HAVE_SDL
+#include "SDL_Window.h"
+#endif
+#ifdef _WIN32
+#include "Win32_Window.h"
+#endif
 
 namespace april
 {

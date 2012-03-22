@@ -21,7 +21,7 @@
 #include <SDL/SDL_keysym.h>
 #include <hltypes/hstring.h>
 
-#if _SDLGLES
+#ifdef _OPENGLES1
 #include <SDL/SDL.h>
 #include <SDL/SDL_gles.h>
 #endif
@@ -37,44 +37,41 @@ namespace april
 	class SDL_Window : public Window
 	{
 	public:
-		SDL_Window(int w, int h, bool fullscreen, chstr title);
+		SDL_Window(int width, int height, bool fullscreen, chstr title);
 		~SDL_Window();
 		
-		// implementations
-		bool updateOneFrame();
-		void enterMainLoop();
-		void terminateMainLoop();
-		void destroyWindow();
-		void showSystemCursor(bool visible);
-		bool isSystemCursorShown();
+		void setTitle(chstr title);
+		bool isCursorVisible();
+		void setCursorVisible(bool visible);
+		bool isCursorInside() { return this->cursorInside; }
 		int getWidth();
 		int getHeight();
-		void setWindowTitle(chstr title);
+		bool isTouchEnabled() { return false; }
+		void setTouchEnabled(bool value) { }
 		gvec2 getCursorPosition();
-		void presentFrame();
-		void* getIDFromBackend();
-		void doEvents();
-		bool isCursorInside();
-		
-		DeviceType getDeviceType();
+		void* getIdFromBackend();
 
-		float mCursorX; // TODO turn into private
-		float mCursorY; // TODO turn into private
+		bool updateOneFrame();
+		void terminateMainLoop();
+		void destroyWindow();
+
+		void presentFrame();
+		void checkEvents();
 		
-	private:
+	protected:
+		SDL_Surface* screen;
+		bool cursorInside;
+#ifdef _OPENGLES1
+		SDL_GLES_Context* glesContext;
+#endif
+
 		void _handleKeyEvent(Window::KeyEventType type, SDLKey keycode, unsigned int unicode);
 		bool _handleDisplayAndUpdate();
 		void _handleMouseEvent(SDL_Event &evt);
+		void _cursorVisibilityUpdate();
 		
-		SDL_Surface *mScreen;
-		bool mRunning;
-		bool mCursorVisible;
-		bool mCursorInside;
-		bool mWindowFocused;
-#if _SDLGLES
-		SDL_GLES_Context *mGLESContext;
-#endif
 	};
+
 }
 
 #endif

@@ -41,10 +41,10 @@ namespace april
 		this->fullscreen = fullscreen;
 		this->title = title;
 		this->touchEnabled = false;
-		this->fpsTitle = " [FPS: 0]";
+		this->_fpsTitle = " [FPS: 0]";
 		this->_touchDown = false;
 		this->_doubleTapDown = false;
-		this->_nMouseMoveMessages = 0;
+		this->_mouseMoveMessagesCount = 0;
 		// Win32
 		WNDCLASSEXW wc;
 		ZeroMemory(&wc, sizeof(WNDCLASSEX));
@@ -62,19 +62,16 @@ namespace april
 
 		int x = 0;
 		int y = 0;
-		if (!fullscreen)
+		if (!this->fullscreen)
 		{
 			x = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
 			y = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
 		}
-		WCHAR wtitle[256] = {0};
-		for_iter (i, 0, this->title.size())
-		{
-			wtitle[i] = this->title[i];
-		}
 		DWORD style = (this->fullscreen ? WS_EX_TOPMOST | WS_POPUP : WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
 		april::log(hsprintf("title: %s %d %d %d %d inst: %d", this->title.c_str(), x, y, width, height, hinst));
+		wchar_t* wtitle = utf8_to_wchars(this->title);
 		this->hWnd = CreateWindowExW(0, L"april_win32_window", wtitle, style, x, y, width, height, NULL, NULL, hinst, NULL);
+		delete [] wtitle;
 		
 		if (!this->fullscreen)
 		{
@@ -97,19 +94,32 @@ namespace april
 	
 	Win32_Window::~Win32_Window()
 	{
-		//log("Destroying Win32 Windowsystem");
+		log("Destroying Win32 Windowsystem");
 	}
 
-	void Win32_Window::destroyWindow()
+	void Win32_Window::setTitle(chstr title)
 	{
-		if (this->hWnd != 0)
-		{
-			DestroyWindow(this->hWnd);
-			UnregisterClassW(L"april_win32_window", GetModuleHandle(0));
-			this->hWnd = 0;
-		}
+		this->title = title;
+		hstr t = this->title;
+#ifdef _DEBUG
+		t += this->_fpsTitle;
+#endif
+		wchar_t* wtitle = utf8_to_wchars(t);
+		SetWindowTextW(this->hWnd, wtitle);
+		delete [] wtitle;
 	}
-
+	
+	bool Win32_Window::isCursorVisible()
+	{
+		return (Window::isCursorVisible() || !this->isCursorInside());
+	}
+	
+	void Win32_Window::setCursorVisible(bool value)
+	{
+		Window::setCursorVisible(value);
+		this->cursorVisible ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
+	}
+	
 	int Win32_Window::getWidth()
 	{
 		RECT rc;
@@ -124,22 +134,11 @@ namespace april
 		return (rc.bottom - rc.top);
 	}
 
-	void Win32_Window::setTitle(chstr title)
+	void* Win32_Window::getIdFromBackend()
 	{
-		this->title = title;
-#ifdef _DEBUG
-		hstr t = this->title + this->fpsTitle;
-#else
-		chstr t = this->title;
-#endif
-		WCHAR wtitle[256] = {0};
-		for_iter (i, 0, t.size())
-		{
-			wtitle[i] = t[i];
-		}
-		SetWindowTextW(hWnd, wtitle);
+		return this->hWnd;
 	}
-	
+
 	void Win32_Window::_setResolution(int width, int height)
 	{
 		int x = 0;
@@ -167,52 +166,12 @@ namespace april
 		UpdateWindow(this->hWnd);
 	}
 	
-	void Win32_Window::showSystemCursor(bool b)
-	{
-		b ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
-		cursorVisible = b;
-	}
-	
-	bool Win32_Window::isSystemCursorShown()
-	{
-		if (cursorVisible)
-		{
-			return true;
-		}
-		return !(is_in_range(cursorPosition.x, 0.0f, (float)getWidth()) && is_in_range(cursorPosition.y, 0.0f, (float)getHeight()));
-	}
-	
-	void Win32_Window::doEvents()
-	{
-		MSG msg;
-		if (PeekMessageW(&msg, hWnd, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessageW(&msg);
-		}
-	}
-
-	void Win32_Window::presentFrame()
-	{
-#ifdef _OPENGL
-		SwapBuffers(hDC);
-#endif
-	}
-	
-	void Win32_Window::terminateMainLoop()
-	{
-		this->running = false;
-	}
-	
 	void Win32_Window::enterMainLoop()
 	{
 		this->_lastTime = this->globalTimer.getTime();
 		this->_fpsTimer = this->_lastTime;
 		this->_fps = 0;
-		while (this->running)
-		{
-			this->running = this->updateOneFrame();
-		}
+		Window::enterMainLoop();
 	}
 
 	bool Win32_Window::updateOneFrame()
@@ -225,7 +184,7 @@ namespace april
 		GetCursorPos(&w32_cursorPosition);
 		ScreenToClient(this->hWnd, &w32_cursorPosition);
 		this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
-		this->doEvents();
+		this->checkEvents();
 		t = this->globalTimer.getTime();
 		if (t == this->_lastTime)
 		{
@@ -243,7 +202,7 @@ namespace april
 			k = 0.0f;
 			for_iter (i, 0, 5)
 			{
-				this->doEvents();
+				this->checkEvents();
 				hthread::sleep(40.0f);
 			}
 		}
@@ -254,7 +213,7 @@ namespace april
 #else
 		if (this->_lastTime - this->_fpsTimer > 1000)
 		{
-			this->fpsTitle = hsprintf(" [FPS: %d]", this->_fps);
+			this->_fpsTitle = hsprintf(" [FPS: %d]", this->_fps);
 			this->setTitle(this->title);
 			this->_fps = 0;
 			this->_fpsTimer = this->_lastTime;
@@ -268,9 +227,36 @@ namespace april
 		return result;
 	}
 	
-	void* Win32_Window::getIDFromBackend()
+	void Win32_Window::terminateMainLoop()
 	{
-		return this->hWnd;
+		this->running = false;
+	}
+	
+	void Win32_Window::destroyWindow()
+	{
+		if (this->hWnd != 0)
+		{
+			DestroyWindow(this->hWnd);
+			UnregisterClassW(L"april_win32_window", GetModuleHandle(0));
+			this->hWnd = 0;
+		}
+	}
+
+	void Win32_Window::presentFrame()
+	{
+#ifdef _OPENGL
+		SwapBuffers(hDC);
+#endif
+	}
+	
+	void Win32_Window::checkEvents()
+	{
+		MSG msg;
+		if (PeekMessageW(&msg, this->hWnd, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessageW(&msg);
+		}
 	}
 
 	LRESULT Win32_Window::_processEvents(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -309,7 +295,6 @@ namespace april
 				this->terminateMainLoop();
 			}
 			return 0;
-			break;
 		case WM_KEYDOWN:
 			this->_handleKeyOnlyEvent(AKEYEVT_DOWN, (april::KeySym)wParam);
 			break;
@@ -321,7 +306,7 @@ namespace april
 			break;
 		case WM_LBUTTONDOWN:
 			this->_touchDown = true;
-			this->_nMouseMoveMessages = 0;
+			this->_mouseMoveMessagesCount = 0;
 			this->handleMouseEvent(AMOUSEEVT_DOWN, this->cursorPosition, AMOUSEBTN_LEFT);
 			if (!april::window->isFullscreen())
 			{
@@ -330,7 +315,7 @@ namespace april
 			break;
 		case WM_RBUTTONDOWN:
 			this->_touchDown = true;
-			this->_nMouseMoveMessages = 0;
+			this->_mouseMoveMessagesCount = 0;
 			this->handleMouseEvent(AMOUSEEVT_DOWN, this->cursorPosition, AMOUSEBTN_RIGHT);
 			if (!april::window->isFullscreen())
 			{
@@ -356,34 +341,37 @@ namespace april
 		case WM_MOUSEMOVE:
 			if (!this->_touchDown)
 			{
-				if (this->_nMouseMoveMessages >= 10)
+				if (this->_mouseMoveMessagesCount >= 10)
 				{
 					this->handleTouchscreenEnabledEvent(false);
 				}
 				else
 				{
-					this->_nMouseMoveMessages++;
+					this->_mouseMoveMessagesCount++;
 				}
 			}
 			else
 			{
-				this->_nMouseMoveMessages = 0;
+				this->_mouseMoveMessagesCount = 0;
 			}
 			this->handleMouseEvent(AMOUSEEVT_MOVE, this->cursorPosition, AMOUSEBTN_NONE);
 			break;
 		case WM_SETCURSOR:
-			this->setCursorVisible(this->isCursorInside());
+			if (!this->cursorVisible)
+			{
+				!this->isCursorInside() ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
+			}
 			return 1;
 		case WM_ACTIVATE:
 			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
 			{
-				this->handleFocusChangeEvent(true);
 				april::log("Window activated");
+				this->handleFocusChangeEvent(true);
 			}
 			else
 			{
-				this->handleFocusChangeEvent(false);
 				april::log("Window deactivated");
+				this->handleFocusChangeEvent(false);
 			}
 			break;
 		}

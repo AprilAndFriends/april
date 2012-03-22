@@ -123,65 +123,65 @@ namespace april
 		}
 		return DEVICE_IPAD;
 	}
-    
+	
 	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
-        NSString *buttons[] = {@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+		NSString *buttons[] = {@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, AMSGBTN_NULL, AMSGBTN_NULL};
-        
+		
 		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
 		{
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            
-            buttonTypes[1] = AMSGBTN_OK;
-            buttonTypes[0] = AMSGBTN_CANCEL;
-        }
+			
+			buttonTypes[1] = AMSGBTN_OK;
+			buttonTypes[0] = AMSGBTN_CANCEL;
+		}
 		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
 		{
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
 			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            
-            buttonTypes[1] = AMSGBTN_YES;
-            buttonTypes[2] = AMSGBTN_NO;
-            buttonTypes[0] = AMSGBTN_CANCEL;
+			
+			buttonTypes[1] = AMSGBTN_YES;
+			buttonTypes[2] = AMSGBTN_NO;
+			buttonTypes[0] = AMSGBTN_CANCEL;
 		}
 		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
 		{
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
-            
-            buttonTypes[1] = AMSGBTN_YES;
-            buttonTypes[0] = AMSGBTN_NO;
+			
+			buttonTypes[1] = AMSGBTN_YES;
+			buttonTypes[0] = AMSGBTN_NO;
 		}
 		else if (buttonMask & AMSGBTN_CANCEL)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            buttonTypes[0] = AMSGBTN_CANCEL;
+			buttonTypes[0] = AMSGBTN_CANCEL;
 		}
 		else if (buttonMask & AMSGBTN_OK)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
-            buttonTypes[0] = AMSGBTN_OK;
+			buttonTypes[0] = AMSGBTN_OK;
 		}
 		else if (buttonMask & AMSGBTN_YES)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
-            buttonTypes[0] = AMSGBTN_YES;
+			buttonTypes[0] = AMSGBTN_YES;
 		}
 		else if (buttonMask & AMSGBTN_NO)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
-            buttonTypes[0] = AMSGBTN_NO;
+			buttonTypes[0] = AMSGBTN_NO;
 		}
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
 		NSString *textns = [NSString stringWithUTF8String:text.c_str()];
 
-        AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:(style & AMSGSTYLE_MODAL)] autorelease];
-        mbd.callback = callback;
-        mbd.buttonTypes = buttonTypes;
+		AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:(style & AMSGSTYLE_MODAL)] autorelease];
+		mbd.callback = callback;
+		mbd.buttonTypes = buttonTypes;
 		[mbd retain];
 
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens
@@ -204,7 +204,7 @@ namespace april
 		}
 		
 		// NOTE: does not return proper values unless modal! 
-		//       you need to implement a delegate.
+		//	   you need to implement a delegate.
 		
 		
 		// some dummy returnvalues

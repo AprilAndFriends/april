@@ -13,6 +13,7 @@
 /// 
 /// Defines a Win32 window.
 
+#ifdef _WIN32
 #ifndef APRIL_WIN32_WINDOW_H
 #define APRIL_WIN32_WINDOW_H
 #include <windows.h>
@@ -28,33 +29,29 @@ namespace april
 	class aprilExport Win32_Window : public Window
 	{
 	public:
-		Win32_Window(int w, int h, bool fullscreen, chstr title);
+		Win32_Window(int width, int height, bool fullscreen, chstr title);
 		~Win32_Window();
 
-		void setTouchEnabled(bool value) { this->touchEnabled = value; }
+		void setTitle(chstr title);
+		bool isCursorVisible();
+		void setCursorVisible(bool value);
+		int getWidth();
+		int getHeight();
 		bool isTouchEnabled() { return this->touchEnabled; }
-		
-		//void _setActive(bool value) { this->active = value; }
-		
-		// implementations
+		void setTouchEnabled(bool value) { this->touchEnabled = value; }
+		void* getIdFromBackend();
+		void _setResolution(int width, int height);
+
 		void enterMainLoop();
 		bool updateOneFrame();
 		void terminateMainLoop();
 		void destroyWindow();
-		void showSystemCursor(bool visible);
-		bool isSystemCursorShown();
-		int getWidth();
-		int getHeight();
-		void setTitle(chstr title);
-		void _setResolution(int width, int height);
 		void presentFrame();
-		void* getIDFromBackend();
-		void doEvents();
+		void checkEvents();
 
 		static LRESULT CALLBACK processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		
 	protected:
-		hstr fpsTitle;
 		HWND hWnd;
 		april::Timer globalTimer;
 		bool touchEnabled; // whether or not a Win7+ touchscreen was detected
@@ -64,12 +61,15 @@ namespace april
 	private:
 		bool _touchDown;
 		bool _doubleTapDown;
-		int _nMouseMoveMessages;
+		int _mouseMoveMessagesCount;
 		float _lastTime;
+		hstr _fpsTitle;
 		float _fpsTimer;
 		int _fps;
 
 	};
+
 }
 
+#endif
 #endif

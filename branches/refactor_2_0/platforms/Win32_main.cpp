@@ -1,7 +1,7 @@
 /// @file
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -19,7 +19,7 @@
 #include "RenderSystem.h"
 #include "Window.h"
 
-bool gAprilShouldInvokeQuitCallback = false;
+int gAprilShouldInvokeQuitCallback = 0;
 
 int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {

@@ -14,10 +14,12 @@
 #ifndef APRIL_ANDROID_JNI_WINDOW_H
 #define APRIL_ANDROID_JNI_WINDOW_H
 
+#include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
-#include "Window.h"
 #include "aprilExport.h"
+#include "Timer.h"
+#include "Window.h"
 
 namespace april
 {
@@ -54,39 +56,24 @@ namespace april
 	class aprilExport AndroidJNI_Window : public Window
 	{
 	public:
-		AndroidJNI_Window(int w, int h, bool fullscreen, chstr title);
+		AndroidJNI_Window(int width, int height, bool fullscreen, chstr title);
 		~AndroidJNI_Window();
-		
-		//void _setActive(bool active) { mActive = active; }
-		
-		// implementations
+
+		void setTitle(chstr title) { }
+		bool isCursorVisible() { return false; }
+		void setCursorVisible(bool value) { }
+		int getWidth() { return this->width; }
+		int getHeight() { return this->height; }
+		void setTouchEnabled(bool value) { }
+		bool isTouchEnabled() { return true; }
+		void* getIdFromBackend();
+
 		void enterMainLoop();
 		bool updateOneFrame();
 		void terminateMainLoop();
 		void destroyWindow();
-		//bool isRunning() { return mRunning; }
-		void showSystemCursor(bool visible);
-		bool isSystemCursorShown();
-		int getWidth();
-		int getHeight();
-		void setWindowTitle(chstr title);
-		//void _setResolution(int w, int h);
-		gvec2 getCursorPosition();
 		void presentFrame();
-		void* getIDFromBackend();
-		void doEvents();
-		
-		// event handlers
-		//void triggerKeyEvent(bool down, unsigned int keycode);
-		//void triggerCharEvent(unsigned int chr);
-		
-		//void triggerMouseUpEvent(int button);
-		//void triggerMouseDownEvent(int button);
-		//void triggerMouseMoveEvent();
-		//bool triggerQuitEvent();
-		//void triggerFocusCallback(bool focused);
-		
-		//void triggerTouchscreenCallback(bool enabled);
+		void checkEvents();
 		
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
@@ -94,15 +81,17 @@ namespace april
 		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
 		
 	protected:
-		float mWidth;
-		float mHeight;
-		bool mActive;
-		//bool mRunning;
-		harray<MouseInputEvent> mMouseEvents;
-		harray<KeyInputEvent> mKeyEvents;
+		int width;
+		int height;
+		april::Timer globalTimer;
+		harray<MouseInputEvent> mouseEvents;
+		harray<KeyInputEvent> keyEvents;
 		
 		// using void** so that jni.h doesn't have to be included in this header
 		void _getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView);
+
+	private:
+		float _lastTime;
 		
 	};
 }

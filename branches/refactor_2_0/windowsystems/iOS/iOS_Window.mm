@@ -230,7 +230,7 @@ namespace april
 		}
 		else
 		{
-			this->doEvents();
+			this->checkEvents();
 			if (!this->retainLoadingOverlay)
 			{
 				[viewcontroller removeImageView];
@@ -239,12 +239,12 @@ namespace april
 		}
     }
 
-	void* iOSWindow::getIDFromBackend()
+	void* iOSWindow::getIdFromBackend()
 	{
 		return uiwindow;
 	}
 
-	void iOSWindow::doEvents()
+	void iOSWindow::checkEvents()
 	{
 		SInt32 result;
 		do

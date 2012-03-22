@@ -95,6 +95,7 @@ namespace april
 		mTexCoordsEnabled(false), mColorEnabled(false)
 	{
 		mParams = params;
+		glClearColor(0, 0, 0, 1);
 	}
 
 	OpenGL_RenderSystem::~OpenGL_RenderSystem()
@@ -133,9 +134,8 @@ namespace april
 
 	void OpenGL_RenderSystem::assignWindow(Window* window)
 	{
- 		mWindow = window;
 #ifdef _WIN32
-		hWnd = (HWND)mWindow->getIDFromBackend();
+		hWnd = (HWND)april::window->getIdFromBackend();
 		PIXELFORMATDESCRIPTOR pfd;
 		memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
 		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
@@ -231,7 +231,7 @@ namespace april
 		}
 #endif
 #endif
-		glViewport(0, 0, mWindow->getWidth(), mWindow->getHeight());
+		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
 		glClearColor(0, 0, 0, 1);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -259,13 +259,13 @@ namespace april
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 		}
-		mOrthoProjection.setSize((float)mWindow->getWidth(), (float)mWindow->getHeight());
+		mOrthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
 	}
 
 	void OpenGL_RenderSystem::restore()
 	{
 		RenderSystem::restore();
-		glViewport(0, 0, mWindow->getWidth(), mWindow->getHeight());
+		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
 		glClearColor(0, 0, 0, 1);
 		_setModelviewMatrix(mModelviewMatrix);
 		_setProjectionMatrix(mProjectionMatrix);
@@ -362,13 +362,13 @@ namespace april
 	{
 		static float params[4];
 		glGetFloatv(GL_VIEWPORT, params);
-		return grect(params[0], mWindow->getHeight() - params[3] - params[1], params[2], params[3]);
+		return grect(params[0], april::window->getHeight() - params[3] - params[1], params[2], params[3]);
 	}
 	
 	void OpenGL_RenderSystem::setViewport(grect rect)
 	{
 		// because GL has to defy screen logic and has (0,0) in the bottom left corner
-		glViewport((int)rect.x, (int)(mWindow->getHeight() - rect.h - rect.y), (int)rect.w, (int)rect.h);
+		glViewport((int)rect.x, (int)(april::window->getHeight() - rect.h - rect.y), (int)rect.w, (int)rect.h);
 	}
 
 	void OpenGL_RenderSystem::setTexture(Texture* t)
@@ -422,14 +422,14 @@ namespace april
     ImageSource* OpenGL_RenderSystem::grabScreenshot(int bpp)
     {
         april::log("grabbing screenshot");
-        int w = mWindow->getWidth();
-		int h = mWindow->getHeight();
+        int w = april::window->getWidth();
+		int h = april::window->getHeight();
         ImageSource* img = new ImageSource();
         img->w = w;
 		img->h = h;
 		img->bpp = bpp;
 		img->format = (bpp == 4 ? AT_RGBA : AT_RGB);
-        img->data = (unsigned char*)malloc(w * (h + 1) * 4); // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
+        img->data = new unsigned char[w * (h + 1) * 4]; // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
         unsigned char* temp = img->data + w * h * 4;
         
 	    glReadPixels(0, 0, w, h, (bpp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img->data);
@@ -453,7 +453,7 @@ namespace april
 		glMatrixMode(GL_PROJECTION);
 #ifdef _OPENGLES1
 		glLoadIdentity();
-		glRotatef(mWindow->prefixRotationAngle(), 0, 0, 1);
+		glRotatef(april::window->prefixRotationAngle(), 0, 0, 1);
 		//printf("rotationangle %g\n", getWindow()->prefixRotationAngle());
 		glMultMatrixf(matrix.data);
 #else

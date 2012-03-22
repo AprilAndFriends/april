@@ -52,8 +52,8 @@ namespace april
 		void setTitle(chstr value);
 		gtypes::Vector2 getCursorPosition();
 		void presentFrame();
-		void* getIDFromBackend();
-		void doEvents();
+		void* getIdFromBackend();
+		void checkEvents();
 		bool isVirtualKeyboardVisible();
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();

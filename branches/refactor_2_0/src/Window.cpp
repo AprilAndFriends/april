@@ -114,6 +114,18 @@ namespace april
 		this->charCallback = charCallback;
 	}
 	
+	void Window::enterMainLoop()
+	{
+		this->running = true;
+		while (this->running)
+		{
+			if (!this->updateOneFrame())
+			{
+				this->running = false;
+			}
+		}
+	}
+	
 	bool Window::performUpdate(float k)
 	{
 		// returning true: continue execution
@@ -244,54 +256,6 @@ namespace april
 		{
 			(*this->lowMemoryCallback)();
 		}
-	}
-	
-	void Window::_platformCursorVisibilityUpdate(bool visible)
-	{
-#if TARGET_OS_MAC && !TARGET_OS_IPHONE
-		NSWindow* window = [[NSApplication sharedApplication] keyWindow];
-		bool shouldShow;
-		
-		if (!visible)
-		{
-			//NSPoint 	mouseLoc = [window convertScreenToBase:[NSEvent mouseLocation]];
-			//[window frame]
-			NSPoint mouseLoc;
-			id hideInsideView; // either NSView or NSWindow; both implement "frame" method
-			if ([window contentView])
-			{
-				hideInsideView = [window contentView];
-				mouseLoc = [window convertScreenToBase:[NSEvent mouseLocation]];
-			}
-			else
-			{
-				hideInsideView = window;
-				mouseLoc = [NSEvent mouseLocation];
-			}
-			
-			if (hideInsideView)
-			{
-				shouldShow = !NSPointInRect(mouseLoc, [hideInsideView frame]);
-			}
-			else // no view? let's presume we are in fullscreen where we should blindly honor the requests from the game
-			{
-				shouldShow = false;
-			}
-		}
-		else
-		{			
-			shouldShow = true;
-		}
-		
-		if (!shouldShow && CGCursorIsVisible())
-		{
-			CGDisplayHideCursor(kCGDirectMainDisplay);
-		}
-		else if (shouldShow && !CGCursorIsVisible())
-		{
-			CGDisplayShowCursor(kCGDirectMainDisplay);
-		}
-#endif
 	}
 	
 }

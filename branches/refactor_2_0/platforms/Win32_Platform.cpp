@@ -48,7 +48,7 @@ namespace april
 		HWND hwnd = 0;
 		if (april::window && (style & AMSGSTYLE_MODAL) != 0)
 		{
-			hwnd = (HWND)april::window->getIDFromBackend();
+			hwnd = (HWND)april::window->getIdFromBackend();
 		}
 		int type = 0;
 		if ((buttonMask & AMSGBTN_OK) != 0 && (buttonMask & AMSGBTN_CANCEL) != 0)

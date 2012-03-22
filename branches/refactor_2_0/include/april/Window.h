@@ -67,19 +67,14 @@ namespace april
 		
 		virtual ~Window();
 
-		// utility funcs
-		void _platformCursorVisibilityUpdate(bool visible);
-
 		// generic getters/setters
 		hstr getTitle() { return this->title; }
 		bool isFullscreen() { return this->fullscreen; }
 		bool isFocused() { return this->focused; }
 		bool isRunning() { return this->running; }
 		gvec2 getCursorPosition() { return this->cursorPosition; }
-		bool isCursorVisible() { return this->cursorVisible; }
 		gvec2 getSize();
 		float getAspectRatio();
-		bool isCursorInside();
 
 		// callback setters
 		void setUpdateCallback(bool (*value)(float)) { this->updateCallback = value; }
@@ -99,9 +94,11 @@ namespace april
 		void setLowMemoryCallback(void (*value)()) { this->lowMemoryCallback = value; }
 
 		// virtual getters/setters
-		virtual bool isVirtualKeyboardVisible() { return false; }
-		virtual void setCursorVisible(bool value) { this->cursorVisible = value; }
 		virtual void setTitle(chstr value) { this->title = value; }
+		virtual bool isVirtualKeyboardVisible() { return false; }
+		virtual bool isCursorVisible() { return this->cursorVisible; }
+		virtual void setCursorVisible(bool value) { this->cursorVisible = value; }
+		virtual bool isCursorInside();
 
 		virtual void _setResolution(int width, int height) { }
 		
@@ -110,7 +107,7 @@ namespace april
 		virtual int getHeight() = 0;
 		virtual void setTouchEnabled(bool value) = 0;
 		virtual bool isTouchEnabled() = 0;
-		virtual void* getIDFromBackend() = 0;
+		virtual void* getIdFromBackend() = 0;
 
 		// additional callback setters
 		void setMouseCallbacks(void (*mouseDownCallback)(float, float, int),
@@ -121,12 +118,11 @@ namespace april
 								  void (*charCallback)(unsigned int));
 
 		// pure virtual methods (window system dependent)
-		virtual void enterMainLoop() = 0;
 		virtual bool updateOneFrame() = 0;
 		virtual void terminateMainLoop() = 0;
 		virtual void destroyWindow() = 0;
 		virtual void presentFrame() = 0;
-		virtual void doEvents() = 0;
+		virtual void checkEvents() = 0;
 
 		// misc virtuals
 		virtual void beginKeyboardHandling() { }
@@ -147,6 +143,7 @@ namespace april
 		virtual bool handleUrl(chstr url);
 		virtual void handleLowMemoryWarning();
 
+		virtual void enterMainLoop();
 		virtual bool performUpdate(float k);
 		
 		DEPRECATED_ATTRIBUTE hstr getWindowTitle() { return this->getTitle(); }
@@ -159,6 +156,7 @@ namespace april
 		DEPRECATED_ATTRIBUTE void showSystemCursor(bool value) { this->setCursorVisible(value); }
 		DEPRECATED_ATTRIBUTE bool isSystemCursorShown() { return this->isCursorVisible(); }
 		DEPRECATED_ATTRIBUTE void handleFocusEvent(bool focused) { this->handleFocusChangeEvent(focused); }
+		DEPRECATED_ATTRIBUTE void* getIDFromBackend() { return this->getIdFromBackend(); }
 
 	protected:
 		Window();

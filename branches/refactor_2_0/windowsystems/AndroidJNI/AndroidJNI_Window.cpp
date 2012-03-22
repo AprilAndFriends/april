@@ -13,7 +13,7 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hthread.h>
 
-#include "AndroidJniWindow.h"
+#include "AndroidJNI_Window.h"
 #include "april.h"
 #include "RenderSystem.h"
 #include "Timer.h"
@@ -23,23 +23,18 @@ namespace april
 	void* javaVM = NULL;
 	jobject aprilActivity = NULL;
 	gvec2 androidResolution;
-	static gvec2 cursorPosition;
-	static april::Timer globalTimer;
-	static float lastTime = 0.0f;
 
-	AndroidJNI_Window::AndroidJNI_Window(int w, int h, bool fullscreen, chstr title) : Window()
+	AndroidJNI_Window::AndroidJNI_Window(int width, int height, bool fullscreen, chstr title) : Window()
 	{
 		if (april::rendersys != NULL)
 		{
-			april::log("Creating Android JNI Windowsystem (" + hstr(w) + ", " + hstr(h) + ")");
+			april::log("Creating Android JNI Windowsystem (" + hstr(width) + ", " + hstr(height) + ")");
 		}
-		mWidth = w;
-		mHeight = h;
-		mRunning = true;
-		mActive = true;
-		mFullscreen = fullscreen;
-		//mTouchEnabled = false;
-		mTitle = title;
+		this->width = width;
+		this->height = height;
+		this->fullscreen = true;
+		this->title = title;
+		this->_lastTime = 0.0f;
 	}
 	
 	AndroidJNI_Window::~AndroidJNI_Window()
@@ -47,84 +42,50 @@ namespace april
 		//log("Destroying Android JNI Windowsystem");
 	}
 
+	void* AndroidJNI_Window::getIdFromBackend()
+	{
+		return javaVM;
+	}
+
 	void AndroidJNI_Window::enterMainLoop()
 	{
+		april::log("Fatal error: Using enterMainLoop on Android JNI!");
+		exit(-1);
 	}
 	
 	bool AndroidJNI_Window::updateOneFrame()
 	{
-		if (lastTime == 0.0f)
+		static bool result = true;
+		static float t = 0.0f;
+		static float k = 0.0f;
+		if (this->_lastTime == 0.0f)
 		{
-			lastTime = globalTimer.getTime();
+			this->_lastTime = this->globalTimer.getTime();
 		}
-		float t;
-		doEvents();
-		t = globalTimer.getTime();
-		if (t == lastTime)
+		this->checkEvents();
+		t = this->globalTimer.getTime();
+		if (t == this->_lastTime)
 		{
 			return true; // don't redraw frames which won't change
 		}
-		float k = (t - lastTime) / 1000.0f;
+		k = (t - this->_lastTime) / 1000.0f;
 		if (k > 0.5f)
 		{
 			k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
 		}
-
-		lastTime = t;
-		if (!mActive)
-		{
-			k = 0;
-			for_iter (i, 0, 5)
-			{
-				mMouseEvents.clear();
-				mKeyEvents.clear();
-				hthread::sleep(40);
-			}
-		}
-		bool result = true;
-		if (mUpdateCallback != NULL)
-		{
-			result = (*mUpdateCallback)(k);
-		}
+		this->_lastTime = t;
+		result = this->performUpdate(k);
 		april::rendersys->presentFrame();
 		return result;
 	}
 	
 	void AndroidJNI_Window::terminateMainLoop()
 	{
-		mRunning = false;
+		this->running = false;
 	}
 
 	void AndroidJNI_Window::destroyWindow()
 	{
-	}
-
-	void AndroidJNI_Window::showSystemCursor(bool visible)
-	{
-	}
-
-	bool AndroidJNI_Window::isSystemCursorShown()
-	{
-		return false;
-	}
-
-	int AndroidJNI_Window::getWidth()
-	{
-		return mWidth;
-	}
-
-	int AndroidJNI_Window::getHeight()
-	{
-		return mHeight;
-	}
-
-	void AndroidJNI_Window::setWindowTitle(chstr title)
-	{
-	}
-
-	gvec2 AndroidJNI_Window::getCursorPosition()
-	{
-		return cursorPosition;
 	}
 
 	void AndroidJNI_Window::presentFrame()
@@ -132,46 +93,31 @@ namespace april
 		// not needed as Android Java Activity takes care of this
 	}
 
-	void* AndroidJNI_Window::getIDFromBackend()
+	void AndroidJNI_Window::checkEvents()
 	{
-		return javaVM;
-	}
-
-	void AndroidJNI_Window::doEvents()
-	{
-		while (mMouseEvents.size() > 0)
+		while (this->mouseEvents.size() > 0)
 		{
-			MouseInputEvent e = mMouseEvents.pop_first();
-			cursorPosition = e.position;
+			MouseInputEvent e = this->mouseEvents.pop_first();
+			this->cursorPosition = e.position;
 			Window::handleMouseEvent(e.type, e.position, e.button);
 		}
-		while (mKeyEvents.size() > 0)
+		while (this->keyEvents.size() > 0)
 		{
-			KeyInputEvent e = mKeyEvents.pop_first();
+			KeyInputEvent e = this->keyEvents.pop_first();
 			Window::handleKeyEvent(e.type, e.keyCode, e.charCode);
 		}
 	}
 
-	void AndroidJNI_Window::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView)
+	void AndroidJNI_Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
 	{
-		JNIEnv* env = NULL;
-		((JavaVM*)javaVM)->GetEnv((void**)&env, JNI_VERSION_1_6);
-		jclass classAprilActivity = env->GetObjectClass(aprilActivity);
-		jclass classContext = env->FindClass("android/content/Context");
-		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
-		jobject INPUT_METHOD_SERVICE = env->GetStaticObjectField(classContext, fieldINPUT_METHOD_SERVICE);
-		jmethodID methodGetSystemService = env->GetMethodID(classAprilActivity, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
-		jmethodID methodGetWindow = env->GetMethodID(classAprilActivity, "getWindow", "()Landroid/view/Window;");
-		jobject window = env->CallObjectMethod(aprilActivity, methodGetWindow);
-		jclass classWindow = env->FindClass("android/view/Window");
-		jmethodID methodGetDecorView = env->GetMethodID(classWindow, "getDecorView", "()Landroid/view/View;");
-		// output
-		*javaEnv = env;
-		*javaClassInputMethodManager = env->FindClass("android/view/inputmethod/InputMethodManager");
-		*javaInputMethodManager = env->CallObjectMethod(aprilActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
-		*javaDecorView = env->CallObjectMethod(window, methodGetDecorView);
+		this->mouseEvents += MouseInputEvent(type, position, button);
 	}
-	
+
+	void AndroidJNI_Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
+	{
+		this->keyEvents += KeyInputEvent(type, keyCode, charCode);
+	}
+
 	void AndroidJNI_Window::beginKeyboardHandling()
 	{
 		JNIEnv* env = NULL;
@@ -199,15 +145,25 @@ namespace april
 		env->CallBooleanMethod(inputMethodManager, methodHideSoftInput, binder, 0);
 	}
 
-	void AndroidJNI_Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
+	void AndroidJNI_Window::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView)
 	{
-		mMouseEvents += MouseInputEvent(type, position, button);
+		JNIEnv* env = NULL;
+		((JavaVM*)javaVM)->GetEnv((void**)&env, JNI_VERSION_1_6);
+		jclass classAprilActivity = env->GetObjectClass(aprilActivity);
+		jclass classContext = env->FindClass("android/content/Context");
+		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
+		jobject INPUT_METHOD_SERVICE = env->GetStaticObjectField(classContext, fieldINPUT_METHOD_SERVICE);
+		jmethodID methodGetSystemService = env->GetMethodID(classAprilActivity, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+		jmethodID methodGetWindow = env->GetMethodID(classAprilActivity, "getWindow", "()Landroid/view/Window;");
+		jobject window = env->CallObjectMethod(aprilActivity, methodGetWindow);
+		jclass classWindow = env->FindClass("android/view/Window");
+		jmethodID methodGetDecorView = env->GetMethodID(classWindow, "getDecorView", "()Landroid/view/View;");
+		// output
+		*javaEnv = env;
+		*javaClassInputMethodManager = env->FindClass("android/view/inputmethod/InputMethodManager");
+		*javaInputMethodManager = env->CallObjectMethod(aprilActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
+		*javaDecorView = env->CallObjectMethod(window, methodGetDecorView);
 	}
-
-	void AndroidJNI_Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
-	{
-		mKeyEvents += KeyInputEvent(type, keyCode, charCode);
-	}
-
+	
 }
 #endif
