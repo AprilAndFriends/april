@@ -150,6 +150,7 @@ namespace april
 
 namespace april
 {
+	Window* window = NULL;
 	Window* Window::mSingleton = NULL;
 
 	Window::Window()
@@ -170,6 +171,7 @@ namespace april
 		mLowMemoryCallback = NULL;
 		mHandleURLCallback = NULL;
 		mSingleton = this;
+		april::window = this;
 	}
 	
 	Window::~Window()
@@ -798,8 +800,8 @@ namespace april
 		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
 		{
 #if !TARGET_OS_IPHONE
-			rendersys->getWindow()->terminateMainLoop();
-			rendersys->getWindow()->destroyWindow();
+			window->terminateMainLoop();
+			window->destroyWindow();
 #endif
 			passedStyle = (MessageBoxStyle)(passedStyle & AMSGSTYLE_MODAL);
 		}

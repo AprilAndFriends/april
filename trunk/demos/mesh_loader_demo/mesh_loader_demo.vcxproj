@@ -137,6 +137,9 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
     <AntBuild>
       <AntBuildPath>$(ProjectDir)android</AntBuildPath>
     </AntBuild>
+    <PreBuildEvent>
+      <Command>xcopy ..\..\..\april\android-template\src\AprilActivity.java android\src\ /d /y</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -204,6 +207,9 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
     <AntBuild>
       <AntBuildPath>$(ProjectDir)android</AntBuildPath>
     </AntBuild>
+    <PreBuildEvent>
+      <Command>xcopy ..\..\..\april\android-template\src\AprilActivity.java android\src\ /d /y</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

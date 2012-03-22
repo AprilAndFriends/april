@@ -209,7 +209,6 @@ namespace april
 		void forceDynamicLoading(bool value) { mDynamicLoading = value; }
 		bool isDynamicLoadingForced() { return mDynamicLoading; }
 		
-		Window* getWindow() { return mWindow; }
 		TextureManager* getTextureManager() { return mTextureManager; }
 		
         virtual ImageSource* grabScreenshot(int bpp = 3) = 0;
@@ -218,6 +217,7 @@ namespace april
 		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
 
 		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f);
+		DEPRECATED_ATTRIBUTE Window* getWindow() { return mWindow; }
 
 	protected:
 		Window* mWindow;
