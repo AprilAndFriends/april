@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -28,14 +28,14 @@ namespace april
 		TextureManager();
 		~TextureManager();
 
-		harray<Texture*> getTextures() { return mTextures; }
+		harray<Texture*> getTextures() { return this->textures; }
 
 		void registerTexture(Texture* texture);
 		void unregisterTexture(Texture* texture);
 		void unloadTextures();
 		
 	protected:
-		harray<Texture*> mTextures;
+		harray<Texture*> textures;
 		
 	};
 	

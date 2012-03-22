@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.5
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -24,20 +24,20 @@ namespace april
 {
 	Texture::Texture()
 	{
-		mDynamic = false;
-		mFilename = "";
-		mWidth = 0;
-		mHeight = 0;
-		mBpp = 3;
-		mUnusedTimer = 0.0f;
-		mTextureFilter = Linear;
-		mTextureWrapping = true;
+		this->dynamic = false;
+		this->filename = "";
+		this->width = 0;
+		this->height = 0;
+		this->bpp = 3;
+		this->unusedTimer = 0.0f;
+		this->textureFilter = Linear;
+		this->textureWrapping = true;
 		april::rendersys->getTextureManager()->registerTexture(this);
 	}
 
 	Texture::~Texture()
 	{
-		foreach (Texture*, it, mDynamicLinks)
+		foreach (Texture*, it, this->dynamicLinks)
 		{
 			(*it)->removeDynamicLink(this);
 		}
@@ -46,12 +46,12 @@ namespace april
 
 	hstr Texture::_getInternalName()
 	{
-		return (mFilename != "" ? mFilename : "UserTexture");
+		return (this->filename != "" ? this->filename : "UserTexture");
 	}
 	
 	void Texture::fillRect(grect rect, Color color)
 	{
-		fillRect((int)rect.x, (int)rect.y, (int)rect.w, (int)rect.h, color);
+		this->fillRect((int)rect.x, (int)rect.y, (int)rect.w, (int)rect.h, color);
 	}
 	
 	Color Texture::getInterpolatedPixel(float x, float y)
@@ -95,45 +95,45 @@ namespace april
 		return result;
 	}
 	
-	void Texture::update(float time_increase)
+	void Texture::update(float k)
 	{
-		if (mDynamic && isLoaded())
+		if (this->dynamic && this->isLoaded())
 		{
-			float max_time = rendersys->getIdleTextureUnloadTime();
+			float max_time = april::rendersys->getIdleTextureUnloadTime();
 			if (max_time > 0)
 			{
-				if (mUnusedTimer > max_time)
+				if (this->unusedTimer > max_time)
 				{
-					unload();
+					this->unload();
 				}
-				mUnusedTimer += time_increase;
+				this->unusedTimer += k;
 			}
 		}
 	}
 	
-	void Texture::addDynamicLink(Texture* lnk)
+	void Texture::addDynamicLink(Texture* link)
 	{
-		if (!mDynamicLinks.contains(lnk))
+		if (!this->dynamicLinks.contains(link))
 		{
-			mDynamicLinks += lnk;
-			lnk->addDynamicLink(this);
+			this->dynamicLinks += link;
+			link->addDynamicLink(this);
 		}
 	}
 	
-	void Texture::removeDynamicLink(Texture* lnk)
+	void Texture::removeDynamicLink(Texture* link)
 	{
-		if (mDynamicLinks.contains(lnk))
+		if (this->dynamicLinks.contains(link))
 		{
-			mDynamicLinks -= lnk;
+			this->dynamicLinks -= link;
 		}
 	}
 	
 	void  Texture::_resetUnusedTimer(bool recursive)
 	{
-		mUnusedTimer = 0;
+		this->unusedTimer = 0;
 		if (recursive)
 		{
-			foreach (Texture*, it, mDynamicLinks)
+			foreach (Texture*, it, this->dynamicLinks)
 			{
 				(*it)->_resetUnusedTimer(0);
 			}
@@ -147,20 +147,20 @@ namespace april
 /************************************************************************************/
 	RAMTexture::RAMTexture(chstr filename, bool dynamic) : Texture()
 	{
-		mFilename = filename;
-		mBuffer = NULL;
+		this->filename = filename;
+		this->buffer = NULL;
 		if (!dynamic)
 		{
-			load();
+			this->load();
 		}
 	}
 
 	RAMTexture::RAMTexture(int w, int h) : Texture()
 	{
-		mWidth = w;
-		mHeight = h;
-		mBuffer = createEmptyImage(w, h);
-		mFilename = "";
+		this->width = w;
+		this->height = h;
+		this->buffer = createEmptyImage(w, h);
+		this->filename = "";
 	}
 
 	RAMTexture::~RAMTexture()
@@ -170,12 +170,12 @@ namespace april
 
 	bool RAMTexture::load()
 	{
-		if (mBuffer == NULL)
+		if (this->buffer == NULL)
 		{
-			april::log("loading RAM texture '" + _getInternalName() + "'");
-			mBuffer = loadImage(mFilename);
-			mWidth = mBuffer->w;
-			mHeight = mBuffer->h;
+			april::log("loading RAM texture '" + this->_getInternalName() + "'");
+			this->buffer = loadImage(this->filename);
+			this->width = this->buffer->w;
+			this->height = this->buffer->h;
 			return true;
 		}
 		return false;
@@ -183,57 +183,57 @@ namespace april
 	
 	void RAMTexture::unload()
 	{
-		if (mBuffer != NULL)
+		if (this->buffer != NULL)
 		{
-			april::log("unloading RAM texture '" + _getInternalName() + "'");
-			delete mBuffer;
-			mBuffer = NULL;
+			april::log("unloading RAM texture '" + this->_getInternalName() + "'");
+			delete this->buffer;
+			this->buffer = NULL;
 		}
 	}
 	
 	bool RAMTexture::isLoaded()
 	{
-		return (mBuffer != NULL);
+		return (this->buffer != NULL);
 	}
 	
 	Color RAMTexture::getPixel(int x, int y)
 	{
-		if (mBuffer == NULL)
+		if (this->buffer == NULL)
 		{
-			load();
+			this->load();
 		}
-		mUnusedTimer = 0;
-		return mBuffer->getPixel(x, y);
+		this->unusedTimer = 0;
+		return this->buffer->getPixel(x, y);
 	}
 	
 	void RAMTexture::setPixel(int x, int y, Color c)
 	{
-		if (mBuffer == NULL)
+		if (this->buffer == NULL)
 		{
-			load();
+			this->load();
 		}
-		mUnusedTimer = 0;
-		mBuffer->setPixel(x, y, c);
+		this->unusedTimer = 0;
+		this->buffer->setPixel(x, y, c);
 	}
 	
 	Color RAMTexture::getInterpolatedPixel(float x, float y)
 	{
-		if (mBuffer == NULL)
+		if (this->buffer == NULL)
 		{
-			load();
+			this->load();
 		}
-		mUnusedTimer = 0;
-		return mBuffer->getInterpolatedPixel(x, y);
+		this->unusedTimer = 0;
+		return this->buffer->getInterpolatedPixel(x, y);
 	}
 	
 	int RAMTexture::getSizeInBytes()
 	{
-		return (mWidth * mHeight * 3); // TODO - should use BPP instead of 3?
+		return (this->width * this->height * 3); // TODO - should use BPP instead of 3?
 	}
 
 	bool RAMTexture::isValid()
 	{
-		return (mBuffer != NULL);
+		return (this->buffer != NULL);
 	}
 
 }

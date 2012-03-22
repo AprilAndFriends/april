@@ -16,20 +16,20 @@
 #include "DirectX9_PixelShader.h"
 #include "DirectX9_RenderSystem.h"
 
+#define DX9_RENDERSYS ((DirectX9_RenderSystem*)april::rendersys)
+
 namespace april
 {
-	extern IDirect3DDevice9* d3dDevice;
-
-	DirectX9_PixelShader::DirectX9_PixelShader() : PixelShader(), mShader(NULL)
+	DirectX9_PixelShader::DirectX9_PixelShader() : PixelShader(), dx9Shader(NULL)
 	{
 	}
 
 	DirectX9_PixelShader::~DirectX9_PixelShader()
 	{
-		if (mShader != NULL)
+		if (this->dx9Shader != NULL)
 		{
-			mShader->Release();
-			mShader = NULL;
+			this->dx9Shader->Release();
+			this->dx9Shader = NULL;
 		}
 	}
 
@@ -52,7 +52,7 @@ namespace april
 			april::log("failed to compile pixel shader");
 			return false;
 		}
-		result = d3dDevice->CreatePixelShader((DWORD*)assembly->GetBufferPointer(), &mShader);
+		result = DX9_RENDERSYS->d3dDevice->CreatePixelShader((DWORD*)assembly->GetBufferPointer(), &this->dx9Shader);
 		if (result != D3D_OK)
 		{
 			april::log("failed to create pixel shader");
@@ -65,7 +65,7 @@ namespace april
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			d3dDevice->SetPixelShaderConstantB(i, quadVectors + i * 4, 1);
+			DX9_RENDERSYS->d3dDevice->SetPixelShaderConstantB(i, quadVectors + i * 4, 1);
 		}
 	}
 
@@ -73,7 +73,7 @@ namespace april
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			d3dDevice->SetPixelShaderConstantI(i, quadVectors + i * 4, 1);
+			DX9_RENDERSYS->d3dDevice->SetPixelShaderConstantI(i, quadVectors + i * 4, 1);
 		}
 	}
 
@@ -81,7 +81,7 @@ namespace april
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			d3dDevice->SetPixelShaderConstantF(i, quadVectors + i * 4, 1);
+			DX9_RENDERSYS->d3dDevice->SetPixelShaderConstantF(i, quadVectors + i * 4, 1);
 		}
 	}
 

@@ -27,7 +27,7 @@ namespace april
 
 	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), alreadyTouched(false), _lastTime(0.0f)
 	{
-		this->name = "Android JNI";
+		this->name = APRIL_WS_ANDROIDJNI;
 	}
 
 	AndroidJNI_Window::~AndroidJNI_Window()

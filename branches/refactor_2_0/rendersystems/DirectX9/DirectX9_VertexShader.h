@@ -9,7 +9,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a DirectX vertex shader.
+/// Defines a DirectX9 vertex shader.
 
 #ifdef _DIRECTX9
 #ifndef APRIL_DIRECTX9_VERTEX_SHADER_H
@@ -21,10 +21,12 @@ struct IDirect3DVertexShader9;
 
 namespace april
 {
+	class DirectX9_RenderSystem;
+	
 	class DirectX9_VertexShader : public VertexShader
 	{
 	public:
-		IDirect3DVertexShader9* mShader;
+		friend class DirectX9_RenderSystem;
 
 		DirectX9_VertexShader();
 		~DirectX9_VertexShader();
@@ -33,6 +35,9 @@ namespace april
 		void setConstantsB(const int* quadVectors, unsigned int quadCount);
 		void setConstantsI(const int* quadVectors, unsigned int quadCount);
 		void setConstantsF(const float* quadVectors, unsigned int quadCount);
+
+	protected:
+		IDirect3DVertexShader9* dx9Shader;
 
 	};
 

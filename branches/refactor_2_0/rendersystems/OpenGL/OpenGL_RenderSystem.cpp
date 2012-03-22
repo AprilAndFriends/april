@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -83,19 +83,17 @@ namespace april
 	int gl_render_ops[]=
 	{
 		0,
-		GL_TRIANGLES,      // ROP_TRIANGLE_LIST
+		GL_TRIANGLES,	  // ROP_TRIANGLE_LIST
 		GL_TRIANGLE_STRIP, // ROP_TRIANGLE_STRIP
 		GL_TRIANGLE_FAN,   // ROP_TRIANGLE_FAN
-		GL_LINES,          // ROP_LINE_LIST
-		GL_LINE_STRIP,     // ROP_LINE_STRIP
-		GL_POINTS,         // ROP_POINTS
+		GL_LINES,		  // ROP_LINE_LIST
+		GL_LINE_STRIP,	 // ROP_LINE_STRIP
+		GL_POINTS,		 // ROP_POINTS
 	};
 	
-	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem()
+	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), textureCoordinatesEnabled(false), colorEnabled(false)
 	{
 		this->name = APRIL_RS_OPENGL;
-		mTexCoordsEnabled = false;
-		mColorEnabled = false;
 	}
 
 	OpenGL_RenderSystem::~OpenGL_RenderSystem()
@@ -109,9 +107,9 @@ namespace april
 		{
 			return false;
 		}
-		mTexCoordsEnabled = false;
-		mColorEnabled = false;
-		mOptions = options;
+		this->textureCoordinatesEnabled = false;
+		this->colorEnabled = false;
+		this->options = options;
 		glClearColor(0, 0, 0, 1);
 		return true;
 	}
@@ -123,7 +121,7 @@ namespace april
 			return false;
 		}
 #ifdef _WIN32
-		_releaseWindow();
+		this->_releaseWindow();
 #endif
 		return true;
 	}
@@ -178,13 +176,13 @@ namespace april
 		if (pixelFormat == 0)
 		{
 			april::log("can't find a suitable pixel format");
-			_releaseWindow();
+			this->_releaseWindow();
 			return;
 		}
 		if (SetPixelFormat(hDC, pixelFormat, &pfd) == 0)
 		{
 			april::log("can't set the pixel format");
-			_releaseWindow();
+			this->_releaseWindow();
 			return;
 		}
 #ifndef _OPENGLES1
@@ -192,13 +190,13 @@ namespace april
 		if (hRC == 0)
 		{
 			april::log("can't create a GL rendering context");
-			_releaseWindow();
+			this->_releaseWindow();
 			return;
 		}
 		if (wglMakeCurrent(hDC, hRC) == 0)
 		{
 			april::log("can't activate the GL rendering context");
-			_releaseWindow();
+			this->_releaseWindow();
 			return;
 		}
 #else
@@ -210,7 +208,7 @@ namespace april
 		if (eglDisplay == EGL_NO_DISPLAY)
 		{
 			april::log("can't get EGL display");
-			_releaseWindow();
+			this->_releaseWindow();
 			return;
 		}
 		EGLint majorVersion;
@@ -218,7 +216,7 @@ namespace april
 		if (!eglInitialize(eglDisplay, &majorVersion, &minorVersion))
 		{
 			april::log("can't initialize EGL");
-			_releaseWindow();
+			this->_releaseWindow();
 			return;
 		}
 		EGLint configs;
@@ -226,7 +224,7 @@ namespace april
 		if (!result || configs == 0)
 		{
 			april::log("can't choose EGL config");
-			_releaseWindow();
+			this->_releaseWindow();
 			return;
 		}
 
@@ -234,21 +232,21 @@ namespace april
 		if (eglGetError() != EGL_SUCCESS)
 		{
 			april::log("can't create window surface");
-			_releaseWindow();
+			this->_releaseWindow();
 			return;
 		}
 		eglContext = eglCreateContext(eglDisplay, eglConfig, EGL_NO_CONTEXT, NULL);
 		if (eglGetError() != EGL_SUCCESS)
 		{
 			april::log("can't create EGL context");
-			_releaseWindow();
+			this->_releaseWindow();
 			return;
 		}
 		eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
 		if (eglGetError() != EGL_SUCCESS)
 		{
 			april::log("can't make context current");
-			_releaseWindow();
+			this->_releaseWindow();
 			return;
 		}
 #endif
@@ -264,9 +262,9 @@ namespace april
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
-        
+		
 		glEnable(GL_TEXTURE_2D);
-        
+		
 		// DevIL defaults
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 #ifndef _OPENGLES1
@@ -276,12 +274,12 @@ namespace april
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 #endif
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		if (mOptions.contains("zbuffer"))
+		if (this->options.contains("zbuffer"))
 		{
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 		}
-		mOrthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
+		this->orthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
 	}
 
 	void OpenGL_RenderSystem::restore()
@@ -289,8 +287,8 @@ namespace april
 		RenderSystem::restore();
 		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
 		glClearColor(0, 0, 0, 1);
-		_setModelviewMatrix(mModelviewMatrix);
-		_setProjectionMatrix(mProjectionMatrix);
+		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->_setProjectionMatrix(this->projectionMatrix);
 		// GL defaults
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -300,9 +298,9 @@ namespace april
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_COLOR_ARRAY);
 		// other
-		mTexCoordsEnabled = false;
-		mColorEnabled = false;
-		if (mOptions.contains("zbuffer"))
+		this->textureCoordinatesEnabled = false;
+		this->colorEnabled = false;
+		if (this->options.contains("zbuffer"))
 		{
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
@@ -318,19 +316,14 @@ namespace april
 		}
 	}
 	
-	float OpenGL_RenderSystem::getPixelOffset()
-	{
-		return 0.0f;
-	}
-
 	Texture* OpenGL_RenderSystem::loadTexture(chstr filename, bool dynamic)
 	{
-		hstr name = findTextureFile(filename);
+		hstr name = this->findTextureFile(filename);
 		if (name == "")
 		{
 			return NULL;
 		}
-		if (mDynamicLoading)
+		if (this->dynamicLoading)
 		{
 			dynamic = true;
 		}
@@ -359,11 +352,13 @@ namespace april
 
 	VertexShader* OpenGL_RenderSystem::createVertexShader()
 	{
+		april::log("WARNING: vertex shaders are not implemented");
 		return NULL;
 	}
 
 	PixelShader* OpenGL_RenderSystem::createPixelShader()
 	{
+		april::log("WARNING: pixel shaders are not implemented");
 		return NULL;
 	}
 
@@ -397,21 +392,21 @@ namespace april
 		}
 		else
 		{
-			if (texture->mTexId == 0)
+			if (!texture->isLoaded())
 			{
 				texture->load();
 			}
 			texture->_resetUnusedTimer();
-			glBindTexture(GL_TEXTURE_2D, texture->mTexId);
+			glBindTexture(GL_TEXTURE_2D, texture->textureId);
 			TextureFilter filter = texture->getTextureFilter();
-			if (filter != mTextureFilter)
+			if (this->textureFilter != filter)
 			{
-				setTextureFilter(filter);
+				this->setTextureFilter(filter);
 			}
 			bool wrapping = texture->isTextureWrappingEnabled();
-			if (mTextureWrapping != wrapping)
+			if (this->textureWrapping != wrapping)
 			{
-				setTextureWrapping(wrapping);
+				this->setTextureWrapping(wrapping);
 			}
 		}
 	}
@@ -433,31 +428,31 @@ namespace april
 	void OpenGL_RenderSystem::clear(bool useColor, bool depth, grect rect, Color color)
 	{
 		glClearColor(color.r_f(), color.b_f(), color.g_f(), color.a_f());
-		clear(useColor, depth);
+		this->clear(useColor, depth);
 	}
-    
-    ImageSource* OpenGL_RenderSystem::grabScreenshot(int bpp)
-    {
-        april::log("grabbing screenshot");
-        int w = april::window->getWidth();
+	
+	ImageSource* OpenGL_RenderSystem::grabScreenshot(int bpp)
+	{
+		april::log("grabbing screenshot");
+		int w = april::window->getWidth();
 		int h = april::window->getHeight();
-        ImageSource* img = new ImageSource();
-        img->w = w;
+		ImageSource* img = new ImageSource();
+		img->w = w;
 		img->h = h;
 		img->bpp = bpp;
 		img->format = (bpp == 4 ? AT_RGBA : AT_RGB);
-        img->data = new unsigned char[w * (h + 1) * 4]; // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
-        unsigned char* temp = img->data + w * h * 4;
-        
-	    glReadPixels(0, 0, w, h, (bpp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img->data);
+		img->data = new unsigned char[w * (h + 1) * 4]; // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
+		unsigned char* temp = img->data + w * h * 4;
+		
+		glReadPixels(0, 0, w, h, (bpp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img->data);
 		for_iter (y, 0, h / 2)
 		{
 			memcpy(temp, img->data + y * w * bpp, w * bpp);
 			memcpy(img->data + y * w * bpp, img->data + (h - y - 1) * w * bpp, w * bpp);
 			memcpy(img->data + (h - y - 1) * w * bpp, temp, w * bpp);
 		}
-        return img;
-    }
+		return img;
+	}
 
 	void OpenGL_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
@@ -512,7 +507,7 @@ namespace april
 		{
 			april::log("trying to set unsupported texture filter!");
 		}
-		mTextureFilter = filter;
+		this->textureFilter = filter;
 	}
 
 	void OpenGL_RenderSystem::setTextureWrapping(bool wrap)
@@ -528,23 +523,23 @@ namespace april
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 #else
-//warning Compiling for an OpenGL ES target, setTextureWrapping cannot use GL_CLAMP
+#warning Compiling for an OpenGL ES target, setTextureWrapping cannot use GL_CLAMP
 #endif
 		}
-		mTextureWrapping = wrap;
+		this->textureWrapping = wrap;
 	}
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
 	{
-		if (!mTexCoordsEnabled)
+		if (!this->textureCoordinatesEnabled)
 		{
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			mTexCoordsEnabled = true;
+			this->textureCoordinatesEnabled = true;
 		}
-		if (mColorEnabled)
+		if (this->colorEnabled)
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
-			mColorEnabled = false;
+			this->colorEnabled = false;
 		}
 		glColor4f(1, 1, 1, 1); 
 		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
@@ -554,15 +549,15 @@ namespace april
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
 	{
-		if (!mTexCoordsEnabled)
+		if (!this->textureCoordinatesEnabled)
 		{
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			mTexCoordsEnabled = true;
+			this->textureCoordinatesEnabled = true;
 		}
-		if (mColorEnabled)
+		if (this->colorEnabled)
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
-			mColorEnabled = false;
+			this->colorEnabled = false;
 		}
 		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
 		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
@@ -572,16 +567,16 @@ namespace april
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
 	{
-		if (mTexCoordsEnabled)
+		if (this->textureCoordinatesEnabled)
 		{
 			glBindTexture(GL_TEXTURE_2D, 0);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			mTexCoordsEnabled = false;
+			this->textureCoordinatesEnabled = false;
 		}
-		if (mColorEnabled)
+		if (this->colorEnabled)
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
-			mColorEnabled = false;
+			this->colorEnabled = false;
 		}
 		glColor4f(1, 1, 1, 1);
 		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
@@ -590,16 +585,16 @@ namespace april
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
 	{
-		if (mTexCoordsEnabled)
+		if (this->textureCoordinatesEnabled)
 		{
 			glBindTexture(GL_TEXTURE_2D, 0);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			mTexCoordsEnabled = false;
+			this->textureCoordinatesEnabled = false;
 		}
-		if (mColorEnabled)
+		if (this->colorEnabled)
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
-			mColorEnabled = false;
+			this->colorEnabled = false;
 		}
 		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
 		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
@@ -608,16 +603,16 @@ namespace april
 	
 	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
 	{
-		if (mTexCoordsEnabled)
+		if (this->textureCoordinatesEnabled)
 		{
 			glBindTexture(GL_TEXTURE_2D, 0);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			mTexCoordsEnabled = false;
+			this->textureCoordinatesEnabled = false;
 		}
-		if (!mColorEnabled)
+		if (!this->colorEnabled)
 		{
 			glEnableClientState(GL_COLOR_ARRAY);
-			mColorEnabled = true;
+			this->colorEnabled = true;
 		}
 		glEnableClientState(GL_COLOR_ARRAY);
 		glVertexPointer(3, GL_FLOAT, sizeof(ColoredVertex), v);
@@ -628,15 +623,15 @@ namespace april
 	
 	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
-		if (!mTexCoordsEnabled)
+		if (!this->textureCoordinatesEnabled)
 		{
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			mTexCoordsEnabled = true;
+			this->textureCoordinatesEnabled = true;
 		}
-		if (!mColorEnabled)
+		if (!this->colorEnabled)
 		{
-			mColorEnabled = true;
 			glEnableClientState(GL_COLOR_ARRAY);
+			this->colorEnabled = true;
 		}
 		for_iter (i, 0, nVertices)
 		{

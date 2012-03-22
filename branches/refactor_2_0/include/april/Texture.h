@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -69,39 +69,39 @@ namespace april
 		void fillRect(grect rect, Color color);
 		virtual Color getInterpolatedPixel(float x, float y);
 		
-		void addDynamicLink(Texture* lnk);
-		void removeDynamicLink(Texture* lnk);
+		void addDynamicLink(Texture* link);
+		void removeDynamicLink(Texture* link);
 		void _resetUnusedTimer(bool recursive = true);
-		float getUnusedTime() { return mUnusedTimer; }
+		float getUnusedTime() { return this->unusedTimer; }
 		
-		int getWidth() { return mWidth; };
-		int getHeight() { return mHeight; };
-		int getBpp() { return mBpp; }
+		int getWidth() { return this->width; };
+		int getHeight() { return this->height; };
+		int getBpp() { return this->bpp; }
 		/// only used with dynamic textures since at chapter load you need it's dimensions for images, but you don't know them yet
-		void _setDimensions(int w, int h) { mWidth = w; mHeight = h; }
-		bool isDynamic() { return mDynamic; }
+		void _setDimensions(int w, int h) { this->width = w; this->height = h; }
+		bool isDynamic() { return this->dynamic; }
 		virtual bool isLoaded() = 0;
 		
-		void update(float time_increase);
-		hstr getFilename() { return mFilename; }
+		void update(float k);
+		hstr getFilename() { return this->filename; }
 		
-		void setTextureFilter(TextureFilter filter) { mTextureFilter = filter; }
-		void setTextureWrapping(bool wrap) { mTextureWrapping = wrap; }
-		bool isTextureWrappingEnabled() { return mTextureWrapping; }
-		TextureFilter getTextureFilter() { return mTextureFilter; }
+		void setTextureFilter(TextureFilter filter) { this->textureFilter = filter; }
+		void setTextureWrapping(bool wrap) { this->textureWrapping = wrap; }
+		bool isTextureWrappingEnabled() { return this->textureWrapping; }
+		TextureFilter getTextureFilter() { return this->textureFilter; }
 
 		virtual void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 		
 	protected:
-		bool mDynamic;
-		hstr mFilename;
-		int mWidth;
-		int mHeight;
-		int mBpp;
-		float mUnusedTimer;
-		TextureFilter mTextureFilter;
-		bool mTextureWrapping;
-		harray<Texture*> mDynamicLinks;
+		bool dynamic;
+		hstr filename;
+		int width;
+		int height;
+		int bpp;
+		float unusedTimer;
+		TextureFilter textureFilter;
+		bool textureWrapping;
+		harray<Texture*> dynamicLinks;
 
 		hstr _getInternalName();
 		
@@ -123,7 +123,7 @@ namespace april
 		bool isValid();
 		
 	protected:
-		ImageSource* mBuffer;
+		ImageSource* buffer;
 		
 	};
 

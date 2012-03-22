@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -22,25 +22,25 @@ namespace april
 
 	TextureManager::~TextureManager()
 	{
-		while (mTextures.size() > 0)
+		while (this->textures.size() > 0)
 		{
-			delete mTextures[0];
+			delete this->textures[0];
 		}
 	}
 
 	void TextureManager::registerTexture(Texture* texture)
 	{
-		mTextures += texture;
+		this->textures += texture;
 	}
 
 	void TextureManager::unregisterTexture(Texture* texture)
 	{
-		mTextures -= texture;
+		this->textures -= texture;
 	}
 
 	void TextureManager::unloadTextures()
 	{
-		foreach (Texture*, it, mTextures)
+		foreach (Texture*, it, this->textures)
 		{
 			(*it)->unload();
 		}

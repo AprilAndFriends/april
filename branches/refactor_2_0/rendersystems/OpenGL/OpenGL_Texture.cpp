@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -75,12 +75,12 @@ namespace april
 	
 	OpenGL_Texture::OpenGL_Texture(chstr filename, bool dynamic) : Texture()
 	{
-		mWidth = 0;
-		mHeight = 0;
-		mFilename = filename;
-		mDynamic = dynamic;
-		mTexId = 0;
-		mManualData = NULL;
+		this->width = 0;
+		this->height = 0;
+		this->filename = filename;
+		this->dynamic = dynamic;
+		this->textureId = 0;
+		this->manualBuffer = NULL;
 		if (!dynamic)
 		{
 			load();
@@ -90,17 +90,17 @@ namespace april
 	OpenGL_Texture::OpenGL_Texture(unsigned char* rgba, int w, int h) : Texture()
 	{
 		april::log("creating user-defined GL texture");
-		mWidth = w;
-		mHeight = h;
-		mDynamic = false;
-		mFilename = "";
-		mManualData = NULL;
+		this->width = w;
+		this->height = h;
+		this->dynamic = false;
+		this->filename = "";
+		this->manualBuffer = NULL;
 #ifdef _ANDROID // currently user texture caching works for Android only
-		mManualData = new unsigned char[w * h * 4];
-		memcpy(mManualData, rgba, w * h * 4 * sizeof(unsigned char));
+		this->manualBuffer = new unsigned char[w * h * 4];
+		memcpy(this->manualBuffer, rgba, w * h * 4 * sizeof(unsigned char));
 #endif
-		glGenTextures(1, &mTexId);
-		glBindTexture(GL_TEXTURE_2D, mTexId);
+		glGenTextures(1, &this->textureId);
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
@@ -109,13 +109,13 @@ namespace april
 	OpenGL_Texture::OpenGL_Texture(int w, int h) : Texture()
 	{
 		april::log("creating empty GL texture [ " + hstr(w) + "x" + hstr(h) + " ]");
-		mWidth = w;
-		mHeight = h;
-		mDynamic = false;
-		mFilename = "";
-		mManualData = NULL;
-		glGenTextures(1, &mTexId);
-		glBindTexture(GL_TEXTURE_2D, mTexId);
+		this->width = w;
+		this->height = h;
+		this->dynamic = false;
+		this->filename = "";
+		this->manualBuffer = NULL;
+		glGenTextures(1, &this->textureId);
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		unsigned char* clearColor = new unsigned char[w * h * 4];
@@ -127,9 +127,9 @@ namespace april
 	OpenGL_Texture::~OpenGL_Texture()
 	{
 		unload();
-		if (mManualData != NULL)
+		if (this->manualBuffer != NULL)
 		{
-			delete [] mManualData;
+			delete [] this->manualBuffer;
 		}
 	}
 
@@ -142,7 +142,7 @@ namespace april
 	void OpenGL_Texture::setPixel(int x, int y, Color color)
 	{
 		unsigned char writeData[4] = {color.r, color.g, color.b, color.a};
-		glBindTexture(GL_TEXTURE_2D, mTexId);
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
 	}
 	
@@ -161,7 +161,7 @@ namespace april
 				writeData[(i + j * w) * 4 + 3] = color.a;
 			}
 		}
-		glBindTexture(GL_TEXTURE_2D, mTexId);
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
 		delete [] writeData;
 	}
@@ -170,11 +170,11 @@ namespace april
 	{
 		// TODO - find a better and faster way to do this
 		/*
-		glBindTexture(GL_TEXTURE_2D, ((OpenGL_Texture*)texture)->mTexId);
+		glBindTexture(GL_TEXTURE_2D, ((OpenGL_Texture*)texture)->this->textureId);
 		glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sx, sy, sw, sh);
 		unsigned char* writeData = new unsigned char[sw * sh * 4];
 		glReadPixels(0, 0, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
-		glBindTexture(GL_TEXTURE_2D, mTexId);
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
 		delete [] writeData;
 		//*/
@@ -203,7 +203,7 @@ namespace april
 				}
 			}
 		}
-		glBindTexture(GL_TEXTURE_2D, mTexId);
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
 		delete [] writeData;
 	}
@@ -235,34 +235,34 @@ namespace april
 	
 	bool OpenGL_Texture::load()
 	{
-		mUnusedTimer = 0.0f;
-		if (mTexId != 0)
+		this->unusedTimer = 0.0f;
+		if (this->textureId != 0)
 		{
 			return true;
 		}
-		if (mFilename != "")
+		if (this->filename != "")
 		{
-			april::log("loading GL texture '" + _getInternalName() + "'");
-			mTexId = platformLoadOpenGL_Texture(mFilename, &mWidth, &mHeight);
+			april::log("loading GL texture '" + this->_getInternalName() + "'");
+			this->textureId = platformLoadOpenGL_Texture(this->filename, &this->width, &this->height);
 		}
 		else
 		{
 			april::log("creating user-defined GL texture");
-			glGenTextures(1, &mTexId);
-			glBindTexture(GL_TEXTURE_2D, mTexId);
+			glGenTextures(1, &this->textureId);
+			glBindTexture(GL_TEXTURE_2D, this->textureId);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			if (mManualData != NULL)
+			if (this->manualBuffer != NULL)
 			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, mManualData);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->manualBuffer);
 			}
 		}
-		if (mTexId == 0)
+		if (this->textureId == 0)
 		{
 			april::log("Failed to load texture: " + _getInternalName());
 			return false;
 		}
-		foreach (Texture*, it, mDynamicLinks)
+		foreach (Texture*, it, this->dynamicLinks)
 		{
 			(*it)->load();
 		}
@@ -271,27 +271,27 @@ namespace april
 
 	bool OpenGL_Texture::isLoaded()
 	{
-		return (mTexId != 0);
+		return (this->textureId != 0);
 	}
 
 	void OpenGL_Texture::unload()
 	{
-		if (mTexId != 0)
+		if (this->textureId != 0)
 		{
-			april::log("unloading GL texture '" + _getInternalName() + "'");
-			glDeleteTextures(1, &mTexId);
-			mTexId = 0;
+			april::log("unloading GL texture '" + this->_getInternalName() + "'");
+			glDeleteTextures(1, &this->textureId);
+			this->textureId = 0;
 		}
 	}
 
 	int OpenGL_Texture::getSizeInBytes()
 	{
-		return (mWidth * mHeight * 3); // TODO
+		return (this->width * this->height * 3); // TODO
 	}
 
 	bool OpenGL_Texture::isValid()
 	{
-		return (mTexId != 0);
+		return (this->textureId != 0);
 	}
 
 }

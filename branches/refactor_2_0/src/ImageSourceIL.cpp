@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -20,13 +20,13 @@ namespace april
 {
 	ImageSource::ImageSource()
 	{
-		ilGenImages(1, &mImageId);
+		ilGenImages(1, &this->imageId);
 		this->compressedLength = 0;
 	}
 	
 	ImageSource::~ImageSource()
 	{
-		ilDeleteImages(1, &mImageId);
+		ilDeleteImages(1, &this->imageId);
 	}
 
 	void ImageSource::copyImage(ImageSource* source, int bpp)

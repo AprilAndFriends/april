@@ -87,7 +87,7 @@ namespace april
 	
     iOSWindow::iOSWindow() : Window()
     {
-		this->name = "iOS";
+		this->name = APRIL_WS_IOS;
 		this->keyboardRequest = 0;
 		this->retainLoadingOverlay = false;
 		this->inputEventsMutex = false;

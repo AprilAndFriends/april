@@ -18,16 +18,24 @@
 
 #include "RenderSystem.h"
 
+struct IDirect3D9;
+struct IDirect3DDevice9;
 struct IDirect3DSurface9;
 
 namespace april
 {
+	class DirectX9_PixelShader;
 	class DirectX9_Texture;
+	class DirectX9_VertexShader;
 	class Window;
 
 	class DirectX9_RenderSystem : public RenderSystem
 	{
 	public:
+		friend class DirectX9_PixelShader;
+		friend class DirectX9_Texture;
+		friend class DirectX9_VertexShader;
+
 		DirectX9_RenderSystem();
 		~DirectX9_RenderSystem();
 		bool create(chstr options);
@@ -55,13 +63,13 @@ namespace april
 		void setTextureWrapping(bool wrap);
 		void setResolution(int w, int h);
 		// caps
-		float getPixelOffset();
+		float getPixelOffset() { return 0.5f; }
 		hstr getName();
 		// rendering
 		void clear(bool useColor = true, bool depth = false);
 		void clear(bool useColor, bool depth, grect rect, Color color = APRIL_COLOR_CLEAR);
 		ImageSource* grabScreenshot(int bpp = 3);
-		void setTexture(Texture* t);
+		void setTexture(Texture* texture);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
@@ -78,12 +86,14 @@ namespace april
 		harray<DisplayMode> getSupportedDisplayModes();
 
 	protected:
-		bool mZBufferEnabled;
-		bool mTexCoordsEnabled;
-		bool mColorEnabled;
-		hstr mTitle;
-		DirectX9_Texture* mRenderTarget;
-		IDirect3DSurface9* mBackBuffer;
+		bool zBufferEnabled;
+		bool textureCoordinatesEnabled;
+		bool colorEnabled;
+		IDirect3D9* d3d;
+		IDirect3DDevice9* d3dDevice;
+		DirectX9_Texture* activeTexture;
+		DirectX9_Texture* renderTarget;
+		IDirect3DSurface9* backBuffer;
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);

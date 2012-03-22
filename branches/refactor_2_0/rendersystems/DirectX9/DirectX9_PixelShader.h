@@ -9,7 +9,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a DirectX pixel shader.
+/// Defines a DirectX9 pixel shader.
 
 #ifdef _DIRECTX9
 #ifndef APRIL_DIRECTX9_PIXEL_SHADER_H
@@ -21,10 +21,12 @@ struct IDirect3DPixelShader9;
 
 namespace april
 {
+	class DirectX9_RenderSystem;
+	
 	class DirectX9_PixelShader : public PixelShader
 	{
 	public:
-		IDirect3DPixelShader9* mShader;
+		friend class DirectX9_RenderSystem;
 
 		DirectX9_PixelShader();
 		~DirectX9_PixelShader();
@@ -33,6 +35,9 @@ namespace april
 		void setConstantsB(const int* quadVectors, unsigned int quadCount);
 		void setConstantsI(const int* quadVectors, unsigned int quadCount);
 		void setConstantsF(const float* quadVectors, unsigned int quadCount);
+
+	protected:
+		IDirect3DPixelShader9* dx9Shader;
 
 	};
 

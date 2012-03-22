@@ -28,136 +28,9 @@ namespace april
 	extern HDC hDC;
 #endif
 	
-/************************************************************************************/
-	LRESULT CALLBACK Win32_Window::processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-	{
-		static bool _touchDown = false;
-		static bool _doubleTapDown = false;
-		static int _mouseMoveMessagesCount = 0;
-		if (!april::window->isCreated()) // don't run callback processing if window was "destroyed"
-		{
-			return 1;
-		}
-		switch (message)
-		{
-		case 0x0119: // WM_GESTURE (Win7+ only)
-			if (wParam == 1) // GID_BEGIN
-			{
-				_touchDown = true;
-			}
-			else if (wParam == 2) // GID_END
-			{
-				if (_doubleTapDown)
-				{ 
-					_doubleTapDown = false;
-					april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AMOUSEBTN_DOUBLETAP);
-				}
-				_touchDown = false;
-			}
-			else if (wParam == 6) // GID_TWOFINGERTAP
-			{
-				_doubleTapDown = true;
-				april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AMOUSEBTN_DOUBLETAP);
-			}
-			break;
-		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
-			_touchDown = true;
-			april::window->handleTouchscreenEnabledEvent(true);
-			break;
-		case WM_DESTROY:
-		case WM_CLOSE:
-			if (april::window->handleQuitRequest(true))
-			{
-				PostQuitMessage(0);
-				april::window->terminateMainLoop();
-			}
-			return 0;
-		case WM_KEYDOWN:
-			april::window->handleKeyOnlyEvent(AKEYEVT_DOWN, (april::KeySym)wParam);
-			break;
-		case WM_KEYUP: 
-			april::window->handleKeyOnlyEvent(AKEYEVT_UP, (april::KeySym)wParam);
-			break;
-		case WM_CHAR:
-			april::window->handleCharOnlyEvent(wParam);
-			break;
-		case WM_LBUTTONDOWN:
-			_touchDown = true;
-			_mouseMoveMessagesCount = 0;
-			april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AMOUSEBTN_LEFT);
-			if (!april::window->isFullscreen())
-			{
-				SetCapture((HWND)april::window->getBackendId());
-			}
-			break;
-		case WM_RBUTTONDOWN:
-			_touchDown = true;
-			_mouseMoveMessagesCount = 0;
-			april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AMOUSEBTN_RIGHT);
-			if (!april::window->isFullscreen())
-			{
-				SetCapture((HWND)april::window->getBackendId());
-			}
-			break;
-		case WM_LBUTTONUP:
-			_touchDown = false;
-			april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AMOUSEBTN_LEFT);
-			if (!april::window->isFullscreen())
-			{
-				ReleaseCapture();
-			}
-			break;
-		case WM_RBUTTONUP:
-			_touchDown = false;
-			april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AMOUSEBTN_RIGHT);
-			if (!april::window->isFullscreen())
-			{
-				ReleaseCapture();
-			}
-			break;
-		case WM_MOUSEMOVE:
-			if (!_touchDown)
-			{
-				if (_mouseMoveMessagesCount >= 10)
-				{
-					april::window->handleTouchscreenEnabledEvent(false);
-				}
-				else
-				{
-					_mouseMoveMessagesCount++;
-				}
-			}
-			else
-			{
-				_mouseMoveMessagesCount = 0;
-			}
-			april::window->handleMouseEvent(AMOUSEEVT_MOVE, april::window->getCursorPosition(), AMOUSEBTN_NONE);
-			break;
-		case WM_SETCURSOR:
-			if (!((Win32_Window*)april::window)->cursorVisible)
-			{
-				!april::window->isCursorInside() ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
-			}
-			return 1;
-		case WM_ACTIVATE:
-			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
-			{
-				april::log("Window activated");
-				april::window->handleFocusChangeEvent(true);
-			}
-			else
-			{
-				april::log("Window deactivated");
-				april::window->handleFocusChangeEvent(false);
-			}
-			break;
-		}
-		return DefWindowProcW(hWnd, message, wParam, lParam);
-	}
-
 	Win32_Window::Win32_Window() : Window()
 	{
-		this->name = "Win32";
+		this->name = APRIL_WS_WIN32;
 		this->touchEnabled = false;
 		this->_fpsTitle = " [FPS: 0]";
 	}
@@ -177,8 +50,7 @@ namespace april
 		this->_fpsTitle = " [FPS: 0]";
 		// Win32
 		WNDCLASSEXW wc;
-		ZeroMemory(&wc, sizeof(WNDCLASSEX));
-		
+		memset(&wc, 0, sizeof(WNDCLASSEX));
 		HINSTANCE hinst = GetModuleHandle(0);
 		wc.cbSize = sizeof(WNDCLASSEX);
 		wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -375,7 +247,10 @@ namespace april
 	void Win32_Window::presentFrame()
 	{
 #ifdef _OPENGL
-		SwapBuffers(hDC);
+		if (april::rendersys->getName() == APRIL_RS_OPENGL)
+		{
+			SwapBuffers(hDC);
+		}
 #endif
 	}
 	
@@ -387,6 +262,132 @@ namespace april
 			TranslateMessage(&msg);
 			DispatchMessageW(&msg);
 		}
+	}
+
+	LRESULT CALLBACK Win32_Window::processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	{
+		static bool _touchDown = false;
+		static bool _doubleTapDown = false;
+		static int _mouseMoveMessagesCount = 0;
+		if (!april::window->isCreated()) // don't run callback processing if window was "destroyed"
+		{
+			return 1;
+		}
+		switch (message)
+		{
+		case 0x0119: // WM_GESTURE (Win7+ only)
+			if (wParam == 1) // GID_BEGIN
+			{
+				_touchDown = true;
+			}
+			else if (wParam == 2) // GID_END
+			{
+				if (_doubleTapDown)
+				{ 
+					_doubleTapDown = false;
+					april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AMOUSEBTN_DOUBLETAP);
+				}
+				_touchDown = false;
+			}
+			else if (wParam == 6) // GID_TWOFINGERTAP
+			{
+				_doubleTapDown = true;
+				april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AMOUSEBTN_DOUBLETAP);
+			}
+			break;
+		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
+			_touchDown = true;
+			april::window->handleTouchscreenEnabledEvent(true);
+			break;
+		case WM_DESTROY:
+		case WM_CLOSE:
+			if (april::window->handleQuitRequest(true))
+			{
+				PostQuitMessage(0);
+				april::window->terminateMainLoop();
+			}
+			return 0;
+		case WM_KEYDOWN:
+			april::window->handleKeyOnlyEvent(AKEYEVT_DOWN, (april::KeySym)wParam);
+			break;
+		case WM_KEYUP: 
+			april::window->handleKeyOnlyEvent(AKEYEVT_UP, (april::KeySym)wParam);
+			break;
+		case WM_CHAR:
+			april::window->handleCharOnlyEvent(wParam);
+			break;
+		case WM_LBUTTONDOWN:
+			_touchDown = true;
+			_mouseMoveMessagesCount = 0;
+			april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AMOUSEBTN_LEFT);
+			if (!april::window->isFullscreen())
+			{
+				SetCapture((HWND)april::window->getBackendId());
+			}
+			break;
+		case WM_RBUTTONDOWN:
+			_touchDown = true;
+			_mouseMoveMessagesCount = 0;
+			april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AMOUSEBTN_RIGHT);
+			if (!april::window->isFullscreen())
+			{
+				SetCapture((HWND)april::window->getBackendId());
+			}
+			break;
+		case WM_LBUTTONUP:
+			_touchDown = false;
+			april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AMOUSEBTN_LEFT);
+			if (!april::window->isFullscreen())
+			{
+				ReleaseCapture();
+			}
+			break;
+		case WM_RBUTTONUP:
+			_touchDown = false;
+			april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AMOUSEBTN_RIGHT);
+			if (!april::window->isFullscreen())
+			{
+				ReleaseCapture();
+			}
+			break;
+		case WM_MOUSEMOVE:
+			if (!_touchDown)
+			{
+				if (_mouseMoveMessagesCount >= 10)
+				{
+					april::window->handleTouchscreenEnabledEvent(false);
+				}
+				else
+				{
+					_mouseMoveMessagesCount++;
+				}
+			}
+			else
+			{
+				_mouseMoveMessagesCount = 0;
+			}
+			april::window->handleMouseEvent(AMOUSEEVT_MOVE, april::window->getCursorPosition(), AMOUSEBTN_NONE);
+			break;
+		case WM_SETCURSOR:
+			if (!((Win32_Window*)april::window)->cursorVisible)
+			{
+				!april::window->isCursorInside() ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
+			}
+			return 1;
+		case WM_ACTIVATE:
+			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
+			{
+				april::log("Window activated");
+				april::window->handleFocusChangeEvent(true);
+			}
+			else
+			{
+				april::log("Window deactivated");
+				april::window->handleFocusChangeEvent(false);
+			}
+			break;
+		}
+		return DefWindowProcW(hWnd, message, wParam, lParam);
 	}
 
 }

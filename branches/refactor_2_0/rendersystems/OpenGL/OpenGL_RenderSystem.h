@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -58,7 +58,7 @@ namespace april
 		void setResolution(int w, int h);
 		void setColorMode(ColorMode mode, unsigned char alpha);
 		// caps
-		float getPixelOffset();
+		float getPixelOffset() { return 0.0f; }
         
         ImageSource* grabScreenshot(int bpp = 3);
 
@@ -79,9 +79,9 @@ namespace april
 		harray<DisplayMode> getSupportedDisplayModes();
 		
 	protected:
-		hstr mOptions;
-		bool mTexCoordsEnabled;
-		bool mColorEnabled;
+		hstr options;
+		bool textureCoordinatesEnabled;
+		bool colorEnabled;
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);

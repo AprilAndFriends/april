@@ -167,19 +167,19 @@ namespace april
 		// camera functions
 		void lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up);
 		// projection matrix transformation
-		grect getOrthoProjection() { return mOrthoProjection; }
+		grect getOrthoProjection() { return this->orthoProjection; }
 		void setOrthoProjection(gvec2 size);
 		void setOrthoProjection(grect rect);
 		void setPerspective(float fov, float aspect, float nearClip, float farClip);
 		// rendersys matrix operations
 		void setModelviewMatrix(const gmat4& matrix);
 		void setProjectionMatrix(const gmat4& matrix);
-		virtual bool isFullscreen();
+
 		virtual void setFullscreen(bool fullscreen) { } //TODO - implement in derived classes
 		virtual void setResolution(int w, int h);
 		
-		const gmat4& getModelviewMatrix();
-		const gmat4& getProjectionMatrix();
+		const gmat4& getModelviewMatrix() { return this->modelviewMatrix; }
+		const gmat4& getProjectionMatrix() { return this->projectionMatrix; }
 		// render state
 		virtual void setBlendMode(BlendMode mode) = 0;
 		virtual void setColorMode(ColorMode mode, unsigned char alpha = 255) = 0;
@@ -207,37 +207,38 @@ namespace april
 		void drawTexturedQuad(grect rect, grect src);
 		void drawTexturedQuad(grect rect, grect src, Color color);
 
-		float getIdleTextureUnloadTime() { return mIdleUnloadTime; }
-		void setIdleTextureUnloadTime(float time) { mIdleUnloadTime = time; }
+		float getIdleTextureUnloadTime() { return this->idleUnloadTime; }
+		void setIdleTextureUnloadTime(float time) { this->idleUnloadTime = time; }
 
 		virtual void beginFrame() = 0;
 
-		void forceDynamicLoading(bool value) { mDynamicLoading = value; }
-		bool isDynamicLoadingForced() { return mDynamicLoading; }
+		void forceDynamicLoading(bool value) { this->dynamicLoading = value; }
+		bool isDynamicLoadingForced() { return this->dynamicLoading; }
 		
-		DEPRECATED_ATTRIBUTE Window* getWindow() { return april::window; }
-		TextureManager* getTextureManager() { return mTextureManager; }
+		TextureManager* getTextureManager() { return this->textureManager; }
 		
         virtual ImageSource* grabScreenshot(int bpp = 3) = 0;
         
 		virtual void presentFrame();
 		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
 
+		DEPRECATED_ATTRIBUTE Window* getWindow() { return april::window; }
 		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f);
+		DEPRECATED_ATTRIBUTE bool isFullscreen() { return april::window->isFullscreen(); }
 
 	protected:
 		hstr name;
 		bool created;
-		TextureManager* mTextureManager;
-		float mIdleUnloadTime;
-		bool mDynamicLoading;
-		TextureFilter mTextureFilter;
-		bool mTextureWrapping;
-		grect mClipRect;
-		bool mClip;
-		gmat4 mModelviewMatrix;
-		gmat4 mProjectionMatrix;
-		grect mOrthoProjection;
+		TextureManager* textureManager;
+		float idleUnloadTime;
+		bool dynamicLoading;
+		TextureFilter textureFilter;
+		bool textureWrapping;
+		grect clipRect;
+		bool clip;
+		gmat4 modelviewMatrix;
+		gmat4 projectionMatrix;
+		grect orthoProjection;
 		
 		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;

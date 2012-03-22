@@ -16,6 +16,7 @@
 
 #include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
+#include <hltypes/hthread.h>
 
 #include "april.h"
 #include "DirectX9_PixelShader.h"
@@ -36,12 +37,6 @@
 
 namespace april
 {
-	IDirect3D9* d3d = NULL;
-	IDirect3DDevice9* d3dDevice = NULL;
-	static HWND hWnd;
-	DirectX9_Texture* activeTexture = NULL;
-	D3DPRESENT_PARAMETERS d3dpp;
-	
 #ifdef _DEBUG
 	char fpstitle[1024] = " [FPS:0]";
 #endif
@@ -80,12 +75,11 @@ namespace april
 		return 0;
 	}
 /************************************************************************************/
-	DirectX9_RenderSystem::DirectX9_RenderSystem() : RenderSystem()
+	DirectX9_RenderSystem::DirectX9_RenderSystem() : RenderSystem(), zBufferEnabled(false),
+		textureCoordinatesEnabled(false), colorEnabled(false), d3d(NULL), d3dDevice(NULL),
+		activeTexture(NULL), renderTarget(NULL), backBuffer(NULL)
 	{
 		this->name = APRIL_RS_DIRECTX9;
-		mZBufferEnabled = false;
-		mTexCoordsEnabled = false;
-		mColorEnabled = false;
 	}
 
 	DirectX9_RenderSystem::~DirectX9_RenderSystem()
@@ -99,12 +93,14 @@ namespace april
 		{
 			return false;
 		}
-		mZBufferEnabled = options.contains("zbuffer");
-		mTexCoordsEnabled = 0;
-		mColorEnabled = 0;
+		this->zBufferEnabled = options.contains("zbuffer");
+		this->textureCoordinatesEnabled = false;
+		this->colorEnabled = false;
+		this->renderTarget = NULL;
+		this->backBuffer = NULL;
 		// DIRECT3D
-		d3d = Direct3DCreate9(D3D_SDK_VERSION);
-		if (d3d == NULL)
+		this->d3d = Direct3DCreate9(D3D_SDK_VERSION);
+		if (this->d3d == NULL)
 		{
 			this->destroy();
 			throw hl_exception("unable to create Direct3D9 object!");
@@ -118,93 +114,84 @@ namespace april
 		{
 			return false;
 		}
-		if (d3dDevice != NULL)
+		if (this->d3dDevice != NULL)
 		{
-			d3dDevice->Release();
+			this->d3dDevice->Release();
 		}
-		d3dDevice = NULL;
-		if (d3d != NULL)
+		this->d3dDevice = NULL;
+		if (this->d3d != NULL)
 		{
-			d3d->Release();
+			this->d3d->Release();
 		}
-		d3d = NULL;
+		this->d3d = NULL;
 		return true;
 	}
 
+	static D3DPRESENT_PARAMETERS d3dpp;
+
 	void DirectX9_RenderSystem::assignWindow(Window* window)
 	{
-		hWnd = (HWND)april::window->getBackendId();
-
-		ZeroMemory(&d3dpp, sizeof(d3dpp));
+		HWND hWnd = (HWND)april::window->getBackendId();
+		memset(&d3dpp, 0, sizeof(d3dpp));
 		d3dpp.Windowed = !window->isFullscreen();
 		d3dpp.BackBufferWidth = window->getWidth();
 		d3dpp.BackBufferHeight = window->getHeight();
 		d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
-		if (mZBufferEnabled)
+		if (this->zBufferEnabled)
 		{
 			d3dpp.EnableAutoDepthStencil = TRUE;
 			d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
 		}
 		d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
 		d3dpp.hDeviceWindow = hWnd;
-		HRESULT result = d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
+		HRESULT result = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
 		if (result != D3D_OK)
 		{
-			result = d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
+			result = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
 			if (result != D3D_OK)
 			{
 				throw hl_exception("Unable to create Direct3D Device!");
 			}
 		}
 		// device config
-		configureDevice();
-		clear(true, false);
-		presentFrame();
-		d3dDevice->GetRenderTarget(0, &mBackBuffer);
-		mRenderTarget = NULL;
-		d3dDevice->BeginScene();
-		mOrthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
+		this->configureDevice();
+		this->clear(true, false);
+		this->presentFrame();
+		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
+		this->renderTarget = NULL;
+		this->d3dDevice->BeginScene();
+		this->orthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
 	}
 	
 	void DirectX9_RenderSystem::configureDevice()
 	{
 		// calls on init and device reset
-		d3dDevice->SetRenderState(D3DRS_LIGHTING, 0);
-		d3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-		d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, 1);
-		d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-		d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+		this->d3dDevice->SetRenderState(D3DRS_LIGHTING, 0);
+		this->d3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+		this->d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, 1);
+		this->d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		// separate alpha blending to use proper alpha blending
-		d3dDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, 1);
-		d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
-		d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
-		d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
+		this->d3dDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, 1);
+		this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
+		this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
+		this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
 		// vertex color blending
-		d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-		d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-		setTextureFilter(mTextureFilter);
+		this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		this->setTextureFilter(this->textureFilter);
 	}
 	
-	hstr DirectX9_RenderSystem::getName()
-	{
-		return "DirectX9";
-	}
-	
-	float DirectX9_RenderSystem::getPixelOffset()
-	{
-		return 0.5f;
-	}
-
 	Texture* DirectX9_RenderSystem::loadTexture(chstr filename, bool dynamic)
 	{
-		hstr name = findTextureFile(filename);
+		hstr name = this->findTextureFile(filename);
 		if (name == "")
 		{
 			return NULL;
 		}
-		if (mDynamicLoading)
+		if (this->dynamicLoading)
 		{
 			dynamic = true;
 		}
@@ -246,11 +233,11 @@ namespace april
 		DirectX9_VertexShader* shader = (DirectX9_VertexShader*)vertexShader;
 		if (shader != NULL)
 		{
-			d3dDevice->SetVertexShader(shader->mShader);
+			this->d3dDevice->SetVertexShader(shader->dx9Shader);
 		}
 		else
 		{
-			d3dDevice->SetVertexShader(NULL);
+			this->d3dDevice->SetVertexShader(NULL);
 		}
 	}
 
@@ -259,18 +246,18 @@ namespace april
 		DirectX9_PixelShader* shader = (DirectX9_PixelShader*)pixelShader;
 		if (shader != NULL)
 		{
-			d3dDevice->SetPixelShader(shader->mShader);
+			this->d3dDevice->SetPixelShader(shader->dx9Shader);
 		}
 		else
 		{
-			d3dDevice->SetPixelShader(NULL);
+			this->d3dDevice->SetPixelShader(NULL);
 		}
 	}
 
 	grect DirectX9_RenderSystem::getViewport()
 	{
 		D3DVIEWPORT9 viewport;
-		d3dDevice->GetViewport(&viewport);
+		this->d3dDevice->GetViewport(&viewport);
 		return grect((float)viewport.X, (float)viewport.Y, (float)viewport.Width, (float)viewport.Height);
 	}
 
@@ -283,80 +270,73 @@ namespace april
 		viewport.Y = (int)rect.y;
 		viewport.Width = (int)rect.w;
 		viewport.Height = (int)rect.h;
-		d3dDevice->SetViewport(&viewport);
+		this->d3dDevice->SetViewport(&viewport);
 	}
 
 	void DirectX9_RenderSystem::setTextureFilter(TextureFilter filter)
 	{
 		if (filter == Linear)
 		{
-			d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		}
 		else if (filter == Nearest)
 		{
-			d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-			d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 		}
 		else
 		{
 			april::log("trying to set unsupported texture filter!");
 		}
-		mTextureFilter = filter;
+		this->textureFilter = filter;
 	}
 
 	void DirectX9_RenderSystem::setTextureWrapping(bool wrap)
 	{
-		if (wrap)
-		{
-			d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-			d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-		}
-		else
-		{
-			d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-			d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-		}
-		mTextureWrapping = wrap;
+		DWORD wrapMode = (wrap ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
+		this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, wrapMode);
+		this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, wrapMode);
+		this->textureWrapping = wrap;
 	}
 
-	void DirectX9_RenderSystem::setTexture(Texture* t)
+	void DirectX9_RenderSystem::setTexture(Texture* texture)
 	{
-		activeTexture = (DirectX9_Texture*)t;
-		if (activeTexture != NULL)
+		this->activeTexture = (DirectX9_Texture*)texture;
+		if (this->activeTexture != NULL)
 		{
-			if (activeTexture->mTexture == NULL && activeTexture->isDynamic())
+			if (!this->activeTexture->isLoaded())
 			{
-				activeTexture->load();
+				this->activeTexture->load();
 			}
-			activeTexture->_resetUnusedTimer();
-			d3dDevice->SetTexture(0, activeTexture->mTexture);
-			TextureFilter filter = t->getTextureFilter();
-			if (filter != mTextureFilter)
+			this->activeTexture->_resetUnusedTimer();
+			this->d3dDevice->SetTexture(0, this->activeTexture->getTexture());
+			TextureFilter filter = texture->getTextureFilter();
+			if (filter != this->textureFilter)
 			{
-				setTextureFilter(filter);
+				this->setTextureFilter(filter);
 			}
-			bool wrapping = t->isTextureWrappingEnabled();
-			if (mTextureWrapping != wrapping)
+			bool wrapping = texture->isTextureWrappingEnabled();
+			if (this->textureWrapping != wrapping)
 			{
-				setTextureWrapping(wrapping);
+				this->setTextureWrapping(wrapping);
 			}
 		}
 		else
 		{
-			d3dDevice->SetTexture(0, NULL);
+			this->d3dDevice->SetTexture(0, NULL);
 		}
 	}
 
 	void DirectX9_RenderSystem::setResolution(int w, int h)
 	{
 		RenderSystem::setResolution(w, h);
-		mBackBuffer->Release();
-		mBackBuffer = NULL;
+		this->backBuffer->Release();
+		this->backBuffer = NULL;
 		d3dpp.BackBufferWidth = april::window->getWidth();
 		d3dpp.BackBufferHeight = april::window->getHeight();
-		log(hsprintf("Resetting device for %d x %d...", april::window->getWidth(), april::window->getHeight()));
-		HRESULT hr = d3dDevice->Reset(&d3dpp);
+		log(hsprintf("resetting device for %d x %d...", april::window->getWidth(), april::window->getHeight()));
+		HRESULT hr = this->d3dDevice->Reset(&d3dpp);
 		if (hr == D3DERR_DRIVERINTERNALERROR)
 		{
 			throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
@@ -369,12 +349,12 @@ namespace april
 		{
 			log("Failed to reset device!");
 		}
-		_setModelviewMatrix(mModelviewMatrix);
-		_setProjectionMatrix(mProjectionMatrix);
-		configureDevice();
-		d3dDevice->GetRenderTarget(0, &mBackBuffer); // update backbuffer pointer
-		log("Direct3D9 Device restored");
-		d3dDevice->BeginScene();
+		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->_setProjectionMatrix(this->projectionMatrix);
+		this->configureDevice();
+		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
+		april::log("Direct3D9 Device restored");
+		this->d3dDevice->BeginScene();
 	}
 
 	void DirectX9_RenderSystem::clear(bool useColor, bool depth)
@@ -384,11 +364,11 @@ namespace april
 		{
 			flags |= D3DCLEAR_TARGET;
 		}
-		if (depth && mZBufferEnabled)
+		if (depth && this->zBufferEnabled)
 		{
 			flags |= D3DCLEAR_ZBUFFER;
 		}
-		d3dDevice->Clear(0, NULL, flags, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
+		this->d3dDevice->Clear(0, NULL, flags, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
 	
 	void DirectX9_RenderSystem::clear(bool useColor, bool depth, grect rect, Color color)
@@ -407,27 +387,27 @@ namespace april
 		area.y1 = (int)rect.y;
 		area.x2 = (int)(rect.x + rect.w);
 		area.y2 = (int)(rect.y + rect.h);
-		d3dDevice->Clear(1, &area, flags, D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b), 1.0f, 0);
+		this->d3dDevice->Clear(1, &area, flags, D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b), 1.0f, 0);
 	}
 	
 	ImageSource* DirectX9_RenderSystem::grabScreenshot(int bpp)
     {
 		april::log("grabbing screenshot");
 		D3DSURFACE_DESC desc;
-		mBackBuffer->GetDesc(&desc);
+		this->backBuffer->GetDesc(&desc);
 		if (desc.Format != D3DFMT_X8R8G8B8)
 		{
 			april::log("failed to grab screenshot, backbuffer format not supported, expected X8R8G8B8, got: " + hstr(desc.Format));
 			return NULL;
 		}
 		IDirect3DSurface9* buffer;
-		HRESULT hr = d3dDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &buffer, NULL);
+		HRESULT hr = this->d3dDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &buffer, NULL);
 		if (hr != D3D_OK)
 		{
 			april::log("failed to grab screenshot, CreateOffscreenPlainSurface() call failed");
 			return NULL;
 		}
-		hr = d3dDevice->GetRenderTargetData(mBackBuffer, buffer);
+		hr = this->d3dDevice->GetRenderTargetData(this->backBuffer, buffer);
 		if (hr != D3D_OK)
 		{
 			april::log("failed to grab screenshot, GetRenderTargetData() call failed");
@@ -455,11 +435,11 @@ namespace april
 		memset(p, 255, img->w * img->h * 4 * sizeof(unsigned char));
 		for_iter (y, 0, img->h)
 		{
-			for_iterx_step (x, 0, img->w * bpp, bpp)
+			for (x = 0; x < img->w * bpp; x += bpp, p += bpp)
 			{
-				p[x] = src[x + 2];
-				p[x + 1] = src[x + 1];
-				p[x + 2] = src[x];
+				p[0] = src[x + 2];
+				p[1] = src[x + 1];
+				p[2] = src[x];
 			}
 			src += rect.Pitch;
 		}
@@ -470,12 +450,12 @@ namespace april
 	
 	void DirectX9_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
-		d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)matrix.data);
+		this->d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)matrix.data);
 	}
 
 	void DirectX9_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
-		d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)matrix.data);
+		this->d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)matrix.data);
 	}
 
 	void DirectX9_RenderSystem::setBlendMode(BlendMode mode)
@@ -484,36 +464,36 @@ namespace april
 		{
 		case DEFAULT:
 		case ALPHA_BLEND:
-			d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
-			d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
-			d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
-			d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
+			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
+			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
+			this->d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 			break;
 		case ADD:
-			d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
-			d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
-			d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
-			d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
+			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
+			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
+			this->d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 			break;
 		case SUBTRACT:
-			d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
-			d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
-			d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
-			d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT);
-			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
+			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
+			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
+			this->d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT);
+			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 			break;
 		case OVERWRITE:
-			d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
-			d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
-			d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_ZERO);
-			d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-			d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
-			d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
+			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
+			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
+			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_ZERO);
+			this->d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
+			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 			break;
 		}
 	}
@@ -524,40 +504,40 @@ namespace april
 		{
 		case NORMAL:
 		case MULTIPLY:
-			d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-			d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-			d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
-			d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-			d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-			d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 			break;
 		case LERP:
-			d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(alpha, alpha, alpha, alpha));
-			d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-			d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-			d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-			d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_BLENDDIFFUSEALPHA);
-			d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
-			d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
+			this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(alpha, alpha, alpha, alpha));
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_BLENDDIFFUSEALPHA);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
 			break;
 		}
 	}
 
 	void DirectX9_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
 	{
-		if (activeTexture != NULL)
+		if (this->activeTexture != NULL)
 		{
-			setTexture(NULL);
+			this->setTexture(NULL);
 		}
-		d3dDevice->SetFVF(PLAIN_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), v, sizeof(PlainVertex));
+		this->d3dDevice->SetFVF(PLAIN_FVF);
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), v, sizeof(PlainVertex));
 	}
 
 	void DirectX9_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
 	{
-		if (activeTexture != NULL)
+		if (this->activeTexture != NULL)
 		{
-			setTexture(NULL);
+			this->setTexture(NULL);
 		}
 		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
 		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
@@ -569,8 +549,8 @@ namespace april
 			p[i].z = v[i].z;
 			p[i].color = colorDx9;
 		}
-		d3dDevice->SetFVF(COLOR_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
+		this->d3dDevice->SetFVF(COLOR_FVF);
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete [] cv;
@@ -579,8 +559,8 @@ namespace april
 	
 	void DirectX9_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
 	{
-		d3dDevice->SetFVF(TEX_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), v, sizeof(TexturedVertex));
+		this->d3dDevice->SetFVF(TEX_FVF);
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), v, sizeof(TexturedVertex));
 	}
 
 	void DirectX9_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
@@ -597,8 +577,8 @@ namespace april
 			p[i].v = v[i].v;
 			p[i].color = colorDx9;
 		}
-		d3dDevice->SetFVF(TEX_COLOR_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
+		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete [] ctv;
@@ -607,9 +587,9 @@ namespace april
 
 	void DirectX9_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
 	{
-		if (activeTexture != NULL)
+		if (this->activeTexture != NULL)
 		{
-			setTexture(NULL);
+			this->setTexture(NULL);
 		}
 		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
 		ColoredVertex* p = cv;
@@ -620,8 +600,8 @@ namespace april
 			p[i].z = v[i].z;
 			p[i].color = UINT_RGBA_TO_ARGB(v[i].color);
 		}
-		d3dDevice->SetFVF(COLOR_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
+		this->d3dDevice->SetFVF(COLOR_FVF);
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete [] cv;
@@ -641,8 +621,8 @@ namespace april
 			p[i].v = v[i].v;
 			p[i].color = UINT_RGBA_TO_ARGB(v[i].color);
 		}
-		d3dDevice->SetFVF(TEX_COLOR_FVF);
-		d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
+		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete [] ctv;
@@ -651,54 +631,54 @@ namespace april
 
 	Texture* DirectX9_RenderSystem::getRenderTarget()
 	{
-		return mRenderTarget;
+		return this->renderTarget;
 	}
 	
 	void DirectX9_RenderSystem::setRenderTarget(Texture* source)
 	{
-		if (mRenderTarget != NULL)
+		if (this->renderTarget != NULL)
 		{
-			d3dDevice->EndScene();
+			this->d3dDevice->EndScene();
 		}
 		DirectX9_Texture* texture = (DirectX9_Texture*)source;
 		if (texture == NULL)
 		{
-			d3dDevice->SetRenderTarget(0, mBackBuffer);
+			this->d3dDevice->SetRenderTarget(0, this->backBuffer);
 		}
 		else
 		{
-			d3dDevice->SetRenderTarget(0, texture->getSurface());
+			this->d3dDevice->SetRenderTarget(0, texture->getSurface());
 		}
-		mRenderTarget = texture;
-		if (mRenderTarget != NULL)
+		this->renderTarget = texture;
+		if (this->renderTarget != NULL)
 		{
-			d3dDevice->BeginScene();
+			this->d3dDevice->BeginScene();
 		}
 	}
 	
 	void DirectX9_RenderSystem::beginFrame()
 	{
-		d3dDevice->BeginScene();
+		this->d3dDevice->BeginScene();
 	}
 
 	void DirectX9_RenderSystem::presentFrame()
 	{
-		d3dDevice->EndScene();
-		HRESULT hr = d3dDevice->Present(NULL, NULL, NULL, NULL);
+		this->d3dDevice->EndScene();
+		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 		if (hr == D3DERR_DEVICELOST)
 		{
 			int i;
 			april::log("Direct3D9 Device lost, attempting to restore...");
-			mBackBuffer->Release();
-			mBackBuffer = NULL;
+			this->backBuffer->Release();
+			this->backBuffer = NULL;
 			while (april::window->isRunning())
 			{
 				for_iterx (i, 0, 10)
 				{
 					april::window->checkEvents();
-					Sleep(100);
+					hthread::sleep(100.0f);
 				}
-				hr = d3dDevice->TestCooperativeLevel();
+				hr = this->d3dDevice->TestCooperativeLevel();
 				if (hr == D3D_OK)
 				{
 					break;
@@ -706,7 +686,7 @@ namespace april
 				if (hr == D3DERR_DEVICENOTRESET)
 				{
 					april::log("Resetting device...");
-					hr = d3dDevice->Reset(&d3dpp);
+					hr = this->d3dDevice->Reset(&d3dpp);
 					if (hr == D3D_OK)
 					{
 						break;
@@ -729,37 +709,37 @@ namespace april
 					throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
 				}
 			}
-			_setModelviewMatrix(mModelviewMatrix);
-			_setProjectionMatrix(mProjectionMatrix);
-			configureDevice();
-			d3dDevice->GetRenderTarget(0, &mBackBuffer); // update backbuffer pointer
+			this->_setModelviewMatrix(this->modelviewMatrix);
+			this->_setProjectionMatrix(this->projectionMatrix);
+			this->configureDevice();
+			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 			april::log("Direct3D9 Device restored");
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)
 		{
 			for_iter (i, 0, 100)
 			{
-				Sleep(1);
-				hr = d3dDevice->Present(NULL, NULL, NULL, NULL);
+				hthread::sleep(1.0f);
+				hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 				if (hr == D3D_OK)
 				{
 					break;
 				}
 			}
 		}
-		d3dDevice->BeginScene();
+		this->d3dDevice->BeginScene();
 	}
 
 	harray<DisplayMode> DirectX9_RenderSystem::getSupportedDisplayModes()
 	{
 		// TODO - optimize to enumerate only once and then reuse
 		harray<DisplayMode> result;
-		unsigned int modeCount = d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
+		unsigned int modeCount = this->d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
 		HRESULT hr;
 		for_itert (unsigned int, i, 0, modeCount)
 		{
 			D3DDISPLAYMODE displayMode;
-			hr = d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
+			hr = this->d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
 			if (!FAILED(hr)) 
 			{
 				DisplayMode mode;

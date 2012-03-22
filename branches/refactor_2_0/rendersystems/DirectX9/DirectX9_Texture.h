@@ -26,7 +26,6 @@ namespace april
 	class DirectX9_Texture : public Texture
 	{
 	public:
-		IDirect3DTexture9* mTexture;
 		
 		DirectX9_Texture(chstr filename, bool dynamic);
 		DirectX9_Texture(unsigned char* rgba, int w, int h);
@@ -34,7 +33,7 @@ namespace april
 		~DirectX9_Texture();
 		
 		IDirect3DSurface9* getSurface();
-		IDirect3DTexture9* getTexture() { return mTexture; }
+		IDirect3DTexture9* getTexture() { return this->texture; }
 
 		Color getPixel(int x, int y);
 		void setPixel(int x, int y, Color color);
@@ -56,7 +55,8 @@ namespace april
 		void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 
 	protected:
-		IDirect3DSurface9* mSurface;
+		IDirect3DSurface9* surface;
+		IDirect3DTexture9* texture;
 
 		enum LOCK_RESULT
 		{

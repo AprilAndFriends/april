@@ -18,36 +18,36 @@
 #include "DirectX9_Texture.h"
 #include "ImageSource.h"
 
+#define DX9_RENDERSYS ((DirectX9_RenderSystem*)april::rendersys)
+
 namespace april
 {
-	extern IDirect3DDevice9* d3dDevice;
-
 	DirectX9_Texture::DirectX9_Texture(chstr filename, bool dynamic) : Texture()
 	{
-		mFilename = filename;
-		mDynamic = dynamic;
-		mTexture = NULL;
-		mSurface = NULL;
-		mWidth = 0;
-		mHeight = 0;
-		if (!mDynamic)
+		this->filename = filename;
+		this->dynamic = dynamic;
+		this->texture = NULL;
+		this->surface = NULL;
+		this->width = 0;
+		this->height = 0;
+		if (!this->dynamic)
 		{
-			load();
+			this->load();
 		}
 	}
 
 	DirectX9_Texture::DirectX9_Texture(unsigned char* rgba, int w, int h) : Texture()
 	{
-		mWidth = w;
-		mHeight = h;
-		mBpp = 4;
-		mDynamic = false;
-		mFilename = "";
-		mUnusedTimer = 0;
-		mSurface = NULL;
+		this->width = w;
+		this->height = h;
+		this->bpp = 4;
+		this->dynamic = false;
+		this->filename = "";
+		this->unusedTimer = 0;
+		this->surface = NULL;
 
 		april::log("creating user-defined DX9 texture");
-		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, NULL);
+		HRESULT hr = DX9_RENDERSYS->d3dDevice->CreateTexture(this->width, this->height, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &this->texture, NULL);
 		if (hr != D3D_OK)
 		{
 			april::log("failed to create user-defined DX9 texture!");
@@ -55,7 +55,7 @@ namespace april
 		}
 		// write texels
 		D3DLOCKED_RECT rect;
-		mTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
+		this->texture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
 		int x;
 		unsigned char* p = (unsigned char*)rect.pBits;
 		for_iter (y, 0, h)
@@ -68,24 +68,24 @@ namespace april
 				p[3] = rgba[3];
 			}
 		}
-		mTexture->UnlockRect(0);
+		this->texture->UnlockRect(0);
 	}
 	
 	DirectX9_Texture::DirectX9_Texture(int w, int h, TextureFormat fmt, TextureType type) : Texture()
 	{
-		mWidth = w;
-		mHeight = h;
-		mDynamic = false;
-		mUnusedTimer = 0;
-		mSurface = NULL;
-		mFilename = "";			
+		this->width = w;
+		this->height = h;
+		this->dynamic = false;
+		this->unusedTimer = 0;
+		this->surface = NULL;
+		this->filename = "";			
 		april::log("creating empty DX9 texture [ " + hstr(w) + "x" + hstr(h) + " ]");
 		D3DFORMAT d3dfmt = D3DFMT_X8R8G8B8;
-		mBpp = 3;
+		this->bpp = 3;
 		if (fmt == AT_ARGB)
 		{
 			d3dfmt = D3DFMT_A8R8G8B8;
-			mBpp = 4;
+			this->bpp = 4;
 		}
 		D3DPOOL d3dpool = D3DPOOL_MANAGED;
 		DWORD d3dusage = 0;
@@ -95,7 +95,7 @@ namespace april
 			d3dpool = D3DPOOL_DEFAULT;
 		}
 
-		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, d3dusage, d3dfmt, d3dpool, &mTexture, NULL);
+		HRESULT hr = DX9_RENDERSYS->d3dDevice->CreateTexture(this->width, this->height, 1, d3dusage, d3dfmt, d3dpool, &this->texture, NULL);
 		if (hr != D3D_OK)
 		{
 			april::log("failed to create user-defined DX9 texture!");
@@ -134,8 +134,8 @@ namespace april
 
 	void DirectX9_Texture::setPixel(int x, int y, Color color)
 	{
-		x = hclamp(x, 0, this->mWidth - 1);
-		y = hclamp(y, 0, this->mHeight - 1);
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
 		D3DLOCKED_RECT lockRect;
 		RECT rect;
 		rect.left = x;
@@ -152,16 +152,16 @@ namespace april
 		p[2] = color.r;
 		p[1] = color.g;
 		p[0] = color.b;
-		p[3] = (mBpp == 4 ? color.a : 255);
+		p[3] = (this->bpp == 4 ? color.a : 255);
 		_unlock(buffer, result, true);
 	}
 
 	void DirectX9_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		x = hclamp(x, 0, this->mWidth - 1);
-		y = hclamp(y, 0, this->mHeight - 1);
-		w = hclamp(w, 1, this->mWidth - x);
-		h = hclamp(h, 1, this->mHeight - y);
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		w = hclamp(w, 1, this->width - x);
+		h = hclamp(h, 1, this->height - y);
 		if (w == 1 && h == 1)
 		{
 			this->setPixel(x, y, color);
@@ -182,13 +182,13 @@ namespace april
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		int i;
 		int offset;
-		if (mBpp == 4)
+		if (this->bpp == 4)
 		{
 			for_iter (j, 0, h)
 			{
 				for_iterx (i, 0, w)
 				{
-					offset = (j * mWidth + i) * 4;
+					offset = (j * this->width + i) * 4;
 					p[offset + 2] = color.r;
 					p[offset + 1] = color.g;
 					p[offset + 0] = color.b;
@@ -202,7 +202,7 @@ namespace april
 			{
 				for_iterx (i, 0, w)
 				{
-					offset = (i + j * mWidth) * 4;
+					offset = (i + j * this->width) * 4;
 					p[offset + 2] = color.r;
 					p[offset + 1] = color.g;
 					p[offset + 0] = color.b;
@@ -215,12 +215,12 @@ namespace april
 	void DirectX9_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		DirectX9_Texture* source = (DirectX9_Texture*)texture;
-		x = hclamp(x, 0, mWidth - 1);
-		y = hclamp(y, 0, mHeight - 1);
-		sx = hclamp(sx, 0, source->mWidth - 1);
-		sy = hclamp(sy, 0, source->mHeight - 1);
-		sw = hmin(sw, hmin(mWidth - x, source->mWidth - sx));
-		sh = hmin(sh, hmin(mHeight - y, source->mHeight - sy));
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		sx = hclamp(sx, 0, source->width - 1);
+		sy = hclamp(sy, 0, source->height - 1);
+		sw = hmin(sw, hmin(this->width - x, source->width - sx));
+		sh = hmin(sh, hmin(this->height - y, source->height - sy));
 		if (sw == 1 && sh == 1)
 		{
 			this->setPixel(x, y, source->getPixel(sx, sy));
@@ -238,18 +238,18 @@ namespace april
 		{
 			return;
 		}
-		blit(x, y, (unsigned char*)lockRect.pBits, source->mWidth, source->mHeight, source->mBpp, sx, sy, sw, sh, alpha);
-		_unlock(buffer, result, false);
+		blit(x, y, (unsigned char*)lockRect.pBits, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
+		this->_unlock(buffer, result, false);
 	}
 
 	void DirectX9_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		x = hclamp(x, 0, mWidth - 1);
-		y = hclamp(y, 0, mHeight - 1);
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
 		sx = hclamp(sx, 0, dataWidth - 1);
 		sy = hclamp(sy, 0, dataHeight - 1);
-		sw = hmin(sw, hmin(mWidth - x, dataWidth - sx));
-		sh = hmin(sh, hmin(mHeight - y, dataHeight - sy));
+		sw = hmin(sw, hmin(this->width - x, dataWidth - sx));
+		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
 		D3DLOCKED_RECT lockRect;
 		RECT rect;
 		rect.left = x;
@@ -271,13 +271,13 @@ namespace april
 		int i;
 		// the following iteration blocks are very similar, but for performance reasons they
 		// have been duplicated instead of putting everything into one block with if branches
-		if (mBpp == 4 && dataBpp == 4)
+		if (this->bpp == 4 && dataBpp == 4)
 		{
 			for_iter (j, 0, sh)
 			{
 				for_iterx (i, 0, sw)
 				{
-					c = &thisData[(i + j * mWidth) * 4];
+					c = &thisData[(i + j * this->width) * 4];
 					sc = &srcData[(i + j * dataWidth) * 4];
 					if (c[3] > 0)
 					{
@@ -304,7 +304,7 @@ namespace april
 			{
 				for_iterx (i, 0, sw)
 				{
-					c = &thisData[(i + j * mWidth) * 4];
+					c = &thisData[(i + j * this->width) * 4];
 					sc = &srcData[(i + j * dataWidth) * 4];
 					a0 = sc[3] * alpha / 255;
 					a1 = 255 - a0;
@@ -322,7 +322,7 @@ namespace april
 			{
 				for_iterx (i, 0, sw)
 				{
-					c = &thisData[(i + j * mWidth) * 4];
+					c = &thisData[(i + j * this->width) * 4];
 					sc = &srcData[(i + j * dataWidth) * 4];
 					c[2] = (sc[2] * a0 + c[2] * a1) / 255;
 					c[1] = (sc[1] * a0 + c[1] * a1) / 255;
@@ -336,7 +336,7 @@ namespace april
 			{
 				for_iterx (i, 0, sw)
 				{
-					c = &thisData[(i + j * mWidth) * 4];
+					c = &thisData[(i + j * this->width) * 4];
 					sc = &srcData[(i + j * dataWidth) * 4];
 					c[2] = sc[2];
 					c[1] = sc[1];
@@ -350,29 +350,29 @@ namespace april
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		DirectX9_Texture* source = (DirectX9_Texture*)texture;
-		x = hclamp(x, 0, this->mWidth - 1);
-		y = hclamp(y, 0, this->mHeight - 1);
-		w = hmin(w, this->mWidth - x);
-		h = hmin(h, this->mHeight - y);
-		sx = hclamp(sx, 0, source->mWidth - 1);
-		sy = hclamp(sy, 0, source->mHeight - 1);
-		sw = hmin(sw, source->mWidth - sx);
-		sh = hmin(sh, source->mHeight - sy);
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		w = hmin(w, this->width - x);
+		h = hmin(h, this->height - y);
+		sx = hclamp(sx, 0, source->width - 1);
+		sy = hclamp(sy, 0, source->height - 1);
+		sw = hmin(sw, source->width - sx);
+		sh = hmin(sh, source->height - sy);
 		D3DLOCKED_RECT lockRect;
 		HRESULT result = source->getTexture()->LockRect(0, &lockRect, NULL, D3DLOCK_DISCARD);
 		if (result == D3D_OK)
 		{
-			stretchBlit(x, y, w, h, (unsigned char*)lockRect.pBits, source->mWidth, source->mHeight, source->mBpp, sx, sy, sw, sh, alpha);
+			stretchBlit(x, y, w, h, (unsigned char*)lockRect.pBits, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
 			source->getTexture()->UnlockRect(0);
 		}
 	}
 
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		x = hclamp(x, 0, mWidth - 1);
-		y = hclamp(y, 0, mHeight - 1);
-		w = hmin(w, mWidth - x);
-		h = hmin(h, mHeight - y);
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		w = hmin(w, this->width - x);
+		h = hmin(h, this->height - y);
 		sx = hclamp(sx, 0, dataWidth - 1);
 		sy = hclamp(sy, 0, dataHeight - 1);
 		sw = hmin(sw, dataWidth - sx);
@@ -415,13 +415,13 @@ namespace april
 		int i;
 		// the following iteration blocks are very similar, but for performance reasons they
 		// have been duplicated instead of putting everything into one block with if branches
-		if (mBpp == 4 && dataBpp == 4)
+		if (this->bpp == 4 && dataBpp == 4)
 		{
 			for_iter (j, 0, h)
 			{
 				for_iterx (i, 0, w)
 				{
-					c = &thisData[(i + j * mWidth) * 4];
+					c = &thisData[(i + j * this->width) * 4];
 					cx = sx + i * fw;
 					cy = sy + j * fh;
 					x0 = (int)cx;
@@ -493,7 +493,7 @@ namespace april
 			{
 				for_iterx (i, 0, w)
 				{
-					c = &thisData[(i + j * mWidth) * 4];
+					c = &thisData[(i + j * this->width) * 4];
 					cx = sx + i * fw;
 					cy = sy + j * fh;
 					x0 = (int)cx;
@@ -556,7 +556,7 @@ namespace april
 			{
 				for_iterx (i, 0, w)
 				{
-					c = &thisData[(i + j * mWidth) * 4];
+					c = &thisData[(i + j * this->width) * 4];
 					cx = sx + i * fw;
 					cy = sy + j * fh;
 					x0 = (int)cx;
@@ -612,7 +612,7 @@ namespace april
 			{
 				for_iterx (i, 0, w)
 				{
-					c = &thisData[(i + j * mWidth) * 4];
+					c = &thisData[(i + j * this->width) * 4];
 					cx = sx + i * fw;
 					cy = sy + j * fh;
 					x0 = (int)cx;
@@ -754,7 +754,7 @@ namespace april
 		float s;
 		float l;
 		unsigned char* data = (unsigned char*)lockRect.pBits;
-		for_iter_step(i, 0, size, mBpp)
+		for_iter_step(i, 0, size, this->bpp)
 		{
 			rgb2hsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
 			h += range;
@@ -781,7 +781,7 @@ namespace april
 		float s;
 		float l;
 		unsigned char* data = (unsigned char*)lockRect.pBits;
-		for_iter_step(i, 0, size, mBpp)
+		for_iter_step(i, 0, size, this->bpp)
 		{
 			rgb2hsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
 			s *= factor;
@@ -792,31 +792,31 @@ namespace april
 
 	IDirect3DSurface9* DirectX9_Texture::getSurface()
 	{
-		if (mSurface == NULL)
+		if (this->surface == NULL)
 		{
-			mTexture->GetSurfaceLevel(0, &mSurface);
+			this->texture->GetSurfaceLevel(0, &this->surface);
 		}
-		return mSurface;
+		return this->surface;
 	}
 
 	bool DirectX9_Texture::load()
 	{
-		mUnusedTimer = 0;
-		if (mTexture)
+		this->unusedTimer = 0;
+		if (this->texture)
 		{
 			return true;
 		}
-		april::log("loading DX9 texture '" + _getInternalName() + "'");
-		ImageSource* img = loadImage(mFilename);
-		if (!img)
+		april::log("loading DX9 texture '" + this->_getInternalName() + "'");
+		ImageSource* img = loadImage(this->filename);
+		if (img == NULL)
 		{
-			april::log("Failed to load texture '" + _getInternalName() + "'!");
+			april::log("Failed to load texture '" + this->_getInternalName() + "'!");
 			return false;
 		}
-		mWidth = img->w;
-		mHeight = img->h;
-		mBpp = (img->bpp == 3 ? 3 : 4);
-		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, (img->bpp == 3) ? D3DFMT_X8R8G8B8 : D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, NULL);
+		this->width = img->w;
+		this->height = img->h;
+		this->bpp = (img->bpp == 3 ? 3 : 4);
+		HRESULT hr = DX9_RENDERSYS->d3dDevice->CreateTexture(this->width, this->height, 1, 0, (img->bpp == 3) ? D3DFMT_X8R8G8B8 : D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &this->texture, NULL);
 		if (hr != D3D_OK)
 		{
 			april::log("Failed to load DX9 texture!");
@@ -825,7 +825,7 @@ namespace april
 		}
 		// write texels
 		D3DLOCKED_RECT rect;
-		mTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
+		this->texture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
 		if (img->bpp == 4)
 		{
 			img->copyPixels(rect.pBits, AF_BGRA);
@@ -841,9 +841,9 @@ namespace april
 			tempImg->copyPixels(rect.pBits, AF_BGRA);
 			delete tempImg;
 		}
-		mTexture->UnlockRect(0);
+		this->texture->UnlockRect(0);
 		delete img;
-		foreach (Texture*, it, mDynamicLinks)
+		foreach (Texture*, it, this->dynamicLinks)
 		{
 			if (!(*it)->isLoaded())
 			{
@@ -855,37 +855,37 @@ namespace april
 
 	bool DirectX9_Texture::isLoaded()
 	{
-		return (mTexture != NULL);
+		return (this->texture != NULL);
 	}
 
 	void DirectX9_Texture::unload()
 	{
-		if (mTexture != NULL)
+		if (this->texture != NULL)
 		{
-			april::log("unloading DX9 texture '" + _getInternalName() + "'");
-			mTexture->Release();
-			mTexture = NULL;
-			if (mSurface != NULL)
+			april::log("unloading DX9 texture '" + this->_getInternalName() + "'");
+			this->texture->Release();
+			this->texture = NULL;
+			if (this->surface != NULL)
 			{
-				mSurface->Release();
-				mSurface = NULL;
+				this->surface->Release();
+				this->surface = NULL;
 			}
 		}
 	}
 
 	int DirectX9_Texture::getSizeInBytes()
 	{
-		return (mWidth * mHeight * mBpp);
+		return (this->width * this->height * this->bpp);
 	}
 
 	bool DirectX9_Texture::isValid()
 	{
-		return (mTexture != NULL);
+		return (this->texture != NULL);
 	}
 
 	void DirectX9_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
 	{
-		if (mWidth != texture->getWidth() || mHeight != texture->getHeight() || mBpp != 4)
+		if (this->width != texture->getWidth() || this->height != texture->getHeight() || this->bpp != 4)
 		{
 			return;
 		}
@@ -913,12 +913,12 @@ namespace april
 		int alpha;
 		int min = (int)median - ambiguity / 2;
 		int max = (int)median + ambiguity / 2;
-		for_iter (j, 0, mHeight)
+		for_iter (j, 0, this->height)
 		{
-			for_iterx (i, 0, mWidth)
+			for_iterx (i, 0, this->width)
 			{
-				c = &thisData[(i + j * mWidth) * 4];
-				sc = &srcData[(i + j * mWidth) * 4];
+				c = &thisData[(i + j * this->width) * 4];
+				sc = &srcData[(i + j * this->width) * 4];
 				alpha = (sc[0] + sc[1] + sc[2]) / 3;
 				if (alpha < min)
 				{
@@ -940,20 +940,20 @@ namespace april
 
 	DirectX9_Texture::LOCK_RESULT DirectX9_Texture::_tryLock(IDirect3DSurface9** buffer, D3DLOCKED_RECT* lockRect, RECT* rect)
 	{
-		HRESULT result = mTexture->LockRect(0, lockRect, rect, D3DLOCK_DISCARD);
+		HRESULT result = this->texture->LockRect(0, lockRect, rect, D3DLOCK_DISCARD);
 		if (result == D3D_OK)
 		{
 			return LR_LOCKED;
 		}
 		// could be a render target
-		result = d3dDevice->CreateOffscreenPlainSurface(mWidth, mHeight,
-			(mBpp == 4 ? D3DFMT_A8R8G8B8 : D3DFMT_X8R8G8B8), D3DPOOL_SYSTEMMEM, buffer, NULL);
+		result = DX9_RENDERSYS->d3dDevice->CreateOffscreenPlainSurface(this->width, this->height,
+			(this->bpp == 4 ? D3DFMT_A8R8G8B8 : D3DFMT_X8R8G8B8), D3DPOOL_SYSTEMMEM, buffer, NULL);
 		if (result != D3D_OK)
 		{
 			april::log("failed to get pixel data, CreateOffscreenPlainSurface() call failed");
 			return LR_FAILED;
 		}
-		result = d3dDevice->GetRenderTargetData(getSurface(), *buffer);
+		result = DX9_RENDERSYS->d3dDevice->GetRenderTargetData(getSurface(), *buffer);
 		if (result != D3D_OK)
 		{
 			april::log("failed to get pixel data, GetRenderTargetData() call failed");
@@ -973,13 +973,13 @@ namespace april
 		switch (lock)
 		{
 		case LR_LOCKED:
-			mTexture->UnlockRect(0);
+			this->texture->UnlockRect(0);
 			break;
 		case LR_RENDERTARGET:
 			buffer->UnlockRect();
 			if (update)
 			{
-				d3dDevice->UpdateSurface(buffer, NULL, getSurface(), NULL);
+				DX9_RENDERSYS->d3dDevice->UpdateSurface(buffer, NULL, getSurface(), NULL);
 			}
 			buffer->Release();
 			break;

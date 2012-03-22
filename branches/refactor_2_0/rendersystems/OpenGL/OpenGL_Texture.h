@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -36,7 +36,7 @@ namespace april
 	class OpenGL_Texture : public Texture
 	{
 	public:
-		GLuint mTexId;
+		GLuint textureId;
 		
 		OpenGL_Texture(chstr filename, bool dynamic);
 		OpenGL_Texture(unsigned char* rgba, int w, int h);
@@ -60,7 +60,7 @@ namespace april
 		bool isValid();
 
 	protected:
-		unsigned char* mManualData;
+		unsigned char* manualBuffer;
 
 	};
 

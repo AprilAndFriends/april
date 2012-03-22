@@ -47,7 +47,7 @@ namespace april
 {
 	SDL_Window::SDL_Window() : Window()
 	{
-		this->name = "SDL";
+		this->name = APRIL_WS_SDL;
 		// centered SDL window
 		SDL_putenv("SDL_VIDEO_WINDOW_POS");
 		SDL_putenv("SDL_VIDEO_CENTERED=1");
