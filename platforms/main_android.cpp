@@ -23,9 +23,9 @@
 #include "Window.h"
 
 #define PROTECTED_RENDERSYS_GET_WINDOW(methodCall) \
-	if (april::rendersys != NULL && april::rendersys->getWindow() != NULL) \
+	if (april::rendersys != NULL && april::window != NULL) \
 	{ \
-		april::rendersys->getWindow()->methodCall; \
+		april::window->methodCall; \
 	}
 #define _JSTR_TO_HSTR(string) _jstringToHstr(env, string)
 
@@ -90,9 +90,9 @@ namespace april
 
 	bool JNICALL _JNI_render(JNIEnv* env, jclass classe)
 	{
-		if (april::rendersys != NULL && april::rendersys->getWindow() != NULL)
+		if (april::rendersys != NULL && april::window != NULL)
 		{
-			return april::rendersys->getWindow()->updateOneFrame();
+			return april::window->updateOneFrame();
 		}
 		return true;
 	}

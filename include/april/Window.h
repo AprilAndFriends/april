@@ -221,6 +221,8 @@ namespace april
 	aprilFnExport SystemInfo& getSystemInfo();
 	aprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN, hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL);
 
+	aprilExport extern Window* window;
+
 }
 
 

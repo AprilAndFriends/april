@@ -315,8 +315,8 @@ void april_init(const harray<hstr>& args)
 	april::init();
 	april::createRenderSystem("");
 	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "Demo Tic Tac Toe");
-	april::rendersys->getWindow()->setUpdateCallback(update);
-	april::rendersys->getWindow()->setMouseCallbacks(NULL, OnMouseUp, NULL);
+	april::window->setUpdateCallback(update);
+	april::window->setMouseCallbacks(NULL, OnMouseUp, NULL);
 	background = april::rendersys->loadTexture(RESOURCE_PATH "texture");
 	x_symbol = april::rendersys->loadTexture(RESOURCE_PATH "x");
 	o_symbol = april::rendersys->loadTexture(RESOURCE_PATH "o");
