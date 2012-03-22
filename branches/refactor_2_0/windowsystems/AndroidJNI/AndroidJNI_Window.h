@@ -28,14 +28,14 @@ namespace april
 		Window::MouseEventType type;
 		gvec2 position;
 		Window::MouseButton button;
-
+		
 		MouseInputEvent(Window::MouseEventType _type, gvec2 _position, Window::MouseButton _button)
 		{
 			type = _type;
 			position = _position;
 			button = _button;
 		}
-
+		
 	};
 
 	struct KeyInputEvent
@@ -43,14 +43,25 @@ namespace april
 		Window::KeyEventType type;
 		KeySym keyCode;
 		unsigned int charCode;
-
+		
 		KeyInputEvent(Window::KeyEventType _type, KeySym _keyCode, unsigned int _charCode)
 		{
 			type = _type;
 			keyCode = _keyCode;
 			charCode = _charCode;
 		}
+		
+	};
 
+	struct TouchInputEvent
+	{
+		harray<gvec2> touches;
+		
+		TouchInputEvent(harray<gvec2>& _touches)
+		{
+			touches = _touches;
+		}
+		
 	};
 
 	class aprilExport AndroidJNI_Window : public Window
@@ -58,7 +69,7 @@ namespace april
 	public:
 		AndroidJNI_Window(int width, int height, bool fullscreen, chstr title);
 		~AndroidJNI_Window();
-
+		
 		void setTitle(chstr title) { }
 		bool isCursorVisible() { return false; }
 		void setCursorVisible(bool value) { }
@@ -67,7 +78,7 @@ namespace april
 		void setTouchEnabled(bool value) { }
 		bool isTouchEnabled() { return true; }
 		void* getIdFromBackend();
-
+		
 		void enterMainLoop();
 		bool updateOneFrame();
 		void terminateMainLoop();
@@ -83,13 +94,15 @@ namespace april
 	protected:
 		int width;
 		int height;
+		bool alreadyTouched;
 		april::Timer globalTimer;
 		harray<MouseInputEvent> mouseEvents;
 		harray<KeyInputEvent> keyEvents;
+		harray<TouchInputEvent> touchEvents;
 		
 		// using void** so that jni.h doesn't have to be included in this header
 		void _getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView);
-
+		
 	private:
 		float _lastTime;
 		

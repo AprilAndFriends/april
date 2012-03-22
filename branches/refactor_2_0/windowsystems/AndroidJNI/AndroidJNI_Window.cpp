@@ -10,6 +10,7 @@
 #ifdef _ANDROID
 #include <jni.h>
 
+#include <gtypes/Vector2.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hthread.h>
 
@@ -21,7 +22,7 @@
 namespace april
 {
 	void* javaVM = NULL;
-	jobject aprilActivity = NULL;
+	jobject jActivity = NULL;
 	gvec2 androidResolution;
 
 	AndroidJNI_Window::AndroidJNI_Window(int width, int height, bool fullscreen, chstr title) : Window()
@@ -106,12 +107,61 @@ namespace april
 			KeyInputEvent e = this->keyEvents.pop_first();
 			Window::handleKeyEvent(e.type, e.keyCode, e.charCode);
 		}
+		while (this->touchEvents.size() > 0)
+		{
+			TouchInputEvent e = this->touchEvents.pop_first();
+			Window::handleTouchEvent(e.touches);
+		}
 	}
 
 	void AndroidJNI_Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
 	{
+		/* // TODO - potential multitouch handling
+#ifdef _DEBUG
+		april::log("    - MOUSE EVENT -> " + hstr(type == AMOUSEEVT_UP ? "UP" : (type == AMOUSEEVT_DOWN ? "DOWN" : "MOV")));
+#endif
+		if (type == AMOUSEEVT_DOWN && mAlreadyTouched)
+		{
+#ifdef _DEBUG
+			april::log("    - TOUCH " + hstr(position.x) + " " + hstr(position.y));
+#endif
+			this->alreadyTouched = false;
+			this->mouseEvents += MouseInputEvent(AMOUSEEVT_UP, position, button);
+			harray<gvec2> touches;
+			touches += cursorPosition;
+			touches += position;
+			this->touchEvents += TouchInputEvent(touches);
+		}
+		else if (type == AMOUSEEVT_DOWN)
+		{
+#ifdef _DEBUG
+			april::log("    - DOWN " + hstr(position.x) + " " + hstr(position.y));
+#endif
+			this->alreadyTouched = true;
+			this->mouseEvents += MouseInputEvent(type, position, button);
+		}
+		else if (type == AMOUSEEVT_MOVE)
+		{
+#ifdef _DEBUG
+			april::log("    - MOV " + hstr(position.x) + " " + hstr(position.y));
+#endif
+			this->mouseEvents += MouseInputEvent(type, position, button);
+		}
+		else if (type == AMOUSEEVT_UP)
+		{
+			if (this->alreadyTouched)
+			{
+				this->aAlreadyTouched = false;
+				this->mouseEvents += MouseInputEvent(type, position, button);
+#ifdef _DEBUG
+				april::log("    - UP " + hstr(position.x) + " " + hstr(position.y));
+#endif
+			}
+		}
+		//*/
 		this->mouseEvents += MouseInputEvent(type, position, button);
 	}
+
 
 	void AndroidJNI_Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
 	{
@@ -124,7 +174,7 @@ namespace april
 		jclass classInputMethodManager = NULL;
 		jobject inputMethodManager = NULL;
 		jobject decorView = NULL;
-		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&decorView);
+		this->_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&decorView);
 		// show virtual keyboard
 		jmethodID methodShowSoftInput = env->GetMethodID(classInputMethodManager, "showSoftInput", "(Landroid/view/View;I)Z");
 		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, decorView, 0);
@@ -136,7 +186,7 @@ namespace april
 		jclass classInputMethodManager = NULL;
 		jobject inputMethodManager = NULL;
 		jobject decorView = NULL;
-		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&decorView);
+		this->_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&decorView);
 		// hide virtual keyboard
 		jclass classView = env->FindClass("android/view/View");
 		jmethodID methodGetWindowToken = env->GetMethodID(classView, "getWindowToken", "()Landroid/os/IBinder;");
@@ -144,26 +194,26 @@ namespace april
 		jmethodID methodHideSoftInput = env->GetMethodID(classInputMethodManager, "hideSoftInputFromWindow", "(Landroid/os/IBinder;I)Z");
 		env->CallBooleanMethod(inputMethodManager, methodHideSoftInput, binder, 0);
 	}
-
+	
 	void AndroidJNI_Window::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView)
 	{
 		JNIEnv* env = NULL;
 		((JavaVM*)javaVM)->GetEnv((void**)&env, JNI_VERSION_1_6);
-		jclass classAprilActivity = env->GetObjectClass(aprilActivity);
+		jclass classAprilActivity = env->GetObjectClass(jActivity);
 		jclass classContext = env->FindClass("android/content/Context");
 		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
 		jobject INPUT_METHOD_SERVICE = env->GetStaticObjectField(classContext, fieldINPUT_METHOD_SERVICE);
 		jmethodID methodGetSystemService = env->GetMethodID(classAprilActivity, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
 		jmethodID methodGetWindow = env->GetMethodID(classAprilActivity, "getWindow", "()Landroid/view/Window;");
-		jobject window = env->CallObjectMethod(aprilActivity, methodGetWindow);
+		jobject window = env->CallObjectMethod(jActivity, methodGetWindow);
 		jclass classWindow = env->FindClass("android/view/Window");
 		jmethodID methodGetDecorView = env->GetMethodID(classWindow, "getDecorView", "()Landroid/view/View;");
 		// output
 		*javaEnv = env;
 		*javaClassInputMethodManager = env->FindClass("android/view/inputmethod/InputMethodManager");
-		*javaInputMethodManager = env->CallObjectMethod(aprilActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
+		*javaInputMethodManager = env->CallObjectMethod(jActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
 		*javaDecorView = env->CallObjectMethod(window, methodGetDecorView);
 	}
-	
+
 }
 #endif

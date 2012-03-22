@@ -31,13 +31,11 @@ class AprilJNI
 	public static native void init(String[] args, int width, int height);
 	public static native boolean render();
 	public static native void destroy();
-	public static native boolean onQuit();
 	public static native void onMouseDown(float x, float y, int button);
 	public static native void onMouseUp(float x, float y, int button);
 	public static native void onMouseMove(float x, float y);
 	public static native boolean onKeyDown(int keyCode, int charCode);
 	public static native boolean onKeyUp(int keyCode);
-	public static native void onFocusChange(boolean focused);
 	public static native void onLowMemory();
 	public static native void onSurfaceCreated();
 	
@@ -58,10 +56,6 @@ public class AprilActivity extends Activity
 	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
 	{
 		AprilJNI.ArchivePath = archivePath;
-	}
-	
-	public void postInit() // supposed to be overriden
-	{
 	}
 	
 	@Override
@@ -144,27 +138,6 @@ public class AprilActivity extends Activity
 	}
 	
 	@Override
-	public boolean dispatchKeyEvent(KeyEvent event)
-	{
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && AprilJNI.onQuit())
-		{
-			this.finish();
-			return false;    
-		}
-        return super.dispatchKeyEvent(event);
-	}
-	
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus)
-	{
-		super.onWindowFocusChanged(hasFocus);
-		if (!this.isFinishing())
-		{
-			AprilJNI.onFocusChange(hasFocus);
-		}
-	}
-
-	@Override
 	public void onLowMemory()
 	{
 		AprilJNI.onLowMemory();
@@ -193,17 +166,25 @@ class AprilGLSurfaceView extends GLSurfaceView
 			{
 				public void run()
 				{
-					if (event.getAction() == MotionEvent.ACTION_DOWN)
+					final int action = event.getAction();
+					switch (action & MotionEvent.ACTION_MASK)
 					{
+					case MotionEvent.ACTION_DOWN:
 						AprilJNI.onMouseDown(event.getX(), event.getY(), 0);
-					}
-					else if (event.getAction() == MotionEvent.ACTION_UP)
-					{
+						break;
+					case MotionEvent.ACTION_UP:
 						AprilJNI.onMouseUp(event.getX(), event.getY(), 0);
-					}
-					else if (event.getAction() == MotionEvent.ACTION_MOVE)
-					{
+						break;
+					case MotionEvent.ACTION_MOVE:
 						AprilJNI.onMouseMove(event.getX(), event.getY());
+						break;
+					// this part should handle multi touch properly
+					case MotionEvent.ACTION_POINTER_DOWN:
+						AprilJNI.onMouseDown(event.getX(), event.getY(), 0);
+						break;
+					case MotionEvent.ACTION_POINTER_UP:
+						AprilJNI.onMouseUp(event.getX(), event.getY(), 0);
+						break;
 					}
 				}
 			}
@@ -225,7 +206,6 @@ class AprilRenderer implements GLSurfaceView.Renderer
 			AprilJNI.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 			String args[] = {AprilJNI.ArchivePath}; // adding argv[0]
 			AprilJNI.init(args, metrics.widthPixels, metrics.heightPixels);
-			AprilJNI.Activity.postInit();
 			AprilJNI.Running = true;
 		}
 	}
