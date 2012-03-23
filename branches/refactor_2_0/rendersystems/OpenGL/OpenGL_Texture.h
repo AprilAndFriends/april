@@ -33,10 +33,12 @@
 
 namespace april
 {
+	class OpenGL_RenderSystem;
+
 	class OpenGL_Texture : public Texture
 	{
 	public:
-		GLuint textureId;
+		friend class OpenGL_RenderSystem;
 		
 		OpenGL_Texture(chstr filename, bool dynamic);
 		OpenGL_Texture(unsigned char* rgba, int w, int h);
@@ -56,10 +58,9 @@ namespace april
 		void clear();
 		void rotateHue(float degrees);
 		void saturate(float factor);
-		int getSizeInBytes();
-		bool isValid();
 
 	protected:
+		GLuint textureId;
 		unsigned char* manualBuffer;
 
 	};

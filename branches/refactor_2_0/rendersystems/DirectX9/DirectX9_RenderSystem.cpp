@@ -155,7 +155,7 @@ namespace april
 			}
 		}
 		// device config
-		this->configureDevice();
+		this->_configureDevice();
 		this->clear(true, false);
 		this->presentFrame();
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
@@ -164,7 +164,7 @@ namespace april
 		this->orthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
 	}
 	
-	void DirectX9_RenderSystem::configureDevice()
+	void DirectX9_RenderSystem::_configureDevice()
 	{
 		// calls on init and device reset
 		this->d3dDevice->SetRenderState(D3DRS_LIGHTING, 0);
@@ -184,6 +184,8 @@ namespace april
 		this->setTextureFilter(this->textureFilter);
 	}
 	
+	////////////////////////////////////////////////////////////////////
+
 	Texture* DirectX9_RenderSystem::loadTexture(chstr filename, bool dynamic)
 	{
 		hstr name = this->findTextureFile(filename);
@@ -191,7 +193,7 @@ namespace april
 		{
 			return NULL;
 		}
-		if (this->dynamicLoading)
+		if (this->forcedDynamicLoading)
 		{
 			dynamic = true;
 		}
@@ -208,14 +210,14 @@ namespace april
 		return t;
 	}
 
-	Texture* DirectX9_RenderSystem::createTextureFromMemory(unsigned char* rgba, int w, int h)
+	Texture* DirectX9_RenderSystem::createTexture(int w, int h, unsigned char* rgba)
 	{
-		return new DirectX9_Texture(rgba, w, h);
+		return new DirectX9_Texture(w, h, rgba);
 	}
 	
-	Texture* DirectX9_RenderSystem::createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type)
+	Texture* DirectX9_RenderSystem::createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
 	{
-		return new DirectX9_Texture(w, h, fmt, type);
+		return new DirectX9_Texture(w, h, format, type, color);
 	}
 	
 	VertexShader* DirectX9_RenderSystem::createVertexShader()
@@ -273,31 +275,42 @@ namespace april
 		this->d3dDevice->SetViewport(&viewport);
 	}
 
-	void DirectX9_RenderSystem::setTextureFilter(TextureFilter filter)
+	void DirectX9_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
 	{
-		if (filter == Linear)
+		switch (textureFilter)
 		{
+		case Texture::FILTER_LINEAR:
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-		}
-		else if (filter == Nearest)
-		{
+			break;
+		case Texture::FILTER_NEAREST:
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-		}
-		else
-		{
+			break;
+		default:
 			april::log("trying to set unsupported texture filter!");
+			break;
 		}
-		this->textureFilter = filter;
+		this->textureFilter = textureFilter;
 	}
 
-	void DirectX9_RenderSystem::setTextureWrapping(bool wrap)
+	void DirectX9_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
-		DWORD wrapMode = (wrap ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
-		this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, wrapMode);
-		this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, wrapMode);
-		this->textureWrapping = wrap;
+		switch (textureAddressMode)
+		{
+		case Texture::ADDRESS_WRAP:
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+			break;
+		case Texture::ADDRESS_CLAMP:
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+			break;
+		default:
+			april::log("trying to set unsupported texture address mode!");
+			break;
+		}
+		this->textureAddressMode = textureAddressMode;
 	}
 
 	void DirectX9_RenderSystem::setTexture(Texture* texture)
@@ -310,16 +323,16 @@ namespace april
 				this->activeTexture->load();
 			}
 			this->activeTexture->_resetUnusedTimer();
-			this->d3dDevice->SetTexture(0, this->activeTexture->getTexture());
-			TextureFilter filter = texture->getTextureFilter();
-			if (filter != this->textureFilter)
+			this->d3dDevice->SetTexture(0, this->activeTexture->_getTexture());
+			Texture::Filter filter = this->activeTexture->getFilter();
+			if (this->textureFilter != filter)
 			{
 				this->setTextureFilter(filter);
 			}
-			bool wrapping = texture->isTextureWrappingEnabled();
-			if (this->textureWrapping != wrapping)
+			Texture::AddressMode addressMode = this->activeTexture->getAddressMode();
+			if (this->textureAddressMode != addressMode)
 			{
-				this->setTextureWrapping(wrapping);
+				this->setTextureAddressMode(addressMode);
 			}
 		}
 		else
@@ -351,7 +364,7 @@ namespace april
 		}
 		this->_setModelviewMatrix(this->modelviewMatrix);
 		this->_setProjectionMatrix(this->projectionMatrix);
-		this->configureDevice();
+		this->_configureDevice();
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 		april::log("Direct3D9 Device restored");
 		this->d3dDevice->BeginScene();
@@ -371,13 +384,10 @@ namespace april
 		this->d3dDevice->Clear(0, NULL, flags, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
 	
-	void DirectX9_RenderSystem::clear(bool useColor, bool depth, grect rect, Color color)
+	void DirectX9_RenderSystem::clear(bool depth, grect rect, Color color)
 	{
 		DWORD flags = 0;
-		if (useColor)
-		{
-			flags |= D3DCLEAR_TARGET;
-		}
+		flags |= D3DCLEAR_TARGET;
 		if (depth)
 		{
 			flags |= D3DCLEAR_ZBUFFER;
@@ -390,7 +400,7 @@ namespace april
 		this->d3dDevice->Clear(1, &area, flags, D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b), 1.0f, 0);
 	}
 	
-	ImageSource* DirectX9_RenderSystem::grabScreenshot(int bpp)
+	ImageSource* DirectX9_RenderSystem::takeScreenshot(int bpp)
     {
 		april::log("grabbing screenshot");
 		D3DSURFACE_DESC desc;
@@ -427,8 +437,8 @@ namespace april
 		img->w = desc.Width;
 		img->h = desc.Height;
 		img->bpp = bpp;
-		img->format = (bpp == 4 ? AT_RGBA : AT_RGB);
-		img->data = (unsigned char*)malloc(img->w * img->h * 4);
+		img->format = (bpp == 4 ? Texture::FORMAT_RGBA : Texture::FORMAT_RGB);
+		img->data = new unsigned char[img->w * img->h * 4];
 		unsigned char* p = img->data;
 		unsigned char* src = (unsigned char*)rect.pBits;
 		int x;
@@ -647,7 +657,7 @@ namespace april
 		}
 		else
 		{
-			this->d3dDevice->SetRenderTarget(0, texture->getSurface());
+			this->d3dDevice->SetRenderTarget(0, texture->_getSurface());
 		}
 		this->renderTarget = texture;
 		if (this->renderTarget != NULL)
@@ -711,7 +721,7 @@ namespace april
 			}
 			this->_setModelviewMatrix(this->modelviewMatrix);
 			this->_setProjectionMatrix(this->projectionMatrix);
-			this->configureDevice();
+			this->_configureDevice();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 			april::log("Direct3D9 Device restored");
 		}

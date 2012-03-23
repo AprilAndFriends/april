@@ -83,11 +83,11 @@ namespace april
 		this->destroy();
 	}
 
-	bool Window::create(int width, int height, bool fullscreen, chstr title)
+	bool Window::create(int w, int h, bool fullscreen, chstr title)
 	{
 		if (!this->created)
 		{
-			april::log(hsprintf("creating window '%s' (%d, %d), '%s' fullscreen : %s", this->name.c_str(), width, height, title.c_str(), fullscreen ? "yes" : "no"));
+			april::log(hsprintf("creating window '%s' (%d, %d), '%s' fullscreen : %s", this->name.c_str(), w, h, title.c_str(), fullscreen ? "yes" : "no"));
 			this->fullscreen = fullscreen;
 			this->title = title;
 			this->created = true;

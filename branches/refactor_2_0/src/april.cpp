@@ -74,7 +74,7 @@
 
 namespace april
 {
-	DEPRECATED_ATTRIBUTE void createRenderTarget(int width, int height, bool fullscreen, chstr title) { createWindow(width, height, fullscreen, title); } // DEPRECATED
+	DEPRECATED_ATTRIBUTE void createRenderTarget(int w, int h, bool fullscreen, chstr title) { createWindow(w, h, fullscreen, title); } // DEPRECATED
 
 	harray<hstr> extensions;
 	hstr systemPath = ".";
@@ -183,17 +183,17 @@ namespace april
 #endif
 	}
 	
-	void createWindow(int width, int height, bool fullscreen, chstr title)
+	void createWindow(int w, int h, bool fullscreen, chstr title)
 	{
-		april::window->create(width, height, fullscreen, title);
+		april::window->create(w, h, fullscreen, title);
 		april::rendersys->assignWindow(april::window);
 	}
 
-	void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType, chstr renderSystemOptions, int width, int height, bool fullscreen, chstr title)
+	void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType, chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title)
 	{
 		init(renderSystemType, windowSystemType);
 		createRenderSystem(renderSystemOptions);
-		createWindow(width, height, fullscreen, title);
+		createWindow(w, h, fullscreen, title);
 	}
 	
 	void setLogFunction(void (*fnptr)(chstr))

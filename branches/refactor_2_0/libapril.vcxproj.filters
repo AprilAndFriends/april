@@ -113,9 +113,6 @@
     <ClCompile Include="src\ImageSourcePng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TextureManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\april.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -142,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="windowsystems\Win32\Win32_Window.cpp">
       <Filter>Source Files\windowsystems\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\aprilUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RamTexture.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,9 +199,6 @@
     <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h">
       <Filter>Header Files\rendersystems\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="include\april\TextureManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\april\Platform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -213,6 +213,12 @@
     </ClInclude>
     <ClInclude Include="windowsystems\Win32\Win32_Window.h">
       <Filter>Header Files\windowsystems\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\aprilUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\RamTexture.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

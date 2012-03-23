@@ -67,7 +67,7 @@ namespace april
 		
 		Window();
 		virtual ~Window();
-		virtual bool create(int width, int height, bool fullscreen, chstr title);
+		virtual bool create(int w, int h, bool fullscreen, chstr title);
 		virtual bool destroy();
 
 		// generic getters/setters
@@ -105,7 +105,7 @@ namespace april
 		virtual void setCursorVisible(bool value) { this->cursorVisible = value; }
 		virtual bool isCursorInside();
 
-		virtual void _setResolution(int width, int height) { }
+		virtual void _setResolution(int w, int h) { }
 		
 		// pure virtual getters/setters (window system dependent)
 		virtual int getWidth() = 0;

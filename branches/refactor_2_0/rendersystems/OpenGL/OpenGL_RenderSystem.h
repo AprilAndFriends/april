@@ -34,7 +34,7 @@ namespace april
 		bool destroy();
 
 		void assignWindow(Window* window);
-		void restore();
+		void reset();
 		
 		// object creation
 		Texture* loadTexture(chstr filename, bool dynamic);
@@ -60,7 +60,7 @@ namespace april
 		// caps
 		float getPixelOffset() { return 0.0f; }
         
-        ImageSource* grabScreenshot(int bpp = 3);
+        ImageSource* takeScreenshot(int bpp = 3);
 
 		// rendering
 		void clear(bool useColor = true, bool depth = false);

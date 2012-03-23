@@ -39,7 +39,7 @@ namespace april
 	public:
 		SDL_Window();
 		~SDL_Window();
-		bool create(int width, int height, bool fullscreen, chstr title);
+		bool create(int w, int h, bool fullscreen, chstr title);
 		bool destroy();
 		
 		void setTitle(chstr title);

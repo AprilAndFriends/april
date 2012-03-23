@@ -17,7 +17,6 @@
 #include "Color.h"
 #include "ImageSource.h"
 #include "Texture.h"
-#include "TextureManager.h"
 #include "RenderSystem.h"
 
 namespace april
@@ -29,10 +28,10 @@ namespace april
 		this->width = 0;
 		this->height = 0;
 		this->bpp = 3;
-		this->unusedTimer = 0.0f;
-		this->textureFilter = Linear;
-		this->textureWrapping = true;
-		april::rendersys->getTextureManager()->registerTexture(this);
+		this->unusedTime = 0.0f;
+		this->filter = FILTER_LINEAR;
+		this->addressMode = ADDRESS_WRAP;
+		april::rendersys->_registerTexture(this);
 	}
 
 	Texture::~Texture()
@@ -41,19 +40,102 @@ namespace april
 		{
 			(*it)->removeDynamicLink(this);
 		}
-		april::rendersys->getTextureManager()->unregisterTexture(this);
+		april::rendersys->_unregisterTexture(this);
+	}
+
+	int Texture::getByteSize()
+	{
+		return (this->width * this->height * this->bpp);
 	}
 
 	hstr Texture::_getInternalName()
 	{
 		return (this->filename != "" ? this->filename : "UserTexture");
 	}
-	
-	void Texture::fillRect(grect rect, Color color)
+
+	void Texture::addDynamicLink(Texture* link)
 	{
-		this->fillRect((int)rect.x, (int)rect.y, (int)rect.w, (int)rect.h, color);
+		if (!this->dynamicLinks.contains(link))
+		{
+			this->dynamicLinks += link;
+			link->addDynamicLink(this);
+		}
 	}
 	
+	void Texture::removeDynamicLink(Texture* link)
+	{
+		if (this->dynamicLinks.contains(link))
+		{
+			this->dynamicLinks -= link;
+		}
+	}
+	
+	void Texture::clear()
+	{
+		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement clear()");
+	}
+
+	Color Texture::getPixel(int x, int y)
+	{
+		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement getPixel()");
+		return APRIL_COLOR_CLEAR;
+	}
+
+	void Texture::setPixel(int x, int y, Color color)
+	{
+		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement setPixel()");
+	}
+
+	void Texture::fillRect(int x, int y, int w, int h, Color color)
+	{
+		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement fillRect()");
+	}
+
+	void Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement blit()");
+	}
+
+	void Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement blit()");
+	}
+
+	void Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement stretchBlit()");
+	}
+
+	void Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement stretchBlit()");
+	}
+
+	void Texture::rotateHue(float degrees)
+	{
+		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement rotateHue()");
+	}
+
+	void Texture::saturate(float factor)
+	{
+		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement saturate()");
+	}
+
+	void Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	{
+		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement insertAsAlphaMap()");
+	}
+
+	Color Texture::getPixel(gvec2 position)
+	{
+		return this->getPixel(hround(position.x), hround(position.y));
+	}
+
+	void Texture::setPixel(gvec2 position, Color color)
+	{
+		this->setPixel(hround(position.x), hround(position.y), color);
+	}
+
 	Color Texture::getInterpolatedPixel(float x, float y)
 	{
 		Color result;
@@ -95,145 +177,463 @@ namespace april
 		return result;
 	}
 	
+	Color Texture::getInterpolatedPixel(gvec2 position)
+	{
+		return this->getInterpolatedPixel(position.x, position.y);
+	}
+
+	void Texture::fillRect(grect rect, Color color)
+	{
+		this->fillRect(hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h), color);
+	}
+
+	void Texture::blit(int x, int y, ImageSource* image, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		this->blit(x, y, image->data, image->w, image->h, image->bpp, sx, sy, sw, sh, alpha);
+	}
+
+	void Texture::blit(gvec2 position, Texture* texture, grect source, unsigned char alpha)
+	{
+		this->blit(hround(position.x), hround(position.y), texture, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+	}
+
+	void Texture::blit(gvec2 position, ImageSource* image, grect source, unsigned char alpha)
+	{
+		this->blit(hround(position.x), hround(position.y), image->data, image->w, image->h, image->bpp, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+	}
+
+	void Texture::blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha)
+	{
+		this->blit(hround(position.x), hround(position.y), data, dataWidth, dataHeight, dataBpp, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+	}
+
+	void Texture::stretchBlit(int x, int y, int w, int h, ImageSource* image, int sx, int sy, int sw, int sh, unsigned char alpha)
+	{
+		this->stretchBlit(x, y, w, h, image->data, image->w, image->h, image->bpp, sx, sy, sw, sh, alpha);
+	}
+
+	void Texture::stretchBlit(grect destination, Texture* texture, grect source, unsigned char alpha)
+	{
+		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), texture,
+			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+	}
+
+	void Texture::stretchBlit(grect destination, ImageSource* image, grect source, unsigned char alpha)
+	{
+		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), image->data, image->w, image->h, image->bpp,
+			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+	}
+
+	void Texture::stretchBlit(grect destination, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha)
+	{
+		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), data, dataWidth, dataHeight, dataBpp,
+			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+	}
+
 	void Texture::update(float k)
 	{
 		if (this->dynamic && this->isLoaded())
 		{
-			float max_time = april::rendersys->getIdleTextureUnloadTime();
-			if (max_time > 0)
+			float maxTime = april::rendersys->getTextureIdleUnloadTime();
+			if (maxTime > 0.0f)
 			{
-				if (this->unusedTimer > max_time)
+				this->unusedTime += k;
+				if (this->unusedTime > maxTime)
 				{
 					this->unload();
 				}
-				this->unusedTimer += k;
 			}
 		}
 	}
 	
-	void Texture::addDynamicLink(Texture* link)
+	void Texture::_resetUnusedTimer()
 	{
-		if (!this->dynamicLinks.contains(link))
+		this->unusedTime = 0.0f;
+		foreach (Texture*, it, this->dynamicLinks)
 		{
-			this->dynamicLinks += link;
-			link->addDynamicLink(this);
+			(*it)->unusedTime = 0.0f;
 		}
 	}
-	
-	void Texture::removeDynamicLink(Texture* link)
+
+	void Texture::_blit(unsigned char* thisData, int x, int y, unsigned char* srcData, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		if (this->dynamicLinks.contains(link))
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		sx = hclamp(sx, 0, dataWidth - 1);
+		sy = hclamp(sy, 0, dataHeight - 1);
+		sw = hmin(sw, hmin(this->width - x, dataWidth - sx));
+		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
+		if (sw < 1 || sh < 1)
 		{
-			this->dynamicLinks -= link;
+			return;
 		}
-	}
-	
-	void  Texture::_resetUnusedTimer(bool recursive)
-	{
-		this->unusedTimer = 0;
-		if (recursive)
+		unsigned char* c;
+		unsigned char* sc;
+		unsigned char a0;
+		unsigned char a1;
+		int i;
+		// the following iteration blocks are very similar, but for performance reasons they
+		// have been duplicated instead of putting everything into one block with if branches
+		if (this->bpp == 4 && dataBpp == 4)
 		{
-			foreach (Texture*, it, this->dynamicLinks)
+			for_iter (j, 0, sh)
 			{
-				(*it)->_resetUnusedTimer(0);
+				for_iterx (i, 0, sw)
+				{
+					c = &thisData[(i + j * this->width) * 4];
+					sc = &srcData[(i + j * dataWidth) * 4];
+					if (c[3] > 0)
+					{
+						a0 = sc[3] * alpha / 255;
+						a1 = 255 - a0;
+						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
+						c[1] = (sc[1] * a0 + c[1] * a1) / 255;
+						c[2] = (sc[2] * a0 + c[2] * a1) / 255;
+						c[3] = a0 + c[3] * a1 / 255;
+					}
+					else
+					{
+						c[0] = sc[0];
+						c[1] = sc[1];
+						c[2] = sc[2];
+						c[3] = sc[3] * alpha / 255;
+					}
+				}
+			}
+		}
+		else if (dataBpp == 4)
+		{
+			for_iter (j, 0, sh)
+			{
+				for_iterx (i, 0, sw)
+				{
+					c = &thisData[(i + j * this->width) * 4];
+					sc = &srcData[(i + j * dataWidth) * 4];
+					a0 = sc[3] * alpha / 255;
+					a1 = 255 - a0;
+					c[0] = (sc[0] * a0 + c[0] * a1) / 255;
+					c[1] = (sc[1] * a0 + c[1] * a1) / 255;
+					c[2] = (sc[2] * a0 + c[2] * a1) / 255;
+				}
+			}
+		}
+		else if (alpha < 255)
+		{
+			a0 = alpha;
+			a1 = 255 - a0;
+			for_iter (j, 0, sh)
+			{
+				for_iterx (i, 0, sw)
+				{
+					c = &thisData[(i + j * this->width) * 4];
+					sc = &srcData[(i + j * dataWidth) * 4];
+					c[0] = (sc[0] * a0 + c[0] * a1) / 255;
+					c[1] = (sc[1] * a0 + c[1] * a1) / 255;
+					c[2] = (sc[2] * a0 + c[2] * a1) / 255;
+				}
+			}
+		}
+		else
+		{
+			for_iter (j, 0, sh)
+			{
+				for_iterx (i, 0, sw)
+				{
+					c = &thisData[(i + j * this->width) * 4];
+					sc = &srcData[(i + j * dataWidth) * 4];
+					c[0] = sc[0];
+					c[1] = sc[1];
+					c[2] = sc[2];
+				}
 			}
 		}
 	}
 
-	void Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	void Texture::_stretchBlit(unsigned char* thisData, int x, int y, int w, int h, unsigned char* srcData, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-	}
-
-/************************************************************************************/
-	RAMTexture::RAMTexture(chstr filename, bool dynamic) : Texture()
-	{
-		this->filename = filename;
-		this->buffer = NULL;
-		if (!dynamic)
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		w = hmin(w, this->width - x);
+		h = hmin(h, this->height - y);
+		sx = hclamp(sx, 0, dataWidth - 1);
+		sy = hclamp(sy, 0, dataHeight - 1);
+		sw = hmin(sw, dataWidth - sx);
+		sh = hmin(sh, dataHeight - sy);
+		if (w < 1 || h < 1 || sw < 1 || sh < 1)
 		{
-			this->load();
+			return;
 		}
-	}
-
-	RAMTexture::RAMTexture(int w, int h) : Texture()
-	{
-		this->width = w;
-		this->height = h;
-		this->buffer = createEmptyImage(w, h);
-		this->filename = "";
-	}
-
-	RAMTexture::~RAMTexture()
-	{
-		unload();
-	}
-
-	bool RAMTexture::load()
-	{
-		if (this->buffer == NULL)
+		float fw = (float)sw / w;
+		float fh = (float)sh / h;
+		unsigned char* c;
+		unsigned char* sc;
+		int a0;
+		int a1;
+		unsigned char color[4] = {0};
+		unsigned char* ctl;
+		unsigned char* ctr;
+		unsigned char* cbl;
+		unsigned char* cbr;
+		float cx;
+		float cy;
+		float rx0;
+		float ry0;
+		float rx1;
+		float ry1;
+		int x0;
+		int y0;
+		int x1;
+		int y1;
+		int i;
+		// the following iteration blocks are very similar, but for performance reasons they
+		// have been duplicated instead of putting everything into one block with if branches
+		if (this->bpp == 4 && dataBpp == 4)
 		{
-			april::log("loading RAM texture '" + this->_getInternalName() + "'");
-			this->buffer = loadImage(this->filename);
-			this->width = this->buffer->w;
-			this->height = this->buffer->h;
-			return true;
+			for_iter (j, 0, h)
+			{
+				for_iterx (i, 0, w)
+				{
+					c = &thisData[(i + j * this->width) * 4];
+					cx = sx + i * fw;
+					cy = sy + j * fh;
+					x0 = (int)cx;
+					y0 = (int)cy;
+					x1 = hmin((int)cx + 1, dataWidth - 1);
+					y1 = hmin((int)cy + 1, dataHeight - 1);
+					rx0 = cx - x0;
+					ry0 = cy - y0;
+					rx1 = 1.0f - rx0;
+					ry1 = 1.0f - ry0;
+					if (rx0 != 0.0f || ry0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
+						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
+						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
+						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+						color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
+						sc = color;
+					}
+					else if (rx0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
+						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+						color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
+						sc = color;
+					}
+					else if (ry0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
+						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+						color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
+						sc = color;
+					}
+					else
+					{
+						sc = &srcData[(x0 + y0 * dataWidth) * 4];
+					}
+					if (c[3] > 0)
+					{
+						a0 = sc[3] * (int)alpha / 255;
+						a1 = 255 - a0;
+						c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+						c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+						c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+						c[3] = (unsigned char)(a0 + c[3] * a1 / 255);
+					}
+					else
+					{
+						c[0] = sc[0];
+						c[1] = sc[1];
+						c[2] = sc[2];
+						c[3] = sc[3] * (int)alpha / 255;
+					}
+				}
+			}
 		}
-		return false;
-	}
-	
-	void RAMTexture::unload()
-	{
-		if (this->buffer != NULL)
+		else if (dataBpp == 4)
 		{
-			april::log("unloading RAM texture '" + this->_getInternalName() + "'");
-			delete this->buffer;
-			this->buffer = NULL;
+			for_iter (j, 0, h)
+			{
+				for_iterx (i, 0, w)
+				{
+					c = &thisData[(i + j * this->width) * 4];
+					cx = sx + i * fw;
+					cy = sy + j * fh;
+					x0 = (int)cx;
+					y0 = (int)cy;
+					x1 = hmin((int)cx + 1, dataWidth - 1);
+					y1 = hmin((int)cy + 1, dataHeight - 1);
+					rx0 = cx - x0;
+					ry0 = cy - y0;
+					rx1 = 1.0f - rx0;
+					ry1 = 1.0f - ry0;
+					if (rx0 != 0.0f || ry0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
+						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
+						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
+						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+						color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
+						sc = color;
+					}
+					else if (rx0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
+						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+						color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
+						sc = color;
+					}
+					else if (ry0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
+						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+						color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
+						sc = color;
+					}
+					else
+					{
+						sc = &srcData[(x0 + y0 * dataWidth) * 4];
+					}
+					a0 = sc[3] * (int)alpha / 255;
+					a1 = 255 - a0;
+					c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+					c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+					c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+				}
+			}
 		}
-	}
-	
-	bool RAMTexture::isLoaded()
-	{
-		return (this->buffer != NULL);
-	}
-	
-	Color RAMTexture::getPixel(int x, int y)
-	{
-		if (this->buffer == NULL)
+		else if (alpha < 255)
 		{
-			this->load();
+			a0 = alpha;
+			a1 = 255 - a0;
+			for_iter (j, 0, h)
+			{
+				for_iterx (i, 0, w)
+				{
+					c = &thisData[(i + j * this->width) * 4];
+					cx = sx + i * fw;
+					cy = sy + j * fh;
+					x0 = (int)cx;
+					y0 = (int)cy;
+					x1 = hmin((int)cx + 1, dataWidth - 1);
+					y1 = hmin((int)cy + 1, dataHeight - 1);
+					rx0 = cx - x0;
+					ry0 = cy - y0;
+					rx1 = 1.0f - rx0;
+					ry1 = 1.0f - ry0;
+					if (rx0 != 0.0f || ry0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
+						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
+						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
+						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+						sc = color;
+					}
+					else if (rx0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
+						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+						sc = color;
+					}
+					else if (ry0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
+						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+						sc = color;
+					}
+					else
+					{
+						sc = &srcData[(x0 + y0 * dataWidth) * 4];
+					}
+					c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+					c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+					c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+				}
+			}
 		}
-		this->unusedTimer = 0;
-		return this->buffer->getPixel(x, y);
-	}
-	
-	void RAMTexture::setPixel(int x, int y, Color c)
-	{
-		if (this->buffer == NULL)
+		else
 		{
-			this->load();
+			for_iter (j, 0, h)
+			{
+				for_iterx (i, 0, w)
+				{
+					c = &thisData[(i + j * this->width) * 4];
+					cx = sx + i * fw;
+					cy = sy + j * fh;
+					x0 = (int)cx;
+					y0 = (int)cy;
+					x1 = hmin((int)cx + 1, dataWidth - 1);
+					y1 = hmin((int)cy + 1, dataHeight - 1);
+					rx0 = cx - x0;
+					ry0 = cy - y0;
+					rx1 = 1.0f - rx0;
+					ry1 = 1.0f - ry0;
+					if (rx0 != 0.0f || ry0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
+						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
+						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
+						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+						sc = color;
+					}
+					else if (rx0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
+						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+						sc = color;
+					}
+					else if (ry0 != 0.0f)
+					{
+						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
+						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+						sc = color;
+					}
+					else
+					{
+						sc = &srcData[(x0 + y0 * dataWidth) * 4];
+					}
+					c[0] = sc[0];
+					c[1] = sc[1];
+					c[2] = sc[2];
+				}
+			}
 		}
-		this->unusedTimer = 0;
-		this->buffer->setPixel(x, y, c);
-	}
-	
-	Color RAMTexture::getInterpolatedPixel(float x, float y)
-	{
-		if (this->buffer == NULL)
-		{
-			this->load();
-		}
-		this->unusedTimer = 0;
-		return this->buffer->getInterpolatedPixel(x, y);
-	}
-	
-	int RAMTexture::getSizeInBytes()
-	{
-		return (this->width * this->height * 3); // TODO - should use BPP instead of 3?
-	}
-
-	bool RAMTexture::isValid()
-	{
-		return (this->buffer != NULL);
 	}
 
 }

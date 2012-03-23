@@ -13,9 +13,6 @@
 #include <algorithm>
 #ifdef __APPLE__
 #include <TargetConditionals.h>
-#ifndef _OPENGL
-#define _OPENGL
-#endif
 #endif
 #ifdef _ANDROID
 #include <android/log.h>
@@ -27,70 +24,22 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
-#include "RenderSystem.h"
+#include "aprilUtil.h"
 #include "ImageSource.h"
-#include "TextureManager.h"
+#include "RamTexture.h"
+#include "RenderSystem.h"
+#include "Texture.h"
 #include "Window.h"
 
 namespace april
 {
 	PlainVertex pv[16];
 	TexturedVertex tv[16];
-
+	
 	april::RenderSystem* rendersys = NULL;
-
-/************************************************************************************/
-	void PlainVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void TexturedVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredTexturedVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredTexturedNormalVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void TexturedNormalVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredNormalVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-/************************************************************************************/
-	RenderSystem::RenderSystem() : created(false), dynamicLoading(false), idleUnloadTime(0.0f),
-		textureFilter(Linear), textureWrapping(true), textureManager(NULL)
+	
+	RenderSystem::RenderSystem() : created(false), forcedDynamicLoading(false), textureIdleUnloadTime(0.0f),
+		textureFilter(Texture::FILTER_LINEAR), textureAddressMode(Texture::ADDRESS_WRAP)
 	{
 		this->name = "Generic";
 	}
@@ -99,13 +48,12 @@ namespace april
 	{
 		this->destroy();
 	}
-
+	
 	bool RenderSystem::create(chstr options)
 	{
 		if (!this->created)
 		{
 			april::log(hsprintf("creating rendersystem '%s' (options: '%s')", this->name.c_str(), options.c_str()));
-			this->textureManager = new TextureManager();
 			this->created = true;
 			return true;
 		}
@@ -117,19 +65,21 @@ namespace april
 		if (this->created)
 		{
 			april::log(hsprintf("destroying rendersystem '%s'", this->name.c_str()));
-			delete this->textureManager;
-			this->textureManager = NULL;
+			while (this->textures.size() > 0)
+			{
+				delete this->textures[0];
+			}
 			this->created = false;
 			return true;
 		}
 		return false;
 	}
-
-	void RenderSystem::restore()
+	
+	void RenderSystem::reset()
 	{
-		april::log("restoring rendersystem");
+		april::log("resetting rendersystem");
 	}
-
+	
 	void RenderSystem::drawQuad(grect rect, Color color)
 	{
 		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
@@ -200,21 +150,14 @@ namespace april
 		return "";
 	}
 	
-	RAMTexture* RenderSystem::loadRAMTexture(chstr filename, bool dynamic)
+	RamTexture* RenderSystem::loadRamTexture(chstr filename, bool dynamic)
 	{
 		hstr name = this->findTextureFile(filename);
 		if (name == "")
 		{
 			return NULL;
 		}
-		return new RAMTexture(name, dynamic);
-	}
-	
-	Texture* RenderSystem::createBlankTexture(int w, int h, TextureFormat fmt, TextureType type)
-	{
-		Texture* texture = this->createEmptyTexture(w, h, fmt, type);
-		texture->fillRect(0, 0, w, h, APRIL_COLOR_BLANK);
-		return texture;
+		return new RamTexture(name, dynamic);
 	}
 	
 	void RenderSystem::setIdentityTransform()
@@ -275,22 +218,22 @@ namespace april
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
 	
-    void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
+	void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
 	{
 		this->projectionMatrix.perspective(fov, aspect, nearClip, farClip);
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
 	
-	void RenderSystem::setModelviewMatrix(const gmat4& matrix)
+	void RenderSystem::setModelviewMatrix(gmat4 matrix)
 	{
 		this->modelviewMatrix = matrix;
-		this->_setModelviewMatrix(matrix);
+		this->_setModelviewMatrix(this->modelviewMatrix);
 	}
-
-	void RenderSystem::setProjectionMatrix(const gmat4& matrix)
+	
+	void RenderSystem::setProjectionMatrix(gmat4 matrix)
 	{
 		this->projectionMatrix = matrix;
-		this->_setProjectionMatrix(matrix);
+		this->_setProjectionMatrix(this->projectionMatrix);
 	}
 	
 	void RenderSystem::setResolution(int w, int h)
@@ -298,10 +241,28 @@ namespace april
 		log(hsprintf("changing resolution: %d x %d", w, h));
 		april::window->_setResolution(w, h);
 	}
-
+	
 	void RenderSystem::presentFrame()
 	{
 		april::window->presentFrame();
+	}
+	
+	void RenderSystem::_registerTexture(Texture* texture)
+	{
+		this->textures += texture;
+	}
+	
+	void RenderSystem::_unregisterTexture(Texture* texture)
+	{
+		this->textures -= texture;
+	}
+	
+	void RenderSystem::unloadTextures()
+	{
+		foreach (Texture*, it, this->textures)
+		{
+			(*it)->unload();
+		}
 	}
 	
 }

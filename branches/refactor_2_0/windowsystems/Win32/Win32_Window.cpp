@@ -40,9 +40,9 @@ namespace april
 		this->destroy();
 	}
 
-	bool Win32_Window::create(int width, int height, bool fullscreen, chstr title)
+	bool Win32_Window::create(int w, int h, bool fullscreen, chstr title)
 	{
-		if (!Window::create(width, height, fullscreen, title))
+		if (!Window::create(w, h, fullscreen, title))
 		{
 			return false;
 		}
@@ -66,12 +66,12 @@ namespace april
 		int y = 0;
 		if (!this->fullscreen)
 		{
-			x = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
-			y = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
+			x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2;
+			y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
 		}
 		DWORD style = (this->fullscreen ? (WS_EX_TOPMOST | WS_POPUP) : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX));
 		wchar_t* wtitle = utf8_to_wchars(this->title);
-		this->hWnd = CreateWindowExW(0, APRIL_WIN32_WINDOW_CLASS, wtitle, style, x, y, width, height, NULL, NULL, hinst, NULL);
+		this->hWnd = CreateWindowExW(0, APRIL_WIN32_WINDOW_CLASS, wtitle, style, x, y, w, h, NULL, NULL, hinst, NULL);
 		delete [] wtitle;
 		
 		if (!this->fullscreen)
@@ -83,7 +83,7 @@ namespace april
 			GetWindowRect(hWnd, &rcWindow);
 			ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
 			ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
-			MoveWindow(this->hWnd, rcWindow.left, rcWindow.top, width + ptDiff.x, height + ptDiff.y, TRUE);
+			MoveWindow(this->hWnd, rcWindow.left, rcWindow.top, ptDiff.x + w, ptDiff.y + h, TRUE);
 		}
  
 		// display the window on the screen
@@ -151,15 +151,15 @@ namespace april
 		return this->hWnd;
 	}
 
-	void Win32_Window::_setResolution(int width, int height)
+	void Win32_Window::_setResolution(int w, int h)
 	{
 		int x = 0;
 		int y = 0;
 		DWORD style = WS_EX_TOPMOST | WS_POPUP;
 		if (!this->fullscreen)
 		{
-			x = (GetSystemMetrics(SM_CXSCREEN) - width) / 2,
-			y = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
+			x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2,
+			y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
 			style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 		}
 		if (!this->fullscreen)
@@ -171,7 +171,7 @@ namespace april
 			GetWindowRect(this->hWnd, &rcWindow);
 			ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
 			ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
-			MoveWindow(this->hWnd, rcWindow.left, rcWindow.top, width + ptDiff.x, height + ptDiff.y, TRUE);
+			MoveWindow(this->hWnd, rcWindow.left, rcWindow.top, ptDiff.x + w, ptDiff.y + h, TRUE);
 		}
 		// display the window on the screen
 		ShowWindow(this->hWnd, 1);

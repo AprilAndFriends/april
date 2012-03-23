@@ -19,7 +19,6 @@
 #include "Keys.h"
 #include "main.h"
 #include "RenderSystem.h"
-#include "TextureManager.h"
 #include "Window.h"
 
 #define PROTECTED_WINDOW_CALL(methodCall) \
@@ -76,7 +75,7 @@ namespace april
 		}
 	}
 
-	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args, jint width, jint height)
+	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args, jint w, jint h)
 	{
 		harray<hstr> args;
 		int length = env->GetArrayLength(_args);
@@ -84,7 +83,7 @@ namespace april
 		{
 			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
 		}
-		april::androidResolution.set((float)hmax(width, height), (float)hmin(width, height));
+		april::androidResolution.set((float)hmax(w, h), (float)hmin(w, h));
 		april_init(args);
 	}
 
@@ -167,7 +166,7 @@ namespace april
 		april::log("Android ActivityOnPause()");
 #endif
 		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(false));
-		PROTECTED_RENDERSYS_CALL(getTextureManager()->unloadTextures());
+		PROTECTED_RENDERSYS_CALL(unloadTextures());
 	}
 
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)

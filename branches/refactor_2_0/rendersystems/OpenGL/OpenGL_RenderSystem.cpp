@@ -282,9 +282,9 @@ namespace april
 		this->orthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
 	}
 
-	void OpenGL_RenderSystem::restore()
+	void OpenGL_RenderSystem::reset()
 	{
-		RenderSystem::restore();
+		RenderSystem::reset();
 		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
 		glClearColor(0, 0, 0, 1);
 		this->_setModelviewMatrix(this->modelviewMatrix);
@@ -323,7 +323,7 @@ namespace april
 		{
 			return NULL;
 		}
-		if (this->dynamicLoading)
+		if (this->forcedDynamicLoading)
 		{
 			dynamic = true;
 		}
@@ -431,7 +431,7 @@ namespace april
 		this->clear(useColor, depth);
 	}
 	
-	ImageSource* OpenGL_RenderSystem::grabScreenshot(int bpp)
+	ImageSource* OpenGL_RenderSystem::takeScreenshot(int bpp)
 	{
 		april::log("grabbing screenshot");
 		int w = april::window->getWidth();

@@ -467,6 +467,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\aprilUtil.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Color.cpp"
 				>
 			</File>
@@ -492,6 +496,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Platform.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\RamTexture.cpp"
 				>
 			</File>
 			<File
@@ -593,6 +601,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\april\aprilUtil.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\april\Color.h"
 				>
 			</File>
@@ -614,6 +626,10 @@
 			</File>
 			<File
 				RelativePath=".\include\april\Platform.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\april\RamTexture.h"
 				>
 			</File>
 			<File

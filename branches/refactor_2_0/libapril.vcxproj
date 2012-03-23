@@ -508,6 +508,7 @@
     <ClCompile Include="platforms\Win32_main.cpp" />
     <ClCompile Include="platforms\Win32_Platform.cpp" />
     <ClCompile Include="src\april.cpp" />
+    <ClCompile Include="src\aprilUtil.cpp" />
     <ClCompile Include="src\ImageSourceJpg.cpp" />
     <ClCompile Include="src\ImageSourcePng.cpp" />
     <ClCompile Include="rendersystems\DirectX9\DirectX9_PixelShader.cpp" />
@@ -517,9 +518,9 @@
     <ClCompile Include="src\ImageSourceIL.cpp" />
     <ClCompile Include="src\Platform.cpp" />
     <ClCompile Include="src\PixelShader.cpp" />
+    <ClCompile Include="src\RamTexture.cpp" />
     <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\TimerPosix.cpp" />
     <ClCompile Include="src\TimerWin.cpp" />
     <ClCompile Include="src\VertexShader.cpp" />
@@ -535,15 +536,16 @@
   <ItemGroup>
     <ClInclude Include="include\april\april.h" />
     <ClInclude Include="include\april\aprilExport.h" />
+    <ClInclude Include="include\april\aprilUtil.h" />
     <ClInclude Include="include\april\Color.h" />
     <ClInclude Include="include\april\ImageSource.h" />
     <ClInclude Include="include\april\Keys.h" />
     <ClInclude Include="include\april\main.h" />
     <ClInclude Include="include\april\PixelShader.h" />
     <ClInclude Include="include\april\Platform.h" />
+    <ClInclude Include="include\april\RamTexture.h" />
     <ClInclude Include="include\april\RenderSystem.h" />
     <ClInclude Include="include\april\Texture.h" />
-    <ClInclude Include="include\april\TextureManager.h" />
     <ClInclude Include="include\april\Timer.h" />
     <ClInclude Include="include\april\VertexShader.h" />
     <ClInclude Include="include\april\Window.h" />

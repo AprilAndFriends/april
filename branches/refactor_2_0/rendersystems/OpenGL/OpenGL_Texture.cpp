@@ -284,16 +284,6 @@ namespace april
 		}
 	}
 
-	int OpenGL_Texture::getSizeInBytes()
-	{
-		return (this->width * this->height * 3); // TODO
-	}
-
-	bool OpenGL_Texture::isValid()
-	{
-		return (this->textureId != 0);
-	}
-
 }
 
 #endif

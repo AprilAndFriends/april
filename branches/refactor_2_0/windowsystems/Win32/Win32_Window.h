@@ -31,7 +31,7 @@ namespace april
 	public:
 		Win32_Window();
 		~Win32_Window();
-		bool create(int width, int height, bool fullscreen, chstr title);
+		bool create(int w, int h, bool fullscreen, chstr title);
 		bool destroy();
 
 		void setTitle(chstr title);
@@ -42,7 +42,7 @@ namespace april
 		bool isTouchEnabled() { return this->touchEnabled; }
 		void setTouchEnabled(bool value) { this->touchEnabled = value; }
 		void* getBackendId();
-		void _setResolution(int width, int height);
+		void _setResolution(int w, int h);
 
 		void enterMainLoop();
 		bool updateOneFrame();

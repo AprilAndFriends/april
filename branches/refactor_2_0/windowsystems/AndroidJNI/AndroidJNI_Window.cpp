@@ -35,14 +35,14 @@ namespace april
 		this->destroy();
 	}
 
-	bool AndroidJNI_Window::create(int width, int height, bool fullscreen, chstr title)
+	bool AndroidJNI_Window::create(int w, int h, bool fullscreen, chstr title)
 	{
-		if (!Window::create(width, height, true, title))
+		if (!Window::create(w, h, true, title))
 		{
 			return false;
 		}
-		this->width = width;
-		this->height = height;
+		this->width = w;
+		this->height = h;
 		this->alreadyTouched = false;
 		this->_lastTime = 0.0f;
 		return true;

@@ -63,9 +63,9 @@ namespace april
 		this->destroy();
 	}
 	
-	bool SDL_Window::create(int width, int height, bool fullscreen, chstr title)
+	bool SDL_Window::create(int w, int h, bool fullscreen, chstr title)
 	{
-		if (!Window::create(width, height, fullscreen, title))
+		if (!Window::create(w, h, fullscreen, title))
 		{
 			return false;
 		}
@@ -78,7 +78,7 @@ namespace april
 		// set up opengl attributes desired for the context
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-		this->screen = SDL_SetVideoMode(width, height, 0, SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0));
+		this->screen = SDL_SetVideoMode(w, h, 0, SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0));
 #else
 		SDL_GLES_Init(SDL_GLES_VERSION_1_1);
 		this->screen = SDL_SetVideoMode(0, 0, 16, SDL_SWSURFACE);
