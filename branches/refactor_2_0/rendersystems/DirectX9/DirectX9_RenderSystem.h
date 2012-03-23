@@ -52,13 +52,16 @@ namespace april
 		void setTextureFilter(Texture::Filter textureFilter);
 		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
 
-		// object creation
 		Texture* loadTexture(chstr filename, bool dynamic);
 		Texture* createTexture(int w, int h, unsigned char* rgba);
 		Texture* createTexture(int w, int h, Texture::Format format = Texture::FORMAT_RGBA, Texture::Type type = Texture::TYPE_NORMAL, Color color = APRIL_COLOR_CLEAR);
-
-		VertexShader* createVertexShader();
 		PixelShader* createPixelShader();
+		PixelShader* createPixelShader(chstr filename);
+		VertexShader* createVertexShader();
+		VertexShader* createVertexShader(chstr filename);
+
+		//////////////////////////////////////////////////
+		// object creation
 		void setVertexShader(VertexShader* vertexShader);
 		void setPixelShader(PixelShader* pixelShader);
 

@@ -38,7 +38,6 @@ namespace april
 
 		Color getPixel(int x, int y);
 		void setPixel(int x, int y, Color c);
-		Color getInterpolatedPixel(float x, float y);
 		
 	protected:
 		ImageSource* source;

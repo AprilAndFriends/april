@@ -318,7 +318,7 @@ namespace april
 	
 	Texture* OpenGL_RenderSystem::loadTexture(chstr filename, bool dynamic)
 	{
-		hstr name = this->findTextureFile(filename);
+		hstr name = this->_findTextureFile(filename);
 		if (name == "")
 		{
 			return NULL;

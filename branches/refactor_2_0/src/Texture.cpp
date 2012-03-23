@@ -27,7 +27,7 @@ namespace april
 		this->filename = "";
 		this->width = 0;
 		this->height = 0;
-		this->bpp = 3;
+		this->bpp = 4;
 		this->unusedTime = 0.0f;
 		this->filter = FILTER_LINEAR;
 		this->addressMode = ADDRESS_WRAP;

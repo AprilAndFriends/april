@@ -75,24 +75,26 @@ namespace april
 		virtual void setTextureFilter(Texture::Filter textureFilter) = 0;
 		virtual void setTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
 
-		virtual void setFullscreen(bool fullscreen) { } //TODO - implement in derived classes
-		virtual void setResolution(int w, int h);
+		virtual void setFullscreen(bool fullscreen) { } // TODO - main part should be in window class
+		virtual void setResolution(int w, int h); // TODO - main part should be in window class
 
-		//////////////////////////////////////////////////////////////////////////////
-		// object creation
 		virtual Texture* loadTexture(chstr filename, bool dynamic = false) = 0;
 		virtual Texture* createTexture(int w, int h, unsigned char* rgba) = 0;
 		virtual Texture* createTexture(int w, int h, Texture::Format format = Texture::FORMAT_RGBA, Texture::Type type = Texture::TYPE_NORMAL, Color color = APRIL_COLOR_CLEAR) = 0;
+		RamTexture* loadRamTexture(chstr filename, bool dynamic = false);
+		virtual PixelShader* createPixelShader() = 0;
+		virtual PixelShader* createPixelShader(chstr filename) = 0;
+		virtual VertexShader* createVertexShader() = 0;
+		virtual VertexShader* createVertexShader(chstr filename) = 0;
+
+		//////////////////////////////////////////////////////////////////////////////
+		// object creation
 		//virtual Texture* createTexture(ImageSource* imageSource) = 0;
 		
-		hstr findTextureFile(chstr filename);
 
 
-		RamTexture* loadRamTexture(chstr filename, bool dynamic = false);
 		
 
-		virtual VertexShader* createVertexShader() = 0;
-		virtual PixelShader* createPixelShader() = 0;
 		virtual void setVertexShader(VertexShader* vertexShader) = 0;
 		virtual void setPixelShader(PixelShader* pixelShader) = 0;
 		
@@ -164,6 +166,7 @@ namespace april
 		
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);
+		hstr _findTextureFile(chstr filename);
 
 		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;

@@ -23,6 +23,7 @@ namespace april
 	class aprilExport PixelShader
 	{
 	public:
+		PixelShader(chstr filename);
 		PixelShader();
 		virtual ~PixelShader();
 
@@ -34,7 +35,7 @@ namespace april
 		virtual void setConstantsF(const float* quadVectors, unsigned int quadCount) = 0;
 
 	protected:
-		hstr mShaderCode;
+		hstr shaderCode;
 
 	};
 

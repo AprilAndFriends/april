@@ -22,7 +22,6 @@ namespace april
 	RamTexture::RamTexture(chstr filename, bool dynamic) : Texture()
 	{
 		this->filename = filename;
-		this->dynamic = dynamic;
 		this->source = NULL;
 		if (!this->dynamic)
 		{
@@ -34,8 +33,9 @@ namespace april
 	{
 		this->width = w;
 		this->height = h;
+		this->bpp = 4;
+		this->dynamic = false;
 		this->source = april::createEmptyImage(w, h);
-		this->filename = "";
 	}
 
 	RamTexture::~RamTexture()
@@ -48,10 +48,17 @@ namespace april
 		if (this->source == NULL)
 		{
 			april::log("loading RAM texture '" + this->_getInternalName() + "'");
-			this->source = april::loadImage(this->filename);
-			this->width = this->source->w;
-			this->height = this->source->h;
-			this->bpp = this->source->bpp;
+			if (this->filename != "")
+			{
+				this->source = april::loadImage(this->filename);
+				this->width = this->source->w;
+				this->height = this->source->h;
+				this->bpp = this->source->bpp;
+			}
+			else
+			{
+				this->source = april::createEmptyImage(this->width, this->height);
+			}
 			return true;
 		}
 		return false;
@@ -82,24 +89,14 @@ namespace april
 		return this->source->getPixel(x, y);
 	}
 	
-	void RamTexture::setPixel(int x, int y, Color c)
+	void RamTexture::setPixel(int x, int y, Color color)
 	{
 		if (this->source == NULL)
 		{
 			this->load();
 		}
 		this->unusedTime = 0.0f;
-		this->source->setPixel(x, y, c);
-	}
-	
-	Color RamTexture::getInterpolatedPixel(float x, float y)
-	{
-		if (this->source == NULL)
-		{
-			this->load();
-		}
-		this->unusedTime = 0.0f;
-		return this->source->getInterpolatedPixel(x, y);
+		this->source->setPixel(x, y, color);
 	}
 	
 }

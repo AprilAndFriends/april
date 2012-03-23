@@ -15,6 +15,8 @@
 #ifndef APRIL_DIRECTX9_VERTEX_SHADER_H
 #define APRIL_DIRECTX9_VERTEX_SHADER_H
 
+#include <hltypes/hstring.h>
+
 #include "VertexShader.h"
 
 struct IDirect3DVertexShader9;
@@ -28,6 +30,7 @@ namespace april
 	public:
 		friend class DirectX9_RenderSystem;
 
+		DirectX9_VertexShader(chstr filename);
 		DirectX9_VertexShader();
 		~DirectX9_VertexShader();
 

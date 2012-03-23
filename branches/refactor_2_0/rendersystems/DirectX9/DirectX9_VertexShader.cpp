@@ -8,17 +8,22 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _DIRECTX9
-
 #include <d3dx9shader.h>
+
+#include <hltypes/hstring.h>
 
 #include "april.h"
 #include "DirectX9_RenderSystem.h"
 #include "DirectX9_VertexShader.h"
 
-#define DX9_RENDERSYS ((DirectX9_RenderSystem*)april::rendersys)
+#define APRIL_D3D_DEVICE (((DirectX9_RenderSystem*)april::rendersys)->d3dDevice)
 
 namespace april
 {
+	DirectX9_VertexShader::DirectX9_VertexShader(chstr filename) : VertexShader(filename), dx9Shader(NULL)
+	{
+	}
+
 	DirectX9_VertexShader::DirectX9_VertexShader() : VertexShader(), dx9Shader(NULL)
 	{
 	}
@@ -51,7 +56,7 @@ namespace april
 			april::log("failed to compile vertex shader");
 			return false;
 		}
-		result = DX9_RENDERSYS->d3dDevice->CreateVertexShader((DWORD*)assembly->GetBufferPointer(), &this->dx9Shader);
+		result = APRIL_D3D_DEVICE->CreateVertexShader((DWORD*)assembly->GetBufferPointer(), &this->dx9Shader);
 		if (result != D3D_OK)
 		{
 			april::log("failed to create vertex shader");
@@ -64,7 +69,7 @@ namespace april
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			DX9_RENDERSYS->d3dDevice->SetVertexShaderConstantB(i, quadVectors + i * 4, 1);
+			APRIL_D3D_DEVICE->SetVertexShaderConstantB(i, quadVectors + i * 4, 1);
 		}
 	}
 
@@ -72,7 +77,7 @@ namespace april
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			DX9_RENDERSYS->d3dDevice->SetVertexShaderConstantI(i, quadVectors + i * 4, 1);
+			APRIL_D3D_DEVICE->SetVertexShaderConstantI(i, quadVectors + i * 4, 1);
 		}
 	}
 
@@ -80,7 +85,7 @@ namespace april
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			DX9_RENDERSYS->d3dDevice->SetVertexShaderConstantF(i, quadVectors + i * 4, 1);
+			APRIL_D3D_DEVICE->SetVertexShaderConstantF(i, quadVectors + i * 4, 1);
 		}
 	}
 

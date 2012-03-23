@@ -117,47 +117,28 @@ namespace april
 		this->render(TriangleStrip, tv, 4, color);
 	}
 	
-	hstr RenderSystem::findTextureFile(chstr _filename)
-	{
-		hstr filename = _filename;
-		if (hresource::exists(filename))
-		{
-			return filename;
-		}
-		hstr name;
-		harray<hstr> extensions = april::getTextureExtensions();
-		foreach (hstr, it, extensions)
-		{
-			name = filename + (*it);
-			if (hresource::exists(name))
-			{
-				return name;
-			}
-		}
-		int index = filename.rfind(".");
-		if (index >= 0)
-		{
-			filename = filename.substr(0, index);
-			foreach (hstr, it, extensions)
-			{
-				name = filename + (*it);
-				if (hresource::exists(name))
-				{
-					return name;
-				}
-			}
-		}
-		return "";
-	}
-	
 	RamTexture* RenderSystem::loadRamTexture(chstr filename, bool dynamic)
 	{
-		hstr name = this->findTextureFile(filename);
+		hstr name = this->_findTextureFile(filename);
 		if (name == "")
 		{
 			return NULL;
 		}
-		return new RamTexture(name, dynamic);
+		if (this->forcedDynamicLoading)
+		{
+			dynamic = true;
+		}
+		if (dynamic)
+		{
+			april::log("creating dynamic RAM texture '" + name + "'");
+		}
+		RamTexture* t = new RamTexture(name, dynamic);
+		if (!dynamic && !t->load())
+		{
+			delete t;
+			return NULL;
+		}
+		return t;
 	}
 	
 	void RenderSystem::setIdentityTransform()
@@ -245,6 +226,39 @@ namespace april
 	void RenderSystem::presentFrame()
 	{
 		april::window->presentFrame();
+	}
+	
+	hstr RenderSystem::_findTextureFile(chstr _filename)
+	{
+		hstr filename = _filename;
+		if (hresource::exists(filename))
+		{
+			return filename;
+		}
+		hstr name;
+		harray<hstr> extensions = april::getTextureExtensions();
+		foreach (hstr, it, extensions)
+		{
+			name = filename + (*it);
+			if (hresource::exists(name))
+			{
+				return name;
+			}
+		}
+		int index = filename.rfind(".");
+		if (index >= 0)
+		{
+			filename = filename.substr(0, index);
+			foreach (hstr, it, extensions)
+			{
+				name = filename + (*it);
+				if (hresource::exists(name))
+				{
+					return name;
+				}
+			}
+		}
+		return "";
 	}
 	
 	void RenderSystem::_registerTexture(Texture* texture)

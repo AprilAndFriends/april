@@ -74,7 +74,7 @@ namespace april
 		}
 		return 0;
 	}
-/************************************************************************************/
+	
 	DirectX9_RenderSystem::DirectX9_RenderSystem() : RenderSystem(), zBufferEnabled(false),
 		textureCoordinatesEnabled(false), colorEnabled(false), d3d(NULL), d3dDevice(NULL),
 		activeTexture(NULL), renderTarget(NULL), backBuffer(NULL)
@@ -184,11 +184,9 @@ namespace april
 		this->setTextureFilter(this->textureFilter);
 	}
 	
-	////////////////////////////////////////////////////////////////////
-
 	Texture* DirectX9_RenderSystem::loadTexture(chstr filename, bool dynamic)
 	{
-		hstr name = this->findTextureFile(filename);
+		hstr name = this->_findTextureFile(filename);
 		if (name == "")
 		{
 			return NULL;
@@ -220,15 +218,27 @@ namespace april
 		return new DirectX9_Texture(w, h, format, type, color);
 	}
 	
+	PixelShader* DirectX9_RenderSystem::createPixelShader()
+	{
+		return new DirectX9_PixelShader();
+	}
+
+	PixelShader* DirectX9_RenderSystem::createPixelShader(chstr filename)
+	{
+		return new DirectX9_PixelShader(filename);
+	}
+
 	VertexShader* DirectX9_RenderSystem::createVertexShader()
 	{
 		return new DirectX9_VertexShader();
 	}
 
-	PixelShader* DirectX9_RenderSystem::createPixelShader()
+	VertexShader* DirectX9_RenderSystem::createVertexShader(chstr filename)
 	{
-		return new DirectX9_PixelShader();
+		return new DirectX9_VertexShader(filename);
 	}
+
+	////////////////////////////////////////////////////////////////////
 
 	void DirectX9_RenderSystem::setVertexShader(VertexShader* vertexShader)
 	{

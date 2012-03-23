@@ -15,6 +15,8 @@
 #ifndef APRIL_DIRECTX9_PIXEL_SHADER_H
 #define APRIL_DIRECTX9_PIXEL_SHADER_H
 
+#include <hltypes/hstring.h>
+
 #include "PixelShader.h"
 
 struct IDirect3DPixelShader9;
@@ -28,6 +30,7 @@ namespace april
 	public:
 		friend class DirectX9_RenderSystem;
 
+		DirectX9_PixelShader(chstr filename);
 		DirectX9_PixelShader();
 		~DirectX9_PixelShader();
 
