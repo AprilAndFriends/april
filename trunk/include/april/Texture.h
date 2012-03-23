@@ -107,12 +107,12 @@ namespace april
 		
 	};
 	
-	class aprilExport RAMTexture : public Texture
+	class aprilExport RamTexture : public Texture
 	{
 	public:
-		RAMTexture(chstr filename, bool dynamic);
-		RAMTexture(int w, int h);
-		virtual ~RAMTexture();
+		RamTexture(chstr filename, bool dynamic);
+		RamTexture(int w, int h);
+		virtual ~RamTexture();
 		bool load();
 		void unload();
 		bool isLoaded();

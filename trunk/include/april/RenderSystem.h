@@ -139,7 +139,7 @@ namespace april
 		// object creation
 		hstr findTextureFile(chstr filename);
 		virtual Texture* loadTexture(chstr filename, bool dynamic = false) = 0;
-		RAMTexture* loadRAMTexture(chstr filename, bool dynamic = false);
+		RamTexture* loadRamTexture(chstr filename, bool dynamic = false);
 		virtual Texture* createTextureFromMemory(unsigned char* rgba, int w, int h) = 0;
 		virtual Texture* createEmptyTexture(int w, int h, TextureFormat fmt = AT_XRGB, TextureType type = AT_NORMAL) = 0;
 		Texture* createBlankTexture(int w, int h, TextureFormat fmt = AT_XRGB, TextureType type = AT_NORMAL);

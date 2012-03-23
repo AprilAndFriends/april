@@ -145,7 +145,7 @@ namespace april
 	}
 
 /************************************************************************************/
-	RAMTexture::RAMTexture(chstr filename, bool dynamic) : Texture()
+	RamTexture::RamTexture(chstr filename, bool dynamic) : Texture()
 	{
 		mFilename = filename;
 		mBuffer = NULL;
@@ -155,7 +155,7 @@ namespace april
 		}
 	}
 
-	RAMTexture::RAMTexture(int w, int h) : Texture()
+	RamTexture::RamTexture(int w, int h) : Texture()
 	{
 		mWidth = w;
 		mHeight = h;
@@ -163,12 +163,12 @@ namespace april
 		mFilename = "";
 	}
 
-	RAMTexture::~RAMTexture()
+	RamTexture::~RamTexture()
 	{
 		unload();
 	}
 
-	bool RAMTexture::load()
+	bool RamTexture::load()
 	{
 		if (mBuffer == NULL)
 		{
@@ -181,7 +181,7 @@ namespace april
 		return false;
 	}
 	
-	void RAMTexture::unload()
+	void RamTexture::unload()
 	{
 		if (mBuffer != NULL)
 		{
@@ -191,12 +191,12 @@ namespace april
 		}
 	}
 	
-	bool RAMTexture::isLoaded()
+	bool RamTexture::isLoaded()
 	{
 		return (mBuffer != NULL);
 	}
 	
-	Color RAMTexture::getPixel(int x, int y)
+	Color RamTexture::getPixel(int x, int y)
 	{
 		if (mBuffer == NULL)
 		{
@@ -206,7 +206,7 @@ namespace april
 		return mBuffer->getPixel(x, y);
 	}
 	
-	void RAMTexture::setPixel(int x, int y, Color c)
+	void RamTexture::setPixel(int x, int y, Color c)
 	{
 		if (mBuffer == NULL)
 		{
@@ -216,7 +216,7 @@ namespace april
 		mBuffer->setPixel(x, y, c);
 	}
 	
-	Color RAMTexture::getInterpolatedPixel(float x, float y)
+	Color RamTexture::getInterpolatedPixel(float x, float y)
 	{
 		if (mBuffer == NULL)
 		{
@@ -226,12 +226,12 @@ namespace april
 		return mBuffer->getInterpolatedPixel(x, y);
 	}
 	
-	int RAMTexture::getSizeInBytes()
+	int RamTexture::getSizeInBytes()
 	{
 		return (mWidth * mHeight * 3); // TODO - should use BPP instead of 3?
 	}
 
-	bool RAMTexture::isValid()
+	bool RamTexture::isValid()
 	{
 		return (mBuffer != NULL);
 	}
