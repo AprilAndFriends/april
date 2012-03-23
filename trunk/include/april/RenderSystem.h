@@ -218,6 +218,7 @@ namespace april
 
 		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f);
 		DEPRECATED_ATTRIBUTE Window* getWindow() { return mWindow; }
+		DEPRECATED_ATTRIBUTE RamTexture* loadRAMTexture(chstr filename, bool dynamic = false) { return loadRamTexture(filename, dynamic); }
 
 	protected:
 		Window* mWindow;
