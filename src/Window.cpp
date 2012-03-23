@@ -492,9 +492,9 @@ namespace april
 	{
 #ifdef _WIN32
 		HWND wnd = 0;
-		if (rendersys && rendersys->getWindow() && style & AMSGSTYLE_MODAL)
+		if (rendersys && window && style & AMSGSTYLE_MODAL)
 		{
-			wnd = (HWND)rendersys->getWindow()->getIDFromBackend();
+			wnd = (HWND)window->getIDFromBackend();
 		}
 		int type = 0;
 		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
