@@ -150,6 +150,7 @@ namespace april
 		DEPRECATED_ATTRIBUTE Texture* createEmptyTexture(int w, int h, Texture::Format format = Texture::FORMAT_RGBA, Texture::Type type = Texture::TYPE_NORMAL) { return this->createTexture(w, h, format, type); }
 		DEPRECATED_ATTRIBUTE Texture* createBlankTexture(int w, int h, Texture::Format format = Texture::FORMAT_RGBA, Texture::Type type = Texture::TYPE_NORMAL) { return this->createTexture(w, h, format, type, Color(APRIL_COLOR_WHITE, 0)); }
 		DEPRECATED_ATTRIBUTE void setTextureWrapping(bool value) { this->setTextureAddressMode(value ? Texture::ADDRESS_WRAP : Texture::ADDRESS_CLAMP); }
+		DEPRECATED_ATTRIBUTE RamTexture* loadRAMTexture(chstr filename, bool dynamic = false) { return this->loadRamTexture(filename, dynamic); }
 
 	protected:
 		hstr name;
