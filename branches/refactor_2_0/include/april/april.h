@@ -53,7 +53,7 @@ namespace april
 	aprilFnExport void setLogFunction(void (*fnptr)(chstr));
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType);
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType, chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title);
-	aprilFnExport void createRenderSystem(chstr options);
+	aprilFnExport void createRenderSystem(chstr options = "");
 	aprilFnExport void createWindow(int w, int h, bool fullscreen, chstr title);
 	aprilFnExport void destroy();
 	aprilFnExport void addTextureExtension(chstr extension);
@@ -61,6 +61,7 @@ namespace april
 	aprilFnExport void setTextureExtensions(const harray<hstr>& exts);
 	aprilFnExport void log(chstr message, chstr prefix = "[april] ");
 
+	aprilFnExport DEPRECATED_ATTRIBUTE void init();
 	aprilFnExport DEPRECATED_ATTRIBUTE void createRenderTarget(int w, int h, bool fullscreen, chstr title);
 	
 }

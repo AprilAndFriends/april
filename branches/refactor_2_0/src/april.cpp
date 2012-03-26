@@ -74,6 +74,7 @@
 
 namespace april
 {
+	DEPRECATED_ATTRIBUTE void init() { init(RS_DEFAULT, WS_DEFAULT); } // DEPRECATED
 	DEPRECATED_ATTRIBUTE void createRenderTarget(int w, int h, bool fullscreen, chstr title) { createWindow(w, h, fullscreen, title); } // DEPRECATED
 
 	harray<hstr> extensions;
