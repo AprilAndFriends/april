@@ -512,17 +512,6 @@ namespace april
 		return NULL;
 	}
 
-	/////////////////////////////////////////////////////////////////////////////
-
-	void OpenGL_RenderSystem::setParam(chstr name, chstr value)
-	{
-		if (name == "zbuffer")
-		{
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LEQUAL);
-		}
-	}
-	
 	void OpenGL_RenderSystem::clear(bool useColor, bool depth)
 	{
 		GLbitfield mask = 0;
@@ -631,6 +620,15 @@ namespace april
 		glMatrixMode(GL_MODELVIEW);
 	}
 
+	void OpenGL_RenderSystem::setParam(chstr name, chstr value)
+	{
+		if (name == "zbuffer")
+		{
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+		}
+	}
+	
 	ImageSource* OpenGL_RenderSystem::takeScreenshot(int bpp)
 	{
 		april::log("grabbing screenshot");
