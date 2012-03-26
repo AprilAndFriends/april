@@ -156,12 +156,11 @@ namespace april
 		{
 			throw hl_exception("could not create given rendersystem");
 		}
-		april::log("rendersystem: " + april::rendersys->getName());
 		if (april::window == NULL)
 		{
 			throw hl_exception("could not create given windowsystem");
 		}
-		april::log("windowsystem: " + april::window->getName());
+		april::log(hsprintf("using: %s, %s", april::rendersys->getName().c_str(), april::window->getName().c_str()));
 	}
 	
 	void createRenderSystem(chstr options)

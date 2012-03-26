@@ -75,7 +75,6 @@ namespace april
 		
 		Texture* getRenderTarget();
 		void setRenderTarget(Texture* source);
-		void beginFrame();
 		harray<DisplayMode> getSupportedDisplayModes();
 		
 	protected:

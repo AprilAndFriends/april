@@ -362,11 +362,11 @@ namespace april
 		return NULL;
 	}
 
-	void OpenGL_RenderSystem::setVertexShader(VertexShader* vertexShader)
+	void OpenGL_RenderSystem::setPixelShader(PixelShader* pixelShader)
 	{
 	}
 
-	void OpenGL_RenderSystem::setPixelShader(PixelShader* pixelShader)
+	void OpenGL_RenderSystem::setVertexShader(VertexShader* vertexShader)
 	{
 	}
 
@@ -655,11 +655,6 @@ namespace april
 		// TODO
 	}
 	
-	void OpenGL_RenderSystem::beginFrame()
-	{
-		// TODO ?
-	}
-
 	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
 	{
 		// TODO

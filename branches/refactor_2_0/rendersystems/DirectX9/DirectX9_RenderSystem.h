@@ -43,7 +43,7 @@ namespace april
 
 		//void reset();
 		void assignWindow(Window* window);
-		
+
 		float getPixelOffset() { return 0.5f; }
 		grect getViewport();
 		void setViewport(grect rect);
@@ -51,6 +51,14 @@ namespace april
 		void setColorMode(ColorMode mode, unsigned char alpha = 255);
 		void setTextureFilter(Texture::Filter textureFilter);
 		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
+		harray<DisplayMode> getSupportedDisplayModes();
+		void setTexture(Texture* texture);
+		Texture* getRenderTarget();
+		void setRenderTarget(Texture* source);
+		void setPixelShader(PixelShader* pixelShader);
+		void setVertexShader(VertexShader* vertexShader);
+
+		void setResolution(int w, int h);
 
 		Texture* loadTexture(chstr filename, bool dynamic);
 		Texture* createTexture(int w, int h, unsigned char* rgba);
@@ -60,17 +68,8 @@ namespace april
 		VertexShader* createVertexShader();
 		VertexShader* createVertexShader(chstr filename);
 
-		//////////////////////////////////////////////////
-		// object creation
-		void setVertexShader(VertexShader* vertexShader);
-		void setPixelShader(PixelShader* pixelShader);
-
-		void setResolution(int w, int h);
-		// rendering
 		void clear(bool useColor = true, bool depth = false);
 		void clear(bool depth, grect rect, Color color = APRIL_COLOR_CLEAR);
-		ImageSource* takeScreenshot(int bpp = 3);
-		void setTexture(Texture* texture);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
@@ -78,13 +77,8 @@ namespace april
 		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 
-		Texture* getRenderTarget();
-		void setRenderTarget(Texture* source);
-
-		void beginFrame();
-		
+		ImageSource* takeScreenshot(int bpp = 3);
 		void presentFrame();
-		harray<DisplayMode> getSupportedDisplayModes();
 
 	protected:
 		bool zBufferEnabled;
@@ -95,6 +89,7 @@ namespace april
 		DirectX9_Texture* activeTexture;
 		DirectX9_Texture* renderTarget;
 		IDirect3DSurface9* backBuffer;
+		harray<DisplayMode> supportedDisplayModes;
 
 		void _configureDevice();
 

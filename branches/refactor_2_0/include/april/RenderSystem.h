@@ -69,11 +69,14 @@ namespace april
 		virtual void setViewport(grect rect) = 0;
 		virtual void setBlendMode(BlendMode mode) = 0;
 		virtual void setColorMode(ColorMode mode, unsigned char alpha = 255) = 0;
+		virtual void setTextureFilter(Texture::Filter textureFilter) = 0;
+		virtual void setTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
+		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
 		virtual void setTexture(Texture* texture) = 0;
 		virtual Texture* getRenderTarget() = 0;
 		virtual void setRenderTarget(Texture* texture) = 0;
-		virtual void setTextureFilter(Texture::Filter textureFilter) = 0;
-		virtual void setTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
+		virtual void setVertexShader(VertexShader* vertexShader) = 0;
+		virtual void setPixelShader(PixelShader* pixelShader) = 0;
 
 		virtual void setFullscreen(bool fullscreen) { } // TODO - main part should be in window class
 		virtual void setResolution(int w, int h); // TODO - main part should be in window class
@@ -87,29 +90,14 @@ namespace april
 		virtual VertexShader* createVertexShader() = 0;
 		virtual VertexShader* createVertexShader(chstr filename) = 0;
 
-		//////////////////////////////////////////////////////////////////////////////
-		// object creation
-		//virtual Texture* createTexture(ImageSource* imageSource) = 0;
-		
-
-
-		
-
-		virtual void setVertexShader(VertexShader* vertexShader) = 0;
-		virtual void setPixelShader(PixelShader* pixelShader) = 0;
-		
-		// modelview matrix transformation
 		void setIdentityTransform();
 		void translate(float x, float y, float z = 0.0f);
 		void rotate(float angle, float ax = 0.0f, float ay = 0.0f, float az = -1.0f);
 		void scale(float s);
 		void scale(float sx, float sy, float sz);
-		// camera functions
 		void lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up);
-		// projection matrix transformation
 		void setPerspective(float fov, float aspect, float nearClip, float farClip);
 
-		// rendering
 		virtual void clear(bool useColor = true, bool depth = false) = 0;
 		virtual void clear(bool depth, grect rect, Color color = APRIL_COLOR_CLEAR) = 0;
 		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices) = 0;
@@ -119,25 +107,19 @@ namespace april
 		virtual void render(RenderOp renderOp, ColoredVertex* v, int nVertices) = 0;
 		virtual void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices) = 0;
 		
-		virtual void setParam(chstr name, chstr value) { }
-		virtual hstr getParam(chstr name) { return ""; }
-		
-		void drawQuad(grect rect, Color color);
-		void drawColoredQuad(grect rect, Color color);
-		void drawTexturedQuad(grect rect, grect src);
-		void drawTexturedQuad(grect rect, grect src, Color color);
-
-		virtual void beginFrame() = 0;
+		void drawRect(grect rect, Color color);
+		void drawFilledRect(grect rect, Color color);
+		void drawTexturedRect(grect rect, grect src);
+		void drawTexturedRect(grect rect, grect src, Color color);
 
 		void unloadTextures();
-		
+		virtual void setParam(chstr name, chstr value) { }
+		virtual hstr getParam(chstr name) { return ""; }
         virtual ImageSource* takeScreenshot(int bpp = 3) = 0;
-        
 		virtual void presentFrame();
-		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
 
 		DEPRECATED_ATTRIBUTE Window* getWindow() { return april::window; }
-		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f);
+		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f) { this->setOrthoProjection(grect(x_offset, y_offset, w, h)); }
 		DEPRECATED_ATTRIBUTE bool isFullscreen() { return april::window->isFullscreen(); }
 		DEPRECATED_ATTRIBUTE float getIdleTextureUnloadTime() { return this->getTextureIdleUnloadTime(); }
 		DEPRECATED_ATTRIBUTE void setIdleTextureUnloadTime(float value) { this->setTextureIdleUnloadTime(value); }
@@ -151,6 +133,10 @@ namespace april
 		DEPRECATED_ATTRIBUTE Texture* createBlankTexture(int w, int h, Texture::Format format = Texture::FORMAT_RGBA, Texture::Type type = Texture::TYPE_NORMAL) { return this->createTexture(w, h, format, type, Color(APRIL_COLOR_WHITE, 0)); }
 		DEPRECATED_ATTRIBUTE void setTextureWrapping(bool value) { this->setTextureAddressMode(value ? Texture::ADDRESS_WRAP : Texture::ADDRESS_CLAMP); }
 		DEPRECATED_ATTRIBUTE RamTexture* loadRAMTexture(chstr filename, bool dynamic = false) { return this->loadRamTexture(filename, dynamic); }
+		DEPRECATED_ATTRIBUTE void drawQuad(grect rect, Color color) { this->drawRect(rect, color); }
+		DEPRECATED_ATTRIBUTE void drawColoredQuad(grect rect, Color color) { this->drawFilledRect(rect, color); }
+		DEPRECATED_ATTRIBUTE void drawTexturedQuad(grect rect, grect src) { this->drawTexturedRect(rect, src); }
+		DEPRECATED_ATTRIBUTE void drawTexturedQuad(grect rect, grect src, Color color) { this->drawTexturedRect(rect, src, color); }
 
 	protected:
 		hstr name;

@@ -79,42 +79,40 @@ namespace april
 	{
 		april::log("resetting rendersystem");
 	}
-	
-	void RenderSystem::drawQuad(grect rect, Color color)
-	{
-		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
-		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
-		pv[2].x = rect.x + rect.w;	pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
-		pv[3].x = rect.x;			pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
-		pv[4].x = rect.x;			pv[4].y = rect.y;			pv[4].z = 0.0f;
-		this->render(LineStrip, pv, 5, color);
-	}
 
-	void RenderSystem::drawColoredQuad(grect rect, Color color)
+	void RenderSystem::setOrthoProjection(grect rect)
 	{
-		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
-		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
-		pv[2].x = rect.x;			pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
-		pv[3].x = rect.x + rect.w;	pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
-		this->render(TriangleStrip, pv, 4, color);
+		this->orthoProjection = rect;
+		float t = this->getPixelOffset();
+		float wnd_w = (float)april::window->getWidth();
+		float wnd_h = (float)april::window->getHeight();
+		rect.x -= t * rect.w / wnd_w;
+		rect.y -= t * rect.h / wnd_h;
+		this->projectionMatrix.ortho(rect);
+		this->_setProjectionMatrix(this->projectionMatrix);
 	}
 	
-	void RenderSystem::drawTexturedQuad(grect rect, grect src)
+	void RenderSystem::setOrthoProjection(gvec2 size)
 	{
-		tv[0].x = rect.x;			tv[0].y = rect.y;			tv[0].z = 0.0f;	tv[0].u = src.x;			tv[0].v = src.y;
-		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
-		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
-		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
-		this->render(TriangleStrip, tv, 4);
+		this->setOrthoProjection(grect(0.0f, 0.0f, size));
 	}
 	
-	void RenderSystem::drawTexturedQuad(grect rect, grect src, Color color)
+	void RenderSystem::setModelviewMatrix(gmat4 matrix)
 	{
-		tv[0].x = rect.x;			tv[0].y = rect.y;			tv[0].z = 0.0f;	tv[0].u = src.x;			tv[0].v = src.y;
-		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
-		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
-		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
-		this->render(TriangleStrip, tv, 4, color);
+		this->modelviewMatrix = matrix;
+		this->_setModelviewMatrix(this->modelviewMatrix);
+	}
+	
+	void RenderSystem::setProjectionMatrix(gmat4 matrix)
+	{
+		this->projectionMatrix = matrix;
+		this->_setProjectionMatrix(this->projectionMatrix);
+	}
+	
+	void RenderSystem::setResolution(int w, int h)
+	{
+		log(hsprintf("changing resolution: %d x %d", w, h));
+		april::window->_setResolution(w, h);
 	}
 	
 	RamTexture* RenderSystem::loadRamTexture(chstr filename, bool dynamic)
@@ -139,6 +137,14 @@ namespace april
 			return NULL;
 		}
 		return t;
+	}
+	
+	void RenderSystem::unloadTextures()
+	{
+		foreach (Texture*, it, this->textures)
+		{
+			(*it)->unload();
+		}
 	}
 	
 	void RenderSystem::setIdentityTransform()
@@ -177,50 +183,47 @@ namespace april
 		this->_setModelviewMatrix(this->modelviewMatrix);
 	}
 		
-	void RenderSystem::setOrthoProjection(float x, float y, float w, float h)
-	{
-		this->setOrthoProjection(grect(x, y, w, h));
-	}
-	
-	void RenderSystem::setOrthoProjection(gvec2 size)
-	{
-		this->setOrthoProjection(grect(0.0f, 0.0f, size));
-	}
-	
-	void RenderSystem::setOrthoProjection(grect rect)
-	{
-		this->orthoProjection = rect;
-		float t = this->getPixelOffset();
-		float wnd_w = (float)april::window->getWidth();
-		float wnd_h = (float)april::window->getHeight();
-		rect.x -= t * rect.w / wnd_w;
-		rect.y -= t * rect.h / wnd_h;
-		this->projectionMatrix.ortho(rect);
-		this->_setProjectionMatrix(this->projectionMatrix);
-	}
-	
 	void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
 	{
 		this->projectionMatrix.perspective(fov, aspect, nearClip, farClip);
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
 	
-	void RenderSystem::setModelviewMatrix(gmat4 matrix)
+	void RenderSystem::drawRect(grect rect, Color color)
 	{
-		this->modelviewMatrix = matrix;
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
+		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
+		pv[2].x = rect.x + rect.w;	pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
+		pv[3].x = rect.x;			pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
+		pv[4].x = rect.x;			pv[4].y = rect.y;			pv[4].z = 0.0f;
+		this->render(LineStrip, pv, 5, color);
+	}
+
+	void RenderSystem::drawFilledRect(grect rect, Color color)
+	{
+		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
+		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
+		pv[2].x = rect.x;			pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
+		pv[3].x = rect.x + rect.w;	pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
+		this->render(TriangleStrip, pv, 4, color);
 	}
 	
-	void RenderSystem::setProjectionMatrix(gmat4 matrix)
+	void RenderSystem::drawTexturedRect(grect rect, grect src)
 	{
-		this->projectionMatrix = matrix;
-		this->_setProjectionMatrix(this->projectionMatrix);
+		tv[0].x = rect.x;			tv[0].y = rect.y;			tv[0].z = 0.0f;	tv[0].u = src.x;			tv[0].v = src.y;
+		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
+		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
+		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
+		this->render(TriangleStrip, tv, 4);
 	}
 	
-	void RenderSystem::setResolution(int w, int h)
+	void RenderSystem::drawTexturedRect(grect rect, grect src, Color color)
 	{
-		log(hsprintf("changing resolution: %d x %d", w, h));
-		april::window->_setResolution(w, h);
+		tv[0].x = rect.x;			tv[0].y = rect.y;			tv[0].z = 0.0f;	tv[0].u = src.x;			tv[0].v = src.y;
+		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
+		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
+		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
+		this->render(TriangleStrip, tv, 4, color);
 	}
 	
 	void RenderSystem::presentFrame()
@@ -269,14 +272,6 @@ namespace april
 	void RenderSystem::_unregisterTexture(Texture* texture)
 	{
 		this->textures -= texture;
-	}
-	
-	void RenderSystem::unloadTextures()
-	{
-		foreach (Texture*, it, this->textures)
-		{
-			(*it)->unload();
-		}
 	}
 	
 }
