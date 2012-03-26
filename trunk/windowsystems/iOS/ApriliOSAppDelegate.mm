@@ -91,7 +91,7 @@
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
 	NSLog(@"Received iOS memory warning!");
-	april::rendersys->getWindow()->handleLowMemoryWarning();
+	april::window->handleLowMemoryWarning();
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -101,7 +101,7 @@
         return;
     }
 	
-	april::rendersys->getWindow()->handleFocusEvent(0);
+	april::window->handleFocusEvent(0);
 	
     for (EAGLView *glview in [viewController.view subviews])
     {
@@ -119,7 +119,7 @@
 	NSString* str = [url absoluteString];
 	hstr urlstr = [str UTF8String];
 
-	return april::rendersys->getWindow()->handleURL(urlstr) ? YES : NO;
+	return april::window->handleURL(urlstr) ? YES : NO;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

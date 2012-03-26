@@ -195,7 +195,7 @@ static void CustomApplicationMain (int argc, char **argv)
     /*status = */
     gAprilInit(argv);
 	
-    april::rendersys->getWindow()->enterMainLoop();
+    april::window->enterMainLoop();
     
     /* We're done, thank you for playing */
     gAprilDestroy();
