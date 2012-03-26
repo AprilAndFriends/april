@@ -13,7 +13,7 @@
 /// 
 /// Defines an OpenGL render system.
 
-#if defined(_OPENGL) || defined(_OPENGLES1)
+#ifdef _OPENGL
 #ifndef APRIL_OPENGL_RENDER_SYSTEM_H
 #define APRIL_OPENGL_RENDER_SYSTEM_H
 
@@ -25,6 +25,9 @@
 
 namespace april
 {
+	class OpenGL_Texture;
+	class Window;
+
 	class OpenGL_RenderSystem : public RenderSystem
 	{
 	public:
@@ -36,36 +39,32 @@ namespace april
 		void assignWindow(Window* window);
 		void reset();
 		
-		// object creation
-		Texture* loadTexture(chstr filename, bool dynamic);
-		Texture* createTextureFromMemory(unsigned char* rgba, int w, int h);
-		Texture* createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type);
-
-		VertexShader* createVertexShader();
-		PixelShader* createPixelShader();
-		void setVertexShader(VertexShader* vertexShader);
-		void setPixelShader(PixelShader* pixelShader);
-		grect getViewport();
-		void setViewport(grect rect);
-		
-		void setParam(chstr name, chstr value);
-		
-		// modelview matrix transformation
-		void setBlendMode(BlendMode mode);
-		void setColorMode(ColorMode mode);
-		void setTextureFilter(TextureFilter filter);
-		void setTextureWrapping(bool wrap);
-		void setResolution(int w, int h);
-		void setColorMode(ColorMode mode, unsigned char alpha);
-		// caps
 		float getPixelOffset() { return 0.0f; }
-        
-        ImageSource* takeScreenshot(int bpp = 3);
+		grect getViewport();
+		void setViewport(grect value);
+		harray<DisplayMode> getSupportedDisplayModes();
 
-		// rendering
+		void setTextureBlendMode(BlendMode textureBlendMode);
+		void setTextureColorMode(ColorMode textureColorMode, unsigned char alpha = 255);
+		void setTextureFilter(Texture::Filter textureFilter);
+		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
+		void setTexture(Texture* texture);
+		Texture* getRenderTarget();
+		void setRenderTarget(Texture* texture);
+		void setPixelShader(PixelShader* pixelShader);
+		void setVertexShader(VertexShader* vertexShader);
+
+		void setResolution(int w, int h);
+
+		Texture* createTexture(int w, int h, unsigned char* rgba);
+		Texture* createTexture(int w, int h, Texture::Format format = Texture::FORMAT_RGBA, Texture::Type type = Texture::TYPE_NORMAL, Color color = APRIL_COLOR_CLEAR);
+		PixelShader* createPixelShader();
+		PixelShader* createPixelShader(chstr filename);
+		VertexShader* createVertexShader();
+		VertexShader* createVertexShader(chstr filename);
+
 		void clear(bool useColor = true, bool depth = false);
-		void clear(bool useColor, bool depth, grect rect, Color color = APRIL_COLOR_CLEAR);
-		void setTexture(Texture* t);
+		void clear(bool depth, grect rect, Color color = APRIL_COLOR_CLEAR);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
@@ -73,14 +72,16 @@ namespace april
 		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 		
-		Texture* getRenderTarget();
-		void setRenderTarget(Texture* source);
-		harray<DisplayMode> getSupportedDisplayModes();
+		void setParam(chstr name, chstr value);
+        ImageSource* takeScreenshot(int bpp = 3);
 		
 	protected:
-		hstr options;
 		bool textureCoordinatesEnabled;
 		bool colorEnabled;
+		OpenGL_Texture* activeTexture;
+		hstr options;
+
+		Texture* _createTexture(chstr filename, bool dynamic = false);
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);

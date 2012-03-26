@@ -41,13 +41,15 @@ namespace april
 		friend class OpenGL_RenderSystem;
 		
 		OpenGL_Texture(chstr filename, bool dynamic);
-		OpenGL_Texture(unsigned char* rgba, int w, int h);
-		OpenGL_Texture(int w, int h);
+		OpenGL_Texture(int w, int h, unsigned char* rgba);
+		OpenGL_Texture(int w, int h, Format format, Type type, Color color = APRIL_COLOR_CLEAR);
 		~OpenGL_Texture();
-		
 		bool load();
 		void unload();
+
 		bool isLoaded();
+
+		void clear();
 		Color getPixel(int x, int y);
 		void setPixel(int x, int y, Color color);
 		void fillRect(int x, int y, int w, int h, Color color);
@@ -55,7 +57,6 @@ namespace april
 		void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		void clear();
 		void rotateHue(float degrees);
 		void saturate(float factor);
 

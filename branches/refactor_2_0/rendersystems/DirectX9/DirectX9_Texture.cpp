@@ -41,6 +41,10 @@ namespace april
 		{
 			this->load();
 		}
+		else
+		{
+			april::log("creating dynamic DX9 texture");
+		}
 	}
 
 	DirectX9_Texture::DirectX9_Texture(int w, int h, unsigned char* rgba) : Texture()
@@ -108,48 +112,52 @@ namespace april
 			return true;
 		}
 		april::log("loading DX9 texture '" + this->_getInternalName() + "'");
-		ImageSource* image = april::loadImage(this->filename);
-		if (image == NULL)
+		ImageSource* image = NULL;
+		if (this->filename != "")
 		{
-			april::log("Failed to load texture '" + this->_getInternalName() + "'!");
-			return false;
+			image = april::loadImage(this->filename);
+			if (image == NULL)
+			{
+				april::log("failed to load texture '" + this->_getInternalName() + "'!");
+				return false;
+			}
+			this->width = image->w;
+			this->height = image->h;
+			this->bpp = (image->bpp == 4 ? 4 : 3);
 		}
-		this->width = image->w;
-		this->height = image->h;
-		this->bpp = (image->bpp == 4 ? 4 : 3);
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, (image->bpp == 4) ? D3DFMT_A8R8G8B8 : D3DFMT_X8R8G8B8, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
-			april::log("Failed to load DX9 texture!");
+			april::log("failed to create DX9 texture!");
 			delete image;
 			return false;
 		}
 		// write texels
-		D3DLOCKED_RECT rect;
-		this->d3dTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
-		if (image->bpp == 4)
+		if (image != NULL)
 		{
-			image->copyPixels(rect.pBits, AF_BGRA);
+			D3DLOCKED_RECT rect;
+			this->d3dTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
+			if (image->bpp == 4)
+			{
+				image->copyPixels(rect.pBits, AF_BGRA);
+			}
+			else if (image->bpp == 3)
+			{
+				image->copyPixels(rect.pBits, AF_BGR);
+			}
+			else
+			{
+				ImageSource* tempImg = april::createEmptyImage(image->w, image->h);
+				tempImg->copyImage(image, 4);
+				tempImg->copyPixels(rect.pBits, AF_BGRA);
+				delete tempImg;
+			}
+			this->d3dTexture->UnlockRect(0);
+			delete image;
 		}
-		else if (image->bpp == 3)
-		{
-			image->copyPixels(rect.pBits, AF_BGR);
-		}
-		else
-		{
-			ImageSource* tempImg = april::createEmptyImage(image->w, image->h);
-			tempImg->copyImage(image, 4);
-			tempImg->copyPixels(rect.pBits, AF_BGRA);
-			delete tempImg;
-		}
-		this->d3dTexture->UnlockRect(0);
-		delete image;
 		foreach (Texture*, it, this->dynamicLinks)
 		{
-			if (!(*it)->isLoaded())
-			{
-				(*it)->load();
-			}
+			(*it)->load();
 		}
 		return true;
 	}

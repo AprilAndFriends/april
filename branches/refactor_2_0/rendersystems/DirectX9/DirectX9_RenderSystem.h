@@ -18,6 +18,7 @@
 
 #include "RenderSystem.h"
 
+struct _D3DPRESENT_PARAMETERS_;
 struct IDirect3D9;
 struct IDirect3DDevice9;
 struct IDirect3DSurface9;
@@ -41,17 +42,18 @@ namespace april
 		bool create(chstr options);
 		bool destroy();
 
-		//void reset();
 		void assignWindow(Window* window);
+		//void reset();
 
 		float getPixelOffset() { return 0.5f; }
+		harray<DisplayMode> getSupportedDisplayModes();
 		grect getViewport();
 		void setViewport(grect rect);
-		void setBlendMode(BlendMode mode);
-		void setColorMode(ColorMode mode, unsigned char alpha = 255);
+
+		void setTextureBlendMode(BlendMode textureBlendMode);
+		void setTextureColorMode(ColorMode textureColorMode, unsigned char alpha = 255);
 		void setTextureFilter(Texture::Filter textureFilter);
 		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
-		harray<DisplayMode> getSupportedDisplayModes();
 		void setTexture(Texture* texture);
 		Texture* getRenderTarget();
 		void setRenderTarget(Texture* source);
@@ -60,7 +62,6 @@ namespace april
 
 		void setResolution(int w, int h);
 
-		Texture* loadTexture(chstr filename, bool dynamic);
 		Texture* createTexture(int w, int h, unsigned char* rgba);
 		Texture* createTexture(int w, int h, Texture::Format format = Texture::FORMAT_RGBA, Texture::Type type = Texture::TYPE_NORMAL, Color color = APRIL_COLOR_CLEAR);
 		PixelShader* createPixelShader();
@@ -90,8 +91,11 @@ namespace april
 		DirectX9_Texture* renderTarget;
 		IDirect3DSurface9* backBuffer;
 		harray<DisplayMode> supportedDisplayModes;
+		_D3DPRESENT_PARAMETERS_* d3dpp;
 
 		void _configureDevice();
+
+		Texture* _createTexture(chstr filename, bool dynamic = false);
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);

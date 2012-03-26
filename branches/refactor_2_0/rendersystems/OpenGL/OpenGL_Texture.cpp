@@ -38,41 +38,6 @@
 
 namespace april
 {
-	unsigned int platformLoadOpenGL_Texture(chstr name, int* w, int* h)
-	{
-		GLuint textureId = 0;
-		ImageSource* img = loadImage(name);
-		if (img == NULL)
-		{
-			return 0;
-		}
-		*w = img->w;
-		*h = img->h;
-		glGenTextures(1, &textureId);
-		glBindTexture(GL_TEXTURE_2D, textureId);
-		
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		
-		switch (img->format)
-		{
-#if TARGET_OS_IPHONE
-		case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
-		case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-		{
-			int mipmaplevel = 0;
-			glCompressedTexImage2D(GL_TEXTURE_2D, mipmaplevel, img->format, img->w, img->h, 0, img->compressedLength, img->data);
-			break;
-		}
-#endif
-		default:
-			glTexImage2D(GL_TEXTURE_2D, 0, img->bpp == 4 ? GL_RGBA : GL_RGB, img->w, img->h, 0, img->format == AF_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, img->data);
-			break;
-		}
-		delete img;
-		return textureId;
-	}
-	
 	OpenGL_Texture::OpenGL_Texture(chstr filename, bool dynamic) : Texture()
 	{
 		this->width = 0;
@@ -81,13 +46,17 @@ namespace april
 		this->dynamic = dynamic;
 		this->textureId = 0;
 		this->manualBuffer = NULL;
-		if (!dynamic)
+		if (!this->dynamic)
 		{
-			load();
+			this->load();
+		}
+		else
+		{
+			april::log("creating dynamic GL texture");
 		}
 	}
 
-	OpenGL_Texture::OpenGL_Texture(unsigned char* rgba, int w, int h) : Texture()
+	OpenGL_Texture::OpenGL_Texture(int w, int h, unsigned char* rgba) : Texture()
 	{
 		april::log("creating user-defined GL texture");
 		this->width = w;
@@ -106,7 +75,7 @@ namespace april
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
 	}
 
-	OpenGL_Texture::OpenGL_Texture(int w, int h) : Texture()
+	OpenGL_Texture::OpenGL_Texture(int w, int h, Format format, Type type, Color color) : Texture()
 	{
 		april::log("creating empty GL texture [ " + hstr(w) + "x" + hstr(h) + " ]");
 		this->width = w;
@@ -118,19 +87,106 @@ namespace april
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		unsigned char* clearColor = new unsigned char[w * h * 4];
-		memset(clearColor, 0, sizeof(unsigned char) * w * h * 4);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, clearColor);
-		delete [] clearColor;
+		if (color != APRIL_COLOR_CLEAR)
+		{
+			this->fillRect(0, 0, this->width, this->height, color);
+		}
+		else
+		{
+			unsigned char* clearColor = new unsigned char[w * h * 4];
+			memset(clearColor, 0, sizeof(unsigned char) * w * h * 4);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, clearColor);
+			delete [] clearColor;
+		}
 	}
 
 	OpenGL_Texture::~OpenGL_Texture()
 	{
-		unload();
+		this->unload();
 		if (this->manualBuffer != NULL)
 		{
 			delete [] this->manualBuffer;
 		}
+	}
+
+	bool OpenGL_Texture::isLoaded()
+	{
+		return (this->textureId != 0);
+	}
+
+	bool OpenGL_Texture::load()
+	{
+		this->unusedTime = 0.0f;
+		if (this->textureId != 0)
+		{
+			return true;
+		}
+		april::log("loading GL texture '" + this->_getInternalName() + "'");
+		ImageSource* image = NULL;
+		if (this->filename != "")
+		{
+			image = april::loadImage(this->filename);
+			if (image == NULL)
+			{
+				april::log("Failed to load texture '" + this->_getInternalName() + "'!");
+				return false;
+			}
+			this->width = image->w;
+			this->height = image->h;
+			this->bpp = (image->bpp == 4 ? 4 : 3);
+		}
+		glGenTextures(1, &this->textureId);
+		if (this->textureId == 0)
+		{
+			april::log("failed to create GL texture");
+			return false;
+		}
+		// write texels
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		if (image != NULL)
+		{
+			switch (image->format)
+			{
+#if TARGET_OS_IPHONE
+			case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
+			case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
+				glCompressedTexImage2D(GL_TEXTURE_2D, 0, img->format, img->w, img->h, 0, img->compressedLength, img->data);
+				break;
+#endif
+			default:
+				glTexImage2D(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == AF_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
+				break;
+			}
+			delete image;
+		}
+		else if (this->manualBuffer != NULL)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->manualBuffer);
+		}
+		foreach (Texture*, it, this->dynamicLinks)
+		{
+			(*it)->load();
+		}
+		return true;
+	}
+
+	void OpenGL_Texture::unload()
+	{
+		if (this->textureId != 0)
+		{
+			april::log("unloading GL texture '" + this->_getInternalName() + "'");
+			glDeleteTextures(1, &this->textureId);
+			this->textureId = 0;
+		}
+	}
+
+	/////////////////////////////////////////////////////////////
+
+	void OpenGL_Texture::clear()
+	{
+		// TODO
 	}
 
 	Color OpenGL_Texture::getPixel(int x, int y)
@@ -218,11 +274,6 @@ namespace april
 		// TODO
 	}
 
-	void OpenGL_Texture::clear()
-	{
-		// TODO
-	}
-
 	void OpenGL_Texture::rotateHue(float degrees)
 	{
 		// TODO
@@ -233,57 +284,6 @@ namespace april
 		// TODO
 	}
 	
-	bool OpenGL_Texture::load()
-	{
-		this->unusedTimer = 0.0f;
-		if (this->textureId != 0)
-		{
-			return true;
-		}
-		if (this->filename != "")
-		{
-			april::log("loading GL texture '" + this->_getInternalName() + "'");
-			this->textureId = platformLoadOpenGL_Texture(this->filename, &this->width, &this->height);
-		}
-		else
-		{
-			april::log("creating user-defined GL texture");
-			glGenTextures(1, &this->textureId);
-			glBindTexture(GL_TEXTURE_2D, this->textureId);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			if (this->manualBuffer != NULL)
-			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->manualBuffer);
-			}
-		}
-		if (this->textureId == 0)
-		{
-			april::log("Failed to load texture: " + _getInternalName());
-			return false;
-		}
-		foreach (Texture*, it, this->dynamicLinks)
-		{
-			(*it)->load();
-		}
-		return true;
-	}
-
-	bool OpenGL_Texture::isLoaded()
-	{
-		return (this->textureId != 0);
-	}
-
-	void OpenGL_Texture::unload()
-	{
-		if (this->textureId != 0)
-		{
-			april::log("unloading GL texture '" + this->_getInternalName() + "'");
-			glDeleteTextures(1, &this->textureId);
-			this->textureId = 0;
-		}
-	}
-
 }
 
 #endif

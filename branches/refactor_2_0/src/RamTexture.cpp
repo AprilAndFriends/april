@@ -27,6 +27,10 @@ namespace april
 		{
 			this->load();
 		}
+		else
+		{
+			april::log("creating dynamic RAM texture");
+		}
 	}
 
 	RamTexture::RamTexture(int w, int h) : Texture()

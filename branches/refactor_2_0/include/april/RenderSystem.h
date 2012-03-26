@@ -49,8 +49,8 @@ namespace april
 		virtual bool create(chstr options);
 		virtual bool destroy();
 
-		virtual void reset();
 		virtual void assignWindow(Window* window) = 0;
+		virtual void reset();
 
 		HL_DEFINE_GET(hstr, name, Name);
 		HL_DEFINE_GET(harray<Texture*>, textures, Textures);
@@ -65,13 +65,14 @@ namespace april
 		HL_DEFINE_ISSET(bool, forcedDynamicLoading, ForcedDynamicLoading);
 
 		virtual float getPixelOffset() = 0;
+		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
 		virtual grect getViewport() = 0;
-		virtual void setViewport(grect rect) = 0;
-		virtual void setBlendMode(BlendMode mode) = 0;
-		virtual void setColorMode(ColorMode mode, unsigned char alpha = 255) = 0;
+		virtual void setViewport(grect value) = 0;
+
+		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
+		virtual void setTextureColorMode(ColorMode colorMode, unsigned char alpha = 255) = 0;
 		virtual void setTextureFilter(Texture::Filter textureFilter) = 0;
 		virtual void setTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
-		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
 		virtual void setTexture(Texture* texture) = 0;
 		virtual Texture* getRenderTarget() = 0;
 		virtual void setRenderTarget(Texture* texture) = 0;
@@ -81,7 +82,7 @@ namespace april
 		virtual void setFullscreen(bool fullscreen) { } // TODO - main part should be in window class
 		virtual void setResolution(int w, int h); // TODO - main part should be in window class
 
-		virtual Texture* loadTexture(chstr filename, bool dynamic = false) = 0;
+		virtual Texture* loadTexture(chstr filename, bool dynamic = false);
 		virtual Texture* createTexture(int w, int h, unsigned char* rgba) = 0;
 		virtual Texture* createTexture(int w, int h, Texture::Format format = Texture::FORMAT_RGBA, Texture::Type type = Texture::TYPE_NORMAL, Color color = APRIL_COLOR_CLEAR) = 0;
 		RamTexture* loadRamTexture(chstr filename, bool dynamic = false);
@@ -137,6 +138,8 @@ namespace april
 		DEPRECATED_ATTRIBUTE void drawColoredQuad(grect rect, Color color) { this->drawFilledRect(rect, color); }
 		DEPRECATED_ATTRIBUTE void drawTexturedQuad(grect rect, grect src) { this->drawTexturedRect(rect, src); }
 		DEPRECATED_ATTRIBUTE void drawTexturedQuad(grect rect, grect src, Color color) { this->drawTexturedRect(rect, src, color); }
+		DEPRECATED_ATTRIBUTE void setBlendMode(BlendMode blendMode) { this->setTextureBlendMode(blendMode); }
+		DEPRECATED_ATTRIBUTE void setColorMode(ColorMode colorMode, unsigned char alpha = 255) { this->setTextureColorMode(colorMode, alpha); }
 
 	protected:
 		hstr name;
@@ -151,9 +154,11 @@ namespace april
 
 		bool forcedDynamicLoading;
 		
+		virtual Texture* _createTexture(chstr filename, bool dynamic = false) = 0;
+
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);
-		hstr _findTextureFile(chstr filename);
+		hstr _findTextureFilename(chstr filename);
 
 		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;

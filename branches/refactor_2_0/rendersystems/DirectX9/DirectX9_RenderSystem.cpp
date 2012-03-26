@@ -11,6 +11,7 @@
 #ifdef _DIRECTX9
 
 #include <d3d9.h>
+#include <d3d9types.h>
 #include <d3dx9math.h>
 #include <stdio.h>
 
@@ -98,6 +99,7 @@ namespace april
 		this->colorEnabled = false;
 		this->renderTarget = NULL;
 		this->backBuffer = NULL;
+		this->activeTexture = NULL;
 		// DIRECT3D
 		this->d3d = Direct3DCreate9(D3D_SDK_VERSION);
 		if (this->d3d == NULL)
@@ -105,6 +107,7 @@ namespace april
 			this->destroy();
 			throw hl_exception("unable to create Direct3D9 object!");
 		}
+		this->d3dpp = new _D3DPRESENT_PARAMETERS_();
 		return true;
 	}
 
@@ -113,6 +116,11 @@ namespace april
 		if (!RenderSystem::destroy())
 		{
 			return false;
+		}
+		if (this->d3dpp != NULL)
+		{
+			delete this->d3dpp;
+			this->d3dpp = NULL;
 		}
 		if (this->d3dDevice != NULL)
 		{
@@ -127,31 +135,29 @@ namespace april
 		return true;
 	}
 
-	static D3DPRESENT_PARAMETERS d3dpp;
-
 	void DirectX9_RenderSystem::assignWindow(Window* window)
 	{
 		HWND hWnd = (HWND)april::window->getBackendId();
-		memset(&d3dpp, 0, sizeof(d3dpp));
-		d3dpp.Windowed = !window->isFullscreen();
-		d3dpp.BackBufferWidth = window->getWidth();
-		d3dpp.BackBufferHeight = window->getHeight();
-		d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
-		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
+		memset(this->d3dpp, 0, sizeof(*this->d3dpp));
+		this->d3dpp->Windowed = !april::window->isFullscreen();
+		this->d3dpp->BackBufferWidth = april::window->getWidth();
+		this->d3dpp->BackBufferHeight = april::window->getHeight();
+		this->d3dpp->BackBufferFormat = D3DFMT_X8R8G8B8;
+		this->d3dpp->PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 		if (this->zBufferEnabled)
 		{
-			d3dpp.EnableAutoDepthStencil = TRUE;
-			d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
+			this->d3dpp->EnableAutoDepthStencil = TRUE;
+			this->d3dpp->AutoDepthStencilFormat = D3DFMT_D16;
 		}
-		d3dpp.SwapEffect = D3DSWAPEFFECT_COPY;
-		d3dpp.hDeviceWindow = hWnd;
-		HRESULT hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
+		this->d3dpp->SwapEffect = D3DSWAPEFFECT_COPY;
+		this->d3dpp->hDeviceWindow = hWnd;
+		HRESULT hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, this->d3dpp, &d3dDevice);
 		if (hr != D3D_OK)
 		{
-			hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dpp, &d3dDevice);
+			hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, this->d3dpp, &d3dDevice);
 			if (hr != D3D_OK)
 			{
-				throw hl_exception("Unable to create Direct3D Device!");
+				throw hl_exception("unable to create Direct3D Device!");
 			}
 		}
 		// device config
@@ -183,7 +189,44 @@ namespace april
 		this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		this->setTextureFilter(this->textureFilter);
 	}
-	
+
+	harray<DisplayMode> DirectX9_RenderSystem::getSupportedDisplayModes()
+	{
+		if (this->supportedDisplayModes.size() == 0)
+		{
+			IDirect3D9* d3d = this->d3d;
+			if (this->d3d == NULL)
+			{
+				d3d = Direct3DCreate9(D3D_SDK_VERSION);
+				if (d3d == NULL)
+				{
+					throw hl_exception("unable to create Direct3D9 object!");
+				}
+			}
+			unsigned int modeCount = this->d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
+			HRESULT hr;
+			D3DDISPLAYMODE displayMode;
+			DisplayMode mode;
+			for_itert (unsigned int, i, 0, modeCount)
+			{
+				memset(&displayMode, 0, sizeof(D3DDISPLAYMODE));
+				hr = this->d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
+				if (hr == D3D_OK) 
+				{
+					mode.width = displayMode.Width;
+					mode.height = displayMode.Height;
+					mode.refreshRate = displayMode.RefreshRate;
+					this->supportedDisplayModes += mode;
+				}
+			}
+			if (this->d3d == NULL)
+			{
+				d3d->Release();
+			}
+		}
+		return this->supportedDisplayModes;
+	}
+
 	grect DirectX9_RenderSystem::getViewport()
 	{
 		D3DVIEWPORT9 viewport;
@@ -203,9 +246,9 @@ namespace april
 		this->d3dDevice->SetViewport(&viewport);
 	}
 
-	void DirectX9_RenderSystem::setBlendMode(BlendMode mode)
+	void DirectX9_RenderSystem::setTextureBlendMode(BlendMode textureBlendMode)
 	{
-		switch (mode)
+		switch (textureBlendMode)
 		{
 		case DEFAULT:
 		case ALPHA_BLEND:
@@ -240,12 +283,15 @@ namespace april
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 			break;
+		default:
+			april::log("trying to set unsupported texture blend mode!");
+			break;
 		}
 	}
 
-	void DirectX9_RenderSystem::setColorMode(ColorMode mode, unsigned char alpha)
+	void DirectX9_RenderSystem::setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
 	{
-		switch (mode)
+		switch (textureColorMode)
 		{
 		case NORMAL:
 		case MULTIPLY:
@@ -264,6 +310,9 @@ namespace april
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_BLENDDIFFUSEALPHA);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
+			break;
+		default:
+			april::log("trying to set unsupported texture color mode!");
 			break;
 		}
 	}
@@ -306,43 +355,6 @@ namespace april
 		this->textureAddressMode = textureAddressMode;
 	}
 
-	harray<DisplayMode> DirectX9_RenderSystem::getSupportedDisplayModes()
-	{
-		if (this->supportedDisplayModes.size() == 0)
-		{
-			IDirect3D9* d3d = this->d3d;
-			if (this->d3d == NULL)
-			{
-				d3d = Direct3DCreate9(D3D_SDK_VERSION);
-				if (d3d == NULL)
-				{
-					throw hl_exception("unable to create Direct3D9 object!");
-				}
-			}
-			unsigned int modeCount = this->d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
-			HRESULT hr;
-			D3DDISPLAYMODE displayMode;
-			DisplayMode mode;
-			for_itert (unsigned int, i, 0, modeCount)
-			{
-				memset(&displayMode, 0, sizeof(D3DDISPLAYMODE));
-				hr = this->d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
-				if (hr == D3D_OK) 
-				{
-					mode.width = displayMode.Width;
-					mode.height = displayMode.Height;
-					mode.refreshRate = displayMode.RefreshRate;
-					this->supportedDisplayModes += mode;
-				}
-			}
-			if (this->d3d == NULL)
-			{
-				d3d->Release();
-			}
-		}
-		return this->supportedDisplayModes;
-	}
-
 	void DirectX9_RenderSystem::setTexture(Texture* texture)
 	{
 		this->activeTexture = (DirectX9_Texture*)texture;
@@ -352,7 +364,7 @@ namespace april
 			{
 				this->activeTexture->load();
 			}
-			this->activeTexture->_resetUnusedTimer();
+			this->activeTexture->_resetUnusedTime();
 			this->d3dDevice->SetTexture(0, this->activeTexture->_getTexture());
 			Texture::Filter filter = this->activeTexture->getFilter();
 			if (this->textureFilter != filter)
@@ -429,17 +441,17 @@ namespace april
 		RenderSystem::setResolution(w, h);
 		this->backBuffer->Release();
 		this->backBuffer = NULL;
-		d3dpp.BackBufferWidth = april::window->getWidth();
-		d3dpp.BackBufferHeight = april::window->getHeight();
-		log(hsprintf("resetting device for %d x %d...", april::window->getWidth(), april::window->getHeight()));
-		HRESULT hr = this->d3dDevice->Reset(&d3dpp);
+		this->d3dpp->BackBufferWidth = april::window->getWidth();
+		this->d3dpp->BackBufferHeight = april::window->getHeight();
+		april::log(hsprintf("resetting device for %d x %d...", april::window->getWidth(), april::window->getHeight()));
+		HRESULT hr = this->d3dDevice->Reset(this->d3dpp);
 		if (hr == D3DERR_DRIVERINTERNALERROR)
 		{
 			throw hl_exception("unable to reset Direct3D device, Driver Internal Error!");
 		}
 		else if (hr == D3DERR_OUTOFVIDEOMEMORY)
 		{
-			throw hl_exception("unable to reset Direct3D device, Out of Video Memory!");
+			throw hl_exception("unable to reset Direct3D device, out of video memory!");
 		}
 		else if (hr != D3D_OK)
 		{
@@ -453,28 +465,9 @@ namespace april
 		this->d3dDevice->BeginScene();
 	}
 
-	Texture* DirectX9_RenderSystem::loadTexture(chstr filename, bool dynamic)
+	Texture* DirectX9_RenderSystem::_createTexture(chstr filename, bool dynamic)
 	{
-		hstr name = this->_findTextureFile(filename);
-		if (name == "")
-		{
-			return NULL;
-		}
-		if (this->forcedDynamicLoading)
-		{
-			dynamic = true;
-		}
-		if (dynamic)
-		{
-			april::log("creating dynamic DX9 texture '" + name + "'");
-		}
-		DirectX9_Texture* t = new DirectX9_Texture(name, dynamic);
-		if (!dynamic && !t->load())
-		{
-			delete t;
-			return NULL;
-		}
-		return t;
+		return new DirectX9_Texture(filename, dynamic);
 	}
 
 	Texture* DirectX9_RenderSystem::createTexture(int w, int h, unsigned char* rgba)
@@ -736,7 +729,7 @@ namespace april
 				if (hr == D3DERR_DEVICENOTRESET)
 				{
 					april::log("Resetting device...");
-					hr = this->d3dDevice->Reset(&d3dpp);
+					hr = this->d3dDevice->Reset(this->d3dpp);
 					if (hr == D3D_OK)
 					{
 						break;

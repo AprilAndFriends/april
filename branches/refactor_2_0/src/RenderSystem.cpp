@@ -115,9 +115,9 @@ namespace april
 		april::window->_setResolution(w, h);
 	}
 	
-	RamTexture* RenderSystem::loadRamTexture(chstr filename, bool dynamic)
+	Texture* RenderSystem::loadTexture(chstr filename, bool dynamic)
 	{
-		hstr name = this->_findTextureFile(filename);
+		hstr name = this->_findTextureFilename(filename);
 		if (name == "")
 		{
 			return NULL;
@@ -126,17 +126,33 @@ namespace april
 		{
 			dynamic = true;
 		}
-		if (dynamic)
+		Texture* texture = this->_createTexture(name, dynamic);
+		if (!texture->isDynamic() && !texture->isLoaded())
 		{
-			april::log("creating dynamic RAM texture '" + name + "'");
-		}
-		RamTexture* t = new RamTexture(name, dynamic);
-		if (!dynamic && !t->load())
-		{
-			delete t;
+			delete texture;
 			return NULL;
 		}
-		return t;
+		return texture;
+	}
+
+	RamTexture* RenderSystem::loadRamTexture(chstr filename, bool dynamic)
+	{
+		hstr name = this->_findTextureFilename(filename);
+		if (name == "")
+		{
+			return NULL;
+		}
+		if (this->forcedDynamicLoading)
+		{
+			dynamic = true;
+		}
+		RamTexture* texture = new RamTexture(name, dynamic);
+		if (!dynamic && !texture->isLoaded())
+		{
+			delete texture;
+			return NULL;
+		}
+		return texture;
 	}
 	
 	void RenderSystem::unloadTextures()
@@ -231,9 +247,8 @@ namespace april
 		april::window->presentFrame();
 	}
 	
-	hstr RenderSystem::_findTextureFile(chstr _filename)
+	hstr RenderSystem::_findTextureFilename(chstr filename)
 	{
-		hstr filename = _filename;
 		if (hresource::exists(filename))
 		{
 			return filename;
@@ -251,10 +266,10 @@ namespace april
 		int index = filename.rfind(".");
 		if (index >= 0)
 		{
-			filename = filename.substr(0, index);
+			hstr noExtensionName = filename.substr(0, index);
 			foreach (hstr, it, extensions)
 			{
-				name = filename + (*it);
+				name = noExtensionName + (*it);
 				if (hresource::exists(name))
 				{
 					return name;
