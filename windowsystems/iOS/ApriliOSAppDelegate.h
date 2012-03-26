@@ -33,13 +33,13 @@ typedef void*(*AprilRemoteNotificationsHandler_t)(void *data);
 
 @interface ApriliOSAppDelegate : NSObject<UIApplicationDelegate>
 {
-	UIWindow *window;
+	UIWindow *uiwnd;
 	AprilViewController *viewController;
 	AprilRemoteNotificationsHandler_t onPushRegistrationSuccess;
 	AprilRemoteNotificationsHandler_t onPushRegistrationFailure;
 }
 
-@property (nonatomic, retain) UIWindow *window;
+@property (nonatomic, retain) UIWindow *uiwnd;
 @property (nonatomic, retain) AprilViewController *viewController;
 @property (nonatomic, assign) AprilRemoteNotificationsHandler_t onPushRegistrationSuccess;
 @property (nonatomic, assign) AprilRemoteNotificationsHandler_t onPushRegistrationFailure;
