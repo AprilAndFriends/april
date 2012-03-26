@@ -11,7 +11,6 @@
 /// @section DESCRIPTION
 /// 
 /// Defines all functions used in aprilui.
-
 #import "ApriliOSAppDelegate.h"
 #import "main.h"
 #import "AprilViewController.h"
@@ -22,7 +21,7 @@
 
 @implementation ApriliOSAppDelegate
 
-@synthesize window;
+@synthesize uiwnd;
 @synthesize viewController;
 @synthesize onPushRegistrationSuccess;
 @synthesize onPushRegistrationFailure;
@@ -36,17 +35,17 @@
 	// create a window.
 	// early creation so Default.png can be displayed while we're waiting for 
 	// game initialization
-	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    window.autoresizesSubviews = YES;
+	uiwnd = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    uiwnd.autoresizesSubviews = YES;
 
 	// viewcontroller will automatically add imageview
 	viewController = [[AprilViewController alloc] init];
-    [window addSubview:viewController.view];
+    [uiwnd addSubview:viewController.view];
 
 	// set window color
-	[window setBackgroundColor:[UIColor blackColor]];
+	[uiwnd setBackgroundColor:[UIColor blackColor]];
 	// display the window
-	[window makeKeyAndVisible];
+	[uiwnd makeKeyAndVisible];
 	
 //	[(EAGLView*)viewController.view beginRender];
 
@@ -157,6 +156,7 @@
 	// from resigning activity
 	[self applicationWillResignActive:application];
 }
+
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     if (![[viewController.view subviews] count]) 
@@ -164,26 +164,21 @@
         return;
     }
 	
-	
 	if ([viewController.view isKindOfClass:[EAGLView class]]) 
 	{
 		EAGLView *glview = (EAGLView*)viewController.view;
 		
 		[glview applicationDidBecomeActive:application];
 		[glview startAnimation];
-		
 	}
-
 }
+
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
 	// for our purposes, we don't need to differentiate entering foreground
 	// from becoming active
 	[self applicationDidBecomeActive:application];
 }
-
-
-
 ///////////////////////////
 // utils and handlers for apps 
 // that need push notifications
@@ -195,12 +190,12 @@
 	if(onPushRegistrationSuccess)
 		onPushRegistrationSuccess(deviceToken);
 }
+
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
 	if(onPushRegistrationFailure)
 		onPushRegistrationFailure(error);
 }
-
 
 - (void)dealloc
 {

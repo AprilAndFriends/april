@@ -20,7 +20,7 @@
 #include "april.h"
 
 static ApriliOSAppDelegate *appDelegate;
-static UIWindow *window = 0;
+static UIWindow *uiwnd = 0;
 EAGLView *glview = 0;
 static AprilViewController *viewcontroller;
 
@@ -85,7 +85,7 @@ namespace april
 		mMultiTouchActive = false;
 		appDelegate = ((ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate]);
 		viewcontroller = [appDelegate viewController];
-		window = [appDelegate window];
+		uiwnd = [appDelegate window];
 		if(fullscreen)
 			[UIApplication sharedApplication].statusBarHidden = YES;
 		else
@@ -181,11 +181,11 @@ namespace april
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
 		{
-			return window.bounds.size.height * caeagllayer.contentsScale;
+			return uiwnd.bounds.size.height * caeagllayer.contentsScale;
 		}
 #endif
 		
-        return window.bounds.size.height;
+        return uiwnd.bounds.size.height;
     }
     int iOSWindow::getHeight()
     {
@@ -194,10 +194,10 @@ namespace april
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
 		{
-			return window.bounds.size.width * caeagllayer.contentsScale;
+			return uiwnd.bounds.size.width * caeagllayer.contentsScale;
 		}
 #endif
-        return window.bounds.size.width;
+        return uiwnd.bounds.size.width;
     }
 
     void iOSWindow::setWindowTitle(chstr title)
