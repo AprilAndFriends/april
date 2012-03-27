@@ -85,11 +85,8 @@ namespace april
 		mMultiTouchActive = false;
 		appDelegate = ((ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate]);
 		viewcontroller = [appDelegate viewController];
-		uiwnd = [appDelegate window];
-		if(fullscreen)
-			[UIApplication sharedApplication].statusBarHidden = YES;
-		else
-			[UIApplication sharedApplication].statusBarHidden = NO;
+		uiwnd = [appDelegate uiwnd];
+		[UIApplication sharedApplication].statusBarHidden = fullscreen ? YES : NO;
 		mFullscreen = true; // iOS apps are always fullscreen
 
 		mFirstFrameDrawn = false; // show window after drawing first frame
