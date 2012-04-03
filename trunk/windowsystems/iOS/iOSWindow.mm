@@ -22,7 +22,7 @@
 static ApriliOSAppDelegate *appDelegate;
 static UIWindow *uiwnd = 0;
 EAGLView *glview = 0;
-static AprilViewController *viewcontroller;
+static AprilViewController *viewcontroller = 0;
 
 extern bool g_wnd_rotating;
 
@@ -222,7 +222,7 @@ namespace april
 
 	void* iOSWindow::getIDFromBackend()
 	{
-		return window;
+		return viewcontroller;
 	}
 
 	void iOSWindow::doEvents()
