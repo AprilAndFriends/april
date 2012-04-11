@@ -35,7 +35,7 @@
 		C9313EB914FE64CE003BC7AB /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9313EB814FE64CE003BC7AB /* SDL.framework */; };
 		C9391E4B14FCCA5100C14F41 /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9391E4A14FCCA5100C14F41 /* TextureManager.cpp */; };
 		C9391E4C14FCCA5100C14F41 /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9391E4A14FCCA5100C14F41 /* TextureManager.cpp */; };
-		C9391E4E14FCCA7300C14F41 /* TextureManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C9391E4D14FCCA7300C14F41 /* TextureManager.h */; };
+		C9391E4E14FCCA7300C14F41 /* TextureManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C9391E4D14FCCA7300C14F41 /* TextureManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9A8520D134AF97000B455BE /* ImageSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9A8520C134AF97000B455BE /* ImageSource.cpp */; };
 		C9C04F8B14BB106F005BD333 /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
 		C9C04F8C14BB106F005BD333 /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
@@ -47,8 +47,8 @@
 		C9E6097E150518B400EB077F /* april.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9E6097C150518B400EB077F /* april.cpp */; };
 		C9E60982150518D000EB077F /* main_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = C9E60980150518D000EB077F /* main_mac.mm */; };
 		C9E6098B150518F200EB077F /* main_ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = C9E60989150518F200EB077F /* main_ios.mm */; };
-		C9E6098F1505191800EB077F /* april.h in Headers */ = {isa = PBXBuildFile; fileRef = C9E6098D1505191800EB077F /* april.h */; };
-		C9E609901505191800EB077F /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = C9E6098E1505191800EB077F /* Platform.h */; };
+		C9E6098F1505191800EB077F /* april.h in Headers */ = {isa = PBXBuildFile; fileRef = C9E6098D1505191800EB077F /* april.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C9E609901505191800EB077F /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = C9E6098E1505191800EB077F /* Platform.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9E6099215051B5100EB077F /* platform_mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = C9E6099115051B5100EB077F /* platform_mac.mm */; };
 		C9E6099415051B5700EB077F /* platform_ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = C9E6099315051B5700EB077F /* platform_ios.mm */; };
 		D1981C42140F82B00057C3AF /* OpenGL_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520C12E470B200E958D8 /* OpenGL_RenderSystem.cpp */; };
@@ -333,6 +333,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9E6098F1505191800EB077F /* april.h in Headers */,
+				C9E609901505191800EB077F /* Platform.h in Headers */,
+				C9391E4E14FCCA7300C14F41 /* TextureManager.h in Headers */,
 				7F42F7A611EB178C00B1C1DF /* ImageSource.h in Headers */,
 				7F42F7A711EB178C00B1C1DF /* Keys.h in Headers */,
 				7F42F7A811EB178C00B1C1DF /* RenderSystem.h in Headers */,
@@ -353,9 +356,6 @@
 				D1981C6B140F85350057C3AF /* iOSWindow.h in Headers */,
 				D1981C6D140F85350057C3AF /* PVRTexture.h in Headers */,
 				D1981C6F140F85350057C3AF /* WBImage.h in Headers */,
-				C9391E4E14FCCA7300C14F41 /* TextureManager.h in Headers */,
-				C9E6098F1505191800EB077F /* april.h in Headers */,
-				C9E609901505191800EB077F /* Platform.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
