@@ -38,6 +38,7 @@ namespace april
 	{
 	protected:
 		static Window* mSingleton;
+		static void (*msLaunchCallback)();
 	public:
 		// data types
 		static Window* getSingleton() { return mSingleton; };
@@ -98,6 +99,11 @@ namespace april
 		
 		// simple setters
 		void setRenderSystem(RenderSystem* rs) { mRenderSystem = rs; }
+		// the following functions should be temporary, it was added because I needed access to
+		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
+		static void setLaunchCallback(void (*callback)()) { msLaunchCallback = callback; }
+		static void handleLaunchCallback();
+		
 		
 		void setUpdateCallback(bool (*callback)(float));
 		void setMouseCallbacks(void (*mouse_dn)(float, float, int),
@@ -158,6 +164,7 @@ namespace april
 		virtual void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
 		virtual bool handleQuitRequest(bool can_reject);
 		virtual void handleFocusEvent(bool has_focus);
+		
 		bool handleURL(chstr url);
 		virtual bool performUpdate(float time_increase);
 		void handleLowMemoryWarning();
