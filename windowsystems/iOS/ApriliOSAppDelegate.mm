@@ -44,27 +44,12 @@
 
 	// set window color
 	[uiwnd setBackgroundColor:[UIColor blackColor]];
+	
+	april::Window::handleLaunchCallback();
+	
 	// display the window
 	[uiwnd makeKeyAndVisible];
-	
-//	[(EAGLView*)viewController.view beginRender];
-
-	//glClearColor(1, 1, 0, 1);
-	//glClear(GL_COLOR_BUFFER_BIT);
-
-/*
-	april::Texture* tex = april::rendersys->loadTexture("data/loading_screen_iphone_hd.png");
-	april::rendersys->setTexture(tex);
-	gmat4 ident; ident.setIdentity();
-	april::rendersys->setProjectionMatrix(ident);
-	april::rendersys->setModelviewMatrix(ident);
-	
-	april::rendersys->drawTexturedQuad(grect(-1,1,2,-2), grect(0,0,0.9375f,0.625f));
-	*/
-	//[(EAGLView*)viewController.view swapBuffers];
-	//delete tex;
-
-    //////////
+	//////////
 	// thanks to Kyle Poole for this trick
     // also used in latest SDL
     // quote:

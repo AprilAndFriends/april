@@ -152,6 +152,7 @@ namespace april
 {
 	Window* window = NULL;
 	Window* Window::mSingleton = NULL;
+	void (*Window::msLaunchCallback)() = NULL;
 
 	Window::Window()
 	{
@@ -178,6 +179,11 @@ namespace april
 	{
 	}
 
+	void Window::handleLaunchCallback()
+	{
+		if (msLaunchCallback != NULL) msLaunchCallback();
+	}
+	
 	void Window::setUpdateCallback(bool (*callback)(float))
 	{
 		mUpdateCallback = callback;
