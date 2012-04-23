@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.5
+/// @version 1.53
 /// 
 /// @section LICENSE
 /// 
@@ -57,7 +57,18 @@ namespace april
 	extern void* javaVM;
 	extern jobject jActivity;
 	extern gvec2 androidResolution;
+	extern void (*dialogCallback)(MessageBoxButton);
 }
+
+#define _JARGS(returnType, arguments) "(" arguments ")" returnType
+#define _JARR(str) "[" str
+#define _JOBJ "Ljava/lang/Object;"
+#define _JSTR "Ljava/lang/String;"
+#define _JINT "I"
+#define _JBOOL "Z"
+#define _JFLOAT "F"
+#define _JVOID "V"
+
 #endif
 
 
@@ -566,6 +577,58 @@ namespace april
 			return AMSGBTN_CANCEL;
 		}
 		return AMSGBTN_OK;
+#elif _ANDROID
+		// Java Environment
+		JavaVM* vm = (JavaVM*)april::javaVM;
+		JNIEnv* env;
+		vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6);
+		// determine ok/yes/no/cancel texts
+		hstr ok;
+		hstr yes;
+		hstr no;
+		hstr cancel;
+		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
+		{
+			ok = customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK");
+			cancel = customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel");
+		}
+		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL))
+		{
+			yes = customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes");
+			no = customButtonTitles.try_get_by_key(AMSGBTN_NO, "No");
+			cancel = customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel");
+		}
+		else if (buttonMask & AMSGBTN_OK)
+		{
+			ok = customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK");
+		}
+		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
+		{
+			yes = customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes");
+			no = customButtonTitles.try_get_by_key(AMSGBTN_NO, "No");
+		}
+		// create Java strings from hstr
+		jstring jTitle = (title != "" ? env->NewStringUTF(title.c_str()) : NULL);
+		jstring jText = (text != "" ? env->NewStringUTF(text.c_str()) : NULL);
+		jstring jOk = (ok != "" ? env->NewStringUTF(ok.c_str()) : NULL);
+		jstring jYes = (yes != "" ? env->NewStringUTF(yes.c_str()) : NULL);
+		jstring jNo = (no != "" ? env->NewStringUTF(no.c_str()) : NULL);
+		jstring jCancel = (cancel != "" ? env->NewStringUTF(cancel.c_str()) : NULL);
+		jint jIconId = 0;
+		if ((style & AMSGSTYLE_INFORMATION) || (style & AMSGSTYLE_QUESTION))
+		{
+			jIconId = 1;
+		}
+		else if ((style & AMSGSTYLE_WARNING) || (style & AMSGSTYLE_CRITICAL))
+		{
+			jIconId = 2;
+		}
+		april::dialogCallback = callback;
+		// call Java AprilJNI
+		jclass aprilJNI = env->FindClass("net/sourceforge/april/AprilJNI");
+		jmethodID methodShowMessageBox = env->GetStaticMethodID(aprilJNI, "showMessageBox", _JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR _JSTR _JINT));
+		env->CallStaticVoidMethod(aprilJNI, methodShowMessageBox, jTitle, jText, jOk, jYes, jNo, jCancel, jIconId);
+		return AMSGBTN_OK;
 #elif TARGET_OS_MAC && !TARGET_OS_IPHONE
 		// fugly implementation of showing messagebox on mac os
 		// ideas:
@@ -574,12 +637,12 @@ namespace april
 		// * use constants for button captions
 		// * use an array with constants for button captions etc
 		
-		NSString *buttons[] = {@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+		NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, AMSGBTN_NULL, AMSGBTN_NULL};
         
 		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
             
             buttonTypes[0] = AMSGBTN_OK;
@@ -611,7 +674,7 @@ namespace april
 		}
 		else if (buttonMask & AMSGBTN_OK)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
             buttonTypes[0] = AMSGBTN_OK;
 		}
 		else if (buttonMask & AMSGBTN_YES)
@@ -650,12 +713,12 @@ namespace april
         
 #elif TARGET_OS_IPHONE
 
-        NSString *buttons[] = {@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+        NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, AMSGBTN_NULL, AMSGBTN_NULL};
         
 		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
             
             buttonTypes[1] = AMSGBTN_OK;
@@ -686,7 +749,7 @@ namespace april
 		}
 		else if (buttonMask & AMSGBTN_OK)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
             buttonTypes[0] = AMSGBTN_OK;
 		}
 		else if (buttonMask & AMSGBTN_YES)

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.52
+/// @version 1.53
 /// 
 /// @section LICENSE
 /// 
@@ -23,6 +23,7 @@ namespace april
 	void* javaVM = NULL;
 	jobject jActivity = NULL;
 	gvec2 androidResolution;
+	void (*dialogCallback)(MessageBoxButton) = NULL;
 	static gvec2 cursorPosition;
 	static april::Timer globalTimer;
 	static float lastTime = 0.0f;
@@ -262,6 +263,17 @@ namespace april
 	Window::DeviceType AndroidJNIWindow::getDeviceType()
 	{
 		return Window::DEVICE_ANDROID_PHONE;
+	}
+
+	SystemInfo& getSystemInfo()
+	{
+		static SystemInfo info;
+		if (info.locale == "")
+		{
+			info.ram = 256;
+			info.locale = "en";
+		}
+		return info;
 	}
 
 }
