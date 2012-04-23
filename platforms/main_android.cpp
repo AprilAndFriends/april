@@ -34,6 +34,7 @@ namespace april
 	extern void* javaVM;
 	extern jobject jActivity;
 	extern gvec2 androidResolution;
+	extern void (*dialogCallback)(MessageBoxButton);
 
 	hstr _jstringToHstr(JNIEnv* env, jstring string)
 	{
@@ -192,6 +193,38 @@ namespace april
 #endif
 	}
 
+	void JNICALL _JNI_onDialogOk(JNIEnv* env, jclass classe)
+	{
+		if (dialogCallback != NULL)
+		{
+			(*dialogCallback)(AMSGBTN_OK);
+		}
+	}
+
+	void JNICALL _JNI_onDialogYes(JNIEnv* env, jclass classe)
+	{
+		if (dialogCallback != NULL)
+		{
+			(*dialogCallback)(AMSGBTN_YES);
+		}
+	}
+
+	void JNICALL _JNI_onDialogNo(JNIEnv* env, jclass classe)
+	{
+		if (dialogCallback != NULL)
+		{
+			(*dialogCallback)(AMSGBTN_NO);
+		}
+	}
+
+	void JNICALL _JNI_onDialogCancel(JNIEnv* env, jclass classe)
+	{
+		if (dialogCallback != NULL)
+		{
+			(*dialogCallback)(AMSGBTN_CANCEL);
+		}
+	}
+
 #define _JARGS(returnType, arguments) "(" arguments ")" returnType
 #define _JARR(str) "[" str
 #define _JOBJ "Ljava/lang/Object;"
@@ -201,7 +234,7 @@ namespace april
 #define _JFLOAT "F"
 #define _JVOID "V"
 
-#define METHOD_COUNT 18 // make sure this fits
+#define METHOD_COUNT 22 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"setVariables",		_JARGS(_JVOID, _JOBJ _JSTR _JSTR _JSTR _JSTR _JSTR),	(void*)&april::_JNI_setVariables		},
@@ -221,7 +254,11 @@ namespace april
 		{"activityOnPause",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnPause		},
 		{"activityOnStop",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnStop		},
 		{"activityOnDestroy",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnDestroy	},
-		{"activityOnRestart",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnRestart	}
+		{"activityOnRestart",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnRestart	},
+		{"onDialogOk",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogOk			},
+		{"onDialogYes",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogYes			},
+		{"onDialogNo",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogNo			},
+		{"onDialogCancel",		_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogCancel		}
 	};
 	
 	jint JNI_OnLoad(JavaVM* vm, void* reserved)
