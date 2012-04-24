@@ -236,23 +236,15 @@ class AprilGLSurfaceView extends GLSurfaceView
 					switch (action & MotionEvent.ACTION_MASK)
 					{
 					case MotionEvent.ACTION_DOWN:
-					//case MotionEvent.ACTION_POINTER_DOWN: // handles multi-touch
+					case MotionEvent.ACTION_POINTER_DOWN: // handles multi-touch
 						AprilJNI.onTouch(0, event.getX(index), event.getY(index), index);
 						break;
 					case MotionEvent.ACTION_UP:
-					//case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
+					case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
 						AprilJNI.onTouch(1, event.getX(index), event.getY(index), index);
 						break;
 					case MotionEvent.ACTION_MOVE:
 						AprilJNI.onTouch(2, event.getX(index), event.getY(index), index);
-						break;
-					//case MotionEvent.ACTION_DOWN:
-					case MotionEvent.ACTION_POINTER_DOWN: // handles multi-touch
-						AprilJNI.onTouch(0, event.getX(index), event.getY(index), index);
-						break;
-					//case MotionEvent.ACTION_UP:
-					case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
-						AprilJNI.onTouch(1, event.getX(index), event.getY(index), index);
 						break;
 					}
 				}
