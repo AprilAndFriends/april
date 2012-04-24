@@ -15,6 +15,7 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
+#include "AndroidJNIWindow.h"
 #include "april.h"
 #include "Keys.h"
 #include "main.h"
@@ -98,21 +99,14 @@ namespace april
 		return true;
 	}
 
-	void JNICALL _JNI_onMouseDown(JNIEnv* env, jclass classe, jfloat x, jfloat y, jint button)
+	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
 	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_DOWN, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT));
+		if (april::window != NULL)
+		{
+			((april::AndroidJNIWindow*)april::window)->handleTouchEvent((april::Window::MouseEventType)type, (float)x, (float)y, (int)index);
+		}
 	}
 
-	void JNICALL _JNI_onMouseUp(JNIEnv* env, jclass classe, jfloat x, jfloat y, jint button)
-	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_UP, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT));
-	}
-
-	void JNICALL _JNI_onMouseMove(JNIEnv* env, jclass classe, jfloat x, jfloat y)
-	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_MOVE, (float)x, (float)y, april::Window::AMOUSEBTN_LEFT));
-	}
-	
 	bool JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
 		PROTECTED_RENDERSYS_GET_WINDOW(handleKeyEvent(april::Window::AKEYEVT_DOWN, (KeySym)(int)keyCode, (unsigned int)charCode));
@@ -234,16 +228,14 @@ namespace april
 #define _JFLOAT "F"
 #define _JVOID "V"
 
-#define METHOD_COUNT 22 // make sure this fits
+#define METHOD_COUNT 20 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"setVariables",		_JARGS(_JVOID, _JOBJ _JSTR _JSTR _JSTR _JSTR _JSTR),	(void*)&april::_JNI_setVariables		},
 		{"init",				_JARGS(_JVOID, _JARR(_JSTR) _JINT _JINT),				(void*)&april::_JNI_init				},
 		{"destroy",				_JARGS(_JVOID, ),										(void*)&april::_JNI_destroy				},
 		{"render",				_JARGS(_JBOOL, ),										(void*)&april::_JNI_render				},
-		{"onMouseDown",			_JARGS(_JVOID, _JFLOAT _JFLOAT _JINT),					(void*)&april::_JNI_onMouseDown			},
-		{"onMouseUp",			_JARGS(_JVOID, _JFLOAT _JFLOAT _JINT),					(void*)&april::_JNI_onMouseUp			},
-		{"onMouseMove",			_JARGS(_JVOID, _JFLOAT _JFLOAT),						(void*)&april::_JNI_onMouseMove			},
+		{"onTouch",				_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),			(void*)&april::_JNI_onTouch				},
 		{"onKeyDown",			_JARGS(_JBOOL, _JINT _JINT),							(bool*)&april::_JNI_onKeyDown			},
 		{"onKeyUp",				_JARGS(_JBOOL, _JINT),									(bool*)&april::_JNI_onKeyUp				},
 		{"onLowMemory",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onLowMemory			},

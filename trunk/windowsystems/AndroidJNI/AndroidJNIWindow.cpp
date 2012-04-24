@@ -38,7 +38,7 @@ namespace april
 		mHeight = h;
 		mRunning = true;
 		mActive = true;
-		mAlreadyTouched = false;
+		mMultiTouchActive = false;
 		mFullscreen = fullscreen;
 		//mTouchEnabled = false;
 		mTitle = title;
@@ -206,53 +206,79 @@ namespace april
 		jmethodID methodHideSoftInput = env->GetMethodID(classInputMethodManager, "hideSoftInputFromWindow", "(Landroid/os/IBinder;I)Z");
 		env->CallBooleanMethod(inputMethodManager, methodHideSoftInput, binder, 0);
 	}
+	
+	void AndroidJNIWindow::handleTouchEvent(MouseEventType type, float x, float y, int index)
+	{
+		switch (type)
+		{
+		case AMOUSEEVT_DOWN:
+#ifdef _DEBUG
+			april::log("    - X-DOWN: " + hstr(index) + " " + hstr(mTouches.size()));
+#endif
+			mTouches += gvec2(x, y);
+			break;
+		case AMOUSEEVT_UP:
+#ifdef _DEBUG
+			april::log("    - X-UP: " + hstr(index) + " " + hstr(mTouches.size()));
+#endif
+			mTouches.remove_at(index);
+			break;
+		case AMOUSEEVT_MOVE:
+#ifdef _DEBUG
+			april::log("    - X-MOVE: " + hstr(index) + " " + hstr(mTouches.size()));
+#endif
+			mTouches[index].set(x, y);
+			break;
+		}
+#ifdef _DEBUG
+		april::log("    - TOUCH OK");
+#endif
+		if (mMultiTouchActive || mTouches.size() > 1)
+		{
+			mMultiTouchActive = (mTouches.size() > 0);
+#ifdef _DEBUG
+			april::log("    - MULTI: " + hstr((int)mMultiTouchActive));
+#endif
+			mTouchEvents += TouchInputEvent(mTouches);
+		}
+		else
+		{
+			this->handleMouseEvent(type, x, y, AMOUSEBTN_LEFT);
+		}
+	}
 
 	void AndroidJNIWindow::handleMouseEvent(MouseEventType type, float x, float y, MouseButton button)
 	{
-		//* // TODO - potential multitouch handling
-#ifdef _DEBUG
-		april::log("    - MOUSE EVENT -> " + hstr(type == AMOUSEEVT_UP ? "UP" : (type == AMOUSEEVT_DOWN ? "DOWN" : "MOV")));
-#endif
-		if (type == AMOUSEEVT_DOWN && mAlreadyTouched)
+		switch (type)
 		{
-#ifdef _DEBUG
-			april::log("    - TOUCH " + hstr(x) + " " + hstr(y));
-#endif
-			mAlreadyTouched = false;
-			mMouseEvents += MouseInputEvent(AMOUSEEVT_UP, x, y, button);
-			harray<gvec2> touches;
-			touches += cursorPosition;
-			touches += gvec2(x, y);
-			mTouchEvents += TouchInputEvent(touches);
-		}
-		else if (type == AMOUSEEVT_DOWN)
-		{
+		case AMOUSEEVT_DOWN:
 #ifdef _DEBUG
 			april::log("    - DOWN " + hstr(x) + " " + hstr(y));
 #endif
-			mAlreadyTouched = true;
 			mMouseEvents += MouseInputEvent(type, x, y, button);
-		}
-		else if (type == AMOUSEEVT_MOVE)
-		{
+			break;
+		case AMOUSEEVT_UP:
+#ifdef _DEBUG
+			april::log("    - UP " + hstr(x) + " " + hstr(y));
+#endif
+			mMouseEvents += MouseInputEvent(type, x, y, button);
+			break;
+		case AMOUSEEVT_MOVE:
 #ifdef _DEBUG
 			april::log("    - MOV " + hstr(x) + " " + hstr(y));
 #endif
 			mMouseEvents += MouseInputEvent(type, x, y, button);
+			break;
+		}
+		if (type == AMOUSEEVT_DOWN)
+		{
+		}
+		else if (type == AMOUSEEVT_MOVE)
+		{
 		}
 		else if (type == AMOUSEEVT_UP)
 		{
-			if (mAlreadyTouched)
-			{
-				mAlreadyTouched = false;
-				mMouseEvents += MouseInputEvent(type, x, y, button);
-#ifdef _DEBUG
-				april::log("    - UP " + hstr(x) + " " + hstr(y));
-#endif
-			}
 		}
-		//*/
-		//mMouseEvents += MouseInputEvent(type, x, y, button);
 	}
 
 	void AndroidJNIWindow::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
