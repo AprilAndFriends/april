@@ -89,20 +89,10 @@ namespace april
 		void* getIDFromBackend();
 		void doEvents();
 		
-		// event handlers
-		//void triggerKeyEvent(bool down, unsigned int keycode);
-		//void triggerCharEvent(unsigned int chr);
-		
-		//void triggerMouseUpEvent(int button);
-		//void triggerMouseDownEvent(int button);
-		//void triggerMouseMoveEvent();
-		//bool triggerQuitEvent();
-		//void triggerFocusCallback(bool focused);
-		
-		//void triggerTouchscreenCallback(bool enabled);
-		
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
+		void handleTouchEvent(MouseEventType type, float x, float y, int index);
+
 		void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
 		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
 		
@@ -112,8 +102,8 @@ namespace april
 		float mWidth;
 		float mHeight;
 		bool mActive;
-		bool mAlreadyTouched;
-		//bool mRunning;
+		bool mMultiTouchActive;
+		harray<gvec2> mTouches;
 		harray<MouseInputEvent> mMouseEvents;
 		harray<KeyInputEvent> mKeyEvents;
 		harray<TouchInputEvent> mTouchEvents;

@@ -35,9 +35,10 @@ class AprilJNI
 	public static native void init(String[] args, int width, int height);
 	public static native boolean render();
 	public static native void destroy();
-	public static native void onMouseDown(float x, float y, int button);
-	public static native void onMouseUp(float x, float y, int button);
-	public static native void onMouseMove(float x, float y);
+						public static native void onMouseDown(float x, float y, int button);
+						public static native void onMouseUp(float x, float y, int button);
+						public static native void onMouseMove(float x, float y);
+	public static native void onTouch(int type, float x, float y, int index);
 	public static native boolean onKeyDown(int keyCode, int charCode);
 	public static native boolean onKeyUp(int keyCode);
 	public static native void onLowMemory();
@@ -231,23 +232,27 @@ class AprilGLSurfaceView extends GLSurfaceView
 				public void run()
 				{
 					final int action = event.getAction();
+					final int index = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;
 					switch (action & MotionEvent.ACTION_MASK)
 					{
 					case MotionEvent.ACTION_DOWN:
-						AprilJNI.onMouseDown(event.getX(), event.getY(), 0);
+					//case MotionEvent.ACTION_POINTER_DOWN: // handles multi-touch
+						AprilJNI.onTouch(0, event.getX(index), event.getY(index), index);
 						break;
 					case MotionEvent.ACTION_UP:
-						AprilJNI.onMouseUp(event.getX(), event.getY(), 0);
+					//case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
+						AprilJNI.onTouch(1, event.getX(index), event.getY(index), index);
 						break;
 					case MotionEvent.ACTION_MOVE:
-						AprilJNI.onMouseMove(event.getX(), event.getY());
+						AprilJNI.onTouch(2, event.getX(index), event.getY(index), index);
 						break;
-					// this part should handle multi touch properly
-					case MotionEvent.ACTION_POINTER_DOWN:
-						AprilJNI.onMouseDown(event.getX(), event.getY(), 0);
+					//case MotionEvent.ACTION_DOWN:
+					case MotionEvent.ACTION_POINTER_DOWN: // handles multi-touch
+						AprilJNI.onTouch(0, event.getX(index), event.getY(index), index);
 						break;
-					case MotionEvent.ACTION_POINTER_UP:
-						AprilJNI.onMouseUp(event.getX(), event.getY(), 0);
+					//case MotionEvent.ACTION_UP:
+					case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
+						AprilJNI.onTouch(1, event.getX(index), event.getY(index), index);
 						break;
 					}
 				}
