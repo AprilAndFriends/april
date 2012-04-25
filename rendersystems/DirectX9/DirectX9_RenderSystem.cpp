@@ -427,18 +427,18 @@ namespace april
 		img->h = desc.Height;
 		img->bpp = bpp;
 		img->format = (bpp == 4 ? AT_RGBA : AT_RGB);
-		img->data = (unsigned char*)malloc(img->w * img->h * 4);
+		img->data = (unsigned char*)malloc(img->w * img->h * bpp);
 		unsigned char* p = img->data;
 		unsigned char* src = (unsigned char*)rect.pBits;
 		int x;
-		memset(p, 255, img->w * img->h * 4 * sizeof(unsigned char));
+		memset(p, 255, img->w * img->h * bpp * sizeof(unsigned char));
 		for_iter (y, 0, img->h)
 		{
-			for_iterx_step (x, 0, img->w * bpp, bpp)
+			for (x = 0; x < img->w; x++, p += bpp)
 			{
-				p[x] = src[x + 2];
-				p[x + 1] = src[x + 1];
-				p[x + 2] = src[x];
+				p[0] = src[x * bpp + 2];
+				p[1] = src[x * bpp + 1];
+				p[2] = src[x * bpp];
 			}
 			src += rect.Pitch;
 		}

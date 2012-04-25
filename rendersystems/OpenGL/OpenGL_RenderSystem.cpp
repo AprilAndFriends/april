@@ -83,12 +83,12 @@ namespace april
 	int gl_render_ops[]=
 	{
 		0,
-		GL_TRIANGLES,      // ROP_TRIANGLE_LIST
+		GL_TRIANGLES,	  // ROP_TRIANGLE_LIST
 		GL_TRIANGLE_STRIP, // ROP_TRIANGLE_STRIP
 		GL_TRIANGLE_FAN,   // ROP_TRIANGLE_FAN
-		GL_LINES,          // ROP_LINE_LIST
-		GL_LINE_STRIP,     // ROP_LINE_STRIP
-		GL_POINTS,         // ROP_POINTS
+		GL_LINES,		  // ROP_LINE_LIST
+		GL_LINE_STRIP,	 // ROP_LINE_STRIP
+		GL_POINTS,		 // ROP_POINTS
 	};
 	
 	OpenGL_RenderSystem::OpenGL_RenderSystem(hstr params) : RenderSystem(),
@@ -242,9 +242,9 @@ namespace april
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
-        
+		
 		glEnable(GL_TEXTURE_2D);
-        
+		
 		// DevIL defaults
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 #ifndef _OPENGLES1
@@ -418,29 +418,29 @@ namespace april
 		glClearColor(color.r_f(), color.b_f(), color.g_f(), color.a_f());
 		clear(useColor, depth);
 	}
-    
-    ImageSource* OpenGL_RenderSystem::grabScreenshot(int bpp)
-    {
-        april::log("grabbing screenshot");
-        int w = mWindow->getWidth();
+	
+	ImageSource* OpenGL_RenderSystem::grabScreenshot(int bpp)
+	{
+		april::log("grabbing screenshot");
+		int w = mWindow->getWidth();
 		int h = mWindow->getHeight();
-        ImageSource* img = new ImageSource();
-        img->w = w;
+		ImageSource* img = new ImageSource();
+		img->w = w;
 		img->h = h;
 		img->bpp = bpp;
 		img->format = (bpp == 4 ? AT_RGBA : AT_RGB);
-        img->data = (unsigned char*)malloc(w * (h + 1) * 4); // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
-        unsigned char* temp = img->data + w * h * 4;
-        
-	    glReadPixels(0, 0, w, h, (bpp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img->data);
+		img->data = (unsigned char*)malloc(w * (h + 1) * 4); // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
+		unsigned char* temp = img->data + w * h * 4;
+		
+		glReadPixels(0, 0, w, h, (bpp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img->data);
 		for_iter (y, 0, h / 2)
 		{
 			memcpy(temp, img->data + y * w * bpp, w * bpp);
 			memcpy(img->data + y * w * bpp, img->data + (h - y - 1) * w * bpp, w * bpp);
 			memcpy(img->data + (h - y - 1) * w * bpp, temp, w * bpp);
 		}
-        return img;
-    }
+		return img;
+	}
 
 	void OpenGL_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
