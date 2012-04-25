@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 1.53
 /// 
 /// @section LICENSE
 /// 
@@ -55,7 +55,8 @@ namespace april
 		int h;
 		int bpp;
 		int format;
-		
+		int internalFormat;
+
 		int compressedLength;
 		
 	protected:

@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 1.53
 /// 
 /// @section LICENSE
 /// 
@@ -32,7 +32,7 @@ namespace april
 	void ImageSource::copyImage(ImageSource* source, int bpp)
 	{
 		ilBindImage(source->getImageId());
-		ilCopyPixels(0, 0, 0, this->w, this->h, 1, this->format, IL_UNSIGNED_BYTE, this->data);
+		ilCopyPixels(0, 0, 0, this->w, this->h, 1, this->internalFormat, IL_UNSIGNED_BYTE, this->data);
 	}
 
 	ImageSource* loadImage(chstr filename)
@@ -48,8 +48,9 @@ namespace april
 		img->w = ilGetInteger(IL_IMAGE_WIDTH);
 		img->h = ilGetInteger(IL_IMAGE_HEIGHT);
 		img->bpp = ilGetInteger(IL_IMAGE_BPP);
-		img->format = (ilGetInteger(IL_IMAGE_FORMAT) == 6408 ? AF_RGBA : AF_RGB);
 		img->data = ilGetData();
+		img->internalFormat = ilGetInteger(IL_IMAGE_FORMAT);
+		img->format = (img->internalFormat == 6408 ? AF_RGBA : AF_RGB);
 		return img;
 	}
 
