@@ -35,9 +35,6 @@ class AprilJNI
 	public static native void init(String[] args, int width, int height);
 	public static native boolean render();
 	public static native void destroy();
-						public static native void onMouseDown(float x, float y, int button);
-						public static native void onMouseUp(float x, float y, int button);
-						public static native void onMouseMove(float x, float y);
 	public static native void onTouch(int type, float x, float y, int index);
 	public static native boolean onKeyDown(int keyCode, int charCode);
 	public static native boolean onKeyUp(int keyCode);

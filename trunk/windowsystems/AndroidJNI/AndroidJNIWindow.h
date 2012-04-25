@@ -70,14 +70,11 @@ namespace april
 		AndroidJNIWindow(int w, int h, bool fullscreen, chstr title);
 		~AndroidJNIWindow();
 		
-		//void _setActive(bool active) { mActive = active; }
-		
 		// implementations
 		void enterMainLoop();
 		bool updateOneFrame();
 		void terminateMainLoop();
 		void destroyWindow();
-		//bool isRunning() { return mRunning; }
 		void showSystemCursor(bool visible);
 		bool isSystemCursorShown();
 		int getWidth();
@@ -92,7 +89,6 @@ namespace april
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
 		void handleTouchEvent(MouseEventType type, float x, float y, int index);
-
 		void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
 		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
 		
@@ -101,7 +97,6 @@ namespace april
 	protected:
 		float mWidth;
 		float mHeight;
-		bool mActive;
 		bool mMultiTouchActive;
 		harray<gvec2> mTouches;
 		harray<MouseInputEvent> mMouseEvents;
