@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 1.53
 /// 
 /// @section LICENSE
 /// 
@@ -255,6 +255,7 @@ namespace april
 		img->w = w;
 		img->h = h;
 		img->bpp = 4; // IL temp hack
+		img->internalFormat = 6408; // IL temp hack, coincides with GL_RGBA
 		img->format = AF_RGBA; // IL temp hack, coincides with GL_RGBA
 		img->data = data;
 		return img;
@@ -268,6 +269,7 @@ namespace april
 		img->w = w;
 		img->h = h;
 		img->bpp = 4; // IL temp hack
+		img->internalFormat = 6408; // IL temp hack, coincides with GL_RGBA
 		img->format = AF_RGBA; // IL temp hack, coincides with GL_RGBA
 		img->data = data;
 		img->setPixels(0, 0, w, h, APRIL_COLOR_BLANK);
