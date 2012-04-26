@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Workspace Name="libapril" Database="./libapril.tags">
+  <Project Name="libapril" Path="libapril.project" Active="No"/>
+  <Project Name="demo_simple" Path="demos/demo_simple/demo_simple.project" Active="No"/>
+  <Project Name="tictactoe" Path="demos/demo_tictactoe/tictactoe.project" Active="No"/>
+  <Project Name="libgtypes" Path="../gtypes/libgtypes.project" Active="No"/>
+  <Project Name="demo_3d" Path="demos/demo_3d/demo_3d.project" Active="No"/>
+  <Project Name="libhltypes" Path="../hltypes/libhltypes.project" Active="No"/>
+  <Project Name="libaprilutil" Path="aprilutil/libaprilutil.project" Active="No"/>
+  <Project Name="mesh_loader_demo" Path="demos/mesh_loader_demo/mesh_loader_demo.project" Active="Yes"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Linux_Debug" Selected="no">
+      <Project Name="tictactoe" ConfigName="Debug"/>
+      <Project Name="libapril" ConfigName="Linux_Debug"/>
+      <Project Name="demo_simple" ConfigName="Linux_Debug"/>
+      <Project Name="libgtypes" ConfigName="Linux_Debug"/>
+      <Project Name="demo_3d" ConfigName="Linux_Debug"/>
+      <Project Name="libhltypes" ConfigName="Linux_Debug"/>
+      <Project Name="libaprilutil" ConfigName="Debug"/>
+      <Project Name="mesh_loader_demo" ConfigName="Debug"/>
+      <Project Name="wintTickTest" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="OpenGL_Debug" Selected="no">
+      <Project Name="tictactoe" ConfigName="Debug"/>
+      <Project Name="libhltypes" ConfigName="Debug"/>
+      <Project Name="libgtypes" ConfigName="Debug"/>
+      <Project Name="libaprilutil" ConfigName="Debug"/>
+      <Project Name="libapril" ConfigName="OpenGL_Debug"/>
+      <Project Name="demo_simple" ConfigName="Debug"/>
+      <Project Name="demo_3d" ConfigName="Debug"/>
+      <Project Name="mesh_loader_demo" ConfigName="Debug"/>
+      <Project Name="wintTickTest" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="OpenGL_Release" Selected="no">
+      <Project Name="tictactoe" ConfigName="Release"/>
+      <Project Name="libhltypes" ConfigName="Release_Win32"/>
+      <Project Name="libgtypes" ConfigName="Release_Win32"/>
+      <Project Name="libaprilutil" ConfigName="Release_Win32"/>
+      <Project Name="libapril" ConfigName="OpenGL_Release"/>
+      <Project Name="demo_simple" ConfigName="Release"/>
+      <Project Name="demo_3d" ConfigName="Release"/>
+      <Project Name="mesh_loader_demo" ConfigName="Debug"/>
+      <Project Name="wintTickTest" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="DirectX9_Debug" Selected="yes">
+      <Project Name="tictactoe" ConfigName="Debug"/>
+      <Project Name="libhltypes" ConfigName="Debug"/>
+      <Project Name="libgtypes" ConfigName="Debug"/>
+      <Project Name="libaprilutil" ConfigName="Debug"/>
+      <Project Name="libapril" ConfigName="DirectX_Debug"/>
+      <Project Name="demo_simple" ConfigName="Debug"/>
+      <Project Name="demo_3d" ConfigName="Debug"/>
+      <Project Name="mesh_loader_demo" ConfigName="Debug"/>
+      <Project Name="wintTickTest" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="DirectX9_Release" Selected="yes">
+      <Project Name="tictactoe" ConfigName="Release"/>
+      <Project Name="libhltypes" ConfigName="Release_Win32"/>
+      <Project Name="libgtypes" ConfigName="Release_Win32"/>
+      <Project Name="libaprilutil" ConfigName="Release_Win32"/>
+      <Project Name="libapril" ConfigName="DirectX_Release"/>
+      <Project Name="demo_simple" ConfigName="Release"/>
+      <Project Name="demo_3d" ConfigName="Release"/>
+      <Project Name="mesh_loader_demo" ConfigName="Debug"/>
+      <Project Name="wintTickTest" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>
