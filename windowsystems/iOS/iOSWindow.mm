@@ -352,8 +352,10 @@ namespace april
 		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
 		int num_touches = mTouches.size();
 		foreach(UITouch*, it, touches)
-			mTouches.remove(*it);
-		
+		{
+			if (mTouches.contains(*it)) // this safeguard is necesarry because of older iOS version bugs
+				mTouches.remove(*it);
+		}
 		if (mMultiTouchActive)
 		{
 			if (num_touches == touches.size()) mMultiTouchActive = false;
