@@ -59,6 +59,7 @@ namespace april
 #endif
 		extensions += ".png";
 		extensions += ".jpg";
+		extensions += ".jpt";
 #if TARGET_OS_IPHONE
 		extensions += ".pvr";
 #endif

@@ -15,6 +15,7 @@
 #ifndef APRIL_IMAGE_SOURCE_H
 #define APRIL_IMAGE_SOURCE_H
 
+#include <hltypes/hsbase.h>
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
@@ -67,6 +68,9 @@ namespace april
 	aprilFnExport ImageSource* loadImage(chstr filename);
 	aprilFnExport ImageSource* createEmptyImage(int w, int h);
 	aprilFnExport ImageSource* createBlankImage(int w, int h);
+	ImageSource* _loadImagePng(hsbase& stream);
+	ImageSource* _loadImageJpg(hsbase& stream);
+	ImageSource* _loadImageJpt(hsbase& stream);
 	
 }
 
