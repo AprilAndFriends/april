@@ -580,6 +580,11 @@ namespace april
 					info.name = "iPad2";
 					info.ram = 512;
 				}
+				else if (name.starts_with("iPad3"))
+				{
+					info.name = "iPad3";
+					info.ram = 1024;
+				}
 			}
 			else if (name.starts_with("iPhone"))
 			{
@@ -602,6 +607,16 @@ namespace april
 				{
 					info.name = "iPhone4";
 					info.ram = 512;
+				}
+				else if (name.starts_with("iPhone4"))
+				{
+					info.name = "iPhone4S";
+					info.ram = 512;
+				}
+				else if (name.starts_with("iPhone5"))
+				{
+					info.name = "iPhone5";
+					info.ram = 1024;
 				}
 			}
 			else if (name.starts_with("iPod"))
