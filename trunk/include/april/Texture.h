@@ -92,6 +92,8 @@ namespace april
 
 		virtual void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 		
+		static void setTextureLoadingListener(void (*listener)(Texture*));
+		
 	protected:
 		bool mDynamic;
 		hstr mFilename;
@@ -104,7 +106,7 @@ namespace april
 		harray<Texture*> mDynamicLinks;
 
 		hstr _getInternalName();
-		
+		void notifyLoadingListener(Texture* t);
 	};
 	
 	class aprilExport RamTexture : public Texture

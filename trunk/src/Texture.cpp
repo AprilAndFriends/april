@@ -22,6 +22,8 @@
 
 namespace april
 {
+	static void (*msTextureLoadingListener)(Texture*) = NULL;
+
 	Texture::Texture()
 	{
 		mDynamic = false;
@@ -42,6 +44,16 @@ namespace april
 			(*it)->removeDynamicLink(this);
 		}
 		april::rendersys->getTextureManager()->unregisterTexture(this);
+	}
+
+	void Texture::setTextureLoadingListener(void (*listener)(Texture*))
+	{
+		msTextureLoadingListener = listener;
+	}
+	
+	void Texture::notifyLoadingListener(Texture* t)
+	{
+		if (msTextureLoadingListener != NULL) msTextureLoadingListener(t);
 	}
 
 	hstr Texture::_getInternalName()

@@ -263,6 +263,7 @@ namespace april
 			april::log("Failed to load texture: " + _getInternalName());
 			return false;
 		}
+		notifyLoadingListener(this);
 		foreach (Texture*, it, mDynamicLinks)
 		{
 			(*it)->load();
