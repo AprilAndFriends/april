@@ -843,6 +843,7 @@ namespace april
 		}
 		mTexture->UnlockRect(0);
 		delete img;
+		notifyLoadingListener(this);
 		foreach (Texture*, it, mDynamicLinks)
 		{
 			if (!(*it)->isLoaded())
