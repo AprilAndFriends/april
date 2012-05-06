@@ -499,6 +499,8 @@ namespace april
 		return Window::DEVICE_WINDOWS_PC;
 	}
 
+	int _impl_getMaxTextureSize();
+
 	SystemInfo& getSystemInfo()
 	{
 		static SystemInfo info;
@@ -506,9 +508,10 @@ namespace april
 		{
 			info.ram = 1024;
 			info.locale = "en";
+			info.max_texture_size = 0;
 		}
+		if (info.max_texture_size == 0) info.max_texture_size = _impl_getMaxTextureSize();
 		return info;
 	}
-
 }
 #endif

@@ -43,6 +43,14 @@ namespace april
 	DirectX9_Texture* activeTexture = NULL;
 	D3DPRESENT_PARAMETERS d3dpp;
 	
+	int _impl_getMaxTextureSize()
+	{
+		if (d3dDevice == NULL) return 0;
+		D3DCAPS9 caps;
+		d3dDevice->GetDeviceCaps(&caps);
+		return caps.MaxTextureWidth;
+	}
+
 #ifdef _DEBUG
 	char fpstitle[1024] = " [FPS:0]";
 #endif

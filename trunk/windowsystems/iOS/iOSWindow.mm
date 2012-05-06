@@ -567,7 +567,8 @@ namespace april
 			
 			info.name = name; // defaults for unknown devices
 			info.ram = 1024; // defaults
-			
+			info.max_texture_size = 0;
+						
 			if (name.starts_with("iPad"))
 			{
 				if (name.starts_with("iPad1"))
@@ -644,6 +645,9 @@ namespace april
 			}
 			//else: i386 (iphone simulator) and possible future device types
 		}
+		if (info.max_texture_size == 0 && april::rendersys != NULL)
+			glGetIntegerv(GL_MAX_TEXTURE_SIZE, &info.max_texture_size);
+
 		return info;
 	}
 

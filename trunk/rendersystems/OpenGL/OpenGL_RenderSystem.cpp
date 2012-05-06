@@ -57,12 +57,30 @@ namespace april
 	HDC hDC = 0;
 #ifndef _OPENGLES1
 	static HGLRC hRC = 0;
+
+	int _impl_getMaxTextureSize()
+	{
+		if (hRC == 0) return 0;
+		int max;
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
+		return max;
+	}
+
 #else
 	static EGLDisplay eglDisplay = 0;
 	static EGLConfig eglConfig	= 0;
 	static EGLSurface eglSurface = 0;
 	static EGLContext eglContext = 0;
 	static EGLint pi32ConfigAttribs[128] = {EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE, 8, EGL_ALPHA_SIZE, 0, EGL_SURFACE_TYPE, EGL_WINDOW_BIT, EGL_NONE};
+
+	int _impl_getMaxTextureSize()
+	{
+		if (eglDisplay == 0) return 0;
+		int max;
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
+		return max;
+	}
+
 #endif
 #endif
 
