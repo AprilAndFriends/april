@@ -83,6 +83,8 @@ namespace april
 		virtual bool isLoaded() = 0;
 		
 		void update(float time_increase);
+		//! sets the filename variable, useful if you want to reload the texture from a different file
+		void _setFilename(chstr filename) { mFilename = filename; }
 		hstr getFilename() { return mFilename; }
 		
 		void setTextureFilter(TextureFilter filter) { mTextureFilter = filter; }

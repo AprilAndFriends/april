@@ -457,7 +457,10 @@ namespace april
 		{
 			info.ram = 1024;
 			info.locale = "en";
+			info.max_texture_size = 0;
 		}
+		if (info.max_texture_size == 0 && april::rendersys != NULL)
+				glGetIntegerv(GL_MAX_TEXTURE_SIZE, &info.max_texture_size);
 		return info;
 	}
 }
