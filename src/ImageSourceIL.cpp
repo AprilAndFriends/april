@@ -12,6 +12,8 @@
 #include <IL/il.h>
 
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hresource.h>
+#include <hltypes/hstream.h>
 
 #include "ImageSource.h"
 #include "RenderSystem.h"
@@ -35,8 +37,59 @@ namespace april
 		ilCopyPixels(0, 0, 0, this->w, this->h, 1, this->internalFormat, IL_UNSIGNED_BYTE, this->data);
 	}
 
+	ImageSource* _loadImageJpt(chstr filename)
+	{
+		ImageSource* jpg = new ImageSource();
+		ImageSource* png = new ImageSource();
+		hresource stream(filename);
+		int size;
+		unsigned char bytes[4];
+		unsigned char* buffer;
+		// file header ("JPT" + 1 byte for version code)
+		stream.read_raw(bytes, 4);
+		// read JPEG
+		stream.read_raw(bytes, 4);
+		size = bytes[0] + bytes[1] * 256 + bytes[2] * 256 * 256 + bytes[3] * 256 * 256 * 256;
+		buffer = new unsigned char[size];
+		stream.read_raw(buffer, size);
+		ilBindImage(jpg->getImageId());
+		ilLoadL(IL_JPG, buffer, size);
+		delete [] buffer;
+		jpg->w = ilGetInteger(IL_IMAGE_WIDTH);
+		jpg->h = ilGetInteger(IL_IMAGE_HEIGHT);
+		jpg->bpp = ilGetInteger(IL_IMAGE_BPP);
+		jpg->data = ilGetData();
+		jpg->internalFormat = ilGetInteger(IL_IMAGE_FORMAT);
+		jpg->format = (jpg->internalFormat == 6408 ? AF_RGBA : AF_RGB);
+		// read PNG
+		stream.read_raw(bytes, 4);
+		size = bytes[0] + bytes[1] * 256 + bytes[2] * 256 * 256 + bytes[3] * 256 * 256 * 256;
+		buffer = new unsigned char[size];
+		stream.read_raw(buffer, size);
+		ilBindImage(png->getImageId());
+		ilLoadL(IL_PNG, buffer, size);
+		delete [] buffer;
+		png->w = ilGetInteger(IL_IMAGE_WIDTH);
+		png->h = ilGetInteger(IL_IMAGE_HEIGHT);
+		png->bpp = ilGetInteger(IL_IMAGE_BPP);
+		png->data = ilGetData();
+		png->internalFormat = ilGetInteger(IL_IMAGE_FORMAT);
+		png->format = (png->internalFormat == 6408 ? AF_RGBA : AF_RGB);
+		// combine
+		ImageSource* img = createEmptyImage(jpg->w, jpg->h);
+		img->copyImage(jpg);
+		img->insertAsAlphaMap(png);
+		delete jpg;
+		delete png;
+		return img;
+	}
+
 	ImageSource* loadImage(chstr filename)
 	{
+		if (filename.lower().ends_with(".jpt"))
+		{
+			return _loadImageJpt(filename);
+		}
 		ImageSource* img = new ImageSource();
 		ilBindImage(img->getImageId());
 		int success = ilLoadImage(filename.c_str());
