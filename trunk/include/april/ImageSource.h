@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.53
+/// @version 1.6
 /// 
 /// @section LICENSE
 /// 
@@ -15,6 +15,7 @@
 #ifndef APRIL_IMAGE_SOURCE_H
 #define APRIL_IMAGE_SOURCE_H
 
+#include <hltypes/hsbase.h>
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
@@ -44,11 +45,11 @@ namespace april
 		Color getInterpolatedPixel(float x, float y);
 		void copyPixels(void* output, ImageFormat format);
 		void setPixels(int x, int y, int w, int h, Color c);
-		void copyImage(ImageSource* source);
-		void copyImage(ImageSource* source, int bpp);
+		void copyImage(ImageSource* source, bool fillAlpha = false);
 		void clear();
 		void blit(int x, int y, ImageSource* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(int x, int y, int w, int h, ImageSource* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void insertAsAlphaMap(ImageSource* source);
 		
 		unsigned char* data;
 		int w;
@@ -67,6 +68,9 @@ namespace april
 	aprilFnExport ImageSource* loadImage(chstr filename);
 	aprilFnExport ImageSource* createEmptyImage(int w, int h);
 	aprilFnExport ImageSource* createBlankImage(int w, int h);
+	ImageSource* _loadImagePng(hsbase& stream);
+	ImageSource* _loadImageJpg(hsbase& stream);
+	ImageSource* _loadImageJpt(hsbase& stream);
 	
 }
 

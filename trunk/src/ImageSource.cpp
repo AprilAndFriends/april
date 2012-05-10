@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.53
+/// @version 1.6
 /// 
 /// @section LICENSE
 /// 
@@ -96,6 +96,39 @@ namespace april
 		}
 	}
 	
+	void ImageSource::insertAsAlphaMap(ImageSource* source)
+	{
+		if (this->bpp < 4)
+		{
+			return;
+		}
+		if (source->bpp == 4 || source->bpp == 3)
+		{
+			unsigned char* o = this->data;
+			unsigned char* i = source->data;
+			int x;
+			for_iter (y, 0, this->h)
+			{
+				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
+				{
+					o[3] = i[2]; // takes actually only the R component
+				}
+			}
+		}
+		else
+		{
+			unsigned char* o = this->data;
+			int x;
+			for_iter (y, 0, this->h)
+			{
+				for (x = 0; x < this->w; x++, o += this->bpp)
+				{
+					o[3] = source->getPixel(x, y).r; // takes actually only the R component
+				}
+			}
+		}
+	}
+
 	void ImageSource::setPixels(int x, int y, int w, int h, Color c)
 	{
 		x = hclamp(x, 0, this->w - 1);
@@ -115,11 +148,6 @@ namespace april
 				ptr[3] = c.a;
 			}
 		}
-	}
-
-	void ImageSource::copyImage(ImageSource* source)
-	{
-		memcpy(this->data, source->data, this->w * this->h * this->bpp * sizeof(unsigned char));
 	}
 
 	void ImageSource::clear()
