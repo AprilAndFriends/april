@@ -45,11 +45,11 @@ namespace april
 		Color getInterpolatedPixel(float x, float y);
 		void copyPixels(void* output, ImageFormat format);
 		void setPixels(int x, int y, int w, int h, Color c);
-		void copyImage(ImageSource* source);
-		void copyImage(ImageSource* source, int bpp);
+		void copyImage(ImageSource* source, bool fillAlpha = false);
 		void clear();
 		void blit(int x, int y, ImageSource* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(int x, int y, int w, int h, ImageSource* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void insertAsAlphaMap(ImageSource* source);
 		
 		unsigned char* data;
 		int w;
