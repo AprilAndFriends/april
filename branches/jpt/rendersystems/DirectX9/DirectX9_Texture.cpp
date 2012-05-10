@@ -837,7 +837,7 @@ namespace april
 		else
 		{
 			ImageSource* tempImg = april::createEmptyImage(img->w, img->h);
-			tempImg->copyImage(img, 4);
+			tempImg->copyImage(img);
 			tempImg->copyPixels(rect.pBits, AF_BGRA);
 			delete tempImg;
 		}

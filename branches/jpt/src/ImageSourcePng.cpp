@@ -50,11 +50,97 @@ namespace april
 		}
 	}
 
-	void ImageSource::copyImage(ImageSource* source, int bpp)
+	void ImageSource::copyImage(ImageSource* source, bool fillAlpha)
 	{
-		memcpy(this->data, source->data, bpp * source->w * source->h * sizeof(unsigned char));
+		if (fillAlpha && this->bpp == 4 && source->bpp < 4)
+		{
+			memset(this->data, 255, this->w * this->h * this->bpp);
+		}
+		if ((this->bpp == 4 || source->bpp == 4) && this->bpp != source->bpp)
+		{
+			unsigned char* o = this->data;
+			unsigned char* i = source->data;
+			int x;
+			for_iter (y, 0, this->h)
+			{
+				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
+				{
+					o[0] = i[0];
+					o[1] = i[1];
+					o[2] = i[2];
+				}
+			}
+		}
+		else if (this->bpp == source->bpp)
+		{
+			memcpy(this->data, source->data, this->w * this->h * this->bpp * sizeof(unsigned char));
+		}
+		else
+		{
+			// not good, BPP differ too much (one might be 4 or 3 while the other is less than 3)
+			Color c;
+			unsigned char* o = this->data;
+			unsigned char* i = source->data;
+			int x;
+			for_iter (y, 0, this->h)
+			{
+				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
+				{
+					c = source->getPixel(x, y);
+					o[0] = c.r;
+					o[1] = c.g;
+					o[2] = c.b;
+				}
+			}
+		}
+
+		if ((this->bpp == 4 || source->bpp == 4) && this->bpp != source->bpp)
+		{
+			if (this->bpp == 4)
+			{
+				memset(this->data, 255, this->w * this->h * this->bpp);
+			}
+			unsigned char* o = this->data;
+			unsigned char* i = source->data;
+			int x;
+			for_iter (y, 0, this->h)
+			{
+				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
+				{
+					o[0] = i[0];
+					o[1] = i[1];
+					o[2] = i[2];
+				}
+			}
+		}
+		else if (this->bpp == source->bpp)
+		{
+			memcpy(this->data, source->data, this->w * this->h * this->bpp * sizeof(unsigned char));
+		}
+		else
+		{
+			// not good, BPP differ too much (one might be 4 or 3 while the other is less than 3)
+			if (this->bpp == 4)
+			{
+				memset(this->data, 255, this->w * this->h * this->bpp);
+			}
+			Color c;
+			unsigned char* o = this->data;
+			unsigned char* i = source->data;
+			int x;
+			for_iter (y, 0, this->h)
+			{
+				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
+				{
+					c = source->getPixel(x, y);
+					o[0] = c.r;
+					o[1] = c.g;
+					o[2] = c.b;
+				}
+			}
+		}
 	}
-	
+
 	ImageSource* loadImage(chstr filename)
 	{
 		ImageSource* img = NULL;
@@ -165,7 +251,7 @@ namespace april
 		int size;
 		unsigned char bytes[4];
 		unsigned char* buffer;
-		// file header
+		// file header ("JPT" + 1 byte for version code)
 		stream.read_raw(bytes, 4);
 		// read JPEG
 		stream.read_raw(bytes, 4);
@@ -189,40 +275,10 @@ namespace april
 		png = _loadImagePng(subStream);
 		// combine
 		ImageSource* img = createEmptyImage(jpg->w, jpg->h);
-		img->w = jpg->w;
-		img->h = jpg->h;
-		img->bpp = 4;
-		img->format = AF_RGBA;
-		img->data = new unsigned char[jpg->w * jpg->h * img->bpp];
-		img->copyImage(jpg, img->bpp);
+		img->copyImage(jpg);
 		img->insertAsAlphaMap(png);
-
-			//size = (buffer)
-			//filename = hstr((char*)buffer);
-			//stream.seek(24);
-
-			/*
-100	8	File mode
-108	8	Owner's numeric user ID
-116	8	Group's numeric user ID
-124	12	File size in bytes
-136	12	Last modification time in numeric Unix time format
-148	8	Checksum for header block
-156	1	Link indicator (file type)
-157	100	Name of linked file			*/
-			if (filename.lower().ends_with(".png"))
-			{
-				//hresource file(filename);
-				//png = _loadImagePng(stream);
-			}
-			else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
-			{
-				//hresource file(filename);
-				img = _loadImageJpg(file);
-			}
-		}
-		/*
-		*/
+		delete jpg;
+		delete png;
 		return img;
 	}
 
