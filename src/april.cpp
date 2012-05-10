@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.51
+/// @version 1.6
 /// 
 /// @section LICENSE
 /// 
@@ -59,6 +59,7 @@ namespace april
 #endif
 		extensions += ".png";
 		extensions += ".jpg";
+		extensions += ".jpt";
 #if TARGET_OS_IPHONE
 		extensions += ".pvr";
 #endif
