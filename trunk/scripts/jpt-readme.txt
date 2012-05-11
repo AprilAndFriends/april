@@ -11,6 +11,7 @@ While the gray scale is used for the alpha channel (white is opaque, black is tr
 during the calculation of the final image actually only takes into account the red channel to
 improve performance.
 
+
 	Format specification:
 
 4 bytes			HEADER
@@ -24,3 +25,10 @@ Header:
 Image defintion:
 4 bytes			following image's size in bytes
 X bytes			raw image file appended to the JPT file (JPEG of PNG)
+
+
+	JPT Tool
+
+JPT Tool is a tool for simple merging of a JPEG and a PNG file into a JPT file or splitting a JPT
+file to a JPEG and PNG file. The tool was written in Python and requires at least Python 2.5 to
+work. The script includes all documentation inside. It can be called using "jpt-tool.py -h".
