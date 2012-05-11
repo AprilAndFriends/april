@@ -63,6 +63,7 @@ class FrameJpt(Frame):
 		if result != None:
 			self.entries[index].delete(0, END)
 			self.entries[index].insert(0, result)
+		return result
 	
 	def _check_browse(self, index):
 		return None
@@ -102,6 +103,17 @@ class MergeJpt(FrameJpt):
 			return tkFileDialog.askopenfilename(defaultextension = FILES_PNG[0][1], filetypes = FILES_PNG)
 		return FrameJpt._check_browse(index)
 		
+	def _browse(self, index):
+		result = FrameJpt._browse(self, index)
+		if result != None and index != 0 and self.entries[0].get() == "":
+			extensions = (".jpg", ".jpeg", ".png")
+			for extension in extensions:
+				i = result.rfind(extension)
+				if i >= 0:
+					self.entries[0].insert(0, result[:-len(extension)] + ".jpt")
+					break
+		return result
+		
 	def _confirm(self):
 		if not self._check_file_save(0):
 			return
@@ -126,6 +138,15 @@ class SplitJpt(FrameJpt):
 		if index == 2:
 			return tkFileDialog.asksaveasfilename(defaultextension = FILES_PNG[0][1], filetypes = FILES_PNG)
 		return FrameJpt._check_browse(index)
+		
+	def _browse(self, index):
+		result = FrameJpt._browse(self, index)
+		if result != None and index == 0:
+			if self.entries[1].get() == "":
+				self.entries[1].insert(0, result[:-4] + ".jpg")
+			if self.entries[2].get() == "":
+				self.entries[2].insert(0, result[:-4] + ".png")
+		return result
 		
 	def _confirm(self):
 		if not self._check_file_open(0):
