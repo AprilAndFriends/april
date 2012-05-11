@@ -7,6 +7,14 @@ from Tkinter import *
 
 from jpt import Jpt
 
+PIL_SUPPORT = False
+try:
+	import Image
+	from pilconv import PilConv
+	PIL_SUPPORT = True
+except:
+	pass
+
 FILES_JPT = [("JPEG-PNG-Type files", ".jpt")]
 FILES_JPEG = [("JPG files", ".jpg"), ("JPEG files", ".jpeg")]
 FILES_PNG = [("PNG files", ".png")]
@@ -33,14 +41,14 @@ class FrameJpt(Frame):
 		self.label_title = Label(self, text = self.title)
 		functions = (self._button_browse_0, self._button_browse_1, self._button_browse_2)
 		for i in xrange(0, len(self.files)):
-			self.labels.append(Label(self, text = self.files[i]))
+			self.labels.append(Label(self, width = 10, text = self.files[i]))
 			self.entries.append(Entry(self, width = 50))
-			self.buttons.append(Button(self, text = "Select", command = functions[i]))
+			self.buttons.append(Button(self, width = 8, text = "Select", command = functions[i]))
 		self.button_confirm = Button(self, text = self.confirm, command = self._button_confirm)
 		
 	def _setup_elements(self):
 		self.label_title.grid(padx = 6, pady = 4, row = 0, sticky = W, columnspan = 3)
-		for i in xrange(0, len(self.labels)):
+		for i in xrange(0, len(self.files)):
 			self.labels[i].grid(padx = 6, pady = 4, row = i + 1, sticky = W)
 			self.entries[i].grid(padx = 6, pady = 4, row = i + 1, column = 1)
 			self.buttons[i].grid(padx = 6, pady = 4, row = i + 1, column = 2)
@@ -106,12 +114,9 @@ class MergeJpt(FrameJpt):
 	def _browse(self, index):
 		result = FrameJpt._browse(self, index)
 		if result != None and index != 0 and self.entries[0].get() == "":
-			extensions = (".jpg", ".jpeg", ".png")
-			for extension in extensions:
-				i = result.rfind(extension)
-				if i >= 0:
-					self.entries[0].insert(0, result[:-len(extension)] + ".jpt")
-					break
+			i = result.rfind(".")
+			if i >= 0:
+				self.entries[0].insert(0, result[:i] + ".jpt")
 		return result
 		
 	def _confirm(self):
@@ -159,6 +164,68 @@ class SplitJpt(FrameJpt):
 		tkMessageBox.showinfo(self.title, result)
 		
 		
+class ConvertPil(FrameJpt):
+	
+	def __init__(self, master, row, column):
+		FrameJpt.__init__(self, master, row, column, "Create JPT from custom image file (requires PIL installed)", "Create JPT", ("JPT File", "Image File"))
+	
+	def _create_elements(self):
+		FrameJpt._create_elements(self)
+		self.label_title = Label(self, text = self.title)
+		functions = (self._button_browse_0, self._button_browse_1, self._button_browse_2)
+		self.labels.append(Label(self, width = 10, text = "JPEG Quality"))
+		self.entries.append(Entry(self, width = 10))
+		
+	def _setup_elements(self):
+		FrameJpt._setup_elements(self)
+		self.labels[2].grid(padx = 6, pady = 4, row = len(self.labels), sticky = W)
+		self.entries[2].grid(padx = 6, pady = 4, row = len(self.labels), column = 1, sticky = W)
+		self.entries[2].insert(0, "75")
+		if not PIL_SUPPORT:
+			for label in self.labels:
+				label.config(state = DISABLED)
+			for entry in self.entries:
+				entry.config(state = DISABLED)
+			for button in self.buttons:
+				button.config(state = DISABLED)
+			self.button_confirm.config(state = DISABLED)
+		
+	def _check_browse(self, index):
+		if index == 0:
+			return tkFileDialog.asksaveasfilename(defaultextension = FILES_JPT[0][1], filetypes = FILES_JPT)
+		if index == 1:
+			return tkFileDialog.askopenfilename(defaultextension = FILES_CUSTOM[0][1], filetypes = FILES_CUSTOM)
+		return FrameJpt._check_browse(index)
+		
+	def _browse(self, index):
+		result = FrameJpt._browse(self, index)
+		if result != None and index != 0 and self.entries[0].get() == "":
+			i = result.rfind(".")
+			if i >= 0:
+				self.entries[0].insert(0, result[:i] + ".jpt")
+		return result
+		
+	def _confirm(self):
+		if not self._check_file_save(0):
+			return
+		if not self._check_file_open(1):
+			return
+		jpt = self.entries[0].get()
+		custom = self.entries[1].get()
+		quality = 75
+		try:
+			quality = int(self.entries[2].get())
+		except:
+			self.entries[2].delete(0, END)
+			self.entries[2].insert(0, "75")
+		jpeg = custom + "__.jpg"
+		png = custom + "__.png"
+		PilConv.convert(custom, jpeg, png, quality)
+		result = Jpt.merge(jpt, jpeg, png)
+		os.remove(jpeg)
+		os.remove(png)
+		tkMessageBox.showinfo(self.title, result)
+		
 class JptGui:
 
 	def __init__(self, master):
@@ -168,6 +235,9 @@ class JptGui:
 		self.merge.setup()
 		self.split = SplitJpt(self.frame, 1, 0)
 		self.split.setup()
+		self.convert = ConvertPil(self.frame, 2, 0)
+		self.convert.setup()
+			
 		
 root = Tk()
 root.title("JPT GUI")
