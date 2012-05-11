@@ -1,4 +1,4 @@
-	JPT format (JPEG and PNG tarred)
+	JPT format (JPEG-PNG-Type)
 
 JPT is a format that takes advantage of the compression ratio from JPEG and PNG at the same time.
 The main image is stored in JPEG while the alpha channel is stored in a PNG file as a gray scale.
@@ -23,7 +23,7 @@ Header:
 1 byte			format version
 
 Image defintion:
-4 bytes			following image's size in bytes
+4 bytes			following image's size in bytes (size is stored as unsigned int in little endian order)
 X bytes			raw image file appended to the JPT file (JPEG of PNG)
 
 
@@ -32,3 +32,10 @@ X bytes			raw image file appended to the JPT file (JPEG of PNG)
 JPT Tool is a tool for simple merging of a JPEG and a PNG file into a JPT file or splitting a JPT
 file to a JPEG and PNG file. The tool was written in Python and requires at least Python 2.5 to
 work. The script includes all documentation inside. It can be called using "jpt-tool.py -h".
+
+
+	JPT GUI
+
+JPT GUI is a visual tool for simple merging of a JPEG and a PNG file into a JPT file or
+splitting a JPT file to a JPEG and PNG file. The tool was written in Python and requires
+at least Python 2.5 to work. The GUI is user-friendly and intuitive.

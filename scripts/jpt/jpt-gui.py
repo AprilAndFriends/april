@@ -7,7 +7,7 @@ from Tkinter import *
 
 from jpt import Jpt
 
-FILES_JPT = [("JPEG-PNG-Tarred files", ".jpt")]
+FILES_JPT = [("JPEG-PNG-Type files", ".jpt")]
 FILES_JPEG = [("JPG files", ".jpg"), ("JPEG files", ".jpeg")]
 FILES_PNG = [("PNG files", ".png")]
 FILES_CUSTOM = [("All files", ".*")]
