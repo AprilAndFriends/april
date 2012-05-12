@@ -790,6 +790,51 @@ namespace april
 		_unlock(buffer, result, true);
 	}
 
+	bool DirectX9_Texture::copyPixelData(unsigned char** output)
+	{
+		D3DLOCKED_RECT lockRect;
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT result = _tryLock(&buffer, &lockRect, NULL);
+		if (result == LR_FAILED)
+		{
+			return false;
+		}
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		int i;
+		int offset;
+		*output = new unsigned char[mWidth * mHeight * 4];
+		if (mBpp == 4)
+		{
+			for_iter (j, 0, mHeight)
+			{
+				for_iterx (i, 0, mWidth)
+				{
+					offset = (j * mWidth + i) * 4;
+					(*output)[offset + 0] = p[offset + 2];
+					(*output)[offset + 1] = p[offset + 1];
+					(*output)[offset + 2] = p[offset + 0];
+					(*output)[offset + 3] = p[offset + 3];
+				}
+			}
+		}
+		else
+		{
+			memset(*output, 255, mWidth * mHeight * 4);
+			for_iter (j, 0, mHeight)
+			{
+				for_iterx (i, 0, mWidth)
+				{
+					offset = (i + j * mWidth) * 4;
+					(*output)[offset + 0] = p[offset + 2];
+					(*output)[offset + 1] = p[offset + 1];
+					(*output)[offset + 2] = p[offset + 0];
+				}
+			}
+		}
+		_unlock(buffer, result, false);
+		return true;
+	}
+
 	IDirect3DSurface9* DirectX9_Texture::getSurface()
 	{
 		if (mSurface == NULL)

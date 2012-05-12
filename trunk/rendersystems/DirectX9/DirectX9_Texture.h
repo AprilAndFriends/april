@@ -46,6 +46,7 @@ namespace april
 		void clear();
 		void rotateHue(float degrees);
 		void saturate(float factor);
+		bool copyPixelData(unsigned char** output);
 
 		bool load();
 		bool isLoaded();

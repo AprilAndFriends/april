@@ -68,6 +68,7 @@ namespace april
 		virtual void saturate(float factor) { }
 		void fillRect(grect rect, Color color);
 		virtual Color getInterpolatedPixel(float x, float y);
+		virtual bool copyPixelData(unsigned char** output) { return false; }
 		
 		void addDynamicLink(Texture* lnk);
 		void removeDynamicLink(Texture* lnk);
