@@ -21,6 +21,7 @@
 namespace april
 {
 	extern IDirect3DDevice9* d3dDevice;
+	extern harray<DirectX9_Texture*> gRenderTargets;
 
 	DirectX9_Texture::DirectX9_Texture(chstr filename, bool dynamic) : Texture()
 	{
@@ -28,6 +29,7 @@ namespace april
 		mDynamic = dynamic;
 		mTexture = NULL;
 		mSurface = NULL;
+		mRenderTarget = false;
 		mWidth = 0;
 		mHeight = 0;
 		if (!mDynamic)
@@ -45,6 +47,7 @@ namespace april
 		mFilename = "";
 		mUnusedTimer = 0;
 		mSurface = NULL;
+		mRenderTarget = false;
 
 		april::log("creating user-defined DX9 texture");
 		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, NULL);
@@ -78,6 +81,7 @@ namespace april
 		mDynamic = false;
 		mUnusedTimer = 0;
 		mSurface = NULL;
+		mRenderTarget = false;
 		mFilename = "";			
 		april::log("creating empty DX9 texture [ " + hstr(w) + "x" + hstr(h) + " ]");
 		D3DFORMAT d3dfmt = D3DFMT_X8R8G8B8;
@@ -93,8 +97,9 @@ namespace april
 		{
 			d3dusage = D3DUSAGE_RENDERTARGET;
 			d3dpool = D3DPOOL_DEFAULT;
+			mRenderTarget = true;
+			gRenderTargets += this;
 		}
-
 		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, d3dusage, d3dfmt, d3dpool, &mTexture, NULL);
 		if (hr != D3D_OK)
 		{
@@ -102,10 +107,36 @@ namespace april
 			return;
 		}
 	}
+
+	void DirectX9_Texture::restore()
+	{
+		if (!mRenderTarget)
+		{
+			return;
+		}
+		unload();
+		D3DFORMAT d3dfmt = D3DFMT_X8R8G8B8;
+		if (mBpp == 4)
+		{
+			d3dfmt = D3DFMT_A8R8G8B8;
+		}
+		D3DPOOL d3dpool = D3DPOOL_DEFAULT;
+		DWORD d3dusage = D3DUSAGE_RENDERTARGET;
+		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, d3dusage, d3dfmt, d3dpool, &mTexture, NULL);
+		if (hr != D3D_OK)
+		{
+			april::log("failed to restore user-defined DX9 texture!");
+			return;
+		}
+	}
 	
 	DirectX9_Texture::~DirectX9_Texture()
 	{
 		unload();
+		if (mRenderTarget)
+		{
+			gRenderTargets -= this;
+		}
 	}
 
 	Color DirectX9_Texture::getPixel(int x, int y)

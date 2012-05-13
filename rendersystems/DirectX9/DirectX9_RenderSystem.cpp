@@ -42,6 +42,7 @@ namespace april
 	static HWND hWnd;
 	DirectX9_Texture* activeTexture = NULL;
 	D3DPRESENT_PARAMETERS d3dpp;
+	harray<DirectX9_Texture*> gRenderTargets;
 	
 	int _impl_getMaxTextureSize()
 	{
@@ -674,10 +675,14 @@ namespace april
 		HRESULT hr = d3dDevice->Present(NULL, NULL, NULL, NULL);
 		if (hr == D3DERR_DEVICELOST)
 		{
-			int i;
 			april::log("Direct3D9 Device lost, attempting to restore...");
+			foreach (DirectX9_Texture*, it, gRenderTargets)
+			{
+				(*it)->unload();
+			}
 			mBackBuffer->Release();
 			mBackBuffer = NULL;
+			int i;
 			while (((Win32Window*)mWindow)->isRunning())
 			{
 				for_iterx (i, 0, 10)
@@ -720,6 +725,10 @@ namespace april
 			_setProjectionMatrix(mProjectionMatrix);
 			configureDevice();
 			d3dDevice->GetRenderTarget(0, &mBackBuffer); // update backbuffer pointer
+			foreach (DirectX9_Texture*, it, gRenderTargets)
+			{
+				(*it)->restore();
+			}
 			april::log("Direct3D9 Device restored");
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)

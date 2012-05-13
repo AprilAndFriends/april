@@ -56,8 +56,11 @@ namespace april
 		
 		void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 
+		void restore(); // TODO - currently only a hack for rendertarget textures
+
 	protected:
 		IDirect3DSurface9* mSurface;
+		bool mRenderTarget;
 
 		enum LOCK_RESULT
 		{
