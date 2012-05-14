@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 1.63
 /// 
 /// @section LICENSE
 /// 
@@ -56,6 +56,8 @@ namespace april
 		void clear();
 		void rotateHue(float degrees);
 		void saturate(float factor);
+		bool copyPixelData(unsigned char** output);
+
 		int getSizeInBytes();
 		bool isValid();
 
