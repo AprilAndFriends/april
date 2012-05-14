@@ -480,6 +480,10 @@ namespace april
 			}
 #endif			
 			april::rendersys->presentFrame();
+			if (!result)
+			{
+				mRunning = false;
+			}
 		}
 	}
 

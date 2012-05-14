@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 1.63
 /// 
 /// @section LICENSE
 /// 
@@ -232,6 +232,15 @@ namespace april
 	void OpenGL_Texture::saturate(float factor)
 	{
 		// TODO
+	}
+
+	bool OpenGL_Texture::copyPixelData(unsigned char** output)
+	{
+		load();
+		glBindTexture(GL_TEXTURE_2D, mTexId);
+		*output = new unsigned char[mWidth * mHeight * 4];
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, *output);
+		return true;
 	}
 	
 	bool OpenGL_Texture::load()

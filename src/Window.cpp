@@ -284,7 +284,7 @@ namespace april
 		{
 			return (*mUpdateCallback)(k);
 		}
-		else rendersys->clear();
+		rendersys->clear();
 		return true;
 	}
 	
