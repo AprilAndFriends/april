@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.31
+/// @version 1.7
 /// 
 /// @section LICENSE
 /// 
@@ -57,6 +57,7 @@ namespace april
 		void triggerMouseUpEvent(int button);
 		void triggerMouseDownEvent(int button);
 		void triggerMouseMoveEvent();
+		void triggerMouseScrollEvent(float x, float y);
 		bool triggerQuitEvent();
 		void triggerFocusCallback(bool focused);
 

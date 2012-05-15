@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.51
+/// @version 1.7
 /// 
 /// @section LICENSE
 /// 
@@ -66,7 +66,8 @@ namespace april
 		{
 			AMOUSEEVT_DOWN = 0,
 			AMOUSEEVT_UP = 1,
-			AMOUSEEVT_MOVE = 2
+			AMOUSEEVT_MOVE = 2,
+			AMOUSEEVT_SCROLL = 3
 		};
 		
 		enum KeyEventType
@@ -107,9 +108,13 @@ namespace april
 		
 		
 		void setUpdateCallback(bool (*callback)(float));
+		DEPRECATED_ATTRIBUTE void setMouseCallbacks(void (*mouse_dn)(float, float, int),
+							   void (*mouse_up)(float, float, int),
+							   void (*mouse_move)(float, float)) { setMouseCallbacks(mouse_dn, mouse_up, mouse_move, NULL); }
 		void setMouseCallbacks(void (*mouse_dn)(float, float, int),
 							   void (*mouse_up)(float, float, int),
-							   void (*mouse_move)(float, float));
+							   void (*mouse_move)(float, float),
+							   void (*mouse_scroll)(float, float));
 		void setKeyboardCallbacks(void (*key_dn)(unsigned int),
 								  void (*key_up)(unsigned int),
 								  void (*char_callback)(unsigned int));
@@ -158,7 +163,6 @@ namespace april
 		virtual hstr getParam(chstr param) { return ""; }
 		virtual void setParam(chstr param, chstr value) { }
 		
-		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
 		void handleTouchEvent(harray<gvec2>& touches);
@@ -183,6 +187,7 @@ namespace april
 		void (*mMouseDownCallback)(float, float, int);
 		void (*mMouseUpCallback)(float, float, int);
 		void (*mMouseMoveCallback)(float, float);
+		void (*mMouseScrollCallback)(float, float);
 		void (*mKeyDownCallback)(unsigned int);
 		void (*mKeyUpCallback)(unsigned int);
 		void (*mCharCallback)(unsigned int);

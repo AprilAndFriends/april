@@ -1,6 +1,7 @@
 /// @file
 /// @author  Ivan Vucica
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 1.7
 /// 
 /// @section LICENSE
 /// 
@@ -69,6 +70,7 @@ namespace april
 		bool mCursorVisible;
 		bool mCursorInside;
 		bool mWindowFocused;
+		bool mScrollHorizontal;
 #if _SDLGLES
 		SDL_GLES_Context *mGLESContext;
 #endif

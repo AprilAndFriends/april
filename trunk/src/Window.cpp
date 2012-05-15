@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.53
+/// @version 1.7
 /// 
 /// @section LICENSE
 /// 
@@ -171,6 +171,7 @@ namespace april
 		mMouseDownCallback = NULL;
 		mMouseUpCallback = NULL;
 		mMouseMoveCallback = NULL;
+		mMouseScrollCallback = NULL;
 		mKeyDownCallback = NULL;
 		mKeyUpCallback = NULL;
 		mCharCallback = NULL;
@@ -202,11 +203,13 @@ namespace april
 
 	void Window::setMouseCallbacks(void (*mouse_dn)(float, float, int),
 								   void (*mouse_up)(float, float, int),
-								   void (*mouse_move)(float, float))
+								   void (*mouse_move)(float, float),
+								   void (*mouse_scroll)(float, float))
 	{
 		mMouseDownCallback = mouse_dn;
 		mMouseUpCallback = mouse_up;
 		mMouseMoveCallback = mouse_move;
+		mMouseScrollCallback = mouse_scroll;
 	}
 	
 	void Window::setKeyboardCallbacks(void (*key_dn)(unsigned int),
@@ -338,6 +341,12 @@ namespace april
 			if (mMouseMoveCallback != NULL)
 			{
 				(*mMouseMoveCallback)(x, y);
+			}
+			break;
+		case AMOUSEEVT_SCROLL:
+			if (mMouseScrollCallback != NULL)
+			{
+				(*mMouseScrollCallback)(x, y);
 			}
 			break;
 		}

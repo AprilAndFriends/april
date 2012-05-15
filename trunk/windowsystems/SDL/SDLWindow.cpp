@@ -1,6 +1,7 @@
 /// @file
 /// @author  Ivan Vucica
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 1.7
 /// 
 /// @section LICENSE
 /// 
@@ -38,7 +39,7 @@
 #include "RenderSystem.h"
 #include "april.h"
 
-extern "C" int gAprilShouldInvokeQuitCallback;
+extern bool gAprilShouldInvokeQuitCallback;
 
 namespace april
 {
@@ -47,8 +48,8 @@ namespace april
 	{
 		log("Creating SDL Window");
 		// we want a centered sdl window
-		putenv((char*) "SDL_VIDEO_WINDOW_POS");
-		putenv((char*) "SDL_VIDEO_CENTERED=1");
+		_putenv("SDL_VIDEO_WINDOW_POS");
+		_putenv("SDL_VIDEO_CENTERED=1");
 		
 		// initialize SDL subsystems, such as video, audio, timer, ...
 		// and immediately set window title
@@ -57,6 +58,7 @@ namespace april
 		mTitle = title;
         mCursorInside = true;
 		mWindowFocused = true;
+		mScrollHorizontal = false;
 		
 #if !_SDLGLES
 		// set up opengl attributes desired for the context
@@ -68,6 +70,7 @@ namespace april
 
 		// set up display with width w, height h, any bpp, opengl, and optionally fullscreen
 		mFullscreen = fullscreen;
+#ifdef _OPENGL
 #if !_SDLGLES
 		mScreen = SDL_SetVideoMode(w, h, 0, SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0));
 #else
@@ -75,8 +78,12 @@ namespace april
 		mGLESContext = SDL_GLES_CreateContext();
 		SDL_GLES_MakeCurrent(mGLESContext);
 #endif
-		
+#else
+		mScreen = SDL_SetVideoMode(w, h, 0, (fullscreen ? SDL_FULLSCREEN : 0));
+#endif
+#ifdef _OPENGL
 		glClear(GL_COLOR_BUFFER_BIT);
+#endif
 		presentFrame();
 		if (!mScreen)
 		{
@@ -125,7 +132,7 @@ namespace april
 			SDL_Event event;
 			event.type = SDL_QUIT;
 			SDL_PushEvent(&event);	
-			gAprilShouldInvokeQuitCallback = 0;
+			gAprilShouldInvokeQuitCallback = false;
 		}
 		//first process sdl events
 		doEvents();
@@ -219,10 +226,12 @@ namespace april
 	
 	void SDLWindow::presentFrame()
 	{
+#ifdef _OPENGL
 #if !_SDLGLES
 		SDL_GL_SwapBuffers();
 #else
 		SDL_GLES_SwapBuffers();
+#endif
 #endif
 	}
 	
@@ -256,7 +265,7 @@ namespace april
 	
 	gvec2 SDLWindow::getCursorPosition()
 	{
-		return gvec2(mCursorX,mCursorY);
+		return gvec2(mCursorX, mCursorY);
 	}
 	
 	int SDLWindow::getWidth()
@@ -346,6 +355,7 @@ namespace april
 			s2a(KP9, NUMPAD9);
 			
 			s2a(LCTRL,LCONTROL);
+			s2a(RCTRL,RCONTROL);
 		default:
 			break;
 		}
@@ -359,6 +369,17 @@ namespace april
 		{
 			akeysym = (KeySym)(keysym - 32); // april letter keys are ascii's capital letters
 		}
+		if (akeysym == AK_LCONTROL || akeysym == AK_RCONTROL)
+		{
+			if (type == AKEYEVT_DOWN)
+			{
+				mScrollHorizontal = true;
+			}
+			else if (type == AKEYEVT_UP)
+			{
+				mScrollHorizontal = false;
+			}
+		}
 		//printf("keycode %d unicode %d (%c)\n", keycode, unicode, unicode);
 		Window::handleKeyEvent(type, akeysym, unicode);
 	}
@@ -369,31 +390,7 @@ namespace april
 		mCursorY = event.button.y;
 		Window::MouseEventType mouseevt;
 		Window::MouseButton mousebtn = AMOUSEBTN_NONE;
-		if (event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN)
-		{
-			switch (event.button.button)
-			{
-			case SDL_BUTTON_LEFT:
-				mousebtn = AMOUSEBTN_LEFT;
-				break;
-			case SDL_BUTTON_RIGHT:
-				mousebtn = AMOUSEBTN_RIGHT;
-				break;
-			case SDL_BUTTON_MIDDLE:
-				mousebtn = AMOUSEBTN_MIDDLE;
-				break;
-			case SDL_BUTTON_WHEELUP:
-				mousebtn = event.type == SDL_MOUSEBUTTONDOWN ? AMOUSEBTN_WHEELUP : AMOUSEBTN_NONE;
-				break;
-			case SDL_BUTTON_WHEELDOWN:
-				mousebtn = event.type == SDL_MOUSEBUTTONDOWN ? AMOUSEBTN_WHEELDN : AMOUSEBTN_NONE;
-				break;
-			default:
-				mousebtn = AMOUSEBTN_NONE;
-				break;
-			}
-		}
-		
+
 		switch (event.type)
 		{
 		case SDL_MOUSEBUTTONUP:
@@ -408,10 +405,50 @@ namespace april
 		default:
 			break;
 		}
-				
-		handleMouseEvent(mouseevt, 
-						 event.button.x, event.button.y,
-						 mousebtn);
+
+		if (event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN)
+		{
+			switch (event.button.button)
+			{
+			case SDL_BUTTON_LEFT:
+				mousebtn = AMOUSEBTN_LEFT;
+				break;
+			case SDL_BUTTON_RIGHT:
+				mousebtn = AMOUSEBTN_RIGHT;
+				break;
+			case SDL_BUTTON_MIDDLE:
+				mousebtn = AMOUSEBTN_MIDDLE;
+				break;
+			case SDL_BUTTON_WHEELUP:
+				if (event.type == SDL_MOUSEBUTTONDOWN)
+				{
+					mousebtn = AMOUSEBTN_WHEELUP;
+					mouseevt = AMOUSEEVT_SCROLL;
+				}
+				break;
+			case SDL_BUTTON_WHEELDOWN:
+				if (event.type == SDL_MOUSEBUTTONDOWN)
+				{
+					mousebtn = AMOUSEBTN_WHEELDN;
+					mouseevt = AMOUSEEVT_SCROLL;
+				}
+				break;
+			default:
+				mousebtn = AMOUSEBTN_NONE;
+				break;
+			}
+		}
+		
+		if (mousebtn == AMOUSEBTN_WHEELUP || mousebtn == AMOUSEBTN_WHEELDN)
+		{
+			float x = (!mScrollHorizontal ? 0.0f : (mousebtn == AMOUSEBTN_WHEELUP ? -1.0f : 1.0f));
+			float y = (mScrollHorizontal ? 0.0f : (mousebtn == AMOUSEBTN_WHEELUP ? -1.0f : 1.0f));
+			handleMouseEvent(mouseevt, x, y, mousebtn);
+		}
+		else
+		{
+			handleMouseEvent(mouseevt, event.button.x, event.button.y, mousebtn);
+		}
 	}
 	
 	bool SDLWindow::_handleDisplayAndUpdate()
@@ -431,6 +468,7 @@ namespace april
 	{
 #ifdef _WIN32
 		SDL_SysWMinfo wmInfo;
+		SDL_VERSION(&wmInfo.version);
 		SDL_GetWMInfo(&wmInfo);
 		return (void*)wmInfo.window;
 #else
@@ -441,15 +479,16 @@ namespace april
 	
 	Window::DeviceType SDLWindow::getDeviceType()
 	{
-	#if TARGET_OS_MAC
+#if TARGET_OS_MAC
 		return DEVICE_MAC_PC;
-	#elif defined(_WIN32)
+#elif defined(_WIN32)
 		return DEVICE_WINDOWS_PC;
-	#else
+#else
 		return DEVICE_LINUX_PC;
-	#endif
+#endif
 	}
 	
+#ifndef _WIN32 // hack to prevent multiple definitions of this function under Win32
 	SystemInfo& getSystemInfo()
 	{
 		static SystemInfo info;
@@ -459,10 +498,16 @@ namespace april
 			info.locale = "en";
 			info.max_texture_size = 0;
 		}
+#ifdef _OPENGL
 		if (info.max_texture_size == 0 && april::rendersys != NULL)
-				glGetIntegerv(GL_MAX_TEXTURE_SIZE, &info.max_texture_size);
+		{
+			glGetIntegerv(GL_MAX_TEXTURE_SIZE, &info.max_texture_size);
+		}
+#endif
 		return info;
 	}
+#endif
+
 }
 
 #endif
