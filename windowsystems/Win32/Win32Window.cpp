@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.5
+/// @version 1.7
 /// 
 /// @section LICENSE
 /// 
@@ -11,6 +11,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <winuser.h>
 
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hthread.h>
@@ -42,6 +43,7 @@ namespace april
 		static bool doubleTapDown = false;
 		static int nMouseMoveMessages = 0;
 		Win32Window *ws = (Win32Window*) instance;
+		static float wheelDelta;
 		switch (message)
 		{
 		case 0x0119: // WM_GESTURE (win7+ only)
@@ -137,6 +139,28 @@ namespace april
 				nMouseMoveMessages = 0;
 			}
 			ws->triggerMouseMoveEvent();
+			break;
+		case WM_MOUSEWHEEL:
+			wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
+			{
+				ws->triggerMouseScrollEvent(0.0f, -(float)wheelDelta);
+			}
+			else
+			{
+				ws->triggerMouseScrollEvent(-(float)wheelDelta, 0.0f);
+			}
+			break;
+		case WM_MOUSEHWHEEL:
+			wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
+			{
+				ws->triggerMouseScrollEvent(-(float)wheelDelta, 0.0f);
+			}
+			else
+			{
+				ws->triggerMouseScrollEvent(0.0f, -(float)wheelDelta);
+			}
 			break;
 		case WM_SETCURSOR:
 			if (!cursorVisible)
@@ -405,6 +429,14 @@ namespace april
 			(*mMouseMoveCallback)(cursorPosition.x, cursorPosition.y);
 		}
 	}
+
+	void Win32Window::triggerMouseScrollEvent(float x, float y)
+	{
+		if (mMouseScrollCallback != NULL)
+		{
+			(*mMouseScrollCallback)(x, y);
+		}
+	}
 	
 	void Win32Window::triggerFocusCallback(bool focused)
 	{
@@ -517,5 +549,6 @@ namespace april
 		if (info.max_texture_size == 0) info.max_texture_size = _impl_getMaxTextureSize();
 		return info;
 	}
+
 }
 #endif
