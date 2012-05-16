@@ -284,9 +284,9 @@ namespace april
 		D3DLOCKED_RECT lockRect;
 		RECT rect;
 		rect.left = x;
-		rect.right = x + sw;
+		rect.right = x + sw - 1;
 		rect.top = y;
-		rect.bottom = y + sh;
+		rect.bottom = y + sh - 1;
 		IDirect3DSurface9* buffer = NULL;
 		LOCK_RESULT result = _tryLock(&buffer, &lockRect, &rect);
 		if (result == LR_FAILED)
@@ -361,7 +361,7 @@ namespace april
 				}
 			}
 		}
-		else
+		else // mBpp == 4 && dataBpp == 3
 		{
 			for_iter (j, 0, sh)
 			{
@@ -372,6 +372,7 @@ namespace april
 					c[2] = sc[2];
 					c[1] = sc[1];
 					c[0] = sc[0];
+					c[3] = 255;
 				}
 			}
 		}
@@ -637,7 +638,7 @@ namespace april
 				}
 			}
 		}
-		else
+		else // mBpp == 4 && dataBpp == 3
 		{
 			for_iter (j, 0, h)
 			{
@@ -690,6 +691,7 @@ namespace april
 					c[2] = sc[2];
 					c[1] = sc[1];
 					c[0] = sc[0];
+					c[3] = 255;
 				}
 			}
 		}
