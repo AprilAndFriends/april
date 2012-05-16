@@ -47,10 +47,11 @@ namespace april
 	SDLWindow::SDLWindow(int w, int h, bool fullscreen, chstr title)
 	{
 		log("Creating SDL Window");
+#ifndef __APPLE__
 		// we want a centered sdl window
 		_putenv("SDL_VIDEO_WINDOW_POS");
 		_putenv("SDL_VIDEO_CENTERED=1");
-		
+#endif
 		// initialize SDL subsystems, such as video, audio, timer, ...
 		// and immediately set window title
 		SDL_Init(SDL_INIT_VIDEO);
