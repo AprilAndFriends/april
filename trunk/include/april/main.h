@@ -105,74 +105,27 @@ int main(int argc, char** argv)
 #include <windows.h>
 int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	// origin: http://www.flipcode.com/archives/WinMain_Command_Line_Parser.shtml
-	//  WinMain Command Line Parser by Max McGuire
-
-	int	argc;
-	char** argv;
-
-	char*  arg;
-	int	index;
-
-	// count the arguments
-	
-	argc = 1;
-	arg  = lpCmdLine;
-	
-	while (arg[0] != 0) 
+	// extract arguments
+	int argc = 0;
+	wchar_t** wArgv = CommandLineToArgvW(GetCommandLineW(), &argc);
+	char** argv = new char*[argc];
+	hstr arg;
+	for_iter (i, 0, argc)
 	{
-		while (arg[0] != 0 && arg[0] == ' ')
-		{
-			arg++;
-		}
-		if (arg[0] != 0) 
-		{
-			argc++;
-			while (arg[0] != 0 && arg[0] != ' ')
-			{
-				arg++;
-			}
-		}
-	}	
-	
-	// tokenize the arguments
-	argv = (char**)malloc(argc * sizeof(char*));
-	arg = lpCmdLine;
-	index = 1;
-
-	while (arg[0] != 0) 
-	{
-		while (arg[0] != 0 && arg[0] == ' ')
-		{
-			arg++;
-		}
-		if (arg[0] != 0) 
-		{
-			argv[index] = arg;
-			index++;
-			while (arg[0] != 0 && arg[0] != ' ')
-			{
-				arg++;
-			}
-			if (arg[0] != 0) 
-			{
-				arg[0] = 0;	
-				arg++;
-			}
-		}
-	}	
-
-	// put the program name into argv[0]
-
-	char filename[_MAX_PATH];
-	
-	GetModuleFileName(NULL, filename, _MAX_PATH);
-	argv[0] = filename;
-
+		arg = unicode_to_utf8(wArgv[i]);
+		argv[i] = new char[arg.size() + 1];
+		memset(argv[i], 0, arg.size() + 1);
+		memcpy(argv[i], arg.c_str(), sizeof(char) * arg.size());
+	}
+	LocalFree(wArgv);
 	// call the user specified main function
 	april_main(april_init, april_destroy, argc, argv);
-	
-	free(argv);
+	// free allocated memory for arguments
+	for_iter (i, 0, argc)
+	{
+		delete [] argv[i];
+	}
+	delete [] argv;
 	return 0;
 }
 #endif
