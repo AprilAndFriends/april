@@ -542,6 +542,9 @@ namespace april
 		static SystemInfo info;
 		if (info.locale == "")
 		{
+			SYSTEM_INFO w32info;
+			GetSystemInfo(&w32info);
+			info.cpu_cores = w32info.dwNumberOfProcessors;
 			info.ram = 1024;
 			info.locale = "en";
 			info.max_texture_size = 0;
@@ -549,6 +552,5 @@ namespace april
 		if (info.max_texture_size == 0) info.max_texture_size = _impl_getMaxTextureSize();
 		return info;
 	}
-
 }
 #endif

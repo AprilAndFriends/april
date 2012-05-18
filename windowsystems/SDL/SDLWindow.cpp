@@ -498,6 +498,7 @@ namespace april
 			info.ram = 1024;
 			info.locale = "en";
 			info.max_texture_size = 0;
+			info.cpu_cores = sysconf(_SC_NPROCESSORS_ONLN);
 		}
 #ifdef _OPENGL
 		if (info.max_texture_size == 0 && april::rendersys != NULL)
