@@ -567,6 +567,7 @@ namespace april
 			
 			info.name = name; // defaults for unknown devices
 			info.ram = 1024; // defaults
+			info.cpu_cores = sysconf(_SC_NPROCESSORS_ONLN);
 			info.max_texture_size = 0;
 						
 			if (name.starts_with("iPad"))

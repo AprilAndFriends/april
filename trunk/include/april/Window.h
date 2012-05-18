@@ -30,6 +30,7 @@ namespace april
 	struct SystemInfo
 	{
 		hstr name;
+		int cpu_cores; // number of CPU cores or separate CPU units
 		int ram; //! how many MB's of ram does the host system have in total
 		int max_texture_size;
 		hstr locale; //! current system locale code
