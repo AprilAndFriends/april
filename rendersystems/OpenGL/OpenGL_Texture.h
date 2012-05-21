@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.63
+/// @version 1.8
 /// 
 /// @section LICENSE
 /// 
@@ -40,7 +40,7 @@ namespace april
 		
 		OpenGL_Texture(chstr filename, bool dynamic);
 		OpenGL_Texture(unsigned char* rgba, int w, int h);
-		OpenGL_Texture(int w, int h);
+		OpenGL_Texture(int w, int h, TextureFormat fmt, TextureType type);
 		~OpenGL_Texture();
 		
 		bool load();

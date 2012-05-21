@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.6
+/// @version 1.8
 /// 
 /// @section LICENSE
 /// 
@@ -103,7 +103,31 @@ namespace april
 		img->bpp = ilGetInteger(IL_IMAGE_BPP);
 		img->data = ilGetData();
 		img->internalFormat = ilGetInteger(IL_IMAGE_FORMAT);
-		img->format = (img->internalFormat == 6408 ? AF_RGBA : AF_RGB);
+		img->format = AF_UNDEFINED;
+		switch (img->internalFormat)
+		{
+		case IL_RGBA:
+			img->format = AF_RGBA;
+			break;
+		case IL_RGB:
+			img->format = AF_RGB;
+			break;
+		case IL_BGR:
+			img->format = AF_BGR;
+			break;
+		case IL_BGRA:
+			img->format = AF_BGRA;
+			break;
+		case IL_LUMINANCE:
+			img->format = AF_GRAYSCALE;
+			break;
+		case IL_COLOUR_INDEX:
+			img->format = AF_PALETTE;
+			break;
+		default:
+			img->format = AF_UNDEFINED;
+			break;
+		}
 		return img;
 	}
 

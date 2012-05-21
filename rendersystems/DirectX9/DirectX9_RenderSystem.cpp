@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.31
+/// @version 1.8
 /// 
 /// @section LICENSE
 /// 
@@ -435,7 +435,7 @@ namespace april
 		img->w = desc.Width;
 		img->h = desc.Height;
 		img->bpp = bpp;
-		img->format = (bpp == 4 ? AT_RGBA : AT_RGB);
+		img->format = (bpp == 4 ? AF_RGBA : AF_RGB);
 		img->data = (unsigned char*)malloc(img->w * img->h * bpp);
 		unsigned char* p = img->data;
 		unsigned char* src = (unsigned char*)rect.pBits;
@@ -527,6 +527,13 @@ namespace april
 			d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_BLENDDIFFUSEALPHA);
 			d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 			d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
+		case ALPHA_MAP:
+			d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+			d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+			d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+			d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+			d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+			d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 			break;
 		}
 	}

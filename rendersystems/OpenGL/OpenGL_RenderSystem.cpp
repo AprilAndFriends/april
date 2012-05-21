@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 1.8
 /// 
 /// @section LICENSE
 /// 
@@ -31,6 +31,8 @@
 #include <string.h>
 #ifndef __APPLE__
 #include <gl/GL.h>
+#define GL_GLEXT_PROTOTYPES
+#include <gl/glext.h>
 #else
 #include <OpenGL/gl.h>
 #endif
@@ -355,7 +357,7 @@ namespace april
 	
 	Texture* OpenGL_RenderSystem::createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type)
 	{
-		return new OpenGL_Texture(w, h);
+		return new OpenGL_Texture(w, h, fmt, type);
 	}
 
 	VertexShader* OpenGL_RenderSystem::createVertexShader()
@@ -446,7 +448,7 @@ namespace april
 		img->w = w;
 		img->h = h;
 		img->bpp = bpp;
-		img->format = (bpp == 4 ? AT_RGBA : AT_RGB);
+		img->format = (bpp == 4 ? AF_RGBA : AF_RGB);
 		img->data = (unsigned char*)malloc(w * (h + 1) * 4); // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
 		unsigned char* temp = img->data + w * h * 4;
 		
@@ -482,19 +484,61 @@ namespace april
 
 	void OpenGL_RenderSystem::setBlendMode(BlendMode mode)
 	{
-		if (mode == ALPHA_BLEND || mode == DEFAULT)
+		switch (mode)
 		{
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		case DEFAULT:
+		case ALPHA_BLEND:
+			glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+			break;
+		case ADD:
+			glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+			break;
+		case SUBTRACT:
+			glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+			break;
+		case OVERWRITE:
+			glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+			glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
+			break;
 		}
-		else if (mode == ADD)
-		{
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		}
+
 	}
 	
-	void OpenGL_RenderSystem::setColorMode(ColorMode mode)
+	void OpenGL_RenderSystem::setColorMode(ColorMode mode, unsigned char alpha)
 	{
-		throw hl_exception("NOT IMPLEMENTED");
+		float constColor[4] = {alpha / 255.0f, alpha / 255.0f, alpha / 255.0f, alpha / 255.0f};
+		switch (mode)
+		{
+		case NORMAL:
+		case MULTIPLY:
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
+			break;
+		case LERP:
+			glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constColor);
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_CONSTANT);
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
+			break;
+		case ALPHA_MAP:
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
+			break;
+		}
 	}
 	
 	void OpenGL_RenderSystem::setTextureFilter(TextureFilter filter)
@@ -678,11 +722,6 @@ namespace april
 		april::log("WARNING: setResolution ignored!");
 	}
 
-	void OpenGL_RenderSystem::setColorMode(ColorMode mode, unsigned char alpha)
-	{
-		// TODO not implemented in OpenGL yet
-	}
-	
 	OpenGL_RenderSystem* OpenGL_RenderSystem::create(chstr options)
 	{
 		return new OpenGL_RenderSystem(options);
