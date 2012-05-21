@@ -484,27 +484,72 @@ namespace april
 
 	void OpenGL_RenderSystem::setBlendMode(BlendMode mode)
 	{
-		switch (mode)
+		static int blend_separation_supported = -1;
+		if (blend_separation_supported == -1)
 		{
-		case DEFAULT:
-		case ALPHA_BLEND:
-			glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-			break;
-		case ADD:
-			glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-			break;
-		case SUBTRACT:
-			glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
-			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-			break;
-		case OVERWRITE:
-			glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-			glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
-			break;
+			// determine if blend separation is possible on first call to this function
+			hstr extensions = (const char*) glGetString(GL_EXTENSIONS);
+#ifdef _OPENGLES1
+			blend_separation_supported = extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate");
+#else
+			blend_separation_supported = extensions.contains("GL_EXT_blend_equation_separate") && extensions.contains("GL_EXT_blend_func_separate");
+#endif
 		}
-
+		if (blend_separation_supported)
+		{
+			switch (mode)
+			{
+			case DEFAULT:
+			case ALPHA_BLEND:
+#ifdef _OPENGLES1
+				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
+				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#else
+				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#endif
+				break;
+			case ADD:
+#ifdef _OPENGLES1
+				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
+				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#else
+				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#endif
+				break;
+			case SUBTRACT:
+#ifdef _OPENGLES1
+				glBlendEquationSeparateOES(GL_FUNC_REVERSE_SUBTRACT_OES, GL_FUNC_ADD_OES);
+				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+					
+#else
+				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#endif
+				break;
+			case OVERWRITE:
+#ifdef _OPENGLES1
+				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
+				glBlendFuncSeparateOES(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);				
+#else
+				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
+#endif
+				break;
+			}
+		}
+		else
+		{
+			if (mode == ALPHA_BLEND || mode == DEFAULT)
+			{
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			}
+			else if (mode == ADD)
+			{
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			}
+		}
 	}
 	
 	void OpenGL_RenderSystem::setColorMode(ColorMode mode, unsigned char alpha)

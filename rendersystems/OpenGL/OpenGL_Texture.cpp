@@ -258,7 +258,9 @@ namespace april
 		{
 			glFormat = GL_ALPHA;
 		}
+#ifndef _OPENGLES1 // temp until we figure out how to handle this on OpenGLES. added by kspes on May 21st 2012
 		glGetTexImage(GL_TEXTURE_2D, 0, glFormat, GL_UNSIGNED_BYTE, readData);
+#endif
 		blit(x, y, readData, source->mWidth, source->mHeight, source->mBpp, sx, sy, sw, sh, alpha);
 		delete [] readData;
 	}
@@ -303,7 +305,6 @@ namespace april
 			glFormat = GL_ALPHA;
 		}
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, glFormat, GL_UNSIGNED_BYTE, writeData);
-		GLint error = glGetError();
 		harray<unsigned char> xxx(writeData, dataWidth * dataHeight * dataBpp);
 		delete [] writeData;
 	}
