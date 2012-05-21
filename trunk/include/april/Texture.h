@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 1.8
 /// 
 /// @section LICENSE
 /// 
@@ -35,16 +35,17 @@ namespace april
 		AT_XRGB = 1,
 		AT_ARGB = 2,
 		AT_RGB = 3,
-		AT_RGBA = 4
+		//AT_RGBA = 4, // TODO - WTF, this isn't supported!
+		AT_ALPHA = 5
 	};
 
-	class ImageSource;
-	
 	enum TextureFilter
 	{
 		Nearest = 1,
 		Linear = 2
 	};
+	
+	class ImageSource;
 	
 	class aprilExport Texture
 	{

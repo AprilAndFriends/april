@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 1.8
 /// 
 /// @section LICENSE
 /// 
@@ -57,6 +57,7 @@ namespace april
 	{
 		MULTIPLY,
 		LERP,
+		ALPHA_MAP,
 		NORMAL
 	};
 

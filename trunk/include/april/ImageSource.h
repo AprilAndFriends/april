@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.6
+/// @version 1.8
 /// 
 /// @section LICENSE
 /// 
@@ -26,11 +26,13 @@ namespace april
 
 	enum ImageFormat
 	{
+		AF_UNDEFINED = 0,
 		AF_RGB = 1,
 		AF_RGBA = 2,
 		AF_BGR = 3,
 		AF_BGRA = 4,
-		AF_UNDEFINED = 66
+		AF_GRAYSCALE = 5,
+		AF_PALETTE = 6
 	};
 	
 	class aprilExport ImageSource
