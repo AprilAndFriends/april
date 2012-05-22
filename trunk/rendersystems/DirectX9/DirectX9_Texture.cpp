@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.8
+/// @version 1.81
 /// 
 /// @section LICENSE
 /// 
@@ -32,6 +32,7 @@ namespace april
 		mRenderTarget = false;
 		mWidth = 0;
 		mHeight = 0;
+		mBpp = 4;
 		if (!mDynamic)
 		{
 			load();
@@ -914,7 +915,7 @@ namespace april
 		int i;
 		int offset;
 		*output = new unsigned char[mWidth * mHeight * 4];
-		if (mBpp == 4)
+		if (mBpp == 4 || mBpp == 3)
 		{
 			for_iter (j, 0, mHeight)
 			{
@@ -924,23 +925,16 @@ namespace april
 					(*output)[offset + 0] = p[offset + 2];
 					(*output)[offset + 1] = p[offset + 1];
 					(*output)[offset + 2] = p[offset + 0];
-					(*output)[offset + 3] = p[offset + 3];
+					if (mBpp == 4)
+					{
+						(*output)[offset + 3] = p[offset + 3];
+					}
 				}
 			}
 		}
-		else
+		else if (mBpp == 1)
 		{
-			memset(*output, 255, mWidth * mHeight * 4);
-			for_iter (j, 0, mHeight)
-			{
-				for_iterx (i, 0, mWidth)
-				{
-					offset = (i + j * mWidth) * 4;
-					(*output)[offset + 0] = p[offset + 2];
-					(*output)[offset + 1] = p[offset + 1];
-					(*output)[offset + 2] = p[offset + 0];
-				}
-			}
+			memcpy(*output, p, mWidth * mHeight * mBpp);
 		}
 		_unlock(buffer, result, false);
 		return true;
@@ -958,21 +952,37 @@ namespace april
 	bool DirectX9_Texture::load()
 	{
 		mUnusedTimer = 0;
-		if (mTexture)
+		if (mTexture != NULL)
 		{
 			return true;
 		}
 		april::log("loading DX9 texture '" + _getInternalName() + "'");
 		ImageSource* img = loadImage(mFilename);
-		if (!img)
+		if (img == NULL)
 		{
 			april::log("Failed to load texture '" + _getInternalName() + "'!");
 			return false;
 		}
 		mWidth = img->w;
 		mHeight = img->h;
-		mBpp = (img->bpp == 3 ? 3 : 4);
-		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, (img->bpp == 3) ? D3DFMT_X8R8G8B8 : D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, NULL);
+		mBpp = img->bpp;
+		D3DFORMAT d3dfmt = D3DFMT_X8R8G8B8;
+		switch (img->format)
+		{
+		case AT_ARGB:
+			d3dfmt = D3DFMT_A8R8G8B8;
+			break;
+		case AT_RGB:
+			d3dfmt = D3DFMT_X8R8G8B8;
+			break;
+		case AT_ALPHA:
+			d3dfmt = D3DFMT_A8;
+			break;
+		default:
+			d3dfmt = D3DFMT_X8R8G8B8;
+			break;
+		}
+		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, d3dfmt, D3DPOOL_MANAGED, &mTexture, NULL);
 		if (hr != D3D_OK)
 		{
 			april::log("Failed to load DX9 texture!");
@@ -989,6 +999,10 @@ namespace april
 		else if (img->bpp == 3)
 		{
 			img->copyPixels(rect.pBits, AF_BGR);
+		}
+		else if (img->bpp == 1)
+		{
+			img->copyPixels(rect.pBits, AF_GRAYSCALE);
 		}
 		else
 		{

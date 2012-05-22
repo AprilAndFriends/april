@@ -121,7 +121,7 @@ namespace april
 		case IL_LUMINANCE:
 			img->format = AF_GRAYSCALE;
 			break;
-		case IL_COLOUR_INDEX:
+		case IL_COLOR_INDEX:
 			img->format = AF_PALETTE;
 			break;
 		default:
