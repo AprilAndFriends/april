@@ -549,7 +549,10 @@ namespace april
 			info.locale = "en";
 			info.max_texture_size = 0;
 		}
-		if (info.max_texture_size == 0) info.max_texture_size = _impl_getMaxTextureSize();
+		if (info.max_texture_size == 0)
+		{
+			info.max_texture_size = _impl_getMaxTextureSize();
+		}
 		return info;
 	}
 }
