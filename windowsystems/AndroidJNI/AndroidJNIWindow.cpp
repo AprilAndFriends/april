@@ -251,8 +251,11 @@ namespace april
 		static SystemInfo info;
 		if (info.locale == "")
 		{
+			// TODO
 			info.ram = 256;
 			info.locale = "en";
+			info.max_texture_size = 0;
+			info.cpu_cores = 1;
 		}
 		return info;
 	}
