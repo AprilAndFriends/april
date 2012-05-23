@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.7
+/// @version 1.82
 /// 
 /// @section LICENSE
 /// 
@@ -100,8 +100,6 @@ namespace april
 		// utility funcs
 		void _platformCursorVisibilityUpdate(bool visible);
 		
-		// simple setters
-		void setRenderSystem(RenderSystem* rs) { mRenderSystem = rs; }
 		// the following functions should be temporary, it was added because I needed access to
 		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
 		static void setLaunchCallback(void (*callback)()) { msLaunchCallback = callback; }
@@ -111,10 +109,11 @@ namespace april
 		void setUpdateCallback(bool (*callback)(float));
 		DEPRECATED_ATTRIBUTE void setMouseCallbacks(void (*mouse_dn)(float, float, int),
 							   void (*mouse_up)(float, float, int),
-							   void (*mouse_move)(float, float)) { setMouseCallbacks(mouse_dn, mouse_up, mouse_move, NULL); }
-		void setMouseCallbacks(void (*mouse_dn)(float, float, int),
-							   void (*mouse_up)(float, float, int),
 							   void (*mouse_move)(float, float),
+							   void (*mouse_scroll)(float, float) = NULL);
+		void setMouseCallbacks(void (*mouse_dn)(int),
+							   void (*mouse_up)(int),
+							   void (*mouse_move)(),
 							   void (*mouse_scroll)(float, float));
 		void setKeyboardCallbacks(void (*key_dn)(unsigned int),
 								  void (*key_up)(unsigned int),
@@ -178,16 +177,15 @@ namespace april
 	protected:
 		Window();
 		
-		RenderSystem* mRenderSystem;
 		DeviceType mDeviceType;
 		hstr mTitle;
 		bool mFullscreen;
 		
 		void (*mLowMemoryCallback)();
 		bool (*mUpdateCallback)(float);
-		void (*mMouseDownCallback)(float, float, int);
-		void (*mMouseUpCallback)(float, float, int);
-		void (*mMouseMoveCallback)(float, float);
+		void (*mMouseDownCallback)(int);
+		void (*mMouseUpCallback)(int);
+		void (*mMouseMoveCallback)();
 		void (*mMouseScrollCallback)(float, float);
 		void (*mKeyDownCallback)(unsigned int);
 		void (*mKeyUpCallback)(unsigned int);
@@ -199,6 +197,11 @@ namespace april
 		void (*mTouchCallback)(harray<gvec2>&);
 		void (*mDeviceOrientationCallback)(DeviceOrientation);
 		bool (*mHandleURLCallback)(chstr);
+
+		// DEPRECATED
+		void (*mMouseDownCallback_DEPRECATED)(float, float, int);
+		void (*mMouseUpCallback_DEPRECATED)(float, float, int);
+		void (*mMouseMoveCallback_DEPRECATED)(float, float);
 
 		bool mRunning;
 		
