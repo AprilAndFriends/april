@@ -90,7 +90,7 @@ namespace april
 		void addInputEvent(InputEvent* event);
 		InputEvent* popInputEvent();
 		
-		bool textField_shouldChangeCharactersInRange_replacementString_(void* uitextfieldTextField, int nsrangeLocation, int nsrangeLength, chstr str);
+		void injectiOSChar(unsigned int inputChar);
 		
 		void setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation));
 		void deviceOrientationDidChange();

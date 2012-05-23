@@ -430,32 +430,25 @@ namespace april
 		return 0;
 	}
 	
-	bool iOSWindow::textField_shouldChangeCharactersInRange_replacementString_(void* uitextfieldTextField, int nsrangeLocation, int nsrangeLength, chstr str)
+	void iOSWindow::injectiOSChar(unsigned int inputChar)
 	{
 		
-		if (nsrangeLocation==0 && str.size()==0)
+		if (inputChar == 0)
 		{
 			// deploy backspace
 			handleKeyEvent(AKEYEVT_DOWN, AK_BACK, 8);
 			handleKeyEvent(AKEYEVT_UP, AK_BACK, 8);
 		}
-		else if (str.size())
+		if(inputChar >= 32)
 		{
-			int inputChar = str[0];
-
-			//if(isalnum(inputChar) || inputChar == ' ')
-			if(inputChar >= 32 && inputChar <= 127)
-			{
-				// deploy keypress
-				april::KeySym keycode = AK_NONE; // FIXME incorrect, might cause a nasty bug. 
-												 // however, writing a translation table atm 
-												 // isn't the priority.
-			
-				handleKeyEvent(AKEYEVT_DOWN, keycode, inputChar);
-				handleKeyEvent(AKEYEVT_UP, keycode, inputChar);
-			}
+			// deploy keypress
+			april::KeySym keycode = AK_NONE; // FIXME incorrect, might cause a nasty bug. 
+											 // however, writing a translation table atm 
+											 // isn't the priority.
+		
+			handleKeyEvent(AKEYEVT_DOWN, keycode, inputChar);
+			handleKeyEvent(AKEYEVT_UP, keycode, inputChar);
 		}
-		return NO;
 	}
 	
 	void iOSWindow::keyboardWasShown()
