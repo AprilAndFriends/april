@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.7
+/// @version 1.82
 /// 
 /// @section LICENSE
 /// 
@@ -165,6 +165,8 @@ namespace april
 	Window* Window::mSingleton = NULL;
 	void (*Window::msLaunchCallback)() = NULL;
 
+	//void mouseDown_DEPRECATED()
+
 	Window::Window()
 	{
 		mUpdateCallback = NULL;
@@ -193,7 +195,10 @@ namespace april
 
 	void Window::handleLaunchCallback()
 	{
-		if (msLaunchCallback != NULL) msLaunchCallback();
+		if (msLaunchCallback != NULL)
+		{
+			(*msLaunchCallback)();
+		}
 	}
 	
 	void Window::setUpdateCallback(bool (*callback)(float))
@@ -204,6 +209,17 @@ namespace april
 	void Window::setMouseCallbacks(void (*mouse_dn)(float, float, int),
 								   void (*mouse_up)(float, float, int),
 								   void (*mouse_move)(float, float),
+								   void (*mouse_scroll)(float, float))
+	{
+		mMouseDownCallback_DEPRECATED = mouse_dn;
+		mMouseUpCallback_DEPRECATED = mouse_up;
+		mMouseMoveCallback_DEPRECATED = mouse_move;
+		mMouseScrollCallback = mouse_scroll;
+	}
+	
+	void Window::setMouseCallbacks(void (*mouse_dn)(int),
+								   void (*mouse_up)(int),
+								   void (*mouse_move)(),
 								   void (*mouse_scroll)(float, float))
 	{
 		mMouseDownCallback = mouse_dn;
@@ -328,19 +344,37 @@ namespace april
 		case AMOUSEEVT_DOWN:
 			if (mMouseDownCallback != NULL)
 			{
-				(*mMouseDownCallback)(x, y, button);
+				(*mMouseDownCallback)(button);
+			}
+			// TODO - this is DEPRECATED
+			else if (mMouseDownCallback_DEPRECATED != NULL)
+			{
+				gvec2 cursorPosition = getCursorPosition();
+				(*mMouseDownCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y, button);
 			}
 			break;
 		case AMOUSEEVT_UP:
 			if (mMouseUpCallback != NULL)
 			{
-				(*mMouseUpCallback)(x, y, button);
+				(*mMouseUpCallback)(button);
+			}
+			// TODO - this is DEPRECATED
+			else if (mMouseUpCallback_DEPRECATED != NULL)
+			{
+				gvec2 cursorPosition = getCursorPosition();
+				(*mMouseUpCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y, button);
 			}
 			break;
 		case AMOUSEEVT_MOVE:
 			if (mMouseMoveCallback != NULL)
 			{
-				(*mMouseMoveCallback)(x, y);
+				(*mMouseMoveCallback)();
+			}
+			// TODO - this is DEPRECATED
+			else if (mMouseMoveCallback_DEPRECATED != NULL)
+			{
+				gvec2 cursorPosition = getCursorPosition();
+				(*mMouseMoveCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y);
 			}
 			break;
 		case AMOUSEEVT_SCROLL:

@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.7
+/// @version 1.82
 /// 
 /// @section LICENSE
 /// 
@@ -406,19 +406,29 @@ namespace april
 		}
 	}
 	
-	void Win32Window::triggerMouseUpEvent(int button)
-	{
-		if (mMouseUpCallback != NULL)
-		{
-			(*mMouseUpCallback)(cursorPosition.x, cursorPosition.y, button);
-		}
-	}
-	
 	void Win32Window::triggerMouseDownEvent(int button)
 	{
 		if (mMouseDownCallback != NULL)
 		{
-			(*mMouseDownCallback)(cursorPosition.x, cursorPosition.y, button);
+			(*mMouseDownCallback)(button);
+		}
+		// TODO - this is DEPRECATED
+		else if (mMouseDownCallback_DEPRECATED != NULL)
+		{
+			(*mMouseDownCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y, button);
+		}
+	}
+	
+	void Win32Window::triggerMouseUpEvent(int button)
+	{
+		if (mMouseUpCallback != NULL)
+		{
+			(*mMouseUpCallback)(button);
+		}
+		// TODO - this is DEPRECATED
+		else if (mMouseUpCallback_DEPRECATED != NULL)
+		{
+			(*mMouseUpCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y, button);
 		}
 	}
 	
@@ -426,7 +436,12 @@ namespace april
 	{
 		if (mMouseMoveCallback != NULL)
 		{
-			(*mMouseMoveCallback)(cursorPosition.x, cursorPosition.y);
+			(*mMouseMoveCallback)();
+		}
+		// TODO - this is DEPRECATED
+		else if (mMouseMoveCallback_DEPRECATED != NULL)
+		{
+			(*mMouseMoveCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y);
 		}
 	}
 
