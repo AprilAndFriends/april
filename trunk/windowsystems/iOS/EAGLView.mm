@@ -360,8 +360,18 @@
 
 - (BOOL)textField:(UITextField *)_textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string   // return NO to not change text
 {
+	hstr str = chstr([string UTF8String]);
+	if (range.location == 0 && str.size() == 0) aprilWindow->injectiOSChar(0); // backspace indicator
+	else if (str.size() == 0) return NO;
+	unichar chars[256];
+	[string getCharacters:chars];
+	int len = [string length];
 	
-	return aprilWindow->textField_shouldChangeCharactersInRange_replacementString_(_textField, range.location, range.length, chstr([string UTF8String]));
+	for (int i = 0; i < len; i++)
+	{
+		aprilWindow->injectiOSChar(chars[i]);
+	}
+	return NO;
 }
 
 -(void)applicationDidBecomeActive:(UIApplication*)app
@@ -373,6 +383,5 @@
 {
 	aprilWindow->applicationWillResignActive();
 }
-
 
 @end
