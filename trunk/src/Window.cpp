@@ -173,6 +173,9 @@ namespace april
 		mMouseDownCallback = NULL;
 		mMouseUpCallback = NULL;
 		mMouseMoveCallback = NULL;
+		mMouseMoveCallback_DEPRECATED = NULL;
+		mMouseUpCallback_DEPRECATED = NULL;
+		mMouseDownCallback_DEPRECATED = NULL;
 		mMouseScrollCallback = NULL;
 		mKeyDownCallback = NULL;
 		mKeyUpCallback = NULL;
@@ -521,7 +524,8 @@ namespace april
 #ifdef HAVE_SDL
 		if (winsysname == "SDL")
 		{
-			return new SDLWindow(w, h, fullscreen, title);
+			SDLWindow* wnd = new SDLWindow(w, h, fullscreen, title);
+			return wnd;
 		}
 #endif
 #ifdef _WIN32
