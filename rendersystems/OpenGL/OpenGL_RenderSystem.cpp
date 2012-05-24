@@ -19,7 +19,10 @@
 #include <OpenGLES/ES1/glext.h>
 #elif defined(_OPENGLES1)
 #include <GLES/gl.h>
-#ifndef _ANDROID
+#ifdef _ANDROID
+#define GL_GLEXT_PROTOTYPES
+#include <GLES/glext.h>
+#else
 #include <EGL/egl.h>
 #endif
 #else
