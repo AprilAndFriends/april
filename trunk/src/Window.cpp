@@ -190,6 +190,9 @@ namespace april
 		mHandleURLCallback = NULL;
 		mSingleton = this;
 		april::window = this;
+		mMouseDownCallback_DEPRECATED = NULL;
+		mMouseUpCallback_DEPRECATED = NULL;
+		mMouseMoveCallback_DEPRECATED = NULL;
 	}
 	
 	Window::~Window()
@@ -218,6 +221,9 @@ namespace april
 		mMouseUpCallback_DEPRECATED = mouse_up;
 		mMouseMoveCallback_DEPRECATED = mouse_move;
 		mMouseScrollCallback = mouse_scroll;
+		mMouseDownCallback = NULL;
+		mMouseUpCallback = NULL;
+		mMouseMoveCallback = NULL;
 	}
 	
 	void Window::setMouseCallbacks(void (*mouse_dn)(int),
@@ -229,6 +235,9 @@ namespace april
 		mMouseUpCallback = mouse_up;
 		mMouseMoveCallback = mouse_move;
 		mMouseScrollCallback = mouse_scroll;
+		mMouseDownCallback_DEPRECATED = NULL;
+		mMouseUpCallback_DEPRECATED = NULL;
+		mMouseMoveCallback_DEPRECATED = NULL;
 	}
 	
 	void Window::setKeyboardCallbacks(void (*key_dn)(unsigned int),
