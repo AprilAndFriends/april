@@ -30,7 +30,7 @@
 		7FF23D9C1255E06E000C729A /* hltypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = hltypes.framework; path = Library/Frameworks/hltypes.framework; sourceTree = SDKROOT; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* aprilutil.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = aprilutil.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D16888FC149023D8004FD97F /* libaprilutil-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libaprilutil-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D16888FC149023D8004FD97F /* libaprilutil.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libaprilutil.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D16888FE149023D8004FD97F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -59,7 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				8DC2EF5B0486A6940098B216 /* aprilutil.framework */,
-				D16888FC149023D8004FD97F /* libaprilutil-ios.a */,
+				D16888FC149023D8004FD97F /* libaprilutil.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -180,9 +180,9 @@
 			productReference = 8DC2EF5B0486A6940098B216 /* aprilutil.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		D16888FB149023D8004FD97F /* aprilutil-ios */ = {
+		D16888FB149023D8004FD97F /* aprilutil (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D1688906149023D8004FD97F /* Build configuration list for PBXNativeTarget "aprilutil-ios" */;
+			buildConfigurationList = D1688906149023D8004FD97F /* Build configuration list for PBXNativeTarget "aprilutil (iOS)" */;
 			buildPhases = (
 				D16888F8149023D8004FD97F /* Sources */,
 				D16888F9149023D8004FD97F /* Frameworks */,
@@ -192,9 +192,9 @@
 			);
 			dependencies = (
 			);
-			name = "aprilutil-ios";
+			name = "aprilutil (iOS)";
 			productName = "aprilutil-ios";
-			productReference = D16888FC149023D8004FD97F /* libaprilutil-ios.a */;
+			productReference = D16888FC149023D8004FD97F /* libaprilutil.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -221,7 +221,7 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* aprilutil */,
-				D16888FB149023D8004FD97F /* aprilutil-ios */,
+				D16888FB149023D8004FD97F /* aprilutil (iOS) */,
 			);
 		};
 /* End PBXProject section */
@@ -499,7 +499,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = aprilutil;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
@@ -526,7 +526,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = aprilutil;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
@@ -547,7 +547,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = aprilutil;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
@@ -569,7 +569,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = aprilutil;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
@@ -591,7 +591,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = aprilutil;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;
@@ -625,7 +625,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D1688906149023D8004FD97F /* Build configuration list for PBXNativeTarget "aprilutil-ios" */ = {
+		D1688906149023D8004FD97F /* Build configuration list for PBXNativeTarget "aprilutil (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D1688907149023D8004FD97F /* Debug */,
