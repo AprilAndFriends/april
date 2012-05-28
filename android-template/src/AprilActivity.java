@@ -173,6 +173,7 @@ public class AprilActivity extends Activity
 		super.onDestroy();
 		System.runFinalizersOnExit(true);
 		System.exit(0);
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 	
 	@Override
