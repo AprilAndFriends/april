@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.6
+/// @version 1.84
 /// 
 /// @section LICENSE
 /// 
@@ -57,7 +57,7 @@ namespace april
 	
 	void ImageSource::copyPixels(void* output, ImageFormat _format)
 	{
-		// todo: hacky. input and output formats can be different, fix this in the future
+		// TODO - hacky. input and output formats can be different, fix this in the future
 		if (_format == AF_BGRA)
 		{
 			unsigned char* o = (unsigned char*)output;

@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.81
+/// @version 1.84
 /// 
 /// @section LICENSE
 /// 
@@ -437,6 +437,7 @@ namespace april
 						c[2] = (sc[2] * a0 + c[2] * a1) / 255;
 						c[1] = (sc[1] * a0 + c[1] * a1) / 255;
 						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
+						c[3] = a0 + c[3] * a1 / 255;
 					}
 				}
 			}
@@ -967,16 +968,25 @@ namespace april
 		mHeight = img->h;
 		mBpp = img->bpp;
 		D3DFORMAT d3dfmt = D3DFMT_X8R8G8B8;
+		if (mFilename.contains("051-Carpet01"))
+		{
+			int x = 0;
+		}
 		switch (img->format)
 		{
-		case AT_ARGB:
+		case AF_RGBA:
+		case AF_BGRA:
 			d3dfmt = D3DFMT_A8R8G8B8;
 			break;
-		case AT_RGB:
+		case AF_RGB:
+		case AF_BGR:
 			d3dfmt = D3DFMT_X8R8G8B8;
 			break;
-		case AT_ALPHA:
+		case AF_GRAYSCALE:
 			d3dfmt = D3DFMT_A8;
+			break;
+		case AF_PALETTE:
+			d3dfmt = D3DFMT_A8R8G8B8;
 			break;
 		default:
 			d3dfmt = D3DFMT_X8R8G8B8;
@@ -992,15 +1002,15 @@ namespace april
 		// write texels
 		D3DLOCKED_RECT rect;
 		mTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
-		if (img->bpp == 4)
+		if (img->format == AF_RGBA)
 		{
 			img->copyPixels(rect.pBits, AF_BGRA);
 		}
-		else if (img->bpp == 3)
+		else if (img->format == AF_RGB)
 		{
 			img->copyPixels(rect.pBits, AF_BGR);
 		}
-		else if (img->bpp == 1)
+		else if (img->format == AF_GRAYSCALE)
 		{
 			img->copyPixels(rect.pBits, AF_GRAYSCALE);
 		}
