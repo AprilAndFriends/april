@@ -26,7 +26,7 @@ class AprilJNI
 	public static boolean Running = false;
 	public static String ArchivePath = "";
 	public static String SystemPath = ".";
-	public static String SharedPath = ".";
+	public static String DataPath = ".";
 	public static String PackageName = "";
 	public static String VersionCode = "0";
 	public static AlertDialog.Builder DialogBuilder = null;
@@ -120,9 +120,9 @@ public class AprilActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		AprilJNI.Activity = this;
-		AprilJNI.SharedPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-		AprilJNI.SystemPath = this.getFilesDir().getAbsolutePath();
 		AprilJNI.PackageName = this.getPackageName();
+		AprilJNI.DataPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/" + AprilJNI.PackageName;
+		AprilJNI.SystemPath = this.getFilesDir().getAbsolutePath();
 		try
 		{
 			AprilJNI.VersionCode = Integer.toString(this.getPackageManager().getPackageInfo(AprilJNI.PackageName, 0).versionCode);
@@ -173,7 +173,6 @@ public class AprilActivity extends Activity
 		super.onDestroy();
 		System.runFinalizersOnExit(true);
 		System.exit(0);
-		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 	
 	@Override
@@ -260,7 +259,7 @@ class AprilRenderer implements GLSurfaceView.Renderer
 		AprilJNI.onSurfaceCreated();
 		if (!AprilJNI.Running)
 		{
-			AprilJNI.setVariables(AprilJNI.Activity, AprilJNI.SystemPath, AprilJNI.SharedPath, AprilJNI.PackageName, AprilJNI.VersionCode, AprilJNI.ArchivePath);
+			AprilJNI.setVariables(AprilJNI.Activity, AprilJNI.SystemPath, AprilJNI.DataPath, AprilJNI.PackageName, AprilJNI.VersionCode, AprilJNI.ArchivePath);
 			DisplayMetrics metrics = new DisplayMetrics();
 			AprilJNI.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 			String args[] = {AprilJNI.ArchivePath}; // adding argv[0]
