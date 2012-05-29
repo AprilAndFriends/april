@@ -46,7 +46,7 @@ namespace april
 	}
 
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jobject activity,
-		jstring jSystemPath, jstring jSharedPath, jstring jPackageName, jstring jVersionCode, jstring jForceArchivePath)
+		jstring jSystemPath, jstring jDataPath, jstring jPackageName, jstring jVersionCode, jstring jForceArchivePath)
 	{
 		april::jActivity = activity;
 		april::systemPath = _JSTR_TO_HSTR(jSystemPath);
@@ -55,7 +55,7 @@ namespace april
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
 			// set the resources CWD
-			hresource::setCwd(_JSTR_TO_HSTR(jSharedPath) + "/Android/data/" + packageName);
+			hresource::setCwd(_JSTR_TO_HSTR(jDataPath));
 			hresource::setArchive(""); // not used anyway when hasZip() returns false
 		}
 		else if (archivePath != "")
@@ -68,8 +68,8 @@ namespace april
 		{
 			// using OBB file as archive
 			hresource::setCwd(".");
-			hstr archiveName = "main." + _JSTR_TO_HSTR(jVersionCode) + "." + packageName + ".obb"; // using Google Play's "Expansion File" system
-			hresource::setArchive(_JSTR_TO_HSTR(jSharedPath) + "/Android/obb/" + packageName + "/" + archiveName);
+			// using Google Play's "Expansion File" system
+			hresource::setArchive(_JSTR_TO_HSTR(jDataPath) + "/main." + _JSTR_TO_HSTR(jVersionCode) + "." + packageName + ".obb");
 		}
 	}
 
@@ -126,6 +126,9 @@ namespace april
 
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
 	{
+#ifdef _DEBUG
+		april::log("Android View::onSurfaceCreated()");
+#endif
 		if (april::rendersys != NULL)
 		{
 			april::rendersys->restore();
@@ -135,21 +138,21 @@ namespace april
 	void JNICALL _JNI_activityOnCreate(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnCreate()");
+		april::log("Android Activity::onCreate()");
 #endif
 	}
 
 	void JNICALL _JNI_activityOnStart(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnStart()");
+		april::log("Android Activity::onStart()");
 #endif
 	}
 
 	void JNICALL _JNI_activityOnResume(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnResume()");
+		april::log("Android Activity::onResume()");
 #endif
 		PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent(true));
 	}
@@ -157,7 +160,7 @@ namespace april
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnPause()");
+		april::log("Android Activity::onPause()");
 #endif
 		PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent(false));
 		if (april::rendersys != NULL)
@@ -169,21 +172,21 @@ namespace april
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnStop()");
+		april::log("Android Activity::onStop()");
 #endif
 	}
 
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnDestroy()");
+		april::log("Android Activity::onDestroy()");
 #endif
 	}
 
 	void JNICALL _JNI_activityOnRestart(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnRestart()");
+		april::log("Android Activity::onRestart()");
 #endif
 	}
 

@@ -112,6 +112,7 @@ namespace april
 	{
 		if (april::rendersys != NULL)
 		{
+			april::log("destroying april");
 			delete april::rendersys;
 			april::rendersys = NULL;
 		}
