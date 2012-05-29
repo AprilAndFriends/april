@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.8
+/// @version 1.84
 /// 
 /// @section LICENSE
 /// 
@@ -57,7 +57,7 @@ namespace april
 		int w;
 		int h;
 		int bpp;
-		int format;
+		ImageFormat format;
 		int internalFormat;
 
 		int compressedLength;
