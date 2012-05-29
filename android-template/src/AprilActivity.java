@@ -8,11 +8,13 @@ import javax.microedition.khronos.opengles.GL10;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.pm.ActivityInfo;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
@@ -130,6 +132,20 @@ public class AprilActivity extends Activity
 		catch (NameNotFoundException e)
 		{
 		}
+		// cheap auto-rotation
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+		{
+			int orientation = this.getRequestedOrientation();
+			if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+			{
+				this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+			}
+			else if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+			{
+				this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+			}
+		}
+		// creating a GL surface view
 		this.glView = new AprilGLSurfaceView(this);
 		this.setContentView(this.glView);
 		AprilJNI.activityOnCreate();
@@ -229,7 +245,8 @@ class AprilGLSurfaceView extends GLSurfaceView
 				public void run()
 				{
 					final int action = event.getAction();
-					final int index = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;
+					final int index = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+					final int pointerCount = event.getPointerCount();
 					switch (action & MotionEvent.ACTION_MASK)
 					{
 					case MotionEvent.ACTION_DOWN:
@@ -240,8 +257,11 @@ class AprilGLSurfaceView extends GLSurfaceView
 					case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
 						AprilJNI.onTouch(1, event.getX(index), event.getY(index), index);
 						break;
-					case MotionEvent.ACTION_MOVE:
-						AprilJNI.onTouch(2, event.getX(index), event.getY(index), index);
+					case MotionEvent.ACTION_MOVE: // Android batches multitouch move events into a single move event
+						for (int i = 0; i < pointerCount; i++)
+						{
+							AprilJNI.onTouch(2, event.getX(i), event.getY(i), i);
+						}
 						break;
 					}
 				}
