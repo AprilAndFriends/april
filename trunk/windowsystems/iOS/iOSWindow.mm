@@ -126,7 +126,6 @@ namespace april
 		}
 		
 		float k = mTimer.diff(true);
-		[viewcontroller update:k]; // iOS specific
 		return performUpdate(k);	
 	}
 
