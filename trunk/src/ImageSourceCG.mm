@@ -100,7 +100,7 @@ namespace april
 	{
 		mImageId = 0; // unused in CG
 		this->data = NULL;
-		this->w = this->h = this->bpp = this->format = 0;
+		this->w = this->h = this->bpp = this->format = AF_UNDEFINED;
 		this->compressedLength = 0;
 	}
 	
