@@ -126,7 +126,7 @@ namespace april
 		}
 		
 		ImageSource* img=new ImageSource();
-		img->format = pvrtex.internalFormat; //ilGetInteger(IL_IMAGE_FORMAT); // not used
+		img->format = (ImageFormat) pvrtex.internalFormat; //ilGetInteger(IL_IMAGE_FORMAT); // not used
 		img->w = pvrtex.width;
 		img->h = pvrtex.height;
 		img->bpp = 4;
