@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.53
+/// @version 1.85
 /// 
 /// @section LICENSE
 /// 
@@ -81,7 +81,7 @@ namespace april
 		{
 			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
 		}
-		april::androidResolution.set((float)hmax(width, height), (float)hmin(width, height));
+		april::androidResolution.set((float)width, (float)height);
 		april_init(args);
 	}
 
@@ -271,6 +271,7 @@ namespace april
 		}
 		return JNI_VERSION_1_6;
 	}
+
 }
 
 #endif

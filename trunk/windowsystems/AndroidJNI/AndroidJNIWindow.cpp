@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.53
+/// @version 1.85
 /// 
 /// @section LICENSE
 /// 
@@ -147,7 +147,7 @@ namespace april
 		}
 	}
 
-	void AndroidJNIWindow::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView)
+	void AndroidJNIWindow::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaView)
 	{
 		JNIEnv* env = NULL;
 		((JavaVM*)javaVM)->GetEnv((void**)&env, JNI_VERSION_1_6);
@@ -156,15 +156,12 @@ namespace april
 		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
 		jobject INPUT_METHOD_SERVICE = env->GetStaticObjectField(classContext, fieldINPUT_METHOD_SERVICE);
 		jmethodID methodGetSystemService = env->GetMethodID(classAprilActivity, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
-		jmethodID methodGetWindow = env->GetMethodID(classAprilActivity, "getWindow", "()Landroid/view/Window;");
-		jobject window = env->CallObjectMethod(jActivity, methodGetWindow);
-		jclass classWindow = env->FindClass("android/view/Window");
-		jmethodID methodGetDecorView = env->GetMethodID(classWindow, "getDecorView", "()Landroid/view/View;");
+		jmethodID methodGetView = env->GetMethodID(classAprilActivity, "getView", "()Landroid/view/View;");
 		// output
 		*javaEnv = (void*)env;
 		*javaClassInputMethodManager = (void*)env->FindClass("android/view/inputmethod/InputMethodManager");
 		*javaInputMethodManager = (void*)env->CallObjectMethod(jActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
-		*javaDecorView = (void*)env->CallObjectMethod(window, methodGetDecorView);
+		*javaView = (void*)env->CallObjectMethod(jActivity, methodGetView);
 	}
 	
 	void AndroidJNIWindow::beginKeyboardHandling()
@@ -172,11 +169,11 @@ namespace april
 		JNIEnv* env = NULL;
 		jclass classInputMethodManager = NULL;
 		jobject inputMethodManager = NULL;
-		jobject decorView = NULL;
-		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&decorView);
+		jobject view = NULL;
+		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&view);
 		// show virtual keyboard
 		jmethodID methodShowSoftInput = env->GetMethodID(classInputMethodManager, "showSoftInput", "(Landroid/view/View;I)Z");
-		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, decorView, 0);
+		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, view, 2);
 	}
 	
 	void AndroidJNIWindow::terminateKeyboardHandling()
@@ -184,12 +181,12 @@ namespace april
 		JNIEnv* env = NULL;
 		jclass classInputMethodManager = NULL;
 		jobject inputMethodManager = NULL;
-		jobject decorView = NULL;
-		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&decorView);
+		jobject view = NULL;
+		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&view);
 		// hide virtual keyboard
 		jclass classView = env->FindClass("android/view/View");
 		jmethodID methodGetWindowToken = env->GetMethodID(classView, "getWindowToken", "()Landroid/os/IBinder;");
-		jobject binder = env->CallObjectMethod(decorView, methodGetWindowToken);
+		jobject binder = env->CallObjectMethod(view, methodGetWindowToken);
 		jmethodID methodHideSoftInput = env->GetMethodID(classInputMethodManager, "hideSoftInputFromWindow", "(Landroid/os/IBinder;I)Z");
 		env->CallBooleanMethod(inputMethodManager, methodHideSoftInput, binder, 0);
 	}

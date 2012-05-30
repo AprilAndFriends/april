@@ -1,6 +1,6 @@
 package net.sourceforge.april;
 
-// version 1.52
+// version 1.85
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -8,9 +8,9 @@ import javax.microedition.khronos.opengles.GL10;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.pm.ActivityInfo;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.opengl.GLSurfaceView;
@@ -18,9 +18,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
+import android.view.inputmethod.BaseInputConnection;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
 
 class AprilJNI
 {
@@ -117,6 +121,11 @@ public class AprilActivity extends Activity
 		AprilJNI.ArchivePath = archivePath;
 	}
 	
+	public View getView()
+	{
+		return this.glView;
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -148,6 +157,9 @@ public class AprilActivity extends Activity
 		// creating a GL surface view
 		this.glView = new AprilGLSurfaceView(this);
 		this.setContentView(this.glView);
+		// focusing this view allows proper input processing
+		this.glView.requestFocus();
+		this.glView.requestFocusFromTouch();
 		AprilJNI.activityOnCreate();
 	}
 	
@@ -234,6 +246,9 @@ class AprilGLSurfaceView extends GLSurfaceView
 		this.setEGLConfigChooser(false);
 		this.renderer = new AprilRenderer();
 		this.setRenderer(this.renderer);
+		// view has to be properly focusable to be able to process input
+		this.setFocusable(true);
+		this.setFocusableInTouchMode(true);
 	}
 	
 	public boolean onTouchEvent(final MotionEvent event)
@@ -270,6 +285,20 @@ class AprilGLSurfaceView extends GLSurfaceView
 		return true;
 	}
 	
+	@Override 
+	public InputConnection onCreateInputConnection(EditorInfo outAttributes)  // required for creation of soft keyboard
+	{ 
+		outAttributes.actionId = EditorInfo.IME_ACTION_DONE; 
+		outAttributes.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI; 
+		return new AprilInputConnection(this, false);
+	}
+	
+	@Override
+	public boolean onCheckIsTextEditor() // required for creation of soft keyboard
+	{
+		return true;
+	}
+	
 }
 
 class AprilRenderer implements GLSurfaceView.Renderer
@@ -283,7 +312,19 @@ class AprilRenderer implements GLSurfaceView.Renderer
 			DisplayMetrics metrics = new DisplayMetrics();
 			AprilJNI.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 			String args[] = {AprilJNI.ArchivePath}; // adding argv[0]
-			AprilJNI.init(args, metrics.widthPixels, metrics.heightPixels);
+			int width = metrics.widthPixels;
+			int height = metrics.heightPixels;
+			if (height > width)
+			{
+				height = metrics.widthPixels;
+				width = metrics.heightPixels;
+			}
+			// fixes problem with bottom 20 pixels being covered by Kindle Fire's menu
+			if (Build.MANUFACTURER == "Amazon" && Build.MODEL == "Kindle Fire")
+			{
+				height -= 20;
+			}
+			AprilJNI.init(args, width, height);
 			AprilJNI.Running = true;
 		}
 	}
@@ -298,6 +339,29 @@ class AprilRenderer implements GLSurfaceView.Renderer
 		{
 			AprilJNI.Activity.finish();
 		}
+	}
+	
+}
+
+class AprilInputConnection extends BaseInputConnection
+{
+	private final View view;
+	private final KeyEvent delKeyDownEvent = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL);
+	private final KeyEvent delKeyUpEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL);
+	
+	public AprilInputConnection(View view, boolean fullEditor)
+	{
+		super(view, fullEditor);
+		this.view = view;
+	}
+	
+	@Override
+	public boolean deleteSurroundingText(int leftLength, int rightLength)
+	{
+		// Ericsson Xperia devices don't send key events but call this method for some reason when handling the delete key
+		this.view.onKeyDown(KeyEvent.KEYCODE_DEL, this.delKeyDownEvent);
+		this.view.onKeyUp(KeyEvent.KEYCODE_DEL, this.delKeyUpEvent);
+		return super.deleteSurroundingText(leftLength, rightLength);
 	}
 	
 }
