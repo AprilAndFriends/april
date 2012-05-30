@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.51
+/// @version 1.86
 /// 
 /// @section LICENSE
 /// 
@@ -37,7 +37,7 @@ namespace april
 		// object creation
 		Texture* loadTexture(chstr filename, bool dynamic);
 		Texture* createTextureFromMemory(unsigned char* rgba, int w, int h);
-		Texture* createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type);
+		Texture* createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type = AT_NORMAL);
 
 		VertexShader* createVertexShader();
 		PixelShader* createPixelShader();

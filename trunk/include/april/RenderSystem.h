@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.8
+/// @version 1.86
 /// 
 /// @section LICENSE
 /// 
@@ -106,27 +106,27 @@ namespace april
 		float v;
 		void operator=(const gvec3& v);
 	};
-    
-    class aprilExport ColoredTexturedNormalVertex : public ColoredTexturedVertex
-    {
-    public:
-        gvec3 normal;
+	
+	class aprilExport ColoredTexturedNormalVertex : public ColoredTexturedVertex
+	{
+	public:
+		gvec3 normal;
 		void operator=(const gvec3& v);
-    };
-    
-    class aprilExport TexturedNormalVertex : public TexturedVertex
-    {
-    public:
-        gvec3 normal;
+	};
+	
+	class aprilExport TexturedNormalVertex : public TexturedVertex
+	{
+	public:
+		gvec3 normal;
 		void operator=(const gvec3& v);
-    };
-    
-    class aprilExport ColoredNormalVertex : public ColoredVertex
-    {
-    public:
-        gvec3 normal;
+	};
+	
+	class aprilExport ColoredNormalVertex : public ColoredVertex
+	{
+	public:
+		gvec3 normal;
 		void operator=(const gvec3& v);
-    };
+	};
 
 	class aprilExport RenderSystem
 	{
@@ -142,8 +142,8 @@ namespace april
 		virtual Texture* loadTexture(chstr filename, bool dynamic = false) = 0;
 		RamTexture* loadRamTexture(chstr filename, bool dynamic = false);
 		virtual Texture* createTextureFromMemory(unsigned char* rgba, int w, int h) = 0;
-		virtual Texture* createEmptyTexture(int w, int h, TextureFormat fmt = AT_XRGB, TextureType type = AT_NORMAL) = 0;
-		Texture* createBlankTexture(int w, int h, TextureFormat fmt = AT_XRGB, TextureType type = AT_NORMAL);
+		virtual Texture* createEmptyTexture(int w, int h, TextureFormat fmt, TextureType type = AT_NORMAL) = 0;
+		Texture* createBlankTexture(int w, int h, TextureFormat fmt, TextureType type = AT_NORMAL);
 
 		virtual VertexShader* createVertexShader() = 0;
 		virtual PixelShader* createPixelShader() = 0;
@@ -212,8 +212,8 @@ namespace april
 		
 		TextureManager* getTextureManager() { return mTextureManager; }
 		
-        virtual ImageSource* grabScreenshot(int bpp = 3) = 0;
-        
+		virtual ImageSource* grabScreenshot(int bpp = 3) = 0;
+		
 		virtual void presentFrame();
 		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
 

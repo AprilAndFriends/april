@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.8
+/// @version 1.86
 /// 
 /// @section LICENSE
 /// 
@@ -280,13 +280,26 @@ namespace april
 		int j;
 		int k;
 		int minBpp = hmin(mBpp, dataBpp);
-		for_iterx (j, 0, sh)
+		if (mBpp >= 3 && dataBpp >= 3)
 		{
-			for_iterx (i, 0, sw)
+			for_iterx (j, 0, sh)
 			{
-				for_iterx (k, 0, minBpp)
+				for_iterx (i, 0, sw)
 				{
-					writeData[(i + j * sw) * mBpp + k] = data[(sx + i + (sy + j) * dataWidth) * dataBpp + k];
+					for_iterx (k, 0, minBpp)
+					{
+						writeData[(i + j * sw) * mBpp + k] = data[(sx + i + (sy + j) * dataWidth) * dataBpp + k];
+					}
+				}
+			}
+		}
+		else
+		{
+			for_iterx (j, 0, sh)
+			{
+				for_iterx (i, 0, sw)
+				{
+					writeData[i + j * sw] = data[sx + i + (sy + j) * dataWidth];
 				}
 			}
 		}
@@ -305,7 +318,6 @@ namespace april
 			glFormat = GL_ALPHA;
 		}
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, glFormat, GL_UNSIGNED_BYTE, writeData);
-		harray<unsigned char> xxx(writeData, dataWidth * dataHeight * dataBpp);
 		delete [] writeData;
 	}
 
@@ -339,7 +351,7 @@ namespace april
 #ifndef _OPENGLES1
 		load();
 		glBindTexture(GL_TEXTURE_2D, mTexId);
-		*output = new unsigned char[mWidth * mHeight * 4];
+		*output = new unsigned char[mWidth * mHeight * mBpp];
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, *output);
 		return true;
 #else
