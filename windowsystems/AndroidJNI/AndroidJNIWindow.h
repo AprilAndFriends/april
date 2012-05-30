@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.52
+/// @version 1.85
 /// 
 /// @section LICENSE
 /// 
@@ -104,7 +104,7 @@ namespace april
 		harray<TouchInputEvent> mTouchEvents;
 		
 		// using void** so that jni.h doesn't have to be included in this header
-		void _getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView);
+		void _getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaView);
 		
 	};
 }
