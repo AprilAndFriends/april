@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.8
+/// @version 1.86
 /// 
 /// @section LICENSE
 /// 
@@ -265,17 +265,15 @@ namespace april
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glEnableClientState(GL_VERTEX_ARRAY);
-		
 		glEnable(GL_TEXTURE_2D);
-		
-		// DevIL defaults
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		// pixel data
 #ifndef _OPENGLES1
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 #endif
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 		if (mParams.contains("zbuffer"))
 		{
@@ -300,6 +298,15 @@ namespace april
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_COLOR_ARRAY);
+		// pixel data
+#ifndef _OPENGLES1
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
+#endif
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 		// other
 		mTexCoordsEnabled = false;
 		mColorEnabled = false;
@@ -487,18 +494,18 @@ namespace april
 
 	void OpenGL_RenderSystem::setBlendMode(BlendMode mode)
 	{
-		static int blend_separation_supported = -1;
-		if (blend_separation_supported == -1)
+		static int blendSeparationSupported = -1;
+		if (blendSeparationSupported == -1)
 		{
 			// determine if blend separation is possible on first call to this function
-			hstr extensions = (const char*) glGetString(GL_EXTENSIONS);
+			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
 #ifdef _OPENGLES1
-			blend_separation_supported = extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate");
+			blendSeparationSupported = extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate");
 #else
-			blend_separation_supported = extensions.contains("GL_EXT_blend_equation_separate") && extensions.contains("GL_EXT_blend_func_separate");
+			blendSeparationSupported = extensions.contains("GL_EXT_blend_equation_separate") && extensions.contains("GL_EXT_blend_func_separate");
 #endif
 		}
-		if (blend_separation_supported)
+		if (blendSeparationSupported)
 		{
 			switch (mode)
 			{
