@@ -314,6 +314,12 @@ namespace april
 		}
 	}
 	
+	bool Win32Window::updateOneFrame()
+	{
+		// TODO
+		return true;
+	}
+	
 	void Win32Window::enterMainLoop()
 	{
 		float time = globalTimer.getTime();
@@ -378,12 +384,6 @@ namespace april
 		}
 	}
 
-	bool Win32Window::updateOneFrame()
-	{
-		// TODO
-		return true;
-	}
-	
 	void* Win32Window::getIDFromBackend()
 	{
 		return hWnd;
