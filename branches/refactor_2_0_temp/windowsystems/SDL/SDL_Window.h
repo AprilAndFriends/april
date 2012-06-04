@@ -1,7 +1,8 @@
 /// @file
 /// @author  Ivan Vucica
+/// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.7
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -33,11 +34,11 @@ union SDL_Event;
 
 namespace april
 {
-	class SDLWindow : public Window
+	class SDL_Window : public Window
 	{
 	public:
-		SDLWindow(int w, int h, bool fullscreen, chstr title);
-		~SDLWindow();
+		SDL_Window(int w, int h, bool fullscreen, chstr title);
+		~SDL_Window();
 		
 		// implementations
 		bool updateOneFrame();

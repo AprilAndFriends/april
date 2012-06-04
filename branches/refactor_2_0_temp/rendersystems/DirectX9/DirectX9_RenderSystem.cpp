@@ -25,7 +25,6 @@
 #include "ImageSource.h"
 #include "Keys.h"
 #include "Timer.h"
-#include "Win32Window.h"
 
 #define PLAIN_FVF (D3DFVF_XYZ)
 #define COLOR_FVF (D3DFVF_XYZ | D3DFVF_DIFFUSE)
@@ -98,15 +97,13 @@ namespace april
 		d3d = Direct3DCreate9(D3D_SDK_VERSION);
 		if (!d3d)
 		{
-			throw hl_exception("Unable to create Direct3D9 object!");
+			throw hl_exception("unable to create Direct3D9 object!");
 		}
 	}
 
 	void DirectX9_RenderSystem::assignWindow(Window* window)
 	{
-		mWindow = window;
-
-		hWnd = (HWND)mWindow->getIDFromBackend();
+		hWnd = (HWND)april::window->getIDFromBackend();
 
 		ZeroMemory(&d3dpp, sizeof(d3dpp));
 		d3dpp.Windowed = !window->isFullscreen();
@@ -341,9 +338,9 @@ namespace april
 		RenderSystem::setResolution(w, h);
 		mBackBuffer->Release();
 		mBackBuffer = NULL;
-		d3dpp.BackBufferWidth = mWindow->getWidth();
-		d3dpp.BackBufferHeight = mWindow->getHeight();
-		log(hsprintf("Resetting device for %d x %d...", mWindow->getWidth(), mWindow->getHeight()));
+		d3dpp.BackBufferWidth = april::window->getWidth();
+		d3dpp.BackBufferHeight = april::window->getHeight();
+		log(hsprintf("Resetting device for %d x %d...", april::window->getWidth(), april::window->getHeight()));
 		HRESULT hr = d3dDevice->Reset(&d3dpp);
 		if (hr == D3DERR_DRIVERINTERNALERROR)
 		{
@@ -689,12 +686,11 @@ namespace april
 			}
 			mBackBuffer->Release();
 			mBackBuffer = NULL;
-			int i;
-			while (((Win32Window*)mWindow)->isRunning())
+			while (april::window->isRunning())
 			{
-				for_iterx (i, 0, 10)
+				for_iter (i, 0, 10)
 				{
-					mWindow->doEvents();
+					april::window->doEvents();
 					Sleep(100);
 				}
 				hr = d3dDevice->TestCooperativeLevel();

@@ -22,17 +22,19 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
+#include "AndroidJNI_Window.h"
 #include "april.h"
-#include "RenderSystem.h"
-#ifdef _OPENGL
-#include "OpenGL_RenderSystem.h"
-#else
 #include "DirectX9_RenderSystem.h"
-#endif
+#include "OpenGL_RenderSystem.h"
+#include "RenderSystem.h"
+#include "SDL_Window.h"
+#include "Win32_Window.h"
 #include "Window.h"
 
 namespace april
 {
+	DEPRECATED_ATTRIBUTE void createRenderTarget(int width, int height, bool fullscreen, chstr title) { createWindow(width, height, fullscreen, title); } // DEPRECATED
+
 	harray<hstr> extensions;
 	hstr systemPath = ".";
 
@@ -84,23 +86,22 @@ namespace april
 #endif
 	}
 	
-	void createRenderTarget(int w, int h, bool fullscreen, chstr title)
+	void createWindow(int width, int height, bool fullscreen, chstr title)
 	{
-		Window* window = NULL;
 #if TARGET_OS_IPHONE
 		return;
 #elif defined(_WIN32)
 #ifndef HAVE_SDL
-		window = createAprilWindow("Win32", w, h, fullscreen, title);
+		april::window = new Win32_Window(width, height, fullscreen, title);
 #else
-		window = createAprilWindow("SDL", w, h, fullscreen, title);
+		april::window = new SDL_Window(width, height, fullscreen, title);
 #endif
 #elif defined(_ANDROID)
-		window = createAprilWindow("AndroidJNI", w, h, fullscreen, title);
+		april::window = new AndroidJNI_Window(width, height, fullscreen, title);
 #else
-		window = createAprilWindow("SDL", w, h, fullscreen, title);
+		april::window = new SDL_Window(width, height, fullscreen, title);
 #endif
-		april::rendersys->assignWindow(window);
+		april::rendersys->assignWindow(april::window);
 	}
 	
 	void setLogFunction(void (*fnptr)(chstr))
@@ -110,6 +111,11 @@ namespace april
 	
 	void destroy()
 	{
+		if (april::window != NULL)
+		{
+			delete april::window;
+			april::window = NULL;
+		}
 		if (april::rendersys != NULL)
 		{
 			april::log("destroying april");

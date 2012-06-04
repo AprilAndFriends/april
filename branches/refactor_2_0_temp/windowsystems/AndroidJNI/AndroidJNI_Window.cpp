@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.85
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -21,14 +21,14 @@
 namespace april
 {
 	void* javaVM = NULL;
-	jobject jActivity = NULL;
+	jobject aprilActivity = NULL;
 	gvec2 androidResolution;
 	void (*dialogCallback)(MessageBoxButton) = NULL;
 	static gvec2 cursorPosition;
 	static april::Timer globalTimer;
 	static float lastTime = 0.0f;
 
-	AndroidJNIWindow::AndroidJNIWindow(int w, int h, bool fullscreen, chstr title) : Window()
+	AndroidJNI_Window::AndroidJNI_Window(int w, int h, bool fullscreen, chstr title) : Window()
 	{
 		if (april::rendersys != NULL)
 		{
@@ -42,16 +42,16 @@ namespace april
 		mTitle = title;
 	}
 	
-	AndroidJNIWindow::~AndroidJNIWindow()
+	AndroidJNI_Window::~AndroidJNI_Window()
 	{
 		//log("Destroying Android JNI Windowsystem");
 	}
 
-	void AndroidJNIWindow::enterMainLoop()
+	void AndroidJNI_Window::enterMainLoop()
 	{
 	}
 	
-	bool AndroidJNIWindow::updateOneFrame()
+	bool AndroidJNI_Window::updateOneFrame()
 	{
 		if (lastTime == 0.0f)
 		{
@@ -71,6 +71,17 @@ namespace april
 		}
 
 		lastTime = t;
+		if (!mActive)
+		{
+			k = 0;
+			for_iter (i, 0, 5)
+			{
+				mMouseEvents.clear();
+				mKeyEvents.clear();
+				mTouchEvents.clear();
+				hthread::sleep(40);
+			}
+		}
 		bool result = true;
 		if (mUpdateCallback != NULL)
 		{
@@ -80,60 +91,60 @@ namespace april
 		return result;
 	}
 	
-	void AndroidJNIWindow::terminateMainLoop()
+	void AndroidJNI_Window::terminateMainLoop()
 	{
 		mRunning = false;
 	}
 
-	void AndroidJNIWindow::destroyWindow()
+	void AndroidJNI_Window::destroyWindow()
 	{
 	}
 
-	void AndroidJNIWindow::showSystemCursor(bool visible)
+	void AndroidJNI_Window::showSystemCursor(bool visible)
 	{
 	}
 
-	bool AndroidJNIWindow::isSystemCursorShown()
+	bool AndroidJNI_Window::isSystemCursorShown()
 	{
 		return false;
 	}
 
-	int AndroidJNIWindow::getWidth()
+	int AndroidJNI_Window::getWidth()
 	{
 		return mWidth;
 	}
 
-	int AndroidJNIWindow::getHeight()
+	int AndroidJNI_Window::getHeight()
 	{
 		return mHeight;
 	}
 
-	void AndroidJNIWindow::setWindowTitle(chstr title)
+	void AndroidJNI_Window::setWindowTitle(chstr title)
 	{
 	}
 
-	gvec2 AndroidJNIWindow::getCursorPosition()
+	gvec2 AndroidJNI_Window::getCursorPosition()
 	{
 		return cursorPosition;
 	}
 
-	void AndroidJNIWindow::presentFrame()
+	void AndroidJNI_Window::presentFrame()
 	{
 		// not needed as Android Java Activity takes care of this
 	}
 
-	void* AndroidJNIWindow::getIDFromBackend()
+	void* AndroidJNI_Window::getIDFromBackend()
 	{
 		return javaVM;
 	}
 
-	void AndroidJNIWindow::doEvents()
+	void AndroidJNI_Window::doEvents()
 	{
 		while (mMouseEvents.size() > 0)
 		{
 			MouseInputEvent e = mMouseEvents.pop_first();
-			cursorPosition.set(e.x, e.y);
-			Window::handleMouseEvent(e.type, e.x, e.y, e.button);
+			cursorPosition = e.position;
+			Window::handleMouseEvent(e.type, e.position, e.button);
 		}
 		while (mKeyEvents.size() > 0)
 		{
@@ -147,24 +158,24 @@ namespace april
 		}
 	}
 
-	void AndroidJNIWindow::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaView)
+	void AndroidJNI_Window::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaView)
 	{
 		JNIEnv* env = NULL;
 		((JavaVM*)javaVM)->GetEnv((void**)&env, JNI_VERSION_1_6);
-		jclass classAprilActivity = env->GetObjectClass(jActivity);
+		jclass classAprilActivity = env->GetObjectClass(aprilActivity);
 		jclass classContext = env->FindClass("android/content/Context");
 		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
 		jobject INPUT_METHOD_SERVICE = env->GetStaticObjectField(classContext, fieldINPUT_METHOD_SERVICE);
 		jmethodID methodGetSystemService = env->GetMethodID(classAprilActivity, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
 		jmethodID methodGetView = env->GetMethodID(classAprilActivity, "getView", "()Landroid/view/View;");
 		// output
-		*javaEnv = (void*)env;
-		*javaClassInputMethodManager = (void*)env->FindClass("android/view/inputmethod/InputMethodManager");
-		*javaInputMethodManager = (void*)env->CallObjectMethod(jActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
+		*javaEnv = env;
+		*javaClassInputMethodManager = env->FindClass("android/view/inputmethod/InputMethodManager");
+		*javaInputMethodManager = env->CallObjectMethod(aprilActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
 		*javaView = (void*)env->CallObjectMethod(jActivity, methodGetView);
 	}
 	
-	void AndroidJNIWindow::beginKeyboardHandling()
+	void AndroidJNI_Window::beginKeyboardHandling()
 	{
 		JNIEnv* env = NULL;
 		jclass classInputMethodManager = NULL;
@@ -176,7 +187,7 @@ namespace april
 		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, view, 2);
 	}
 	
-	void AndroidJNIWindow::terminateKeyboardHandling()
+	void AndroidJNI_Window::terminateKeyboardHandling()
 	{
 		JNIEnv* env = NULL;
 		jclass classInputMethodManager = NULL;
@@ -236,25 +247,6 @@ namespace april
 	void AndroidJNIWindow::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
 	{
 		mKeyEvents += KeyInputEvent(type, keyCode, charCode);
-	}
-
-	Window::DeviceType AndroidJNIWindow::getDeviceType()
-	{
-		return Window::DEVICE_ANDROID_PHONE;
-	}
-
-	SystemInfo& getSystemInfo()
-	{
-		static SystemInfo info;
-		if (info.locale == "")
-		{
-			// TODO
-			info.ram = 256;
-			info.locale = "en";
-			info.max_texture_size = 0;
-			info.cpu_cores = 1;
-		}
-		return info;
 	}
 
 }

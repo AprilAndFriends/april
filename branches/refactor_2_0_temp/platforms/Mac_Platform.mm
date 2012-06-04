@@ -31,22 +31,36 @@ namespace april
 		return gvec2(rect.size.width, rect.size.height);
 	}
 
-	SystemInfo getSystemInfo()
+	SystemInfo& getSystemInfo()
 	{
 		static SystemInfo info;
 		if (info.locale == "")
 		{
+			info.cpu_cores = sysconf(_SC_NPROCESSORS_ONLN);
 			info.ram = 1024;
 			info.locale = "en";
+			info.max_texture_size = 0;
 		}
+#ifdef _OPENGL
+		if (info.max_texture_size == 0 && april::rendersys != NULL)
+		{
+			glGetIntegerv(GL_MAX_TEXTURE_SIZE, &info.max_texture_size);
+		}
+#endif
 		return info;
 	}
 	
 	DeviceType getDeviceType()
 	{
+#if TARGET_OS_MAC
 		return DEVICE_MAC_PC;
+#elif defined(_WIN32)
+		return DEVICE_WINDOWS_PC;
+#else
+		return DEVICE_LINUX_PC;
+#endif
 	}
-    
+	
 	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// fugly implementation of showing messagebox on mac os
@@ -56,55 +70,55 @@ namespace april
 		// * use constants for button captions
 		// * use an array with constants for button captions etc
 		
-		NSString *buttons[] = {@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+		NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, AMSGBTN_NULL, AMSGBTN_NULL};
-        
+		
 		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            
-            buttonTypes[0] = AMSGBTN_OK;
-            buttonTypes[1] = AMSGBTN_CANCEL;
+			
+			buttonTypes[0] = AMSGBTN_OK;
+			buttonTypes[1] = AMSGBTN_CANCEL;
 		}
 		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
 			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            
-            buttonTypes[0] = AMSGBTN_YES;
-            buttonTypes[1] = AMSGBTN_NO;
-            buttonTypes[2] = AMSGBTN_CANCEL;
+			
+			buttonTypes[0] = AMSGBTN_YES;
+			buttonTypes[1] = AMSGBTN_NO;
+			buttonTypes[2] = AMSGBTN_CANCEL;
 
 		}
 		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
-            
-            buttonTypes[0] = AMSGBTN_YES;
-            buttonTypes[1] = AMSGBTN_NO;
+			
+			buttonTypes[0] = AMSGBTN_YES;
+			buttonTypes[1] = AMSGBTN_NO;
 		}
 		else if (buttonMask & AMSGBTN_CANCEL)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            buttonTypes[0] = AMSGBTN_CANCEL;
+			buttonTypes[0] = AMSGBTN_CANCEL;
 		}
 		else if (buttonMask & AMSGBTN_OK)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
-            buttonTypes[0] = AMSGBTN_OK;
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
+			buttonTypes[0] = AMSGBTN_OK;
 		}
 		else if (buttonMask & AMSGBTN_YES)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
-            buttonTypes[0] = AMSGBTN_YES;
+			buttonTypes[0] = AMSGBTN_YES;
 		}
 		else if (buttonMask & AMSGBTN_NO)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
-            buttonTypes[0] = AMSGBTN_NO;
+			buttonTypes[0] = AMSGBTN_NO;
 		}
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
@@ -123,12 +137,12 @@ namespace april
 			clicked = 2;
 			break;
 		}
-        
-        if (callback != NULL)
-        {
-            (*callback)(buttonTypes[clicked]);
-        }
-        return buttonTypes[clicked];
+		
+		if (callback != NULL)
+		{
+			(*callback)(buttonTypes[clicked]);
+		}
+		return buttonTypes[clicked];
 	}
 	
 }

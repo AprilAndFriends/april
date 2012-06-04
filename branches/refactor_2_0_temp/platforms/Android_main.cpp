@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.52
+/// @version 1.85
 /// 
 /// @section LICENSE
 /// 
@@ -15,6 +15,7 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
+#include "AndroidJNIWindow.h"
 #include "april.h"
 #include "Keys.h"
 #include "main.h"
@@ -23,17 +24,18 @@
 #include "Window.h"
 
 #define PROTECTED_RENDERSYS_GET_WINDOW(methodCall) \
-	if (april::rendersys != NULL && april::rendersys->getWindow() != NULL) \
+	if (april::rendersys != NULL && april::window != NULL) \
 	{ \
-		april::rendersys->getWindow()->methodCall; \
+		april::window->methodCall; \
 	}
 #define _JSTR_TO_HSTR(string) _jstringToHstr(env, string)
 
 namespace april
 {
 	extern void* javaVM;
-	extern jobject aprilActivity;
+	extern jobject jActivity;
 	extern gvec2 androidResolution;
+	extern void (*dialogCallback)(MessageBoxButton);
 
 	hstr _jstringToHstr(JNIEnv* env, jstring string)
 	{
@@ -44,16 +46,16 @@ namespace april
 	}
 
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jobject activity,
-		jstring jSystemPath, jstring jSharedPath, jstring jPackageName, jstring jVersionCode, jstring jForceArchivePath)
+		jstring jSystemPath, jstring jDataPath, jstring jPackageName, jstring jVersionCode, jstring jForceArchivePath)
 	{
-		april::aprilActivity = activity;
+		april::jActivity = activity;
 		april::systemPath = _JSTR_TO_HSTR(jSystemPath);
 		hstr archivePath = _JSTR_TO_HSTR(jForceArchivePath);
 		hstr packageName = _JSTR_TO_HSTR(jPackageName);
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
 			// set the resources CWD
-			hresource::setCwd(_JSTR_TO_HSTR(jSharedPath) + "/Android/data/" + packageName);
+			hresource::setCwd(_JSTR_TO_HSTR(jDataPath));
 			hresource::setArchive(""); // not used anyway when hasZip() returns false
 		}
 		else if (archivePath != "")
@@ -66,8 +68,8 @@ namespace april
 		{
 			// using OBB file as archive
 			hresource::setCwd(".");
-			hstr archiveName = "main." + _JSTR_TO_HSTR(jVersionCode) + "." + packageName + ".obb"; // using Google Play's "Expansion File" system
-			hresource::setArchive(_JSTR_TO_HSTR(jSharedPath) + "/Android/obb/" + packageName + "/" + archiveName);
+			// using Google Play's "Expansion File" system
+			hresource::setArchive(_JSTR_TO_HSTR(jDataPath) + "/main." + _JSTR_TO_HSTR(jVersionCode) + "." + packageName + ".obb");
 		}
 	}
 
@@ -79,7 +81,7 @@ namespace april
 		{
 			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
 		}
-		april::androidResolution.set((float)hmax(width, height), (float)hmin(width, height));
+		april::androidResolution.set((float)width, (float)height);
 		april_init(args);
 	}
 
@@ -90,37 +92,21 @@ namespace april
 
 	bool JNICALL _JNI_render(JNIEnv* env, jclass classe)
 	{
-		if (april::rendersys != NULL && april::rendersys->getWindow() != NULL)
+		if (april::rendersys != NULL && april::window != NULL)
 		{
-			return april::rendersys->getWindow()->updateOneFrame();
+			return april::window->updateOneFrame();
 		}
 		return true;
 	}
 
-	bool JNICALL _JNI_onQuit(JNIEnv* env, jclass classe)
+	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
 	{
-		if (april::rendersys != NULL && april::rendersys->getWindow() != NULL)
+		if (april::window != NULL)
 		{
-			return april::rendersys->getWindow()->handleQuitRequest(true);
+			((april::AndroidJNIWindow*)april::window)->handleTouchEvent((april::Window::MouseEventType)type, (float)x, (float)y, (int)index);
 		}
-		return true;
 	}
 
-	void JNICALL _JNI_onMouseDown(JNIEnv* env, jclass classe, jfloat x, jfloat y, jint button)
-	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_DOWN, gvec2((float)x, (float)y), april::Window::AMOUSEBTN_LEFT));
-	}
-
-	void JNICALL _JNI_onMouseUp(JNIEnv* env, jclass classe, jfloat x, jfloat y, jint button)
-	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_UP, gvec2((float)x, (float)y), april::Window::AMOUSEBTN_LEFT));
-	}
-
-	void JNICALL _JNI_onMouseMove(JNIEnv* env, jclass classe, jfloat x, jfloat y)
-	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleMouseEvent(april::Window::AMOUSEEVT_MOVE, gvec2((float)x, (float)y), april::Window::AMOUSEBTN_LEFT));
-	}
-	
 	bool JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
 		PROTECTED_RENDERSYS_GET_WINDOW(handleKeyEvent(april::Window::AKEYEVT_DOWN, (KeySym)(int)keyCode, (unsigned int)charCode));
@@ -133,11 +119,6 @@ namespace april
 		return true;
 	}
 
-	void JNICALL _JNI_onFocusChange(JNIEnv* env, jclass classe, jboolean has_focus)
-	{
-		//PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent((bool)has_focus));
-	}
-
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
 	{
 		PROTECTED_RENDERSYS_GET_WINDOW(handleLowMemoryWarning());
@@ -146,7 +127,7 @@ namespace april
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android onSurfaceCreated");
+		april::log("Android View::onSurfaceCreated()");
 #endif
 		if (april::rendersys != NULL)
 		{
@@ -157,21 +138,21 @@ namespace april
 	void JNICALL _JNI_activityOnCreate(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnCreate()");
+		april::log("Android Activity::onCreate()");
 #endif
 	}
 
 	void JNICALL _JNI_activityOnStart(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnStart()");
+		april::log("Android Activity::onStart()");
 #endif
 	}
 
 	void JNICALL _JNI_activityOnResume(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnResume()");
+		april::log("Android Activity::onResume()");
 #endif
 		PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent(true));
 	}
@@ -179,7 +160,7 @@ namespace april
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnPause()");
+		april::log("Android Activity::onPause()");
 #endif
 		PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent(false));
 		if (april::rendersys != NULL)
@@ -191,22 +172,54 @@ namespace april
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnStop()");
+		april::log("Android Activity::onStop()");
 #endif
 	}
 
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnDestroy()");
+		april::log("Android Activity::onDestroy()");
 #endif
 	}
 
 	void JNICALL _JNI_activityOnRestart(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
-		april::log("Android ActivityOnRestart()");
+		april::log("Android Activity::onRestart()");
 #endif
+	}
+
+	void JNICALL _JNI_onDialogOk(JNIEnv* env, jclass classe)
+	{
+		if (dialogCallback != NULL)
+		{
+			(*dialogCallback)(AMSGBTN_OK);
+		}
+	}
+
+	void JNICALL _JNI_onDialogYes(JNIEnv* env, jclass classe)
+	{
+		if (dialogCallback != NULL)
+		{
+			(*dialogCallback)(AMSGBTN_YES);
+		}
+	}
+
+	void JNICALL _JNI_onDialogNo(JNIEnv* env, jclass classe)
+	{
+		if (dialogCallback != NULL)
+		{
+			(*dialogCallback)(AMSGBTN_NO);
+		}
+	}
+
+	void JNICALL _JNI_onDialogCancel(JNIEnv* env, jclass classe)
+	{
+		if (dialogCallback != NULL)
+		{
+			(*dialogCallback)(AMSGBTN_CANCEL);
+		}
 	}
 
 #define _JARGS(returnType, arguments) "(" arguments ")" returnType
@@ -225,13 +238,9 @@ namespace april
 		{"init",				_JARGS(_JVOID, _JARR(_JSTR) _JINT _JINT),				(void*)&april::_JNI_init				},
 		{"destroy",				_JARGS(_JVOID, ),										(void*)&april::_JNI_destroy				},
 		{"render",				_JARGS(_JBOOL, ),										(void*)&april::_JNI_render				},
-		{"onQuit",				_JARGS(_JBOOL, ),										(void*)&april::_JNI_onQuit				},
-		{"onMouseDown",			_JARGS(_JVOID, _JFLOAT _JFLOAT _JINT),					(void*)&april::_JNI_onMouseDown			},
-		{"onMouseUp",			_JARGS(_JVOID, _JFLOAT _JFLOAT _JINT),					(void*)&april::_JNI_onMouseUp			},
-		{"onMouseMove",			_JARGS(_JVOID, _JFLOAT _JFLOAT),						(void*)&april::_JNI_onMouseMove			},
+		{"onTouch",				_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),			(void*)&april::_JNI_onTouch				},
 		{"onKeyDown",			_JARGS(_JBOOL, _JINT _JINT),							(bool*)&april::_JNI_onKeyDown			},
 		{"onKeyUp",				_JARGS(_JBOOL, _JINT),									(bool*)&april::_JNI_onKeyUp				},
-		{"onFocusChange",		_JARGS(_JVOID, _JBOOL),									(void*)&april::_JNI_onFocusChange		},
 		{"onLowMemory",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onLowMemory			},
 		{"onSurfaceCreated",	_JARGS(_JVOID, ),										(void*)&april::_JNI_onSurfaceCreated	},
 		{"activityOnCreate",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnCreate	},
@@ -240,7 +249,11 @@ namespace april
 		{"activityOnPause",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnPause		},
 		{"activityOnStop",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnStop		},
 		{"activityOnDestroy",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnDestroy	},
-		{"activityOnRestart",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnRestart	}
+		{"activityOnRestart",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnRestart	},
+		{"onDialogOk",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogOk			},
+		{"onDialogYes",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogYes			},
+		{"onDialogNo",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogNo			},
+		{"onDialogCancel",		_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogCancel		}
 	};
 	
 	jint JNI_OnLoad(JavaVM* vm, void* reserved)
@@ -258,6 +271,7 @@ namespace april
 		}
 		return JNI_VERSION_1_6;
 	}
+
 }
 
 #endif

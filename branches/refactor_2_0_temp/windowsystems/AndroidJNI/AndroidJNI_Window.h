@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.85
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -11,6 +11,7 @@
 /// 
 /// Defines an Android JNI window.
 
+#ifdef _ANDROID
 #ifndef APRIL_ANDROID_JNI_WINDOW_H
 #define APRIL_ANDROID_JNI_WINDOW_H
 
@@ -24,15 +25,13 @@ namespace april
 	struct MouseInputEvent
 	{
 		Window::MouseEventType type;
-		float x;
-		float y;
+		gvec2 position;
 		Window::MouseButton button;
 
-		MouseInputEvent(Window::MouseEventType _type, float _x, float _y, Window::MouseButton _button)
+		MouseInputEvent(Window::MouseEventType _type, gvec2 _position, Window::MouseButton _button)
 		{
 			type = _type;
-			x = _x;
-			y = _y;
+			position = _position;
 			button = _button;
 		}
 
@@ -64,11 +63,11 @@ namespace april
 
 	};
 
-	class aprilExport AndroidJNIWindow : public Window
+	class aprilExport AndroidJNI_Window : public Window
 	{
 	public:
-		AndroidJNIWindow(int w, int h, bool fullscreen, chstr title);
-		~AndroidJNIWindow();
+		AndroidJNI_Window(int w, int h, bool fullscreen, chstr title);
+		~AndroidJNI_Window();
 		
 		// implementations
 		void enterMainLoop();
@@ -88,11 +87,8 @@ namespace april
 		
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
-		void handleTouchEvent(MouseEventType type, float x, float y, int index);
-		void handleMouseEvent(MouseEventType type, float x, float y, MouseButton button);
+		void handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button);
 		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
-		
-		DeviceType getDeviceType();
 		
 	protected:
 		float mWidth;
@@ -104,8 +100,10 @@ namespace april
 		harray<TouchInputEvent> mTouchEvents;
 		
 		// using void** so that jni.h doesn't have to be included in this header
-		void _getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaView);
+		void _getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView);
 		
 	};
+
 }
+#endif
 #endif

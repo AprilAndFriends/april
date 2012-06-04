@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.86
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -22,17 +22,20 @@
 #include <gtypes/Vector3.h>
 #include <gtypes/Matrix4.h>
 
+#include "aprilExport.h"
 #include "Color.h"
 #include "PixelShader.h"
 #include "Texture.h"
 #include "VertexShader.h"
-#include "aprilExport.h"
+
+#include "Window.h" // can be removed later
 
 namespace april
 {
 	class ImageSource;
 	class TextureManager;
 	class Window;
+
 	// render operations
 	enum RenderOp
 	{
@@ -218,11 +221,10 @@ namespace april
 		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
 
 		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f);
-		DEPRECATED_ATTRIBUTE Window* getWindow() { return mWindow; }
+		DEPRECATED_ATTRIBUTE Window* getWindow() { return april::window; }
 		DEPRECATED_ATTRIBUTE RamTexture* loadRAMTexture(chstr filename, bool dynamic = false) { return loadRamTexture(filename, dynamic); }
 
 	protected:
-		Window* mWindow;
 		TextureManager* mTextureManager;
 		float mIdleUnloadTime;
 		bool mDynamicLoading;

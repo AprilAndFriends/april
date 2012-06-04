@@ -18,6 +18,91 @@
 #include "iOSWindow.h"
 #include "Platform.h"
 
+@interface AprilMessageBoxDelegate : NSObject<UIAlertViewDelegate>
+{
+	void(*callback)(april::MessageBoxButton);
+	april::MessageBoxButton buttonTypes[3];
+	
+	CFRunLoopRef runLoop;
+	BOOL isModal;
+	april::MessageBoxButton selectedButton;
+}
+@property (nonatomic, assign) void(*callback)(april::MessageBoxButton);
+@property (nonatomic, assign) april::MessageBoxButton *buttonTypes;
+@property (nonatomic, readonly) april::MessageBoxButton selectedButton;
+@end
+@implementation AprilMessageBoxDelegate
+@synthesize callback;
+@synthesize selectedButton;
+@dynamic buttonTypes;
+-(id)initWithModality:(BOOL)_isModal
+{
+	self = [super init];
+	if(self)
+	{
+		runLoop = CFRunLoopGetCurrent();
+		isModal = _isModal;
+	}
+	return self;
+}
+-(april::MessageBoxButton*)buttonTypes
+{
+	return buttonTypes;
+}
+-(void)setButtonTypes:(april::MessageBoxButton*)_buttonTypes
+{
+	memcpy(buttonTypes, _buttonTypes, sizeof(april::MessageBoxButton)*3);
+}
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	if (callback)
+	{
+		callback(buttonTypes[buttonIndex]);
+	}
+	if (isModal)
+	{
+		CFRunLoopStop(runLoop);
+	}
+	
+	selectedButton = buttonTypes[buttonIndex];
+	
+	[self release];
+}
+- (void)willPresentAlertView:(UIAlertView*)alertView
+{
+	
+	NSString *reqSysVer = @"4.0";
+	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+	BOOL isFourOh = ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending);
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && buttonTypes[2] && isFourOh) 
+	{
+		// landscape sucks on 4.0+ phones when we have three buttons.
+		// it doesnt show hint message.
+		// unless we hack.
+		
+		float w = alertView.bounds.size.width;
+		if(w < 5.)
+		{
+			april::log("In messageBox()'s label hack, width override took place");
+			w = 400; // hardcoded width! seems to work ok
+			
+		}
+		
+		
+		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 30.0f, alertView.bounds.size.width, 40.0f)]; 
+		label.backgroundColor = [UIColor clearColor]; 
+		label.textColor = [UIColor whiteColor]; 
+		label.font = [UIFont systemFontOfSize:14.0f]; 
+		label.textAlignment = UITextAlignmentCenter;
+		label.text = alertView.message; 
+		[alertView addSubview:label]; 
+		[label release];
+	}
+	
+}
+@end
+
 namespace april
 {
 	gvec2 getDisplayResolution()
@@ -49,7 +134,9 @@ namespace april
 			hstr name = cname;
 			
 			info.name = name; // defaults for unknown devices
+			info.cpu_cores = sysconf(_SC_NPROCESSORS_ONLN);
 			info.ram = 1024; // defaults
+			info.max_texture_size = 0;
 			
 			if (name.starts_with("iPad"))
 			{
@@ -62,6 +149,11 @@ namespace april
 				{
 					info.name = "iPad2";
 					info.ram = 512;
+				}
+				else if (name.starts_with("iPad3"))
+				{
+					info.name = "iPad3";
+					info.ram = 1024;
 				}
 			}
 			else if (name.starts_with("iPhone"))
@@ -85,6 +177,16 @@ namespace april
 				{
 					info.name = "iPhone4";
 					info.ram = 512;
+				}
+				else if (name.starts_with("iPhone4"))
+				{
+					info.name = "iPhone4S";
+					info.ram = 512;
+				}
+				else if (name.starts_with("iPhone5"))
+				{
+					info.name = "iPhone5";
+					info.ram = 1024;
 				}
 			}
 			else if (name.starts_with("iPod"))
@@ -111,6 +213,10 @@ namespace april
 				}
 			}
 			//else: i386 (iphone simulator) and possible future device types
+		}
+		if (info.max_texture_size == 0 && april::rendersys != NULL)
+		{
+			glGetIntegerv(GL_MAX_TEXTURE_SIZE, &info.max_texture_size);
 		}
 		return info;
 	}
@@ -204,7 +310,7 @@ namespace april
 		}
 		
 		// NOTE: does not return proper values unless modal! 
-		//       you need to implement a delegate.
+		// you need to implement a delegate.
 		
 		
 		// some dummy returnvalues

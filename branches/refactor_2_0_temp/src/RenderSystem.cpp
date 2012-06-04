@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.51
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -95,16 +95,11 @@ namespace april
 		mIdleUnloadTime = 0;
 		mTextureFilter = Linear;
 		mTextureWrapping = true;
-		mWindow = NULL;
 		mTextureManager = new TextureManager();
 	}
 	
 	RenderSystem::~RenderSystem()
 	{
-		if (mWindow != NULL)
-		{
-			delete mWindow;
-		}
 		delete mTextureManager;
 	}
 
@@ -250,8 +245,8 @@ namespace april
 	{
 		mOrthoProjection = rect;
 		float t = getPixelOffset();
-		float wnd_w = (float)mWindow->getWidth();
-		float wnd_h = (float)mWindow->getHeight();
+		float wnd_w = (float)april::window->getWidth();
+		float wnd_h = (float)april::window->getHeight();
 		rect.x -= t * rect.w / wnd_w;
 		rect.y -= t * rect.h / wnd_h;
 		mProjectionMatrix.ortho(rect);
@@ -278,7 +273,7 @@ namespace april
 	void RenderSystem::setResolution(int w, int h)
 	{
 		log(hsprintf("changing resolution: %d x %d", w, h));
-		mWindow->_setResolution(w, h);
+		april::window->_setResolution(w, h);
 	}
 
 	const gmat4& RenderSystem::getModelviewMatrix()
@@ -293,12 +288,12 @@ namespace april
 	
 	bool RenderSystem::isFullscreen()
 	{
-		return mWindow->isFullscreen();
+		return april::window->isFullscreen();
 	}
 
 	void RenderSystem::presentFrame()
 	{
-		mWindow->presentFrame();
+		april::window->presentFrame();
 	}
 	
 }
