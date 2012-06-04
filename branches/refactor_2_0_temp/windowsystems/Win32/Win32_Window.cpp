@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 1.82
 /// 
 /// @section LICENSE
 /// 
@@ -11,6 +11,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <winuser.h>
 
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hthread.h>
@@ -18,162 +19,328 @@
 #include "april.h"
 #include "RenderSystem.h"
 #include "Timer.h"
-#include "Win32_Window.h"
+#include "Win32Window.h"
 
 namespace april
 {
+	static HWND hWnd;
+	static gvec2 cursorPosition;
+	static bool cursorVisible = true;
+	static april::Timer globalTimer;
+	static Win32Window* instance;
+
 #ifdef _OPENGL
 	extern HDC hDC;
 #endif
 	
+#ifdef _DEBUG
+	hstr fpsTitle = " [FPS: 0]";
+#endif
 /************************************************************************************/
-	LRESULT CALLBACK Win32_Window::processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-		return ((Win32_Window*)april::window)->_processEvents(hWnd, message, wParam, lParam);
+		static bool touchDown = false;
+		static bool doubleTapDown = false;
+		static int nMouseMoveMessages = 0;
+		Win32Window *ws = (Win32Window*) instance;
+		static float wheelDelta;
+		switch (message)
+		{
+		case 0x0119: // WM_GESTURE (win7+ only)
+			if (wParam == 1) // GID_BEGIN
+			{
+				touchDown = true;
+			}
+			else if (wParam == 2) // GID_END
+			{
+				if (doubleTapDown)
+				{ 
+					doubleTapDown = false;
+					ws->triggerMouseUpEvent(AK_DOUBLETAP);
+				}
+				touchDown = false;
+			}
+			else if (wParam == 6) // GID_TWOFINGERTAP
+			{
+				doubleTapDown = true;
+				ws->triggerMouseDownEvent(AK_DOUBLETAP);
+			}
+			break;
+		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
+			touchDown = true;
+			ws->triggerTouchscreenCallback(true);
+			break;
+		case WM_DESTROY:
+		case WM_CLOSE:
+			if (ws->triggerQuitEvent())
+			{
+				PostQuitMessage(0);
+				ws->terminateMainLoop();
+			}
+			return 0;
+			break;
+		case WM_KEYDOWN:
+			ws->triggerKeyEvent(true, wParam);
+			break;
+		case WM_KEYUP: 
+			ws->triggerKeyEvent(false, wParam);
+			break;
+		case WM_CHAR:
+			ws->triggerCharEvent(wParam);
+			break;
+		case WM_LBUTTONDOWN:
+			touchDown = true;
+			nMouseMoveMessages = 0;
+			ws->triggerMouseDownEvent(AK_LBUTTON);
+			if (!instance->isFullscreen())
+			{
+				SetCapture(hWnd);
+			}
+			break;
+		case WM_RBUTTONDOWN:
+			touchDown = true;
+			nMouseMoveMessages = 0;
+			ws->triggerMouseDownEvent(AK_RBUTTON);
+			if (!instance->isFullscreen())
+			{
+				SetCapture(hWnd);
+			}
+			break;
+		case WM_LBUTTONUP:
+			touchDown = false;
+			ws->triggerMouseUpEvent(AK_LBUTTON);
+			if (!instance->isFullscreen())
+			{
+				ReleaseCapture();
+			}
+			break;
+		case WM_RBUTTONUP:
+			touchDown = false;
+			ws->triggerMouseUpEvent(AK_RBUTTON);
+			if (!instance->isFullscreen())
+			{
+				ReleaseCapture();
+			}
+			break;
+		case WM_MOUSEMOVE:
+			if (!touchDown)
+			{
+				if (nMouseMoveMessages >= 10)
+				{
+					ws->triggerTouchscreenCallback(false);
+				}
+				else
+				{
+					nMouseMoveMessages++;
+				}
+			}
+			else
+			{
+				nMouseMoveMessages = 0;
+			}
+			ws->triggerMouseMoveEvent();
+			break;
+		case WM_MOUSEWHEEL:
+			wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
+			{
+				ws->triggerMouseScrollEvent(0.0f, -(float)wheelDelta);
+			}
+			else
+			{
+				ws->triggerMouseScrollEvent(-(float)wheelDelta, 0.0f);
+			}
+			break;
+		case WM_MOUSEHWHEEL:
+			wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
+			{
+				ws->triggerMouseScrollEvent(-(float)wheelDelta, 0.0f);
+			}
+			else
+			{
+				ws->triggerMouseScrollEvent(0.0f, -(float)wheelDelta);
+			}
+			break;
+		case WM_SETCURSOR:
+			if (!cursorVisible)
+			{
+				if (is_between(cursorPosition.x, 0.0f, (float)ws->getWidth()) && is_between(cursorPosition.y, 0.0f, (float)ws->getHeight()))
+				{
+					SetCursor(0);
+				}
+				else
+				{
+					SetCursor(LoadCursor(0, IDC_ARROW));
+				}
+			}
+			return 1;
+		case WM_ACTIVATE:
+			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
+			{
+				instance->_setActive(true);
+				ws->triggerFocusCallback(true);
+				april::log("Window activated");
+			}
+			else
+			{
+				instance->_setActive(false);
+				ws->triggerFocusCallback(false);
+				april::log("Window deactivated");
+			}
+			break;
+		}
+		return DefWindowProcW(hWnd, message, wParam, lParam);
 	}
-
-	Win32_Window::Win32_Window(int width, int height, bool fullscreen, chstr title) : Window()
+/************************************************************************************/
+	Win32Window::Win32Window(int w, int h, bool fullscreen, chstr title) : Window()
 	{
 		if (april::rendersys != NULL)
 		{
 			april::log("Creating Win32 Windowsystem");
 		}
-		this->fullscreen = fullscreen;
-		this->title = title;
-		this->touchEnabled = false;
-		this->fpsTitle = " [FPS: 0]";
-		this->_touchDown = false;
-		this->_doubleTapDown = false;
-		this->_nMouseMoveMessages = 0;
-		// Win32
+		instance = this;
+		
+		mRunning = mActive = true;
+		mFullscreen = fullscreen;
+		mTouchEnabled = false;
+		// WINDOW
+		mTitle = title;
 		WNDCLASSEXW wc;
 		ZeroMemory(&wc, sizeof(WNDCLASSEX));
 		
 		HINSTANCE hinst = GetModuleHandle(0);
 		wc.cbSize = sizeof(WNDCLASSEX);
 		wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-		wc.lpfnWndProc = &Win32_Window::processCallback;
+		wc.lpfnWndProc = WindowProc;
 		wc.hInstance = hinst;
 		wc.hCursor = LoadCursor(0, IDC_ARROW);
 		wc.lpszClassName = L"april_win32_window";
 		wc.hIcon = (HICON)LoadImage(hinst, MAKEINTRESOURCE(1), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
 		wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+		
 		RegisterClassExW(&wc);
-
 		int x = 0;
 		int y = 0;
 		if (!fullscreen)
 		{
-			x = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
-			y = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
+			x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2;
+			y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
 		}
-		WCHAR wtitle[256] = {0};
-		for_iter (i, 0, this->title.size())
-		{
-			wtitle[i] = this->title[i];
-		}
-		DWORD style = (this->fullscreen ? WS_EX_TOPMOST | WS_POPUP : WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
-		april::log(hsprintf("title: %s %d %d %d %d inst: %d", this->title.c_str(), x, y, width, height, hinst));
-		this->hWnd = CreateWindowExW(0, L"april_win32_window", wtitle, style, x, y, width, height, NULL, NULL, hinst, NULL);
 		
-		if (!this->fullscreen)
+		WCHAR wtitle[256] = {0};
+		for_iter (i, 0, title.size())
 		{
-			RECT rcClient;
-			RECT rcWindow;
+			wtitle[i] = title[i];
+		}
+
+		DWORD style = (fullscreen ? WS_EX_TOPMOST | WS_POPUP : WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
+		april::log(hsprintf("title: %s %d %d %d %d inst: %d", title.c_str(), x, y, w, h, hinst));
+		hWnd = CreateWindowExW(0, L"april_win32_window", wtitle, style, x, y, w, h, NULL, NULL, hinst, NULL);
+		
+		if (!fullscreen)
+		{
+			RECT rcClient, rcWindow;
 			POINT ptDiff;
 			GetClientRect(hWnd, &rcClient);
 			GetWindowRect(hWnd, &rcWindow);
 			ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
 			ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
-			MoveWindow(this->hWnd, rcWindow.left, rcWindow.top, width + ptDiff.x, height + ptDiff.y, TRUE);
+			MoveWindow(hWnd, rcWindow.left, rcWindow.top, w + ptDiff.x, h + ptDiff.y, TRUE);
 		}
  
 		// display the window on the screen
-		ShowWindow(this->hWnd, 1);
-		UpdateWindow(this->hWnd);
+		ShowWindow(hWnd, 1);
+		UpdateWindow(hWnd);
 		SetCursor(wc.hCursor);
-		this->setCursorVisible(true);
 	}
 	
-	Win32_Window::~Win32_Window()
+	Win32Window::~Win32Window()
 	{
 		//log("Destroying Win32 Windowsystem");
 	}
 
-	void Win32_Window::destroyWindow()
+	void Win32Window::destroyWindow()
 	{
-		if (this->hWnd != 0)
+		if (hWnd != 0)
 		{
-			DestroyWindow(this->hWnd);
+			DestroyWindow(hWnd);
 			UnregisterClassW(L"april_win32_window", GetModuleHandle(0));
-			this->hWnd = 0;
+			hWnd = 0;
 		}
 	}
 
-	int Win32_Window::getWidth()
+	int Win32Window::getWidth()
 	{
 		RECT rc;
 		GetClientRect(hWnd, &rc);
 		return (rc.right - rc.left);
 	}
 	
-	int Win32_Window::getHeight()
+	int Win32Window::getHeight()
 	{
 		RECT rc;
 		GetClientRect(hWnd, &rc);
 		return (rc.bottom - rc.top);
 	}
 
-	void Win32_Window::setTitle(chstr title)
+	void Win32Window::setWindowTitle(chstr title)
 	{
-		this->title = title;
+		mTitle = title;
 #ifdef _DEBUG
-		hstr t = this->title + this->fpsTitle;
+		hstr t = title + fpsTitle;
 #else
-		chstr t = this->title;
+		chstr t = title;
 #endif
 		WCHAR wtitle[256] = {0};
 		for_iter (i, 0, t.size())
 		{
 			wtitle[i] = t[i];
 		}
+
 		SetWindowTextW(hWnd, wtitle);
 	}
 	
-	void Win32_Window::_setResolution(int width, int height)
+	void Win32Window::_setResolution(int w, int h)
 	{
 		int x = 0;
 		int y = 0;
 		DWORD style = WS_EX_TOPMOST | WS_POPUP;
-		if (!this->fullscreen)
+		if (!mFullscreen)
 		{
-			x = (GetSystemMetrics(SM_CXSCREEN) - width) / 2,
-			y = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
+			x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2,
+			y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
 			style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 		}
-		if (!this->fullscreen)
+		
+		if (!mFullscreen)
 		{
-			RECT rcClient;
-			RECT rcWindow;
+			RECT rcClient, rcWindow;
 			POINT ptDiff;
-			GetClientRect(this->hWnd, &rcClient);
-			GetWindowRect(this->hWnd, &rcWindow);
+			GetClientRect(hWnd, &rcClient);
+			GetWindowRect(hWnd, &rcWindow);
 			ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
 			ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
-			MoveWindow(this->hWnd, rcWindow.left, rcWindow.top, width + ptDiff.x, height + ptDiff.y, TRUE);
+			MoveWindow(hWnd,rcWindow.left, rcWindow.top, w + ptDiff.x, h + ptDiff.y, TRUE);
 		}
+
 		// display the window on the screen
-		ShowWindow(this->hWnd, 1);
-		UpdateWindow(this->hWnd);
+		ShowWindow(hWnd, 1);
+		UpdateWindow(hWnd);
 	}
 	
-	void Win32_Window::showSystemCursor(bool b)
+	gvec2 Win32Window::getCursorPosition()
+	{
+		return cursorPosition;
+	}
+
+	void Win32Window::showSystemCursor(bool b)
 	{
 		b ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
 		cursorVisible = b;
 	}
 	
-	bool Win32_Window::isSystemCursorShown()
+	bool Win32Window::isSystemCursorShown()
 	{
 		if (cursorVisible)
 		{
@@ -182,7 +349,7 @@ namespace april
 		return !(is_in_range(cursorPosition.x, 0.0f, (float)getWidth()) && is_in_range(cursorPosition.y, 0.0f, (float)getHeight()));
 	}
 	
-	void Win32_Window::doEvents()
+	void Win32Window::doEvents()
 	{
 		MSG msg;
 		if (PeekMessageW(&msg, hWnd, 0, 0, PM_REMOVE))
@@ -192,203 +359,216 @@ namespace april
 		}
 	}
 
-	void Win32_Window::presentFrame()
+	void Win32Window::presentFrame()
 	{
 #ifdef _OPENGL
 		SwapBuffers(hDC);
 #endif
 	}
 	
-	void Win32_Window::terminateMainLoop()
+	void Win32Window::terminateMainLoop()
 	{
-		this->running = false;
+		mRunning = false;
 	}
 	
-	void Win32_Window::enterMainLoop()
+	bool Win32Window::triggerQuitEvent()
 	{
-		this->_lastTime = this->globalTimer.getTime();
-		this->_fpsTimer = this->_lastTime;
-		this->_fps = 0;
-		while (this->running)
+		if (mQuitCallback != NULL)
 		{
-			this->running = this->updateOneFrame();
+			return (*mQuitCallback)(true);
 		}
+		return true;
 	}
-
-	bool Win32_Window::updateOneFrame()
+	
+	void Win32Window::triggerKeyEvent(bool down, unsigned int keycode)
 	{
-		static bool result = true;
-		static float t = 0.0f;
-		static float k = 0.0f;
-		static POINT w32_cursorPosition;
-		// mouse position
-		GetCursorPos(&w32_cursorPosition);
-		ScreenToClient(this->hWnd, &w32_cursorPosition);
-		this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
-		this->doEvents();
-		t = this->globalTimer.getTime();
-		if (t == this->_lastTime)
+		if (down)
 		{
-			return true; // don't redraw frames which won't change
-		}
-		k = (t - this->_lastTime) / 1000.0f;
-		if (k > 0.5f)
-		{
-			k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
-		}
-
-		this->_lastTime = t;
-		if (!this->focused)
-		{
-			k = 0.0f;
-			for_iter (i, 0, 5)
+			if (mKeyDownCallback != NULL)
 			{
-				this->doEvents();
-				hthread::sleep(40.0f);
+				(*mKeyDownCallback)(keycode);
 			}
-		}
-		// rendering
-		result = this->performUpdate(k);
-#ifndef _DEBUG
-		this->setWindowTitle(this->title);
-#else
-		if (this->_lastTime - this->_fpsTimer > 1000)
-		{
-			this->fpsTitle = hsprintf(" [FPS: %d]", this->_fps);
-			this->setTitle(this->title);
-			this->_fps = 0;
-			this->_fpsTimer = this->_lastTime;
 		}
 		else
 		{
-			this->_fps++;
+			if (mKeyUpCallback != NULL)
+			{
+				(*mKeyUpCallback)(keycode);
+			}
 		}
-#endif			
-		april::rendersys->presentFrame();
-		return result;
 	}
 	
-	void* Win32_Window::getIDFromBackend()
+	void Win32Window::triggerCharEvent(unsigned int chr)
 	{
-		return this->hWnd;
-	}
-
-	LRESULT Win32_Window::_processEvents(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-	{
-		switch (message)
+		if (mCharCallback != NULL)
 		{
-		case 0x0119: // WM_GESTURE (Win7+ only)
-			if (wParam == 1) // GID_BEGIN
-			{
-				this->_touchDown = true;
-			}
-			else if (wParam == 2) // GID_END
-			{
-				if (this->_doubleTapDown)
-				{ 
-					this->_doubleTapDown = false;
-					this->handleMouseEvent(AMOUSEEVT_UP, this->cursorPosition, AMOUSEBTN_DOUBLETAP);
-				}
-				this->_touchDown = false;
-			}
-			else if (wParam == 6) // GID_TWOFINGERTAP
-			{
-				this->_doubleTapDown = true;
-				this->handleMouseEvent(AMOUSEEVT_DOWN, this->cursorPosition, AMOUSEBTN_DOUBLETAP);
-			}
-			break;
-		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
-			this->_touchDown = true;
-			this->handleTouchscreenEnabledEvent(true);
-			break;
-		case WM_DESTROY:
-		case WM_CLOSE:
-			if (this->handleQuitRequest(true))
-			{
-				PostQuitMessage(0);
-				this->terminateMainLoop();
-			}
-			return 0;
-			break;
-		case WM_KEYDOWN:
-			this->_handleKeyOnlyEvent(AKEYEVT_DOWN, (april::KeySym)wParam);
-			break;
-		case WM_KEYUP: 
-			this->_handleKeyOnlyEvent(AKEYEVT_UP, (april::KeySym)wParam);
-			break;
-		case WM_CHAR:
-			this->_handleCharOnlyEvent(wParam);
-			break;
-		case WM_LBUTTONDOWN:
-			this->_touchDown = true;
-			this->_nMouseMoveMessages = 0;
-			this->handleMouseEvent(AMOUSEEVT_DOWN, this->cursorPosition, AMOUSEBTN_LEFT);
-			if (!april::window->isFullscreen())
-			{
-				SetCapture(this->hWnd);
-			}
-			break;
-		case WM_RBUTTONDOWN:
-			this->_touchDown = true;
-			this->_nMouseMoveMessages = 0;
-			this->handleMouseEvent(AMOUSEEVT_DOWN, this->cursorPosition, AMOUSEBTN_RIGHT);
-			if (!april::window->isFullscreen())
-			{
-				SetCapture(this->hWnd);
-			}
-			break;
-		case WM_LBUTTONUP:
-			this->_touchDown = false;
-			this->handleMouseEvent(AMOUSEEVT_UP, this->cursorPosition, AMOUSEBTN_LEFT);
-			if (!april::window->isFullscreen())
-			{
-				ReleaseCapture();
-			}
-			break;
-		case WM_RBUTTONUP:
-			this->_touchDown = false;
-			this->handleMouseEvent(AMOUSEEVT_UP, this->cursorPosition, AMOUSEBTN_RIGHT);
-			if (!april::window->isFullscreen())
-			{
-				ReleaseCapture();
-			}
-			break;
-		case WM_MOUSEMOVE:
-			if (!this->_touchDown)
-			{
-				if (this->_nMouseMoveMessages >= 10)
-				{
-					this->handleTouchscreenEnabledEvent(false);
-				}
-				else
-				{
-					this->_nMouseMoveMessages++;
-				}
-			}
-			else
-			{
-				this->_nMouseMoveMessages = 0;
-			}
-			this->handleMouseEvent(AMOUSEEVT_MOVE, this->cursorPosition, AMOUSEBTN_NONE);
-			break;
-		case WM_SETCURSOR:
-			this->setCursorVisible(this->isCursorInside());
-			return 1;
-		case WM_ACTIVATE:
-			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
-			{
-				this->handleFocusChangeEvent(true);
-				april::log("Window activated");
-			}
-			else
-			{
-				this->handleFocusChangeEvent(false);
-				april::log("Window deactivated");
-			}
-			break;
+			(*mCharCallback)(chr);
 		}
-		return DefWindowProcW(hWnd, message, wParam, lParam);
+	}
+	
+	void Win32Window::triggerMouseDownEvent(int button)
+	{
+		if (mMouseDownCallback != NULL)
+		{
+			(*mMouseDownCallback)(button);
+		}
+		// TODO - this is DEPRECATED
+		else if (mMouseDownCallback_DEPRECATED != NULL)
+		{
+			(*mMouseDownCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y, button);
+		}
+	}
+	
+	void Win32Window::triggerMouseUpEvent(int button)
+	{
+		if (mMouseUpCallback != NULL)
+		{
+			(*mMouseUpCallback)(button);
+		}
+		// TODO - this is DEPRECATED
+		else if (mMouseUpCallback_DEPRECATED != NULL)
+		{
+			(*mMouseUpCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y, button);
+		}
+	}
+	
+	void Win32Window::triggerMouseMoveEvent()
+	{
+		if (mMouseMoveCallback != NULL)
+		{
+			(*mMouseMoveCallback)();
+		}
+		// TODO - this is DEPRECATED
+		else if (mMouseMoveCallback_DEPRECATED != NULL)
+		{
+			(*mMouseMoveCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y);
+		}
 	}
 
+	void Win32Window::triggerMouseScrollEvent(float x, float y)
+	{
+		if (mMouseScrollCallback != NULL)
+		{
+			(*mMouseScrollCallback)(x, y);
+		}
+	}
+	
+	void Win32Window::triggerFocusCallback(bool focused)
+	{
+		if (mFocusCallback != NULL)
+		{
+			(*mFocusCallback)(focused);
+		}
+	}
+	
+	void Win32Window::triggerTouchscreenCallback(bool enabled)
+	{
+		if (mTouchEnabledCallback != NULL && mTouchEnabled != enabled)
+		{
+			mTouchEnabled = enabled;
+			(*mTouchEnabledCallback)(enabled);
+		}
+	}
+	
+	void Win32Window::enterMainLoop()
+	{
+		float time = globalTimer.getTime();
+		float t;
+		bool cVisible = cursorVisible;
+#ifdef _DEBUG
+		static float fpsTimer = globalTimer.getTime();
+		static int fps = 0;
+#endif
+		POINT w32_cursorPosition;
+		float k;
+		while (mRunning)
+		{
+			// mouse position
+			GetCursorPos(&w32_cursorPosition);
+			ScreenToClient(hWnd, &w32_cursorPosition);
+			cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
+			doEvents();
+			t = globalTimer.getTime();
+			if (t == time)
+			{
+				continue; // don't redraw frames which won't change
+			}
+			k = (t - time) / 1000.0f;
+			if (k > 0.5f)
+			{
+				k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
+			}
+
+			time = t;
+			if (!mActive)
+			{
+				k = 0;
+				for_iter (i, 0, 5)
+				{
+					doEvents();
+					hthread::sleep(40.0f);
+				}
+			}
+			// rendering
+			bool result = performUpdate(k);
+#ifndef _DEBUG
+			setWindowTitle(mTitle);
+#else
+			if (time - fpsTimer > 1000)
+			{
+				fpsTitle = hsprintf(" [FPS: %d]", fps);
+				setWindowTitle(mTitle);
+				fps = 0;
+				fpsTimer = time;
+			}
+			else
+			{
+				fps++;
+			}
+#endif			
+			april::rendersys->presentFrame();
+			if (!result)
+			{
+				mRunning = false;
+			}
+		}
+	}
+
+	bool Win32Window::updateOneFrame()
+	{
+		// TODO
+		return true;
+	}
+	
+	void* Win32Window::getIDFromBackend()
+	{
+		return hWnd;
+	}
+
+	Window::DeviceType Win32Window::getDeviceType()
+	{
+		return Window::DEVICE_WINDOWS_PC;
+	}
+
+	int _impl_getMaxTextureSize();
+
+	SystemInfo& getSystemInfo()
+	{
+		static SystemInfo info;
+		if (info.locale == "")
+		{
+			SYSTEM_INFO w32info;
+			GetSystemInfo(&w32info);
+			info.cpu_cores = w32info.dwNumberOfProcessors;
+			info.ram = 1024;
+			info.locale = "en";
+			info.max_texture_size = 0;
+		}
+		if (info.max_texture_size == 0)
+		{
+			info.max_texture_size = _impl_getMaxTextureSize();
+		}
+		return info;
+	}
 }
 #endif

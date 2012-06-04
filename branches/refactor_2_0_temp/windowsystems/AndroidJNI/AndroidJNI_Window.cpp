@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 1.85
 /// 
 /// @section LICENSE
 /// 
@@ -21,13 +21,14 @@
 namespace april
 {
 	void* javaVM = NULL;
-	jobject aprilActivity = NULL;
+	jobject jActivity = NULL;
 	gvec2 androidResolution;
+	void (*dialogCallback)(MessageBoxButton) = NULL;
 	static gvec2 cursorPosition;
 	static april::Timer globalTimer;
 	static float lastTime = 0.0f;
 
-	AndroidJNI_Window::AndroidJNI_Window(int w, int h, bool fullscreen, chstr title) : Window()
+	AndroidJNIWindow::AndroidJNIWindow(int w, int h, bool fullscreen, chstr title) : Window()
 	{
 		if (april::rendersys != NULL)
 		{
@@ -36,22 +37,21 @@ namespace april
 		mWidth = w;
 		mHeight = h;
 		mRunning = true;
-		mActive = true;
+		mMultiTouchActive = false;
 		mFullscreen = fullscreen;
-		//mTouchEnabled = false;
 		mTitle = title;
 	}
 	
-	AndroidJNI_Window::~AndroidJNI_Window()
+	AndroidJNIWindow::~AndroidJNIWindow()
 	{
 		//log("Destroying Android JNI Windowsystem");
 	}
 
-	void AndroidJNI_Window::enterMainLoop()
+	void AndroidJNIWindow::enterMainLoop()
 	{
 	}
 	
-	bool AndroidJNI_Window::updateOneFrame()
+	bool AndroidJNIWindow::updateOneFrame()
 	{
 		if (lastTime == 0.0f)
 		{
@@ -71,16 +71,6 @@ namespace april
 		}
 
 		lastTime = t;
-		if (!mActive)
-		{
-			k = 0;
-			for_iter (i, 0, 5)
-			{
-				mMouseEvents.clear();
-				mKeyEvents.clear();
-				hthread::sleep(40);
-			}
-		}
 		bool result = true;
 		if (mUpdateCallback != NULL)
 		{
@@ -90,123 +80,181 @@ namespace april
 		return result;
 	}
 	
-	void AndroidJNI_Window::terminateMainLoop()
+	void AndroidJNIWindow::terminateMainLoop()
 	{
 		mRunning = false;
 	}
 
-	void AndroidJNI_Window::destroyWindow()
+	void AndroidJNIWindow::destroyWindow()
 	{
 	}
 
-	void AndroidJNI_Window::showSystemCursor(bool visible)
+	void AndroidJNIWindow::showSystemCursor(bool visible)
 	{
 	}
 
-	bool AndroidJNI_Window::isSystemCursorShown()
+	bool AndroidJNIWindow::isSystemCursorShown()
 	{
 		return false;
 	}
 
-	int AndroidJNI_Window::getWidth()
+	int AndroidJNIWindow::getWidth()
 	{
 		return mWidth;
 	}
 
-	int AndroidJNI_Window::getHeight()
+	int AndroidJNIWindow::getHeight()
 	{
 		return mHeight;
 	}
 
-	void AndroidJNI_Window::setWindowTitle(chstr title)
+	void AndroidJNIWindow::setWindowTitle(chstr title)
 	{
 	}
 
-	gvec2 AndroidJNI_Window::getCursorPosition()
+	gvec2 AndroidJNIWindow::getCursorPosition()
 	{
 		return cursorPosition;
 	}
 
-	void AndroidJNI_Window::presentFrame()
+	void AndroidJNIWindow::presentFrame()
 	{
 		// not needed as Android Java Activity takes care of this
 	}
 
-	void* AndroidJNI_Window::getIDFromBackend()
+	void* AndroidJNIWindow::getIDFromBackend()
 	{
 		return javaVM;
 	}
 
-	void AndroidJNI_Window::doEvents()
+	void AndroidJNIWindow::doEvents()
 	{
 		while (mMouseEvents.size() > 0)
 		{
 			MouseInputEvent e = mMouseEvents.pop_first();
-			cursorPosition = e.position;
-			Window::handleMouseEvent(e.type, e.position, e.button);
+			cursorPosition.set(e.x, e.y);
+			Window::handleMouseEvent(e.type, e.x, e.y, e.button);
 		}
 		while (mKeyEvents.size() > 0)
 		{
 			KeyInputEvent e = mKeyEvents.pop_first();
 			Window::handleKeyEvent(e.type, e.keyCode, e.charCode);
 		}
+		while (mTouchEvents.size() > 0)
+		{
+			TouchInputEvent e = mTouchEvents.pop_first();
+			Window::handleTouchEvent(e.touches);
+		}
 	}
 
-	void AndroidJNI_Window::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaDecorView)
+	void AndroidJNIWindow::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaView)
 	{
 		JNIEnv* env = NULL;
 		((JavaVM*)javaVM)->GetEnv((void**)&env, JNI_VERSION_1_6);
-		jclass classAprilActivity = env->GetObjectClass(aprilActivity);
+		jclass classAprilActivity = env->GetObjectClass(jActivity);
 		jclass classContext = env->FindClass("android/content/Context");
 		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
 		jobject INPUT_METHOD_SERVICE = env->GetStaticObjectField(classContext, fieldINPUT_METHOD_SERVICE);
 		jmethodID methodGetSystemService = env->GetMethodID(classAprilActivity, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
-		jmethodID methodGetWindow = env->GetMethodID(classAprilActivity, "getWindow", "()Landroid/view/Window;");
-		jobject window = env->CallObjectMethod(aprilActivity, methodGetWindow);
-		jclass classWindow = env->FindClass("android/view/Window");
-		jmethodID methodGetDecorView = env->GetMethodID(classWindow, "getDecorView", "()Landroid/view/View;");
+		jmethodID methodGetView = env->GetMethodID(classAprilActivity, "getView", "()Landroid/view/View;");
 		// output
-		*javaEnv = env;
-		*javaClassInputMethodManager = env->FindClass("android/view/inputmethod/InputMethodManager");
-		*javaInputMethodManager = env->CallObjectMethod(aprilActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
-		*javaDecorView = env->CallObjectMethod(window, methodGetDecorView);
+		*javaEnv = (void*)env;
+		*javaClassInputMethodManager = (void*)env->FindClass("android/view/inputmethod/InputMethodManager");
+		*javaInputMethodManager = (void*)env->CallObjectMethod(jActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
+		*javaView = (void*)env->CallObjectMethod(jActivity, methodGetView);
 	}
 	
-	void AndroidJNI_Window::beginKeyboardHandling()
+	void AndroidJNIWindow::beginKeyboardHandling()
 	{
 		JNIEnv* env = NULL;
 		jclass classInputMethodManager = NULL;
 		jobject inputMethodManager = NULL;
-		jobject decorView = NULL;
-		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&decorView);
+		jobject view = NULL;
+		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&view);
 		// show virtual keyboard
 		jmethodID methodShowSoftInput = env->GetMethodID(classInputMethodManager, "showSoftInput", "(Landroid/view/View;I)Z");
-		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, decorView, 0);
+		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, view, 2);
 	}
 	
-	void AndroidJNI_Window::terminateKeyboardHandling()
+	void AndroidJNIWindow::terminateKeyboardHandling()
 	{
 		JNIEnv* env = NULL;
 		jclass classInputMethodManager = NULL;
 		jobject inputMethodManager = NULL;
-		jobject decorView = NULL;
-		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&decorView);
+		jobject view = NULL;
+		_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&view);
 		// hide virtual keyboard
 		jclass classView = env->FindClass("android/view/View");
 		jmethodID methodGetWindowToken = env->GetMethodID(classView, "getWindowToken", "()Landroid/os/IBinder;");
-		jobject binder = env->CallObjectMethod(decorView, methodGetWindowToken);
+		jobject binder = env->CallObjectMethod(view, methodGetWindowToken);
 		jmethodID methodHideSoftInput = env->GetMethodID(classInputMethodManager, "hideSoftInputFromWindow", "(Landroid/os/IBinder;I)Z");
 		env->CallBooleanMethod(inputMethodManager, methodHideSoftInput, binder, 0);
 	}
 
-	void AndroidJNI_Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
+	void AndroidJNIWindow::handleTouchEvent(MouseEventType type, float x, float y, int index)
 	{
-		mMouseEvents += MouseInputEvent(type, position, button);
+		switch (type)
+		{
+		case AMOUSEEVT_DOWN:
+			if (index < mTouches.size()) // DOWN event of an already indexed touch, never happened so far
+			{
+				return;
+			}
+			mTouches += gvec2(x, y);
+			break;
+		case AMOUSEEVT_UP:
+			if (index >= mTouches.size()) // redundant UP event, can happen
+			{
+				return;
+			}
+			mTouches.remove_at(index);
+			break;
+		case AMOUSEEVT_MOVE:
+			if (index >= mTouches.size()) // MOVE event of an unindexed touch, never happened so far
+			{
+				return;
+			}
+			mTouches[index].set(x, y);
+			break;
+		}
+		if (mMultiTouchActive || mTouches.size() > 1)
+		{
+			mMultiTouchActive = (mTouches.size() > 0);
+		}
+		else
+		{
+			this->handleMouseEvent(type, x, y, AMOUSEBTN_LEFT);
+		}
+		mTouchEvents += TouchInputEvent(mTouches);
 	}
 
-	void AndroidJNI_Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
+	void AndroidJNIWindow::handleMouseEvent(MouseEventType type, float x, float y, MouseButton button)
+	{
+		mMouseEvents += MouseInputEvent(type, x, y, button);
+	}
+
+	void AndroidJNIWindow::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
 	{
 		mKeyEvents += KeyInputEvent(type, keyCode, charCode);
+	}
+
+	Window::DeviceType AndroidJNIWindow::getDeviceType()
+	{
+		return Window::DEVICE_ANDROID_PHONE;
+	}
+
+	SystemInfo& getSystemInfo()
+	{
+		static SystemInfo info;
+		if (info.locale == "")
+		{
+			// TODO
+			info.ram = 256;
+			info.locale = "en";
+			info.max_texture_size = 0;
+			info.cpu_cores = 1;
+		}
+		return info;
 	}
 
 }

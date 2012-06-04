@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 1.7
 /// 
 /// @section LICENSE
 /// 
@@ -15,60 +15,63 @@
 
 #ifndef APRIL_WIN32_WINDOW_H
 #define APRIL_WIN32_WINDOW_H
-#include <windows.h>
 
 #include <hltypes/hstring.h>
 
-#include "aprilExport.h"
-#include "Timer.h"
 #include "Window.h"
+#include "aprilExport.h"
 
 namespace april
 {
-	class aprilExport Win32_Window : public Window
+	class aprilExport Win32Window : public Window
 	{
-	public:
-		Win32_Window(int w, int h, bool fullscreen, chstr title);
-		~Win32_Window();
 
-		void setTouchEnabled(bool value) { this->touchEnabled = value; }
-		bool isTouchEnabled() { return this->touchEnabled; }
+		bool mTouchEnabled; //! Wheter or not a win7+ touchscreen was detected
+	public:
+		Win32Window(int w, int h, bool fullscreen, chstr title);
+		~Win32Window();
 		
-		//void _setActive(bool value) { this->active = value; }
+		void _setActive(bool active) { mActive = active; }
 		
 		// implementations
 		void enterMainLoop();
 		bool updateOneFrame();
 		void terminateMainLoop();
 		void destroyWindow();
+		bool isRunning() { return mRunning; }
 		void showSystemCursor(bool visible);
 		bool isSystemCursorShown();
 		int getWidth();
 		int getHeight();
-		void setTitle(chstr title);
-		void _setResolution(int width, int height);
+		void setWindowTitle(chstr title);
+		void _setResolution(int w, int h);
+		gvec2 getCursorPosition();
 		void presentFrame();
 		void* getIDFromBackend();
 		void doEvents();
-
-		static LRESULT CALLBACK processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		
-	protected:
-		hstr fpsTitle;
-		HWND hWnd;
-		april::Timer globalTimer;
-		bool touchEnabled; // whether or not a Win7+ touchscreen was detected
-		
-		LRESULT _processEvents(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+		// event handlers
+		void triggerKeyEvent(bool down, unsigned int keycode);
+		void triggerCharEvent(unsigned int chr);
+	
+		void triggerMouseUpEvent(int button);
+		void triggerMouseDownEvent(int button);
+		void triggerMouseMoveEvent();
+		void triggerMouseScrollEvent(float x, float y);
+		bool triggerQuitEvent();
+		void triggerFocusCallback(bool focused);
 
+		void triggerTouchscreenCallback(bool enabled);
+
+		DeviceType getDeviceType();
+		
+		float mCursorX; // TODO turn into private
+		float mCursorY; // TODO turn into private
+		
 	private:
-		bool _touchDown;
-		bool _doubleTapDown;
-		int _nMouseMoveMessages;
-		float _lastTime;
-		float _fpsTimer;
-		int _fps;
-
+		bool mRunning;
+		bool mActive;
+		
 	};
 }
 

@@ -1,8 +1,7 @@
 /// @file
 /// @author  Ivan Vucica
-/// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 1.7
 /// 
 /// @section LICENSE
 /// 
@@ -35,23 +34,24 @@
 
 #include <hltypes/hthread.h>
 
-#include "april.h"
+#include "SDLWindow.h"
 #include "Keys.h"
 #include "RenderSystem.h"
-#include "SDL_Window.h"
+#include "april.h"
 
-extern "C" int gAprilShouldInvokeQuitCallback;
+extern bool gAprilShouldInvokeQuitCallback;
 
 namespace april
 {
 	
-	SDL_Window::SDL_Window(int w, int h, bool fullscreen, chstr title)
+	SDLWindow::SDLWindow(int w, int h, bool fullscreen, chstr title)
 	{
 		log("Creating SDL Window");
+#ifndef __APPLE__
 		// we want a centered sdl window
-		putenv((char*) "SDL_VIDEO_WINDOW_POS");
-		putenv((char*) "SDL_VIDEO_CENTERED=1");
-		
+		_putenv("SDL_VIDEO_WINDOW_POS");
+		_putenv("SDL_VIDEO_CENTERED=1");
+#endif
 		// initialize SDL subsystems, such as video, audio, timer, ...
 		// and immediately set window title
 		SDL_Init(SDL_INIT_VIDEO);
@@ -59,6 +59,7 @@ namespace april
 		mTitle = title;
         mCursorInside = true;
 		mWindowFocused = true;
+		mScrollHorizontal = false;
 		
 #if !_SDLGLES
 		// set up opengl attributes desired for the context
@@ -70,6 +71,7 @@ namespace april
 
 		// set up display with width w, height h, any bpp, opengl, and optionally fullscreen
 		mFullscreen = fullscreen;
+#ifdef _OPENGL
 #if !_SDLGLES
 		mScreen = SDL_SetVideoMode(w, h, 0, SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0));
 #else
@@ -77,8 +79,12 @@ namespace april
 		mGLESContext = SDL_GLES_CreateContext();
 		SDL_GLES_MakeCurrent(mGLESContext);
 #endif
-		
+#else
+		mScreen = SDL_SetVideoMode(w, h, 0, (fullscreen ? SDL_FULLSCREEN : 0));
+#endif
+#ifdef _OPENGL
 		glClear(GL_COLOR_BUFFER_BIT);
+#endif
 		presentFrame();
 		if (!mScreen)
 		{
@@ -105,7 +111,7 @@ namespace april
 	// implementations
 	//////////////////////
 	
-	void SDL_Window::enterMainLoop()
+	void SDLWindow::enterMainLoop()
 	{
 		mRunning = true;
 		
@@ -119,7 +125,7 @@ namespace april
 				
 	}
 	
-	bool SDL_Window::updateOneFrame()
+	bool SDLWindow::updateOneFrame()
 	{
 		//check if we should quit...
 		if (gAprilShouldInvokeQuitCallback)
@@ -127,7 +133,7 @@ namespace april
 			SDL_Event event;
 			event.type = SDL_QUIT;
 			SDL_PushEvent(&event);	
-			gAprilShouldInvokeQuitCallback = 0;
+			gAprilShouldInvokeQuitCallback = false;
 		}
 		//first process sdl events
 		doEvents();
@@ -135,7 +141,7 @@ namespace april
 	}
 
 	
-	void SDL_Window::doEvents()
+	void SDLWindow::doEvents()
 	{
 		SDL_Event event;
 
@@ -200,7 +206,7 @@ namespace april
 		this->_platformCursorVisibilityUpdate(mCursorVisible);
 	}
 	
-	SDL_Window::~SDL_Window()
+	SDLWindow::~SDLWindow()
 	{
 #if _SDLGLES
 		SDL_GLES_DeleteContext(mGLESContext);
@@ -209,26 +215,28 @@ namespace april
 		SDL_Quit();
 	}
 	
-	void SDL_Window::terminateMainLoop()
+	void SDLWindow::terminateMainLoop()
 	{
 		mRunning = false;
 	}
 	
-	void SDL_Window::destroyWindow()
+	void SDLWindow::destroyWindow()
 	{
 		SDL_Quit();
 	}
 	
-	void SDL_Window::presentFrame()
+	void SDLWindow::presentFrame()
 	{
+#ifdef _OPENGL
 #if !_SDLGLES
 		SDL_GL_SwapBuffers();
 #else
 		SDL_GLES_SwapBuffers();
 #endif
+#endif
 	}
 	
-	void SDL_Window::showSystemCursor(bool b)
+	void SDLWindow::showSystemCursor(bool b)
 	{
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 		// intentionally do nothing; let the platform specific code take over
@@ -241,7 +249,7 @@ namespace april
 		mCursorVisible = b;
 	}
 	
-	bool SDL_Window::isSystemCursorShown()
+	bool SDLWindow::isSystemCursorShown()
 	{
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 		return CGCursorIsVisible();
@@ -250,23 +258,28 @@ namespace april
 #endif
 	}
 	
-	void SDL_Window::setWindowTitle(chstr title)
+	void SDLWindow::setWindowTitle(chstr title)
 	{
 		SDL_WM_SetCaption(title.c_str(), title.c_str());
 		mTitle = title;
 	}
 	
-	int SDL_Window::getWidth()
+	gvec2 SDLWindow::getCursorPosition()
+	{
+		return gvec2(mCursorX, mCursorY);
+	}
+	
+	int SDLWindow::getWidth()
 	{
 		return SDL_GetVideoInfo()->current_w;
 	}
 	
-	int SDL_Window::getHeight()
+	int SDLWindow::getHeight()
 	{
 		return SDL_GetVideoInfo()->current_h;
 	}
 	
-	bool SDL_Window::isCursorInside()
+	bool SDLWindow::isCursorInside()
 	{
 		return mCursorInside;
 	}
@@ -275,7 +288,7 @@ namespace april
 	// private parts
 	//////////////////////	
 	
-	void SDL_Window::_handleKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
+	void SDLWindow::_handleKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
 	{
 		april::KeySym akeysym = AK_UNKNOWN;
 	
@@ -343,6 +356,7 @@ namespace april
 			s2a(KP9, NUMPAD9);
 			
 			s2a(LCTRL,LCONTROL);
+			s2a(RCTRL,RCONTROL);
 		default:
 			break;
 		}
@@ -356,40 +370,28 @@ namespace april
 		{
 			akeysym = (KeySym)(keysym - 32); // april letter keys are ascii's capital letters
 		}
+		if (akeysym == AK_LCONTROL || akeysym == AK_RCONTROL)
+		{
+			if (type == AKEYEVT_DOWN)
+			{
+				mScrollHorizontal = true;
+			}
+			else if (type == AKEYEVT_UP)
+			{
+				mScrollHorizontal = false;
+			}
+		}
 		//printf("keycode %d unicode %d (%c)\n", keycode, unicode, unicode);
 		Window::handleKeyEvent(type, akeysym, unicode);
 	}
 		
-	void SDL_Window::_handleMouseEvent(SDL_Event &event)
+	void SDLWindow::_handleMouseEvent(SDL_Event &event)
 	{
-		cursorPosition.set(event.button.x, event.button.y);
+		mCursorX = event.button.x; 
+		mCursorY = event.button.y;
 		Window::MouseEventType mouseevt;
 		Window::MouseButton mousebtn = AMOUSEBTN_NONE;
-		if (event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN)
-		{
-			switch (event.button.button)
-			{
-			case SDL_BUTTON_LEFT:
-				mousebtn = AMOUSEBTN_LEFT;
-				break;
-			case SDL_BUTTON_RIGHT:
-				mousebtn = AMOUSEBTN_RIGHT;
-				break;
-			case SDL_BUTTON_MIDDLE:
-				mousebtn = AMOUSEBTN_MIDDLE;
-				break;
-			case SDL_BUTTON_WHEELUP:
-				mousebtn = event.type == SDL_MOUSEBUTTONDOWN ? AMOUSEBTN_WHEELUP : AMOUSEBTN_NONE;
-				break;
-			case SDL_BUTTON_WHEELDOWN:
-				mousebtn = event.type == SDL_MOUSEBUTTONDOWN ? AMOUSEBTN_WHEELDN : AMOUSEBTN_NONE;
-				break;
-			default:
-				mousebtn = AMOUSEBTN_NONE;
-				break;
-			}
-		}
-		
+
 		switch (event.type)
 		{
 		case SDL_MOUSEBUTTONUP:
@@ -404,11 +406,53 @@ namespace april
 		default:
 			break;
 		}
-				
-		handleMouseEvent(mouseevt, cursorPosition, mousebtn);
+
+		if (event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN)
+		{
+			switch (event.button.button)
+			{
+			case SDL_BUTTON_LEFT:
+				mousebtn = AMOUSEBTN_LEFT;
+				break;
+			case SDL_BUTTON_RIGHT:
+				mousebtn = AMOUSEBTN_RIGHT;
+				break;
+			case SDL_BUTTON_MIDDLE:
+				mousebtn = AMOUSEBTN_MIDDLE;
+				break;
+			case SDL_BUTTON_WHEELUP:
+				if (event.type == SDL_MOUSEBUTTONDOWN)
+				{
+					mousebtn = AMOUSEBTN_WHEELUP;
+					mouseevt = AMOUSEEVT_SCROLL;
+				}
+				break;
+			case SDL_BUTTON_WHEELDOWN:
+				if (event.type == SDL_MOUSEBUTTONDOWN)
+				{
+					mousebtn = AMOUSEBTN_WHEELDN;
+					mouseevt = AMOUSEEVT_SCROLL;
+				}
+				break;
+			default:
+				mousebtn = AMOUSEBTN_NONE;
+				break;
+			}
+		}
+		
+		if (mousebtn == AMOUSEBTN_WHEELUP || mousebtn == AMOUSEBTN_WHEELDN)
+		{
+			float x = (!mScrollHorizontal ? 0.0f : (mousebtn == AMOUSEBTN_WHEELUP ? -1.0f : 1.0f));
+			float y = (mScrollHorizontal ? 0.0f : (mousebtn == AMOUSEBTN_WHEELUP ? -1.0f : 1.0f));
+			handleMouseEvent(mouseevt, x, y, mousebtn);
+		}
+		else
+		{
+			handleMouseEvent(mouseevt, event.button.x, event.button.y, mousebtn);
+		}
 	}
 	
-	bool SDL_Window::_handleDisplayAndUpdate()
+	bool SDLWindow::_handleDisplayAndUpdate()
 	{
 		static unsigned int x = SDL_GetTicks();
 		float k = (SDL_GetTicks() - x) / 1000.0f;
@@ -421,10 +465,11 @@ namespace april
 		return result;
 	}
 		
-	void* SDL_Window::getIDFromBackend()
+	void* SDLWindow::getIDFromBackend()
 	{
 #ifdef _WIN32
 		SDL_SysWMinfo wmInfo;
+		SDL_VERSION(&wmInfo.version);
 		SDL_GetWMInfo(&wmInfo);
 		return (void*)wmInfo.window;
 #else
@@ -433,6 +478,38 @@ namespace april
 #endif
 	}
 	
+	Window::DeviceType SDLWindow::getDeviceType()
+	{
+#if TARGET_OS_MAC
+		return DEVICE_MAC_PC;
+#elif defined(_WIN32)
+		return DEVICE_WINDOWS_PC;
+#else
+		return DEVICE_LINUX_PC;
+#endif
+	}
+	
+#ifndef _WIN32 // hack to prevent multiple definitions of this function under Win32
+	SystemInfo& getSystemInfo()
+	{
+		static SystemInfo info;
+		if (info.locale == "")
+		{
+			info.ram = 1024;
+			info.locale = "en";
+			info.max_texture_size = 0;
+			info.cpu_cores = sysconf(_SC_NPROCESSORS_ONLN);
+		}
+#ifdef _OPENGL
+		if (info.max_texture_size == 0 && april::rendersys != NULL)
+		{
+			glGetIntegerv(GL_MAX_TEXTURE_SIZE, &info.max_texture_size);
+		}
+#endif
+		return info;
+	}
+#endif
+
 }
 
 #endif

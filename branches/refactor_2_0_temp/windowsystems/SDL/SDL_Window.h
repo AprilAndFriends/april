@@ -1,8 +1,7 @@
 /// @file
 /// @author  Ivan Vucica
-/// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 1.7
 /// 
 /// @section LICENSE
 /// 
@@ -34,11 +33,11 @@ union SDL_Event;
 
 namespace april
 {
-	class SDL_Window : public Window
+	class SDLWindow : public Window
 	{
 	public:
-		SDL_Window(int w, int h, bool fullscreen, chstr title);
-		~SDL_Window();
+		SDLWindow(int w, int h, bool fullscreen, chstr title);
+		~SDLWindow();
 		
 		// implementations
 		bool updateOneFrame();
@@ -71,6 +70,7 @@ namespace april
 		bool mCursorVisible;
 		bool mCursorInside;
 		bool mWindowFocused;
+		bool mScrollHorizontal;
 #if _SDLGLES
 		SDL_GLES_Context *mGLESContext;
 #endif
