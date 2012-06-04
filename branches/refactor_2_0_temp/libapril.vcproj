@@ -497,6 +497,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Platform.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\RenderSystem.cpp"
 				>
 			</File>
@@ -527,7 +531,7 @@
 					Name="Win32"
 					>
 					<File
-						RelativePath=".\windowsystems\Win32\Win32Window.cpp"
+						RelativePath=".\windowsystems\Win32\Win32_Window.cpp"
 						>
 					</File>
 				</Filter>
@@ -572,11 +576,11 @@
 				Name="platforms"
 				>
 				<File
-					RelativePath=".\platforms\main_win32.cpp"
+					RelativePath=".\platforms\Win32_main.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\platforms\platform_win32.cpp"
+					RelativePath=".\platforms\Win32_Platform.cpp"
 					>
 				</File>
 			</Filter>
@@ -649,7 +653,7 @@
 					Name="Win32"
 					>
 					<File
-						RelativePath=".\windowsystems\Win32\Win32Window.h"
+						RelativePath=".\windowsystems\Win32\Win32_Window.h"
 						>
 					</File>
 				</Filter>

@@ -512,10 +512,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="platforms\main_android.cpp" />
-    <ClCompile Include="platforms\main_win32.cpp" />
-    <ClCompile Include="platforms\platform_android.cpp" />
-    <ClCompile Include="platforms\platform_win32.cpp" />
+    <ClCompile Include="platforms\Android_main.cpp" />
+    <ClCompile Include="platforms\Android_Platform.cpp" />
+    <ClCompile Include="platforms\Win32_main.cpp" />
+    <ClCompile Include="platforms\Win32_Platform.cpp" />
     <ClCompile Include="src\april.cpp" />
     <ClCompile Include="src\ImageSourceJpg.cpp" />
     <ClCompile Include="src\ImageSourcePng.cpp" />
@@ -524,6 +524,7 @@
     <ClCompile Include="src\Color.cpp" />
     <ClCompile Include="src\ImageSource.cpp" />
     <ClCompile Include="src\ImageSourceIL.cpp" />
+    <ClCompile Include="src\Platform.cpp" />
     <ClCompile Include="src\PixelShader.cpp" />
     <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -532,13 +533,13 @@
     <ClCompile Include="src\TimerWin.cpp" />
     <ClCompile Include="src\VertexShader.cpp" />
     <ClCompile Include="src\Window.cpp" />
-    <ClCompile Include="windowsystems\AndroidJni\AndroidJNIWindow.cpp" />
-    <ClCompile Include="windowsystems\SDL\SDLWindow.cpp" />
-    <ClCompile Include="windowsystems\Win32\Win32Window.cpp" />
     <ClCompile Include="rendersystems\DirectX9\DirectX9_RenderSystem.cpp" />
     <ClCompile Include="rendersystems\DirectX9\DirectX9_Texture.cpp" />
     <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp" />
     <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp" />
+    <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Window.cpp" />
+    <ClCompile Include="windowsystems\SDL\SDL_Window.cpp" />
+    <ClCompile Include="windowsystems\Win32\Win32_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\april.h" />
@@ -557,13 +558,13 @@
     <ClInclude Include="include\april\Window.h" />
     <ClInclude Include="rendersystems\DirectX9\DirectX9_PixelShader.h" />
     <ClInclude Include="rendersystems\DirectX9\DirectX9_VertexShader.h" />
-    <ClInclude Include="windowsystems\AndroidJni\AndroidJNIWindow.h" />
-    <ClInclude Include="windowsystems\SDL\SDLWindow.h" />
-    <ClInclude Include="windowsystems\Win32\Win32Window.h" />
     <ClInclude Include="rendersystems\DirectX9\DirectX9_RenderSystem.h" />
     <ClInclude Include="rendersystems\DirectX9\DirectX9_Texture.h" />
     <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h" />
     <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h" />
+    <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Window.h" />
+    <ClInclude Include="windowsystems\SDL\SDL_Window.h" />
+    <ClInclude Include="windowsystems\Win32\Win32_Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\gtypes\libgtypes.vcxproj">
