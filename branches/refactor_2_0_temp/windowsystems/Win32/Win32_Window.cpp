@@ -37,162 +37,6 @@ namespace april
 	hstr fpsTitle = " [FPS: 0]";
 #endif
 /************************************************************************************/
-	LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-	{
-		static bool touchDown = false;
-		static bool doubleTapDown = false;
-		static int nMouseMoveMessages = 0;
-		Win32Window *ws = (Win32Window*) instance;
-		static float wheelDelta;
-		switch (message)
-		{
-		case 0x0119: // WM_GESTURE (win7+ only)
-			if (wParam == 1) // GID_BEGIN
-			{
-				touchDown = true;
-			}
-			else if (wParam == 2) // GID_END
-			{
-				if (doubleTapDown)
-				{ 
-					doubleTapDown = false;
-					ws->triggerMouseUpEvent(AK_DOUBLETAP);
-				}
-				touchDown = false;
-			}
-			else if (wParam == 6) // GID_TWOFINGERTAP
-			{
-				doubleTapDown = true;
-				ws->triggerMouseDownEvent(AK_DOUBLETAP);
-			}
-			break;
-		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
-			touchDown = true;
-			ws->triggerTouchscreenCallback(true);
-			break;
-		case WM_DESTROY:
-		case WM_CLOSE:
-			if (ws->triggerQuitEvent())
-			{
-				PostQuitMessage(0);
-				ws->terminateMainLoop();
-			}
-			return 0;
-			break;
-		case WM_KEYDOWN:
-			ws->triggerKeyEvent(true, wParam);
-			break;
-		case WM_KEYUP: 
-			ws->triggerKeyEvent(false, wParam);
-			break;
-		case WM_CHAR:
-			ws->triggerCharEvent(wParam);
-			break;
-		case WM_LBUTTONDOWN:
-			touchDown = true;
-			nMouseMoveMessages = 0;
-			ws->triggerMouseDownEvent(AK_LBUTTON);
-			if (!instance->isFullscreen())
-			{
-				SetCapture(hWnd);
-			}
-			break;
-		case WM_RBUTTONDOWN:
-			touchDown = true;
-			nMouseMoveMessages = 0;
-			ws->triggerMouseDownEvent(AK_RBUTTON);
-			if (!instance->isFullscreen())
-			{
-				SetCapture(hWnd);
-			}
-			break;
-		case WM_LBUTTONUP:
-			touchDown = false;
-			ws->triggerMouseUpEvent(AK_LBUTTON);
-			if (!instance->isFullscreen())
-			{
-				ReleaseCapture();
-			}
-			break;
-		case WM_RBUTTONUP:
-			touchDown = false;
-			ws->triggerMouseUpEvent(AK_RBUTTON);
-			if (!instance->isFullscreen())
-			{
-				ReleaseCapture();
-			}
-			break;
-		case WM_MOUSEMOVE:
-			if (!touchDown)
-			{
-				if (nMouseMoveMessages >= 10)
-				{
-					ws->triggerTouchscreenCallback(false);
-				}
-				else
-				{
-					nMouseMoveMessages++;
-				}
-			}
-			else
-			{
-				nMouseMoveMessages = 0;
-			}
-			ws->triggerMouseMoveEvent();
-			break;
-		case WM_MOUSEWHEEL:
-			wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
-			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
-			{
-				ws->triggerMouseScrollEvent(0.0f, -(float)wheelDelta);
-			}
-			else
-			{
-				ws->triggerMouseScrollEvent(-(float)wheelDelta, 0.0f);
-			}
-			break;
-		case WM_MOUSEHWHEEL:
-			wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
-			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
-			{
-				ws->triggerMouseScrollEvent(-(float)wheelDelta, 0.0f);
-			}
-			else
-			{
-				ws->triggerMouseScrollEvent(0.0f, -(float)wheelDelta);
-			}
-			break;
-		case WM_SETCURSOR:
-			if (!cursorVisible)
-			{
-				if (is_between(cursorPosition.x, 0.0f, (float)ws->getWidth()) && is_between(cursorPosition.y, 0.0f, (float)ws->getHeight()))
-				{
-					SetCursor(0);
-				}
-				else
-				{
-					SetCursor(LoadCursor(0, IDC_ARROW));
-				}
-			}
-			return 1;
-		case WM_ACTIVATE:
-			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
-			{
-				instance->_setActive(true);
-				ws->triggerFocusCallback(true);
-				april::log("Window activated");
-			}
-			else
-			{
-				instance->_setActive(false);
-				ws->triggerFocusCallback(false);
-				april::log("Window deactivated");
-			}
-			break;
-		}
-		return DefWindowProcW(hWnd, message, wParam, lParam);
-	}
-/************************************************************************************/
 	Win32Window::Win32Window(int w, int h, bool fullscreen, chstr title) : Window()
 	{
 		if (april::rendersys != NULL)
@@ -545,6 +389,162 @@ namespace april
 		return hWnd;
 	}
 
+	LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	{
+		static bool touchDown = false;
+		static bool doubleTapDown = false;
+		static int nMouseMoveMessages = 0;
+		Win32Window *ws = (Win32Window*) instance;
+		static float wheelDelta;
+		switch (message)
+		{
+		case 0x0119: // WM_GESTURE (win7+ only)
+			if (wParam == 1) // GID_BEGIN
+			{
+				touchDown = true;
+			}
+			else if (wParam == 2) // GID_END
+			{
+				if (doubleTapDown)
+				{ 
+					doubleTapDown = false;
+					ws->triggerMouseUpEvent(AK_DOUBLETAP);
+				}
+				touchDown = false;
+			}
+			else if (wParam == 6) // GID_TWOFINGERTAP
+			{
+				doubleTapDown = true;
+				ws->triggerMouseDownEvent(AK_DOUBLETAP);
+			}
+			break;
+		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
+			touchDown = true;
+			ws->triggerTouchscreenCallback(true);
+			break;
+		case WM_DESTROY:
+		case WM_CLOSE:
+			if (ws->triggerQuitEvent())
+			{
+				PostQuitMessage(0);
+				ws->terminateMainLoop();
+			}
+			return 0;
+			break;
+		case WM_KEYDOWN:
+			ws->triggerKeyEvent(true, wParam);
+			break;
+		case WM_KEYUP: 
+			ws->triggerKeyEvent(false, wParam);
+			break;
+		case WM_CHAR:
+			ws->triggerCharEvent(wParam);
+			break;
+		case WM_LBUTTONDOWN:
+			touchDown = true;
+			nMouseMoveMessages = 0;
+			ws->triggerMouseDownEvent(AK_LBUTTON);
+			if (!instance->isFullscreen())
+			{
+				SetCapture(hWnd);
+			}
+			break;
+		case WM_RBUTTONDOWN:
+			touchDown = true;
+			nMouseMoveMessages = 0;
+			ws->triggerMouseDownEvent(AK_RBUTTON);
+			if (!instance->isFullscreen())
+			{
+				SetCapture(hWnd);
+			}
+			break;
+		case WM_LBUTTONUP:
+			touchDown = false;
+			ws->triggerMouseUpEvent(AK_LBUTTON);
+			if (!instance->isFullscreen())
+			{
+				ReleaseCapture();
+			}
+			break;
+		case WM_RBUTTONUP:
+			touchDown = false;
+			ws->triggerMouseUpEvent(AK_RBUTTON);
+			if (!instance->isFullscreen())
+			{
+				ReleaseCapture();
+			}
+			break;
+		case WM_MOUSEMOVE:
+			if (!touchDown)
+			{
+				if (nMouseMoveMessages >= 10)
+				{
+					ws->triggerTouchscreenCallback(false);
+				}
+				else
+				{
+					nMouseMoveMessages++;
+				}
+			}
+			else
+			{
+				nMouseMoveMessages = 0;
+			}
+			ws->triggerMouseMoveEvent();
+			break;
+		case WM_MOUSEWHEEL:
+			wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
+			{
+				ws->triggerMouseScrollEvent(0.0f, -(float)wheelDelta);
+			}
+			else
+			{
+				ws->triggerMouseScrollEvent(-(float)wheelDelta, 0.0f);
+			}
+			break;
+		case WM_MOUSEHWHEEL:
+			wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
+			{
+				ws->triggerMouseScrollEvent(-(float)wheelDelta, 0.0f);
+			}
+			else
+			{
+				ws->triggerMouseScrollEvent(0.0f, -(float)wheelDelta);
+			}
+			break;
+		case WM_SETCURSOR:
+			if (!cursorVisible)
+			{
+				if (is_between(cursorPosition.x, 0.0f, (float)ws->getWidth()) && is_between(cursorPosition.y, 0.0f, (float)ws->getHeight()))
+				{
+					SetCursor(0);
+				}
+				else
+				{
+					SetCursor(LoadCursor(0, IDC_ARROW));
+				}
+			}
+			return 1;
+		case WM_ACTIVATE:
+			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
+			{
+				instance->_setActive(true);
+				ws->triggerFocusCallback(true);
+				april::log("Window activated");
+			}
+			else
+			{
+				instance->_setActive(false);
+				ws->triggerFocusCallback(false);
+				april::log("Window deactivated");
+			}
+			break;
+		}
+		return DefWindowProcW(hWnd, message, wParam, lParam);
+	}
+	
 	Window::DeviceType Win32Window::getDeviceType()
 	{
 		return Window::DEVICE_WINDOWS_PC;
