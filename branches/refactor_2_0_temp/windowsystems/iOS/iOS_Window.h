@@ -1,8 +1,6 @@
 /// @file
-/// @author  Kresimir Spes
 /// @author  Ivan Vucica
-/// @author  Boris Mikic
-/// @version 2.0
+/// @version 1.31
 /// 
 /// @section LICENSE
 /// 
@@ -25,21 +23,39 @@ namespace april
 	class InputEvent
 	{
 	public:
-		Window* window;
-		
+		Window* mWindow;
 		InputEvent();
 		virtual ~InputEvent();
 		InputEvent(Window* wnd);
 		virtual void execute() = 0;
-		
 	};
 	
 	class iOSWindow : public Window
 	{
-	public:
-		iOSWindow(int w, int h, bool fullscreen, chstr title);
-		~iOSWindow();
+	protected:
+		bool mFocused;
+		bool mRunning;
+		bool mCursorVisible;
+		int mKeyboardRequest;
+		Timer mTimer;
+		float mCursorX, mCursorY;
+		bool mFirstFrameDrawn;
+		harray<InputEvent*> mInputEvents;
+		bool mInputEventsMutex;
 		
+		float _getTouchScale();
+		harray<UITouch*> _convertTouchesToCoordinates(void* touches);
+		void callTouchCallback();
+		harray<UITouch*> mTouches;
+		bool mMultiTouchActive;
+		
+		bool mRetainLoadingOverlay;
+	public:
+		
+		static iOSWindow* getSingleton() { return (iOSWindow*) mSingleton; }
+		
+		iOSWindow(int w, int h, bool fullscreen, chstr title);
+		DeviceType getDeviceType();
 		// implementations
 		void enterMainLoop();
 		bool updateOneFrame();
@@ -49,12 +65,12 @@ namespace april
 		bool isSystemCursorShown();
 		int getWidth();
 		int getHeight();
-		void setTitle(chstr value);
+		void setWindowTitle(chstr title);
 		gtypes::Vector2 getCursorPosition();
 		void presentFrame();
 		void* getIDFromBackend();
 		void doEvents();
-		bool isVirtualKeyboardVisible();
+		bool isKeyboardVisible();
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
 		void keyboardWasShown();
@@ -74,32 +90,14 @@ namespace april
 		void addInputEvent(InputEvent* event);
 		InputEvent* popInputEvent();
 		
-		bool textField_shouldChangeCharactersInRange_replacementString_(void* uitextfieldTextField, int nsrangeLocation, int nsrangeLength, chstr str);
+		void injectiOSChar(unsigned int inputChar);
 		
 		void setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation));
 		void deviceOrientationDidChange();
 
 		void applicationWillResignActive();
 		void applicationDidBecomeActive();
-		
-	protected:
-		bool focused;
-		bool cursorVisible;
-		int keyboardRequest;
-		Timer timer;
-		bool firstFrameDrawn;
-		harray<InputEvent*> inputEvents;
-		bool inputEventsMutex;
-		bool retainLoadingOverlay;
-		harray<UITouch*> touches;
-		bool multiTouchActive;
-		
-		float _getTouchScale();
-		harray<UITouch*> _convertTouchesToCoordinates(void* touches);
-		void callTouchCallback();
-		
 	};
-	
 }
 
 #endif
