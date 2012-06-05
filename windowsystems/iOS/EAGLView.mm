@@ -271,8 +271,6 @@
 	// clear crap from previous renders. I often got a magenta colored initial screen without this
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
-    [context presentRenderbuffer:GL_RENDERBUFFER_OES];
     return YES;
 }
 
