@@ -322,7 +322,7 @@ namespace april
 	void Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
 	{
 		if (keyCode == AK_UNKNOWN)
-		{
+		{	
 			april::log("key event on unknown key");
 			keyCode = AK_NONE;
 		}
@@ -333,7 +333,7 @@ namespace april
 			{
 				(*mKeyDownCallback)(keyCode);
 			}
-			if (charCode != 0 && mCharCallback != NULL && charCode != 127) // hack for sdl on mac, backspace induces character
+			if (charCode >= 32 && mCharCallback != NULL && charCode != 127) // hack for sdl on mac, backspace induces character
 			{
 				(*mCharCallback)(charCode);
 			}
