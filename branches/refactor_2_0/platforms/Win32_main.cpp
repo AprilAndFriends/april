@@ -32,7 +32,7 @@ int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(
 		}
 	}
 	anAprilInit(args);
-    april::window->enterMainLoop();
+	april::window->enterMainLoop();
 	anAprilDestroy();
 	return 0;
 }

@@ -159,6 +159,7 @@ namespace april
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);
 		hstr _findTextureFilename(chstr filename);
+		DEPRECATED_ATTRIBUTE RamTexture* loadRAMTexture(chstr filename, bool dynamic = false) { return loadRamTexture(filename, dynamic); }
 
 		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;
