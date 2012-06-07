@@ -17,6 +17,7 @@
 #include <hltypes/hstring.h>
 
 #include "Platform.h"
+#include "RenderSystem.h"
 #include "Window.h"
 
 namespace april
@@ -28,11 +29,18 @@ namespace april
 
 	SystemInfo getSystemInfo()
 	{
+		// TODO
 		static SystemInfo info;
 		if (info.locale == "")
 		{
 			info.ram = 1024;
+			info.max_texture_size = 0;
 			info.locale = "en";
+		}
+		// TODO
+		if (info.max_texture_size == 0 && april::rendersys != NULL)
+		{
+			info.max_texture_size = april::rendersys->_getMaxTextureSize();
 		}
 		return info;
 	}
@@ -45,17 +53,17 @@ namespace april
 	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
-		HWND wnd = 0;
-		if (rendersys && rendersys->getWindow() && style & AMSGSTYLE_MODAL)
+		HWND hwnd = 0;
+		if (april::rendersys != NULL && april::window != NULL && (style & AMSGSTYLE_MODAL))
 		{
-			wnd = (HWND)rendersys->getWindow()->getIDFromBackend();
+			hwnd = (HWND)april::window->getBackendId();
 		}
 		int type = 0;
-		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
+		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
 		{
 			type |= MB_OKCANCEL;
 		}
-		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
+		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO) && (buttonMask & AMSGBTN_CANCEL))
 		{
 			type |= MB_YESNOCANCEL;
 		}
@@ -63,7 +71,7 @@ namespace april
 		{
 			type |= MB_OK;
 		}
-		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
+		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
 		{
 			type |= MB_YESNO;
 		}
@@ -85,8 +93,8 @@ namespace april
 			type |= MB_ICONQUESTION;
 		}
 		
-		int btn = MessageBox(wnd, text.c_str(), title.c_str(), type);
-		switch(btn)
+		int button = MessageBox(hwnd, text.c_str(), title.c_str(), type);
+		switch (button)
 		{
 		case IDOK:
             if (callback != NULL)

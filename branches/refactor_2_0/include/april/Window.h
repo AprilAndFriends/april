@@ -29,7 +29,6 @@ namespace april
 
 	class aprilExport Window
 	{
-		static void (*msLaunchCallback)();
 	public:
 		enum MouseEventType
 		{

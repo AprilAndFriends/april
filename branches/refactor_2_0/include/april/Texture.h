@@ -115,6 +115,13 @@ namespace april
 		DEPRECATED_ATTRIBUTE Filter getTextureFilter() { return this->getFilter(); }
 		DEPRECATED_ATTRIBUTE bool isValid() { return this->isLoaded(); }
 		
+		// TODO - this horrible, horrible hack has to be discussed and changed
+		//! sets the filename variable, useful if you want to reload the texture from a different file
+		void _setFilename(chstr value) { this->filename = value; }
+
+		// TODO - has to be discussed
+		static void setTextureLoadingListener(void (*listener)(Texture*));
+
 	protected:
 		hstr filename;
 		int width;
@@ -130,8 +137,11 @@ namespace april
 
 		hstr _findTextureFilename(chstr filename);
 		void _resetUnusedTime();
+
+		// TODO - has to be discussed
+		void _notifyLoadingListener(Texture* t);
 		
-		// warning: these may currently not work well with anything else than DirectX9
+		// TODO - these may currently not work well with anything else than DirectX9
 		void _blit(unsigned char* thisData, int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void _stretchBlit(unsigned char* thisData, int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 

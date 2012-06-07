@@ -81,6 +81,9 @@ namespace april
 		ImageSource* takeScreenshot(int bpp = 3);
 		void presentFrame();
 
+		// TODO - refactor
+		int _getMaxTextureSize();
+
 	protected:
 		bool zBufferEnabled;
 		bool textureCoordinatesEnabled;

@@ -38,6 +38,18 @@
 
 namespace april
 {
+	// TODO - refactor
+	int DirectX9_RenderSystem::_getMaxTextureSize()
+	{
+		if (this->d3dDevice == NULL)
+		{
+			return 0;
+		}
+		D3DCAPS9 caps;
+		this->d3dDevice->GetDeviceCaps(&caps);
+		return caps.MaxTextureWidth;
+	}
+
 #ifdef _DEBUG
 	char fpstitle[1024] = " [FPS:0]";
 #endif

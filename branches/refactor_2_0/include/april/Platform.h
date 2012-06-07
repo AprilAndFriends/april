@@ -26,8 +26,8 @@ namespace april
 	{
 		hstr name;
 		int ram; //! how many MB of RAM does the host system have in total
+		int max_texture_size;
 		hstr locale; //! current system locale code
-
 	};
 	
 	enum DeviceType

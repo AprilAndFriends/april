@@ -42,7 +42,13 @@ namespace april
 		if (info.locale == "")
 		{
 			info.ram = 256;
+			info.max_texture_size = 0;
 			info.locale = "en";
+		}
+		// TODO
+		if (info.max_texture_size == 0 && april::rendersys != NULL)
+		{
+			info.max_texture_size = april::rendersys->_getMaxTextureSize();
 		}
 		return info;
 	}

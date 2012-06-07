@@ -75,6 +75,9 @@ namespace april
 		void setParam(chstr name, chstr value);
         ImageSource* takeScreenshot(int bpp = 3);
 		
+		// TODO - refactor
+		int _getMaxTextureSize();
+
 	protected:
 		bool textureCoordinatesEnabled;
 		bool colorEnabled;

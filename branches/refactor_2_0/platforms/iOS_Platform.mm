@@ -54,6 +54,7 @@ namespace april
 			
 			info.name = name; // defaults for unknown devices
 			info.ram = 1024; // defaults
+			info.max_texture_size = 0;
 			
 			if (name.starts_with("iPad"))
 			{
@@ -66,6 +67,11 @@ namespace april
 				{
 					info.name = "iPad2";
 					info.ram = 512;
+				}
+				else if (name.starts_with("iPad3"))
+				{
+					info.name = "iPad3";
+					info.ram = 1024;
 				}
 			}
 			else if (name.starts_with("iPhone"))
@@ -89,6 +95,16 @@ namespace april
 				{
 					info.name = "iPhone4";
 					info.ram = 512;
+				}
+				else if (name.starts_with("iPhone4"))
+				{
+					info.name = "iPhone4S";
+					info.ram = 512;
+				}
+				else if (name.starts_with("iPhone5"))
+				{
+					info.name = "iPhone5";
+					info.ram = 1024;
 				}
 			}
 			else if (name.starts_with("iPod"))
@@ -115,6 +131,11 @@ namespace april
 				}
 			}
 			//else: i386 (iphone simulator) and possible future device types
+		}
+		// TODO
+		if (info.max_texture_size == 0 && april::rendersys != NULL)
+		{
+			info.max_texture_size = april::rendersys->_getMaxTextureSize();
 		}
 		return info;
 	}

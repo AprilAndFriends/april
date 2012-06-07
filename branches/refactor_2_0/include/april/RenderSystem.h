@@ -141,6 +141,9 @@ namespace april
 		DEPRECATED_ATTRIBUTE void setBlendMode(BlendMode blendMode) { this->setTextureBlendMode(blendMode); }
 		DEPRECATED_ATTRIBUTE void setColorMode(ColorMode colorMode, unsigned char alpha = 255) { this->setTextureColorMode(colorMode, alpha); }
 
+		// TODO - refactor
+		virtual int _getMaxTextureSize() = 0;
+
 	protected:
 		hstr name;
 		bool created;
@@ -159,7 +162,6 @@ namespace april
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);
 		hstr _findTextureFilename(chstr filename);
-		DEPRECATED_ATTRIBUTE RamTexture* loadRAMTexture(chstr filename, bool dynamic = false) { return loadRamTexture(filename, dynamic); }
 
 		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;

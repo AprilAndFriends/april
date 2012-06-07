@@ -386,10 +386,7 @@ namespace april
 	{
 		harray<UITouch*> touches = this->_convertTouchesToCoordinates(nssetTouches);
 		int num_touches = this->touches.size();
-		foreach (UITouch*, it, touches)
-		{
-			this->touches.remove(*it);
-		}
+		this->touches /= touches;
 		
 		if (this->multiTouchActive)
 		{
