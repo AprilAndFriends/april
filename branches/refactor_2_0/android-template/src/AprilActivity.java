@@ -6,7 +6,10 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.opengl.GLSurfaceView;
@@ -26,6 +29,7 @@ class AprilJNI
 	public static String SharedPath = ".";
 	public static String PackageName = "";
 	public static String VersionCode = "0";
+	public static AlertDialog.Builder DialogBuilder = null;
 	
 	public static native void setVariables(Object activity, String systemPath, String sharedPath, String packageName, String versionCode, String forceArchivePath);
 	public static native void init(String[] args, int width, int height);
@@ -46,6 +50,61 @@ class AprilJNI
 	public static native void activityOnStop();
 	public static native void activityOnDestroy();
 	public static native void activityOnRestart();
+	
+	public static native void onDialogOk();
+	public static native void onDialogYes();
+	public static native void onDialogNo();
+	public static native void onDialogCancel();
+	
+	public static void showMessageBox(String title, String text, String ok, String yes, String no, String cancel, int iconId)
+	{
+		AprilJNI.DialogBuilder = new AlertDialog.Builder(AprilJNI.Activity);
+		AprilJNI.DialogBuilder.setTitle(title != null ? title : "");
+		AprilJNI.DialogBuilder.setMessage(text != null ? text : "");
+		if (ok != null)
+		{
+			AprilJNI.DialogBuilder.setPositiveButton(ok, new AprilDialogOkListener());
+		}
+		else
+		{
+			if (yes != null)
+			{
+				AprilJNI.DialogBuilder.setPositiveButton(yes, new AprilDialogYesListener());
+			}
+			if (no != null)
+			{
+				AprilJNI.DialogBuilder.setNegativeButton(no, new AprilDialogNoListener());
+			}
+		}
+		if (cancel != null)
+		{
+			AprilJNI.DialogBuilder.setNeutralButton(cancel, new AprilDialogCancelListener());
+			AprilJNI.DialogBuilder.setCancelable(true);
+			AprilJNI.DialogBuilder.setOnCancelListener(new AprilDialogOnCancelListener());
+		}
+		else
+		{
+			AprilJNI.DialogBuilder.setCancelable(false);
+		}
+		switch (iconId)
+		{
+		case 1:
+			AprilJNI.DialogBuilder.setIcon(android.R.drawable.ic_dialog_info);
+			break;
+		case 2:
+			AprilJNI.DialogBuilder.setIcon(android.R.drawable.ic_dialog_alert);
+			break;
+		default:
+			break;
+		}
+		AprilJNI.Activity.runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				AprilJNI.Activity.showDialog(0);
+			}
+		});
+	}
 	
 }
 
@@ -144,6 +203,11 @@ public class AprilActivity extends Activity
 		super.onLowMemory();
 	}
 	
+	protected Dialog onCreateDialog(int id)
+	{
+		return AprilJNI.DialogBuilder.create();
+	}
+	
 }
 
 class AprilGLSurfaceView extends GLSurfaceView
@@ -223,3 +287,44 @@ class AprilRenderer implements GLSurfaceView.Renderer
 	}
 	
 }
+
+class AprilDialogOkListener implements DialogInterface.OnClickListener
+{
+	public void onClick(DialogInterface dialog, int id)
+	{
+		AprilJNI.onDialogOk();
+	}
+}
+
+class AprilDialogYesListener implements DialogInterface.OnClickListener
+{
+	public void onClick(DialogInterface dialog, int id)
+	{
+		AprilJNI.onDialogYes();
+	}
+}
+
+class AprilDialogNoListener implements DialogInterface.OnClickListener
+{
+	public void onClick(DialogInterface dialog, int id)
+	{
+		AprilJNI.onDialogNo();
+	}
+}
+
+class AprilDialogCancelListener implements DialogInterface.OnClickListener
+{
+	public void onClick(DialogInterface dialog, int id)
+	{
+		AprilJNI.onDialogCancel();
+	}
+}
+
+class AprilDialogOnCancelListener implements DialogInterface.OnCancelListener
+{
+	public void onCancel(DialogInterface dialog)
+	{
+		AprilJNI.onDialogCancel();
+	}
+}
+

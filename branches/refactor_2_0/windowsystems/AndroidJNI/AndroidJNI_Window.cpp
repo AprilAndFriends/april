@@ -24,6 +24,7 @@ namespace april
 	void* javaVM = NULL;
 	jobject jActivity = NULL;
 	gvec2 androidResolution;
+	void (*dialogCallback)(MessageBoxButton) = NULL;
 
 	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), alreadyTouched(false), _lastTime(0.0f)
 	{

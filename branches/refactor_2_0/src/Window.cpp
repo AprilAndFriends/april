@@ -9,31 +9,6 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef __APPLE__
-#include <TargetConditionals.h>
-#if TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
-#include "iOSWindow.h"
-#endif
-#endif
-#ifdef _WIN32
-#include <windows.h>
-#endif
-#ifdef _ANDROID
-#include <jni.h>
-#endif
-
-#if TARGET_OS_MAC && !TARGET_OS_IPHONE
-	#import <Foundation/NSString.h>
-	#import <AppKit/NSScreen.h>
-	#import <AppKit/NSPanel.h>
-
-	#import <AppKit/NSApplication.h>
-	#import <AppKit/NSWindow.h>
-	#import <AppKit/NSEvent.h>
-	#import <AppKit/NSCursor.h>
-#endif
-
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/hstring.h>
@@ -43,15 +18,6 @@
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
-
-#ifdef _ANDROID
-namespace april
-{
-	extern void* javaVM;
-	extern jobject jActivity;
-	extern gvec2 androidResolution;
-}
-#endif
 
 namespace april
 {
@@ -89,24 +55,6 @@ namespace april
 		this->lowMemoryCallback = NULL;
 	}
 	
-		mUpdateCallback = NULL;
-		mMouseDownCallback = NULL;
-		mMouseUpCallback = NULL;
-		mMouseMoveCallback = NULL;
-		mKeyDownCallback = NULL;
-		mKeyUpCallback = NULL;
-		mCharCallback = NULL;
-		mQuitCallback = NULL;
-		mFocusCallback = NULL;
-		mVKeyboardCallback = NULL;
-		mDeviceOrientationCallback = NULL;
-		mTouchEnabledCallback = NULL;
-		mTouchCallback = NULL;
-		mLowMemoryCallback = NULL;
-		mHandleURLCallback = NULL;
-		mSingleton = this;
-		april::window = this;
-	}
 	Window::~Window()
 	{
 		this->destroy();

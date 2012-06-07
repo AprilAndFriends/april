@@ -9,8 +9,12 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#include "iOSWindow.h"
 
 #include <gtypes/Vector2.h>
 #include <hltypes/hltypesUtil.h>
@@ -126,12 +130,12 @@ namespace april
 	
 	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
-        NSString *buttons[] = {@"Ok", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+        NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, AMSGBTN_NULL, AMSGBTN_NULL};
         
 		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
 		{
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
             
             buttonTypes[1] = AMSGBTN_OK;
@@ -162,7 +166,7 @@ namespace april
 		}
 		else if (buttonMask & AMSGBTN_OK)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "Ok").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
             buttonTypes[0] = AMSGBTN_OK;
 		}
 		else if (buttonMask & AMSGBTN_YES)

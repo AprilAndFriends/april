@@ -42,12 +42,12 @@ namespace april
 		void set(chstr hex);
 		void set(Color color, unsigned char a);
 
-		float r_f() { return r / 255.0f; }
-		float g_f() { return g / 255.0f; }
-		float b_f() { return b / 255.0f; }
-		float a_f() { return a / 255.0f; }
+		float r_f() const { return r / 255.0f; }
+		float g_f() const { return g / 255.0f; }
+		float b_f() const { return b / 255.0f; }
+		float a_f() const { return a / 255.0f; }
 		
-		hstr hex(bool rgbOnly = false); // careful when using rgbOnly!
+		hstr hex(bool rgbOnly = false) const; // careful when using rgbOnly!
 		
 		operator unsigned int() const;
 		

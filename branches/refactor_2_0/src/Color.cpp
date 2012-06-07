@@ -108,7 +108,7 @@ namespace april
 		this->a = a;
 	}
 
-	hstr Color::hex(bool rgbOnly)
+	hstr Color::hex(bool rgbOnly) const
 	{
 		hstr result = hsprintf("%02X%02X%02X", this->r, this->g, this->b);
 		if (!rgbOnly)
