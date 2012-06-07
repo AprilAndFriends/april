@@ -109,12 +109,12 @@ namespace april
 	int gl_render_ops[]=
 	{
 		0,
-		GL_TRIANGLES,	  // ROP_TRIANGLE_LIST
-		GL_TRIANGLE_STRIP, // ROP_TRIANGLE_STRIP
-		GL_TRIANGLE_FAN,   // ROP_TRIANGLE_FAN
-		GL_LINES,		  // ROP_LINE_LIST
-		GL_LINE_STRIP,	 // ROP_LINE_STRIP
-		GL_POINTS,		 // ROP_POINTS
+		GL_TRIANGLES,		// ROP_TRIANGLE_LIST
+		GL_TRIANGLE_STRIP,	// ROP_TRIANGLE_STRIP
+		GL_TRIANGLE_FAN,	// ROP_TRIANGLE_FAN
+		GL_LINES,			// ROP_LINE_LIST
+		GL_LINE_STRIP,		// ROP_LINE_STRIP
+		GL_POINTS,			// ROP_POINTS
 	};
 	
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(),
@@ -628,6 +628,7 @@ namespace april
 			glDepthFunc(GL_LEQUAL);
 		}
 	}
+	
 	
 	ImageSource* OpenGL_RenderSystem::takeScreenshot(int bpp)
 	{

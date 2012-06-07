@@ -33,15 +33,15 @@ namespace april
 	public:
 		enum MouseEventType
 		{
-			AMOUSEEVT_UP = 0,
-			AMOUSEEVT_DOWN,
-			AMOUSEEVT_MOVE
+			AMOUSEEVT_DOWN = 0,
+			AMOUSEEVT_UP = 1,
+			AMOUSEEVT_MOVE = 2
 		};
 		
 		enum KeyEventType
 		{
-			AKEYEVT_UP = 0,
-			AKEYEVT_DOWN
+			AKEYEVT_DOWN = 0,
+			AKEYEVT_UP = 1
 		};
 		
 		enum MouseButton

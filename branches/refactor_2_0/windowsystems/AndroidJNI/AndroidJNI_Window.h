@@ -11,6 +11,7 @@
 /// 
 /// Defines an Android JNI window.
 
+#ifdef _ANDROID
 #ifndef APRIL_ANDROID_JNI_WINDOW_H
 #define APRIL_ANDROID_JNI_WINDOW_H
 
@@ -88,14 +89,16 @@ namespace april
 		
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
+		void handleTouchEvent(MouseEventType type, gvec2 position, int index);
 		void handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button);
 		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
 		
 	protected:
 		int width;
 		int height;
-		bool alreadyTouched;
+		bool multiTouchActive;
 		april::Timer globalTimer;
+		harray<gvec2> touches;
 		harray<MouseInputEvent> mouseEvents;
 		harray<KeyInputEvent> keyEvents;
 		harray<TouchInputEvent> touchEvents;
@@ -107,5 +110,7 @@ namespace april
 		float _lastTime;
 		
 	};
+
 }
+#endif
 #endif

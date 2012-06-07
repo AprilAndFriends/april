@@ -44,7 +44,7 @@ namespace april
 		}
 		this->width = w;
 		this->height = h;
-		this->alreadyTouched = false;
+		this->multiTouchActive = false;
 		this->_lastTime = 0.0f;
 		return true;
 	}
@@ -116,54 +116,47 @@ namespace april
 		}
 	}
 
-	void AndroidJNI_Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
+	void AndroidJNI_Window::handleTouchEvent(MouseEventType type, gvec2 position, int index)
 	{
-		/* // TODO - potential multitouch handling
-#ifdef _DEBUG
-		april::log("    - MOUSE EVENT -> " + hstr(type == AMOUSEEVT_UP ? "UP" : (type == AMOUSEEVT_DOWN ? "DOWN" : "MOV")));
-#endif
-		if (type == AMOUSEEVT_DOWN && mAlreadyTouched)
+		switch (type)
 		{
-#ifdef _DEBUG
-			april::log("    - TOUCH " + hstr(position.x) + " " + hstr(position.y));
-#endif
-			this->alreadyTouched = false;
-			this->mouseEvents += MouseInputEvent(AMOUSEEVT_UP, position, button);
-			harray<gvec2> touches;
-			touches += cursorPosition;
-			touches += position;
-			this->touchEvents += TouchInputEvent(touches);
-		}
-		else if (type == AMOUSEEVT_DOWN)
-		{
-#ifdef _DEBUG
-			april::log("    - DOWN " + hstr(position.x) + " " + hstr(position.y));
-#endif
-			this->alreadyTouched = true;
-			this->mouseEvents += MouseInputEvent(type, position, button);
-		}
-		else if (type == AMOUSEEVT_MOVE)
-		{
-#ifdef _DEBUG
-			april::log("    - MOV " + hstr(position.x) + " " + hstr(position.y));
-#endif
-			this->mouseEvents += MouseInputEvent(type, position, button);
-		}
-		else if (type == AMOUSEEVT_UP)
-		{
-			if (this->alreadyTouched)
+		case AMOUSEEVT_DOWN:
+			if (index < this->touches.size()) // DOWN event of an already indexed touch, never happened so far
 			{
-				this->aAlreadyTouched = false;
-				this->mouseEvents += MouseInputEvent(type, position, button);
-#ifdef _DEBUG
-				april::log("    - UP " + hstr(position.x) + " " + hstr(position.y));
-#endif
+				return;
 			}
+			this->touches += position;
+			break;
+		case AMOUSEEVT_UP:
+			if (index >= this->touches.size()) // redundant UP event, can happen
+			{
+				return;
+			}
+			this->touches.remove_at(index);
+			break;
+		case AMOUSEEVT_MOVE:
+			if (index >= this->touches.size()) // MOVE event of an unindexed touch, never happened so far
+			{
+				return;
+			}
+			this->touches[index] = position;
+			break;
 		}
-		//*/
-		this->mouseEvents += MouseInputEvent(type, position, button);
+		if (this->multiTouchActive || this->touches.size() > 1)
+		{
+			this->multiTouchActive = (this->touches.size() > 0);
+		}
+		else
+		{
+			this->handleMouseEvent(type, position, AMOUSEBTN_LEFT);
+		}
+		this->touchEvents += TouchInputEvent(this->touches);
 	}
 
+	void AndroidJNI_Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
+	{
+		this->mouseEvents += MouseInputEvent(type, position, button);
+	}
 
 	void AndroidJNI_Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
 	{

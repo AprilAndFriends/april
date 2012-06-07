@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 1.53
 /// 
 /// @section LICENSE
 /// 
@@ -55,7 +55,7 @@ bool update(float k)
 
 void onMouseDown(float x, float y, int button)
 {
-	printf("dn x: %4.0f y: %4.0f button: %d\n", x, y, button);
+	april::log(hsprintf("    - DOWN x: %4.0f y: %4.0f button: %d\n", x, y, button));
 	mousePressed = true;
 	offset.x = x;
 	offset.y = y;
@@ -63,13 +63,13 @@ void onMouseDown(float x, float y, int button)
 
 void onMouseUp(float x, float y, int button)
 {
-	printf("up x: %4.0f y: %4.0f button: %d\n", x, y, button);
+	april::log(hsprintf("    - UP   x: %4.0f y: %4.0f button: %d\n", x, y, button));
 	mousePressed = false;
 }
 
 void onMouseMove(float x, float y)
 {
-	printf("mv x: %4.0f y: %4.0f\n", x, y);
+	april::log(hsprintf("    - MOVE x: %4.0f y: %4.0f\n", x, y));
 	if (mousePressed)
 	{
 		offset.x = x;
@@ -87,8 +87,8 @@ void april_init(const harray<hstr>& args)
 	april::init();
 	april::createRenderSystem("");
 	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "april: Simple Demo");
-	april::window->setUpdateCallback(update);
-	april::window->setMouseCallbacks(onMouseDown, onMouseUp, onMouseMove);
+	april::window->setUpdateCallback(&update);
+	april::window->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove);
 	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture");
 	manualTexture = april::rendersys->createEmptyTexture((int)drawRect.w, (int)drawRect.h);
 	manualTexture->blit(100, 100, texture, 0, 0, texture->getWidth(), texture->getHeight());
