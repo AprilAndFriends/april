@@ -23,7 +23,7 @@
 static ApriliOSAppDelegate* appDelegate;
 static UIWindow* uiwindow = NULL;
 EAGLView* glview = NULL;
-static AprilViewController* viewcontroller;
+static AprilViewController* viewcontroller = NULL;
 
 extern bool g_wnd_rotating;
 
@@ -113,15 +113,8 @@ namespace april
 		this->multiTouchActive = false;
 		appDelegate = ((ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate]);
 		viewcontroller = [appDelegate viewController];
-		uiwindow = [appDelegate window];
-		if (fullscreen)
-		{
-			[UIApplication sharedApplication].statusBarHidden = YES;
-		}
-		else
-		{
-			[UIApplication sharedApplication].statusBarHidden = NO;
-		}
+		uiwindow = [appDelegate uiwindow];
+		[UIApplication sharedApplication].statusBarHidden = fullscreen ? YES : NO;		
 		this->fullscreen = true; // iOS apps are always fullscreen
 		this->firstFrameDrawn = false; // show window after drawing first frame
 		this->running = true;
@@ -257,7 +250,7 @@ namespace april
 
 	void* iOSWindow::getIdFromBackend()
 	{
-		return uiwindow;
+		return viewcontroller;
 	}
 
 	void iOSWindow::checkEvents()

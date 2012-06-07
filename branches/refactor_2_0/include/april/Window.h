@@ -29,6 +29,7 @@ namespace april
 
 	class aprilExport Window
 	{
+		static void (*msLaunchCallback)();
 	public:
 		enum MouseEventType
 		{
@@ -165,6 +166,12 @@ namespace april
 		DEPRECATED_ATTRIBUTE void handleFocusEvent(bool focused) { this->handleFocusChangeEvent(focused); }
 		DEPRECATED_ATTRIBUTE void* getIDFromBackend() { return this->getBackendId(); }
 
+		// TODO - refactor
+		// the following functions should be temporary, it was added because I needed access to
+		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
+		static void setLaunchCallback(void (*callback)()) { msLaunchCallback = callback; }
+		static void handleLaunchCallback();
+
 	protected:
 		bool created;
 		hstr name;
@@ -174,6 +181,9 @@ namespace april
 		bool running;
 		gvec2 cursorPosition;
 		bool cursorVisible;
+
+		// TODO - refactor
+		static void (*msLaunchCallback)();
 
 		bool (*updateCallback)(float);
 		void (*mouseDownCallback)(float, float, int);

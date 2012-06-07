@@ -55,6 +55,17 @@ namespace april
 
 namespace april
 {
+	// TODO - refactor
+	void (*Window::msLaunchCallback)() = NULL;
+	void Window::handleLaunchCallback()
+	{
+		if (msLaunchCallback != NULL)
+		{
+			(*msLaunchCallback)();
+		}
+	}
+	//////////////////
+
 	Window* window = NULL;
 	
 	Window::Window() : created(false), fullscreen(true), focused(true), running(true), cursorVisible(false)
