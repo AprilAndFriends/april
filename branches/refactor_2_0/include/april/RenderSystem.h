@@ -128,7 +128,7 @@ namespace april
 		DEPRECATED_ATTRIBUTE void forceDynamicLoading(bool value) { this->setForcedDynamicLoading(value); }
 		DEPRECATED_ATTRIBUTE void restore() { this->reset(); }
 		DEPRECATED_ATTRIBUTE void clear(bool useColor, bool depth, grect rect, Color color = APRIL_COLOR_CLEAR) { this->clear(depth, rect, color); }
-		DEPRECATED_ATTRIBUTE ImageSource* gradScreenshot(int bpp = 3) { return this->takeScreenshot(bpp); }
+		DEPRECATED_ATTRIBUTE ImageSource* grabScreenshot(int bpp = 3) { return this->takeScreenshot(bpp); }
 		DEPRECATED_ATTRIBUTE Texture* createTextureFromMemory(unsigned char* rgba, int w, int h) { return this->createTexture(w, h, rgba); }
 		DEPRECATED_ATTRIBUTE Texture* createEmptyTexture(int w, int h, Texture::Format format = Texture::FORMAT_RGBA, Texture::Type type = Texture::TYPE_NORMAL) { return this->createTexture(w, h, format, type); }
 		DEPRECATED_ATTRIBUTE Texture* createBlankTexture(int w, int h, Texture::Format format = Texture::FORMAT_RGBA, Texture::Type type = Texture::TYPE_NORMAL) { return this->createTexture(w, h, format, type, Color(APRIL_COLOR_WHITE, 0)); }

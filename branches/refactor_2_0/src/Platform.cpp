@@ -21,20 +21,20 @@ namespace april
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		MessageBoxStyle passedStyle = style;
-		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY)
+		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
 		{
 #if !TARGET_OS_IPHONE
-			april::window->terminateMainLoop();
-			april::window->destroy();
+			window->terminateMainLoop();
+			window->destroyWindow();
 #endif
 			passedStyle = (MessageBoxStyle)(passedStyle & AMSGSTYLE_MODAL);
 		}
-		MessageBoxButton result = messageBox_platform(title, text, buttonMask, passedStyle, customButtonTitles, callback);
+		MessageBoxButton returnValue = messageBox_impl(title, text, buttonMask, passedStyle, customButtonTitles, callback);
 		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY)
 		{
 			exit(1);
 		}
-		return result;
+		return returnValue;
 	}
 
 }

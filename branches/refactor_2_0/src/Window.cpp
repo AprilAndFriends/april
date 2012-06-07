@@ -78,6 +78,24 @@ namespace april
 		this->lowMemoryCallback = NULL;
 	}
 	
+		mUpdateCallback = NULL;
+		mMouseDownCallback = NULL;
+		mMouseUpCallback = NULL;
+		mMouseMoveCallback = NULL;
+		mKeyDownCallback = NULL;
+		mKeyUpCallback = NULL;
+		mCharCallback = NULL;
+		mQuitCallback = NULL;
+		mFocusCallback = NULL;
+		mVKeyboardCallback = NULL;
+		mDeviceOrientationCallback = NULL;
+		mTouchEnabledCallback = NULL;
+		mTouchCallback = NULL;
+		mLowMemoryCallback = NULL;
+		mHandleURLCallback = NULL;
+		mSingleton = this;
+		april::window = this;
+	}
 	Window::~Window()
 	{
 		this->destroy();

@@ -87,8 +87,8 @@ void april_init(const harray<hstr>& args)
 	april::init();
 	april::createRenderSystem("");
 	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "april: Simple Demo");
-	april::rendersys->getWindow()->setUpdateCallback(update);
-	april::rendersys->getWindow()->setMouseCallbacks(onMouseDown, onMouseUp, onMouseMove);
+	april::window->setUpdateCallback(update);
+	april::window->setMouseCallbacks(onMouseDown, onMouseUp, onMouseMove);
 	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture");
 	manualTexture = april::rendersys->createEmptyTexture((int)drawRect.w, (int)drawRect.h);
 	manualTexture->blit(100, 100, texture, 0, 0, texture->getWidth(), texture->getHeight());

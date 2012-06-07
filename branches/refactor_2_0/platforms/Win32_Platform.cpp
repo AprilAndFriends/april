@@ -45,47 +45,47 @@ namespace april
 	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
-		HWND hwnd = 0;
-		if (april::window && (style & AMSGSTYLE_MODAL) != 0)
+		HWND wnd = 0;
+		if (rendersys && rendersys->getWindow() && style & AMSGSTYLE_MODAL)
 		{
-			hwnd = (HWND)april::window->getBackendId();
+			wnd = (HWND)rendersys->getWindow()->getIDFromBackend();
 		}
 		int type = 0;
-		if ((buttonMask & AMSGBTN_OK) != 0 && (buttonMask & AMSGBTN_CANCEL) != 0)
+		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
 		{
 			type |= MB_OKCANCEL;
 		}
-		else if ((buttonMask & AMSGBTN_YES) != 0 && (buttonMask & AMSGBTN_NO) != 0 && (buttonMask & AMSGBTN_CANCEL) != 0)
+		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
 		{
 			type |= MB_YESNOCANCEL;
 		}
-		else if ((buttonMask & AMSGBTN_OK) != 0)
+		else if (buttonMask & AMSGBTN_OK)
 		{
 			type |= MB_OK;
 		}
-		else if ((buttonMask & AMSGBTN_YES) != 0 && (buttonMask & AMSGBTN_NO) != 0)
+		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
 		{
 			type |= MB_YESNO;
 		}
 		
-		if ((style & AMSGSTYLE_INFORMATION) != 0)
+		if (style & AMSGSTYLE_INFORMATION)
 		{
 			type |= MB_ICONINFORMATION;
 		}
-		else if ((style & AMSGSTYLE_WARNING) != 0)
+		else if (style & AMSGSTYLE_WARNING)
 		{
 			type |= MB_ICONWARNING;
 		}
-		else if ((style & AMSGSTYLE_CRITICAL) != 0)
+		else if (style & AMSGSTYLE_CRITICAL)
 		{
 			type |= MB_ICONSTOP;
 		}
-		else if ((style & AMSGSTYLE_QUESTION) != 0)
+		else if (style & AMSGSTYLE_QUESTION)
 		{
 			type |= MB_ICONQUESTION;
 		}
 		
-		int btn = MessageBox(hwnd, text.c_str(), title.c_str(), type);
+		int btn = MessageBox(wnd, text.c_str(), title.c_str(), type);
 		switch(btn)
 		{
 		case IDOK:
