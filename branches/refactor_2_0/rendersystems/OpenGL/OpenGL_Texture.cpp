@@ -338,13 +338,26 @@ namespace april
 		int j;
 		int k;
 		int minBpp = hmin(this->bpp, dataBpp);
-		for_iterx (j, 0, sh)
+		if (this->bpp >= 3 && dataBpp >= 3)
 		{
-			for_iterx (i, 0, sw)
+			for_iterx (j, 0, sh)
 			{
-				for_iterx (k, 0, minBpp)
+				for_iterx (i, 0, sw)
 				{
-					writeData[(i + j * sw) * this->bpp + k] = data[(sx + i + (sy + j) * dataWidth) * dataBpp + k];
+					for_iterx (k, 0, minBpp)
+					{
+						writeData[(i + j * sw) * this->bpp + k] = data[(sx + i + (sy + j) * dataWidth) * dataBpp + k];
+					}
+				}
+			}
+		}
+		else
+		{
+			for_iterx (j, 0, sh)
+			{
+				for_iterx (i, 0, sw)
+				{
+					writeData[i + j * sw] = data[sx + i + (sy + j) * dataWidth];
 				}
 			}
 		}
@@ -391,7 +404,7 @@ namespace april
 #ifndef _OPENGLES1
 		this->load();
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		*output = new unsigned char[this->width * this->height * 4];
+		*output = new unsigned char[this->width * this->height * this->bpp];
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, *output);
 		return true;
 #else

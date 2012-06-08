@@ -95,33 +95,33 @@ namespace april
 		void operator=(const gvec3& v);
 
 	};
-    
-    class aprilExport ColoredTexturedNormalVertex : public ColoredTexturedVertex
-    {
-    public:
-        gvec3 normal;
+	
+	class aprilExport ColoredTexturedNormalVertex : public ColoredTexturedVertex
+	{
+	public:
+		gvec3 normal;
 
 		void operator=(const gvec3& v);
 
-    };
-    
-    class aprilExport TexturedNormalVertex : public TexturedVertex
-    {
-    public:
-        gvec3 normal;
+	};
+	
+	class aprilExport TexturedNormalVertex : public TexturedVertex
+	{
+	public:
+		gvec3 normal;
 
 		void operator=(const gvec3& v);
 
-    };
-    
-    class aprilExport ColoredNormalVertex : public ColoredVertex
-    {
-    public:
-        gvec3 normal;
+	};
+	
+	class aprilExport ColoredNormalVertex : public ColoredVertex
+	{
+	public:
+		gvec3 normal;
 
 		void operator=(const gvec3& v);
 
-    };
+	};
 
 	aprilFnExport void rgbToHsl(unsigned char r, unsigned char g, unsigned char b, float* h, float* s, float* l);
 	aprilFnExport void hslToRgb(float h, float s, float l, unsigned char* r, unsigned char* g, unsigned char* b);

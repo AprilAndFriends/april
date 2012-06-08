@@ -162,7 +162,7 @@ namespace april
 	void Window::handleKeyOnlyEvent(KeyEventType type, KeySym keyCode)
 	{
 		if (keyCode == AK_UNKNOWN)
-		{
+		{	
 			april::log("key event on unknown key");
 			keyCode = AK_NONE;
 		}
@@ -187,7 +187,7 @@ namespace april
 	
 	void Window::handleCharOnlyEvent(unsigned int charCode)
 	{
-		if (charCode > 0 && this->charCallback != NULL && charCode != 127) // special hack, backspace induces a character in some implementations
+		if (this->charCallback != NULL && charCode >= 32 && charCode != 127) // special hack, backspace induces a character in some implementations
 		{
 			(*this->charCallback)(charCode);
 		}
