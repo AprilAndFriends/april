@@ -54,6 +54,9 @@ namespace april
 		this->virtualKeyboardCallback = NULL;
 		this->handleUrlCallback = NULL;
 		this->lowMemoryCallback = NULL;
+		this->mouseMoveCallback_DEPRECATED = NULL;
+		this->mouseUpCallback_DEPRECATED = NULL;
+		this->mouseDownCallback_DEPRECATED = NULL;
 	}
 	
 	Window::~Window()
@@ -100,15 +103,18 @@ namespace april
 		return grect(0.0f, 0.0f, this->getSize()).isPointInside(this->getCursorPosition());
 	}
 	
-	void Window::setMouseCallbacks(void (*mouseDownCallback)(float, float, int),
-								   void (*mouseUpCallback)(float, float, int),
-								   void (*mouseMoveCallback)(float, float),
+	void Window::setMouseCallbacks(void (*mouseDownCallback)(int),
+								   void (*mouseUpCallback)(int),
+								   void (*mouseMoveCallback)(),
 								   void (*mouseScrollCallback)(float, float))
 	{
 		this->mouseDownCallback = mouseDownCallback;
 		this->mouseUpCallback = mouseUpCallback;
 		this->mouseMoveCallback = mouseMoveCallback;
 		this->mouseScrollCallback = mouseScrollCallback;
+		this->mouseDownCallback_DEPRECATED = NULL;
+		this->mouseUpCallback_DEPRECATED = NULL;
+		this->mouseMoveCallback_DEPRECATED = NULL;
 	}
 	
 	void Window::setKeyboardCallbacks(void (*keyDownCallback)(unsigned int),
@@ -194,19 +200,37 @@ namespace april
 		case AMOUSEEVT_DOWN:
 			if (this->mouseDownCallback != NULL)
 			{
-				(*this->mouseDownCallback)(position.x, position.y, button);
+				(*this->mouseDownCallback)(button);
+			}
+			// TODO - this is DEPRECATED
+			else if (this->mouseDownCallback_DEPRECATED != NULL)
+			{
+				gvec2 cursorPosition = getCursorPosition();
+				(*this->mouseDownCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y, button);
 			}
 			break;
 		case AMOUSEEVT_UP:
 			if (this->mouseUpCallback != NULL)
 			{
-				(*this->mouseUpCallback)(position.x, position.y, button);
+				(*this->mouseUpCallback)(button);
+			}
+			// TODO - this is DEPRECATED
+			else if (this->mouseUpCallback_DEPRECATED != NULL)
+			{
+				gvec2 cursorPosition = getCursorPosition();
+				(*this->mouseUpCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y, button);
 			}
 			break;
 		case AMOUSEEVT_MOVE:
 			if (this->mouseMoveCallback != NULL)
 			{
-				(*this->mouseMoveCallback)(position.x, position.y);
+				(*this->mouseMoveCallback)();
+			}
+			// TODO - this is DEPRECATED
+			else if (this->mouseMoveCallback_DEPRECATED != NULL)
+			{
+				gvec2 cursorPosition = getCursorPosition();
+				(*this->mouseMoveCallback_DEPRECATED)(cursorPosition.x, cursorPosition.y);
 			}
 			break;
 		case AMOUSEEVT_SCROLL:

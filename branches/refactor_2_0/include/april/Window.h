@@ -85,9 +85,9 @@ namespace april
 		// callback setters
 		void setUpdateCallback(bool (*value)(float)) { this->updateCallback = value; }
 		// TODO - update this this
-		void setMouseDownCallback(void (*value)(float, float, int)) { this->mouseDownCallback = value; }// this->mouseDownCallback_DEPRECATED = NULL; }
-		void setMouseUpCallback(void (*value)(float, float, int)) { this->mouseUpCallback = value; }// this->mouseUpCallback_DEPRECATED = NULL; }
-		void setMouseMoveCallback(void (*value)(float, float)) { this->mouseMoveCallback = value; }// this->mouseMoveCallback_DERPECATED = NULL; }
+		void setMouseDownCallback(void (*value)(int)) { this->mouseDownCallback = value; this->mouseDownCallback_DEPRECATED = NULL; }
+		void setMouseUpCallback(void (*value)(int)) { this->mouseUpCallback = value; this->mouseUpCallback_DEPRECATED = NULL; }
+		void setMouseMoveCallback(void (*value)()) { this->mouseMoveCallback = value; this->mouseMoveCallback_DEPRECATED = NULL; }
 		void setKeyDownCallback(void (*value)(unsigned int)) { this->keyDownCallback = value; }
 		void setKeyUpCallback(void (*value)(unsigned int)) { this->keyUpCallback = value; }
 		void setCharCallback(void (*value)(unsigned int)) { this->charCallback = value; }
@@ -117,12 +117,9 @@ namespace april
 		virtual void* getBackendId() = 0;
 
 		// additional callback setters
-		DEPRECATED_ATTRIBUTE void setMouseCallbacks(void (*mouseDownCallback)(float, float, int),
-							   void (*mouseUpCallback)(float, float, int),
-							   void (*mouseMoveCallback)(float, float)) { setMouseCallbacks(mouseDownCallback, mouseUpCallback, mouseMoveCallback, NULL); }
-		void setMouseCallbacks(void (*mouseDownCallback)(float, float, int),
-							   void (*mouseUpCallback)(float, float, int),
-							   void (*mouseMoveCallback)(float, float),
+		void setMouseCallbacks(void (*mouseDownCallback)(int),
+							   void (*mouseUpCallback)(int),
+							   void (*mouseMoveCallback)(),
 							   void (*mouseScrollCallback)(float, float));
 		void setKeyboardCallbacks(void (*keyDownCallback)(unsigned int),
 								  void (*keyUpCallback)(unsigned int),
@@ -170,6 +167,19 @@ namespace april
 		DEPRECATED_ATTRIBUTE bool isSystemCursorShown() { return this->isCursorVisible(); }
 		DEPRECATED_ATTRIBUTE void handleFocusEvent(bool focused) { this->handleFocusChangeEvent(focused); }
 		DEPRECATED_ATTRIBUTE void* getIDFromBackend() { return this->getBackendId(); }
+		DEPRECATED_ATTRIBUTE void setMouseCallbacks(void (*mouseDownCallback)(float, float, int),
+							   void (*mouseUpCallback)(float, float, int),
+							   void (*mouseMoveCallback)(float, float),
+							   void (*mouseScrollCallback)(float, float))
+							{
+								this->mouseDownCallback_DEPRECATED = mouseDownCallback;
+								this->mouseUpCallback_DEPRECATED = mouseUpCallback;
+								this->mouseMoveCallback_DEPRECATED = mouseMoveCallback;
+								this->mouseScrollCallback = mouseScrollCallback;
+								this->mouseDownCallback = NULL;
+								this->mouseUpCallback = NULL;
+								this->mouseMoveCallback = NULL;
+							}
 
 		// TODO - refactor
 		// the following functions should be temporary, it was added because I needed access to
@@ -191,9 +201,9 @@ namespace april
 		static void (*msLaunchCallback)();
 
 		bool (*updateCallback)(float);
-		void (*mouseDownCallback)(float, float, int);
-		void (*mouseUpCallback)(float, float, int);
-		void (*mouseMoveCallback)(float, float);
+		void (*mouseDownCallback)(int);
+		void (*mouseUpCallback)(int);
+		void (*mouseMoveCallback)();
 		void (*mouseScrollCallback)(float, float);
 		void (*keyDownCallback)(unsigned int);
 		void (*keyUpCallback)(unsigned int);
@@ -206,6 +216,11 @@ namespace april
 		void (*virtualKeyboardCallback)(bool);
 		bool (*handleUrlCallback)(chstr);
 		void (*lowMemoryCallback)();
+
+		// DEPRECATED
+		void (*mouseDownCallback_DEPRECATED)(float, float, int);
+		void (*mouseUpCallback_DEPRECATED)(float, float, int);
+		void (*mouseMoveCallback_DEPRECATED)(float, float);
 
 	};
 
