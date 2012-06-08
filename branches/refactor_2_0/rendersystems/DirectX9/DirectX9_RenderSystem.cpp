@@ -39,6 +39,9 @@
 namespace april
 {
 	// TODO - refactor
+	harray<DirectX9_Texture*> gRenderTargets;
+
+	// TODO - refactor
 	int DirectX9_RenderSystem::_getMaxTextureSize()
 	{
 		if (this->d3dDevice == NULL)
@@ -722,13 +725,16 @@ namespace april
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 		if (hr == D3DERR_DEVICELOST)
 		{
-			int i;
 			april::log("Direct3D9 Device lost, attempting to restore...");
+			foreach (DirectX9_Texture*, it, gRenderTargets)
+			{
+				(*it)->unload();
+			}
 			this->backBuffer->Release();
 			this->backBuffer = NULL;
 			while (april::window->isRunning())
 			{
-				for_iterx (i, 0, 10)
+				for_iter (i, 0, 10)
 				{
 					april::window->checkEvents();
 					hthread::sleep(100.0f);
@@ -768,6 +774,10 @@ namespace april
 			this->_setProjectionMatrix(this->projectionMatrix);
 			this->_configureDevice();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
+			foreach (DirectX9_Texture*, it, gRenderTargets)
+			{
+				(*it)->restore();
+			}
 			april::log("Direct3D9 Device restored");
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)

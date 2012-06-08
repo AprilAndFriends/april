@@ -107,6 +107,7 @@ namespace april
 		void stretchBlit(grect destination, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
 
 		void update(float k);
+		virtual bool copyPixelData(unsigned char** output) { return false; }
 		
 		DEPRECATED_ATTRIBUTE int getSizeInBytes() { return this->getByteSize(); }
 		DEPRECATED_ATTRIBUTE void setTextureFilter(Filter value) { this->setFilter(value); }

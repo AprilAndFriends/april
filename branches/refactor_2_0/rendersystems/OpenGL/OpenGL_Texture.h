@@ -59,6 +59,7 @@ namespace april
 		void stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void rotateHue(float degrees);
 		void saturate(float factor);
+		bool copyPixelData(unsigned char** output);
 
 	protected:
 		GLuint textureId;

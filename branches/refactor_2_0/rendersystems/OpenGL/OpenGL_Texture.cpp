@@ -283,6 +283,15 @@ namespace april
 	{
 		// TODO
 	}
+
+	bool OpenGL_Texture::copyPixelData(unsigned char** output)
+	{
+		load();
+		glBindTexture(GL_TEXTURE_2D, mTexId);
+		*output = new unsigned char[mWidth * mHeight * 4];
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, *output);
+		return true;
+	}
 	
 }
 

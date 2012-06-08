@@ -49,11 +49,15 @@ namespace april
 		void stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void rotateHue(float degrees);
 		void saturate(float factor);
+		bool copyPixelData(unsigned char** output);
 		void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
+
+		void restore(); // TODO - currently only a hack for rendertarget textures
 
 	protected:
 		IDirect3DSurface9* d3dSurface;
 		IDirect3DTexture9* d3dTexture;
+		bool renderTarget;
 
 		enum LOCK_RESULT
 		{

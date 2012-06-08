@@ -28,6 +28,9 @@
 
 namespace april
 {
+	// TODO - refactor
+	extern harray<DirectX9_Texture*> gRenderTargets;
+
 	DirectX9_Texture::DirectX9_Texture(chstr filename, bool dynamic) : Texture()
 	{
 		this->filename = filename;
@@ -35,6 +38,7 @@ namespace april
 		this->width = 0;
 		this->height = 0;
 		this->bpp = 0;
+		this->renderTarget = false;
 		this->d3dTexture = NULL;
 		this->d3dSurface = NULL;
 		if (!this->dynamic)
@@ -54,6 +58,7 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->bpp = 4;
+		this->renderTarget = false;
 		this->d3dSurface = NULL;
 		april::log("creating user-defined DX9 texture");
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
@@ -71,6 +76,7 @@ namespace april
 		this->dynamic = false;
 		this->width = w;
 		this->height = h;
+		this->renderTarget = false;
 		this->d3dSurface = NULL;
 		april::log("creating clean DX9 texture");
 		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
@@ -86,6 +92,8 @@ namespace april
 		{
 			d3dusage = D3DUSAGE_RENDERTARGET;
 			d3dpool = D3DPOOL_DEFAULT;
+			this->renderTarget = true;
+			gRenderTargets += this;
 		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, d3dformat, d3dpool, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
@@ -99,9 +107,35 @@ namespace april
 		}
 	}
 	
+	void DirectX9_Texture::restore()
+	{
+		if (!this->renderTarget)
+		{
+			return;
+		}
+		this->unload();
+		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
+		if (this->bpp == 4)
+		{
+			d3dformat = D3DFMT_A8R8G8B8;
+		}
+		D3DPOOL d3dpool = D3DPOOL_DEFAULT;
+		DWORD d3dusage = D3DUSAGE_RENDERTARGET;
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, d3dformat, d3dpool, &this->d3dTexture, NULL);
+		if (hr != D3D_OK)
+		{
+			april::log("failed to restore user-defined DX9 texture!");
+			return;
+		}
+	}
+
 	DirectX9_Texture::~DirectX9_Texture()
 	{
 		this->unload();
+		if (this->renderTarget)
+		{
+			gRenderTargets -= this;
+		}
 	}
 
 	bool DirectX9_Texture::load()
@@ -148,7 +182,7 @@ namespace april
 			else
 			{
 				ImageSource* tempImg = april::createEmptyImage(image->w, image->h);
-				tempImg->copyImage(image, 4);
+				tempImg->copyImage(image);
 				tempImg->copyPixels(rect.pBits, AF_BGRA);
 				delete tempImg;
 			}
@@ -423,6 +457,51 @@ namespace april
 			april::hslToRgb(h, hmin(s * factor, 1.0f), l, &data[i + 2], &data[i + 1], &data[i]);
 		}
 		this->_unlock(buffer, result, true);
+	}
+
+	bool DirectX9_Texture::copyPixelData(unsigned char** output)
+	{
+		D3DLOCKED_RECT lockRect;
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
+		if (result == LR_FAILED)
+		{
+			return false;
+		}
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		int i;
+		int offset;
+		*output = new unsigned char[this->width * this->height * 4];
+		if (this->bpp == 4)
+		{
+			for_iter (j, 0, this->height)
+			{
+				for_iterx (i, 0, this->width)
+				{
+					offset = (j * this->width + i) * 4;
+					(*output)[offset + 0] = p[offset + 2];
+					(*output)[offset + 1] = p[offset + 1];
+					(*output)[offset + 2] = p[offset + 0];
+					(*output)[offset + 3] = p[offset + 3];
+				}
+			}
+		}
+		else
+		{
+			memset(*output, 255, this->width * this->height * 4);
+			for_iter (j, 0, this->height)
+			{
+				for_iterx (i, 0, this->width)
+				{
+					offset = (i + j * this->width) * 4;
+					(*output)[offset + 0] = p[offset + 2];
+					(*output)[offset + 1] = p[offset + 1];
+					(*output)[offset + 2] = p[offset + 0];
+				}
+			}
+		}
+		this->_unlock(buffer, result, false);
+		return true;
 	}
 
 	void DirectX9_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
