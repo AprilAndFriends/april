@@ -320,11 +320,13 @@ namespace april
 		unsigned char a0;
 		unsigned char a1;
 		int i;
+		int j;
+		// TODO - should be checked on different BPPs and data access better
 		// the following iteration blocks are very similar, but for performance reasons they
 		// have been duplicated instead of putting everything into one block with if branches
 		if (this->bpp == 4 && dataBpp == 4)
 		{
-			for_iter (j, 0, sh)
+			for_iterx (j, 0, sh)
 			{
 				for_iterx (i, 0, sw)
 				{
@@ -333,11 +335,14 @@ namespace april
 					if (c[3] > 0)
 					{
 						a0 = sc[3] * alpha / 255;
-						a1 = 255 - a0;
-						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-						c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-						c[2] = (sc[2] * a0 + c[2] * a1) / 255;
-						c[3] = a0 + c[3] * a1 / 255;
+						if (a0 > 0)
+						{
+							a1 = 255 - a0;
+							c[0] = (sc[0] * a0 + c[0] * a1) / 255;
+							c[1] = (sc[1] * a0 + c[1] * a1) / 255;
+							c[2] = (sc[2] * a0 + c[2] * a1) / 255;
+							c[3] = a0 + c[3] * a1 / 255;
+						}
 					}
 					else
 					{
@@ -349,52 +354,64 @@ namespace april
 				}
 			}
 		}
-		else if (dataBpp == 4)
+		else if (this->bpp == 3 && dataBpp == 4)
 		{
-			for_iter (j, 0, sh)
+			for_iterx (j, 0, sh)
 			{
 				for_iterx (i, 0, sw)
 				{
 					c = &thisData[(i + j * this->width) * 4];
 					sc = &srcData[(i + j * dataWidth) * 4];
 					a0 = sc[3] * alpha / 255;
-					a1 = 255 - a0;
-					c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-					c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-					c[2] = (sc[2] * a0 + c[2] * a1) / 255;
+					if (a0 > 0)
+					{
+						a1 = 255 - a0;
+						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
+						c[1] = (sc[1] * a0 + c[1] * a1) / 255;
+						c[2] = (sc[2] * a0 + c[2] * a1) / 255;
+					}
 				}
 			}
 		}
-		else if (alpha < 255)
+		else if (this->bpp == 4 && dataBpp == 3)
 		{
-			a0 = alpha;
-			a1 = 255 - a0;
-			for_iter (j, 0, sh)
+			if (alpha > 0)
 			{
-				for_iterx (i, 0, sw)
+				a0 = alpha;
+				a1 = 255 - a0;
+				for_iterx (j, 0, sh)
 				{
-					c = &thisData[(i + j * this->width) * 4];
-					sc = &srcData[(i + j * dataWidth) * 4];
-					c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-					c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-					c[2] = (sc[2] * a0 + c[2] * a1) / 255;
+					for_iterx (i, 0, sw)
+					{
+						c = &thisData[(i + j * this->width) * 4];
+						sc = &srcData[(i + j * dataWidth) * 4];
+						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
+						c[1] = (sc[1] * a0 + c[1] * a1) / 255;
+						c[2] = (sc[2] * a0 + c[2] * a1) / 255;
+					}
 				}
 			}
 		}
-		else // mBpp == 4 && dataBpp == 3
+		else if (this->bpp == 1 && dataBpp == 1)
 		{
-			for_iter (j, 0, sh)
+			if (alpha > 0)
 			{
-				for_iterx (i, 0, sw)
+				a0 = alpha;
+				a1 = 255 - a0;
+				for_iterx (j, 0, sh)
 				{
-					c = &thisData[(i + j * this->width) * 4];
-					sc = &srcData[(i + j * dataWidth) * 4];
-					c[0] = sc[0];
-					c[1] = sc[1];
-					c[2] = sc[2];
-					c[3] = 255;
+					for_iterx (i, 0, sw)
+					{
+						c = &thisData[i + j * this->width];
+						sc = &srcData[i + j * dataWidth];
+						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
+					}
 				}
 			}
+		}
+		else
+		{
+			april::log("Unsupported format for blit");
 		}
 	}
 
@@ -434,83 +451,13 @@ namespace april
 		int x1;
 		int y1;
 		int i;
+		int j;
+		// TODO - should be checked on different BPPs and data access better
 		// the following iteration blocks are very similar, but for performance reasons they
 		// have been duplicated instead of putting everything into one block with if branches
 		if (this->bpp == 4 && dataBpp == 4)
 		{
-			for_iter (j, 0, h)
-			{
-				for_iterx (i, 0, w)
-				{
-					c = &thisData[(i + j * this->width) * 4];
-					cx = sx + i * fw;
-					cy = sy + j * fh;
-					x0 = (int)cx;
-					y0 = (int)cy;
-					x1 = hmin((int)cx + 1, dataWidth - 1);
-					y1 = hmin((int)cy + 1, dataHeight - 1);
-					rx0 = cx - x0;
-					ry0 = cy - y0;
-					rx1 = 1.0f - rx0;
-					ry1 = 1.0f - ry0;
-					if (rx0 != 0.0f || ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-						color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
-						sc = color;
-					}
-					else if (rx0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-						color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
-						sc = color;
-					}
-					else if (ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-						color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
-						sc = color;
-					}
-					else
-					{
-						sc = &srcData[(x0 + y0 * dataWidth) * 4];
-					}
-					if (c[3] > 0)
-					{
-						a0 = sc[3] * (int)alpha / 255;
-						a1 = 255 - a0;
-						c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
-						c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-						c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
-						c[3] = (unsigned char)(a0 + c[3] * a1 / 255);
-					}
-					else
-					{
-						c[0] = sc[0];
-						c[1] = sc[1];
-						c[2] = sc[2];
-						c[3] = sc[3] * (int)alpha / 255;
-					}
-				}
-			}
-		}
-		else if (dataBpp == 4)
-		{
-			for_iter (j, 0, h)
+			for_iterx (j, 0, h)
 			{
 				for_iterx (i, 0, w)
 				{
@@ -562,18 +509,30 @@ namespace april
 						sc = &srcData[(x0 + y0 * dataWidth) * 4];
 					}
 					a0 = sc[3] * (int)alpha / 255;
-					a1 = 255 - a0;
-					c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
-					c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-					c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+					if (a0 > 0)
+					{
+						if (c[3] > 0)
+						{
+							a1 = 255 - a0;
+							c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+							c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+							c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+							c[3] = (unsigned char)(a0 + c[3] * a1 / 255);
+						}
+						else
+						{
+							c[0] = sc[0];
+							c[1] = sc[1];
+							c[2] = sc[2];
+							c[3] = a0;
+						}
+					}
 				}
 			}
 		}
-		else if (alpha < 255)
+		else if (this->bpp == 3 && dataBpp == 4)
 		{
-			a0 = alpha;
-			a1 = 255 - a0;
-			for_iter (j, 0, h)
+			for_iterx (j, 0, h)
 			{
 				for_iterx (i, 0, w)
 				{
@@ -597,6 +556,7 @@ namespace april
 						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
 						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
 						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+						color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
 						sc = color;
 					}
 					else if (rx0 != 0.0f)
@@ -606,6 +566,7 @@ namespace april
 						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
 						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
 						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+						color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
 						sc = color;
 					}
 					else if (ry0 != 0.0f)
@@ -615,74 +576,138 @@ namespace april
 						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
 						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
 						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+						color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
 						sc = color;
 					}
 					else
 					{
 						sc = &srcData[(x0 + y0 * dataWidth) * 4];
 					}
-					c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
-					c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-					c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+					a0 = sc[3] * (int)alpha / 255;
+					if (a0 > 0)
+					{
+						a1 = 255 - a0;
+						c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
+						c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
+						c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
+					}
 				}
 			}
 		}
-		else // mBpp == 4 && dataBpp == 3
+		else if (this->bpp == 4 && dataBpp == 3)
 		{
-			for_iter (j, 0, h)
+			if (alpha > 0)
 			{
-				for_iterx (i, 0, w)
+				for_iterx (j, 0, h)
 				{
-					c = &thisData[(i + j * this->width) * 4];
-					cx = sx + i * fw;
-					cy = sy + j * fh;
-					x0 = (int)cx;
-					y0 = (int)cy;
-					x1 = hmin((int)cx + 1, dataWidth - 1);
-					y1 = hmin((int)cy + 1, dataHeight - 1);
-					rx0 = cx - x0;
-					ry0 = cy - y0;
-					rx1 = 1.0f - rx0;
-					ry1 = 1.0f - ry0;
-					if (rx0 != 0.0f || ry0 != 0.0f)
+					for_iterx (i, 0, w)
 					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-						sc = color;
+						c = &thisData[(i + j * this->width) * 4];
+						cx = sx + i * fw;
+						cy = sy + j * fh;
+						x0 = (int)cx;
+						y0 = (int)cy;
+						x1 = hmin((int)cx + 1, dataWidth - 1);
+						y1 = hmin((int)cy + 1, dataHeight - 1);
+						rx0 = cx - x0;
+						ry0 = cy - y0;
+						rx1 = 1.0f - rx0;
+						ry1 = 1.0f - ry0;
+						if (rx0 != 0.0f || ry0 != 0.0f)
+						{
+							ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+							ctr = &srcData[(x1 + y0 * dataWidth) * 4];
+							cbl = &srcData[(x0 + y1 * dataWidth) * 4];
+							cbr = &srcData[(x1 + y1 * dataWidth) * 4];
+							color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+							color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+							color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+							sc = color;
+						}
+						else if (rx0 != 0.0f)
+						{
+							ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+							ctr = &srcData[(x1 + y0 * dataWidth) * 4];
+							color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+							color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+							color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+							sc = color;
+						}
+						else if (ry0 != 0.0f)
+						{
+							ctl = &srcData[(x0 + y0 * dataWidth) * 4];
+							cbl = &srcData[(x0 + y1 * dataWidth) * 4];
+							color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+							color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+							color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+							sc = color;
+						}
+						else
+						{
+							sc = &srcData[(x0 + y0 * dataWidth) * 4];
+						}
+						c[0] = sc[0];
+						c[1] = sc[1];
+						c[2] = sc[2];
+						c[3] = 255;
 					}
-					else if (rx0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-						sc = color;
-					}
-					else if (ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-						sc = color;
-					}
-					else
-					{
-						sc = &srcData[(x0 + y0 * dataWidth) * 4];
-					}
-					c[0] = sc[0];
-					c[1] = sc[1];
-					c[2] = sc[2];
-					c[3] = 255;
 				}
 			}
+		}
+		else if (this->bpp == 1 && dataBpp == 1)
+		{
+			if (alpha > 0)
+			{
+				for_iterx (j, 0, h)
+				{
+					for_iterx (i, 0, w)
+					{
+						c = &thisData[i + j * this->width];
+						cx = sx + i * fw;
+						cy = sy + j * fh;
+						x0 = (int)cx;
+						y0 = (int)cy;
+						x1 = hmin((int)cx + 1, dataWidth - 1);
+						y1 = hmin((int)cy + 1, dataHeight - 1);
+						rx0 = cx - x0;
+						ry0 = cy - y0;
+						rx1 = 1.0f - rx0;
+						ry1 = 1.0f - ry0;
+						if (rx0 != 0.0f || ry0 != 0.0f)
+						{
+							ctl = &srcData[x0 + y0 * dataWidth];
+							ctr = &srcData[x1 + y0 * dataWidth];
+							cbl = &srcData[x0 + y1 * dataWidth];
+							cbr = &srcData[x1 + y1 * dataWidth];
+							color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+							sc = color;
+						}
+						else if (rx0 != 0.0f)
+						{
+							ctl = &srcData[x0 + y0 * dataWidth];
+							ctr = &srcData[x1 + y0 * dataWidth];
+							color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+							sc = color;
+						}
+						else if (ry0 != 0.0f)
+						{
+							ctl = &srcData[x0 + y0 * dataWidth];
+							cbl = &srcData[x0 + y1 * dataWidth];
+							color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+							sc = color;
+						}
+						else
+						{
+							sc = &srcData[x0 + y0 * dataWidth];
+						}
+						c[0] = sc[0];
+					}
+				}
+			}
+		}
+		else
+		{
+			april::log("Unsupported format for stretchBlit");
 		}
 	}
 

@@ -63,7 +63,7 @@ namespace april
 		void setResolution(int w, int h);
 
 		Texture* createTexture(int w, int h, unsigned char* rgba);
-		Texture* createTexture(int w, int h, Texture::Format format = Texture::FORMAT_RGBA, Texture::Type type = Texture::TYPE_NORMAL, Color color = APRIL_COLOR_CLEAR);
+		Texture* createTexture(int w, int h, Texture::Format format = Texture::FORMAT_ARGB, Texture::Type type = Texture::TYPE_NORMAL, Color color = APRIL_COLOR_CLEAR);
 		PixelShader* createPixelShader();
 		PixelShader* createPixelShader(chstr filename);
 		VertexShader* createVertexShader();

@@ -45,7 +45,8 @@ namespace april
 	{
 		NORMAL = 0,
 		MULTIPLY = 1,
-		LERP = 2
+		LERP = 2,
+		ALPHA_MAP = 3
 	};
 
 	struct aprilExport DisplayMode

@@ -37,7 +37,7 @@ namespace april
 		this->dynamic = dynamic;
 		this->width = 0;
 		this->height = 0;
-		this->bpp = 0;
+		this->bpp = 4;
 		this->renderTarget = false;
 		this->d3dTexture = NULL;
 		this->d3dSurface = NULL;
@@ -70,7 +70,7 @@ namespace april
 		this->blit(0, 0, rgba, this->width, this->height, this->bpp, 0, 0, this->width, this->height);
 	}
 	
-	DirectX9_Texture::DirectX9_Texture(int w, int h, Texture::Format fmt, Texture::Type type, Color color) : Texture()
+	DirectX9_Texture::DirectX9_Texture(int w, int h, Texture::Format format, Texture::Type type, Color color) : Texture()
 	{
 		this->filename = "";
 		this->dynamic = false;
@@ -81,10 +81,24 @@ namespace april
 		april::log("creating clean DX9 texture");
 		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
 		this->bpp = 3;
-		if (fmt == FORMAT_RGBA)
+		switch (format)
 		{
+		case FORMAT_ARGB:
 			d3dformat = D3DFMT_A8R8G8B8;
 			this->bpp = 4;
+			break;
+		case FORMAT_RGB:
+			d3dformat = D3DFMT_X8R8G8B8;
+			this->bpp = 3;
+			break;
+		case FORMAT_ALPHA:
+			d3dformat = D3DFMT_A8;
+			this->bpp = 1;
+			break;
+		default:
+			d3dformat = D3DFMT_X8R8G8B8;
+			this->bpp = 3;
+			break;
 		}
 		D3DPOOL d3dpool = D3DPOOL_MANAGED;
 		DWORD d3dusage = 0;
@@ -157,9 +171,25 @@ namespace april
 			}
 			this->width = image->w;
 			this->height = image->h;
-			this->bpp = (image->bpp == 4 ? 4 : 3);
+			this->bpp = image->bpp;
 		}
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, (image->bpp == 4) ? D3DFMT_A8R8G8B8 : D3DFMT_X8R8G8B8, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
+		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
+		switch (image->format)
+		{
+		case FORMAT_ARGB:
+			d3dformat = D3DFMT_A8R8G8B8;
+			break;
+		case FORMAT_RGB:
+			d3dformat = D3DFMT_X8R8G8B8;
+			break;
+		case FORMAT_ALPHA:
+			d3dformat = D3DFMT_A8;
+			break;
+		default:
+			d3dformat = D3DFMT_X8R8G8B8;
+			break;
+		}
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, d3dformat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
 			april::log("failed to create DX9 texture!");
@@ -178,6 +208,10 @@ namespace april
 			else if (image->bpp == 3)
 			{
 				image->copyPixels(rect.pBits, AF_BGR);
+			}
+			else if (image->bpp == 1)
+			{
+				image->copyPixels(rect.pBits, AF_GRAYSCALE);
 			}
 			else
 			{
@@ -241,10 +275,31 @@ namespace april
 			return color;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
-		color.b = p[0];
-		color.g = p[1];
-		color.r = p[2];
-		color.a = p[3];
+		if (this->bpp == 4)
+		{
+			color.r = p[2];
+			color.g = p[1];
+			color.b = p[0];
+			color.a = p[3];
+		}
+		else if (this->bpp == 3)
+		{
+			color.r = p[2];
+			color.g = p[1];
+			color.b = p[0];
+			color.a = 255;
+		}
+		else if (this->bpp == 1)
+		{
+			color.r = 255;
+			color.g = 255;
+			color.b = 255;
+			color.a = p[0];
+		}
+		else
+		{
+			april::log("Unsupported format for getPixel");
+		}
 		this->_unlock(buffer, result, false);
 		return color;
 	}
@@ -262,10 +317,27 @@ namespace april
 			return;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
-		p[0] = color.b;
-		p[1] = color.g;
-		p[2] = color.r;
-		p[3] = (this->bpp == 4 ? color.a : 255);
+		if (this->bpp == 4)
+		{
+			p[2] = color.r;
+			p[1] = color.g;
+			p[0] = color.b;
+			p[3] = color.a;
+		}
+		else if (this->bpp == 3)
+		{
+			p[2] = color.r;
+			p[1] = color.g;
+			p[0] = color.b;
+		}
+		else if (this->bpp == 1)
+		{
+			p[0] = (color.r + color.g + color.b) / 3;
+		}
+		else
+		{
+			april::log("Unsupported format for setPixel");
+		}
 		this->_unlock(buffer, result, true);
 	}
 
@@ -290,33 +362,49 @@ namespace april
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		int i;
+		int j;
 		int offset;
 		if (this->bpp == 4)
 		{
-			for_iter (j, 0, h)
+			for_iterx (j, 0, h)
 			{
 				for_iterx (i, 0, w)
 				{
 					offset = (j * this->width + i) * this->bpp;
-					p[offset + 0] = color.b;
-					p[offset + 1] = color.g;
 					p[offset + 2] = color.r;
+					p[offset + 1] = color.g;
+					p[offset + 0] = color.b;
 					p[offset + 3] = color.a;
+				}
+			}
+		}
+		else if (this->bpp == 3)
+		{
+			for_iterx (j, 0, h)
+			{
+				for_iterx (i, 0, w)
+				{
+					offset = (i + j * this->width) * this->bpp;
+					p[offset + 2] = color.r;
+					p[offset + 1] = color.g;
+					p[offset + 0] = color.b;
+				}
+			}
+		}
+		else if (this->bpp == 1)
+		{
+			for_iterx (j, 0, h)
+			{
+				for_iterx (i, 0, w)
+				{
+					offset = (i + j * this->width) * this->bpp;
+					p[offset] = (color.r + color.g + color.b) / 3;
 				}
 			}
 		}
 		else
 		{
-			for_iter (j, 0, h)
-			{
-				for_iterx (i, 0, w)
-				{
-					offset = (i + j * this->width) * this->bpp;
-					p[offset + 0] = color.b;
-					p[offset + 1] = color.g;
-					p[offset + 2] = color.r;
-				}
-			}
+			april::log("Unsupported format for setPixel");
 		}
 		this->_unlock(buffer, result, true);
 	}
@@ -472,7 +560,7 @@ namespace april
 		int i;
 		int offset;
 		*output = new unsigned char[this->width * this->height * 4];
-		if (this->bpp == 4)
+		if (this->bpp == 4 || this->bpp == 3)
 		{
 			for_iter (j, 0, this->height)
 			{
@@ -482,23 +570,16 @@ namespace april
 					(*output)[offset + 0] = p[offset + 2];
 					(*output)[offset + 1] = p[offset + 1];
 					(*output)[offset + 2] = p[offset + 0];
-					(*output)[offset + 3] = p[offset + 3];
+					if (this->bpp == 4)
+					{
+						(*output)[offset + 3] = p[offset + 3];
+					}
 				}
 			}
 		}
-		else
+		else if (this->bpp == 1)
 		{
-			memset(*output, 255, this->width * this->height * 4);
-			for_iter (j, 0, this->height)
-			{
-				for_iterx (i, 0, this->width)
-				{
-					offset = (i + j * this->width) * 4;
-					(*output)[offset + 0] = p[offset + 2];
-					(*output)[offset + 1] = p[offset + 1];
-					(*output)[offset + 2] = p[offset + 0];
-				}
-			}
+			memcpy(*output, p, this->getByteSize() * sizeof(unsigned char));
 		}
 		this->_unlock(buffer, result, false);
 		return true;

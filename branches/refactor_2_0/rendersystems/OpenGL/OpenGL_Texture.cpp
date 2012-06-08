@@ -42,6 +42,7 @@ namespace april
 	{
 		this->width = 0;
 		this->height = 0;
+		this->bpp = 4;
 		this->filename = filename;
 		this->dynamic = dynamic;
 		this->textureId = 0;
@@ -80,6 +81,7 @@ namespace april
 		april::log("creating empty GL texture [ " + hstr(w) + "x" + hstr(h) + " ]");
 		this->width = w;
 		this->height = h;
+		this->bpp = 4;
 		this->dynamic = false;
 		this->filename = "";
 		this->manualBuffer = NULL;
@@ -93,9 +95,31 @@ namespace april
 		}
 		else
 		{
-			unsigned char* clearColor = new unsigned char[w * h * 4];
-			memset(clearColor, 0, sizeof(unsigned char) * w * h * 4);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, clearColor);
+			// TODO - use as base for ::clear
+			int glFormat = GL_RGB;
+			this->bpp = 3;
+			switch (format)
+			{
+			case FORMAT_ARGB:
+				glFormat = GL_RGBA;
+				this->bpp = 4;
+				break;
+			case FORMAT_RGB:
+				glFormat = GL_RGB;
+				this->bpp = 3;
+				break;
+			case FORMAT_ALPHA:
+				glFormat = GL_ALPHA;
+				this->bpp = 1;
+				break;
+			default:
+				glFormat = GL_RGB;
+				this->bpp = 3;
+				break;
+			}
+			unsigned char* clearColor = new unsigned char[w * h * this->bpp];
+			memset(clearColor, 0, sizeof(unsigned char) * w * h * this->bpp);
+			glTexImage2D(GL_TEXTURE_2D, 0, glFormat, w, h, 0, glFormat, GL_UNSIGNED_BYTE, clearColor);
 			delete [] clearColor;
 		}
 	}
@@ -133,7 +157,7 @@ namespace april
 			}
 			this->width = image->w;
 			this->height = image->h;
-			this->bpp = (image->bpp == 4 ? 4 : 3);
+			this->bpp = image->bpp;
 		}
 		glGenTextures(1, &this->textureId);
 		if (this->textureId == 0)
@@ -152,9 +176,18 @@ namespace april
 #if TARGET_OS_IPHONE
 			case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
 			case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-				glCompressedTexImage2D(GL_TEXTURE_2D, 0, img->format, img->w, img->h, 0, img->compressedLength, img->data);
+				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image->format, image->w, image->h, 0, img->compressedLength, image->data);
 				break;
 #endif
+			case AF_RGBA:
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
+				break;
+			case AF_RGB:
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
+				break;
+			case AF_GRAYSCALE:
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image->w, image->h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, image->data);
+				break;
 			default:
 				glTexImage2D(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == AF_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
 				break;
@@ -186,7 +219,8 @@ namespace april
 
 	void OpenGL_Texture::clear()
 	{
-		// TODO
+		// TODO - can be improved by directly using memset
+		this->fillRect(0, 0, this->width, this->height, APRIL_COLOR_CLEAR);
 	}
 
 	Color OpenGL_Texture::getPixel(int x, int y)
@@ -204,63 +238,131 @@ namespace april
 	
 	void OpenGL_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		w = hclamp(w, 1, this->width - x);
+		h = hclamp(h, 1, this->height - y);
 		// TODO - find a better and faster way to do this
-		unsigned char* writeData = new unsigned char[w * h * 4];
-		memset(writeData, 0, sizeof(unsigned char) * w * h * 4);
-		for_iter (j, 0, h)
+		unsigned char* writeData = new unsigned char[w * h * this->bpp];
+		memset(writeData, 0, sizeof(unsigned char) * w * h * this->bpp);
+		if (this->bpp == 4 || this->bpp == 3)
 		{
-			for_iter (i, 0, w)
+			int i;
+			int j;
+			for_iterx (j, 0, h)
 			{
-				writeData[(i + j * w) * 4 + 0] = color.r;
-				writeData[(i + j * w) * 4 + 1] = color.g;
-				writeData[(i + j * w) * 4 + 2] = color.b;
-				writeData[(i + j * w) * 4 + 3] = color.a;
+				for_iterx (i, 0, w)
+				{
+					writeData[(i + j * w) * this->bpp + 0] = color.r;
+					writeData[(i + j * w) * this->bpp + 1] = color.g;
+					writeData[(i + j * w) * this->bpp + 2] = color.b;
+					if (this->bpp == 4)
+					{
+						writeData[(i + j * w) * this->bpp + 3] = color.a;
+					}
+				}
 			}
 		}
+		else if (this->bpp == 1)
+		{
+			unsigned char value = (color.r + color.g + color.b) / 3;
+			memset(writeData, value, sizeof(unsigned char) * w * h * this->bpp);
+		}
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
+		int glFormat = GL_RGBA;
+		if (this->bpp == 4)
+		{
+			glFormat = GL_RGBA;
+		}
+		else if (this->bpp == 3)
+		{
+			glFormat = GL_RGB;
+		}
+		else if (this->bpp == 1)
+		{
+			glFormat = GL_ALPHA;
+		}
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, glFormat, GL_UNSIGNED_BYTE, writeData);
 		delete [] writeData;
 	}
 	
 	void OpenGL_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO - find a better and faster way to do this
-		/*
-		glBindTexture(GL_TEXTURE_2D, ((OpenGL_Texture*)texture)->this->textureId);
-		glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, sx, sy, sw, sh);
-		unsigned char* writeData = new unsigned char[sw * sh * 4];
-		glReadPixels(0, 0, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
-		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
-		delete [] writeData;
-		//*/
+		OpenGL_Texture* source = (OpenGL_Texture*)texture;
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		sx = hclamp(sx, 0, source->width - 1);
+		sy = hclamp(sy, 0, source->height - 1);
+		sw = hmin(sw, hmin(this->width - x, source->width - sx));
+		sh = hmin(sh, hmin(this->height - y, source->height - sy));
+		if (sw == 1 && sh == 1)
+		{
+			this->setPixel(x, y, source->getPixel(sx, sy));
+			return;
+		}
+		texture->load();
+		unsigned char* readData = new unsigned char[source->width * source->height * source->bpp];
+		glBindTexture(GL_TEXTURE_2D, source->textureId);
+		int glFormat = GL_RGBA;
+		if (source->bpp == 4)
+		{
+			glFormat = GL_RGBA;
+		}
+		else if (source->bpp == 3)
+		{
+			glFormat = GL_RGB;
+		}
+		else if (source->bpp == 1)
+		{
+			glFormat = GL_ALPHA;
+		}
+#ifndef _OPENGLES1 // TODO - temp until we figure out how to handle this on OpenGLES. added by kspes on May 21st 2012
+		glGetTexImage(GL_TEXTURE_2D, 0, glFormat, GL_UNSIGNED_BYTE, readData);
+#endif
+		blit(x, y, readData, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
+		delete [] readData;
 	}
 
 	void OpenGL_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO - find a better and faster way to do this
-		unsigned char* writeData = new unsigned char[sw * sh * 4];
-		memset(writeData, 0, sizeof(unsigned char) * sw * sh * 4);
-		for_iter (j, 0, sh)
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		sx = hclamp(sx, 0, dataWidth - 1);
+		sy = hclamp(sy, 0, dataHeight - 1);
+		sw = hmin(sw, hmin(this->width - x, dataWidth - sx));
+		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
+		// TODO - improve this
+		unsigned char* writeData = new unsigned char[sw * sh * this->bpp];
+		memset(writeData, 255, sizeof(unsigned char) * sw * sh * this->bpp);
+		int i;
+		int j;
+		int k;
+		int minBpp = hmin(this->bpp, dataBpp);
+		for_iterx (j, 0, sh)
 		{
-			for_iter (i, 0, sw)
+			for_iterx (i, 0, sw)
 			{
-				for_iter (k, 0, dataBpp)
+				for_iterx (k, 0, minBpp)
 				{
-					writeData[(i + j * sw) * 4 + k] = data[(sx + i + (sy + j * dataWidth)) * dataBpp + k];
-				}
-				if (dataBpp < 4)
-				{
-					writeData[(i + j * sw) * 4 + 3] = alpha;
-				}
-				else
-				{
-					writeData[(i + j * sw) * 4 + 3] = alpha * writeData[(i + j * sw) * 4 + 3] / 255;
+					writeData[(i + j * sw) * this->bpp + k] = data[(sx + i + (sy + j) * dataWidth) * dataBpp + k];
 				}
 			}
 		}
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
+		int glFormat = GL_RGBA;
+		if (this->bpp == 4)
+		{
+			glFormat = GL_RGBA;
+		}
+		else if (this->bpp == 3)
+		{
+			glFormat = GL_RGB;
+		}
+		else if (this->bpp == 1)
+		{
+			glFormat = GL_ALPHA;
+		}
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, glFormat, GL_UNSIGNED_BYTE, writeData);
 		delete [] writeData;
 	}
 
@@ -287,9 +389,9 @@ namespace april
 	bool OpenGL_Texture::copyPixelData(unsigned char** output)
 	{
 #ifndef _OPENGLES1
-		load();
-		glBindTexture(GL_TEXTURE_2D, mTexId);
-		*output = new unsigned char[mWidth * mHeight * 4];
+		this->load();
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
+		*output = new unsigned char[this->width * this->height * 4];
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, *output);
 		return true;
 #else

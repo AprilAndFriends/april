@@ -31,6 +31,8 @@
 #include <string.h>
 #ifndef __APPLE__
 #include <gl/GL.h>
+#define GL_GLEXT_PROTOTYPES
+#include <gl/glext.h>
 #else
 #include <OpenGL/gl.h>
 #endif
@@ -174,6 +176,7 @@ namespace april
 		{
 			return false;
 		}
+		// TODO - should maybe be refactored
 #ifdef _WIN32
 		this->_releaseWindow();
 #endif
@@ -382,25 +385,115 @@ namespace april
 
 	void OpenGL_RenderSystem::setTextureBlendMode(BlendMode textureBlendMode)
 	{
-		switch (textureBlendMode)
+		// TODO - is there a way to make this work on Win32?
+#ifndef _WIN32
+		static int blendSeparationSupported = -1;
+		if (blendSeparationSupported == -1)
 		{
-		case DEFAULT:
-		case ALPHA_BLEND:
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			break;
-		case ADD:
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-			break;
-		default:
-			april::log("trying to set unsupported texture blend mode!");
-			break;
+			// determine if blend separation is possible on first call to this function
+			hstr extensions = (const char*) glGetString(GL_EXTENSIONS);
+#ifdef _OPENGLES1
+			blend_separation_supported = extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate");
+#else
+			blendSeparationSupported = extensions.contains("GL_EXT_blend_equation_separate") && extensions.contains("GL_EXT_blend_func_separate");
+#endif
+		}
+		if (blendSeparationSupported)
+		{
+			// blending for the new generations
+			switch (textureBlendMode)
+			{
+			case DEFAULT:
+			case ALPHA_BLEND:
+#ifdef _OPENGLES1
+				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
+				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#else
+				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#endif
+				break;
+			case ADD:
+#ifdef _OPENGLES1
+				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
+				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#else
+				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#endif
+				break;
+			case SUBTRACT:
+#ifdef _OPENGLES1
+				glBlendEquationSeparateOES(GL_FUNC_REVERSE_SUBTRACT_OES, GL_FUNC_ADD_OES);
+				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+					
+#else
+				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+#endif
+				break;
+			case OVERWRITE:
+#ifdef _OPENGLES1
+				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
+				glBlendFuncSeparateOES(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);				
+#else
+				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
+#endif
+				break;
+			}
+		}
+		else
+#endif
+		{
+			// old-school blending mode for your mom
+			if (textureBlendMode == ALPHA_BLEND || textureBlendMode == DEFAULT)
+			{
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			}
+			else if (textureBlendMode == ADD)
+			{
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			}
 		}
 	}
 	
 	void OpenGL_RenderSystem::setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
 	{
-		// TODO not implemented in OpenGL yet
-		april::log("WARNING: setTextureColorMode ignored!");
+		static float constColor[4];
+		for_iter (i, 0, 4)
+		{
+			constColor[i] = alpha / 255.0f;
+		}
+		switch (textureColorMode)
+		{
+		case NORMAL:
+		case MULTIPLY:
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
+			break;
+		case LERP:
+			glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constColor);
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_CONSTANT);
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
+			break;
+		case ALPHA_MAP:
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
+			break;
+		}
 	}
 
 	void OpenGL_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
@@ -665,7 +758,7 @@ namespace april
 		img->w = w;
 		img->h = h;
 		img->bpp = bpp;
-		img->format = (bpp == 4 ? Texture::FORMAT_RGBA : Texture::FORMAT_RGB);
+		img->format = (bpp == 4 ? AF_RGBA : AF_RGB);
 		img->data = new unsigned char[w * (h + 1) * 4]; // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
 		unsigned char* temp = img->data + w * h * 4;
 		

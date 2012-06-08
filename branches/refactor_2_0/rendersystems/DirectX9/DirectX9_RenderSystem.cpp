@@ -326,6 +326,13 @@ namespace april
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
 			break;
+		case ALPHA_MAP:
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 		default:
 			april::log("trying to set unsupported texture color mode!");
 			break;
@@ -698,7 +705,7 @@ namespace april
 		img->w = desc.Width;
 		img->h = desc.Height;
 		img->bpp = bpp;
-		img->format = (bpp == 4 ? Texture::FORMAT_RGBA : Texture::FORMAT_RGB);
+		img->format = (bpp == 4 ? AF_RGBA : AF_RGB);
 		img->data = new unsigned char[img->w * img->h * img->bpp];
 		unsigned char* p = img->data;
 		unsigned char* src = (unsigned char*)rect.pBits;

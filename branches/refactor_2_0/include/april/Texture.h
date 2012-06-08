@@ -42,10 +42,12 @@ namespace april
 		enum Format
 		{
 			FORMAT_INVALID = 0,
-			FORMAT_RGB = 1,
-			FORMAT_RGBA = 2/*,
-			FORMAT_PALETTE = 3,
-			FORMAT_MONOCHROME = 4*/
+			FORMAT_ARGB = 1,
+			FORMAT_RGB = 2,
+			//FORMAT_RGBA = 3, // TODO - WTF, this isn't supported!
+			FORMAT_ALPHA = 4/*, // TODO
+			FORMAT_PALETTE = 5,
+			FORMAT_MONOCHROME = 6*/
 		};
 
 		enum Filter
