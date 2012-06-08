@@ -176,14 +176,19 @@ namespace april
 		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
 		switch (image->format)
 		{
-		case FORMAT_ARGB:
+		case AF_RGBA:
+		case AF_BGRA:
 			d3dformat = D3DFMT_A8R8G8B8;
 			break;
-		case FORMAT_RGB:
+		case AF_RGB:
+		case AF_BGR:
 			d3dformat = D3DFMT_X8R8G8B8;
 			break;
-		case FORMAT_ALPHA:
+		case AF_GRAYSCALE:
 			d3dformat = D3DFMT_A8;
+			break;
+		case AF_PALETTE:
+			d3dformat = D3DFMT_A8R8G8B8;
 			break;
 		default:
 			d3dformat = D3DFMT_X8R8G8B8;
@@ -201,15 +206,16 @@ namespace april
 		{
 			D3DLOCKED_RECT rect;
 			this->d3dTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
-			if (image->bpp == 4)
+			// TODO - format handling like this has to be fixed/refactored
+			if (image->format == AF_RGBA)
 			{
 				image->copyPixels(rect.pBits, AF_BGRA);
 			}
-			else if (image->bpp == 3)
+			else if (image->format == AF_RGB)
 			{
 				image->copyPixels(rect.pBits, AF_BGR);
 			}
-			else if (image->bpp == 1)
+			else if (image->format  == AF_GRAYSCALE)
 			{
 				image->copyPixels(rect.pBits, AF_GRAYSCALE);
 			}
@@ -517,7 +523,7 @@ namespace april
 		float s;
 		float l;
 		unsigned char* data = (unsigned char*)lockRect.pBits;
-		for_iter_step(i, 0, size, this->bpp)
+		for_iter_step (i, 0, size, this->bpp)
 		{
 			april::rgbToHsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
 			april::hslToRgb(hmodf(h + range, 1.0f), s, l, &data[i + 2], &data[i + 1], &data[i]);
@@ -539,7 +545,7 @@ namespace april
 		float s;
 		float l;
 		unsigned char* data = (unsigned char*)lockRect.pBits;
-		for_iter_step(i, 0, size, this->bpp)
+		for_iter_step (i, 0, size, this->bpp)
 		{
 			april::rgbToHsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
 			april::hslToRgb(h, hmin(s * factor, 1.0f), l, &data[i + 2], &data[i + 1], &data[i]);
@@ -558,11 +564,12 @@ namespace april
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		int i;
+		int j;
 		int offset;
 		*output = new unsigned char[this->width * this->height * 4];
 		if (this->bpp == 4 || this->bpp == 3)
 		{
-			for_iter (j, 0, this->height)
+			for_iterx (j, 0, this->height)
 			{
 				for_iterx (i, 0, this->width)
 				{
@@ -612,10 +619,11 @@ namespace april
 		unsigned char* c;
 		unsigned char* sc;
 		int i;
+		int j;
 		int alpha;
 		int min = (int)median - ambiguity / 2;
 		int max = (int)median + ambiguity / 2;
-		for_iter (j, 0, this->height)
+		for_iterx (j, 0, this->height)
 		{
 			for_iterx (i, 0, this->width)
 			{

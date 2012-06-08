@@ -57,7 +57,7 @@ namespace april
 	
 	void ImageSource::copyPixels(void* output, ImageFormat _format)
 	{
-		// todo: hacky. input and output formats can be different, fix this in the future
+		// TODO - hacky. input and output formats can be different, fix this in the future
 		if (_format == AF_BGRA)
 		{
 			unsigned char* o = (unsigned char*)output;

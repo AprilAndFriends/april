@@ -193,6 +193,23 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	mImageView.layer.zPosition = 1;
 }
 
+- (void)animationWillStart:(NSString*)animationID context:(void*)context
+{
+	
+}
+
+- (void) animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
+{
+	if (animationID == @"FadeOut")
+	{
+		NSLog(@"Removing loading screen UIImageView from View Controller");
+		[mImageView removeFromSuperview];
+		[mImageView release];
+		mImageView = nil;
+	}
+}
+
+
 - (void)removeImageView
 {
 	if (mImageView != nil)
@@ -202,23 +219,9 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 		[UIView beginAnimations:@"FadeOut" context:nil];
 		[UIView setAnimationDuration:1];
 		mImageView.alpha = 0;
+		[UIView  setAnimationDelegate:self];
+		[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
 		[UIView commitAnimations];
-	}
-}
-
-- (void)update:(float)k
-{
-	static float timer = 0;
-	if (mImageView != nil && mImageView.alpha == 0)
-	{
-		timer += k;
-		if (timer > 1.5f)
-		{
-			NSLog(@"Removing loading screen UIImageView from View Controller");
-			[mImageView removeFromSuperview];
-			[mImageView release];
-			mImageView = nil;
-		}
 	}
 }
 

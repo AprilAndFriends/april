@@ -57,7 +57,7 @@ namespace april
 		int w;
 		int h;
 		int bpp;
-		int format;
+		ImageFormat format;
 		int internalFormat;
 
 		int compressedLength;

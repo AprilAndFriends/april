@@ -170,7 +170,7 @@ namespace april
 		DEPRECATED_ATTRIBUTE void setMouseCallbacks(void (*mouseDownCallback)(float, float, int),
 							   void (*mouseUpCallback)(float, float, int),
 							   void (*mouseMoveCallback)(float, float),
-							   void (*mouseScrollCallback)(float, float))
+							   void (*mouseScrollCallback)(float, float) = NULL)
 							{
 								this->mouseDownCallback_DEPRECATED = mouseDownCallback;
 								this->mouseUpCallback_DEPRECATED = mouseUpCallback;
