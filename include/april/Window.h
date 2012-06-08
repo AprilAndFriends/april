@@ -157,7 +157,6 @@ namespace april
 		virtual void beginKeyboardHandling();
 		virtual void terminateKeyboardHandling();
 		virtual bool isKeyboardVisible();
-		virtual float prefixRotationAngle();
 		
 		virtual bool isRotating() { return false; } // iOS/Android devices for example
 		virtual hstr getParam(chstr param) { return ""; }

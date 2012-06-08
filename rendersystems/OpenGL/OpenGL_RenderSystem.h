@@ -25,6 +25,22 @@
 
 namespace april
 {
+	class OpenGL_RenderState
+	{
+	public:
+		OpenGL_RenderState();
+
+		bool texCoordsEnabled;
+		bool colorEnabled;
+		unsigned int texId;
+		Color systemColor;
+		bool modelviewMatrixSet, projectionMatrixSet;
+		gmat4 modelviewMatrix, projectionMatrix;
+		BlendMode blendMode;
+		ColorMode colorMode;
+		unsigned char colorModeAlpha;
+	};
+	
 	class OpenGL_RenderSystem : public RenderSystem
 	{
 	public:
@@ -48,17 +64,17 @@ namespace april
 		
 		void setParam(chstr name, chstr value);
 		
-		// modelview matrix transformation
+		void _setBlendMode(BlendMode mode);
 		void setBlendMode(BlendMode mode);
-		void setColorMode(ColorMode mode);
 		void setTextureFilter(TextureFilter filter);
 		void setTextureWrapping(bool wrap);
 		void setResolution(int w, int h);
+		void _setColorMode(ColorMode mode, unsigned char alpha);
 		void setColorMode(ColorMode mode, unsigned char alpha);
 		// caps
 		float getPixelOffset();
 		hstr getName();
-        
+		
         ImageSource* grabScreenshot(int bpp = 3);
 
 		// rendering
@@ -79,11 +95,16 @@ namespace april
 		
 		static OpenGL_RenderSystem* create(chstr options);
 
+		void setMatrixMode(unsigned int mode);
+		void bindTexture(unsigned int tex_id);
+		void applyStateChanges();
 	protected:
 		hstr mParams;
-		bool mTexCoordsEnabled;
-		bool mColorEnabled;
+		OpenGL_RenderState mState, mDeviceState;
 
+		void _setVertexPointer(int stride, const void *pointer);
+		void _setTexCoordPointer(int stride, const void *pointer);
+		void _setColorPointer(int stride, const void *pointer);
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
 #ifdef _WIN32
