@@ -60,6 +60,7 @@ namespace april
 		
 	protected:
 		bool cursorInside;
+		bool scrollHorizontal;
 		SDL_Surface* screen;
 #ifdef _OPENGLES1
 		SDL_GLES_Context* glesContext;

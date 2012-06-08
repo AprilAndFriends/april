@@ -34,7 +34,8 @@ namespace april
 		{
 			AMOUSEEVT_DOWN = 0,
 			AMOUSEEVT_UP = 1,
-			AMOUSEEVT_MOVE = 2
+			AMOUSEEVT_MOVE = 2,
+			AMOUSEEVT_SCROLL = 3
 		};
 		
 		enum KeyEventType
@@ -83,9 +84,10 @@ namespace april
 
 		// callback setters
 		void setUpdateCallback(bool (*value)(float)) { this->updateCallback = value; }
-		void setMouseDownCallback(void (*value)(float, float, int)) { this->mouseDownCallback = value; }
-		void setMouseUpCallback(void (*value)(float, float, int)) { this->mouseUpCallback = value; }
-		void setMouseMoveCallback(void (*value)(float, float)) { this->mouseMoveCallback = value; }
+		// TODO - update this this
+		void setMouseDownCallback(void (*value)(float, float, int)) { this->mouseDownCallback = value; }// this->mouseDownCallback_DEPRECATED = NULL; }
+		void setMouseUpCallback(void (*value)(float, float, int)) { this->mouseUpCallback = value; }// this->mouseUpCallback_DEPRECATED = NULL; }
+		void setMouseMoveCallback(void (*value)(float, float)) { this->mouseMoveCallback = value; }// this->mouseMoveCallback_DERPECATED = NULL; }
 		void setKeyDownCallback(void (*value)(unsigned int)) { this->keyDownCallback = value; }
 		void setKeyUpCallback(void (*value)(unsigned int)) { this->keyUpCallback = value; }
 		void setCharCallback(void (*value)(unsigned int)) { this->charCallback = value; }
@@ -115,9 +117,13 @@ namespace april
 		virtual void* getBackendId() = 0;
 
 		// additional callback setters
+		DEPRECATED_ATTRIBUTE void setMouseCallbacks(void (*mouseDownCallback)(float, float, int),
+							   void (*mouseUpCallback)(float, float, int),
+							   void (*mouseMoveCallback)(float, float)) { setMouseCallbacks(mouseDownCallback, mouseUpCallback, mouseMoveCallback, NULL); }
 		void setMouseCallbacks(void (*mouseDownCallback)(float, float, int),
 							   void (*mouseUpCallback)(float, float, int),
-							   void (*mouseMoveCallback)(float, float));
+							   void (*mouseMoveCallback)(float, float),
+							   void (*mouseScrollCallback)(float, float));
 		void setKeyboardCallbacks(void (*keyDownCallback)(unsigned int),
 								  void (*keyUpCallback)(unsigned int),
 								  void (*charCallback)(unsigned int));
@@ -188,6 +194,7 @@ namespace april
 		void (*mouseDownCallback)(float, float, int);
 		void (*mouseUpCallback)(float, float, int);
 		void (*mouseMoveCallback)(float, float);
+		void (*mouseScrollCallback)(float, float);
 		void (*keyDownCallback)(unsigned int);
 		void (*keyUpCallback)(unsigned int);
 		void (*charCallback)(unsigned int);

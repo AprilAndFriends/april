@@ -51,7 +51,8 @@ namespace april
 		// centered SDL window
 		SDL_putenv("SDL_VIDEO_WINDOW_POS");
 		SDL_putenv("SDL_VIDEO_CENTERED=1");
-        this->cursorInside = true;
+		this->cursorInside = true;
+		this->scrollHorizontal = false;
 		this->screen = NULL;
 #ifdef _OPENGLES1
 		this->glesContext = NULL;
@@ -69,11 +70,13 @@ namespace april
 		{
 			return false;
 		}
-        this->cursorInside = true;
+		this->cursorInside = true;
 		// initialize only SDL video subsystem
 		SDL_Init(SDL_INIT_VIDEO);
 		// and immediately set window title
 		SDL_WM_SetCaption(this->title.c_str(), this->title.c_str());
+
+#ifdef _OPENGL
 #ifndef _OPENGLES1
 		// set up opengl attributes desired for the context
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -85,6 +88,11 @@ namespace april
 		this->glesContext = SDL_GLES_CreateContext();
 		SDL_GLES_MakeCurrent(this->glesContext);
 #endif
+		glClear(GL_COLOR_BUFFER_BIT);
+#else
+		mScreen = SDL_SetVideoMode(w, h, 0, (fullscreen ? SDL_FULLSCREEN : 0));
+#endif
+
 		if (this->screen == NULL)
 		{
 #ifdef __APPLE__
@@ -134,6 +142,7 @@ namespace april
 	
 	bool SDL_Window::isCursorVisible()
 	{
+		// TODO - refactor
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 		return CGCursorIsVisible();
 #else
@@ -144,6 +153,7 @@ namespace april
 	void SDL_Window::setCursorVisible(bool value)
 	{
 		Window::setCursorVisible(value);
+		// TODO - refactor
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 		// intentionally do nothing; let the platform specific code take over
 		// if sdl-hidden mouse goes over the dock, then it will show again,
@@ -201,9 +211,9 @@ namespace april
 	{
 		SDL_Event sdlEvent;
 		while (SDL_PollEvent(&sdlEvent))
-        {
+		{
 			switch (sdlEvent.type)
-            {
+			{
 			case SDL_VIDEORESIZE:
 				// do a SetVideoMode here, if we really want this
 				//g_game->doResize(event.resize.w, event.resize.h);
@@ -327,13 +337,14 @@ namespace april
 		#define sea(key) s2a(key, key)
 		
 		switch (keysym)
-        {
+		{
 			// control character keys
 			s2a(BACKSPACE, BACK);
 #ifdef __APPLE__
 			s2a(DELETE, BACK);
 #else
-		case SDLK_DELETE: akeysym = AK_DELETE; //sea(DELETE);
+		case SDLK_DELETE:
+			akeysym = AK_DELETE; //sea(DELETE);
 #endif
 			sea(TAB)
 			sea(RETURN);
@@ -371,7 +382,7 @@ namespace april
 			sea(F10);
 			sea(F11);
 			sea(F12);
-			s2a(ESCAPE,ESCAPE);
+			s2a(ESCAPE, ESCAPE);
 			
 			// keypad keys
 			s2a(KP0, NUMPAD0);
@@ -385,7 +396,8 @@ namespace april
 			s2a(KP8, NUMPAD8);
 			s2a(KP9, NUMPAD9);
 			
-			s2a(LCTRL,LCONTROL);
+			s2a(LCTRL, LCONTROL);
+			s2a(LCTRL, RCONTROL);
 		default:
 			break;
 		}
@@ -399,15 +411,41 @@ namespace april
 		{
 			akeysym = (KeySym)(keysym - 32); // april letter keys are capital ASCII letters
 		}
-		//printf("keycode %d unicode %d (%c)\n", keycode, unicode, unicode);
+		if (akeysym == AK_LCONTROL || akeysym == AK_RCONTROL)
+		{
+			if (type == AKEYEVT_DOWN)
+			{
+				this->scrollHorizontal = true;
+			}
+			else if (type == AKEYEVT_UP)
+			{
+				this->scrollHorizontal = false;
+			}
+		}
 		Window::handleKeyEvent(type, akeysym, unicode);
 	}
 		
 	void SDL_Window::_handleMouseEvent(SDL_Event& sdlEvent)
 	{
 		this->cursorPosition.set(sdlEvent.button.x, sdlEvent.button.y);
-		Window::MouseEventType mouseevt;
+		Window::MouseEventType mouseEvent;
 		Window::MouseButton mouseButton = AMOUSEBTN_NONE;
+
+		switch (event.type)
+		{
+		case SDL_MOUSEBUTTONUP:
+			mouseEvent = AMOUSEEVT_UP;
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			mouseEvent = AMOUSEEVT_DOWN;
+			break;
+		case SDL_MOUSEMOTION:
+			mouseEvent = AMOUSEEVT_MOVE;
+			break;
+		default:
+			break;
+		}
+
 		if (sdlEvent.type == SDL_MOUSEBUTTONUP || sdlEvent.type == SDL_MOUSEBUTTONDOWN)
 		{
 			switch (sdlEvent.button.button)
@@ -422,33 +460,35 @@ namespace april
 				mouseButton = AMOUSEBTN_MIDDLE;
 				break;
 			case SDL_BUTTON_WHEELUP:
-				mouseButton = (sdlEvent.type == SDL_MOUSEBUTTONDOWN ? AMOUSEBTN_WHEELUP : AMOUSEBTN_NONE);
+				if (sdlEvent.type == SDL_MOUSEBUTTONDOWN)
+				{
+					mouseButton = AMOUSEBTN_WHEELUP;
+					mouseEvent = AMOUSEEVT_SCROLL;
+				}
 				break;
 			case SDL_BUTTON_WHEELDOWN:
-				mouseButton = (sdlEvent.type == SDL_MOUSEBUTTONDOWN ? AMOUSEBTN_WHEELDOWN : AMOUSEBTN_NONE);
-				break;
+				if (sdlEvent.type == SDL_MOUSEBUTTONDOWN)
+				{
+					mouseButton = AMOUSEBTN_WHEELDN;
+					mouseEvent = AMOUSEEVT_SCROLL;
+				}
 			default:
 				mouseButton = AMOUSEBTN_NONE;
 				break;
 			}
 		}
 		
-		switch (sdlEvent.type)
+		if (mouseButton == AMOUSEBTN_WHEELUP || mouseButton == AMOUSEBTN_WHEELDN)
 		{
-		case SDL_MOUSEBUTTONUP:
-			mouseevt = AMOUSEEVT_UP;
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-			mouseevt = AMOUSEEVT_DOWN;
-			break;
-		case SDL_MOUSEMOTION:
-			mouseevt = AMOUSEEVT_MOVE;
-			break;
-		default:
-			break;
+			gvec2 scroll;
+			scroll.x = (!this->scrollHorizontal ? 0.0f : (mouseButton == AMOUSEBTN_WHEELUP ? -1.0f : 1.0f));
+			scroll.y = (this->scrollHorizontal ? 0.0f : (mouseButton == AMOUSEBTN_WHEELUP ? -1.0f : 1.0f));
+			this->handleMouseEvent(mouseEvent, scroll, mouseButton);
 		}
-				
-		this->handleMouseEvent(mouseevt, cursorPosition, mouseButton);
+		else
+		{
+			this->handleMouseEvent(mouseEvent, this->cursorPosition, mouseButton);
+		}
 	}
 	
 	bool SDL_Window::_handleDisplayAndUpdate()

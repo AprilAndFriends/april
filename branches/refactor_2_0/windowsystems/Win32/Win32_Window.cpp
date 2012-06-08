@@ -11,6 +11,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <winuser.h>
 
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hthread.h>
@@ -269,6 +270,7 @@ namespace april
 		static bool _touchDown = false;
 		static bool _doubleTapDown = false;
 		static int _mouseMoveMessagesCount = 0;
+		static float _wheelDelta = 0.0f;
 		if (!april::window->isCreated()) // don't run callback processing if window was "destroyed"
 		{
 			return 1;
@@ -367,6 +369,28 @@ namespace april
 				_mouseMoveMessagesCount = 0;
 			}
 			april::window->handleMouseEvent(AMOUSEEVT_MOVE, april::window->getCursorPosition(), AMOUSEBTN_NONE);
+			break;
+		case WM_MOUSEWHEEL:
+			_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
+			{
+				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(0.0f, -(float)_wheelDelta), AMOUSEBTN_NONE);
+			}
+			else
+			{
+				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), AMOUSEBTN_NONE);
+			}
+			break;
+		case WM_MOUSEHWHEEL:
+			_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
+			{
+				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), AMOUSEBTN_NONE);
+			}
+			else
+			{
+				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(0.0f, -(float)_wheelDelta), AMOUSEBTN_NONE);
+			}
 			break;
 		case WM_SETCURSOR:
 			if (!((Win32_Window*)april::window)->cursorVisible)

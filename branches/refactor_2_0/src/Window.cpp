@@ -42,6 +42,7 @@ namespace april
 		this->mouseDownCallback = NULL;
 		this->mouseUpCallback = NULL;
 		this->mouseMoveCallback = NULL;
+		this->mouseScrollCallback = NULL;
 		this->keyDownCallback = NULL;
 		this->keyUpCallback = NULL;
 		this->charCallback = NULL;
@@ -101,11 +102,13 @@ namespace april
 	
 	void Window::setMouseCallbacks(void (*mouseDownCallback)(float, float, int),
 								   void (*mouseUpCallback)(float, float, int),
-								   void (*mouseMoveCallback)(float, float))
+								   void (*mouseMoveCallback)(float, float),
+								   void (*mouseScrollCallback)(float, float))
 	{
 		this->mouseDownCallback = mouseDownCallback;
 		this->mouseUpCallback = mouseUpCallback;
 		this->mouseMoveCallback = mouseMoveCallback;
+		this->mouseScrollCallback = mouseScrollCallback;
 	}
 	
 	void Window::setKeyboardCallbacks(void (*keyDownCallback)(unsigned int),
@@ -204,6 +207,12 @@ namespace april
 			if (this->mouseMoveCallback != NULL)
 			{
 				(*this->mouseMoveCallback)(position.x, position.y);
+			}
+			break;
+		case AMOUSEEVT_SCROLL:
+			if (this->mouseScrollCallback != NULL)
+			{
+				(*this->mouseScrollCallback)(position.x, position.y);
 			}
 			break;
 		}
