@@ -11,6 +11,7 @@
 
 #ifdef _OPENGL
 
+// TODO - should be cleaned up a bit
 #if __APPLE__
 #include <TargetConditionals.h>
 #endif
