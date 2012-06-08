@@ -402,32 +402,6 @@ namespace april
 	{
 		mKeyboardRequest = -1;
 	}
-	float iOSWindow::prefixRotationAngle()
-	{
-		// this function needs updating if we want
-		// support for truly portrait-rendered apps
-		
-		// currently, in the same way as is the case
-		// in rest of april for iOS, we only provide
-		// support for landscape orientations
-		
-		//NSLog(@"Orientation: %d", viewcontroller.interfaceOrientation);
-		switch (viewcontroller.interfaceOrientation)
-		{
-			case UIInterfaceOrientationPortrait:
-				return 90.0f; // simulate left landscape orientation (needed only until we transform into a landscape orientation on earlier iOS)
-			case UIInterfaceOrientationLandscapeLeft:
-			case UIInterfaceOrientationLandscapeRight:
-				return 0.0f; // any landscape orientation will be well supported elsewhere
-				
-			case UIInterfaceOrientationPortraitUpsideDown:
-				return -90.0f; // this shouldn't occur except if someone plays with shouldAutorotateToInterfaceOrientation in AprilViewController
-				
-			default:
-				break;
-		}
-		return 0;
-	}
 	
 	void iOSWindow::injectiOSChar(unsigned int inputChar)
 	{

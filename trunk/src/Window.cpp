@@ -460,19 +460,6 @@ namespace april
 	{
 		return 0;
 	}
-
-	float Window::prefixRotationAngle()
-	{
-		// some platforms such as iOS may need extra 
-		// rotation before they can render anything
-		// with certain orientations.
-		
-		// earlier versions of iOS always launch with
-		// portrait orientation and require us to
-		// manually rotate
-		return 0.0f;
-	}
-
 	
 	void Window::_platformCursorVisibilityUpdate(bool visible)
 	{

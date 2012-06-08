@@ -190,8 +190,7 @@
 		NSLog(@"Called drawView while in background!");
 		return;
 	}
-    glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
-    glViewport(0, 0, backingWidth, backingHeight);
+ //   glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer); // commented this out on June 8th 2012, it's probably reduntant, but I'll keep it here for a while just in case. -- kspes
     
     [EAGLContext setCurrentContext:context];
 }
@@ -222,7 +221,7 @@
 		NSLog(@"Warning: OpenGL swapBuffers while app in background, ignoring!");
 		return;
 	}
-	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+//	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer); // commented this out on June 8th 2012, it's probably reduntant, but I'll keep it here for a while just in case. -- kspes
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];
 
 }
@@ -271,6 +270,7 @@
 	// clear crap from previous renders. I often got a magenta colored initial screen without this
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
+	glViewport(0, 0, backingWidth, backingHeight);
     return YES;
 }
 
