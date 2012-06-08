@@ -8,9 +8,12 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _ANDROID
+#include <jni.h>
+
 #include <gtypes/Vector2.h>
 
 #include "Platform.h"
+#include "RenderSystem.h"
 
 // TODO - move this into a common Android platform header
 #define _JARGS(returnType, arguments) "(" arguments ")" returnType

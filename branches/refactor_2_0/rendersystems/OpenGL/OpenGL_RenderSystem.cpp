@@ -83,45 +83,37 @@
 
 namespace april
 {
-#ifdef _WIN32
+#ifdef _WIN32 // if _WIN32
 	static HWND hWnd = 0;
 	HDC hDC = 0;
-#ifndef _OPENGLES1
+#ifndef _OPENGLES1 // if _WIN32 && GLES
 	static HGLRC hRC = 0;
-
-	// TODO - refactor
-	int OpenGL_RenderSystem::_getMaxTextureSize()
-	{
-		if (hRC == 0)
-		{
-			return 0;
-		}
-		int max;
-		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
-		return max;
-	}
-
 #else
 	static EGLDisplay eglDisplay = 0;
 	static EGLConfig eglConfig	= 0;
 	static EGLSurface eglSurface = 0;
 	static EGLContext eglContext = 0;
 	static EGLint pi32ConfigAttribs[128] = {EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE, 8, EGL_ALPHA_SIZE, 0, EGL_SURFACE_TYPE, EGL_WINDOW_BIT, EGL_NONE};
+#endif
+#endif
 
 	// TODO - refactor
 	int OpenGL_RenderSystem::_getMaxTextureSize()
 	{
+#ifdef _WIN32
+#ifndef _OPENGLES1
+		if (hRC == 0)
+#else
 		if (eglDisplay == 0)
+#endif
 		{
 			return 0;
 		}
+#endif
 		int max;
 		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
 		return max;
 	}
-
-#endif
-#endif
 
 	void win_mat_invert()
 	{
@@ -533,14 +525,12 @@ namespace april
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			break;
+#ifndef _OPENGLES1 // CLAMP not supported in OpenGL ES 1.1
 		case Texture::ADDRESS_CLAMP:
-#ifndef _OPENGLES1
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-#else
-#warning Compiling for an OpenGL ES target, setTextureAddressMode cannot use ADDRESS_MODE_CLAMP
-#endif
 			break;
+#endif
 		default:
 			april::log("trying to set unsupported texture address mode!");
 			break;

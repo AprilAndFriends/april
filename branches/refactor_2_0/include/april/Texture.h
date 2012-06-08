@@ -97,7 +97,7 @@ namespace april
 		Color getPixel(gvec2 position);
 		void setPixel(gvec2 position, Color color);
 		Color getInterpolatedPixel(float x, float y);
-		Color Texture::getInterpolatedPixel(gvec2 position);
+		Color getInterpolatedPixel(gvec2 position);
 		void fillRect(grect rect, Color color);
 		void blit(int x, int y, ImageSource* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void blit(gvec2 position, Texture* texture, grect source, unsigned char alpha = 255);

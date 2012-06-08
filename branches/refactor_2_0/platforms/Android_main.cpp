@@ -19,6 +19,7 @@
 #include "april.h"
 #include "Keys.h"
 #include "main.h"
+#include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
 
@@ -107,7 +108,7 @@ namespace april
 	{
 		if (april::window != NULL)
 		{
-			((april::AndroidJNIWindow*)april::window)->handleTouchEvent((april::Window::MouseEventType)type, gvec2((float)x, (float)y), (int)index);
+			((april::AndroidJNI_Window*)april::window)->handleTouchEvent((april::Window::MouseEventType)type, gvec2((float)x, (float)y), (int)index);
 		}
 	}
 

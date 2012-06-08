@@ -16,6 +16,7 @@
 
 #include "AndroidJNI_Window.h"
 #include "april.h"
+#include "Platform.h"
 #include "RenderSystem.h"
 #include "Timer.h"
 
@@ -26,7 +27,7 @@ namespace april
 	gvec2 androidResolution;
 	void (*dialogCallback)(MessageBoxButton) = NULL;
 
-	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), alreadyTouched(false), _lastTime(0.0f)
+	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), multiTouchActive(false), _lastTime(0.0f)
 	{
 		this->name = APRIL_WS_ANDROIDJNI;
 	}
