@@ -77,7 +77,7 @@ namespace april
 		}
 	}
 
-	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args, jint w, jint h)
+	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args, jint width, jint height)
 	{
 		harray<hstr> args;
 		int length = env->GetArrayLength(_args);
@@ -85,7 +85,7 @@ namespace april
 		{
 			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
 		}
-		april::androidResolution.set((float)hmax(w, h), (float)hmin(w, h));
+		april::androidResolution.set((float)width, (float)height);
 		april_init(args);
 	}
 
@@ -269,6 +269,7 @@ namespace april
 		}
 		return JNI_VERSION_1_6;
 	}
+
 }
 
 #endif
