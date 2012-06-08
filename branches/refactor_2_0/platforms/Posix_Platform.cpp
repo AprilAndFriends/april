@@ -27,6 +27,7 @@ namespace april
 		static SystemInfo info;
 		if (info.locale == "")
 		{
+			info.cpu_cores = 1; // TODO
 			info.ram = 1024;
 			info.max_texture_size = 0;
 			info.locale = "en";

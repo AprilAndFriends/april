@@ -40,6 +40,7 @@ namespace april
 		static SystemInfo info;
 		if (info.locale == "")
 		{
+			info.cpu_cores = sysconf(_SC_NPROCESSORS_ONLN);
 			info.ram = 1024;
 			info.max_texture_size = 0;
 			info.locale = "en";

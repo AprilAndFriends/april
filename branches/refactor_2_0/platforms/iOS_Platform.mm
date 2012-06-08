@@ -43,6 +43,7 @@ namespace april
 	SystemInfo getSystemInfo()
 	{
 		static SystemInfo info;
+		info.cpu_cores = sysconf(_SC_NPROCESSORS_ONLN);
 		if (info.name == "")
 		{
 			info.locale = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];

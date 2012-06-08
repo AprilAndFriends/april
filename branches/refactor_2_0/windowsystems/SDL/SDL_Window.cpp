@@ -49,8 +49,10 @@ namespace april
 	{
 		this->name = APRIL_WS_SDL;
 		// centered SDL window
+#ifndef __APPLE__
 		SDL_putenv("SDL_VIDEO_WINDOW_POS");
 		SDL_putenv("SDL_VIDEO_CENTERED=1");
+#endif
 		this->cursorInside = true;
 		this->scrollHorizontal = false;
 		this->screen = NULL;

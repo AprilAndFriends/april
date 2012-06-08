@@ -25,9 +25,10 @@ namespace april
 	struct SystemInfo
 	{
 		hstr name;
-		int ram; //! how many MB of RAM does the host system have in total
+		int cpu_cores; // number of CPU cores or separate CPU units
+		int ram; // how many MB of RAM does the host system have in total
 		int max_texture_size;
-		hstr locale; //! current system locale code
+		hstr locale; // current system locale code
 	};
 	
 	enum DeviceType

@@ -381,7 +381,7 @@ namespace april
 				}
 			}
 		}
-		else
+		else // mBpp == 4 && dataBpp == 3
 		{
 			for_iter (j, 0, sh)
 			{
@@ -392,6 +392,7 @@ namespace april
 					c[0] = sc[0];
 					c[1] = sc[1];
 					c[2] = sc[2];
+					c[3] = 255;
 				}
 			}
 		}
@@ -626,7 +627,7 @@ namespace april
 				}
 			}
 		}
-		else
+		else // mBpp == 4 && dataBpp == 3
 		{
 			for_iter (j, 0, h)
 			{
@@ -679,6 +680,7 @@ namespace april
 					c[0] = sc[0];
 					c[1] = sc[1];
 					c[2] = sc[2];
+					c[3] = 255;
 				}
 			}
 		}
