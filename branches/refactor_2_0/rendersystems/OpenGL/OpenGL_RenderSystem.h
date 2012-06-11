@@ -28,6 +28,25 @@ namespace april
 	class OpenGL_Texture;
 	class Window;
 
+	class OpenGL_RenderState
+	{
+	public:
+		OpenGL_RenderState();
+
+		bool textureCoordinatesEnabled;
+		bool colorEnabled;
+		unsigned int textureId;
+		Color systemColor;
+		bool modelviewMatrixSet;
+		bool projectionMatrixSet;
+		gmat4 modelviewMatrix;
+		gmat4 projectionMatrix;
+		BlendMode blendMode;
+		ColorMode colorMode;
+		unsigned char colorModeAlpha;
+
+	};
+	
 	class OpenGL_RenderSystem : public RenderSystem
 	{
 	public:
@@ -74,20 +93,32 @@ namespace april
 		
 		void setParam(chstr name, chstr value);
         ImageSource* takeScreenshot(int bpp = 3);
-		
+
+		void setMatrixMode(unsigned int mode);
+		void bindTexture(unsigned int textureId);
+
 		// TODO - refactor
 		int _getMaxTextureSize();
 
 	protected:
-		bool textureCoordinatesEnabled;
-		bool colorEnabled;
 		OpenGL_Texture* activeTexture;
 		hstr options;
+		// TODO - refactor
+		OpenGL_RenderState state;
+		OpenGL_RenderState deviceState;
 
 		Texture* _createTexture(chstr filename, bool dynamic = false);
 
+		void _setVertexPointer(int stride, const void* pointer);
+		void _setTexCoordPointer(int stride, const void* pointer);
+		void _setColorPointer(int stride, const void* pointer);
+		void _setTextureBlendMode(BlendMode mode);
+		void _setTextureColorMode(ColorMode mode, unsigned char alpha = 255);
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
+
+		void _applyStateChanges();
+		void _setClientState(unsigned int type, bool enabled);
 #ifdef _WIN32
 		void _releaseWindow();
 #endif

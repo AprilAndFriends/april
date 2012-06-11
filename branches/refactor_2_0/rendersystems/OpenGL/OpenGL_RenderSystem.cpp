@@ -54,36 +54,9 @@
 #include "Timer.h"
 #include "Window.h"
 
-#define SET_TEXTURE_ENABLED(value) \
-	if (this->textureCoordinatesEnabled != value) \
-	{ \
-		if (this->textureCoordinatesEnabled) \
-		{ \
-			glBindTexture(GL_TEXTURE_2D, 0); \
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY); \
-		} \
-		else \
-		{ \
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY); \
-		} \
-		this->textureCoordinatesEnabled = value; \
-	}
-#define SET_COLOR_ENABLED(value) \
-	if (this->colorEnabled != value) \
-	{ \
-		if (this->colorEnabled) \
-		{ \
-			glDisableClientState(GL_COLOR_ARRAY); \
-		} \
-		else \
-		{ \
-			glEnableClientState(GL_COLOR_ARRAY); \
-		} \
-		this->colorEnabled = value; \
-	}
-
 namespace april
 {
+	static Color lastColor = APRIL_COLOR_BLACK;
 #ifdef _WIN32 // if _WIN32
 	static HWND hWnd = 0;
 	HDC hDC = 0;
@@ -118,7 +91,7 @@ namespace april
 
 	void win_mat_invert()
 	{
-		glMatrixMode(GL_PROJECTION);
+		((OpenGL_RenderSystem*)april::rendersys)->setMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		float mat[16];
 		glGetFloatv(GL_PROJECTION_MATRIX, mat);
@@ -141,8 +114,20 @@ namespace april
 		GL_POINTS,			// ROP_POINTS
 	};
 	
-	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(),
-		textureCoordinatesEnabled(false), colorEnabled(false), activeTexture(NULL)
+	OpenGL_RenderState::OpenGL_RenderState()
+	{
+		this->textureCoordinatesEnabled = false;
+		this->colorEnabled = false;
+		this->textureId = 0;
+		this->systemColor = APRIL_COLOR_BLACK;
+		this->modelviewMatrixSet = false;
+		this->projectionMatrixSet = false;
+		this->blendMode = (BlendMode)10000;
+		this->colorMode = (ColorMode)10000;
+		this->colorModeAlpha = 255;
+	}
+	
+	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
 	{
 		this->name = APRIL_RS_OPENGL;
 	}
@@ -158,8 +143,6 @@ namespace april
 		{
 			return false;
 		}
-		this->textureCoordinatesEnabled = false;
-		this->colorEnabled = false;
 		this->activeTexture = NULL;
 		this->options = options;
 		glClearColor(0, 0, 0, 1);
@@ -306,14 +289,15 @@ namespace april
 #endif
 		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
 		glClearColor(0, 0, 0, 1);
-		glMatrixMode(GL_PROJECTION);
+		setMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glMatrixMode(GL_MODELVIEW);
+		setMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
+		// TODO - can be put into common function, because ::reset() uses the same code
+		// GL defaults
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnable(GL_TEXTURE_2D);
 		// pixel data
@@ -325,11 +309,16 @@ namespace april
 #endif
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		// other
 		if (this->options.contains("zbuffer"))
 		{
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 		}
+		// TODO - UNTIL HERE
+		this->state.systemColor = APRIL_COLOR_BLACK;
+		this->deviceState.systemColor = APRIL_COLOR_BLACK;
+		glColor4f(0, 0, 0, 1);
 		this->orthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
 	}
 
@@ -345,9 +334,6 @@ namespace april
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
 		// pixel data
 #ifndef _OPENGLES1
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
@@ -358,8 +344,6 @@ namespace april
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 		// other
-		this->textureCoordinatesEnabled = false;
-		this->colorEnabled = false;
 		if (this->options.contains("zbuffer"))
 		{
 			glEnable(GL_DEPTH_TEST);
@@ -385,8 +369,13 @@ namespace april
 		// because GL has to defy screen logic and has (0,0) in the bottom left corner
 		glViewport((int)rect.x, (int)(april::window->getHeight() - rect.h - rect.y), (int)rect.w, (int)rect.h);
 	}
-
-	void OpenGL_RenderSystem::setTextureBlendMode(BlendMode textureBlendMode)
+	
+	void OpenGL_RenderSystem::setTextureBlendMode(BlendMode mode)
+	{
+		this->state.blendMode = mode;
+	}
+	
+	void OpenGL_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
 	{
 		// TODO - is there a way to make this work on Win32?
 #ifndef _WIN32
@@ -462,6 +451,12 @@ namespace april
 	}
 	
 	void OpenGL_RenderSystem::setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
+	{
+		this->state.colorMode = textureColorMode;
+		this->state.colorModeAlpha = alpha;
+	}
+
+	void OpenGL_RenderSystem::_setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
 	{
 		static float constColor[4];
 		for_iter (i, 0, 4)
@@ -554,16 +549,10 @@ namespace april
 		this->activeTexture = (OpenGL_Texture*)texture;
 		if (this->activeTexture == NULL)
 		{
-			glBindTexture(GL_TEXTURE_2D, 0);
+			this->bindTexture(0);
 		}
 		else
 		{
-			if (!this->activeTexture->isLoaded())
-			{
-				this->activeTexture->load();
-			}
-			this->activeTexture->_resetUnusedTime();
-			glBindTexture(GL_TEXTURE_2D, this->activeTexture->textureId);
 			Texture::Filter filter = this->activeTexture->getFilter();
 			if (this->textureFilter != filter)
 			{
@@ -574,6 +563,13 @@ namespace april
 			{
 				this->setTextureAddressMode(addressMode);
 			}
+			// filtering and wrapping applied before loading texture data, iOS OpenGL guidelines suggest it as an optimization
+			if (!this->activeTexture->isLoaded())
+			{
+				this->activeTexture->load();
+			}
+			this->activeTexture->_resetUnusedTime();
+			this->bindTexture(this->activeTexture->textureId);
 		}
 	}
 
@@ -591,6 +587,65 @@ namespace april
 	{
 		// TODO
 		april::log("WARNING: setResolution is not implemented");
+	}
+
+	void OpenGL_RenderSystem::_applyStateChanges()
+	{
+		if (this->state.textureCoordinatesEnabled != this->deviceState.textureCoordinatesEnabled)
+		{
+			this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->state.textureCoordinatesEnabled);
+			this->deviceState.textureCoordinatesEnabled = this->state.textureCoordinatesEnabled;
+		}
+		if (this->state.colorEnabled != this->deviceState.colorEnabled)
+		{
+			this->_setClientState(GL_COLOR_ARRAY, this->state.colorEnabled);
+			this->deviceState.colorEnabled = this->state.colorEnabled;
+		}
+		if (this->state.systemColor != this->deviceState.systemColor)
+		{
+			glColor4f(this->state.systemColor.r_f(), this->state.systemColor.g_f(), this->state.systemColor.b_f(), this->state.systemColor.a_f());
+			this->deviceState.systemColor = this->state.systemColor;
+		}
+		if (this->state.textureId != this->deviceState.textureId)
+		{
+			glBindTexture(GL_TEXTURE_2D, this->state.textureId);
+			this->deviceState.textureId = this->state.textureId;
+		}
+		if (this->state.blendMode != this->deviceState.blendMode)
+		{
+			this->_setTextureBlendMode(this->state.blendMode);
+			this->deviceState.blendMode = this->state.blendMode;
+		}
+		if (this->state.colorMode != this->deviceState.colorMode || this->state.colorModeAlpha != this->deviceState.colorModeAlpha)
+		{
+			this->_setTextureColorMode(this->state.colorMode, this->state.colorModeAlpha);
+			this->deviceState.colorMode = this->state.colorMode;
+			this->deviceState.colorModeAlpha = this->state.colorModeAlpha;
+		}
+		if (this->state.projectionMatrixSet && this->projectionMatrix != this->deviceState.projectionMatrix)
+		{
+			this->setMatrixMode(GL_PROJECTION);
+			glLoadMatrixf(this->projectionMatrix.data);
+			this->deviceState.projectionMatrix = this->projectionMatrix;
+			this->state.projectionMatrixSet = false;
+		}
+		if (this->state.modelviewMatrixSet && this->modelviewMatrix != this->deviceState.modelviewMatrix)
+		{
+			this->setMatrixMode(GL_MODELVIEW);
+			glLoadMatrixf(this->modelviewMatrix.data);
+			this->deviceState.modelviewMatrix = this->modelviewMatrix;
+			this->state.modelviewMatrixSet = false;
+		}
+	}
+
+	void OpenGL_RenderSystem::_setClientState(unsigned int type, bool enabled)
+	{
+		enabled ? glEnableClientState(type) : glDisableClientState(type);
+	}
+
+	void OpenGL_RenderSystem::bindTexture(unsigned int textureId)
+	{
+		this->state.textureId = textureId;
 	}
 
 	Texture* OpenGL_RenderSystem::_createTexture(chstr filename, bool dynamic)
@@ -648,96 +703,149 @@ namespace april
 
 	void OpenGL_RenderSystem::clear(bool depth, grect rect, Color color)
 	{
-		glClearColor(color.r_f(), color.b_f(), color.g_f(), color.a_f());
+		if (color != lastColor) // used to minimize redundant calls to OpenGL
+		{
+			glClearColor(color.r_f(), color.b_f(), color.g_f(), color.a_f());
+			lastColor = color;
+		}
 		this->clear(true, depth);
 	}
 	
+	void OpenGL_RenderSystem::setMatrixMode(unsigned int mode)
+	{
+		// performance call, minimize redundant calls to setMatrixMode
+		static unsigned int _mode = 0;
+		if (_mode != mode)
+		{
+			_mode = mode;
+			glMatrixMode(mode);
+		}
+	}
+	
+	void OpenGL_RenderSystem::_setVertexPointer(int stride, const void* pointer)
+	{
+		static int _stride = 0;
+		static const void *_pointer = 0;
+		if (_stride != stride || _pointer != pointer)
+		{
+			glVertexPointer(3, GL_FLOAT, stride, pointer);
+			_stride = stride;
+			_pointer = pointer;
+		}
+	}
+	
+	void OpenGL_RenderSystem::_setTexCoordPointer(int stride, const void *pointer)
+	{
+		static int _stride = 0;
+		static const void* _pointer = 0;
+		if (_stride != stride || _pointer != pointer)
+		{
+			glTexCoordPointer(2, GL_FLOAT, stride, pointer);
+			_stride = stride;
+			_pointer = pointer;
+		}
+	}
+	
+	void OpenGL_RenderSystem::_setColorPointer(int stride, const void *pointer)
+	{
+		static int _stride = 0;
+		static const void* _pointer = 0;
+		if (_stride != stride || _pointer != pointer)
+		{
+			glColorPointer(4, GL_UNSIGNED_BYTE, stride, pointer);
+			_stride = stride;
+			_pointer = pointer;
+		}
+	}
+
 	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
 	{
-		SET_TEXTURE_ENABLED(false);
-		SET_COLOR_ENABLED(false);
-		glColor4f(1, 1, 1, 1);
-		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
+		this->state.textureId = 0;
+		this->state.textureCoordinatesEnabled = false;
+		this->state.colorEnabled = false;
+		this->state.systemColor.set(255, 255, 255, 255);
+		this->_applyStateChanges();
+		this->_setVertexPointer(sizeof(PlainVertex), v);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
 	{
-		SET_TEXTURE_ENABLED(false);
-		SET_COLOR_ENABLED(false);
-		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
-		glVertexPointer(3, GL_FLOAT, sizeof(PlainVertex), v);
+		this->state.textureId = 0;
+		this->state.textureCoordinatesEnabled = false;
+		this->state.colorEnabled = false;
+		this->state.systemColor = color;
+		this->_applyStateChanges();
+		this->_setVertexPointer(sizeof(PlainVertex), v);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 	
 	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
 	{
-		SET_TEXTURE_ENABLED(true);
-		SET_COLOR_ENABLED(false);
-		glColor4f(1, 1, 1, 1); 
-		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), &v->u);
+		this->state.textureCoordinatesEnabled = true;
+		this->state.colorEnabled = false;
+		this->state.systemColor.set(255, 255, 255, 255);
+		this->_applyStateChanges();
+		this->_setVertexPointer(sizeof(TexturedVertex), v);
+		this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
 	{
-		SET_TEXTURE_ENABLED(true);
-		SET_COLOR_ENABLED(false);
-		glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
-		glVertexPointer(3, GL_FLOAT, sizeof(TexturedVertex), v);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(TexturedVertex), (unsigned char*)v + 3 * sizeof(float));
+		this->state.textureCoordinatesEnabled = true;
+		this->state.colorEnabled = false;
+		this->state.systemColor = color;
+		this->_applyStateChanges();
+		this->_setVertexPointer(sizeof(TexturedVertex), v);
+		this->_setTexCoordPointer(sizeof(TexturedVertex), (unsigned char*)v + 3 * sizeof(float)); // I forgot why this pointer is like that
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
 	{
-		SET_TEXTURE_ENABLED(false);
-		SET_COLOR_ENABLED(true);
+		this->state.textureId = 0;
+		this->state.textureCoordinatesEnabled = false;
+		this->state.colorEnabled = true;
+		this->state.systemColor.set(255, 255, 255, 255);
 		for_iter (i, 0, nVertices)
 		{
 			// making sure this is in AGBR order
 			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
 		}
-		glColor4f(1, 1, 1, 1);
-		glVertexPointer(3, GL_FLOAT, sizeof(ColoredVertex), v);
-		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(ColoredVertex), &v->color);
+		this->_applyStateChanges();
+		this->_setVertexPointer(sizeof(ColoredVertex), v);
+		this->_setColorPointer(sizeof(ColoredVertex), &v->color);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 	
 	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
-		SET_TEXTURE_ENABLED(true);
-		SET_COLOR_ENABLED(true);
+		this->state.textureCoordinatesEnabled = true;
+		this->state.colorEnabled = true;
+		this->state.systemColor.set(255, 255, 255, 255);
 		for_iter (i, 0, nVertices)
 		{
 			// making sure this is in AGBR order
 			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
 		}
-		glVertexPointer(3, GL_FLOAT, sizeof(ColoredTexturedVertex), v);
-		glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(ColoredTexturedVertex), &v->color);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(ColoredTexturedVertex), &v->u);
+		this->_applyStateChanges();
+		this->_setVertexPointer(sizeof(ColoredTexturedVertex), v);
+		this->_setColorPointer(sizeof(ColoredTexturedVertex), &v->color);
+		this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &v->u);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 	
 	void OpenGL_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(matrix.data);
+		this->state.modelviewMatrix = matrix;
+		this->state.modelviewMatrixSet = true;
 	}
 
 	void OpenGL_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
-		glMatrixMode(GL_PROJECTION);
-#ifdef _OPENGLES1
-		glLoadIdentity();
-		glRotatef(april::window->prefixRotationAngle(), 0, 0, 1);
-		//printf("rotationangle %g\n", getWindow()->prefixRotationAngle());
-		glMultMatrixf(matrix.data);
-#else
-		glLoadMatrixf(matrix.data);
-#endif
-		glMatrixMode(GL_MODELVIEW);
+		this->state.projectionMatrix = matrix;
+		this->state.projectionMatrixSet = true;
 	}
 
 	void OpenGL_RenderSystem::setParam(chstr name, chstr value)
@@ -748,7 +856,6 @@ namespace april
 			glDepthFunc(GL_LEQUAL);
 		}
 	}
-	
 	
 	ImageSource* OpenGL_RenderSystem::takeScreenshot(int bpp)
 	{

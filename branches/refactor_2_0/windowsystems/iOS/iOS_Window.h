@@ -59,7 +59,6 @@ namespace april
 		void terminateKeyboardHandling();
 		void keyboardWasShown();
 		void keyboardWasHidden();
-		float prefixRotationAngle();
 		
 		bool isRotating();
 		hstr getParam(chstr param);
