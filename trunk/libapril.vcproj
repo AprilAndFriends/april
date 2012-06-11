@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="libapril"
 	ProjectGUID="{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}"
 	RootNamespace="libapril"
@@ -517,10 +517,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\TextureManager.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\TimerWin.cpp"
 				>
 			</File>
@@ -644,10 +640,6 @@
 			</File>
 			<File
 				RelativePath=".\include\april\Texture.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\april\TextureManager.h"
 				>
 			</File>
 			<File

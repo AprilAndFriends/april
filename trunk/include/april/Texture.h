@@ -121,6 +121,8 @@ namespace april
 		// TODO - this horrible, horrible hack has to be discussed and changed
 		//! sets the filename variable, useful if you want to reload the texture from a different file
 		void _setFilename(chstr value) { this->filename = value; }
+		// TODO - this another horrible, horrible hack and has to be removed
+		void _setDimensions(int w, int h) { this->width = w; this->height = h; }
 
 		// TODO - has to be discussed
 		static void setTextureLoadingListener(void (*listener)(Texture*));
