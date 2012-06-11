@@ -1,6 +1,6 @@
 package net.sourceforge.april;
 
-// version 1.85
+// version 2.0
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

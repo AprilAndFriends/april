@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.84
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -41,7 +41,7 @@ namespace april
 		ImageSource();
 		~ImageSource();
 		
-		unsigned int getImageId() { return mImageId; };
+		unsigned int getImageId() { return this->imageId; };
 		Color getPixel(int x, int y);
 		void setPixel(int x, int y, Color c);
 		Color getInterpolatedPixel(float x, float y);
@@ -63,7 +63,7 @@ namespace april
 		int compressedLength;
 		
 	protected:
-		unsigned int mImageId;
+		unsigned int imageId;
 		
 	};
 	

@@ -104,14 +104,8 @@
     <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\Win32\Win32Window.cpp">
-      <Filter>Source Files\windowsystems\Win32</Filter>
-    </ClCompile>
     <ClCompile Include="src\TimerPosix.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="windowsystems\AndroidJni\AndroidJNIWindow.cpp">
-      <Filter>Source Files\windowsystems\AndroidJNI</Filter>
     </ClCompile>
     <ClCompile Include="src\ImageSourceJpg.cpp">
       <Filter>Source Files</Filter>
@@ -119,25 +113,37 @@
     <ClCompile Include="src\ImageSourcePng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TextureManager.cpp">
+    <ClCompile Include="src\april.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\SDL\SDLWindow.cpp">
+    <ClCompile Include="src\Platform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Window.cpp">
+      <Filter>Source Files\windowsystems\AndroidJNI</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\Android_main.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\Android_Platform.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\Win32_main.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\Win32_Platform.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\SDL\SDL_Window.cpp">
       <Filter>Source Files\windowsystems\SDL</Filter>
     </ClCompile>
-    <ClCompile Include="platforms\main_android.cpp">
-      <Filter>Source Files\platforms</Filter>
+    <ClCompile Include="windowsystems\Win32\Win32_Window.cpp">
+      <Filter>Source Files\windowsystems\Win32</Filter>
     </ClCompile>
-    <ClCompile Include="platforms\main_win32.cpp">
-      <Filter>Source Files\platforms</Filter>
+    <ClCompile Include="src\aprilUtil.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="platforms\platform_android.cpp">
-      <Filter>Source Files\platforms</Filter>
-    </ClCompile>
-    <ClCompile Include="platforms\platform_win32.cpp">
-      <Filter>Source Files\platforms</Filter>
-    </ClCompile>
-    <ClCompile Include="src\april.cpp">
+    <ClCompile Include="src\RamTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -193,22 +199,25 @@
     <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h">
       <Filter>Header Files\rendersystems\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\Win32\Win32Window.h">
-      <Filter>Header Files\windowsystems\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="windowsystems\AndroidJni\AndroidJNIWindow.h">
-      <Filter>Header Files\windowsystems\AndroidJNI</Filter>
-    </ClInclude>
-    <ClInclude Include="include\april\TextureManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="windowsystems\SDL\SDLWindow.h">
-      <Filter>Header Files\windowsystems\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="include\april\Platform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\april\april.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Window.h">
+      <Filter>Header Files\windowsystems\AndroidJNI</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\SDL\SDL_Window.h">
+      <Filter>Header Files\windowsystems\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\Win32\Win32_Window.h">
+      <Filter>Header Files\windowsystems\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\aprilUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\RamTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

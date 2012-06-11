@@ -1,7 +1,8 @@
 /// @file
 /// @author  Ivan Vucica
+/// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.7
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -20,7 +21,7 @@
 #include <SDL/SDL_keysym.h>
 #include <hltypes/hstring.h>
 
-#if _SDLGLES
+#ifdef _OPENGLES1
 #include <SDL/SDL.h>
 #include <SDL/SDL_gles.h>
 #endif
@@ -33,48 +34,45 @@ union SDL_Event;
 
 namespace april
 {
-	class SDLWindow : public Window
+	class SDL_Window : public Window
 	{
 	public:
-		SDLWindow(int w, int h, bool fullscreen, chstr title);
-		~SDLWindow();
+		SDL_Window();
+		~SDL_Window();
+		bool create(int w, int h, bool fullscreen, chstr title);
+		bool destroy();
 		
-		// implementations
-		bool updateOneFrame();
-		void enterMainLoop();
-		void terminateMainLoop();
-		void destroyWindow();
-		void showSystemCursor(bool visible);
-		bool isSystemCursorShown();
+		void setTitle(chstr title);
+		bool isCursorVisible();
+		void setCursorVisible(bool visible);
+		bool isCursorInside() { return this->cursorInside; }
 		int getWidth();
 		int getHeight();
-		void setWindowTitle(chstr title);
+		bool isTouchEnabled() { return false; }
+		void setTouchEnabled(bool value) { }
 		gvec2 getCursorPosition();
-		void presentFrame();
-		void* getIDFromBackend();
-		void doEvents();
-		bool isCursorInside();
-		
-		DeviceType getDeviceType();
+		void* getBackendId();
 
-		float mCursorX; // TODO turn into private
-		float mCursorY; // TODO turn into private
+		bool updateOneFrame();
+		void terminateMainLoop();
+		void presentFrame();
+		void checkEvents();
 		
-	private:
+	protected:
+		bool cursorInside;
+		bool scrollHorizontal;
+		SDL_Surface* screen;
+#ifdef _OPENGLES1
+		SDL_GLES_Context* glesContext;
+#endif
+
 		void _handleKeyEvent(Window::KeyEventType type, SDLKey keycode, unsigned int unicode);
 		bool _handleDisplayAndUpdate();
 		void _handleMouseEvent(SDL_Event &evt);
+		void _cursorVisibilityUpdate();
 		
-		SDL_Surface *mScreen;
-		bool mRunning;
-		bool mCursorVisible;
-		bool mCursorInside;
-		bool mWindowFocused;
-		bool mScrollHorizontal;
-#if _SDLGLES
-		SDL_GLES_Context *mGLESContext;
-#endif
 	};
+
 }
 
 #endif

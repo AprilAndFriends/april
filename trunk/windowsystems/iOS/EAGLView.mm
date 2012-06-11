@@ -23,7 +23,6 @@
 
 
 #define USE_DEPTH_BUFFER 0
-#define aprilWindow april::iOSWindow::getSingleton()
 
 
 // A class extension to declare private methods
@@ -145,8 +144,10 @@
 						   action:@selector(textFieldFinished:)
 							forControlEvents:UIControlEventEditingDidEndOnExit];
 		// create ios window object
-		april::createRenderSystem("create_eagl");
-		april::rendersys->assignWindow(new april::iOSWindow(0,0,1,"iOS Window"));
+		april::_createRenderSystem("create_eagl");
+		april::window = new april::iOSWindow();
+		april::window->create(0, 0, 1, "iOS Window");
+		april::rendersys->assignWindow(april::window);
     }
 	
     return self;
@@ -200,7 +201,7 @@
     [self beginRender];
 	
 	//mydraw();
-	((april::iOSWindow*)aprilWindow)->handleDisplayAndUpdate();
+	((april::iOSWindow*)april::window)->handleDisplayAndUpdate();
 	
 
 

@@ -1,6 +1,8 @@
 /// @file
+/// @author  Kresimir Spes
 /// @author  Ivan Vucica
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -23,54 +25,36 @@ namespace april
 	class InputEvent
 	{
 	public:
-		Window* mWindow;
+		Window* window;
+		
 		InputEvent();
 		virtual ~InputEvent();
 		InputEvent(Window* wnd);
 		virtual void execute() = 0;
+		
 	};
 	
 	class iOSWindow : public Window
 	{
-	protected:
-		bool mFocused;
-		bool mRunning;
-		bool mCursorVisible;
-		int mKeyboardRequest;
-		Timer mTimer;
-		float mCursorX, mCursorY;
-		bool mFirstFrameDrawn;
-		harray<InputEvent*> mInputEvents;
-		bool mInputEventsMutex;
-		
-		float _getTouchScale();
-		harray<UITouch*> _convertTouchesToCoordinates(void* touches);
-		void callTouchCallback();
-		harray<UITouch*> mTouches;
-		bool mMultiTouchActive;
-		
-		bool mRetainLoadingOverlay;
 	public:
-		
-		static iOSWindow* getSingleton() { return (iOSWindow*) mSingleton; }
-		
 		iOSWindow(int w, int h, bool fullscreen, chstr title);
-		DeviceType getDeviceType();
+		~iOSWindow();
+		
 		// implementations
 		void enterMainLoop();
 		bool updateOneFrame();
 		void terminateMainLoop();
 		void destroyWindow();
-		void showSystemCursor(bool visible);
-		bool isSystemCursorShown();
+		void setCursorVisible(bool value);
+		bool isCursorVisible();
 		int getWidth();
 		int getHeight();
-		void setWindowTitle(chstr title);
+		void setTitle(chstr value);
 		gtypes::Vector2 getCursorPosition();
 		void presentFrame();
-		void* getIDFromBackend();
-		void doEvents();
-		bool isKeyboardVisible();
+		void* getIdFromBackend();
+		void checkEvents();
+		bool isVirtualKeyboardVisible();
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
 		void keyboardWasShown();
@@ -96,7 +80,23 @@ namespace april
 
 		void applicationWillResignActive();
 		void applicationDidBecomeActive();
+		
+	protected:
+		int keyboardRequest;
+		Timer timer;
+		bool firstFrameDrawn;
+		harray<InputEvent*> inputEvents;
+		bool inputEventsMutex;
+		bool retainLoadingOverlay;
+		harray<UITouch*> touches;
+		bool multiTouchActive;
+		
+		float _getTouchScale();
+		harray<UITouch*> _convertTouchesToCoordinates(void* touches);
+		void callTouchCallback();
+		
 	};
+	
 }
 
 #endif

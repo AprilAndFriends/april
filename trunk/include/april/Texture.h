@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.8
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -15,124 +15,141 @@
 #ifndef APRIL_TEXTURE_H
 #define APRIL_TEXTURE_H
 
-#include <hltypes/hstring.h>
-#include <hltypes/harray.h>
 #include <gtypes/Rectangle.h>
+#include <gtypes/Vector2.h>
+#include <hltypes/harray.h>
+#include <hltypes/hltypesUtil.h>
+#include <hltypes/hstring.h>
 
 #include "Color.h"
 #include "aprilExport.h"
 
 namespace april
 {
-	enum TextureType
-	{
-		AT_NORMAL = 1,
-		AT_RENDER_TARGET = 2
-	};
-
-	enum TextureFormat
-	{
-		AT_XRGB = 1,
-		AT_ARGB = 2,
-		AT_RGB = 3,
-		//AT_RGBA = 4, // TODO - WTF, this isn't supported!
-		AT_ALPHA = 5
-	};
-
-	enum TextureFilter
-	{
-		Nearest = 1,
-		Linear = 2
-	};
-	
 	class ImageSource;
 	
 	class aprilExport Texture
 	{
 	public:
+		friend class RenderSystem;
+
+		enum Type
+		{
+			TYPE_NORMAL = 1,
+			TYPE_RENDER_TARGET = 2
+		};
+
+		enum Format
+		{
+			FORMAT_INVALID = 0,
+			FORMAT_ARGB = 1,
+			FORMAT_RGB = 2,
+			//FORMAT_RGBA = 3, // TODO - WTF, this isn't supported!
+			FORMAT_ALPHA = 4/*, // TODO
+			FORMAT_PALETTE = 5,
+			FORMAT_MONOCHROME = 6*/
+		};
+
+		enum Filter
+		{
+			FILTER_NEAREST = 1,
+			FILTER_LINEAR = 2
+		};
+
+		enum AddressMode
+		{
+			ADDRESS_WRAP = 0,
+			ADDRESS_CLAMP = 1
+		};
+	
 		Texture();
 		virtual ~Texture();
 		virtual bool load() = 0;
 		virtual void unload() = 0;
-		virtual int getSizeInBytes() = 0;
-		virtual bool isValid() = 0;
-		
-		virtual Color getPixel(int x, int y) { return APRIL_COLOR_CLEAR; }
-		virtual void setPixel(int x, int y, Color color) { }
-		virtual void fillRect(int x, int y, int w, int h, Color color) { }
-		virtual void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255) { }
-		virtual void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255) { }
-		virtual void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255) { }
-		virtual void stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255) { }
-		virtual void clear() { }
-		virtual void rotateHue(float degrees) { }
-		virtual void saturate(float factor) { }
-		void fillRect(grect rect, Color color);
-		virtual Color getInterpolatedPixel(float x, float y);
-		virtual bool copyPixelData(unsigned char** output) { return false; }
-		
-		void addDynamicLink(Texture* lnk);
-		void removeDynamicLink(Texture* lnk);
-		void _resetUnusedTimer(bool recursive = true);
-		float getUnusedTime() { return mUnusedTimer; }
-		
-		int getWidth() { return mWidth; };
-		int getHeight() { return mHeight; };
-		int getBpp() { return mBpp; }
-		/// only used with dynamic textures since at chapter load you need it's dimensions for images, but you don't know them yet
-		void _setDimensions(int w, int h) { mWidth = w; mHeight = h; }
-		bool isDynamic() { return mDynamic; }
+
+		HL_DEFINE_GET(hstr, filename, Filename);
+		HL_DEFINE_GET(int, width, Width);
+		HL_DEFINE_GET(int, height, Height);
+		HL_DEFINE_GET(int, bpp, Bpp);
+		HL_DEFINE_GETSET(Filter, filter, Filter);
+		HL_DEFINE_GETSET(AddressMode, addressMode, AddressMode);
+		HL_DEFINE_IS(bool, dynamic, Dynamic);
+		HL_DEFINE_GET(float, unusedTime, UnusedTime);
+		int getByteSize();
+
 		virtual bool isLoaded() = 0;
 		
-		void update(float time_increase);
-		//! sets the filename variable, useful if you want to reload the texture from a different file
-		void _setFilename(chstr filename) { mFilename = filename; }
-		hstr getFilename() { return mFilename; }
+		void addDynamicLink(Texture* link);
+		void removeDynamicLink(Texture* link);
 		
-		void setTextureFilter(TextureFilter filter) { mTextureFilter = filter; }
-		void setTextureWrapping(bool wrap) { mTextureWrapping = wrap; }
-		bool isTextureWrappingEnabled() { return mTextureWrapping; }
-		TextureFilter getTextureFilter() { return mTextureFilter; }
-
+		virtual void clear();
+		virtual Color getPixel(int x, int y);
+		virtual void setPixel(int x, int y, Color color);
+		virtual void fillRect(int x, int y, int w, int h, Color color);
+		virtual void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		virtual void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		virtual void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		virtual void stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		virtual void rotateHue(float degrees);
+		virtual void saturate(float factor);
 		virtual void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
+
+		Color getPixel(gvec2 position);
+		void setPixel(gvec2 position, Color color);
+		Color getInterpolatedPixel(float x, float y);
+		Color getInterpolatedPixel(gvec2 position);
+		void fillRect(grect rect, Color color);
+		void blit(int x, int y, ImageSource* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void blit(gvec2 position, Texture* texture, grect source, unsigned char alpha = 255);
+		void blit(gvec2 position, ImageSource* image, grect source, unsigned char alpha = 255);
+		void blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
+		void stretchBlit(int x, int y, int w, int h, ImageSource* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void stretchBlit(grect destination, Texture* texture, grect source, unsigned char alpha = 255);
+		void stretchBlit(grect destination, ImageSource* image, grect source, unsigned char alpha = 255);
+		void stretchBlit(grect destination, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
+
+		void update(float k);
+		virtual bool copyPixelData(unsigned char** output) { return false; }
 		
+		DEPRECATED_ATTRIBUTE int getSizeInBytes() { return this->getByteSize(); }
+		DEPRECATED_ATTRIBUTE void setTextureFilter(Filter value) { this->setFilter(value); }
+		DEPRECATED_ATTRIBUTE void setTextureWrapping(bool wrap) { this->setAddressMode(wrap ? ADDRESS_WRAP : ADDRESS_CLAMP); }
+		DEPRECATED_ATTRIBUTE bool isTextureWrappingEnabled() { return (this->getAddressMode() == ADDRESS_WRAP); }
+		DEPRECATED_ATTRIBUTE Filter getTextureFilter() { return this->getFilter(); }
+		DEPRECATED_ATTRIBUTE bool isValid() { return this->isLoaded(); }
+		
+		// TODO - this horrible, horrible hack has to be discussed and changed
+		//! sets the filename variable, useful if you want to reload the texture from a different file
+		void _setFilename(chstr value) { this->filename = value; }
+
+		// TODO - has to be discussed
 		static void setTextureLoadingListener(void (*listener)(Texture*));
-		
+
 	protected:
-		bool mDynamic;
-		hstr mFilename;
-		int mWidth;
-		int mHeight;
-		int mBpp;
-		float mUnusedTimer;
-		TextureFilter mTextureFilter;
-		bool mTextureWrapping;
-		harray<Texture*> mDynamicLinks;
+		hstr filename;
+		int width;
+		int height;
+		int bpp;
+		Filter filter;
+		AddressMode addressMode;
+		bool dynamic;
+		float unusedTime;
+		harray<Texture*> dynamicLinks;
 
 		hstr _getInternalName();
-		void notifyLoadingListener(Texture* t);
+
+		hstr _findTextureFilename(chstr filename);
+		void _resetUnusedTime();
+
+		// TODO - has to be discussed
+		void _notifyLoadingListener(Texture* t);
+		
+		// TODO - these may currently not work well with anything else than DirectX9
+		void _blit(unsigned char* thisData, int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void _stretchBlit(unsigned char* thisData, int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+
 	};
 	
-	class aprilExport RamTexture : public Texture
-	{
-	public:
-		RamTexture(chstr filename, bool dynamic);
-		RamTexture(int w, int h);
-		virtual ~RamTexture();
-		bool load();
-		void unload();
-		bool isLoaded();
-		Color getPixel(int x, int y);
-		void setPixel(int x, int y, Color c);
-		Color getInterpolatedPixel(float x, float y);
-		int getSizeInBytes();
-		bool isValid();
-		
-	protected:
-		ImageSource* mBuffer;
-		
-	};
-
 }
 
 #endif
