@@ -76,6 +76,7 @@ namespace april
 		bool isCreated() { return this->created; }
 		hstr getTitle() { return this->title; }
 		bool isFullscreen() { return this->fullscreen; }
+		void setFullscreen(bool value) { } // TODO
 		bool isFocused() { return this->focused; }
 		bool isRunning() { return this->running; }
 		gvec2 getCursorPosition() { return this->cursorPosition; }
