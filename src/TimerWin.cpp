@@ -1,6 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -8,7 +9,6 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _WIN32
-
 #include "april.h"
 #include "RenderSystem.h"
 #include "Timer.h"
@@ -17,32 +17,32 @@ namespace april
 {
 	Timer::Timer()
 	{
-		mDt = 0;
-		mTd2 = 0;
-		mTd = 0;
-		mFrequency = 0;
-		mPerformanceTimerStart = 0;
-		mResolution = 0;
-		mMmTimerStart = 0;
-		mMmTimerElapsed = 0;
-		mPerformanceTimerElapsed = 0;
-		mPerformanceTimer = false;
+		this->dt = 0;
+		this->td = 0;
+		this->td2 = 0;
+		this->frequency = 0;
+		this->performanceTimerStart = 0;
+		this->resolution = 0;
+		this->mmTimerStart = 0;
+		this->mmTimerElapsed = 0;
+		this->performanceTimerElapsed = 0;
+		this->performanceTimer = false;
 		
-		if (!QueryPerformanceFrequency((LARGE_INTEGER*)&mFrequency))
+		if (!QueryPerformanceFrequency((LARGE_INTEGER*)&this->frequency))
 		{
 			april::log("performance timer not available, multimedia timer will be used instead!");
-			mPerformanceTimer = false;
-			mMmTimerStart = timeGetTime();
-			mResolution = 1.0f / 1000.0f;
-			mFrequency = 1000;
-			mMmTimerElapsed = (unsigned long)mMmTimerStart;
+			this->performanceTimer = false;
+			this->mmTimerStart = timeGetTime();
+			this->resolution = 1.0f / 1000.0f;
+			this->frequency = 1000;
+			this->mmTimerElapsed = (unsigned long)this->mmTimerStart;
 		}
 		else
 		{
-			QueryPerformanceCounter((LARGE_INTEGER*)&mPerformanceTimerStart);
-			mPerformanceTimer = true;
-			mResolution = (float)(1.0 / mFrequency);
-			mPerformanceTimerElapsed = mPerformanceTimerStart;
+			QueryPerformanceCounter((LARGE_INTEGER*)&this->performanceTimerStart);
+			this->performanceTimer = true;
+			this->resolution = (float)(1.0 / this->frequency);
+			this->performanceTimerElapsed = this->performanceTimerStart;
 		}
 	}
 	
@@ -54,14 +54,14 @@ namespace april
 	float Timer::getTime()
 	{
 		__int64 time;
-		if (mPerformanceTimer)
+		if (this->performanceTimer)
 		{
 			QueryPerformanceCounter((LARGE_INTEGER *) &time);
-			return ((float)(time - mPerformanceTimerStart) * mResolution * 1000.0f);
+			return ((float)(time - this->performanceTimerStart) * this->resolution * 1000.0f);
 		}
 		else
 		{
-			return ((float)(timeGetTime() - mMmTimerStart) * mResolution * 1000.0f);
+			return ((float)(timeGetTime() - this->mmTimerStart) * this->resolution * 1000.0f);
 		}
 	}
 	
@@ -71,14 +71,14 @@ namespace april
 		{
 			this->update();
 		}
-		return mDt;
+		return this->dt;
 	}
 	
 	void Timer::update()
 	{
-		mTd2 = getTime();
-		mDt = (mTd2 - mTd) * 0.1f;
-		mTd = mTd2;
+		this->td2 = this->getTime();
+		this->dt = (this->td2 - this->td) * 0.1f;
+		this->td = this->td2;
 	}
 	
 }

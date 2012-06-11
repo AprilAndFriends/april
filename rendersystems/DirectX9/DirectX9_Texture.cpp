@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.84
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -18,174 +18,284 @@
 #include "DirectX9_Texture.h"
 #include "ImageSource.h"
 
+#define APRIL_D3D_DEVICE (((DirectX9_RenderSystem*)april::rendersys)->d3dDevice)
+#define _CREATE_RECT(name, x, y, w, h) \
+	RECT name; \
+	name.left = x; \
+	name.top = y; \
+	name.right = x + w - 1; \
+	name.bottom = y + h - 1;
+
 namespace april
 {
-	extern IDirect3DDevice9* d3dDevice;
+	// TODO - refactor
 	extern harray<DirectX9_Texture*> gRenderTargets;
 
 	DirectX9_Texture::DirectX9_Texture(chstr filename, bool dynamic) : Texture()
 	{
-		mFilename = filename;
-		mDynamic = dynamic;
-		mTexture = NULL;
-		mSurface = NULL;
-		mRenderTarget = false;
-		mWidth = 0;
-		mHeight = 0;
-		mBpp = 4;
-		if (!mDynamic)
+		this->filename = filename;
+		this->dynamic = dynamic;
+		this->width = 0;
+		this->height = 0;
+		this->bpp = 4;
+		this->renderTarget = false;
+		this->d3dTexture = NULL;
+		this->d3dSurface = NULL;
+		if (!this->dynamic)
 		{
-			load();
+			this->load();
+		}
+		else
+		{
+			april::log("creating dynamic DX9 texture");
 		}
 	}
 
-	DirectX9_Texture::DirectX9_Texture(unsigned char* rgba, int w, int h) : Texture()
+	DirectX9_Texture::DirectX9_Texture(int w, int h, unsigned char* rgba) : Texture()
 	{
-		mWidth = w;
-		mHeight = h;
-		mBpp = 4;
-		mDynamic = false;
-		mFilename = "";
-		mUnusedTimer = 0;
-		mSurface = NULL;
-		mRenderTarget = false;
-
+		this->filename = "";
+		this->dynamic = false;
+		this->width = w;
+		this->height = h;
+		this->bpp = 4;
+		this->renderTarget = false;
+		this->d3dSurface = NULL;
 		april::log("creating user-defined DX9 texture");
-		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &mTexture, NULL);
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
-			april::log("failed to create user-defined DX9 texture!");
+			april::log("failed to create DX9 texture!");
 			return;
 		}
-		// write texels
-		D3DLOCKED_RECT rect;
-		mTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
-		int x;
-		unsigned char* p = (unsigned char*)rect.pBits;
-		for_iter (y, 0, h)
-		{
-			for (x = 0; x < w; x++, p += 4, rgba += 4)
-			{
-				p[0] = rgba[2];
-				p[1] = rgba[1];
-				p[2] = rgba[0];
-				p[3] = rgba[3];
-			}
-		}
-		mTexture->UnlockRect(0);
+		this->blit(0, 0, rgba, this->width, this->height, this->bpp, 0, 0, this->width, this->height);
 	}
 	
-	DirectX9_Texture::DirectX9_Texture(int w, int h, TextureFormat fmt, TextureType type) : Texture()
+	DirectX9_Texture::DirectX9_Texture(int w, int h, Texture::Format format, Texture::Type type, Color color) : Texture()
 	{
-		mWidth = w;
-		mHeight = h;
-		mDynamic = false;
-		mUnusedTimer = 0;
-		mSurface = NULL;
-		mRenderTarget = false;
-		mFilename = "";			
-		april::log("creating empty DX9 texture [ " + hstr(w) + "x" + hstr(h) + " ]");
-		D3DFORMAT d3dfmt = D3DFMT_X8R8G8B8;
-		mBpp = 3;
-		switch (fmt)
+		this->filename = "";
+		this->dynamic = false;
+		this->width = w;
+		this->height = h;
+		this->renderTarget = false;
+		this->d3dSurface = NULL;
+		april::log("creating clean DX9 texture");
+		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
+		this->bpp = 3;
+		switch (format)
 		{
-		case AT_ARGB:
-			d3dfmt = D3DFMT_A8R8G8B8;
-			mBpp = 4;
+		case FORMAT_ARGB:
+			d3dformat = D3DFMT_A8R8G8B8;
+			this->bpp = 4;
 			break;
-		case AT_RGB:
-			d3dfmt = D3DFMT_X8R8G8B8;
-			mBpp = 3;
+		case FORMAT_RGB:
+			d3dformat = D3DFMT_X8R8G8B8;
+			this->bpp = 3;
 			break;
-		case AT_ALPHA:
-			d3dfmt = D3DFMT_A8;
-			mBpp = 1;
+		case FORMAT_ALPHA:
+			d3dformat = D3DFMT_A8;
+			this->bpp = 1;
 			break;
 		default:
-			d3dfmt = D3DFMT_X8R8G8B8;
-			mBpp = 3;
+			d3dformat = D3DFMT_X8R8G8B8;
+			this->bpp = 3;
 			break;
 		}
 		D3DPOOL d3dpool = D3DPOOL_MANAGED;
 		DWORD d3dusage = 0;
-		if (type == AT_RENDER_TARGET)
+		if (type == TYPE_RENDER_TARGET)
 		{
 			d3dusage = D3DUSAGE_RENDERTARGET;
 			d3dpool = D3DPOOL_DEFAULT;
-			mRenderTarget = true;
+			this->renderTarget = true;
 			gRenderTargets += this;
 		}
-		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, d3dusage, d3dfmt, d3dpool, &mTexture, NULL);
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, d3dformat, d3dpool, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
-			april::log("failed to create user-defined DX9 texture!");
+			april::log("failed to create DX9 texture!");
 			return;
 		}
-		this->clear();
+		if (color != APRIL_COLOR_CLEAR)
+		{
+			this->fillRect(0, 0, this->width, this->height, color);
+		}
 	}
-
+	
 	void DirectX9_Texture::restore()
 	{
-		if (!mRenderTarget)
+		if (!this->renderTarget)
 		{
 			return;
 		}
-		unload();
-		D3DFORMAT d3dfmt = D3DFMT_X8R8G8B8;
-		if (mBpp == 4)
+		this->unload();
+		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
+		if (this->bpp == 4)
 		{
-			d3dfmt = D3DFMT_A8R8G8B8;
+			d3dformat = D3DFMT_A8R8G8B8;
 		}
 		D3DPOOL d3dpool = D3DPOOL_DEFAULT;
 		DWORD d3dusage = D3DUSAGE_RENDERTARGET;
-		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, d3dusage, d3dfmt, d3dpool, &mTexture, NULL);
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, d3dformat, d3dpool, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
 			april::log("failed to restore user-defined DX9 texture!");
 			return;
 		}
 	}
-	
+
 	DirectX9_Texture::~DirectX9_Texture()
 	{
-		unload();
-		if (mRenderTarget)
+		this->unload();
+		if (this->renderTarget)
 		{
 			gRenderTargets -= this;
 		}
 	}
 
+	bool DirectX9_Texture::load()
+	{
+		this->unusedTime = 0.0f;
+		if (this->isLoaded())
+		{
+			return true;
+		}
+		april::log("loading DX9 texture '" + this->_getInternalName() + "'");
+		ImageSource* image = NULL;
+		if (this->filename != "")
+		{
+			image = april::loadImage(this->filename);
+			if (image == NULL)
+			{
+				april::log("failed to load texture '" + this->_getInternalName() + "'!");
+				return false;
+			}
+			this->width = image->w;
+			this->height = image->h;
+			this->bpp = image->bpp;
+		}
+		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
+		switch (image->format)
+		{
+		case AF_RGBA:
+		case AF_BGRA:
+			d3dformat = D3DFMT_A8R8G8B8;
+			break;
+		case AF_RGB:
+		case AF_BGR:
+			d3dformat = D3DFMT_X8R8G8B8;
+			break;
+		case AF_GRAYSCALE:
+			d3dformat = D3DFMT_A8;
+			break;
+		case AF_PALETTE:
+			d3dformat = D3DFMT_A8R8G8B8;
+			break;
+		default:
+			d3dformat = D3DFMT_X8R8G8B8;
+			break;
+		}
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, d3dformat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
+		if (hr != D3D_OK)
+		{
+			april::log("failed to create DX9 texture!");
+			delete image;
+			return false;
+		}
+		// write texels
+		if (image != NULL)
+		{
+			D3DLOCKED_RECT rect;
+			this->d3dTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
+			// TODO - format handling like this has to be fixed/refactored
+			if (image->format == AF_RGBA)
+			{
+				image->copyPixels(rect.pBits, AF_BGRA);
+			}
+			else if (image->format == AF_RGB)
+			{
+				image->copyPixels(rect.pBits, AF_BGR);
+			}
+			else if (image->format  == AF_GRAYSCALE)
+			{
+				image->copyPixels(rect.pBits, AF_GRAYSCALE);
+			}
+			else
+			{
+				ImageSource* tempImg = april::createEmptyImage(image->w, image->h);
+				tempImg->copyImage(image);
+				tempImg->copyPixels(rect.pBits, AF_BGRA);
+				delete tempImg;
+			}
+			this->d3dTexture->UnlockRect(0);
+			delete image;
+		}
+		foreach (Texture*, it, this->dynamicLinks)
+		{
+			(*it)->load();
+		}
+		return true;
+	}
+
+	void DirectX9_Texture::unload()
+	{
+		if (this->d3dTexture != NULL)
+		{
+			april::log("unloading DX9 texture '" + this->_getInternalName() + "'");
+			this->d3dTexture->Release();
+			this->d3dTexture = NULL;
+			if (this->d3dSurface != NULL)
+			{
+				this->d3dSurface->Release();
+				this->d3dSurface = NULL;
+			}
+		}
+	}
+
+	bool DirectX9_Texture::isLoaded()
+	{
+		return (this->d3dTexture != NULL);
+	}
+
+	void DirectX9_Texture::clear()
+	{
+		D3DLOCKED_RECT lockRect;
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
+		if (result == LR_FAILED)
+		{
+			return;
+		}
+		memset(lockRect.pBits, 0, this->getByteSize() * sizeof(unsigned char));
+		this->_unlock(buffer, result, true);
+	}
+
 	Color DirectX9_Texture::getPixel(int x, int y)
 	{
-		Color color;
+		Color color = APRIL_COLOR_CLEAR;
 		D3DLOCKED_RECT lockRect;
-		RECT rect;
-		rect.left = x;
-		rect.top = y;
-		rect.right = x;
-		rect.bottom = y;
+		_CREATE_RECT(rect, x, y, 1, 1);
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = _tryLock(&buffer, &lockRect, &rect);
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
 		if (result == LR_FAILED)
 		{
 			return color;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
-		if (mBpp == 4)
+		if (this->bpp == 4)
 		{
 			color.r = p[2];
 			color.g = p[1];
 			color.b = p[0];
 			color.a = p[3];
 		}
-		else if (mBpp == 3)
+		else if (this->bpp == 3)
 		{
 			color.r = p[2];
 			color.g = p[1];
 			color.b = p[0];
 			color.a = 255;
 		}
-		else if (mBpp == 1)
+		else if (this->bpp == 1)
 		{
 			color.r = 255;
 			color.g = 255;
@@ -196,41 +306,37 @@ namespace april
 		{
 			april::log("Unsupported format for getPixel");
 		}
-		_unlock(buffer, result, false);
+		this->_unlock(buffer, result, false);
 		return color;
 	}
 
 	void DirectX9_Texture::setPixel(int x, int y, Color color)
 	{
-		x = hclamp(x, 0, this->mWidth - 1);
-		y = hclamp(y, 0, this->mHeight - 1);
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
 		D3DLOCKED_RECT lockRect;
-		RECT rect;
-		rect.left = x;
-		rect.right = x;
-		rect.top = y;
-		rect.bottom = y;
+		_CREATE_RECT(rect, x, y, 1, 1);
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = _tryLock(&buffer, &lockRect, &rect);
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
 		if (result == LR_FAILED)
 		{
 			return;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
-		if (mBpp == 4)
+		if (this->bpp == 4)
 		{
 			p[2] = color.r;
 			p[1] = color.g;
 			p[0] = color.b;
 			p[3] = color.a;
 		}
-		else if (mBpp == 3)
+		else if (this->bpp == 3)
 		{
 			p[2] = color.r;
 			p[1] = color.g;
 			p[0] = color.b;
 		}
-		else if (mBpp == 1)
+		else if (this->bpp == 1)
 		{
 			p[0] = (color.r + color.g + color.b) / 3;
 		}
@@ -238,28 +344,24 @@ namespace april
 		{
 			april::log("Unsupported format for setPixel");
 		}
-		_unlock(buffer, result, true);
+		this->_unlock(buffer, result, true);
 	}
 
 	void DirectX9_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		x = hclamp(x, 0, this->mWidth - 1);
-		y = hclamp(y, 0, this->mHeight - 1);
-		w = hclamp(w, 1, this->mWidth - x);
-		h = hclamp(h, 1, this->mHeight - y);
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		w = hclamp(w, 1, this->width - x);
+		h = hclamp(h, 1, this->height - y);
 		if (w == 1 && h == 1)
 		{
 			this->setPixel(x, y, color);
 			return;
 		}
 		D3DLOCKED_RECT lockRect;
-		RECT rect;
-		rect.left = x;
-		rect.right = x + w - 1;
-		rect.top = y;
-		rect.bottom = y + h - 1;
+		_CREATE_RECT(rect, x, y, w, h);
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = _tryLock(&buffer, &lockRect, &rect);
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
 		if (result == LR_FAILED)
 		{
 			return;
@@ -268,13 +370,13 @@ namespace april
 		int i;
 		int j;
 		int offset;
-		if (mBpp == 4)
+		if (this->bpp == 4)
 		{
 			for_iterx (j, 0, h)
 			{
 				for_iterx (i, 0, w)
 				{
-					offset = (j * mWidth + i) * mBpp;
+					offset = (j * this->width + i) * this->bpp;
 					p[offset + 2] = color.r;
 					p[offset + 1] = color.g;
 					p[offset + 0] = color.b;
@@ -282,26 +384,26 @@ namespace april
 				}
 			}
 		}
-		else if (mBpp == 3)
+		else if (this->bpp == 3)
 		{
 			for_iterx (j, 0, h)
 			{
 				for_iterx (i, 0, w)
 				{
-					offset = (i + j * mWidth) * mBpp;
+					offset = (i + j * this->width) * this->bpp;
 					p[offset + 2] = color.r;
 					p[offset + 1] = color.g;
 					p[offset + 0] = color.b;
 				}
 			}
 		}
-		else if (mBpp == 1)
+		else if (this->bpp == 1)
 		{
 			for_iterx (j, 0, h)
 			{
 				for_iterx (i, 0, w)
 				{
-					offset = (i + j * mWidth) * mBpp;
+					offset = (i + j * this->width) * this->bpp;
 					p[offset] = (color.r + color.g + color.b) / 3;
 				}
 			}
@@ -310,542 +412,96 @@ namespace april
 		{
 			april::log("Unsupported format for setPixel");
 		}
-		_unlock(buffer, result, true);
+		this->_unlock(buffer, result, true);
 	}
 
 	void DirectX9_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		DirectX9_Texture* source = (DirectX9_Texture*)texture;
-		x = hclamp(x, 0, mWidth - 1);
-		y = hclamp(y, 0, mHeight - 1);
-		sx = hclamp(sx, 0, source->mWidth - 1);
-		sy = hclamp(sy, 0, source->mHeight - 1);
-		sw = hmin(sw, hmin(mWidth - x, source->mWidth - sx));
-		sh = hmin(sh, hmin(mHeight - y, source->mHeight - sy));
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		sx = hclamp(sx, 0, source->width - 1);
+		sy = hclamp(sy, 0, source->height - 1);
+		sw = hmin(sw, hmin(this->width - x, source->width - sx));
+		sh = hmin(sh, hmin(this->height - y, source->height - sy));
 		if (sw == 1 && sh == 1)
 		{
 			this->setPixel(x, y, source->getPixel(sx, sy));
 			return;
 		}
 		D3DLOCKED_RECT lockRect;
-		RECT rect;
-		rect.left = sx;
-		rect.right = sx + sw - 1;
-		rect.top = sy;
-		rect.bottom = sy + sh - 1;
+		_CREATE_RECT(rect, sx, sy, sw, sh);
 		IDirect3DSurface9* buffer = NULL;
 		LOCK_RESULT result = source->_tryLock(&buffer, &lockRect, &rect);
 		if (result == LR_FAILED)
 		{
 			return;
 		}
-		blit(x, y, (unsigned char*)lockRect.pBits, source->mWidth, source->mHeight, source->mBpp, sx, sy, sw, sh, alpha);
-		_unlock(buffer, result, false);
+		this->blit(x, y, (unsigned char*)lockRect.pBits, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
+		source->_unlock(buffer, result, false);
 	}
 
 	void DirectX9_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		x = hclamp(x, 0, mWidth - 1);
-		y = hclamp(y, 0, mHeight - 1);
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
 		sx = hclamp(sx, 0, dataWidth - 1);
 		sy = hclamp(sy, 0, dataHeight - 1);
-		sw = hmin(sw, hmin(mWidth - x, dataWidth - sx));
-		sh = hmin(sh, hmin(mHeight - y, dataHeight - sy));
+		sw = hmin(sw, hmin(this->width - x, dataWidth - sx));
+		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
 		D3DLOCKED_RECT lockRect;
-		RECT rect;
-		rect.left = x;
-		rect.right = x + sw - 1;
-		rect.top = y;
-		rect.bottom = y + sh - 1;
+		_CREATE_RECT(rect, x, y, sw, sh);
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = _tryLock(&buffer, &lockRect, &rect);
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
 		if (result == LR_FAILED)
 		{
 			return;
 		}
-		unsigned char* thisData = (unsigned char*)lockRect.pBits;
-		unsigned char* srcData = data;
-		unsigned char* c;
-		unsigned char* sc;
-		unsigned char a0;
-		unsigned char a1;
-		int i;
-		int j;
-		// the following iteration blocks are very similar, but for performance reasons they
-		// have been duplicated instead of putting everything into one block with if branches
-		if (mBpp == 4 && dataBpp == 4)
-		{
-			for_iterx (j, 0, sh)
-			{
-				for_iterx (i, 0, sw)
-				{
-					c = &thisData[(i + j * mWidth) * 4];
-					sc = &srcData[(i + j * dataWidth) * 4];
-					if (c[3] > 0)
-					{
-						a0 = sc[3] * alpha / 255;
-						a1 = 255 - a0;
-						if (a0 > 0)
-						{
-							c[2] = (sc[2] * a0 + c[2] * a1) / 255;
-							c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-							c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-							c[3] = a0 + c[3] * a1 / 255;
-						}
-					}
-					else
-					{
-						c[2] = sc[2];
-						c[1] = sc[1];
-						c[0] = sc[0];
-						c[3] = sc[3] * alpha / 255;
-					}
-				}
-			}
-		}
-		else if (mBpp == 3 && dataBpp == 4)
-		{
-			for_iterx (j, 0, sh)
-			{
-				for_iterx (i, 0, sw)
-				{
-					c = &thisData[(i + j * mWidth) * 4];
-					sc = &srcData[(i + j * dataWidth) * 4];
-					a0 = sc[3] * alpha / 255;
-					a1 = 255 - a0;
-					if (a0 > 0)
-					{
-						c[2] = (sc[2] * a0 + c[2] * a1) / 255;
-						c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-					}
-				}
-			}
-		}
-		else if (mBpp == 4 && dataBpp == 3)
-		{
-			a0 = alpha;
-			a1 = 255 - a0;
-			if (a0 > 0)
-			{
-				for_iterx (j, 0, sh)
-				{
-					for_iterx (i, 0, sw)
-					{
-						c = &thisData[(i + j * mWidth) * 4];
-						sc = &srcData[(i + j * dataWidth) * 4];
-						c[2] = (sc[2] * a0 + c[2] * a1) / 255;
-						c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-						c[3] = a0 + c[3] * a1 / 255;
-					}
-				}
-			}
-		}
-		else if (mBpp == 1 && dataBpp == 1)
-		{
-			a0 = alpha;
-			a1 = 255 - a0;
-			if (a0 > 0)
-			{
-				for_iterx (j, 0, sh)
-				{
-					for_iterx (i, 0, sw)
-					{
-						c = &thisData[i + j * mWidth];
-						sc = &srcData[i + j * dataWidth];
-						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-					}
-				}
-			}
-		}
-		_unlock(buffer, result, true);
+		this->_blit((unsigned char*)lockRect.pBits, x, y, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
+		this->_unlock(buffer, result, true);
 	}
 
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		DirectX9_Texture* source = (DirectX9_Texture*)texture;
-		x = hclamp(x, 0, this->mWidth - 1);
-		y = hclamp(y, 0, this->mHeight - 1);
-		w = hmin(w, this->mWidth - x);
-		h = hmin(h, this->mHeight - y);
-		sx = hclamp(sx, 0, source->mWidth - 1);
-		sy = hclamp(sy, 0, source->mHeight - 1);
-		sw = hmin(sw, source->mWidth - sx);
-		sh = hmin(sh, source->mHeight - sy);
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		w = hmin(w, this->width - x);
+		h = hmin(h, this->height - y);
+		sx = hclamp(sx, 0, source->width - 1);
+		sy = hclamp(sy, 0, source->height - 1);
+		sw = hmin(sw, source->width - sx);
+		sh = hmin(sh, source->height - sy);
 		D3DLOCKED_RECT lockRect;
-		HRESULT result = source->getTexture()->LockRect(0, &lockRect, NULL, D3DLOCK_DISCARD);
-		if (result == D3D_OK)
+		HRESULT result = source->_getTexture()->LockRect(0, &lockRect, NULL, D3DLOCK_DISCARD);
+		if (result != D3D_OK)
 		{
-			stretchBlit(x, y, w, h, (unsigned char*)lockRect.pBits, source->mWidth, source->mHeight, source->mBpp, sx, sy, sw, sh, alpha);
-			source->getTexture()->UnlockRect(0);
+			return;
 		}
+		this->stretchBlit(x, y, w, h, (unsigned char*)lockRect.pBits, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
+		source->_getTexture()->UnlockRect(0);
 	}
 
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		x = hclamp(x, 0, mWidth - 1);
-		y = hclamp(y, 0, mHeight - 1);
-		w = hmin(w, mWidth - x);
-		h = hmin(h, mHeight - y);
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		w = hmin(w, this->width - x);
+		h = hmin(h, this->height - y);
 		sx = hclamp(sx, 0, dataWidth - 1);
 		sy = hclamp(sy, 0, dataHeight - 1);
 		sw = hmin(sw, dataWidth - sx);
 		sh = hmin(sh, dataHeight - sy);
 		D3DLOCKED_RECT lockRect;
-		RECT rect;
-		rect.left = x;
-		rect.right = x + w - 1;
-		rect.top = y;
-		rect.bottom = y + h - 1;
+		_CREATE_RECT(rect, x, y, w, h);
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = _tryLock(&buffer, &lockRect, &rect);
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
 		if (result == LR_FAILED)
 		{
 			return;
 		}
-		unsigned char* thisData = (unsigned char*)lockRect.pBits;
-		unsigned char* srcData = data;
-		float fw = (float)sw / w;
-		float fh = (float)sh / h;
-		unsigned char* c;
-		unsigned char* sc;
-		int a0;
-		int a1;
-		unsigned char color[4] = {0};
-		unsigned char* ctl;
-		unsigned char* ctr;
-		unsigned char* cbl;
-		unsigned char* cbr;
-		float cx;
-		float cy;
-		float rx0;
-		float ry0;
-		float rx1;
-		float ry1;
-		int x0;
-		int y0;
-		int x1;
-		int y1;
-		int i;
-		int j;
-		// the following iteration blocks are very similar, but for performance reasons they
-		// have been duplicated instead of putting everything into one block with if branches
-		if (mBpp == 4 && dataBpp == 4)
-		{
-			for_iterx (j, 0, h)
-			{
-				for_iterx (i, 0, w)
-				{
-					c = &thisData[(i + j * mWidth) * 4];
-					cx = sx + i * fw;
-					cy = sy + j * fh;
-					x0 = (int)cx;
-					y0 = (int)cy;
-					x1 = hmin((int)cx + 1, dataWidth - 1);
-					y1 = hmin((int)cy + 1, dataHeight - 1);
-					rx0 = cx - x0;
-					ry0 = cy - y0;
-					rx1 = 1.0f - rx0;
-					ry1 = 1.0f - ry0;
-					if (rx0 != 0.0f || ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
-						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
-						sc = color;
-					}
-					else if (rx0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
-						sc = color;
-					}
-					else if (ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
-						sc = color;
-					}
-					else
-					{
-						sc = &srcData[(x0 + y0 * dataWidth) * 4];
-					}
-					if (c[3] > 0)
-					{
-						a0 = sc[3] * (int)alpha / 255;
-						a1 = 255 - a0;
-						if (a0 > 0)
-						{
-							c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
-							c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-							c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
-							c[3] = (unsigned char)(a0 + c[3] * a1 / 255);
-						}
-					}
-					else
-					{
-						c[2] = sc[2];
-						c[1] = sc[1];
-						c[0] = sc[0];
-						c[3] = sc[3] * (int)alpha / 255;
-					}
-				}
-			}
-		}
-		else if (mBpp == 3 && dataBpp == 4)
-		{
-			for_iterx (j, 0, h)
-			{
-				for_iterx (i, 0, w)
-				{
-					c = &thisData[(i + j * mWidth) * 4];
-					cx = sx + i * fw;
-					cy = sy + j * fh;
-					x0 = (int)cx;
-					y0 = (int)cy;
-					x1 = hmin((int)cx + 1, dataWidth - 1);
-					y1 = hmin((int)cy + 1, dataHeight - 1);
-					rx0 = cx - x0;
-					ry0 = cy - y0;
-					rx1 = 1.0f - rx0;
-					ry1 = 1.0f - ry0;
-					if (rx0 != 0.0f || ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
-						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
-						sc = color;
-					}
-					else if (rx0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
-						sc = color;
-					}
-					else if (ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
-						sc = color;
-					}
-					else
-					{
-						sc = &srcData[(x0 + y0 * dataWidth) * 4];
-					}
-					a0 = sc[3] * (int)alpha / 255;
-					a1 = 255 - a0;
-					if (a0 > 0)
-					{
-						c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
-						c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-						c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
-					}
-				}
-			}
-		}
-		else if (mBpp == 4 && dataBpp == 3)
-		{
-			for_iterx (j, 0, h)
-			{
-				for_iterx (i, 0, w)
-				{
-					c = &thisData[(i + j * mWidth) * 4];
-					cx = sx + i * fw;
-					cy = sy + j * fh;
-					x0 = (int)cx;
-					y0 = (int)cy;
-					x1 = hmin((int)cx + 1, dataWidth - 1);
-					y1 = hmin((int)cy + 1, dataHeight - 1);
-					rx0 = cx - x0;
-					ry0 = cy - y0;
-					rx1 = 1.0f - rx0;
-					ry1 = 1.0f - ry0;
-					if (rx0 != 0.0f || ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
-						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						sc = color;
-					}
-					else if (rx0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						sc = color;
-					}
-					else if (ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						sc = color;
-					}
-					else
-					{
-						sc = &srcData[(x0 + y0 * dataWidth) * 4];
-					}
-					c[2] = sc[2];
-					c[1] = sc[1];
-					c[0] = sc[0];
-					c[3] = 255;
-				}
-			}
-		}
-		else if (mBpp == 1 && dataBpp == 1)
-		{
-			for_iterx (j, 0, h)
-			{
-				for_iterx (i, 0, w)
-				{
-					c = &thisData[(i + j * mWidth) * 4];
-					cx = sx + i * fw;
-					cy = sy + j * fh;
-					x0 = (int)cx;
-					y0 = (int)cy;
-					x1 = hmin((int)cx + 1, dataWidth - 1);
-					y1 = hmin((int)cy + 1, dataHeight - 1);
-					rx0 = cx - x0;
-					ry0 = cy - y0;
-					rx1 = 1.0f - rx0;
-					ry1 = 1.0f - ry0;
-					if (rx0 != 0.0f || ry0 != 0.0f)
-					{
-						ctl = &srcData[x0 + y0 * dataWidth];
-						ctr = &srcData[x1 + y0 * dataWidth];
-						cbl = &srcData[x0 + y1 * dataWidth];
-						cbr = &srcData[x1 + y1 * dataWidth];
-						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						sc = color;
-					}
-					else if (rx0 != 0.0f)
-					{
-						ctl = &srcData[x0 + y0 * dataWidth];
-						ctr = &srcData[x1 + y0 * dataWidth];
-						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						sc = color;
-					}
-					else if (ry0 != 0.0f)
-					{
-						ctl = &srcData[x0 + y0 * dataWidth];
-						cbl = &srcData[x0 + y1 * dataWidth];
-						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						sc = color;
-					}
-					else
-					{
-						sc = &srcData[x0 + y0 * dataWidth];
-					}
-					c[0] = sc[0];
-				}
-			}
-		}
-		_unlock(buffer, result, true);
-	}
-
-	void DirectX9_Texture::clear()
-	{
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = _tryLock(&buffer, &lockRect, NULL);
-		if (result == LR_FAILED)
-		{
-			return;
-		}
-		memset(lockRect.pBits, 0, getWidth() * getHeight() * (mBpp == 1 ? 1 : 4) * sizeof(unsigned char));
-		_unlock(buffer, result, true);
-	}
-
-	void rgb2hsl(unsigned char r, unsigned char g, unsigned char b, float* h, float* s, float* l)
-	{
-		int min = hmin(hmin(r, g), b);
-		int max = hmax(hmax(r, g), b);
-		int delta = max - min;
-		*l = (max + min) / 510.0f;
-		*s = 0.0f;
-		if (*l > 0.0f && *l < 1.0f)
-		{
-			*s = (delta / 255.0f) / (*l < 0.5f ? (2 * *l) : (2 - 2 * *l));
-		}
-		*h = 0.0f;
-		if (delta > 0)
-		{
-			if (max == r)
-			{
-				*h += (g - b) / (float)delta;
-			}
-			if (max == g)
-			{
-				*h += 2 + (b - r) / (float)delta;
-			}
-			if (max == b)
-			{
-				*h += 4 + (r - g) / (float)delta;
-			}
-			*h /= 6;
-		}
-    }
-
-	float _color_hue2rgb(float m1, float m2, float h)
-	{ 
-		h = (h < 0) ? h + 1 : ((h > 1) ? h - 1 : h);
-		if (h * 6 < 1)
-		{
-			return m1 + (m2 - m1) * h * 6;
-		}
-		if (h * 2 < 1)
-		{
-			return m2;
-		}
-		if (h * 3 < 2)
-		{
-			return m1 + (m2 - m1) * (0.6666667f - h) * 6;
-		}
-		return m1;
-	}
-
-	void hsl2rgb(float h, float s, float l, unsigned char* r, unsigned char* g, unsigned char* b)
-	{
-		float m2 = (l <= 0.5f) ? l * (s + 1) : l + s - l * s;
-		float m1 = l * 2 - m2;
-		*r = (unsigned char)hroundf(255.0f * _color_hue2rgb(m1, m2, h + 0.3333333f));
-		*g = (unsigned char)hroundf(255.0f * _color_hue2rgb(m1, m2, h));
-		*b = (unsigned char)hroundf(255.0f * _color_hue2rgb(m1, m2, h - 0.3333333f));
+		this->_stretchBlit((unsigned char*)lockRect.pBits, x, y, w, h, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
+		this->_unlock(buffer, result, true);
 	}
 
 	void DirectX9_Texture::rotateHue(float degrees)
@@ -856,224 +512,96 @@ namespace april
 		}
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = _tryLock(&buffer, &lockRect, NULL);
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
 		if (result == LR_FAILED)
 		{
 			return;
 		}
-		int size = getWidth() * getHeight() * 4;
+		int size = this->getByteSize();
 		float range = hmodf(degrees, 360.0f) / 360.0f;
 		float h;
 		float s;
 		float l;
 		unsigned char* data = (unsigned char*)lockRect.pBits;
-		for_iter_step(i, 0, size, mBpp)
+		for_iter_step (i, 0, size, this->bpp)
 		{
-			rgb2hsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
-			h += range;
-			if (h > 1.0f)
-			{
-				h -= 1.0f;
-			}
-			hsl2rgb(h, s, l, &data[i + 2], &data[i + 1], &data[i]);
+			april::rgbToHsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
+			april::hslToRgb(hmodf(h + range, 1.0f), s, l, &data[i + 2], &data[i + 1], &data[i]);
 		}
-		_unlock(buffer, result, true);
+		this->_unlock(buffer, result, true);
 	}
 
 	void DirectX9_Texture::saturate(float factor)
 	{
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = _tryLock(&buffer, &lockRect, NULL);
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
 		if (result == LR_FAILED)
 		{
 			return;
 		}
-		int size = getWidth() * getHeight() * 4;
+		int size = this->getByteSize();
 		float h;
 		float s;
 		float l;
 		unsigned char* data = (unsigned char*)lockRect.pBits;
-		for_iter_step(i, 0, size, mBpp)
+		for_iter_step (i, 0, size, this->bpp)
 		{
-			rgb2hsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
-			s *= factor;
-			hsl2rgb(h, s, l, &data[i + 2], &data[i + 1], &data[i]);
+			april::rgbToHsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
+			april::hslToRgb(h, hmin(s * factor, 1.0f), l, &data[i + 2], &data[i + 1], &data[i]);
 		}
-		_unlock(buffer, result, true);
+		this->_unlock(buffer, result, true);
 	}
 
 	bool DirectX9_Texture::copyPixelData(unsigned char** output)
 	{
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = _tryLock(&buffer, &lockRect, NULL);
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
 		if (result == LR_FAILED)
 		{
 			return false;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		int i;
+		int j;
 		int offset;
-		*output = new unsigned char[mWidth * mHeight * 4];
-		if (mBpp == 4 || mBpp == 3)
+		*output = new unsigned char[this->width * this->height * 4];
+		if (this->bpp == 4 || this->bpp == 3)
 		{
-			for_iter (j, 0, mHeight)
+			for_iterx (j, 0, this->height)
 			{
-				for_iterx (i, 0, mWidth)
+				for_iterx (i, 0, this->width)
 				{
-					offset = (j * mWidth + i) * 4;
+					offset = (j * this->width + i) * 4;
 					(*output)[offset + 0] = p[offset + 2];
 					(*output)[offset + 1] = p[offset + 1];
 					(*output)[offset + 2] = p[offset + 0];
-					if (mBpp == 4)
+					if (this->bpp == 4)
 					{
 						(*output)[offset + 3] = p[offset + 3];
 					}
 				}
 			}
 		}
-		else if (mBpp == 1)
+		else if (this->bpp == 1)
 		{
-			memcpy(*output, p, mWidth * mHeight * mBpp);
+			memcpy(*output, p, this->getByteSize() * sizeof(unsigned char));
 		}
-		_unlock(buffer, result, false);
+		this->_unlock(buffer, result, false);
 		return true;
-	}
-
-	IDirect3DSurface9* DirectX9_Texture::getSurface()
-	{
-		if (mSurface == NULL)
-		{
-			mTexture->GetSurfaceLevel(0, &mSurface);
-		}
-		return mSurface;
-	}
-
-	bool DirectX9_Texture::load()
-	{
-		mUnusedTimer = 0;
-		if (mTexture != NULL)
-		{
-			return true;
-		}
-		april::log("loading DX9 texture '" + _getInternalName() + "'");
-		ImageSource* img = loadImage(mFilename);
-		if (img == NULL)
-		{
-			april::log("Failed to load texture '" + _getInternalName() + "'!");
-			return false;
-		}
-		mWidth = img->w;
-		mHeight = img->h;
-		mBpp = img->bpp;
-		D3DFORMAT d3dfmt = D3DFMT_X8R8G8B8;
-		if (mFilename.contains("051-Carpet01"))
-		{
-			int x = 0;
-		}
-		switch (img->format)
-		{
-		case AF_RGBA:
-		case AF_BGRA:
-			d3dfmt = D3DFMT_A8R8G8B8;
-			break;
-		case AF_RGB:
-		case AF_BGR:
-			d3dfmt = D3DFMT_X8R8G8B8;
-			break;
-		case AF_GRAYSCALE:
-			d3dfmt = D3DFMT_A8;
-			break;
-		case AF_PALETTE:
-			d3dfmt = D3DFMT_A8R8G8B8;
-			break;
-		default:
-			d3dfmt = D3DFMT_X8R8G8B8;
-			break;
-		}
-		HRESULT hr = d3dDevice->CreateTexture(mWidth, mHeight, 1, 0, d3dfmt, D3DPOOL_MANAGED, &mTexture, NULL);
-		if (hr != D3D_OK)
-		{
-			april::log("Failed to load DX9 texture!");
-			delete img;
-			return false;
-		}
-		// write texels
-		D3DLOCKED_RECT rect;
-		mTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
-		if (img->format == AF_RGBA)
-		{
-			img->copyPixels(rect.pBits, AF_BGRA);
-		}
-		else if (img->format == AF_RGB)
-		{
-			img->copyPixels(rect.pBits, AF_BGR);
-		}
-		else if (img->format == AF_GRAYSCALE)
-		{
-			img->copyPixels(rect.pBits, AF_GRAYSCALE);
-		}
-		else
-		{
-			ImageSource* tempImg = april::createEmptyImage(img->w, img->h);
-			tempImg->copyImage(img);
-			tempImg->copyPixels(rect.pBits, AF_BGRA);
-			delete tempImg;
-		}
-		mTexture->UnlockRect(0);
-		delete img;
-		notifyLoadingListener(this);
-		foreach (Texture*, it, mDynamicLinks)
-		{
-			if (!(*it)->isLoaded())
-			{
-				(*it)->load();
-			}
-		}
-		return true;
-	}
-
-	bool DirectX9_Texture::isLoaded()
-	{
-		return (mTexture != NULL);
-	}
-
-	void DirectX9_Texture::unload()
-	{
-		if (mTexture != NULL)
-		{
-			april::log("unloading DX9 texture '" + _getInternalName() + "'");
-			mTexture->Release();
-			mTexture = NULL;
-			if (mSurface != NULL)
-			{
-				mSurface->Release();
-				mSurface = NULL;
-			}
-		}
-	}
-
-	int DirectX9_Texture::getSizeInBytes()
-	{
-		return (mWidth * mHeight * mBpp);
-	}
-
-	bool DirectX9_Texture::isValid()
-	{
-		return (mTexture != NULL);
 	}
 
 	void DirectX9_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
 	{
-		if (mWidth != texture->getWidth() || mHeight != texture->getHeight() || mBpp != 4)
+		if (this->width != texture->getWidth() || this->height != texture->getHeight() || this->bpp != 4)
 		{
 			return;
 		}
 		DirectX9_Texture* source = (DirectX9_Texture*)texture;
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = _tryLock(&buffer, &lockRect, NULL);
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
 		if (result == LR_FAILED)
 		{
 			return;
@@ -1083,7 +611,7 @@ namespace april
 		LOCK_RESULT srcResult = source->_tryLock(&srcBuffer, &srcLockRect, NULL);
 		if (srcResult == LR_FAILED)
 		{
-			_unlock(buffer, result, false);
+			this->_unlock(buffer, result, false);
 			return;
 		}
 		unsigned char* thisData = (unsigned char*)lockRect.pBits;
@@ -1091,15 +619,16 @@ namespace april
 		unsigned char* c;
 		unsigned char* sc;
 		int i;
+		int j;
 		int alpha;
 		int min = (int)median - ambiguity / 2;
 		int max = (int)median + ambiguity / 2;
-		for_iter (j, 0, mHeight)
+		for_iterx (j, 0, this->height)
 		{
-			for_iterx (i, 0, mWidth)
+			for_iterx (i, 0, this->width)
 			{
-				c = &thisData[(i + j * mWidth) * 4];
-				sc = &srcData[(i + j * mWidth) * 4];
+				c = &thisData[(i + j * this->width) * 4];
+				sc = &srcData[(i + j * this->width) * 4];
 				alpha = (sc[0] + sc[1] + sc[2]) / 3;
 				if (alpha < min)
 				{
@@ -1115,26 +644,35 @@ namespace april
 				}
 			}
 		}
+		this->_unlock(buffer, result, true);
 		source->_unlock(srcBuffer, srcResult, false);
-		_unlock(buffer, result, true);
+	}
+
+	IDirect3DSurface9* DirectX9_Texture::_getSurface()
+	{
+		if (this->d3dSurface == NULL)
+		{
+			this->d3dTexture->GetSurfaceLevel(0, &this->d3dSurface);
+		}
+		return this->d3dSurface;
 	}
 
 	DirectX9_Texture::LOCK_RESULT DirectX9_Texture::_tryLock(IDirect3DSurface9** buffer, D3DLOCKED_RECT* lockRect, RECT* rect)
 	{
-		HRESULT result = mTexture->LockRect(0, lockRect, rect, D3DLOCK_DISCARD);
+		HRESULT result = this->d3dTexture->LockRect(0, lockRect, rect, D3DLOCK_DISCARD);
 		if (result == D3D_OK)
 		{
 			return LR_LOCKED;
 		}
 		// could be a render target
-		result = d3dDevice->CreateOffscreenPlainSurface(mWidth, mHeight,
-			(mBpp == 4 ? D3DFMT_A8R8G8B8 : D3DFMT_X8R8G8B8), D3DPOOL_SYSTEMMEM, buffer, NULL);
+		result = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(this->width, this->height,
+			(this->bpp == 4 ? D3DFMT_A8R8G8B8 : D3DFMT_X8R8G8B8), D3DPOOL_SYSTEMMEM, buffer, NULL);
 		if (result != D3D_OK)
 		{
 			april::log("failed to get pixel data, CreateOffscreenPlainSurface() call failed");
 			return LR_FAILED;
 		}
-		result = d3dDevice->GetRenderTargetData(getSurface(), *buffer);
+		result = APRIL_D3D_DEVICE->GetRenderTargetData(this->_getSurface(), *buffer);
 		if (result != D3D_OK)
 		{
 			april::log("failed to get pixel data, GetRenderTargetData() call failed");
@@ -1154,15 +692,17 @@ namespace april
 		switch (lock)
 		{
 		case LR_LOCKED:
-			mTexture->UnlockRect(0);
+			this->d3dTexture->UnlockRect(0);
 			break;
 		case LR_RENDERTARGET:
 			buffer->UnlockRect();
 			if (update)
 			{
-				d3dDevice->UpdateSurface(buffer, NULL, getSurface(), NULL);
+				APRIL_D3D_DEVICE->UpdateSurface(buffer, NULL, this->_getSurface(), NULL);
 			}
 			buffer->Release();
+			break;
+		default:
 			break;
 		}
 	}

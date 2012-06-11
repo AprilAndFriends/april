@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.85
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -15,18 +15,23 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
-#include "AndroidJNIWindow.h"
+#include "AndroidJNI_Window.h"
 #include "april.h"
 #include "Keys.h"
 #include "main.h"
+#include "Platform.h"
 #include "RenderSystem.h"
-#include "TextureManager.h"
 #include "Window.h"
 
-#define PROTECTED_RENDERSYS_GET_WINDOW(methodCall) \
-	if (april::rendersys != NULL && april::window != NULL) \
+#define PROTECTED_WINDOW_CALL(methodCall) \
+	if (april::window != NULL) \
 	{ \
 		april::window->methodCall; \
+	}
+#define PROTECTED_RENDERSYS_CALL(methodCall) \
+	if (april::rendersys != NULL) \
+	{ \
+		april::rendersys->methodCall; \
 	}
 #define _JSTR_TO_HSTR(string) _jstringToHstr(env, string)
 
@@ -55,7 +60,7 @@ namespace april
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
 			// set the resources CWD
-			hresource::setCwd(_JSTR_TO_HSTR(jDataPath));
+			hresource::setCwd(_JSTR_TO_HSTR(jDataPath) + "/Android/data/" + packageName);
 			hresource::setArchive(""); // not used anyway when hasZip() returns false
 		}
 		else if (archivePath != "")
@@ -92,7 +97,7 @@ namespace april
 
 	bool JNICALL _JNI_render(JNIEnv* env, jclass classe)
 	{
-		if (april::rendersys != NULL && april::window != NULL)
+		if (april::window != NULL)
 		{
 			return april::window->updateOneFrame();
 		}
@@ -103,25 +108,25 @@ namespace april
 	{
 		if (april::window != NULL)
 		{
-			((april::AndroidJNIWindow*)april::window)->handleTouchEvent((april::Window::MouseEventType)type, (float)x, (float)y, (int)index);
+			((april::AndroidJNI_Window*)april::window)->handleTouchEvent((april::Window::MouseEventType)type, gvec2((float)x, (float)y), (int)index);
 		}
 	}
 
 	bool JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleKeyEvent(april::Window::AKEYEVT_DOWN, (KeySym)(int)keyCode, (unsigned int)charCode));
+		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_DOWN, (KeySym)(int)keyCode, (unsigned int)charCode));
 		return true;
 	}
 
 	bool JNICALL _JNI_onKeyUp(JNIEnv* env, jclass classe, jint keyCode)
 	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleKeyEvent(april::Window::AKEYEVT_UP, (KeySym)(int)keyCode, 0));
+		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_UP, (KeySym)(int)keyCode, 0));
 		return true;
 	}
 
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
 	{
-		PROTECTED_RENDERSYS_GET_WINDOW(handleLowMemoryWarning());
+		PROTECTED_WINDOW_CALL(handleLowMemoryWarning());
 	}
 
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
@@ -129,10 +134,7 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android View::onSurfaceCreated()");
 #endif
-		if (april::rendersys != NULL)
-		{
-			april::rendersys->restore();
-		}
+		PROTECTED_RENDERSYS_CALL(restore());
 	}
 
 	void JNICALL _JNI_activityOnCreate(JNIEnv* env, jclass classe)
@@ -154,7 +156,7 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android Activity::onResume()");
 #endif
-		PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent(true));
+		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(true));
 	}
 	
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
@@ -162,11 +164,8 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android Activity::onPause()");
 #endif
-		PROTECTED_RENDERSYS_GET_WINDOW(handleFocusEvent(false));
-		if (april::rendersys != NULL)
-		{
-			april::rendersys->getTextureManager()->unloadTextures();
-		}
+		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(false));
+		PROTECTED_RENDERSYS_CALL(unloadTextures());
 	}
 
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)

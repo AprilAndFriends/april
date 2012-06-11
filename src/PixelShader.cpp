@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 1.32
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -14,6 +14,11 @@
 
 namespace april
 {
+	PixelShader::PixelShader(chstr filename)
+	{
+		this->load(filename);
+	}
+
 	PixelShader::PixelShader()
 	{
 	}
@@ -24,13 +29,13 @@ namespace april
 	
 	void PixelShader::load(chstr filename)
 	{
-		mShaderCode = hresource::hread(filename);
-		compile();
+		this->shaderCode = hresource::hread(filename);
+		this->compile(this->shaderCode);
 	}
 	
 	bool PixelShader::compile()
 	{
-		return compile(mShaderCode);
+		return this->compile(shaderCode);
 	}
 	
 }

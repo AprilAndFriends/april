@@ -1,6 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -38,16 +39,16 @@ namespace april
         void update();
 		
 	protected:
-		float mDt;
-		float mTd;
-		float mTd2;
-		__int64 mFrequency;
-		float mResolution;
-		__int64 mMmTimerStart;
-		unsigned long mMmTimerElapsed;
-		bool mPerformanceTimer;
-		__int64 mPerformanceTimerStart;
-		__int64 mPerformanceTimerElapsed;
+		float dt;
+		float td;
+		float td2;
+		__int64 frequency;
+		float resolution;
+		__int64 mmTimerStart;
+		unsigned long mmTimerElapsed;
+		bool performanceTimer;
+		__int64 performanceTimerStart;
+		__int64 performanceTimerElapsed;
 		
 	};
 }

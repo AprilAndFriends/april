@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.51
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -13,9 +13,6 @@
 #include <algorithm>
 #ifdef __APPLE__
 #include <TargetConditionals.h>
-#ifndef _OPENGL
-#define _OPENGL
-#endif
 #endif
 #ifdef _ANDROID
 #include <android/log.h>
@@ -27,132 +24,231 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
-#include "RenderSystem.h"
+#include "aprilUtil.h"
 #include "ImageSource.h"
-#include "TextureManager.h"
+#include "RamTexture.h"
+#include "RenderSystem.h"
+#include "Texture.h"
 #include "Window.h"
 
 namespace april
 {
 	PlainVertex pv[16];
 	TexturedVertex tv[16];
-
+	
 	april::RenderSystem* rendersys = NULL;
-
-/************************************************************************************/
-	void PlainVertex::operator=(const gvec3& v)
+	
+	RenderSystem::RenderSystem() : created(false), forcedDynamicLoading(false), textureIdleUnloadTime(0.0f),
+		textureFilter(Texture::FILTER_LINEAR), textureAddressMode(Texture::ADDRESS_WRAP)
 	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void TexturedVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredTexturedVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredTexturedNormalVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void TexturedNormalVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredNormalVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-/************************************************************************************/
-	RenderSystem::RenderSystem()
-	{
-		mDynamicLoading = false;
-		mIdleUnloadTime = 0;
-		mTextureFilter = Linear;
-		mTextureWrapping = true;
-		mWindow = NULL;
-		mTextureManager = new TextureManager();
+		this->name = "Generic";
 	}
 	
 	RenderSystem::~RenderSystem()
 	{
-		if (mWindow != NULL)
-		{
-			delete mWindow;
-		}
-		delete mTextureManager;
+		this->destroy();
 	}
-
-	void RenderSystem::restore()
+	
+	bool RenderSystem::create(chstr options)
 	{
-		april::log("restoring rendersystem");
+		if (!this->created)
+		{
+			april::log(hsprintf("creating rendersystem '%s' (options: '%s')", this->name.c_str(), options.c_str()));
+			this->created = true;
+			return true;
+		}
+		return false;
+	}
+	
+	bool RenderSystem::destroy()
+	{
+		if (this->created)
+		{
+			april::log(hsprintf("destroying rendersystem '%s'", this->name.c_str()));
+			while (this->textures.size() > 0)
+			{
+				delete this->textures[0];
+			}
+			this->created = false;
+			return true;
+		}
+		return false;
+	}
+	
+	void RenderSystem::reset()
+	{
+		april::log("resetting rendersystem");
 	}
 
-	void RenderSystem::drawQuad(grect rect, Color color)
+	void RenderSystem::setOrthoProjection(grect rect)
+	{
+		this->orthoProjection = rect;
+		float t = this->getPixelOffset();
+		float wnd_w = (float)april::window->getWidth();
+		float wnd_h = (float)april::window->getHeight();
+		rect.x -= t * rect.w / wnd_w;
+		rect.y -= t * rect.h / wnd_h;
+		this->projectionMatrix.ortho(rect);
+		this->_setProjectionMatrix(this->projectionMatrix);
+	}
+	
+	void RenderSystem::setOrthoProjection(gvec2 size)
+	{
+		this->setOrthoProjection(grect(0.0f, 0.0f, size));
+	}
+	
+	void RenderSystem::setModelviewMatrix(gmat4 matrix)
+	{
+		this->modelviewMatrix = matrix;
+		this->_setModelviewMatrix(this->modelviewMatrix);
+	}
+	
+	void RenderSystem::setProjectionMatrix(gmat4 matrix)
+	{
+		this->projectionMatrix = matrix;
+		this->_setProjectionMatrix(this->projectionMatrix);
+	}
+	
+	void RenderSystem::setResolution(int w, int h)
+	{
+		log(hsprintf("changing resolution: %d x %d", w, h));
+		april::window->_setResolution(w, h);
+	}
+	
+	Texture* RenderSystem::loadTexture(chstr filename, bool dynamic)
+	{
+		hstr name = this->_findTextureFilename(filename);
+		if (name == "")
+		{
+			return NULL;
+		}
+		if (this->forcedDynamicLoading)
+		{
+			dynamic = true;
+		}
+		Texture* texture = this->_createTexture(name, dynamic);
+		if (!texture->isDynamic() && !texture->isLoaded())
+		{
+			delete texture;
+			return NULL;
+		}
+		return texture;
+	}
+
+	RamTexture* RenderSystem::loadRamTexture(chstr filename, bool dynamic)
+	{
+		hstr name = this->_findTextureFilename(filename);
+		if (name == "")
+		{
+			return NULL;
+		}
+		if (this->forcedDynamicLoading)
+		{
+			dynamic = true;
+		}
+		RamTexture* texture = new RamTexture(name, dynamic);
+		if (!dynamic && !texture->isLoaded())
+		{
+			delete texture;
+			return NULL;
+		}
+		return texture;
+	}
+	
+	void RenderSystem::unloadTextures()
+	{
+		foreach (Texture*, it, this->textures)
+		{
+			(*it)->unload();
+		}
+	}
+	
+	void RenderSystem::setIdentityTransform()
+	{
+		this->modelviewMatrix.setIdentity();
+		this->_setModelviewMatrix(this->modelviewMatrix);
+	}
+	
+	void RenderSystem::translate(float x, float y, float z)
+	{
+		this->modelviewMatrix.translate(x, y, z);
+		this->_setModelviewMatrix(this->modelviewMatrix);
+	}
+	
+	void RenderSystem::rotate(float angle, float ax, float ay, float az)
+	{
+		this->modelviewMatrix.rotate(ax, ay, az, angle);
+		this->_setModelviewMatrix(this->modelviewMatrix);
+	}	
+	
+	void RenderSystem::scale(float s)
+	{
+		this->modelviewMatrix.scale(s);
+		this->_setModelviewMatrix(this->modelviewMatrix);
+	}
+	
+	void RenderSystem::scale(float sx, float sy, float sz)
+	{
+		this->modelviewMatrix.scale(sx, sy, sz);
+		this->_setModelviewMatrix(this->modelviewMatrix);
+	}
+	
+	void RenderSystem::lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up)
+	{
+		this->modelviewMatrix.lookAt(eye, direction, up);
+		this->_setModelviewMatrix(this->modelviewMatrix);
+	}
+		
+	void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
+	{
+		this->projectionMatrix.perspective(fov, aspect, nearClip, farClip);
+		this->_setProjectionMatrix(this->projectionMatrix);
+	}
+	
+	void RenderSystem::drawRect(grect rect, Color color)
 	{
 		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
 		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
 		pv[2].x = rect.x + rect.w;	pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
 		pv[3].x = rect.x;			pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
 		pv[4].x = rect.x;			pv[4].y = rect.y;			pv[4].z = 0.0f;
-		render(LineStrip, pv, 5, color);
+		this->render(LineStrip, pv, 5, color);
 	}
 
-	void RenderSystem::drawColoredQuad(grect rect, Color color)
+	void RenderSystem::drawFilledRect(grect rect, Color color)
 	{
 		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
 		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
 		pv[2].x = rect.x;			pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
 		pv[3].x = rect.x + rect.w;	pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
-		render(TriangleStrip, pv, 4, color);
+		this->render(TriangleStrip, pv, 4, color);
 	}
 	
-	void RenderSystem::drawTexturedQuad(grect rect, grect src)
+	void RenderSystem::drawTexturedRect(grect rect, grect src)
 	{
 		tv[0].x = rect.x;			tv[0].y = rect.y;			tv[0].z = 0.0f;	tv[0].u = src.x;			tv[0].v = src.y;
 		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
 		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
 		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
-		render(TriangleStrip, tv, 4);
+		this->render(TriangleStrip, tv, 4);
 	}
 	
-	void RenderSystem::drawTexturedQuad(grect rect, grect src, Color color)
+	void RenderSystem::drawTexturedRect(grect rect, grect src, Color color)
 	{
 		tv[0].x = rect.x;			tv[0].y = rect.y;			tv[0].z = 0.0f;	tv[0].u = src.x;			tv[0].v = src.y;
 		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
 		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
 		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
-		render(TriangleStrip, tv, 4, color);
+		this->render(TriangleStrip, tv, 4, color);
 	}
 	
-	hstr RenderSystem::findTextureFile(chstr _filename)
+	void RenderSystem::presentFrame()
 	{
-		hstr filename = _filename;
+		april::window->presentFrame();
+	}
+	
+	hstr RenderSystem::_findTextureFilename(chstr filename)
+	{
 		if (hresource::exists(filename))
 		{
 			return filename;
@@ -170,10 +266,10 @@ namespace april
 		int index = filename.rfind(".");
 		if (index >= 0)
 		{
-			filename = filename.substr(0, index);
+			hstr noExtensionName = filename.substr(0, index);
 			foreach (hstr, it, extensions)
 			{
-				name = filename + (*it);
+				name = noExtensionName + (*it);
 				if (hresource::exists(name))
 				{
 					return name;
@@ -183,122 +279,14 @@ namespace april
 		return "";
 	}
 	
-	RamTexture* RenderSystem::loadRamTexture(chstr filename, bool dynamic)
+	void RenderSystem::_registerTexture(Texture* texture)
 	{
-		hstr name = findTextureFile(filename);
-		if (name == "")
-		{
-			return 0;
-		}
-		return new RamTexture(name, dynamic);
+		this->textures += texture;
 	}
 	
-	Texture* RenderSystem::createBlankTexture(int w, int h, TextureFormat fmt, TextureType type)
+	void RenderSystem::_unregisterTexture(Texture* texture)
 	{
-		Texture* texture = this->createEmptyTexture(w, h, fmt, type);
-		texture->fillRect(0, 0, w, h, APRIL_COLOR_BLANK);
-		return texture;
-	}
-	
-	void RenderSystem::setIdentityTransform()
-	{
-		mModelviewMatrix.setIdentity();
-		_setModelviewMatrix(mModelviewMatrix);
-	}
-	
-	void RenderSystem::translate(float x, float y, float z)
-	{
-		mModelviewMatrix.translate(x, y, z);
-		_setModelviewMatrix(mModelviewMatrix);
-	}
-	
-	void RenderSystem::rotate(float angle, float ax, float ay, float az)
-	{
-		mModelviewMatrix.rotate(ax, ay, az, angle);
-		_setModelviewMatrix(mModelviewMatrix);
-	}	
-	
-	void RenderSystem::scale(float s)
-	{
-		mModelviewMatrix.scale(s);
-		_setModelviewMatrix(mModelviewMatrix);
-	}
-	
-	void RenderSystem::scale(float sx, float sy, float sz)
-	{
-		mModelviewMatrix.scale(sx, sy, sz);
-		_setModelviewMatrix(mModelviewMatrix);
-	}
-	
-	void RenderSystem::lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up)
-	{
-		mModelviewMatrix.lookAt(eye, direction, up);
-		_setModelviewMatrix(mModelviewMatrix);
-	}
-		
-	void RenderSystem::setOrthoProjection(float x, float y, float w, float h)
-	{
-		setOrthoProjection(grect(x, y, w, h));
-	}
-	
-	void RenderSystem::setOrthoProjection(gvec2 size)
-	{
-		setOrthoProjection(grect(0.0f, 0.0f, size));
-	}
-	
-	void RenderSystem::setOrthoProjection(grect rect)
-	{
-		mOrthoProjection = rect;
-		float t = getPixelOffset();
-		float wnd_w = (float)mWindow->getWidth();
-		float wnd_h = (float)mWindow->getHeight();
-		rect.x -= t * rect.w / wnd_w;
-		rect.y -= t * rect.h / wnd_h;
-		mProjectionMatrix.ortho(rect);
-		_setProjectionMatrix(mProjectionMatrix);
-	}
-	
-    void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
-	{
-		mProjectionMatrix.perspective(fov, aspect, nearClip, farClip);
-		_setProjectionMatrix(mProjectionMatrix);
-	}
-	
-	void RenderSystem::setModelviewMatrix(const gmat4& matrix)
-	{
-		mModelviewMatrix = matrix;
-		_setModelviewMatrix(matrix);
-	}
-	void RenderSystem::setProjectionMatrix(const gmat4& matrix)
-	{
-		mProjectionMatrix = matrix;
-		_setProjectionMatrix(matrix);
-	}
-	
-	void RenderSystem::setResolution(int w, int h)
-	{
-		log(hsprintf("changing resolution: %d x %d", w, h));
-		mWindow->_setResolution(w, h);
-	}
-
-	const gmat4& RenderSystem::getModelviewMatrix()
-	{
-		return mModelviewMatrix;
-	}
-	
-	const gmat4& RenderSystem::getProjectionMatrix()
-	{
-		return mProjectionMatrix;
-	}
-	
-	bool RenderSystem::isFullscreen()
-	{
-		return mWindow->isFullscreen();
-	}
-
-	void RenderSystem::presentFrame()
-	{
-		mWindow->presentFrame();
+		this->textures -= texture;
 	}
 	
 }

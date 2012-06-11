@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 1.5
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -19,8 +19,8 @@
 namespace april
 {
 	// this enum defines Windows-specific virtual keys
-	// however, these are mostly nicely defined so they can be used
-	// on other platforms as well
+	// however, these are mostly nicely defined, so let's use them
+	// on other platforms too
 
 	enum KeySym
 	{

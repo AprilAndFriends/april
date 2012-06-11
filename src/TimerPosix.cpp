@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 1.5
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -19,25 +19,25 @@ namespace april
 {
 	Timer::Timer()
 	{
-		mDt = 0;
-		mTd2 = 0;
-		mTd = 0;
-		mFrequency = 0;
-		mPerformanceTimerStart = 0;
-		mResolution = 0; // unused in Posix timer
-		mMmTimerStart = 0;
-		mMmTimerElapsed = 0;
-		mPerformanceTimerElapsed = 0;
-		mPerformanceTimer = 0;
+		this->dt = 0;
+		this->td = 0;
+		this->td2 = 0;
+		this->frequency = 0;
+		this->performanceTimerStart = 0;
+		this->resolution = 0; // unused in Posix timer
+		this->mmTimerStart = 0;
+		this->mmTimerElapsed = 0;
+		this->performanceTimerElapsed = 0;
+		this->performanceTimer = 0;
         
 		// for posix:
-		timeval tv = { 0, 0 };
+		timeval tv = {0, 0};
 		gettimeofday(&tv, NULL);
 		
-		mPerformanceTimer = 0; 
-		mMmTimerStart = ((uint64_t(tv.tv_sec)) << 32) + int64_t(tv.tv_usec);
-		mFrequency = 1;
-		mMmTimerElapsed = mMmTimerStart;
+		this->performanceTimer = 0; 
+		this->mmTimerStart = ((uint64_t(tv.tv_sec)) << 32) + int64_t(tv.tv_usec);
+		this->frequency = 1;
+		this->mmTimerElapsed = this->mmTimerStart;
 	}
     
 	Timer::~Timer()
@@ -47,7 +47,7 @@ namespace april
 	float Timer::getTime()
 	{
 		timeval tv = {0, 0};
-		timeval init_tv = {mMmTimerStart >> 32, mMmTimerStart & 0xFFFFFFFF};
+		timeval init_tv = {this->mmTimerStart >> 32, this->mmTimerStart & 0xFFFFFFFF};
 		gettimeofday(&tv, NULL);
 		return (tv.tv_usec - init_tv.tv_usec) / 1000 + (tv.tv_sec - init_tv.tv_sec) * 1000;
 	}
@@ -57,16 +57,16 @@ namespace april
 		if (update)
 		{
 			this->update();
-			return mDt;
+			return this->dt;
 		}
-		return mDt;
+		return this->dt;
 	}
     
 	void Timer::update()
 	{
-		mTd2 = getTime();
-		mDt = (mTd2 - mTd) * 0.001f;
-		mTd = mTd2;
+		this->td2 = this->getTime();
+		this->dt = (this->td2 - this->td) * 0.001f;
+		this->td = this->td2;
 	}
 
 }
