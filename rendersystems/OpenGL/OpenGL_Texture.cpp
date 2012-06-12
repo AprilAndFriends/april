@@ -176,7 +176,7 @@ namespace april
 #if TARGET_OS_IPHONE
 			case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
 			case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image->format, image->w, image->h, 0, img->compressedLength, image->data);
+				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image->format, image->w, image->h, 0, image->compressedLength, image->data);
 				break;
 #endif
 			case AF_RGBA:

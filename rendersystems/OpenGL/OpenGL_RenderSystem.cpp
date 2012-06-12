@@ -145,7 +145,6 @@ namespace april
 		}
 		this->activeTexture = NULL;
 		this->options = options;
-		glClearColor(0, 0, 0, 1);
 		return true;
 	}
 
@@ -289,6 +288,7 @@ namespace april
 #endif
 		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
 		glClearColor(0, 0, 0, 1);
+		lastColor.set(0, 0, 0, 255);
 		setMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		setMatrixMode(GL_MODELVIEW);
@@ -327,6 +327,7 @@ namespace april
 		RenderSystem::reset();
 		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
 		glClearColor(0, 0, 0, 1);
+		lastColor.set(0, 0, 0, 255);
 		this->_setModelviewMatrix(this->modelviewMatrix);
 		this->_setProjectionMatrix(this->projectionMatrix);
 		// GL defaults

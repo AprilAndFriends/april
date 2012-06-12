@@ -98,7 +98,7 @@ namespace april
 {
 	ImageSource::ImageSource()
 	{
-		mImageId = 0; // unused in CG
+		imageId = 0; // unused in CG
 		this->data = NULL;
 		this->w = this->h = this->bpp = this->format = AF_UNDEFINED;
 		this->compressedLength = 0;

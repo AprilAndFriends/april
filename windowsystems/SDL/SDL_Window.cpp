@@ -14,9 +14,6 @@
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #include <OpenGL/gl.h>
-#if TARGET_OS_MAC && !TARGET_OS_IPHONE
-#include <ApplicationServices/ApplicationServices.h>
-#endif
 #elif _OPENGLES1
 #include <GLES/gl.h>
 #else
@@ -45,6 +42,11 @@ extern int gAprilShouldInvokeQuitCallback;
 
 namespace april
 {
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
+	void platform_cursorVisibilityUpdate();
+	bool platform_CursorIsVisible();
+#endif
+	
 	SDL_Window::SDL_Window() : Window()
 	{
 		this->name = APRIL_WS_SDL;
@@ -146,7 +148,7 @@ namespace april
 	{
 		// TODO - refactor
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
-		return CGCursorIsVisible();
+		return platform_CursorIsVisible();
 #else
 		return (SDL_ShowCursor(SDL_QUERY) != 0);
 #endif
@@ -267,55 +269,8 @@ namespace april
 				break;
 			}
 		}
-		this->_cursorVisibilityUpdate();
-	}
-	
-	void SDL_Window::_cursorVisibilityUpdate()
-	{
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
-		// mac only: extra visibility handling
-		NSWindow* window = [[NSApplication sharedApplication] keyWindow];
-		bool shouldShow;
-		
-		if (!this->cursorVisible)
-		{
-			//NSPoint 	mouseLoc = [window convertScreenToBase:[NSEvent mouseLocation]];
-			//[window frame]
-			NSPoint mouseLoc;
-			id hideInsideView; // either NSView or NSWindow; both implement "frame" method
-			if ([window contentView])
-			{
-				hideInsideView = [window contentView];
-				mouseLoc = [window convertScreenToBase:[NSEvent mouseLocation]];
-			}
-			else
-			{
-				hideInsideView = window;
-				mouseLoc = [NSEvent mouseLocation];
-			}
-			
-			if (hideInsideView)
-			{
-				shouldShow = !NSPointInRect(mouseLoc, [hideInsideView frame]);
-			}
-			else // no view? let's presume we are in fullscreen where we should blindly honor the requests from the game
-			{
-				shouldShow = false;
-			}
-		}
-		else
-		{			
-			shouldShow = true;
-		}
-		
-		if (!shouldShow && CGCursorIsVisible())
-		{
-			CGDisplayHideCursor(kCGDirectMainDisplay);
-		}
-		else if (shouldShow && !CGCursorIsVisible())
-		{
-			CGDisplayShowCursor(kCGDirectMainDisplay);
-		}
+		platform_cursorVisibilityUpdate();
 #endif
 	}
 	
@@ -399,7 +354,7 @@ namespace april
 			s2a(KP9, NUMPAD9);
 			
 			s2a(LCTRL, LCONTROL);
-			s2a(LCTRL, RCONTROL);
+			s2a(RCTRL, RCONTROL);
 		default:
 			break;
 		}
@@ -433,7 +388,7 @@ namespace april
 		Window::MouseEventType mouseEvent;
 		Window::MouseButton mouseButton = AMOUSEBTN_NONE;
 
-		switch (event.type)
+		switch (sdlEvent.type)
 		{
 		case SDL_MOUSEBUTTONUP:
 			mouseEvent = AMOUSEEVT_UP;
@@ -471,7 +426,7 @@ namespace april
 			case SDL_BUTTON_WHEELDOWN:
 				if (sdlEvent.type == SDL_MOUSEBUTTONDOWN)
 				{
-					mouseButton = AMOUSEBTN_WHEELDN;
+					mouseButton = AMOUSEBTN_WHEELDOWN;
 					mouseEvent = AMOUSEEVT_SCROLL;
 				}
 			default:
@@ -480,7 +435,7 @@ namespace april
 			}
 		}
 		
-		if (mouseButton == AMOUSEBTN_WHEELUP || mouseButton == AMOUSEBTN_WHEELDN)
+		if (mouseButton == AMOUSEBTN_WHEELUP || mouseButton == AMOUSEBTN_WHEELDOWN)
 		{
 			gvec2 scroll;
 			scroll.x = (!this->scrollHorizontal ? 0.0f : (mouseButton == AMOUSEBTN_WHEELUP ? -1.0f : 1.0f));

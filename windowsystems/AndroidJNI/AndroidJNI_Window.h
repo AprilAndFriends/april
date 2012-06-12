@@ -77,8 +77,8 @@ namespace april
 		void setCursorVisible(bool value) { }
 		int getWidth() { return this->width; }
 		int getHeight() { return this->height; }
-		void setTouchEnabled(bool value) { }
 		bool isTouchEnabled() { return true; }
+		void setTouchEnabled(bool value) { }
 		void* getBackendId();
 		
 		void enterMainLoop();

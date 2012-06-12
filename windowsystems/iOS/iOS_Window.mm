@@ -12,7 +12,6 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/CAEAGLLayer.h>
 #import <hltypes/exception.h>
-#include <sys/sysctl.h>
 #import "AprilViewController.h"
 #import "EAGLView.h"
 #import "iOS_Window.h"
@@ -29,6 +28,36 @@ extern bool g_wnd_rotating;
 
 namespace april
 {
+	// TODO - convert to gvec2 so it can be included in the class
+	static harray<UITouch*> g_touches;
+	static harray<UITouch*> _convertTouchesToCoordinates(void* nssetTouches)
+	{
+		float scale = ((iOS_Window*) window)->_getTouchScale();
+		// return value stored in cursorX and cursorY
+		harray<UITouch*> coordinates;
+		NSSet* touches = (NSSet*)nssetTouches;
+		UITouch* touch;
+		int len = [touches count];
+		
+		if (len == 1)
+		{
+			touch = touches.anyObject;
+			CGPoint location = [touch locationInView:glview];
+			//For "primary" landscape orientation, this is how we calc it
+			((iOS_Window*) window)->_setCursorPosition(location.x * scale, location.y * scale);
+			coordinates += touch;
+		}
+		else
+		{
+			for (touch in touches)
+			{
+				coordinates += touch;
+			}
+		}
+		
+		return coordinates;
+	}
+	
 	InputEvent::InputEvent()
 	{
 	
@@ -49,14 +78,14 @@ namespace april
 	public:
 		MouseInputEvent(Window* window, Window::MouseEventType type, gvec2 position, Window::MouseButton button) : InputEvent(window)
 		{
-			this->event = type;
+			this->type = type;
 			this->position = position;
 			this->button = button;
 		}
 		
 		void execute()
 		{
-			this->window->handleMouseEvent(this->type, this->position.x, this->position.y, this->button);
+			this->window->handleMouseEvent(this->type, this->position, this->button);
 		}
 		
 	protected:
@@ -80,32 +109,22 @@ namespace april
 		}
 		
 	protected:
-		harray<hstr> touches;
+		harray<gvec2> touches;
 		
 	};
 	
-	
-    iOSWindow::iOSWindow() : Window()
+	iOS_Window::iOS_Window() : Window()
     {
 		this->name = APRIL_WS_IOS;
-		this->keyboardRequest = 0;
-		this->retainLoadingOverlay = false;
-		this->inputEventsMutex = false;
-		this->multiTouchActive = false;
-		this->firstFrameDrawn = false; // show window after drawing first frame
 	}
 	
-	iOSWindow::~iOSWindow()
+	bool iOS_Window::create(int w, int h, bool fullscreen, chstr title)
 	{
-		destroy();
-	}
-	
-    bool iOSWindow::create(int width, int height, bool fullscreen, chstr title)
-    {
-		if (!Window::create(width, height, fullscreen, title))
+		if (!Window::create(w, h, fullscreen, title))
 		{
 			return false;
 		}
+		this->firstFrameDrawn = false; // show window after drawing first frame
 		this->keyboardRequest = 0;
 		this->retainLoadingOverlay = false;
 		this->focused = true;
@@ -113,21 +132,26 @@ namespace april
 		this->multiTouchActive = false;
 		appDelegate = ((ApriliOSAppDelegate*)[[UIApplication sharedApplication] delegate]);
 		viewcontroller = [appDelegate viewController];
-		uiwindow = [appDelegate uiwindow];
+		uiwindow = appDelegate.uiwnd;
 		[UIApplication sharedApplication].statusBarHidden = fullscreen ? YES : NO;		
 		this->fullscreen = true; // iOS apps are always fullscreen
 		this->firstFrameDrawn = false; // show window after drawing first frame
 		this->running = true;
 		return true;
-    }
+	}
 	
-    void iOSWindow::enterMainLoop()
+	iOS_Window::~iOS_Window()
+	{
+		destroy();
+	}
+		
+    void iOS_Window::enterMainLoop()
     {
         NSLog(@"Fatal error: Using enterMainLoop on iOS!");
         exit(-1);
     }
 	
-	bool iOSWindow::updateOneFrame()
+	bool iOS_Window::updateOneFrame()
 	{
 		// call input events
 		InputEvent* e;
@@ -136,7 +160,7 @@ namespace april
 			e->execute();
 			delete e;
 		}	
-		if (this->keyboardRequest != 0 && this->touches.size() == 0) // only process keyboard when there is no interaction with the screen
+		if (this->keyboardRequest != 0 && g_touches.size() == 0) // only process keyboard when there is no interaction with the screen
 		{
 			bool visible = this->isVirtualKeyboardVisible();
 			if (visible && this->keyboardRequest == -1)
@@ -154,24 +178,24 @@ namespace april
 		return this->performUpdate(k);	
 	}
 
-    void iOSWindow::terminateMainLoop()
+    void iOS_Window::terminateMainLoop()
 	{
         NSLog(@"Fatal error: Using terminateMainLoop on iOS!");
         exit(-2);
     }
 	
-	void iOSWindow::destroyWindow()
+	void iOS_Window::destroyWindow()
 	{
 		// just stopping the animation on iOS
 		[glview stopAnimation];
 	}
 	
-    void iOSWindow::setCursorVisible(bool visible)
+    void iOS_Window::setCursorVisible(bool visible)
     {
         // no effect on iOS
     }
 	
-	void iOSWindow::addInputEvent(InputEvent* event)
+	void iOS_Window::addInputEvent(InputEvent* event)
 	{
 		// TODO - use a real mutex, this is unsafe
 		while (this->inputEventsMutex); // wait it out
@@ -180,7 +204,7 @@ namespace april
 		this->inputEventsMutex = false;
 	}
 
-	InputEvent* iOSWindow::popInputEvent()
+	InputEvent* iOS_Window::popInputEvent()
 	{
 		// TODO - use a real mutex, this is unsafe
 		while (this->inputEventsMutex); // wait it out
@@ -194,12 +218,17 @@ namespace april
 		return e;
 	}
 
-    bool iOSWindow::isCursorVisible()
+	void iOS_Window::_setCursorPosition(float x, float y)
+	{
+		this->cursorPosition.set(x, y);
+	}
+
+    bool iOS_Window::isCursorVisible()
     {
         return false; // iOS never shows system cursor
     }
 	
-    int iOSWindow::getWidth()
+    int iOS_Window::getWidth()
     {
 		// TODO dont swap width and height in case display is in portrait mode
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
@@ -212,7 +241,7 @@ namespace april
         return uiwindow.bounds.size.height;
     }
 	
-    int iOSWindow::getHeight()
+    int iOS_Window::getHeight()
     {
 		// TODO dont swap width and height in case display is in portrait mode
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
@@ -225,12 +254,12 @@ namespace april
         return uiwindow.bounds.size.width;
     }
 
-    void iOSWindow::setTitle(chstr value)
+    void iOS_Window::setTitle(chstr value)
     {
         // no effect on iOS
     }
 	
-    void iOSWindow::presentFrame()
+    void iOS_Window::presentFrame()
     {
 		if (this->firstFrameDrawn)
 		{
@@ -247,12 +276,12 @@ namespace april
 		}
     }
 
-	void* iOSWindow::getIdFromBackend()
+	void* iOS_Window::getBackendId()
 	{
 		return viewcontroller;
 	}
 
-	void iOSWindow::checkEvents()
+	void iOS_Window::checkEvents()
 	{
 		SInt32 result;
 		do
@@ -261,7 +290,7 @@ namespace april
 		} while (result == kCFRunLoopRunHandledSource);
 	}
 	
-	void iOSWindow::callTouchCallback()
+	void iOS_Window::callTouchCallback()
 	{
 		if (this->touchCallback == NULL)
 		{
@@ -272,7 +301,7 @@ namespace april
 		CGPoint point;
 		float scale = this->_getTouchScale();
 		
-		foreach (UITouch*, it, this->touches)
+		foreach (UITouch*, it, g_touches)
 		{
 			point = [*it locationInView:glview];
 			position.x = point.x * scale;
@@ -282,12 +311,12 @@ namespace april
 		this->inputEvents += new TouchInputEvent(this, coordinates);
 	}
 	
-	bool iOSWindow::isRotating()
+	bool iOS_Window::isRotating()
 	{
 		return g_wnd_rotating;
 	}
 	
-	hstr iOSWindow::getParam(chstr param)
+	hstr iOS_Window::getParam(chstr param)
 	{
 		if (param == "retain_loading_overlay")
 		{
@@ -296,7 +325,7 @@ namespace april
 		return "";
 	}
 	
-	void iOSWindow::setParam(chstr param, chstr value)
+	void iOS_Window::setParam(chstr param, chstr value)
 	{
 		if (param == "retain_loading_overlay")
 		{
@@ -309,7 +338,7 @@ namespace april
 		}
 	}
 
-	float iOSWindow::_getTouchScale()
+	float iOS_Window::_getTouchScale()
 	{
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		static float scale = -1;
@@ -330,47 +359,18 @@ namespace april
 		return 1;
 #endif
 	}
-
-	harray<UITouch*> iOSWindow::_convertTouchesToCoordinates(void* nssetTouches)
-	{
-		float scale = this->_getTouchScale();
-		// return value stored in cursorX and cursorY
-		harray<UITouch*> coordinates;
-		NSSet* touches = (NSSet*)nssetTouches;
-		UITouch* touch;
-		int len = [touches count];
-
-		if (len == 1)
-		{
-			touch = touches.anyObject;
-			CGPoint location = [touch locationInView:glview];
-			//For "primary" landscape orientation, this is how we calc it
-			this->cursorPosition.x = location.x * scale;
-			this->cursorPosition.y = location.y * scale;
-			coordinates += touch;
-		}
-		else
-		{
-			for (touch in touches)
-			{
-				coordinates += touch;
-			}
-		}
-		
-		return coordinates;
-	}
 	
-	void iOSWindow::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
+	void iOS_Window::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		harray<UITouch*> touches = this->_convertTouchesToCoordinates(nssetTouches);
+		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
 		
-		this->touches += touches;
-		if (this->touches.size() > 1)
+		g_touches += touches;
+		if (g_touches.size() > 1)
 		{
-			if (!this->multiTouchActive && this->touches.size() == 1)
+			if (!this->multiTouchActive && g_touches.size() == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_UP, -10000, -10000, AMOUSEBTN_LEFT));
+				this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_UP, gvec2(-10000, -10000), AMOUSEBTN_LEFT));
 			}
 			this->multiTouchActive = true;
 		}
@@ -381,11 +381,11 @@ namespace april
 		this->callTouchCallback();
 	}
 
-	void iOSWindow::touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent)
+	void iOS_Window::touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		harray<UITouch*> touches = this->_convertTouchesToCoordinates(nssetTouches);
-		int num_touches = this->touches.size();
-		this->touches /= touches;
+		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
+		int num_touches = g_touches.size();
+		g_touches /= touches;
 		
 		if (this->multiTouchActive)
 		{
@@ -402,35 +402,35 @@ namespace april
 	}
 	
 	
-	void iOSWindow::touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent)
+	void iOS_Window::touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
 		// FIXME needs to cancel touches, not treat them as "release"
 		this->touchesEnded_withEvent_(nssetTouches, uieventEvent);
 	}
 	
-	void iOSWindow::touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent)
+	void iOS_Window::touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		this->_convertTouchesToCoordinates(nssetTouches);
+		_convertTouchesToCoordinates(nssetTouches);
 		this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_MOVE, this->cursorPosition, AMOUSEBTN_NONE));
 		this->callTouchCallback();
 	}
 	
-	bool iOSWindow::isVirtualKeyboardVisible()
+	bool iOS_Window::isVirtualKeyboardVisible()
 	{
 		return [glview isKeyboardActive];
 	}
 	
-	void iOSWindow::beginKeyboardHandling()
+	void iOS_Window::beginKeyboardHandling()
 	{
 		this->keyboardRequest = 1;
 	}
 	
-	void iOSWindow::terminateKeyboardHandling()
+	void iOS_Window::terminateKeyboardHandling()
 	{
 		this->keyboardRequest = -1;
 	}
 	
-	void iOSWindow::injectiOSChar(unsigned int inputChar)
+	void iOS_Window::injectiOSChar(unsigned int inputChar)
 	{
 		if (inputChar == 0)
 		{
@@ -450,14 +450,14 @@ namespace april
 		}
 	}
 	
-	void iOSWindow::keyboardWasShown()
+	void iOS_Window::keyboardWasShown()
 	{
 		if (this->virtualKeyboardCallback != NULL)
 		{
 			(*this->virtualKeyboardCallback)(true);
 		}
 	}
-	void iOSWindow::keyboardWasHidden()
+	void iOS_Window::keyboardWasHidden()
 	{
 		if (this->virtualKeyboardCallback != NULL)
 		{
@@ -465,7 +465,7 @@ namespace april
 		}
 	}
 	
-	void iOSWindow::setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation))
+	void iOS_Window::setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation))
 	{
 		if (do_callback != NULL)
 		{
@@ -480,13 +480,13 @@ namespace april
 	}
 	
 	//////////////
-	void iOSWindow::handleDisplayAndUpdate()
+	void iOS_Window::handleDisplayAndUpdate()
 	{
 		this->updateOneFrame();
 		april::rendersys->presentFrame();
 	}
 	
-	void iOSWindow::deviceOrientationDidChange()
+	void iOS_Window::deviceOrientationDidChange()
 	{
 		if (this->deviceOrientationCallback != NULL)
 		{
@@ -514,7 +514,7 @@ namespace april
 			(*this->deviceOrientationCallback)(newOrientation);
 		}
 	}
-	void iOSWindow::applicationWillResignActive()
+	void iOS_Window::applicationWillResignActive()
 	{
 		if (!this->firstFrameDrawn)
 		{
@@ -525,23 +525,23 @@ namespace april
 		if (this->focused)
 		{
 			this->focused = false;
-			if (this->focusCallback != NULL)
+			if (this->focusChangeCallback != NULL)
 			{
-				(*this->focusCallback)(false);
+				(*this->focusChangeCallback)(false);
 			}
 			[glview stopAnimation];
 		}
 	}
 	
-	void iOSWindow::applicationDidBecomeActive()
+	void iOS_Window::applicationDidBecomeActive()
 	{
 		if (!this->focused)
 		{
 			this->focused = true;
 			[glview startAnimation];
-			if (this->focusCallback != NULL)
+			if (this->focusChangeCallback != NULL)
 			{
-				(*this->focusCallback)(true);
+				(*this->focusChangeCallback)(true);
 			}
 		}
 	}

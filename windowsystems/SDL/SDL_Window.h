@@ -68,9 +68,7 @@ namespace april
 
 		void _handleKeyEvent(Window::KeyEventType type, SDLKey keycode, unsigned int unicode);
 		bool _handleDisplayAndUpdate();
-		void _handleMouseEvent(SDL_Event &evt);
-		void _cursorVisibilityUpdate();
-		
+		void _handleMouseEvent(SDL_Event &evt);		
 	};
 
 }
