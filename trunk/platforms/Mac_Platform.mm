@@ -24,9 +24,63 @@
 #include <gtypes/Vector2.h>
 
 #include "Platform.h"
+#include "RenderSystem.h"
+#include "Window.h"
 
 namespace april
 {
+	bool platform_CursorIsVisible()
+	{
+		return CGCursorIsVisible();
+	}
+	
+	void platform_cursorVisibilityUpdate()
+	{
+		// mac only: extra visibility handling
+		NSWindow* window = [[NSApplication sharedApplication] keyWindow];
+		bool shouldShow;
+		
+		if (!april::window->isCursorVisible())
+		{
+			//NSPoint 	mouseLoc = [window convertScreenToBase:[NSEvent mouseLocation]];
+			//[window frame]
+			NSPoint mouseLoc;
+			id hideInsideView; // either NSView or NSWindow; both implement "frame" method
+			if ([window contentView])
+			{
+				hideInsideView = [window contentView];
+				mouseLoc = [window convertScreenToBase:[NSEvent mouseLocation]];
+			}
+			else
+			{
+				hideInsideView = window;
+				mouseLoc = [NSEvent mouseLocation];
+			}
+			
+			if (hideInsideView)
+			{
+				shouldShow = !NSPointInRect(mouseLoc, [hideInsideView frame]);
+			}
+			else // no view? let's presume we are in fullscreen where we should blindly honor the requests from the game
+			{
+				shouldShow = false;
+			}
+		}
+		else
+		{			
+			shouldShow = true;
+		}
+		
+		if (!shouldShow && CGCursorIsVisible())
+		{
+			CGDisplayHideCursor(kCGDirectMainDisplay);
+		}
+		else if (shouldShow && !CGCursorIsVisible())
+		{
+			CGDisplayShowCursor(kCGDirectMainDisplay);
+		}
+	}
+	
 	gvec2 getDisplayResolution()
 	{
 		NSScreen* mainScreen = [NSScreen mainScreen];

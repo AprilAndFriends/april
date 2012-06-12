@@ -16,6 +16,9 @@
 #ifdef USE_IL
 #include <IL/il.h>
 #endif
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
 
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
@@ -23,12 +26,19 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
+#ifdef _DIRECTX9
 #include "DirectX9_RenderSystem.h"
+#endif
+#ifdef _OPENGL
 #include "OpenGL_RenderSystem.h"
+#endif
 #include "RenderSystem.h"
 #include "Window.h"
 #ifdef _ANDROID
 #include "AndroidJNI_Window.h"
+#endif
+#if TARGET_OS_IPHONE
+#include "iOS_Window.h"
 #endif
 #ifdef HAVE_SDL
 #include "SDL_Window.h"
@@ -114,19 +124,17 @@ namespace april
 		{
 			renderSystem = RS_INTERNAL_DEFAULT;
 		}
-#if !TARGET_OS_IPHONE
 #ifdef _DIRECTX9
-		if (renderSystem == RS_DIRECTX9)
+		if (april::rendersys == NULL && renderSystem == RS_DIRECTX9)
 		{
 			april::rendersys = new DirectX9_RenderSystem();
 		}
 #endif
 #ifdef _OPENGL
-		if (renderSystem == RS_OPENGL)
+		if (april::rendersys == NULL && renderSystem == RS_OPENGL)
 		{
 			april::rendersys = new OpenGL_RenderSystem();
 		}
-#endif
 #endif
 		// creating the windowsystem
 		WindowSystemType windowSystem = windowSystemType;
@@ -134,25 +142,29 @@ namespace april
 		{
 			windowSystem = WS_INTERNAL_DEFAULT;
 		}
-#if !TARGET_OS_IPHONE
 #ifdef _WIN32
-		if (windowSystem == WS_WIN32)
+		if (april::window == NULL && windowSystem == WS_WIN32)
 		{
 			april::window = new Win32_Window();
 		}
 #endif
 #ifdef HAVE_SDL
-		if (windowSystem == WS_SDL)
+		if (april::window == NULL && windowSystem == WS_SDL)
 		{
 			april::window = new SDL_Window();
 		}
 #endif
+#if TARGET_OS_IPHONE
+		if (april::window == NULL && windowSystem == WS_IOS)
+		{
+			april::window = new iOS_Window();
+		}
+#endif
 #ifdef _ANDROID
-		if (windowSystem == WS_ANDROIDJNI)
+		if (april::window == NULL && windowSystem == WS_ANDROIDJNI)
 		{
 			april::window = new AndroidJNI_Window();
 		}
-#endif
 #endif
 		if (april::rendersys == NULL)
 		{
@@ -167,21 +179,7 @@ namespace april
 	
 	void createRenderSystem(chstr options)
 	{
-#if TARGET_OS_IPHONE
-		if (options == "create_eagl")
-		{
-			april::rendersys->create(options);
-		}
-		else
-		{
-			april::rendersys->setParam(options, "");
-		}
-		//else do nothing, rendersys was created ahead
-#elif defined(_OPENGL)
 		april::rendersys->create(options);
-#else
-		april::rendersys->create(options);
-#endif
 	}
 	
 	void createWindow(int w, int h, bool fullscreen, chstr title)

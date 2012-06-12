@@ -85,7 +85,7 @@
         return;
     }
 	
-	april::window->handleFocusEvent(0);
+	april::window->handleFocusChangeEvent(0);
 	
     for (EAGLView *glview in [viewController.view subviews])
     {
@@ -103,7 +103,7 @@
 	NSString* str = [url absoluteString];
 	hstr urlstr = [str UTF8String];
 
-	return april::window->handleURL(urlstr) ? YES : NO;
+	return april::window->handleUrl(urlstr) ? YES : NO;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

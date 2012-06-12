@@ -16,13 +16,14 @@
 #import <OpenGLES/EAGLDrawable.h>
 
 #import "EAGLView.h"
-#include "iOSWindow.h"
+#include "iOS_Window.h"
 #include "RenderSystem.h"
 #include "april.h"
 #include "Keys.h"
 
 
 #define USE_DEPTH_BUFFER 0
+#define aprilWindow ((april::iOS_Window*) april::window)
 
 
 // A class extension to declare private methods
@@ -42,8 +43,6 @@
 
 @synthesize context;
 @synthesize animationTimer;
-//@synthesize animationInterval;
-@synthesize aprilWindowVoid;
 
 // You must implement this method
 + (Class)layerClass
@@ -144,9 +143,9 @@
 						   action:@selector(textFieldFinished:)
 							forControlEvents:UIControlEventEditingDidEndOnExit];
 		// create ios window object
-		april::_createRenderSystem("create_eagl");
-		april::window = new april::iOSWindow();
-		april::window->create(0, 0, 1, "iOS Window");
+		april::init(april::RS_DEFAULT, april::WS_DEFAULT);
+		april::createRenderSystem();
+		april::createWindow(0, 0, 1, "iOS Window");
 		april::rendersys->assignWindow(april::window);
     }
 	
@@ -201,7 +200,7 @@
     [self beginRender];
 	
 	//mydraw();
-	((april::iOSWindow*)april::window)->handleDisplayAndUpdate();
+	((april::iOS_Window*)april::window)->handleDisplayAndUpdate();
 	
 
 

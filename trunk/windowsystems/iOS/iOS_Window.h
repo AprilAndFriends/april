@@ -34,12 +34,13 @@ namespace april
 		
 	};
 	
-	class iOSWindow : public Window
+	class iOS_Window : public Window
 	{
 	public:
-		iOSWindow(int w, int h, bool fullscreen, chstr title);
-		~iOSWindow();
+		iOS_Window();
+		~iOS_Window();
 		
+		bool create(int w, int h, bool fullscreen, chstr title);
 		// implementations
 		void enterMainLoop();
 		bool updateOneFrame();
@@ -52,7 +53,9 @@ namespace april
 		void setTitle(chstr value);
 		gtypes::Vector2 getCursorPosition();
 		void presentFrame();
-		void* getIdFromBackend();
+		bool isTouchEnabled() { return true; }
+		void setTouchEnabled(bool value) { }
+		void* getBackendId();
 		void checkEvents();
 		bool isVirtualKeyboardVisible();
 		void beginKeyboardHandling();
@@ -81,6 +84,8 @@ namespace april
 		void applicationWillResignActive();
 		void applicationDidBecomeActive();
 		
+		void _setCursorPosition(float x, float y);
+		float _getTouchScale();		
 	protected:
 		int keyboardRequest;
 		Timer timer;
@@ -88,11 +93,8 @@ namespace april
 		harray<InputEvent*> inputEvents;
 		bool inputEventsMutex;
 		bool retainLoadingOverlay;
-		harray<UITouch*> touches;
 		bool multiTouchActive;
 		
-		float _getTouchScale();
-		harray<UITouch*> _convertTouchesToCoordinates(void* touches);
 		void callTouchCallback();
 		
 	};

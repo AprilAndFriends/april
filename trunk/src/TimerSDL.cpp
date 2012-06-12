@@ -17,22 +17,22 @@ namespace april
 {
     Timer::Timer()
     {
-        mDt = 0;
-        mTd2 = 0;
-        mTd = 0;
-        mFrequency = 0;
-        mPerformanceTimerStart = 0;
-        mResolution = 0; // unused in SDL timer
-        mMmTimerStart = 0;
-        mMmTimerElapsed = 0;
-        mPerformanceTimerElapsed = 0;
-        mPerformanceTimer = 0;
+        this->dt = 0;
+        this->td2 = 0;
+        this->td = 0;
+        this->frequency = 0;
+        this->performanceTimerStart = 0;
+        this->resolution = 0; // unused in SDL timer
+        this->mmTimerStart = 0;
+        this->mmTimerElapsed = 0;
+        performanceTimerElapsed = 0;
+        performanceTimer = 0;
         
 		// for sdl:
-		mPerformanceTimer	= 0; // was: "false"
-		mMmTimerStart	    = SDL_GetTicks();
-		mFrequency			= 1000;
-		mMmTimerElapsed	    = mMmTimerStart;
+		performanceTimer = 0; // was: "false"
+		this->mmTimerStart = SDL_GetTicks();
+		this->frequency	= 1000;
+		this->mmTimerElapsed = this->mmTimerStart;
             
         
     }
@@ -44,7 +44,7 @@ namespace april
     
     float Timer::getTime()
     {        
-		return( (float) ( SDL_GetTicks() - mMmTimerStart));
+		return( (float) ( SDL_GetTicks() - this->mmTimerStart));
         
     }
     
@@ -53,17 +53,17 @@ namespace april
         if(doUpdate)
         {
             this->update();
-            return mDt;
+            return this->dt;
         }
         else
-            return mDt;
+            return this->dt;
         
     }
     
     void Timer::update()
     {
-        mTd2 = getTime();
-        mDt = (mTd2-mTd) * 0.1f;
-        mTd = mTd2;
+        this->td2 = getTime();
+        this->dt = (this->td2-this->td) * 0.1f;
+        this->td = this->td2;
     }
 }

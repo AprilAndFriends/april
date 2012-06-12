@@ -44,14 +44,9 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 	
 	/* Textfield */
 	UITextField *textField;
-	
-	/* C++ class iOSWindow */
-	void *aprilWindowVoid;
 @public
     bool app_started;
 }
-
-@property (assign) void *aprilWindowVoid;
 
 - (void)startAnimation;
 - (void)stopAnimation;
