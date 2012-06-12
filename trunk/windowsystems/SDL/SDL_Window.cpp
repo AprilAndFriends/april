@@ -94,7 +94,7 @@ namespace april
 #endif
 		glClear(GL_COLOR_BUFFER_BIT);
 #else
-		mScreen = SDL_SetVideoMode(w, h, 0, (fullscreen ? SDL_FULLSCREEN : 0));
+		this->screen = SDL_SetVideoMode(w, h, 0, (fullscreen ? SDL_FULLSCREEN : 0));
 #endif
 
 		if (this->screen == NULL)
