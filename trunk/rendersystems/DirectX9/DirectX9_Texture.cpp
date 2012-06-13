@@ -47,7 +47,7 @@ namespace april
 		}
 		else
 		{
-			april::log("creating dynamic DX9 texture");
+			april::log("creating dynamic DX9 texture: " + _getInternalName());
 		}
 	}
 
