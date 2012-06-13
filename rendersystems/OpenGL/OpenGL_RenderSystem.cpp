@@ -706,7 +706,7 @@ namespace april
 	{
 		if (color != lastColor) // used to minimize redundant calls to OpenGL
 		{
-			glClearColor(color.r_f(), color.b_f(), color.g_f(), color.a_f());
+			glClearColor(color.r_f(), color.g_f(), color.b_f(), color.a_f());
 			lastColor = color;
 		}
 		this->clear(true, depth);
