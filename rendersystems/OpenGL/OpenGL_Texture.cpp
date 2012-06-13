@@ -53,7 +53,7 @@ namespace april
 		}
 		else
 		{
-			april::log("creating dynamic GL texture");
+			april::log("creating dynamic GL texture: " + _getInternalName());
 		}
 	}
 
