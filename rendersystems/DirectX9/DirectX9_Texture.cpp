@@ -67,7 +67,24 @@ namespace april
 			april::log("failed to create DX9 texture!");
 			return;
 		}
-		this->blit(0, 0, rgba, this->width, this->height, this->bpp, 0, 0, this->width, this->height);
+		// TODO - this will be removed once format/native format enums have been implemented
+		unsigned char* bgra = new unsigned char[this->width * this->height * this->bpp];
+		memcpy(bgra, rgba, this->width * this->height * this->bpp * sizeof(unsigned char)); // so alpha doesn't have to be copied in each iteration
+		int offset;
+		int i;
+		int j;
+		for_iterx (j, 0, this->width)
+		{
+			for_iterx (i, 0, this->height)
+			{
+				offset = (j * this->width + i) * this->bpp;
+				bgra[offset + 2] = rgba[offset + 0];
+				bgra[offset + 1] = rgba[offset + 1];
+				bgra[offset + 0] = rgba[offset + 2];
+			}
+		}
+		this->blit(0, 0, bgra, this->width, this->height, this->bpp, 0, 0, this->width, this->height);
+		delete [] bgra;
 	}
 	
 	DirectX9_Texture::DirectX9_Texture(int w, int h, Texture::Format format, Texture::Type type, Color color) : Texture()
