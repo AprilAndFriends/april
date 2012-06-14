@@ -146,9 +146,8 @@ namespace april
 	
 	bool SDL_Window::isCursorVisible()
 	{
-		// TODO - refactor
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
-		return platform_CursorIsVisible();
+		return this->cursorVisible;
 #else
 		return (SDL_ShowCursor(SDL_QUERY) != 0);
 #endif
