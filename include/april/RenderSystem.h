@@ -82,10 +82,10 @@ namespace april
 		virtual void setFullscreen(bool fullscreen) { } // TODO - main part should be in window class
 		virtual void setResolution(int w, int h); // TODO - main part should be in window class
 
-		virtual Texture* loadTexture(chstr filename, bool dynamic = false);
+		virtual Texture* loadTexture(chstr filename, bool delayLoad = true);
 		virtual Texture* createTexture(int w, int h, unsigned char* rgba) = 0;
 		virtual Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = APRIL_COLOR_CLEAR) = 0;
-		RamTexture* loadRamTexture(chstr filename, bool dynamic = false);
+		Texture* loadRamTexture(chstr filename, bool delayLoad = true);
 		virtual PixelShader* createPixelShader() = 0;
 		virtual PixelShader* createPixelShader(chstr filename) = 0;
 		virtual VertexShader* createVertexShader() = 0;
@@ -133,7 +133,7 @@ namespace april
 		DEPRECATED_ATTRIBUTE Texture* createEmptyTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL) { return this->createTexture(w, h, format, type); }
 		DEPRECATED_ATTRIBUTE Texture* createBlankTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL) { return this->createTexture(w, h, format, type, Color(APRIL_COLOR_WHITE, 0)); }
 		DEPRECATED_ATTRIBUTE void setTextureWrapping(bool value) { this->setTextureAddressMode(value ? Texture::ADDRESS_WRAP : Texture::ADDRESS_CLAMP); }
-		DEPRECATED_ATTRIBUTE RamTexture* loadRAMTexture(chstr filename, bool dynamic = false) { return this->loadRamTexture(filename, dynamic); }
+		DEPRECATED_ATTRIBUTE Texture* loadRAMTexture(chstr filename, bool dynamic = false) { return this->loadRamTexture(filename, dynamic); }
 		DEPRECATED_ATTRIBUTE void drawQuad(grect rect, Color color) { this->drawRect(rect, color); }
 		DEPRECATED_ATTRIBUTE void drawColoredQuad(grect rect, Color color) { this->drawFilledRect(rect, color); }
 		DEPRECATED_ATTRIBUTE void drawTexturedQuad(grect rect, grect src) { this->drawTexturedRect(rect, src); }
@@ -157,7 +157,7 @@ namespace april
 
 		bool forcedDynamicLoading;
 		
-		virtual Texture* _createTexture(chstr filename, bool dynamic = false) = 0;
+		virtual Texture* _createTexture(chstr filename) = 0;
 
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);

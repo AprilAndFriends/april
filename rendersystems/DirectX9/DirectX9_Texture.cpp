@@ -31,30 +31,21 @@ namespace april
 	// TODO - refactor
 	extern harray<DirectX9_Texture*> gRenderTargets;
 
-	DirectX9_Texture::DirectX9_Texture(chstr filename, bool dynamic) : Texture()
+	DirectX9_Texture::DirectX9_Texture(chstr filename) : Texture()
 	{
 		this->filename = filename;
-		this->dynamic = dynamic;
 		this->width = 0;
 		this->height = 0;
 		this->bpp = 4;
 		this->renderTarget = false;
 		this->d3dTexture = NULL;
 		this->d3dSurface = NULL;
-		if (!this->dynamic)
-		{
-			this->load();
-		}
-		else
-		{
-			april::log("creating dynamic DX9 texture: " + _getInternalName());
-		}
+		april::log("creating DX9 texture: " + _getInternalName());
 	}
 
 	DirectX9_Texture::DirectX9_Texture(int w, int h, unsigned char* rgba) : Texture()
 	{
 		this->filename = "";
-		this->dynamic = false;
 		this->width = w;
 		this->height = h;
 		this->bpp = 4;
@@ -90,7 +81,6 @@ namespace april
 	DirectX9_Texture::DirectX9_Texture(int w, int h, Texture::Format format, Texture::Type type, Color color) : Texture()
 	{
 		this->filename = "";
-		this->dynamic = false;
 		this->width = w;
 		this->height = h;
 		this->renderTarget = false;
@@ -171,7 +161,6 @@ namespace april
 
 	bool DirectX9_Texture::load()
 	{
-		this->unusedTime = 0.0f;
 		if (this->isLoaded())
 		{
 			return true;
@@ -245,10 +234,6 @@ namespace april
 			}
 			this->d3dTexture->UnlockRect(0);
 			delete image;
-		}
-		foreach (Texture*, it, this->dynamicLinks)
-		{
-			(*it)->load();
 		}
 		return true;
 	}

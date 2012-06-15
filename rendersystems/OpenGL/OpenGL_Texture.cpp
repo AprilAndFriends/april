@@ -38,23 +38,15 @@
 
 namespace april
 {
-	OpenGL_Texture::OpenGL_Texture(chstr filename, bool dynamic) : Texture()
+	OpenGL_Texture::OpenGL_Texture(chstr filename) : Texture()
 	{
 		this->width = 0;
 		this->height = 0;
 		this->bpp = 4;
 		this->filename = filename;
-		this->dynamic = dynamic;
 		this->textureId = 0;
 		this->manualBuffer = NULL;
-		if (!this->dynamic)
-		{
-			this->load();
-		}
-		else
-		{
-			april::log("creating dynamic GL texture: " + _getInternalName());
-		}
+		april::log("creating GL texture: " + _getInternalName());
 	}
 
 	OpenGL_Texture::OpenGL_Texture(int w, int h, unsigned char* rgba) : Texture()
@@ -62,7 +54,6 @@ namespace april
 		april::log("creating user-defined GL texture");
 		this->width = w;
 		this->height = h;
-		this->dynamic = false;
 		this->filename = "";
 		this->manualBuffer = NULL;
 #ifdef _ANDROID // currently user texture caching works for Android only
@@ -82,7 +73,6 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->bpp = 4;
-		this->dynamic = false;
 		this->filename = "";
 		this->manualBuffer = NULL;
 		glGenTextures(1, &this->textureId);

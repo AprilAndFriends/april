@@ -39,12 +39,10 @@ namespace april
 
 	Texture::Texture()
 	{
-		this->dynamic = false;
 		this->filename = "";
 		this->width = 0;
 		this->height = 0;
 		this->bpp = 4;
-		this->unusedTime = 0.0f;
 		this->filter = FILTER_LINEAR;
 		this->addressMode = ADDRESS_WRAP;
 		april::rendersys->_registerTexture(this);
@@ -52,10 +50,6 @@ namespace april
 
 	Texture::~Texture()
 	{
-		foreach (Texture*, it, this->dynamicLinks)
-		{
-			(*it)->removeDynamicLink(this);
-		}
 		april::rendersys->_unregisterTexture(this);
 	}
 	
@@ -69,23 +63,6 @@ namespace april
 		return (this->filename != "" ? this->filename : "UserTexture");
 	}
 
-	void Texture::addDynamicLink(Texture* link)
-	{
-		if (!this->dynamicLinks.contains(link))
-		{
-			this->dynamicLinks += link;
-			link->addDynamicLink(this);
-		}
-	}
-	
-	void Texture::removeDynamicLink(Texture* link)
-	{
-		if (this->dynamicLinks.contains(link))
-		{
-			this->dynamicLinks -= link;
-		}
-	}
-	
 	void Texture::clear()
 	{
 		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement clear()");
@@ -244,31 +221,6 @@ namespace april
 	{
 		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), data, dataWidth, dataHeight, dataBpp,
 			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
-	}
-
-	void Texture::update(float k)
-	{
-		if (this->dynamic && this->isLoaded())
-		{
-			float maxTime = april::rendersys->getTextureIdleUnloadTime();
-			if (maxTime > 0.0f)
-			{
-				this->unusedTime += k;
-				if (this->unusedTime > maxTime)
-				{
-					this->unload();
-				}
-			}
-		}
-	}
-	
-	void Texture::_resetUnusedTime()
-	{
-		this->unusedTime = 0.0f;
-		foreach (Texture*, it, this->dynamicLinks)
-		{
-			(*it)->unusedTime = 0.0f;
-		}
 	}
 
 	hstr Texture::_findTextureFilename(chstr filename)

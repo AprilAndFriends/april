@@ -98,7 +98,7 @@ namespace april
 
 		void _configureDevice();
 
-		Texture* _createTexture(chstr filename, bool dynamic = false);
+		Texture* _createTexture(chstr filename);
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);

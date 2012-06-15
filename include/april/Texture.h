@@ -73,14 +73,9 @@ namespace april
 		HL_DEFINE_GET(int, bpp, Bpp);
 		HL_DEFINE_GETSET(Filter, filter, Filter);
 		HL_DEFINE_GETSET(AddressMode, addressMode, AddressMode);
-		HL_DEFINE_IS(bool, dynamic, Dynamic);
-		HL_DEFINE_GET(float, unusedTime, UnusedTime);
 		int getByteSize();
 
 		virtual bool isLoaded() = 0;
-		
-		void addDynamicLink(Texture* link);
-		void removeDynamicLink(Texture* link);
 		
 		virtual void clear();
 		virtual Color getPixel(int x, int y);
@@ -108,7 +103,6 @@ namespace april
 		void stretchBlit(grect destination, ImageSource* image, grect source, unsigned char alpha = 255);
 		void stretchBlit(grect destination, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
 
-		void update(float k);
 		virtual bool copyPixelData(unsigned char** output) { return false; }
 		
 		DEPRECATED_ATTRIBUTE int getSizeInBytes() { return this->getByteSize(); }
@@ -134,14 +128,10 @@ namespace april
 		int bpp;
 		Filter filter;
 		AddressMode addressMode;
-		bool dynamic;
-		float unusedTime;
-		harray<Texture*> dynamicLinks;
 
 		hstr _getInternalName();
 
 		hstr _findTextureFilename(chstr filename);
-		void _resetUnusedTime();
 
 		// TODO - has to be discussed
 		void _notifyLoadingListener(Texture* t);
