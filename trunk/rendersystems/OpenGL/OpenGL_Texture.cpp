@@ -130,7 +130,6 @@ namespace april
 
 	bool OpenGL_Texture::load()
 	{
-		this->unusedTime = 0.0f;
 		if (this->textureId != 0)
 		{
 			return true;
@@ -187,10 +186,6 @@ namespace april
 		else if (this->manualBuffer != NULL)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->manualBuffer);
-		}
-		foreach (Texture*, it, this->dynamicLinks)
-		{
-			(*it)->load();
 		}
 		return true;
 	}
