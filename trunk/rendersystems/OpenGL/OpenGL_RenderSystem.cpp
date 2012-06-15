@@ -565,11 +565,7 @@ namespace april
 				this->setTextureAddressMode(addressMode);
 			}
 			// filtering and wrapping applied before loading texture data, iOS OpenGL guidelines suggest it as an optimization
-			if (!this->activeTexture->isLoaded())
-			{
-				this->activeTexture->load();
-			}
-			this->activeTexture->_resetUnusedTime();
+			this->activeTexture->load();
 			this->bindTexture(this->activeTexture->textureId);
 		}
 	}

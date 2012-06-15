@@ -28,7 +28,7 @@ namespace april
 	class aprilExport RamTexture : public Texture
 	{
 	public:
-		RamTexture(chstr filename, bool dynamic);
+		RamTexture(chstr filename);
 		RamTexture(int w, int h);
 		~RamTexture();
 		bool load();

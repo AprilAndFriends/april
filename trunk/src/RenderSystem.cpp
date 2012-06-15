@@ -115,7 +115,7 @@ namespace april
 		april::window->_setResolution(w, h);
 	}
 	
-	Texture* RenderSystem::loadTexture(chstr filename, bool dynamic)
+	Texture* RenderSystem::loadTexture(chstr filename, bool delayLoad)
 	{
 		hstr name = this->_findTextureFilename(filename);
 		if (name == "")
@@ -124,10 +124,14 @@ namespace april
 		}
 		if (this->forcedDynamicLoading)
 		{
-			dynamic = true;
+			delayLoad = true;
 		}
-		Texture* texture = this->_createTexture(name, dynamic);
-		if (!texture->isDynamic() && !texture->isLoaded())
+		Texture* texture = this->_createTexture(name);
+		if (!delayLoad)
+		{
+			texture->load();
+		}
+		if (!delayLoad && !texture->isLoaded())
 		{
 			delete texture;
 			return NULL;
@@ -135,7 +139,7 @@ namespace april
 		return texture;
 	}
 
-	RamTexture* RenderSystem::loadRamTexture(chstr filename, bool dynamic)
+	Texture* RenderSystem::loadRamTexture(chstr filename, bool delayLoad)
 	{
 		hstr name = this->_findTextureFilename(filename);
 		if (name == "")
@@ -144,10 +148,14 @@ namespace april
 		}
 		if (this->forcedDynamicLoading)
 		{
-			dynamic = true;
+			delayLoad = true;
 		}
-		RamTexture* texture = new RamTexture(name, dynamic);
-		if (!dynamic && !texture->isLoaded())
+		RamTexture* texture = new RamTexture(name);
+		if (!delayLoad)
+		{
+			texture->load();
+		}
+		if (!delayLoad && !texture->isLoaded())
 		{
 			delete texture;
 			return NULL;

@@ -19,18 +19,11 @@
 
 namespace april
 {
-	RamTexture::RamTexture(chstr filename, bool dynamic) : Texture()
+	RamTexture::RamTexture(chstr filename) : Texture()
 	{
 		this->filename = filename;
 		this->source = NULL;
-		if (!this->dynamic)
-		{
-			this->load();
-		}
-		else
-		{
-			april::log("creating dynamic RAM texture");
-		}
+		april::log("creating RAM texture");
 	}
 
 	RamTexture::RamTexture(int w, int h) : Texture()
@@ -38,7 +31,6 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->bpp = 4;
-		this->dynamic = false;
 		this->source = april::createEmptyImage(w, h);
 	}
 
@@ -89,7 +81,6 @@ namespace april
 		{
 			this->load();
 		}
-		this->unusedTime = 0.0f;
 		return this->source->getPixel(x, y);
 	}
 	
@@ -99,7 +90,6 @@ namespace april
 		{
 			this->load();
 		}
-		this->unusedTime = 0.0f;
 		this->source->setPixel(x, y, color);
 	}
 	

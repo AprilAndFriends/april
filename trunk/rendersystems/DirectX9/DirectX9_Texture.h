@@ -30,7 +30,7 @@ namespace april
 	public:
 		friend class DirectX9_RenderSystem;
 
-		DirectX9_Texture(chstr filename, bool dynamic);
+		DirectX9_Texture(chstr filename);
 		DirectX9_Texture(int w, int h, unsigned char* rgba);
 		DirectX9_Texture(int w, int h, Format format, Type type, Color color = APRIL_COLOR_CLEAR);
 		~DirectX9_Texture();

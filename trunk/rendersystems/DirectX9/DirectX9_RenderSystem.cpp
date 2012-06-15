@@ -383,12 +383,6 @@ namespace april
 		this->activeTexture = (DirectX9_Texture*)texture;
 		if (this->activeTexture != NULL)
 		{
-			if (!this->activeTexture->isLoaded())
-			{
-				this->activeTexture->load();
-			}
-			this->activeTexture->_resetUnusedTime();
-			this->d3dDevice->SetTexture(0, this->activeTexture->_getTexture());
 			Texture::Filter filter = this->activeTexture->getFilter();
 			if (this->textureFilter != filter)
 			{
@@ -399,6 +393,8 @@ namespace april
 			{
 				this->setTextureAddressMode(addressMode);
 			}
+			this->activeTexture->load();
+			this->d3dDevice->SetTexture(0, this->activeTexture->_getTexture());
 		}
 		else
 		{
@@ -488,9 +484,9 @@ namespace april
 		this->d3dDevice->BeginScene();
 	}
 
-	Texture* DirectX9_RenderSystem::_createTexture(chstr filename, bool dynamic)
+	Texture* DirectX9_RenderSystem::_createTexture(chstr filename)
 	{
-		return new DirectX9_Texture(filename, dynamic);
+		return new DirectX9_Texture(filename);
 	}
 
 	Texture* DirectX9_RenderSystem::createTexture(int w, int h, unsigned char* rgba)

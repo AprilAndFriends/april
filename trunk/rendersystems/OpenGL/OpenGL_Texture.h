@@ -40,7 +40,7 @@ namespace april
 	public:
 		friend class OpenGL_RenderSystem;
 		
-		OpenGL_Texture(chstr filename, bool dynamic);
+		OpenGL_Texture(chstr filename);
 		OpenGL_Texture(int w, int h, unsigned char* rgba);
 		OpenGL_Texture(int w, int h, Format format, Type type, Color color = APRIL_COLOR_CLEAR);
 		~OpenGL_Texture();

@@ -107,7 +107,7 @@ namespace april
 		OpenGL_RenderState state;
 		OpenGL_RenderState deviceState;
 
-		Texture* _createTexture(chstr filename, bool dynamic = false);
+		Texture* _createTexture(chstr filename);
 
 		void _setVertexPointer(int stride, const void* pointer);
 		void _setTexCoordPointer(int stride, const void* pointer);
