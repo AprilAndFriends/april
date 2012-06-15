@@ -645,9 +645,9 @@ namespace april
 		this->state.textureId = textureId;
 	}
 
-	Texture* OpenGL_RenderSystem::_createTexture(chstr filename, bool dynamic)
+	Texture* OpenGL_RenderSystem::_createTexture(chstr filename)
 	{
-		return new OpenGL_Texture(filename, dynamic);
+		return new OpenGL_Texture(filename);
 	}
 
 	Texture* OpenGL_RenderSystem::createTexture(int w, int h, unsigned char* rgba)
