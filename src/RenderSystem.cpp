@@ -38,7 +38,7 @@ namespace april
 	
 	april::RenderSystem* rendersys = NULL;
 	
-	RenderSystem::RenderSystem() : created(false), forcedDynamicLoading(false), textureIdleUnloadTime(0.0f),
+	RenderSystem::RenderSystem() : created(false), forcedDynamicLoading(false),
 		textureFilter(Texture::FILTER_LINEAR), textureAddressMode(Texture::ADDRESS_WRAP)
 	{
 		this->name = "Generic";
@@ -117,7 +117,7 @@ namespace april
 	
 	Texture* RenderSystem::loadTexture(chstr filename, bool delayLoad)
 	{
-		hstr name = this->_findTextureFilename(filename);
+		hstr name = this->findTextureFilename(filename);
 		if (name == "")
 		{
 			return NULL;
@@ -141,7 +141,7 @@ namespace april
 
 	Texture* RenderSystem::loadRamTexture(chstr filename, bool delayLoad)
 	{
-		hstr name = this->_findTextureFilename(filename);
+		hstr name = this->findTextureFilename(filename);
 		if (name == "")
 		{
 			return NULL;
@@ -255,7 +255,7 @@ namespace april
 		april::window->presentFrame();
 	}
 	
-	hstr RenderSystem::_findTextureFilename(chstr filename)
+	hstr RenderSystem::findTextureFilename(chstr filename)
 	{
 		if (hresource::exists(filename))
 		{

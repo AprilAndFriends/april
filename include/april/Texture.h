@@ -131,8 +131,6 @@ namespace april
 
 		hstr _getInternalName();
 
-		hstr _findTextureFilename(chstr filename);
-
 		// TODO - has to be discussed
 		void _notifyLoadingListener(Texture* t);
 		
