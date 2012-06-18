@@ -1,6 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -21,43 +22,43 @@ namespace april
 {
 	BlurManager::BlurManager()
 	{
-		mTex1 = rendersys->createEmptyTexture(TEXTURE_SIZE, TEXTURE_SIZE, AT_XRGB, AT_RENDER_TARGET);
-		mTex2 = rendersys->createEmptyTexture(TEXTURE_SIZE, TEXTURE_SIZE, AT_XRGB, AT_RENDER_TARGET);
-		mNumLevels = 0;
-		mEnable = true;
-		mInc = 1.0f;
+		this->textures[0] = rendersys->createTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::Texture::FORMAT_RGB, april::Texture::TYPE_RENDER_TARGET);
+		this->textures[1] = rendersys->createTexture(TEXTURE_SIZE, TEXTURE_SIZE, april::Texture::FORMAT_RGB, april::Texture::TYPE_RENDER_TARGET);
+		this->numLevels = 0;
+		this->enabled = true;
+		this->increment = 1.0f;
 	}
 	
 	BlurManager::~BlurManager()
 	{
-		delete mTex1;
-		delete mTex2;
+		delete this->textures[0];
+		delete this->textures[1];
 	}
 
-	void BlurManager::begin(int nLevels, float inc)
+	void BlurManager::begin(int nLevels, float increment)
 	{
-		if (nLevels != mNumLevels && nLevels > 0)
+		if (nLevels != this->numLevels && nLevels > 0)
 		{	
-			rendersys->setRenderTarget(mTex1);
-			mEnable = true;
+			april::rendersys->setRenderTarget(this->textures[0]);
+			this->enabled = true;
 		}
 		else
 		{
-			mEnable = false;
+			this->enabled = false;
 		}
-		mInc = inc;
-		mNumLevels = nLevels;
+		this->increment = increment;
+		this->numLevels = nLevels;
 	}
 
 	void BlurManager::end()
 	{
-		if (mEnable)
+		if (this->enabled)
 		{
 			int i;
-			float inc;
+			float increment;
 			april::ColoredTexturedVertex av[6 * 4];
 			gtypes::Matrix4 mat = rendersys->getProjectionMatrix();
-			rendersys->setOrthoProjection(gvec2(TEXTURE_SIZE, TEXTURE_SIZE));
+			april::rendersys->setOrthoProjection(gvec2(TEXTURE_SIZE, TEXTURE_SIZE));
 			float k = 0.5f / TEXTURE_SIZE;
 			av[0].x = 0;			av[0].y = 0;			av[0].u = k;		av[0].v = k;
 			av[1].x = TEXTURE_SIZE;	av[1].y = 0;			av[1].u = 1 + k;	av[1].v = k;
@@ -70,34 +71,46 @@ namespace april
 			memcpy(&av[12], &av[0], 6 * sizeof(april::ColoredTexturedVertex));
 			memcpy(&av[18], &av[0], 6 * sizeof(april::ColoredTexturedVertex));
 			
-			rendersys->setBlendMode(april::ADD);
-			for (int j = 0; j < mNumLevels; j++)
+			april::rendersys->setTextureBlendMode(april::ADD);
+			for_iter (j, 0, this->numLevels)
 			{
-				rendersys->setRenderTarget(mTex2);
-				rendersys->setTexture(mTex1);
-				rendersys->clear();
-				hswap(mTex1, mTex2);
+				april::rendersys->setRenderTarget(this->textures[1]);
+				april::rendersys->setTexture(this->textures[0]);
+				april::rendersys->clear();
+				hswap(this->textures[0], this->textures[1]);
 
-				inc = mInc;
-				for (i =  0; i <  6; i++) av[i].v -= inc * k;
-				for (i =  6; i < 12; i++) av[i].v += inc * k;
-				for (i = 12; i < 18; i++) av[i].u -= inc * k;
-				for (i = 18; i < 24; i++) av[i].u += inc * k;
-				rendersys->render(april::TriangleList, av, 24);
+				increment = this->increment;
+				for_iterx (i, 0, 6)
+				{
+					av[i].v -= increment * k;
+				}
+				for_iterx (i, 6, 12)
+				{
+					av[i].v += increment * k;
+				}
+				for_iterx (i, 12, 18)
+				{
+					av[i].u -= increment * k;
+				}
+				for_iterx (i, 18, 24)
+				{
+					av[i].u += increment * k;
+				}
+				april::rendersys->render(april::TriangleList, av, 24);
 			}
-			rendersys->setBlendMode(april::ALPHA_BLEND);
-			rendersys->setRenderTarget(0);
-			rendersys->setProjectionMatrix(mat);
+			april::rendersys->setTextureBlendMode(april::ALPHA_BLEND);
+			april::rendersys->setRenderTarget(0);
+			april::rendersys->setProjectionMatrix(mat);
 		}
 	}
 	
 	void BlurManager::draw(int w, int h)
 	{
-		if (mNumLevels)
+		if (this->numLevels)
 		{
 			float k = 0.5f / TEXTURE_SIZE;
-			rendersys->setTexture(mTex1);
-			rendersys->drawTexturedQuad(grect(0.0f, 0.0f, (float)w, (float)h),grect(k, k, 1.0f, 1.0f));
+			april::rendersys->setTexture(this->textures[0]);
+			april::rendersys->drawTexturedRect(grect(0.0f, 0.0f, (float)w, (float)h), grect(k, k, 1.0f, 1.0f));
 		}
 	}
 }
