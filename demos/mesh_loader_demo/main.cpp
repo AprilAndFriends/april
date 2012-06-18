@@ -46,9 +46,9 @@ bool update(float k)
 
 void april_init(const harray<hstr>& args)
 {
-	april::init();
-	april::createRenderSystem("");
-	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "april: Mesh Demo");
+	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
+	april::createRenderSystem();
+	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "april: Mesh Demo");
 	april::window->setUpdateCallback(update);
 	mesh = new april::StaticMesh(RESOURCE_PATH "testobject.obj");
 	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture");

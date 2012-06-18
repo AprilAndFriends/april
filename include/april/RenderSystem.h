@@ -61,7 +61,6 @@ namespace april
 		HL_DEFINE_GET(grect, orthoProjection, OrthoProjection);
 		void setOrthoProjection(grect rect);
 		void setOrthoProjection(gvec2 size);
-		HL_DEFINE_ISSET(bool, forcedDynamicLoading, ForcedDynamicLoading);
 
 		virtual float getPixelOffset() = 0;
 		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
@@ -81,10 +80,10 @@ namespace april
 		virtual void setFullscreen(bool fullscreen) { } // TODO - main part should be in window class
 		virtual void setResolution(int w, int h); // TODO - main part should be in window class
 
-		virtual Texture* loadTexture(chstr filename, bool delayLoad = true);
+		virtual Texture* loadTexture(chstr filename, bool delayLoad = false);
 		virtual Texture* createTexture(int w, int h, unsigned char* rgba) = 0;
 		virtual Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = APRIL_COLOR_CLEAR) = 0;
-		Texture* loadRamTexture(chstr filename, bool delayLoad = true);
+		Texture* loadRamTexture(chstr filename, bool delayLoad = false);
 		virtual PixelShader* createPixelShader() = 0;
 		virtual PixelShader* createPixelShader(chstr filename) = 0;
 		virtual VertexShader* createVertexShader() = 0;
@@ -122,8 +121,6 @@ namespace april
 		DEPRECATED_ATTRIBUTE Window* getWindow() { return april::window; }
 		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f) { this->setOrthoProjection(grect(x_offset, y_offset, w, h)); }
 		DEPRECATED_ATTRIBUTE bool isFullscreen() { return april::window->isFullscreen(); }
-		DEPRECATED_ATTRIBUTE bool isDynamicLoadingForced() { return this->isForcedDynamicLoading(); }
-		DEPRECATED_ATTRIBUTE void forceDynamicLoading(bool value) { this->setForcedDynamicLoading(value); }
 		DEPRECATED_ATTRIBUTE void restore() { this->reset(); }
 		DEPRECATED_ATTRIBUTE void clear(bool useColor, bool depth, grect rect, Color color = APRIL_COLOR_CLEAR) { this->clear(depth, rect, color); }
 		DEPRECATED_ATTRIBUTE ImageSource* grabScreenshot(int bpp = 3) { return this->takeScreenshot(bpp); }
@@ -153,8 +150,6 @@ namespace april
 		gmat4 projectionMatrix;
 		grect orthoProjection;
 
-		bool forcedDynamicLoading;
-		
 		virtual Texture* _createTexture(chstr filename) = 0;
 
 		void _registerTexture(Texture* texture);

@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Domagoj Cerjan
 /// @author  Boris Mikic
-/// @version 1.4
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -29,44 +29,47 @@ namespace april
     
     StaticMesh::~StaticMesh()
     {
-        
+		if (this->vertexArray != NULL)
+		{
+			delete [] this->vertexArray;
+		}
     }
     
     void StaticMesh::convertToVertexArray()
     {
-        mVertexArray = new april::TexturedVertex[3*mPolygons.size()];
-        bool tex = (mTextureCoordinates.size() > 0);
+        this->vertexArray = new april::TexturedVertex[3 * polygons.size()];
+        bool tex = (this->textureCoordinates.size() > 0);
         
-        for (int i = 0; i < mPolygons.size(); ++i)
+        for (int i = 0; i < this->polygons.size(); ++i)
         {
             
-            mVertexArray[3 * i + 0].x = mVertices[mPolygons[i].mVertind[0]].x;
-            mVertexArray[3 * i + 0].y = mVertices[mPolygons[i].mVertind[0]].y;
-            mVertexArray[3 * i + 0].z = mVertices[mPolygons[i].mVertind[0]].z;
+            this->vertexArray[3 * i + 0].x = this->vertexes[this->polygons[i].vertind[0]].x;
+            this->vertexArray[3 * i + 0].y = this->vertexes[this->polygons[i].vertind[0]].y;
+            this->vertexArray[3 * i + 0].z = this->vertexes[this->polygons[i].vertind[0]].z;
             if (tex)
             {
-                mVertexArray[3 * i + 0].u = mTextureCoordinates[mPolygons[i].mTexind[0]].x;
-                mVertexArray[3 * i + 0].v = mTextureCoordinates[mPolygons[i].mTexind[0]].y;
+                this->vertexArray[3 * i + 0].u = this->textureCoordinates[this->polygons[i].texind[0]].x;
+                this->vertexArray[3 * i + 0].v = this->textureCoordinates[this->polygons[i].texind[0]].y;
             }
-            mVertexArray[3 * i + 1].x = mVertices[mPolygons[i].mVertind[1]].x;
-            mVertexArray[3 * i + 1].y = mVertices[mPolygons[i].mVertind[1]].y;
-            mVertexArray[3 * i + 1].z = mVertices[mPolygons[i].mVertind[1]].z;
+            this->vertexArray[3 * i + 1].x = this->vertexes[this->polygons[i].vertind[1]].x;
+            this->vertexArray[3 * i + 1].y = this->vertexes[this->polygons[i].vertind[1]].y;
+            this->vertexArray[3 * i + 1].z = this->vertexes[this->polygons[i].vertind[1]].z;
             if (tex)
             {
-                mVertexArray[3 * i + 1].u = mTextureCoordinates[mPolygons[i].mTexind[1]].x;
-                mVertexArray[3 * i + 1].v = mTextureCoordinates[mPolygons[i].mTexind[1]].y;
+                this->vertexArray[3 * i + 1].u = this->textureCoordinates[this->polygons[i].texind[1]].x;
+                this->vertexArray[3 * i + 1].v = this->textureCoordinates[this->polygons[i].texind[1]].y;
             }
-            mVertexArray[3 * i + 2].x = mVertices[mPolygons[i].mVertind[2]].x;
-            mVertexArray[3 * i + 2].y = mVertices[mPolygons[i].mVertind[2]].y;
-            mVertexArray[3 * i + 2].z = mVertices[mPolygons[i].mVertind[2]].z;
+            this->vertexArray[3 * i + 2].x = this->vertexes[this->polygons[i].vertind[2]].x;
+            this->vertexArray[3 * i + 2].y = this->vertexes[this->polygons[i].vertind[2]].y;
+            this->vertexArray[3 * i + 2].z = this->vertexes[this->polygons[i].vertind[2]].z;
             if (tex)
             {
-                mVertexArray[3 * i + 2].u = mTextureCoordinates[mPolygons[i].mTexind[2]].x;
-                mVertexArray[3 * i + 2].v = mTextureCoordinates[mPolygons[i].mTexind[2]].y;
+                this->vertexArray[3 * i + 2].u = this->textureCoordinates[this->polygons[i].texind[2]].x;
+                this->vertexArray[3 * i + 2].v = this->textureCoordinates[this->polygons[i].texind[2]].y;
             }
         }
         
-        mNumVertices = 3 * mPolygons.size();
+        this->numVertexes = 3 * this->polygons.size();
     }
     
     void StaticMesh::loadFromFile(chstr meshPath)
@@ -87,46 +90,50 @@ namespace april
         while (fscanf(fp, "%s", buffer) > 0)
         {
             command = hstr(buffer);
-            if(command == "v")
+            if (command == "v")
             {
                 gtypes::Vector3 vert;
                 if( fscanf(fp, "%f %f %f", &vert.x, &vert.y, &vert.z) != EOF )
                 {
-                    mVertices.push_back(vert);
-                    //std::cerr << "Vertice (" << msh->mVertices.size() << ")" << "[" << vert.x << "," << vert.y << "," << vert.z << "]" << std::endl;
+                    this->vertexes.push_back(vert);
+                    //std::cerr << "Vertice (" << msh->vertexes.size() << ")" << "[" << vert.x << "," << vert.y << "," << vert.z << "]" << std::endl;
                 }
                 else throw faulty_obj_file(meshPath);
             }
-            else if(command == "vn")
+            else if (command == "vn")
             {
                 gtypes::Vector3 nor;
-                if( fscanf(fp, "%f %f %f", &nor.x, &nor.y, &nor.z) != EOF )
+                if (fscanf(fp, "%f %f %f", &nor.x, &nor.y, &nor.z) != EOF)
                 {
-                    mNormals.push_back(nor);
+                    this->normals.push_back(nor);
                     //std::cerr << "Normal (" << msh->mNormals.size() << ")" << "[" << nor.x << "," << nor.y << "," << nor.z << "]" << std::endl;
                 }
                 else throw faulty_obj_file(meshPath);
             }
-            else if(command == "vt")
+            else if (command == "vt")
             {
                 gtypes::Vector2 uv;
-                if( fscanf(fp, "%f %f", &uv.x, &uv.y) != EOF )
+                if (fscanf(fp, "%f %f", &uv.x, &uv.y) != EOF)
                 {
-                    mTextureCoordinates.push_back(uv);
-                    //std::cerr << "TexCoord (" << msh->mTextureCoordinates.size() << ")" << "[" << uv.x << "," << uv.y << "]" << std::endl;
+                    this->textureCoordinates.push_back(uv);
+                    //std::cerr << "TexCoord (" << msh->textureCoordinates.size() << ")" << "[" << uv.x << "," << uv.y << "]" << std::endl;
                 }
                 else throw faulty_obj_file(meshPath);
             }
-            else if(command == "f")
+            else if (command == "f")
             {
                 Polygon poly;
                 char buff1[64];
                 char buff2[64];
                 char buff3[64];
-                hstr first, second, third;
+                hstr first;
+				hstr second;
+				hstr third;
                 
-                if(fscanf(fp, " %s %s %s", buff1, buff2, buff3) == EOF)
+                if (fscanf(fp, " %s %s %s", buff1, buff2, buff3) == EOF)
+				{
                     throw faulty_obj_file(meshPath);
+				}
                     
                 first  = hstr(buff1);
                 second = hstr(buff2);
@@ -134,83 +141,86 @@ namespace april
                 
                 if(first.count("/") == 0)
                 {
-                    poly.mVertind[0] = ((int)first - 1);
-                    poly.mVertind[1] = ((int)second - 1);
-                    poly.mVertind[2] = ((int)third - 1);
+                    poly.vertind[0] = ((int)first - 1);
+                    poly.vertind[1] = ((int)second - 1);
+                    poly.vertind[2] = ((int)third - 1);
                 }
                 
                 else if(first.count("//") == 1)
                 {
                     hstr tmp1, tmp2;
                     first.split("//", tmp1, tmp2);
-                    poly.mVertind[0] = ((int)tmp1 - 1);
-                    poly.mNorind[0]  = ((int)tmp2 - 1);
+                    poly.vertind[0] = ((int)tmp1 - 1);
+                    poly.norind[0]  = ((int)tmp2 - 1);
                     
                     second.split("//", tmp1, tmp2);
-                    poly.mVertind[1] = ((int)tmp1 - 1);
-                    poly.mNorind[1]  = ((int)tmp2 - 1);
+                    poly.vertind[1] = ((int)tmp1 - 1);
+                    poly.norind[1]  = ((int)tmp2 - 1);
                     
                     third.split("//", tmp1, tmp2);
-                    poly.mVertind[2] = ((int)tmp1 - 1);
-                    poly.mNorind[2]  = ((int)tmp2 - 1);
+                    poly.vertind[2] = ((int)tmp1 - 1);
+                    poly.norind[2]  = ((int)tmp2 - 1);
                 }
                 
                 else if(first.count("/") == 2)
                 {
                     
-                    hstr tmp1,tmp2,tmp3, tmp;
+                    hstr tmp1;
+					hstr tmp2;
+					hstr tmp3;
+					hstr tmp;
                     first.split('/', tmp1, tmp);
                     tmp.split('/', tmp2, tmp3);
                     
                     //std::cerr << tmp1 << " " << tmp2 << " " << tmp3 << std::endl;
                     
-                    poly.mVertind[0] = ((int)tmp1 - 1);
-                    poly.mTexind[0]  = ((int)tmp2 - 1);
-                    poly.mNorind[0]  = ((int)tmp3 - 1);
+                    poly.vertind[0] = ((int)tmp1 - 1);
+                    poly.texind[0]  = ((int)tmp2 - 1);
+                    poly.norind[0]  = ((int)tmp3 - 1);
                     
                     second.split('/', tmp1, tmp);
                     tmp.split('/', tmp2, tmp3);
                     
                     //std::cerr << tmp1 << " " << tmp2 << " " << tmp3 << std::endl;
                     
-                    poly.mVertind[1] = ((int)tmp1 - 1);
-                    poly.mTexind[1]  = ((int)tmp2 - 1);
-                    poly.mNorind[1]  = ((int)tmp3 - 1);
+                    poly.vertind[1] = ((int)tmp1 - 1);
+                    poly.texind[1]  = ((int)tmp2 - 1);
+                    poly.norind[1]  = ((int)tmp3 - 1);
                     
                     third.split('/', tmp1, tmp);
                     tmp.split('/', tmp2, tmp3);
                     
                     //std::cerr << tmp1 << " " << tmp2 << " " << tmp3 << std::endl;
                     
-                    poly.mVertind[2] = ((int)tmp1 - 1);
-                    poly.mTexind[2]  = ((int)tmp2 - 1);
-                    poly.mNorind[2]  = ((int)tmp3 - 1);
+                    poly.vertind[2] = ((int)tmp1 - 1);
+                    poly.texind[2]  = ((int)tmp2 - 1);
+                    poly.norind[2]  = ((int)tmp3 - 1);
                 }
                 
-                mPolygons.push_back(poly);
+                this->polygons.push_back(poly);
                 
             }
-            else if(command.starts_with("#"))
+            else if (command.starts_with("#"))
             {
                 
             }
-            else if(command.starts_with("mtllib"))
+            else if (command.starts_with("mtllib"))
             {
                 
             }
-            else if(command.starts_with("usemtl"))
+            else if (command.starts_with("usemtl"))
             {
                 
             }
-            else if(command == "s")
+            else if (command == "s")
             {
                 
             }
-            else if(command == "o")
+            else if (command == "o")
             {
                 
             }
-            else if(command == "g")
+            else if (command == "g")
             {
                 
             }
@@ -219,12 +229,12 @@ namespace april
     
     void StaticMesh::setMeshName(chstr meshName)
     {
-        mMeshName = meshName;
+        this->meshName = meshName;
     }
     
     void StaticMesh::draw(april::RenderOp renderOp)
     {
-        rendersys->render(renderOp, mVertexArray, mNumVertices);
+        rendersys->render(renderOp, vertexArray, numVertexes);
     }
     
     /////////////////////////////////////////////////////////////////////////////////////

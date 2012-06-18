@@ -1,7 +1,8 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Domagoj Cerjan
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -32,9 +33,9 @@ namespace april
     class aprilutilExport Polygon
     {
     public:
-        int mVertind[3];
-        int mNorind[3];
-        int mTexind[3];
+        int vertind[3];
+        int norind[3];
+        int texind[3];
     };
     
     
@@ -44,18 +45,18 @@ namespace april
 	{
     
     public:
-        hltypes::Array<gvec3> mVertices;
-        hltypes::Array<Polygon> mPolygons;
-        hltypes::Array<gvec3> mNormals;
-        hltypes::Array<gvec2> mTextureCoordinates;
+        hltypes::Array<gvec3> vertexes;
+        hltypes::Array<Polygon> polygons;
+        hltypes::Array<gvec3> normals;
+        hltypes::Array<gvec2> textureCoordinates;
         
-        hstr mMeshName;
+        hstr meshName;
         
-        april::TexturedVertex *mVertexArray;
-        int mNumVertices;
+        april::TexturedVertex* vertexArray;
+        int numVertexes;
         
         
-        april::Texture *mTexture;
+        april::Texture* texture;
         
     public:
 		StaticMesh();

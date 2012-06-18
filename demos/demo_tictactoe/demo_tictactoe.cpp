@@ -124,10 +124,10 @@ bool update(float k)
 	april::rendersys->render(april::TriangleStrip, v, 4);
 	
 	april::rendersys->setTexture(NULL);
-	april::rendersys->drawColoredQuad(grect(size.x, 0, 10, drawRect.h), APRIL_COLOR_MANGENTA);
-	april::rendersys->drawColoredQuad(grect(size.x * 2 + 10, 0, 10, drawRect.h), APRIL_COLOR_MANGENTA);
-	april::rendersys->drawColoredQuad(grect(0, size.y, drawRect.w, 10), APRIL_COLOR_MANGENTA);
-	april::rendersys->drawColoredQuad(grect(0, size.y * 2 + 10, drawRect.w, 10), APRIL_COLOR_MANGENTA);
+	april::rendersys->drawFilledRect(grect(size.x, 0, 10, drawRect.h), APRIL_COLOR_MANGENTA);
+	april::rendersys->drawFilledRect(grect(size.x * 2 + 10, 0, 10, drawRect.h), APRIL_COLOR_MANGENTA);
+	april::rendersys->drawFilledRect(grect(0, size.y, drawRect.w, 10), APRIL_COLOR_MANGENTA);
+	april::rendersys->drawFilledRect(grect(0, size.y * 2 + 10, drawRect.w, 10), APRIL_COLOR_MANGENTA);
 	
 	for (int j = 0; j < 3; j++)
 	{
@@ -175,8 +175,11 @@ bool update(float k)
 	return true;
 }
 
-void OnMouseUp(float x, float y, int button)
+void OnMouseUp(int button)
 {
+	gvec2 cursorPosition = april::window->getCursorPosition();
+	float x = cursorPosition.x;
+	float y = cursorPosition.y;
 	if (!player)
 	{
 		if (x >= 0 && x <= size.x && y >= 0 && y <= size.y && positions[0][0] == 0)
@@ -312,11 +315,11 @@ void OnMouseUp(float x, float y, int button)
 
 void april_init(const harray<hstr>& args)
 {
-	april::init();
-	april::createRenderSystem("");
-	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "Demo Tic Tac Toe");
+	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
+	april::createRenderSystem();
+	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "Demo Tic Tac Toe");
 	april::window->setUpdateCallback(update);
-	april::window->setMouseCallbacks(NULL, OnMouseUp, NULL);
+	april::window->setMouseCallbacks(NULL, OnMouseUp, NULL, NULL);
 	background = april::rendersys->loadTexture(RESOURCE_PATH "texture");
 	x_symbol = april::rendersys->loadTexture(RESOURCE_PATH "x");
 	o_symbol = april::rendersys->loadTexture(RESOURCE_PATH "o");

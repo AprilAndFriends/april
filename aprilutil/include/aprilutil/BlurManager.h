@@ -1,6 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
-/// @version 1.31
+/// @author  Boris Mikic
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
@@ -26,16 +27,15 @@ namespace april
 		BlurManager();
 		~BlurManager();
 
-		void begin(int nLevels, float inc);
+		void begin(int nLevels, float increment);
 		void end();
 		void draw(int w, int h);
 		
 	protected:
-		Texture* mTex1;
-		Texture* mTex2;
-		int mNumLevels;
-		bool mEnable;
-		float mInc;
+		Texture* textures[2];
+		int numLevels;
+		bool enabled;
+		float increment;
 
 	};
 

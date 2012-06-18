@@ -43,9 +43,9 @@ bool render(float k)
 
 void april_init(const harray<hstr>& args)
 {
-	april::init();
-	april::createRenderSystem("");
-	april::createRenderTarget((int)drawRect.w, (int)drawRect.h, false, "april: Simple 3D");
+	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
+	april::createRenderSystem();
+	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "april: Simple 3D");
 	april::window->setUpdateCallback(render);
 	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture");
 	v[0].x = -1.0f;	v[0].y = 1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;

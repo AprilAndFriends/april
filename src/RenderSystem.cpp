@@ -38,8 +38,7 @@ namespace april
 	
 	april::RenderSystem* rendersys = NULL;
 	
-	RenderSystem::RenderSystem() : created(false), forcedDynamicLoading(false),
-		textureFilter(Texture::FILTER_LINEAR), textureAddressMode(Texture::ADDRESS_WRAP)
+	RenderSystem::RenderSystem() : created(false), textureFilter(Texture::FILTER_LINEAR), textureAddressMode(Texture::ADDRESS_WRAP)
 	{
 		this->name = "Generic";
 	}
@@ -122,10 +121,6 @@ namespace april
 		{
 			return NULL;
 		}
-		if (this->forcedDynamicLoading)
-		{
-			delayLoad = true;
-		}
 		Texture* texture = this->_createTexture(name);
 		if (!delayLoad)
 		{
@@ -145,10 +140,6 @@ namespace april
 		if (name == "")
 		{
 			return NULL;
-		}
-		if (this->forcedDynamicLoading)
-		{
-			delayLoad = true;
 		}
 		RamTexture* texture = new RamTexture(name);
 		if (!delayLoad)
