@@ -223,38 +223,6 @@ namespace april
 			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
 	}
 
-	hstr Texture::_findTextureFilename(chstr filename)
-	{
-		if (hresource::exists(filename))
-		{
-			return filename;
-		}
-		hstr name;
-		harray<hstr> extensions = april::getTextureExtensions();
-		foreach (hstr, it, extensions)
-		{
-			name = filename + (*it);
-			if (hresource::exists(name))
-			{
-				return name;
-			}
-		}
-		int index = filename.rfind(".");
-		if (index >= 0)
-		{
-			hstr noExtensionName = filename.substr(0, index);
-			foreach (hstr, it, extensions)
-			{
-				name = noExtensionName + (*it);
-				if (hresource::exists(name))
-				{
-					return name;
-				}
-			}
-		}
-		return "";
-	}
-	
 	void Texture::_blit(unsigned char* thisData, int x, int y, unsigned char* srcData, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		x = hclamp(x, 0, this->width - 1);

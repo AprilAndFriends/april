@@ -61,7 +61,6 @@ namespace april
 		HL_DEFINE_GET(grect, orthoProjection, OrthoProjection);
 		void setOrthoProjection(grect rect);
 		void setOrthoProjection(gvec2 size);
-		HL_DEFINE_GETSET(float, textureIdleUnloadTime, TextureIdleUnloadTime);
 		HL_DEFINE_ISSET(bool, forcedDynamicLoading, ForcedDynamicLoading);
 
 		virtual float getPixelOffset() = 0;
@@ -113,6 +112,7 @@ namespace april
 		void drawTexturedRect(grect rect, grect src);
 		void drawTexturedRect(grect rect, grect src, Color color);
 
+		hstr findTextureFilename(chstr filename);
 		void unloadTextures();
 		virtual void setParam(chstr name, chstr value) { }
 		virtual hstr getParam(chstr name) { return ""; }
@@ -122,8 +122,6 @@ namespace april
 		DEPRECATED_ATTRIBUTE Window* getWindow() { return april::window; }
 		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f) { this->setOrthoProjection(grect(x_offset, y_offset, w, h)); }
 		DEPRECATED_ATTRIBUTE bool isFullscreen() { return april::window->isFullscreen(); }
-		DEPRECATED_ATTRIBUTE float getIdleTextureUnloadTime() { return this->getTextureIdleUnloadTime(); }
-		DEPRECATED_ATTRIBUTE void setIdleTextureUnloadTime(float value) { this->setTextureIdleUnloadTime(value); }
 		DEPRECATED_ATTRIBUTE bool isDynamicLoadingForced() { return this->isForcedDynamicLoading(); }
 		DEPRECATED_ATTRIBUTE void forceDynamicLoading(bool value) { this->setForcedDynamicLoading(value); }
 		DEPRECATED_ATTRIBUTE void restore() { this->reset(); }
@@ -140,6 +138,11 @@ namespace april
 		DEPRECATED_ATTRIBUTE void drawTexturedQuad(grect rect, grect src, Color color) { this->drawTexturedRect(rect, src, color); }
 		DEPRECATED_ATTRIBUTE void setBlendMode(BlendMode blendMode) { this->setTextureBlendMode(blendMode); }
 		DEPRECATED_ATTRIBUTE void setColorMode(ColorMode colorMode, unsigned char alpha = 255) { this->setTextureColorMode(colorMode, alpha); }
+		DEPRECATED_ATTRIBUTE hstr _findTextureFilename(chstr filename) { return this->findTextureFilename(filename); }
+		DEPRECATED_ATTRIBUTE float getIdleTextureUnloadTime() { return 0.0f; }
+		DEPRECATED_ATTRIBUTE void setIdleTextureUnloadTime(float value) { }
+		DEPRECATED_ATTRIBUTE float getTextureIdleUnloadTime() { return 0.0f; } // moved to aprilui!
+		DEPRECATED_ATTRIBUTE void setTextureIdleUnloadTime(float value) { } // moved to aprilui!
 
 		// TODO - refactor
 		virtual int _getMaxTextureSize() = 0;
@@ -148,7 +151,6 @@ namespace april
 		hstr name;
 		bool created;
 		harray<Texture*> textures;
-		float textureIdleUnloadTime;
 		Texture::Filter textureFilter;
 		Texture::AddressMode textureAddressMode;
 		gmat4 modelviewMatrix;
@@ -161,7 +163,6 @@ namespace april
 
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);
-		hstr _findTextureFilename(chstr filename);
 
 		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;
