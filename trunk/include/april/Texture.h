@@ -68,11 +68,11 @@ namespace april
 		virtual void unload() = 0;
 
 		HL_DEFINE_GET(hstr, filename, Filename);
-		HL_DEFINE_GET(int, width, Width);
-		HL_DEFINE_GET(int, height, Height);
-		HL_DEFINE_GET(int, bpp, Bpp);
 		HL_DEFINE_GETSET(Filter, filter, Filter);
 		HL_DEFINE_GETSET(AddressMode, addressMode, AddressMode);
+		int getWidth();
+		int getHeight();
+		int getBpp();
 		int getByteSize();
 
 		virtual bool isLoaded() = 0;

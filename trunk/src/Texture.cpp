@@ -53,8 +53,39 @@ namespace april
 		april::rendersys->_unregisterTexture(this);
 	}
 	
+	int Texture::getWidth()
+	{
+		if (this->width == 0)
+		{
+			april::log(hsprintf("WARNING! Texture '%s' has width = 0 (possibly not loaded yet?)", this->filename.c_str()));
+		}
+		return this->width;
+	}
+
+	int Texture::getHeight()
+	{
+		if (this->height == 0)
+		{
+			april::log(hsprintf("WARNING! Texture '%s' has height = 0 (possibly not loaded yet?)", this->filename.c_str()));
+		}
+		return this->height;
+	}
+
+	int Texture::getBpp()
+	{
+		if (this->bpp == 0)
+		{
+			april::log(hsprintf("WARNING! Texture '%s' has bpp = 0 (possibly not loaded yet?)", this->filename.c_str()));
+		}
+		return this->bpp;
+	}
+
 	int Texture::getByteSize()
 	{
+		if (this->width == 0 || this->height == 0 || this->bpp == 0)
+		{
+			april::log(hsprintf("WARNING! Texture '%s' has byteSize = 0 (possibly not loaded yet?)", this->filename.c_str()));
+		}
 		return (this->width * this->height * this->bpp);
 	}
 
