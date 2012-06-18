@@ -139,10 +139,6 @@ namespace april
 		DEPRECATED_ATTRIBUTE void setBlendMode(BlendMode blendMode) { this->setTextureBlendMode(blendMode); }
 		DEPRECATED_ATTRIBUTE void setColorMode(ColorMode colorMode, unsigned char alpha = 255) { this->setTextureColorMode(colorMode, alpha); }
 		DEPRECATED_ATTRIBUTE hstr _findTextureFilename(chstr filename) { return this->findTextureFilename(filename); }
-		DEPRECATED_ATTRIBUTE float getIdleTextureUnloadTime() { return 0.0f; }
-		DEPRECATED_ATTRIBUTE void setIdleTextureUnloadTime(float value) { }
-		DEPRECATED_ATTRIBUTE float getTextureIdleUnloadTime() { return 0.0f; } // moved to aprilui!
-		DEPRECATED_ATTRIBUTE void setTextureIdleUnloadTime(float value) { } // moved to aprilui!
 
 		// TODO - refactor
 		virtual int _getMaxTextureSize() = 0;
