@@ -222,7 +222,7 @@ namespace april
 		// rendering
 		result = this->performUpdate(k);
 #ifndef _DEBUG
-		this->setWindowTitle(this->title);
+		this->setTitle(this->title);
 #else
 		if (this->_lastTime - this->_fpsTimer > 1000)
 		{
