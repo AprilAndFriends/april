@@ -134,7 +134,7 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android View::onSurfaceCreated()");
 #endif
-		PROTECTED_RENDERSYS_CALL(restore());
+		PROTECTED_RENDERSYS_CALL(reset());
 	}
 
 	void JNICALL _JNI_activityOnCreate(JNIEnv* env, jclass classe)
