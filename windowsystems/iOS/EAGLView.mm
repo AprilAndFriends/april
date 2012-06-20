@@ -54,26 +54,30 @@
 // Handles the start of a touch
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	aprilWindow->touchesBegan_withEvent_(touches, event);
+	if (april::window)
+		aprilWindow->touchesBegan_withEvent_(touches, event);
 }
 
 // Handles the end of a touch event when the touch is a tap.
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	aprilWindow->touchesEnded_withEvent_(touches, event);
+	if (april::window)
+		aprilWindow->touchesEnded_withEvent_(touches, event);
 }
 
 // Called if touches are cancelled and need to be undone. 
 // On iPhone, happens when 5 fingers are pressed.
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	aprilWindow->touchesCancelled_withEvent_(touches, event);
+	if (april::window)
+		aprilWindow->touchesCancelled_withEvent_(touches, event);
 }
 
 // Handles the movement of a touch event. 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	aprilWindow->touchesMoved_withEvent_(touches, event);
+	if (april::window)
+		aprilWindow->touchesMoved_withEvent_(touches, event);
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -155,8 +159,11 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)aTextField
 {
     [textField resignFirstResponder];
-	aprilWindow->handleKeyEvent(april::Window::AKEYEVT_DOWN, april::AK_RETURN, 0);
-	aprilWindow->handleKeyEvent(april::Window::AKEYEVT_UP, april::AK_RETURN, 0);
+	if (april::window)
+	{
+		aprilWindow->handleKeyEvent(april::Window::AKEYEVT_DOWN, april::AK_RETURN, 0);
+		aprilWindow->handleKeyEvent(april::Window::AKEYEVT_UP, april::AK_RETURN, 0);
+	}
     return YES;
 }
 
@@ -165,12 +172,14 @@
 
 - (void)keyboardWasShown:(id)sender
 {
-	aprilWindow->keyboardWasShown();
+	if (april::window)
+		aprilWindow->keyboardWasShown();
 }
 
 - (void)keyboardWasHidden:(id)sender
 {
-	aprilWindow->keyboardWasHidden();
+	if (april::window)
+		aprilWindow->keyboardWasHidden();
 }
 
 // we'll also use this objc class for getting notifications
@@ -178,7 +187,8 @@
 
 -(void)deviceOrientationDidChange:(id)sender
 {
-	aprilWindow->deviceOrientationDidChange();
+	if (april::window)
+		aprilWindow->deviceOrientationDidChange();
 }
 
 // ok, now other functionality of this class
@@ -200,7 +210,8 @@
     [self beginRender];
 	
 	//mydraw();
-	((april::iOS_Window*)april::window)->handleDisplayAndUpdate();
+	if (april::window)
+		aprilWindow->handleDisplayAndUpdate();
 	
 
 
@@ -358,6 +369,7 @@
 
 - (BOOL)textField:(UITextField *)_textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string   // return NO to not change text
 {
+	if (april::window == NULL) return NO;
 	hstr str = chstr([string UTF8String]);
 	if (range.location == 0 && str.size() == 0) aprilWindow->injectiOSChar(0); // backspace indicator
 	else if (str.size() == 0) return NO;
@@ -374,12 +386,14 @@
 
 -(void)applicationDidBecomeActive:(UIApplication*)app
 {
-	aprilWindow->applicationDidBecomeActive();
+	if (april::window)
+		aprilWindow->applicationDidBecomeActive();
 }
 
 -(void)applicationWillResignActive:(UIApplication*)app
 {
-	aprilWindow->applicationWillResignActive();
+	if (april::window)
+		aprilWindow->applicationWillResignActive();
 }
 
 @end
