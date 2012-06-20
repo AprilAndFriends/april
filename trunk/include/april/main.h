@@ -98,8 +98,7 @@ int main(int argc, char** argv)
 	}
 #endif
 	
-	april_main(april_init, april_destroy, argc, argv);
-	return 0;
+	return april_main(april_init, april_destroy, argc, argv);
 }
 #else
 #include <windows.h>

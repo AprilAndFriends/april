@@ -538,7 +538,7 @@ namespace april
 		if (!this->focused)
 		{
 			this->focused = true;
-			[glview startAnimation];
+			if (glview != NULL) [glview startAnimation];
 			if (this->focusChangeCallback != NULL)
 			{
 				(*this->focusChangeCallback)(true);
