@@ -448,6 +448,9 @@ namespace april
 				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
 #endif
 				break;
+			default:
+				april::log("WARNING! Trying to set unsupported blend mode!");
+				break;
 			}
 		}
 		else
@@ -461,6 +464,10 @@ namespace april
 			else if (textureBlendMode == ADD)
 			{
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			}
+			else
+			{
+				april::log("WARNING! Trying to set unsupported blend mode!");
 			}
 		}
 	}
@@ -506,6 +513,9 @@ namespace april
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
 			break;
+		default:
+			april::log("WARNING! Trying to set unsupported color mode!");
+			break;
 		}
 	}
 
@@ -522,7 +532,7 @@ namespace april
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			break;
 		default:
-			april::log("trying to set unsupported texture filter!");
+			april::log("WARNING! Trying to set unsupported texture filter!");
 			break;
 		}
 		this->textureFilter = textureFilter;
@@ -543,7 +553,7 @@ namespace april
 			break;
 #endif
 		default:
-			april::log("trying to set unsupported texture address mode!");
+			april::log("WARNING! Trying to set unsupported texture address mode!");
 			break;
 		}
 		this->textureAddressMode = textureAddressMode;

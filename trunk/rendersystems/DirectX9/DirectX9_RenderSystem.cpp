@@ -299,7 +299,7 @@ namespace april
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 			break;
 		default:
-			april::log("trying to set unsupported texture blend mode!");
+			april::log("WARNING! Trying to set unsupported texture blend mode!");
 			break;
 		}
 	}
@@ -335,7 +335,7 @@ namespace april
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 			break;
 		default:
-			april::log("trying to set unsupported texture color mode!");
+			april::log("WARNING! Trying to set unsupported texture color mode!");
 			break;
 		}
 	}
@@ -353,7 +353,7 @@ namespace april
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 			break;
 		default:
-			april::log("trying to set unsupported texture filter!");
+			april::log("WARNING! Trying to set unsupported texture filter!");
 			break;
 		}
 		this->textureFilter = textureFilter;
@@ -372,7 +372,7 @@ namespace april
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 			break;
 		default:
-			april::log("trying to set unsupported texture address mode!");
+			april::log("WARNING! Trying to set unsupported texture address mode!");
 			break;
 		}
 		this->textureAddressMode = textureAddressMode;
