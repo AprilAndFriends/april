@@ -116,6 +116,15 @@ namespace april
 	
 	OpenGL_RenderState::OpenGL_RenderState()
 	{
+		this->reset();
+	}
+	
+	OpenGL_RenderState::~OpenGL_RenderState()
+	{
+	}
+	
+	void OpenGL_RenderState::reset()
+	{
 		this->textureCoordinatesEnabled = false;
 		this->colorEnabled = false;
 		this->textureId = 0;
@@ -330,6 +339,8 @@ namespace april
 		lastColor.set(0, 0, 0, 255);
 		this->_setModelviewMatrix(this->modelviewMatrix);
 		this->_setProjectionMatrix(this->projectionMatrix);
+		this->deviceState.reset();
+		this->_applyStateChanges();
 		// GL defaults
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -350,6 +361,9 @@ namespace april
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 		}
+		this->state.systemColor = APRIL_COLOR_BLACK;
+		this->deviceState.systemColor = APRIL_COLOR_BLACK;
+		glColor4f(0, 0, 0, 1);
 	}
 
 	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()

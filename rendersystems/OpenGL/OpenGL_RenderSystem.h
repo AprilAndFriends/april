@@ -32,6 +32,9 @@ namespace april
 	{
 	public:
 		OpenGL_RenderState();
+		~OpenGL_RenderState();
+		
+		void reset();
 
 		bool textureCoordinatesEnabled;
 		bool colorEnabled;
