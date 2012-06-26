@@ -128,6 +128,8 @@ namespace april
 		this->textureCoordinatesEnabled = false;
 		this->colorEnabled = false;
 		this->textureId = 0;
+		this->textureFilter = Texture::FILTER_LINEAR;
+		this->textureAddressMode = Texture::ADDRESS_WRAP;
 		this->systemColor = APRIL_COLOR_BLACK;
 		this->modelviewMatrixSet = false;
 		this->projectionMatrixSet = false;
@@ -329,6 +331,8 @@ namespace april
 		this->deviceState.systemColor = APRIL_COLOR_BLACK;
 		glColor4f(0, 0, 0, 1);
 		this->orthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
+		this->_setTextureFilter(Texture::FILTER_LINEAR);
+		this->_setTextureAddressMode(Texture::ADDRESS_WRAP);
 	}
 
 	void OpenGL_RenderSystem::reset()
@@ -364,6 +368,8 @@ namespace april
 		this->state.systemColor = APRIL_COLOR_BLACK;
 		this->deviceState.systemColor = APRIL_COLOR_BLACK;
 		glColor4f(0, 0, 0, 1);
+		this->_setTextureFilter(Texture::FILTER_LINEAR);
+		this->_setTextureAddressMode(Texture::ADDRESS_WRAP);
 	}
 
 	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
@@ -521,6 +527,11 @@ namespace april
 
 	void OpenGL_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
 	{
+		this->state.textureFilter = textureFilter;
+	}
+
+	void OpenGL_RenderSystem::_setTextureFilter(Texture::Filter textureFilter)
+	{
 		switch (textureFilter)
 		{
 		case Texture::FILTER_LINEAR:
@@ -539,6 +550,11 @@ namespace april
 	}
 
 	void OpenGL_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
+	{
+		this->state.textureAddressMode = textureAddressMode;
+	}
+
+	void OpenGL_RenderSystem::_setTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
 		switch (textureAddressMode)
 		{
@@ -581,16 +597,8 @@ namespace april
 		}
 		else
 		{
-			Texture::Filter filter = this->activeTexture->getFilter();
-			if (this->textureFilter != filter)
-			{
-				this->setTextureFilter(filter);
-			}
-			Texture::AddressMode addressMode = this->activeTexture->getAddressMode();
-			if (this->textureAddressMode != addressMode)
-			{
-				this->setTextureAddressMode(addressMode);
-			}
+			this->setTextureFilter(this->activeTexture->getFilter());
+			this->setTextureAddressMode(this->activeTexture->getAddressMode());
 			// filtering and wrapping applied before loading texture data, iOS OpenGL guidelines suggest it as an optimization
 			this->activeTexture->load();
 			this->bindTexture(this->activeTexture->textureId);
@@ -634,6 +642,17 @@ namespace april
 		{
 			glBindTexture(GL_TEXTURE_2D, this->state.textureId);
 			this->deviceState.textureId = this->state.textureId;
+		}
+		// texture has to be bound first or else filter and address mode won't be applied afterwards
+		if (this->state.textureFilter != this->deviceState.textureFilter)
+		{
+			this->_setTextureFilter(this->state.textureFilter);
+			this->deviceState.textureFilter = this->state.textureFilter;
+		}
+		if (this->state.textureAddressMode != this->deviceState.textureAddressMode)
+		{
+			this->_setTextureAddressMode(this->state.textureAddressMode);
+			this->deviceState.textureAddressMode = this->state.textureAddressMode;
 		}
 		if (this->state.blendMode != this->deviceState.blendMode)
 		{

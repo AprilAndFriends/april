@@ -39,6 +39,8 @@ namespace april
 		bool textureCoordinatesEnabled;
 		bool colorEnabled;
 		unsigned int textureId;
+		Texture::Filter textureFilter;
+		Texture::AddressMode textureAddressMode;
 		Color systemColor;
 		bool modelviewMatrixSet;
 		bool projectionMatrixSet;
@@ -117,6 +119,8 @@ namespace april
 		void _setColorPointer(int stride, const void* pointer);
 		void _setTextureBlendMode(BlendMode mode);
 		void _setTextureColorMode(ColorMode mode, unsigned char alpha = 255);
+		void _setTextureFilter(Texture::Filter textureFilter);
+		void _setTextureAddressMode(Texture::AddressMode textureAddressMode);
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
 
