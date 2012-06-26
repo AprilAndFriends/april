@@ -546,12 +546,15 @@ namespace april
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			break;
-#ifndef _OPENGLES1 // CLAMP not supported in OpenGL ES 1.1
 		case Texture::ADDRESS_CLAMP:
+#ifndef _OPENGLES1 // CLAMP not supported in OpenGL ES 1.1
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-			break;
+#else
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 #endif
+			break;
 		default:
 			april::log("WARNING! Trying to set unsupported texture address mode!");
 			break;
