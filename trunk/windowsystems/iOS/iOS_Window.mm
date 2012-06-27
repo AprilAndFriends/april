@@ -30,29 +30,25 @@ namespace april
 {
 	// TODO - convert to gvec2 so it can be included in the class
 	static harray<UITouch*> g_touches;
-	static harray<UITouch*> _convertTouchesToCoordinates(void* nssetTouches)
+	
+	void updateCursorPosition(gvec2 touch)
 	{
 		float scale = ((iOS_Window*) window)->_getTouchScale();
+		// return value stored in cursorX and cursorY		
+		//For "primary" landscape orientation, this is how we calc it
+		((iOS_Window*) window)->_setCursorPosition(touch.x * scale, touch.y * scale);		
+	}
+	
+	static harray<UITouch*> _convertTouchesToCoordinates(void* nssetTouches)
+	{
 		// return value stored in cursorX and cursorY
 		harray<UITouch*> coordinates;
 		NSSet* touches = (NSSet*)nssetTouches;
 		UITouch* touch;
-		int len = [touches count];
-		
-		if (len == 1)
+
+		for (touch in touches)
 		{
-			touch = touches.anyObject;
-			CGPoint location = [touch locationInView:glview];
-			//For "primary" landscape orientation, this is how we calc it
-			((iOS_Window*) window)->_setCursorPosition(location.x * scale, location.y * scale);
 			coordinates += touch;
-		}
-		else
-		{
-			for (touch in touches)
-			{
-				coordinates += touch;
-			}
 		}
 		
 		return coordinates;
@@ -85,6 +81,7 @@ namespace april
 		
 		void execute()
 		{
+			updateCursorPosition(this->position);
 			this->window->handleMouseEvent(this->type, this->position, this->button);
 		}
 		
@@ -364,10 +361,11 @@ namespace april
 	{
 		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
 		
+		int prev_len = g_touches.size();
 		g_touches += touches;
 		if (g_touches.size() > 1)
 		{
-			if (!this->multiTouchActive && g_touches.size() == 1)
+			if (!this->multiTouchActive && prev_len == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
 				this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_UP, gvec2(-10000, -10000), AMOUSEBTN_LEFT));
@@ -376,7 +374,8 @@ namespace april
 		}
 		else
 		{
-			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_DOWN, this->cursorPosition, AMOUSEBTN_LEFT));
+			CGPoint pt = [g_touches[0] locationInView:glview];
+			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_DOWN, gvec2(pt.x, pt.y), AMOUSEBTN_LEFT));
 		}
 		this->callTouchCallback();
 	}
@@ -396,11 +395,11 @@ namespace april
 		}
 		else
 		{
-			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_UP, this->cursorPosition, AMOUSEBTN_LEFT));
+			CGPoint pt = [touches[0] locationInView:glview];
+			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_UP, gvec2(pt.x, pt.y), AMOUSEBTN_LEFT));
 		}
 		this->callTouchCallback();
 	}
-	
 	
 	void iOS_Window::touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
@@ -410,8 +409,12 @@ namespace april
 	
 	void iOS_Window::touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		_convertTouchesToCoordinates(nssetTouches);
-		this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_MOVE, this->cursorPosition, AMOUSEBTN_NONE));
+		if (!this->multiTouchActive)
+		{
+			UITouch* touch = [[(NSSet*) nssetTouches allObjects] objectAtIndex:0];
+			CGPoint pt = [touch locationInView:glview];			
+			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_MOVE, gvec2(pt.x, pt.y), AMOUSEBTN_NONE));
+		}
 		this->callTouchCallback();
 	}
 	
