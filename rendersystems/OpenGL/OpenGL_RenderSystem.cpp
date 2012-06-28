@@ -455,7 +455,7 @@ namespace april
 #endif
 				break;
 			default:
-				april::log("WARNING! Trying to set unsupported blend mode!");
+				april::log("WARNING: Trying to set unsupported blend mode!");
 				break;
 			}
 		}
@@ -473,7 +473,7 @@ namespace april
 			}
 			else
 			{
-				april::log("WARNING! Trying to set unsupported blend mode!");
+				april::log("WARNING: Trying to set unsupported blend mode!");
 			}
 		}
 	}
@@ -520,7 +520,7 @@ namespace april
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
 			break;
 		default:
-			april::log("WARNING! Trying to set unsupported color mode!");
+			april::log("WARNING: Trying to set unsupported color mode!");
 			break;
 		}
 	}
@@ -543,7 +543,7 @@ namespace april
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			break;
 		default:
-			april::log("WARNING! Trying to set unsupported texture filter!");
+			april::log("WARNING: Trying to set unsupported texture filter!");
 			break;
 		}
 		this->textureFilter = textureFilter;
@@ -572,7 +572,7 @@ namespace april
 #endif
 			break;
 		default:
-			april::log("WARNING! Trying to set unsupported texture address mode!");
+			april::log("WARNING: Trying to set unsupported texture address mode!");
 			break;
 		}
 		this->textureAddressMode = textureAddressMode;
@@ -607,18 +607,18 @@ namespace april
 
 	void OpenGL_RenderSystem::setPixelShader(PixelShader* pixelShader)
 	{
-		april::log("WARNING: pixel shaders are not implemented");
+		april::log("WARNING: Pixel shaders are not implemented!");
 	}
 
 	void OpenGL_RenderSystem::setVertexShader(VertexShader* vertexShader)
 	{
-		april::log("WARNING: vertex shaders are not implemented");
+		april::log("WARNING: Vertex shaders are not implemented!");
 	}
 
 	void OpenGL_RenderSystem::setResolution(int w, int h)
 	{
 		// TODO
-		april::log("WARNING: setResolution is not implemented");
+		april::log("WARNING: 'setResolution' is not implemented!");
 	}
 
 	void OpenGL_RenderSystem::_applyStateChanges()
@@ -708,25 +708,25 @@ namespace april
 
 	PixelShader* OpenGL_RenderSystem::createPixelShader()
 	{
-		april::log("WARNING: pixel shaders are not implemented");
+		april::log("WARNING: Pixel shaders are not implemented!");
 		return NULL;
 	}
 
 	PixelShader* OpenGL_RenderSystem::createPixelShader(chstr filename)
 	{
-		april::log("WARNING: pixel shaders are not implemented");
+		april::log("WARNING: Pixel shaders are not implemented!");
 		return NULL;
 	}
 
 	VertexShader* OpenGL_RenderSystem::createVertexShader()
 	{
-		april::log("WARNING: vertex shaders are not implemented");
+		april::log("WARNING: Vertex shaders are not implemented!");
 		return NULL;
 	}
 
 	VertexShader* OpenGL_RenderSystem::createVertexShader(chstr filename)
 	{
-		april::log("WARNING: vertex shaders are not implemented");
+		april::log("WARNING: Vertex shaders are not implemented!");
 		return NULL;
 	}
 

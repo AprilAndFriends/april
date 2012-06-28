@@ -57,7 +57,7 @@ namespace april
 	{
 		if (this->width == 0)
 		{
-			april::log(hsprintf("WARNING! Texture '%s' has width = 0 (possibly not loaded yet?)", this->filename.c_str()));
+			april::log(hsprintf("WARNING: Texture '%s' has width = 0 (possibly not loaded yet?)", this->filename.c_str()));
 		}
 		return this->width;
 	}
@@ -66,7 +66,7 @@ namespace april
 	{
 		if (this->height == 0)
 		{
-			april::log(hsprintf("WARNING! Texture '%s' has height = 0 (possibly not loaded yet?)", this->filename.c_str()));
+			april::log(hsprintf("WARNING: Texture '%s' has height = 0 (possibly not loaded yet?)", this->filename.c_str()));
 		}
 		return this->height;
 	}
@@ -75,7 +75,7 @@ namespace april
 	{
 		if (this->bpp == 0)
 		{
-			april::log(hsprintf("WARNING! Texture '%s' has bpp = 0 (possibly not loaded yet?)", this->filename.c_str()));
+			april::log(hsprintf("WARNING: Texture '%s' has bpp = 0 (possibly not loaded yet?)", this->filename.c_str()));
 		}
 		return this->bpp;
 	}
@@ -84,7 +84,7 @@ namespace april
 	{
 		if (this->width == 0 || this->height == 0 || this->bpp == 0)
 		{
-			april::log(hsprintf("WARNING! Texture '%s' has byteSize = 0 (possibly not loaded yet?)", this->filename.c_str()));
+			april::log(hsprintf("WARNING: Texture '%s' has byteSize = 0 (possibly not loaded yet?)", this->filename.c_str()));
 		}
 		return (this->width * this->height * this->bpp);
 	}
@@ -96,58 +96,58 @@ namespace april
 
 	void Texture::clear()
 	{
-		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement clear()");
+		april::log(hsprintf("WARNING: Rendersystem '%s' does not implement clear()!", april::rendersys->getName().c_str()));
 	}
 
 	Color Texture::getPixel(int x, int y)
 	{
-		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement getPixel()");
+		april::log(hsprintf("WARNING: Rendersystem '%s' does not implement getPixel()!", april::rendersys->getName().c_str()));
 		return APRIL_COLOR_CLEAR;
 	}
 
 	void Texture::setPixel(int x, int y, Color color)
 	{
-		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement setPixel()");
+		april::log(hsprintf("WARNING: Rendersystem '%s' does not implement setPixel()!", april::rendersys->getName().c_str()));
 	}
 
 	void Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement fillRect()");
+		april::log(hsprintf("WARNING: Rendersystem '%s' does not implement fillRect()!", april::rendersys->getName().c_str()));
 	}
 
 	void Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement blit()");
+		april::log(hsprintf("WARNING: Rendersystem '%s' does not implement blit()!", april::rendersys->getName().c_str()));
 	}
 
 	void Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement blit()");
+		april::log(hsprintf("WARNING: Rendersystem '%s' does not implement blit()!", april::rendersys->getName().c_str()));
 	}
 
 	void Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement stretchBlit()");
+		april::log(hsprintf("WARNING: Rendersystem '%s' does not implement stretchBlit()!", april::rendersys->getName().c_str()));
 	}
 
 	void Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement stretchBlit()");
+		april::log(hsprintf("WARNING: Rendersystem '%s' does not implement stretchBlit()!", april::rendersys->getName().c_str()));
 	}
 
 	void Texture::rotateHue(float degrees)
 	{
-		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement rotateHue()");
+		april::log(hsprintf("WARNING: Rendersystem '%s' does not implement rotateHue()!", april::rendersys->getName().c_str()));
 	}
 
 	void Texture::saturate(float factor)
 	{
-		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement saturate()");
+		april::log(hsprintf("WARNING: Rendersystem '%s' does not implement saturate()!", april::rendersys->getName().c_str()));
 	}
 
 	void Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
 	{
-		april::log("WARNING: rendersystem '" + april::rendersys->getName() + "' does not implement insertAsAlphaMap()");
+		april::log(hsprintf("WARNING: Rendersystem '%s' does not implement insertAsAlphaMap()!", april::rendersys->getName().c_str()));
 	}
 
 	Color Texture::getPixel(gvec2 position)
