@@ -60,12 +60,12 @@ namespace april
 	D3DPRIMITIVETYPE dx9_render_ops[]=
 	{
 		D3DPT_FORCE_DWORD,
-		D3DPT_TRIANGLELIST,  // ROP_TRIANGLE_LIST
-		D3DPT_TRIANGLESTRIP, // ROP_TRIANGLE_STRIP
-		D3DPT_TRIANGLEFAN,   // ROP_TRIANGLE_FAN
-		D3DPT_LINELIST,      // ROP_LINE_LIST
-		D3DPT_LINESTRIP,     // ROP_LINE_STRIP
-		D3DPT_POINTLIST,     // ROP_POINT_LIST
+		D3DPT_TRIANGLELIST,		// ROP_TRIANGLE_LIST
+		D3DPT_TRIANGLESTRIP,	// ROP_TRIANGLE_STRIP
+		D3DPT_TRIANGLEFAN,		// ROP_TRIANGLE_FAN
+		D3DPT_LINELIST,			// ROP_LINE_LIST
+		D3DPT_LINESTRIP,		// ROP_LINE_STRIP
+		D3DPT_POINTLIST,		// ROP_POINT_LIST
 	};
 
 	ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
@@ -666,7 +666,7 @@ namespace april
 	}
 
 	ImageSource* DirectX9_RenderSystem::takeScreenshot(int bpp)
-    {
+	{
 		april::log("grabbing screenshot");
 		D3DSURFACE_DESC desc;
 		this->backBuffer->GetDesc(&desc);
@@ -720,7 +720,7 @@ namespace april
 		}
 		buffer->UnlockRect();
 		buffer->Release();
-    	return img;
+		return img;
 	}
 	
 	void DirectX9_RenderSystem::presentFrame()

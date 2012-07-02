@@ -106,27 +106,27 @@ namespace april
 		switch (button)
 		{
 		case IDOK:
-            if (callback != NULL)
+			if (callback != NULL)
 			{
-                (*callback)(AMSGBTN_OK);
+				(*callback)(AMSGBTN_OK);
 			}
 			return AMSGBTN_OK;
 		case IDYES:
-            if (callback != NULL)
+			if (callback != NULL)
 			{
-                (*callback)(AMSGBTN_YES);
+				(*callback)(AMSGBTN_YES);
 			}
 			return AMSGBTN_YES;
 		case IDNO:
-            if (callback != NULL)
+			if (callback != NULL)
 			{
-                (*callback)(AMSGBTN_NO);
+				(*callback)(AMSGBTN_NO);
 			}
 			return AMSGBTN_NO;
 		case IDCANCEL:
-            if (callback != NULL)
+			if (callback != NULL)
 			{
-                (*callback)(AMSGBTN_CANCEL);
+				(*callback)(AMSGBTN_CANCEL);
 			}
 			return AMSGBTN_CANCEL;
 		}
