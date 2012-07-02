@@ -27,16 +27,16 @@
 
 namespace april
 {
-    class aprilExport Timer
-    {
+	class aprilExport Timer
+	{
 	public:
 		Timer();
 		~Timer();
 		
 		float getTime();
 		float diff(bool update = true);
-        
-        void update();
+		
+		void update();
 		
 	protected:
 		float dt;

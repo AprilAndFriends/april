@@ -20,7 +20,7 @@
 
 namespace april
 {
-    Color ImageSource::getPixel(int x, int y)
+	Color ImageSource::getPixel(int x, int y)
 	{
 		x = hclamp(x, 0, w - 1);
 		y = hclamp(y, 0, h - 1);

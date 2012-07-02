@@ -102,7 +102,7 @@ namespace april
 			}
 			*h /= 6;
 		}
-    }
+	}
 
 	float _colorHueToRgb(float m1, float m2, float h)
 	{ 

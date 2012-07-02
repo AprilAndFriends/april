@@ -29,7 +29,7 @@ namespace april
 		this->mmTimerElapsed = 0;
 		this->performanceTimerElapsed = 0;
 		this->performanceTimer = 0;
-        
+		
 		// for posix:
 		timeval tv = {0, 0};
 		gettimeofday(&tv, NULL);
@@ -39,11 +39,11 @@ namespace april
 		this->frequency = 1;
 		this->mmTimerElapsed = this->mmTimerStart;
 	}
-    
+	
 	Timer::~Timer()
 	{
 	}
-    
+	
 	float Timer::getTime()
 	{
 		timeval tv = {0, 0};
@@ -51,7 +51,7 @@ namespace april
 		gettimeofday(&tv, NULL);
 		return (tv.tv_usec - init_tv.tv_usec) / 1000 + (tv.tv_sec - init_tv.tv_sec) * 1000;
 	}
-    
+	
 	float Timer::diff(bool update)
 	{
 		if (update)
@@ -61,7 +61,7 @@ namespace april
 		}
 		return this->dt;
 	}
-    
+	
 	void Timer::update()
 	{
 		this->td2 = this->getTime();
