@@ -428,6 +428,7 @@ namespace april
 					mouseButton = AMOUSEBTN_WHEELDOWN;
 					mouseEvent = AMOUSEEVT_SCROLL;
 				}
+				break;
 			default:
 				mouseButton = AMOUSEBTN_NONE;
 				break;
