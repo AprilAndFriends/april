@@ -113,9 +113,9 @@ namespace april
 		}
 		april::dialogCallback = callback;
 		// call Java AprilJNI
-		jclass aprilJNI = env->FindClass("net/sourceforge/april/AprilJNI");
-		jmethodID methodShowMessageBox = env->GetStaticMethodID(aprilJNI, "showMessageBox", _JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR _JSTR _JINT));
-		env->CallStaticVoidMethod(aprilJNI, methodShowMessageBox, jTitle, jText, jOk, jYes, jNo, jCancel, jIconId);
+		jclass nativeInterface = env->FindClass("net/sourceforge/april/android/NativeInterface");
+		jmethodID methodShowMessageBox = env->GetStaticMethodID(nativeInterface, "showMessageBox", _JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR _JSTR _JINT));
+		env->CallStaticVoidMethod(nativeInterface, methodShowMessageBox, jTitle, jText, jOk, jYes, jNo, jCancel, jIconId);
 		return AMSGBTN_OK;
 	}
 

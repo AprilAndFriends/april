@@ -275,7 +275,7 @@ namespace april
 		{
 			return -1;
 		}
-		jclass classe = env->FindClass("net/sourceforge/april/AprilJNI");
+		jclass classe = env->FindClass("net/sourceforge/april/android/NativeInterface");
 		if (env->RegisterNatives(classe, methods, METHOD_COUNT) != 0)
 		{
 			return -1;

@@ -1,6 +1,6 @@
-package com.example.april.demoSimple;
+package com.example.april.android.demoSimple;
 
-public class DemoSimple extends net.sourceforge.april.AprilActivity
+public class DemoSimple extends net.sourceforge.april.android.Activity
 {
 	static
 	{

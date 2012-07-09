@@ -1,6 +1,6 @@
-package com.example.april.demoMesh;
+package com.example.april.android.demoMesh;
 
-public class DemoMesh extends net.sourceforge.april.AprilActivity
+public class DemoMesh extends net.sourceforge.april.android.Activity
 {
 	static
 	{
