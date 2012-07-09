@@ -138,7 +138,8 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <Command>xcopy ..\media android\assets\ /d /y /s /e</Command>
     </PreLinkEvent>
     <PreBuildEvent>
-      <Command>xcopy ..\..\..\april\android-template\src\AprilActivity.java android\src\ /d /y</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -208,7 +209,8 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <Command>xcopy ..\media android\assets\ /d /y /s /e</Command>
     </PreLinkEvent>
     <PreBuildEvent>
-      <Command>xcopy ..\..\..\april\android-template\src\AprilActivity.java android\src\ /d /y</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

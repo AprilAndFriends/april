@@ -1,6 +1,6 @@
-package com.example.april.demoTicTacToe;
+package com.example.april.android.demoTicTacToe;
 
-public class DemoTicTacToe extends net.sourceforge.april.AprilActivity
+public class DemoTicTacToe extends net.sourceforge.april.android.Activity
 {
 	static
 	{
