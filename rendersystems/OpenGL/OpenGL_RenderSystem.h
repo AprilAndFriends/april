@@ -105,12 +105,12 @@ namespace april
 		// TODO - refactor
 		int _getMaxTextureSize();
 
+		// TODO - refactor
+		OpenGL_RenderState deviceState;
+		OpenGL_RenderState state;
 	protected:
 		OpenGL_Texture* activeTexture;
 		hstr options;
-		// TODO - refactor
-		OpenGL_RenderState state;
-		OpenGL_RenderState deviceState;
 
 		Texture* _createTexture(chstr filename);
 
