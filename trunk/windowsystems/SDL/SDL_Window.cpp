@@ -354,6 +354,8 @@ namespace april
 			
 			s2a(LCTRL, LCONTROL);
 			s2a(RCTRL, RCONTROL);
+			s2a(LMETA, LCOMMAND);
+			s2a(RMETA, RCOMMAND);
 		default:
 			break;
 		}
