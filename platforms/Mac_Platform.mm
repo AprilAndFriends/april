@@ -97,7 +97,7 @@ namespace april
 			info.cpu_cores = sysconf(_SC_NPROCESSORS_ONLN);
 			info.ram = 1024;
 			info.max_texture_size = 0;
-			info.locale = "en";
+			info.locale = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];
 		}
 		// TODO
 		if (info.max_texture_size == 0 && april::rendersys != NULL)
