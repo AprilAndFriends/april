@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.11
 /// 
 /// @section LICENSE
 /// 
@@ -41,6 +41,7 @@ namespace april
 {
 	OpenGL_Texture::OpenGL_Texture(chstr filename) : Texture()
 	{
+		this->format = FORMAT_ARGB;
 		this->width = 0;
 		this->height = 0;
 		this->bpp = 4;
@@ -53,6 +54,7 @@ namespace april
 	OpenGL_Texture::OpenGL_Texture(int w, int h, unsigned char* rgba) : Texture()
 	{
 		april::log("creating user-defined GL texture");
+		this->format = FORMAT_ARGB;
 		this->width = w;
 		this->height = h;
 		this->filename = "";
@@ -72,6 +74,7 @@ namespace april
 	OpenGL_Texture::OpenGL_Texture(int w, int h, Format format, Type type, Color color) : Texture()
 	{
 		april::log("creating empty GL texture [ " + hstr(w) + "x" + hstr(h) + " ]");
+		this->format = format;
 		this->width = w;
 		this->height = h;
 		this->bpp = 4;
@@ -79,7 +82,7 @@ namespace april
 		this->manualBuffer = NULL;
 		glGenTextures(1, &this->textureId);
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*) april::rendersys)->state.textureId = ((OpenGL_RenderSystem*) april::rendersys)->deviceState.textureId = this->textureId;
+		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		if (color != APRIL_COLOR_CLEAR)
@@ -170,19 +173,24 @@ namespace april
 			case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
 			case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
 				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image->format, image->w, image->h, 0, image->compressedLength, image->data);
+				this->format = FORMAT_ARGB; // TODO - not really a format
 				break;
 #endif
 			case AF_RGBA:
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
+				this->format = FORMAT_ARGB;
 				break;
 			case AF_RGB:
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
+				this->format = FORMAT_ARGB;
 				break;
 			case AF_GRAYSCALE:
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image->w, image->h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, image->data);
+				this->format = FORMAT_ALPHA;
 				break;
 			default:
 				glTexImage2D(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == AF_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
+				this->format = FORMAT_ARGB;
 				break;
 			}
 			delete image;

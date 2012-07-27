@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.11
 /// 
 /// @section LICENSE
 /// 
@@ -34,6 +34,7 @@ namespace april
 	DirectX9_Texture::DirectX9_Texture(chstr filename) : Texture()
 	{
 		this->filename = filename;
+		this->format = FORMAT_ARGB;
 		this->width = 0;
 		this->height = 0;
 		this->bpp = 4;
@@ -46,6 +47,7 @@ namespace april
 	DirectX9_Texture::DirectX9_Texture(int w, int h, unsigned char* rgba) : Texture()
 	{
 		this->filename = "";
+		this->format = FORMAT_ARGB;
 		this->width = w;
 		this->height = h;
 		this->bpp = 4;
@@ -70,7 +72,7 @@ namespace april
 			{
 				offset = (j * this->width + i) * this->bpp;
 				bgra[offset + 2] = rgba[offset + 0];
-				bgra[offset + 1] = rgba[offset + 1];
+				//bgra[offset + 1] = rgba[offset + 1]; // not necessary to be executed because of previous memcpy call
 				bgra[offset + 0] = rgba[offset + 2];
 			}
 		}
@@ -81,6 +83,7 @@ namespace april
 	DirectX9_Texture::DirectX9_Texture(int w, int h, Texture::Format format, Texture::Type type, Color color) : Texture()
 	{
 		this->filename = "";
+		this->format = format;
 		this->width = w;
 		this->height = h;
 		this->renderTarget = false;
@@ -185,19 +188,24 @@ namespace april
 		case AF_RGBA:
 		case AF_BGRA:
 			d3dformat = D3DFMT_A8R8G8B8;
+			this->format = FORMAT_ARGB;
 			break;
 		case AF_RGB:
 		case AF_BGR:
 			d3dformat = D3DFMT_X8R8G8B8;
+			this->format = FORMAT_RGB;
 			break;
 		case AF_GRAYSCALE:
 			d3dformat = D3DFMT_A8;
+			this->format = FORMAT_ALPHA;
 			break;
 		case AF_PALETTE:
 			d3dformat = D3DFMT_A8R8G8B8;
+			this->format = FORMAT_ARGB; // TODO - should be changed
 			break;
 		default:
 			d3dformat = D3DFMT_X8R8G8B8;
+			this->format = FORMAT_ARGB;
 			break;
 		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, d3dformat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
@@ -569,7 +577,21 @@ namespace april
 		int j;
 		int offset;
 		*output = new unsigned char[this->width * this->height * 4];
-		if (this->bpp == 4 || this->bpp == 3)
+		if (this->bpp == 4)
+		{
+			memcpy(*output, p, this->getByteSize() * sizeof(unsigned char));
+			for_iterx (j, 0, this->height)
+			{
+				for_iterx (i, 0, this->width)
+				{
+					offset = (j * this->width + i) * 4;
+					(*output)[offset + 0] = p[offset + 2];
+					//(*output)[offset + 1] = p[offset + 1]; // not necessary to be executed because of previous memcpy call
+					(*output)[offset + 2] = p[offset + 0];
+				}
+			}
+		}
+		else if (this->bpp == 3)
 		{
 			for_iterx (j, 0, this->height)
 			{
@@ -579,10 +601,6 @@ namespace april
 					(*output)[offset + 0] = p[offset + 2];
 					(*output)[offset + 1] = p[offset + 1];
 					(*output)[offset + 2] = p[offset + 0];
-					if (this->bpp == 4)
-					{
-						(*output)[offset + 3] = p[offset + 3];
-					}
 				}
 			}
 		}
