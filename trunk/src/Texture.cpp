@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.11
 /// 
 /// @section LICENSE
 /// 
@@ -40,6 +40,7 @@ namespace april
 	Texture::Texture()
 	{
 		this->filename = "";
+		this->format = FORMAT_INVALID;
 		this->width = 0;
 		this->height = 0;
 		this->bpp = 4;

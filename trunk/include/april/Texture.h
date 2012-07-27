@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.11
 /// 
 /// @section LICENSE
 /// 
@@ -68,6 +68,7 @@ namespace april
 		virtual void unload() = 0;
 
 		HL_DEFINE_GET(hstr, filename, Filename);
+		HL_DEFINE_GET(Format, format, Format);
 		HL_DEFINE_GETSET(Filter, filter, Filter);
 		HL_DEFINE_GETSET(AddressMode, addressMode, AddressMode);
 		int getWidth();
@@ -123,6 +124,7 @@ namespace april
 
 	protected:
 		hstr filename;
+		Format format;
 		int width;
 		int height;
 		int bpp;
