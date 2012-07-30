@@ -520,6 +520,10 @@
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_SHADOW = NO;
 				GCC_WARN_UNUSED_VALUE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${SRCROOT}/../include/X11",
+				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
@@ -552,6 +556,10 @@
 					TARGET_OS_MAC,
 				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${SRCROOT}/../include/X11",
+				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
@@ -662,6 +670,10 @@
 					TARGET_OS_MAC,
 				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${SRCROOT}/../include/X11",
+				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
@@ -726,6 +738,10 @@
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_SHADOW = NO;
 				GCC_WARN_UNUSED_VALUE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${SRCROOT}/../include/X11",
+				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
@@ -782,6 +798,10 @@
 					TARGET_OS_MAC,
 				);
 				GCC_VERSION = "";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${SRCROOT}/../include/X11",
+				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				MACOSX_DEPLOYMENT_TARGET = 10.4;

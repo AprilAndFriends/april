@@ -171,7 +171,7 @@ namespace april
 				
 				if(!imageSource)
 				{
-					NSLog(@"Failed to load %@", filename.c_str()); // FIXME should use logFunction!
+					NSLog(@"Failed to load %s", filename.c_str()); // FIXME should use logFunction!
 					[arp release];
 					return NULL;
 				}
