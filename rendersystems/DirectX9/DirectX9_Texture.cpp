@@ -66,11 +66,11 @@ namespace april
 		int offset;
 		int i;
 		int j;
-		for_iterx (j, 0, this->width)
+		for_iterx (j, 0, this->height)
 		{
-			for_iterx (i, 0, this->height)
+			for_iterx (i, 0, this->width)
 			{
-				offset = (j * this->width + i) * this->bpp;
+				offset = (i + j * this->width) * this->bpp;
 				bgra[offset + 2] = rgba[offset + 0];
 				//bgra[offset + 1] = rgba[offset + 1]; // not necessary to be executed because of previous memcpy call
 				bgra[offset + 0] = rgba[offset + 2];
