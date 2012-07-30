@@ -7,6 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.app.Dialog;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,7 +39,9 @@ public class Activity extends android.app.Activity
 		NativeInterface.SystemPath = this.getFilesDir().getAbsolutePath();
 		try
 		{
-			NativeInterface.VersionCode = Integer.toString(this.getPackageManager().getPackageInfo(NativeInterface.PackageName, 0).versionCode);
+			PackageInfo info = this.getPackageManager().getPackageInfo(NativeInterface.PackageName, 0);
+			NativeInterface.VersionCode = Integer.toString(info.versionCode);
+			NativeInterface.ApkPath = info.applicationInfo.sourceDir;
 		}
 		catch (NameNotFoundException e)
 		{
