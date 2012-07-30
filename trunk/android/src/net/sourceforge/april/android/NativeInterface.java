@@ -18,6 +18,7 @@ public class NativeInterface
 	public static String DataPath = ".";
 	public static String PackageName = "";
 	public static String VersionCode = "0";
+	public static String ApkPath = "";
 	public static AlertDialog.Builder DialogBuilder = null;
 	
 	public static native void setVariables(Object activity, String systemPath, String sharedPath, String packageName, String versionCode, String forceArchivePath);
