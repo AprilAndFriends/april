@@ -76,6 +76,7 @@
 		D1981C78140F858F0057C3AF /* WBImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D1981C64140F85350057C3AF /* WBImage.m */; };
 		D1981C79140F858F0057C3AF /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1981C71140F856B0057C3AF /* TimerPosix.cpp */; };
 		D1981C7A140F87060057C3AF /* AprilViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D1981C5C140F85350057C3AF /* AprilViewController.m */; };
+		D1CB6B6515CA905900B927BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1CB6B6415CA905900B927BC /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -143,6 +144,7 @@
 		D1981C63140F85350057C3AF /* WBImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WBImage.h; path = windowsystems/iOS/WBImage.h; sourceTree = "<group>"; };
 		D1981C64140F85350057C3AF /* WBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WBImage.m; path = windowsystems/iOS/WBImage.m; sourceTree = "<group>"; };
 		D1981C71140F856B0057C3AF /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/TimerPosix.cpp; sourceTree = "<group>"; };
+		D1CB6B6415CA905900B927BC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1CB6B6515CA905900B927BC /* Foundation.framework in Frameworks */,
 				C9313EB914FE64CE003BC7AB /* SDL.framework in Frameworks */,
 				7F42F83211EB1A9700B1C1DF /* gtypes.framework in Frameworks */,
 				7F42F83411EB1A9700B1C1DF /* hltypes.framework in Frameworks */,
@@ -197,6 +200,7 @@
 		1058C7B0FEA5585E11CA2CBB /* Mac */ = {
 			isa = PBXGroup;
 			children = (
+				D1CB6B6415CA905900B927BC /* Foundation.framework */,
 				C9313EB814FE64CE003BC7AB /* SDL.framework */,
 				7F42FAD411EB342900B1C1DF /* Cocoa.framework */,
 				7F42FACC11EB341E00B1C1DF /* OpenGL.framework */,
