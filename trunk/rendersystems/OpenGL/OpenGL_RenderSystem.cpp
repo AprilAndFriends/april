@@ -563,13 +563,8 @@ namespace april
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			break;
 		case Texture::ADDRESS_CLAMP:
-#ifndef _OPENGLES1 // CLAMP not supported in OpenGL ES 1.1
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-#else
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-#endif
 			break;
 		default:
 			april::log("WARNING: Trying to set unsupported texture address mode!");
@@ -642,6 +637,9 @@ namespace april
 		{
 			glBindTexture(GL_TEXTURE_2D, this->state.textureId);
 			this->deviceState.textureId = this->state.textureId;
+			// TODO - you should memorize address and filter modes per texture in opengl to avoid unnecesarry calls
+			this->deviceState.textureAddressMode = Texture::ADDRESS_UNDEFINED;
+			this->deviceState.textureFilter = Texture::FILTER_UNDEFINED;
 		}
 		// texture has to be bound first or else filter and address mode won't be applied afterwards
 		if (this->state.textureFilter != this->deviceState.textureFilter)

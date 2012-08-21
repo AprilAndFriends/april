@@ -53,13 +53,15 @@ namespace april
 		enum Filter
 		{
 			FILTER_NEAREST = 1,
-			FILTER_LINEAR = 2
+			FILTER_LINEAR = 2,
+			FILTER_UNDEFINED = 505
 		};
 
 		enum AddressMode
 		{
 			ADDRESS_WRAP = 0,
-			ADDRESS_CLAMP = 1
+			ADDRESS_CLAMP = 1,
+			ADDRESS_UNDEFINED = 505
 		};
 	
 		Texture();
