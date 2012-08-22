@@ -38,7 +38,8 @@
 namespace april
 {
 	extern void* javaVM;
-	extern jobject jActivity;
+	JNIEnv* getJNIEnv();
+	jobject getActivity();
 	extern gvec2 androidResolution;
 	extern void (*dialogCallback)(MessageBoxButton);
 
@@ -53,7 +54,6 @@ namespace april
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jobject activity,
 		jstring jSystemPath, jstring jDataPath, jstring jPackageName, jstring jVersionCode, jstring jForceArchivePath)
 	{
-		april::jActivity = activity;
 		april::systemPath = _JSTR_TO_HSTR(jSystemPath);
 		hstr archivePath = _JSTR_TO_HSTR(jForceArchivePath);
 		hstr packageName = _JSTR_TO_HSTR(jPackageName);
@@ -270,8 +270,8 @@ namespace april
 	jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	{
 		april::javaVM = (void*)vm;
-		JNIEnv* env;
-		if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK)
+		JNIEnv* env = april::getJNIEnv();
+		if (env == NULL)
 		{
 			return -1;
 		}
