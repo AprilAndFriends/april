@@ -23,10 +23,25 @@
 namespace april
 {
 	void* javaVM = NULL;
-	jobject jActivity = NULL;
 	gvec2 androidResolution;
 	void (*dialogCallback)(MessageBoxButton) = NULL;
 
+	JNIEnv* getJNIEnv()
+	{
+		JNIEnv* env;
+		return (((JavaVM*)april::javaVM)->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) == JNI_OK ? env : NULL);
+	}
+
+	jobject getActivity()
+	{
+		JavaVM* vm = (JavaVM*)april::javaVM;
+		JNIEnv* env;
+		vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6);
+		jclass classNativeInterface = env->FindClass("net/sourceforge/april/android/NativeInterface");
+		jfieldID fieldActivity = env->GetStaticFieldID(classNativeInterface, "Activity", "Lnet/sourceforge/april/android/Activity;");
+		return env->GetStaticObjectField(classNativeInterface, fieldActivity);
+	}
+	
 	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), multiTouchActive(false), _lastTime(0.0f)
 	{
 		this->name = APRIL_WS_ANDROIDJNI;
@@ -195,6 +210,7 @@ namespace april
 	{
 		JNIEnv* env = NULL;
 		((JavaVM*)javaVM)->GetEnv((void**)&env, JNI_VERSION_1_6);
+		jobject jActivity = getActivity();
 		jclass classAprilActivity = env->GetObjectClass(jActivity);
 		jclass classContext = env->FindClass("android/content/Context");
 		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");

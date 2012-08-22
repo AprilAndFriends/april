@@ -27,8 +27,8 @@
 
 namespace april
 {
-	extern void* javaVM;
-	extern jobject jActivity;
+	JNIEnv* getJNIEnv();
+	jobject getActivity();
 	extern gvec2 androidResolution; // TODO
 	extern void (*dialogCallback)(MessageBoxButton);
 
@@ -67,9 +67,7 @@ namespace april
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// Java Environment
-		JavaVM* vm = (JavaVM*)april::javaVM;
-		JNIEnv* env;
-		vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6);
+		JNIEnv* env = getJNIEnv();
 		// determine ok/yes/no/cancel texts
 		hstr ok;
 		hstr yes;
