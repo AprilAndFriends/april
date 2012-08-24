@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.12
 /// 
 /// @section LICENSE
 /// 
@@ -189,6 +189,7 @@ namespace april
 		// show virtual keyboard
 		jmethodID methodShowSoftInput = env->GetMethodID(classInputMethodManager, "showSoftInput", "(Landroid/view/View;I)Z");
 		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, view, 2);
+		(*this->virtualKeyboardCallback)(true);
 	}
 	
 	void AndroidJNI_Window::terminateKeyboardHandling()
@@ -204,6 +205,7 @@ namespace april
 		jobject binder = env->CallObjectMethod(view, methodGetWindowToken);
 		jmethodID methodHideSoftInput = env->GetMethodID(classInputMethodManager, "hideSoftInputFromWindow", "(Landroid/os/IBinder;I)Z");
 		env->CallBooleanMethod(inputMethodManager, methodHideSoftInput, binder, 0);
+		(*this->virtualKeyboardCallback)(false);
 	}
 	
 	void AndroidJNI_Window::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaView)
