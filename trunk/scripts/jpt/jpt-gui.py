@@ -218,8 +218,8 @@ class ConvertPil(FrameJpt):
 		except:
 			self.entries[2].delete(0, END)
 			self.entries[2].insert(0, "75")
-		jpeg = custom + "__.jpg"
-		png = custom + "__.png"
+		jpeg = custom + "__tmp__.jpg"
+		png = custom + "__tmp__.png"
 		PilConv.convert(custom, jpeg, png, quality)
 		result = Jpt.merge(jpt, jpeg, png)
 		os.remove(jpeg)
