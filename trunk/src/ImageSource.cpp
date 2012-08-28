@@ -26,12 +26,19 @@ namespace april
 		y = hclamp(y, 0, h - 1);
 		Color c = APRIL_COLOR_WHITE;
 		int index = x + y * w;
-		c.r = this->data[index * this->bpp];
-		c.g = this->data[index * this->bpp + 1];
-		c.b = this->data[index * this->bpp + 2];
-		if (this->bpp == 4) // RGBA
+		if (this->bpp >= 3)
 		{
-			c.a = this->data[index * this->bpp + 3];
+			c.r = this->data[index * this->bpp];
+			c.g = this->data[index * this->bpp + 1];
+			c.b = this->data[index * this->bpp + 2];
+			if (this->bpp == 4) // RGBA
+			{
+				c.a = this->data[index * this->bpp + 3];
+			}
+		}
+		else
+		{
+			c.r = c.g = c.b = this->data[index * this->bpp];
 		}
 		return c;
 	}
@@ -41,12 +48,20 @@ namespace april
 		x = hclamp(x, 0, w - 1);
 		y = hclamp(y, 0, h - 1);
 		int index = x + y * w;
-		this->data[index * this->bpp] = c.r;
-		this->data[index * this->bpp + 1] = c.g;
-		this->data[index * this->bpp + 2] = c.b;
-		if (this->bpp == 4) // RGBA
+		if (this->bpp >= 3)
 		{
-			this->data[index * 4 + 3] = c.a;
+
+			this->data[index * this->bpp] = c.r;
+			this->data[index * this->bpp + 1] = c.g;
+			this->data[index * this->bpp + 2] = c.b;
+			if (this->bpp == 4) // RGBA
+			{
+				this->data[index * 4 + 3] = c.a;
+			}
+		}
+		else
+		{
+			this->data[index * this->bpp] = (c.r + c.g + c.b) / 3;
 		}
 	}
 
@@ -118,11 +133,12 @@ namespace april
 		{
 			unsigned char* o = this->data;
 			int x;
+			int w = source->w;
 			for_iter (y, 0, this->h)
 			{
 				for (x = 0; x < this->w; x++, o += this->bpp)
 				{
-					o[3] = source->getPixel(x, y).r; // takes actually only the R component
+					o[3] = source->data[x + y * w];
 				}
 			}
 		}
