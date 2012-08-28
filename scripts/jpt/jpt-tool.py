@@ -83,7 +83,8 @@ def info():
 	print "       jpt-tool.py convert FILENAME JPT_FILENAME [JPEG_QUALITY]"
 	print "       use 'jpt-tool.py -h' for more information"
 	print ""
-	os.system("pause")
+	if os.name != 'posix':
+		os.system("pause")
 
 def help():
 	print ""

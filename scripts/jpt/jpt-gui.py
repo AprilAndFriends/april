@@ -241,7 +241,8 @@ class JptGui:
 		
 root = Tk()
 root.title("JPT GUI")
-root.iconbitmap(default = 'jpt-gui.ico')
+if os.name != 'posix':
+	root.iconbitmap(default = 'jpt-gui.ico')
 root.resizable(False, False)
 gui = JptGui(root)
 root.mainloop()

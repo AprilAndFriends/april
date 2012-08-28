@@ -11,12 +11,21 @@
 #include <stdio.h>
 extern "C"
 {
+#ifdef __APPLE__
+	#include <jpeglib.h>
+#else
 	#include <jpeg/jpeglib.h>
+#endif
 }
-#include <png/png.h>
-#include <png/pngpriv.h>
-#include <png/pngstruct.h>
-
+#ifdef _IOS
+	#include <png.h>
+	#include <pngpriv.h>
+	#include <pngstruct.h>
+#else
+	#include <png/png.h>
+	#include <png/pngpriv.h>
+	#include <png/pngstruct.h>
+#endif
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hsbase.h>

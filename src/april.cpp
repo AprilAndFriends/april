@@ -112,9 +112,9 @@ namespace april
 #ifdef USE_IL
 		ilInit();
 #endif
+		extensions += ".jpt";
 		extensions += ".png";
 		extensions += ".jpg";
-		extensions += ".jpt";
 #if TARGET_OS_IPHONE
 		extensions += ".pvr";
 #endif
