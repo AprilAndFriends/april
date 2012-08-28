@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.12
+/// @version 2.13
 /// 
 /// @section LICENSE
 /// 
@@ -34,9 +34,7 @@ namespace april
 
 	jobject getActivity()
 	{
-		JavaVM* vm = (JavaVM*)april::javaVM;
-		JNIEnv* env;
-		vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6);
+		JNIEnv* env = getJNIEnv();
 		jclass classNativeInterface = env->FindClass("net/sourceforge/april/android/NativeInterface");
 		jfieldID fieldActivity = env->GetStaticFieldID(classNativeInterface, "Activity", "Lnet/sourceforge/april/android/Activity;");
 		return env->GetStaticObjectField(classNativeInterface, fieldActivity);
@@ -189,7 +187,10 @@ namespace april
 		// show virtual keyboard
 		jmethodID methodShowSoftInput = env->GetMethodID(classInputMethodManager, "showSoftInput", "(Landroid/view/View;I)Z");
 		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, view, 2);
-		(*this->virtualKeyboardCallback)(true);
+		if (this->virtualKeyboardCallback != NULL)
+		{
+			(*this->virtualKeyboardCallback)(true);
+		}
 	}
 	
 	void AndroidJNI_Window::terminateKeyboardHandling()
@@ -205,7 +206,10 @@ namespace april
 		jobject binder = env->CallObjectMethod(view, methodGetWindowToken);
 		jmethodID methodHideSoftInput = env->GetMethodID(classInputMethodManager, "hideSoftInputFromWindow", "(Landroid/os/IBinder;I)Z");
 		env->CallBooleanMethod(inputMethodManager, methodHideSoftInput, binder, 0);
-		(*this->virtualKeyboardCallback)(false);
+		if (this->virtualKeyboardCallback != NULL)
+		{
+			(*this->virtualKeyboardCallback)(false);
+		}
 	}
 	
 	void AndroidJNI_Window::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaView)
