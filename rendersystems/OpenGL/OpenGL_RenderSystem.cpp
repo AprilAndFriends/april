@@ -51,6 +51,7 @@
 #include "Keys.h"
 #include "OpenGL_RenderSystem.h"
 #include "OpenGL_Texture.h"
+#include "Platform.h"
 #include "Timer.h"
 #include "Window.h"
 
@@ -375,7 +376,14 @@ namespace april
 	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
 	{
 		// TODO
-		return harray<DisplayMode>();
+		harray<DisplayMode> result;
+		gvec2 resolution = april::getDisplayResolution();
+		DisplayMode displayMode;
+		displayMode.width = (int)resolution.x;
+		displayMode.height = (int)resolution.y;
+		displayMode.refreshRate = 60;
+		result += displayMode;
+		return result;
 	}
 	
 	grect OpenGL_RenderSystem::getViewport()
