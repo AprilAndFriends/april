@@ -180,7 +180,7 @@ class ConvertPil(FrameJpt):
 		FrameJpt._setup_elements(self)
 		self.labels[2].grid(padx = 6, pady = 4, row = len(self.labels), sticky = W)
 		self.entries[2].grid(padx = 6, pady = 4, row = len(self.labels), column = 1, sticky = W)
-		self.entries[2].insert(0, "75")
+		self.entries[2].insert(0, "95")
 		if not PIL_SUPPORT:
 			for label in self.labels:
 				label.config(state = DISABLED)
@@ -212,12 +212,12 @@ class ConvertPil(FrameJpt):
 			return
 		jpt = self.entries[0].get()
 		custom = self.entries[1].get()
-		quality = 75
+		quality = 95
 		try:
 			quality = int(self.entries[2].get())
 		except:
 			self.entries[2].delete(0, END)
-			self.entries[2].insert(0, "75")
+			self.entries[2].insert(0, "95")
 		jpeg = custom + "__tmp__.jpg"
 		png = custom + "__tmp__.png"
 		PilConv.convert(custom, jpeg, png, quality)

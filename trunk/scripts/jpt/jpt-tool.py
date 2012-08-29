@@ -48,7 +48,7 @@ def split(args):
 
 def prepare(args):
 	if checkPIL():
-		quality = 75
+		quality = 95
 		if len(args) == 4:
 			quality = int(args[3])
 		from pilconv import PilConv
@@ -103,7 +103,7 @@ def help():
 	print "JPEG_FILENAME    - JPEG filename to use in the process"
 	print "PNG_FILENAME     - PNG filename to use in the process"
 	print "FILENAME         - image filename (any format) to use in the process"
-	print "JPEG_QUALITY     - value from 1 (worst) to 95 (best) for JPEG compression quality (default = 75); values above 95 should be avoided, 100 completely disables the quantization stage"
+	print "JPEG_QUALITY     - value from 1 (worst) to 95 (best) for JPEG compression quality (default = 95); values above 95 should be avoided, 100 completely disables the quantization stage"
 	print ""
 	os.system("pause")
 
