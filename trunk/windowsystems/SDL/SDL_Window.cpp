@@ -289,8 +289,11 @@ namespace april
 		april::KeySym akeysym = AK_UNKNOWN;
 	
 		#define _s2a(sdlk, ak) case sdlk: akeysym = ak; break; 
+		#define _s2a_u0(sdlk, ak) case sdlk: akeysym = ak; unicode = 0; break;
 		#define s2a(sdlk, ak) _s2a(SDLK_ ## sdlk, AK_ ## ak)
+		#define s2a_u0(sdlk, ak) _s2a_u0(SDLK_ ## sdlk, AK_ ## ak)
 		#define sea(key) s2a(key, key)
+		#define sea_u0(key) s2a_u0(key, key)
 		
 		switch (keysym)
 		{
@@ -317,27 +320,27 @@ namespace april
 			// for some reason
 			
 			// cursor keys
-			sea(LEFT);
-			sea(RIGHT);
-			sea(UP);
-			sea(DOWN);
+			sea_u0(LEFT);
+			sea_u0(RIGHT);
+			sea_u0(UP);
+			sea_u0(DOWN);
 			
 			// space
 			sea(SPACE);
 			
 			// function keys
-			sea(F1);
-			sea(F2);
-			sea(F3);
-			sea(F4);
-			sea(F5);
-			sea(F6);
-			sea(F7);
-			sea(F8);
-			sea(F9);
-			sea(F10);
-			sea(F11);
-			sea(F12);
+			sea_u0(F1);
+			sea_u0(F2);
+			sea_u0(F3);
+			sea_u0(F4);
+			sea_u0(F5);
+			sea_u0(F6);
+			sea_u0(F7);
+			sea_u0(F8);
+			sea_u0(F9);
+			sea_u0(F10);
+			sea_u0(F11);
+			sea_u0(F12);
 			s2a(ESCAPE, ESCAPE);
 			
 			// keypad keys
@@ -356,6 +359,8 @@ namespace april
 			s2a(RCTRL, RCONTROL);
 			s2a(LMETA, LCOMMAND);
 			s2a(RMETA, RCOMMAND);
+			s2a(LSHIFT, LSHIFT);
+			s2a(RSHIFT, RSHIFT);
 		default:
 			break;
 		}

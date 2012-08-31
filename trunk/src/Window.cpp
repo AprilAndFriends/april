@@ -163,7 +163,6 @@ namespace april
 	{
 		if (keyCode == AK_UNKNOWN)
 		{	
-			april::log("key event on unknown key");
 			keyCode = AK_NONE;
 		}
 		switch (type)
