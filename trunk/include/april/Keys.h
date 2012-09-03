@@ -64,8 +64,8 @@ namespace april
 		AK_MODECHANGE = 0x1F,
 
 		// Mac CMD keys
-		AK_LCOMMAND = 117,
-		AK_RCOMMAND = 118,
+		AK_LCOMMAND = 1117,
+		AK_RCOMMAND = 1118,
 		
 		// space
 		AK_SPACE = 0x20,
