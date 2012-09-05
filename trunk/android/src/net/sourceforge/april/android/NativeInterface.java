@@ -1,8 +1,11 @@
 package net.sourceforge.april.android;
 
-// version 2.1
+// version 2.14
 
 import android.app.AlertDialog;
+import android.os.Build;
+import android.util.DisplayMetrics;
+
 import net.sourceforge.april.android.DialogListener.Cancel;
 import net.sourceforge.april.android.DialogListener.Ok;
 import net.sourceforge.april.android.DialogListener.OnCancel;
@@ -22,7 +25,7 @@ public class NativeInterface
 	public static AlertDialog.Builder DialogBuilder = null;
 	
 	public static native void setVariables(Object activity, String systemPath, String sharedPath, String packageName, String versionCode, String forceArchivePath);
-	public static native void init(String[] args, int width, int height);
+	public static native void init(String[] args);
 	public static native boolean render();
 	public static native void destroy();
 	public static native void onTouch(int type, float x, float y, int index);
@@ -43,6 +46,26 @@ public class NativeInterface
 	public static native void onDialogYes();
 	public static native void onDialogNo();
 	public static native void onDialogCancel();
+	
+	public static Object getDisplayResolution()
+	{
+		DisplayMetrics metrics = new DisplayMetrics();
+		NativeInterface.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		int width = metrics.widthPixels;
+		int height = metrics.heightPixels;
+		if (height > width)
+		{
+			height = metrics.widthPixels;
+			width = metrics.heightPixels;
+		}
+		// fixes problem with bottom 20 pixels being covered by Kindle Fire's menu
+		if (Build.MANUFACTURER == "Amazon" && Build.MODEL == "Kindle Fire")
+		{
+			height -= 20;
+		}
+		int[] result = {width, height};
+		return result;
+	}
 	
 	public static void showMessageBox(String title, String text, String ok, String yes, String no, String cancel, int iconId)
 	{

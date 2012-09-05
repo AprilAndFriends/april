@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.13
+/// @version 2.14
 /// 
 /// @section LICENSE
 /// 
@@ -23,7 +23,6 @@
 namespace april
 {
 	void* javaVM = NULL;
-	gvec2 androidResolution;
 	void (*dialogCallback)(MessageBoxButton) = NULL;
 
 	JNIEnv* getJNIEnv()

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.14
 /// 
 /// @section LICENSE
 /// 
@@ -40,7 +40,6 @@ namespace april
 	extern void* javaVM;
 	JNIEnv* getJNIEnv();
 	jobject getActivity();
-	extern gvec2 androidResolution;
 	extern void (*dialogCallback)(MessageBoxButton);
 
 	hstr _jstringToHstr(JNIEnv* env, jstring string)
@@ -90,7 +89,7 @@ namespace april
 		}
 	}
 
-	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args, jint width, jint height)
+	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args)
 	{
 		harray<hstr> args;
 		int length = env->GetArrayLength(_args);
@@ -98,7 +97,6 @@ namespace april
 		{
 			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
 		}
-		april::androidResolution.set((float)width, (float)height);
 		april_init(args);
 	}
 
@@ -246,7 +244,7 @@ namespace april
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"setVariables",		_JARGS(_JVOID, _JOBJ _JSTR _JSTR _JSTR _JSTR _JSTR),	(void*)&april::_JNI_setVariables		},
-		{"init",				_JARGS(_JVOID, _JARR(_JSTR) _JINT _JINT),				(void*)&april::_JNI_init				},
+		{"init",				_JARGS(_JVOID, _JARR(_JSTR)),							(void*)&april::_JNI_init				},
 		{"destroy",				_JARGS(_JVOID, ),										(void*)&april::_JNI_destroy				},
 		{"render",				_JARGS(_JBOOL, ),										(void*)&april::_JNI_render				},
 		{"onTouch",				_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),			(void*)&april::_JNI_onTouch				},

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.14
 /// 
 /// @section LICENSE
 /// 
@@ -29,13 +29,17 @@ namespace april
 {
 	JNIEnv* getJNIEnv();
 	jobject getActivity();
-	extern gvec2 androidResolution; // TODO
 	extern void (*dialogCallback)(MessageBoxButton);
 
 	gvec2 getDisplayResolution()
 	{
-		// TODO
-		return april::androidResolution;
+		JNIEnv* env = getJNIEnv();
+		jclass classNativeInterface = env->FindClass("net/sourceforge/april/android/NativeInterface");
+		jmethodID methodGetDisplayResolution = env->GetStaticMethodID(classNativeInterface, "getDisplayResolution", _JARGS(_JOBJ, ));
+		jintArray jResolution = (jintArray)env->CallStaticObjectMethod(classNativeInterface, methodGetDisplayResolution);
+		jint dimensions[2];
+		env->GetIntArrayRegion(jResolution, 0, 2, dimensions);
+		return gvec2((float)(int)dimensions[0], (float)(int)dimensions[1]);
 	}
 
 	SystemInfo getSystemInfo()
