@@ -428,6 +428,7 @@ namespace april
 					mouseButton = AMOUSEBTN_WHEELUP;
 					mouseEvent = AMOUSEEVT_SCROLL;
 				}
+				else return;
 				break;
 			case SDL_BUTTON_WHEELDOWN:
 				if (sdlEvent.type == SDL_MOUSEBUTTONDOWN)
@@ -435,6 +436,7 @@ namespace april
 					mouseButton = AMOUSEBTN_WHEELDOWN;
 					mouseEvent = AMOUSEEVT_SCROLL;
 				}
+				else return;
 				break;
 			default:
 				mouseButton = AMOUSEBTN_NONE;
