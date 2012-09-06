@@ -74,7 +74,7 @@ namespace april
 			hresource::setCwd("assets");
 			hresource::setArchive(archivePath);
 #ifdef _DEBUG
-			april::log("using assets: " + archivePath);
+			april::log("using assets: " + hresource::getArchive());
 #endif
 		}
 		else
