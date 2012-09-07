@@ -76,7 +76,7 @@ namespace april
 #define APRIL_COLOR_GREEN april::Color(0, 255, 0)
 #define APRIL_COLOR_BLUE april::Color(0, 0, 255)
 #define APRIL_COLOR_YELLOW april::Color(255, 255, 0)
-#define APRIL_COLOR_MANGENTA april::Color(255, 0, 255)
+#define APRIL_COLOR_MAGENTA april::Color(255, 0, 255)
 #define APRIL_COLOR_CYAN april::Color(0, 255, 255)
 #define APRIL_COLOR_ORANGE april::Color(255, 127, 0)
 #define APRIL_COLOR_PINK april::Color(255, 0, 127)
