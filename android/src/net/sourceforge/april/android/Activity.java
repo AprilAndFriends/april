@@ -1,9 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.1
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
+// version 2.2
 
 import android.app.Dialog;
 import android.content.pm.ActivityInfo;
@@ -15,13 +12,28 @@ import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
 public class Activity extends android.app.Activity
 {
 	private GLSurfaceView glView = null;
+	private ArrayList ignoredKeys = null;
 	
 	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
 	{
 		NativeInterface.ArchivePath = archivePath;
+	}
+	
+	public Activity()
+	{
+		super();
+		this.ignoredKeys = new ArrayList();
+		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_DOWN);
+		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_UP);
+		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_MUTE);
 	}
 	
 	public View getView()
@@ -118,12 +130,20 @@ public class Activity extends android.app.Activity
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
+		if (this.ignoredKeys.contains(event.getKeyCode()))
+		{
+			return false;
+		}
 		return NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
 	}
 	
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event)
 	{
+		if (this.ignoredKeys.contains(event.getKeyCode()))
+		{
+			return false;
+		}
 		return NativeInterface.onKeyUp(event.getKeyCode());
 	}
 	

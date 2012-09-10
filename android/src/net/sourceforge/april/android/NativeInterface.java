@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.14
+// version 2.2
 
 import android.app.AlertDialog;
 import android.os.Build;
@@ -31,6 +31,7 @@ public class NativeInterface
 	public static native void onTouch(int type, float x, float y, int index);
 	public static native boolean onKeyDown(int keyCode, int charCode);
 	public static native boolean onKeyUp(int keyCode);
+	public static native void onWindowFocusChanged(boolean focused);
 	public static native void onLowMemory();
 	public static native void onSurfaceCreated();
 	
