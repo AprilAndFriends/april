@@ -152,6 +152,14 @@
 		D1981C63140F85350057C3AF /* WBImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WBImage.h; path = windowsystems/iOS/WBImage.h; sourceTree = "<group>"; };
 		D1981C64140F85350057C3AF /* WBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WBImage.m; path = windowsystems/iOS/WBImage.m; sourceTree = "<group>"; };
 		D1981C71140F856B0057C3AF /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/TimerPosix.cpp; sourceTree = "<group>"; };
+		D1C2083F15FDC65600AB5DCA /* DirectX9_PixelShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_PixelShader.cpp; path = rendersystems/DirectX9/DirectX9_PixelShader.cpp; sourceTree = "<group>"; };
+		D1C2084015FDC65600AB5DCA /* DirectX9_PixelShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_PixelShader.h; path = rendersystems/DirectX9/DirectX9_PixelShader.h; sourceTree = "<group>"; };
+		D1C2084115FDC65600AB5DCA /* DirectX9_RenderSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_RenderSystem.cpp; path = rendersystems/DirectX9/DirectX9_RenderSystem.cpp; sourceTree = "<group>"; };
+		D1C2084215FDC65600AB5DCA /* DirectX9_RenderSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_RenderSystem.h; path = rendersystems/DirectX9/DirectX9_RenderSystem.h; sourceTree = "<group>"; };
+		D1C2084315FDC65600AB5DCA /* DirectX9_Texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_Texture.cpp; path = rendersystems/DirectX9/DirectX9_Texture.cpp; sourceTree = "<group>"; };
+		D1C2084415FDC65600AB5DCA /* DirectX9_Texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_Texture.h; path = rendersystems/DirectX9/DirectX9_Texture.h; sourceTree = "<group>"; };
+		D1C2084515FDC65600AB5DCA /* DirectX9_VertexShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_VertexShader.cpp; path = rendersystems/DirectX9/DirectX9_VertexShader.cpp; sourceTree = "<group>"; };
+		D1C2084615FDC65600AB5DCA /* DirectX9_VertexShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_VertexShader.h; path = rendersystems/DirectX9/DirectX9_VertexShader.h; sourceTree = "<group>"; };
 		D1CB6B6415CA905900B927BC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -284,10 +292,8 @@
 		7F42F7AE11EB185F00B1C1DF /* Render Systems */ = {
 			isa = PBXGroup;
 			children = (
-				7F1B520C12E470B200E958D8 /* OpenGL_RenderSystem.cpp */,
-				7F1B520D12E470B200E958D8 /* OpenGL_RenderSystem.h */,
-				7F1B520E12E470B200E958D8 /* OpenGL_Texture.cpp */,
-				7F1B520F12E470B200E958D8 /* OpenGL_Texture.h */,
+				D1C2083C15FDC63500AB5DCA /* OpenGL */,
+				D1C2083E15FDC63E00AB5DCA /* DirectX9 */,
 			);
 			name = "Render Systems";
 			sourceTree = "<group>";
@@ -354,6 +360,32 @@
 				D1981C64140F85350057C3AF /* WBImage.m */,
 			);
 			name = iOS;
+			sourceTree = "<group>";
+		};
+		D1C2083C15FDC63500AB5DCA /* OpenGL */ = {
+			isa = PBXGroup;
+			children = (
+				7F1B520C12E470B200E958D8 /* OpenGL_RenderSystem.cpp */,
+				7F1B520D12E470B200E958D8 /* OpenGL_RenderSystem.h */,
+				7F1B520E12E470B200E958D8 /* OpenGL_Texture.cpp */,
+				7F1B520F12E470B200E958D8 /* OpenGL_Texture.h */,
+			);
+			name = OpenGL;
+			sourceTree = "<group>";
+		};
+		D1C2083E15FDC63E00AB5DCA /* DirectX9 */ = {
+			isa = PBXGroup;
+			children = (
+				D1C2083F15FDC65600AB5DCA /* DirectX9_PixelShader.cpp */,
+				D1C2084015FDC65600AB5DCA /* DirectX9_PixelShader.h */,
+				D1C2084115FDC65600AB5DCA /* DirectX9_RenderSystem.cpp */,
+				D1C2084215FDC65600AB5DCA /* DirectX9_RenderSystem.h */,
+				D1C2084315FDC65600AB5DCA /* DirectX9_Texture.cpp */,
+				D1C2084415FDC65600AB5DCA /* DirectX9_Texture.h */,
+				D1C2084515FDC65600AB5DCA /* DirectX9_VertexShader.cpp */,
+				D1C2084615FDC65600AB5DCA /* DirectX9_VertexShader.h */,
+			);
+			name = DirectX9;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
