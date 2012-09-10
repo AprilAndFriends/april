@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.14
+/// @version 2.2
 /// 
 /// @section LICENSE
 /// 
@@ -134,6 +134,11 @@ namespace april
 		return true;
 	}
 
+	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean focused)
+	{
+		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(focused != JNI_FALSE));
+	}
+
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
 	{
 		PROTECTED_WINDOW_CALL(handleLowMemoryWarning());
@@ -166,7 +171,6 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android Activity::onResume()");
 #endif
-		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(true));
 	}
 	
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
@@ -174,7 +178,6 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android Activity::onPause()");
 #endif
-		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(false));
 		PROTECTED_RENDERSYS_CALL(unloadTextures());
 	}
 
@@ -240,29 +243,30 @@ namespace april
 #define _JFLOAT "F"
 #define _JVOID "V"
 
-#define METHOD_COUNT 20 // make sure this fits
+#define METHOD_COUNT 21 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
-		{"setVariables",		_JARGS(_JVOID, _JOBJ _JSTR _JSTR _JSTR _JSTR _JSTR),	(void*)&april::_JNI_setVariables		},
-		{"init",				_JARGS(_JVOID, _JARR(_JSTR)),							(void*)&april::_JNI_init				},
-		{"destroy",				_JARGS(_JVOID, ),										(void*)&april::_JNI_destroy				},
-		{"render",				_JARGS(_JBOOL, ),										(void*)&april::_JNI_render				},
-		{"onTouch",				_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),			(void*)&april::_JNI_onTouch				},
-		{"onKeyDown",			_JARGS(_JBOOL, _JINT _JINT),							(bool*)&april::_JNI_onKeyDown			},
-		{"onKeyUp",				_JARGS(_JBOOL, _JINT),									(bool*)&april::_JNI_onKeyUp				},
-		{"onLowMemory",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onLowMemory			},
-		{"onSurfaceCreated",	_JARGS(_JVOID, ),										(void*)&april::_JNI_onSurfaceCreated	},
-		{"activityOnCreate",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnCreate	},
-		{"activityOnStart",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnStart		},
-		{"activityOnResume",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnResume	},
-		{"activityOnPause",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnPause		},
-		{"activityOnStop",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnStop		},
-		{"activityOnDestroy",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnDestroy	},
-		{"activityOnRestart",	_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnRestart	},
-		{"onDialogOk",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogOk			},
-		{"onDialogYes",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogYes			},
-		{"onDialogNo",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogNo			},
-		{"onDialogCancel",		_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogCancel		}
+		{"setVariables",			_JARGS(_JVOID, _JOBJ _JSTR _JSTR _JSTR _JSTR _JSTR),	(void*)&april::_JNI_setVariables			},
+		{"init",					_JARGS(_JVOID, _JARR(_JSTR)),							(void*)&april::_JNI_init					},
+		{"destroy",					_JARGS(_JVOID, ),										(void*)&april::_JNI_destroy					},
+		{"render",					_JARGS(_JBOOL, ),										(void*)&april::_JNI_render					},
+		{"onTouch",					_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),			(void*)&april::_JNI_onTouch					},
+		{"onKeyDown",				_JARGS(_JBOOL, _JINT _JINT),							(bool*)&april::_JNI_onKeyDown				},
+		{"onKeyUp",					_JARGS(_JBOOL, _JINT),									(bool*)&april::_JNI_onKeyUp					},
+		{"onWindowFocusChanged",	_JARGS(_JVOID, _JBOOL),									(void*)&april::_JNI_onWindowFocusChanged	},
+		{"onLowMemory",				_JARGS(_JVOID, ),										(void*)&april::_JNI_onLowMemory				},
+		{"onSurfaceCreated",		_JARGS(_JVOID, ),										(void*)&april::_JNI_onSurfaceCreated		},
+		{"activityOnCreate",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnCreate		},
+		{"activityOnStart",			_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnStart			},
+		{"activityOnResume",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnResume		},
+		{"activityOnPause",			_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnPause			},
+		{"activityOnStop",			_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnStop			},
+		{"activityOnDestroy",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnDestroy		},
+		{"activityOnRestart",		_JARGS(_JVOID, ),										(void*)&april::_JNI_activityOnRestart		},
+		{"onDialogOk",				_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogOk				},
+		{"onDialogYes",				_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogYes				},
+		{"onDialogNo",				_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogNo				},
+		{"onDialogCancel",			_JARGS(_JVOID, ),										(void*)&april::_JNI_onDialogCancel			}
 	};
 	
 	jint JNI_OnLoad(JavaVM* vm, void* reserved)

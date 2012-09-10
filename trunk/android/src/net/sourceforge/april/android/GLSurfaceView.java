@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.1
+// version 2.2
 
 import android.content.Context;
 import android.view.inputmethod.EditorInfo;
@@ -19,6 +19,12 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		// view has to be properly focusable to be able to process input
 		this.setFocusable(true);
 		this.setFocusableInTouchMode(true);
+	}
+	
+	@Override
+	public void onWindowFocusChanged(boolean focused)
+	{
+		NativeInterface.onWindowFocusChanged(focused);
 	}
 	
 	public boolean onTouchEvent(final MotionEvent event)
