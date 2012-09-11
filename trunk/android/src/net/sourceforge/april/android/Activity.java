@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 
@@ -45,6 +46,7 @@ public class Activity extends android.app.Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		NativeInterface.Activity = this;
 		NativeInterface.PackageName = this.getPackageName();
 		NativeInterface.DataPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/" + NativeInterface.PackageName;
