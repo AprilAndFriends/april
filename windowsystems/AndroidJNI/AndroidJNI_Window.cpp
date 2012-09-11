@@ -185,7 +185,7 @@ namespace april
 		this->_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&view);
 		// show virtual keyboard
 		jmethodID methodShowSoftInput = env->GetMethodID(classInputMethodManager, "showSoftInput", "(Landroid/view/View;I)Z");
-		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, view, 2);
+		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, view, 1);
 		if (this->virtualKeyboardCallback != NULL)
 		{
 			(*this->virtualKeyboardCallback)(true);
