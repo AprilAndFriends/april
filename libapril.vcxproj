@@ -59,6 +59,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DirectX9|Android'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -69,6 +70,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9|Android'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -79,6 +81,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OpenGL|Android'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -90,6 +93,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OpenGLES1|Android'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -100,6 +104,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGL|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGL|Android'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -109,6 +114,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES1|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES1|Android'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
