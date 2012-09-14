@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.3
 /// 
 /// @section LICENSE
 /// 
@@ -17,6 +17,11 @@
 
 namespace april
 {
+	gvec2 getDisplayResolution()
+	{
+		return getSystemInfo().displayResolution;
+	}
+
 	MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{

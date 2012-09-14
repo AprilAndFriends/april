@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.3
 /// 
 /// @section LICENSE
 /// 
@@ -22,11 +22,6 @@
 
 namespace april
 {
-	gvec2 getDisplayResolution()
-	{
-		return gvec2((float)GetSystemMetrics(SM_CXSCREEN), (float)GetSystemMetrics(SM_CYSCREEN));
-	}
-
 	SystemInfo getSystemInfo()
 	{
 		// TODO
@@ -36,20 +31,23 @@ namespace april
 			// number of CPU cores
 			SYSTEM_INFO w32info;
 			GetSystemInfo(&w32info);
-			info.cpu_cores = w32info.dwNumberOfProcessors;
+			info.cpuCores = w32info.dwNumberOfProcessors;
 			// RAM size
 			MEMORYSTATUSEX status;
 			status.dwLength = sizeof(status);
 			GlobalMemoryStatusEx(&status);
-			info.ram = (int)status.ullTotalPhys; // TODO - won't work on more than 2 GB!
+			info.ram = (int)(status.ullTotalPhys / 1048576);
+			// display resolution
+			info.displayResolution.set((float)GetSystemMetrics(SM_CXSCREEN), (float)GetSystemMetrics(SM_CYSCREEN));
+			// display DPI
+			info.displayDpi = 96;
 			// other
-			info.locale = "en";
-			info.max_texture_size = 0;
+			info.locale = "en"; // TODO
 		}
 		// TODO
-		if (info.max_texture_size == 0 && april::rendersys != NULL)
+		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
-			info.max_texture_size = april::rendersys->_getMaxTextureSize();
+			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
 		}
 		return info;
 	}

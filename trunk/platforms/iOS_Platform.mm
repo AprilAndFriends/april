@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.3
 /// 
 /// @section LICENSE
 /// 
@@ -108,27 +108,11 @@
 
 namespace april
 {
-	gvec2 getDisplayResolution()
-	{
-		UIScreen* mainScreen = [UIScreen mainScreen];
-		float scale = 1.0f;
-#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
-		if ([mainScreen respondsToSelector:@selector(scale)])
-		{
-			scale = [mainScreen scale];
-		}
-#endif
-		int w = mainScreen.bounds.size.width * scale;
-		int h = mainScreen.bounds.size.height * scale;
-		// forcing a w:h ratio where w > h
-		return gvec2((float)hmax(w, h), (float)hmin(w, h));
-	}
-
 	SystemInfo getSystemInfo()
 	{
 		static SystemInfo info;
-		info.cpu_cores = sysconf(_SC_NPROCESSORS_ONLN);
-		if (info.name == "")
+		info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
+		if (info.locale == "")
 		{
 			info.locale = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];
 			
@@ -138,8 +122,20 @@ namespace april
 			hstr name = cname;
 			
 			info.name = name; // defaults for unknown devices
-			info.ram = 1024; // defaults
-			info.max_texture_size = 0;
+			info.displayDpi = 0; // TODO
+			
+			UIScreen* mainScreen = [UIScreen mainScreen];
+			float scale = 1.0f;
+#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
+			if ([mainScreen respondsToSelector:@selector(scale)])
+			{
+				scale = [mainScreen scale];
+			}
+#endif
+			int w = mainScreen.bounds.size.width * scale;
+			int h = mainScreen.bounds.size.height * scale;
+			// forcing a w:h ratio where w > h
+			info.displayResolution.set((float)hmax(w, h), (float)hmin(w, h));
 			
 			if (name.starts_with("iPad"))
 			{
@@ -218,9 +214,9 @@ namespace april
 			//else: i386 (iphone simulator) and possible future device types
 		}
 		// TODO
-		if (info.max_texture_size == 0 && april::rendersys != NULL)
+		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
-			info.max_texture_size = april::rendersys->_getMaxTextureSize();
+			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
 		}
 		return info;
 	}

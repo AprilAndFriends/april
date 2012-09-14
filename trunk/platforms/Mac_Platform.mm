@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.3
 /// 
 /// @section LICENSE
 /// 
@@ -81,28 +81,29 @@ namespace april
 		}
 	}
 	
-	gvec2 getDisplayResolution()
-	{
-		NSScreen* mainScreen = [NSScreen mainScreen];
-		NSRect rect = [mainScreen frame];
-		return gvec2(rect.size.width, rect.size.height);
-	}
-
 	SystemInfo getSystemInfo()
 	{
 		// TODO
 		static SystemInfo info;
 		if (info.locale == "")
 		{
-			info.cpu_cores = sysconf(_SC_NPROCESSORS_ONLN);
-			info.ram = 1024;
-			info.max_texture_size = 0;
+			// CPU cores
+			info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
+			// RAM
+			info.ram = 1024; // TODO
+			// display resolution
+			NSScreen* mainScreen = [NSScreen mainScreen];
+			NSRect rect = [mainScreen frame];
+			info.displayResolution.set((float)rect.size.width, (float)rect.size.height);
+			// display DPI
+			info.displayDpi = 72; // TODO
+			// locale
 			info.locale = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];
 		}
 		// TODO
-		if (info.max_texture_size == 0 && april::rendersys != NULL)
+		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
-			info.max_texture_size = april::rendersys->_getMaxTextureSize();
+			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
 		}
 		return info;
 	}

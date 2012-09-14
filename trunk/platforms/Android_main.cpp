@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.2
+/// @version 2.3
 /// 
 /// @section LICENSE
 /// 
@@ -15,6 +15,8 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
+#define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
+#include "androidUtilJNI.h"
 #include "AndroidJNI_Window.h"
 #include "april.h"
 #include "Keys.h"
@@ -33,13 +35,10 @@
 	{ \
 		april::rendersys->methodCall; \
 	}
-#define _JSTR_TO_HSTR(string) _jstringToHstr(env, string)
 
 namespace april
 {
 	extern void* javaVM;
-	JNIEnv* getJNIEnv();
-	jobject getActivity();
 	extern void (*dialogCallback)(MessageBoxButton);
 
 	hstr _jstringToHstr(JNIEnv* env, jstring string)
@@ -234,15 +233,6 @@ namespace april
 		}
 	}
 
-#define _JARGS(returnType, arguments) "(" arguments ")" returnType
-#define _JARR(str) "[" str
-#define _JOBJ "Ljava/lang/Object;"
-#define _JSTR "Ljava/lang/String;"
-#define _JINT "I"
-#define _JBOOL "Z"
-#define _JFLOAT "F"
-#define _JVOID "V"
-
 #define METHOD_COUNT 21 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
@@ -272,13 +262,8 @@ namespace april
 	jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	{
 		april::javaVM = (void*)vm;
-		JNIEnv* env = april::getJNIEnv();
-		if (env == NULL)
-		{
-			return -1;
-		}
-		jclass classe = env->FindClass("net/sourceforge/april/android/NativeInterface");
-		if (env->RegisterNatives(classe, methods, METHOD_COUNT) != 0)
+		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
+		if (env->RegisterNatives(classNativeInterface, methods, METHOD_COUNT) != 0)
 		{
 			return -1;
 		}

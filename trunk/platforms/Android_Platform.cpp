@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.14
+/// @version 2.3
 /// 
 /// @section LICENSE
 /// 
@@ -11,52 +11,46 @@
 #include <jni.h>
 
 #include <gtypes/Vector2.h>
+#include <hltypes/hmap.h>
+#include <hltypes/hstring.h>
 
+#define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
+#include "androidUtilJNI.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 
-// TODO - move this into a common Android platform header
-#define _JARGS(returnType, arguments) "(" arguments ")" returnType
-#define _JARR(str) "[" str
-#define _JOBJ "Ljava/lang/Object;"
-#define _JSTR "Ljava/lang/String;"
-#define _JINT "I"
-#define _JBOOL "Z"
-#define _JFLOAT "F"
-#define _JVOID "V"
-
 namespace april
 {
-	JNIEnv* getJNIEnv();
-	jobject getActivity();
 	extern void (*dialogCallback)(MessageBoxButton);
-
-	gvec2 getDisplayResolution()
-	{
-		JNIEnv* env = getJNIEnv();
-		jclass classNativeInterface = env->FindClass("net/sourceforge/april/android/NativeInterface");
-		jmethodID methodGetDisplayResolution = env->GetStaticMethodID(classNativeInterface, "getDisplayResolution", _JARGS(_JOBJ, ));
-		jintArray jResolution = (jintArray)env->CallStaticObjectMethod(classNativeInterface, methodGetDisplayResolution);
-		jint dimensions[2];
-		env->GetIntArrayRegion(jResolution, 0, 2, dimensions);
-		return gvec2((float)(int)dimensions[0], (float)(int)dimensions[1]);
-	}
 
 	SystemInfo getSystemInfo()
 	{
-		// TODO
 		static SystemInfo info;
 		if (info.locale == "")
 		{
-			info.cpu_cores = 1; // TODO
-			info.ram = 256;
-			info.max_texture_size = 0;
-			info.locale = "en";
+			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
+			// CPU cores
+			jmethodID methodGetCpuCores = env->GetStaticMethodID(classNativeInterface, "getCpuCores", _JARGS(_JINT, ));
+			info.cpuCores = (int)env->CallStaticObjectMethod(classNativeInterface, methodGetCpuCores);
+			// RAM
+			jmethodID methodGetDeviceRam = env->GetStaticMethodID(classNativeInterface, "getDeviceRam", _JARGS(_JINT, ));
+			info.ram = (int)env->CallStaticObjectMethod(classNativeInterface, methodGetDeviceRam);
+			// display resolution
+			jmethodID methodGetDisplayResolution = env->GetStaticMethodID(classNativeInterface, "getDisplayResolution", _JARGS(_JOBJ, ));
+			jintArray jResolution = (jintArray)env->CallStaticObjectMethod(classNativeInterface, methodGetDisplayResolution);
+			jint dimensions[2];
+			env->GetIntArrayRegion(jResolution, 0, 2, dimensions);
+			info.displayResolution.set((float)(int)dimensions[0], (float)(int)dimensions[1]);
+			// display DPI
+			jmethodID methodGetDisplayDpi = env->GetStaticMethodID(classNativeInterface, "getDisplayDpi", _JARGS(_JINT, ));
+			info.displayDpi = (int)env->CallStaticObjectMethod(classNativeInterface, methodGetDisplayDpi);
+			// locale
+			jmethodID methodGetLocale = env->GetStaticMethodID(classNativeInterface, "getLocale", _JARGS(_JSTR, ));
+			info.locale = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetLocale));
 		}
-		// TODO
-		if (info.max_texture_size == 0 && april::rendersys != NULL)
+		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
-			info.max_texture_size = april::rendersys->_getMaxTextureSize();
+			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
 		}
 		return info;
 	}
@@ -115,9 +109,8 @@ namespace april
 		}
 		april::dialogCallback = callback;
 		// call Java AprilJNI
-		jclass nativeInterface = env->FindClass("net/sourceforge/april/android/NativeInterface");
-		jmethodID methodShowMessageBox = env->GetStaticMethodID(nativeInterface, "showMessageBox", _JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR _JSTR _JINT));
-		env->CallStaticVoidMethod(nativeInterface, methodShowMessageBox, jTitle, jText, jOk, jYes, jNo, jCancel, jIconId);
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowMessageBox, "showMessageBox", _JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR _JSTR _JINT));
+		env->CallStaticVoidMethod(classNativeInterface, methodShowMessageBox, jTitle, jText, jOk, jYes, jNo, jCancel, jIconId);
 		return AMSGBTN_OK;
 	}
 

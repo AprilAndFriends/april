@@ -549,6 +549,7 @@
     <ClCompile Include="windowsystems\Win32\Win32_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\april\androidUtilJNI.h" />
     <ClInclude Include="include\april\april.h" />
     <ClInclude Include="include\april\aprilExport.h" />
     <ClInclude Include="include\april\aprilUtil.h" />

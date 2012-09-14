@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.3
 /// 
 /// @section LICENSE
 /// 
@@ -25,10 +25,13 @@ namespace april
 	struct SystemInfo
 	{
 		hstr name;
-		int cpu_cores; // number of CPU cores or separate CPU units
+		int cpuCores; // number of CPU cores or separate CPU units
 		int ram; // how many MB of RAM does the host system have in total
-		int max_texture_size;
+		int maxTextureSize;
+		gvec2 displayResolution;
+		int displayDpi;
 		hstr locale; // current system locale code
+		SystemInfo() : name(""), cpuCores(1), ram(256), maxTextureSize(256), displayDpi(0), locale("") { }
 	};
 	
 	enum DeviceType
@@ -77,7 +80,7 @@ namespace april
 
 	};
 		
-	aprilFnExport gvec2 getDisplayResolution();
+	aprilFnExport DEPRECATED_ATTRIBUTE gvec2 getDisplayResolution();
 	aprilFnExport SystemInfo getSystemInfo();
 	aprilFnExport DeviceType getDeviceType();
 	aprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN,

@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.2
+// version 2.3
 
 import android.app.AlertDialog;
 import android.os.Build;
@@ -11,6 +11,13 @@ import net.sourceforge.april.android.DialogListener.Ok;
 import net.sourceforge.april.android.DialogListener.OnCancel;
 import net.sourceforge.april.android.DialogListener.No;
 import net.sourceforge.april.android.DialogListener.Yes;
+
+import java.io.File;
+import java.io.InputStream;
+import java.io.IOException;
+import java.lang.Math;
+import java.lang.Runtime;
+import java.util.Locale;
 
 public class NativeInterface
 {
@@ -68,6 +75,57 @@ public class NativeInterface
 		return result;
 	}
 	
+	public static int getCpuCores()
+	{
+		return Runtime.getRuntime().availableProcessors();
+	}
+	
+	public static int getDisplayDpi()
+	{
+		DisplayMetrics metrics = new DisplayMetrics();
+		NativeInterface.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		return metrics.densityDpi;
+	}
+	
+	public static int getDeviceRam()
+	{
+		int result = 128;
+		try
+		{
+			// it's not as nice a solution as MemoryInfo.totalMem, but this one is available before API level 16
+			ProcessBuilder builder = new ProcessBuilder(new String[] {"/system/bin/cat", "/proc/meminfo"});
+			builder.directory(new File("/system/bin/"));
+			builder.redirectErrorStream(true);
+			Process process = builder.start();
+			InputStream input = process.getInputStream();
+			byte[] buffer = new byte[1024];
+			String output = "";
+			while (input.read(buffer) != -1)
+			{
+				output += new String(buffer);
+			}
+			input.close();
+			int startIndex = output.indexOf("MemTotal:");
+			int endIndex = output.indexOf("\n", startIndex);
+			String memory = output.substring(startIndex, endIndex).replace("MemTotal:", "").replace("kB", "").replace(" ", "");
+			result = Math.round(Float.parseFloat(memory) / 1024);
+		}
+		catch (IOException e)
+		{
+			android.util.Log.e("april", e.toString());
+		}
+		catch (Exception e)
+		{
+			android.util.Log.e("april", e.toString());
+		}
+		return result;
+	}
+	
+	public static String getLocale()
+	{
+		return Locale.getDefault().getLanguage();
+	}
+	
 	public static void showMessageBox(String title, String text, String ok, String yes, String no, String cancel, int iconId)
 	{
 		NativeInterface.DialogBuilder = new AlertDialog.Builder(NativeInterface.Activity);
@@ -118,4 +176,37 @@ public class NativeInterface
 		});
 	}
 	
+}
+
+
+// just a special helper class for getting the output of a process
+class CmdExecute
+{
+	public synchronized String run(String[] cmd, String workdirectory)
+	{
+		String result = "";
+		try
+		{
+			ProcessBuilder builder = new ProcessBuilder(cmd);
+			// set working directory
+			if (workdirectory != null)
+			{
+				builder.directory(new File(workdirectory));
+				builder.redirectErrorStream(true);
+				Process process = builder.start();
+				InputStream in = process.getInputStream();
+				byte[] re = new byte[1024];
+				while (in.read(re) != -1)
+				{
+					result += new String(re);
+				}
+				in.close();
+			}
+		}
+		catch (Exception ex)
+		{
+		}
+		return result;
+	}
+
 }
