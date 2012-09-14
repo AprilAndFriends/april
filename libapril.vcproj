@@ -603,6 +603,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\include\april\androidUtilJNI.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\april\april.h"
 				>
 			</File>

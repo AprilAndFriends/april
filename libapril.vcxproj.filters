@@ -220,6 +220,9 @@
     <ClInclude Include="include\april\RamTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\april\androidUtilJNI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="fileproperties.rc">

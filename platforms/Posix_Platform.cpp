@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.3
 /// 
 /// @section LICENSE
 /// 
@@ -15,27 +15,21 @@
 
 namespace april
 {
-	gvec2 getDisplayResolution()
-	{
-		// TODO
-		return gvec2();
-	}
-
 	SystemInfo getSystemInfo()
 	{
 		// TODO
 		static SystemInfo info;
 		if (info.locale == "")
 		{
-			info.cpu_cores = 1; // TODO
-			info.ram = 1024;
-			info.max_texture_size = 0;
-			info.locale = "en";
+			info.cpuCores = 1; // TODO
+			info.displayResolution.set(1024.0f, 768.0f); // TODO
+			info.displayDpi = 96; // TODO
+			//info.ram = 1024; // TODO
+			info.locale = "en"; // TODO
 		}
-		// TODO
-		if (info.max_texture_size == 0 && april::rendersys != NULL)
+		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
-			info.max_texture_size = april::rendersys->_getMaxTextureSize();
+			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
 		}
 		return info;
 	}
