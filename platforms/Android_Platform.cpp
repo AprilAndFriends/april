@@ -64,8 +64,7 @@ namespace april
 	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
-		// Java Environment
-		JNIEnv* env = getJNIEnv();
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowMessageBox, "showMessageBox", _JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR _JSTR _JINT));
 		// determine ok/yes/no/cancel texts
 		hstr ok;
 		hstr yes;
@@ -109,7 +108,6 @@ namespace april
 		}
 		april::dialogCallback = callback;
 		// call Java AprilJNI
-		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowMessageBox, "showMessageBox", _JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR _JSTR _JINT));
 		env->CallStaticVoidMethod(classNativeInterface, methodShowMessageBox, jTitle, jText, jOk, jYes, jNo, jCancel, jIconId);
 		return AMSGBTN_OK;
 	}
