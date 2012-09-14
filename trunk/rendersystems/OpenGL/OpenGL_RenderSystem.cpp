@@ -377,7 +377,7 @@ namespace april
 	{
 		// TODO
 		harray<DisplayMode> result;
-		gvec2 resolution = april::getDisplayResolution();
+		gvec2 resolution = april::getSystemInfo().displayResolution;
 		DisplayMode displayMode;
 		displayMode.width = (int)resolution.x;
 		displayMode.height = (int)resolution.y;
