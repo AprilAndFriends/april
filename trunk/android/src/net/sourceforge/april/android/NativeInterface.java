@@ -31,7 +31,7 @@ public class NativeInterface
 	public static String ApkPath = "";
 	public static AlertDialog.Builder DialogBuilder = null;
 	
-	public static native void setVariables(Object activity, String systemPath, String sharedPath, String packageName, String versionCode, String forceArchivePath);
+	public static native void setVariables(String systemPath, String sharedPath, String packageName, String versionCode, String forceArchivePath);
 	public static native void init(String[] args);
 	public static native boolean render();
 	public static native void destroy();

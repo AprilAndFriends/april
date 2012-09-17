@@ -14,7 +14,7 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 		NativeInterface.onSurfaceCreated();
 		if (!NativeInterface.Running)
 		{
-			NativeInterface.setVariables(NativeInterface.Activity, NativeInterface.SystemPath, NativeInterface.DataPath,
+			NativeInterface.setVariables(NativeInterface.SystemPath, NativeInterface.DataPath,
 				NativeInterface.PackageName, NativeInterface.VersionCode, NativeInterface.ArchivePath);
 			String args[] = {NativeInterface.ApkPath}; // adding argv[0]
 			NativeInterface.init(args);

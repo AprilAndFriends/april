@@ -14,31 +14,21 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hthread.h>
 
+#define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
+#include "androidUtilJNI.h"
 #include "AndroidJNI_Window.h"
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Timer.h"
 
+#define CLASS_VIEW "android/view/View"
+#define CLASS_IBINDER "android/os/IBinder"
+
 namespace april
 {
-	void* javaVM = NULL;
-	void (*dialogCallback)(MessageBoxButton) = NULL;
+	extern JavaVM* javaVM;
 
-	JNIEnv* getJNIEnv()
-	{
-		JNIEnv* env;
-		return (((JavaVM*)april::javaVM)->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) == JNI_OK ? env : NULL);
-	}
-
-	jobject getActivity()
-	{
-		JNIEnv* env = getJNIEnv();
-		jclass classNativeInterface = env->FindClass("net/sourceforge/april/android/NativeInterface");
-		jfieldID fieldActivity = env->GetStaticFieldID(classNativeInterface, "Activity", "Lnet/sourceforge/april/android/Activity;");
-		return env->GetStaticObjectField(classNativeInterface, fieldActivity);
-	}
-	
 	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), multiTouchActive(false), _lastTime(0.0f)
 	{
 		this->name = APRIL_WS_ANDROIDJNI;
@@ -184,7 +174,7 @@ namespace april
 		jobject view = NULL;
 		this->_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&view);
 		// show virtual keyboard
-		jmethodID methodShowSoftInput = env->GetMethodID(classInputMethodManager, "showSoftInput", "(Landroid/view/View;I)Z");
+		jmethodID methodShowSoftInput = env->GetMethodID(classInputMethodManager, "showSoftInput", _JARGS(_JBOOL, _JCLASS("android/view/View") _JINT));
 		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, view, 1);
 		if (this->virtualKeyboardCallback != NULL)
 		{
@@ -200,10 +190,10 @@ namespace april
 		jobject view = NULL;
 		this->_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&view);
 		// hide virtual keyboard
-		jclass classView = env->FindClass("android/view/View");
-		jmethodID methodGetWindowToken = env->GetMethodID(classView, "getWindowToken", "()Landroid/os/IBinder;");
+		jclass classView = env->FindClass(CLASS_VIEW);
+		jmethodID methodGetWindowToken = env->GetMethodID(classView, "getWindowToken", _JARGS(_JCLASS(CLASS_IBINDER), ));
 		jobject binder = env->CallObjectMethod(view, methodGetWindowToken);
-		jmethodID methodHideSoftInput = env->GetMethodID(classInputMethodManager, "hideSoftInputFromWindow", "(Landroid/os/IBinder;I)Z");
+		jmethodID methodHideSoftInput = env->GetMethodID(classInputMethodManager, "hideSoftInputFromWindow", _JARGS(_JBOOL, _JCLASS(CLASS_IBINDER) _JINT));
 		env->CallBooleanMethod(inputMethodManager, methodHideSoftInput, binder, 0);
 		if (this->virtualKeyboardCallback != NULL)
 		{
@@ -213,15 +203,14 @@ namespace april
 	
 	void AndroidJNI_Window::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaView)
 	{
-		JNIEnv* env = NULL;
-		((JavaVM*)javaVM)->GetEnv((void**)&env, JNI_VERSION_1_6);
+		JNIEnv* env = getJNIEnv();
 		jobject jActivity = getActivity();
 		jclass classAprilActivity = env->GetObjectClass(jActivity);
 		jclass classContext = env->FindClass("android/content/Context");
-		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
+		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", _JSTR);
 		jobject INPUT_METHOD_SERVICE = env->GetStaticObjectField(classContext, fieldINPUT_METHOD_SERVICE);
-		jmethodID methodGetSystemService = env->GetMethodID(classAprilActivity, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
-		jmethodID methodGetView = env->GetMethodID(classAprilActivity, "getView", "()Landroid/view/View;");		// output
+		jmethodID methodGetSystemService = env->GetMethodID(classAprilActivity, "getSystemService", _JARGS(_JSTR, _JOBJ));
+		jmethodID methodGetView = env->GetMethodID(classAprilActivity, "getView", _JARGS(_JCLASS(CLASS_VIEW), ));
 		*javaEnv = env;
 		*javaClassInputMethodManager = env->FindClass("android/view/inputmethod/InputMethodManager");
 		*javaInputMethodManager = env->CallObjectMethod(jActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
