@@ -65,7 +65,7 @@ namespace april
 #endif
 		glGenTextures(1, &this->textureId);
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*) april::rendersys)->state.textureId = ((OpenGL_RenderSystem*) april::rendersys)->deviceState.textureId = this->textureId;
+		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
@@ -162,7 +162,7 @@ namespace april
 		}
 		// write texels
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*) april::rendersys)->state.textureId = ((OpenGL_RenderSystem*) april::rendersys)->deviceState.textureId = this->textureId;
+		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		if (image != NULL)
@@ -231,7 +231,7 @@ namespace april
 	{
 		unsigned char writeData[4] = {color.r, color.g, color.b, color.a};
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*) april::rendersys)->state.textureId = ((OpenGL_RenderSystem*) april::rendersys)->deviceState.textureId = this->textureId;
+		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
 	}
 	
@@ -268,7 +268,7 @@ namespace april
 			memset(writeData, value, sizeof(unsigned char) * w * h * this->bpp);
 		}
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*) april::rendersys)->state.textureId = ((OpenGL_RenderSystem*) april::rendersys)->deviceState.textureId = this->textureId;
+		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
@@ -303,7 +303,7 @@ namespace april
 		texture->load();
 		unsigned char* readData = new unsigned char[source->width * source->height * source->bpp];
 		glBindTexture(GL_TEXTURE_2D, source->textureId);
-		((OpenGL_RenderSystem*) april::rendersys)->state.textureId = ((OpenGL_RenderSystem*) april::rendersys)->deviceState.textureId = this->textureId;
+		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
 		if (source->bpp == 4)
 		{
@@ -363,7 +363,7 @@ namespace april
 			}
 		}
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*) april::rendersys)->state.textureId = ((OpenGL_RenderSystem*) april::rendersys)->deviceState.textureId = this->textureId;
+		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
@@ -406,7 +406,7 @@ namespace april
 #ifndef _OPENGLES1
 		this->load();
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*) april::rendersys)->state.textureId = ((OpenGL_RenderSystem*) april::rendersys)->deviceState.textureId = this->textureId;
+		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
 		*output = new unsigned char[this->width * this->height * this->bpp];
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, *output);
 		return true;

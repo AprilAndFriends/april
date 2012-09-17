@@ -369,6 +369,8 @@ namespace april
 		this->state.systemColor = APRIL_COLOR_BLACK;
 		this->deviceState.systemColor = APRIL_COLOR_BLACK;
 		glColor4f(0, 0, 0, 1);
+		this->setTextureFilter(Texture::FILTER_LINEAR);
+		this->setTextureAddressMode(Texture::ADDRESS_WRAP);
 		this->_setTextureFilter(Texture::FILTER_LINEAR);
 		this->_setTextureAddressMode(Texture::ADDRESS_WRAP);
 	}
@@ -650,12 +652,12 @@ namespace april
 			this->deviceState.textureFilter = Texture::FILTER_UNDEFINED;
 		}
 		// texture has to be bound first or else filter and address mode won't be applied afterwards
-		if (this->state.textureFilter != this->deviceState.textureFilter)
+		if (this->state.textureFilter != this->deviceState.textureFilter || this->deviceState.textureFilter == Texture::FILTER_UNDEFINED)
 		{
 			this->_setTextureFilter(this->state.textureFilter);
 			this->deviceState.textureFilter = this->state.textureFilter;
 		}
-		if (this->state.textureAddressMode != this->deviceState.textureAddressMode)
+		if (this->state.textureAddressMode != this->deviceState.textureAddressMode || this->deviceState.textureAddressMode == Texture::ADDRESS_UNDEFINED)
 		{
 			this->_setTextureAddressMode(this->state.textureAddressMode);
 			this->deviceState.textureAddressMode = this->state.textureAddressMode;
