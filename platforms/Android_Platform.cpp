@@ -21,7 +21,21 @@
 
 namespace april
 {
-	extern void (*dialogCallback)(MessageBoxButton);
+	void* javaVM = NULL;
+	void (*dialogCallback)(MessageBoxButton) = NULL;
+
+	JNIEnv* getJNIEnv()
+	{
+		JNIEnv* env;
+		return (((JavaVM*)april::javaVM)->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) == JNI_OK ? env : NULL);
+	}
+
+	jobject getActivity()
+	{
+		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
+		jfieldID fieldActivity = env->GetStaticFieldID(classNativeInterface, "Activity", _JCLASS("net/sourceforge/april/android/Activity"));
+		return env->GetStaticObjectField(classNativeInterface, fieldActivity);
+	}
 
 	SystemInfo getSystemInfo()
 	{
