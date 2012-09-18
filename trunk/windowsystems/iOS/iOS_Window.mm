@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.32
 /// 
 /// @section LICENSE
 /// 
@@ -111,7 +111,7 @@ namespace april
 	};
 	
 	iOS_Window::iOS_Window() : Window()
-    {
+	{
 		this->name = APRIL_WS_IOS;
 	}
 	
@@ -142,11 +142,11 @@ namespace april
 		destroy();
 	}
 		
-    void iOS_Window::enterMainLoop()
-    {
-        NSLog(@"Fatal error: Using enterMainLoop on iOS!");
-        exit(-1);
-    }
+	void iOS_Window::enterMainLoop()
+	{
+		NSLog(@"Fatal error: Using enterMainLoop on iOS!");
+		exit(-1);
+	}
 	
 	bool iOS_Window::updateOneFrame()
 	{
@@ -172,25 +172,19 @@ namespace april
 		}
 		
 		float k = this->timer.diff(true);
-		return this->performUpdate(k);	
+		return (this->performUpdate(k) && this->running);	
 	}
 
-    void iOS_Window::terminateMainLoop()
-	{
-        NSLog(@"Fatal error: Using terminateMainLoop on iOS!");
-        exit(-2);
-    }
-	
 	void iOS_Window::destroyWindow()
 	{
 		// just stopping the animation on iOS
 		[glview stopAnimation];
 	}
 	
-    void iOS_Window::setCursorVisible(bool visible)
-    {
-        // no effect on iOS
-    }
+	void iOS_Window::setCursorVisible(bool visible)
+	{
+		// no effect on iOS
+	}
 	
 	void iOS_Window::addInputEvent(InputEvent* event)
 	{
@@ -220,13 +214,13 @@ namespace april
 		this->cursorPosition.set(x, y);
 	}
 
-    bool iOS_Window::isCursorVisible()
-    {
-        return false; // iOS never shows system cursor
-    }
+	bool iOS_Window::isCursorVisible()
+	{
+		return false; // iOS never shows system cursor
+	}
 	
-    int iOS_Window::getWidth()
-    {
+	int iOS_Window::getWidth()
+	{
 		// TODO dont swap width and height in case display is in portrait mode
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
@@ -235,11 +229,11 @@ namespace april
 			return uiwindow.bounds.size.height * caeagllayer.contentsScale;
 		}
 #endif
-        return uiwindow.bounds.size.height;
-    }
+		return uiwindow.bounds.size.height;
+	}
 	
-    int iOS_Window::getHeight()
-    {
+	int iOS_Window::getHeight()
+	{
 		// TODO dont swap width and height in case display is in portrait mode
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
@@ -248,16 +242,16 @@ namespace april
 			return uiwindow.bounds.size.width * caeagllayer.contentsScale;
 		}
 #endif
-        return uiwindow.bounds.size.width;
-    }
+		return uiwindow.bounds.size.width;
+	}
 
-    void iOS_Window::setTitle(chstr value)
-    {
-        // no effect on iOS
-    }
+	void iOS_Window::setTitle(chstr value)
+	{
+		// no effect on iOS
+	}
 	
-    void iOS_Window::presentFrame()
-    {
+	void iOS_Window::presentFrame()
+	{
 		if (this->firstFrameDrawn)
 		{
 			[glview swapBuffers];
@@ -271,7 +265,7 @@ namespace april
 			}
 			this->firstFrameDrawn = true;
 		}
-    }
+	}
 
 	void* iOS_Window::getBackendId()
 	{
@@ -485,8 +479,12 @@ namespace april
 	//////////////
 	void iOS_Window::handleDisplayAndUpdate()
 	{
-		this->updateOneFrame();
+		bool result = this->updateOneFrame();
 		april::rendersys->presentFrame();
+		if (!result)
+		{
+			// TODO - should exit application here
+		}
 	}
 	
 	void iOS_Window::deviceOrientationDidChange()

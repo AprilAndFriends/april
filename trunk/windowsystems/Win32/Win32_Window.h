@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.32
 /// 
 /// @section LICENSE
 /// 
@@ -46,7 +46,6 @@ namespace april
 
 		void enterMainLoop();
 		bool updateOneFrame();
-		void terminateMainLoop();
 		void presentFrame();
 		void checkEvents();
 

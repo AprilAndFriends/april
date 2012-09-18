@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.32
 /// 
 /// @section LICENSE
 /// 
@@ -237,12 +237,7 @@ namespace april
 		}
 #endif			
 		april::rendersys->presentFrame();
-		return result;
-	}
-	
-	void Win32_Window::terminateMainLoop()
-	{
-		this->running = false;
+		return (result && Window::updateOneFrame());
 	}
 	
 	void Win32_Window::presentFrame()

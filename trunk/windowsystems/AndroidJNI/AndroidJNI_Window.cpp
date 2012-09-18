@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.14
+/// @version 2.32
 /// 
 /// @section LICENSE
 /// 
@@ -76,7 +76,7 @@ namespace april
 		t = this->globalTimer.getTime();
 		if (t == this->_lastTime)
 		{
-			return true; // don't redraw frames which won't change
+			return this->running; // don't redraw frames which won't change
 		}
 		k = (t - this->_lastTime) / 1000.0f;
 		if (k > 0.5f)
@@ -86,14 +86,9 @@ namespace april
 		this->_lastTime = t;
 		result = this->performUpdate(k);
 		april::rendersys->presentFrame();
-		return result;
+		return (result && Window::updateOneFrame());
 	}
 	
-	void AndroidJNI_Window::terminateMainLoop()
-	{
-		this->running = false;
-	}
-
 	void AndroidJNI_Window::presentFrame()
 	{
 		// not needed as Android Java Activity takes care of this
