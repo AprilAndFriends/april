@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.32
 /// 
 /// @section LICENSE
 /// 
@@ -44,7 +44,6 @@ namespace april
 		// implementations
 		void enterMainLoop();
 		bool updateOneFrame();
-		void terminateMainLoop();
 		void destroyWindow();
 		void setCursorVisible(bool value);
 		bool isCursorVisible();

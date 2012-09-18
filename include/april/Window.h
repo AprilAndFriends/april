@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.32
 /// 
 /// @section LICENSE
 /// 
@@ -127,10 +127,10 @@ namespace april
 								  void (*charCallback)(unsigned int));
 
 		// pure virtual methods (window system dependent)
-		virtual bool updateOneFrame() = 0;
-		virtual void terminateMainLoop() = 0;
 		virtual void presentFrame() = 0;
 		virtual void checkEvents() = 0;
+		virtual bool updateOneFrame();
+		virtual void terminateMainLoop();
 
 		// misc virtuals
 		virtual void beginKeyboardHandling() { }

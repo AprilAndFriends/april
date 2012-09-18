@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.32
 /// 
 /// @section LICENSE
 /// 
@@ -54,7 +54,6 @@ namespace april
 		void* getBackendId();
 
 		bool updateOneFrame();
-		void terminateMainLoop();
 		void presentFrame();
 		void checkEvents();
 		

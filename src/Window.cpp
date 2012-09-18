@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.32
 /// 
 /// @section LICENSE
 /// 
@@ -136,6 +136,16 @@ namespace april
 				this->running = false;
 			}
 		}
+	}
+
+	bool Window::updateOneFrame()
+	{
+		return this->running;
+	}
+	
+	void Window::terminateMainLoop()
+	{
+		this->running = false;
 	}
 	
 	bool Window::performUpdate(float k)

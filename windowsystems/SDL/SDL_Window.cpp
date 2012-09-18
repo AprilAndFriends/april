@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.32
 /// 
 /// @section LICENSE
 /// 
@@ -202,14 +202,9 @@ namespace april
 		}
 		// first process sdl events
 		this->checkEvents();
-		return this->_handleDisplayAndUpdate();
+		return (this->_handleDisplayAndUpdate() && Window::updateOneFrame());
 	}
 
-	void SDL_Window::terminateMainLoop()
-	{
-		this->running = false;
-	}
-	
 	void SDL_Window::checkEvents()
 	{
 		SDL_Event sdlEvent;
