@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.32
+/// @version 2.33
 /// 
 /// @section LICENSE
 /// 
@@ -163,14 +163,8 @@ namespace april
 
 	void AndroidJNI_Window::beginKeyboardHandling()
 	{
-		JNIEnv* env = NULL;
-		jclass classInputMethodManager = NULL;
-		jobject inputMethodManager = NULL;
-		jobject view = NULL;
-		this->_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&view);
-		// show virtual keyboard
-		jmethodID methodShowSoftInput = env->GetMethodID(classInputMethodManager, "showSoftInput", _JARGS(_JBOOL, _JCLASS("android/view/View") _JINT));
-		env->CallBooleanMethod(inputMethodManager, methodShowSoftInput, view, 1);
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowVirtualKeyboard, "showVirtualKeyboard", _JARGS(_JVOID, ));
+		env->CallStaticVoidMethod(classNativeInterface, methodShowVirtualKeyboard);
 		if (this->virtualKeyboardCallback != NULL)
 		{
 			(*this->virtualKeyboardCallback)(true);
@@ -179,37 +173,12 @@ namespace april
 	
 	void AndroidJNI_Window::terminateKeyboardHandling()
 	{
-		JNIEnv* env = NULL;
-		jclass classInputMethodManager = NULL;
-		jobject inputMethodManager = NULL;
-		jobject view = NULL;
-		this->_getVirtualKeyboardClasses((void**)&env, (void**)&classInputMethodManager, (void**)&inputMethodManager, (void**)&view);
-		// hide virtual keyboard
-		jclass classView = env->FindClass(CLASS_VIEW);
-		jmethodID methodGetWindowToken = env->GetMethodID(classView, "getWindowToken", _JARGS(_JCLASS(CLASS_IBINDER), ));
-		jobject binder = env->CallObjectMethod(view, methodGetWindowToken);
-		jmethodID methodHideSoftInput = env->GetMethodID(classInputMethodManager, "hideSoftInputFromWindow", _JARGS(_JBOOL, _JCLASS(CLASS_IBINDER) _JINT));
-		env->CallBooleanMethod(inputMethodManager, methodHideSoftInput, binder, 0);
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodHideVirtualKeyboard, "hideVirtualKeyboard", _JARGS(_JVOID, ));
+		env->CallStaticVoidMethod(classNativeInterface, methodHideVirtualKeyboard);
 		if (this->virtualKeyboardCallback != NULL)
 		{
 			(*this->virtualKeyboardCallback)(false);
 		}
-	}
-	
-	void AndroidJNI_Window::_getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaView)
-	{
-		JNIEnv* env = getJNIEnv();
-		jobject jActivity = getActivity();
-		jclass classAprilActivity = env->GetObjectClass(jActivity);
-		jclass classContext = env->FindClass("android/content/Context");
-		jfieldID fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(classContext, "INPUT_METHOD_SERVICE", _JSTR);
-		jobject INPUT_METHOD_SERVICE = env->GetStaticObjectField(classContext, fieldINPUT_METHOD_SERVICE);
-		jmethodID methodGetSystemService = env->GetMethodID(classAprilActivity, "getSystemService", _JARGS(_JSTR, _JOBJ));
-		jmethodID methodGetView = env->GetMethodID(classAprilActivity, "getView", _JARGS(_JCLASS(CLASS_VIEW), ));
-		*javaEnv = env;
-		*javaClassInputMethodManager = env->FindClass("android/view/inputmethod/InputMethodManager");
-		*javaInputMethodManager = env->CallObjectMethod(jActivity, methodGetSystemService, INPUT_METHOD_SERVICE);
-		*javaView = (void*)env->CallObjectMethod(jActivity, methodGetView);
 	}
 
 }

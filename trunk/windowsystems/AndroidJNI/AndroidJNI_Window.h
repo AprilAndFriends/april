@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.32
+/// @version 2.33
 /// 
 /// @section LICENSE
 /// 
@@ -101,9 +101,6 @@ namespace april
 		harray<MouseInputEvent> mouseEvents;
 		harray<KeyInputEvent> keyEvents;
 		harray<TouchInputEvent> touchEvents;
-		
-		// using void** so that jni.h doesn't have to be included in this header
-		void _getVirtualKeyboardClasses(void** javaEnv, void** javaClassInputMethodManager, void** javaInputMethodManager, void** javaView);
 		
 	private:
 		float _lastTime;

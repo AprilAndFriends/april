@@ -1,9 +1,11 @@
 package net.sourceforge.april.android;
 
-// version 2.3
+// version 2.33
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Build;
+import android.view.inputmethod.InputMethodManager;
 import android.util.DisplayMetrics;
 
 import net.sourceforge.april.android.DialogListener.Cancel;
@@ -54,6 +56,21 @@ public class NativeInterface
 	public static native void onDialogYes();
 	public static native void onDialogNo();
 	public static native void onDialogCancel();
+	
+	private static InputMethodManager _getInputMethodManager()
+	{
+		return (InputMethodManager)NativeInterface.Activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+	}
+	
+	public static void showVirtualKeyboard()
+	{
+		NativeInterface._getInputMethodManager().showSoftInput(NativeInterface.Activity.getView(), InputMethodManager.SHOW_IMPLICIT);
+	}
+	
+	public static void hideVirtualKeyboard()
+	{
+		NativeInterface._getInputMethodManager().hideSoftInputFromWindow(NativeInterface.Activity.getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+	}
 	
 	public static Object getDisplayResolution()
 	{
