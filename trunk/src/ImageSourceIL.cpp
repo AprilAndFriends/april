@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.31
 /// 
 /// @section LICENSE
 /// 
@@ -24,10 +24,15 @@ namespace april
 	{
 		ilGenImages(1, &this->imageId);
 		this->compressedLength = 0;
+		this->manualData = false;
 	}
 	
 	ImageSource::~ImageSource()
 	{
+		if (this->manualData && this->data != NULL)
+		{
+			delete [] this->data;
+		}
 		ilDeleteImages(1, &this->imageId);
 	}
 
@@ -44,7 +49,7 @@ namespace april
 		hresource stream(filename);
 		int size;
 		unsigned char bytes[4];
-		unsigned char* buffer;
+		unsigned char* buffer = NULL;
 		// file header ("JPT" + 1 byte for version code)
 		stream.read_raw(bytes, 4);
 		// read JPEG

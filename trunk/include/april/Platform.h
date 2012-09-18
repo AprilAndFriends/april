@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.3
+/// @version 2.31
 /// 
 /// @section LICENSE
 /// 
@@ -31,7 +31,7 @@ namespace april
 		gvec2 displayResolution;
 		int displayDpi;
 		hstr locale; // current system locale code
-		SystemInfo() : name(""), cpuCores(1), ram(256), maxTextureSize(256), displayDpi(0), locale("") { }
+		SystemInfo() : name(""), cpuCores(1), ram(256), maxTextureSize(0), displayDpi(0), locale("") { }
 	};
 	
 	enum DeviceType
