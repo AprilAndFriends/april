@@ -90,6 +90,7 @@ namespace april
 			// CPU cores
 			info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
 			// RAM
+			info.name = "mac";
 			info.ram = 1024; // TODO
 			// display resolution
 			NSScreen* mainScreen = [NSScreen mainScreen];
@@ -97,6 +98,7 @@ namespace april
 			info.displayResolution.set((float)rect.size.width, (float)rect.size.height);
 			// display DPI
 			info.displayDpi = 72; // TODO
+			info.maxTextureSize = 0;
 			// locale
 			info.locale = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];
 		}
