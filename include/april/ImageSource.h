@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.31
 /// 
 /// @section LICENSE
 /// 
@@ -61,6 +61,11 @@ namespace april
 		int internalFormat;
 
 		int compressedLength;
+#ifdef USE_IL
+		// this is necessary because DevIL does not handle JPT since they are loaded manually
+		// TODO - will be removed after refactoring of ImageSource and transfer to libjpeg and libpng
+		bool manualData;
+#endif
 		
 	protected:
 		unsigned int imageId;
