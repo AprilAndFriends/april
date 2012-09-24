@@ -8,7 +8,7 @@
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
-
+#include <sys/sysctl.h>
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
@@ -91,7 +91,16 @@ namespace april
 			info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
 			// RAM
 			info.name = "mac";
-			info.ram = 1024; // TODO
+
+			int mib [] = { CTL_HW, HW_MEMSIZE };
+			int64_t value = 0;
+			size_t length = sizeof(value);
+
+			if (sysctl(mib, 2, &value, &length, NULL, 0) == -1)
+				info.ram = 2048;
+			else
+				info.ram = value / (1024 * 1024);
+
 			// display resolution
 			NSScreen* mainScreen = [NSScreen mainScreen];
 			NSRect rect = [mainScreen frame];
