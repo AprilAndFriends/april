@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.32
+/// @version 2.34
 /// 
 /// @section LICENSE
 /// 
@@ -130,7 +130,7 @@ namespace april
 	void Win32_Window::setCursorVisible(bool value)
 	{
 		Window::setCursorVisible(value);
-		this->cursorVisible ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
+		this->isCursorVisible() ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
 	}
 	
 	int Win32_Window::getWidth()
@@ -388,10 +388,7 @@ namespace april
 			}
 			break;
 		case WM_SETCURSOR:
-			if (!((Win32_Window*)april::window)->cursorVisible)
-			{
-				!april::window->isCursorInside() ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
-			}
+			april::window->isCursorVisible() ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
 			return 1;
 		case WM_ACTIVATE:
 			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
