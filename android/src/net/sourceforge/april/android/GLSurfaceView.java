@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.2
+// version 2.35
 
 import android.content.Context;
 import android.view.inputmethod.EditorInfo;
@@ -36,17 +36,22 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 				public void run()
 				{
 					final int action = event.getAction();
-					final int index = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 					final int pointerCount = event.getPointerCount();
 					switch (action & MotionEvent.ACTION_MASK)
 					{
 					case MotionEvent.ACTION_DOWN:
 					case MotionEvent.ACTION_POINTER_DOWN: // handles multi-touch
-						NativeInterface.onTouch(0, event.getX(index), event.getY(index), index);
+						for (int i = 0; i < pointerCount; i++)
+						{
+							NativeInterface.onTouch(0, event.getX(i), event.getY(i), i);
+						}
 						break;
 					case MotionEvent.ACTION_UP:
 					case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
-						NativeInterface.onTouch(1, event.getX(index), event.getY(index), index);
+						for (int i = 0; i < pointerCount; i++)
+						{
+							NativeInterface.onTouch(1, event.getX(i), event.getY(i), i);
+						}
 						break;
 					case MotionEvent.ACTION_MOVE: // Android batches multitouch move events into a single move event
 						for (int i = 0; i < pointerCount; i++)
