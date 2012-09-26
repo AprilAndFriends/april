@@ -64,7 +64,7 @@ public class NativeInterface
 	
 	public static void showVirtualKeyboard()
 	{
-		NativeInterface._getInputMethodManager().showSoftInput(NativeInterface.Activity.getView(), InputMethodManager.SHOW_FORCED);
+		NativeInterface._getInputMethodManager().showSoftInput(NativeInterface.Activity.getView(), InputMethodManager.SHOW_IMPLICIT);
 	}
 	
 	public static void hideVirtualKeyboard()
