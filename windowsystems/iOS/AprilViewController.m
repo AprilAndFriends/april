@@ -154,19 +154,24 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	
 	
 	UIUserInterfaceIdiom idiom = UIUserInterfaceIdiomPhone;
+	CGSize size = [UIScreen mainScreen].bounds.size;
 	if ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom:)]) 
 	{
 		idiom = [UIDevice currentDevice].userInterfaceIdiom;
 	}
-	else if([UIScreen mainScreen].bounds.size.height == 1024)
+	else if(size.width >= 768)
 	{
 		idiom = UIUserInterfaceIdiomPad;
 	}
-	
+
 	NSString *defaultPngName = @"Default";
 	if(idiom == UIUserInterfaceIdiomPad)
 	{
 		defaultPngName = @"Default-Landscape";
+	}
+	else if(size.height / size.width > 3.0f / 2.0f + 0.01f) // iPhone5
+	{
+		defaultPngName = @"Default-568h@2x";
 	}
 	
 	UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"] ];
