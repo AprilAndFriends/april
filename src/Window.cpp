@@ -22,12 +22,12 @@
 namespace april
 {
 	// TODO - refactor
-	void (*Window::msLaunchCallback)() = NULL;
-	void Window::handleLaunchCallback()
+	void (*Window::msLaunchCallback)(void*) = NULL;
+	void Window::handleLaunchCallback(void* args)
 	{
 		if (msLaunchCallback != NULL)
 		{
-			(*msLaunchCallback)();
+			(*msLaunchCallback)(args);
 		}
 	}
 	//////////////////

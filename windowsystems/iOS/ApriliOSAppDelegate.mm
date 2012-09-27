@@ -51,7 +51,7 @@
 	// set window color
 	[uiwnd setBackgroundColor:[UIColor blackColor]];
 	
-	april::Window::handleLaunchCallback();
+	april::Window::handleLaunchCallback(viewController);
 	
 	// display the window
 	[uiwnd makeKeyAndVisible];

@@ -184,8 +184,8 @@ namespace april
 		// TODO - refactor
 		// the following functions should be temporary, it was added because I needed access to
 		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
-		static void setLaunchCallback(void (*callback)()) { msLaunchCallback = callback; }
-		static void handleLaunchCallback();
+		static void setLaunchCallback(void (*callback)(void*)) { msLaunchCallback = callback; }
+		static void handleLaunchCallback(void* args);
 
 	protected:
 		bool created;
@@ -198,7 +198,7 @@ namespace april
 		bool cursorVisible;
 
 		// TODO - refactor
-		static void (*msLaunchCallback)();
+		static void (*msLaunchCallback)(void*);
 
 		bool (*updateCallback)(float);
 		void (*mouseDownCallback)(int);
