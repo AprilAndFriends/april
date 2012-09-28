@@ -152,6 +152,18 @@
 		D1981C63140F85350057C3AF /* WBImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WBImage.h; path = windowsystems/iOS/WBImage.h; sourceTree = "<group>"; };
 		D1981C64140F85350057C3AF /* WBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WBImage.m; path = windowsystems/iOS/WBImage.m; sourceTree = "<group>"; };
 		D1981C71140F856B0057C3AF /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/TimerPosix.cpp; sourceTree = "<group>"; };
+		D1BCC575161595580049CEA9 /* ImageSourceCG.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = ImageSourceCG.mm; path = src/ImageSourceCG.mm; sourceTree = "<group>"; };
+		D1BCC576161595580049CEA9 /* ImageSourceIL.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSourceIL.cpp; path = src/ImageSourceIL.cpp; sourceTree = "<group>"; };
+		D1BCC577161595580049CEA9 /* ImageSourceJpg.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSourceJpg.cpp; path = src/ImageSourceJpg.cpp; sourceTree = "<group>"; };
+		D1BCC5781615A24A0049CEA9 /* TimerWin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TimerWin.cpp; path = src/TimerWin.cpp; sourceTree = "<group>"; };
+		D1BCC5791615A2620049CEA9 /* Win32_Window.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Win32_Window.cpp; path = windowsystems/Win32/Win32_Window.cpp; sourceTree = "<group>"; };
+		D1BCC57A1615A2620049CEA9 /* Win32_Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Win32_Window.h; path = windowsystems/Win32/Win32_Window.h; sourceTree = "<group>"; };
+		D1BCC57D1615A2900049CEA9 /* AndroidJNI_Window.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AndroidJNI_Window.cpp; path = windowsystems/AndroidJNI/AndroidJNI_Window.cpp; sourceTree = "<group>"; };
+		D1BCC57E1615A2900049CEA9 /* AndroidJNI_Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AndroidJNI_Window.h; path = windowsystems/AndroidJNI/AndroidJNI_Window.h; sourceTree = "<group>"; };
+		D1BCC57F1615A2B20049CEA9 /* Android_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Android_main.cpp; path = platforms/Android_main.cpp; sourceTree = "<group>"; };
+		D1BCC5801615A2B20049CEA9 /* Android_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Android_Platform.cpp; path = platforms/Android_Platform.cpp; sourceTree = "<group>"; };
+		D1BCC5831615A2B20049CEA9 /* Win32_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Win32_main.cpp; path = platforms/Win32_main.cpp; sourceTree = "<group>"; };
+		D1BCC5841615A2B20049CEA9 /* Win32_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Win32_Platform.cpp; path = platforms/Win32_Platform.cpp; sourceTree = "<group>"; };
 		D1C2083F15FDC65600AB5DCA /* DirectX9_PixelShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_PixelShader.cpp; path = rendersystems/DirectX9/DirectX9_PixelShader.cpp; sourceTree = "<group>"; };
 		D1C2084015FDC65600AB5DCA /* DirectX9_PixelShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_PixelShader.h; path = rendersystems/DirectX9/DirectX9_PixelShader.h; sourceTree = "<group>"; };
 		D1C2084115FDC65600AB5DCA /* DirectX9_RenderSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_RenderSystem.cpp; path = rendersystems/DirectX9/DirectX9_RenderSystem.cpp; sourceTree = "<group>"; };
@@ -200,6 +212,7 @@
 				C9E60986150518D500EB077F /* Platforms */,
 				7FA3ED1111F9813E001D1DDD /* Window Systems */,
 				7F42F7AE11EB185F00B1C1DF /* Render Systems */,
+				D1BCC573161595410049CEA9 /* Image Sources */,
 				7F42F7A011EB177F00B1C1DF /* include */,
 				7F42F79F11EB177B00B1C1DF /* src */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
@@ -257,10 +270,9 @@
 				C9C04F9214BB109B005BD333 /* VertexShader.cpp */,
 				D1981C71140F856B0057C3AF /* TimerPosix.cpp */,
 				7FC8FA75122FACA30092964C /* TimerSDL.cpp */,
+				D1BCC5781615A24A0049CEA9 /* TimerWin.cpp */,
 				7F1B522E12E4713600E958D8 /* Color.cpp */,
 				7F1B522F12E4713600E958D8 /* Texture.cpp */,
-				C9A8520C134AF97000B455BE /* ImageSource.cpp */,
-				D197C2F815ECF4650017452F /* ImageSourcePng.cpp */,
 				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
 				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
 			);
@@ -301,8 +313,10 @@
 		7FA3ED1111F9813E001D1DDD /* Window Systems */ = {
 			isa = PBXGroup;
 			children = (
+				D1BCC57C1615A27A0049CEA9 /* AndroidJNI */,
 				D1981C58140F85050057C3AF /* iOS */,
 				7FA3ED1211F98145001D1DDD /* SDL */,
+				D1BCC57B1615A2660049CEA9 /* Win32 */,
 			);
 			name = "Window Systems";
 			sourceTree = "<group>";
@@ -319,28 +333,30 @@
 		C9E60986150518D500EB077F /* Platforms */ = {
 			isa = PBXGroup;
 			children = (
-				C9E60987150518DC00EB077F /* mac */,
-				C9E60988150518E200EB077F /* ios */,
+				D1BCC5851615A2BD0049CEA9 /* Android */,
+				C9E60988150518E200EB077F /* iOS */,
+				C9E60987150518DC00EB077F /* Mac */,
+				D1BCC5861615A2DD0049CEA9 /* Win32 */,
 			);
 			name = Platforms;
 			sourceTree = "<group>";
 		};
-		C9E60987150518DC00EB077F /* mac */ = {
+		C9E60987150518DC00EB077F /* Mac */ = {
 			isa = PBXGroup;
 			children = (
 				D14BF81415872B4900D31573 /* Mac_main.mm */,
 				D14BF81515872B4900D31573 /* Mac_Platform.mm */,
 			);
-			name = mac;
+			name = Mac;
 			sourceTree = "<group>";
 		};
-		C9E60988150518E200EB077F /* ios */ = {
+		C9E60988150518E200EB077F /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 				D14BF81015872B4000D31573 /* iOS_main.mm */,
 				D14BF81115872B4000D31573 /* iOS_Platform.mm */,
 			);
-			name = ios;
+			name = iOS;
 			sourceTree = "<group>";
 		};
 		D1981C58140F85050057C3AF /* iOS */ = {
@@ -360,6 +376,54 @@
 				D1981C64140F85350057C3AF /* WBImage.m */,
 			);
 			name = iOS;
+			sourceTree = "<group>";
+		};
+		D1BCC573161595410049CEA9 /* Image Sources */ = {
+			isa = PBXGroup;
+			children = (
+				C9A8520C134AF97000B455BE /* ImageSource.cpp */,
+				D197C2F815ECF4650017452F /* ImageSourcePng.cpp */,
+				D1BCC575161595580049CEA9 /* ImageSourceCG.mm */,
+				D1BCC576161595580049CEA9 /* ImageSourceIL.cpp */,
+				D1BCC577161595580049CEA9 /* ImageSourceJpg.cpp */,
+			);
+			name = "Image Sources";
+			sourceTree = "<group>";
+		};
+		D1BCC57B1615A2660049CEA9 /* Win32 */ = {
+			isa = PBXGroup;
+			children = (
+				D1BCC5791615A2620049CEA9 /* Win32_Window.cpp */,
+				D1BCC57A1615A2620049CEA9 /* Win32_Window.h */,
+			);
+			name = Win32;
+			sourceTree = "<group>";
+		};
+		D1BCC57C1615A27A0049CEA9 /* AndroidJNI */ = {
+			isa = PBXGroup;
+			children = (
+				D1BCC57D1615A2900049CEA9 /* AndroidJNI_Window.cpp */,
+				D1BCC57E1615A2900049CEA9 /* AndroidJNI_Window.h */,
+			);
+			name = AndroidJNI;
+			sourceTree = "<group>";
+		};
+		D1BCC5851615A2BD0049CEA9 /* Android */ = {
+			isa = PBXGroup;
+			children = (
+				D1BCC57F1615A2B20049CEA9 /* Android_main.cpp */,
+				D1BCC5801615A2B20049CEA9 /* Android_Platform.cpp */,
+			);
+			name = Android;
+			sourceTree = "<group>";
+		};
+		D1BCC5861615A2DD0049CEA9 /* Win32 */ = {
+			isa = PBXGroup;
+			children = (
+				D1BCC5831615A2B20049CEA9 /* Win32_main.cpp */,
+				D1BCC5841615A2B20049CEA9 /* Win32_Platform.cpp */,
+			);
+			name = Win32;
 			sourceTree = "<group>";
 		};
 		D1C2083C15FDC63500AB5DCA /* OpenGL */ = {

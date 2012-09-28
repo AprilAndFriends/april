@@ -164,8 +164,8 @@ namespace april
 	Color Texture::getInterpolatedPixel(float x, float y)
 	{
 		Color result;
-		int x0 = (int)x;
-		int y0 = (int)x;
+		int x0 = (int) x;
+		int y0 = (int) y;
 		int x1 = x0 + 1;
 		int y1 = y0 + 1;
 		float rx0 = x - x0;

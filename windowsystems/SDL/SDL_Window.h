@@ -56,8 +56,10 @@ namespace april
 		bool updateOneFrame();
 		void presentFrame();
 		void checkEvents();
+		bool isCreated() { return this->created; }
 		
 	protected:
+		bool created;
 		bool cursorInside;
 		bool scrollHorizontal;
 		SDL_Surface* screen;

@@ -58,6 +58,7 @@ namespace april
 		this->cursorInside = true;
 		this->scrollHorizontal = false;
 		this->screen = NULL;
+		this->created = false;
 #ifdef _OPENGLES1
 		this->glesContext = NULL;
 #endif
@@ -121,6 +122,7 @@ namespace april
 		SDL_EnableKeyRepeat(100, 50);
 		this->checkEvents();
 		SDL_EnableUNICODE(1);
+		this->created = true;
 		return true;
 	}
 	

@@ -16,10 +16,16 @@
 #import <UIKit/UIKit.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/hltypesUtil.h>
+#import <CoreGraphics/CoreGraphics.h>
+
+#import <OpenGLES/ES1/gl.h>
+
 #include "RenderSystem.h"
+#include "ImageSource.h"
 #include "iOS_Window.h"
 #include "Platform.h"
 #include "april.h"
+#include "PVRTexture.h"
 
 @interface AprilMessageBoxDelegate : NSObject<UIAlertViewDelegate> {
     void(*callback)(april::MessageBoxButton);
@@ -363,6 +369,89 @@ namespace april
 		}
 		return AMSGBTN_OK;
 	}
+	
+	NSURL* _getFileURL(chstr filename)
+	{
+		
+		// consider that "filename" is "../media/hello.jpg" and "appname" is
+		// installed in "/Applications/appname/bin/". then:
+		
+		// bundle: file:///Applications/appname/bin/appname.app/
+		// file:  file:///Applications/appname/bin/appname.app/../../media/hello.jpg
+		// url: file:///Applications/appname/media/hello.jpg
+		
+#if defined(__MAC_10_6)
+		
+		NSString* cdp = [[[[NSFileManager alloc] init] autorelease] currentDirectoryPath];
+		NSString* file = [NSString stringWithFormat:@"%@/%s", cdp, filename.c_str()];
+		NSURL* url = [NSURL fileURLWithPath:file];
+		url = [url absoluteURL];
+		
+		[cdp release];
+		[file release];
+#else
+		// FIXME use NSURL fileURLWithPath:
+		NSString * bundle = [[[[NSBundle mainBundle] bundlePath] stringByAppendingString:@"/"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+		NSURL * bundleURL = [NSURL URLWithString:[@"file://" stringByAppendingString:bundle]];
+		NSURL * file = [NSURL URLWithString:[NSString stringWithFormat:@"../%s", filename.c_str()]
+							  relativeToURL:bundleURL];
+		NSURL * url = [file absoluteURL];
+		
+#endif
+		//NSLog(@"_getFileURL: %@", url);
+		
+		return url;
+		
+	}
+	
+	NSURL* _getFileURLAsResource(chstr filename)
+	{
+		
+		// consider that "filename" is "data/media/hello.jpg" and "appname" is
+		// installed in "/Applications/". then:
+		
+		// resources:  /Applications/appname.app/Contents/Resources/
+		// file:       /Applications/appname.app/Contents/Resources/data/media/hello.jpg
+		// url: file:///Applications/appname.app/Contents/Resources/data/media/hello.jpg
+		
+		// FIXME use NSURL fileURLWithPath:
+		NSString * resources = [[NSBundle mainBundle] resourcePath];
+		NSString * file = [resources stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
+		NSURL * url = [NSURL URLWithString:[@"file://" stringByAppendingString:[file stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] ]];
+		
+		//NSLog(@"_getFileURLAsResource: %@", url);
+		return url;
+	}
 
+	ImageSource* _tryLoadingPVR(chstr filename)
+	{
+		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
+		NSString *pvrfilename = [NSString stringWithUTF8String:filename.c_str()];
+		
+		PVRTexture* pvrtex = [PVRTexture pvrTextureWithContentsOfURL:(NSURL*)_getFileURLAsResource(pvrfilename.UTF8String)];
+		if(!pvrtex)
+		{
+			pvrtex = [PVRTexture pvrTextureWithContentsOfFile:pvrfilename];
+			
+			if(!pvrtex)
+			{
+				return NULL;
+			}
+		}
+		
+		ImageSource* img=new ImageSource();
+		img->format = (ImageFormat) pvrtex.internalFormat; //ilGetInteger(IL_IMAGE_FORMAT); // not used
+		img->w = pvrtex.width;
+		img->h = pvrtex.height;
+		img->bpp = 4;
+		
+		NSData* data = [pvrtex.imageData objectAtIndex:0];
+		img->data = (unsigned char*) malloc(data.length);
+		memcpy(img->data,data.bytes,data.length);
+		img->compressedLength = data.length;
+		
+		[arp release];
+		return img;
+	}
 }
 #endif
