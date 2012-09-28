@@ -36,6 +36,10 @@ extern "C"
 
 namespace april
 {
+#ifdef _IOS
+	ImageSource* _tryLoadingPVR(chstr filename);
+#endif
+	
 	void _pngZipRead(png_structp png, png_bytep data, png_size_t size)
 	{
 		hsbase* file = (hsbase*)png->io_ptr;
@@ -168,6 +172,16 @@ namespace april
 			hresource file(filename);
 			img = _loadImageJpt(file);
 		}
+#ifdef _IOS
+		else if (filename.ends_with(".pvr"))
+		{
+			ImageSource *pvrimg = _tryLoadingPVR(filename);
+			if (pvrimg)
+			{
+				return pvrimg;
+			}
+		}
+#endif
 		return img;
 	}
 

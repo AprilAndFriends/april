@@ -26,6 +26,7 @@
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
+#include "SDL_Window.h"
 
 namespace april
 {
@@ -112,7 +113,7 @@ namespace april
 			info.locale = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];
 		}
 		// TODO
-		if (info.maxTextureSize == 0 && april::rendersys != NULL)
+		if (info.maxTextureSize == 0 && april::window != NULL && ((SDL_Window*) april::window)->isCreated()) // SDL window cast is a hack, TODO fix this systematically
 		{
 			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
 		}
