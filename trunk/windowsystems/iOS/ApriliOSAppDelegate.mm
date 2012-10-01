@@ -41,12 +41,10 @@
 	// viewcontroller will automatically add imageview
 	viewController = [[AprilViewController alloc] init];
 	
-	hstr iOS_version = [[[UIDevice currentDevice] systemVersion] UTF8String];
-	if ((int) iOS_version[0] < 4)
-		[uiwnd addSubview:viewController.view]; 
+	if ([uiwnd respondsToSelector: @selector(rootViewController)])
+		uiwnd.rootViewController = viewController; // only available on iOS4+, required on iOS6+
 	else
-		[uiwnd setRootViewController:viewController]; // only available on iOS4+, required on iOS6+
-	
+		[uiwnd addSubview:viewController.view];
 
 	// set window color
 	[uiwnd setBackgroundColor:[UIColor blackColor]];
