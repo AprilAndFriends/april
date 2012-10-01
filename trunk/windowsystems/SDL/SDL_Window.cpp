@@ -297,7 +297,7 @@ namespace april
 			// control character keys
 			s2a(BACKSPACE, BACK);
 #ifdef __APPLE__
-			s2a(DELETE, BACK);
+			s2a_u0(DELETE, DELETE);
 #else
 		case SDLK_DELETE:
 			akeysym = AK_DELETE; //sea(DELETE);
