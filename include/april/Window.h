@@ -83,8 +83,10 @@ namespace april
 		gvec2 getSize();
 		float getAspectRatio();
 
-		// callback setters
-		void setUpdateCallback(bool (*value)(float)) { this->updateCallback = value; }
+		// callbacks
+		typedef bool (*updateFunction)(float);
+		void setUpdateCallback(updateFunction func) { this->updateCallback = func; }
+		updateFunction getUpdateCallback() { return this->updateCallback; }
 		// TODO - update this this
 		void setMouseDownCallback(void (*value)(int)) { this->mouseDownCallback = value; this->mouseDownCallback_DEPRECATED = NULL; }
 		void setMouseUpCallback(void (*value)(int)) { this->mouseUpCallback = value; this->mouseUpCallback_DEPRECATED = NULL; }

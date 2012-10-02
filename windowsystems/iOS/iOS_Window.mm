@@ -261,7 +261,7 @@ namespace april
 			this->checkEvents();
 			if (!this->retainLoadingOverlay)
 			{
-				[viewcontroller removeImageView];
+				[viewcontroller removeImageView:false];
 			}
 			this->firstFrameDrawn = true;
 		}
@@ -321,10 +321,10 @@ namespace april
 		if (param == "retain_loading_overlay")
 		{
 			bool prev = this->retainLoadingOverlay;
-			this->retainLoadingOverlay = (value != "0");
+			this->retainLoadingOverlay = (value == "1");
 			if (!this->retainLoadingOverlay && prev && this->firstFrameDrawn)
 			{
-				[viewcontroller removeImageView];
+				[viewcontroller removeImageView:(value == "0" ? false : true)];
 			}
 		}
 	}
