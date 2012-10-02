@@ -215,14 +215,14 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 }
 
 
-- (void)removeImageView
+- (void)removeImageView:(bool)fast
 {
 	if (mImageView != nil)
 	{
 		NSLog(@"Performing fadeout of loading screen's UIImageView");
 
 		[UIView beginAnimations:@"FadeOut" context:nil];
-		[UIView setAnimationDuration:1];
+		[UIView setAnimationDuration:(fast ? 0.25f : 1)];
 		mImageView.alpha = 0;
 		[UIView  setAnimationDelegate:self];
 		[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
