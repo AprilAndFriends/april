@@ -97,8 +97,9 @@ namespace april
 		}
 		ImageSource* img = new ImageSource();
 		ilBindImage(img->getImageId());
-		int success = ilLoadImage(filename.c_str());
-		if (!success)
+		// this is only because DevIL was compiled using non-Unicode!!!
+		int success = ilLoadImage((wchar_t*)filename.c_str());
+		if (success == 0)
 		{
 			delete img;
 			return NULL;
