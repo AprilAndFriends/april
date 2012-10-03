@@ -100,7 +100,11 @@ namespace april
 			type |= MB_ICONQUESTION;
 		}
 		
-		int button = MessageBox(hwnd, text.c_str(), title.c_str(), type);
+		wchar_t* wtext = utf8_to_wchars(text);
+		wchar_t* wtitle = utf8_to_wchars(title);
+		int button = MessageBoxW(hwnd, wtext, wtitle, type);
+		delete [] wtext;
+		delete [] wtitle;
 		switch (button)
 		{
 		case IDOK:
