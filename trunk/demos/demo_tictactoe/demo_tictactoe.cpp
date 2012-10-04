@@ -124,10 +124,10 @@ bool update(float k)
 	april::rendersys->render(april::TriangleStrip, v, 4);
 	
 	april::rendersys->setTexture(NULL);
-	april::rendersys->drawFilledRect(grect(size.x, 0, 10, drawRect.h), APRIL_COLOR_MANGENTA);
-	april::rendersys->drawFilledRect(grect(size.x * 2 + 10, 0, 10, drawRect.h), APRIL_COLOR_MANGENTA);
-	april::rendersys->drawFilledRect(grect(0, size.y, drawRect.w, 10), APRIL_COLOR_MANGENTA);
-	april::rendersys->drawFilledRect(grect(0, size.y * 2 + 10, drawRect.w, 10), APRIL_COLOR_MANGENTA);
+	april::rendersys->drawFilledRect(grect(size.x, 0, 10, drawRect.h), APRIL_COLOR_MAGENTA);
+	april::rendersys->drawFilledRect(grect(size.x * 2 + 10, 0, 10, drawRect.h), APRIL_COLOR_MAGENTA);
+	april::rendersys->drawFilledRect(grect(0, size.y, drawRect.w, 10), APRIL_COLOR_MAGENTA);
+	april::rendersys->drawFilledRect(grect(0, size.y * 2 + 10, drawRect.w, 10), APRIL_COLOR_MAGENTA);
 	
 	for (int j = 0; j < 3; j++)
 	{
