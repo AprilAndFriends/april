@@ -106,7 +106,7 @@ int main(int argc, char** argv)
 #include <shellapi.h>
 int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCmdLine, int nCmdShow)
 {
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if !defined(WINAPI_FAMILY) || WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 	// extract arguments
 	int argc = 0;
 	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);
@@ -128,9 +128,8 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCm
 		delete [] argv[i];
 	}
 	delete [] argv;
-#endif
-#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
-	char* test = ".\\mbattles.exe";
+#else
+	char* test = ".\\win8app";
 	april_main(april_init, april_destroy, 1, &test);
 #endif
 	return 0;
