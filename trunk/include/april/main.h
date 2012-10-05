@@ -102,11 +102,14 @@ int main(int argc, char** argv)
 }
 #else
 #include <windows.h>
-int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+#include <stdio.h>
+#include <shellapi.h>
+int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCmdLine, int nCmdShow)
 {
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
 	// extract arguments
 	int argc = 0;
-	wchar_t** wArgv = CommandLineToArgvW(GetCommandLineW(), &argc);
+	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);
 	char** argv = new char*[argc];
 	hstr arg;
 	for_iter (i, 0, argc)
@@ -125,6 +128,11 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		delete [] argv[i];
 	}
 	delete [] argv;
+#endif
+#if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
+	char* test = ".\\mbattles.exe";
+	april_main(april_init, april_destroy, 1, &test);
+#endif
 	return 0;
 }
 #endif

@@ -71,7 +71,7 @@ namespace april
 			y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
 		}
 		DWORD style = (this->fullscreen ? (WS_EX_TOPMOST | WS_POPUP) : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX));
-		wchar_t* wtitle = utf8_to_wchars(this->title);
+		wchar_t* wtitle = this->title.w_str();
 		this->hWnd = CreateWindowExW(0, APRIL_WIN32_WINDOW_CLASS, wtitle, style, x, y, w, h, NULL, NULL, hinst, NULL);
 		delete [] wtitle;
 		
@@ -117,7 +117,7 @@ namespace april
 #ifdef _DEBUG
 		t += this->_fpsTitle;
 #endif
-		wchar_t* wtitle = utf8_to_wchars(t);
+		wchar_t* wtitle = t.w_str();
 		SetWindowTextW(this->hWnd, wtitle);
 		delete [] wtitle;
 	}
