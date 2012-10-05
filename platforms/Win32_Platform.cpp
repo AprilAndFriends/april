@@ -100,8 +100,8 @@ namespace april
 			type |= MB_ICONQUESTION;
 		}
 		
-		wchar_t* wtext = utf8_to_wchars(text);
-		wchar_t* wtitle = utf8_to_wchars(title);
+		wchar_t* wtext = text.w_str();
+		wchar_t* wtitle = title.w_str();
 		int button = MessageBoxW(hwnd, wtext, wtitle, type);
 		delete [] wtext;
 		delete [] wtitle;

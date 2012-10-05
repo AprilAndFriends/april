@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\windowsystems">
+      <UniqueIdentifier>{89a33cfd-9923-463b-8900-b6ec0c384d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems">
+      <UniqueIdentifier>{3bb5863e-68d7-4150-9cdb-7ad981c4596a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files\windowsystems">
+      <UniqueIdentifier>{f31eac1f-9820-4ea3-8fea-773ecc1f6167}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems">
+      <UniqueIdentifier>{2cbdabf4-1f5a-41ba-afef-961f8d5343c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{bc3abb83-0c68-456a-ae46-f6fe13ebf76e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\DirectX9">
+      <UniqueIdentifier>{dfe5826f-1d2c-4f6d-8d5f-656d36961488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL">
+      <UniqueIdentifier>{43b75f5a-a897-45bc-a6cd-0f649765424b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX9">
+      <UniqueIdentifier>{edfbadb8-e07f-4516-9ad6-479af740625c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL">
+      <UniqueIdentifier>{67c8116e-f076-46fd-94f7-0c597f17b27f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\windowsystems\Win32">
+      <UniqueIdentifier>{fc3c2db0-d18e-4947-a5ff-518b26111c1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\windowsystems\Win32">
+      <UniqueIdentifier>{ca32f0eb-a1ce-4b6d-9803-4dcbec60d895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\windowsystems\AndroidJNI">
+      <UniqueIdentifier>{cde54747-2548-4ec6-9652-7e8739c55149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\windowsystems\AndroidJNI">
+      <UniqueIdentifier>{3bb5b83b-c0e7-420e-b268-2972cb7c22a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\windowsystems\SDL">
+      <UniqueIdentifier>{5291bb52-c4ba-4f97-b7f4-7dab7d77151b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\windowsystems\SDL">
+      <UniqueIdentifier>{5f7b44b9-42a2-42b2-8ae7-6324083d850c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\platforms">
+      <UniqueIdentifier>{4849144f-915b-416b-955e-a300028d705b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImageSourceIL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TimerWin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImageSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PixelShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_PixelShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\DirectX9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_Texture.cpp">
+      <Filter>Source Files\rendersystems\DirectX9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX9\DirectX9_VertexShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TimerPosix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImageSourceJpg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImageSourcePng.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\april.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Window.cpp">
+      <Filter>Source Files\windowsystems\AndroidJNI</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\Android_main.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\Android_Platform.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\Win32_main.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\Win32_Platform.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\SDL\SDL_Window.cpp">
+      <Filter>Source Files\windowsystems\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\Win32\Win32_Window.cpp">
+      <Filter>Source Files\windowsystems\Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\aprilUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RamTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\april\aprilExport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\ImageSource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Keys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\RenderSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\PixelShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\VertexShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_PixelShader.h">
+      <Filter>Header Files\rendersystems\DirectX9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_RenderSystem.h">
+      <Filter>Header Files\rendersystems\DirectX9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_Texture.h">
+      <Filter>Header Files\rendersystems\DirectX9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX9\DirectX9_VertexShader.h">
+      <Filter>Header Files\rendersystems\DirectX9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\april.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Window.h">
+      <Filter>Header Files\windowsystems\AndroidJNI</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\SDL\SDL_Window.h">
+      <Filter>Header Files\windowsystems\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\Win32\Win32_Window.h">
+      <Filter>Header Files\windowsystems\Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\aprilUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\RamTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\androidUtilJNI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="fileproperties.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

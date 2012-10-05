@@ -10,31 +10,27 @@
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
-      <UniqueIdentifier>{5d3a3907-6fbd-4ed0-b5e3-e7f42c25a4bf}</UniqueIdentifier>
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="AndroidApk">
+      <UniqueIdentifier>{f1597604-53ca-4d88-91e0-905b03d67b8e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BlurManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\StaticMesh.cpp">
+    <ClCompile Include="demo_tictactoe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\aprilutil\aprilutilExport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\aprilutil\BlurManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\aprilutil\StaticMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="fileproperties.rc">
-      <Filter>Resource Files</Filter>
+    <None Include="android\AndroidManifest.xml">
+      <Filter>AndroidApk</Filter>
+    </None>
+    <None Include="android\src\DemoTicTacToe.java">
+      <Filter>AndroidApk</Filter>
+    </None>
+    <None Include="android\build.xml">
+      <Filter>AndroidApk</Filter>
     </None>
   </ItemGroup>
 </Project>
