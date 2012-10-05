@@ -106,7 +106,7 @@ int main(int argc, char** argv)
 #include <shellapi.h>
 int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCmdLine, int nCmdShow)
 {
-#if !defined(WINAPI_FAMILY) || WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)
+#if !_HLWINRT
 	// extract arguments
 	int argc = 0;
 	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);
