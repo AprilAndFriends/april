@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.36
 /// 
 /// @section LICENSE
 /// 
@@ -42,8 +42,8 @@ namespace april
 		Texture::Filter textureFilter;
 		Texture::AddressMode textureAddressMode;
 		Color systemColor;
-		bool modelviewMatrixSet;
-		bool projectionMatrixSet;
+		bool modelviewMatrixChanged;
+		bool projectionMatrixChanged;
 		gmat4 modelviewMatrix;
 		gmat4 projectionMatrix;
 		BlendMode blendMode;
@@ -112,6 +112,7 @@ namespace april
 		OpenGL_Texture* activeTexture;
 		hstr options;
 
+		void _setupDefaultParameters();
 		Texture* _createTexture(chstr filename);
 
 		void _setVertexPointer(int stride, const void* pointer);
