@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.36
 /// 
 /// @section LICENSE
 /// 
@@ -135,11 +135,11 @@ namespace april
 		this->textureCoordinatesEnabled = false;
 		this->colorEnabled = false;
 		this->textureId = 0;
-		this->textureFilter = Texture::FILTER_LINEAR;
-		this->textureAddressMode = Texture::ADDRESS_WRAP;
+		this->textureFilter = Texture::FILTER_UNDEFINED;
+		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->systemColor = APRIL_COLOR_BLACK;
-		this->modelviewMatrixSet = false;
-		this->projectionMatrixSet = false;
+		this->modelviewMatrixChanged = false;
+		this->projectionMatrixChanged = false;
 		this->blendMode = (BlendMode)10000;
 		this->colorMode = (ColorMode)10000;
 		this->colorModeAlpha = 255;
@@ -304,62 +304,34 @@ namespace april
 		}
 #endif
 #endif
-		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
-		glClearColor(0, 0, 0, 1);
-		lastColor.set(0, 0, 0, 255);
-		setMatrixMode(GL_PROJECTION);
+		this->_setupDefaultParameters();
+		this->setMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		setMatrixMode(GL_MODELVIEW);
+		this->setMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-
-		// TODO - can be put into common function, because ::reset() uses the same code
-		// GL defaults
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
-		glEnable(GL_TEXTURE_2D);
-		// pixel data
-#ifndef _OPENGLES
-		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
-#endif
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		// other
-		if (this->options.contains("zbuffer"))
-		{
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LEQUAL);
-		}
-		// TODO - UNTIL HERE
-		this->state.systemColor = APRIL_COLOR_BLACK;
-		this->deviceState.systemColor = APRIL_COLOR_BLACK;
-		glColor4f(0, 0, 0, 1);
 		this->orthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
-		this->_setTextureFilter(Texture::FILTER_LINEAR);
-		this->_setTextureAddressMode(Texture::ADDRESS_WRAP);
 	}
 
 	void OpenGL_RenderSystem::reset()
 	{
 		RenderSystem::reset();
+		this->state.reset();
+		this->deviceState.reset();
+		this->_setupDefaultParameters();
+		this->state.modelviewMatrixChanged = true;
+		this->state.projectionMatrixChanged = true;
+		this->_applyStateChanges();
+	}
+
+	void OpenGL_RenderSystem::_setupDefaultParameters()
+	{
 		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
 		glClearColor(0, 0, 0, 1);
 		lastColor.set(0, 0, 0, 255);
-		this->_setModelviewMatrix(this->modelviewMatrix);
-		this->_setProjectionMatrix(this->projectionMatrix);
-		this->deviceState.reset();
-		this->_applyStateChanges();
 		// GL defaults
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
 		glEnable(GL_TEXTURE_2D);
 		// pixel data
 #ifndef _OPENGLES
@@ -376,13 +348,14 @@ namespace april
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 		}
-		this->state.systemColor = APRIL_COLOR_BLACK;
-		this->deviceState.systemColor = APRIL_COLOR_BLACK;
-		glColor4f(0, 0, 0, 1);
-		this->setTextureFilter(Texture::FILTER_LINEAR);
-		this->setTextureAddressMode(Texture::ADDRESS_WRAP);
-		this->_setTextureFilter(Texture::FILTER_LINEAR);
-		this->_setTextureAddressMode(Texture::ADDRESS_WRAP);
+		this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->deviceState.textureCoordinatesEnabled);
+		this->_setClientState(GL_COLOR_ARRAY, this->deviceState.colorEnabled);
+		glColor4f(this->deviceState.systemColor.r_f(), this->deviceState.systemColor.g_f(), this->deviceState.systemColor.b_f(), this->deviceState.systemColor.a_f());
+		glBindTexture(GL_TEXTURE_2D, this->deviceState.textureId);
+		this->state.textureFilter = april::Texture::FILTER_LINEAR;
+		this->state.textureAddressMode = april::Texture::ADDRESS_WRAP;
+		this->state.blendMode = april::DEFAULT;
+		this->state.colorMode = april::NORMAL;
 	}
 
 	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
@@ -683,19 +656,19 @@ namespace april
 			this->deviceState.colorMode = this->state.colorMode;
 			this->deviceState.colorModeAlpha = this->state.colorModeAlpha;
 		}
-		if (this->state.projectionMatrixSet && this->projectionMatrix != this->deviceState.projectionMatrix)
-		{
-			this->setMatrixMode(GL_PROJECTION);
-			glLoadMatrixf(this->projectionMatrix.data);
-			this->deviceState.projectionMatrix = this->projectionMatrix;
-			this->state.projectionMatrixSet = false;
-		}
-		if (this->state.modelviewMatrixSet && this->modelviewMatrix != this->deviceState.modelviewMatrix)
+		if (this->state.modelviewMatrixChanged && this->modelviewMatrix != this->deviceState.modelviewMatrix)
 		{
 			this->setMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(this->modelviewMatrix.data);
 			this->deviceState.modelviewMatrix = this->modelviewMatrix;
-			this->state.modelviewMatrixSet = false;
+			this->state.modelviewMatrixChanged = false;
+		}
+		if (this->state.projectionMatrixChanged && this->projectionMatrix != this->deviceState.projectionMatrix)
+		{
+			this->setMatrixMode(GL_PROJECTION);
+			glLoadMatrixf(this->projectionMatrix.data);
+			this->deviceState.projectionMatrix = this->projectionMatrix;
+			this->state.projectionMatrixChanged = false;
 		}
 	}
 
@@ -782,6 +755,7 @@ namespace april
 			glMatrixMode(mode);
 		}
 	}
+
 	void OpenGL_RenderSystem::_setVertexPointer(int stride, const void* pointer)
 	{
 		static int _stride = 0;
@@ -904,13 +878,13 @@ namespace april
 	void OpenGL_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
 		this->state.modelviewMatrix = matrix;
-		this->state.modelviewMatrixSet = true;
+		this->state.modelviewMatrixChanged = true;
 	}
 
 	void OpenGL_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
 		this->state.projectionMatrix = matrix;
-		this->state.projectionMatrixSet = true;
+		this->state.projectionMatrixChanged = true;
 	}
 
 	void OpenGL_RenderSystem::setParam(chstr name, chstr value)
