@@ -17,7 +17,7 @@
 #if TARGET_OS_IPHONE
 #include <OpenGLES/ES1/gl.h>
 #include <OpenGLES/ES1/glext.h>
-#elif _OPENGLES1
+#elif _OPENGLES
 #include <GLES/gl.h>
 #else
 #ifdef _WIN32
@@ -317,7 +317,7 @@ namespace april
 		{
 			glFormat = GL_ALPHA;
 		}
-#ifndef _OPENGLES1 // TODO - temp until we figure out how to handle this on OpenGLES. added by kspes on May 21st 2012
+#ifndef _OPENGLES // TODO - temp until we figure out how to handle this on OpenGLES. added by kspes on May 21st 2012
 		glGetTexImage(GL_TEXTURE_2D, 0, glFormat, GL_UNSIGNED_BYTE, readData);
 #endif
 		blit(x, y, readData, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
@@ -403,7 +403,7 @@ namespace april
 
 	bool OpenGL_Texture::copyPixelData(unsigned char** output)
 	{
-#ifndef _OPENGLES1
+#ifndef _OPENGLES
 		this->load();
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;

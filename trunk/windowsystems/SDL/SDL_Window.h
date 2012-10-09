@@ -21,7 +21,7 @@
 #include <SDL/SDL_keysym.h>
 #include <hltypes/hstring.h>
 
-#ifdef _OPENGLES1
+#ifdef _OPENGLES
 #include <SDL/SDL.h>
 #include <SDL/SDL_gles.h>
 #endif
@@ -63,7 +63,7 @@ namespace april
 		bool cursorInside;
 		bool scrollHorizontal;
 		SDL_Surface* screen;
-#ifdef _OPENGLES1
+#ifdef _OPENGLES
 		SDL_GLES_Context* glesContext;
 #endif
 

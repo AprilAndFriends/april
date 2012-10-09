@@ -101,9 +101,11 @@
         eaglLayer.opaque = YES;
         eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
                                         [NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
-		
+#ifdef _OPENGLES1
         context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
-        
+#else
+        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+#endif
         if (!context || ![EAGLContext setCurrentContext:context])
 		{
             [self release];
@@ -248,6 +250,81 @@
     [self createFramebuffer];
 }
 
+#ifdef _OPENGLES2
+GLuint _positionSlot;
+GLuint _colorSlot;
+
+- (GLuint)compileShader:(NSString*)shaderString withType:(GLenum)shaderType {
+	
+    // 2
+    GLuint shaderHandle = glCreateShader(shaderType);
+	
+    // 3
+    const char * shaderStringUTF8 = [shaderString UTF8String];
+    int shaderStringLength = [shaderString length];
+    glShaderSource(shaderHandle, 1, &shaderStringUTF8, &shaderStringLength);
+	
+    // 4
+    glCompileShader(shaderHandle);
+	
+    // 5
+    GLint compileSuccess;
+    glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &compileSuccess);
+    if (compileSuccess == GL_FALSE) {
+        GLchar messages[256];
+        glGetShaderInfoLog(shaderHandle, sizeof(messages), 0, &messages[0]);
+        NSString *messageString = [NSString stringWithUTF8String:messages];
+        NSLog(@"%@", messageString);
+        exit(1);
+    }
+	
+    return shaderHandle;
+	
+}
+
+- (void)compileShaders {
+	const char* vert = "\
+attribute vec4 Position;\
+void main(void) {\
+	gl_Position = Position;\
+}";
+	const char* frag = "\
+void main(void) {\
+	gl_FragColor = vec4(1,0.8,0,1);\
+}";
+    // 1
+    GLuint vertexShader = [self compileShader:[NSString stringWithUTF8String:vert]
+									 withType:GL_VERTEX_SHADER];
+    GLuint fragmentShader = [self compileShader:[NSString stringWithUTF8String:frag]
+									   withType:GL_FRAGMENT_SHADER];
+	
+    // 2
+    GLuint programHandle = glCreateProgram();
+    glAttachShader(programHandle, vertexShader);
+    glAttachShader(programHandle, fragmentShader);
+    glLinkProgram(programHandle);
+	
+    // 3
+    GLint linkSuccess;
+    glGetProgramiv(programHandle, GL_LINK_STATUS, &linkSuccess);
+    if (linkSuccess == GL_FALSE) {
+        GLchar messages[256];
+        glGetProgramInfoLog(programHandle, sizeof(messages), 0, &messages[0]);
+        NSString *messageString = [NSString stringWithUTF8String:messages];
+        NSLog(@"%@", messageString);
+        exit(1);
+    }
+	
+    // 4
+    glUseProgram(programHandle);
+	
+    // 5
+    _positionSlot = glGetAttribLocation(programHandle, "Position");
+  //  _colorSlot = glGetAttribLocation(programHandle, "SourceColor");
+    glEnableVertexAttribArray(_positionSlot);
+    //glEnableVertexAttribArray(_colorSlot);
+}
+#endif
 
 - (BOOL)createFramebuffer
 {
@@ -282,6 +359,10 @@
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, backingWidth, backingHeight);
+	
+#ifdef _OPENGLES2
+	[self compileShaders];
+#endif
     return YES;
 }
 
