@@ -12,7 +12,7 @@
 /// 
 /// Defines an OpenGL specific texture.
 
-#if defined(_OPENGL) || (_OPENGLES1)
+#if defined(_OPENGL) || (_OPENGLES)
 #ifndef APRIL_OPENGL_TEXTURE_H
 #define APRIL_OPENGL_TEXTURE_H
 
@@ -23,7 +23,7 @@
 #include <OpenGL/gl.h>
 #elif (TARGET_OS_IPHONE)
 #include <OpenGLES/ES1/gl.h>
-#elif (_OPENGLES1)
+#elif (_OPENGLES)
 #include <GLES/gl.h>
 #else
 #include <GL/gl.h>

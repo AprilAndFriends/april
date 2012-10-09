@@ -16,9 +16,16 @@
 #include <TargetConditionals.h>
 #endif
 #if TARGET_OS_IPHONE
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES1/glext.h>
-#elif defined(_OPENGLES1)
+#ifdef _OPENGLES1
+	#include <OpenGLES/ES1/gl.h>
+	#include <OpenGLES/ES1/glext.h>
+#else
+
+	#include <OpenGLES/ES2/gl.h>
+	#include <OpenGLES/ES2/glext.h>
+	extern GLint _positionSlot;
+#endif
+#elif defined(_OPENGLES)
 #include <GLES/gl.h>
 #ifdef _ANDROID
 #define GL_GLEXT_PROTOTYPES
@@ -61,7 +68,7 @@ namespace april
 #ifdef _WIN32 // if _WIN32
 	static HWND hWnd = 0;
 	HDC hDC = 0;
-#ifndef _OPENGLES1 // if _WIN32 && GLES
+#ifndef _OPENGLES // if _WIN32 && GLES
 	static HGLRC hRC = 0;
 #else
 	static EGLDisplay eglDisplay = 0;
@@ -76,7 +83,7 @@ namespace april
 	int OpenGL_RenderSystem::_getMaxTextureSize()
 	{
 #ifdef _WIN32
-#ifndef _OPENGLES1
+#ifndef _OPENGLES
 		if (hRC == 0)
 #else
 		if (eglDisplay == 0)
@@ -176,7 +183,7 @@ namespace april
 #ifdef _WIN32
 	void OpenGL_RenderSystem::_releaseWindow()
 	{
-#ifndef _OPENGLES1
+#ifndef _OPENGLES
 		if (hRC != 0)
 		{
 			wglMakeCurrent(NULL, NULL);
@@ -232,7 +239,7 @@ namespace april
 			this->_releaseWindow();
 			return;
 		}
-#ifndef _OPENGLES1
+#ifndef _OPENGLES
 		hRC = wglCreateContext(hDC);
 		if (hRC == 0)
 		{
@@ -315,7 +322,7 @@ namespace april
 		glDisableClientState(GL_COLOR_ARRAY);
 		glEnable(GL_TEXTURE_2D);
 		// pixel data
-#ifndef _OPENGLES1
+#ifndef _OPENGLES
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
@@ -356,7 +363,7 @@ namespace april
 		glDisableClientState(GL_COLOR_ARRAY);
 		glEnable(GL_TEXTURE_2D);
 		// pixel data
-#ifndef _OPENGLES1
+#ifndef _OPENGLES
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
@@ -419,7 +426,7 @@ namespace april
 		{
 			// determine if blend separation is possible on first call to this function
 			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-#ifdef _OPENGLES1
+#ifdef _OPENGLES
 			blendSeparationSupported = extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate");
 #else
 			blendSeparationSupported = extensions.contains("GL_EXT_blend_equation_separate") && extensions.contains("GL_EXT_blend_func_separate");
@@ -776,14 +783,18 @@ namespace april
 			glMatrixMode(mode);
 		}
 	}
-	
 	void OpenGL_RenderSystem::_setVertexPointer(int stride, const void* pointer)
 	{
 		static int _stride = 0;
 		static const void *_pointer = 0;
 		if (_stride != stride || _pointer != pointer)
 		{
+#ifdef _OPENGLES2
+			glVertexAttribPointer(_positionSlot, 3, GL_FLOAT, GL_FALSE,
+								  stride, pointer);
+#else
 			glVertexPointer(3, GL_FLOAT, stride, pointer);
+#endif
 			_stride = stride;
 			_pointer = pointer;
 		}

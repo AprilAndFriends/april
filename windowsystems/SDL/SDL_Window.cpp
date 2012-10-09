@@ -14,7 +14,7 @@
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #include <OpenGL/gl.h>
-#elif _OPENGLES1
+#elif _OPENGLES
 #include <GLES/gl.h>
 #else
 #ifdef _WIN32
@@ -59,7 +59,7 @@ namespace april
 		this->scrollHorizontal = false;
 		this->screen = NULL;
 		this->created = false;
-#ifdef _OPENGLES1
+#ifdef _OPENGLES
 		this->glesContext = NULL;
 #endif
 	}
@@ -82,7 +82,7 @@ namespace april
 		SDL_WM_SetCaption(this->title.c_str(), this->title.c_str());
 
 #ifdef _OPENGL
-#ifndef _OPENGLES1
+#ifndef _OPENGLES
 		// set up opengl attributes desired for the context
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
@@ -132,7 +132,7 @@ namespace april
 		{
 			return false;
 		}
-#ifdef _OPENGLES1
+#ifdef _OPENGLES
 		SDL_GLES_DeleteContext(this->glesContext);
 		SDL_GLES_Quit();
 #endif
@@ -273,7 +273,7 @@ namespace april
 	void SDL_Window::presentFrame()
 	{
 #ifdef _OPENGL
-#ifndef _OPENGLES1
+#ifndef _OPENGLES
 		SDL_GL_SwapBuffers();
 #else
 		SDL_GLES_SwapBuffers();
