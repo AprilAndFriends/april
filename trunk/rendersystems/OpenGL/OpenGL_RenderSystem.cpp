@@ -19,8 +19,7 @@
 #ifdef _OPENGLES1
 	#include <OpenGLES/ES1/gl.h>
 	#include <OpenGLES/ES1/glext.h>
-#else
-
+#elif defined(_OPENGLES2)
 	#include <OpenGLES/ES2/gl.h>
 	#include <OpenGLES/ES2/glext.h>
 	extern GLint _positionSlot;
