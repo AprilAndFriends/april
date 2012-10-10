@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.11
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -107,13 +107,6 @@ namespace april
 		void stretchBlit(grect destination, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
 
 		virtual bool copyPixelData(unsigned char** output) { return false; }
-		
-		DEPRECATED_ATTRIBUTE int getSizeInBytes() { return this->getByteSize(); }
-		DEPRECATED_ATTRIBUTE void setTextureFilter(Filter value) { this->setFilter(value); }
-		DEPRECATED_ATTRIBUTE void setTextureWrapping(bool wrap) { this->setAddressMode(wrap ? ADDRESS_WRAP : ADDRESS_CLAMP); }
-		DEPRECATED_ATTRIBUTE bool isTextureWrappingEnabled() { return (this->getAddressMode() == ADDRESS_WRAP); }
-		DEPRECATED_ATTRIBUTE Filter getTextureFilter() { return this->getFilter(); }
-		DEPRECATED_ATTRIBUTE bool isValid() { return this->isLoaded(); }
 		
 		// TODO - this horrible, horrible hack has to be discussed and changed
 		//! sets the filename variable, useful if you want to reload the texture from a different file
