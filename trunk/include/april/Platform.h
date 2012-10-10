@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.31
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -80,7 +80,6 @@ namespace april
 
 	};
 		
-	aprilFnExport DEPRECATED_ATTRIBUTE gvec2 getDisplayResolution();
 	aprilFnExport SystemInfo getSystemInfo();
 	aprilFnExport DeviceType getDeviceType();
 	aprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN,

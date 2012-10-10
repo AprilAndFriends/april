@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -117,25 +117,6 @@ namespace april
 		virtual hstr getParam(chstr name) { return ""; }
 		virtual ImageSource* takeScreenshot(int bpp = 3) = 0;
 		virtual void presentFrame();
-
-		DEPRECATED_ATTRIBUTE Window* getWindow() { return april::window; }
-		DEPRECATED_ATTRIBUTE void setOrthoProjection(float w, float h, float x_offset = 0.0f, float y_offset = 0.0f) { this->setOrthoProjection(grect(x_offset, y_offset, w, h)); }
-		DEPRECATED_ATTRIBUTE bool isFullscreen() { return april::window->isFullscreen(); }
-		DEPRECATED_ATTRIBUTE void restore() { this->reset(); }
-		DEPRECATED_ATTRIBUTE void clear(bool useColor, bool depth, grect rect, Color color = APRIL_COLOR_CLEAR) { this->clear(depth, rect, color); }
-		DEPRECATED_ATTRIBUTE ImageSource* grabScreenshot(int bpp = 3) { return this->takeScreenshot(bpp); }
-		DEPRECATED_ATTRIBUTE Texture* createTextureFromMemory(unsigned char* rgba, int w, int h) { return this->createTexture(w, h, rgba); }
-		DEPRECATED_ATTRIBUTE Texture* createEmptyTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL) { return this->createTexture(w, h, format, type); }
-		DEPRECATED_ATTRIBUTE Texture* createBlankTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL) { return this->createTexture(w, h, format, type, Color(APRIL_COLOR_WHITE, 0)); }
-		DEPRECATED_ATTRIBUTE void setTextureWrapping(bool value) { this->setTextureAddressMode(value ? Texture::ADDRESS_WRAP : Texture::ADDRESS_CLAMP); }
-		DEPRECATED_ATTRIBUTE Texture* loadRAMTexture(chstr filename, bool dynamic = false) { return this->loadRamTexture(filename, dynamic); }
-		DEPRECATED_ATTRIBUTE void drawQuad(grect rect, Color color) { this->drawRect(rect, color); }
-		DEPRECATED_ATTRIBUTE void drawColoredQuad(grect rect, Color color) { this->drawFilledRect(rect, color); }
-		DEPRECATED_ATTRIBUTE void drawTexturedQuad(grect rect, grect src) { this->drawTexturedRect(rect, src); }
-		DEPRECATED_ATTRIBUTE void drawTexturedQuad(grect rect, grect src, Color color) { this->drawTexturedRect(rect, src, color); }
-		DEPRECATED_ATTRIBUTE void setBlendMode(BlendMode blendMode) { this->setTextureBlendMode(blendMode); }
-		DEPRECATED_ATTRIBUTE void setColorMode(ColorMode colorMode, unsigned char alpha = 255) { this->setTextureColorMode(colorMode, alpha); }
-		DEPRECATED_ATTRIBUTE hstr _findTextureFilename(chstr filename) { return this->findTextureFilename(filename); }
 
 		// TODO - refactor
 		virtual int _getMaxTextureSize() = 0;

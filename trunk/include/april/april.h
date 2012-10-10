@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -61,9 +61,6 @@ namespace april
 	aprilFnExport void setTextureExtensions(const harray<hstr>& exts);
 	aprilFnExport void log(chstr message, chstr prefix = "[april] ");
 
-	aprilFnExport DEPRECATED_ATTRIBUTE void init();
-	aprilFnExport DEPRECATED_ATTRIBUTE void createRenderTarget(int w, int h, bool fullscreen, chstr title);
-	
 }
 
 #endif

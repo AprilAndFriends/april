@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.32
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -87,10 +87,11 @@ namespace april
 		typedef bool (*updateFunction)(float);
 		void setUpdateCallback(updateFunction func) { this->updateCallback = func; }
 		updateFunction getUpdateCallback() { return this->updateCallback; }
-		// TODO - update this this
-		void setMouseDownCallback(void (*value)(int)) { this->mouseDownCallback = value; this->mouseDownCallback_DEPRECATED = NULL; }
-		void setMouseUpCallback(void (*value)(int)) { this->mouseUpCallback = value; this->mouseUpCallback_DEPRECATED = NULL; }
-		void setMouseMoveCallback(void (*value)()) { this->mouseMoveCallback = value; this->mouseMoveCallback_DEPRECATED = NULL; }
+		// TODO - update this
+		void setMouseDownCallback(void (*value)(int)) { this->mouseDownCallback = value; }
+		void setMouseUpCallback(void (*value)(int)) { this->mouseUpCallback = value; }
+		void setMouseMoveCallback(void (*value)()) { this->mouseMoveCallback = value; }
+		void setMouseScrollCallback(void (*value)(float, float)) { this->mouseScrollCallback = value; }
 		void setKeyDownCallback(void (*value)(unsigned int)) { this->keyDownCallback = value; }
 		void setKeyUpCallback(void (*value)(unsigned int)) { this->keyUpCallback = value; }
 		void setCharCallback(void (*value)(unsigned int)) { this->charCallback = value; }
@@ -158,31 +159,6 @@ namespace april
 		virtual void enterMainLoop();
 		virtual bool performUpdate(float k);
 		
-		DEPRECATED_ATTRIBUTE hstr getWindowTitle() { return this->getTitle(); }
-		DEPRECATED_ATTRIBUTE virtual void setWindowTitle(chstr value) { this->setTitle(value); }
-		DEPRECATED_ATTRIBUTE void setWindowFocusCallback(void (*value)(bool)) { this->setFocusChangeCallback(value); }
-		DEPRECATED_ATTRIBUTE bool handleURL(chstr url) { return this->handleUrl(url); }
-		DEPRECATED_ATTRIBUTE void setHandleURLCallback(bool (*value)(chstr)) { this->setHandleUrlCallback(value); }
-		DEPRECATED_ATTRIBUTE gvec2 getDimensions() { return this->getSize(); }
-		DEPRECATED_ATTRIBUTE bool isKeyboardVisible() { return this->isVirtualKeyboardVisible(); }
-		DEPRECATED_ATTRIBUTE void showSystemCursor(bool value) { this->setCursorVisible(value); }
-		DEPRECATED_ATTRIBUTE bool isSystemCursorShown() { return this->isCursorVisible(); }
-		DEPRECATED_ATTRIBUTE void handleFocusEvent(bool focused) { this->handleFocusChangeEvent(focused); }
-		DEPRECATED_ATTRIBUTE void* getIDFromBackend() { return this->getBackendId(); }
-		DEPRECATED_ATTRIBUTE void setMouseCallbacks(void (*mouseDownCallback)(float, float, int),
-							   void (*mouseUpCallback)(float, float, int),
-							   void (*mouseMoveCallback)(float, float),
-							   void (*mouseScrollCallback)(float, float) = NULL)
-							{
-								this->mouseDownCallback_DEPRECATED = mouseDownCallback;
-								this->mouseUpCallback_DEPRECATED = mouseUpCallback;
-								this->mouseMoveCallback_DEPRECATED = mouseMoveCallback;
-								this->mouseScrollCallback = mouseScrollCallback;
-								this->mouseDownCallback = NULL;
-								this->mouseUpCallback = NULL;
-								this->mouseMoveCallback = NULL;
-							}
-
 		// TODO - refactor
 		// the following functions should be temporary, it was added because I needed access to
 		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
@@ -218,11 +194,6 @@ namespace april
 		void (*virtualKeyboardCallback)(bool);
 		bool (*handleUrlCallback)(chstr);
 		void (*lowMemoryCallback)();
-
-		// DEPRECATED
-		void (*mouseDownCallback_DEPRECATED)(float, float, int);
-		void (*mouseUpCallback_DEPRECATED)(float, float, int);
-		void (*mouseMoveCallback_DEPRECATED)(float, float);
 
 	};
 

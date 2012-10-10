@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -84,9 +84,6 @@
 
 namespace april
 {
-	DEPRECATED_ATTRIBUTE void init() { init(RS_DEFAULT, WS_DEFAULT); } // DEPRECATED
-	DEPRECATED_ATTRIBUTE void createRenderTarget(int w, int h, bool fullscreen, chstr title) { createWindow(w, h, fullscreen, title); } // DEPRECATED
-
 	harray<hstr> extensions;
 	hstr systemPath = ".";
 
