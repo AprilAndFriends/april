@@ -96,6 +96,13 @@ namespace april
 		{
 			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
 		}
+#ifdef _DEBUG
+		april::log("got args: " + args.join(","));
+		foreach (hstr, it, args)
+		{
+			april::log("  " + (*it));
+		}
+#endif
 		april_init(args);
 	}
 
