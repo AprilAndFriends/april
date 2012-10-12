@@ -181,21 +181,29 @@ namespace april
 		{
 			dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 			dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
+			dialog->DefaultCommandIndex = 0;
+			dialog->CancelCommandIndex = 1;
 		}
 		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO) && (buttonMask & AMSGBTN_CANCEL))
 		{
 			dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 			dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
 			dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
+			dialog->DefaultCommandIndex = 0;
+			dialog->CancelCommandIndex = 2;
 		}
 		else if (buttonMask & AMSGBTN_OK)
 		{
 			dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDOK));
+			dialog->DefaultCommandIndex = 0;
+			dialog->CancelCommandIndex = 0;
 		}
 		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
 		{
 			dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 			dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
+			dialog->DefaultCommandIndex = 0;
+			dialog->CancelCommandIndex = 1;
 		}
 		dialog->ShowAsync();
 #endif
