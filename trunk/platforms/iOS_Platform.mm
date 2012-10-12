@@ -267,7 +267,7 @@ namespace april
 		return DEVICE_IPAD;
 	}
 	
-	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
         NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, AMSGBTN_NULL, AMSGBTN_NULL};
@@ -338,36 +338,6 @@ namespace april
 			CFRunLoopRun();
 		}
 		[alert release];
-		
-		// We're modal?
-		// If so, we know what to return!
-		if (style & AMSGSTYLE_MODAL)
-		{
-			return mbd.selectedButton;
-		}
-		
-		// NOTE: does not return proper values unless modal! 
-		//       you need to implement a delegate.
-		
-		
-		// some dummy returnvalues
-		if (buttonMask & AMSGBTN_CANCEL)
-		{
-			return AMSGBTN_CANCEL;
-		}
-		if (buttonMask & AMSGBTN_OK)
-		{
-			return AMSGBTN_OK;
-		}
-		if (buttonMask & AMSGBTN_NO)
-		{
-			return AMSGBTN_NO;
-		}
-		if (buttonMask & AMSGBTN_YES)
-		{
-			return AMSGBTN_YES;
-		}
-		return AMSGBTN_OK;
 	}
 	
 	NSURL* _getFileURL(chstr filename)

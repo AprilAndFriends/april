@@ -125,7 +125,7 @@ namespace april
 		return DEVICE_MAC_PC;
 	}
     
-	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// fugly implementation of showing messagebox on mac os
 		// ideas:
@@ -205,8 +205,7 @@ namespace april
         if (callback != NULL)
         {
             (*callback)(buttonTypes[clicked]);
-        }
-        return buttonTypes[clicked];
+		}
 	}
 	
 }
