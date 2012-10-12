@@ -23,16 +23,16 @@ namespace april
         this->frequency = 0;
         this->performanceTimerStart = 0;
         this->resolution = 0; // unused in SDL timer
-        this->mmTimerStart = 0;
-        this->mmTimerElapsed = 0;
+        this->mTimerStart = 0;
+        this->mTimerElapsed = 0;
         performanceTimerElapsed = 0;
         performanceTimer = 0;
         
 		// for sdl:
 		performanceTimer = 0; // was: "false"
-		this->mmTimerStart = SDL_GetTicks();
+		this->mTimerStart = SDL_GetTicks();
 		this->frequency	= 1000;
-		this->mmTimerElapsed = this->mmTimerStart;
+		this->mTimerElapsed = this->mTimerStart;
             
         
     }
@@ -44,7 +44,7 @@ namespace april
     
     float Timer::getTime()
     {        
-		return( (float) ( SDL_GetTicks() - this->mmTimerStart));
+		return( (float) ( SDL_GetTicks() - this->mTimerStart));
         
     }
     
