@@ -44,8 +44,8 @@ namespace april
 		float td2;
 		__int64 frequency;
 		float resolution;
-		__int64 mmTimerStart;
-		unsigned long mmTimerElapsed;
+		__int64 mTimerStart;
+		unsigned long mTimerElapsed;
 		bool performanceTimer;
 		__int64 performanceTimerStart;
 		__int64 performanceTimerElapsed;

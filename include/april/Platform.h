@@ -82,10 +82,13 @@ namespace april
 		
 	aprilFnExport SystemInfo getSystemInfo();
 	aprilFnExport DeviceType getDeviceType();
-	aprilFnExport MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN,
+	aprilFnExport void messageBox(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN,
 		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL);
 
-	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN,
+	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel,
+		MessageBoxButton buttonMask, hmap<MessageBoxButton, hstr> customButtonTitles);
+
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN,
 		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL);
 
 }

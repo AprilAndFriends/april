@@ -168,7 +168,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_OPENGL;USE_IL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -195,7 +195,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;USE_IL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -276,7 +276,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_DIRECTX9;USE_IL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -305,7 +305,7 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_DIRECTX9;USE_IL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>

@@ -84,26 +84,7 @@ namespace april
 		hstr yes;
 		hstr no;
 		hstr cancel;
-		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
-		{
-			ok = customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK");
-			cancel = customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel");
-		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL))
-		{
-			yes = customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes");
-			no = customButtonTitles.try_get_by_key(AMSGBTN_NO, "No");
-			cancel = customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel");
-		}
-		else if (buttonMask & AMSGBTN_OK)
-		{
-			ok = customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK");
-		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
-		{
-			yes = customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes");
-			no = customButtonTitles.try_get_by_key(AMSGBTN_NO, "No");
-		}
+		_makeButtonLabels(&ok, &yes, &no, &cancel, buttonMask customButtonTitles);
 		// create Java strings from hstr
 		jstring jTitle = (title != "" ? env->NewStringUTF(title.c_str()) : NULL);
 		jstring jText = (text != "" ? env->NewStringUTF(text.c_str()) : NULL);

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.4
 /// 
 /// @section LICENSE
 /// 
@@ -15,6 +15,8 @@
 #ifndef APRIL_DIRECTX9_VERTEX_SHADER_H
 #define APRIL_DIRECTX9_VERTEX_SHADER_H
 
+#include <hltypes/hplatform.h>
+#if !_HL_WINRT
 #include <hltypes/hstring.h>
 
 #include "VertexShader.h"
@@ -45,5 +47,6 @@ namespace april
 	};
 
 }
+#endif
 #endif
 #endif
