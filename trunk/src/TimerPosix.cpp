@@ -25,8 +25,8 @@ namespace april
 		this->frequency = 0;
 		this->performanceTimerStart = 0;
 		this->resolution = 0; // unused in Posix timer
-		this->mmTimerStart = 0;
-		this->mmTimerElapsed = 0;
+		this->mTimerStart = 0;
+		this->mTimerElapsed = 0;
 		this->performanceTimerElapsed = 0;
 		this->performanceTimer = 0;
 		
@@ -35,9 +35,9 @@ namespace april
 		gettimeofday(&tv, NULL);
 		
 		this->performanceTimer = 0; 
-		this->mmTimerStart = ((uint64_t(tv.tv_sec)) << 32) + int64_t(tv.tv_usec);
+		this->mTimerStart = ((uint64_t(tv.tv_sec)) << 32) + int64_t(tv.tv_usec);
 		this->frequency = 1;
-		this->mmTimerElapsed = this->mmTimerStart;
+		this->mTimerElapsed = this->mTimerStart;
 	}
 	
 	Timer::~Timer()
@@ -47,7 +47,7 @@ namespace april
 	float Timer::getTime()
 	{
 		timeval tv = {0, 0};
-		timeval init_tv = {this->mmTimerStart >> 32, this->mmTimerStart & 0xFFFFFFFF};
+		timeval init_tv = {this->mTimerStart >> 32, this->mTimerStart & 0xFFFFFFFF};
 		gettimeofday(&tv, NULL);
 		return (tv.tv_usec - init_tv.tv_usec) / 1000 + (tv.tv_sec - init_tv.tv_sec) * 1000;
 	}

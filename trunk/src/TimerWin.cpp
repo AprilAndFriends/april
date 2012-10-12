@@ -9,6 +9,8 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _WIN32
+#include <hltypes/hltypesUtil.h>
+
 #include "april.h"
 #include "RenderSystem.h"
 #include "Timer.h"
@@ -23,8 +25,8 @@ namespace april
 		this->frequency = 0;
 		this->performanceTimerStart = 0;
 		this->resolution = 0;
-		this->mmTimerStart = 0;
-		this->mmTimerElapsed = 0;
+		this->mTimerStart = 0;
+		this->mTimerElapsed = 0;
 		this->performanceTimerElapsed = 0;
 		this->performanceTimer = false;
 		
@@ -32,10 +34,10 @@ namespace april
 		{
 			april::log("performance timer not available, multimedia timer will be used instead!");
 			this->performanceTimer = false;
-			this->mmTimerStart = timeGetTime();
+			this->mTimerStart = get_system_tick_count();
 			this->resolution = 1.0f / 1000.0f;
 			this->frequency = 1000;
-			this->mmTimerElapsed = (unsigned long)this->mmTimerStart;
+			this->mTimerElapsed = (unsigned long)this->mTimerStart;
 		}
 		else
 		{
@@ -61,7 +63,7 @@ namespace april
 		}
 		else
 		{
-			return ((float)(timeGetTime() - this->mmTimerStart) * this->resolution * 1000.0f);
+			return ((float)(get_system_tick_count() - this->mTimerStart) * this->resolution * 1000.0f);
 		}
 	}
 	

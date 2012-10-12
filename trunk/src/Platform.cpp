@@ -22,7 +22,7 @@ namespace april
 		return getSystemInfo().displayResolution;
 	}
 
-	MessageBoxButton messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
+	void messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		MessageBoxStyle passedStyle = style;
@@ -35,12 +35,36 @@ namespace april
 #endif
 			passedStyle = (MessageBoxStyle)(passedStyle & AMSGSTYLE_MODAL);
 		}
-		MessageBoxButton returnValue = messageBox_platform(title, text, buttonMask, passedStyle, customButtonTitles, callback);
+		messageBox_platform(title, text, buttonMask, passedStyle, customButtonTitles, callback);
 		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY)
 		{
 			exit(1);
 		}
-		return returnValue;
+	}
+
+	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel,
+		MessageBoxButton buttonMask, hmap<MessageBoxButton, hstr> customButtonTitles)
+	{
+		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
+		{
+			*ok = customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK");
+			*cancel = customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel");
+		}
+		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL))
+		{
+			*yes = customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes");
+			*no = customButtonTitles.try_get_by_key(AMSGBTN_NO, "No");
+			*cancel = customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel");
+		}
+		else if (buttonMask & AMSGBTN_OK)
+		{
+			*ok = customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK");
+		}
+		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
+		{
+			*yes = customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes");
+			*no = customButtonTitles.try_get_by_key(AMSGBTN_NO, "No");
+		}
 	}
 
 }

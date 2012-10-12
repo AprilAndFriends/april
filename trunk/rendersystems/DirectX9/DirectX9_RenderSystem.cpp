@@ -12,11 +12,11 @@
 
 #include <d3d9.h>
 #include <d3d9types.h>
-#include <d3dx9math.h>
 #include <stdio.h>
 
 #include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
+#include <hltypes/hplatform.h>
 #include <hltypes/hthread.h>
 
 #include "april.h"
@@ -431,6 +431,7 @@ namespace april
 	
 	void DirectX9_RenderSystem::setPixelShader(PixelShader* pixelShader)
 	{
+#if !_HL_WINRT
 		DirectX9_PixelShader* shader = (DirectX9_PixelShader*)pixelShader;
 		if (shader != NULL)
 		{
@@ -440,10 +441,12 @@ namespace april
 		{
 			this->d3dDevice->SetPixelShader(NULL);
 		}
+#endif
 	}
 
 	void DirectX9_RenderSystem::setVertexShader(VertexShader* vertexShader)
 	{
+#if !_HL_WINRT
 		DirectX9_VertexShader* shader = (DirectX9_VertexShader*)vertexShader;
 		if (shader != NULL)
 		{
@@ -453,6 +456,7 @@ namespace april
 		{
 			this->d3dDevice->SetVertexShader(NULL);
 		}
+#endif
 	}
 
 	void DirectX9_RenderSystem::setResolution(int w, int h)
@@ -501,22 +505,38 @@ namespace april
 	
 	PixelShader* DirectX9_RenderSystem::createPixelShader()
 	{
+#if !_HL_WINRT
 		return new DirectX9_PixelShader();
+#else
+		return NULL;
+#endif
 	}
 
 	PixelShader* DirectX9_RenderSystem::createPixelShader(chstr filename)
 	{
+#if !_HL_WINRT
 		return new DirectX9_PixelShader(filename);
+#else
+		return NULL;
+#endif
 	}
 
 	VertexShader* DirectX9_RenderSystem::createVertexShader()
 	{
+#if !_HL_WINRT
 		return new DirectX9_VertexShader();
+#else
+		return NULL;
+#endif
 	}
 
 	VertexShader* DirectX9_RenderSystem::createVertexShader(chstr filename)
 	{
+#if !_HL_WINRT
 		return new DirectX9_VertexShader(filename);
+#else
+		return NULL;
+#endif
 	}
 
 	void DirectX9_RenderSystem::clear(bool useColor, bool depth)
