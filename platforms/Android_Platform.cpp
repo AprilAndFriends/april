@@ -75,7 +75,7 @@ namespace april
 		return DEVICE_ANDROID_PHONE;
 	}
 
-	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowMessageBox, "showMessageBox", _JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR _JSTR _JINT));
@@ -84,7 +84,7 @@ namespace april
 		hstr yes;
 		hstr no;
 		hstr cancel;
-		_makeButtonLabels(&ok, &yes, &no, &cancel, buttonMask customButtonTitles);
+		_makeButtonLabels(&ok, &yes, &no, &cancel, buttonMask, customButtonTitles);
 		// create Java strings from hstr
 		jstring jTitle = (title != "" ? env->NewStringUTF(title.c_str()) : NULL);
 		jstring jText = (text != "" ? env->NewStringUTF(text.c_str()) : NULL);
@@ -104,7 +104,6 @@ namespace april
 		april::dialogCallback = callback;
 		// call Java AprilJNI
 		env->CallStaticVoidMethod(classNativeInterface, methodShowMessageBox, jTitle, jText, jOk, jYes, jNo, jCancel, jIconId);
-		return AMSGBTN_OK;
 	}
 
 }
