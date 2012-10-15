@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.36
+/// @version 2.41
 /// 
 /// @section LICENSE
 /// 
@@ -55,6 +55,8 @@ namespace april
 	class OpenGL_RenderSystem : public RenderSystem
 	{
 	public:
+		friend class OpenGL_Texture;
+
 		OpenGL_RenderSystem();
 		~OpenGL_RenderSystem();
 		bool create(chstr options);
@@ -105,10 +107,9 @@ namespace april
 		// TODO - refactor
 		int _getMaxTextureSize();
 
-		// TODO - refactor
+	protected:
 		OpenGL_RenderState deviceState;
 		OpenGL_RenderState state;
-	protected:
 		OpenGL_Texture* activeTexture;
 		hstr options;
 

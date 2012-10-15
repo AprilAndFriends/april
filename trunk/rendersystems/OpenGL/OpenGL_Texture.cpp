@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.11
+/// @version 2.41
 /// 
 /// @section LICENSE
 /// 
@@ -48,7 +48,7 @@ namespace april
 		this->filename = filename;
 		this->textureId = 0;
 		this->manualBuffer = NULL;
-		april::log("creating GL texture: " + _getInternalName());
+		april::log("creating GL texture: " + this->_getInternalName());
 	}
 
 	OpenGL_Texture::OpenGL_Texture(int w, int h, unsigned char* rgba) : Texture()
@@ -64,10 +64,7 @@ namespace april
 		memcpy(this->manualBuffer, rgba, w * h * 4 * sizeof(unsigned char));
 #endif
 		glGenTextures(1, &this->textureId);
-		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		this->_setCurrentTexture();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
 	}
 
@@ -81,10 +78,7 @@ namespace april
 		this->filename = "";
 		this->manualBuffer = NULL;
 		glGenTextures(1, &this->textureId);
-		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		this->_setCurrentTexture();
 		if (color != APRIL_COLOR_CLEAR)
 		{
 			this->fillRect(0, 0, this->width, this->height, color);
@@ -127,6 +121,19 @@ namespace april
 		{
 			delete [] this->manualBuffer;
 		}
+	}
+
+	void OpenGL_Texture::_setCurrentTexture()
+	{
+		OpenGL_RenderSystem* rendersys = (OpenGL_RenderSystem*)april::rendersys;
+		rendersys->state.textureId = rendersys->deviceState.textureId = this->textureId;
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
+		rendersys->state.textureFilter = rendersys->deviceState.textureFilter = this->filter;
+		rendersys->_setTextureFilter(this->filter);
+		rendersys->state.textureAddressMode = rendersys->deviceState.textureAddressMode = this->addressMode;
+		rendersys->_setTextureAddressMode(this->addressMode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	}
 
 	bool OpenGL_Texture::isLoaded()

@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.41
 /// 
 /// @section LICENSE
 /// 
@@ -64,6 +64,8 @@ namespace april
 	protected:
 		GLuint textureId;
 		unsigned char* manualBuffer;
+
+		void _setCurrentTexture();
 
 	};
 
