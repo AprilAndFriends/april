@@ -142,7 +142,10 @@ namespace april
 
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean focused)
 	{
-		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(focused != JNI_FALSE));
+		if (focused != JNI_FALSE)
+		{
+			PROTECTED_WINDOW_CALL(handleFocusChangeEvent(true));
+		}
 	}
 
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
@@ -184,6 +187,7 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android Activity::onPause()");
 #endif
+		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(false));
 		PROTECTED_RENDERSYS_CALL(unloadTextures());
 	}
 
