@@ -57,6 +57,12 @@
     <Filter Include="Source Files\platforms">
       <UniqueIdentifier>{4849144f-915b-416b-955e-a300028d705b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\windowsystems\WinRT">
+      <UniqueIdentifier>{347e9151-bd15-413c-a458-470eb505c5ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\windowsystems\WinRT">
+      <UniqueIdentifier>{e26cc618-a92f-4d76-afb3-6284c09394ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -146,6 +152,9 @@
     <ClCompile Include="src\RamTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp">
+      <Filter>Source Files\windowsystems\WinRT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -222,6 +231,9 @@
     </ClInclude>
     <ClInclude Include="include\april\androidUtilJNI.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_Window.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

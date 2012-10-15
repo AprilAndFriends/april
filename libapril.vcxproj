@@ -553,6 +553,7 @@
     <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Window.cpp" />
     <ClCompile Include="windowsystems\SDL\SDL_Window.cpp" />
     <ClCompile Include="windowsystems\Win32\Win32_Window.cpp" />
+    <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\androidUtilJNI.h" />
@@ -580,6 +581,7 @@
     <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Window.h" />
     <ClInclude Include="windowsystems\SDL\SDL_Window.h" />
     <ClInclude Include="windowsystems\Win32\Win32_Window.h" />
+    <ClInclude Include="windowsystems\WinRT\WinRT_Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\gtypes\libgtypes.vcxproj">
