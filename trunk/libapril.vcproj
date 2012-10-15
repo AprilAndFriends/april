@@ -540,6 +540,14 @@
 					</File>
 				</Filter>
 				<Filter
+					Name="WinRT"
+					>
+					<File
+						RelativePath=".\windowsystems\WinRT\WinRT_Window.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
 					Name="SDL"
 					>
 					<File
@@ -674,6 +682,14 @@
 					>
 					<File
 						RelativePath=".\windowsystems\Win32\Win32_Window.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="WinRT"
+					>
+					<File
+						RelativePath=".\windowsystems\WinRT\WinRT_Window.h"
 						>
 					</File>
 				</Filter>

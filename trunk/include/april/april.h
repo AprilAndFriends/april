@@ -25,6 +25,7 @@
 #define APRIL_RS_DEFAULT ""
 
 #define APRIL_WS_WIN32 "Win32"
+#define APRIL_WS_WINRT "WinRT"
 #define APRIL_WS_SDL "SDL"
 #define APRIL_WS_ANDROIDJNI "AndroidJNI"
 #define APRIL_WS_IOS "iOS"

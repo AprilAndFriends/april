@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.4
+/// @version 2.41
 /// 
 /// @section LICENSE
 /// 
@@ -22,6 +22,7 @@
 
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hplatform.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
@@ -44,7 +45,11 @@
 #include "SDL_Window.h"
 #endif
 #ifdef _WIN32
+#if !_HL_WINRT
 #include "Win32_Window.h"
+#else
+#include "WinRT_Window.h"
+#endif
 #endif
 
 #ifdef _WIN32
@@ -55,7 +60,11 @@
 	#else
 	#warning "no rendersystems specified"
 	#endif
+	#if !_HL_WINRT
 	#define WS_INTERNAL_DEFAULT WS_WIN32
+	#else
+	#define WS_INTERNAL_DEFAULT WS_WINRT
+	#endif
 #elif defined(__APPLE__) && !TARGET_OS_IPHONE
 	#define RS_INTERNAL_DEFAULT RS_OPENGL
 	#define WS_INTERNAL_DEFAULT WS_SDL
@@ -140,10 +149,17 @@ namespace april
 			windowSystem = WS_INTERNAL_DEFAULT;
 		}
 #ifdef _WIN32
+#if !_HL_WINRT
 		if (april::window == NULL && windowSystem == WS_WIN32)
 		{
 			april::window = new Win32_Window();
 		}
+#else
+		if (april::window == NULL && windowSystem == WS_WINRT)
+		{
+			april::window = new WinRT_Window();
+		}
+#endif
 #endif
 #ifdef HAVE_SDL
 		if (april::window == NULL && windowSystem == WS_SDL)
