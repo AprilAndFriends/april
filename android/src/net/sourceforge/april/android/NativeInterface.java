@@ -1,10 +1,13 @@
 package net.sourceforge.april.android;
 
-// version 2.33
+// version 2.41
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.view.inputmethod.InputMethodManager;
 import android.util.DisplayMetrics;
 
@@ -33,6 +36,8 @@ public class NativeInterface
 	public static String ApkPath = "";
 	public static AlertDialog.Builder DialogBuilder = null;
 	
+	private static boolean htcKeyboardHack = true;
+	
 	public static native void setVariables(String systemPath, String sharedPath, String packageName, String versionCode, String forceArchivePath);
 	public static native void init(String[] args);
 	public static native boolean render();
@@ -57,19 +62,65 @@ public class NativeInterface
 	public static native void onDialogNo();
 	public static native void onDialogCancel();
 	
+	public static void showVirtualKeyboard()
+	{
+		NativeInterface.Activity.runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface._getInputMethodManager().showSoftInput(
+					NativeInterface.Activity.getView(), InputMethodManager.SHOW_IMPLICIT, NativeInterface._makeResultReceiver());
+			}
+		});
+	}
+	
+	public static void hideVirtualKeyboard()
+	{
+		NativeInterface.Activity.runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(
+					NativeInterface.Activity.getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS, NativeInterface._makeResultReceiver());
+			}
+		});
+	}
+	
 	private static InputMethodManager _getInputMethodManager()
 	{
 		return (InputMethodManager)NativeInterface.Activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 	
-	public static void showVirtualKeyboard()
+	private static ResultReceiver _makeResultReceiver()
 	{
-		NativeInterface._getInputMethodManager().showSoftInput(NativeInterface.Activity.getView(), InputMethodManager.SHOW_IMPLICIT);
-	}
-	
-	public static void hideVirtualKeyboard()
-	{
-		NativeInterface._getInputMethodManager().hideSoftInputFromWindow(NativeInterface.Activity.getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		return new ResultReceiver(new Handler())
+		{
+			@Override
+			protected void onReceiveResult(int resultCode, Bundle resultData)
+			{
+				boolean keyboardShown = true;
+				if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN ||
+					resultCode == InputMethodManager.RESULT_HIDDEN)
+				{
+					keyboardShown = false;
+				}
+				if (keyboardShown && htcKeyboardHack)
+				{
+					htcKeyboardHack = false;
+					// repeat call for these problematic devices
+					if (Build.BOARD.equals("mecha") || // Thunderbolt
+						Build.BOARD.equals("marvel") || // Wildfire S
+						Build.BOARD.equals("marvelc") || // Wildfire S
+						Build.VERSION.SDK_INT < 10 && Build.BOARD.equals("shooteru") || // EVO 3D
+						Build.BOARD.equals("supersonic") || // EVO 4G
+						Build.VERSION.SDK_INT >= 10 && Build.BOARD.equals("inc")) // Droid Incredible
+					{
+						NativeInterface.hideVirtualKeyboard();
+						NativeInterface.showVirtualKeyboard();
+					}
+				}
+			}
+		};
 	}
 	
 	public static Object getDisplayResolution()
@@ -193,37 +244,4 @@ public class NativeInterface
 		});
 	}
 	
-}
-
-
-// just a special helper class for getting the output of a process
-class CmdExecute
-{
-	public synchronized String run(String[] cmd, String workdirectory)
-	{
-		String result = "";
-		try
-		{
-			ProcessBuilder builder = new ProcessBuilder(cmd);
-			// set working directory
-			if (workdirectory != null)
-			{
-				builder.directory(new File(workdirectory));
-				builder.redirectErrorStream(true);
-				Process process = builder.start();
-				InputStream in = process.getInputStream();
-				byte[] re = new byte[1024];
-				while (in.read(re) != -1)
-				{
-					result += new String(re);
-				}
-				in.close();
-			}
-		}
-		catch (Exception ex)
-		{
-		}
-		return result;
-	}
-
 }
