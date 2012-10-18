@@ -182,6 +182,11 @@ namespace april
 			this->height = image->h;
 			this->bpp = image->bpp;
 		}
+		if (image == NULL)
+		{
+			april::log("image source does not exist!");
+			return false;
+		}
 		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
 		switch (image->format)
 		{
