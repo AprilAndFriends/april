@@ -40,7 +40,7 @@ namespace april
 {
 	extern void* javaVM;
 	extern void (*dialogCallback)(MessageBoxButton);
-
+	
 	hstr _jstringToHstr(JNIEnv* env, jstring string)
 	{
 		const char* chars = env->GetStringUTFChars(string, NULL);
@@ -48,7 +48,7 @@ namespace april
 		env->ReleaseStringUTFChars(string, chars);
 		return result;
 	}
-
+	
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jSystemPath,
 		jstring jDataPath, jstring jPackageName, jstring jVersionCode, jstring jForceArchivePath)
 	{
@@ -87,7 +87,7 @@ namespace april
 #endif
 		}
 	}
-
+	
 	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args)
 	{
 		harray<hstr> args;
@@ -105,12 +105,12 @@ namespace april
 #endif
 		april_init(args);
 	}
-
+	
 	void JNICALL _JNI_destroy(JNIEnv* env, jclass classe)
 	{
 		april_destroy();
 	}
-
+	
 	bool JNICALL _JNI_render(JNIEnv* env, jclass classe)
 	{
 		if (april::window != NULL)
@@ -119,7 +119,7 @@ namespace april
 		}
 		return true;
 	}
-
+	
 	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
 	{
 		if (april::window != NULL)
@@ -127,32 +127,33 @@ namespace april
 			((april::AndroidJNI_Window*)april::window)->handleTouchEvent((april::Window::MouseEventType)type, gvec2((float)x, (float)y), (int)index);
 		}
 	}
-
+	
 	bool JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
 		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_DOWN, (KeySym)(int)keyCode, (unsigned int)charCode));
 		return true;
 	}
-
+	
 	bool JNICALL _JNI_onKeyUp(JNIEnv* env, jclass classe, jint keyCode)
 	{
 		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_UP, (KeySym)(int)keyCode, 0));
 		return true;
 	}
-
+	
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean focused)
 	{
 		if (focused != JNI_FALSE)
 		{
+			// only TRUE is propagated as FALSE is already handled by onPause()
 			PROTECTED_WINDOW_CALL(handleFocusChangeEvent(true));
 		}
 	}
-
+	
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
 	{
 		PROTECTED_WINDOW_CALL(handleLowMemoryWarning());
 	}
-
+	
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
@@ -160,21 +161,21 @@ namespace april
 #endif
 		PROTECTED_RENDERSYS_CALL(reset());
 	}
-
+	
 	void JNICALL _JNI_activityOnCreate(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
 		april::log("Android Activity::onCreate()");
 #endif
 	}
-
+	
 	void JNICALL _JNI_activityOnStart(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
 		april::log("Android Activity::onStart()");
 #endif
 	}
-
+	
 	void JNICALL _JNI_activityOnResume(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
@@ -187,31 +188,31 @@ namespace april
 #ifdef _DEBUG
 		april::log("Android Activity::onPause()");
 #endif
-		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(false));
+		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(false)); // has to be here because of a problem on certain devices where audio volume change window takes away focus
 		PROTECTED_RENDERSYS_CALL(unloadTextures());
 	}
-
+	
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
 		april::log("Android Activity::onStop()");
 #endif
 	}
-
+	
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
 		april::log("Android Activity::onDestroy()");
 #endif
 	}
-
+	
 	void JNICALL _JNI_activityOnRestart(JNIEnv* env, jclass classe)
 	{
 #ifdef _DEBUG
 		april::log("Android Activity::onRestart()");
 #endif
 	}
-
+	
 	void JNICALL _JNI_onDialogOk(JNIEnv* env, jclass classe)
 	{
 		if (dialogCallback != NULL)
@@ -219,7 +220,7 @@ namespace april
 			(*dialogCallback)(AMSGBTN_OK);
 		}
 	}
-
+	
 	void JNICALL _JNI_onDialogYes(JNIEnv* env, jclass classe)
 	{
 		if (dialogCallback != NULL)
@@ -227,7 +228,7 @@ namespace april
 			(*dialogCallback)(AMSGBTN_YES);
 		}
 	}
-
+	
 	void JNICALL _JNI_onDialogNo(JNIEnv* env, jclass classe)
 	{
 		if (dialogCallback != NULL)
@@ -235,7 +236,7 @@ namespace april
 			(*dialogCallback)(AMSGBTN_NO);
 		}
 	}
-
+	
 	void JNICALL _JNI_onDialogCancel(JNIEnv* env, jclass classe)
 	{
 		if (dialogCallback != NULL)
@@ -243,7 +244,7 @@ namespace april
 			(*dialogCallback)(AMSGBTN_CANCEL);
 		}
 	}
-
+	
 #define METHOD_COUNT 21 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
