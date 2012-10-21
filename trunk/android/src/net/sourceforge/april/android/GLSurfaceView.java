@@ -24,6 +24,11 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	@Override
 	public void onWindowFocusChanged(boolean focused)
 	{
+		if (focused)
+		{
+			this.requestFocus();
+			this.requestFocusFromTouch();
+		}
 		NativeInterface.onWindowFocusChanged(focused);
 	}
 	
