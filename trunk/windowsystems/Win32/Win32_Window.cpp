@@ -262,6 +262,7 @@ namespace april
 		static bool _doubleTapDown = false;
 		static int _mouseMoveMessagesCount = 0;
 		static float _wheelDelta = 0.0f;
+		static bool _altKeyDown = false;
 		if (!april::window->isCreated()) // don't run callback processing if window was "destroyed"
 		{
 			return 1;
@@ -301,11 +302,24 @@ namespace april
 			}
 			return 0;
 		case WM_SYSKEYDOWN:
+			if (wParam == VK_MENU) _altKeyDown = true;
 		case WM_KEYDOWN:
-			april::window->handleKeyOnlyEvent(AKEYEVT_DOWN, (april::KeySym)wParam);
+			if (_altKeyDown && wParam == VK_F4)
+			{
+				if (april::window->handleQuitRequest(true))
+				{
+					PostQuitMessage(0);
+					april::window->terminateMainLoop();
+				}
+			}
+			else
+			{
+				april::window->handleKeyOnlyEvent(AKEYEVT_DOWN, (april::KeySym)wParam);
+			}
 			return 0;
 		case WM_SYSKEYUP:
-		case WM_KEYUP: 
+			if (wParam == VK_MENU) _altKeyDown = false;
+		case WM_KEYUP:
 			april::window->handleKeyOnlyEvent(AKEYEVT_UP, (april::KeySym)wParam);
 			return 0;
 		case WM_CHAR:
