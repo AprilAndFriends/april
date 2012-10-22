@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.4
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -11,6 +11,7 @@
 
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
 #include "april.h"
@@ -65,7 +66,8 @@ namespace april
 	{
 		if (!this->created)
 		{
-			april::log(hsprintf("creating window '%s' (%d, %d), '%s' fullscreen : %s", this->name.c_str(), w, h, title.c_str(), fullscreen ? "yes" : "no"));
+			hlog::writef(april::logTag, "Creating window: '%s' (%d, %d), '%s' fullscreen : %s",
+				this->name.c_str(), w, h, title.c_str(), fullscreen ? "yes" : "no");
 			this->fullscreen = fullscreen;
 			this->title = title;
 			this->created = true;
@@ -78,7 +80,7 @@ namespace april
 	{
 		if (this->created)
 		{
-			april::log(hsprintf("destroying window '%s'", this->name.c_str()));
+			hlog::writef(april::logTag, "Destroying window '%s'.", this->name.c_str());
 			this->created = false;
 			return true;
 		}
@@ -257,6 +259,7 @@ namespace april
 	void Window::handleFocusChangeEvent(bool focused)
 	{
 		this->focused = focused;
+		hlog::write(april::logTag, "Window " + hstr(focused ? "activated" : "deactivated") + ".");
 		if (this->focusChangeCallback != NULL)
 		{
 			(*this->focusChangeCallback)(focused);

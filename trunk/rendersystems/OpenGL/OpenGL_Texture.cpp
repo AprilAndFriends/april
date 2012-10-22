@@ -10,7 +10,6 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _OPENGL
-
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
@@ -30,6 +29,7 @@
 #endif
 #endif
 
+#include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
 #include "april.h"
@@ -48,12 +48,12 @@ namespace april
 		this->filename = filename;
 		this->textureId = 0;
 		this->manualBuffer = NULL;
-		april::log("creating GL texture: " + this->_getInternalName());
+		hlog::write(april::logTag, "Creating GL texture: " + this->_getInternalName());
 	}
 
 	OpenGL_Texture::OpenGL_Texture(int w, int h, unsigned char* rgba) : Texture()
 	{
-		april::log("creating user-defined GL texture");
+		hlog::write(april::logTag, "Creating user-defined GL texture.");
 		this->format = FORMAT_ARGB;
 		this->width = w;
 		this->height = h;
@@ -70,7 +70,7 @@ namespace april
 
 	OpenGL_Texture::OpenGL_Texture(int w, int h, Format format, Type type, Color color) : Texture()
 	{
-		april::log("creating empty GL texture [ " + hstr(w) + "x" + hstr(h) + " ]");
+		hlog::writef(april::logTag, "Creating empty GL texture [ %dx%d ].", w, h);
 		this->format = format;
 		this->width = w;
 		this->height = h;
@@ -147,14 +147,14 @@ namespace april
 		{
 			return true;
 		}
-		april::log("loading GL texture '" + this->_getInternalName() + "'");
+		hlog::write(april::logTag, "Loading GL texture: " + this->_getInternalName());
 		ImageSource* image = NULL;
 		if (this->filename != "")
 		{
 			image = april::loadImage(this->filename);
 			if (image == NULL)
 			{
-				april::log("Failed to load texture '" + this->_getInternalName() + "'!");
+				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
 				return false;
 			}
 			this->width = image->w;
@@ -164,7 +164,7 @@ namespace april
 		glGenTextures(1, &this->textureId);
 		if (this->textureId == 0)
 		{
-			april::log("failed to create GL texture");
+			hlog::error(april::logTag, "Failed to create GL texture!");
 			return false;
 		}
 		// write texels
@@ -214,7 +214,7 @@ namespace april
 	{
 		if (this->textureId != 0)
 		{
-			april::log("unloading GL texture '" + this->_getInternalName() + "'");
+			hlog::write(april::logTag, "Unloading GL texture: " + this->_getInternalName());
 			glDeleteTextures(1, &this->textureId);
 			this->textureId = 0;
 		}

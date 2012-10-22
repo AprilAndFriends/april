@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.34
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -14,6 +14,7 @@
 #include <winuser.h>
 
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hthread.h>
 
 #include "april.h"
@@ -405,12 +406,10 @@ namespace april
 		case WM_ACTIVATE:
 			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
 			{
-				april::log("Window activated");
 				april::window->handleFocusChangeEvent(true);
 			}
 			else
 			{
-				april::log("Window deactivated");
 				april::window->handleFocusChangeEvent(false);
 			}
 			break;

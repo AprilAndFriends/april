@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.32
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -12,11 +12,14 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/CAEAGLLayer.h>
 #import <hltypes/exception.h>
+#import <hltypes/hlog.h>
+
 #import "AprilViewController.h"
 #import "EAGLView.h"
 #import "iOS_Window.h"
 #import "RenderSystem.h"
 #import "ApriliOSAppDelegate.h"
+
 #include "april.h"
 
 static ApriliOSAppDelegate* appDelegate;
@@ -487,6 +490,7 @@ namespace april
 		}
 	}
 	
+	// TODO - this is actually not supported right now
 	void iOS_Window::deviceOrientationDidChange()
 	{
 		if (this->deviceOrientationCallback != NULL)
@@ -496,18 +500,25 @@ namespace april
 			{
 			case UIDeviceOrientationUnknown:
 				newOrientation = ADEVICEORIENTATION_NONE;
+				break;
 			case UIDeviceOrientationPortrait:
 				newOrientation = ADEVICEORIENTATION_PORTRAIT;
+				break;
 			case UIDeviceOrientationPortraitUpsideDown:
 				newOrientation = ADEVICEORIENTATION_PORTRAIT_UPSIDEDOWN;
+				break;
 			case UIDeviceOrientationLandscapeLeft:
 				newOrientation = ADEVICEORIENTATION_LANDSCAPE_LEFT;
+				break;
 			case UIDeviceOrientationLandscapeRight:
 				newOrientation = ADEVICEORIENTATION_LANDSCAPE_RIGHT;
+				break;
 			case UIDeviceOrientationFaceUp:
 				newOrientation = ADEVICEORIENTATION_FACE_UP;
+				break;
 			case UIDeviceOrientationFaceDown:
 				newOrientation = ADEVICEORIENTATION_FACE_DOWN;
+				break;
 			// not adding default, so we get a warning in case
 			// a new orientation is added to backing API
 			}
@@ -519,7 +530,7 @@ namespace april
 	{
 		if (!this->firstFrameDrawn)
 		{
-			log("April iOS Window: received app suspend request before first frame was drawn, quitting app.");
+			hlog::write(april::logTag, "iOS Window: received app suspend request before first frame was drawn, quitting app.");
 			this->destroy();
 			exit(0);
 		}

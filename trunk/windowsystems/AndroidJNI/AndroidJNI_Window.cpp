@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.33
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -11,6 +11,7 @@
 #include <jni.h>
 
 #include <gtypes/Vector2.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hthread.h>
 
@@ -59,7 +60,7 @@ namespace april
 
 	void AndroidJNI_Window::enterMainLoop()
 	{
-		april::log("Fatal error: Using enterMainLoop on Android JNI!");
+		hlog::error(april::logTag, "Using enterMainLoop on Android JNI!");
 		exit(-1);
 	}
 	

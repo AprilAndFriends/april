@@ -2,13 +2,14 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
 #include "april.h"
@@ -23,7 +24,7 @@ namespace april
 	{
 		this->filename = filename;
 		this->source = NULL;
-		april::log("creating RAM texture");
+		hlog::write(april::logTag, "Creating RAM texture.");
 	}
 
 	RamTexture::RamTexture(int w, int h) : Texture()
@@ -43,7 +44,7 @@ namespace april
 	{
 		if (this->source == NULL)
 		{
-			april::log("loading RAM texture '" + this->_getInternalName() + "'");
+			hlog::writef(april::logTag, "Loading RAM texture '%s'.", this->_getInternalName().c_str());
 			if (this->filename != "")
 			{
 				this->source = april::loadImage(this->filename);
@@ -64,7 +65,7 @@ namespace april
 	{
 		if (this->source != NULL)
 		{
-			april::log("unloading RAM texture '" + this->_getInternalName() + "'");
+			hlog::writef(april::logTag, "Unloading RAM texture '%s'.", this->_getInternalName().c_str());
 			delete this->source;
 			this->source = NULL;
 		}

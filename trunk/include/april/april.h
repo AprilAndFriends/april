@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -33,6 +33,8 @@
 
 namespace april
 {
+	extern hstr logTag;
+
 	enum RenderSystemType
 	{
 		RS_DEFAULT = 0,
@@ -51,7 +53,6 @@ namespace april
 
 	extern hstr systemPath;
 
-	aprilFnExport void setLogFunction(void (*fnptr)(chstr));
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType);
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType, chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title);
 	aprilFnExport void createRenderSystem(chstr options = "");
@@ -60,7 +61,9 @@ namespace april
 	aprilFnExport void addTextureExtension(chstr extension);
 	aprilFnExport harray<hstr> getTextureExtensions();
 	aprilFnExport void setTextureExtensions(const harray<hstr>& exts);
-	aprilFnExport void log(chstr message, chstr prefix = "[april] ");
+
+	DEPRECATED_ATTRIBUTE aprilFnExport void setLogFunction(void (*fnptr)(chstr));
+	DEPRECATED_ATTRIBUTE aprilFnExport void log(chstr message, chstr prefix = "[april] ");
 
 }
 

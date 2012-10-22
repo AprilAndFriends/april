@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -14,11 +14,9 @@
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
-#ifdef _ANDROID
-#include <android/log.h>
-#endif
 
 #include <hltypes/harray.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
@@ -52,7 +50,7 @@ namespace april
 	{
 		if (!this->created)
 		{
-			april::log(hsprintf("creating rendersystem '%s' (options: '%s')", this->name.c_str(), options.c_str()));
+			hlog::writef(april::logTag, "Creating rendersystem: '%s' (options: '%s')", this->name.c_str(), options.c_str());
 			this->created = true;
 			return true;
 		}
@@ -63,7 +61,7 @@ namespace april
 	{
 		if (this->created)
 		{
-			april::log(hsprintf("destroying rendersystem '%s'", this->name.c_str()));
+			hlog::writef(april::logTag, "Destroying rendersystem '%s'.", this->name.c_str());
 			while (this->textures.size() > 0)
 			{
 				delete this->textures[0];
@@ -76,7 +74,7 @@ namespace april
 	
 	void RenderSystem::reset()
 	{
-		april::log("resetting rendersystem");
+		hlog::write(april::logTag, "Resetting rendersystem.");
 	}
 
 	void RenderSystem::setOrthoProjection(grect rect)
@@ -110,7 +108,7 @@ namespace april
 	
 	void RenderSystem::setResolution(int w, int h)
 	{
-		log(hsprintf("changing resolution: %d x %d", w, h));
+		hlog::writef(april::logTag, "Changing resolution: %d x %d", w, h);
 		april::window->_setResolution(w, h);
 	}
 	

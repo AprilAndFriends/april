@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.32
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -30,6 +30,8 @@
 #include <ctype.h> // tolower()
 #include <SDL/SDL_syswm.h>
 
+#include <hltypes/exception.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hthread.h>
 
 #include "april.h"
@@ -106,8 +108,7 @@ namespace april
 			//NSRunAlertPanel(@"Could not open display", @"Game could not set the screen resolution. Perhaps resetting game configuration will help.", @"Ok", nil, nil);
 #endif
 #endif
-			april::log("SDL: requested display mode could not be provided");
-			exit(0);
+			throw hl_exception("Requested display mode could not be provided!");
 		}
 #ifndef _WIN32
 		april::rendersys->clear();

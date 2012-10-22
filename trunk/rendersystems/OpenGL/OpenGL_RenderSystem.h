@@ -49,6 +49,13 @@ namespace april
 		BlendMode blendMode;
 		ColorMode colorMode;
 		unsigned char colorModeAlpha;
+		unsigned int modeMatrix;
+		int strideVertex;
+		const void* pointerVertex;
+		int strideTexCoord;
+		const void* pointerTexCoord;
+		int strideColor;
+		const void* pointerColor;
 
 	};
 	

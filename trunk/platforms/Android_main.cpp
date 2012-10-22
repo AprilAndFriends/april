@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.3
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -11,6 +11,7 @@
 #include <jni.h>
 
 #include <hltypes/harray.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
@@ -55,26 +56,20 @@ namespace april
 		april::systemPath = _JSTR_TO_HSTR(jSystemPath);
 		hstr archivePath = _JSTR_TO_HSTR(jForceArchivePath);
 		hstr packageName = _JSTR_TO_HSTR(jPackageName);
-#ifdef _DEBUG
-		april::log("system path: " + april::systemPath);
-#endif
+		hlog::debug(april::logTag, "System path: " + april::systemPath);
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
 			// set the resources CWD
 			hresource::setCwd(_JSTR_TO_HSTR(jDataPath) + "/Android/data/" + packageName);
 			hresource::setArchive(""); // not used anyway when hasZip() returns false
-#ifdef _DEBUG
-			april::log("using no-zip: " + hresource::getCwd());
-#endif
+			hlog::debug(april::logTag, "Using no-zip: " + hresource::getCwd());
 		}
 		else if (archivePath != "")
 		{
 			// using APK file as archive
 			hresource::setCwd("assets");
 			hresource::setArchive(archivePath);
-#ifdef _DEBUG
-			april::log("using assets: " + hresource::getArchive());
-#endif
+			hlog::debug(april::logTag, "Using assets: " + hresource::getArchive());
 		}
 		else
 		{
@@ -82,9 +77,7 @@ namespace april
 			hresource::setCwd(".");
 			// using Google Play's "Expansion File" system
 			hresource::setArchive(_JSTR_TO_HSTR(jDataPath) + "/main." + _JSTR_TO_HSTR(jVersionCode) + "." + packageName + ".obb");
-#ifdef _DEBUG
-			april::log("using obb: " + hresource::getArchive());
-#endif
+			hlog::debug(april::logTag, "Using obb: " + hresource::getArchive());
 		}
 	}
 	
@@ -96,13 +89,11 @@ namespace april
 		{
 			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
 		}
-#ifdef _DEBUG
-		april::log("got args: " + args.join(","));
+		hlog::debug(april::logTag, "Got args: " + args.join(","));
 		foreach (hstr, it, args)
 		{
-			april::log("  " + (*it));
+			hlog::debug(april::logTag, "  " + (*it));
 		}
-#endif
 		april_init(args);
 	}
 	
@@ -156,61 +147,45 @@ namespace april
 	
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
 	{
-#ifdef _DEBUG
-		april::log("Android View::onSurfaceCreated()");
-#endif
+		hlog::debug(april::logTag, "Android View::onSurfaceCreated()");
 		PROTECTED_RENDERSYS_CALL(reset());
 	}
 	
 	void JNICALL _JNI_activityOnCreate(JNIEnv* env, jclass classe)
 	{
-#ifdef _DEBUG
-		april::log("Android Activity::onCreate()");
-#endif
+		hlog::debug(april::logTag, "Android Activity::onCreate()");
 	}
 	
 	void JNICALL _JNI_activityOnStart(JNIEnv* env, jclass classe)
 	{
-#ifdef _DEBUG
-		april::log("Android Activity::onStart()");
-#endif
+		hlog::debug(april::logTag, "Android Activity::onStart()");
 	}
 	
 	void JNICALL _JNI_activityOnResume(JNIEnv* env, jclass classe)
 	{
-#ifdef _DEBUG
-		april::log("Android Activity::onResume()");
-#endif
+		hlog::debug(april::logTag, "Android Activity::onResume()");
 	}
 	
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
-#ifdef _DEBUG
-		april::log("Android Activity::onPause()");
-#endif
+		hlog::debug(april::logTag, "Android Activity::onPause()");
 		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(false)); // has to be here because of a problem on certain devices where audio volume change window takes away focus
 		PROTECTED_RENDERSYS_CALL(unloadTextures());
 	}
 	
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
 	{
-#ifdef _DEBUG
-		april::log("Android Activity::onStop()");
-#endif
+		hlog::debug(april::logTag, "Android Activity::onStop()");
 	}
 	
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
 	{
-#ifdef _DEBUG
-		april::log("Android Activity::onDestroy()");
-#endif
+		hlog::debug(april::logTag, "Android Activity::onDestroy()");
 	}
 	
 	void JNICALL _JNI_activityOnRestart(JNIEnv* env, jclass classe)
 	{
-#ifdef _DEBUG
-		april::log("Android Activity::onRestart()");
-#endif
+		hlog::debug(april::logTag, "Android Activity::onRestart()");
 	}
 	
 	void JNICALL _JNI_onDialogOk(JNIEnv* env, jclass classe)
