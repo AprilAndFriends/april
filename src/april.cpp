@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.41
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -10,9 +10,6 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #include <stdio.h>
-#ifdef _ANDROID
-#include <android/log.h>
-#endif
 #ifdef USE_IL
 #include <IL/il.h>
 #endif
@@ -22,6 +19,7 @@
 
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hplatform.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
@@ -93,28 +91,23 @@
 
 namespace april
 {
-	harray<hstr> extensions;
-	hstr systemPath = ".";
+	hstr logTag = "april";
 
-	void april_writelog(chstr message)
+	hstr systemPath = ".";
+	static harray<hstr> extensions;
+
+	void log(chstr message, chstr prefix) // DEPRECATED
 	{
-#ifndef _ANDROID
-		printf("%s\n", message.c_str());
-#else
-		__android_log_print(ANDROID_LOG_INFO, "april", "%s", message.c_str());
-#endif
+		hlog::write(april::logTag, message);
 	}
 	
-	void (*g_logFunction)(chstr) = april_writelog;
-	
-	void log(chstr message, chstr prefix)
+	void setLogFunction(void (*fnptr)(chstr)) // DEPRECATED
 	{
-		g_logFunction(prefix + message);
 	}
-	
+
 	void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType)
 	{
-		april::log("initializing april");
+		hlog::write(april::logTag, "Initializing april.");
 #ifdef USE_IL
 		ilInit();
 #endif
@@ -181,13 +174,13 @@ namespace april
 #endif
 		if (april::rendersys == NULL)
 		{
-			throw hl_exception("could not create given rendersystem");
+			throw hl_exception("Could not create given rendersystem!");
 		}
 		if (april::window == NULL)
 		{
-			throw hl_exception("could not create given windowsystem");
+			throw hl_exception("Could not create given windowsystem!");
 		}
-		april::log(hsprintf("using: %s, %s", april::rendersys->getName().c_str(), april::window->getName().c_str()));
+		hlog::writef(april::logTag, "Using: %s, %s", april::rendersys->getName().c_str(), april::window->getName().c_str());
 	}
 	
 	void createRenderSystem(chstr options)
@@ -208,11 +201,6 @@ namespace april
 		createWindow(w, h, fullscreen, title);
 	}
 	
-	void setLogFunction(void (*fnptr)(chstr))
-	{
-		g_logFunction = fnptr;
-	}
-	
 	void destroy()
 	{
 		if (april::window != NULL)
@@ -222,7 +210,7 @@ namespace april
 		}
 		if (april::rendersys != NULL)
 		{
-			april::log("destroying april");
+			hlog::write(april::logTag, "Destroying april.");
 			delete april::rendersys;
 			april::rendersys = NULL;
 		}

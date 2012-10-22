@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.36
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -10,7 +10,6 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _OPENGL
-
 // TODO - should be cleaned up a bit
 #if __APPLE__
 #include <TargetConditionals.h>
@@ -50,6 +49,7 @@
 
 #include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 
 #include "april.h"
@@ -143,6 +143,13 @@ namespace april
 		this->blendMode = (BlendMode)10000;
 		this->colorMode = (ColorMode)10000;
 		this->colorModeAlpha = 255;
+		this->modeMatrix = 0;
+		this->strideVertex = 0;
+		this->pointerVertex = NULL;
+		this->strideTexCoord = 0;
+		this->pointerTexCoord = NULL;
+		this->strideColor = 0;
+		this->pointerColor = NULL;
 	}
 	
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
@@ -222,19 +229,19 @@ namespace april
 		hDC = GetDC(hWnd);
 		if (hDC == 0)
 		{
-			april::log("can't create a GL device context");
+			hlog::error(april::logTag, "Can't create a GL device context!");
 			return;
 		}
 		GLuint pixelFormat = ChoosePixelFormat(hDC, &pfd);
 		if (pixelFormat == 0)
 		{
-			april::log("can't find a suitable pixel format");
+			hlog::error(april::logTag, "Can't find a suitable pixel format!");
 			this->_releaseWindow();
 			return;
 		}
 		if (SetPixelFormat(hDC, pixelFormat, &pfd) == 0)
 		{
-			april::log("can't set the pixel format");
+			hlog::error(april::logTag, "Can't set the pixel format!");
 			this->_releaseWindow();
 			return;
 		}
@@ -242,13 +249,13 @@ namespace april
 		hRC = wglCreateContext(hDC);
 		if (hRC == 0)
 		{
-			april::log("can't create a GL rendering context");
+			hlog::error(april::logTag, "Can't create a GL rendering context!");
 			this->_releaseWindow();
 			return;
 		}
 		if (wglMakeCurrent(hDC, hRC) == 0)
 		{
-			april::log("can't activate the GL rendering context");
+			hlog::error(april::logTag, "Can't activate the GL rendering context!");
 			this->_releaseWindow();
 			return;
 		}
@@ -260,7 +267,7 @@ namespace april
 		}
 		if (eglDisplay == EGL_NO_DISPLAY)
 		{
-			april::log("can't get EGL display");
+			hlog::error(april::logTag, "Can't get EGL display!");
 			this->_releaseWindow();
 			return;
 		}
@@ -268,7 +275,7 @@ namespace april
 		EGLint minorVersion;
 		if (!eglInitialize(eglDisplay, &majorVersion, &minorVersion))
 		{
-			april::log("can't initialize EGL");
+			hlog::error(april::logTag, "Can't initialize EGL!");
 			this->_releaseWindow();
 			return;
 		}
@@ -276,7 +283,7 @@ namespace april
 		EGLBoolean result = eglChooseConfig(eglDisplay, pi32ConfigAttribs, &eglConfig, 1, &configs);
 		if (!result || configs == 0)
 		{
-			april::log("can't choose EGL config");
+			hlog::error(april::logTag, "Can't choose EGL config!");
 			this->_releaseWindow();
 			return;
 		}
@@ -284,21 +291,21 @@ namespace april
 		eglSurface = eglCreateWindowSurface(eglDisplay, eglConfig, (NativeWindowType)hWnd, NULL);
 		if (eglGetError() != EGL_SUCCESS)
 		{
-			april::log("can't create window surface");
+			hlog::error(april::logTag, "Can't create window surface!");
 			this->_releaseWindow();
 			return;
 		}
 		eglContext = eglCreateContext(eglDisplay, eglConfig, EGL_NO_CONTEXT, NULL);
 		if (eglGetError() != EGL_SUCCESS)
 		{
-			april::log("can't create EGL context");
+			hlog::error(april::logTag, "Can't create EGL context!");
 			this->_releaseWindow();
 			return;
 		}
 		eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
 		if (eglGetError() != EGL_SUCCESS)
 		{
-			april::log("can't make context current");
+			hlog::error(april::logTag, "Can't make context current!");
 			this->_releaseWindow();
 			return;
 		}
@@ -448,7 +455,7 @@ namespace april
 #endif
 				break;
 			default:
-				april::log("WARNING: Trying to set unsupported blend mode!");
+				hlog::warn(april::logTag, "Trying to set unsupported blend mode!");
 				break;
 			}
 		}
@@ -466,7 +473,7 @@ namespace april
 			}
 			else
 			{
-				april::log("WARNING: Trying to set unsupported blend mode!");
+				hlog::warn(april::logTag, "Trying to set unsupported blend mode!");
 			}
 		}
 	}
@@ -513,7 +520,7 @@ namespace april
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
 			break;
 		default:
-			april::log("WARNING: Trying to set unsupported color mode!");
+			hlog::warn(april::logTag, "Trying to set unsupported color mode!");
 			break;
 		}
 	}
@@ -536,7 +543,7 @@ namespace april
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			break;
 		default:
-			april::log("WARNING: Trying to set unsupported texture filter!");
+			hlog::warn(april::logTag, "Trying to set unsupported texture filter!");
 			break;
 		}
 		this->textureFilter = textureFilter;
@@ -560,7 +567,7 @@ namespace april
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			break;
 		default:
-			april::log("WARNING: Trying to set unsupported texture address mode!");
+			hlog::warn(april::logTag, "Trying to set unsupported texture address mode!");
 			break;
 		}
 		this->textureAddressMode = textureAddressMode;
@@ -595,18 +602,17 @@ namespace april
 
 	void OpenGL_RenderSystem::setPixelShader(PixelShader* pixelShader)
 	{
-		april::log("WARNING: Pixel shaders are not implemented!");
+		hlog::warn(april::logTag, "Pixel shaders are not implemented!");
 	}
 
 	void OpenGL_RenderSystem::setVertexShader(VertexShader* vertexShader)
 	{
-		april::log("WARNING: Vertex shaders are not implemented!");
+		hlog::warn(april::logTag, "Vertex shaders are not implemented!");
 	}
 
 	void OpenGL_RenderSystem::setResolution(int w, int h)
 	{
-		// TODO
-		april::log("WARNING: 'setResolution' is not implemented!");
+		hlog::warn(april::logTag, "setResolution() is not implemented!");
 	}
 
 	void OpenGL_RenderSystem::_applyStateChanges()
@@ -699,25 +705,25 @@ namespace april
 
 	PixelShader* OpenGL_RenderSystem::createPixelShader()
 	{
-		april::log("WARNING: Pixel shaders are not implemented!");
+		hlog::warn(april::logTag, "Pixel shaders are not implemented!");
 		return NULL;
 	}
 
 	PixelShader* OpenGL_RenderSystem::createPixelShader(chstr filename)
 	{
-		april::log("WARNING: Pixel shaders are not implemented!");
+		hlog::warn(april::logTag, "Pixel shaders are not implemented!");
 		return NULL;
 	}
 
 	VertexShader* OpenGL_RenderSystem::createVertexShader()
 	{
-		april::log("WARNING: Vertex shaders are not implemented!");
+		hlog::warn(april::logTag, "Vertex shaders are not implemented!");
 		return NULL;
 	}
 
 	VertexShader* OpenGL_RenderSystem::createVertexShader(chstr filename)
 	{
-		april::log("WARNING: Vertex shaders are not implemented!");
+		hlog::warn(april::logTag, "Vertex shaders are not implemented!");
 		return NULL;
 	}
 
@@ -748,52 +754,44 @@ namespace april
 	void OpenGL_RenderSystem::setMatrixMode(unsigned int mode)
 	{
 		// performance call, minimize redundant calls to setMatrixMode
-		static unsigned int _mode = 0;
-		if (_mode != mode)
+		if (this->deviceState.modeMatrix != mode)
 		{
-			_mode = mode;
+			this->deviceState.modeMatrix = mode;
 			glMatrixMode(mode);
 		}
 	}
 
 	void OpenGL_RenderSystem::_setVertexPointer(int stride, const void* pointer)
 	{
-		static int _stride = 0;
-		static const void *_pointer = 0;
-		if (_stride != stride || _pointer != pointer)
+		if (this->deviceState.strideVertex != stride || this->deviceState.pointerVertex != pointer)
 		{
+			this->deviceState.strideVertex = stride;
+			this->deviceState.pointerVertex = pointer;
 #ifdef _OPENGLES2
-			glVertexAttribPointer(_positionSlot, 3, GL_FLOAT, GL_FALSE,
-								  stride, pointer);
+			glVertexAttribPointer(_positionSlot, 3, GL_FLOAT, GL_FALSE, stride, pointer);
 #else
 			glVertexPointer(3, GL_FLOAT, stride, pointer);
 #endif
-			_stride = stride;
-			_pointer = pointer;
 		}
 	}
 	
 	void OpenGL_RenderSystem::_setTexCoordPointer(int stride, const void *pointer)
 	{
-		static int _stride = 0;
-		static const void* _pointer = 0;
-		if (_stride != stride || _pointer != pointer)
+		if (this->deviceState.strideTexCoord != stride || this->deviceState.pointerTexCoord != pointer)
 		{
+			this->deviceState.strideTexCoord = stride;
+			this->deviceState.pointerTexCoord = pointer;
 			glTexCoordPointer(2, GL_FLOAT, stride, pointer);
-			_stride = stride;
-			_pointer = pointer;
 		}
 	}
 	
 	void OpenGL_RenderSystem::_setColorPointer(int stride, const void *pointer)
 	{
-		static int _stride = 0;
-		static const void* _pointer = 0;
-		if (_stride != stride || _pointer != pointer)
+		if (this->deviceState.strideColor != stride || this->deviceState.pointerColor != pointer)
 		{
+			this->deviceState.strideColor = stride;
+			this->deviceState.pointerColor = pointer;
 			glColorPointer(4, GL_UNSIGNED_BYTE, stride, pointer);
-			_stride = stride;
-			_pointer = pointer;
 		}
 	}
 
@@ -898,7 +896,7 @@ namespace april
 	
 	ImageSource* OpenGL_RenderSystem::takeScreenshot(int bpp)
 	{
-		april::log("grabbing screenshot");
+		hlog::write(april::logTag, "Grabbing screenshot...");
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
 		ImageSource* img = new ImageSource();

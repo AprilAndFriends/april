@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -13,6 +13,7 @@
 #include <d3d9.h>
 #include <d3dx9shader.h>
 
+#include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
 #include "april.h"
@@ -44,7 +45,7 @@ namespace april
 	{
 		if (shaderCode == "")
 		{
-			april::log("no pixel shader code given");
+			hlog::error(april::logTag, "No pixel shader code given!");
 			return false;
 		}
 		DWORD flags = D3DXSHADER_OPTIMIZATION_LEVEL3;
@@ -56,13 +57,13 @@ namespace april
 			NULL, NULL, "main", "ps_2_0", flags, &assembly, NULL, NULL);
 		if (result != D3D_OK)
 		{
-			april::log("failed to compile pixel shader");
+			hlog::error(april::logTag, "Failed to compile pixel shader!");
 			return false;
 		}
 		result = APRIL_D3D_DEVICE->CreatePixelShader((DWORD*)assembly->GetBufferPointer(), &this->dx9Shader);
 		if (result != D3D_OK)
 		{
-			april::log("failed to create pixel shader");
+			hlog::error(april::logTag, "Failed to create pixel shader!");
 			return false;
 		}
 		return true;

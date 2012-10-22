@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -12,6 +12,7 @@
 #if !_HL_WINRT
 #include <d3dx9shader.h>
 
+#include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
 #include "april.h"
@@ -43,7 +44,7 @@ namespace april
 	{
 		if (shaderCode == "")
 		{
-			april::log("no vertex shader code given");
+			hlog::error(april::logTag, "No vertex shader code given!");
 			return false;
 		}
 		DWORD flags = D3DXSHADER_OPTIMIZATION_LEVEL3;
@@ -55,13 +56,13 @@ namespace april
 			NULL, NULL, "main", "vs_2_0", flags, &assembly, NULL, NULL);
 		if (result != D3D_OK)
 		{
-			april::log("failed to compile vertex shader");
+			hlog::error(april::logTag, "Failed to compile vertex shader!");
 			return false;
 		}
 		result = APRIL_D3D_DEVICE->CreateVertexShader((DWORD*)assembly->GetBufferPointer(), &this->dx9Shader);
 		if (result != D3D_OK)
 		{
-			april::log("failed to create vertex shader");
+			hlog::error(april::logTag, "Failed to create vertex shader!");
 			return false;
 		}
 		return true;

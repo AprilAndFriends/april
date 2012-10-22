@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -9,6 +9,7 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _WIN32
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 
 #include "april.h"
@@ -32,7 +33,7 @@ namespace april
 		
 		if (!QueryPerformanceFrequency((LARGE_INTEGER*)&this->frequency))
 		{
-			april::log("performance timer not available, multimedia timer will be used instead!");
+			hlog::warn(april::logTag, "Performance timer not available, multimedia timer will be used instead!");
 			this->performanceTimer = false;
 			this->mTimerStart = get_system_tick_count();
 			this->resolution = 1.0f / 1000.0f;

@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.11
+/// @version 2.42
 /// 
 /// @section LICENSE
 /// 
@@ -9,9 +9,10 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _DIRECTX9
-
 #include <d3d9.h>
 #include <IL/il.h>
+
+#include <hltypes/hlog.h>
 
 #include "april.h"
 #include "DirectX9_RenderSystem.h"
@@ -41,7 +42,7 @@ namespace april
 		this->renderTarget = false;
 		this->d3dTexture = NULL;
 		this->d3dSurface = NULL;
-		april::log("creating DX9 texture: " + _getInternalName());
+		hlog::write(april::logTag, "Creating DX9 texture: " + _getInternalName());
 	}
 
 	DirectX9_Texture::DirectX9_Texture(int w, int h, unsigned char* rgba) : Texture()
@@ -53,11 +54,11 @@ namespace april
 		this->bpp = 4;
 		this->renderTarget = false;
 		this->d3dSurface = NULL;
-		april::log("creating user-defined DX9 texture");
+		hlog::write(april::logTag, "Creating user-defined DX9 texture.");
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
-			april::log("failed to create DX9 texture!");
+			hlog::error(april::logTag, "Failed to create DX9 texture!");
 			return;
 		}
 		// TODO - this will be removed once format/native format enums have been implemented
@@ -88,7 +89,7 @@ namespace april
 		this->height = h;
 		this->renderTarget = false;
 		this->d3dSurface = NULL;
-		april::log("creating clean DX9 texture");
+		hlog::writef(april::logTag, "Creating empty DX9 texture [ %dx%d ].", w, h);
 		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
 		this->bpp = 3;
 		switch (format)
@@ -122,7 +123,7 @@ namespace april
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, d3dformat, d3dpool, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
-			april::log("failed to create DX9 texture!");
+			hlog::error(april::logTag, "Failed to create DX9 texture!");
 			return;
 		}
 		if (color != APRIL_COLOR_CLEAR)
@@ -148,7 +149,7 @@ namespace april
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, d3dformat, d3dpool, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
-			april::log("failed to restore user-defined DX9 texture!");
+			hlog::error(april::logTag, "Failed to restore user-defined DX9 texture!");
 			return;
 		}
 	}
@@ -168,14 +169,14 @@ namespace april
 		{
 			return true;
 		}
-		april::log("loading DX9 texture '" + this->_getInternalName() + "'");
+		hlog::write(april::logTag, "Loading DX9 texture: " + this->_getInternalName());
 		ImageSource* image = NULL;
 		if (this->filename != "")
 		{
 			image = april::loadImage(this->filename);
 			if (image == NULL)
 			{
-				april::log("failed to load texture '" + this->_getInternalName() + "'!");
+				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
 				return false;
 			}
 			this->width = image->w;
@@ -184,7 +185,7 @@ namespace april
 		}
 		if (image == NULL)
 		{
-			april::log("image source does not exist!");
+			hlog::error(april::logTag, "Image source does not exist!");
 			return false;
 		}
 		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
@@ -216,7 +217,7 @@ namespace april
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, d3dformat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
-			april::log("failed to create DX9 texture!");
+			hlog::error(april::logTag, "Failed to create DX9 texture!");
 			delete image;
 			return false;
 		}
@@ -256,7 +257,7 @@ namespace april
 	{
 		if (this->d3dTexture != NULL)
 		{
-			april::log("unloading DX9 texture '" + this->_getInternalName() + "'");
+			hlog::write(april::logTag, "Unloading DX9 texture: " + this->_getInternalName());
 			this->d3dTexture->Release();
 			this->d3dTexture = NULL;
 			if (this->d3dSurface != NULL)
@@ -320,7 +321,7 @@ namespace april
 		}
 		else
 		{
-			april::log("Unsupported format for getPixel");
+			hlog::error(april::logTag, "Unsupported format for getPixel()!");
 		}
 		this->_unlock(buffer, result, false);
 		return color;
@@ -358,7 +359,7 @@ namespace april
 		}
 		else
 		{
-			april::log("Unsupported format for setPixel");
+			hlog::error(april::logTag, "Unsupported format for setPixel()!");
 		}
 		this->_unlock(buffer, result, true);
 	}
@@ -426,7 +427,7 @@ namespace april
 		}
 		else
 		{
-			april::log("Unsupported format for setPixel");
+			hlog::error(april::logTag, "Unsupported format for setPixel()!");
 		}
 		this->_unlock(buffer, result, true);
 	}
@@ -695,19 +696,19 @@ namespace april
 			(this->bpp == 4 ? D3DFMT_A8R8G8B8 : D3DFMT_X8R8G8B8), D3DPOOL_SYSTEMMEM, buffer, NULL);
 		if (result != D3D_OK)
 		{
-			april::log("failed to get pixel data, CreateOffscreenPlainSurface() call failed");
+			hlog::error(april::logTag, "Failed to get pixel data, CreateOffscreenPlainSurface() call failed!");
 			return LR_FAILED;
 		}
 		result = APRIL_D3D_DEVICE->GetRenderTargetData(this->_getSurface(), *buffer);
 		if (result != D3D_OK)
 		{
-			april::log("failed to get pixel data, GetRenderTargetData() call failed");
+			hlog::error(april::logTag, "Failed to get pixel data, GetRenderTargetData() call failed!");
 			return LR_FAILED;
 		}
 		result = (*buffer)->LockRect(lockRect, rect, D3DLOCK_DISCARD);
 		if (result != D3D_OK)
 		{
-			april::log("failed to get pixel data, surface lock failed");
+			hlog::error(april::logTag, "Failed to get pixel data, surface lock failed!");
 			return LR_FAILED;
 		}
 		return LR_RENDERTARGET;
