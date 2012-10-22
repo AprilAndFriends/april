@@ -300,12 +300,14 @@ namespace april
 				april::window->terminateMainLoop();
 			}
 			return 0;
+		case WM_SYSKEYDOWN:
 		case WM_KEYDOWN:
 			april::window->handleKeyOnlyEvent(AKEYEVT_DOWN, (april::KeySym)wParam);
-			break;
+			return 0;
+		case WM_SYSKEYUP:
 		case WM_KEYUP: 
 			april::window->handleKeyOnlyEvent(AKEYEVT_UP, (april::KeySym)wParam);
-			break;
+			return 0;
 		case WM_CHAR:
 			april::window->handleCharOnlyEvent(wParam);
 			break;
