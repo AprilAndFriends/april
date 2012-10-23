@@ -175,11 +175,7 @@ namespace april
 #ifdef _IOS
 		else if (filename.ends_with(".pvr"))
 		{
-			ImageSource *pvrimg = _tryLoadingPVR(filename);
-			if (pvrimg)
-			{
-				return pvrimg;
-			}
+			img = _tryLoadingPVR(filename);
 		}
 #endif
 		return img;
@@ -243,19 +239,21 @@ namespace april
 		// read JPEG image from file data
 		struct jpeg_decompress_struct cInfo;
 		struct jpeg_error_mgr jErr;
-		unsigned char* imageData;
+		unsigned char* imageData = NULL;
 		cInfo.err = jpeg_std_error(&jErr);
 		jpeg_create_decompress(&cInfo);
 		jpeg_mem_src(&cInfo, compressedData, compressedSize);
 		jpeg_read_header(&cInfo, TRUE);
 		jpeg_start_decompress(&cInfo);
 		imageData = new unsigned char[cInfo.output_width * cInfo.output_height * 3]; // JPEG is always RGB
-		unsigned char* ptr;
+		unsigned char* ptr = NULL;
 		for_itert (unsigned int, i, 0, cInfo.output_height)
 		{
-			ptr = imageData + i * 3 * cInfo.output_width;
+			ptr = imageData + i * cInfo.output_width * 3;
 			jpeg_read_scanlines(&cInfo, &ptr, 1);
 		}
+		jpeg_finish_decompress(&cInfo);
+		jpeg_destroy_decompress(&cInfo);
 		delete [] compressedData;
 		// assign ImageSource data
 		img->data = imageData;

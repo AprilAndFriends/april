@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;USE_IL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -60,7 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib OpenGL32.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				GenerateDebugInformation="true"
@@ -116,7 +116,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;USE_IL;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib OpenGL32.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib OpenGL32.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				OptimizeReferences="2"
@@ -189,7 +189,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX9;USE_IL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX9;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -208,7 +208,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib d3d9.lib d3dx9.lib DevIL.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib d3d9.lib d3dx9.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				GenerateDebugInformation="true"
@@ -264,7 +264,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX9;USE_IL;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX9;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -282,7 +282,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib d3d9.lib d3dx9.lib DevIL.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib d3d9.lib d3dx9.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				OptimizeReferences="2"
@@ -337,7 +337,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;USE_IL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -356,7 +356,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib libGLES_CM.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib libGLES_CM.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				GenerateDebugInformation="true"
@@ -412,7 +412,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;USE_IL;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -430,7 +430,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib DevIL.lib libGLES_CM.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib libGLES_CM.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				OptimizeReferences="2"
