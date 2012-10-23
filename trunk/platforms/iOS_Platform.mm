@@ -16,6 +16,7 @@
 #import <UIKit/UIKit.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hlog.h>
 #import <CoreGraphics/CoreGraphics.h>
 
 #import <OpenGLES/ES1/gl.h>
@@ -92,7 +93,7 @@
 		float w = alertView.bounds.size.width;
 		if(w < 5.)
 		{
-			april::log("In messageBox()'s label hack, width override took place");
+			hlog::write(april::logTag, "In messageBox()'s label hack, width override took place");
 			w = 400; // hardcoded width! seems to work ok
 			
 		}
