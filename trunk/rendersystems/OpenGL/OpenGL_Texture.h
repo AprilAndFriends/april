@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.41
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -42,7 +42,7 @@ namespace april
 		
 		OpenGL_Texture(chstr filename);
 		OpenGL_Texture(int w, int h, unsigned char* rgba);
-		OpenGL_Texture(int w, int h, Format format, Type type, Color color = APRIL_COLOR_CLEAR);
+		OpenGL_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
 		~OpenGL_Texture();
 		bool load();
 		void unload();

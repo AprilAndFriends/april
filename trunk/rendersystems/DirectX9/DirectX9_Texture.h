@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -32,7 +32,7 @@ namespace april
 
 		DirectX9_Texture(chstr filename);
 		DirectX9_Texture(int w, int h, unsigned char* rgba);
-		DirectX9_Texture(int w, int h, Format format, Type type, Color color = APRIL_COLOR_CLEAR);
+		DirectX9_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
 		~DirectX9_Texture();
 		bool load();
 		void unload();
