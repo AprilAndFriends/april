@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -63,14 +63,14 @@ namespace april
 		void setResolution(int w, int h);
 
 		Texture* createTexture(int w, int h, unsigned char* rgba);
-		Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = APRIL_COLOR_CLEAR);
+		Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
 		PixelShader* createPixelShader();
 		PixelShader* createPixelShader(chstr filename);
 		VertexShader* createVertexShader();
 		VertexShader* createVertexShader(chstr filename);
 
 		void clear(bool useColor = true, bool depth = false);
-		void clear(bool depth, grect rect, Color color = APRIL_COLOR_CLEAR);
+		void clear(bool depth, grect rect, Color color = Color::Clear);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
