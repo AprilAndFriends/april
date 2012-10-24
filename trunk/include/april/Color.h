@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -66,28 +66,46 @@ namespace april
 		Color operator/=(Color& other);
 		Color operator*=(float value);
 		Color operator/=(float value);
+
+		static Color Red;
+		static Color Green;
+		static Color Blue;
+		static Color Yellow;
+		static Color Magenta;
+		static Color Cyan;
+		static Color Orange;
+		static Color Pink;
+		static Color Teal;
+		static Color Neon;
+		static Color Purple;
+		static Color Aqua;
+		static Color White;
+		static Color Grey;
+		static Color Black;
+		static Color Clear;
+		static Color Blank;
 		
 	};
 
 }
 
-// predefined colors
-#define APRIL_COLOR_RED april::Color(255, 0, 0)
-#define APRIL_COLOR_GREEN april::Color(0, 255, 0)
-#define APRIL_COLOR_BLUE april::Color(0, 0, 255)
-#define APRIL_COLOR_YELLOW april::Color(255, 255, 0)
-#define APRIL_COLOR_MAGENTA april::Color(255, 0, 255)
-#define APRIL_COLOR_CYAN april::Color(0, 255, 255)
-#define APRIL_COLOR_ORANGE april::Color(255, 127, 0)
-#define APRIL_COLOR_PINK april::Color(255, 0, 127)
-#define APRIL_COLOR_TEAL april::Color(0, 255, 127)
-#define APRIL_COLOR_NEON april::Color(127, 255, 0)
-#define APRIL_COLOR_PURPLE april::Color(127, 0, 255)
-#define APRIL_COLOR_AQUA april::Color(0, 127, 255)
-#define APRIL_COLOR_WHITE april::Color(255, 255, 255)
-#define APRIL_COLOR_GREY april::Color(127, 127, 127)
-#define APRIL_COLOR_BLACK april::Color(0, 0, 0)
-#define APRIL_COLOR_CLEAR april::Color(0, 0, 0, 0)
-#define APRIL_COLOR_BLANK april::Color(255, 255, 255, 0)
+// DEPRECATED
+#define APRIL_COLOR_RED april::Color::Red
+#define APRIL_COLOR_GREEN april::Color::Green
+#define APRIL_COLOR_BLUE april::Color::Blue
+#define APRIL_COLOR_YELLOW april::Color::Yellow
+#define APRIL_COLOR_MAGENTA april::Color::Magenta
+#define APRIL_COLOR_CYAN april::Color::Cyan
+#define APRIL_COLOR_ORANGE april::Color::Orange
+#define APRIL_COLOR_PINK april::Color::Pink
+#define APRIL_COLOR_TEAL april::Color::Teal
+#define APRIL_COLOR_NEON april::Color::Neon
+#define APRIL_COLOR_PURPLE april::Color::Purple
+#define APRIL_COLOR_AQUA april::Color::Aqua
+#define APRIL_COLOR_WHITE april::Color::White
+#define APRIL_COLOR_GREY april::Color::Grey
+#define APRIL_COLOR_BLACK april::Color::Black
+#define APRIL_COLOR_CLEAR april::Color::Clear
+#define APRIL_COLOR_BLANK april::Color::Blank
 		
 #endif

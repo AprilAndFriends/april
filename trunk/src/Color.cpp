@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.0
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -26,6 +26,25 @@ namespace april
 		return i;
 	}
 	
+	// predefined colors
+	Color Color::Red(255, 0, 0);
+	Color Color::Green(0, 255, 0);
+	Color Color::Blue(0, 0, 255);
+	Color Color::Yellow(255, 255, 0);
+	Color Color::Magenta(255, 0, 255);
+	Color Color::Cyan(0, 255, 255);
+	Color Color::Orange(255, 127, 0);
+	Color Color::Pink(255, 0, 127);
+	Color Color::Teal(0, 255, 127);
+	Color Color::Neon(127, 255, 0);
+	Color Color::Purple(127, 0, 255);
+	Color Color::Aqua(0, 127, 255);
+	Color Color::White(255, 255, 255);
+	Color Color::Grey(127, 127, 127);
+	Color Color::Black(0, 0, 0);
+	Color Color::Clear(0, 0, 0, 0);
+	Color Color::Blank(255, 255, 255, 0);
+		
 	Color::Color()
 	{
 		this->r = 255;
