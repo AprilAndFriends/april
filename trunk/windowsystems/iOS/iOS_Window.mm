@@ -550,6 +550,12 @@ namespace april
 		if (!this->focused)
 		{
 			this->focused = true;
+			if (g_touches.size() > 0) // in some situations, on older iOS versions (happend on iOS4), touchesEnded will not be called, causing problems, so this counters it.
+			{
+				g_touches.clear();
+				multiTouchActive = false;
+			}
+			
 			if (glview != NULL) [glview startAnimation];
 			if (this->focusChangeCallback != NULL)
 			{
@@ -557,5 +563,5 @@ namespace april
 			}
 		}
 	}
-
 }
+
