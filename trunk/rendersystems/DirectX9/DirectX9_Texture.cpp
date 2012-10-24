@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.42
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -126,7 +126,7 @@ namespace april
 			hlog::error(april::logTag, "Failed to create DX9 texture!");
 			return;
 		}
-		if (color != APRIL_COLOR_CLEAR)
+		if (color != Color::Clear)
 		{
 			this->fillRect(0, 0, this->width, this->height, color);
 		}
@@ -288,7 +288,7 @@ namespace april
 
 	Color DirectX9_Texture::getPixel(int x, int y)
 	{
-		Color color = APRIL_COLOR_CLEAR;
+		Color color = Color::Clear;
 		D3DLOCKED_RECT lockRect;
 		_CREATE_RECT(rect, x, y, 1, 1);
 		IDirect3DSurface9* buffer = NULL;

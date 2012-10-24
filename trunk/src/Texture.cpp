@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.42
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -104,7 +104,7 @@ namespace april
 	Color Texture::getPixel(int x, int y)
 	{
 		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement getPixel()!", april::rendersys->getName().c_str());
-		return APRIL_COLOR_CLEAR;
+		return Color::Clear;
 	}
 
 	void Texture::setPixel(int x, int y, Color color)

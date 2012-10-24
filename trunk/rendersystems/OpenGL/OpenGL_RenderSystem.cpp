@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.42
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -63,7 +63,7 @@
 
 namespace april
 {
-	static Color lastColor = APRIL_COLOR_BLACK;
+	static Color lastColor = Color::Black;
 #ifdef _WIN32 // if _WIN32
 	static HWND hWnd = 0;
 	HDC hDC = 0;
@@ -137,7 +137,7 @@ namespace april
 		this->textureId = 0;
 		this->textureFilter = Texture::FILTER_UNDEFINED;
 		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
-		this->systemColor = APRIL_COLOR_BLACK;
+		this->systemColor = Color::Black;
 		this->modelviewMatrixChanged = false;
 		this->projectionMatrixChanged = false;
 		this->blendMode = (BlendMode)10000;
