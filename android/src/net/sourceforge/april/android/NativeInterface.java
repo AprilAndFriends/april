@@ -152,7 +152,7 @@ public class NativeInterface
 	{
 		DisplayMetrics metrics = new DisplayMetrics();
 		NativeInterface.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		return metrics.densityDpi;
+		return (int)Math.sqrt((metrics.xdpi * metrics.xdpi + metrics.ydpi * metrics.ydpi) / 2.0);
 	}
 	
 	public static int getDeviceRam()

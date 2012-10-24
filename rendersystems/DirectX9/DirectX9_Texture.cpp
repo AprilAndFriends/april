@@ -63,7 +63,7 @@ namespace april
 		}
 		// TODO - this will be removed once format/native format enums have been implemented
 		unsigned char* bgra = new unsigned char[this->width * this->height * this->bpp];
-		memcpy(bgra, rgba, this->width * this->height * this->bpp * sizeof(unsigned char)); // so alpha doesn't have to be copied in each iteration
+		memcpy(bgra, rgba, this->width * this->height * this->bpp); // so alpha doesn't have to be copied in each iteration
 		int offset;
 		int i;
 		int j;
@@ -282,7 +282,7 @@ namespace april
 		{
 			return;
 		}
-		memset(lockRect.pBits, 0, this->getByteSize() * sizeof(unsigned char));
+		memset(lockRect.pBits, 0, this->getByteSize());
 		this->_unlock(buffer, result, true);
 	}
 
@@ -586,7 +586,7 @@ namespace april
 		*output = new unsigned char[this->width * this->height * 4];
 		if (this->bpp == 4)
 		{
-			memcpy(*output, p, this->getByteSize() * sizeof(unsigned char));
+			memcpy(*output, p, this->getByteSize());
 			for_iterx (j, 0, this->height)
 			{
 				for_iterx (i, 0, this->width)
@@ -613,7 +613,7 @@ namespace april
 		}
 		else if (this->bpp == 1)
 		{
-			memcpy(*output, p, this->getByteSize() * sizeof(unsigned char));
+			memcpy(*output, p, this->getByteSize());
 		}
 		this->_unlock(buffer, result, false);
 		return true;
