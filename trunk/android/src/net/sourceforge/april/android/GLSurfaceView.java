@@ -3,6 +3,7 @@ package net.sourceforge.april.android;
 // version 2.35
 
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.view.inputmethod.EditorInfo;
 import android.view.MotionEvent;
 
@@ -13,7 +14,8 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	public GLSurfaceView(Context context)
 	{
 		super(context);
-		this.setEGLConfigChooser(false);
+		this.setEGLConfigChooser(8, 8, 8, 8, 0, 0);
+		this.getHolder().setFormat(PixelFormat.RGBA_8888);
 		this.renderer = new net.sourceforge.april.android.Renderer();
 		this.setRenderer(this.renderer);
 		// view has to be properly focusable to be able to process input

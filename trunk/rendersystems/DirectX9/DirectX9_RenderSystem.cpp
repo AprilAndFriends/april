@@ -727,7 +727,7 @@ namespace april
 		unsigned char* p = img->data;
 		unsigned char* src = (unsigned char*)rect.pBits;
 		int x;
-		memset(p, 255, img->w * img->h * img->bpp * sizeof(unsigned char));
+		memset(p, 255, img->w * img->h * img->bpp);
 		for_iter (y, 0, img->h)
 		{
 			for (x = 0; x < img->w; x++, p += bpp)

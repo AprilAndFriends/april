@@ -61,7 +61,7 @@ namespace april
 		this->manualBuffer = NULL;
 #ifdef _ANDROID // currently user texture caching works for Android only
 		this->manualBuffer = new unsigned char[w * h * 4];
-		memcpy(this->manualBuffer, rgba, w * h * 4 * sizeof(unsigned char));
+		memcpy(this->manualBuffer, rgba, w * h * 4);
 #endif
 		glGenTextures(1, &this->textureId);
 		this->_setCurrentTexture();
@@ -108,7 +108,7 @@ namespace april
 				break;
 			}
 			unsigned char* clearColor = new unsigned char[w * h * this->bpp];
-			memset(clearColor, 0, sizeof(unsigned char) * w * h * this->bpp);
+			memset(clearColor, 0, w * h * this->bpp);
 			glTexImage2D(GL_TEXTURE_2D, 0, glFormat, w, h, 0, glFormat, GL_UNSIGNED_BYTE, clearColor);
 			delete [] clearColor;
 		}
@@ -250,7 +250,7 @@ namespace april
 		h = hclamp(h, 1, this->height - y);
 		// TODO - find a better and faster way to do this
 		unsigned char* writeData = new unsigned char[w * h * this->bpp];
-		memset(writeData, 0, sizeof(unsigned char) * w * h * this->bpp);
+		memset(writeData, 0, w * h * this->bpp);
 		if (this->bpp == 4 || this->bpp == 3)
 		{
 			int i;
@@ -272,7 +272,7 @@ namespace april
 		else if (this->bpp == 1)
 		{
 			unsigned char value = (color.r + color.g + color.b) / 3;
-			memset(writeData, value, sizeof(unsigned char) * w * h * this->bpp);
+			memset(writeData, value, w * h * this->bpp);
 		}
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
@@ -308,7 +308,6 @@ namespace april
 			return;
 		}
 		texture->load();
-		unsigned char* readData = new unsigned char[source->width * source->height * source->bpp];
 		glBindTexture(GL_TEXTURE_2D, source->textureId);
 		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
@@ -324,10 +323,13 @@ namespace april
 		{
 			glFormat = GL_ALPHA;
 		}
+		unsigned char* readData = new unsigned char[source->width * source->height * source->bpp];
 #ifndef _OPENGLES // TODO - temp until we figure out how to handle this on OpenGLES. added by kspes on May 21st 2012
 		glGetTexImage(GL_TEXTURE_2D, 0, glFormat, GL_UNSIGNED_BYTE, readData);
+#else
+		memset(readData, 0, source->width * source->height * source->bpp);
 #endif
-		blit(x, y, readData, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
+		this->blit(x, y, readData, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
 		delete [] readData;
 	}
 
@@ -341,7 +343,7 @@ namespace april
 		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
 		// TODO - improve this
 		unsigned char* writeData = new unsigned char[sw * sh * this->bpp];
-		memset(writeData, 255, sizeof(unsigned char) * sw * sh * this->bpp);
+		memset(writeData, 0, sw * sh * this->bpp);
 		int i;
 		int j;
 		int k;
