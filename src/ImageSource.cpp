@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.32
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -24,7 +24,7 @@ namespace april
 	{
 		x = hclamp(x, 0, w - 1);
 		y = hclamp(y, 0, h - 1);
-		Color c = APRIL_COLOR_WHITE;
+		Color c = Color::White;
 		int index = x + y * w;
 		if (this->bpp >= 3)
 		{
@@ -321,7 +321,7 @@ namespace april
 #ifdef USE_IL
 		img->manualData = true;
 #endif
-		img->setPixels(0, 0, w, h, APRIL_COLOR_BLANK);
+		img->setPixels(0, 0, w, h, Color::Blank);
 		return img;
 	}
 	

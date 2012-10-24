@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.41
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -79,7 +79,7 @@ namespace april
 		this->manualBuffer = NULL;
 		glGenTextures(1, &this->textureId);
 		this->_setCurrentTexture();
-		if (color != APRIL_COLOR_CLEAR)
+		if (color != Color::Clear)
 		{
 			this->fillRect(0, 0, this->width, this->height, color);
 		}
@@ -225,13 +225,13 @@ namespace april
 	void OpenGL_Texture::clear()
 	{
 		// TODO - can be improved by directly using memset
-		this->fillRect(0, 0, this->width, this->height, APRIL_COLOR_CLEAR);
+		this->fillRect(0, 0, this->width, this->height, Color::Clear);
 	}
 
 	Color OpenGL_Texture::getPixel(int x, int y)
 	{
 		// TODO
-		return APRIL_COLOR_CLEAR;
+		return Color::Clear;
 	}
 
 	void OpenGL_Texture::setPixel(int x, int y, Color color)

@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -82,7 +82,7 @@ namespace april
 
 		virtual Texture* loadTexture(chstr filename, bool delayLoad = false);
 		virtual Texture* createTexture(int w, int h, unsigned char* rgba) = 0;
-		virtual Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = APRIL_COLOR_CLEAR) = 0;
+		virtual Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear) = 0;
 		Texture* loadRamTexture(chstr filename, bool delayLoad = false);
 		virtual PixelShader* createPixelShader() = 0;
 		virtual PixelShader* createPixelShader(chstr filename) = 0;
@@ -98,7 +98,7 @@ namespace april
 		void setPerspective(float fov, float aspect, float nearClip, float farClip);
 
 		virtual void clear(bool useColor = true, bool depth = false) = 0;
-		virtual void clear(bool depth, grect rect, Color color = APRIL_COLOR_CLEAR) = 0;
+		virtual void clear(bool depth, grect rect, Color color = Color::Clear) = 0;
 		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices) = 0;
 		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color) = 0;
 		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices) = 0;
