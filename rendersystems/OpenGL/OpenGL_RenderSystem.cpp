@@ -803,6 +803,8 @@ namespace april
 		this->state.systemColor.set(255, 255, 255, 255);
 		this->_applyStateChanges();
 		this->_setVertexPointer(sizeof(PlainVertex), v);
+		this->_setColorPointer(0, NULL);
+		this->_setTexCoordPointer(0, NULL);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 
@@ -814,6 +816,8 @@ namespace april
 		this->state.systemColor = color;
 		this->_applyStateChanges();
 		this->_setVertexPointer(sizeof(PlainVertex), v);
+		this->_setColorPointer(0, NULL);
+		this->_setTexCoordPointer(0, NULL);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 	
@@ -824,6 +828,7 @@ namespace april
 		this->state.systemColor.set(255, 255, 255, 255);
 		this->_applyStateChanges();
 		this->_setVertexPointer(sizeof(TexturedVertex), v);
+		this->_setColorPointer(0, NULL);
 		this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
@@ -835,6 +840,7 @@ namespace april
 		this->state.systemColor = color;
 		this->_applyStateChanges();
 		this->_setVertexPointer(sizeof(TexturedVertex), v);
+		this->_setColorPointer(0, NULL);
 		this->_setTexCoordPointer(sizeof(TexturedVertex), (unsigned char*)v + 3 * sizeof(float)); // I forgot why this pointer is like that
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
@@ -853,6 +859,7 @@ namespace april
 		this->_applyStateChanges();
 		this->_setVertexPointer(sizeof(ColoredVertex), v);
 		this->_setColorPointer(sizeof(ColoredVertex), &v->color);
+		this->_setTexCoordPointer(0, NULL);
 		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
 	}
 	

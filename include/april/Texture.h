@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -108,15 +108,6 @@ namespace april
 
 		virtual bool copyPixelData(unsigned char** output) { return false; }
 		
-		// TODO - this horrible, horrible hack has to be discussed and changed
-		//! sets the filename variable, useful if you want to reload the texture from a different file
-		void _setFilename(chstr value) { this->filename = value; }
-		// TODO - this another horrible, horrible hack and has to be removed
-		void _setDimensions(int w, int h) { this->width = w; this->height = h; }
-
-		// TODO - has to be discussed
-		static void setTextureLoadingListener(void (*listener)(Texture*));
-
 	protected:
 		hstr filename;
 		Format format;
@@ -128,9 +119,6 @@ namespace april
 
 		hstr _getInternalName();
 
-		// TODO - has to be discussed
-		void _notifyLoadingListener(Texture* t);
-		
 		// TODO - these may currently not work well with anything else than DirectX9
 		void _blit(unsigned char* thisData, int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void _stretchBlit(unsigned char* thisData, int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);

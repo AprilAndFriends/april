@@ -249,7 +249,6 @@ namespace april
 			this->d3dTexture->UnlockRect(0);
 			delete image;
 		}
-		_notifyLoadingListener(this);
 		return true;
 	}
 
