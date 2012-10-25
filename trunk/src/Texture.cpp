@@ -23,21 +23,6 @@
 
 namespace april
 {
-	// TODO - refactor
-	static void (*msTextureLoadingListener)(Texture*) = NULL;
-	void Texture::setTextureLoadingListener(void (*listener)(Texture*))
-	{
-		msTextureLoadingListener = listener;
-	}
-	void Texture::_notifyLoadingListener(Texture* texture)
-	{
-		if (msTextureLoadingListener != NULL)
-		{
-			(*msTextureLoadingListener)(texture);
-		}
-	}
-	//////////////////////////
-
 	Texture::Texture()
 	{
 		this->filename = "";

@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.42
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -31,8 +31,8 @@
 
 namespace april
 {
-	PlainVertex pv[16];
-	TexturedVertex tv[16];
+	PlainVertex pv[4];
+	TexturedVertex tv[4];
 	
 	april::RenderSystem* rendersys = NULL;
 	

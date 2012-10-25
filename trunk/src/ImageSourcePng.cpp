@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.31
+/// @version 2.43
 /// 
 /// @section LICENSE
 /// 
@@ -218,7 +218,7 @@ namespace april
 		png_read_image(pngPtr, rowPointers);
 		png_read_end(pngPtr, infoPtr);
 		// assign ImageSource data
-		img->data = imageData;
+		img->data = (unsigned char*)imageData;
 		img->w = pngPtr->width;
 		img->h = pngPtr->height;
 		img->bpp = bpp;
