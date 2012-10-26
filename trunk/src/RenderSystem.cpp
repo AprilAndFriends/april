@@ -31,8 +31,8 @@
 
 namespace april
 {
-	PlainVertex pv[4];
-	TexturedVertex tv[4];
+	PlainVertex pv[5];
+	TexturedVertex tv[5];
 	
 	april::RenderSystem* rendersys = NULL;
 	
