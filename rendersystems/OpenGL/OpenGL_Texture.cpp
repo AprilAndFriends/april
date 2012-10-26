@@ -249,7 +249,7 @@ namespace april
 		h = hclamp(h, 1, this->height - y);
 		// TODO - find a better and faster way to do this
 		unsigned char* writeData = new unsigned char[w * h * this->bpp];
-		memset(writeData, 0, w * h * this->bpp);
+		memset(writeData, 0, w * h * this->bpp); // TODO: kspes: i don't think this call is redundant, check all similar situations
 		if (this->bpp == 4 || this->bpp == 3)
 		{
 			int i;
@@ -342,7 +342,7 @@ namespace april
 		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
 		// TODO - improve this
 		unsigned char* writeData = new unsigned char[sw * sh * this->bpp];
-		memset(writeData, 0, sw * sh * this->bpp);
+		memset(writeData, 255, sw * sh * this->bpp);
 		int i;
 		int j;
 		int k;
