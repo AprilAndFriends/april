@@ -10,7 +10,9 @@
 
 #ifdef _DIRECTX9
 #include <d3d9.h>
+#ifdef USE_IL
 #include <IL/il.h>
+#endif
 
 #include <hltypes/hlog.h>
 
