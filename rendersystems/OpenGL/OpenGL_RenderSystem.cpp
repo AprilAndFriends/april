@@ -903,7 +903,9 @@ namespace april
 	
 	ImageSource* OpenGL_RenderSystem::takeScreenshot(int bpp)
 	{
+#ifdef _DEBUG
 		hlog::write(april::logTag, "Grabbing screenshot...");
+#endif
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
 		ImageSource* img = new ImageSource();

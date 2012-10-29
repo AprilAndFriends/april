@@ -107,7 +107,7 @@ namespace april
 
 	void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType)
 	{
-		hlog::write(april::logTag, "Initializing april.");
+		hlog::write(april::logTag, "Initializing APRIL.");
 #ifdef USE_IL
 		ilInit();
 #endif
@@ -210,7 +210,7 @@ namespace april
 		}
 		if (april::rendersys != NULL)
 		{
-			hlog::write(april::logTag, "Destroying april.");
+			hlog::write(april::logTag, "Destroying APRIL.");
 			delete april::rendersys;
 			april::rendersys = NULL;
 		}
