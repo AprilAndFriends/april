@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.41
+// version 2.44
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.view.inputmethod.InputMethodManager;
+import android.view.View;
 import android.util.DisplayMetrics;
 
 import net.sourceforge.april.android.DialogListener.Cancel;
@@ -68,8 +69,8 @@ public class NativeInterface
 		{
 			public void run()
 			{
-				NativeInterface._getInputMethodManager().showSoftInput(
-					NativeInterface.Activity.getView(), InputMethodManager.SHOW_IMPLICIT, NativeInterface._makeResultReceiver());
+				View view = NativeInterface.Activity.getView();
+				NativeInterface._getInputMethodManager().showSoftInput(view, 0, NativeInterface._makeResultReceiver());
 			}
 		});
 	}
@@ -80,8 +81,9 @@ public class NativeInterface
 		{
 			public void run()
 			{
-				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(
-					NativeInterface.Activity.getView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS, NativeInterface._makeResultReceiver());
+				View view = NativeInterface.Activity.getView();
+				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(),
+					InputMethodManager.HIDE_NOT_ALWAYS, NativeInterface._makeResultReceiver());
 			}
 		});
 	}
@@ -93,9 +95,8 @@ public class NativeInterface
 	
 	private static ResultReceiver _makeResultReceiver()
 	{
-		return new ResultReceiver(new Handler())
+		return new ResultReceiver(new Handler()
 		{
-			@Override
 			protected void onReceiveResult(int resultCode, Bundle resultData)
 			{
 				boolean keyboardShown = true;
@@ -115,12 +116,14 @@ public class NativeInterface
 						Build.BOARD.equals("supersonic") || // EVO 4G
 						Build.VERSION.SDK_INT >= 10 && Build.BOARD.equals("inc")) // Droid Incredible
 					{
-						NativeInterface.hideVirtualKeyboard();
-						NativeInterface.showVirtualKeyboard();
+						InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
+						View view = NativeInterface.Activity.getView();
+						inputMethodManager.showSoftInput(view, 0);
+						inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 					}
 				}
 			}
-		};
+		});
 	}
 	
 	public static Object getDisplayResolution()
