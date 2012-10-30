@@ -61,6 +61,8 @@
 #include "Timer.h"
 #include "Window.h"
 
+#define MAX_VERTEX_COUNT 65536
+
 namespace april
 {
 	static Color lastColor = Color::Black;
@@ -78,6 +80,26 @@ namespace april
 #endif
 #endif
 
+	unsigned int _limitPrimitives(RenderOp renderOp, int nVertices)
+	{
+		switch (renderOp)
+		{
+		case TriangleList:
+			return nVertices / 3 * 3;
+		case TriangleStrip:
+			return nVertices;
+		case TriangleFan:
+			return nVertices;
+		case LineList:
+			return nVertices / 2 * 2;
+		case LineStrip:
+			return nVertices;
+		case PointList:
+			return nVertices;
+		}
+		return nVertices;
+	}
+	
 	// TODO - refactor
 	int OpenGL_RenderSystem::_getMaxTextureSize()
 	{
@@ -802,10 +824,22 @@ namespace april
 		this->state.colorEnabled = false;
 		this->state.systemColor.set(255, 255, 255, 255);
 		this->_applyStateChanges();
-		this->_setVertexPointer(sizeof(PlainVertex), v);
 		this->_setColorPointer(0, NULL);
 		this->_setTexCoordPointer(0, NULL);
-		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(PlainVertex), v);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
 	}
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
@@ -815,10 +849,22 @@ namespace april
 		this->state.colorEnabled = false;
 		this->state.systemColor = color;
 		this->_applyStateChanges();
-		this->_setVertexPointer(sizeof(PlainVertex), v);
 		this->_setColorPointer(0, NULL);
 		this->_setTexCoordPointer(0, NULL);
-		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(PlainVertex), v);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
 	}
 	
 	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
@@ -827,10 +873,22 @@ namespace april
 		this->state.colorEnabled = false;
 		this->state.systemColor.set(255, 255, 255, 255);
 		this->_applyStateChanges();
-		this->_setVertexPointer(sizeof(TexturedVertex), v);
 		this->_setColorPointer(0, NULL);
-		this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
-		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(TexturedVertex), v);
+			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
 	}
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
@@ -839,10 +897,22 @@ namespace april
 		this->state.colorEnabled = false;
 		this->state.systemColor = color;
 		this->_applyStateChanges();
-		this->_setVertexPointer(sizeof(TexturedVertex), v);
 		this->_setColorPointer(0, NULL);
-		this->_setTexCoordPointer(sizeof(TexturedVertex), (unsigned char*)v + 3 * sizeof(float)); // I forgot why this pointer is like that
-		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(TexturedVertex), v);
+			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
 	}
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
@@ -857,10 +927,22 @@ namespace april
 			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
 		}
 		this->_applyStateChanges();
-		this->_setVertexPointer(sizeof(ColoredVertex), v);
-		this->_setColorPointer(sizeof(ColoredVertex), &v->color);
 		this->_setTexCoordPointer(0, NULL);
-		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(ColoredVertex), v);
+			this->_setColorPointer(sizeof(ColoredVertex), &v->color);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
 	}
 	
 	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
@@ -874,10 +956,22 @@ namespace april
 			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
 		}
 		this->_applyStateChanges();
-		this->_setVertexPointer(sizeof(ColoredTexturedVertex), v);
-		this->_setColorPointer(sizeof(ColoredTexturedVertex), &v->color);
-		this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &v->u);
-		glDrawArrays(gl_render_ops[renderOp], 0, nVertices);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(ColoredTexturedVertex), v);
+			this->_setColorPointer(sizeof(ColoredTexturedVertex), &v->color);
+			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &v->u);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
 	}
 	
 	void OpenGL_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
