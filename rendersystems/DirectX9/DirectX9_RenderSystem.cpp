@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.42
+/// @version 2.44
 /// 
 /// @section LICENSE
 /// 
@@ -71,9 +71,9 @@ namespace april
 	ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
 	ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
 
-	unsigned int _numPrimitives(RenderOp rop, int nVertices)
+	unsigned int _numPrimitives(RenderOp renderOp, int nVertices)
 	{
-		switch (rop)
+		switch (renderOp)
 		{
 		case TriangleList:
 			return nVertices / 3;
