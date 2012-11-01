@@ -169,7 +169,8 @@ namespace april
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
 		hlog::debug(april::logTag, "Android Activity::onPause()");
-		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(false)); // has to be here because of a problem on certain devices where audio volume change window takes away focus
+		// has to be here because of a problem on certain devices where audio volume change window takes away focus
+		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(false));
 		PROTECTED_RENDERSYS_CALL(unloadTextures());
 	}
 	
