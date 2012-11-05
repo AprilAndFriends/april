@@ -29,11 +29,11 @@ namespace april
 		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
 		{
 			// TODO - move somewhere else, this file should be completely platform independent
-#if !TARGET_OS_IPHONE
+#ifndef _IOS
 			window->terminateMainLoop();
 			window->destroy();
 #endif
-			passedStyle = (MessageBoxStyle)(passedStyle & AMSGSTYLE_MODAL);
+			passedStyle = (MessageBoxStyle)(passedStyle | AMSGSTYLE_MODAL);
 		}
 		messageBox_platform(title, text, buttonMask, passedStyle, customButtonTitles, callback);
 		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY)
