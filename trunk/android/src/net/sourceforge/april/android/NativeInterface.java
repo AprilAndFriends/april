@@ -83,7 +83,7 @@ public class NativeInterface
 			{
 				View view = NativeInterface.Activity.getView();
 				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(),
-					InputMethodManager.HIDE_NOT_ALWAYS, NativeInterface._makeResultReceiver());
+					InputMethodManager.HIDE_NOT_ALWAYS);
 			}
 		});
 	}
@@ -105,7 +105,7 @@ public class NativeInterface
 				{
 					keyboardShown = false;
 				}
-				if (keyboardShown && htcKeyboardHack)
+				if (!keyboardShown && htcKeyboardHack)
 				{
 					htcKeyboardHack = false;
 					// repeat call for these problematic devices
@@ -118,8 +118,8 @@ public class NativeInterface
 					{
 						InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
 						View view = NativeInterface.Activity.getView();
-						inputMethodManager.showSoftInput(view, 0);
 						inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+						inputMethodManager.showSoftInput(view, 0);
 					}
 				}
 			}
