@@ -46,9 +46,10 @@ namespace april
 	{
 		WS_DEFAULT = 0,
 		WS_WIN32 = 1,
-		WS_SDL = 2,
-		WS_IOS = 3,
-		WS_ANDROIDJNI = 4
+		WS_WINRT = 2,
+		WS_SDL = 3,
+		WS_IOS = 4,
+		WS_ANDROIDJNI = 5
 	};
 
 	extern hstr systemPath;

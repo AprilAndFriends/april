@@ -1,12 +1,14 @@
 /// @file
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+/// 
+/// @note This implementation works for both Win32 and WinRT as the Window class handles the actual processing.
 
 #ifdef _WIN32
 #include <windows.h>

@@ -1,7 +1,7 @@
 /// @file
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -45,6 +45,7 @@
  **/
 
 #ifndef BUILDING_APRIL
+#include <hltypes/hplatform.h>
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
@@ -73,7 +74,7 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
 	return april::JNI_OnLoad(vm, reserved);
 }
-#elif !defined(_WIN32) || defined(_CONSOLE)
+#elif !defined(_WIN32) || defined(_CONSOLE) && !_HL_WINRT
 int main(int argc, char** argv)
 {
 #if TARGET_IPHONE_SIMULATOR
@@ -101,25 +102,37 @@ int main(int argc, char** argv)
 	return april_main(april_init, april_destroy, argc, argv);
 }
 #else
+#if !_HL_WINRT
 #include <windows.h>
 #include <stdio.h>
 #include <shellapi.h>
 int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCmdLine, int nCmdShow)
+#else
+[Platform::MTAThread]
+int main(Platform::Array<Platform::String^>^ args)
+#endif
 {
-#if !_HLWINRT
 	// extract arguments
 	int argc = 0;
+#if !_HL_WINRT
 	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);
+#endif
 	char** argv = new char*[argc];
 	hstr arg;
 	for_iter (i, 0, argc)
 	{
+#if !_HL_WINRT
 		arg = unicode_to_utf8(wArgv[i]);
+#else
+		arg = unicode_to_utf8(args[i]->Data());
+#endif
 		argv[i] = new char[arg.size() + 1];
 		memset(argv[i], 0, arg.size() + 1);
 		memcpy(argv[i], arg.c_str(), sizeof(char) * arg.size());
 	}
+#if !_HL_WINRT
 	LocalFree(wArgv);
+#endif
 	// call the user specified main function
 	april_main(april_init, april_destroy, argc, argv);
 	// free allocated memory for arguments
@@ -128,15 +141,11 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCm
 		delete [] argv[i];
 	}
 	delete [] argv;
-#else
-	char* test = ".\\win8app";
-	april_main(april_init, april_destroy, 1, &test);
-#endif
 	return 0;
 }
+
 #endif
 #define main __ STOP_USING_MAIN___DEPRECATED_IN_APRIL
-//}
 #endif
 
 #define APRIL_NO_MAIN 1

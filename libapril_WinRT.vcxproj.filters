@@ -57,6 +57,12 @@
     <Filter Include="Source Files\platforms">
       <UniqueIdentifier>{4849144f-915b-416b-955e-a300028d705b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\windowsystems\WinRT">
+      <UniqueIdentifier>{b057517c-ef9f-47d8-8b0e-5488931d531b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\windowsystems\WinRT">
+      <UniqueIdentifier>{3fbf91f2-1d89-4763-9e05-f20c1bd1b914}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -140,11 +146,23 @@
     <ClCompile Include="windowsystems\Win32\Win32_Window.cpp">
       <Filter>Source Files\windowsystems\Win32</Filter>
     </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp">
+      <Filter>Source Files\windowsystems\WinRT</Filter>
+    </ClCompile>
     <ClCompile Include="src\aprilUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\RamTexture.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT_View.cpp">
+      <Filter>Source Files\windowsystems\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\WinRT_Platform.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT_ViewSource.cpp">
+      <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +232,9 @@
     <ClInclude Include="windowsystems\Win32\Win32_Window.h">
       <Filter>Header Files\windowsystems\Win32</Filter>
     </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_Window.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
     <ClInclude Include="include\april\aprilUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -222,6 +243,12 @@
     </ClInclude>
     <ClInclude Include="include\april\androidUtilJNI.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_View.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_ViewSource.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

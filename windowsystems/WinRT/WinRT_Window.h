@@ -17,6 +17,53 @@
 #include <hltypes/hplatform.h>
 #if _HL_WINRT
 
+#include <windows.h>
+
+#include <hltypes/hstring.h>
+
+#include "aprilExport.h"
+#include "Timer.h"
+#include "Window.h"
+#include "WinRT_View.h"
+
+namespace april
+{
+	class aprilExport WinRT_Window : public Window
+	{
+	public:
+		WinRT_Window();
+		~WinRT_Window();
+
+		//IFrameworkView^ getView() { return this->view; }
+
+		bool create(int w, int h, bool fullscreen, chstr title);
+		bool destroy();
+
+		//void setTitle(chstr title);
+		//bool isCursorVisible();
+		//void setCursorVisible(bool value);
+		int getWidth() { return this->width; }
+		int getHeight() { return this->height; }
+		bool isTouchEnabled() { return this->touchEnabled; }
+		void setTouchEnabled(bool value) { this->touchEnabled = value; }
+		void* getBackendId();
+		//void _setResolution(int w, int h);
+		void enterMainLoop();
+		//bool updateOneFrame();
+		void presentFrame();
+		void checkEvents();
+
+	protected:
+		//april::Timer globalTimer;
+		int width;
+		int height;
+		bool touchEnabled;
+		//WinRT_View^ view;
+		
+	};
+
+}
+
 #endif
 #endif
 #endif
