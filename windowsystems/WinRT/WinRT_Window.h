@@ -39,6 +39,8 @@ namespace april
 		bool create(int w, int h, bool fullscreen, chstr title);
 		bool destroy();
 
+		void setView(WinRT_View^ value) { this->view = value; }
+
 		//void setTitle(chstr title);
 		//bool isCursorVisible();
 		//void setCursorVisible(bool value);
@@ -48,15 +50,19 @@ namespace april
 		void setTouchEnabled(bool value) { this->touchEnabled = value; }
 		void* getBackendId();
 		//void _setResolution(int w, int h);
-		//bool updateOneFrame();
+		bool updateOneFrame();
 		void presentFrame();
 		void checkEvents();
 
 	protected:
-		//april::Timer globalTimer;
+		april::Timer globalTimer;
 		int width;
 		int height;
 		bool touchEnabled;
+		WinRT_View^ view;
+
+	private:
+		float _lastTime;
 		//WinRT_View^ view;
 		
 	};

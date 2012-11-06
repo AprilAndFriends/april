@@ -172,7 +172,7 @@ namespace april
 			hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, this->d3dpp, &d3dDevice);
 			if (hr != D3D_OK)
 			{
-				throw hl_exception("unable to create Direct3D Device!");
+				throw hl_exception("Unable to create Direct3D Device!");
 			}
 		}
 		// device config

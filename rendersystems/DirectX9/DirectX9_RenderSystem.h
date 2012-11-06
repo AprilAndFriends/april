@@ -16,6 +16,8 @@
 #ifndef APRIL_DIRECTX9_RENDER_SYSTEM_H
 #define APRIL_DIRECTX9_RENDER_SYSTEM_H
 
+#include <hltypes/hplatform.h>
+
 #include "RenderSystem.h"
 
 struct _D3DPRESENT_PARAMETERS_;

@@ -33,6 +33,8 @@ namespace april
 		this->width = 0;
 		this->height = 0;
 		this->touchEnabled = false;
+		this->_lastTime = 0.0f;
+		this->view = nullptr;
 	}
 
 	WinRT_Window::~WinRT_Window()
@@ -86,8 +88,8 @@ namespace april
 	
 	void* WinRT_Window::getBackendId()
 	{
-		// TODO
-		return 0;
+		// TODO ?
+		return this->view->getBackendId();
 	}
 
 	/*
@@ -119,17 +121,13 @@ namespace april
 	}
 	*/
 	
-	/*
 	bool WinRT_Window::updateOneFrame()
 	{
 		static bool result = true;
 		static float t = 0.0f;
 		static float k = 0.0f;
-		static POINT w32_cursorPosition;
 		// mouse position
-		GetCursorPos(&w32_cursorPosition);
-		ScreenToClient(this->hWnd, &w32_cursorPosition);
-		this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
+		//this->cursorPosition.set(); ???
 		this->checkEvents();
 		t = this->globalTimer.getTime();
 		if (t == this->_lastTime)
@@ -154,25 +152,10 @@ namespace april
 		}
 		// rendering
 		result = this->performUpdate(k);
-#ifndef _DEBUG
 		this->setTitle(this->title);
-#else
-		if (this->_lastTime - this->_fpsTimer > 1000)
-		{
-			this->_fpsTitle = hsprintf(" [FPS: %d]", this->_fps);
-			this->setTitle(this->title);
-			this->_fps = 0;
-			this->_fpsTimer = this->_lastTime;
-		}
-		else
-		{
-			this->_fps++;
-		}
-#endif			
 		april::rendersys->presentFrame();
 		return (result && Window::updateOneFrame());
 	}
-	*/
 	
 	void WinRT_Window::presentFrame()
 	{
@@ -180,7 +163,7 @@ namespace april
 	
 	void WinRT_Window::checkEvents()
 	{
-		// events are handled by WinRT_View
+		this->view->checkEvents();
 	}
 
 }

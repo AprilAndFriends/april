@@ -15,11 +15,16 @@
 
 #include "Window.h"
 #include "WinRT_View.h"
+#include "WinRT_Window.h"
 
 using namespace Windows::Foundation;
 
 namespace april
 {
+	void (*WinRT::Init)(const harray<hstr>&);
+	void (*WinRT::Destroy)();
+	harray<hstr> WinRT::Args;
+
 	void WinRT_View::Initialize(_In_ CoreApplicationView^ applicationView)
 	{
         applicationView->Activated +=
@@ -42,10 +47,13 @@ namespace april
 	void WinRT_View::Load(_In_ Platform::String^ entryPoint)
 	{
 	}
-	
+
 	void WinRT_View::Run()
 	{
+		(*WinRT::Init)(WinRT::Args);
+		((WinRT_Window*)april::window)->setView(this);
 		april::window->enterMainLoop();
+		(*WinRT::Destroy)();
 
 		/*
         // First, create the Direct3D device.
@@ -125,6 +133,11 @@ namespace april
         }
 		*/
 	}
+
+	void* WinRT_View::getBackendId()
+	{
+		return NULL;
+	}
 	
 	void WinRT_View::OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args)
 	{
@@ -134,6 +147,11 @@ namespace april
 	void WinRT_View::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
         // TODO
+	}
+
+	void WinRT_View::checkEvents()
+	{
+		this->window->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
 	}
 	
 }
