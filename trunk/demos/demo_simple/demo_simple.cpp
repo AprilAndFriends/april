@@ -1,17 +1,20 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.8
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#include <hltypes/hplatform.h>
 #ifdef _ANDROID
 #define RESOURCE_PATH "./"
-#else
+#elif !_HL_WINRT
 #define RESOURCE_PATH "../media/"
+#else
+#define RESOURCE_PATH "Assets/"
 #endif
 
 #include <stdio.h>
@@ -23,7 +26,11 @@
 #include <april/Window.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hstring.h>
+
+#define LOG_TAG "demo_simple"
 
 april::Texture* texture = NULL;
 april::Texture* manualTexture = NULL;
@@ -52,27 +59,27 @@ bool update(float k)
 	return true;
 }
 
-void onMouseDown(float x, float y, int button)
+void onMouseDown(int button)
 {
-	april::log(hsprintf("    - DOWN x: %4.0f y: %4.0f button: %d", x, y, button));
+	offset = april::window->getCursorPosition();
+	hlog::writef(LOG_TAG, "    - DOWN x: %4.0f y: %4.0f button: %d", offset.x, offset.y, button);
 	mousePressed = true;
-	offset.x = x;
-	offset.y = y;
 }
 
-void onMouseUp(float x, float y, int button)
+void onMouseUp(int button)
 {
-	april::log(hsprintf("    - UP   x: %4.0f y: %4.0f button: %d", x, y, button));
+	gvec2 cursor = april::window->getCursorPosition();
+	hlog::writef(LOG_TAG, "    - UP   x: %4.0f y: %4.0f button: %d", cursor.x, cursor.y, button);
 	mousePressed = false;
 }
 
-void onMouseMove(float x, float y)
+void onMouseMove()
 {
-	april::log(hsprintf("    - MOVE x: %4.0f y: %4.0f", x, y));
+	gvec2 cursor = april::window->getCursorPosition();
+	hlog::writef(LOG_TAG, "    - MOVE x: %4.0f y: %4.0f", cursor.x, cursor.y);
 	if (mousePressed)
 	{
-		offset.x = x;
-		offset.y = y;
+		offset = cursor;
 	}
 }
 

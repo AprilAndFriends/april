@@ -16,6 +16,12 @@
     <Filter Include="AndroidApk">
       <UniqueIdentifier>{419bdca5-3fca-476d-9de2-8ec9fcee831c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Win8xap">
+      <UniqueIdentifier>{f0ae1058-a500-44e2-8f2a-326b57b71662}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win8xap\Assets">
+      <UniqueIdentifier>{54c407b3-832b-4178-8a01-96291b02c30b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="android\AndroidManifest.xml">
@@ -27,10 +33,32 @@
     <None Include="android\build.xml">
       <Filter>AndroidApk</Filter>
     </None>
+    <None Include="demo_simple_TemporaryKey.pfx">
+      <Filter>Win8xap</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo_simple.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <Filter>Win8xap</Filter>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\icon.png">
+      <Filter>Win8xap\Assets</Filter>
+    </Image>
+    <Image Include="Assets\small_icon.png">
+      <Filter>Win8xap\Assets</Filter>
+    </Image>
+    <Image Include="Assets\splash.png">
+      <Filter>Win8xap\Assets</Filter>
+    </Image>
+    <Image Include="Assets\store_icon.png">
+      <Filter>Win8xap\Assets</Filter>
+    </Image>
   </ItemGroup>
 </Project>
