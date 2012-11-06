@@ -69,7 +69,7 @@
       <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libgtypes.lib;libhltypes.lib;libapril.lib;libaprilutil.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libgtypes.lib;libhltypes.lib;libapril.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -81,6 +81,10 @@
 xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Configuration)\ /d /y
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy ..\Assets\*.* Assets\ /d /y
+xcopy ..\media\*.* media\ /d /y</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -98,7 +102,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libgtypes.lib;libhltypes.lib;libapril.lib;libaprilutil.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libgtypes.lib;libhltypes.lib;libapril.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -112,6 +116,10 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
 xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Configuration)\ /d /y
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy ..\Assets\*.* Assets\ /d /y
+xcopy ..\media\*.* media\ /d /y</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="demo_3d.cpp" />

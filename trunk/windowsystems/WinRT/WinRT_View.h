@@ -18,7 +18,9 @@
 #if _HL_WINRT
 
 #include <windows.h>
+#include <agile.h>
 
+using namespace Microsoft::WRL;
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::ApplicationModel::Core;
 using namespace Windows::UI::Core;
@@ -36,6 +38,15 @@ namespace april
 
 		void OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args);
 		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
+
+	private: // has to be private
+		Platform::Agile<CoreWindow> window;
+		/*
+		ComPtr<IDXGISwapChain1> swapChain;
+		ComPtr<ID3D11Device1> d3dDevice;
+		ComPtr<ID3D11DeviceContext1> d3dDeviceContext;
+		ComPtr<ID3D11RenderTargetView> renderTargetView;
+		*/
 
 	};
 

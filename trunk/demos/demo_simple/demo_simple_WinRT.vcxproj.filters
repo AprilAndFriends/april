@@ -22,6 +22,9 @@
     <Filter Include="Win8xap\Assets">
       <UniqueIdentifier>{54c407b3-832b-4178-8a01-96291b02c30b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DLLs">
+      <UniqueIdentifier>{f84bdb13-d712-4d85-9f76-bc08bb84c6a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="android\AndroidManifest.xml">
@@ -36,6 +39,12 @@
     <None Include="demo_simple_TemporaryKey.pfx">
       <Filter>Win8xap</Filter>
     </None>
+    <None Include="..\..\..\lib\WinRT\libpng.dll">
+      <Filter>DLLs</Filter>
+    </None>
+    <None Include="..\..\..\lib\WinRT\zlib1.dll">
+      <Filter>DLLs</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo_simple.cpp">
@@ -48,9 +57,6 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Assets\icon.png">
-      <Filter>Win8xap\Assets</Filter>
-    </Image>
     <Image Include="Assets\small_icon.png">
       <Filter>Win8xap\Assets</Filter>
     </Image>
@@ -58,6 +64,9 @@
       <Filter>Win8xap\Assets</Filter>
     </Image>
     <Image Include="Assets\store_icon.png">
+      <Filter>Win8xap\Assets</Filter>
+    </Image>
+    <Image Include="Assets\logo_icon.png">
       <Filter>Win8xap\Assets</Filter>
     </Image>
   </ItemGroup>
