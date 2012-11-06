@@ -48,7 +48,6 @@ namespace april
 		void setTouchEnabled(bool value) { this->touchEnabled = value; }
 		void* getBackendId();
 		//void _setResolution(int w, int h);
-		void enterMainLoop();
 		//bool updateOneFrame();
 		void presentFrame();
 		void checkEvents();

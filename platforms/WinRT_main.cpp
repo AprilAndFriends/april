@@ -1,5 +1,4 @@
 /// @file
-/// @author  Ivan Vucica
 /// @author  Boris Mikic
 /// @version 2.5
 /// 
@@ -10,8 +9,7 @@
 
 #ifdef _WIN32
 #include <hltypes/hplatform.h>
-#if !_HL_WINRT
-#include <windows.h>
+#if _HL_WINRT
 
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
@@ -20,8 +18,9 @@
 #include "main.h"
 #include "RenderSystem.h"
 #include "Window.h"
+#include "WinRT_ViewSource.h"
 
-int gAprilShouldInvokeQuitCallback = 0;
+using namespace Windows::ApplicationModel::Core;
 
 int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {
@@ -34,7 +33,7 @@ int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(
 		}
 	}
 	anAprilInit(args);
-	april::window->enterMainLoop();
+	CoreApplication::Run(ref new april::WinRT_ViewSource());
 	anAprilDestroy();
 	return 0;
 }

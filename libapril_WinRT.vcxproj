@@ -377,6 +377,7 @@
     <ClCompile Include="platforms\Android_Platform.cpp" />
     <ClCompile Include="platforms\Win32_main.cpp" />
     <ClCompile Include="platforms\Win32_Platform.cpp" />
+    <ClCompile Include="platforms\WinRT_main.cpp" />
     <ClCompile Include="platforms\WinRT_Platform.cpp" />
     <ClCompile Include="src\april.cpp" />
     <ClCompile Include="src\aprilUtil.cpp" />

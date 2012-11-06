@@ -119,11 +119,6 @@ namespace april
 	}
 	*/
 	
-	void WinRT_Window::enterMainLoop()
-	{
-		CoreApplication::Run(ref new WinRT_ViewSource());
-	}
-
 	/*
 	bool WinRT_Window::updateOneFrame()
 	{

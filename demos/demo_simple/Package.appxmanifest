@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="d9dc50c6-976a-4a40-9644-b3d669788186" Publisher="CN=April" Version="2.5.0.0" />
+  <Identity Name="net.sourceforge.april.demoSimple.winrt" Publisher="CN=April" Version="2.5.0.0" />
   <Properties>
     <DisplayName>demo_simple</DisplayName>
     <PublisherDisplayName>April</PublisherDisplayName>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="demo_simple.App">
-      <VisualElements DisplayName="demo_simple" Logo="Assets\icon.png" SmallLogo="Assets\small_icon.png" Description="April Demo Simple" ForegroundText="light" BackgroundColor="#464646">
+      <VisualElements DisplayName="demo_simple" Logo="Assets\logo_icon.png" SmallLogo="Assets\small_icon.png" Description="April Demo Simple" ForegroundText="light" BackgroundColor="#464646">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="Assets/splash.png" />
         <InitialRotationPreference>
