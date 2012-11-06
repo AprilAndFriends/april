@@ -10,7 +10,6 @@
 #ifdef _WIN32
 #include <hltypes/hplatform.h>
 #if _HL_WINRT
-
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
@@ -19,22 +18,23 @@
 #include "RenderSystem.h"
 #include "Window.h"
 #include "WinRT_ViewSource.h"
+#include "WinRT_View.h"
 
 using namespace Windows::ApplicationModel::Core;
 
 int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {
-	harray<hstr> args;
+	april::WinRT::Args.clear();
 	if (argv != NULL)
 	{
 		for_iter (i, 0, argc)
 		{
-			args += argv[i];
+			april::WinRT::Args += argv[i];
 		}
 	}
-	anAprilInit(args);
+	april::WinRT::Init = anAprilInit;
+	april::WinRT::Destroy = anAprilDestroy;
 	CoreApplication::Run(ref new april::WinRT_ViewSource());
-	anAprilDestroy();
 	return 0;
 }
 #endif
