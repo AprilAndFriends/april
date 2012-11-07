@@ -92,9 +92,11 @@ namespace april
 		DirectX11_Texture* activeTexture;
 		DirectX11_Texture* renderTarget;
 		harray<DisplayMode> supportedDisplayModes;
+		VertexShader* defaultVertexShader;
+		PixelShader* defaultPixelShader;
 
 		void _configureDevice();
-		void _createSwapChain(CoreWindow^ window, int width, int height);
+		void _createSwapChain(int width, int height);
 		
 		Texture* _createTexture(chstr filename);
 

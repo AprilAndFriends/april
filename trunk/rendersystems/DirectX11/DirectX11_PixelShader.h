@@ -37,6 +37,9 @@ namespace april
 		void setConstantsI(const int* quadVectors, unsigned int quadCount);
 		void setConstantsF(const float* quadVectors, unsigned int quadCount);
 
+	protected:
+		ID3D11PixelShader* dx11Shader;
+
 	};
 
 }
