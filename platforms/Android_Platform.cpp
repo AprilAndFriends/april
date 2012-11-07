@@ -45,10 +45,10 @@ namespace april
 			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 			// CPU cores
 			jmethodID methodGetCpuCores = env->GetStaticMethodID(classNativeInterface, "getCpuCores", _JARGS(_JINT, ));
-			info.cpuCores = (int)env->CallStaticObjectMethod(classNativeInterface, methodGetCpuCores);
+			info.cpuCores = (int)env->CallStaticIntMethod(classNativeInterface, methodGetCpuCores);
 			// RAM
 			jmethodID methodGetDeviceRam = env->GetStaticMethodID(classNativeInterface, "getDeviceRam", _JARGS(_JINT, ));
-			info.ram = (int)env->CallStaticObjectMethod(classNativeInterface, methodGetDeviceRam);
+			info.ram = (int)env->CallStaticIntMethod(classNativeInterface, methodGetDeviceRam);
 			// display resolution
 			jmethodID methodGetDisplayResolution = env->GetStaticMethodID(classNativeInterface, "getDisplayResolution", _JARGS(_JOBJ, ));
 			jintArray jResolution = (jintArray)env->CallStaticObjectMethod(classNativeInterface, methodGetDisplayResolution);
@@ -57,7 +57,7 @@ namespace april
 			info.displayResolution.set((float)(int)dimensions[0], (float)(int)dimensions[1]);
 			// display DPI
 			jmethodID methodGetDisplayDpi = env->GetStaticMethodID(classNativeInterface, "getDisplayDpi", _JARGS(_JINT, ));
-			info.displayDpi = (int)env->CallStaticObjectMethod(classNativeInterface, methodGetDisplayDpi);
+			info.displayDpi = (int)env->CallStaticIntMethod(classNativeInterface, methodGetDisplayDpi);
 			// locale
 			jmethodID methodGetLocale = env->GetStaticMethodID(classNativeInterface, "getLocale", _JARGS(_JSTR, ));
 			info.locale = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetLocale));
