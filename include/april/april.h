@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.42
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -22,6 +22,7 @@
 
 #define APRIL_RS_OPENGL "OpenGL"
 #define APRIL_RS_DIRECTX9 "DirectX9"
+#define APRIL_RS_DIRECTX11 "DirectX11"
 #define APRIL_RS_DEFAULT ""
 
 #define APRIL_WS_WIN32 "Win32"
@@ -39,7 +40,8 @@ namespace april
 	{
 		RS_DEFAULT = 0,
 		RS_DIRECTX9 = 1,
-		RS_OPENGL = 2
+		RS_DIRECTX11 = 2,
+		RS_OPENGL = 3
 	};
 
 	enum WindowSystemType

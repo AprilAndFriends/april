@@ -20,6 +20,7 @@
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
+#include "WinRT_View.h"
 
 using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Popups;
@@ -39,10 +40,9 @@ namespace april
 			// TODO
 			// RAM size
 			info.ram = 1024;
-			// TODO - maybe this is not correct
 			// display resolution
-			int width = (int)Windows::UI::Xaml::Window::Current->Bounds.Width;
-			int height = (int)Windows::UI::Xaml::Window::Current->Bounds.Height;
+			int width = (int)april::WinRT::View->getCoreWindow()->Bounds.Width;
+			int height = (int)april::WinRT::View->getCoreWindow()->Bounds.Height;
 			info.displayResolution.set((float)width, (float)height);
 			// display DPI
 			info.displayDpi = (int)DisplayProperties::LogicalDpi;

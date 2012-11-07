@@ -22,27 +22,12 @@
 #include <windows.h>
 #include <agile.h>
 
-using namespace Microsoft::WRL;
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::ApplicationModel::Core;
 using namespace Windows::UI::Core;
 
 namespace april
 {
-	class WinRT
-	{
-	public:
-		~WinRT() { }
-
-		static void (*Init)(const harray<hstr>&);
-		static void (*Destroy)();
-		static harray<hstr> Args;
-
-	private:
-		WinRT() { }
-
-	};
-
 	ref class WinRT_View : public IFrameworkView
 	{
 	public:
@@ -52,7 +37,7 @@ namespace april
 		virtual void Load(_In_ Platform::String^ entryPoint);
 		virtual void Run();
 
-		void* getBackendId();
+		CoreWindow^ getCoreWindow() { return this->window.Get(); }
 
 		void OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args);
 		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
@@ -62,13 +47,20 @@ namespace april
 	private: // has to be private
 		Platform::Agile<CoreWindow> window;
 
+	};
 
-		/*
-		ComPtr<IDXGISwapChain1> swapChain;
-		ComPtr<ID3D11Device1> d3dDevice;
-		ComPtr<ID3D11DeviceContext1> d3dDeviceContext;
-		ComPtr<ID3D11RenderTargetView> renderTargetView;
-		*/
+	class WinRT
+	{
+	public:
+		~WinRT() { }
+
+		static void (*Init)(const harray<hstr>&);
+		static void (*Destroy)();
+		static harray<hstr> Args;
+		static WinRT_View^ View;
+
+	private:
+		WinRT() { }
 
 	};
 

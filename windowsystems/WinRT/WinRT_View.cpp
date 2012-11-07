@@ -21,9 +21,10 @@ using namespace Windows::Foundation;
 
 namespace april
 {
-	void (*WinRT::Init)(const harray<hstr>&);
-	void (*WinRT::Destroy)();
+	void (*WinRT::Init)(const harray<hstr>&) = NULL;
+	void (*WinRT::Destroy)() = NULL;
 	harray<hstr> WinRT::Args;
+	WinRT_View^ WinRT::View = nullptr;
 
 	void WinRT_View::Initialize(_In_ CoreApplicationView^ applicationView)
 	{
@@ -50,8 +51,8 @@ namespace april
 
 	void WinRT_View::Run()
 	{
+		WinRT::View = this;
 		(*WinRT::Init)(WinRT::Args);
-		((WinRT_Window*)april::window)->setView(this);
 		april::window->enterMainLoop();
 		(*WinRT::Destroy)();
 
@@ -134,11 +135,6 @@ namespace april
 		*/
 	}
 
-	void* WinRT_View::getBackendId()
-	{
-		return NULL;
-	}
-	
 	void WinRT_View::OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args)
 	{
         CoreWindow::GetForCurrentThread()->Activate();

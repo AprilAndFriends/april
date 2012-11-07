@@ -63,6 +63,12 @@
     <Filter Include="Source Files\windowsystems\WinRT">
       <UniqueIdentifier>{3fbf91f2-1d89-4763-9e05-f20c1bd1b914}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\rendersystems\DirectX11">
+      <UniqueIdentifier>{ce428bfd-9a41-4c87-80d8-057dcd96dbba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX11">
+      <UniqueIdentifier>{69720d0b-cdf2-4947-990c-cb2b115ad64d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -167,6 +173,18 @@
     <ClCompile Include="platforms\WinRT_main.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
+    <ClCompile Include="rendersystems\DirectX11\DirectX11_PixelShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX11\DirectX11_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX11\DirectX11_Texture.cpp">
+      <Filter>Source Files\rendersystems\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX11\DirectX11_VertexShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -252,6 +270,18 @@
     </ClInclude>
     <ClInclude Include="windowsystems\WinRT\WinRT_ViewSource.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX11\DirectX11_PixelShader.h">
+      <Filter>Header Files\rendersystems\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX11\DirectX11_RenderSystem.h">
+      <Filter>Header Files\rendersystems\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX11\DirectX11_Texture.h">
+      <Filter>Header Files\rendersystems\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX11\DirectX11_VertexShader.h">
+      <Filter>Header Files\rendersystems\DirectX11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

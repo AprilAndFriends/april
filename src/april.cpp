@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.42
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -27,6 +27,9 @@
 #include "april.h"
 #ifdef _DIRECTX9
 #include "DirectX9_RenderSystem.h"
+#endif
+#ifdef _DIRECTX11
+#include "DirectX11_RenderSystem.h"
 #endif
 #ifdef _OPENGL
 #include "OpenGL_RenderSystem.h"
@@ -53,6 +56,8 @@
 #ifdef _WIN32
 	#ifdef _DIRECTX9
 	#define RS_INTERNAL_DEFAULT RS_DIRECTX9
+	#elif defined(_DIRECTX11)
+	#define RS_INTERNAL_DEFAULT RS_DIRECTX11
 	#elif defined(_OPENGL)
 	#define RS_INTERNAL_DEFAULT RS_OPENGL
 	#else
@@ -127,6 +132,12 @@ namespace april
 		if (april::rendersys == NULL && renderSystem == RS_DIRECTX9)
 		{
 			april::rendersys = new DirectX9_RenderSystem();
+		}
+#endif
+#ifdef _DIRECTX11
+		if (april::rendersys == NULL && renderSystem == RS_DIRECTX11)
+		{
+			april::rendersys = new DirectX11_RenderSystem();
 		}
 #endif
 #ifdef _OPENGL

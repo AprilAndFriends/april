@@ -8,8 +8,6 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _DIRECTX9
-#include <hltypes/hplatform.h>
-#if !_HL_WINRT
 #include <d3dx9shader.h>
 
 #include <hltypes/hlog.h>
@@ -94,5 +92,4 @@ namespace april
 
 }
 
-#endif
 #endif
