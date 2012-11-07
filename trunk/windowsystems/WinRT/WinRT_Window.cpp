@@ -34,7 +34,6 @@ namespace april
 		this->height = 0;
 		this->touchEnabled = false;
 		this->_lastTime = 0.0f;
-		this->view = nullptr;
 	}
 
 	WinRT_Window::~WinRT_Window()
@@ -89,7 +88,7 @@ namespace april
 	void* WinRT_Window::getBackendId()
 	{
 		// TODO ?
-		return this->view->getBackendId();
+		return 0;
 	}
 
 	/*
@@ -163,7 +162,7 @@ namespace april
 	
 	void WinRT_Window::checkEvents()
 	{
-		this->view->checkEvents();
+		april::WinRT::View->checkEvents();
 	}
 
 }

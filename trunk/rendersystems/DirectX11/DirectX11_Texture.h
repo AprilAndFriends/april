@@ -1,7 +1,6 @@
 /// @file
-/// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.43
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -10,30 +9,27 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a DirectX9 specific texture.
+/// Defines a DirectX11 specific texture.
 
-#ifdef _DIRECTX9
-#ifndef APRIL_DIRECTX9_TEXTURE_H
-#define APRIL_DIRECTX9_TEXTURE_H
+#ifdef _DIRECTX11
+#ifndef APRIL_DIRECTX11_TEXTURE_H
+#define APRIL_DIRECTX11_TEXTURE_H
 
 #include "RenderSystem.h"
 
-struct IDirect3DTexture9;
-struct IDirect3DSurface9;
-
 namespace april
 {
-	class DirectX9_RenderSystem;
+	class DirectX11_RenderSystem;
 
-	class DirectX9_Texture : public Texture
+	class DirectX11_Texture : public Texture
 	{
 	public:
-		friend class DirectX9_RenderSystem;
+		friend class DirectX11_RenderSystem;
 
-		DirectX9_Texture(chstr filename);
-		DirectX9_Texture(int w, int h, unsigned char* rgba);
-		DirectX9_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
-		~DirectX9_Texture();
+		DirectX11_Texture(chstr filename);
+		DirectX11_Texture(int w, int h, unsigned char* rgba);
+		DirectX11_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
+		~DirectX11_Texture();
 		bool load();
 		void unload();
 		
@@ -55,6 +51,8 @@ namespace april
 		void restore(); // TODO - currently only a hack for rendertarget textures
 
 	protected:
+		// TODO
+		/*
 		IDirect3DSurface9* d3dSurface;
 		IDirect3DTexture9* d3dTexture;
 		bool renderTarget;
@@ -71,6 +69,7 @@ namespace april
 
 		LOCK_RESULT _tryLock(IDirect3DSurface9** buffer, D3DLOCKED_RECT* lockRect, RECT* rect);
 		void _unlock(IDirect3DSurface9* buffer, LOCK_RESULT lock, bool update);
+		*/
 
 	};
 

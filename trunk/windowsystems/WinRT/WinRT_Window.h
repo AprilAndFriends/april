@@ -34,12 +34,8 @@ namespace april
 		WinRT_Window();
 		~WinRT_Window();
 
-		//IFrameworkView^ getView() { return this->view; }
-
 		bool create(int w, int h, bool fullscreen, chstr title);
 		bool destroy();
-
-		void setView(WinRT_View^ value) { this->view = value; }
 
 		//void setTitle(chstr title);
 		//bool isCursorVisible();
@@ -59,11 +55,9 @@ namespace april
 		int width;
 		int height;
 		bool touchEnabled;
-		WinRT_View^ view;
 
 	private:
 		float _lastTime;
-		//WinRT_View^ view;
 		
 	};
 
