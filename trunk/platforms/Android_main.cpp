@@ -56,28 +56,28 @@ namespace april
 		april::systemPath = _JSTR_TO_HSTR(jSystemPath);
 		hstr archivePath = _JSTR_TO_HSTR(jForceArchivePath);
 		hstr packageName = _JSTR_TO_HSTR(jPackageName);
-		hlog::debug(april::logTag, "System path: " + april::systemPath);
+		hlog::write(april::logTag, "System path: " + april::systemPath);
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
 			// set the resources CWD
 			hresource::setCwd(_JSTR_TO_HSTR(jDataPath) + "/Android/data/" + packageName);
 			hresource::setArchive(""); // not used anyway when hasZip() returns false
-			hlog::debug(april::logTag, "Using no-zip: " + hresource::getCwd());
+			hlog::write(april::logTag, "Using no-zip: " + hresource::getCwd());
 		}
 		else if (archivePath != "")
 		{
 			// using APK file as archive
 			hresource::setCwd("assets");
 			hresource::setArchive(archivePath);
-			hlog::debug(april::logTag, "Using assets: " + hresource::getArchive());
+			hlog::write(april::logTag, "Using assets: " + hresource::getArchive());
 		}
 		else
 		{
 			// using OBB file as archive
 			hresource::setCwd(".");
 			// using Google Play's "Expansion File" system
-			hresource::setArchive(_JSTR_TO_HSTR(jDataPath) + "/main." + _JSTR_TO_HSTR(jVersionCode) + "." + packageName + ".obb");
-			hlog::debug(april::logTag, "Using obb: " + hresource::getArchive());
+			hresource::setArchive(_JSTR_TO_HSTR(jDataPath) + "/Android/obb/" + packageName + "/main." + _JSTR_TO_HSTR(jVersionCode) + "." + packageName + ".obb");
+			hlog::write(april::logTag, "Using obb: " + hresource::getArchive());
 		}
 	}
 	
