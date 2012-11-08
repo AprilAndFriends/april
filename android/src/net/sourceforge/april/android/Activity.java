@@ -35,6 +35,7 @@ public class Activity extends android.app.Activity
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_DOWN);
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_UP);
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_MUTE);
+		NativeInterface.DataPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 	}
 	
 	public View getView()
@@ -49,7 +50,6 @@ public class Activity extends android.app.Activity
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		NativeInterface.Activity = this;
 		NativeInterface.PackageName = this.getPackageName();
-		NativeInterface.DataPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/" + NativeInterface.PackageName;
 		NativeInterface.SystemPath = this.getFilesDir().getAbsolutePath();
 		try
 		{
@@ -159,6 +159,18 @@ public class Activity extends android.app.Activity
 	protected Dialog onCreateDialog(int id)
 	{
 		return NativeInterface.DialogBuilder.create();
+	}
+	
+	protected void setKeepAwake(boolean value)
+	{
+		if (value)
+		{
+			this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		}
+		else
+		{
+			this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		}
 	}
 	
 }
