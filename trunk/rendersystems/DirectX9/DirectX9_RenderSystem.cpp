@@ -120,7 +120,7 @@ namespace april
 		if (this->d3d == NULL)
 		{
 			this->destroy();
-			throw hl_exception("unable to create Direct3D9 object!");
+			throw hl_exception("Unable to create Direct3D9 object!");
 		}
 		this->d3dpp = new _D3DPRESENT_PARAMETERS_();
 		return true;
@@ -215,7 +215,7 @@ namespace april
 				d3d = Direct3DCreate9(D3D_SDK_VERSION);
 				if (d3d == NULL)
 				{
-					throw hl_exception("unable to create Direct3D9 object!");
+					throw hl_exception("Unable to create Direct3D9 object!");
 				}
 			}
 			unsigned int modeCount = this->d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
