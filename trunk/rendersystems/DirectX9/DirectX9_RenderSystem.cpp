@@ -164,7 +164,7 @@ namespace april
 			this->d3dpp->EnableAutoDepthStencil = TRUE;
 			this->d3dpp->AutoDepthStencilFormat = D3DFMT_D16;
 		}
-		this->d3dpp->SwapEffect = D3DSWAPEFFECT_DISCARD;
+		this->d3dpp->SwapEffect = D3DSWAPEFFECT_COPY; // COPY is being used here as otherwise some weird tearing manifests during rendering
 		this->d3dpp->hDeviceWindow = hWnd;
 		HRESULT hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, this->d3dpp, &d3dDevice);
 		if (hr != D3D_OK)
