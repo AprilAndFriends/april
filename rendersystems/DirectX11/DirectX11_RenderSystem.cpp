@@ -18,6 +18,7 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
+#include "DirectX11_DefaultShaders.h"
 #include "DirectX11_PixelShader.h"
 #include "DirectX11_RenderSystem.h"
 #include "DirectX11_Texture.h"
@@ -35,18 +36,6 @@ using namespace Microsoft::WRL;
 
 namespace april
 {
-	static const char* defaultVertexShaderCode = 
-		"void VS(in float4 posIn : POSITION, out float4 posOut : SV_Position)\n"
-		"{\n"
-		"	posOut = posIn;\n"
-		"}\n";
-	
-	static const char* defaultPixelShaderCode = 
-		"void PS(out float4 colorOut : SV_Target)\n"
-		"{\n"
-		"	colorOut = float4(1.0f, 1.0f, 1.0f, 1.0f);\n"
-		"}\n";
-
 	// TODO - refactor
 	harray<DirectX11_Texture*> gRenderTargets;
 
@@ -108,7 +97,6 @@ namespace april
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
-		this->indexBuffer = nullptr;
 	}
 
 	DirectX11_RenderSystem::~DirectX11_RenderSystem()
@@ -149,7 +137,6 @@ namespace april
 			delete this->defaultPixelShader;
 			this->defaultPixelShader = NULL;
 		}
-		this->indexBuffer = nullptr;
 		return true;
 	}
 
@@ -197,32 +184,6 @@ namespace april
 		// device config
 		this->_configureDevice();
 		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), nullptr);
-		if (this->genericIndices.size() == 0)
-		{
-			for_iter (i, 0, 65536)
-			{
-				this->genericIndices += (unsigned short)i;
-			}
-		}
-		D3D11_BUFFER_DESC indexBufferDescription = {0};
-		indexBufferDescription.ByteWidth = sizeof(unsigned short) * this->genericIndices.size();
-		indexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
-		indexBufferDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		indexBufferDescription.CPUAccessFlags = 0;
-		indexBufferDescription.MiscFlags = 0;
-		indexBufferDescription.StructureByteStride = 0;
-		D3D11_SUBRESOURCE_DATA indexBufferData;
-		indexBufferData.pSysMem = &this->genericIndices.first();
-		indexBufferData.SysMemPitch = 0;
-		indexBufferData.SysMemSlicePitch = 0;
-		if (this->indexBuffer == nullptr)
-		{
-			hr = this->d3dDevice->CreateBuffer(&indexBufferDescription, &indexBufferData, &this->indexBuffer);
-			if (FAILED(hr))
-			{
-				throw hl_exception("Unable to create generic index buffer!");
-			}
-		}
 		// initial calls
 		this->clear(true, false);
 		this->presentFrame();
@@ -230,12 +191,12 @@ namespace april
 		if (this->defaultVertexShader == NULL)
 		{
 			this->defaultVertexShader = this->createVertexShader();
-			this->defaultVertexShader->compile(defaultVertexShaderCode);
+			this->defaultVertexShader->compile(DirectX11::DefaultVertexShader);
 		}
 		if (this->defaultPixelShader == NULL)
 		{
 			this->defaultPixelShader = this->createPixelShader();
-			this->defaultPixelShader->compile(defaultPixelShaderCode);
+			this->defaultPixelShader->compile(DirectX11::DefaultPixelShader);
 		}
 		this->setVertexShader(this->defaultVertexShader);
 		this->setPixelShader(this->defaultPixelShader);
@@ -315,6 +276,23 @@ namespace april
 		{
 			throw hl_exception("Unable to create render target view!");
 		}
+		D3D11_RASTERIZER_DESC rasterDescription;
+		rasterDescription.AntialiasedLineEnable = false;
+		rasterDescription.CullMode = D3D11_CULL_NONE;
+		rasterDescription.DepthBias = 0;
+		rasterDescription.DepthBiasClamp = 0.0f;
+		rasterDescription.DepthClipEnable = true;
+		rasterDescription.FillMode = D3D11_FILL_SOLID;
+		rasterDescription.FrontCounterClockwise = false;
+		rasterDescription.MultisampleEnable = false;
+		rasterDescription.ScissorEnable = false;
+		rasterDescription.SlopeScaledDepthBias = 0.0f;
+		hr = this->d3dDevice->CreateRasterizerState(&rasterDescription, this->rasterState.GetAddressOf());
+		if (FAILED(hr))
+		{
+			throw hl_exception("Unable to create raster state!");
+		}
+		this->d3dDeviceContext->RSSetState(this->rasterState.Get());
 		D3D11_TEXTURE2D_DESC backBufferDesc = {0};
 		_backBuffer->GetDesc(&backBufferDesc);
 		this->setViewport(grect(0.0f, 0.0f, (float)backBufferDesc.Width, (float)backBufferDesc.Height));
@@ -640,7 +618,11 @@ namespace april
 
 	void DirectX11_RenderSystem::clear(bool useColor, bool depth)
 	{
+#ifndef _DEBUG
 		static const float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+#else
+		static const float clearColor[4] = {0.0f, 1.0f, 0.0f, 1.0f};
+#endif
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 	
@@ -657,67 +639,39 @@ namespace april
 		{
 			this->setTexture(NULL);
 		}
-		static gvec3 vert[] =
+		/*
+		PlainVertex vert[] =
         {
-            gvec3(200.0f, 400.0f, 0.5f),
-            gvec3(400.0f, 200.0f, 0.5f),
-            gvec3(400.0f, 400.0f, 0.5f),
+            PlainVertex(200.0f, 400.0f, 0.5f),
+            PlainVertex(400.0f, 200.0f, 0.5f),
+            PlainVertex(400.0f, 400.0f, 0.5f),
+            PlainVertex(200.0f, 200.0f, 0.5f),
         };
-        unsigned short ind[] =
-        {
-            0, 1, 2,
-        };
-
-
+		*/
 		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
 		// vertex buffer
 		memset(&this->vertexBufferDescription, 0, sizeof(D3D11_BUFFER_DESC));
-		this->vertexBufferDescription.ByteWidth = sizeof(gvec3) * 3;//sizeof(PlainVertex) * nVertices;
+		//this->vertexBufferDescription.ByteWidth = sizeof(gvec3) * 3;//sizeof(PlainVertex) * nVertices;
+		this->vertexBufferDescription.ByteWidth = sizeof(PlainVertex) * nVertices;
 		this->vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
 		this->vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		this->vertexBufferDescription.CPUAccessFlags = 0;
 		this->vertexBufferDescription.MiscFlags = 0;
 		this->vertexBufferDescription.StructureByteStride = 0;
-		this->vertexBufferData.pSysMem = vert;//v;
+		this->vertexBufferData.pSysMem = v;
 		this->vertexBufferData.SysMemPitch = 0;
 		this->vertexBufferData.SysMemSlicePitch = 0;
 		ComPtr<ID3D11Buffer> vertexBuffer;
 		unsigned int stride = sizeof(PlainVertex);
 		unsigned int offset = 0;
-		this->d3dDevice->CreateBuffer(&this->vertexBufferDescription, &this->vertexBufferData, &vertexBuffer);
-		this->vertexBuffers += vertexBuffer;
+		this->d3dDevice->CreateBuffer(&this->vertexBufferDescription, &this->vertexBufferData, vertexBuffer.GetAddressOf());
+		// TODO - this seems to prevent a low-level exception, leave it?
+		//this->vertexBuffers += vertexBuffer;
 		this->d3dDeviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-
-		/*
-        D3D11_BUFFER_DESC indexBufferDesc;
-        indexBufferDesc.ByteWidth = sizeof(unsigned short) * ARRAYSIZE(ind);
-        indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-        indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-        indexBufferDesc.CPUAccessFlags = 0;
-        indexBufferDesc.MiscFlags = 0;
-        indexBufferDesc.StructureByteStride = 0;
-
-        D3D11_SUBRESOURCE_DATA indexBufferData;
-        indexBufferData.pSysMem = ind;
-        indexBufferData.SysMemPitch = 0;
-        indexBufferData.SysMemSlicePitch = 0;
-
-        ComPtr<ID3D11Buffer> indexBuffer;
-		*/
-
-
-		/*
-		// index buffer
-		D3D11_BUFFER_DESC indexBufferDescription;
-		this->indexBuffer.Get()->GetDesc(&indexBufferDescription);
-		// TODO - cannot render more than 64k at once
-		indexBufferDescription.ByteWidth = sizeof(unsigned short) * hmin(nVertices, 65535);
-		this->d3dDeviceContext->IASetIndexBuffer(this->indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
-		*/
 		// other
 		this->_setPixelShader(this->activePixelShader);
 		this->_setVertexShader(this->activeVertexShader);
-		this->d3dDeviceContext->DrawIndexed(nVertices, 0, 0);
+		this->d3dDeviceContext->Draw(nVertices, 0);
 
 		// TODO
 		/*
@@ -840,6 +794,23 @@ namespace april
 
 	void DirectX11_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
+		/*
+		D3D11_BUFFER_DESC matrixBufferDescription;
+		matrixBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
+		matrixBufferDescription.ByteWidth = sizeof(gmat4);
+		matrixBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		matrixBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		matrixBufferDescription.MiscFlags = 0;
+		matrixBufferDescription.StructureByteStride = 0;
+
+		// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+		HRESULT hr = this->d3dDevice->CreateBuffer(&matrixBufferDescription, NULL, &m_matrixBuffer);
+		if( FAILED(hr))
+		{
+			throw hl_exception("Unable to create matrix buffer!");
+		}
+		*/
+
 		// TODO
 		/*
 		this->d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)matrix.data);
@@ -922,7 +893,6 @@ namespace april
 	{
 		this->swapChain->Present(1, 0);
 		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), nullptr);
-		//this->vertexBuffers.clear();
 	}
 
 }

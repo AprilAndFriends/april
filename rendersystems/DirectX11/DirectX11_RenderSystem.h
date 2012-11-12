@@ -111,12 +111,10 @@ namespace april
 		ComPtr<ID3D11Device1> d3dDevice;
 		ComPtr<ID3D11DeviceContext1> d3dDeviceContext;
 		ComPtr<IDXGISwapChain1> swapChain;
+		ComPtr<ID3D11RasterizerState> rasterState;
 		ComPtr<ID3D11RenderTargetView> renderTargetView;
 		D3D11_BUFFER_DESC vertexBufferDescription;
 		D3D11_SUBRESOURCE_DATA vertexBufferData;
-		harray<unsigned short> genericIndices;
-		harray<ComPtr<ID3D11Buffer> > vertexBuffers;
-		ComPtr<ID3D11Buffer> indexBuffer;
 
 	};
 
