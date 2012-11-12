@@ -115,6 +115,7 @@ namespace april
 		D3D11_BUFFER_DESC vertexBufferDescription;
 		D3D11_SUBRESOURCE_DATA vertexBufferData;
 		harray<unsigned short> genericIndices;
+		harray<ComPtr<ID3D11Buffer> > vertexBuffers;
 		ComPtr<ID3D11Buffer> indexBuffer;
 
 	};

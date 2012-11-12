@@ -73,12 +73,12 @@ namespace april
 			hlog::error(april::logTag, "Failed to create vertex shader!");
 			return false;
 		}
-        const D3D11_INPUT_ELEMENT_DESC inputLayoutDescription[] =
-        {
-            {"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        };
-        hr = APRIL_D3D_DEVICE->CreateInputLayout(inputLayoutDescription, ARRAYSIZE(inputLayoutDescription),
-            bufferShader->GetBufferPointer(), bufferShader->GetBufferSize(), &this->inputLayout);
+		const D3D11_INPUT_ELEMENT_DESC inputLayoutDescription[] =
+		{
+			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		};
+		hr = APRIL_D3D_DEVICE->CreateInputLayout(inputLayoutDescription, ARRAYSIZE(inputLayoutDescription),
+			bufferShader->GetBufferPointer(), bufferShader->GetBufferSize(), &this->inputLayout);
 		if (FAILED(hr))
 		{
 			hlog::error(april::logTag, "Failed to set vertex shader input layout!");
