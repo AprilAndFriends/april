@@ -185,6 +185,9 @@
     <ClCompile Include="rendersystems\DirectX11\DirectX11_VertexShader.cpp">
       <Filter>Source Files\rendersystems\DirectX11</Filter>
     </ClCompile>
+    <ClCompile Include="rendersystems\DirectX11\DirectX11_DefaultShaders.cpp">
+      <Filter>Source Files\rendersystems\DirectX11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -281,6 +284,9 @@
       <Filter>Header Files\rendersystems\DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="rendersystems\DirectX11\DirectX11_VertexShader.h">
+      <Filter>Header Files\rendersystems\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX11\DirectX11_DefaultShaders.h">
       <Filter>Header Files\rendersystems\DirectX11</Filter>
     </ClInclude>
   </ItemGroup>

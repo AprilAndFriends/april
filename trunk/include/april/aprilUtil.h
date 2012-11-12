@@ -63,6 +63,8 @@ namespace april
 	struct aprilExport PlainVertex : public gvec3
 	{
 	public:
+		PlainVertex() : gvec3(0.0f, 0.0f, 0.0f) { }
+		PlainVertex(float x, float y, float z) : gvec3(x, y, z) { }
 		void operator=(const gvec3& v);
 
 	};
@@ -72,6 +74,8 @@ namespace april
 	public:
 		unsigned int color;
 
+		ColoredVertex() : PlainVertex() { this->color = 0xFFFFFFFF; }
+		ColoredVertex(float x, float y, float z) : PlainVertex(x, y, z) { this->color = 0xFFFFFFFF; }
 		void operator=(const gvec3& v);
 
 	};
@@ -82,6 +86,8 @@ namespace april
 		float u;
 		float v;
 
+		TexturedVertex() : PlainVertex() { this->u = 0.0f; this->v = 0.0f; }
+		TexturedVertex(float x, float y, float z) : PlainVertex(x, y, z) { this->u = 0.0f; this->v = 0.0f; }
 		void operator=(const gvec3& v);
 
 	};
@@ -92,6 +98,8 @@ namespace april
 		float u;
 		float v;
 
+		ColoredTexturedVertex() : ColoredVertex() { this->u = 0.0f; this->v = 0.0f; }
+		ColoredTexturedVertex(float x, float y, float z) : ColoredVertex(x, y, z) { this->u = 0.0f; this->v = 0.0f; }
 		void operator=(const gvec3& v);
 
 	};
@@ -101,6 +109,8 @@ namespace april
 	public:
 		gvec3 normal;
 
+		ColoredTexturedNormalVertex() : ColoredTexturedVertex() { this->normal.set(0.0f, 0.0f, 0.0f); }
+		ColoredTexturedNormalVertex(float x, float y, float z) : ColoredTexturedVertex(x, y, z) { this->normal.set(0.0f, 0.0f, 0.0f); }
 		void operator=(const gvec3& v);
 
 	};
@@ -110,6 +120,8 @@ namespace april
 	public:
 		gvec3 normal;
 
+		TexturedNormalVertex() : TexturedVertex() { this->normal.set(0.0f, 0.0f, 0.0f); }
+		TexturedNormalVertex(float x, float y, float z) : TexturedVertex(x, y, z) { this->normal.set(0.0f, 0.0f, 0.0f); }
 		void operator=(const gvec3& v);
 
 	};
@@ -119,6 +131,8 @@ namespace april
 	public:
 		gvec3 normal;
 
+		ColoredNormalVertex() : ColoredVertex() { this->normal.set(0.0f, 0.0f, 0.0f); }
+		ColoredNormalVertex(float x, float y, float z) : ColoredVertex(x, y, z) { this->normal.set(0.0f, 0.0f, 0.0f); }
 		void operator=(const gvec3& v);
 
 	};

@@ -363,6 +363,7 @@
     <ClCompile Include="platforms\Win32_Platform.cpp" />
     <ClCompile Include="platforms\WinRT_main.cpp" />
     <ClCompile Include="platforms\WinRT_Platform.cpp" />
+    <ClCompile Include="rendersystems\DirectX11\DirectX11_DefaultShaders.cpp" />
     <ClCompile Include="rendersystems\DirectX11\DirectX11_PixelShader.cpp" />
     <ClCompile Include="rendersystems\DirectX11\DirectX11_RenderSystem.cpp" />
     <ClCompile Include="rendersystems\DirectX11\DirectX11_Texture.cpp" />
@@ -413,6 +414,7 @@
     <ClInclude Include="include\april\Timer.h" />
     <ClInclude Include="include\april\VertexShader.h" />
     <ClInclude Include="include\april\Window.h" />
+    <ClInclude Include="rendersystems\DirectX11\DirectX11_DefaultShaders.h" />
     <ClInclude Include="rendersystems\DirectX11\DirectX11_PixelShader.h" />
     <ClInclude Include="rendersystems\DirectX11\DirectX11_RenderSystem.h" />
     <ClInclude Include="rendersystems\DirectX11\DirectX11_Texture.h" />
