@@ -133,6 +133,9 @@ xcopy ..\media\*.* media\ /d /y</Command>
     <None Include="..\..\..\lib\WinRT\zlib1.dll">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>
+    <None Include="..\..\bin\Win32\d3dcompiler_46.dll">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </None>
     <None Include="android\AndroidManifest.xml">
       <SubType>Designer</SubType>
     </None>

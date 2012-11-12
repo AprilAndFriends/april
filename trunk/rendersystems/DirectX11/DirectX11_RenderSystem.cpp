@@ -106,13 +106,14 @@ namespace april
 	}
 	
 	DirectX11_RenderSystem::DirectX11_RenderSystem() : RenderSystem(), zBufferEnabled(false),
-		textureCoordinatesEnabled(false), colorEnabled(false), activeTexture(NULL), renderTarget(NULL),
-		defaultVertexShader(NULL), defaultPixelShader(NULL)
+		textureCoordinatesEnabled(false), colorEnabled(false), activeTexture(NULL), activeVertexShader(NULL),
+		activePixelShader(NULL), renderTarget(NULL), defaultVertexShader(NULL), defaultPixelShader(NULL)
 	{
 		this->name = APRIL_RS_DIRECTX11;
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
+		this->indexBuffer = nullptr;
 	}
 
 	DirectX11_RenderSystem::~DirectX11_RenderSystem()
@@ -129,8 +130,10 @@ namespace april
 		this->zBufferEnabled = options.contains("zbuffer");
 		this->textureCoordinatesEnabled = false;
 		this->colorEnabled = false;
-		this->renderTarget = NULL;
 		this->activeTexture = NULL;
+		this->activeVertexShader = NULL;
+		this->activePixelShader = NULL;
+		this->renderTarget = NULL;
 		this->renderTargetView = nullptr;
 		return true;
 	}
@@ -151,6 +154,7 @@ namespace april
 			delete this->defaultPixelShader;
 			this->defaultPixelShader = NULL;
 		}
+		this->indexBuffer = nullptr;
 		return true;
 	}
 
@@ -170,17 +174,17 @@ namespace april
 		ComPtr<ID3D11DeviceContext> _d3dDeviceContext;
 		HRESULT hr;
 		hr = D3D11CreateDevice(
-				nullptr,                    // specify nullptr to use the default adapter
-				D3D_DRIVER_TYPE_HARDWARE,
-				nullptr,                    // leave as nullptr if hardware is used
-				creationFlags,              // optionally set debug and Direct2D compatibility flags
-				featureLevels,
-				ARRAYSIZE(featureLevels),
-				D3D11_SDK_VERSION,          // always set this to D3D11_SDK_VERSION
-				&_d3dDevice,
-				nullptr,
-				&_d3dDeviceContext
-			);
+			nullptr,                    // specify nullptr to use the default adapter
+			D3D_DRIVER_TYPE_HARDWARE,
+			nullptr,                    // leave as nullptr if hardware is used
+			creationFlags,              // optionally set debug and Direct2D compatibility flags
+			featureLevels,
+			ARRAYSIZE(featureLevels),
+			D3D11_SDK_VERSION,          // always set this to D3D11_SDK_VERSION
+			&_d3dDevice,
+			nullptr,
+			&_d3dDeviceContext
+		);
 		if (FAILED(hr))
 		{
 			throw hl_exception("Unable to create DX11 device!");
@@ -198,7 +202,33 @@ namespace april
 		// device config
 		this->_configureDevice();
 		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), nullptr);
-		this->renderTarget = NULL;
+		if (this->genericIndices.size() == 0)
+		{
+			for_iter (i, 0, 65536)
+			{
+				this->genericIndices += (unsigned short)i;
+			}
+		}
+		D3D11_BUFFER_DESC indexBufferDescription;
+		indexBufferDescription.ByteWidth = sizeof(unsigned short) * this->genericIndices.size();
+		indexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+		indexBufferDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		indexBufferDescription.CPUAccessFlags = 0;
+		indexBufferDescription.MiscFlags = 0;
+		indexBufferDescription.StructureByteStride = 0;
+		D3D11_SUBRESOURCE_DATA indexBufferData;
+		indexBufferData.pSysMem = &this->genericIndices.first();
+		indexBufferData.SysMemPitch = 0;
+		indexBufferData.SysMemSlicePitch = 0;
+
+        if (this->indexBuffer == nullptr)
+		{
+			hr = this->d3dDevice->CreateBuffer(&indexBufferDescription, &indexBufferData, &this->indexBuffer);
+			if (FAILED(hr))
+			{
+				throw hl_exception("Unable to create generic index buffer!");
+			}
+		}
 		this->clear(true, false);
 		this->presentFrame();
 		this->orthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
@@ -212,6 +242,8 @@ namespace april
 			this->defaultPixelShader = this->createPixelShader();
 			this->defaultPixelShader->compile(defaultPixelShaderCode);
 		}
+		this->setVertexShader(this->defaultVertexShader);
+		this->setPixelShader(this->defaultPixelShader);
 	}
 
 	void DirectX11_RenderSystem::_createSwapChain(int width, int height)
@@ -354,6 +386,7 @@ namespace april
 		{
 		case DEFAULT:
 		case ALPHA_BLEND:
+			this->setPixelShader(this->defaultPixelShader);
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
@@ -533,10 +566,19 @@ namespace april
 	
 	void DirectX11_RenderSystem::setPixelShader(PixelShader* pixelShader)
 	{
-		DirectX11_PixelShader* shader = (DirectX11_PixelShader*)pixelShader;
-		if (shader != NULL)
+		this->activePixelShader = (DirectX11_PixelShader*)pixelShader;
+	}
+
+	void DirectX11_RenderSystem::setVertexShader(VertexShader* vertexShader)
+	{
+		this->activeVertexShader = (DirectX11_VertexShader*)vertexShader;
+	}
+
+	void DirectX11_RenderSystem::_setPixelShader(DirectX11_PixelShader* pixelShader)
+	{
+		if (pixelShader != NULL)
 		{
-			this->d3dDeviceContext->PSSetShader(shader->dx11Shader, NULL, 0);
+			this->d3dDeviceContext->PSSetShader(pixelShader->dx11Shader, NULL, 0);
 		}
 		else
 		{
@@ -544,12 +586,12 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::setVertexShader(VertexShader* vertexShader)
+	void DirectX11_RenderSystem::_setVertexShader(DirectX11_VertexShader* vertexShader)
 	{
-		DirectX11_VertexShader* shader = (DirectX11_VertexShader*)vertexShader;
-		if (shader != NULL)
+		if (vertexShader != NULL)
 		{
-			this->d3dDeviceContext->VSSetShader(shader->dx11Shader, NULL, 0);
+			this->d3dDeviceContext->VSSetShader(vertexShader->dx11Shader, NULL, 0);
+			this->d3dDeviceContext->IASetInputLayout(vertexShader->inputLayout.Get());
 		}
 		else
 		{
@@ -635,28 +677,30 @@ namespace april
             );
 			*/
 
-
-		D3D11_BUFFER_DESC vertexBufferDesc = {0};
-		vertexBufferDesc.ByteWidth = sizeof(PlainVertex) * nVertices;
-		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBufferDesc.CPUAccessFlags = 0;
-		vertexBufferDesc.MiscFlags = 0;
-		vertexBufferDesc.StructureByteStride = 0;
-
-		D3D11_SUBRESOURCE_DATA vertexBufferData;
-		vertexBufferData.pSysMem = v;
-		vertexBufferData.SysMemPitch = 0;
-		vertexBufferData.SysMemSlicePitch = 0;
-
+		memset(&this->vertexBufferDescription, 0, sizeof(D3D11_BUFFER_DESC));
+		this->vertexBufferDescription.ByteWidth = sizeof(PlainVertex) * nVertices;
+		this->vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+		this->vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		this->vertexBufferDescription.CPUAccessFlags = 0;
+		this->vertexBufferDescription.MiscFlags = 0;
+		this->vertexBufferDescription.StructureByteStride = 0;
+		this->vertexBufferData.pSysMem = v;
+		this->vertexBufferData.SysMemPitch = 0;
+		this->vertexBufferData.SysMemSlicePitch = 0;
 		ComPtr<ID3D11Buffer> vertexBuffer;
         unsigned int stride = sizeof(PlainVertex);
         unsigned int offset = 0;
-		this->d3dDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertexBuffer);
+		this->d3dDevice->CreateBuffer(&this->vertexBufferDescription, &this->vertexBufferData, &vertexBuffer);
 		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
         this->d3dDeviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-		this->setVertexShader(this->defaultVertexShader);
-		this->setPixelShader(this->defaultPixelShader);
+		D3D11_BUFFER_DESC indexBufferDescription;
+		this->indexBuffer.Get()->GetDesc(&indexBufferDescription);
+		// TODO - cannot render more than 64k at once
+		indexBufferDescription.ByteWidth = sizeof(unsigned short) * hmin(nVertices, 65535);
+		this->d3dDeviceContext->IASetIndexBuffer(this->indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+
+		this->_setPixelShader(this->activePixelShader);
+		this->_setVertexShader(this->activeVertexShader);
 		this->d3dDeviceContext->DrawIndexed(nVertices, 0, 0);
 
 		// TODO
@@ -861,6 +905,7 @@ namespace april
 	void DirectX11_RenderSystem::presentFrame()
 	{
 		this->swapChain->Present(1, 0);
+		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), nullptr);
 	}
 
 }

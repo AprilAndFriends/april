@@ -46,14 +46,16 @@ namespace april
 			hlog::error(april::logTag, "No pixel shader code given!");
 			return false;
 		}
-		DWORD shaderFlags = (D3DCOMPILE_OPTIMIZATION_LEVEL3 | D3DCOMPILE_ENABLE_STRICTNESS);
+		DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
 		shaderFlags |= D3DCOMPILE_DEBUG;
+#else
+		shaderFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
 #endif
-		ID3D10Blob* bufferShader = NULL;
-		ID3D10Blob* bufferError = NULL;
-		HRESULT hr = D3DCompile(shaderCode.c_str(), shaderCode.size() + 1, "PS", NULL, NULL,
-			"PS", "ps_2_0", shaderFlags, 0, &bufferShader, &bufferError);
+		ID3DBlob* bufferShader = NULL;
+		ID3DBlob* bufferError = NULL;
+		HRESULT hr = D3DCompile(shaderCode.c_str(), shaderCode.size(), "PS", NULL, NULL,
+			"PS", "ps_4_0_level_9_1", shaderFlags, 0, &bufferShader, &bufferError);
 		if (FAILED(hr))
 		{
 			hlog::error(april::logTag, "Failed to compile pixel shader!");
