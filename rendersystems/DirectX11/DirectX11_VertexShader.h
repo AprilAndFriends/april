@@ -39,6 +39,7 @@ namespace april
 
 	protected:
 		ID3D11VertexShader* dx11Shader;
+		ComPtr<ID3D11InputLayout> inputLayout;
 
 	};
 

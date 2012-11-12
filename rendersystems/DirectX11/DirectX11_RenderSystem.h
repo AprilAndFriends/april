@@ -90,6 +90,8 @@ namespace april
 		bool textureCoordinatesEnabled;
 		bool colorEnabled;
 		DirectX11_Texture* activeTexture;
+		DirectX11_VertexShader* activeVertexShader;
+		DirectX11_PixelShader* activePixelShader;
 		DirectX11_Texture* renderTarget;
 		harray<DisplayMode> supportedDisplayModes;
 		VertexShader* defaultVertexShader;
@@ -102,12 +104,18 @@ namespace april
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
+		void _setPixelShader(DirectX11_PixelShader* shader);
+		void _setVertexShader(DirectX11_VertexShader* shader);
 
 	private:
 		ComPtr<ID3D11Device1> d3dDevice;
 		ComPtr<ID3D11DeviceContext1> d3dDeviceContext;
 		ComPtr<IDXGISwapChain1> swapChain;
 		ComPtr<ID3D11RenderTargetView> renderTargetView;
+		D3D11_BUFFER_DESC vertexBufferDescription;
+		D3D11_SUBRESOURCE_DATA vertexBufferData;
+		harray<unsigned short> genericIndices;
+		ComPtr<ID3D11Buffer> indexBuffer;
 
 	};
 
