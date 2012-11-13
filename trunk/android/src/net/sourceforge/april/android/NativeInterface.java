@@ -37,7 +37,7 @@ public class NativeInterface
 	public static String ApkPath = "";
 	public static AlertDialog.Builder DialogBuilder = null;
 	
-	private static boolean htcKeyboardHack = true;
+	private static boolean keyboardShowHack = true;
 	
 	public static native void setVariables(String systemPath, String sharedPath, String packageName, String versionCode, String forceArchivePath);
 	public static native void init(String[] args);
@@ -105,22 +105,13 @@ public class NativeInterface
 				{
 					keyboardShown = false;
 				}
-				if (!keyboardShown && htcKeyboardHack)
+				if (!keyboardShown && keyboardShowHack)
 				{
-					htcKeyboardHack = false;
-					// repeat call for these problematic devices
-					if (Build.BOARD.equals("mecha") || // Thunderbolt
-						Build.BOARD.equals("marvel") || // Wildfire S
-						Build.BOARD.equals("marvelc") || // Wildfire S
-						Build.VERSION.SDK_INT < 10 && Build.BOARD.equals("shooteru") || // EVO 3D
-						Build.BOARD.equals("supersonic") || // EVO 4G
-						Build.VERSION.SDK_INT >= 10 && Build.BOARD.equals("inc")) // Droid Incredible
-					{
-						InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
-						View view = NativeInterface.Activity.getView();
-						inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-						inputMethodManager.showSoftInput(view, 0);
-					}
+					keyboardShowHack = false;
+					InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
+					View view = NativeInterface.Activity.getView();
+					inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+					inputMethodManager.showSoftInput(view, 0);
 				}
 			}
 		});
