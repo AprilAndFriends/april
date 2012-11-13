@@ -36,41 +36,32 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	
 	public boolean onTouchEvent(final MotionEvent event)
 	{
-		this.queueEvent
-		(
-			new Runnable()
+		final int action = event.getAction();
+		final int pointerCount = event.getPointerCount();
+		switch (action & MotionEvent.ACTION_MASK)
+		{
+		case MotionEvent.ACTION_DOWN:
+		case MotionEvent.ACTION_POINTER_DOWN: // handles multi-touch
+			for (int i = 0; i < pointerCount; i++)
 			{
-				public void run()
-				{
-					final int action = event.getAction();
-					final int pointerCount = event.getPointerCount();
-					switch (action & MotionEvent.ACTION_MASK)
-					{
-					case MotionEvent.ACTION_DOWN:
-					case MotionEvent.ACTION_POINTER_DOWN: // handles multi-touch
-						for (int i = 0; i < pointerCount; i++)
-						{
-							NativeInterface.onTouch(0, event.getX(i), event.getY(i), i);
-						}
-						break;
-					case MotionEvent.ACTION_UP:
-					case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
-						for (int i = 0; i < pointerCount; i++)
-						{
-							NativeInterface.onTouch(1, event.getX(i), event.getY(i), i);
-						}
-						break;
-					case MotionEvent.ACTION_MOVE: // Android batches multitouch move events into a single move event
-						for (int i = 0; i < pointerCount; i++)
-						{
-							NativeInterface.onTouch(2, event.getX(i), event.getY(i), i);
-						}
-						break;
-					}
-				}
+				NativeInterface.onTouch(0, event.getX(i), event.getY(i), i);
 			}
-		);
-		return true;
+			return true;
+		case MotionEvent.ACTION_UP:
+		case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
+			for (int i = 0; i < pointerCount; i++)
+			{
+				NativeInterface.onTouch(1, event.getX(i), event.getY(i), i);
+			}
+			return true;
+		case MotionEvent.ACTION_MOVE: // Android batches multitouch move events into a single move event
+			for (int i = 0; i < pointerCount; i++)
+			{
+				NativeInterface.onTouch(2, event.getX(i), event.getY(i), i);
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	@Override 

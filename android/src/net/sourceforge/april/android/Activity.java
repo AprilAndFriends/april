@@ -136,7 +136,8 @@ public class Activity extends android.app.Activity
 		{
 			return false;
 		}
-		return NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
+		NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
+		return true;
 	}
 	
 	@Override
@@ -146,7 +147,8 @@ public class Activity extends android.app.Activity
 		{
 			return false;
 		}
-		return NativeInterface.onKeyUp(event.getKeyCode());
+		NativeInterface.onKeyUp(event.getKeyCode());
+		return true;
 	}
 	
 	@Override
