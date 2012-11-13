@@ -119,16 +119,14 @@ namespace april
 		}
 	}
 	
-	bool JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
+	void JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
 		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_DOWN, (KeySym)(int)keyCode, (unsigned int)charCode));
-		return true;
 	}
 	
-	bool JNICALL _JNI_onKeyUp(JNIEnv* env, jclass classe, jint keyCode)
+	void JNICALL _JNI_onKeyUp(JNIEnv* env, jclass classe, jint keyCode)
 	{
 		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_UP, (KeySym)(int)keyCode, 0));
-		return true;
 	}
 	
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean focused)
@@ -229,8 +227,8 @@ namespace april
 		{"destroy",					_JARGS(_JVOID, ),								(void*)&april::_JNI_destroy					},
 		{"render",					_JARGS(_JBOOL, ),								(void*)&april::_JNI_render					},
 		{"onTouch",					_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),	(void*)&april::_JNI_onTouch					},
-		{"onKeyDown",				_JARGS(_JBOOL, _JINT _JINT),					(bool*)&april::_JNI_onKeyDown				},
-		{"onKeyUp",					_JARGS(_JBOOL, _JINT),							(bool*)&april::_JNI_onKeyUp					},
+		{"onKeyDown",				_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onKeyDown				},
+		{"onKeyUp",					_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onKeyUp					},
 		{"onWindowFocusChanged",	_JARGS(_JVOID, _JBOOL),							(void*)&april::_JNI_onWindowFocusChanged	},
 		{"onLowMemory",				_JARGS(_JVOID, ),								(void*)&april::_JNI_onLowMemory				},
 		{"onSurfaceCreated",		_JARGS(_JVOID, ),								(void*)&april::_JNI_onSurfaceCreated		},
