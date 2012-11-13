@@ -30,6 +30,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		{
 			this.requestFocus();
 			this.requestFocusFromTouch();
+			NativeInterface.updateKeyboard();
 		}
 		NativeInterface.onWindowFocusChanged(focused);
 	}

@@ -37,7 +37,28 @@ public class NativeInterface
 	public static String ApkPath = "";
 	public static AlertDialog.Builder DialogBuilder = null;
 	
-	private static boolean keyboardShowHack = true;
+	private static boolean htcKeyboardHack = false;
+	private static ResultReceiver keyboardResultReceiver = new ResultReceiver(new Handler()
+	{
+		protected void onReceiveResult(int resultCode, Bundle resultData)
+		{
+			boolean keyboardShown = true;
+			if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN ||
+				resultCode == InputMethodManager.RESULT_HIDDEN)
+			{
+				keyboardShown = false;
+			}
+			if (keyboardShown && htcKeyboardHack)
+			{
+				htcKeyboardHack = false;
+				InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
+				View view = NativeInterface.Activity.getView();
+				inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0, NativeInterface.keyboardResultReceiver);
+				inputMethodManager.showSoftInput(view, 0, NativeInterface.keyboardResultReceiver);
+			}
+		}
+	});
+
 	
 	public static native void setVariables(String systemPath, String sharedPath, String packageName, String versionCode, String forceArchivePath);
 	public static native void init(String[] args);
@@ -70,7 +91,7 @@ public class NativeInterface
 			public void run()
 			{
 				View view = NativeInterface.Activity.getView();
-				NativeInterface._getInputMethodManager().showSoftInput(view, 0, NativeInterface._makeResultReceiver());
+				NativeInterface._getInputMethodManager().showSoftInput(view, 0, NativeInterface.keyboardResultReceiver);
 			}
 		});
 	}
@@ -82,39 +103,37 @@ public class NativeInterface
 			public void run()
 			{
 				View view = NativeInterface.Activity.getView();
-				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(),
-					InputMethodManager.HIDE_NOT_ALWAYS);
+				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(), 0,
+					NativeInterface.keyboardResultReceiver);
 			}
 		});
+	}
+	
+	public static void updateKeyboard()
+	{
+		// TODO - detect broken versions of com.htc.android.htcime
+		if (Build.BOARD.equals("mecha") ||		// Thunderbolt
+			Build.BOARD.equals("marvel") ||		// Wildfire S
+			Build.BOARD.equals("marvelc"))		// Wildfire S
+		{
+			htcKeyboardHack = true;
+		}
+		else if (Build.VERSION.SDK_INT < 10 &&
+			Build.BOARD.equals("shooteru") ||	// EVO 3D
+			Build.BOARD.equals("supersonic"))	// EVO 4G
+		{
+			htcKeyboardHack = true;
+		}
+		else if (Build.VERSION.SDK_INT >= 10 &&
+			Build.BOARD.equals("inc"))			// Droid Incredible
+		{
+			htcKeyboardHack = true;
+		}
 	}
 	
 	private static InputMethodManager _getInputMethodManager()
 	{
 		return (InputMethodManager)NativeInterface.Activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-	}
-	
-	private static ResultReceiver _makeResultReceiver()
-	{
-		return new ResultReceiver(new Handler()
-		{
-			protected void onReceiveResult(int resultCode, Bundle resultData)
-			{
-				boolean keyboardShown = true;
-				if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN ||
-					resultCode == InputMethodManager.RESULT_HIDDEN)
-				{
-					keyboardShown = false;
-				}
-				if (!keyboardShown && keyboardShowHack)
-				{
-					keyboardShowHack = false;
-					InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
-					View view = NativeInterface.Activity.getView();
-					inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-					inputMethodManager.showSoftInput(view, 0);
-				}
-			}
-		});
 	}
 	
 	public static Object getDisplayResolution()
