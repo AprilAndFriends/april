@@ -17,7 +17,11 @@
 
 #include <d3d11_1.h>
 
+#include <gtypes/Matrix4.h>
+#include <gtypes/Rectangle.h>
+#include <hltypes/harray.h>
 #include <hltypes/hplatform.h>
+#include <hltypes/hstring.h>
 
 #include "RenderSystem.h"
 
@@ -37,6 +41,13 @@ namespace april
 		friend class DirectX11_PixelShader;
 		friend class DirectX11_Texture;
 		friend class DirectX11_VertexShader;
+
+		struct MatrixBuffer
+		{
+			gmat4 model;
+			gmat4 view;
+			gmat4 projection;
+		};
 
 		DirectX11_RenderSystem();
 		~DirectX11_RenderSystem();
@@ -113,8 +124,14 @@ namespace april
 		ComPtr<IDXGISwapChain1> swapChain;
 		ComPtr<ID3D11RasterizerState> rasterState;
 		ComPtr<ID3D11RenderTargetView> renderTargetView;
+
 		D3D11_BUFFER_DESC vertexBufferDescription;
 		D3D11_SUBRESOURCE_DATA vertexBufferData;
+		ComPtr<ID3D11Buffer> vertexBuffer;
+
+		MatrixBuffer matrixBuffer;
+
+		void _updateVertexBuffer(unsigned int size, void* data);
 
 	};
 
