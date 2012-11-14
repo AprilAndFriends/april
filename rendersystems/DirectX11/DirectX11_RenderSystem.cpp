@@ -118,6 +118,7 @@ namespace april
 		this->activePixelShader = NULL;
 		this->renderTarget = NULL;
 		this->renderTargetView = nullptr;
+		this->vertexBuffer = nullptr;
 		return true;
 	}
 
@@ -137,6 +138,7 @@ namespace april
 			delete this->defaultPixelShader;
 			this->defaultPixelShader = NULL;
 		}
+		this->vertexBuffer = nullptr;
 		return true;
 	}
 
@@ -184,6 +186,16 @@ namespace april
 		// device config
 		this->_configureDevice();
 		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), nullptr);
+		// initial vertex buffer data
+		this->vertexBufferDescription.ByteWidth = 0;
+		this->vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+		this->vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		this->vertexBufferDescription.CPUAccessFlags = 0;
+		this->vertexBufferDescription.MiscFlags = 0;
+		this->vertexBufferDescription.StructureByteStride = 0;
+		this->vertexBufferData.pSysMem = NULL;
+		this->vertexBufferData.SysMemPitch = 0;
+		this->vertexBufferData.SysMemSlicePitch = 0;
 		// initial calls
 		this->clear(true, false);
 		this->presentFrame();
@@ -632,6 +644,21 @@ namespace april
 		const float clearColor[4] = {color.b_f(), color.g_f(), color.r_f(), color.a_f()};
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
+
+	void DirectX11_RenderSystem::_updateVertexBuffer(unsigned int size, void* data)
+	{
+		this->vertexBufferData.pSysMem = data;
+		if (size > this->vertexBufferDescription.ByteWidth)
+		{
+			this->vertexBufferDescription.ByteWidth = size;
+			this->vertexBuffer = nullptr;
+			this->d3dDevice->CreateBuffer(&this->vertexBufferDescription, &this->vertexBufferData, this->vertexBuffer.GetAddressOf());
+		}
+		else
+		{
+			this->d3dDeviceContext->UpdateSubresource(this->vertexBuffer.Get(), 0, nullptr, &this->vertexBufferData, 0, 0);
+		}
+	}
 	
 	void DirectX11_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
 	{
@@ -639,45 +666,14 @@ namespace april
 		{
 			this->setTexture(NULL);
 		}
-		/*
-		PlainVertex vert[] =
-        {
-            PlainVertex(200.0f, 400.0f, 0.5f),
-            PlainVertex(400.0f, 200.0f, 0.5f),
-            PlainVertex(400.0f, 400.0f, 0.5f),
-            PlainVertex(200.0f, 200.0f, 0.5f),
-        };
-		*/
 		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
-		// vertex buffer
-		memset(&this->vertexBufferDescription, 0, sizeof(D3D11_BUFFER_DESC));
-		//this->vertexBufferDescription.ByteWidth = sizeof(gvec3) * 3;//sizeof(PlainVertex) * nVertices;
-		this->vertexBufferDescription.ByteWidth = sizeof(PlainVertex) * nVertices;
-		this->vertexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
-		this->vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		this->vertexBufferDescription.CPUAccessFlags = 0;
-		this->vertexBufferDescription.MiscFlags = 0;
-		this->vertexBufferDescription.StructureByteStride = 0;
-		this->vertexBufferData.pSysMem = v;
-		this->vertexBufferData.SysMemPitch = 0;
-		this->vertexBufferData.SysMemSlicePitch = 0;
-		ComPtr<ID3D11Buffer> vertexBuffer;
+		this->_updateVertexBuffer(sizeof(PlainVertex) * nVertices, v);
 		unsigned int stride = sizeof(PlainVertex);
 		unsigned int offset = 0;
-		this->d3dDevice->CreateBuffer(&this->vertexBufferDescription, &this->vertexBufferData, vertexBuffer.GetAddressOf());
-		// TODO - this seems to prevent a low-level exception, leave it?
-		//this->vertexBuffers += vertexBuffer;
-		this->d3dDeviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-		// other
+		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &stride, &offset);
 		this->_setPixelShader(this->activePixelShader);
 		this->_setVertexShader(this->activeVertexShader);
 		this->d3dDeviceContext->Draw(nVertices, 0);
-
-		// TODO
-		/*
-		this->d3dDevice->SetFVF(PLAIN_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx11_render_ops[renderOp], _numPrimitives(renderOp, nVertices), v, sizeof(PlainVertex));
-		*/
 	}
 
 	void DirectX11_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
@@ -770,6 +766,7 @@ namespace april
 
 	void DirectX11_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
+		
 		// TODO
 		/*
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
@@ -794,35 +791,12 @@ namespace april
 
 	void DirectX11_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
-		/*
-		D3D11_BUFFER_DESC matrixBufferDescription;
-		matrixBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
-		matrixBufferDescription.ByteWidth = sizeof(gmat4);
-		matrixBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		matrixBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		matrixBufferDescription.MiscFlags = 0;
-		matrixBufferDescription.StructureByteStride = 0;
-
-		// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-		HRESULT hr = this->d3dDevice->CreateBuffer(&matrixBufferDescription, NULL, &m_matrixBuffer);
-		if( FAILED(hr))
-		{
-			throw hl_exception("Unable to create matrix buffer!");
-		}
-		*/
-
-		// TODO
-		/*
-		this->d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)matrix.data);
-		*/
+		this->matrixBuffer.view = matrix;
 	}
 
 	void DirectX11_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
-		// TODO
-		/*
-		this->d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)matrix.data);
-		*/
+		this->matrixBuffer.projection = matrix;
 	}
 
 	ImageSource* DirectX11_RenderSystem::takeScreenshot(int bpp)
