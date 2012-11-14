@@ -119,6 +119,7 @@ namespace april
 		this->renderTarget = NULL;
 		this->renderTargetView = nullptr;
 		this->vertexBuffer = nullptr;
+		this->constantBuffer = nullptr;
 		return true;
 	}
 
@@ -128,6 +129,10 @@ namespace april
 		{
 			return false;
 		}
+		this->d3dDevice.Get()->Release();
+		this->d3dDevice = nullptr;
+		this->d3dDeviceContext.Get()->Release();
+		this->d3dDeviceContext = nullptr;
 		if (this->defaultVertexShader != NULL)
 		{
 			delete this->defaultVertexShader;
@@ -138,7 +143,16 @@ namespace april
 			delete this->defaultPixelShader;
 			this->defaultPixelShader = NULL;
 		}
-		this->vertexBuffer = nullptr;
+		if (this->vertexBuffer != nullptr)
+		{
+			this->vertexBuffer.Get()->Release();
+			this->vertexBuffer = nullptr;
+		}
+		if (this->constantBuffer != nullptr)
+		{
+			this->constantBuffer.Get()->Release();
+			this->constantBuffer = nullptr;
+		}
 		return true;
 	}
 
@@ -196,6 +210,19 @@ namespace april
 		this->vertexBufferData.pSysMem = NULL;
 		this->vertexBufferData.SysMemPitch = 0;
 		this->vertexBufferData.SysMemSlicePitch = 0;
+		// initial constant buffer
+		D3D11_BUFFER_DESC constantBufferDescription = {0};
+		constantBufferDescription.ByteWidth = sizeof(this->constantBufferData);
+		constantBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+		constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		constantBufferDescription.CPUAccessFlags = 0;
+		constantBufferDescription.MiscFlags = 0;
+		constantBufferDescription.StructureByteStride = 0;
+		hr = this->d3dDevice->CreateBuffer(&constantBufferDescription, nullptr, this->constantBuffer.GetAddressOf());
+		if (FAILED(hr))
+		{
+			throw hl_exception("Unable to create constant buffer!");
+		}
 		// initial calls
 		this->clear(true, false);
 		this->presentFrame();
@@ -648,16 +675,45 @@ namespace april
 	void DirectX11_RenderSystem::_updateVertexBuffer(unsigned int size, void* data)
 	{
 		this->vertexBufferData.pSysMem = data;
-		if (size > this->vertexBufferDescription.ByteWidth)
+		if (true || size > this->vertexBufferDescription.ByteWidth)
 		{
 			this->vertexBufferDescription.ByteWidth = size;
-			this->vertexBuffer = nullptr;
+			if (this->vertexBuffer != nullptr)
+			{
+				this->vertexBuffer.Get()->Release();
+				this->vertexBuffer = nullptr;
+			}
 			this->d3dDevice->CreateBuffer(&this->vertexBufferDescription, &this->vertexBufferData, this->vertexBuffer.GetAddressOf());
 		}
 		else
 		{
 			this->d3dDeviceContext->UpdateSubresource(this->vertexBuffer.Get(), 0, nullptr, &this->vertexBufferData, 0, 0);
 		}
+	}
+	
+	void DirectX11_RenderSystem::_updateConstantBuffer()
+	{
+        this->d3dDeviceContext->UpdateSubresource(this->constantBuffer.Get(), 0, nullptr, &this->constantBufferData, 0, 0);
+		static int print = 0;
+		if (print == 10)
+		{
+			for_iter (j, 0, 4)
+			{
+				hlog::writef("VIEW", "%6.2f %6.2f %6.2f %6.2f", this->modelviewMatrix.data[0 + j * 4], this->modelviewMatrix.data[1 + j * 4],
+					this->modelviewMatrix.data[2 + j * 4], this->modelviewMatrix.data[3 + j * 4]);
+			}
+			for_iter (j, 0, 4)
+			{
+				hlog::writef("PROJ", "%6.2f %6.2f %6.2f %6.2f", this->projectionMatrix.data[0 + j * 4], this->projectionMatrix.data[1 + j * 4],
+					this->projectionMatrix.data[2 + j * 4], this->projectionMatrix.data[3 + j * 4]);
+			}
+			for_iter (j, 0, 4)
+			{
+				hlog::writef("MATR", "%6.2f %6.2f %6.2f %6.2f", this->constantBufferData.matrix.data[0 + j * 4], this->constantBufferData.matrix.data[1 + j * 4],
+					this->constantBufferData.matrix.data[2 + j * 4], this->constantBufferData.matrix.data[3 + j * 4]);
+			}
+		}
+		print++;
 	}
 	
 	void DirectX11_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
@@ -671,8 +727,10 @@ namespace april
 		unsigned int stride = sizeof(PlainVertex);
 		unsigned int offset = 0;
 		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &stride, &offset);
-		this->_setPixelShader(this->activePixelShader);
 		this->_setVertexShader(this->activeVertexShader);
+		this->_setPixelShader(this->activePixelShader);
+		this->_updateConstantBuffer();
+		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
 		this->d3dDeviceContext->Draw(nVertices, 0);
 	}
 
@@ -791,12 +849,12 @@ namespace april
 
 	void DirectX11_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
-		this->matrixBuffer.view = matrix;
+		this->constantBufferData.matrix = (matrix * this->projectionMatrix).transposed();
 	}
 
 	void DirectX11_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
-		this->matrixBuffer.projection = matrix;
+		this->constantBufferData.matrix = (this->modelviewMatrix * matrix).transposed();
 	}
 
 	ImageSource* DirectX11_RenderSystem::takeScreenshot(int bpp)

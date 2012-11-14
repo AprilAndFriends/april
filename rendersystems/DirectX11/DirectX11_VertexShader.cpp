@@ -76,6 +76,7 @@ namespace april
 		const D3D11_INPUT_ELEMENT_DESC inputLayoutDescription[] =
 		{
 			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+            //{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
 		hr = APRIL_D3D_DEVICE->CreateInputLayout(inputLayoutDescription, ARRAYSIZE(inputLayoutDescription),
 			bufferShader->GetBufferPointer(), bufferShader->GetBufferSize(), &this->inputLayout);

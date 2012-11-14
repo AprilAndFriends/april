@@ -42,11 +42,9 @@ namespace april
 		friend class DirectX11_Texture;
 		friend class DirectX11_VertexShader;
 
-		struct MatrixBuffer
+		struct ConstantBuffer
 		{
-			gmat4 model;
-			gmat4 view;
-			gmat4 projection;
+			gmat4 matrix;
 		};
 
 		DirectX11_RenderSystem();
@@ -129,9 +127,11 @@ namespace april
 		D3D11_SUBRESOURCE_DATA vertexBufferData;
 		ComPtr<ID3D11Buffer> vertexBuffer;
 
-		MatrixBuffer matrixBuffer;
+		ComPtr<ID3D11Buffer> constantBuffer;
+		ConstantBuffer constantBufferData;
 
 		void _updateVertexBuffer(unsigned int size, void* data);
+		void _updateConstantBuffer();
 
 	};
 
