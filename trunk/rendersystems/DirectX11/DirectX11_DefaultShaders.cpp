@@ -16,6 +16,7 @@ namespace april
 {
 	namespace DirectX11
 	{
+		/*
 		hstr DefaultVertexShader = "\
 		void VS(in float4 posIn : POSITION, out float4 posOut : SV_Position)\n \
 		{\n \
@@ -28,6 +29,55 @@ namespace april
 		{\n \
 			colorOut = float4(1.0f, 1.0f, 1.0f, 1.0f);\n \
 		}\n \
+		";
+		*/
+		
+		hstr _constantBuffer = "\
+		cbuffer constantBuffer : register(b0) \
+		{ \
+			matrix mat; \
+		}; \
+		";
+
+		hstr _vertexInput = "\
+		struct VertexShaderInput \
+		{ \
+			float3 pos : POSITION; \
+			/*float4 color : COLOR;*/ \
+		}; \
+		";
+
+		hstr _pixelInput = "\
+		struct PixelShaderInput \
+		{ \
+			float4 pos : SV_POSITION; \
+			/*float4 color : COLOR;*/ \
+		}; \
+		";
+
+		hstr DefaultVertexShader = 
+			_constantBuffer +
+			_vertexInput +
+			_pixelInput +
+			"\
+		PixelShaderInput VS(VertexShaderInput input) \
+		{ \
+			PixelShaderInput vertexShaderOutput; \
+			float4 pos = float4(input.pos, 1.0f); \
+			pos = mul(pos, mat); \
+			vertexShaderOutput.pos = pos; \
+			/*vertexShaderOutput.color = input.color;*/ \
+			return vertexShaderOutput; \
+		} \
+		";
+	
+		hstr DefaultPixelShader =
+			_pixelInput +
+			"\
+		float4 PS(PixelShaderInput input) : SV_TARGET \
+		{ \
+			return float4(1.0f, 1.0f, 1.0f, 1.0f);/* input.color;*/ \
+		} \
 		";
 
 	}
