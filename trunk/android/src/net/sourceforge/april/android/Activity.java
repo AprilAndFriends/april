@@ -163,16 +163,4 @@ public class Activity extends android.app.Activity
 		return NativeInterface.DialogBuilder.create();
 	}
 	
-	protected void setKeepAwake(boolean value)
-	{
-		if (value)
-		{
-			this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		}
-		else
-		{
-			this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		}
-	}
-	
 }
