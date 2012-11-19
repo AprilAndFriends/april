@@ -34,5 +34,10 @@ namespace april
 		stream.read_raw(*data, *size);
 		return true;
 	}
+
+	bool PixelShader::compile(chstr shaderCode) // DEPRECATED
+	{
+		return false;
+	}
 	
 }
