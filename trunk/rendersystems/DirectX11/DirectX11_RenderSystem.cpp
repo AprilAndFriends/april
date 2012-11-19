@@ -842,78 +842,36 @@ namespace april
 		this->_updateConstantBuffer(color);
 		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
 		this->d3dDeviceContext->Draw(nVertices, 0);
-		// TODO
-		/*
-		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
-		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		ColoredTexturedVertex* p = ctv;
-		for_iter (i, 0, nVertices)
-		{
-			p[i].x = v[i].x;
-			p[i].y = v[i].y;
-			p[i].z = v[i].z;
-			p[i].u = v[i].u;
-			p[i].v = v[i].v;
-			p[i].color = colorDx9;
-		}
-		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx11_render_ops[renderOp], _numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete [] ctv;
-		}
-		*/
 	}
 
 	void DirectX11_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
 	{
-		// TODO
-		/*
-		if (this->activeTexture != NULL)
-		{
-			this->setTexture(NULL);
-		}
-		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
-		ColoredVertex* p = cv;
-		for_iter (i, 0, nVertices)
-		{
-			p[i].x = v[i].x;
-			p[i].y = v[i].y;
-			p[i].z = v[i].z;
-			p[i].color = UINT_RGBA_TO_ARGB(v[i].color);
-		}
-		this->d3dDevice->SetFVF(COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx11_render_ops[renderOp], _numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete [] cv;
-		}
-		*/
+		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
+		this->_updateVertexBuffer(sizeof(ColoredVertex) * nVertices, v);
+		unsigned int stride = sizeof(ColoredVertex);
+		unsigned int offset = 0;
+		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &stride, &offset);
+		this->d3dDeviceContext->IASetInputLayout(this->inputLayoutColored.Get());
+		this->_setVertexShader(this->vertexShaderTextured);
+		this->_setPixelShader(this->pixelShaderTextured);
+		this->_updateConstantBuffer(april::Color::White);
+		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
+		this->d3dDeviceContext->Draw(nVertices, 0);
 	}
 
 	void DirectX11_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
-		
-		// TODO
-		/*
-		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		ColoredTexturedVertex* p = ctv;
-		for_iter (i, 0, nVertices)
-		{
-			p[i].x = v[i].x;
-			p[i].y = v[i].y;
-			p[i].z = v[i].z;
-			p[i].u = v[i].u;
-			p[i].v = v[i].v;
-			p[i].color = UINT_RGBA_TO_ARGB(v[i].color);
-		}
-		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx11_render_ops[renderOp], _numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete [] ctv;
-		}
-		*/
+		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
+		this->_updateVertexBuffer(sizeof(ColoredTexturedVertex) * nVertices, v);
+		unsigned int stride = sizeof(ColoredTexturedVertex);
+		unsigned int offset = 0;
+		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &stride, &offset);
+		this->d3dDeviceContext->IASetInputLayout(this->inputLayoutColoredTextured.Get());
+		this->_setVertexShader(this->vertexShaderColoredTextured);
+		this->_setPixelShader(this->pixelShaderColoredTextured);
+		this->_updateConstantBuffer(april::Color::White);
+		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
+		this->d3dDeviceContext->Draw(nVertices, 0);
 	}
 
 	void DirectX11_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
