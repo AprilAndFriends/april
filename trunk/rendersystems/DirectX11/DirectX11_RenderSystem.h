@@ -18,6 +18,7 @@
 #include <d3d11_1.h>
 
 #include <gtypes/Matrix4.h>
+#include <gtypes/Quaternion.h>
 #include <gtypes/Rectangle.h>
 #include <hltypes/harray.h>
 #include <hltypes/hplatform.h>
@@ -45,6 +46,7 @@ namespace april
 		struct ConstantBuffer
 		{
 			gmat4 matrix;
+			gquat color;
 		};
 
 		DirectX11_RenderSystem();
@@ -130,8 +132,10 @@ namespace april
 		ComPtr<ID3D11Buffer> constantBuffer;
 		ConstantBuffer constantBufferData;
 
+		bool matrixDirty;
+
 		void _updateVertexBuffer(unsigned int size, void* data);
-		void _updateConstantBuffer();
+		void _updateConstantBuffer(Color color);
 
 	};
 
