@@ -91,7 +91,8 @@ namespace april
 	
 	DirectX11_RenderSystem::DirectX11_RenderSystem() : RenderSystem(), zBufferEnabled(false),
 		textureCoordinatesEnabled(false), colorEnabled(false), activeTexture(NULL), activeVertexShader(NULL),
-		activePixelShader(NULL), renderTarget(NULL), defaultVertexShader(NULL), defaultPixelShader(NULL)
+		activePixelShader(NULL), renderTarget(NULL), defaultVertexShader(NULL), defaultPixelShader(NULL),
+		matrixDirty(true)
 	{
 		this->name = APRIL_RS_DIRECTX11;
 		this->d3dDevice = nullptr;
@@ -120,6 +121,7 @@ namespace april
 		this->renderTargetView = nullptr;
 		this->vertexBuffer = nullptr;
 		this->constantBuffer = nullptr;
+		this->matrixDirty = true;
 		return true;
 	}
 
@@ -374,7 +376,7 @@ namespace april
 		D3D11_VIEWPORT viewport;
 		unsigned int count = 1;
 		this->d3dDeviceContext->RSGetViewports(&count, &viewport);
-		return grect((float)viewport.TopLeftX, (float)viewport.TopLeftY, (float)viewport.Width, (float)viewport.Height);
+		return grect((float)viewport.TopLeftX, (float)viewport.TopLeftY, (float)viewport.Width - 1, (float)viewport.Height - 1);
 	}
 
 	void DirectX11_RenderSystem::setViewport(grect rect)
@@ -385,8 +387,8 @@ namespace april
 		// these double-casts are to ensure consistent behavior among rendering systems
 		viewport.TopLeftX = (float)(int)rect.x;
 		viewport.TopLeftY = (float)(int)rect.y;
-		viewport.Width = (float)(int)rect.w;
-		viewport.Height = (float)(int)rect.h;
+		viewport.Width = (float)(int)rect.w + 1;
+		viewport.Height = (float)(int)rect.h + 1;
 		this->d3dDeviceContext->RSSetViewports(1, &viewport);
 	}
 
@@ -691,9 +693,16 @@ namespace april
 		}
 	}
 	
-	void DirectX11_RenderSystem::_updateConstantBuffer()
+	void DirectX11_RenderSystem::_updateConstantBuffer(Color color)
 	{
+		if (this->matrixDirty)
+		{
+			this->matrixDirty = false;
+			this->constantBufferData.matrix.transpose();
+		}
+		this->constantBufferData.color.set(gvec3(color.r_f(), color.g_f(), color.b_f()), color.a_f());
         this->d3dDeviceContext->UpdateSubresource(this->constantBuffer.Get(), 0, nullptr, &this->constantBufferData, 0, 0);
+		/*
 		static int print = 0;
 		if (print == 10)
 		{
@@ -714,9 +723,15 @@ namespace april
 			}
 		}
 		print++;
+		*/
 	}
 	
 	void DirectX11_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
+	{
+		this->render(renderOp, v, nVertices, april::Color::White);
+	}
+
+	void DirectX11_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
 	{
 		if (this->activeTexture != NULL)
 		{
@@ -729,14 +744,9 @@ namespace april
 		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &stride, &offset);
 		this->_setVertexShader(this->activeVertexShader);
 		this->_setPixelShader(this->activePixelShader);
-		this->_updateConstantBuffer();
+		this->_updateConstantBuffer(color);
 		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
 		this->d3dDeviceContext->Draw(nVertices, 0);
-	}
-
-	void DirectX11_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
-	{
-		this->render(renderOp, v, nVertices);
 		// TODO
 		/*
 		if (this->activeTexture != NULL)
@@ -849,12 +859,14 @@ namespace april
 
 	void DirectX11_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
-		this->constantBufferData.matrix = (matrix * this->projectionMatrix).transposed();
+		this->constantBufferData.matrix = matrix * this->projectionMatrix;
+		this->matrixDirty = true;
 	}
 
 	void DirectX11_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
-		this->constantBufferData.matrix = (this->modelviewMatrix * matrix).transposed();
+		this->constantBufferData.matrix = this->modelviewMatrix * matrix;
+		this->matrixDirty = true;
 	}
 
 	ImageSource* DirectX11_RenderSystem::takeScreenshot(int bpp)

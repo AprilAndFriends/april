@@ -36,6 +36,7 @@ namespace april
 		cbuffer constantBuffer : register(b0) \
 		{ \
 			matrix mat; \
+			float4 col; \
 		}; \
 		";
 
@@ -51,7 +52,7 @@ namespace april
 		struct PixelShaderInput \
 		{ \
 			float4 pos : SV_POSITION; \
-			/*float4 color : COLOR;*/ \
+			float4 color : COLOR; \
 		}; \
 		";
 
@@ -67,6 +68,7 @@ namespace april
 			pos = mul(pos, mat); \
 			vertexShaderOutput.pos = pos; \
 			/*vertexShaderOutput.color = input.color;*/ \
+			vertexShaderOutput.color = col; \
 			return vertexShaderOutput; \
 		} \
 		";
@@ -76,7 +78,7 @@ namespace april
 			"\
 		float4 PS(PixelShaderInput input) : SV_TARGET \
 		{ \
-			return float4(1.0f, 1.0f, 1.0f, 1.0f);/* input.color;*/ \
+			return input.color; \
 		} \
 		";
 
