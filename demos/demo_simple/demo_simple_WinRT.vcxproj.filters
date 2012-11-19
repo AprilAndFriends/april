@@ -13,29 +13,20 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
-    <Filter Include="AndroidApk">
-      <UniqueIdentifier>{419bdca5-3fca-476d-9de2-8ec9fcee831c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Win8xap">
       <UniqueIdentifier>{f0ae1058-a500-44e2-8f2a-326b57b71662}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Win8xap\Assets">
-      <UniqueIdentifier>{54c407b3-832b-4178-8a01-96291b02c30b}</UniqueIdentifier>
     </Filter>
     <Filter Include="DLLs">
       <UniqueIdentifier>{f84bdb13-d712-4d85-9f76-bc08bb84c6a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Win8xap\media">
+      <UniqueIdentifier>{df25b4c6-d8ac-462d-b490-c614f00bcfbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win8xap\media\assets">
+      <UniqueIdentifier>{88ab3f03-5374-4194-8762-3355cfa6d25a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="android\AndroidManifest.xml">
-      <Filter>AndroidApk</Filter>
-    </None>
-    <None Include="android\src\DemoSimple.java">
-      <Filter>AndroidApk</Filter>
-    </None>
-    <None Include="android\build.xml">
-      <Filter>AndroidApk</Filter>
-    </None>
     <None Include="demo_simple_TemporaryKey.pfx">
       <Filter>Win8xap</Filter>
     </None>
@@ -45,8 +36,8 @@
     <None Include="..\..\..\lib\WinRT\zlib1.dll">
       <Filter>DLLs</Filter>
     </None>
-    <None Include="..\..\bin\Win32\d3dcompiler_46.dll">
-      <Filter>DLLs</Filter>
+    <None Include="media\jpt_final.jpt">
+      <Filter>Win8xap\media</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -60,17 +51,47 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Assets\small_icon.png">
-      <Filter>Win8xap\Assets</Filter>
+    <Image Include="media\icon.png">
+      <Filter>Win8xap\media</Filter>
     </Image>
-    <Image Include="Assets\splash.png">
-      <Filter>Win8xap\Assets</Filter>
+    <Image Include="media\jpt_raw.jpg">
+      <Filter>Win8xap\media</Filter>
     </Image>
-    <Image Include="Assets\store_icon.png">
-      <Filter>Win8xap\Assets</Filter>
+    <Image Include="media\jpt_raw.png">
+      <Filter>Win8xap\media</Filter>
     </Image>
-    <Image Include="Assets\logo_icon.png">
-      <Filter>Win8xap\Assets</Filter>
+    <Image Include="media\line_horz.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\line_vert.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\line45.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\line315.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\o.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\texture.jpg">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\x.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\Assets\logo_icon.png">
+      <Filter>Win8xap\media\assets</Filter>
+    </Image>
+    <Image Include="media\Assets\small_icon.png">
+      <Filter>Win8xap\media\assets</Filter>
+    </Image>
+    <Image Include="media\Assets\splash.png">
+      <Filter>Win8xap\media\assets</Filter>
+    </Image>
+    <Image Include="media\Assets\store_icon.png">
+      <Filter>Win8xap\media\assets</Filter>
     </Image>
   </ItemGroup>
 </Project>

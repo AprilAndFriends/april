@@ -9,9 +9,9 @@
 
 #ifdef _DIRECTX11
 #include <d3d11.h>
-#include <d3dcompiler.h>
 
 #include <hltypes/hlog.h>
+#include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
 #include "april.h"
@@ -22,8 +22,9 @@
 
 namespace april
 {
-	DirectX11_PixelShader::DirectX11_PixelShader(chstr filename) : PixelShader(filename), dx11Shader(NULL)
+	DirectX11_PixelShader::DirectX11_PixelShader(chstr filename) : PixelShader(), dx11Shader(NULL)
 	{
+		this->load(filename);
 	}
 
 	DirectX11_PixelShader::DirectX11_PixelShader() : PixelShader(), dx11Shader(NULL)
@@ -39,35 +40,22 @@ namespace april
 		}
 	}
 
-	bool DirectX11_PixelShader::compile(chstr shaderCode)
+	bool DirectX11_PixelShader::load(chstr filename)
 	{
-		if (shaderCode == "")
+		if (this->dx11Shader != NULL)
 		{
-			hlog::error(april::logTag, "No pixel shader code given!");
+			hlog::error(april::logTag, "Shader already loaded.");
 			return false;
 		}
-		DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-#ifdef _DEBUG
-		shaderFlags |= D3DCOMPILE_DEBUG;
-#else
-		shaderFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
-#endif
-		ID3DBlob* bufferShader = NULL;
-		ID3DBlob* bufferError = NULL;
-		HRESULT hr = D3DCompile(shaderCode.c_str(), shaderCode.size(), "PS", NULL, NULL,
-			"PS", "ps_4_0_level_9_1", shaderFlags, 0, &bufferShader, &bufferError);
-		if (FAILED(hr))
+		unsigned char* data = NULL;
+		long size = 0;
+		if (!this->_loadData(filename, &data, &size))
 		{
-			hlog::error(april::logTag, "Failed to compile pixel shader!");
-			if (bufferError != NULL)
-			{
-				hlog::error(april::logTag, (char*)bufferError->GetBufferPointer());
-				bufferError->Release();
-			}
+			hlog::error(april::logTag, "Shader file not found: " + filename);
 			return false;
 		}
-		hr = APRIL_D3D_DEVICE->CreatePixelShader(bufferShader->GetBufferPointer(),
-			bufferShader->GetBufferSize(), NULL, &this->dx11Shader);
+		HRESULT hr = APRIL_D3D_DEVICE->CreatePixelShader(data, size, NULL, &this->dx11Shader);
+		delete [] data;
 		if (FAILED(hr))
 		{
 			hlog::error(april::logTag, "Failed to create pixel shader!");

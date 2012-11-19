@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.42
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -21,8 +21,9 @@
 
 namespace april
 {
-	DirectX9_VertexShader::DirectX9_VertexShader(chstr filename) : VertexShader(filename), dx9Shader(NULL)
+	DirectX9_VertexShader::DirectX9_VertexShader(chstr filename) : VertexShader(), dx9Shader(NULL)
 	{
+		this->load(filename);
 	}
 
 	DirectX9_VertexShader::DirectX9_VertexShader() : VertexShader(), dx9Shader(NULL)
@@ -36,6 +37,24 @@ namespace april
 			this->dx9Shader->Release();
 			this->dx9Shader = NULL;
 		}
+	}
+
+	bool DirectX9_VertexShader::load(chstr filename)
+	{
+		unsigned char* data = NULL;
+		long size = 0;
+		if (!this->_loadData(filename, &data, &size))
+		{
+			hlog::error(april::logTag, "Shader file not found: " + filename);
+			return false;
+		}
+		HRESULT result = APRIL_D3D_DEVICE->CreateVertexShader((DWORD*)data, &this->dx9Shader);
+		if (result != D3D_OK)
+		{
+			hlog::error(april::logTag, "Failed to create vertex shader!");
+			return false;
+		}
+		return true;
 	}
 
 	bool DirectX9_VertexShader::compile(chstr shaderCode)

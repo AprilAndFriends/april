@@ -32,7 +32,7 @@ namespace april
 		DirectX11_PixelShader();
 		~DirectX11_PixelShader();
 
-		bool compile(chstr shaderCode);
+		bool load(chstr filename);
 		void setConstantsB(const int* quadVectors, unsigned int quadCount);
 		void setConstantsI(const int* quadVectors, unsigned int quadCount);
 		void setConstantsF(const float* quadVectors, unsigned int quadCount);
