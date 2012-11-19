@@ -82,8 +82,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>xcopy ..\Assets\*.* Assets\ /d /y
-xcopy ..\media\*.* media\ /d /y</Command>
+      <Command>xcopy ..\media\*.* media\ /d /y</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,8 +116,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>xcopy ..\Assets\*.* Assets\ /d /y
-xcopy ..\media\*.* media\ /d /y</Command>
+      <Command>xcopy ..\media\*.* media\ /d /y</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -137,11 +135,6 @@ xcopy ..\media\*.* media\ /d /y</Command>
       <Project>{2d053cda-686b-4b36-80eb-1da5f0cef8f9}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="android\AndroidManifest.xml" />
-    <None Include="android\build.xml" />
-    <None Include="android\src\DemoTicTacToe.java" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

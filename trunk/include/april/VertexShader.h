@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.0
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -23,19 +23,18 @@ namespace april
 	class aprilExport VertexShader
 	{
 	public:
-		VertexShader(chstr filename);
 		VertexShader();
 		virtual ~VertexShader();
 
-		void load(chstr filename);
-		bool compile();
-		virtual bool compile(chstr shaderCode) = 0;
+		virtual bool load(chstr filename) = 0;
 		virtual void setConstantsB(const int* quadVectors, unsigned int quadCount) = 0;
 		virtual void setConstantsI(const int* quadVectors, unsigned int quadCount) = 0;
 		virtual void setConstantsF(const float* quadVectors, unsigned int quadCount) = 0;
 
+		DEPRECATED_ATTRIBUTE virtual bool compile(chstr shaderCode) { return false; }
+
 	protected:
-		hstr shaderCode;
+		bool _loadData(chstr filename, unsigned char** data, long* size);
 
 	};
 

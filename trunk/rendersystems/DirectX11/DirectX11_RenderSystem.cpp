@@ -18,7 +18,6 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
-#include "DirectX11_DefaultShaders.h"
 #include "DirectX11_PixelShader.h"
 #include "DirectX11_RenderSystem.h"
 #include "DirectX11_Texture.h"
@@ -33,6 +32,13 @@ using namespace Microsoft::WRL;
 
 #define VERTICES_BUFFER_COUNT 8192
 #define UINT_RGBA_TO_ARGB(c) ((((c) >> 8) & 0xFFFFFF) | (((c) & 0xFF) << 24))
+
+#define TRY_DELETE(name) \
+	if (name != NULL) \
+	{ \
+		delete name; \
+		name = NULL; \
+	}
 
 namespace april
 {
@@ -90,9 +96,10 @@ namespace april
 	}
 	
 	DirectX11_RenderSystem::DirectX11_RenderSystem() : RenderSystem(), zBufferEnabled(false),
-		textureCoordinatesEnabled(false), colorEnabled(false), activeTexture(NULL), activeVertexShader(NULL),
-		activePixelShader(NULL), renderTarget(NULL), defaultVertexShader(NULL), defaultPixelShader(NULL),
-		matrixDirty(true)
+		textureCoordinatesEnabled(false), colorEnabled(false), activeTexture(NULL), renderTarget(NULL),
+		matrixDirty(true), vertexShaderPlain(NULL), pixelShaderPlain(NULL), vertexShaderTextured(NULL),
+		pixelShaderTextured(NULL), vertexShaderColored(NULL), pixelShaderColored(NULL),
+		vertexShaderColoredTextured(NULL), pixelShaderColoredTextured(NULL)
 	{
 		this->name = APRIL_RS_DIRECTX11;
 		this->d3dDevice = nullptr;
@@ -115,8 +122,6 @@ namespace april
 		this->textureCoordinatesEnabled = false;
 		this->colorEnabled = false;
 		this->activeTexture = NULL;
-		this->activeVertexShader = NULL;
-		this->activePixelShader = NULL;
 		this->renderTarget = NULL;
 		this->renderTargetView = nullptr;
 		this->vertexBuffer = nullptr;
@@ -135,15 +140,33 @@ namespace april
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext.Get()->Release();
 		this->d3dDeviceContext = nullptr;
-		if (this->defaultVertexShader != NULL)
+		TRY_DELETE(this->vertexShaderPlain);
+		TRY_DELETE(this->pixelShaderPlain);
+		TRY_DELETE(this->vertexShaderColored);
+		TRY_DELETE(this->pixelShaderColored);
+		TRY_DELETE(this->vertexShaderTextured);
+		TRY_DELETE(this->vertexShaderTextured);
+		TRY_DELETE(this->vertexShaderColoredTextured);
+		TRY_DELETE(this->pixelShaderColoredTextured);
+		if (this->inputLayoutPlain != nullptr)
 		{
-			delete this->defaultVertexShader;
-			this->defaultVertexShader = NULL;
+			this->inputLayoutPlain.Get()->Release();
+			this->inputLayoutPlain = nullptr;
 		}
-		if (this->defaultPixelShader != NULL)
+		if (this->inputLayoutColored != nullptr)
 		{
-			delete this->defaultPixelShader;
-			this->defaultPixelShader = NULL;
+			this->inputLayoutColored.Get()->Release();
+			this->inputLayoutColored = nullptr;
+		}
+		if (this->inputLayoutTextured != nullptr)
+		{
+			this->inputLayoutTextured.Get()->Release();
+			this->inputLayoutTextured = nullptr;
+		}
+		if (this->inputLayoutColoredTextured != nullptr)
+		{
+			this->inputLayoutColoredTextured.Get()->Release();
+			this->inputLayoutColoredTextured = nullptr;
 		}
 		if (this->vertexBuffer != nullptr)
 		{
@@ -229,18 +252,98 @@ namespace april
 		this->clear(true, false);
 		this->presentFrame();
 		this->orthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
-		if (this->defaultVertexShader == NULL)
+		// default shaders
+		if (this->vertexShaderPlain == NULL)
 		{
-			this->defaultVertexShader = this->createVertexShader();
-			this->defaultVertexShader->compile(DirectX11::DefaultVertexShader);
+			this->vertexShaderPlain = (DirectX11_VertexShader*)this->createVertexShader("libapril/VertexShader_Plain.cso");
 		}
-		if (this->defaultPixelShader == NULL)
+		if (this->pixelShaderPlain == NULL)
 		{
-			this->defaultPixelShader = this->createPixelShader();
-			this->defaultPixelShader->compile(DirectX11::DefaultPixelShader);
+			this->pixelShaderPlain = (DirectX11_PixelShader*)this->createPixelShader("libapril/PixelShader_Plain.cso");
 		}
-		this->setVertexShader(this->defaultVertexShader);
-		this->setPixelShader(this->defaultPixelShader);
+		if (this->vertexShaderTextured == NULL)
+		{
+			this->vertexShaderTextured = (DirectX11_VertexShader*)this->createVertexShader("libapril/VertexShader_Textured.cso");
+		}
+		if (this->pixelShaderTextured == NULL)
+		{
+			this->pixelShaderTextured = (DirectX11_PixelShader*)this->createPixelShader("libapril/PixelShader_Textured.cso");
+		}
+		if (this->vertexShaderColored == NULL)
+		{
+			this->vertexShaderColored = (DirectX11_VertexShader*)this->createVertexShader("libapril/VertexShader_Colored.cso");
+		}
+		if (this->pixelShaderColored == NULL)
+		{
+			this->pixelShaderColored = (DirectX11_PixelShader*)this->createPixelShader("libapril/PixelShader_Colored.cso");
+		}
+		if (this->vertexShaderColoredTextured == NULL)
+		{
+			this->vertexShaderColoredTextured = (DirectX11_VertexShader*)this->createVertexShader("libapril/VertexShader_ColoredTextured.cso");
+		}
+		if (this->pixelShaderColoredTextured == NULL)
+		{
+			this->pixelShaderColoredTextured = (DirectX11_PixelShader*)this->createPixelShader("libapril/PixelShader_ColoredTextured.cso");
+		}
+		// input layouts for default shaders
+		D3D11_INPUT_ELEMENT_DESC _position = {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
+		D3D11_INPUT_ELEMENT_DESC _color = {"COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0};
+		if (this->inputLayoutPlain == nullptr)
+		{
+			const D3D11_INPUT_ELEMENT_DESC inputLayoutDescriptionPlain[] =
+			{
+				_position,
+			};
+			hr = this->d3dDevice->CreateInputLayout(inputLayoutDescriptionPlain, ARRAYSIZE(inputLayoutDescriptionPlain),
+				this->vertexShaderPlain->shaderData, this->vertexShaderPlain->shaderSize, &this->inputLayoutPlain);
+			if (FAILED(hr))
+			{
+				throw hl_exception("Unable to create input layout for plain shader!");
+			}
+		}
+		if (this->inputLayoutColored == nullptr)
+		{
+			const D3D11_INPUT_ELEMENT_DESC inputLayoutDescriptionColored[] =
+			{
+				_position,
+				_color,
+			};
+			hr = this->d3dDevice->CreateInputLayout(inputLayoutDescriptionColored, ARRAYSIZE(inputLayoutDescriptionColored),
+				this->vertexShaderColored->shaderData, this->vertexShaderColored->shaderSize, &this->inputLayoutColored);
+			if (FAILED(hr))
+			{
+				throw hl_exception("Unable to create input layout for colored shader!");
+			}
+		}
+		if (this->inputLayoutTextured == nullptr)
+		{
+			const D3D11_INPUT_ELEMENT_DESC inputLayoutDescriptionTextured[] =
+			{
+				_position,
+				{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			};
+			hr = this->d3dDevice->CreateInputLayout(inputLayoutDescriptionTextured, ARRAYSIZE(inputLayoutDescriptionTextured),
+				this->vertexShaderTextured->shaderData, this->vertexShaderTextured->shaderSize, &this->inputLayoutTextured);
+			if (FAILED(hr))
+			{
+				throw hl_exception("Unable to create input layout for textured shader!");
+			}
+		}
+		if (this->inputLayoutColoredTextured == nullptr)
+		{
+			const D3D11_INPUT_ELEMENT_DESC inputLayoutDescriptionColoredTextured[] =
+			{
+				_position,
+				_color,
+				{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			};
+			hr = this->d3dDevice->CreateInputLayout(inputLayoutDescriptionColoredTextured, ARRAYSIZE(inputLayoutDescriptionColoredTextured),
+				this->vertexShaderColoredTextured->shaderData, this->vertexShaderColoredTextured->shaderSize, &this->inputLayoutColoredTextured);
+			if (FAILED(hr))
+			{
+				throw hl_exception("Unable to create input layout for colored-textured shader!");
+			}
+		}
 	}
 
 	void DirectX11_RenderSystem::_createSwapChain(int width, int height)
@@ -590,27 +693,20 @@ namespace april
 
 	void DirectX11_RenderSystem::_setPixelShader(DirectX11_PixelShader* pixelShader)
 	{
-		if (pixelShader != NULL)
+		if (this->activePixelShader != NULL)
 		{
-			this->d3dDeviceContext->PSSetShader(pixelShader->dx11Shader, NULL, 0);
+			pixelShader = this->activePixelShader;
 		}
-		else
-		{
-			this->d3dDeviceContext->PSSetShader(NULL, NULL, 0);
-		}
+		this->d3dDeviceContext->PSSetShader(pixelShader->dx11Shader, NULL, 0);
 	}
 
 	void DirectX11_RenderSystem::_setVertexShader(DirectX11_VertexShader* vertexShader)
 	{
-		if (vertexShader != NULL)
+		if (this->activeVertexShader != NULL)
 		{
-			this->d3dDeviceContext->VSSetShader(vertexShader->dx11Shader, NULL, 0);
-			this->d3dDeviceContext->IASetInputLayout(vertexShader->inputLayout.Get());
+			vertexShader = this->activeVertexShader;
 		}
-		else
-		{
-			this->d3dDeviceContext->VSSetShader(NULL, NULL, 0);
-		}
+		this->d3dDeviceContext->VSSetShader(vertexShader->dx11Shader, NULL, 0);
 	}
 
 	void DirectX11_RenderSystem::setResolution(int w, int h)
@@ -659,11 +755,7 @@ namespace april
 
 	void DirectX11_RenderSystem::clear(bool useColor, bool depth)
 	{
-#ifndef _DEBUG
 		static const float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-#else
-		static const float clearColor[4] = {0.0f, 1.0f, 0.0f, 1.0f};
-#endif
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 	
@@ -702,28 +794,6 @@ namespace april
 		}
 		this->constantBufferData.color.set(gvec3(color.r_f(), color.g_f(), color.b_f()), color.a_f());
         this->d3dDeviceContext->UpdateSubresource(this->constantBuffer.Get(), 0, nullptr, &this->constantBufferData, 0, 0);
-		/*
-		static int print = 0;
-		if (print == 10)
-		{
-			for_iter (j, 0, 4)
-			{
-				hlog::writef("VIEW", "%6.2f %6.2f %6.2f %6.2f", this->modelviewMatrix.data[0 + j * 4], this->modelviewMatrix.data[1 + j * 4],
-					this->modelviewMatrix.data[2 + j * 4], this->modelviewMatrix.data[3 + j * 4]);
-			}
-			for_iter (j, 0, 4)
-			{
-				hlog::writef("PROJ", "%6.2f %6.2f %6.2f %6.2f", this->projectionMatrix.data[0 + j * 4], this->projectionMatrix.data[1 + j * 4],
-					this->projectionMatrix.data[2 + j * 4], this->projectionMatrix.data[3 + j * 4]);
-			}
-			for_iter (j, 0, 4)
-			{
-				hlog::writef("MATR", "%6.2f %6.2f %6.2f %6.2f", this->constantBufferData.matrix.data[0 + j * 4], this->constantBufferData.matrix.data[1 + j * 4],
-					this->constantBufferData.matrix.data[2 + j * 4], this->constantBufferData.matrix.data[3 + j * 4]);
-			}
-		}
-		print++;
-		*/
 	}
 	
 	void DirectX11_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
@@ -742,47 +812,36 @@ namespace april
 		unsigned int stride = sizeof(PlainVertex);
 		unsigned int offset = 0;
 		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &stride, &offset);
-		this->_setVertexShader(this->activeVertexShader);
-		this->_setPixelShader(this->activePixelShader);
+		this->d3dDeviceContext->IASetInputLayout(this->inputLayoutPlain.Get());
+		this->_setVertexShader(this->vertexShaderPlain);
+		this->_setPixelShader(this->pixelShaderPlain);
 		this->_updateConstantBuffer(color);
 		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
 		this->d3dDeviceContext->Draw(nVertices, 0);
-		// TODO
-		/*
-		if (this->activeTexture != NULL)
-		{
-			this->setTexture(NULL);
-		}
-		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
-		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
-		ColoredVertex* p = cv;
-		for_iter (i, 0, nVertices)
-		{
-			p[i].x = v[i].x;
-			p[i].y = v[i].y;
-			p[i].z = v[i].z;
-			p[i].color = colorDx9;
-		}
-		this->d3dDevice->SetFVF(COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx11_render_ops[renderOp], _numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete [] cv;
-		}
-		*/
 	}
 	
 	void DirectX11_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
 	{
-		// TODO
-		/*
-		this->d3dDevice->SetFVF(TEX_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx11_render_ops[renderOp], _numPrimitives(renderOp, nVertices), v, sizeof(TexturedVertex));
-		*/
+		this->render(renderOp, v, nVertices, april::Color::White);
 	}
 
 	void DirectX11_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
 	{
+		if (this->activeTexture != NULL)
+		{
+			this->setTexture(NULL);
+		}
+		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
+		this->_updateVertexBuffer(sizeof(TexturedVertex) * nVertices, v);
+		unsigned int stride = sizeof(TexturedVertex);
+		unsigned int offset = 0;
+		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &stride, &offset);
+		this->d3dDeviceContext->IASetInputLayout(this->inputLayoutTextured.Get());
+		this->_setVertexShader(this->vertexShaderTextured);
+		this->_setPixelShader(this->pixelShaderTextured);
+		this->_updateConstantBuffer(color);
+		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
+		this->d3dDeviceContext->Draw(nVertices, 0);
 		// TODO
 		/*
 		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);

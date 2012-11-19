@@ -105,8 +105,15 @@ namespace april
 		DirectX11_PixelShader* activePixelShader;
 		DirectX11_Texture* renderTarget;
 		harray<DisplayMode> supportedDisplayModes;
-		VertexShader* defaultVertexShader;
-		PixelShader* defaultPixelShader;
+
+		DirectX11_VertexShader* vertexShaderPlain;
+		DirectX11_PixelShader* pixelShaderPlain;
+		DirectX11_VertexShader* vertexShaderTextured;
+		DirectX11_PixelShader* pixelShaderTextured;
+		DirectX11_VertexShader* vertexShaderColored;
+		DirectX11_PixelShader* pixelShaderColored;
+		DirectX11_VertexShader* vertexShaderColoredTextured;
+		DirectX11_PixelShader* pixelShaderColoredTextured;
 
 		void _configureDevice();
 		void _createSwapChain(int width, int height);
@@ -131,6 +138,12 @@ namespace april
 
 		ComPtr<ID3D11Buffer> constantBuffer;
 		ConstantBuffer constantBufferData;
+
+		ComPtr<ID3D11InputLayout> inputLayoutPlain;
+		ComPtr<ID3D11InputLayout> inputLayoutTextured;
+		ComPtr<ID3D11InputLayout> inputLayoutColored;
+		ComPtr<ID3D11InputLayout> inputLayoutColoredTextured;
+
 
 		bool matrixDirty;
 

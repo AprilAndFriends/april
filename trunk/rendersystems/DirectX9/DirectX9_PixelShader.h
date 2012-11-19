@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -34,10 +34,12 @@ namespace april
 		DirectX9_PixelShader();
 		~DirectX9_PixelShader();
 
-		bool compile(chstr shaderCode);
+		bool load(chstr filename);
 		void setConstantsB(const int* quadVectors, unsigned int quadCount);
 		void setConstantsI(const int* quadVectors, unsigned int quadCount);
 		void setConstantsF(const float* quadVectors, unsigned int quadCount);
+
+		DEPRECATED_ATTRIBUTE bool compile(chstr shaderCode);
 
 	protected:
 		IDirect3DPixelShader9* dx9Shader;

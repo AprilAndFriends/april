@@ -32,14 +32,15 @@ namespace april
 		DirectX11_VertexShader();
 		~DirectX11_VertexShader();
 
-		bool compile(chstr shaderCode);
+		bool load(chstr filename);
 		void setConstantsB(const int* quadVectors, unsigned int quadCount);
 		void setConstantsI(const int* quadVectors, unsigned int quadCount);
 		void setConstantsF(const float* quadVectors, unsigned int quadCount);
 
 	protected:
 		ID3D11VertexShader* dx11Shader;
-		ComPtr<ID3D11InputLayout> inputLayout;
+		unsigned char* shaderData;
+		long shaderSize;
 
 	};
 

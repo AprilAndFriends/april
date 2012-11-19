@@ -1,2 +1,0 @@
-Due to usage of pixel and vertex shaders, the DirectX11 compilation configuration requires a d3dcompiler_XX.dll
-to be distributed with the application.

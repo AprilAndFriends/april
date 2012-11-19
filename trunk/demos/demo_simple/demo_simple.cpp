@@ -13,7 +13,7 @@
 #if !_HL_WINRT
 #define RESOURCE_PATH "../media/"
 #else
-#define RESOURCE_PATH "Assets/"
+#define RESOURCE_PATH "media/"
 #endif
 #else
 #define RESOURCE_PATH "./"

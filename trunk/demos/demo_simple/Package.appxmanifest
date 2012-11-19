@@ -4,7 +4,7 @@
   <Properties>
     <DisplayName>demo_simple</DisplayName>
     <PublisherDisplayName>April</PublisherDisplayName>
-    <Logo>Assets\store_icon.png</Logo>
+    <Logo>media\assets\store_icon.png</Logo>
   </Properties>
   <Prerequisites>
     <OSMinVersion>6.2.1</OSMinVersion>
@@ -15,9 +15,9 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="demo_simple.App">
-      <VisualElements DisplayName="demo_simple" Logo="Assets\logo_icon.png" SmallLogo="Assets\small_icon.png" Description="April Demo Simple" ForegroundText="light" BackgroundColor="#464646">
+      <VisualElements DisplayName="demo_simple" Logo="media\assets\logo_icon.png" SmallLogo="media\assets\small_icon.png" Description="April Demo Simple" ForegroundText="light" BackgroundColor="#464646">
         <DefaultTile ShowName="allLogos" />
-        <SplashScreen Image="Assets/splash.png" />
+        <SplashScreen Image="media\assets\splash.png" />
         <InitialRotationPreference>
           <Rotation Preference="landscape" />
           <Rotation Preference="landscapeFlipped" />
