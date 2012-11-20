@@ -22,6 +22,8 @@
 #include <windows.h>
 #include <agile.h>
 
+#include "Window.h"
+
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::ApplicationModel::Core;
 using namespace Windows::UI::Core;
@@ -40,9 +42,22 @@ namespace april
 		CoreWindow^ getCoreWindow() { return this->window.Get(); }
 
 		void OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args);
+
 		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
+		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
+
+		void OnMouseDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void OnMouseUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void OnMouseMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
+		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
+		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
 
 		void checkEvents();
+
+	protected:
+		int _getMouseButton(_In_ PointerEventArgs^ args); // not april::Window::MouseButton because a WinRT type cannot include a native enum
 
 	private: // has to be private
 		Platform::Agile<CoreWindow> window;
