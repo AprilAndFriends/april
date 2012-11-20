@@ -74,7 +74,7 @@ public class Activity extends android.app.Activity
 			}
 		}
 		// creating a GL surface view
-		this.glView = new GLSurfaceView(this);
+		this.glView = this.createGlView();
 		this.setContentView(this.glView);
 		// focusing this view allows proper input processing
 		this.glView.requestFocus();
@@ -161,6 +161,11 @@ public class Activity extends android.app.Activity
 	protected Dialog onCreateDialog(int id)
 	{
 		return NativeInterface.DialogBuilder.create();
+	}
+	
+	protected GLSurfaceView createGlView()
+	{
+		return new GLSurfaceView(this);
 	}
 	
 }
