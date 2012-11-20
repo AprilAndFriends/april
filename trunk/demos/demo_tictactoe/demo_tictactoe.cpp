@@ -1,17 +1,22 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 1.7
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _ANDROID
-#define RESOURCE_PATH "./"
-#else
+#include <hltypes/hplatform.h>
+#ifndef _ANDROID
+#if !_HL_WINRT
 #define RESOURCE_PATH "../media/"
+#else
+#define RESOURCE_PATH "media/"
+#endif
+#else
+#define RESOURCE_PATH "./"
 #endif
 
 #include <stdio.h>

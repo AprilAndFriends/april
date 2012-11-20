@@ -35,39 +35,30 @@ namespace april
 
 	DirectX11_Texture::DirectX11_Texture(chstr filename) : Texture()
 	{
-		// TODO
-		/*
 		this->filename = filename;
 		this->format = FORMAT_ARGB;
 		this->width = 0;
 		this->height = 0;
 		this->bpp = 4;
 		this->renderTarget = false;
-		this->d3dTexture = NULL;
-		this->d3dSurface = NULL;
-		hlog::write(april::logTag, "Creating DX9 texture: " + _getInternalName());
-		*/
+		this->d3dTexture = nullptr;
+		this->d3dView = nullptr;
+		this->d3dSampler = nullptr;
+		hlog::write(april::logTag, "Creating DX11 texture: " + this->_getInternalName());
 	}
 
 	DirectX11_Texture::DirectX11_Texture(int w, int h, unsigned char* rgba) : Texture()
 	{
-		// TODO
-		/*
 		this->filename = "";
 		this->format = FORMAT_ARGB;
 		this->width = w;
 		this->height = h;
 		this->bpp = 4;
 		this->renderTarget = false;
-		this->d3dSurface = NULL;
-		hlog::write(april::logTag, "Creating user-defined DX9 texture.");
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
-		if (hr != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to create DX9 texture!");
-			return;
-		}
-		// TODO - this will be removed once format/native format enums have been implemented
+		this->d3dTexture = nullptr;
+		this->d3dView = nullptr;
+		this->d3dSampler = nullptr;
+		hlog::write(april::logTag, "Creating user-defined DX11 texture.");
 		unsigned char* bgra = new unsigned char[this->width * this->height * this->bpp];
 		memcpy(bgra, rgba, this->width * this->height * this->bpp); // so alpha doesn't have to be copied in each iteration
 		int offset;
@@ -83,63 +74,122 @@ namespace april
 				bgra[offset + 0] = rgba[offset + 2];
 			}
 		}
-		this->blit(0, 0, bgra, this->width, this->height, this->bpp, 0, 0, this->width, this->height);
+		this->_createInternalTexture(bgra);
 		delete [] bgra;
-		*/
 	}
 	
 	DirectX11_Texture::DirectX11_Texture(int w, int h, Texture::Format format, Texture::Type type, Color color) : Texture()
 	{
-		// TODO
-		/*
 		this->filename = "";
 		this->format = format;
 		this->width = w;
 		this->height = h;
 		this->renderTarget = false;
-		this->d3dSurface = NULL;
-		hlog::writef(april::logTag, "Creating empty DX9 texture [ %dx%d ].", w, h);
-		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
-		this->bpp = 3;
-		switch (format)
-		{
-		case FORMAT_ARGB:
-			d3dformat = D3DFMT_A8R8G8B8;
-			this->bpp = 4;
-			break;
-		case FORMAT_RGB:
-			d3dformat = D3DFMT_X8R8G8B8;
-			this->bpp = 3;
-			break;
-		case FORMAT_ALPHA:
-			d3dformat = D3DFMT_A8;
-			this->bpp = 1;
-			break;
-		default:
-			d3dformat = D3DFMT_X8R8G8B8;
-			this->bpp = 3;
-			break;
-		}
-		D3DPOOL d3dpool = D3DPOOL_MANAGED;
-		DWORD d3dusage = 0;
+		this->d3dTexture = nullptr;
+		this->d3dView = nullptr;
+		this->d3dSampler = nullptr;
+		hlog::writef(april::logTag, "Creating empty DX11 texture [ %dx%d ].", w, h);
+		this->bpp = 4;
 		if (type == TYPE_RENDER_TARGET)
 		{
-			d3dusage = D3DUSAGE_RENDERTARGET;
-			d3dpool = D3DPOOL_DEFAULT;
 			this->renderTarget = true;
 			gRenderTargets += this;
 		}
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, d3dformat, d3dpool, &this->d3dTexture, NULL);
-		if (hr != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to create DX9 texture!");
-			return;
-		}
+		unsigned char* data = new unsigned char[this->width * this->height * this->bpp];
+		memset(data, 0, this->width * this->height * this->bpp);
+		this->_createInternalTexture(data);
+		delete [] data;
 		if (color != Color::Clear)
 		{
 			this->fillRect(0, 0, this->width, this->height, color);
 		}
-		*/
+	}
+
+	bool DirectX11_Texture::_createInternalTexture(unsigned char* data)
+	{
+		// texture
+		D3D11_SUBRESOURCE_DATA textureSubresourceData = {0};
+		textureSubresourceData.pSysMem = data;
+		textureSubresourceData.SysMemPitch = this->width * this->bpp;
+		textureSubresourceData.SysMemSlicePitch = 0;
+		D3D11_TEXTURE2D_DESC textureDesc = {0};
+		textureDesc.Width = this->width;
+		textureDesc.Height = this->height;
+		textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.CPUAccessFlags = 0;
+		textureDesc.MiscFlags = 0;
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		switch (this->format)
+		{
+		case FORMAT_ARGB:
+			textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+			this->bpp = 4;
+			break;
+		case FORMAT_RGB:
+			textureDesc.Format = DXGI_FORMAT_B8G8R8X8_UNORM;
+			this->bpp = 4;
+			break;
+		case FORMAT_ALPHA:
+			textureDesc.Format = DXGI_FORMAT_A8_UNORM;
+			this->bpp = 1;
+			break;
+		default:
+			textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+			this->bpp = 4;
+			break;
+		}
+		textureSubresourceData.SysMemPitch = this->width * this->bpp;
+		if (this->renderTarget) // TODO - may not even be necessary
+		{
+			textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		}
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
+		if (FAILED(hr))
+		{
+			hlog::error(april::logTag, "Failed to create DX11 texture!");
+			return false;
+		}
+		// shader resource
+        D3D11_SHADER_RESOURCE_VIEW_DESC textureViewDesc;
+		memset(&textureViewDesc, 0, sizeof(textureViewDesc));
+        textureViewDesc.Format = textureDesc.Format;
+        textureViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        textureViewDesc.Texture2D.MipLevels = textureDesc.MipLevels;
+        textureViewDesc.Texture2D.MostDetailedMip = 0;
+        hr = APRIL_D3D_DEVICE->CreateShaderResourceView(this->d3dTexture.Get(), &textureViewDesc, &this->d3dView);
+		if (FAILED(hr))
+		{
+			hlog::error(april::logTag, "Failed to create DX11 texture view!");
+			return false;
+		}
+		// sampler
+		D3D11_SAMPLER_DESC samplerDesc;
+		memset(&samplerDesc, 0, sizeof(samplerDesc));
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.MaxAnisotropy = 0;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		samplerDesc.BorderColor[0] = 0.0f;
+		samplerDesc.BorderColor[1] = 0.0f;
+		samplerDesc.BorderColor[2] = 0.0f;
+		samplerDesc.BorderColor[3] = 0.0f;
+		hr = APRIL_D3D_DEVICE->CreateSamplerState(&samplerDesc, &this->d3dSampler);
+		if (FAILED(hr))
+		{
+			hlog::error(april::logTag, "Failed to create DX11 texture sample!");
+			return false;
+		}
+		return true;
 	}
 	
 	void DirectX11_Texture::restore()
@@ -161,7 +211,7 @@ namespace april
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, d3dformat, d3dpool, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
-			hlog::error(april::logTag, "Failed to restore user-defined DX9 texture!");
+			hlog::error(april::logTag, "Failed to restore user-defined DX11 texture!");
 			return;
 		}
 		*/
@@ -169,25 +219,20 @@ namespace april
 
 	DirectX11_Texture::~DirectX11_Texture()
 	{
-		// TODO
-		/*
 		this->unload();
 		if (this->renderTarget)
 		{
 			gRenderTargets -= this;
 		}
-		*/
 	}
 
 	bool DirectX11_Texture::load()
 	{
-		// TODO
-		/*
 		if (this->isLoaded())
 		{
 			return true;
 		}
-		hlog::write(april::logTag, "Loading DX9 texture: " + this->_getInternalName());
+		hlog::write(april::logTag, "Loading DX11 texture: " + this->_getInternalName());
 		ImageSource* image = NULL;
 		if (this->filename != "")
 		{
@@ -206,97 +251,60 @@ namespace april
 			hlog::error(april::logTag, "Image source does not exist!");
 			return false;
 		}
-		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
 		switch (image->format)
 		{
 		case AF_RGBA:
 		case AF_BGRA:
-			d3dformat = D3DFMT_A8R8G8B8;
 			this->format = FORMAT_ARGB;
 			break;
 		case AF_RGB:
 		case AF_BGR:
-			d3dformat = D3DFMT_X8R8G8B8;
-			this->format = FORMAT_RGB;
+			this->format = FORMAT_ARGB;
 			break;
 		case AF_GRAYSCALE:
-			d3dformat = D3DFMT_A8;
 			this->format = FORMAT_ALPHA;
 			break;
 		case AF_PALETTE:
-			d3dformat = D3DFMT_A8R8G8B8;
 			this->format = FORMAT_ARGB; // TODO - should be changed
 			break;
 		default:
-			d3dformat = D3DFMT_X8R8G8B8;
 			this->format = FORMAT_ARGB;
 			break;
 		}
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, d3dformat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
-		if (hr != D3D_OK)
+		if (image->format == AF_RGBA || image->format == AF_RGB)
 		{
-			hlog::error(april::logTag, "Failed to create DX9 texture!");
-			delete image;
-			return false;
-		}
-		// write texels
-		if (image != NULL)
-		{
-			D3DLOCKED_RECT rect;
-			this->d3dTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
-			// TODO - format handling like this has to be fixed/refactored
+			unsigned char* data = new unsigned char[image->w * image->h * 4];
 			if (image->format == AF_RGBA)
 			{
-				image->copyPixels(rect.pBits, AF_BGRA);
-			}
-			else if (image->format == AF_RGB)
-			{
-				image->copyPixels(rect.pBits, AF_BGR);
-			}
-			else if (image->format  == AF_GRAYSCALE)
-			{
-				image->copyPixels(rect.pBits, AF_GRAYSCALE);
+				image->copyPixels(data, AF_BGRA);
 			}
 			else
 			{
-				ImageSource* tempImg = april::createEmptyImage(image->w, image->h);
-				tempImg->copyImage(image);
-				tempImg->copyPixels(rect.pBits, AF_BGRA);
-				delete tempImg;
+				image->copyPixels(data, AF_BGR);
 			}
-			this->d3dTexture->UnlockRect(0);
-			delete image;
+			this->bpp = image->bpp = 4;
+			delete image->data;
+			image->data = data;
 		}
-		return true;
-		*/
-		return false;
+		bool result = this->_createInternalTexture(image->data);
+		delete image;
+		return result;
 	}
 
 	void DirectX11_Texture::unload()
 	{
-		// TODO
-		/*
-		if (this->d3dTexture != NULL)
+		if (this->d3dTexture != nullptr)
 		{
-			hlog::write(april::logTag, "Unloading DX9 texture: " + this->_getInternalName());
-			this->d3dTexture->Release();
-			this->d3dTexture = NULL;
-			if (this->d3dSurface != NULL)
-			{
-				this->d3dSurface->Release();
-				this->d3dSurface = NULL;
-			}
+			hlog::write(april::logTag, "Unloading DX11 texture: " + this->_getInternalName());
+			_HL_TRY_RELEASE_COMPTR(this->d3dTexture);
+			_HL_TRY_RELEASE_COMPTR(this->d3dView);
+			_HL_TRY_RELEASE_COMPTR(this->d3dSampler);
 		}
-		*/
 	}
 
 	bool DirectX11_Texture::isLoaded()
 	{
-		// TODO
-		/*
-		return (this->d3dTexture != NULL);
-		*/
-		return false;
+		return (this->d3dTexture != nullptr);
 	}
 
 	void DirectX11_Texture::clear()

@@ -7,12 +7,14 @@ cbuffer constantBuffer : register(b0)
 struct VertexShaderInput
 {
 	float3 position : POSITION;
+	float2 tex : TEXCOORD0;
 };
 
 struct PixelShaderInput
 {
 	float4 position : SV_POSITION;
 	float4 color : COLOR;
+	float2 tex : TEXCOORD0;
 };
 
 PixelShaderInput main(VertexShaderInput input)
@@ -22,5 +24,6 @@ PixelShaderInput main(VertexShaderInput input)
 	position = mul(position, cMatrix);
 	vertexShaderOutput.position = position;
 	vertexShaderOutput.color = cColor;
+	vertexShaderOutput.tex = input.tex;
 	return vertexShaderOutput;
 }

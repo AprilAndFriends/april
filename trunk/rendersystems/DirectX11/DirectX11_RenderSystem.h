@@ -98,8 +98,7 @@ namespace april
 
 	protected:
 		bool zBufferEnabled;
-		bool textureCoordinatesEnabled;
-		bool colorEnabled;
+		BlendMode activeTextureBlendMode;
 		DirectX11_Texture* activeTexture;
 		DirectX11_VertexShader* activeVertexShader;
 		DirectX11_PixelShader* activePixelShader;
@@ -131,8 +130,12 @@ namespace april
 		ComPtr<IDXGISwapChain1> swapChain;
 		ComPtr<ID3D11RasterizerState> rasterState;
 		ComPtr<ID3D11RenderTargetView> renderTargetView;
+		ComPtr<ID3D11BlendState> blendStateAlpha;
+		ComPtr<ID3D11BlendState> blendStateAdd;
+		ComPtr<ID3D11BlendState> blendStateSubtract;
+		ComPtr<ID3D11BlendState> blendStateOverwrite;
 
-		D3D11_BUFFER_DESC vertexBufferDescription;
+		D3D11_BUFFER_DESC vertexBufferDesc;
 		D3D11_SUBRESOURCE_DATA vertexBufferData;
 		ComPtr<ID3D11Buffer> vertexBuffer;
 
@@ -149,6 +152,8 @@ namespace april
 
 		void _updateVertexBuffer(unsigned int size, void* data);
 		void _updateConstantBuffer(Color color);
+		void _updateBlending();
+		void _updateTexture(bool use = true);
 
 	};
 

@@ -52,11 +52,17 @@ namespace april
 
 	protected:
 		// TODO
-		/*
-		IDirect3DSurface9* d3dSurface;
-		IDirect3DTexture9* d3dTexture;
+		//*
+		//IDirect3DSurface9* d3dSurface;
+		ComPtr<ID3D11Texture2D> d3dTexture;
+		ComPtr<ID3D11ShaderResourceView> d3dView;
+		ComPtr<ID3D11SamplerState> d3dSampler;
 		bool renderTarget;
 
+		bool _createInternalTexture(unsigned char* data);
+
+	private:
+		/*
 		enum LOCK_RESULT
 		{
 			LR_LOCKED,
