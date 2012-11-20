@@ -35,6 +35,7 @@ namespace april
 	{
         applicationView->Activated +=
             ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &WinRT_View::OnActivated);
+
 	}
 	
 	void WinRT_View::Uninitialize()
@@ -48,6 +49,30 @@ namespace april
 		this->window->SizeChanged +=
             ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(
                 this, &WinRT_View::OnWindowSizeChanged);
+		this->window->VisibilityChanged +=
+			ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(
+                this, &WinRT_View::OnVisibilityChanged);
+		this->window->PointerPressed +=
+			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
+				this, &WinRT_View::OnMouseDown);
+		this->window->PointerReleased +=
+			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
+				this, &WinRT_View::OnMouseUp);
+		this->window->PointerMoved +=
+			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
+				this, &WinRT_View::OnMouseMove);
+		this->window->PointerWheelChanged +=
+			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
+				this, &WinRT_View::OnMouseScroll);
+		this->window->KeyDown +=
+			ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(
+				this, &WinRT_View::OnKeyDown);
+		this->window->KeyUp +=
+			ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(
+				this, &WinRT_View::OnKeyUp);
+		this->window->CharacterReceived +=
+			ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(
+				this, &WinRT_View::OnCharacterReceived);
 	}
 	
 	void WinRT_View::Load(_In_ Platform::String^ entryPoint)
@@ -73,6 +98,80 @@ namespace april
 	void WinRT_View::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
         // TODO
+		//args->Handled = true;
+	}
+
+	void WinRT_View::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
+	{
+		april::window->handleFocusChangeEvent(args->Visible);
+		args->Handled = true;
+	}
+
+	int WinRT_View::_getMouseButton(_In_ PointerEventArgs^ args)
+	{
+		april::Window::MouseButton button = april::Window::AMOUSEBTN_NONE;
+		if (args->CurrentPoint->Properties->IsLeftButtonPressed)
+		{
+			button = april::Window::AMOUSEBTN_LEFT;
+		}
+		else if (args->CurrentPoint->Properties->IsRightButtonPressed)
+		{
+			button = april::Window::AMOUSEBTN_RIGHT;
+		}
+		else if (args->CurrentPoint->Properties->IsMiddleButtonPressed)
+		{
+			button = april::Window::AMOUSEBTN_MIDDLE;
+		}
+		return (int)button;
+	}
+
+	void WinRT_View::OnMouseDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	{
+		april::window->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, gvec2(args->CurrentPoint->Position.X,
+			args->CurrentPoint->Position.Y), (april::Window::MouseButton)this->_getMouseButton(args));
+		args->Handled = true;
+	}
+
+	void WinRT_View::OnMouseUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	{
+		april::window->handleMouseEvent(april::Window::AMOUSEEVT_UP, gvec2(args->CurrentPoint->Position.X,
+			args->CurrentPoint->Position.Y), (april::Window::MouseButton)this->_getMouseButton(args));
+		args->Handled = true;
+	}
+
+	void WinRT_View::OnMouseMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	{
+		april::window->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, gvec2(args->CurrentPoint->Position.X,
+			args->CurrentPoint->Position.Y), april::Window::AMOUSEBTN_NONE);
+		args->Handled = true;
+	}
+
+	void WinRT_View::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	{
+		float delta = (float)args->CurrentPoint->Properties->MouseWheelDelta;
+		// TODO
+		//args->CurrentPoint->
+		//april::window->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL, gvec2(args->CurrentPoint->Position.X,
+		//	args->CurrentPoint->Position.Y), april::Window::AMOUSEBTN_NONE);
+		args->Handled = true;
+	}
+
+	void WinRT_View::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
+	{
+		april::window->handleKeyOnlyEvent(april::Window::AKEYEVT_DOWN, (april::KeySym)args->VirtualKey);
+		args->Handled = true;
+	}
+
+	void WinRT_View::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
+	{
+		april::window->handleKeyOnlyEvent(april::Window::AKEYEVT_DOWN, (april::KeySym)args->VirtualKey);
+		args->Handled = true;
+	}
+
+	void WinRT_View::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
+	{
+		april::window->handleCharOnlyEvent(args->KeyCode);
+		args->Handled = true;
 	}
 
 	void WinRT_View::checkEvents()
