@@ -87,7 +87,7 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>xcopy ..\media\*.* media\ /d /y</Command>
+      <Command>xcopy ..\media media\ /d /y /e</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -121,18 +121,22 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>xcopy ..\media\*.* media\ /d /y</Command>
+      <Command>xcopy ..\media media\ /d /y /e</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\..\..\lib\WinRT\libpng.dll">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </None>
     <None Include="..\..\..\lib\WinRT\zlib1.dll">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </None>
     <None Include="demo_simple_TemporaryKey.pfx" />
-    <None Include="media\jpt_final.jpt" />
+    <Image Include="media\jpt_final.jpt">
+      <FileType>Document</FileType>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\gtypes\libgtypes_WinRT.vcxproj">
@@ -169,10 +173,10 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="media\Assets\logo_icon.png" />
-    <Image Include="media\Assets\small_icon.png" />
-    <Image Include="media\Assets\splash.png" />
-    <Image Include="media\Assets\store_icon.png" />
+    <Image Include="media\assets\logo_icon.png" />
+    <Image Include="media\assets\small_icon.png" />
+    <Image Include="media\assets\splash.png" />
+    <Image Include="media\assets\store_icon.png" />
     <Image Include="media\icon.png" />
     <Image Include="media\jpt_raw.jpg" />
     <Image Include="media\jpt_raw.png" />

@@ -36,9 +36,6 @@
     <None Include="..\..\..\lib\WinRT\zlib1.dll">
       <Filter>DLLs</Filter>
     </None>
-    <None Include="media\jpt_final.jpt">
-      <Filter>Win8xap\media</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo_simple.cpp">
@@ -81,17 +78,20 @@
     <Image Include="media\x.png">
       <Filter>Win8xap\media</Filter>
     </Image>
-    <Image Include="media\Assets\logo_icon.png">
+    <Image Include="media\assets\logo_icon.png">
       <Filter>Win8xap\media\assets</Filter>
     </Image>
-    <Image Include="media\Assets\small_icon.png">
+    <Image Include="media\assets\small_icon.png">
       <Filter>Win8xap\media\assets</Filter>
     </Image>
-    <Image Include="media\Assets\splash.png">
+    <Image Include="media\assets\splash.png">
       <Filter>Win8xap\media\assets</Filter>
     </Image>
-    <Image Include="media\Assets\store_icon.png">
+    <Image Include="media\assets\store_icon.png">
       <Filter>Win8xap\media\assets</Filter>
+    </Image>
+    <Image Include="media\jpt_final.jpt">
+      <Filter>Win8xap\media</Filter>
     </Image>
   </ItemGroup>
 </Project>

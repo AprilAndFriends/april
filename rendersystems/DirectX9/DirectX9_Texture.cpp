@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.43
+/// @version 2.46
 /// 
 /// @section LICENSE
 /// 
@@ -44,7 +44,7 @@ namespace april
 		this->renderTarget = false;
 		this->d3dTexture = NULL;
 		this->d3dSurface = NULL;
-		hlog::write(april::logTag, "Creating DX9 texture: " + _getInternalName());
+		hlog::write(april::logTag, "Creating DX9 texture: " + this->_getInternalName());
 	}
 
 	DirectX9_Texture::DirectX9_Texture(int w, int h, unsigned char* rgba) : Texture()
