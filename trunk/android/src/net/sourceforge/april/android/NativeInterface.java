@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.44
+// version 2.5
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -204,7 +204,14 @@ public class NativeInterface
 	
 	public static String getLocale()
 	{
-		return Locale.getDefault().getLanguage();
+		Locale locale = Locale.getDefault();
+		String result = locale.getLanguage();
+		String country = locale.getCountry();
+		if (result.equals("pt") && country.equals("PT")) // Java is stupid and needs "equals" instead of "=="
+		{
+			result += "-" + country;
+		}
+		return result;
 	}
 	
 	public static void showMessageBox(String title, String text, String ok, String yes, String no, String cancel, int iconId)
