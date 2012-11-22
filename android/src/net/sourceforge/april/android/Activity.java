@@ -35,12 +35,17 @@ public class Activity extends android.app.Activity
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_DOWN);
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_UP);
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_MUTE);
-		NativeInterface.DataPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 	}
 	
 	public View getView()
 	{
 		return this.glView;
+	}
+	
+	public String createDataPath()
+	{
+		return (Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/" +
+			NativeInterface.PackageName + "/main." + NativeInterface.VersionCode + "." + NativeInterface.PackageName + ".obb");
 	}
 	
 	@Override
@@ -56,6 +61,7 @@ public class Activity extends android.app.Activity
 			PackageInfo info = this.getPackageManager().getPackageInfo(NativeInterface.PackageName, 0);
 			NativeInterface.VersionCode = Integer.toString(info.versionCode);
 			NativeInterface.ApkPath = info.applicationInfo.sourceDir;
+			NativeInterface.DataPath = this.createDataPath();
 		}
 		catch (NameNotFoundException e)
 		{
