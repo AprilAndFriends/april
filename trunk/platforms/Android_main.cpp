@@ -56,11 +56,12 @@ namespace april
 		april::systemPath = _JSTR_TO_HSTR(jSystemPath);
 		hstr archivePath = _JSTR_TO_HSTR(jForceArchivePath);
 		hstr packageName = _JSTR_TO_HSTR(jPackageName);
+		hstr dataPath = _JSTR_TO_HSTR(jDataPath);
 		hlog::write(april::logTag, "System path: " + april::systemPath);
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
 			// set the resources CWD
-			hresource::setCwd(_JSTR_TO_HSTR(jDataPath) + "/Android/data/" + packageName);
+			hresource::setCwd(dataPath + "/Android/data/" + packageName);
 			hresource::setArchive(""); // not used anyway when hasZip() returns false
 			hlog::write(april::logTag, "Using no-zip: " + hresource::getCwd());
 		}
@@ -76,7 +77,7 @@ namespace april
 			// using OBB file as archive
 			hresource::setCwd(".");
 			// using Google Play's "Expansion File" system
-			hresource::setArchive(_JSTR_TO_HSTR(jDataPath) + "/Android/obb/" + packageName + "/main." + _JSTR_TO_HSTR(jVersionCode) + "." + packageName + ".obb");
+			hresource::setArchive(dataPath);
 			hlog::write(april::logTag, "Using obb: " + hresource::getArchive());
 		}
 	}
