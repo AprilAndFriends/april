@@ -59,7 +59,7 @@ namespace april
 		__int64 time;
 		if (this->performanceTimer)
 		{
-			QueryPerformanceCounter((LARGE_INTEGER *) &time);
+			QueryPerformanceCounter((LARGE_INTEGER*)&time);
 			return ((float)(time - this->performanceTimerStart) * this->resolution * 1000.0f);
 		}
 		else
@@ -80,7 +80,7 @@ namespace april
 	void Timer::update()
 	{
 		this->td2 = this->getTime();
-		this->dt = (this->td2 - this->td) * 0.1f;
+		this->dt = (this->td2 - this->td) * 0.001f;
 		this->td = this->td2;
 	}
 	

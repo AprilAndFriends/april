@@ -67,9 +67,10 @@ namespace april
 		SDL_GLES_Context* glesContext;
 #endif
 
+		float _calcTimeSinceLastFrame();
 		void _handleKeyEvent(Window::KeyEventType type, SDLKey keyCode, unsigned int unicode);
-		bool _handleDisplayAndUpdate();
 		void _handleMouseEvent(SDL_Event &evt);		
+
 	};
 
 }

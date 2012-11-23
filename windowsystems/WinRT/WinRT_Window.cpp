@@ -10,9 +10,6 @@
 #ifdef _WIN32
 #include <hltypes/hplatform.h>
 #if _HL_WINRT
-
-#include <windows.h>
-
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hthread.h>
 
@@ -122,38 +119,11 @@ namespace april
 	
 	bool WinRT_Window::updateOneFrame()
 	{
-		static bool result = true;
-		static float t = 0.0f;
-		static float k = 0.0f;
 		// mouse position
 		//this->cursorPosition.set(); ???
-		this->checkEvents();
-		t = this->globalTimer.getTime();
-		if (t == this->_lastTime)
-		{
-			return true; // don't redraw frames which won't change
-		}
-		k = (t - this->_lastTime) / 1000.0f;
-		if (k > 0.5f)
-		{
-			k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
-		}
-
-		this->_lastTime = t;
-		if (!this->focused)
-		{
-			k = 0.0f;
-			for_iter (i, 0, 5)
-			{
-				this->checkEvents();
-				hthread::sleep(40.0f);
-			}
-		}
 		// rendering
-		result = this->performUpdate(k);
 		this->setTitle(this->title);
-		april::rendersys->presentFrame();
-		return (result && Window::updateOneFrame());
+		return Window::updateOneFrame();
 	}
 	
 	void WinRT_Window::presentFrame()

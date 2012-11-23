@@ -16,9 +16,6 @@
 #define APRIL_WINRT_WINDOW_H
 #include <hltypes/hplatform.h>
 #if _HL_WINRT
-
-#include <windows.h>
-
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
@@ -51,14 +48,10 @@ namespace april
 		void checkEvents();
 
 	protected:
-		april::Timer globalTimer;
 		int width;
 		int height;
 		bool touchEnabled;
 
-	private:
-		float _lastTime;
-		
 	};
 
 }

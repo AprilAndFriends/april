@@ -10,6 +10,7 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _OPENGL
+#include <hltypes/hplatform.h>
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
@@ -19,9 +20,6 @@
 #elif _OPENGLES
 #include <GLES/gl.h>
 #else
-#ifdef _WIN32
-#include <windows.h>
-#endif
 #ifndef __APPLE__
 #include <gl/GL.h>
 #else

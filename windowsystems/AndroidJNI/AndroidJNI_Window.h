@@ -96,14 +96,10 @@ namespace april
 		int width;
 		int height;
 		bool multiTouchActive;
-		april::Timer globalTimer;
 		harray<gvec2> touches;
 		harray<MouseInputEvent> mouseEvents;
 		harray<KeyInputEvent> keyEvents;
 		harray<TouchInputEvent> touchEvents;
-		
-	private:
-		float _lastTime;
 		
 	};
 

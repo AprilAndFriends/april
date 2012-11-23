@@ -15,9 +15,8 @@
 #ifndef APRIL_TIMER_H
 #define APRIL_TIMER_H
 
-#ifdef _WIN32
-#include <windows.h>
-#else
+#include <hltypes/hplatform.h>
+#ifndef _WIN32
 #include <stdint.h>
 #define __int64 uint64_t
 #endif

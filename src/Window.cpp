@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.42
+/// @version 2.45
 /// 
 /// @section LICENSE
 /// 
@@ -13,6 +13,7 @@
 #include <gtypes/Vector2.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hthread.h>
 
 #include "april.h"
 #include "Keys.h"
@@ -35,7 +36,8 @@ namespace april
 
 	Window* window = NULL;
 	
-	Window::Window() : created(false), fullscreen(true), focused(true), running(true), cursorVisible(false)
+	Window::Window() : created(false), fullscreen(true), focused(true), running(true),
+		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), cursorVisible(false)
 	{
 		april::window = this;
 		this->name = "Generic";
@@ -71,6 +73,10 @@ namespace april
 			this->fullscreen = fullscreen;
 			this->title = title;
 			this->created = true;
+			this->fps = 0;
+			this->fpsCount = 0;
+			this->fpsTimer = 0.0f;
+			this->fpsResolution = 0.5f;
 			return true;
 		}
 		return false;
@@ -124,6 +130,9 @@ namespace april
 	
 	void Window::enterMainLoop()
 	{
+		this->fps = 0;
+		this->fpsCount = 0;
+		this->fpsTimer = 0.0f;
 		this->running = true;
 		while (this->running)
 		{
@@ -136,7 +145,20 @@ namespace april
 
 	bool Window::updateOneFrame()
 	{
-		return this->running;
+		static bool result;
+		static float k;
+		k = this->_calcTimeSinceLastFrame();
+		if (k == 0.0f)
+		{
+			if (!this->focused)
+			{
+				hthread::sleep(40.0f);
+			}
+			return this->running; // don't redraw frames which won't change
+		}
+		result = this->performUpdate(k);
+		april::rendersys->presentFrame();
+		return (result && this->running);
 	}
 	
 	void Window::terminateMainLoop()
@@ -146,13 +168,29 @@ namespace april
 	
 	bool Window::performUpdate(float k)
 	{
+		this->fpsTimer += k;
+		if (this->fpsTimer > 0.0f)
+		{
+			this->fpsCount++;
+			if (this->fpsTimer >= this->fpsResolution)
+			{
+				this->fps = (int)(this->fpsCount / this->fpsTimer);
+				this->fpsCount = 0;
+				this->fpsTimer = 0.0f;
+			}
+		}
+		else
+		{
+			this->fps = 0;
+			this->fpsCount = 0;
+		}
 		// returning true: continue execution
 		// returning false: abort execution
 		if (this->updateCallback != NULL)
 		{
 			return (*this->updateCallback)(k);
 		}
-		rendersys->clear();
+		april::rendersys->clear();
 		return true;
 	}
 	
@@ -281,6 +319,20 @@ namespace april
 		{
 			(*this->lowMemoryCallback)();
 		}
+	}
+
+	float Window::_calcTimeSinceLastFrame()
+	{
+		float k = this->timer.diff(true);
+		if (k > 0.5f)
+		{
+			k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
+		}
+		if (!this->focused)
+		{
+			k = 0.0f;
+		}
+		return k;
 	}
 	
 }

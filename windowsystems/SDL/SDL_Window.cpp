@@ -10,16 +10,13 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef HAVE_SDL
-
+#include <hltypes/hplatform.h>
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #include <OpenGL/gl.h>
 #elif _OPENGLES
 #include <GLES/gl.h>
 #else
-#ifdef _WIN32
-#include <windows.h>
-#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -205,7 +202,7 @@ namespace april
 		}
 		// first process sdl events
 		this->checkEvents();
-		return (this->_handleDisplayAndUpdate() && Window::updateOneFrame());
+		return Window::updateOneFrame();
 	}
 
 	void SDL_Window::checkEvents()
@@ -457,18 +454,20 @@ namespace april
 		}
 	}
 	
-	bool SDL_Window::_handleDisplayAndUpdate()
+	float SDL_Window::_calcTimeSinceLastFrame()
 	{
 		static unsigned int x = SDL_GetTicks();
 		float k = (SDL_GetTicks() - x) / 1000.0f;
 		x = SDL_GetTicks();
+		if (k > 0.5f)
+		{
+			k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
+		}
 		if (!this->focused)
 		{
-			hthread::sleep(100);
+			k = 0.0f;
 		}
-		bool result = this->performUpdate(k);
-		april::rendersys->presentFrame();
-		return result;
+		return k;
 	}
 		
 }

@@ -30,7 +30,7 @@ namespace april
 {
 	extern JavaVM* javaVM;
 
-	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), multiTouchActive(false), _lastTime(0.0f)
+	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), multiTouchActive(false)
 	{
 		this->name = APRIL_WS_ANDROIDJNI;
 	}
@@ -49,7 +49,6 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->multiTouchActive = false;
-		this->_lastTime = 0.0f;
 		return true;
 	}
 	
@@ -66,28 +65,8 @@ namespace april
 	
 	bool AndroidJNI_Window::updateOneFrame()
 	{
-		static bool result = true;
-		static float t = 0.0f;
-		static float k = 0.0f;
-		if (this->_lastTime == 0.0f)
-		{
-			this->_lastTime = this->globalTimer.getTime();
-		}
 		this->checkEvents();
-		t = this->globalTimer.getTime();
-		if (t == this->_lastTime)
-		{
-			return this->running; // don't redraw frames which won't change
-		}
-		k = (t - this->_lastTime) / 1000.0f;
-		if (k > 0.5f)
-		{
-			k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
-		}
-		this->_lastTime = t;
-		result = this->performUpdate(k);
-		april::rendersys->presentFrame();
-		return (result && Window::updateOneFrame());
+		return Window::updateOneFrame();
 	}
 	
 	void AndroidJNI_Window::presentFrame()

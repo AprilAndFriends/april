@@ -87,7 +87,6 @@ namespace april
 		float _getTouchScale();		
 	protected:
 		int keyboardRequest;
-		Timer timer;
 		bool firstFrameDrawn;
 		harray<InputEvent*> inputEvents;
 		bool inputEventsMutex;
