@@ -12,7 +12,6 @@
 #ifdef _WIN32
 #include <hltypes/hplatform.h>
 #if !_HL_WINRT
-#include <windows.h>
 #include <winuser.h>
 
 #include <hltypes/hltypesUtil.h>
@@ -36,7 +35,6 @@ namespace april
 	{
 		this->name = APRIL_WS_WIN32;
 		this->touchEnabled = false;
-		this->_fpsTitle = " [FPS: 0]";
 	}
 
 	Win32_Window::~Win32_Window()
@@ -51,7 +49,6 @@ namespace april
 			return false;
 		}
 		this->touchEnabled = false;
-		this->_fpsTitle = " [FPS: 0]";
 		// Win32
 		WNDCLASSEXW wc;
 		memset(&wc, 0, sizeof(WNDCLASSEX));
@@ -116,7 +113,7 @@ namespace april
 		this->title = title;
 		hstr t = this->title;
 #ifdef _DEBUG
-		t += this->_fpsTitle;
+		t += hsprintf(" [FPS: %d]", this->fps);
 #endif
 		SetWindowTextW(this->hWnd, t.w_str().c_str());
 	}
@@ -178,65 +175,19 @@ namespace april
 		UpdateWindow(this->hWnd);
 	}
 	
-	void Win32_Window::enterMainLoop()
-	{
-		this->_lastTime = this->globalTimer.getTime();
-		this->_fpsTimer = this->_lastTime;
-		this->_fps = 0;
-		Window::enterMainLoop();
-	}
-
 	bool Win32_Window::updateOneFrame()
 	{
-		static bool result = true;
-		static float t = 0.0f;
-		static float k = 0.0f;
+		static bool result;
 		static POINT w32_cursorPosition;
 		// mouse position
 		GetCursorPos(&w32_cursorPosition);
 		ScreenToClient(this->hWnd, &w32_cursorPosition);
 		this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
 		this->checkEvents();
-		t = this->globalTimer.getTime();
-		if (t == this->_lastTime)
-		{
-			return true; // don't redraw frames which won't change
-		}
-		k = (t - this->_lastTime) / 1000.0f;
-		if (k > 0.5f)
-		{
-			k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
-		}
-
-		this->_lastTime = t;
-		if (!this->focused)
-		{
-			k = 0.0f;
-			for_iter (i, 0, 5)
-			{
-				this->checkEvents();
-				hthread::sleep(40.0f);
-			}
-		}
 		// rendering
-		result = this->performUpdate(k);
-#ifndef _DEBUG
-		this->setTitle(this->title);
-#else
-		if (this->_lastTime - this->_fpsTimer > 1000)
-		{
-			this->_fpsTitle = hsprintf(" [FPS: %d]", this->_fps);
-			this->setTitle(this->title);
-			this->_fps = 0;
-			this->_fpsTimer = this->_lastTime;
-		}
-		else
-		{
-			this->_fps++;
-		}
-#endif			
-		april::rendersys->presentFrame();
-		return (result && Window::updateOneFrame());
+		result = Window::updateOneFrame();
+		this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
+		return result;
 	}
 	
 	void Win32_Window::presentFrame()

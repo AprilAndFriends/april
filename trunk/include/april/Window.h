@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.4
+/// @version 2.45
 /// 
 /// @section LICENSE
 /// 
@@ -22,6 +22,7 @@
 
 #include "aprilExport.h"
 #include "Keys.h"
+#include "Timer.h"
 
 namespace april
 {
@@ -79,6 +80,9 @@ namespace april
 		void setFullscreen(bool value) { } // TODO
 		bool isFocused() { return this->focused; }
 		bool isRunning() { return this->running; }
+		int getFps() { return this->fps; }
+		float getFpsResolution() { return this->fpsResolution; }
+		void setFpsResolution(float value) { this->fpsResolution = value; }
 		gvec2 getCursorPosition() { return this->cursorPosition; }
 		gvec2 getSize();
 		float getAspectRatio();
@@ -172,8 +176,13 @@ namespace april
 		bool fullscreen;
 		bool focused;
 		bool running;
+		int fps;
+		int fpsCount;
+		float fpsTimer;
+		float fpsResolution;
 		gvec2 cursorPosition;
 		bool cursorVisible;
+		Timer timer;
 
 		// TODO - refactor
 		static void (*msLaunchCallback)(void*);
@@ -194,6 +203,8 @@ namespace april
 		void (*virtualKeyboardCallback)(bool);
 		bool (*handleUrlCallback)(chstr);
 		void (*lowMemoryCallback)();
+
+		virtual float _calcTimeSinceLastFrame();
 
 	};
 

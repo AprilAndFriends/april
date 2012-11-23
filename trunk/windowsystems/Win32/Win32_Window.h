@@ -18,8 +18,6 @@
 #define APRIL_WIN32_WINDOW_H
 #include <hltypes/hplatform.h>
 #if !_HL_WINRT
-#include <windows.h>
-
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
@@ -46,7 +44,6 @@ namespace april
 		void* getBackendId();
 		void _setResolution(int w, int h);
 
-		void enterMainLoop();
 		bool updateOneFrame();
 		void presentFrame();
 		void checkEvents();
@@ -55,15 +52,8 @@ namespace april
 		
 	protected:
 		HWND hWnd;
-		april::Timer globalTimer;
 		bool touchEnabled; // whether or not a Win7+ touchscreen was detected
 		
-	private:
-		float _lastTime;
-		hstr _fpsTitle;
-		float _fpsTimer;
-		int _fps;
-
 	};
 
 }

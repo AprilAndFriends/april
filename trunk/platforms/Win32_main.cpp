@@ -11,8 +11,6 @@
 #ifdef _WIN32
 #include <hltypes/hplatform.h>
 #if !_HL_WINRT
-#include <windows.h>
-
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>

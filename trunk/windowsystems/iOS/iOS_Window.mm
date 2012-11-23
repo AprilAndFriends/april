@@ -173,9 +173,7 @@ namespace april
 			}
 			this->keyboardRequest = 0;
 		}
-		
-		float k = this->timer.diff(true);
-		return (this->performUpdate(k) && this->running);	
+		return Window::updateOneFrame();
 	}
 
 	void iOS_Window::destroyWindow()
@@ -483,7 +481,6 @@ namespace april
 	void iOS_Window::handleDisplayAndUpdate()
 	{
 		bool result = this->updateOneFrame();
-		april::rendersys->presentFrame();
 		if (!result)
 		{
 			// TODO - should exit application here

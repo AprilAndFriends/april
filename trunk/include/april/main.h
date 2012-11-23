@@ -103,7 +103,6 @@ int main(int argc, char** argv)
 }
 #else
 #if !_HL_WINRT
-#include <windows.h>
 #include <stdio.h>
 #include <shellapi.h>
 int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCmdLine, int nCmdShow)

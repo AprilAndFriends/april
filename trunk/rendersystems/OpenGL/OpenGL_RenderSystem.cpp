@@ -10,6 +10,7 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _OPENGL
+#include <hltypes/hplatform.h>
 // TODO - should be cleaned up a bit
 #if __APPLE__
 #include <TargetConditionals.h>
@@ -32,9 +33,6 @@
 #include <EGL/egl.h>
 #endif
 #else
-#ifdef _WIN32
-#include <windows.h>
-#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
