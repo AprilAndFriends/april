@@ -1,5 +1,5 @@
-Texture2D simpleTexture : register(t0);
-SamplerState simpleSampler : register(s0);
+Texture2D cTexture : register(t0);
+SamplerState cSampler : register(s0);
 
 struct PixelShaderInput
 {
@@ -10,5 +10,5 @@ struct PixelShaderInput
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {
-    return input.color * simpleTexture.Sample(simpleSampler, input.tex);
+    return (input.color * cTexture.Sample(cSampler, input.tex));
 }

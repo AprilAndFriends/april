@@ -30,7 +30,6 @@ namespace april
 		this->width = 0;
 		this->height = 0;
 		this->touchEnabled = false;
-		this->_lastTime = 0.0f;
 	}
 
 	WinRT_Window::~WinRT_Window()

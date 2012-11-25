@@ -33,6 +33,19 @@ using namespace Microsoft::WRL;
 #define VERTICES_BUFFER_COUNT 8192
 #define UINT_RGBA_TO_ARGB(c) ((((c) >> 8) & 0xFFFFFF) | (((c) & 0xFF) << 24))
 
+#define _HL_TRY_DELETE(name) \
+	if (name != NULL) \
+	{ \
+		delete name; \
+		name = NULL; \
+	}
+#define _HL_TRY_RELEASE_COMPTR(name) \
+	if (name != nullptr) \
+	{ \
+		name.Get()->Release(); \
+		name = nullptr; \
+	}
+
 namespace april
 {
 	// TODO - refactor
@@ -260,35 +273,35 @@ namespace april
 		// default shaders
 		if (this->vertexShaderPlain == NULL)
 		{
-			this->vertexShaderPlain = (DirectX11_VertexShader*)this->createVertexShader("libapril/VertexShader_Plain.cso");
+			this->vertexShaderPlain = (DirectX11_VertexShader*)this->createVertexShader("april/VertexShader_Plain.cso");
 		}
 		if (this->pixelShaderPlain == NULL)
 		{
-			this->pixelShaderPlain = (DirectX11_PixelShader*)this->createPixelShader("libapril/PixelShader_Plain.cso");
+			this->pixelShaderPlain = (DirectX11_PixelShader*)this->createPixelShader("april/PixelShader_Plain.cso");
 		}
 		if (this->vertexShaderTextured == NULL)
 		{
-			this->vertexShaderTextured = (DirectX11_VertexShader*)this->createVertexShader("libapril/VertexShader_Textured.cso");
+			this->vertexShaderTextured = (DirectX11_VertexShader*)this->createVertexShader("april/VertexShader_Textured.cso");
 		}
 		if (this->pixelShaderTextured == NULL)
 		{
-			this->pixelShaderTextured = (DirectX11_PixelShader*)this->createPixelShader("libapril/PixelShader_Textured.cso");
+			this->pixelShaderTextured = (DirectX11_PixelShader*)this->createPixelShader("april/PixelShader_Textured.cso");
 		}
 		if (this->vertexShaderColored == NULL)
 		{
-			this->vertexShaderColored = (DirectX11_VertexShader*)this->createVertexShader("libapril/VertexShader_Colored.cso");
+			this->vertexShaderColored = (DirectX11_VertexShader*)this->createVertexShader("april/VertexShader_Colored.cso");
 		}
 		if (this->pixelShaderColored == NULL)
 		{
-			this->pixelShaderColored = (DirectX11_PixelShader*)this->createPixelShader("libapril/PixelShader_Colored.cso");
+			this->pixelShaderColored = (DirectX11_PixelShader*)this->createPixelShader("april/PixelShader_Colored.cso");
 		}
 		if (this->vertexShaderColoredTextured == NULL)
 		{
-			this->vertexShaderColoredTextured = (DirectX11_VertexShader*)this->createVertexShader("libapril/VertexShader_ColoredTextured.cso");
+			this->vertexShaderColoredTextured = (DirectX11_VertexShader*)this->createVertexShader("april/VertexShader_ColoredTextured.cso");
 		}
 		if (this->pixelShaderColoredTextured == NULL)
 		{
-			this->pixelShaderColoredTextured = (DirectX11_PixelShader*)this->createPixelShader("libapril/PixelShader_ColoredTextured.cso");
+			this->pixelShaderColoredTextured = (DirectX11_PixelShader*)this->createPixelShader("april/PixelShader_ColoredTextured.cso");
 		}
 		// input layouts for default shaders
 		D3D11_INPUT_ELEMENT_DESC _position = {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
@@ -543,6 +556,7 @@ namespace april
 	void DirectX11_RenderSystem::setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
 	{
 		// TODO - actually implemented through shaders
+		hlog::warn(april::logTag, "DirectX11_RenderSystem::setTextureColorMode()");
 		/*
 		switch (textureColorMode)
 		{
@@ -582,6 +596,7 @@ namespace april
 	void DirectX11_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_RenderSystem::setTextureFilter()");
 		/*
 		switch (textureFilter)
 		{
@@ -604,6 +619,7 @@ namespace april
 	void DirectX11_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_RenderSystem::setTextureAddressMode()");
 		/*
 		switch (textureAddressMode)
 		{
@@ -650,6 +666,7 @@ namespace april
 	void DirectX11_RenderSystem::setRenderTarget(Texture* source)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_RenderSystem::setRenderTarget()");
 		/*
 		if (this->renderTarget != NULL)
 		{
@@ -777,9 +794,9 @@ namespace april
 		if (this->matrixDirty)
 		{
 			this->matrixDirty = false;
-			this->constantBufferData.matrix = (this->modelviewMatrix * this->projectionMatrix).transposed();
+			this->constantBufferData.matrix = (this->projectionMatrix * this->modelviewMatrix).transposed();
 		}
-		this->constantBufferData.color.set(gvec3(color.r_f(), color.g_f(), color.b_f()), color.a_f());
+		this->constantBufferData.color.set(color.r_f(), color.g_f(), color.b_f(), color.a_f());
         this->d3dDeviceContext->UpdateSubresource(this->constantBuffer.Get(), 0, nullptr, &this->constantBufferData, 0, 0);
 	}
 
@@ -877,6 +894,8 @@ namespace april
 
 	void DirectX11_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
+		hlog::warn(april::logTag, "DirectX11_RenderSystem::render(ColoredTexturedVertex)");
+		/*
 		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
 		this->_updateVertexBuffer(sizeof(ColoredTexturedVertex) * nVertices, v);
 		unsigned int stride = sizeof(ColoredTexturedVertex);
@@ -890,6 +909,7 @@ namespace april
 		this->_updateTexture();
 		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
 		this->d3dDeviceContext->Draw(nVertices, 0);
+		*/
 	}
 
 	void DirectX11_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
@@ -905,6 +925,7 @@ namespace april
 	ImageSource* DirectX11_RenderSystem::takeScreenshot(int bpp)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_RenderSystem::takeScreenshot()");
 		/*
 #ifdef _DEBUG
 		hlog::write(april::logTag, "Grabbing screenshot...");
