@@ -2,7 +2,7 @@
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
   <Identity Name="net.sourceforge.april.demo3d.winrt" Publisher="CN=April" Version="2.5.0.0" />
   <Properties>
-    <DisplayName>demo_3d</DisplayName>
+    <DisplayName>April Demo 3D</DisplayName>
     <PublisherDisplayName>April</PublisherDisplayName>
     <Logo>media\assets\store_icon.png</Logo>
   </Properties>

@@ -2,7 +2,7 @@
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
   <Identity Name="net.sourceforge.april.demoTicTacToe.winrt" Publisher="CN=April" Version="2.5.0.0" />
   <Properties>
-    <DisplayName>demo_tictactoe</DisplayName>
+    <DisplayName>April Demo Tic Tac Toe</DisplayName>
     <PublisherDisplayName>April</PublisherDisplayName>
     <Logo>media\assets\store_icon.png</Logo>
   </Properties>
