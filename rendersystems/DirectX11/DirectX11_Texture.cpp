@@ -8,12 +8,8 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _DIRECTX11
-#include <d3d9.h>
-#ifdef USE_IL
-#include <IL/il.h>
-#endif
-
 #include <hltypes/hlog.h>
+#include <hltypes/hstring.h>
 
 #include "april.h"
 #include "DirectX11_RenderSystem.h"
@@ -27,6 +23,13 @@
 	name.top = y; \
 	name.right = x + w - 1; \
 	name.bottom = y + h - 1;
+
+#define _HL_TRY_RELEASE_COMPTR(name) \
+	if (name != nullptr) \
+	{ \
+		name.Get()->Release(); \
+		name = nullptr; \
+	}
 
 namespace april
 {
@@ -310,6 +313,7 @@ namespace april
 	void DirectX11_Texture::clear()
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_Texture::clear()");
 		/*
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
@@ -325,6 +329,7 @@ namespace april
 
 	Color DirectX11_Texture::getPixel(int x, int y)
 	{
+		hlog::warn(april::logTag, "DirectX11_Texture::getPixel()");
 		Color color = Color::Clear;
 		// TODO
 		/*
@@ -370,6 +375,7 @@ namespace april
 	void DirectX11_Texture::setPixel(int x, int y, Color color)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_Texture::setPixel()");
 		/*
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
@@ -409,6 +415,7 @@ namespace april
 
 	void DirectX11_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
+		hlog::warn(april::logTag, "DirectX11_Texture::fillRect()");
 		// TODO
 		/*
 		x = hclamp(x, 0, this->width - 1);
@@ -481,6 +488,7 @@ namespace april
 	void DirectX11_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_Texture::blit()");
 		/*
 		DirectX11_Texture* source = (DirectX11_Texture*)texture;
 		x = hclamp(x, 0, this->width - 1);
@@ -510,6 +518,7 @@ namespace april
 	void DirectX11_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_Texture::blit()");
 		/*
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
@@ -533,6 +542,7 @@ namespace april
 	void DirectX11_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_Texture::stretchBlit()");
 		/*
 		DirectX11_Texture* source = (DirectX11_Texture*)texture;
 		x = hclamp(x, 0, this->width - 1);
@@ -557,6 +567,7 @@ namespace april
 	void DirectX11_Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_Texture::stretchBlit()");
 		/*
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
@@ -582,6 +593,7 @@ namespace april
 	void DirectX11_Texture::rotateHue(float degrees)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_Texture::rotateHue()");
 		/*
 		if (degrees == 0.0f)
 		{
@@ -612,6 +624,7 @@ namespace april
 	void DirectX11_Texture::saturate(float factor)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_Texture::saturate()");
 		/*
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
@@ -636,6 +649,7 @@ namespace april
 
 	bool DirectX11_Texture::copyPixelData(unsigned char** output)
 	{
+		hlog::warn(april::logTag, "DirectX11_Texture::copyPixelData()");
 		// TODO
 		/*
 		D3DLOCKED_RECT lockRect;
@@ -690,6 +704,7 @@ namespace april
 	void DirectX11_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
 	{
 		// TODO
+		hlog::warn(april::logTag, "DirectX11_Texture::insertAsAlphaMap()");
 		/*
 		if (this->width != texture->getWidth() || this->height != texture->getHeight() || this->bpp != 4)
 		{

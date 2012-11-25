@@ -82,7 +82,6 @@ namespace april
 	void WinRT_View::Run()
 	{
 		hresource::setCwd(normalize_path(unicode_to_utf8(Package::Current->InstalledLocation->Path->Data())));
-		hlog::write("APRIL", hresource::getCwd());
 		hresource::setArchive("");
 		WinRT::View = this;
 		(*WinRT::Init)(WinRT::Args);
