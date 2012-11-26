@@ -270,6 +270,7 @@ namespace april
 		if (image->format == AF_RGBA || image->format == AF_RGB)
 		{
 			unsigned char* data = new unsigned char[image->w * image->h * 4];
+			memset(data, 255, image->w * image->h * 4);
 			if (image->format == AF_RGBA)
 			{
 				image->copyPixels(data, AF_BGRA);

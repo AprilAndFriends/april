@@ -28,6 +28,47 @@ namespace april
 	class aprilExport WinRT_Window : public Window
 	{
 	public:
+		struct MouseInputEvent
+		{
+			MouseEventType type;
+			gvec2 position;
+			MouseButton button;
+		
+			MouseInputEvent(MouseEventType _type, gvec2 _position, MouseButton _button)
+			{
+				type = _type;
+				position = _position;
+				button = _button;
+			}
+		
+		};
+
+		struct KeyInputEvent
+		{
+			KeyEventType type;
+			KeySym keyCode;
+			unsigned int charCode;
+		
+			KeyInputEvent(KeyEventType _type, KeySym _keyCode, unsigned int _charCode)
+			{
+				type = _type;
+				keyCode = _keyCode;
+				charCode = _charCode;
+			}
+		
+		};
+
+		struct TouchInputEvent
+		{
+			harray<gvec2> touches;
+		
+			TouchInputEvent(harray<gvec2>& _touches)
+			{
+				touches = _touches;
+			}
+		
+		};
+
 		WinRT_Window();
 		~WinRT_Window();
 
@@ -39,18 +80,26 @@ namespace april
 		//void setCursorVisible(bool value);
 		int getWidth() { return this->width; }
 		int getHeight() { return this->height; }
-		bool isTouchEnabled() { return this->touchEnabled; }
-		void setTouchEnabled(bool value) { this->touchEnabled = value; }
+		bool isTouchEnabled() { return false; }
+		void setTouchEnabled(bool value) { }
 		void* getBackendId();
 		//void _setResolution(int w, int h);
 		bool updateOneFrame();
 		void presentFrame();
 		void checkEvents();
 
+		void handleTouchEvent(MouseEventType type, gvec2 position, int index);
+		void handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button);
+		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
+
 	protected:
 		int width;
 		int height;
-		bool touchEnabled;
+		bool multiTouchActive;
+		harray<gvec2> touches;
+		harray<MouseInputEvent> mouseEvents;
+		harray<KeyInputEvent> keyEvents;
+		harray<TouchInputEvent> touchEvents;
 
 	};
 

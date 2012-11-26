@@ -24,50 +24,50 @@
 
 namespace april
 {
-	struct MouseInputEvent
-	{
-		Window::MouseEventType type;
-		gvec2 position;
-		Window::MouseButton button;
-		
-		MouseInputEvent(Window::MouseEventType _type, gvec2 _position, Window::MouseButton _button)
-		{
-			type = _type;
-			position = _position;
-			button = _button;
-		}
-		
-	};
-
-	struct KeyInputEvent
-	{
-		Window::KeyEventType type;
-		KeySym keyCode;
-		unsigned int charCode;
-		
-		KeyInputEvent(Window::KeyEventType _type, KeySym _keyCode, unsigned int _charCode)
-		{
-			type = _type;
-			keyCode = _keyCode;
-			charCode = _charCode;
-		}
-		
-	};
-
-	struct TouchInputEvent
-	{
-		harray<gvec2> touches;
-		
-		TouchInputEvent(harray<gvec2>& _touches)
-		{
-			touches = _touches;
-		}
-		
-	};
-
 	class aprilExport AndroidJNI_Window : public Window
 	{
 	public:
+		struct MouseInputEvent
+		{
+			MouseEventType type;
+			gvec2 position;
+			MouseButton button;
+		
+			MouseInputEvent(MouseEventType _type, gvec2 _position, MouseButton _button)
+			{
+				type = _type;
+				position = _position;
+				button = _button;
+			}
+		
+		};
+
+		struct KeyInputEvent
+		{
+			KeyEventType type;
+			KeySym keyCode;
+			unsigned int charCode;
+		
+			KeyInputEvent(KeyEventType _type, KeySym _keyCode, unsigned int _charCode)
+			{
+				type = _type;
+				keyCode = _keyCode;
+				charCode = _charCode;
+			}
+		
+		};
+
+		struct TouchInputEvent
+		{
+			harray<gvec2> touches;
+		
+			TouchInputEvent(harray<gvec2>& _touches)
+			{
+				touches = _touches;
+			}
+		
+		};
+
 		AndroidJNI_Window();
 		~AndroidJNI_Window();
 		bool create(int w, int h, bool fullscreen, chstr title);

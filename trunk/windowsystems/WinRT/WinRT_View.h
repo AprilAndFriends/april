@@ -56,9 +56,6 @@ namespace april
 
 		void checkEvents();
 
-	protected:
-		int _getMouseButton(_In_ PointerEventArgs^ args); // not april::Window::MouseButton because a WinRT type cannot include a native enum
-
 	private: // has to be private
 		Platform::Agile<CoreWindow> window;
 
