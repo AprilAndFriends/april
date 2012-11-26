@@ -38,6 +38,9 @@
 
 namespace april
 {
+	static ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
+	static ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
+
 	// TODO - refactor
 	harray<DirectX9_Texture*> gRenderTargets;
 
@@ -67,9 +70,6 @@ namespace april
 		D3DPT_LINESTRIP,		// ROP_LINE_STRIP
 		D3DPT_POINTLIST,		// ROP_POINT_LIST
 	};
-
-	ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
-	ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
 
 	unsigned int _numPrimitives(RenderOp renderOp, int nVertices)
 	{
