@@ -75,6 +75,13 @@ namespace april
 		return DEVICE_ANDROID_PHONE;
 	}
 
+	hstr getPackageName()
+	{
+		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
+		jfieldID fieldPackageName = env->GetStaticFieldID(classNativeInterface, "PackageName", _JSTR);
+		return _JSTR_TO_HSTR((jstring)env->GetStaticObjectField(classNativeInterface, fieldPackageName));
+	}
+
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{

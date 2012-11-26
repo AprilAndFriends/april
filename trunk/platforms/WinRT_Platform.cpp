@@ -62,6 +62,13 @@ namespace april
 		return DEVICE_WINDOWS_8;
 	}
 
+	hstr getPackageName()
+	{
+		// TODO
+		hlog::warn("Not implemented getPackageName() on this platform.");
+		return "";
+	}
+
 	static void(*currentCallback)(MessageBoxButton) = NULL;
 
 	void _messageBoxResult(int button)
