@@ -28,12 +28,14 @@
 #include "Keys.h"
 #include "Timer.h"
 
+#define VERTICES_BUFFER_COUNT 65536
+
 #define PLAIN_FVF (D3DFVF_XYZ)
 #define COLOR_FVF (D3DFVF_XYZ | D3DFVF_DIFFUSE)
 #define TEX_FVF (D3DFVF_XYZ | D3DFVF_TEX1)
 #define TEX_COLOR_FVF (D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE)
 #define TEX_COLOR_TONE_FVF (D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_SPECULAR)
-#define VERTICES_BUFFER_COUNT 8192
+
 #define UINT_RGBA_TO_ARGB(c) ((((c) >> 8) & 0xFFFFFF) | (((c) & 0xFF) << 24))
 
 namespace april
@@ -567,9 +569,11 @@ namespace april
 		}
 		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
 		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
-		memcpy(cv, v, sizeof(ColoredVertex) * nVertices);
 		for_iter (i, 0, nVertices)
 		{
+			cv[i].x = v[i].x;
+			cv[i].y = v[i].y;
+			cv[i].z = v[i].z;
 			cv[i].color = colorDx9;
 		}
 		this->d3dDevice->SetFVF(COLOR_FVF);
@@ -590,9 +594,13 @@ namespace april
 	{
 		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		memcpy(ctv, v, sizeof(ColoredTexturedVertex) * nVertices);
 		for_iter (i, 0, nVertices)
 		{
+			ctv[i].x = v[i].x;
+			ctv[i].y = v[i].y;
+			ctv[i].z = v[i].z;
+			ctv[i].u = v[i].u;
+			ctv[i].v = v[i].v;
 			ctv[i].color = colorDx9;
 		}
 		this->d3dDevice->SetFVF(TEX_COLOR_FVF);

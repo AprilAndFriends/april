@@ -28,10 +28,11 @@
 #include "Timer.h"
 #include "WinRT_Window.h"
 
-using namespace Microsoft::WRL;
+#define VERTICES_BUFFER_COUNT 65536
 
-#define VERTICES_BUFFER_COUNT 8192
 #define UINT_RGBA_TO_ABGR(c) ((((c) >> 24) & 0xFF) | (((c) << 24) & 0xFF000000) | (((c) >> 8) & 0xFF00) | (((c) << 8) & 0xFF0000))
+
+using namespace Microsoft::WRL;
 
 namespace april
 {
