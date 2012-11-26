@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.41
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -14,6 +14,7 @@
 #if !_HL_WINRT
 
 #include <gtypes/Vector2.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hplatform.h>
