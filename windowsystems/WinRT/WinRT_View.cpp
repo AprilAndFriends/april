@@ -106,35 +106,19 @@ namespace april
 		args->Handled = true;
 	}
 
-	int WinRT_View::_getMouseButton(_In_ PointerEventArgs^ args)
-	{
-		april::Window::MouseButton button = april::Window::AMOUSEBTN_NONE;
-		if (args->CurrentPoint->Properties->IsLeftButtonPressed)
-		{
-			button = april::Window::AMOUSEBTN_LEFT;
-		}
-		else if (args->CurrentPoint->Properties->IsRightButtonPressed)
-		{
-			button = april::Window::AMOUSEBTN_RIGHT;
-		}
-		else if (args->CurrentPoint->Properties->IsMiddleButtonPressed)
-		{
-			button = april::Window::AMOUSEBTN_MIDDLE;
-		}
-		return (int)button;
-	}
-
 	void WinRT_View::OnMouseDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		april::window->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, gvec2(args->CurrentPoint->Position.X,
-			args->CurrentPoint->Position.Y), (april::Window::MouseButton)this->_getMouseButton(args));
+		((WinRT_Window*)april::window)->handleTouchEvent(april::Window::AMOUSEEVT_DOWN,
+			gvec2(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y),
+			args->CurrentPoint->PointerId - 1);
 		args->Handled = true;
 	}
 
 	void WinRT_View::OnMouseUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		april::window->handleMouseEvent(april::Window::AMOUSEEVT_UP, gvec2(args->CurrentPoint->Position.X,
-			args->CurrentPoint->Position.Y), (april::Window::MouseButton)this->_getMouseButton(args));
+		((WinRT_Window*)april::window)->handleTouchEvent(april::Window::AMOUSEEVT_UP,
+			gvec2(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y),
+			args->CurrentPoint->PointerId - 1);
 		args->Handled = true;
 	}
 

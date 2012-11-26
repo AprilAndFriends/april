@@ -29,7 +29,7 @@ namespace april
 		this->name = APRIL_WS_WINRT;
 		this->width = 0;
 		this->height = 0;
-		this->touchEnabled = false;
+		this->multiTouchActive = false;
 	}
 
 	WinRT_Window::~WinRT_Window()
@@ -45,6 +45,7 @@ namespace april
 		}
 		this->width = w;
 		this->height = h;
+		this->multiTouchActive = false;
 		this->setCursorVisible(true);
 		return true;
 	}
@@ -119,8 +120,6 @@ namespace april
 	bool WinRT_Window::updateOneFrame()
 	{
 		static bool result;
-		// mouse position
-		//this->cursorPosition.set(); ???
 		this->checkEvents();
 		// rendering
 		result = Window::updateOneFrame();
@@ -135,6 +134,69 @@ namespace april
 	void WinRT_Window::checkEvents()
 	{
 		april::WinRT::View->checkEvents();
+		while (this->mouseEvents.size() > 0)
+		{
+			MouseInputEvent e = this->mouseEvents.pop_first();
+			this->cursorPosition = e.position;
+			Window::handleMouseEvent(e.type, e.position, e.button);
+		}
+		while (this->keyEvents.size() > 0)
+		{
+			KeyInputEvent e = this->keyEvents.pop_first();
+			Window::handleKeyEvent(e.type, e.keyCode, e.charCode);
+		}
+		while (this->touchEvents.size() > 0)
+		{
+			TouchInputEvent e = this->touchEvents.pop_first();
+			Window::handleTouchEvent(e.touches);
+		}
+	}
+
+	void WinRT_Window::handleTouchEvent(MouseEventType type, gvec2 position, int index)
+	{
+		switch (type)
+		{
+		case AMOUSEEVT_DOWN:
+			if (index < this->touches.size()) // DOWN event of an already indexed touch, never happened so far
+			{
+				return;
+			}
+			this->touches += position;
+			break;
+		case AMOUSEEVT_UP:
+			if (index >= this->touches.size()) // redundant UP event, can happen
+			{
+				return;
+			}
+			this->touches.remove_at(index);
+			break;
+		case AMOUSEEVT_MOVE:
+			if (index >= this->touches.size()) // MOVE event of an unindexed touch, never happened so far
+			{
+				return;
+			}
+			this->touches[index] = position;
+			break;
+		}
+		if (this->multiTouchActive || this->touches.size() > 1)
+		{
+			this->multiTouchActive = (this->touches.size() > 0);
+		}
+		else
+		{
+			this->handleMouseEvent(type, position, AMOUSEBTN_LEFT);
+		}
+		this->touchEvents += TouchInputEvent(this->touches);
+	}
+
+	void WinRT_Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
+	{
+		this->mouseEvents += MouseInputEvent(type, position, button);
+	}
+
+	void WinRT_Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
+	{
+		this->keyEvents += KeyInputEvent(type, keyCode, charCode);
 	}
 
 }
