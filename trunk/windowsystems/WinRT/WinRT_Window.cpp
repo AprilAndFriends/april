@@ -118,11 +118,14 @@ namespace april
 	
 	bool WinRT_Window::updateOneFrame()
 	{
+		static bool result;
 		// mouse position
 		//this->cursorPosition.set(); ???
+		this->checkEvents();
 		// rendering
-		this->setTitle(this->title);
-		return Window::updateOneFrame();
+		result = Window::updateOneFrame();
+		this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
+		return result;
 	}
 	
 	void WinRT_Window::presentFrame()

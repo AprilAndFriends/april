@@ -12,6 +12,7 @@ struct VertexShaderInput
 struct PixelShaderInput
 {
 	float4 position : SV_POSITION;
+	float4 color : COLOR;
 };
 
 PixelShaderInput main(VertexShaderInput input)
@@ -20,5 +21,6 @@ PixelShaderInput main(VertexShaderInput input)
 	float4 position = float4(input.position, 1.0f);
 	position = mul(position, cMatrix);
 	vertexShaderOutput.position = position;
+	vertexShaderOutput.color = cColor;
 	return vertexShaderOutput;
 }
