@@ -816,7 +816,6 @@ namespace april
             this->d3dDeviceContext->PSSetSamplers(0, 1, this->activeTexture->d3dSampler.GetAddressOf());
 		}
 	}
-
 	
 	void DirectX11_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
 	{
