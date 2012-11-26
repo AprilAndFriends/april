@@ -15,8 +15,8 @@
 #include <sys/sysctl.h>
 #import <UIKit/UIKit.h>
 #include <gtypes/Vector2.h>
-#include <hltypes/hltypesUtil.h>
 #include <hltypes/hlog.h>
+#include <hltypes/hltypesUtil.h>
 #import <CoreGraphics/CoreGraphics.h>
 
 #import <OpenGLES/ES1/gl.h>

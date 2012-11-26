@@ -10,6 +10,9 @@
 
 #ifdef _UNIX
 #include <gtypes/Vector2.h>
+#include <hltypes/hlog.h>
+#include <hltypes/hltypesUtil.h>
+#include <hltypes/hstring.h>
 
 #include "Platform.h"
 
