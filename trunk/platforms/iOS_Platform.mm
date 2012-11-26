@@ -21,6 +21,7 @@
 
 #import <OpenGLES/ES1/gl.h>
 
+#include "april.h"
 #include "RenderSystem.h"
 #include "ImageSource.h"
 #include "iOS_Window.h"
@@ -271,7 +272,7 @@ namespace april
 	hstr getPackageName()
 	{
 		// TODO
-		hlog::warn("Not implemented getPackageName() on this platform.");
+		hlog::warn(april::logTag, "Not implemented getPackageName() on this platform.");
 		return "";
 	}
 

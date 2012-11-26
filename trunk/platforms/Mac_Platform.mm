@@ -26,6 +26,7 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
+#include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
@@ -130,7 +131,7 @@ namespace april
     
 	hstr getPackageName()
 	{
-		hlog::warn("Cannot use getPackageName() on this platform.");
+		hlog::warn(april::logTag, "Cannot use getPackageName() on this platform.");
 		return "";
 	}
 
