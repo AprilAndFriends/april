@@ -31,23 +31,13 @@
 using namespace Microsoft::WRL;
 
 #define VERTICES_BUFFER_COUNT 8192
-#define UINT_RGBA_TO_ARGB(c) ((((c) >> 8) & 0xFFFFFF) | (((c) & 0xFF) << 24))
-
-#define _HL_TRY_DELETE(name) \
-	if (name != NULL) \
-	{ \
-		delete name; \
-		name = NULL; \
-	}
-#define _HL_TRY_RELEASE_COMPTR(name) \
-	if (name != nullptr) \
-	{ \
-		name.Get()->Release(); \
-		name = nullptr; \
-	}
+#define UINT_RGBA_TO_ABGR(c) ((((c) >> 24) & 0xFF) | (((c) << 24) & 0xFF000000) | (((c) >> 8) & 0xFF00) | (((c) << 8) & 0xFF0000))
 
 namespace april
 {
+	static ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
+	static ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
+
 	// TODO - refactor
 	harray<DirectX11_Texture*> gRenderTargets;
 	int _maxTextureSize = 0;
@@ -69,9 +59,6 @@ namespace april
 		D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,		// ROP_LINE_STRIP
 		D3D11_PRIMITIVE_TOPOLOGY_POINTLIST,		// ROP_POINT_LIST
 	};
-
-	ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
-	ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
 
 	unsigned int _numPrimitives(RenderOp renderOp, int nVertices)
 	{
@@ -877,27 +864,49 @@ namespace april
 
 	void DirectX11_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
 	{
+		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
+		ColoredVertex* p = cv;
+		for_iter (i, 0, nVertices)
+		{
+			p[i].x = v[i].x;
+			p[i].y = v[i].y;
+			p[i].z = v[i].z;
+			p[i].color = UINT_RGBA_TO_ABGR(v[i].color);
+		}
 		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
-		this->_updateVertexBuffer(sizeof(ColoredVertex) * nVertices, v);
+		this->_updateVertexBuffer(sizeof(ColoredVertex) * nVertices, cv);
 		unsigned int stride = sizeof(ColoredVertex);
 		unsigned int offset = 0;
 		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &stride, &offset);
 		this->d3dDeviceContext->IASetInputLayout(this->inputLayoutColored.Get());
-		this->_setVertexShader(this->vertexShaderTextured);
-		this->_setPixelShader(this->pixelShaderTextured);
+		this->_setVertexShader(this->vertexShaderColored);
+		this->_setPixelShader(this->pixelShaderColored);
 		this->_updateConstantBuffer(april::Color::White);
 		this->_updateBlending();
 		this->_updateTexture(false);
 		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
 		this->d3dDeviceContext->Draw(nVertices, 0);
+		if (nVertices > VERTICES_BUFFER_COUNT)
+		{
+			delete [] cv;
+		}
 	}
 
 	void DirectX11_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
-		hlog::warn(april::logTag, "DirectX11_RenderSystem::render(ColoredTexturedVertex)");
-		/*
+		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
+		ColoredTexturedVertex* p = ctv;
+		for_iter (i, 0, nVertices)
+		{
+			p[i].x = v[i].x;
+			p[i].y = v[i].y;
+			p[i].z = v[i].z;
+			p[i].u = v[i].u;
+			p[i].v = v[i].v;
+			p[i].color = UINT_RGBA_TO_ABGR(v[i].color);
+		}
 		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
-		this->_updateVertexBuffer(sizeof(ColoredTexturedVertex) * nVertices, v);
+		this->_updateVertexBuffer(sizeof(ColoredTexturedVertex) * nVertices, ctv);
 		unsigned int stride = sizeof(ColoredTexturedVertex);
 		unsigned int offset = 0;
 		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &stride, &offset);
@@ -909,7 +918,10 @@ namespace april
 		this->_updateTexture();
 		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
 		this->d3dDeviceContext->Draw(nVertices, 0);
-		*/
+		if (nVertices > VERTICES_BUFFER_COUNT)
+		{
+			delete [] ctv;
+		}
 	}
 
 	void DirectX11_RenderSystem::_setModelviewMatrix(const gmat4& matrix)

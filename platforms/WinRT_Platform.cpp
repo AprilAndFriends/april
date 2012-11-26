@@ -12,11 +12,13 @@
 #if _HL_WINRT
 
 #include <gtypes/Vector2.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
+#include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
@@ -65,7 +67,7 @@ namespace april
 	hstr getPackageName()
 	{
 		// TODO
-		hlog::warn("Not implemented getPackageName() on this platform.");
+		hlog::warn(april::logTag, "Not implemented getPackageName() on this platform.");
 		return "";
 	}
 

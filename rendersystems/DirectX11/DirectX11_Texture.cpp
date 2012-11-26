@@ -24,13 +24,6 @@
 	name.right = x + w - 1; \
 	name.bottom = y + h - 1;
 
-#define _HL_TRY_RELEASE_COMPTR(name) \
-	if (name != nullptr) \
-	{ \
-		name.Get()->Release(); \
-		name = nullptr; \
-	}
-
 namespace april
 {
 	// TODO - refactor
