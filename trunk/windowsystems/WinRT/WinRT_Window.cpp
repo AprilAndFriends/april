@@ -137,7 +137,10 @@ namespace april
 		while (this->mouseEvents.size() > 0)
 		{
 			MouseInputEvent e = this->mouseEvents.pop_first();
-			this->cursorPosition = e.position;
+			if (e.type != AMOUSEEVT_SCROLL)
+			{
+				this->cursorPosition = e.position;
+			}
 			Window::handleMouseEvent(e.type, e.position, e.button);
 		}
 		while (this->keyEvents.size() > 0)

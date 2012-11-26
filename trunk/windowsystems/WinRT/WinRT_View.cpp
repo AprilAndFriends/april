@@ -35,7 +35,6 @@ namespace april
 	{
         applicationView->Activated +=
             ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &WinRT_View::OnActivated);
-
 	}
 	
 	void WinRT_View::Uninitialize()
@@ -81,6 +80,7 @@ namespace april
 
 	void WinRT_View::Run()
 	{
+		this->scrollHorizontal = false;
 		hresource::setCwd(normalize_path(unicode_to_utf8(Package::Current->InstalledLocation->Path->Data())));
 		hresource::setArchive("");
 		WinRT::View = this;
@@ -131,23 +131,39 @@ namespace april
 
 	void WinRT_View::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		float delta = (float)args->CurrentPoint->Properties->MouseWheelDelta;
-		// TODO
-		//args->CurrentPoint->
-		//april::window->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL, gvec2(args->CurrentPoint->Position.X,
-		//	args->CurrentPoint->Position.Y), april::Window::AMOUSEBTN_NONE);
+		float _wheelDelta = (float)args->CurrentPoint->Properties->MouseWheelDelta / WHEEL_DELTA;
+		if (this->scrollHorizontal ^ args->CurrentPoint->Properties->IsHorizontalMouseWheel)
+		{
+			april::window->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL,
+				gvec2(-(float)_wheelDelta, 0.0f), april::Window::AMOUSEBTN_NONE);
+		}
+		else
+		{
+			april::window->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL,
+				gvec2(0.0f, -(float)_wheelDelta), april::Window::AMOUSEBTN_NONE);
+		}
 		args->Handled = true;
 	}
 
 	void WinRT_View::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
-		april::window->handleKeyOnlyEvent(april::Window::AKEYEVT_DOWN, (april::KeySym)args->VirtualKey);
+		april::KeySym key = (april::KeySym)args->VirtualKey;
+		april::window->handleKeyOnlyEvent(april::Window::AKEYEVT_DOWN, key);
+		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
+		{
+			this->scrollHorizontal = true;
+		}
 		args->Handled = true;
 	}
 
 	void WinRT_View::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
-		april::window->handleKeyOnlyEvent(april::Window::AKEYEVT_DOWN, (april::KeySym)args->VirtualKey);
+		april::KeySym key = (april::KeySym)args->VirtualKey;
+		april::window->handleKeyOnlyEvent(april::Window::AKEYEVT_DOWN, key);
+		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
+		{
+			this->scrollHorizontal = false;
+		}
 		args->Handled = true;
 	}
 
