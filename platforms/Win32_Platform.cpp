@@ -60,6 +60,12 @@ namespace april
 		return DEVICE_WINDOWS_PC;
 	}
 
+	hstr getPackageName()
+	{
+		hlog::warn("Cannot use getPackageName() on this platform.");
+		return "";
+	}
+
 	static void(*currentCallback)(MessageBoxButton) = NULL;
 
 	// TODO - could be maybe put as a common function

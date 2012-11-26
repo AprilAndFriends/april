@@ -125,6 +125,12 @@ namespace april
 		return DEVICE_MAC_PC;
 	}
     
+	hstr getPackageName()
+	{
+		hlog::warn("Cannot use getPackageName() on this platform.");
+		return "";
+	}
+
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// fugly implementation of showing messagebox on mac os
