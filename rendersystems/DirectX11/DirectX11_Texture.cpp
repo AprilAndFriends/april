@@ -142,13 +142,23 @@ namespace april
 		textureSubresourceData.SysMemPitch = this->width * this->bpp;
 		if (this->renderTarget) // TODO - may not even be necessary
 		{
-			textureDesc.Usage = D3D11_USAGE_DEFAULT;
+			textureDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+			//textureDesc.Usage = D3D11_USAGE_DEFAULT;
 		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
 		if (FAILED(hr))
 		{
 			hlog::error(april::logTag, "Failed to create DX11 texture!");
 			return false;
+		}
+		if (this->renderTarget)
+		{
+			D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+			renderTargetViewDesc.Format = textureDesc.Format;
+			renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+			renderTargetViewDesc.Texture2D.MipSlice = 0;
+			APRIL_D3D_DEVICE->CreateRenderTargetView(this->d3dTexture.Get(),
+				&renderTargetViewDesc, this->d3dRenderTargetView.GetAddressOf());
 		}
 		// shader resource
         D3D11_SHADER_RESOURCE_VIEW_DESC textureViewDesc;
@@ -190,27 +200,7 @@ namespace april
 	
 	void DirectX11_Texture::restore()
 	{
-		// TODO
-		/*
-		if (!this->renderTarget)
-		{
-			return;
-		}
-		this->unload();
-		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
-		if (this->bpp == 4)
-		{
-			d3dformat = D3DFMT_A8R8G8B8;
-		}
-		D3DPOOL d3dpool = D3DPOOL_DEFAULT;
-		DWORD d3dusage = D3DUSAGE_RENDERTARGET;
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, d3dformat, d3dpool, &this->d3dTexture, NULL);
-		if (hr != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to restore user-defined DX11 texture!");
-			return;
-		}
-		*/
+		// not needed, DX11 does not use the concept of device reset as DX9 and earlier did
 	}
 
 	DirectX11_Texture::~DirectX11_Texture()
@@ -296,6 +286,7 @@ namespace april
 			_HL_TRY_RELEASE_COMPTR(this->d3dTexture);
 			_HL_TRY_RELEASE_COMPTR(this->d3dView);
 			_HL_TRY_RELEASE_COMPTR(this->d3dSampler);
+			_HL_TRY_RELEASE_COMPTR(this->d3dRenderTargetView);
 		}
 	}
 
