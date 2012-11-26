@@ -58,6 +58,7 @@ namespace april
 
 	private: // has to be private
 		Platform::Agile<CoreWindow> window;
+		bool scrollHorizontal;
 
 	};
 
