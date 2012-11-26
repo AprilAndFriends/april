@@ -567,13 +567,10 @@ namespace april
 		}
 		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
 		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
-		ColoredVertex* p = cv;
+		memcpy(cv, v, sizeof(ColoredVertex) * nVertices);
 		for_iter (i, 0, nVertices)
 		{
-			p[i].x = v[i].x;
-			p[i].y = v[i].y;
-			p[i].z = v[i].z;
-			p[i].color = colorDx9;
+			cv[i].color = colorDx9;
 		}
 		this->d3dDevice->SetFVF(COLOR_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], _numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
@@ -593,15 +590,10 @@ namespace april
 	{
 		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		ColoredTexturedVertex* p = ctv;
+		memcpy(ctv, v, sizeof(ColoredTexturedVertex) * nVertices);
 		for_iter (i, 0, nVertices)
 		{
-			p[i].x = v[i].x;
-			p[i].y = v[i].y;
-			p[i].z = v[i].z;
-			p[i].u = v[i].u;
-			p[i].v = v[i].v;
-			p[i].color = colorDx9;
+			ctv[i].color = colorDx9;
 		}
 		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], _numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
@@ -618,13 +610,10 @@ namespace april
 			this->setTexture(NULL);
 		}
 		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
-		ColoredVertex* p = cv;
+		memcpy(cv, v, sizeof(ColoredVertex) * nVertices);
 		for_iter (i, 0, nVertices)
 		{
-			p[i].x = v[i].x;
-			p[i].y = v[i].y;
-			p[i].z = v[i].z;
-			p[i].color = UINT_RGBA_TO_ARGB(v[i].color);
+			cv[i].color = UINT_RGBA_TO_ARGB(v[i].color);
 		}
 		this->d3dDevice->SetFVF(COLOR_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], _numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
@@ -637,15 +626,10 @@ namespace april
 	void DirectX9_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		ColoredTexturedVertex* p = ctv;
+		memcpy(ctv, v, sizeof(ColoredTexturedVertex) * nVertices);
 		for_iter (i, 0, nVertices)
 		{
-			p[i].x = v[i].x;
-			p[i].y = v[i].y;
-			p[i].z = v[i].z;
-			p[i].u = v[i].u;
-			p[i].v = v[i].v;
-			p[i].color = UINT_RGBA_TO_ARGB(v[i].color);
+			ctv[i].color = UINT_RGBA_TO_ARGB(v[i].color);
 		}
 		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], _numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));

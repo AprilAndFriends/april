@@ -652,28 +652,22 @@ namespace april
 	
 	void DirectX11_RenderSystem::setRenderTarget(Texture* source)
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_RenderSystem::setRenderTarget()");
-		/*
-		if (this->renderTarget != NULL)
-		{
-			this->d3dDevice->EndScene();
-		}
+		// TODO - test, this code is experimental
 		DirectX11_Texture* texture = (DirectX11_Texture*)source;
 		if (texture == NULL)
 		{
-			this->d3dDevice->SetRenderTarget(0, this->backBuffer);
+			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), nullptr);
+		}
+		else if (texture->d3dRenderTargetView != nullptr)
+		{
+			this->d3dDeviceContext->OMSetRenderTargets(1, texture->d3dRenderTargetView.GetAddressOf(), nullptr);
 		}
 		else
 		{
-			this->d3dDevice->SetRenderTarget(0, texture->_getSurface());
+			hlog::error(april::logTag, "Texture not created as rendertarget: " + texture->_getInternalName());
+			return;
 		}
 		this->renderTarget = texture;
-		if (this->renderTarget != NULL)
-		{
-			this->d3dDevice->BeginScene();
-		}
-		*/
 	}
 	
 	void DirectX11_RenderSystem::setPixelShader(PixelShader* pixelShader)
@@ -751,14 +745,20 @@ namespace april
 	void DirectX11_RenderSystem::clear(bool useColor, bool depth)
 	{
 		static const float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+		// TODO - should use current renderTargetView, not global one
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 	
 	void DirectX11_RenderSystem::clear(bool depth, grect rect, Color color)
 	{
-		// TODO
 		const float clearColor[4] = {color.b_f(), color.g_f(), color.r_f(), color.a_f()};
-		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
+		D3D11_RECT area;
+		area.left = (int)rect.x;
+		area.top = (int)rect.y;
+		area.right = (int)(rect.x + rect.w);
+		area.bottom = (int)(rect.y + rect.h);
+		// TODO - should use current renderTargetView, not global one
+		this->d3dDeviceContext->ClearView(this->renderTargetView.Get(), clearColor, &area, 1);
 	}
 
 	void DirectX11_RenderSystem::_updateVertexBuffer(unsigned int size, void* data)
@@ -864,13 +864,10 @@ namespace april
 	void DirectX11_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
 	{
 		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
-		ColoredVertex* p = cv;
+		memcpy(cv, v, sizeof(ColoredVertex) * nVertices);
 		for_iter (i, 0, nVertices)
 		{
-			p[i].x = v[i].x;
-			p[i].y = v[i].y;
-			p[i].z = v[i].z;
-			p[i].color = UINT_RGBA_TO_ABGR(v[i].color);
+			cv[i].color = UINT_RGBA_TO_ABGR(v[i].color);
 		}
 		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
 		this->_updateVertexBuffer(sizeof(ColoredVertex) * nVertices, cv);
@@ -894,15 +891,10 @@ namespace april
 	void DirectX11_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		ColoredTexturedVertex* p = ctv;
+		memcpy(ctv, v, sizeof(ColoredTexturedVertex) * nVertices);
 		for_iter (i, 0, nVertices)
 		{
-			p[i].x = v[i].x;
-			p[i].y = v[i].y;
-			p[i].z = v[i].z;
-			p[i].u = v[i].u;
-			p[i].v = v[i].v;
-			p[i].color = UINT_RGBA_TO_ABGR(v[i].color);
+			ctv[i].color = UINT_RGBA_TO_ABGR(v[i].color);
 		}
 		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
 		this->_updateVertexBuffer(sizeof(ColoredTexturedVertex) * nVertices, ctv);
