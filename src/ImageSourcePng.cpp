@@ -198,12 +198,11 @@ namespace april
 			png_set_palette_to_rgb(pngPtr);
 			bpp = 3;
 		}
-		/*
-		else if (pngPtr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+		if (pngPtr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA && bpp > 1)
 		{
-			bpp = 1; // because sometimes this can be 2 BPP
+			png_set_strip_alpha(pngPtr);
+			bpp -= 1;
 		}
-		*/
 		if (png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS))
 		{
 			png_set_tRNS_to_alpha(pngPtr);

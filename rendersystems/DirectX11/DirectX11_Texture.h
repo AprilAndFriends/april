@@ -48,32 +48,17 @@ namespace april
 		bool copyPixelData(unsigned char** output);
 		void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 
-		void restore(); // TODO - currently only a hack for rendertarget textures
-
 	protected:
 		ComPtr<ID3D11Texture2D> d3dTexture;
 		ComPtr<ID3D11ShaderResourceView> d3dView;
 		ComPtr<ID3D11SamplerState> d3dSampler;
 		ComPtr<ID3D11RenderTargetView> d3dRenderTargetView;
 		bool renderTarget;
+		unsigned char* manualData;
 
 		bool _createInternalTexture(unsigned char* data);
-
-	private:
-		/*
-		enum LOCK_RESULT
-		{
-			LR_LOCKED,
-			LR_RENDERTARGET,
-			LR_FAILED
-		};
-
-		IDirect3DTexture9* _getTexture() { return this->d3dTexture; }
-		IDirect3DSurface9* _getSurface();
-
-		LOCK_RESULT _tryLock(IDirect3DSurface9** buffer, D3DLOCKED_RECT* lockRect, RECT* rect);
-		void _unlock(IDirect3DSurface9* buffer, LOCK_RESULT lock, bool update);
-		*/
+		void _updateTexture();
+		void _updateTexture(int x, int y, int w, int h);
 
 	};
 

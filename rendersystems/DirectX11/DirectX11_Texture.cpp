@@ -17,8 +17,9 @@
 #include "ImageSource.h"
 
 #define APRIL_D3D_DEVICE (((DirectX11_RenderSystem*)april::rendersys)->d3dDevice)
+#define APRIL_D3D_DEVICE_CONTEXT (((DirectX11_RenderSystem*)april::rendersys)->d3dDeviceContext)
 #define _CREATE_RECT(name, x, y, w, h) \
-	RECT name; \
+	D3D11_RECT name; \
 	name.left = x; \
 	name.top = y; \
 	name.right = x + w - 1; \
@@ -40,6 +41,7 @@ namespace april
 		this->d3dTexture = nullptr;
 		this->d3dView = nullptr;
 		this->d3dSampler = nullptr;
+		this->manualData = NULL;
 		hlog::write(april::logTag, "Creating DX11 texture: " + this->_getInternalName());
 	}
 
@@ -55,8 +57,8 @@ namespace april
 		this->d3dView = nullptr;
 		this->d3dSampler = nullptr;
 		hlog::write(april::logTag, "Creating user-defined DX11 texture.");
-		unsigned char* bgra = new unsigned char[this->width * this->height * this->bpp];
-		memcpy(bgra, rgba, this->width * this->height * this->bpp); // so alpha doesn't have to be copied in each iteration
+		this->manualData = new unsigned char[this->width * this->height * this->bpp];
+		memcpy(this->manualData, rgba, this->width * this->height * this->bpp); // so alpha doesn't have to be copied in each iteration
 		int offset;
 		int i;
 		int j;
@@ -65,13 +67,12 @@ namespace april
 			for_iterx (i, 0, this->width)
 			{
 				offset = (i + j * this->width) * this->bpp;
-				bgra[offset + 2] = rgba[offset + 0];
-				//bgra[offset + 1] = rgba[offset + 1]; // not necessary to be executed because of previous memcpy call
-				bgra[offset + 0] = rgba[offset + 2];
+				this->manualData[offset + 2] = rgba[offset + 0];
+				//this->manualData[offset + 1] = rgba[offset + 1]; // not necessary to be executed because of previous memcpy call
+				this->manualData[offset + 0] = rgba[offset + 2];
 			}
 		}
-		this->_createInternalTexture(bgra);
-		delete [] bgra;
+		this->_createInternalTexture(this->manualData);
 	}
 	
 	DirectX11_Texture::DirectX11_Texture(int w, int h, Texture::Format format, Texture::Type type, Color color) : Texture()
@@ -91,10 +92,9 @@ namespace april
 			this->renderTarget = true;
 			gRenderTargets += this;
 		}
-		unsigned char* data = new unsigned char[this->width * this->height * this->bpp];
-		memset(data, 0, this->width * this->height * this->bpp);
-		this->_createInternalTexture(data);
-		delete [] data;
+		this->manualData = new unsigned char[this->width * this->height * this->bpp];
+		memset(this->manualData, 0, this->width * this->height * this->bpp);
+		this->_createInternalTexture(this->manualData);
 		if (color != Color::Clear)
 		{
 			this->fillRect(0, 0, this->width, this->height, color);
@@ -140,10 +140,9 @@ namespace april
 			break;
 		}
 		textureSubresourceData.SysMemPitch = this->width * this->bpp;
-		if (this->renderTarget) // TODO - may not even be necessary
+		if (this->renderTarget)
 		{
 			textureDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
-			//textureDesc.Usage = D3D11_USAGE_DEFAULT;
 		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
 		if (FAILED(hr))
@@ -157,8 +156,13 @@ namespace april
 			renderTargetViewDesc.Format = textureDesc.Format;
 			renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 			renderTargetViewDesc.Texture2D.MipSlice = 0;
-			APRIL_D3D_DEVICE->CreateRenderTargetView(this->d3dTexture.Get(),
+			hr = APRIL_D3D_DEVICE->CreateRenderTargetView(this->d3dTexture.Get(),
 				&renderTargetViewDesc, this->d3dRenderTargetView.GetAddressOf());
+			if (FAILED(hr))
+			{
+				hlog::error(april::logTag, "Failed to create render target view for texture with render-to-texture!");
+				return false;
+			}
 		}
 		// shader resource
         D3D11_SHADER_RESOURCE_VIEW_DESC textureViewDesc;
@@ -198,11 +202,6 @@ namespace april
 		return true;
 	}
 	
-	void DirectX11_Texture::restore()
-	{
-		// not needed, DX11 does not use the concept of device reset as DX9 and earlier did
-	}
-
 	DirectX11_Texture::~DirectX11_Texture()
 	{
 		this->unload();
@@ -259,21 +258,24 @@ namespace april
 		}
 		if (image->format == AF_RGBA || image->format == AF_RGB)
 		{
-			unsigned char* data = new unsigned char[image->w * image->h * 4];
-			memset(data, 255, image->w * image->h * 4);
+			this->manualData = new unsigned char[image->w * image->h * 4];
+			memset(this->manualData, 255, image->w * image->h * 4);
 			if (image->format == AF_RGBA)
 			{
-				image->copyPixels(data, AF_BGRA);
+				image->copyPixels(this->manualData, AF_BGRA);
 			}
 			else
 			{
-				image->copyPixels(data, AF_BGR);
+				image->copyPixels(this->manualData, AF_BGR);
 			}
 			this->bpp = image->bpp = 4;
-			delete image->data;
-			image->data = data;
 		}
-		bool result = this->_createInternalTexture(image->data);
+		else
+		{
+			this->manualData = image->data;
+			image->data = NULL;
+		}
+		bool result = this->_createInternalTexture(this->manualData);
 		delete image;
 		return result;
 	}
@@ -288,6 +290,7 @@ namespace april
 			_HL_TRY_RELEASE_COMPTR(this->d3dSampler);
 			_HL_TRY_RELEASE_COMPTR(this->d3dRenderTargetView);
 		}
+		_HL_TRY_DELETE(this->manualData);
 	}
 
 	bool DirectX11_Texture::isLoaded()
@@ -297,36 +300,14 @@ namespace april
 
 	void DirectX11_Texture::clear()
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_Texture::clear()");
-		/*
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
-		if (result == LR_FAILED)
-		{
-			return;
-		}
-		memset(lockRect.pBits, 0, this->getByteSize());
-		this->_unlock(buffer, result, true);
-		*/
+		memset(this->manualData, 0, this->getByteSize());
+		this->_updateTexture();
 	}
 
 	Color DirectX11_Texture::getPixel(int x, int y)
 	{
-		hlog::warn(april::logTag, "DirectX11_Texture::getPixel()");
 		Color color = Color::Clear;
-		// TODO
-		/*
-		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, x, y, 1, 1);
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
-		if (result == LR_FAILED)
-		{
-			return color;
-		}
-		unsigned char* p = (unsigned char*)lockRect.pBits;
+		unsigned char* p = this->manualData + (y * this->width + x) * this->bpp;
 		if (this->bpp == 4)
 		{
 			color.r = p[2];
@@ -352,27 +333,14 @@ namespace april
 		{
 			hlog::error(april::logTag, "Unsupported format for getPixel()!");
 		}
-		this->_unlock(buffer, result, false);
-		*/
 		return color;
 	}
 
 	void DirectX11_Texture::setPixel(int x, int y, Color color)
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_Texture::setPixel()");
-		/*
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
-		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, x, y, 1, 1);
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
-		if (result == LR_FAILED)
-		{
-			return;
-		}
-		unsigned char* p = (unsigned char*)lockRect.pBits;
+		unsigned char* p = this->manualData + (y * this->width + x) * this->bpp;
 		if (this->bpp == 4)
 		{
 			p[2] = color.r;
@@ -394,15 +362,11 @@ namespace april
 		{
 			hlog::error(april::logTag, "Unsupported format for setPixel()!");
 		}
-		this->_unlock(buffer, result, true);
-		*/
+		this->_updateTexture(x, y, 1, 1);
 	}
 
 	void DirectX11_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		hlog::warn(april::logTag, "DirectX11_Texture::fillRect()");
-		// TODO
-		/*
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
 		w = hclamp(w, 1, this->width - x);
@@ -412,15 +376,7 @@ namespace april
 			this->setPixel(x, y, color);
 			return;
 		}
-		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, x, y, w, h);
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
-		if (result == LR_FAILED)
-		{
-			return;
-		}
-		unsigned char* p = (unsigned char*)lockRect.pBits;
+		unsigned char* p = this->manualData + (y * this->width + x) * this->bpp;
 		int i;
 		int j;
 		int offset;
@@ -466,15 +422,11 @@ namespace april
 		{
 			hlog::error(april::logTag, "Unsupported format for setPixel()!");
 		}
-		this->_unlock(buffer, result, true);
-		*/
+		this->_updateTexture(x, y, w, h);
 	}
 
 	void DirectX11_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_Texture::blit()");
-		/*
 		DirectX11_Texture* source = (DirectX11_Texture*)texture;
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
@@ -487,48 +439,25 @@ namespace april
 			this->setPixel(x, y, source->getPixel(sx, sy));
 			return;
 		}
-		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, sx, sy, sw, sh);
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = source->_tryLock(&buffer, &lockRect, &rect);
-		if (result == LR_FAILED)
-		{
-			return;
-		}
-		this->blit(x, y, (unsigned char*)lockRect.pBits, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
-		source->_unlock(buffer, result, false);
-		*/
+		unsigned char* s = source->manualData + (sy * source->width + sx) * source->bpp;
+		this->blit(x, y, s, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
 	}
 
 	void DirectX11_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_Texture::blit()");
-		/*
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
 		sx = hclamp(sx, 0, dataWidth - 1);
 		sy = hclamp(sy, 0, dataHeight - 1);
 		sw = hmin(sw, hmin(this->width - x, dataWidth - sx));
 		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
-		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, x, y, sw, sh);
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
-		if (result == LR_FAILED)
-		{
-			return;
-		}
-		this->_blit((unsigned char*)lockRect.pBits, x, y, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
-		this->_unlock(buffer, result, true);
-		*/
+		unsigned char* p = this->manualData + (y * this->width + x) * this->bpp;
+		this->_blit(p, x, y, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
+		this->_updateTexture(x, y, sw, sh);
 	}
 
 	void DirectX11_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_Texture::stretchBlit()");
-		/*
 		DirectX11_Texture* source = (DirectX11_Texture*)texture;
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
@@ -538,22 +467,12 @@ namespace april
 		sy = hclamp(sy, 0, source->height - 1);
 		sw = hmin(sw, source->width - sx);
 		sh = hmin(sh, source->height - sy);
-		D3DLOCKED_RECT lockRect;
-		HRESULT result = source->_getTexture()->LockRect(0, &lockRect, NULL, D3DLOCK_DISCARD);
-		if (result != D3D_OK)
-		{
-			return;
-		}
-		this->stretchBlit(x, y, w, h, (unsigned char*)lockRect.pBits, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
-		source->_getTexture()->UnlockRect(0);
-		*/
+		unsigned char* s = source->manualData + (sy * source->width + sx) * source->bpp;
+		this->stretchBlit(x, y, w, h, s, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
 	}
 
 	void DirectX11_Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_Texture::stretchBlit()");
-		/*
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
 		w = hmin(w, this->width - x);
@@ -562,32 +481,14 @@ namespace april
 		sy = hclamp(sy, 0, dataHeight - 1);
 		sw = hmin(sw, dataWidth - sx);
 		sh = hmin(sh, dataHeight - sy);
-		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, x, y, w, h);
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
-		if (result == LR_FAILED)
-		{
-			return;
-		}
-		this->_stretchBlit((unsigned char*)lockRect.pBits, x, y, w, h, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
-		this->_unlock(buffer, result, true);
-		*/
+		unsigned char* p = this->manualData + (y * this->width + x) * this->bpp;
+		this->_stretchBlit(p, x, y, w, h, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
+		this->_updateTexture(x, y, w, h);
 	}
 
 	void DirectX11_Texture::rotateHue(float degrees)
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_Texture::rotateHue()");
-		/*
 		if (degrees == 0.0f)
-		{
-			return;
-		}
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
-		if (result == LR_FAILED)
 		{
 			return;
 		}
@@ -596,55 +497,33 @@ namespace april
 		float h;
 		float s;
 		float l;
-		unsigned char* data = (unsigned char*)lockRect.pBits;
+		unsigned char* data = this->manualData;
 		for_iter_step (i, 0, size, this->bpp)
 		{
 			april::rgbToHsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
 			april::hslToRgb(hmodf(h + range, 1.0f), s, l, &data[i + 2], &data[i + 1], &data[i]);
 		}
-		this->_unlock(buffer, result, true);
-		*/
+		this->_updateTexture();
 	}
 
 	void DirectX11_Texture::saturate(float factor)
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_Texture::saturate()");
-		/*
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
-		if (result == LR_FAILED)
-		{
-			return;
-		}
 		int size = this->getByteSize();
 		float h;
 		float s;
 		float l;
-		unsigned char* data = (unsigned char*)lockRect.pBits;
+		unsigned char* data = this->manualData;
 		for_iter_step (i, 0, size, this->bpp)
 		{
 			april::rgbToHsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
 			april::hslToRgb(h, hmin(s * factor, 1.0f), l, &data[i + 2], &data[i + 1], &data[i]);
 		}
-		this->_unlock(buffer, result, true);
-		*/
+		this->_updateTexture();
 	}
 
 	bool DirectX11_Texture::copyPixelData(unsigned char** output)
 	{
-		hlog::warn(april::logTag, "DirectX11_Texture::copyPixelData()");
-		// TODO
-		/*
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
-		if (result == LR_FAILED)
-		{
-			return false;
-		}
-		unsigned char* p = (unsigned char*)lockRect.pBits;
+		unsigned char* p = this->manualData;
 		int i;
 		int j;
 		int offset;
@@ -680,39 +559,18 @@ namespace april
 		{
 			memcpy(*output, p, this->getByteSize());
 		}
-		this->_unlock(buffer, result, false);
 		return true;
-		*/
-		return false;
 	}
 
 	void DirectX11_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_Texture::insertAsAlphaMap()");
-		/*
 		if (this->width != texture->getWidth() || this->height != texture->getHeight() || this->bpp != 4)
 		{
 			return;
 		}
 		DirectX11_Texture* source = (DirectX11_Texture*)texture;
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
-		if (result == LR_FAILED)
-		{
-			return;
-		}
-		D3DLOCKED_RECT srcLockRect;
-		IDirect3DSurface9* srcBuffer = NULL;
-		LOCK_RESULT srcResult = source->_tryLock(&srcBuffer, &srcLockRect, NULL);
-		if (srcResult == LR_FAILED)
-		{
-			this->_unlock(buffer, result, false);
-			return;
-		}
-		unsigned char* thisData = (unsigned char*)lockRect.pBits;
-		unsigned char* srcData = (unsigned char*)srcLockRect.pBits;
+		unsigned char* thisData = this->manualData;
+		unsigned char* srcData = source->manualData;
 		unsigned char* c;
 		unsigned char* sc;
 		int i;
@@ -741,9 +599,26 @@ namespace april
 				}
 			}
 		}
-		this->_unlock(buffer, result, true);
-		source->_unlock(srcBuffer, srcResult, false);
-		*/
+		this->_updateTexture();
+	}
+
+	void DirectX11_Texture::_updateTexture()
+	{
+		APRIL_D3D_DEVICE_CONTEXT->UpdateSubresource(this->d3dTexture.Get(), 0, NULL, this->manualData, this->width * this->bpp, 0);
+	}
+
+	void DirectX11_Texture::_updateTexture(int x, int y, int w, int h)
+	{
+		static D3D11_BOX box;
+		box.left = x;
+		box.right = x + w;
+		box.top = y;
+		box.bottom = y + h;
+		box.front = 0;
+		box.back = 1;
+		// using UpdateSubresource1() because UpdateSubresource() has problems with deferred contexts and non-NULL boxes
+		APRIL_D3D_DEVICE_CONTEXT->UpdateSubresource1(this->d3dTexture.Get(), 0, &box,
+			this->manualData + (y * this->width + x) * this->bpp, this->width * this->bpp, 0, D3D11_COPY_DISCARD);
 	}
 
 }

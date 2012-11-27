@@ -52,17 +52,11 @@ bool update(float k)
 	april::rendersys->clear();
 	april::rendersys->setOrthoProjection(drawRect);
 	april::rendersys->drawFilledRect(drawRect, april::Color::Grey);
-	/*
 	manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
-	*/
-	/*
 	april::rendersys->setTexture(manualTexture);
 	april::rendersys->render(april::TriangleStrip, dv, 4);
-	*/
-
 	april::rendersys->setTexture(texture);
 	april::rendersys->drawTexturedRect(textureRect + offset, src);
-	//*/
 	april::rendersys->drawFilledRect(grect(0.0f, 0.0f, 100.0f, 75.0f), april::Color::Yellow);
 	return true;
 }
@@ -103,18 +97,13 @@ void april_init(const harray<hstr>& args)
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "april: Simple Demo");
 	april::window->setUpdateCallback(&update);
 	april::window->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove, NULL);
-	//*
-	//texture = april::rendersys->loadTexture(RESOURCE_PATH "jpt_final");
-	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture");
+	texture = april::rendersys->loadTexture(RESOURCE_PATH "jpt_final");
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w / 2;
 	textureRect.y = -textureRect.h / 2;
-	//*/
-	/*
 	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Texture::FORMAT_ARGB);
 	manualTexture->blit(100, 100, texture, 0, 0, texture->getWidth(), texture->getHeight());
 	manualTexture->stretchBlit(0, 100, 900, 200, texture, 0, 0, texture->getWidth() / 2, texture->getHeight() / 2);
-	//*/
 }
 
 void april_destroy()
