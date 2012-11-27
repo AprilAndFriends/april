@@ -764,16 +764,16 @@ namespace april
 
 	void DirectX11_RenderSystem::_updateVertexBuffer(unsigned int size, void* data)
 	{
-		this->vertexBufferData.pSysMem = data;
 		if (true || size > this->vertexBufferDesc.ByteWidth)
 		{
-			this->vertexBufferDesc.ByteWidth = size;
 			_HL_TRY_RELEASE_COMPTR(this->vertexBuffer);
+			this->vertexBufferData.pSysMem = data;
+			this->vertexBufferDesc.ByteWidth = size;
 			this->d3dDevice->CreateBuffer(&this->vertexBufferDesc, &this->vertexBufferData, this->vertexBuffer.GetAddressOf());
 		}
 		else
 		{
-			this->d3dDeviceContext->UpdateSubresource(this->vertexBuffer.Get(), 0, nullptr, &this->vertexBufferData, 0, 0);
+			this->d3dDeviceContext->UpdateSubresource(this->vertexBuffer.Get(), 0, NULL, data, 0, 0);
 		}
 	}
 	
@@ -785,7 +785,7 @@ namespace april
 			this->constantBufferData.matrix = (this->projectionMatrix * this->modelviewMatrix).transposed();
 		}
 		this->constantBufferData.color.set(color.r_f(), color.g_f(), color.b_f(), color.a_f());
-        this->d3dDeviceContext->UpdateSubresource(this->constantBuffer.Get(), 0, nullptr, &this->constantBufferData, 0, 0);
+        this->d3dDeviceContext->UpdateSubresource(this->constantBuffer.Get(), 0, NULL, &this->constantBufferData, 0, 0);
 	}
 
 	void DirectX11_RenderSystem::_updateBlending()
