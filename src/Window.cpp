@@ -148,13 +148,9 @@ namespace april
 		static bool result;
 		static float k;
 		k = this->_calcTimeSinceLastFrame();
-		if (k == 0.0f)
+		if (!this->focused)
 		{
-			if (!this->focused)
-			{
-				hthread::sleep(40.0f);
-			}
-			return this->running; // don't redraw frames which won't change
+			hthread::sleep(40.0f);
 		}
 		result = this->performUpdate(k);
 		april::rendersys->presentFrame();
