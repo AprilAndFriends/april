@@ -33,8 +33,8 @@ namespace april
 
 	void WinRT_View::Initialize(_In_ CoreApplicationView^ applicationView)
 	{
-        applicationView->Activated +=
-            ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &WinRT_View::OnActivated);
+		applicationView->Activated +=
+			ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &WinRT_View::OnActivated);
 	}
 	
 	void WinRT_View::Uninitialize()
@@ -44,13 +44,13 @@ namespace april
 	void WinRT_View::SetWindow(_In_ CoreWindow^ window)
 	{
 		this->window = window;
-        this->window->PointerCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
+		this->window->PointerCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
 		this->window->SizeChanged +=
-            ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(
-                this, &WinRT_View::OnWindowSizeChanged);
+			ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(
+				this, &WinRT_View::OnWindowSizeChanged);
 		this->window->VisibilityChanged +=
 			ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(
-                this, &WinRT_View::OnVisibilityChanged);
+				this, &WinRT_View::OnVisibilityChanged);
 		this->window->PointerPressed +=
 			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
 				this, &WinRT_View::OnMouseDown);
@@ -77,7 +77,7 @@ namespace april
 	void WinRT_View::Load(_In_ Platform::String^ entryPoint)
 	{
 	}
-
+	
 	void WinRT_View::Run()
 	{
 		this->scrollHorizontal = false;
@@ -87,16 +87,17 @@ namespace april
 		(*WinRT::Init)(WinRT::Args);
 		april::window->enterMainLoop();
 		(*WinRT::Destroy)();
+		WinRT::View = nullptr;
 	}
-
+	
 	void WinRT_View::OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args)
 	{
-        CoreWindow::GetForCurrentThread()->Activate();
+		CoreWindow::GetForCurrentThread()->Activate();
 	}
 	
 	void WinRT_View::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
-        // TODO
+		// TODO
 		//args->Handled = true;
 	}
 

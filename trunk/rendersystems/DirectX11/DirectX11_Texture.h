@@ -49,9 +49,9 @@ namespace april
 		void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 
 	protected:
-		ComPtr<ID3D11Texture2D> d3dTexture;
-		ComPtr<ID3D11ShaderResourceView> d3dView;
-		ComPtr<ID3D11RenderTargetView> d3dRenderTargetView;
+		ID3D11Texture2D* d3dTexture;
+		ID3D11ShaderResourceView* d3dView;
+		ID3D11RenderTargetView* d3dRenderTargetView;
 		bool renderTarget;
 		unsigned char* manualData;
 
