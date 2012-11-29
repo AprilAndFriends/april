@@ -40,7 +40,6 @@ namespace april
 		this->renderTarget = false;
 		this->d3dTexture = nullptr;
 		this->d3dView = nullptr;
-		this->d3dSampler = nullptr;
 		this->manualData = NULL;
 		hlog::write(april::logTag, "Creating DX11 texture: " + this->_getInternalName());
 	}
@@ -55,7 +54,6 @@ namespace april
 		this->renderTarget = false;
 		this->d3dTexture = nullptr;
 		this->d3dView = nullptr;
-		this->d3dSampler = nullptr;
 		hlog::write(april::logTag, "Creating user-defined DX11 texture.");
 		this->manualData = new unsigned char[this->width * this->height * this->bpp];
 		memcpy(this->manualData, rgba, this->width * this->height * this->bpp); // so alpha doesn't have to be copied in each iteration
@@ -84,7 +82,6 @@ namespace april
 		this->renderTarget = false;
 		this->d3dTexture = nullptr;
 		this->d3dView = nullptr;
-		this->d3dSampler = nullptr;
 		hlog::writef(april::logTag, "Creating empty DX11 texture [ %dx%d ].", w, h);
 		this->bpp = 4;
 		if (type == TYPE_RENDER_TARGET)
@@ -131,7 +128,7 @@ namespace april
 			this->bpp = 4;
 			break;
 		case FORMAT_ALPHA:
-			textureDesc.Format = DXGI_FORMAT_A8_UNORM;
+			textureDesc.Format = DXGI_FORMAT_R8_UNORM;
 			this->bpp = 1;
 			break;
 		default:
@@ -175,28 +172,6 @@ namespace april
 		if (FAILED(hr))
 		{
 			hlog::error(april::logTag, "Failed to create DX11 texture view!");
-			return false;
-		}
-		// sampler
-		D3D11_SAMPLER_DESC samplerDesc;
-		memset(&samplerDesc, 0, sizeof(samplerDesc));
-		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		samplerDesc.MaxAnisotropy = 0;
-		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.MipLODBias = 0.0f;
-		samplerDesc.MinLOD = 0;
-		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-		samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-		samplerDesc.BorderColor[0] = 0.0f;
-		samplerDesc.BorderColor[1] = 0.0f;
-		samplerDesc.BorderColor[2] = 0.0f;
-		samplerDesc.BorderColor[3] = 0.0f;
-		hr = APRIL_D3D_DEVICE->CreateSamplerState(&samplerDesc, &this->d3dSampler);
-		if (FAILED(hr))
-		{
-			hlog::error(april::logTag, "Failed to create DX11 texture sample!");
 			return false;
 		}
 		return true;
@@ -287,7 +262,6 @@ namespace april
 			hlog::write(april::logTag, "Unloading DX11 texture: " + this->_getInternalName());
 			_HL_TRY_RELEASE_COMPTR(this->d3dTexture);
 			_HL_TRY_RELEASE_COMPTR(this->d3dView);
-			_HL_TRY_RELEASE_COMPTR(this->d3dSampler);
 			_HL_TRY_RELEASE_COMPTR(this->d3dRenderTargetView);
 		}
 		_HL_TRY_DELETE(this->manualData);
@@ -604,7 +578,7 @@ namespace april
 
 	void DirectX11_Texture::_updateTexture()
 	{
-		APRIL_D3D_DEVICE_CONTEXT->UpdateSubresource(this->d3dTexture.Get(), 0, NULL, this->manualData, this->width * this->bpp, 0);
+		this->_updateTexture(0, 0, this->width, this->height);
 	}
 
 	void DirectX11_Texture::_updateTexture(int x, int y, int w, int h)

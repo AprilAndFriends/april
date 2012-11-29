@@ -81,7 +81,10 @@ namespace april
 	}
 	
 	DirectX11_RenderSystem::DirectX11_RenderSystem() : RenderSystem(), zBufferEnabled(false),
-		activeTextureBlendMode(DEFAULT), activeTexture(NULL), renderTarget(NULL), matrixDirty(true)
+		activeTextureBlendMode(DEFAULT), activeTexture(NULL), renderTarget(NULL),
+		activeTextureColorMode(NORMAL), activeTextureColorModeAlpha(255),
+		activeTextureFilter(Texture::FILTER_LINEAR), activeTextureAddressMode(Texture::ADDRESS_WRAP),
+		matrixDirty(true)
 	{
 		this->name = APRIL_RS_DIRECTX11;
 		this->d3dDevice = nullptr;
@@ -93,6 +96,10 @@ namespace april
 		this->blendStateAdd = nullptr;
 		this->blendStateSubtract = nullptr;
 		this->blendStateOverwrite = nullptr;
+		this->samplerLinearWrap = nullptr;
+		this->samplerLinearClamp = nullptr;
+		this->samplerNearestWrap = nullptr;
+		this->samplerNearestClamp = nullptr;
 		this->vertexBuffer = nullptr;
 		this->constantBuffer = nullptr;
 		this->inputLayoutPlain = nullptr;
@@ -124,6 +131,10 @@ namespace april
 		this->activeTextureBlendMode = DEFAULT;
 		this->activeTexture = NULL;
 		this->renderTarget = NULL;
+		this->activeTextureColorMode = NORMAL;
+		this->activeTextureColorModeAlpha = 255;
+		this->activeTextureFilter = Texture::FILTER_LINEAR;
+		this->activeTextureAddressMode = Texture::ADDRESS_WRAP;
 		this->matrixDirty = true;
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
@@ -134,6 +145,10 @@ namespace april
 		this->blendStateAdd = nullptr;
 		this->blendStateSubtract = nullptr;
 		this->blendStateOverwrite = nullptr;
+		this->samplerLinearWrap = nullptr;
+		this->samplerLinearClamp = nullptr;
+		this->samplerNearestWrap = nullptr;
+		this->samplerNearestClamp = nullptr;
 		this->vertexBuffer = nullptr;
 		this->constantBuffer = nullptr;
 		this->inputLayoutPlain = nullptr;
@@ -162,7 +177,7 @@ namespace april
 		_HL_TRY_DELETE(this->vertexShaderColored);
 		_HL_TRY_DELETE(this->pixelShaderColored);
 		_HL_TRY_DELETE(this->vertexShaderTextured);
-		_HL_TRY_DELETE(this->vertexShaderTextured);
+		_HL_TRY_DELETE(this->pixelShaderTextured);
 		_HL_TRY_DELETE(this->vertexShaderColoredTextured);
 		_HL_TRY_DELETE(this->pixelShaderColoredTextured);
 		_HL_TRY_RELEASE_COMPTR(this->inputLayoutPlain);
@@ -171,6 +186,10 @@ namespace april
 		_HL_TRY_RELEASE_COMPTR(this->inputLayoutColoredTextured);
 		_HL_TRY_RELEASE_COMPTR(this->vertexBuffer);
 		_HL_TRY_RELEASE_COMPTR(this->constantBuffer);
+		_HL_TRY_RELEASE_COMPTR(this->samplerLinearWrap);
+		_HL_TRY_RELEASE_COMPTR(this->samplerLinearClamp);
+		_HL_TRY_RELEASE_COMPTR(this->samplerNearestWrap);
+		_HL_TRY_RELEASE_COMPTR(this->samplerNearestClamp);
 		_HL_TRY_RELEASE_COMPTR(this->blendStateAlpha);
 		_HL_TRY_RELEASE_COMPTR(this->blendStateAdd);
 		_HL_TRY_RELEASE_COMPTR(this->blendStateSubtract);
@@ -484,9 +503,47 @@ namespace april
 		blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 		blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
 		this->d3dDevice->CreateBlendState(&blendDesc, this->blendStateOverwrite.GetAddressOf());
+		// texture samplers
+		D3D11_SAMPLER_DESC samplerDesc;
+		memset(&samplerDesc, 0, sizeof(samplerDesc));
+		samplerDesc.MaxAnisotropy = 0;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		samplerDesc.BorderColor[0] = 0.0f;
+		samplerDesc.BorderColor[1] = 0.0f;
+		samplerDesc.BorderColor[2] = 0.0f;
+		samplerDesc.BorderColor[3] = 0.0f;
+		// linear + wrap
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		this->d3dDevice->CreateSamplerState(&samplerDesc, this->samplerLinearWrap.GetAddressOf());
+		// linear + clamp
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		this->d3dDevice->CreateSamplerState(&samplerDesc, this->samplerLinearClamp.GetAddressOf());
+		// nearest neighbor + wrap
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		this->d3dDevice->CreateSamplerState(&samplerDesc, this->samplerNearestWrap.GetAddressOf());
+		// nearest neighbor + clamp
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		this->d3dDevice->CreateSamplerState(&samplerDesc, this->samplerNearestClamp.GetAddressOf());
 		// other
 		this->setTextureBlendMode(DEFAULT);
-		// TODO - set default texture filter/address mode
+		this->setTextureColorMode(NORMAL);
+		this->setTextureAddressMode(Texture::ADDRESS_WRAP);
+		this->setTextureFilter(Texture::FILTER_LINEAR);
 	}
 
 	harray<DisplayMode> DirectX11_RenderSystem::getSupportedDisplayModes()
@@ -543,88 +600,48 @@ namespace april
 
 	void DirectX11_RenderSystem::setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
 	{
-		// TODO - actually implemented through shaders
-		hlog::warn(april::logTag, "DirectX11_RenderSystem::setTextureColorMode()");
-		/*
+		this->activeTextureColorModeAlpha = 255;
 		switch (textureColorMode)
 		{
+		case LERP: // LERP also needs alpha
+			this->activeTextureColorModeAlpha = alpha;
 		case NORMAL:
 		case MULTIPLY:
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-			break;
-		case LERP:
-			this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(alpha, alpha, alpha, alpha));
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_BLENDDIFFUSEALPHA);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
-			break;
 		case ALPHA_MAP:
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+			this->activeTextureColorMode = textureColorMode;
 			break;
 		default:
 			hlog::warn(april::logTag, "Trying to set unsupported texture color mode!");
 			break;
 		}
-		*/
 	}
 
 	void DirectX11_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_RenderSystem::setTextureFilter()");
-		/*
 		switch (textureFilter)
 		{
 		case Texture::FILTER_LINEAR:
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-			break;
 		case Texture::FILTER_NEAREST:
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+			this->activeTextureFilter = textureFilter;
 			break;
 		default:
 			hlog::warn(april::logTag, "Trying to set unsupported texture filter!");
 			break;
 		}
-		this->textureFilter = textureFilter;
-		*/
 	}
 
 	void DirectX11_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
-		// TODO
-		hlog::warn(april::logTag, "DirectX11_RenderSystem::setTextureAddressMode()");
-		/*
 		switch (textureAddressMode)
 		{
 		case Texture::ADDRESS_WRAP:
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-			break;
 		case Texture::ADDRESS_CLAMP:
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+			this->textureAddressMode = textureAddressMode;
 			break;
 		default:
 			hlog::warn(april::logTag, "Trying to set unsupported texture address mode!");
 			break;
 		}
-		this->textureAddressMode = textureAddressMode;
-		*/
 	}
 
 	void DirectX11_RenderSystem::setTexture(Texture* texture)
@@ -769,7 +786,13 @@ namespace april
 			_HL_TRY_RELEASE_COMPTR(this->vertexBuffer);
 			this->vertexBufferData.pSysMem = data;
 			this->vertexBufferDesc.ByteWidth = size;
-			this->d3dDevice->CreateBuffer(&this->vertexBufferDesc, &this->vertexBufferData, this->vertexBuffer.GetAddressOf());
+			static int x = 0;
+			HRESULT hr = this->d3dDevice->CreateBuffer(&this->vertexBufferDesc, &this->vertexBufferData, this->vertexBuffer.GetAddressOf());
+			x++;
+			if (hr == E_OUTOFMEMORY)
+			{
+				int a = 0;
+			}
 		}
 		else
 		{
@@ -785,6 +808,7 @@ namespace april
 			this->constantBufferData.matrix = (this->projectionMatrix * this->modelviewMatrix).transposed();
 		}
 		this->constantBufferData.color.set(color.r_f(), color.g_f(), color.b_f(), color.a_f());
+		this->constantBufferData.colorModeData.set((float)this->activeTextureColorMode, this->activeTextureColorModeAlpha / 255.0f, 0.0f, 0.0f);
         this->d3dDeviceContext->UpdateSubresource(this->constantBuffer.Get(), 0, NULL, &this->constantBufferData, 0, 0);
 	}
 
@@ -814,7 +838,26 @@ namespace april
 		if (use && this->activeTexture != NULL)
 		{
             this->d3dDeviceContext->PSSetShaderResources(0, 1, this->activeTexture->d3dView.GetAddressOf());
-            this->d3dDeviceContext->PSSetSamplers(0, 1, this->activeTexture->d3dSampler.GetAddressOf());
+			if (this->activeTextureFilter == Texture::FILTER_LINEAR &&
+				this->activeTextureAddressMode == Texture::ADDRESS_WRAP)
+			{
+				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerLinearWrap.GetAddressOf());
+			}
+			else if (this->activeTextureFilter == Texture::FILTER_LINEAR &&
+				this->activeTextureAddressMode == Texture::ADDRESS_CLAMP)
+			{
+				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerLinearClamp.GetAddressOf());
+			}
+			else if (this->activeTextureFilter == Texture::FILTER_NEAREST &&
+				this->activeTextureAddressMode == Texture::ADDRESS_WRAP)
+			{
+				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerNearestWrap.GetAddressOf());
+			}
+			else if (this->activeTextureFilter == Texture::FILTER_NEAREST &&
+				this->activeTextureAddressMode == Texture::ADDRESS_CLAMP)
+			{
+				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerNearestClamp.GetAddressOf());
+			}
 		}
 	}
 	

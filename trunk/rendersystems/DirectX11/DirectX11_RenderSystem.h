@@ -47,6 +47,7 @@ namespace april
 		{
 			gmat4 matrix;
 			gquat color;
+			gquat colorModeData;
 		};
 
 		DirectX11_RenderSystem();
@@ -99,6 +100,10 @@ namespace april
 	protected:
 		bool zBufferEnabled;
 		BlendMode activeTextureBlendMode;
+		ColorMode activeTextureColorMode;
+		unsigned char activeTextureColorModeAlpha;
+		Texture::Filter activeTextureFilter;
+		Texture::AddressMode activeTextureAddressMode;
 		DirectX11_Texture* activeTexture;
 		DirectX11_VertexShader* activeVertexShader;
 		DirectX11_PixelShader* activePixelShader;
@@ -134,6 +139,10 @@ namespace april
 		ComPtr<ID3D11BlendState> blendStateAdd;
 		ComPtr<ID3D11BlendState> blendStateSubtract;
 		ComPtr<ID3D11BlendState> blendStateOverwrite;
+		ComPtr<ID3D11SamplerState> samplerLinearWrap;
+		ComPtr<ID3D11SamplerState> samplerLinearClamp;
+		ComPtr<ID3D11SamplerState> samplerNearestWrap;
+		ComPtr<ID3D11SamplerState> samplerNearestClamp;
 
 		D3D11_BUFFER_DESC vertexBufferDesc;
 		D3D11_SUBRESOURCE_DATA vertexBufferData;
@@ -146,7 +155,6 @@ namespace april
 		ComPtr<ID3D11InputLayout> inputLayoutTextured;
 		ComPtr<ID3D11InputLayout> inputLayoutColored;
 		ComPtr<ID3D11InputLayout> inputLayoutColoredTextured;
-
 
 		bool matrixDirty;
 
