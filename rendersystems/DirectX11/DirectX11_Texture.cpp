@@ -38,8 +38,9 @@ namespace april
 		this->height = 0;
 		this->bpp = 4;
 		this->renderTarget = false;
-		this->d3dTexture = nullptr;
-		this->d3dView = nullptr;
+		this->d3dTexture = NULL;
+		this->d3dView = NULL;
+		this->d3dRenderTargetView = NULL;
 		this->manualData = NULL;
 		hlog::write(april::logTag, "Creating DX11 texture: " + this->_getInternalName());
 	}
@@ -52,8 +53,9 @@ namespace april
 		this->height = h;
 		this->bpp = 4;
 		this->renderTarget = false;
-		this->d3dTexture = nullptr;
-		this->d3dView = nullptr;
+		this->d3dTexture = NULL;
+		this->d3dView = NULL;
+		this->d3dRenderTargetView = NULL;
 		hlog::write(april::logTag, "Creating user-defined DX11 texture.");
 		this->manualData = new unsigned char[this->width * this->height * this->bpp];
 		memcpy(this->manualData, rgba, this->width * this->height * this->bpp); // so alpha doesn't have to be copied in each iteration
@@ -80,8 +82,9 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->renderTarget = false;
-		this->d3dTexture = nullptr;
-		this->d3dView = nullptr;
+		this->d3dTexture = NULL;
+		this->d3dView = NULL;
+		this->d3dRenderTargetView = NULL;
 		hlog::writef(april::logTag, "Creating empty DX11 texture [ %dx%d ].", w, h);
 		this->bpp = 4;
 		if (type == TYPE_RENDER_TARGET)
@@ -153,8 +156,8 @@ namespace april
 			renderTargetViewDesc.Format = textureDesc.Format;
 			renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 			renderTargetViewDesc.Texture2D.MipSlice = 0;
-			hr = APRIL_D3D_DEVICE->CreateRenderTargetView(this->d3dTexture.Get(),
-				&renderTargetViewDesc, this->d3dRenderTargetView.GetAddressOf());
+			hr = APRIL_D3D_DEVICE->CreateRenderTargetView(this->d3dTexture,
+				&renderTargetViewDesc, &this->d3dRenderTargetView);
 			if (FAILED(hr))
 			{
 				hlog::error(april::logTag, "Failed to create render target view for texture with render-to-texture!");
@@ -162,13 +165,13 @@ namespace april
 			}
 		}
 		// shader resource
-        D3D11_SHADER_RESOURCE_VIEW_DESC textureViewDesc;
+		D3D11_SHADER_RESOURCE_VIEW_DESC textureViewDesc;
 		memset(&textureViewDesc, 0, sizeof(textureViewDesc));
-        textureViewDesc.Format = textureDesc.Format;
-        textureViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-        textureViewDesc.Texture2D.MipLevels = textureDesc.MipLevels;
-        textureViewDesc.Texture2D.MostDetailedMip = 0;
-        hr = APRIL_D3D_DEVICE->CreateShaderResourceView(this->d3dTexture.Get(), &textureViewDesc, &this->d3dView);
+		textureViewDesc.Format = textureDesc.Format;
+		textureViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		textureViewDesc.Texture2D.MipLevels = textureDesc.MipLevels;
+		textureViewDesc.Texture2D.MostDetailedMip = 0;
+		hr = APRIL_D3D_DEVICE->CreateShaderResourceView(this->d3dTexture, &textureViewDesc, &this->d3dView);
 		if (FAILED(hr))
 		{
 			hlog::error(april::logTag, "Failed to create DX11 texture view!");
@@ -185,7 +188,7 @@ namespace april
 			gRenderTargets -= this;
 		}
 	}
-
+	
 	bool DirectX11_Texture::load()
 	{
 		if (this->isLoaded())
@@ -254,30 +257,30 @@ namespace april
 		delete image;
 		return result;
 	}
-
+	
 	void DirectX11_Texture::unload()
 	{
-		if (this->d3dTexture != nullptr)
+		if (this->d3dTexture != NULL)
 		{
 			hlog::write(april::logTag, "Unloading DX11 texture: " + this->_getInternalName());
-			_HL_TRY_RELEASE_COMPTR(this->d3dTexture);
-			_HL_TRY_RELEASE_COMPTR(this->d3dView);
-			_HL_TRY_RELEASE_COMPTR(this->d3dRenderTargetView);
+			_HL_TRY_RELEASE(this->d3dTexture);
+			_HL_TRY_RELEASE(this->d3dView);
+			_HL_TRY_RELEASE(this->d3dRenderTargetView);
 		}
 		_HL_TRY_DELETE(this->manualData);
 	}
-
+	
 	bool DirectX11_Texture::isLoaded()
 	{
-		return (this->d3dTexture != nullptr);
+		return (this->d3dTexture != NULL);
 	}
-
+	
 	void DirectX11_Texture::clear()
 	{
 		memset(this->manualData, 0, this->getByteSize());
 		this->_updateTexture();
 	}
-
+	
 	Color DirectX11_Texture::getPixel(int x, int y)
 	{
 		Color color = Color::Clear;
@@ -309,7 +312,7 @@ namespace april
 		}
 		return color;
 	}
-
+	
 	void DirectX11_Texture::setPixel(int x, int y, Color color)
 	{
 		x = hclamp(x, 0, this->width - 1);
@@ -338,7 +341,7 @@ namespace april
 		}
 		this->_updateTexture(x, y, 1, 1);
 	}
-
+	
 	void DirectX11_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
 		x = hclamp(x, 0, this->width - 1);
@@ -398,7 +401,7 @@ namespace april
 		}
 		this->_updateTexture(x, y, w, h);
 	}
-
+	
 	void DirectX11_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		DirectX11_Texture* source = (DirectX11_Texture*)texture;
@@ -416,7 +419,7 @@ namespace april
 		unsigned char* s = source->manualData + (sy * source->width + sx) * source->bpp;
 		this->blit(x, y, s, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
 	}
-
+	
 	void DirectX11_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		x = hclamp(x, 0, this->width - 1);
@@ -429,7 +432,7 @@ namespace april
 		this->_blit(p, x, y, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
 		this->_updateTexture(x, y, sw, sh);
 	}
-
+	
 	void DirectX11_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		DirectX11_Texture* source = (DirectX11_Texture*)texture;
@@ -444,7 +447,7 @@ namespace april
 		unsigned char* s = source->manualData + (sy * source->width + sx) * source->bpp;
 		this->stretchBlit(x, y, w, h, s, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
 	}
-
+	
 	void DirectX11_Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		x = hclamp(x, 0, this->width - 1);
@@ -459,7 +462,7 @@ namespace april
 		this->_stretchBlit(p, x, y, w, h, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
 		this->_updateTexture(x, y, w, h);
 	}
-
+	
 	void DirectX11_Texture::rotateHue(float degrees)
 	{
 		if (degrees == 0.0f)
@@ -479,7 +482,7 @@ namespace april
 		}
 		this->_updateTexture();
 	}
-
+	
 	void DirectX11_Texture::saturate(float factor)
 	{
 		int size = this->getByteSize();
@@ -494,7 +497,7 @@ namespace april
 		}
 		this->_updateTexture();
 	}
-
+	
 	bool DirectX11_Texture::copyPixelData(unsigned char** output)
 	{
 		unsigned char* p = this->manualData;
@@ -535,7 +538,7 @@ namespace april
 		}
 		return true;
 	}
-
+	
 	void DirectX11_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
 	{
 		if (this->width != texture->getWidth() || this->height != texture->getHeight() || this->bpp != 4)
@@ -575,12 +578,12 @@ namespace april
 		}
 		this->_updateTexture();
 	}
-
+	
 	void DirectX11_Texture::_updateTexture()
 	{
 		this->_updateTexture(0, 0, this->width, this->height);
 	}
-
+	
 	void DirectX11_Texture::_updateTexture(int x, int y, int w, int h)
 	{
 		static D3D11_BOX box;
@@ -591,7 +594,7 @@ namespace april
 		box.front = 0;
 		box.back = 1;
 		// using UpdateSubresource1() because UpdateSubresource() has problems with deferred contexts and non-NULL boxes
-		APRIL_D3D_DEVICE_CONTEXT->UpdateSubresource1(this->d3dTexture.Get(), 0, &box,
+		APRIL_D3D_DEVICE_CONTEXT->UpdateSubresource1(this->d3dTexture, 0, &box,
 			this->manualData + (y * this->width + x) * this->bpp, this->width * this->bpp, 0, D3D11_COPY_DISCARD);
 	}
 
