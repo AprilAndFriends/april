@@ -2,6 +2,7 @@ cbuffer constantBuffer : register(b0)
 {
 	matrix cMatrix;
 	float4 cColor;
+	float4 cColorModeData;
 };
 
 struct VertexShaderInput
@@ -11,8 +12,9 @@ struct VertexShaderInput
 
 struct PixelShaderInput
 {
-	float4 position : SV_POSITION;
+	float4 position : SV_Position;
 	float4 color : COLOR;
+	float4 colorModeData : COLOR1; // r is color-mode, g is color-mode-alpha (used in LERP), b and a are not used
 };
 
 PixelShaderInput main(VertexShaderInput input)
@@ -22,5 +24,6 @@ PixelShaderInput main(VertexShaderInput input)
 	position = mul(position, cMatrix);
 	vertexShaderOutput.position = position;
 	vertexShaderOutput.color = cColor;
+	vertexShaderOutput.colorModeData = cColorModeData;
 	return vertexShaderOutput;
 }

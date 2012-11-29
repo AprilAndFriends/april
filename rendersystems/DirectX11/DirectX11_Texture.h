@@ -51,7 +51,6 @@ namespace april
 	protected:
 		ComPtr<ID3D11Texture2D> d3dTexture;
 		ComPtr<ID3D11ShaderResourceView> d3dView;
-		ComPtr<ID3D11SamplerState> d3dSampler;
 		ComPtr<ID3D11RenderTargetView> d3dRenderTargetView;
 		bool renderTarget;
 		unsigned char* manualData;
