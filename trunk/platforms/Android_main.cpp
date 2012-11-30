@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.42
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -50,18 +50,15 @@ namespace april
 		return result;
 	}
 	
-	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jSystemPath,
-		jstring jDataPath, jstring jPackageName, jstring jVersionCode, jstring jForceArchivePath)
+	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jDataPath, jstring jForcedArchivePath)
 	{
-		april::systemPath = _JSTR_TO_HSTR(jSystemPath);
-		hstr archivePath = _JSTR_TO_HSTR(jForceArchivePath);
-		hstr packageName = _JSTR_TO_HSTR(jPackageName);
 		hstr dataPath = _JSTR_TO_HSTR(jDataPath);
-		hlog::write(april::logTag, "System path: " + april::systemPath);
+		hstr archivePath = _JSTR_TO_HSTR(jForcedArchivePath);
+		hlog::write(april::logTag, "System path: " + april::getUserDataPath());
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
 			// set the resources CWD
-			hresource::setCwd(dataPath + "/Android/data/" + packageName);
+			hresource::setCwd(dataPath + "/Android/data/" + april::getPackageName());
 			hresource::setArchive(""); // not used anyway when hasZip() returns false
 			hlog::write(april::logTag, "Using no-zip: " + hresource::getCwd());
 		}
@@ -90,10 +87,10 @@ namespace april
 		{
 			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
 		}
-		hlog::debug(april::logTag, "Got args: " + args.join(","));
+		hlog::debug(april::logTag, "Got args:");
 		foreach (hstr, it, args)
 		{
-			hlog::debug(april::logTag, "  " + (*it));
+			hlog::debug(april::logTag, "    " + (*it));
 		}
 		april_init(args);
 	}
@@ -223,7 +220,7 @@ namespace april
 #define METHOD_COUNT 21 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
-		{"setVariables",			_JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR),	(void*)&april::_JNI_setVariables			},
+		{"setVariables",			_JARGS(_JVOID, _JSTR _JSTR),					(void*)&april::_JNI_setVariables			},
 		{"init",					_JARGS(_JVOID, _JARR(_JSTR)),					(void*)&april::_JNI_init					},
 		{"destroy",					_JARGS(_JVOID, ),								(void*)&april::_JNI_destroy					},
 		{"render",					_JARGS(_JBOOL, ),								(void*)&april::_JNI_render					},

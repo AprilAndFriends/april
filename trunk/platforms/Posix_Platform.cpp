@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.3
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -49,6 +49,12 @@ namespace april
 		return "";
 	}
 
+	hstr getUserDataPath()
+	{
+		hlog::warn(april::logTag, "Cannot use getUserDataPath() on this platform.");
+		return ".";
+	}
+	
 	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// TODO

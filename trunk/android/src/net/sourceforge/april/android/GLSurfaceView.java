@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.35
+// version 2.5
 
 import android.content.Context;
 import android.graphics.PixelFormat;

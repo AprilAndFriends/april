@@ -71,6 +71,12 @@ namespace april
 		return "";
 	}
 
+	hstr getUserDataPath()
+	{
+		hlog::warn(april::logTag, "Cannot use getUserDataPath() on this platform.");
+		return ".";
+	}
+	
 	static void(*currentCallback)(MessageBoxButton) = NULL;
 
 	void _messageBoxResult(int button)

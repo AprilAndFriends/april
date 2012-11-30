@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.2
+// version 2.5
 
 import android.app.Dialog;
 import android.content.pm.ActivityInfo;
@@ -55,7 +55,6 @@ public class Activity extends android.app.Activity
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		NativeInterface.Activity = this;
 		NativeInterface.PackageName = this.getPackageName();
-		NativeInterface.SystemPath = this.getFilesDir().getAbsolutePath();
 		try
 		{
 			PackageInfo info = this.getPackageManager().getPackageInfo(NativeInterface.PackageName, 0);

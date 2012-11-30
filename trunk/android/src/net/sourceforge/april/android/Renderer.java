@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.14
+// version 2.5
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -14,8 +14,7 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 		NativeInterface.onSurfaceCreated();
 		if (!NativeInterface.Running)
 		{
-			NativeInterface.setVariables(NativeInterface.SystemPath, NativeInterface.DataPath,
-				NativeInterface.PackageName, NativeInterface.VersionCode, NativeInterface.ArchivePath);
+			NativeInterface.setVariables(NativeInterface.DataPath, NativeInterface.ArchivePath);
 			String args[] = {NativeInterface.ApkPath}; // adding argv[0]
 			NativeInterface.init(args);
 			NativeInterface.Running = true;
