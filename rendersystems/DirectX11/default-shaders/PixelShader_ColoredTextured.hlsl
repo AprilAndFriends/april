@@ -1,3 +1,5 @@
+// version 2.5
+
 Texture2D cTexture : register(t0);
 SamplerState cSampler : register(s0);
 

@@ -2,12 +2,13 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.3
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+
 #include <sys/sysctl.h>
 #ifdef __APPLE__
 #include <TargetConditionals.h>
@@ -135,6 +136,12 @@ namespace april
 		return "";
 	}
 
+	hstr getUserDataPath()
+	{
+		hlog::warn(april::logTag, "Cannot use getUserDataPath() on this platform.");
+		return ".";
+	}
+	
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// fugly implementation of showing messagebox on mac os

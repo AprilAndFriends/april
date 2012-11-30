@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.3
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -23,20 +23,20 @@ namespace april
 {
 	void* javaVM = NULL;
 	void (*dialogCallback)(MessageBoxButton) = NULL;
-
+	
 	JNIEnv* getJNIEnv()
 	{
 		JNIEnv* env;
 		return (((JavaVM*)april::javaVM)->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) == JNI_OK ? env : NULL);
 	}
-
+	
 	jobject getActivity()
 	{
 		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 		jfieldID fieldActivity = env->GetStaticFieldID(classNativeInterface, "Activity", _JCLASS("net/sourceforge/april/android/Activity"));
 		return env->GetStaticObjectField(classNativeInterface, fieldActivity);
 	}
-
+	
 	SystemInfo getSystemInfo()
 	{
 		static SystemInfo info;
@@ -68,20 +68,25 @@ namespace april
 		}
 		return info;
 	}
-
+	
 	DeviceType getDeviceType()
 	{
 		// TODO
 		return DEVICE_ANDROID_PHONE;
 	}
-
+	
 	hstr getPackageName()
 	{
-		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
-		jfieldID fieldPackageName = env->GetStaticFieldID(classNativeInterface, "PackageName", _JSTR);
+		APRIL_GET_NATIVE_INTERFACE_FIELD(classNativeInterface, fieldPackageName, "PackageName", _JSTR);
 		return _JSTR_TO_HSTR((jstring)env->GetStaticObjectField(classNativeInterface, fieldPackageName));
 	}
-
+	
+	hstr getUserDataPath()
+	{
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodGetUserDataPath, "getUserDataPath", _JARGS(_JSTR, ));
+		return _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetUserDataPath));
+	}
+	
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{

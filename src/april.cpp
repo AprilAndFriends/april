@@ -98,7 +98,6 @@ namespace april
 {
 	hstr logTag = "april";
 
-	hstr systemPath = ".";
 	static harray<hstr> extensions;
 
 	void log(chstr message, chstr prefix) // DEPRECATED
@@ -231,7 +230,7 @@ namespace april
 	{
 		extensions += extension;
 	}
-
+	
 	harray<hstr> getTextureExtensions()
 	{
 		return extensions;
@@ -241,5 +240,5 @@ namespace april
 	{
 		extensions = exts;
 	}
-	
+
 }

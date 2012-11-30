@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.4
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -84,6 +84,7 @@ namespace april
 	aprilFnExport SystemInfo getSystemInfo();
 	aprilFnExport DeviceType getDeviceType();
 	aprilFnExport hstr getPackageName();
+	aprilFnExport hstr getUserDataPath();
 	aprilFnExport void messageBox(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN,
 		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL);
 

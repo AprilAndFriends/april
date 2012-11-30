@@ -1,3 +1,5 @@
+// version 2.5
+
 struct PixelShaderInput
 {
 	float4 position : SV_Position;

@@ -54,8 +54,6 @@ namespace april
 		WS_ANDROIDJNI = 5
 	};
 
-	extern hstr systemPath;
-
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType);
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType, chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title);
 	aprilFnExport void createRenderSystem(chstr options = "");

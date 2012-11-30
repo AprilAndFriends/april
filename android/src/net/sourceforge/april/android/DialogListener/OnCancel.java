@@ -1,6 +1,6 @@
 package net.sourceforge.april.android.DialogListener;
 
-// version 2.1
+// version 2.5
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;

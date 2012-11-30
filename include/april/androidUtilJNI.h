@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.3
+/// @version 2.5
 /// 
 /// @section LICENSE
 /// 
@@ -47,6 +47,9 @@ namespace april
 #define APRIL_GET_NATIVE_INTERFACE_METHOD(className, methodName, methodString, args) \
 	APRIL_GET_NATIVE_INTERFACE_CLASS(className); \
 	jmethodID methodName = env->GetStaticMethodID(className, methodString, args);
+#define APRIL_GET_NATIVE_INTERFACE_FIELD(className, fieldName, fieldString, type) \
+	APRIL_GET_NATIVE_INTERFACE_CLASS(className); \
+	jfieldID fieldName = env->GetStaticFieldID(className, fieldString, type);
 #endif
 
 #endif

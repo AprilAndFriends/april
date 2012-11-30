@@ -30,7 +30,6 @@ public class NativeInterface
 	public static Activity Activity = null;
 	public static boolean Running = false;
 	public static String ArchivePath = "";
-	public static String SystemPath = ".";
 	public static String DataPath = ".";
 	public static String PackageName = "";
 	public static String VersionCode = "0";
@@ -60,7 +59,7 @@ public class NativeInterface
 	});
 
 	
-	public static native void setVariables(String systemPath, String sharedPath, String packageName, String versionCode, String forceArchivePath);
+	public static native void setVariables(String dataPath, String forcedArchivePath);
 	public static native void init(String[] args);
 	public static native boolean render();
 	public static native void destroy();
@@ -84,56 +83,9 @@ public class NativeInterface
 	public static native void onDialogNo();
 	public static native void onDialogCancel();
 	
-	public static void showVirtualKeyboard()
+	public static String getUserDataPath()
 	{
-		NativeInterface.Activity.runOnUiThread(new Runnable()
-		{
-			public void run()
-			{
-				View view = NativeInterface.Activity.getView();
-				NativeInterface._getInputMethodManager().showSoftInput(view, 0, NativeInterface.keyboardResultReceiver);
-			}
-		});
-	}
-	
-	public static void hideVirtualKeyboard()
-	{
-		NativeInterface.Activity.runOnUiThread(new Runnable()
-		{
-			public void run()
-			{
-				View view = NativeInterface.Activity.getView();
-				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(), 0,
-					NativeInterface.keyboardResultReceiver);
-			}
-		});
-	}
-	
-	public static void updateKeyboard()
-	{
-		// TODO - detect broken versions of com.htc.android.htcime
-		if (Build.BOARD.equals("mecha") ||		// Thunderbolt
-			Build.BOARD.equals("marvel") ||		// Wildfire S
-			Build.BOARD.equals("marvelc"))		// Wildfire S
-		{
-			htcKeyboardHack = true;
-		}
-		else if (Build.VERSION.SDK_INT < 10 &&
-			Build.BOARD.equals("shooteru") ||	// EVO 3D
-			Build.BOARD.equals("supersonic"))	// EVO 4G
-		{
-			htcKeyboardHack = true;
-		}
-		else if (Build.VERSION.SDK_INT >= 10 &&
-			Build.BOARD.equals("inc"))			// Droid Incredible
-		{
-			htcKeyboardHack = true;
-		}
-	}
-	
-	private static InputMethodManager _getInputMethodManager()
-	{
-		return (InputMethodManager)NativeInterface.Activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		return NativeInterface.Activity.getFilesDir().getAbsolutePath();
 	}
 	
 	public static Object getDisplayResolution()
@@ -212,6 +164,58 @@ public class NativeInterface
 			result += "-" + country;
 		}
 		return result;
+	}
+	
+	public static void showVirtualKeyboard()
+	{
+		NativeInterface.Activity.runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				View view = NativeInterface.Activity.getView();
+				NativeInterface._getInputMethodManager().showSoftInput(view, 0, NativeInterface.keyboardResultReceiver);
+			}
+		});
+	}
+	
+	public static void hideVirtualKeyboard()
+	{
+		NativeInterface.Activity.runOnUiThread(new Runnable()
+		{
+			public void run()
+			{
+				View view = NativeInterface.Activity.getView();
+				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(), 0,
+					NativeInterface.keyboardResultReceiver);
+			}
+		});
+	}
+	
+	public static void updateKeyboard()
+	{
+		// TODO - detect broken versions of com.htc.android.htcime
+		if (Build.BOARD.equals("mecha") ||		// Thunderbolt
+			Build.BOARD.equals("marvel") ||		// Wildfire S
+			Build.BOARD.equals("marvelc"))		// Wildfire S
+		{
+			htcKeyboardHack = true;
+		}
+		else if (Build.VERSION.SDK_INT < 10 &&
+			Build.BOARD.equals("shooteru") ||	// EVO 3D
+			Build.BOARD.equals("supersonic"))	// EVO 4G
+		{
+			htcKeyboardHack = true;
+		}
+		else if (Build.VERSION.SDK_INT >= 10 &&
+			Build.BOARD.equals("inc"))			// Droid Incredible
+		{
+			htcKeyboardHack = true;
+		}
+	}
+	
+	private static InputMethodManager _getInputMethodManager()
+	{
+		return (InputMethodManager)NativeInterface.Activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 	
 	public static void showMessageBox(String title, String text, String ok, String yes, String no, String cancel, int iconId)
