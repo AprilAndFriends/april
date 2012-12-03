@@ -15,9 +15,12 @@
 #ifndef APRIL_DIRECTX11_VERTEX_SHADER_H
 #define APRIL_DIRECTX11_VERTEX_SHADER_H
 
+#include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
 #include "VertexShader.h"
+
+using namespace Microsoft::WRL;
 
 namespace april
 {
@@ -38,7 +41,7 @@ namespace april
 		void setConstantsF(const float* quadVectors, unsigned int quadCount);
 
 	protected:
-		ID3D11VertexShader* dx11Shader;
+		ComPtr<ID3D11VertexShader> dx11Shader;
 		unsigned char* shaderData;
 		long shaderSize;
 

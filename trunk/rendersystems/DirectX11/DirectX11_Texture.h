@@ -15,7 +15,12 @@
 #ifndef APRIL_DIRECTX11_TEXTURE_H
 #define APRIL_DIRECTX11_TEXTURE_H
 
+#include <hltypes/hplatform.h>
+#include <hltypes/hstring.h>
+
 #include "RenderSystem.h"
+
+using namespace Microsoft::WRL;
 
 namespace april
 {
@@ -49,9 +54,9 @@ namespace april
 		void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 
 	protected:
-		ID3D11Texture2D* d3dTexture;
-		ID3D11ShaderResourceView* d3dView;
-		ID3D11RenderTargetView* d3dRenderTargetView;
+		ComPtr<ID3D11Texture2D> d3dTexture;
+		ComPtr<ID3D11ShaderResourceView> d3dView;
+		ComPtr<ID3D11RenderTargetView> d3dRenderTargetView;
 		bool renderTarget;
 		unsigned char* manualData;
 

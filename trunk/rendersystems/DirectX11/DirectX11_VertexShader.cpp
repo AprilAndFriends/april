@@ -20,33 +20,28 @@
 
 #define APRIL_D3D_DEVICE (((DirectX11_RenderSystem*)april::rendersys)->d3dDevice)
 
+using namespace Microsoft::WRL;
+
 namespace april
 {
-	DirectX11_VertexShader::DirectX11_VertexShader(chstr filename) : VertexShader(), shaderData(NULL), shaderSize(0), dx11Shader(NULL)
+	DirectX11_VertexShader::DirectX11_VertexShader(chstr filename) : VertexShader(), shaderData(NULL), shaderSize(0), dx11Shader(nullptr)
 	{
 		this->load(filename);
 	}
 
-	DirectX11_VertexShader::DirectX11_VertexShader() : VertexShader(), shaderData(NULL), shaderSize(0), dx11Shader(NULL)
+	DirectX11_VertexShader::DirectX11_VertexShader() : VertexShader(), shaderData(NULL), shaderSize(0), dx11Shader(nullptr)
 	{
 	}
 
 	DirectX11_VertexShader::~DirectX11_VertexShader()
 	{
-		if (this->dx11Shader != NULL)
-		{
-			this->dx11Shader->Release();
-			this->dx11Shader = NULL;
-		}
-		if (this->shaderData != NULL)
-		{
-			delete [] this->shaderData;
-		}
+		this->dx11Shader = nullptr;
+		_HL_TRY_DELETE_ARRAY(this->shaderData);
 	}
 
 	bool DirectX11_VertexShader::load(chstr filename)
 	{
-		if (this->dx11Shader != NULL)
+		if (this->dx11Shader != nullptr)
 		{
 			hlog::error(april::logTag, "Shader already loaded.");
 			return false;

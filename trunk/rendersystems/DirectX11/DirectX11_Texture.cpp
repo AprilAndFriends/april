@@ -38,9 +38,9 @@ namespace april
 		this->height = 0;
 		this->bpp = 4;
 		this->renderTarget = false;
-		this->d3dTexture = NULL;
-		this->d3dView = NULL;
-		this->d3dRenderTargetView = NULL;
+		this->d3dTexture = nullptr;
+		this->d3dView = nullptr;
+		this->d3dRenderTargetView = nullptr;
 		this->manualData = NULL;
 		hlog::write(april::logTag, "Creating DX11 texture: " + this->_getInternalName());
 	}
@@ -53,9 +53,9 @@ namespace april
 		this->height = h;
 		this->bpp = 4;
 		this->renderTarget = false;
-		this->d3dTexture = NULL;
-		this->d3dView = NULL;
-		this->d3dRenderTargetView = NULL;
+		this->d3dTexture = nullptr;
+		this->d3dView = nullptr;
+		this->d3dRenderTargetView = nullptr;
 		hlog::write(april::logTag, "Creating user-defined DX11 texture.");
 		this->manualData = new unsigned char[this->width * this->height * this->bpp];
 		memcpy(this->manualData, rgba, this->width * this->height * this->bpp); // so alpha doesn't have to be copied in each iteration
@@ -82,9 +82,9 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->renderTarget = false;
-		this->d3dTexture = NULL;
-		this->d3dView = NULL;
-		this->d3dRenderTargetView = NULL;
+		this->d3dTexture = nullptr;
+		this->d3dView = nullptr;
+		this->d3dRenderTargetView = nullptr;
 		hlog::writef(april::logTag, "Creating empty DX11 texture [ %dx%d ].", w, h);
 		this->bpp = 4;
 		if (type == TYPE_RENDER_TARGET)
@@ -156,7 +156,7 @@ namespace april
 			renderTargetViewDesc.Format = textureDesc.Format;
 			renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 			renderTargetViewDesc.Texture2D.MipSlice = 0;
-			hr = APRIL_D3D_DEVICE->CreateRenderTargetView(this->d3dTexture,
+			hr = APRIL_D3D_DEVICE->CreateRenderTargetView(this->d3dTexture.Get(),
 				&renderTargetViewDesc, &this->d3dRenderTargetView);
 			if (FAILED(hr))
 			{
@@ -171,7 +171,7 @@ namespace april
 		textureViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		textureViewDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 		textureViewDesc.Texture2D.MostDetailedMip = 0;
-		hr = APRIL_D3D_DEVICE->CreateShaderResourceView(this->d3dTexture, &textureViewDesc, &this->d3dView);
+		hr = APRIL_D3D_DEVICE->CreateShaderResourceView(this->d3dTexture.Get(), &textureViewDesc, &this->d3dView);
 		if (FAILED(hr))
 		{
 			hlog::error(april::logTag, "Failed to create DX11 texture view!");
@@ -260,19 +260,19 @@ namespace april
 	
 	void DirectX11_Texture::unload()
 	{
-		if (this->d3dTexture != NULL)
+		if (this->d3dTexture != nullptr)
 		{
 			hlog::write(april::logTag, "Unloading DX11 texture: " + this->_getInternalName());
-			_HL_TRY_RELEASE(this->d3dTexture);
-			_HL_TRY_RELEASE(this->d3dView);
-			_HL_TRY_RELEASE(this->d3dRenderTargetView);
+			this->d3dTexture = nullptr;
+			this->d3dView = nullptr;
+			this->d3dRenderTargetView = nullptr;
 		}
 		_HL_TRY_DELETE(this->manualData);
 	}
 	
 	bool DirectX11_Texture::isLoaded()
 	{
-		return (this->d3dTexture != NULL);
+		return (this->d3dTexture != nullptr);
 	}
 	
 	void DirectX11_Texture::clear()
@@ -594,7 +594,7 @@ namespace april
 		box.front = 0;
 		box.back = 1;
 		// using UpdateSubresource1() because UpdateSubresource() has problems with deferred contexts and non-NULL boxes
-		APRIL_D3D_DEVICE_CONTEXT->UpdateSubresource1(this->d3dTexture, 0, &box,
+		APRIL_D3D_DEVICE_CONTEXT->UpdateSubresource1(this->d3dTexture.Get(), 0, &box,
 			this->manualData + (y * this->width + x) * this->bpp, this->width * this->bpp, 0, D3D11_COPY_DISCARD);
 	}
 

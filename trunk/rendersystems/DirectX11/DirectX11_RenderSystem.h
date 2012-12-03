@@ -130,31 +130,31 @@ namespace april
 		void _setVertexShader(DirectX11_VertexShader* shader);
 
 	private:
-		ID3D11Device1* d3dDevice;
-		ID3D11DeviceContext1* d3dDeviceContext;
-		IDXGISwapChain1* swapChain;
-		ID3D11RasterizerState* rasterState;
-		ID3D11RenderTargetView* renderTargetView;
-		ID3D11BlendState* blendStateAlpha;
-		ID3D11BlendState* blendStateAdd;
-		ID3D11BlendState* blendStateSubtract;
-		ID3D11BlendState* blendStateOverwrite;
-		ID3D11SamplerState* samplerLinearWrap;
-		ID3D11SamplerState* samplerLinearClamp;
-		ID3D11SamplerState* samplerNearestWrap;
-		ID3D11SamplerState* samplerNearestClamp;
+		ComPtr<ID3D11Device1> d3dDevice;
+		ComPtr<ID3D11DeviceContext1> d3dDeviceContext;
+		ComPtr<IDXGISwapChain1> swapChain;
+		ComPtr<ID3D11RasterizerState> rasterState;
+		ComPtr<ID3D11RenderTargetView> renderTargetView;
+		ComPtr<ID3D11BlendState> blendStateAlpha;
+		ComPtr<ID3D11BlendState> blendStateAdd;
+		ComPtr<ID3D11BlendState> blendStateSubtract;
+		ComPtr<ID3D11BlendState> blendStateOverwrite;
+		ComPtr<ID3D11SamplerState> samplerLinearWrap;
+		ComPtr<ID3D11SamplerState> samplerLinearClamp;
+		ComPtr<ID3D11SamplerState> samplerNearestWrap;
+		ComPtr<ID3D11SamplerState> samplerNearestClamp;
 
 		D3D11_BUFFER_DESC vertexBufferDesc;
 		D3D11_SUBRESOURCE_DATA vertexBufferData;
-		ID3D11Buffer* vertexBuffer;
+		ComPtr<ID3D11Buffer> vertexBuffer;
 
-		ID3D11Buffer* constantBuffer;
+		ComPtr<ID3D11Buffer> constantBuffer;
 		ConstantBuffer constantBufferData;
 
-		ID3D11InputLayout* inputLayoutPlain;
-		ID3D11InputLayout* inputLayoutTextured;
-		ID3D11InputLayout* inputLayoutColored;
-		ID3D11InputLayout* inputLayoutColoredTextured;
+		ComPtr<ID3D11InputLayout> inputLayoutPlain;
+		ComPtr<ID3D11InputLayout> inputLayoutTextured;
+		ComPtr<ID3D11InputLayout> inputLayoutColored;
+		ComPtr<ID3D11InputLayout> inputLayoutColoredTextured;
 
 		bool matrixDirty;
 

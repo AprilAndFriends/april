@@ -20,29 +20,27 @@
 
 #define APRIL_D3D_DEVICE (((DirectX11_RenderSystem*)april::rendersys)->d3dDevice)
 
+using namespace Microsoft::WRL;
+
 namespace april
 {
-	DirectX11_PixelShader::DirectX11_PixelShader(chstr filename) : PixelShader(), dx11Shader(NULL)
+	DirectX11_PixelShader::DirectX11_PixelShader(chstr filename) : PixelShader(), dx11Shader(nullptr)
 	{
 		this->load(filename);
 	}
 
-	DirectX11_PixelShader::DirectX11_PixelShader() : PixelShader(), dx11Shader(NULL)
+	DirectX11_PixelShader::DirectX11_PixelShader() : PixelShader(), dx11Shader(nullptr)
 	{
 	}
 
 	DirectX11_PixelShader::~DirectX11_PixelShader()
 	{
-		if (this->dx11Shader != NULL)
-		{
-			this->dx11Shader->Release();
-			this->dx11Shader = NULL;
-		}
+		this->dx11Shader = nullptr;
 	}
 
 	bool DirectX11_PixelShader::load(chstr filename)
 	{
-		if (this->dx11Shader != NULL)
+		if (this->dx11Shader != nullptr)
 		{
 			hlog::error(april::logTag, "Shader already loaded.");
 			return false;
