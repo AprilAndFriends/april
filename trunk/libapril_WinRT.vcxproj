@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug_DirectX11|ARM">
-      <Configuration>Debug_DirectX11</Configuration>
-      <Platform>ARM</Platform>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_DirectX11|Win32">
       <Configuration>Debug_DirectX11</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_DirectX11|ARM">
-      <Configuration>Release_DirectX11</Configuration>
-      <Platform>ARM</Platform>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release_DirectX11|Win32">
       <Configuration>Release_DirectX11</Configuration>
@@ -35,7 +35,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -46,7 +46,7 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
@@ -57,41 +57,39 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">$(SolutionDir)bin\$(Platform)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Platform)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">$(SolutionDir)bin\$(Platform)\lib\$(ProjectName)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">$(SolutionDir)bin\$(Platform)\lib\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\$(Platform)\lib\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">$(SolutionDir)bin\$(Platform)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\$(Platform)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">$(SolutionDir)bin\$(Platform)\lib\$(ProjectName)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">$(SolutionDir)bin\$(Platform)\lib\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\$(Platform)\lib\$(ProjectName)\$(Configuration)\</IntDir>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">$(IncludePath);$(DXSDK_DIR)Include</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">$(IncludePath);$(DXSDK_DIR)Include</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IncludePath);$(DXSDK_DIR)Include</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">$(IncludePath);$(DXSDK_DIR)Include</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">$(IncludePath);$(DXSDK_DIR)Include</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath);$(DXSDK_DIR)Include</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">$(LibraryPath);$(DXSDK_DIR)Lib\x86</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">$(LibraryPath);$(DXSDK_DIR)Lib\x86</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);$(DXSDK_DIR)Lib\x86</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">$(LibraryPath);$(DXSDK_DIR)Lib\x86</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">$(LibraryPath);$(DXSDK_DIR)Lib\x86</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);$(DXSDK_DIR)Lib\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">
-    <OutDir>$(SolutionDir)bin\$(Platform)\</OutDir>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">
-    <OutDir>$(SolutionDir)bin\$(Platform)\</OutDir>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -117,7 +115,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>./src;windowsystems/WinRT;../include;../include/zlib;rendersystems/DirectX9;rendersystems/DirectX11;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -167,7 +165,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -290,83 +288,83 @@
   <ItemGroup>
     <FxCompile Include="rendersystems\DirectX11\default-shaders\PixelShader_Colored.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="rendersystems\DirectX11\default-shaders\PixelShader_ColoredTextured.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="rendersystems\DirectX11\default-shaders\PixelShader_Plain.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="rendersystems\DirectX11\default-shaders\PixelShader_Textured.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="rendersystems\DirectX11\default-shaders\VertexShader_Colored.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="rendersystems\DirectX11\default-shaders\VertexShader_ColoredTextured.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="rendersystems\DirectX11\default-shaders\VertexShader_Plain.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="rendersystems\DirectX11\default-shaders\VertexShader_Textured.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">4.0_level_9_1</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">4.0_level_9_1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0_level_9_1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
