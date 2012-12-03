@@ -53,6 +53,7 @@ namespace april
 		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
+		void OnClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
 
 		void checkEvents();
 
