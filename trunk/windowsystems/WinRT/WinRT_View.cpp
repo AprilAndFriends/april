@@ -72,6 +72,9 @@ namespace april
 		this->window->CharacterReceived +=
 			ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(
 				this, &WinRT_View::OnCharacterReceived);
+		this->window->Closed +=
+			ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
+				this, &WinRT_View::OnClosed);
 	}
 	
 	void WinRT_View::Load(_In_ Platform::String^ entryPoint)
@@ -171,6 +174,12 @@ namespace april
 	void WinRT_View::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
 	{
 		april::window->handleCharOnlyEvent(args->KeyCode);
+		args->Handled = true;
+	}
+
+	void WinRT_View::OnClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
+	{
+		april::window->handleQuitRequest(false);
 		args->Handled = true;
 	}
 

@@ -38,6 +38,7 @@ namespace april
 {
 	static ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
 	static ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
+	static TexturedVertex static_tv[VERTICES_BUFFER_COUNT];
 
 	// TODO - refactor
 	harray<DirectX11_Texture*> gRenderTargets;
@@ -778,16 +779,26 @@ namespace april
 
 	void DirectX11_RenderSystem::_updateVertexBuffer(int vertexSize, int nVertices, void* data)
 	{
-		if ((unsigned int)(vertexSize * nVertices) > this->vertexBufferDesc.ByteWidth)
+		static unsigned int size;
+		size = (unsigned int)(vertexSize * nVertices);
+		if (size > this->vertexBufferDesc.ByteWidth)
 		{
 			this->vertexBuffer = nullptr;
 			this->vertexBufferData.pSysMem = data;
-			this->vertexBufferDesc.ByteWidth = (unsigned int)(vertexSize * nVertices);
+			this->vertexBufferDesc.ByteWidth = size;
 			this->d3dDevice->CreateBuffer(&this->vertexBufferDesc, &this->vertexBufferData, &this->vertexBuffer);
 		}
 		else
 		{
-			this->d3dDeviceContext->UpdateSubresource(this->vertexBuffer.Get(), 0, NULL, data, 0, 0);
+			// the usage of a box is required, because otherwise updating could cause an access violation when trying to read the data after the valid buffer
+			static D3D11_BOX box;
+			box.left = 0;
+			box.right = size;
+			box.top = 0;
+			box.bottom = 1;
+			box.front = 0;
+			box.back = 1;
+			this->d3dDeviceContext->UpdateSubresource1(this->vertexBuffer.Get(), 0, &box, data, 0, 0, D3D11_COPY_DISCARD);
 		}
 		static unsigned int stride;
 		static unsigned int offset;
@@ -883,6 +894,8 @@ namespace april
 
 	void DirectX11_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
 	{
+		TexturedVertex* tv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_tv : new TexturedVertex[nVertices];
+		memcpy(tv, v, sizeof(TexturedVertex) * nVertices);
 		this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
 		this->d3dDeviceContext->IASetInputLayout(this->inputLayoutTextured.Get());
 		this->_updateVertexBuffer(sizeof(TexturedVertex), nVertices, v);
@@ -890,8 +903,12 @@ namespace april
 		this->_setPixelShader(this->pixelShaderTextured);
 		this->_updateConstantBuffer(color);
 		this->_updateBlending();
-		this->_updateTexture();
+		this->_updateTexture(true);
 		this->d3dDeviceContext->Draw(nVertices, 0);
+		if (nVertices > VERTICES_BUFFER_COUNT)
+		{
+			delete [] tv;
+		}
 	}
 
 	void DirectX11_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
@@ -932,7 +949,7 @@ namespace april
 		this->_setPixelShader(this->pixelShaderColoredTextured);
 		this->_updateConstantBuffer(april::Color::White);
 		this->_updateBlending();
-		this->_updateTexture();
+		this->_updateTexture(true);
 		this->d3dDeviceContext->Draw(nVertices, 0);
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
@@ -1017,7 +1034,7 @@ namespace april
 	
 	void DirectX11_RenderSystem::presentFrame()
 	{
-		this->swapChain->Present(1, 0);
+		this->swapChain->Present(0, 0);
 		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
 		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
 	}

@@ -161,7 +161,7 @@ namespace april
 		void _updateVertexBuffer(int vertexSize, int nVertices, void* data);
 		void _updateConstantBuffer(Color color);
 		void _updateBlending();
-		void _updateTexture(bool use = true);
+		void _updateTexture(bool use);
 
 	};
 
