@@ -47,7 +47,7 @@ namespace april
 	int DirectX11_RenderSystem::_getMaxTextureSize()
 	{
 		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
-		return 2048;
+		return D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
 	}
 
 	D3D11_PRIMITIVE_TOPOLOGY dx11_render_ops[]=
@@ -213,6 +213,10 @@ namespace april
 #endif
 		D3D_FEATURE_LEVEL featureLevels[] =
 		{
+			D3D_FEATURE_LEVEL_11_1,
+			D3D_FEATURE_LEVEL_11_0,
+			D3D_FEATURE_LEVEL_10_1,
+			D3D_FEATURE_LEVEL_10_0,
 			D3D_FEATURE_LEVEL_9_3,
 			D3D_FEATURE_LEVEL_9_2,
 			D3D_FEATURE_LEVEL_9_1
