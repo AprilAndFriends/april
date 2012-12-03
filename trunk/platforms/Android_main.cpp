@@ -127,9 +127,11 @@ namespace april
 		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_UP, (KeySym)(int)keyCode, 0));
 	}
 	
-	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean focused)
+	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
 	{
-		if (focused != JNI_FALSE)
+		bool focused = (jFocused != JNI_FALSE);
+		hlog::write(april::logTag, "onWindowFocusChanged(" + hstr(focused) + ")");
+		if (focused)
 		{
 			// only TRUE is propagated as FALSE is already handled by onPause()
 			PROTECTED_WINDOW_CALL(handleFocusChangeEvent(true));
@@ -138,33 +140,34 @@ namespace april
 	
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
 	{
+		hlog::write(april::logTag, "onLowMemoryWarning()");
 		PROTECTED_WINDOW_CALL(handleLowMemoryWarning());
 	}
 	
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
 	{
-		hlog::debug(april::logTag, "Android View::onSurfaceCreated()");
+		hlog::write(april::logTag, "Android View::onSurfaceCreated()");
 		PROTECTED_RENDERSYS_CALL(reset());
 	}
 	
 	void JNICALL _JNI_activityOnCreate(JNIEnv* env, jclass classe)
 	{
-		hlog::debug(april::logTag, "Android Activity::onCreate()");
+		hlog::write(april::logTag, "Android Activity::onCreate()");
 	}
 	
 	void JNICALL _JNI_activityOnStart(JNIEnv* env, jclass classe)
 	{
-		hlog::debug(april::logTag, "Android Activity::onStart()");
+		hlog::write(april::logTag, "Android Activity::onStart()");
 	}
 	
 	void JNICALL _JNI_activityOnResume(JNIEnv* env, jclass classe)
 	{
-		hlog::debug(april::logTag, "Android Activity::onResume()");
+		hlog::write(april::logTag, "Android Activity::onResume()");
 	}
 	
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
-		hlog::debug(april::logTag, "Android Activity::onPause()");
+		hlog::write(april::logTag, "Android Activity::onPause()");
 		// has to be here because of a problem on certain devices where audio volume change window takes away focus
 		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(false));
 		PROTECTED_RENDERSYS_CALL(unloadTextures());
@@ -172,17 +175,17 @@ namespace april
 	
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
 	{
-		hlog::debug(april::logTag, "Android Activity::onStop()");
+		hlog::write(april::logTag, "Android Activity::onStop()");
 	}
 	
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
 	{
-		hlog::debug(april::logTag, "Android Activity::onDestroy()");
+		hlog::write(april::logTag, "Android Activity::onDestroy()");
 	}
 	
 	void JNICALL _JNI_activityOnRestart(JNIEnv* env, jclass classe)
 	{
-		hlog::debug(april::logTag, "Android Activity::onRestart()");
+		hlog::write(april::logTag, "Android Activity::onRestart()");
 	}
 	
 	void JNICALL _JNI_onDialogOk(JNIEnv* env, jclass classe)
