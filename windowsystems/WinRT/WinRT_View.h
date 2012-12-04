@@ -24,6 +24,7 @@
 
 #include "Window.h"
 
+using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::ApplicationModel::Core;
 using namespace Windows::UI::Core;
@@ -40,11 +41,14 @@ namespace april
 		virtual void Run();
 
 		CoreWindow^ getCoreWindow() { return this->window.Get(); }
+		void setCursorVisible(bool value);
 
 		void OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args);
-
 		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
 		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
+		void OnSuspend(_In_ Platform::Object^ sender, _In_ SuspendingEventArgs^ args);
+		void OnResume(_In_ Platform::Object^ sender, _In_ Platform::Object^ args);
+		void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
 
 		void OnMouseDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void OnMouseUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
@@ -53,7 +57,6 @@ namespace april
 		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
-		void OnClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
 
 		void checkEvents();
 

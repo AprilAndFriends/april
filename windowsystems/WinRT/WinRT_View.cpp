@@ -21,8 +21,8 @@
 #include "WinRT_View.h"
 #include "WinRT_Window.h"
 
-using namespace Windows::Foundation;
 using namespace Windows::ApplicationModel;
+using namespace Windows::Foundation;
 
 namespace april
 {
@@ -44,13 +44,13 @@ namespace april
 	void WinRT_View::SetWindow(_In_ CoreWindow^ window)
 	{
 		this->window = window;
-		this->window->PointerCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
 		this->window->SizeChanged +=
 			ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(
 				this, &WinRT_View::OnWindowSizeChanged);
-		this->window->VisibilityChanged +=
-			ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(
-				this, &WinRT_View::OnVisibilityChanged);
+		CoreApplication::Suspending +=
+			ref new EventHandler<SuspendingEventArgs^>(this, &WinRT_View::OnSuspend);
+		CoreApplication::Resuming +=
+			ref new EventHandler<Platform::Object^>(this, &WinRT_View::OnResume);
 		this->window->PointerPressed +=
 			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
 				this, &WinRT_View::OnMouseDown);
@@ -74,7 +74,8 @@ namespace april
 				this, &WinRT_View::OnCharacterReceived);
 		this->window->Closed +=
 			ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
-				this, &WinRT_View::OnClosed);
+				this, &WinRT_View::OnWindowClosed);
+		this->setCursorVisible(true);
 	}
 	
 	void WinRT_View::Load(_In_ Platform::String^ entryPoint)
@@ -92,6 +93,11 @@ namespace april
 		(*WinRT::Destroy)();
 		WinRT::View = nullptr;
 	}
+
+	void WinRT_View::setCursorVisible(bool value)
+	{
+		this->window->PointerCursor = (value ? ref new CoreCursor(CoreCursorType::Arrow, 0) : nullptr);
+	}
 	
 	void WinRT_View::OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args)
 	{
@@ -106,7 +112,22 @@ namespace april
 
 	void WinRT_View::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
 	{
-		april::window->handleFocusChangeEvent(args->Visible);
+		args->Handled = true;
+	}
+
+	void WinRT_View::OnSuspend(_In_ Platform::Object^ sender, _In_ SuspendingEventArgs^ args)
+	{
+		april::window->handleFocusChangeEvent(false);
+	}
+
+	void WinRT_View::OnResume(_In_ Platform::Object^ sender, _In_ Platform::Object^ args)
+	{
+		april::window->handleFocusChangeEvent(true);
+	}
+
+	void WinRT_View::OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
+	{
+		april::window->handleQuitRequest(false);
 		args->Handled = true;
 	}
 
@@ -174,12 +195,6 @@ namespace april
 	void WinRT_View::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
 	{
 		april::window->handleCharOnlyEvent(args->KeyCode);
-		args->Handled = true;
-	}
-
-	void WinRT_View::OnClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
-	{
-		april::window->handleQuitRequest(false);
 		args->Handled = true;
 	}
 

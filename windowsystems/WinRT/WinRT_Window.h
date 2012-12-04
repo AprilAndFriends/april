@@ -76,8 +76,7 @@ namespace april
 		bool destroy();
 
 		//void setTitle(chstr title);
-		//bool isCursorVisible();
-		//void setCursorVisible(bool value);
+		void setCursorVisible(bool value);
 		int getWidth() { return this->width; }
 		int getHeight() { return this->height; }
 		bool isTouchEnabled() { return false; }
