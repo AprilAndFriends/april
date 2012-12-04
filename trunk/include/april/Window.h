@@ -129,9 +129,20 @@ namespace april
 							   void (*mouseUpCallback)(int),
 							   void (*mouseMoveCallback)(),
 							   void (*mouseScrollCallback)(float, float));
+		
+		void getMouseCallbacks(void (**mouseDownCallback)(int),
+							   void (**mouseUpCallback)(int),
+							   void (**mouseMoveCallback)(),
+							   void (**mouseScrollCallback)(float, float));
+		
 		void setKeyboardCallbacks(void (*keyDownCallback)(unsigned int),
 								  void (*keyUpCallback)(unsigned int),
 								  void (*charCallback)(unsigned int));
+		
+		void getKeyboardCallbacks(void (**keyDownCallback)(unsigned int),
+								  void (**keyUpCallback)(unsigned int),
+								  void (**charCallback)(unsigned int));
+
 
 		// pure virtual methods (window system dependent)
 		virtual void presentFrame() = 0;
