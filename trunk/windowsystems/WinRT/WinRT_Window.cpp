@@ -62,25 +62,14 @@ namespace april
 	/*
 	void WinRT_Window::setTitle(chstr title)
 	{
-		this->title = title;
-		hstr t = this->title;
-#ifdef _DEBUG
-		t += this->_fpsTitle;
-#endif
-		SetWindowTextW(this->hWnd, t.w_str().c_str());
 	}
-	
-	bool WinRT_Window::isCursorVisible()
-	{
-		return (Window::isCursorVisible() || !this->isCursorInside());
-	}
+	*/
 	
 	void WinRT_Window::setCursorVisible(bool value)
 	{
 		Window::setCursorVisible(value);
-		this->isCursorVisible() ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
+		WinRT::View->setCursorVisible(value);
 	}
-	*/
 	
 	void* WinRT_Window::getBackendId()
 	{
@@ -91,40 +80,13 @@ namespace april
 	/*
 	void WinRT_Window::_setResolution(int w, int h)
 	{
-		int x = 0;
-		int y = 0;
-		DWORD style = WS_EX_TOPMOST | WS_POPUP;
-		if (!this->fullscreen)
-		{
-			x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2,
-			y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
-			style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
-		}
-		if (!this->fullscreen)
-		{
-			RECT rcClient;
-			RECT rcWindow;
-			POINT ptDiff;
-			GetClientRect(this->hWnd, &rcClient);
-			GetWindowRect(this->hWnd, &rcWindow);
-			ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
-			ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
-			MoveWindow(this->hWnd, rcWindow.left, rcWindow.top, ptDiff.x + w, ptDiff.y + h, TRUE);
-		}
-		// display the window on the screen
-		ShowWindow(this->hWnd, 1);
-		UpdateWindow(this->hWnd);
 	}
 	*/
 	
 	bool WinRT_Window::updateOneFrame()
 	{
-		static bool result;
 		this->checkEvents();
-		// rendering
-		result = Window::updateOneFrame();
-		this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
-		return result;
+		return Window::updateOneFrame();
 	}
 	
 	void WinRT_Window::presentFrame()
