@@ -36,7 +36,7 @@ namespace april
 			hlog::warn(april::logTag, "Performance timer not available, multimedia timer will be used instead!");
 			this->performanceTimer = false;
 			this->mTimerStart = get_system_tick_count();
-			this->resolution = 1.0f / 1000.0f;
+			this->resolution = 0.001f;
 			this->frequency = 1000;
 			this->mTimerElapsed = (unsigned long)this->mTimerStart;
 		}

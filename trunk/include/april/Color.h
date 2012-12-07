@@ -42,10 +42,10 @@ namespace april
 		void set(chstr hex);
 		void set(Color color, unsigned char a);
 
-		float r_f() const { return r / 255.0f; }
-		float g_f() const { return g / 255.0f; }
-		float b_f() const { return b / 255.0f; }
-		float a_f() const { return a / 255.0f; }
+		float r_f() const { return this->r * 0.003921569f; } // equals r / 255, multiplication is faster than division
+		float g_f() const { return this->g * 0.003921569f; } // equals g / 255, multiplication is faster than division
+		float b_f() const { return this->b * 0.003921569f; } // equals b / 255, multiplication is faster than division
+		float a_f() const { return this->a * 0.003921569f; } // equals a / 255, multiplication is faster than division
 		
 		hstr hex(bool rgbOnly = false) const; // careful when using rgbOnly!
 		
