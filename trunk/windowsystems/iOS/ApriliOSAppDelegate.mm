@@ -102,7 +102,14 @@
     april_destroy();
 }
 
-- (BOOL) application:(UIApplication*) application handleOpenURL:(NSURL *)url
+- (NSUInteger)application:(UIApplication*)application supportedInterfaceOrientationsForWindow:(UIWindow*)window
+{
+	// this is a needed Hack to fix an iOS6 bug
+	// more info: http://stackoverflow.com/questions/12488838/game-center-login-lock-in-landscape-only-in-i-os-6/12560069#12560069
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+
+- (BOOL)application:(UIApplication*) application handleOpenURL:(NSURL *)url
 {
 	NSString* str = [url absoluteString];
 	hstr urlstr = [str UTF8String];
