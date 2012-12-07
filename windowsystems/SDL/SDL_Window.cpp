@@ -457,7 +457,7 @@ namespace april
 	float SDL_Window::_calcTimeSinceLastFrame()
 	{
 		static unsigned int x = SDL_GetTicks();
-		float k = (SDL_GetTicks() - x) / 1000.0f;
+		float k = (SDL_GetTicks() - x) * 0.001f;
 		x = SDL_GetTicks();
 		if (k > 0.5f)
 		{

@@ -104,11 +104,8 @@ namespace april
 
 	void Color::set(chstr hex)
 	{
-		hstr value = hex;
-		if (value(0, 2) != "0x")
-		{
-			value = "0x" + value;
-		}
+		static hstr value;
+		value = (hex(0, 2) != "0x" ? "0x" + hex : hex);
 		if (value.size() != 8 && value.size() != 10)
 		{
 			throw hl_exception("Color format must be either 0xRRGGBBAA or 0xRRGGBB");
@@ -139,12 +136,7 @@ namespace april
 
 	Color::operator unsigned int() const
 	{
-		unsigned int i = 0;
-		i |= this->r << 24;
-		i |= this->g << 16;
-		i |= this->b << 8;
-		i |= this->a;
-		return i;
+		return ((this->r << 24) | (this->g << 16) | (this->b << 8) | this->a);
 	}
 	
 	bool Color::operator==(Color& other)
@@ -154,7 +146,7 @@ namespace april
 
 	bool Color::operator!=(Color& other)
 	{
-		return !(*this == other);
+		return (this->r != other.r || this->g != other.g || this->b != other.b || this->a != other.a);
 	}
 	
 	Color Color::operator+(Color& other)
@@ -246,10 +238,11 @@ namespace april
 
 	Color Color::operator/=(float value)
 	{
-		this->r = hclamp((int)(this->r / value), 0, 255);
-		this->g = hclamp((int)(this->g / value), 0, 255);
-		this->b = hclamp((int)(this->b / value), 0, 255);
-		this->a = hclamp((int)(this->a / value), 0, 255);
+		float val = 1.0f / value;
+		this->r = hclamp((int)(this->r * val), 0, 255);
+		this->g = hclamp((int)(this->g * val), 0, 255);
+		this->b = hclamp((int)(this->b * val), 0, 255);
+		this->a = hclamp((int)(this->a * val), 0, 255);
 		return (*this);
 	}
 	
