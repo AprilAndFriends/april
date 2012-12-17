@@ -113,21 +113,10 @@ namespace april
 								   void (*mouseMoveCallback)(),
 								   void (*mouseScrollCallback)(float, float))
 	{
-		this->mouseDownCallback   = mouseDownCallback;
-		this->mouseUpCallback     = mouseUpCallback;
-		this->mouseMoveCallback   = mouseMoveCallback;
+		this->mouseDownCallback = mouseDownCallback;
+		this->mouseUpCallback = mouseUpCallback;
+		this->mouseMoveCallback = mouseMoveCallback;
 		this->mouseScrollCallback = mouseScrollCallback;
-	}
-	
-	void Window::getMouseCallbacks(void (**mouseDownCallback)(int),
-								   void (**mouseUpCallback)(int),
-								   void (**mouseMoveCallback)(),
-								   void (**mouseScrollCallback)(float, float))
-	{
-		*mouseDownCallback   = this->mouseDownCallback;
-		*mouseUpCallback     = this->mouseUpCallback;
-		*mouseMoveCallback   = this->mouseMoveCallback;
-		*mouseScrollCallback = this->mouseScrollCallback;
 	}
 	
 	void Window::setKeyboardCallbacks(void (*keyDownCallback)(unsigned int),
@@ -135,17 +124,8 @@ namespace april
 									  void (*charCallback)(unsigned int))
 	{
 		this->keyDownCallback = keyDownCallback;
-		this->keyUpCallback   = keyUpCallback;
-		this->charCallback    = charCallback;
-	}
-	
-	void Window::getKeyboardCallbacks(void (**keyDownCallback)(unsigned int),
-									  void (**keyUpCallback)(unsigned int),
-									  void (**charCallback)(unsigned int))
-	{
-		*keyDownCallback = this->keyDownCallback;
-		*keyUpCallback   = this->keyUpCallback;
-		*charCallback    = this->charCallback;
+		this->keyUpCallback = keyUpCallback;
+		this->charCallback = charCallback;
 	}
 	
 	void Window::enterMainLoop()

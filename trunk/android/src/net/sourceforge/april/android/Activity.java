@@ -15,9 +15,6 @@ import android.view.WindowManager;
 
 import java.util.ArrayList;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
 public class Activity extends android.app.Activity
 {
 	private GLSurfaceView glView = null;

@@ -89,16 +89,29 @@ namespace april
 
 		// callbacks
 		typedef bool (*updateFunction)(float);
-		void setUpdateCallback(updateFunction func) { this->updateCallback = func; }
+		typedef void (*mouseDownFunction)(int);
+		typedef void (*mouseUpFunction)(int);
+		typedef void (*mouseMoveFunction)();
+		typedef void (*mouseScrollFunction)(float, float);
+		typedef void (*keyDownFunction)(unsigned int);
+		typedef void (*keyUpFunction)(unsigned int);
+		typedef void (*charFunction)(unsigned int);
 		updateFunction getUpdateCallback() { return this->updateCallback; }
-		// TODO - update this
-		void setMouseDownCallback(void (*value)(int)) { this->mouseDownCallback = value; }
-		void setMouseUpCallback(void (*value)(int)) { this->mouseUpCallback = value; }
-		void setMouseMoveCallback(void (*value)()) { this->mouseMoveCallback = value; }
-		void setMouseScrollCallback(void (*value)(float, float)) { this->mouseScrollCallback = value; }
-		void setKeyDownCallback(void (*value)(unsigned int)) { this->keyDownCallback = value; }
-		void setKeyUpCallback(void (*value)(unsigned int)) { this->keyUpCallback = value; }
-		void setCharCallback(void (*value)(unsigned int)) { this->charCallback = value; }
+		void setUpdateCallback(updateFunction value) { this->updateCallback = value; }
+		mouseDownFunction getMouseDownCallback() { return this->mouseDownCallback; }
+		void setMouseDownCallback(mouseDownFunction value) { this->mouseDownCallback = value; }
+		mouseUpFunction getMouseUpCallback() { return this->mouseUpCallback; }
+		void setMouseUpCallback(mouseUpFunction value) { this->mouseUpCallback = value; }
+		mouseMoveFunction getMouseMoveCallback() { return this->mouseMoveCallback; }
+		void setMouseMoveCallback(mouseMoveFunction value) { this->mouseMoveCallback = value; }
+		mouseScrollFunction getMouseScrollCallback() { return this->mouseScrollCallback; }
+		void setMouseScrollCallback(mouseScrollFunction value) { this->mouseScrollCallback = value; }
+		keyDownFunction getKeyDownCallback() { return this->keyDownCallback; }
+		void setKeyDownCallback(keyDownFunction value) { this->keyDownCallback = value; }
+		keyUpFunction getKeyUpCallback() { return this->keyUpCallback; }
+		void setKeyUpCallback(keyUpFunction value) { this->keyUpCallback = value; }
+		charFunction getCharCallback() { return this->charCallback; }
+		void setCharCallback(charFunction value) { this->charCallback = value; }
 		void setQuitCallback(bool (*value)(bool)) { this->quitCallback = value; }
 		void setFocusChangeCallback(void (*value)(bool)) { this->focusChangeCallback = value; }
 		void setTouchscreenEnabledCallback(void (*value)(bool)) { this->touchscreenEnabledCallback = value; }
@@ -129,20 +142,9 @@ namespace april
 							   void (*mouseUpCallback)(int),
 							   void (*mouseMoveCallback)(),
 							   void (*mouseScrollCallback)(float, float));
-		
-		void getMouseCallbacks(void (**mouseDownCallback)(int),
-							   void (**mouseUpCallback)(int),
-							   void (**mouseMoveCallback)(),
-							   void (**mouseScrollCallback)(float, float));
-		
 		void setKeyboardCallbacks(void (*keyDownCallback)(unsigned int),
 								  void (*keyUpCallback)(unsigned int),
 								  void (*charCallback)(unsigned int));
-		
-		void getKeyboardCallbacks(void (**keyDownCallback)(unsigned int),
-								  void (**keyUpCallback)(unsigned int),
-								  void (**charCallback)(unsigned int));
-
 
 		// pure virtual methods (window system dependent)
 		virtual void presentFrame() = 0;

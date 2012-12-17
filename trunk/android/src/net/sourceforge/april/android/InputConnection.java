@@ -21,7 +21,7 @@ class InputConnection extends BaseInputConnection
 	@Override
 	public boolean deleteSurroundingText(int leftLength, int rightLength)
 	{
-		// Ericsson Xperia devices don't send key events but call this method for some reason when handling the delete key
+		// Android SDK 16+ doesn't send key events for backspace but calls this method
 		this.view.onKeyDown(KeyEvent.KEYCODE_DEL, this.delKeyDownEvent);
 		this.view.onKeyUp(KeyEvent.KEYCODE_DEL, this.delKeyUpEvent);
 		return super.deleteSurroundingText(leftLength, rightLength);
