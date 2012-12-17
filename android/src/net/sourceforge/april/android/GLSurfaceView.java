@@ -38,27 +38,27 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	public boolean onTouchEvent(final MotionEvent event)
 	{
 		final int action = event.getAction();
-		final int pointerCount = event.getPointerCount();
+		int type = -1;
 		switch (action & MotionEvent.ACTION_MASK)
 		{
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_POINTER_DOWN: // handles multi-touch
-			for (int i = 0; i < pointerCount; i++)
-			{
-				NativeInterface.onTouch(0, event.getX(i), event.getY(i), i);
-			}
-			return true;
+			type = 0;
+			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
-			for (int i = 0; i < pointerCount; i++)
-			{
-				NativeInterface.onTouch(1, event.getX(i), event.getY(i), i);
-			}
-			return true;
+			type = 1;
+			break;
 		case MotionEvent.ACTION_MOVE: // Android batches multitouch move events into a single move event
+			type = 2;
+			break;
+		}
+		if (type >= 0)
+		{
+			final int pointerCount = event.getPointerCount();
 			for (int i = 0; i < pointerCount; i++)
 			{
-				NativeInterface.onTouch(2, event.getX(i), event.getY(i), i);
+				NativeInterface.onTouch(type, event.getX(i), event.getY(i), i);
 			}
 			return true;
 		}
