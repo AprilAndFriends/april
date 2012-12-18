@@ -49,8 +49,7 @@ public class Activity extends android.app.Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN |
-			WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		NativeInterface.Activity = this;
 		NativeInterface.PackageName = this.getPackageName();
 		try
