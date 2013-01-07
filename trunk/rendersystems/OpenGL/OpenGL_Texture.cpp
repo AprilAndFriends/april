@@ -84,30 +84,39 @@ namespace april
 		else
 		{
 			// TODO - use as base for ::clear
-			int glFormat = GL_RGB;
+			int glFormat = GL_RGB, internalFormat = GL_RGB;
 			this->bpp = 3;
 			switch (format)
 			{
 			case FORMAT_ARGB:
-				glFormat = GL_RGBA;
+				glFormat = internalFormat = GL_RGBA;
 				this->bpp = 4;
 				break;
 			case FORMAT_RGB:
-				glFormat = GL_RGB;
+				glFormat = internalFormat = GL_RGB;
 				this->bpp = 3;
 				break;
 			case FORMAT_ALPHA:
-				glFormat = GL_ALPHA;
+				glFormat = internalFormat = GL_ALPHA;
 				this->bpp = 1;
 				break;
+			case FORMAT_BGRA:
+#ifdef __APPLE__
+				glFormat = GL_BGRA_EXT;
+#else
+				glFormat = GL_BGRA;
+#endif
+				internalFormat = GL_RGBA;
+				this->bpp = 4;
+				break;
 			default:
-				glFormat = GL_RGB;
+				glFormat = internalFormat = GL_RGB;
 				this->bpp = 3;
 				break;
 			}
 			unsigned char* clearColor = new unsigned char[w * h * this->bpp];
 			memset(clearColor, 0, w * h * this->bpp);
-			glTexImage2D(GL_TEXTURE_2D, 0, glFormat, w, h, 0, glFormat, GL_UNSIGNED_BYTE, clearColor);
+			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, glFormat, GL_UNSIGNED_BYTE, clearColor);
 			delete [] clearColor;
 		}
 	}
@@ -276,7 +285,15 @@ namespace april
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
-			glFormat = GL_RGBA;
+			if (this->format == FORMAT_BGRA)
+			{
+#ifdef __APPLE__
+				glFormat = GL_BGRA_EXT;
+#else
+				glFormat = GL_BGRA;
+#endif
+			}
+			else glFormat = GL_RGBA;
 		}
 		else if (this->bpp == 3)
 		{
@@ -286,6 +303,7 @@ namespace april
 		{
 			glFormat = GL_ALPHA;
 		}
+		
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, glFormat, GL_UNSIGNED_BYTE, writeData);
 		delete [] writeData;
 	}
@@ -310,7 +328,15 @@ namespace april
 		int glFormat = GL_RGBA;
 		if (source->bpp == 4)
 		{
-			glFormat = GL_RGBA;
+			if (this->format == FORMAT_BGRA)
+			{
+#ifdef __APPLE__
+				glFormat = GL_BGRA_EXT;
+#else
+				glFormat = GL_BGRA;
+#endif
+			}
+			else glFormat = GL_RGBA;
 		}
 		else if (source->bpp == 3)
 		{
@@ -373,7 +399,15 @@ namespace april
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
-			glFormat = GL_RGBA;
+			if (this->format == FORMAT_BGRA)
+			{
+#ifdef __APPLE__
+				glFormat = GL_BGRA_EXT;
+#else
+				glFormat = GL_BGRA;
+#endif
+			}
+			else glFormat = GL_RGBA;
 		}
 		else if (this->bpp == 3)
 		{
@@ -385,6 +419,38 @@ namespace april
 		}
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, glFormat, GL_UNSIGNED_BYTE, writeData);
 		delete [] writeData;
+	}
+	
+	void OpenGL_Texture::write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp)
+	{
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
+		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
+		int glFormat = GL_RGBA;
+
+		if (this->bpp == 4)
+		{
+			if (this->format == FORMAT_BGRA)
+			{
+#ifdef __APPLE__
+				glFormat = GL_BGRA_EXT;
+#else
+				glFormat = GL_BGRA;
+#endif
+			}
+			else glFormat = GL_RGBA;
+		}
+		else if (this->bpp == 3)
+		{
+			glFormat = GL_RGB;
+		}
+		else if (this->bpp == 1)
+		{
+			glFormat = GL_ALPHA;
+		}
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, dataWidth, dataHeight, glFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 	void OpenGL_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
