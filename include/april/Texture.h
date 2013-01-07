@@ -45,7 +45,9 @@ namespace april
 			FORMAT_ARGB = 1,
 			FORMAT_RGB = 2,
 			//FORMAT_RGBA = 3, // TODO - WTF, this isn't supported!
-			FORMAT_ALPHA = 4/*, // TODO
+			FORMAT_ALPHA = 4,
+			FORMAT_BGRA = 5 // TODO - only supported in OpenGL for now
+			/*, // TODO
 			FORMAT_PALETTE = 5,
 			FORMAT_MONOCHROME = 6*/
 		};
@@ -101,6 +103,7 @@ namespace april
 		void blit(gvec2 position, Texture* texture, grect source, unsigned char alpha = 255);
 		void blit(gvec2 position, ImageSource* image, grect source, unsigned char alpha = 255);
 		void blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
+		virtual void write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp);
 		void stretchBlit(int x, int y, int w, int h, ImageSource* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(grect destination, Texture* texture, grect source, unsigned char alpha = 255);
 		void stretchBlit(grect destination, ImageSource* image, grect source, unsigned char alpha = 255);
