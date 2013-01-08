@@ -478,6 +478,22 @@ namespace april
 		this->_blit((unsigned char*)lockRect.pBits, x, y, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
 		this->_unlock(buffer, result, true);
 	}
+	
+	void DirectX9_Texture::write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp)
+	{
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		D3DLOCKED_RECT lockRect;
+		_CREATE_RECT(rect, x, y, dataWidth, dataHeight);
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
+		if (result == LR_FAILED)
+		{
+			return;
+		}
+		memcpy(lockRect.pBits, data, dataWidth * dataHeight * dataBpp);
+		this->_unlock(buffer, result, true);
+	}
 
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
