@@ -100,15 +100,17 @@ namespace april
 				glFormat = internalFormat = GL_ALPHA;
 				this->bpp = 1;
 				break;
+#ifndef _ANDROID
 			case FORMAT_BGRA:
-#ifdef __APPLE__
-				glFormat = GL_BGRA_EXT;
-#else
+#ifndef __APPLE__
 				glFormat = GL_BGRA;
+#else
+				glFormat = GL_BGRA_EXT;
 #endif
 				internalFormat = GL_RGBA;
 				this->bpp = 4;
 				break;
+#endif
 			default:
 				glFormat = internalFormat = GL_RGB;
 				this->bpp = 3;
@@ -285,15 +287,20 @@ namespace april
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
+#ifndef _ANDROID
 			if (this->format == FORMAT_BGRA)
 			{
-#ifdef __APPLE__
-				glFormat = GL_BGRA_EXT;
-#else
+#ifndef __APPLE__
 				glFormat = GL_BGRA;
+#else
+				glFormat = GL_BGRA_EXT;
 #endif
 			}
-			else glFormat = GL_RGBA;
+			else
+#endif
+			{
+				glFormat = GL_RGBA;
+			}
 		}
 		else if (this->bpp == 3)
 		{
@@ -328,15 +335,20 @@ namespace april
 		int glFormat = GL_RGBA;
 		if (source->bpp == 4)
 		{
+#ifndef _ANDROID
 			if (this->format == FORMAT_BGRA)
 			{
-#ifdef __APPLE__
-				glFormat = GL_BGRA_EXT;
-#else
+#ifndef __APPLE__
 				glFormat = GL_BGRA;
+#else
+				glFormat = GL_BGRA_EXT;
 #endif
 			}
-			else glFormat = GL_RGBA;
+			else
+#endif
+			{
+				glFormat = GL_RGBA;
+			}
 		}
 		else if (source->bpp == 3)
 		{
@@ -399,15 +411,20 @@ namespace april
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
+#ifndef _ANDROID
 			if (this->format == FORMAT_BGRA)
 			{
-#ifdef __APPLE__
-				glFormat = GL_BGRA_EXT;
-#else
+#ifndef __APPLE__
 				glFormat = GL_BGRA;
+#else
+				glFormat = GL_BGRA_EXT;
 #endif
 			}
-			else glFormat = GL_RGBA;
+			else
+#endif
+			{
+				glFormat = GL_RGBA;
+			}
 		}
 		else if (this->bpp == 3)
 		{
@@ -432,15 +449,20 @@ namespace april
 
 		if (this->bpp == 4)
 		{
+#ifndef _ANDROID
 			if (this->format == FORMAT_BGRA)
 			{
-#ifdef __APPLE__
-				glFormat = GL_BGRA_EXT;
-#else
+#ifndef __APPLE__
 				glFormat = GL_BGRA;
+#else
+				glFormat = GL_BGRA_EXT;
 #endif
 			}
-			else glFormat = GL_RGBA;
+			else
+#endif
+			{
+				glFormat = GL_RGBA;
+			}
 		}
 		else if (this->bpp == 3)
 		{
