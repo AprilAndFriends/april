@@ -491,7 +491,22 @@ namespace april
 		{
 			return;
 		}
-		memcpy(lockRect.pBits, data, dataWidth * dataHeight * dataBpp);
+		if (dataWidth == this->width)
+		{
+			memcpy(lockRect.pBits, data, dataWidth * dataHeight * dataBpp);			
+		}
+		else
+		{
+			unsigned char *dst = (unsigned char*) lockRect.pBits, *src = data;
+			unsigned char *dstEnd = dst + this->width * dataHeight * dataBpp;
+			int rowLen = dataWidth * dataBpp;
+			int dstInc = this->width * dataBpp, srcInc = rowLen;
+
+			for (; dst != dstEnd; dst += dstInc, src += srcInc)
+			{
+				memcpy(dst, src, rowLen);
+			}
+		}
 		this->_unlock(buffer, result, true);
 	}
 
