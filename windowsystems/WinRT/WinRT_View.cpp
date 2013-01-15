@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.51
 /// 
 /// @section LICENSE
 /// 
@@ -53,13 +53,13 @@ namespace april
 			ref new EventHandler<Platform::Object^>(this, &WinRT_View::OnResume);
 		this->window->PointerPressed +=
 			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
-				this, &WinRT_View::OnMouseDown);
+				this, &WinRT_View::OnTouchDown);
 		this->window->PointerReleased +=
 			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
-				this, &WinRT_View::OnMouseUp);
+				this, &WinRT_View::OnTouchUp);
 		this->window->PointerMoved +=
 			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
-				this, &WinRT_View::OnMouseMove);
+				this, &WinRT_View::OnTouchMove);
 		this->window->PointerWheelChanged +=
 			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
 				this, &WinRT_View::OnMouseScroll);
@@ -131,31 +131,92 @@ namespace april
 		args->Handled = true;
 	}
 
-	void WinRT_View::OnMouseDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	void WinRT_View::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		((WinRT_Window*)april::window)->handleTouchEvent(april::Window::AMOUSEEVT_DOWN,
-			gvec2(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y),
-			args->CurrentPoint->PointerId - 1);
+		unsigned int id;
+		int index;
+		gvec2 position(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
+		{
+		case Windows::Devices::Input::PointerDeviceType::Mouse:
+			april::window->handleTouchscreenEnabledEvent(false);
+			april::window->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, position, april::Window::AMOUSEBTN_LEFT);
+			break;
+		case Windows::Devices::Input::PointerDeviceType::Touch:
+		case Windows::Devices::Input::PointerDeviceType::Pen:
+			april::window->handleTouchscreenEnabledEvent(true);
+			id = args->CurrentPoint->PointerId;
+			index = this->pointerIds.index_of(id);
+			if (index < 0)
+			{
+				index = this->pointerIds.size();
+				this->pointerIds += id;
+			}
+			((WinRT_Window*)april::window)->handleTouchEvent(april::Window::AMOUSEEVT_DOWN, position, index);
+			break;
+		}
 		args->Handled = true;
 	}
 
-	void WinRT_View::OnMouseUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	void WinRT_View::OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		((WinRT_Window*)april::window)->handleTouchEvent(april::Window::AMOUSEEVT_UP,
-			gvec2(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y),
-			args->CurrentPoint->PointerId - 1);
+		unsigned int id;
+		int index;
+		gvec2 position(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
+		{
+		case Windows::Devices::Input::PointerDeviceType::Mouse:
+			april::window->handleTouchscreenEnabledEvent(false);
+			april::window->handleMouseEvent(april::Window::AMOUSEEVT_UP, position, april::Window::AMOUSEBTN_LEFT);
+			break;
+		case Windows::Devices::Input::PointerDeviceType::Touch:
+		case Windows::Devices::Input::PointerDeviceType::Pen:
+			april::window->handleTouchscreenEnabledEvent(true);
+			id = args->CurrentPoint->PointerId;
+			index = this->pointerIds.index_of(id);
+			if (index < 0)
+			{
+				index = this->pointerIds.size();
+			}
+			else
+			{
+				this->pointerIds.remove_at(index);
+			}
+			((WinRT_Window*)april::window)->handleTouchEvent(april::Window::AMOUSEEVT_UP, position, index);
+			break;
+		}
 		args->Handled = true;
 	}
 
-	void WinRT_View::OnMouseMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	void WinRT_View::OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		april::window->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, gvec2(args->CurrentPoint->Position.X,
-			args->CurrentPoint->Position.Y), april::Window::AMOUSEBTN_NONE);
+		unsigned int id;
+		int index;
+		gvec2 position(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
+		{
+		case Windows::Devices::Input::PointerDeviceType::Mouse:
+			april::window->handleTouchscreenEnabledEvent(false);
+			april::window->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, position, april::Window::AMOUSEBTN_LEFT);
+			break;
+		case Windows::Devices::Input::PointerDeviceType::Touch:
+		case Windows::Devices::Input::PointerDeviceType::Pen:
+			april::window->handleTouchscreenEnabledEvent(true);
+			id = args->CurrentPoint->PointerId;
+			index = this->pointerIds.index_of(id);
+			if (index < 0)
+			{
+				index = this->pointerIds.size();
+			}
+			((WinRT_Window*)april::window)->handleTouchEvent(april::Window::AMOUSEEVT_MOVE, position, index);
+			break;
+		}
 		args->Handled = true;
 	}
 
 	void WinRT_View::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
+		april::window->handleTouchscreenEnabledEvent(false);
 		float _wheelDelta = (float)args->CurrentPoint->Properties->MouseWheelDelta / WHEEL_DELTA;
 		if (this->scrollHorizontal ^ args->CurrentPoint->Properties->IsHorizontalMouseWheel)
 		{

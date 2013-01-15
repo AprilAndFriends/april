@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.51
 /// 
 /// @section LICENSE
 /// 
@@ -11,6 +11,7 @@
 #include <hltypes/hplatform.h>
 #if _HL_WINRT
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hthread.h>
 
 #include "april.h"
@@ -29,6 +30,7 @@ namespace april
 		this->name = APRIL_WS_WINRT;
 		this->width = 0;
 		this->height = 0;
+		this->touchEnabled = false;
 		this->multiTouchActive = false;
 	}
 
