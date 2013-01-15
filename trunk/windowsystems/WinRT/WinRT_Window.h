@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.51
 /// 
 /// @section LICENSE
 /// 
@@ -79,8 +79,8 @@ namespace april
 		void setCursorVisible(bool value);
 		int getWidth() { return this->width; }
 		int getHeight() { return this->height; }
-		bool isTouchEnabled() { return false; }
-		void setTouchEnabled(bool value) { }
+		bool isTouchEnabled() { return this->touchEnabled; }
+		void setTouchEnabled(bool value) { this->touchEnabled = value; }
 		void* getBackendId();
 		//void _setResolution(int w, int h);
 		bool updateOneFrame();
@@ -94,6 +94,7 @@ namespace april
 	protected:
 		int width;
 		int height;
+		bool touchEnabled;
 		bool multiTouchActive;
 		harray<gvec2> touches;
 		harray<MouseInputEvent> mouseEvents;

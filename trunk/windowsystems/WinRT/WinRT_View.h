@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.51
 /// 
 /// @section LICENSE
 /// 
@@ -50,9 +50,9 @@ namespace april
 		void OnResume(_In_ Platform::Object^ sender, _In_ Platform::Object^ args);
 		void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
 
-		void OnMouseDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnMouseUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnMouseMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
@@ -63,6 +63,7 @@ namespace april
 	private: // has to be private
 		Platform::Agile<CoreWindow> window;
 		bool scrollHorizontal;
+		harray<unsigned int> pointerIds;
 
 	};
 
