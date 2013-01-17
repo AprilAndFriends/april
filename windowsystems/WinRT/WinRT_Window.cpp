@@ -124,14 +124,13 @@ namespace april
 				{
 					// render texture in center
 					drawRect.x = (float)((this->width - SNAP_VIEW_WIDTH - this->logoTexture->getWidth()) / 2);
-					april::rendersys->drawTexturedRect(drawRect, srcRect);
 				}
 				if (WinRT::View->isSnapped())
 				{
 					// render texture twice on each side of the snapped view
 					drawRect.x = (float)((SNAP_VIEW_WIDTH - this->logoTexture->getWidth()) / 2);
-					april::rendersys->drawTexturedRect(drawRect, srcRect);
 				}
+				april::rendersys->drawTexturedRect(drawRect, srcRect);
 			}
 			april::rendersys->presentFrame();
 			return this->running;
