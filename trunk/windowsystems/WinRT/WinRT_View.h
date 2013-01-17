@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.51
+/// @version 2.52
 /// 
 /// @section LICENSE
 /// 
@@ -39,17 +39,19 @@ namespace april
 		virtual void SetWindow(_In_ CoreWindow^ window);
 		virtual void Load(_In_ Platform::String^ entryPoint);
 		virtual void Run();
-
+		
+		bool isFilled() { return this->filled; }
+		bool isSnapped() { return this->snapped; }
 		CoreWindow^ getCoreWindow() { return this->window.Get(); }
 		void setCursorVisible(bool value);
-
+		
 		void OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args);
 		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
 		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
 		void OnSuspend(_In_ Platform::Object^ sender, _In_ SuspendingEventArgs^ args);
 		void OnResume(_In_ Platform::Object^ sender, _In_ Platform::Object^ args);
 		void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
-
+		
 		void OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
@@ -57,31 +59,35 @@ namespace april
 		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
-
+		
 		void checkEvents();
-
+		
 	private: // has to be private
 		Platform::Agile<CoreWindow> window;
 		bool scrollHorizontal;
 		harray<unsigned int> pointerIds;
-
+		bool filled;
+		bool snapped;
+		
+		void _updateViewState();
+		
 	};
-
+	
 	class WinRT
 	{
 	public:
 		~WinRT() { }
-
+		
 		static void (*Init)(const harray<hstr>&);
 		static void (*Destroy)();
 		static harray<hstr> Args;
 		static WinRT_View^ View;
-
+		
 	private:
 		WinRT() { }
-
+		
 	};
-
+	
 }
 
 #endif

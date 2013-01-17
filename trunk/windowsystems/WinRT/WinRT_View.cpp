@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.51
+/// @version 2.52
 /// 
 /// @section LICENSE
 /// 
@@ -17,12 +17,15 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
+#include "april.h"
+#include "Platform.h"
 #include "Window.h"
 #include "WinRT_View.h"
 #include "WinRT_Window.h"
 
 using namespace Windows::ApplicationModel;
 using namespace Windows::Foundation;
+using namespace Windows::UI::ViewManagement;
 
 namespace april
 {
@@ -30,7 +33,7 @@ namespace april
 	void (*WinRT::Destroy)() = NULL;
 	harray<hstr> WinRT::Args;
 	WinRT_View^ WinRT::View = nullptr;
-
+	
 	void WinRT_View::Initialize(_In_ CoreApplicationView^ applicationView)
 	{
 		applicationView->Activated +=
@@ -75,11 +78,15 @@ namespace april
 		this->window->Closed +=
 			ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
 				this, &WinRT_View::OnWindowClosed);
+		this->filled = false;
+		this->snapped = false;
 		this->setCursorVisible(true);
 	}
 	
 	void WinRT_View::Load(_In_ Platform::String^ entryPoint)
 	{
+		this->filled = false;
+		this->snapped = false;
 	}
 	
 	void WinRT_View::Run()
@@ -93,7 +100,7 @@ namespace april
 		(*WinRT::Destroy)();
 		WinRT::View = nullptr;
 	}
-
+	
 	void WinRT_View::setCursorVisible(bool value)
 	{
 		this->window->PointerCursor = (value ? ref new CoreCursor(CoreCursorType::Arrow, 0) : nullptr);
@@ -102,35 +109,55 @@ namespace april
 	void WinRT_View::OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args)
 	{
 		CoreWindow::GetForCurrentThread()->Activate();
+		this->filled = false;
+		this->snapped = false;
+	}
+	
+	void WinRT_View::_updateViewState()
+	{
+		bool newFilled = (ApplicationView::Value == ApplicationViewState::Filled);
+		if (!this->filled && newFilled)
+		{
+			hlog::write(april::logTag, "Handling filled view override...");
+		}
+		this->filled = newFilled;
+		bool newSnapped = (ApplicationView::Value == ApplicationViewState::Snapped);
+		if (!this->snapped && newSnapped)
+		{
+			hlog::write(april::logTag, "Handling snapped view override...");
+		}
+		this->snapped = newSnapped;
 	}
 	
 	void WinRT_View::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
-		// TODO
-		//args->Handled = true;
-	}
-
-	void WinRT_View::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
-	{
+		this->_updateViewState();
 		args->Handled = true;
 	}
-
+	
+	void WinRT_View::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
+	{
+		this->_updateViewState();
+		args->Handled = true;
+	}
+	
 	void WinRT_View::OnSuspend(_In_ Platform::Object^ sender, _In_ SuspendingEventArgs^ args)
 	{
 		april::window->handleFocusChangeEvent(false);
 	}
-
+	
 	void WinRT_View::OnResume(_In_ Platform::Object^ sender, _In_ Platform::Object^ args)
 	{
+		this->_updateViewState();
 		april::window->handleFocusChangeEvent(true);
 	}
-
+	
 	void WinRT_View::OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
 	{
 		april::window->handleQuitRequest(false);
 		args->Handled = true;
 	}
-
+	
 	void WinRT_View::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		unsigned int id;
@@ -157,7 +184,7 @@ namespace april
 		}
 		args->Handled = true;
 	}
-
+	
 	void WinRT_View::OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		unsigned int id;
@@ -187,7 +214,7 @@ namespace april
 		}
 		args->Handled = true;
 	}
-
+	
 	void WinRT_View::OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		unsigned int id;
@@ -213,7 +240,7 @@ namespace april
 		}
 		args->Handled = true;
 	}
-
+	
 	void WinRT_View::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		april::window->handleTouchscreenEnabledEvent(false);
@@ -230,7 +257,7 @@ namespace april
 		}
 		args->Handled = true;
 	}
-
+	
 	void WinRT_View::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
 		april::KeySym key = (april::KeySym)args->VirtualKey;
@@ -241,7 +268,7 @@ namespace april
 		}
 		args->Handled = true;
 	}
-
+	
 	void WinRT_View::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
 		april::KeySym key = (april::KeySym)args->VirtualKey;
@@ -252,13 +279,13 @@ namespace april
 		}
 		args->Handled = true;
 	}
-
+	
 	void WinRT_View::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
 	{
 		april::window->handleCharOnlyEvent(args->KeyCode);
 		args->Handled = true;
 	}
-
+	
 	void WinRT_View::checkEvents()
 	{
 		this->window->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
