@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.51
+/// @version 2.52
 /// 
 /// @section LICENSE
 /// 
@@ -16,15 +16,19 @@
 #define APRIL_WINRT_WINDOW_H
 #include <hltypes/hplatform.h>
 #if _HL_WINRT
+#include <gtypes/Matrix4.h>
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
+#include "Color.h"
 #include "Timer.h"
 #include "Window.h"
 #include "WinRT_View.h"
 
 namespace april
 {
+	class Texture;
+	
 	class aprilExport WinRT_Window : public Window
 	{
 	public:
@@ -42,7 +46,7 @@ namespace april
 			}
 		
 		};
-
+		
 		struct KeyInputEvent
 		{
 			KeyEventType type;
@@ -57,7 +61,7 @@ namespace april
 			}
 		
 		};
-
+		
 		struct TouchInputEvent
 		{
 			harray<gvec2> touches;
@@ -68,13 +72,13 @@ namespace april
 			}
 		
 		};
-
+		
 		WinRT_Window();
 		~WinRT_Window();
-
+		
 		bool create(int w, int h, bool fullscreen, chstr title);
 		bool destroy();
-
+		
 		//void setTitle(chstr title);
 		void setCursorVisible(bool value);
 		int getWidth() { return this->width; }
@@ -86,23 +90,29 @@ namespace april
 		bool updateOneFrame();
 		void presentFrame();
 		void checkEvents();
-
+		
 		void handleTouchEvent(MouseEventType type, gvec2 position, int index);
 		void handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button);
 		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
-
+		
 	protected:
 		int width;
 		int height;
 		bool touchEnabled;
 		bool multiTouchActive;
+		bool hasStoredProjectionMatrix;
+		gmat4 storedProjectionMatrix;
+		Color backgroundColor;
+		Texture* logoTexture;
 		harray<gvec2> touches;
 		harray<MouseInputEvent> mouseEvents;
 		harray<KeyInputEvent> keyEvents;
 		harray<TouchInputEvent> touchEvents;
-
+		
+		void _tryLoadLogoTexture();
+		
 	};
-
+	
 }
 
 #endif
