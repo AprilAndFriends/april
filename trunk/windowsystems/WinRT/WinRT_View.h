@@ -68,6 +68,7 @@ namespace april
 		harray<unsigned int> pointerIds;
 		bool filled;
 		bool snapped;
+		int mouseMoveMessagesCount;
 		
 		void _updateViewState();
 		
