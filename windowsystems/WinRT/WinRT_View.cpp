@@ -78,8 +78,6 @@ namespace april
 		this->window->Closed +=
 			ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
 				this, &WinRT_View::OnWindowClosed);
-		this->filled = false;
-		this->snapped = false;
 		this->setCursorVisible(true);
 	}
 	
@@ -92,6 +90,9 @@ namespace april
 	void WinRT_View::Run()
 	{
 		this->scrollHorizontal = false;
+		this->filled = false;
+		this->snapped = false;
+		this->mouseMoveMessagesCount = 0;
 		hresource::setCwd(normalize_path(unicode_to_utf8(Package::Current->InstalledLocation->Path->Data())));
 		hresource::setArchive("");
 		WinRT::View = this;
@@ -171,6 +172,7 @@ namespace april
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
+			this->mouseMoveMessagesCount = 0;
 			april::window->handleTouchscreenEnabledEvent(true);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.index_of(id);
@@ -198,6 +200,7 @@ namespace april
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
+			this->mouseMoveMessagesCount = 0;
 			april::window->handleTouchscreenEnabledEvent(true);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.index_of(id);
@@ -223,11 +226,16 @@ namespace april
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			april::window->handleTouchscreenEnabledEvent(false);
+			this->mouseMoveMessagesCount++;
+			if (this->mouseMoveMessagesCount >= 10)
+			{
+				april::window->handleTouchscreenEnabledEvent(false);
+			}
 			april::window->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, position, april::Window::AMOUSEBTN_LEFT);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
+			this->mouseMoveMessagesCount = 0;
 			april::window->handleTouchscreenEnabledEvent(true);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.index_of(id);
