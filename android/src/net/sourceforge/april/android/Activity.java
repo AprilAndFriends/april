@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.5
+// version 2.53
 
 import android.app.Dialog;
 import android.content.pm.ActivityInfo;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class Activity extends android.app.Activity
 {
-	private GLSurfaceView glView = null;
+	public GLSurfaceView GlView = null;
 	private ArrayList ignoredKeys = null;
 	
 	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
@@ -36,7 +36,7 @@ public class Activity extends android.app.Activity
 	
 	public View getView()
 	{
-		return this.glView;
+		return this.GlView;
 	}
 	
 	public String createDataPath()
@@ -76,11 +76,11 @@ public class Activity extends android.app.Activity
 			}
 		}
 		// creating a GL surface view
-		this.glView = this.createGlView();
-		this.setContentView(this.glView);
+		this.GlView = this.createGlView();
+		this.setContentView(this.GlView);
 		// focusing this view allows proper input processing
-		this.glView.requestFocus();
-		this.glView.requestFocusFromTouch();
+		this.GlView.requestFocus();
+		this.GlView.requestFocusFromTouch();
 		NativeInterface.activityOnCreate();
 	}
 	
@@ -88,29 +88,53 @@ public class Activity extends android.app.Activity
 	protected void onStart()
 	{
 		super.onStart();
-		NativeInterface.activityOnStart();
+		this.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.activityOnStart();
+			}
+		});
 	}
 
 	@Override
 	protected void onResume()
 	{
 		super.onResume();
-		NativeInterface.activityOnResume();
-		this.glView.onResume();
+		this.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.activityOnResume();
+			}
+		});
+		this.GlView.onResume();
 	}
 	
 	@Override
 	protected void onPause()
 	{
-		this.glView.onPause();
-		NativeInterface.activityOnPause();
+		this.GlView.onPause();
+		this.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.activityOnPause();
+			}
+		});
 		super.onPause();
 	}
 	
 	@Override
 	protected void onStop()
 	{
-		NativeInterface.activityOnStop();
+		this.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.activityOnStop();
+			}
+		});
 		super.onStop();
 	}
 	
@@ -128,28 +152,46 @@ public class Activity extends android.app.Activity
 	protected void onRestart()
 	{
 		super.onRestart();
-		NativeInterface.activityOnRestart();
+		this.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.activityOnRestart();
+			}
+		});
 	}
 	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event)
+	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
 		if (this.ignoredKeys.contains(event.getKeyCode()))
 		{
 			return false;
 		}
-		NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
+		this.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
+			}
+		});
 		return true;
 	}
 	
 	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event)
+	public boolean onKeyUp(int keyCode, final KeyEvent event)
 	{
 		if (this.ignoredKeys.contains(event.getKeyCode()))
 		{
 			return false;
 		}
-		NativeInterface.onKeyUp(event.getKeyCode());
+		this.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onKeyUp(event.getKeyCode());
+			}
+		});
 		return true;
 	}
 	
