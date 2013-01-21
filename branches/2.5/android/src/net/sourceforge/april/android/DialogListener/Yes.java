@@ -1,6 +1,6 @@
 package net.sourceforge.april.android.DialogListener;
 
-// version 2.5
+// version 2.53
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -10,6 +10,13 @@ public class Yes implements OnClickListener
 {
 	public void onClick(DialogInterface dialog, int id)
 	{
-		NativeInterface.onDialogYes();
+		NativeInterface.Activity.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onDialogYes();
+			}
+		});
 	}
+	
 }
