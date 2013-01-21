@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.5
+// version 2.53
 
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -24,7 +24,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	}
 	
 	@Override
-	public void onWindowFocusChanged(boolean focused)
+	public void onWindowFocusChanged(final boolean focused)
 	{
 		if (focused)
 		{
@@ -32,13 +32,19 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 			this.requestFocusFromTouch();
 			NativeInterface.updateKeyboard();
 		}
-		NativeInterface.onWindowFocusChanged(focused);
+		NativeInterface.Activity.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onWindowFocusChanged(focused);
+			}
+		});
 	}
 	
 	public boolean onTouchEvent(final MotionEvent event)
 	{
 		final int action = event.getAction();
-		int type = -1;
+		final int type;
 		switch (action & MotionEvent.ACTION_MASK)
 		{
 		case MotionEvent.ACTION_DOWN:
@@ -52,14 +58,23 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		case MotionEvent.ACTION_MOVE: // Android batches multitouch move events into a single move event
 			type = 2;
 			break;
+		default:
+			type = -1;
+			break;
 		}
 		if (type >= 0)
 		{
-			final int pointerCount = event.getPointerCount();
-			for (int i = 0; i < pointerCount; i++)
+			this.queueEvent(new Runnable()
 			{
-				NativeInterface.onTouch(type, event.getX(i), event.getY(i), i);
-			}
+				public void run()
+				{
+					final int pointerCount = event.getPointerCount();
+					for (int i = 0; i < pointerCount; i++)
+					{
+						NativeInterface.onTouch(type, event.getX(i), event.getY(i), i);
+					}
+				}
+			});
 			return true;
 		}
 		return false;
