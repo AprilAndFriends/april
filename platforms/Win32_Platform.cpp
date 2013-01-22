@@ -29,7 +29,6 @@ namespace april
 {
 	SystemInfo getSystemInfo()
 	{
-		// TODO
 		static SystemInfo info;
 		if (info.locale == "")
 		{
@@ -47,7 +46,18 @@ namespace april
 			// display DPI
 			info.displayDpi = 96;
 			// other
-			info.locale = "en"; // TODO
+			info.locale = "en"; // default is "en"
+			wchar_t locale[LOCALE_NAME_MAX_LENGTH] = {0};
+			int length = GetLocaleInfoW(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME,
+				locale, (LOCALE_NAME_MAX_LENGTH - 1) * sizeof(wchar_t));
+			if (length > 0)
+			{
+				info.locale = unicode_to_utf8(locale).lower();
+				if (info.locale.size() > 2)
+				{
+					info.locale = info.locale(0, 2);
+				}
+			}
 		}
 		// TODO
 		if (info.maxTextureSize == 0 && april::rendersys != NULL)
