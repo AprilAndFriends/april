@@ -30,7 +30,22 @@
 {
 	NSLog(@"Creating iOS window");
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
-	[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:NULL];
+	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0" options:NSNumericSearch] == NSOrderedAscending)
+    {
+		// less then iOS 5.0 - workarround for an apple bug where the audio sesion get's interrupted while using AVAssetReader and similar
+		AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+		[audioSession setActive: NO error: nil];
+		[audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+		
+		// Modifying Playback Mixing Behavior, allow playing music in other apps
+		UInt32 allowMixing = true;
+		AudioSessionSetProperty(kAudioSessionProperty_OverrideCategoryMixWithOthers, sizeof(allowMixing), &allowMixing);
+		[audioSession setActive: YES error: nil];
+    }
+    else
+    {
+		[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:NULL];
+    }
 
 	// create a window.
 	// early creation so Default.png can be displayed while we're waiting for 
