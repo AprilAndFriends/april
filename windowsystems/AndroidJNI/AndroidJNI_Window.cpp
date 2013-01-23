@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.54
 /// 
 /// @section LICENSE
 /// 
@@ -30,7 +30,8 @@ namespace april
 {
 	extern JavaVM* javaVM;
 
-	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), multiTouchActive(false)
+	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0),
+		multiTouchActive(false), forcedFocus(false)
 	{
 		this->name = APRIL_WS_ANDROIDJNI;
 	}
@@ -49,6 +50,7 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->multiTouchActive = false;
+		this->forcedFocus = false;
 		return true;
 	}
 	
@@ -159,6 +161,31 @@ namespace april
 		{
 			(*this->virtualKeyboardCallback)(false);
 		}
+	}
+
+	void AndroidJNI_Window::handleActivityChangeEvent(bool active)
+	{
+		if (!active)
+		{
+			 // lose focus if still has focus during activity change, remember that it wasn't a real focus change
+			this->forcedFocus = false;
+			this->handleFocusChangeEvent(false);
+			this->forcedFocus = true;
+		}
+		else if (this->forcedFocus)
+		{
+			// if resuming was done, but previously focused, then refocus has to happen
+			this->handleFocusChangeEvent(true);
+		}
+	}
+
+	void AndroidJNI_Window::handleFocusChangeEvent(bool focused)
+	{
+		if (!this->forcedFocus || focused)
+		{
+			Window::handleFocusChangeEvent(focused);
+		}
+		this->forcedFocus = false;
 	}
 
 }
