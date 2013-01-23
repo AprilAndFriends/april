@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.54
 /// 
 /// @section LICENSE
 /// 
@@ -91,11 +91,15 @@ namespace april
 		void handleTouchEvent(MouseEventType type, gvec2 position, int index);
 		void handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button);
 		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
+
+		void handleFocusChangeEvent(bool focused);
+		void handleActivityChangeEvent(bool active);
 		
 	protected:
 		int width;
 		int height;
 		bool multiTouchActive;
+		bool forcedFocus;
 		harray<gvec2> touches;
 		harray<MouseInputEvent> mouseEvents;
 		harray<KeyInputEvent> keyEvents;
