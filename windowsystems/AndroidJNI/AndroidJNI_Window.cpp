@@ -167,25 +167,24 @@ namespace april
 	{
 		if (!active)
 		{
-			 // lose focus if still has focus during activity change, remember that it wasn't a real focus change
-			this->forcedFocus = false;
-			this->handleFocusChangeEvent(false);
-			this->forcedFocus = true;
+			if (this->focused)
+			{
+				this->forcedFocus = true;
+				Window::handleFocusChangeEvent(false);
+			}
 		}
 		else if (this->forcedFocus)
 		{
-			// if resuming was done, but previously focused, then refocus has to happen
-			this->handleFocusChangeEvent(true);
+			// only return focus if previously lost focus through acitvity state change
+			this->forcedFocus = false;
+			Window::handleFocusChangeEvent(true);
 		}
 	}
 
 	void AndroidJNI_Window::handleFocusChangeEvent(bool focused)
 	{
-		if (!this->forcedFocus || focused)
-		{
-			Window::handleFocusChangeEvent(focused);
-		}
 		this->forcedFocus = false;
+		Window::handleFocusChangeEvent(focused);
 	}
 
 }
