@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -9,18 +9,38 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #include <string.h>
-#ifdef USE_IL
-#include <IL/il.h>
-#endif
 
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hresource.h>
 
-#include "ImageSource.h"
+#include "Image.h"
 #include "RenderSystem.h"
 
 namespace april
 {
-	Color ImageSource::getPixel(int x, int y)
+#ifdef _IOS
+	Image* _tryLoadingPVR(chstr filename);
+#endif
+
+	Image::Image()
+	{
+		this->data = NULL;
+		this->w = 0;
+		this->h = 0;
+		this->bpp = 0;
+		this->format = april::Image::FORMAT_UNDEFINED;
+		this->compressedSize = 0;
+	}
+	
+	Image::~Image()
+	{
+		if (this->data != NULL)
+		{
+			delete [] this->data;
+		}
+	}
+
+	Color Image::getPixel(int x, int y)
 	{
 		x = hclamp(x, 0, w - 1);
 		y = hclamp(y, 0, h - 1);
@@ -43,7 +63,7 @@ namespace april
 		return c;
 	}
 	
-	void ImageSource::setPixel(int x, int y, Color c)
+	void Image::setPixel(int x, int y, Color c)
 	{
 		x = hclamp(x, 0, w - 1);
 		y = hclamp(y, 0, h - 1);
@@ -65,15 +85,106 @@ namespace april
 		}
 	}
 
-	Color ImageSource::getInterpolatedPixel(float x, float y)
+	Color Image::getInterpolatedPixel(float x, float y)
 	{
 		return getPixel((int)x, (int)y); // TODO
 	}
 	
-	void ImageSource::copyPixels(void* output, ImageFormat _format)
+	void Image::copyImage(Image* source, bool fillAlpha)
+	{
+		if (fillAlpha && this->bpp == 4 && source->bpp < 4)
+		{
+			memset(this->data, 255, this->w * this->h * this->bpp);
+		}
+		if ((this->bpp == 4 || source->bpp == 4) && this->bpp != source->bpp)
+		{
+			unsigned char* o = this->data;
+			unsigned char* i = source->data;
+			int x;
+			for_iter (y, 0, this->h)
+			{
+				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
+				{
+					o[0] = i[0];
+					o[1] = i[1];
+					o[2] = i[2];
+				}
+			}
+		}
+		else if (this->bpp == source->bpp)
+		{
+			memcpy(this->data, source->data, this->w * this->h * this->bpp * sizeof(unsigned char));
+		}
+		else
+		{
+			// not good, BPP differ too much (one might be 4 or 3 while the other is less than 3)
+			Color c;
+			unsigned char* o = this->data;
+			unsigned char* i = source->data;
+			int x;
+			for_iter (y, 0, this->h)
+			{
+				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
+				{
+					c = source->getPixel(x, y);
+					o[0] = c.r;
+					o[1] = c.g;
+					o[2] = c.b;
+				}
+			}
+		}
+
+		if ((this->bpp == 4 || source->bpp == 4) && this->bpp != source->bpp)
+		{
+			if (this->bpp == 4)
+			{
+				memset(this->data, 255, this->w * this->h * this->bpp);
+			}
+			unsigned char* o = this->data;
+			unsigned char* i = source->data;
+			int x;
+			for_iter (y, 0, this->h)
+			{
+				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
+				{
+					o[0] = i[0];
+					o[1] = i[1];
+					o[2] = i[2];
+				}
+			}
+		}
+		else if (this->bpp == source->bpp)
+		{
+			memcpy(this->data, source->data, this->w * this->h * this->bpp * sizeof(unsigned char));
+		}
+		else
+		{
+			// not good, BPP differ too much (one might be 4 or 3 while the other is less than 3)
+			if (this->bpp == 4)
+			{
+				memset(this->data, 255, this->w * this->h * this->bpp);
+			}
+			Color c;
+			unsigned char* o = this->data;
+			unsigned char* i = source->data;
+			int x;
+			for_iter (y, 0, this->h)
+			{
+				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
+				{
+					c = source->getPixel(x, y);
+					o[0] = c.r;
+					o[1] = c.g;
+					o[2] = c.b;
+				}
+			}
+		}
+	}
+
+	void Image::copyPixels(void* output, Format _format)
 	{
 		// TODO - hacky. input and output formats can be different, fix this in the future
-		if (_format == AF_BGRA)
+		if (_format == Image::FORMAT_BGRA)
 		{
 			unsigned char* o = (unsigned char*)output;
 			unsigned char* i = data;
@@ -89,7 +200,7 @@ namespace april
 				}
 			}
 		}
-		else if (_format == AF_BGR)
+		else if (_format == Image::FORMAT_BGR)
 		{
 			unsigned char* o = (unsigned char*)output;
 			unsigned char* i = data;
@@ -110,7 +221,7 @@ namespace april
 		}
 	}
 	
-	void ImageSource::insertAsAlphaMap(ImageSource* source)
+	void Image::insertAsAlphaMap(Image* source)
 	{
 		if (this->bpp < 4)
 		{
@@ -144,7 +255,7 @@ namespace april
 		}
 	}
 
-	void ImageSource::setPixels(int x, int y, int w, int h, Color c)
+	void Image::setPixels(int x, int y, int w, int h, Color c)
 	{
 		x = hclamp(x, 0, this->w - 1);
 		y = hclamp(y, 0, this->h - 1);
@@ -165,12 +276,12 @@ namespace april
 		}
 	}
 
-	void ImageSource::clear()
+	void Image::clear()
 	{
 		memset(this->data, 0, this->w * this->h * this->bpp * sizeof(unsigned char));
 	}
 
-	void ImageSource::blit(int x, int y, ImageSource* source, int sx, int sy, int sw, int sh, unsigned char alpha)
+	void Image::blit(int x, int y, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		x = hclamp(x, 0, this->w - 1);
 		y = hclamp(y, 0, this->h - 1);
@@ -197,7 +308,7 @@ namespace april
 		}
 	}
 
-	void ImageSource::stretchBlit(int x, int y, int w, int h, ImageSource* source, int sx, int sy, int sw, int sh, unsigned char alpha)
+	void Image::stretchBlit(int x, int y, int w, int h, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		x = hclamp(x, 0, this->w - 1);
 		y = hclamp(y, 0, this->h - 1);
@@ -290,38 +401,49 @@ namespace april
 		}
 	}
 
-	ImageSource* createEmptyImage(int w, int h)
+	Image* Image::load(chstr filename)
 	{
-		ImageSource* img = new ImageSource();
-		unsigned char* data = new unsigned char[w * h * 4];
-		memset(data, 0, w * h * 4 * sizeof(unsigned char));
-		img->w = w;
-		img->h = h;
-		img->bpp = 4; // IL temp hack
-		img->internalFormat = 6408; // IL temp hack, coincides with GL_RGBA
-		img->format = AF_RGBA; // IL temp hack, coincides with GL_RGBA
-		img->data = data;
-#ifdef USE_IL
-		img->manualData = true;
+		Image* img = NULL;
+		if (filename.lower().ends_with(".png"))
+		{
+			img = Image::_loadPng(hresource(filename));
+		}
+		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
+		{
+			img = Image::_loadJpg(hresource(filename));
+		}
+		else if (filename.lower().ends_with(".jpt"))
+		{
+			img = Image::_loadJpt(hresource(filename));
+		}
+#ifdef _IOS
+		else if (filename.lower().ends_with(".pvr"))
+		{
+			img = _tryLoadingPVR(filename);
+		}
 #endif
 		return img;
 	}
-	
-	ImageSource* createBlankImage(int w, int h)
+
+	Image* Image::create(int w, int h, Color color)
 	{
-		ImageSource* img = new ImageSource();
 		unsigned char* data = new unsigned char[w * h * 4];
-		memset(data, 0, w * h * 4 * sizeof(unsigned char));
+		bool uniColor = (color.r == color.g == color.b == color.a);
+		if (uniColor)
+		{
+			memset(data, color.r, w * h * 4 * sizeof(unsigned char));
+		}
+		Image* img = new Image();
 		img->w = w;
 		img->h = h;
-		img->bpp = 4; // IL temp hack
-		img->internalFormat = 6408; // IL temp hack, coincides with GL_RGBA
-		img->format = AF_RGBA; // IL temp hack, coincides with GL_RGBA
+		img->bpp = 4;
+		img->format = Image::FORMAT_RGBA;
 		img->data = data;
-#ifdef USE_IL
-		img->manualData = true;
-#endif
-		img->setPixels(0, 0, w, h, Color::Blank);
+		img->compressedSize = 0;
+		if (!uniColor)
+		{
+			img->setPixels(0, 0, w, h, color);
+		}
 		return img;
 	}
 	

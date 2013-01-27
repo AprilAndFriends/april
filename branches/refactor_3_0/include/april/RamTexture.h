@@ -23,7 +23,7 @@
 
 namespace april
 {
-	class ImageSource;
+	class Image;
 	
 	class aprilExport RamTexture : public Texture
 	{
@@ -40,7 +40,7 @@ namespace april
 		void setPixel(int x, int y, Color c);
 		
 	protected:
-		ImageSource* source;
+		Image* source;
 		
 	};
 

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -24,7 +24,7 @@
 #import <OpenGLES/ES1/gl.h>
 #import "PVRTexture.h"
 #endif
-#include "ImageSource.h"
+#include "Image.h"
 #include "RenderSystem.h"
 
 // fix for NSURL not working on iPad Simulator
@@ -39,26 +39,13 @@ namespace april
 {
 	NSURL* _getFileURL(chstr filename);
 	NSURL* _getFileURLAsResource(chstr filename);
-	ImageSource* _tryLoadingPVR(chstr filename);
+	Image* _tryLoadingPVR(chstr filename);
 
-	ImageSource::ImageSource()
-	{
-		imageId = 0; // unused in CG
-		this->data = NULL;
-		this->w = this->h = this->bpp = this->format = AF_UNDEFINED;
-		this->compressedLength = 0;
-	}
-	
-	ImageSource::~ImageSource()
-	{
-		free(this->data);
-	}
-			
-	ImageSource* loadImage(chstr filename)
+	Image* Image::load(chstr filename)
 	{
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
 #if TARGET_OS_IPHONE
-		ImageSource *pvrimg=_tryLoadingPVR(filename);
+		Image *pvrimg=_tryLoadingPVR(filename);
 		if (pvrimg)
 		{
 			[arp release];
@@ -72,11 +59,11 @@ namespace april
 		// according to:
 		// http://www.cocoabuilder.com/archive/cocoa/194282-imagekit-gc-nogo-or-better-how.html
 		// here might be a memory leak and we might wanna switch to
-		// CGImageSourceCreateWithData(). bug in cocoa present
+		// CGImageCreateWithData(). bug in cocoa present
 		// as late as 2007!
 		
-		CGImageSourceRef
-				imageSource = CGImageSourceCreateWithData((CFDataRef)[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]], NULL);
+		CGImageRef
+				imageSource = CGImageCreateWithData((CFDataRef)[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]], NULL);
 				
 				if(!imageSource)
 				{
@@ -85,7 +72,7 @@ namespace april
 					return NULL;
 				}
 
-		CGImageRef imageRef = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
+		CGImageRef imageRef = CGImageCreateImageAtIndex(imageSource, 0, NULL);
 		CFRelease(imageSource);
 		
 #else
@@ -96,8 +83,8 @@ namespace april
 #endif
 
 		// alloc img, set attributes
-		ImageSource* img=new ImageSource();
-		img->format = AF_RGBA; //ilGetInteger(IL_IMAGE_FORMAT); // not used
+		Image* img=new Image();
+		img->format = Image::FORMAT_RGBA; //ilGetInteger(IL_IMAGE_FORMAT); // not used
 		img->w = CGImageGetWidth(imageRef);
 		img->h = CGImageGetHeight(imageRef);
 		int bitsPerComponent = CGImageGetBitsPerComponent(imageRef); // almost always 8
@@ -141,9 +128,9 @@ namespace april
         return img;
  /*
 		
-		ImageSource* img=new ImageSource();
-		CGImageSourceRef myImageSourceRef = CGImageSourceCreateWithData((CFDataRef)[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]], NULL);
-		CGImageRef myImageRef = CGImageSourceCreateImageAtIndex (myImageSourceRef, 0, NULL);
+		Image* img=new Image();
+		CGImageRef myImageRef = CGImageCreateWithData((CFDataRef)[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename.c_str()]], NULL);
+		CGImageRef myImageRef = CGImageCreateImageAtIndex (myImageRef, 0, NULL);
 		CFDataRef data = CGDataProviderCopyData(CGImageGetDataProvider(myImageRef));
 		img->w = CGImageGetWidth(myImageRef);
 		img->h = CGImageGetHeight(myImageRef);
@@ -154,7 +141,7 @@ namespace april
 		
 		//CFRelease(data);
 		CGImageRelease(myImageRef);
-		CFRelease(myImageSourceRef);
+		CFRelease(myImageRef);
 		return img;*/
 	}
 }

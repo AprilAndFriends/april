@@ -10,9 +10,6 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #include <stdio.h>
-#ifdef USE_IL
-#include <IL/il.h>
-#endif
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
@@ -112,9 +109,6 @@ namespace april
 	void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType)
 	{
 		hlog::write(april::logTag, "Initializing APRIL.");
-#ifdef USE_IL
-		ilInit();
-#endif
 		extensions += ".jpt";
 		extensions += ".png";
 		extensions += ".jpg";

@@ -377,13 +377,13 @@
     <ClCompile Include="rendersystems\DirectX11\DirectX11_VertexShader.cpp" />
     <ClCompile Include="src\april.cpp" />
     <ClCompile Include="src\aprilUtil.cpp" />
-    <ClCompile Include="src\ImageSourceJpg.cpp" />
-    <ClCompile Include="src\ImageSourcePng.cpp" />
+    <ClCompile Include="src\ImageJpg.cpp" />
+    <ClCompile Include="src\ImagePng.cpp" />
     <ClCompile Include="rendersystems\DirectX9\DirectX9_PixelShader.cpp" />
     <ClCompile Include="rendersystems\DirectX9\DirectX9_VertexShader.cpp" />
     <ClCompile Include="src\Color.cpp" />
-    <ClCompile Include="src\ImageSource.cpp" />
-    <ClCompile Include="src\ImageSourceIL.cpp" />
+    <ClCompile Include="src\Image.cpp" />
+    <ClCompile Include="src\ImageJpt.cpp" />
     <ClCompile Include="src\Platform.cpp" />
     <ClCompile Include="src\PixelShader.cpp" />
     <ClCompile Include="src\RamTexture.cpp" />
@@ -410,7 +410,7 @@
     <ClInclude Include="include\april\aprilExport.h" />
     <ClInclude Include="include\april\aprilUtil.h" />
     <ClInclude Include="include\april\Color.h" />
-    <ClInclude Include="include\april\ImageSource.h" />
+    <ClInclude Include="include\april\Image.h" />
     <ClInclude Include="include\april\Keys.h" />
     <ClInclude Include="include\april\main.h" />
     <ClInclude Include="include\april\PixelShader.h" />

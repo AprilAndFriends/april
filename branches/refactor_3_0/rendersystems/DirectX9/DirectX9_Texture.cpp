@@ -10,16 +10,13 @@
 
 #ifdef _DIRECTX9
 #include <d3d9.h>
-#ifdef USE_IL
-#include <IL/il.h>
-#endif
 
 #include <hltypes/hlog.h>
 
 #include "april.h"
 #include "DirectX9_RenderSystem.h"
 #include "DirectX9_Texture.h"
-#include "ImageSource.h"
+#include "Image.h"
 
 #define APRIL_D3D_DEVICE (((DirectX9_RenderSystem*)april::rendersys)->d3dDevice)
 #define _CREATE_RECT(name, x, y, w, h) \
@@ -172,10 +169,10 @@ namespace april
 			return true;
 		}
 		hlog::write(april::logTag, "Loading DX9 texture: " + this->_getInternalName());
-		ImageSource* image = NULL;
+		Image* image = NULL;
 		if (this->filename != "")
 		{
-			image = april::loadImage(this->filename);
+			image = Image::load(this->filename);
 			if (image == NULL)
 			{
 				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
@@ -193,21 +190,21 @@ namespace april
 		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
 		switch (image->format)
 		{
-		case AF_RGBA:
-		case AF_BGRA:
+		case Image::FORMAT_RGBA:
+		case Image::FORMAT_BGRA:
 			d3dformat = D3DFMT_A8R8G8B8;
 			this->format = FORMAT_ARGB;
 			break;
-		case AF_RGB:
-		case AF_BGR:
+		case Image::FORMAT_RGB:
+		case Image::FORMAT_BGR:
 			d3dformat = D3DFMT_X8R8G8B8;
 			this->format = FORMAT_RGB;
 			break;
-		case AF_GRAYSCALE:
+		case Image::FORMAT_GRAYSCALE:
 			d3dformat = D3DFMT_A8;
 			this->format = FORMAT_ALPHA;
 			break;
-		case AF_PALETTE:
+		case Image::FORMAT_PALETTE:
 			d3dformat = D3DFMT_A8R8G8B8;
 			this->format = FORMAT_ARGB; // TODO - should be changed
 			break;
@@ -229,23 +226,23 @@ namespace april
 			D3DLOCKED_RECT rect;
 			this->d3dTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
 			// TODO - format handling like this has to be fixed/refactored
-			if (image->format == AF_RGBA)
+			if (image->format == Image::FORMAT_RGBA)
 			{
-				image->copyPixels(rect.pBits, AF_BGRA);
+				image->copyPixels(rect.pBits, Image::FORMAT_BGRA);
 			}
-			else if (image->format == AF_RGB)
+			else if (image->format == Image::FORMAT_RGB)
 			{
-				image->copyPixels(rect.pBits, AF_BGR);
+				image->copyPixels(rect.pBits, Image::FORMAT_BGR);
 			}
-			else if (image->format  == AF_GRAYSCALE)
+			else if (image->format  == Image::FORMAT_GRAYSCALE)
 			{
-				image->copyPixels(rect.pBits, AF_GRAYSCALE);
+				image->copyPixels(rect.pBits, Image::FORMAT_GRAYSCALE);
 			}
 			else
 			{
-				ImageSource* tempImg = april::createEmptyImage(image->w, image->h);
+				Image* tempImg = Image::create(image->w, image->h);
 				tempImg->copyImage(image);
-				tempImg->copyPixels(rect.pBits, AF_BGRA);
+				tempImg->copyPixels(rect.pBits, Image::FORMAT_BGRA);
 				delete tempImg;
 			}
 			this->d3dTexture->UnlockRect(0);

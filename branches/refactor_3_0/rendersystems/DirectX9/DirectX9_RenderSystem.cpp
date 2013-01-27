@@ -24,7 +24,7 @@
 #include "DirectX9_RenderSystem.h"
 #include "DirectX9_Texture.h"
 #include "DirectX9_VertexShader.h"
-#include "ImageSource.h"
+#include "Image.h"
 #include "Keys.h"
 #include "Timer.h"
 
@@ -657,7 +657,7 @@ namespace april
 		this->d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)matrix.data);
 	}
 
-	ImageSource* DirectX9_RenderSystem::takeScreenshot(int bpp)
+	Image* DirectX9_RenderSystem::takeScreenshot(int bpp)
 	{
 #ifdef _DEBUG
 		hlog::write(april::logTag, "Grabbing screenshot...");
@@ -692,11 +692,11 @@ namespace april
 			return NULL;
 		}
 		
-		ImageSource* img = new ImageSource();
+		Image* img = new Image();
 		img->w = desc.Width;
 		img->h = desc.Height;
 		img->bpp = bpp;
-		img->format = (bpp == 4 ? AF_RGBA : AF_RGB);
+		img->format = (bpp == 4 ? Image::FORMAT_RGBA : Image::FORMAT_RGB);
 		img->data = new unsigned char[img->w * img->h * img->bpp];
 		unsigned char* p = img->data;
 		unsigned char* src = (unsigned char*)rect.pBits;

@@ -23,7 +23,7 @@
 
 #include "april.h"
 #include "aprilUtil.h"
-#include "ImageSource.h"
+#include "Image.h"
 #include "RamTexture.h"
 #include "RenderSystem.h"
 #include "Texture.h"

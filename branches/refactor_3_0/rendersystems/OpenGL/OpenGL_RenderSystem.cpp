@@ -51,7 +51,7 @@
 #include <hltypes/hltypesUtil.h>
 
 #include "april.h"
-#include "ImageSource.h"
+#include "Image.h"
 #include "Keys.h"
 #include "OpenGL_RenderSystem.h"
 #include "OpenGL_Texture.h"
@@ -993,18 +993,18 @@ namespace april
 		}
 	}
 	
-	ImageSource* OpenGL_RenderSystem::takeScreenshot(int bpp)
+	Image* OpenGL_RenderSystem::takeScreenshot(int bpp)
 	{
 #ifdef _DEBUG
 		hlog::write(april::logTag, "Grabbing screenshot...");
 #endif
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
-		ImageSource* img = new ImageSource();
+		Image* img = new Image();
 		img->w = w;
 		img->h = h;
 		img->bpp = bpp;
-		img->format = (bpp == 4 ? AF_RGBA : AF_RGB);
+		img->format = (bpp == 4 ? Image::FORMAT_RGBA : Image::FORMAT_RGB);
 		img->data = new unsigned char[w * (h + 1) * 4]; // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
 		unsigned char* temp = img->data + w * h * 4;
 		

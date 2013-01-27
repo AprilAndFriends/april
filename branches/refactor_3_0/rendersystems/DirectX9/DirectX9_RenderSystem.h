@@ -30,6 +30,7 @@ namespace april
 	class DirectX9_PixelShader;
 	class DirectX9_Texture;
 	class DirectX9_VertexShader;
+	class Image;
 	class Window;
 
 	class DirectX9_RenderSystem : public RenderSystem
@@ -80,7 +81,7 @@ namespace april
 		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 
-		ImageSource* takeScreenshot(int bpp = 3);
+		Image* takeScreenshot(int bpp = 3);
 		void presentFrame();
 
 		// TODO - refactor

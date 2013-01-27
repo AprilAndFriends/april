@@ -68,9 +68,6 @@
     <ClCompile Include="src\Color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImageSourceIL.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\RenderSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -83,7 +80,7 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImageSource.cpp">
+    <ClCompile Include="src\Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PixelShader.cpp">
@@ -113,10 +110,10 @@
     <ClCompile Include="src\TimerPosix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImageSourceJpg.cpp">
+    <ClCompile Include="src\ImageJpg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImageSourcePng.cpp">
+    <ClCompile Include="src\ImagePng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\april.cpp">
@@ -155,6 +152,9 @@
     <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
+    <ClCompile Include="src\ImageJpt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -163,7 +163,7 @@
     <ClInclude Include="include\april\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\april\ImageSource.h">
+    <ClInclude Include="include\april\Image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Keys.h">

@@ -32,7 +32,7 @@
 
 namespace april
 {
-	class ImageSource;
+	class Image;
 	class PixelShader;
 	class RamTexture;
 	class Texture;
@@ -115,7 +115,7 @@ namespace april
 		void unloadTextures();
 		virtual void setParam(chstr name, chstr value) { }
 		virtual hstr getParam(chstr name) { return ""; }
-		virtual ImageSource* takeScreenshot(int bpp = 3) = 0;
+		virtual Image* takeScreenshot(int bpp = 3) = 0;
 		virtual void presentFrame();
 
 		// TODO - refactor

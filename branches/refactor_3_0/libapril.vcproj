@@ -481,19 +481,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\ImageSource.cpp"
+				RelativePath=".\src\Image.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\ImageSourceIL.cpp"
+				RelativePath=".\src\ImageJpt.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\ImageSourceJpg.cpp"
+				RelativePath=".\src\ImageJpg.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\ImageSourcePng.cpp"
+				RelativePath=".\src\ImagePng.cpp"
 				>
 			</File>
 			<File
@@ -631,7 +631,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\april\ImageSource.h"
+				RelativePath=".\include\april\Image.h"
 				>
 			</File>
 			<File

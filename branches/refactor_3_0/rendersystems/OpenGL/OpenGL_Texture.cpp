@@ -31,7 +31,7 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
-#include "ImageSource.h"
+#include "Image.h"
 #include "OpenGL_Texture.h"
 #include "OpenGL_RenderSystem.h"
 
@@ -84,7 +84,8 @@ namespace april
 		else
 		{
 			// TODO - use as base for ::clear
-			int glFormat = GL_RGB, internalFormat = GL_RGB;
+			int glFormat = GL_RGB;
+			int internalFormat = GL_RGB;
 			this->bpp = 3;
 			switch (format)
 			{
@@ -157,7 +158,7 @@ namespace april
 			return true;
 		}
 		hlog::write(april::logTag, "Loading GL texture: " + this->_getInternalName());
-		ImageSource* image = NULL;
+		Image* image = NULL;
 		if (this->filename != "")
 		{
 			image = april::loadImage(this->filename);
@@ -188,24 +189,24 @@ namespace april
 #if TARGET_OS_IPHONE
 			case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
 			case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image->format, image->w, image->h, 0, image->compressedLength, image->data);
+				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image->format, image->w, image->h, 0, image->compressedSize, image->data);
 				this->format = FORMAT_ARGB; // TODO - not really a format
 				break;
 #endif
-			case AF_RGBA:
+			case Image::FORMAT_RGBA:
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ARGB;
 				break;
-			case AF_RGB:
+			case Image::FORMAT_RGB:
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ARGB;
 				break;
-			case AF_GRAYSCALE:
+			case Image::FORMAT_GRAYSCALE:
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image->w, image->h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ALPHA;
 				break;
 			default:
-				glTexImage2D(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == AF_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
+				glTexImage2D(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == Image::FORMAT_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ARGB;
 				break;
 			}

@@ -25,6 +25,7 @@
 
 namespace april
 {
+	class Image;
 	class OpenGL_Texture;
 	class Window;
 
@@ -106,7 +107,7 @@ namespace april
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 		
 		void setParam(chstr name, chstr value);
-		ImageSource* takeScreenshot(int bpp = 3);
+		Image* takeScreenshot(int bpp = 3);
 
 		void setMatrixMode(unsigned int mode);
 		void bindTexture(unsigned int textureId);
