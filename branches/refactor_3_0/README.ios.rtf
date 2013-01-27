@@ -1,0 +1,71 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{square\}}{\leveltext\leveltemplateid1\'01\uc0\u9642 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
+{\info
+{\author Ivan Vu\uc0\u269 ica}
+{\*\copyright (c) 2010 Ivan Vu\uc0\u269 ica}}\paperw11900\paperh16840\margl1440\margr1440\vieww9000\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\b\fs24 \cf0 README for iOS\
+
+\b0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\qj\pardirnatural
+\cf0 This library is prepared to be built with Xcode. It builds an SDK consisting of public headers and a static library. Xcode project contains a single Cocoa Touch static library target with two configurations: Debug and Release. \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
+
+\b Debug
+\b0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\qj\pardirnatural
+\cf0 This configuration is set to build only the library, and not prepare the SDK. It does not install the library or the headers anywhere, and it's your duty to set it up prior to use in other programs or libraries. \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\qj\pardirnatural
+
+\b \cf0 Release\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\qj\pardirnatural
+
+\b0 \cf0 This configuration is set to build an SDK. An SDK is a directory with structure:\
+\pard\tx220\tx540\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li500\fi-500\qj\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	
+\f1 \uc0\u9642 
+\f0 	}SDK folder itself\
+{\listtext	
+\f1 \uc0\u9642 
+\f0 	}inside, a particular platform's directory, for example, iphoneos.sdk and iphonesimulator.sdk\
+\pard\tx220\tx460\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li500\fi-500\qj\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	
+\f1 \uc0\u9642 
+\f0 	}inside, a structure emulating Mac OS X root filesystem, containing folder such as usr\
+\pard\tx560\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\qj\pardirnatural
+\cf0 \
+We name our SDKs librarynameSDK, and we store our files in librarynameSDK/platform.sdk/usr/local/\{lib,include\}. Once you build the SDK, it will be stored in build/Release/librarynameSDK/.\
+\
+After that, it's your duty to set it up for use in your programs and (recommended) install it userwide or systemwide. Recommended destinations include /Users/username/Library/SDKs/ and /Library/SDKs/. If the destination does not exist, you should create it. You can then add this SDK to your program through Xcode's "Additional SDKs" option.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\qj\pardirnatural
+\cf0 \
+-- ivan@vucica.net, Aug 5th 2010\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\qj\pardirnatural
+
+\b \cf0 Important platform differences\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\qj\pardirnatural
+
+\b0 \cf0 \
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\qj\pardirnatural
+\ls2\ilvl0\cf0 {\listtext	1.	}messageBox is, by default, nonblocking -- just like UIKit's default behavior for UIAlertViews. Use AMSGSTYLE_MODAL flag to force use of a run loop hack to make the alert views blocking. \
+{\listtext	2.	}Since messageBox is nonblocking, correct button is returned 
+\b only
+\b0  via the callback, or when you pass AMSGSTYLE_MODAL. With nonblocking messageBox, what you receive is a default value based on buttons you requested to be displayed, and not actually related to user's choices.\
+{\listtext	3.	}Some nasty hacks are done to perform autorotation. Beware of autorotation issues. Patches accepted.\
+{\listtext	4.	}Window::destroy() is a stub.\
+{\listtext	5.	}Don't terminate the app "violently" (such as by using exit()) unless absolutely necessary. That's not looked kindly upon by the iOS or UIKit, it's contrary to the Apple HIG, and looks very ugly to the user. Remove exit functionality from your app and let the user terminate it via the home button. Window::terminateMainLoop() is also not supported under iOS.\
+{\listtext	6.	}Avoid shipping with a call to the messageBox that passes on the flag  AMSGSTYLE_TERMINATEAPPONDISPLAY. This terminates the app violently as described above, and looks ugly to the user.\
+{\listtext	7.	}Be prepared to be requested to exit at any time. Implement Quit notification handler to quickly save whatever you have to save. (You have under 5 seconds to perform handling, and you don't have a right to do any sort of painting at that time.)\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\qj\pardirnatural
+\cf0 \
+-- ivan@vucica.net, May 26th 2011\
+\
+}
