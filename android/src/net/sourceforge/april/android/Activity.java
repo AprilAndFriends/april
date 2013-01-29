@@ -17,13 +17,15 @@ import java.util.ArrayList;
 
 public class Activity extends android.app.Activity
 {
-	public GLSurfaceView GlView = null;
-	private ArrayList ignoredKeys = null;
+	protected boolean nookWorkaround = false; // set this to true in your activity if your are using a nook build in order to speed up new intent/activity calls
 	
 	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
 	{
 		NativeInterface.ArchivePath = archivePath;
 	}
+	
+	public GLSurfaceView GlView = null;
+	private ArrayList ignoredKeys = null;
 	
 	public Activity()
 	{
@@ -108,13 +110,19 @@ public class Activity extends android.app.Activity
 				NativeInterface.activityOnResume();
 			}
 		});
-		this.GlView.onResume();
+		if (!this.nookWorkaround)
+		{
+			this.GlView.onResume();
+		}
 	}
 	
 	@Override
 	protected void onPause()
 	{
-		this.GlView.onPause();
+		if (!this.nookWorkaround)
+		{
+			this.GlView.onPause();
+		}
 		this.GlView.queueEvent(new Runnable()
 		{
 			public void run()
