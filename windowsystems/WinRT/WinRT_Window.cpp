@@ -114,7 +114,7 @@ namespace april
 			april::rendersys->clear();
 			viewport.setSize((float)this->width, (float)this->height);
 			april::rendersys->setOrthoProjection(viewport);
-			april::rendersys->drawFilledRect(drawRect, this->backgroundColor);
+			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
 			if (this->logoTexture != NULL)
 			{
 				drawRect.set(0.0f, (float)((this->height - this->logoTexture->getHeight()) / 2),
