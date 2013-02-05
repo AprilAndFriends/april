@@ -29,7 +29,7 @@
 			#endif
 		#else
 			#define aprilExport __attribute__ ((visibility("default")))
-			#define aprilFnExport
+			#define aprilFnExport __attribute__ ((visibility("default")))
 		#endif
 	#endif
 	#ifndef DEPRECATED_ATTRIBUTE
