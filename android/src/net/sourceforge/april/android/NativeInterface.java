@@ -214,8 +214,7 @@ public class NativeInterface
 	
 	public static void showMessageBox(String title, String text, String ok, String yes, String no, String cancel, int iconId)
 	{
-		DialogFragment dialogFragment = new DialogFragment(title, text, ok, yes, no, cancel, iconId);
-		dialogFragment.show(NativeInterface.Activity.getFragmentManager(), "april-dialog");
+		DialogFactory.create(title, text, ok, yes, no, cancel, iconId);
 	}
 	
 }

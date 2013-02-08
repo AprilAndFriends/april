@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.53
+// version 2.55
 
 import android.app.Dialog;
 import android.content.pm.ActivityInfo;
@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import net.sourceforge.april.android.DialogFactory;
 
 import java.util.ArrayList;
 
@@ -212,7 +213,7 @@ public class Activity extends android.app.Activity
 	
 	protected Dialog onCreateDialog(int id)
 	{
-		return NativeInterface.DialogBuilder.create();
+		return DialogFactory.show();
 	}
 	
 	protected GLSurfaceView createGlView()
