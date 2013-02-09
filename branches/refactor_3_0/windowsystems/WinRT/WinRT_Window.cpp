@@ -114,7 +114,7 @@ namespace april
 			april::rendersys->clear();
 			viewport.setSize((float)this->width, (float)this->height);
 			april::rendersys->setOrthoProjection(viewport);
-			april::rendersys->drawFilledRect(drawRect, this->backgroundColor);
+			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
 			if (this->logoTexture != NULL)
 			{
 				drawRect.set(0.0f, (float)((this->height - this->logoTexture->getHeight()) / 2),
@@ -173,6 +173,7 @@ namespace april
 	
 	void WinRT_Window::handleTouchEvent(MouseEventType type, gvec2 position, int index)
 	{
+		int previousTouchesSize = this->touches.size();
 		switch (type)
 		{
 		case AMOUSEEVT_DOWN:
@@ -199,6 +200,11 @@ namespace april
 		}
 		if (this->multiTouchActive || this->touches.size() > 1)
 		{
+			if (!this->multiTouchActive && previousTouchesSize == 1)
+			{
+				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
+				this->handleMouseEvent(AMOUSEEVT_UP, gvec2(-10000.0f, -10000.0f), AMOUSEBTN_LEFT);
+			}
 			this->multiTouchActive = (this->touches.size() > 0);
 		}
 		else
