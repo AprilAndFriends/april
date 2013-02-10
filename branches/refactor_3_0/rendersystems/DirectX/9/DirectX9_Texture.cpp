@@ -31,7 +31,7 @@ namespace april
 	// TODO - refactor
 	extern harray<DirectX9_Texture*> gRenderTargets;
 
-	DirectX9_Texture::DirectX9_Texture(chstr filename) : Texture()
+	DirectX9_Texture::DirectX9_Texture(chstr filename) : DirectX_Texture()
 	{
 		this->filename = filename;
 		this->format = FORMAT_ARGB;
@@ -44,7 +44,7 @@ namespace april
 		hlog::write(april::logTag, "Creating DX9 texture: " + this->_getInternalName());
 	}
 
-	DirectX9_Texture::DirectX9_Texture(int w, int h, unsigned char* rgba) : Texture()
+	DirectX9_Texture::DirectX9_Texture(int w, int h, unsigned char* rgba) : DirectX_Texture()
 	{
 		this->filename = "";
 		this->format = FORMAT_ARGB;
@@ -80,7 +80,7 @@ namespace april
 		delete [] bgra;
 	}
 	
-	DirectX9_Texture::DirectX9_Texture(int w, int h, Texture::Format format, Texture::Type type, Color color) : Texture()
+	DirectX9_Texture::DirectX9_Texture(int w, int h, Texture::Format format, Texture::Type type, Color color) : DirectX_Texture()
 	{
 		this->filename = "";
 		this->format = format;

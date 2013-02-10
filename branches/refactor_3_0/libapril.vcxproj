@@ -199,8 +199,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGL|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_OPENGL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGL1;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -225,8 +225,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGL|Android'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ANDROID;_ANDROID_JNI;APRIL_EXPORTS;_OPENGL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;../include;../include/zlib;include/april;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_ANDROID;_ANDROID_JNI;APRIL_EXPORTS;_OPENGL;_OPENGL1;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -254,7 +254,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES1|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -280,7 +280,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES1|Android'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;../include;../include/zlib;include/april;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_ANDROID;_ANDROID_JNI;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -311,8 +311,8 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_OPENGL;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGL1;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level3</WarningLevel>
@@ -339,8 +339,8 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ANDROID;_ANDROID_JNI;APRIL_EXPORTS;_OPENGL;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;../include;../include/zlib;include/april;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_ANDROID;_ANDROID_JNI;APRIL_EXPORTS;_OPENGL;_OPENGL1;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level3</WarningLevel>
@@ -365,7 +365,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -393,7 +393,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;../include;../include/zlib;include/april;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_ANDROID;_ANDROID_JNI;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -419,8 +419,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_DIRECTX9;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -447,8 +447,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9|Android'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ANDROID;_ANDROID_JNI;APRIL_EXPORTS;_DIRECTX9;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;../include;../include/zlib;include/april;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_ANDROID;_ANDROID_JNI;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -479,8 +479,8 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_DIRECTX9;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN32;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level3</WarningLevel>
@@ -507,8 +507,8 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ANDROID;_ANDROID_JNI;APRIL_EXPORTS;_DIRECTX9;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./src;windowsystems/AndroidJNI;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;../include;../include/zlib;include/april;include;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_ANDROID;_ANDROID_JNI;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WarningLevel>Level3</WarningLevel>
@@ -534,13 +534,23 @@
     <ClCompile Include="platforms\Android_Platform.cpp" />
     <ClCompile Include="platforms\Win32_main.cpp" />
     <ClCompile Include="platforms\Win32_Platform.cpp" />
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_PixelShader.cpp" />
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_RenderSystem.cpp" />
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_Texture.cpp" />
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_VertexShader.cpp" />
+    <ClCompile Include="rendersystems\DirectX\DirectX_RenderSystem.cpp" />
+    <ClCompile Include="rendersystems\DirectX\DirectX_Texture.cpp" />
+    <ClCompile Include="rendersystems\OpenGL\1\OpenGL1_RenderSystem.cpp" />
+    <ClCompile Include="rendersystems\OpenGL\1\OpenGL1_Texture.cpp" />
+    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp" />
+    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp" />
+    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp" />
+    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_Texture.cpp" />
     <ClCompile Include="src\april.cpp" />
     <ClCompile Include="src\aprilUtil.cpp" />
     <ClCompile Include="src\ImageJpg.cpp" />
     <ClCompile Include="src\ImageJpt.cpp" />
     <ClCompile Include="src\ImagePng.cpp" />
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_PixelShader.cpp" />
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_VertexShader.cpp" />
     <ClCompile Include="src\Color.cpp" />
     <ClCompile Include="src\Image.cpp" />
     <ClCompile Include="src\Platform.cpp" />
@@ -552,8 +562,6 @@
     <ClCompile Include="src\TimerWin.cpp" />
     <ClCompile Include="src\VertexShader.cpp" />
     <ClCompile Include="src\Window.cpp" />
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_RenderSystem.cpp" />
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_Texture.cpp" />
     <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp" />
     <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp" />
     <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Window.cpp" />
@@ -578,10 +586,18 @@
     <ClInclude Include="include\april\Timer.h" />
     <ClInclude Include="include\april\VertexShader.h" />
     <ClInclude Include="include\april\Window.h" />
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_PixelShader.h" />
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_VertexShader.h" />
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_RenderSystem.h" />
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_Texture.h" />
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_PixelShader.h" />
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_RenderSystem.h" />
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_Texture.h" />
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_VertexShader.h" />
+    <ClInclude Include="rendersystems\DirectX\DirectX_RenderSystem.h" />
+    <ClInclude Include="rendersystems\DirectX\DirectX_Texture.h" />
+    <ClInclude Include="rendersystems\OpenGL\1\OpenGL1_RenderSystem.h" />
+    <ClInclude Include="rendersystems\OpenGL\1\OpenGL1_Texture.h" />
+    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h" />
+    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h" />
+    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h" />
+    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_Texture.h" />
     <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h" />
     <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h" />
     <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Window.h" />

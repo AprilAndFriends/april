@@ -28,8 +28,11 @@
 #ifdef _DIRECTX11
 #include "DirectX11_RenderSystem.h"
 #endif
-#ifdef _OPENGL
-#include "OpenGL_RenderSystem.h"
+#ifdef _OPENGL1
+#include "OpenGL1_RenderSystem.h"
+#endif
+#ifdef _OPENGLES1
+#include "OpenGLES1_RenderSystem.h"
 #endif
 #include "RenderSystem.h"
 #include "Window.h"
@@ -55,8 +58,10 @@
 	#define RS_INTERNAL_DEFAULT RS_DIRECTX9
 	#elif defined(_DIRECTX11)
 	#define RS_INTERNAL_DEFAULT RS_DIRECTX11
-	#elif defined(_OPENGL)
-	#define RS_INTERNAL_DEFAULT RS_OPENGL
+	#elif defined(_OPENGL1)
+	#define RS_INTERNAL_DEFAULT RS_OPENGL1
+	#elif defined(_OPENGLES1)
+	#define RS_INTERNAL_DEFAULT RS_OPENGLES1
 	#else
 	#warning "no rendersystems specified"
 	#endif
@@ -66,25 +71,25 @@
 	#define WS_INTERNAL_DEFAULT WS_WINRT
 	#endif
 #elif defined(__APPLE__) && !TARGET_OS_IPHONE
-	#define RS_INTERNAL_DEFAULT RS_OPENGL
+	#define RS_INTERNAL_DEFAULT RS_OPENGL1
 	#define WS_INTERNAL_DEFAULT WS_SDL
 	#ifndef HAVE_SDL
 	#warning "no windowsystems specified"
 	#endif
 #elif defined(__APPLE__) && TARGET_OS_IPHONE
-	#define RS_INTERNAL_DEFAULT RS_OPENGL
+	#define RS_INTERNAL_DEFAULT RS_OPENGLES1
 	#define WS_INTERNAL_DEFAULT WS_IOS
 	#if !TARGET_OS_IPHONE
 	#warning "no windowsystems specified"
 	#endif
 #elif defined(_UNIX)
-	#define RS_INTERNAL_DEFAULT RS_OPENGL
+	#define RS_INTERNAL_DEFAULT RS_OPENGL1
 	#define WS_INTERNAL_DEFAULT WS_SDL
 	#ifndef HAVE_SDL
 	#warning "no windowsystems specified"
 	#endif
 #elif defined(_ANDROID)
-	#define RS_INTERNAL_DEFAULT RS_OPENGL
+	#define RS_INTERNAL_DEFAULT RS_OPENGLES1
 	#define WS_INTERNAL_DEFAULT WS_ANDROIDJNI
 #else
 	#warning "no platform specified"
@@ -133,10 +138,16 @@ namespace april
 			april::rendersys = new DirectX11_RenderSystem();
 		}
 #endif
-#ifdef _OPENGL
-		if (april::rendersys == NULL && renderSystem == RS_OPENGL)
+#ifdef _OPENGL1
+		if (april::rendersys == NULL && renderSystem == RS_OPENGL1)
 		{
-			april::rendersys = new OpenGL_RenderSystem();
+			april::rendersys = new OpenGL1_RenderSystem();
+		}
+#endif
+#ifdef _OPENGLES1
+		if (april::rendersys == NULL && renderSystem == RS_OPENGLES1)
+		{
+			april::rendersys = new OpenGLES1_RenderSystem();
 		}
 #endif
 		// creating the windowsystem

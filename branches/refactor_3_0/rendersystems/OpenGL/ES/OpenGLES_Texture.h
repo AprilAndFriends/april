@@ -12,22 +12,23 @@
 /// 
 /// Defines a generic OpenGL texture.
 
-#ifdef _OPENGL
-#ifndef APRIL_OPENGL_TEXTURE_H
-#define APRIL_OPENGL_TEXTURE_H
+#ifdef _OPENGLES
+#ifndef APRIL_OPENGLES_TEXTURE_H
+#define APRIL_OPENGLES_TEXTURE_H
 
-#include "Texture.h"
+#include "OpenGL_Texture.h"
 
 namespace april
 {
-	class OpenGL_Texture : public Texture
+	class OpenGLES_Texture : public OpenGL_Texture
 	{
 	public:
-		OpenGL_Texture();
-		~OpenGL_Texture();
+		OpenGLES_Texture();
+		~OpenGLES_Texture();
 
 	};
 
 }
+
 #endif
 #endif

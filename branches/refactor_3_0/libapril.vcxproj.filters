@@ -24,14 +24,8 @@
     <Filter Include="Resource Files">
       <UniqueIdentifier>{bc3abb83-0c68-456a-ae46-f6fe13ebf76e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\rendersystems\DirectX9">
-      <UniqueIdentifier>{dfe5826f-1d2c-4f6d-8d5f-656d36961488}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\rendersystems\OpenGL">
       <UniqueIdentifier>{43b75f5a-a897-45bc-a6cd-0f649765424b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\rendersystems\DirectX9">
-      <UniqueIdentifier>{edfbadb8-e07f-4516-9ad6-479af740625c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\rendersystems\OpenGL">
       <UniqueIdentifier>{67c8116e-f076-46fd-94f7-0c597f17b27f}</UniqueIdentifier>
@@ -63,6 +57,36 @@
     <Filter Include="Source Files\windowsystems\WinRT">
       <UniqueIdentifier>{e26cc618-a92f-4d76-afb3-6284c09394ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX">
+      <UniqueIdentifier>{11331481-3ba0-4096-8be2-76d6ff673b74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\DirectX">
+      <UniqueIdentifier>{820198e5-62b0-4874-97d0-3c863591b045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\DirectX\9">
+      <UniqueIdentifier>{dfe5826f-1d2c-4f6d-8d5f-656d36961488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX\9">
+      <UniqueIdentifier>{edfbadb8-e07f-4516-9ad6-479af740625c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL\1">
+      <UniqueIdentifier>{9928026c-27fb-4619-aa07-f9c4c33d2e8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL\1">
+      <UniqueIdentifier>{ad9edae5-3d49-4bdc-8769-332bd86200d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL\1\ES">
+      <UniqueIdentifier>{ac7c9ce1-886b-414f-a4e8-fadb84db647f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL\1\ES\1">
+      <UniqueIdentifier>{8646ebab-15a0-4b45-8f1c-7f0f44be853b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL\1\ES">
+      <UniqueIdentifier>{97aedb7a-1691-4b2f-9b86-46b2216a8a5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL\1\ES\1">
+      <UniqueIdentifier>{edd447d4-a504-4c48-b697-0c95a178fb75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -88,18 +112,6 @@
     </ClCompile>
     <ClCompile Include="src\VertexShader.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_PixelShader.cpp">
-      <Filter>Source Files\rendersystems\DirectX9</Filter>
-    </ClCompile>
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_RenderSystem.cpp">
-      <Filter>Source Files\rendersystems\DirectX9</Filter>
-    </ClCompile>
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_Texture.cpp">
-      <Filter>Source Files\rendersystems\DirectX9</Filter>
-    </ClCompile>
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_VertexShader.cpp">
-      <Filter>Source Files\rendersystems\DirectX9</Filter>
     </ClCompile>
     <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
@@ -155,6 +167,42 @@
     <ClCompile Include="src\ImageJpt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\DirectX_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\DirectX_Texture.cpp">
+      <Filter>Source Files\rendersystems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_PixelShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX\9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\DirectX\9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_Texture.cpp">
+      <Filter>Source Files\rendersystems\DirectX\9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_VertexShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX\9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\1\OpenGL1_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\1</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\1\OpenGL1_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\1</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\1\ES</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\1\ES</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\1\ES\1</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\1\ES\1</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -190,18 +238,6 @@
     <ClInclude Include="include\april\VertexShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_PixelShader.h">
-      <Filter>Header Files\rendersystems\DirectX9</Filter>
-    </ClInclude>
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_RenderSystem.h">
-      <Filter>Header Files\rendersystems\DirectX9</Filter>
-    </ClInclude>
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_Texture.h">
-      <Filter>Header Files\rendersystems\DirectX9</Filter>
-    </ClInclude>
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_VertexShader.h">
-      <Filter>Header Files\rendersystems\DirectX9</Filter>
-    </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h">
       <Filter>Header Files\rendersystems\OpenGL</Filter>
     </ClInclude>
@@ -234,6 +270,42 @@
     </ClInclude>
     <ClInclude Include="windowsystems\WinRT\WinRT_Window.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\DirectX_RenderSystem.h">
+      <Filter>Header Files\rendersystems\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\DirectX_Texture.h">
+      <Filter>Header Files\rendersystems\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_PixelShader.h">
+      <Filter>Header Files\rendersystems\DirectX\9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_RenderSystem.h">
+      <Filter>Header Files\rendersystems\DirectX\9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_Texture.h">
+      <Filter>Header Files\rendersystems\DirectX\9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_VertexShader.h">
+      <Filter>Header Files\rendersystems\DirectX\9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\1\OpenGL1_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL\1</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\1\OpenGL1_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL\1</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL\1\ES\1</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL\1\ES\1</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL\1\ES</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL\1\ES</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

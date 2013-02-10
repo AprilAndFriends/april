@@ -93,7 +93,7 @@ namespace april
 		return 0;
 	}
 	
-	DirectX9_RenderSystem::DirectX9_RenderSystem() : RenderSystem(), zBufferEnabled(false),
+	DirectX9_RenderSystem::DirectX9_RenderSystem() : DirectX_RenderSystem(), zBufferEnabled(false),
 		textureCoordinatesEnabled(false), colorEnabled(false), d3d(NULL), d3dDevice(NULL),
 		activeTexture(NULL), renderTarget(NULL), backBuffer(NULL)
 	{
@@ -107,7 +107,7 @@ namespace april
 
 	bool DirectX9_RenderSystem::create(chstr options)
 	{
-		if (!RenderSystem::create(options))
+		if (!DirectX_RenderSystem::create(options))
 		{
 			return false;
 		}
@@ -130,7 +130,7 @@ namespace april
 
 	bool DirectX9_RenderSystem::destroy()
 	{
-		if (!RenderSystem::destroy())
+		if (!DirectX_RenderSystem::destroy())
 		{
 			return false;
 		}
@@ -459,7 +459,7 @@ namespace april
 
 	void DirectX9_RenderSystem::setResolution(int w, int h)
 	{
-		RenderSystem::setResolution(w, h);
+		DirectX_RenderSystem::setResolution(w, h);
 		this->backBuffer->Release();
 		this->backBuffer = NULL;
 		this->d3dpp->BackBufferWidth = april::window->getWidth();

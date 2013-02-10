@@ -16,7 +16,7 @@
 #ifndef APRIL_DIRECTX9_TEXTURE_H
 #define APRIL_DIRECTX9_TEXTURE_H
 
-#include "RenderSystem.h"
+#include "DirectX_Texture.h"
 
 struct IDirect3DTexture9;
 struct IDirect3DSurface9;
@@ -25,7 +25,7 @@ namespace april
 {
 	class DirectX9_RenderSystem;
 
-	class DirectX9_Texture : public Texture
+	class DirectX9_Texture : public DirectX_Texture
 	{
 	public:
 		friend class DirectX9_RenderSystem;

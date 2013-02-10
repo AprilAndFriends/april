@@ -10,21 +10,21 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a generic OpenGL texture.
+/// Defines a generic DirectX render system.
 
-#ifdef _OPENGL
-#ifndef APRIL_OPENGL_TEXTURE_H
-#define APRIL_OPENGL_TEXTURE_H
+#ifdef _DIRECTX
+#ifndef APRIL_DIRECTX_RENDER_SYSTEM_H
+#define APRIL_DIRECTX_RENDER_SYSTEM_H
 
-#include "Texture.h"
+#include "RenderSystem.h"
 
 namespace april
 {
-	class OpenGL_Texture : public Texture
+	class DirectX_RenderSystem : public RenderSystem
 	{
 	public:
-		OpenGL_Texture();
-		~OpenGL_Texture();
+		DirectX_RenderSystem();
+		~DirectX_RenderSystem();
 
 	};
 

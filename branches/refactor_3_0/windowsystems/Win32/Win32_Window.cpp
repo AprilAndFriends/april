@@ -193,7 +193,10 @@ namespace april
 	void Win32_Window::presentFrame()
 	{
 #ifdef _OPENGL
-		if (april::rendersys->getName() == APRIL_RS_OPENGL)
+		harray<hstr> renderSystems;
+		renderSystems += APRIL_RS_OPENGL1;
+		renderSystems += APRIL_RS_OPENGLES1;
+		if (renderSystems.contains(april::rendersys->getName()))
 		{
 			SwapBuffers(hDC);
 		}

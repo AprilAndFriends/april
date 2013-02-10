@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="libapril"
 	ProjectGUID="{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}"
 	RootNamespace="libapril"
@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGL1;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -115,8 +115,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGL1;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -188,8 +188,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX9;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -263,8 +263,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX9;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -336,7 +336,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
 				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -411,7 +411,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
 				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -485,11 +485,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\ImageJpt.cpp"
+				RelativePath=".\src\ImageJpg.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\ImageJpg.cpp"
+				RelativePath=".\src\ImageJpt.cpp"
 				>
 			</File>
 			<File
@@ -560,6 +560,38 @@
 				Name="rendersystems"
 				>
 				<Filter
+					Name="DirectX"
+					>
+					<File
+						RelativePath=".\rendersystems\DirectX\DirectX_RenderSystem.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\rendersystems\DirectX\DirectX_Texture.cpp"
+						>
+					</File>
+					<Filter
+						Name="9"
+						>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_PixelShader.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_RenderSystem.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_Texture.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_VertexShader.cpp"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
 					Name="OpenGL"
 					>
 					<File
@@ -570,26 +602,42 @@
 						RelativePath=".\rendersystems\OpenGL\OpenGL_Texture.cpp"
 						>
 					</File>
-				</Filter>
-				<Filter
-					Name="DirectX9"
-					>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_PixelShader.cpp"
+					<Filter
+						Name="1"
 						>
-					</File>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_RenderSystem.cpp"
+						<File
+							RelativePath=".\rendersystems\OpenGL\1\OpenGL1_RenderSystem.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\OpenGL\1\OpenGL1_Texture.cpp"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="ES"
 						>
-					</File>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_Texture.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_VertexShader.cpp"
-						>
-					</File>
+						<File
+							RelativePath=".\rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\OpenGL\ES\OpenGLES_Texture.cpp"
+							>
+						</File>
+						<Filter
+							Name="1"
+							>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp"
+								>
+							</File>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp"
+								>
+							</File>
+						</Filter>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter
@@ -716,26 +764,74 @@
 						RelativePath=".\rendersystems\OpenGL\OpenGL_Texture.h"
 						>
 					</File>
+					<Filter
+						Name="1"
+						>
+						<File
+							RelativePath=".\rendersystems\OpenGL\1\OpenGL1_RenderSystem.h"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\OpenGL\1\OpenGL1_Texture.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="ES"
+						>
+						<File
+							RelativePath=".\rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\OpenGL\ES\OpenGLES_Texture.h"
+							>
+						</File>
+						<Filter
+							Name="1"
+							>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h"
+								>
+							</File>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h"
+								>
+							</File>
+						</Filter>
+					</Filter>
 				</Filter>
 				<Filter
-					Name="DirectX9"
+					Name="DirectX"
 					>
 					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_PixelShader.h"
+						RelativePath=".\rendersystems\DirectX\DirectX_RenderSystem.h"
 						>
 					</File>
 					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_RenderSystem.h"
+						RelativePath=".\rendersystems\DirectX\DirectX_Texture.h"
 						>
 					</File>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_Texture.h"
+					<Filter
+						Name="9"
 						>
-					</File>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_VertexShader.h"
-						>
-					</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_PixelShader.h"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_RenderSystem.h"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_Texture.h"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_VertexShader.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 		</Filter>

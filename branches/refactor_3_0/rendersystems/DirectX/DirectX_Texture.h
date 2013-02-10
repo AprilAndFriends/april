@@ -10,21 +10,21 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a generic OpenGL texture.
+/// Defines a generic DirectX texture.
 
-#ifdef _OPENGL
-#ifndef APRIL_OPENGL_TEXTURE_H
-#define APRIL_OPENGL_TEXTURE_H
+#ifdef _DIRECTX
+#ifndef APRIL_DIRECTX_TEXTURE_H
+#define APRIL_DIRECTX_TEXTURE_H
 
 #include "Texture.h"
 
 namespace april
 {
-	class OpenGL_Texture : public Texture
+	class DirectX_Texture : public Texture
 	{
 	public:
-		OpenGL_Texture();
-		~OpenGL_Texture();
+		DirectX_Texture();
+		~DirectX_Texture();
 
 	};
 

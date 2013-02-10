@@ -7,27 +7,20 @@
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
-/// 
-/// @section DESCRIPTION
-/// 
-/// Defines a generic OpenGL texture.
 
-#ifdef _OPENGL
-#ifndef APRIL_OPENGL_TEXTURE_H
-#define APRIL_OPENGL_TEXTURE_H
+#ifdef _DIRECTX
 
-#include "Texture.h"
+#include "DirectX_Texture.h"
 
 namespace april
 {
-	class OpenGL_Texture : public Texture
+	DirectX_Texture::DirectX_Texture() : Texture()
 	{
-	public:
-		OpenGL_Texture();
-		~OpenGL_Texture();
+	}
 
-	};
+	DirectX_Texture::~DirectX_Texture()
+	{
+	}
 
 }
-#endif
 #endif

@@ -1,5 +1,6 @@
 /// @file
 /// @author  Kresimir Spes
+/// @author  Ivan Vucica
 /// @author  Boris Mikic
 /// @version 2.5
 /// 
@@ -7,27 +8,20 @@
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
-/// 
-/// @section DESCRIPTION
-/// 
-/// Defines a generic OpenGL texture.
 
-#ifdef _OPENGL
-#ifndef APRIL_OPENGL_TEXTURE_H
-#define APRIL_OPENGL_TEXTURE_H
+#ifdef _OPENGLES
 
-#include "Texture.h"
+#include "OpenGLES_Texture.h"
 
 namespace april
 {
-	class OpenGL_Texture : public Texture
+	OpenGLES_Texture::OpenGLES_Texture() : OpenGL_Texture()
 	{
-	public:
-		OpenGL_Texture();
-		~OpenGL_Texture();
+	}
 
-	};
+	OpenGLES_Texture::~OpenGLES_Texture()
+	{
+	}
 
 }
-#endif
 #endif

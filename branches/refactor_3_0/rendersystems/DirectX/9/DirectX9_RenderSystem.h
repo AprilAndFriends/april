@@ -18,7 +18,7 @@
 
 #include <hltypes/hplatform.h>
 
-#include "RenderSystem.h"
+#include "DirectX_RenderSystem.h"
 
 struct _D3DPRESENT_PARAMETERS_;
 struct IDirect3D9;
@@ -33,7 +33,7 @@ namespace april
 	class Image;
 	class Window;
 
-	class DirectX9_RenderSystem : public RenderSystem
+	class DirectX9_RenderSystem : public DirectX_RenderSystem
 	{
 	public:
 		friend class DirectX9_PixelShader;
