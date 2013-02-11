@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.5
+// version 2.56
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
