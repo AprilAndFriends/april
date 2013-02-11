@@ -131,7 +131,7 @@ namespace april
 			hstr name = cname;
 			
 			info.name = name; // defaults for unknown devices
-			info.displayDpi = 0; // TODO
+			info.displayDpi = 0;
 			
 			UIScreen* mainScreen = [UIScreen mainScreen];
 			float scale = 1.0f;
@@ -253,10 +253,20 @@ namespace april
 			}
 			//else: i386 (iphone simulator) and possible future device types
 		}
-		// TODO
+		// iPhone simulator
 		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
 			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
+
+			int h = info.displayResolution.y;
+			if (h == 320) // iPhone3GS
+				info.displayDpi = 163;
+			else if (h == 768) // iPad 1/2
+				info.displayDpi = 132;
+			else if (h == 640) // iPhone4+
+				info.displayDpi = 326;
+			else if (h == 1536) // iPad3+
+				info.displayDpi = 256;
 		}
 		return info;
 	}
