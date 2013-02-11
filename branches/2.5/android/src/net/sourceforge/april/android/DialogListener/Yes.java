@@ -1,6 +1,6 @@
 package net.sourceforge.april.android.DialogListener;
 
-// version 2.53
+// version 2.56
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;

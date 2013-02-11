@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.55
+// version 2.56
 
 import android.app.Dialog;
 import android.content.pm.ActivityInfo;
