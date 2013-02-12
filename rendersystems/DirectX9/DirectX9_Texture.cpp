@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.56
 /// 
 /// @section LICENSE
 /// 
@@ -22,12 +22,13 @@
 #include "ImageSource.h"
 
 #define APRIL_D3D_DEVICE (((DirectX9_RenderSystem*)april::rendersys)->d3dDevice)
+// using w, h directly because of problems with locking proper regions if using w-1, h-1
 #define _CREATE_RECT(name, x, y, w, h) \
 	RECT name; \
 	name.left = x; \
 	name.top = y; \
-	name.right = x + w - 1; \
-	name.bottom = y + h - 1;
+	name.right = x + w; \
+	name.bottom = y + h;
 
 namespace april
 {
