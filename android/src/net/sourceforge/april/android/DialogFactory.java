@@ -57,7 +57,7 @@ public class DialogFactory
 		default:
 			break;
 		}
-		if (Build.VERSION.SDK_INT >= 11) // use DialogFragment if available, because later APIs don't work any other way
+		if (Build.VERSION.SDK_INT >= 16) // use DialogFragment on API level 16 or higher, earlier APIs can have problems
 		{
 			DialogFragment dialogFragment = new DialogFragment();
 			dialogFragment.show(NativeInterface.Activity.getFragmentManager(), "april-dialog");
