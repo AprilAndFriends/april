@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 2.56
 /// 
 /// @section LICENSE
 /// 
@@ -100,7 +100,7 @@ namespace april
 				glFormat = internalFormat = GL_ALPHA;
 				this->bpp = 1;
 				break;
-#ifndef _ANDROID
+#if !defined(_ANDROID) && !defined(_WIN32)
 			case FORMAT_BGRA:
 #ifndef __APPLE__
 				glFormat = GL_BGRA;
@@ -287,7 +287,7 @@ namespace april
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
-#ifndef _ANDROID
+#if !defined(_ANDROID) && !defined(_WIN32)
 			if (this->format == FORMAT_BGRA)
 			{
 #ifndef __APPLE__
@@ -335,7 +335,7 @@ namespace april
 		int glFormat = GL_RGBA;
 		if (source->bpp == 4)
 		{
-#ifndef _ANDROID
+#if !defined(_ANDROID) && !defined(_WIN32)
 			if (this->format == FORMAT_BGRA)
 			{
 #ifndef __APPLE__
@@ -411,7 +411,7 @@ namespace april
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
-#ifndef _ANDROID
+#if !defined(_ANDROID) && !defined(_WIN32)
 			if (this->format == FORMAT_BGRA)
 			{
 #ifndef __APPLE__
@@ -449,7 +449,7 @@ namespace april
 
 		if (this->bpp == 4)
 		{
-#ifndef _ANDROID
+#if !defined(_ANDROID) && !defined(_WIN32)
 			if (this->format == FORMAT_BGRA)
 			{
 #ifndef __APPLE__
