@@ -21,6 +21,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		// view has to be properly focusable to be able to process input
 		this.setFocusable(true);
 		this.setFocusableInTouchMode(true);
+		this.setId(0x0513BEEF); // who doesn't love half a kg of beef?
 	}
 	
 	@Override
