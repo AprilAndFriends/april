@@ -14,9 +14,10 @@ import net.sourceforge.april.android.DialogListener.Yes;
 
 public class DialogFactory
 {
-	static protected AlertDialog.Builder dialogBuilder = null;
+	protected static AlertDialog.Builder dialogBuilder = null;
+	protected static boolean useDialogFragment = true;
 	
-	static public void create(String title, String text, String ok, String yes, String no, String cancel, int iconId)
+	public static void create(String title, String text, String ok, String yes, String no, String cancel, int iconId)
 	{
 		DialogFactory.dialogBuilder = new AlertDialog.Builder(NativeInterface.Activity);
 		DialogFactory.dialogBuilder.setTitle(title != null ? title : "");
@@ -57,12 +58,20 @@ public class DialogFactory
 		default:
 			break;
 		}
-		if (Build.VERSION.SDK_INT >= 16) // use DialogFragment on API level 16 or higher, earlier APIs can have problems
+		if (DialogFactory.useDialogFragment)
 		{
-			DialogFragment dialogFragment = new DialogFragment();
-			dialogFragment.show(NativeInterface.Activity.getFragmentManager(), "april-dialog");
+			try
+			{
+				DialogFragment dialogFragment = new DialogFragment();
+				dialogFragment.show(NativeInterface.Activity.getFragmentManager(), "april-dialog");
+			}
+			catch (java.lang.Throwable e)
+			{
+				android.util.Log.w("april", "This Android OS version does not support DialogFragment, defaulting to legacy Activity.showDialog().");
+				DialogFactory.useDialogFragment = false;
+			}
 		}
-		else
+		if (!DialogFactory.useDialogFragment)
 		{
 			NativeInterface.Activity.runOnUiThread(new Runnable()
 			{
@@ -74,7 +83,7 @@ public class DialogFactory
 		}
 	}
 	
-	static public Dialog show()
+	public static Dialog show()
 	{
 		return DialogFactory.dialogBuilder.create();
 	}
