@@ -211,7 +211,14 @@ public class Activity extends android.app.Activity
 		super.onLowMemory();
 	}
 	
+	@Override
 	protected Dialog onCreateDialog(int id)
+	{
+		return DialogFactory.show();
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id, Bundle bundle)
 	{
 		return DialogFactory.show();
 	}
