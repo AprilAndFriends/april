@@ -16,6 +16,7 @@ public class DialogFactory
 {
 	protected static AlertDialog.Builder dialogBuilder = null;
 	protected static boolean useDialogFragment = true;
+	protected static int dialogIndex = 0;
 	
 	public static void create(String title, String text, String ok, String yes, String no, String cancel, int iconId)
 	{
@@ -77,7 +78,8 @@ public class DialogFactory
 			{
 				public void run()
 				{
-					NativeInterface.Activity.showDialog(0);
+					NativeInterface.Activity.showDialog(DialogFactory.dialogIndex);
+					DialogFactory.dialogIndex++;
 				}
 			});
 		}
