@@ -10,33 +10,25 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a generic OpenGL texture.
+/// Defines an OpenGLES2 specific texture.
 
-#ifdef _OPENGL
-#ifndef APRIL_OPENGL_TEXTURE_H
-#define APRIL_OPENGL_TEXTURE_H
+#ifdef _OPENGLES2
+#ifndef APRIL_OPENGLES2_TEXTURE_H
+#define APRIL_OPENGLES2_TEXTURE_H
 
-#include "Texture.h"
+#include "OpenGLES_Texture.h"
 
 namespace april
 {
-	class OpenGL_RenderSystem;
-
-	class OpenGL_Texture : public Texture
+	class OpenGLES2_Texture : public OpenGLES_Texture
 	{
 	public:
-		friend class OpenGL_RenderSystem;
-
-		OpenGL_Texture();
-		~OpenGL_Texture();
-
-		void unload();
-
-	protected:
-		unsigned int textureId;
+		OpenGLES2_Texture();
+		~OpenGLES2_Texture();
 
 	};
 
 }
+
 #endif
 #endif

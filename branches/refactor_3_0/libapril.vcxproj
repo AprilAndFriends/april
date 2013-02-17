@@ -723,6 +723,8 @@
     <ClCompile Include="rendersystems\OpenGL\1\OpenGL1_Texture.cpp" />
     <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp" />
     <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp" />
+    <ClCompile Include="rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.cpp" />
+    <ClCompile Include="rendersystems\OpenGL\ES\2\OpenGLES2_Texture.cpp" />
     <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp" />
     <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_Texture.cpp" />
     <ClCompile Include="rendersystems\OpenGL\OpenGL_State.cpp" />
@@ -790,6 +792,8 @@
     <ClInclude Include="rendersystems\OpenGL\1\OpenGL1_Texture.h" />
     <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h" />
     <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h" />
+    <ClInclude Include="rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.h" />
+    <ClInclude Include="rendersystems\OpenGL\ES\2\OpenGLES2_Texture.h" />
     <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h" />
     <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_Texture.h" />
     <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h" />

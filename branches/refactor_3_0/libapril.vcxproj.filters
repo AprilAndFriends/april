@@ -75,16 +75,16 @@
     <Filter Include="Header Files\rendersystems\OpenGL\1">
       <UniqueIdentifier>{ad9edae5-3d49-4bdc-8769-332bd86200d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\rendersystems\OpenGL\1\ES">
+    <Filter Include="Source Files\rendersystems\OpenGL\ES">
       <UniqueIdentifier>{ac7c9ce1-886b-414f-a4e8-fadb84db647f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\rendersystems\OpenGL\1\ES\1">
+    <Filter Include="Source Files\rendersystems\OpenGL\ES\1">
       <UniqueIdentifier>{8646ebab-15a0-4b45-8f1c-7f0f44be853b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\rendersystems\OpenGL\1\ES">
+    <Filter Include="Header Files\rendersystems\OpenGL\ES">
       <UniqueIdentifier>{97aedb7a-1691-4b2f-9b86-46b2216a8a5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\rendersystems\OpenGL\1\ES\1">
+    <Filter Include="Header Files\rendersystems\OpenGL\ES\1">
       <UniqueIdentifier>{edd447d4-a504-4c48-b697-0c95a178fb75}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\delegates">
@@ -98,6 +98,12 @@
     </Filter>
     <Filter Include="Source Files\timers">
       <UniqueIdentifier>{606d267a-8075-4528-a50e-ff0afd0dae93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL\ES\2">
+      <UniqueIdentifier>{f6e5fbbc-2ee1-4d75-bee2-ee0be9b1e3d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL\ES\2">
+      <UniqueIdentifier>{34ab2985-e17c-4c50-ad9d-0761eccf6fa5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -186,16 +192,16 @@
       <Filter>Source Files\rendersystems\OpenGL\1</Filter>
     </ClCompile>
     <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp">
-      <Filter>Source Files\rendersystems\OpenGL\1\ES</Filter>
+      <Filter>Source Files\rendersystems\OpenGL\ES</Filter>
     </ClCompile>
     <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_Texture.cpp">
-      <Filter>Source Files\rendersystems\OpenGL\1\ES</Filter>
+      <Filter>Source Files\rendersystems\OpenGL\ES</Filter>
     </ClCompile>
     <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp">
-      <Filter>Source Files\rendersystems\OpenGL\1\ES\1</Filter>
+      <Filter>Source Files\rendersystems\OpenGL\ES\1</Filter>
     </ClCompile>
     <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp">
-      <Filter>Source Files\rendersystems\OpenGL\1\ES\1</Filter>
+      <Filter>Source Files\rendersystems\OpenGL\ES\1</Filter>
     </ClCompile>
     <ClCompile Include="rendersystems\OpenGL\OpenGL_State.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
@@ -238,6 +244,12 @@
     </ClCompile>
     <ClCompile Include="src\delegates\TouchDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES\2</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\2\OpenGLES2_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES\2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -329,16 +341,16 @@
       <Filter>Header Files\rendersystems\OpenGL\1</Filter>
     </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h">
-      <Filter>Header Files\rendersystems\OpenGL\1\ES\1</Filter>
+      <Filter>Header Files\rendersystems\OpenGL\ES\1</Filter>
     </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h">
-      <Filter>Header Files\rendersystems\OpenGL\1\ES\1</Filter>
+      <Filter>Header Files\rendersystems\OpenGL\ES\1</Filter>
     </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h">
-      <Filter>Header Files\rendersystems\OpenGL\1\ES</Filter>
+      <Filter>Header Files\rendersystems\OpenGL\ES</Filter>
     </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_Texture.h">
-      <Filter>Header Files\rendersystems\OpenGL\1\ES</Filter>
+      <Filter>Header Files\rendersystems\OpenGL\ES</Filter>
     </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\OpenGL_State.h">
       <Filter>Header Files\rendersystems\OpenGL</Filter>
@@ -366,6 +378,12 @@
     </ClInclude>
     <ClInclude Include="include\april\TouchDelegate.h">
       <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES\2</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\2\OpenGLES2_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES\2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

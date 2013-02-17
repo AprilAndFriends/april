@@ -50,7 +50,6 @@ namespace april
 		this->height = 0;
 		this->bpp = 4;
 		this->filename = filename;
-		this->textureId = 0;
 		this->manualBuffer = NULL;
 		hlog::write(april::logTag, "Creating GL texture: " + this->_getInternalName());
 	}
@@ -224,18 +223,6 @@ namespace april
 		}
 		return true;
 	}
-
-	void OpenGLES1_Texture::unload()
-	{
-		if (this->textureId != 0)
-		{
-			hlog::write(april::logTag, "Unloading GL texture: " + this->_getInternalName());
-			glDeleteTextures(1, &this->textureId);
-			this->textureId = 0;
-		}
-	}
-
-	/////////////////////////////////////////////////////////////
 
 	void OpenGLES1_Texture::clear()
 	{

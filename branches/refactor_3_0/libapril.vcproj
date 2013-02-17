@@ -769,6 +769,18 @@
 								>
 							</File>
 						</Filter>
+						<Filter
+							Name="2"
+							>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.cpp"
+								>
+							</File>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\2\OpenGLES2_Texture.cpp"
+								>
+							</File>
+						</Filter>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -992,6 +1004,18 @@
 							</File>
 							<File
 								RelativePath=".\rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="2"
+							>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.h"
+								>
+							</File>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\2\OpenGLES2_Texture.h"
 								>
 							</File>
 						</Filter>

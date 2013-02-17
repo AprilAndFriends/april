@@ -12,7 +12,7 @@
 /// 
 /// Defines an OpenGL1 specific texture.
 
-#if defined(_OPENGL1) || (_OPENGLES)
+#ifdef _OPENGL1
 #ifndef APRIL_OPENGL1_TEXTURE_H
 #define APRIL_OPENGL1_TEXTURE_H
 
@@ -45,7 +45,6 @@ namespace april
 		OpenGL1_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
 		~OpenGL1_Texture();
 		bool load();
-		void unload();
 
 		bool isLoaded();
 
@@ -63,7 +62,6 @@ namespace april
 		bool copyPixelData(unsigned char** output);
 
 	protected:
-		GLuint textureId;
 		unsigned char* manualBuffer;
 
 		void _setCurrentTexture();

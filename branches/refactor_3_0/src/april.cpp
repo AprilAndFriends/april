@@ -34,6 +34,9 @@
 #ifdef _OPENGLES1
 #include "OpenGLES1_RenderSystem.h"
 #endif
+#ifdef _OPENGLES2
+#include "OpenGLES2_RenderSystem.h"
+#endif
 #include "RenderSystem.h"
 #include "Window.h"
 #ifdef _ANDROID
@@ -55,42 +58,48 @@
 
 #ifdef _WIN32
 	#ifdef _DIRECTX9
-	#define RS_INTERNAL_DEFAULT RS_DIRECTX9
+		#define RS_INTERNAL_DEFAULT RS_DIRECTX9
 	#elif defined(_DIRECTX11)
-	#define RS_INTERNAL_DEFAULT RS_DIRECTX11
+		#define RS_INTERNAL_DEFAULT RS_DIRECTX11
 	#elif defined(_OPENGL1)
-	#define RS_INTERNAL_DEFAULT RS_OPENGL1
+		#define RS_INTERNAL_DEFAULT RS_OPENGL1
 	#elif defined(_OPENGLES1)
-	#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+	#elif defined(_OPENGLES2)
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
 	#endif
 	#if !_HL_WINRT
-	#define WS_INTERNAL_DEFAULT WS_WIN32
+		#define WS_INTERNAL_DEFAULT WS_WIN32
 	#else
-	#define WS_INTERNAL_DEFAULT WS_WINRT
+		#define WS_INTERNAL_DEFAULT WS_WINRT
 	#endif
 #elif defined(__APPLE__) && !TARGET_OS_IPHONE
-	#define RS_INTERNAL_DEFAULT RS_OPENGL1
+	#ifdef _OPENGLES2
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
+	#elif defined(_OPENGLES1)
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+	#endif
 	#define WS_INTERNAL_DEFAULT WS_SDL
 	#ifndef HAVE_SDL
-	#define RS_INTERNAL_DEFAULT RS_DEFAULT
+		#define RS_INTERNAL_DEFAULT RS_DEFAULT
 	#endif
 #elif defined(__APPLE__) && TARGET_OS_IPHONE
-	#define RS_INTERNAL_DEFAULT RS_OPENGLES1
-	#define WS_INTERNAL_DEFAULT WS_IOS
-	#if !TARGET_OS_IPHONE
-	#warning "no windowsystems specified"
+	#ifdef _OPENGLES2
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
+	#elif defined(_OPENGLES1)
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
 	#endif
+	#define WS_INTERNAL_DEFAULT WS_IOS
 #elif defined(_UNIX)
 	#define RS_INTERNAL_DEFAULT RS_OPENGL1
 	#define WS_INTERNAL_DEFAULT WS_SDL
-	#ifndef HAVE_SDL
-	#warning "no windowsystems specified"
-	#endif
 #elif defined(_ANDROID)
-	#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+	#ifdef _OPENGLES1
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+	#elif defined(_OPENGLES2)
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
+	#endif
 	#define WS_INTERNAL_DEFAULT WS_ANDROIDJNI
-#else
-	#warning "no platform specified"
 #endif
 
 #ifndef RS_INTERNAL_DEFAULT
@@ -152,6 +161,12 @@ namespace april
 		if (april::rendersys == NULL && renderSystem == RS_OPENGLES1)
 		{
 			april::rendersys = new OpenGLES1_RenderSystem();
+		}
+#endif
+#ifdef _OPENGLES2
+		if (april::rendersys == NULL && renderSystem == RS_OPENGLES2)
+		{
+			april::rendersys = new OpenGLES2_RenderSystem();
 		}
 #endif
 		if (april::rendersys == NULL)

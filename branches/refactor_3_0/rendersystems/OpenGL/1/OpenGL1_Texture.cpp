@@ -219,16 +219,6 @@ namespace april
 		return true;
 	}
 
-	void OpenGL1_Texture::unload()
-	{
-		if (this->textureId != 0)
-		{
-			hlog::write(april::logTag, "Unloading GL texture: " + this->_getInternalName());
-			glDeleteTextures(1, &this->textureId);
-			this->textureId = 0;
-		}
-	}
-
 	void OpenGL1_Texture::clear()
 	{
 		// TODO - can be improved by directly using memset

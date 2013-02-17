@@ -45,7 +45,6 @@ namespace april
 		OpenGLES1_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
 		~OpenGLES1_Texture();
 		bool load();
-		void unload();
 
 		bool isLoaded();
 
@@ -63,7 +62,6 @@ namespace april
 		bool copyPixelData(unsigned char** output);
 
 	protected:
-		GLuint textureId;
 		unsigned char* manualBuffer;
 
 		void _setCurrentTexture();

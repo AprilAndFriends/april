@@ -22,6 +22,7 @@
 
 #define APRIL_RS_OPENGL1 "OpenGL1"
 #define APRIL_RS_OPENGLES1 "OpenGLES1"
+#define APRIL_RS_OPENGLES2 "OpenGLES2"
 #define APRIL_RS_DIRECTX9 "DirectX9"
 #define APRIL_RS_DIRECTX11 "DirectX11"
 #define APRIL_RS_DEFAULT ""
@@ -47,7 +48,7 @@ namespace april
 		RS_DIRECTX11 = 2,
 		RS_OPENGL1 = 3,
 		RS_OPENGLES1 = 4,
-		RS_CUSTOM = 5
+		RS_OPENGLES2 = 5
 	};
 
 	enum WindowType

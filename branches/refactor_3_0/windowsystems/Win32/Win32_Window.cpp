@@ -196,6 +196,7 @@ namespace april
 		harray<hstr> renderSystems;
 		renderSystems += APRIL_RS_OPENGL1;
 		renderSystems += APRIL_RS_OPENGLES1;
+		renderSystems += APRIL_RS_OPENGLES2;
 		if (renderSystems.contains(april::rendersys->getName()))
 		{
 			SwapBuffers(hDC);

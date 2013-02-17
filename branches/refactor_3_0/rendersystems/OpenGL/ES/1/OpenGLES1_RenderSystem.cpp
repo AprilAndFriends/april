@@ -63,7 +63,6 @@
 
 namespace april
 {
-	static Color lastColor = Color::Black;
 #ifdef _WIN32 // if _WIN32
 	static HWND hWnd = 0;
 	HDC hDC = 0;
@@ -141,7 +140,7 @@ namespace april
 		GL_POINTS,			// ROP_POINTS
 	};
 	
-	OpenGLES1_RenderSystem::OpenGLES1_RenderSystem() : OpenGLES_RenderSystem(), activeTexture(NULL)
+	OpenGLES1_RenderSystem::OpenGLES1_RenderSystem() : OpenGLES_RenderSystem()
 	{
 		this->name = APRIL_RS_OPENGLES1;
 	}
@@ -158,7 +157,6 @@ namespace april
 			return false;
 		}
 		this->activeTexture = NULL;
-		this->options = options;
 		return true;
 	}
 
@@ -308,27 +306,9 @@ namespace april
 		this->orthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
 	}
 
-	void OpenGLES1_RenderSystem::reset()
-	{
-		OpenGLES_RenderSystem::reset();
-		this->state.reset();
-		this->deviceState.reset();
-		this->_setupDefaultParameters();
-		this->state.modelviewMatrixChanged = true;
-		this->state.projectionMatrixChanged = true;
-		this->_applyStateChanges();
-	}
-
 	void OpenGLES1_RenderSystem::_setupDefaultParameters()
 	{
-		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
-		glClearColor(0, 0, 0, 1);
-		lastColor.set(0, 0, 0, 255);
-		// GL defaults
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnable(GL_TEXTURE_2D);
+		OpenGLES_RenderSystem::_setupDefaultParameters();
 		// pixel data
 #ifndef _OPENGLES
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
@@ -451,232 +431,10 @@ namespace april
 		else
 #endif
 		{
-			// old-school blending mode for your mom
-			if (textureBlendMode == ALPHA_BLEND || textureBlendMode == DEFAULT)
-			{
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			}
-			else if (textureBlendMode == ADD)
-			{
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-			}
-			else
-			{
-				hlog::warn(april::logTag, "Trying to set unsupported blend mode!");
-			}
+			OpenGLES_RenderSystem::_setTextureBlendMode(textureBlendMode);
 		}
 	}
 	
-	void OpenGLES1_RenderSystem::setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
-	{
-		this->state.colorMode = textureColorMode;
-		this->state.colorModeAlpha = alpha;
-	}
-
-	void OpenGLES1_RenderSystem::_setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
-	{
-		static float constColor[4];
-		for_iter (i, 0, 4)
-		{
-			constColor[i] = alpha / 255.0f;
-		}
-		switch (textureColorMode)
-		{
-		case NORMAL:
-		case MULTIPLY:
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
-			break;
-		case LERP:
-			glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constColor);
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_CONSTANT);
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
-			break;
-		case ALPHA_MAP:
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
-			break;
-		default:
-			hlog::warn(april::logTag, "Trying to set unsupported color mode!");
-			break;
-		}
-	}
-
-	void OpenGLES1_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
-	{
-		this->state.textureFilter = textureFilter;
-	}
-
-	void OpenGLES1_RenderSystem::_setTextureFilter(Texture::Filter textureFilter)
-	{
-		switch (textureFilter)
-		{
-		case Texture::FILTER_LINEAR:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			break;
-		case Texture::FILTER_NEAREST:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			break;
-		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture filter!");
-			break;
-		}
-		this->textureFilter = textureFilter;
-	}
-
-	void OpenGLES1_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
-	{
-		this->state.textureAddressMode = textureAddressMode;
-	}
-
-	void OpenGLES1_RenderSystem::_setTextureAddressMode(Texture::AddressMode textureAddressMode)
-	{
-		switch (textureAddressMode)
-		{
-		case Texture::ADDRESS_WRAP:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			break;
-		case Texture::ADDRESS_CLAMP:
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			break;
-		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture address mode!");
-			break;
-		}
-		this->textureAddressMode = textureAddressMode;
-	}
-
-	Texture* OpenGLES1_RenderSystem::getRenderTarget()
-	{
-		return NULL;
-	}
-	
-	void OpenGLES1_RenderSystem::setRenderTarget(Texture* texture)
-	{
-		// TODO
-	}
-	
-	void OpenGLES1_RenderSystem::setTexture(Texture* texture)
-	{
-		this->activeTexture = (OpenGLES1_Texture*)texture;
-		if (this->activeTexture == NULL)
-		{
-			this->bindTexture(0);
-		}
-		else
-		{
-			this->setTextureFilter(this->activeTexture->getFilter());
-			this->setTextureAddressMode(this->activeTexture->getAddressMode());
-			// filtering and wrapping applied before loading texture data, iOS OpenGL guidelines suggest it as an optimization
-			this->activeTexture->load();
-			this->bindTexture(this->activeTexture->textureId);
-		}
-	}
-
-	void OpenGLES1_RenderSystem::setPixelShader(PixelShader* pixelShader)
-	{
-		hlog::warn(april::logTag, "Pixel shaders are not implemented!");
-	}
-
-	void OpenGLES1_RenderSystem::setVertexShader(VertexShader* vertexShader)
-	{
-		hlog::warn(april::logTag, "Vertex shaders are not implemented!");
-	}
-
-	void OpenGLES1_RenderSystem::setResolution(int w, int h)
-	{
-		hlog::warn(april::logTag, "setResolution() is not implemented!");
-	}
-
-	void OpenGLES1_RenderSystem::_applyStateChanges()
-	{
-		if (this->state.textureCoordinatesEnabled != this->deviceState.textureCoordinatesEnabled)
-		{
-			this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->state.textureCoordinatesEnabled);
-			this->deviceState.textureCoordinatesEnabled = this->state.textureCoordinatesEnabled;
-		}
-		if (this->state.colorEnabled != this->deviceState.colorEnabled)
-		{
-			this->_setClientState(GL_COLOR_ARRAY, this->state.colorEnabled);
-			this->deviceState.colorEnabled = this->state.colorEnabled;
-		}
-		if (this->state.systemColor != this->deviceState.systemColor)
-		{
-			glColor4f(this->state.systemColor.r_f(), this->state.systemColor.g_f(), this->state.systemColor.b_f(), this->state.systemColor.a_f());
-			this->deviceState.systemColor = this->state.systemColor;
-		}
-		if (this->state.textureId != this->deviceState.textureId)
-		{
-			glBindTexture(GL_TEXTURE_2D, this->state.textureId);
-			this->deviceState.textureId = this->state.textureId;
-			// TODO - you should memorize address and filter modes per texture in opengl to avoid unnecesarry calls
-			this->deviceState.textureAddressMode = Texture::ADDRESS_UNDEFINED;
-			this->deviceState.textureFilter = Texture::FILTER_UNDEFINED;
-		}
-		// texture has to be bound first or else filter and address mode won't be applied afterwards
-		if (this->state.textureFilter != this->deviceState.textureFilter || this->deviceState.textureFilter == Texture::FILTER_UNDEFINED)
-		{
-			this->_setTextureFilter(this->state.textureFilter);
-			this->deviceState.textureFilter = this->state.textureFilter;
-		}
-		if (this->state.textureAddressMode != this->deviceState.textureAddressMode || this->deviceState.textureAddressMode == Texture::ADDRESS_UNDEFINED)
-		{
-			this->_setTextureAddressMode(this->state.textureAddressMode);
-			this->deviceState.textureAddressMode = this->state.textureAddressMode;
-		}
-		if (this->state.blendMode != this->deviceState.blendMode)
-		{
-			this->_setTextureBlendMode(this->state.blendMode);
-			this->deviceState.blendMode = this->state.blendMode;
-		}
-		if (this->state.colorMode != this->deviceState.colorMode || this->state.colorModeAlpha != this->deviceState.colorModeAlpha)
-		{
-			this->_setTextureColorMode(this->state.colorMode, this->state.colorModeAlpha);
-			this->deviceState.colorMode = this->state.colorMode;
-			this->deviceState.colorModeAlpha = this->state.colorModeAlpha;
-		}
-		if (this->state.modelviewMatrixChanged && this->modelviewMatrix != this->deviceState.modelviewMatrix)
-		{
-			this->setMatrixMode(GL_MODELVIEW);
-			glLoadMatrixf(this->modelviewMatrix.data);
-			this->deviceState.modelviewMatrix = this->modelviewMatrix;
-			this->state.modelviewMatrixChanged = false;
-		}
-		if (this->state.projectionMatrixChanged && this->projectionMatrix != this->deviceState.projectionMatrix)
-		{
-			this->setMatrixMode(GL_PROJECTION);
-			glLoadMatrixf(this->projectionMatrix.data);
-			this->deviceState.projectionMatrix = this->projectionMatrix;
-			this->state.projectionMatrixChanged = false;
-		}
-	}
-
-	void OpenGLES1_RenderSystem::_setClientState(unsigned int type, bool enabled)
-	{
-		enabled ? glEnableClientState(type) : glDisableClientState(type);
-	}
-
-	void OpenGLES1_RenderSystem::bindTexture(unsigned int textureId)
-	{
-		this->state.textureId = textureId;
-	}
-
 	Texture* OpenGLES1_RenderSystem::_createTexture(chstr filename)
 	{
 		return new OpenGLES1_Texture(filename);
@@ -690,64 +448,6 @@ namespace april
 	Texture* OpenGLES1_RenderSystem::createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
 	{
 		return new OpenGLES1_Texture(w, h, format, type, color);
-	}
-
-	PixelShader* OpenGLES1_RenderSystem::createPixelShader()
-	{
-		hlog::warn(april::logTag, "Pixel shaders are not implemented!");
-		return NULL;
-	}
-
-	PixelShader* OpenGLES1_RenderSystem::createPixelShader(chstr filename)
-	{
-		hlog::warn(april::logTag, "Pixel shaders are not implemented!");
-		return NULL;
-	}
-
-	VertexShader* OpenGLES1_RenderSystem::createVertexShader()
-	{
-		hlog::warn(april::logTag, "Vertex shaders are not implemented!");
-		return NULL;
-	}
-
-	VertexShader* OpenGLES1_RenderSystem::createVertexShader(chstr filename)
-	{
-		hlog::warn(april::logTag, "Vertex shaders are not implemented!");
-		return NULL;
-	}
-
-	void OpenGLES1_RenderSystem::clear(bool useColor, bool depth)
-	{
-		GLbitfield mask = 0;
-		if (useColor)
-		{
-			mask |= GL_COLOR_BUFFER_BIT;
-		}
-		if (depth)
-		{
-			mask |= GL_DEPTH_BUFFER_BIT;
-		}
-		glClear(mask);
-	}
-
-	void OpenGLES1_RenderSystem::clear(bool depth, grect rect, Color color)
-	{
-		if (color != lastColor) // used to minimize redundant calls to OpenGL
-		{
-			glClearColor(color.r_f(), color.g_f(), color.b_f(), color.a_f());
-			lastColor = color;
-		}
-		this->clear(true, depth);
-	}
-	
-	void OpenGLES1_RenderSystem::setMatrixMode(unsigned int mode)
-	{
-		// performance call, minimize redundant calls to setMatrixMode
-		if (this->deviceState.modeMatrix != mode)
-		{
-			this->deviceState.modeMatrix = mode;
-			glMatrixMode(mode);
-		}
 	}
 
 	void OpenGLES1_RenderSystem::_setVertexPointer(int stride, const void* pointer)
