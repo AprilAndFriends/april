@@ -481,22 +481,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Image.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ImageJpg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ImageJpt.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ImagePng.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\PixelShader.cpp"
 				>
 			</File>
@@ -514,10 +498,6 @@
 			</File>
 			<File
 				RelativePath=".\src\Texture.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TimerWin.cpp"
 				>
 			</File>
 			<File
@@ -653,6 +633,66 @@
 				</File>
 				<File
 					RelativePath=".\platforms\Win32_Platform.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="images"
+				>
+				<File
+					RelativePath=".\src\images\Image.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\images\ImageJpg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\images\ImageJpt.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\images\ImagePng.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="timers"
+				>
+				<File
+					RelativePath=".\src\timers\TimerWin.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="delegates"
+				>
+				<File
+					RelativePath=".\src\delegates\EventDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\InputDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\KeyboardDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\MouseDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\SystemDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\TouchDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\UpdateDelegate.cpp"
 					>
 				</File>
 			</Filter>
@@ -841,6 +881,38 @@
 						</File>
 					</Filter>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="delegates"
+				>
+				<File
+					RelativePath=".\include\april\EventDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\InputDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\KeyboardDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\MouseDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\SystemDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\TouchDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\UpdateDelegate.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

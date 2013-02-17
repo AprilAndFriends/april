@@ -87,6 +87,18 @@
     <Filter Include="Header Files\rendersystems\OpenGL\1\ES\1">
       <UniqueIdentifier>{edd447d4-a504-4c48-b697-0c95a178fb75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\delegates">
+      <UniqueIdentifier>{5cac0f8f-0272-4a8d-9b57-4a6539e4e550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\delegates">
+      <UniqueIdentifier>{4e772634-510d-4f8a-9610-9aa5e773c50f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\images">
+      <UniqueIdentifier>{4134bfcd-c189-4665-9696-a768a8c9540f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\timers">
+      <UniqueIdentifier>{606d267a-8075-4528-a50e-ff0afd0dae93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -98,13 +110,7 @@
     <ClCompile Include="src\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TimerWin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PixelShader.cpp">
@@ -118,15 +124,6 @@
     </ClCompile>
     <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TimerPosix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImageJpg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImagePng.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\april.cpp">
       <Filter>Source Files</Filter>
@@ -163,9 +160,6 @@
     </ClCompile>
     <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImageJpt.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="rendersystems\DirectX\DirectX_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\DirectX</Filter>
@@ -206,6 +200,45 @@
     <ClCompile Include="rendersystems\OpenGL\OpenGL_State.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\delegates\UpdateDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\images\ImageJpg.cpp">
+      <Filter>Source Files\images</Filter>
+    </ClCompile>
+    <ClCompile Include="src\images\ImageJpt.cpp">
+      <Filter>Source Files\images</Filter>
+    </ClCompile>
+    <ClCompile Include="src\images\ImagePng.cpp">
+      <Filter>Source Files\images</Filter>
+    </ClCompile>
+    <ClCompile Include="src\images\Image.cpp">
+      <Filter>Source Files\images</Filter>
+    </ClCompile>
+    <ClCompile Include="src\timers\TimerPosix.cpp">
+      <Filter>Source Files\timers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\timers\TimerWin.cpp">
+      <Filter>Source Files\timers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\EventDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\InputDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\KeyboardDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\MouseDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\SystemDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\TouchDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -224,9 +257,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\april\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Window.h">
@@ -312,6 +342,30 @@
     </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\OpenGL_State.h">
       <Filter>Header Files\rendersystems\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\UpdateDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\EventDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\InputDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\KeyboardDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\MouseDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\SystemDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\TouchDelegate.h">
+      <Filter>Header Files\delegates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -45,7 +45,7 @@ namespace april
 		void setTitle(chstr title);
 		bool isCursorVisible();
 		void setCursorVisible(bool visible);
-		bool isCursorInside() { return this->cursorInside; }
+		HL_DEFINE_IS(bool, cursorInside, CursorInside);
 		int getWidth();
 		int getHeight();
 		bool isTouchEnabled() { return false; }
@@ -56,10 +56,8 @@ namespace april
 		bool updateOneFrame();
 		void presentFrame();
 		void checkEvents();
-		bool isCreated() { return this->created; }
 		
 	protected:
-		bool created;
 		bool cursorInside;
 		bool scrollHorizontal;
 		SDL_Surface* screen;

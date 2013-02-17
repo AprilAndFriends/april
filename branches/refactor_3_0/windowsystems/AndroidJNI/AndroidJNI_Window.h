@@ -75,8 +75,8 @@ namespace april
 		void setTitle(chstr title) { }
 		bool isCursorVisible() { return false; }
 		void setCursorVisible(bool value) { }
-		int getWidth() { return this->width; }
-		int getHeight() { return this->height; }
+		HL_DEFINE_GET(int, width, Width);
+		HL_DEFINE_GET(int, height, Height);
 		bool isTouchEnabled() { return true; }
 		void setTouchEnabled(bool value) { }
 		void* getBackendId();

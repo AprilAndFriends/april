@@ -16,10 +16,16 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
+#include "KeyboardDelegate.h"
 #include "Keys.h"
+#include "MouseDelegate.h"
 #include "Platform.h"
 #include "RenderSystem.h"
+#include "SystemDelegate.h"
+#include "TouchDelegate.h"
+#include "UpdateDelegate.h"
 #include "Window.h"
+
 
 namespace april
 {
@@ -41,7 +47,7 @@ namespace april
 	{
 		april::window = this;
 		this->name = "Generic";
-		this->updateCallback = NULL;
+		this->updateDelegate = NULL;
 		this->mouseDownCallback = NULL;
 		this->mouseUpCallback = NULL;
 		this->mouseMoveCallback = NULL;
@@ -88,6 +94,22 @@ namespace april
 		{
 			hlog::writef(april::logTag, "Destroying window '%s'.", this->name.c_str());
 			this->created = false;
+			this->updateDelegate = NULL;
+			this->mouseDownCallback = NULL;
+			this->mouseUpCallback = NULL;
+			this->mouseMoveCallback = NULL;
+			this->mouseScrollCallback = NULL;
+			this->keyDownCallback = NULL;
+			this->keyUpCallback = NULL;
+			this->charCallback = NULL;
+			this->quitCallback = NULL;
+			this->focusChangeCallback = NULL;
+			this->touchscreenEnabledCallback = NULL;
+			this->touchCallback = NULL;
+			this->deviceOrientationCallback = NULL;
+			this->virtualKeyboardCallback = NULL;
+			this->handleUrlCallback = NULL;
+			this->lowMemoryCallback = NULL;
 			return true;
 		}
 		return false;
@@ -182,9 +204,9 @@ namespace april
 		}
 		// returning true: continue execution
 		// returning false: abort execution
-		if (this->updateCallback != NULL)
+		if (this->updateDelegate != NULL)
 		{
-			return (*this->updateCallback)(k);
+			return this->updateDelegate->updateRenderLoop(k);
 		}
 		april::rendersys->clear();
 		return true;

@@ -81,10 +81,9 @@ namespace april
 		
 		//void setTitle(chstr title);
 		void setCursorVisible(bool value);
-		int getWidth() { return this->width; }
-		int getHeight() { return this->height; }
-		bool isTouchEnabled() { return this->touchEnabled; }
-		void setTouchEnabled(bool value) { this->touchEnabled = value; }
+		HL_DEFINE_GET(int, width, Width);
+		HL_DEFINE_GET(int, height, Height);
+		HL_DEFINE_ISSET(bool, touchEnabled, TouchEnabled);
 		void* getBackendId();
 		//void _setResolution(int w, int h);
 		bool updateOneFrame();

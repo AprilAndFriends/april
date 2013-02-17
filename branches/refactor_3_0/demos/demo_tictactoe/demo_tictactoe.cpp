@@ -19,11 +19,10 @@
 #define RESOURCE_PATH "./"
 #endif
 
-#include <stdio.h>
-
 #include <april/april.h>
 #include <april/main.h>
 #include <april/RenderSystem.h>
+#include <april/UpdateDelegate.h>
 #include <april/Window.h>
 #include <gtypes/Rectangle.h>
 #include <hltypes/hstring.h>
@@ -116,69 +115,73 @@ void draw_line(int x_start, int y_start, int x_end, int y_end, std::string symbo
 	april::rendersys->render(april::TriangleStrip, v, 4);
 }
 
-bool update(float k)
-{	
-	april::rendersys->clear();
-	april::rendersys->setOrthoProjection(drawRect);
+class UpdateDelegate : public april::UpdateDelegate
+{
+	bool updateRenderLoop(float timeSinceLastFrame)
+	{	
+		april::rendersys->clear();
+		april::rendersys->setOrthoProjection(drawRect);
 	
-	april::rendersys->setTexture(background);
-	v[0].x = 0;				v[0].y = 0;				v[0].z = 0;	v[0].u = 0;	v[0].v = 0;
-	v[1].x = drawRect.w;	v[1].y = 0;				v[1].z = 0;	v[1].u = 1;	v[1].v = 0;
-	v[2].x = 0;				v[2].y = drawRect.h;	v[2].z = 0;	v[2].u = 0;	v[2].v = 1;
-	v[3].x = drawRect.w;	v[3].y = drawRect.h;	v[3].z = 0;	v[3].u = 1;	v[3].v = 1;
-	april::rendersys->render(april::TriangleStrip, v, 4);
+		april::rendersys->setTexture(background);
+		v[0].x = 0;				v[0].y = 0;				v[0].z = 0;	v[0].u = 0;	v[0].v = 0;
+		v[1].x = drawRect.w;	v[1].y = 0;				v[1].z = 0;	v[1].u = 1;	v[1].v = 0;
+		v[2].x = 0;				v[2].y = drawRect.h;	v[2].z = 0;	v[2].u = 0;	v[2].v = 1;
+		v[3].x = drawRect.w;	v[3].y = drawRect.h;	v[3].z = 0;	v[3].u = 1;	v[3].v = 1;
+		april::rendersys->render(april::TriangleStrip, v, 4);
 	
-	april::rendersys->setTexture(NULL);
-	april::rendersys->drawFilledRect(grect(size.x, 0, 10, drawRect.h), APRIL_COLOR_MAGENTA);
-	april::rendersys->drawFilledRect(grect(size.x * 2 + 10, 0, 10, drawRect.h), APRIL_COLOR_MAGENTA);
-	april::rendersys->drawFilledRect(grect(0, size.y, drawRect.w, 10), APRIL_COLOR_MAGENTA);
-	april::rendersys->drawFilledRect(grect(0, size.y * 2 + 10, drawRect.w, 10), APRIL_COLOR_MAGENTA);
+		april::rendersys->setTexture(NULL);
+		april::rendersys->drawFilledRect(grect(size.x, 0, 10, drawRect.h), april::Color::Magenta);
+		april::rendersys->drawFilledRect(grect(size.x * 2 + 10, 0, 10, drawRect.h), april::Color::Magenta);
+		april::rendersys->drawFilledRect(grect(0, size.y, drawRect.w, 10), april::Color::Magenta);
+		april::rendersys->drawFilledRect(grect(0, size.y * 2 + 10, drawRect.w, 10), april::Color::Magenta);
 	
-	for (int j = 0; j < 3; j++)
-	{
-		for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
 		{
-			if (positions[i][j] == 1)
+			for (int i = 0; i < 3; i++)
 			{
-				draw_symbol(i + 1, j + 1, "x_symbol");
-			}
-			else if (positions[i][j] == 2)
-			{
-				draw_symbol(i + 1, j + 1, "o_symbol");
+				if (positions[i][j] == 1)
+				{
+					draw_symbol(i + 1, j + 1, "x_symbol");
+				}
+				else if (positions[i][j] == 2)
+				{
+					draw_symbol(i + 1, j + 1, "o_symbol");
+				}
 			}
 		}
-	}
 		
-	switch (victory)
-	{
-	case 1:
-		draw_line(0, 0, 0, 2, "line_horz");
-		break;
-	case 2:
-		draw_line(1, 0, 1, 2, "line_horz");
-		break;
-	case 3:
-		draw_line(2, 0, 2, 2, "line_horz");
-		break;
-	case 4:
-		draw_line(0, 0, 2, 0, "line_vert");
-		break;
-	case 5:
-		draw_line(0, 1, 2, 1, "line_vert");
-		break;
-	case 6:
-		draw_line(0, 2, 2, 2, "line_vert");
-		break;
-	case 7:
-		draw_line(0, 0, 2, 2, "line45");
-		break;
-	case 8:
-		draw_line(0, 0, 2, 2, "line315");
-		break;
-	}
+		switch (victory)
+		{
+		case 1:
+			draw_line(0, 0, 0, 2, "line_horz");
+			break;
+		case 2:
+			draw_line(1, 0, 1, 2, "line_horz");
+			break;
+		case 3:
+			draw_line(2, 0, 2, 2, "line_horz");
+			break;
+		case 4:
+			draw_line(0, 0, 2, 0, "line_vert");
+			break;
+		case 5:
+			draw_line(0, 1, 2, 1, "line_vert");
+			break;
+		case 6:
+			draw_line(0, 2, 2, 2, "line_vert");
+			break;
+		case 7:
+			draw_line(0, 0, 2, 2, "line45");
+			break;
+		case 8:
+			draw_line(0, 0, 2, 2, "line315");
+			break;
+		}
 	
-	return true;
-}
+		return true;
+	}
+};
+static UpdateDelegate* updateDelegate = new UpdateDelegate();
 
 void OnMouseUp(int button)
 {
@@ -320,10 +323,13 @@ void OnMouseUp(int button)
 
 void april_init(const harray<hstr>& args)
 {
+#if defined(_ANDROID) || defined(_IOS)
+	drawRect.setSize(april::getSystemInfo().displayResolution);
+#endif
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 	april::createRenderSystem();
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "Demo Tic Tac Toe");
-	april::window->setUpdateCallback(update);
+	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setMouseCallbacks(NULL, OnMouseUp, NULL, NULL);
 	background = april::rendersys->loadTexture(RESOURCE_PATH "texture");
 	x_symbol = april::rendersys->loadTexture(RESOURCE_PATH "x");

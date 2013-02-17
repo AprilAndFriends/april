@@ -26,7 +26,12 @@
 
 namespace april
 {
+	class KeyboardDelegate;
+	class MouseDelegate;
 	class RenderSystem;
+	class SystemDelegate;
+	class TouchDelegate;
+	class UpdateDelegate;
 
 	class aprilExport Window
 	{
@@ -73,22 +78,22 @@ namespace april
 		virtual bool destroy();
 
 		// generic getters/setters
-		hstr getName() { return this->name; }
-		bool isCreated() { return this->created; }
-		hstr getTitle() { return this->title; }
-		bool isFullscreen() { return this->fullscreen; }
+		HL_DEFINE_GET(hstr, name, Name);
+		HL_DEFINE_IS(bool, created, Created);
+		HL_DEFINE_GET(hstr, title, Title);
+		HL_DEFINE_IS(bool, fullscreen, Fullscreen);
 		void setFullscreen(bool value) { } // TODO
-		bool isFocused() { return this->focused; }
-		bool isRunning() { return this->running; }
-		int getFps() { return this->fps; }
-		float getFpsResolution() { return this->fpsResolution; }
-		void setFpsResolution(float value) { this->fpsResolution = value; }
-		gvec2 getCursorPosition() { return this->cursorPosition; }
+		HL_DEFINE_IS(bool, focused, Focused);
+		HL_DEFINE_IS(bool, running, Running);
+		HL_DEFINE_GET(int, fps, Fps);
+		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
+		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
 		gvec2 getSize();
 		float getAspectRatio();
 
 		// callbacks
-		typedef bool (*updateFunction)(float);
+		HL_DEFINE_GETSET(UpdateDelegate*, updateDelegate, UpdateDelegate);
+
 		typedef void (*mouseDownFunction)(int);
 		typedef void (*mouseUpFunction)(int);
 		typedef void (*mouseMoveFunction)();
@@ -96,8 +101,6 @@ namespace april
 		typedef void (*keyDownFunction)(unsigned int);
 		typedef void (*keyUpFunction)(unsigned int);
 		typedef void (*charFunction)(unsigned int);
-		updateFunction getUpdateCallback() { return this->updateCallback; }
-		void setUpdateCallback(updateFunction value) { this->updateCallback = value; }
 		mouseDownFunction getMouseDownCallback() { return this->mouseDownCallback; }
 		void setMouseDownCallback(mouseDownFunction value) { this->mouseDownCallback = value; }
 		mouseUpFunction getMouseUpCallback() { return this->mouseUpCallback; }
@@ -200,7 +203,8 @@ namespace april
 		// TODO - refactor
 		static void (*msLaunchCallback)(void*);
 
-		bool (*updateCallback)(float);
+		UpdateDelegate* updateDelegate;
+
 		void (*mouseDownCallback)(int);
 		void (*mouseUpCallback)(int);
 		void (*mouseMoveCallback)();
