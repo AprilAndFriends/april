@@ -11,7 +11,7 @@
 /// 
 /// Defines a WinRT window.
 
-#ifdef _WIN32
+#ifdef HAVE_WINRT
 #ifndef APRIL_WINRT_WINDOW_H
 #define APRIL_WINRT_WINDOW_H
 #include <hltypes/hplatform.h>
@@ -29,7 +29,7 @@ namespace april
 {
 	class Texture;
 	
-	class aprilExport WinRT_Window : public Window
+	class WinRT_Window : public Window
 	{
 	public:
 		struct MouseInputEvent

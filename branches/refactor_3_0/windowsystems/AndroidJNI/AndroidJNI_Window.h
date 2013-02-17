@@ -24,7 +24,7 @@
 
 namespace april
 {
-	class aprilExport AndroidJNI_Window : public Window
+	class AndroidJNI_Window : public Window
 	{
 	public:
 		struct MouseInputEvent

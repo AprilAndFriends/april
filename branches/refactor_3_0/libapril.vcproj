@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug_OpenGL|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGL1;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGL1;HAVE_WIN32;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -90,7 +90,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release_OpenGL|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -116,7 +116,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGL1;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGL1;HAVE_WIN32;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -165,7 +165,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug_DirectX9|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -189,7 +189,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;HAVE_WIN32;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -238,7 +238,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release_DirectX9|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -264,7 +264,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;HAVE_WIN32;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -313,7 +313,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug_OpenGLES1|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -337,7 +337,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;HAVE_WIN32;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -386,7 +386,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release_OpenGLES1|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -412,7 +412,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;HAVE_WIN32;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -435,6 +435,154 @@
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
+			ConfigurationType="2"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4251"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib winmm.lib"
+				OutputFile="$(OutDir)$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
+			ConfigurationType="2"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4251"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib winmm.lib"
+				OutputFile="$(OutDir)$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
+				GenerateDebugInformation="true"
 			/>
 			<Tool
 				Name="VCALinkTool"

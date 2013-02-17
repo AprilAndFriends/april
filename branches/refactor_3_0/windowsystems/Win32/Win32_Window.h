@@ -13,7 +13,7 @@
 /// 
 /// Defines a Win32 window.
 
-#ifdef _WIN32
+#ifdef HAVE_WIN32
 #ifndef APRIL_WIN32_WINDOW_H
 #define APRIL_WIN32_WINDOW_H
 #include <hltypes/hplatform.h>
@@ -26,7 +26,7 @@
 
 namespace april
 {
-	class aprilExport Win32_Window : public Window
+	class Win32_Window : public Window
 	{
 	public:
 		Win32_Window();

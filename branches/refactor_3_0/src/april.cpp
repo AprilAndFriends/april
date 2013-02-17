@@ -62,8 +62,6 @@
 	#define RS_INTERNAL_DEFAULT RS_OPENGL1
 	#elif defined(_OPENGLES1)
 	#define RS_INTERNAL_DEFAULT RS_OPENGLES1
-	#else
-	#warning "no rendersystems specified"
 	#endif
 	#if !_HL_WINRT
 	#define WS_INTERNAL_DEFAULT WS_WIN32
@@ -74,7 +72,7 @@
 	#define RS_INTERNAL_DEFAULT RS_OPENGL1
 	#define WS_INTERNAL_DEFAULT WS_SDL
 	#ifndef HAVE_SDL
-	#warning "no windowsystems specified"
+	#define RS_INTERNAL_DEFAULT RS_DEFAULT
 	#endif
 #elif defined(__APPLE__) && TARGET_OS_IPHONE
 	#define RS_INTERNAL_DEFAULT RS_OPENGLES1
@@ -95,6 +93,12 @@
 	#warning "no platform specified"
 #endif
 
+#ifndef RS_INTERNAL_DEFAULT
+#define RS_INTERNAL_DEFAULT RS_DEFAULT
+#endif
+#ifndef WS_INTERNAL_DEFAULT
+#define WS_INTERNAL_DEFAULT WS_DEFAULT
+#endif
 
 namespace april
 {
@@ -164,18 +168,17 @@ namespace april
 		{
 			window = WS_INTERNAL_DEFAULT;
 		}
-#ifdef _WIN32
-#if !_HL_WINRT
+#ifdef HAVE_WIN32
 		if (april::window == NULL && window == WS_WIN32)
 		{
 			april::window = new Win32_Window();
 		}
-#else
+#endif
+#ifdef HAVE_WINRT
 		if (april::window == NULL && window == WS_WINRT)
 		{
 			april::window = new WinRT_Window();
 		}
-#endif
 #endif
 #ifdef HAVE_SDL
 		if (april::window == NULL && window == WS_SDL)
