@@ -229,8 +229,6 @@ namespace april
 		}
 	}
 
-	/////////////////////////////////////////////////////////////
-
 	void OpenGL1_Texture::clear()
 	{
 		// TODO - can be improved by directly using memset
