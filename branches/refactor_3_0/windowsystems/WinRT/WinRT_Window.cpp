@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.52
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -46,9 +46,9 @@ namespace april
 		this->destroy();
 	}
 
-	bool WinRT_Window::create(int w, int h, bool fullscreen, chstr title)
+	bool WinRT_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
-		if (!Window::create(w, h, fullscreen, title))
+		if (!Window::create(w, h, fullscreen, title, options))
 		{
 			return false;
 		}

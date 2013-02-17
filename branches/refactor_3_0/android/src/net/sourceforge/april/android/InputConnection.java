@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.5
+// version 3.0
 
 import android.view.inputmethod.BaseInputConnection;
 import android.view.KeyEvent;

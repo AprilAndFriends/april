@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -140,37 +140,6 @@ namespace april
 		GL_LINE_STRIP,		// ROP_LINE_STRIP
 		GL_POINTS,			// ROP_POINTS
 	};
-	
-	OpenGLES1_RenderState::OpenGLES1_RenderState()
-	{
-		this->reset();
-	}
-	
-	OpenGLES1_RenderState::~OpenGLES1_RenderState()
-	{
-	}
-	
-	void OpenGLES1_RenderState::reset()
-	{
-		this->textureCoordinatesEnabled = false;
-		this->colorEnabled = false;
-		this->textureId = 0;
-		this->textureFilter = Texture::FILTER_UNDEFINED;
-		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
-		this->systemColor = Color::Black;
-		this->modelviewMatrixChanged = false;
-		this->projectionMatrixChanged = false;
-		this->blendMode = (BlendMode)10000;
-		this->colorMode = (ColorMode)10000;
-		this->colorModeAlpha = 255;
-		this->modeMatrix = 0;
-		this->strideVertex = 0;
-		this->pointerVertex = NULL;
-		this->strideTexCoord = 0;
-		this->pointerTexCoord = NULL;
-		this->strideColor = 0;
-		this->pointerColor = NULL;
-	}
 	
 	OpenGLES1_RenderSystem::OpenGLES1_RenderSystem() : OpenGLES_RenderSystem(), activeTexture(NULL)
 	{

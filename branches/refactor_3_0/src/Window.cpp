@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -64,7 +64,7 @@ namespace april
 		this->destroy();
 	}
 
-	bool Window::create(int w, int h, bool fullscreen, chstr title)
+	bool Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
 		if (!this->created)
 		{

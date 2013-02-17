@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -17,11 +17,8 @@
 #ifndef APRIL_OPENGL1_RENDER_SYSTEM_H
 #define APRIL_OPENGL1_RENDER_SYSTEM_H
 
-#ifdef __APPLE__
-#include <TargetConditionals.h>
-#endif
-
-#include "RenderSystem.h"
+#include "OpenGL_RenderSystem.h"
+#include "OpenGL_State.h"
 
 namespace april
 {
@@ -29,37 +26,6 @@ namespace april
 	class OpenGL1_Texture;
 	class Window;
 
-	class OpenGL1_RenderState
-	{
-	public:
-		OpenGL1_RenderState();
-		~OpenGL1_RenderState();
-		
-		void reset();
-
-		bool textureCoordinatesEnabled;
-		bool colorEnabled;
-		unsigned int textureId;
-		Texture::Filter textureFilter;
-		Texture::AddressMode textureAddressMode;
-		Color systemColor;
-		bool modelviewMatrixChanged;
-		bool projectionMatrixChanged;
-		gmat4 modelviewMatrix;
-		gmat4 projectionMatrix;
-		BlendMode blendMode;
-		ColorMode colorMode;
-		unsigned char colorModeAlpha;
-		unsigned int modeMatrix;
-		int strideVertex;
-		const void* pointerVertex;
-		int strideTexCoord;
-		const void* pointerTexCoord;
-		int strideColor;
-		const void* pointerColor;
-
-	};
-	
 	class OpenGL1_RenderSystem : public OpenGL_RenderSystem
 	{
 	public:
@@ -116,8 +82,8 @@ namespace april
 		int _getMaxTextureSize();
 
 	protected:
-		OpenGL1_RenderState deviceState;
-		OpenGL1_RenderState state;
+		OpenGL_State deviceState;
+		OpenGL_State state;
 		OpenGL1_Texture* activeTexture;
 		hstr options;
 

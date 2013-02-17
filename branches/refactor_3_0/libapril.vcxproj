@@ -546,6 +546,7 @@
     <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp" />
     <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp" />
     <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_Texture.cpp" />
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_State.cpp" />
     <ClCompile Include="src\april.cpp" />
     <ClCompile Include="src\aprilUtil.cpp" />
     <ClCompile Include="src\ImageJpg.cpp" />
@@ -599,6 +600,7 @@
     <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h" />
     <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_Texture.h" />
     <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h" />
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_State.h" />
     <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h" />
     <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Window.h" />
     <ClInclude Include="windowsystems\SDL\SDL_Window.h" />

@@ -599,6 +599,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\rendersystems\OpenGL\OpenGL_State.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\rendersystems\OpenGL\OpenGL_Texture.cpp"
 						>
 					</File>
@@ -758,6 +762,10 @@
 					>
 					<File
 						RelativePath=".\rendersystems\OpenGL\OpenGL_RenderSystem.h"
+						>
+					</File>
+					<File
+						RelativePath=".\rendersystems\OpenGL\OpenGL_State.h"
 						>
 					</File>
 					<File

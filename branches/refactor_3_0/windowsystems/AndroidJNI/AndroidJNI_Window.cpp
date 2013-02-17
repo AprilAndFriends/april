@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.54
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -41,9 +41,9 @@ namespace april
 		this->destroy();
 	}
 
-	bool AndroidJNI_Window::create(int w, int h, bool fullscreen, chstr title)
+	bool AndroidJNI_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
-		if (!Window::create(w, h, true, title))
+		if (!Window::create(w, h, true, title, options))
 		{
 			return false;
 		}

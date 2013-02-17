@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.52
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -76,7 +76,7 @@ namespace april
 		WinRT_Window();
 		~WinRT_Window();
 		
-		bool create(int w, int h, bool fullscreen, chstr title);
+		bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
 		bool destroy();
 		
 		//void setTitle(chstr title);

@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -21,6 +21,7 @@
 #include <TargetConditionals.h>
 #endif
 
+#include "OpenGL_State.h"
 #include "OpenGLES_RenderSystem.h"
 
 namespace april
@@ -29,37 +30,6 @@ namespace april
 	class OpenGLES1_Texture;
 	class Window;
 
-	class OpenGLES1_RenderState
-	{
-	public:
-		OpenGLES1_RenderState();
-		~OpenGLES1_RenderState();
-		
-		void reset();
-
-		bool textureCoordinatesEnabled;
-		bool colorEnabled;
-		unsigned int textureId;
-		Texture::Filter textureFilter;
-		Texture::AddressMode textureAddressMode;
-		Color systemColor;
-		bool modelviewMatrixChanged;
-		bool projectionMatrixChanged;
-		gmat4 modelviewMatrix;
-		gmat4 projectionMatrix;
-		BlendMode blendMode;
-		ColorMode colorMode;
-		unsigned char colorModeAlpha;
-		unsigned int modeMatrix;
-		int strideVertex;
-		const void* pointerVertex;
-		int strideTexCoord;
-		const void* pointerTexCoord;
-		int strideColor;
-		const void* pointerColor;
-
-	};
-	
 	class OpenGLES1_RenderSystem : public OpenGLES_RenderSystem
 	{
 	public:
@@ -116,8 +86,8 @@ namespace april
 		int _getMaxTextureSize();
 
 	protected:
-		OpenGLES1_RenderState deviceState;
-		OpenGLES1_RenderState state;
+		OpenGL_State deviceState;
+		OpenGL_State state;
 		OpenGLES1_Texture* activeTexture;
 		hstr options;
 

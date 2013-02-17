@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -102,16 +102,7 @@ namespace april
 
 	static harray<hstr> extensions;
 
-	void log(chstr message, chstr prefix) // DEPRECATED
-	{
-		hlog::write(april::logTag, message);
-	}
-	
-	void setLogFunction(void (*fnptr)(chstr)) // DEPRECATED
-	{
-	}
-
-	void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType)
+	void _startInit()
 	{
 		hlog::write(april::logTag, "Initializing APRIL.");
 		extensions += ".jpt";
@@ -120,6 +111,15 @@ namespace april
 #if TARGET_OS_IPHONE
 		extensions += ".pvr";
 #endif
+	}
+
+	void _finishInit()
+	{
+		hlog::writef(april::logTag, "Using: %s, %s", april::rendersys->getName().c_str(), april::window->getName().c_str());
+	}
+
+	void _createRenderSystem(RenderSystemType renderSystemType)
+	{
 		// creating the rendersystem
 		RenderSystemType renderSystem = renderSystemType;
 		if (renderSystem == RS_DEFAULT)
@@ -150,52 +150,119 @@ namespace april
 			april::rendersys = new OpenGLES1_RenderSystem();
 		}
 #endif
-		// creating the windowsystem
-		WindowSystemType windowSystem = windowSystemType;
-		if (windowSystem == WS_DEFAULT)
+		if (april::rendersys == NULL)
 		{
-			windowSystem = WS_INTERNAL_DEFAULT;
+			throw hl_exception("Could not create given rendersystem!");
+		}
+	}
+
+	void _createWindowSystem(WindowType windowType)
+	{
+		// creating the windowsystem
+		WindowType window = windowType;
+		if (window == WS_DEFAULT)
+		{
+			window = WS_INTERNAL_DEFAULT;
 		}
 #ifdef _WIN32
 #if !_HL_WINRT
-		if (april::window == NULL && windowSystem == WS_WIN32)
+		if (april::window == NULL && window == WS_WIN32)
 		{
 			april::window = new Win32_Window();
 		}
 #else
-		if (april::window == NULL && windowSystem == WS_WINRT)
+		if (april::window == NULL && window == WS_WINRT)
 		{
 			april::window = new WinRT_Window();
 		}
 #endif
 #endif
 #ifdef HAVE_SDL
-		if (april::window == NULL && windowSystem == WS_SDL)
+		if (april::window == NULL && window == WS_SDL)
 		{
 			april::window = new SDL_Window();
 		}
 #endif
 #if TARGET_OS_IPHONE
-		if (april::window == NULL && windowSystem == WS_IOS)
+		if (april::window == NULL && window == WS_IOS)
 		{
 			april::window = new iOS_Window();
 		}
 #endif
 #ifdef _ANDROID
-		if (april::window == NULL && windowSystem == WS_ANDROIDJNI)
+		if (april::window == NULL && window == WS_ANDROIDJNI)
 		{
 			april::window = new AndroidJNI_Window();
 		}
 #endif
-		if (april::rendersys == NULL)
-		{
-			throw hl_exception("Could not create given rendersystem!");
-		}
 		if (april::window == NULL)
 		{
 			throw hl_exception("Could not create given windowsystem!");
 		}
-		hlog::writef(april::logTag, "Using: %s, %s", april::rendersys->getName().c_str(), april::window->getName().c_str());
+	}
+
+	void init(RenderSystemType renderSystemType, WindowType windowType)
+	{
+		_startInit();
+		_createRenderSystem(renderSystemType);
+		_createWindowSystem(windowType);
+		_finishInit();
+	}
+	
+	void init(RenderSystem* customRenderSystem, WindowType windowType)
+	{
+		_startInit();
+		april::rendersys = customRenderSystem;
+		_createWindowSystem(windowType);
+		_finishInit();
+	}
+	
+	void init(RenderSystemType renderSystemType, Window* customWindow)
+	{
+		_startInit();
+		_createRenderSystem(renderSystemType);
+		april::window = customWindow;
+		_finishInit();
+	}
+	
+	void init(RenderSystem* customRenderSystem, Window* customWindow)
+	{
+		_startInit();
+		april::rendersys = customRenderSystem;
+		april::window = customWindow;
+		_finishInit();
+	}
+	
+	void init(RenderSystemType renderSystemType, WindowType windowType, chstr renderSystemOptions,
+		int w, int h, bool fullscreen, chstr title, chstr windowOptions)
+	{
+		init(renderSystemType, windowType);
+		createRenderSystem(renderSystemOptions);
+		createWindow(w, h, fullscreen, title, windowOptions);
+	}
+	
+	void init(RenderSystem* customRenderSystem, WindowType windowType, chstr renderSystemOptions,
+		int w, int h, bool fullscreen, chstr title, chstr windowOptions)
+	{
+		init(customRenderSystem, windowType);
+		createRenderSystem(renderSystemOptions);
+		createWindow(w, h, fullscreen, title, windowOptions);
+	}
+	
+	void init(RenderSystemType renderSystemType, Window* customWindow, chstr renderSystemOptions,
+		int w, int h, bool fullscreen, chstr title, chstr windowOptions)
+	{
+		init(renderSystemType, customWindow);
+		createRenderSystem(renderSystemOptions);
+		createWindow(w, h, fullscreen, title, windowOptions);
+	}
+	
+	void init(RenderSystem* customRenderSystem, Window* customWindow, chstr renderSystemOptions,
+		int w, int h, bool fullscreen, chstr title, chstr windowOptions)
+	{
+		init(customRenderSystem, customWindow);
+		createRenderSystem(renderSystemOptions);
+		createWindow(w, h, fullscreen, title, windowOptions);
 	}
 	
 	void createRenderSystem(chstr options)
@@ -203,21 +270,18 @@ namespace april
 		april::rendersys->create(options);
 	}
 	
-	void createWindow(int w, int h, bool fullscreen, chstr title)
+	void createWindow(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
-		april::window->create(w, h, fullscreen, title);
+		april::window->create(w, h, fullscreen, title, options);
 		april::rendersys->assignWindow(april::window);
 	}
 
-	void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType, chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title)
-	{
-		init(renderSystemType, windowSystemType);
-		createRenderSystem(renderSystemOptions);
-		createWindow(w, h, fullscreen, title);
-	}
-	
 	void destroy()
 	{
+		if (april::rendersys != NULL || april::window != NULL)
+		{
+			hlog::write(april::logTag, "Destroying APRIL.");
+		}
 		if (april::window != NULL)
 		{
 			delete april::window;
@@ -225,7 +289,6 @@ namespace april
 		}
 		if (april::rendersys != NULL)
 		{
-			hlog::write(april::logTag, "Destroying APRIL.");
 			delete april::rendersys;
 			april::rendersys = NULL;
 		}

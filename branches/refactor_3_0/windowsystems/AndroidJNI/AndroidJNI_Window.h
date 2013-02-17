@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.54
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -70,7 +70,7 @@ namespace april
 
 		AndroidJNI_Window();
 		~AndroidJNI_Window();
-		bool create(int w, int h, bool fullscreen, chstr title);
+		bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
 		
 		void setTitle(chstr title) { }
 		bool isCursorVisible() { return false; }

@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -39,7 +39,7 @@ namespace april
 	public:
 		SDL_Window();
 		~SDL_Window();
-		bool create(int w, int h, bool fullscreen, chstr title);
+		bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
 		bool destroy();
 		
 		void setTitle(chstr title);

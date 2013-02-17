@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -141,43 +141,12 @@ namespace april
 		GL_POINTS,			// ROP_POINTS
 	};
 	
-	OpenGL1_RenderState::OpenGL1_RenderState()
-	{
-		this->reset();
-	}
-	
-	OpenGL1_RenderState::~OpenGL1_RenderState()
-	{
-	}
-	
-	void OpenGL1_RenderState::reset()
-	{
-		this->textureCoordinatesEnabled = false;
-		this->colorEnabled = false;
-		this->textureId = 0;
-		this->textureFilter = Texture::FILTER_UNDEFINED;
-		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
-		this->systemColor = Color::Black;
-		this->modelviewMatrixChanged = false;
-		this->projectionMatrixChanged = false;
-		this->blendMode = (BlendMode)10000;
-		this->colorMode = (ColorMode)10000;
-		this->colorModeAlpha = 255;
-		this->modeMatrix = 0;
-		this->strideVertex = 0;
-		this->pointerVertex = NULL;
-		this->strideTexCoord = 0;
-		this->pointerTexCoord = NULL;
-		this->strideColor = 0;
-		this->pointerColor = NULL;
-	}
-	
-	OpenGL1_RenderSystem::OpenGL1_OpenGL_RenderSystem() : OpenGL_RenderSystem(), activeTexture(NULL)
+	OpenGL1_RenderSystem::OpenGL1_RenderSystem() : OpenGL_RenderSystem(), activeTexture(NULL)
 	{
 		this->name = APRIL_RS_OPENGL1;
 	}
 
-	OpenGL1_RenderSystem::~OpenGL1_OpenGL_RenderSystem()
+	OpenGL1_RenderSystem::~OpenGL1_RenderSystem()
 	{
 		this->destroy();
 	}

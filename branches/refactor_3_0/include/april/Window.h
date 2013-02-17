@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -69,7 +69,7 @@ namespace april
 		
 		Window();
 		virtual ~Window();
-		virtual bool create(int w, int h, bool fullscreen, chstr title);
+		virtual bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
 		virtual bool destroy();
 
 		// generic getters/setters

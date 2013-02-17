@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -35,6 +35,9 @@
 
 namespace april
 {
+	class RenderSystem;
+	class Window;
+
 	extern hstr logTag;
 
 	enum RenderSystemType
@@ -47,7 +50,7 @@ namespace april
 		RS_CUSTOM = 5
 	};
 
-	enum WindowSystemType
+	enum WindowType
 	{
 		WS_DEFAULT = 0,
 		WS_WIN32 = 1,
@@ -57,17 +60,24 @@ namespace april
 		WS_ANDROIDJNI = 5
 	};
 
-	aprilFnExport void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType);
-	aprilFnExport void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType, chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title);
+	aprilFnExport void init(RenderSystemType renderSystemType, WindowType windowType);
+	aprilFnExport void init(RenderSystem* customRenderSystem, WindowType windowType);
+	aprilFnExport void init(RenderSystemType renderSystemType, Window* customWindow);
+	aprilFnExport void init(RenderSystem* customRenderSystem, Window* customWindow);
+	aprilFnExport void init(RenderSystemType renderSystemType, WindowType windowType,
+		chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title, chstr windowOptions);
+	aprilFnExport void init(RenderSystem* customRenderSystem, WindowType windowType,
+		chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title, chstr windowOptions);
+	aprilFnExport void init(RenderSystemType renderSystemType, Window* customWindow,
+		chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title, chstr windowOptions);
+	aprilFnExport void init(RenderSystem* customRenderSystem, Window* customWindow,
+		chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title, chstr windowOptions);
 	aprilFnExport void createRenderSystem(chstr options = "");
-	aprilFnExport void createWindow(int w, int h, bool fullscreen, chstr title);
+	aprilFnExport void createWindow(int w, int h, bool fullscreen, chstr title, chstr options = "");
 	aprilFnExport void destroy();
 	aprilFnExport void addTextureExtension(chstr extension);
 	aprilFnExport harray<hstr> getTextureExtensions();
 	aprilFnExport void setTextureExtensions(const harray<hstr>& exts);
-
-	DEPRECATED_ATTRIBUTE aprilFnExport void setLogFunction(void (*fnptr)(chstr));
-	DEPRECATED_ATTRIBUTE aprilFnExport void log(chstr message, chstr prefix = "[april] ");
 
 }
 

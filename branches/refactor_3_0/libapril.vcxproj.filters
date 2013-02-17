@@ -203,6 +203,9 @@
     <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL\1\ES\1</Filter>
     </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_State.cpp">
+      <Filter>Source Files\rendersystems\OpenGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -306,6 +309,9 @@
     </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_Texture.h">
       <Filter>Header Files\rendersystems\OpenGL\1\ES</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_State.h">
+      <Filter>Header Files\rendersystems\OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
