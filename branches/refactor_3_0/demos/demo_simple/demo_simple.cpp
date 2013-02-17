@@ -21,6 +21,7 @@
 
 #include <april/april.h>
 #include <april/main.h>
+#include <april/MouseDelegate.h>
 #include <april/RenderSystem.h>
 #include <april/UpdateDelegate.h>
 #include <april/Window.h>
@@ -47,7 +48,7 @@ bool mousePressed = false;
 
 class UpdateDelegate : public april::UpdateDelegate
 {
-	bool updateRenderLoop(float timeSinceLastFrame)
+	bool onUpdate(float timeSinceLastFrame)
 	{
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);
@@ -62,34 +63,41 @@ class UpdateDelegate : public april::UpdateDelegate
 	}
 
 };
-static UpdateDelegate* updateDelegate = new UpdateDelegate();
 
-void onMouseDown(int button)
+class MouseDelegate : public april::MouseDelegate
 {
-	offset = april::window->getCursorPosition();
-	hlog::writef(LOG_TAG, "- DOWN x: %4.0f y: %4.0f button: %d", offset.x, offset.y, button);
-	mousePressed = true;
-}
-
-void onMouseUp(int button)
-{
-	gvec2 cursor = april::window->getCursorPosition();
-	hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", cursor.x, cursor.y, button);
-	mousePressed = false;
-}
-
-void onMouseMove()
-{
-	gvec2 cursor = april::window->getCursorPosition();
-	hlog::writef(LOG_TAG, "- MOVE x: %4.0f y: %4.0f", cursor.x, cursor.y);
-	if (mousePressed)
+	void onMouseDown(april::KeySym button)
 	{
-		offset = cursor;
+		offset = april::window->getCursorPosition();
+		hlog::writef(LOG_TAG, "- DOWN x: %4.0f y: %4.0f button: %d", offset.x, offset.y, button);
+		mousePressed = true;
 	}
-}
+
+	void onMouseUp(april::KeySym button)
+	{
+		gvec2 cursor = april::window->getCursorPosition();
+		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", cursor.x, cursor.y, button);
+		mousePressed = false;
+	}
+
+	void onMouseMove()
+	{
+		gvec2 cursor = april::window->getCursorPosition();
+		hlog::writef(LOG_TAG, "- MOVE x: %4.0f y: %4.0f", cursor.x, cursor.y);
+		if (mousePressed)
+		{
+			offset = cursor;
+		}
+	}
+};
+
+static UpdateDelegate* updateDelegate = NULL;
+static MouseDelegate* mouseDelegate = NULL;
 
 void april_init(const harray<hstr>& args)
 {
+	updateDelegate = new UpdateDelegate();
+	mouseDelegate = new MouseDelegate();
 #if defined(_ANDROID) || defined(_IOS)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
@@ -100,9 +108,9 @@ void april_init(const harray<hstr>& args)
 	dv[3].x = drawRect.w;	dv[3].y = drawRect.h;	dv[3].z = 0.0f;	dv[3].u = 1.0f;	dv[3].v = 1.0f;
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 	april::createRenderSystem();
-	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "april: Simple Demo");
+	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple Demo");
 	april::window->setUpdateDelegate(updateDelegate);
-	april::window->setMouseCallbacks(&onMouseDown, &onMouseUp, &onMouseMove, NULL);
+	april::window->setMouseDelegate(mouseDelegate);
 	texture = april::rendersys->loadTexture(RESOURCE_PATH "jpt_final");
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w / 2;
@@ -117,4 +125,6 @@ void april_destroy()
 	delete texture;
 	delete manualTexture;
 	april::destroy();
+	delete updateDelegate;
+	delete mouseDelegate;
 }

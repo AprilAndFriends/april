@@ -203,18 +203,18 @@ namespace april
 			if (!this->multiTouchActive && previousTouchesSize == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->handleMouseEvent(AMOUSEEVT_UP, gvec2(-10000.0f, -10000.0f), AMOUSEBTN_LEFT);
+				this->handleMouseEvent(AMOUSEEVT_UP, gvec2(-10000.0f, -10000.0f), AK_LBUTTON);
 			}
 			this->multiTouchActive = (this->touches.size() > 0);
 		}
 		else
 		{
-			this->handleMouseEvent(type, position, AMOUSEBTN_LEFT);
+			this->handleMouseEvent(type, position, AK_LBUTTON);
 		}
 		this->touchEvents += TouchInputEvent(this->touches);
 	}
 	
-	void WinRT_Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
+	void WinRT_Window::handleMouseEvent(MouseEventType type, gvec2 position, KeySym button)
 	{
 		this->mouseEvents += MouseInputEvent(type, position, button);
 	}

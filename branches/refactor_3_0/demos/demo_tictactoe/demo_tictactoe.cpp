@@ -20,7 +20,9 @@
 #endif
 
 #include <april/april.h>
+#include <april/KeyboardDelegate.h>
 #include <april/main.h>
+#include <april/MouseDelegate.h>
 #include <april/RenderSystem.h>
 #include <april/UpdateDelegate.h>
 #include <april/Window.h>
@@ -117,7 +119,7 @@ void draw_line(int x_start, int y_start, int x_end, int y_end, std::string symbo
 
 class UpdateDelegate : public april::UpdateDelegate
 {
-	bool updateRenderLoop(float timeSinceLastFrame)
+	bool onUpdate(float timeSinceLastFrame)
 	{	
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);
@@ -181,156 +183,164 @@ class UpdateDelegate : public april::UpdateDelegate
 		return true;
 	}
 };
-static UpdateDelegate* updateDelegate = new UpdateDelegate();
 
-void OnMouseUp(int button)
+class MouseDelegate : public april::MouseDelegate
 {
-	gvec2 cursorPosition = april::window->getCursorPosition();
-	float x = cursorPosition.x;
-	float y = cursorPosition.y;
-	if (!player)
+	void onMouseUp(april::KeySym button)
 	{
-		if (x >= 0 && x <= size.x && y >= 0 && y <= size.y && positions[0][0] == 0)
+		gvec2 cursorPosition = april::window->getCursorPosition();
+		float x = cursorPosition.x;
+		float y = cursorPosition.y;
+		if (!player)
 		{
-			positions[0][0] = 1;
-			player = !player;
+			if (x >= 0 && x <= size.x && y >= 0 && y <= size.y && positions[0][0] == 0)
+			{
+				positions[0][0] = 1;
+				player = !player;
+			}
+			if (x >= 0 && x <= size.x && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[0][1] == 0)
+			{
+				positions[0][1] = 1;
+				player = !player;
+			}
+			if (x >= 0 && x <= size.x && y >= size.y * 2 + 20 && y <= drawRect.h && positions[0][2] == 0)
+			{
+				positions[0][2] = 1;
+				player = !player;
+			}
+			if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= 0 && y <= size.y && positions[1][0] == 0)
+			{
+				positions[1][0] = 1;
+				player = !player;
+			}
+			if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[1][1] == 0)
+			{
+				positions[1][1] = 1;
+				player = !player;
+			}
+			if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y * 2 + 20 && y <= drawRect.h && positions[1][2] == 0)
+			{
+				positions[1][2] = 1;
+				player = !player;
+			}
+			if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= 0 && y <= size.y && positions[2][0] == 0)
+			{
+				positions[2][0] = 1;
+				player = !player;
+			}
+			if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[2][1] == 0)
+			{
+				positions[2][1] = 1;
+				player = !player;
+			}
+			if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y * 2 + 20 && y <= drawRect.h && positions[2][2] == 0)
+			{
+				positions[2][2] = 1;
+				player = !player;
+			}
 		}
-		if (x >= 0 && x <= size.x && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[0][1] == 0)
+		else
 		{
-			positions[0][1] = 1;
-			player = !player;
+			if (x >= 0 && x <= size.x && y >= 0 && y <= size.y && positions[0][0] == 0)
+			{
+				positions[0][0] = 2;
+				player = !player;
+			}
+			if (x >= 0 && x <= size.x && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[0][1] == 0)
+			{
+				positions[0][1] = 2;
+				player = !player;
+			}
+			if (x >= 0 && x <= size.x && y >= size.y * 2 + 20 && y <= drawRect.h && positions[0][2] == 0)
+			{
+				positions[0][2] = 2;
+				player = !player;
+			}
+			if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= 0 && y <= size.y && positions[1][0] == 0)
+			{
+				positions[1][0] = 2;
+				player = !player;
+			}
+			if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[1][1] == 0)
+			{
+				positions[1][1] = 2;
+				player = !player;
+			}
+			if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y * 2 + 20 && y <= drawRect.h && positions[1][2] == 0)
+			{
+				positions[1][2] = 2;
+				player = !player;
+			}
+			if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= 0 && y <= size.y && positions[2][0] == 0)
+			{
+				positions[2][0] = 2;
+				player = !player;
+			}
+			if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[2][1] == 0)
+			{
+				positions[2][1] = 2;
+				player = !player;
+			}
+			if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y * 2 + 20 && y <= drawRect.h && positions[2][2] == 0)
+			{
+				positions[2][2] = 2;	
+				player = !player;
+			}
 		}
-		if (x >= 0 && x <= size.x && y >= size.y * 2 + 20 && y <= drawRect.h && positions[0][2] == 0)
-		{
-			positions[0][2] = 1;
-			player = !player;
-		}
-		if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= 0 && y <= size.y && positions[1][0] == 0)
-		{
-			positions[1][0] = 1;
-			player = !player;
-		}
-		if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[1][1] == 0)
-		{
-			positions[1][1] = 1;
-			player = !player;
-		}
-		if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y * 2 + 20 && y <= drawRect.h && positions[1][2] == 0)
-		{
-			positions[1][2] = 1;
-			player = !player;
-		}
-		if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= 0 && y <= size.y && positions[2][0] == 0)
-		{
-			positions[2][0] = 1;
-			player = !player;
-		}
-		if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[2][1] == 0)
-		{
-			positions[2][1] = 1;
-			player = !player;
-		}
-		if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y * 2 + 20 && y <= drawRect.h && positions[2][2] == 0)
-		{
-			positions[2][2] = 1;
-			player = !player;
-		}
-	}
-	else
-	{
-		if (x >= 0 && x <= size.x && y >= 0 && y <= size.y && positions[0][0] == 0)
-		{
-			positions[0][0] = 2;
-			player = !player;
-		}
-		if (x >= 0 && x <= size.x && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[0][1] == 0)
-		{
-			positions[0][1] = 2;
-			player = !player;
-		}
-		if (x >= 0 && x <= size.x && y >= size.y * 2 + 20 && y <= drawRect.h && positions[0][2] == 0)
-		{
-			positions[0][2] = 2;
-			player = !player;
-		}
-		if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= 0 && y <= size.y && positions[1][0] == 0)
-		{
-			positions[1][0] = 2;
-			player = !player;
-		}
-		if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[1][1] == 0)
-		{
-			positions[1][1] = 2;
-			player = !player;
-		}
-		if (x >= size.x + 10 && x <= size.x * 2 + 10 && y >= size.y * 2 + 20 && y <= drawRect.h && positions[1][2] == 0)
-		{
-			positions[1][2] = 2;
-			player = !player;
-		}
-		if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= 0 && y <= size.y && positions[2][0] == 0)
-		{
-			positions[2][0] = 2;
-			player = !player;
-		}
-		if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y + 10 && y <= size.y * 2 + 10 && positions[2][1] == 0)
-		{
-			positions[2][1] = 2;
-			player = !player;
-		}
-		if (x >= size.x * 2 + 20 && x <= drawRect.w && y >= size.y * 2 + 20 && y <= drawRect.h && positions[2][2] == 0)
-		{
-			positions[2][2] = 2;	
-			player = !player;
-		}
-	}
 	
 	
-	if (positions[0][0] == 1 && positions[0][1] == 1 && positions[0][2] == 1)
-		victory = 1;
-	if (positions[1][0] == 1 && positions[1][1] == 1 && positions[1][2] == 1)
-		victory = 2;
-	if (positions[2][0] == 1 && positions[2][1] == 1 && positions[2][2] == 1)
-		victory = 3;
-	if (positions[0][0] == 1 && positions[1][0] == 1 && positions[2][0] == 1)
-		victory = 4;
-	if (positions[0][1] == 1 && positions[1][1] == 1 && positions[2][1] == 1)
-		victory = 5;
-	if (positions[0][2] == 1 && positions[1][2] == 1 && positions[2][2] == 1)
-		victory = 6;
-	if (positions[0][0] == 1 && positions[1][1] == 1 && positions[2][2] == 1)
-		victory = 7;
-	if (positions[0][2] == 1 && positions[1][1] == 1 && positions[2][0] == 1)
-		victory = 8;
+		if (positions[0][0] == 1 && positions[0][1] == 1 && positions[0][2] == 1)
+			victory = 1;
+		if (positions[1][0] == 1 && positions[1][1] == 1 && positions[1][2] == 1)
+			victory = 2;
+		if (positions[2][0] == 1 && positions[2][1] == 1 && positions[2][2] == 1)
+			victory = 3;
+		if (positions[0][0] == 1 && positions[1][0] == 1 && positions[2][0] == 1)
+			victory = 4;
+		if (positions[0][1] == 1 && positions[1][1] == 1 && positions[2][1] == 1)
+			victory = 5;
+		if (positions[0][2] == 1 && positions[1][2] == 1 && positions[2][2] == 1)
+			victory = 6;
+		if (positions[0][0] == 1 && positions[1][1] == 1 && positions[2][2] == 1)
+			victory = 7;
+		if (positions[0][2] == 1 && positions[1][1] == 1 && positions[2][0] == 1)
+			victory = 8;
 		
-	if (positions[0][0] == 2 && positions[0][1] == 2 && positions[0][2] == 2)
-		victory = 1;
-	if (positions[1][0] == 2 && positions[1][1] == 2 && positions[1][2] == 2)
-		victory = 2;
-	if (positions[2][0] == 2 && positions[2][1] == 2 && positions[2][2] == 2)
-		victory = 3;
-	if (positions[0][0] == 2 && positions[1][0] == 2 && positions[2][0] == 2)
-		victory = 4;
-	if (positions[0][1] == 2 && positions[1][1] == 2 && positions[2][1] == 2)
-		victory = 5;
-	if (positions[0][2] == 2 && positions[1][2] == 2 && positions[2][2] == 2)
-		victory = 6;
-	if (positions[0][0] == 2 && positions[1][1] == 2 && positions[2][2] == 2)
-		victory = 7;
-	if (positions[0][2] == 2 && positions[1][1] == 2 && positions[2][0] == 2)
-		victory = 8;
-}
+		if (positions[0][0] == 2 && positions[0][1] == 2 && positions[0][2] == 2)
+			victory = 1;
+		if (positions[1][0] == 2 && positions[1][1] == 2 && positions[1][2] == 2)
+			victory = 2;
+		if (positions[2][0] == 2 && positions[2][1] == 2 && positions[2][2] == 2)
+			victory = 3;
+		if (positions[0][0] == 2 && positions[1][0] == 2 && positions[2][0] == 2)
+			victory = 4;
+		if (positions[0][1] == 2 && positions[1][1] == 2 && positions[2][1] == 2)
+			victory = 5;
+		if (positions[0][2] == 2 && positions[1][2] == 2 && positions[2][2] == 2)
+			victory = 6;
+		if (positions[0][0] == 2 && positions[1][1] == 2 && positions[2][2] == 2)
+			victory = 7;
+		if (positions[0][2] == 2 && positions[1][1] == 2 && positions[2][0] == 2)
+			victory = 8;
+	}
+
+};
+
+static UpdateDelegate* updateDelegate = NULL;
+static MouseDelegate* mouseDelegate = NULL;
 
 void april_init(const harray<hstr>& args)
 {
+	updateDelegate = new UpdateDelegate();
+	mouseDelegate = new MouseDelegate();
 #if defined(_ANDROID) || defined(_IOS)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 	april::createRenderSystem();
-	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "Demo Tic Tac Toe");
+	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Tic Tac Toe Demo");
 	april::window->setUpdateDelegate(updateDelegate);
-	april::window->setMouseCallbacks(NULL, OnMouseUp, NULL, NULL);
+	april::window->setMouseDelegate(mouseDelegate);
 	background = april::rendersys->loadTexture(RESOURCE_PATH "texture");
 	x_symbol = april::rendersys->loadTexture(RESOURCE_PATH "x");
 	o_symbol = april::rendersys->loadTexture(RESOURCE_PATH "o");
@@ -350,4 +360,6 @@ void april_destroy()
 	delete line45;
 	delete line315;
 	april::destroy();
+	delete updateDelegate;
+	delete mouseDelegate;
 }

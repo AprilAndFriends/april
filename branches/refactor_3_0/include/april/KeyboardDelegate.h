@@ -24,6 +24,10 @@ namespace april
 		KeyboardDelegate();
 		virtual ~KeyboardDelegate();
 
+		virtual void onKeyDown(unsigned int keyCode);
+		virtual void onKeyUp(unsigned int keyCode);
+		virtual void onChar(unsigned int charCode);
+
 	};
 
 }

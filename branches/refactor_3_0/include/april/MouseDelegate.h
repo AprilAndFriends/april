@@ -15,6 +15,7 @@
 #define APRIL_MOUSE_DELEGATE_H
 
 #include "aprilExport.h"
+#include "Keys.h"
 
 namespace april
 {
@@ -23,6 +24,11 @@ namespace april
 	public:
 		MouseDelegate();
 		virtual ~MouseDelegate();
+
+		virtual void onMouseDown(april::KeySym button);
+		virtual void onMouseUp(april::KeySym button);
+		virtual void onMouseMove();
+		virtual void onMouseScroll(float x, float y);
 
 	};
 

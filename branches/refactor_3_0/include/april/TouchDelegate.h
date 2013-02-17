@@ -14,6 +14,9 @@
 #ifndef APRIL_TOUCH_DELEGATE_H
 #define APRIL_TOUCH_DELEGATE_H
 
+#include <gtypes/Vector2.h>
+#include <hltypes/harray.h>
+
 #include "aprilExport.h"
 
 namespace april
@@ -23,6 +26,8 @@ namespace april
 	public:
 		TouchDelegate();
 		virtual ~TouchDelegate();
+
+		virtual void onTouch(const harray<gvec2>& touches);
 
 	};
 

@@ -38,7 +38,7 @@ public:
 	{
 	}
 
-	bool updateRenderLoop(float timeSinceLastFrame)
+	bool onUpdate(float timeSinceLastFrame)
 	{
 		this->angle += timeSinceLastFrame * 90.0f;
 		april::rendersys->clear();
@@ -55,16 +55,17 @@ protected:
 
 };
 
-static UpdateDelegate* updateDelegate = new UpdateDelegate();
+static UpdateDelegate* updateDelegate = NULL;
 
 void april_init(const harray<hstr>& args)
 {
+	updateDelegate = new UpdateDelegate();
 #if defined(_ANDROID) || defined(_IOS)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 	april::createRenderSystem();
-	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "april: Simple 3D");
+	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple 3D");
 	april::window->setUpdateDelegate(updateDelegate);
 	texture = april::rendersys->loadTexture(RESOURCE_PATH "texture");
 	v[0].x = -1.0f;	v[0].y = 1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;

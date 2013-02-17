@@ -14,7 +14,10 @@
 #ifndef APRIL_SYSTEM_DELEGATE_H
 #define APRIL_SYSTEM_DELEGATE_H
 
+#include <hltypes/hstring.h>
+
 #include "aprilExport.h"
+#include "Window.h"
 
 namespace april
 {
@@ -23,6 +26,14 @@ namespace april
 	public:
 		SystemDelegate();
 		virtual ~SystemDelegate();
+
+		bool onQuit(bool canCancel);
+		void onWindowSizeChanged(int width, int height);
+		void onWindowFocusChanged(bool focused);
+		void onDeviceOrientationChanged(Window::DeviceOrientation deviceOrientation);
+		void onVirtualKeyboardVisibilityChanged(bool visible);
+		bool onHandleUrl(chstr url);
+		void onLowMemoryWarning();
 
 	};
 

@@ -36,9 +36,9 @@ namespace april
 		{
 			MouseEventType type;
 			gvec2 position;
-			MouseButton button;
+			KeySym button;
 		
-			MouseInputEvent(MouseEventType _type, gvec2 _position, MouseButton _button)
+			MouseInputEvent(MouseEventType _type, gvec2 _position, KeySym _button)
 			{
 				type = _type;
 				position = _position;
@@ -91,7 +91,7 @@ namespace april
 		void checkEvents();
 		
 		void handleTouchEvent(MouseEventType type, gvec2 position, int index);
-		void handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button);
+		void handleMouseEvent(MouseEventType type, gvec2 position, KeySym button);
 		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
 		
 	protected:

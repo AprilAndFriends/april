@@ -7,6 +7,10 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#include <hltypes/hlog.h>
+#include <hltypes/hstring.h>
+
+#include "april.h"
 #include "UpdateDelegate.h"
 
 namespace april
@@ -19,9 +23,10 @@ namespace april
 	{
 	}
 
-	bool UpdateDelegate::updateRenderLoop(float timeSinceLastFrame)
+	bool UpdateDelegate::onUpdate(float timeSinceLastFrame)
 	{
-		return true;
+		hlog::debug(april::logTag, "Event onUpdate() was not implemented.");
+		return false; // quits immediately
 	}
 	
 }
