@@ -26,10 +26,10 @@ namespace april
 	bool SystemDelegate::onQuit(bool canCancel)
 	{
 		hlog::debug(april::logTag, "Event onQuit() was not implemented.");
-		return false;
+		return true;
 	}
 
-	void SystemDelegate::onWindowSizeChanged(int width, int height)
+	void SystemDelegate::onWindowSizeChanged(int width, int height, Window::DeviceOrientation deviceOrientation)
 	{
 		hlog::debug(april::logTag, "Event onWindowSizeChanged() was not implemented.");
 	}
@@ -37,11 +37,6 @@ namespace april
 	void SystemDelegate::onWindowFocusChanged(bool focused)
 	{
 		hlog::debug(april::logTag, "Event onWindowFocusChanged() was not implemented.");
-	}
-
-	void SystemDelegate::onDeviceOrientationChanged(Window::DeviceOrientation deviceOrientation)
-	{
-		hlog::debug(april::logTag, "Event onDeviceOrientationChanged() was not implemented.");
 	}
 
 	void SystemDelegate::onVirtualKeyboardVisibilityChanged(bool visible)
