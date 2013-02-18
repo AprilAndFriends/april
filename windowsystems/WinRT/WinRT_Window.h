@@ -36,9 +36,9 @@ namespace april
 		{
 			MouseEventType type;
 			gvec2 position;
-			KeySym button;
+			Key button;
 		
-			MouseInputEvent(MouseEventType _type, gvec2 _position, KeySym _button)
+			MouseInputEvent(MouseEventType _type, gvec2 _position, Key _button)
 			{
 				type = _type;
 				position = _position;
@@ -50,10 +50,10 @@ namespace april
 		struct KeyInputEvent
 		{
 			KeyEventType type;
-			KeySym keyCode;
+			Key keyCode;
 			unsigned int charCode;
 		
-			KeyInputEvent(KeyEventType _type, KeySym _keyCode, unsigned int _charCode)
+			KeyInputEvent(KeyEventType _type, Key _keyCode, unsigned int _charCode)
 			{
 				type = _type;
 				keyCode = _keyCode;
@@ -91,8 +91,8 @@ namespace april
 		void checkEvents();
 		
 		void handleTouchEvent(MouseEventType type, gvec2 position, int index);
-		void handleMouseEvent(MouseEventType type, gvec2 position, KeySym button);
-		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
+		void handleMouseEvent(MouseEventType type, gvec2 position, Key button);
+		void handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
 		
 	protected:
 		int width;

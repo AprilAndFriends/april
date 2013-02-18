@@ -215,12 +215,12 @@ namespace april
 		this->touchEvents += TouchInputEvent(this->touches);
 	}
 	
-	void WinRT_Window::handleMouseEvent(MouseEventType type, gvec2 position, KeySym button)
+	void WinRT_Window::handleMouseEvent(MouseEventType type, gvec2 position, Key button)
 	{
 		this->mouseEvents += MouseInputEvent(type, position, button);
 	}
 	
-	void WinRT_Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
+	void WinRT_Window::handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode)
 	{
 		this->keyEvents += KeyInputEvent(type, keyCode, charCode);
 	}

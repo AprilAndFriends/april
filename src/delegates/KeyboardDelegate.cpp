@@ -23,12 +23,12 @@ namespace april
 	{
 	}
 
-	void KeyboardDelegate::onKeyDown(unsigned int keyCode)
+	void KeyboardDelegate::onKeyDown(Key keyCode)
 	{
 		hlog::debug(april::logTag, "Event onKeyDown() was not implemented.");
 	}
 
-	void KeyboardDelegate::onKeyUp(unsigned int keyCode)
+	void KeyboardDelegate::onKeyUp(Key keyCode)
 	{
 		hlog::debug(april::logTag, "Event onKeyUp() was not implemented.");
 	}

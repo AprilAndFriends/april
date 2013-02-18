@@ -170,7 +170,7 @@ namespace april
 		return true;
 	}
 	
-	void Window::handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode)
+	void Window::handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode)
 	{
 		this->handleKeyOnlyEvent(type, keyCode);
 		if (type == AKEYEVT_DOWN)
@@ -179,7 +179,7 @@ namespace april
 		}
 	}
 	
-	void Window::handleKeyOnlyEvent(KeyEventType type, KeySym keyCode)
+	void Window::handleKeyOnlyEvent(KeyEventType type, Key keyCode)
 	{
 		if (keyCode == AK_UNKNOWN)
 		{	
@@ -207,7 +207,7 @@ namespace april
 		}
 	}
 	
-	void Window::handleMouseEvent(MouseEventType type, gvec2 position, KeySym button)
+	void Window::handleMouseEvent(MouseEventType type, gvec2 position, Key button)
 	{
 		if (this->mouseDelegate != NULL)
 		{

@@ -291,7 +291,7 @@ namespace april
 	
 	void SDL_Window::_handleKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
 	{
-		april::KeySym akeysym = AK_UNKNOWN;
+		april::Key akeysym = AK_UNKNOWN;
 	
 		#define _s2a(sdlk, ak) case sdlk: akeysym = ak; break; 
 		#define _s2a_u0(sdlk, ak) case sdlk: akeysym = ak; unicode = 0; break;
@@ -374,12 +374,12 @@ namespace april
 		// number keys
 		if (keysym >= '0' && keysym <= '9')
 		{
-			akeysym = (KeySym)keysym;
+			akeysym = (Key)keysym;
 		}
 		// letters
 		if (keysym >= 'a' && keysym <= 'z') // sdl letter keys are small ASCII letters
 		{
-			akeysym = (KeySym)(keysym - 32); // april letter keys are capital ASCII letters
+			akeysym = (Key)(keysym - 32); // april letter keys are capital ASCII letters
 		}
 		if (akeysym == AK_LCONTROL || akeysym == AK_RCONTROL)
 		{
@@ -399,7 +399,7 @@ namespace april
 	{
 		this->cursorPosition.set(sdlEvent.button.x, sdlEvent.button.y);
 		Window::MouseEventType mouseEvent;
-		april::KeySym mouseButton = AK_NONE;
+		april::Key mouseButton = AK_NONE;
 
 		switch (sdlEvent.type)
 		{
