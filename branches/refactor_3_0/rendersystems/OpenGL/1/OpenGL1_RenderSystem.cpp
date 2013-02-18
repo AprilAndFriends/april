@@ -63,41 +63,12 @@
 
 namespace april
 {
-#ifdef _WIN32 // if _WIN32
-	static HWND hWnd = 0;
-	HDC hDC = 0;
-#ifndef _OPENGLES // if _WIN32 && !GLES
-	static HGLRC hRC = 0;
-#else
-	static EGLDisplay eglDisplay = 0;
-	static EGLConfig eglConfig	= 0;
-	static EGLSurface eglSurface = 0;
-	static EGLContext eglContext = 0;
-	static EGLint pi32ConfigAttribs[128] = {EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE, 8, EGL_ALPHA_SIZE, 0, EGL_SURFACE_TYPE, EGL_WINDOW_BIT, EGL_NONE};
-#endif
-#endif
-
-	// TODO - refactor
-	int OpenGL1_RenderSystem::_getMaxTextureSize()
-	{
-#ifdef _WIN32
-#ifndef _OPENGLES
-		if (hRC == 0)
-#else
-		if (eglDisplay == 0)
-#endif
-		{
-			return 0;
-		}
-#endif
-		int max;
-		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
-		return max;
-	}
-
 	OpenGL1_RenderSystem::OpenGL1_RenderSystem() : OpenGL_RenderSystem()
 	{
 		this->name = APRIL_RS_OPENGL1;
+#ifdef _WIN32
+		this->hRC = 0;
+#endif
 	}
 
 	OpenGL1_RenderSystem::~OpenGL1_RenderSystem()
@@ -105,178 +76,64 @@ namespace april
 		this->destroy();
 	}
 
-	bool OpenGL1_RenderSystem::destroy()
-	{
-		if (!OpenGL_RenderSystem::destroy())
-		{
-			return false;
-		}
-		// TODO - should maybe be refactored
-#ifdef _WIN32
-		this->_releaseWindow();
-#endif
-		return true;
-	}
-
 #ifdef _WIN32
 	void OpenGL1_RenderSystem::_releaseWindow()
 	{
-#ifndef _OPENGLES
-		if (hRC != 0)
+		if (this->hRC != 0)
 		{
 			wglMakeCurrent(NULL, NULL);
 			wglDeleteContext(hRC);
-			hRC = 0;
+			this->hRC = 0;
 		}
-#else
-		if (eglDisplay != 0)
-		{
-			eglMakeCurrent(eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-			eglTerminate(eglDisplay);
-			eglDisplay = 0;
-		}
-#endif
-		if (hDC != 0)
-		{
-			ReleaseDC(hWnd, hDC);
-			hDC = 0;
-		}
+		OpenGL_RenderSystem::_releaseWindow();
 	}
 #endif
 
 	void OpenGL1_RenderSystem::assignWindow(Window* window)
 	{
 #ifdef _WIN32
-		hWnd = (HWND)april::window->getBackendId();
-		PIXELFORMATDESCRIPTOR pfd;
-		memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
-		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-		pfd.nVersion = 1;
-		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL |	PFD_DOUBLEBUFFER;
-		pfd.iPixelType = PFD_TYPE_RGBA;
-		pfd.cColorBits = 24;
-		pfd.cStencilBits = 16;
-		pfd.dwLayerMask = PFD_MAIN_PLANE;
-
-		hDC = GetDC(hWnd);
-		if (hDC == 0)
+		if (!this->_initWin32(window))
 		{
-			hlog::error(april::logTag, "Can't create a GL device context!");
 			return;
 		}
-		GLuint pixelFormat = ChoosePixelFormat(hDC, &pfd);
-		if (pixelFormat == 0)
-		{
-			hlog::error(april::logTag, "Can't find a suitable pixel format!");
-			this->_releaseWindow();
-			return;
-		}
-		if (SetPixelFormat(hDC, pixelFormat, &pfd) == 0)
-		{
-			hlog::error(april::logTag, "Can't set the pixel format!");
-			this->_releaseWindow();
-			return;
-		}
-#ifndef _OPENGLES
-		hRC = wglCreateContext(hDC);
-		if (hRC == 0)
+		this->hRC = wglCreateContext(this->hDC);
+		if (this->hRC == 0)
 		{
 			hlog::error(april::logTag, "Can't create a GL rendering context!");
 			this->_releaseWindow();
 			return;
 		}
-		if (wglMakeCurrent(hDC, hRC) == 0)
+		if (wglMakeCurrent(this->hDC, this->hRC) == 0)
 		{
 			hlog::error(april::logTag, "Can't activate the GL rendering context!");
 			this->_releaseWindow();
 			return;
 		}
-#else
-		eglDisplay = eglGetDisplay((NativeDisplayType)hDC);
-		if (eglDisplay == EGL_NO_DISPLAY)
-		{
-			 eglDisplay = eglGetDisplay((NativeDisplayType)EGL_DEFAULT_DISPLAY);
-		}
-		if (eglDisplay == EGL_NO_DISPLAY)
-		{
-			hlog::error(april::logTag, "Can't get EGL display!");
-			this->_releaseWindow();
-			return;
-		}
-		EGLint majorVersion;
-		EGLint minorVersion;
-		if (!eglInitialize(eglDisplay, &majorVersion, &minorVersion))
-		{
-			hlog::error(april::logTag, "Can't initialize EGL!");
-			this->_releaseWindow();
-			return;
-		}
-		EGLint configs;
-		EGLBoolean result = eglChooseConfig(eglDisplay, pi32ConfigAttribs, &eglConfig, 1, &configs);
-		if (!result || configs == 0)
-		{
-			hlog::error(april::logTag, "Can't choose EGL config!");
-			this->_releaseWindow();
-			return;
-		}
-
-		eglSurface = eglCreateWindowSurface(eglDisplay, eglConfig, (NativeWindowType)hWnd, NULL);
-		if (eglGetError() != EGL_SUCCESS)
-		{
-			hlog::error(april::logTag, "Can't create window surface!");
-			this->_releaseWindow();
-			return;
-		}
-		eglContext = eglCreateContext(eglDisplay, eglConfig, EGL_NO_CONTEXT, NULL);
-		if (eglGetError() != EGL_SUCCESS)
-		{
-			hlog::error(april::logTag, "Can't create EGL context!");
-			this->_releaseWindow();
-			return;
-		}
-		eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
-		if (eglGetError() != EGL_SUCCESS)
-		{
-			hlog::error(april::logTag, "Can't make context current!");
-			this->_releaseWindow();
-			return;
-		}
 #endif
-#endif
-		this->_setupDefaultParameters();
-		this->setMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		this->setMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		this->orthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
+		OpenGL_RenderSystem::assignWindow(window);
 	}
 
 	void OpenGL1_RenderSystem::_setupDefaultParameters()
 	{
 		OpenGL_RenderSystem::_setupDefaultParameters();
 		// pixel data
-#ifndef _OPENGLES
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
-#endif
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		// other
-		if (this->options.contains("zbuffer"))
+	}
+
+	int OpenGL1_RenderSystem::getMaxTextureSize()
+	{
+#ifdef _WIN32
+		if (this->hRC == 0)
 		{
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LEQUAL);
+			return 0;
 		}
-		this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->deviceState.textureCoordinatesEnabled);
-		this->_setClientState(GL_COLOR_ARRAY, this->deviceState.colorEnabled);
-		glColor4f(this->deviceState.systemColor.r_f(), this->deviceState.systemColor.g_f(), this->deviceState.systemColor.b_f(), this->deviceState.systemColor.a_f());
-		glBindTexture(GL_TEXTURE_2D, this->deviceState.textureId);
-		this->state.textureFilter = april::Texture::FILTER_LINEAR;
-		this->state.textureAddressMode = april::Texture::ADDRESS_WRAP;
-		this->state.blendMode = april::DEFAULT;
-		this->state.colorMode = april::NORMAL;
+#endif
+		int max;
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
+		return max;
 	}
 
 	void OpenGL1_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
@@ -354,12 +211,12 @@ namespace april
 		return new OpenGL1_Texture(filename);
 	}
 
-	Texture* OpenGL1_RenderSystem::createTexture(int w, int h, unsigned char* rgba)
+	Texture* OpenGL1_RenderSystem::_createTexture(int w, int h, unsigned char* rgba)
 	{
 		return new OpenGL1_Texture(w, h, rgba);
 	}
 	
-	Texture* OpenGL1_RenderSystem::createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
+	Texture* OpenGL1_RenderSystem::_createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
 	{
 		return new OpenGL1_Texture(w, h, format, type, color);
 	}

@@ -75,8 +75,6 @@ namespace april
 
 		void setResolution(int w, int h);
 
-		Texture* createTexture(int w, int h, unsigned char* rgba);
-		Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
 		PixelShader* createPixelShader();
 		PixelShader* createPixelShader(chstr filename);
 		VertexShader* createVertexShader();
@@ -123,6 +121,8 @@ namespace april
 		void _createSwapChain(int width, int height);
 		
 		Texture* _createTexture(chstr filename);
+		Texture* _createTexture(int w, int h, unsigned char* rgba);
+		Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);

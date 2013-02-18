@@ -271,10 +271,20 @@ namespace april
 	void SDL_Window::presentFrame()
 	{
 #ifdef _OPENGL
-#ifndef _OPENGLES
-		SDL_GL_SwapBuffers();
-#else
-		SDL_GLES_SwapBuffers();
+#ifdef _OPENGL1
+		if (april::rendersys->getName() == APRIL_RS_OPENGL1)
+		{
+			SDL_GL_SwapBuffers();
+		}
+#endif
+#ifdef _OPENGLES
+		harray<hstr> renderSystems;
+		renderSystems += APRIL_RS_OPENGLES1;
+		renderSystems += APRIL_RS_OPENGLES2;
+		if (renderSystems.contains(april::rendersys->getName()))
+		{
+			SDL_GLES_SwapBuffers();
+		}
 #endif
 #endif
 	}

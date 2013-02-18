@@ -23,14 +23,14 @@
 #include "Timer.h"
 #include "Win32_Window.h"
 
+#ifdef _OPENGL
+#include "OpenGL_RenderSystem.h"
+#endif
+
 #define APRIL_WIN32_WINDOW_CLASS L"AprilWin32Window"
 
 namespace april
 {
-#ifdef _OPENGL
-	extern HDC hDC;
-#endif
-	
 	Win32_Window::Win32_Window() : Window()
 	{
 		this->name = APRIL_WS_WIN32;
@@ -199,7 +199,7 @@ namespace april
 		renderSystems += APRIL_RS_OPENGLES2;
 		if (renderSystems.contains(april::rendersys->getName()))
 		{
-			SwapBuffers(hDC);
+			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
 		}
 #endif
 	}

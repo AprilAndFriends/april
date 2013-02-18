@@ -65,8 +65,6 @@ namespace april
 
 		void setResolution(int w, int h);
 
-		Texture* createTexture(int w, int h, unsigned char* rgba);
-		Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
 		PixelShader* createPixelShader();
 		PixelShader* createPixelShader(chstr filename);
 		VertexShader* createVertexShader();
@@ -85,7 +83,7 @@ namespace april
 		void presentFrame();
 
 		// TODO - refactor
-		int _getMaxTextureSize();
+		int getMaxTextureSize();
 
 	protected:
 		bool zBufferEnabled;
@@ -102,6 +100,8 @@ namespace april
 		void _configureDevice();
 
 		Texture* _createTexture(chstr filename);
+		Texture* _createTexture(int w, int h, unsigned char* rgba);
+		Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);

@@ -47,7 +47,7 @@ namespace april
 	harray<DirectX9_Texture*> gRenderTargets;
 
 	// TODO - refactor
-	int DirectX9_RenderSystem::_getMaxTextureSize()
+	int DirectX9_RenderSystem::getMaxTextureSize()
 	{
 		if (this->d3dDevice == NULL)
 		{
@@ -491,12 +491,12 @@ namespace april
 		return new DirectX9_Texture(filename);
 	}
 
-	Texture* DirectX9_RenderSystem::createTexture(int w, int h, unsigned char* rgba)
+	Texture* DirectX9_RenderSystem::_createTexture(int w, int h, unsigned char* rgba)
 	{
 		return new DirectX9_Texture(w, h, rgba);
 	}
 	
-	Texture* DirectX9_RenderSystem::createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
+	Texture* DirectX9_RenderSystem::_createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
 	{
 		return new DirectX9_Texture(w, h, format, type, color);
 	}

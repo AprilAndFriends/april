@@ -39,6 +39,11 @@
 
 namespace april
 {
+#ifdef _WIN32 // if _WIN32
+	static HWND hWnd = 0;
+	static HDC hDC = 0;
+#endif
+
 	static Color lastColor = Color::Black;
 
 	unsigned int _limitPrimitives(RenderOp renderOp, int nVertices)
@@ -75,6 +80,10 @@ namespace april
 	
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
 	{
+#ifdef _WIN32
+		this->hWnd = 0;
+		this->hDC = 0;
+#endif
 	}
 
 	OpenGL_RenderSystem::~OpenGL_RenderSystem()
@@ -103,7 +112,65 @@ namespace april
 		this->activeTexture = NULL;
 		this->deviceState.reset();
 		this->state.reset();
+#ifdef _WIN32
+		this->_releaseWindow();
+#endif
 		return true;
+	}
+
+#ifdef _WIN32
+	void OpenGL_RenderSystem::_releaseWindow()
+	{
+		if (hDC != 0)
+		{
+			ReleaseDC(hWnd, hDC);
+			hDC = 0;
+		}
+	}
+	bool OpenGL_RenderSystem::_initWin32(Window* window)
+	{
+		this->hWnd = (HWND)window->getBackendId();
+		PIXELFORMATDESCRIPTOR pfd;
+		memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
+		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+		pfd.nVersion = 1;
+		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL |	PFD_DOUBLEBUFFER;
+		pfd.iPixelType = PFD_TYPE_RGBA;
+		pfd.cColorBits = 24;
+		pfd.cStencilBits = 16;
+		pfd.dwLayerMask = PFD_MAIN_PLANE;
+		this->hDC = GetDC(this->hWnd);
+		if (this->hDC == 0)
+		{
+			hlog::error(april::logTag, "Can't create a GL device context!");
+			return false;
+		}
+		GLuint pixelFormat = ChoosePixelFormat(this->hDC, &pfd);
+		if (pixelFormat == 0)
+		{
+			hlog::error(april::logTag, "Can't find a suitable pixel format!");
+			this->_releaseWindow();
+			return false;
+		}
+		if (SetPixelFormat(this->hDC, pixelFormat, &pfd) == 0)
+		{
+			hlog::error(april::logTag, "Can't set the pixel format!");
+			this->_releaseWindow();
+			return false;
+		}
+		return true;
+	}
+
+#endif
+
+	void OpenGL_RenderSystem::assignWindow(Window* window)
+	{
+		this->_setupDefaultParameters();
+		this->setMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		this->setMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		this->orthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
 	}
 
 	void OpenGL_RenderSystem::reset()
@@ -127,6 +194,23 @@ namespace april
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnable(GL_TEXTURE_2D);
+		// pixel data
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		// other
+		if (this->options.contains("zbuffer"))
+		{
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+		}
+		this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->deviceState.textureCoordinatesEnabled);
+		this->_setClientState(GL_COLOR_ARRAY, this->deviceState.colorEnabled);
+		glColor4f(this->deviceState.systemColor.r_f(), this->deviceState.systemColor.g_f(), this->deviceState.systemColor.b_f(), this->deviceState.systemColor.a_f());
+		glBindTexture(GL_TEXTURE_2D, this->deviceState.textureId);
+		this->state.textureFilter = april::Texture::FILTER_LINEAR;
+		this->state.textureAddressMode = april::Texture::ADDRESS_WRAP;
+		this->state.blendMode = april::DEFAULT;
+		this->state.colorMode = april::NORMAL;
 	}
 
 	grect OpenGL_RenderSystem::getViewport()

@@ -22,7 +22,6 @@
 
 namespace april
 {
-	class Image;
 	class OpenGL1_Texture;
 	class Window;
 
@@ -33,28 +32,28 @@ namespace april
 
 		OpenGL1_RenderSystem();
 		~OpenGL1_RenderSystem();
-		bool destroy();
 
 		void assignWindow(Window* window);
 		
-		Texture* createTexture(int w, int h, unsigned char* rgba);
-		Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
-
-		// TODO - refactor
-		int _getMaxTextureSize();
+		int getMaxTextureSize();
 
 	protected:
 		void _setupDefaultParameters();
+
 		Texture* _createTexture(chstr filename);
+		Texture* _createTexture(int w, int h, unsigned char* rgba);
+		Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
 
 		void _setVertexPointer(int stride, const void* pointer);
 
 		void _setTextureBlendMode(BlendMode mode);
 
 #ifdef _WIN32
+		HGLRC hRC;
+
 		void _releaseWindow();
 #endif
-		
+
 	};
 	
 }

@@ -17,8 +17,27 @@
 #ifndef APRIL_OPENGLES1_RENDER_SYSTEM_H
 #define APRIL_OPENGLES1_RENDER_SYSTEM_H
 
-#ifdef __APPLE__
+#include <hltypes/hplatform.h>
+#if __APPLE__
 #include <TargetConditionals.h>
+#endif
+#if TARGET_OS_IPHONE
+#ifdef _OPENGLES1
+#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES1/glext.h>
+#elif defined(_OPENGLES2)
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+extern GLint _positionSlot;
+#endif
+#else
+#include <GLES/gl.h>
+#ifdef _ANDROID
+#define GL_GLEXT_PROTOTYPES
+#include <GLES/glext.h>
+#else
+#include <EGL/egl.h>
+#endif
 #endif
 
 #include "OpenGL_State.h"
@@ -26,7 +45,6 @@
 
 namespace april
 {
-	class Image;
 	class OpenGLES1_Texture;
 	class Window;
 
@@ -37,27 +55,30 @@ namespace april
 
 		OpenGLES1_RenderSystem();
 		~OpenGLES1_RenderSystem();
-		bool destroy();
 
 		void assignWindow(Window* window);
 		
-		Texture* createTexture(int w, int h, unsigned char* rgba);
-		Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
-
 		// TODO - refactor
-		int _getMaxTextureSize();
+		int getMaxTextureSize();
 
 	protected:
-		void _setupDefaultParameters();
 		Texture* _createTexture(chstr filename);
+		Texture* _createTexture(int w, int h, unsigned char* rgba);
+		Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
 
 		void _setVertexPointer(int stride, const void* pointer);
 		void _setTextureBlendMode(BlendMode mode);
 
 #ifdef _WIN32
+		EGLDisplay eglDisplay;
+		EGLConfig eglConfig;
+		EGLSurface eglSurface;
+		EGLContext eglContext;
+		EGLint pi32ConfigAttribs[128];
+
 		void _releaseWindow();
 #endif
-		
+
 	};
 	
 }

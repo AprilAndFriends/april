@@ -111,7 +111,7 @@ void april_init(const harray<hstr>& args)
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple Demo");
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
-	texture = april::rendersys->loadTexture(RESOURCE_PATH "jpt_final");
+	texture = april::rendersys->createTexture(RESOURCE_PATH "jpt_final");
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w / 2;
 	textureRect.y = -textureRect.h / 2;

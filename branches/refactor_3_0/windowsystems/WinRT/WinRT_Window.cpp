@@ -265,7 +265,7 @@ namespace april
 			{
 				// loading the logo file
 				logoFilename = logoFilename(0, index);
-				this->logoTexture = april::rendersys->loadTexture(logoFilename, true);
+				this->logoTexture = april::rendersys->createTexture(logoFilename, false);
 				if (this->logoTexture != NULL)
 				{
 					try

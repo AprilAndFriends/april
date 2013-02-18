@@ -341,13 +341,13 @@ void april_init(const harray<hstr>& args)
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Tic Tac Toe Demo");
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
-	background = april::rendersys->loadTexture(RESOURCE_PATH "texture");
-	x_symbol = april::rendersys->loadTexture(RESOURCE_PATH "x");
-	o_symbol = april::rendersys->loadTexture(RESOURCE_PATH "o");
-	line_horz = april::rendersys->loadTexture(RESOURCE_PATH "line_horz");
-	line_vert = april::rendersys->loadTexture(RESOURCE_PATH "line_vert");
-	line45 = april::rendersys->loadTexture(RESOURCE_PATH "line45");
-	line315 = april::rendersys->loadTexture(RESOURCE_PATH "line315");
+	background = april::rendersys->createTexture(RESOURCE_PATH "texture");
+	x_symbol = april::rendersys->createTexture(RESOURCE_PATH "x");
+	o_symbol = april::rendersys->createTexture(RESOURCE_PATH "o");
+	line_horz = april::rendersys->createTexture(RESOURCE_PATH "line_horz");
+	line_vert = april::rendersys->createTexture(RESOURCE_PATH "line_vert");
+	line45 = april::rendersys->createTexture(RESOURCE_PATH "line45");
+	line315 = april::rendersys->createTexture(RESOURCE_PATH "line315");
 }
 
 void april_destroy()

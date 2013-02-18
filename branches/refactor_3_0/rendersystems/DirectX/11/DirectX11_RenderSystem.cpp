@@ -732,12 +732,12 @@ namespace april
 		return new DirectX11_Texture(filename);
 	}
 
-	Texture* DirectX11_RenderSystem::createTexture(int w, int h, unsigned char* rgba)
+	Texture* DirectX11_RenderSystem::_createTexture(int w, int h, unsigned char* rgba)
 	{
 		return new DirectX11_Texture(w, h, rgba);
 	}
 	
-	Texture* DirectX11_RenderSystem::createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
+	Texture* DirectX11_RenderSystem::_createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
 	{
 		return new DirectX11_Texture(w, h, format, type, color);
 	}

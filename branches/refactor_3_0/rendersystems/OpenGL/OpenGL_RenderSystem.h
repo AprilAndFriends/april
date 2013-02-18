@@ -17,6 +17,7 @@
 #ifndef APRIL_OPENGL_RENDER_SYSTEM_H
 #define APRIL_OPENGL_RENDER_SYSTEM_H
 
+#include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
 #include "OpenGL_State.h"
@@ -25,6 +26,7 @@
 namespace april
 {
 	class OpenGL_Texture;
+	class Window;
 
 	class OpenGL_RenderSystem : public RenderSystem
 	{
@@ -35,6 +37,7 @@ namespace april
 		bool destroy();
 
 		void reset();
+		void assignWindow(Window* window);
 
 		float getPixelOffset() { return 0.0f; }
 		grect getViewport();
@@ -93,6 +96,17 @@ namespace april
 		virtual void _setVertexPointer(int stride, const void* pointer) = 0;
 		virtual void _setTexCoordPointer(int stride, const void* pointer);
 		virtual void _setColorPointer(int stride, const void* pointer);
+
+#ifdef _WIN32
+		HWND hWnd;
+		HDC hDC;
+
+		bool _initWin32(Window* window);
+		virtual void _releaseWindow();
+	public:
+		HDC getHDC() { return this->hDC; }
+
+#endif
 
 	};
 	
