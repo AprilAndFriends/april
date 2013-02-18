@@ -211,6 +211,7 @@ namespace april
 		{
 			this->handleMouseEvent(type, position, AMOUSEBTN_LEFT);
 		}
+		this->touchEvents.clear();
 		this->touchEvents += TouchInputEvent(this->touches);
 	}
 	
