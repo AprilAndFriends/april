@@ -41,11 +41,7 @@ int victory = 0;
 bool player = 0;
 april::TexturedVertex v[4];
 
-#ifndef _ANDROID
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
-#else
-grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
-#endif
 gvec2 size = drawRect.getSize() * 5 / 16;
 
 void draw_symbol(int x, int y, chstr symbol)
@@ -186,7 +182,7 @@ class UpdateDelegate : public april::UpdateDelegate
 
 class MouseDelegate : public april::MouseDelegate
 {
-	void onMouseUp(april::KeySym button)
+	void onMouseUp(april::Key button)
 	{
 		gvec2 cursorPosition = april::window->getCursorPosition();
 		float x = cursorPosition.x;
@@ -331,6 +327,49 @@ static MouseDelegate* mouseDelegate = NULL;
 
 void april_init(const harray<hstr>& args)
 {
+#ifdef __APPLE__
+	// On MacOSX, the current working directory is not set by
+	// the Finder, since you are expected to use Core Foundation
+	// or ObjC APIs to find files. 
+	// So, when porting you probably want to set the current working
+	// directory to something sane (e.g. .../Resources/ in the app
+	// bundle).
+	// In this case, we set it to parent of the .app bundle.
+	{	// curly braces in order to localize variables 
+
+		CFURLRef url = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+		CFStringRef path = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
+		// let's hope chdir() will be happy with utf8 encoding
+		const char* cpath = CFStringGetCStringPtr(path, kCFStringEncodingUTF8);
+		char* cpath_alloc = NULL;
+		if (cpath == NULL)
+		{
+			// CFStringGetCStringPtr is allowed to return NULL. bummer.
+			// we need to use CFStringGetCString instead.
+			cpath_alloc = (char*)malloc(CFStringGetLength(path) + 1);
+			CFStringGetCString(path, cpath_alloc, CFStringGetLength(path) + 1, kCFStringEncodingUTF8);
+		}
+		else
+		{
+			// even though it didn't return NULL, we still want to slice off bundle name.
+			cpath_alloc = (char*)malloc(CFStringGetLength(path) + 1);
+			strcpy(cpath_alloc, cpath);
+		}
+		// just in case / is appended to .app path for some reason
+		if (cpath_alloc[CFStringGetLength(path) - 1] == '/')
+		{
+			cpath_alloc[CFStringGetLength(path) - 1] = 0;
+		}
+		// replace pre-.app / with a null character, thus
+		// cutting off .app's name and getting parent of .app.
+		strrchr(cpath_alloc, '/')[0] = 0;
+		// change current dir using posix api
+		chdir(cpath_alloc);
+		free(cpath_alloc); // even if null, still ok
+		CFRelease(path);
+		CFRelease(url);
+	}
+#endif
 	updateDelegate = new UpdateDelegate();
 	mouseDelegate = new MouseDelegate();
 #if defined(_ANDROID) || defined(_IOS)
@@ -361,5 +400,7 @@ void april_destroy()
 	delete line315;
 	april::destroy();
 	delete updateDelegate;
+	updateDelegate = NULL;
 	delete mouseDelegate;
+	mouseDelegate = NULL;
 }

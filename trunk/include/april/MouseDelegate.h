@@ -25,8 +25,8 @@ namespace april
 		MouseDelegate();
 		virtual ~MouseDelegate();
 
-		virtual void onMouseDown(april::KeySym button);
-		virtual void onMouseUp(april::KeySym button);
+		virtual void onMouseDown(april::Key button);
+		virtual void onMouseUp(april::Key button);
 		virtual void onMouseMove();
 		virtual void onMouseScroll(float x, float y);
 

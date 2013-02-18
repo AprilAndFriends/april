@@ -119,12 +119,12 @@ namespace april
 	
 	void JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
-		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_DOWN, (KeySym)(int)keyCode, (unsigned int)charCode));
+		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_DOWN, (Key)(int)keyCode, (unsigned int)charCode));
 	}
 	
 	void JNICALL _JNI_onKeyUp(JNIEnv* env, jclass classe, jint keyCode)
 	{
-		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_UP, (KeySym)(int)keyCode, 0));
+		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_UP, (Key)(int)keyCode, 0));
 	}
 	
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)

@@ -15,6 +15,7 @@
 #define APRIL_KEYBOARD_DELEGATE_H
 
 #include "aprilExport.h"
+#include "Keys.h"
 
 namespace april
 {
@@ -24,8 +25,8 @@ namespace april
 		KeyboardDelegate();
 		virtual ~KeyboardDelegate();
 
-		virtual void onKeyDown(unsigned int keyCode);
-		virtual void onKeyUp(unsigned int keyCode);
+		virtual void onKeyDown(april::Key keyCode);
+		virtual void onKeyUp(april::Key keyCode);
 		virtual void onChar(unsigned int charCode);
 
 	};
