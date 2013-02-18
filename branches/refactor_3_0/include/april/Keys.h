@@ -22,7 +22,7 @@ namespace april
 	// however, these are mostly nicely defined, so let's use them
 	// on other platforms too
 
-	enum KeySym
+	enum Key
 	{
 #ifndef _ANDROID
 		AK_UNKNOWN = -1,

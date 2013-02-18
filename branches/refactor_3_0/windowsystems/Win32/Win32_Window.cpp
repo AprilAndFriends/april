@@ -272,13 +272,13 @@ namespace april
 			}
 			else
 			{
-				april::window->handleKeyOnlyEvent(AKEYEVT_DOWN, (april::KeySym)wParam);
+				april::window->handleKeyOnlyEvent(AKEYEVT_DOWN, (april::Key)wParam);
 			}
 			return 0;
 		case WM_SYSKEYUP:
 			if (wParam == VK_MENU) _altKeyDown = false;
 		case WM_KEYUP:
-			april::window->handleKeyOnlyEvent(AKEYEVT_UP, (april::KeySym)wParam);
+			april::window->handleKeyOnlyEvent(AKEYEVT_UP, (april::Key)wParam);
 			return 0;
 		case WM_CHAR:
 			april::window->handleCharOnlyEvent(wParam);
