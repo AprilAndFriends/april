@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.52
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -11,7 +11,7 @@
 /// 
 /// Defines a WinRT window.
 
-#ifdef _WIN32
+#ifdef HAVE_WINRT
 #ifndef APRIL_WINRT_WINDOW_H
 #define APRIL_WINRT_WINDOW_H
 #include <hltypes/hplatform.h>
@@ -29,16 +29,16 @@ namespace april
 {
 	class Texture;
 	
-	class aprilExport WinRT_Window : public Window
+	class WinRT_Window : public Window
 	{
 	public:
 		struct MouseInputEvent
 		{
 			MouseEventType type;
 			gvec2 position;
-			MouseButton button;
+			KeySym button;
 		
-			MouseInputEvent(MouseEventType _type, gvec2 _position, MouseButton _button)
+			MouseInputEvent(MouseEventType _type, gvec2 _position, KeySym _button)
 			{
 				type = _type;
 				position = _position;
@@ -76,15 +76,14 @@ namespace april
 		WinRT_Window();
 		~WinRT_Window();
 		
-		bool create(int w, int h, bool fullscreen, chstr title);
+		bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
 		bool destroy();
 		
 		//void setTitle(chstr title);
 		void setCursorVisible(bool value);
-		int getWidth() { return this->width; }
-		int getHeight() { return this->height; }
-		bool isTouchEnabled() { return this->touchEnabled; }
-		void setTouchEnabled(bool value) { this->touchEnabled = value; }
+		HL_DEFINE_GET(int, width, Width);
+		HL_DEFINE_GET(int, height, Height);
+		HL_DEFINE_ISSET(bool, touchEnabled, TouchEnabled);
 		void* getBackendId();
 		//void _setResolution(int w, int h);
 		bool updateOneFrame();
@@ -92,7 +91,7 @@ namespace april
 		void checkEvents();
 		
 		void handleTouchEvent(MouseEventType type, gvec2 position, int index);
-		void handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button);
+		void handleMouseEvent(MouseEventType type, gvec2 position, KeySym button);
 		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
 		
 	protected:

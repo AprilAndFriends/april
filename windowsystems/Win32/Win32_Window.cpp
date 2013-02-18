@@ -2,14 +2,14 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _WIN32
+#ifdef HAVE_WIN32
 #include <hltypes/hplatform.h>
 #if !_HL_WINRT
 #include <winuser.h>
@@ -23,14 +23,14 @@
 #include "Timer.h"
 #include "Win32_Window.h"
 
+#ifdef _OPENGL
+#include "OpenGL_RenderSystem.h"
+#endif
+
 #define APRIL_WIN32_WINDOW_CLASS L"AprilWin32Window"
 
 namespace april
 {
-#ifdef _OPENGL
-	extern HDC hDC;
-#endif
-	
 	Win32_Window::Win32_Window() : Window()
 	{
 		this->name = APRIL_WS_WIN32;
@@ -42,9 +42,9 @@ namespace april
 		this->destroy();
 	}
 
-	bool Win32_Window::create(int w, int h, bool fullscreen, chstr title)
+	bool Win32_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
-		if (!Window::create(w, h, fullscreen, title))
+		if (!Window::create(w, h, fullscreen, title, options))
 		{
 			return false;
 		}
@@ -193,9 +193,13 @@ namespace april
 	void Win32_Window::presentFrame()
 	{
 #ifdef _OPENGL
-		if (april::rendersys->getName() == APRIL_RS_OPENGL)
+		harray<hstr> renderSystems;
+		renderSystems += APRIL_RS_OPENGL1;
+		renderSystems += APRIL_RS_OPENGLES1;
+		renderSystems += APRIL_RS_OPENGLES2;
+		if (renderSystems.contains(april::rendersys->getName()))
 		{
-			SwapBuffers(hDC);
+			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
 		}
 #endif
 	}
@@ -233,19 +237,19 @@ namespace april
 				if (_doubleTapDown)
 				{ 
 					_doubleTapDown = false;
-					april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AMOUSEBTN_DOUBLETAP);
+					april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AK_DOUBLETAP);
 				}
 				_touchDown = false;
 			}
 			else if (wParam == 6) // GID_TWOFINGERTAP
 			{
 				_doubleTapDown = true;
-				april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AMOUSEBTN_DOUBLETAP);
+				april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AK_DOUBLETAP);
 			}
 			break;
 		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
 			_touchDown = true;
-			april::window->handleTouchscreenEnabledEvent(true);
+			april::window->setTouchEnabled(true);
 			break;
 		case WM_DESTROY:
 		case WM_CLOSE:
@@ -282,7 +286,7 @@ namespace april
 		case WM_LBUTTONDOWN:
 			_touchDown = true;
 			_mouseMoveMessagesCount = 0;
-			april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AMOUSEBTN_LEFT);
+			april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AK_LBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				SetCapture((HWND)april::window->getBackendId());
@@ -291,7 +295,7 @@ namespace april
 		case WM_RBUTTONDOWN:
 			_touchDown = true;
 			_mouseMoveMessagesCount = 0;
-			april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AMOUSEBTN_RIGHT);
+			april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AK_RBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				SetCapture((HWND)april::window->getBackendId());
@@ -299,7 +303,7 @@ namespace april
 			break;
 		case WM_LBUTTONUP:
 			_touchDown = false;
-			april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AMOUSEBTN_LEFT);
+			april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AK_LBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				ReleaseCapture();
@@ -307,7 +311,7 @@ namespace april
 			break;
 		case WM_RBUTTONUP:
 			_touchDown = false;
-			april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AMOUSEBTN_RIGHT);
+			april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AK_RBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				ReleaseCapture();
@@ -318,7 +322,7 @@ namespace april
 			{
 				if (_mouseMoveMessagesCount >= 10)
 				{
-					april::window->handleTouchscreenEnabledEvent(false);
+					april::window->setTouchEnabled(false);
 				}
 				else
 				{
@@ -329,28 +333,28 @@ namespace april
 			{
 				_mouseMoveMessagesCount = 0;
 			}
-			april::window->handleMouseEvent(AMOUSEEVT_MOVE, april::window->getCursorPosition(), AMOUSEBTN_NONE);
+			april::window->handleMouseEvent(AMOUSEEVT_MOVE, april::window->getCursorPosition(), AK_NONE);
 			break;
 		case WM_MOUSEWHEEL:
 			_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 			{
-				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(0.0f, -(float)_wheelDelta), AMOUSEBTN_NONE);
+				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(0.0f, -(float)_wheelDelta), AK_NONE);
 			}
 			else
 			{
-				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), AMOUSEBTN_NONE);
+				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), AK_NONE);
 			}
 			break;
 		case WM_MOUSEHWHEEL:
 			_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 			{
-				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), AMOUSEBTN_NONE);
+				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), AK_NONE);
 			}
 			else
 			{
-				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(0.0f, -(float)_wheelDelta), AMOUSEBTN_NONE);
+				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(0.0f, -(float)_wheelDelta), AK_NONE);
 			}
 			break;
 		case WM_SETCURSOR:

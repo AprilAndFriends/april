@@ -21,12 +21,16 @@ Global
 		Debug_OpenGL|Win32 = Debug_OpenGL|Win32
 		Debug_OpenGLES1|Android = Debug_OpenGLES1|Android
 		Debug_OpenGLES1|Win32 = Debug_OpenGLES1|Win32
+		Debug|Android = Debug|Android
+		Debug|Win32 = Debug|Win32
 		Release_DirectX9|Android = Release_DirectX9|Android
 		Release_DirectX9|Win32 = Release_DirectX9|Win32
 		Release_OpenGL|Android = Release_OpenGL|Android
 		Release_OpenGL|Win32 = Release_OpenGL|Win32
 		Release_OpenGLES1|Android = Release_OpenGLES1|Android
 		Release_OpenGLES1|Win32 = Release_OpenGLES1|Win32
+		Release|Android = Release|Android
+		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_DirectX9|Android.ActiveCfg = Debug_DirectX9|Android
@@ -41,6 +45,10 @@ Global
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGLES1|Android.Build.0 = Debug_OpenGLES1|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGLES1|Win32.ActiveCfg = Debug_OpenGLES1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGLES1|Win32.Build.0 = Debug_OpenGLES1|Win32
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug|Android.ActiveCfg = Debug|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug|Android.Build.0 = Debug|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug|Win32.Build.0 = Debug|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_DirectX9|Android.ActiveCfg = Release_DirectX9|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_DirectX9|Android.Build.0 = Release_DirectX9|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_DirectX9|Win32.ActiveCfg = Release_DirectX9|Win32
@@ -53,6 +61,10 @@ Global
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGLES1|Android.Build.0 = Release_OpenGLES1|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGLES1|Win32.ActiveCfg = Release_OpenGLES1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGLES1|Win32.Build.0 = Release_OpenGLES1|Win32
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release|Android.ActiveCfg = Release|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release|Android.Build.0 = Release|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release|Win32.ActiveCfg = Release|Win32
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release|Win32.Build.0 = Release|Win32
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Debug_DirectX9|Android.ActiveCfg = Debug|Android
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Debug_DirectX9|Android.Build.0 = Debug|Android
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Debug_DirectX9|Win32.ActiveCfg = Debug|Win32
@@ -65,6 +77,10 @@ Global
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Debug_OpenGLES1|Android.Build.0 = Debug|Android
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Debug_OpenGLES1|Win32.ActiveCfg = Debug|Win32
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Debug_OpenGLES1|Win32.Build.0 = Debug|Win32
+		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Debug|Android.ActiveCfg = Debug|Android
+		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Debug|Android.Build.0 = Debug|Android
+		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Debug|Win32.Build.0 = Debug|Win32
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Release_DirectX9|Android.ActiveCfg = Release|Android
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Release_DirectX9|Android.Build.0 = Release|Android
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Release_DirectX9|Win32.ActiveCfg = Release|Win32
@@ -77,6 +93,10 @@ Global
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Release_OpenGLES1|Android.Build.0 = Release|Android
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Release_OpenGLES1|Win32.ActiveCfg = Release|Win32
 		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Release_OpenGLES1|Win32.Build.0 = Release|Win32
+		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Release|Android.ActiveCfg = Release|Android
+		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Release|Android.Build.0 = Release|Android
+		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Release|Win32.ActiveCfg = Release|Win32
+		{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}.Release|Win32.Build.0 = Release|Win32
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Debug_DirectX9|Android.ActiveCfg = Debug|Android
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Debug_DirectX9|Android.Build.0 = Debug|Android
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Debug_DirectX9|Win32.ActiveCfg = Debug|Win32
@@ -89,6 +109,10 @@ Global
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Debug_OpenGLES1|Android.Build.0 = Debug|Android
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Debug_OpenGLES1|Win32.ActiveCfg = Debug|Win32
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Debug_OpenGLES1|Win32.Build.0 = Debug|Win32
+		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Debug|Android.ActiveCfg = Debug|Android
+		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Debug|Android.Build.0 = Debug|Android
+		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Debug|Win32.Build.0 = Debug|Win32
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Release_DirectX9|Android.ActiveCfg = Release|Android
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Release_DirectX9|Android.Build.0 = Release|Android
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Release_DirectX9|Win32.ActiveCfg = Release|Win32
@@ -101,6 +125,10 @@ Global
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Release_OpenGLES1|Android.Build.0 = Release|Android
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Release_OpenGLES1|Win32.ActiveCfg = Release|Win32
 		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Release_OpenGLES1|Win32.Build.0 = Release|Win32
+		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Release|Android.ActiveCfg = Release|Android
+		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Release|Android.Build.0 = Release|Android
+		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Release|Win32.ActiveCfg = Release|Win32
+		{8ED4EDB5-7C0E-411F-BCC6-A96882CC73F3}.Release|Win32.Build.0 = Release|Win32
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Debug_DirectX9|Android.ActiveCfg = Debug|Android
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Debug_DirectX9|Android.Build.0 = Debug|Android
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Debug_DirectX9|Win32.ActiveCfg = Debug|Win32
@@ -113,6 +141,10 @@ Global
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Debug_OpenGLES1|Android.Build.0 = Debug|Android
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Debug_OpenGLES1|Win32.ActiveCfg = Debug|Win32
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Debug_OpenGLES1|Win32.Build.0 = Debug|Win32
+		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Debug|Android.ActiveCfg = Debug|Android
+		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Debug|Android.Build.0 = Debug|Android
+		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Debug|Win32.Build.0 = Debug|Win32
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release_DirectX9|Android.ActiveCfg = Release|Android
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release_DirectX9|Android.Build.0 = Release|Android
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release_DirectX9|Win32.ActiveCfg = Release|Win32
@@ -125,6 +157,10 @@ Global
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release_OpenGLES1|Android.Build.0 = Release|Android
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release_OpenGLES1|Win32.ActiveCfg = Release|Win32
 		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release_OpenGLES1|Win32.Build.0 = Release|Win32
+		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release|Android.ActiveCfg = Release|Android
+		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release|Android.Build.0 = Release|Android
+		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release|Win32.ActiveCfg = Release|Win32
+		{9C043B29-DB40-48D5-97D8-1BC44128E3BA}.Release|Win32.Build.0 = Release|Win32
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Debug_DirectX9|Android.ActiveCfg = Debug_ZipResource|Android
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Debug_DirectX9|Android.Build.0 = Debug_ZipResource|Android
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Debug_DirectX9|Win32.ActiveCfg = Debug|Win32
@@ -137,6 +173,10 @@ Global
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Debug_OpenGLES1|Android.Build.0 = Debug_ZipResource|Android
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Debug_OpenGLES1|Win32.ActiveCfg = Debug|Win32
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Debug_OpenGLES1|Win32.Build.0 = Debug|Win32
+		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Debug|Android.ActiveCfg = Debug_ZipResource|Android
+		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Debug|Android.Build.0 = Debug_ZipResource|Android
+		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Debug|Win32.Build.0 = Debug|Win32
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Release_DirectX9|Android.ActiveCfg = Release_ZipResource|Android
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Release_DirectX9|Android.Build.0 = Release_ZipResource|Android
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Release_DirectX9|Win32.ActiveCfg = Release|Win32
@@ -149,6 +189,10 @@ Global
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Release_OpenGLES1|Android.Build.0 = Release_ZipResource|Android
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Release_OpenGLES1|Win32.ActiveCfg = Release|Win32
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Release_OpenGLES1|Win32.Build.0 = Release|Win32
+		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Release|Android.ActiveCfg = Release_ZipResource|Android
+		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Release|Android.Build.0 = Release_ZipResource|Android
+		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Release|Win32.ActiveCfg = Release|Win32
+		{E4D373BF-E227-48B9-99E6-84987E8674EC}.Release|Win32.Build.0 = Release|Win32
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Debug_DirectX9|Android.ActiveCfg = Debug|Android
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Debug_DirectX9|Android.Build.0 = Debug|Android
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Debug_DirectX9|Win32.ActiveCfg = Debug|Win32
@@ -161,6 +205,10 @@ Global
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Debug_OpenGLES1|Android.Build.0 = Debug|Android
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Debug_OpenGLES1|Win32.ActiveCfg = Debug|Win32
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Debug_OpenGLES1|Win32.Build.0 = Debug|Win32
+		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Debug|Android.ActiveCfg = Debug|Android
+		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Debug|Android.Build.0 = Debug|Android
+		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Debug|Win32.Build.0 = Debug|Win32
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Release_DirectX9|Android.ActiveCfg = Release|Android
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Release_DirectX9|Android.Build.0 = Release|Android
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Release_DirectX9|Win32.ActiveCfg = Release|Win32
@@ -173,6 +221,10 @@ Global
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Release_OpenGLES1|Android.Build.0 = Release|Android
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Release_OpenGLES1|Win32.ActiveCfg = Release|Win32
 		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Release_OpenGLES1|Win32.Build.0 = Release|Win32
+		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Release|Android.ActiveCfg = Release|Android
+		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Release|Android.Build.0 = Release|Android
+		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Release|Win32.ActiveCfg = Release|Win32
+		{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

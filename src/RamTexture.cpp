@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -14,7 +14,7 @@
 
 #include "april.h"
 #include "Color.h"
-#include "ImageSource.h"
+#include "Image.h"
 #include "RamTexture.h"
 #include "RenderSystem.h"
 
@@ -32,7 +32,7 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->bpp = 4;
-		this->source = april::createEmptyImage(w, h);
+		this->source = Image::create(w, h);
 	}
 
 	RamTexture::~RamTexture()
@@ -47,14 +47,14 @@ namespace april
 			hlog::writef(april::logTag, "Loading RAM texture '%s'.", this->_getInternalName().c_str());
 			if (this->filename != "")
 			{
-				this->source = april::loadImage(this->filename);
+				this->source = Image::load(this->filename);
 				this->width = this->source->w;
 				this->height = this->source->h;
 				this->bpp = this->source->bpp;
 			}
 			else
 			{
-				this->source = april::createEmptyImage(this->width, this->height);
+				this->source = Image::create(this->width, this->height);
 			}
 			return true;
 		}

@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -10,29 +10,11 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _OPENGL
+
 #include <hltypes/hplatform.h>
-// TODO - should be cleaned up a bit
 #if __APPLE__
 #include <TargetConditionals.h>
 #endif
-#if TARGET_OS_IPHONE
-#ifdef _OPENGLES1
-	#include <OpenGLES/ES1/gl.h>
-	#include <OpenGLES/ES1/glext.h>
-#elif defined(_OPENGLES2)
-	#include <OpenGLES/ES2/gl.h>
-	#include <OpenGLES/ES2/glext.h>
-	extern GLint _positionSlot;
-#endif
-#elif defined(_OPENGLES)
-#include <GLES/gl.h>
-#ifdef _ANDROID
-#define GL_GLEXT_PROTOTYPES
-#include <GLES/glext.h>
-#else
-#include <EGL/egl.h>
-#endif
-#else
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -43,40 +25,28 @@
 #else
 #include <OpenGL/gl.h>
 #endif
-#endif
 
-#include <gtypes/Vector2.h>
-#include <hltypes/exception.h>
+#include <gtypes/Rectangle.h>
 #include <hltypes/hlog.h>
-#include <hltypes/hltypesUtil.h>
+#include <hltypes/hstring.h>
 
 #include "april.h"
-#include "ImageSource.h"
-#include "Keys.h"
+#include "Color.h"
+#include "Image.h"
 #include "OpenGL_RenderSystem.h"
 #include "OpenGL_Texture.h"
 #include "Platform.h"
-#include "Timer.h"
-#include "Window.h"
 
 #define MAX_VERTEX_COUNT 65536
 
 namespace april
 {
-	static Color lastColor = Color::Black;
 #ifdef _WIN32 // if _WIN32
 	static HWND hWnd = 0;
-	HDC hDC = 0;
-#ifndef _OPENGLES // if _WIN32 && GLES
-	static HGLRC hRC = 0;
-#else
-	static EGLDisplay eglDisplay = 0;
-	static EGLConfig eglConfig	= 0;
-	static EGLSurface eglSurface = 0;
-	static EGLContext eglContext = 0;
-	static EGLint pi32ConfigAttribs[128] = {EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE, 8, EGL_ALPHA_SIZE, 0, EGL_SURFACE_TYPE, EGL_WINDOW_BIT, EGL_NONE};
+	static HDC hDC = 0;
 #endif
-#endif
+
+	static Color lastColor = Color::Black;
 
 	unsigned int _limitPrimitives(RenderOp renderOp, int nVertices)
 	{
@@ -98,37 +68,6 @@ namespace april
 		return nVertices;
 	}
 	
-	// TODO - refactor
-	int OpenGL_RenderSystem::_getMaxTextureSize()
-	{
-#ifdef _WIN32
-#ifndef _OPENGLES
-		if (hRC == 0)
-#else
-		if (eglDisplay == 0)
-#endif
-		{
-			return 0;
-		}
-#endif
-		int max;
-		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
-		return max;
-	}
-
-	void win_mat_invert()
-	{
-		((OpenGL_RenderSystem*)april::rendersys)->setMatrixMode(GL_PROJECTION);
-		glPushMatrix();
-		float mat[16];
-		glGetFloatv(GL_PROJECTION_MATRIX, mat);
-		hswap(mat[1], mat[0]);
-		hswap(mat[4], mat[5]);
-		mat[5] = -mat[5];
-		mat[13] = -mat[13];
-		glLoadMatrixf(mat);
-	}
-	
 	// translation from abstract render ops to gl's render ops
 	int gl_render_ops[]=
 	{
@@ -141,45 +80,16 @@ namespace april
 		GL_POINTS,			// ROP_POINTS
 	};
 	
-	OpenGL_RenderState::OpenGL_RenderState()
-	{
-		this->reset();
-	}
-	
-	OpenGL_RenderState::~OpenGL_RenderState()
-	{
-	}
-	
-	void OpenGL_RenderState::reset()
-	{
-		this->textureCoordinatesEnabled = false;
-		this->colorEnabled = false;
-		this->textureId = 0;
-		this->textureFilter = Texture::FILTER_UNDEFINED;
-		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
-		this->systemColor = Color::Black;
-		this->modelviewMatrixChanged = false;
-		this->projectionMatrixChanged = false;
-		this->blendMode = (BlendMode)10000;
-		this->colorMode = (ColorMode)10000;
-		this->colorModeAlpha = 255;
-		this->modeMatrix = 0;
-		this->strideVertex = 0;
-		this->pointerVertex = NULL;
-		this->strideTexCoord = 0;
-		this->pointerTexCoord = NULL;
-		this->strideColor = 0;
-		this->pointerColor = NULL;
-	}
-	
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
 	{
-		this->name = APRIL_RS_OPENGL;
+#ifdef _WIN32
+		this->hWnd = 0;
+		this->hDC = 0;
+#endif
 	}
 
 	OpenGL_RenderSystem::~OpenGL_RenderSystem()
 	{
-		this->destroy();
 	}
 
 	bool OpenGL_RenderSystem::create(chstr options)
@@ -190,6 +100,8 @@ namespace april
 		}
 		this->activeTexture = NULL;
 		this->options = options;
+		this->deviceState.reset();
+		this->state.reset();
 		return true;
 	}
 
@@ -199,7 +111,9 @@ namespace april
 		{
 			return false;
 		}
-		// TODO - should maybe be refactored
+		this->activeTexture = NULL;
+		this->deviceState.reset();
+		this->state.reset();
 #ifdef _WIN32
 		this->_releaseWindow();
 #endif
@@ -209,33 +123,15 @@ namespace april
 #ifdef _WIN32
 	void OpenGL_RenderSystem::_releaseWindow()
 	{
-#ifndef _OPENGLES
-		if (hRC != 0)
-		{
-			wglMakeCurrent(NULL, NULL);
-			wglDeleteContext(hRC);
-			hRC = 0;
-		}
-#else
-		if (eglDisplay != 0)
-		{
-			eglMakeCurrent(eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-			eglTerminate(eglDisplay);
-			eglDisplay = 0;
-		}
-#endif
 		if (hDC != 0)
 		{
 			ReleaseDC(hWnd, hDC);
 			hDC = 0;
 		}
 	}
-#endif
-
-	void OpenGL_RenderSystem::assignWindow(Window* window)
+	bool OpenGL_RenderSystem::_initWin32(Window* window)
 	{
-#ifdef _WIN32
-		hWnd = (HWND)april::window->getBackendId();
+		this->hWnd = (HWND)window->getBackendId();
 		PIXELFORMATDESCRIPTOR pfd;
 		memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
 		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
@@ -245,98 +141,38 @@ namespace april
 		pfd.cColorBits = 24;
 		pfd.cStencilBits = 16;
 		pfd.dwLayerMask = PFD_MAIN_PLANE;
-
-		hDC = GetDC(hWnd);
-		if (hDC == 0)
+		this->hDC = GetDC(this->hWnd);
+		if (this->hDC == 0)
 		{
 			hlog::error(april::logTag, "Can't create a GL device context!");
-			return;
+			return false;
 		}
-		GLuint pixelFormat = ChoosePixelFormat(hDC, &pfd);
+		GLuint pixelFormat = ChoosePixelFormat(this->hDC, &pfd);
 		if (pixelFormat == 0)
 		{
 			hlog::error(april::logTag, "Can't find a suitable pixel format!");
 			this->_releaseWindow();
-			return;
+			return false;
 		}
-		if (SetPixelFormat(hDC, pixelFormat, &pfd) == 0)
+		if (SetPixelFormat(this->hDC, pixelFormat, &pfd) == 0)
 		{
 			hlog::error(april::logTag, "Can't set the pixel format!");
 			this->_releaseWindow();
-			return;
+			return false;
 		}
-#ifndef _OPENGLES
-		hRC = wglCreateContext(hDC);
-		if (hRC == 0)
-		{
-			hlog::error(april::logTag, "Can't create a GL rendering context!");
-			this->_releaseWindow();
-			return;
-		}
-		if (wglMakeCurrent(hDC, hRC) == 0)
-		{
-			hlog::error(april::logTag, "Can't activate the GL rendering context!");
-			this->_releaseWindow();
-			return;
-		}
-#else
-		eglDisplay = eglGetDisplay((NativeDisplayType)hDC);
-		if (eglDisplay == EGL_NO_DISPLAY)
-		{
-			 eglDisplay = eglGetDisplay((NativeDisplayType)EGL_DEFAULT_DISPLAY);
-		}
-		if (eglDisplay == EGL_NO_DISPLAY)
-		{
-			hlog::error(april::logTag, "Can't get EGL display!");
-			this->_releaseWindow();
-			return;
-		}
-		EGLint majorVersion;
-		EGLint minorVersion;
-		if (!eglInitialize(eglDisplay, &majorVersion, &minorVersion))
-		{
-			hlog::error(april::logTag, "Can't initialize EGL!");
-			this->_releaseWindow();
-			return;
-		}
-		EGLint configs;
-		EGLBoolean result = eglChooseConfig(eglDisplay, pi32ConfigAttribs, &eglConfig, 1, &configs);
-		if (!result || configs == 0)
-		{
-			hlog::error(april::logTag, "Can't choose EGL config!");
-			this->_releaseWindow();
-			return;
-		}
+		return true;
+	}
 
-		eglSurface = eglCreateWindowSurface(eglDisplay, eglConfig, (NativeWindowType)hWnd, NULL);
-		if (eglGetError() != EGL_SUCCESS)
-		{
-			hlog::error(april::logTag, "Can't create window surface!");
-			this->_releaseWindow();
-			return;
-		}
-		eglContext = eglCreateContext(eglDisplay, eglConfig, EGL_NO_CONTEXT, NULL);
-		if (eglGetError() != EGL_SUCCESS)
-		{
-			hlog::error(april::logTag, "Can't create EGL context!");
-			this->_releaseWindow();
-			return;
-		}
-		eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
-		if (eglGetError() != EGL_SUCCESS)
-		{
-			hlog::error(april::logTag, "Can't make context current!");
-			this->_releaseWindow();
-			return;
-		}
 #endif
-#endif
+
+	void OpenGL_RenderSystem::assignWindow(Window* window)
+	{
 		this->_setupDefaultParameters();
 		this->setMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		this->setMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		this->orthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
+		this->orthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
 	}
 
 	void OpenGL_RenderSystem::reset()
@@ -352,21 +188,15 @@ namespace april
 
 	void OpenGL_RenderSystem::_setupDefaultParameters()
 	{
-		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
 		glClearColor(0, 0, 0, 1);
 		lastColor.set(0, 0, 0, 255);
+		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
 		// GL defaults
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnable(GL_TEXTURE_2D);
 		// pixel data
-#ifndef _OPENGLES
-		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
-#endif
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 		// other
@@ -385,19 +215,13 @@ namespace april
 		this->state.colorMode = april::NORMAL;
 	}
 
-	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
+	int OpenGL_RenderSystem::getMaxTextureSize()
 	{
-		// TODO
-		harray<DisplayMode> result;
-		gvec2 resolution = april::getSystemInfo().displayResolution;
-		DisplayMode displayMode;
-		displayMode.width = (int)resolution.x;
-		displayMode.height = (int)resolution.y;
-		displayMode.refreshRate = 60;
-		result += displayMode;
-		return result;
+		int max;
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
+		return max;
 	}
-	
+
 	grect OpenGL_RenderSystem::getViewport()
 	{
 		static float params[4];
@@ -411,6 +235,126 @@ namespace april
 		glViewport((int)rect.x, (int)(april::window->getHeight() - rect.h - rect.y), (int)rect.w, (int)rect.h);
 	}
 	
+	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
+	{
+		// TODO
+		harray<DisplayMode> result;
+		gvec2 resolution = april::getSystemInfo().displayResolution;
+		DisplayMode displayMode;
+		displayMode.width = (int)resolution.x;
+		displayMode.height = (int)resolution.y;
+		displayMode.refreshRate = 60;
+		result += displayMode;
+		return result;
+	}
+	
+	void OpenGL_RenderSystem::clear(bool useColor, bool depth)
+	{
+		GLbitfield mask = 0;
+		if (useColor)
+		{
+			mask |= GL_COLOR_BUFFER_BIT;
+		}
+		if (depth)
+		{
+			mask |= GL_DEPTH_BUFFER_BIT;
+		}
+		glClear(mask);
+	}
+
+	void OpenGL_RenderSystem::clear(bool depth, grect rect, Color color)
+	{
+		if (color != lastColor) // used to minimize redundant calls to OpenGL
+		{
+			glClearColor(color.r_f(), color.g_f(), color.b_f(), color.a_f());
+			lastColor = color;
+		}
+		this->clear(true, depth);
+	}
+	
+	void OpenGL_RenderSystem::_applyStateChanges()
+	{
+		if (this->state.textureCoordinatesEnabled != this->deviceState.textureCoordinatesEnabled)
+		{
+			this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->state.textureCoordinatesEnabled);
+			this->deviceState.textureCoordinatesEnabled = this->state.textureCoordinatesEnabled;
+		}
+		if (this->state.colorEnabled != this->deviceState.colorEnabled)
+		{
+			this->_setClientState(GL_COLOR_ARRAY, this->state.colorEnabled);
+			this->deviceState.colorEnabled = this->state.colorEnabled;
+		}
+		if (this->state.systemColor != this->deviceState.systemColor)
+		{
+			glColor4f(this->state.systemColor.r_f(), this->state.systemColor.g_f(), this->state.systemColor.b_f(), this->state.systemColor.a_f());
+			this->deviceState.systemColor = this->state.systemColor;
+		}
+		if (this->state.textureId != this->deviceState.textureId)
+		{
+			glBindTexture(GL_TEXTURE_2D, this->state.textureId);
+			this->deviceState.textureId = this->state.textureId;
+			// TODO - you should memorize address and filter modes per texture in opengl to avoid unnecesarry calls
+			this->deviceState.textureAddressMode = Texture::ADDRESS_UNDEFINED;
+			this->deviceState.textureFilter = Texture::FILTER_UNDEFINED;
+		}
+		// texture has to be bound first or else filter and address mode won't be applied afterwards
+		if (this->state.textureFilter != this->deviceState.textureFilter || this->deviceState.textureFilter == Texture::FILTER_UNDEFINED)
+		{
+			this->_setTextureFilter(this->state.textureFilter);
+			this->deviceState.textureFilter = this->state.textureFilter;
+		}
+		if (this->state.textureAddressMode != this->deviceState.textureAddressMode || this->deviceState.textureAddressMode == Texture::ADDRESS_UNDEFINED)
+		{
+			this->_setTextureAddressMode(this->state.textureAddressMode);
+			this->deviceState.textureAddressMode = this->state.textureAddressMode;
+		}
+		if (this->state.blendMode != this->deviceState.blendMode)
+		{
+			this->_setTextureBlendMode(this->state.blendMode);
+			this->deviceState.blendMode = this->state.blendMode;
+		}
+		if (this->state.colorMode != this->deviceState.colorMode || this->state.colorModeAlpha != this->deviceState.colorModeAlpha)
+		{
+			this->_setTextureColorMode(this->state.colorMode, this->state.colorModeAlpha);
+			this->deviceState.colorMode = this->state.colorMode;
+			this->deviceState.colorModeAlpha = this->state.colorModeAlpha;
+		}
+		if (this->state.modelviewMatrixChanged && this->modelviewMatrix != this->deviceState.modelviewMatrix)
+		{
+			this->setMatrixMode(GL_MODELVIEW);
+			glLoadMatrixf(this->modelviewMatrix.data);
+			this->deviceState.modelviewMatrix = this->modelviewMatrix;
+			this->state.modelviewMatrixChanged = false;
+		}
+		if (this->state.projectionMatrixChanged && this->projectionMatrix != this->deviceState.projectionMatrix)
+		{
+			this->setMatrixMode(GL_PROJECTION);
+			glLoadMatrixf(this->projectionMatrix.data);
+			this->deviceState.projectionMatrix = this->projectionMatrix;
+			this->state.projectionMatrixChanged = false;
+		}
+	}
+
+	void OpenGL_RenderSystem::_setClientState(unsigned int type, bool enabled)
+	{
+		enabled ? glEnableClientState(type) : glDisableClientState(type);
+	}
+
+	void OpenGL_RenderSystem::bindTexture(unsigned int textureId)
+	{
+		this->state.textureId = textureId;
+	}
+
+	void OpenGL_RenderSystem::setMatrixMode(unsigned int mode)
+	{
+		// performance call, minimize redundant calls to setMatrixMode
+		if (this->deviceState.modeMatrix != mode)
+		{
+			this->deviceState.modeMatrix = mode;
+			glMatrixMode(mode);
+		}
+	}
+
 	void OpenGL_RenderSystem::setTextureBlendMode(BlendMode mode)
 	{
 		this->state.blendMode = mode;
@@ -418,83 +362,17 @@ namespace april
 	
 	void OpenGL_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
 	{
-		// TODO - is there a way to make this work on Win32?
-#ifndef _WIN32
-		static int blendSeparationSupported = -1;
-		if (blendSeparationSupported == -1)
+		if (textureBlendMode == ALPHA_BLEND || textureBlendMode == DEFAULT)
 		{
-			// determine if blend separation is possible on first call to this function
-			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-#ifdef _OPENGLES
-			blendSeparationSupported = extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate");
-#else
-			blendSeparationSupported = extensions.contains("GL_EXT_blend_equation_separate") && extensions.contains("GL_EXT_blend_func_separate");
-#endif
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		}
-		if (blendSeparationSupported)
+		else if (textureBlendMode == ADD)
 		{
-			// blending for the new generations
-			switch (textureBlendMode)
-			{
-			case DEFAULT:
-			case ALPHA_BLEND:
-#ifdef _OPENGLES1
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#else
-				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#endif
-				break;
-			case ADD:
-#ifdef _OPENGLES1
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#else
-				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#endif
-				break;
-			case SUBTRACT:
-#ifdef _OPENGLES1
-				glBlendEquationSeparateOES(GL_FUNC_REVERSE_SUBTRACT_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-					
-#else
-				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#endif
-				break;
-			case OVERWRITE:
-#ifdef _OPENGLES1
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);				
-#else
-				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
-#endif
-				break;
-			default:
-				hlog::warn(april::logTag, "Trying to set unsupported blend mode!");
-				break;
-			}
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		}
 		else
-#endif
 		{
-			// old-school blending mode for your mom
-			if (textureBlendMode == ALPHA_BLEND || textureBlendMode == DEFAULT)
-			{
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			}
-			else if (textureBlendMode == ADD)
-			{
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-			}
-			else
-			{
-				hlog::warn(april::logTag, "Trying to set unsupported blend mode!");
-			}
+			hlog::warn(april::logTag, "Trying to set unsupported blend mode!");
 		}
 	}
 	
@@ -593,16 +471,6 @@ namespace april
 		this->textureAddressMode = textureAddressMode;
 	}
 
-	Texture* OpenGL_RenderSystem::getRenderTarget()
-	{
-		return NULL;
-	}
-	
-	void OpenGL_RenderSystem::setRenderTarget(Texture* texture)
-	{
-		// TODO
-	}
-	
 	void OpenGL_RenderSystem::setTexture(Texture* texture)
 	{
 		this->activeTexture = (OpenGL_Texture*)texture;
@@ -620,6 +488,16 @@ namespace april
 		}
 	}
 
+	Texture* OpenGL_RenderSystem::getRenderTarget()
+	{
+		return NULL;
+	}
+	
+	void OpenGL_RenderSystem::setRenderTarget(Texture* texture)
+	{
+		// TODO
+	}
+	
 	void OpenGL_RenderSystem::setPixelShader(PixelShader* pixelShader)
 	{
 		hlog::warn(april::logTag, "Pixel shaders are not implemented!");
@@ -633,94 +511,6 @@ namespace april
 	void OpenGL_RenderSystem::setResolution(int w, int h)
 	{
 		hlog::warn(april::logTag, "setResolution() is not implemented!");
-	}
-
-	void OpenGL_RenderSystem::_applyStateChanges()
-	{
-		if (this->state.textureCoordinatesEnabled != this->deviceState.textureCoordinatesEnabled)
-		{
-			this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->state.textureCoordinatesEnabled);
-			this->deviceState.textureCoordinatesEnabled = this->state.textureCoordinatesEnabled;
-		}
-		if (this->state.colorEnabled != this->deviceState.colorEnabled)
-		{
-			this->_setClientState(GL_COLOR_ARRAY, this->state.colorEnabled);
-			this->deviceState.colorEnabled = this->state.colorEnabled;
-		}
-		if (this->state.systemColor != this->deviceState.systemColor)
-		{
-			glColor4f(this->state.systemColor.r_f(), this->state.systemColor.g_f(), this->state.systemColor.b_f(), this->state.systemColor.a_f());
-			this->deviceState.systemColor = this->state.systemColor;
-		}
-		if (this->state.textureId != this->deviceState.textureId)
-		{
-			glBindTexture(GL_TEXTURE_2D, this->state.textureId);
-			this->deviceState.textureId = this->state.textureId;
-			// TODO - you should memorize address and filter modes per texture in opengl to avoid unnecesarry calls
-			this->deviceState.textureAddressMode = Texture::ADDRESS_UNDEFINED;
-			this->deviceState.textureFilter = Texture::FILTER_UNDEFINED;
-		}
-		// texture has to be bound first or else filter and address mode won't be applied afterwards
-		if (this->state.textureFilter != this->deviceState.textureFilter || this->deviceState.textureFilter == Texture::FILTER_UNDEFINED)
-		{
-			this->_setTextureFilter(this->state.textureFilter);
-			this->deviceState.textureFilter = this->state.textureFilter;
-		}
-		if (this->state.textureAddressMode != this->deviceState.textureAddressMode || this->deviceState.textureAddressMode == Texture::ADDRESS_UNDEFINED)
-		{
-			this->_setTextureAddressMode(this->state.textureAddressMode);
-			this->deviceState.textureAddressMode = this->state.textureAddressMode;
-		}
-		if (this->state.blendMode != this->deviceState.blendMode)
-		{
-			this->_setTextureBlendMode(this->state.blendMode);
-			this->deviceState.blendMode = this->state.blendMode;
-		}
-		if (this->state.colorMode != this->deviceState.colorMode || this->state.colorModeAlpha != this->deviceState.colorModeAlpha)
-		{
-			this->_setTextureColorMode(this->state.colorMode, this->state.colorModeAlpha);
-			this->deviceState.colorMode = this->state.colorMode;
-			this->deviceState.colorModeAlpha = this->state.colorModeAlpha;
-		}
-		if (this->state.modelviewMatrixChanged && this->modelviewMatrix != this->deviceState.modelviewMatrix)
-		{
-			this->setMatrixMode(GL_MODELVIEW);
-			glLoadMatrixf(this->modelviewMatrix.data);
-			this->deviceState.modelviewMatrix = this->modelviewMatrix;
-			this->state.modelviewMatrixChanged = false;
-		}
-		if (this->state.projectionMatrixChanged && this->projectionMatrix != this->deviceState.projectionMatrix)
-		{
-			this->setMatrixMode(GL_PROJECTION);
-			glLoadMatrixf(this->projectionMatrix.data);
-			this->deviceState.projectionMatrix = this->projectionMatrix;
-			this->state.projectionMatrixChanged = false;
-		}
-	}
-
-	void OpenGL_RenderSystem::_setClientState(unsigned int type, bool enabled)
-	{
-		enabled ? glEnableClientState(type) : glDisableClientState(type);
-	}
-
-	void OpenGL_RenderSystem::bindTexture(unsigned int textureId)
-	{
-		this->state.textureId = textureId;
-	}
-
-	Texture* OpenGL_RenderSystem::_createTexture(chstr filename)
-	{
-		return new OpenGL_Texture(filename);
-	}
-
-	Texture* OpenGL_RenderSystem::createTexture(int w, int h, unsigned char* rgba)
-	{
-		return new OpenGL_Texture(w, h, rgba);
-	}
-	
-	Texture* OpenGL_RenderSystem::createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
-	{
-		return new OpenGL_Texture(w, h, format, type, color);
 	}
 
 	PixelShader* OpenGL_RenderSystem::createPixelShader()
@@ -747,54 +537,6 @@ namespace april
 		return NULL;
 	}
 
-	void OpenGL_RenderSystem::clear(bool useColor, bool depth)
-	{
-		GLbitfield mask = 0;
-		if (useColor)
-		{
-			mask |= GL_COLOR_BUFFER_BIT;
-		}
-		if (depth)
-		{
-			mask |= GL_DEPTH_BUFFER_BIT;
-		}
-		glClear(mask);
-	}
-
-	void OpenGL_RenderSystem::clear(bool depth, grect rect, Color color)
-	{
-		if (color != lastColor) // used to minimize redundant calls to OpenGL
-		{
-			glClearColor(color.r_f(), color.g_f(), color.b_f(), color.a_f());
-			lastColor = color;
-		}
-		this->clear(true, depth);
-	}
-	
-	void OpenGL_RenderSystem::setMatrixMode(unsigned int mode)
-	{
-		// performance call, minimize redundant calls to setMatrixMode
-		if (this->deviceState.modeMatrix != mode)
-		{
-			this->deviceState.modeMatrix = mode;
-			glMatrixMode(mode);
-		}
-	}
-
-	void OpenGL_RenderSystem::_setVertexPointer(int stride, const void* pointer)
-	{
-		if (this->deviceState.strideVertex != stride || this->deviceState.pointerVertex != pointer)
-		{
-			this->deviceState.strideVertex = stride;
-			this->deviceState.pointerVertex = pointer;
-#ifdef _OPENGLES2
-			glVertexAttribPointer(_positionSlot, 3, GL_FLOAT, GL_FALSE, stride, pointer);
-#else
-			glVertexPointer(3, GL_FLOAT, stride, pointer);
-#endif
-		}
-	}
-	
 	void OpenGL_RenderSystem::_setTexCoordPointer(int stride, const void *pointer)
 	{
 		if (this->deviceState.strideTexCoord != stride || this->deviceState.pointerTexCoord != pointer)
@@ -824,8 +566,9 @@ namespace april
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
 		this->_setTexCoordPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
@@ -849,8 +592,9 @@ namespace april
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
 		this->_setTexCoordPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
@@ -872,8 +616,9 @@ namespace april
 		this->state.systemColor.set(255, 255, 255, 255);
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
@@ -896,8 +641,9 @@ namespace april
 		this->state.systemColor = color;
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
@@ -926,8 +672,9 @@ namespace april
 		}
 		this->_applyStateChanges();
 		this->_setTexCoordPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
@@ -954,8 +701,9 @@ namespace april
 			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
 		}
 		this->_applyStateChanges();
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
@@ -993,21 +741,20 @@ namespace april
 		}
 	}
 	
-	ImageSource* OpenGL_RenderSystem::takeScreenshot(int bpp)
+	Image* OpenGL_RenderSystem::takeScreenshot(int bpp)
 	{
 #ifdef _DEBUG
-		hlog::write(april::logTag, "Grabbing screenshot...");
+		hlog::write(april::logTag, "Taking screenshot...");
 #endif
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
-		ImageSource* img = new ImageSource();
+		Image* img = new Image();
 		img->w = w;
 		img->h = h;
 		img->bpp = bpp;
-		img->format = (bpp == 4 ? AF_RGBA : AF_RGB);
+		img->format = (bpp == 4 ? Image::FORMAT_RGBA : Image::FORMAT_RGB);
 		img->data = new unsigned char[w * (h + 1) * 4]; // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
 		unsigned char* temp = img->data + w * h * 4;
-		
 		glReadPixels(0, 0, w, h, (bpp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img->data);
 		for_iter (y, 0, h / 2)
 		{
@@ -1019,5 +766,4 @@ namespace april
 	}
 
 }
-
 #endif

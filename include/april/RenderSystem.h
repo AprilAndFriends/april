@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -32,7 +32,7 @@
 
 namespace april
 {
-	class ImageSource;
+	class Image;
 	class PixelShader;
 	class RamTexture;
 	class Texture;
@@ -80,10 +80,10 @@ namespace april
 		virtual void setFullscreen(bool fullscreen) { } // TODO - main part should be in window class
 		virtual void setResolution(int w, int h); // TODO - main part should be in window class
 
-		virtual Texture* loadTexture(chstr filename, bool delayLoad = false);
-		virtual Texture* createTexture(int w, int h, unsigned char* rgba) = 0;
-		virtual Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear) = 0;
-		Texture* loadRamTexture(chstr filename, bool delayLoad = false);
+		Texture* createTexture(chstr filename, bool loadImmediately = true);
+		Texture* createTexture(int w, int h, unsigned char* rgba);
+		Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
+		Texture* createRamTexture(chstr filename, bool loadImmediately = true);
 		virtual PixelShader* createPixelShader() = 0;
 		virtual PixelShader* createPixelShader(chstr filename) = 0;
 		virtual VertexShader* createVertexShader() = 0;
@@ -115,11 +115,14 @@ namespace april
 		void unloadTextures();
 		virtual void setParam(chstr name, chstr value) { }
 		virtual hstr getParam(chstr name) { return ""; }
-		virtual ImageSource* takeScreenshot(int bpp = 3) = 0;
+		virtual Image* takeScreenshot(int bpp = 3) = 0;
 		virtual void presentFrame();
 
 		// TODO - refactor
-		virtual int _getMaxTextureSize() = 0;
+		virtual int getMaxTextureSize() = 0;
+
+		DEPRECATED_ATTRIBUTE Texture* loadTexture(chstr filename, bool delayLoad = false) { return this->createTexture(filename, !delayLoad); }
+		DEPRECATED_ATTRIBUTE Texture* loadRamTexture(chstr filename, bool delayLoad = false) { return this->createRamTexture(filename, !delayLoad); }
 
 	protected:
 		hstr name;
@@ -132,6 +135,8 @@ namespace april
 		grect orthoProjection;
 
 		virtual Texture* _createTexture(chstr filename) = 0;
+		virtual Texture* _createTexture(int w, int h, unsigned char* rgba) = 0;
+		virtual Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear) = 0;
 
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);

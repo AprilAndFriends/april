@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -10,9 +10,6 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #include <stdio.h>
-#ifdef USE_IL
-#include <IL/il.h>
-#endif
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
@@ -31,8 +28,14 @@
 #ifdef _DIRECTX11
 #include "DirectX11_RenderSystem.h"
 #endif
-#ifdef _OPENGL
-#include "OpenGL_RenderSystem.h"
+#ifdef _OPENGL1
+#include "OpenGL1_RenderSystem.h"
+#endif
+#ifdef _OPENGLES1
+#include "OpenGLES1_RenderSystem.h"
+#endif
+#ifdef _OPENGLES2
+#include "OpenGLES2_RenderSystem.h"
 #endif
 #include "RenderSystem.h"
 #include "Window.h"
@@ -55,44 +58,56 @@
 
 #ifdef _WIN32
 	#ifdef _DIRECTX9
-	#define RS_INTERNAL_DEFAULT RS_DIRECTX9
+		#define RS_INTERNAL_DEFAULT RS_DIRECTX9
 	#elif defined(_DIRECTX11)
-	#define RS_INTERNAL_DEFAULT RS_DIRECTX11
-	#elif defined(_OPENGL)
-	#define RS_INTERNAL_DEFAULT RS_OPENGL
-	#else
-	#warning "no rendersystems specified"
+		#define RS_INTERNAL_DEFAULT RS_DIRECTX11
+	#elif defined(_OPENGL1)
+		#define RS_INTERNAL_DEFAULT RS_OPENGL1
+	#elif defined(_OPENGLES1)
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+	#elif defined(_OPENGLES2)
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
 	#endif
 	#if !_HL_WINRT
-	#define WS_INTERNAL_DEFAULT WS_WIN32
+		#define WS_INTERNAL_DEFAULT WS_WIN32
 	#else
-	#define WS_INTERNAL_DEFAULT WS_WINRT
+		#define WS_INTERNAL_DEFAULT WS_WINRT
 	#endif
 #elif defined(__APPLE__) && !TARGET_OS_IPHONE
-	#define RS_INTERNAL_DEFAULT RS_OPENGL
+	#ifdef _OPENGLES2
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
+	#elif defined(_OPENGLES1)
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+	#endif
 	#define WS_INTERNAL_DEFAULT WS_SDL
 	#ifndef HAVE_SDL
-	#warning "no windowsystems specified"
+		#define RS_INTERNAL_DEFAULT RS_DEFAULT
 	#endif
 #elif defined(__APPLE__) && TARGET_OS_IPHONE
-	#define RS_INTERNAL_DEFAULT RS_OPENGL
+	#ifdef _OPENGLES2
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
+	#elif defined(_OPENGLES1)
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+	#endif
 	#define WS_INTERNAL_DEFAULT WS_IOS
-	#if !TARGET_OS_IPHONE
-	#warning "no windowsystems specified"
-	#endif
 #elif defined(_UNIX)
-	#define RS_INTERNAL_DEFAULT RS_OPENGL
+	#define RS_INTERNAL_DEFAULT RS_OPENGL1
 	#define WS_INTERNAL_DEFAULT WS_SDL
-	#ifndef HAVE_SDL
-	#warning "no windowsystems specified"
-	#endif
 #elif defined(_ANDROID)
-	#define RS_INTERNAL_DEFAULT RS_OPENGL
+	#ifdef _OPENGLES1
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+	#elif defined(_OPENGLES2)
+		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
+	#endif
 	#define WS_INTERNAL_DEFAULT WS_ANDROIDJNI
-#else
-	#warning "no platform specified"
 #endif
 
+#ifndef RS_INTERNAL_DEFAULT
+#define RS_INTERNAL_DEFAULT RS_DEFAULT
+#endif
+#ifndef WS_INTERNAL_DEFAULT
+#define WS_INTERNAL_DEFAULT WS_DEFAULT
+#endif
 
 namespace april
 {
@@ -100,27 +115,24 @@ namespace april
 
 	static harray<hstr> extensions;
 
-	void log(chstr message, chstr prefix) // DEPRECATED
-	{
-		hlog::write(april::logTag, message);
-	}
-	
-	void setLogFunction(void (*fnptr)(chstr)) // DEPRECATED
-	{
-	}
-
-	void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType)
+	void _startInit()
 	{
 		hlog::write(april::logTag, "Initializing APRIL.");
-#ifdef USE_IL
-		ilInit();
-#endif
 		extensions += ".jpt";
 		extensions += ".png";
 		extensions += ".jpg";
 #if TARGET_OS_IPHONE
 		extensions += ".pvr";
 #endif
+	}
+
+	void _finishInit()
+	{
+		hlog::writef(april::logTag, "Using: %s, %s", april::rendersys->getName().c_str(), april::window->getName().c_str());
+	}
+
+	void _createRenderSystem(RenderSystemType renderSystemType)
+	{
 		// creating the rendersystem
 		RenderSystemType renderSystem = renderSystemType;
 		if (renderSystem == RS_DEFAULT)
@@ -139,58 +151,136 @@ namespace april
 			april::rendersys = new DirectX11_RenderSystem();
 		}
 #endif
-#ifdef _OPENGL
-		if (april::rendersys == NULL && renderSystem == RS_OPENGL)
+#ifdef _OPENGL1
+		if (april::rendersys == NULL && renderSystem == RS_OPENGL1)
 		{
-			april::rendersys = new OpenGL_RenderSystem();
+			april::rendersys = new OpenGL1_RenderSystem();
 		}
 #endif
-		// creating the windowsystem
-		WindowSystemType windowSystem = windowSystemType;
-		if (windowSystem == WS_DEFAULT)
+#ifdef _OPENGLES1
+		if (april::rendersys == NULL && renderSystem == RS_OPENGLES1)
 		{
-			windowSystem = WS_INTERNAL_DEFAULT;
-		}
-#ifdef _WIN32
-#if !_HL_WINRT
-		if (april::window == NULL && windowSystem == WS_WIN32)
-		{
-			april::window = new Win32_Window();
-		}
-#else
-		if (april::window == NULL && windowSystem == WS_WINRT)
-		{
-			april::window = new WinRT_Window();
+			april::rendersys = new OpenGLES1_RenderSystem();
 		}
 #endif
-#endif
-#ifdef HAVE_SDL
-		if (april::window == NULL && windowSystem == WS_SDL)
+#ifdef _OPENGLES2
+		if (april::rendersys == NULL && renderSystem == RS_OPENGLES2)
 		{
-			april::window = new SDL_Window();
-		}
-#endif
-#if TARGET_OS_IPHONE
-		if (april::window == NULL && windowSystem == WS_IOS)
-		{
-			april::window = new iOS_Window();
-		}
-#endif
-#ifdef _ANDROID
-		if (april::window == NULL && windowSystem == WS_ANDROIDJNI)
-		{
-			april::window = new AndroidJNI_Window();
+			april::rendersys = new OpenGLES2_RenderSystem();
 		}
 #endif
 		if (april::rendersys == NULL)
 		{
 			throw hl_exception("Could not create given rendersystem!");
 		}
+	}
+
+	void _createWindowSystem(WindowType windowType)
+	{
+		// creating the windowsystem
+		WindowType window = windowType;
+		if (window == WS_DEFAULT)
+		{
+			window = WS_INTERNAL_DEFAULT;
+		}
+#ifdef HAVE_WIN32
+		if (april::window == NULL && window == WS_WIN32)
+		{
+			april::window = new Win32_Window();
+		}
+#endif
+#ifdef HAVE_WINRT
+		if (april::window == NULL && window == WS_WINRT)
+		{
+			april::window = new WinRT_Window();
+		}
+#endif
+#ifdef HAVE_SDL
+		if (april::window == NULL && window == WS_SDL)
+		{
+			april::window = new SDL_Window();
+		}
+#endif
+#if TARGET_OS_IPHONE
+		if (april::window == NULL && window == WS_IOS)
+		{
+			april::window = new iOS_Window();
+		}
+#endif
+#ifdef _ANDROID
+		if (april::window == NULL && window == WS_ANDROIDJNI)
+		{
+			april::window = new AndroidJNI_Window();
+		}
+#endif
 		if (april::window == NULL)
 		{
 			throw hl_exception("Could not create given windowsystem!");
 		}
-		hlog::writef(april::logTag, "Using: %s, %s", april::rendersys->getName().c_str(), april::window->getName().c_str());
+	}
+
+	void init(RenderSystemType renderSystemType, WindowType windowType)
+	{
+		_startInit();
+		_createRenderSystem(renderSystemType);
+		_createWindowSystem(windowType);
+		_finishInit();
+	}
+	
+	void init(RenderSystem* customRenderSystem, WindowType windowType)
+	{
+		_startInit();
+		april::rendersys = customRenderSystem;
+		_createWindowSystem(windowType);
+		_finishInit();
+	}
+	
+	void init(RenderSystemType renderSystemType, Window* customWindow)
+	{
+		_startInit();
+		_createRenderSystem(renderSystemType);
+		april::window = customWindow;
+		_finishInit();
+	}
+	
+	void init(RenderSystem* customRenderSystem, Window* customWindow)
+	{
+		_startInit();
+		april::rendersys = customRenderSystem;
+		april::window = customWindow;
+		_finishInit();
+	}
+	
+	void init(RenderSystemType renderSystemType, WindowType windowType, chstr renderSystemOptions,
+		int w, int h, bool fullscreen, chstr title, chstr windowOptions)
+	{
+		init(renderSystemType, windowType);
+		createRenderSystem(renderSystemOptions);
+		createWindow(w, h, fullscreen, title, windowOptions);
+	}
+	
+	void init(RenderSystem* customRenderSystem, WindowType windowType, chstr renderSystemOptions,
+		int w, int h, bool fullscreen, chstr title, chstr windowOptions)
+	{
+		init(customRenderSystem, windowType);
+		createRenderSystem(renderSystemOptions);
+		createWindow(w, h, fullscreen, title, windowOptions);
+	}
+	
+	void init(RenderSystemType renderSystemType, Window* customWindow, chstr renderSystemOptions,
+		int w, int h, bool fullscreen, chstr title, chstr windowOptions)
+	{
+		init(renderSystemType, customWindow);
+		createRenderSystem(renderSystemOptions);
+		createWindow(w, h, fullscreen, title, windowOptions);
+	}
+	
+	void init(RenderSystem* customRenderSystem, Window* customWindow, chstr renderSystemOptions,
+		int w, int h, bool fullscreen, chstr title, chstr windowOptions)
+	{
+		init(customRenderSystem, customWindow);
+		createRenderSystem(renderSystemOptions);
+		createWindow(w, h, fullscreen, title, windowOptions);
 	}
 	
 	void createRenderSystem(chstr options)
@@ -198,21 +288,18 @@ namespace april
 		april::rendersys->create(options);
 	}
 	
-	void createWindow(int w, int h, bool fullscreen, chstr title)
+	void createWindow(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
-		april::window->create(w, h, fullscreen, title);
+		april::window->create(w, h, fullscreen, title, options);
 		april::rendersys->assignWindow(april::window);
 	}
 
-	void init(RenderSystemType renderSystemType, WindowSystemType windowSystemType, chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title)
-	{
-		init(renderSystemType, windowSystemType);
-		createRenderSystem(renderSystemOptions);
-		createWindow(w, h, fullscreen, title);
-	}
-	
 	void destroy()
 	{
+		if (april::rendersys != NULL || april::window != NULL)
+		{
+			hlog::write(april::logTag, "Destroying APRIL.");
+		}
 		if (april::window != NULL)
 		{
 			delete april::window;
@@ -220,7 +307,6 @@ namespace april
 		}
 		if (april::rendersys != NULL)
 		{
-			hlog::write(april::logTag, "Destroying APRIL.");
 			delete april::rendersys;
 			april::rendersys = NULL;
 		}

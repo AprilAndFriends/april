@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -68,9 +68,9 @@ namespace april
 		this->destroy();
 	}
 	
-	bool SDL_Window::create(int w, int h, bool fullscreen, chstr title)
+	bool SDL_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
-		if (!Window::create(w, h, fullscreen, title))
+		if (!Window::create(w, h, fullscreen, title, options))
 		{
 			return false;
 		}
@@ -271,10 +271,20 @@ namespace april
 	void SDL_Window::presentFrame()
 	{
 #ifdef _OPENGL
-#ifndef _OPENGLES
-		SDL_GL_SwapBuffers();
-#else
-		SDL_GLES_SwapBuffers();
+#ifdef _OPENGL1
+		if (april::rendersys->getName() == APRIL_RS_OPENGL1)
+		{
+			SDL_GL_SwapBuffers();
+		}
+#endif
+#ifdef _OPENGLES
+		harray<hstr> renderSystems;
+		renderSystems += APRIL_RS_OPENGLES1;
+		renderSystems += APRIL_RS_OPENGLES2;
+		if (renderSystems.contains(april::rendersys->getName()))
+		{
+			SDL_GLES_SwapBuffers();
+		}
 #endif
 #endif
 	}
@@ -389,7 +399,7 @@ namespace april
 	{
 		this->cursorPosition.set(sdlEvent.button.x, sdlEvent.button.y);
 		Window::MouseEventType mouseEvent;
-		Window::MouseButton mouseButton = AMOUSEBTN_NONE;
+		april::KeySym mouseButton = AK_NONE;
 
 		switch (sdlEvent.type)
 		{
@@ -411,18 +421,18 @@ namespace april
 			switch (sdlEvent.button.button)
 			{
 			case SDL_BUTTON_LEFT:
-				mouseButton = AMOUSEBTN_LEFT;
+				mouseButton = AK_LBUTTON;
 				break;
 			case SDL_BUTTON_RIGHT:
-				mouseButton = AMOUSEBTN_RIGHT;
+				mouseButton = AK_RBUTTON;
 				break;
 			case SDL_BUTTON_MIDDLE:
-				mouseButton = AMOUSEBTN_MIDDLE;
+				mouseButton = AK_MBUTTON;
 				break;
 			case SDL_BUTTON_WHEELUP:
 				if (sdlEvent.type == SDL_MOUSEBUTTONDOWN)
 				{
-					mouseButton = AMOUSEBTN_WHEELUP;
+					mouseButton = AK_WHEELUP;
 					mouseEvent = AMOUSEEVT_SCROLL;
 				}
 				else return;
@@ -430,22 +440,22 @@ namespace april
 			case SDL_BUTTON_WHEELDOWN:
 				if (sdlEvent.type == SDL_MOUSEBUTTONDOWN)
 				{
-					mouseButton = AMOUSEBTN_WHEELDOWN;
+					mouseButton = AK_WHEELDN;
 					mouseEvent = AMOUSEEVT_SCROLL;
 				}
 				else return;
 				break;
 			default:
-				mouseButton = AMOUSEBTN_NONE;
+				mouseButton = AK_NONE;
 				break;
 			}
 		}
 		
-		if (mouseButton == AMOUSEBTN_WHEELUP || mouseButton == AMOUSEBTN_WHEELDOWN)
+		if (mouseButton == AK_WHEELUP || mouseButton == AK_WHEELDN)
 		{
 			gvec2 scroll;
-			scroll.x = (!this->scrollHorizontal ? 0.0f : (mouseButton == AMOUSEBTN_WHEELUP ? -1.0f : 1.0f));
-			scroll.y = (this->scrollHorizontal ? 0.0f : (mouseButton == AMOUSEBTN_WHEELUP ? -1.0f : 1.0f));
+			scroll.x = (!this->scrollHorizontal ? 0.0f : (mouseButton == AK_WHEELUP ? -1.0f : 1.0f));
+			scroll.y = (this->scrollHorizontal ? 0.0f : (mouseButton == AK_WHEELUP ? -1.0f : 1.0f));
 			this->handleMouseEvent(mouseEvent, scroll, mouseButton);
 		}
 		else

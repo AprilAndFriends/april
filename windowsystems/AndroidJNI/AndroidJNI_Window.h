@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -24,16 +24,16 @@
 
 namespace april
 {
-	class aprilExport AndroidJNI_Window : public Window
+	class AndroidJNI_Window : public Window
 	{
 	public:
 		struct MouseInputEvent
 		{
 			MouseEventType type;
 			gvec2 position;
-			MouseButton button;
+			KeySym button;
 		
-			MouseInputEvent(MouseEventType _type, gvec2 _position, MouseButton _button)
+			MouseInputEvent(MouseEventType _type, gvec2 _position, KeySym _button)
 			{
 				type = _type;
 				position = _position;
@@ -70,13 +70,13 @@ namespace april
 
 		AndroidJNI_Window();
 		~AndroidJNI_Window();
-		bool create(int w, int h, bool fullscreen, chstr title);
+		bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
 		
 		void setTitle(chstr title) { }
 		bool isCursorVisible() { return false; }
 		void setCursorVisible(bool value) { }
-		int getWidth() { return this->width; }
-		int getHeight() { return this->height; }
+		HL_DEFINE_GET(int, width, Width);
+		HL_DEFINE_GET(int, height, Height);
 		bool isTouchEnabled() { return true; }
 		void setTouchEnabled(bool value) { }
 		void* getBackendId();
@@ -89,7 +89,7 @@ namespace april
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
 		void handleTouchEvent(MouseEventType type, gvec2 position, int index);
-		void handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button);
+		void handleMouseEvent(MouseEventType type, gvec2 position, KeySym button);
 		void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
 		
 	protected:

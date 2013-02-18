@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -23,7 +23,7 @@
 
 #include "april.h"
 #include "aprilUtil.h"
-#include "ImageSource.h"
+#include "Image.h"
 #include "RamTexture.h"
 #include "RenderSystem.h"
 #include "Texture.h"
@@ -112,7 +112,7 @@ namespace april
 		april::window->_setResolution(w, h);
 	}
 	
-	Texture* RenderSystem::loadTexture(chstr filename, bool delayLoad)
+	Texture* RenderSystem::createTexture(chstr filename, bool loadImmediately)
 	{
 		hstr name = this->findTextureFilename(filename);
 		if (name == "")
@@ -120,19 +120,29 @@ namespace april
 			return NULL;
 		}
 		Texture* texture = this->_createTexture(name);
-		if (!delayLoad)
+		if (loadImmediately)
 		{
 			texture->load();
-		}
-		if (!delayLoad && !texture->isLoaded())
-		{
-			delete texture;
-			return NULL;
+			if (!texture->isLoaded())
+			{
+				delete texture;
+				return NULL;
+			}
 		}
 		return texture;
 	}
 
-	Texture* RenderSystem::loadRamTexture(chstr filename, bool delayLoad)
+	Texture* RenderSystem::createTexture(int w, int h, unsigned char* rgba)
+	{
+		return this->_createTexture(w, h, rgba);
+	}
+
+	Texture* RenderSystem::createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
+	{
+		return this->_createTexture(w, h, format, type, color);
+	}
+
+	Texture* RenderSystem::createRamTexture(chstr filename, bool loadImmediately)
 	{
 		hstr name = this->findTextureFilename(filename);
 		if (name == "")
@@ -140,14 +150,14 @@ namespace april
 			return NULL;
 		}
 		RamTexture* texture = new RamTexture(name);
-		if (!delayLoad)
+		if (loadImmediately)
 		{
 			texture->load();
-		}
-		if (!delayLoad && !texture->isLoaded())
-		{
-			delete texture;
-			return NULL;
+			if (!texture->isLoaded())
+			{
+				delete texture;
+				return NULL;
+			}
 		}
 		return texture;
 	}

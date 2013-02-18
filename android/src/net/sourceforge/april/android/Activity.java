@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 2.53
+// version 3.0
 
 import android.app.Dialog;
 import android.content.pm.ActivityInfo;
@@ -12,18 +12,21 @@ import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import net.sourceforge.april.android.DialogFactory;
 
 import java.util.ArrayList;
 
 public class Activity extends android.app.Activity
 {
-	public GLSurfaceView GlView = null;
-	private ArrayList ignoredKeys = null;
+	protected boolean nookWorkaround = false; // set this to true in your activity if your are using a nook build in order to speed up new intent/activity calls
 	
 	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
 	{
 		NativeInterface.ArchivePath = archivePath;
 	}
+	
+	public GLSurfaceView GlView = null;
+	private ArrayList ignoredKeys = null;
 	
 	public Activity()
 	{
@@ -108,13 +111,19 @@ public class Activity extends android.app.Activity
 				NativeInterface.activityOnResume();
 			}
 		});
-		this.GlView.onResume();
+		if (!this.nookWorkaround)
+		{
+			this.GlView.onResume();
+		}
 	}
 	
 	@Override
 	protected void onPause()
 	{
-		this.GlView.onPause();
+		if (!this.nookWorkaround)
+		{
+			this.GlView.onPause();
+		}
 		this.GlView.queueEvent(new Runnable()
 		{
 			public void run()
@@ -202,9 +211,16 @@ public class Activity extends android.app.Activity
 		super.onLowMemory();
 	}
 	
+	@Override
 	protected Dialog onCreateDialog(int id)
 	{
-		return NativeInterface.DialogBuilder.create();
+		return DialogFactory.show();
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id, Bundle bundle)
+	{
+		return DialogFactory.show();
 	}
 	
 	protected GLSurfaceView createGlView()

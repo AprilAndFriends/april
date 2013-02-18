@@ -1,13 +1,13 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.52
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _WIN32
+#ifdef HAVE_WINRT
 #include <hltypes/hplatform.h>
 #if _HL_WINRT
 #include <hltypes/hfile.h>
@@ -46,9 +46,9 @@ namespace april
 		this->destroy();
 	}
 
-	bool WinRT_Window::create(int w, int h, bool fullscreen, chstr title)
+	bool WinRT_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
-		if (!Window::create(w, h, fullscreen, title))
+		if (!Window::create(w, h, fullscreen, title, options))
 		{
 			return false;
 		}
@@ -114,7 +114,7 @@ namespace april
 			april::rendersys->clear();
 			viewport.setSize((float)this->width, (float)this->height);
 			april::rendersys->setOrthoProjection(viewport);
-			april::rendersys->drawFilledRect(drawRect, this->backgroundColor);
+			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
 			if (this->logoTexture != NULL)
 			{
 				drawRect.set(0.0f, (float)((this->height - this->logoTexture->getHeight()) / 2),
@@ -173,6 +173,7 @@ namespace april
 	
 	void WinRT_Window::handleTouchEvent(MouseEventType type, gvec2 position, int index)
 	{
+		int previousTouchesSize = this->touches.size();
 		switch (type)
 		{
 		case AMOUSEEVT_DOWN:
@@ -199,16 +200,22 @@ namespace april
 		}
 		if (this->multiTouchActive || this->touches.size() > 1)
 		{
+			if (!this->multiTouchActive && previousTouchesSize == 1)
+			{
+				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
+				this->handleMouseEvent(AMOUSEEVT_UP, gvec2(-10000.0f, -10000.0f), AK_LBUTTON);
+			}
 			this->multiTouchActive = (this->touches.size() > 0);
 		}
 		else
 		{
-			this->handleMouseEvent(type, position, AMOUSEBTN_LEFT);
+			this->handleMouseEvent(type, position, AK_LBUTTON);
 		}
+		this->touchEvents.clear();
 		this->touchEvents += TouchInputEvent(this->touches);
 	}
 	
-	void WinRT_Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
+	void WinRT_Window::handleMouseEvent(MouseEventType type, gvec2 position, KeySym button)
 	{
 		this->mouseEvents += MouseInputEvent(type, position, button);
 	}
@@ -259,7 +266,7 @@ namespace april
 			{
 				// loading the logo file
 				logoFilename = logoFilename(0, index);
-				this->logoTexture = april::rendersys->loadTexture(logoFilename, true);
+				this->logoTexture = april::rendersys->createTexture(logoFilename, false);
 				if (this->logoTexture != NULL)
 				{
 					try

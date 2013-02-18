@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -16,10 +16,16 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
+#include "KeyboardDelegate.h"
 #include "Keys.h"
+#include "MouseDelegate.h"
 #include "Platform.h"
 #include "RenderSystem.h"
+#include "SystemDelegate.h"
+#include "TouchDelegate.h"
+#include "UpdateDelegate.h"
 #include "Window.h"
+
 
 namespace april
 {
@@ -41,22 +47,11 @@ namespace april
 	{
 		april::window = this;
 		this->name = "Generic";
-		this->updateCallback = NULL;
-		this->mouseDownCallback = NULL;
-		this->mouseUpCallback = NULL;
-		this->mouseMoveCallback = NULL;
-		this->mouseScrollCallback = NULL;
-		this->keyDownCallback = NULL;
-		this->keyUpCallback = NULL;
-		this->charCallback = NULL;
-		this->quitCallback = NULL;
-		this->focusChangeCallback = NULL;
-		this->touchscreenEnabledCallback = NULL;
-		this->touchCallback = NULL;
-		this->deviceOrientationCallback = NULL;
-		this->virtualKeyboardCallback = NULL;
-		this->handleUrlCallback = NULL;
-		this->lowMemoryCallback = NULL;
+		this->updateDelegate = NULL;
+		this->keyboardDelegate = NULL;
+		this->mouseDelegate = NULL;
+		this->touchDelegate = NULL;
+		this->systemDelegate = NULL;
 	}
 	
 	Window::~Window()
@@ -64,7 +59,7 @@ namespace april
 		this->destroy();
 	}
 
-	bool Window::create(int w, int h, bool fullscreen, chstr title)
+	bool Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
 		if (!this->created)
 		{
@@ -88,6 +83,11 @@ namespace april
 		{
 			hlog::writef(april::logTag, "Destroying window '%s'.", this->name.c_str());
 			this->created = false;
+			this->updateDelegate = NULL;
+			this->keyboardDelegate = NULL;
+			this->mouseDelegate = NULL;
+			this->touchDelegate = NULL;
+			this->systemDelegate = NULL;
 			return true;
 		}
 		return false;
@@ -106,26 +106,6 @@ namespace april
 	bool Window::isCursorInside()
 	{
 		return grect(0.0f, 0.0f, this->getSize()).isPointInside(this->getCursorPosition());
-	}
-	
-	void Window::setMouseCallbacks(void (*mouseDownCallback)(int),
-								   void (*mouseUpCallback)(int),
-								   void (*mouseMoveCallback)(),
-								   void (*mouseScrollCallback)(float, float))
-	{
-		this->mouseDownCallback = mouseDownCallback;
-		this->mouseUpCallback = mouseUpCallback;
-		this->mouseMoveCallback = mouseMoveCallback;
-		this->mouseScrollCallback = mouseScrollCallback;
-	}
-	
-	void Window::setKeyboardCallbacks(void (*keyDownCallback)(unsigned int),
-									  void (*keyUpCallback)(unsigned int),
-									  void (*charCallback)(unsigned int))
-	{
-		this->keyDownCallback = keyDownCallback;
-		this->keyUpCallback = keyUpCallback;
-		this->charCallback = charCallback;
 	}
 	
 	void Window::enterMainLoop()
@@ -182,9 +162,9 @@ namespace april
 		}
 		// returning true: continue execution
 		// returning false: abort execution
-		if (this->updateCallback != NULL)
+		if (this->updateDelegate != NULL)
 		{
-			return (*this->updateCallback)(k);
+			return this->updateDelegate->onUpdate(k);
 		}
 		april::rendersys->clear();
 		return true;
@@ -205,87 +185,64 @@ namespace april
 		{	
 			keyCode = AK_NONE;
 		}
-		switch (type)
+		if (this->keyboardDelegate != NULL && keyCode != AK_NONE)
 		{
-		case AKEYEVT_DOWN:
-			if (this->keyDownCallback != NULL && keyCode != AK_NONE)
+			switch (type)
 			{
-				(*this->keyDownCallback)(keyCode);
+			case AKEYEVT_DOWN:
+				this->keyboardDelegate->onKeyDown(keyCode);
+				break;
+			case AKEYEVT_UP:
+				this->keyboardDelegate->onKeyUp(keyCode);
+				break;
 			}
-			break;
-		case AKEYEVT_UP:
-			if (this->keyUpCallback != NULL && keyCode != AK_NONE)
-			{
-				(*this->keyUpCallback)(keyCode);
-			}
-			break;
-		default:
-			break;
 		}
 	}
 	
 	void Window::handleCharOnlyEvent(unsigned int charCode)
 	{
-		if (this->charCallback != NULL && charCode >= 32 && charCode != 127) // special hack, backspace induces a character in some implementations
+		if (this->keyboardDelegate != NULL && charCode >= 32 && charCode != 127) // special hack, backspace induces a character in some implementations
 		{
-			(*this->charCallback)(charCode);
+			this->keyboardDelegate->onChar(charCode);
 		}
 	}
 	
-	void Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
+	void Window::handleMouseEvent(MouseEventType type, gvec2 position, KeySym button)
 	{
-		switch (type)
+		if (this->mouseDelegate != NULL)
 		{
-		case AMOUSEEVT_DOWN:
-			if (this->mouseDownCallback != NULL)
+			switch (type)
 			{
-				(*this->mouseDownCallback)(button);
+			case AMOUSEEVT_DOWN:
+				this->mouseDelegate->onMouseDown(button);
+				break;
+			case AMOUSEEVT_UP:
+				this->mouseDelegate->onMouseUp(button);
+				break;
+			case AMOUSEEVT_MOVE:
+				this->mouseDelegate->onMouseMove();
+				break;
+			case AMOUSEEVT_SCROLL:
+				this->mouseDelegate->onMouseScroll(position.x, position.y);
+				break;
 			}
-			break;
-		case AMOUSEEVT_UP:
-			if (this->mouseUpCallback != NULL)
-			{
-				(*this->mouseUpCallback)(button);
-			}
-			break;
-		case AMOUSEEVT_MOVE:
-			if (this->mouseMoveCallback != NULL)
-			{
-				(*this->mouseMoveCallback)();
-			}
-			break;
-		case AMOUSEEVT_SCROLL:
-			if (this->mouseScrollCallback != NULL)
-			{
-				(*this->mouseScrollCallback)(position.x, position.y);
-			}
-			break;
 		}
 	}
 	
-	void Window::handleTouchscreenEnabledEvent(bool enabled)
+	void Window::handleTouchEvent(const harray<gvec2>& touches)
 	{
-		if (this->touchscreenEnabledCallback != NULL && this->isTouchEnabled() != enabled)
+		if (this->touchDelegate != NULL)
 		{
-			this->setTouchEnabled(enabled);
-			(*this->touchscreenEnabledCallback)(enabled);
-		}
-	}
-	
-	void Window::handleTouchEvent(harray<gvec2>& touches)
-	{
-		if (this->touchCallback != NULL)
-		{
-			(*this->touchCallback)(touches);
+			this->touchDelegate->onTouch(touches);
 		}
 	}
 
-	bool Window::handleQuitRequest(bool canReject)
+	bool Window::handleQuitRequest(bool canCancel)
 	{
 		// returns whether or not the windowing system is permitted to close the window
-		if (this->quitCallback != NULL)
+		if (this->systemDelegate != NULL)
 		{
-			return (*this->quitCallback)(canReject);
+			return this->systemDelegate->onQuit(canCancel);
 		}
 		return true;
 	}
@@ -294,26 +251,26 @@ namespace april
 	{
 		this->focused = focused;
 		hlog::write(april::logTag, "Window " + hstr(focused ? "activated" : "deactivated") + ".");
-		if (this->focusChangeCallback != NULL)
+		if (this->systemDelegate != NULL)
 		{
-			(*this->focusChangeCallback)(focused);
+			this->systemDelegate->onWindowFocusChanged(focused);
 		}
 	}
 	
 	bool Window::handleUrl(chstr url)
 	{
-		if (this->handleUrlCallback != NULL)
+		if (this->systemDelegate != NULL)
 		{
-			return (*this->handleUrlCallback)(url);
+			return this->systemDelegate->onHandleUrl(url);
 		}
 		return false;
 	}
 	
 	void Window::handleLowMemoryWarning()
 	{
-		if (this->lowMemoryCallback != NULL)
+		if (this->systemDelegate != NULL)
 		{
-			(*this->lowMemoryCallback)();
+			this->systemDelegate->onLowMemoryWarning();
 		}
 	}
 
