@@ -37,6 +37,8 @@
 #include "OpenGL_Texture.h"
 #include "Platform.h"
 
+#define MAX_VERTEX_COUNT 65536
+
 namespace april
 {
 #ifdef _WIN32 // if _WIN32
@@ -213,6 +215,13 @@ namespace april
 		this->state.colorMode = april::NORMAL;
 	}
 
+	int OpenGL_RenderSystem::getMaxTextureSize()
+	{
+		int max;
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
+		return max;
+	}
+
 	grect OpenGL_RenderSystem::getViewport()
 	{
 		static float params[4];
@@ -353,7 +362,6 @@ namespace april
 	
 	void OpenGL_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
 	{
-		// old-school blending mode for your mom
 		if (textureBlendMode == ALPHA_BLEND || textureBlendMode == DEFAULT)
 		{
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -558,8 +566,9 @@ namespace april
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
 		this->_setTexCoordPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
@@ -583,8 +592,9 @@ namespace april
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
 		this->_setTexCoordPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
@@ -606,8 +616,9 @@ namespace april
 		this->state.systemColor.set(255, 255, 255, 255);
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
@@ -630,8 +641,9 @@ namespace april
 		this->state.systemColor = color;
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
@@ -660,8 +672,9 @@ namespace april
 		}
 		this->_applyStateChanges();
 		this->_setTexCoordPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
@@ -688,8 +701,9 @@ namespace april
 			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
 		}
 		this->_applyStateChanges();
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
-		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)

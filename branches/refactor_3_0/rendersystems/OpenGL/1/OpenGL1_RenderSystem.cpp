@@ -11,28 +11,9 @@
 
 #ifdef _OPENGL1
 #include <hltypes/hplatform.h>
-// TODO - should be cleaned up a bit
 #if __APPLE__
 #include <TargetConditionals.h>
 #endif
-#if TARGET_OS_IPHONE
-#ifdef _OPENGLES1
-	#include <OpenGLES/ES1/gl.h>
-	#include <OpenGLES/ES1/glext.h>
-#elif defined(_OPENGLES2)
-	#include <OpenGLES/ES2/gl.h>
-	#include <OpenGLES/ES2/glext.h>
-	extern GLint _positionSlot;
-#endif
-#elif defined(_OPENGLES)
-#include <GLES/gl.h>
-#ifdef _ANDROID
-#define GL_GLEXT_PROTOTYPES
-#include <GLES/glext.h>
-#else
-#include <EGL/egl.h>
-#endif
-#else
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -42,7 +23,6 @@
 #include <gl/glext.h>
 #else
 #include <OpenGL/gl.h>
-#endif
 #endif
 
 #include <gtypes/Vector2.h>
@@ -58,8 +38,6 @@
 #include "Platform.h"
 #include "Timer.h"
 #include "Window.h"
-
-#define MAX_VERTEX_COUNT 65536
 
 namespace april
 {
@@ -131,25 +109,20 @@ namespace april
 			return 0;
 		}
 #endif
-		int max;
-		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
-		return max;
+		return OpenGL_RenderSystem::getMaxTextureSize();
 	}
 
 	void OpenGL1_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
 	{
 		// TODO - is there a way to make this work on Win32?
 #ifndef _WIN32
+		// TODO - refactor
 		static int blendSeparationSupported = -1;
 		if (blendSeparationSupported == -1)
 		{
 			// determine if blend separation is possible on first call to this function
 			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-#ifdef _OPENGLES
-			blendSeparationSupported = extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate");
-#else
 			blendSeparationSupported = extensions.contains("GL_EXT_blend_equation_separate") && extensions.contains("GL_EXT_blend_func_separate");
-#endif
 		}
 		if (blendSeparationSupported)
 		{
@@ -158,41 +131,20 @@ namespace april
 			{
 			case DEFAULT:
 			case ALPHA_BLEND:
-#ifdef _OPENGLES1
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#else
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#endif
 				break;
 			case ADD:
-#ifdef _OPENGLES1
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#else
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#endif
 				break;
 			case SUBTRACT:
-#ifdef _OPENGLES1
-				glBlendEquationSeparateOES(GL_FUNC_REVERSE_SUBTRACT_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-					
-#else
 				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-#endif
 				break;
 			case OVERWRITE:
-#ifdef _OPENGLES1
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);				
-#else
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
-#endif
 				break;
 			default:
 				hlog::warn(april::logTag, "Trying to set unsupported blend mode!");
@@ -202,6 +154,7 @@ namespace april
 		else
 #endif
 		{
+			// old-school blending mode for your mom
 			OpenGL_RenderSystem::_setTextureBlendMode(textureBlendMode);
 		}
 	}
@@ -227,11 +180,7 @@ namespace april
 		{
 			this->deviceState.strideVertex = stride;
 			this->deviceState.pointerVertex = pointer;
-#ifdef _OPENGLES2
-			glVertexAttribPointer(_positionSlot, 3, GL_FLOAT, GL_FALSE, stride, pointer);
-#else
 			glVertexPointer(3, GL_FLOAT, stride, pointer);
-#endif
 		}
 	}
 	

@@ -16,15 +16,30 @@
 #ifndef APRIL_OPENGLES2_RENDER_SYSTEM_H
 #define APRIL_OPENGLES2_RENDER_SYSTEM_H
 
+#include <hltypes/hstring.h>
+
+#include "Color.h"
 #include "OpenGLES_RenderSystem.h"
+#include "Texture.h"
 
 namespace april
 {
+	class OpenGLES1_Texture;
+
 	class OpenGLES2_RenderSystem : public OpenGLES_RenderSystem
 	{
 	public:
+		friend class OpenGLES1_Texture;
+
 		OpenGLES2_RenderSystem();
 		~OpenGLES2_RenderSystem();
+
+	protected:
+		Texture* _createTexture(chstr filename);
+		Texture* _createTexture(int w, int h, unsigned char* rgba);
+		Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
+
+		void _setVertexPointer(int stride, const void* pointer);
 
 	};
 	
