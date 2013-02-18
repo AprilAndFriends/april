@@ -10,12 +10,15 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a generic OpenGL texture.
+/// Defines a generic OpenGLES texture.
 
 #ifdef _OPENGLES
 #ifndef APRIL_OPENGLES_TEXTURE_H
 #define APRIL_OPENGLES_TEXTURE_H
 
+#include <hltypes/hstring.h>
+
+#include "Color.h"
 #include "OpenGL_Texture.h"
 
 namespace april
@@ -23,8 +26,12 @@ namespace april
 	class OpenGLES_Texture : public OpenGL_Texture
 	{
 	public:
-		OpenGLES_Texture();
+		OpenGLES_Texture(chstr filename);
+		OpenGLES_Texture(int w, int h, unsigned char* rgba);
+		OpenGLES_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
 		~OpenGLES_Texture();
+
+		bool copyPixelData(unsigned char** output);
 
 	};
 

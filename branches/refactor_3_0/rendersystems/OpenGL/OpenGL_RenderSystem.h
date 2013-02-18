@@ -31,6 +31,8 @@ namespace april
 	class OpenGL_RenderSystem : public RenderSystem
 	{
 	public:
+		friend class OpenGL_Texture;
+
 		OpenGL_RenderSystem();
 		~OpenGL_RenderSystem();
 		bool create(chstr options);
