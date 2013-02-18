@@ -32,13 +32,47 @@
 
 #include "april.h"
 #include "Color.h"
+#include "Image.h"
 #include "OpenGL_RenderSystem.h"
 #include "OpenGL_Texture.h"
+#include "Platform.h"
 
 namespace april
 {
 	static Color lastColor = Color::Black;
 
+	unsigned int _limitPrimitives(RenderOp renderOp, int nVertices)
+	{
+		switch (renderOp)
+		{
+		case TriangleList:
+			return nVertices / 3 * 3;
+		case TriangleStrip:
+			return nVertices;
+		case TriangleFan:
+			return nVertices;
+		case LineList:
+			return nVertices / 2 * 2;
+		case LineStrip:
+			return nVertices;
+		case PointList:
+			return nVertices;
+		}
+		return nVertices;
+	}
+	
+	// translation from abstract render ops to gl's render ops
+	int gl_render_ops[]=
+	{
+		0,
+		GL_TRIANGLES,		// ROP_TRIANGLE_LIST
+		GL_TRIANGLE_STRIP,	// ROP_TRIANGLE_STRIP
+		GL_TRIANGLE_FAN,	// ROP_TRIANGLE_FAN
+		GL_LINES,			// ROP_LINE_LIST
+		GL_LINE_STRIP,		// ROP_LINE_STRIP
+		GL_POINTS,			// ROP_POINTS
+	};
+	
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
 	{
 	}
@@ -95,6 +129,32 @@ namespace april
 		glEnable(GL_TEXTURE_2D);
 	}
 
+	grect OpenGL_RenderSystem::getViewport()
+	{
+		static float params[4];
+		glGetFloatv(GL_VIEWPORT, params);
+		return grect(params[0], april::window->getHeight() - params[3] - params[1], params[2], params[3]);
+	}
+	
+	void OpenGL_RenderSystem::setViewport(grect rect)
+	{
+		// because GL has to defy screen logic and has (0,0) in the bottom left corner
+		glViewport((int)rect.x, (int)(april::window->getHeight() - rect.h - rect.y), (int)rect.w, (int)rect.h);
+	}
+	
+	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
+	{
+		// TODO
+		harray<DisplayMode> result;
+		gvec2 resolution = april::getSystemInfo().displayResolution;
+		DisplayMode displayMode;
+		displayMode.width = (int)resolution.x;
+		displayMode.height = (int)resolution.y;
+		displayMode.refreshRate = 60;
+		result += displayMode;
+		return result;
+	}
+	
 	void OpenGL_RenderSystem::clear(bool useColor, bool depth)
 	{
 		GLbitfield mask = 0;
@@ -383,6 +443,228 @@ namespace april
 	{
 		hlog::warn(april::logTag, "Vertex shaders are not implemented!");
 		return NULL;
+	}
+
+	void OpenGL_RenderSystem::_setTexCoordPointer(int stride, const void *pointer)
+	{
+		if (this->deviceState.strideTexCoord != stride || this->deviceState.pointerTexCoord != pointer)
+		{
+			this->deviceState.strideTexCoord = stride;
+			this->deviceState.pointerTexCoord = pointer;
+			glTexCoordPointer(2, GL_FLOAT, stride, pointer);
+		}
+	}
+	
+	void OpenGL_RenderSystem::_setColorPointer(int stride, const void *pointer)
+	{
+		if (this->deviceState.strideColor != stride || this->deviceState.pointerColor != pointer)
+		{
+			this->deviceState.strideColor = stride;
+			this->deviceState.pointerColor = pointer;
+			glColorPointer(4, GL_UNSIGNED_BYTE, stride, pointer);
+		}
+	}
+
+	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
+	{
+		this->state.textureId = 0;
+		this->state.textureCoordinatesEnabled = false;
+		this->state.colorEnabled = false;
+		this->state.systemColor.set(255, 255, 255, 255);
+		this->_applyStateChanges();
+		this->_setColorPointer(0, NULL);
+		this->_setTexCoordPointer(0, NULL);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(PlainVertex), v);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+
+	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
+	{
+		this->state.textureId = 0;
+		this->state.textureCoordinatesEnabled = false;
+		this->state.colorEnabled = false;
+		this->state.systemColor = color;
+		this->_applyStateChanges();
+		this->_setColorPointer(0, NULL);
+		this->_setTexCoordPointer(0, NULL);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(PlainVertex), v);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+	
+	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
+	{
+		this->state.textureCoordinatesEnabled = true;
+		this->state.colorEnabled = false;
+		this->state.systemColor.set(255, 255, 255, 255);
+		this->_applyStateChanges();
+		this->_setColorPointer(0, NULL);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(TexturedVertex), v);
+			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+
+	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
+	{
+		this->state.textureCoordinatesEnabled = true;
+		this->state.colorEnabled = false;
+		this->state.systemColor = color;
+		this->_applyStateChanges();
+		this->_setColorPointer(0, NULL);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(TexturedVertex), v);
+			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+
+	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
+	{
+		this->state.textureId = 0;
+		this->state.textureCoordinatesEnabled = false;
+		this->state.colorEnabled = true;
+		this->state.systemColor.set(255, 255, 255, 255);
+		for_iter (i, 0, nVertices)
+		{
+			// making sure this is in AGBR order
+			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
+		}
+		this->_applyStateChanges();
+		this->_setTexCoordPointer(0, NULL);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(ColoredVertex), v);
+			this->_setColorPointer(sizeof(ColoredVertex), &v->color);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+	
+	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
+	{
+		this->state.textureCoordinatesEnabled = true;
+		this->state.colorEnabled = true;
+		this->state.systemColor.set(255, 255, 255, 255);
+		for_iter (i, 0, nVertices)
+		{
+			// making sure this is in AGBR order
+			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
+		}
+		this->_applyStateChanges();
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES hardware that may allow only a certain amount
+		// of vertices to be rendered at the time. Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(ColoredTexturedVertex), v);
+			this->_setColorPointer(sizeof(ColoredTexturedVertex), &v->color);
+			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &v->u);
+			glDrawArrays(gl_render_ops[renderOp], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+	
+	void OpenGL_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
+	{
+		this->state.modelviewMatrix = matrix;
+		this->state.modelviewMatrixChanged = true;
+	}
+
+	void OpenGL_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
+	{
+		this->state.projectionMatrix = matrix;
+		this->state.projectionMatrixChanged = true;
+	}
+
+	void OpenGL_RenderSystem::setParam(chstr name, chstr value)
+	{
+		if (name == "zbuffer")
+		{
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+		}
+	}
+	
+	Image* OpenGL_RenderSystem::takeScreenshot(int bpp)
+	{
+#ifdef _DEBUG
+		hlog::write(april::logTag, "Taking screenshot...");
+#endif
+		int w = april::window->getWidth();
+		int h = april::window->getHeight();
+		Image* img = new Image();
+		img->w = w;
+		img->h = h;
+		img->bpp = bpp;
+		img->format = (bpp == 4 ? Image::FORMAT_RGBA : Image::FORMAT_RGB);
+		img->data = new unsigned char[w * (h + 1) * 4]; // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
+		unsigned char* temp = img->data + w * h * 4;
+		glReadPixels(0, 0, w, h, (bpp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img->data);
+		for_iter (y, 0, h / 2)
+		{
+			memcpy(temp, img->data + y * w * bpp, w * bpp);
+			memcpy(img->data + y * w * bpp, img->data + (h - y - 1) * w * bpp, w * bpp);
+			memcpy(img->data + (h - y - 1) * w * bpp, temp, w * bpp);
+		}
+		return img;
 	}
 
 }

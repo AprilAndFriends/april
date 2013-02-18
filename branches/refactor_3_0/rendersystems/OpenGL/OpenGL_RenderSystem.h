@@ -36,6 +36,11 @@ namespace april
 
 		void reset();
 
+		float getPixelOffset() { return 0.0f; }
+		grect getViewport();
+		void setViewport(grect value);
+		harray<DisplayMode> getSupportedDisplayModes();
+
 		void clear(bool useColor = true, bool depth = false);
 		void clear(bool depth, grect rect, Color color = Color::Clear);
 
@@ -58,6 +63,16 @@ namespace april
 		VertexShader* createVertexShader();
 		VertexShader* createVertexShader(chstr filename);
 
+		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
+		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
+		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
+		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color);
+		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
+		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
+		
+		void setParam(chstr name, chstr value);
+		Image* takeScreenshot(int bpp = 3);
+
 	protected:
 		OpenGL_State deviceState;
 		OpenGL_State state;
@@ -67,11 +82,17 @@ namespace april
 		virtual void _setupDefaultParameters();
 		virtual void _applyStateChanges();
 		void _setClientState(unsigned int type, bool enabled);
+		void _setModelviewMatrix(const gmat4& matrix);
+		void _setProjectionMatrix(const gmat4& matrix);
 
 		virtual void _setTextureBlendMode(BlendMode textureBlendMode);
 		virtual void _setTextureColorMode(ColorMode mode, unsigned char alpha = 255);
 		virtual void _setTextureFilter(Texture::Filter textureFilter);
 		virtual void _setTextureAddressMode(Texture::AddressMode textureAddressMode);
+
+		virtual void _setVertexPointer(int stride, const void* pointer) = 0;
+		virtual void _setTexCoordPointer(int stride, const void* pointer);
+		virtual void _setColorPointer(int stride, const void* pointer);
 
 	};
 	

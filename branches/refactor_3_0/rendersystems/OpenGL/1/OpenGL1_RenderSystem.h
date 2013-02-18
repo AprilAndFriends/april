@@ -33,30 +33,12 @@ namespace april
 
 		OpenGL1_RenderSystem();
 		~OpenGL1_RenderSystem();
-		bool create(chstr options);
 		bool destroy();
 
 		void assignWindow(Window* window);
 		
-		float getPixelOffset() { return 0.0f; }
-		grect getViewport();
-		void setViewport(grect value);
-		harray<DisplayMode> getSupportedDisplayModes();
-
-		void setTextureBlendMode(BlendMode textureBlendMode);
-
 		Texture* createTexture(int w, int h, unsigned char* rgba);
 		Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
-
-		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
-		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color);
-		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
-		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
-		
-		void setParam(chstr name, chstr value);
-		Image* takeScreenshot(int bpp = 3);
 
 		// TODO - refactor
 		int _getMaxTextureSize();
@@ -66,11 +48,8 @@ namespace april
 		Texture* _createTexture(chstr filename);
 
 		void _setVertexPointer(int stride, const void* pointer);
-		void _setTexCoordPointer(int stride, const void* pointer);
-		void _setColorPointer(int stride, const void* pointer);
+
 		void _setTextureBlendMode(BlendMode mode);
-		void _setModelviewMatrix(const gmat4& matrix);
-		void _setProjectionMatrix(const gmat4& matrix);
 
 #ifdef _WIN32
 		void _releaseWindow();

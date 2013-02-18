@@ -660,7 +660,7 @@ namespace april
 	Image* DirectX9_RenderSystem::takeScreenshot(int bpp)
 	{
 #ifdef _DEBUG
-		hlog::write(april::logTag, "Grabbing screenshot...");
+		hlog::write(april::logTag, "Taking screenshot...");
 #endif
 		D3DSURFACE_DESC desc;
 		this->backBuffer->GetDesc(&desc);
