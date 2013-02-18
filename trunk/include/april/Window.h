@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -26,7 +26,12 @@
 
 namespace april
 {
+	class KeyboardDelegate;
+	class MouseDelegate;
 	class RenderSystem;
+	class SystemDelegate;
+	class TouchDelegate;
+	class UpdateDelegate;
 
 	class aprilExport Window
 	{
@@ -45,17 +50,6 @@ namespace april
 			AKEYEVT_UP = 1
 		};
 		
-		enum MouseButton
-		{
-			AMOUSEBTN_NONE = 0,
-			AMOUSEBTN_LEFT = 1,
-			AMOUSEBTN_RIGHT = 2,
-			AMOUSEBTN_MIDDLE = 3,
-			AMOUSEBTN_WHEELUP = 4,
-			AMOUSEBTN_WHEELDOWN = 5,
-			AMOUSEBTN_DOUBLETAP = 7
-		};
-
 		enum DeviceOrientation
 		{
 			ADEVICEORIENTATION_NONE = 0,
@@ -69,57 +63,29 @@ namespace april
 		
 		Window();
 		virtual ~Window();
-		virtual bool create(int w, int h, bool fullscreen, chstr title);
+		virtual bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
 		virtual bool destroy();
 
 		// generic getters/setters
-		hstr getName() { return this->name; }
-		bool isCreated() { return this->created; }
-		hstr getTitle() { return this->title; }
-		bool isFullscreen() { return this->fullscreen; }
+		HL_DEFINE_GET(hstr, name, Name);
+		HL_DEFINE_IS(bool, created, Created);
+		HL_DEFINE_GET(hstr, title, Title);
+		HL_DEFINE_IS(bool, fullscreen, Fullscreen);
 		void setFullscreen(bool value) { } // TODO
-		bool isFocused() { return this->focused; }
-		bool isRunning() { return this->running; }
-		int getFps() { return this->fps; }
-		float getFpsResolution() { return this->fpsResolution; }
-		void setFpsResolution(float value) { this->fpsResolution = value; }
-		gvec2 getCursorPosition() { return this->cursorPosition; }
+		HL_DEFINE_IS(bool, focused, Focused);
+		HL_DEFINE_IS(bool, running, Running);
+		HL_DEFINE_GET(int, fps, Fps);
+		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
+		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
 		gvec2 getSize();
 		float getAspectRatio();
 
 		// callbacks
-		typedef bool (*updateFunction)(float);
-		typedef void (*mouseDownFunction)(int);
-		typedef void (*mouseUpFunction)(int);
-		typedef void (*mouseMoveFunction)();
-		typedef void (*mouseScrollFunction)(float, float);
-		typedef void (*keyDownFunction)(unsigned int);
-		typedef void (*keyUpFunction)(unsigned int);
-		typedef void (*charFunction)(unsigned int);
-		updateFunction getUpdateCallback() { return this->updateCallback; }
-		void setUpdateCallback(updateFunction value) { this->updateCallback = value; }
-		mouseDownFunction getMouseDownCallback() { return this->mouseDownCallback; }
-		void setMouseDownCallback(mouseDownFunction value) { this->mouseDownCallback = value; }
-		mouseUpFunction getMouseUpCallback() { return this->mouseUpCallback; }
-		void setMouseUpCallback(mouseUpFunction value) { this->mouseUpCallback = value; }
-		mouseMoveFunction getMouseMoveCallback() { return this->mouseMoveCallback; }
-		void setMouseMoveCallback(mouseMoveFunction value) { this->mouseMoveCallback = value; }
-		mouseScrollFunction getMouseScrollCallback() { return this->mouseScrollCallback; }
-		void setMouseScrollCallback(mouseScrollFunction value) { this->mouseScrollCallback = value; }
-		keyDownFunction getKeyDownCallback() { return this->keyDownCallback; }
-		void setKeyDownCallback(keyDownFunction value) { this->keyDownCallback = value; }
-		keyUpFunction getKeyUpCallback() { return this->keyUpCallback; }
-		void setKeyUpCallback(keyUpFunction value) { this->keyUpCallback = value; }
-		charFunction getCharCallback() { return this->charCallback; }
-		void setCharCallback(charFunction value) { this->charCallback = value; }
-		void setQuitCallback(bool (*value)(bool)) { this->quitCallback = value; }
-		void setFocusChangeCallback(void (*value)(bool)) { this->focusChangeCallback = value; }
-		void setTouchscreenEnabledCallback(void (*value)(bool)) { this->touchscreenEnabledCallback = value; }
-		void setTouchEventCallback(void (*value)(harray<gvec2>&)) { this->touchCallback = value; }
-		void setDeviceOrientationCallback(void (*value)(DeviceOrientation)) { this->deviceOrientationCallback = value; }
-		void setVirtualKeyboardCallback(void (*value)(bool)) { this->virtualKeyboardCallback = value; }
-		void setHandleUrlCallback(bool (*value)(chstr)) { this->handleUrlCallback = value; }
-		void setLowMemoryCallback(void (*value)()) { this->lowMemoryCallback = value; }
+		HL_DEFINE_GETSET(UpdateDelegate*, updateDelegate, UpdateDelegate);
+		HL_DEFINE_GETSET(KeyboardDelegate*, keyboardDelegate, KeyboardDelegate);
+		HL_DEFINE_GETSET(MouseDelegate*, mouseDelegate, MouseDelegate);
+		HL_DEFINE_GETSET(TouchDelegate*, touchDelegate, TouchDelegate);
+		HL_DEFINE_GETSET(SystemDelegate*, systemDelegate, SystemDelegate);
 
 		// virtual getters/setters
 		virtual void setTitle(chstr value) { this->title = value; }
@@ -137,15 +103,6 @@ namespace april
 		virtual bool isTouchEnabled() = 0;
 		virtual void* getBackendId() = 0;
 
-		// additional callback setters
-		void setMouseCallbacks(void (*mouseDownCallback)(int),
-							   void (*mouseUpCallback)(int),
-							   void (*mouseMoveCallback)(),
-							   void (*mouseScrollCallback)(float, float));
-		void setKeyboardCallbacks(void (*keyDownCallback)(unsigned int),
-								  void (*keyUpCallback)(unsigned int),
-								  void (*charCallback)(unsigned int));
-
 		// pure virtual methods (window system dependent)
 		virtual void presentFrame() = 0;
 		virtual void checkEvents() = 0;
@@ -161,12 +118,11 @@ namespace april
 		virtual void setParam(chstr param, chstr value) { }
 		
 		// generic but overridable event handlers
-		virtual void handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button);
+		virtual void handleMouseEvent(MouseEventType type, gvec2 position, KeySym button);
 		virtual void handleKeyEvent(KeyEventType type, KeySym keyCode, unsigned int charCode);
-		virtual bool handleQuitRequest(bool canReject);
+		virtual void handleTouchEvent(const harray<gvec2>& touches);
+		virtual bool handleQuitRequest(bool canCancel);
 		virtual void handleFocusChangeEvent(bool focused);
-		virtual void handleTouchscreenEnabledEvent(bool enabled);
-		virtual void handleTouchEvent(harray<gvec2>& touches);
 		virtual bool handleUrl(chstr url);
 		virtual void handleLowMemoryWarning();
 
@@ -200,22 +156,11 @@ namespace april
 		// TODO - refactor
 		static void (*msLaunchCallback)(void*);
 
-		bool (*updateCallback)(float);
-		void (*mouseDownCallback)(int);
-		void (*mouseUpCallback)(int);
-		void (*mouseMoveCallback)();
-		void (*mouseScrollCallback)(float, float);
-		void (*keyDownCallback)(unsigned int);
-		void (*keyUpCallback)(unsigned int);
-		void (*charCallback)(unsigned int);
-		bool (*quitCallback)(bool can_reject);
-		void (*focusChangeCallback)(bool);
-		void (*touchscreenEnabledCallback)(bool);
-		void (*touchCallback)(harray<gvec2>&);
-		void (*deviceOrientationCallback)(DeviceOrientation);
-		void (*virtualKeyboardCallback)(bool);
-		bool (*handleUrlCallback)(chstr);
-		void (*lowMemoryCallback)();
+		UpdateDelegate* updateDelegate;
+		KeyboardDelegate* keyboardDelegate;
+		MouseDelegate* mouseDelegate;
+		TouchDelegate* touchDelegate;
+		SystemDelegate* systemDelegate;
 
 		virtual float _calcTimeSinceLastFrame();
 

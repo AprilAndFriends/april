@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -52,7 +52,7 @@ namespace april
 		// TODO
 		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
-			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
+			info.maxTextureSize = april::rendersys->getMaxTextureSize();
 		}
 		return info;
 	}

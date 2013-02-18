@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -40,9 +40,9 @@ namespace april
 		this->destroy();
 	}
 
-	bool AndroidJNI_Window::create(int w, int h, bool fullscreen, chstr title)
+	bool AndroidJNI_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
-		if (!Window::create(w, h, true, title))
+		if (!Window::create(w, h, true, title, options))
 		{
 			return false;
 		}
@@ -96,6 +96,7 @@ namespace april
 
 	void AndroidJNI_Window::handleTouchEvent(MouseEventType type, gvec2 position, int index)
 	{
+		int previousTouchesSize = this->touches.size();
 		switch (type)
 		{
 		case AMOUSEEVT_DOWN:
@@ -122,16 +123,22 @@ namespace april
 		}
 		if (this->multiTouchActive || this->touches.size() > 1)
 		{
+			if (!this->multiTouchActive && previousTouchesSize == 1)
+			{
+				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
+				this->handleMouseEvent(AMOUSEEVT_UP, gvec2(-10000.0f, -10000.0f), AK_LBUTTON);
+			}
 			this->multiTouchActive = (this->touches.size() > 0);
 		}
 		else
 		{
-			this->handleMouseEvent(type, position, AMOUSEBTN_LEFT);
+			this->handleMouseEvent(type, position, AK_LBUTTON);
 		}
+		this->touchEvents.clear();
 		this->touchEvents += TouchInputEvent(this->touches);
 	}
 
-	void AndroidJNI_Window::handleMouseEvent(MouseEventType type, gvec2 position, MouseButton button)
+	void AndroidJNI_Window::handleMouseEvent(MouseEventType type, gvec2 position, KeySym button)
 	{
 		this->mouseEvents += MouseInputEvent(type, position, button);
 	}

@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -10,26 +10,13 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines an OpenGL specific texture.
+/// Defines a generic OpenGL texture.
 
-#if defined(_OPENGL) || (_OPENGLES)
+#ifdef _OPENGL
 #ifndef APRIL_OPENGL_TEXTURE_H
 #define APRIL_OPENGL_TEXTURE_H
 
-#ifdef __APPLE__
-#include <TargetConditionals.h>
-#endif
-#if (TARGET_OS_MAC) && !(TARGET_OS_IPHONE)
-#include <OpenGL/gl.h>
-#elif (TARGET_OS_IPHONE)
-#include <OpenGLES/ES1/gl.h>
-#elif (_OPENGLES)
-#include <GLES/gl.h>
-#else
-#include <GL/gl.h>
-#endif
-
-#include "RenderSystem.h"
+#include "Texture.h"
 
 namespace april
 {
@@ -39,7 +26,7 @@ namespace april
 	{
 	public:
 		friend class OpenGL_RenderSystem;
-		
+
 		OpenGL_Texture(chstr filename);
 		OpenGL_Texture(int w, int h, unsigned char* rgba);
 		OpenGL_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
@@ -60,10 +47,10 @@ namespace april
 		void stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void rotateHue(float degrees);
 		void saturate(float factor);
-		bool copyPixelData(unsigned char** output);
+		virtual bool copyPixelData(unsigned char** output) = 0;
 
 	protected:
-		GLuint textureId;
+		unsigned int textureId;
 		unsigned char* manualBuffer;
 
 		void _setCurrentTexture();
@@ -71,6 +58,5 @@ namespace april
 	};
 
 }
-
 #endif
 #endif

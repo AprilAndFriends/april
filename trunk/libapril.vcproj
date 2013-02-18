@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="libapril"
 	ProjectGUID="{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}"
 	RootNamespace="libapril"
@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug_OpenGL|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGL1;HAVE_WIN32;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -90,7 +90,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release_OpenGL|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -115,8 +115,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGL1;HAVE_WIN32;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -165,7 +165,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug_DirectX9|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -188,8 +188,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX9;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;HAVE_WIN32;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -238,7 +238,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release_DirectX9|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -263,8 +263,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX9;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DIRECTX;_DIRECTX9;HAVE_WIN32;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -313,7 +313,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug_OpenGLES1|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -336,8 +336,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;HAVE_WIN32;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -386,7 +386,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release_OpenGLES1|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -411,8 +411,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="windowsystems/Win32;windowsystems/SDL;../win32/include;../include;../include/zlib;rendersystems/DirectX9;include/april;rendersystems/OpenGL;include;../hltypes/include;../gtypes/include"
-				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_OPENGL;_OPENGLES;_OPENGLES1;HAVE_WIN32;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
@@ -459,6 +459,154 @@
 				CommandLine=""
 			/>
 		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
+			ConfigurationType="2"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4251"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib winmm.lib"
+				OutputFile="$(OutDir)$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
+			ConfigurationType="2"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="./src;windowsystems/Win32;windowsystems/SDL;../include;../include/zlib;rendersystems/DirectX;rendersystems/DirectX/9;include/april;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;include;../hltypes/include;../gtypes/include"
+				PreprocessorDefinitions="_WIN32;APRIL_EXPORTS;_DEBUG;BUILDING_APRIL;_CRT_SECURE_NO_WARNINGS"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4251"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib winmm.lib"
+				OutputFile="$(OutDir)$(ProjectName).dll"
+				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
+				GenerateDebugInformation="true"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -481,22 +629,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\ImageSource.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ImageSourceIL.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ImageSourceJpg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\ImageSourcePng.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\PixelShader.cpp"
 				>
 			</File>
@@ -514,10 +646,6 @@
 			</File>
 			<File
 				RelativePath=".\src\Texture.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\TimerWin.cpp"
 				>
 			</File>
 			<File
@@ -560,6 +688,38 @@
 				Name="rendersystems"
 				>
 				<Filter
+					Name="DirectX"
+					>
+					<File
+						RelativePath=".\rendersystems\DirectX\DirectX_RenderSystem.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\rendersystems\DirectX\DirectX_Texture.cpp"
+						>
+					</File>
+					<Filter
+						Name="9"
+						>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_PixelShader.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_RenderSystem.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_Texture.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_VertexShader.cpp"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
 					Name="OpenGL"
 					>
 					<File
@@ -567,29 +727,61 @@
 						>
 					</File>
 					<File
+						RelativePath=".\rendersystems\OpenGL\OpenGL_State.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\rendersystems\OpenGL\OpenGL_Texture.cpp"
 						>
 					</File>
-				</Filter>
-				<Filter
-					Name="DirectX9"
-					>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_PixelShader.cpp"
+					<Filter
+						Name="1"
 						>
-					</File>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_RenderSystem.cpp"
+						<File
+							RelativePath=".\rendersystems\OpenGL\1\OpenGL1_RenderSystem.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\OpenGL\1\OpenGL1_Texture.cpp"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="ES"
 						>
-					</File>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_Texture.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_VertexShader.cpp"
-						>
-					</File>
+						<File
+							RelativePath=".\rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\OpenGL\ES\OpenGLES_Texture.cpp"
+							>
+						</File>
+						<Filter
+							Name="1"
+							>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp"
+								>
+							</File>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="2"
+							>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.cpp"
+								>
+							</File>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\2\OpenGLES2_Texture.cpp"
+								>
+							</File>
+						</Filter>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter
@@ -601,6 +793,66 @@
 				</File>
 				<File
 					RelativePath=".\platforms\Win32_Platform.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="images"
+				>
+				<File
+					RelativePath=".\src\images\Image.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\images\ImageJpg.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\images\ImageJpt.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\images\ImagePng.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="timers"
+				>
+				<File
+					RelativePath=".\src\timers\TimerWin.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="delegates"
+				>
+				<File
+					RelativePath=".\src\delegates\EventDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\InputDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\KeyboardDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\MouseDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\SystemDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\TouchDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\delegates\UpdateDelegate.cpp"
 					>
 				</File>
 			</Filter>
@@ -631,7 +883,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\april\ImageSource.h"
+				RelativePath=".\include\april\Image.h"
 				>
 			</File>
 			<File
@@ -713,30 +965,126 @@
 						>
 					</File>
 					<File
+						RelativePath=".\rendersystems\OpenGL\OpenGL_State.h"
+						>
+					</File>
+					<File
 						RelativePath=".\rendersystems\OpenGL\OpenGL_Texture.h"
 						>
 					</File>
+					<Filter
+						Name="1"
+						>
+						<File
+							RelativePath=".\rendersystems\OpenGL\1\OpenGL1_RenderSystem.h"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\OpenGL\1\OpenGL1_Texture.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="ES"
+						>
+						<File
+							RelativePath=".\rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\OpenGL\ES\OpenGLES_Texture.h"
+							>
+						</File>
+						<Filter
+							Name="1"
+							>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h"
+								>
+							</File>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="2"
+							>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.h"
+								>
+							</File>
+							<File
+								RelativePath=".\rendersystems\OpenGL\ES\2\OpenGLES2_Texture.h"
+								>
+							</File>
+						</Filter>
+					</Filter>
 				</Filter>
 				<Filter
-					Name="DirectX9"
+					Name="DirectX"
 					>
 					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_PixelShader.h"
+						RelativePath=".\rendersystems\DirectX\DirectX_RenderSystem.h"
 						>
 					</File>
 					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_RenderSystem.h"
+						RelativePath=".\rendersystems\DirectX\DirectX_Texture.h"
 						>
 					</File>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_Texture.h"
+					<Filter
+						Name="9"
 						>
-					</File>
-					<File
-						RelativePath=".\rendersystems\DirectX9\DirectX9_VertexShader.h"
-						>
-					</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_PixelShader.h"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_RenderSystem.h"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_Texture.h"
+							>
+						</File>
+						<File
+							RelativePath=".\rendersystems\DirectX\9\DirectX9_VertexShader.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="delegates"
+				>
+				<File
+					RelativePath=".\include\april\EventDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\InputDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\KeyboardDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\MouseDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\SystemDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\TouchDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\april\UpdateDelegate.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

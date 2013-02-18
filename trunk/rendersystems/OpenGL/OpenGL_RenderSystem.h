@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -11,16 +11,16 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines an OpenGL render system.
+/// Defines a generic OpenGL render system.
 
 #ifdef _OPENGL
 #ifndef APRIL_OPENGL_RENDER_SYSTEM_H
 #define APRIL_OPENGL_RENDER_SYSTEM_H
 
-#ifdef __APPLE__
-#include <TargetConditionals.h>
-#endif
+#include <hltypes/hplatform.h>
+#include <hltypes/hstring.h>
 
+#include "OpenGL_State.h"
 #include "RenderSystem.h"
 
 namespace april
@@ -28,37 +28,6 @@ namespace april
 	class OpenGL_Texture;
 	class Window;
 
-	class OpenGL_RenderState
-	{
-	public:
-		OpenGL_RenderState();
-		~OpenGL_RenderState();
-		
-		void reset();
-
-		bool textureCoordinatesEnabled;
-		bool colorEnabled;
-		unsigned int textureId;
-		Texture::Filter textureFilter;
-		Texture::AddressMode textureAddressMode;
-		Color systemColor;
-		bool modelviewMatrixChanged;
-		bool projectionMatrixChanged;
-		gmat4 modelviewMatrix;
-		gmat4 projectionMatrix;
-		BlendMode blendMode;
-		ColorMode colorMode;
-		unsigned char colorModeAlpha;
-		unsigned int modeMatrix;
-		int strideVertex;
-		const void* pointerVertex;
-		int strideTexCoord;
-		const void* pointerTexCoord;
-		int strideColor;
-		const void* pointerColor;
-
-	};
-	
 	class OpenGL_RenderSystem : public RenderSystem
 	{
 	public:
@@ -69,35 +38,37 @@ namespace april
 		bool create(chstr options);
 		bool destroy();
 
-		void assignWindow(Window* window);
 		void reset();
-		
+		void assignWindow(Window* window);
+
 		float getPixelOffset() { return 0.0f; }
+		int getMaxTextureSize();
 		grect getViewport();
 		void setViewport(grect value);
 		harray<DisplayMode> getSupportedDisplayModes();
 
-		void setTextureBlendMode(BlendMode textureBlendMode);
-		void setTextureColorMode(ColorMode textureColorMode, unsigned char alpha = 255);
-		void setTextureFilter(Texture::Filter textureFilter);
-		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
+		void clear(bool useColor = true, bool depth = false);
+		void clear(bool depth, grect rect, Color color = Color::Clear);
+
+		void bindTexture(unsigned int textureId);
+		void setResolution(int w, int h);
+
+		void setMatrixMode(unsigned int mode);
 		void setTexture(Texture* texture);
 		Texture* getRenderTarget();
 		void setRenderTarget(Texture* texture);
 		void setPixelShader(PixelShader* pixelShader);
 		void setVertexShader(VertexShader* vertexShader);
+		void setTextureBlendMode(BlendMode mode);
+		void setTextureColorMode(ColorMode textureColorMode, unsigned char alpha = 255);
+		void setTextureFilter(Texture::Filter textureFilter);
+		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
 
-		void setResolution(int w, int h);
-
-		Texture* createTexture(int w, int h, unsigned char* rgba);
-		Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
 		PixelShader* createPixelShader();
 		PixelShader* createPixelShader(chstr filename);
 		VertexShader* createVertexShader();
 		VertexShader* createVertexShader(chstr filename);
 
-		void clear(bool useColor = true, bool depth = false);
-		void clear(bool depth, grect rect, Color color = Color::Clear);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
 		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
 		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
@@ -106,42 +77,42 @@ namespace april
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 		
 		void setParam(chstr name, chstr value);
-		ImageSource* takeScreenshot(int bpp = 3);
-
-		void setMatrixMode(unsigned int mode);
-		void bindTexture(unsigned int textureId);
-
-		// TODO - refactor
-		int _getMaxTextureSize();
+		Image* takeScreenshot(int bpp = 3);
 
 	protected:
-		OpenGL_RenderState deviceState;
-		OpenGL_RenderState state;
-		OpenGL_Texture* activeTexture;
+		OpenGL_State deviceState;
+		OpenGL_State state;
 		hstr options;
+		OpenGL_Texture* activeTexture;
 
-		void _setupDefaultParameters();
-		Texture* _createTexture(chstr filename);
-
-		void _setVertexPointer(int stride, const void* pointer);
-		void _setTexCoordPointer(int stride, const void* pointer);
-		void _setColorPointer(int stride, const void* pointer);
-		void _setTextureBlendMode(BlendMode mode);
-		void _setTextureColorMode(ColorMode mode, unsigned char alpha = 255);
-		void _setTextureFilter(Texture::Filter textureFilter);
-		void _setTextureAddressMode(Texture::AddressMode textureAddressMode);
+		virtual void _setupDefaultParameters();
+		virtual void _applyStateChanges();
+		void _setClientState(unsigned int type, bool enabled);
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
 
-		void _applyStateChanges();
-		void _setClientState(unsigned int type, bool enabled);
+		virtual void _setTextureBlendMode(BlendMode textureBlendMode);
+		virtual void _setTextureColorMode(ColorMode mode, unsigned char alpha = 255);
+		virtual void _setTextureFilter(Texture::Filter textureFilter);
+		virtual void _setTextureAddressMode(Texture::AddressMode textureAddressMode);
+
+		virtual void _setVertexPointer(int stride, const void* pointer) = 0;
+		virtual void _setTexCoordPointer(int stride, const void* pointer);
+		virtual void _setColorPointer(int stride, const void* pointer);
+
 #ifdef _WIN32
-		void _releaseWindow();
+		HWND hWnd;
+		HDC hDC;
+
+		bool _initWin32(Window* window);
+		virtual void _releaseWindow();
+	public:
+		HDC getHDC() { return this->hDC; }
+
 #endif
-		
+
 	};
 	
 }
-
 #endif
 #endif

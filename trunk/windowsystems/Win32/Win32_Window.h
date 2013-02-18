@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -13,7 +13,7 @@
 /// 
 /// Defines a Win32 window.
 
-#ifdef _WIN32
+#ifdef HAVE_WIN32
 #ifndef APRIL_WIN32_WINDOW_H
 #define APRIL_WIN32_WINDOW_H
 #include <hltypes/hplatform.h>
@@ -26,12 +26,12 @@
 
 namespace april
 {
-	class aprilExport Win32_Window : public Window
+	class Win32_Window : public Window
 	{
 	public:
 		Win32_Window();
 		~Win32_Window();
-		bool create(int w, int h, bool fullscreen, chstr title);
+		bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
 		bool destroy();
 
 		void setTitle(chstr title);
@@ -39,8 +39,7 @@ namespace april
 		void setCursorVisible(bool value);
 		int getWidth();
 		int getHeight();
-		bool isTouchEnabled() { return this->touchEnabled; }
-		void setTouchEnabled(bool value) { this->touchEnabled = value; }
+		HL_DEFINE_ISSET(bool, touchEnabled, TouchEnabled);
 		void* getBackendId();
 		void _setResolution(int w, int h);
 

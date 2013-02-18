@@ -24,14 +24,8 @@
     <Filter Include="Resource Files">
       <UniqueIdentifier>{bc3abb83-0c68-456a-ae46-f6fe13ebf76e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\rendersystems\DirectX9">
-      <UniqueIdentifier>{dfe5826f-1d2c-4f6d-8d5f-656d36961488}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\rendersystems\OpenGL">
       <UniqueIdentifier>{43b75f5a-a897-45bc-a6cd-0f649765424b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\rendersystems\DirectX9">
-      <UniqueIdentifier>{edfbadb8-e07f-4516-9ad6-479af740625c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\rendersystems\OpenGL">
       <UniqueIdentifier>{67c8116e-f076-46fd-94f7-0c597f17b27f}</UniqueIdentifier>
@@ -63,12 +57,57 @@
     <Filter Include="Source Files\windowsystems\WinRT">
       <UniqueIdentifier>{e26cc618-a92f-4d76-afb3-6284c09394ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX">
+      <UniqueIdentifier>{11331481-3ba0-4096-8be2-76d6ff673b74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\DirectX">
+      <UniqueIdentifier>{820198e5-62b0-4874-97d0-3c863591b045}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\DirectX\9">
+      <UniqueIdentifier>{dfe5826f-1d2c-4f6d-8d5f-656d36961488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX\9">
+      <UniqueIdentifier>{edfbadb8-e07f-4516-9ad6-479af740625c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL\1">
+      <UniqueIdentifier>{9928026c-27fb-4619-aa07-f9c4c33d2e8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL\1">
+      <UniqueIdentifier>{ad9edae5-3d49-4bdc-8769-332bd86200d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL\ES">
+      <UniqueIdentifier>{ac7c9ce1-886b-414f-a4e8-fadb84db647f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL\ES\1">
+      <UniqueIdentifier>{8646ebab-15a0-4b45-8f1c-7f0f44be853b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL\ES">
+      <UniqueIdentifier>{97aedb7a-1691-4b2f-9b86-46b2216a8a5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL\ES\1">
+      <UniqueIdentifier>{edd447d4-a504-4c48-b697-0c95a178fb75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\delegates">
+      <UniqueIdentifier>{5cac0f8f-0272-4a8d-9b57-4a6539e4e550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\delegates">
+      <UniqueIdentifier>{4e772634-510d-4f8a-9610-9aa5e773c50f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\images">
+      <UniqueIdentifier>{4134bfcd-c189-4665-9696-a768a8c9540f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\timers">
+      <UniqueIdentifier>{606d267a-8075-4528-a50e-ff0afd0dae93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL\ES\2">
+      <UniqueIdentifier>{f6e5fbbc-2ee1-4d75-bee2-ee0be9b1e3d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL\ES\2">
+      <UniqueIdentifier>{34ab2985-e17c-4c50-ad9d-0761eccf6fa5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImageSourceIL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\RenderSystem.cpp">
@@ -77,13 +116,7 @@
     <ClCompile Include="src\Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TimerWin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImageSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PixelShader.cpp">
@@ -92,32 +125,11 @@
     <ClCompile Include="src\VertexShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_PixelShader.cpp">
-      <Filter>Source Files\rendersystems\DirectX9</Filter>
-    </ClCompile>
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_RenderSystem.cpp">
-      <Filter>Source Files\rendersystems\DirectX9</Filter>
-    </ClCompile>
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_Texture.cpp">
-      <Filter>Source Files\rendersystems\DirectX9</Filter>
-    </ClCompile>
-    <ClCompile Include="rendersystems\DirectX9\DirectX9_VertexShader.cpp">
-      <Filter>Source Files\rendersystems\DirectX9</Filter>
-    </ClCompile>
     <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TimerPosix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImageSourceJpg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImageSourcePng.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\april.cpp">
       <Filter>Source Files</Filter>
@@ -155,6 +167,90 @@
     <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\DirectX_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\DirectX_Texture.cpp">
+      <Filter>Source Files\rendersystems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_PixelShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX\9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\DirectX\9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_Texture.cpp">
+      <Filter>Source Files\rendersystems\DirectX\9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\9\DirectX9_VertexShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX\9</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\1\OpenGL1_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\1</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\1\OpenGL1_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\1</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES\1</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES\1</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_State.cpp">
+      <Filter>Source Files\rendersystems\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\UpdateDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\images\ImageJpg.cpp">
+      <Filter>Source Files\images</Filter>
+    </ClCompile>
+    <ClCompile Include="src\images\ImageJpt.cpp">
+      <Filter>Source Files\images</Filter>
+    </ClCompile>
+    <ClCompile Include="src\images\ImagePng.cpp">
+      <Filter>Source Files\images</Filter>
+    </ClCompile>
+    <ClCompile Include="src\images\Image.cpp">
+      <Filter>Source Files\images</Filter>
+    </ClCompile>
+    <ClCompile Include="src\timers\TimerPosix.cpp">
+      <Filter>Source Files\timers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\timers\TimerWin.cpp">
+      <Filter>Source Files\timers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\EventDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\InputDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\KeyboardDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\MouseDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\SystemDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="src\delegates\TouchDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES\2</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\2\OpenGLES2_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES\2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -163,7 +259,7 @@
     <ClInclude Include="include\april\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\april\ImageSource.h">
+    <ClInclude Include="include\april\Image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Keys.h">
@@ -173,9 +269,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\april\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Window.h">
@@ -189,18 +282,6 @@
     </ClInclude>
     <ClInclude Include="include\april\VertexShader.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_PixelShader.h">
-      <Filter>Header Files\rendersystems\DirectX9</Filter>
-    </ClInclude>
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_RenderSystem.h">
-      <Filter>Header Files\rendersystems\DirectX9</Filter>
-    </ClInclude>
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_Texture.h">
-      <Filter>Header Files\rendersystems\DirectX9</Filter>
-    </ClInclude>
-    <ClInclude Include="rendersystems\DirectX9\DirectX9_VertexShader.h">
-      <Filter>Header Files\rendersystems\DirectX9</Filter>
     </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h">
       <Filter>Header Files\rendersystems\OpenGL</Filter>
@@ -234,6 +315,75 @@
     </ClInclude>
     <ClInclude Include="windowsystems\WinRT\WinRT_Window.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\DirectX_RenderSystem.h">
+      <Filter>Header Files\rendersystems\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\DirectX_Texture.h">
+      <Filter>Header Files\rendersystems\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_PixelShader.h">
+      <Filter>Header Files\rendersystems\DirectX\9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_RenderSystem.h">
+      <Filter>Header Files\rendersystems\DirectX\9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_Texture.h">
+      <Filter>Header Files\rendersystems\DirectX\9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\9\DirectX9_VertexShader.h">
+      <Filter>Header Files\rendersystems\DirectX\9</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\1\OpenGL1_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL\1</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\1\OpenGL1_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL\1</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES\1</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES\1</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_State.h">
+      <Filter>Header Files\rendersystems\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\UpdateDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\EventDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\InputDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\KeyboardDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\MouseDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\SystemDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\TouchDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES\2</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\2\OpenGLES2_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES\2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

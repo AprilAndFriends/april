@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -17,7 +17,7 @@
 
 #include "april.h"
 #include "Color.h"
-#include "ImageSource.h"
+#include "Image.h"
 #include "Texture.h"
 #include "RenderSystem.h"
 
@@ -198,7 +198,7 @@ namespace april
 		this->fillRect(hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h), color);
 	}
 
-	void Texture::blit(int x, int y, ImageSource* image, int sx, int sy, int sw, int sh, unsigned char alpha)
+	void Texture::blit(int x, int y, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		this->blit(x, y, image->data, image->w, image->h, image->bpp, sx, sy, sw, sh, alpha);
 	}
@@ -208,7 +208,7 @@ namespace april
 		this->blit(hround(position.x), hround(position.y), texture, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
 	}
 
-	void Texture::blit(gvec2 position, ImageSource* image, grect source, unsigned char alpha)
+	void Texture::blit(gvec2 position, Image* image, grect source, unsigned char alpha)
 	{
 		this->blit(hround(position.x), hround(position.y), image->data, image->w, image->h, image->bpp, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
 	}
@@ -218,7 +218,7 @@ namespace april
 		this->blit(hround(position.x), hround(position.y), data, dataWidth, dataHeight, dataBpp, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
 	}
 
-	void Texture::stretchBlit(int x, int y, int w, int h, ImageSource* image, int sx, int sy, int sw, int sh, unsigned char alpha)
+	void Texture::stretchBlit(int x, int y, int w, int h, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		this->stretchBlit(x, y, w, h, image->data, image->w, image->h, image->bpp, sx, sy, sw, sh, alpha);
 	}
@@ -229,7 +229,7 @@ namespace april
 			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
 	}
 
-	void Texture::stretchBlit(grect destination, ImageSource* image, grect source, unsigned char alpha)
+	void Texture::stretchBlit(grect destination, Image* image, grect source, unsigned char alpha)
 	{
 		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), image->data, image->w, image->h, image->bpp,
 			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);

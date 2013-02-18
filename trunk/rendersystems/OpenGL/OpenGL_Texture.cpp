@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -31,9 +31,12 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
-#include "ImageSource.h"
-#include "OpenGL_Texture.h"
+#include "Image.h"
 #include "OpenGL_RenderSystem.h"
+#include "OpenGL_State.h"
+#include "OpenGL_Texture.h"
+
+#define APRIL_OGL_RENDERSYS ((OpenGL_RenderSystem*)april::rendersys)
 
 namespace april
 {
@@ -84,7 +87,8 @@ namespace april
 		else
 		{
 			// TODO - use as base for ::clear
-			int glFormat = GL_RGB, internalFormat = GL_RGB;
+			int glFormat = GL_RGB;
+			int internalFormat = GL_RGB;
 			this->bpp = 3;
 			switch (format)
 			{
@@ -100,7 +104,7 @@ namespace april
 				glFormat = internalFormat = GL_ALPHA;
 				this->bpp = 1;
 				break;
-#ifndef _ANDROID
+#if !defined(_ANDROID) && !defined(_WIN32)
 			case FORMAT_BGRA:
 #ifndef __APPLE__
 				glFormat = GL_BGRA;
@@ -134,13 +138,12 @@ namespace april
 
 	void OpenGL_Texture::_setCurrentTexture()
 	{
-		OpenGL_RenderSystem* rendersys = (OpenGL_RenderSystem*)april::rendersys;
-		rendersys->state.textureId = rendersys->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		rendersys->state.textureFilter = rendersys->deviceState.textureFilter = this->filter;
-		rendersys->_setTextureFilter(this->filter);
-		rendersys->state.textureAddressMode = rendersys->deviceState.textureAddressMode = this->addressMode;
-		rendersys->_setTextureAddressMode(this->addressMode);
+		APRIL_OGL_RENDERSYS->state.textureFilter = APRIL_OGL_RENDERSYS->deviceState.textureFilter = this->filter;
+		APRIL_OGL_RENDERSYS->_setTextureFilter(this->filter);
+		APRIL_OGL_RENDERSYS->state.textureAddressMode = APRIL_OGL_RENDERSYS->deviceState.textureAddressMode = this->addressMode;
+		APRIL_OGL_RENDERSYS->_setTextureAddressMode(this->addressMode);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	}
@@ -157,10 +160,10 @@ namespace april
 			return true;
 		}
 		hlog::write(april::logTag, "Loading GL texture: " + this->_getInternalName());
-		ImageSource* image = NULL;
+		Image* image = NULL;
 		if (this->filename != "")
 		{
-			image = april::loadImage(this->filename);
+			image = Image::load(this->filename);
 			if (image == NULL)
 			{
 				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
@@ -178,7 +181,7 @@ namespace april
 		}
 		// write texels
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		if (image != NULL)
@@ -188,24 +191,24 @@ namespace april
 #if TARGET_OS_IPHONE
 			case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
 			case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image->format, image->w, image->h, 0, image->compressedLength, image->data);
+				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image->format, image->w, image->h, 0, image->compressedSize, image->data);
 				this->format = FORMAT_ARGB; // TODO - not really a format
 				break;
 #endif
-			case AF_RGBA:
+			case Image::FORMAT_RGBA:
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ARGB;
 				break;
-			case AF_RGB:
+			case Image::FORMAT_RGB:
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ARGB;
 				break;
-			case AF_GRAYSCALE:
+			case Image::FORMAT_GRAYSCALE:
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image->w, image->h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ALPHA;
 				break;
 			default:
-				glTexImage2D(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == AF_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
+				glTexImage2D(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == Image::FORMAT_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ARGB;
 				break;
 			}
@@ -228,8 +231,6 @@ namespace april
 		}
 	}
 
-	/////////////////////////////////////////////////////////////
-
 	void OpenGL_Texture::clear()
 	{
 		// TODO - can be improved by directly using memset
@@ -246,7 +247,7 @@ namespace april
 	{
 		unsigned char writeData[4] = {color.r, color.g, color.b, color.a};
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
 	}
 	
@@ -283,11 +284,11 @@ namespace april
 			memset(writeData, value, w * h * this->bpp);
 		}
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
-#ifndef _ANDROID
+#if !defined(_ANDROID) && !defined(_WIN32)
 			if (this->format == FORMAT_BGRA)
 			{
 #ifndef __APPLE__
@@ -331,11 +332,11 @@ namespace april
 		}
 		texture->load();
 		glBindTexture(GL_TEXTURE_2D, source->textureId);
-		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
 		if (source->bpp == 4)
 		{
-#ifndef _ANDROID
+#if !defined(_ANDROID) && !defined(_WIN32)
 			if (this->format == FORMAT_BGRA)
 			{
 #ifndef __APPLE__
@@ -407,11 +408,11 @@ namespace april
 			}
 		}
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
-#ifndef _ANDROID
+#if !defined(_ANDROID) && !defined(_WIN32)
 			if (this->format == FORMAT_BGRA)
 			{
 #ifndef __APPLE__
@@ -444,12 +445,12 @@ namespace april
 		y = hclamp(y, 0, this->height - 1);
 
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
 
 		if (this->bpp == 4)
 		{
-#ifndef _ANDROID
+#if !defined(_ANDROID) && !defined(_WIN32)
 			if (this->format == FORMAT_BGRA)
 			{
 #ifndef __APPLE__
@@ -495,20 +496,5 @@ namespace april
 		// TODO
 	}
 
-	bool OpenGL_Texture::copyPixelData(unsigned char** output)
-	{
-#ifndef _OPENGLES
-		this->load();
-		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		((OpenGL_RenderSystem*)april::rendersys)->state.textureId = ((OpenGL_RenderSystem*)april::rendersys)->deviceState.textureId = this->textureId;
-		*output = new unsigned char[this->width * this->height * this->bpp];
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, *output);
-		return true;
-#else
-		return false;
-#endif
-	}
-	
 }
-
 #endif

@@ -1,7 +1,7 @@
 /// @file
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 2.5
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
@@ -34,10 +34,6 @@
  *   (typically main.cpp); it MUST be included somewhere
  * - define just april_init() and april_destroy()
  * - do not worry about other functionality in this header
- * - if you are using Android with JNI, make sure to define
- *   APRIL_ANDROID_ACTIVITY_NAME as a fully-qualified
- *   name of the launch activity of implement JNI_OnLoad
- *   yourself
  *
  * No other functionality defined in main.h should be seen as
  * being publicly available, and other functions (such as
