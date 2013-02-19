@@ -428,6 +428,7 @@
 		7F42F7A011EB177F00B1C1DF /* include */ = {
 			isa = PBXGroup;
 			children = (
+				D1049F6316D39E870058C514 /* delegates */,
 				D14BF81E158737B300D31573 /* aprilUtil.h */,
 				D14BF81F158737B300D31573 /* RamTexture.h */,
 				C9E6098D1505191800EB077F /* april.h */,
@@ -442,14 +443,7 @@
 				7F42F7A311EB178C00B1C1DF /* Keys.h */,
 				7F42F7A411EB178C00B1C1DF /* RenderSystem.h */,
 				7FA3ED1711F9817A001D1DDD /* Window.h */,
-				D1E7203116D37B2700B9C9AD /* EventDelegate.h */,
 				D1E7203216D37B2700B9C9AD /* Image.h */,
-				D1E7203316D37B2700B9C9AD /* InputDelegate.h */,
-				D1E7203416D37B2700B9C9AD /* KeyboardDelegate.h */,
-				D1E7203516D37B2700B9C9AD /* MouseDelegate.h */,
-				D1E7203616D37B2700B9C9AD /* SystemDelegate.h */,
-				D1E7203716D37B2700B9C9AD /* TouchDelegate.h */,
-				D1E7203816D37B2700B9C9AD /* UpdateDelegate.h */,
 			);
 			name = include;
 			sourceTree = "<group>";
@@ -511,6 +505,20 @@
 				D14BF81115872B4000D31573 /* iOS_Platform.mm */,
 			);
 			name = iOS;
+			sourceTree = "<group>";
+		};
+		D1049F6316D39E870058C514 /* delegates */ = {
+			isa = PBXGroup;
+			children = (
+				D1E7203116D37B2700B9C9AD /* EventDelegate.h */,
+				D1E7203316D37B2700B9C9AD /* InputDelegate.h */,
+				D1E7203416D37B2700B9C9AD /* KeyboardDelegate.h */,
+				D1E7203516D37B2700B9C9AD /* MouseDelegate.h */,
+				D1E7203616D37B2700B9C9AD /* SystemDelegate.h */,
+				D1E7203716D37B2700B9C9AD /* TouchDelegate.h */,
+				D1E7203816D37B2700B9C9AD /* UpdateDelegate.h */,
+			);
+			name = delegates;
 			sourceTree = "<group>";
 		};
 		D1981C58140F85050057C3AF /* iOS */ = {
