@@ -24,7 +24,7 @@
 
 #include "april.h"
 #include "RenderSystem.h"
-#include "ImageSource.h"
+#include "Image.h"
 #include "iOS_Window.h"
 #include "Platform.h"
 #include "april.h"
@@ -256,7 +256,7 @@ namespace april
 		// iPhone simulator
 		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
-			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
+			info.maxTextureSize = april::rendersys->getMaxTextureSize();
 
 			int h = info.displayResolution.y;
 			if (h == 320) // iPhone3GS
@@ -419,7 +419,7 @@ namespace april
 		return url;
 	}
 
-	ImageSource* _tryLoadingPVR(chstr filename)
+	Image* _tryLoadingPVR(chstr filename)
 	{
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
 		NSString *pvrfilename = [NSString stringWithUTF8String:filename.c_str()];
@@ -435,8 +435,8 @@ namespace april
 			}
 		}
 		
-		ImageSource* img=new ImageSource();
-		img->format = (ImageFormat) pvrtex.internalFormat; //ilGetInteger(IL_IMAGE_FORMAT); // not used
+		Image* img = new Image();
+		img->format = (Image::Format) pvrtex.internalFormat;
 		img->w = pvrtex.width;
 		img->h = pvrtex.height;
 		img->bpp = 4;
@@ -444,7 +444,7 @@ namespace april
 		NSData* data = [pvrtex.imageData objectAtIndex:0];
 		img->data = (unsigned char*) malloc(data.length);
 		memcpy(img->data,data.bytes,data.length);
-		img->compressedLength = data.length;
+		img->compressedSize = data.length;
 		
 		[arp release];
 		return img;

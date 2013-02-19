@@ -257,15 +257,6 @@ namespace april
 		}
 	}
 	
-	bool Window::handleUrl(chstr url)
-	{
-		if (this->systemDelegate != NULL)
-		{
-			return this->systemDelegate->onHandleUrl(url);
-		}
-		return false;
-	}
-	
 	void Window::handleLowMemoryWarning()
 	{
 		if (this->systemDelegate != NULL)

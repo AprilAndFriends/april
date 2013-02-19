@@ -19,11 +19,21 @@
 #include <stdio.h>
 #include <string.h>
 #ifndef __APPLE__
-#include <gl/GL.h>
-#define GL_GLEXT_PROTOTYPES
-#include <gl/glext.h>
+	#include <gl/GL.h>
+	#define GL_GLEXT_PROTOTYPES
+	#include <gl/glext.h>
 #else
-#include <OpenGL/gl.h>
+	#ifdef _IOS
+		#ifdef _OPENGLES1
+			#include <OpenGLES/ES1/gl.h>
+			#include <OpenGLES/ES1/glext.h>
+		#elif defined(_OPENGLES2)
+			#include <OpenGLES/ES2/gl.h>
+			#include <OpenGLES/ES2/glext.h>
+		#endif
+	#else
+		#include <OpenGL/gl.h>
+	#endif
 #endif
 
 #include <gtypes/Rectangle.h>

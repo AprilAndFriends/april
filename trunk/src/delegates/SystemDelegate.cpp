@@ -44,12 +44,6 @@ namespace april
 		hlog::debug(april::logTag, "Event onVirtualKeyboardVisibilityChanged() was not implemented.");
 	}
 
-	bool SystemDelegate::onHandleUrl(chstr url)
-	{
-		hlog::debug(april::logTag, "Event onHandleUrl() was not implemented.");
-		return false;
-	}
-
 	void SystemDelegate::onLowMemoryWarning()
 	{
 		hlog::debug(april::logTag, "Event onLowMemoryWarning() was not implemented.");

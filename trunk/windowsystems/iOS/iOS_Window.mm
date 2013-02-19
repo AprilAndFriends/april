@@ -20,6 +20,8 @@
 #import "RenderSystem.h"
 #import "ApriliOSAppDelegate.h"
 
+#include "EventDelegate.h"
+
 #include "april.h"
 
 static ApriliOSAppDelegate* appDelegate;
@@ -75,7 +77,7 @@ namespace april
 	class MouseInputEvent : public InputEvent
 	{
 	public:
-		MouseInputEvent(Window* window, Window::MouseEventType type, gvec2 position, Window::MouseButton button) : InputEvent(window)
+		MouseInputEvent(Window* window, Window::MouseEventType type, gvec2 position, april::Key button) : InputEvent(window)
 		{
 			this->type = type;
 			this->position = position;
@@ -91,7 +93,7 @@ namespace april
 	protected:
 		Window::MouseEventType type;
 		gvec2 position;
-		Window::MouseButton button;
+		april::Key button;
 		
 	};
 	
@@ -118,9 +120,9 @@ namespace april
 		this->name = APRIL_WS_IOS;
 	}
 	
-	bool iOS_Window::create(int w, int h, bool fullscreen, chstr title)
+	bool iOS_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
-		if (!Window::create(w, h, fullscreen, title))
+		if (!Window::create(w, h, fullscreen, title, options))
 		{
 			return false;
 		}
@@ -284,7 +286,7 @@ namespace april
 	
 	void iOS_Window::callTouchCallback()
 	{
-		if (this->touchCallback == NULL)
+		if (this->touchDelegate == NULL)
 		{
 			return;
 		}
@@ -363,14 +365,14 @@ namespace april
 			if (!this->multiTouchActive && prev_len == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_UP, gvec2(-10000, -10000), AMOUSEBTN_LEFT));
+				this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_UP, gvec2(-10000, -10000), AK_LBUTTON));
 			}
 			this->multiTouchActive = true;
 		}
 		else
 		{
 			CGPoint pt = [g_touches[0] locationInView:glview];
-			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_DOWN, gvec2(pt.x, pt.y), AMOUSEBTN_LEFT));
+			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_DOWN, gvec2(pt.x, pt.y), AK_LBUTTON));
 		}
 		this->callTouchCallback();
 	}
@@ -391,7 +393,7 @@ namespace april
 		else
 		{
 			CGPoint pt = [touches[0] locationInView:glview];
-			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_UP, gvec2(pt.x, pt.y), AMOUSEBTN_LEFT));
+			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_UP, gvec2(pt.x, pt.y), AK_LBUTTON));
 		}
 		this->callTouchCallback();
 	}
@@ -408,7 +410,7 @@ namespace april
 		{
 			UITouch* touch = [[(NSSet*) nssetTouches allObjects] objectAtIndex:0];
 			CGPoint pt = [touch locationInView:glview];			
-			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_MOVE, gvec2(pt.x, pt.y), AMOUSEBTN_NONE));
+			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_MOVE, gvec2(pt.x, pt.y), AK_NONE));
 		}
 		this->callTouchCallback();
 	}
@@ -439,7 +441,7 @@ namespace april
 		if (inputChar >= 32)
 		{
 			// deploy keypress
-			april::KeySym keycode = AK_NONE; // TODO - FIXME incorrect, might cause a nasty bug. 
+			april::Key keycode = AK_NONE; // TODO - FIXME incorrect, might cause a nasty bug. 
 											 // however, writing a translation table atm 
 											 // isn't the priority.
 		
@@ -450,16 +452,16 @@ namespace april
 	
 	void iOS_Window::keyboardWasShown()
 	{
-		if (this->virtualKeyboardCallback != NULL)
+		if (this->systemDelegate != NULL)
 		{
-			(*this->virtualKeyboardCallback)(true);
+			this->systemDelegate->onVirtualKeyboardVisibilityChanged(true);
 		}
 	}
 	void iOS_Window::keyboardWasHidden()
 	{
-		if (this->virtualKeyboardCallback != NULL)
+		if (this->systemDelegate != NULL)
 		{
-			(*this->virtualKeyboardCallback)(false);
+			this->systemDelegate->onVirtualKeyboardVisibilityChanged(false);
 		}
 	}
 	
@@ -474,7 +476,8 @@ namespace april
 			[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 		}
 		// update mDeviceOrientationCallback
-		Window::setDeviceOrientationCallback(do_callback);
+		// TODO - refactor
+		// Window::setDeviceOrientationCallback(do_callback);
 	}
 	
 	//////////////
@@ -490,6 +493,8 @@ namespace april
 	// TODO - this is actually not supported right now
 	void iOS_Window::deviceOrientationDidChange()
 	{
+		/* 		// TODO - refactor
+
 		if (this->deviceOrientationCallback != NULL)
 		{
 			DeviceOrientation newOrientation;
@@ -522,6 +527,7 @@ namespace april
 			newOrientation = ADEVICEORIENTATION_NONE;
 			(*this->deviceOrientationCallback)(newOrientation);
 		}
+		 */
 	}
 	void iOS_Window::applicationWillResignActive()
 	{
@@ -534,9 +540,9 @@ namespace april
 		if (this->focused)
 		{
 			this->focused = false;
-			if (this->focusChangeCallback != NULL)
+			if (this->systemDelegate != NULL)
 			{
-				(*this->focusChangeCallback)(false);
+				this->systemDelegate->onWindowFocusChanged(false);
 			}
 			[glview stopAnimation];
 		}
@@ -554,9 +560,9 @@ namespace april
 			}
 			
 			if (glview != NULL) [glview startAnimation];
-			if (this->focusChangeCallback != NULL)
+			if (this->systemDelegate != NULL)
 			{
-				(*this->focusChangeCallback)(true);
+				this->systemDelegate->onWindowFocusChanged(true);
 			}
 		}
 	}
