@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="libapril"
 	ProjectGUID="{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}"
 	RootNamespace="libapril"
@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug_OpenGL|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -90,7 +90,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release_OpenGL|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -165,7 +165,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug_DirectX9|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -238,7 +238,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release_DirectX9|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -313,7 +313,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug_OpenGLES1|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -386,7 +386,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release_OpenGLES1|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -461,7 +461,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
@@ -536,7 +536,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\lib\"
+			OutputDirectory="$(SolutionDir)bin\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)bin\$(PlatformName)\lib\$(ProjectName)\$(ConfigurationName)\"
 			ConfigurationType="2"
 			CharacterSet="1"
