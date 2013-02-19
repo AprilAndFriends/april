@@ -27,12 +27,11 @@ namespace april
 		SystemDelegate();
 		virtual ~SystemDelegate();
 
-		bool onQuit(bool canCancel);
-		void onWindowSizeChanged(int width, int height, Window::DeviceOrientation deviceOrientation);
-		void onWindowFocusChanged(bool focused);
-		void onVirtualKeyboardVisibilityChanged(bool visible);
-		bool onHandleUrl(chstr url);
-		void onLowMemoryWarning();
+		virtual bool onQuit(bool canCancel);
+		virtual void onWindowSizeChanged(int width, int height, Window::DeviceOrientation deviceOrientation);
+		virtual void onWindowFocusChanged(bool focused);
+		virtual void onVirtualKeyboardVisibilityChanged(bool visible);
+		virtual void onLowMemoryWarning();
 
 	};
 

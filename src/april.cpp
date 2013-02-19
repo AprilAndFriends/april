@@ -72,24 +72,19 @@
 		#define WS_INTERNAL_DEFAULT WS_WIN32
 	#else
 		#define WS_INTERNAL_DEFAULT WS_WINRT
+	#endif r
+#elif defined(__APPLE__)
+	#if defined(_IOS)
+		#ifdef _OPENGLES2
+			#define RS_INTERNAL_DEFAULT RS_OPENGLES2
+		#elif defined(_OPENGLES1)
+			#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+		#endif
+		#define WS_INTERNAL_DEFAULT WS_IOS
+	#else
+		#define RS_INTERNAL_DEFAULT RS_OPENGL1
+		#define WS_INTERNAL_DEFAULT WS_SDL
 	#endif
-#elif defined(__APPLE__) && !TARGET_OS_IPHONE
-	#ifdef _OPENGLES2
-		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
-	#elif defined(_OPENGLES1)
-		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
-	#endif
-	#define WS_INTERNAL_DEFAULT WS_SDL
-	#ifndef HAVE_SDL
-		#define RS_INTERNAL_DEFAULT RS_DEFAULT
-	#endif
-#elif defined(__APPLE__) && TARGET_OS_IPHONE
-	#ifdef _OPENGLES2
-		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
-	#elif defined(_OPENGLES1)
-		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
-	#endif
-	#define WS_INTERNAL_DEFAULT WS_IOS
 #elif defined(_UNIX)
 	#define RS_INTERNAL_DEFAULT RS_OPENGL1
 	#define WS_INTERNAL_DEFAULT WS_SDL

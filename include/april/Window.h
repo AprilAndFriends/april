@@ -123,7 +123,6 @@ namespace april
 		virtual void handleTouchEvent(const harray<gvec2>& touches);
 		virtual bool handleQuitRequest(bool canCancel);
 		virtual void handleFocusChangeEvent(bool focused);
-		virtual bool handleUrl(chstr url);
 		virtual void handleLowMemoryWarning();
 
 		void handleKeyOnlyEvent(KeyEventType type, Key keyCode);

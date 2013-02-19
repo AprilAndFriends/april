@@ -120,7 +120,7 @@ namespace april
 		// TODO
 		if (info.maxTextureSize == 0 && april::window != NULL && ((SDL_Window*) april::window)->isCreated()) // SDL window cast is a hack, TODO fix this systematically
 		{
-			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
+			info.maxTextureSize = april::rendersys->getMaxTextureSize();
 		}
 		return info;
 	}

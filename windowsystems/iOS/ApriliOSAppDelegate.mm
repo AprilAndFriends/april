@@ -19,6 +19,8 @@
 #include "Window.h"
 #import <AVFoundation/AVFoundation.h>
 
+bool (*iOShandleUrlCallback)(chstr url) = NULL;
+
 @implementation ApriliOSAppDelegate
 
 @synthesize uiwnd;
@@ -129,7 +131,11 @@
 	NSString* str = [url absoluteString];
 	hstr urlstr = [str UTF8String];
 
-	return april::window->handleUrl(urlstr) ? YES : NO;
+	if (iOShandleUrlCallback != NULL)
+	{
+		return iOShandleUrlCallback(urlstr) ? YES : NO;
+	}
+	return NO;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

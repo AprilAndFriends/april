@@ -404,17 +404,21 @@ namespace april
 	Image* Image::load(chstr filename)
 	{
 		Image* img = NULL;
+		
 		if (filename.lower().ends_with(".png"))
 		{
-			img = Image::_loadPng(hresource(filename));
+			hresource res(filename);
+			img = Image::_loadPng(res);
 		}
 		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
 		{
-			img = Image::_loadJpg(hresource(filename));
+			hresource res(filename);
+			img = Image::_loadJpg(res);
 		}
 		else if (filename.lower().ends_with(".jpt"))
 		{
-			img = Image::_loadJpt(hresource(filename));
+			hresource res(filename);
+			img = Image::_loadJpt(res);
 		}
 #ifdef _IOS
 		else if (filename.lower().ends_with(".pvr"))
