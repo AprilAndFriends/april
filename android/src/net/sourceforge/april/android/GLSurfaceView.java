@@ -3,7 +3,6 @@ package net.sourceforge.april.android;
 // version 2.56
 
 import android.content.Context;
-import android.graphics.PixelFormat;
 import android.view.inputmethod.EditorInfo;
 import android.view.MotionEvent;
 
