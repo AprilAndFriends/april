@@ -78,6 +78,9 @@ public class Activity extends android.app.Activity
 				this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 			}
 		}
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		this.getWindow().setFormat(PixelFormat.RGBA_8888);
+		this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		// creating a GL surface view
 		this.GlView = this.createGlView();
 		this.setContentView(this.GlView);
