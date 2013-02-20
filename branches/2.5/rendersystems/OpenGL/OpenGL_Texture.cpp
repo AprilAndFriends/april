@@ -183,15 +183,17 @@ namespace april
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		if (image != NULL)
 		{
-			switch (image->format)
-			{
 #if TARGET_OS_IPHONE
-			case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
-			case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
+			if (image->format == GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG || image->format == GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG)
+			{
 				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image->format, image->w, image->h, 0, image->compressedLength, image->data);
 				this->format = FORMAT_ARGB; // TODO - not really a format
-				break;
+			}
+			else
+			{
 #endif
+			switch (image->format)
+			{
 			case AF_RGBA:
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ARGB;
@@ -209,6 +211,9 @@ namespace april
 				this->format = FORMAT_ARGB;
 				break;
 			}
+#if TARGET_OS_IPHONE
+			}
+#endif
 			delete image;
 		}
 		else if (this->manualBuffer != NULL)
