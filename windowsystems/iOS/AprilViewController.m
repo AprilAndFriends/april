@@ -205,7 +205,7 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 
 - (void) animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
 {
-	if (animationID == @"FadeOut")
+	if ([animationID isEqual: @"FadeOut"])
 	{
 		NSLog(@"Removing loading screen UIImageView from View Controller");
 		[mImageView removeFromSuperview];
