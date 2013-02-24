@@ -186,31 +186,34 @@ namespace april
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		if (image != NULL)
 		{
-			switch (image->format)
-			{
 #if TARGET_OS_IPHONE
-			case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
-			case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
+			if (image->format == GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG || image->format == GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG)
+			{
 				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image->format, image->w, image->h, 0, image->compressedSize, image->data);
 				this->format = FORMAT_ARGB; // TODO - not really a format
-				break;
+			}
+			else
 #endif
-			case Image::FORMAT_RGBA:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
-				this->format = FORMAT_ARGB;
-				break;
-			case Image::FORMAT_RGB:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
-				this->format = FORMAT_ARGB;
-				break;
-			case Image::FORMAT_GRAYSCALE:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image->w, image->h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, image->data);
-				this->format = FORMAT_ALPHA;
-				break;
-			default:
-				glTexImage2D(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == Image::FORMAT_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
-				this->format = FORMAT_ARGB;
-				break;
+			{
+				switch (image->format)
+				{
+				case Image::FORMAT_RGBA:
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
+					this->format = FORMAT_ARGB;
+					break;
+				case Image::FORMAT_RGB:
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
+					this->format = FORMAT_RGB;
+					break;
+				case Image::FORMAT_GRAYSCALE:
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image->w, image->h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, image->data);
+					this->format = FORMAT_ALPHA;
+					break;
+				default:
+					glTexImage2D(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == Image::FORMAT_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
+					this->format = FORMAT_ARGB;
+					break;
+				}
 			}
 			delete image;
 		}
