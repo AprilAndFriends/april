@@ -263,18 +263,24 @@ namespace april
 		{
 			if (!uploadFailed)
 			{
-				hlog::write(april::logTag, "Unable to upload pixel data to GL texture, out of memory, sending a memory warning to application and trying again!");
+				hlog::warn(april::logTag, "Unable to upload pixel data to GL texture, out of memory, sending a memory warning to application and trying again!");
 				april::window->handleLowMemoryWarning();
 				glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
 				
-				if (glGetError() == GL_OUT_OF_MEMORY)
+				GLuint error = glGetError();
+				if (error == GL_OUT_OF_MEMORY)
 				{
 					uploadFailed = true;
 					hlog::error(april::logTag, "Pixel upload failed, not enough memory was cleared in the memory warning call.");
 				}
-				else
+				else if (error == GL_NO_ERROR)
 				{
 					hlog::write(april::logTag, "Succeeded uploading pixel data to GL texture after clearing up memory!");
+				}
+				else
+				{
+					uploadFailed = true;
+					hlog::error(april::logTag, "Pixel upload failed, error code: " + hstr(error));
 				}
 			}
 			else
