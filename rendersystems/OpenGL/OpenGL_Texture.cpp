@@ -37,6 +37,8 @@
 
 namespace april
 {
+	bool OpenGL_Texture::uploadFailed = false;
+	
 	OpenGL_Texture::OpenGL_Texture(chstr filename) : Texture()
 	{
 		this->format = FORMAT_ARGB;
@@ -61,9 +63,9 @@ namespace april
 		this->manualBuffer = new unsigned char[w * h * 4];
 		memcpy(this->manualBuffer, rgba, w * h * 4);
 #endif
-		glGenTextures(1, &this->textureId);
+		this->textureId = createTextureId();
 		this->_setCurrentTexture();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+		uploadPixelData(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
 	}
 
 	OpenGL_Texture::OpenGL_Texture(int w, int h, Format format, Type type, Color color) : Texture()
@@ -75,7 +77,7 @@ namespace april
 		this->bpp = 4;
 		this->filename = "";
 		this->manualBuffer = NULL;
-		glGenTextures(1, &this->textureId);
+		this->textureId = createTextureId();
 		this->_setCurrentTexture();
 		if (color != Color::Clear)
 		{
@@ -118,7 +120,7 @@ namespace april
 			}
 			unsigned char* clearColor = new unsigned char[w * h * this->bpp];
 			memset(clearColor, 0, w * h * this->bpp);
-			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, glFormat, GL_UNSIGNED_BYTE, clearColor);
+			uploadPixelData(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, glFormat, GL_UNSIGNED_BYTE, clearColor);
 			delete [] clearColor;
 		}
 	}
@@ -170,10 +172,9 @@ namespace april
 			this->height = image->h;
 			this->bpp = image->bpp;
 		}
-		glGenTextures(1, &this->textureId);
+		this->textureId = createTextureId();
 		if (this->textureId == 0)
 		{
-			hlog::error(april::logTag, "Failed to create GL texture!");
 			return false;
 		}
 		// write texels
@@ -195,19 +196,19 @@ namespace april
 			switch (image->format)
 			{
 			case AF_RGBA:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
+				uploadPixelData(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ARGB;
 				break;
 			case AF_RGB:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
+				uploadPixelData(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ARGB;
 				break;
 			case AF_GRAYSCALE:
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image->w, image->h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, image->data);
+				uploadPixelData(GL_TEXTURE_2D, 0, GL_ALPHA, image->w, image->h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ALPHA;
 				break;
 			default:
-				glTexImage2D(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == AF_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
+				uploadPixelData(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == AF_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
 				this->format = FORMAT_ARGB;
 				break;
 			}
@@ -218,9 +219,73 @@ namespace april
 		}
 		else if (this->manualBuffer != NULL)
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->manualBuffer);
+			uploadPixelData(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->manualBuffer);
 		}
 		return true;
+	}
+	
+	GLuint OpenGL_Texture::createTextureId()
+	{
+		GLuint id;
+		glGenTextures(1, &id);
+		if (id == 0)
+		{
+			if (!uploadFailed)
+			{
+				hlog::write(april::logTag, "Failed to create GL texture ID, sending a memory warning to application and trying again!");
+				april::window->handleLowMemoryWarning();
+				glGenTextures(1, &id);
+				if (id == 0)
+				{
+					hlog::error(april::logTag, "Failed to create GL texture!");
+					uploadFailed = true;
+					return 0;
+				}
+				else
+				{
+					hlog::write(april::logTag, "Succeeded creating GL texture ID after clearing up memory!");
+				}
+			}
+			else
+			{
+				hlog::error(april::logTag, "Failed to create texture ID, out of memory!");
+				return 0;
+			}
+		}
+		return id;
+	}
+
+	void OpenGL_Texture::uploadPixelData(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels)
+	{
+		glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
+		
+		if (glGetError() == GL_OUT_OF_MEMORY)
+		{
+			if (!uploadFailed)
+			{
+				hlog::write(april::logTag, "Unable to upload pixel data to GL texture, out of memory, sending a memory warning to application and trying again!");
+				april::window->handleLowMemoryWarning();
+				glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
+				
+				if (glGetError() == GL_OUT_OF_MEMORY)
+				{
+					uploadFailed = true;
+					hlog::error(april::logTag, "Pixel upload failed, not enough memory was cleared in the memory warning call.");
+				}
+				else
+				{
+					hlog::write(april::logTag, "Succeeded uploading pixel data to GL texture after clearing up memory!");
+				}
+			}
+			else
+			{
+				hlog::error(april::logTag, "Unable to upload pixel data to GL texture, out of memory!");
+			}
+		}
+		else if (uploadFailed)
+		{
+			uploadFailed = false;
+		}
 	}
 
 	void OpenGL_Texture::unload()

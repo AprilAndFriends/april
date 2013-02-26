@@ -37,6 +37,7 @@ namespace april
 
 	class OpenGL_Texture : public Texture
 	{
+		static bool uploadFailed;
 	public:
 		friend class OpenGL_RenderSystem;
 		
@@ -48,6 +49,9 @@ namespace april
 		void unload();
 
 		bool isLoaded();
+		
+		void uploadPixelData(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
+		GLuint createTextureId();
 
 		void clear();
 		Color getPixel(int x, int y);
