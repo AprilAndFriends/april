@@ -207,7 +207,13 @@ public class Activity extends android.app.Activity
 	@Override
 	public void onLowMemory()
 	{
-		NativeInterface.onLowMemory();
+		this.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onLowMemory();
+			}
+		});
 		super.onLowMemory();
 	}
 	
