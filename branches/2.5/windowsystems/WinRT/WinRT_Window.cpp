@@ -273,7 +273,7 @@ namespace april
 					{
 						this->logoTexture->load();
 					}
-					catch (hltypes::exception& e)
+					catch (hltypes::exception&)
 					{
 						delete this->logoTexture;
 						this->logoTexture = NULL;
