@@ -21,6 +21,7 @@
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
+#include "SystemDelegate.h"
 #include "Timer.h"
 
 #define CLASS_VIEW "android/view/View"
@@ -152,9 +153,9 @@ namespace april
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowVirtualKeyboard, "showVirtualKeyboard", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodShowVirtualKeyboard);
-		if (this->virtualKeyboardCallback != NULL)
+		if (this->systemDelegate != NULL)
 		{
-			(*this->virtualKeyboardCallback)(true);
+			this->systemDelegate->onVirtualKeyboardVisibilityChanged(true);
 		}
 	}
 	
@@ -162,9 +163,9 @@ namespace april
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodHideVirtualKeyboard, "hideVirtualKeyboard", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodHideVirtualKeyboard);
-		if (this->virtualKeyboardCallback != NULL)
+		if (this->systemDelegate != NULL)
 		{
-			(*this->virtualKeyboardCallback)(false);
+			this->systemDelegate->onVirtualKeyboardVisibilityChanged(false);
 		}
 	}
 

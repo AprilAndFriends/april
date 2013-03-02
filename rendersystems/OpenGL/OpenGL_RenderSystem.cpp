@@ -19,9 +19,15 @@
 #include <stdio.h>
 #include <string.h>
 #ifndef __APPLE__
-	#include <gl/GL.h>
-	#define GL_GLEXT_PROTOTYPES
-	#include <gl/glext.h>
+	#ifdef _ANDROID
+		#include <GLES/gl.h>
+		#define GL_GLEXT_PROTOTYPES
+		#include <GLES/glext.h>
+	#else
+		#include <gl/GL.h>
+		#define GL_GLEXT_PROTOTYPES
+		#include <gl/glext.h>
+	#endif
 #else
 	#ifdef _IOS
 		#ifdef _OPENGLES1
@@ -35,6 +41,41 @@
 		#include <OpenGL/gl.h>
 	#endif
 #endif
+
+
+
+
+#if TARGET_OS_IPHONE
+	#ifdef _OPENGLES1
+		#include <OpenGLES/ES1/gl.h>
+		#include <OpenGLES/ES1/glext.h>
+	#elif defined(_OPENGLES2)
+		#include <OpenGLES/ES2/gl.h>
+		#include <OpenGLES/ES2/glext.h>
+		extern GLint _positionSlot;
+	#endif
+#elif defined(_OPENGLES)
+	#include <GLES/gl.h>
+	#ifdef _ANDROID
+		#define GL_GLEXT_PROTOTYPES
+		#include <GLES/glext.h>
+	#else
+		#include <EGL/egl.h>
+	#endif
+#else
+	#include <stdlib.h>
+	#include <stdio.h>
+	#include <string.h>
+	#ifndef __APPLE__
+		#include <gl/GL.h>
+		#define GL_GLEXT_PROTOTYPES
+		#include <gl/glext.h>
+	#else
+		#include <OpenGL/gl.h>
+	#endif
+#endif
+
+
 
 #include <gtypes/Rectangle.h>
 #include <hltypes/hlog.h>
