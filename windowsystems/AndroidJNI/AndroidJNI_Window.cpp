@@ -79,18 +79,18 @@ namespace april
 	{
 		while (this->mouseEvents.size() > 0)
 		{
-			MouseInputEvent e = this->mouseEvents.pop_first();
+			MouseInputEvent e = this->mouseEvents.remove_first();
 			this->cursorPosition = e.position;
 			Window::handleMouseEvent(e.type, e.position, e.button);
 		}
 		while (this->keyEvents.size() > 0)
 		{
-			KeyInputEvent e = this->keyEvents.pop_first();
+			KeyInputEvent e = this->keyEvents.remove_first();
 			Window::handleKeyEvent(e.type, e.keyCode, e.charCode);
 		}
 		while (this->touchEvents.size() > 0)
 		{
-			TouchInputEvent e = this->touchEvents.pop_first();
+			TouchInputEvent e = this->touchEvents.remove_first();
 			Window::handleTouchEvent(e.touches);
 		}
 	}
