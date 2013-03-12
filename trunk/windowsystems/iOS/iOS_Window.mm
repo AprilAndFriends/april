@@ -533,9 +533,12 @@ namespace april
 	{
 		if (!this->firstFrameDrawn)
 		{
-			hlog::write(april::logTag, "iOS Window: received app suspend request before first frame was drawn, quitting app.");
-			this->destroy();
-			exit(0);
+			hlog::warn(april::logTag, "iOS Window: received app suspend request before first frame was drawn");
+
+			// commenting this code, not relevant on iOS4.3+
+			//hlog::write(april::logTag, "iOS Window: received app suspend request before first frame was drawn, quitting app.");
+			//this->destroy();
+			//exit(0);
 		}
 		if (this->focused)
 		{
