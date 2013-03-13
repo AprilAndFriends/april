@@ -24,12 +24,12 @@ namespace april
 	{
 	}
 
-	void MouseDelegate::onMouseDown(april::Key button)
+	void MouseDelegate::onMouseDown(april::Key keyCode)
 	{
 		hlog::debug(april::logTag, "Event onMouseDown() was not implemented.");
 	}
 
-	void MouseDelegate::onMouseUp(april::Key button)
+	void MouseDelegate::onMouseUp(april::Key keyCode)
 	{
 		hlog::debug(april::logTag, "Event onMouseUp() was not implemented.");
 	}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="libapril"
 	ProjectGUID="{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}"
 	RootNamespace="libapril"
@@ -828,6 +828,10 @@
 				Name="delegates"
 				>
 				<File
+					RelativePath=".\src\delegates\ControllerDelegate.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\delegates\EventDelegate.cpp"
 					>
 				</File>
@@ -1057,6 +1061,10 @@
 			<Filter
 				Name="delegates"
 				>
+				<File
+					RelativePath=".\include\april\ControllerDelegate.h"
+					>
+				</File>
 				<File
 					RelativePath=".\include\april\EventDelegate.h"
 					>

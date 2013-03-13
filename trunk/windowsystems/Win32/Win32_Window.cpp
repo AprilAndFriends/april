@@ -34,7 +34,6 @@ namespace april
 	Win32_Window::Win32_Window() : Window()
 	{
 		this->name = APRIL_WS_WIN32;
-		this->touchEnabled = false;
 	}
 
 	Win32_Window::~Win32_Window()
@@ -48,7 +47,6 @@ namespace april
 		{
 			return false;
 		}
-		this->touchEnabled = false;
 		// Win32
 		WNDCLASSEXW wc;
 		memset(&wc, 0, sizeof(WNDCLASSEX));
@@ -249,7 +247,7 @@ namespace april
 			break;
 		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
 			_touchDown = true;
-			april::window->setTouchEnabled(true);
+			april::window->setInputParadigm(april::Window::TOUCH);
 			break;
 		case WM_DESTROY:
 		case WM_CLOSE:
@@ -322,7 +320,7 @@ namespace april
 			{
 				if (_mouseMoveMessagesCount >= 10)
 				{
-					april::window->setTouchEnabled(false);
+					april::window->setInputParadigm(april::Window::MOUSE);
 				}
 				else
 				{

@@ -39,7 +39,6 @@ namespace april
 		void setCursorVisible(bool value);
 		int getWidth();
 		int getHeight();
-		HL_DEFINE_ISSET(bool, touchEnabled, TouchEnabled);
 		void* getBackendId();
 		void _setResolution(int w, int h);
 
@@ -51,7 +50,6 @@ namespace april
 		
 	protected:
 		HWND hWnd;
-		bool touchEnabled; // whether or not a Win7+ touchscreen was detected
 		
 	};
 

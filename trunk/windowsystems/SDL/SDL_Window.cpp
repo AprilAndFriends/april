@@ -236,14 +236,14 @@ namespace april
 				else
 #endif
 				{
-					this->_handleKeyEvent((sdlEvent.type == SDL_KEYUP ? AKEYEVT_UP : AKEYEVT_DOWN),
+					this->_handleSDLKeyEvent((sdlEvent.type == SDL_KEYUP ? AKEYEVT_UP : AKEYEVT_DOWN),
 						sdlEvent.key.keysym.sym, sdlEvent.key.keysym.unicode);
 				}
 				break;
 			case SDL_MOUSEBUTTONUP:
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEMOTION:
-				this->_handleMouseEvent(sdlEvent);
+				this->_handleSDLMouseEvent(sdlEvent);
 				break;
 			case SDL_ACTIVEEVENT:
 				if (sdlEvent.active.state & SDL_APPINPUTFOCUS)
@@ -289,7 +289,7 @@ namespace april
 #endif
 	}
 	
-	void SDL_Window::_handleKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
+	void SDL_Window::_handleSDLKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
 	{
 		april::Key akeysym = AK_UNKNOWN;
 	
@@ -395,7 +395,7 @@ namespace april
 		Window::handleKeyEvent(type, akeysym, unicode);
 	}
 		
-	void SDL_Window::_handleMouseEvent(SDL_Event& sdlEvent)
+	void SDL_Window::_handleSDLMouseEvent(SDL_Event& sdlEvent)
 	{
 		this->cursorPosition.set(sdlEvent.button.x, sdlEvent.button.y);
 		Window::MouseEventType mouseEvent;

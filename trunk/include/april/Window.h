@@ -26,6 +26,7 @@
 
 namespace april
 {
+	class ControllerDelegate;
 	class KeyboardDelegate;
 	class MouseDelegate;
 	class RenderSystem;
@@ -49,6 +50,20 @@ namespace april
 			AKEYEVT_DOWN = 0,
 			AKEYEVT_UP = 1
 		};
+
+		enum ControllerEventType
+		{
+			ACTRLEVT_DOWN = 0,
+			ACTRLEVT_UP = 1
+			// possibly analog triggers
+		};
+
+		enum InputParadigm
+		{
+			MOUSE,
+			TOUCH,
+			CONTROLLER
+		};
 		
 		enum DeviceOrientation
 		{
@@ -61,6 +76,43 @@ namespace april
 			ADEVICEORIENTATION_FACE_UP // screen is facing the sky
 		};
 		
+		struct KeyInputEvent
+		{
+			KeyEventType type;
+			Key keyCode;
+			unsigned int charCode;
+		
+			KeyInputEvent(KeyEventType type, Key keyCode, unsigned int charCode);
+		
+		};
+
+		struct MouseInputEvent
+		{
+			MouseEventType type;
+			gvec2 position;
+			Key keyCode;
+		
+			MouseInputEvent(MouseEventType type, gvec2 position, Key keyCode);
+		
+		};
+
+		struct TouchInputEvent
+		{
+			harray<gvec2> touches;
+		
+			TouchInputEvent(harray<gvec2>& touches);
+		
+		};
+
+		struct ControllerInputEvent
+		{
+			ControllerEventType type;
+			Button buttonCode;
+		
+			ControllerInputEvent(ControllerEventType type, Button buttonCode);
+		
+		};
+
 		Window();
 		virtual ~Window();
 		virtual bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
@@ -77,6 +129,7 @@ namespace april
 		HL_DEFINE_GET(int, fps, Fps);
 		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
 		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
+		HL_DEFINE_GETSET(InputParadigm, inputParadigm, InputParadigm);
 		gvec2 getSize();
 		float getAspectRatio();
 
@@ -85,6 +138,7 @@ namespace april
 		HL_DEFINE_GETSET(KeyboardDelegate*, keyboardDelegate, KeyboardDelegate);
 		HL_DEFINE_GETSET(MouseDelegate*, mouseDelegate, MouseDelegate);
 		HL_DEFINE_GETSET(TouchDelegate*, touchDelegate, TouchDelegate);
+		HL_DEFINE_GETSET(ControllerDelegate*, controllerDelegate, ControllerDelegate);
 		HL_DEFINE_GETSET(SystemDelegate*, systemDelegate, SystemDelegate);
 
 		// virtual getters/setters
@@ -99,14 +153,13 @@ namespace april
 		// pure virtual getters/setters (window system dependent)
 		virtual int getWidth() = 0;
 		virtual int getHeight() = 0;
-		virtual void setTouchEnabled(bool value) = 0;
-		virtual bool isTouchEnabled() = 0;
+		DEPRECATED_ATTRIBUTE bool isTouchEnabled() { return (this->inputParadigm == TOUCH); }
 		virtual void* getBackendId() = 0;
 
 		// pure virtual methods (window system dependent)
 		virtual void presentFrame() = 0;
-		virtual void checkEvents() = 0;
 		virtual bool updateOneFrame();
+		virtual void checkEvents();
 		virtual void terminateMainLoop();
 
 		// misc virtuals
@@ -118,15 +171,21 @@ namespace april
 		virtual void setParam(chstr param, chstr value) { }
 		
 		// generic but overridable event handlers
-		virtual void handleMouseEvent(MouseEventType type, gvec2 position, Key button);
+		virtual void handleMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
 		virtual void handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
 		virtual void handleTouchEvent(const harray<gvec2>& touches);
+		virtual void handleControllerEvent(ControllerEventType type, Button buttonCode);
 		virtual bool handleQuitRequest(bool canCancel);
 		virtual void handleFocusChangeEvent(bool focused);
 		virtual void handleLowMemoryWarning();
 
 		void handleKeyOnlyEvent(KeyEventType type, Key keyCode);
 		void handleCharOnlyEvent(unsigned int charCode);
+
+		virtual void queueKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
+		virtual void queueMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
+		virtual void queueTouchEvent(MouseEventType type, gvec2 position, int index);
+		virtual void queueControllerEvent(ControllerEventType type, Button buttonCode);
 
 		virtual void enterMainLoop();
 		virtual bool performUpdate(float k);
@@ -150,6 +209,13 @@ namespace april
 		float fpsResolution;
 		gvec2 cursorPosition;
 		bool cursorVisible;
+		InputParadigm inputParadigm;
+		bool multiTouchActive;
+		harray<gvec2> touches;
+		harray<KeyInputEvent> keyEvents;
+		harray<MouseInputEvent> mouseEvents;
+		harray<TouchInputEvent> touchEvents;
+		harray<ControllerInputEvent> controllerEvents;
 		Timer timer;
 
 		// TODO - refactor
@@ -159,6 +225,7 @@ namespace april
 		KeyboardDelegate* keyboardDelegate;
 		MouseDelegate* mouseDelegate;
 		TouchDelegate* touchDelegate;
+		ControllerDelegate* controllerDelegate;
 		SystemDelegate* systemDelegate;
 
 		virtual float _calcTimeSinceLastFrame();

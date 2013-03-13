@@ -9,7 +9,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a delegate for all event callbacks.
+/// Defines a delegate for all event callbacks. One delegate to rule them all.
 
 #ifndef APRIL_EVENT_DELEGATE_H
 #define APRIL_EVENT_DELEGATE_H

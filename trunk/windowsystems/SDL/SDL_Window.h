@@ -48,8 +48,6 @@ namespace april
 		HL_DEFINE_IS(bool, cursorInside, CursorInside);
 		int getWidth();
 		int getHeight();
-		bool isTouchEnabled() { return false; }
-		void setTouchEnabled(bool value) { }
 		gvec2 getCursorPosition();
 		void* getBackendId();
 
@@ -66,8 +64,8 @@ namespace april
 #endif
 
 		float _calcTimeSinceLastFrame();
-		void _handleKeyEvent(Window::KeyEventType type, SDLKey keyCode, unsigned int unicode);
-		void _handleMouseEvent(SDL_Event &evt);		
+		void _handleSDLKeyEvent(Window::KeyEventType type, SDLKey keyCode, unsigned int unicode);
+		void _handleSDLMouseEvent(SDL_Event &evt);		
 
 	};
 

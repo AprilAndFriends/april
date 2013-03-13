@@ -15,13 +15,14 @@
 #define APRIL_INPUT_DELEGATE_H
 
 #include "aprilExport.h"
+#include "ControllerDelegate.h"
 #include "KeyboardDelegate.h"
 #include "MouseDelegate.h"
 #include "TouchDelegate.h"
 
 namespace april
 {
-	class aprilExport InputDelegate : public KeyboardDelegate, public MouseDelegate, public TouchDelegate
+	class aprilExport InputDelegate : public KeyboardDelegate, public MouseDelegate, public TouchDelegate, public ControllerDelegate
 	{
 	public:
 		InputDelegate();

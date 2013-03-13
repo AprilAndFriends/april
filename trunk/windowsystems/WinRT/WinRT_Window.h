@@ -32,47 +32,6 @@ namespace april
 	class WinRT_Window : public Window
 	{
 	public:
-		struct MouseInputEvent
-		{
-			MouseEventType type;
-			gvec2 position;
-			Key button;
-		
-			MouseInputEvent(MouseEventType _type, gvec2 _position, Key _button)
-			{
-				type = _type;
-				position = _position;
-				button = _button;
-			}
-		
-		};
-		
-		struct KeyInputEvent
-		{
-			KeyEventType type;
-			Key keyCode;
-			unsigned int charCode;
-		
-			KeyInputEvent(KeyEventType _type, Key _keyCode, unsigned int _charCode)
-			{
-				type = _type;
-				keyCode = _keyCode;
-				charCode = _charCode;
-			}
-		
-		};
-		
-		struct TouchInputEvent
-		{
-			harray<gvec2> touches;
-		
-			TouchInputEvent(harray<gvec2>& _touches)
-			{
-				touches = _touches;
-			}
-		
-		};
-		
 		WinRT_Window();
 		~WinRT_Window();
 		
@@ -83,30 +42,19 @@ namespace april
 		void setCursorVisible(bool value);
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
-		HL_DEFINE_ISSET(bool, touchEnabled, TouchEnabled);
 		void* getBackendId();
 		//void _setResolution(int w, int h);
 		bool updateOneFrame();
 		void presentFrame();
 		void checkEvents();
 		
-		void handleTouchEvent(MouseEventType type, gvec2 position, int index);
-		void handleMouseEvent(MouseEventType type, gvec2 position, Key button);
-		void handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
-		
 	protected:
 		int width;
 		int height;
-		bool touchEnabled;
-		bool multiTouchActive;
 		bool hasStoredProjectionMatrix;
 		gmat4 storedProjectionMatrix;
 		Color backgroundColor;
 		Texture* logoTexture;
-		harray<gvec2> touches;
-		harray<MouseInputEvent> mouseEvents;
-		harray<KeyInputEvent> keyEvents;
-		harray<TouchInputEvent> touchEvents;
 		
 		void _tryLoadLogoTexture();
 		

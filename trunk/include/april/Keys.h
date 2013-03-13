@@ -472,6 +472,38 @@ namespace april
 #endif
 	};
 
+	/// @brief Controller buttons.
+	enum Button
+	{
+		AB_NONE,
+		AB_START,
+		AB_MENU,
+		AB_A,
+		AB_B,
+		AB_C,
+		AB_D,
+		AB_E,
+		AB_F,
+		AB_L1,
+		AB_L2,
+		AB_L3,
+		AB_R1,
+		AB_R2,
+		AB_R3,
+		AB_D_RIGHT,
+		AB_D_LEFT,
+		AB_D_UP,
+		AB_D_DOWN,
+		AB_LS_RIGHT,
+		AB_LS_LEFT,
+		AB_LS_UP,
+		AB_LS_DOWN,
+		AB_RS_RIGHT,
+		AB_RS_LEFT,
+		AB_RS_UP,
+		AB_RS_DOWN
+	};
+
 }
 
 #endif
