@@ -722,6 +722,7 @@
     <ClCompile Include="rendersystems\OpenGL\OpenGL_State.cpp" />
     <ClCompile Include="src\april.cpp" />
     <ClCompile Include="src\aprilUtil.cpp" />
+    <ClCompile Include="src\delegates\ControllerDelegate.cpp" />
     <ClCompile Include="src\delegates\EventDelegate.cpp" />
     <ClCompile Include="src\delegates\InputDelegate.cpp" />
     <ClCompile Include="src\delegates\KeyboardDelegate.cpp" />
@@ -756,6 +757,7 @@
     <ClInclude Include="include\april\aprilExport.h" />
     <ClInclude Include="include\april\aprilUtil.h" />
     <ClInclude Include="include\april\Color.h" />
+    <ClInclude Include="include\april\ControllerDelegate.h" />
     <ClInclude Include="include\april\EventDelegate.h" />
     <ClInclude Include="include\april\Image.h" />
     <ClInclude Include="include\april\InputDelegate.h" />

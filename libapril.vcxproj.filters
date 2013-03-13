@@ -251,6 +251,9 @@
     <ClCompile Include="rendersystems\OpenGL\ES\2\OpenGLES2_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL\ES\2</Filter>
     </ClCompile>
+    <ClCompile Include="src\delegates\ControllerDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -384,6 +387,9 @@
     </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\ES\2\OpenGLES2_Texture.h">
       <Filter>Header Files\rendersystems\OpenGL\ES\2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\ControllerDelegate.h">
+      <Filter>Header Files\delegates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

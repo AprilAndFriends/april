@@ -16,6 +16,7 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
+#include "ControllerDelegate.h"
 #include "KeyboardDelegate.h"
 #include "Keys.h"
 #include "MouseDelegate.h"
@@ -40,10 +41,36 @@ namespace april
 	}
 	//////////////////
 
+	Window::KeyInputEvent::KeyInputEvent(Window::KeyEventType type, Key keyCode, unsigned int charCode)
+	{
+		this->type = type;
+		this->keyCode = keyCode;
+		this->charCode = charCode;
+	}
+
+	Window::MouseInputEvent::MouseInputEvent(Window::MouseEventType type, gvec2 position, Key keyCode)
+	{
+		this->type = type;
+		this->position = position;
+		this->keyCode = keyCode;
+	}
+		
+	Window::TouchInputEvent::TouchInputEvent(harray<gvec2>& touches)
+	{
+		this->touches = touches;
+	}
+		
+	Window::ControllerInputEvent::ControllerInputEvent(Window::ControllerEventType type, Button buttonCode)
+	{
+		this->type = type;
+		this->buttonCode = buttonCode;
+	}
+
 	Window* window = NULL;
 	
 	Window::Window() : created(false), fullscreen(true), focused(true), running(true),
-		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), cursorVisible(false)
+		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), cursorVisible(false),
+		multiTouchActive(false), inputParadigm(MOUSE)
 	{
 		april::window = this;
 		this->name = "Generic";
@@ -51,6 +78,7 @@ namespace april
 		this->keyboardDelegate = NULL;
 		this->mouseDelegate = NULL;
 		this->touchDelegate = NULL;
+		this->controllerDelegate = NULL;
 		this->systemDelegate = NULL;
 	}
 	
@@ -72,6 +100,8 @@ namespace april
 			this->fpsCount = 0;
 			this->fpsTimer = 0.0f;
 			this->fpsResolution = 0.5f;
+			this->multiTouchActive = false;
+			this->inputParadigm = MOUSE;
 			return true;
 		}
 		return false;
@@ -87,7 +117,13 @@ namespace april
 			this->keyboardDelegate = NULL;
 			this->mouseDelegate = NULL;
 			this->touchDelegate = NULL;
+			this->controllerDelegate = NULL;
 			this->systemDelegate = NULL;
+			this->keyEvents.clear();
+			this->mouseEvents.clear();
+			this->touchEvents.clear();
+			this->controllerEvents.clear();
+			this->touches.clear();
 			return true;
 		}
 		return false;
@@ -132,11 +168,37 @@ namespace april
 		{
 			hthread::sleep(40.0f);
 		}
+		this->checkEvents();
 		result = this->performUpdate(k);
 		april::rendersys->presentFrame();
 		return (result && this->running);
 	}
 	
+	void Window::checkEvents()
+	{
+		while (this->keyEvents.size() > 0)
+		{
+			KeyInputEvent e = this->keyEvents.remove_first();
+			this->handleKeyEvent(e.type, e.keyCode, e.charCode);
+		}
+		while (this->mouseEvents.size() > 0)
+		{
+			MouseInputEvent e = this->mouseEvents.remove_first();
+			this->cursorPosition = e.position;
+			this->handleMouseEvent(e.type, e.position, e.keyCode);
+		}
+		while (this->touchEvents.size() > 0)
+		{
+			TouchInputEvent e = this->touchEvents.remove_first();
+			this->handleTouchEvent(e.touches);
+		}
+		while (this->controllerEvents.size() > 0)
+		{
+			ControllerInputEvent e = this->controllerEvents.remove_first();
+			this->handleControllerEvent(e.type, e.buttonCode);
+		}
+	}
+
 	void Window::terminateMainLoop()
 	{
 		this->running = false;
@@ -207,17 +269,17 @@ namespace april
 		}
 	}
 	
-	void Window::handleMouseEvent(MouseEventType type, gvec2 position, Key button)
+	void Window::handleMouseEvent(MouseEventType type, gvec2 position, Key keyCode)
 	{
 		if (this->mouseDelegate != NULL)
 		{
 			switch (type)
 			{
 			case AMOUSEEVT_DOWN:
-				this->mouseDelegate->onMouseDown(button);
+				this->mouseDelegate->onMouseDown(keyCode);
 				break;
 			case AMOUSEEVT_UP:
-				this->mouseDelegate->onMouseUp(button);
+				this->mouseDelegate->onMouseUp(keyCode);
 				break;
 			case AMOUSEEVT_MOVE:
 				this->mouseDelegate->onMouseMove();
@@ -237,6 +299,22 @@ namespace april
 		}
 	}
 
+	void Window::handleControllerEvent(ControllerEventType type, Button buttonCode)
+	{
+		if (this->controllerDelegate != NULL && buttonCode != AB_NONE)
+		{
+			switch (type)
+			{
+			case ACTRLEVT_DOWN:
+				this->controllerDelegate->onButtonDown(buttonCode);
+				break;
+			case ACTRLEVT_UP:
+				this->controllerDelegate->onButtonUp(buttonCode);
+				break;
+			}
+		}
+	}
+	
 	bool Window::handleQuitRequest(bool canCancel)
 	{
 		// returns whether or not the windowing system is permitted to close the window
@@ -263,6 +341,65 @@ namespace april
 		{
 			this->systemDelegate->onLowMemoryWarning();
 		}
+	}
+
+	void Window::queueKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode)
+	{
+		this->keyEvents += KeyInputEvent(type, keyCode, charCode);
+	}
+
+	void Window::queueMouseEvent(MouseEventType type, gvec2 position, Key keyCode)
+	{
+		this->mouseEvents += MouseInputEvent(type, position, keyCode);
+	}
+
+	void Window::queueTouchEvent(MouseEventType type, gvec2 position, int index)
+	{
+		int previousTouchesSize = this->touches.size();
+		switch (type)
+		{
+		case AMOUSEEVT_DOWN:
+			if (index < this->touches.size()) // DOWN event of an already indexed touch, never happened so far
+			{
+				return;
+			}
+			this->touches += position;
+			break;
+		case AMOUSEEVT_UP:
+			if (index >= this->touches.size()) // redundant UP event, can happen
+			{
+				return;
+			}
+			this->touches.remove_at(index);
+			break;
+		case AMOUSEEVT_MOVE:
+			if (index >= this->touches.size()) // MOVE event of an unindexed touch, never happened so far
+			{
+				return;
+			}
+			this->touches[index] = position;
+			break;
+		}
+		if (this->multiTouchActive || this->touches.size() > 1)
+		{
+			if (!this->multiTouchActive && previousTouchesSize == 1)
+			{
+				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
+				this->queueMouseEvent(AMOUSEEVT_UP, gvec2(-10000.0f, -10000.0f), AK_LBUTTON);
+			}
+			this->multiTouchActive = (this->touches.size() > 0);
+		}
+		else
+		{
+			this->queueMouseEvent(type, position, AK_LBUTTON);
+		}
+		this->touchEvents.clear();
+		this->touchEvents += TouchInputEvent(this->touches);
+	}
+
+	void Window::queueControllerEvent(ControllerEventType type, Button buttonCode)
+	{
+		this->controllerEvents += ControllerInputEvent(type, buttonCode);
 	}
 
 	float Window::_calcTimeSinceLastFrame()

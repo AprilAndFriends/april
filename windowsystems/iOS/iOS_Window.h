@@ -52,8 +52,6 @@ namespace april
 		void setTitle(chstr value);
 		gtypes::Vector2 getCursorPosition();
 		void presentFrame();
-		bool isTouchEnabled() { return true; }
-		void setTouchEnabled(bool value) { }
 		void* getBackendId();
 		void checkEvents();
 		bool isVirtualKeyboardVisible();
@@ -84,14 +82,14 @@ namespace april
 		void applicationDidBecomeActive();
 		
 		void _setCursorPosition(float x, float y);
-		float _getTouchScale();		
+		float _getTouchScale();
+		
 	protected:
 		int keyboardRequest;
 		bool firstFrameDrawn;
 		harray<InputEvent*> inputEvents;
 		bool inputEventsMutex;
 		bool retainLoadingOverlay;
-		bool multiTouchActive;
 		
 		void callTouchCallback();
 		

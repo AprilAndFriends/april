@@ -109,22 +109,32 @@ namespace april
 		return true;
 	}
 	
-	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
-	{
-		if (april::window != NULL)
-		{
-			((april::AndroidJNI_Window*)april::window)->handleTouchEvent((april::Window::MouseEventType)type, gvec2((float)x, (float)y), (int)index);
-		}
-	}
-	
 	void JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
-		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_DOWN, (Key)(int)keyCode, (unsigned int)charCode));
+		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::AKEYEVT_DOWN, (Key)(int)keyCode, (unsigned int)charCode));
 	}
 	
 	void JNICALL _JNI_onKeyUp(JNIEnv* env, jclass classe, jint keyCode)
 	{
-		PROTECTED_WINDOW_CALL(handleKeyEvent(april::Window::AKEYEVT_UP, (Key)(int)keyCode, 0));
+		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::AKEYEVT_UP, (Key)(int)keyCode, 0));
+	}
+	
+	void JNICALL _JNI_onButtonDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
+	{
+		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ACTRLEVT_DOWN, (Button)(int)keyCode));
+	}
+	
+	void JNICALL _JNI_onButtonUp(JNIEnv* env, jclass classe, jint keyCode)
+	{
+		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ACTRLEVT_UP, (Button)(int)keyCode));
+	}
+	
+	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
+	{
+		if (april::window != NULL)
+		{
+			april::window->queueTouchEvent((april::Window::MouseEventType)type, gvec2((float)x, (float)y), (int)index);
+		}
 	}
 	
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
@@ -220,16 +230,18 @@ namespace april
 		}
 	}
 	
-#define METHOD_COUNT 21 // make sure this fits
+#define METHOD_COUNT 23 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"setVariables",			_JARGS(_JVOID, _JSTR _JSTR),					(void*)&april::_JNI_setVariables			},
 		{"init",					_JARGS(_JVOID, _JARR(_JSTR)),					(void*)&april::_JNI_init					},
 		{"destroy",					_JARGS(_JVOID, ),								(void*)&april::_JNI_destroy					},
 		{"render",					_JARGS(_JBOOL, ),								(void*)&april::_JNI_render					},
-		{"onTouch",					_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),	(void*)&april::_JNI_onTouch					},
 		{"onKeyDown",				_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onKeyDown				},
 		{"onKeyUp",					_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onKeyUp					},
+		{"onTouch",					_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),	(void*)&april::_JNI_onTouch					},
+		{"onButtonDown",			_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonDown			},
+		{"onButtonUp",				_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonUp				},
 		{"onWindowFocusChanged",	_JARGS(_JVOID, _JBOOL),							(void*)&april::_JNI_onWindowFocusChanged	},
 		{"onLowMemory",				_JARGS(_JVOID, ),								(void*)&april::_JNI_onLowMemory				},
 		{"onSurfaceCreated",		_JARGS(_JVOID, ),								(void*)&april::_JNI_onSurfaceCreated		},

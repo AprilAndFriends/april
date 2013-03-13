@@ -74,10 +74,10 @@ namespace april
 		this->window = window;
 	}
 
-	class MouseInputEvent : public InputEvent
+	class iOS_MouseInputEvent : public InputEvent
 	{
 	public:
-		MouseInputEvent(Window* window, Window::MouseEventType type, gvec2 position, april::Key button) : InputEvent(window)
+		iOS_MouseInputEvent(Window* window, Window::MouseEventType type, gvec2 position, april::Key button) : InputEvent(window)
 		{
 			this->type = type;
 			this->position = position;
@@ -97,10 +97,10 @@ namespace april
 		
 	};
 	
-	class TouchInputEvent : public InputEvent
+	class iOS_TouchInputEvent : public InputEvent
 	{
 	public:
-		TouchInputEvent(Window* window, harray<gvec2>& touches) : InputEvent(window)
+		iOS_TouchInputEvent(Window* window, harray<gvec2>& touches) : InputEvent(window)
 		{
 			this->touches = touches;
 		}
@@ -139,6 +139,7 @@ namespace april
 		this->fullscreen = true; // iOS apps are always fullscreen
 		this->firstFrameDrawn = false; // show window after drawing first frame
 		this->running = true;
+		this->inputParadigm = april::Window::TOUCH;
 		return true;
 	}
 	
@@ -302,7 +303,7 @@ namespace april
 			position.y = point.y * scale;
 			coordinates += position;
 		}
-		this->inputEvents += new TouchInputEvent(this, coordinates);
+		this->inputEvents += new iOS_TouchInputEvent(this, coordinates);
 	}
 	
 	bool iOS_Window::isRotating()
@@ -365,14 +366,14 @@ namespace april
 			if (!this->multiTouchActive && prev_len == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_UP, gvec2(-10000, -10000), AK_LBUTTON));
+				this->addInputEvent(new iOS_MouseInputEvent(this, AMOUSEEVT_UP, gvec2(-10000, -10000), AK_LBUTTON));
 			}
 			this->multiTouchActive = true;
 		}
 		else
 		{
 			CGPoint pt = [g_touches[0] locationInView:glview];
-			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_DOWN, gvec2(pt.x, pt.y), AK_LBUTTON));
+			this->addInputEvent(new iOS_MouseInputEvent(this, AMOUSEEVT_DOWN, gvec2(pt.x, pt.y), AK_LBUTTON));
 		}
 		this->callTouchCallback();
 	}
@@ -393,7 +394,7 @@ namespace april
 		else
 		{
 			CGPoint pt = [touches[0] locationInView:glview];
-			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_UP, gvec2(pt.x, pt.y), AK_LBUTTON));
+			this->addInputEvent(new iOS_MouseInputEvent(this, AMOUSEEVT_UP, gvec2(pt.x, pt.y), AK_LBUTTON));
 		}
 		this->callTouchCallback();
 	}
@@ -410,7 +411,7 @@ namespace april
 		{
 			UITouch* touch = [[(NSSet*) nssetTouches allObjects] objectAtIndex:0];
 			CGPoint pt = [touch locationInView:glview];			
-			this->addInputEvent(new MouseInputEvent(this, AMOUSEEVT_MOVE, gvec2(pt.x, pt.y), AK_NONE));
+			this->addInputEvent(new iOS_MouseInputEvent(this, AMOUSEEVT_MOVE, gvec2(pt.x, pt.y), AK_NONE));
 		}
 		this->callTouchCallback();
 	}
@@ -562,7 +563,10 @@ namespace april
 				multiTouchActive = false;
 			}
 			
-			if (glview != NULL) [glview startAnimation];
+			if (glview != NULL)
+			{
+				[glview startAnimation];
+			}
 			if (this->systemDelegate != NULL)
 			{
 				this->systemDelegate->onWindowFocusChanged(true);

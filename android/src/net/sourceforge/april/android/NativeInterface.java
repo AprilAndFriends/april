@@ -57,9 +57,11 @@ public class NativeInterface
 	public static native void init(String[] args);
 	public static native boolean render();
 	public static native void destroy();
-	public static native void onTouch(int type, float x, float y, int index);
 	public static native void onKeyDown(int keyCode, int charCode);
 	public static native void onKeyUp(int keyCode);
+	public static native void onTouch(int type, float x, float y, int index);
+	public static native void onButtonDown(int buttonCode);
+	public static native void onButtonUp(int buttonCode);
 	public static native void onWindowFocusChanged(boolean focused);
 	public static native void onLowMemory();
 	public static native void onSurfaceCreated();
