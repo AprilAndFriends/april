@@ -75,6 +75,9 @@
 		D14BF821158737B300D31573 /* RamTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = D14BF81F158737B300D31573 /* RamTexture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D14BF96A15875F3300D31573 /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
 		D14BF96B15875F3300D31573 /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
+		D16AB63E16F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
+		D16AB63F16F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
+		D16AB64016F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
 		D197C5A415ED05F30017452F /* jpg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A015ED05F20017452F /* jpg.framework */; };
 		D197C5A515ED05F30017452F /* png.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A115ED05F20017452F /* png.framework */; };
 		D197C5A615ED05F30017452F /* zip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A215ED05F20017452F /* zip.framework */; };
@@ -210,6 +213,7 @@
 		D14BF81E158737B300D31573 /* aprilUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = aprilUtil.h; path = include/april/aprilUtil.h; sourceTree = "<group>"; };
 		D14BF81F158737B300D31573 /* RamTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RamTexture.h; path = include/april/RamTexture.h; sourceTree = "<group>"; };
 		D14BF96915875F3300D31573 /* aprilUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = aprilUtil.cpp; path = src/aprilUtil.cpp; sourceTree = "<group>"; };
+		D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerDelegate.cpp; path = src/delegates/ControllerDelegate.cpp; sourceTree = "<group>"; };
 		D197C2F815ECF4650017452F /* ImageSourcePng.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSourcePng.cpp; path = src/ImageSourcePng.cpp; sourceTree = "<group>"; };
 		D197C5A015ED05F20017452F /* jpg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = jpg.framework; path = ../../__build__/products/Debug/jpg.framework; sourceTree = "<group>"; };
 		D197C5A115ED05F20017452F /* png.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = png.framework; path = ../../__build__/products/Debug/png.framework; sourceTree = "<group>"; };
@@ -619,6 +623,7 @@
 		D1E7204116D37BF900B9C9AD /* delegates */ = {
 			isa = PBXGroup;
 			children = (
+				D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */,
 				D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */,
 				D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */,
 				D1E7204616D37C2300B9C9AD /* KeyboardDelegate.cpp */,
@@ -918,6 +923,7 @@
 				D1E720A516D37E3100B9C9AD /* OpenGL_State.cpp in Sources */,
 				D1E720AD16D37E3900B9C9AD /* OpenGL1_RenderSystem.cpp in Sources */,
 				D1E720B116D37E3900B9C9AD /* OpenGL1_Texture.cpp in Sources */,
+				D16AB63E16F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -965,6 +971,7 @@
 				D1E720CD16D37E6100B9C9AD /* OpenGLES2_RenderSystem.cpp in Sources */,
 				D1E720CE16D37E6100B9C9AD /* OpenGLES2_Texture.cpp in Sources */,
 				D1049F6216D38FCD0058C514 /* ImageCG.mm in Sources */,
+				D16AB64016F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1012,6 +1019,7 @@
 				D1E720C716D37E5800B9C9AD /* OpenGLES1_RenderSystem.cpp in Sources */,
 				D1E720C816D37E5800B9C9AD /* OpenGLES1_Texture.cpp in Sources */,
 				D1049F6116D38FCC0058C514 /* ImageCG.mm in Sources */,
+				D16AB63F16F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
