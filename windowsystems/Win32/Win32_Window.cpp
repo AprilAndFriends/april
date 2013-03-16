@@ -210,6 +210,7 @@ namespace april
 			TranslateMessage(&msg);
 			DispatchMessageW(&msg);
 		}
+		// Win32 window cannot use event queueing properly because of split key-down and char events
 	}
 
 	LRESULT CALLBACK Win32_Window::processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -258,7 +259,10 @@ namespace april
 			}
 			return 0;
 		case WM_SYSKEYDOWN:
-			if (wParam == VK_MENU) _altKeyDown = true;
+			if (wParam == VK_MENU)
+			{
+				_altKeyDown = true;
+			}
 		case WM_KEYDOWN:
 			if (_altKeyDown && wParam == VK_F4)
 			{

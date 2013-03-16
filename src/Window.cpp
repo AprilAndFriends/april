@@ -27,7 +27,6 @@
 #include "UpdateDelegate.h"
 #include "Window.h"
 
-
 namespace april
 {
 	// TODO - refactor
