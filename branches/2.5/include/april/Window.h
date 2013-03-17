@@ -81,6 +81,7 @@ namespace april
 		bool isFocused() { return this->focused; }
 		bool isRunning() { return this->running; }
 		int getFps() { return this->fps; }
+		void setFps(int value) { this->fps = value; } // for those who handle the update loop themselves
 		float getFpsResolution() { return this->fpsResolution; }
 		void setFpsResolution(float value) { this->fpsResolution = value; }
 		gvec2 getCursorPosition() { return this->cursorPosition; }
