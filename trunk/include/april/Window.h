@@ -126,7 +126,7 @@ namespace april
 		void setFullscreen(bool value) { } // TODO
 		HL_DEFINE_IS(bool, focused, Focused);
 		HL_DEFINE_IS(bool, running, Running);
-		HL_DEFINE_GET(int, fps, Fps);
+		HL_DEFINE_GETSET(int, fps, Fps);
 		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
 		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
 		HL_DEFINE_GETSET(InputParadigm, inputParadigm, InputParadigm);
