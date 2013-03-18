@@ -27,6 +27,11 @@
 #include "UpdateDelegate.h"
 #include "Window.h"
 
+#define PARADIGM_STRING(value) \
+	hstr(value == MOUSE ? "MOUSE" : \
+	(value == TOUCH ? "TOUCH" : \
+	(value == CONTROLLER ? "CONTROLLER" : "UNDEFINED")))
+
 namespace april
 {
 	// TODO - refactor
@@ -123,9 +128,23 @@ namespace april
 			this->touchEvents.clear();
 			this->controllerEvents.clear();
 			this->touches.clear();
+			this->controllerEmulationKeys.clear();
 			return true;
 		}
 		return false;
+	}
+
+	void Window::setInputParadigm(Window::InputParadigm value)
+	{
+		if (this->inputParadigm != value)
+		{
+			this->inputParadigm = value;
+			hlog::debug(april::logTag, "Changing Input Paradigm to: " + PARADIGM_STRING(this->inputParadigm));
+			if (this->inputParadigm == CONTROLLER)
+			{
+				this->cursorPosition.set(-10000.0f, -10000.0f);
+			}
+		}
 	}
 	
 	gvec2 Window::getSize()
@@ -257,6 +276,12 @@ namespace april
 				this->keyboardDelegate->onKeyUp(keyCode);
 				break;
 			}
+		}
+		// emulation of buttons using keyboard
+		if (this->controllerEmulationKeys.has_key(keyCode))
+		{
+			ControllerEventType buttonType = (type == AKEYEVT_DOWN ? ACTRLEVT_DOWN : ACTRLEVT_UP);
+			this->handleControllerEvent(buttonType, this->controllerEmulationKeys[keyCode]);
 		}
 	}
 	
