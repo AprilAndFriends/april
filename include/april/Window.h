@@ -129,9 +129,11 @@ namespace april
 		HL_DEFINE_GETSET(int, fps, Fps);
 		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
 		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
-		HL_DEFINE_GETSET(InputParadigm, inputParadigm, InputParadigm);
+		HL_DEFINE_GET(InputParadigm, inputParadigm, InputParadigm);
+		void setInputParadigm(InputParadigm value);
 		gvec2 getSize();
 		float getAspectRatio();
+		HL_DEFINE_GETSET(HL_HMAP_MACRO_FIX(Key, Button), controllerEmulationKeys, ControllerEmulationKeys);
 
 		// callbacks
 		HL_DEFINE_GETSET(UpdateDelegate*, updateDelegate, UpdateDelegate);
@@ -217,6 +219,7 @@ namespace april
 		harray<TouchInputEvent> touchEvents;
 		harray<ControllerInputEvent> controllerEvents;
 		Timer timer;
+		hmap<Key, Button> controllerEmulationKeys;
 
 		// TODO - refactor
 		static void (*msLaunchCallback)(void*);
