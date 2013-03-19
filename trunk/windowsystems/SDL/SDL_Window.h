@@ -45,7 +45,7 @@ namespace april
 		void setTitle(chstr title);
 		bool isCursorVisible();
 		void setCursorVisible(bool visible);
-		HL_DEFINE_IS(bool, cursorInside, CursorInside);
+		HL_DEFINE_IS(cursorInside, CursorInside);
 		int getWidth();
 		int getHeight();
 		gvec2 getCursorPosition();
