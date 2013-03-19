@@ -17,6 +17,7 @@
 #define APRIL_WINDOW_H
 
 #include <gtypes/Vector2.h>
+#include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
@@ -133,7 +134,8 @@ namespace april
 		void setInputParadigm(InputParadigm value);
 		gvec2 getSize();
 		float getAspectRatio();
-		HL_DEFINE_GETSET(HL_HMAP_MACRO_FIX(Key, Button), controllerEmulationKeys, ControllerEmulationKeys);
+        
+		HL_DEFINE_GETSET2(hmap, Key, Button, controllerEmulationKeys, ControllerEmulationKeys);
 
 		// callbacks
 		HL_DEFINE_GETSET(UpdateDelegate*, updateDelegate, UpdateDelegate);
