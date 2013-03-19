@@ -248,7 +248,7 @@ namespace april
 			break;
 		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
 			_touchDown = true;
-			april::window->setInputParadigm(april::Window::TOUCH);
+			april::window->setInputMode(april::Window::TOUCH);
 			break;
 		case WM_DESTROY:
 		case WM_CLOSE:
@@ -324,7 +324,7 @@ namespace april
 			{
 				if (_mouseMoveMessagesCount >= 10)
 				{
-					april::window->setInputParadigm(april::Window::MOUSE);
+					april::window->setInputMode(april::Window::MOUSE);
 				}
 				else
 				{

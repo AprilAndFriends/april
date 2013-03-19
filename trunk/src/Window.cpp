@@ -74,7 +74,7 @@ namespace april
 	
 	Window::Window() : created(false), fullscreen(true), focused(true), running(true),
 		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), cursorVisible(false),
-		multiTouchActive(false), inputParadigm(MOUSE)
+		multiTouchActive(false), inputMode(MOUSE)
 	{
 		april::window = this;
 		this->name = "Generic";
@@ -105,7 +105,7 @@ namespace april
 			this->fpsTimer = 0.0f;
 			this->fpsResolution = 0.5f;
 			this->multiTouchActive = false;
-			this->inputParadigm = MOUSE;
+			this->inputMode = MOUSE;
 			return true;
 		}
 		return false;
@@ -134,13 +134,13 @@ namespace april
 		return false;
 	}
 
-	void Window::setInputParadigm(Window::InputParadigm value)
+	void Window::setInputMode(Window::InputMode value)
 	{
-		if (this->inputParadigm != value)
+		if (this->inputMode != value)
 		{
-			this->inputParadigm = value;
-			hlog::debug(april::logTag, "Changing Input Paradigm to: " + PARADIGM_STRING(this->inputParadigm));
-			if (this->inputParadigm == CONTROLLER)
+			this->inputMode = value;
+			hlog::debug(april::logTag, "Changing Input Paradigm to: " + PARADIGM_STRING(this->inputMode));
+			if (this->inputMode == CONTROLLER)
 			{
 				this->cursorPosition.set(-10000.0f, -10000.0f);
 			}

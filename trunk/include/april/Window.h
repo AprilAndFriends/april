@@ -59,7 +59,7 @@ namespace april
 			// possibly analog triggers
 		};
 
-		enum InputParadigm
+		enum InputMode
 		{
 			MOUSE,
 			TOUCH,
@@ -130,8 +130,8 @@ namespace april
 		HL_DEFINE_GETSET(int, fps, Fps);
 		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
 		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
-		HL_DEFINE_GET(InputParadigm, inputParadigm, InputParadigm);
-		void setInputParadigm(InputParadigm value);
+		HL_DEFINE_GET(InputMode, inputMode, InputMode);
+		void setInputMode(InputMode value);
 		gvec2 getSize();
 		float getAspectRatio();
         
@@ -157,7 +157,7 @@ namespace april
 		// pure virtual getters/setters (window system dependent)
 		virtual int getWidth() = 0;
 		virtual int getHeight() = 0;
-		DEPRECATED_ATTRIBUTE bool isTouchEnabled() { return (this->inputParadigm == TOUCH); }
+		DEPRECATED_ATTRIBUTE bool isTouchEnabled() { return (this->inputMode == TOUCH); }
 		virtual void* getBackendId() = 0;
 
 		// pure virtual methods (window system dependent)
@@ -213,7 +213,7 @@ namespace april
 		float fpsResolution;
 		gvec2 cursorPosition;
 		bool cursorVisible;
-		InputParadigm inputParadigm;
+		InputMode inputMode;
 		bool multiTouchActive;
 		harray<gvec2> touches;
 		harray<KeyInputEvent> keyEvents;
