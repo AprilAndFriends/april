@@ -49,7 +49,7 @@ namespace april
 		}
 		this->width = w;
 		this->height = h;
-		this->inputParadigm = TOUCH;
+		this->inputMode = TOUCH;
 		return true;
 	}
 	
