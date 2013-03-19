@@ -121,12 +121,12 @@ namespace april
 
 		// generic getters/setters
 		HL_DEFINE_GET(hstr, name, Name);
-		HL_DEFINE_IS(bool, created, Created);
+		HL_DEFINE_IS(created, Created);
 		HL_DEFINE_GET(hstr, title, Title);
-		HL_DEFINE_IS(bool, fullscreen, Fullscreen);
+		HL_DEFINE_IS(fullscreen, Fullscreen);
 		void setFullscreen(bool value) { } // TODO
-		HL_DEFINE_IS(bool, focused, Focused);
-		HL_DEFINE_IS(bool, running, Running);
+		HL_DEFINE_IS(focused, Focused);
+		HL_DEFINE_IS(running, Running);
 		HL_DEFINE_GETSET(int, fps, Fps);
 		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
 		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
