@@ -139,7 +139,7 @@ namespace april
 		this->fullscreen = true; // iOS apps are always fullscreen
 		this->firstFrameDrawn = false; // show window after drawing first frame
 		this->running = true;
-		this->inputParadigm = april::Window::TOUCH;
+		this->inputMode = april::Window::TOUCH;
 		return true;
 	}
 	
