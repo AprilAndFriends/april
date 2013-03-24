@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="net.sourceforge.april"
+      package="net.sourceforge.april.android"
       android:versionCode="300"
       android:versionName="3.0.0">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17"/>
-    
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     
 </manifest> 
