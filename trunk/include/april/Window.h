@@ -131,6 +131,7 @@ namespace april
 		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
 		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
 		HL_DEFINE_GET(InputMode, inputMode, InputMode);
+		HL_DEFINE_GETSET2(hmap, InputMode, InputMode, inputModeTranslations, InputModeTranslations);
 		void setInputMode(InputMode value);
 		gvec2 getSize();
 		float getAspectRatio();
@@ -214,6 +215,7 @@ namespace april
 		gvec2 cursorPosition;
 		bool cursorVisible;
 		InputMode inputMode;
+		hmap<InputMode, InputMode> inputModeTranslations;
 		bool multiTouchActive;
 		harray<gvec2> touches;
 		harray<KeyInputEvent> keyEvents;

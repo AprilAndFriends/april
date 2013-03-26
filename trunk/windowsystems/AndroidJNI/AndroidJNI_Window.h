@@ -41,6 +41,9 @@ namespace april
 		void enterMainLoop();
 		void presentFrame();
 		
+		void queueTouchEvent(MouseEventType type, gvec2 position, int index);
+		void queueControllerEvent(ControllerEventType type, Button buttonCode);
+
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
 		
