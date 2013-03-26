@@ -69,6 +69,21 @@ namespace april
 		// not needed as Android Java Activity takes care of this
 	}
 
+	void AndroidJNI_Window::queueTouchEvent(Window::MouseEventType type, gvec2 position, int index)
+	{
+		if (type == AMOUSEEVT_DOWN || type == AMOUSEEVT_UP)
+		{
+			this->setInputMode(TOUCH);
+		}
+		Window::queueTouchEvent(type, position, index);
+	}
+
+	void AndroidJNI_Window::queueControllerEvent(Window::ControllerEventType type, Button buttonCode)
+	{
+		this->setInputMode(CONTROLLER);
+		Window::queueControllerEvent(type, buttonCode);
+	}
+
 	void AndroidJNI_Window::beginKeyboardHandling()
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowVirtualKeyboard, "showVirtualKeyboard", _JARGS(_JVOID, ));

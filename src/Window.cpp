@@ -27,7 +27,7 @@
 #include "UpdateDelegate.h"
 #include "Window.h"
 
-#define PARADIGM_STRING(value) \
+#define INPUT_MODE_NAME(value) \
 	hstr(value == MOUSE ? "MOUSE" : \
 	(value == TOUCH ? "TOUCH" : \
 	(value == CONTROLLER ? "CONTROLLER" : "UNDEFINED")))
@@ -136,10 +136,14 @@ namespace april
 
 	void Window::setInputMode(Window::InputMode value)
 	{
+		if (this->inputModeTranslations.has_key(value))
+		{
+			value = this->inputModeTranslations[value];
+		}
 		if (this->inputMode != value)
 		{
 			this->inputMode = value;
-			hlog::debug(april::logTag, "Changing Input Paradigm to: " + PARADIGM_STRING(this->inputMode));
+			hlog::write(april::logTag, "Changing Input Mode to: " + INPUT_MODE_NAME(this->inputMode));
 			if (this->inputMode == CONTROLLER)
 			{
 				this->cursorPosition.set(-10000.0f, -10000.0f);

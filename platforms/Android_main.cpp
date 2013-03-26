@@ -119,6 +119,11 @@ namespace april
 		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::AKEYEVT_UP, (Key)(int)keyCode, 0));
 	}
 	
+	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
+	{
+		PROTECTED_WINDOW_CALL(queueTouchEvent((april::Window::MouseEventType)type, gvec2((float)x, (float)y), (int)index));
+	}
+	
 	void JNICALL _JNI_onButtonDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
 		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ACTRLEVT_DOWN, (Button)(int)keyCode));
@@ -127,14 +132,6 @@ namespace april
 	void JNICALL _JNI_onButtonUp(JNIEnv* env, jclass classe, jint keyCode)
 	{
 		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ACTRLEVT_UP, (Button)(int)keyCode));
-	}
-	
-	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
-	{
-		if (april::window != NULL)
-		{
-			april::window->queueTouchEvent((april::Window::MouseEventType)type, gvec2((float)x, (float)y), (int)index);
-		}
 	}
 	
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
