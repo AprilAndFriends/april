@@ -9,12 +9,12 @@
 /// 
 /// @section DESCRIPTION
 
-#ifndef APRIL_MAC_WINDOW_DELEGATE_H
-#define APRIL_MAC_WINDOW_DELEGATE_H
+#ifndef APRIL_MAC_COCOA_WINDOW_H
+#define APRIL_MAC_COCOA_WINDOW_H
 
 #import <AppKit/NSWindow.h>
 
-@interface AprilMacWindowDelegate : NSObject<NSWindowDelegate>
+@interface AprilCocoaWindow : NSWindow<NSWindowDelegate>
 {
 @private
     NSTimer* mTimer;

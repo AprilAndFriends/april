@@ -12,12 +12,12 @@
 #include "april.h"
 #include "Mac_Window.h"
 #import "Mac_OpenGLView.h"
-#import "Mac_WindowDelegate.h"
+#import "Mac_CocoaWindow.h"
 #import "Mac_LoadingOverlay.h"
 // declared here instead of as class properties because C++ doesn't play nicely with forward declared objc classes
 
 static AprilMacOpenGLView* mView = nil;
-static NSWindow* mWindow = nil;
+static AprilCocoaWindow* mWindow = nil;
 bool gReattachLoadingOverlay = false;
 
 namespace april
@@ -79,14 +79,19 @@ namespace april
 			gReattachLoadingOverlay = true;
 		}
 	}
+	
+	void Mac_Window::updateCursorPosition(gvec2& pos)
+	{
+		this->cursorPosition = pos;
+	}
 
 	bool Mac_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
 		NSRect frame = NSMakeRect(0, 0, 1280, 800);
 		NSUInteger styleMask = NSTitledWindowMask | NSMiniaturizableWindowMask;
-		mWindow = [[NSWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
+		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
 		[mWindow setBackgroundColor:[NSColor blackColor]];
-		[mWindow setDelegate:[[AprilMacWindowDelegate alloc] init]];
+		[mWindow setDelegate:mWindow];
 
 //		[mWindow setContentSize:frame.size];
 
@@ -133,12 +138,6 @@ namespace april
 		
 	}
 	
-	gvec2 Mac_Window::getCursorPosition()
-	{
-		gvec2 pt;
-		return pt;
-	}
-
 	bool Mac_Window::updateOneFrame()
 	{
         Window::updateOneFrame();
