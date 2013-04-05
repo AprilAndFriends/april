@@ -38,6 +38,8 @@ namespace april
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
 		
+		void updateCursorPosition(gvec2& pos);
+		
         void presentFrame();
 		bool updateOneFrame();
 	protected:

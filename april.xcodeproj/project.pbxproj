@@ -76,7 +76,7 @@
 		D16AB63F16F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
 		D16AB64016F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
 		D1962A86170EC6FC0072A146 /* Mac_OpenGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1962A84170EC6FC0072A146 /* Mac_OpenGLView.mm */; };
-		D1962A8A170EC7A20072A146 /* Mac_WindowDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1962A88170EC7A20072A146 /* Mac_WindowDelegate.mm */; };
+		D1962A8A170EC7A20072A146 /* Mac_CocoaWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1962A88170EC7A20072A146 /* Mac_CocoaWindow.mm */; };
 		D1962A8E170ECC400072A146 /* Mac_LoadingOverlay.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1962A8C170ECC400072A146 /* Mac_LoadingOverlay.mm */; };
 		D197C5A415ED05F30017452F /* jpg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A015ED05F20017452F /* jpg.framework */; };
 		D197C5A515ED05F30017452F /* png.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A115ED05F20017452F /* png.framework */; };
@@ -268,8 +268,8 @@
 		D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerDelegate.cpp; path = src/delegates/ControllerDelegate.cpp; sourceTree = "<group>"; };
 		D1962A83170EC6FC0072A146 /* Mac_OpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_OpenGLView.h; path = windowsystems/Mac/Mac_OpenGLView.h; sourceTree = "<group>"; };
 		D1962A84170EC6FC0072A146 /* Mac_OpenGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_OpenGLView.mm; path = windowsystems/Mac/Mac_OpenGLView.mm; sourceTree = "<group>"; };
-		D1962A87170EC7A20072A146 /* Mac_WindowDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_WindowDelegate.h; path = windowsystems/Mac/Mac_WindowDelegate.h; sourceTree = "<group>"; };
-		D1962A88170EC7A20072A146 /* Mac_WindowDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_WindowDelegate.mm; path = windowsystems/Mac/Mac_WindowDelegate.mm; sourceTree = "<group>"; };
+		D1962A87170EC7A20072A146 /* Mac_CocoaWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_CocoaWindow.h; path = windowsystems/Mac/Mac_CocoaWindow.h; sourceTree = "<group>"; };
+		D1962A88170EC7A20072A146 /* Mac_CocoaWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_CocoaWindow.mm; path = windowsystems/Mac/Mac_CocoaWindow.mm; sourceTree = "<group>"; };
 		D1962A8B170ECC400072A146 /* Mac_LoadingOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_LoadingOverlay.h; path = windowsystems/Mac/Mac_LoadingOverlay.h; sourceTree = "<group>"; };
 		D1962A8C170ECC400072A146 /* Mac_LoadingOverlay.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_LoadingOverlay.mm; path = windowsystems/Mac/Mac_LoadingOverlay.mm; sourceTree = "<group>"; };
 		D197C2F815ECF4650017452F /* ImageSourcePng.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSourcePng.cpp; path = src/ImageSourcePng.cpp; sourceTree = "<group>"; };
@@ -628,8 +628,8 @@
 			children = (
 				D1962A83170EC6FC0072A146 /* Mac_OpenGLView.h */,
 				D1962A84170EC6FC0072A146 /* Mac_OpenGLView.mm */,
-				D1962A87170EC7A20072A146 /* Mac_WindowDelegate.h */,
-				D1962A88170EC7A20072A146 /* Mac_WindowDelegate.mm */,
+				D1962A87170EC7A20072A146 /* Mac_CocoaWindow.h */,
+				D1962A88170EC7A20072A146 /* Mac_CocoaWindow.mm */,
 				D1962A8B170ECC400072A146 /* Mac_LoadingOverlay.h */,
 				D1962A8C170ECC400072A146 /* Mac_LoadingOverlay.mm */,
 				D1AF669B170B1E4800A43743 /* Mac_Window.h */,
@@ -1188,7 +1188,7 @@
 				D1AF66BC170B1E5900A43743 /* OpenGL1_Texture.cpp in Sources */,
 				D1AF66BD170B1E5900A43743 /* ControllerDelegate.cpp in Sources */,
 				D1962A86170EC6FC0072A146 /* Mac_OpenGLView.mm in Sources */,
-				D1962A8A170EC7A20072A146 /* Mac_WindowDelegate.mm in Sources */,
+				D1962A8A170EC7A20072A146 /* Mac_CocoaWindow.mm in Sources */,
 				D1962A8E170ECC400072A146 /* Mac_LoadingOverlay.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
