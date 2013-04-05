@@ -192,7 +192,7 @@ namespace april
 		}
 		this->checkEvents();
 		result = this->performUpdate(k);
-		april::rendersys->presentFrame();
+		this->presentFrame();
 		return (result && this->running);
 	}
 	
