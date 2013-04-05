@@ -30,6 +30,7 @@
 #define APRIL_WS_WIN32 "Win32"
 #define APRIL_WS_WINRT "WinRT"
 #define APRIL_WS_SDL "SDL"
+#define APRIL_WS_MAC "Mac"
 #define APRIL_WS_ANDROIDJNI "AndroidJNI"
 #define APRIL_WS_IOS "iOS"
 #define APRIL_WS_DEFAULT ""
@@ -57,8 +58,9 @@ namespace april
 		WS_WIN32 = 1,
 		WS_WINRT = 2,
 		WS_SDL = 3,
-		WS_IOS = 4,
-		WS_ANDROIDJNI = 5
+		WS_MAC = 4,
+		WS_IOS = 5,
+		WS_ANDROIDJNI = 6
 	};
 
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowType windowType);

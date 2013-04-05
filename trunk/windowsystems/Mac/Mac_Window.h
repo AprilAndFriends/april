@@ -14,7 +14,6 @@
 #ifndef APRIL_MAC_WINDOW_H
 #define APRIL_MAC_WINDOW_H
 
-#include "Timer.h"
 #include "Window.h"
 
 namespace april
@@ -25,8 +24,24 @@ namespace april
 		Mac_Window();
 		~Mac_Window();
 
+		virtual int getWidth();
+		virtual int getHeight();
+		virtual void* getBackendId();
 		
+		bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
+		bool destroy();
+		
+		void setTitle(chstr title);
+		bool isCursorVisible();
+		void setCursorVisible(bool visible);
+		gvec2 getCursorPosition();
+		hstr getParam(chstr param);
+		void setParam(chstr param, chstr value);
+		
+        void presentFrame();
+		bool updateOneFrame();
 	protected:
+		bool retainLoadingOverlay;
 	};
 	
 }
