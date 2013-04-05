@@ -94,11 +94,7 @@
 	#endif
 #elif defined(_UNIX)
 	#define RS_INTERNAL_DEFAULT RS_OPENGL1
-	#ifdef _SDL
-		#define WS_INTERNAL_DEFAULT WS_SDL
-	#else
-		#define WS_INTERNAL_DEFAULT WS_MAC
-	#endif
+	#define WS_INTERNAL_DEFAULT WS_SDL
 #elif defined(_ANDROID)
 	#ifdef _OPENGLES1
 		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
