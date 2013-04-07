@@ -7,7 +7,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 #import "Mac_CocoaWindow.h"
 #include "Mac_LoadingOverlay.h"
 #include "Mac_Window.h"
@@ -17,21 +17,23 @@ extern bool gReattachLoadingOverlay;
 
 @implementation AprilCocoaWindow
 
-- (void)timerEvent:(NSTimer *)t
+- (void)timerEvent:(NSTimer*) t
 {
 	if (april::window) april::window->updateOneFrame();
-    //[self setNeedsDisplay:YES];
 }
 
-- (void)windowDidBecomeMain:(NSNotification *)notification
+- (void)configure
 {
-    mTimer = [NSTimer timerWithTimeInterval:1/60.0f
-									 target:self
-								   selector:@selector(timerEvent:)
-								   userInfo:nil
-									repeats:YES];
-    
-    [[NSRunLoop mainRunLoop] addTimer:mTimer forMode:NSDefaultRunLoopMode];
+	[self setBackgroundColor:[NSColor blackColor]];
+	[self setOpaque:YES];
+	[self setDelegate:self];
+	[self setAcceptsMouseMovedEvents:YES];
+}
+
+- (void)startRenderLoop
+{
+	mTimer = [NSTimer timerWithTimeInterval:1/60.0f target:self selector:@selector(timerEvent:) userInfo:nil repeats:YES];
+	[[NSRunLoop mainRunLoop] addTimer:mTimer forMode:NSDefaultRunLoopMode];
 }
 
 - (BOOL)windowShouldClose:(NSWindow*) sender
@@ -66,6 +68,12 @@ extern bool gReattachLoadingOverlay;
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
 	april::window->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, pos, april::AK_NONE);
 }
+
+- (void)mouseDragged:(NSEvent*) event
+{
+	[self mouseMoved:event];
+}
+
 
 - (void)windowDidResignKey:(NSNotification*) notification
 {

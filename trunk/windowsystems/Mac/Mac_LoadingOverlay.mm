@@ -75,6 +75,7 @@ void updateLoadingOverlay(float k)
 			[mImageView release];
 			mImageView = nil;
 			[mOverlayWindow.parentWindow removeChildWindow:mOverlayWindow];
+			[mOverlayWindow release];
 			mOverlayWindow = nil;
 		}
 		else
