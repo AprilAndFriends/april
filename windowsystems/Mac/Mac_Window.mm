@@ -16,6 +16,8 @@
 #import "Mac_LoadingOverlay.h"
 // declared here instead of as class properties because C++ doesn't play nicely with forward declared objc classes
 
+float getMacOSVersion();
+
 static AprilMacOpenGLView* mView = nil;
 static AprilCocoaWindow* mWindow = nil;
 bool gReattachLoadingOverlay = false;
@@ -37,8 +39,6 @@ namespace april
 		}
         if (mWindow)
 		{
-			[mWindow.delegate release];
-			mWindow.delegate = nil;
 			[mWindow release];
 			mWindow = nil;
 		}
@@ -87,31 +87,63 @@ namespace april
 
 	bool Mac_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
-		NSRect frame = NSMakeRect(0, 0, 1280, 800);
-		NSUInteger styleMask = NSTitledWindowMask | NSMiniaturizableWindowMask;
+		NSRect frame;
+		NSUInteger styleMask;
+		
+		bool lionFullscreen = getMacOSVersion() >= 10.7f;
+		if (fullscreen)
+		{
+			frame = [[NSScreen mainScreen] frame];
+			styleMask = NSBorderlessWindowMask;
+
+			[[NSApplication sharedApplication] setPresentationOptions:
+				 NSFullScreenWindowMask |
+				 NSApplicationPresentationAutoHideMenuBar |
+				 NSApplicationPresentationHideDock |
+				 NSApplicationPresentationDisableMenuBarTransparency];
+		}
+		else
+		{
+			frame = NSMakeRect(0, 0, w, h);
+			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+		}
 		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
-		[mWindow setBackgroundColor:[NSColor blackColor]];
-		[mWindow setDelegate:mWindow];
+		[mWindow configure];
+		if (fullscreen)
+		{
+			[mWindow setLevel:NSMainMenuWindowLevel - 1];
+			[mWindow setHidesOnDeactivate:YES];
+		}
+		else
+		{
+			[mWindow center];
+		}
+		if (lionFullscreen)
+			[mWindow setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
 
-//		[mWindow setContentSize:frame.size];
+		createLoadingOverlay(mWindow);
 
-		createLoadingOverlay(mWindow);		
-		/////
-		[mWindow center];
 		[mWindow makeKeyAndOrderFront:mWindow];
+		[mWindow setOpaque:YES];
 		[mWindow display];
-//        [mWindow setLevel: NSScreenSaverWindowLevel-1];
-
-		// A trick to force the window to display as early as possible while we continue with
-		// initialization
-		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
+		// A trick to force the window to display as early as possible while we continue with initialization
+		if (fullscreen)
+		{
+			if (lionFullscreen)
+			{
+				[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
+				[mWindow toggleFullScreen:nil];
+				[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:2.0]];
+			}
+		}
+		else
+		{
+			[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
+		}
 		mView = [[AprilMacOpenGLView alloc] init];
 		mView.frame = frame;
-//		[mWindow.contentView addSubview: mView];
 		mWindow.contentView = mView;
-	//	[mView addSubview:mImageView];
-
-
+		[mWindow startRenderLoop];
 		return 1;
 	}
 	

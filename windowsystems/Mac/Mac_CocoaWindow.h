@@ -19,7 +19,8 @@
 @private
     NSTimer* mTimer;
 }
+-(void)startRenderLoop;
+-(void)configure;
 @end
-
 
 #endif
