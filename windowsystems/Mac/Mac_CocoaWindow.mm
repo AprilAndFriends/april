@@ -131,6 +131,11 @@ extern bool gReattachLoadingOverlay;
 	}
 }
 
+- (BOOL)canBecomeKeyWindow
+{
+	return YES;
+}
+
 - (BOOL)acceptsFirstResponder
 {
     return YES;
