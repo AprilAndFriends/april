@@ -32,16 +32,17 @@ namespace april
 		bool destroy();
 		
 		void setTitle(chstr title);
-		bool isCursorVisible();
-		void setCursorVisible(bool visible);
 		gvec2 getCursorPosition();
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
 		
 		void updateCursorPosition(gvec2& pos);
-		
+		bool isCursorVisible();
+		void setCursorVisible(bool visible);
+
         void presentFrame();
 		bool updateOneFrame();
+		void terminateMainLoop();
 	protected:
 		bool retainLoadingOverlay;
 	};

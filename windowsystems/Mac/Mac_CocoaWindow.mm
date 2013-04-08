@@ -11,7 +11,7 @@
 #import "Mac_CocoaWindow.h"
 #include "Mac_LoadingOverlay.h"
 #include "Mac_Window.h"
-#include "Keys.h"
+#include "Mac_Keyboard.h"
 
 extern bool gReattachLoadingOverlay;
 
@@ -24,6 +24,8 @@ extern bool gReattachLoadingOverlay;
 
 - (void)configure
 {
+	april::initMacKeyMap();
+	
 	[self setBackgroundColor:[NSColor blackColor]];
 	[self setOpaque:YES];
 	[self setDelegate:self];
@@ -75,6 +77,51 @@ extern bool gReattachLoadingOverlay;
 }
 
 
+- (void)onKeyDown:(unsigned int) keyCode unicode:(NSString*) unicode
+{
+	unsigned int unichr = 0;
+	if ([unicode length] > 0)
+	{
+		unichr = [unicode characterAtIndex:0];
+	}
+	april::window->handleKeyEvent(april::Window::AKEYEVT_DOWN, april::getAprilMacKeyCode(keyCode), unichr);
+}
+
+- (void)onKeyUp:(unsigned int) keyCode
+{
+	april::window->handleKeyEvent(april::Window::AKEYEVT_UP, april::getAprilMacKeyCode(keyCode), 0);
+}
+
+- (void)keyDown:(NSEvent*) event
+{
+	[self onKeyDown:[event keyCode] unicode:[event characters]];
+	[super keyDown:event];
+}
+
+- (void)keyUp:(NSEvent*) event
+{
+	[self onKeyUp:[event keyCode]];
+	[super keyUp:event];
+}
+
+- (void)scrollWheel:(NSEvent*) event
+{
+	gvec2 vec([event deltaX], -[event deltaY]);
+	april::window->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL, vec, april::AK_NONE);
+}
+
+- (void)flagsChanged:(NSEvent*) event // special NSWindow function for modifier keys
+{
+    if ([event modifierFlags] > (1 << 15)) // DOWN
+    {
+		onKeyDown:[event keyCode];
+    }
+    else
+    {
+		onKeyUp:[event keyCode];
+    }
+}
+
 - (void)windowDidResignKey:(NSNotification*) notification
 {
 	if (gReattachLoadingOverlay)
@@ -82,6 +129,11 @@ extern bool gReattachLoadingOverlay;
 		gReattachLoadingOverlay = false;
 		reattachLoadingOverlay();
 	}
+}
+
+- (BOOL)acceptsFirstResponder
+{
+    return YES;
 }
 
 - (void) dealloc

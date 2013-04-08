@@ -16,9 +16,14 @@
 
 @interface AprilMacOpenGLView : NSOpenGLView
 {
-
+	bool mUseBlankCursor;
+	NSCursor* mBlankCursor;
 }
 - (void) presentFrame;
+- (void) setDefaultCursor;
+- (void) setBlankCursor;
+- (BOOL) isBlankCursorUsed;
+
 @end
 
 #endif
