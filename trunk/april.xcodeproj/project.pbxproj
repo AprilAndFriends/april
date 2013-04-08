@@ -58,6 +58,7 @@
 		D10950BA162073A500C5B181 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF818158737A000D31573 /* Platform.cpp */; };
 		D10950BB162073A500C5B181 /* RamTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF819158737A000D31573 /* RamTexture.cpp */; };
 		D10950BC162073A500C5B181 /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
+		D11A21631712CF9A00BA9DA8 /* Mac_Keyboard.mm in Sources */ = {isa = PBXBuildFile; fileRef = D11A21621712CF9A00BA9DA8 /* Mac_Keyboard.mm */; };
 		D14BF80B15872B2600D31573 /* SDL_Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF80915872B2600D31573 /* SDL_Window.cpp */; };
 		D14BF80F15872B3700D31573 /* iOS_Window.mm in Sources */ = {isa = PBXBuildFile; fileRef = D14BF80E15872B3700D31573 /* iOS_Window.mm */; };
 		D14BF81215872B4000D31573 /* iOS_main.mm in Sources */ = {isa = PBXBuildFile; fileRef = D14BF81015872B4000D31573 /* iOS_main.mm */; };
@@ -252,6 +253,8 @@
 		C9E6098D1505191800EB077F /* april.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = april.h; path = include/april/april.h; sourceTree = "<group>"; };
 		C9E6098E1505191800EB077F /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = include/april/Platform.h; sourceTree = "<group>"; };
 		D10950C4162073A500C5B181 /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D11A21621712CF9A00BA9DA8 /* Mac_Keyboard.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_Keyboard.mm; path = windowsystems/Mac/Mac_Keyboard.mm; sourceTree = "<group>"; };
+		D11A21641712D01500BA9DA8 /* Mac_Keyboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Mac_Keyboard.h; path = windowsystems/Mac/Mac_Keyboard.h; sourceTree = "<group>"; };
 		D14BF80915872B2600D31573 /* SDL_Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDL_Window.cpp; path = windowsystems/SDL/SDL_Window.cpp; sourceTree = "<group>"; };
 		D14BF80A15872B2600D31573 /* SDL_Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDL_Window.h; path = windowsystems/SDL/SDL_Window.h; sourceTree = "<group>"; };
 		D14BF80D15872B3700D31573 /* iOS_Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iOS_Window.h; path = windowsystems/iOS/iOS_Window.h; sourceTree = "<group>"; };
@@ -628,6 +631,8 @@
 			children = (
 				D1962A83170EC6FC0072A146 /* Mac_OpenGLView.h */,
 				D1962A84170EC6FC0072A146 /* Mac_OpenGLView.mm */,
+				D11A21641712D01500BA9DA8 /* Mac_Keyboard.h */,
+				D11A21621712CF9A00BA9DA8 /* Mac_Keyboard.mm */,
 				D1962A87170EC7A20072A146 /* Mac_CocoaWindow.h */,
 				D1962A88170EC7A20072A146 /* Mac_CocoaWindow.mm */,
 				D1962A8B170ECC400072A146 /* Mac_LoadingOverlay.h */,
@@ -1190,6 +1195,7 @@
 				D1962A86170EC6FC0072A146 /* Mac_OpenGLView.mm in Sources */,
 				D1962A8A170EC7A20072A146 /* Mac_CocoaWindow.mm in Sources */,
 				D1962A8E170ECC400072A146 /* Mac_LoadingOverlay.mm in Sources */,
+				D11A21631712CF9A00BA9DA8 /* Mac_Keyboard.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

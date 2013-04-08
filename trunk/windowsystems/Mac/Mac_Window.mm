@@ -84,7 +84,21 @@ namespace april
 	{
 		this->cursorPosition = pos;
 	}
+	
+	bool Mac_Window::isCursorVisible()
+	{
+		return ![mView isBlankCursorUsed];
+	}
+	
+	void Mac_Window::setCursorVisible(bool visible)
+	{
+		if (visible != [mView isBlankCursorUsed]) return;
 
+		[mWindow invalidateCursorRectsForView:mView];
+		if (visible) [mView setDefaultCursor];
+		else         [mView setBlankCursor];
+	}
+	
 	bool Mac_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
 		NSRect frame;
@@ -108,6 +122,7 @@ namespace april
 			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
 		}
 		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
+		setTitle(title);
 		[mWindow configure];
 		if (fullscreen)
 		{
@@ -157,17 +172,8 @@ namespace april
 	
 	void Mac_Window::setTitle(chstr title)
 	{
-	
-	}
-	
-	bool Mac_Window::isCursorVisible()
-	{
-		return 1;
-	}
-	
-	void Mac_Window::setCursorVisible(bool visible)
-	{
-		
+		Window::setTitle(title);
+		[mWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
 	}
 	
 	bool Mac_Window::updateOneFrame()
@@ -186,4 +192,9 @@ namespace april
     {
         [mView presentFrame];
     }
+	
+	void Mac_Window::terminateMainLoop()
+	{
+		[[NSApplication sharedApplication] terminate:nil];
+	}
 }

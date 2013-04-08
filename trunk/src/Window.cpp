@@ -266,7 +266,7 @@ namespace april
 	void Window::handleKeyOnlyEvent(KeyEventType type, Key keyCode)
 	{
 		if (keyCode == AK_UNKNOWN)
-		{	
+		{
 			keyCode = AK_NONE;
 		}
 		if (this->keyboardDelegate != NULL && keyCode != AK_NONE)

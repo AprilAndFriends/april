@@ -8,20 +8,17 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 /// 
 /// @section DESCRIPTION
+/// 
 
-#ifndef APRIL_MAC_COCOA_WINDOW_H
-#define APRIL_MAC_COCOA_WINDOW_H
+#ifndef APRIL_MAC_KEYBOARD_H
+#define APRIL_MAC_KEYBOARD_H
 
-#import <AppKit/NSWindow.h>
 #include "Keys.h"
 
-@interface AprilCocoaWindow : NSWindow<NSWindowDelegate>
+namespace april
 {
-@private
-    NSTimer* mTimer;
+	Key getAprilMacKeyCode(unsigned int macKeyCode);
+	void initMacKeyMap();
 }
--(void)startRenderLoop;
--(void)configure;
-@end
 
 #endif

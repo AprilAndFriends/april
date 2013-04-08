@@ -36,17 +36,18 @@ int gAprilShouldInvokeQuitCallback = 0;
 #ifdef _SDL
 	gAprilShouldInvokeQuitCallback = 1;
 #else
-	[super terminate:sender];
-	/*
-	if (april::window->handleQuitRequest(true))
+	if (sender == nil) // called from Window::terminateMainLoop()
+	{
+		[super terminate:sender];
+	}
+	else if (april::window->handleQuitRequest(true))
 	{
 		[super terminate:sender];
 	}
 	else
 	{
 		NSLog(@"Aborting application quit request per app's request.");
-	}
-	*/
+	}	
 #endif
 }
 
