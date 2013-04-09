@@ -24,6 +24,8 @@ void createLoadingOverlay(NSWindow* parent)
 		
 		frame.origin = windowFrame.origin;
 		mOverlayWindow = [[NSWindow alloc] initWithContentRect:frame styleMask:NSBorderlessWindowMask backing: NSBackingStoreBuffered defer:false];
+		[mOverlayWindow setBackgroundColor:[NSColor blackColor]];
+		[mOverlayWindow setOpaque:YES];
 
 		NSImage* image = [[NSImage alloc] initWithContentsOfFile:path];
 		NSSize imgSize = image.size;
