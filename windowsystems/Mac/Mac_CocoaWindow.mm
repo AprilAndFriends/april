@@ -129,6 +129,17 @@ extern bool gReattachLoadingOverlay;
 		gReattachLoadingOverlay = false;
 		reattachLoadingOverlay();
 	}
+	else april::window->handleFocusChangeEvent(0);
+}
+
+- (void)windowDidBecomeKey:(NSNotification*) notification
+{
+	if (!gReattachLoadingOverlay)
+	{
+		static bool first = 0;
+		if (!first) first = 1; // ignore initialization time focus gain
+		else april::window->handleFocusChangeEvent(1);
+	}
 }
 
 - (BOOL)canBecomeKeyWindow

@@ -111,10 +111,10 @@ namespace april
 			styleMask = NSBorderlessWindowMask;
 
 			[[NSApplication sharedApplication] setPresentationOptions:
-				 NSFullScreenWindowMask |
-				 NSApplicationPresentationAutoHideMenuBar |
-				 NSApplicationPresentationHideDock |
-				 NSApplicationPresentationDisableMenuBarTransparency];
+			 NSFullScreenWindowMask |
+			 NSApplicationPresentationAutoHideMenuBar |
+			 NSApplicationPresentationHideDock |
+			 NSApplicationPresentationDisableMenuBarTransparency];
 		}
 		else
 		{
@@ -122,12 +122,13 @@ namespace april
 			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
 		}
 		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
-		setTitle(title);
 		[mWindow configure];
+		setTitle(title);
+		createLoadingOverlay(mWindow);
+
 		if (fullscreen)
 		{
-			[mWindow setLevel:NSMainMenuWindowLevel - 1];
-			[mWindow setHidesOnDeactivate:YES];
+
 		}
 		else
 		{
@@ -136,23 +137,15 @@ namespace april
 		if (lionFullscreen)
 			[mWindow setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
 
-		createLoadingOverlay(mWindow);
 
 		[mWindow makeKeyAndOrderFront:mWindow];
 		[mWindow setOpaque:YES];
 		[mWindow display];
 		// A trick to force the window to display as early as possible while we continue with initialization
-		if (fullscreen)
+		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
+		if (fullscreen && lionFullscreen)
 		{
-			if (lionFullscreen)
-			{
-				[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
-				[mWindow toggleFullScreen:nil];
-				[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:2.0]];
-			}
-		}
-		else
-		{
+			[mWindow toggleFullScreen:nil];
 			[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
 		}
 		mView = [[AprilMacOpenGLView alloc] init];
