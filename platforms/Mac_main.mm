@@ -62,13 +62,16 @@ static NSString* getApplicationName()
 	NSString* appName = 0;
 	
 	/* Determine the application name */
-	dict = (NSDictionary*) CFBundleGetInfoDictionary(CFBundleGetMainBundle());
-	if (dict)
-		appName = [dict objectForKey: @"CFBundleName"];
-	
-	if (![appName length])
-		appName = [[NSProcessInfo processInfo] processName];
-	
+	appName = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
+	if (!appName || [appName length] == 0)
+	{
+		dict = (NSDictionary*) CFBundleGetInfoDictionary(CFBundleGetMainBundle());
+		if (dict)
+			appName = [dict objectForKey: @"CFBundleName"];
+		
+		if (![appName length])
+			appName = [[NSProcessInfo processInfo] processName];
+	}
 	return appName;
 }
 
@@ -100,6 +103,12 @@ static NSString* getApplicationName()
 
 @end
 
+static NSString* getLocalizedString(NSString* key, NSString* fallback)
+{
+	NSString* s = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:key];
+	return (s == nil || [s length] == 0) ? fallback : s;
+}
+
 static void setApplicationMenu()
 {
 	/* warning: this code is very odd */
@@ -112,22 +121,24 @@ static void setApplicationMenu()
 	appleMenu = [[NSMenu alloc] initWithTitle:@""];
 	
 	/* Add menu items */
-	title = [@"About " stringByAppendingString:appName];
+	title = [getLocalizedString(@"MenuAbout", @"About ") stringByAppendingString:appName];
 	[appleMenu addItemWithTitle:title action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""];
 	
 	[appleMenu addItem:[NSMenuItem separatorItem]];
 	
-	title = [@"Hide " stringByAppendingString:appName];
+	title = [getLocalizedString(@"MenuHide", @"Hide ") stringByAppendingString:appName];
 	[appleMenu addItemWithTitle:title action:@selector(hide:) keyEquivalent:@"h"];
 	
-	menuItem = (NSMenuItem *)[appleMenu addItemWithTitle:@"Hide Others" action:@selector(hideOtherApplications:) keyEquivalent:@"h"];
+	title = getLocalizedString(@"MenuHideOthers", @"Hide Others");
+	menuItem = (NSMenuItem *)[appleMenu addItemWithTitle:title action:@selector(hideOtherApplications:) keyEquivalent:@"h"];
 	[menuItem setKeyEquivalentModifierMask:(NSAlternateKeyMask|NSCommandKeyMask)];
 	
-	[appleMenu addItemWithTitle:@"Show All" action:@selector(unhideAllApplications:) keyEquivalent:@""];
+	title = getLocalizedString(@"MenuShowAll", @"Show All");
+	[appleMenu addItemWithTitle:title action:@selector(unhideAllApplications:) keyEquivalent:@""];
 	
 	[appleMenu addItem:[NSMenuItem separatorItem]];
 	
-	title = [@"Quit " stringByAppendingString:appName];
+	title = [getLocalizedString(@"MenuQuit", @"Quit ") stringByAppendingString:appName];
 	[appleMenu addItemWithTitle:title action:@selector(terminate:) keyEquivalent:@"q"];
 	
 	
@@ -142,33 +153,6 @@ static void setApplicationMenu()
 	/* Finally give up our references to the objects */
 	[appleMenu release];
 	[menuItem release];
-}
-
-/* Create a window menu */
-static void setupWindowMenu()
-{
-	NSMenu*    windowMenu;
-	NSMenuItem* windowMenuItem;
-	NSMenuItem* menuItem;
-	
-	windowMenu = [[NSMenu alloc] initWithTitle:@"Window"];
-	
-	/* "Minimize" item */
-	menuItem = [[NSMenuItem alloc] initWithTitle:@"Minimize" action:@selector(performMiniaturize:) keyEquivalent:@"m"];
-	[windowMenu addItem:menuItem];
-	[menuItem release];
-	
-	/* Put menu into the menubar */
-	windowMenuItem = [[NSMenuItem alloc] initWithTitle:@"Window" action:nil keyEquivalent:@""];
-	[windowMenuItem setSubmenu:windowMenu];
-	[[NSApp mainMenu] addItem:windowMenuItem];
-	
-	/* Tell the application object that this is now the window menu */
-	[NSApp setWindowsMenu:windowMenu];
-	
-	/* Finally give up our references to the objects */
-	[windowMenu release];
-	[windowMenuItem release];
 }
 
 /* Replacement for NSApplicationMain */
@@ -194,7 +178,6 @@ static void CustomApplicationMain(int argc, char **argv)
 	/* Set up the menubar */
 	[NSApp setMainMenu:[[NSMenu alloc] init]];
 	setApplicationMenu();
-	setupWindowMenu();
 	
 	/* Create AprilAppDelegate and make it the app delegate */
 	appDelegate = [[AprilAppDelegate alloc] init];
