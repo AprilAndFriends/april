@@ -46,10 +46,14 @@ namespace april
 
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
+
+		void handleFocusChangeEvent(bool focused);
+		void handleActivityChangeEvent(bool active);
 		
 	protected:
 		int width;
 		int height;
+		bool forcedFocus;
 		
 	};
 
