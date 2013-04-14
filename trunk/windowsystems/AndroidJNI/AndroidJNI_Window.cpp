@@ -31,7 +31,8 @@ namespace april
 {
 	extern JavaVM* javaVM;
 
-	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0)
+	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0),
+		forcedFocus(false)
 	{
 		this->name = APRIL_WS_ANDROIDJNI;
 	}
@@ -50,6 +51,7 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->inputMode = TOUCH;
+		this->forcedFocus = false;
 		return true;
 	}
 	
@@ -102,6 +104,30 @@ namespace april
 		{
 			this->systemDelegate->onVirtualKeyboardVisibilityChanged(false);
 		}
+	}
+
+	void AndroidJNI_Window::handleActivityChangeEvent(bool active)
+	{
+		if (!active)
+		{
+			if (this->focused)
+			{
+				this->forcedFocus = true;
+				Window::handleFocusChangeEvent(false);
+			}
+		}
+		else if (this->forcedFocus)
+		{
+			// only return focus if previously lost focus through acitvity state change
+			this->forcedFocus = false;
+			Window::handleFocusChangeEvent(true);
+		}
+	}
+
+	void AndroidJNI_Window::handleFocusChangeEvent(bool focused)
+	{
+		this->forcedFocus = false;
+		Window::handleFocusChangeEvent(focused);
 	}
 
 }

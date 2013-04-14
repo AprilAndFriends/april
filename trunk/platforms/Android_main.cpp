@@ -31,6 +31,11 @@
 	{ \
 		april::window->methodCall; \
 	}
+#define PROTECTED_ANDROID_JNI_WINDOW_CALL(methodCall) \
+	if (april::window != NULL) \
+	{ \
+		((april::AndroidJNI_Window*)april::window)->methodCall; \
+	}
 #define PROTECTED_RENDERSYS_CALL(methodCall) \
 	if (april::rendersys != NULL) \
 	{ \
@@ -138,11 +143,7 @@ namespace april
 	{
 		bool focused = (jFocused != JNI_FALSE);
 		hlog::write(april::logTag, "onWindowFocusChanged(" + hstr(focused) + ")");
-		if (focused)
-		{
-			// only TRUE is propagated as FALSE is already handled by onPause()
-			PROTECTED_WINDOW_CALL(handleFocusChangeEvent(true));
-		}
+		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(focused));
 	}
 	
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
@@ -170,13 +171,13 @@ namespace april
 	void JNICALL _JNI_activityOnResume(JNIEnv* env, jclass classe)
 	{
 		hlog::write(april::logTag, "Android Activity::onResume()");
+		PROTECTED_ANDROID_JNI_WINDOW_CALL(handleActivityChangeEvent(true));
 	}
 	
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
 		hlog::write(april::logTag, "Android Activity::onPause()");
-		// has to be here because of a problem on certain devices where audio volume change window takes away focus
-		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(false));
+		PROTECTED_ANDROID_JNI_WINDOW_CALL(handleActivityChangeEvent(false));
 		PROTECTED_RENDERSYS_CALL(unloadTextures());
 	}
 	

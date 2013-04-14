@@ -135,7 +135,7 @@ namespace april
 		void setInputMode(InputMode value);
 		gvec2 getSize();
 		float getAspectRatio();
-        
+		
 		HL_DEFINE_GETSET2(hmap, Key, Button, controllerEmulationKeys, ControllerEmulationKeys);
 
 		// callbacks
