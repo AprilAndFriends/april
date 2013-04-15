@@ -114,17 +114,11 @@ namespace april
 		{
 			frame = [[NSScreen mainScreen] frame];
 			styleMask = NSBorderlessWindowMask;
-
-			[[NSApplication sharedApplication] setPresentationOptions:
-			 NSFullScreenWindowMask |
-			 NSApplicationPresentationAutoHideMenuBar |
-			 NSApplicationPresentationHideDock |
-			 NSApplicationPresentationDisableMenuBarTransparency];
 		}
 		else
 		{
 			frame = NSMakeRect(0, 0, w, h);
-			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;// | NSResizableWindowMask;
 		}
 		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
 		[mWindow configure];
@@ -133,11 +127,14 @@ namespace april
 
 		if (fullscreen)
 		{
-
+			float w = frame.size.width * 2.0f / 3.0f, h = frame.size.height * 2.0f / 3.0f;
+			NSRect wnd_frame = NSMakeRect(frame.origin.x + (frame.size.width - w) / 2.0f, frame.origin.y + (frame.size.height - h) / 2.0f, w, h);
+			mWindow->mWindowedRect = wnd_frame;
 		}
 		else
 		{
 			[mWindow center];
+			mWindow->mWindowedRect = mWindow.frame;
 		}
 		if (lionFullscreen)
 			[mWindow setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
@@ -147,14 +144,21 @@ namespace april
 		[mWindow display];
 		// A trick to force the window to display as early as possible while we continue with initialization
 		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
-		if (fullscreen && lionFullscreen)
+		if (fullscreen)
 		{
-			[mWindow toggleFullScreen:nil];
-			[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
+			if (lionFullscreen)
+			{
+				[mWindow toggleFullScreen:nil];
+				[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
+			}
+			else
+			{
+				[mWindow enterFullScreen];
+			}
 		}
 		mView = [[AprilMacOpenGLView alloc] init];
 		mView.frame = frame;
-		mWindow.contentView = mView;
+		[mWindow setOpenGLView: mView];
 		[mWindow startRenderLoop];
 		return 1;
 	}
@@ -162,7 +166,11 @@ namespace april
 	bool Mac_Window::destroy()
 	{
         if (mView)   { [mView release];   mView   = nil; }
-        if (mWindow) { [mWindow release]; mWindow = nil; }
+        if (mWindow)
+		{
+			[mWindow release];
+			mWindow = nil;
+		}
 
 		return 1;
 	}

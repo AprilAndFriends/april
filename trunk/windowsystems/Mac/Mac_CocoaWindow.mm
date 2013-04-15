@@ -9,17 +9,19 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Mac_CocoaWindow.h"
+#include "SystemDelegate.h"
 #include "Mac_LoadingOverlay.h"
 #include "Mac_Window.h"
 #include "Mac_Keyboard.h"
 
+float getMacOSVersion();
 extern bool gReattachLoadingOverlay;
 
 @implementation AprilCocoaWindow
 
 - (void)timerEvent:(NSTimer*) t
 {
-	[self.contentView setNeedsDisplay:YES];
+	[mView setNeedsDisplay:YES];
 }
 
 - (void)configure
@@ -51,6 +53,71 @@ extern bool gReattachLoadingOverlay;
 		NSLog(@"Aborting window close request per app's request.");
 	}
 	return NO;
+}
+
+- (void)onWindowSizeChange
+{
+	april::SystemDelegate* delegate = april::window->getSystemDelegate();
+	NSSize size = [mView bounds].size;
+	[mView updateGLViewport];
+	if (!april::window->isFullscreen())
+		mWindowedRect = [self frame];
+	
+	if (delegate)
+	{
+		delegate->onWindowSizeChanged(size.width, size.height, april::Window::ADEVICEORIENTATION_NONE);
+	}
+	[mView setNeedsDisplay:YES];
+}
+
+- (void)windowDidResize:(NSNotification*) notification
+{
+	[self onWindowSizeChange];
+}
+
+- (void)enterFullScreen
+{
+	april::window->setFullscreen(1);
+	NSRect prevFrame = [self frame];
+	[self setStyleMask:NSBorderlessWindowMask];
+	[self setFrame: [[NSScreen mainScreen] frame] display:YES];
+	[[NSApplication sharedApplication] setPresentationOptions: NSFullScreenWindowMask | NSApplicationPresentationAutoHideMenuBar | NSApplicationPresentationHideDock | NSApplicationPresentationDisableMenuBarTransparency];
+	if (!NSEqualRects(prevFrame, [self frame]))
+	{
+		[self onWindowSizeChange];
+	}
+}
+
+- (void)windowWillEnterFullScreen:(NSNotification*) notification
+{
+	[self enterFullScreen]; // this gets called on 10.7+, while < 10.7 call enterFullScreen directly
+}
+
+- (void)exitFullScreen
+{
+	NSRect prevFrame = [self frame];
+	[[NSApplication sharedApplication] setPresentationOptions: NSApplicationPresentationDefault];
+	[self setStyleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask];
+	[self setFrame:mWindowedRect display:YES];
+	
+	if (!NSEqualRects(prevFrame, [self frame]))
+	{
+		[self onWindowSizeChange];
+	}
+	april::window->setFullscreen(0);
+}
+
+- (void)windowWillExitFullScreen:(NSNotification*) notification
+{
+	[self setStyleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask];
+}
+
+- (void)windowDidExitFullScreen:(NSNotification*) notification
+{
+	[[NSApplication sharedApplication] setPresentationOptions: NSApplicationPresentationDefault];
+
+	[self setStyleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask];
+	[self setFrame:mWindowedRect display:YES];
 }
 
 - (gvec2)transformCocoaPoint:(NSPoint) point
@@ -115,14 +182,33 @@ extern bool gReattachLoadingOverlay;
 
 - (void)keyDown:(NSEvent*) event
 {
-	[self onKeyDown:[self processKeyCode:event] unicode:[event characters]];
 	[super keyDown:event];
+	if (event.modifierFlags & NSCommandKeyMask)
+	{
+		NSString* s = [event characters];
+		if ([s isEqualTo:@"f"]) // fullscreen toggle
+		{
+			if (getMacOSVersion() >= 10.7f)
+			{
+				[self toggleFullScreen:self];
+			}
+			else
+			{
+				if (april::window->isFullscreen())
+					[self exitFullScreen];
+				else
+					[self enterFullScreen];
+			}
+			return;
+		}
+	}
+	[self onKeyDown:[self processKeyCode:event] unicode:[event characters]];
 }
 
 - (void)keyUp:(NSEvent*) event
 {
-	[self onKeyUp:[self processKeyCode:event]];
 	[super keyUp:event];
+	[self onKeyUp:[self processKeyCode:event]];
 }
 
 - (void)scrollWheel:(NSEvent*) event
@@ -171,6 +257,12 @@ extern bool gReattachLoadingOverlay;
 - (BOOL)acceptsFirstResponder
 {
     return YES;
+}
+
+- (void)setOpenGLView:(AprilMacOpenGLView*) view
+{
+	mView = view;
+	self.contentView = view;
 }
 
 - (void) dealloc

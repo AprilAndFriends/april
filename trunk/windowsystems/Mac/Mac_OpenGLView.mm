@@ -59,6 +59,11 @@ float getMacOSVersion();
 	return self;
 }
 
+- (void)updateGLViewport
+{
+	glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
+}
+
 - (void)drawRect:(NSRect)dirtyRect
 {
 	NSOpenGLContext* context = [self openGLContext];
