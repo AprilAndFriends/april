@@ -7,8 +7,12 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 #include <Cocoa/Cocoa.h>
-#import "Mac_OpenGLView.h"
+#include <hltypes/hlog.h>
+#include "april.h"
 #include "Window.h"
+#import "Mac_OpenGLView.h"
+
+float getMacOSVersion();
 
 @implementation AprilMacOpenGLView
 
@@ -22,7 +26,7 @@
 	[image addRepresentation: bmp];
 	[image lockFocus];
 	
-	[[NSColor colorWithSRGBRed:0 green:0 blue:0 alpha:0] set];
+	[[[NSColor blackColor] colorWithAlphaComponent:0] set];
 	NSRectFill(NSMakeRect(0, 0, 1, 1));
 	
 	[image unlockFocus];
@@ -31,20 +35,22 @@
 	[bmp release];
 	[image release];
 
-    NSOpenGLPixelFormatAttribute attrs[] =
-    {
-		NSOpenGLPFAAccelerated,
-		NSOpenGLPFANoRecovery,
-		NSOpenGLPFADoubleBuffer,
-		NSOpenGLPFADepthSize, 24,
-		0
-    };
-	
-    NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
-	
-    if (!pf)
-		NSLog(@"No OpenGL pixel format");
-	
+	// set up pixel format
+	int n = 0;
+	NSOpenGLPixelFormatAttribute a[64] = {0};
+	a[n++] = NSOpenGLPFANoRecovery;
+	a[n++] = NSOpenGLPFADoubleBuffer;
+	a[n++] = NSOpenGLPFADepthSize; a[n++] = (NSOpenGLPixelFormatAttribute) 16;
+	if (getMacOSVersion() >= 10.7f)
+	{
+		a[n++] = kCGLPFAOpenGLProfile; a[n++] = kCGLOGLPVersion_Legacy;
+	}
+	a[n++] = 0;
+
+    NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:a];
+
+    if (!pf) hlog::error(april::logTag, "Unable to create requested OpenGL pixel format");
+
     if (self = [super initWithFrame:frameRect pixelFormat:[pf autorelease]])
 	{
 		[self initGL];
@@ -53,19 +59,27 @@
 	return self;
 }
 
+- (void)drawRect:(NSRect)dirtyRect
+{
+	NSOpenGLContext* context = [self openGLContext];
+//	[context clearDrawable];
+//	[context setView:self];
+	[context makeCurrentContext];
+	if (april::window) april::window->updateOneFrame();
+}
+
 - (void) initGL
 {
-	[[self openGLContext] makeCurrentContext];
-	
+	NSOpenGLContext* context = [self openGLContext];
+	[context makeCurrentContext];
 	// Synchronize buffer swaps with vertical refresh rate
 	GLint swapInt = 1;
-	[[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
+	[context setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
 }
 
 - (void) presentFrame
 {
 	[[self openGLContext] makeCurrentContext];
-	    
 	[[self openGLContext] flushBuffer];
 }
 

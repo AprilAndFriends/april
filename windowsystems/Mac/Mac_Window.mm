@@ -101,6 +101,11 @@ namespace april
 	
 	bool Mac_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
 	{
+		if (!Window::create(w, h, fullscreen, title, options))
+		{
+			return false;
+		}
+
 		NSRect frame;
 		NSUInteger styleMask;
 		
@@ -136,7 +141,6 @@ namespace april
 		}
 		if (lionFullscreen)
 			[mWindow setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
-
 
 		[mWindow makeKeyAndOrderFront:mWindow];
 		[mWindow setOpaque:YES];

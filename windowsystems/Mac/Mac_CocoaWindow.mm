@@ -19,7 +19,7 @@ extern bool gReattachLoadingOverlay;
 
 - (void)timerEvent:(NSTimer*) t
 {
-	if (april::window) april::window->updateOneFrame();
+	[self.contentView setNeedsDisplay:YES];
 }
 
 - (void)configure
@@ -34,13 +34,23 @@ extern bool gReattachLoadingOverlay;
 
 - (void)startRenderLoop
 {
-	mTimer = [NSTimer timerWithTimeInterval:1/60.0f target:self selector:@selector(timerEvent:) userInfo:nil repeats:YES];
-	[[NSRunLoop mainRunLoop] addTimer:mTimer forMode:NSDefaultRunLoopMode];
+	mTimer = [NSTimer timerWithTimeInterval:0.00000001f target:self selector:@selector(timerEvent:) userInfo:nil repeats:YES];
+	[[NSRunLoop currentRunLoop] addTimer:mTimer forMode:NSDefaultRunLoopMode];
+	[[NSRunLoop currentRunLoop] addTimer:mTimer forMode:NSEventTrackingRunLoopMode];
 }
 
 - (BOOL)windowShouldClose:(NSWindow*) sender
 {
-	return YES;
+	if (april::window->handleQuitRequest(true))
+	{
+		[NSApp terminate:nil];
+		return YES;
+	}
+	else
+	{
+		NSLog(@"Aborting window close request per app's request.");
+	}
+	return NO;
 }
 
 - (gvec2)transformCocoaPoint:(NSPoint) point
@@ -84,23 +94,34 @@ extern bool gReattachLoadingOverlay;
 	{
 		unichr = [unicode characterAtIndex:0];
 	}
-	april::window->handleKeyEvent(april::Window::AKEYEVT_DOWN, april::getAprilMacKeyCode(keyCode), unichr);
+	april::window->handleKeyEvent(april::Window::AKEYEVT_DOWN, (april::Key) keyCode, unichr);
 }
 
 - (void)onKeyUp:(unsigned int) keyCode
 {
-	april::window->handleKeyEvent(april::Window::AKEYEVT_UP, april::getAprilMacKeyCode(keyCode), 0);
+	april::window->handleKeyEvent(april::Window::AKEYEVT_UP, (april::Key) keyCode, 0);
+}
+
+- (unsigned int) processKeyCode:(NSEvent*) event
+{
+	NSString* chr = [event characters];
+	if ([chr length] == 1)
+	{
+		unichar c = [chr characterAtIndex:0];
+		if (c >= 'a' && c <= 'z') return toupper(c);
+	}
+	return april::getAprilMacKeyCode([event keyCode]);
 }
 
 - (void)keyDown:(NSEvent*) event
 {
-	[self onKeyDown:[event keyCode] unicode:[event characters]];
+	[self onKeyDown:[self processKeyCode:event] unicode:[event characters]];
 	[super keyDown:event];
 }
 
 - (void)keyUp:(NSEvent*) event
 {
-	[self onKeyUp:[event keyCode]];
+	[self onKeyUp:[self processKeyCode:event]];
 	[super keyUp:event];
 }
 
@@ -114,11 +135,11 @@ extern bool gReattachLoadingOverlay;
 {
     if ([event modifierFlags] > (1 << 15)) // DOWN
     {
-		onKeyDown:[event keyCode];
+		onKeyDown:april::getAprilMacKeyCode([event keyCode]);
     }
     else
     {
-		onKeyUp:[event keyCode];
+		onKeyUp:april::getAprilMacKeyCode([event keyCode]);
     }
 }
 
