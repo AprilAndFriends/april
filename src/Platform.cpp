@@ -29,8 +29,11 @@ namespace april
 		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
 		{
 			// TODO - move somewhere else, this file should be completely platform independent
-#ifndef _IOS
+#if !defined(_IOS) && !defined(_COCOA)
 			window->terminateMainLoop();
+			window->destroy();
+#endif
+#if defined(_COCOA)
 			window->destroy();
 #endif
 			passedStyle = (MessageBoxStyle)(passedStyle | AMSGSTYLE_MODAL);

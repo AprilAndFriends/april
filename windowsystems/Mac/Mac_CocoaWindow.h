@@ -13,15 +13,23 @@
 #define APRIL_MAC_COCOA_WINDOW_H
 
 #import <AppKit/NSWindow.h>
+#import "Mac_OpenGLView.h"
 #include "Keys.h"
 
 @interface AprilCocoaWindow : NSWindow<NSWindowDelegate>
 {
+@public
+	NSRect mWindowedRect;
 @private
     NSTimer* mTimer;
+	AprilMacOpenGLView* mView;
 }
--(void)startRenderLoop;
--(void)configure;
+- (void)startRenderLoop;
+- (void)configure;
+- (void)enterFullScreen;
+- (void)exitFullScreen;
+- (void)setOpenGLView:(AprilMacOpenGLView*) view;
+- (void)onWindowSizeChange;
 @end
 
 #endif

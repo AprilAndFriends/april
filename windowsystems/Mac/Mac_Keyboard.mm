@@ -146,7 +146,7 @@ namespace april
 		if (gMacKeyMap.has_key(macKeyCode)) return gMacKeyMap[macKeyCode];
 
 #ifdef _DEBUG
-		NSLog(@"Unknown key code: %ud", macKeyCode);
+		NSLog(@"Unknown key code: %u", macKeyCode);
 #endif
 		return april::AK_NONE;
 	}
@@ -273,6 +273,6 @@ namespace april
 //		m[kVK_ANSI_KeypadEnter] = AK_;
 //		m[kVK_ANSI_KeypadMinus] = AK_;
 //		m[kVK_ANSI_KeypadEquals] = AK_;
-//		m[kVK_Command] = AK_;
+		m[kVK_Command] = AK_LCOMMAND;
 	}
 }
