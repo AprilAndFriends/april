@@ -53,9 +53,9 @@ namespace april
 			if (length > 0)
 			{
 				info.locale = hstr::from_unicode(locale).lower();
-				if (info.locale.size() > 2)
+				if (info.locale.utf8_size() > 2)
 				{
-					info.locale = info.locale(0, 2);
+					info.locale = info.locale.utf8_substr(0, 2);
 				}
 			}
 		}
