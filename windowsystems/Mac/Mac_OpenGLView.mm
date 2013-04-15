@@ -9,10 +9,8 @@
 #include <Cocoa/Cocoa.h>
 #include <hltypes/hlog.h>
 #include "april.h"
-#include "Window.h"
+#include "Mac_Window.h"
 #import "Mac_OpenGLView.h"
-
-float getMacOSVersion();
 
 @implementation AprilMacOpenGLView
 

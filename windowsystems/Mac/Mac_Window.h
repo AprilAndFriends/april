@@ -43,10 +43,16 @@ namespace april
         void presentFrame();
 		bool updateOneFrame();
 		void terminateMainLoop();
+
+		bool mResizable;
 	protected:
 		bool retainLoadingOverlay;
 	};
 	
 }
+extern april::Mac_Window* aprilWindow;
+
+float getMacOSVersion();
+
 
 #endif
