@@ -35,9 +35,4 @@ namespace april
 		return true;
 	}
 	
-	bool VertexShader::compile(chstr shaderCode) // DEPRECATED
-	{
-		return false;
-	}
-	
 }

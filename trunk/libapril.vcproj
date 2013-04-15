@@ -208,7 +208,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib d3d9.lib d3dx9.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib d3d9.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				GenerateDebugInformation="true"
@@ -282,7 +282,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib d3d9.lib d3dx9.lib winmm.lib"
+				AdditionalDependencies="libhltypes.lib libgtypes.lib libpng.lib libjpeg.lib d3d9.lib winmm.lib"
 				OutputFile="$(OutDir)$(ProjectName).dll"
 				AdditionalLibraryDirectories="..\lib\msvc90;$(SolutionDir)bin\$(PlatformName)"
 				OptimizeReferences="2"

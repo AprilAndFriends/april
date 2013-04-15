@@ -31,8 +31,6 @@ namespace april
 		virtual void setConstantsI(const int* quadVectors, unsigned int quadCount) = 0;
 		virtual void setConstantsF(const float* quadVectors, unsigned int quadCount) = 0;
 
-		DEPRECATED_ATTRIBUTE virtual bool compile(chstr shaderCode);
-
 	protected:
 		bool _loadData(chstr filename, unsigned char** data, long* size);
 
