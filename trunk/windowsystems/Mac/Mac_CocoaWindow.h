@@ -30,6 +30,7 @@
 - (void)exitFullScreen;
 - (void)setOpenGLView:(AprilMacOpenGLView*) view;
 - (void)onWindowSizeChange;
+- (void)setWindowedStyleMask;
 @end
 
 #endif

@@ -59,7 +59,7 @@
 
 - (void)updateGLViewport
 {
-	glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
+	glViewport(0, 0, aprilWindow->getWidth(), aprilWindow->getHeight());
 }
 
 - (void)drawRect:(NSRect)dirtyRect
@@ -68,7 +68,7 @@
 //	[context clearDrawable];
 //	[context setView:self];
 	[context makeCurrentContext];
-	if (april::window) april::window->updateOneFrame();
+	if (april::window) aprilWindow->updateOneFrame();
 }
 
 - (void) initGL

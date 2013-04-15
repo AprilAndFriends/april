@@ -92,15 +92,24 @@ extern bool gReattachLoadingOverlay;
 	[self enterFullScreen]; // this gets called on 10.7+, while < 10.7 call enterFullScreen directly
 }
 
+- (void)setWindowedStyleMask
+{
+	NSUInteger mask;
+	mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+	if (aprilWindow->mResizable) mask |= NSResizableWindowMask;
+	[self setStyleMask:mask];
+	if (getMacOSVersion() >= 10.7f) // workarround for bug in macos
+	{
+		[[self standardWindowButton:NSWindowMiniaturizeButton] setEnabled:YES];
+	}
+}
+
 - (void)exitFullScreen
 {
 	NSRect prevFrame = [self frame];
 	[[NSApplication sharedApplication] setPresentationOptions: NSApplicationPresentationDefault];
 	
-	NSUInteger mask;
-	mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
-	if (aprilWindow) mask |= NSResizableWindowMask;
-	[self setStyleMask:mask];
+	[self setWindowedStyleMask];
 	[self setFrame:mWindowedRect display:YES];
 	
 	if (!NSEqualRects(prevFrame, [self frame]))
@@ -112,14 +121,14 @@ extern bool gReattachLoadingOverlay;
 
 - (void)windowWillExitFullScreen:(NSNotification*) notification
 {
-	[self setStyleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask];
+	[self setWindowedStyleMask];
 }
 
 - (void)windowDidExitFullScreen:(NSNotification*) notification
 {
 	[[NSApplication sharedApplication] setPresentationOptions: NSApplicationPresentationDefault];
 
-	[self setStyleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask];
+	[self setWindowedStyleMask];
 	[self setFrame:mWindowedRect display:YES];
 
 }

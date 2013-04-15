@@ -9,7 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Mac_LoadingOverlay.h"
-#include "Window.h"
+#include "Mac_Window.h"
 
 NSWindow* mOverlayWindow = nil;
 NSImageView* mImageView = nil;
@@ -69,7 +69,7 @@ void updateLoadingOverlay(float k)
 	if (mOverlayWindow)
 	{
 		alpha -= k;
-		if (april::window->getParam("retain_loading_overlay") == "1") alpha = 1.5f;
+		if (aprilWindow->getParam("retain_loading_overlay") == "1") alpha = 1.5f;
 
 		if (alpha < 0)
 		{
