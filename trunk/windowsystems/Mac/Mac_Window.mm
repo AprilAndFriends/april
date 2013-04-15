@@ -16,18 +16,39 @@
 #import "Mac_LoadingOverlay.h"
 // declared here instead of as class properties because C++ doesn't play nicely with forward declared objc classes
 
-float getMacOSVersion();
-
 static AprilMacOpenGLView* mView = nil;
 static AprilCocoaWindow* mWindow = nil;
 bool gReattachLoadingOverlay = false;
+april::Mac_Window* aprilWindow = NULL;
+
+float getMacOSVersion()
+{
+	static float version = 0;
+	if (version == 0)
+	{
+		SInt32 major, minor;
+		if (Gestalt(gestaltSystemVersionMajor, &major) == noErr && Gestalt(gestaltSystemVersionMinor, &minor) == noErr)
+		{
+			version = major + minor / 10.0f;
+		}
+		else version = 10.3f; // just in case. < 10.4 is not supported.
+	}
+	return version;
+}
 
 namespace april
 {
     Mac_Window::Mac_Window() : Window()
     {
+#ifdef _DEBUG
+		this->mResizable = 1;
+#else
+		this->mResizable = 0;
+#endif
 		this->name = APRIL_WS_MAC;
 		this->retainLoadingOverlay = false;
+		
+		aprilWindow = this;
     }
 
     Mac_Window::~Mac_Window()
@@ -118,7 +139,8 @@ namespace april
 		else
 		{
 			frame = NSMakeRect(0, 0, w, h);
-			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;// | NSResizableWindowMask;
+			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+			if (aprilWindow->mResizable) styleMask |= NSResizableWindowMask;
 		}
 		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
 		[mWindow configure];

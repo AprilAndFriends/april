@@ -32,21 +32,6 @@
 #include "RenderSystem.h"
 #include "Window.h"
 
-float getMacOSVersion()
-{
-	static float version = 0;
-	if (version == 0)
-	{
-		SInt32 major, minor;
-		if (Gestalt(gestaltSystemVersionMajor, &major) == noErr && Gestalt(gestaltSystemVersionMinor, &minor) == noErr)
-		{
-			version = major + minor / 10.0f;
-		}
-		else version = 10.3f; // just in case. < 10.4 is not supported.
-	}
-	return version;
-}
-
 namespace april
 {
 	bool platform_CursorIsVisible()

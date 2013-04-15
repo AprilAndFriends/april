@@ -14,7 +14,6 @@
 #include "Mac_Window.h"
 #include "Mac_Keyboard.h"
 
-float getMacOSVersion();
 extern bool gReattachLoadingOverlay;
 
 @implementation AprilCocoaWindow
@@ -43,7 +42,7 @@ extern bool gReattachLoadingOverlay;
 
 - (BOOL)windowShouldClose:(NSWindow*) sender
 {
-	if (april::window->handleQuitRequest(true))
+	if (aprilWindow->handleQuitRequest(true))
 	{
 		[NSApp terminate:nil];
 		return YES;
@@ -57,10 +56,10 @@ extern bool gReattachLoadingOverlay;
 
 - (void)onWindowSizeChange
 {
-	april::SystemDelegate* delegate = april::window->getSystemDelegate();
+	april::SystemDelegate* delegate = aprilWindow->getSystemDelegate();
 	NSSize size = [mView bounds].size;
 	[mView updateGLViewport];
-	if (!april::window->isFullscreen())
+	if (!aprilWindow->isFullscreen())
 		mWindowedRect = [self frame];
 	
 	if (delegate)
@@ -77,7 +76,7 @@ extern bool gReattachLoadingOverlay;
 
 - (void)enterFullScreen
 {
-	april::window->setFullscreen(1);
+	aprilWindow->setFullscreen(1);
 	NSRect prevFrame = [self frame];
 	[self setStyleMask:NSBorderlessWindowMask];
 	[self setFrame: [[NSScreen mainScreen] frame] display:YES];
@@ -97,14 +96,18 @@ extern bool gReattachLoadingOverlay;
 {
 	NSRect prevFrame = [self frame];
 	[[NSApplication sharedApplication] setPresentationOptions: NSApplicationPresentationDefault];
-	[self setStyleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask];
+	
+	NSUInteger mask;
+	mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+	if (aprilWindow) mask |= NSResizableWindowMask;
+	[self setStyleMask:mask];
 	[self setFrame:mWindowedRect display:YES];
 	
 	if (!NSEqualRects(prevFrame, [self frame]))
 	{
 		[self onWindowSizeChange];
 	}
-	april::window->setFullscreen(0);
+	aprilWindow->setFullscreen(0);
 }
 
 - (void)windowWillExitFullScreen:(NSNotification*) notification
@@ -118,12 +121,13 @@ extern bool gReattachLoadingOverlay;
 
 	[self setStyleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask];
 	[self setFrame:mWindowedRect display:YES];
+
 }
 
 - (gvec2)transformCocoaPoint:(NSPoint) point
 {
 	// TODO: optimize
-	gvec2 pt(point.x, april::window->getHeight() - point.y);
+	gvec2 pt(point.x, aprilWindow->getHeight() - point.y);
 	return pt;
 }
 
@@ -131,21 +135,21 @@ extern bool gReattachLoadingOverlay;
 {	
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
-	april::window->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, pos, april::AK_LBUTTON);
+	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, pos, april::AK_LBUTTON);
 }
 
 - (void)mouseUp:(NSEvent*) event
 {
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
-	april::window->handleMouseEvent(april::Window::AMOUSEEVT_UP, pos, april::AK_LBUTTON);	
+	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_UP, pos, april::AK_LBUTTON);	
 }
 
 - (void)mouseMoved:(NSEvent*) event
 {
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
-	april::window->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, pos, april::AK_NONE);
+	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, pos, april::AK_NONE);
 }
 
 - (void)mouseDragged:(NSEvent*) event
@@ -161,12 +165,12 @@ extern bool gReattachLoadingOverlay;
 	{
 		unichr = [unicode characterAtIndex:0];
 	}
-	april::window->handleKeyEvent(april::Window::AKEYEVT_DOWN, (april::Key) keyCode, unichr);
+	aprilWindow->handleKeyEvent(april::Window::AKEYEVT_DOWN, (april::Key) keyCode, unichr);
 }
 
 - (void)onKeyUp:(unsigned int) keyCode
 {
-	april::window->handleKeyEvent(april::Window::AKEYEVT_UP, (april::Key) keyCode, 0);
+	aprilWindow->handleKeyEvent(april::Window::AKEYEVT_UP, (april::Key) keyCode, 0);
 }
 
 - (unsigned int) processKeyCode:(NSEvent*) event
@@ -194,7 +198,7 @@ extern bool gReattachLoadingOverlay;
 			}
 			else
 			{
-				if (april::window->isFullscreen())
+				if (aprilWindow->isFullscreen())
 					[self exitFullScreen];
 				else
 					[self enterFullScreen];
@@ -208,13 +212,19 @@ extern bool gReattachLoadingOverlay;
 - (void)keyUp:(NSEvent*) event
 {
 	[super keyUp:event];
+	if (event.modifierFlags & NSCommandKeyMask)
+	{
+		NSString* s = [event characters];
+		if ([s isEqualTo:@"f"]) return;
+	}
+
 	[self onKeyUp:[self processKeyCode:event]];
 }
 
 - (void)scrollWheel:(NSEvent*) event
 {
 	gvec2 vec([event deltaX], -[event deltaY]);
-	april::window->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL, vec, april::AK_NONE);
+	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL, vec, april::AK_NONE);
 }
 
 - (void)flagsChanged:(NSEvent*) event // special NSWindow function for modifier keys
@@ -236,7 +246,7 @@ extern bool gReattachLoadingOverlay;
 		gReattachLoadingOverlay = false;
 		reattachLoadingOverlay();
 	}
-	else april::window->handleFocusChangeEvent(0);
+	else aprilWindow->handleFocusChangeEvent(0);
 }
 
 - (void)windowDidBecomeKey:(NSNotification*) notification
@@ -245,7 +255,7 @@ extern bool gReattachLoadingOverlay;
 	{
 		static bool first = 0;
 		if (!first) first = 1; // ignore initialization time focus gain
-		else april::window->handleFocusChangeEvent(1);
+		else aprilWindow->handleFocusChangeEvent(1);
 	}
 }
 
