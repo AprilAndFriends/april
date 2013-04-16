@@ -140,18 +140,48 @@ extern bool gReattachLoadingOverlay;
 	return pt;
 }
 
+- (april::Key)getMouseButtonCode:(NSEvent*) event
+{
+	april::Key button;
+	int n = event.buttonNumber;
+	if      (n == 0) button = april::AK_LBUTTON;
+	else if (n == 1) button = april::AK_RBUTTON;
+	else             button = april::AK_MBUTTON;
+	return button;
+}
+
 - (void)mouseDown:(NSEvent*) event
 {	
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
-	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, pos, april::AK_LBUTTON);
+	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, pos, [self getMouseButtonCode:event]);
+}
+
+- (void)rightMouseDown:(NSEvent*) event
+{
+	[self mouseDown:event];
+}
+
+- (void)otherMouseDown:(NSEvent*) event
+{
+	[self mouseDown:event];	
 }
 
 - (void)mouseUp:(NSEvent*) event
 {
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
-	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_UP, pos, april::AK_LBUTTON);	
+	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_UP, pos, [self getMouseButtonCode:event]);	
+}
+
+- (void)rightMouseUp:(NSEvent*) event
+{
+	[self mouseUp:event];
+}
+
+- (void)otherMouseUp:(NSEvent*) event
+{
+	[self mouseUp:event];
 }
 
 - (void)mouseMoved:(NSEvent*) event
@@ -166,6 +196,15 @@ extern bool gReattachLoadingOverlay;
 	[self mouseMoved:event];
 }
 
+- (void)rightMouseDragged:(NSEvent*) event
+{
+	[self mouseMoved:event];
+}
+
+- (void)otherMouseDragged:(NSEvent*) event
+{
+	[self mouseMoved:event];
+}
 
 - (void)onKeyDown:(unsigned int) keyCode unicode:(NSString*) unicode
 {
