@@ -14,6 +14,33 @@
 NSWindow* mOverlayWindow = nil;
 NSImageView* mImageView = nil;
 
+static void updateLoadingOverlaySize(NSWindow* parent, bool check)
+{
+	NSRect windowFrame = parent.frame;
+	NSRect frame = [parent.contentView bounds];
+	
+	if (!check || !NSEqualSizes(frame.size, mOverlayWindow.frame.size))
+	{
+		frame.origin = windowFrame.origin;
+
+		NSSize imgSize = [mImageView image].size;
+		NSRect imgFrame = frame;
+		if ((float) imgSize.width / imgSize.height > (float) frame.size.width / frame.size.height)
+		{
+			float w = frame.size.width;
+			imgFrame.size.width = frame.size.height * imgSize.width / imgSize.height;
+			imgFrame.origin.y = 0;
+			imgFrame.origin.x = -(imgFrame.size.width - w) / 2;
+		}
+		else
+		{
+			imgFrame.origin.x = imgFrame.origin.y = 0;
+		}
+		[mImageView setFrame:imgFrame];
+		[mOverlayWindow setFrame:frame display:YES];
+	}
+}
+
 void createLoadingOverlay(NSWindow* parent)
 {
 	NSString* path = [[NSBundle mainBundle] pathForResource:@"Default" ofType:@"png"];
@@ -21,32 +48,20 @@ void createLoadingOverlay(NSWindow* parent)
 	{
 		NSRect windowFrame = parent.frame;
 		NSRect frame = [parent.contentView bounds];
-		
+
 		frame.origin = windowFrame.origin;
 		mOverlayWindow = [[NSWindow alloc] initWithContentRect:frame styleMask:NSBorderlessWindowMask backing: NSBackingStoreBuffered defer:false];
 		[mOverlayWindow setBackgroundColor:[NSColor blackColor]];
 		[mOverlayWindow setOpaque:YES];
 
 		NSImage* image = [[NSImage alloc] initWithContentsOfFile:path];
-		NSSize imgSize = image.size;
 		mImageView = [[NSImageView alloc] init];
 		[mImageView setImage:image];
 
-		if ((float) imgSize.width / imgSize.height > (float) frame.size.width / frame.size.height)
-		{
-			float w = frame.size.width;
-			frame.size.width = frame.size.height * imgSize.width / imgSize.height;
-			frame.origin.y = 0;
-			frame.origin.x = -(frame.size.width - w) / 2;
-		}
-		else
-		{
-			frame.origin.y = 0;
-		}
-		
+		updateLoadingOverlaySize(parent, 0);
+
 		[mImageView setImageScaling:NSImageScaleAxesIndependently];
-		[mImageView setFrame:frame];
-		
+
 		[mOverlayWindow.contentView addSubview: mImageView];
 		[parent addChildWindow:mOverlayWindow ordered:NSWindowAbove];
 		[mOverlayWindow makeKeyWindow];
@@ -81,6 +96,9 @@ void updateLoadingOverlay(float k)
 			mOverlayWindow = nil;
 		}
 		else
+		{
 			mOverlayWindow.alphaValue = alpha;
+			updateLoadingOverlaySize([mOverlayWindow parentWindow], 1);
+		}
 	}
 }
