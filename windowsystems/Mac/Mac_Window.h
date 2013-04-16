@@ -44,6 +44,9 @@ namespace april
 		bool updateOneFrame();
 		void terminateMainLoop();
 
+		void setFullscreenFlag(bool value);
+		
+	
 		bool mResizable;
 	protected:
 		bool retainLoadingOverlay;

@@ -76,7 +76,7 @@ extern bool gReattachLoadingOverlay;
 
 - (void)enterFullScreen
 {
-	aprilWindow->setFullscreen(1);
+	aprilWindow->setFullscreenFlag(1);
 	NSRect prevFrame = [self frame];
 	[self setStyleMask:NSBorderlessWindowMask];
 	[self setFrame: [[NSScreen mainScreen] frame] display:YES];
@@ -116,7 +116,7 @@ extern bool gReattachLoadingOverlay;
 	{
 		[self onWindowSizeChange];
 	}
-	aprilWindow->setFullscreen(0);
+	aprilWindow->setFullscreenFlag(0);
 }
 
 - (void)windowWillExitFullScreen:(NSNotification*) notification

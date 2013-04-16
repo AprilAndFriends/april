@@ -185,18 +185,11 @@ namespace april
 		return 1;
 	}
 	
-	bool Mac_Window::destroy()
+	void Mac_Window::setFullscreenFlag(bool value)
 	{
-        if (mView)   { [mView release];   mView   = nil; }
-        if (mWindow)
-		{
-			[mWindow release];
-			mWindow = nil;
-		}
-
-		return 1;
+		this->fullscreen = value;
 	}
-	
+
 	void Mac_Window::setTitle(chstr title)
 	{
 		Window::setTitle(title);
@@ -223,5 +216,21 @@ namespace april
 	void Mac_Window::terminateMainLoop()
 	{
 		[[NSApplication sharedApplication] terminate:nil];
+	}
+	
+	bool Mac_Window::destroy()
+	{
+        if (mView)
+		{
+			[mView release];
+			mView = nil;
+		}
+        if (mWindow)
+		{
+			[mWindow release];
+			mWindow = nil;
+		}
+		
+		return 1;
 	}
 }
