@@ -124,7 +124,7 @@ namespace april
 		HL_DEFINE_IS(created, Created);
 		HL_DEFINE_GET(hstr, title, Title);
 		HL_DEFINE_IS(fullscreen, Fullscreen);
-		void setFullscreen(bool value) { this->fullscreen = value; }
+		virtual void setFullscreen(bool value) { this->fullscreen = value; }
 		HL_DEFINE_IS(focused, Focused);
 		HL_DEFINE_IS(running, Running);
 		HL_DEFINE_GETSET(int, fps, Fps);

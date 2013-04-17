@@ -59,7 +59,7 @@ extern bool gReattachLoadingOverlay;
 	april::SystemDelegate* delegate = aprilWindow->getSystemDelegate();
 	NSSize size = [mView bounds].size;
 	[mView updateGLViewport];
-	if (!aprilWindow->isFullscreen())
+	if (![self isFullScreen])
 		mWindowedRect = [self frame];
 	
 	if (delegate)
@@ -72,6 +72,13 @@ extern bool gReattachLoadingOverlay;
 - (void)windowDidResize:(NSNotification*) notification
 {
 	[self onWindowSizeChange];
+	updateLoadingOverlay(0);
+}
+
+- (BOOL)isFullScreen
+{
+	int style = [self styleMask];
+	return (style == NSBorderlessWindowMask || style == NSFullScreenWindowMask); // this covers both 10.7 and older macs
 }
 
 - (void)enterFullScreen
@@ -109,8 +116,10 @@ extern bool gReattachLoadingOverlay;
 	NSRect prevFrame = [self frame];
 	[[NSApplication sharedApplication] setPresentationOptions: NSApplicationPresentationDefault];
 	
+	NSRect rect = mWindowedRect; // in case mWindowedRect gets overriden in onWindowResize
 	[self setWindowedStyleMask];
-	[self setFrame:mWindowedRect display:YES];
+	[self setFrame:rect display:YES];
+	mWindowedRect = rect;
 	
 	if (!NSEqualRects(prevFrame, [self frame]))
 	{
@@ -232,6 +241,21 @@ extern bool gReattachLoadingOverlay;
 	return april::getAprilMacKeyCode([event keyCode]);
 }
 
+- (void)platformToggleFullScreen
+{
+	if (getMacOSVersion() >= 10.7f)
+	{
+		[self toggleFullScreen:self];
+	}
+	else
+	{
+		if ([self isFullScreen])
+			[self exitFullScreen];
+		else
+			[self enterFullScreen];
+	}
+}
+
 - (void)keyDown:(NSEvent*) event
 {
 	[super keyDown:event];
@@ -240,17 +264,7 @@ extern bool gReattachLoadingOverlay;
 		NSString* s = [event characters];
 		if ([s isEqualTo:@"f"]) // fullscreen toggle
 		{
-			if (getMacOSVersion() >= 10.7f)
-			{
-				[self toggleFullScreen:self];
-			}
-			else
-			{
-				if (aprilWindow->isFullscreen())
-					[self exitFullScreen];
-				else
-					[self enterFullScreen];
-			}
+			[self platformToggleFullScreen];
 			return;
 		}
 	}
@@ -323,9 +337,18 @@ extern bool gReattachLoadingOverlay;
 	self.contentView = view;
 }
 
-- (void) dealloc
+- (void)destroy
 {
-    [mTimer release];
+	if (mTimer != nil)
+	{
+		[mTimer invalidate];
+		mTimer = nil;
+	}
+}
+
+- (void)dealloc
+{
+	[self destroy];
 	[super dealloc];
 }
 

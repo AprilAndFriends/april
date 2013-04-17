@@ -26,11 +26,14 @@
 }
 - (void)startRenderLoop;
 - (void)configure;
+- (BOOL)isFullScreen;
+- (void)platformToggleFullScreen;
 - (void)enterFullScreen;
 - (void)exitFullScreen;
 - (void)setOpenGLView:(AprilMacOpenGLView*) view;
 - (void)onWindowSizeChange;
 - (void)setWindowedStyleMask;
+- (void)destroy;
 @end
 
 #endif

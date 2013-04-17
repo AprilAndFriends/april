@@ -44,8 +44,9 @@ namespace april
 		bool updateOneFrame();
 		void terminateMainLoop();
 
+		virtual void setFullscreen(bool value);
 		void setFullscreenFlag(bool value);
-		
+
 	
 		bool mResizable;
 	protected:
