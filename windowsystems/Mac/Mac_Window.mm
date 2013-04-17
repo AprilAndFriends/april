@@ -23,6 +23,10 @@ april::Mac_Window* aprilWindow = NULL;
 
 float getMacOSVersion()
 {
+#ifdef _DEBUG
+//	return 10.6f; // uncomment this to test behaviour on older macs
+#endif
+
 	static float version = 0;
 	if (version == 0)
 	{
@@ -60,6 +64,7 @@ namespace april
 		}
         if (mWindow)
 		{
+			[mWindow destroy];
 			[mWindow release];
 			mWindow = nil;
 		}
@@ -127,14 +132,21 @@ namespace april
 			return false;
 		}
 
-		NSRect frame;
+		NSRect frame, defaultWndFrame;
 		NSUInteger styleMask;
 		
 		bool lionFullscreen = getMacOSVersion() >= 10.7f;
+
 		if (fullscreen)
 		{
 			frame = [[NSScreen mainScreen] frame];
 			styleMask = NSBorderlessWindowMask;
+			float tw = frame.size.width * 2.0f / 3.0f, th = frame.size.height * 2.0f / 3.0f;
+			defaultWndFrame = NSMakeRect(frame.origin.x + (frame.size.width - tw) / 2.0f, frame.origin.y + (frame.size.height - th) / 2.0f, tw, th);
+			if (lionFullscreen)
+			{
+				frame = defaultWndFrame;
+			}
 		}
 		else
 		{
@@ -142,6 +154,7 @@ namespace april
 			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
 			if (aprilWindow->mResizable) styleMask |= NSResizableWindowMask;
 		}
+
 		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
 		[mWindow configure];
 		setTitle(title);
@@ -149,9 +162,7 @@ namespace april
 
 		if (fullscreen)
 		{
-			float w = frame.size.width * 2.0f / 3.0f, h = frame.size.height * 2.0f / 3.0f;
-			NSRect wnd_frame = NSMakeRect(frame.origin.x + (frame.size.width - w) / 2.0f, frame.origin.y + (frame.size.height - h) / 2.0f, w, h);
-			mWindow->mWindowedRect = wnd_frame;
+			mWindow->mWindowedRect = defaultWndFrame;
 		}
 		else
 		{
@@ -183,6 +194,13 @@ namespace april
 		[mWindow setOpenGLView: mView];
 		[mWindow startRenderLoop];
 		return 1;
+	}
+	
+	void Mac_Window::setFullscreen(bool value)
+	{
+		Window::setFullscreen(value);
+		bool state = [mWindow isFullScreen];
+		if (value != state) [mWindow platformToggleFullScreen];
 	}
 	
 	void Mac_Window::setFullscreenFlag(bool value)
