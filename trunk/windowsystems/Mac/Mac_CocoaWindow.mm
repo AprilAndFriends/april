@@ -259,9 +259,9 @@ extern bool gReattachLoadingOverlay;
 - (void)keyDown:(NSEvent*) event
 {
 	[super keyDown:event];
-	if (event.modifierFlags & NSCommandKeyMask)
+	if ((event.modifierFlags & (NSCommandKeyMask | NSControlKeyMask)) == (NSCommandKeyMask | NSControlKeyMask))
 	{
-		NSString* s = [event characters];
+		NSString* s = [event charactersIgnoringModifiers];
 		if ([s isEqualTo:@"f"]) // fullscreen toggle
 		{
 			[self platformToggleFullScreen];
