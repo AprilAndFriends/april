@@ -26,7 +26,8 @@ extern bool gReattachLoadingOverlay;
 - (void)configure
 {
 	april::initMacKeyMap();
-	
+	mCustomFullscreenExitAnimation = false;
+
 	[self setBackgroundColor:[NSColor blackColor]];
 	[self setOpaque:YES];
 	[self setDelegate:self];
@@ -118,16 +119,30 @@ extern bool gReattachLoadingOverlay;
 	NSRect prevFrame = [self frame];
 	[[NSApplication sharedApplication] setPresentationOptions: NSApplicationPresentationDefault];
 	
-	NSRect rect = mWindowedRect; // in case mWindowedRect gets overriden in onWindowResize
 	[self setWindowedStyleMask];
-	[self setFrame:rect display:YES];
-	mWindowedRect = rect;
+	[self setFrame:mWindowedRect display:YES];
 	
 	if (!NSEqualRects(prevFrame, [self frame]))
 	{
 		[self onWindowSizeChange];
 	}
 	aprilWindow->setFullscreenFlag(0);
+}
+
+- (void)window:(NSWindow*) window startCustomAnimationToExitFullScreenWithDuration:(NSTimeInterval) duration
+{
+	[NSAnimationContext beginGrouping];
+	[[NSAnimationContext currentContext] setDuration:duration];
+	[[self animator] setFrame:mWindowedRect display:NO];
+	[NSAnimationContext endGrouping];
+}
+
+- (NSArray*) customWindowsToExitFullScreenForWindow:(NSWindow*) window
+{
+	// counter bad fullscreen exit animation when window started in fullscreen. all subsequent animations look good
+	if (!mCustomFullscreenExitAnimation) return nil;
+	mCustomFullscreenExitAnimation = false;
+	return [NSArray arrayWithObjects:self, nil];
 }
 
 - (void)windowWillExitFullScreen:(NSNotification*) notification
