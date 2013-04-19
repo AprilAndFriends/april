@@ -159,6 +159,7 @@ namespace april
 		if (fullscreen)
 		{
 			mWindow->mWindowedRect = defaultWndFrame;
+			mWindow->mCustomFullscreenExitAnimation = true;
 		}
 		else
 		{

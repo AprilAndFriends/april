@@ -20,6 +20,7 @@
 {
 @public
 	NSRect mWindowedRect;
+	bool mCustomFullscreenExitAnimation;
 @private
     NSTimer* mTimer;
 	AprilMacOpenGLView* mView;
