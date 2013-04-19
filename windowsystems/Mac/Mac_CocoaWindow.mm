@@ -59,8 +59,10 @@ extern bool gReattachLoadingOverlay;
 	april::SystemDelegate* delegate = aprilWindow->getSystemDelegate();
 	NSSize size = [mView bounds].size;
 	[mView updateGLViewport];
-	if (![self isFullScreen])
+	if ([self inLiveResize])
+	{
 		mWindowedRect = [self frame];
+	}
 	
 	if (delegate)
 	{
@@ -87,7 +89,7 @@ extern bool gReattachLoadingOverlay;
 	NSRect prevFrame = [self frame];
 	[self setStyleMask:NSBorderlessWindowMask];
 	[self setFrame: [[NSScreen mainScreen] frame] display:YES];
-	[[NSApplication sharedApplication] setPresentationOptions: NSFullScreenWindowMask | NSApplicationPresentationAutoHideMenuBar | NSApplicationPresentationHideDock | NSApplicationPresentationDisableMenuBarTransparency];
+	[[NSApplication sharedApplication] setPresentationOptions: NSFullScreenWindowMask | NSApplicationPresentationAutoHideMenuBar | NSApplicationPresentationAutoHideDock | NSApplicationPresentationDisableMenuBarTransparency];
 	if (!NSEqualRects(prevFrame, [self frame]))
 	{
 		[self onWindowSizeChange];
@@ -258,7 +260,7 @@ extern bool gReattachLoadingOverlay;
 
 - (void)keyDown:(NSEvent*) event
 {
-	[super keyDown:event];
+	if (event.keyCode != 53) [super keyDown:event]; // prevent forwarding ESC key to super class because Lion uses it to exit fullscreen mode
 	if ((event.modifierFlags & (NSCommandKeyMask | NSControlKeyMask)) == (NSCommandKeyMask | NSControlKeyMask))
 	{
 		NSString* s = [event charactersIgnoringModifiers];
@@ -273,7 +275,7 @@ extern bool gReattachLoadingOverlay;
 
 - (void)keyUp:(NSEvent*) event
 {
-	[super keyUp:event];
+	if (event.keyCode != 53) [super keyUp:event]; // prevent forwarding ESC key to super class because Lion uses it to exit fullscreen mode
 	if (event.modifierFlags & NSCommandKeyMask)
 	{
 		NSString* s = [event characters];
