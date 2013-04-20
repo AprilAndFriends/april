@@ -57,6 +57,7 @@ namespace april
 extern april::Mac_Window* aprilWindow;
 
 float getMacOSVersion();
-
+bool isPreLion();
+bool isLionOrNewer();
 
 #endif

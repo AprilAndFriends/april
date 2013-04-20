@@ -39,7 +39,7 @@
 	a[n++] = NSOpenGLPFANoRecovery;
 	a[n++] = NSOpenGLPFADoubleBuffer;
 	a[n++] = NSOpenGLPFADepthSize; a[n++] = (NSOpenGLPixelFormatAttribute) 16;
-	if (getMacOSVersion() >= 10.7f)
+	if (isLionOrNewer())
 	{
 		a[n++] = kCGLPFAOpenGLProfile; a[n++] = kCGLOGLPVersion_Legacy;
 	}
@@ -89,7 +89,9 @@
 - (void)resetCursorRects
 {
 	if (mUseBlankCursor)
+	{
 		[self addCursorRect:[self bounds] cursor:mBlankCursor];
+	}
 }
 
 - (void) setDefaultCursor
@@ -100,7 +102,6 @@
 - (void) setBlankCursor
 {
 	mUseBlankCursor = true;
-	[self resetCursorRects];
 }
 
 - (BOOL) isBlankCursorUsed

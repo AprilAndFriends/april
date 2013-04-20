@@ -20,7 +20,7 @@ extern bool gReattachLoadingOverlay;
 
 - (void)timerEvent:(NSTimer*) t
 {
-	[mView setNeedsDisplay:YES];
+	[mView drawRect:[mView bounds]];
 }
 
 - (void)configure
@@ -90,11 +90,20 @@ extern bool gReattachLoadingOverlay;
 	NSRect prevFrame = [self frame];
 	[self setStyleMask:NSBorderlessWindowMask];
 	[self setFrame: [[NSScreen mainScreen] frame] display:YES];
-	[[NSApplication sharedApplication] setPresentationOptions: NSFullScreenWindowMask | NSApplicationPresentationAutoHideMenuBar | NSApplicationPresentationAutoHideDock | NSApplicationPresentationDisableMenuBarTransparency];
+	
+	if (isPreLion()) // 10.7+ is set in willUseFullScreenPresentationOptions
+	{
+		[[NSApplication sharedApplication] setPresentationOptions: NSApplicationPresentationAutoHideMenuBar | NSApplicationPresentationHideDock];
+	}
 	if (!NSEqualRects(prevFrame, [self frame]))
 	{
 		[self onWindowSizeChange];
 	}
+}
+
+- (NSApplicationPresentationOptions)window:(NSWindow*) window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions) proposedOptions
+{
+	return NSApplicationPresentationFullScreen | NSApplicationPresentationAutoHideMenuBar | NSApplicationPresentationHideDock;
 }
 
 - (void)windowWillEnterFullScreen:(NSNotification*) notification
@@ -108,7 +117,7 @@ extern bool gReattachLoadingOverlay;
 	mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
 	if (aprilWindow->mResizable) mask |= NSResizableWindowMask;
 	[self setStyleMask:mask];
-	if (getMacOSVersion() >= 10.7f) // workarround for bug in macos
+	if (isLionOrNewer()) // workarround for bug in macos
 	{
 		[[self standardWindowButton:NSWindowMiniaturizeButton] setEnabled:YES];
 	}
@@ -215,6 +224,23 @@ extern bool gReattachLoadingOverlay;
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
 	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, pos, april::AK_NONE);
+	
+	// Hack for Lion fullscreen bug, when the user moves the cursor quickly to and from the dock area,
+	// the cursor gets reset to the default arrow, this hack counters that.
+	if (isLionOrNewer() && [self isFullScreen])
+	{
+		static bool prevOnEdges = false;
+		
+		NSSize size = self.frame.size;
+		// cover all 3 posibilities for dock position
+		bool onEdges = pos.x < size.width * 0.01f || pos.x > size.width * 0.99f || pos.y > size.height * 0.99f;
+		
+		if (!onEdges && prevOnEdges)
+		{
+			[self invalidateCursorRectsForView:mView];
+		}
+		prevOnEdges = onEdges;
+	}
 }
 
 - (void)mouseDragged:(NSEvent*) event
@@ -260,7 +286,7 @@ extern bool gReattachLoadingOverlay;
 
 - (void)platformToggleFullScreen
 {
-	if (getMacOSVersion() >= 10.7f)
+	if (isLionOrNewer())
 	{
 		[self toggleFullScreen:self];
 	}
