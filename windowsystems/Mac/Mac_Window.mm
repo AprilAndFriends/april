@@ -21,6 +21,18 @@ static AprilCocoaWindow* mWindow = nil;
 bool gReattachLoadingOverlay = false;
 april::Mac_Window* aprilWindow = NULL;
 
+bool isPreLion()
+{
+	static bool result = getMacOSVersion() < 10.7f;
+	return result;
+}
+
+bool isLionOrNewer()
+{
+	static bool result = getMacOSVersion() >= 10.7f;
+	return result;
+}
+
 float getMacOSVersion()
 {
 #ifdef _DEBUG
@@ -119,10 +131,9 @@ namespace april
 	void Mac_Window::setCursorVisible(bool visible)
 	{
 		if (visible != [mView isBlankCursorUsed]) return;
-
-		[mWindow invalidateCursorRectsForView:mView];
 		if (visible) [mView setDefaultCursor];
 		else         [mView setBlankCursor];
+		[mWindow invalidateCursorRectsForView:mView];
 	}
 	
 	bool Mac_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
@@ -135,7 +146,7 @@ namespace april
 		NSRect frame, defaultWndFrame;
 		NSUInteger styleMask;
 		
-		bool lionFullscreen = getMacOSVersion() >= 10.7f;
+		bool lionFullscreen = isLionOrNewer();
 
 		if (fullscreen)
 		{
