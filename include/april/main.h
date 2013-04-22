@@ -145,7 +145,7 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCm
 int main(Platform::Array<Platform::String^>^ args)
 #endif
 {
-#if !_HL_WINRT && defined(__SINGLE_INSTANCE)
+#if _HL_WINRT && defined(__SINGLE_INSTANCE)
 	if (!__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::from_unicode(args[0]->Data())))
 	{
 		return 0;
@@ -156,7 +156,7 @@ int main(Platform::Array<Platform::String^>^ args)
 #if !_HL_WINRT
 	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);
 #ifdef __SINGLE_INSTANCE
-	if (!__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::from_unicode(wArgv[i])))
+	if (!__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::from_unicode(wArgv[0])))
 	{
 		LocalFree(wArgv);
 		return 0;
