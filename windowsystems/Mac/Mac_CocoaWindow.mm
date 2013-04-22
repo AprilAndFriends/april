@@ -301,7 +301,6 @@ extern bool gReattachLoadingOverlay;
 
 - (void)keyDown:(NSEvent*) event
 {
-	if (event.keyCode != 53) [super keyDown:event]; // prevent forwarding ESC key to super class because Lion uses it to exit fullscreen mode
 	if ((event.modifierFlags & (NSCommandKeyMask | NSControlKeyMask)) == (NSCommandKeyMask | NSControlKeyMask))
 	{
 		NSString* s = [event charactersIgnoringModifiers];
@@ -316,7 +315,6 @@ extern bool gReattachLoadingOverlay;
 
 - (void)keyUp:(NSEvent*) event
 {
-	if (event.keyCode != 53) [super keyUp:event]; // prevent forwarding ESC key to super class because Lion uses it to exit fullscreen mode
 	if (event.modifierFlags & NSCommandKeyMask)
 	{
 		NSString* s = [event characters];
