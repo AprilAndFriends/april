@@ -64,6 +64,32 @@ extern void april_init(const harray<hstr>& args);
 extern void april_destroy();
 
 #ifndef BUILDING_APRIL
+#if defined(_WIN32) && !_HL_WINRT && defined(__APRIL_SINGLE_INSTANCE_NAME)
+#define __SINGLE_INSTANCE
+#include <april/Platform.h>
+static HANDLE lockMutex;
+bool __lockSingleInstanceMutex()
+{
+	hstr instanceName = hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME);
+	lockMutex = CreateMutexW(NULL, true, instanceName.w_str().c_str());
+	if (lockMutex != 0 && GetLastError() == ERROR_ALREADY_EXISTS)
+	{
+		CloseHandle(lockMutex);
+		april::messageBox("Warning", "Cannot launch " + instanceName + ", already running!", april::AMSGBTN_OK, april::AMSGSTYLE_WARNING);
+		return false;
+	}
+	//printf(__APRIL_SINGLE_INSTANCE_NAME "\n");
+	return true;
+}
+
+void __unlockSingleInstanceMutex()
+{
+	if (lockMutex != 0)
+	{
+		CloseHandle(lockMutex);
+	}
+}
+#endif
 //{
 #ifdef _ANDROID
 extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
@@ -73,6 +99,12 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 #elif !defined(_WIN32) || defined(_CONSOLE) && !_HL_WINRT
 int main(int argc, char** argv)
 {
+#ifdef __SINGLE_INSTANCE
+	if (!__lockSingleInstanceMutex())
+	{
+		return 0;
+	}
+#endif
 #if TARGET_IPHONE_SIMULATOR
 	/* trick for running valgrind in iphone simulator
 	 * http://landonf.bikemonkey.org/code/iphone/iPhone_Simulator_Valgrind.20081224.html
@@ -94,8 +126,11 @@ int main(int argc, char** argv)
 		execl(VALGRIND, VALGRIND, "--leak-check=full", "--error-limit=no", argv[0], NULL);
 	}
 #endif
-	
-	return april_main(april_init, april_destroy, argc, argv);
+	int result = april_main(april_init, april_destroy, argc, argv);
+#ifdef __SINGLE_INSTANCE
+	__unlockSingleInstanceMutex();
+#endif
+	return result;
 }
 #else
 #if !_HL_WINRT
@@ -107,6 +142,12 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCm
 int main(Platform::Array<Platform::String^>^ args)
 #endif
 {
+#ifdef __SINGLE_INSTANCE
+	if (!__lockSingleInstanceMutex())
+	{
+		return 0;
+	}
+#endif
 	// extract arguments
 	int argc = 0;
 #if !_HL_WINRT
@@ -136,6 +177,9 @@ int main(Platform::Array<Platform::String^>^ args)
 		delete [] argv[i];
 	}
 	delete [] argv;
+#ifdef __SINGLE_INSTANCE
+	__unlockSingleInstanceMutex();
+#endif
 	return 0;
 }
 
