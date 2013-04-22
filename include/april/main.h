@@ -68,9 +68,13 @@ extern void april_destroy();
 #define __SINGLE_INSTANCE
 #include <april/Platform.h>
 static HANDLE lockMutex;
-bool __lockSingleInstanceMutex()
+bool __lockSingleInstanceMutex(hstr instanceName, chstr fallbackName)
 {
-	hstr instanceName = hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME);
+	if (instanceName == "")
+	{
+		instanceName = fallbackName;
+	}
+	instanceName = instanceName.replace("\\", "/");
 	lockMutex = CreateMutexW(NULL, true, instanceName.w_str().c_str());
 	if (lockMutex != 0 && GetLastError() == ERROR_ALREADY_EXISTS)
 	{
@@ -78,7 +82,6 @@ bool __lockSingleInstanceMutex()
 		april::messageBox("Warning", "Cannot launch " + instanceName + ", already running!", april::AMSGBTN_OK, april::AMSGSTYLE_WARNING);
 		return false;
 	}
-	//printf(__APRIL_SINGLE_INSTANCE_NAME "\n");
 	return true;
 }
 
@@ -100,7 +103,7 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 int main(int argc, char** argv)
 {
 #ifdef __SINGLE_INSTANCE
-	if (!__lockSingleInstanceMutex())
+	if (!__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), argv[0]))
 	{
 		return 0;
 	}
@@ -142,8 +145,8 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCm
 int main(Platform::Array<Platform::String^>^ args)
 #endif
 {
-#ifdef __SINGLE_INSTANCE
-	if (!__lockSingleInstanceMutex())
+#if !_HL_WINRT && defined(__SINGLE_INSTANCE)
+	if (!__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::from_unicode(args[0]->Data())))
 	{
 		return 0;
 	}
@@ -152,6 +155,13 @@ int main(Platform::Array<Platform::String^>^ args)
 	int argc = 0;
 #if !_HL_WINRT
 	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);
+#ifdef __SINGLE_INSTANCE
+	if (!__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::from_unicode(wArgv[i])))
+	{
+		LocalFree(wArgv);
+		return 0;
+	}
+#endif
 #endif
 	char** argv = new char*[argc];
 	hstr arg;
