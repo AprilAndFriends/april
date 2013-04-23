@@ -332,14 +332,18 @@ extern bool gReattachLoadingOverlay;
 
 - (void)flagsChanged:(NSEvent*) event // special NSWindow function for modifier keys
 {
-    if ([event modifierFlags] > (1 << 15)) // DOWN
-    {
-		onKeyDown:april::getAprilMacKeyCode([event keyCode]);
-    }
-    else
-    {
-		onKeyUp:april::getAprilMacKeyCode([event keyCode]);
-    }
+	static unsigned int prevFlags = 0;
+	unsigned int flags = [event modifierFlags];
+	unsigned int keyCode = april::getAprilMacKeyCode([event keyCode]);
+	
+#define processFlag(mask) if      ((flags & mask)     == mask && (prevFlags & mask) == 0) [self onKeyDown:keyCode unicode:@""];\
+					      else if ((prevFlags & mask) == mask &&     (flags & mask) == 0) [self onKeyUp:keyCode];
+	processFlag(NSControlKeyMask);
+	processFlag(NSAlternateKeyMask);
+	processFlag(NSShiftKeyMask);
+	processFlag(NSCommandKeyMask);
+	
+	prevFlags = flags;
 }
 
 - (void)windowDidResignKey:(NSNotification*) notification
