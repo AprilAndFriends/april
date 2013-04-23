@@ -15,6 +15,8 @@
 
 namespace april
 {
+// TDODO - due to a bug in the GCC 4.6 toolset, linking won't work if the members are defined in a separate source file
+#ifndef _ANDROID
 	ControllerDelegate::ControllerDelegate()
 	{
 	}
@@ -32,5 +34,6 @@ namespace april
 	{
 		hlog::debug(april::logTag, "Event onButtonUp() was not implemented.");
 	}
+#endif
 
 }
