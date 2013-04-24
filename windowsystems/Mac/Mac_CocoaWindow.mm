@@ -9,6 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Mac_CocoaWindow.h"
+#include <hltypes/hthread.h>
 #include "SystemDelegate.h"
 #include "Mac_LoadingOverlay.h"
 #include "Mac_Window.h"
@@ -20,7 +21,15 @@ extern bool gReattachLoadingOverlay;
 
 - (void)timerEvent:(NSTimer*) t
 {
-	[mView drawRect:[mView bounds]];
+	// Avoid CPU overload while the app is waiting for screen to refresh
+	if (mView->mStartedDrawing)
+	{
+		hthread::sleep(1);
+		return;
+	}
+
+	mView->mStartedDrawing = true;
+	[mView setNeedsDisplay:YES];
 }
 
 - (void)configure
@@ -352,17 +361,6 @@ extern bool gReattachLoadingOverlay;
 	{
 		gReattachLoadingOverlay = false;
 		reattachLoadingOverlay();
-	}
-	else aprilWindow->handleFocusChangeEvent(0);
-}
-
-- (void)windowDidBecomeKey:(NSNotification*) notification
-{
-	if (!gReattachLoadingOverlay)
-	{
-		static bool first = 0;
-		if (!first) first = 1; // ignore initialization time focus gain
-		else aprilWindow->handleFocusChangeEvent(1);
 	}
 }
 

@@ -215,7 +215,24 @@ namespace april
 	{
 		this->fullscreen = value;
 	}
+	
+	void Mac_Window::OnAppGainedFocus()
+	{
+		static bool first = 0;
+		if (!first) first = 1; // ignore initialization time focus gain
+		else
+		{
+			handleFocusChangeEvent(1);
+			// sometimes MacOS forgets about checking cursor rects, so let's remind it..
+			[mWindow invalidateCursorRectsForView:mView];
+		}
+	}
 
+	void Mac_Window::OnAppLostFocus()
+	{
+		handleFocusChangeEvent(0);
+	}
+	
 	void Mac_Window::setTitle(chstr title)
 	{
 		Window::setTitle(title);

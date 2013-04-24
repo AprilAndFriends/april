@@ -11,6 +11,9 @@
 #include "RenderSystem.h"
 #include "Window.h"
 #include "main.h"
+#ifdef _COCOA
+#include "Mac_Window.h"
+#endif
 
 static int gArgc = 0;
 static char** gArgv;
@@ -100,6 +103,20 @@ static NSString* getApplicationName()
 {
 	gAprilDestroy();
 }
+
+#ifdef _COCOA
+
+- (void)applicationDidBecomeActive:(NSNotification *)aNotification
+{
+	aprilWindow->OnAppGainedFocus();
+}
+
+- (void)applicationDidResignActive:(NSNotification *)aNotification
+{
+	aprilWindow->OnAppLostFocus();
+}
+
+#endif
 
 @end
 
