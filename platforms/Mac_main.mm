@@ -12,14 +12,15 @@
 #include "Window.h"
 #include "main.h"
 #ifdef _COCOA
-#include "Mac_Window.h"
+#import "Mac_Window.h"
+#import "Mac_AppDelegate.h"
 #endif
 
-static int gArgc = 0;
-static char** gArgv;
+int gArgc = 0;
+char** gArgv;
+void (*gAprilInit)(const harray<hstr>&);
+void (*gAprilDestroy)();
 static BOOL gFinderLaunch = NO;
-static void (*gAprilInit)(const harray<hstr>&);
-static void (*gAprilDestroy)();
 
 int gAprilShouldInvokeQuitCallback = 0;
 
@@ -56,10 +57,7 @@ int gAprilShouldInvokeQuitCallback = 0;
 
 @end
 
-@interface AprilAppDelegate : NSObject<NSApplicationDelegate>
-@end
-
-static NSString* getApplicationName()
+NSString* getApplicationName()
 {
 	NSDictionary* dict;
 	NSString* appName = 0;
@@ -77,6 +75,11 @@ static NSString* getApplicationName()
 	}
 	return appName;
 }
+
+#ifdef _SDL // should be refactored for SDL
+
+@interface AprilAppDelegate : NSObject<NSApplicationDelegate>
+@end
 
 /* The main class of the application, the application's delegate */
 @implementation AprilAppDelegate
@@ -119,6 +122,8 @@ static NSString* getApplicationName()
 #endif
 
 @end
+
+#endif
 
 static NSString* getLocalizedString(NSString* key, NSString* fallback)
 {
