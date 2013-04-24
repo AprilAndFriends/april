@@ -289,6 +289,10 @@ namespace april
 		AK_ACCEPT = 0,
 		AK_MODECHANGE = 0,
 
+		// Mac CMD keys, they aren't used so they will act like CTRL
+		AK_LCOMMAND = 113,
+		AK_RCOMMAND = 114,
+
 		// space
 		AK_SPACE = 62,
 
