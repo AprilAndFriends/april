@@ -47,6 +47,8 @@ namespace april
 		virtual void setFullscreen(bool value);
 		void setFullscreenFlag(bool value);
 
+		void OnAppGainedFocus();
+		void OnAppLostFocus();
 	
 		bool mResizable;
 	protected:

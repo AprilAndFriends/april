@@ -17,6 +17,7 @@
 - (id) initWithFrame:(NSRect)frameRect
 {
 	mUseBlankCursor = false;
+	mStartedDrawing = false;
 	
 	NSImage* image = [[NSImage alloc] initWithSize: NSMakeSize(8, 8)];
 	
@@ -65,10 +66,9 @@
 - (void)drawRect:(NSRect)dirtyRect
 {
 	NSOpenGLContext* context = [self openGLContext];
-//	[context clearDrawable];
-//	[context setView:self];
 	[context makeCurrentContext];
 	if (april::window) aprilWindow->updateOneFrame();
+	mStartedDrawing = false;
 }
 
 - (void) initGL

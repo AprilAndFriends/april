@@ -16,6 +16,8 @@
 
 @interface AprilMacOpenGLView : NSOpenGLView
 {
+@public
+	bool mStartedDrawing;
 	bool mUseBlankCursor;
 	NSCursor* mBlankCursor;
 }
