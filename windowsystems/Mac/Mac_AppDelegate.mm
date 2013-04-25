@@ -20,16 +20,44 @@ NSString* getApplicationName();
 
 @implementation AprilAppDelegate
 
+- (void) receiveSleepNote: (NSNotification*) note
+{
+	if (aprilWindow && aprilWindow->isFocused())
+	{
+		aprilWindow->handleFocusChangeEvent(0);
+		mNotifyFocusChanged = true;
+	}
+	else mNotifyFocusChanged = false;
+}
+
+- (void) receiveWakeNote: (NSNotification*) note
+{
+	if (mNotifyFocusChanged)
+	{
+		aprilWindow->handleFocusChangeEvent(true);
+		mNotifyFocusChanged = false;
+	}
+}
+
 - (void) applicationDidFinishLaunching: (NSNotification*) note
 {
-	/* Hand off to main application code */
-	//gCalledAppMainline = TRUE;
+	mNotifyFocusChanged = false;
+
 	harray<hstr> argv;
 	for (int i = 0; i < gArgc; i++)
 	{
 		argv.push_back(gArgv[i]);
 	}
 	gAprilInit(argv);
+	// register for sleep/wake notifications, needed for proper handling
+	// of focus/unfocus events
+	
+	NSNotificationCenter* c = [[NSWorkspace sharedWorkspace] notificationCenter];
+	[c addObserver:self selector: @selector(receiveSleepNote:) name:NSWorkspaceWillSleepNotification object:NULL];
+	
+    [c addObserver:self selector: @selector(receiveWakeNote:) name:NSWorkspaceDidWakeNotification object:NULL];
+
+	
 #ifdef _SDL
 	april::window->enterMainLoop();
 	gAprilDestroy();
