@@ -16,7 +16,7 @@
 
 @interface AprilAppDelegate : NSObject<NSApplicationDelegate>
 {
-
+	bool mNotifyFocusChanged;
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification*) note;
