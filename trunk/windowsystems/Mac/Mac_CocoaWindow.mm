@@ -45,7 +45,7 @@ extern bool gReattachLoadingOverlay;
 
 - (void)startRenderLoop
 {
-	mTimer = [NSTimer timerWithTimeInterval:0.00000001f target:self selector:@selector(timerEvent:) userInfo:nil repeats:YES];
+	mTimer = [NSTimer timerWithTimeInterval:1 / 1000.0f target:self selector:@selector(timerEvent:) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:mTimer forMode:NSDefaultRunLoopMode];
 	[[NSRunLoop currentRunLoop] addTimer:mTimer forMode:NSEventTrackingRunLoopMode];
 }
