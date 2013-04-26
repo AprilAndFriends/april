@@ -21,6 +21,7 @@
 	bool mUseBlankCursor;
 	NSCursor* mBlankCursor;
 }
+- (void) initGL;
 - (void) presentFrame;
 - (void) setDefaultCursor;
 - (void) setBlankCursor;
