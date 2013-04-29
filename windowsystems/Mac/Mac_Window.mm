@@ -120,6 +120,7 @@ namespace april
 	
 	bool Mac_Window::isCursorVisible()
 	{
+		if (mView == NULL) return 1;
 		return !mView->mUseBlankCursor;
 	}
 	
