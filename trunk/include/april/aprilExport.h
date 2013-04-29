@@ -15,7 +15,7 @@
 #ifndef APRIL_EXPORT_H
 #define APRIL_EXPORT_H
 
-	#ifdef _STATICLIB
+	#ifdef _LIB
 		#define aprilExport
 		#define aprilFnExport
 	#else
