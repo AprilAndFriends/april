@@ -25,7 +25,6 @@
 - (void) presentFrame;
 - (void) setDefaultCursor;
 - (void) setBlankCursor;
-- (BOOL) isBlankCursorUsed;
 - (void) updateGLViewport;
 
 @end

@@ -9,8 +9,10 @@
 
 #import <Foundation/Foundation.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hlog.h>
 #import "Mac_AppDelegate.h"
 #import "Mac_Window.h"
+#include "april.h"
 
 extern int gArgc;
 extern char** gArgv;
@@ -18,31 +20,37 @@ extern void (*gAprilInit)(const harray<hstr>&);
 extern void (*gAprilDestroy)();
 NSString* getApplicationName();
 
+bool g_WindowFocusedBeforeSleep = false;
+
 @implementation AprilAppDelegate
 
 - (void) receiveSleepNote: (NSNotification*) note
 {
 	if (aprilWindow && aprilWindow->isFocused())
 	{
-		aprilWindow->handleFocusChangeEvent(0);
-		mNotifyFocusChanged = true;
+#ifdef _DEBUG
+		hlog::write(april::logTag, "Computer went to sleep while app was focused.");
+#endif
+		aprilWindow->onFocusChanged(false);
+		g_WindowFocusedBeforeSleep = true;
 	}
-	else mNotifyFocusChanged = false;
+	else g_WindowFocusedBeforeSleep = false;
 }
 
 - (void) receiveWakeNote: (NSNotification*) note
 {
-	if (mNotifyFocusChanged)
+	if (g_WindowFocusedBeforeSleep)
 	{
-		aprilWindow->handleFocusChangeEvent(true);
-		mNotifyFocusChanged = false;
+#ifdef _DEBUG
+		hlog::write(april::logTag, "Computer waked from sleep, focusing window.");
+#endif
+		aprilWindow->onFocusChanged(true);
+		g_WindowFocusedBeforeSleep = false;
 	}
 }
 
 - (void) applicationDidFinishLaunching: (NSNotification*) note
 {
-	mNotifyFocusChanged = false;
-
 	harray<hstr> argv;
 	for (int i = 0; i < gArgc; i++)
 	{
@@ -54,10 +62,7 @@ NSString* getApplicationName();
 	
 	NSNotificationCenter* c = [[NSWorkspace sharedWorkspace] notificationCenter];
 	[c addObserver:self selector: @selector(receiveSleepNote:) name:NSWorkspaceWillSleepNotification object:NULL];
-	
     [c addObserver:self selector: @selector(receiveWakeNote:) name:NSWorkspaceDidWakeNotification object:NULL];
-
-	
 #ifdef _SDL
 	april::window->enterMainLoop();
 	gAprilDestroy();
@@ -72,10 +77,16 @@ NSString* getApplicationName();
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
 {
+#ifdef _DEBUG
+	hlog::write(april::logTag, "Application activated.");
+#endif
 	aprilWindow->OnAppGainedFocus();
 }
 - (void)applicationDidResignActive:(NSNotification *)aNotification
 {
+#ifdef _DEBUG
+	hlog::write(april::logTag, "Application deactivated.");
+#endif
 	aprilWindow->OnAppLostFocus();
 }
 

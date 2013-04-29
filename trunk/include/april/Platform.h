@@ -25,13 +25,14 @@ namespace april
 	struct SystemInfo
 	{
 		hstr name;
+		float osVersion;
 		int cpuCores; // number of CPU cores or separate CPU units
 		int ram; // how many MB of RAM does the host system have in total
 		int maxTextureSize;
 		gvec2 displayResolution;
 		int displayDpi;
 		hstr locale; // current system locale code
-		SystemInfo() : name(""), cpuCores(1), ram(256), maxTextureSize(0), displayDpi(0), locale("") { }
+		SystemInfo() : name(""), osVersion(1.0f), cpuCores(1), ram(256), maxTextureSize(0), displayDpi(0), locale("") { }
 	};
 	
 	enum DeviceType

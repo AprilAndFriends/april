@@ -34,6 +34,24 @@
 
 namespace april
 {
+	float getMacOSVersion()
+	{
+#ifdef _DEBUG
+		//	return 10.6f; // uncomment this to test behaviour on older macs
+#endif
+		static float version = 0;
+		if (version == 0)
+		{
+			SInt32 major, minor;
+			if (Gestalt(gestaltSystemVersionMajor, &major) == noErr && Gestalt(gestaltSystemVersionMinor, &minor) == noErr)
+			{
+				version = major + minor / 10.0f;
+			}
+			else version = 10.3f; // just in case. < 10.4 is not supported.
+		}
+		return version;
+	}
+	
 	bool platform_CursorIsVisible()
 	{
 		return CGCursorIsVisible();
@@ -96,6 +114,7 @@ namespace april
 			info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
 			// RAM
 			info.name = "mac";
+			info.osVersion = getMacOSVersion();
 
 			int mib [] = { CTL_HW, HW_MEMSIZE };
 			int64_t value = 0;
