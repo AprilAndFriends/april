@@ -320,6 +320,9 @@ class MouseDelegate : public april::MouseDelegate
 			victory = 8;
 	}
 
+	void onMouseDown(april::Key button) { }
+	void onMouseMove() { }
+
 };
 
 static UpdateDelegate* updateDelegate = NULL;
