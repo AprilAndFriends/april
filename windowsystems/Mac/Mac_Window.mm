@@ -9,6 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 
+#include <hltypes/hlog.h>
 #include "april.h"
 #include "Mac_Window.h"
 #import "Mac_OpenGLView.h"
@@ -21,35 +22,23 @@ static AprilCocoaWindow* mWindow = nil;
 bool gReattachLoadingOverlay = false;
 april::Mac_Window* aprilWindow = NULL;
 
+extern bool g_WindowFocusedBeforeSleep;
+
+namespace april
+{
+	float getMacOSVersion();
+}
+
 bool isPreLion()
 {
-	static bool result = getMacOSVersion() < 10.7f;
+	static bool result = april::getMacOSVersion() < 10.7f;
 	return result;
 }
 
 bool isLionOrNewer()
 {
-	static bool result = getMacOSVersion() >= 10.7f;
+	static bool result = april::getMacOSVersion() >= 10.7f;
 	return result;
-}
-
-float getMacOSVersion()
-{
-#ifdef _DEBUG
-//	return 10.6f; // uncomment this to test behaviour on older macs
-#endif
-
-	static float version = 0;
-	if (version == 0)
-	{
-		SInt32 major, minor;
-		if (Gestalt(gestaltSystemVersionMajor, &major) == noErr && Gestalt(gestaltSystemVersionMinor, &minor) == noErr)
-		{
-			version = major + minor / 10.0f;
-		}
-		else version = 10.3f; // just in case. < 10.4 is not supported.
-	}
-	return version;
 }
 
 namespace april
@@ -123,14 +112,20 @@ namespace april
 		this->cursorPosition = pos;
 	}
 	
+	bool Mac_Window::isCursorInside()
+	{
+		if (mView->mUseBlankCursor) return [NSCursor currentCursor] == mView->mBlankCursor;
+		else return Window::isCursorInside();
+	}
+	
 	bool Mac_Window::isCursorVisible()
 	{
-		return ![mView isBlankCursorUsed];
+		return !mView->mUseBlankCursor;
 	}
 	
 	void Mac_Window::setCursorVisible(bool visible)
 	{
-		if (visible != [mView isBlankCursorUsed]) return;
+		if (visible != mView->mUseBlankCursor) return;
 		if (visible) [mView setDefaultCursor];
 		else         [mView setBlankCursor];
 		[mWindow invalidateCursorRectsForView:mView];
@@ -216,13 +211,28 @@ namespace april
 		this->fullscreen = value;
 	}
 	
+	void Mac_Window::onFocusChanged(bool value)
+	{
+		if (value == false && g_WindowFocusedBeforeSleep)
+		{
+#ifdef _DEBUG
+			hlog::write(april::logTag, "Application lost focus while going to sleep, canceling focus on wake.");
+#endif
+			g_WindowFocusedBeforeSleep = false;
+		}
+		if (this->focused != value)
+		{
+			handleFocusChangeEvent(value);
+		}
+	}
+	
 	void Mac_Window::OnAppGainedFocus()
 	{
 		static bool first = 0;
 		if (!first) first = 1; // ignore initialization time focus gain
 		else
 		{
-			handleFocusChangeEvent(1);
+			if (![mWindow isMiniaturized]) onFocusChanged(1);
 			// sometimes MacOS forgets about checking cursor rects, so let's remind it..
 			[mWindow invalidateCursorRectsForView:mView];
 		}
@@ -230,7 +240,7 @@ namespace april
 
 	void Mac_Window::OnAppLostFocus()
 	{
-		handleFocusChangeEvent(0);
+		onFocusChanged(0);
 	}
 	
 	void Mac_Window::setTitle(chstr title)

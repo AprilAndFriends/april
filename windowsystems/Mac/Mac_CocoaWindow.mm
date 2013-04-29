@@ -9,11 +9,13 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Mac_CocoaWindow.h"
+#include <hltypes/hlog.h>
 #include <hltypes/hthread.h>
 #include "SystemDelegate.h"
 #include "Mac_LoadingOverlay.h"
 #include "Mac_Window.h"
 #include "Mac_Keyboard.h"
+#include "april.h"
 
 extern bool gReattachLoadingOverlay;
 
@@ -85,6 +87,22 @@ extern bool gReattachLoadingOverlay;
 {
 	[self onWindowSizeChange];
 	updateLoadingOverlay(0);
+}
+
+- (void)windowDidMiniaturize:(NSNotification *)notification
+{
+#ifdef _DEBUG
+	hlog::write(april::logTag, "User minimized window.");
+#endif
+	aprilWindow->onFocusChanged(0);
+}
+
+- (void)windowDidDeminiaturize:(NSNotification *)notification
+{
+#ifdef _DEBUG
+	hlog::write(april::logTag, "User unminimized window.");
+#endif
+	aprilWindow->onFocusChanged(1);
 }
 
 - (BOOL)isFullScreen

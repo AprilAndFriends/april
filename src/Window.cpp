@@ -356,7 +356,7 @@ namespace april
 	void Window::handleFocusChangeEvent(bool focused)
 	{
 		this->focused = focused;
-		hlog::write(april::logTag, "Window " + hstr(focused ? "activated" : "deactivated") + ".");
+		hlog::write(april::logTag, "Window " + hstr(focused ? "gained focus." : "lost focus."));
 		if (this->systemDelegate != NULL)
 		{
 			this->systemDelegate->onWindowFocusChanged(focused);

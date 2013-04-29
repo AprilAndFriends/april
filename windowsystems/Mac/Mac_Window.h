@@ -39,6 +39,7 @@ namespace april
 		void updateCursorPosition(gvec2& pos);
 		bool isCursorVisible();
 		void setCursorVisible(bool visible);
+		bool isCursorInside();
 
         void presentFrame();
 		bool updateOneFrame();
@@ -49,6 +50,8 @@ namespace april
 
 		void OnAppGainedFocus();
 		void OnAppLostFocus();
+		
+		void onFocusChanged(bool value);
 	
 		bool mResizable;
 	protected:
@@ -58,7 +61,6 @@ namespace april
 }
 extern april::Mac_Window* aprilWindow;
 
-float getMacOSVersion();
 bool isPreLion();
 bool isLionOrNewer();
 

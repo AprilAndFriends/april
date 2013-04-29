@@ -104,11 +104,6 @@
 	mUseBlankCursor = true;
 }
 
-- (BOOL) isBlankCursorUsed
-{
-	return mUseBlankCursor;
-}
-
 - (void) dealloc
 {
 	[mBlankCursor release];
