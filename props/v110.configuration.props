@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' or '$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Link>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Android' or '$(Configuration)|$(Platform)'=='Release|Android'">
+    <Link>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-ljpeg;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-ljpeg;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9|Win32' or
+                                  '$(Configuration)|$(Platform)'=='DebugS_DirectX9|Win32' or
+                                  '$(Configuration)|$(Platform)'=='Release_DirectX9|Win32' or
+                                  '$(Configuration)|$(Platform)'=='ReleaseS_DirectX9|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DIRECTX;_DIRECTX9;HAVE_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;d3d9.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;d3d9.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGL1|Win32' or
+                                  '$(Configuration)|$(Platform)'=='DebugS_OpenGL1|Win32' or
+                                  '$(Configuration)|$(Platform)'=='Release_OpenGL1|Win32' or
+                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenGL1|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_OPENGL;_OPENGL1;HAVE_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;OpenGL32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;OpenGL32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES1|Win32' or
+                                  '$(Configuration)|$(Platform)'=='DebugS_OpenGLES1|Win32' or
+                                  '$(Configuration)|$(Platform)'=='Release_OpenGLES1|Win32' or
+                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES1|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;HAVE_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;libGLES_CM.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;libGLES_CM.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES1|Android' or
+                                  '$(Configuration)|$(Platform)'=='DebugS_OpenGLES1|Android' or
+                                  '$(Configuration)|$(Platform)'=='Release_OpenGLES1|Android' or
+                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES1|Android'">
+    <ClCompile>
+      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-lpeg;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-lpeg;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+</Project>
