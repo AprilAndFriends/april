@@ -66,10 +66,10 @@
       <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-lpeg;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-ljpeg;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-lpeg;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-ljpeg;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
 </Project>
