@@ -114,7 +114,7 @@ namespace april
 	
 	bool Mac_Window::isCursorInside()
 	{
-		if (mView->mUseBlankCursor) return [NSCursor currentCursor] == mView->mBlankCursor;
+		if (mView != NULL && mView->mUseBlankCursor) return [NSCursor currentCursor] == mView->mBlankCursor;
 		else return Window::isCursorInside();
 	}
 	
@@ -126,6 +126,7 @@ namespace april
 	
 	void Mac_Window::setCursorVisible(bool visible)
 	{
+		if (mView == NULL) return;
 		if (visible != mView->mUseBlankCursor) return;
 		if (visible) [mView setDefaultCursor];
 		else         [mView setBlankCursor];
