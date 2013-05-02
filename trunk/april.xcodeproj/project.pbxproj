@@ -302,7 +302,7 @@
 		D1981C64140F85350057C3AF /* WBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WBImage.m; path = windowsystems/iOS/WBImage.m; sourceTree = "<group>"; };
 		D1AF669B170B1E4800A43743 /* Mac_Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Mac_Window.h; path = windowsystems/Mac/Mac_Window.h; sourceTree = "<group>"; };
 		D1AF669C170B1E4800A43743 /* Mac_Window.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_Window.mm; path = windowsystems/Mac/Mac_Window.mm; sourceTree = "<group>"; };
-		D1AF66F3170B1E5900A43743 /* april (SDL OpenGL) copy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "april (SDL OpenGL) copy.framework"; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1AF66F3170B1E5900A43743 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "april.framework"; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1BCC575161595580049CEA9 /* ImageSourceCG.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = ImageSourceCG.mm; path = src/ImageSourceCG.mm; sourceTree = "<group>"; };
 		D1BCC576161595580049CEA9 /* ImageSourceIL.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSourceIL.cpp; path = src/ImageSourceIL.cpp; sourceTree = "<group>"; };
 		D1BCC577161595580049CEA9 /* ImageSourceJpg.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSourceJpg.cpp; path = src/ImageSourceJpg.cpp; sourceTree = "<group>"; };
@@ -435,7 +435,7 @@
 				8DC2EF5B0486A6940098B216 /* april.framework */,
 				D1981C30140F824B0057C3AF /* libapril.a */,
 				D10950C4162073A500C5B181 /* libapril.a */,
-				D1AF66F3170B1E5900A43743 /* april (SDL OpenGL) copy.framework */,
+				D1AF66F3170B1E5900A43743 /* april.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -995,7 +995,7 @@
 			name = "april (Cocoa OpenGL)";
 			productInstallPath = "$(HOME)/Library/Frameworks";
 			productName = libapril;
-			productReference = D1AF66F3170B1E5900A43743 /* april (SDL OpenGL) copy.framework */;
+			productReference = D1AF66F3170B1E5900A43743 /* april.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
