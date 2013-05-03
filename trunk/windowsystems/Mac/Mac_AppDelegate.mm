@@ -80,14 +80,14 @@ bool g_WindowFocusedBeforeSleep = false;
 #ifdef _DEBUG
 	hlog::write(april::logTag, "Application activated.");
 #endif
-	aprilWindow->OnAppGainedFocus();
+	if (aprilWindow) aprilWindow->OnAppGainedFocus();
 }
 - (void)applicationDidResignActive:(NSNotification *)aNotification
 {
 #ifdef _DEBUG
 	hlog::write(april::logTag, "Application deactivated.");
 #endif
-	aprilWindow->OnAppLostFocus();
+	if (aprilWindow) aprilWindow->OnAppLostFocus();
 }
 
 @end
