@@ -16,12 +16,13 @@
 #import "Mac_OpenGLView.h"
 #include "Keys.h"
 
-@interface AprilCocoaWindow : NSWindow<NSWindowDelegate>
+@interface AprilCocoaWindow : NSWindow<NSWindowDelegate, NSMetadataQueryDelegate>
 {
 @public
 	NSRect mWindowedRect;
 	bool mCustomFullscreenExitAnimation;
 @private
+	NSMetadataQuery* mMetadataQuery;
     NSTimer* mTimer;
 	AprilMacOpenGLView* mView;
 }
