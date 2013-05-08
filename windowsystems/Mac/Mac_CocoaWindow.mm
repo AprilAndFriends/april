@@ -34,6 +34,12 @@ extern bool gReattachLoadingOverlay;
 	[mView setNeedsDisplay:YES];
 }
 
+- (void)queryUpdated:(NSNotification*) note
+{
+	// needed for screenshot notifications because mac messes up the custom cursor when making a screenshot in fullscreen...sigh..
+	[self invalidateCursorRectsForView:mView];
+}
+
 - (void)configure
 {
 	april::initMacKeyMap();
@@ -43,6 +49,16 @@ extern bool gReattachLoadingOverlay;
 	[self setOpaque:YES];
 	[self setDelegate:self];
 	[self setAcceptsMouseMovedEvents:YES];
+	
+	// setup screenshot listening to counter apple's bug..
+	mMetadataQuery = [[NSMetadataQuery alloc] init];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryUpdated:) name:NSMetadataQueryDidStartGatheringNotification object:mMetadataQuery];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryUpdated:) name:NSMetadataQueryDidUpdateNotification object:mMetadataQuery];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryUpdated:) name:NSMetadataQueryDidFinishGatheringNotification object:mMetadataQuery];
+    
+    [mMetadataQuery setDelegate:self];
+    [mMetadataQuery setPredicate:[NSPredicate predicateWithFormat:@"kMDItemIsScreenCapture = 1"]];
+    [mMetadataQuery startQuery];
 }
 
 - (void)startRenderLoop
@@ -404,6 +420,11 @@ extern bool gReattachLoadingOverlay;
 	{
 		[mTimer invalidate];
 		mTimer = nil;
+	}
+	if (mMetadataQuery != nil)
+	{
+		[mMetadataQuery release];
+		mMetadataQuery = nil;
 	}
 }
 
