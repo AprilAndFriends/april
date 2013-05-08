@@ -94,6 +94,18 @@
 	}
 }
 
+// Apple doesn't forward rightmouse events on MacOS 10.6 and earlier for some reason, so we override the behaviour here
+- (void)rightMouseDown:(NSEvent*) event
+{
+	[[self nextResponder] rightMouseDown:event];
+}
+
+- (void)rightMouseUp:(NSEvent*) event
+{
+	[[self nextResponder] rightMouseUp:event];
+}
+
+
 - (void) setDefaultCursor
 {
 	mUseBlankCursor = false;
