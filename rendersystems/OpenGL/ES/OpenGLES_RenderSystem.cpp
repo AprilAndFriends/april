@@ -72,53 +72,56 @@ namespace april
 		{
 			return;
 		}
-		this->eglDisplay = eglGetDisplay((NativeDisplayType)this->hDC);
-		if (this->eglDisplay == EGL_NO_DISPLAY)
+		if (april::window->getName() == APRIL_WS_WIN32)
 		{
-			 this->eglDisplay = eglGetDisplay((NativeDisplayType)EGL_DEFAULT_DISPLAY);
-		}
-		if (this->eglDisplay == EGL_NO_DISPLAY)
-		{
-			hlog::error(april::logTag, "Can't get EGL display!");
-			this->_releaseWindow();
-			return;
-		}
-		EGLint majorVersion;
-		EGLint minorVersion;
-		if (!eglInitialize(this->eglDisplay, &majorVersion, &minorVersion))
-		{
-			hlog::error(april::logTag, "Can't initialize EGL!");
-			this->_releaseWindow();
-			return;
-		}
-		EGLint configs;
-		EGLBoolean result = eglChooseConfig(this->eglDisplay, this->pi32ConfigAttribs, &this->eglConfig, 1, &configs);
-		if (!result || configs == 0)
-		{
-			hlog::error(april::logTag, "Can't choose EGL config!");
-			this->_releaseWindow();
-			return;
-		}
-		this->eglSurface = eglCreateWindowSurface(this->eglDisplay, this->eglConfig, (NativeWindowType)this->hWnd, NULL);
-		if (eglGetError() != EGL_SUCCESS)
-		{
-			hlog::error(april::logTag, "Can't create window surface!");
-			this->_releaseWindow();
-			return;
-		}
-		this->eglContext = eglCreateContext(this->eglDisplay, this->eglConfig, EGL_NO_CONTEXT, NULL);
-		if (eglGetError() != EGL_SUCCESS)
-		{
-			hlog::error(april::logTag, "Can't create EGL context!");
-			this->_releaseWindow();
-			return;
-		}
-		eglMakeCurrent(this->eglDisplay, this->eglSurface, this->eglSurface, this->eglContext);
-		if (eglGetError() != EGL_SUCCESS)
-		{
-			hlog::error(april::logTag, "Can't make context current!");
-			this->_releaseWindow();
-			return;
+			this->eglDisplay = eglGetDisplay((NativeDisplayType)this->hDC);
+			if (this->eglDisplay == EGL_NO_DISPLAY)
+			{
+				 this->eglDisplay = eglGetDisplay((NativeDisplayType)EGL_DEFAULT_DISPLAY);
+			}
+			if (this->eglDisplay == EGL_NO_DISPLAY)
+			{
+				hlog::error(april::logTag, "Can't get EGL display!");
+				this->_releaseWindow();
+				return;
+			}
+			EGLint majorVersion;
+			EGLint minorVersion;
+			if (!eglInitialize(this->eglDisplay, &majorVersion, &minorVersion))
+			{
+				hlog::error(april::logTag, "Can't initialize EGL!");
+				this->_releaseWindow();
+				return;
+			}
+			EGLint configs;
+			EGLBoolean result = eglChooseConfig(this->eglDisplay, this->pi32ConfigAttribs, &this->eglConfig, 1, &configs);
+			if (!result || configs == 0)
+			{
+				hlog::error(april::logTag, "Can't choose EGL config!");
+				this->_releaseWindow();
+				return;
+			}
+			this->eglSurface = eglCreateWindowSurface(this->eglDisplay, this->eglConfig, (NativeWindowType)this->hWnd, NULL);
+			if (eglGetError() != EGL_SUCCESS)
+			{
+				hlog::error(april::logTag, "Can't create window surface!");
+				this->_releaseWindow();
+				return;
+			}
+			this->eglContext = eglCreateContext(this->eglDisplay, this->eglConfig, EGL_NO_CONTEXT, NULL);
+			if (eglGetError() != EGL_SUCCESS)
+			{
+				hlog::error(april::logTag, "Can't create EGL context!");
+				this->_releaseWindow();
+				return;
+			}
+			eglMakeCurrent(this->eglDisplay, this->eglSurface, this->eglSurface, this->eglContext);
+			if (eglGetError() != EGL_SUCCESS)
+			{
+				hlog::error(april::logTag, "Can't make context current!");
+				this->_releaseWindow();
+				return;
+			}
 		}
 #endif
 		OpenGL_RenderSystem::assignWindow(window);

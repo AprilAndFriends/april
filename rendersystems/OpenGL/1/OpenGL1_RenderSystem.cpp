@@ -60,7 +60,7 @@ namespace april
 		if (this->hRC != 0)
 		{
 			wglMakeCurrent(NULL, NULL);
-			wglDeleteContext(hRC);
+			wglDeleteContext(this->hRC);
 			this->hRC = 0;
 		}
 		OpenGL_RenderSystem::_releaseWindow();
@@ -74,18 +74,21 @@ namespace april
 		{
 			return;
 		}
-		this->hRC = wglCreateContext(this->hDC);
-		if (this->hRC == 0)
+		if (april::window->getName() == APRIL_WS_WIN32)
 		{
-			hlog::error(april::logTag, "Can't create a GL rendering context!");
-			this->_releaseWindow();
-			return;
-		}
-		if (wglMakeCurrent(this->hDC, this->hRC) == 0)
-		{
-			hlog::error(april::logTag, "Can't activate the GL rendering context!");
-			this->_releaseWindow();
-			return;
+			this->hRC = wglCreateContext(this->hDC);
+			if (this->hRC == 0)
+			{
+				hlog::error(april::logTag, "Can't create a GL rendering context!");
+				this->_releaseWindow();
+				return;
+			}
+			if (wglMakeCurrent(this->hDC, this->hRC) == 0)
+			{
+				hlog::error(april::logTag, "Can't activate the GL rendering context!");
+				this->_releaseWindow();
+				return;
+			}
 		}
 #endif
 		OpenGL_RenderSystem::assignWindow(window);
