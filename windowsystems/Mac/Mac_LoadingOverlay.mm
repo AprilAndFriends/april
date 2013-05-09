@@ -44,7 +44,15 @@ static void updateLoadingOverlaySize(NSWindow* parent, bool check)
 void createLoadingOverlay(NSWindow* parent)
 {
 	NSString* path = [[NSBundle mainBundle] pathForResource:@"Default" ofType:@"png"];
-	if ([[NSFileManager defaultManager] fileExistsAtPath:path])
+	bool found = [[NSFileManager defaultManager] fileExistsAtPath:path];
+	
+	if (!found)
+	{
+		path = [[NSBundle mainBundle] pathForResource:@"Default-Mac" ofType:@"png"];
+		found = [[NSFileManager defaultManager] fileExistsAtPath:path];
+	}
+	
+	if (found)
 	{
 		NSRect windowFrame = parent.frame;
 		NSRect frame = [parent.contentView bounds];

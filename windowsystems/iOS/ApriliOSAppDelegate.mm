@@ -75,7 +75,6 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
     // also used in latest SDL
     // quote:
     // KP: using a selector gets around the "failed to launch application in time" if the startup code takes too long
-    // This is easy to see if running with Valgrind
 	[self performSelector:@selector(performInit:) withObject:nil afterDelay:0.2f];
     
 }
