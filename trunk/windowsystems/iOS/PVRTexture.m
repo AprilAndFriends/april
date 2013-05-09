@@ -107,27 +107,7 @@ typedef struct _PVRTexHeader
 	uint32_t formatFlags;
 	
 	header = (PVRTexHeader *)[data bytes];
-	/*
-	printf("Header: ");
-	for (int i = 0; i < sizeof(PVRTexHeader); i++)
-	{
-		printf("%02x ", ((unsigned char*)[data bytes])[i]);
-	}
-	printf("\n");
-	
-	printf("Header: ");
-	for (int i = 0; i < sizeof(PVRTexHeader); i++)
-	{
-		unsigned char c = ((unsigned char*)[data bytes])[i];
-		if (c < 32 || c > 127)
-	    {
-			c='.';
-		}
-		printf("%c", c);
-	}
-	printf("\n");
-	*/
-	
+
 	pvrTag = CFSwapInt32LittleToHost(header->pvrTag);
 
 	if (gPVRTexIdentifier[0] != ((pvrTag >>  0) & 0xff) ||
@@ -135,7 +115,6 @@ typedef struct _PVRTexHeader
 		gPVRTexIdentifier[2] != ((pvrTag >> 16) & 0xff) ||
 		gPVRTexIdentifier[3] != ((pvrTag >> 24) & 0xff))
 	{
-		//NSLog(@"Unknown header - pvr tag is %c%c%c%c", pvrTag & 0xff, (pvrTag >> 8) & 0xff, (pvrTag >> 16) & 0xff, (pvrTag >> 24) & 0xff);
 		return FALSE;
 	}
 	
