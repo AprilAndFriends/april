@@ -11,7 +11,7 @@
 /// 
 /// Defines a WinRT window.
 
-#ifdef HAVE_WINRT
+#ifdef _WINRT_WINDOW
 #ifndef APRIL_WINRT_WINDOW_H
 #define APRIL_WINRT_WINDOW_H
 #include <hltypes/hplatform.h>

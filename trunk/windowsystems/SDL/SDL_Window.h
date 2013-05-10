@@ -16,7 +16,7 @@
 #ifndef APRIL_SDL_WINDOW_H
 #define APRIL_SDL_WINDOW_H
 
-#ifdef _SDL
+#ifdef _SDL_WINDOW
 
 #include <SDL/SDL_keysym.h>
 #include <hltypes/hstring.h>

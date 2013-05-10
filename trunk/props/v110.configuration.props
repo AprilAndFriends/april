@@ -15,7 +15,7 @@
                                   '$(Configuration)|$(Platform)'=='Release_DirectX9|Win32' or
                                   '$(Configuration)|$(Platform)'=='ReleaseS_DirectX9|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>_DIRECTX;_DIRECTX9;HAVE_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DIRECTX;_DIRECTX9;_WIN32_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -26,7 +26,7 @@
                                   '$(Configuration)|$(Platform)'=='Release_OpenGL1|Win32' or
                                   '$(Configuration)|$(Platform)'=='ReleaseS_OpenGL1|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>_OPENGL;_OPENGL1;HAVE_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_OPENGL;_OPENGL1;_WIN32_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -37,7 +37,7 @@
                                   '$(Configuration)|$(Platform)'=='Release_OpenGLES1|Win32' or
                                   '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES1|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;HAVE_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libGLES_CM.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -48,7 +48,7 @@
                                   '$(Configuration)|$(Platform)'=='Release_OpenGLES1|Android' or
                                   '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES1|Android'">
     <ClCompile>
-      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;_ANDROIDJNI_WINDOW%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>
