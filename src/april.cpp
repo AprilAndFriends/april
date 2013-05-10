@@ -215,7 +215,7 @@ namespace april
 			april::window = new iOS_Window();
 		}
 #endif
-#ifdef _ANDROID
+#ifdef _ANDROIDJNI_WINDOW
 		if (april::window == NULL && window == WS_ANDROIDJNI)
 		{
 			april::window = new AndroidJNI_Window();

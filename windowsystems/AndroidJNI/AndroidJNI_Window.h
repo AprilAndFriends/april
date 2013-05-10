@@ -11,7 +11,7 @@
 /// 
 /// Defines an Android JNI window.
 
-#ifdef _ANDROID
+#ifdef _ANDROIDJNI_WINDOW
 #ifndef APRIL_ANDROID_JNI_WINDOW_H
 #define APRIL_ANDROID_JNI_WINDOW_H
 
