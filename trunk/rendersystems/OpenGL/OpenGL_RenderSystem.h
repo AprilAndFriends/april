@@ -101,13 +101,15 @@ namespace april
 		virtual void _setColorPointer(int stride, const void* pointer);
 
 #ifdef _WIN32
+	public:
+		HDC getHDC() { return this->hDC; }
+		bool _initWin32(Window* window);
+
+	protected:
 		HWND hWnd;
 		HDC hDC;
 
-		bool _initWin32(Window* window);
-		virtual void _releaseWindow();
-	public:
-		HDC getHDC() { return this->hDC; }
+		void _releaseWindow();
 
 #endif
 

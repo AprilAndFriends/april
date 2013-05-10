@@ -22,16 +22,9 @@
 
 using namespace Windows::ApplicationModel::Core;
 
-int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
+int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), const harray<hstr>& args, int argc, char** argv)
 {
-	april::WinRT::Args.clear();
-	if (argv != NULL)
-	{
-		for_iter (i, 0, argc)
-		{
-			april::WinRT::Args += argv[i];
-		}
-	}
+	april::WinRT::Args = args;
 	april::WinRT::Init = anAprilInit;
 	april::WinRT::Destroy = anAprilDestroy;
 	CoreApplication::Run(ref new april::WinRT_ViewSource());

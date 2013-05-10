@@ -18,33 +18,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#ifndef __APPLE__
-	#ifdef _ANDROID
-		#include <GLES/gl.h>
-		#define GL_GLEXT_PROTOTYPES
-		#include <GLES/glext.h>
-	#else
-		#include <gl/GL.h>
-		#define GL_GLEXT_PROTOTYPES
-		#include <gl/glext.h>
-	#endif
-#else
-	#ifdef _IOS
-		#ifdef _OPENGLES1
-			#include <OpenGLES/ES1/gl.h>
-			#include <OpenGLES/ES1/glext.h>
-		#elif defined(_OPENGLES2)
-			#include <OpenGLES/ES2/gl.h>
-			#include <OpenGLES/ES2/glext.h>
-		#endif
-	#else
-		#include <OpenGL/gl.h>
-	#endif
-#endif
-
-
-
-
 #if TARGET_OS_IPHONE
 	#ifdef _OPENGLES1
 		#include <OpenGLES/ES1/gl.h>
@@ -74,8 +47,6 @@
 		#include <OpenGL/gl.h>
 	#endif
 #endif
-
-
 
 #include <gtypes/Rectangle.h>
 #include <hltypes/hlog.h>
@@ -129,7 +100,7 @@ namespace april
 	
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
 	{
-#ifdef _WIN32
+#if defined(_WIN32) && defined(_WIN32_WINDOW)
 		this->hWnd = 0;
 		this->hDC = 0;
 #endif
@@ -170,15 +141,18 @@ namespace april
 #ifdef _WIN32
 	void OpenGL_RenderSystem::_releaseWindow()
 	{
-		if (this->hDC != 0)
+#ifdef _WIN32_WINDOW
+		if (april::window->getName() == APRIL_WS_WIN32 && this->hDC != 0)
 		{
 			ReleaseDC(this->hWnd, this->hDC);
 			this->hDC = 0;
 		}
+#endif
 	}
 
 	bool OpenGL_RenderSystem::_initWin32(Window* window)
 	{
+#ifdef _WIN32_WINDOW
 		if (april::window->getName() == APRIL_WS_WIN32)
 		{
 			this->hWnd = (HWND)window->getBackendId();
@@ -211,6 +185,7 @@ namespace april
 				return false;
 			}
 		}
+#endif
 		return true;
 	}
 #endif
