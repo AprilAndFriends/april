@@ -13,7 +13,7 @@
 /// 
 /// Defines a Win32 window.
 
-#ifdef HAVE_WIN32
+#ifdef _WIN32_WINDOW
 #ifndef APRIL_WIN32_WINDOW_H
 #define APRIL_WIN32_WINDOW_H
 #include <hltypes/hplatform.h>

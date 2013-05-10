@@ -45,7 +45,7 @@
 #if TARGET_OS_IPHONE
 #include "iOS_Window.h"
 #endif
-#ifdef _SDL
+#ifdef _SDL_WINDOW
 #include "SDL_Window.h"
 #endif
 #ifdef _COCOA
@@ -86,7 +86,7 @@
 		#define WS_INTERNAL_DEFAULT WS_IOS
 	#else
 		#define RS_INTERNAL_DEFAULT RS_OPENGL1
-		#ifdef _SDL
+		#ifdef _SDL_WINDOW
 			#define WS_INTERNAL_DEFAULT WS_SDL
 		#else
 			#define WS_INTERNAL_DEFAULT WS_MAC
@@ -185,19 +185,19 @@ namespace april
 		{
 			window = WS_INTERNAL_DEFAULT;
 		}
-#ifdef HAVE_WIN32
+#ifdef _WIN32_WINDOW
 		if (april::window == NULL && window == WS_WIN32)
 		{
 			april::window = new Win32_Window();
 		}
 #endif
-#ifdef HAVE_WINRT
+#ifdef _WINRT_WINDOW
 		if (april::window == NULL && window == WS_WINRT)
 		{
 			april::window = new WinRT_Window();
 		}
 #endif
-#ifdef _SDL
+#ifdef _SDL_WINDOW
 		if (april::window == NULL && window == WS_SDL)
 		{
 			april::window = new SDL_Window();
