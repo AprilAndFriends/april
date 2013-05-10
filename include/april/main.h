@@ -34,6 +34,8 @@
  *   (typically main.cpp); it MUST be included somewhere
  * - define just april_init() and april_destroy()
  * - do not worry about other functionality in this header
+ * - when using the OpenKODE standard, kdMain is defined here
+ *   and you should include KD/kd.h before this file
  *
  * No other functionality defined in main.h should be seen as
  * being publicly available, and other functions (such as
@@ -52,7 +54,7 @@
 #endif
 
 #ifndef _ANDROID
-aprilExport int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv);
+aprilExport int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), const harray<hstr>& args, int argc, char** argv);
 #else
 namespace april
 {
@@ -93,11 +95,24 @@ void __unlockSingleInstanceMutex()
 	}
 }
 #endif
-//{
 #ifdef _ANDROID
 extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
 	return april::JNI_OnLoad(vm, reserved);
+}
+#elif defined(_OPENKODE)
+KDint KD_APIENTRY kdMain(KDint argc, const KDchar* const* argv)
+{
+	harray<hstr> args;
+	if (argv != NULL && argv[0] != NULL)
+	{
+		for_iter (i, 0, argc)
+		{
+			args += argv[i];
+		}
+	}
+	april_main(april_init, april_destroy, args, (int)argc, (char**)argv);
+	return 0;
 }
 #elif !defined(_WIN32) || defined(_CONSOLE) && !_HL_WINRT
 int main(int argc, char** argv)
@@ -108,7 +123,15 @@ int main(int argc, char** argv)
 		return 0;
 	}
 #endif
-	int result = april_main(april_init, april_destroy, argc, argv);
+	harray<hstr> args;
+	if (argv != NULL)
+	{
+		for_iter (i, 0, argc)
+		{
+			args += argv[i];
+		}
+	}
+	int result = april_main(april_init, april_destroy, args, argc, argv);
 #ifdef __SINGLE_INSTANCE
 	__unlockSingleInstanceMutex();
 #endif
@@ -142,36 +165,25 @@ int main(Platform::Array<Platform::String^>^ args)
 	}
 #endif
 #endif
-	char** argv = new char*[argc];
-	hstr arg;
+	harray<hstr> args;
 	for_iter (i, 0, argc)
 	{
 #if !_HL_WINRT
-		arg = hstr::from_unicode(wArgv[i]);
+		args += hstr::from_unicode(wArgv[i]);
 #else
-		arg = hstr::from_unicode(args[i]->Data());
+		args += hstr::from_unicode(args[i]->Data());
 #endif
-		argv[i] = new char[arg.size() + 1];
-		memset(argv[i], 0, arg.size() + 1);
-		memcpy(argv[i], arg.c_str(), sizeof(char) * arg.size());
 	}
 #if !_HL_WINRT
 	LocalFree(wArgv);
 #endif
 	// call the user specified main function
-	april_main(april_init, april_destroy, argc, argv);
-	// free allocated memory for arguments
-	for_iter (i, 0, argc)
-	{
-		delete [] argv[i];
-	}
-	delete [] argv;
+	april_main(april_init, april_destroy, args, argc, argv);
 #ifdef __SINGLE_INSTANCE
 	__unlockSingleInstanceMutex();
 #endif
 	return 0;
 }
-
 #endif
 #define main __ STOP_USING_MAIN___DEPRECATED_IN_APRIL
 #endif

@@ -57,16 +57,6 @@ namespace april
 	protected:
 		void _setTextureBlendMode(BlendMode mode);
 
-#ifdef _WIN32
-		EGLDisplay eglDisplay;
-		EGLConfig eglConfig;
-		EGLSurface eglSurface;
-		EGLContext eglContext;
-		EGLint pi32ConfigAttribs[128];
-
-		void _releaseWindow();
-#endif
-
 	};
 	
 }

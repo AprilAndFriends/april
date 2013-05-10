@@ -9,7 +9,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_OPENKODE)
 #include <hltypes/hplatform.h>
 #if !_HL_WINRT
 
@@ -59,7 +59,6 @@ namespace april
 				}
 			}
 		}
-		// TODO
 		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
 			info.maxTextureSize = april::rendersys->getMaxTextureSize();

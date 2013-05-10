@@ -31,8 +31,9 @@
 #define APRIL_WS_WINRT "WinRT"
 #define APRIL_WS_SDL "SDL"
 #define APRIL_WS_MAC "Mac"
-#define APRIL_WS_ANDROIDJNI "AndroidJNI"
 #define APRIL_WS_IOS "iOS"
+#define APRIL_WS_ANDROIDJNI "AndroidJNI"
+#define APRIL_WS_OPENKODE "OpenKODE"
 #define APRIL_WS_DEFAULT ""
 
 namespace april
@@ -60,7 +61,8 @@ namespace april
 		WS_SDL = 3,
 		WS_MAC = 4,
 		WS_IOS = 5,
-		WS_ANDROIDJNI = 6
+		WS_ANDROIDJNI = 6,
+		WS_OPENKODE = 7
 	};
 
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowType windowType);

@@ -9,6 +9,10 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#ifdef _OPENKODE
+#include <KD/kd.h>
+#endif
+
 #include <stdio.h>
 #ifdef __APPLE__
 #include <TargetConditionals.h>
@@ -36,6 +40,9 @@
 #endif
 #ifdef _OPENGLES2
 #include "OpenGLES2_RenderSystem.h"
+#endif
+#ifdef _OPENKODE_WINDOW
+#include "OpenKODE_Window.h"
 #endif
 #include "RenderSystem.h"
 #include "Window.h"
@@ -71,22 +78,30 @@
 	#elif defined(_OPENGLES2)
 		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
 	#endif
-	#if !_HL_WINRT
+	#ifdef _OPENKODE_WINDOW
+		#define WS_INTERNAL_DEFAULT WS_OPENKODE
+	#elif !_HL_WINRT
 		#define WS_INTERNAL_DEFAULT WS_WIN32
 	#else
 		#define WS_INTERNAL_DEFAULT WS_WINRT
 	#endif r
 #elif defined(__APPLE__)
-	#if defined(_IOS)
+	#ifdef _IOS
 		#ifdef _OPENGLES2
 			#define RS_INTERNAL_DEFAULT RS_OPENGLES2
 		#elif defined(_OPENGLES1)
 			#define RS_INTERNAL_DEFAULT RS_OPENGLES1
 		#endif
-		#define WS_INTERNAL_DEFAULT WS_IOS
+		#ifdef _OPENKODE_WINDOW
+			#define WS_INTERNAL_DEFAULT WS_OPENKODE
+		#else
+			#define WS_INTERNAL_DEFAULT WS_IOS
+		#endif
 	#else
 		#define RS_INTERNAL_DEFAULT RS_OPENGL1
-		#ifdef _SDL_WINDOW
+		#ifdef _OPENKODE_WINDOW
+			#define WS_INTERNAL_DEFAULT WS_OPENKODE
+		#elif defined(_SDL_WINDOW)
 			#define WS_INTERNAL_DEFAULT WS_SDL
 		#else
 			#define WS_INTERNAL_DEFAULT WS_MAC
@@ -94,14 +109,22 @@
 	#endif
 #elif defined(_UNIX)
 	#define RS_INTERNAL_DEFAULT RS_OPENGL1
-	#define WS_INTERNAL_DEFAULT WS_SDL
+	#ifdef _OPENKODE_WINDOW
+		#define WS_INTERNAL_DEFAULT WS_OPENKODE
+	#else
+		#define WS_INTERNAL_DEFAULT WS_SDL
+	#endif
 #elif defined(_ANDROID)
 	#ifdef _OPENGLES1
 		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
 	#elif defined(_OPENGLES2)
 		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
 	#endif
-	#define WS_INTERNAL_DEFAULT WS_ANDROIDJNI
+	#ifdef _OPENKODE_WINDOW
+		#define WS_INTERNAL_DEFAULT WS_OPENKODE
+	#elif defined(_ANDROIDJNI_WINDOW)
+		#define WS_INTERNAL_DEFAULT WS_ANDROIDJNI
+	#endif
 #endif
 
 #ifndef RS_INTERNAL_DEFAULT
@@ -219,6 +242,12 @@ namespace april
 		if (april::window == NULL && window == WS_ANDROIDJNI)
 		{
 			april::window = new AndroidJNI_Window();
+		}
+#endif
+#ifdef _OPENKODE_WINDOW
+		if (april::window == NULL && window == WS_OPENKODE)
+		{
+			april::window = new OpenKODE_Window();
 		}
 #endif
 		if (april::window == NULL)
