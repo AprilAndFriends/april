@@ -48,7 +48,7 @@
 #ifdef _SDL_WINDOW
 #include "SDL_Window.h"
 #endif
-#ifdef _COCOA
+#ifdef _COCOA_WINDOW
 #include "Mac_Window.h"
 #endif
 #ifdef _WIN32
@@ -203,7 +203,7 @@ namespace april
 			april::window = new SDL_Window();
 		}
 #endif
-#ifdef _COCOA
+#ifdef _COCOA_WINDOW
 		if (april::window == NULL && window == WS_MAC)
 		{
 			april::window = new Mac_Window();

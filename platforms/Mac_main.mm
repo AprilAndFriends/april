@@ -11,7 +11,7 @@
 #include "RenderSystem.h"
 #include "Window.h"
 #include "main.h"
-#ifdef _COCOA
+#ifdef _COCOA_WINDOW
 #import "Mac_Window.h"
 #import "Mac_AppDelegate.h"
 #endif
@@ -107,7 +107,7 @@ NSString* getApplicationName()
 	gAprilDestroy();
 }
 
-#ifdef _COCOA
+#ifdef _COCOA_WINDOW
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
 {
