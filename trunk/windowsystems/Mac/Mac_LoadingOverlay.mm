@@ -91,7 +91,11 @@ void updateLoadingOverlay(float k)
 	static float alpha = 1.5f;
 	if (mOverlayWindow)
 	{
-		alpha -= k;
+		if (aprilWindow->getParam("fasthide_loading_overlay") == "1")
+			alpha -= k * 3; // If you don't want to wait for the loading overlay every time, set this param. eg on debug mode
+		else
+			alpha -= k;
+
 		if (aprilWindow->getParam("retain_loading_overlay") == "1") alpha = 1.5f;
 
 		if (alpha < 0)

@@ -222,7 +222,7 @@ namespace april
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
 		
-		int clicked = NSRunAlertPanel(@"%@", [NSString stringWithUTF8String:text.c_str()], buttons[0], buttons[1], buttons[2], titlens);
+		int clicked = NSRunAlertPanel(titlens, @"%@", buttons[0], buttons[1], buttons[2], [NSString stringWithUTF8String:text.c_str()]);
 		switch (clicked)
 		{
 		case NSAlertDefaultReturn:
