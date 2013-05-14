@@ -51,6 +51,8 @@ bool g_WindowFocusedBeforeSleep = false;
 
 - (void) applicationDidFinishLaunching: (NSNotification*) note
 {
+	mAppFocused = true;
+
 	harray<hstr> argv;
 	for (int i = 0; i < gArgc; i++)
 	{
@@ -77,13 +79,18 @@ bool g_WindowFocusedBeforeSleep = false;
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
 {
+	if (mAppFocused) return; // this blocks initial app focus call
+	mAppFocused = true;
 #ifdef _DEBUG
 	hlog::write(april::logTag, "Application activated.");
 #endif
 	if (aprilWindow) aprilWindow->OnAppGainedFocus();
 }
+
 - (void)applicationDidResignActive:(NSNotification *)aNotification
 {
+	if (!mAppFocused) return;
+	mAppFocused = false;
 #ifdef _DEBUG
 	hlog::write(april::logTag, "Application deactivated.");
 #endif
