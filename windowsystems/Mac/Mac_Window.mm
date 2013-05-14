@@ -230,14 +230,9 @@ namespace april
 	
 	void Mac_Window::OnAppGainedFocus()
 	{
-		static bool first = 0;
-		if (!first) first = 1; // ignore initialization time focus gain
-		else
-		{
-			if (![mWindow isMiniaturized]) onFocusChanged(1);
-			// sometimes MacOS forgets about checking cursor rects, so let's remind it..
-			[mWindow invalidateCursorRectsForView:mView];
-		}
+		if (![mWindow isMiniaturized]) onFocusChanged(1);
+		// sometimes MacOS forgets about checking cursor rects, so let's remind it..
+		[mWindow invalidateCursorRectsForView:mView];
 	}
 
 	void Mac_Window::OnAppLostFocus()
