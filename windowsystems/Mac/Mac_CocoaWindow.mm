@@ -340,6 +340,8 @@ extern bool gReattachLoadingOverlay;
 		else
 			[self enterFullScreen];
 	}
+	// setting title again because Cocoa forgets it for some reason when swiching from fullscreen
+	[self setTitle:[NSString stringWithUTF8String:aprilWindow->getTitle().c_str()]];
 }
 
 - (void)keyDown:(NSEvent*) event
