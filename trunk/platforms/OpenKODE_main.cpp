@@ -18,8 +18,16 @@
 
 int gAprilShouldInvokeQuitCallback = 0;
 
-int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), const harray<hstr>& args, int argc, char** argv)
+int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {
+	harray<hstr> args;
+	if (argv != NULL && argv[0] != NULL)
+	{
+		for_iter (i, 0, argc)
+		{
+			args += argv[i];
+		}
+	}
 	anAprilInit(args);
 	april::window->enterMainLoop();
 	anAprilDestroy();

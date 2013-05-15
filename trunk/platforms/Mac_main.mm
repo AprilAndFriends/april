@@ -89,12 +89,12 @@ NSString* getApplicationName()
 {
 	/* Hand off to main application code */
 	//gCalledAppMainline = TRUE;
-	harray<hstr> argv;
+	harray<hstr> args;
 	for (int i = 0; i < gArgc; i++)
 	{
-		argv.push_back(gArgv[i]);
+		args.push_back(gArgv[i]);
 	}
-	gAprilInit(argv);
+	gAprilInit(args);
 #ifdef _SDL
 	april::window->enterMainLoop();
 	gAprilDestroy();

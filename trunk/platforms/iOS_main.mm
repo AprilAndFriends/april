@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "main.h"
 
-int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), const harray<hstr>& args, int argc, char **argv)
+int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char **argv)
 {	
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	int retVal = UIApplicationMain(argc, argv, nil, @"ApriliOSAppDelegate");
