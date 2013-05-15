@@ -178,7 +178,7 @@ int main(Platform::Array<Platform::String^>^ args)
 	LocalFree(wArgv);
 #endif
 	// call the user specified main function
-	april_main(april_init, april_destroy, args, argc, argv);
+	april_main(april_init, april_destroy, args, 0, NULL);
 #ifdef __SINGLE_INSTANCE
 	__unlockSingleInstanceMutex();
 #endif
