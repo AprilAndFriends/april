@@ -337,6 +337,11 @@ namespace april
 		{
 			hlog::write(april::logTag, "Destroying APRIL.");
 		}
+		if (april::window != NULL && april::rendersys != NULL)
+		{
+			april::rendersys->destroy();
+			april::window->destroy();
+		}
 		if (april::window != NULL)
 		{
 			delete april::window;
