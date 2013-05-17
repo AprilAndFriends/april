@@ -120,7 +120,7 @@ namespace april
 		this->name = APRIL_WS_IOS;
 	}
 	
-	bool iOS_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
+	bool iOS_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
 		if (!Window::create(w, h, fullscreen, title, options))
 		{

@@ -19,6 +19,8 @@
 #include <hltypes/harray.h>
 
 #include "aprilExport.h"
+#include "RenderSystem.h"
+#include "Window.h"
 
 #define APRIL_RS_OPENGL1 "OpenGL1"
 #define APRIL_RS_OPENGLES1 "OpenGLES1"
@@ -70,15 +72,15 @@ namespace april
 	aprilFnExport void init(RenderSystemType renderSystemType, Window* customWindow);
 	aprilFnExport void init(RenderSystem* customRenderSystem, Window* customWindow);
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowType windowType,
-		chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title, chstr windowOptions);
+		RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions);
 	aprilFnExport void init(RenderSystem* customRenderSystem, WindowType windowType,
-		chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title, chstr windowOptions);
+		RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions);
 	aprilFnExport void init(RenderSystemType renderSystemType, Window* customWindow,
-		chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title, chstr windowOptions);
+		RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions);
 	aprilFnExport void init(RenderSystem* customRenderSystem, Window* customWindow,
-		chstr renderSystemOptions, int w, int h, bool fullscreen, chstr title, chstr windowOptions);
-	aprilFnExport void createRenderSystem(chstr options = "");
-	aprilFnExport void createWindow(int w, int h, bool fullscreen, chstr title, chstr options = "");
+		RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions);
+	aprilFnExport void createRenderSystem(RenderSystem::Options options = RenderSystem::Options());
+	aprilFnExport void createWindow(int w, int h, bool fullscreen, chstr title, Window::Options options = Window::Options());
 	aprilFnExport void destroy();
 	aprilFnExport void addTextureExtension(chstr extension);
 	aprilFnExport harray<hstr> getTextureExtensions();

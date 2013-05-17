@@ -35,7 +35,7 @@ namespace april
 
 		OpenGL_RenderSystem();
 		~OpenGL_RenderSystem();
-		bool create(chstr options);
+		bool create(Options options);
 		bool destroy();
 
 		void reset();

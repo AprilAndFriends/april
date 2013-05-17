@@ -29,7 +29,7 @@ namespace april
 	public:
 		AndroidJNI_Window();
 		~AndroidJNI_Window();
-		bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
+		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		
 		void setTitle(chstr title) { }
 		bool isCursorVisible() { return false; }

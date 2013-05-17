@@ -40,7 +40,7 @@ namespace april
 		iOS_Window();
 		~iOS_Window();
 		
-		bool create(int w, int h, bool fullscreen, chstr title, chstr options);
+		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		// implementations
 		void enterMainLoop();
 		bool updateOneFrame();

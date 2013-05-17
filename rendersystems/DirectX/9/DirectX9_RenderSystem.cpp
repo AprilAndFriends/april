@@ -93,7 +93,7 @@ namespace april
 		return 0;
 	}
 	
-	DirectX9_RenderSystem::DirectX9_RenderSystem() : DirectX_RenderSystem(), zBufferEnabled(false),
+	DirectX9_RenderSystem::DirectX9_RenderSystem() : DirectX_RenderSystem(),
 		textureCoordinatesEnabled(false), colorEnabled(false), d3d(NULL), d3dDevice(NULL),
 		activeTexture(NULL), renderTarget(NULL), backBuffer(NULL)
 	{
@@ -105,13 +105,12 @@ namespace april
 		this->destroy();
 	}
 
-	bool DirectX9_RenderSystem::create(chstr options)
+	bool DirectX9_RenderSystem::create(RenderSystem::Options options)
 	{
 		if (!DirectX_RenderSystem::create(options))
 		{
 			return false;
 		}
-		this->zBufferEnabled = options.contains("zbuffer");
 		this->textureCoordinatesEnabled = false;
 		this->colorEnabled = false;
 		this->renderTarget = NULL;
@@ -161,7 +160,7 @@ namespace april
 		this->d3dpp->BackBufferHeight = april::window->getHeight();
 		this->d3dpp->BackBufferFormat = D3DFMT_X8R8G8B8;
 		this->d3dpp->PresentationInterval = D3DPRESENT_INTERVAL_ONE;
-		if (this->zBufferEnabled)
+		if (this->options.depthBuffer)
 		{
 			this->d3dpp->EnableAutoDepthStencil = TRUE;
 			this->d3dpp->AutoDepthStencilFormat = D3DFMT_D16;
@@ -528,7 +527,7 @@ namespace april
 		{
 			flags |= D3DCLEAR_TARGET;
 		}
-		if (depth && this->zBufferEnabled)
+		if (depth && this->options.depthBuffer)
 		{
 			flags |= D3DCLEAR_ZBUFFER;
 		}
@@ -539,7 +538,7 @@ namespace april
 	{
 		DWORD flags = 0;
 		flags |= D3DCLEAR_TARGET;
-		if (depth && this->zBufferEnabled)
+		if (depth && this->options.depthBuffer)
 		{
 			flags |= D3DCLEAR_ZBUFFER;
 		}

@@ -28,7 +28,7 @@ namespace april
 		virtual int getHeight();
 		virtual void* getBackendId();
 		
-		bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
+		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		bool destroy();
 		
 		void setTitle(chstr title);

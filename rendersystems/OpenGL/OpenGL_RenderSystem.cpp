@@ -110,14 +110,13 @@ namespace april
 	{
 	}
 
-	bool OpenGL_RenderSystem::create(chstr options)
+	bool OpenGL_RenderSystem::create(RenderSystem::Options options)
 	{
 		if (!RenderSystem::create(options))
 		{
 			return false;
 		}
 		this->activeTexture = NULL;
-		this->options = options;
 		this->deviceState.reset();
 		this->state.reset();
 		return true;
@@ -225,7 +224,7 @@ namespace april
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 		// other
-		if (this->options.contains("zbuffer"))
+		if (this->options.depthBuffer)
 		{
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
