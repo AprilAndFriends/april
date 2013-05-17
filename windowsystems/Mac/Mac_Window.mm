@@ -51,7 +51,7 @@ namespace april
 		this->mResizable = 0;
 #endif
 		this->name = APRIL_WS_MAC;
-		this->retainLoadingOverlay = false;
+		this->retainLoadingOverlay = fastHideLoadingOverlay = false;
 		
 		aprilWindow = this;
     }
@@ -92,6 +92,10 @@ namespace april
 		{
 			return this->retainLoadingOverlay ? "1" : "0";
 		}
+		if (param == "fasthide_loading_overlay")
+		{
+			return this->fastHideLoadingOverlay ? "1" : "0";
+		}
 		return "";
 	}
 	
@@ -104,6 +108,10 @@ namespace april
 		if (param == "reattach_loading_overlay")
 		{
 			gReattachLoadingOverlay = true;
+		}
+		if (param == "fasthide_loading_overlay")
+		{
+			this->fastHideLoadingOverlay = (value == "1");
 		}
 	}
 	

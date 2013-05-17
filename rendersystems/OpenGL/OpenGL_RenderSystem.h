@@ -82,7 +82,6 @@ namespace april
 	protected:
 		OpenGL_State deviceState;
 		OpenGL_State state;
-		hstr options;
 		OpenGL_Texture* activeTexture;
 
 		virtual void _setupDefaultParameters();
