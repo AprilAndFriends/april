@@ -29,7 +29,7 @@ namespace april
 	public:
 		OpenKODE_Window();
 		~OpenKODE_Window();
-		bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
+		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		bool destroy();
 
 		HL_DEFINE_SET(gvec2, cursorPosition, CursorPosition);

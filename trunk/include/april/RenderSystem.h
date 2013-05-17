@@ -44,9 +44,21 @@ namespace april
 	public:
 		friend class Texture;
 
+		struct aprilExport Options
+		{
+		public:
+			bool depthBuffer;
+
+			Options();
+			~Options();
+
+			hstr toString();
+
+		};
+
 		RenderSystem();
 		virtual ~RenderSystem();
-		virtual bool create(chstr options);
+		virtual bool create(Options options);
 		virtual bool destroy();
 
 		virtual void assignWindow(Window* window) = 0;
@@ -127,6 +139,7 @@ namespace april
 	protected:
 		hstr name;
 		bool created;
+		Options options;
 		harray<Texture*> textures;
 		Texture::Filter textureFilter;
 		Texture::AddressMode textureAddressMode;

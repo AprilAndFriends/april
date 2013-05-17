@@ -31,7 +31,7 @@ namespace april
 	public:
 		Win32_Window();
 		~Win32_Window();
-		bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
+		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		bool destroy();
 
 		void setTitle(chstr title);

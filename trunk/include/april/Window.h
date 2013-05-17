@@ -114,9 +114,23 @@ namespace april
 		
 		};
 
+		struct aprilExport Options
+		{
+		public:
+			bool fullscreenSwitch;
+			bool resolutionSwitch;
+			bool windowResize;
+
+			Options();
+			~Options();
+
+			hstr toString();
+
+		};
+
 		Window();
 		virtual ~Window();
-		virtual bool create(int w, int h, bool fullscreen, chstr title, chstr options = "");
+		virtual bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		virtual bool destroy();
 
 		// generic getters/setters
@@ -206,6 +220,7 @@ namespace april
 		hstr name;
 		hstr title;
 		bool fullscreen;
+		Options options;
 		bool focused;
 		bool running;
 		int fps;

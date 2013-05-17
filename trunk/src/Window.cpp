@@ -72,6 +72,39 @@ namespace april
 
 	Window* window = NULL;
 	
+	Window::Options::Options()
+	{
+		this->fullscreenSwitch = false;
+		this->resolutionSwitch = false;
+		this->windowResize = false;
+	}
+	
+	Window::Options::~Options()
+	{
+	}
+
+	hstr Window::Options::toString()
+	{
+		harray<hstr> options;
+		if (this->fullscreenSwitch)
+		{
+			options += "fullscreen-switch";
+		}
+		if (this->resolutionSwitch)
+		{
+			options += "resolution-switch";
+		}
+		if (this->windowResize)
+		{
+			options += "window-resize";
+		}
+		if (options.size() == 0)
+		{
+			options += "none";
+		}
+		return options.join(',');
+	}
+	
 	Window::Window() : created(false), fullscreen(true), focused(true), running(true),
 		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), cursorVisible(false),
 		multiTouchActive(false), inputMode(MOUSE)
@@ -91,14 +124,15 @@ namespace april
 		this->destroy();
 	}
 
-	bool Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
+	bool Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
 		if (!this->created)
 		{
-			hlog::writef(april::logTag, "Creating window: '%s' (%d, %d), '%s' fullscreen : %s",
-				this->name.c_str(), w, h, title.c_str(), fullscreen ? "yes" : "no");
+			hlog::writef(april::logTag, "Creating window: '%s' (%d, %d) %s, '%s', (options: %s)",
+				this->name.c_str(), w, h, fullscreen ? "fullscreen" : "windowed", title.c_str(), options.toString().c_str());
 			this->fullscreen = fullscreen;
 			this->title = title;
+			this->options = options;
 			this->created = true;
 			this->fps = 0;
 			this->fpsCount = 0;

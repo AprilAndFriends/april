@@ -41,7 +41,7 @@ namespace april
 		this->destroy();
 	}
 
-	bool OpenKODE_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
+	bool OpenKODE_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
 		if (!Window::create(w, h, fullscreen, title, options))
 		{

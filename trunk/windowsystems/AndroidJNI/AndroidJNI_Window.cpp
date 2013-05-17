@@ -42,7 +42,7 @@ namespace april
 		this->destroy();
 	}
 
-	bool AndroidJNI_Window::create(int w, int h, bool fullscreen, chstr title, chstr options)
+	bool AndroidJNI_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
 		if (!Window::create(w, h, true, title, options))
 		{

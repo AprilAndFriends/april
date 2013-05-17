@@ -42,7 +42,7 @@ namespace april
 
 		DirectX9_RenderSystem();
 		~DirectX9_RenderSystem();
-		bool create(chstr options);
+		bool create(Options options);
 		bool destroy();
 
 		void assignWindow(Window* window);
@@ -86,7 +86,6 @@ namespace april
 		int getMaxTextureSize();
 
 	protected:
-		bool zBufferEnabled;
 		bool textureCoordinatesEnabled;
 		bool colorEnabled;
 		IDirect3D9* d3d;

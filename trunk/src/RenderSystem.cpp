@@ -34,7 +34,30 @@ namespace april
 	PlainVertex pv[5];
 	TexturedVertex tv[5];
 	
-	april::RenderSystem* rendersys = NULL;
+	RenderSystem* rendersys = NULL;
+
+	RenderSystem::Options::Options()
+	{
+		this->depthBuffer = false;
+	}
+	
+	RenderSystem::Options::~Options()
+	{
+	}
+	
+	hstr RenderSystem::Options::toString()
+	{
+		harray<hstr> options;
+		if (this->depthBuffer)
+		{
+			options += "depth-buffer";
+		}
+		if (options.size() == 0)
+		{
+			options += "none";
+		}
+		return options.join(',');
+	}
 	
 	RenderSystem::RenderSystem() : created(false), textureFilter(Texture::FILTER_LINEAR), textureAddressMode(Texture::ADDRESS_WRAP)
 	{
@@ -46,12 +69,13 @@ namespace april
 		this->destroy();
 	}
 	
-	bool RenderSystem::create(chstr options)
+	bool RenderSystem::create(RenderSystem::Options options)
 	{
 		if (!this->created)
 		{
-			hlog::writef(april::logTag, "Creating rendersystem: '%s' (options: '%s')", this->name.c_str(), options.c_str());
+			hlog::writef(april::logTag, "Creating rendersystem: '%s' (options: %s)", this->name.c_str(), options.toString().c_str());
 			this->created = true;
+			this->options = options;
 			return true;
 		}
 		return false;
