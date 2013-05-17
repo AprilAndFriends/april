@@ -55,7 +55,7 @@ namespace april
 	
 		bool mResizable;
 	protected:
-		bool retainLoadingOverlay;
+		bool retainLoadingOverlay, fastHideLoadingOverlay;
 	};
 	
 }
