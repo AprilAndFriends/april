@@ -117,9 +117,7 @@ namespace april
 		struct aprilExport Options
 		{
 		public:
-			bool fullscreenSwitch;
-			bool resolutionSwitch;
-			bool windowResize;
+			bool resizable;
 
 			Options();
 			~Options();
@@ -135,10 +133,11 @@ namespace april
 
 		// generic getters/setters
 		HL_DEFINE_GET(hstr, name, Name);
+		HL_DEFINE_GET(Options, options, Options);
 		HL_DEFINE_IS(created, Created);
 		HL_DEFINE_GET(hstr, title, Title);
 		HL_DEFINE_IS(fullscreen, Fullscreen);
-		virtual void setFullscreen(bool value) { this->fullscreen = value; }
+		void setFullscreen(bool value);
 		HL_DEFINE_IS(focused, Focused);
 		HL_DEFINE_IS(running, Running);
 		HL_DEFINE_GETSET(int, fps, Fps);
@@ -167,7 +166,8 @@ namespace april
 		virtual void setCursorVisible(bool value) { this->cursorVisible = value; }
 		virtual bool isCursorInside();
 
-		virtual void _setResolution(int w, int h) { }
+		virtual void setResolution(int w, int h);
+		virtual void setResolution(int w, int h, bool fullscreen);
 		
 		// pure virtual getters/setters (window system dependent)
 		virtual int getWidth() = 0;
@@ -177,17 +177,17 @@ namespace april
 
 		// pure virtual methods (window system dependent)
 		virtual void presentFrame() = 0;
+
+		// misc virtuals
 		virtual bool updateOneFrame();
 		virtual void checkEvents();
 		virtual void terminateMainLoop();
-
-		// misc virtuals
 		virtual void beginKeyboardHandling() { }
 		virtual void terminateKeyboardHandling() { }
 		
 		virtual bool isRotating() { return false; } // iOS/Android devices for example
-		virtual hstr getParam(chstr param) { return ""; }
-		virtual void setParam(chstr param, chstr value) { }
+		virtual hstr getParam(chstr param) { return ""; } // TODO - this should be refactored
+		virtual void setParam(chstr param, chstr value) { } // TODO - this should be refactored
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
@@ -251,6 +251,8 @@ namespace april
 		SystemDelegate* systemDelegate;
 
 		virtual float _calcTimeSinceLastFrame();
+		void _setRenderSystemResolution();
+		virtual void _setRenderSystemResolution(int w, int h, bool fullscreen);
 
 	};
 

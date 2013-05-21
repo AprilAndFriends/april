@@ -532,11 +532,6 @@ namespace april
 		hlog::warn(april::logTag, "Vertex shaders are not implemented!");
 	}
 
-	void OpenGL_RenderSystem::setResolution(int w, int h)
-	{
-		hlog::warn(april::logTag, "setResolution() is not implemented!");
-	}
-
 	PixelShader* OpenGL_RenderSystem::createPixelShader()
 	{
 		hlog::warn(april::logTag, "Pixel shaders are not implemented!");
@@ -756,15 +751,14 @@ namespace april
 		this->state.projectionMatrixChanged = true;
 	}
 
-	void OpenGL_RenderSystem::setParam(chstr name, chstr value)
+	void OpenGL_RenderSystem::_setResolution(int w, int h, bool fullscreen)
 	{
-		if (name == "zbuffer")
-		{
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LEQUAL);
-		}
+		glViewport(0, 0, w, h);
+		this->orthoProjection.setSize((float)w, (float)h);
+		this->setOrthoProjection(this->orthoProjection);
+		this->_applyStateChanges();
 	}
-	
+
 	Image* OpenGL_RenderSystem::takeScreenshot(int bpp)
 	{
 #ifdef _DEBUG

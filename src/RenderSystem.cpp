@@ -130,12 +130,6 @@ namespace april
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
 	
-	void RenderSystem::setResolution(int w, int h)
-	{
-		hlog::writef(april::logTag, "Changing resolution: %d x %d", w, h);
-		april::window->_setResolution(w, h);
-	}
-	
 	Texture* RenderSystem::createTexture(chstr filename, bool loadImmediately)
 	{
 		hstr name = this->findTextureFilename(filename);

@@ -74,9 +74,7 @@ namespace april
 	
 	Window::Options::Options()
 	{
-		this->fullscreenSwitch = false;
-		this->resolutionSwitch = false;
-		this->windowResize = false;
+		this->resizable = false;
 	}
 	
 	Window::Options::~Options()
@@ -86,17 +84,9 @@ namespace april
 	hstr Window::Options::toString()
 	{
 		harray<hstr> options;
-		if (this->fullscreenSwitch)
+		if (this->resizable)
 		{
-			options += "fullscreen-switch";
-		}
-		if (this->resolutionSwitch)
-		{
-			options += "resolution-switch";
-		}
-		if (this->windowResize)
-		{
-			options += "window-resize";
+			options += "resizable";
 		}
 		if (options.size() == 0)
 		{
@@ -198,6 +188,37 @@ namespace april
 	bool Window::isCursorInside()
 	{
 		return grect(0.0f, 0.0f, this->getSize()).isPointInside(this->getCursorPosition());
+	}
+
+	void Window::setFullscreen(bool value)
+	{
+		SystemInfo info = april::getSystemInfo();
+		this->setResolution(hround(info.displayResolution.x), hround(info.displayResolution.y), value);
+		this->fullscreen = value;
+	}
+
+	void Window::setResolution(int w, int h)
+	{
+		this->setResolution(w, h, this->isFullscreen());
+	}
+
+	void Window::setResolution(int w, int h, bool fullscreen)
+	{
+		hlog::warnf(april::logTag, "setResolution() is not available in '%s'.", this->name.c_str());
+	}
+
+	void Window::_setRenderSystemResolution()
+	{
+		this->_setRenderSystemResolution(this->getWidth(), this->getHeight(), this->fullscreen);
+	}
+	
+	void Window::_setRenderSystemResolution(int w, int h, bool fullscreen)
+	{
+		april::rendersys->_setResolution(w, h, fullscreen);
+		if (this->systemDelegate != NULL)
+		{
+			this->systemDelegate->onWindowSizeChanged(w, h, fullscreen);
+		}
 	}
 	
 	void Window::enterMainLoop()

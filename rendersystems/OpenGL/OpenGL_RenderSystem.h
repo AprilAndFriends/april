@@ -51,7 +51,6 @@ namespace april
 		void clear(bool depth, grect rect, Color color = Color::Clear);
 
 		void bindTexture(unsigned int textureId);
-		void setResolution(int w, int h);
 
 		void setMatrixMode(unsigned int mode);
 		void setTexture(Texture* texture);
@@ -76,7 +75,6 @@ namespace april
 		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 		
-		void setParam(chstr name, chstr value);
 		Image* takeScreenshot(int bpp = 3);
 
 	protected:
@@ -89,6 +87,8 @@ namespace april
 		void _setClientState(unsigned int type, bool enabled);
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
+
+		void _setResolution(int w, int h, bool fullscreen);
 
 		virtual void _setTextureBlendMode(BlendMode textureBlendMode);
 		virtual void _setTextureColorMode(ColorMode mode, unsigned char alpha = 255);

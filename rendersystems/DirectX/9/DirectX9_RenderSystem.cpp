@@ -151,6 +151,50 @@ namespace april
 		return true;
 	}
 
+	void DirectX9_RenderSystem::reset()
+	{
+		RenderSystem::reset();
+		this->d3dDevice->EndScene();
+		foreach (DirectX9_Texture*, it, gRenderTargets)
+		{
+			(*it)->unload();
+		}
+		this->backBuffer->Release();
+		this->backBuffer = NULL;
+		HRESULT hr;
+		while (april::window->isRunning())
+		{
+			hlog::write(april::logTag, "Resetting device...");
+			hr = this->d3dDevice->Reset(this->d3dpp);
+			if (hr == D3D_OK)
+			{
+				break;
+			}
+			if (hr == D3DERR_DRIVERINTERNALERROR)
+			{
+				throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
+			}
+			else if (hr == D3DERR_OUTOFVIDEOMEMORY)
+			{
+				throw hl_exception("Unable to reset Direct3D device, Out of Video Memory!");
+			}
+			else
+			{
+				hlog::error(april::logTag, "Failed to reset device!");
+			}
+		}
+		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->_setProjectionMatrix(this->projectionMatrix);
+		this->_configureDevice();
+		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
+		foreach (DirectX9_Texture*, it, gRenderTargets)
+		{
+			(*it)->restore();
+		}
+		hlog::write(april::logTag, "Direct3D9 Device restored.");
+		this->d3dDevice->BeginScene();
+	}
+
 	void DirectX9_RenderSystem::assignWindow(Window* window)
 	{
 		HWND hWnd = (HWND)april::window->getBackendId();
@@ -456,33 +500,16 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::setResolution(int w, int h)
+	void DirectX9_RenderSystem::_setResolution(int w, int h, bool fullscreen)
 	{
-		DirectX_RenderSystem::setResolution(w, h);
-		this->backBuffer->Release();
-		this->backBuffer = NULL;
-		this->d3dpp->BackBufferWidth = april::window->getWidth();
-		this->d3dpp->BackBufferHeight = april::window->getHeight();
-		hlog::writef(april::logTag, "Resetting device for %d x %d...", april::window->getWidth(), april::window->getHeight());
-		HRESULT hr = this->d3dDevice->Reset(this->d3dpp);
-		if (hr == D3DERR_DRIVERINTERNALERROR)
+		if (this->backBuffer == NULL)
 		{
-			throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
+			return;
 		}
-		else if (hr == D3DERR_OUTOFVIDEOMEMORY)
-		{
-			throw hl_exception("Unable to reset Direct3D device, out of video memory!");
-		}
-		else if (hr != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to reset device!");
-		}
-		this->_setModelviewMatrix(this->modelviewMatrix);
-		this->_setProjectionMatrix(this->projectionMatrix);
-		this->_configureDevice();
-		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
-		hlog::write(april::logTag, "Direct3D9 Device restored.");
-		this->d3dDevice->BeginScene();
+		this->d3dpp->Windowed = !fullscreen;
+		this->d3dpp->BackBufferWidth = w;
+		this->d3dpp->BackBufferHeight = h;
+		this->reset();
 	}
 
 	Texture* DirectX9_RenderSystem::_createTexture(chstr filename)

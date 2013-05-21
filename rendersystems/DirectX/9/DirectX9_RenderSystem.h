@@ -45,8 +45,8 @@ namespace april
 		bool create(Options options);
 		bool destroy();
 
+		void reset();
 		void assignWindow(Window* window);
-		//void reset();
 
 		float getPixelOffset() { return 0.5f; }
 		harray<DisplayMode> getSupportedDisplayModes();
@@ -62,8 +62,6 @@ namespace april
 		void setRenderTarget(Texture* source);
 		void setPixelShader(PixelShader* pixelShader);
 		void setVertexShader(VertexShader* vertexShader);
-
-		void setResolution(int w, int h);
 
 		PixelShader* createPixelShader();
 		PixelShader* createPixelShader(chstr filename);
@@ -97,6 +95,7 @@ namespace april
 		_D3DPRESENT_PARAMETERS_* d3dpp;
 
 		void _configureDevice();
+		void _setResolution(int w, int h, bool fullscreen);
 
 		Texture* _createTexture(chstr filename);
 		Texture* _createTexture(int w, int h, unsigned char* rgba);

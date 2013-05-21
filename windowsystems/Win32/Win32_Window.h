@@ -40,7 +40,7 @@ namespace april
 		int getWidth();
 		int getHeight();
 		void* getBackendId();
-		void _setResolution(int w, int h);
+		void setResolution(int w, int h, bool fullscreen);
 
 		bool updateOneFrame();
 		void presentFrame();
@@ -50,6 +50,9 @@ namespace april
 		
 	protected:
 		HWND hWnd;
+
+		void _setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen);
+		void _adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle);
 		
 	};
 
