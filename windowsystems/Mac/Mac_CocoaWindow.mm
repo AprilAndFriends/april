@@ -94,7 +94,7 @@ extern bool gReattachLoadingOverlay;
 	
 	if (delegate)
 	{
-		delegate->onWindowSizeChanged(size.width, size.height, april::Window::ADEVICEORIENTATION_NONE);
+		delegate->onWindowSizeChanged(size.width, size.height, [self isFullScreen]);
 	}
 	[mView setNeedsDisplay:YES];
 }
