@@ -28,10 +28,12 @@ namespace april
 		virtual ~SystemDelegate();
 
 		virtual bool onQuit(bool canCancel);
-		virtual void onWindowSizeChanged(int width, int height, Window::DeviceOrientation deviceOrientation);
+		virtual void onWindowSizeChanged(int width, int height, bool fullscreen);
 		virtual void onWindowFocusChanged(bool focused);
 		virtual void onVirtualKeyboardVisibilityChanged(bool visible);
 		virtual void onLowMemoryWarning();
+
+		DEPRECATED_ATTRIBUTE virtual void onWindowSizeChanged(int width, int height, Window::DeviceOrientation deviceOrientation);
 
 	};
 

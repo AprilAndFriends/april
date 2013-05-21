@@ -43,6 +43,7 @@ namespace april
 	{
 	public:
 		friend class Texture;
+		friend class Window;
 
 		struct aprilExport Options
 		{
@@ -65,6 +66,7 @@ namespace april
 		virtual void reset();
 
 		HL_DEFINE_GET(hstr, name, Name);
+		HL_DEFINE_GET(Options, options, Options);
 		HL_DEFINE_GET(harray<Texture*>, textures, Textures);
 		HL_DEFINE_GET(gmat4, modelviewMatrix, ModelviewMatrix);
 		void setModelviewMatrix(gmat4 matrix);
@@ -88,9 +90,6 @@ namespace april
 		virtual void setRenderTarget(Texture* texture) = 0;
 		virtual void setVertexShader(VertexShader* vertexShader) = 0;
 		virtual void setPixelShader(PixelShader* pixelShader) = 0;
-
-		virtual void setFullscreen(bool fullscreen) { } // TODO - main part should be in window class
-		virtual void setResolution(int w, int h); // TODO - main part should be in window class
 
 		Texture* createTexture(chstr filename, bool loadImmediately = true);
 		Texture* createTexture(int w, int h, unsigned char* rgba);
@@ -125,8 +124,6 @@ namespace april
 
 		hstr findTextureFilename(chstr filename);
 		void unloadTextures();
-		virtual void setParam(chstr name, chstr value) { }
-		virtual hstr getParam(chstr name) { return ""; }
 		virtual Image* takeScreenshot(int bpp = 3) = 0;
 		virtual void presentFrame();
 
@@ -157,6 +154,8 @@ namespace april
 		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;
 		
+		virtual void _setResolution(int w, int h, bool fullscreen) = 0; // TODO - main part should be in window class
+
 	};
 
 	// global rendersys shortcut variable

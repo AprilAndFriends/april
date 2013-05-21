@@ -15,6 +15,11 @@
 
 namespace april
 {
+	void SystemDelegate::onWindowSizeChanged(int width, int height, Window::DeviceOrientation deviceOrientation) // DEPRECATED
+	{
+		hlog::debug(april::logTag, "Event onWindowSizeChanged() was not implemented.");
+	}
+
 	SystemDelegate::SystemDelegate()
 	{
 	}
@@ -29,7 +34,7 @@ namespace april
 		return true;
 	}
 
-	void SystemDelegate::onWindowSizeChanged(int width, int height, Window::DeviceOrientation deviceOrientation)
+	void SystemDelegate::onWindowSizeChanged(int width, int height, bool fullscreen)
 	{
 		hlog::debug(april::logTag, "Event onWindowSizeChanged() was not implemented.");
 	}

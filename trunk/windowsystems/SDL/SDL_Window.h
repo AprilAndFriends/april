@@ -50,6 +50,7 @@ namespace april
 		int getHeight();
 		gvec2 getCursorPosition();
 		void* getBackendId();
+		void setResolution(int w, int h, bool fullscreen);
 
 		bool updateOneFrame();
 		void presentFrame();
@@ -59,6 +60,8 @@ namespace april
 		bool cursorInside;
 		bool scrollHorizontal;
 		SDL_Surface* screen;
+		int videoBpp;
+		unsigned int videoFlags;
 #ifdef _OPENGLES
 		SDL_GLES_Context* glesContext;
 #endif

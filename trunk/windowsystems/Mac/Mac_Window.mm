@@ -83,7 +83,7 @@ namespace april
 	
 	void* Mac_Window::getBackendId()
 	{
-		return (void*) mWindow;
+		return (void*)mWindow;
 	}
 
 	hstr Mac_Window::getParam(chstr param)

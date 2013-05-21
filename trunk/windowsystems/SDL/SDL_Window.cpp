@@ -36,6 +36,15 @@
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "SDL_Window.h"
+#ifdef _DIRECTX
+#include "DirectX_RenderSystem.h"
+#endif
+#ifdef _OPENGL1
+#include "OpenGL1_RenderSystem.h"
+#endif
+#ifdef _OPENGLES
+#include "OpenGLES_RenderSystem.h"
+#endif
 
 extern int gAprilShouldInvokeQuitCallback;
 
@@ -79,24 +88,42 @@ namespace april
 		SDL_Init(SDL_INIT_VIDEO);
 		// and immediately set window title
 		SDL_WM_SetCaption(this->title.c_str(), this->title.c_str());
-
+		this->videoFlags = (fullscreen ? SDL_FULLSCREEN : 0);
+		if (this->options.resizable)
+		{
+			this->videoFlags |= SDL_RESIZABLE;
+		}
+		this->videoBpp = 0;
 #ifdef _OPENGL
-#ifndef _OPENGLES
-		// set up opengl attributes desired for the context
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-		this->screen = SDL_SetVideoMode(w, h, 0, SDL_OPENGL | (fullscreen ? SDL_FULLSCREEN : 0));
-#else
-		SDL_GLES_Init(SDL_GLES_VERSION_1_1);
-		this->screen = SDL_SetVideoMode(0, 0, 16, SDL_SWSURFACE);
-		this->glesContext = SDL_GLES_CreateContext();
-		SDL_GLES_MakeCurrent(this->glesContext);
+#ifdef _OPENGL1
+		if (dynamic_cast<OpenGL1_RenderSystem*>(april::rendersys) != NULL)
+		{
+			// set up opengl attributes desired for the context
+			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+			SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
+			this->videoFlags |= SDL_OPENGL;
+			this->screen = SDL_SetVideoMode(w, h, this->videoBpp, this->videoFlags);
+		}
+#endif
+#ifdef _OPENGLES
+		if (dynamic_cast<OpenGLES_RenderSystem*>(april::rendersys) != NULL)
+		{
+			SDL_GLES_Init(SDL_GLES_VERSION_1_1);
+			this->videoFlags = SDL_SWSURFACE;
+			this->videoBpp = 16;
+			this->screen = SDL_SetVideoMode(0, 0, this->videoBpp, this->videoFlags);
+			this->glesContext = SDL_GLES_CreateContext();
+			SDL_GLES_MakeCurrent(this->glesContext);
+		}
 #endif
 		glClear(GL_COLOR_BUFFER_BIT);
-#else
-		this->screen = SDL_SetVideoMode(w, h, 0, (fullscreen ? SDL_FULLSCREEN : 0));
 #endif
-
+#ifdef _DIRECTX
+		if (dynamic_cast<DirectX_RenderSystem*>(april::rendersys) != NULL)
+		{
+			this->screen = SDL_SetVideoMode(w, h, this->videoBpp, this->videoFlags);
+		}
+#endif
 		if (this->screen == NULL)
 		{
 #ifdef __APPLE__
@@ -190,6 +217,16 @@ namespace april
 #endif
 	}
 	
+	void SDL_Window::setResolution(int w, int h, bool fullscreen)
+	{
+		if (this->fullscreen == fullscreen && this->getWidth() == w && this->getHeight() == h)
+		{
+			return;
+		}
+		this->videoFlags = (fullscreen ? this->videoFlags | SDL_FULLSCREEN : this->videoFlags & ~SDL_FULLSCREEN);
+		SDL_SetVideoMode(w, h, this->videoBpp, this->videoFlags);
+	}
+	
 	bool SDL_Window::updateOneFrame()
 	{
 		// check if we should quit...
@@ -213,8 +250,8 @@ namespace april
 			switch (sdlEvent.type)
 			{
 			case SDL_VIDEORESIZE:
-				// do a SetVideoMode here, if we really want this
-				//g_game->doResize(event.resize.w, event.resize.h);
+				SDL_SetVideoMode(sdlEvent.resize.w, sdlEvent.resize.h, this->videoBpp, this->videoFlags);
+				this->_setRenderSystemResolution(sdlEvent.resize.w, sdlEvent.resize.h, this->fullscreen);
 				break;
 			case SDL_QUIT:
 				if (this->handleQuitRequest(true))

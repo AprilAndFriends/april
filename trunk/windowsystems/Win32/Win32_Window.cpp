@@ -19,6 +19,7 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
+#include "Platform.h"
 #include "RenderSystem.h"
 #include "Timer.h"
 #include "Win32_Window.h"
@@ -28,12 +29,17 @@
 #endif
 
 #define APRIL_WIN32_WINDOW_CLASS L"AprilWin32Window"
+#define STYLE_FULLSCREEN WS_POPUP
+#define STYLE_WINDOWED (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX)
+#define EXSTYLE_FULLSCREEN WS_EX_TOPMOST
+#define EXSTYLE_WINDOWED WS_EX_LEFT
 
 namespace april
 {
 	Win32_Window::Win32_Window() : Window()
 	{
 		this->name = APRIL_WS_WIN32;
+		this->hWnd = NULL;
 	}
 
 	Win32_Window::~Win32_Window()
@@ -60,7 +66,7 @@ namespace april
 		wc.hIcon = (HICON)LoadImage(hinst, MAKEINTRESOURCE(1), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
 		wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		RegisterClassExW(&wc);
-
+		// determine position
 		int x = 0;
 		int y = 0;
 		if (!this->fullscreen)
@@ -68,23 +74,18 @@ namespace april
 			x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2;
 			y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
 		}
-		DWORD style = (this->fullscreen ? (WS_EX_TOPMOST | WS_POPUP) : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX));
-		this->hWnd = CreateWindowExW(0, APRIL_WIN32_WINDOW_CLASS, this->title.w_str().c_str(), style, x, y, w, h, NULL, NULL, hinst, NULL);
-		
+		// setting the necessary styles
+		DWORD style = 0;
+		DWORD exstyle = 0;
+		this->_setupStyles(style, exstyle, this->fullscreen);
 		if (!this->fullscreen)
 		{
-			RECT rcClient;
-			RECT rcWindow;
-			POINT ptDiff;
-			GetClientRect(hWnd, &rcClient);
-			GetWindowRect(hWnd, &rcWindow);
-			ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
-			ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
-			MoveWindow(this->hWnd, rcWindow.left, rcWindow.top, ptDiff.x + w, ptDiff.y + h, TRUE);
+			this->_adjustWindowSizeForClient(x, y, w, h, style, exstyle);
 		}
- 
+		// create window
+		this->hWnd = CreateWindowExW(exstyle, APRIL_WIN32_WINDOW_CLASS, this->title.w_str().c_str(), style, x, y, w, h, NULL, NULL, hinst, NULL);
 		// display the window on the screen
-		ShowWindow(this->hWnd, 1);
+		ShowWindow(this->hWnd, SW_SHOWNORMAL);
 		UpdateWindow(this->hWnd);
 		SetCursor(wc.hCursor);
 		this->setCursorVisible(true);
@@ -129,16 +130,16 @@ namespace april
 	
 	int Win32_Window::getWidth()
 	{
-		RECT rc;
-		GetClientRect(hWnd, &rc);
-		return (rc.right - rc.left);
+		RECT rect;
+		GetClientRect(this->hWnd, &rect);
+		return (rect.right - rect.left);
 	}
 	
 	int Win32_Window::getHeight()
 	{
-		RECT rc;
-		GetClientRect(hWnd, &rc);
-		return (rc.bottom - rc.top);
+		RECT rect;
+		GetClientRect(this->hWnd, &rect);
+		return (rect.bottom - rect.top);
 	}
 
 	void* Win32_Window::getBackendId()
@@ -146,31 +147,60 @@ namespace april
 		return this->hWnd;
 	}
 
-	void Win32_Window::_setResolution(int w, int h)
+	void Win32_Window::setResolution(int w, int h, bool fullscreen)
 	{
+		if (this->fullscreen == fullscreen && this->getWidth() == w && this->getHeight() == h)
+		{
+			return;
+		}
+		// do NOT change the order the following function calls or else dragons
+		// setting the necessary styles
+		DWORD style = 0;
+		DWORD exstyle = 0;
+		this->_setupStyles(style, exstyle, fullscreen);
+		SetWindowLongPtr(this->hWnd, GWL_EXSTYLE, exstyle);
+		SetWindowLongPtr(this->hWnd, GWL_STYLE, style);
+		// changing display settings
+		if (fullscreen)
+		{
+			DEVMODE deviceMode;
+			deviceMode.dmPelsWidth = w;
+			deviceMode.dmPelsWidth = h;
+			deviceMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT;
+			ChangeDisplaySettings(&deviceMode, CDS_FULLSCREEN);
+		}
+		if (this->fullscreen || fullscreen)
+		{
+			ChangeDisplaySettings(NULL, CDS_RESET);
+		}
+		// window positions
 		int x = 0;
 		int y = 0;
-		DWORD style = WS_EX_TOPMOST | WS_POPUP;
-		if (!this->fullscreen)
+		if (!fullscreen)
 		{
-			x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2,
-			y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
-			style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+			if (this->fullscreen)
+			{
+				x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2;
+				y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
+			}
+			else
+			{
+				RECT rect;
+				GetWindowRect(this->hWnd, &rect);
+				x = rect.left;
+				y = rect.top;
+			}
 		}
-		if (!this->fullscreen)
+		// updating/executing all remaining changes
+		if (!fullscreen)
 		{
-			RECT rcClient;
-			RECT rcWindow;
-			POINT ptDiff;
-			GetClientRect(this->hWnd, &rcClient);
-			GetWindowRect(this->hWnd, &rcWindow);
-			ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
-			ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
-			MoveWindow(this->hWnd, rcWindow.left, rcWindow.top, ptDiff.x + w, ptDiff.y + h, TRUE);
+			this->_adjustWindowSizeForClient(x, y, w, h, style, exstyle);
 		}
-		// display the window on the screen
-		ShowWindow(this->hWnd, 1);
+		SetWindowPos(this->hWnd, (fullscreen ? HWND_TOPMOST : HWND_NOTOPMOST), x, y, w, h, 0);
+		ShowWindow(this->hWnd, SW_SHOW);
 		UpdateWindow(this->hWnd);
+		this->fullscreen = fullscreen;
+		this->_setRenderSystemResolution(this->getWidth(), this->getHeight(), this->fullscreen);
 	}
 	
 	bool Win32_Window::updateOneFrame()
@@ -213,6 +243,32 @@ namespace april
 		// Win32 window cannot use event queueing properly because of split key-down and char events
 	}
 
+	void Win32_Window::_setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen)
+	{
+		style = STYLE_WINDOWED;
+		if (fullscreen)
+		{
+			style = STYLE_FULLSCREEN;
+		}
+		else if (this->options.resizable)
+		{
+			style |= WS_SIZEBOX;
+		}
+		exstyle = (fullscreen ? EXSTYLE_FULLSCREEN : EXSTYLE_WINDOWED);
+	}
+
+	void Win32_Window::_adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle)
+	{
+		RECT rect;
+		rect.left = x;
+		rect.top = y;
+		rect.right = x + w;
+		rect.bottom = y + h;
+		AdjustWindowRectEx(&rect, style, FALSE, exstyle);
+		w = rect.right - rect.left;
+		h = rect.bottom - rect.top;
+	}
+
 	LRESULT CALLBACK Win32_Window::processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		static bool _touchDown = false;
@@ -220,6 +276,7 @@ namespace april
 		static int _mouseMoveMessagesCount = 0;
 		static float _wheelDelta = 0.0f;
 		static bool _altKeyDown = false;
+		static bool _sizeChanging = false;
 		if (!april::window->isCreated()) // don't run callback processing if window was "destroyed"
 		{
 			return 1;
@@ -251,6 +308,9 @@ namespace april
 			april::window->setInputMode(april::Window::TOUCH);
 			break;
 		case WM_DESTROY:
+			PostQuitMessage(0);
+			april::window->terminateMainLoop();
+			break;
 		case WM_CLOSE:
 			if (april::window->handleQuitRequest(true))
 			{
@@ -263,6 +323,7 @@ namespace april
 			{
 				_altKeyDown = true;
 			}
+			// no break here, because this is still an input message that needs to be processed normally
 		case WM_KEYDOWN:
 			if (_altKeyDown && wParam == VK_F4)
 			{
@@ -278,7 +339,11 @@ namespace april
 			}
 			return 0;
 		case WM_SYSKEYUP:
-			if (wParam == VK_MENU) _altKeyDown = false;
+			if (wParam == VK_MENU)
+			{
+				_altKeyDown = false;
+			}
+			// no break here, because this is still an input message that needs to be processed normally
 		case WM_KEYUP:
 			april::window->handleKeyOnlyEvent(AKEYEVT_UP, (april::Key)wParam);
 			return 0;
@@ -370,6 +435,18 @@ namespace april
 			else
 			{
 				april::window->handleFocusChangeEvent(false);
+			}
+			break;
+		case WM_ENTERSIZEMOVE:
+			_sizeChanging = true;
+			break;
+		case WM_EXITSIZEMOVE:
+			_sizeChanging = false;
+			break;
+		case WM_SIZE:
+			if (_sizeChanging && !april::window->isFullscreen())
+			{
+				((Win32_Window*)april::window)->_setRenderSystemResolution();
 			}
 			break;
 		}
