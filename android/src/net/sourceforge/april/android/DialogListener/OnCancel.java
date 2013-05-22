@@ -10,7 +10,7 @@ public class OnCancel implements OnCancelListener
 {
 	public void onCancel(DialogInterface dialog)
 	{
-		NativeInterface.Activity.GlView.queueEvent(new Runnable()
+		NativeInterface.AprilActivity.GlView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
