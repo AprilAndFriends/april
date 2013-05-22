@@ -42,8 +42,9 @@ namespace april
 		{
 			AMOUSEEVT_DOWN = 0,
 			AMOUSEEVT_UP = 1,
-			AMOUSEEVT_MOVE = 2,
-			AMOUSEEVT_SCROLL = 3
+			AMOUSEEVT_CANCEL = 2, // canceling a down event
+			AMOUSEEVT_MOVE = 3,
+			AMOUSEEVT_SCROLL = 4
 		};
 		
 		enum KeyEventType
@@ -56,7 +57,7 @@ namespace april
 		{
 			ACTRLEVT_DOWN = 0,
 			ACTRLEVT_UP = 1
-			// possibly analog triggers
+			// TODO - possibly add analog triggers
 		};
 
 		enum InputMode

@@ -27,6 +27,7 @@ namespace april
 
 		virtual void onMouseDown(april::Key keyCode);
 		virtual void onMouseUp(april::Key keyCode);
+		virtual void onMouseCancel(april::Key keyCode);
 		virtual void onMouseMove();
 		virtual void onMouseScroll(float x, float y);
 

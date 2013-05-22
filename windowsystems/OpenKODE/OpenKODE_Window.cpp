@@ -270,12 +270,20 @@ namespace april
 	{
 		kdKeyboardShow(this->kdWindow, 1);
 		this->virtualKeyboardVisible = true;
+		if (this->systemDelegate != NULL)
+		{
+			this->systemDelegate->onVirtualKeyboardVisibilityChanged(true);
+		}
 	}
 
 	void OpenKODE_Window::terminateKeyboardHandling()
 	{
 		kdKeyboardShow(this->kdWindow, 0);
 		this->virtualKeyboardVisible = false;
+		if (this->systemDelegate != NULL)
+		{
+			this->systemDelegate->onVirtualKeyboardVisibilityChanged(false);
+		}
 	}
 
 }

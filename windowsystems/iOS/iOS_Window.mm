@@ -366,7 +366,7 @@ namespace april
 			if (!this->multiTouchActive && prev_len == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->addInputEvent(new iOS_MouseInputEvent(this, AMOUSEEVT_UP, gvec2(-10000, -10000), AK_LBUTTON));
+				this->addInputEvent(new iOS_MouseInputEvent(this, AMOUSEEVT_CANCEL, gvec2(), AK_LBUTTON));
 			}
 			this->multiTouchActive = true;
 		}
@@ -458,6 +458,7 @@ namespace april
 			this->systemDelegate->onVirtualKeyboardVisibilityChanged(true);
 		}
 	}
+	
 	void iOS_Window::keyboardWasHidden()
 	{
 		if (this->systemDelegate != NULL)

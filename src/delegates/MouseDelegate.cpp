@@ -34,6 +34,11 @@ namespace april
 		hlog::debug(april::logTag, "Event onMouseUp() was not implemented.");
 	}
 
+	void MouseDelegate::onMouseCancel(april::Key keyCode)
+	{
+		hlog::debug(april::logTag, "Event onMouseCancel() was not implemented.");
+	}
+
 	void MouseDelegate::onMouseMove()
 	{
 		hlog::debug(april::logTag, "Event onMouseMove() was not implemented.");

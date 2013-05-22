@@ -364,6 +364,9 @@ namespace april
 			case AMOUSEEVT_UP:
 				this->mouseDelegate->onMouseUp(keyCode);
 				break;
+			case AMOUSEEVT_CANCEL:
+				this->mouseDelegate->onMouseCancel(keyCode);
+				break;
 			case AMOUSEEVT_MOVE:
 				this->mouseDelegate->onMouseMove();
 				break;
@@ -475,7 +478,7 @@ namespace april
 			if (!this->multiTouchActive && previousTouchesSize == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->queueMouseEvent(AMOUSEEVT_UP, gvec2(-10000.0f, -10000.0f), AK_LBUTTON);
+				this->queueMouseEvent(AMOUSEEVT_CANCEL, position, AK_LBUTTON);
 			}
 			this->multiTouchActive = (this->touches.size() > 0);
 		}
