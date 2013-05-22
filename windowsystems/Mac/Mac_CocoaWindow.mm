@@ -332,13 +332,20 @@ extern bool gReattachLoadingOverlay;
 	if (isLionOrNewer())
 	{
 		[self toggleFullScreen:self];
+		aprilWindow->setFullscreenFlag([self isFullScreen]);
 	}
 	else
 	{
 		if ([self isFullScreen])
+		{
 			[self exitFullScreen];
+			aprilWindow->setFullscreenFlag(false);
+		}
 		else
+		{
 			[self enterFullScreen];
+			aprilWindow->setFullscreenFlag(true);
+		}
 	}
 	// setting title again because Cocoa forgets it for some reason when swiching from fullscreen
 	[self setTitle:[NSString stringWithUTF8String:aprilWindow->getTitle().c_str()]];

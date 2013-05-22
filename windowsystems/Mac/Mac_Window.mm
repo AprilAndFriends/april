@@ -204,11 +204,10 @@ namespace april
 		return 1;
 	}
 	
-	void Mac_Window::setFullscreen(bool value)
+	void Mac_Window::setResolution(int w, int h, bool fullscreen)
 	{
-		Window::setFullscreen(value);
 		bool state = [mWindow isFullScreen];
-		if (value != state) [mWindow platformToggleFullScreen];
+		if (fullscreen != state) [mWindow platformToggleFullScreen];
 	}
 	
 	void Mac_Window::setFullscreenFlag(bool value)

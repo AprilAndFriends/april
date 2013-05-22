@@ -45,7 +45,7 @@ namespace april
 		bool updateOneFrame();
 		void terminateMainLoop();
 
-		virtual void setFullscreen(bool value);
+		void setResolution(int w, int h, bool fullscreen);
 		void setFullscreenFlag(bool value);
 
 		void OnAppGainedFocus();
