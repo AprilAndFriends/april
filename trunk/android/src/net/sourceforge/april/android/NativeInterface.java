@@ -22,7 +22,7 @@ import java.util.Locale;
 
 public class NativeInterface
 {
-	public static Activity Activity = null;
+	public static android.app.Activity Activity = null;
 	public static boolean Running = false;
 	public static String ArchivePath = "";
 	public static String DataPath = ".";
@@ -45,7 +45,7 @@ public class NativeInterface
 			{
 				htcKeyboardHack = false;
 				InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
-				View view = NativeInterface.Activity.getView();
+				View view = ((Activity)NativeInterface.Activity).getView();
 				inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0, NativeInterface.keyboardResultReceiver);
 				inputMethodManager.showSoftInput(view, 0, NativeInterface.keyboardResultReceiver);
 			}
@@ -168,7 +168,7 @@ public class NativeInterface
 		{
 			public void run()
 			{
-				View view = NativeInterface.Activity.getView();
+				View view = ((Activity)NativeInterface.Activity).getView();
 				NativeInterface._getInputMethodManager().showSoftInput(view, 0, NativeInterface.keyboardResultReceiver);
 			}
 		});
@@ -180,7 +180,7 @@ public class NativeInterface
 		{
 			public void run()
 			{
-				View view = NativeInterface.Activity.getView();
+				View view = ((Activity)NativeInterface.Activity).getView();
 				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(), 0,
 					NativeInterface.keyboardResultReceiver);
 			}

@@ -7,7 +7,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _ANDROID
+#if defined(_ANDROID)
 #include <jni.h>
 
 #include <hltypes/harray.h>
@@ -18,7 +18,6 @@
 
 #define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
 #include "androidUtilJNI.h"
-#include "AndroidJNI_Window.h"
 #include "april.h"
 #include "Keys.h"
 #include "main.h"
@@ -30,11 +29,6 @@
 	if (april::window != NULL) \
 	{ \
 		april::window->methodCall; \
-	}
-#define PROTECTED_ANDROID_JNI_WINDOW_CALL(methodCall) \
-	if (april::window != NULL) \
-	{ \
-		((april::AndroidJNI_Window*)april::window)->methodCall; \
 	}
 #define PROTECTED_RENDERSYS_CALL(methodCall) \
 	if (april::rendersys != NULL) \
@@ -62,10 +56,14 @@ namespace april
 		hlog::write(april::logTag, "System path: " + april::getUserDataPath());
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
+#ifndef _OPENKODE
 			// set the resources CWD
 			hresource::setCwd(dataPath + "/Android/data/" + april::getPackageName());
 			hresource::setArchive(""); // not used anyway when hasZip() returns false
 			hlog::write(april::logTag, "Using no-zip: " + hresource::getCwd());
+#else
+			hlog::write(april::logTag, "Using KD file system: " + hresource::getCwd());
+#endif
 		}
 		else if (archivePath != "")
 		{
@@ -171,13 +169,13 @@ namespace april
 	void JNICALL _JNI_activityOnResume(JNIEnv* env, jclass classe)
 	{
 		hlog::write(april::logTag, "Android Activity::onResume()");
-		PROTECTED_ANDROID_JNI_WINDOW_CALL(handleActivityChangeEvent(true));
+		PROTECTED_WINDOW_CALL(handleActivityChangeEvent(true));
 	}
 	
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
 		hlog::write(april::logTag, "Android Activity::onPause()");
-		PROTECTED_ANDROID_JNI_WINDOW_CALL(handleActivityChangeEvent(false));
+		PROTECTED_WINDOW_CALL(handleActivityChangeEvent(false));
 		PROTECTED_RENDERSYS_CALL(unloadTextures());
 	}
 	

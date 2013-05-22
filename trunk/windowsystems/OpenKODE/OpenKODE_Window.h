@@ -32,21 +32,29 @@ namespace april
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		bool destroy();
 
-		HL_DEFINE_SET(gvec2, cursorPosition, CursorPosition);
+		HL_DEFINE_IS(virtualKeyboardVisible, VirtualKeyboardVisible);
 		int getWidth();
 		int getHeight();
 		void setTitle(chstr title);
 		bool isCursorVisible();
 		void setCursorVisible(bool value);
 		void* getBackendId();
-		void _setResolution(int w, int h);
+		void setResolution(int w, int h, bool fullscreen);
+
+		void handleActivityChangeEvent(bool active);
 
 		bool updateOneFrame();
 		void presentFrame();
 		void checkEvents();
 
+		void beginKeyboardHandling();
+		void terminateKeyboardHandling();
+
 	protected:
 		KDWindow* kdWindow;
+		bool virtualKeyboardVisible;
+
+		bool _processEvent(const KDEvent* evt);
 
 	};
 

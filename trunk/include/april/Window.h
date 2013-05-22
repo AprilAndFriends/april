@@ -196,6 +196,7 @@ namespace april
 		virtual void handleControllerEvent(ControllerEventType type, Button buttonCode);
 		virtual bool handleQuitRequest(bool canCancel);
 		virtual void handleFocusChangeEvent(bool focused);
+		virtual void handleActivityChangeEvent(bool active);
 		virtual void handleLowMemoryWarning();
 
 		void handleKeyOnlyEvent(KeyEventType type, Key keyCode);

@@ -65,6 +65,9 @@
 #include "WinRT_Window.h"
 #endif
 #endif
+#ifdef _EGL
+#include "egl.h"
+#endif
 
 #ifdef _WIN32
 	#ifdef _DIRECTX9
@@ -148,6 +151,9 @@ namespace april
 		extensions += ".jpg";
 #if TARGET_OS_IPHONE
 		extensions += ".pvr";
+#endif
+#ifdef _EGL
+		april::egl = new EglData();
 #endif
 	}
 
@@ -352,6 +358,13 @@ namespace april
 			delete april::rendersys;
 			april::rendersys = NULL;
 		}
+#ifdef _EGL
+		if (april::egl != NULL)
+		{
+			delete april::egl;
+			april::egl = NULL;
+		}
+#endif
 	}
 	
 	void addTextureExtension(chstr extension)

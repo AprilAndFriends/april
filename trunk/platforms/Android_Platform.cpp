@@ -7,7 +7,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _ANDROID
+#if defined(_ANDROID) && !defined(_OPENKODE)
 #include <jni.h>
 
 #include <gtypes/Vector2.h>
@@ -21,22 +21,8 @@
 
 namespace april
 {
-	void* javaVM = NULL;
-	void (*dialogCallback)(MessageBoxButton) = NULL;
-	
-	JNIEnv* getJNIEnv()
-	{
-		JNIEnv* env;
-		return (((JavaVM*)april::javaVM)->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) == JNI_OK ? env : NULL);
-	}
-	
-	jobject getActivity()
-	{
-		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
-		jfieldID fieldActivity = env->GetStaticFieldID(classNativeInterface, "Activity", _JCLASS("net/sourceforge/april/android/Activity"));
-		return env->GetStaticObjectField(classNativeInterface, fieldActivity);
-	}
-	
+	extern void (*dialogCallback)(MessageBoxButton);
+
 	SystemInfo getSystemInfo()
 	{
 		static SystemInfo info;

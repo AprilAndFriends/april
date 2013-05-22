@@ -47,19 +47,20 @@
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
+#endif
 #ifdef _ANDROID
 #include <jni.h>
 #include <string.h>
 #endif
-#endif
 
-#ifndef _ANDROID
-aprilExport int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv);
-#else
+#ifdef _ANDROID
 namespace april
 {
 	aprilExport jint JNI_OnLoad(JavaVM* vm, void* reserved);
 }
+#endif
+#if !defined(_ANDROID) || defined(_OPENKODE)
+aprilExport int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv);
 #endif
 
 extern void april_init(const harray<hstr>& args);
@@ -100,13 +101,15 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
 	return april::JNI_OnLoad(vm, reserved);
 }
-#elif defined(_OPENKODE)
+#endif
+#ifdef _OPENKODE
 KDint KD_APIENTRY kdMain(KDint argc, const KDchar* const* argv)
 {
 	april_main(april_init, april_destroy, (int)argc, (char**)argv);
 	return 0;
 }
-#elif !defined(_WIN32) || defined(_CONSOLE) && !_HL_WINRT
+#elif !defined(_ANDROID)
+#if !defined(_WIN32) || defined(_CONSOLE) && !_HL_WINRT
 int main(int argc, char** argv)
 {
 #ifdef __SINGLE_INSTANCE
@@ -177,6 +180,7 @@ int main(Platform::Array<Platform::String^>^ args)
 #endif
 	return 0;
 }
+#endif
 #endif
 #define main __ STOP_USING_MAIN___DEPRECATED_IN_APRIL
 #endif
