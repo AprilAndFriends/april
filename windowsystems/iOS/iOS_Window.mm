@@ -86,7 +86,7 @@ namespace april
 		
 		void execute()
 		{
-			updateCursorPosition(this->position);
+			if (this->type != Window::AMOUSEEVT_CANCEL) updateCursorPosition(this->position);
 			this->window->handleMouseEvent(this->type, this->position, this->button);
 		}
 		
