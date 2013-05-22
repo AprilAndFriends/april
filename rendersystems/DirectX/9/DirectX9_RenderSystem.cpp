@@ -193,6 +193,8 @@ namespace april
 		}
 		hlog::write(april::logTag, "Direct3D9 Device restored.");
 		this->d3dDevice->BeginScene();
+		// this is used to display window content while resizing window
+		april::window->updateOneFrame();
 	}
 
 	void DirectX9_RenderSystem::assignWindow(Window* window)

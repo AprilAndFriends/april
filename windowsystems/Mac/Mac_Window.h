@@ -52,8 +52,6 @@ namespace april
 		void OnAppLostFocus();
 		
 		void onFocusChanged(bool value);
-	
-		bool mResizable;
 	protected:
 		bool retainLoadingOverlay, fastHideLoadingOverlay;
 	};

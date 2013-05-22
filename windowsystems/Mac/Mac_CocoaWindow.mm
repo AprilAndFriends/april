@@ -158,7 +158,7 @@ extern bool gReattachLoadingOverlay;
 {
 	NSUInteger mask;
 	mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
-	if (aprilWindow->mResizable) mask |= NSResizableWindowMask;
+	if (aprilWindow->getOptions().resizable) mask |= NSResizableWindowMask;
 	[self setStyleMask:mask];
 	if (isLionOrNewer()) // workarround for bug in macos
 	{

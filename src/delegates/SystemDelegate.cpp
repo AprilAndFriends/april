@@ -15,11 +15,6 @@
 
 namespace april
 {
-	void SystemDelegate::onWindowSizeChanged(int width, int height, Window::DeviceOrientation deviceOrientation) // DEPRECATED
-	{
-		hlog::debug(april::logTag, "Event onWindowSizeChanged() was not implemented.");
-	}
-
 	SystemDelegate::SystemDelegate()
 	{
 	}
