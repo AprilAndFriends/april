@@ -165,6 +165,10 @@ namespace april
 		while (april::window->isRunning())
 		{
 			hlog::write(april::logTag, "Resetting device...");
+			if (this->d3dpp->BackBufferWidth <= 0 || this->d3dpp->BackBufferHeight <= 0)
+			{
+				throw hl_exception(hsprintf("Backbuffer size is invalid: %d x %d", this->d3dpp->BackBufferWidth, this->d3dpp->BackBufferHeight));
+			}
 			hr = this->d3dDevice->Reset(this->d3dpp);
 			if (hr == D3D_OK)
 			{
@@ -506,6 +510,11 @@ namespace april
 	{
 		if (this->backBuffer == NULL)
 		{
+			return;
+		}
+		if (w <= 0 || h <= 0)
+		{
+			hlog::warnf(april::logTag, "Cannot set resolution to: %d x %d", w, h);
 			return;
 		}
 		this->d3dpp->Windowed = !fullscreen;
