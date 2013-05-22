@@ -252,7 +252,7 @@ namespace april
 		}
 		else if (this->options.resizable)
 		{
-			style |= WS_SIZEBOX;
+			style |= WS_SIZEBOX | WS_MAXIMIZEBOX;
 		}
 		exstyle = (fullscreen ? EXSTYLE_FULLSCREEN : EXSTYLE_WINDOWED);
 	}
@@ -425,8 +425,12 @@ namespace april
 			}
 			break;
 		case WM_SETCURSOR:
-			april::window->isCursorVisible() ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
-			return 1;
+			if (!april::window->isCursorVisible())
+			{
+				SetCursor(0);
+				return 1;
+			}
+			break;
 		case WM_ACTIVATE:
 			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
 			{
@@ -444,7 +448,7 @@ namespace april
 			_sizeChanging = false;
 			break;
 		case WM_SIZE:
-			if (_sizeChanging && !april::window->isFullscreen())
+			if ((_sizeChanging || wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED) && !april::window->isFullscreen())
 			{
 				((Win32_Window*)april::window)->_setRenderSystemResolution();
 			}

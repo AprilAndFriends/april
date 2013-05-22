@@ -45,11 +45,6 @@ namespace april
 {
     Mac_Window::Mac_Window() : Window()
     {
-#ifdef _DEBUG
-		this->mResizable = 1;
-#else
-		this->mResizable = 0;
-#endif
 		this->name = APRIL_WS_MAC;
 		this->retainLoadingOverlay = fastHideLoadingOverlay = false;
 		
@@ -150,7 +145,7 @@ namespace april
 
 		NSRect frame, defaultWndFrame;
 		NSUInteger styleMask;
-		
+
 		bool lionFullscreen = isLionOrNewer();
 
 		if (fullscreen)
@@ -164,7 +159,7 @@ namespace april
 		{
 			frame = NSMakeRect(0, 0, w, h);
 			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
-			if (aprilWindow->mResizable) styleMask |= NSResizableWindowMask;
+			if (options.resizable) styleMask |= NSResizableWindowMask;
 		}
 
 		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
