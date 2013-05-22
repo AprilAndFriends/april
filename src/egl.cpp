@@ -21,10 +21,11 @@
 
 namespace april
 {
-	EglData egl;
+	EglData* egl;
 
 	EglData::EglData()
 	{
+		this->hWnd = NULL;
 		this->display = NULL;
 		this->config = NULL;
 		this->surface = NULL;
@@ -45,9 +46,10 @@ namespace april
 
 	EglData::~EglData()
 	{
+		this->destroy();
 	}
 
-	bool EglData::init()
+	bool EglData::create()
 	{
 		if (this->display == NULL)
 		{
@@ -67,33 +69,21 @@ namespace april
 				return false;
 			}
 			EGLint configs = 0;
-			eglGetConfigs(this->display, NULL, 0, &configs);
-			if (configs == 0)
+			EGLBoolean result = eglGetConfigs(this->display, NULL, 0, &configs);
+			if (!result || configs == 0)
 			{
 				hlog::error(april::logTag, "There are no EGL configs!");
 				this->destroy();
 				return false;
 			}
-			EGLBoolean result = eglChooseConfig(this->display, this->pi32ConfigAttribs, &this->config, 1, &configs);
+			result = eglChooseConfig(this->display, this->pi32ConfigAttribs, &this->config, 1, &configs);
 			if (!result || configs == 0)
 			{
 				hlog::error(april::logTag, "Can't choose EGL config!");
 				this->destroy();
 				return false;
 			}
-			eglSwapInterval(this->display, 1);
 		}
-		return true;
-	}
-
-	bool EglData::create()
-	{
-		return this->create(NULL, NULL);
-	}
-
-	bool EglData::create(int* width, int* height)
-	{
-		this->init(); // just in case somebody didn't call init before
 		if (this->surface == NULL)
 		{
 			this->surface = eglCreateWindowSurface(this->display, this->config, this->hWnd, NULL);
@@ -107,10 +97,7 @@ namespace april
 				this->destroy();
 				return false;
 			}
-		}
-		if (width != NULL && height != NULL)
-		{
-			this->getSystemParameters(width, height, NULL);
+			eglSwapInterval(this->display, 1);
 		}
 		return true;
 	}
@@ -142,37 +129,6 @@ namespace april
 	void EglData::swapBuffers()
 	{
 		eglSwapBuffers(this->display, this->surface);
-	}
-
-	bool EglData::getSystemParameters(int* width, int* height, int* dpi)
-	{
-		if (this->display == NULL || this->surface == NULL)
-		{
-			*width = 0;
-			*height = 0;
-			if (dpi != NULL)
-			{
-				*dpi = 0;
-			}
-			return false;
-		}
-		if (!eglQuerySurface(this->display, this->surface, EGL_WIDTH, (EGLint*)width))
-		{
-			*width = 0;
-		}
-		if (!eglQuerySurface(this->display, this->surface, EGL_HEIGHT, (EGLint*)height))
-		{
-			*height = 0;
-		}
-		if (dpi != NULL)
-		{
-			int dpiX = 0;
-			int dpiY = 0;
-			eglQuerySurface(this->display, this->surface, EGL_HORIZONTAL_RESOLUTION, (EGLint*)&dpiX);
-			eglQuerySurface(this->display, this->surface, EGL_VERTICAL_RESOLUTION, (EGLint*)&dpiY);
-			*dpi = (int)(hhypot(dpiX / METERS_TO_INCHES_FACTOR, dpiY / METERS_TO_INCHES_FACTOR) * 0.5f);
-		}
-		return true;
 	}
 
 }

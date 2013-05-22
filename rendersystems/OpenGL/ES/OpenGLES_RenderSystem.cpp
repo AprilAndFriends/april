@@ -45,7 +45,7 @@ namespace april
 	int OpenGLES_RenderSystem::getMaxTextureSize()
 	{
 #ifdef _WIN32
-		if (april::egl.display == NULL)
+		if (april::egl->display == NULL)
 		{
 			return 0;
 		}

@@ -311,8 +311,8 @@ namespace april
 	
 	void Window::handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode)
 	{
-		this->handleKeyOnlyEvent(type, keyCode);
-		if (type == AKEYEVT_DOWN)
+		this->handleKeyOnlyEvent(type, keyCode); // doesn't do anything if keyCode is AK_NONE
+		if (type == AKEYEVT_DOWN && charCode > 0) // ignores invalid chars
 		{
 			this->handleCharOnlyEvent(charCode);
 		}
@@ -335,12 +335,12 @@ namespace april
 				this->keyboardDelegate->onKeyUp(keyCode);
 				break;
 			}
-		}
-		// emulation of buttons using keyboard
-		if (this->controllerEmulationKeys.has_key(keyCode))
-		{
-			ControllerEventType buttonType = (type == AKEYEVT_DOWN ? ACTRLEVT_DOWN : ACTRLEVT_UP);
-			this->handleControllerEvent(buttonType, this->controllerEmulationKeys[keyCode]);
+			// emulation of buttons using keyboard
+			if (this->controllerEmulationKeys.has_key(keyCode))
+			{
+				ControllerEventType buttonType = (type == AKEYEVT_DOWN ? ACTRLEVT_DOWN : ACTRLEVT_UP);
+				this->handleControllerEvent(buttonType, this->controllerEmulationKeys[keyCode]);
+			}
 		}
 	}
 	
@@ -416,6 +416,11 @@ namespace april
 		{
 			this->systemDelegate->onWindowFocusChanged(focused);
 		}
+	}
+
+	void Window::handleActivityChangeEvent(bool active)
+	{
+		hlog::warn(april::logTag, this->name + " does not implement activity change events!");
 	}
 	
 	void Window::handleLowMemoryWarning()

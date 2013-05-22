@@ -272,6 +272,9 @@
     <ClCompile Include="src\egl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="platforms\AndroidJNI_Platform.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">

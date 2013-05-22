@@ -35,16 +35,13 @@ namespace april
 		EglData();
 		~EglData();
 
-		bool init();
 		bool create();
-		bool create(int* width, int* height);
 		bool destroy();
 		void swapBuffers();
-		bool getSystemParameters(int* width, int* height, int* dpi);
 
 	};
 
-	extern EglData egl;
+	extern EglData* egl;
 
 }
 #endif

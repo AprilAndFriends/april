@@ -267,6 +267,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="platforms\AndroidJNI_Platform.cpp" />
     <ClCompile Include="platforms\Android_main.cpp" />
     <ClCompile Include="platforms\Android_Platform.cpp" />
     <ClCompile Include="platforms\OpenKODE_main.cpp" />

@@ -31,6 +31,7 @@ namespace april
 	{
 		this->name = APRIL_WS_OPENKODE;
 		this->kdWindow = NULL;
+		this->virtualKeyboardVisible = false;
 #if defined(_WIN32) && !defined(_EGL)
 		hlog::warn(april::logTag, "OpenKODE Window requires EGL to be present!");
 #endif
@@ -47,30 +48,41 @@ namespace april
 		{
 			return false;
 		}
+		this->virtualKeyboardVisible = false;
+		if (w <= 0 || h <= 0)
+		{
+			hlog::errorf(april::logTag, "Cannot create window with size: %d x %d", w, h);
+			this->destroy();
+			return false;
+		}
 #ifdef _EGL
-		april::egl.init();
+		this->kdWindow = kdCreateWindow(april::egl->display, april::egl->config, NULL);
 #endif
-		this->kdWindow = kdCreateWindow(april::egl.display, april::egl.config, NULL);
 		if (this->kdWindow == NULL)
 		{
 			hlog::error(april::logTag, "Can't create KD Window!");
+			this->destroy();
 			return false;
 		}
-		if (kdRealizeWindow(this->kdWindow, &april::egl.hWnd) != NULL)
+		if (fullscreen) // KD only supports fullscreen in the screen's resolution
+		{
+			kdQueryAttribi(KD_ATTRIB_WIDTH, &w);
+			kdQueryAttribi(KD_ATTRIB_HEIGHT, &h);
+		}
+		KDint32 size[] = {w, h};
+		kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_SIZE, size);
+		kdSetWindowPropertycv(this->kdWindow, KD_WINDOWPROPERTY_CAPTION, title.c_str());
+#ifdef _EGL // KD doesn't actually work without EGL
+		if (kdRealizeWindow(this->kdWindow, &april::egl->hWnd) != 0)
+#endif
 		{
 			hlog::error(april::logTag, "Can't realize KD Window!");
 			this->destroy();
 			return false;
 		}
 #ifdef _EGL
-		april::egl.create();
+		april::egl->create();
 #endif
-		if (w != 0 && h != 0)
-		{
-			KDint32 size[] = {w, h};
-			kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_SIZE, size);
-		}
-		kdSetWindowPropertycv(this->kdWindow, KD_WINDOWPROPERTY_CAPTION, title.c_str());
 		return true;
 	}
 	
@@ -80,7 +92,10 @@ namespace april
 		{
 			return false;
 		}
-		april::egl.destroy();
+		this->virtualKeyboardVisible = false;
+#ifdef _EGL
+		april::egl->destroy();
+#endif
 		if (this->kdWindow != NULL)
 		{
 			kdDestroyWindow(this->kdWindow);
@@ -122,17 +137,29 @@ namespace april
 	void* OpenKODE_Window::getBackendId()
 	{
 #ifdef _EGL
-		return april::egl.hWnd;
+		return april::egl->hWnd;
 #else
 		return 0;
 #endif
 	}
 
-	void OpenKODE_Window::_setResolution(int w, int h)
+	void OpenKODE_Window::setResolution(int w, int h, bool fullscreen)
 	{
-		// TODO
+		if (fullscreen) // KD only supports fullscreen in the screen's resolution
+		{
+			kdQueryAttribi(KD_ATTRIB_WIDTH, &w);
+			kdQueryAttribi(KD_ATTRIB_HEIGHT, &h);
+		}
+		this->fullscreen = fullscreen;
+		KDint32 size[] = {w, h};
+		kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_SIZE, size);
 	}
-	
+
+	void OpenKODE_Window::handleActivityChangeEvent(bool active)
+	{
+		this->handleFocusChangeEvent(active);
+	}
+
 	bool OpenKODE_Window::updateOneFrame()
 	{
 		static bool result;
@@ -146,62 +173,80 @@ namespace april
 	void OpenKODE_Window::presentFrame()
 	{
 #ifdef _EGL
-		april::egl.swapBuffers();
+		april::egl->swapBuffers();
 #endif
 	}
 
-	bool __process_event(const KDEvent* evt)
+	bool OpenKODE_Window::_processEvent(const KDEvent* evt)
 	{
-		gvec2 cursorPosition;
 		switch (evt->type)
 		{
 		case KD_EVENT_QUIT:
-			april::window->handleQuitRequest(false);
-			april::window->terminateMainLoop();
+			this->handleQuitRequest(false);
+			this->terminateMainLoop();
 			return true;
 		case KD_EVENT_WINDOW_CLOSE:
-			april::window->handleQuitRequest(true);
+			this->handleQuitRequest(true);
 			return true;
 		case KD_EVENT_PAUSE:
-			april::window->handleFocusChangeEvent(false);
+			this->handleActivityChangeEvent(false);
+			april::rendersys->unloadTextures();
 #ifdef _EGL
-			april::egl.destroy();
+			april::egl->destroy();
 #endif
 			return true;
 		case KD_EVENT_RESUME:
 #ifdef _EGL
-			april::egl.create();
+			april::egl->create();
 #endif
-			april::window->handleFocusChangeEvent(true);
+			this->handleActivityChangeEvent(true);
 			return true;
 		case KD_EVENT_WINDOW_FOCUS:
-			april::window->handleFocusChangeEvent(evt->data.windowfocus.focusstate != 0);
+			this->handleFocusChangeEvent(evt->data.windowfocus.focusstate != 0);
+			return true;
+		case KD_EVENT_INPUT:
+			if (evt->data.input.value.i != 0)
+			{
+				if (evt->data.input.index < KD_IOGROUP_CHARS) // because key and char events are separate
+				{
+					this->queueKeyEvent(april::Window::AKEYEVT_DOWN, (april::Key)evt->data.input.index, 0);
+				}
+				else
+				{
+					this->queueKeyEvent(april::Window::AKEYEVT_DOWN, april::AK_NONE, evt->data.input.index - KD_IOGROUP_CHARS);
+				}
+			}
+			else
+			{
+				this->queueKeyEvent(april::Window::AKEYEVT_UP, (april::Key)evt->data.input.index, 0);
+			}
 			return true;
 		case KD_EVENT_INPUT_POINTER:
-			cursorPosition.set((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
-			((OpenKODE_Window*)april::window)->setCursorPosition(cursorPosition);
+			this->cursorPosition.set((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
 			switch (evt->data.inputpointer.index)
 			{
 			case KD_INPUT_POINTER_X:
 			case KD_INPUT_POINTER_Y:
-				april::window->queueTouchEvent(Window::AMOUSEEVT_MOVE, cursorPosition, 0);
+				this->queueTouchEvent(Window::AMOUSEEVT_MOVE, this->cursorPosition, 0);
 				break;
 			case KD_INPUT_POINTER_SELECT:
 				if (evt->data.inputpointer.select != 0)
 				{
-					april::window->queueTouchEvent(Window::AMOUSEEVT_DOWN, cursorPosition, 0);
+					this->queueTouchEvent(Window::AMOUSEEVT_DOWN, this->cursorPosition, 0);
 				}
 				else
 				{
-					april::window->queueTouchEvent(Window::AMOUSEEVT_UP, cursorPosition, 0);
+					this->queueTouchEvent(Window::AMOUSEEVT_UP, this->cursorPosition, 0);
 				}
 				break;
 			}
 			return true;
-		case KD_EVENT_ORIENTATION:
-			// TODO
-			//april::window->getSystemDelegate()->onWindowSizeChanged();
-			return false;
+		case KD_EVENT_WINDOWPROPERTY_CHANGE:
+			if (evt->data.windowproperty.pname == KD_WINDOWPROPERTY_SIZE)
+			{
+				this->_setRenderSystemResolution();
+			}
+			return true;
 		}
 		return false;
 	}
@@ -213,12 +258,24 @@ namespace april
 		// 1 milisecond as timeout
 		while (this->running && (evt = kdWaitEvent(1000000L)) != NULL)
 		{
-			if (!__process_event(evt))
+			if (!this->_processEvent(evt))
 			{
 				kdDefaultEvent(evt);
 			}
 		}
 		Window::checkEvents();
+	}
+
+	void OpenKODE_Window::beginKeyboardHandling()
+	{
+		kdKeyboardShow(this->kdWindow, 1);
+		this->virtualKeyboardVisible = true;
+	}
+
+	void OpenKODE_Window::terminateKeyboardHandling()
+	{
+		kdKeyboardShow(this->kdWindow, 0);
+		this->virtualKeyboardVisible = false;
 	}
 
 }
