@@ -154,8 +154,8 @@ public class Activity extends android.app.Activity
 	{
 		NativeInterface.activityOnDestroy();
 		NativeInterface.destroy();
-		super.onDestroy();
 		NativeInterface.reset();
+		super.onDestroy();
 		if (this.useHardExit)
 		{
 			System.runFinalizersOnExit(true);
