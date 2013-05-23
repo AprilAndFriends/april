@@ -219,4 +219,16 @@ public class NativeInterface
 		DialogFactory.create(title, text, ok, yes, no, cancel, iconId);
 	}
 	
+	public static void reset()
+	{
+		NativeInterface.Activity = null;
+		NativeInterface.AprilActivity = null;
+		NativeInterface.Running = false;
+		NativeInterface.ArchivePath = "";
+		NativeInterface.DataPath = ".";
+		NativeInterface.PackageName = "";
+		NativeInterface.VersionCode = "0";
+		NativeInterface.ApkPath = "";
+	}
+	
 }
