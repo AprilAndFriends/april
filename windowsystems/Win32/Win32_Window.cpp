@@ -277,6 +277,7 @@ namespace april
 		static float _wheelDelta = 0.0f;
 		static bool _altKeyDown = false;
 		static bool _sizeChanging = false;
+		static bool _initialSize = true;
 		if (!april::window->isCreated()) // don't run callback processing if window was "destroyed"
 		{
 			return 1;
@@ -448,10 +449,12 @@ namespace april
 			_sizeChanging = false;
 			break;
 		case WM_SIZE:
-			if ((_sizeChanging || wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED) && !april::window->isFullscreen())
+			if (!april::window->isFullscreen() &&
+				(_sizeChanging || wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED && !_initialSize))
 			{
 				((Win32_Window*)april::window)->_setRenderSystemResolution();
 			}
+			_initialSize = false;
 			break;
 		}
 		return DefWindowProcW(hWnd, message, wParam, lParam);
