@@ -19,7 +19,6 @@ import java.util.ArrayList;
 public class Activity extends android.app.Activity
 {
 	protected boolean nookWorkaround = false; // set this to true in your activity if your are using a nook build in order to speed up new intent/activity calls
-	protected boolean useHardExit = true;
 	
 	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
 	{
@@ -155,12 +154,8 @@ public class Activity extends android.app.Activity
 		NativeInterface.activityOnDestroy();
 		NativeInterface.destroy();
 		super.onDestroy();
-		NativeInterface.reset();
-		if (this.useHardExit)
-		{
-			System.runFinalizersOnExit(true);
-			System.exit(0);
-		}
+		System.runFinalizersOnExit(true);
+		System.exit(0);
 	}
 	
 	@Override
