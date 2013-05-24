@@ -261,7 +261,10 @@ namespace april
 		while (this->mouseEvents.size() > 0)
 		{
 			MouseInputEvent e = this->mouseEvents.remove_first();
-			this->cursorPosition = e.position;
+			if (e.type != Window::AMOUSEEVT_CANCEL)
+			{
+				this->cursorPosition = e.position;
+			}
 			this->handleMouseEvent(e.type, e.position, e.keyCode);
 		}
 		while (this->touchEvents.size() > 0)
@@ -469,8 +472,6 @@ namespace april
 				return;
 			}
 			this->touches[index] = position;
-			break;
-		default:
 			break;
 		}
 		if (this->multiTouchActive || this->touches.size() > 1)
