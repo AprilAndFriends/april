@@ -57,7 +57,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 			type = 1;
 			break;
 		case MotionEvent.ACTION_MOVE: // Android batches multitouch move events into a single move event
-			type = 2;
+			type = 3;
 			break;
 		default:
 			type = -1;
