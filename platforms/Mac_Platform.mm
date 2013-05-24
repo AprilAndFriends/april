@@ -133,7 +133,15 @@ namespace april
 			info.displayDpi = 72; // TODO
 			info.maxTextureSize = 0;
 			// locale
-			info.locale = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];
+			// This code gets the prefered locale based on user's list of prefered languages against the supported languages
+			// in the app bundle (the .lproj folders in the bundle)
+			CFArrayRef locs = CFBundleCopyBundleLocalizations(CFBundleGetMainBundle());
+			CFArrayRef preferred = CFBundleCopyPreferredLocalizationsFromArray(locs);
+			CFStringRef loc = (CFStringRef) CFArrayGetValueAtIndex(preferred, 0);
+			CFStringRef lang = CFLocaleCreateCanonicalLocaleIdentifierFromString(NULL, loc);
+			char cstr[64 + 1];
+			CFStringGetCString(lang, cstr, 64, kCFStringEncodingASCII);
+			info.locale = cstr;
 		}
 		// TODO
 		if (info.maxTextureSize == 0 && april::window != NULL && april::window->isCreated())
