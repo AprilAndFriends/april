@@ -75,7 +75,26 @@ namespace april
 		this->format = format;
 		this->width = w;
 		this->height = h;
-		this->bpp = 4;
+		switch (format)
+		{
+		case FORMAT_ARGB:
+			this->bpp = 4;
+			break;
+		case FORMAT_RGB:
+			this->bpp = 3;
+			break;
+		case FORMAT_ALPHA:
+			this->bpp = 1;
+			break;
+#if !defined(_ANDROID) && !defined(_WIN32)
+		case FORMAT_BGRA:
+			this->bpp = 4;
+			break;
+#endif
+		default:
+			this->bpp = 3;
+			break;
+		}
 		this->filename = "";
 		this->manualBuffer = NULL;
 		glGenTextures(1, &this->textureId);
@@ -86,44 +105,7 @@ namespace april
 		}
 		else
 		{
-			// TODO - use as base for ::clear
-			int glFormat = GL_RGB;
-			int internalFormat = GL_RGB;
-			this->bpp = 3;
-			switch (format)
-			{
-			case FORMAT_ARGB:
-				glFormat = internalFormat = GL_RGBA;
-				this->bpp = 4;
-				break;
-			case FORMAT_RGB:
-				glFormat = internalFormat = GL_RGB;
-				this->bpp = 3;
-				break;
-			case FORMAT_ALPHA:
-				glFormat = internalFormat = GL_ALPHA;
-				this->bpp = 1;
-				break;
-#if !defined(_ANDROID) && !defined(_WIN32)
-			case FORMAT_BGRA:
-#ifndef __APPLE__
-				glFormat = GL_BGRA;
-#else
-				glFormat = GL_BGRA_EXT;
-#endif
-				internalFormat = GL_RGBA;
-				this->bpp = 4;
-				break;
-#endif
-			default:
-				glFormat = internalFormat = GL_RGB;
-				this->bpp = 3;
-				break;
-			}
-			unsigned char* clearColor = new unsigned char[w * h * this->bpp];
-			memset(clearColor, 0, w * h * this->bpp);
-			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, w, h, 0, glFormat, GL_UNSIGNED_BYTE, clearColor);
-			delete [] clearColor;
+			this->clear();
 		}
 	}
 
@@ -221,6 +203,10 @@ namespace april
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->manualBuffer);
 		}
+		else
+		{
+			this->clear();
+		}
 		return true;
 	}
 
@@ -236,8 +222,38 @@ namespace april
 
 	void OpenGL_Texture::clear()
 	{
-		// TODO - can be improved by directly using memset
-		this->fillRect(0, 0, this->width, this->height, Color::Clear);
+		// TODO - use as base for ::clear
+		int glFormat = GL_RGB;
+		int internalFormat = GL_RGB;
+		switch (this->format)
+		{
+		case FORMAT_ARGB:
+			glFormat = internalFormat = GL_RGBA;
+			break;
+		case FORMAT_RGB:
+			glFormat = internalFormat = GL_RGB;
+			break;
+		case FORMAT_ALPHA:
+			glFormat = internalFormat = GL_ALPHA;
+			break;
+#if !defined(_ANDROID) && !defined(_WIN32)
+		case FORMAT_BGRA:
+#ifndef __APPLE__
+			glFormat = GL_BGRA;
+#else
+			glFormat = GL_BGRA_EXT;
+#endif
+			internalFormat = GL_RGBA;
+			break;
+#endif
+		default:
+			glFormat = internalFormat = GL_RGB;
+			break;
+		}
+		unsigned char* clearColor = new unsigned char[this->width * this->height * this->bpp];
+		memset(clearColor, 0, this->width * this->height * this->bpp);
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, this->width, this->height, 0, glFormat, GL_UNSIGNED_BYTE, clearColor);
+		delete [] clearColor;
 	}
 
 	Color OpenGL_Texture::getPixel(int x, int y)
@@ -476,6 +492,9 @@ namespace april
 		{
 			glFormat = GL_ALPHA;
 		}
+		hlog::writef("B", "HUR HUR %p", this);
+		hlog::writef("B", "%X", this->textureId);
+		hlog::warnf("B", "%d %d %d %d %d %p", x, y, dataWidth, dataHeight, glFormat, data);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, dataWidth, dataHeight, glFormat, GL_UNSIGNED_BYTE, data);
 	}
 

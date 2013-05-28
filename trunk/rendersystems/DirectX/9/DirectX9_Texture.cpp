@@ -248,6 +248,10 @@ namespace april
 			this->d3dTexture->UnlockRect(0);
 			delete image;
 		}
+		else
+		{
+			this->clear();
+		}
 		return true;
 	}
 
