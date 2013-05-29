@@ -492,9 +492,6 @@ namespace april
 		{
 			glFormat = GL_ALPHA;
 		}
-		hlog::writef("B", "HUR HUR %p", this);
-		hlog::writef("B", "%X", this->textureId);
-		hlog::warnf("B", "%d %d %d %d %d %p", x, y, dataWidth, dataHeight, glFormat, data);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, dataWidth, dataHeight, glFormat, GL_UNSIGNED_BYTE, data);
 	}
 
