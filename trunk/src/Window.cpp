@@ -473,6 +473,8 @@ namespace april
 			}
 			this->touches[index] = position;
 			break;
+		default:
+			break;
 		}
 		if (this->multiTouchActive || this->touches.size() > 1)
 		{
