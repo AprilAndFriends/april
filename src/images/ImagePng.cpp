@@ -7,7 +7,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifndef _IOS
+#if !defined(_IOS) && !defined(_OPENKODE)
 #include <png/png.h>
 #include <png/pngpriv.h>
 #include <png/pngstruct.h>

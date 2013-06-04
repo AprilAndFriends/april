@@ -8,6 +8,11 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _OPENKODE_WINDOW
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#import <UIKit/UIWindow.h>
+#endif
+
 #include <KD/kd.h>
 
 #include <hltypes/hltypesUtil.h>
@@ -24,6 +29,10 @@
 #endif
 #include "OpenGL_RenderSystem.h"
 #include "OpenKODE_Window.h"
+
+#if TARGET_OS_IPHONE
+bool (*iOShandleUrlCallback)(chstr url) = NULL; // KD-TODO
+#endif
 
 namespace april
 {
@@ -136,7 +145,15 @@ namespace april
 	
 	void* OpenKODE_Window::getBackendId()
 	{
-#ifdef _EGL
+#if TARGET_OS_IPHONE
+		UIWindow* window = [UIApplication sharedApplication].keyWindow;
+		if (!window)
+			window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+		
+		UIViewController* controller = [window rootViewController];
+
+		return controller;
+#elif defined(_EGL)
 		return april::egl->hWnd;
 #else
 		return 0;

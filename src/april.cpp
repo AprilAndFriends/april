@@ -49,7 +49,7 @@
 #ifdef _ANDROID
 #include "AndroidJNI_Window.h"
 #endif
-#if TARGET_OS_IPHONE
+#ifdef _IOS
 #include "iOS_Window.h"
 #endif
 #ifdef _SDL_WINDOW
@@ -89,7 +89,7 @@
 		#define WS_INTERNAL_DEFAULT WS_WINRT
 	#endif r
 #elif defined(__APPLE__)
-	#ifdef _IOS
+	#if TARGET_OS_IPHONE
 		#ifdef _OPENGLES2
 			#define RS_INTERNAL_DEFAULT RS_OPENGLES2
 		#elif defined(_OPENGLES1)
@@ -238,7 +238,7 @@ namespace april
 			april::window = new Mac_Window();
 		}
 #endif
-#if TARGET_OS_IPHONE
+#ifdef _IOS
 		if (april::window == NULL && window == WS_IOS)
 		{
 			april::window = new iOS_Window();

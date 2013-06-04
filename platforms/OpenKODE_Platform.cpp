@@ -10,6 +10,10 @@
 #ifdef _OPENKODE
 #include <KD/kd.h>
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+
 #include <gtypes/Vector2.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
@@ -36,9 +40,14 @@ namespace april
 			// TODOkd
 			info.cpuCores = 1;
 			// RAM size
+#if TARGET_IPHONE_SIMULATOR
+			info.ram = 1024;
+#else
 			int ram;
 			kdQueryAttribi(KD_ATTRIB_RAM, (KDint*)&ram);
 			info.ram = ram / 1048576; // in MB
+#endif
+
 			// display resolution
 			int width = 0;
 			int height = 0;
