@@ -14,7 +14,7 @@
 #include "SystemDelegate.h"
 #include "Mac_LoadingOverlay.h"
 #include "Mac_Window.h"
-#include "Mac_Keyboard.h"
+#include "Mac_Keys.h"
 #include "april.h"
 
 extern bool gReattachLoadingOverlay;

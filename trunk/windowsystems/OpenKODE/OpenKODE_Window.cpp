@@ -29,6 +29,7 @@
 #endif
 #include "OpenGL_RenderSystem.h"
 #include "OpenKODE_Window.h"
+#include "OpenKODE_Keys.h"
 
 #if TARGET_OS_IPHONE
 bool (*iOShandleUrlCallback)(chstr url) = NULL; // KD-TODO
@@ -41,9 +42,11 @@ namespace april
 		this->name = APRIL_WS_OPENKODE;
 		this->kdWindow = NULL;
 		this->virtualKeyboardVisible = false;
+		memset(this->kdTouches, 0, 16 * sizeof(bool));
 #if defined(_WIN32) && !defined(_EGL)
 		hlog::warn(april::logTag, "OpenKODE Window requires EGL to be present!");
 #endif
+		initOpenKODEKeyMap();
 	}
 
 	OpenKODE_Window::~OpenKODE_Window()
@@ -193,6 +196,20 @@ namespace april
 		april::egl->swapBuffers();
 #endif
 	}
+	
+	int OpenKODE_Window::getAprilTouchIndex(int kdIndex)
+	{
+		int index = 0;
+		for (int i = 0; i <= kdIndex; i++)
+		{
+			if (this->kdTouches[i])
+			{
+				index++;
+			}
+		}
+		
+		return index -1;
+	}
 
 	bool OpenKODE_Window::_processEvent(const KDEvent* evt)
 	{
@@ -226,7 +243,7 @@ namespace april
 			{
 				if (evt->data.input.index < KD_IOGROUP_CHARS) // because key and char events are separate
 				{
-					this->queueKeyEvent(april::Window::AKEYEVT_DOWN, (april::Key)evt->data.input.index, 0);
+					this->queueKeyEvent(april::Window::AKEYEVT_DOWN, kd2april(evt->data.input.index), 0);
 				}
 				else
 				{
@@ -235,27 +252,40 @@ namespace april
 			}
 			else
 			{
-				this->queueKeyEvent(april::Window::AKEYEVT_UP, (april::Key)evt->data.input.index, 0);
+				this->queueKeyEvent(april::Window::AKEYEVT_UP, kd2april(evt->data.input.index), 0);
 			}
 			return true;
 		case KD_EVENT_INPUT_POINTER:
-			this->cursorPosition.set((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
-			switch (evt->data.inputpointer.index)
 			{
-			case KD_INPUT_POINTER_X:
-			case KD_INPUT_POINTER_Y:
-				this->queueTouchEvent(Window::AMOUSEEVT_MOVE, this->cursorPosition, 0);
-				break;
-			case KD_INPUT_POINTER_SELECT:
-				if (evt->data.inputpointer.select != 0)
+				int i, j, index = evt->data.inputpointer.index;
+				gvec2 pos((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
+				for (i = 0, j = 0; i < 4; i++, j += KD_IO_POINTER_STRIDE)
 				{
-					this->queueTouchEvent(Window::AMOUSEEVT_DOWN, this->cursorPosition, 0);
+					if (index == KD_INPUT_POINTER_X + j || index == KD_INPUT_POINTER_Y + j)
+					{
+						this->queueTouchEvent(Window::AMOUSEEVT_MOVE, pos, this->getAprilTouchIndex(i));
+					}
+					else if (index == KD_INPUT_POINTER_SELECT + j)
+					{
+						if (evt->data.inputpointer.select != 0)
+						{
+							this->kdTouches[i] = true;
+							this->queueTouchEvent(Window::AMOUSEEVT_DOWN, pos, this->getAprilTouchIndex(i));
+						}
+						else
+						{
+							this->queueTouchEvent(Window::AMOUSEEVT_UP, pos, this->getAprilTouchIndex(i));
+							this->kdTouches[i] = false;
+						}
+					}
+					else
+						continue;
+					break;
 				}
-				else
+				if (i == 0)
 				{
-					this->queueTouchEvent(Window::AMOUSEEVT_UP, this->cursorPosition, 0);
+					this->cursorPosition = pos;
 				}
-				break;
 			}
 			return true;
 		case KD_EVENT_WINDOWPROPERTY_CHANGE:

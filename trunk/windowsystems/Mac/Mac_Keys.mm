@@ -7,7 +7,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 #include <hltypes/hmap.h>
-#include "Mac_Keyboard.h"
+#include "Mac_Keys.h"
 #import <Foundation/Foundation.h>
 
 

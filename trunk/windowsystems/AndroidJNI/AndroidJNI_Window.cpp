@@ -18,6 +18,7 @@
 #define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
 #include "androidUtilJNI.h"
 #include "AndroidJNI_Window.h"
+#include "AndroidJNI_Keys.h"
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"

@@ -10,10 +10,6 @@
 #ifdef _OPENKODE
 #include <KD/kd.h>
 
-#ifdef __APPLE__
-#include <TargetConditionals.h>
-#endif
-
 #include <gtypes/Vector2.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
@@ -22,6 +18,7 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
+
 #ifdef _EGL
 #include "egl.h"
 #endif
@@ -29,16 +26,20 @@
 #include "RenderSystem.h"
 #include "Window.h"
 
+#ifdef __APPLE__
+	#include <TargetConditionals.h>
+	#if TARGET_OS_IPHONE
+		void getStaticiOSInfo(chstr name, april::SystemInfo& info);
+	#endif
+#endif
+
 namespace april
 {
+	static SystemInfo info;
 	SystemInfo getSystemInfo()
 	{
-		static SystemInfo info;
 		if (info.locale == "")
 		{
-			// number of CPU cores
-			// TODOkd
-			info.cpuCores = 1;
 			// RAM size
 #if TARGET_IPHONE_SIMULATOR
 			info.ram = 1024;
@@ -57,6 +58,20 @@ namespace april
 			// display DPI
 			kdQueryAttribi(KD_ATTRIB_DPI, (KDint*)&info.displayDpi);
 			// other
+			
+			// number of CPU cores
+			info.cpuCores = 1;
+#if TARGET_OS_IPHONE // On iOS, april prefers to use hardcoded device info then OpenKODE's info, it's more accurate
+			hstr model = kdQueryAttribcv(KD_ATTRIB_PLATFORM);
+			if (model.contains("(") && model.contains(")"))
+			{
+				hstr a, b;
+				model.split("(",a, b);
+				b.split(")", model, a);
+				getStaticiOSInfo(model, info);
+			}
+#endif
+
 			info.locale = hstr(kdGetLocale());
 			if (info.locale == "")
 			{
