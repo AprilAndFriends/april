@@ -10,15 +10,15 @@
 /// @section DESCRIPTION
 /// 
 
-#ifndef APRIL_MAC_KEYBOARD_H
-#define APRIL_MAC_KEYBOARD_H
+#ifndef APRIL_ANDROIDJNI_KEYS_H
+#define APRIL_ANDROIDJNI_KEYS_H
 
 #include "Keys.h"
 
 namespace april
 {
-	Key getAprilMacKeyCode(unsigned int macKeyCode);
-	void initMacKeyMap();
+	Key android2april(unsigned int androidKeyCode);
+	void initAndroidKeyMap();
 }
 
 #endif

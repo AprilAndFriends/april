@@ -30,6 +30,9 @@
 #include "april.h"
 #include "PVRTexture.h"
 
+void getStaticiOSInfo(chstr name, april::SystemInfo& info);
+
+
 @interface AprilMessageBoxDelegate : NSObject<UIAlertViewDelegate> {
     void(*callback)(april::MessageBoxButton);
     april::MessageBoxButton buttonTypes[3];
@@ -145,113 +148,8 @@ namespace april
 			int h = mainScreen.bounds.size.height * scale;
 			// forcing a w:h ratio where w > h
 			info.displayResolution.set((float)hmax(w, h), (float)hmin(w, h));
-			
-			if (name.starts_with("iPad"))
-			{
-				if (name.starts_with("iPad1"))
-				{
-					info.name = "iPad1";
-					info.ram = 256;
-					info.displayDpi = 132;
-				}
-				else if (name.starts_with("iPad2"))
-				{
-					info.name = "iPad2";
-					info.ram = 512;
-					info.displayDpi = 132;
-				}
-				else if (name.starts_with("iPad3"))
-				{
-					info.name = "iPad3";
-					info.ram = 1024;
-					info.displayDpi = 264;
-				}
-				else
-				{
-					info.name = "iPad?";
-					info.ram = 1024;
-					info.displayDpi = 264;
-				}
-			}
-			else if (name.starts_with("iPhone"))
-			{
-				if (name == "iPhone1,1")
-				{
-					info.name = "iPhone2G";
-					info.ram = 128;
-					info.displayDpi = 163;
-				}
-				else if (name == "iPhone1,2")
-				{
-					info.name = "iPhone3G";
-					info.ram = 128;
-					info.displayDpi = 163;
-				}
-				else if (name == "iPhone2,1")
-				{
-					info.name = "iPhone3GS";
-					info.ram = 256;
-					info.displayDpi = 163;
-				}
-				else if (name.starts_with("iPhone3"))
-				{
-					info.name = "iPhone4";
-					info.ram = 512;
-					info.displayDpi = 326;
-				}
-				else if (name.starts_with("iPhone4"))
-				{
-					info.name = "iPhone4S";
-					info.ram = 512;
-					info.displayDpi = 326;
-				}
-				else if (name.starts_with("iPhone5"))
-				{
-					info.name = "iPhone5";
-					info.ram = 1024;
-					info.displayDpi = 326;
-				}
-				else
-				{
-					info.name = "iPhone?";
-					info.ram = 1024;
-					info.displayDpi = 326;
-				}
-			}
-			else if (name.starts_with("iPod"))
-			{
-				if (name == "iPod1,1")
-				{
-					info.name = "iPod1";
-					info.ram = 128;
-					info.displayDpi = 163;
-				}
-				else if (name == "iPod2,1")
-				{
-					info.name = "iPod2";
-					info.ram = 128;
-					info.displayDpi = 163;
-				}
-				else if (name == "iPod3,1")
-				{
-					info.name = "iPod3";
-					info.ram = 256;
-					info.displayDpi = 163;
-				}
-				else if (name == "iPod4,1")
-				{
-					info.name = "iPod4";
-					info.ram = 256;
-					info.displayDpi = 326;
-				}
-				else
-				{
-					info.name = "iPod?";
-					info.ram = 512;
-					info.displayDpi = 326;
-				}
-			}
-			//else: i386 (iphone simulator) and possible future device types
+
+			getStaticiOSInfo(name, info);
 		}
 		// iPhone simulator
 		if (info.maxTextureSize == 0 && april::rendersys != NULL)

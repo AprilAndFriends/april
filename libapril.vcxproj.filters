@@ -275,6 +275,12 @@
     <ClCompile Include="platforms\AndroidJNI_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
+    <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Keys.cpp">
+      <Filter>Source Files\windowsystems\OpenKODE</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Keys.cpp">
+      <Filter>Source Files\windowsystems\AndroidJNI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -417,6 +423,9 @@
     </ClInclude>
     <ClInclude Include="src\egl.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Keys.h">
+      <Filter>Source Files\windowsystems\AndroidJNI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -449,6 +449,7 @@ namespace april
 
 	void Window::queueTouchEvent(MouseEventType type, gvec2 position, int index)
 	{
+		hlog::write("KOK", hstr(index));
 		int previousTouchesSize = this->touches.size();
 		switch (type)
 		{

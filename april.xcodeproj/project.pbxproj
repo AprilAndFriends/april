@@ -74,9 +74,12 @@
 		D1134F1F175CDAC600BFF3A2 /* OpenKODE_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F1D175CDAC600BFF3A2 /* OpenKODE_main.cpp */; };
 		D1134F20175CDAC600BFF3A2 /* OpenKODE_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F1E175CDAC600BFF3A2 /* OpenKODE_Platform.cpp */; };
 		D1134F23175CDAD200BFF3A2 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F21175CDAD200BFF3A2 /* egl.cpp */; };
-		D11A21631712CF9A00BA9DA8 /* Mac_Keyboard.mm in Sources */ = {isa = PBXBuildFile; fileRef = D11A21621712CF9A00BA9DA8 /* Mac_Keyboard.mm */; };
+		D11A21631712CF9A00BA9DA8 /* Mac_Keys.mm in Sources */ = {isa = PBXBuildFile; fileRef = D11A21621712CF9A00BA9DA8 /* Mac_Keys.mm */; };
 		D1256A2E1727F6C60089C583 /* Mac_AppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1256A2C1727F6C60089C583 /* Mac_AppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1256A2F1727F6C60089C583 /* Mac_AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1256A2D1727F6C60089C583 /* Mac_AppDelegate.mm */; };
+		D1397A46175F32CE00DC02D7 /* OpenKODE_Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1397A44175F32CE00DC02D7 /* OpenKODE_Keys.cpp */; };
+		D1397A9A175F834800DC02D7 /* iOS_devices.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1397A99175F834800DC02D7 /* iOS_devices.mm */; };
+		D1397A9B175F834800DC02D7 /* iOS_devices.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1397A99175F834800DC02D7 /* iOS_devices.mm */; };
 		D14BF80B15872B2600D31573 /* SDL_Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF80915872B2600D31573 /* SDL_Window.cpp */; };
 		D14BF80F15872B3700D31573 /* iOS_Window.mm in Sources */ = {isa = PBXBuildFile; fileRef = D14BF80E15872B3700D31573 /* iOS_Window.mm */; };
 		D14BF81215872B4000D31573 /* iOS_main.mm in Sources */ = {isa = PBXBuildFile; fileRef = D14BF81015872B4000D31573 /* iOS_main.mm */; };
@@ -256,10 +259,15 @@
 		D1134F1E175CDAC600BFF3A2 /* OpenKODE_Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenKODE_Platform.cpp; path = platforms/OpenKODE_Platform.cpp; sourceTree = "<group>"; };
 		D1134F21175CDAD200BFF3A2 /* egl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egl.cpp; path = src/egl.cpp; sourceTree = "<group>"; };
 		D1134F22175CDAD200BFF3A2 /* egl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egl.h; path = src/egl.h; sourceTree = "<group>"; };
-		D11A21621712CF9A00BA9DA8 /* Mac_Keyboard.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_Keyboard.mm; path = windowsystems/Mac/Mac_Keyboard.mm; sourceTree = "<group>"; };
-		D11A21641712D01500BA9DA8 /* Mac_Keyboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Mac_Keyboard.h; path = windowsystems/Mac/Mac_Keyboard.h; sourceTree = "<group>"; };
+		D11A21621712CF9A00BA9DA8 /* Mac_Keys.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_Keys.mm; path = windowsystems/Mac/Mac_Keys.mm; sourceTree = "<group>"; };
+		D11A21641712D01500BA9DA8 /* Mac_Keys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Mac_Keys.h; path = windowsystems/Mac/Mac_Keys.h; sourceTree = "<group>"; };
 		D1256A2C1727F6C60089C583 /* Mac_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_AppDelegate.h; path = windowsystems/Mac/Mac_AppDelegate.h; sourceTree = "<group>"; };
 		D1256A2D1727F6C60089C583 /* Mac_AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_AppDelegate.mm; path = windowsystems/Mac/Mac_AppDelegate.mm; sourceTree = "<group>"; };
+		D1397A44175F32CE00DC02D7 /* OpenKODE_Keys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenKODE_Keys.cpp; path = windowsystems/OpenKODE/OpenKODE_Keys.cpp; sourceTree = "<group>"; };
+		D1397A45175F32CE00DC02D7 /* OpenKODE_Keys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenKODE_Keys.h; path = windowsystems/OpenKODE/OpenKODE_Keys.h; sourceTree = "<group>"; };
+		D1397A99175F834800DC02D7 /* iOS_devices.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_devices.mm; path = platforms/iOS_devices.mm; sourceTree = "<group>"; };
+		D1397A9C175F85E200DC02D7 /* AndroidJNI_Keys.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AndroidJNI_Keys.cpp; path = windowsystems/AndroidJNI/AndroidJNI_Keys.cpp; sourceTree = "<group>"; };
+		D1397A9D175F85E200DC02D7 /* AndroidJNI_Keys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AndroidJNI_Keys.h; path = windowsystems/AndroidJNI/AndroidJNI_Keys.h; sourceTree = "<group>"; };
 		D14BF80915872B2600D31573 /* SDL_Window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDL_Window.cpp; path = windowsystems/SDL/SDL_Window.cpp; sourceTree = "<group>"; };
 		D14BF80A15872B2600D31573 /* SDL_Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDL_Window.h; path = windowsystems/SDL/SDL_Window.h; sourceTree = "<group>"; };
 		D14BF80D15872B3700D31573 /* iOS_Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iOS_Window.h; path = windowsystems/iOS/iOS_Window.h; sourceTree = "<group>"; };
@@ -592,6 +600,7 @@
 			isa = PBXGroup;
 			children = (
 				D14BF81015872B4000D31573 /* iOS_main.mm */,
+				D1397A99175F834800DC02D7 /* iOS_devices.mm */,
 				D14BF81115872B4000D31573 /* iOS_Platform.mm */,
 			);
 			name = iOS;
@@ -616,6 +625,8 @@
 			children = (
 				D1134F19175CDA8D00BFF3A2 /* OpenKODE_Window.cpp */,
 				D1134F1A175CDA8D00BFF3A2 /* OpenKODE_Window.h */,
+				D1397A45175F32CE00DC02D7 /* OpenKODE_Keys.h */,
+				D1397A44175F32CE00DC02D7 /* OpenKODE_Keys.cpp */,
 			);
 			name = OpenKODE;
 			sourceTree = "<group>";
@@ -655,8 +666,8 @@
 				D1256A2D1727F6C60089C583 /* Mac_AppDelegate.mm */,
 				D1962A83170EC6FC0072A146 /* Mac_OpenGLView.h */,
 				D1962A84170EC6FC0072A146 /* Mac_OpenGLView.mm */,
-				D11A21641712D01500BA9DA8 /* Mac_Keyboard.h */,
-				D11A21621712CF9A00BA9DA8 /* Mac_Keyboard.mm */,
+				D11A21641712D01500BA9DA8 /* Mac_Keys.h */,
+				D11A21621712CF9A00BA9DA8 /* Mac_Keys.mm */,
 				D1962A87170EC7A20072A146 /* Mac_CocoaWindow.h */,
 				D1962A88170EC7A20072A146 /* Mac_CocoaWindow.mm */,
 				D1962A8B170ECC400072A146 /* Mac_LoadingOverlay.h */,
@@ -681,6 +692,8 @@
 			children = (
 				D1BCC57D1615A2900049CEA9 /* AndroidJNI_Window.cpp */,
 				D1BCC57E1615A2900049CEA9 /* AndroidJNI_Window.h */,
+				D1397A9C175F85E200DC02D7 /* AndroidJNI_Keys.cpp */,
+				D1397A9D175F85E200DC02D7 /* AndroidJNI_Keys.h */,
 			);
 			name = AndroidJNI;
 			sourceTree = "<group>";
@@ -1115,6 +1128,8 @@
 				D1134F1F175CDAC600BFF3A2 /* OpenKODE_main.cpp in Sources */,
 				D1134F20175CDAC600BFF3A2 /* OpenKODE_Platform.cpp in Sources */,
 				D1134F23175CDAD200BFF3A2 /* egl.cpp in Sources */,
+				D1397A46175F32CE00DC02D7 /* OpenKODE_Keys.cpp in Sources */,
+				D1397A9B175F834800DC02D7 /* iOS_devices.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1163,6 +1178,7 @@
 				D1E720C816D37E5800B9C9AD /* OpenGLES1_Texture.cpp in Sources */,
 				D1049F6116D38FCC0058C514 /* ImageCG.mm in Sources */,
 				D16AB63F16F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */,
+				D1397A9A175F834800DC02D7 /* iOS_devices.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1204,7 +1220,7 @@
 				D1962A86170EC6FC0072A146 /* Mac_OpenGLView.mm in Sources */,
 				D1962A8A170EC7A20072A146 /* Mac_CocoaWindow.mm in Sources */,
 				D1962A8E170ECC400072A146 /* Mac_LoadingOverlay.mm in Sources */,
-				D11A21631712CF9A00BA9DA8 /* Mac_Keyboard.mm in Sources */,
+				D11A21631712CF9A00BA9DA8 /* Mac_Keys.mm in Sources */,
 				D1256A2F1727F6C60089C583 /* Mac_AppDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
