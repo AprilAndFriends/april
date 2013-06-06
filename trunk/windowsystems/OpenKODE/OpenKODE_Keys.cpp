@@ -17,9 +17,9 @@
 
 namespace april
 {
-	static hmap<unsigned int, Key> gKeyMap;
+	static hmap<int, Key> gKeyMap;
 	
-	Key kd2april(unsigned int kdKeyCode)
+	Key kd2april(int kdKeyCode)
 	{
 		if (gKeyMap.has_key(kdKeyCode)) return gKeyMap[kdKeyCode];
 
@@ -31,7 +31,7 @@ namespace april
 	
 	void initOpenKODEKeyMap()
 	{
-		hmap<unsigned int, Key>& m = gKeyMap;
+		hmap<int, Key>& m = gKeyMap;
 		m[KD_INPUT_KEYS_LBUTTON] = AK_LBUTTON;
 		m[KD_INPUT_KEYS_RBUTTON] = AK_RBUTTON;
 		m[KD_INPUT_KEYS_MBUTTON] = AK_MBUTTON;
