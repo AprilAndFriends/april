@@ -36,6 +36,7 @@ namespace april
 		forcedFocus(false)
 	{
 		this->name = APRIL_WS_ANDROIDJNI;
+		initAndroidKeyMap();
 	}
 
 	AndroidJNI_Window::~AndroidJNI_Window()

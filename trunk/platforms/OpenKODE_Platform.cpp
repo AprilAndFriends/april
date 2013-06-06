@@ -112,7 +112,7 @@ namespace april
 		hstr no;
 		hstr cancel;
 		_makeButtonLabels(&ok, &yes, &no, &cancel, buttonMask, customButtonTitles);
-		const char* buttons[4] = {"", "", "", NULL};
+		const char* buttons[4] = {"", NULL, NULL, NULL};
 		MessageBoxButton resultButtons[4] = {AMSGBTN_NULL, AMSGBTN_NULL, AMSGBTN_NULL, AMSGBTN_NULL};
 		int indexCancel = -1;
 		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
