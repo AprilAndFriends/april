@@ -16,9 +16,13 @@
 #include "Image.h"
 #include "RenderSystem.h"
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif
+
 namespace april
 {
-#ifdef _IOS
+#if TARGET_OS_IPHONE
 	Image* _tryLoadingPVR(chstr filename);
 #endif
 
@@ -420,7 +424,7 @@ namespace april
 			hresource res(filename);
 			img = Image::_loadJpt(res);
 		}
-#ifdef _IOS
+#if TARGET_OS_IPHONE
 		else if (filename.lower().ends_with(".pvr"))
 		{
 			img = _tryLoadingPVR(filename);

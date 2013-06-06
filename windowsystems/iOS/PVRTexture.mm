@@ -48,6 +48,7 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 */
 
 #import "PVRTexture.h"
+#include "Image.h"
 
 // fix for NSURL not working on iPad Simulator
 #ifndef __GNUC__
@@ -59,7 +60,7 @@ __asm__(".weak_reference _OBJC_CLASS_$_NSURL");
 
 #define PVR_TEXTURE_FLAG_TYPE_MASK	0xff
 
-static char gPVRTexIdentifier[4] = "PVR!";
+static char gPVRTexIdentifier[5] = "PVR!";
 
 enum
 {
@@ -288,3 +289,48 @@ typedef struct _PVRTexHeader
 }
 
 @end
+
+namespace april
+{
+	NSURL* _getFileURLAsResource(chstr filename)
+	{
+		NSString * resources = [[NSBundle mainBundle] resourcePath];
+		NSString * file = [resources stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
+		NSURL * url = [NSURL URLWithString:[@"file://" stringByAppendingString:[file stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] ]];
+		return url;
+	}
+
+	Image* _tryLoadingPVR(chstr filename)
+	{
+		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
+#ifdef _OPENKODE
+		NSString *pvrfilename = [NSString stringWithUTF8String:("res/" + filename).c_str()];
+#else
+		NSString *pvrfilename = [NSString stringWithUTF8String:filename.c_str()];
+#endif
+		PVRTexture* pvrtex = [PVRTexture pvrTextureWithContentsOfURL:(NSURL*)_getFileURLAsResource([pvrfilename UTF8String])];
+		if(!pvrtex)
+		{
+			pvrtex = [PVRTexture pvrTextureWithContentsOfFile:pvrfilename];
+			
+			if(!pvrtex)
+			{
+				return NULL;
+			}
+		}
+		
+		Image* img = new Image();
+		img->format = (Image::Format) pvrtex.internalFormat;
+		img->w = pvrtex.width;
+		img->h = pvrtex.height;
+		img->bpp = 4;
+		
+		NSData* data = [pvrtex.imageData objectAtIndex:0];
+		img->data = (unsigned char*) malloc(data.length);
+		memcpy(img->data,data.bytes,data.length);
+		img->compressedSize = data.length;
+		
+		[arp release];
+		return img;
+	}
+}

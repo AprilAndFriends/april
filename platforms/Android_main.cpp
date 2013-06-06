@@ -24,6 +24,7 @@
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
+#include "AndroidJNI_Keys.h"
 
 #define PROTECTED_WINDOW_CALL(methodCall) \
 	if (april::window != NULL) \
@@ -114,12 +115,12 @@ namespace april
 	
 	void JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
-		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::AKEYEVT_DOWN, (Key)(int)keyCode, (unsigned int)charCode));
+		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::AKEYEVT_DOWN, android2april((int)keyCode), (unsigned int)charCode));
 	}
 	
 	void JNICALL _JNI_onKeyUp(JNIEnv* env, jclass classe, jint keyCode)
 	{
-		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::AKEYEVT_UP, (Key)(int)keyCode, 0));
+		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::AKEYEVT_UP, android2april((int)keyCode), 0));
 	}
 	
 	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)

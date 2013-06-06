@@ -36,7 +36,6 @@
 		C9E6097E150518B400EB077F /* april.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9E6097C150518B400EB077F /* april.cpp */; };
 		C9E6098F1505191800EB077F /* april.h in Headers */ = {isa = PBXBuildFile; fileRef = C9E6098D1505191800EB077F /* april.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9E609901505191800EB077F /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = C9E6098E1505191800EB077F /* Platform.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D1049F6116D38FCC0058C514 /* ImageCG.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1E7207016D37C5D00B9C9AD /* ImageCG.mm */; };
 		D1134EED175CDA3300BFF3A2 /* OpenGL_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520C12E470B200E958D8 /* OpenGL_RenderSystem.cpp */; };
 		D1134EEE175CDA3300BFF3A2 /* OpenGL_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520E12E470B200E958D8 /* OpenGL_Texture.cpp */; };
 		D1134EEF175CDA3300BFF3A2 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522E12E4713600E958D8 /* Color.cpp */; };
@@ -68,7 +67,6 @@
 		D1134F0C175CDA3300BFF3A2 /* OpenGLES_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E720B716D37E4200B9C9AD /* OpenGLES_Texture.cpp */; };
 		D1134F0D175CDA3300BFF3A2 /* OpenGLES1_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E720C316D37E5800B9C9AD /* OpenGLES1_RenderSystem.cpp */; };
 		D1134F0E175CDA3300BFF3A2 /* OpenGLES1_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E720C516D37E5800B9C9AD /* OpenGLES1_Texture.cpp */; };
-		D1134F0F175CDA3300BFF3A2 /* ImageCG.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1E7207016D37C5D00B9C9AD /* ImageCG.mm */; };
 		D1134F10175CDA3300BFF3A2 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
 		D1134F1B175CDA8D00BFF3A2 /* OpenKODE_Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F19175CDA8D00BFF3A2 /* OpenKODE_Window.cpp */; };
 		D1134F1F175CDAC600BFF3A2 /* OpenKODE_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F1D175CDAC600BFF3A2 /* OpenKODE_main.cpp */; };
@@ -77,6 +75,7 @@
 		D11A21631712CF9A00BA9DA8 /* Mac_Keys.mm in Sources */ = {isa = PBXBuildFile; fileRef = D11A21621712CF9A00BA9DA8 /* Mac_Keys.mm */; };
 		D1256A2E1727F6C60089C583 /* Mac_AppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1256A2C1727F6C60089C583 /* Mac_AppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1256A2F1727F6C60089C583 /* Mac_AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1256A2D1727F6C60089C583 /* Mac_AppDelegate.mm */; };
+		D137FF331760912300568F0E /* PVRTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1981C62140F85350057C3AF /* PVRTexture.mm */; };
 		D1397A46175F32CE00DC02D7 /* OpenKODE_Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1397A44175F32CE00DC02D7 /* OpenKODE_Keys.cpp */; };
 		D1397A9A175F834800DC02D7 /* iOS_devices.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1397A99175F834800DC02D7 /* iOS_devices.mm */; };
 		D1397A9B175F834800DC02D7 /* iOS_devices.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1397A99175F834800DC02D7 /* iOS_devices.mm */; };
@@ -111,7 +110,7 @@
 		D1981C4A140F82B00057C3AF /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
 		D1981C73140F858F0057C3AF /* ApriliOSAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1981C5A140F85350057C3AF /* ApriliOSAppDelegate.mm */; };
 		D1981C75140F858F0057C3AF /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1981C5E140F85350057C3AF /* EAGLView.mm */; };
-		D1981C77140F858F0057C3AF /* PVRTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = D1981C62140F85350057C3AF /* PVRTexture.m */; };
+		D1981C77140F858F0057C3AF /* PVRTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1981C62140F85350057C3AF /* PVRTexture.mm */; };
 		D1981C78140F858F0057C3AF /* WBImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D1981C64140F85350057C3AF /* WBImage.m */; };
 		D1981C7A140F87060057C3AF /* AprilViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D1981C5C140F85350057C3AF /* AprilViewController.m */; };
 		D1A6260F170B78FF009ABE7B /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */; };
@@ -305,7 +304,7 @@
 		D1981C5D140F85350057C3AF /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EAGLView.h; path = windowsystems/iOS/EAGLView.h; sourceTree = "<group>"; };
 		D1981C5E140F85350057C3AF /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EAGLView.mm; path = windowsystems/iOS/EAGLView.mm; sourceTree = "<group>"; };
 		D1981C61140F85350057C3AF /* PVRTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PVRTexture.h; path = windowsystems/iOS/PVRTexture.h; sourceTree = "<group>"; };
-		D1981C62140F85350057C3AF /* PVRTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PVRTexture.m; path = windowsystems/iOS/PVRTexture.m; sourceTree = "<group>"; };
+		D1981C62140F85350057C3AF /* PVRTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PVRTexture.mm; path = windowsystems/iOS/PVRTexture.mm; sourceTree = "<group>"; };
 		D1981C63140F85350057C3AF /* WBImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WBImage.h; path = windowsystems/iOS/WBImage.h; sourceTree = "<group>"; };
 		D1981C64140F85350057C3AF /* WBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WBImage.m; path = windowsystems/iOS/WBImage.m; sourceTree = "<group>"; };
 		D1AF669B170B1E4800A43743 /* Mac_Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Mac_Window.h; path = windowsystems/Mac/Mac_Window.h; sourceTree = "<group>"; };
@@ -339,7 +338,6 @@
 		D1E7206116D37C5600B9C9AD /* ImageJpg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageJpg.cpp; path = src/images/ImageJpg.cpp; sourceTree = "<group>"; };
 		D1E7206216D37C5600B9C9AD /* ImageJpt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageJpt.cpp; path = src/images/ImageJpt.cpp; sourceTree = "<group>"; };
 		D1E7206316D37C5600B9C9AD /* ImagePng.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImagePng.cpp; path = src/images/ImagePng.cpp; sourceTree = "<group>"; };
-		D1E7207016D37C5D00B9C9AD /* ImageCG.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = ImageCG.mm; path = src/images/ImageCG.mm; sourceTree = "<group>"; };
 		D1E7207116D37C6A00B9C9AD /* TimerSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerSDL.cpp; path = src/timers/TimerSDL.cpp; sourceTree = "<group>"; };
 		D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/timers/TimerPosix.cpp; sourceTree = "<group>"; };
 		D1E7207616D37C7800B9C9AD /* TimerWin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TimerWin.cpp; path = src/timers/TimerWin.cpp; sourceTree = "<group>"; };
@@ -652,7 +650,7 @@
 				D14BF80D15872B3700D31573 /* iOS_Window.h */,
 				D14BF80E15872B3700D31573 /* iOS_Window.mm */,
 				D1981C61140F85350057C3AF /* PVRTexture.h */,
-				D1981C62140F85350057C3AF /* PVRTexture.m */,
+				D1981C62140F85350057C3AF /* PVRTexture.mm */,
 				D1981C63140F85350057C3AF /* WBImage.h */,
 				D1981C64140F85350057C3AF /* WBImage.m */,
 			);
@@ -763,7 +761,6 @@
 			isa = PBXGroup;
 			children = (
 				D1E7206016D37C5600B9C9AD /* Image.cpp */,
-				D1E7207016D37C5D00B9C9AD /* ImageCG.mm */,
 				D1E7206116D37C5600B9C9AD /* ImageJpg.cpp */,
 				D1E7206216D37C5600B9C9AD /* ImageJpt.cpp */,
 				D1E7206316D37C5600B9C9AD /* ImagePng.cpp */,
@@ -1122,7 +1119,6 @@
 				D1134F0C175CDA3300BFF3A2 /* OpenGLES_Texture.cpp in Sources */,
 				D1134F0D175CDA3300BFF3A2 /* OpenGLES1_RenderSystem.cpp in Sources */,
 				D1134F0E175CDA3300BFF3A2 /* OpenGLES1_Texture.cpp in Sources */,
-				D1134F0F175CDA3300BFF3A2 /* ImageCG.mm in Sources */,
 				D1134F10175CDA3300BFF3A2 /* ControllerDelegate.cpp in Sources */,
 				D1134F1B175CDA8D00BFF3A2 /* OpenKODE_Window.cpp in Sources */,
 				D1134F1F175CDAC600BFF3A2 /* OpenKODE_main.cpp in Sources */,
@@ -1130,6 +1126,7 @@
 				D1134F23175CDAD200BFF3A2 /* egl.cpp in Sources */,
 				D1397A46175F32CE00DC02D7 /* OpenKODE_Keys.cpp in Sources */,
 				D1397A9B175F834800DC02D7 /* iOS_devices.mm in Sources */,
+				D137FF331760912300568F0E /* PVRTexture.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1140,7 +1137,7 @@
 				D1981C7A140F87060057C3AF /* AprilViewController.m in Sources */,
 				D1981C73140F858F0057C3AF /* ApriliOSAppDelegate.mm in Sources */,
 				D1981C75140F858F0057C3AF /* EAGLView.mm in Sources */,
-				D1981C77140F858F0057C3AF /* PVRTexture.m in Sources */,
+				D1981C77140F858F0057C3AF /* PVRTexture.mm in Sources */,
 				D1981C78140F858F0057C3AF /* WBImage.m in Sources */,
 				D1981C42140F82B00057C3AF /* OpenGL_RenderSystem.cpp in Sources */,
 				D1981C43140F82B00057C3AF /* OpenGL_Texture.cpp in Sources */,
@@ -1176,7 +1173,6 @@
 				D1E720BE16D37E4200B9C9AD /* OpenGLES_Texture.cpp in Sources */,
 				D1E720C716D37E5800B9C9AD /* OpenGLES1_RenderSystem.cpp in Sources */,
 				D1E720C816D37E5800B9C9AD /* OpenGLES1_Texture.cpp in Sources */,
-				D1049F6116D38FCC0058C514 /* ImageCG.mm in Sources */,
 				D16AB63F16F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */,
 				D1397A9A175F834800DC02D7 /* iOS_devices.mm in Sources */,
 			);
