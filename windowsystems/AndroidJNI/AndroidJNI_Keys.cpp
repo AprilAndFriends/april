@@ -15,9 +15,9 @@
 
 namespace april
 {
-	static hmap<unsigned int, Key> gKeyMap;
+	static hmap<int, Key> gKeyMap;
 	
-	Key android2april(unsigned int androidKeyCode)
+	Key android2april(int androidKeyCode)
 	{
 		if (gKeyMap.has_key(androidKeyCode)) return gKeyMap[androidKeyCode];
 
@@ -29,7 +29,7 @@ namespace april
 	
 	void initAndroidKeyMap()
 	{
-		hmap<unsigned int, Key>& m = gKeyMap;
+		hmap<int, Key>& m = gKeyMap;
 
 		// codes obtained from http://developer.android.com/reference/android/view/KeyEvent.html#KEYCODE_0
 		m[-1] = AK_UNKNOWN;
@@ -204,13 +204,13 @@ namespace april
 		m[58] = AK_RMENU;
 		
 		// browser control keys
-		m[4] = AK_BROWSER_BACK;
-		m[125] = AK_BROWSER_FORWARD;
-		m[0] = AK_BROWSER_REFRESH;
-		m[0] = AK_BROWSER_STOP;
-		m[84] = AK_BROWSER_SEARCH;
-		m[0] = AK_BROWSER_FAVORITES;
-		m[0] = AK_BROWSER_HOME;
+		//m[4] = AK_BROWSER_BACK;
+		//m[125] = AK_BROWSER_FORWARD;
+		//m[0] = AK_BROWSER_REFRESH;
+		//m[0] = AK_BROWSER_STOP;
+		//m[84] = AK_BROWSER_SEARCH;
+		//m[0] = AK_BROWSER_FAVORITES;
+		//m[0] = AK_BROWSER_HOME;
 		
 		// volume keys
 		m[164] = AK_VOLUME_MUTE;

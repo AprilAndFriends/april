@@ -17,7 +17,7 @@
 
 namespace april
 {
-	Key kd2april(unsigned int kdKeyCode);
+	Key kd2april(int kdKeyCode);
 	void initOpenKODEKeyMap();
 }
 

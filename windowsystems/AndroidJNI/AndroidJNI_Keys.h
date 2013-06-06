@@ -17,7 +17,7 @@
 
 namespace april
 {
-	Key android2april(unsigned int androidKeyCode);
+	Key android2april(int androidKeyCode);
 	void initAndroidKeyMap();
 }
 
