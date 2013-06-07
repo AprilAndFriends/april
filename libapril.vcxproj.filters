@@ -425,7 +425,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Keys.h">
-      <Filter>Source Files\windowsystems\AndroidJNI</Filter>
+      <Filter>Header Files\windowsystems\AndroidJNI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
