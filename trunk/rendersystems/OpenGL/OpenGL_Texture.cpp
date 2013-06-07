@@ -252,6 +252,7 @@ namespace april
 		}
 		unsigned char* clearColor = new unsigned char[this->width * this->height * this->bpp];
 		memset(clearColor, 0, this->width * this->height * this->bpp);
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, this->width, this->height, 0, glFormat, GL_UNSIGNED_BYTE, clearColor);
 		delete [] clearColor;
 	}
