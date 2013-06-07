@@ -32,13 +32,44 @@
 #include "OpenKODE_Keys.h"
 
 #if TARGET_OS_IPHONE
+#import <AVFoundation/AVFoundation.h>
+
 bool (*iOShandleUrlCallback)(chstr url) = NULL; // KD-TODO
 #endif
 
 namespace april
 {
+#if TARGET_OS_IPHONE
+	static void iosSetupAudioSession()
+	{
+		
+		// kspes: copied this from iOS app delegate code, it's needed for OpenKODE and OpenAL to play along on iOS
+		[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
+		if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0" options:NSNumericSearch] == NSOrderedAscending)
+		{
+			// less then iOS 5.0 - workarround for an apple bug where the audio sesion get's interrupted while using AVAssetReader and similar
+			AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+			[audioSession setActive: NO error: nil];
+			[audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+			
+			// Modifying Playback Mixing Behavior, allow playing music in other apps
+			UInt32 allowMixing = true;
+			AudioSessionSetProperty(kAudioSessionProperty_OverrideCategoryMixWithOthers, sizeof(allowMixing), &allowMixing);
+			[audioSession setActive: YES error: nil];
+		}
+		else
+		{
+			[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:NULL];
+		}
+	}
+#endif
+	
 	OpenKODE_Window::OpenKODE_Window() : Window()
 	{
+#if TARGET_OS_IPHONE
+		iosSetupAudioSession();
+#endif
+		
 		this->name = APRIL_WS_OPENKODE;
 		this->kdWindow = NULL;
 		this->virtualKeyboardVisible = false;
@@ -223,6 +254,7 @@ namespace april
 			this->handleQuitRequest(true);
 			return true;
 		case KD_EVENT_PAUSE:
+			hlog::write(logTag, "OpenKODE pause event received.");
 			this->handleActivityChangeEvent(false);
 			april::rendersys->unloadTextures();
 #ifdef _EGL
@@ -233,6 +265,7 @@ namespace april
 #ifdef _EGL
 			april::egl->create();
 #endif
+			hlog::write(logTag, "OpenKODE resume event received.");
 			this->handleActivityChangeEvent(true);
 			return true;
 		case KD_EVENT_WINDOW_FOCUS:
