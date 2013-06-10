@@ -82,7 +82,7 @@ namespace april
 		case TriangleStrip:
 			return nVertices - 2;
 		case TriangleFan:
-			return nVertices - 1;
+			return nVertices - 2;
 		case LineList:
 			return nVertices / 2;
 		case LineStrip:
