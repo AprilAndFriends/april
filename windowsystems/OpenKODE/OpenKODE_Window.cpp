@@ -208,7 +208,10 @@ namespace april
 
 	void OpenKODE_Window::handleActivityChangeEvent(bool active)
 	{
-		this->handleFocusChangeEvent(active);
+		if (active != this->focused)
+		{
+			this->handleFocusChangeEvent(active);
+		}
 	}
 
 	bool OpenKODE_Window::updateOneFrame()
@@ -269,7 +272,11 @@ namespace april
 			this->handleActivityChangeEvent(true);
 			return true;
 		case KD_EVENT_WINDOW_FOCUS:
-			this->handleFocusChangeEvent(evt->data.windowfocus.focusstate != 0);
+			{
+				bool active = evt->data.windowfocus.focusstate != 0;
+				if (this->focused != active)
+					this->handleFocusChangeEvent(active);
+			}
 			return true;
 		case KD_EVENT_INPUT:
 			if (evt->data.input.value.i != 0)
