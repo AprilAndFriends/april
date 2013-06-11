@@ -28,6 +28,7 @@ namespace april
 		static SystemInfo info;
 		if (info.locale == "")
 		{
+			info.name = "android";
 			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 			// CPU cores
 			jmethodID methodGetCpuCores = env->GetStaticMethodID(classNativeInterface, "getCpuCores", _JARGS(_JINT, ));
@@ -63,14 +64,24 @@ namespace april
 	
 	hstr getPackageName()
 	{
-		APRIL_GET_NATIVE_INTERFACE_FIELD(classNativeInterface, fieldPackageName, "PackageName", _JSTR);
-		return _JSTR_TO_HSTR((jstring)env->GetStaticObjectField(classNativeInterface, fieldPackageName));
+		static hstr package;
+		if (package == "")
+		{
+			APRIL_GET_NATIVE_INTERFACE_FIELD(classNativeInterface, fieldPackageName, "PackageName", _JSTR);
+			package = _JSTR_TO_HSTR((jstring)env->GetStaticObjectField(classNativeInterface, fieldPackageName));
+		}
+		return package;
 	}
 	
 	hstr getUserDataPath()
 	{
-		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodGetUserDataPath, "getUserDataPath", _JARGS(_JSTR, ));
-		return _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetUserDataPath));
+		static hstr path;
+		if (path == "")
+		{
+			APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodGetUserDataPath, "getUserDataPath", _JARGS(_JSTR, ));
+			path = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetUserDataPath));
+		}
+		return path;
 	}
 	
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
