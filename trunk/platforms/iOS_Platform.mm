@@ -180,9 +180,13 @@ namespace april
 	
 	hstr getPackageName()
 	{
-		// TODO
-		hlog::warn(april::logTag, "Not implemented getPackageName() on this platform.");
-		return "";
+		static hstr bundleID;
+		if (bundleID == "")
+		{
+			NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+			bundleID = [bundleIdentifier UTF8String];
+		}
+		return bundleID;
 	}
 
 	hstr getUserDataPath()
