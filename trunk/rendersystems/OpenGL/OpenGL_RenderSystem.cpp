@@ -396,6 +396,7 @@ namespace april
 		}
 		else
 		{
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			hlog::warn(april::logTag, "Trying to set unsupported blend mode!");
 		}
 	}

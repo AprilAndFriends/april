@@ -95,7 +95,7 @@ namespace april
 		else
 #endif
 		{
-			// old-school blending mode for your mom
+			// old-school blending mode for your dad
 			OpenGL_RenderSystem::_setTextureBlendMode(textureBlendMode);
 		}
 	}
