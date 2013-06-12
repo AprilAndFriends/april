@@ -42,9 +42,7 @@ namespace april
 #if TARGET_OS_IPHONE
 	static void iosSetupAudioSession()
 	{
-		
 		// kspes: copied this from iOS app delegate code, it's needed for OpenKODE and OpenAL to play along on iOS
-		[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
 		if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0" options:NSNumericSearch] == NSOrderedAscending)
 		{
 			// less then iOS 5.0 - workarround for an apple bug where the audio sesion get's interrupted while using AVAssetReader and similar
