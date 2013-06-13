@@ -15,6 +15,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		{
 			info.name = "iPad2";
 			info.ram = 512;
+			info.cpuCores = 2;
 			if (name == "iPad2,5") // iPad mini
 				info.displayDpi = 163;
 			else
@@ -31,6 +32,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		{
 			info.name = "iPad?";
 			info.ram = 1024;
+			info.cpuCores = 2;
 			info.displayDpi = 264;
 		}
 	}
@@ -70,6 +72,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		else if (name.starts_with("iPhone5"))
 		{
 			info.name = "iPhone5";
+			info.cpuCores = 2;
 			info.ram = 1024;
 			info.displayDpi = 326;
 		}
@@ -110,6 +113,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		{
 			info.name = "iPod?";
 			info.ram = 512;
+			info.cpuCores = 2;
 			info.displayDpi = 326;
 		}
 	}
