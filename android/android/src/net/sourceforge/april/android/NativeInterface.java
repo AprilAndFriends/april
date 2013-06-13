@@ -219,6 +219,11 @@ public class NativeInterface
 		DialogFactory.create(title, text, ok, yes, no, cancel, iconId);
 	}
 	
+	public static void swapBuffers()
+	{
+		NativeInterface.AprilActivity.GlView.swapBuffers();
+	}
+	
 	public static void reset()
 	{
 		NativeInterface.Activity = null;

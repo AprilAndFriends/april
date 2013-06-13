@@ -70,7 +70,8 @@ namespace april
 	
 	void AndroidJNI_Window::presentFrame()
 	{
-		// not needed as Android Java Activity takes care of this
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodSwapBuffers, "swapBuffers", _JARGS(_JVOID, ));
+		env->CallStaticVoidMethod(classNativeInterface, methodSwapBuffers);
 	}
 
 	void AndroidJNI_Window::queueTouchEvent(Window::MouseEventType type, gvec2 position, int index)

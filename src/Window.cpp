@@ -233,12 +233,12 @@ namespace april
 			{
 				this->running = false;
 			}
+			april::rendersys->presentFrame();
 		}
 	}
 
 	bool Window::updateOneFrame()
 	{
-		static bool result;
 		static float k;
 		k = this->_calcTimeSinceLastFrame();
 		if (!this->focused)
@@ -246,9 +246,7 @@ namespace april
 			hthread::sleep(40.0f);
 		}
 		this->checkEvents();
-		result = this->performUpdate(k);
-		april::rendersys->presentFrame();
-		return (result && this->running);
+		return (this->performUpdate(k) && this->running);
 	}
 	
 	void Window::checkEvents()
