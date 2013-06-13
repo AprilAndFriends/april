@@ -486,6 +486,7 @@ namespace april
 	void iOS_Window::handleDisplayAndUpdate()
 	{
 		bool result = this->updateOneFrame();
+		april::rendersys->presentFrame();
 		if (!result)
 		{
 			// TODO - should exit application here

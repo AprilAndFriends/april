@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 
 public class GLSurfaceView extends android.opengl.GLSurfaceView
 {
-	private net.sourceforge.april.android.Renderer renderer;
+	protected net.sourceforge.april.android.Renderer renderer;
 	
 	public GLSurfaceView(Context context)
 	{
@@ -87,6 +87,11 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		outAttributes.actionId = EditorInfo.IME_ACTION_DONE; 
 		outAttributes.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI; 
 		return new InputConnection(this, false);
+	}
+	
+	public void swapBuffers()
+	{
+		this.renderer.swapBuffers();
 	}
 	
 	@Override

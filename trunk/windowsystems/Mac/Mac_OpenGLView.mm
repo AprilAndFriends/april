@@ -67,7 +67,14 @@
 {
 	NSOpenGLContext* context = [self openGLContext];
 	[context makeCurrentContext];
-	if (april::window) aprilWindow->updateOneFrame();
+	if (april::window != NULL)
+	{
+		aprilWindow->updateOneFrame();
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->presentFrame();
+		}
+	}
 	mStartedDrawing = false;
 }
 
