@@ -25,6 +25,7 @@ namespace april
 {
 	JNIEnv* getJNIEnv();
 	jobject getActivity();
+	jobject getAprilActivity();
 	hstr _jstringToHstr(JNIEnv* env, jstring string);
 }
 
