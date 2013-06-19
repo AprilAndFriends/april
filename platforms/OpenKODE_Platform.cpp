@@ -117,19 +117,21 @@ namespace april
 		int indexCancel = -1;
 		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
 		{
-			buttons[0] = ok.c_str();
-			buttons[1] = cancel.c_str();
-			resultButtons[0] = AMSGBTN_OK;
-			resultButtons[1] = AMSGBTN_CANCEL;
-			indexCancel = 1;
+			// order is reversed because libKD prefers the colored button to be at place [1], at least on iOS
+			// if this is going to be changed for a new platform, ifdef the button order for iOS
+			buttons[1] = ok.c_str();
+			buttons[0] = cancel.c_str();
+			resultButtons[1] = AMSGBTN_OK;
+			resultButtons[0] = AMSGBTN_CANCEL;
+			indexCancel = 0;
 		}
 		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO) && (buttonMask & AMSGBTN_CANCEL))
 		{
-			buttons[0] = yes.c_str();
-			buttons[1] = no.c_str();
+			buttons[1] = yes.c_str();
+			buttons[0] = no.c_str();
 			buttons[2] = cancel.c_str();
-			resultButtons[0] = AMSGBTN_YES;
-			resultButtons[1] = AMSGBTN_NO;
+			resultButtons[1] = AMSGBTN_YES;
+			resultButtons[0] = AMSGBTN_NO;
 			resultButtons[2] = AMSGBTN_CANCEL;
 			indexCancel = 2;
 		}
@@ -141,10 +143,10 @@ namespace april
 		}
 		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
 		{
-			buttons[0] = yes.c_str();
-			buttons[1] = no.c_str();
-			resultButtons[0] = AMSGBTN_YES;
-			resultButtons[1] = AMSGBTN_NO;
+			buttons[1] = yes.c_str();
+			buttons[0] = no.c_str();
+			resultButtons[1] = AMSGBTN_YES;
+			resultButtons[0] = AMSGBTN_NO;
 			indexCancel = 1;
 		}
 		int index = kdShowMessage(title.c_str(), text.c_str(), buttons);
