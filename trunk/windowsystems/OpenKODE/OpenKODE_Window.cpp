@@ -62,12 +62,25 @@ namespace april
 	}
 #endif
 	
+	void KD_APIENTRY lowMemoryEventCallback(const KDEvent * _event)
+	{
+		switch (_event->type)
+		{
+			case KD_EVENT_LOWMEM:
+			{
+				NSLog(@"Received libKD memory warning!");
+				if (april::window) april::window->handleLowMemoryWarning();
+				break;
+			}
+		}
+	}
+	
 	OpenKODE_Window::OpenKODE_Window() : Window()
 	{
 #if TARGET_OS_IPHONE
 		iosSetupAudioSession();
 #endif
-		
+
 		this->name = APRIL_WS_OPENKODE;
 		this->kdWindow = NULL;
 		this->virtualKeyboardVisible = false;
@@ -124,11 +137,15 @@ namespace april
 #ifdef _EGL
 		april::egl->create();
 #endif
+		
+		kdInstallCallback(&lowMemoryEventCallback, KD_EVENT_LOWMEM, NULL);
 		return true;
 	}
 	
 	bool OpenKODE_Window::destroy()
 	{
+		kdInstallCallback(NULL, KD_EVENT_LOWMEM, NULL);
+
 		if (!Window::destroy())
 		{
 			return false;
