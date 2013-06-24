@@ -250,14 +250,14 @@ namespace april
 	
 	bool Mac_Window::updateOneFrame()
 	{
-        Window::updateOneFrame();
-		if (mOverlayWindow != nil)
+        bool result = Window::updateOneFrame();
+		if (result && mOverlayWindow != nil)
 		{
 			float k = this->timer.diff(false);
 			if (k > 0.5f) k = 0.05f;
 			updateLoadingOverlay(k);
 		}
-		return 1;
+		return result;
 	}
     
     void Mac_Window::presentFrame()
