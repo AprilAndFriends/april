@@ -218,6 +218,39 @@
 		D1E720BE16D37E4200B9C9AD /* OpenGLES_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E720B716D37E4200B9C9AD /* OpenGLES_Texture.cpp */; };
 		D1E720C716D37E5800B9C9AD /* OpenGLES1_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E720C316D37E5800B9C9AD /* OpenGLES1_RenderSystem.cpp */; };
 		D1E720C816D37E5800B9C9AD /* OpenGLES1_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E720C516D37E5800B9C9AD /* OpenGLES1_Texture.cpp */; };
+		D1F27AC2177A2DF700E5C131 /* OpenGL_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520C12E470B200E958D8 /* OpenGL_RenderSystem.cpp */; };
+		D1F27AC3177A2DF700E5C131 /* OpenGL_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520E12E470B200E958D8 /* OpenGL_Texture.cpp */; };
+		D1F27AC4177A2DF700E5C131 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522E12E4713600E958D8 /* Color.cpp */; };
+		D1F27AC5177A2DF700E5C131 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522F12E4713600E958D8 /* Texture.cpp */; };
+		D1F27AC6177A2DF700E5C131 /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */; };
+		D1F27AC7177A2DF700E5C131 /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
+		D1F27AC8177A2DF700E5C131 /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
+		D1F27AC9177A2DF700E5C131 /* VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F9214BB109B005BD333 /* VertexShader.cpp */; };
+		D1F27ACA177A2DF700E5C131 /* april.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9E6097C150518B400EB077F /* april.cpp */; };
+		D1F27ACB177A2DF700E5C131 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF818158737A000D31573 /* Platform.cpp */; };
+		D1F27ACC177A2DF700E5C131 /* RamTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF819158737A000D31573 /* RamTexture.cpp */; };
+		D1F27ACD177A2DF700E5C131 /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
+		D1F27ACE177A2DF700E5C131 /* EventDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */; };
+		D1F27ACF177A2DF700E5C131 /* InputDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */; };
+		D1F27AD0177A2DF700E5C131 /* KeyboardDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204616D37C2300B9C9AD /* KeyboardDelegate.cpp */; };
+		D1F27AD1177A2DF700E5C131 /* MouseDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204716D37C2300B9C9AD /* MouseDelegate.cpp */; };
+		D1F27AD2177A2DF700E5C131 /* SystemDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204816D37C2300B9C9AD /* SystemDelegate.cpp */; };
+		D1F27AD3177A2DF700E5C131 /* TouchDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204916D37C2300B9C9AD /* TouchDelegate.cpp */; };
+		D1F27AD4177A2DF700E5C131 /* UpdateDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204A16D37C2300B9C9AD /* UpdateDelegate.cpp */; };
+		D1F27AD5177A2DF700E5C131 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7206016D37C5600B9C9AD /* Image.cpp */; };
+		D1F27AD6177A2DF700E5C131 /* ImageJpg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7206116D37C5600B9C9AD /* ImageJpg.cpp */; };
+		D1F27AD7177A2DF700E5C131 /* ImageJpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7206216D37C5600B9C9AD /* ImageJpt.cpp */; };
+		D1F27AD8177A2DF700E5C131 /* ImagePng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7206316D37C5600B9C9AD /* ImagePng.cpp */; };
+		D1F27AD9177A2DF700E5C131 /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */; };
+		D1F27ADA177A2DF700E5C131 /* OpenGL_State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E720A316D37E3100B9C9AD /* OpenGL_State.cpp */; };
+		D1F27ADB177A2DF700E5C131 /* OpenGL1_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E720A916D37E3900B9C9AD /* OpenGL1_RenderSystem.cpp */; };
+		D1F27ADC177A2DF700E5C131 /* OpenGL1_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E720AB16D37E3900B9C9AD /* OpenGL1_Texture.cpp */; };
+		D1F27AE1177A2DF700E5C131 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
+		D1F27AE2177A2DF700E5C131 /* OpenKODE_Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F19175CDA8D00BFF3A2 /* OpenKODE_Window.cpp */; };
+		D1F27AE3177A2DF700E5C131 /* OpenKODE_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F1D175CDAC600BFF3A2 /* OpenKODE_main.cpp */; };
+		D1F27AE4177A2DF700E5C131 /* OpenKODE_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F1E175CDAC600BFF3A2 /* OpenKODE_Platform.cpp */; };
+		D1F27AE5177A2DF700E5C131 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F21175CDAD200BFF3A2 /* egl.cpp */; };
+		D1F27AE6177A2DF700E5C131 /* OpenKODE_Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1397A44175F32CE00DC02D7 /* OpenKODE_Keys.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -393,6 +426,7 @@
 		D1E720CA16D37E6100B9C9AD /* OpenGLES2_RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES2_RenderSystem.h; path = rendersystems/OpenGL/ES/2/OpenGLES2_RenderSystem.h; sourceTree = "<group>"; };
 		D1E720CB16D37E6100B9C9AD /* OpenGLES2_Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGLES2_Texture.cpp; path = rendersystems/OpenGL/ES/2/OpenGLES2_Texture.cpp; sourceTree = "<group>"; };
 		D1E720CC16D37E6100B9C9AD /* OpenGLES2_Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES2_Texture.h; path = rendersystems/OpenGL/ES/2/OpenGLES2_Texture.h; sourceTree = "<group>"; };
+		D1F27AEF177A2DF700E5C131 /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -439,6 +473,7 @@
 				D1981C30140F824B0057C3AF /* libapril.a */,
 				D1AF66F3170B1E5900A43743 /* april.framework */,
 				D1134F17175CDA3300BFF3A2 /* libapril-kd.a */,
+				D1F27AEF177A2DF700E5C131 /* libapril.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1014,6 +1049,21 @@
 			productReference = D1AF66F3170B1E5900A43743 /* april.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		D1F27AC0177A2DF700E5C131 /* april (Mac OpenKODE) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1F27AE9177A2DF700E5C131 /* Build configuration list for PBXNativeTarget "april (Mac OpenKODE)" */;
+			buildPhases = (
+				D1F27AC1177A2DF700E5C131 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "april (Mac OpenKODE)";
+			productName = "libapril-ios";
+			productReference = D1F27AEF177A2DF700E5C131 /* libapril.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1039,6 +1089,7 @@
 			targets = (
 				D1AF669D170B1E5900A43743 /* april (Cocoa OpenGL) */,
 				8DC2EF4F0486A6940098B216 /* april (SDL OpenGL) */,
+				D1F27AC0177A2DF700E5C131 /* april (Mac OpenKODE) */,
 				D1981C2F140F824B0057C3AF /* april (iOS OpenGLES1) */,
 				D1134EE6175CDA3300BFF3A2 /* april (iOS OpenKODE) */,
 			);
@@ -1221,6 +1272,46 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D1F27AC1177A2DF700E5C131 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1F27AC2177A2DF700E5C131 /* OpenGL_RenderSystem.cpp in Sources */,
+				D1F27AC3177A2DF700E5C131 /* OpenGL_Texture.cpp in Sources */,
+				D1F27AC4177A2DF700E5C131 /* Color.cpp in Sources */,
+				D1F27AC5177A2DF700E5C131 /* Texture.cpp in Sources */,
+				D1F27AC6177A2DF700E5C131 /* RenderSystem.cpp in Sources */,
+				D1F27AC7177A2DF700E5C131 /* Window.cpp in Sources */,
+				D1F27AC8177A2DF700E5C131 /* PixelShader.cpp in Sources */,
+				D1F27AC9177A2DF700E5C131 /* VertexShader.cpp in Sources */,
+				D1F27ACA177A2DF700E5C131 /* april.cpp in Sources */,
+				D1F27ACB177A2DF700E5C131 /* Platform.cpp in Sources */,
+				D1F27ACC177A2DF700E5C131 /* RamTexture.cpp in Sources */,
+				D1F27ACD177A2DF700E5C131 /* aprilUtil.cpp in Sources */,
+				D1F27ACE177A2DF700E5C131 /* EventDelegate.cpp in Sources */,
+				D1F27ACF177A2DF700E5C131 /* InputDelegate.cpp in Sources */,
+				D1F27AD0177A2DF700E5C131 /* KeyboardDelegate.cpp in Sources */,
+				D1F27AD1177A2DF700E5C131 /* MouseDelegate.cpp in Sources */,
+				D1F27AD2177A2DF700E5C131 /* SystemDelegate.cpp in Sources */,
+				D1F27AD3177A2DF700E5C131 /* TouchDelegate.cpp in Sources */,
+				D1F27AD4177A2DF700E5C131 /* UpdateDelegate.cpp in Sources */,
+				D1F27AD5177A2DF700E5C131 /* Image.cpp in Sources */,
+				D1F27AD6177A2DF700E5C131 /* ImageJpg.cpp in Sources */,
+				D1F27AD7177A2DF700E5C131 /* ImageJpt.cpp in Sources */,
+				D1F27AD8177A2DF700E5C131 /* ImagePng.cpp in Sources */,
+				D1F27AD9177A2DF700E5C131 /* TimerPosix.cpp in Sources */,
+				D1F27ADA177A2DF700E5C131 /* OpenGL_State.cpp in Sources */,
+				D1F27ADB177A2DF700E5C131 /* OpenGL1_RenderSystem.cpp in Sources */,
+				D1F27ADC177A2DF700E5C131 /* OpenGL1_Texture.cpp in Sources */,
+				D1F27AE1177A2DF700E5C131 /* ControllerDelegate.cpp in Sources */,
+				D1F27AE2177A2DF700E5C131 /* OpenKODE_Window.cpp in Sources */,
+				D1F27AE3177A2DF700E5C131 /* OpenKODE_main.cpp in Sources */,
+				D1F27AE4177A2DF700E5C131 /* OpenKODE_Platform.cpp in Sources */,
+				D1F27AE5177A2DF700E5C131 /* egl.cpp in Sources */,
+				D1F27AE6177A2DF700E5C131 /* OpenKODE_Keys.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -1239,6 +1330,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
 					_SDL_WINDOW,
 					_OPENGL1,
 					"$(inherited)",
@@ -1272,6 +1364,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
 					_SDL_WINDOW,
 					_OPENGL1,
 					"$(inherited)",
@@ -1399,6 +1492,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
 					_SDL_WINDOW,
 					_OPENGL1,
 					"$(inherited)",
@@ -1466,6 +1560,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
 					_SDL_WINDOW,
 					_OPENGL1,
 					"$(inherited)",
@@ -1529,6 +1624,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
 					_SDL_WINDOW,
 					_OPENGL1,
 					"$(inherited)",
@@ -1843,6 +1939,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
 					_COCOA_WINDOW,
 					_OPENGL1,
 					"$(inherited)",
@@ -1880,6 +1977,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
 					_COCOA_WINDOW,
 					_OPENGL1,
 					"$(inherited)",
@@ -1914,6 +2012,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
 					_COCOA_WINDOW,
 					_OPENGL1,
 					"$(inherited)",
@@ -1945,6 +2044,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
 					_COCOA_WINDOW,
 					_OPENGL1,
 					"$(inherited)",
@@ -1976,6 +2076,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC,
 					_COCOA_WINDOW,
 					_OPENGL1,
 					"$(inherited)",
@@ -1992,6 +2093,149 @@
 				SKIP_INSTALL = YES;
 				VALID_ARCHS = "i386 x86_64 ppc";
 				WRAPPER_EXTENSION = framework;
+			};
+			name = "App Store";
+		};
+		D1F27AEA177A2DF700E5C131 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/libapril_ios.dst;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_OPENGL1,
+					_EGL,
+					_OPENKODE,
+					_OPENKODE_WINDOW,
+					_PC_INPUT,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../khronos",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = "april-kd";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D1F27AEB177A2DF700E5C131 /* Debug-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/libapril_ios.dst;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_OPENGL1,
+					_EGL,
+					_OPENKODE,
+					_OPENKODE_WINDOW,
+					_PC_INPUT,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../khronos",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = "april-kd";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = "Debug-LLVM";
+		};
+		D1F27AEC177A2DF700E5C131 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libapril_ios.dst;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_OPENGL1,
+					_EGL,
+					_OPENKODE,
+					_OPENKODE_WINDOW,
+					_PC_INPUT,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../khronos",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = "april-kd";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D1F27AED177A2DF700E5C131 /* Release-LLVM */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libapril_ios.dst;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_OPENGL1,
+					_EGL,
+					_OPENKODE,
+					_OPENKODE_WINDOW,
+					_PC_INPUT,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../khronos",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = "april-kd";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-LLVM";
+		};
+		D1F27AEE177A2DF700E5C131 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DSTROOT = /tmp/libapril_ios.dst;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_OPENGL1,
+					_EGL,
+					_OPENKODE,
+					_OPENKODE_WINDOW,
+					_PC_INPUT,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../khronos",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = "april-kd";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = "App Store";
 		};
@@ -2054,6 +2298,18 @@
 				D1AF66F0170B1E5900A43743 /* Release */,
 				D1AF66F1170B1E5900A43743 /* Release-LLVM */,
 				D1AF66F2170B1E5900A43743 /* App Store */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D1F27AE9177A2DF700E5C131 /* Build configuration list for PBXNativeTarget "april (Mac OpenKODE)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1F27AEA177A2DF700E5C131 /* Debug */,
+				D1F27AEB177A2DF700E5C131 /* Debug-LLVM */,
+				D1F27AEC177A2DF700E5C131 /* Release */,
+				D1F27AED177A2DF700E5C131 /* Release-LLVM */,
+				D1F27AEE177A2DF700E5C131 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
