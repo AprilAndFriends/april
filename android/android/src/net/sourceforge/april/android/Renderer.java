@@ -41,7 +41,7 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 	{
 		EGL10 egl = (EGL10)EGLContext.getEGL();
 		EGLDisplay display = egl.eglGetCurrentDisplay();
-		EGLSurface surface = egl.eglGetCurrentSurface(EGL10.EGL_DRAW);
+		EGLSurface surface = egl.eglGetCurrentSurface(EGL10.EGL_READ);
 		egl.eglSwapBuffers(display, surface);
 	}
 	
