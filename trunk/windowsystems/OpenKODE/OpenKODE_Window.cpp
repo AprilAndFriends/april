@@ -9,8 +9,10 @@
 
 #ifdef _OPENKODE_WINDOW
 #ifdef __APPLE__
-#include <TargetConditionals.h>
-#import <UIKit/UIWindow.h>
+	#include <TargetConditionals.h>
+	#if TARGET_OS_IPHONE
+		#import <UIKit/UIWindow.h>
+	#endif
 #endif
 
 #include <KD/kd.h>
@@ -68,7 +70,7 @@ namespace april
 		{
 			case KD_EVENT_LOWMEM:
 			{
-				NSLog(@"Received libKD memory warning!");
+				hlog::write(logTag, "Received libKD memory warning!");
 				if (april::window) april::window->handleLowMemoryWarning();
 				break;
 			}
@@ -312,6 +314,9 @@ namespace april
 			return true;
 		case KD_EVENT_INPUT_POINTER:
 			{
+#ifdef _PC_INPUT
+				
+#else
 				int i, j, index = evt->data.inputpointer.index;
 				gvec2 pos((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
 				for (i = 0, j = 0; i < 4; i++, j += KD_IO_POINTER_STRIDE)
@@ -341,6 +346,7 @@ namespace april
 				{
 					this->cursorPosition = pos;
 				}
+#endif
 			}
 			return true;
 		case KD_EVENT_WINDOWPROPERTY_CHANGE:
