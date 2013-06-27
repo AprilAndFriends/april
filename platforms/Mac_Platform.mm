@@ -130,7 +130,9 @@ namespace april
 			NSRect rect = [mainScreen frame];
 			info.displayResolution.set((float)rect.size.width, (float)rect.size.height);
 			// display DPI
-			info.displayDpi = 72; // TODO
+			CGSize screenSize = CGDisplayScreenSize(CGMainDisplayID());
+			info.displayDpi = 25.4f * rect.size.height / screenSize.height;
+
 			info.maxTextureSize = 0;
 			// locale
 			// This code gets the prefered locale based on user's list of prefered languages against the supported languages
