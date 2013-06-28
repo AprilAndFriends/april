@@ -352,6 +352,7 @@
 		D1BCC5831615A2B20049CEA9 /* Win32_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Win32_main.cpp; path = platforms/Win32_main.cpp; sourceTree = "<group>"; };
 		D1BCC5841615A2B20049CEA9 /* Win32_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Win32_Platform.cpp; path = platforms/Win32_Platform.cpp; sourceTree = "<group>"; };
 		D1CB6B6415CA905900B927BC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D1CC873C177D9FE500E47EBF /* AndroidJNI_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AndroidJNI_Platform.cpp; path = platforms/AndroidJNI_Platform.cpp; sourceTree = "<group>"; };
 		D1E7203116D37B2700B9C9AD /* EventDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventDelegate.h; path = include/april/EventDelegate.h; sourceTree = "<group>"; };
 		D1E7203216D37B2700B9C9AD /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = include/april/Image.h; sourceTree = "<group>"; };
 		D1E7203316D37B2700B9C9AD /* InputDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputDelegate.h; path = include/april/InputDelegate.h; sourceTree = "<group>"; };
@@ -426,7 +427,7 @@
 		D1E720CA16D37E6100B9C9AD /* OpenGLES2_RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES2_RenderSystem.h; path = rendersystems/OpenGL/ES/2/OpenGLES2_RenderSystem.h; sourceTree = "<group>"; };
 		D1E720CB16D37E6100B9C9AD /* OpenGLES2_Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGLES2_Texture.cpp; path = rendersystems/OpenGL/ES/2/OpenGLES2_Texture.cpp; sourceTree = "<group>"; };
 		D1E720CC16D37E6100B9C9AD /* OpenGLES2_Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES2_Texture.h; path = rendersystems/OpenGL/ES/2/OpenGLES2_Texture.h; sourceTree = "<group>"; };
-		D1F27AEF177A2DF700E5C131 /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1F27AEF177A2DF700E5C131 /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libapril.a; path = "libapril-kd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -736,6 +737,7 @@
 			children = (
 				D1BCC57F1615A2B20049CEA9 /* Android_main.cpp */,
 				D1BCC5801615A2B20049CEA9 /* Android_Platform.cpp */,
+				D1CC873C177D9FE500E47EBF /* AndroidJNI_Platform.cpp */,
 			);
 			name = Android;
 			sourceTree = "<group>";
