@@ -45,6 +45,7 @@ namespace april
 {
     Mac_Window::Mac_Window() : Window()
     {
+		this->ignoreUpdate = false;
 		this->name = APRIL_WS_MAC;
 		this->retainLoadingOverlay = fastHideLoadingOverlay = false;
 		
@@ -262,7 +263,12 @@ namespace april
     
     void Mac_Window::presentFrame()
     {
+		// presentFrame() calls are always manually called, so let's make sure
+		// Mac can update the view contents before we continue.
+		ignoreUpdate = true;
         [mView presentFrame];
+		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.01]];
+		ignoreUpdate = false;
     }
 	
 	void Mac_Window::terminateMainLoop()
