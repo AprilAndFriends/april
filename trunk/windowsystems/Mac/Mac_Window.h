@@ -52,8 +52,10 @@ namespace april
 		void OnAppLostFocus();
 		
 		void onFocusChanged(bool value);
-	protected:
-		bool retainLoadingOverlay, fastHideLoadingOverlay;
+
+		bool retainLoadingOverlay;
+		bool fastHideLoadingOverlay;
+		bool ignoreUpdate;
 	};
 	
 }
