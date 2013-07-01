@@ -77,7 +77,11 @@ namespace april
 			{
 				info.locale = "en"; // default is "en"
 			}
-			else if (info.locale.utf8_size() > 2)
+			else if (info.locale == "pt_PT")
+			{
+				info.locale = "pt-PT";
+			}
+			else if (info.locale.utf8_size() > 2 && info.locale != "pt-PT")
 			{
 				info.locale = info.locale.utf8_substr(0, 2);
 			}
