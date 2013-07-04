@@ -75,6 +75,7 @@ namespace april
 	Window::Options::Options()
 	{
 		this->resizable = false;
+		this->fpsCounter = false;
 	}
 	
 	Window::Options::~Options()

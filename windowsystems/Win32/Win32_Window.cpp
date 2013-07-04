@@ -89,6 +89,8 @@ namespace april
 		UpdateWindow(this->hWnd);
 		SetCursor(wc.hCursor);
 		this->setCursorVisible(true);
+		
+		this->fpsCounter = options.fpsCounter;
 		return true;
 	}
 	
@@ -109,12 +111,19 @@ namespace april
 
 	void Win32_Window::setTitle(chstr title)
 	{
+		if (this->fpsCounter)
+		{
+			hstr t = title + hsprintf(" [FPS: %d]", this->fps);
+			// optimization to prevent setting title every frame
+			if (t == this->fpsTitle) return;
+			this->fpsTitle = t;
+			SetWindowTextW(this->hWnd, t.w_str().c_str());
+		}
+		else
+		{
+			SetWindowTextW(this->hWnd, title.w_str().c_str());
+		}
 		this->title = title;
-		hstr t = this->title;
-#ifdef _DEBUG
-		t += hsprintf(" [FPS: %d]", this->fps);
-#endif
-		SetWindowTextW(this->hWnd, t.w_str().c_str());
 	}
 	
 	bool Win32_Window::isCursorVisible()
@@ -214,7 +223,10 @@ namespace april
 		this->checkEvents();
 		// rendering
 		result = Window::updateOneFrame();
-		this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
+		if (this->fpsCounter)
+		{
+			this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
+		}
 		return result;
 	}
 	
