@@ -119,6 +119,7 @@ namespace april
 		{
 		public:
 			bool resizable;
+			bool fpsCounter;
 
 			Options();
 			~Options();

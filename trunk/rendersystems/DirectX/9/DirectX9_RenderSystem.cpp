@@ -58,10 +58,6 @@ namespace april
 		return caps.MaxTextureWidth;
 	}
 
-#ifdef _DEBUG
-	char fpstitle[1024] = " [FPS:0]";
-#endif
-
 	D3DPRIMITIVETYPE dx9_render_ops[]=
 	{
 		D3DPT_FORCE_DWORD,

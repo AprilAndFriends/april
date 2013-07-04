@@ -148,6 +148,7 @@ namespace april
 		NSUInteger styleMask;
 
 		bool lionFullscreen = isLionOrNewer();
+		this->fpsCounter = options.fpsCounter;
 
 		if (fullscreen)
 		{
@@ -245,8 +246,19 @@ namespace april
 	
 	void Mac_Window::setTitle(chstr title)
 	{
-		Window::setTitle(title);
-		[mWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
+		if (this->fpsCounter)
+		{
+			hstr t = title + hsprintf(" [FPS: %d]", this->fps);
+			// optimization to prevent setting title every frame
+			if (t == this->fpsTitle) return;
+			this->fpsTitle = t;
+			[mWindow setTitle:[NSString stringWithUTF8String:t.c_str()]];
+		}
+		else
+		{
+			[mWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
+		}
+		this->title = title;
 	}
 	
 	bool Mac_Window::updateOneFrame()
@@ -257,6 +269,11 @@ namespace april
 			float k = this->timer.diff(false);
 			if (k > 0.5f) k = 0.05f;
 			updateLoadingOverlay(k);
+		}
+		
+		if (this->fpsCounter)
+		{
+			setTitle(this->title);
 		}
 		return result;
 	}
