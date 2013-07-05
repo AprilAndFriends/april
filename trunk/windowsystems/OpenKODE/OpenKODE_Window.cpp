@@ -82,7 +82,6 @@ namespace april
 #if TARGET_OS_IPHONE
 		iosSetupAudioSession();
 #endif
-
 		this->name = APRIL_WS_OPENKODE;
 		this->kdWindow = NULL;
 		this->virtualKeyboardVisible = false;
@@ -315,7 +314,31 @@ namespace april
 		case KD_EVENT_INPUT_POINTER:
 			{
 #ifdef _PC_INPUT
-				
+				int index = evt->data.inputpointer.index;
+				gvec2 pos((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
+
+				if (index == KD_INPUT_POINTER_X || index == KD_INPUT_POINTER_Y)
+				{
+					this->queueMouseEvent(Window::AMOUSEEVT_MOVE, pos, AK_NONE);
+				}
+				else if (index == KD_INPUT_POINTER_SELECT)
+				{
+					int s = evt->data.inputpointer.select;
+					bool state[3];
+					state[0] = s & 1;
+					state[1] = s & 2;
+					state[2] = s & 4;
+					
+					for (int i = 0; i < 3; i++)
+					{
+						if (state[i] != this->kdTouches[i])
+						{							
+							this->queueMouseEvent(state[i] ? Window::AMOUSEEVT_DOWN : Window::AMOUSEEVT_UP, pos, (i == 0 ? AK_LBUTTON : (i == 1 ? AK_RBUTTON : AK_MBUTTON)));
+						}
+					}
+					memcpy(this->kdTouches, state, 3 * sizeof(bool));
+				}
+				this->cursorPosition = pos;
 #else
 				int i, j, index = evt->data.inputpointer.index;
 				gvec2 pos((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
