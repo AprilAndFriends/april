@@ -220,6 +220,15 @@ namespace april
 		this->fullscreen = fullscreen;
 		KDint32 size[] = {w, h};
 		kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_SIZE, size);
+		
+		april::SystemDelegate* delegate = this->getSystemDelegate();
+		april::rendersys->setViewport(grect(0, 0, w, h));
+
+		if (delegate)
+		{
+			delegate->onWindowSizeChanged(w, h, fullscreen);
+		}
+
 	}
 
 	void OpenKODE_Window::handleActivityChangeEvent(bool active)

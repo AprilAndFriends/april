@@ -194,7 +194,14 @@ namespace april
 	void Window::setFullscreen(bool value)
 	{
 		SystemInfo info = april::getSystemInfo();
-		this->setResolution(hround(info.displayResolution.x), hround(info.displayResolution.y), value);
+		int w = hround(info.displayResolution.x), h = hround(info.displayResolution.y);
+		
+		if (!value)
+		{
+			w *= 2.0f / 3.0f;
+			h *= 2.0f / 3.0f;
+		}
+		this->setResolution(w, h, value);
 		this->fullscreen = value;
 	}
 
