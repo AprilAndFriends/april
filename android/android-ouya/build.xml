@@ -10,9 +10,9 @@
 	/>
 
 	<target name="-check-env">
-		<copy todir="${jar.libs.dir}" file="../../../lib/android/ouya-sdk.jar"/>
-		<copy todir="${jar.libs.dir}" file="../../../lib/android/commons-lang-2.6.jar"/>
-		<copy todir="${jar.libs.dir}" file="../../../lib/android/guava-r09.jar"/>
+		<copy todir="${jar.libs.dir}" overwrite="true" file="../../../lib/android/ouya-sdk.jar"/>
+		<copy todir="${jar.libs.dir}" overwrite="true" file="../../../lib/android/commons-lang-2.6.jar"/>
+		<copy todir="${jar.libs.dir}" overwrite="true" file="../../../lib/android/guava-r09.jar"/>
 	</target>
 	
 	<import file="${sdk.dir}/tools/ant/build.xml"/>
