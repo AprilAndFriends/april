@@ -41,13 +41,9 @@ public class DialogFactory
 		if (cancel != null)
 		{
 			DialogFactory.dialogBuilder.setNeutralButton(cancel, new Cancel());
-			DialogFactory.dialogBuilder.setCancelable(true);
-			DialogFactory.dialogBuilder.setOnCancelListener(new OnCancel());
 		}
-		else
-		{
-			DialogFactory.dialogBuilder.setCancelable(false);
-		}
+		DialogFactory.dialogBuilder.setCancelable(true);
+		DialogFactory.dialogBuilder.setOnCancelListener(new OnCancel());
 		switch (iconId)
 		{
 		case 1:
