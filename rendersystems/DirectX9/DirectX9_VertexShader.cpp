@@ -57,34 +57,6 @@ namespace april
 		return true;
 	}
 
-	bool DirectX9_VertexShader::compile(chstr shaderCode)
-	{
-		if (shaderCode == "")
-		{
-			hlog::error(april::logTag, "No vertex shader code given!");
-			return false;
-		}
-		DWORD flags = D3DXSHADER_OPTIMIZATION_LEVEL3;
-#ifdef _DEBUG
-		flags |= D3DXSHADER_DEBUG;
-#endif
-		LPD3DXBUFFER assembly;
-		HRESULT result = D3DXCompileShader(shaderCode.c_str(), shaderCode.size(),
-			NULL, NULL, "main", "vs_2_0", flags, &assembly, NULL, NULL);
-		if (result != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to compile vertex shader!");
-			return false;
-		}
-		result = APRIL_D3D_DEVICE->CreateVertexShader((DWORD*)assembly->GetBufferPointer(), &this->dx9Shader);
-		if (result != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to create vertex shader!");
-			return false;
-		}
-		return true;
-	}
-
 	void DirectX9_VertexShader::setConstantsB(const int* quadVectors, unsigned int quadCount)
 	{
 		for_itert (unsigned int, i, 0, quadCount)

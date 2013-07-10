@@ -21,7 +21,6 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}</ProjectGuid>
     <RootNamespace>demo_simple</RootNamespace>
-    <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -85,8 +84,6 @@
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
@@ -97,7 +94,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)..\lib\msvc110\*.dll $(SolutionDir)bin\$(Platform)\ /d /y
@@ -113,8 +109,6 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
@@ -125,7 +119,6 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <AdditionalLibraryDirectories>..\..\..\lib\android;$(SolutionDir)bin\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalDependencies>-lhltypes;-lgtypes;-lapril;-ljpeg;-lpng;-lzip;%(AdditionalDependencies)</AdditionalDependencies>
       <AndroidSystemLibs>c;m;log;gcc;z;GLESv1_CM</AndroidSystemLibs>
     </Link>
@@ -139,10 +132,6 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
     <PreLinkEvent>
       <Command>xcopy ..\media android\assets\ /d /y /s /e</Command>
     </PreLinkEvent>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -152,8 +141,6 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <PreprocessorDefinitions>_WIN32;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
@@ -166,7 +153,6 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)..\lib\msvc110\*.dll $(SolutionDir)bin\$(Platform)\ /d /y
@@ -182,8 +168,6 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <PreprocessorDefinitions>_ANDROID;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
@@ -196,24 +180,15 @@ xcopy $(SolutionDir)bin\$(Platform)\*.dll $(SolutionDir)bin\$(Platform)\$(Config
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalDependencies>-lhltypes;-lgtypes;-lapril;-ljpeg;-lpng;-lzip;%(AdditionalDependencies)</AdditionalDependencies>
       <AndroidSystemLibs>c;m;log;gcc;z;GLESv1_CM</AndroidSystemLibs>
     </Link>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
     <AntBuild>
       <AntBuildPath>$(ProjectDir)android</AntBuildPath>
     </AntBuild>
     <PreLinkEvent>
       <Command>xcopy ..\media android\assets\ /d /y /s /e</Command>
     </PreLinkEvent>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="android\AndroidManifest.xml">

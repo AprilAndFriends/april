@@ -39,8 +39,6 @@ namespace april
 		void setConstantsI(const int* quadVectors, unsigned int quadCount);
 		void setConstantsF(const float* quadVectors, unsigned int quadCount);
 
-		DEPRECATED_ATTRIBUTE bool compile(chstr shaderCode);
-
 	protected:
 		IDirect3DVertexShader9* dx9Shader;
 

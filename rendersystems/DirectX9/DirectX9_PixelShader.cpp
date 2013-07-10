@@ -58,34 +58,6 @@ namespace april
 		return true;
 	}
 
-	bool DirectX9_PixelShader::compile(chstr shaderCode)
-	{
-		if (shaderCode == "")
-		{
-			hlog::error(april::logTag, "No pixel shader code given!");
-			return false;
-		}
-		DWORD flags = D3DXSHADER_OPTIMIZATION_LEVEL3;
-#ifdef _DEBUG
-		flags |= D3DXSHADER_DEBUG;
-#endif
-		LPD3DXBUFFER assembly;
-		HRESULT result = D3DXCompileShader(shaderCode.c_str(), shaderCode.size(),
-			NULL, NULL, "main", "ps_2_0", flags, &assembly, NULL, NULL);
-		if (result != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to compile pixel shader!");
-			return false;
-		}
-		result = APRIL_D3D_DEVICE->CreatePixelShader((DWORD*)assembly->GetBufferPointer(), &this->dx9Shader);
-		if (result != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to create pixel shader!");
-			return false;
-		}
-		return true;
-	}
-
 	void DirectX9_PixelShader::setConstantsB(const int* quadVectors, unsigned int quadCount)
 	{
 		for_itert (unsigned int, i, 0, quadCount)
