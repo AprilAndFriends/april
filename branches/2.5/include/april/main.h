@@ -121,9 +121,9 @@ int main(Platform::Array<Platform::String^>^ args)
 	for_iter (i, 0, argc)
 	{
 #if !_HL_WINRT
-		arg = unicode_to_utf8(wArgv[i]);
+		arg = hstr::from_unicode(wArgv[i]);
 #else
-		arg = unicode_to_utf8(args[i]->Data());
+		arg = hstr::from_unicode(args[i]->Data());
 #endif
 		argv[i] = new char[arg.size() + 1];
 		memset(argv[i], 0, arg.size() + 1);
