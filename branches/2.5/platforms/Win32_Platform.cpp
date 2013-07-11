@@ -52,7 +52,7 @@ namespace april
 				locale, (LOCALE_NAME_MAX_LENGTH - 1) * sizeof(wchar_t));
 			if (length > 0)
 			{
-				info.locale = unicode_to_utf8(locale).lower();
+				info.locale = hstr::from_unicode(locale).lower();
 				if (info.locale.size() > 2)
 				{
 					info.locale = info.locale(0, 2);
