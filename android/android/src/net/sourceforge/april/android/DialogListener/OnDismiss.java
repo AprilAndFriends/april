@@ -3,18 +3,18 @@ package net.sourceforge.april.android.DialogListener;
 // version 3.0
 
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import net.sourceforge.april.android.NativeInterface;
 
-public class OnCancel implements OnCancelListener
+public class OnDismiss implements OnDismissListener
 {
-	public void onCancel(DialogInterface dialog)
+	public void onDismiss(DialogInterface dialog)
 	{
 		NativeInterface.AprilActivity.GlView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
-				NativeInterface.onDialogCancel();
+				NativeInterface.onDialogCancel(); // dismiss is like cancel button in April
 			}
 		});
 	}

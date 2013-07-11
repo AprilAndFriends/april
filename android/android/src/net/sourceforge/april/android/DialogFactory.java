@@ -42,8 +42,6 @@ public class DialogFactory
 		{
 			DialogFactory.dialogBuilder.setNeutralButton(cancel, new Cancel());
 		}
-		DialogFactory.dialogBuilder.setCancelable(true);
-		DialogFactory.dialogBuilder.setOnCancelListener(new OnCancel());
 		switch (iconId)
 		{
 		case 1:
@@ -83,7 +81,11 @@ public class DialogFactory
 	
 	public static Dialog show()
 	{
-		return DialogFactory.dialogBuilder.create();
+		Dialog dialog = DialogFactory.dialogBuilder.create();
+		dialog.setCancelable(true);
+		dialog.setCanceledOnTouchOutside(true);
+		dialog.setOnDismissListener(new OnDismiss());
+		return dialog;
 	}
 	
 }
