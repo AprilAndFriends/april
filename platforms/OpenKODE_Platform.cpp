@@ -30,6 +30,8 @@
 	#include <TargetConditionals.h>
 	#if TARGET_OS_IPHONE
 		void getStaticiOSInfo(chstr name, april::SystemInfo& info);
+	#elif TARGET_OS_MAC
+		#include <sys/sysctl.h>
 	#endif
 #endif
 
@@ -43,6 +45,15 @@ namespace april
 			// RAM size
 #if TARGET_IPHONE_SIMULATOR
 			info.ram = 1024;
+#elif defined(__APPLE__) && defined(_PC_INPUT) // mac
+			int mib [] = { CTL_HW, HW_MEMSIZE };
+			int64_t value = 0;
+			size_t length = sizeof(value);
+			
+			if (sysctl(mib, 2, &value, &length, NULL, 0) == -1)
+				info.ram = 2048;
+			else
+				info.ram = value / (1024 * 1024);
 #else
 			int ram;
 			kdQueryAttribi(KD_ATTRIB_RAM, (KDint*)&ram);
@@ -70,6 +81,8 @@ namespace april
 				b.split(")", model, a);
 				getStaticiOSInfo(model, info);
 			}
+#elif defined(__APPLE__) && defined(_PC_INPUT) // mac
+			info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
 #endif
 
 			info.locale = hstr(kdGetLocale());
