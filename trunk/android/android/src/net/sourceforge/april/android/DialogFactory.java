@@ -8,7 +8,6 @@ import android.os.Build;
 
 import net.sourceforge.april.android.DialogListener.Cancel;
 import net.sourceforge.april.android.DialogListener.Ok;
-import net.sourceforge.april.android.DialogListener.OnCancel;
 import net.sourceforge.april.android.DialogListener.No;
 import net.sourceforge.april.android.DialogListener.Yes;
 
@@ -84,7 +83,6 @@ public class DialogFactory
 		Dialog dialog = DialogFactory.dialogBuilder.create();
 		dialog.setCancelable(true);
 		dialog.setCanceledOnTouchOutside(true);
-		dialog.setOnDismissListener(new OnDismiss());
 		return dialog;
 	}
 	
