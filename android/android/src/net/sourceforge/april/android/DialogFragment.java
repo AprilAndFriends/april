@@ -18,4 +18,30 @@ public class DialogFragment extends android.app.DialogFragment
 		return DialogFactory.show();
 	}
 	
+	@Override
+	public void onCancel(DialogInterface dialog)
+	{
+		dialog.cancel();
+		NativeInterface.AprilActivity.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onDialogCancel();
+			}
+		});
+	}
+	
+	@Override
+	public void onDismiss(DialogInterface dialog)
+	{
+		dialog.dismiss();
+		NativeInterface.AprilActivity.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onDialogCancel();
+			}
+		});
+	}
+	
 }
