@@ -1,20 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' or '$(Configuration)|$(Platform)'=='Release|Win32'">
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <Lib>
-      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Android' or '$(Configuration)|$(Platform)'=='Release|Android'">
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Android'">
     <Link>
       <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-ljpeg;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <Lib>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-ljpeg;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9|Win32' or
                                   '$(Configuration)|$(Platform)'=='DebugS_DirectX9|Win32' or
@@ -24,11 +18,8 @@
       <PreprocessorDefinitions>_DIRECTX;_DIRECTX9;HAVE_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;d3d9.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <Lib>
-      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;d3d9.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGL1|Win32' or
                                   '$(Configuration)|$(Platform)'=='DebugS_OpenGL1|Win32' or
@@ -38,11 +29,8 @@
       <PreprocessorDefinitions>_OPENGL;_OPENGL1;HAVE_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;OpenGL32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <Lib>
-      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;OpenGL32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES1|Win32' or
                                   '$(Configuration)|$(Platform)'=='DebugS_OpenGLES1|Win32' or
@@ -52,11 +40,8 @@
       <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;HAVE_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;libGLES_CM.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libGLES_CM.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <Lib>
-      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;libGLES_CM.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES1|Android' or
                                   '$(Configuration)|$(Platform)'=='DebugS_OpenGLES1|Android' or
@@ -65,11 +50,5 @@
     <ClCompile>
       <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <Link>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-ljpeg;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-    <Lib>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-ljpeg;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
 </Project>
