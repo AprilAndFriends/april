@@ -3,6 +3,7 @@ package net.sourceforge.april.android;
 // version 3.0
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 public class DialogFragment extends android.app.DialogFragment
@@ -30,18 +31,5 @@ public class DialogFragment extends android.app.DialogFragment
 			}
 		});
 	}
-	
-	@Override
-	public void onDismiss(DialogInterface dialog)
-	{
-		dialog.dismiss();
-		NativeInterface.AprilActivity.GlView.queueEvent(new Runnable()
-		{
-			public void run()
-			{
-				NativeInterface.onDialogCancel();
-			}
-		});
-	}
-	
+
 }
