@@ -8,19 +8,16 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #include <stdio.h>
-extern "C"
-{
-#ifdef __APPLE__
-#include <jpeglib.h>
-#else
-#include <jpeg/jpeglib.h>
-#endif
-}
 
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hsbase.h>
 #include <hltypes/hstream.h>
+
+extern "C"
+{
+#include <jpeglib.h> // has to be down here because of problems with header order
+}
 
 #include "Image.h"
 
