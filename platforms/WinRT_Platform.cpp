@@ -54,7 +54,7 @@ namespace april
 		// TODO
 		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
-			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
+			info.maxTextureSize = april::rendersys->getMaxTextureSize();
 		}
 		return info;
 	}
