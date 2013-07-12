@@ -22,12 +22,13 @@
 #include "DirectX11_RenderSystem.h"
 #include "DirectX11_Texture.h"
 #include "DirectX11_VertexShader.h"
-#include "ImageSource.h"
+#include "Image.h"
 #include "Keys.h"
 #include "Platform.h"
 #include "Timer.h"
 #include "WinRT_Window.h"
 
+#define SHADER_PATH "april/"
 #define VERTICES_BUFFER_COUNT 65536
 
 #define UINT_RGBA_TO_ABGR(c) ((((c) >> 24) & 0xFF) | (((c) << 24) & 0xFF000000) | (((c) >> 8) & 0xFF00) | (((c) << 8) & 0xFF0000))
@@ -44,7 +45,7 @@ namespace april
 	harray<DirectX11_Texture*> gRenderTargets;
 
 	// TODO - refactor
-	int DirectX11_RenderSystem::_getMaxTextureSize()
+	int DirectX11_RenderSystem::getMaxTextureSize()
 	{
 		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
 		return D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
@@ -81,7 +82,7 @@ namespace april
 		return 0;
 	}
 	
-	DirectX11_RenderSystem::DirectX11_RenderSystem() : RenderSystem(), zBufferEnabled(false),
+	DirectX11_RenderSystem::DirectX11_RenderSystem() : RenderSystem(),
 		activeTextureBlendMode(DEFAULT), activeTexture(NULL), renderTarget(NULL),
 		activeTextureColorMode(NORMAL), activeTextureColorModeAlpha(255),
 		activeTextureFilter(Texture::FILTER_LINEAR), activeTextureAddressMode(Texture::ADDRESS_WRAP),
@@ -122,13 +123,12 @@ namespace april
 		this->destroy();
 	}
 
-	bool DirectX11_RenderSystem::create(chstr options)
+	bool DirectX11_RenderSystem::create(Options options)
 	{
 		if (!RenderSystem::create(options))
 		{
 			return false;
 		}
-		this->zBufferEnabled = options.contains("zbuffer");
 		this->activeTextureBlendMode = DEFAULT;
 		this->activeTexture = NULL;
 		this->renderTarget = NULL;
@@ -279,35 +279,35 @@ namespace april
 		// default shaders
 		if (this->vertexShaderPlain == NULL)
 		{
-			this->vertexShaderPlain = (DirectX11_VertexShader*)this->createVertexShader("april/VertexShader_Plain.cso");
+			this->vertexShaderPlain = (DirectX11_VertexShader*)this->createVertexShader(SHADER_PATH "VertexShader_Plain.cso");
 		}
 		if (this->pixelShaderPlain == NULL)
 		{
-			this->pixelShaderPlain = (DirectX11_PixelShader*)this->createPixelShader("april/PixelShader_Plain.cso");
+			this->pixelShaderPlain = (DirectX11_PixelShader*)this->createPixelShader(SHADER_PATH "PixelShader_Plain.cso");
 		}
 		if (this->vertexShaderTextured == NULL)
 		{
-			this->vertexShaderTextured = (DirectX11_VertexShader*)this->createVertexShader("april/VertexShader_Textured.cso");
+			this->vertexShaderTextured = (DirectX11_VertexShader*)this->createVertexShader(SHADER_PATH "VertexShader_Textured.cso");
 		}
 		if (this->pixelShaderTextured == NULL)
 		{
-			this->pixelShaderTextured = (DirectX11_PixelShader*)this->createPixelShader("april/PixelShader_Textured.cso");
+			this->pixelShaderTextured = (DirectX11_PixelShader*)this->createPixelShader(SHADER_PATH "PixelShader_Textured.cso");
 		}
 		if (this->vertexShaderColored == NULL)
 		{
-			this->vertexShaderColored = (DirectX11_VertexShader*)this->createVertexShader("april/VertexShader_Colored.cso");
+			this->vertexShaderColored = (DirectX11_VertexShader*)this->createVertexShader(SHADER_PATH "VertexShader_Colored.cso");
 		}
 		if (this->pixelShaderColored == NULL)
 		{
-			this->pixelShaderColored = (DirectX11_PixelShader*)this->createPixelShader("april/PixelShader_Colored.cso");
+			this->pixelShaderColored = (DirectX11_PixelShader*)this->createPixelShader(SHADER_PATH "PixelShader_Colored.cso");
 		}
 		if (this->vertexShaderColoredTextured == NULL)
 		{
-			this->vertexShaderColoredTextured = (DirectX11_VertexShader*)this->createVertexShader("april/VertexShader_ColoredTextured.cso");
+			this->vertexShaderColoredTextured = (DirectX11_VertexShader*)this->createVertexShader(SHADER_PATH "VertexShader_ColoredTextured.cso");
 		}
 		if (this->pixelShaderColoredTextured == NULL)
 		{
-			this->pixelShaderColoredTextured = (DirectX11_PixelShader*)this->createPixelShader("april/PixelShader_ColoredTextured.cso");
+			this->pixelShaderColoredTextured = (DirectX11_PixelShader*)this->createPixelShader(SHADER_PATH "PixelShader_ColoredTextured.cso");
 		}
 		// input layouts for default shaders
 		D3D11_INPUT_ELEMENT_DESC _position = {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
@@ -546,6 +546,11 @@ namespace april
 		this->setTextureFilter(Texture::FILTER_LINEAR);
 	}
 
+	void DirectX11_RenderSystem::_setResolution(int w, int h, bool fullscreen)
+	{
+		hlog::error(april::logTag, "Cannot change resolution on render system: " + this->name);
+	}
+
 	harray<DisplayMode> DirectX11_RenderSystem::getSupportedDisplayModes()
 	{
 		if (this->supportedDisplayModes.size() == 0)
@@ -716,15 +721,6 @@ namespace april
 			vertexShader = this->activeVertexShader;
 		}
 		this->d3dDeviceContext->VSSetShader(vertexShader->dx11Shader.Get(), NULL, 0);
-	}
-
-	void DirectX11_RenderSystem::setResolution(int w, int h)
-	{
-		RenderSystem::setResolution(w, h);
-		hlog::writef(april::logTag, "Resetting device for %d x %d...", april::window->getWidth(), april::window->getHeight());
-		this->_createSwapChain(w, h);
-		this->_setModelviewMatrix(this->modelviewMatrix);
-		this->_setProjectionMatrix(this->projectionMatrix);
 	}
 
 	Texture* DirectX11_RenderSystem::_createTexture(chstr filename)
@@ -971,68 +967,10 @@ namespace april
 		this->matrixDirty = true;
 	}
 
-	ImageSource* DirectX11_RenderSystem::takeScreenshot(int bpp)
+	Image* DirectX11_RenderSystem::takeScreenshot(int bpp)
 	{
 		// TODO
-		hlog::warn(april::logTag, "DirectX11_RenderSystem::takeScreenshot()");
-		/*
-#ifdef _DEBUG
-		hlog::write(april::logTag, "Grabbing screenshot...");
-#endif
-		D3DSURFACE_DESC desc;
-		this->backBuffer->GetDesc(&desc);
-		if (desc.Format != D3DFMT_X8R8G8B8)
-		{
-			hlog::error(april::logTag, "Failed to grab screenshot, backbuffer format not supported, expected X8R8G8B8, got: " + hstr(desc.Format));
-			return NULL;
-		}
-		IDirect3DSurface9* buffer;
-		HRESULT hr = this->d3dDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &buffer, NULL);
-		if (hr != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to grab screenshot, CreateOffscreenPlainSurface() call failed.");
-			return NULL;
-		}
-		hr = this->d3dDevice->GetRenderTargetData(this->backBuffer, buffer);
-		if (hr != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to grab screenshot, GetRenderTargetData() call failed.");
-			buffer->Release();
-			return NULL;
-		}		
-		D3DLOCKED_RECT rect;
-		hr = buffer->LockRect(&rect, NULL, D3DLOCK_DONOTWAIT);
-		if (hr != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to grab screenshot, surface lock failed.");
-			buffer->Release();
-			return NULL;
-		}
-		
-		ImageSource* img = new ImageSource();
-		img->w = desc.Width;
-		img->h = desc.Height;
-		img->bpp = bpp;
-		img->format = (bpp == 4 ? AF_RGBA : AF_RGB);
-		img->data = new unsigned char[img->w * img->h * img->bpp];
-		unsigned char* p = img->data;
-		unsigned char* src = (unsigned char*)rect.pBits;
-		int x;
-		memset(p, 255, img->w * img->h * img->bpp);
-		for_iter (y, 0, img->h)
-		{
-			for (x = 0; x < img->w; x++, p += bpp)
-			{
-				p[0] = src[x * bpp + 2];
-				p[1] = src[x * bpp + 1];
-				p[2] = src[x * bpp];
-			}
-			src += rect.Pitch;
-		}
-		buffer->UnlockRect();
-		buffer->Release();
-		return img;
-		*/
+		hlog::warn(april::logTag, "DirectX11_RenderSystem::takeScreenshot() not implemented!");
 		return NULL;
 	}
 	

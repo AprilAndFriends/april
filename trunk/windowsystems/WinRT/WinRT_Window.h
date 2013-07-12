@@ -14,9 +14,9 @@
 #ifdef _WINRT_WINDOW
 #ifndef APRIL_WINRT_WINDOW_H
 #define APRIL_WINRT_WINDOW_H
-#include <hltypes/hplatform.h>
-#if _HL_WINRT
+
 #include <gtypes/Matrix4.h>
+#include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
@@ -43,7 +43,7 @@ namespace april
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId();
-		//void _setResolution(int w, int h);
+		void setResolution(int w, int h, bool fullscreen);
 		bool updateOneFrame();
 		void presentFrame();
 		void checkEvents();
@@ -62,6 +62,5 @@ namespace april
 	
 }
 
-#endif
 #endif
 #endif

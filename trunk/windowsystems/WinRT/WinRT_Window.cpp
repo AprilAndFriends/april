@@ -8,8 +8,6 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _WINRT_WINDOW
-#include <hltypes/hplatform.h>
-#if _HL_WINRT
 #include <hltypes/hfile.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hlog.h>
@@ -88,11 +86,10 @@ namespace april
 		return 0;
 	}
 
-	/*
-	void WinRT_Window::_setResolution(int w, int h)
+	void WinRT_Window::setResolution(int w, int h, bool fullscreen)
 	{
+		hlog::error(april::logTag, "Cannot change resolution on window system: " + this->name);
 	}
-	*/
 	
 	bool WinRT_Window::updateOneFrame()
 	{
@@ -128,7 +125,6 @@ namespace april
 				}
 				april::rendersys->drawTexturedRect(drawRect, srcRect);
 			}
-			april::rendersys->presentFrame();
 			return this->running;
 		}
 		if (this->hasStoredProjectionMatrix)
@@ -197,7 +193,7 @@ namespace april
 					{
 						this->logoTexture->load();
 					}
-					catch (hltypes::exception& e)
+					catch (hltypes::exception&)
 					{
 						delete this->logoTexture;
 						this->logoTexture = NULL;
@@ -229,5 +225,4 @@ namespace april
 	}
 
 }
-#endif
 #endif

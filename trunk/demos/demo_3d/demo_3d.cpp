@@ -10,7 +10,7 @@
 
 #include <hltypes/hplatform.h>
 #ifndef _ANDROID
-#if !_HL_WINRT
+#if !_WINRT
 #define RESOURCE_PATH "../media/"
 #else
 #define RESOURCE_PATH "media/"

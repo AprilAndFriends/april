@@ -131,9 +131,6 @@
     <ClCompile Include="src\timers\TimerPosix.cpp">
       <Filter>Source Files\timers</Filter>
     </ClCompile>
-    <ClCompile Include="src\timers\TimerSDL.cpp">
-      <Filter>Source Files\timers</Filter>
-    </ClCompile>
     <ClCompile Include="src\timers\TimerWin.cpp">
       <Filter>Source Files\timers</Filter>
     </ClCompile>

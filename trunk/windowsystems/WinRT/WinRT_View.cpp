@@ -7,13 +7,10 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _WIN32
-#include <hltypes/hplatform.h>
-#if _HL_WINRT
-
-#include <windows.h>
+#ifdef _WINRT_WINDOW
 
 #include <hltypes/hlog.h>
+#include <hltypes/hplatform.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
@@ -93,7 +90,7 @@ namespace april
 		this->filled = false;
 		this->snapped = false;
 		this->mouseMoveMessagesCount = 0;
-		hresource::setCwd(normalize_path(unicode_to_utf8(Package::Current->InstalledLocation->Path->Data())));
+		hresource::setCwd(normalize_path(hstr::from_unicode(Package::Current->InstalledLocation->Path->Data())));
 		hresource::setArchive("");
 		WinRT::View = this;
 		(*WinRT::Init)(WinRT::Args);
@@ -167,13 +164,13 @@ namespace april
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			april::window->handleTouchscreenEnabledEvent(false);
-			april::window->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, position, april::Window::AMOUSEBTN_LEFT);
+			april::window->setInputMode(april::Window::MOUSE);
+			april::window->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, position, april::AK_LBUTTON);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 			this->mouseMoveMessagesCount = 0;
-			april::window->handleTouchscreenEnabledEvent(true);
+			april::window->setInputMode(april::Window::TOUCH);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.index_of(id);
 			if (index < 0)
@@ -181,7 +178,7 @@ namespace april
 				index = this->pointerIds.size();
 				this->pointerIds += id;
 			}
-			((WinRT_Window*)april::window)->handleTouchEvent(april::Window::AMOUSEEVT_DOWN, position, index);
+			((WinRT_Window*)april::window)->queueTouchEvent(april::Window::AMOUSEEVT_DOWN, position, index);
 			break;
 		}
 		args->Handled = true;
@@ -195,13 +192,13 @@ namespace april
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			april::window->handleTouchscreenEnabledEvent(false);
-			april::window->handleMouseEvent(april::Window::AMOUSEEVT_UP, position, april::Window::AMOUSEBTN_LEFT);
+			april::window->setInputMode(april::Window::MOUSE);
+			april::window->handleMouseEvent(april::Window::AMOUSEEVT_UP, position, april::AK_LBUTTON);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 			this->mouseMoveMessagesCount = 0;
-			april::window->handleTouchscreenEnabledEvent(true);
+			april::window->setInputMode(april::Window::TOUCH);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.index_of(id);
 			if (index < 0)
@@ -212,7 +209,7 @@ namespace april
 			{
 				this->pointerIds.remove_at(index);
 			}
-			((WinRT_Window*)april::window)->handleTouchEvent(april::Window::AMOUSEEVT_UP, position, index);
+			((WinRT_Window*)april::window)->queueTouchEvent(april::Window::AMOUSEEVT_UP, position, index);
 			break;
 		}
 		args->Handled = true;
@@ -229,21 +226,21 @@ namespace april
 			this->mouseMoveMessagesCount++;
 			if (this->mouseMoveMessagesCount >= 10)
 			{
-				april::window->handleTouchscreenEnabledEvent(false);
+				april::window->setInputMode(april::Window::MOUSE);
 			}
-			april::window->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, position, april::Window::AMOUSEBTN_LEFT);
+			april::window->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, position, april::AK_LBUTTON);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 			this->mouseMoveMessagesCount = 0;
-			april::window->handleTouchscreenEnabledEvent(true);
+			april::window->setInputMode(april::Window::TOUCH);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.index_of(id);
 			if (index < 0)
 			{
 				index = this->pointerIds.size();
 			}
-			((WinRT_Window*)april::window)->handleTouchEvent(april::Window::AMOUSEEVT_MOVE, position, index);
+			((WinRT_Window*)april::window)->queueTouchEvent(april::Window::AMOUSEEVT_MOVE, position, index);
 			break;
 		}
 		args->Handled = true;
@@ -251,24 +248,24 @@ namespace april
 	
 	void WinRT_View::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		april::window->handleTouchscreenEnabledEvent(false);
+		april::window->setInputMode(april::Window::MOUSE);
 		float _wheelDelta = (float)args->CurrentPoint->Properties->MouseWheelDelta / WHEEL_DELTA;
 		if (this->scrollHorizontal ^ args->CurrentPoint->Properties->IsHorizontalMouseWheel)
 		{
 			april::window->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL,
-				gvec2(-(float)_wheelDelta, 0.0f), april::Window::AMOUSEBTN_NONE);
+				gvec2(-(float)_wheelDelta, 0.0f), april::AK_NONE);
 		}
 		else
 		{
 			april::window->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL,
-				gvec2(0.0f, -(float)_wheelDelta), april::Window::AMOUSEBTN_NONE);
+				gvec2(0.0f, -(float)_wheelDelta), april::AK_NONE);
 		}
 		args->Handled = true;
 	}
 	
 	void WinRT_View::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
-		april::KeySym key = (april::KeySym)args->VirtualKey;
+		april::Key key = (april::Key)args->VirtualKey;
 		april::window->handleKeyOnlyEvent(april::Window::AKEYEVT_DOWN, key);
 		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
 		{
@@ -279,7 +276,7 @@ namespace april
 	
 	void WinRT_View::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
-		april::KeySym key = (april::KeySym)args->VirtualKey;
+		april::Key key = (april::Key)args->VirtualKey;
 		april::window->handleKeyOnlyEvent(april::Window::AKEYEVT_DOWN, key);
 		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
 		{
@@ -300,5 +297,4 @@ namespace april
 	}
 	
 }
-#endif
 #endif
