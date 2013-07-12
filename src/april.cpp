@@ -46,9 +46,9 @@
 #include "SDL_Window.h"
 #endif
 #ifdef _WIN32
+#ifndef _WINRT
 #include "Win32_Window.h"
-#endif
-#ifdef _WINRT
+#else
 #include "WinRT_Window.h"
 #endif
 
