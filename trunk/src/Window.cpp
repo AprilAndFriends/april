@@ -195,11 +195,10 @@ namespace april
 	{
 		SystemInfo info = april::getSystemInfo();
 		int w = hround(info.displayResolution.x), h = hround(info.displayResolution.y);
-		
 		if (!value)
 		{
-			w *= 2.0f / 3.0f;
-			h *= 2.0f / 3.0f;
+			w = (int)(w * 0.6666667f);
+			h = (int)(h * 0.6666667f);
 		}
 		this->setResolution(w, h, value);
 		this->fullscreen = value;
