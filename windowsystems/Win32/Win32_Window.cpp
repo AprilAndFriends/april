@@ -10,10 +10,9 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #if defined(_WIN32) && !defined(_WINRT)
-#include <winuser.h>
-
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hlog.h>
+#include <hltypes/hplatform.h>
 #include <hltypes/hthread.h>
 
 #include "april.h"
