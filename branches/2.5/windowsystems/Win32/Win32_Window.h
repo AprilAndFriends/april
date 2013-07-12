@@ -13,11 +13,9 @@
 /// 
 /// Defines a Win32 window.
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WINRT)
 #ifndef APRIL_WIN32_WINDOW_H
 #define APRIL_WIN32_WINDOW_H
-#include <hltypes/hplatform.h>
-#if !_HL_WINRT
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
@@ -58,6 +56,5 @@ namespace april
 
 }
 
-#endif
 #endif
 #endif

@@ -46,9 +46,9 @@
 #include "SDL_Window.h"
 #endif
 #ifdef _WIN32
-#if !_HL_WINRT
 #include "Win32_Window.h"
-#else
+#endif
+#ifdef _WINRT
 #include "WinRT_Window.h"
 #endif
 #endif
@@ -63,7 +63,7 @@
 	#else
 	#warning "no rendersystems specified"
 	#endif
-	#if !_HL_WINRT
+	#ifndef _WINRT
 	#define WS_INTERNAL_DEFAULT WS_WIN32
 	#else
 	#define WS_INTERNAL_DEFAULT WS_WINRT
@@ -152,7 +152,7 @@ namespace april
 			windowSystem = WS_INTERNAL_DEFAULT;
 		}
 #ifdef _WIN32
-#if !_HL_WINRT
+#ifndef _WINRT
 		if (april::window == NULL && windowSystem == WS_WIN32)
 		{
 			april::window = new Win32_Window();

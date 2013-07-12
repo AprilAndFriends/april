@@ -7,13 +7,9 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _WIN32
-#include <hltypes/hplatform.h>
-#if _HL_WINRT
-
-#include <windows.h>
-
+#ifdef _WINRT
 #include <hltypes/hlog.h>
+#include <hltypes/hplatform.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
@@ -300,5 +296,4 @@ namespace april
 	}
 	
 }
-#endif
 #endif

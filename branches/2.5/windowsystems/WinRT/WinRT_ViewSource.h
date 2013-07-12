@@ -11,13 +11,10 @@
 /// 
 /// Defines a WinRT ViewSource.
 
-#ifdef _WIN32
+#ifdef _WINRT
 #ifndef APRIL_WINRT_VIEW_SOURCE_H
 #define APRIL_WINRT_VIEW_SOURCE_H
 #include <hltypes/hplatform.h>
-#if _HL_WINRT
-
-#include <windows.h>
 
 using namespace Windows::ApplicationModel::Core;
 
@@ -32,6 +29,5 @@ namespace april
 
 }
 
-#endif
 #endif
 #endif
