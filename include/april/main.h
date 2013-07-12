@@ -74,7 +74,7 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
 	return april::JNI_OnLoad(vm, reserved);
 }
-#elif !defined(_WIN32) || defined(_CONSOLE) && !_HL_WINRT
+#elif !defined(_WIN32) || defined(_CONSOLE) && !defined(_WINRT)
 int main(int argc, char** argv)
 {
 #if TARGET_IPHONE_SIMULATOR
@@ -102,7 +102,7 @@ int main(int argc, char** argv)
 	return april_main(april_init, april_destroy, argc, argv);
 }
 #else
-#if !_HL_WINRT
+#ifndef _WINRT
 #include <stdio.h>
 #include <shellapi.h>
 int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCmdLine, int nCmdShow)
@@ -113,14 +113,14 @@ int main(Platform::Array<Platform::String^>^ args)
 {
 	// extract arguments
 	int argc = 0;
-#if !_HL_WINRT
+#ifndef _WINRT
 	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);
 #endif
 	char** argv = new char*[argc];
 	hstr arg;
 	for_iter (i, 0, argc)
 	{
-#if !_HL_WINRT
+#ifndef _WINRT
 		arg = hstr::from_unicode(wArgv[i]);
 #else
 		arg = hstr::from_unicode(args[i]->Data());
@@ -129,7 +129,7 @@ int main(Platform::Array<Platform::String^>^ args)
 		memset(argv[i], 0, arg.size() + 1);
 		memcpy(argv[i], arg.c_str(), sizeof(char) * arg.size());
 	}
-#if !_HL_WINRT
+#ifndef _WINRT
 	LocalFree(wArgv);
 #endif
 	// call the user specified main function

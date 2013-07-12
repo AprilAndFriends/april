@@ -11,12 +11,12 @@
 /// 
 /// Defines a WinRT View.
 
-#ifdef _WIN32
+#ifdef _WINRT
 #ifndef APRIL_WINRT_VIEW_H
 #define APRIL_WINRT_VIEW_H
-#include <hltypes/hplatform.h>
-#if _HL_WINRT
+
 #include <hltypes/harray.h>
+#include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
 #include <windows.h>
@@ -91,6 +91,5 @@ namespace april
 	
 }
 
-#endif
 #endif
 #endif
