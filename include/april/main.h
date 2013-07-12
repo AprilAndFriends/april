@@ -67,7 +67,7 @@ extern void april_init(const harray<hstr>& args);
 extern void april_destroy();
 
 #ifndef BUILDING_APRIL
-#if defined(_WIN32) && !_HL_WINRT && defined(__APRIL_SINGLE_INSTANCE_NAME)
+#if defined(_WIN32) && !defined(_WINRT) && defined(__APRIL_SINGLE_INSTANCE_NAME)
 #define __SINGLE_INSTANCE
 #include <april/Platform.h>
 static HANDLE lockMutex;
@@ -109,7 +109,7 @@ KDint KD_APIENTRY kdMain(KDint argc, const KDchar* const* argv)
 	return 0;
 }
 #elif !defined(_ANDROID)
-#if !defined(_WIN32) || defined(_CONSOLE) && !_HL_WINRT
+#if !defined(_WIN32) || defined(_CONSOLE) && !defined(_WINRT)
 int main(int argc, char** argv)
 {
 #ifdef __SINGLE_INSTANCE
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
 	return result;
 }
 #else
-#if !_HL_WINRT
+#ifndef _WINRT
 #include <stdio.h>
 #include <shellapi.h>
 int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCmdLine, int nCmdShow)
@@ -134,7 +134,7 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCm
 int main(Platform::Array<Platform::String^>^ args)
 #endif
 {
-#if _HL_WINRT && defined(__SINGLE_INSTANCE)
+#if defined(_WINRT) && defined(__SINGLE_INSTANCE)
 	if (!__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::from_unicode(args[0]->Data())))
 	{
 		return 0;
@@ -142,7 +142,7 @@ int main(Platform::Array<Platform::String^>^ args)
 #endif
 	// extract arguments
 	int argc = 0;
-#if !_HL_WINRT
+#ifndef _WINRT
 	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);
 #ifdef __SINGLE_INSTANCE
 	if (!__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::from_unicode(wArgv[0])))
@@ -156,7 +156,7 @@ int main(Platform::Array<Platform::String^>^ args)
 	hstr arg;
 	for_iter (i, 0, argc)
 	{
-#if !_HL_WINRT
+#ifndef _WINRT
 		arg = hstr::from_unicode(wArgv[i]);
 #else
 		arg = hstr::from_unicode(args[i]->Data());
@@ -164,7 +164,7 @@ int main(Platform::Array<Platform::String^>^ args)
 		argv[i] = new char[arg.size() + 1];
 		memcpy(argv[i], arg.c_str(), sizeof(char) * (arg.size() + 1));
 	}
-#if !_HL_WINRT
+#ifndef _WINRT
 	LocalFree(wArgv);
 #endif
 	// call the user specified main function

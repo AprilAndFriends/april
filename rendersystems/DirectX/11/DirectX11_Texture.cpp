@@ -14,7 +14,7 @@
 #include "april.h"
 #include "DirectX11_RenderSystem.h"
 #include "DirectX11_Texture.h"
-#include "ImageSource.h"
+#include "Image.h"
 
 #define APRIL_D3D_DEVICE (((DirectX11_RenderSystem*)april::rendersys)->d3dDevice)
 #define APRIL_D3D_DEVICE_CONTEXT (((DirectX11_RenderSystem*)april::rendersys)->d3dDeviceContext)
@@ -196,10 +196,10 @@ namespace april
 			return true;
 		}
 		hlog::write(april::logTag, "Loading DX11 texture: " + this->_getInternalName());
-		ImageSource* image = NULL;
+		Image* image = NULL;
 		if (this->filename != "")
 		{
-			image = april::loadImage(this->filename);
+			image = Image::load(this->filename);
 			if (image == NULL)
 			{
 				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
@@ -216,35 +216,35 @@ namespace april
 		}
 		switch (image->format)
 		{
-		case AF_RGBA:
-		case AF_BGRA:
+		case Image::FORMAT_RGBA:
+		case Image::FORMAT_BGRA:
 			this->format = FORMAT_ARGB;
 			break;
-		case AF_RGB:
-		case AF_BGR:
-			this->format = FORMAT_ARGB;
+		case Image::FORMAT_RGB:
+		case Image::FORMAT_BGR:
+			this->format = FORMAT_RGB;
 			break;
-		case AF_GRAYSCALE:
+		case Image::FORMAT_GRAYSCALE:
 			this->format = FORMAT_ALPHA;
 			break;
-		case AF_PALETTE:
+		case Image::FORMAT_PALETTE:
 			this->format = FORMAT_ARGB; // TODO - should be changed
 			break;
 		default:
 			this->format = FORMAT_ARGB;
 			break;
 		}
-		if (image->format == AF_RGBA || image->format == AF_RGB)
+		if (image->format == Image::FORMAT_RGBA || image->format == Image::FORMAT_RGB)
 		{
 			this->manualData = new unsigned char[image->w * image->h * 4];
 			memset(this->manualData, 255, image->w * image->h * 4);
-			if (image->format == AF_RGBA)
+			if (image->format == Image::FORMAT_RGBA)
 			{
-				image->copyPixels(this->manualData, AF_BGRA);
+				image->copyPixels(this->manualData, Image::FORMAT_BGRA);
 			}
 			else
 			{
-				image->copyPixels(this->manualData, AF_BGR);
+				image->copyPixels(this->manualData, Image::FORMAT_BGR);
 			}
 			this->bpp = image->bpp = 4;
 		}

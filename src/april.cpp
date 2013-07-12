@@ -26,6 +26,7 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
+#include "RenderSystem.h"
 #ifdef _DIRECTX9
 #include "DirectX9_RenderSystem.h"
 #endif
@@ -44,7 +45,6 @@
 #ifdef _OPENKODE_WINDOW
 #include "OpenKODE_Window.h"
 #endif
-#include "RenderSystem.h"
 #include "Window.h"
 #ifdef _ANDROID
 #include "AndroidJNI_Window.h"
@@ -58,12 +58,11 @@
 #ifdef _COCOA_WINDOW
 #include "Mac_Window.h"
 #endif
-#ifdef _WIN32
-#if !_HL_WINRT
+#ifdef _WIN32_WINDOW
 #include "Win32_Window.h"
-#else
-#include "WinRT_Window.h"
 #endif
+#ifdef _WINRT_WINDOW
+#include "WinRT_Window.h"
 #endif
 #ifdef _EGL
 #include "egl.h"
@@ -83,7 +82,7 @@
 	#endif
 	#ifdef _OPENKODE_WINDOW
 		#define WS_INTERNAL_DEFAULT WS_OPENKODE
-	#elif !_HL_WINRT
+	#elif !defined(_WINRT)
 		#define WS_INTERNAL_DEFAULT WS_WIN32
 	#else
 		#define WS_INTERNAL_DEFAULT WS_WINRT

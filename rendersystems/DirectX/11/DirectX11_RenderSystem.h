@@ -52,7 +52,7 @@ namespace april
 
 		DirectX11_RenderSystem();
 		~DirectX11_RenderSystem();
-		bool create(chstr options);
+		bool create(Options options);
 		bool destroy();
 
 		void assignWindow(Window* window);
@@ -73,8 +73,6 @@ namespace april
 		void setPixelShader(PixelShader* pixelShader);
 		void setVertexShader(VertexShader* vertexShader);
 
-		void setResolution(int w, int h);
-
 		PixelShader* createPixelShader();
 		PixelShader* createPixelShader(chstr filename);
 		VertexShader* createVertexShader();
@@ -89,14 +87,13 @@ namespace april
 		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
 		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
 
-		ImageSource* takeScreenshot(int bpp = 3);
+		Image* takeScreenshot(int bpp = 3);
 		void presentFrame();
 
 		// TODO - refactor
-		int _getMaxTextureSize();
+		int getMaxTextureSize();
 
 	protected:
-		bool zBufferEnabled;
 		BlendMode activeTextureBlendMode;
 		ColorMode activeTextureColorMode;
 		unsigned char activeTextureColorModeAlpha;
@@ -120,6 +117,8 @@ namespace april
 		void _configureDevice();
 		void _createSwapChain(int width, int height);
 		
+		void _setResolution(int w, int h, bool fullscreen);
+
 		Texture* _createTexture(chstr filename);
 		Texture* _createTexture(int w, int h, unsigned char* rgba);
 		Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);

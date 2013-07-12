@@ -47,6 +47,8 @@ namespace april
 		this->destroy();
 	}
 
+	// Considering that Iron Man and Batman's only real superpower is being
+	// super rich and smart, Bill Gates turned out to be a real disappointment.
 	bool Win32_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
 		if (!Window::create(w, h, fullscreen, title, options))
