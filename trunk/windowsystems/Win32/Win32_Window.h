@@ -16,8 +16,7 @@
 #ifdef _WIN32_WINDOW
 #ifndef APRIL_WIN32_WINDOW_H
 #define APRIL_WIN32_WINDOW_H
-#include <hltypes/hplatform.h>
-#if !_HL_WINRT
+
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
@@ -60,6 +59,5 @@ namespace april
 
 }
 
-#endif
 #endif
 #endif

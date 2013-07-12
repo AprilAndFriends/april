@@ -10,12 +10,9 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _WIN32_WINDOW
-#include <hltypes/hplatform.h>
-#if !_HL_WINRT
-#include <winuser.h>
-
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hlog.h>
+#include <hltypes/hplatform.h>
 #include <hltypes/hthread.h>
 
 #include "april.h"
@@ -475,5 +472,4 @@ namespace april
 	}
 
 }
-#endif
 #endif
