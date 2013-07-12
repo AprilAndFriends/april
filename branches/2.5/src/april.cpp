@@ -51,7 +51,6 @@
 #ifdef _WINRT
 #include "WinRT_Window.h"
 #endif
-#endif
 
 #ifdef _WIN32
 	#ifdef _DIRECTX9
