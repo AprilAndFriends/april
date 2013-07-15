@@ -165,7 +165,7 @@ namespace april
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
 			april::window->setInputMode(april::Window::MOUSE);
-			april::window->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, position, april::AK_LBUTTON);
+			april::window->queueMouseEvent(april::Window::AMOUSEEVT_DOWN, position, april::AK_LBUTTON);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
@@ -178,7 +178,7 @@ namespace april
 				index = this->pointerIds.size();
 				this->pointerIds += id;
 			}
-			((WinRT_Window*)april::window)->queueTouchEvent(april::Window::AMOUSEEVT_DOWN, position, index);
+			april::window->queueTouchEvent(april::Window::AMOUSEEVT_DOWN, position, index);
 			break;
 		}
 		args->Handled = true;
@@ -193,7 +193,7 @@ namespace april
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
 			april::window->setInputMode(april::Window::MOUSE);
-			april::window->handleMouseEvent(april::Window::AMOUSEEVT_UP, position, april::AK_LBUTTON);
+			april::window->queueMouseEvent(april::Window::AMOUSEEVT_UP, position, april::AK_LBUTTON);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
@@ -209,7 +209,7 @@ namespace april
 			{
 				this->pointerIds.remove_at(index);
 			}
-			((WinRT_Window*)april::window)->queueTouchEvent(april::Window::AMOUSEEVT_UP, position, index);
+			april::window->queueTouchEvent(april::Window::AMOUSEEVT_UP, position, index);
 			break;
 		}
 		args->Handled = true;
@@ -228,7 +228,7 @@ namespace april
 			{
 				april::window->setInputMode(april::Window::MOUSE);
 			}
-			april::window->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, position, april::AK_LBUTTON);
+			april::window->queueMouseEvent(april::Window::AMOUSEEVT_MOVE, position, april::AK_LBUTTON);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
@@ -240,7 +240,7 @@ namespace april
 			{
 				index = this->pointerIds.size();
 			}
-			((WinRT_Window*)april::window)->queueTouchEvent(april::Window::AMOUSEEVT_MOVE, position, index);
+			april::window->queueTouchEvent(april::Window::AMOUSEEVT_MOVE, position, index);
 			break;
 		}
 		args->Handled = true;
@@ -252,12 +252,12 @@ namespace april
 		float _wheelDelta = (float)args->CurrentPoint->Properties->MouseWheelDelta / WHEEL_DELTA;
 		if (this->scrollHorizontal ^ args->CurrentPoint->Properties->IsHorizontalMouseWheel)
 		{
-			april::window->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL,
+			april::window->queueMouseEvent(april::Window::AMOUSEEVT_SCROLL,
 				gvec2(-(float)_wheelDelta, 0.0f), april::AK_NONE);
 		}
 		else
 		{
-			april::window->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL,
+			april::window->queueMouseEvent(april::Window::AMOUSEEVT_SCROLL,
 				gvec2(0.0f, -(float)_wheelDelta), april::AK_NONE);
 		}
 		args->Handled = true;
@@ -266,7 +266,7 @@ namespace april
 	void WinRT_View::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
 		april::Key key = (april::Key)args->VirtualKey;
-		april::window->handleKeyOnlyEvent(april::Window::AKEYEVT_DOWN, key);
+		april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, key, 0);
 		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
 		{
 			this->scrollHorizontal = true;
@@ -277,7 +277,7 @@ namespace april
 	void WinRT_View::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
 		april::Key key = (april::Key)args->VirtualKey;
-		april::window->handleKeyOnlyEvent(april::Window::AKEYEVT_DOWN, key);
+		april::window->queueKeyEvent(april::Window::AKEYEVT_UP, key, 0);
 		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
 		{
 			this->scrollHorizontal = false;
@@ -287,7 +287,7 @@ namespace april
 	
 	void WinRT_View::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
 	{
-		april::window->handleCharOnlyEvent(args->KeyCode);
+		april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, AK_NONE, args->KeyCode);
 		args->Handled = true;
 	}
 	
