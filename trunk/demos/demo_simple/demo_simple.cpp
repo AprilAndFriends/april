@@ -78,14 +78,6 @@ class MouseDelegate : public april::MouseDelegate
 		gvec2 cursor = april::window->getCursorPosition();
 		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", cursor.x, cursor.y, button);
 		mousePressed = false;
-		if (april::window->getWidth() == 800)
-		{
-			april::window->setResolution(1280, 720, true);
-		}
-		else
-		{
-			april::window->setResolution((int)drawRect.w, (int)drawRect.h, true);
-		}
 	}
 
 	void onMouseMove()
