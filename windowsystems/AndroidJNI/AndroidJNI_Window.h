@@ -37,6 +37,7 @@ namespace april
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId();
+		bool isVirtualKeyboardVisible();
 		
 		void enterMainLoop();
 		void presentFrame();

@@ -88,7 +88,7 @@ namespace april
 		UpdateWindow(this->hWnd);
 		SetCursor(wc.hCursor);
 		this->setCursorVisible(true);
-		
+		this->_virtualKeyboardVisible = false;
 		this->fpsCounter = options.fpsCounter;
 		return true;
 	}
@@ -105,6 +105,7 @@ namespace april
 			UnregisterClassW(APRIL_WIN32_WINDOW_CLASS, GetModuleHandle(0));
 			this->hWnd = 0;
 		}
+		this->_virtualKeyboardVisible = false;
 		return true;
 	}
 
@@ -278,6 +279,16 @@ namespace april
 		AdjustWindowRectEx(&rect, style, FALSE, exstyle);
 		w = rect.right - rect.left;
 		h = rect.bottom - rect.top;
+	}
+
+	void Win32_Window::beginKeyboardHandling()
+	{
+		this->_virtualKeyboardVisible = true; // should usually only be used for testing
+	}
+
+	void Win32_Window::terminateKeyboardHandling()
+	{
+		this->_virtualKeyboardVisible = false; // should usually only be used for testing
 	}
 
 	LRESULT CALLBACK Win32_Window::processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

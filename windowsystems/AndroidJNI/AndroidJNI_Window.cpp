@@ -25,9 +25,6 @@
 #include "SystemDelegate.h"
 #include "Timer.h"
 
-#define CLASS_VIEW "android/view/View"
-#define CLASS_IBINDER "android/os/IBinder"
-
 namespace april
 {
 	extern JavaVM* javaVM;
@@ -60,6 +57,13 @@ namespace april
 	void* AndroidJNI_Window::getBackendId()
 	{
 		return javaVM;
+	}
+
+	bool AndroidJNI_Window::isVirtualKeyboardVisible()
+	{
+		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
+		jfieldID fieldKeyboardVisible = env->GetStaticFieldID(classNativeInterface, "KeyboardVisible", _JBOOL);
+		return env->GetStaticBooleanField(classNativeInterface, fieldKeyboardVisible);
 	}
 
 	void AndroidJNI_Window::enterMainLoop()

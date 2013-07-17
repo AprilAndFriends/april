@@ -25,6 +25,7 @@ public class NativeInterface
 	public static android.app.Activity Activity = null;
 	public static Activity AprilActivity = null;
 	public static boolean Running = false;
+	public static boolean KeyboardVisible = false;
 	public static String ArchivePath = "";
 	public static String DataPath = ".";
 	public static String PackageName = "";
@@ -36,13 +37,16 @@ public class NativeInterface
 	{
 		protected void onReceiveResult(int resultCode, Bundle resultData)
 		{
-			boolean keyboardShown = true;
 			if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN ||
 				resultCode == InputMethodManager.RESULT_HIDDEN)
 			{
-				keyboardShown = false;
+				KeyboardVisible = false;
 			}
-			if (keyboardShown && htcKeyboardHack)
+			else
+			{
+				KeyboardVisible = true;
+			}
+			if (KeyboardVisible && htcKeyboardHack)
 			{
 				htcKeyboardHack = false;
 				InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
