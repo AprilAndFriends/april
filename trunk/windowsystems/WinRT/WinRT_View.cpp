@@ -47,6 +47,9 @@ namespace april
 		this->window->SizeChanged +=
 			ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(
 				this, &WinRT_View::OnWindowSizeChanged);
+		this->window->VisibilityChanged +=
+			ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(
+				this, &WinRT_View::OnVisibilityChanged);
 		CoreApplication::Suspending +=
 			ref new EventHandler<SuspendingEventArgs^>(this, &WinRT_View::OnSuspend);
 		CoreApplication::Resuming +=
@@ -111,7 +114,7 @@ namespace april
 		this->snapped = false;
 	}
 	
-	void WinRT_View::_updateViewState()
+	void WinRT_View::updateViewState()
 	{
 		bool newFilled = (ApplicationView::Value == ApplicationViewState::Filled);
 		if (!this->filled && newFilled)
@@ -129,13 +132,11 @@ namespace april
 	
 	void WinRT_View::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
-		this->_updateViewState();
 		args->Handled = true;
 	}
 	
 	void WinRT_View::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
 	{
-		this->_updateViewState();
 		args->Handled = true;
 	}
 	
@@ -146,7 +147,6 @@ namespace april
 	
 	void WinRT_View::OnResume(_In_ Platform::Object^ sender, _In_ Platform::Object^ args)
 	{
-		this->_updateViewState();
 		april::window->handleFocusChangeEvent(true);
 	}
 	

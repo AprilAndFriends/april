@@ -159,6 +159,10 @@ namespace april
 		return false;
 	}
 
+	void Window::unassign()
+	{
+	}
+
 	void Window::setInputMode(Window::InputMode value)
 	{
 		if (this->inputModeTranslations.has_key(value))

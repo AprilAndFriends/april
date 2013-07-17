@@ -37,6 +37,7 @@ namespace april
 		
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		bool destroy();
+		void unassign();
 		
 		//void setTitle(chstr title);
 		void setCursorVisible(bool value);

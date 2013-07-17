@@ -60,6 +60,7 @@ namespace april
 		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
 		
 		void checkEvents();
+		void updateViewState();
 		
 	private: // has to be private
 		Platform::Agile<CoreWindow> window;
@@ -68,8 +69,6 @@ namespace april
 		bool filled;
 		bool snapped;
 		int mouseMoveMessagesCount;
-		
-		void _updateViewState();
 		
 	};
 	
