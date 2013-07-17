@@ -132,6 +132,7 @@ namespace april
 		virtual ~Window();
 		virtual bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		virtual bool destroy();
+		virtual void unassign();
 
 		// generic getters/setters
 		HL_DEFINE_GET(hstr, name, Name);

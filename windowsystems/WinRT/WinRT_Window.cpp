@@ -23,7 +23,7 @@
 using namespace Windows::ApplicationModel::Core;
 
 #define MANIFEST_FILENAME "AppxManifest.xml"
-#define SNAP_VIEW_WIDTH 320 // as defined by Microsfot
+#define SNAP_VIEW_WIDTH 320 // as defined by Microsoft
 
 namespace april
 {
@@ -64,8 +64,13 @@ namespace april
 			return false;
 		}
 		this->hasStoredProjectionMatrix = false;
-		_HL_TRY_DELETE(this->logoTexture);
 		return true;
+	}
+
+	void WinRT_Window::unassign()
+	{
+		Window::unassign();
+		_HL_TRY_DELETE(this->logoTexture);
 	}
 
 	/*
@@ -96,6 +101,7 @@ namespace april
 		static grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
 		static grect srcRect(0.0f, 0.0f, 1.0f, 1.0f);
 		static grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
+		WinRT::View->updateViewState();
 		if (WinRT::View->isFilled() || WinRT::View->isSnapped())
 		{
 			if (!this->hasStoredProjectionMatrix)
@@ -103,6 +109,8 @@ namespace april
 				this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
 				this->hasStoredProjectionMatrix = true;
 			}
+			this->_calcTimeSinceLastFrame();
+			this->checkEvents();
 			this->_tryLoadLogoTexture();
 			april::rendersys->clear();
 			viewport.setSize((float)this->width, (float)this->height);
@@ -186,6 +194,9 @@ namespace april
 			{
 				// loading the logo file
 				logoFilename = logoFilename(0, index);
+				// adding that ".scale-100" thing there, because my prayers went unanswered and Microsoft decided to change the format after all
+				index = logoFilename.rfind('.');
+				logoFilename = logoFilename(0, index) + ".scale-100" + logoFilename(index, -1);
 				this->logoTexture = april::rendersys->createTexture(logoFilename, false);
 				if (this->logoTexture != NULL)
 				{
