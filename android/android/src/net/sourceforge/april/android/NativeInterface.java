@@ -33,29 +33,34 @@ public class NativeInterface
 	public static String ApkPath = "";
 	
 	private static boolean htcKeyboardHack = false;
-	private static ResultReceiver keyboardResultReceiver = new ResultReceiver(new Handler()
+	private static class KeyboardResultReceiver extends ResultReceiver
 	{
+		public KeyboardResultReceiver()
+		{
+			super(new Handler());
+		}
+		
+		@Override
 		protected void onReceiveResult(int resultCode, Bundle resultData)
 		{
+			boolean keyboardVisible = true;
 			if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN ||
 				resultCode == InputMethodManager.RESULT_HIDDEN)
 			{
-				KeyboardVisible = false;
+				keyboardVisible = false;
 			}
-			else
+			if (keyboardVisible && NativeInterface.htcKeyboardHack)
 			{
-				KeyboardVisible = true;
-			}
-			if (KeyboardVisible && htcKeyboardHack)
-			{
-				htcKeyboardHack = false;
+				NativeInterface.htcKeyboardHack = false;
 				InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
 				View view = NativeInterface.AprilActivity.getView();
 				inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0, NativeInterface.keyboardResultReceiver);
 				inputMethodManager.showSoftInput(view, 0, NativeInterface.keyboardResultReceiver);
 			}
 		}
-	});
+		
+	};
+	private static KeyboardResultReceiver keyboardResultReceiver = new KeyboardResultReceiver();
 	
 	public static native void setVariables(String dataPath, String forcedArchivePath);
 	public static native void init(String[] args);

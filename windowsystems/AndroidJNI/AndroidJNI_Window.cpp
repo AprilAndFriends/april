@@ -59,13 +59,6 @@ namespace april
 		return javaVM;
 	}
 
-	bool AndroidJNI_Window::isVirtualKeyboardVisible()
-	{
-		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
-		jfieldID fieldKeyboardVisible = env->GetStaticFieldID(classNativeInterface, "KeyboardVisible", _JBOOL);
-		return env->GetStaticBooleanField(classNativeInterface, fieldKeyboardVisible);
-	}
-
 	void AndroidJNI_Window::enterMainLoop()
 	{
 		hlog::error(april::logTag, "Using enterMainLoop on Android JNI!");
@@ -97,6 +90,7 @@ namespace april
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowVirtualKeyboard, "showVirtualKeyboard", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodShowVirtualKeyboard);
+		this->virtualKeyboardVisible = true;
 		if (this->systemDelegate != NULL)
 		{
 			this->systemDelegate->onVirtualKeyboardVisibilityChanged(true);
@@ -107,6 +101,7 @@ namespace april
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodHideVirtualKeyboard, "hideVirtualKeyboard", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodHideVirtualKeyboard);
+		this->virtualKeyboardVisible = false;
 		if (this->systemDelegate != NULL)
 		{
 			this->systemDelegate->onVirtualKeyboardVisibilityChanged(false);
