@@ -164,9 +164,9 @@ namespace april
 
 		// virtual getters/setters
 		virtual void setTitle(chstr value) { this->title = value; }
+		virtual bool isVirtualKeyboardVisible() { return false; }
 		virtual bool isCursorVisible() { return this->cursorVisible; }
 		virtual void setCursorVisible(bool value) { this->cursorVisible = value; }
-		virtual bool isVirtualKeyboardVisible() { return this->virtualKeyboardVisible; }
 		virtual bool isCursorInside();
 
 		virtual void setResolution(int w, int h);
@@ -233,7 +233,6 @@ namespace april
 		float fpsResolution;
 		gvec2 cursorPosition;
 		bool cursorVisible;
-		bool virtualKeyboardVisible;
 		InputMode inputMode;
 		hmap<InputMode, InputMode> inputModeTranslations;
 		bool multiTouchActive;

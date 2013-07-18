@@ -40,6 +40,7 @@ namespace april
 		int getHeight();
 		void* getBackendId();
 		void setResolution(int w, int h, bool fullscreen);
+		bool isVirtualKeyboardVisible() { return this->_virtualKeyboardVisible; }
 
 		bool updateOneFrame();
 		void presentFrame();
@@ -58,6 +59,9 @@ namespace april
 		void _setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen);
 		void _adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle);
 		
+	private:
+		bool _virtualKeyboardVisible;
+
 	};
 
 }
