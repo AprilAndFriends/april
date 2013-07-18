@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Win8xap">
+      <UniqueIdentifier>{f0ae1058-a500-44e2-8f2a-326b57b71662}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win8xap\media">
+      <UniqueIdentifier>{df25b4c6-d8ac-462d-b490-c614f00bcfbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win8xap\media\assets">
+      <UniqueIdentifier>{88ab3f03-5374-4194-8762-3355cfa6d25a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="demo_3d_TemporaryKey.pfx">
+      <Filter>Win8xap</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="demo_3d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <Filter>Win8xap</Filter>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="media\icon.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\jpt_raw.jpg">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\jpt_raw.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\line_horz.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\line_vert.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\line45.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\line315.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\o.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\texture.jpg">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\x.png">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+    <Image Include="media\assets\logo_icon.png">
+      <Filter>Win8xap\media\assets</Filter>
+    </Image>
+    <Image Include="media\assets\small_icon.png">
+      <Filter>Win8xap\media\assets</Filter>
+    </Image>
+    <Image Include="media\assets\splash.png">
+      <Filter>Win8xap\media\assets</Filter>
+    </Image>
+    <Image Include="media\assets\store_icon.png">
+      <Filter>Win8xap\media\assets</Filter>
+    </Image>
+    <Image Include="media\jpt_final.jpt">
+      <Filter>Win8xap\media</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
