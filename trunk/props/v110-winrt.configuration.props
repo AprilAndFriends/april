@@ -5,10 +5,10 @@
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32' or
-                                  '$(Configuration)|$(Platform)'=='DebugS_DirectX11|Win32' or
-                                  '$(Configuration)|$(Platform)'=='Release_DirectX11|Win32' or
-                                  '$(Configuration)|$(Platform)'=='ReleaseS_DirectX11|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_DirectX11' or
+                                  '$(Configuration)'=='DebugS_DirectX11' or
+                                  '$(Configuration)'=='Release_DirectX11' or
+                                  '$(Configuration)'=='ReleaseS_DirectX11'">
     <ClCompile>
       <PreprocessorDefinitions>_DIRECTX;_DIRECTX11;_WINRT_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
