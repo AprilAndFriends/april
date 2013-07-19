@@ -271,7 +271,7 @@ namespace april
 		while (this->mouseEvents.size() > 0)
 		{
 			MouseInputEvent e = this->mouseEvents.remove_first();
-			if (e.type != Window::AMOUSEEVT_CANCEL)
+			if (e.type != Window::AMOUSEEVT_CANCEL && e.type != Window::AMOUSEEVT_SCROLL)
 			{
 				this->cursorPosition = e.position;
 			}

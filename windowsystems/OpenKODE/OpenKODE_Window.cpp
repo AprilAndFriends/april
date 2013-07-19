@@ -191,6 +191,11 @@ namespace april
 	void OpenKODE_Window::setCursorVisible(bool value)
 	{
 		Window::setCursorVisible(value);
+		if (this->kdWindow)
+		{
+			KDint param = value ? KD_CURSOR_ARROW : KD_CURSOR_NONE;
+			kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_CURSOR, &param);
+		}
 	}
 	
 	void* OpenKODE_Window::getBackendId()
@@ -329,6 +334,7 @@ namespace april
 				if (index == KD_INPUT_POINTER_X || index == KD_INPUT_POINTER_Y)
 				{
 					this->queueMouseEvent(Window::AMOUSEEVT_MOVE, pos, AK_NONE);
+					this->cursorPosition = pos;
 				}
 				else if (index == KD_INPUT_POINTER_SELECT)
 				{
@@ -346,8 +352,14 @@ namespace april
 						}
 					}
 					memcpy(this->kdTouches, state, 3 * sizeof(bool));
+					this->cursorPosition = pos;
 				}
-				this->cursorPosition = pos;
+				else if (index == KD_INPUT_POINTER_WHEEL)
+				{
+					int deltaV = -short(evt->data.inputpointer.select >> 16);
+					int deltaH = -short(evt->data.inputpointer.select & 0xFFFF);
+					this->queueMouseEvent(Window::AMOUSEEVT_SCROLL, gvec2(deltaH, deltaV), AK_NONE);
+				}
 #else
 				int i, j, index = evt->data.inputpointer.index;
 				gvec2 pos((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);

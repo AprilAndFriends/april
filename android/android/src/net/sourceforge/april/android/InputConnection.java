@@ -11,9 +11,9 @@ class InputConnection extends BaseInputConnection
 	private final KeyEvent delKeyDownEvent = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL);
 	private final KeyEvent delKeyUpEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL);
 	
-	public InputConnection(View view, boolean fullEditor)
+	public InputConnection(View view)
 	{
-		super(view, fullEditor);
+		super(view, false);
 		this.setSelection(0, 0);
 	}
 	
