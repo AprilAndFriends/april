@@ -4,9 +4,7 @@ package net.sourceforge.april.android;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
 import android.view.MotionEvent;
 import android.text.InputType;
 
@@ -89,9 +87,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	{ 
 		outAttributes.actionId = EditorInfo.IME_ACTION_DONE;
 		outAttributes.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI;
-		outAttributes.inputType = InputType.TYPE_CLASS_TEXT;
-		outAttributes.initialCapsMode = 0;
-		return new BaseInputConnection(this, true);
+		return new InputConnection(this);
 	}
 	
 	public void swapBuffers()
