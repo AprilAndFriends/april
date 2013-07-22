@@ -1431,6 +1431,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
 					_SDL_WINDOW,
+					_SDL,
 					_OPENGL1,
 					"$(inherited)",
 				);
@@ -1465,6 +1466,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
 					_SDL_WINDOW,
+					_SDL,
 					_OPENGL1,
 					"$(inherited)",
 				);
@@ -1593,6 +1595,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
 					_SDL_WINDOW,
+					_SDL,
 					_OPENGL1,
 					"$(inherited)",
 				);
@@ -1661,6 +1664,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
 					_SDL_WINDOW,
+					_SDL,
 					_OPENGL1,
 					"$(inherited)",
 				);
@@ -1725,6 +1729,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
 					_SDL_WINDOW,
+					_SDL,
 					_OPENGL1,
 					"$(inherited)",
 				);
