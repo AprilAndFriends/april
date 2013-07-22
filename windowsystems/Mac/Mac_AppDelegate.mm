@@ -65,11 +65,6 @@ bool g_WindowFocusedBeforeSleep = false;
 	NSNotificationCenter* c = [[NSWorkspace sharedWorkspace] notificationCenter];
 	[c addObserver:self selector: @selector(receiveSleepNote:) name:NSWorkspaceWillSleepNotification object:NULL];
     [c addObserver:self selector: @selector(receiveWakeNote:) name:NSWorkspaceDidWakeNotification object:NULL];
-#ifdef _SDL
-	april::window->enterMainLoop();
-	gAprilDestroy();
-	exit(0);
-#endif
 }
 
 - (void) applicationWillTerminate:(NSNotification*) note
