@@ -18,6 +18,7 @@ public class Activity extends net.sourceforge.april.android.Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		this.OuyaKeyboardFix = true;
 		super.onCreate(savedInstanceState);
 		OuyaController.init(this);
 		this.registerReceiver(new BroadcastReceiver()

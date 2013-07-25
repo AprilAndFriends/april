@@ -18,6 +18,8 @@ import java.util.ArrayList;
 
 public class Activity extends android.app.Activity
 {
+	public boolean OuyaKeyboardFix = false; // used directly by the OUYA portion of the code to fix the software keyboard
+	
 	protected boolean nookWorkaround = false; // set this to true in your activity if your are using a nook build in order to speed up new intent/activity calls
 	protected boolean useHardExit = true; // set this to false to prevent application from fully exiting
 	
