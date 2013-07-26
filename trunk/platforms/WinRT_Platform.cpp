@@ -134,7 +134,6 @@ namespace april
 		_HL_HSTR_TO_PSTR_DEF(text);
 		_HL_HSTR_TO_PSTR_DEF(title);
 		MessageDialog^ dialog = ref new MessageDialog(ptext, ptitle);
-		MessageBoxButton button = AMSGBTN_OK;
 		UICommandInvokedHandler^ commandHandler = ref new UICommandInvokedHandler(
 			[](IUICommand^ command)
 		{
@@ -167,7 +166,7 @@ namespace april
 		}
 		else if (buttonMask & AMSGBTN_OK)
 		{
-			dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDOK));
+			dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 			dialog->DefaultCommandIndex = 0;
 			dialog->CancelCommandIndex = 0;
 		}
