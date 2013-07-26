@@ -39,7 +39,7 @@ namespace april
 		bool destroy();
 		void unassign();
 		
-		//void setTitle(chstr title);
+		void setTitle(chstr title);
 		void setCursorVisible(bool value);
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
@@ -47,7 +47,9 @@ namespace april
 		void setResolution(int w, int h, bool fullscreen);
 		bool updateOneFrame();
 		void presentFrame();
-		void checkEvents();
+
+		void beginKeyboardHandling();
+		void terminateKeyboardHandling();
 		
 	protected:
 		int width;

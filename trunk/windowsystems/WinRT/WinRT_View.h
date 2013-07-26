@@ -22,6 +22,8 @@
 #include <agile.h>
 
 #include "Window.h"
+#include "WinRT_XamlApp.h"
+#include "WinRT_XamlInterface.xaml.h"
 
 using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
@@ -30,6 +32,7 @@ using namespace Windows::UI::Core;
 
 namespace april
 {
+	/*
 	ref class WinRT_View : public IFrameworkView
 	{
 	public:
@@ -41,36 +44,16 @@ namespace april
 		
 		bool isFilled() { return this->filled; }
 		bool isSnapped() { return this->snapped; }
-		CoreWindow^ getCoreWindow() { return this->window.Get(); }
-		void setCursorVisible(bool value);
-		
-		void OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args);
-		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
-		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
-		void OnSuspend(_In_ Platform::Object^ sender, _In_ SuspendingEventArgs^ args);
-		void OnResume(_In_ Platform::Object^ sender, _In_ Platform::Object^ args);
-		void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
-		
-		void OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
-		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
-		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
 		
 		void checkEvents();
 		void updateViewState();
 		
 	private: // has to be private
-		Platform::Agile<CoreWindow> window;
-		bool scrollHorizontal;
-		harray<unsigned int> pointerIds;
 		bool filled;
 		bool snapped;
-		int mouseMoveMessagesCount;
 		
 	};
+	*/
 	
 	class WinRT
 	{
@@ -80,7 +63,8 @@ namespace april
 		static void (*Init)(const harray<hstr>&);
 		static void (*Destroy)();
 		static harray<hstr> Args;
-		static WinRT_View^ View;
+		static WinRT_XamlApp^ App;
+		static WinRT_XamlInterface^ Interface;
 		
 	private:
 		WinRT() { }

@@ -92,6 +92,7 @@ namespace april
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
+		this->swapChainNative = nullptr;
 		this->rasterState = nullptr;
 		this->renderTargetView = nullptr;
 		this->blendStateAlpha = nullptr;
@@ -140,6 +141,7 @@ namespace april
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
+		this->swapChainNative = nullptr;
 		this->rasterState = nullptr;
 		this->renderTargetView = nullptr;
 		this->blendStateAlpha = nullptr;
@@ -197,6 +199,7 @@ namespace april
 		this->blendStateOverwrite = nullptr;
 		this->renderTargetView = nullptr;
 		this->rasterState = nullptr;
+		this->swapChainNative = nullptr;
 		this->swapChain = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->d3dDevice = nullptr;
@@ -398,24 +401,33 @@ namespace april
 		{
 			throw hl_exception("Unable to get parent factory from DXGI adapter!");
 		}
+		gvec2 resolution = april::getSystemInfo().displayResolution;
+		int w = hround(resolution.x);
+		int h = hround(resolution.y);
+		if (w != width || h != height)
+		{
+			hlog::warnf(april::logTag, "On WinRT the window resolution (%d,%d) should match the display resolution (%d,%d) in order to avoid problems.", width, height, w, h);
+		}
 		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {0};
 		swapChainDesc.Stereo = false;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDesc.Scaling = DXGI_SCALING_NONE;
+		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
 		swapChainDesc.Flags = 0;
 		swapChainDesc.Width = width;
 		swapChainDesc.Height = height;
-		swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.SampleDesc.Quality = 0;
 		swapChainDesc.BufferCount = 2;
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-		hr = dxgiFactory->CreateSwapChainForCoreWindow(this->d3dDevice.Get(),
-			reinterpret_cast<IUnknown*>(april::WinRT::View->getCoreWindow()), &swapChainDesc, NULL, &this->swapChain);
+		hr = dxgiFactory->CreateSwapChainForComposition(this->d3dDevice.Get(), &swapChainDesc, nullptr, &this->swapChain);
 		if (FAILED(hr))
 		{
 			throw hl_exception("Unable to create swap chain!");
 		}
+		IInspectable* panelInspectable = (IInspectable*)reinterpret_cast<IInspectable*>(WinRT::Interface);
+		panelInspectable->QueryInterface(__uuidof(ISwapChainBackgroundPanelNative), (void **)&this->swapChainNative);
+		this->swapChainNative->SetSwapChain(this->swapChain.Get());
 	}
 
 	void DirectX11_RenderSystem::_configureDevice()

@@ -22,6 +22,8 @@
 #include "Window.h"
 #include "WinRT_View.h"
 
+using namespace Windows::Foundation::Collections;
+using namespace Windows::Globalization;
 using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Popups;
 
@@ -41,13 +43,30 @@ namespace april
 			// RAM size
 			info.ram = 1024;
 			// display resolution
-			int width = (int)april::WinRT::View->getCoreWindow()->Bounds.Width;
-			int height = (int)april::WinRT::View->getCoreWindow()->Bounds.Height;
+			int width = (int)CoreWindow::GetForCurrentThread()->Bounds.Width;
+			int height = (int)CoreWindow::GetForCurrentThread()->Bounds.Height;
 			info.displayResolution.set((float)width, (float)height);
 			// display DPI
 			info.displayDpi = (int)DisplayProperties::LogicalDpi;
 			// other
-			info.locale = "en"; // TODO
+			info.locale = "";
+			for (IIterator<Platform::String^>^ it = ApplicationLanguages::Languages->First(); it->HasCurrent; it->MoveNext())
+			{
+				info.locale = _HL_PSTR_TO_HSTR(it->Current);
+				break;
+			}
+			if (info.locale == "")
+			{
+				info.locale = "en"; // default is "en"
+			}
+			else if (info.locale == "pt_PT")
+			{
+				info.locale = "pt-PT";
+			}
+			else if (info.locale.utf8_size() > 2 && info.locale != "pt-PT")
+			{
+				info.locale = info.locale.utf8_substr(0, 2);
+			}
 		}
 		// TODO
 		if (info.maxTextureSize == 0 && april::rendersys != NULL)

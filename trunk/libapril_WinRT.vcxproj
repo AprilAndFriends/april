@@ -120,9 +120,12 @@
     <ClCompile Include="src\timers\TimerWin.cpp" />
     <ClCompile Include="src\VertexShader.cpp" />
     <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="windowsystems\WinRT\WinRT_XamlApp.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_View.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinRT_ViewSource.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp" />
+    <ClCompile Include="windowsystems\WinRT\WinRT_XamlInterface.xaml.cpp">
+      <DependentUpon>windowsystems\WinRT\WinRT_XamlInterface.xaml</DependentUpon>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\april.h" />
@@ -153,9 +156,13 @@
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_Texture.h" />
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_VertexShader.h" />
     <ClInclude Include="src\egl.h" />
+    <ClInclude Include="windowsystems\WinRT\pch.h" />
+    <ClInclude Include="windowsystems\WinRT\WinRT_XamlApp.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_View.h" />
-    <ClInclude Include="windowsystems\WinRT\WinRT_ViewSource.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_Window.h" />
+    <ClInclude Include="windowsystems\WinRT\WinRT_XamlInterface.xaml.h">
+      <DependentUpon>windowsystems\WinRT\WinRT_XamlInterface.xaml</DependentUpon>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\gtypes\libgtypes_WinRT.vcxproj">
@@ -211,6 +218,9 @@
       <ShaderType>Vertex</ShaderType>
       <ShaderModel>4.0_level_9_1</ShaderModel>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="windowsystems\WinRT\WinRT_XamlInterface.xaml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
