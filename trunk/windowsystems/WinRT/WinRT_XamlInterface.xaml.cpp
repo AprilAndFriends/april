@@ -23,6 +23,7 @@ namespace april
 
 	void WinRT_XamlInterface::showKeyboard()
 	{
+		this->keyboardTextbox->IsEnabled = true;
 		this->keyboardTextbox->Focus(FocusState::Programmatic);
 	}
 	

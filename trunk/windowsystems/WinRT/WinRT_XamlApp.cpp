@@ -10,36 +10,35 @@
 #ifdef _WINRT_WINDOW
 #include "pch.h"
 
+#include <hltypes/hfile.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
+#include "april.h"
+#include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
-#include "WinRT_View.h"
+#include "WinRT.h"
 #include "WinRT_XamlApp.h"
 
 #ifdef _DEBUG
 extern "C" __declspec(dllimport) int __stdcall IsDebuggerPresent();
 #endif
 
-//using namespace Concurrency;
-//using namespace Platform;
 using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
+using namespace Windows::ApplicationModel::Core;
 using namespace Windows::Foundation;
-//using namespace Windows::Foundation::Collections;
-//using namespace Windows::UI::Core;
+using namespace Windows::UI::ViewManagement;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::UI::Xaml::Controls::Primitives;
-//using namespace Windows::UI::Xaml::Data;
-//using namespace Windows::UI::Xaml::Input;
-//using namespace Windows::UI::Xaml::Interop;
 using namespace Windows::UI::Xaml::Media;
-//using namespace Windows::UI::Xaml::Navigation;
 
-#include "Platform.h"
+#define MANIFEST_FILENAME "AppxManifest.xml"
+#define SNAP_VIEW_WIDTH 320 // as defined by Microsoft
 
 namespace april
 {
@@ -47,9 +46,12 @@ namespace april
 	{
 		this->running = true;
 		this->scrollHorizontal = false;
-		//this->filled = false;
-		//this->snapped = false;
 		this->mouseMoveMessagesCount = 0;
+		this->filled = false;
+		this->snapped = false;
+		this->logoTexture = NULL;
+		this->hasStoredProjectionMatrix = false;
+		this->backgroundColor = april::Color::Black;
 		this->Suspending += ref new SuspendingEventHandler(this, &WinRT_XamlApp::OnSuspend);
 		this->Resuming += ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnResume);
 #ifdef _DEBUG
@@ -68,6 +70,7 @@ namespace april
 
 	WinRT_XamlApp::~WinRT_XamlApp()
 	{
+		_HL_TRY_DELETE(this->logoTexture);
 		CompositionTarget::Rendering::remove(this->renderEventToken);
 	}
 
@@ -76,6 +79,29 @@ namespace april
 		Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = (value ? ref new CoreCursor(CoreCursorType::Arrow, 0) : nullptr);
 	}
 	
+	void WinRT_XamlApp::updateViewState()
+	{
+		bool newFilled = (ApplicationView::Value == ApplicationViewState::Filled);
+		if (!this->filled && newFilled)
+		{
+			hlog::write(april::logTag, "Handling filled view override...");
+		}
+		this->filled = newFilled;
+		bool newSnapped = (ApplicationView::Value == ApplicationViewState::Snapped);
+		if (!this->snapped && newSnapped)
+		{
+			hlog::write(april::logTag, "Handling snapped view override...");
+		}
+		this->snapped = newSnapped;
+	}
+
+	void WinRT_XamlApp::unassignWindow()
+	{
+		_HL_TRY_DELETE(this->logoTexture);
+		this->hasStoredProjectionMatrix = false;
+		this->backgroundColor = april::Color::Black;
+	}
+
 	void WinRT_XamlApp::Connect(int connectionId, Object^ target)
 	{
 	}
@@ -124,18 +150,6 @@ namespace april
 			ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(
 				this, &WinRT_XamlApp::OnCharacterReceived);
 		this->setCursorVisible(true);
-
-
-		
-		//WinRT::Keyboard = (TextBox^)XamlReader::Load(APRIL_WINRT_XAML);
-
-
-		/*
-		this->scrollHorizontal = false;
-		this->filled = false;
-		this->snapped = false;
-		this->mouseMoveMessagesCount = 0;
-		*/
 		hresource::setCwd(normalize_path(hstr::from_unicode(Package::Current->InstalledLocation->Path->Data())));
 		hresource::setArchive("");
 		(*WinRT::Init)(WinRT::Args);
@@ -149,6 +163,7 @@ namespace april
 
 	void WinRT_XamlApp::OnResume(_In_ Object^ sender, _In_ Object^ args)
 	{
+		this->updateViewState();
 		april::window->handleFocusChangeEvent(true);
 	}
 
@@ -158,7 +173,57 @@ namespace april
 		{
 			return;
 		}
-		this->running = april::window->updateOneFrame();
+		this->updateViewState();
+		if (!this->filled && !this->snapped)
+		{
+			if (this->hasStoredProjectionMatrix)
+			{
+				april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
+				this->hasStoredProjectionMatrix = false;
+			}
+			this->running = april::window->updateOneFrame();
+		}
+		else
+		{
+			static grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
+			static grect srcRect(0.0f, 0.0f, 1.0f, 1.0f);
+			static grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
+			static int width = 0;
+			static int height = 0;
+			if (width == 0 || height == 0)
+			{
+				gvec2 resolution = april::getSystemInfo().displayResolution;
+				width = hround(resolution.x);
+				height = hround(resolution.y);
+			}
+			if (!this->hasStoredProjectionMatrix)
+			{
+				this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
+				this->hasStoredProjectionMatrix = true;
+			}
+			this->_tryLoadLogoTexture();
+			april::rendersys->clear();
+			viewport.setSize((float)width, (float)height);
+			april::rendersys->setOrthoProjection(viewport);
+			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
+			if (this->logoTexture != NULL)
+			{
+				drawRect.set(0.0f, (float)((height - this->logoTexture->getHeight()) / 2),
+					(float)this->logoTexture->getWidth(), (float)this->logoTexture->getHeight());
+				april::rendersys->setTexture(this->logoTexture);
+				if (this->filled)
+				{
+					// render texture in center
+					drawRect.x = (float)((width - SNAP_VIEW_WIDTH - this->logoTexture->getWidth()) / 2);
+				}
+				if (this->snapped)
+				{
+					// render texture twice on each side of the snapped view
+					drawRect.x = (float)((SNAP_VIEW_WIDTH - this->logoTexture->getWidth()) / 2);
+				}
+				april::rendersys->drawTexturedRect(drawRect, srcRect);
+			}
+		}
 		april::rendersys->presentFrame();
 		if (!this->running)
 		{
@@ -173,11 +238,13 @@ namespace april
 
 	void WinRT_XamlApp::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
+		this->updateViewState();
 		args->Handled = true;
 	}
 	
 	void WinRT_XamlApp::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
 	{
+		this->updateViewState();
 		args->Handled = true;
 	}
 	
@@ -191,7 +258,7 @@ namespace april
 	{
 		unsigned int id;
 		int index;
-		gvec2 position(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
@@ -219,7 +286,7 @@ namespace april
 	{
 		unsigned int id;
 		int index;
-		gvec2 position(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
@@ -250,7 +317,7 @@ namespace april
 	{
 		unsigned int id;
 		int index;
-		gvec2 position(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
@@ -322,167 +389,112 @@ namespace april
 		args->Handled = true;
 	}
 	
-		/*
-	void WinRT_XamlApp::OnWindowActivationChanged(
-		_In_ Object^ sender,
-		_In_ Windows::UI::Core::WindowActivatedEventArgs^ args
-		)
+	gvec2 WinRT_XamlApp::_translatePosition(float x, float y)
 	{
-		if (args->WindowActivationState == CoreWindowActivationState::Deactivated)
+		static int w = 0;
+		static int h = 0;
+		if (w == 0 || h == 0)
 		{
-			m_haveFocus = false;
-
-			switch (m_updateState)
-			{
-			case UpdateEngineState::Dynamics:
-				// From Dynamic mode, when coming out of Deactivated rather than going directly back into game play
-				// go to the paused state waiting for user input to continue
-				m_updateStateNext = UpdateEngineState::WaitingForPress;
-				m_pressResult = PressResultState::ContinueLevel;
-				SetGameInfoOverlay(GameInfoOverlayState::Pause);
-				ShowGameInfoOverlay();
-				m_game->PauseGame();
-				m_updateState = UpdateEngineState::Deactivated;
-				SetAction(GameInfoOverlayCommand::None);
-				m_renderNeeded = true;
-				break;
-
-			case UpdateEngineState::WaitingForResources:
-			case UpdateEngineState::WaitingForPress:
-				m_updateStateNext = m_updateState;
-				m_updateState = UpdateEngineState::Deactivated;
-				SetAction(GameInfoOverlayCommand::None);
-				ShowGameInfoOverlay();
-				m_renderNeeded = true;
-				break;
-			}
-			// Don't have focus so shutdown input processing
-			m_controller->Active(false);
+			gvec2 resolution = april::getSystemInfo().displayResolution;
+			w = hround(resolution.x);
+			h = hround(resolution.y);
 		}
-		else if (args->WindowActivationState == CoreWindowActivationState::CodeActivated
-			|| args->WindowActivationState == CoreWindowActivationState::PointerActivated)
+		int width = april::window->getWidth();
+		int height = april::window->getHeight();
+		if (w == width && h == height)
 		{
-			m_haveFocus = true;
+			return gvec2(x, y);
+		}
+		return gvec2((float)(int)(x * width / w), (float)(int)(y * height / h));
+	}
 
-			if (m_updateState == UpdateEngineState::Deactivated)
+	void WinRT_XamlApp::_tryLoadLogoTexture()
+	{
+		if (this->logoTexture != NULL)
+		{
+			return;
+		}
+		if (!hfile::exists(MANIFEST_FILENAME))
+		{
+			return;
+		}
+		hstr data = hfile::hread(MANIFEST_FILENAME); // lets hope Microsoft does not change the format of these
+		// locating the right entry in XML
+		int index = data.find("<Applications>");
+		if (index < 0)
+		{
+			return;
+		}
+		data = data(index, data.size() - index);
+		index = data.find("<Application ");
+		if (index < 0)
+		{
+			return;
+		}
+		data = data(index, data.size() - index);
+		index = data.find("<VisualElements ");
+		if (index < 0)
+		{
+			return;
+		}
+		// finding the logo entry in XML
+		data = data(index, data.size() - index);
+		int logoIndex = data.find("Logo=\"");
+		if (logoIndex >= 0)
+		{
+			index = logoIndex + hstr("Logo=\"").size();
+			hstr logoFilename = data(index, data.size() - index);
+			index = logoFilename.find("\"");
+			if (index >= 0)
 			{
-				m_updateState = m_updateStateNext;
-
-				if (m_updateState == UpdateEngineState::WaitingForPress)
+				logoFilename = logoFilename(0, index);
+				harray<hstr> filenames;
+				filenames += logoFilename(0, index);
+				// adding that ".scale-100" thing here, because my prayers went unanswered and Microsoft decided to change the format after all
+				index = logoFilename.rfind('.');
+				filenames += logoFilename(0, index) + ".scale-100" + logoFilename(index, -1);
+				foreach (hstr, it, filenames)
 				{
-					SetAction(GameInfoOverlayCommand::TapToContinue);
-					m_controller->WaitForPress();
+					// loading the logo file
+					this->logoTexture = april::rendersys->createTexture(logoFilename, false);
+					if (this->logoTexture != NULL)
+					{
+						try
+						{
+							this->logoTexture->load();
+							break;
+						}
+						catch (hltypes::exception&)
+						{
+							delete this->logoTexture;
+							this->logoTexture = NULL;
+						}
+					}
 				}
-				else if (m_updateStateNext == UpdateEngineState::WaitingForResources)
+			}
+		}
+		// finding the color entry in XML
+		int colorIndex = data.find("BackgroundColor=\"");
+		if (colorIndex >= 0)
+		{
+			index = colorIndex + hstr("BackgroundColor=\"").size();
+			hstr colorString = data(index, data.size() - index);
+			index = colorString.find("\"");
+			if (index >= 0)
+			{
+				// loading the color string
+				colorString = colorString(0, index).ltrim('#');
+				if (colorString.size() >= 6)
 				{
-					SetAction(GameInfoOverlayCommand::PleaseWait);
-				}
-
-				// App is now "active" so set up the event handler to do game processing and rendering
-				if (this->renderEventToken.Value == 0)
-				{
-					this->renderEventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRendering));
+					if (colorString.size() > 6)
+					{
+						colorString = colorString(0, 6);
+					}
+					this->backgroundColor.set(colorString);
 				}
 			}
 		}
 	}
 
-	//--------------------------------------------------------------------------------------
-
-	void WinRT_XamlApp::UpdateViewState()
-	{
-		if (ApplicationView::Value == ApplicationViewState::Snapped)
-		{
-			switch (m_updateState)
-			{
-			case UpdateEngineState::Dynamics:
-				// From Dynamic mode, when coming out of SNAPPED layout rather than going directly back into game play
-				// go to the paused state waiting for user input to continue
-				m_updateStateNext = UpdateEngineState::WaitingForPress;
-				m_pressResult = PressResultState::ContinueLevel;
-				SetGameInfoOverlay(GameInfoOverlayState::Pause);
-				SetAction(GameInfoOverlayCommand::TapToContinue);
-				m_game->PauseGame();
-				break;
-
-			case UpdateEngineState::WaitingForResources:
-			case UpdateEngineState::WaitingForPress:
-				// Avoid corrupting the m_updateStateNext on a transition from Snapped -> Snapped.
-				// Otherwise just cache the current state and return to it when leaving SNAPPED layout
-
-				m_updateStateNext = m_updateState;
-				break;
-
-			default:
-				break;
-			}
-
-			m_updateState = UpdateEngineState::Snapped;
-			m_controller->Active(false);
-			HideGameInfoOverlay();
-			SetSnapped();
-			m_renderNeeded = true;
-		}
-		else if (ApplicationView::Value == ApplicationViewState::Filled ||
-			ApplicationView::Value == ApplicationViewState::FullScreenLandscape ||
-			ApplicationView::Value == ApplicationViewState::FullScreenPortrait)
-		{
-			if (m_updateState == UpdateEngineState::Snapped)
-			{
-				HideSnapped();
-				ShowGameInfoOverlay();
-				m_renderNeeded = true;
-
-				if (m_haveFocus)
-				{
-					if (m_updateStateNext == UpdateEngineState::WaitingForPress)
-					{
-						SetAction(GameInfoOverlayCommand::TapToContinue);
-						m_controller->WaitForPress();
-					}
-					else if (m_updateStateNext == UpdateEngineState::WaitingForResources)
-					{
-						SetAction(GameInfoOverlayCommand::PleaseWait);
-					}
-
-					m_updateState = m_updateStateNext;
-				}
-				else
-				{
-					m_updateState = UpdateEngineState::Deactivated;
-					SetAction(GameInfoOverlayCommand::None);
-				}
-			}
-			else if (m_updateState == UpdateEngineState::Dynamics)
-			{
-				// In Dynamic mode, when a resize event happens, go to the paused state waiting for user input to continue.
-				m_pressResult = PressResultState::ContinueLevel;
-				SetGameInfoOverlay(GameInfoOverlayState::Pause);
-				m_game->PauseGame();
-				if (m_haveFocus)
-				{
-					m_updateState = UpdateEngineState::WaitingForPress;
-					SetAction(GameInfoOverlayCommand::TapToContinue);
-					m_controller->WaitForPress();
-				}
-				else
-				{
-					m_updateState = UpdateEngineState::Deactivated;
-					SetAction(GameInfoOverlayCommand::None);
-				}
-				ShowGameInfoOverlay();
-				m_renderNeeded = true;
-			}
-
-			if (m_haveFocus && this->renderEventToken.Value == 0)
-			{
-				// App is now "active" so set up the event handler to do game processing and rendering
-				this->renderEventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRendering));
-			}
-		}
-	}
-
-
-	*/
 }
 #endif

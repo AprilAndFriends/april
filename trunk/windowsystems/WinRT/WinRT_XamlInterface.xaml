@@ -21,6 +21,7 @@
             Background="{x:Null}"
             BorderBrush="{x:Null}"
             Foreground="{x:Null}"
+            IsEnabled="False"
             Opacity="0">
     </TextBox>
 
