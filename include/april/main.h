@@ -129,20 +129,9 @@ int main(int argc, char** argv)
 #include <stdio.h>
 #include <shellapi.h>
 int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCmdLine, int nCmdShow)
-#else
-[Platform::MTAThread]
-int main(Platform::Array<Platform::String^>^ args)
-#endif
 {
-#if defined(_WINRT) && defined(__SINGLE_INSTANCE)
-	if (!__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::from_unicode(args[0]->Data())))
-	{
-		return 0;
-	}
-#endif
 	// extract arguments
 	int argc = 0;
-#ifndef _WINRT
 	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);
 #ifdef __SINGLE_INSTANCE
 	if (!__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::from_unicode(wArgv[0])))
@@ -151,22 +140,15 @@ int main(Platform::Array<Platform::String^>^ args)
 		return 0;
 	}
 #endif
-#endif
 	char** argv = new char*[argc];
 	hstr arg;
 	for_iter (i, 0, argc)
 	{
-#ifndef _WINRT
 		arg = hstr::from_unicode(wArgv[i]);
-#else
-		arg = hstr::from_unicode(args[i]->Data());
-#endif
 		argv[i] = new char[arg.size() + 1];
 		memcpy(argv[i], arg.c_str(), sizeof(char) * (arg.size() + 1));
 	}
-#ifndef _WINRT
 	LocalFree(wArgv);
-#endif
 	// call the user specified main function
 	april_main(april_init, april_destroy, argc, argv);
 	// free allocated memory for arguments
@@ -180,6 +162,40 @@ int main(Platform::Array<Platform::String^>^ args)
 #endif
 	return 0;
 }
+#else
+[Platform::MTAThread]
+int main(Platform::Array<Platform::String^>^ args)
+{
+#ifdef __SINGLE_INSTANCE
+	if (!__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::from_unicode(args[0]->Data())))
+	{
+		return 0;
+	}
+#endif
+	// extract arguments
+	int argc = 0;
+	char** argv = new char*[argc];
+	hstr arg;
+	for_iter (i, 0, argc)
+	{
+		arg = hstr::from_unicode(args[i]->Data());
+		argv[i] = new char[arg.size() + 1];
+		memcpy(argv[i], arg.c_str(), sizeof(char) * (arg.size() + 1));
+	}
+	// call the user specified main function
+	april_main(april_init, april_destroy, argc, argv);
+	// free allocated memory for arguments
+	for_iter (i, 0, argc)
+	{
+		delete [] argv[i];
+	}
+	delete [] argv;
+#ifdef __SINGLE_INSTANCE
+	__unlockSingleInstanceMutex();
+#endif
+	return 0;
+}
+#endif
 #endif
 #endif
 #define main __ STOP_USING_MAIN___DEPRECATED_IN_APRIL

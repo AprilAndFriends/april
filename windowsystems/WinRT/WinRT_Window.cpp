@@ -15,9 +15,9 @@
 
 #include "april.h"
 #include "RenderSystem.h"
+#include "SystemDelegate.h"
 #include "Timer.h"
 #include "WinRT_View.h"
-#include "WinRT_ViewSource.h"
 #include "WinRT_Window.h"
 
 using namespace Windows::ApplicationModel::Core;
@@ -73,16 +73,15 @@ namespace april
 		_HL_TRY_DELETE(this->logoTexture);
 	}
 
-	/*
 	void WinRT_Window::setTitle(chstr title)
 	{
+		hlog::warn(april::logTag, "Window::setTitle() does nothing on WinRT.");
 	}
-	*/
 	
 	void WinRT_Window::setCursorVisible(bool value)
 	{
 		Window::setCursorVisible(value);
-		WinRT::View->setCursorVisible(value);
+		WinRT::App->setCursorVisible(value);
 	}
 	
 	void* WinRT_Window::getBackendId()
@@ -101,6 +100,8 @@ namespace april
 		static grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
 		static grect srcRect(0.0f, 0.0f, 1.0f, 1.0f);
 		static grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
+		// TODOr
+		/*
 		WinRT::View->updateViewState();
 		if (WinRT::View->isFilled() || WinRT::View->isSnapped())
 		{
@@ -135,6 +136,7 @@ namespace april
 			}
 			return this->running;
 		}
+		*/
 		if (this->hasStoredProjectionMatrix)
 		{
 			april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
@@ -147,12 +149,26 @@ namespace april
 	{
 	}
 	
-	void WinRT_Window::checkEvents()
+	void WinRT_Window::beginKeyboardHandling()
 	{
-		april::WinRT::View->checkEvents();
-		Window::checkEvents();
+		WinRT::Interface->showKeyboard();
+		this->virtualKeyboardVisible = true;
+		if (this->systemDelegate != NULL)
+		{
+			this->systemDelegate->onVirtualKeyboardVisibilityChanged(true);
+		}
 	}
-	
+
+	void WinRT_Window::terminateKeyboardHandling()
+	{
+		WinRT::Interface->hideKeyboard();
+		this->virtualKeyboardVisible = false;
+		if (this->systemDelegate != NULL)
+		{
+			this->systemDelegate->onVirtualKeyboardVisibilityChanged(false);
+		}
+	}
+
 	void WinRT_Window::_tryLoadLogoTexture()
 	{
 		if (this->logoTexture != NULL)

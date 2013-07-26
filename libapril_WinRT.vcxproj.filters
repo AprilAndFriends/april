@@ -98,9 +98,6 @@
     <ClCompile Include="platforms\WinRT_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\WinRT\WinRT_ViewSource.cpp">
-      <Filter>Source Files\windowsystems\WinRT</Filter>
-    </ClCompile>
     <ClCompile Include="platforms\WinRT_main.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
@@ -164,6 +161,12 @@
     <ClCompile Include="src\RenderSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT_XamlInterface.xaml.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT_XamlApp.cpp">
+      <Filter>Source Files\windowsystems\WinRT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -217,9 +220,6 @@
     <ClInclude Include="windowsystems\WinRT\WinRT_View.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\WinRT\WinRT_ViewSource.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_PixelShader.h">
       <Filter>Header Files\rendersystems\DirectX\11</Filter>
     </ClInclude>
@@ -259,6 +259,15 @@
     <ClInclude Include="src\egl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_XamlInterface.xaml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_XamlApp.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\pch.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="fileproperties.rc">
@@ -290,5 +299,10 @@
     <FxCompile Include="rendersystems\DirectX\11\default-shaders\VertexShader_Textured.hlsl">
       <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="windowsystems\WinRT\WinRT_XamlInterface.xaml">
+      <Filter>Source Files\windowsystems\WinRT</Filter>
+    </Page>
   </ItemGroup>
 </Project>

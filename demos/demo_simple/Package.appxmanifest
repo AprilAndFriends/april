@@ -14,7 +14,7 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="demo_simple.App">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="april.App">
       <VisualElements DisplayName="demo_simple" Logo="media\assets\logo_icon.png" SmallLogo="media\assets\small_icon.png" Description="April Demo Simple" ForegroundText="light" BackgroundColor="#464646">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="media\assets\splash.png" />
