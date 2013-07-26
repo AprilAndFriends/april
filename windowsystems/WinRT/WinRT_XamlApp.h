@@ -17,7 +17,6 @@
 
 #include "pch.h"
 #include "WinRT_XamlInterface.xaml.h"
-//#include "windowsystems/WinRT/WinRT_XamlInterface.g.h" // because it's an auto-generated file
 
 using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
@@ -37,6 +36,9 @@ namespace april
 
 		void setCursorVisible(bool value);
 
+		void updateViewState();
+		void unassignWindow();
+		
 		void OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
@@ -44,7 +46,7 @@ namespace april
 		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
-		
+
     internal:
 		virtual void OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args);
 		virtual void OnResume(_In_ Object^ sender, _In_ Object^ args);
@@ -61,99 +63,19 @@ namespace april
 		bool scrollHorizontal;
 		int mouseMoveMessagesCount;
 		harray<unsigned int> pointerIds;
+		bool filled;
+		bool snapped;
+		Texture* logoTexture;
+		bool hasStoredProjectionMatrix;
+		gmat4 storedProjectionMatrix;
+		Color backgroundColor;
 		Windows::Foundation::EventRegistrationToken renderEventToken;
 
 		~WinRT_XamlApp();
 
+		gvec2 _translatePosition(float x, float y);
+		void _tryLoadLogoTexture();
 
-		/*
-        void PauseRequested() { if (m_updateState == UpdateEngineState::Dynamics) m_pauseRequested = true; };
-        void PressComplete()  { if (m_updateState == UpdateEngineState::WaitingForPress) m_pressComplete = true; };
-        void ResetGame();
-        void SetBackground(unsigned int background);
-        void CycleBackground();
-
-#ifdef USE_STORE_SIMULATOR
-        void ResetLicense();
-#endif
-		*/
-
-		/*
-    private:
-
-        void OnSuspending(
-            _In_ Object^ sender,
-            _In_ Windows::ApplicationModel::SuspendingEventArgs^ args
-            );
-
-        void OnResuming(
-            _In_ Object^ sender,
-            _In_ Object^ args
-            );
-
-        void UpdateViewState();
-
-        void OnWindowActivationChanged(
-            _In_ Object^ sender,
-            _In_ Windows::UI::Core::WindowActivatedEventArgs^ args
-            );
-
-        void OnLogicalDpiChanged(
-            _In_ Object^ sender
-            );
-
-        void OnDisplayContentsInvalidated(
-            _In_ Object^ sender
-            );
-
-        void OnVisibilityChanged(
-            _In_ Windows::UI::Core::CoreWindow^ sender,
-            _In_ Windows::UI::Core::VisibilityChangedEventArgs^ args
-            );
-
-        void OnRendering(
-            _In_ Object^ sender,
-            _In_ Object^ args
-            );
-
-        void OnLicenseChanged();
-        void InitializeLicense();
-        void InitializeLicenseCore();
-
-        void InitializeGameState();
-        void OnDeviceLost();
-        void OnDeviceReset();
-        void Update();
-        void SetGameInfoOverlay(GameInfoOverlayState state);
-        void SetAction (GameInfoOverlayCommand command);
-        void ShowGameInfoOverlay();
-        void HideGameInfoOverlay();
-        void SetSnapped();
-        void HideSnapped();
-
-        Windows::Foundation::EventRegistrationToken         m_onRenderingEventToken;
-        bool                                                m_pauseRequested;
-        bool                                                m_pressComplete;
-        bool                                                m_renderNeeded;
-        bool                                                m_haveFocus;
-        bool                                                m_visible;
-
-        MainPage^                                           m_mainPage;
-        MoveLookController^                                 m_controller;
-        GameRenderer^                                       m_renderer;
-        Simple3DGame^                                       m_game;
-
-        UpdateEngineState                                   m_updateState;
-        UpdateEngineState                                   m_updateStateNext;
-        PressResultState                                    m_pressResult;
-        GameInfoOverlayState                                m_gameInfoOverlayState;
-        Windows::ApplicationModel::Store::LicenseInformation^ m_licenseInformation;
-        Windows::ApplicationModel::Store::ListingInformation^ m_listingInformation;
-#ifdef USE_STORE_SIMULATOR
-        PersistentState^                                    m_licenseState;
-        bool                                                m_isTrial;
-#endif
-		*/
     };
 }
 #endif

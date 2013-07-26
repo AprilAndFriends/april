@@ -92,9 +92,6 @@
     <ClCompile Include="src\RamTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\WinRT\WinRT_View.cpp">
-      <Filter>Source Files\windowsystems\WinRT</Filter>
-    </ClCompile>
     <ClCompile Include="platforms\WinRT_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
@@ -167,6 +164,9 @@
     <ClCompile Include="windowsystems\WinRT\WinRT_XamlApp.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT.cpp">
+      <Filter>Source Files\windowsystems\WinRT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -217,9 +217,6 @@
     <ClInclude Include="include\april\RamTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\WinRT\WinRT_View.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_PixelShader.h">
       <Filter>Header Files\rendersystems\DirectX\11</Filter>
     </ClInclude>
@@ -266,6 +263,9 @@
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
     <ClInclude Include="windowsystems\WinRT\pch.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
   </ItemGroup>

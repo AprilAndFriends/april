@@ -23,7 +23,7 @@
 #include "Color.h"
 #include "Timer.h"
 #include "Window.h"
-#include "WinRT_View.h"
+#include "WinRT.h"
 
 namespace april
 {
@@ -36,7 +36,6 @@ namespace april
 		~WinRT_Window();
 		
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
-		bool destroy();
 		void unassign();
 		
 		void setTitle(chstr title);
@@ -45,21 +44,14 @@ namespace april
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId();
 		void setResolution(int w, int h, bool fullscreen);
-		bool updateOneFrame();
 		void presentFrame();
 
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
-		
+
 	protected:
 		int width;
 		int height;
-		bool hasStoredProjectionMatrix;
-		gmat4 storedProjectionMatrix;
-		Color backgroundColor;
-		Texture* logoTexture;
-		
-		void _tryLoadLogoTexture();
 		
 	};
 	

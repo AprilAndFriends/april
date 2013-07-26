@@ -15,7 +15,7 @@
 #include "main.h"
 #include "RenderSystem.h"
 #include "Window.h"
-#include "WinRT_View.h"
+#include "WinRT.h"
 #include "WinRT_XamlApp.h"
 
 using namespace Windows::UI::Xaml;

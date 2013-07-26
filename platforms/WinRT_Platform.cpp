@@ -20,7 +20,7 @@
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
-#include "WinRT_View.h"
+#include "WinRT.h"
 
 using namespace Windows::Foundation::Collections;
 using namespace Windows::Globalization;
