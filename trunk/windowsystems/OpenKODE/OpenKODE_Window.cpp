@@ -358,7 +358,7 @@ namespace april
 				{
 					int deltaV = -short(evt->data.inputpointer.select >> 16);
 					int deltaH = -short(evt->data.inputpointer.select & 0xFFFF);
-					this->queueMouseEvent(Window::AMOUSEEVT_SCROLL, gvec2(deltaH, deltaV), AK_NONE);
+					this->queueMouseEvent(Window::AMOUSEEVT_SCROLL, gvec2(deltaH * 0.2f, deltaV * 0.2f), AK_NONE);
 				}
 #else
 				int i, j, index = evt->data.inputpointer.index;
