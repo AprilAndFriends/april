@@ -71,7 +71,11 @@ namespace april
 	WinRT_XamlApp::~WinRT_XamlApp()
 	{
 		_HL_TRY_DELETE(this->logoTexture);
-		CompositionTarget::Rendering::remove(this->renderEventToken);
+		if (this->renderEventToken.Value != 0)
+		{
+			CompositionTarget::Rendering::remove(this->renderEventToken);
+			this->renderEventToken.Value = 0;
+		}
 	}
 
 	void WinRT_XamlApp::setCursorVisible(bool value)
@@ -158,13 +162,18 @@ namespace april
 
 	void WinRT_XamlApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
 	{
-		april::window->handleFocusChangeEvent(false);
+		if (!this->snapped && !this->filled)
+		{
+			april::window->handleFocusChangeEvent(false);
+		}
 	}
 
 	void WinRT_XamlApp::OnResume(_In_ Object^ sender, _In_ Object^ args)
 	{
-		this->updateViewState();
-		april::window->handleFocusChangeEvent(true);
+		if (!this->snapped && !this->filled)
+		{
+			april::window->handleFocusChangeEvent(true);
+		}
 	}
 
 	void WinRT_XamlApp::OnRender(_In_ Object^ sender, _In_ Object^ args)
@@ -178,6 +187,7 @@ namespace april
 		{
 			if (this->hasStoredProjectionMatrix)
 			{
+				april::window->handleFocusChangeEvent(true);
 				april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
 				this->hasStoredProjectionMatrix = false;
 			}
@@ -200,6 +210,7 @@ namespace april
 			{
 				this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
 				this->hasStoredProjectionMatrix = true;
+				april::window->handleFocusChangeEvent(false);
 			}
 			this->_tryLoadLogoTexture();
 			april::rendersys->clear();
