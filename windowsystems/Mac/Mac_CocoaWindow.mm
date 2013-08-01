@@ -129,7 +129,7 @@ extern bool gReattachLoadingOverlay;
 
 - (void)enterFullScreen
 {
-	aprilWindow->setFullscreenFlag(1);
+	aprilWindow->setFullscreenFlag(true);
 	NSRect prevFrame = [self frame];
 	[self setStyleMask:NSBorderlessWindowMask];
 	[self setFrame: [[NSScreen mainScreen] frame] display:YES];
@@ -178,7 +178,7 @@ extern bool gReattachLoadingOverlay;
 	{
 		[self onWindowSizeChange];
 	}
-	aprilWindow->setFullscreenFlag(0);
+	aprilWindow->setFullscreenFlag(false);
 }
 
 - (void)window:(NSWindow*) window startCustomAnimationToExitFullScreenWithDuration:(NSTimeInterval) duration
@@ -192,6 +192,7 @@ extern bool gReattachLoadingOverlay;
 - (NSArray*) customWindowsToExitFullScreenForWindow:(NSWindow*) window
 {
 	// counter bad fullscreen exit animation when window started in fullscreen. all subsequent animations look good
+	aprilWindow->setFullscreenFlag(false);
 	if (!mCustomFullscreenExitAnimation) return nil;
 	mCustomFullscreenExitAnimation = false;
 	return [NSArray arrayWithObjects:self, nil];
