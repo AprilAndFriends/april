@@ -945,7 +945,7 @@ namespace april
 		if (this->_currentRenderOp != renderOp)
 		{
 			this->_currentRenderOp = renderOp;
-			this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[renderOp]);
+			this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[this->_currentRenderOp]);
 		}
 	}
 
