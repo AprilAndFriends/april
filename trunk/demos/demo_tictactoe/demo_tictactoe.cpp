@@ -22,6 +22,7 @@
 #include <april/KeyboardDelegate.h>
 #include <april/main.h>
 #include <april/MouseDelegate.h>
+#include <april/Platform.h>
 #include <april/RenderSystem.h>
 #include <april/UpdateDelegate.h>
 #include <april/Window.h>
@@ -374,7 +375,7 @@ void april_init(const harray<hstr>& args)
 #endif
 	updateDelegate = new UpdateDelegate();
 	mouseDelegate = new MouseDelegate();
-#if defined(_ANDROID) || defined(_IOS)
+#if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);

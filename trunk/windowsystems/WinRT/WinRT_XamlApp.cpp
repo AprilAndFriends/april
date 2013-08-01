@@ -23,14 +23,11 @@
 #include "WinRT.h"
 #include "WinRT_XamlApp.h"
 
-#ifdef _DEBUG
-extern "C" __declspec(dllimport) int __stdcall IsDebuggerPresent();
-#endif
-
 using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::ApplicationModel::Core;
 using namespace Windows::Foundation;
+using namespace Windows::UI::Core;
 using namespace Windows::UI::ViewManagement;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
@@ -52,30 +49,20 @@ namespace april
 		this->logoTexture = NULL;
 		this->hasStoredProjectionMatrix = false;
 		this->backgroundColor = april::Color::Black;
+		this->initialized = false;
 		this->Suspending += ref new SuspendingEventHandler(this, &WinRT_XamlApp::OnSuspend);
 		this->Resuming += ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnResume);
 #ifdef _DEBUG
-		this->UnhandledException += ref new UnhandledExceptionEventHandler(
-			[](Object^ sender, UnhandledExceptionEventArgs^ e)
-			{
-				if (IsDebuggerPresent())
-				{
-					Platform::String^ errorMessage = e->Message;
-					__debugbreak();
-				}
-			}
-		);
+		this->UnhandledException += ref new UnhandledExceptionEventHandler([](Object^ sender, UnhandledExceptionEventArgs^ args)
+		{
+			hlog::error("FATAL", _HL_PSTR_TO_HSTR(args->Message));
+		});
 #endif
 	}
 
 	WinRT_XamlApp::~WinRT_XamlApp()
 	{
 		_HL_TRY_DELETE(this->logoTexture);
-		if (this->renderEventToken.Value != 0)
-		{
-			CompositionTarget::Rendering::remove(this->renderEventToken);
-			this->renderEventToken.Value = 0;
-		}
 	}
 
 	void WinRT_XamlApp::setCursorVisible(bool value)
@@ -120,6 +107,7 @@ namespace april
 		}
 		WinRT::Interface = ref new WinRT_XamlInterface();
 		Windows::UI::Xaml::Window::Current->Content = WinRT::Interface;
+		Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &WinRT_XamlApp::OnWindowActivationChanged);
 		Windows::UI::Xaml::Window::Current->Activate();
 		// events
 		CoreWindow^ window = Windows::UI::Xaml::Window::Current->CoreWindow;
@@ -154,10 +142,18 @@ namespace april
 			ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(
 				this, &WinRT_XamlApp::OnCharacterReceived);
 		this->setCursorVisible(true);
-		hresource::setCwd(normalize_path(hstr::from_unicode(Package::Current->InstalledLocation->Path->Data())));
-		hresource::setArchive("");
-		(*WinRT::Init)(WinRT::Args);
-		this->renderEventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
+	}
+
+	void WinRT_XamlApp::OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args)
+	{
+		if (!this->initialized)
+		{
+			hresource::setCwd(normalize_path(hstr::from_unicode(Package::Current->InstalledLocation->Path->Data())));
+			hresource::setArchive("");
+			(*WinRT::Init)(WinRT::Args);
+			CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender);
+			this->initialized = true;
+		}
 	}
 
 	void WinRT_XamlApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
@@ -182,6 +178,7 @@ namespace april
 		{
 			return;
 		}
+		// don't repeat initialization when already running
 		this->updateViewState();
 		if (!this->filled && !this->snapped)
 		{
@@ -238,11 +235,6 @@ namespace april
 		april::rendersys->presentFrame();
 		if (!this->running)
 		{
-			if (this->renderEventToken.Value != 0)
-			{
-				CompositionTarget::Rendering::remove(this->renderEventToken);
-				this->renderEventToken.Value = 0;
-			}
 			(*WinRT::Destroy)();
 		}
 	}
@@ -436,25 +428,25 @@ namespace april
 		{
 			return;
 		}
-		data = data(index, data.size() - index);
+		data = data(index, -1);
 		index = data.find("<Application ");
 		if (index < 0)
 		{
 			return;
 		}
-		data = data(index, data.size() - index);
+		data = data(index, -1);
 		index = data.find("<VisualElements ");
 		if (index < 0)
 		{
 			return;
 		}
 		// finding the logo entry in XML
-		data = data(index, data.size() - index);
+		data = data(index, -1);
 		int logoIndex = data.find("Logo=\"");
 		if (logoIndex >= 0)
 		{
 			index = logoIndex + hstr("Logo=\"").size();
-			hstr logoFilename = data(index, data.size() - index);
+			hstr logoFilename = data(index, -1);
 			index = logoFilename.find("\"");
 			if (index >= 0)
 			{
@@ -489,7 +481,7 @@ namespace april
 		if (colorIndex >= 0)
 		{
 			index = colorIndex + hstr("BackgroundColor=\"").size();
-			hstr colorString = data(index, data.size() - index);
+			hstr colorString = data(index, -1);
 			index = colorString.find("\"");
 			if (index >= 0)
 			{

@@ -8,7 +8,6 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#include <hltypes/hplatform.h>
 #ifndef _ANDROID
 #ifndef _WINRT
 #define RESOURCE_PATH "../media/"
@@ -22,6 +21,7 @@
 #include <april/april.h>
 #include <april/main.h>
 #include <april/MouseDelegate.h>
+#include <april/Platform.h>
 #include <april/RenderSystem.h>
 #include <april/UpdateDelegate.h>
 #include <april/Window.h>
@@ -141,7 +141,7 @@ void april_init(const harray<hstr>& args)
 #endif
 	updateDelegate = new UpdateDelegate();
 	mouseDelegate = new MouseDelegate();
-#if defined(_ANDROID) || defined(_IOS)
+#if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 	srand(get_system_time());
