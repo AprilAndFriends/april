@@ -159,11 +159,21 @@ namespace april
 		ComPtr<ID3D11InputLayout> inputLayoutColored;
 		ComPtr<ID3D11InputLayout> inputLayoutColoredTextured;
 
+		DirectX11_VertexShader* _currentVertexShader;
+		DirectX11_PixelShader* _currentPixelShader;
+		BlendMode _currentTextureBlendMode;
+		Texture::Filter _currentTextureFilter;
+		Texture::AddressMode _currentTextureAddressMode;
+		RenderOp _currentRenderOp;
+		InputLayout _currentInputLayout;
+
 		bool matrixDirty;
 
+		void _setRenderOp(RenderOp renderOp);
+		void _setRenderInputLayout(InputLayout inputLayout);
 		void _updateVertexBuffer(int vertexSize, int nVertices, void* data);
 		void _updateConstantBuffer(Color color);
-		void _updateBlending();
+		void _updateBlendMode();
 		void _updateTexture(bool use);
 
 	};

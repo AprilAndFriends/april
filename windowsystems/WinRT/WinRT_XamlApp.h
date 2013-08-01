@@ -15,6 +15,11 @@
 #ifndef APRIL_WINRT_XAML_APP_H
 #define APRIL_WINRT_XAML_APP_H
 
+#include <gtypes/Matrix4.h>
+#include <gtypes/Vector2.h>
+#include <hltypes/harray.h>
+
+#include "Color.h"
 #include "pch.h"
 #include "WinRT_XamlInterface.xaml.h"
 
@@ -27,6 +32,8 @@ using namespace Windows::UI::Xaml::Markup;
 
 namespace april
 {
+	class Texture;
+
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public ref class WinRT_XamlApp sealed : public Application, public IComponentConnector
     {
@@ -48,6 +55,7 @@ namespace april
 		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
 
     internal:
+		virtual void OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args);
 		virtual void OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args);
 		virtual void OnResume(_In_ Object^ sender, _In_ Object^ args);
 		virtual void OnRender(_In_ Object^ sender, _In_ Object^ args);
@@ -69,7 +77,7 @@ namespace april
 		bool hasStoredProjectionMatrix;
 		gmat4 storedProjectionMatrix;
 		Color backgroundColor;
-		Windows::Foundation::EventRegistrationToken renderEventToken;
+		bool initialized;
 
 		~WinRT_XamlApp();
 

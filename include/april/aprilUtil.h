@@ -30,6 +30,16 @@ namespace april
 		LineList = 4,
 		LineStrip = 5,
 		PointList = 6,
+		RENDER_OP_UNDEFINED = 0x7FFFFFFF
+	};
+
+	enum InputLayout
+	{
+		PLAIN = 1,
+		TEXTURED = 2,
+		COLORED = 3,
+		COLORED_TEXTURED = 4,
+		INPUT_LAYOUT_UNDEFINED = 0x7FFFFFFF
 	};
 	
 	enum BlendMode
@@ -38,7 +48,8 @@ namespace april
 		ALPHA_BLEND = 1,
 		ADD = 2,
 		SUBTRACT = 3,
-		OVERWRITE = 4
+		OVERWRITE = 4,
+		BLEND_MODE_UNDEFINED = 0x7FFFFFFF
 	};
 
 	enum ColorMode
@@ -46,7 +57,8 @@ namespace april
 		NORMAL = 0,
 		MULTIPLY = 1,
 		LERP = 2,
-		ALPHA_MAP = 3
+		ALPHA_MAP = 3,
+		COLOR_MODE_UNDEFINED = 0x7FFFFFFF
 	};
 
 	struct aprilExport DisplayMode
