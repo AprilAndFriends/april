@@ -184,9 +184,9 @@ namespace april
 		{
 			if (this->hasStoredProjectionMatrix)
 			{
-				april::window->handleFocusChangeEvent(true);
 				april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
 				this->hasStoredProjectionMatrix = false;
+				april::window->handleFocusChangeEvent(true);
 			}
 			this->running = april::window->updateOneFrame();
 		}
