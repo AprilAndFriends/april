@@ -33,15 +33,6 @@ namespace april
 		RENDER_OP_UNDEFINED = 0x7FFFFFFF
 	};
 
-	enum InputLayout
-	{
-		PLAIN = 1,
-		TEXTURED = 2,
-		COLORED = 3,
-		COLORED_TEXTURED = 4,
-		INPUT_LAYOUT_UNDEFINED = 0x7FFFFFFF
-	};
-	
 	enum BlendMode
 	{
 		DEFAULT = 0,

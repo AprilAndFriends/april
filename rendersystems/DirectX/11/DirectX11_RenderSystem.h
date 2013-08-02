@@ -45,6 +45,14 @@ namespace april
 		friend class DirectX11_Texture;
 		friend class DirectX11_VertexShader;
 
+		enum ColorInputLayout
+		{
+			CIL_IGNORE = 0,
+			CIL_MULTIPLY = 1,
+			CIL_PER_VERTEX = 2,
+			CIL_UNDEFINED = 0x7FFFFFFF
+		};
+	
 		struct ConstantBuffer
 		{
 			gmat4 matrix;
@@ -107,14 +115,8 @@ namespace april
 		DirectX11_Texture* renderTarget;
 		harray<DisplayMode> supportedDisplayModes;
 
-		DirectX11_VertexShader* vertexShaderPlain;
-		DirectX11_PixelShader* pixelShaderPlain;
-		DirectX11_VertexShader* vertexShaderTextured;
-		DirectX11_PixelShader* pixelShaderTextured;
-		DirectX11_VertexShader* vertexShaderColored;
-		DirectX11_PixelShader* pixelShaderColored;
-		DirectX11_VertexShader* vertexShaderColoredTextured;
-		DirectX11_PixelShader* pixelShaderColoredTextured;
+		DirectX11_VertexShader* vertexShaderDefault;
+		DirectX11_PixelShader* pixelShaderDefault;
 
 		void _configureDevice();
 		void _createSwapChain(int width, int height);
@@ -129,6 +131,9 @@ namespace april
 		void _setProjectionMatrix(const gmat4& matrix);
 		void _setPixelShader(DirectX11_PixelShader* shader);
 		void _setVertexShader(DirectX11_VertexShader* shader);
+
+		void _render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color, ColorInputLayout colorInputLayout);
+		void _render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color, ColorInputLayout colorInputLayout);
 
 	private:
 		ComPtr<ID3D11Device1> d3dDevice;
@@ -149,15 +154,13 @@ namespace april
 
 		D3D11_BUFFER_DESC vertexBufferDesc;
 		D3D11_SUBRESOURCE_DATA vertexBufferData;
+		D3D11_MAPPED_SUBRESOURCE mappedSubResource;
 		ComPtr<ID3D11Buffer> vertexBuffer;
 
 		ComPtr<ID3D11Buffer> constantBuffer;
 		ConstantBuffer constantBufferData;
 
-		ComPtr<ID3D11InputLayout> inputLayoutPlain;
-		ComPtr<ID3D11InputLayout> inputLayoutTextured;
-		ComPtr<ID3D11InputLayout> inputLayoutColored;
-		ComPtr<ID3D11InputLayout> inputLayoutColoredTextured;
+		ComPtr<ID3D11InputLayout> inputLayout;
 
 		DirectX11_VertexShader* _currentVertexShader;
 		DirectX11_PixelShader* _currentPixelShader;
@@ -165,14 +168,13 @@ namespace april
 		Texture::Filter _currentTextureFilter;
 		Texture::AddressMode _currentTextureAddressMode;
 		RenderOp _currentRenderOp;
-		InputLayout _currentInputLayout;
-
+		ID3D11Buffer** _currentVertexBuffer;
+		
 		bool matrixDirty;
 
 		void _setRenderOp(RenderOp renderOp);
-		void _setRenderInputLayout(InputLayout inputLayout);
-		void _updateVertexBuffer(int vertexSize, int nVertices, void* data);
-		void _updateConstantBuffer(Color color);
+		void _updateVertexBuffer(int nVertices, void* data);
+		void _updateConstantBuffer(Color color, bool useTexture, ColorInputLayout colorInputLayout);
 		void _updateBlendMode();
 		void _updateTexture(bool use);
 
