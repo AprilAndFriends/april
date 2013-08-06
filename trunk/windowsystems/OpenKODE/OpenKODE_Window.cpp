@@ -12,6 +12,8 @@
 	#include <TargetConditionals.h>
 	#if TARGET_OS_IPHONE
 		#import <UIKit/UIWindow.h>
+    #else
+        #define MAC_OS
 	#endif
 #endif
 
@@ -233,7 +235,6 @@ namespace april
 		{
 			delegate->onWindowSizeChanged(w, h, fullscreen);
 		}
-
 	}
 
 	void OpenKODE_Window::handleActivityChangeEvent(bool active)
@@ -246,6 +247,22 @@ namespace april
 
 	bool OpenKODE_Window::updateOneFrame()
 	{
+#ifdef MAC_OS
+        // MacOS has a bug where if you move the cursor to the dock area and back, it resets to the arrow cursor
+        // in Mac window we implemented a workarround, but in OpenKODE, depending on implementation, it may not work
+        // so the simplest solution would be to just reset the cursor every 60 frames and problem solved.
+        static int timer = 0;
+        if (!this->cursorVisible)
+        {
+            timer++;
+            if (timer > 60)
+            {
+                timer = 0;
+                KDint param = KD_CURSOR_NONE;
+                kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_CURSOR, &param);
+            }
+        }
+#endif
 		static bool result;
 		this->checkEvents();
 		// rendering
@@ -279,7 +296,7 @@ namespace april
 	{
 		switch (evt->type)
 		{
-		case KD_EVENT_QUIT:
+        case KD_EVENT_QUIT:
 			this->handleQuitRequest(false);
 			this->terminateMainLoop();
 			return true;
