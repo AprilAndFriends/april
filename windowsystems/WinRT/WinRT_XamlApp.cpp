@@ -151,14 +151,14 @@ namespace april
 			hresource::setCwd(normalize_path(hstr::from_unicode(Package::Current->InstalledLocation->Path->Data())));
 			hresource::setArchive("");
 			(*WinRT::Init)(WinRT::Args);
-			CompositionTarget::Rendering += ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender);
+			this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
 			this->initialized = true;
 		}
 	}
 
 	void WinRT_XamlApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
 	{
-		if (!this->snapped && !this->filled)
+		if (april::window != NULL && !this->snapped && !this->filled)
 		{
 			april::window->handleFocusChangeEvent(false);
 		}
@@ -166,7 +166,7 @@ namespace april
 
 	void WinRT_XamlApp::OnResume(_In_ Object^ sender, _In_ Object^ args)
 	{
-		if (!this->snapped && !this->filled)
+		if (april::window != NULL && !this->snapped && !this->filled)
 		{
 			april::window->handleFocusChangeEvent(true);
 		}
@@ -174,7 +174,7 @@ namespace april
 
 	void WinRT_XamlApp::OnRender(_In_ Object^ sender, _In_ Object^ args)
 	{
-		if (!this->running)
+		if (!this->running || april::window == NULL)
 		{
 			return;
 		}
@@ -236,6 +236,8 @@ namespace april
 		if (!this->running)
 		{
 			(*WinRT::Destroy)();
+			CompositionTarget::Rendering::remove(this->eventToken);
+			hlog::warn(april::logTag, "Manual closing in WinRT apps should not be used!");
 		}
 	}
 
@@ -253,12 +255,20 @@ namespace april
 	
 	void WinRT_XamlApp::OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
 	{
+		if (april::window == NULL)
+		{
+			return;
+		}
 		april::window->handleQuitRequest(false);
 		args->Handled = true;
 	}
 	
 	void WinRT_XamlApp::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
+		if (april::window == NULL)
+		{
+			return;
+		}
 		unsigned int id;
 		int index;
 		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
@@ -287,6 +297,10 @@ namespace april
 	
 	void WinRT_XamlApp::OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
+		if (april::window == NULL)
+		{
+			return;
+		}
 		unsigned int id;
 		int index;
 		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
@@ -318,6 +332,10 @@ namespace april
 	
 	void WinRT_XamlApp::OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
+		if (april::window == NULL)
+		{
+			return;
+		}
 		unsigned int id;
 		int index;
 		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
@@ -349,6 +367,10 @@ namespace april
 	
 	void WinRT_XamlApp::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
+		if (april::window == NULL)
+		{
+			return;
+		}
 		april::window->setInputMode(april::Window::MOUSE);
 		float _wheelDelta = (float)args->CurrentPoint->Properties->MouseWheelDelta / WHEEL_DELTA;
 		if (this->scrollHorizontal ^ args->CurrentPoint->Properties->IsHorizontalMouseWheel)
@@ -366,6 +388,10 @@ namespace april
 	
 	void WinRT_XamlApp::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
+		if (april::window == NULL)
+		{
+			return;
+		}
 		april::Key key = (april::Key)args->VirtualKey;
 		april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, key, 0);
 		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
@@ -377,6 +403,10 @@ namespace april
 	
 	void WinRT_XamlApp::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
+		if (april::window == NULL)
+		{
+			return;
+		}
 		april::Key key = (april::Key)args->VirtualKey;
 		april::window->queueKeyEvent(april::Window::AKEYEVT_UP, key, 0);
 		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
@@ -388,6 +418,10 @@ namespace april
 	
 	void WinRT_XamlApp::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
 	{
+		if (april::window == NULL)
+		{
+			return;
+		}
 		april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, AK_NONE, args->KeyCode);
 		args->Handled = true;
 	}
@@ -413,6 +447,10 @@ namespace april
 
 	void WinRT_XamlApp::_tryLoadLogoTexture()
 	{
+		if (april::rendersys == NULL)
+		{
+			return;
+		}
 		if (this->logoTexture != NULL)
 		{
 			return;
