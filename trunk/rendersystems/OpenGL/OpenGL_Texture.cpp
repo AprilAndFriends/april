@@ -40,6 +40,11 @@
 
 namespace april
 {
+    static inline bool isPower2(int x)
+    {
+        return (x > 0) && ((x & (x - 1)) == 0);
+    }
+    
 	OpenGL_Texture::OpenGL_Texture(chstr filename) : Texture()
 	{
 		this->format = FORMAT_ARGB;
@@ -67,6 +72,9 @@ namespace april
 		glGenTextures(1, &this->textureId);
 		this->_setCurrentTexture();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+        
+        // Non power of 2 textures in OpenGL, must have addressing mode set to clamp, otherwise they won't work.
+        if (!isPower2(w) || !isPower2(h)) setAddressMode(ADDRESS_CLAMP);
 	}
 
 	OpenGL_Texture::OpenGL_Texture(int w, int h, Format format, Type type, Color color) : Texture()
@@ -107,6 +115,9 @@ namespace april
 		{
 			this->clear();
 		}
+        
+        // Non power of 2 textures in OpenGL, must have addressing mode set to clamp, otherwise they won't work.
+        if (!isPower2(w) || !isPower2(h)) setAddressMode(ADDRESS_CLAMP);
 	}
 
 	OpenGL_Texture::~OpenGL_Texture()
@@ -207,6 +218,8 @@ namespace april
 		{
 			this->clear();
 		}
+        // Non power of 2 textures in OpenGL, must have addressing mode set to clamp, otherwise they won't work.
+        if (!isPower2(this->width) || !isPower2(this->height)) setAddressMode(ADDRESS_CLAMP);
 		return true;
 	}
 
