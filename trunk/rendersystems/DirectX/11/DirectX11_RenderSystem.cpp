@@ -718,14 +718,17 @@ namespace april
 	
 	void DirectX11_RenderSystem::clear(bool depth, grect rect, Color color)
 	{
-		const float clearColor[4] = {color.b_f(), color.g_f(), color.r_f(), color.a_f()};
-		D3D11_RECT area;
-		area.left = (int)rect.x;
-		area.top = (int)rect.y;
-		area.right = (int)(rect.x + rect.w);
-		area.bottom = (int)(rect.y + rect.h);
-		// TODO - should use current renderTargetView, not global one
-		this->d3dDeviceContext->ClearView(this->renderTargetView.Get(), clearColor, &area, 1);
+		if (rect.w > 0.0f && rect.h > 0.0f)
+		{
+			const float clearColor[4] = {color.b_f(), color.g_f(), color.r_f(), color.a_f()};
+			D3D11_RECT area;
+			area.left = (int)rect.x;
+			area.top = (int)rect.y;
+			area.right = (int)(rect.x + rect.w);
+			area.bottom = (int)(rect.y + rect.h);
+			// TODO - should use current renderTargetView, not global one
+			this->d3dDeviceContext->ClearView(this->renderTargetView.Get(), clearColor, &area, 1);
+		}
 	}
 
 	void DirectX11_RenderSystem::_updateVertexBuffer(int nVertices, void* data)
