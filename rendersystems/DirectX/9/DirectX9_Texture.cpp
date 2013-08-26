@@ -497,16 +497,17 @@ namespace april
 		{
 			return;
 		}
+		unsigned char* bits = (unsigned char*)lockRect.pBits;
 		if (x == 0 && dataWidth == this->width)
 		{
-			memcpy(lockRect.pBits + (y * this->width) * this->bpp, data, dataWidth * dataHeight * dataBpp);
+			memcpy(bits + (y * this->width) * this->bpp, data, dataWidth * dataHeight * dataBpp);
 		}
 		else
 		{
 			int w = hmin(this->width - x, dataWidth);
 			for_iter (j, 0, dataHeight)
 			{
-				memcpy(lockRect.pBits + ((y + j) * this->width + x) * this->bpp, data + (j * dataWidth) * dataBpp, w * dataBpp);
+				memcpy(bits + ((y + j) * this->width + x) * this->bpp, data + (j * dataWidth) * dataBpp, w * dataBpp);
 			}
 		}
 		this->_unlock(buffer, result, true);
