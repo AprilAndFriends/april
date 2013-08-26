@@ -112,8 +112,16 @@ namespace april
 		textureDesc.Width = this->width;
 		textureDesc.Height = this->height;
 		textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-		textureDesc.Usage = D3D11_USAGE_DEFAULT;
-		textureDesc.CPUAccessFlags = 0;
+		if (this->manualData == NULL)
+		{
+			textureDesc.Usage = D3D11_USAGE_DEFAULT;
+			textureDesc.CPUAccessFlags = 0;
+		}
+		else
+		{
+			textureDesc.Usage = D3D11_USAGE_DYNAMIC;
+			textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		}
 		textureDesc.MiscFlags = 0;
 		textureDesc.MipLevels = 1;
 		textureDesc.ArraySize = 1;
@@ -339,7 +347,7 @@ namespace april
 		{
 			hlog::error(april::logTag, "Unsupported format for setPixel()!");
 		}
-		this->_updateTexture(x, y, 1, 1);
+		this->_updateTexture();
 	}
 	
 	void DirectX11_Texture::fillRect(int x, int y, int w, int h, Color color)
@@ -399,7 +407,7 @@ namespace april
 		{
 			hlog::error(april::logTag, "Unsupported format for setPixel()!");
 		}
-		this->_updateTexture(x, y, w, h);
+		this->_updateTexture();
 	}
 	
 	void DirectX11_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
@@ -430,7 +438,7 @@ namespace april
 		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
 		unsigned char* p = this->manualData + (y * this->width + x) * this->bpp;
 		this->_blit(p, x, y, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
-		this->_updateTexture(x, y, sw, sh);
+		this->_updateTexture();
 	}
 	
 	void DirectX11_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
@@ -460,7 +468,7 @@ namespace april
 		sh = hmin(sh, dataHeight - sy);
 		unsigned char* p = this->manualData + (y * this->width + x) * this->bpp;
 		this->_stretchBlit(p, x, y, w, h, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
-		this->_updateTexture(x, y, w, h);
+		this->_updateTexture();
 	}
 	
 	void DirectX11_Texture::rotateHue(float degrees)
@@ -579,25 +587,37 @@ namespace april
 		this->_updateTexture();
 	}
 	
-	void DirectX11_Texture::_updateTexture()
+	void DirectX11_Texture::write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp)
 	{
-		this->_updateTexture(0, 0, this->width, this->height);
+		if (this->bpp != dataBpp)
+		{
+			hlog::errorf(april::logTag, "Texture '%s' does not have same BPP (%d) as source data (%d)!", this->filename.c_str(), this->bpp, dataBpp);
+			return;
+		}
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		if (x == 0 && dataWidth == this->width)
+		{
+			memcpy(this->manualData + (y * this->width) * this->bpp, data, dataWidth * dataHeight * dataBpp);
+		}
+		else
+		{
+			int w = hmin(this->width - x, dataWidth);
+			for_iter (j, 0, dataHeight)
+			{
+				memcpy(this->manualData + ((y + j) * this->width + x) * this->bpp, data + (j * dataWidth) * dataBpp, w * dataBpp);
+			}
+		}
+		this->_updateTexture();
 	}
 	
-	void DirectX11_Texture::_updateTexture(int x, int y, int w, int h)
+	void DirectX11_Texture::_updateTexture()
 	{
-		static D3D11_BOX box;
-		box.left = x;
-		box.right = x + w;
-		box.top = y;
-		box.bottom = y + h;
-		box.front = 0;
-		box.back = 1;
-		// using UpdateSubresource1() because UpdateSubresource() has problems with deferred contexts and non-NULL boxes
-		APRIL_D3D_DEVICE_CONTEXT->UpdateSubresource1(this->d3dTexture.Get(), 0, &box,
-			this->manualData + (y * this->width + x) * this->bpp, this->width * this->bpp, 0, D3D11_COPY_DISCARD);
+		static D3D11_MAPPED_SUBRESOURCE mappedSubResource;
+		APRIL_D3D_DEVICE_CONTEXT->Map(this->d3dTexture.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
+		memcpy(mappedSubResource.pData, this->manualData, this->width * this->height * this->bpp);
+		APRIL_D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
 	}
 
 }
-
 #endif

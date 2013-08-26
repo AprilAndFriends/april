@@ -482,6 +482,11 @@ namespace april
 	
 	void DirectX9_Texture::write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp)
 	{
+		if (this->bpp != dataBpp)
+		{
+			hlog::errorf(april::logTag, "Texture '%s' does not have same BPP (%d) as source data (%d)!", this->filename.c_str(), this->bpp, dataBpp);
+			return;
+		}
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
 		D3DLOCKED_RECT lockRect;
@@ -492,20 +497,16 @@ namespace april
 		{
 			return;
 		}
-		if (dataWidth == this->width)
+		if (x == 0 && dataWidth == this->width)
 		{
-			memcpy(lockRect.pBits, data, dataWidth * dataHeight * dataBpp);			
+			memcpy(lockRect.pBits + (y * this->width) * this->bpp, data, dataWidth * dataHeight * dataBpp);
 		}
 		else
 		{
-			unsigned char *dst = (unsigned char*) lockRect.pBits, *src = data;
-			unsigned char *dstEnd = dst + this->width * dataHeight * dataBpp;
-			int rowLen = dataWidth * dataBpp;
-			int dstInc = this->width * dataBpp, srcInc = rowLen;
-
-			for (; dst != dstEnd; dst += dstInc, src += srcInc)
+			int w = hmin(this->width - x, dataWidth);
+			for_iter (j, 0, dataHeight)
 			{
-				memcpy(dst, src, rowLen);
+				memcpy(lockRect.pBits + ((y + j) * this->width + x) * this->bpp, data + (j * dataWidth) * dataBpp, w * dataBpp);
 			}
 		}
 		this->_unlock(buffer, result, true);
