@@ -2,33 +2,32 @@
 
 cbuffer constantBuffer : register(b0)
 {
-	matrix cMatrix;
-	float4 cColor;
-	float4 cColorModeData;
+	min16float4x4 cMatrix;
+	min16float4 cColor;
+	min16float4 cColorModeData;
 };
 
 struct VertexShaderInput
 {
-	float3 position : POSITION;
-	float4 color : COLOR;
+	min16float3 position : POSITION;
+	min16float4 color : COLOR;
 	float2 tex : TEXCOORD0;
 };
 
 struct PixelShaderInput
 {
-	float4 position : SV_Position;
-	float4 color : COLOR;
+	min16float4 position : SV_Position;
+	min16float4 color : COLOR;
 	float2 tex : TEXCOORD0;
-	float4 colorModeData : COLOR1; // r is texture usage, g is color usage mode, b is color-mode, a is color-mode-alpha (used in LERP)
+	min16float4 colorModeData : COLOR1; // r is texture usage, g is color usage mode, b is color-mode, a is color-mode-alpha (used in LERP)
 };
 
 PixelShaderInput main(VertexShaderInput input)
 {
 	PixelShaderInput vertexShaderOutput;
-	float4 position = float4(input.position, 1.0f);
-	position = mul(position, cMatrix);
-	vertexShaderOutput.position = position;
-	if (cColorModeData.g > 1.999 && cColorModeData.g < 2.001) // PER_VERTEX color input layout
+	min16float4 position = min16float4(input.position, 1.0f);
+	vertexShaderOutput.position = mul(position, cMatrix);
+	if (cColorModeData.g > (min16float)1.99 && cColorModeData.g < (min16float)2.01) // PER_VERTEX color input layout
 	{
 		vertexShaderOutput.color = input.color;
 	}
