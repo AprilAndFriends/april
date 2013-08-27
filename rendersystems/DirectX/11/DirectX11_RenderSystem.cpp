@@ -221,7 +221,7 @@ namespace april
 
 	void DirectX11_RenderSystem::assignWindow(Window* window)
 	{
-		unsigned int creationFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
+		unsigned int creationFlags = D3D11_CREATE_DEVICE_PREVENT_INTERNAL_THREADING_OPTIMIZATIONS; // drivers on Tegra 3 with ARM CPU and VM drivers are broken, that's why this is needed
 #ifdef _DEBUG
 		creationFlags |= D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_DEBUGGABLE;
 #else
