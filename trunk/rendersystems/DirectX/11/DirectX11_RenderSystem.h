@@ -45,19 +45,10 @@ namespace april
 		friend class DirectX11_Texture;
 		friend class DirectX11_VertexShader;
 
-		enum ColorInputLayout
-		{
-			CIL_IGNORE = 0,
-			CIL_MULTIPLY = 1,
-			CIL_PER_VERTEX = 2,
-			CIL_UNDEFINED = 0x7FFFFFFF
-		};
-	
 		struct ConstantBuffer
 		{
 			gmat4 matrix;
-			gquat color;
-			gquat colorModeData;
+			gquat lerpAlpha; // must be, because of 16 byte alignment of constant buffer size
 		};
 
 		DirectX11_RenderSystem();
@@ -116,7 +107,12 @@ namespace april
 		harray<DisplayMode> supportedDisplayModes;
 
 		DirectX11_VertexShader* vertexShaderDefault;
-		DirectX11_PixelShader* pixelShaderDefault;
+		DirectX11_PixelShader* pixelShaderTexturedMultiply;
+		DirectX11_PixelShader* pixelShaderTexturedAlphaMap;
+		DirectX11_PixelShader* pixelShaderTexturedLerp;
+		DirectX11_PixelShader* pixelShaderMultiply;
+		DirectX11_PixelShader* pixelShaderAlphaMap;
+		DirectX11_PixelShader* pixelShaderLerp;
 
 		void _configureDevice();
 		void _createSwapChain(int width, int height);
@@ -129,11 +125,8 @@ namespace april
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
-		void _setPixelShader(DirectX11_PixelShader* shader);
-		void _setVertexShader(DirectX11_VertexShader* shader);
-
-		void _render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color, ColorInputLayout colorInputLayout);
-		void _render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color, ColorInputLayout colorInputLayout);
+		void _setPixelShader(bool useTexture);
+		void _setVertexShader();
 
 	private:
 		ComPtr<ID3D11Device1> d3dDevice;
@@ -164,7 +157,9 @@ namespace april
 
 		DirectX11_VertexShader* _currentVertexShader;
 		DirectX11_PixelShader* _currentPixelShader;
+		DirectX11_Texture* _currentTexture;
 		BlendMode _currentTextureBlendMode;
+		ColorMode _currentTextureColorMode;
 		Texture::Filter _currentTextureFilter;
 		Texture::AddressMode _currentTextureAddressMode;
 		RenderOp _currentRenderOp;
@@ -174,7 +169,7 @@ namespace april
 
 		void _setRenderOp(RenderOp renderOp);
 		void _updateVertexBuffer(int nVertices, void* data);
-		void _updateConstantBuffer(Color color, bool useTexture, ColorInputLayout colorInputLayout);
+		void _updateConstantBuffer();
 		void _updateBlendMode();
 		void _updateTexture(bool use);
 
