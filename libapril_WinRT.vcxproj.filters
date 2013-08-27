@@ -275,10 +275,25 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_Default.hlsl">
+    <FxCompile Include="rendersystems\DirectX\11\default-shaders\VertexShader_Default.hlsl">
       <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
     </FxCompile>
-    <FxCompile Include="rendersystems\DirectX\11\default-shaders\VertexShader_Default.hlsl">
+    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_Lerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_Multiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_TexturedLerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_TexturedMultiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
       <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
     </FxCompile>
   </ItemGroup>
@@ -286,5 +301,10 @@
     <Page Include="windowsystems\WinRT\WinRT_XamlInterface.xaml">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="rendersystems\DirectX\11\default-shaders\Shaders.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
