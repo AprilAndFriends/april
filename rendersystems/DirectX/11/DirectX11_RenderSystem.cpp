@@ -873,7 +873,10 @@ namespace april
 		if (this->_currentTexture != this->activeTexture)
 		{
 			this->_currentTexture = this->activeTexture;
-			this->d3dDeviceContext->PSSetShaderResources(0, 1, this->_currentTexture->d3dView.GetAddressOf());
+			if (this->_currentTexture != NULL)
+			{
+				this->d3dDeviceContext->PSSetShaderResources(0, 1, this->_currentTexture->d3dView.GetAddressOf());
+			}
 		}
 		if (this->_currentTextureFilter != this->activeTextureFilter ||
 			this->_currentTextureAddressMode != this->activeTextureAddressMode)
