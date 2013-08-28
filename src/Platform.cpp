@@ -29,13 +29,16 @@ namespace april
 		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
 		{
 			// TODO - move somewhere else, this file should be completely platform independent
+			if (window != NULL)
+			{
 #if !defined(_IOS) && !defined(_COCOA_WINDOW)
-			window->terminateMainLoop();
-			window->destroy();
+				window->terminateMainLoop();
+				window->destroy();
 #endif
 #if defined(_COCOA_WINDOW)
-			window->destroy();
+				window->destroy();
 #endif
+			}
 			passedStyle = (MessageBoxStyle)(passedStyle | AMSGSTYLE_MODAL);
 		}
 		messageBox_platform(title, text, buttonMask, passedStyle, customButtonTitles, callback);

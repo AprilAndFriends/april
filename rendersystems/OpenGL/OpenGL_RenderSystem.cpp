@@ -82,6 +82,8 @@ namespace april
 			return nVertices;
 		case PointList:
 			return nVertices;
+		default:
+			return nVertices;
 		}
 		return nVertices;
 	}
