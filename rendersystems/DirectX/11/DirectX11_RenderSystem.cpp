@@ -221,11 +221,11 @@ namespace april
 
 	void DirectX11_RenderSystem::assignWindow(Window* window)
 	{
-		unsigned int creationFlags = D3D11_CREATE_DEVICE_PREVENT_INTERNAL_THREADING_OPTIMIZATIONS; // drivers on Tegra 3 with ARM CPU and VM drivers are broken, that's why this is needed
-#ifdef _DEBUG
-		creationFlags |= D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_DEBUGGABLE;
+		unsigned int creationFlags = 0;
+#ifndef _DEBUG
+		creationFlags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
 #else
-		creationFlags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY; // prevents debug hooks and hacking
+		creationFlags |= D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_DEBUGGABLE;
 #endif
 		D3D_FEATURE_LEVEL featureLevels[] =
 		{
@@ -689,7 +689,7 @@ namespace april
 		this->activeVertexShader = (DirectX11_VertexShader*)vertexShader;
 	}
 
-	void DirectX11_RenderSystem::_setPixelShader(bool useTexture)
+	void DirectX11_RenderSystem::_updatePixelShader(bool useTexture)
 	{
 		DirectX11_PixelShader* pixelShader = this->activePixelShader;
 		if (pixelShader == NULL)
@@ -715,7 +715,7 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::_setVertexShader()
+	void DirectX11_RenderSystem::_updateVertexShader()
 	{
 		DirectX11_VertexShader* vertexShader = this->activeVertexShader;
 		if (vertexShader == NULL)
@@ -796,6 +796,7 @@ namespace april
 			this->vertexBuffer = nullptr;
 			this->vertexBufferData.pSysMem = data;
 			this->vertexBufferDesc.ByteWidth = size;
+			this->vertexBufferDesc.StructureByteStride = vertexSize;
 			this->d3dDevice->CreateBuffer(&this->vertexBufferDesc, &this->vertexBufferData, &this->vertexBuffer);
 			this->_currentVertexBuffer = NULL;
 		}
@@ -807,12 +808,9 @@ namespace april
 		}
 		if (this->_currentVertexBuffer != this->vertexBuffer.GetAddressOf())
 		{
-			this->_currentVertexBuffer = this->vertexBuffer.GetAddressOf();
-			static unsigned int stride;
-			static unsigned int offset;
-			stride = vertexSize;
-			offset = 0;
-			this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->_currentVertexBuffer, &stride, &offset);
+			static unsigned int stride = vertexSize;
+			static unsigned int offset = 0;
+			this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &stride, &offset);
 		}
 	}
 	
@@ -934,8 +932,8 @@ namespace april
 		}
 		this->_setRenderOp(renderOp);
 		this->_updateVertexBuffer(nVertices, ctv);
-		this->_setVertexShader();
-		this->_setPixelShader(false);
+		this->_updateVertexShader();
+		this->_updatePixelShader(false);
 		this->_updateConstantBuffer();
 		this->_updateBlendMode();
 		this->_updateTexture(false);
@@ -967,8 +965,8 @@ namespace april
 		}
 		this->_setRenderOp(renderOp);
 		this->_updateVertexBuffer(nVertices, ctv);
-		this->_setVertexShader();
-		this->_setPixelShader(true);
+		this->_updateVertexShader();
+		this->_updatePixelShader(true);
 		this->_updateConstantBuffer();
 		this->_updateBlendMode();
 		this->_updateTexture(true);
@@ -991,8 +989,8 @@ namespace april
 		}
 		this->_setRenderOp(renderOp);
 		this->_updateVertexBuffer(nVertices, ctv);
-		this->_setVertexShader();
-		this->_setPixelShader(false);
+		this->_updateVertexShader();
+		this->_updatePixelShader(false);
 		this->_updateConstantBuffer();
 		this->_updateBlendMode();
 		this->_updateTexture(false);
@@ -1013,8 +1011,8 @@ namespace april
 		}
 		this->_setRenderOp(renderOp);
 		this->_updateVertexBuffer(nVertices, ctv);
-		this->_setVertexShader();
-		this->_setPixelShader(true);
+		this->_updateVertexShader();
+		this->_updatePixelShader(true);
 		this->_updateConstantBuffer();
 		this->_updateBlendMode();
 		this->_updateTexture(true);
@@ -1044,7 +1042,7 @@ namespace april
 	
 	void DirectX11_RenderSystem::presentFrame()
 	{
-		this->swapChain->Present(0, 0);
+		this->swapChain->Present(2, 0);
 		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
 		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
 	}

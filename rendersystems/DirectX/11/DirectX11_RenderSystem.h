@@ -125,8 +125,8 @@ namespace april
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
-		void _setPixelShader(bool useTexture);
-		void _setVertexShader();
+		void _updatePixelShader(bool useTexture);
+		void _updateVertexShader();
 
 	private:
 		ComPtr<ID3D11Device1> d3dDevice;
