@@ -16,9 +16,15 @@
 #include "RenderSystem.h"
 #include "Window.h"
 #include "WinRT.h"
+#include "WinRT_ViewSource.h"
+#include "WinRT_View.h"
 #include "WinRT_XamlApp.h"
 
+#ifndef _WINP8
 using namespace Windows::UI::Xaml;
+#else
+using namespace Windows::ApplicationModel::Core;
+#endif
 
 int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {
@@ -32,12 +38,16 @@ int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(
 	}
 	april::WinRT::Init = anAprilInit;
 	april::WinRT::Destroy = anAprilDestroy;
+#ifndef _WINP8
     Application::Start(ref new ApplicationInitializationCallback(
         [](ApplicationInitializationCallbackParams^ p)
 		{
             april::WinRT::App = ref new april::WinRT_XamlApp();
         }
 	));
+#else
+	CoreApplication::Run(ref new april::WinRT_ViewSource());
+#endif
 	return 0;
 }
 #endif

@@ -11,7 +11,7 @@
 /// 
 /// Defines a WinRT View.
 
-#ifdef _WINRT_WINDOW
+#if defined(_WINRT_WINDOW) && !defined(_WINP8)
 #ifndef APRIL_WINRT_XAML_INTERFACE_H
 #define APRIL_WINRT_XAML_INTERFACE_H
 

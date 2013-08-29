@@ -7,7 +7,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _WINRT_WINDOW
+#if defined(_WINRT_WINDOW) && !defined(_WINP8)
 #include "pch.h"
 
 #include <hltypes/hfile.h>

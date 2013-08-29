@@ -209,6 +209,9 @@
     <ClCompile Include="src\timers\TimerWin.cpp" />
     <ClCompile Include="src\VertexShader.cpp" />
     <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="windowsystems\WinRT\WinP8_Window.cpp" />
+    <ClCompile Include="windowsystems\WinRT\WinRT_View.cpp" />
+    <ClCompile Include="windowsystems\WinRT\WinRT_ViewSource.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_XamlApp.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp" />
@@ -246,6 +249,8 @@
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_VertexShader.h" />
     <ClInclude Include="src\egl.h" />
     <ClInclude Include="windowsystems\WinRT\pch.h" />
+    <ClInclude Include="windowsystems\WinRT\WinRT_View.h" />
+    <ClInclude Include="windowsystems\WinRT\WinRT_ViewSource.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_XamlApp.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_Window.h" />

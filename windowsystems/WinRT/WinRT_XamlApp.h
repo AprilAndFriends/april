@@ -11,7 +11,7 @@
 /// 
 /// Defines a WinRT XAML App.
 
-#ifdef _WINRT_WINDOW
+#if defined(_WINRT_WINDOW) && !defined(_WINP8)
 #ifndef APRIL_WINRT_XAML_APP_H
 #define APRIL_WINRT_XAML_APP_H
 

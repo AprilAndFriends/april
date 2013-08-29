@@ -26,6 +26,7 @@
 #include "Keys.h"
 #include "Platform.h"
 #include "Timer.h"
+#include "WinRT.h"
 #include "WinRT_Window.h"
 
 #define SHADER_PATH "april/"
@@ -90,7 +91,9 @@ namespace april
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
+#ifndef _WINP8
 		this->swapChainNative = nullptr;
+#endif
 		this->rasterState = nullptr;
 		this->renderTargetView = nullptr;
 		this->blendStateAlpha = nullptr;
@@ -144,7 +147,9 @@ namespace april
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
+#ifndef _WINP8
 		this->swapChainNative = nullptr;
+#endif
 		this->rasterState = nullptr;
 		this->renderTargetView = nullptr;
 		this->blendStateAlpha = nullptr;
@@ -203,7 +208,9 @@ namespace april
 		this->blendStateOverwrite = nullptr;
 		this->renderTargetView = nullptr;
 		this->rasterState = nullptr;
+#ifndef _WINP8
 		this->swapChainNative = nullptr;
+#endif
 		this->swapChain = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->d3dDevice = nullptr;
@@ -388,6 +395,7 @@ namespace april
 		swapChainDesc.SampleDesc.Quality = 0;
 		swapChainDesc.BufferCount = 2;
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+#ifndef _WINP8
 		hr = dxgiFactory->CreateSwapChainForComposition(this->d3dDevice.Get(), &swapChainDesc, nullptr, &this->swapChain);
 		if (FAILED(hr))
 		{
@@ -396,6 +404,14 @@ namespace april
 		IInspectable* panelInspectable = (IInspectable*)reinterpret_cast<IInspectable*>(WinRT::Interface);
 		panelInspectable->QueryInterface(__uuidof(ISwapChainBackgroundPanelNative), (void**)&this->swapChainNative);
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
+#else
+		hr = dxgiFactory->CreateSwapChainForCoreWindow(this->d3dDevice.Get(),
+			reinterpret_cast<IUnknown*>(april::WinRT::View->getCoreWindow()), &swapChainDesc, NULL, &this->swapChain);
+		if (FAILED(hr))
+		{
+			throw hl_exception("Unable to create swap chain!");
+		}
+#endif
 	}
 
 	void DirectX11_RenderSystem::_configureDevice()
