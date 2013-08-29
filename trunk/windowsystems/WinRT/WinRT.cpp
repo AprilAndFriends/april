@@ -20,8 +20,12 @@ namespace april
 	void (*WinRT::Init)(const harray<hstr>&) = NULL;
 	void (*WinRT::Destroy)() = NULL;
 	harray<hstr> WinRT::Args;
+#ifndef _WINP8
 	WinRT_XamlApp^ WinRT::App = nullptr;
 	WinRT_XamlInterface^ WinRT::Interface = nullptr;
+#else
+	WinRT_View^ WinRT::View = nullptr;
+#endif
 	
 }
 #endif

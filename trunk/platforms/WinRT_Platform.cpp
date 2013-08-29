@@ -7,7 +7,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#ifdef _WINRT_WINDOW
+#ifdef _WINRT
 
 #include <gtypes/Vector2.h>
 #include <hltypes/hlog.h>
@@ -23,9 +23,12 @@
 #include "WinRT.h"
 
 using namespace Windows::Foundation::Collections;
-using namespace Windows::Globalization;
 using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Popups;
+#ifndef _WINP8
+using namespace Windows::Globalization;
+#else
+#endif
 
 namespace april
 {
@@ -50,11 +53,13 @@ namespace april
 			info.displayDpi = (int)DisplayProperties::LogicalDpi;
 			// other
 			info.locale = "";
+#ifndef _WINP8 // TODOp8
 			for (IIterator<Platform::String^>^ it = ApplicationLanguages::Languages->First(); it->HasCurrent; it->MoveNext())
 			{
 				info.locale = _HL_PSTR_TO_HSTR(it->Current);
 				break;
 			}
+#endif
 			if (info.locale == "")
 			{
 				info.locale = "en"; // default is "en"
@@ -78,7 +83,11 @@ namespace april
 
 	DeviceType getDeviceType()
 	{
+#ifndef _WINP8
 		return DEVICE_WINDOWS_8;
+#else
+		return DEVICE_WINDOWS_PHONE_8;
+#endif
 	}
 
 	hstr getPackageName()
@@ -130,6 +139,7 @@ namespace april
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
+#ifndef _WINP8 // TODOp8
 		currentCallback = callback;
 		_HL_HSTR_TO_PSTR_DEF(text);
 		_HL_HSTR_TO_PSTR_DEF(title);
@@ -178,6 +188,9 @@ namespace april
 			dialog->CancelCommandIndex = 1;
 		}
 		dialog->ShowAsync();
+#else
+		hlog::warn(april::logTag, "Windows Phione 8 does not support MessageBox()!)");
+#endif
 	}
 
 }

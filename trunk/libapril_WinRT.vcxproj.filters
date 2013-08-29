@@ -60,6 +60,9 @@
     <Filter Include="Source Files\delegates">
       <UniqueIdentifier>{8318e614-93bf-4fef-8462-0bfeef0094de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\windowsystems\WinP8">
+      <UniqueIdentifier>{4a7d87e9-fe35-4af8-ab25-0b0134d55854}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -167,6 +170,15 @@
     <ClCompile Include="windowsystems\WinRT\WinRT.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT_View.cpp">
+      <Filter>Source Files\windowsystems\WinP8</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT_ViewSource.cpp">
+      <Filter>Source Files\windowsystems\WinP8</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinP8_Window.cpp">
+      <Filter>Source Files\windowsystems\WinRT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -266,6 +278,12 @@
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
     <ClInclude Include="windowsystems\WinRT\WinRT.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_View.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_ViewSource.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
   </ItemGroup>

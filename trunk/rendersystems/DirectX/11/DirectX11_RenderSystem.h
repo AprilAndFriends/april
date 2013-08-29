@@ -15,8 +15,12 @@
 #ifndef APRIL_DIRECTX11_RENDER_SYSTEM_H
 #define APRIL_DIRECTX11_RENDER_SYSTEM_H
 
-#include <d3d11_1.h>
+#ifndef _WINP8
 #include <windows.ui.xaml.media.dxinterop.h>
+using namespace Windows::UI::Xaml::Controls;
+#endif
+
+#include <d3d11_1.h>
 
 #include <gtypes/Matrix4.h>
 #include <gtypes/Quaternion.h>
@@ -29,7 +33,6 @@
 
 using namespace Microsoft::WRL;
 using namespace Windows::UI::Core;
-using namespace Windows::UI::Xaml::Controls;
 
 namespace april
 {
@@ -132,7 +135,9 @@ namespace april
 		ComPtr<ID3D11Device1> d3dDevice;
 		ComPtr<ID3D11DeviceContext1> d3dDeviceContext;
 		ComPtr<IDXGISwapChain1> swapChain;
+#ifndef _WINP8
 		ComPtr<ISwapChainBackgroundPanelNative>	swapChainNative;
+#endif
 
 		ComPtr<ID3D11RasterizerState> rasterState;
 		ComPtr<ID3D11RenderTargetView> renderTargetView;
