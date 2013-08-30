@@ -54,10 +54,18 @@ namespace april
 			// other
 			info.locale = "";
 #ifndef _WINP8 // TODOp8
-			for (IIterator<Platform::String^>^ it = ApplicationLanguages::Languages->First(); it->HasCurrent; it->MoveNext())
+			IIterator<Platform::String^>^ it = ApplicationLanguages::Languages->First();
+			if (it->HasCurrent)
 			{
 				info.locale = _HL_PSTR_TO_HSTR(it->Current);
-				break;
+			}
+#else
+			unsigned int count = 0;
+			unsigned int length = 256;
+			wchar_t locale[256] = {0};
+			if (GetUserPreferredUILanguages(MUI_LANGUAGE_NAME, &count, locale, &length) && count > 0 && length > 0)
+			{
+				info.locale = hstr::from_unicode(locale);
 			}
 #endif
 			if (info.locale == "")
