@@ -25,10 +25,6 @@
 using namespace Windows::Foundation::Collections;
 using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Popups;
-#ifndef _WINP8
-using namespace Windows::Globalization;
-#else
-#endif
 
 namespace april
 {
@@ -53,26 +49,26 @@ namespace april
 			info.displayDpi = (int)DisplayProperties::LogicalDpi;
 			// other
 			info.locale = "";
-#ifndef _WINP8 // TODOp8
-			IIterator<Platform::String^>^ it = ApplicationLanguages::Languages->First();
+#ifndef _WINP8
+			IIterator<Platform::String^>^ it = Windows::Globalization::ApplicationLanguages::Languages->First();
 			if (it->HasCurrent)
 			{
-				info.locale = _HL_PSTR_TO_HSTR(it->Current);
+				info.locale = _HL_PSTR_TO_HSTR(it->Current).lower();
 			}
 #else
 			unsigned int count = 0;
-			unsigned int length = 256;
-			wchar_t locale[256] = {0};
+			unsigned int length = LOCALE_NAME_MAX_LENGTH;
+			wchar_t locale[LOCALE_NAME_MAX_LENGTH] = {0};
 			if (GetUserPreferredUILanguages(MUI_LANGUAGE_NAME, &count, locale, &length) && count > 0 && length > 0)
 			{
-				info.locale = hstr::from_unicode(locale);
+				info.locale = hstr::from_unicode(locale).lower();
 			}
 #endif
 			if (info.locale == "")
 			{
 				info.locale = "en"; // default is "en"
 			}
-			else if (info.locale == "pt_PT")
+			else if (info.locale == "pt_pt" || info.locale == "pt-pt")
 			{
 				info.locale = "pt-PT";
 			}
@@ -81,7 +77,6 @@ namespace april
 				info.locale = info.locale.utf8_substr(0, 2);
 			}
 		}
-		// TODO
 		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
 			info.maxTextureSize = april::rendersys->getMaxTextureSize();
