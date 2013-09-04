@@ -56,8 +56,8 @@ namespace april
 				info.locale = _HL_PSTR_TO_HSTR(it->Current).lower();
 			}
 #else
-			unsigned int count = 0;
-			unsigned int length = LOCALE_NAME_MAX_LENGTH;
+			unsigned long count = 0;
+			unsigned long length = LOCALE_NAME_MAX_LENGTH;
 			wchar_t locale[LOCALE_NAME_MAX_LENGTH] = {0};
 			if (GetUserPreferredUILanguages(MUI_LANGUAGE_NAME, &count, locale, &length) && count > 0 && length > 0)
 			{
@@ -142,7 +142,7 @@ namespace april
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
-#ifndef _WINP8 // TODOp8
+#ifndef _WINP8
 		currentCallback = callback;
 		_HL_HSTR_TO_PSTR_DEF(text);
 		_HL_HSTR_TO_PSTR_DEF(title);
@@ -192,7 +192,8 @@ namespace april
 		}
 		dialog->ShowAsync();
 #else
-		hlog::warn(april::logTag, "Windows Phione 8 does not support MessageBox()!)");
+		// TODOp8 - if Microsoft ever decides to allow usage of basic features on Windows Phone 8, this has to be implemented
+		hlog::error(april::logTag, "Windows Phone 8 does not support messageBox()!)");
 #endif
 	}
 
