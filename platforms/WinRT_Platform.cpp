@@ -95,9 +95,7 @@ namespace april
 
 	hstr getPackageName()
 	{
-		// TODO
-		hlog::warn(april::logTag, "Not implemented getPackageName() on this platform.");
-		return "";
+		return _HL_PSTR_TO_HSTR(Windows::ApplicationModel::Package::Current->Id->Name);
 	}
 
 	hstr getUserDataPath()
