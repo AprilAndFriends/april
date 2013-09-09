@@ -3,7 +3,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <PreprocessorDefinitions>BUILDING_APRIL;APRIL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-	  <AdditionalIncludeDirectories>../../include;../include;../png;../jpg;src;include/april;windowsystems/Win32;windowsystems/SDL;windowsystems/AndroidJNI;windowsystems/OpenKODE;rendersystems/DirectX;rendersystems/DirectX/9;rendersystems/OpenGL;rendersystems/OpenGL/1;rendersystems/OpenGL/ES;rendersystems/OpenGL/ES/1;../include/zlib;../hltypes/include;../gtypes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+	  <AdditionalIncludeDirectories>include/april;windowsystems/WinRT;rendersystems/DirectX;rendersystems/DirectX/11;../include/zlib;../hltypes/include;../gtypes/include;../jpg;../png;../zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
