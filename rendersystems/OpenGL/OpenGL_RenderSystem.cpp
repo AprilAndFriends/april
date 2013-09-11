@@ -58,7 +58,9 @@
 #include "OpenGL_RenderSystem.h"
 #include "OpenGL_Texture.h"
 #include "Platform.h"
+#ifdef _WIN32_WINDOW
 #include "Win32_Window.h"
+#endif
 
 #define MAX_VERTEX_COUNT 65536
 

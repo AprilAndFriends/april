@@ -63,6 +63,30 @@
     <Filter Include="Source Files\windowsystems\WinP8">
       <UniqueIdentifier>{4a7d87e9-fe35-4af8-ab25-0b0134d55854}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL">
+      <UniqueIdentifier>{4ec46024-f445-482c-9449-86e4c6764491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL\ES">
+      <UniqueIdentifier>{65a036dc-b43b-4749-9ade-5fed0135a25a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\OpenGL\ES\1">
+      <UniqueIdentifier>{64903a66-cc9c-4158-b243-f00b821e9833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL">
+      <UniqueIdentifier>{b191cad0-48aa-4783-9708-6e700de76e94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL\ES">
+      <UniqueIdentifier>{2138d704-1896-48d6-b90d-e84b94eafd32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\OpenGL\ES\1">
+      <UniqueIdentifier>{c0fd5a07-60c3-4200-95ae-409a57b9d73c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\windowsystems\OpenKODE">
+      <UniqueIdentifier>{0541bba8-e20e-4a8a-84c1-670ad29baf5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\windowsystems\OpenKODE">
+      <UniqueIdentifier>{250f9bc5-7173-4bc0-accd-2f330c864aca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -179,6 +203,39 @@
     <ClCompile Include="windowsystems\WinRT\WinP8_Window.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES\1</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES\1</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_State.cpp">
+      <Filter>Source Files\rendersystems\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp">
+      <Filter>Source Files\rendersystems\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Keys.cpp">
+      <Filter>Source Files\windowsystems\OpenKODE</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Window.cpp">
+      <Filter>Source Files\windowsystems\OpenKODE</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\OpenKODE_main.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="platforms\OpenKODE_Platform.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -286,6 +343,33 @@
     <ClInclude Include="windowsystems\WinRT\WinRT_ViewSource.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES\1</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES\1</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\OpenGL_State.h">
+      <Filter>Header Files\rendersystems\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_Texture.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\OpenKODE\OpenKODE_Keys.h">
+      <Filter>Header Files\windowsystems\OpenKODE</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\OpenKODE\OpenKODE_Window.h">
+      <Filter>Header Files\windowsystems\OpenKODE</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="fileproperties.rc">
@@ -316,13 +400,11 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="windowsystems\WinRT\WinRT_XamlInterface.xaml">
-      <Filter>Source Files\windowsystems\WinRT</Filter>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="rendersystems\DirectX\11\default-shaders\Shaders.hlsli">
       <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </None>
+    <None Include="windowsystems\WinRT\WinRT_XamlInterface.xaml">
+      <Filter>Source Files\windowsystems\WinRT</Filter>
     </None>
   </ItemGroup>
 </Project>
