@@ -73,7 +73,10 @@ namespace april
 			case KD_EVENT_LOWMEM:
 			{
 				hlog::write(logTag, "Received libKD memory warning!");
-				if (april::window) april::window->handleLowMemoryWarning();
+				if (april::window != NULL)
+				{
+					april::window->handleLowMemoryWarning();
+				}
 				break;
 			}
 		}
@@ -140,19 +143,17 @@ namespace april
 #ifdef _EGL
 		april::egl->create();
 #endif
-		
 		kdInstallCallback(&lowMemoryEventCallback, KD_EVENT_LOWMEM, NULL);
 		return true;
 	}
 	
 	bool OpenKODE_Window::destroy()
 	{
-		kdInstallCallback(NULL, KD_EVENT_LOWMEM, NULL);
-
 		if (!Window::destroy())
 		{
 			return false;
 		}
+		kdInstallCallback(NULL, KD_EVENT_LOWMEM, NULL);
 		this->virtualKeyboardVisible = false;
 #ifdef _EGL
 		april::egl->destroy();
@@ -205,10 +206,10 @@ namespace april
 #if TARGET_OS_IPHONE
 		UIWindow* window = [UIApplication sharedApplication].keyWindow;
 		if (!window)
+		{
 			window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-		
+		}
 		UIViewController* controller = [window rootViewController];
-
 		return controller;
 #elif defined(_EGL)
 		return april::egl->hWnd;
@@ -227,19 +228,16 @@ namespace april
 		this->fullscreen = fullscreen;
 		KDint32 size[] = {w, h};
 		kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_SIZE, size);
-		
-		april::SystemDelegate* delegate = this->getSystemDelegate();
-		april::rendersys->setViewport(grect(0, 0, w, h));
-
-		if (delegate)
+		april::rendersys->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
+		if (this->systemDelegate != NULL)
 		{
-			delegate->onWindowSizeChanged(w, h, fullscreen);
+			this->systemDelegate->onWindowSizeChanged(w, h, fullscreen);
 		}
 	}
 
 	void OpenKODE_Window::handleActivityChangeEvent(bool active)
 	{
-		if (active != this->focused)
+		if (this->focused != active)
 		{
 			this->handleFocusChangeEvent(active);
 		}
@@ -248,26 +246,28 @@ namespace april
 	bool OpenKODE_Window::updateOneFrame()
 	{
 #ifdef MAC_OS
-        // MacOS has a bug where if you move the cursor to the dock area and back, it resets to the arrow cursor
-        // in Mac window we implemented a workarround, but in OpenKODE, depending on implementation, it may not work
-        // so the simplest solution would be to just reset the cursor every 60 frames and problem solved.
-        static int timer = 0;
-        if (!this->cursorVisible)
-        {
-            timer++;
-            if (timer > 60)
-            {
-                timer = 0;
-                KDint param = KD_CURSOR_NONE;
-                kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_CURSOR, &param);
-            }
-        }
+		// MacOS has a bug where if you move the cursor to the dock area and back, it resets to the arrow cursor
+		// in Mac window we implemented a workarround, but in OpenKODE, depending on implementation, it may not work
+		// so the simplest solution would be to just reset the cursor every 60 frames and problem solved.
+		static int timer = 0;
+		if (!this->cursorVisible)
+		{
+			timer++;
+			if (timer > 60)
+			{
+				timer = 0;
+				KDint param = KD_CURSOR_NONE;
+				kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_CURSOR, &param);
+			}
+		}
 #endif
 		static bool result;
 		this->checkEvents();
 		// rendering
 		result = Window::updateOneFrame();
+#ifndef _WINRT
 		this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
+#endif
 		return result;
 	}
 	
@@ -281,22 +281,21 @@ namespace april
 	int OpenKODE_Window::getAprilTouchIndex(int kdIndex)
 	{
 		int index = 0;
-		for (int i = 0; i <= kdIndex; i++)
+		for_iter (i, 0, kdIndex + 1)
 		{
 			if (this->kdTouches[i])
 			{
 				index++;
 			}
 		}
-		
-		return index -1;
+		return (index - 1);
 	}
 
 	bool OpenKODE_Window::_processEvent(const KDEvent* evt)
 	{
 		switch (evt->type)
 		{
-        case KD_EVENT_QUIT:
+		case KD_EVENT_QUIT:
 			this->handleQuitRequest(false);
 			this->terminateMainLoop();
 			return true;
@@ -320,9 +319,11 @@ namespace april
 			return true;
 		case KD_EVENT_WINDOW_FOCUS:
 			{
-				bool active = evt->data.windowfocus.focusstate != 0;
+				bool active = (evt->data.windowfocus.focusstate != 0);
 				if (this->focused != active)
+				{
 					this->handleFocusChangeEvent(active);
+				}
 			}
 			return true;
 		case KD_EVENT_INPUT:
@@ -347,7 +348,6 @@ namespace april
 #ifdef _PC_INPUT
 				int index = evt->data.inputpointer.index;
 				gvec2 pos((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
-
 				if (index == KD_INPUT_POINTER_X || index == KD_INPUT_POINTER_Y)
 				{
 					this->queueMouseEvent(Window::AMOUSEEVT_MOVE, pos, AK_NONE);
@@ -360,8 +360,7 @@ namespace april
 					state[0] = s & 1;
 					state[1] = s & 2;
 					state[2] = s & 4;
-					
-					for (int i = 0; i < 3; i++)
+					for_iter (i, 0, 3)
 					{
 						if (state[i] != this->kdTouches[i])
 						{							
@@ -373,20 +372,23 @@ namespace april
 				}
 				else if (index == KD_INPUT_POINTER_WHEEL)
 				{
-					int deltaV = -short(evt->data.inputpointer.select >> 16);
-					int deltaH = -short(evt->data.inputpointer.select & 0xFFFF);
+					int deltaV = -(short)(evt->data.inputpointer.select >> 16);
+					int deltaH = -(short)(evt->data.inputpointer.select & 0xFFFF);
 					this->queueMouseEvent(Window::AMOUSEEVT_SCROLL, gvec2(deltaH * 0.2f, deltaV * 0.2f), AK_NONE);
 				}
 #else
-				int i, j, index = evt->data.inputpointer.index;
+				int i = 0;
+				int j = 0;
+				int index = evt->data.inputpointer.index;
 				gvec2 pos((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
-				for (i = 0, j = 0; i < 4; i++, j += KD_IO_POINTER_STRIDE)
+				for (; i < 4; i++, j += KD_IO_POINTER_STRIDE)
 				{
 					if (index == KD_INPUT_POINTER_X + j || index == KD_INPUT_POINTER_Y + j)
 					{
 						this->queueTouchEvent(Window::AMOUSEEVT_MOVE, pos, this->getAprilTouchIndex(i));
+						break;
 					}
-					else if (index == KD_INPUT_POINTER_SELECT + j)
+					if (index == KD_INPUT_POINTER_SELECT + j)
 					{
 						if (evt->data.inputpointer.select != 0)
 						{
@@ -398,10 +400,8 @@ namespace april
 							this->queueTouchEvent(Window::AMOUSEEVT_UP, pos, this->getAprilTouchIndex(i));
 							this->kdTouches[i] = false;
 						}
+						break;
 					}
-					else
-						continue;
-					break;
 				}
 				if (i == 0)
 				{
@@ -434,7 +434,7 @@ namespace april
 		}
 		Window::checkEvents();
 	}
-
+	
 	void OpenKODE_Window::beginKeyboardHandling()
 	{
 		kdKeyboardShow(this->kdWindow, 1);
@@ -444,7 +444,7 @@ namespace april
 			this->systemDelegate->onVirtualKeyboardVisibilityChanged(true);
 		}
 	}
-
+	
 	void OpenKODE_Window::terminateKeyboardHandling()
 	{
 		kdKeyboardShow(this->kdWindow, 0);

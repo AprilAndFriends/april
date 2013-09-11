@@ -6,8 +6,8 @@
 ///
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
-#ifdef _OPENKODE_WINDOW
 
+#ifdef _OPENKODE_WINDOW
 #include <KD/kd.h>
 #include <KD/kd_keyboard.h>
 #include <hltypes/hlog.h>
@@ -21,8 +21,10 @@ namespace april
 	
 	Key kd2april(int kdKeyCode)
 	{
-		if (gKeyMap.has_key(kdKeyCode)) return gKeyMap[kdKeyCode];
-
+		if (gKeyMap.has_key(kdKeyCode))
+		{
+			return gKeyMap[kdKeyCode];
+		}
 #ifdef _DEBUG
 		hlog::writef(logTag, "Unknown key code: %u", kdKeyCode);
 #endif
