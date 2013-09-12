@@ -403,8 +403,10 @@
     <None Include="rendersystems\DirectX\11\default-shaders\Shaders.hlsli">
       <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
     </None>
-    <None Include="windowsystems\WinRT\WinRT_XamlInterface.xaml">
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="windowsystems\WinRT\WinRT_XamlInterface.xaml">
       <Filter>Source Files\windowsystems\WinRT</Filter>
-    </None>
+    </Page>
   </ItemGroup>
 </Project>
