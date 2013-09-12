@@ -37,7 +37,7 @@
                                   '$(Configuration)|$(Platform)'=='Release_OpenGLES1|Win32' or
                                   '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES1|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;_EGL;_OPENKODE;_OPENKODE_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;_EGL;_OPENKODE;_OPENKODE_WINDOW;_PC_INPUT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libGLES_CM.lib;%(AdditionalDependencies)</AdditionalDependencies>

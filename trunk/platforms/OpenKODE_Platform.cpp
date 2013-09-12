@@ -117,7 +117,12 @@ namespace april
 
 	hstr getPackageName()
 	{
+#ifndef _WINRT
 		return hstr(kdGetenv("KD_APP_ID"));
+#else
+		return _HL_PSTR_TO_HSTR(Windows::ApplicationModel::Package::Current->Id->Name);
+#endif
+
 	}
 
 	hstr getUserDataPath()

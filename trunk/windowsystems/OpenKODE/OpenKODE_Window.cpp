@@ -253,7 +253,7 @@ namespace april
 		if (!this->cursorVisible)
 		{
 			timer++;
-			if (timer > 60)
+			if (timer >= 60)
 			{
 				timer = 0;
 				KDint param = KD_CURSOR_NONE;

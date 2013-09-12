@@ -35,7 +35,7 @@ namespace april
 				window->terminateMainLoop();
 				window->destroy();
 #endif
-#if defined(_COCOA_WINDOW)
+#ifdef _COCOA_WINDOW
 				window->destroy();
 #endif
 			}
