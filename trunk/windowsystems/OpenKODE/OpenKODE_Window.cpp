@@ -357,9 +357,9 @@ namespace april
 				{
 					int s = evt->data.inputpointer.select;
 					bool state[3];
-					state[0] = s & 1;
-					state[1] = s & 2;
-					state[2] = s & 4;
+					state[0] = ((s & 1) != 0);
+					state[1] = ((s & 2) != 0);
+					state[2] = ((s & 4) != 0);
 					for_iter (i, 0, 3)
 					{
 						if (state[i] != this->kdTouches[i])
