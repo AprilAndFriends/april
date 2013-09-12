@@ -51,12 +51,13 @@ namespace april
 		void terminateKeyboardHandling();
 
 	protected:
-		int getAprilTouchIndex(int kdIndex);
+		int _getAprilTouchIndex(int kdIndex);
 		
 		bool kdTouches[16];
 		KDWindow* kdWindow;
 		bool virtualKeyboardVisible;
 
+		bool _isMousePointer();
 		bool _processEvent(const KDEvent* evt);
 
 	};

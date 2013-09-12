@@ -278,7 +278,7 @@ namespace april
 #endif
 	}
 	
-	int OpenKODE_Window::getAprilTouchIndex(int kdIndex)
+	int OpenKODE_Window::_getAprilTouchIndex(int kdIndex)
 	{
 		int index = 0;
 		for_iter (i, 0, kdIndex + 1)
@@ -345,69 +345,72 @@ namespace april
 			return true;
 		case KD_EVENT_INPUT_POINTER:
 			{
-#ifdef _PC_INPUT
 				int index = evt->data.inputpointer.index;
 				gvec2 pos((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
-				if (index == KD_INPUT_POINTER_X || index == KD_INPUT_POINTER_Y)
+				if (this->_isMousePointer())
 				{
-					this->queueMouseEvent(Window::AMOUSEEVT_MOVE, pos, AK_NONE);
-					this->cursorPosition = pos;
-				}
-				else if (index == KD_INPUT_POINTER_SELECT)
-				{
-					int s = evt->data.inputpointer.select;
-					bool state[3];
-					state[0] = ((s & 1) != 0);
-					state[1] = ((s & 2) != 0);
-					state[2] = ((s & 4) != 0);
-					for_iter (i, 0, 3)
+					this->setInputMode(MOUSE);
+					if (index == KD_INPUT_POINTER_X || index == KD_INPUT_POINTER_Y)
 					{
-						if (state[i] != this->kdTouches[i])
-						{							
-							this->queueMouseEvent(state[i] ? Window::AMOUSEEVT_DOWN : Window::AMOUSEEVT_UP, pos, (i == 0 ? AK_LBUTTON : (i == 1 ? AK_RBUTTON : AK_MBUTTON)));
-						}
+						this->queueMouseEvent(Window::AMOUSEEVT_MOVE, pos, AK_NONE);
+						this->cursorPosition = pos;
 					}
-					memcpy(this->kdTouches, state, 3 * sizeof(bool));
-					this->cursorPosition = pos;
-				}
-				else if (index == KD_INPUT_POINTER_WHEEL)
-				{
-					int deltaV = -(short)(evt->data.inputpointer.select >> 16);
-					int deltaH = -(short)(evt->data.inputpointer.select & 0xFFFF);
-					this->queueMouseEvent(Window::AMOUSEEVT_SCROLL, gvec2(deltaH * 0.2f, deltaV * 0.2f), AK_NONE);
-				}
-#else
-				int i = 0;
-				int j = 0;
-				int index = evt->data.inputpointer.index;
-				gvec2 pos((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
-				for (; i < 4; i++, j += KD_IO_POINTER_STRIDE)
-				{
-					if (index == KD_INPUT_POINTER_X + j || index == KD_INPUT_POINTER_Y + j)
+					else if (index == KD_INPUT_POINTER_SELECT)
 					{
-						this->queueTouchEvent(Window::AMOUSEEVT_MOVE, pos, this->getAprilTouchIndex(i));
-						break;
-					}
-					if (index == KD_INPUT_POINTER_SELECT + j)
-					{
-						if (evt->data.inputpointer.select != 0)
+						int s = evt->data.inputpointer.select;
+						bool state[3];
+						state[0] = ((s & 1) != 0);
+						state[1] = ((s & 2) != 0);
+						state[2] = ((s & 4) != 0);
+						for_iter (i, 0, 3)
 						{
-							this->kdTouches[i] = true;
-							this->queueTouchEvent(Window::AMOUSEEVT_DOWN, pos, this->getAprilTouchIndex(i));
+							if (state[i] != this->kdTouches[i])
+							{							
+								this->queueMouseEvent(state[i] ? Window::AMOUSEEVT_DOWN : Window::AMOUSEEVT_UP, pos, (i == 0 ? AK_LBUTTON : (i == 1 ? AK_RBUTTON : AK_MBUTTON)));
+							}
 						}
-						else
-						{
-							this->queueTouchEvent(Window::AMOUSEEVT_UP, pos, this->getAprilTouchIndex(i));
-							this->kdTouches[i] = false;
-						}
-						break;
+						memcpy(this->kdTouches, state, 3 * sizeof(bool));
+						this->cursorPosition = pos;
+					}
+					else if (index == KD_INPUT_POINTER_WHEEL)
+					{
+						int deltaV = -(short)(evt->data.inputpointer.select >> 16);
+						int deltaH = -(short)(evt->data.inputpointer.select & 0xFFFF);
+						this->queueMouseEvent(Window::AMOUSEEVT_SCROLL, gvec2(deltaH * 0.2f, deltaV * 0.2f), AK_NONE);
 					}
 				}
-				if (i == 0)
+				else
 				{
-					this->cursorPosition = pos;
+					this->setInputMode(TOUCH);
+					int i = 0;
+					int j = 0;
+					for (; i < 4; i++, j += KD_IO_POINTER_STRIDE)
+					{
+						if (index == KD_INPUT_POINTER_X + j || index == KD_INPUT_POINTER_Y + j)
+						{
+							this->queueTouchEvent(Window::AMOUSEEVT_MOVE, pos, this->_getAprilTouchIndex(i));
+							break;
+						}
+						if (index == KD_INPUT_POINTER_SELECT + j)
+						{
+							if (evt->data.inputpointer.select != 0)
+							{
+								this->kdTouches[i] = true;
+								this->queueTouchEvent(Window::AMOUSEEVT_DOWN, pos, this->_getAprilTouchIndex(i));
+							}
+							else
+							{
+								this->queueTouchEvent(Window::AMOUSEEVT_UP, pos, this->_getAprilTouchIndex(i));
+								this->kdTouches[i] = false;
+							}
+							break;
+						}
+					}
+					if (i == 0)
+					{
+						this->cursorPosition = pos;
+					}
 				}
-#endif
 			}
 			return true;
 		case KD_EVENT_WINDOWPROPERTY_CHANGE:
@@ -453,6 +456,13 @@ namespace april
 		{
 			this->systemDelegate->onVirtualKeyboardVisibilityChanged(false);
 		}
+	}
+
+	bool OpenKODE_Window::_isMousePointer() 
+	{ 
+		KDint32 type; 
+		kdStateGeti(KD_INPUT_POINTER_TYPE + 0 * KD_IO_POINTER_STRIDE, 1, &type); 
+		return (type == KD_POINTER_MOUSE); 
 	}
 
 }
