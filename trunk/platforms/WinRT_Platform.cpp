@@ -41,9 +41,11 @@ namespace april
 			// RAM size
 			info.ram = 1024;
 			// display resolution
+#ifdef _WINRT_WINDOW
 			int width = (int)CoreWindow::GetForCurrentThread()->Bounds.Width;
 			int height = (int)CoreWindow::GetForCurrentThread()->Bounds.Height;
 			info.displayResolution.set((float)width, (float)height);
+#endif
 			// display DPI
 			info.displayDpi = (int)DisplayProperties::LogicalDpi;
 			// other

@@ -78,6 +78,7 @@ namespace april
 		gmat4 storedProjectionMatrix;
 		Color backgroundColor;
 		bool initialized;
+		april::Key currentButton;
 		Windows::Foundation::EventRegistrationToken eventToken;
 
 		~WinRT_XamlApp();

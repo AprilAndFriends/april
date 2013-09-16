@@ -38,14 +38,14 @@ int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(
 	}
 	april::WinRT::Init = anAprilInit;
 	april::WinRT::Destroy = anAprilDestroy;
-#ifndef _WINP8
-    Application::Start(ref new ApplicationInitializationCallback(
-        [](ApplicationInitializationCallbackParams^ p)
+#ifdef _WINRT_WINDOW
+	Application::Start(ref new ApplicationInitializationCallback(
+		[](ApplicationInitializationCallbackParams^ p)
 		{
-            april::WinRT::App = ref new april::WinRT_XamlApp();
-        }
+			april::WinRT::App = ref new april::WinRT_XamlApp();
+		}
 	));
-#else
+#elif defined(_WINP8)
 	CoreApplication::Run(ref new april::WinRT_ViewSource());
 #endif
 	return 0;

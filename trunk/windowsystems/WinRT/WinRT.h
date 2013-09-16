@@ -11,17 +11,17 @@
 /// 
 /// Defines a WinRT View.
 
-#ifdef _WINRT_WINDOW
+#ifdef _WINRT
 #ifndef APRIL_WINRT_H
 #define APRIL_WINRT_H
 
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
-#ifndef _WINP8
+#ifdef _WINRT_WINDOW
 #include "WinRT_XamlApp.h"
 #include "WinRT_XamlInterface.xaml.h"
-#else
+#elif defined(_WINP8)
 #include "WinRT_View.h"
 #endif
 
@@ -35,10 +35,10 @@ namespace april
 		static void (*Init)(const harray<hstr>&);
 		static void (*Destroy)();
 		static harray<hstr> Args;
-#ifndef _WINP8
+#ifdef _WINRT_WINDOW
 		static WinRT_XamlApp^ App;
 		static WinRT_XamlInterface^ Interface;
-#else
+#elif defined(_WINP8)
 		static WinRT_View^ View;
 #endif
 		

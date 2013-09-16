@@ -50,6 +50,7 @@ namespace april
 		this->hasStoredProjectionMatrix = false;
 		this->backgroundColor = april::Color::Black;
 		this->initialized = false;
+		this->currentButton = april::Key::AK_NONE;
 		this->Suspending += ref new SuspendingEventHandler(this, &WinRT_XamlApp::OnSuspend);
 		this->Resuming += ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnResume);
 #ifdef _DEBUG
@@ -271,12 +272,21 @@ namespace april
 		}
 		unsigned int id;
 		int index;
+		this->currentButton = april::AK_LBUTTON;
 		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
 			april::window->setInputMode(april::Window::MOUSE);
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_DOWN, position, april::AK_LBUTTON);
+			if (args->CurrentPoint->Properties->IsRightButtonPressed)
+			{
+				this->currentButton = april::AK_RBUTTON;
+			}
+			else if (args->CurrentPoint->Properties->IsMiddleButtonPressed)
+			{
+				this->currentButton = april::AK_MBUTTON;
+			}
+			april::window->queueMouseEvent(april::Window::AMOUSEEVT_DOWN, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
@@ -308,7 +318,7 @@ namespace april
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
 			april::window->setInputMode(april::Window::MOUSE);
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_UP, position, april::AK_LBUTTON);
+			april::window->queueMouseEvent(april::Window::AMOUSEEVT_UP, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
@@ -327,6 +337,7 @@ namespace april
 			april::window->queueTouchEvent(april::Window::AMOUSEEVT_UP, position, index);
 			break;
 		}
+		this->currentButton = april::AK_NONE;
 		args->Handled = true;
 	}
 	
@@ -347,7 +358,7 @@ namespace april
 			{
 				april::window->setInputMode(april::Window::MOUSE);
 			}
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_MOVE, position, april::AK_LBUTTON);
+			april::window->queueMouseEvent(april::Window::AMOUSEEVT_MOVE, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:

@@ -615,7 +615,20 @@ namespace april
 	{
 		static D3D11_MAPPED_SUBRESOURCE mappedSubResource;
 		APRIL_D3D_DEVICE_CONTEXT->Map(this->d3dTexture.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubResource);
-		memcpy(mappedSubResource.pData, this->manualData, this->width * this->height * this->bpp);
+		unsigned int size = (unsigned int)this->width * this->height * this->bpp;
+		if (mappedSubResource.RowPitch == size)
+		{
+			memcpy(mappedSubResource.pData, this->manualData, this->width * this->height * this->bpp);
+		}
+		else // DX11 textures don't work properly on some hardware and have a pitch different than w*bpp so this is needed
+		{
+			unsigned char* data = (unsigned char*)mappedSubResource.pData;
+			int pitch = this->width * this->bpp;
+			for_iter (j, 0, this->height)
+			{
+				memcpy(data + (j * mappedSubResource.RowPitch), this->manualData + (j * pitch), pitch);
+			}
+		}
 		APRIL_D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
 	}
 
