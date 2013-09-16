@@ -66,17 +66,17 @@ class UpdateDelegate : public april::UpdateDelegate
 
 class MouseDelegate : public april::MouseDelegate
 {
-	void onMouseDown(april::Key button)
+	void onMouseDown(april::Key key)
 	{
 		offset = april::window->getCursorPosition();
-		hlog::writef(LOG_TAG, "- DOWN x: %4.0f y: %4.0f button: %d", offset.x, offset.y, button);
+		hlog::writef(LOG_TAG, "- DOWN x: %4.0f y: %4.0f button: %d", offset.x, offset.y, key);
 		mousePressed = true;
 	}
 
-	void onMouseUp(april::Key button)
+	void onMouseUp(april::Key key)
 	{
 		gvec2 cursor = april::window->getCursorPosition();
-		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", cursor.x, cursor.y, button);
+		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", cursor.x, cursor.y, key);
 		mousePressed = false;
 	}
 
@@ -89,6 +89,12 @@ class MouseDelegate : public april::MouseDelegate
 			offset = cursor;
 		}
 	}
+
+	void onMouseCancel(april::Key key)
+	{
+		hlog::writef(LOG_TAG, "- CANCEL button: %d", key);
+	}
+
 };
 
 static UpdateDelegate* updateDelegate = NULL;
