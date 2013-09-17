@@ -30,6 +30,7 @@ using namespace Windows::UI::Xaml::Controls;
 #include <hltypes/hstring.h>
 
 #include "RenderSystem.h"
+#include "Window.h"
 
 using namespace Microsoft::WRL;
 using namespace Windows::UI::Core;
@@ -93,6 +94,8 @@ namespace april
 
 		Image* takeScreenshot(int bpp = 3);
 		void presentFrame();
+
+		void updateOrientation();
 
 		// TODO - refactor
 		int getMaxTextureSize();

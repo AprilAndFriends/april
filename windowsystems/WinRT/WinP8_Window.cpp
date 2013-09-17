@@ -14,6 +14,7 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
+#include "DirectX11_RenderSystem.h"
 #include "RenderSystem.h"
 #include "Timer.h"
 #include "WinRT.h"

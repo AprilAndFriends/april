@@ -87,6 +87,9 @@
     <Filter Include="Source Files\windowsystems\OpenKODE">
       <UniqueIdentifier>{250f9bc5-7173-4bc0-accd-2f330c864aca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\windowsystems\WinP8">
+      <UniqueIdentifier>{20827fd8-d672-4341-8a13-e0f5a9c4fb95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -334,15 +337,6 @@
     <ClInclude Include="windowsystems\WinRT\pch.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\WinRT\WinRT.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="windowsystems\WinRT\WinRT_View.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="windowsystems\WinRT\WinRT_ViewSource.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
     <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h">
       <Filter>Header Files\rendersystems\OpenGL\ES\1</Filter>
     </ClInclude>
@@ -369,6 +363,15 @@
     </ClInclude>
     <ClInclude Include="windowsystems\OpenKODE\OpenKODE_Window.h">
       <Filter>Header Files\windowsystems\OpenKODE</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_ViewSource.h">
+      <Filter>Header Files\windowsystems\WinP8</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_View.h">
+      <Filter>Header Files\windowsystems\WinP8</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

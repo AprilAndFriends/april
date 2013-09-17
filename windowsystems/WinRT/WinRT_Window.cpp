@@ -71,7 +71,9 @@ namespace april
 
 	void WinRT_Window::setResolution(int w, int h, bool fullscreen)
 	{
-		hlog::error(april::logTag, "Cannot change resolution on window system: " + this->name);
+		((DirectX11_RenderSystem*)april::rendersys)->updateSwapChain();
+		this->_setRenderSystemResolution(w, h, fullscreen);
+		//hlog::error(april::logTag, "Cannot change resolution on window system: " + this->name);
 	}
 	
 	void WinRT_Window::presentFrame()
