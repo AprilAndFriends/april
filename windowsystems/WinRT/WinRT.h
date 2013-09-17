@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -9,7 +9,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a WinRT View.
+/// Defines WinRT utility and global stuff.
 
 #ifdef _WINRT
 #ifndef APRIL_WINRT_H
@@ -18,13 +18,9 @@
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
-#ifdef _WINRT_WINDOW
+#include "WinRT_BaseApp.h"
 #ifndef _WINP8
-#include "WinRT_XamlApp.h"
-#include "WinRT_XamlInterface.xaml.h"
-#else
-#include "WinRT_View.h"
-#endif
+#include "WinRT_XamlOverlay.xaml.h"
 #endif
 
 namespace april
@@ -37,18 +33,13 @@ namespace april
 		static void (*Init)(const harray<hstr>&);
 		static void (*Destroy)();
 		static harray<hstr> Args;
-#ifdef _WINRT_WINDOW
+		static IWinRT^ Interface;
 #ifndef _WINP8
-		static WinRT_XamlApp^ App;
-		static WinRT_XamlInterface^ Interface;
+		static WinRT_XamlOverlay^ XamlOverlay;
 #else
-		static WinRT_View^ View;
-
 		static int getScreenRotation();
 #endif
-#endif
 
-		
 	private:
 		WinRT() { }
 		

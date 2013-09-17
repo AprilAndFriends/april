@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -20,8 +20,9 @@
 #include <hltypes/harray.h>
 
 #include "Color.h"
+#include "IWinRT.h"
 #include "pch.h"
-#include "WinRT_XamlInterface.xaml.h"
+#include "WinRT_BaseApp.h"
 
 using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
@@ -35,42 +36,30 @@ namespace april
 	class Texture;
 
 	[Windows::Foundation::Metadata::WebHostHidden]
-	public ref class WinRT_XamlApp sealed : public Application, public IComponentConnector
+	ref class WinRT_XamlApp sealed : public Application, public IWinRT, public IComponentConnector
     {
     public:
         WinRT_XamlApp();
         virtual void Connect(int connectionId, Object^ target);
 
-		void setCursorVisible(bool value);
-
-		void updateViewState();
-		void unassignWindow();
-		
-		void OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
-		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
-		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
+		virtual void unassignWindow();
+		virtual void setCursorVisible(bool value);
+		virtual bool canSuspendResume();
+		virtual void updateViewState();
+		virtual void checkEvents();
+		virtual void showKeyboard();
+		virtual void hideKeyboard();
 
     internal:
 		virtual void OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args);
-		virtual void OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args);
-		virtual void OnResume(_In_ Object^ sender, _In_ Object^ args);
 		virtual void OnRender(_In_ Object^ sender, _In_ Object^ args);
-        virtual void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
-		virtual void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
-		virtual void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
 
 	protected:
         virtual void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;
 
 	private:
+		WinRT_BaseApp^ app;
 		bool running;
-		bool scrollHorizontal;
-		int mouseMoveMessagesCount;
-		harray<unsigned int> pointerIds;
 		bool filled;
 		bool snapped;
 		Texture* logoTexture;
@@ -78,12 +67,10 @@ namespace april
 		gmat4 storedProjectionMatrix;
 		Color backgroundColor;
 		bool initialized;
-		april::Key currentButton;
 		Windows::Foundation::EventRegistrationToken eventToken;
 
 		~WinRT_XamlApp();
 
-		gvec2 _translatePosition(float x, float y);
 		void _tryLoadLogoTexture();
 
     };

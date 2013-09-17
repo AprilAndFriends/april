@@ -60,9 +60,6 @@
     <Filter Include="Source Files\delegates">
       <UniqueIdentifier>{8318e614-93bf-4fef-8462-0bfeef0094de}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\windowsystems\WinP8">
-      <UniqueIdentifier>{4a7d87e9-fe35-4af8-ab25-0b0134d55854}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\rendersystems\OpenGL">
       <UniqueIdentifier>{4ec46024-f445-482c-9449-86e4c6764491}</UniqueIdentifier>
     </Filter>
@@ -87,8 +84,11 @@
     <Filter Include="Source Files\windowsystems\OpenKODE">
       <UniqueIdentifier>{250f9bc5-7173-4bc0-accd-2f330c864aca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\windowsystems\WinP8">
-      <UniqueIdentifier>{20827fd8-d672-4341-8a13-e0f5a9c4fb95}</UniqueIdentifier>
+    <Filter Include="Header Files\windowsystems\WinRT\WinP8">
+      <UniqueIdentifier>{4811bbda-ef69-4399-930a-b88609ae0b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\windowsystems\WinRT\WinP8">
+      <UniqueIdentifier>{7ebb6126-e027-4986-afb3-080940040276}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -188,20 +188,11 @@
     <ClCompile Include="src\RenderSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\WinRT\WinRT_XamlInterface.xaml.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="windowsystems\WinRT\WinRT_XamlApp.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
     <ClCompile Include="windowsystems\WinRT\WinRT.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="windowsystems\WinRT\WinRT_View.cpp">
-      <Filter>Source Files\windowsystems\WinP8</Filter>
-    </ClCompile>
-    <ClCompile Include="windowsystems\WinRT\WinRT_ViewSource.cpp">
-      <Filter>Source Files\windowsystems\WinP8</Filter>
     </ClCompile>
     <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL\ES\1</Filter>
@@ -236,8 +227,17 @@
     <ClCompile Include="platforms\OpenKODE_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\WinRT\WinP8_Window.cpp">
-      <Filter>Source Files\windowsystems\WinP8</Filter>
+    <ClCompile Include="windowsystems\WinRT\WinP8_App.cpp">
+      <Filter>Source Files\windowsystems\WinRT\WinP8</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinP8_AppLauncher.cpp">
+      <Filter>Source Files\windowsystems\WinRT\WinP8</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT_BaseApp.cpp">
+      <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -328,9 +328,6 @@
     <ClInclude Include="src\egl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\WinRT\WinRT_XamlInterface.xaml.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="windowsystems\WinRT\WinRT_XamlApp.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
@@ -364,14 +361,23 @@
     <ClInclude Include="windowsystems\OpenKODE\OpenKODE_Window.h">
       <Filter>Header Files\windowsystems\OpenKODE</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\WinRT\WinRT_ViewSource.h">
-      <Filter>Header Files\windowsystems\WinP8</Filter>
-    </ClInclude>
     <ClInclude Include="windowsystems\WinRT\WinRT.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\WinRT\WinRT_View.h">
-      <Filter>Header Files\windowsystems\WinP8</Filter>
+    <ClInclude Include="windowsystems\WinRT\WinP8_AppLauncher.h">
+      <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinP8_App.h">
+      <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\IWinRT.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_BaseApp.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -408,7 +414,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="windowsystems\WinRT\WinRT_XamlInterface.xaml">
+    <Page Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </Page>
   </ItemGroup>

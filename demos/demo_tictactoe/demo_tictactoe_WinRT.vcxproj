@@ -101,15 +101,6 @@
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="TemporaryKey.pfx" />
-    <Image Include="media\assets\icon.png" />
-    <Image Include="media\assets\tile-medium.png" />
-    <Image Include="media\assets\tile-small.png" />
-    <Image Include="media\jpt_final.jpt">
-      <FileType>Document</FileType>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\gtypes\libgtypes_WinRT.vcxproj">
       <Project>{9c043b29-db40-48d5-97d8-1bc44128e3ba}</Project>
       <CopyLocal>false</CopyLocal>
@@ -163,15 +154,13 @@
     <ClCompile Include="demo_tictactoe.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
-      <SubType>Designer</SubType>
-    </AppxManifest>
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="media\assets\logo_icon.png" />
     <Image Include="media\assets\small_icon.png" />
     <Image Include="media\assets\splash.png" />
     <Image Include="media\assets\store_icon.png" />
+    <Image Include="media\assets\icon.png" />
+    <Image Include="media\assets\tile-medium.png" />
+    <Image Include="media\assets\tile-small.png" />
     <Image Include="media\icon.png" />
     <Image Include="media\jpt_raw.jpg" />
     <Image Include="media\jpt_raw.png" />
@@ -182,14 +171,20 @@
     <Image Include="media\o.png" />
     <Image Include="media\texture.jpg" />
     <Image Include="media\x.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <Image Include="media\icon.png" />
+    <Image Include="media\jpt_final.jpt">
+    <None Include="TemporaryKey.pfx" />
+      <FileType>Document</FileType>
+    </Image>
     <Xml Include="WMAppManifest.xml">
       <SubType>Designer</SubType>
     </Xml>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsPhone\v$(TargetPlatformVersion)\Microsoft.Cpp.WindowsPhone.$(TargetPlatformVersion).targets" />
+  <Import Condition="'$(PlatformToolset)'=='v110_wp80'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsPhone\v$(TargetPlatformVersion)\Microsoft.Cpp.WindowsPhone.$(TargetPlatformVersion).targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>

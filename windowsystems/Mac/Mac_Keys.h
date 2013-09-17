@@ -1,6 +1,6 @@
 /// @file
 /// @author  Kresimir Spes
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -9,6 +9,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
+/// Key definition converter.
 
 #ifndef APRIL_MAC_KEYS_H
 #define APRIL_MAC_KEYS_H

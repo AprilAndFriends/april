@@ -1,11 +1,12 @@
 /// @file
 /// @author  Kresimir Spes
-/// @version 3.0
+/// @version 3.1
 ///
 /// @section LICENSE
 ///
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+
 #include <Cocoa/Cocoa.h>
 #include <hltypes/hlog.h>
 #include "april.h"

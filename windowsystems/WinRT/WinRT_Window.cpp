@@ -1,13 +1,13 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#if defined(_WINRT_WINDOW) && !defined(_WINP8)
+#ifdef _WINRT_WINDOW
 #include <hltypes/hfile.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hlog.h>
@@ -48,7 +48,7 @@ namespace april
 	
 	void WinRT_Window::unassign()
 	{
-		WinRT::App->unassignWindow();
+		WinRT::Interface->unassignWindow();
 		Window::unassign();
 	}
 
@@ -60,7 +60,7 @@ namespace april
 	void WinRT_Window::setCursorVisible(bool value)
 	{
 		Window::setCursorVisible(value);
-		WinRT::App->setCursorVisible(value);
+		WinRT::Interface->setCursorVisible(value);
 	}
 	
 	void* WinRT_Window::getBackendId()
@@ -76,6 +76,12 @@ namespace april
 	
 	void WinRT_Window::presentFrame()
 	{
+	}
+
+	void WinRT_Window::checkEvents()
+	{
+		Window::checkEvents();
+		WinRT::Interface->checkEvents();
 	}
 	
 	void WinRT_Window::beginKeyboardHandling()

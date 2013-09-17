@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -408,14 +408,14 @@ namespace april
 		{
 			throw hl_exception("Unable to create swap chain!");
 		}
-		IInspectable* panelInspectable = (IInspectable*)reinterpret_cast<IInspectable*>(WinRT::Interface);
+		IInspectable* panelInspectable = (IInspectable*)reinterpret_cast<IInspectable*>(WinRT::XamlOverlay);
 		panelInspectable->QueryInterface(__uuidof(ISwapChainBackgroundPanelNative), (void**)&this->swapChainNative);
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
 #else
 		swapChainDesc.BufferCount = 1;
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		hr = dxgiFactory->CreateSwapChainForCoreWindow(this->d3dDevice.Get(),
-			reinterpret_cast<IUnknown*>(april::WinRT::View->getCoreWindow()), &swapChainDesc, NULL, &this->swapChain);
+			reinterpret_cast<IUnknown*>(Windows::UI::Core::CoreWindow::GetForCurrentThread()), &swapChainDesc, NULL, &this->swapChain);
 		if (FAILED(hr))
 		{
 			throw hl_exception("Unable to create swap chain!");

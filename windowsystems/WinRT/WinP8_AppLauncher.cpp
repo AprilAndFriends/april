@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -8,17 +8,16 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #if defined(_WINRT_WINDOW) && defined(_WINP8)
-
 #include <hltypes/hplatform.h>
 
-#include "WinRT_View.h"
-#include "WinRT_ViewSource.h"
+#include "WinP8_App.h"
+#include "WinP8_AppLauncher.h"
 
 namespace april
 {
-	IFrameworkView^ WinRT_ViewSource::CreateView()
+	IFrameworkView^ WinP8_AppLauncher::CreateView()
 	{
-		return ref new WinRT_View();
+		return ref new WinP8_App();
 	}
 	
 }

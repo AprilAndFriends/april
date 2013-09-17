@@ -1,6 +1,6 @@
 package net.sourceforge.april.android.ouya;
 
-// version 3.0
+// version 3.1
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

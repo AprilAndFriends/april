@@ -268,14 +268,14 @@
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Keys.cpp" />
     <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Window.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinP8_Window.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinRT_View.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinRT_ViewSource.cpp" />
+    <ClCompile Include="windowsystems\WinRT\WinP8_App.cpp" />
+    <ClCompile Include="windowsystems\WinRT\WinP8_AppLauncher.cpp" />
+    <ClCompile Include="windowsystems\WinRT\WinRT_BaseApp.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_XamlApp.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinRT_XamlInterface.xaml.cpp">
-      <DependentUpon>windowsystems\WinRT\WinRT_XamlInterface.xaml</DependentUpon>
+    <ClCompile Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
+      <DependentUpon>windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenGLES1' or '$(Configuration)'=='Release_OpenGLES1'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
@@ -317,14 +317,16 @@
     <ClInclude Include="src\egl.h" />
     <ClInclude Include="windowsystems\OpenKODE\OpenKODE_Keys.h" />
     <ClInclude Include="windowsystems\OpenKODE\OpenKODE_Window.h" />
+    <ClInclude Include="windowsystems\WinRT\IWinRT.h" />
     <ClInclude Include="windowsystems\WinRT\pch.h" />
-    <ClInclude Include="windowsystems\WinRT\WinRT_View.h" />
-    <ClInclude Include="windowsystems\WinRT\WinRT_ViewSource.h" />
+    <ClInclude Include="windowsystems\WinRT\WinP8_App.h" />
+    <ClInclude Include="windowsystems\WinRT\WinP8_AppLauncher.h" />
+    <ClInclude Include="windowsystems\WinRT\WinRT_BaseApp.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_XamlApp.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_Window.h" />
-    <ClInclude Include="windowsystems\WinRT\WinRT_XamlInterface.xaml.h">
-      <DependentUpon>windowsystems\WinRT\WinRT_XamlInterface.xaml</DependentUpon>
+    <ClInclude Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
+      <DependentUpon>windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenGLES1' or '$(Configuration)'=='Release_OpenGLES1'">true</ExcludedFromBuild>
     </ClInclude>
   </ItemGroup>
@@ -387,7 +389,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="windowsystems\WinRT\WinRT_XamlInterface.xaml">
+    <Page Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenGLES1' or '$(Configuration)'=='Release_OpenGLES1'">true</ExcludedFromBuild>
     </Page>
   </ItemGroup>
