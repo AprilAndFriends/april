@@ -29,7 +29,6 @@ namespace april
 {
 	SystemInfo getSystemInfo()
 	{
-		// TODO
 		static SystemInfo info;
 		if (info.locale == "")
 		{
@@ -37,14 +36,14 @@ namespace april
 			SYSTEM_INFO w32info;
 			GetNativeSystemInfo(&w32info);
 			info.cpuCores = w32info.dwNumberOfProcessors;
-			// TODO
+			// TODO - though, WinRT does not seem to be able to retrieve this information
 			// RAM size
 			info.ram = 1024;
 			// display resolution
 #ifdef _WINRT_WINDOW
 			int width = (int)CoreWindow::GetForCurrentThread()->Bounds.Width;
 			int height = (int)CoreWindow::GetForCurrentThread()->Bounds.Height;
-			info.displayResolution.set((float)width, (float)height);
+			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
 #endif
 			// display DPI
 			info.displayDpi = (int)DisplayProperties::LogicalDpi;

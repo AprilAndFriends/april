@@ -28,7 +28,11 @@
 april::Texture* texture = NULL;
 april::TexturedVertex v[4];
 
+#if !defined(_ANDROID) && !defined(_WINP8)
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+#else
+grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
+#endif
 
 class UpdateDelegate : public april::UpdateDelegate
 {

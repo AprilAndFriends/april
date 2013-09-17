@@ -45,6 +45,8 @@ namespace april
 		void OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args);
 		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
 		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
+		void OnOrientationChanged(_In_ Platform::Object^ sender);
+		void OnLogicalDpiChanged(_In_ Platform::Object^ sender);
 		void OnSuspend(_In_ Platform::Object^ sender, _In_ SuspendingEventArgs^ args);
 		void OnResume(_In_ Platform::Object^ sender, _In_ Platform::Object^ args);
 		void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
@@ -64,6 +66,8 @@ namespace april
 		bool scrollHorizontal;
 		harray<unsigned int> pointerIds;
 		int mouseMoveMessagesCount;
+
+		gvec2 _translatePosition(float x, float y);
 		
 	};
 	

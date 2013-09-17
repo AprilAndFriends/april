@@ -19,10 +19,12 @@
 #include <hltypes/hstring.h>
 
 #ifdef _WINRT_WINDOW
+#ifndef _WINP8
 #include "WinRT_XamlApp.h"
 #include "WinRT_XamlInterface.xaml.h"
-#elif defined(_WINP8)
+#else
 #include "WinRT_View.h"
+#endif
 #endif
 
 namespace april
@@ -36,11 +38,16 @@ namespace april
 		static void (*Destroy)();
 		static harray<hstr> Args;
 #ifdef _WINRT_WINDOW
+#ifndef _WINP8
 		static WinRT_XamlApp^ App;
 		static WinRT_XamlInterface^ Interface;
-#elif defined(_WINP8)
+#else
 		static WinRT_View^ View;
+
+		static int getScreenRotation();
 #endif
+#endif
+
 		
 	private:
 		WinRT() { }

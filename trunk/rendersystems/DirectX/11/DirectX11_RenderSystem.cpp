@@ -15,6 +15,7 @@
 #include <hltypes/exception.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hplatform.h>
+#include <hltypes/hresource.h>
 #include <hltypes/hthread.h>
 
 #include "april.h"
@@ -34,7 +35,30 @@
 
 #define UINT_RGBA_TO_ABGR(c) ((((c) >> 24) & 0xFF) | (((c) << 24) & 0xFF000000) | (((c) >> 8) & 0xFF00) | (((c) << 8) & 0xFF0000))
 
+#ifndef _WINP8
+#define _LOAD_SHADER(name, type, file) \
+	if (name == NULL) \
+	{ \
+		name = (DirectX11_ ## type ## Shader*)this->create ## type ## Shader(SHADER_PATH #type "Shader_" #file ".cso"); \
+	}
+#else // on WinP8 the shaders may be in the root directory
+#define _LOAD_SHADER(name, type, file) \
+	if (name == NULL) \
+	{ \
+		hstr filename = #type "Shader_" #file ".cso"; \
+		if (hresource::exists(SHADER_PATH + filename)) \
+		{ \
+			name = (DirectX11_ ## type ## Shader*)this->create ## type ## Shader(SHADER_PATH + filename); \
+		} \
+		else \
+		{ \
+			name = (DirectX11_ ## type ## Shader*)this->create ## type ## Shader(filename); \
+		} \
+	}
+#endif
+
 using namespace Microsoft::WRL;
+using namespace Windows::Graphics::Display;
 
 namespace april
 {
@@ -236,6 +260,7 @@ namespace april
 #endif
 		D3D_FEATURE_LEVEL featureLevels[] =
 		{
+#ifndef _WINP8
 			D3D_FEATURE_LEVEL_11_1,
 			D3D_FEATURE_LEVEL_11_0,
 			D3D_FEATURE_LEVEL_10_1,
@@ -243,6 +268,9 @@ namespace april
 			D3D_FEATURE_LEVEL_9_3,
 			D3D_FEATURE_LEVEL_9_2,
 			D3D_FEATURE_LEVEL_9_1
+#else
+			D3D_FEATURE_LEVEL_9_3
+#endif
 		};
 		ComPtr<ID3D11Device> _d3dDevice;
 		ComPtr<ID3D11DeviceContext> _d3dDeviceContext;
@@ -301,34 +329,13 @@ namespace april
 		this->presentFrame();
 		this->orthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
 		// default shaders
-		if (this->vertexShaderDefault == NULL)
-		{
-			this->vertexShaderDefault = (DirectX11_VertexShader*)this->createVertexShader(SHADER_PATH "VertexShader_Default.cso");
-		}
-		if (this->pixelShaderTexturedMultiply == NULL)
-		{
-			this->pixelShaderTexturedMultiply = (DirectX11_PixelShader*)this->createPixelShader(SHADER_PATH "PixelShader_TexturedMultiply.cso");
-		}
-		if (this->pixelShaderTexturedAlphaMap == NULL)
-		{
-			this->pixelShaderTexturedAlphaMap = (DirectX11_PixelShader*)this->createPixelShader(SHADER_PATH "PixelShader_TexturedAlphaMap.cso");
-		}
-		if (this->pixelShaderTexturedLerp == NULL)
-		{
-			this->pixelShaderTexturedLerp = (DirectX11_PixelShader*)this->createPixelShader(SHADER_PATH "PixelShader_TexturedLerp.cso");
-		}
-		if (this->pixelShaderMultiply == NULL)
-		{
-			this->pixelShaderMultiply = (DirectX11_PixelShader*)this->createPixelShader(SHADER_PATH "PixelShader_Multiply.cso");
-		}
-		if (this->pixelShaderAlphaMap == NULL)
-		{
-			this->pixelShaderAlphaMap = (DirectX11_PixelShader*)this->createPixelShader(SHADER_PATH "PixelShader_AlphaMap.cso");
-		}
-		if (this->pixelShaderLerp == NULL)
-		{
-			this->pixelShaderLerp = (DirectX11_PixelShader*)this->createPixelShader(SHADER_PATH "PixelShader_Lerp.cso");
-		}
+		_LOAD_SHADER(this->vertexShaderDefault, Vertex, Default);
+		_LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply);
+		_LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
+		_LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
+		_LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply);
+		_LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap);
+		_LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp);
 		// input layouts for default shaders
 		if (this->inputLayout == nullptr)
 		{
@@ -393,9 +400,9 @@ namespace april
 		swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.SampleDesc.Quality = 0;
+#ifndef _WINP8
 		swapChainDesc.BufferCount = 2;
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-#ifndef _WINP8
 		hr = dxgiFactory->CreateSwapChainForComposition(this->d3dDevice.Get(), &swapChainDesc, nullptr, &this->swapChain);
 		if (FAILED(hr))
 		{
@@ -405,13 +412,42 @@ namespace april
 		panelInspectable->QueryInterface(__uuidof(ISwapChainBackgroundPanelNative), (void**)&this->swapChainNative);
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
 #else
+		swapChainDesc.BufferCount = 1;
+		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		hr = dxgiFactory->CreateSwapChainForCoreWindow(this->d3dDevice.Get(),
 			reinterpret_cast<IUnknown*>(april::WinRT::View->getCoreWindow()), &swapChainDesc, NULL, &this->swapChain);
 		if (FAILED(hr))
 		{
 			throw hl_exception("Unable to create swap chain!");
 		}
+		this->updateOrientation();
 #endif
+	}
+
+	void DirectX11_RenderSystem::updateOrientation()
+	{
+		DisplayOrientations orientation = DisplayProperties::CurrentOrientation;
+		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
+		switch (orientation)
+		{
+		case DisplayOrientations::Landscape:
+			rotation = DXGI_MODE_ROTATION_ROTATE90;
+			break;
+		case DisplayOrientations::Portrait:
+			rotation = DXGI_MODE_ROTATION_IDENTITY;
+			break;
+		case DisplayOrientations::LandscapeFlipped:
+			rotation = DXGI_MODE_ROTATION_ROTATE270;
+			break;
+		case DisplayOrientations::PortraitFlipped:
+			rotation = DXGI_MODE_ROTATION_ROTATE180;
+			break;
+		default:
+			hlog::error(april::logTag, "Undefined screen orienation, using default landscape!");
+			rotation = DXGI_MODE_ROTATION_ROTATE90;
+			break;
+		}
+		this->swapChain->SetRotation(rotation);
 	}
 
 	void DirectX11_RenderSystem::_configureDevice()
@@ -424,6 +460,7 @@ namespace april
 			{
 				throw hl_exception("Unable to resize swap chain buffers!");
 			}
+			this->updateOrientation();
 		}
 		else
 		{
@@ -693,6 +730,7 @@ namespace april
 			return;
 		}
 		this->renderTarget = texture;
+		this->matrixDirty = true;
 	}
 	
 	void DirectX11_RenderSystem::setPixelShader(PixelShader* pixelShader)
@@ -843,6 +881,13 @@ namespace april
 		{
 			this->matrixDirty = false;
 			this->constantBufferData.matrix = (this->projectionMatrix * this->modelviewMatrix).transposed();
+#ifdef _WINP8 // hahaha, Windows Phone 8 is unable to rotate the display by itself!
+			int angle = WinRT::getScreenRotation();
+			if (angle != 0)
+			{
+				this->constantBufferData.matrix.rotateZ((float)angle);
+			}
+#endif
 		}
 		if (dirty)
 		{

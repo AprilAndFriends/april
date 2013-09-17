@@ -16,11 +16,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="demo_simple_TemporaryKey.pfx">
-      <Filter>winrt</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="demo_simple.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -76,5 +71,24 @@
     <Image Include="media\jpt_final.jpt">
       <Filter>winrt\media</Filter>
     </Image>
+    <Image Include="media\assets\icon.png">
+      <Filter>winrt\media\assets</Filter>
+    </Image>
+    <Image Include="media\assets\tile-medium.png">
+      <Filter>winrt\media\assets</Filter>
+    </Image>
+    <Image Include="media\assets\tile-small.png">
+      <Filter>winrt\media\assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="WMAppManifest.xml">
+      <Filter>winrt</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TemporaryKey.pfx">
+      <Filter>winrt</Filter>
+    </None>
   </ItemGroup>
 </Project>

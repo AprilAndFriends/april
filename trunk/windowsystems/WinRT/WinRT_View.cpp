@@ -15,7 +15,9 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
+#include "DirectX11_RenderSystem.h"
 #include "Platform.h"
+#include "SystemDelegate.h"
 #include "Window.h"
 #include "WinRT.h"
 #include "WinRT_View.h"
@@ -23,12 +25,16 @@
 
 using namespace Windows::ApplicationModel;
 using namespace Windows::Foundation;
+using namespace Windows::Graphics::Display;
 using namespace Windows::UI::ViewManagement;
+
+#define DX11_RENDERSYS ((DirectX11_RenderSystem*)april::rendersys)
 
 namespace april
 {
 	void WinRT_View::Initialize(_In_ CoreApplicationView^ applicationView)
 	{
+		DisplayProperties::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
 		applicationView->Activated +=
 			ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &WinRT_View::OnActivated);
 	}
@@ -40,16 +46,22 @@ namespace april
 	void WinRT_View::SetWindow(_In_ CoreWindow^ window)
 	{
 		this->window = window;
+		CoreApplication::Suspending +=
+			ref new EventHandler<SuspendingEventArgs^>(this, &WinRT_View::OnSuspend);
+		CoreApplication::Resuming +=
+			ref new EventHandler<Platform::Object^>(this, &WinRT_View::OnResume);
+		DisplayProperties::OrientationChanged +=
+			ref new DisplayPropertiesEventHandler(
+				this, &WinRT_View::OnOrientationChanged);
+		DisplayProperties::LogicalDpiChanged +=
+			ref new DisplayPropertiesEventHandler(
+				this, &WinRT_View::OnLogicalDpiChanged);
 		this->window->SizeChanged +=
 			ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(
 				this, &WinRT_View::OnWindowSizeChanged);
 		this->window->VisibilityChanged +=
 			ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(
 				this, &WinRT_View::OnVisibilityChanged);
-		CoreApplication::Suspending +=
-			ref new EventHandler<SuspendingEventArgs^>(this, &WinRT_View::OnSuspend);
-		CoreApplication::Resuming +=
-			ref new EventHandler<Platform::Object^>(this, &WinRT_View::OnResume);
 		this->window->PointerPressed +=
 			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
 				this, &WinRT_View::OnTouchDown);
@@ -96,7 +108,7 @@ namespace april
 	
 	void WinRT_View::setCursorVisible(bool value)
 	{
-		this->window->PointerCursor = (value ? ref new CoreCursor(CoreCursorType::Arrow, 0) : nullptr);
+		// not used on WinP8
 	}
 	
 	void WinRT_View::OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args)
@@ -106,12 +118,27 @@ namespace april
 	
 	void WinRT_View::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
+		april::SystemDelegate* systemDelegate = april::window->getSystemDelegate();
+		if (systemDelegate != NULL)
+		{
+			systemDelegate->onWindowSizeChanged((int)args->Size.Width, (int)args->Size.Height, true);
+		}
 		args->Handled = true;
 	}
 	
 	void WinRT_View::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
 	{
 		args->Handled = true;
+	}
+	
+	void WinRT_View::OnOrientationChanged(_In_ Platform::Object^ sender)
+	{
+		DX11_RENDERSYS->updateOrientation();
+	}
+	
+	void WinRT_View::OnLogicalDpiChanged(_In_ Platform::Object^ sender)
+	{
+		DX11_RENDERSYS->updateOrientation();
 	}
 	
 	void WinRT_View::OnSuspend(_In_ Platform::Object^ sender, _In_ SuspendingEventArgs^ args)
@@ -134,7 +161,8 @@ namespace april
 	{
 		unsigned int id;
 		int index;
-		gvec2 position(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+#ifndef _WINP8
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
@@ -144,6 +172,7 @@ namespace april
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 			this->mouseMoveMessagesCount = 0;
+#endif
 			april::window->setInputMode(april::Window::TOUCH);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.index_of(id);
@@ -153,8 +182,10 @@ namespace april
 				this->pointerIds += id;
 			}
 			april::window->queueTouchEvent(april::Window::AMOUSEEVT_DOWN, position, index);
+#ifndef _WINP8
 			break;
 		}
+#endif
 		args->Handled = true;
 	}
 	
@@ -162,7 +193,8 @@ namespace april
 	{
 		unsigned int id;
 		int index;
-		gvec2 position(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+#ifndef _WINP8
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
@@ -172,6 +204,7 @@ namespace april
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 			this->mouseMoveMessagesCount = 0;
+#endif
 			april::window->setInputMode(april::Window::TOUCH);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.index_of(id);
@@ -184,8 +217,10 @@ namespace april
 				this->pointerIds.remove_at(index);
 			}
 			april::window->queueTouchEvent(april::Window::AMOUSEEVT_UP, position, index);
+#ifndef _WINP8
 			break;
 		}
+#endif
 		args->Handled = true;
 	}
 	
@@ -193,7 +228,8 @@ namespace april
 	{
 		unsigned int id;
 		int index;
-		gvec2 position(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+#ifndef _WINP8
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
@@ -207,6 +243,7 @@ namespace april
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 			this->mouseMoveMessagesCount = 0;
+#endif
 			april::window->setInputMode(april::Window::TOUCH);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.index_of(id);
@@ -215,8 +252,10 @@ namespace april
 				index = this->pointerIds.size();
 			}
 			april::window->queueTouchEvent(april::Window::AMOUSEEVT_MOVE, position, index);
+#ifndef _WINP8
 			break;
 		}
+#endif
 		args->Handled = true;
 	}
 	
@@ -270,5 +309,42 @@ namespace april
 		this->window->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
 	}
 	
+	gvec2 WinRT_View::_translatePosition(float x, float y)
+	{
+		static int w = 0;
+		static int h = 0;
+		if (w == 0 || h == 0)
+		{
+			gvec2 resolution = april::getSystemInfo().displayResolution;
+			w = hround(resolution.x);
+			h = hround(resolution.y);
+		}
+#ifdef _WINP8
+		int angle = WinRT::getScreenRotation();
+		if (angle == 90)
+		{
+			hswap(x, y);
+			y = h - y;
+		}
+		if (angle == 180)
+		{
+			x = w - x;
+			y = h - y;
+		}
+		if (angle == 270)
+		{
+			hswap(x, y);
+			x = w - x;
+		}
+#endif
+		int width = april::window->getWidth();
+		int height = april::window->getHeight();
+		if (w == width && h == height)
+		{
+			return gvec2(x, y);
+		}
+		return gvec2((float)(int)(x * width / w), (float)(int)(y * height / h));
+	}
+
 }
 #endif
