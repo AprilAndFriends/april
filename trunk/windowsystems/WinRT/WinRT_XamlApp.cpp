@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -17,10 +17,12 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
+#include "IWinRT.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
 #include "WinRT.h"
+#include "WinRT_BaseApp.h"
 #include "WinRT_XamlApp.h"
 
 using namespace Windows::ApplicationModel;
@@ -41,18 +43,16 @@ namespace april
 {
 	WinRT_XamlApp::WinRT_XamlApp() : Application()
 	{
+		this->app = ref new WinRT_BaseApp();
 		this->running = true;
-		this->scrollHorizontal = false;
-		this->mouseMoveMessagesCount = 0;
 		this->filled = false;
 		this->snapped = false;
 		this->logoTexture = NULL;
 		this->hasStoredProjectionMatrix = false;
 		this->backgroundColor = april::Color::Black;
 		this->initialized = false;
-		this->currentButton = april::Key::AK_NONE;
-		this->Suspending += ref new SuspendingEventHandler(this, &WinRT_XamlApp::OnSuspend);
-		this->Resuming += ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnResume);
+		this->Suspending += ref new SuspendingEventHandler(this->app, &WinRT_BaseApp::OnSuspend);
+		this->Resuming += ref new EventHandler<Object^>(this->app, &WinRT_BaseApp::OnResume);
 #ifdef _DEBUG
 		this->UnhandledException += ref new UnhandledExceptionEventHandler([](Object^ sender, UnhandledExceptionEventArgs^ args)
 		{
@@ -66,11 +66,23 @@ namespace april
 		_HL_TRY_DELETE(this->logoTexture);
 	}
 
+	void WinRT_XamlApp::unassignWindow()
+	{
+		_HL_TRY_DELETE(this->logoTexture);
+		this->hasStoredProjectionMatrix = false;
+		this->backgroundColor = april::Color::Black;
+	}
+
 	void WinRT_XamlApp::setCursorVisible(bool value)
 	{
 		Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = (value ? ref new CoreCursor(CoreCursorType::Arrow, 0) : nullptr);
 	}
 	
+	bool WinRT_XamlApp::canSuspendResume()
+	{
+		return (!this->snapped && !this->filled);
+	}
+
 	void WinRT_XamlApp::updateViewState()
 	{
 		bool newFilled = (ApplicationView::Value == ApplicationViewState::Filled);
@@ -87,11 +99,18 @@ namespace april
 		this->snapped = newSnapped;
 	}
 
-	void WinRT_XamlApp::unassignWindow()
+	void WinRT_XamlApp::checkEvents()
 	{
-		_HL_TRY_DELETE(this->logoTexture);
-		this->hasStoredProjectionMatrix = false;
-		this->backgroundColor = april::Color::Black;
+	}
+
+	void WinRT_XamlApp::showKeyboard()
+	{
+		WinRT::XamlOverlay->showKeyboard();
+	}
+
+	void WinRT_XamlApp::hideKeyboard()
+	{
+		WinRT::XamlOverlay->hideKeyboard();
 	}
 
 	void WinRT_XamlApp::Connect(int connectionId, Object^ target)
@@ -106,42 +125,11 @@ namespace april
 			Windows::UI::Xaml::Window::Current->Activate();
 			return;
 		}
-		WinRT::Interface = ref new WinRT_XamlInterface();
-		Windows::UI::Xaml::Window::Current->Content = WinRT::Interface;
+		WinRT::XamlOverlay = ref new WinRT_XamlOverlay();
+		Windows::UI::Xaml::Window::Current->Content = WinRT::XamlOverlay;
 		Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &WinRT_XamlApp::OnWindowActivationChanged);
 		Windows::UI::Xaml::Window::Current->Activate();
-		// events
-		CoreWindow^ window = Windows::UI::Xaml::Window::Current->CoreWindow;
-		window->SizeChanged +=
-			ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(
-				this, &WinRT_XamlApp::OnWindowSizeChanged);
-		window->VisibilityChanged +=
-			ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(
-				this, &WinRT_XamlApp::OnVisibilityChanged);
-		window->Closed +=
-			ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
-				this, &WinRT_XamlApp::OnWindowClosed);
-		window->PointerPressed +=
-			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
-				this, &WinRT_XamlApp::OnTouchDown);
-		window->PointerReleased +=
-			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
-				this, &WinRT_XamlApp::OnTouchUp);
-		window->PointerMoved +=
-			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
-				this, &WinRT_XamlApp::OnTouchMove);
-		window->PointerWheelChanged +=
-			ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
-				this, &WinRT_XamlApp::OnMouseScroll);
-		window->KeyDown +=
-			ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(
-				this, &WinRT_XamlApp::OnKeyDown);
-		window->KeyUp +=
-			ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(
-				this, &WinRT_XamlApp::OnKeyUp);
-		window->CharacterReceived +=
-			ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(
-				this, &WinRT_XamlApp::OnCharacterReceived);
+		this->app->assignEvents(Windows::UI::Core::CoreWindow::GetForCurrentThread());
 		this->setCursorVisible(true);
 	}
 
@@ -157,22 +145,6 @@ namespace april
 		}
 	}
 
-	void WinRT_XamlApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
-	{
-		if (april::window != NULL && !this->snapped && !this->filled)
-		{
-			april::window->handleFocusChangeEvent(false);
-		}
-	}
-
-	void WinRT_XamlApp::OnResume(_In_ Object^ sender, _In_ Object^ args)
-	{
-		if (april::window != NULL && !this->snapped && !this->filled)
-		{
-			april::window->handleFocusChangeEvent(true);
-		}
-	}
-
 	void WinRT_XamlApp::OnRender(_In_ Object^ sender, _In_ Object^ args)
 	{
 		if (!this->running || april::window == NULL)
@@ -180,7 +152,7 @@ namespace april
 			return;
 		}
 		// don't repeat initialization when already running
-		this->updateViewState();
+		WinRT::Interface->updateViewState();
 		if (!this->filled && !this->snapped)
 		{
 			if (this->hasStoredProjectionMatrix)
@@ -240,220 +212,6 @@ namespace april
 			CompositionTarget::Rendering::remove(this->eventToken);
 			hlog::warn(april::logTag, "Manual closing in WinRT apps should not be used!");
 		}
-	}
-
-	void WinRT_XamlApp::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
-	{
-		this->updateViewState();
-		args->Handled = true;
-	}
-	
-	void WinRT_XamlApp::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
-	{
-		this->updateViewState();
-		args->Handled = true;
-	}
-	
-	void WinRT_XamlApp::OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
-	{
-		if (april::window == NULL)
-		{
-			return;
-		}
-		april::window->handleQuitRequest(false);
-		args->Handled = true;
-	}
-	
-	void WinRT_XamlApp::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
-	{
-		if (april::window == NULL)
-		{
-			return;
-		}
-		unsigned int id;
-		int index;
-		this->currentButton = april::AK_LBUTTON;
-		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
-		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
-		{
-		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			april::window->setInputMode(april::Window::MOUSE);
-			if (args->CurrentPoint->Properties->IsRightButtonPressed)
-			{
-				this->currentButton = april::AK_RBUTTON;
-			}
-			else if (args->CurrentPoint->Properties->IsMiddleButtonPressed)
-			{
-				this->currentButton = april::AK_MBUTTON;
-			}
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_DOWN, position, this->currentButton);
-			break;
-		case Windows::Devices::Input::PointerDeviceType::Touch:
-		case Windows::Devices::Input::PointerDeviceType::Pen:
-			this->mouseMoveMessagesCount = 0;
-			april::window->setInputMode(april::Window::TOUCH);
-			id = args->CurrentPoint->PointerId;
-			index = this->pointerIds.index_of(id);
-			if (index < 0)
-			{
-				index = this->pointerIds.size();
-				this->pointerIds += id;
-			}
-			april::window->queueTouchEvent(april::Window::AMOUSEEVT_DOWN, position, index);
-			break;
-		}
-		args->Handled = true;
-	}
-	
-	void WinRT_XamlApp::OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
-	{
-		if (april::window == NULL)
-		{
-			return;
-		}
-		unsigned int id;
-		int index;
-		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
-		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
-		{
-		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			april::window->setInputMode(april::Window::MOUSE);
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_UP, position, this->currentButton);
-			break;
-		case Windows::Devices::Input::PointerDeviceType::Touch:
-		case Windows::Devices::Input::PointerDeviceType::Pen:
-			this->mouseMoveMessagesCount = 0;
-			april::window->setInputMode(april::Window::TOUCH);
-			id = args->CurrentPoint->PointerId;
-			index = this->pointerIds.index_of(id);
-			if (index < 0)
-			{
-				index = this->pointerIds.size();
-			}
-			else
-			{
-				this->pointerIds.remove_at(index);
-			}
-			april::window->queueTouchEvent(april::Window::AMOUSEEVT_UP, position, index);
-			break;
-		}
-		this->currentButton = april::AK_NONE;
-		args->Handled = true;
-	}
-	
-	void WinRT_XamlApp::OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
-	{
-		if (april::window == NULL)
-		{
-			return;
-		}
-		unsigned int id;
-		int index;
-		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
-		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
-		{
-		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			this->mouseMoveMessagesCount++;
-			if (this->mouseMoveMessagesCount >= 10)
-			{
-				april::window->setInputMode(april::Window::MOUSE);
-			}
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_MOVE, position, this->currentButton);
-			break;
-		case Windows::Devices::Input::PointerDeviceType::Touch:
-		case Windows::Devices::Input::PointerDeviceType::Pen:
-			this->mouseMoveMessagesCount = 0;
-			april::window->setInputMode(april::Window::TOUCH);
-			id = args->CurrentPoint->PointerId;
-			index = this->pointerIds.index_of(id);
-			if (index < 0)
-			{
-				index = this->pointerIds.size();
-			}
-			april::window->queueTouchEvent(april::Window::AMOUSEEVT_MOVE, position, index);
-			break;
-		}
-		args->Handled = true;
-	}
-	
-	void WinRT_XamlApp::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
-	{
-		if (april::window == NULL)
-		{
-			return;
-		}
-		april::window->setInputMode(april::Window::MOUSE);
-		float _wheelDelta = (float)args->CurrentPoint->Properties->MouseWheelDelta / WHEEL_DELTA;
-		if (this->scrollHorizontal ^ args->CurrentPoint->Properties->IsHorizontalMouseWheel)
-		{
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_SCROLL,
-				gvec2(-(float)_wheelDelta, 0.0f), april::AK_NONE);
-		}
-		else
-		{
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_SCROLL,
-				gvec2(0.0f, -(float)_wheelDelta), april::AK_NONE);
-		}
-		args->Handled = true;
-	}
-	
-	void WinRT_XamlApp::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
-	{
-		if (april::window == NULL)
-		{
-			return;
-		}
-		april::Key key = (april::Key)args->VirtualKey;
-		april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, key, 0);
-		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
-		{
-			this->scrollHorizontal = true;
-		}
-		args->Handled = true;
-	}
-	
-	void WinRT_XamlApp::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
-	{
-		if (april::window == NULL)
-		{
-			return;
-		}
-		april::Key key = (april::Key)args->VirtualKey;
-		april::window->queueKeyEvent(april::Window::AKEYEVT_UP, key, 0);
-		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
-		{
-			this->scrollHorizontal = false;
-		}
-		args->Handled = true;
-	}
-	
-	void WinRT_XamlApp::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
-	{
-		if (april::window == NULL)
-		{
-			return;
-		}
-		april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, AK_NONE, args->KeyCode);
-		args->Handled = true;
-	}
-	
-	gvec2 WinRT_XamlApp::_translatePosition(float x, float y)
-	{
-		static int w = 0;
-		static int h = 0;
-		if (w == 0 || h == 0)
-		{
-			gvec2 resolution = april::getSystemInfo().displayResolution;
-			w = hround(resolution.x);
-			h = hround(resolution.y);
-		}
-		int width = april::window->getWidth();
-		int height = april::window->getHeight();
-		if (w == width && h == height)
-		{
-			return gvec2(x, y);
-		}
-		return gvec2((float)(int)(x * width / w), (float)(int)(y * height / h));
 	}
 
 	void WinRT_XamlApp::_tryLoadLogoTexture()

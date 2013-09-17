@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -9,23 +9,23 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a WinRT View.
+/// Defines a WinRT XAML Overlay for keyboard handling.
 
 #if defined(_WINRT_WINDOW) && !defined(_WINP8)
-#ifndef APRIL_WINRT_XAML_INTERFACE_H
-#define APRIL_WINRT_XAML_INTERFACE_H
+#ifndef APRIL_WINRT_XAML_OVERLAY_H
+#define APRIL_WINRT_XAML_OVERLAY_H
 
-#include "windowsystems/WinRT/WinRT_XamlInterface.g.h" // auto-generated file
+#include "windowsystems/WinRT/WinRT_XamlOverlay.g.h" // auto-generated file
 
 using namespace Windows::UI::Xaml::Controls;
 
 namespace april
 {
     [Windows::Foundation::Metadata::WebHostHidden]
-    public ref class WinRT_XamlInterface sealed
+    public ref class WinRT_XamlOverlay sealed
     {
     public:
-        WinRT_XamlInterface();
+        WinRT_XamlOverlay();
 
 		void showKeyboard();
 		void hideKeyboard();

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -9,11 +9,11 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a WinRT ViewSource.
+/// Defines a WinRT Phone 8 App Launcher.
 
 #if defined(_WINRT_WINDOW) && defined(_WINP8)
-#ifndef APRIL_WINRT_VIEW_SOURCE_H
-#define APRIL_WINRT_VIEW_SOURCE_H
+#ifndef APRIL_WINP8_APP_LAUNCHER_H
+#define APRIL_WINP8_APP_LAUNCHER_H
 
 #include <hltypes/hplatform.h>
 
@@ -21,7 +21,7 @@ using namespace Windows::ApplicationModel::Core;
 
 namespace april
 {
-	ref class WinRT_ViewSource : public IFrameworkViewSource
+	ref class WinP8_AppLauncher : public IFrameworkViewSource
 	{
 	public:
 		virtual IFrameworkView^ CreateView();

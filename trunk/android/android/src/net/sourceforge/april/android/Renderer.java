@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 3.0
+// version 3.1
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;

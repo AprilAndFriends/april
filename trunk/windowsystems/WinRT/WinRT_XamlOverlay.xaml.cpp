@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -10,24 +10,24 @@
 #if defined(_WINRT_WINDOW) && !defined(_WINP8)
 #include "pch.h"
 
-#include "WinRT_XamlInterface.xaml.h"
+#include "WinRT_XamlOverlay.xaml.h"
 
 using namespace Windows::UI::Xaml;
 
 namespace april
 {
-	WinRT_XamlInterface::WinRT_XamlInterface()
+	WinRT_XamlOverlay::WinRT_XamlOverlay()
 	{
 		this->InitializeComponent();
 	}
 
-	void WinRT_XamlInterface::showKeyboard()
+	void WinRT_XamlOverlay::showKeyboard()
 	{
 		this->keyboardTextbox->IsEnabled = true;
 		this->keyboardTextbox->Focus(FocusState::Programmatic);
 	}
 	
-	void WinRT_XamlInterface::hideKeyboard()
+	void WinRT_XamlOverlay::hideKeyboard()
 	{
 		this->keyboardDisable->Focus(FocusState::Programmatic);
 	}
