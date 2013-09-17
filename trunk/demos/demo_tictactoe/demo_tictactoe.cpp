@@ -41,11 +41,7 @@ int victory = 0;
 bool player = 0;
 april::TexturedVertex v[4];
 
-#if !defined(_ANDROID) && !defined(_WINP8)
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
-#else
-grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
-#endif
 gvec2 size = drawRect.getSize() * 5 / 16;
 
 void draw_symbol(int x, int y, chstr symbol)
