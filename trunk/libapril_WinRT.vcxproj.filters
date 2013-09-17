@@ -203,9 +203,6 @@
     <ClCompile Include="windowsystems\WinRT\WinRT_ViewSource.cpp">
       <Filter>Source Files\windowsystems\WinP8</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\WinRT\WinP8_Window.cpp">
-      <Filter>Source Files\windowsystems\WinRT</Filter>
-    </ClCompile>
     <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL\ES\1</Filter>
     </ClCompile>
@@ -238,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="platforms\OpenKODE_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinP8_Window.cpp">
+      <Filter>Source Files\windowsystems\WinP8</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
