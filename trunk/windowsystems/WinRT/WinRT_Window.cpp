@@ -42,6 +42,7 @@ namespace april
 		}
 		this->width = w;
 		this->height = h;
+		this->inputMode = TOUCH;
 		this->setCursorVisible(true);
 		return true;
 	}
