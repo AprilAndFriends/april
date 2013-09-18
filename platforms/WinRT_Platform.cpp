@@ -95,7 +95,7 @@ namespace april
 
 	hstr getPackageName()
 	{
-		return _HL_PSTR_TO_HSTR(Windows::ApplicationModel::Package::Current->Id->Name);
+		return _HL_PSTR_TO_HSTR(Windows::ApplicationModel::Package::Current->Id->FamilyName);
 	}
 
 	hstr getUserDataPath()
