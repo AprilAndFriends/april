@@ -47,6 +47,7 @@ namespace april
 		void OnActivated(_In_ CoreApplicationView^ applicationView, _In_ IActivatedEventArgs^ args);
 		void OnOrientationChanged(_In_ Object^ sender);
 		void OnLogicalDpiChanged(_In_ Object^ sender);
+		void OnBackButtonPressed(Object^ sender, BackPressedEventArgs^ args);
 		
 		virtual void unassignWindow();
 		virtual void setCursorVisible(bool value);
