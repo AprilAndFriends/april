@@ -159,7 +159,7 @@ namespace april
 			{
 				april::rendersys->setOrthoProjection(this->storedOrthoProjection);
 				april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
-				this->hasStoredProjectionMatrix = false;
+				this->hasStoredProjection = false;
 				april::window->handleFocusChangeEvent(true);
 			}
 			this->running = april::window->updateOneFrame();
