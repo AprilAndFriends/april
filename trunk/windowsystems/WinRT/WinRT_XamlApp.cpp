@@ -48,7 +48,7 @@ namespace april
 		this->filled = false;
 		this->snapped = false;
 		this->logoTexture = NULL;
-		this->hasStoredProjectionMatrix = false;
+		this->hasStoredProjection = false;
 		this->backgroundColor = april::Color::Black;
 		this->initialized = false;
 		this->Suspending += ref new SuspendingEventHandler(this->app, &WinRT_BaseApp::OnSuspend);
@@ -69,7 +69,7 @@ namespace april
 	void WinRT_XamlApp::unassignWindow()
 	{
 		_HL_TRY_DELETE(this->logoTexture);
-		this->hasStoredProjectionMatrix = false;
+		this->hasStoredProjection = false;
 		this->backgroundColor = april::Color::Black;
 	}
 
@@ -155,8 +155,9 @@ namespace april
 		WinRT::Interface->updateViewState();
 		if (!this->filled && !this->snapped)
 		{
-			if (this->hasStoredProjectionMatrix)
+			if (this->hasStoredProjection)
 			{
+				april::rendersys->setOrthoProjection(this->storedOrthoProjection);
 				april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
 				this->hasStoredProjectionMatrix = false;
 				april::window->handleFocusChangeEvent(true);
@@ -175,16 +176,17 @@ namespace april
 				gvec2 resolution = april::getSystemInfo().displayResolution;
 				width = hround(resolution.x);
 				height = hround(resolution.y);
+				viewport.setSize((float)width, (float)height);
 			}
-			if (!this->hasStoredProjectionMatrix)
+			if (!this->hasStoredProjection)
 			{
+				this->storedOrthoProjection = april::rendersys->getOrthoProjection();
 				this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
-				this->hasStoredProjectionMatrix = true;
+				this->hasStoredProjection = true;
 				april::window->handleFocusChangeEvent(false);
 			}
 			this->_tryLoadLogoTexture();
 			april::rendersys->clear();
-			viewport.setSize((float)width, (float)height);
 			april::rendersys->setOrthoProjection(viewport);
 			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
 			if (this->logoTexture != NULL)

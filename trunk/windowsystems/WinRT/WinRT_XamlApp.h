@@ -63,7 +63,8 @@ namespace april
 		bool filled;
 		bool snapped;
 		Texture* logoTexture;
-		bool hasStoredProjectionMatrix;
+		bool hasStoredProjection;
+		grect storedOrthoProjection;
 		gmat4 storedProjectionMatrix;
 		Color backgroundColor;
 		bool initialized;
