@@ -8,7 +8,6 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #if defined(_WINRT_WINDOW) && defined(_WINP8)
-
 #include <hltypes/hlog.h>
 #include <hltypes/hplatform.h>
 #include <hltypes/hresource.h>
@@ -27,6 +26,7 @@
 using namespace Windows::ApplicationModel;
 using namespace Windows::Foundation;
 using namespace Windows::Graphics::Display;
+using namespace Windows::Phone::UI::Input;
 using namespace Windows::UI::ViewManagement;
 
 #define DX11_RENDERSYS ((DirectX11_RenderSystem*)april::rendersys)
@@ -48,10 +48,11 @@ namespace april
 	void WinP8_App::SetWindow(_In_ CoreWindow^ window)
 	{
 		this->window = window;
+		this->keyboardInterface = ref new WinP8_KeyboardInterface(window, this->app);
 		CoreApplication::Suspending +=
 			ref new EventHandler<SuspendingEventArgs^>(this->app, &WinRT_BaseApp::OnSuspend);
 		CoreApplication::Resuming +=
-			ref new EventHandler<Platform::Object^>(this->app, &WinRT_BaseApp::OnResume);
+			ref new EventHandler<Object^>(this->app, &WinRT_BaseApp::OnResume);
 		DisplayProperties::OrientationChanged +=
 			ref new DisplayPropertiesEventHandler(
 				this, &WinP8_App::OnOrientationChanged);
@@ -81,12 +82,12 @@ namespace april
 		CoreWindow::GetForCurrentThread()->Activate();
 	}
 	
-	void WinP8_App::OnOrientationChanged(_In_ Platform::Object^ sender)
+	void WinP8_App::OnOrientationChanged(_In_ Object^ sender)
 	{
 		DX11_RENDERSYS->updateOrientation();
 	}
 	
-	void WinP8_App::OnLogicalDpiChanged(_In_ Platform::Object^ sender)
+	void WinP8_App::OnLogicalDpiChanged(_In_ Object^ sender)
 	{
 		DX11_RENDERSYS->updateOrientation();
 	}
@@ -111,16 +112,17 @@ namespace april
 	void WinP8_App::checkEvents()
 	{
 		this->window->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
+		this->keyboardInterface->processEvents();
 	}
 	
 	void WinP8_App::showKeyboard()
 	{
-		// TODOp8
+		this->keyboardInterface->showKeyboard();
 	}
 	
 	void WinP8_App::hideKeyboard()
 	{
-		// TODOp8
+		this->keyboardInterface->hideKeyboard();
 	}
 	
 }

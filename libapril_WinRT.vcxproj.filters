@@ -239,6 +239,9 @@
     <ClCompile Include="windowsystems\WinRT\WinRT_BaseApp.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinP8_KeyboardInterface.cpp">
+      <Filter>Source Files\windowsystems\WinRT\WinP8</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -378,6 +381,9 @@
     </ClInclude>
     <ClInclude Include="windowsystems\WinRT\WinRT_BaseApp.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinP8_KeyboardInterface.h">
+      <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

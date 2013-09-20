@@ -175,7 +175,7 @@
     <Image Include="media\jpt_final.jpt">
     <None Include="TemporaryKey.pfx" />
       <FileType>Document</FileType>
-    </Image>
+    </None>
     <Xml Include="WMAppManifest.xml">
       <SubType>Designer</SubType>
     </Xml>
