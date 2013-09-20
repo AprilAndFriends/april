@@ -39,6 +39,7 @@ namespace april
 		DisplayProperties::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
 		applicationView->Activated +=
 			ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &WinP8_App::OnActivated);
+		
 	}
 	
 	void WinP8_App::Uninitialize()
@@ -47,6 +48,7 @@ namespace april
 	
 	void WinP8_App::SetWindow(_In_ CoreWindow^ window)
 	{
+		
 		this->window = window;
 		this->keyboardInterface = ref new WinP8_KeyboardInterface(window, this->app);
 		CoreApplication::Suspending +=
@@ -59,6 +61,11 @@ namespace april
 		DisplayProperties::LogicalDpiChanged +=
 			ref new DisplayPropertiesEventHandler(
 				this, &WinP8_App::OnLogicalDpiChanged);
+		/* // TODO - not used for now due to conceptual problems with WinP8
+		HardwareButtons::BackPressed +=
+			ref new EventHandler<BackPressedEventArgs^>(
+				this, &WinP8_App::OnBackButtonPressed);
+		*/
 		this->app->assignEvents(window);
 	}
 	
@@ -90,6 +97,16 @@ namespace april
 	void WinP8_App::OnLogicalDpiChanged(_In_ Object^ sender)
 	{
 		DX11_RENDERSYS->updateOrientation();
+	}
+
+	void WinP8_App::OnBackButtonPressed(Object^ sender, BackPressedEventArgs^ args)
+	{
+		if (april::window != NULL)
+		{
+			april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, april::AK_ESCAPE, 0);
+			april::window->queueKeyEvent(april::Window::AKEYEVT_UP, april::AK_ESCAPE, 0);
+		}
+		args->Handled = true;
 	}
 
 	void WinP8_App::unassignWindow()
