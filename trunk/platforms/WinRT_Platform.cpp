@@ -38,7 +38,11 @@ namespace april
 			info.cpuCores = w32info.dwNumberOfProcessors;
 			// TODO - though, WinRT does not seem to be able to retrieve this information
 			// RAM size
+#ifndef _WINP8
 			info.ram = 1024;
+#else
+			info.ram = 512;
+#endif
 			// display resolution
 #ifdef _WINRT_WINDOW
 			int width = (int)CoreWindow::GetForCurrentThread()->Bounds.Width;
