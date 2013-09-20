@@ -103,6 +103,7 @@ namespace april
 
 	void RenderSystem::setOrthoProjection(grect rect)
 	{
+		// TODO - this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
 		this->orthoProjection = rect;
 		float t = this->getPixelOffset();
 		float wnd_w = (float)april::window->getWidth();
