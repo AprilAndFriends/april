@@ -310,27 +310,29 @@ namespace april
 			gvec2 resolution = april::getSystemInfo().displayResolution;
 			w = hround(resolution.x);
 			h = hround(resolution.y);
+			CHECK_SWAP(w, h);
 		}
 #ifdef _WINP8
-		int angle = WinRT::getScreenRotation();
-		if (angle == 90)
-		{
-			hswap(x, y);
-			y = h - y;
-		}
-		if (angle == 180)
+		int rotation = WinRT::getScreenRotation();
+		if (rotation == 90)
 		{
 			x = w - x;
-			y = h - y;
-		}
-		if (angle == 270)
-		{
 			hswap(x, y);
+		}
+		else if (rotation == 180)
+		{
+			y = h - y;
 			x = w - x;
+		}
+		else if (rotation == 270)
+		{
+			y = h - y;
+			hswap(x, y);
 		}
 #endif
 		int width = april::window->getWidth();
 		int height = april::window->getHeight();
+		CHECK_SWAP(width, height);
 		if (w == width && h == height)
 		{
 			return gvec2(x, y);

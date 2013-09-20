@@ -390,6 +390,7 @@ namespace april
 		{
 			hlog::warnf(april::logTag, "On WinRT the window resolution (%d,%d) should match the display resolution (%d,%d) in order to avoid problems.", width, height, w, h);
 		}
+		CHECK_SWAP(width, height);
 		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {0};
 		swapChainDesc.Stereo = false;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -447,7 +448,7 @@ namespace april
 			rotation = DXGI_MODE_ROTATION_ROTATE90;
 			break;
 		}
-		this->swapChain->SetRotation(rotation);
+		//this->swapChain->SetRotation(rotation);
 	}
 
 	void DirectX11_RenderSystem::_configureDevice()
@@ -498,7 +499,8 @@ namespace april
 		this->d3dDeviceContext->RSSetState(this->rasterState.Get());
 		D3D11_TEXTURE2D_DESC backBufferDesc = {0};
 		_backBuffer->GetDesc(&backBufferDesc);
-		this->setViewport(grect(0.0f, 0.0f, (float)backBufferDesc.Width + 0.01f, (float)backBufferDesc.Height + 0.01f)); // just to be on the safe side and prevent floating point errors
+		CHECK_SWAP(backBufferDesc.Width, backBufferDesc.Height);
+		this->setViewport(grect(0.0f, 0.0f, (float)backBufferDesc.Width, (float)backBufferDesc.Height)); // just to be on the safe side and prevent floating point errors
 		// blend modes
 		D3D11_BLEND_DESC blendDesc = {0};
 		blendDesc.AlphaToCoverageEnable = false;
@@ -607,11 +609,19 @@ namespace april
 		D3D11_VIEWPORT viewport;
 		unsigned int count = 1;
 		this->d3dDeviceContext->RSGetViewports(&count, &viewport);
-		return grect((float)viewport.TopLeftX, (float)viewport.TopLeftY, (float)viewport.Width - 1, (float)viewport.Height - 1);
+		grect rect((float)viewport.TopLeftX, (float)viewport.TopLeftY, (float)viewport.Width - 1, (float)viewport.Height - 1);
+#ifdef _WINP8
+		rect = WinRT::unrotateViewport(rect);
+#endif
+		return rect;
 	}
 
 	void DirectX11_RenderSystem::setViewport(grect rect)
 	{
+#ifdef _WINP8
+		rect = WinRT::rotateViewport(rect);
+#endif
+		rect.setSize(rect.w + 0.01f, rect.h + 0.01f); // just to be on the safe side and prevent floating point errors
 		D3D11_VIEWPORT viewport;
 		viewport.MinDepth = D3D11_MIN_DEPTH;
 		viewport.MaxDepth = D3D11_MAX_DEPTH;

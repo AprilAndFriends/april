@@ -270,6 +270,7 @@
     <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Window.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinP8_App.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinP8_AppLauncher.cpp" />
+    <ClCompile Include="windowsystems\WinRT\WinP8_KeyboardInterface.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_BaseApp.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_XamlApp.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT.cpp" />
@@ -321,6 +322,7 @@
     <ClInclude Include="windowsystems\WinRT\pch.h" />
     <ClInclude Include="windowsystems\WinRT\WinP8_App.h" />
     <ClInclude Include="windowsystems\WinRT\WinP8_AppLauncher.h" />
+    <ClInclude Include="windowsystems\WinRT\WinP8_KeyboardInterface.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_BaseApp.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_XamlApp.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT.h" />

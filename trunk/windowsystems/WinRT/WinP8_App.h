@@ -15,20 +15,21 @@
 #ifndef APRIL_WINP8_APP_H
 #define APRIL_WINP8_APP_H
 
+#include <agile.h>
+
 #include <hltypes/harray.h>
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
-#include <agile.h>
-
 #include "IWinRT.h"
 #include "Window.h"
+#include "WinP8_KeyboardInterface.h"
 #include "WinRT_BaseApp.h"
 
 using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::ApplicationModel::Core;
-using namespace Windows::UI::Core;
+using namespace Windows::Phone::UI::Input;
 
 namespace april
 {
@@ -58,6 +59,7 @@ namespace april
 	private: // has to be private
 		Platform::Agile<CoreWindow> window;
 		WinRT_BaseApp^ app;
+		WinP8_KeyboardInterface^ keyboardInterface;
 		
 	};
 	

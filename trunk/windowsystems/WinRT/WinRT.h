@@ -15,12 +15,25 @@
 #ifndef APRIL_WINRT_H
 #define APRIL_WINRT_H
 
+#include <gtypes/Rectangle.h>
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
 #include "WinRT_BaseApp.h"
 #ifndef _WINP8
 #include "WinRT_XamlOverlay.xaml.h"
+#endif
+
+#ifndef _WINP8
+#define CHECK_SWAP(w, h)
+#else // on WinP8 the shaders may be in the root directory
+using namespace Windows::Graphics::Display;
+#define CHECK_SWAP(w, h) \
+	if (DisplayProperties::NativeOrientation == DisplayOrientations::Portrait || \
+		DisplayProperties::NativeOrientation == DisplayOrientations::PortraitFlipped) \
+	{ \
+		hswap(w, h); \
+	}
 #endif
 
 namespace april
@@ -38,6 +51,8 @@ namespace april
 		static WinRT_XamlOverlay^ XamlOverlay;
 #else
 		static int getScreenRotation();
+		static grect rotateViewport(grect viewport);
+		static grect unrotateViewport(grect viewport);
 #endif
 
 	private:
