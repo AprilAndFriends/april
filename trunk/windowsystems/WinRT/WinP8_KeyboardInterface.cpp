@@ -41,17 +41,17 @@ namespace april
 			bool closed = false;
 			for_itert (unsigned int, i, 0, text.size())
 			{
-				if (text[i] == '\n')
+				if (text[i] != '\n' && text[i] != '\r')
+				{
+					april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, AK_NONE, text[i]);
+				}
+				else
 				{
 					if (!closed)
 					{
 						april::window->terminateKeyboardHandling();
 					}
 					closed = true;
-				}
-				else if (text[i] != '\r' && text[i] != '\n')
-				{
-					april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, AK_NONE, text[i]);
 				}
 			}
 			this->inputBuffer->Text = "";
