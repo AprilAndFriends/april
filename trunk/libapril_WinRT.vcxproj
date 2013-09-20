@@ -5,8 +5,8 @@
       <Configuration>Debug_DirectX11</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug_OpenGLES1|ARM">
-      <Configuration>Debug_OpenGLES1</Configuration>
+    <ProjectConfiguration Include="Debug_OpenKODE|ARM">
+      <Configuration>Debug_OpenKODE</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|ARM">
@@ -25,12 +25,12 @@
       <Configuration>Release_DirectX11</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug_OpenGLES1|Win32">
-      <Configuration>Debug_OpenGLES1</Configuration>
+    <ProjectConfiguration Include="Debug_OpenKODE|Win32">
+      <Configuration>Debug_OpenKODE</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_OpenGLES1|ARM">
-      <Configuration>Release_OpenGLES1</Configuration>
+    <ProjectConfiguration Include="Release_OpenKODE|ARM">
+      <Configuration>Release_OpenKODE</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|ARM">
@@ -49,12 +49,12 @@
       <Configuration>DebugP8_DirectX11</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_OpenGLES1|Win32">
-      <Configuration>Release_OpenGLES1</Configuration>
+    <ProjectConfiguration Include="Release_OpenKODE|Win32">
+      <Configuration>Release_OpenKODE</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugP8_OpenGLES1|ARM">
-      <Configuration>DebugP8_OpenGLES1</Configuration>
+    <ProjectConfiguration Include="DebugP8_OpenKODE|ARM">
+      <Configuration>DebugP8_OpenKODE</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="DebugP8|ARM">
@@ -73,12 +73,12 @@
       <Configuration>ReleaseP8_DirectX11</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugP8_OpenGLES1|Win32">
-      <Configuration>DebugP8_OpenGLES1</Configuration>
+    <ProjectConfiguration Include="DebugP8_OpenKODE|Win32">
+      <Configuration>DebugP8_OpenKODE</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseP8_OpenGLES1|ARM">
-      <Configuration>ReleaseP8_OpenGLES1</Configuration>
+    <ProjectConfiguration Include="ReleaseP8_OpenKODE|ARM">
+      <Configuration>ReleaseP8_OpenKODE</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="ReleaseP8|ARM">
@@ -93,8 +93,8 @@
       <Configuration>ReleaseP8_DirectX11</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseP8_OpenGLES1|Win32">
-      <Configuration>ReleaseP8_OpenGLES1</Configuration>
+    <ProjectConfiguration Include="ReleaseP8_OpenKODE|Win32">
+      <Configuration>ReleaseP8_OpenKODE</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -119,11 +119,11 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OpenGLES1|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OpenKODE|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OpenGLES1|ARM'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OpenKODE|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
@@ -141,10 +141,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES1|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenKODE|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES1|ARM'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenKODE|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -163,12 +163,12 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v110_wp80</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseP8_OpenGLES1|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseP8_OpenKODE|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v110_wp80</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseP8_OpenGLES1|ARM'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseP8_OpenKODE|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v110_wp80</PlatformToolset>
@@ -191,11 +191,11 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v110_wp80</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugP8_OpenGLES1|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugP8_OpenKODE|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v110_wp80</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugP8_OpenGLES1|ARM'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugP8_OpenKODE|ARM'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>v110_wp80</PlatformToolset>
   </PropertyGroup>
@@ -276,7 +276,7 @@
     <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
       <DependentUpon>windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenGLES1' or '$(Configuration)'=='Release_OpenGLES1'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='DebugP8_OpenKODE' or '$(Configuration)'=='ReleaseP8_OpenKODE'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -327,7 +327,7 @@
     <ClInclude Include="windowsystems\WinRT\WinRT_Window.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
       <DependentUpon>windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenGLES1' or '$(Configuration)'=='Release_OpenGLES1'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='DebugP8_OpenKODE' or '$(Configuration)'=='ReleaseP8_OpenKODE'">true</ExcludedFromBuild>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -390,7 +390,7 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenGLES1' or '$(Configuration)'=='Release_OpenGLES1'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='DebugP8_OpenKODE' or '$(Configuration)'=='ReleaseP8_OpenKODE'">true</ExcludedFromBuild>
     </Page>
   </ItemGroup>
   <ItemGroup>

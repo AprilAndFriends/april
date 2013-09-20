@@ -70,8 +70,8 @@ Global
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGL1|Android.Build.0 = Debug_OpenGL1|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGL1|Win32.ActiveCfg = Debug_OpenGL1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGL1|Win32.Build.0 = Debug_OpenGL1|Win32
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGLES1|Android.ActiveCfg = Debug_OpenGLES1|Android
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGLES1|Android.Build.0 = Debug_OpenGLES1|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGLES1|Android.ActiveCfg = Debug_OpenKODE|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGLES1|Android.Build.0 = Debug_OpenKODE|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGLES1|Win32.ActiveCfg = Debug_OpenGLES1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug_OpenGLES1|Win32.Build.0 = Debug_OpenGLES1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Debug|Android.ActiveCfg = Debug|Android
@@ -86,8 +86,8 @@ Global
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.DebugS_OpenGL1|Android.Build.0 = DebugS_OpenGL1|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.DebugS_OpenGL1|Win32.ActiveCfg = DebugS_OpenGL1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.DebugS_OpenGL1|Win32.Build.0 = DebugS_OpenGL1|Win32
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.DebugS_OpenGLES1|Android.ActiveCfg = DebugS_OpenGLES1|Android
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.DebugS_OpenGLES1|Android.Build.0 = DebugS_OpenGLES1|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.DebugS_OpenGLES1|Android.ActiveCfg = DebugS_OpenKODE|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.DebugS_OpenGLES1|Android.Build.0 = DebugS_OpenKODE|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.DebugS_OpenGLES1|Win32.ActiveCfg = DebugS_OpenGLES1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.DebugS_OpenGLES1|Win32.Build.0 = DebugS_OpenGLES1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.DebugS|Android.ActiveCfg = DebugS|Android
@@ -102,8 +102,8 @@ Global
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGL1|Android.Build.0 = Release_OpenGL1|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGL1|Win32.ActiveCfg = Release_OpenGL1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGL1|Win32.Build.0 = Release_OpenGL1|Win32
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGLES1|Android.ActiveCfg = Release_OpenGLES1|Android
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGLES1|Android.Build.0 = Release_OpenGLES1|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGLES1|Android.ActiveCfg = Release_OpenKODE|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGLES1|Android.Build.0 = Release_OpenKODE|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGLES1|Win32.ActiveCfg = Release_OpenGLES1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release_OpenGLES1|Win32.Build.0 = Release_OpenGLES1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.Release|Android.ActiveCfg = Release|Android
@@ -118,8 +118,8 @@ Global
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.ReleaseS_OpenGL1|Android.Build.0 = ReleaseS_OpenGL1|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.ReleaseS_OpenGL1|Win32.ActiveCfg = ReleaseS_OpenGL1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.ReleaseS_OpenGL1|Win32.Build.0 = ReleaseS_OpenGL1|Win32
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.ReleaseS_OpenGLES1|Android.ActiveCfg = ReleaseS_OpenGLES1|Android
-		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.ReleaseS_OpenGLES1|Android.Build.0 = ReleaseS_OpenGLES1|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.ReleaseS_OpenGLES1|Android.ActiveCfg = ReleaseS_OpenKODE|Android
+		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.ReleaseS_OpenGLES1|Android.Build.0 = ReleaseS_OpenKODE|Android
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.ReleaseS_OpenGLES1|Win32.ActiveCfg = ReleaseS_OpenGLES1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.ReleaseS_OpenGLES1|Win32.Build.0 = ReleaseS_OpenGLES1|Win32
 		{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}.ReleaseS|Android.ActiveCfg = ReleaseS|Android
