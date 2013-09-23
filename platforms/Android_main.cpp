@@ -7,7 +7,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
-#if defined(_ANDROID)
+#if defined(_ANDROID) && !defined(_OPENKODE)
 #include <jni.h>
 
 #include <hltypes/harray.h>
@@ -41,14 +41,6 @@ namespace april
 {
 	extern void* javaVM;
 	extern void (*dialogCallback)(MessageBoxButton);
-	
-	hstr _jstringToHstr(JNIEnv* env, jstring string)
-	{
-		const char* chars = env->GetStringUTFChars(string, NULL);
-		hstr result(chars);
-		env->ReleaseStringUTFChars(string, chars);
-		return result;
-	}
 	
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jDataPath, jstring jForcedArchivePath)
 	{

@@ -194,11 +194,13 @@ namespace april
 	void OpenKODE_Window::setCursorVisible(bool value)
 	{
 		Window::setCursorVisible(value);
-		if (this->kdWindow)
+#if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
+		if (this->kdWindow != NULL)
 		{
 			KDint param = value ? KD_CURSOR_ARROW : KD_CURSOR_NONE;
 			kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_CURSOR, &param);
 		}
+#endif
 	}
 	
 	void* OpenKODE_Window::getBackendId()
