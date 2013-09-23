@@ -9,7 +9,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines WinRT keyboard
+/// Defines WinRT keyboard.
 
 #if defined(_WINRT) && defined(_WINP8)
 #ifndef APRIL_WINP8_KEYBOARD_INTERFACE_H

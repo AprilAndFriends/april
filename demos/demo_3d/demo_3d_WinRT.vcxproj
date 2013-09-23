@@ -171,9 +171,8 @@
     <Image Include="media\o.png" />
     <Image Include="media\texture.jpg" />
     <Image Include="media\x.png" />
-    <Image Include="media\icon.png" />
-    <Image Include="media\jpt_final.jpt">
-    <None Include="TemporaryKey.pfx" />
+    <Image Include="media\jpt_final.jpt" />
+    <None Include="TemporaryKey.pfx">
       <FileType>Document</FileType>
     </None>
     <Xml Include="WMAppManifest.xml">

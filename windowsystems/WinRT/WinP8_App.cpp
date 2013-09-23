@@ -26,6 +26,7 @@
 using namespace Windows::ApplicationModel;
 using namespace Windows::Foundation;
 using namespace Windows::Graphics::Display;
+using namespace Windows::Phone::System::Memory;
 using namespace Windows::Phone::UI::Input;
 using namespace Windows::UI::ViewManagement;
 
@@ -48,7 +49,6 @@ namespace april
 	
 	void WinP8_App::SetWindow(_In_ CoreWindow^ window)
 	{
-		
 		this->window = window;
 		this->keyboardInterface = ref new WinP8_KeyboardInterface(window, this->app);
 		CoreApplication::Suspending +=
@@ -130,6 +130,14 @@ namespace april
 	{
 		this->window->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
 		this->keyboardInterface->processEvents();
+		if (april::window != NULL)
+		{
+			april::SystemDelegate* systemDelegate = april::window->getSystemDelegate();
+			if (systemDelegate != NULL && (float)MemoryManager::ProcessCommittedBytes / MemoryManager::ProcessCommittedLimit > 0.85f)
+			{
+				systemDelegate->onLowMemoryWarning();
+			}
+		}
 	}
 	
 	void WinP8_App::showKeyboard()

@@ -63,7 +63,7 @@ namespace april
 		void assignWindow(Window* window);
 		//void reset();
 
-		float getPixelOffset() { return 0.5f; }
+		float getPixelOffset() { return 0.0f; }
 		harray<DisplayMode> getSupportedDisplayModes();
 		grect getViewport();
 		void setViewport(grect rect);

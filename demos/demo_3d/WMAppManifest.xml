@@ -4,7 +4,7 @@
   <Languages xmlns="">
     <Language code="en" />
   </Languages>
-  <App xmlns="" ProductID="{e0e4d21b-ece1-40f9-8335-ed9000e4c2fd}" Title="Demo 3D" RuntimeType="Modern Native" Version="3.1.0.0" Genre="apps.game" Author="April" Description="Demo 3D" Publisher="April" PublisherID="{016db639-0f24-4f88-8062-7ceb291b9cfd}">
+  <App xmlns="" ProductID="{65EE4D3E-AC78-49D5-84D3-D80C44BA2E39}" Title="Demo 3D" RuntimeType="Modern Native" Version="3.1.0.0" Genre="apps.game" Author="April" Description="Demo 3D" Publisher="April" PublisherID="{016db639-0f24-4f88-8062-7ceb291b9cfd}">
     <IconPath IsRelative="true" IsResource="false">media\assets\icon.png</IconPath>
     <Capabilities>
     </Capabilities>
