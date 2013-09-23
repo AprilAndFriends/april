@@ -253,7 +253,7 @@ namespace april
 	void DirectX11_RenderSystem::assignWindow(Window* window)
 	{
 		unsigned int creationFlags = 0;
-#ifndef _DEBUG
+#if !defined(_DEBUG) || defined(_WINP8)
 		creationFlags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
 #else
 		creationFlags |= D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_DEBUGGABLE;
@@ -609,7 +609,7 @@ namespace april
 		D3D11_VIEWPORT viewport;
 		unsigned int count = 1;
 		this->d3dDeviceContext->RSGetViewports(&count, &viewport);
-		grect rect((float)viewport.TopLeftX, (float)viewport.TopLeftY, (float)viewport.Width - 1, (float)viewport.Height - 1);
+		grect rect((float)viewport.TopLeftX, (float)viewport.TopLeftY, (float)viewport.Width, (float)viewport.Height);
 #ifdef _WINP8
 		rect = WinRT::unrotateViewport(rect);
 #endif
@@ -621,15 +621,14 @@ namespace april
 #ifdef _WINP8
 		rect = WinRT::rotateViewport(rect);
 #endif
-		rect.setSize(rect.w + 0.01f, rect.h + 0.01f); // just to be on the safe side and prevent floating point errors
 		D3D11_VIEWPORT viewport;
 		viewport.MinDepth = D3D11_MIN_DEPTH;
 		viewport.MaxDepth = D3D11_MAX_DEPTH;
 		// these double-casts are to ensure consistent behavior among rendering systems
 		viewport.TopLeftX = (float)(int)rect.x;
 		viewport.TopLeftY = (float)(int)rect.y;
-		viewport.Width = (float)(int)rect.w + 1;
-		viewport.Height = (float)(int)rect.h + 1;
+		viewport.Width = (float)(int)rect.w;
+		viewport.Height = (float)(int)rect.h;
 		this->d3dDeviceContext->RSSetViewports(1, &viewport);
 	}
 
