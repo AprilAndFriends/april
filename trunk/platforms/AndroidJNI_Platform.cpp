@@ -24,6 +24,14 @@ namespace april
 	void* javaVM = NULL;
 	void (*dialogCallback)(MessageBoxButton) = NULL; // defined here to avoid making a bunch of _OPENKODE #ifdefs in Android_Platform.cpp
 	
+	hstr _jstringToHstr(JNIEnv* env, jstring string)
+	{
+		const char* chars = env->GetStringUTFChars(string, NULL);
+		hstr result(chars);
+		env->ReleaseStringUTFChars(string, chars);
+		return result;
+	}
+	
 	JNIEnv* getJNIEnv()
 	{
 		JNIEnv* env;

@@ -67,10 +67,10 @@
                                   '$(Configuration)|$(Platform)'=='Release_OpenKODE|Android' or
                                   '$(Configuration)|$(Platform)'=='ReleaseS_OpenKODE|Android'">
     <ClCompile>
-      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;_EGL;_OPENKODE;_OPENKODE_WINDOW;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;_OPENKODE;_OPENKODE_WINDOW;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>-lKD;-lEGL;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lKD;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
 </Project>
