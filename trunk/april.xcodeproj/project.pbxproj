@@ -1125,7 +1125,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "april" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1414,143 +1414,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1DEB91AE08733DA50010E9CD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DSTROOT = /;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_MAC,
-					_SDL_WINDOW,
-					_SDL,
-					_OPENGL1,
-					"$(inherited)",
-				);
-				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
-				GCC_WARN_SHADOW = NO;
-				GCC_WARN_UNUSED_VALUE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"${SRCROOT}/../include/X11",
-				);
-				INFOPLIST_FILE = Info.plist;
-				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				VALID_ARCHS = "i386 x86_64 ppc";
-				WRAPPER_EXTENSION = framework;
-			};
-			name = Debug;
-		};
-		1DEB91AF08733DA50010E9CD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
-				DSTROOT = /;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_MODEL_TUNING = G5;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_MAC,
-					_SDL_WINDOW,
-					_SDL,
-					_OPENGL1,
-					"$(inherited)",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"${SRCROOT}/../include/X11",
-				);
-				INFOPLIST_FILE = Info.plist;
-				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				VALID_ARCHS = "i386 x86_64 ppc";
-				WRAPPER_EXTENSION = framework;
-			};
-			name = Release;
-		};
-		1DEB91B208733DA50010E9CD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_UNIX,
-					BUILDING_APRIL,
-					_DEBUG,
-					"DEBUG=1",
-					_OPENGL,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../png",
-					"${SRCROOT}/../jpg",
-					"${SRCROOT}/../hltypes/include",
-					"${SRCROOT}/../gtypes/include",
-					"${SRCROOT}/include/april",
-				);
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = april;
-				SDKROOT = macosx;
-			};
-			name = Debug;
-		};
-		1DEB91B308733DA50010E9CD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					i386,
-					ppc,
-				);
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_UNIX,
-					BUILDING_APRIL,
-					_OPENGL,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../png",
-					"${SRCROOT}/../jpg",
-					"${SRCROOT}/../hltypes/include",
-					"${SRCROOT}/../gtypes/include",
-					"${SRCROOT}/include/april",
-				);
-				PRODUCT_NAME = april;
-				SDKROOT = macosx;
-			};
-			name = Release;
-		};
 		7FC8A8A81296C768003D3931 /* App Store */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1565,7 +1428,7 @@
 					_OPENGL,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1613,7 +1476,7 @@
 			};
 			name = "App Store";
 		};
-		C981CCB7132AEAE20072B5A9 /* Debug-LLVM */ = {
+		C981CCB7132AEAE20072B5A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1645,9 +1508,9 @@
 				PRODUCT_NAME = april;
 				SDKROOT = macosx;
 			};
-			name = "Debug-LLVM";
+			name = Debug;
 		};
-		C981CCB8132AEAE20072B5A9 /* Debug-LLVM */ = {
+		C981CCB8132AEAE20072B5A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1683,9 +1546,9 @@
 				VALID_ARCHS = "i386 x86_64 ppc";
 				WRAPPER_EXTENSION = framework;
 			};
-			name = "Debug-LLVM";
+			name = Debug;
 		};
-		C981CCB9132AEAEA0072B5A9 /* Release-LLVM */ = {
+		C981CCB9132AEAEA0072B5A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1713,9 +1576,9 @@
 				PRODUCT_NAME = april;
 				SDKROOT = macosx;
 			};
-			name = "Release-LLVM";
+			name = Release;
 		};
-		C981CCBA132AEAEA0072B5A9 /* Release-LLVM */ = {
+		C981CCBA132AEAEA0072B5A9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1745,9 +1608,9 @@
 				VALID_ARCHS = "i386 x86_64 ppc";
 				WRAPPER_EXTENSION = framework;
 			};
-			name = "Release-LLVM";
+			name = Release;
 		};
-		D1134F12175CDA3300BFF3A2 /* Debug */ = {
+		D1134F13175CDA3300BFF3A2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1777,37 +1640,7 @@
 			};
 			name = Debug;
 		};
-		D1134F13175CDA3300BFF3A2 /* Debug-LLVM */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/libapril_ios.dst;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_OPENGLES,
-					_OPENGLES1,
-					_EGL,
-					_OPENKODE,
-					_OPENKODE_WINDOW,
-					"$(inherited)",
-				);
-				GCC_THUMB_SUPPORT = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../khronos",
-					"$(inherited)",
-				);
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_LDFLAGS = "-ObjC";
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				PRODUCT_NAME = "april-kd";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = "Debug-LLVM";
-		};
-		D1134F14175CDA3300BFF3A2 /* Release */ = {
+		D1134F15175CDA3300BFF3A2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1837,37 +1670,6 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
-		};
-		D1134F15175CDA3300BFF3A2 /* Release-LLVM */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libapril_ios.dst;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_OPENGLES,
-					_OPENGLES1,
-					_EGL,
-					_OPENKODE,
-					_OPENKODE_WINDOW,
-					"$(inherited)",
-				);
-				GCC_THUMB_SUPPORT = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../khronos",
-					"$(inherited)",
-				);
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_LDFLAGS = "-ObjC";
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				PRODUCT_NAME = "april-kd";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = "Release-LLVM";
 		};
 		D1134F16175CDA3300BFF3A2 /* App Store */ = {
 			isa = XCBuildConfiguration;
@@ -1900,7 +1702,7 @@
 			};
 			name = "App Store";
 		};
-		D1534771178AD62A00151D1A /* Debug */ = {
+		D1534772178AD62A00151D1A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1927,34 +1729,7 @@
 			};
 			name = Debug;
 		};
-		D1534772178AD62A00151D1A /* Debug-LLVM */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/libapril_ios.dst;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_MAC,
-					_COCOA_WINDOW,
-					_OPENGL1,
-					"$(inherited)",
-				);
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../khronos",
-					"$(inherited)",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				OTHER_LDFLAGS = "-ObjC";
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				PRODUCT_NAME = april;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = "Debug-LLVM";
-		};
-		D1534773178AD62A00151D1A /* Release */ = {
+		D1534774178AD62A00151D1A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1981,34 +1756,6 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
-		};
-		D1534774178AD62A00151D1A /* Release-LLVM */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libapril_ios.dst;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_MAC,
-					_COCOA_WINDOW,
-					_OPENGL1,
-					"$(inherited)",
-				);
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../khronos",
-					"$(inherited)",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				OTHER_LDFLAGS = "-ObjC";
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				PRODUCT_NAME = april;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = "Release-LLVM";
 		};
 		D1534775178AD62A00151D1A /* App Store */ = {
 			isa = XCBuildConfiguration;
@@ -2038,7 +1785,7 @@
 			};
 			name = "App Store";
 		};
-		D1981C3A140F824B0057C3AF /* Debug */ = {
+		D1981C3B140F824B0057C3AF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2063,32 +1810,7 @@
 			};
 			name = Debug;
 		};
-		D1981C3B140F824B0057C3AF /* Debug-LLVM */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/libapril_ios.dst;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_OPENGLES,
-					_OPENGLES1,
-					_IOS,
-					"$(inherited)",
-				);
-				GCC_THUMB_SUPPORT = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_LDFLAGS = "-ObjC";
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				PRODUCT_NAME = april;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = "Debug-LLVM";
-		};
-		D1981C3C140F824B0057C3AF /* Release */ = {
+		D1981C3D140F824B0057C3AF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2113,32 +1835,6 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
-		};
-		D1981C3D140F824B0057C3AF /* Release-LLVM */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libapril_ios.dst;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_OPENGLES,
-					_OPENGLES1,
-					_IOS,
-					"$(inherited)",
-				);
-				GCC_THUMB_SUPPORT = NO;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_LDFLAGS = "-ObjC";
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				PRODUCT_NAME = april;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = "Release-LLVM";
 		};
 		D1981C3E140F824B0057C3AF /* App Store */ = {
 			isa = XCBuildConfiguration;
@@ -2166,7 +1862,7 @@
 			};
 			name = "App Store";
 		};
-		D1AF66EE170B1E5900A43743 /* Debug */ = {
+		D1AF66EF170B1E5900A43743 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2204,45 +1900,7 @@
 			};
 			name = Debug;
 		};
-		D1AF66EF170B1E5900A43743 /* Debug-LLVM */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DSTROOT = /;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_MAC,
-					_COCOA_WINDOW,
-					_OPENGL1,
-					"$(inherited)",
-				);
-				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
-				GCC_WARN_SHADOW = NO;
-				GCC_WARN_UNUSED_VALUE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"${SRCROOT}/../include/X11",
-				);
-				INFOPLIST_FILE = Info.plist;
-				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				PRODUCT_NAME = april;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				VALID_ARCHS = "i386 x86_64 ppc";
-				WRAPPER_EXTENSION = framework;
-			};
-			name = "Debug-LLVM";
-		};
-		D1AF66F0170B1E5900A43743 /* Release */ = {
+		D1AF66F1170B1E5900A43743 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2273,38 +1931,6 @@
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
-		};
-		D1AF66F1170B1E5900A43743 /* Release-LLVM */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
-				DSTROOT = /;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_VERSION = A;
-				GCC_MODEL_TUNING = G5;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_MAC,
-					_COCOA_WINDOW,
-					_OPENGL1,
-					"$(inherited)",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"${SRCROOT}/../include/X11",
-				);
-				INFOPLIST_FILE = Info.plist;
-				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				PRODUCT_NAME = april;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				VALID_ARCHS = "i386 x86_64 ppc";
-				WRAPPER_EXTENSION = framework;
-			};
-			name = "Release-LLVM";
 		};
 		D1AF66F2170B1E5900A43743 /* App Store */ = {
 			isa = XCBuildConfiguration;
@@ -2338,7 +1964,7 @@
 			};
 			name = "App Store";
 		};
-		D1F27AEA177A2DF700E5C131 /* Debug */ = {
+		D1F27AEB177A2DF700E5C131 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2366,35 +1992,7 @@
 			};
 			name = Debug;
 		};
-		D1F27AEB177A2DF700E5C131 /* Debug-LLVM */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/libapril_ios.dst;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_OPENGL1,
-					_EGL,
-					_OPENKODE,
-					_OPENKODE_WINDOW,
-					_PC_INPUT,
-					"$(inherited)",
-				);
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../khronos",
-					"$(inherited)",
-				);
-				OTHER_LDFLAGS = "-ObjC";
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				PRODUCT_NAME = "april-kd";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = "Debug-LLVM";
-		};
-		D1F27AEC177A2DF700E5C131 /* Release */ = {
+		D1F27AED177A2DF700E5C131 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2422,35 +2020,6 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
-		};
-		D1F27AED177A2DF700E5C131 /* Release-LLVM */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libapril_ios.dst;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_OPENGL1,
-					_EGL,
-					_OPENKODE,
-					_OPENKODE_WINDOW,
-					_PC_INPUT,
-					"$(inherited)",
-				);
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../khronos",
-					"$(inherited)",
-				);
-				OTHER_LDFLAGS = "-ObjC";
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
-				PRODUCT_NAME = "april-kd";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = "Release-LLVM";
 		};
 		D1F27AEE177A2DF700E5C131 /* App Store */ = {
 			isa = XCBuildConfiguration;
@@ -2487,86 +2056,72 @@
 		1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "april (SDL OpenGL)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB91AE08733DA50010E9CD /* Debug */,
-				C981CCB8132AEAE20072B5A9 /* Debug-LLVM */,
-				1DEB91AF08733DA50010E9CD /* Release */,
-				C981CCBA132AEAEA0072B5A9 /* Release-LLVM */,
+				C981CCB8132AEAE20072B5A9 /* Debug */,
+				C981CCBA132AEAEA0072B5A9 /* Release */,
 				7FC8A8A91296C768003D3931 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "april" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB91B208733DA50010E9CD /* Debug */,
-				C981CCB7132AEAE20072B5A9 /* Debug-LLVM */,
-				1DEB91B308733DA50010E9CD /* Release */,
-				C981CCB9132AEAEA0072B5A9 /* Release-LLVM */,
+				C981CCB7132AEAE20072B5A9 /* Debug */,
+				C981CCB9132AEAEA0072B5A9 /* Release */,
 				7FC8A8A81296C768003D3931 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		D1134F11175CDA3300BFF3A2 /* Build configuration list for PBXNativeTarget "april (iOS OpenKODE)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D1134F12175CDA3300BFF3A2 /* Debug */,
-				D1134F13175CDA3300BFF3A2 /* Debug-LLVM */,
-				D1134F14175CDA3300BFF3A2 /* Release */,
-				D1134F15175CDA3300BFF3A2 /* Release-LLVM */,
+				D1134F13175CDA3300BFF3A2 /* Debug */,
+				D1134F15175CDA3300BFF3A2 /* Release */,
 				D1134F16175CDA3300BFF3A2 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		D1534770178AD62A00151D1A /* Build configuration list for PBXNativeTarget "april (Mac Cocoa OpenGL)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D1534771178AD62A00151D1A /* Debug */,
-				D1534772178AD62A00151D1A /* Debug-LLVM */,
-				D1534773178AD62A00151D1A /* Release */,
-				D1534774178AD62A00151D1A /* Release-LLVM */,
+				D1534772178AD62A00151D1A /* Debug */,
+				D1534774178AD62A00151D1A /* Release */,
 				D1534775178AD62A00151D1A /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		D1981C3F140F824B0057C3AF /* Build configuration list for PBXNativeTarget "april (iOS OpenGLES1)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D1981C3A140F824B0057C3AF /* Debug */,
-				D1981C3B140F824B0057C3AF /* Debug-LLVM */,
-				D1981C3C140F824B0057C3AF /* Release */,
-				D1981C3D140F824B0057C3AF /* Release-LLVM */,
+				D1981C3B140F824B0057C3AF /* Debug */,
+				D1981C3D140F824B0057C3AF /* Release */,
 				D1981C3E140F824B0057C3AF /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		D1AF66ED170B1E5900A43743 /* Build configuration list for PBXNativeTarget "april (Cocoa OpenGL)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D1AF66EE170B1E5900A43743 /* Debug */,
-				D1AF66EF170B1E5900A43743 /* Debug-LLVM */,
-				D1AF66F0170B1E5900A43743 /* Release */,
-				D1AF66F1170B1E5900A43743 /* Release-LLVM */,
+				D1AF66EF170B1E5900A43743 /* Debug */,
+				D1AF66F1170B1E5900A43743 /* Release */,
 				D1AF66F2170B1E5900A43743 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		D1F27AE9177A2DF700E5C131 /* Build configuration list for PBXNativeTarget "april (Mac OpenKODE)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D1F27AEA177A2DF700E5C131 /* Debug */,
-				D1F27AEB177A2DF700E5C131 /* Debug-LLVM */,
-				D1F27AEC177A2DF700E5C131 /* Release */,
-				D1F27AED177A2DF700E5C131 /* Release-LLVM */,
+				D1F27AEB177A2DF700E5C131 /* Debug */,
+				D1F27AED177A2DF700E5C131 /* Release */,
 				D1F27AEE177A2DF700E5C131 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
