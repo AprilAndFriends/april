@@ -53,12 +53,13 @@
 #include <string.h>
 #endif
 
-#if defined(_ANDROID) && !defined(_OPENKODE)
+#ifdef _ANDROID
 namespace april
 {
 	aprilExport jint JNI_OnLoad(JavaVM* vm, void* reserved);
 }
-#else
+#endif
+#if !defined(_ANDROID) || defined(_OPENKODE)
 aprilExport int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv);
 #endif
 
@@ -93,6 +94,12 @@ void __unlockSingleInstanceMutex()
 	{
 		CloseHandle(lockMutex);
 	}
+}
+#endif
+#ifdef _ANDROID
+extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
+{
+	return april::JNI_OnLoad(vm, reserved);
 }
 #endif
 #ifdef _OPENKODE
@@ -190,11 +197,6 @@ int main(Platform::Array<Platform::String^>^ args)
 }
 #endif
 #endif
-#else
-extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
-{
-	return april::JNI_OnLoad(vm, reserved);
-}
 #endif
 #define main __ STOP_USING_MAIN___DEPRECATED_IN_APRIL
 #endif

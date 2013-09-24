@@ -10,6 +10,7 @@
 /// @section DESCRIPTION
 /// 
 
+#ifdef _ANDROID
 #ifndef APRIL_ANDROIDJNI_KEYS_H
 #define APRIL_ANDROIDJNI_KEYS_H
 
@@ -21,4 +22,5 @@ namespace april
 	void initAndroidKeyMap();
 }
 
+#endif
 #endif

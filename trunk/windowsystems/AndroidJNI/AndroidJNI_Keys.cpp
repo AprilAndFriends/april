@@ -6,10 +6,12 @@
 ///
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
-#ifdef _ANDROIDJNI_WINDOW
+
+#ifdef _ANDROID
 
 #include <hltypes/hlog.h>
 #include <hltypes/hmap.h>
+
 #include "april.h"
 #include "AndroidJNI_Keys.h"
 
@@ -19,8 +21,10 @@ namespace april
 	
 	Key android2april(int androidKeyCode)
 	{
-		if (gKeyMap.has_key(androidKeyCode)) return gKeyMap[androidKeyCode];
-
+		if (gKeyMap.has_key(androidKeyCode))
+		{
+			return gKeyMap[androidKeyCode];
+		}
 #ifdef _DEBUG
 		hlog::writef(logTag, "Unknown key code: %u", androidKeyCode);
 #endif
@@ -256,5 +260,4 @@ namespace april
 		//m[0] = AK_OEM_CLEAR;
 	}
 }
-
 #endif
