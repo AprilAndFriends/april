@@ -17,6 +17,10 @@
 	#endif
 #endif
 
+#ifdef _ANDROID
+#include <jni.h>
+#endif
+
 #include <KD/kd.h>
 
 #include <hltypes/hltypesUtil.h>
@@ -43,6 +47,10 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL; // KD-TODO
 
 namespace april
 {
+#ifdef _ANDROID
+	extern JavaVM* javaVM;
+#endif
+
 #if TARGET_OS_IPHONE
 	static void iosSetupAudioSession()
 	{
@@ -213,6 +221,8 @@ namespace april
 		}
 		UIViewController* controller = [window rootViewController];
 		return controller;
+#elif defined(_ANDROID)
+		return javaVM;
 #elif defined(_EGL)
 		return april::egl->hWnd;
 #else
