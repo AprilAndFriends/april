@@ -464,7 +464,7 @@
 		D1E720CA16D37E6100B9C9AD /* OpenGLES2_RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES2_RenderSystem.h; path = rendersystems/OpenGL/ES/2/OpenGLES2_RenderSystem.h; sourceTree = "<group>"; };
 		D1E720CB16D37E6100B9C9AD /* OpenGLES2_Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGLES2_Texture.cpp; path = rendersystems/OpenGL/ES/2/OpenGLES2_Texture.cpp; sourceTree = "<group>"; };
 		D1E720CC16D37E6100B9C9AD /* OpenGLES2_Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES2_Texture.h; path = rendersystems/OpenGL/ES/2/OpenGLES2_Texture.h; sourceTree = "<group>"; };
-		D1F27AEF177A2DF700E5C131 /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libapril.a; path = "libapril-kd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1F27AEF177A2DF700E5C131 /* libapril-kd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libapril-kd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -511,7 +511,7 @@
 				D1981C30140F824B0057C3AF /* libapril.a */,
 				D1AF66F3170B1E5900A43743 /* april.framework */,
 				D1134F17175CDA3300BFF3A2 /* libapril-kd.a */,
-				D1F27AEF177A2DF700E5C131 /* libapril.a */,
+				D1F27AEF177A2DF700E5C131 /* libapril-kd.a */,
 				D1534776178AD62A00151D1A /* libapril.a */,
 			);
 			name = Products;
@@ -1116,7 +1116,7 @@
 			);
 			name = "april (Mac OpenKODE)";
 			productName = "libapril-ios";
-			productReference = D1F27AEF177A2DF700E5C131 /* libapril.a */;
+			productReference = D1F27AEF177A2DF700E5C131 /* libapril-kd.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
