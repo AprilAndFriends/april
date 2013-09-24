@@ -25,6 +25,8 @@
 #include "Window.h"
 #include "WinRT.h"
 
+#define WINP8_BACK_BUTTON_SYSTEM_HANDLING "back_button_system_handling"
+
 namespace april
 {
 	class Texture;
@@ -38,6 +40,9 @@ namespace april
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		void unassign();
 		
+		hstr getParam(chstr param);
+		void setParam(chstr param, chstr value);
+
 		void setTitle(chstr title);
 		void setCursorVisible(bool value);
 		HL_DEFINE_GET(int, width, Width);
@@ -53,6 +58,7 @@ namespace april
 	protected:
 		int width;
 		int height;
+		bool backButtonSystemHandling;
 		
 	};
 	

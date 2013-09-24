@@ -61,6 +61,7 @@ namespace april
 		Platform::Agile<CoreWindow> window;
 		WinRT_BaseApp^ app;
 		WinP8_KeyboardInterface^ keyboardInterface;
+		bool lowMemoryReported;
 		
 	};
 	

@@ -30,6 +30,8 @@ using namespace Windows::Phone::System::Memory;
 using namespace Windows::Phone::UI::Input;
 using namespace Windows::UI::ViewManagement;
 
+#define MEMORY_LIMIT 0.8f
+
 #define DX11_RENDERSYS ((DirectX11_RenderSystem*)april::rendersys)
 
 namespace april
@@ -40,7 +42,7 @@ namespace april
 		DisplayProperties::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
 		applicationView->Activated +=
 			ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &WinP8_App::OnActivated);
-		
+		this->lowMemoryReported = false;
 	}
 	
 	void WinP8_App::Uninitialize()
@@ -61,11 +63,9 @@ namespace april
 		DisplayProperties::LogicalDpiChanged +=
 			ref new DisplayPropertiesEventHandler(
 				this, &WinP8_App::OnLogicalDpiChanged);
-		/* // TODO - not used for now due to conceptual problems with WinP8
 		HardwareButtons::BackPressed +=
 			ref new EventHandler<BackPressedEventArgs^>(
 				this, &WinP8_App::OnBackButtonPressed);
-		*/
 		this->app->assignEvents(window);
 	}
 	
@@ -101,12 +101,12 @@ namespace april
 
 	void WinP8_App::OnBackButtonPressed(Object^ sender, BackPressedEventArgs^ args)
 	{
-		if (april::window != NULL)
+		if (april::window != NULL && april::window->getParam(WINP8_BACK_BUTTON_SYSTEM_HANDLING) == "0")
 		{
 			april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, april::AK_ESCAPE, 0);
 			april::window->queueKeyEvent(april::Window::AKEYEVT_UP, april::AK_ESCAPE, 0);
+			args->Handled = true;
 		}
-		args->Handled = true;
 	}
 
 	void WinP8_App::unassignWindow()
@@ -133,9 +133,17 @@ namespace april
 		if (april::window != NULL)
 		{
 			april::SystemDelegate* systemDelegate = april::window->getSystemDelegate();
-			if (systemDelegate != NULL && (float)MemoryManager::ProcessCommittedBytes / MemoryManager::ProcessCommittedLimit > 0.85f)
+			if (systemDelegate != NULL)
 			{
-				systemDelegate->onLowMemoryWarning();
+				if ((float)MemoryManager::ProcessCommittedBytes / MemoryManager::ProcessCommittedLimit <= MEMORY_LIMIT)
+				{
+					this->lowMemoryReported = false;
+				}
+				else if (!this->lowMemoryReported)
+				{
+					systemDelegate->onLowMemoryWarning();
+					this->lowMemoryReported = true;
+				}
 			}
 		}
 	}

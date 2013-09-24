@@ -27,6 +27,7 @@ namespace april
 		this->name = APRIL_WS_WINRT;
 		this->width = 0;
 		this->height = 0;
+		this->backButtonSystemHandling = false;
 	}
 
 	WinRT_Window::~WinRT_Window()
@@ -42,6 +43,7 @@ namespace april
 		}
 		this->width = w;
 		this->height = h;
+		this->backButtonSystemHandling = false;
 		this->inputMode = TOUCH;
 		this->setCursorVisible(true);
 		return true;
@@ -51,6 +53,27 @@ namespace april
 	{
 		WinRT::Interface->unassignWindow();
 		Window::unassign();
+	}
+
+	hstr WinRT_Window::getParam(chstr param)
+	{
+#ifdef _WINP8
+		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
+		{
+			return hstr(this->backButtonSystemHandling ? "1" : "0");
+		}
+#endif
+		return "";
+	}
+
+	void WinRT_Window::setParam(chstr param, chstr value)
+	{
+#ifdef _WINP8
+		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
+		{
+			this->backButtonSystemHandling = (value != "0");
+		}
+#endif
 	}
 
 	void WinRT_Window::setTitle(chstr title)
