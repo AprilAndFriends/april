@@ -86,17 +86,30 @@ namespace april
 	void WinRT_XamlApp::updateViewState()
 	{
 		bool newFilled = (ApplicationView::Value == ApplicationViewState::Filled);
-		if (!this->filled && newFilled)
-		{
-			hlog::write(april::logTag, "Handling filled view override...");
-		}
-		this->filled = newFilled;
 		bool newSnapped = (ApplicationView::Value == ApplicationViewState::Snapped);
-		if (!this->snapped && newSnapped)
+		if (this->filled != newFilled || this->snapped != newSnapped)
 		{
-			hlog::write(april::logTag, "Handling snapped view override...");
+			hlog::write(april::logTag, "Handling view change...");
+			if (!newFilled && !newSnapped)
+			{
+				if (this->hasStoredProjection)
+				{
+					april::rendersys->setOrthoProjection(this->storedOrthoProjection);
+					april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
+					this->hasStoredProjection = false;
+					april::window->handleFocusChangeEvent(true);
+				}
+			}
+			else if (!this->hasStoredProjection)
+			{
+				this->storedOrthoProjection = april::rendersys->getOrthoProjection();
+				this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
+				this->hasStoredProjection = true;
+				april::window->handleFocusChangeEvent(false);
+			}
+			this->snapped = newSnapped;
+			this->filled = newFilled;
 		}
-		this->snapped = newSnapped;
 	}
 
 	void WinRT_XamlApp::checkEvents()
@@ -152,16 +165,9 @@ namespace april
 			return;
 		}
 		// don't repeat initialization when already running
-		WinRT::Interface->updateViewState();
+		this->updateViewState();
 		if (!this->filled && !this->snapped)
 		{
-			if (this->hasStoredProjection)
-			{
-				april::rendersys->setOrthoProjection(this->storedOrthoProjection);
-				april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
-				this->hasStoredProjection = false;
-				april::window->handleFocusChangeEvent(true);
-			}
 			this->running = april::window->updateOneFrame();
 		}
 		else
@@ -177,13 +183,6 @@ namespace april
 				width = hround(resolution.x);
 				height = hround(resolution.y);
 				viewport.setSize((float)width, (float)height);
-			}
-			if (!this->hasStoredProjection)
-			{
-				this->storedOrthoProjection = april::rendersys->getOrthoProjection();
-				this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
-				this->hasStoredProjection = true;
-				april::window->handleFocusChangeEvent(false);
 			}
 			this->_tryLoadLogoTexture();
 			april::rendersys->clear();
