@@ -74,19 +74,55 @@ namespace april
 	}
 #endif
 	
-	void KD_APIENTRY lowMemoryEventCallback(const KDEvent * _event)
+	void KD_APIENTRY _processEventPause(const KDEvent* evt)
 	{
-		switch (_event->type)
+		switch (evt->type)
 		{
-			case KD_EVENT_LOWMEM:
+		case KD_EVENT_PAUSE:
+			hlog::write(logTag, "OpenKODE pause event received.");
+			if (april::window != NULL)
 			{
-				hlog::write(logTag, "Received libKD memory warning!");
-				if (april::window != NULL)
-				{
-					april::window->handleLowMemoryWarning();
-				}
-				break;
+				april::window->handleActivityChangeEvent(false);
 			}
+			if (april::rendersys != NULL)
+			{
+				april::rendersys->unloadTextures();
+			}
+#if defined(_EGL) && !defined(_ANDROID) // don't destroy the context on Android, otherwise problems arise
+			april::egl->destroy();
+#endif
+			break;
+		}
+	}
+	
+	void KD_APIENTRY _processEventResume(const KDEvent* evt)
+	{
+		switch (evt->type)
+		{
+		case KD_EVENT_RESUME:
+#if defined(_EGL) && !defined(_ANDROID) // don't destroy the context on Android, otherwise problems arise
+			april::egl->create();
+#endif
+			hlog::write(logTag, "OpenKODE resume event received.");
+			if (april::window != NULL)
+			{
+				april::window->handleActivityChangeEvent(true);
+			}
+			break;
+		}
+	}
+	
+	void KD_APIENTRY _processEventLowMemory(const KDEvent* evt)
+	{
+		switch (evt->type)
+		{
+		case KD_EVENT_LOWMEM:
+			hlog::write(logTag, "Received libKD memory warning!");
+			if (april::window != NULL)
+			{
+				april::window->handleLowMemoryWarning();
+			}
+			break;
 		}
 	}
 	
@@ -151,7 +187,9 @@ namespace april
 #ifdef _EGL
 		april::egl->create();
 #endif
-		kdInstallCallback(&lowMemoryEventCallback, KD_EVENT_LOWMEM, NULL);
+		kdInstallCallback(&_processEventPause, KD_EVENT_PAUSE, NULL);
+		kdInstallCallback(&_processEventResume, KD_EVENT_RESUME, NULL);
+		kdInstallCallback(&_processEventLowMemory, KD_EVENT_LOWMEM, NULL);
 		return true;
 	}
 	
@@ -161,6 +199,8 @@ namespace april
 		{
 			return false;
 		}
+		kdInstallCallback(NULL, KD_EVENT_PAUSE, NULL);
+		kdInstallCallback(NULL, KD_EVENT_RESUME, NULL);
 		kdInstallCallback(NULL, KD_EVENT_LOWMEM, NULL);
 		this->virtualKeyboardVisible = false;
 #ifdef _EGL
@@ -317,13 +357,16 @@ namespace april
 		case KD_EVENT_PAUSE:
 			hlog::write(logTag, "OpenKODE pause event received.");
 			this->handleActivityChangeEvent(false);
-			april::rendersys->unloadTextures();
-#ifdef _EGL
+			if (april::rendersys != NULL)
+			{
+				april::rendersys->unloadTextures();
+			}
+#if defined(_EGL) && !defined(_ANDROID)
 			april::egl->destroy();
 #endif
 			return true;
 		case KD_EVENT_RESUME:
-#ifdef _EGL
+#if defined(_EGL) && !defined(_ANDROID)
 			april::egl->create();
 #endif
 			hlog::write(logTag, "OpenKODE resume event received.");
