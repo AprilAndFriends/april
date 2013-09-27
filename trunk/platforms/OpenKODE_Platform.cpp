@@ -42,6 +42,24 @@ namespace april
 	{
 		if (info.locale == "")
 		{
+			// number of CPU cores
+			info.cpuCores = 1;
+#if TARGET_OS_IPHONE // On iOS, april prefers to use hardcoded device info then OpenKODE's info, it's more accurate
+			hstr model = kdQueryAttribcv(KD_ATTRIB_PLATFORM);
+			if (model.contains("(") && model.contains(")"))
+			{
+				hstr a, b;
+				model.split("(",a, b);
+				b.split(")", model, a);
+				getStaticiOSInfo(model, info);
+			}
+#elif defined(__APPLE__) && defined(_PC_INPUT) // mac
+			info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
+#elif defined(_WINRT)
+			SYSTEM_INFO w32info;
+			GetNativeSystemInfo(&w32info);
+			info.cpuCores = w32info.dwNumberOfProcessors;
+#endif
 			// RAM size
 #if TARGET_IPHONE_SIMULATOR
 			info.ram = 1024;
@@ -63,7 +81,6 @@ namespace april
 			kdQueryAttribi(KD_ATTRIB_RAM, (KDint*)&ram);
 			info.ram = ram / 1048576; // in MB
 #endif
-
 			// display resolution
 			int width = 0;
 			int height = 0;
@@ -73,22 +90,6 @@ namespace april
 			// display DPI
 			kdQueryAttribi(KD_ATTRIB_DPI, (KDint*)&info.displayDpi);
 			// other
-			
-			// number of CPU cores
-			info.cpuCores = 1;
-#if TARGET_OS_IPHONE // On iOS, april prefers to use hardcoded device info then OpenKODE's info, it's more accurate
-			hstr model = kdQueryAttribcv(KD_ATTRIB_PLATFORM);
-			if (model.contains("(") && model.contains(")"))
-			{
-				hstr a, b;
-				model.split("(",a, b);
-				b.split(")", model, a);
-				getStaticiOSInfo(model, info);
-			}
-#elif defined(__APPLE__) && defined(_PC_INPUT) // mac
-			info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
-#endif
-
 			info.locale = hstr(kdGetLocale());
 			if (info.locale == "")
 			{
@@ -120,9 +121,8 @@ namespace april
 #ifndef _WINRT
 		return hstr(kdGetenv("KD_APP_ID"));
 #else
-		return _HL_PSTR_TO_HSTR(Windows::ApplicationModel::Package::Current->Id->Name);
+		return _HL_PSTR_TO_HSTR(Windows::ApplicationModel::Package::Current->Id->FamilyName);
 #endif
-
 	}
 
 	hstr getUserDataPath()
