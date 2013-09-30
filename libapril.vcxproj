@@ -472,6 +472,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseS_OpenKODE|Android-x86'">
     <TargetName>$(ProjectName)-kd</TargetName>
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugS_OpenGLES1|Android-x86'">
+    <ClCompile />
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="platforms\AndroidJNI_Platform.cpp" />
     <ClCompile Include="platforms\Android_main.cpp" />
