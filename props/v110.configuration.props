@@ -5,7 +5,7 @@
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Platform)'=='Android'">
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">
     <Link>
       <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-ljpeg;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -46,7 +46,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES1|Android' or
                                   '$(Configuration)|$(Platform)'=='DebugS_OpenGLES1|Android' or
                                   '$(Configuration)|$(Platform)'=='Release_OpenGLES1|Android' or
-                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES1|Android'">
+                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES1|Android' or
+                                  '$(Configuration)|$(Platform)'=='Debug_OpenGLES1|Android-x86' or
+                                  '$(Configuration)|$(Platform)'=='DebugS_OpenGLES1|Android-x86' or
+                                  '$(Configuration)|$(Platform)'=='Release_OpenGLES1|Android-x86' or
+                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES1|Android-x86'">
     <ClCompile>
       <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;_ANDROIDJNI_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -65,7 +69,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenKODE|Android' or
                                   '$(Configuration)|$(Platform)'=='DebugS_OpenKODE|Android' or
                                   '$(Configuration)|$(Platform)'=='Release_OpenKODE|Android' or
-                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenKODE|Android'">
+                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenKODE|Android' or
+                                  '$(Configuration)|$(Platform)'=='Debug_OpenKODE|Android-x86' or
+                                  '$(Configuration)|$(Platform)'=='DebugS_OpenKODE|Android-x86' or
+                                  '$(Configuration)|$(Platform)'=='Release_OpenKODE|Android-x86' or
+                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenKODE|Android-x86'">
     <ClCompile>
       <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;_EGL;_OPENKODE;_OPENKODE_WINDOW;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
