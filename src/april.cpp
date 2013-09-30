@@ -136,6 +136,38 @@
 #define WS_INTERNAL_DEFAULT WS_DEFAULT
 #endif
 
+#ifdef _WIN32
+	#ifndef _WINRT
+		#define APRIL_PLATFORM_NAME "Win32"
+	#elif !defined(_WINP8)
+		#define APRIL_PLATFORM_NAME "WinRT"
+	#else
+		#define APRIL_PLATFORM_NAME "WinP8"
+	#endif
+#elif defined(_ANDROID)
+	#define APRIL_PLATFORM_NAME "Android"
+#elif defined(__APPLE__)
+	#if TARGET_OS_IPHONE
+		#define APRIL_PLATFORM_NAME "iOS"
+	#else
+		#define APRIL_PLATFORM_NAME "Mac OS X"
+	#endif
+#elif defined(_UNIX)
+	#define APRIL_PLATFORM_NAME "Unix"
+#endif
+#ifndef APRIL_PLATFORM_NAME
+#define APRIL_PLATFORM_NAME "Unknown"
+#endif
+
+#ifdef _ARM
+#define APRIL_PLATFORM_ARCHITECTURE "ARM"
+#elif defined(_X64)
+#define APRIL_PLATFORM_ARCHITECTURE "x64"
+#endif
+#ifndef APRIL_PLATFORM_ARCHITECTURE
+#define APRIL_PLATFORM_ARCHITECTURE "x86"
+#endif
+
 namespace april
 {
 	hstr logTag = "april";
@@ -144,7 +176,7 @@ namespace april
 
 	void _startInit()
 	{
-		hlog::write(april::logTag, "Initializing APRIL.");
+		hlog::writef(april::logTag, "Initializing APRIL. (Platform: %s %s)", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE);
 		extensions += ".jpt";
 		extensions += ".png";
 		extensions += ".jpg";

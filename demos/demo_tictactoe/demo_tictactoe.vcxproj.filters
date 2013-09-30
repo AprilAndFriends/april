@@ -18,11 +18,9 @@
     <None Include="android\AndroidManifest.xml">
       <Filter>AndroidApk</Filter>
     </None>
-    <None Include="android\src\DemoTicTacToe.java">
-      <Filter>AndroidApk</Filter>
-    </None>
     <None Include="android\build.xml">
       <Filter>AndroidApk</Filter>
     </None>
+    <None Include="android\src\DemoSimple.java" />
   </ItemGroup>
 </Project>
