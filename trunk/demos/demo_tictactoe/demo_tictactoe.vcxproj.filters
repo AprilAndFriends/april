@@ -5,22 +5,10 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="AndroidApk">
-      <UniqueIdentifier>{f1597604-53ca-4d88-91e0-905b03d67b8e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo_tictactoe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="android\AndroidManifest.xml">
-      <Filter>AndroidApk</Filter>
-    </None>
-    <None Include="android\build.xml">
-      <Filter>AndroidApk</Filter>
-    </None>
-    <None Include="android\src\DemoSimple.java" />
   </ItemGroup>
 </Project>
