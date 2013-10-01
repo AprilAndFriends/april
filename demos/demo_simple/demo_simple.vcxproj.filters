@@ -5,20 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="AndroidApk">
-      <UniqueIdentifier>{419bdca5-3fca-476d-9de2-8ec9fcee831c}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="android\AndroidManifest.xml">
-      <Filter>AndroidApk</Filter>
-    </None>
-    <None Include="android\src\DemoSimple.java">
-      <Filter>AndroidApk</Filter>
-    </None>
-    <None Include="android\build.xml">
-      <Filter>AndroidApk</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="demo_simple.cpp">

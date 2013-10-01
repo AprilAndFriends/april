@@ -131,13 +131,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="android\AndroidManifest.xml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="android\build.xml" />
-    <None Include="android\src\DemoSimple.java" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\gtypes\libgtypes.vcxproj">
       <Project>{9c043b29-db40-48d5-97d8-1bc44128e3ba}</Project>
       <CopyLocal>false</CopyLocal>
