@@ -129,6 +129,7 @@ namespace april
 		this->firstFrameDrawn = false; // show window after drawing first frame
 		this->keyboardRequest = 0;
 		this->retainLoadingOverlay = false;
+		this->inputMode = TOUCH;
 		this->focused = true;
 		this->inputEventsMutex = false;
 		this->multiTouchActive = false;
@@ -139,7 +140,6 @@ namespace april
 		this->fullscreen = true; // iOS apps are always fullscreen
 		this->firstFrameDrawn = false; // show window after drawing first frame
 		this->running = true;
-		this->inputMode = april::Window::TOUCH;
 		return true;
 	}
 	

@@ -288,6 +288,10 @@ namespace april
 		{
 			this->scrollHorizontal = false;
 		}
+		if (key == AK_RETURN)
+		{
+			april::window->terminateKeyboardHandling();
+		}
 		args->Handled = true;
 	}
 	

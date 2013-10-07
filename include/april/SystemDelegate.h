@@ -30,6 +30,7 @@ namespace april
 		virtual bool onQuit(bool canCancel);
 		virtual void onWindowSizeChanged(int width, int height, bool fullscreen);
 		virtual void onWindowFocusChanged(bool focused);
+		virtual void onInputModeChanged(Window::InputMode inputMode);
 		virtual void onVirtualKeyboardVisibilityChanged(bool visible);
 		virtual void onLowMemoryWarning();
 	};

@@ -39,6 +39,11 @@ namespace april
 		hlog::debug(april::logTag, "Event onWindowFocusChanged() was not implemented.");
 	}
 
+	void SystemDelegate::onInputModeChanged(Window::InputMode inputMode)
+	{
+		hlog::debug(april::logTag, "Event onInputModeChanged() was not implemented.");
+	}
+
 	void SystemDelegate::onVirtualKeyboardVisibilityChanged(bool visible)
 	{
 		hlog::debug(april::logTag, "Event onVirtualKeyboardVisibilityChanged() was not implemented.");
