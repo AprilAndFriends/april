@@ -149,6 +149,7 @@ namespace april
 
 		bool lionFullscreen = isLionOrNewer();
 		this->fpsCounter = options.fpsCounter;
+		this->inputMode = MOUSE;
 
 		if (fullscreen)
 		{

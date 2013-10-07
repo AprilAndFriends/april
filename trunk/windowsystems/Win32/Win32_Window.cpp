@@ -53,6 +53,7 @@ namespace april
 		{
 			return false;
 		}
+		this->inputMode = MOUSE;
 		// Win32
 		WNDCLASSEXW wc;
 		memset(&wc, 0, sizeof(WNDCLASSEX));

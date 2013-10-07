@@ -83,6 +83,7 @@ namespace april
 		{
 			return false;
 		}
+		this->inputMode = MOUSE;
 		this->cursorInside = true;
 		// initialize only SDL video subsystem
 		SDL_Init(SDL_INIT_VIDEO);

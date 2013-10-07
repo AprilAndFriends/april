@@ -153,6 +153,7 @@ namespace april
 			return false;
 		}
 		this->virtualKeyboardVisible = false;
+		this->inputMode = TOUCH;
 		if (w <= 0 || h <= 0)
 		{
 			hlog::errorf(april::logTag, "Cannot create window with size: %d x %d", w, h);
