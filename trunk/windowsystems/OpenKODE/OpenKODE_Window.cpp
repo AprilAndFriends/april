@@ -346,6 +346,7 @@ namespace april
 
 	bool OpenKODE_Window::_processEvent(const KDEvent* evt)
 	{
+		static int kdSize[2] = {0, 0};
 		switch (evt->type)
 		{
 		case KD_EVENT_QUIT:
@@ -472,7 +473,8 @@ namespace april
 		case KD_EVENT_WINDOWPROPERTY_CHANGE:
 			if (evt->data.windowproperty.pname == KD_WINDOWPROPERTY_SIZE)
 			{
-				this->_setRenderSystemResolution();
+				kdGetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_SIZE, kdSize);
+				this->_setRenderSystemResolution(kdSize[0], kdSize[1], this->fullscreen);
 			}
 			return true;
 		}
