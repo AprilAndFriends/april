@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.1
+/// @version 3.11
 /// 
 /// @section LICENSE
 /// 
@@ -68,12 +68,14 @@ namespace april
 		wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		RegisterClassExW(&wc);
 		// determine position
+		int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+		int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 		int x = 0;
 		int y = 0;
 		if (!this->fullscreen)
 		{
-			x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2;
-			y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
+			x = (screenWidth - w) / 2;
+			y = (screenHeight - h) / 2;
 		}
 		// setting the necessary styles
 		DWORD style = 0;
@@ -82,6 +84,8 @@ namespace april
 		if (!this->fullscreen)
 		{
 			this->_adjustWindowSizeForClient(x, y, w, h, style, exstyle);
+			x = (screenWidth - w) / 2;
+			y = (screenHeight - h) / 2;
 		}
 		// create window
 		this->hWnd = CreateWindowExW(exstyle, APRIL_WIN32_WINDOW_CLASS, this->title.w_str().c_str(), style, x, y, w, h, NULL, NULL, hinst, NULL);
