@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.11
 /// 
 /// @section LICENSE
 /// 
@@ -67,7 +67,8 @@ namespace april
 		grect storedOrthoProjection;
 		gmat4 storedProjectionMatrix;
 		Color backgroundColor;
-		bool initialized;
+		bool launched;
+		bool activated;
 		Windows::Foundation::EventRegistrationToken eventToken;
 
 		~WinRT_XamlApp();

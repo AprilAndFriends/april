@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.11
 /// 
 /// @section LICENSE
 /// 
@@ -50,7 +50,8 @@ namespace april
 		this->logoTexture = NULL;
 		this->hasStoredProjection = false;
 		this->backgroundColor = april::Color::Black;
-		this->initialized = false;
+		this->launched = false;
+		this->activated = false;
 		this->Suspending += ref new SuspendingEventHandler(this->app, &WinRT_BaseApp::OnSuspend);
 		this->Resuming += ref new EventHandler<Object^>(this->app, &WinRT_BaseApp::OnResume);
 #ifdef _DEBUG
@@ -132,29 +133,28 @@ namespace april
 
 	void WinRT_XamlApp::OnLaunched(LaunchActivatedEventArgs^ args)
 	{
-		// don't repeat app initialization when already running
-		if (args->PreviousExecutionState == ApplicationExecutionState::Running)
+		// don't repeat app initialization when already launched
+		if (!this->launched)
 		{
-			Windows::UI::Xaml::Window::Current->Activate();
-			return;
+			this->launched = true;
+			this->app->assignEvents(Windows::UI::Core::CoreWindow::GetForCurrentThread());
+			this->setCursorVisible(true);
+			WinRT::XamlOverlay = ref new WinRT_XamlOverlay();
+			Windows::UI::Xaml::Window::Current->Content = WinRT::XamlOverlay;
+			Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &WinRT_XamlApp::OnWindowActivationChanged);
+			hresource::setCwd(normalize_path(hstr::from_unicode(Package::Current->InstalledLocation->Path->Data())));
+			hresource::setArchive("");
+			(*WinRT::Init)(WinRT::Args);
 		}
-		WinRT::XamlOverlay = ref new WinRT_XamlOverlay();
-		Windows::UI::Xaml::Window::Current->Content = WinRT::XamlOverlay;
-		Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &WinRT_XamlApp::OnWindowActivationChanged);
 		Windows::UI::Xaml::Window::Current->Activate();
-		this->app->assignEvents(Windows::UI::Core::CoreWindow::GetForCurrentThread());
-		this->setCursorVisible(true);
 	}
 
 	void WinRT_XamlApp::OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args)
 	{
-		if (!this->initialized)
+		if (!this->activated)
 		{
-			hresource::setCwd(normalize_path(hstr::from_unicode(Package::Current->InstalledLocation->Path->Data())));
-			hresource::setArchive("");
-			(*WinRT::Init)(WinRT::Args);
+			this->activated = true;
 			this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
-			this->initialized = true;
 		}
 	}
 
