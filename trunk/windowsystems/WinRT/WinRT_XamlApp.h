@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.11
+/// @version 3.12
 /// 
 /// @section LICENSE
 /// 
@@ -34,14 +34,14 @@ using namespace Windows::UI::Xaml::Markup;
 namespace april
 {
 	class Texture;
-
+	
 	[Windows::Foundation::Metadata::WebHostHidden]
 	ref class WinRT_XamlApp sealed : public Application, public IWinRT, public IComponentConnector
-    {
-    public:
-        WinRT_XamlApp();
-        virtual void Connect(int connectionId, Object^ target);
-
+	{
+	public:
+		WinRT_XamlApp();
+		virtual void Connect(int connectionId, Object^ target);
+		
 		virtual void unassignWindow();
 		virtual void setCursorVisible(bool value);
 		virtual bool canSuspendResume();
@@ -49,33 +49,34 @@ namespace april
 		virtual void checkEvents();
 		virtual void showKeyboard();
 		virtual void hideKeyboard();
-
-    internal:
+		
+	internal:
 		virtual void OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args);
 		virtual void OnRender(_In_ Object^ sender, _In_ Object^ args);
-
+		
 	protected:
-        virtual void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;
-
+		virtual void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;
+		
 	private:
 		WinRT_BaseApp^ app;
 		bool running;
 		bool filled;
 		bool snapped;
 		Texture* logoTexture;
-		bool hasStoredProjection;
+		bool hasStoredViewData;
 		grect storedOrthoProjection;
 		gmat4 storedProjectionMatrix;
+		bool storedCursorVisible;
 		Color backgroundColor;
 		bool launched;
 		bool activated;
 		Windows::Foundation::EventRegistrationToken eventToken;
-
+		
 		~WinRT_XamlApp();
-
+		
 		void _tryLoadLogoTexture();
-
-    };
+		
+	};
 }
 #endif
 #endif

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.12
 /// 
 /// @section LICENSE
 /// 
@@ -32,6 +32,11 @@
 
 #define SHADER_PATH "april/"
 #define VERTICES_BUFFER_COUNT 65536
+#ifndef _WINP8
+#define BACKBUFFER_COUNT 2
+#else
+#define BACKBUFFER_COUNT 1
+#endif
 
 #define UINT_RGBA_TO_ABGR(c) ((((c) >> 24) & 0xFF) | (((c) << 24) & 0xFF000000) | (((c) >> 8) & 0xFF00) | (((c) << 8) & 0xFF0000))
 
@@ -59,6 +64,7 @@
 
 using namespace Microsoft::WRL;
 using namespace Windows::Graphics::Display;
+using namespace Windows::UI::ViewManagement;
 
 namespace april
 {
@@ -293,8 +299,6 @@ namespace april
 		}
 		// device config
 		this->_configureDevice();
-		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
-		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
 		// initial vertex buffer data
 		this->vertexBufferData.pSysMem = NULL;
 		this->vertexBufferData.SysMemPitch = 0;
@@ -395,14 +399,14 @@ namespace april
 		swapChainDesc.Stereo = false;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
-		swapChainDesc.Flags = 0;
+		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 		swapChainDesc.Width = width;
 		swapChainDesc.Height = height;
 		swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.SampleDesc.Quality = 0;
+		swapChainDesc.BufferCount = BACKBUFFER_COUNT;
 #ifndef _WINP8
-		swapChainDesc.BufferCount = 2;
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 		hr = dxgiFactory->CreateSwapChainForComposition(this->d3dDevice.Get(), &swapChainDesc, nullptr, &this->swapChain);
 		if (FAILED(hr))
@@ -413,7 +417,6 @@ namespace april
 		panelInspectable->QueryInterface(__uuidof(ISwapChainBackgroundPanelNative), (void**)&this->swapChainNative);
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
 #else
-		swapChainDesc.BufferCount = 1;
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		hr = dxgiFactory->CreateSwapChainForCoreWindow(this->d3dDevice.Get(),
 			reinterpret_cast<IUnknown*>(Windows::UI::Core::CoreWindow::GetForCurrentThread()), &swapChainDesc, NULL, &this->swapChain);
@@ -421,54 +424,28 @@ namespace april
 		{
 			throw hl_exception("Unable to create swap chain!");
 		}
-		this->updateOrientation();
 #endif
+		this->_configureSwapChain();
+		this->updateOrientation();
 	}
 
-	void DirectX11_RenderSystem::updateOrientation()
+	void DirectX11_RenderSystem::_resizeSwapChain(int width, int height)
 	{
-		DisplayOrientations orientation = DisplayProperties::CurrentOrientation;
-		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
-		switch (orientation)
+		this->d3dDeviceContext->OMSetRenderTargets(0, NULL, NULL);
+		this->renderTargetView = nullptr;
+		HRESULT hr = this->swapChain->ResizeBuffers(BACKBUFFER_COUNT, width, height, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+		if (FAILED(hr))
 		{
-		case DisplayOrientations::Landscape:
-			rotation = DXGI_MODE_ROTATION_ROTATE90;
-			break;
-		case DisplayOrientations::Portrait:
-			rotation = DXGI_MODE_ROTATION_IDENTITY;
-			break;
-		case DisplayOrientations::LandscapeFlipped:
-			rotation = DXGI_MODE_ROTATION_ROTATE270;
-			break;
-		case DisplayOrientations::PortraitFlipped:
-			rotation = DXGI_MODE_ROTATION_ROTATE180;
-			break;
-		default:
-			hlog::error(april::logTag, "Undefined screen orienation, using default landscape!");
-			rotation = DXGI_MODE_ROTATION_ROTATE90;
-			break;
+			throw hl_exception("Unable to resize swap chain buffers!");
 		}
-		//this->swapChain->SetRotation(rotation);
+		this->_configureSwapChain();
+		this->updateOrientation();
 	}
 
-	void DirectX11_RenderSystem::_configureDevice()
+	void DirectX11_RenderSystem::_configureSwapChain()
 	{
-		HRESULT hr;
-		if (this->swapChain != nullptr)
-		{
-			hr = this->swapChain->ResizeBuffers(2, 0, 0, DXGI_FORMAT_B8G8R8A8_UNORM, 0);
-			if (FAILED(hr))
-			{
-				throw hl_exception("Unable to resize swap chain buffers!");
-			}
-			this->updateOrientation();
-		}
-		else
-		{
-			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
-		}
 		ComPtr<ID3D11Texture2D> _backBuffer;
-		hr = this->swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
+		HRESULT hr = this->swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
 		if (FAILED(hr))
 		{
 			throw hl_exception("Unable to get swap chain back buffer!");
@@ -480,6 +457,22 @@ namespace april
 		{
 			throw hl_exception("Unable to create render target view!");
 		}
+		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
+		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+	}
+
+	void DirectX11_RenderSystem::_configureDevice()
+	{
+		if (this->swapChain != nullptr)
+		{
+			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
+		}
+		else
+		{
+			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
+		}
+		ComPtr<ID3D11Texture2D> _backBuffer;
+		HRESULT hr = this->swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
 		D3D11_RASTERIZER_DESC rasterDesc;
 		rasterDesc.AntialiasedLineEnable = false;
 		rasterDesc.CullMode = D3D11_CULL_NONE;
@@ -585,9 +578,34 @@ namespace april
 		this->presentFrame();
 	}
 
+	void DirectX11_RenderSystem::updateOrientation()
+	{
+		DisplayOrientations orientation = DisplayProperties::CurrentOrientation;
+		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
+		switch (orientation)
+		{
+		case DisplayOrientations::Landscape:
+			rotation = DXGI_MODE_ROTATION_ROTATE90;
+			break;
+		case DisplayOrientations::Portrait:
+			rotation = DXGI_MODE_ROTATION_IDENTITY;
+			break;
+		case DisplayOrientations::LandscapeFlipped:
+			rotation = DXGI_MODE_ROTATION_ROTATE270;
+			break;
+		case DisplayOrientations::PortraitFlipped:
+			rotation = DXGI_MODE_ROTATION_ROTATE180;
+			break;
+		default:
+			hlog::error(april::logTag, "Undefined screen orienation, using default landscape!");
+			rotation = DXGI_MODE_ROTATION_ROTATE90;
+			break;
+		}
+	}
+
 	void DirectX11_RenderSystem::_setResolution(int w, int h, bool fullscreen)
 	{
-		hlog::error(april::logTag, "Cannot change resolution on render system: " + this->name);
+		this->matrixDirty = true;
 	}
 
 	harray<DisplayMode> DirectX11_RenderSystem::getSupportedDisplayModes()
@@ -889,7 +907,23 @@ namespace april
 		else // actually "if (this->matrixDirty)"
 		{
 			this->matrixDirty = false;
-			this->constantBufferData.matrix = (this->projectionMatrix * this->modelviewMatrix).transposed();
+#ifndef _WINP8
+			// oh god, why Microsoft, why?
+			if (ApplicationView::Value == ApplicationViewState::Filled || ApplicationView::Value == ApplicationViewState::Snapped)
+			{
+				static float factor = 1.0f;
+				static gmat4 moddedMatrix;
+				moddedMatrix = this->projectionMatrix;
+				factor = april::window->getWidth() / april::getSystemInfo().displayResolution.x;
+				moddedMatrix[0] *= factor;
+				moddedMatrix[12] = (moddedMatrix[12] + 1) * factor - 1;
+				this->constantBufferData.matrix = (moddedMatrix * this->modelviewMatrix).transposed();
+			}
+			else
+#endif
+			{
+				this->constantBufferData.matrix = (this->projectionMatrix * this->modelviewMatrix).transposed();
+			}
 #ifdef _WINP8 // hahaha, Windows Phone 8 is unable to rotate the display by itself!
 			int angle = WinRT::getScreenRotation();
 			if (angle != 0)

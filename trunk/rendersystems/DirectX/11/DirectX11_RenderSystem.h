@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.12
 /// 
 /// @section LICENSE
 /// 
@@ -120,8 +120,10 @@ namespace april
 		DirectX11_PixelShader* pixelShaderAlphaMap;
 		DirectX11_PixelShader* pixelShaderLerp;
 
-		void _configureDevice();
 		void _createSwapChain(int width, int height);
+		void _resizeSwapChain(int width, int height);
+		void _configureSwapChain();
+		void _configureDevice();
 		
 		void _setResolution(int w, int h, bool fullscreen);
 
