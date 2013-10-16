@@ -181,21 +181,29 @@ namespace april
 			static grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
 			static grect srcRect(0.0f, 0.0f, 1.0f, 1.0f);
 			static grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
+			static bool useCustomSnappedView = false;
 			static int width = 0;
 			static int height = 0;
+			useCustomSnappedView = (april::window->getParam(WINRT_USE_CUSTOM_SNAPPED_VIEW) != "0");
 			width = april::window->getWidth();
 			height = april::window->getHeight();
 			viewport.setSize((float)width, (float)height);
-			this->_tryLoadLogoTexture();
+			if (!useCustomSnappedView)
+			{
+				this->_tryLoadLogoTexture();
+			}
 			april::rendersys->clear();
 			april::rendersys->setOrthoProjection(viewport);
-			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
-			if (this->logoTexture != NULL)
+			if (!useCustomSnappedView)
 			{
-				drawRect.set((float)((width - this->logoTexture->getWidth()) / 2), (float)((height - this->logoTexture->getHeight()) / 2),
-					(float)this->logoTexture->getWidth(), (float)this->logoTexture->getHeight());
-				april::rendersys->setTexture(this->logoTexture);
-				april::rendersys->drawTexturedRect(drawRect, srcRect);
+				april::rendersys->drawFilledRect(viewport, this->backgroundColor);
+				if (this->logoTexture != NULL)
+				{
+					drawRect.set((float)((width - this->logoTexture->getWidth()) / 2), (float)((height - this->logoTexture->getHeight()) / 2),
+						(float)this->logoTexture->getWidth(), (float)this->logoTexture->getHeight());
+					april::rendersys->setTexture(this->logoTexture);
+					april::rendersys->drawTexturedRect(drawRect, srcRect);
+				}
 			}
 		}
 		april::rendersys->presentFrame();
