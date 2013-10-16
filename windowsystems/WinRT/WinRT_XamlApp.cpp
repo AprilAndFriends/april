@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.11
+/// @version 3.12
 /// 
 /// @section LICENSE
 /// 
@@ -23,6 +23,7 @@
 #include "Window.h"
 #include "WinRT.h"
 #include "WinRT_BaseApp.h"
+#include "WinRT_Window.h"
 #include "WinRT_XamlApp.h"
 
 using namespace Windows::ApplicationModel;
@@ -37,7 +38,6 @@ using namespace Windows::UI::Xaml::Controls::Primitives;
 using namespace Windows::UI::Xaml::Media;
 
 #define MANIFEST_FILENAME "AppxManifest.xml"
-#define SNAP_VIEW_WIDTH 320 // as defined by Microsoft
 
 namespace april
 {
@@ -48,7 +48,8 @@ namespace april
 		this->filled = false;
 		this->snapped = false;
 		this->logoTexture = NULL;
-		this->hasStoredProjection = false;
+		this->hasStoredViewData = false;
+		this->storedCursorVisible = false;
 		this->backgroundColor = april::Color::Black;
 		this->launched = false;
 		this->activated = false;
@@ -70,7 +71,8 @@ namespace april
 	void WinRT_XamlApp::unassignWindow()
 	{
 		_HL_TRY_DELETE(this->logoTexture);
-		this->hasStoredProjection = false;
+		this->hasStoredViewData = false;
+		this->storedCursorVisible = false;
 		this->backgroundColor = april::Color::Black;
 	}
 
@@ -86,26 +88,30 @@ namespace april
 
 	void WinRT_XamlApp::updateViewState()
 	{
-		bool newFilled = (ApplicationView::Value == ApplicationViewState::Filled);
+		bool allowFilledView = (april::window->getParam(WINRT_ALLOW_FILLED_VIEW) != "0");
+		bool newFilled = (ApplicationView::Value == ApplicationViewState::Filled && !allowFilledView);
 		bool newSnapped = (ApplicationView::Value == ApplicationViewState::Snapped);
 		if (this->filled != newFilled || this->snapped != newSnapped)
 		{
 			hlog::write(april::logTag, "Handling view change...");
 			if (!newFilled && !newSnapped)
 			{
-				if (this->hasStoredProjection)
+				if (this->hasStoredViewData)
 				{
 					april::rendersys->setOrthoProjection(this->storedOrthoProjection);
 					april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
-					this->hasStoredProjection = false;
+					april::window->setCursorVisible(this->storedCursorVisible);
+					this->hasStoredViewData = false;
 					april::window->handleFocusChangeEvent(true);
 				}
 			}
-			else if (!this->hasStoredProjection)
+			else if (!this->hasStoredViewData)
 			{
 				this->storedOrthoProjection = april::rendersys->getOrthoProjection();
 				this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
-				this->hasStoredProjection = true;
+				this->storedCursorVisible = april::window->isCursorVisible();
+				april::window->setCursorVisible(true);
+				this->hasStoredViewData = true;
 				april::window->handleFocusChangeEvent(false);
 			}
 			this->snapped = newSnapped;
@@ -177,32 +183,18 @@ namespace april
 			static grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
 			static int width = 0;
 			static int height = 0;
-			if (width == 0 || height == 0)
-			{
-				gvec2 resolution = april::getSystemInfo().displayResolution;
-				width = hround(resolution.x);
-				height = hround(resolution.y);
-				viewport.setSize((float)width, (float)height);
-			}
+			width = april::window->getWidth();
+			height = april::window->getHeight();
+			viewport.setSize((float)width, (float)height);
 			this->_tryLoadLogoTexture();
 			april::rendersys->clear();
 			april::rendersys->setOrthoProjection(viewport);
 			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
 			if (this->logoTexture != NULL)
 			{
-				drawRect.set(0.0f, (float)((height - this->logoTexture->getHeight()) / 2),
+				drawRect.set((float)((width - this->logoTexture->getWidth()) / 2), (float)((height - this->logoTexture->getHeight()) / 2),
 					(float)this->logoTexture->getWidth(), (float)this->logoTexture->getHeight());
 				april::rendersys->setTexture(this->logoTexture);
-				if (this->filled)
-				{
-					// render texture in center
-					drawRect.x = (float)((width - SNAP_VIEW_WIDTH - this->logoTexture->getWidth()) / 2);
-				}
-				if (this->snapped)
-				{
-					// render texture twice on each side of the snapped view
-					drawRect.x = (float)((SNAP_VIEW_WIDTH - this->logoTexture->getWidth()) / 2);
-				}
 				april::rendersys->drawTexturedRect(drawRect, srcRect);
 			}
 		}

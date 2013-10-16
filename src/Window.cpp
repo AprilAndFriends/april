@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.0
+/// @version 3.12
 /// 
 /// @section LICENSE
 /// 
@@ -203,7 +203,8 @@ namespace april
 	void Window::setFullscreen(bool value)
 	{
 		SystemInfo info = april::getSystemInfo();
-		int w = hround(info.displayResolution.x), h = hround(info.displayResolution.y);
+		int w = hround(info.displayResolution.x);
+		int h = hround(info.displayResolution.y);
 		if (!value)
 		{
 			w = (int)(w * 0.6666667f);

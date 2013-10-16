@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.12
 /// 
 /// @section LICENSE
 /// 
@@ -27,6 +27,8 @@ namespace april
 		this->name = APRIL_WS_WINRT;
 		this->width = 0;
 		this->height = 0;
+		this->allowFilledView = false;
+		this->useCustomSnappedView = false;
 		this->backButtonSystemHandling = false;
 	}
 
@@ -43,6 +45,8 @@ namespace april
 		}
 		this->width = w;
 		this->height = h;
+		this->allowFilledView = false;
+		this->useCustomSnappedView = false;
 		this->backButtonSystemHandling = false;
 		this->inputMode = TOUCH;
 		this->setCursorVisible(true);
@@ -62,6 +66,16 @@ namespace april
 		{
 			return hstr(this->backButtonSystemHandling ? "1" : "0");
 		}
+#else
+		if (param == WINRT_ALLOW_FILLED_VIEW)
+		{
+			return hstr(this->allowFilledView ? "1" : "0");
+		}
+		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
+		{
+			return hstr(this->useCustomSnappedView ? "1" : "0");
+		}
+
 #endif
 		return "";
 	}
@@ -72,6 +86,15 @@ namespace april
 		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
 		{
 			this->backButtonSystemHandling = (value != "0");
+		}
+#else
+		if (param == WINRT_ALLOW_FILLED_VIEW)
+		{
+			this->allowFilledView = (value != "0");
+		}
+		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
+		{
+			this->useCustomSnappedView = (value != "0");
 		}
 #endif
 	}
@@ -96,6 +119,14 @@ namespace april
 	void WinRT_Window::setResolution(int w, int h, bool fullscreen)
 	{
 		hlog::error(april::logTag, "Cannot change resolution on window system: " + this->name);
+	}
+
+	void WinRT_Window::_setRenderSystemResolution(int w, int h, bool fullscreen)
+	{
+		this->width = w;
+		this->height = h;
+		this->fullscreen = fullscreen;
+		Window::_setRenderSystemResolution(w, h, fullscreen);
 	}
 	
 	void WinRT_Window::presentFrame()

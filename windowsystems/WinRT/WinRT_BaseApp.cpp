@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.12
 /// 
 /// @section LICENSE
 /// 
@@ -19,6 +19,7 @@
 #include "Window.h"
 #include "WinRT.h"
 #include "WinRT_BaseApp.h"
+#include "WinRT_Window.h"
 
 using namespace Windows::Foundation;
 using namespace Windows::UI::Core;
@@ -27,7 +28,6 @@ namespace april
 {
 	WinRT_BaseApp::WinRT_BaseApp()
 	{
-		//april::WinRT::App = this;
 		this->scrollHorizontal = false;
 		this->mouseMoveMessagesCount = 0;
 		this->currentButton = april::AK_NONE;
@@ -101,11 +101,7 @@ namespace april
 		WinRT::Interface->updateViewState();
 		if (april::window != NULL)
 		{
-			april::SystemDelegate* systemDelegate = april::window->getSystemDelegate();
-			if (systemDelegate != NULL)
-			{
-				systemDelegate->onWindowSizeChanged((int)args->Size.Width, (int)args->Size.Height, true);
-			}
+			((WinRT_Window*)april::window)->_setRenderSystemResolution((int)args->Size.Width, (int)args->Size.Height, true);
 		}
 		args->Handled = true;
 	}

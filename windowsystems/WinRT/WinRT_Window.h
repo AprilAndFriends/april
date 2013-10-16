@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.12
 /// 
 /// @section LICENSE
 /// 
@@ -25,6 +25,10 @@
 #include "Window.h"
 #include "WinRT.h"
 
+#define WINRT_SNAPPED_VIEW_WIDTH 320 // as defined by Microsoft
+
+#define WINRT_ALLOW_FILLED_VIEW "allow_filled_view"
+#define WINRT_USE_CUSTOM_SNAPPED_VIEW "use_custom_snapped_view"
 #define WINP8_BACK_BUTTON_SYSTEM_HANDLING "back_button_system_handling"
 
 namespace april
@@ -54,10 +58,13 @@ namespace april
 
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
+		void _setRenderSystemResolution(int w, int h, bool fullscreen); // required to be public for external access within april
 
 	protected:
 		int width;
 		int height;
+		bool allowFilledView;
+		bool useCustomSnappedView;
 		bool backButtonSystemHandling;
 		
 	};
