@@ -20,6 +20,8 @@
 #include "WinRT.h"
 #include "WinRT_Window.h"
 
+using namespace Windows::UI::ViewManagement;
+
 namespace april
 {
 	WinRT_Window::WinRT_Window() : Window()
@@ -61,12 +63,7 @@ namespace april
 
 	hstr WinRT_Window::getParam(chstr param)
 	{
-#ifdef _WINP8
-		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
-		{
-			return hstr(this->backButtonSystemHandling ? "1" : "0");
-		}
-#else
+#ifndef _WINP8
 		if (param == WINRT_ALLOW_FILLED_VIEW)
 		{
 			return hstr(this->allowFilledView ? "1" : "0");
@@ -75,19 +72,30 @@ namespace april
 		{
 			return hstr(this->useCustomSnappedView ? "1" : "0");
 		}
-
+		if (param == WINRT_VIEW_STATE)
+		{
+			if (ApplicationView::Value == ApplicationViewState::Snapped)
+			{
+				return WINRT_VIEW_STATE_SNAPPED;
+			}
+			if (ApplicationView::Value == ApplicationViewState::Filled)
+			{
+				return WINRT_VIEW_STATE_FILLED;
+			}
+			return WINRT_VIEW_STATE_FULLSCREEN;
+		}
+#else
+		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
+		{
+			return hstr(this->backButtonSystemHandling ? "1" : "0");
+		}
 #endif
 		return "";
 	}
 
 	void WinRT_Window::setParam(chstr param, chstr value)
 	{
-#ifdef _WINP8
-		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
-		{
-			this->backButtonSystemHandling = (value != "0");
-		}
-#else
+#ifndef _WINP8
 		if (param == WINRT_ALLOW_FILLED_VIEW)
 		{
 			this->allowFilledView = (value != "0");
@@ -95,6 +103,34 @@ namespace april
 		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
 		{
 			this->useCustomSnappedView = (value != "0");
+		}
+		if (param == WINRT_VIEW_STATE)
+		{
+			if (ApplicationView::Value == ApplicationViewState::Snapped)
+			{
+				if (value != WINRT_VIEW_STATE_SNAPPED)
+				{
+					if (!ApplicationView::TryUnsnap())
+					{
+#ifdef _DEBUG
+						hlog::warn(april::logTag, "Unsnapping failed!");
+#endif
+					}
+				}
+				else
+				{
+					hlog::warn(april::logTag, "Ignoring unsnap, new view state is already 'snapped'!");
+				}
+			}
+			else
+			{
+				hlog::warn(april::logTag, "Application not in snapped view, cannot change view state!");
+			}
+		}
+#else
+		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
+		{
+			this->backButtonSystemHandling = (value != "0");
 		}
 #endif
 	}

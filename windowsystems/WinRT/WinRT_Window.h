@@ -29,6 +29,10 @@
 
 #define WINRT_ALLOW_FILLED_VIEW "allow_filled_view"
 #define WINRT_USE_CUSTOM_SNAPPED_VIEW "use_custom_snapped_view"
+#define WINRT_VIEW_STATE "view_state"
+#define WINRT_VIEW_STATE_FILLED "filled"
+#define WINRT_VIEW_STATE_SNAPPED "snapped"
+#define WINRT_VIEW_STATE_FULLSCREEN "fullscreen"
 #define WINP8_BACK_BUTTON_SYSTEM_HANDLING "back_button_system_handling"
 
 namespace april
