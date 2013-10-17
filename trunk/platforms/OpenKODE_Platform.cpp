@@ -86,7 +86,7 @@ namespace april
 			int height = 0;
 			kdQueryAttribi(KD_ATTRIB_WIDTH, (KDint*)&width);
 			kdQueryAttribi(KD_ATTRIB_HEIGHT, (KDint*)&height);
-			info.displayResolution.set((float)width, (float)height);
+			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
 			// display DPI
 			kdQueryAttribi(KD_ATTRIB_DPI, (KDint*)&info.displayDpi);
 			// other
