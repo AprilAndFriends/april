@@ -161,6 +161,27 @@ namespace april
 		{
 			this->activated = true;
 			this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
+			if (april::rendersys != NULL)
+			{
+				april::rendersys->presentFrame();
+				april::rendersys->reset();
+				april::rendersys->clear();
+			}
+		}
+		else if (args->WindowActivationState == CoreWindowActivationState::Deactivated)
+		{
+			this->app->handleFocusChange(false);
+			CompositionTarget::Rendering::remove(this->eventToken);
+			this->eventToken.Value = 0;
+		}
+		else if (args->WindowActivationState == CoreWindowActivationState::CodeActivated
+			|| args->WindowActivationState == CoreWindowActivationState::PointerActivated)
+		{
+			this->app->handleFocusChange(true);
+			if (this->eventToken.Value == 0)
+			{
+				this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
+			}
 		}
 	}
 
@@ -170,7 +191,6 @@ namespace april
 		{
 			return;
 		}
-		// don't repeat initialization when already running
 		this->updateViewState();
 		if (!this->filled && !this->snapped)
 		{

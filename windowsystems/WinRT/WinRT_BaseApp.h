@@ -39,6 +39,7 @@ namespace april
 		void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
 		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
 		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
+		void OnOrientationChanged(_In_ Object^ args);
 
 		void OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
@@ -47,6 +48,8 @@ namespace april
 		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
+
+		void handleFocusChange(bool focused);
 
 	protected:
 

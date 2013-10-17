@@ -15,6 +15,7 @@
 
 #include "Keys.h"
 #include "Platform.h"
+#include "Rendersystem.h"
 #include "SystemDelegate.h"
 #include "Window.h"
 #include "WinRT.h"
@@ -22,12 +23,14 @@
 #include "WinRT_Window.h"
 
 using namespace Windows::Foundation;
+using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Core;
 
 namespace april
 {
 	WinRT_BaseApp::WinRT_BaseApp()
 	{
+		DisplayProperties::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
 		this->scrollHorizontal = false;
 		this->mouseMoveMessagesCount = 0;
 		this->currentButton = april::AK_NONE;
@@ -69,22 +72,18 @@ namespace april
 		window->Closed +=
 			ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
 				this, &WinRT_BaseApp::OnWindowClosed);
+		DisplayProperties::OrientationChanged +=
+			ref new DisplayPropertiesEventHandler(this, &WinRT_BaseApp::OnOrientationChanged);
 	}
 
 	void WinRT_BaseApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
 	{
-		if (april::window != NULL && WinRT::Interface->canSuspendResume())
-		{
-			april::window->handleFocusChangeEvent(false);
-		}
+		this->handleFocusChange(false);
 	}
 
 	void WinRT_BaseApp::OnResume(_In_ Object^ sender, _In_ Object^ args)
 	{
-		if (april::window != NULL && WinRT::Interface->canSuspendResume())
-		{
-			april::window->handleFocusChangeEvent(true);
-		}
+		this->handleFocusChange(true);
 	}
 
 	void WinRT_BaseApp::OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
@@ -95,9 +94,25 @@ namespace april
 		}
 		args->Handled = true;
 	}
+
+	void WinRT_BaseApp::handleFocusChange(bool focused)
+	{
+		if (april::rendersys != NULL && focused)
+		{
+			april::rendersys->reset();
+		}
+		if (april::window != NULL && april::window->isFocused() != focused && WinRT::Interface->canSuspendResume())
+		{
+			april::window->handleFocusChangeEvent(focused);
+		}
+	}
 	
 	void WinRT_BaseApp::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->reset();
+		}
 		WinRT::Interface->updateViewState();
 		if (april::window != NULL)
 		{
@@ -110,6 +125,14 @@ namespace april
 	{
 		WinRT::Interface->updateViewState();
 		args->Handled = true;
+	}
+
+	void WinRT_BaseApp::OnOrientationChanged(_In_ Object^ args)
+	{
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->reset();
+		}
 	}
 	
 	void WinRT_BaseApp::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
