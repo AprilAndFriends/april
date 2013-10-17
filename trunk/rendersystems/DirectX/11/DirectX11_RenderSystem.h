@@ -61,7 +61,7 @@ namespace april
 		bool destroy();
 
 		void assignWindow(Window* window);
-		//void reset();
+		void reset();
 
 		float getPixelOffset() { return 0.0f; }
 		harray<DisplayMode> getSupportedDisplayModes();

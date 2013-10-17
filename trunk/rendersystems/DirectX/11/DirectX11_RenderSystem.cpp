@@ -359,6 +359,15 @@ namespace april
 		this->d3dDeviceContext->IASetInputLayout(this->inputLayout.Get());
 	}
 
+	void DirectX11_RenderSystem::reset()
+	{
+		RenderSystem::reset();
+		// possible Microsoft bug, required for SwapChainBackgroundPanel to update its layout 
+		IInspectable* panelInspectable = (IInspectable*)reinterpret_cast<IInspectable*>(WinRT::XamlOverlay);
+		panelInspectable->QueryInterface(__uuidof(ISwapChainBackgroundPanelNative), (void**)&this->swapChainNative);
+		this->swapChainNative->SetSwapChain(this->swapChain.Get());
+	}
+
 	void DirectX11_RenderSystem::_createSwapChain(int width, int height)
 	{
 		// Once the swap chain desc is configured, it must be

@@ -39,7 +39,6 @@ namespace april
 	void WinP8_App::Initialize(_In_ CoreApplicationView^ applicationView)
 	{
 		this->app = ref new WinRT_BaseApp();
-		DisplayProperties::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
 		applicationView->Activated +=
 			ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &WinP8_App::OnActivated);
 		this->lowMemoryReported = false;
