@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.12
+/// @version 3.13
 /// 
 /// @section LICENSE
 /// 
@@ -64,7 +64,6 @@
 
 using namespace Microsoft::WRL;
 using namespace Windows::Graphics::Display;
-using namespace Windows::UI::ViewManagement;
 
 namespace april
 {
@@ -916,23 +915,7 @@ namespace april
 		else // actually "if (this->matrixDirty)"
 		{
 			this->matrixDirty = false;
-#ifndef _WINP8
-			// oh god, why Microsoft, why?
-			if (ApplicationView::Value == ApplicationViewState::Filled || ApplicationView::Value == ApplicationViewState::Snapped)
-			{
-				static float factor = 1.0f;
-				static gmat4 moddedMatrix;
-				moddedMatrix = this->projectionMatrix;
-				factor = april::window->getWidth() / april::getSystemInfo().displayResolution.x;
-				moddedMatrix[0] *= factor;
-				moddedMatrix[12] = (moddedMatrix[12] + 1) * factor - 1;
-				this->constantBufferData.matrix = (moddedMatrix * this->modelviewMatrix).transposed();
-			}
-			else
-#endif
-			{
-				this->constantBufferData.matrix = (this->projectionMatrix * this->modelviewMatrix).transposed();
-			}
+			this->constantBufferData.matrix = (this->projectionMatrix * this->modelviewMatrix).transposed();
 #ifdef _WINP8 // hahaha, Windows Phone 8 is unable to rotate the display by itself!
 			int angle = WinRT::getScreenRotation();
 			if (angle != 0)

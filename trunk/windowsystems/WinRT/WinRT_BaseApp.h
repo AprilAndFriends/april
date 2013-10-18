@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.13
 /// 
 /// @section LICENSE
 /// 
@@ -27,20 +27,20 @@ namespace april
 {
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public ref class WinRT_BaseApp sealed
-    {
-    public:
-        WinRT_BaseApp();
+	{
+	public:
+		WinRT_BaseApp();
 		virtual ~WinRT_BaseApp();
-
+		
 		void assignEvents(CoreWindow^ window);
-
+		
 		void OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args);
 		void OnResume(_In_ Object^ sender, _In_ Object^ args);
 		void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
 		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
 		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
 		void OnOrientationChanged(_In_ Object^ args);
-
+		
 		void OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
@@ -48,21 +48,19 @@ namespace april
 		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
-
+		
 		void handleFocusChange(bool focused);
-
-	protected:
-
+		
 	private:
 		bool scrollHorizontal;
 		harray<unsigned int> pointerIds;
 		int mouseMoveMessagesCount;
 		april::Key currentButton;
 		IWinRT^ iwinrt;
-
-		gvec2 _translatePosition(float x, float y);
-
-    };
+		
+		gvec2 _transformPosition(float x, float y);
+		
+	};
 }
 #endif
 #endif

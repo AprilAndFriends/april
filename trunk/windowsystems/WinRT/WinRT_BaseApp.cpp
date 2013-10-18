@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.12
+/// @version 3.13
 /// 
 /// @section LICENSE
 /// 
@@ -25,6 +25,11 @@
 using namespace Windows::Foundation;
 using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Core;
+#ifndef _WINP8
+using namespace Windows::UI::ViewManagement;
+#endif
+
+#define WINRT_SNAPPED_VIEW_UNUSED (WINRT_SNAPPED_VIEW_WIDTH + 22)
 
 namespace april
 {
@@ -143,7 +148,7 @@ namespace april
 		}
 		unsigned int id;
 		int index;
-		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 #ifndef _WINP8
 		this->currentButton = april::AK_LBUTTON;
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
@@ -188,7 +193,7 @@ namespace april
 		}
 		unsigned int id;
 		int index;
-		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 #ifndef _WINP8
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
@@ -228,7 +233,7 @@ namespace april
 		}
 		unsigned int id;
 		int index;
-		gvec2 position = this->_translatePosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 #ifndef _WINP8
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
@@ -324,18 +329,29 @@ namespace april
 		args->Handled = true;
 	}
 	
-	gvec2 WinRT_BaseApp::_translatePosition(float x, float y)
+	gvec2 WinRT_BaseApp::_transformPosition(float x, float y)
 	{
-		static int w = 0;
-		static int h = 0;
-		if (w == 0 || h == 0)
+		static int screenWidth = 0;
+		static int screenHeight = 0;
+		if (screenWidth == 0 || screenHeight == 0)
 		{
 			gvec2 resolution = april::getSystemInfo().displayResolution;
-			w = hround(resolution.x);
-			h = hround(resolution.y);
-			CHECK_SWAP(w, h);
+			screenWidth = hround(resolution.x);
+			screenHeight = hround(resolution.y);
+			CHECK_SWAP(screenWidth, screenHeight);
 		}
-#ifdef _WINP8
+		int w = screenWidth;
+		int h = screenHeight;
+#ifndef _WINP8
+		if (ApplicationView::Value == ApplicationViewState::Filled)
+		{
+			w -= WINRT_SNAPPED_VIEW_UNUSED;
+		}
+		else if (ApplicationView::Value == ApplicationViewState::Snapped)
+		{
+			w = WINRT_SNAPPED_VIEW_UNUSED;
+		}
+#else
 		int rotation = WinRT::getScreenRotation();
 		if (rotation == 90)
 		{
