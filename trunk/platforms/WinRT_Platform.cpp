@@ -23,6 +23,7 @@
 
 using namespace Windows::Foundation::Collections;
 using namespace Windows::Graphics::Display;
+using namespace Windows::Storage;
 using namespace Windows::UI::Popups;
 
 namespace april
@@ -104,8 +105,7 @@ namespace april
 
 	hstr getUserDataPath()
 	{
-		hlog::warn(april::logTag, "Cannot use getUserDataPath() on this platform.");
-		return ".";
+		return systemize_path(_HL_PSTR_TO_HSTR(ApplicationData::Current->RoamingFolder->Path));
 	}
 	
 	static void(*currentCallback)(MessageBoxButton) = NULL;
