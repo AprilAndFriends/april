@@ -105,7 +105,7 @@ namespace april
 
 	hstr getUserDataPath()
 	{
-		return systemize_path(_HL_PSTR_TO_HSTR(ApplicationData::Current->LocalFolder->Path));
+		return systemize_path(_HL_PSTR_TO_HSTR(ApplicationData::Current->RoamingFolder->Path));
 	}
 	
 	static void(*currentCallback)(MessageBoxButton) = NULL;
