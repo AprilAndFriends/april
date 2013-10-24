@@ -231,6 +231,7 @@ namespace april
 	
 	void Window::_setRenderSystemResolution(int w, int h, bool fullscreen)
 	{
+		hlog::writef(april::logTag, "Setting window resolution: (%d,%d); fullscreen: %s", w, h, fullscreen ? "yes" : "no");
 		april::rendersys->_setResolution(w, h, fullscreen);
 		if (this->systemDelegate != NULL)
 		{
