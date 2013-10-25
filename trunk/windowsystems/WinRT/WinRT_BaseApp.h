@@ -33,6 +33,8 @@ namespace april
 		virtual ~WinRT_BaseApp();
 		
 		void assignEvents(CoreWindow^ window);
+
+		HL_DEFINE_GET(unsigned int, startTime, StartTime);
 		
 		void OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args);
 		void OnResume(_In_ Object^ sender, _In_ Object^ args);
@@ -55,6 +57,7 @@ namespace april
 		bool scrollHorizontal;
 		harray<unsigned int> pointerIds;
 		int mouseMoveMessagesCount;
+		unsigned int startTime;
 		april::Key currentButton;
 		IWinRT^ iwinrt;
 		

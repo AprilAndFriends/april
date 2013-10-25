@@ -29,6 +29,7 @@ namespace april
 		this->name = APRIL_WS_WINRT;
 		this->width = 0;
 		this->height = 0;
+		this->delaySplash = 0.0f;
 		this->allowFilledView = false;
 		this->useCustomSnappedView = false;
 		this->backButtonSystemHandling = false;
@@ -47,6 +48,7 @@ namespace april
 		}
 		this->width = w;
 		this->height = h;
+		this->delaySplash = 0.0f;
 		this->allowFilledView = false;
 		this->useCustomSnappedView = false;
 		this->backButtonSystemHandling = false;
@@ -83,6 +85,10 @@ namespace april
 				return WINRT_VIEW_STATE_FILLED;
 			}
 			return WINRT_VIEW_STATE_FULLSCREEN;
+		}
+		if (param == WINRT_DELAY_SPLASH)
+		{
+			return hstr(this->delaySplash);
 		}
 #else
 		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
@@ -126,6 +132,10 @@ namespace april
 			{
 				hlog::warn(april::logTag, "Application not in snapped view, cannot change view state!");
 			}
+		}
+		if (param == WINRT_DELAY_SPLASH)
+		{
+			this->delaySplash = (float)value;
 		}
 #else
 		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)

@@ -63,6 +63,7 @@ namespace april
 		bool filled;
 		bool snapped;
 		Texture* logoTexture;
+		Texture* splashTexture;
 		bool hasStoredViewData;
 		grect storedOrthoProjection;
 		gmat4 storedProjectionMatrix;
@@ -74,7 +75,12 @@ namespace april
 		
 		~WinRT_XamlApp();
 		
+		void _tryRenderSplashTexture();
+		april::Texture* _tryLoadTexture(chstr nodeName, chstr attributeName);
 		void _tryLoadLogoTexture();
+		void _tryLoadSplashTexture();
+		void _tryLoadBackgroundColor();
+		bool _findVisualElements(chstr nodeName, hstr& data, int& index);
 		
 	};
 }

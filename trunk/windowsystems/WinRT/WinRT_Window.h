@@ -29,6 +29,7 @@
 
 #define WINRT_ALLOW_FILLED_VIEW "allow_filled_view"
 #define WINRT_USE_CUSTOM_SNAPPED_VIEW "use_custom_snapped_view"
+#define WINRT_DELAY_SPLASH "delay_splash"
 #define WINRT_VIEW_STATE "view_state"
 #define WINRT_VIEW_STATE_FILLED "filled"
 #define WINRT_VIEW_STATE_SNAPPED "snapped"
@@ -67,6 +68,7 @@ namespace april
 	protected:
 		int width;
 		int height;
+		float delaySplash;
 		bool allowFilledView;
 		bool useCustomSnappedView;
 		bool backButtonSystemHandling;
