@@ -62,7 +62,7 @@ namespace april
 
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
-		void _setRenderSystemResolution(int w, int h, bool fullscreen); // required to be public for external access within april
+		void changeSize(int w, int h); // required override instead of normal size changing
 
 	protected:
 		int width;
