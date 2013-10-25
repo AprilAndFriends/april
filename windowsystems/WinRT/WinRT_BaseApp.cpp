@@ -38,6 +38,7 @@ namespace april
 		DisplayProperties::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
 		this->scrollHorizontal = false;
 		this->mouseMoveMessagesCount = 0;
+		this->startTime = get_system_tick_count();
 		this->currentButton = april::AK_NONE;
 	}
 

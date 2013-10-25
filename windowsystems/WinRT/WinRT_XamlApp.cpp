@@ -15,6 +15,7 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hthread.h>
 
 #include "april.h"
 #include "IWinRT.h"
@@ -152,6 +153,15 @@ namespace april
 			hresource::setCwd(normalize_path(hstr::from_unicode(Package::Current->InstalledLocation->Path->Data())));
 			hresource::setArchive("");
 			(*WinRT::Init)(WinRT::Args);
+			if (april::rendersys != NULL && april::window != NULL)
+			{
+				float delaySplash = (float)april::window->getParam(WINRT_DELAY_SPLASH);
+				if (delaySplash > 0.0f && delaySplash - (get_system_tick_count() - this->app->getStartTime()) * 0.001f > 0.0f)
+				{
+					this->_tryLoadSplashTexture();
+					this->_tryRenderSplashTexture();
+				}
+			}
 		}
 		Windows::UI::Xaml::Window::Current->Activate();
 	}
@@ -164,9 +174,41 @@ namespace april
 			this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
 			if (april::rendersys != NULL)
 			{
-				april::rendersys->presentFrame();
-				april::rendersys->reset();
-				april::rendersys->clear();
+				bool rendered = false;
+				if (april::window != NULL)
+				{
+					float delaySplash = (float)april::window->getParam(WINRT_DELAY_SPLASH);
+					if (delaySplash > 0.0f)
+					{
+						float delay = delaySplash - (get_system_tick_count() - this->app->getStartTime()) * 0.001f;
+						if (delay > 0.0f)
+						{
+							hlog::write(april::logTag, "Rendering splash screen for: " + hstr(delay));
+							this->_tryLoadSplashTexture();
+							this->_tryRenderSplashTexture();
+							if (this->splashTexture != NULL)
+							{
+								rendered = true;
+							}
+							delay = delaySplash - (get_system_tick_count() - this->app->getStartTime()) / 1000.0f;
+							if (delay > 0.0f) // if there's still time left after rendering
+							{
+								hthread::sleep(delay * 1000.0f);
+							}
+						}
+					}
+				}
+				if (this->splashTexture != NULL)
+				{
+					delete this->splashTexture;
+					this->splashTexture = NULL;
+				}
+				if (!rendered)
+				{
+					april::rendersys->clear();
+					april::rendersys->presentFrame();
+					april::rendersys->reset();
+				}
 			}
 		}
 		else if (args->WindowActivationState == CoreWindowActivationState::Deactivated)
@@ -236,45 +278,47 @@ namespace april
 		}
 	}
 
-	void WinRT_XamlApp::_tryLoadLogoTexture()
+	void WinRT_XamlApp::_tryRenderSplashTexture()
+	{
+		if (this->splashTexture != NULL)
+		{
+			this->storedOrthoProjection = april::rendersys->getOrthoProjection();
+			this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
+			grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
+			grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
+			int width = april::window->getWidth();
+			int height = april::window->getHeight();
+			viewport.setSize((float)width, (float)height);
+			april::rendersys->setOrthoProjection(viewport);
+			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
+			drawRect.set((float)((width - this->splashTexture->getWidth()) / 2), (float)((height - this->splashTexture->getHeight()) / 2),
+				(float)this->splashTexture->getWidth(), (float)this->splashTexture->getHeight());
+			april::rendersys->setTexture(this->splashTexture);
+			april::rendersys->drawTexturedRect(drawRect, grect(0.0f, 0.0f, 1.0f, 1.0f));
+			april::rendersys->presentFrame();
+			april::rendersys->reset();
+			april::rendersys->setOrthoProjection(this->storedOrthoProjection);
+			april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
+		}
+	}
+
+	april::Texture* WinRT_XamlApp::_tryLoadTexture(chstr nodeName, chstr attributeName)
 	{
 		if (april::rendersys == NULL)
 		{
-			return;
+			return NULL;
 		}
-		if (this->logoTexture != NULL)
+		hstr data;
+		int index = 0;
+		if (!this->_findVisualElements(nodeName, data, index))
 		{
-			return;
-		}
-		if (!hfile::exists(MANIFEST_FILENAME))
-		{
-			return;
-		}
-		hstr data = hfile::hread(MANIFEST_FILENAME); // lets hope Microsoft does not change the format of these
-		// locating the right entry in XML
-		int index = data.find("<Applications>");
-		if (index < 0)
-		{
-			return;
-		}
-		data = data(index, -1);
-		index = data.find("<Application ");
-		if (index < 0)
-		{
-			return;
-		}
-		data = data(index, -1);
-		index = data.find("<VisualElements ");
-		if (index < 0)
-		{
-			return;
+			return NULL;
 		}
 		// finding the logo entry in XML
-		data = data(index, -1);
-		int logoIndex = data.find("Logo=\"");
+		int logoIndex = data.find(attributeName + "=\"");
 		if (logoIndex >= 0)
 		{
-			index = logoIndex + hstr("Logo=\"").size();
+			index = logoIndex + hstr(attributeName + "=\"").size();
 			hstr logoFilename = data(index, -1);
 			index = logoFilename.find("\"");
 			if (index >= 0)
@@ -288,22 +332,50 @@ namespace april
 				foreach (hstr, it, filenames)
 				{
 					// loading the logo file
-					this->logoTexture = april::rendersys->createTexture(logoFilename, false);
-					if (this->logoTexture != NULL)
+					april::Texture* texture = april::rendersys->createTexture(logoFilename, false);
+					if (texture != NULL)
 					{
 						try
 						{
-							this->logoTexture->load();
-							break;
+							texture->load();
+							return texture;
 						}
 						catch (hltypes::exception&)
 						{
-							delete this->logoTexture;
-							this->logoTexture = NULL;
+							delete texture;
 						}
 					}
 				}
 			}
+		}
+		return NULL;
+	}
+
+	void WinRT_XamlApp::_tryLoadLogoTexture()
+	{
+		if (this->logoTexture == NULL)
+		{
+			this->logoTexture = this->_tryLoadTexture("VisualElements", "Logo");
+		}
+		this->_tryLoadBackgroundColor();
+	}
+
+	void WinRT_XamlApp::_tryLoadSplashTexture()
+	{
+		if (this->splashTexture == NULL)
+		{
+			this->splashTexture = this->_tryLoadTexture("SplashScreen", "Image");
+		}
+		this->_tryLoadBackgroundColor();
+	}
+
+	void WinRT_XamlApp::_tryLoadBackgroundColor()
+	{
+		hstr data;
+		int index = 0;
+		if (!this->_findVisualElements("VisualElements", data, index))
+		{
+			return;
 		}
 		// finding the color entry in XML
 		int colorIndex = data.find("BackgroundColor=\"");
@@ -326,6 +398,35 @@ namespace april
 				}
 			}
 		}
+	}
+
+	bool WinRT_XamlApp::_findVisualElements(chstr nodeName, hstr& data, int& index)
+	{
+		if (!hfile::exists(MANIFEST_FILENAME))
+		{
+			return false;
+		}
+		data = hfile::hread(MANIFEST_FILENAME); // lets hope Microsoft does not change the format of these
+		// locating the right entry in XML
+		index = data.find("<Applications>");
+		if (index < 0)
+		{
+			return false;
+		}
+		data = data(index, -1);
+		index = data.find("<Application ");
+		if (index < 0)
+		{
+			return false;
+		}
+		data = data(index, -1);
+		index = data.find("<" + nodeName + " ");
+		if (index < 0)
+		{
+			return false;
+		}
+		data = data(index, -1);
+		return true;
 	}
 
 }
