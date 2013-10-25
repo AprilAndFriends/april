@@ -157,12 +157,14 @@ namespace april
 		hlog::error(april::logTag, "Cannot change resolution on window system: " + this->name);
 	}
 
-	void WinRT_Window::_setRenderSystemResolution(int w, int h, bool fullscreen)
+	void WinRT_Window::changeSize(int w, int h)
 	{
-		this->width = w;
-		this->height = h;
-		this->fullscreen = fullscreen;
-		Window::_setRenderSystemResolution(w, h, fullscreen);
+		if (this->width != w || this->height != h)
+		{
+			this->width = w;
+			this->height = h;
+			this->_setRenderSystemResolution(w, h, this->fullscreen);
+		}
 	}
 	
 	void WinRT_Window::presentFrame()
