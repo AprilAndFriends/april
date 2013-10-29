@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.12
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -104,8 +104,6 @@ namespace april
 		BlendMode activeTextureBlendMode;
 		ColorMode activeTextureColorMode;
 		unsigned char activeTextureColorModeAlpha;
-		Texture::Filter activeTextureFilter;
-		Texture::AddressMode activeTextureAddressMode;
 		DirectX11_Texture* activeTexture;
 		DirectX11_VertexShader* activeVertexShader;
 		DirectX11_PixelShader* activePixelShader;
