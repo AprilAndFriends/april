@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.13
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -143,7 +143,7 @@ namespace april
 	
 	void WinRT_BaseApp::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		if (april::window == NULL)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -188,7 +188,7 @@ namespace april
 	
 	void WinRT_BaseApp::OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		if (april::window == NULL)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -228,7 +228,7 @@ namespace april
 	
 	void WinRT_BaseApp::OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		if (april::window == NULL)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -267,7 +267,7 @@ namespace april
 	
 	void WinRT_BaseApp::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		if (april::window == NULL)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -288,7 +288,7 @@ namespace april
 	
 	void WinRT_BaseApp::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
-		if (april::window == NULL)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -303,7 +303,7 @@ namespace april
 	
 	void WinRT_BaseApp::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
-		if (april::window == NULL)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -322,7 +322,7 @@ namespace april
 	
 	void WinRT_BaseApp::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
 	{
-		if (april::window == NULL)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
