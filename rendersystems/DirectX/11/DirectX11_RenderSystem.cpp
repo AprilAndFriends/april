@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.13
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -113,7 +113,6 @@ namespace april
 	DirectX11_RenderSystem::DirectX11_RenderSystem() : RenderSystem(),
 		activeTextureBlendMode(DEFAULT), activeTexture(NULL), renderTarget(NULL),
 		activeTextureColorMode(NORMAL), activeTextureColorModeAlpha(255),
-		activeTextureFilter(Texture::FILTER_LINEAR), activeTextureAddressMode(Texture::ADDRESS_WRAP),
 		matrixDirty(true)
 	{
 		this->name = APRIL_RS_DIRECTX11;
@@ -170,8 +169,6 @@ namespace april
 		this->renderTarget = NULL;
 		this->activeTextureColorMode = NORMAL;
 		this->activeTextureColorModeAlpha = 255;
-		this->activeTextureFilter = Texture::FILTER_LINEAR;
-		this->activeTextureAddressMode = Texture::ADDRESS_WRAP;
 		this->matrixDirty = true;
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
@@ -699,7 +696,7 @@ namespace april
 		{
 		case Texture::FILTER_LINEAR:
 		case Texture::FILTER_NEAREST:
-			this->activeTextureFilter = textureFilter;
+			this->textureFilter = textureFilter;
 			break;
 		default:
 			hlog::warn(april::logTag, "Trying to set unsupported texture filter!");
@@ -972,11 +969,11 @@ namespace april
 				this->d3dDeviceContext->PSSetShaderResources(0, 1, this->_currentTexture->d3dView.GetAddressOf());
 			}
 		}
-		if (this->_currentTextureFilter != this->activeTextureFilter ||
-			this->_currentTextureAddressMode != this->activeTextureAddressMode)
+		if (this->_currentTextureFilter != this->textureFilter ||
+			this->_currentTextureAddressMode != this->textureAddressMode)
 		{
-			this->_currentTextureFilter = this->activeTextureFilter;
-			this->_currentTextureAddressMode = this->activeTextureAddressMode;
+			this->_currentTextureFilter = this->textureFilter;
+			this->_currentTextureAddressMode = this->textureAddressMode;
 			if (this->_currentTextureFilter == Texture::FILTER_LINEAR &&
 				this->_currentTextureAddressMode == Texture::ADDRESS_WRAP)
 			{
