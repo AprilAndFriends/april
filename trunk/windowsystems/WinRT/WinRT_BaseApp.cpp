@@ -110,17 +110,9 @@ namespace april
 		if (april::window != NULL && april::window->isFocused() != focused && WinRT::Interface->canSuspendResume())
 		{
 			april::window->handleFocusChangeEvent(focused);
-			if (!focused)
-			{
-				bool allowFilledView = (april::window->getParam(WINRT_ALLOW_FILLED_VIEW) != "0");
-				if (allowFilledView && ApplicationView::Value == ApplicationViewState::Filled)
-				{
-					april::window->handleFocusChangeEvent(true);
-				}
-			}
 		}
 	}
-	
+
 	void WinRT_BaseApp::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
 		if (april::rendersys != NULL)

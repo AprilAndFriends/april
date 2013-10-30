@@ -119,6 +119,14 @@ namespace april
 			this->snapped = newSnapped;
 			this->filled = newFilled;
 		}
+		if (allowFilledView && ApplicationView::Value == ApplicationViewState::Filled && april::window != NULL && !april::window->isFocused())
+		{
+			april::window->handleFocusChangeEvent(true);
+			if (this->eventToken.Value == 0)
+			{
+				this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
+			}
+		}
 	}
 
 	void WinRT_XamlApp::checkEvents()
