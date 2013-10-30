@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.12
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -214,11 +214,14 @@ namespace april
 		else if (args->WindowActivationState == CoreWindowActivationState::Deactivated)
 		{
 			this->app->handleFocusChange(false);
-			CompositionTarget::Rendering::remove(this->eventToken);
-			this->eventToken.Value = 0;
+			if (!april::window->isFocused()) // this causes "filled view" to still keep rendering when "allow_filled_view" is used
+			{
+				CompositionTarget::Rendering::remove(this->eventToken);
+				this->eventToken.Value = 0;
+			}
 		}
-		else if (args->WindowActivationState == CoreWindowActivationState::CodeActivated
-			|| args->WindowActivationState == CoreWindowActivationState::PointerActivated)
+		else if (args->WindowActivationState == CoreWindowActivationState::CodeActivated ||
+			args->WindowActivationState == CoreWindowActivationState::PointerActivated)
 		{
 			this->app->handleFocusChange(true);
 			if (this->eventToken.Value == 0)
