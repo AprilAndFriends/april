@@ -11,6 +11,7 @@
 #include <hltypes/hlog.h>
 #include "april.h"
 #include "Mac_Window.h"
+#import <OpenGL/gl.h>
 #import "Mac_OpenGLView.h"
 
 @implementation AprilMacOpenGLView
