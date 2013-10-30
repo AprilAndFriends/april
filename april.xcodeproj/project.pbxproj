@@ -1439,6 +1439,7 @@
 					"${SRCROOT}/../gtypes/include",
 					"${SRCROOT}/include/april",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = april;
 				SDKROOT = macosx;
 			};
@@ -1468,7 +1469,6 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				VALID_ARCHS = "i386 x86_64 ppc";
@@ -1504,6 +1504,7 @@
 					"${SRCROOT}/../gtypes/include",
 					"${SRCROOT}/include/april",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = april;
 				SDKROOT = macosx;
@@ -1540,7 +1541,6 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				VALID_ARCHS = "i386 x86_64 ppc";
@@ -1573,6 +1573,7 @@
 					"${SRCROOT}/../gtypes/include",
 					"${SRCROOT}/include/april",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = april;
 				SDKROOT = macosx;
 			};
@@ -1602,7 +1603,6 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				VALID_ARCHS = "i386 x86_64 ppc";
@@ -1720,7 +1720,6 @@
 					"${SRCROOT}/../khronos",
 					"$(inherited)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_LDFLAGS = "-ObjC";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = april;
@@ -1747,7 +1746,6 @@
 					"${SRCROOT}/../khronos",
 					"$(inherited)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_LDFLAGS = "-ObjC";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = april;
@@ -1775,7 +1773,6 @@
 					"${SRCROOT}/../khronos",
 					"$(inherited)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_LDFLAGS = "-ObjC";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = april;
@@ -1891,7 +1888,6 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = april;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1923,7 +1919,6 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = april;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1955,7 +1950,6 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = april;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
