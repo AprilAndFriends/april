@@ -9,6 +9,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,6 +23,8 @@ public class Activity extends android.app.Activity
 	
 	protected boolean nookWorkaround = false; // set this to true in your activity if your are using a nook build in order to speed up new intent/activity calls
 	protected boolean useHardExit = true; // set this to false to prevent application from fully exiting
+	
+	protected SystemSettingsObserver systemSettingsObserver = null;
 	
 	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
 	{
@@ -38,6 +41,7 @@ public class Activity extends android.app.Activity
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_DOWN);
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_UP);
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_MUTE);
+		this.systemSettingsObserver = new SystemSettingsObserver();
 	}
 	
 	public View getView()
@@ -57,6 +61,8 @@ public class Activity extends android.app.Activity
 		super.onCreate(savedInstanceState);
 		NativeInterface.Activity = (android.app.Activity)this;
 		NativeInterface.AprilActivity = this;
+		this.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), true, this.systemSettingsObserver);
+		this.systemSettingsObserver.onChange(true);
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		NativeInterface.PackageName = this.getPackageName();
 		try
