@@ -28,6 +28,11 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 @synthesize onPushRegistrationSuccess;
 @synthesize onPushRegistrationFailure;
 
+- (UIWindow*)window
+{
+	return uiwnd;
+}
+
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
 	NSLog(@"Creating iOS window");
