@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -17,6 +17,23 @@
 
 namespace april
 {
+	SystemInfo::SystemInfo()
+	{
+		this->name = "";
+#ifdef _ARM
+		this->architecture = "ARM";
+#else
+		this->architecture = "x86";
+#endif
+		this->osVersion = 1.0f;
+		this->cpuCores = 1;
+		this->ram = 256;
+		this->maxTextureSize = 0;
+		this->displayDpi = 0;
+		this->locale = "";
+	}
+
+
 	gvec2 getDisplayResolution()
 	{
 		return getSystemInfo().displayResolution;

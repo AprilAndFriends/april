@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -25,6 +25,7 @@ namespace april
 	struct SystemInfo
 	{
 		hstr name;
+		hstr architecture;
 		float osVersion;
 		int cpuCores; // number of CPU cores or separate CPU units
 		int ram; // how many MB of RAM does the host system have in total
@@ -32,7 +33,9 @@ namespace april
 		gvec2 displayResolution;
 		int displayDpi;
 		hstr locale; // current system locale code
-		SystemInfo() : name(""), osVersion(1.0f), cpuCores(1), ram(256), maxTextureSize(0), displayDpi(0), locale("") { }
+		
+		SystemInfo();
+		
 	};
 	
 	enum DeviceType
