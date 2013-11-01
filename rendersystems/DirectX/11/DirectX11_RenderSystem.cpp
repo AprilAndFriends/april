@@ -395,6 +395,12 @@ namespace april
 		gvec2 resolution = april::getSystemInfo().displayResolution;
 		int w = hround(resolution.x);
 		int h = hround(resolution.y);
+#ifndef _WINP8
+		if (Windows::UI::ViewManagement::ApplicationView::Value == Windows::UI::ViewManagement::ApplicationViewState::Filled)
+		{
+			w -= WINRT_SNAPPED_VIEW_UNUSED;
+		}
+#endif
 		if (w != width || h != height)
 		{
 			hlog::warnf(april::logTag, "On WinRT the window resolution (%d,%d) should match the display resolution (%d,%d) in order to avoid problems.", width, height, w, h);

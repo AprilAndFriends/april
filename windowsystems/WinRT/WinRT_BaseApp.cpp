@@ -29,8 +29,6 @@ using namespace Windows::UI::Core;
 using namespace Windows::UI::ViewManagement;
 #endif
 
-#define WINRT_SNAPPED_VIEW_UNUSED (WINRT_SNAPPED_VIEW_WIDTH + 22)
-
 namespace april
 {
 	WinRT_BaseApp::WinRT_BaseApp()

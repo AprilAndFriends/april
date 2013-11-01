@@ -42,6 +42,10 @@ namespace april
 
 	bool WinRT_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
+		if (ApplicationView::Value == ApplicationViewState::Filled)
+		{
+			w -= WINRT_SNAPPED_VIEW_UNUSED;
+		}
 		if (!Window::create(w, h, fullscreen, title, options))
 		{
 			return false;
