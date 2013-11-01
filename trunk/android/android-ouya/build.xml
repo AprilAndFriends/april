@@ -15,6 +15,7 @@
 		<copy todir="${jar.libs.dir}" overwrite="true" file="../../../lib/android/guava-r09.jar"/>
 	</target>
 	
+	<!-- version-tag: 1 -->
 	<import file="${sdk.dir}/tools/ant/build.xml"/>
 
 </project>

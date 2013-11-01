@@ -20,11 +20,15 @@
 #include "RenderSystem.h"
 #include "Window.h"
 #include "WinRT.h"
+#include "WinRT_Window.h"
 
 using namespace Windows::Foundation::Collections;
 using namespace Windows::Graphics::Display;
 using namespace Windows::Storage;
 using namespace Windows::UI::Popups;
+#ifndef WINP8
+using namespace Windows::UI::ViewManagement;
+#endif
 
 namespace april
 {
@@ -48,6 +52,10 @@ namespace april
 #ifdef _WINRT_WINDOW
 			int width = (int)CoreWindow::GetForCurrentThread()->Bounds.Width;
 			int height = (int)CoreWindow::GetForCurrentThread()->Bounds.Height;
+			if (ApplicationView::Value == ApplicationViewState::Filled)
+			{
+				width += WINRT_SNAPPED_VIEW_UNUSED;
+			}
 			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
 #endif
 			// display DPI
