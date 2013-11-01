@@ -31,17 +31,11 @@ namespace april
 		this->surface = NULL;
 		this->context = NULL;
 		memset(this->pi32ConfigAttribs, 0, sizeof(EGLint) * 128);
-		this->pi32ConfigAttribs[0] = EGL_RED_SIZE;
-		this->pi32ConfigAttribs[1] = 8;
-		this->pi32ConfigAttribs[2] = EGL_GREEN_SIZE;
-		this->pi32ConfigAttribs[3] = 8;
-		this->pi32ConfigAttribs[4] = EGL_BLUE_SIZE;
-		this->pi32ConfigAttribs[5] = 8;
-		this->pi32ConfigAttribs[6] = EGL_ALPHA_SIZE;
-		this->pi32ConfigAttribs[7] = 0;
-		this->pi32ConfigAttribs[8] = EGL_SURFACE_TYPE;
-		this->pi32ConfigAttribs[9] = EGL_WINDOW_BIT;
-		this->pi32ConfigAttribs[10] = EGL_NONE;
+		this->pi32ConfigAttribs[0] = EGL_BUFFER_SIZE;
+		this->pi32ConfigAttribs[1] = 0;
+		this->pi32ConfigAttribs[2] = EGL_SURFACE_TYPE;
+		this->pi32ConfigAttribs[3] = EGL_WINDOW_BIT;
+		this->pi32ConfigAttribs[4] = EGL_NONE;
 	}
 
 	EglData::~EglData()
