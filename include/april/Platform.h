@@ -22,7 +22,7 @@
 
 namespace april
 {
-	struct SystemInfo
+	struct aprilExport SystemInfo
 	{
 		hstr name;
 		hstr architecture;
