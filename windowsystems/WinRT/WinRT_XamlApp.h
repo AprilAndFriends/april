@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.12
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -28,6 +28,7 @@ using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::Foundation;
 using namespace Windows::UI::Core;
+using namespace Windows::UI::ViewManagement;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Markup;
 
@@ -53,6 +54,7 @@ namespace april
 	internal:
 		virtual void OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args);
 		virtual void OnRender(_In_ Object^ sender, _In_ Object^ args);
+		virtual void OnVirtualKeyboardVisibilityChange(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 		
 	protected:
 		virtual void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;

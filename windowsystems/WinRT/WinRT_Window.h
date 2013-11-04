@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.12
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -52,7 +52,7 @@ namespace april
 		
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
-
+		
 		void setTitle(chstr title);
 		void setCursorVisible(bool value);
 		HL_DEFINE_GET(int, width, Width);
@@ -61,11 +61,11 @@ namespace april
 		void setResolution(int w, int h, bool fullscreen);
 		void presentFrame();
 		void checkEvents();
-
+		
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
 		void changeSize(int w, int h); // required override instead of normal size changing
-
+		
 	protected:
 		int width;
 		int height;

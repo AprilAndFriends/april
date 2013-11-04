@@ -143,6 +143,11 @@ namespace april
 		WinRT::XamlOverlay->hideKeyboard();
 	}
 
+	void WinRT_XamlApp::OnVirtualKeyboardVisibilityChange(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
+	{
+		this->app->resetTouches();
+	}
+
 	void WinRT_XamlApp::Connect(int connectionId, Object^ target)
 	{
 	}
@@ -158,7 +163,13 @@ namespace april
 			WinRT::XamlOverlay = ref new WinRT_XamlOverlay();
 			Windows::UI::Xaml::Window::Current->Content = WinRT::XamlOverlay;
 			Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &WinRT_XamlApp::OnWindowActivationChanged);
-			hresource::setCwd(normalize_path(hstr::from_unicode(Package::Current->InstalledLocation->Path->Data())));
+			InputPane::GetForCurrentView()->Showing +=
+				ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
+					this, &WinRT_XamlApp::OnVirtualKeyboardVisibilityChange);
+			InputPane::GetForCurrentView()->Hiding +=
+				ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
+					this, &WinRT_XamlApp::OnVirtualKeyboardVisibilityChange);
+			hresource::setCwd(normalize_path(_HL_PSTR_TO_HSTR(Package::Current->InstalledLocation->Path)));
 			hresource::setArchive("");
 			(*WinRT::Init)(WinRT::Args);
 			if (april::rendersys != NULL && april::window != NULL)

@@ -35,6 +35,7 @@ namespace april
 		hstr locale; // current system locale code
 		
 		SystemInfo();
+		~SystemInfo();
 		
 	};
 	

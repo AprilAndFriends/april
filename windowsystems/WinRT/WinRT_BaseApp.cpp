@@ -327,6 +327,15 @@ namespace april
 		april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, AK_NONE, args->KeyCode);
 		args->Handled = true;
 	}
+
+	void WinRT_BaseApp::resetTouches()
+	{
+		for_iter_r (i, this->pointerIds.size(), 0)
+		{
+			april::window->queueTouchEvent(april::Window::AMOUSEEVT_CANCEL, gvec2(), i);
+		}
+		this->pointerIds.clear();
+	}
 	
 	gvec2 WinRT_BaseApp::_transformPosition(float x, float y)
 	{
