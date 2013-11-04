@@ -32,7 +32,10 @@ namespace april
 		this->displayDpi = 0;
 		this->locale = "";
 	}
-
+	
+	SystemInfo::~SystemInfo()
+	{
+	}
 
 	gvec2 getDisplayResolution()
 	{

@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.13
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -33,7 +33,7 @@ namespace april
 		virtual ~WinRT_BaseApp();
 		
 		void assignEvents(CoreWindow^ window);
-
+		
 		HL_DEFINE_GET(unsigned int, startTime, StartTime);
 		
 		void OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args);
@@ -52,6 +52,7 @@ namespace april
 		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
 		
 		void handleFocusChange(bool focused);
+		void resetTouches();
 		
 	private:
 		bool scrollHorizontal;
