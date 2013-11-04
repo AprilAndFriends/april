@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.12
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -489,6 +489,16 @@ namespace april
 			}
 			this->touches[index] = position;
 			break;
+		case AMOUSEEVT_CANCEL: // canceling a particular pointer, required by specific systems (e.g. WinRT)
+			if (index < this->touches.size())
+			{
+				this->touches.remove_at(index);
+				if (this->touches.size() == 0)
+				{
+					this->multiTouchActive = false;
+				}
+			}
+			return;
 		default:
 			break;
 		}
