@@ -57,7 +57,7 @@ namespace april
 		// kspes: copied this from iOS app delegate code, it's needed for OpenKODE and OpenAL to play along on iOS
 		if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0" options:NSNumericSearch] == NSOrderedAscending)
 		{
-			// less then iOS 5.0 - workarround for an apple bug where the audio sesion get's interrupted while using AVAssetReader and similar
+			// less than iOS 5.0 - workarround for an apple bug where the audio sesion get's interrupted while using AVAssetReader and similar
 			AVAudioSession *audioSession = [AVAudioSession sharedInstance];
 			[audioSession setActive: NO error: nil];
 			[audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];

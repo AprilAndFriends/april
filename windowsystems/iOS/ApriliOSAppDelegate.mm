@@ -39,7 +39,7 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
 	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0" options:NSNumericSearch] == NSOrderedAscending)
     {
-		// less then iOS 5.0 - workarround for an apple bug where the audio sesion get's interrupted while using AVAssetReader and similar
+		// less than iOS 5.0 - workarround for an apple bug where the audio sesion get's interrupted while using AVAssetReader and similar
 		AVAudioSession *audioSession = [AVAudioSession sharedInstance];
 		[audioSession setActive: NO error: nil];
 		[audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
