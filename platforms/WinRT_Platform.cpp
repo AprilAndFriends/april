@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -52,10 +52,12 @@ namespace april
 #ifdef _WINRT_WINDOW
 			int width = (int)CoreWindow::GetForCurrentThread()->Bounds.Width;
 			int height = (int)CoreWindow::GetForCurrentThread()->Bounds.Height;
+#ifndef _WINP8
 			if (ApplicationView::Value == ApplicationViewState::Filled)
 			{
 				width += WINRT_SNAPPED_VIEW_UNUSED;
 			}
+#endif
 			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
 #endif
 			// display DPI
