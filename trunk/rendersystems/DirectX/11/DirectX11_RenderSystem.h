@@ -65,7 +65,7 @@ namespace april
 
 		float getPixelOffset() { return 0.0f; }
 		harray<DisplayMode> getSupportedDisplayModes();
-		grect getViewport();
+		HL_DEFINE_GET(grect, viewport, Viewport);
 		void setViewport(grect rect);
 
 		void setTextureBlendMode(BlendMode textureBlendMode);
@@ -109,6 +109,7 @@ namespace april
 		DirectX11_PixelShader* activePixelShader;
 		DirectX11_Texture* renderTarget;
 		harray<DisplayMode> supportedDisplayModes;
+		grect viewport;
 
 		DirectX11_VertexShader* vertexShaderDefault;
 		DirectX11_PixelShader* pixelShaderTexturedMultiply;
