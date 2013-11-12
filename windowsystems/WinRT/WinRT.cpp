@@ -73,18 +73,18 @@ namespace april
 		{
 			hswap(viewport.x, viewport.y);
 			hswap(viewport.w, viewport.h);
-			viewport.x = w - (viewport.x + viewport.w) - 1;
+			viewport.x = w - (viewport.x + viewport.w);
 		}
 		else if (rotation == 180)
 		{
-			viewport.x = w - (viewport.x + viewport.w) - 1;
-			viewport.y = h - (viewport.y + viewport.h) - 1;
+			viewport.x = w - (viewport.x + viewport.w);
+			viewport.y = h - (viewport.y + viewport.h);
 		}
 		else if (rotation == 270)
 		{
 			hswap(viewport.x, viewport.y);
 			hswap(viewport.w, viewport.h);
-			viewport.y = h - (viewport.y + viewport.h) - 1;
+			viewport.y = h - (viewport.y + viewport.h);
 		}
 		if (viewport.x < 0.0f)
 		{
@@ -96,14 +96,8 @@ namespace april
 			viewport.h += viewport.y;
 			viewport.y = 0.0f;
 		}
-		if (viewport.x + viewport.w > (float)w)
-		{
-			viewport.w = hmax(w - viewport.x, 0.0f);
-		}
-		if (viewport.y + viewport.h > (float)h)
-		{
-			viewport.h = hmax(h - viewport.y, 0.0f);
-		}
+		viewport.w = hclamp(viewport.w, 0.0f, hmax(w - viewport.x, 0.0f));
+		viewport.h = hclamp(viewport.h, 0.0f, hmax(h - viewport.y, 0.0f));
 		return viewport;
 	}
 
