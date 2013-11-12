@@ -205,7 +205,7 @@ namespace april
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->_currentRenderOp = RENDER_OP_UNDEFINED;
 		this->_currentVertexBuffer = NULL;
-		this->viewport.setSize(april::getSystemInfo().displayResolution());
+		this->viewport.setSize(april::getSystemInfo().displayResolution);
 		return true;
 	}
 
@@ -250,7 +250,7 @@ namespace april
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->_currentRenderOp = RENDER_OP_UNDEFINED;
 		this->_currentVertexBuffer = NULL;
-		this->viewport.setSize(april::getSystemInfo().displayResolution());
+		this->viewport.setSize(april::getSystemInfo().displayResolution);
 		return true;
 	}
 
