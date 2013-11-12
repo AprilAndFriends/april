@@ -73,50 +73,36 @@ namespace april
 		{
 			hswap(viewport.x, viewport.y);
 			hswap(viewport.w, viewport.h);
-			viewport.x = w - (viewport.x + viewport.w);
+			viewport.x = w - (viewport.x + viewport.w) - 1;
 		}
 		else if (rotation == 180)
 		{
-			viewport.x = w - (viewport.x + viewport.w);
-			viewport.y = h - (viewport.y + viewport.h);
+			viewport.x = w - (viewport.x + viewport.w) - 1;
+			viewport.y = h - (viewport.y + viewport.h) - 1;
 		}
 		else if (rotation == 270)
 		{
 			hswap(viewport.x, viewport.y);
 			hswap(viewport.w, viewport.h);
-			viewport.y = h - (viewport.y + viewport.h);
+			viewport.y = h - (viewport.y + viewport.h) - 1;
 		}
-		return viewport;
-	}
-
-	grect WinRT::unrotateViewport(grect viewport)
-	{
-		static int w = 0;
-		static int h = 0;
-		if (w == 0 || h == 0)
+		if (viewport.x < 0.0f)
 		{
-			gvec2 resolution = april::getSystemInfo().displayResolution;
-			w = hround(resolution.x);
-			h = hround(resolution.y);
-			CHECK_SWAP(w, h);
+			viewport.w += viewport.x;
+			viewport.x = 0.0f;
 		}
-		int rotation = WinRT::getScreenRotation();
-		if (rotation == 90)
+		if (viewport.y < 0.0f)
 		{
-			viewport.x = w - (viewport.x + viewport.w);
-			hswap(viewport.w, viewport.h);
-			hswap(viewport.x, viewport.y);
+			viewport.h += viewport.y;
+			viewport.y = 0.0f;
 		}
-		else if (rotation == 180)
+		if (viewport.x + viewport.w > (float)w)
 		{
-			viewport.y = h - (viewport.y + viewport.h);
-			viewport.x = w - (viewport.x + viewport.w);
+			viewport.w = hmax(w - viewport.x, 0.0f);
 		}
-		else if (rotation == 270)
+		if (viewport.y + viewport.h > (float)h)
 		{
-			viewport.y = h - (viewport.y + viewport.h);
-			hswap(viewport.w, viewport.h);
-			hswap(viewport.x, viewport.y);
+			viewport.h = hmax(h - viewport.y, 0.0f);
 		}
 		return viewport;
 	}

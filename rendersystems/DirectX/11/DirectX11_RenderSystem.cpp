@@ -205,6 +205,7 @@ namespace april
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->_currentRenderOp = RENDER_OP_UNDEFINED;
 		this->_currentVertexBuffer = NULL;
+		this->viewport.setSize(april::getSystemInfo().displayResolution());
 		return true;
 	}
 
@@ -249,6 +250,7 @@ namespace april
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->_currentRenderOp = RENDER_OP_UNDEFINED;
 		this->_currentVertexBuffer = NULL;
+		this->viewport.setSize(april::getSystemInfo().displayResolution());
 		return true;
 	}
 
@@ -635,20 +637,9 @@ namespace april
 		return this->supportedDisplayModes;
 	}
 
-	grect DirectX11_RenderSystem::getViewport()
-	{
-		D3D11_VIEWPORT viewport;
-		unsigned int count = 1;
-		this->d3dDeviceContext->RSGetViewports(&count, &viewport);
-		grect rect((float)viewport.TopLeftX, (float)viewport.TopLeftY, (float)viewport.Width, (float)viewport.Height);
-#ifdef _WINP8
-		rect = WinRT::unrotateViewport(rect);
-#endif
-		return rect;
-	}
-
 	void DirectX11_RenderSystem::setViewport(grect rect)
 	{
+		this->viewport = rect;
 #ifdef _WINP8
 		rect = WinRT::rotateViewport(rect);
 #endif

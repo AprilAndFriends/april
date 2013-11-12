@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -52,7 +52,6 @@ namespace april
 #else
 		static int getScreenRotation();
 		static grect rotateViewport(grect viewport);
-		static grect unrotateViewport(grect viewport);
 #endif
 
 	private:
