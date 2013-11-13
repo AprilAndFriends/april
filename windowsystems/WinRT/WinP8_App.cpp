@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -10,7 +10,6 @@
 #if defined(_WINRT_WINDOW) && defined(_WINP8)
 #include <hltypes/hlog.h>
 #include <hltypes/hplatform.h>
-#include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
 #include "april.h"
@@ -74,8 +73,6 @@ namespace april
 	
 	void WinP8_App::Run()
 	{
-		hresource::setCwd(normalize_path(hstr::from_unicode(Package::Current->InstalledLocation->Path->Data())));
-		hresource::setArchive("");
 		WinRT::Interface = this;
 		(*WinRT::Init)(WinRT::Args);
 		april::window->enterMainLoop();

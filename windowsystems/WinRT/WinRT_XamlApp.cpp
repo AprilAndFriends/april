@@ -13,7 +13,6 @@
 #include <hltypes/hfile.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
-#include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 #include <hltypes/hthread.h>
 
@@ -169,8 +168,6 @@ namespace april
 			InputPane::GetForCurrentView()->Hiding +=
 				ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
 					this, &WinRT_XamlApp::OnVirtualKeyboardVisibilityChange);
-			hresource::setCwd(normalize_path(_HL_PSTR_TO_HSTR(Package::Current->InstalledLocation->Path)));
-			hresource::setArchive("");
 			(*WinRT::Init)(WinRT::Args);
 			if (april::rendersys != NULL && april::window != NULL)
 			{
