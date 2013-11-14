@@ -35,6 +35,12 @@
 	#endif
 #endif
 
+#if defined(_ANDROID)
+#include <jni.h>
+#define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
+#include "androidUtilJNI.h"
+#endif
+
 namespace april
 {
 	static SystemInfo info;
@@ -44,6 +50,7 @@ namespace april
 		{
 			// number of CPU cores
 			info.cpuCores = 1;
+            
 #if TARGET_OS_IPHONE // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
 			hstr model = kdQueryAttribcv(KD_ATTRIB_PLATFORM);
 			if (model.contains("(") && model.contains(")"))
@@ -59,6 +66,11 @@ namespace april
 			SYSTEM_INFO w32info;
 			GetNativeSystemInfo(&w32info);
 			info.cpuCores = w32info.dwNumberOfProcessors;
+#elif defined(_ANDROID)
+			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
+			// CPU cores
+			jmethodID methodGetCpuCores = env->GetStaticMethodID(classNativeInterface, "getCpuCores", _JARGS(_JINT, ));
+			info.cpuCores = (int)env->CallStaticIntMethod(classNativeInterface, methodGetCpuCores);
 #endif
 			// RAM size
 #if TARGET_IPHONE_SIMULATOR
