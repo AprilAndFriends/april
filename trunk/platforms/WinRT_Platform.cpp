@@ -115,7 +115,11 @@ namespace april
 
 	hstr getUserDataPath()
 	{
+#ifndef _WINP8
 		return systemize_path(_HL_PSTR_TO_HSTR(ApplicationData::Current->RoamingFolder->Path));
+#else // because Windows Phone 8 is missing yet another feature
+		return systemize_path(_HL_PSTR_TO_HSTR(ApplicationData::Current->LocalFolder->Path));
+#endif
 	}
 	
 	static void(*currentCallback)(MessageBoxButton) = NULL;
