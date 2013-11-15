@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -50,7 +50,7 @@ namespace april
 		{
 			// number of CPU cores
 			info.cpuCores = 1;
-            
+			
 #if TARGET_OS_IPHONE // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
 			hstr model = kdQueryAttribcv(KD_ATTRIB_PLATFORM);
 			if (model.contains("(") && model.contains(")"))
