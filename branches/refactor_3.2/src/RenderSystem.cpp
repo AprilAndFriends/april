@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.0
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -26,11 +26,13 @@
 #include "Image.h"
 #include "RamTexture.h"
 #include "RenderSystem.h"
+#include "Platform.h"
 #include "Texture.h"
 #include "Window.h"
 
 namespace april
 {
+	// optimizations
 	PlainVertex pv[5];
 	TexturedVertex tv[5];
 	
@@ -59,7 +61,7 @@ namespace april
 		return options.join(',');
 	}
 	
-	RenderSystem::RenderSystem() : created(false), textureFilter(Texture::FILTER_LINEAR), textureAddressMode(Texture::ADDRESS_WRAP)
+	RenderSystem::RenderSystem() : created(false), state(NULL), textureFilter(Texture::FILTER_LINEAR), textureAddressMode(Texture::ADDRESS_WRAP)
 	{
 		this->name = "Generic";
 	}
@@ -67,6 +69,7 @@ namespace april
 	RenderSystem::~RenderSystem()
 	{
 		this->destroy();
+		delete this->state;
 	}
 	
 	bool RenderSystem::create(RenderSystem::Options options)
@@ -78,6 +81,7 @@ namespace april
 			this->options = options;
 			return true;
 		}
+		this->state->reset();
 		return false;
 	}
 	
@@ -90,6 +94,7 @@ namespace april
 			{
 				delete this->textures[0];
 			}
+			this->state->reset();
 			this->created = false;
 			return true;
 		}
@@ -101,9 +106,17 @@ namespace april
 		hlog::write(april::logTag, "Resetting rendersystem.");
 	}
 
+	harray<DisplayMode> RenderSystem::getSupportedDisplayModes()
+	{
+		harray<DisplayMode> result;
+		gvec2 resolution = april::getSystemInfo().displayResolution;
+		result += DisplayMode((int)resolution.x, (int)resolution.y, 60);
+		return result;
+	}
+	
 	void RenderSystem::setOrthoProjection(grect rect)
 	{
-		// TODO - this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
+		// TODOa - this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
 		this->orthoProjection = rect;
 		float t = this->getPixelOffset();
 		float wnd_w = (float)april::window->getWidth();

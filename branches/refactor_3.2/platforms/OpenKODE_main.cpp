@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -15,11 +15,9 @@
 #include <hltypes/hstring.h>
 #include <hltypes/hlog.h>
 
-#include "main.h"
-#include "RenderSystem.h"
+#include "main_internal.h"
 #include "Window.h"
 #include "april.h"
-
 
 int gAprilShouldInvokeQuitCallback = 0;
 
@@ -33,9 +31,7 @@ int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(
 			args += argv[i];
 		}
 	}
-	
 	hlog::write(april::logTag, "Initializing OpenKODE: " + hstr(kdQueryAttribcv(KD_ATTRIB_VERSION)));
-	
 	anAprilInit(args);
 	april::window->enterMainLoop();
 	anAprilDestroy();
