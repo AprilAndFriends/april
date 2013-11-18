@@ -88,9 +88,6 @@ namespace april
 			{
 				april::rendersys->unloadTextures();
 			}
-#if defined(_EGL) && !defined(_ANDROID) && !defined(_WINRT) // don't destroy the context on Android and WinRT, otherwise problems arise
-			april::egl->destroy();
-#endif
 			break;
 		}
 	}
@@ -100,9 +97,6 @@ namespace april
 		switch (evt->type)
 		{
 		case KD_EVENT_RESUME:
-#if defined(_EGL) && !defined(_ANDROID) && !defined(_WINRT) // don't recreate the context on Android and WinRT, otherwise problems arise
-			april::egl->create();
-#endif
 			hlog::write(logTag, "OpenKODE resume event received.");
 			if (april::window != NULL)
 			{
@@ -363,14 +357,8 @@ namespace april
 			{
 				april::rendersys->unloadTextures();
 			}
-#if defined(_EGL) && !defined(_ANDROID)
-			april::egl->destroy();
-#endif
 			return true;
 		case KD_EVENT_RESUME:
-#if defined(_EGL) && !defined(_ANDROID)
-			april::egl->create();
-#endif
 			hlog::write(logTag, "OpenKODE resume event received.");
 			this->handleActivityChangeEvent(true);
 			return true;
