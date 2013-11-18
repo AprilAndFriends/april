@@ -1,5 +1,4 @@
 /// @file
-/// @author  Ivan Vucica
 /// @author  Boris Mikic
 /// @version 3.2
 /// 
@@ -15,6 +14,11 @@
 #ifndef APRIL_MAIN_BASE_H
 #define APRIL_MAIN_BASE_H
 
+#ifdef _ANDROID
+#include <jni.h>
+#include <string.h>
+#endif
+
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
@@ -28,16 +32,11 @@ namespace april
 {
 	aprilFnExport bool __lockSingleInstanceMutex(hstr instanceName, chstr fallbackName);
 	aprilFnExport void __unlockSingleInstanceMutex();
+#ifdef _ANDROID
+	aprilFnExport jint JNI_OnLoad(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), JavaVM* vm, void* reserved);
+#endif
 }
 
-#ifdef _ANDROID
-#include <jni.h>
-#include <string.h>
-namespace april
-{
-	aprilExport jint JNI_OnLoad(JavaVM* vm, void* reserved);
-}
-#endif
 #if !defined(_ANDROID) || defined(_OPENKODE)
 aprilExport int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv);
 #endif

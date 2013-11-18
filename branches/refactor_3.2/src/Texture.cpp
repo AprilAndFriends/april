@@ -164,10 +164,12 @@ namespace april
 			Color tr = this->getPixel(x1, y0);
 			Color bl = this->getPixel(x0, y1);
 			Color br = this->getPixel(x1, y1);
+			/*
 			Color l = tl * ry1 + bl * ry0;
 			Color r = tr * ry1 + br * ry0;
 			result = l * rx1 + r * rx0;
-			//result = (tl * ry1 + bl * ry0) * rx1 + (tr * ry1 + br * ry0) * rx0; // causes a weird conversion from "float" to "unsigned int" warning
+			*/
+			result = (tl * ry1 + bl * ry0) * rx1 + (tr * ry1 + br * ry0) * rx0; // causes a weird conversion from "float" to "unsigned int" warning
 		}
 		else if (rx0 != 0.0f)
 		{

@@ -18,9 +18,11 @@
 #include <jni.h>
 #include <string.h>
 
+#include "aprilExport.h"
+
 extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
-	return april::JNI_OnLoad(vm, reserved);
+	return april::JNI_OnLoad(&april_init, &april_destroy, vm, reserved);
 }
 #endif
 #endif

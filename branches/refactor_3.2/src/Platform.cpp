@@ -39,18 +39,12 @@ namespace april
 	{
 	}
 
-	gvec2 getDisplayResolution()
-	{
-		return getSystemInfo().displayResolution;
-	}
-
 	void messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		MessageBoxStyle passedStyle = style;
 		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
 		{
-			// TODOa - move somewhere else, this file should be completely platform independent
 			if (window != NULL)
 			{
 #if !defined(_IOS) && !defined(_COCOA_WINDOW)
@@ -66,7 +60,7 @@ namespace april
 		messageBox_platform(title, text, buttonMask, passedStyle, customButtonTitles, callback);
 		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY)
 		{
-			exit(1);
+			exit(0);
 		}
 	}
 

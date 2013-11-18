@@ -41,6 +41,8 @@ namespace april
 {
 	extern void* javaVM;
 	extern void (*dialogCallback)(MessageBoxButton);
+	void (*aprilInit)(const harray<hstr>&) = NULL;
+	void (*aprilDestroy)() = NULL;
 	
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jDataPath, jstring jForcedArchivePath)
 	{
@@ -88,12 +90,12 @@ namespace april
 		{
 			hlog::debug(april::logTag, "    " + (*it));
 		}
-		april_init(args);
+		(*aprilInit)(args);
 	}
 	
 	void JNICALL _JNI_destroy(JNIEnv* env, jclass classe)
 	{
-		april_destroy();
+		(*aprilDestroy)();
 	}
 	
 	bool JNICALL _JNI_render(JNIEnv* env, jclass classe)
@@ -247,9 +249,11 @@ namespace april
 		{"onDialogCancel",			_JARGS(_JVOID, ),								(void*)&april::_JNI_onDialogCancel			}
 	};
 	
-	jint JNI_OnLoad(JavaVM* vm, void* reserved)
+	jint JNI_OnLoad(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), JavaVM* vm, void* reserved)
 	{
 		april::javaVM = (void*)vm;
+		april::aprilInit = anAprilInit;
+		april::aprilDestroy = anAprilDestroy;
 		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 		if (env->RegisterNatives(classNativeInterface, methods, METHOD_COUNT) != 0)
 		{
