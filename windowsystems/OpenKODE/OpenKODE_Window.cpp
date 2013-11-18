@@ -84,10 +84,12 @@ namespace april
 			{
 				april::window->handleActivityChangeEvent(false);
 			}
+#if defined(_IOS) || defined(_ANDROID)
 			if (april::rendersys != NULL)
 			{
 				april::rendersys->unloadTextures();
 			}
+#endif
 			break;
 		}
 	}
@@ -353,10 +355,12 @@ namespace april
 		case KD_EVENT_PAUSE:
 			hlog::write(logTag, "OpenKODE pause event received.");
 			this->handleActivityChangeEvent(false);
+#if defined(_IOS) || defined(_ANDROID)
 			if (april::rendersys != NULL)
 			{
 				april::rendersys->unloadTextures();
 			}
+#endif
 			return true;
 		case KD_EVENT_RESUME:
 			hlog::write(logTag, "OpenKODE resume event received.");
