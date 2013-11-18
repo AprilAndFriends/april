@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -20,7 +20,7 @@
 #include "androidUtilJNI.h"
 #include "april.h"
 #include "Keys.h"
-#include "main.h"
+#include "main_base.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"

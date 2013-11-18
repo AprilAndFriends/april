@@ -1,6 +1,6 @@
 /// @file
 /// @author  Ivan Vucica
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -8,7 +8,8 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #import <UIKit/UIKit.h>
-#import "main.h"
+
+#import "main_base.h"
 
 int april_main (void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char **argv)
 {	

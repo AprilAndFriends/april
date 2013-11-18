@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.0
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -73,7 +73,7 @@ namespace april
 		this->set(hex);
 	}
 
-	Color::Color(Color color, unsigned char a)
+	Color::Color(const Color& color, unsigned char a)
 	{
 		this->set(color, a);
 	}
@@ -116,7 +116,7 @@ namespace april
 		this->a = (value.size() == 10 ? (unsigned char)hexstr_to_int(value(8, 2)) : 255);
 	}
 	
-	void Color::set(Color color, unsigned char a)
+	void Color::set(const Color& color, unsigned char a)
 	{
 		this->r = color.r;
 		this->g = color.g;
@@ -139,110 +139,111 @@ namespace april
 		return ((this->r << 24) | (this->g << 16) | (this->b << 8) | this->a);
 	}
 	
-	bool Color::operator==(Color& other)
+	bool Color::operator==(const Color& other) const
 	{
 		return (this->r == other.r && this->g == other.g && this->b == other.b && this->a == other.a);
 	}
-
-	bool Color::operator!=(Color& other)
+	
+	bool Color::operator!=(const Color& other) const
 	{
 		return (this->r != other.r || this->g != other.g || this->b != other.b || this->a != other.a);
 	}
 	
-	Color Color::operator+(Color& other)
+	Color Color::operator+(const Color& other) const
 	{
 		Color result(*this);
 		result += other;
 		return result;
 	}
 
-	Color Color::operator-(Color& other)
+	Color Color::operator-(const Color& other) const
 	{
 		Color result(*this);
 		result -= other;
 		return result;
 	}
 
-	Color Color::operator*(Color& other)
+	Color Color::operator*(const Color& other) const
 	{
 		Color result(*this);
 		result *= other;
 		return result;
 	}
 
-	Color Color::operator/(Color& other)
+	Color Color::operator/(const Color& other) const
 	{
 		Color result(*this);
 		result /= other;
 		return result;
 	}
 
-	Color Color::operator*(float value)
+	Color Color::operator*(float value) const
 	{
 		Color result(*this);
 		result *= value;
 		return result;
 	}
 
-	Color Color::operator/(float value)
+	Color Color::operator/(float value) const
 	{
 		Color result(*this);
 		result /= value;
 		return result;
 	}
 
-	Color Color::operator+=(Color& other)
+	Color Color::operator+=(const Color& other)
 	{
-		this->r = hclamp(this->r + other.r, 0, 255);
-		this->g = hclamp(this->g + other.g, 0, 255);
-		this->b = hclamp(this->b + other.b, 0, 255);
-		this->a = hclamp(this->a + other.a, 0, 255);
+		this->r = (unsigned char)hclamp((int)this->r + other.r, 0, 255);
+		this->g = (unsigned char)hclamp((int)this->g + other.g, 0, 255);
+		this->b = (unsigned char)hclamp((int)this->b + other.b, 0, 255);
+		this->a = (unsigned char)hclamp((int)this->a + other.a, 0, 255);
 		return (*this);
 	}
 
-	Color Color::operator-=(Color& other)
+	Color Color::operator-=(const Color& other)
 	{
-		this->r = hclamp(this->r - other.r, 0, 255);
-		this->g = hclamp(this->g - other.g, 0, 255);
-		this->b = hclamp(this->b - other.b, 0, 255);
-		this->a = hclamp(this->a - other.a, 0, 255);
+		this->r = (unsigned char)hclamp((int)this->r - other.r, 0, 255);
+		this->g = (unsigned char)hclamp((int)this->g - other.g, 0, 255);
+		this->b = (unsigned char)hclamp((int)this->b - other.b, 0, 255);
+		this->a = (unsigned char)hclamp((int)this->a - other.a, 0, 255);
 		return (*this);
 	}
 
-	Color Color::operator*=(Color& other)
+	Color Color::operator*=(const Color& other)
 	{
-		this->r = hclamp((int)(this->r_f() * other.r), 0, 255);
-		this->g = hclamp((int)(this->g_f() * other.g), 0, 255);
-		this->b = hclamp((int)(this->b_f() * other.b), 0, 255);
-		this->a = hclamp((int)(this->a_f() * other.a), 0, 255);
+		this->r = (unsigned char)hclamp((int)(this->r_f() * other.r), 0, 255);
+		this->g = (unsigned char)hclamp((int)(this->g_f() * other.g), 0, 255);
+		this->b = (unsigned char)hclamp((int)(this->b_f() * other.b), 0, 255);
+		this->a = (unsigned char)hclamp((int)(this->a_f() * other.a), 0, 255);
 		return (*this);
 	}
 
-	Color Color::operator/=(Color& other)
+	Color Color::operator/=(const Color& other)
 	{
-		this->r = hclamp((int)(this->r_f() / other.r), 0, 255);
-		this->g = hclamp((int)(this->g_f() / other.g), 0, 255);
-		this->b = hclamp((int)(this->b_f() / other.b), 0, 255);
-		this->a = hclamp((int)(this->a_f() / other.a), 0, 255);
+		this->r = (unsigned char)hclamp((int)(this->r_f() / other.r), 0, 255);
+		this->g = (unsigned char)hclamp((int)(this->g_f() / other.g), 0, 255);
+		this->b = (unsigned char)hclamp((int)(this->b_f() / other.b), 0, 255);
+		this->a = (unsigned char)hclamp((int)(this->a_f() / other.a), 0, 255);
 		return (*this);
 	}
 
 	Color Color::operator*=(float value)
 	{
-		this->r = hclamp((int)(this->r * value), 0, 255);
-		this->g = hclamp((int)(this->g * value), 0, 255);
-		this->b = hclamp((int)(this->b * value), 0, 255);
-		this->a = hclamp((int)(this->a * value), 0, 255);
+		this->r = (unsigned char)hclamp((int)(this->r * value), 0, 255);
+		this->g = (unsigned char)hclamp((int)(this->g * value), 0, 255);
+		this->b = (unsigned char)hclamp((int)(this->b * value), 0, 255);
+		this->a = (unsigned char)hclamp((int)(this->a * value), 0, 255);
 		return (*this);
 	}
 
 	Color Color::operator/=(float value)
 	{
-		float val = 1.0f / value;
-		this->r = hclamp((int)(this->r * val), 0, 255);
-		this->g = hclamp((int)(this->g * val), 0, 255);
-		this->b = hclamp((int)(this->b * val), 0, 255);
-		this->a = hclamp((int)(this->a * val), 0, 255);
+		static float val; // optimization
+		val = 1.0f / value;
+		this->r = (unsigned char)hclamp((int)(this->r * val), 0, 255);
+		this->g = (unsigned char)hclamp((int)(this->g * val), 0, 255);
+		this->b = (unsigned char)hclamp((int)(this->b * val), 0, 255);
+		this->a = (unsigned char)hclamp((int)(this->a * val), 0, 255);
 		return (*this);
 	}
 	

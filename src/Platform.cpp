@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.14
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -22,6 +22,8 @@ namespace april
 		this->name = "";
 #ifdef _ARM
 		this->architecture = "ARM";
+#elif defined(_X64)
+		this->architecture = "x64";
 #else
 		this->architecture = "x86";
 #endif
@@ -48,7 +50,7 @@ namespace april
 		MessageBoxStyle passedStyle = style;
 		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
 		{
-			// TODO - move somewhere else, this file should be completely platform independent
+			// TODOa - move somewhere else, this file should be completely platform independent
 			if (window != NULL)
 			{
 #if !defined(_IOS) && !defined(_COCOA_WINDOW)

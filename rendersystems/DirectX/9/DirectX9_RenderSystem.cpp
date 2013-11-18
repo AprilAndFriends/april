@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -26,6 +26,7 @@
 #include "DirectX9_VertexShader.h"
 #include "Image.h"
 #include "Keys.h"
+#include "RenderState.h"
 #include "Timer.h"
 
 #define VERTICES_BUFFER_COUNT 65536
@@ -43,10 +44,10 @@ namespace april
 	static ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
 	static ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
 
-	// TODO - refactor
+	// TODOa - refactor
 	harray<DirectX9_Texture*> gRenderTargets;
 
-	// TODO - refactor
+	// TODOa - refactor
 	int DirectX9_RenderSystem::getMaxTextureSize()
 	{
 		if (this->d3dDevice == NULL)
@@ -94,6 +95,7 @@ namespace april
 		activeTexture(NULL), renderTarget(NULL), backBuffer(NULL)
 	{
 		this->name = APRIL_RS_DIRECTX9;
+		this->state = new RenderState(); // TODOa
 	}
 
 	DirectX9_RenderSystem::~DirectX9_RenderSystem()
@@ -225,11 +227,12 @@ namespace april
 		// device config
 		this->_configureDevice();
 		this->clear(true, false);
+		this->viewport.set(0.0f, 0.0f, (float)april::window->getWidth(), (float)april::window->getHeight());
 		this->presentFrame();
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
 		this->renderTarget = NULL;
 		this->d3dDevice->BeginScene();
-		this->orthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
+		this->orthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
 	}
 	
 	void DirectX9_RenderSystem::_configureDevice()
@@ -268,17 +271,13 @@ namespace april
 			unsigned int modeCount = this->d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
 			HRESULT hr;
 			D3DDISPLAYMODE displayMode;
-			DisplayMode mode;
 			for_itert (unsigned int, i, 0, modeCount)
 			{
 				memset(&displayMode, 0, sizeof(D3DDISPLAYMODE));
 				hr = this->d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
 				if (hr == D3D_OK) 
 				{
-					mode.width = displayMode.Width;
-					mode.height = displayMode.Height;
-					mode.refreshRate = displayMode.RefreshRate;
-					this->supportedDisplayModes += mode;
+					this->supportedDisplayModes += DisplayMode(displayMode.Width, displayMode.Height, displayMode.RefreshRate);
 				}
 			}
 			if (this->d3d == NULL)
@@ -289,15 +288,9 @@ namespace april
 		return this->supportedDisplayModes;
 	}
 
-	grect DirectX9_RenderSystem::getViewport()
-	{
-		D3DVIEWPORT9 viewport;
-		this->d3dDevice->GetViewport(&viewport);
-		return grect((float)viewport.X, (float)viewport.Y, (float)viewport.Width, (float)viewport.Height);
-	}
-
 	void DirectX9_RenderSystem::setViewport(grect rect)
 	{
+		RenderSystem::setViewport(rect);
 		D3DVIEWPORT9 viewport;
 		viewport.MinZ = 0.0f;
 		viewport.MaxZ = 1.0f;

@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -37,7 +37,7 @@ namespace april
 	float getMacOSVersion()
 	{
 #ifdef _DEBUG
-		//	return 10.6f; // uncomment this to test behaviour on older macs
+		//return 10.6f; // uncomment this to test behaviour on older macs
 #endif
 		static float version = 0;
 		if (version == 0)

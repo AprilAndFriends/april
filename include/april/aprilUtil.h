@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -30,7 +30,7 @@ namespace april
 		LineList = 4,
 		LineStrip = 5,
 		PointList = 6,
-		RENDER_OP_UNDEFINED = 0x7FFFFFFF
+		RENDER_OP_MAX = 0x7FFFFFFF
 	};
 
 	enum BlendMode
@@ -40,7 +40,7 @@ namespace april
 		ADD = 2,
 		SUBTRACT = 3,
 		OVERWRITE = 4,
-		BLEND_MODE_UNDEFINED = 0x7FFFFFFF
+		BLEND_MODE_MAX = 0x7FFFFFFF
 	};
 
 	enum ColorMode
@@ -49,7 +49,7 @@ namespace april
 		MULTIPLY = 1,
 		LERP = 2,
 		ALPHA_MAP = 3,
-		COLOR_MODE_UNDEFINED = 0x7FFFFFFF
+		COLOR_MODE_MAX = 0x7FFFFFFF
 	};
 
 	struct aprilExport DisplayMode
@@ -58,8 +58,10 @@ namespace april
 		int height;
 		int refreshRate;
 
-		bool operator==(const DisplayMode& other);
-		bool operator!=(const DisplayMode& other);
+		bool operator==(const DisplayMode& other) const;
+		bool operator!=(const DisplayMode& other) const;
+
+		DisplayMode(int width, int height, int refreshRate);
 
 	};
 	

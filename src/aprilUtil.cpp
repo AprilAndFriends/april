@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -15,12 +15,19 @@
 
 namespace april
 {
-	bool DisplayMode::operator==(const DisplayMode& other)
+	DisplayMode::DisplayMode(int width, int height, int refreshRate)
+	{
+		this->width = width;
+		this->height = height;
+		this->refreshRate = refreshRate;
+	}
+
+	bool DisplayMode::operator==(const DisplayMode& other) const
 	{
 		return (this->width == other.width && this->height == other.height && this->refreshRate == other.refreshRate);
 	}
 
-	bool DisplayMode::operator!=(const DisplayMode& other)
+	bool DisplayMode::operator!=(const DisplayMode& other) const
 	{
 		return !(*this == other);
 	}

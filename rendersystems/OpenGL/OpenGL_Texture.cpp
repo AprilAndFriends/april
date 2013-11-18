@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -131,11 +131,11 @@ namespace april
 
 	void OpenGL_Texture::_setCurrentTexture()
 	{
-		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		APRIL_OGL_RENDERSYS->state.textureFilter = APRIL_OGL_RENDERSYS->deviceState.textureFilter = this->filter;
+		APRIL_OGL_RENDERSYS->currentState.textureFilter = APRIL_OGL_RENDERSYS->deviceState.textureFilter = this->filter;
 		APRIL_OGL_RENDERSYS->_setTextureFilter(this->filter);
-		APRIL_OGL_RENDERSYS->state.textureAddressMode = APRIL_OGL_RENDERSYS->deviceState.textureAddressMode = this->addressMode;
+		APRIL_OGL_RENDERSYS->currentState.textureAddressMode = APRIL_OGL_RENDERSYS->deviceState.textureAddressMode = this->addressMode;
 		APRIL_OGL_RENDERSYS->_setTextureAddressMode(this->addressMode);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -174,7 +174,7 @@ namespace april
 		}
 		// write texels
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		if (image != NULL)
@@ -280,7 +280,7 @@ namespace april
 	{
 		unsigned char writeData[4] = {color.r, color.g, color.b, color.a};
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
 	}
 	
@@ -317,7 +317,7 @@ namespace april
 			memset(writeData, value, w * h * this->bpp);
 		}
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
@@ -365,7 +365,7 @@ namespace april
 		}
 		texture->load();
 		glBindTexture(GL_TEXTURE_2D, source->textureId);
-		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
 		if (source->bpp == 4)
 		{
@@ -441,7 +441,7 @@ namespace april
 			}
 		}
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
 		if (this->bpp == 4)
 		{
@@ -478,7 +478,7 @@ namespace april
 		y = hclamp(y, 0, this->height - 1);
 
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		APRIL_OGL_RENDERSYS->state.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
+		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
 
 		if (this->bpp == 4)
