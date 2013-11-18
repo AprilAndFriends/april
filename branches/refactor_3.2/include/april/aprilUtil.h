@@ -21,6 +21,7 @@
 
 namespace april
 {
+	// TODOa - rename
 	// render operations
 	enum RenderOp
 	{
@@ -30,7 +31,7 @@ namespace april
 		LineList = 4,
 		LineStrip = 5,
 		PointList = 6,
-		RENDER_OP_MAX = 0x7FFFFFFF
+		RENDER_OP_UNDEFINED = 0x7FFFFFFF
 	};
 
 	enum BlendMode
@@ -40,7 +41,7 @@ namespace april
 		ADD = 2,
 		SUBTRACT = 3,
 		OVERWRITE = 4,
-		BLEND_MODE_MAX = 0x7FFFFFFF
+		BLEND_MODE_UNDEFINED = 0x7FFFFFFF
 	};
 
 	enum ColorMode
@@ -49,7 +50,7 @@ namespace april
 		MULTIPLY = 1,
 		LERP = 2,
 		ALPHA_MAP = 3,
-		COLOR_MODE_MAX = 0x7FFFFFFF
+		COLOR_MODE_UNDEFINED = 0x7FFFFFFF
 	};
 
 	struct aprilExport DisplayMode

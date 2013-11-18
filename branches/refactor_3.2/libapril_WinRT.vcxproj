@@ -257,9 +257,11 @@
     <ClCompile Include="src\images\ImageJpg.cpp" />
     <ClCompile Include="src\images\ImageJpt.cpp" />
     <ClCompile Include="src\images\ImagePng.cpp" />
+    <ClCompile Include="src\main_base.cpp" />
     <ClCompile Include="src\Platform.cpp" />
     <ClCompile Include="src\PixelShader.cpp" />
     <ClCompile Include="src\RamTexture.cpp" />
+    <ClCompile Include="src\RenderState.cpp" />
     <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\timers\TimerPosix.cpp" />
@@ -281,6 +283,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\april\androidUtilJNI.h" />
     <ClInclude Include="include\april\april.h" />
     <ClInclude Include="include\april\aprilExport.h" />
     <ClInclude Include="include\april\aprilUtil.h" />
@@ -292,11 +295,15 @@
     <ClInclude Include="include\april\KeyboardDelegate.h" />
     <ClInclude Include="include\april\Keys.h" />
     <ClInclude Include="include\april\main.h" />
+    <ClInclude Include="include\april\main_base.h" />
     <ClInclude Include="include\april\MouseDelegate.h" />
+    <ClInclude Include="include\april\OpenKODE_main.h" />
     <ClInclude Include="include\april\PixelShader.h" />
     <ClInclude Include="include\april\Platform.h" />
     <ClInclude Include="include\april\RamTexture.h" />
+    <ClInclude Include="include\april\RenderState.h" />
     <ClInclude Include="include\april\RenderSystem.h" />
+    <ClInclude Include="include\april\Standard_main.h" />
     <ClInclude Include="include\april\SystemDelegate.h" />
     <ClInclude Include="include\april\Texture.h" />
     <ClInclude Include="include\april\Timer.h" />
@@ -304,6 +311,7 @@
     <ClInclude Include="include\april\UpdateDelegate.h" />
     <ClInclude Include="include\april\VertexShader.h" />
     <ClInclude Include="include\april\Window.h" />
+    <ClInclude Include="include\april\WinRT_main.h" />
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_PixelShader.h" />
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_RenderSystem.h" />
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_Texture.h" />
