@@ -105,7 +105,7 @@
     <Filter Include="Header Files\windowsystems\OpenKODE">
       <UniqueIdentifier>{ab78e32a-7c18-4409-8201-c0a814275841}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\main">
+    <Filter Include="Header Files\platforms">
       <UniqueIdentifier>{49215b07-a2cd-4b10-ba8e-2f00612c1829}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -425,25 +425,22 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Android_main.h">
-      <Filter>Header Files\main</Filter>
+      <Filter>Header Files\platforms</Filter>
     </ClInclude>
     <ClInclude Include="include\april\OpenKODE_main.h">
-      <Filter>Header Files\main</Filter>
-    </ClInclude>
-    <ClInclude Include="include\april\WinRT_main.h">
-      <Filter>Header Files\main</Filter>
+      <Filter>Header Files\platforms</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Win32_main.h">
-      <Filter>Header Files\main</Filter>
+      <Filter>Header Files\platforms</Filter>
     </ClInclude>
     <ClInclude Include="include\april\main_base.h">
-      <Filter>Header Files\main</Filter>
+      <Filter>Header Files\platforms</Filter>
     </ClInclude>
     <ClInclude Include="include\april\main.h">
-      <Filter>Header Files\main</Filter>
+      <Filter>Header Files\platforms</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Standard_main.h">
-      <Filter>Header Files\main</Filter>
+      <Filter>Header Files\platforms</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

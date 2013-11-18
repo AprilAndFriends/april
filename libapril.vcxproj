@@ -565,7 +565,6 @@
     <ClInclude Include="include\april\VertexShader.h" />
     <ClInclude Include="include\april\Win32_main.h" />
     <ClInclude Include="include\april\Window.h" />
-    <ClInclude Include="include\april\WinRT_main.h" />
     <ClInclude Include="rendersystems\DirectX\9\DirectX9_PixelShader.h" />
     <ClInclude Include="rendersystems\DirectX\9\DirectX9_RenderSystem.h" />
     <ClInclude Include="rendersystems\DirectX\9\DirectX9_Texture.h" />
