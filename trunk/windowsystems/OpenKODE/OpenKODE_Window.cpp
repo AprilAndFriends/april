@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -88,7 +88,7 @@ namespace april
 			{
 				april::rendersys->unloadTextures();
 			}
-#if defined(_EGL) && !defined(_ANDROID) // don't destroy the context on Android, otherwise problems arise
+#if defined(_EGL) && !defined(_ANDROID) && !defined(_WINRT) // don't destroy the context on Android and WinRT, otherwise problems arise
 			april::egl->destroy();
 #endif
 			break;
@@ -100,7 +100,7 @@ namespace april
 		switch (evt->type)
 		{
 		case KD_EVENT_RESUME:
-#if defined(_EGL) && !defined(_ANDROID) // don't destroy the context on Android, otherwise problems arise
+#if defined(_EGL) && !defined(_ANDROID) && !defined(_WINRT) // don't recreate the context on Android and WinRT, otherwise problems arise
 			april::egl->create();
 #endif
 			hlog::write(logTag, "OpenKODE resume event received.");
