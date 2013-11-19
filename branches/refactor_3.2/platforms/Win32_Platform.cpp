@@ -12,6 +12,7 @@
 #if defined(_WIN32) && !defined(_OPENKODE) && !defined(_WINRT)
 
 #include <gtypes/Vector2.h>
+#include <hltypes/hdir.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
@@ -77,13 +78,12 @@ namespace april
 
 	hstr getUserDataPath()
 	{
-		hlog::warn(april::logTag, "Cannot use getUserDataPath() on this platform.");
-		return ".";
+		return get_environment_variable("APPDATA");
 	}
 	
 	static void(*currentCallback)(MessageBoxButton) = NULL;
 
-	// TODO - could be maybe put as a common function
+	// TODOa - could be maybe put as a common function
 	void _messageBoxResult(int button)
 	{
 		switch (button)
