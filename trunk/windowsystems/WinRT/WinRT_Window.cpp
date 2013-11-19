@@ -161,7 +161,7 @@ namespace april
 		Window::setCursorVisible(value);
 		WinRT::Interface->setCursorVisible(value);
 	}
-	
+
 	void* WinRT_Window::getBackendId()
 	{
 		// TODO ?
@@ -196,21 +196,11 @@ namespace april
 	void WinRT_Window::beginKeyboardHandling()
 	{
 		WinRT::Interface->showKeyboard();
-		this->virtualKeyboardVisible = true;
-		if (this->systemDelegate != NULL)
-		{
-			this->systemDelegate->onVirtualKeyboardVisibilityChanged(true);
-		}
 	}
 
 	void WinRT_Window::terminateKeyboardHandling()
 	{
 		WinRT::Interface->hideKeyboard();
-		this->virtualKeyboardVisible = false;
-		if (this->systemDelegate != NULL)
-		{
-			this->systemDelegate->onVirtualKeyboardVisibilityChanged(false);
-		}
 	}
 
 }

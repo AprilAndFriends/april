@@ -98,7 +98,8 @@ namespace april
 	
 	Window::Window() : created(false), fullscreen(true), focused(true), running(true),
 		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), cursorVisible(false),
-		virtualKeyboardVisible(false), multiTouchActive(false), inputMode(MOUSE)
+		virtualKeyboardVisible(false), virtualKeyboardHeightRatio(0.0f),
+		multiTouchActive(false), inputMode(MOUSE)
 	{
 		april::window = this;
 		this->name = "Generic";
@@ -131,6 +132,7 @@ namespace april
 			this->fpsResolution = 0.5f;
 			this->multiTouchActive = false;
 			this->virtualKeyboardVisible = false;
+			this->virtualKeyboardHeightRatio = 0.0f;
 			this->inputMode = MOUSE;
 			return true;
 		}
@@ -445,6 +447,16 @@ namespace april
 		hlog::warn(april::logTag, this->name + " does not implement activity change events!");
 	}
 	
+	void Window::handleVirtualKeyboardVisibilityChange(bool visible, float heightRatio)
+	{
+		this->virtualKeyboardVisible = visible;
+		this->virtualKeyboardHeightRatio = heightRatio;
+		if (this->systemDelegate != NULL)
+		{
+			this->systemDelegate->onVirtualKeyboardVisibilityChanged(this->virtualKeyboardVisible, this->virtualKeyboardHeightRatio);
+		}
+	}
+
 	void Window::handleLowMemoryWarning()
 	{
 		if (this->systemDelegate != NULL)
