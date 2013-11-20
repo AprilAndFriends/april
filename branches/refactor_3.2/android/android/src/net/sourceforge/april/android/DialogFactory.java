@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 3.1
+// version 3.2
 
 import android.app.AlertDialog;
 import android.app.Dialog;
