@@ -32,7 +32,6 @@ namespace april
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		bool destroy();
 
-		HL_DEFINE_IS(virtualKeyboardVisible, VirtualKeyboardVisible);
 		int getWidth();
 		int getHeight();
 		void setTitle(chstr title);
@@ -55,7 +54,6 @@ namespace april
 		
 		bool kdTouches[16];
 		KDWindow* kdWindow;
-		bool virtualKeyboardVisible;
 
 		bool _isMousePointer();
 		bool _processEvent(const KDEvent* evt);

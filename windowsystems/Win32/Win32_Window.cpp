@@ -287,12 +287,12 @@ namespace april
 
 	void Win32_Window::beginKeyboardHandling()
 	{
-		this->virtualKeyboardVisible = true; // should usually only be used for testing
+		//this->handleVirtualKeyboardChangeEvent(true, 0.5f); // usually only used for testing
 	}
 
 	void Win32_Window::terminateKeyboardHandling()
 	{
-		this->virtualKeyboardVisible = false; // should usually only be used for testing
+		//this->handleVirtualKeyboardChangeEvent(false, 0.0f); // usually only used for testing
 	}
 
 	LRESULT CALLBACK Win32_Window::processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
