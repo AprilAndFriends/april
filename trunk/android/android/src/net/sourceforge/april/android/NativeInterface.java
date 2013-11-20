@@ -72,6 +72,7 @@ public class NativeInterface
 	public static native void onButtonDown(int buttonCode);
 	public static native void onButtonUp(int buttonCode);
 	public static native void onWindowFocusChanged(boolean focused);
+	public static native void onVirtualKeyboardVisibilityChanged(boolean visible, float heightRation);
 	public static native void onLowMemory();
 	public static native void onSurfaceCreated();
 	
