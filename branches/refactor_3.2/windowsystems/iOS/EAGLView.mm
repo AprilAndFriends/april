@@ -172,10 +172,15 @@
 // we'll also use this objc class for getting notifications
 // on virtual keyboard's appearance and disappearance
 
-- (void)keyboardWasShown:(id)sender
+- (void)keyboardWasShown:(NSNotification*)notification
 {
 	if (april::window)
-		aprilWindow->keyboardWasShown();
+	{
+		NSDictionary* info = [notification userInfo];
+		CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+		CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+		aprilWindow->keyboardWasShown(kbSize.width / screenSize.width);
+	}
 }
 
 - (void)keyboardWasHidden:(id)sender

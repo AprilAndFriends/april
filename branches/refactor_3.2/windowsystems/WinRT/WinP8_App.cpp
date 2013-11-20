@@ -52,9 +52,11 @@ namespace april
 		this->window = window;
 		this->keyboardInterface = ref new WinP8_KeyboardInterface(window, this->app);
 		CoreApplication::Suspending +=
-			ref new EventHandler<SuspendingEventArgs^>(this->app, &WinRT_BaseApp::OnSuspend);
+			ref new EventHandler<SuspendingEventArgs^>(
+				this->app, &WinRT_BaseApp::OnSuspend);
 		CoreApplication::Resuming +=
-			ref new EventHandler<Object^>(this->app, &WinRT_BaseApp::OnResume);
+			ref new EventHandler<Object^>(
+				this->app, &WinRT_BaseApp::OnResume);
 		DisplayProperties::OrientationChanged +=
 			ref new DisplayPropertiesEventHandler(
 				this, &WinP8_App::OnOrientationChanged);

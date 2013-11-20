@@ -139,12 +139,12 @@ namespace april
 		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(focused));
 	}
 	
-	void JNICALL _JNI_onVirtualKeyboardVisibilityChanged(JNIEnv* env, jclass classe, jboolean jVisible, jfloat jHeightRatio)
+	void JNICALL _JNI_onVirtualKeyboardChanged(JNIEnv* env, jclass classe, jboolean jVisible, jfloat jHeightRatio)
 	{
 		bool visible = (jVisible != JNI_FALSE);
 		float heightRatio = (float)jHeightRatio;
-		hlog::write(april::logTag, "onVirtualKeyboardVisibilityChanged(" + hstr(visible) + "," + hstr(heightRatio) + ")");
-		PROTECTED_WINDOW_CALL(handleVirtualKeyboardVisibilityChange(visible, heightRatio));
+		hlog::write(april::logTag, "onVirtualKeyboardChanged(" + hstr(visible) + "," + hstr(heightRatio) + ")");
+		PROTECTED_WINDOW_CALL(handleVirtualKeyboardChangeEvent(visible, heightRatio));
 	}
 	
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
@@ -242,7 +242,7 @@ namespace april
 		{"onButtonDown",						_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonDown						},
 		{"onButtonUp",							_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonUp							},
 		{"onWindowFocusChanged",				_JARGS(_JVOID, _JBOOL),							(void*)&april::_JNI_onWindowFocusChanged				},
-		{"onVirtualKeyboardVisibilityChanged",	_JARGS(_JVOID, _JBOOL _JFLOAT),					(void*)&april::_JNI_onVirtualKeyboardVisibilityChanged	},
+		{"onVirtualKeyboardChanged",	_JARGS(_JVOID, _JBOOL _JFLOAT),					(void*)&april::_JNI_onVirtualKeyboardChanged	},
 		{"onLowMemory",							_JARGS(_JVOID, ),								(void*)&april::_JNI_onLowMemory							},
 		{"onSurfaceCreated",					_JARGS(_JVOID, ),								(void*)&april::_JNI_onSurfaceCreated					},
 		{"activityOnCreate",					_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnCreate					},

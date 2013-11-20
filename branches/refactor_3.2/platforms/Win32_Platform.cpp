@@ -28,6 +28,7 @@ namespace april
 {
 	SystemInfo getSystemInfo()
 	{
+		// TODOa - move to a common place
 		static SystemInfo info;
 		if (info.locale == "")
 		{

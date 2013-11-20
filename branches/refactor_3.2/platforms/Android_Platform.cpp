@@ -25,6 +25,7 @@ namespace april
 
 	SystemInfo getSystemInfo()
 	{
+		// TODOa - move to a common place
 		static SystemInfo info;
 		if (info.locale == "")
 		{
@@ -58,8 +59,7 @@ namespace april
 	
 	DeviceType getDeviceType()
 	{
-		// TODO
-		return DEVICE_ANDROID_PHONE;
+		return DEVICE_ANDROID;
 	}
 	
 	hstr getPackageName()

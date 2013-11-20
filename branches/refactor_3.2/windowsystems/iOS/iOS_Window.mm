@@ -451,11 +451,11 @@ namespace april
 		}
 	}
 	
-	void iOS_Window::keyboardWasShown()
+	void iOS_Window::keyboardWasShown(float kbSize)
 	{
 		if (this->systemDelegate != NULL)
 		{
-			this->systemDelegate->onVirtualKeyboardVisibilityChanged(true);
+			this->systemDelegate->onVirtualKeyboardChanged(true, kbSize);
 		}
 	}
 	
@@ -463,7 +463,7 @@ namespace april
 	{
 		if (this->systemDelegate != NULL)
 		{
-			this->systemDelegate->onVirtualKeyboardVisibilityChanged(false);
+			this->systemDelegate->onVirtualKeyboardChanged(false, 0.0f);
 		}
 	}
 	

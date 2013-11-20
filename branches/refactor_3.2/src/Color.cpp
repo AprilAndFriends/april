@@ -19,10 +19,10 @@
 
 namespace april
 {
-	int hexstr_to_int(chstr s)
+	static int _hexstr_to_int(chstr s)
 	{
 		int i;
-		sscanf(s.c_str(), "%x", &i);
+		sscanf(s.upper().c_str(), "%X", &i);
 		return i;
 	}
 	
@@ -104,16 +104,15 @@ namespace april
 
 	void Color::set(chstr hex)
 	{
-		static hstr value;
-		value = (hex(0, 2) != "0x" ? "0x" + hex : hex);
-		if (value.size() != 8 && value.size() != 10)
+		hstr value = (hex.starts_with("0x") ? hex(2, -1) : hex);
+		if (value.size() != 6 && value.size() != 8 && !value.is_hex())
 		{
-			throw hl_exception("Color format must be either 0xRRGGBBAA or 0xRRGGBB");
+			throw hl_exception("Color format must be either 0xRRGGBBAA or 0xRRGGBB (with or without 0x prefix)");
 		}
-		this->r = (unsigned char)hexstr_to_int(value(2, 2));
-		this->g = (unsigned char)hexstr_to_int(value(4, 2));
-		this->b = (unsigned char)hexstr_to_int(value(6, 2));
-		this->a = (value.size() == 10 ? (unsigned char)hexstr_to_int(value(8, 2)) : 255);
+		this->r = (unsigned char)_hexstr_to_int(value(0, 2));
+		this->g = (unsigned char)_hexstr_to_int(value(2, 2));
+		this->b = (unsigned char)_hexstr_to_int(value(4, 2));
+		this->a = (value.size() == 6 ? (unsigned char)_hexstr_to_int(value(6, 2)) : 255);
 	}
 	
 	void Color::set(const Color& color, unsigned char a)
@@ -126,12 +125,7 @@ namespace april
 
 	hstr Color::hex(bool rgbOnly) const
 	{
-		hstr result = hsprintf("%02X%02X%02X", this->r, this->g, this->b);
-		if (!rgbOnly)
-		{
-			result += hsprintf("%02X", this->a);
-		}
-		return result;
+		return (!rgbOnly ? hsprintf("%02X%02X%02X%02X", this->r, this->g, this->b, this->a) : hsprintf("%02X%02X%02X", this->r, this->g, this->b));
 	}
 
 	Color::operator unsigned int() const
@@ -238,8 +232,7 @@ namespace april
 
 	Color Color::operator/=(float value)
 	{
-		static float val; // optimization
-		val = 1.0f / value;
+		float val = 1.0f / value;
 		this->r = (unsigned char)hclamp((int)(this->r * val), 0, 255);
 		this->g = (unsigned char)hclamp((int)(this->g * val), 0, 255);
 		this->b = (unsigned char)hclamp((int)(this->b * val), 0, 255);
