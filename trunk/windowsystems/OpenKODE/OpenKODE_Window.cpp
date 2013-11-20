@@ -339,7 +339,7 @@ namespace april
 
 	bool OpenKODE_Window::_processEvent(const KDEvent* evt)
 	{
-		static int kdSize[2] = {0, 0};
+		int kdSize[2] = {0, 0};
 		switch (evt->type)
 		{
 		case KD_EVENT_QUIT:
