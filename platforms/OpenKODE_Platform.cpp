@@ -50,7 +50,14 @@ namespace april
 		{
 			// number of CPU cores
 			info.cpuCores = 1;
-			
+			// display resolution
+			int width = 0;
+			int height = 0;
+			kdQueryAttribi(KD_ATTRIB_WIDTH, (KDint*)&width);
+			kdQueryAttribi(KD_ATTRIB_HEIGHT, (KDint*)&height);
+			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
+			// display DPI
+			kdQueryAttribi(KD_ATTRIB_DPI, (KDint*)&info.displayDpi);
 #if TARGET_OS_IPHONE // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
 			hstr model = kdQueryAttribcv(KD_ATTRIB_PLATFORM);
 			if (model.contains("(") && model.contains(")"))
@@ -93,14 +100,6 @@ namespace april
 			kdQueryAttribi(KD_ATTRIB_RAM, (KDint*)&ram);
 			info.ram = ram / 1048576; // in MB
 #endif
-			// display resolution
-			int width = 0;
-			int height = 0;
-			kdQueryAttribi(KD_ATTRIB_WIDTH, (KDint*)&width);
-			kdQueryAttribi(KD_ATTRIB_HEIGHT, (KDint*)&height);
-			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
-			// display DPI
-			kdQueryAttribi(KD_ATTRIB_DPI, (KDint*)&info.displayDpi);
 			// other
 			info.locale = hstr(kdGetLocale());
 			if (info.locale == "")
