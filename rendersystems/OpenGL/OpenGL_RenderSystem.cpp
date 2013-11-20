@@ -65,30 +65,24 @@
 
 #define MAX_VERTEX_COUNT 65536
 
-#define RGBA_TO_ABGR(c) (((c & 0xFF000000) >> 24) | ((c & 0x00FF0000) >> 8) | ((c & 0x0000FF00) << 8) | ((c & 0x000000FF) << 24));
+#define UINT_RGBA_TO_ABGR(c) (((c & 0xFF000000) >> 24) | ((c & 0x00FF0000) >> 8) | ((c & 0x0000FF00) << 8) | ((c & 0x000000FF) << 24));
 
 namespace april
 {
+	// TODOa - put in state class
 	static Color lastColor = Color::Black;
 
+	// TODOa - make protected member of RenderSystem
 	unsigned int _limitPrimitives(RenderOp renderOp, int nVertices)
 	{
 		switch (renderOp)
 		{
-		case TriangleList:
-			return nVertices / 3 * 3;
-		case TriangleStrip:
-			return nVertices;
-		case TriangleFan:
-			return nVertices;
-		case LineList:
-			return nVertices / 2 * 2;
-		case LineStrip:
-			return nVertices;
-		case PointList:
-			return nVertices;
-		default:
-			return nVertices;
+		case TriangleList:	return nVertices / 3 * 3;
+		case TriangleStrip:	return nVertices;
+		case TriangleFan:	return nVertices;
+		case LineList:		return nVertices / 2 * 2;
+		case LineStrip:		return nVertices;
+		case PointList:		return nVertices;
 		}
 		return nVertices;
 	}
@@ -400,7 +394,7 @@ namespace april
 
 	void OpenGL_RenderSystem::_setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
 	{
-		static float constColor[4];
+		float constColor[4] = {0.0f};
 		for_iter (i, 0, 4)
 		{
 			constColor[i] = alpha / 255.0f;
@@ -679,7 +673,7 @@ namespace april
 		for_iter (i, 0, nVertices)
 		{
 			// making sure this is in AGBR order
-			v[i].color = RGBA_TO_ABGR(v[i].color);
+			v[i].color = UINT_RGBA_TO_ABGR(v[i].color);
 		}
 		this->_applyStateChanges();
 		this->_setTexCoordPointer(0, NULL);
@@ -709,7 +703,7 @@ namespace april
 		for_iter (i, 0, nVertices)
 		{
 			// making sure this is in AGBR order
-			v[i].color = RGBA_TO_ABGR(v[i].color);
+			v[i].color = UINT_RGBA_TO_ABGR(v[i].color);
 		}
 		this->_applyStateChanges();
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES

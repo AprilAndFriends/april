@@ -112,7 +112,7 @@ namespace april
 		this->r = (unsigned char)_hexstr_to_int(value(0, 2));
 		this->g = (unsigned char)_hexstr_to_int(value(2, 2));
 		this->b = (unsigned char)_hexstr_to_int(value(4, 2));
-		this->a = (value.size() == 6 ? (unsigned char)_hexstr_to_int(value(6, 2)) : 255);
+		this->a = (value.size() == 8 ? (unsigned char)_hexstr_to_int(value(6, 2)) : 255);
 	}
 	
 	void Color::set(const Color& color, unsigned char a)

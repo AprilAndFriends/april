@@ -33,8 +33,8 @@
 namespace april
 {
 	// optimizations
-	PlainVertex pv[5];
-	TexturedVertex tv[5];
+	static PlainVertex pv[5];
+	static TexturedVertex tv[5];
 	
 	RenderSystem* rendersys = NULL;
 
@@ -61,9 +61,13 @@ namespace april
 		return options.join(',');
 	}
 	
-	RenderSystem::RenderSystem() : created(false), state(NULL), textureFilter(Texture::FILTER_LINEAR), textureAddressMode(Texture::ADDRESS_WRAP)
+	RenderSystem::RenderSystem()
 	{
 		this->name = "Generic";
+		this->created = false;
+		this->state = NULL;
+		this->textureFilter = Texture::FILTER_LINEAR;
+		this->textureAddressMode = Texture::ADDRESS_WRAP;
 	}
 	
 	RenderSystem::~RenderSystem()
@@ -116,7 +120,8 @@ namespace april
 	
 	void RenderSystem::setOrthoProjection(grect rect)
 	{
-		// TODOa - this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
+		// TODOa - change and improve this implementation
+		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
 		this->orthoProjection = rect;
 		float t = this->getPixelOffset();
 		float wnd_w = (float)april::window->getWidth();

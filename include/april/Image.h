@@ -46,7 +46,7 @@ namespace april
 		Format format;
 		int compressedSize;
 
-		Image(); // TODO3 - make protected
+		Image(); // TODOa - make protected
 		~Image();
 		
 		Color getPixel(int x, int y);
@@ -69,14 +69,6 @@ namespace april
 		static Image* _loadJpt(hsbase& stream);
 
 	};
-	
-	// TODO3
-	//aprilFnExport Image* loadImage(chstr filename);
-	//aprilFnExport Image* createEmptyImage(int w, int h);
-	//aprilFnExport Image* createBlankImage(int w, int h);
-	//Image* _loadImagePng(hsbase& stream);
-	//Image* _loadImageJpg(hsbase& stream);
-	//Image* _loadImageJpt(hsbase& stream);
 	
 }
 
