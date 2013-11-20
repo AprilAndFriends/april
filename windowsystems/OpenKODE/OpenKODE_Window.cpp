@@ -491,21 +491,14 @@ namespace april
 	void OpenKODE_Window::beginKeyboardHandling()
 	{
 		kdKeyboardShow(this->kdWindow, 1);
-		this->virtualKeyboardVisible = true;
-		if (this->systemDelegate != NULL)
-		{
-			this->systemDelegate->onVirtualKeyboardVisibilityChanged(true);
-		}
+		// TODOa
+		this->handleVirtualKeyboardVisibilityChange(true, 0.5f);
 	}
 	
 	void OpenKODE_Window::terminateKeyboardHandling()
 	{
 		kdKeyboardShow(this->kdWindow, 0);
-		this->virtualKeyboardVisible = false;
-		if (this->systemDelegate != NULL)
-		{
-			this->systemDelegate->onVirtualKeyboardVisibilityChanged(false);
-		}
+		this->handleVirtualKeyboardVisibilityChange(false, 0.0f);
 	}
 
 	bool OpenKODE_Window::_isMousePointer() 

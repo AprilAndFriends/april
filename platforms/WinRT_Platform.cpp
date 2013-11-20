@@ -9,6 +9,7 @@
 
 #if defined(_WINRT) && !defined(_OPENKODE)
 #include <gtypes/Vector2.h>
+#include <hltypes/hdir.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
@@ -116,9 +117,9 @@ namespace april
 	hstr getUserDataPath()
 	{
 #ifndef _WINP8
-		return systemize_path(_HL_PSTR_TO_HSTR(ApplicationData::Current->RoamingFolder->Path));
+		return hdir::systemize(_HL_PSTR_TO_HSTR(ApplicationData::Current->RoamingFolder->Path));
 #else // because Windows Phone 8 is missing yet another feature
-		return systemize_path(_HL_PSTR_TO_HSTR(ApplicationData::Current->LocalFolder->Path));
+		return hdir::systemize(_HL_PSTR_TO_HSTR(ApplicationData::Current->LocalFolder->Path));
 #endif
 	}
 	

@@ -1,17 +1,19 @@
 package net.sourceforge.april.android;
 
-// version 3.1
+// version 3.2
 
 import android.app.Dialog;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import net.sourceforge.april.android.DialogFactory;
 
@@ -64,6 +66,19 @@ public class Activity extends android.app.Activity
 		this.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), true, this.systemSettingsObserver);
 		this.systemSettingsObserver.onChange(true);
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		// needed for keyboard height
+		this.getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+		{
+			@Override
+			public void onGlobalLayout()
+			{
+				View view = NativeInterface.AprilActivity.getView();
+				Rect r = new Rect();
+				view.getWindowVisibleDisplayFrame(r);
+				float heightRatio = 1.0f - (float)(r.bottom - r.top) / view.getRootView().getHeight();
+				NativeInterface.onVirtualKeyboardVisibilityChanged((heightRatio > 0.01f), heightRatio);
+			}
+		});		
 		NativeInterface.PackageName = this.getPackageName();
 		try
 		{

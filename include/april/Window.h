@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.2
+/// @version 3.1
 /// 
 /// @section LICENSE
 /// 
@@ -146,6 +146,8 @@ namespace april
 		HL_DEFINE_GETSET(int, fps, Fps);
 		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
 		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
+		HL_DEFINE_IS(virtualKeyboardVisible, VirtualKeyboardVisible);
+		HL_DEFINE_GET(float, virtualKeyboardHeightRatio, VirtualKeyboardHeightRatio);
 		HL_DEFINE_GET(InputMode, inputMode, InputMode);
 		HL_DEFINE_GETSET2(hmap, InputMode, InputMode, inputModeTranslations, InputModeTranslations);
 		void setInputMode(InputMode value);
@@ -166,7 +168,6 @@ namespace april
 		virtual void setTitle(chstr value) { this->title = value; }
 		virtual bool isCursorVisible() { return this->cursorVisible; }
 		virtual void setCursorVisible(bool value) { this->cursorVisible = value; }
-		virtual bool isVirtualKeyboardVisible() { return this->virtualKeyboardVisible; }
 		virtual bool isCursorInside();
 
 		virtual void setResolution(int w, int h);
@@ -189,8 +190,8 @@ namespace april
 		virtual void terminateKeyboardHandling() { }
 		
 		virtual bool isRotating() { return false; } // iOS/Android devices for example
-		virtual hstr getParam(chstr param) { return ""; } // TODO - this should be refactored
-		virtual void setParam(chstr param, chstr value) { } // TODO - this should be refactored
+		virtual hstr getParam(chstr param) { return ""; } // TODOa - this should be refactored
+		virtual void setParam(chstr param, chstr value) { } // TODOa - this should be refactored
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
@@ -200,6 +201,7 @@ namespace april
 		virtual bool handleQuitRequest(bool canCancel);
 		virtual void handleFocusChangeEvent(bool focused);
 		virtual void handleActivityChangeEvent(bool active);
+		virtual void handleVirtualKeyboardVisibilityChange(bool visible, float heightRatio);
 		virtual void handleLowMemoryWarning();
 
 		void handleKeyOnlyEvent(KeyEventType type, Key keyCode);
@@ -234,6 +236,7 @@ namespace april
 		gvec2 cursorPosition;
 		bool cursorVisible;
 		bool virtualKeyboardVisible;
+		float virtualKeyboardHeightRatio;
 		InputMode inputMode;
 		hmap<InputMode, InputMode> inputModeTranslations;
 		bool multiTouchActive;
