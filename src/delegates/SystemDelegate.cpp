@@ -44,9 +44,9 @@ namespace april
 		hlog::debug(april::logTag, "Event onInputModeChanged() was not implemented.");
 	}
 
-	void SystemDelegate::onVirtualKeyboardVisibilityChanged(bool visible, float heightRatio)
+	void SystemDelegate::onVirtualKeyboardChanged(bool visible, float heightRatio)
 	{
-		hlog::debug(april::logTag, "Event onVirtualKeyboardVisibilityChanged() was not implemented.");
+		hlog::debug(april::logTag, "Event onVirtualKeyboardChanged() was not implemented.");
 	}
 
 	void SystemDelegate::onLowMemoryWarning()
