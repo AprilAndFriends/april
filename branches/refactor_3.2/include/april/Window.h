@@ -67,6 +67,7 @@ namespace april
 			CONTROLLER
 		};
 		
+		// TODOa - remove?
 		enum DeviceOrientation
 		{
 			ADEVICEORIENTATION_NONE = 0,

@@ -34,7 +34,7 @@
 
 namespace april
 {
-	// TODO - refactor
+	// TODOa - refactor
 	void (*Window::msLaunchCallback)(void*) = NULL;
 	void Window::handleLaunchCallback(void* args)
 	{
@@ -96,13 +96,22 @@ namespace april
 		return options.join(',');
 	}
 	
-	Window::Window() : created(false), fullscreen(true), focused(true), running(true),
-		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), cursorVisible(false),
-		virtualKeyboardVisible(false), virtualKeyboardHeightRatio(0.0f),
-		multiTouchActive(false), inputMode(MOUSE)
+	Window::Window()
 	{
-		april::window = this;
 		this->name = "Generic";
+		this->created = false;
+		this->fullscreen = true;
+		this->focused = true;
+		this->running = true;
+		this->fps = 0;
+		this->fpsCount = 0;
+		this->fpsTimer = 0.0f;
+		this->fpsResolution = 0.5f;
+		this->cursorVisible = false;
+		this->virtualKeyboardVisible = false;
+		this->virtualKeyboardHeightRatio = 0.0f;
+		this->multiTouchActive = false;
+		this->inputMode = MOUSE;
 		this->updateDelegate = NULL;
 		this->keyboardDelegate = NULL;
 		this->mouseDelegate = NULL;
@@ -145,6 +154,14 @@ namespace april
 		{
 			hlog::writef(april::logTag, "Destroying window '%s'.", this->name.c_str());
 			this->created = false;
+			this->fps = 0;
+			this->fpsCount = 0;
+			this->fpsTimer = 0.0f;
+			this->fpsResolution = 0.5f;
+			this->multiTouchActive = false;
+			this->virtualKeyboardVisible = false;
+			this->virtualKeyboardHeightRatio = 0.0f;
+			this->inputMode = MOUSE;
 			this->updateDelegate = NULL;
 			this->keyboardDelegate = NULL;
 			this->mouseDelegate = NULL;
@@ -259,8 +276,7 @@ namespace april
 
 	bool Window::updateOneFrame()
 	{
-		static float k;
-		k = this->_calcTimeSinceLastFrame();
+		float k = this->_calcTimeSinceLastFrame();
 		if (!this->focused)
 		{
 			hthread::sleep(40.0f);
@@ -425,11 +441,7 @@ namespace april
 	bool Window::handleQuitRequest(bool canCancel)
 	{
 		// returns whether or not the windowing system is permitted to close the window
-		if (this->systemDelegate != NULL)
-		{
-			return this->systemDelegate->onQuit(canCancel);
-		}
-		return true;
+		return (this->systemDelegate == NULL || this->systemDelegate->onQuit(canCancel));
 	}
 	
 	void Window::handleFocusChangeEvent(bool focused)
@@ -541,7 +553,7 @@ namespace april
 		float k = this->timer.diff(true);
 		if (k > 0.5f)
 		{
-			k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
+			k = 0.05f; // prevent jumps from e.g, waiting on device reset or super low framerate
 		}
 		if (!this->focused)
 		{

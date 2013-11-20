@@ -70,22 +70,17 @@ namespace april
 		D3DPT_POINTLIST,		// ROP_POINT_LIST
 	};
 
+	// TODOa - make protected member of RenderSystem
 	unsigned int _numPrimitives(RenderOp renderOp, int nVertices)
 	{
 		switch (renderOp)
 		{
-		case TriangleList:
-			return nVertices / 3;
-		case TriangleStrip:
-			return nVertices - 2;
-		case TriangleFan:
-			return nVertices - 2;
-		case LineList:
-			return nVertices / 2;
-		case LineStrip:
-			return nVertices - 1;
-		case PointList:
-			return nVertices;
+		case TriangleList:	return nVertices / 3;
+		case TriangleStrip:	return nVertices - 2;
+		case TriangleFan:	return nVertices - 2;
+		case LineList:		return nVertices / 2;
+		case LineStrip:		return nVertices - 1;
+		case PointList:		return nVertices;
 		}
 		return 0;
 	}
@@ -114,7 +109,7 @@ namespace april
 		this->renderTarget = NULL;
 		this->backBuffer = NULL;
 		this->activeTexture = NULL;
-		// DIRECT3D
+		// Direct3D
 		this->d3d = Direct3DCreate9(D3D_SDK_VERSION);
 		if (this->d3d == NULL)
 		{

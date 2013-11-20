@@ -47,6 +47,7 @@ namespace april
 		{
 			if (window != NULL)
 			{
+				// TODOa - move this in their appropriate classes
 #if !defined(_IOS) && !defined(_COCOA_WINDOW)
 				window->terminateMainLoop();
 				window->destroy();

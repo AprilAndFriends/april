@@ -76,7 +76,7 @@ namespace april
 			img->format = FORMAT_RGB;
 			break;
 		default:
-			img->format = FORMAT_RGB; // TODO3
+			img->format = FORMAT_RGB; // TODOa
 			break;
 		}
 		// clean up

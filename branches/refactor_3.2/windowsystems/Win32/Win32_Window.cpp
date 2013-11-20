@@ -218,15 +218,14 @@ namespace april
 	
 	bool Win32_Window::updateOneFrame()
 	{
-		static bool result;
-		static POINT w32_cursorPosition;
+		POINT w32_cursorPosition;
 		// mouse position
 		GetCursorPos(&w32_cursorPosition);
 		ScreenToClient(this->hWnd, &w32_cursorPosition);
 		this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
 		this->checkEvents();
 		// rendering
-		result = Window::updateOneFrame();
+		bool result = Window::updateOneFrame();
 		if (this->fpsCounter)
 		{
 			this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
