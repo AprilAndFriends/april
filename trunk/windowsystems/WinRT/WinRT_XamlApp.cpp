@@ -146,7 +146,7 @@ namespace april
 	{
 		if (april::window != NULL)
 		{
-			april::window->handleVirtualKeyboardVisibilityChange(true, args->OccludedRect.Height / april::getSystemInfo().displayResolution.y);
+			april::window->handleVirtualKeyboardChangeEvent(true, args->OccludedRect.Height / april::getSystemInfo().displayResolution.y);
 		}
 		this->app->resetTouches();
 	}

@@ -492,13 +492,13 @@ namespace april
 	{
 		kdKeyboardShow(this->kdWindow, 1);
 		// TODOa
-		this->handleVirtualKeyboardVisibilityChange(true, 0.5f);
+		this->handleVirtualKeyboardChangeEvent(true, 0.5f);
 	}
 	
 	void OpenKODE_Window::terminateKeyboardHandling()
 	{
 		kdKeyboardShow(this->kdWindow, 0);
-		this->handleVirtualKeyboardVisibilityChange(false, 0.0f);
+		this->handleVirtualKeyboardChangeEvent(false, 0.0f);
 	}
 
 	bool OpenKODE_Window::_isMousePointer() 
