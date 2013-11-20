@@ -76,9 +76,9 @@ public class Activity extends android.app.Activity
 				Rect r = new Rect();
 				view.getWindowVisibleDisplayFrame(r);
 				float heightRatio = 1.0f - (float)(r.bottom - r.top) / view.getRootView().getHeight();
-				NativeInterface.onVirtualKeyboardVisibilityChanged((heightRatio > 0.01f), heightRatio);
+				NativeInterface.onVirtualKeyboardChanged((heightRatio > 0.01f), heightRatio);
 			}
-		});		
+		});
 		NativeInterface.PackageName = this.getPackageName();
 		try
 		{

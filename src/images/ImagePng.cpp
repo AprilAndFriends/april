@@ -18,9 +18,7 @@ namespace april
 {
 	void _pngZipRead(png_structp png, png_bytep data, png_size_t size)
 	{
-		static hsbase* file = NULL;
-		file = (hsbase*)png->io_ptr;
-		file->read_raw(data, size);
+		((hsbase*)png->io_ptr)->read_raw(data, size);
 	}
 
 	Image* Image::_loadPng(hsbase& stream)

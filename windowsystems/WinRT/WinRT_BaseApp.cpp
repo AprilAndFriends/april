@@ -77,7 +77,14 @@ namespace april
 			ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
 				this, &WinRT_BaseApp::OnWindowClosed);
 		DisplayProperties::OrientationChanged +=
-			ref new DisplayPropertiesEventHandler(this, &WinRT_BaseApp::OnOrientationChanged);
+			ref new DisplayPropertiesEventHandler(
+				this, &WinRT_BaseApp::OnOrientationChanged);
+		InputPane::GetForCurrentView()->Showing +=
+			ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
+				this, &WinRT_BaseApp::OnVirtualKeyboardShow);
+		InputPane::GetForCurrentView()->Hiding +=
+			ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
+				this, &WinRT_BaseApp::OnVirtualKeyboardHide);
 	}
 
 	void WinRT_BaseApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
@@ -139,6 +146,24 @@ namespace april
 		}
 	}
 	
+	void WinRT_BaseApp::OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
+	{
+		if (april::window != NULL)
+		{
+			april::window->handleVirtualKeyboardChangeEvent(true, args->OccludedRect.Height / april::getSystemInfo().displayResolution.y);
+		}
+		this->resetTouches();
+	}
+
+	void WinRT_BaseApp::OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
+	{
+		if (april::window != NULL)
+		{
+			april::window->handleVirtualKeyboardChangeEvent(false, 0.0f);
+		}
+		this->resetTouches();
+	}
+
 	void WinRT_BaseApp::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		if (april::window == NULL || !april::window->isFocused())

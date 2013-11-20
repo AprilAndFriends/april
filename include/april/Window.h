@@ -201,7 +201,7 @@ namespace april
 		virtual bool handleQuitRequest(bool canCancel);
 		virtual void handleFocusChangeEvent(bool focused);
 		virtual void handleActivityChangeEvent(bool active);
-		virtual void handleVirtualKeyboardVisibilityChange(bool visible, float heightRatio);
+		virtual void handleVirtualKeyboardChangeEvent(bool visible, float heightRatio);
 		virtual void handleLowMemoryWarning();
 
 		void handleKeyOnlyEvent(KeyEventType type, Key keyCode);

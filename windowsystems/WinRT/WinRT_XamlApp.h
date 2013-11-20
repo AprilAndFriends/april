@@ -52,13 +52,11 @@ namespace april
 		virtual void hideKeyboard();
 		
 	internal:
-		virtual void OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args);
-		virtual void OnRender(_In_ Object^ sender, _In_ Object^ args);
-		virtual void OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
-		virtual void OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
+		void OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args);
+		void OnRender(_In_ Object^ sender, _In_ Object^ args);
 		
 	protected:
-		virtual void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;
+		void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;
 		
 	private:
 		WinRT_BaseApp^ app;

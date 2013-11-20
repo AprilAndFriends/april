@@ -91,7 +91,7 @@ namespace april
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowVirtualKeyboard, "showVirtualKeyboard", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodShowVirtualKeyboard);
 		// TODOa
-		this->handleVirtualKeyboardVisibilityChange(true, 0.5f);
+		this->handleVirtualKeyboardChangeEvent(true, 0.5f);
 	}
 	
 	void AndroidJNI_Window::terminateKeyboardHandling()
@@ -99,7 +99,7 @@ namespace april
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodHideVirtualKeyboard, "hideVirtualKeyboard", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodHideVirtualKeyboard);
 		// TODOa
-		this->handleVirtualKeyboardVisibilityChange(false, 0.5f);
+		this->handleVirtualKeyboardChangeEvent(false, 0.5f);
 	}
 
 	void AndroidJNI_Window::handleActivityChangeEvent(bool active)

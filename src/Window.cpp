@@ -447,13 +447,13 @@ namespace april
 		hlog::warn(april::logTag, this->name + " does not implement activity change events!");
 	}
 	
-	void Window::handleVirtualKeyboardVisibilityChange(bool visible, float heightRatio)
+	void Window::handleVirtualKeyboardChangeEvent(bool visible, float heightRatio)
 	{
 		this->virtualKeyboardVisible = visible;
 		this->virtualKeyboardHeightRatio = heightRatio;
 		if (this->systemDelegate != NULL)
 		{
-			this->systemDelegate->onVirtualKeyboardVisibilityChanged(this->virtualKeyboardVisible, this->virtualKeyboardHeightRatio);
+			this->systemDelegate->onVirtualKeyboardChanged(this->virtualKeyboardVisible, this->virtualKeyboardHeightRatio);
 		}
 	}
 
