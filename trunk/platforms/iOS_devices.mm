@@ -2,7 +2,6 @@
 
 void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 {
-
 	if (name.starts_with("iPad"))
 	{
 		if (name.starts_with("iPad1"))
@@ -76,6 +75,13 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.ram = 1024;
 			info.displayDpi = 326;
 		}
+		else if (name.starts_with("iPhone6"))
+		{
+			info.name = "iPhone5S";
+			info.cpuCores = 2;
+			info.ram = 1024;
+			info.displayDpi = 326;
+		}
 		else
 		{
 			info.name = "iPhone?";
@@ -115,6 +121,49 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.ram = 512;
 			info.cpuCores = 2;
 			info.displayDpi = 326;
+		}
+	}
+	else if (name.starts_with("x86")) // iPhone Simulator
+	{
+		int w = info.displayResolution.x, h = info.displayResolution.y;
+		if (h < 768) // iPhone
+		{
+			if (h < 640)
+			{
+				info.name = "iPhone3GS";
+				info.ram = 256;
+				info.displayDpi = 163;
+			}
+			else if (w == 960)
+			{
+				info.name = "iPhone4";
+				info.ram = 512;
+				info.displayDpi = 326;
+			}
+			else
+			{
+				info.name = "iPhone5";
+				info.cpuCores = 2;
+				info.ram = 1024;
+				info.displayDpi = 326;
+			}
+		}
+		else
+		{
+			if (h == 768)
+			{
+				info.name = "iPad2";
+				info.ram = 512;
+				info.cpuCores = 2;
+				info.displayDpi = 132;
+			}
+			else
+			{
+				info.name = "iPad3";
+				info.ram = 1024;
+				info.cpuCores = 2;
+				info.displayDpi = 264;
+			}
 		}
 	}
 	//else: i386 (iphone simulator) and possible future device types

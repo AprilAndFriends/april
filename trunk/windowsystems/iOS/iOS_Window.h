@@ -57,7 +57,7 @@ namespace april
 		bool isVirtualKeyboardVisible();
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
-		void keyboardWasShown();
+		void keyboardWasShown(float kbSize);
 		void keyboardWasHidden();
 		
 		bool isRotating();
