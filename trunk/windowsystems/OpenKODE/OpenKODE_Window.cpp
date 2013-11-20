@@ -129,7 +129,6 @@ namespace april
 #endif
 		this->name = APRIL_WS_OPENKODE;
 		this->kdWindow = NULL;
-		this->virtualKeyboardVisible = false;
 		memset(this->kdTouches, 0, 16 * sizeof(bool));
 #if defined(_WIN32) && !defined(_EGL)
 		hlog::warn(april::logTag, "OpenKODE Window requires EGL to be present!");
@@ -148,7 +147,6 @@ namespace april
 		{
 			return false;
 		}
-		this->virtualKeyboardVisible = false;
 		this->inputMode = TOUCH;
 		if (w <= 0 || h <= 0)
 		{
@@ -199,7 +197,6 @@ namespace april
 		kdInstallCallback(NULL, KD_EVENT_PAUSE, NULL);
 		kdInstallCallback(NULL, KD_EVENT_RESUME, NULL);
 		kdInstallCallback(NULL, KD_EVENT_LOWMEM, NULL);
-		this->virtualKeyboardVisible = false;
 #ifdef _EGL
 		april::egl->destroy();
 #endif
@@ -491,14 +488,27 @@ namespace april
 	void OpenKODE_Window::beginKeyboardHandling()
 	{
 		kdKeyboardShow(this->kdWindow, 1);
-		// TODOa
-		this->handleVirtualKeyboardChangeEvent(true, 0.5f);
+#ifdef _WINRT
+		if (this->inputMode == TOUCH)
+		{
+#ifndef _WINP8
+			this->handleVirtualKeyboardChangeEvent(true, 0.5f);
+#else
+			this->handleVirtualKeyboardChangeEvent(true, 0.53f);
+#endif
+		}
+#endif
 	}
 	
 	void OpenKODE_Window::terminateKeyboardHandling()
 	{
 		kdKeyboardShow(this->kdWindow, 0);
-		this->handleVirtualKeyboardChangeEvent(false, 0.0f);
+#ifdef _WINRT
+		if (this->inputMode == TOUCH || !this->virtualKeyboardVisible)
+		{
+			this->handleVirtualKeyboardChangeEvent(false, 0.0f);
+		}
+#endif
 	}
 
 	bool OpenKODE_Window::_isMousePointer() 
