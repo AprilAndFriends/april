@@ -489,7 +489,7 @@ namespace april
 	{
 		kdKeyboardShow(this->kdWindow, 1);
 #ifdef _WINRT
-		if (this->inputMode == TOUCH)
+		if (this->inputMode == TOUCH && !this->virtualKeyboardVisible)
 		{
 #ifndef _WINP8
 			this->handleVirtualKeyboardChangeEvent(true, 0.5f);
@@ -504,7 +504,7 @@ namespace april
 	{
 		kdKeyboardShow(this->kdWindow, 0);
 #ifdef _WINRT
-		if (this->inputMode == TOUCH || !this->virtualKeyboardVisible)
+		if (this->virtualKeyboardVisible)
 		{
 			this->handleVirtualKeyboardChangeEvent(false, 0.0f);
 		}
