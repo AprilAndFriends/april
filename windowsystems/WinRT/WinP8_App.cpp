@@ -99,7 +99,7 @@ namespace april
 
 	void WinP8_App::OnBackButtonPressed(Object^ sender, BackPressedEventArgs^ args)
 	{
-		if (april::window != NULL && april::window->getParam(WINP8_BACK_BUTTON_SYSTEM_HANDLING) == "0")
+		if (april::window != NULL && april::window->getParam(WINP8_BACK_BUTTON_SYSTEM_HANDLING) != "1")
 		{
 			april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, april::AK_ESCAPE, 0);
 			april::window->queueKeyEvent(april::Window::AKEYEVT_UP, april::AK_ESCAPE, 0);
