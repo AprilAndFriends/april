@@ -56,6 +56,7 @@ namespace april
 		bool retainLoadingOverlay;
 		bool fastHideLoadingOverlay;
 		bool ignoreUpdate;
+		bool splashScreenFadeout;
 		bool fpsCounter;
 		hstr fpsTitle;
 	};

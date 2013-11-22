@@ -48,6 +48,7 @@ namespace april
 		this->ignoreUpdate = false;
 		this->name = APRIL_WS_MAC;
 		this->retainLoadingOverlay = fastHideLoadingOverlay = false;
+		this->splashScreenFadeout = true;
 		
 		aprilWindow = this;
     }
@@ -92,6 +93,10 @@ namespace april
 		{
 			return this->fastHideLoadingOverlay ? "1" : "0";
 		}
+		if (param == "splashscreen_fadeout")
+		{
+			return this->splashScreenFadeout ? "1" : "0";
+		}
 		return "";
 	}
 	
@@ -108,6 +113,10 @@ namespace april
 		if (param == "fasthide_loading_overlay")
 		{
 			this->fastHideLoadingOverlay = (value == "1");
+		}
+		if (param == "splashscreen_fadeout")
+		{
+			this->splashScreenFadeout = (value == "1");
 		}
 	}
 	
