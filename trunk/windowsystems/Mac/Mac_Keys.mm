@@ -274,5 +274,6 @@ namespace april
 //		m[kVK_ANSI_KeypadMinus] = AK_;
 //		m[kVK_ANSI_KeypadEquals] = AK_;
 		m[kVK_Command] = AK_LCOMMAND;
+		m[0x36] = AK_RCOMMAND;
 	}
 }
