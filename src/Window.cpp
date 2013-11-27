@@ -335,7 +335,17 @@ namespace april
 		this->handleKeyOnlyEvent(type, keyCode); // doesn't do anything if keyCode is AK_NONE
 		if (type == AKEYEVT_DOWN && charCode > 0) // ignores invalid chars
 		{
-			this->handleCharOnlyEvent(charCode);
+			if (charCode >= 0xE000 && charCode <= 0xF8FF)
+			{
+				// according to the unicode standard, this range is undefined and reserved for system codes
+				// for example, macosx maps keys up, down, left, right to this key, inducing wrong char calls to the app.
+				// source: http://en.wikibooks.org/wiki/Unicode/Character_reference/F000-FFFF
+				charCode = 0;
+			}
+			else
+			{
+				this->handleCharOnlyEvent(charCode);
+			}
 		}
 	}
 	
