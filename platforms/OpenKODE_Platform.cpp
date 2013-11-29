@@ -96,7 +96,7 @@ namespace april
 				info.ram = value / (1024 * 1024);
 			}
 #else
-			int ram;
+			unsigned int ram;
 			kdQueryAttribi(KD_ATTRIB_RAM, (KDint*)&ram);
 			info.ram = ram / 1048576; // in MB
 #endif
