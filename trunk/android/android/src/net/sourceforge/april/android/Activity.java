@@ -78,7 +78,7 @@ public class Activity extends android.app.Activity
 				float heightRatio = 1.0f - (float)(r.bottom - r.top) / view.getRootView().getHeight();
 				try
 				{
-					NativeInterface.onVirtualKeyboardChanged((heightRatio > 0.01f), heightRatio);
+					NativeInterface.onVirtualKeyboardChanged((heightRatio > 0.15f), heightRatio);
 				}
 				catch (java.lang.UnsatisfiedLinkError e)
 				{
