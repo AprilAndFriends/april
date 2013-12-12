@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -35,15 +35,14 @@
 	#endif
 #endif
 
-#ifdef _ANDROID
-	#include <jni.h>
-	#define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
-	#include "androidUtilJNI.h"
+#if defined(_ANDROID)
+#include <jni.h>
+#define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
+#include "androidUtilJNI.h"
 #endif
 
 namespace april
 {
-	// TODOa - move to a common place
 	static SystemInfo info;
 	SystemInfo getSystemInfo()
 	{
@@ -97,9 +96,11 @@ namespace april
 				info.ram = value / (1024 * 1024);
 			}
 #else
-			int ram;
-			kdQueryAttribi(KD_ATTRIB_RAM, (KDint*)&ram);
-			info.ram = ram / 1048576; // in MB
+			int pageSize;
+			int pageCount;
+			kdQueryAttribi(KD_ATTRIB_PAGESIZE, (KDint*)&pageSize);
+			kdQueryAttribi(KD_ATTRIB_NUMPAGES, (KDint*)&pageCount);
+			info.ram = pageSize / 1048576 * pageCount; // in MB
 #endif
 			// other
 			info.locale = hstr(kdGetLocale());
