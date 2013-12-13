@@ -331,6 +331,23 @@
 		D11A21641712D01500BA9DA8 /* Mac_Keys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Mac_Keys.h; path = windowsystems/Mac/Mac_Keys.h; sourceTree = "<group>"; };
 		D1256A2C1727F6C60089C583 /* Mac_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_AppDelegate.h; path = windowsystems/Mac/Mac_AppDelegate.h; sourceTree = "<group>"; };
 		D1256A2D1727F6C60089C583 /* Mac_AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_AppDelegate.mm; path = windowsystems/Mac/Mac_AppDelegate.mm; sourceTree = "<group>"; };
+		D12EA4BF185B28400082CC20 /* IWinRT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IWinRT.h; path = windowsystems/WinRT/IWinRT.h; sourceTree = "<group>"; };
+		D12EA4C0185B28400082CC20 /* pch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = pch.h; path = windowsystems/WinRT/pch.h; sourceTree = "<group>"; };
+		D12EA4C1185B28400082CC20 /* WinP8_App.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WinP8_App.cpp; path = windowsystems/WinRT/WinP8_App.cpp; sourceTree = "<group>"; };
+		D12EA4C2185B28400082CC20 /* WinP8_App.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinP8_App.h; path = windowsystems/WinRT/WinP8_App.h; sourceTree = "<group>"; };
+		D12EA4C3185B28400082CC20 /* WinP8_AppLauncher.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WinP8_AppLauncher.cpp; path = windowsystems/WinRT/WinP8_AppLauncher.cpp; sourceTree = "<group>"; };
+		D12EA4C4185B28400082CC20 /* WinP8_AppLauncher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinP8_AppLauncher.h; path = windowsystems/WinRT/WinP8_AppLauncher.h; sourceTree = "<group>"; };
+		D12EA4C5185B28400082CC20 /* WinP8_KeyboardInterface.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WinP8_KeyboardInterface.cpp; path = windowsystems/WinRT/WinP8_KeyboardInterface.cpp; sourceTree = "<group>"; };
+		D12EA4C6185B28400082CC20 /* WinP8_KeyboardInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinP8_KeyboardInterface.h; path = windowsystems/WinRT/WinP8_KeyboardInterface.h; sourceTree = "<group>"; };
+		D12EA4C7185B28400082CC20 /* WinRT_BaseApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WinRT_BaseApp.cpp; path = windowsystems/WinRT/WinRT_BaseApp.cpp; sourceTree = "<group>"; };
+		D12EA4C8185B28400082CC20 /* WinRT_BaseApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinRT_BaseApp.h; path = windowsystems/WinRT/WinRT_BaseApp.h; sourceTree = "<group>"; };
+		D12EA4C9185B28400082CC20 /* WinRT_XamlApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WinRT_XamlApp.cpp; path = windowsystems/WinRT/WinRT_XamlApp.cpp; sourceTree = "<group>"; };
+		D12EA4CA185B28400082CC20 /* WinRT_XamlApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinRT_XamlApp.h; path = windowsystems/WinRT/WinRT_XamlApp.h; sourceTree = "<group>"; };
+		D12EA4CB185B28400082CC20 /* WinRT_XamlOverlay.xaml */ = {isa = PBXFileReference; lastKnownFileType = text; name = WinRT_XamlOverlay.xaml; path = windowsystems/WinRT/WinRT_XamlOverlay.xaml; sourceTree = "<group>"; };
+		D12EA4CC185B28400082CC20 /* WinRT_XamlOverlay.xaml.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WinRT_XamlOverlay.xaml.cpp; path = windowsystems/WinRT/WinRT_XamlOverlay.xaml.cpp; sourceTree = "<group>"; };
+		D12EA4CD185B28400082CC20 /* WinRT_XamlOverlay.xaml.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinRT_XamlOverlay.xaml.h; path = windowsystems/WinRT/WinRT_XamlOverlay.xaml.h; sourceTree = "<group>"; };
+		D12EA4CE185B28400082CC20 /* WinRT.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WinRT.cpp; path = windowsystems/WinRT/WinRT.cpp; sourceTree = "<group>"; };
+		D12EA4CF185B28400082CC20 /* WinRT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinRT.h; path = windowsystems/WinRT/WinRT.h; sourceTree = "<group>"; };
 		D1397A44175F32CE00DC02D7 /* OpenKODE_Keys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenKODE_Keys.cpp; path = windowsystems/OpenKODE/OpenKODE_Keys.cpp; sourceTree = "<group>"; };
 		D1397A45175F32CE00DC02D7 /* OpenKODE_Keys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenKODE_Keys.h; path = windowsystems/OpenKODE/OpenKODE_Keys.h; sourceTree = "<group>"; };
 		D1397A99175F834800DC02D7 /* iOS_devices.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_devices.mm; path = platforms/iOS_devices.mm; sourceTree = "<group>"; };
@@ -412,10 +429,6 @@
 		D1E7207116D37C6A00B9C9AD /* TimerSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerSDL.cpp; path = src/timers/TimerSDL.cpp; sourceTree = "<group>"; };
 		D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/timers/TimerPosix.cpp; sourceTree = "<group>"; };
 		D1E7207616D37C7800B9C9AD /* TimerWin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TimerWin.cpp; path = src/timers/TimerWin.cpp; sourceTree = "<group>"; };
-		D1E7207816D37CAB00B9C9AD /* WinRT_View.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WinRT_View.cpp; path = windowsystems/WinRT/WinRT_View.cpp; sourceTree = "<group>"; };
-		D1E7207916D37CAB00B9C9AD /* WinRT_View.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinRT_View.h; path = windowsystems/WinRT/WinRT_View.h; sourceTree = "<group>"; };
-		D1E7207A16D37CAB00B9C9AD /* WinRT_ViewSource.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WinRT_ViewSource.cpp; path = windowsystems/WinRT/WinRT_ViewSource.cpp; sourceTree = "<group>"; };
-		D1E7207B16D37CAB00B9C9AD /* WinRT_ViewSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinRT_ViewSource.h; path = windowsystems/WinRT/WinRT_ViewSource.h; sourceTree = "<group>"; };
 		D1E7207C16D37CAB00B9C9AD /* WinRT_Window.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WinRT_Window.cpp; path = windowsystems/WinRT/WinRT_Window.cpp; sourceTree = "<group>"; };
 		D1E7207D16D37CAB00B9C9AD /* WinRT_Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinRT_Window.h; path = windowsystems/WinRT/WinRT_Window.h; sourceTree = "<group>"; };
 		D1E7208416D37CE300B9C9AD /* DirectX9_PixelShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_PixelShader.cpp; path = rendersystems/DirectX/9/DirectX9_PixelShader.cpp; sourceTree = "<group>"; };
@@ -856,10 +869,23 @@
 		D1E7207716D37C9500B9C9AD /* WinRT */ = {
 			isa = PBXGroup;
 			children = (
-				D1E7207816D37CAB00B9C9AD /* WinRT_View.cpp */,
-				D1E7207916D37CAB00B9C9AD /* WinRT_View.h */,
-				D1E7207A16D37CAB00B9C9AD /* WinRT_ViewSource.cpp */,
-				D1E7207B16D37CAB00B9C9AD /* WinRT_ViewSource.h */,
+				D12EA4BF185B28400082CC20 /* IWinRT.h */,
+				D12EA4C0185B28400082CC20 /* pch.h */,
+				D12EA4C1185B28400082CC20 /* WinP8_App.cpp */,
+				D12EA4C2185B28400082CC20 /* WinP8_App.h */,
+				D12EA4C3185B28400082CC20 /* WinP8_AppLauncher.cpp */,
+				D12EA4C4185B28400082CC20 /* WinP8_AppLauncher.h */,
+				D12EA4C5185B28400082CC20 /* WinP8_KeyboardInterface.cpp */,
+				D12EA4C6185B28400082CC20 /* WinP8_KeyboardInterface.h */,
+				D12EA4C7185B28400082CC20 /* WinRT_BaseApp.cpp */,
+				D12EA4C8185B28400082CC20 /* WinRT_BaseApp.h */,
+				D12EA4C9185B28400082CC20 /* WinRT_XamlApp.cpp */,
+				D12EA4CA185B28400082CC20 /* WinRT_XamlApp.h */,
+				D12EA4CB185B28400082CC20 /* WinRT_XamlOverlay.xaml */,
+				D12EA4CC185B28400082CC20 /* WinRT_XamlOverlay.xaml.cpp */,
+				D12EA4CD185B28400082CC20 /* WinRT_XamlOverlay.xaml.h */,
+				D12EA4CE185B28400082CC20 /* WinRT.cpp */,
+				D12EA4CF185B28400082CC20 /* WinRT.h */,
 				D1E7207C16D37CAB00B9C9AD /* WinRT_Window.cpp */,
 				D1E7207D16D37CAB00B9C9AD /* WinRT_Window.h */,
 			);
