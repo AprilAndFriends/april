@@ -325,7 +325,7 @@ namespace april
 	
 	int OpenKODE_Window::_getAprilTouchIndex(int kdIndex)
 	{
-		int index = 0;
+		int index = -1;
 		for_iter (i, 0, kdIndex + 1)
 		{
 			if (this->kdTouches[i])
@@ -333,7 +333,7 @@ namespace april
 				index++;
 			}
 		}
-		return (index - 1);
+		return index;
 	}
 
 	bool OpenKODE_Window::_processEvent(const KDEvent* evt)
@@ -429,11 +429,16 @@ namespace april
 					this->setInputMode(TOUCH);
 					int i = 0;
 					int j = 0;
+					int touchIndex = 0;
 					for (; i < 4; i++, j += KD_IO_POINTER_STRIDE)
 					{
 						if (index == KD_INPUT_POINTER_X + j || index == KD_INPUT_POINTER_Y + j)
 						{
-							this->queueTouchEvent(Window::AMOUSEEVT_MOVE, pos, this->_getAprilTouchIndex(i));
+							touchIndex = this->_getAprilTouchIndex(i);
+							if (touchIndex >= 0)
+							{
+								this->queueTouchEvent(Window::AMOUSEEVT_MOVE, pos, touchIndex);
+							}
 							break;
 						}
 						if (index == KD_INPUT_POINTER_SELECT + j)
@@ -441,11 +446,19 @@ namespace april
 							if (evt->data.inputpointer.select != 0)
 							{
 								this->kdTouches[i] = true;
-								this->queueTouchEvent(Window::AMOUSEEVT_DOWN, pos, this->_getAprilTouchIndex(i));
+								touchIndex = this->_getAprilTouchIndex(i);
+								if (touchIndex >= 0)
+								{
+									this->queueTouchEvent(Window::AMOUSEEVT_DOWN, pos, touchIndex);
+								}
 							}
 							else
 							{
-								this->queueTouchEvent(Window::AMOUSEEVT_UP, pos, this->_getAprilTouchIndex(i));
+								touchIndex = this->_getAprilTouchIndex(i);
+								if (touchIndex >= 0)
+								{
+									this->queueTouchEvent(Window::AMOUSEEVT_UP, pos, touchIndex);
+								}
 								this->kdTouches[i] = false;
 							}
 							break;

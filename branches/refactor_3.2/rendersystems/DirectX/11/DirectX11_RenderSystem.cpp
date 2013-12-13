@@ -641,6 +641,38 @@ namespace april
 #ifdef _WINP8
 		value = WinRT::rotateViewport(value);
 #endif
+		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
+		static int w = 0;
+		static int h = 0;
+		if (w == 0 || h == 0)
+		{
+			gvec2 resolution = april::getSystemInfo().displayResolution;
+			w = hround(resolution.x);
+			h = hround(resolution.y);
+			CHECK_SWAP(w, h);
+		}
+		if (rect.x < 0.0f)
+		{
+			rect.w += rect.x;
+			rect.x = 0.0f;
+		}
+		if (rect.y < 0.0f)
+		{
+			rect.h += rect.y;
+			rect.y = 0.0f;
+		}
+		rect.w = hclamp(rect.w, 0.0f, hmax(w - rect.x, 0.0f));
+		rect.h = hclamp(rect.h, 0.0f, hmax(h - rect.y, 0.0f));
+		if (rect.w > 0.0f && rect.h > 0.0f)
+		{
+			rect.x = hclamp(rect.x, 0.0f, (float)w);
+			rect.y = hclamp(rect.y, 0.0f, (float)h);
+		}
+		else
+		{
+			rect.set((float)w, (float)h, 0.0f, 0.0f);
+		}
+		// setting the system viewport
 		D3D11_VIEWPORT viewport;
 		viewport.MinDepth = D3D11_MIN_DEPTH;
 		viewport.MaxDepth = D3D11_MAX_DEPTH;

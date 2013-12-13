@@ -183,7 +183,7 @@ namespace april
 	{
 	}
 
-	void Window::setInputMode(Window::InputMode value)
+	void Window::setInputMode(InputMode value)
 	{
 		if (this->inputModeTranslations.has_key(value))
 		{
@@ -203,7 +203,21 @@ namespace april
 			}
 		}
 	}
-	
+
+	void Window::setInputModeTranslations(hmap<InputMode, InputMode> value)
+	{
+		this->inputModeTranslations = value;
+		if (this->inputModeTranslations.has_key(this->inputMode))
+		{
+			this->inputMode = this->inputModeTranslations[this->inputMode];
+			hlog::write(april::logTag, "Forcing Input Mode to: " + INPUT_MODE_NAME(this->inputMode));
+			if (this->inputMode == CONTROLLER)
+			{
+				this->cursorPosition.set(-10000.0f, -10000.0f);
+			}
+		}
+	}
+
 	gvec2 Window::getSize()
 	{
 		return gvec2((float)this->getWidth(), (float)this->getHeight());
@@ -351,7 +365,17 @@ namespace april
 		this->handleKeyOnlyEvent(type, keyCode); // doesn't do anything if keyCode is AK_NONE
 		if (type == AKEYEVT_DOWN && charCode > 0) // ignores invalid chars
 		{
-			this->handleCharOnlyEvent(charCode);
+			if (charCode >= 0xE000 && charCode <= 0xF8FF)
+			{
+				// according to the unicode standard, this range is undefined and reserved for system codes
+				// for example, macosx maps keys up, down, left, right to this key, inducing wrong char calls to the app.
+				// source: http://en.wikibooks.org/wiki/Unicode/Character_reference/F000-FFFF
+				charCode = 0;
+			}
+			else
+			{
+				this->handleCharOnlyEvent(charCode);
+			}
 		}
 	}
 	
