@@ -86,18 +86,6 @@ namespace april
 			hswap(viewport.w, viewport.h);
 			viewport.y = h - (viewport.y + viewport.h);
 		}
-		if (viewport.x < 0.0f)
-		{
-			viewport.w += viewport.x;
-			viewport.x = 0.0f;
-		}
-		if (viewport.y < 0.0f)
-		{
-			viewport.h += viewport.y;
-			viewport.y = 0.0f;
-		}
-		viewport.w = hclamp(viewport.w, 0.0f, hmax(w - viewport.x, 0.0f));
-		viewport.h = hclamp(viewport.h, 0.0f, hmax(h - viewport.y, 0.0f));
 		return viewport;
 	}
 

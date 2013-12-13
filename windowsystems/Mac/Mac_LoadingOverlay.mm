@@ -88,7 +88,11 @@ void reattachLoadingOverlay()
 
 void updateLoadingOverlay(float k)
 {
-	static float alpha = 1.5f;
+	static float alpha = 505;
+	if (alpha == 505)
+	{
+		alpha = aprilWindow->getParam("splashscreen_fadeout") == "0" ? -1 : 1.5f;
+	}
 	if (mOverlayWindow)
 	{
 		if (aprilWindow->getParam("fasthide_loading_overlay") == "1")

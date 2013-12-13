@@ -150,7 +150,8 @@ namespace april
 		HL_DEFINE_IS(virtualKeyboardVisible, VirtualKeyboardVisible);
 		HL_DEFINE_GET(float, virtualKeyboardHeightRatio, VirtualKeyboardHeightRatio);
 		HL_DEFINE_GET(InputMode, inputMode, InputMode);
-		HL_DEFINE_GETSET2(hmap, InputMode, InputMode, inputModeTranslations, InputModeTranslations);
+		HL_DEFINE_GET2(hmap, InputMode, InputMode, inputModeTranslations, InputModeTranslations);
+		void setInputModeTranslations(hmap<InputMode, InputMode> value);
 		void setInputMode(InputMode value);
 		gvec2 getSize();
 		float getAspectRatio();

@@ -33,7 +33,7 @@ grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 class UpdateDelegate : public april::UpdateDelegate
 {
 public:
-	UpdateDelegate::UpdateDelegate() : april::UpdateDelegate(), angle(0.0f)
+	UpdateDelegate() : april::UpdateDelegate(), angle(0.0f)
 	{
 	}
 
