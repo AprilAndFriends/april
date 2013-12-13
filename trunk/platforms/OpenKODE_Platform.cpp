@@ -96,9 +96,11 @@ namespace april
 				info.ram = value / (1024 * 1024);
 			}
 #else
-			unsigned int ram;
-			kdQueryAttribi(KD_ATTRIB_RAM, (KDint*)&ram);
-			info.ram = ram / 1048576; // in MB
+			int pageSize;
+			int pageCount;
+			kdQueryAttribi(KD_ATTRIB_PAGESIZE, (KDint*)&pageSize);
+			kdQueryAttribi(KD_ATTRIB_NUMPAGES, (KDint*)&pageCount);
+			info.ram = pageSize / 1048576 * pageCount; // in MB
 #endif
 			// other
 			info.locale = hstr(kdGetLocale());
