@@ -100,15 +100,6 @@ namespace april
 		return info;
 	}
 
-	DeviceType getDeviceType()
-	{
-#ifndef _WINP8
-		return DEVICE_WINDOWS_8;
-#else
-		return DEVICE_WINDOWS_PHONE_8;
-#endif
-	}
-
 	hstr getPackageName()
 	{
 		return _HL_PSTR_TO_HSTR(Windows::ApplicationModel::Package::Current->Id->FamilyName);
@@ -132,25 +123,25 @@ namespace april
 		case IDOK:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_OK);
+				(*currentCallback)(MESSAGE_BUTTON_OK);
 			}
 			break;
 		case IDYES:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_YES);
+				(*currentCallback)(MESSAGE_BUTTON_YES);
 			}
 			break;
 		case IDNO:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_NO);
+				(*currentCallback)(MESSAGE_BUTTON_NO);
 			}
 			break;
 		case IDCANCEL:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_CANCEL);
+				(*currentCallback)(MESSAGE_BUTTON_CANCEL);
 			}
 			break;
 		}
@@ -179,14 +170,14 @@ namespace april
 		_HL_HSTR_TO_PSTR_DEF(no);
 		_HL_HSTR_TO_PSTR_DEF(cancel);
 
-		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
+		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 			dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
 			dialog->DefaultCommandIndex = 0;
 			dialog->CancelCommandIndex = 1;
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO) && (buttonMask & AMSGBTN_CANCEL))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 			dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
@@ -194,13 +185,13 @@ namespace april
 			dialog->DefaultCommandIndex = 0;
 			dialog->CancelCommandIndex = 2;
 		}
-		else if (buttonMask & AMSGBTN_OK)
+		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
 			dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 			dialog->DefaultCommandIndex = 0;
 			dialog->CancelCommandIndex = 0;
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
 			dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 			dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));

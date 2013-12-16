@@ -17,6 +17,25 @@
 
 namespace april
 {
+	/*
+	MessageBoxButton AMSGBTN_NULL = MESSAGE_BUTTON_OK; // DEPRECATED
+	MessageBoxButton MESSAGE_BUTTON_OK = MESSAGE_BUTTON_OK; // DEPRECATED
+	MessageBoxButton MESSAGE_BUTTON_CANCEL = MESSAGE_BUTTON_CANCEL; // DEPRECATED
+	MessageBoxButton MESSAGE_BUTTON_YES = MESSAGE_BUTTON_YES; // DEPRECATED
+	MessageBoxButton MESSAGE_BUTTON_NO = MESSAGE_BUTTON_NO; // DEPRECATED
+	MessageBoxButton MESSAGE_BUTTON_OKCANCEL = MESSAGE_BUTTON_OK_CANCEL; // DEPRECATED
+	MessageBoxButton MESSAGE_BUTTON_YESNO = MESSAGE_BUTTON_YES_NO; // DEPRECATED
+	MessageBoxButton MESSAGE_BUTTON_YESNOCANCEL = MESSAGE_BUTTON_YES_NO_CANCEL; // DEPRECATED
+
+	MessageBoxStyle AMSGSTYLE_PLAIN = MESSAGE_STYLE_NORMAL; // DEPRECATED
+	MessageBoxStyle AMSGSTYLE_INFORMATION = MESSAGE_STYLE_INFO; // DEPRECATED
+	MessageBoxStyle AMSGSTYLE_WARNING = MESSAGE_STYLE_WARNING; // DEPRECATED
+	MessageBoxStyle AMSGSTYLE_CRITICAL = MESSAGE_STYLE_CRITICAL; // DEPRECATED
+	MessageBoxStyle AMSGSTYLE_QUESTION = MESSAGE_STYLE_QUESTION; // DEPRECATED
+	MessageBoxStyle AMSGSTYLE_MODAL = MESSAGE_STYLE_MODAL; // DEPRECATED
+	MessageBoxStyle AMSGSTYLE_TERMINATEAPPONDISPLAY = MESSAGE_STYLE_TERMINATE_ON_DISPLAY; // DEPRECATED
+	*/
+
 	SystemInfo::SystemInfo()
 	{
 		this->name = "";
@@ -43,7 +62,7 @@ namespace april
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		MessageBoxStyle passedStyle = style;
-		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
+		if (style & MESSAGE_STYLE_TERMINATE_ON_DISPLAY)
 		{
 			if (window != NULL)
 			{
@@ -56,10 +75,10 @@ namespace april
 				window->destroy();
 #endif
 			}
-			passedStyle = (MessageBoxStyle)(passedStyle | AMSGSTYLE_MODAL);
+			passedStyle = (MessageBoxStyle)(passedStyle | MESSAGE_STYLE_MODAL);
 		}
 		messageBox_platform(title, text, buttonMask, passedStyle, customButtonTitles, callback);
-		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY)
+		if (style & MESSAGE_STYLE_TERMINATE_ON_DISPLAY)
 		{
 			exit(0);
 		}
@@ -68,25 +87,25 @@ namespace april
 	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel,
 		MessageBoxButton buttonMask, hmap<MessageBoxButton, hstr> customButtonTitles)
 	{
-		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
+		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			*ok = customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK");
-			*cancel = customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel");
+			*ok = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK");
+			*cancel = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel");
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			*yes = customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes");
-			*no = customButtonTitles.try_get_by_key(AMSGBTN_NO, "No");
-			*cancel = customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel");
+			*yes = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes");
+			*no = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No");
+			*cancel = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel");
 		}
-		else if (buttonMask & AMSGBTN_OK)
+		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
-			*ok = customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK");
+			*ok = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK");
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
-			*yes = customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes");
-			*no = customButtonTitles.try_get_by_key(AMSGBTN_NO, "No");
+			*yes = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes");
+			*no = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No");
 		}
 	}
 

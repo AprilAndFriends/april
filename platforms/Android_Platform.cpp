@@ -57,11 +57,6 @@ namespace april
 		return info;
 	}
 	
-	DeviceType getDeviceType()
-	{
-		return DEVICE_ANDROID;
-	}
-	
 	hstr getPackageName()
 	{
 		static hstr package;
@@ -102,11 +97,11 @@ namespace april
 		jstring jNo = (no != "" ? env->NewStringUTF(no.c_str()) : NULL);
 		jstring jCancel = (cancel != "" ? env->NewStringUTF(cancel.c_str()) : NULL);
 		jint jIconId = 0;
-		if ((style & AMSGSTYLE_INFORMATION) || (style & AMSGSTYLE_QUESTION))
+		if ((style & MESSAGE_STYLE_INFO) || (style & MESSAGE_STYLE_QUESTION))
 		{
 			jIconId = 1;
 		}
-		else if ((style & AMSGSTYLE_WARNING) || (style & AMSGSTYLE_CRITICAL))
+		else if ((style & MESSAGE_STYLE_WARNING) || (style & MESSAGE_STYLE_CRITICAL))
 		{
 			jIconId = 2;
 		}

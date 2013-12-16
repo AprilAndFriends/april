@@ -169,15 +169,6 @@ namespace april
 		return info;
 	}
 
-	DeviceType getDeviceType()
-	{
-		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-		{
-			return DEVICE_IPHONE;
-		}
-		return DEVICE_IPAD;
-	}
-	
 	hstr getPackageName()
 	{
 		static hstr bundleID;
@@ -198,59 +189,56 @@ namespace april
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
         NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
-		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, AMSGBTN_NULL, AMSGBTN_NULL};
+		MessageBoxButton buttonTypes[] = {MESSAGE_BUTTON_OK, (MessageBoxButton)NULL, (MessageBoxButton)NULL};
         
-		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
+		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            
-            buttonTypes[1] = AMSGBTN_OK;
-            buttonTypes[0] = AMSGBTN_CANCEL;
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
+            buttonTypes[1] = MESSAGE_BUTTON_OK;
+            buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
         }
-		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
-			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            
-            buttonTypes[1] = AMSGBTN_YES;
-            buttonTypes[2] = AMSGBTN_NO;
-            buttonTypes[0] = AMSGBTN_CANCEL;
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
+			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
+            buttonTypes[1] = MESSAGE_BUTTON_YES;
+            buttonTypes[2] = MESSAGE_BUTTON_NO;
+            buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
 		}
-		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
-            
-            buttonTypes[1] = AMSGBTN_YES;
-            buttonTypes[0] = AMSGBTN_NO;
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
+            buttonTypes[1] = MESSAGE_BUTTON_YES;
+            buttonTypes[0] = MESSAGE_BUTTON_NO;
 		}
-		else if (buttonMask & AMSGBTN_CANCEL)
+		else if (buttonMask & MESSAGE_BUTTON_CANCEL)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            buttonTypes[0] = AMSGBTN_CANCEL;
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
+            buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
 		}
-		else if (buttonMask & AMSGBTN_OK)
+		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
-            buttonTypes[0] = AMSGBTN_OK;
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK").c_str()];
+            buttonTypes[0] = MESSAGE_BUTTON_OK;
 		}
-		else if (buttonMask & AMSGBTN_YES)
+		else if (buttonMask & MESSAGE_BUTTON_YES)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
-            buttonTypes[0] = AMSGBTN_YES;
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
+            buttonTypes[0] = MESSAGE_BUTTON_YES;
 		}
-		else if (buttonMask & AMSGBTN_NO)
+		else if (buttonMask & MESSAGE_BUTTON_NO)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
-            buttonTypes[0] = AMSGBTN_NO;
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
+            buttonTypes[0] = MESSAGE_BUTTON_NO;
 		}
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
 		NSString *textns = [NSString stringWithUTF8String:text.c_str()];
 
-        AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:(style & AMSGSTYLE_MODAL)] autorelease];
+        AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:(style & MESSAGE_STYLE_MODAL)] autorelease];
         mbd.callback = callback;
         mbd.buttonTypes = buttonTypes;
 		[mbd retain];
@@ -261,7 +249,7 @@ namespace april
 											  cancelButtonTitle:buttons[0]
 											  otherButtonTitles:buttons[1], buttons[2], nil];
 		[alert show];
-		if (style & AMSGSTYLE_MODAL) 
+		if (style & MESSAGE_STYLE_MODAL) 
 		{
 			CFRunLoopRun();
 		}

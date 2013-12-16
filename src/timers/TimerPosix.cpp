@@ -57,7 +57,6 @@ namespace april
 		if (update)
 		{
 			this->update();
-			return this->dt;
 		}
 		return this->dt;
 	}

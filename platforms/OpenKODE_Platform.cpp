@@ -124,11 +124,6 @@ namespace april
 		return info;
 	}
 
-	DeviceType getDeviceType()
-	{
-		return DEVICE_OPENKODE;
-	}
-
 	hstr getPackageName()
 	{
 #ifndef _WINRT
@@ -152,40 +147,40 @@ namespace april
 		hstr cancel;
 		_makeButtonLabels(&ok, &yes, &no, &cancel, buttonMask, customButtonTitles);
 		const char* buttons[4] = {"", NULL, NULL, NULL};
-		MessageBoxButton resultButtons[4] = {AMSGBTN_NULL, AMSGBTN_NULL, AMSGBTN_NULL, AMSGBTN_NULL};
+		MessageBoxButton resultButtons[4] = {(MessageBoxButton)NULL, (MessageBoxButton)NULL, (MessageBoxButton)NULL, (MessageBoxButton)NULL};
 		int indexCancel = -1;
-		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
+		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			// order is reversed because libKD prefers the colored button to be at place [1], at least on iOS
 			// if this is going to be changed for a new platform, ifdef the button order for iOS
 			buttons[1] = ok.c_str();
 			buttons[0] = cancel.c_str();
-			resultButtons[1] = AMSGBTN_OK;
-			resultButtons[0] = AMSGBTN_CANCEL;
+			resultButtons[1] = MESSAGE_BUTTON_OK;
+			resultButtons[0] = MESSAGE_BUTTON_CANCEL;
 			indexCancel = 0;
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO) && (buttonMask & AMSGBTN_CANCEL))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			buttons[1] = yes.c_str();
 			buttons[0] = no.c_str();
 			buttons[2] = cancel.c_str();
-			resultButtons[1] = AMSGBTN_YES;
-			resultButtons[0] = AMSGBTN_NO;
-			resultButtons[2] = AMSGBTN_CANCEL;
+			resultButtons[1] = MESSAGE_BUTTON_YES;
+			resultButtons[0] = MESSAGE_BUTTON_NO;
+			resultButtons[2] = MESSAGE_BUTTON_CANCEL;
 			indexCancel = 2;
 		}
-		else if (buttonMask & AMSGBTN_OK)
+		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
 			buttons[0] = ok.c_str();
-			resultButtons[0] = AMSGBTN_OK;
+			resultButtons[0] = MESSAGE_BUTTON_OK;
 			indexCancel = 0;
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
 			buttons[1] = yes.c_str();
 			buttons[0] = no.c_str();
-			resultButtons[1] = AMSGBTN_YES;
-			resultButtons[0] = AMSGBTN_NO;
+			resultButtons[1] = MESSAGE_BUTTON_YES;
+			resultButtons[0] = MESSAGE_BUTTON_NO;
 			indexCancel = 1;
 		}
 		int index = kdShowMessage(title.c_str(), text.c_str(), buttons);
