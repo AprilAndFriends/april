@@ -17,24 +17,7 @@
 
 namespace april
 {
-	/*
-	MessageBoxButton AMSGBTN_NULL = MESSAGE_BUTTON_OK; // DEPRECATED
-	MessageBoxButton MESSAGE_BUTTON_OK = MESSAGE_BUTTON_OK; // DEPRECATED
-	MessageBoxButton MESSAGE_BUTTON_CANCEL = MESSAGE_BUTTON_CANCEL; // DEPRECATED
-	MessageBoxButton MESSAGE_BUTTON_YES = MESSAGE_BUTTON_YES; // DEPRECATED
-	MessageBoxButton MESSAGE_BUTTON_NO = MESSAGE_BUTTON_NO; // DEPRECATED
-	MessageBoxButton MESSAGE_BUTTON_OKCANCEL = MESSAGE_BUTTON_OK_CANCEL; // DEPRECATED
-	MessageBoxButton MESSAGE_BUTTON_YESNO = MESSAGE_BUTTON_YES_NO; // DEPRECATED
-	MessageBoxButton MESSAGE_BUTTON_YESNOCANCEL = MESSAGE_BUTTON_YES_NO_CANCEL; // DEPRECATED
-
-	MessageBoxStyle AMSGSTYLE_PLAIN = MESSAGE_STYLE_NORMAL; // DEPRECATED
-	MessageBoxStyle AMSGSTYLE_INFORMATION = MESSAGE_STYLE_INFO; // DEPRECATED
-	MessageBoxStyle AMSGSTYLE_WARNING = MESSAGE_STYLE_WARNING; // DEPRECATED
-	MessageBoxStyle AMSGSTYLE_CRITICAL = MESSAGE_STYLE_CRITICAL; // DEPRECATED
-	MessageBoxStyle AMSGSTYLE_QUESTION = MESSAGE_STYLE_QUESTION; // DEPRECATED
-	MessageBoxStyle AMSGSTYLE_MODAL = MESSAGE_STYLE_MODAL; // DEPRECATED
-	MessageBoxStyle AMSGSTYLE_TERMINATEAPPONDISPLAY = MESSAGE_STYLE_TERMINATE_ON_DISPLAY; // DEPRECATED
-	*/
+	SystemInfo info;
 
 	SystemInfo::SystemInfo()
 	{
@@ -49,7 +32,6 @@ namespace april
 		this->osVersion = 1.0f;
 		this->cpuCores = 1;
 		this->ram = 256;
-		this->maxTextureSize = 0;
 		this->displayDpi = 0;
 		this->locale = "";
 	}
@@ -66,7 +48,6 @@ namespace april
 		{
 			if (window != NULL)
 			{
-				// TODOa - move this in their appropriate classes
 #if !defined(_IOS) && !defined(_COCOA_WINDOW)
 				window->terminateMainLoop();
 				window->destroy();

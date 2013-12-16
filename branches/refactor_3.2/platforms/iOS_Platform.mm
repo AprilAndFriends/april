@@ -32,7 +32,6 @@
 
 void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 
-
 @interface AprilMessageBoxDelegate : NSObject<UIAlertViewDelegate> {
     void(*callback)(april::MessageBoxButton);
     april::MessageBoxButton buttonTypes[3];
@@ -84,7 +83,6 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 }
 - (void)willPresentAlertView:(UIAlertView*)alertView
 {
-	
 	NSString *reqSysVer = @"4.0";
 	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
 	BOOL isFourOh = ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending);
@@ -96,13 +94,11 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 		// unless we hack.
 		
 		float w = alertView.bounds.size.width;
-		if(w < 5.)
+		if (w < 5.0f)
 		{
 			hlog::write(april::logTag, "In messageBox()'s label hack, width override took place");
-			w = 400; // hardcoded width! seems to work ok
-			
+			w = 400.0f; // hardcoded width! seems to work ok
 		}
-		
 		
 		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 30.0f, alertView.bounds.size.width, 40.0f)]; 
 		label.backgroundColor = [UIColor clearColor]; 
@@ -117,12 +113,12 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 }
 @end
 
-
 namespace april
 {
+	extern SystemInfo info;
+	
 	SystemInfo getSystemInfo()
 	{
-		static SystemInfo info;
 		info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
 		if (info.locale == "")
 		{
@@ -135,6 +131,23 @@ namespace april
 			
 			info.name = name; // defaults for unknown devices
 			info.displayDpi = 0;
+			int h = hround(info.displayResolution.y); // just to make sure there are no floating point errors
+			if (h == 320) // iPhone3GS
+			{
+				info.displayDpi = 163;
+			}
+			else if (h == 768) // iPad 1/2
+			{
+				info.displayDpi = 132;
+			}
+			else if (h == 640) // iPhone4+
+			{
+				info.displayDpi = 326;
+			}
+			else if (h == 1536) // iPad3+
+			{
+				info.displayDpi = 256;
+			}
 			
 			UIScreen* mainScreen = [UIScreen mainScreen];
 			float scale = 1.0f;
@@ -151,33 +164,18 @@ namespace april
 
 			getStaticiOSInfo(name, info);
 		}
-		// iPhone simulator
-		if (info.maxTextureSize == 0 && april::rendersys != NULL)
-		{
-			info.maxTextureSize = april::rendersys->getMaxTextureSize();
-
-			int h = info.displayResolution.y;
-			if (h == 320) // iPhone3GS
-				info.displayDpi = 163;
-			else if (h == 768) // iPad 1/2
-				info.displayDpi = 132;
-			else if (h == 640) // iPhone4+
-				info.displayDpi = 326;
-			else if (h == 1536) // iPad3+
-				info.displayDpi = 256;
-		}
 		return info;
 	}
 
 	hstr getPackageName()
 	{
-		static hstr bundleID;
-		if (bundleID == "")
+		static hstr bundleId;
+		if (bundleId == "")
 		{
 			NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
-			bundleID = [bundleIdentifier UTF8String];
+			bundleId = [bundleIdentifier UTF8String];
 		}
-		return bundleID;
+		return bundleId;
 	}
 
 	hstr getUserDataPath()
@@ -256,38 +254,5 @@ namespace april
 		[alert release];
 	}
 	
-	NSURL* _getFileURL(chstr filename)
-	{
-		
-		// consider that "filename" is "../media/hello.jpg" and "appname" is
-		// installed in "/Applications/appname/bin/". then:
-		
-		// bundle: file:///Applications/appname/bin/appname.app/
-		// file:  file:///Applications/appname/bin/appname.app/../../media/hello.jpg
-		// url: file:///Applications/appname/media/hello.jpg
-		
-#if defined(__MAC_10_6)
-		
-		NSString* cdp = [[[[NSFileManager alloc] init] autorelease] currentDirectoryPath];
-		NSString* file = [NSString stringWithFormat:@"%@/%s", cdp, filename.c_str()];
-		NSURL* url = [NSURL fileURLWithPath:file];
-		url = [url absoluteURL];
-		
-		[cdp release];
-		[file release];
-#else
-		// FIXME use NSURL fileURLWithPath:
-		NSString * bundle = [[[[NSBundle mainBundle] bundlePath] stringByAppendingString:@"/"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-		NSURL * bundleURL = [NSURL URLWithString:[@"file://" stringByAppendingString:bundle]];
-		NSURL * file = [NSURL URLWithString:[NSString stringWithFormat:@"../%s", filename.c_str()]
-							  relativeToURL:bundleURL];
-		NSURL * url = [file absoluteURL];
-		
-#endif
-		//NSLog(@"_getFileURL: %@", url);
-		
-		return url;
-		
-	}
 }
 #endif

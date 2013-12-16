@@ -29,7 +29,6 @@ namespace april
 		float osVersion;
 		int cpuCores; // number of CPU cores or separate CPU units
 		int ram; // how many MB of RAM does the host system have in total
-		int maxTextureSize;
 		gvec2 displayResolution;
 		int displayDpi;
 		hstr locale; // current system locale code

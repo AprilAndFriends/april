@@ -222,12 +222,12 @@ namespace april
 		// device config
 		this->_configureDevice();
 		this->clear(true, false);
-		this->viewport.set(0.0f, 0.0f, (float)april::window->getWidth(), (float)april::window->getHeight());
+		this->viewport.set(0.0f, 0.0f, april::window->getSize());
 		this->presentFrame();
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
 		this->renderTarget = NULL;
 		this->d3dDevice->BeginScene();
-		this->orthoProjection.setSize((float)april::window->getWidth(), (float)april::window->getHeight());
+		this->orthoProjection.setSize(april::window->getSize());
 	}
 	
 	void DirectX9_RenderSystem::_configureDevice()

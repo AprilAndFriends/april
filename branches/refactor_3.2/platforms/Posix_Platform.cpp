@@ -19,10 +19,10 @@
 
 namespace april
 {
+	extern SystemInfo info;
+	
 	SystemInfo getSystemInfo()
 	{
-		// TODO
-		static SystemInfo info;
 		if (info.locale == "")
 		{
 			info.cpuCores = 1; // TODO
@@ -30,10 +30,6 @@ namespace april
 			info.displayDpi = 96; // TODO
 			//info.ram = 1024; // TODO
 			info.locale = "en"; // TODO
-		}
-		if (info.maxTextureSize == 0 && april::rendersys != NULL)
-		{
-			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
 		}
 		return info;
 	}

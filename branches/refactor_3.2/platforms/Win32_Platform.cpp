@@ -26,10 +26,10 @@
 
 namespace april
 {
+	extern SystemInfo info;
+	
 	SystemInfo getSystemInfo()
 	{
-		// TODOa - move to a common place
-		static SystemInfo info;
 		if (info.locale == "")
 		{
 			// number of CPU cores
@@ -59,10 +59,6 @@ namespace april
 				}
 			}
 		}
-		if (info.maxTextureSize == 0 && april::rendersys != NULL)
-		{
-			info.maxTextureSize = april::rendersys->getMaxTextureSize();
-		}
 		return info;
 	}
 
@@ -79,7 +75,6 @@ namespace april
 	
 	static void(*currentCallback)(MessageBoxButton) = NULL;
 
-	// TODOa - could be maybe put as a common function
 	void _messageBoxResult(int button)
 	{
 		switch (button)
@@ -107,6 +102,9 @@ namespace april
 			{
 				(*currentCallback)(MESSAGE_BUTTON_CANCEL);
 			}
+			break;
+		default:
+			hlog::error(april::logTag, "Unknown message box callback: " + hstr(button));
 			break;
 		}
 	}

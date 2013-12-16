@@ -43,7 +43,8 @@
 
 namespace april
 {
-	static SystemInfo info;
+	extern SystemInfo info;
+
 	SystemInfo getSystemInfo()
 	{
 		if (info.locale == "")
@@ -116,10 +117,6 @@ namespace april
 			{
 				info.locale = info.locale.utf8_substr(0, 2);
 			}
-		}
-		if (info.maxTextureSize == 0 && april::rendersys != NULL)
-		{
-			info.maxTextureSize = april::rendersys->getMaxTextureSize();
 		}
 		return info;
 	}

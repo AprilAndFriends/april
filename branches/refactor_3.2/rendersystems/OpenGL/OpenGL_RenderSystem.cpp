@@ -200,7 +200,7 @@ namespace april
 		glLoadIdentity();
 		this->setMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		this->orthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
+		this->orthoProjection.setSize(window->getSize());
 	}
 
 	void OpenGL_RenderSystem::reset()

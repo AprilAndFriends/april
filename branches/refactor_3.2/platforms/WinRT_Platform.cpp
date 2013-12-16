@@ -33,9 +33,10 @@ using namespace Windows::UI::ViewManagement;
 
 namespace april
 {
+	extern SystemInfo info;
+	
 	SystemInfo getSystemInfo()
 	{
-		static SystemInfo info;
 		if (info.locale == "")
 		{
 			// number of CPU cores
@@ -93,10 +94,6 @@ namespace april
 				info.locale = info.locale.utf8_substr(0, 2);
 			}
 		}
-		if (info.maxTextureSize == 0 && april::rendersys != NULL)
-		{
-			info.maxTextureSize = april::rendersys->getMaxTextureSize();
-		}
 		return info;
 	}
 
@@ -143,6 +140,9 @@ namespace april
 			{
 				(*currentCallback)(MESSAGE_BUTTON_CANCEL);
 			}
+			break;
+		default:
+			hlog::error(april::logTag, "Unknown message box callback: " + hstr(button));
 			break;
 		}
 	}

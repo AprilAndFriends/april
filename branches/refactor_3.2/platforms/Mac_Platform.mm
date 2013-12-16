@@ -104,10 +104,10 @@ namespace april
 		}
 	}
 	
+	extern SystemInfo info;
+	
 	SystemInfo getSystemInfo()
 	{
-		// TODO
-		static SystemInfo info;
 		if (info.locale == "")
 		{
 			// CPU cores
@@ -133,7 +133,6 @@ namespace april
 			CGSize screenSize = CGDisplayScreenSize(CGMainDisplayID());
 			info.displayDpi = 25.4f * rect.size.height / screenSize.height;
 
-			info.maxTextureSize = 0;
 			// locale
 			// This code gets the prefered locale based on user's list of prefered languages against the supported languages
 			// in the app bundle (the .lproj folders in the bundle)
@@ -144,11 +143,6 @@ namespace april
 			char cstr[64 + 1];
 			CFStringGetCString(lang, cstr, 64, kCFStringEncodingASCII);
 			info.locale = cstr;
-		}
-		// TODO
-		if (info.maxTextureSize == 0 && april::window != NULL && april::window->isCreated())
-		{
-			info.maxTextureSize = april::rendersys->getMaxTextureSize();
 		}
 		return info;
 	}
