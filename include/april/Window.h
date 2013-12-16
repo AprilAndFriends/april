@@ -154,6 +154,8 @@ namespace april
 		void setInputMode(InputMode value);
 		gvec2 getSize();
 		float getAspectRatio();
+		hstr getCursorFilename() { return ""; } // dummy
+		void setCursorFilename(chstr value) { } // dummy
 		
 		HL_DEFINE_GETSET2(hmap, Key, Button, controllerEmulationKeys, ControllerEmulationKeys);
 
