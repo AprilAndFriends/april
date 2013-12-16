@@ -150,9 +150,10 @@ namespace april
 		HL_DEFINE_IS(virtualKeyboardVisible, VirtualKeyboardVisible);
 		HL_DEFINE_GET(float, virtualKeyboardHeightRatio, VirtualKeyboardHeightRatio);
 		HL_DEFINE_GET(InputMode, inputMode, InputMode);
+		void setInputMode(InputMode value);
 		HL_DEFINE_GET2(hmap, InputMode, InputMode, inputModeTranslations, InputModeTranslations);
 		void setInputModeTranslations(hmap<InputMode, InputMode> value);
-		void setInputMode(InputMode value);
+		HL_DEFINE_GET(hstr, cursorFilename, CursorFilename);
 		gvec2 getSize();
 		float getAspectRatio();
 		
@@ -170,6 +171,7 @@ namespace april
 		virtual void setTitle(chstr value) { this->title = value; }
 		virtual bool isCursorVisible() { return this->cursorVisible; }
 		virtual void setCursorVisible(bool value) { this->cursorVisible = value; }
+		virtual void setCursorFilename(chstr value) { this->cursorFilename = value; }
 		virtual bool isCursorInside();
 
 		virtual void setResolution(int w, int h);
@@ -241,6 +243,8 @@ namespace april
 		float virtualKeyboardHeightRatio;
 		InputMode inputMode;
 		hmap<InputMode, InputMode> inputModeTranslations;
+		hstr cursorFilename;
+		harray<hstr> cursorExtensions;
 		bool multiTouchActive;
 		harray<gvec2> touches;
 		harray<KeyInputEvent> keyEvents;
@@ -263,6 +267,7 @@ namespace april
 		virtual float _calcTimeSinceLastFrame();
 		void _setRenderSystemResolution();
 		virtual void _setRenderSystemResolution(int w, int h, bool fullscreen);
+		hstr _findCursorFile();
 
 	};
 
