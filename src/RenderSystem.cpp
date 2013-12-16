@@ -123,11 +123,7 @@ namespace april
 		// TODOa - change and improve this implementation
 		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
 		this->orthoProjection = rect;
-		float t = this->getPixelOffset();
-		float wnd_w = (float)april::window->getWidth();
-		float wnd_h = (float)april::window->getHeight();
-		rect.x -= t * rect.w / wnd_w;
-		rect.y -= t * rect.h / wnd_h;
+		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
 		this->projectionMatrix.ortho(rect);
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}

@@ -21,12 +21,11 @@
 
 namespace april
 {
+	extern SystemInfo info;
 	extern void (*dialogCallback)(MessageBoxButton);
-
+	
 	SystemInfo getSystemInfo()
 	{
-		// TODOa - move to a common place
-		static SystemInfo info;
 		if (info.locale == "")
 		{
 			info.name = "android";
@@ -49,10 +48,6 @@ namespace april
 			// locale
 			jmethodID methodGetLocale = env->GetStaticMethodID(classNativeInterface, "getLocale", _JARGS(_JSTR, ));
 			info.locale = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetLocale));
-		}
-		if (info.maxTextureSize == 0 && april::rendersys != NULL)
-		{
-			info.maxTextureSize = april::rendersys->getMaxTextureSize();
 		}
 		return info;
 	}

@@ -215,7 +215,10 @@ namespace april
 			{
 				this->cursorPosition.set(-10000.0f, -10000.0f);
 			}
-			// TODOa - should onInputModeChanged() be called here?
+			if (this->systemDelegate != NULL)
+			{
+				this->systemDelegate->onInputModeChanged(this->inputMode);
+			}
 		}
 	}
 
