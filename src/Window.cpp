@@ -12,6 +12,7 @@
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/hlog.h>
+#include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 #include <hltypes/hthread.h>
 
@@ -588,6 +589,24 @@ namespace april
 			k = 0.0f;
 		}
 		return k;
+	}
+
+	hstr Window::_findCursorFile()
+	{
+		if (this->cursorFilename == "")
+		{
+			return "";
+		}
+		hstr filename;
+		foreach (hstr, it, this->cursorExtensions)
+		{
+			filename = this->cursorFilename + (*it);
+			if (hresource::exists(filename))
+			{
+				return filename;
+			}
+		}
+		return "";
 	}
 	
 }
