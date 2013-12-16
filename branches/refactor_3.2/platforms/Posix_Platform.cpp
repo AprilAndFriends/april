@@ -38,11 +38,6 @@ namespace april
 		return info;
 	}
 
-	DeviceType getDeviceType()
-	{
-		return DEVICE_LINUX_PC;
-	}
-	
 	hstr getPackageName()
 	{
 		hlog::warn(april::logTag, "Cannot use getPackageName() on this platform.");
@@ -51,14 +46,14 @@ namespace april
 
 	hstr getUserDataPath()
 	{
-		hlog::warn(april::logTag, "Cannot use getUserDataPath() on this platform.");
+		hlog::error(april::logTag, "Not implemented.");
 		return ".";
 	}
 	
 	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// TODO
-		return AMSGBTN_OK;
+		return MESSAGE_BUTTON_OK;
 	}
 
 }
