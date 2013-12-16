@@ -73,13 +73,6 @@ namespace april
 	// TODO - refactor
 	harray<DirectX11_Texture*> gRenderTargets;
 
-	// TODO - refactor
-	int DirectX11_RenderSystem::getMaxTextureSize()
-	{
-		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
-		return D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
-	}
-
 	D3D11_PRIMITIVE_TOPOLOGY dx11_render_ops[]=
 	{
 		D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED,
@@ -623,6 +616,12 @@ namespace april
 	void DirectX11_RenderSystem::_setResolution(int w, int h, bool fullscreen)
 	{
 		this->matrixDirty = true;
+	}
+
+	int DirectX11_RenderSystem::getMaxTextureSize()
+	{
+		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
+		return D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
 	}
 
 	harray<DisplayMode> DirectX11_RenderSystem::getSupportedDisplayModes()

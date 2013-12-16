@@ -47,18 +47,6 @@ namespace april
 	// TODOa - refactor
 	harray<DirectX9_Texture*> gRenderTargets;
 
-	// TODOa - refactor
-	int DirectX9_RenderSystem::getMaxTextureSize()
-	{
-		if (this->d3dDevice == NULL)
-		{
-			return 0;
-		}
-		D3DCAPS9 caps;
-		this->d3dDevice->GetDeviceCaps(&caps);
-		return caps.MaxTextureWidth;
-	}
-
 	D3DPRIMITIVETYPE dx9_render_ops[]=
 	{
 		D3DPT_FORCE_DWORD,
@@ -250,6 +238,17 @@ namespace april
 		this->setTextureFilter(this->textureFilter);
 	}
 
+	int DirectX9_RenderSystem::getMaxTextureSize()
+	{
+		if (this->d3dDevice == NULL)
+		{
+			return 0;
+		}
+		D3DCAPS9 caps;
+		this->d3dDevice->GetDeviceCaps(&caps);
+		return caps.MaxTextureWidth;
+	}
+
 	harray<DisplayMode> DirectX9_RenderSystem::getSupportedDisplayModes()
 	{
 		if (this->supportedDisplayModes.size() == 0)
@@ -263,13 +262,13 @@ namespace april
 					throw hl_exception("Unable to create Direct3D9 object!");
 				}
 			}
-			unsigned int modeCount = this->d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
+			unsigned int modeCount = d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
 			HRESULT hr;
 			D3DDISPLAYMODE displayMode;
 			for_itert (unsigned int, i, 0, modeCount)
 			{
 				memset(&displayMode, 0, sizeof(D3DDISPLAYMODE));
-				hr = this->d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
+				hr = d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
 				if (hr == D3D_OK) 
 				{
 					this->supportedDisplayModes += DisplayMode(displayMode.Width, displayMode.Height, displayMode.RefreshRate);
