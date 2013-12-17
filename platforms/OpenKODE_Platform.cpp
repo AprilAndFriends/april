@@ -83,24 +83,27 @@ namespace april
 #if TARGET_IPHONE_SIMULATOR
 			info.ram = 1024;
 #elif defined(__APPLE__) && defined(_PC_INPUT) // mac
-			int mib [] = { CTL_HW, HW_MEMSIZE };
+			int mib [] = {CTL_HW, HW_MEMSIZE};
 			int64_t value = 0;
 			size_t length = sizeof(value);
-			
-			if (sysctl(mib, 2, &value, &length, NULL, 0) == -1)
+			if (sysctl(mib, 2, &value, &length, NULL, 0) != -1)
 			{
-				info.ram = 2048;
+				info.ram = value / (1024 * 1024);
 			}
 			else
 			{
-				info.ram = value / (1024 * 1024);
+				info.ram = 2048;
 			}
 #else
 			int pageSize;
 			int pageCount;
 			kdQueryAttribi(KD_ATTRIB_PAGESIZE, (KDint*)&pageSize);
 			kdQueryAttribi(KD_ATTRIB_NUMPAGES, (KDint*)&pageCount);
-			info.ram = hmax((int)((int64)pageSize * pageCount / 1048576), 1024); // in MB, min being 1 GB
+#ifdef _WINRT
+			info.ram = (int)((int64)pageSize * pageCount / (1024 * 1024)); // in MB
+#else
+			info.ram = (int)((int64_t)pageSize * pageCount / (1024 * 1024)); // in MB
+#endif
 #endif
 			// other
 			info.locale = hstr(kdGetLocale());
