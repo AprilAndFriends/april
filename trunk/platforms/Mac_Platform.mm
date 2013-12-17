@@ -42,10 +42,12 @@ namespace april
 		static float version = 0;
 		if (version == 0)
 		{
-			SInt32 major, minor;
-			if (Gestalt(gestaltSystemVersionMajor, &major) == noErr && Gestalt(gestaltSystemVersionMinor, &minor) == noErr)
+			SInt32 major, minor, bugfix;
+			if (Gestalt(gestaltSystemVersionMajor, &major)   == noErr &&
+				Gestalt(gestaltSystemVersionMinor, &minor)   == noErr &&
+				Gestalt(gestaltSystemVersionBugFix, &bugfix) == noErr)
 			{
-				version = major + minor / 10.0f;
+				version = major + minor / 10.0f + bugfix / 100.0f;
 			}
 			else version = 10.3f; // just in case. < 10.4 is not supported.
 		}
