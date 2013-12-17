@@ -160,6 +160,11 @@ public class NativeInterface
 		return result;
 	}
 	
+	public static String getOsVersion()
+	{
+		return Build.VERSION.RELEASE;
+	}
+	
 	public static String getLocale()
 	{
 		Locale locale = Locale.getDefault();

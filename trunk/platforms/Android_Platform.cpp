@@ -48,6 +48,15 @@ namespace april
 			// locale
 			jmethodID methodGetLocale = env->GetStaticMethodID(classNativeInterface, "getLocale", _JARGS(_JSTR, ));
 			info.locale = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetLocale));
+			// OS version
+			jmethodID methodGetOsVersion = env->GetStaticMethodID(classNativeInterface, "getOsVersion", _JARGS(_JSTR, ));
+			harray<hstr> osVersions = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)).split('.');
+			hstr majorVersion = osVersions.remove_first();
+			hstr minorVersion = osVersions.join("");
+			osVersions.clear();
+			osVersions += majorVersion;
+			osVersions += minorVersion;
+			info.osVersion = (float)osVersions.join('.');
 		}
 		if (info.maxTextureSize == 0 && april::rendersys != NULL)
 		{
