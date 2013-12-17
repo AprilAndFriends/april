@@ -100,7 +100,7 @@ namespace april
 			int pageCount;
 			kdQueryAttribi(KD_ATTRIB_PAGESIZE, (KDint*)&pageSize);
 			kdQueryAttribi(KD_ATTRIB_NUMPAGES, (KDint*)&pageCount);
-			info.ram = (int)((int64)pageSize * pageCount / 1048576); // in MB
+			info.ram = hmax((int)((int64)pageSize * pageCount / 1048576), 1024); // in MB, min being 1 GB
 #endif
 			// other
 			info.locale = hstr(kdGetLocale());
