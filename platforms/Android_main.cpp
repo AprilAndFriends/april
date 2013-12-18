@@ -240,7 +240,7 @@ namespace april
 		{"onButtonDown",						_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonDown						},
 		{"onButtonUp",							_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonUp							},
 		{"onWindowFocusChanged",				_JARGS(_JVOID, _JBOOL),							(void*)&april::_JNI_onWindowFocusChanged				},
-		{"onVirtualKeyboardChanged",	_JARGS(_JVOID, _JBOOL _JFLOAT),					(void*)&april::_JNI_onVirtualKeyboardChanged	},
+		{"onVirtualKeyboardChanged",			_JARGS(_JVOID, _JBOOL _JFLOAT),					(void*)&april::_JNI_onVirtualKeyboardChanged			},
 		{"onLowMemory",							_JARGS(_JVOID, ),								(void*)&april::_JNI_onLowMemory							},
 		{"onSurfaceCreated",					_JARGS(_JVOID, ),								(void*)&april::_JNI_onSurfaceCreated					},
 		{"activityOnCreate",					_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnCreate					},

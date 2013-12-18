@@ -35,7 +35,7 @@
 	#endif
 #endif
 
-#if defined(_ANDROID)
+#ifdef _ANDROID
 #include <jni.h>
 #define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
 #include "androidUtilJNI.h"
