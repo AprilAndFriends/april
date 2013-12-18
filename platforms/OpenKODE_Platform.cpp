@@ -78,7 +78,6 @@ namespace april
 			// CPU cores
 			jmethodID methodGetCpuCores = env->GetStaticMethodID(classNativeInterface, "getCpuCores", _JARGS(_JINT, ));
 			info.cpuCores = (int)env->CallStaticIntMethod(classNativeInterface, methodGetCpuCores);
-			
 			// OS version
 			jmethodID methodGetOsVersion = env->GetStaticMethodID(classNativeInterface, "getOsVersion", _JARGS(_JSTR, ));
 			harray<hstr> osVersions = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)).split('.');
@@ -88,8 +87,6 @@ namespace april
 			osVersions += majorVersion;
 			osVersions += minorVersion;
 			info.osVersion = (float)osVersions.join('.');
-
-
 #endif
 			// RAM size
 #if TARGET_IPHONE_SIMULATOR
