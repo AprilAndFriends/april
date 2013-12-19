@@ -79,7 +79,7 @@ namespace april
 
 	OpenGL_Texture::OpenGL_Texture(int w, int h, Format format, Type type, Color color) : Texture()
 	{
-		hlog::writef(april::logTag, "Creating empty GL texture [ %dx%d ].", w, h);
+		hlog::writef(april::logTag, "Creating empty OpenGL texture (%d x %d).", w, h);
 		this->format = format;
 		this->width = w;
 		this->height = h;

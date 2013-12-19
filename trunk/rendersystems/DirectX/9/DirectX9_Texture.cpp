@@ -88,7 +88,7 @@ namespace april
 		this->height = h;
 		this->renderTarget = false;
 		this->d3dSurface = NULL;
-		hlog::writef(april::logTag, "Creating empty DX9 texture [ %dx%d ].", w, h);
+		hlog::writef(april::logTag, "Creating empty DX9 texture (%d x %d).", w, h);
 		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
 		this->bpp = 3;
 		switch (format)
