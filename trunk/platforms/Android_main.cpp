@@ -77,6 +77,7 @@ namespace april
 	
 	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args)
 	{
+        env->EnsureLocalCapacity(1024);
 		harray<hstr> args;
 		int length = env->GetArrayLength(_args);
 		for_iter (i, 0, length)
