@@ -11,6 +11,7 @@
 #include <d3d11_1.h>
 #include <stdio.h>
 
+#include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/exception.h>
 #include <hltypes/hlog.h>
@@ -650,26 +651,26 @@ namespace april
 			h = hround(resolution.y);
 			CHECK_SWAP(w, h);
 		}
-		if (rect.x < 0.0f)
+		if (value.x < 0.0f)
 		{
-			rect.w += rect.x;
-			rect.x = 0.0f;
+			value.w += value.x;
+			value.x = 0.0f;
 		}
-		if (rect.y < 0.0f)
+		if (value.y < 0.0f)
 		{
-			rect.h += rect.y;
-			rect.y = 0.0f;
+			value.h += value.y;
+			value.y = 0.0f;
 		}
-		rect.w = hclamp(rect.w, 0.0f, hmax(w - rect.x, 0.0f));
-		rect.h = hclamp(rect.h, 0.0f, hmax(h - rect.y, 0.0f));
-		if (rect.w > 0.0f && rect.h > 0.0f)
+		value.w = hclamp(value.w, 0.0f, hmax(w - value.x, 0.0f));
+		value.h = hclamp(value.h, 0.0f, hmax(h - value.y, 0.0f));
+		if (value.w > 0.0f && value.h > 0.0f)
 		{
-			rect.x = hclamp(rect.x, 0.0f, (float)w);
-			rect.y = hclamp(rect.y, 0.0f, (float)h);
+			value.x = hclamp(value.x, 0.0f, (float)w);
+			value.y = hclamp(value.y, 0.0f, (float)h);
 		}
 		else
 		{
-			rect.set((float)w, (float)h, 0.0f, 0.0f);
+			value.set((float)w, (float)h, 0.0f, 0.0f);
 		}
 		// setting the system viewport
 		D3D11_VIEWPORT viewport;

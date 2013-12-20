@@ -267,7 +267,7 @@ namespace april
 		virtual float _calcTimeSinceLastFrame();
 		void _setRenderSystemResolution();
 		virtual void _setRenderSystemResolution(int w, int h, bool fullscreen);
-		hstr _findCursorFile();
+		virtual hstr _findCursorFile();
 
 	};
 

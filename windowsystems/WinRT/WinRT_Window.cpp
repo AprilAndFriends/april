@@ -11,6 +11,7 @@
 #include <hltypes/hfile.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hlog.h>
+#include <hltypes/hrdir.h>
 #include <hltypes/hthread.h>
 
 #include "april.h"
@@ -33,6 +34,8 @@ namespace april
 		this->allowFilledView = false;
 		this->useCustomSnappedView = false;
 		this->backButtonSystemHandling = false;
+		this->cursorExtensions += ".ani";
+		this->cursorExtensions += ".cur";
 	}
 
 	WinRT_Window::~WinRT_Window()
@@ -162,6 +165,12 @@ namespace april
 		WinRT::Interface->setCursorVisible(value);
 	}
 
+	void WinRT_Window::setCursorFilename(chstr value)
+	{
+		Window::setCursorFilename(value);
+		WinRT::Interface->setCursorFilename(_HL_HSTR_TO_PSTR(this->_findCursorFile()));
+	}
+
 	void* WinRT_Window::getBackendId()
 	{
 		// TODO ?
@@ -203,5 +212,24 @@ namespace april
 		WinRT::Interface->hideKeyboard();
 	}
 
+	hstr WinRT_Window::_findCursorFile()
+	{
+		if (this->cursorFilename == "")
+		{
+			return "";
+		}
+		hstr filename;
+		foreach (hstr, it, this->cursorExtensions)
+		{
+			filename = this->cursorFilename + (*it);
+			// TODO - check if embedded resource exists
+			if (true)
+			{
+				return hrdir::normalize(filename);
+			}
+		}
+		return "";
+	}
+	
 }
 #endif

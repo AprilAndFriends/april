@@ -45,6 +45,7 @@ namespace april
 		
 		virtual void unassignWindow();
 		virtual void setCursorVisible(bool value);
+		virtual void setCursorFilename(Platform::String^ value);
 		virtual bool canSuspendResume();
 		virtual void updateViewState();
 		virtual void checkEvents();
@@ -69,6 +70,7 @@ namespace april
 		grect storedOrthoProjection;
 		gmat4 storedProjectionMatrix;
 		bool storedCursorVisible;
+		hstr cursorFilename;
 		Color backgroundColor;
 		bool launched;
 		bool activated;
@@ -76,6 +78,7 @@ namespace april
 		
 		~WinRT_XamlApp();
 		
+		void _refreshCursor();
 		void _tryRenderSplashTexture();
 		april::Texture* _tryLoadTexture(chstr nodeName, chstr attributeName);
 		void _tryLoadLogoTexture();
