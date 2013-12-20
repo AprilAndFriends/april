@@ -43,6 +43,7 @@ namespace april
 	extern void (*dialogCallback)(MessageBoxButton);
 	void (*aprilInit)(const harray<hstr>&) = NULL;
 	void (*aprilDestroy)() = NULL;
+	extern jobject classLoader;
 	
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jDataPath, jstring jForcedArchivePath)
 	{
@@ -194,6 +195,11 @@ namespace april
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
 	{
 		hlog::write(april::logTag, "Android Activity::onDestroy()");
+		if (april::classLoader != NULL)
+		{
+			env->DeleteGlobalRef(april::classLoader);
+			april::classLoader = NULL;
+		}
 	}
 	
 	void JNICALL _JNI_activityOnRestart(JNIEnv* env, jclass classe)
@@ -246,7 +252,7 @@ namespace april
 		{"onButtonDown",						_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonDown						},
 		{"onButtonUp",							_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonUp							},
 		{"onWindowFocusChanged",				_JARGS(_JVOID, _JBOOL),							(void*)&april::_JNI_onWindowFocusChanged				},
-		{"onVirtualKeyboardChanged",	_JARGS(_JVOID, _JBOOL _JFLOAT),					(void*)&april::_JNI_onVirtualKeyboardChanged	},
+		{"onVirtualKeyboardChanged",			_JARGS(_JVOID, _JBOOL _JFLOAT),					(void*)&april::_JNI_onVirtualKeyboardChanged			},
 		{"onLowMemory",							_JARGS(_JVOID, ),								(void*)&april::_JNI_onLowMemory							},
 		{"onSurfaceCreated",					_JARGS(_JVOID, ),								(void*)&april::_JNI_onSurfaceCreated					},
 		{"activityOnCreate",					_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnCreate					},
@@ -267,11 +273,22 @@ namespace april
 		april::javaVM = (void*)vm;
 		april::aprilInit = anAprilInit;
 		april::aprilDestroy = anAprilDestroy;
-		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
+		JNIEnv* env = NULL;
+		if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK)
+		{
+			return -1;
+		}
+		jclass classNativeInterface = env->FindClass(__NATIVE_INTERFACE_CLASS);
 		if (env->RegisterNatives(classNativeInterface, methods, METHOD_COUNT) != 0)
 		{
 			return -1;
 		}
+#ifdef _OPENKODE // not really needed when OpenKODE isn't used
+		jclass classClass = env->FindClass("java/lang/Class");
+		jmethodID methodGetClassLoader = env->GetMethodID(classClass, "getClassLoader", _JARGS(_JCLASS("java/lang/ClassLoader"), ));
+		jobject classLoader = env->CallObjectMethod(classNativeInterface, methodGetClassLoader);
+		april::classLoader = env->NewGlobalRef(classLoader);
+#endif
 		return JNI_VERSION_1_6;
 	}
 

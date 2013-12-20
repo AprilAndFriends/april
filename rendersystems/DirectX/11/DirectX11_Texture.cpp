@@ -85,7 +85,7 @@ namespace april
 		this->d3dTexture = nullptr;
 		this->d3dView = nullptr;
 		this->d3dRenderTargetView = nullptr;
-		hlog::writef(april::logTag, "Creating empty DX11 texture [ %dx%d ].", w, h);
+		hlog::writef(april::logTag, "Creating empty DX11 texture (%d x %d).", w, h);
 		this->bpp = 4;
 		if (type == TYPE_RENDER_TARGET)
 		{

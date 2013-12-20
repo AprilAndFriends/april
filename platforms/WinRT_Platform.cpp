@@ -39,6 +39,7 @@ namespace april
 	{
 		if (info.locale == "")
 		{
+			info.name = "winrt";
 			// number of CPU cores
 			SYSTEM_INFO w32info;
 			GetNativeSystemInfo(&w32info);
