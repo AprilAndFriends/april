@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.14
 /// 
 /// @section LICENSE
 /// 
@@ -41,6 +41,7 @@ namespace april
 {
 	extern void* javaVM;
 	extern void (*dialogCallback)(MessageBoxButton);
+	extern jobject classLoader;
 	
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jDataPath, jstring jForcedArchivePath)
 	{
@@ -188,6 +189,11 @@ namespace april
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
 	{
 		hlog::write(april::logTag, "Android Activity::onDestroy()");
+		if (april::classLoader != NULL)
+		{
+			env->DeleteGlobalRef(april::classLoader);
+			april::classLoader = NULL;
+		}
 	}
 	
 	void JNICALL _JNI_activityOnRestart(JNIEnv* env, jclass classe)
@@ -259,11 +265,22 @@ namespace april
 	jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	{
 		april::javaVM = (void*)vm;
-		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
+		JNIEnv* env = NULL;
+		if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK)
+		{
+			return -1;
+		}
+		jclass classNativeInterface = env->FindClass(__NATIVE_INTERFACE_CLASS);
 		if (env->RegisterNatives(classNativeInterface, methods, METHOD_COUNT) != 0)
 		{
 			return -1;
 		}
+#ifdef _OPENKODE // not really needed when OpenKODE isn't used
+		jclass classClass = env->FindClass("java/lang/Class");
+		jmethodID methodGetClassLoader = env->GetMethodID(classClass, "getClassLoader", _JARGS(_JCLASS("java/lang/ClassLoader"), ));
+		jobject classLoader = env->CallObjectMethod(classNativeInterface, methodGetClassLoader);
+		april::classLoader = env->NewGlobalRef(classLoader);
+#endif
 		return JNI_VERSION_1_6;
 	}
 
