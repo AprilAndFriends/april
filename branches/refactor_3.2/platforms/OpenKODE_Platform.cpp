@@ -35,7 +35,7 @@
 	#endif
 #endif
 
-#if defined(_ANDROID)
+#ifdef _ANDROID
 #include <jni.h>
 #define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
 #include "androidUtilJNI.h"
@@ -79,6 +79,15 @@ namespace april
 			// CPU cores
 			jmethodID methodGetCpuCores = env->GetStaticMethodID(classNativeInterface, "getCpuCores", _JARGS(_JINT, ));
 			info.cpuCores = (int)env->CallStaticIntMethod(classNativeInterface, methodGetCpuCores);
+			// OS version
+			jmethodID methodGetOsVersion = env->GetStaticMethodID(classNativeInterface, "getOsVersion", _JARGS(_JSTR, ));
+			harray<hstr> osVersions = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)).split('.');
+			hstr majorVersion = osVersions.remove_first();
+			hstr minorVersion = osVersions.join("");
+			osVersions.clear();
+			osVersions += majorVersion;
+			osVersions += minorVersion;
+			info.osVersion = (float)osVersions.join('.');
 #endif
 			// RAM size
 #if TARGET_IPHONE_SIMULATOR

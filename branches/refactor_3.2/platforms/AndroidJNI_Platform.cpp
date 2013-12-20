@@ -23,7 +23,8 @@ namespace april
 {
 	void* javaVM = NULL;
 	void (*dialogCallback)(MessageBoxButton) = NULL; // defined here to avoid making a bunch of _OPENKODE #ifdefs in Android_Platform.cpp
-	
+	jobject classLoader = NULL;
+
 	hstr _jstringToHstr(JNIEnv* env, jstring string)
 	{
 		const char* chars = env->GetStringUTFChars(string, NULL);
@@ -34,8 +35,8 @@ namespace april
 	
 	JNIEnv* getJNIEnv()
 	{
-		JNIEnv* env;
-		return (((JavaVM*)april::javaVM)->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) == JNI_OK ? env : NULL);
+		JNIEnv* env = NULL;
+		return (((JavaVM*)april::javaVM)->AttachCurrentThread(&env, NULL) == JNI_OK ? env : NULL);
 	}
 	
 	jobject getActivity()
@@ -51,6 +52,19 @@ namespace april
 		jfieldID fieldAprilActivity = env->GetStaticFieldID(classNativeInterface, "AprilActivity", _JCLASS("net/sourceforge/april/android/Activity"));
 		return env->GetStaticObjectField(classNativeInterface, fieldAprilActivity);
 	}
-	
+
+	jclass findJNIClass(JNIEnv* env, hstr classPath)
+	{
+		if (april::classLoader == NULL)
+		{
+			return env->FindClass(classPath.c_str());
+		}
+		jclass classClassLoader = env->GetObjectClass(april::classLoader);
+		jmethodID methodLoadClass = env->GetMethodID(classClassLoader, "loadClass", _JARGS(_JCLASS("java/lang/Class"), _JSTR _JBOOL));
+		jstring jClassPath = env->NewStringUTF(classPath.c_str());
+		jboolean jInitialize = JNI_TRUE;
+		return (jclass)env->CallObjectMethod(april::classLoader, methodLoadClass, jClassPath, jInitialize);
+	}
+
 }
 #endif
