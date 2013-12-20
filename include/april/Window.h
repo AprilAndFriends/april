@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.1
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -156,8 +156,6 @@ namespace april
 		HL_DEFINE_GET(hstr, cursorFilename, CursorFilename);
 		gvec2 getSize();
 		float getAspectRatio();
-		hstr getCursorFilename() { return ""; } // dummy
-		void setCursorFilename(chstr value) { } // dummy
 		
 		HL_DEFINE_GETSET2(hmap, Key, Button, controllerEmulationKeys, ControllerEmulationKeys);
 
