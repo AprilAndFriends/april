@@ -55,6 +55,7 @@ namespace april
 		
 		void setTitle(chstr title);
 		void setCursorVisible(bool value);
+		void setCursorFilename(chstr value);
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId();
@@ -74,6 +75,8 @@ namespace april
 		bool allowFilledView;
 		bool useCustomSnappedView;
 		bool backButtonSystemHandling;
+
+		hstr _findCursorFile();
 		
 	};
 	

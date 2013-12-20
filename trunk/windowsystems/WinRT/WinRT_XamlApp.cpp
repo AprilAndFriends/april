@@ -78,12 +78,38 @@ namespace april
 
 	void WinRT_XamlApp::setCursorVisible(bool value)
 	{
-		Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = (value ? ref new CoreCursor(CoreCursorType::Arrow, 0) : nullptr);
+		this->_refreshCursor();
+	}
+
+	void WinRT_XamlApp::setCursorFilename(Platform::String^ value)
+	{
+		this->cursorFilename = _HL_PSTR_TO_HSTR(value);
+		this->_refreshCursor();
 	}
 	
 	bool WinRT_XamlApp::canSuspendResume()
 	{
 		return (!this->snapped && !this->filled);
+	}
+
+	void WinRT_XamlApp::_refreshCursor()
+	{
+		if (april::window != NULL)
+		{
+			if (!april::window->isCursorVisible())
+			{
+				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = nullptr;
+			}
+			else if (this->cursorFilename != "")
+			{
+				// TODO
+				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = ref new CoreCursor(CoreCursorType::Custom, 101);
+			}
+			else
+			{
+				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
+			}
+		}
 	}
 
 	void WinRT_XamlApp::updateViewState()
