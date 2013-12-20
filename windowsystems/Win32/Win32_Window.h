@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -36,6 +36,7 @@ namespace april
 		void setTitle(chstr title);
 		bool isCursorVisible();
 		void setCursorVisible(bool value);
+		void setCursorFilename(chstr value);
 		int getWidth();
 		int getHeight();
 		void* getBackendId();
@@ -52,11 +53,13 @@ namespace april
 		
 	protected:
 		HWND hWnd;
+		HCURSOR cursor;
 		hstr fpsTitle;
 		bool fpsCounter;
 
 		void _setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen);
 		void _adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle);
+		void _refreshCursor();
 		
 	};
 

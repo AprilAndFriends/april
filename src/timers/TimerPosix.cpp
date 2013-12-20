@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -57,7 +57,6 @@ namespace april
 		if (update)
 		{
 			this->update();
-			return this->dt;
 		}
 		return this->dt;
 	}

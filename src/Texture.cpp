@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.0
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -164,10 +164,7 @@ namespace april
 			Color tr = this->getPixel(x1, y0);
 			Color bl = this->getPixel(x0, y1);
 			Color br = this->getPixel(x1, y1);
-			Color l = tl * ry1 + bl * ry0;
-			Color r = tr * ry1 + br * ry0;
-			result = l * rx1 + r * rx0;
-			//result = (tl * ry1 + bl * ry0) * rx1 + (tr * ry1 + br * ry0) * rx0; // causes a weird conversion from "float" to "unsigned int" warning
+			result = (tl * ry1 + bl * ry0) * rx1 + (tr * ry1 + br * ry0) * rx0;
 		}
 		else if (rx0 != 0.0f)
 		{
@@ -264,7 +261,7 @@ namespace april
 		unsigned char a1;
 		int i;
 		int j;
-		// TODO - should be checked on different BPPs and data access better
+		// TODOa - should be checked on different BPPs and data access better
 		// the following iteration blocks are very similar, but for performance reasons they
 		// have been duplicated instead of putting everything into one block with if branches
 		if (this->bpp == 4 && dataBpp == 4)
@@ -396,7 +393,7 @@ namespace april
 		int y1;
 		int i;
 		int j;
-		// TODO - should be checked on different BPPs and data access better
+		// TODOa - should be checked on different BPPs and data access better
 		// the following iteration blocks are very similar, but for performance reasons they
 		// have been duplicated instead of putting everything into one block with if branches
 		if (this->bpp == 4 && dataBpp == 4)

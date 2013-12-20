@@ -1,16 +1,18 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+
 #import <Cocoa/Cocoa.h>
+
 #include "RenderSystem.h"
 #include "Window.h"
-#include "main.h"
+#include "main_base.h"
 #ifdef _COCOA_WINDOW
 #import "Mac_Window.h"
 #import "Mac_AppDelegate.h"

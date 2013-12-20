@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -43,9 +43,7 @@ namespace april
 
 		float getPixelOffset() { return 0.0f; }
 		int getMaxTextureSize();
-		grect getViewport();
 		void setViewport(grect value);
-		harray<DisplayMode> getSupportedDisplayModes();
 
 		void clear(bool useColor = true, bool depth = false);
 		void clear(bool depth, grect rect, Color color = Color::Clear);
@@ -79,7 +77,7 @@ namespace april
 
 	protected:
 		OpenGL_State deviceState;
-		OpenGL_State state;
+		OpenGL_State currentState;
 		OpenGL_Texture* activeTexture;
 
 		virtual void _setupDefaultParameters();

@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -13,7 +13,7 @@
 
 #include <hltypes/hplatform.h>
 #if __APPLE__
-#include <TargetConditionals.h>
+	#include <TargetConditionals.h>
 #endif
 #include <stdlib.h>
 #include <stdio.h>
@@ -58,34 +58,31 @@
 #include "OpenGL_RenderSystem.h"
 #include "OpenGL_Texture.h"
 #include "Platform.h"
+#include "RenderState.h"
 #ifdef _WIN32_WINDOW
 #include "Win32_Window.h"
 #endif
 
 #define MAX_VERTEX_COUNT 65536
 
+#define UINT_RGBA_TO_ABGR(c) (((c & 0xFF000000) >> 24) | ((c & 0x00FF0000) >> 8) | ((c & 0x0000FF00) << 8) | ((c & 0x000000FF) << 24));
+
 namespace april
 {
+	// TODOa - put in state class
 	static Color lastColor = Color::Black;
 
+	// TODOa - make protected member of RenderSystem
 	unsigned int _limitPrimitives(RenderOp renderOp, int nVertices)
 	{
 		switch (renderOp)
 		{
-		case TriangleList:
-			return nVertices / 3 * 3;
-		case TriangleStrip:
-			return nVertices;
-		case TriangleFan:
-			return nVertices;
-		case LineList:
-			return nVertices / 2 * 2;
-		case LineStrip:
-			return nVertices;
-		case PointList:
-			return nVertices;
-		default:
-			return nVertices;
+		case TriangleList:	return nVertices / 3 * 3;
+		case TriangleStrip:	return nVertices;
+		case TriangleFan:	return nVertices;
+		case LineList:		return nVertices / 2 * 2;
+		case LineStrip:		return nVertices;
+		case PointList:		return nVertices;
 		}
 		return nVertices;
 	}
@@ -104,6 +101,7 @@ namespace april
 	
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
 	{
+		this->state = new RenderState(); // TODOa
 #if defined(_WIN32) && defined(_WIN32_WINDOW)
 		this->hWnd = 0;
 		this->hDC = 0;
@@ -122,7 +120,8 @@ namespace april
 		}
 		this->activeTexture = NULL;
 		this->deviceState.reset();
-		this->state.reset();
+		this->currentState.reset();
+		this->state->reset();
 		return true;
 	}
 
@@ -134,7 +133,8 @@ namespace april
 		}
 		this->activeTexture = NULL;
 		this->deviceState.reset();
-		this->state.reset();
+		this->currentState.reset();
+		this->state->reset();
 #ifdef _WIN32
 		this->_releaseWindow();
 #endif
@@ -200,17 +200,17 @@ namespace april
 		glLoadIdentity();
 		this->setMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		this->orthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
+		this->orthoProjection.setSize(window->getSize());
 	}
 
 	void OpenGL_RenderSystem::reset()
 	{
 		RenderSystem::reset();
-		this->state.reset();
+		this->currentState.reset();
 		this->deviceState.reset();
 		this->_setupDefaultParameters();
-		this->state.modelviewMatrixChanged = true;
-		this->state.projectionMatrixChanged = true;
+		this->currentState.modelviewMatrixChanged = true;
+		this->currentState.projectionMatrixChanged = true;
 		this->_applyStateChanges();
 	}
 
@@ -237,10 +237,10 @@ namespace april
 		this->_setClientState(GL_COLOR_ARRAY, this->deviceState.colorEnabled);
 		glColor4f(this->deviceState.systemColor.r_f(), this->deviceState.systemColor.g_f(), this->deviceState.systemColor.b_f(), this->deviceState.systemColor.a_f());
 		glBindTexture(GL_TEXTURE_2D, this->deviceState.textureId);
-		this->state.textureFilter = april::Texture::FILTER_LINEAR;
-		this->state.textureAddressMode = april::Texture::ADDRESS_WRAP;
-		this->state.blendMode = april::DEFAULT;
-		this->state.colorMode = april::NORMAL;
+		this->currentState.textureFilter = april::Texture::FILTER_LINEAR;
+		this->currentState.textureAddressMode = april::Texture::ADDRESS_WRAP;
+		this->currentState.blendMode = april::DEFAULT;
+		this->currentState.colorMode = april::NORMAL;
 	}
 
 	int OpenGL_RenderSystem::getMaxTextureSize()
@@ -250,30 +250,11 @@ namespace april
 		return max;
 	}
 
-	grect OpenGL_RenderSystem::getViewport()
-	{
-		static float params[4];
-		glGetFloatv(GL_VIEWPORT, params);
-		return grect(params[0], april::window->getHeight() - params[3] - params[1], params[2], params[3]);
-	}
-	
 	void OpenGL_RenderSystem::setViewport(grect rect)
 	{
+		RenderSystem::setViewport(rect);
 		// because GL has to defy screen logic and has (0,0) in the bottom left corner
 		glViewport((int)rect.x, (int)(april::window->getHeight() - rect.h - rect.y), (int)rect.w, (int)rect.h);
-	}
-	
-	harray<DisplayMode> OpenGL_RenderSystem::getSupportedDisplayModes()
-	{
-		// TODO
-		harray<DisplayMode> result;
-		gvec2 resolution = april::getSystemInfo().displayResolution;
-		DisplayMode displayMode;
-		displayMode.width = (int)resolution.x;
-		displayMode.height = (int)resolution.y;
-		displayMode.refreshRate = 60;
-		result += displayMode;
-		return result;
 	}
 	
 	void OpenGL_RenderSystem::clear(bool useColor, bool depth)
@@ -302,64 +283,64 @@ namespace april
 	
 	void OpenGL_RenderSystem::_applyStateChanges()
 	{
-		if (this->state.textureCoordinatesEnabled != this->deviceState.textureCoordinatesEnabled)
+		if (this->currentState.textureCoordinatesEnabled != this->deviceState.textureCoordinatesEnabled)
 		{
-			this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->state.textureCoordinatesEnabled);
-			this->deviceState.textureCoordinatesEnabled = this->state.textureCoordinatesEnabled;
+			this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->currentState.textureCoordinatesEnabled);
+			this->deviceState.textureCoordinatesEnabled = this->currentState.textureCoordinatesEnabled;
 		}
-		if (this->state.colorEnabled != this->deviceState.colorEnabled)
+		if (this->currentState.colorEnabled != this->deviceState.colorEnabled)
 		{
-			this->_setClientState(GL_COLOR_ARRAY, this->state.colorEnabled);
-			this->deviceState.colorEnabled = this->state.colorEnabled;
+			this->_setClientState(GL_COLOR_ARRAY, this->currentState.colorEnabled);
+			this->deviceState.colorEnabled = this->currentState.colorEnabled;
 		}
-		if (this->state.systemColor != this->deviceState.systemColor)
+		if (this->currentState.systemColor != this->deviceState.systemColor)
 		{
-			glColor4f(this->state.systemColor.r_f(), this->state.systemColor.g_f(), this->state.systemColor.b_f(), this->state.systemColor.a_f());
-			this->deviceState.systemColor = this->state.systemColor;
+			glColor4f(this->currentState.systemColor.r_f(), this->currentState.systemColor.g_f(), this->currentState.systemColor.b_f(), this->currentState.systemColor.a_f());
+			this->deviceState.systemColor = this->currentState.systemColor;
 		}
-		if (this->state.textureId != this->deviceState.textureId)
+		if (this->currentState.textureId != this->deviceState.textureId)
 		{
-			glBindTexture(GL_TEXTURE_2D, this->state.textureId);
-			this->deviceState.textureId = this->state.textureId;
+			glBindTexture(GL_TEXTURE_2D, this->currentState.textureId);
+			this->deviceState.textureId = this->currentState.textureId;
 			// TODO - you should memorize address and filter modes per texture in opengl to avoid unnecesarry calls
 			this->deviceState.textureAddressMode = Texture::ADDRESS_UNDEFINED;
 			this->deviceState.textureFilter = Texture::FILTER_UNDEFINED;
 		}
 		// texture has to be bound first or else filter and address mode won't be applied afterwards
-		if (this->state.textureFilter != this->deviceState.textureFilter || this->deviceState.textureFilter == Texture::FILTER_UNDEFINED)
+		if (this->currentState.textureFilter != this->deviceState.textureFilter || this->deviceState.textureFilter == Texture::FILTER_UNDEFINED)
 		{
-			this->_setTextureFilter(this->state.textureFilter);
-			this->deviceState.textureFilter = this->state.textureFilter;
+			this->_setTextureFilter(this->currentState.textureFilter);
+			this->deviceState.textureFilter = this->currentState.textureFilter;
 		}
-		if (this->state.textureAddressMode != this->deviceState.textureAddressMode || this->deviceState.textureAddressMode == Texture::ADDRESS_UNDEFINED)
+		if (this->currentState.textureAddressMode != this->deviceState.textureAddressMode || this->deviceState.textureAddressMode == Texture::ADDRESS_UNDEFINED)
 		{
-			this->_setTextureAddressMode(this->state.textureAddressMode);
-			this->deviceState.textureAddressMode = this->state.textureAddressMode;
+			this->_setTextureAddressMode(this->currentState.textureAddressMode);
+			this->deviceState.textureAddressMode = this->currentState.textureAddressMode;
 		}
-		if (this->state.blendMode != this->deviceState.blendMode)
+		if (this->currentState.blendMode != this->deviceState.blendMode)
 		{
-			this->_setTextureBlendMode(this->state.blendMode);
-			this->deviceState.blendMode = this->state.blendMode;
+			this->_setTextureBlendMode(this->currentState.blendMode);
+			this->deviceState.blendMode = this->currentState.blendMode;
 		}
-		if (this->state.colorMode != this->deviceState.colorMode || this->state.colorModeAlpha != this->deviceState.colorModeAlpha)
+		if (this->currentState.colorMode != this->deviceState.colorMode || this->currentState.colorModeAlpha != this->deviceState.colorModeAlpha)
 		{
-			this->_setTextureColorMode(this->state.colorMode, this->state.colorModeAlpha);
-			this->deviceState.colorMode = this->state.colorMode;
-			this->deviceState.colorModeAlpha = this->state.colorModeAlpha;
+			this->_setTextureColorMode(this->currentState.colorMode, this->currentState.colorModeAlpha);
+			this->deviceState.colorMode = this->currentState.colorMode;
+			this->deviceState.colorModeAlpha = this->currentState.colorModeAlpha;
 		}
-		if (this->state.modelviewMatrixChanged && this->modelviewMatrix != this->deviceState.modelviewMatrix)
+		if (this->currentState.modelviewMatrixChanged && this->modelviewMatrix != this->deviceState.modelviewMatrix)
 		{
 			this->setMatrixMode(GL_MODELVIEW);
 			glLoadMatrixf(this->modelviewMatrix.data);
 			this->deviceState.modelviewMatrix = this->modelviewMatrix;
-			this->state.modelviewMatrixChanged = false;
+			this->currentState.modelviewMatrixChanged = false;
 		}
-		if (this->state.projectionMatrixChanged && this->projectionMatrix != this->deviceState.projectionMatrix)
+		if (this->currentState.projectionMatrixChanged && this->projectionMatrix != this->deviceState.projectionMatrix)
 		{
 			this->setMatrixMode(GL_PROJECTION);
 			glLoadMatrixf(this->projectionMatrix.data);
 			this->deviceState.projectionMatrix = this->projectionMatrix;
-			this->state.projectionMatrixChanged = false;
+			this->currentState.projectionMatrixChanged = false;
 		}
 	}
 
@@ -370,7 +351,7 @@ namespace april
 
 	void OpenGL_RenderSystem::bindTexture(unsigned int textureId)
 	{
-		this->state.textureId = textureId;
+		this->currentState.textureId = textureId;
 	}
 
 	void OpenGL_RenderSystem::setMatrixMode(unsigned int mode)
@@ -385,7 +366,7 @@ namespace april
 
 	void OpenGL_RenderSystem::setTextureBlendMode(BlendMode mode)
 	{
-		this->state.blendMode = mode;
+		this->currentState.blendMode = mode;
 	}
 	
 	void OpenGL_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
@@ -407,13 +388,13 @@ namespace april
 	
 	void OpenGL_RenderSystem::setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
 	{
-		this->state.colorMode = textureColorMode;
-		this->state.colorModeAlpha = alpha;
+		this->currentState.colorMode = textureColorMode;
+		this->currentState.colorModeAlpha = alpha;
 	}
 
 	void OpenGL_RenderSystem::_setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
 	{
-		float constColor[4];
+		float constColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 		for_iter (i, 0, 4)
 		{
 			constColor[i] = alpha / 255.0f;
@@ -454,7 +435,7 @@ namespace april
 
 	void OpenGL_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
 	{
-		this->state.textureFilter = textureFilter;
+		this->currentState.textureFilter = textureFilter;
 	}
 
 	void OpenGL_RenderSystem::_setTextureFilter(Texture::Filter textureFilter)
@@ -478,7 +459,7 @@ namespace april
 
 	void OpenGL_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
-		this->state.textureAddressMode = textureAddressMode;
+		this->currentState.textureAddressMode = textureAddressMode;
 	}
 
 	void OpenGL_RenderSystem::_setTextureAddressMode(Texture::AddressMode textureAddressMode)
@@ -524,7 +505,7 @@ namespace april
 	
 	void OpenGL_RenderSystem::setRenderTarget(Texture* texture)
 	{
-		// TODO
+		// TODOa
 	}
 	
 	void OpenGL_RenderSystem::setPixelShader(PixelShader* pixelShader)
@@ -583,10 +564,10 @@ namespace april
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
 	{
-		this->state.textureId = 0;
-		this->state.textureCoordinatesEnabled = false;
-		this->state.colorEnabled = false;
-		this->state.systemColor.set(255, 255, 255, 255);
+		this->currentState.textureId = 0;
+		this->currentState.textureCoordinatesEnabled = false;
+		this->currentState.colorEnabled = false;
+		this->currentState.systemColor.set(255, 255, 255, 255);
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
 		this->_setTexCoordPointer(0, NULL);
@@ -609,10 +590,10 @@ namespace april
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
 	{
-		this->state.textureId = 0;
-		this->state.textureCoordinatesEnabled = false;
-		this->state.colorEnabled = false;
-		this->state.systemColor = color;
+		this->currentState.textureId = 0;
+		this->currentState.textureCoordinatesEnabled = false;
+		this->currentState.colorEnabled = false;
+		this->currentState.systemColor = color;
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
 		this->_setTexCoordPointer(0, NULL);
@@ -635,9 +616,9 @@ namespace april
 	
 	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
 	{
-		this->state.textureCoordinatesEnabled = true;
-		this->state.colorEnabled = false;
-		this->state.systemColor.set(255, 255, 255, 255);
+		this->currentState.textureCoordinatesEnabled = true;
+		this->currentState.colorEnabled = false;
+		this->currentState.systemColor.set(255, 255, 255, 255);
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
@@ -660,9 +641,9 @@ namespace april
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
 	{
-		this->state.textureCoordinatesEnabled = true;
-		this->state.colorEnabled = false;
-		this->state.systemColor = color;
+		this->currentState.textureCoordinatesEnabled = true;
+		this->currentState.colorEnabled = false;
+		this->currentState.systemColor = color;
 		this->_applyStateChanges();
 		this->_setColorPointer(0, NULL);
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
@@ -685,14 +666,14 @@ namespace april
 
 	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
 	{
-		this->state.textureId = 0;
-		this->state.textureCoordinatesEnabled = false;
-		this->state.colorEnabled = true;
-		this->state.systemColor.set(255, 255, 255, 255);
+		this->currentState.textureId = 0;
+		this->currentState.textureCoordinatesEnabled = false;
+		this->currentState.colorEnabled = true;
+		this->currentState.systemColor.set(255, 255, 255, 255);
 		for_iter (i, 0, nVertices)
 		{
 			// making sure this is in AGBR order
-			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
+			v[i].color = UINT_RGBA_TO_ABGR(v[i].color);
 		}
 		this->_applyStateChanges();
 		this->_setTexCoordPointer(0, NULL);
@@ -716,13 +697,13 @@ namespace april
 	
 	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
 	{
-		this->state.textureCoordinatesEnabled = true;
-		this->state.colorEnabled = true;
-		this->state.systemColor.set(255, 255, 255, 255);
+		this->currentState.textureCoordinatesEnabled = true;
+		this->currentState.colorEnabled = true;
+		this->currentState.systemColor.set(255, 255, 255, 255);
 		for_iter (i, 0, nVertices)
 		{
 			// making sure this is in AGBR order
-			v[i].color = (((v[i].color & 0xFF000000) >> 24) | ((v[i].color & 0x00FF0000) >> 8) | ((v[i].color & 0x0000FF00) << 8) | ((v[i].color & 0x000000FF) << 24));
+			v[i].color = UINT_RGBA_TO_ABGR(v[i].color);
 		}
 		this->_applyStateChanges();
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
@@ -746,14 +727,14 @@ namespace april
 	
 	void OpenGL_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
-		this->state.modelviewMatrix = matrix;
-		this->state.modelviewMatrixChanged = true;
+		this->currentState.modelviewMatrix = matrix;
+		this->currentState.modelviewMatrixChanged = true;
 	}
 
 	void OpenGL_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
-		this->state.projectionMatrix = matrix;
-		this->state.projectionMatrixChanged = true;
+		this->currentState.projectionMatrix = matrix;
+		this->currentState.projectionMatrixChanged = true;
 	}
 
 	void OpenGL_RenderSystem::_setResolution(int w, int h, bool fullscreen)

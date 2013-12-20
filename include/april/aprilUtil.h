@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -21,6 +21,7 @@
 
 namespace april
 {
+	// TODOa - rename
 	// render operations
 	enum RenderOp
 	{
@@ -58,8 +59,10 @@ namespace april
 		int height;
 		int refreshRate;
 
-		bool operator==(const DisplayMode& other);
-		bool operator!=(const DisplayMode& other);
+		bool operator==(const DisplayMode& other) const;
+		bool operator!=(const DisplayMode& other) const;
+
+		DisplayMode(int width, int height, int refreshRate);
 
 	};
 	

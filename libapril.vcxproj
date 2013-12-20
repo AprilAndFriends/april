@@ -514,9 +514,11 @@
     <ClCompile Include="src\images\ImagePng.cpp" />
     <ClCompile Include="src\Color.cpp" />
     <ClCompile Include="src\images\Image.cpp" />
+    <ClCompile Include="src\main_base.cpp" />
     <ClCompile Include="src\Platform.cpp" />
     <ClCompile Include="src\PixelShader.cpp" />
     <ClCompile Include="src\RamTexture.cpp" />
+    <ClCompile Include="src\RenderState.cpp" />
     <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\timers\TimerPosix.cpp" />
@@ -534,6 +536,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\androidUtilJNI.h" />
+    <ClInclude Include="include\april\Android_main.h" />
     <ClInclude Include="include\april\april.h" />
     <ClInclude Include="include\april\aprilExport.h" />
     <ClInclude Include="include\april\aprilUtil.h" />
@@ -545,17 +548,22 @@
     <ClInclude Include="include\april\KeyboardDelegate.h" />
     <ClInclude Include="include\april\Keys.h" />
     <ClInclude Include="include\april\main.h" />
+    <ClInclude Include="include\april\main_base.h" />
     <ClInclude Include="include\april\MouseDelegate.h" />
+    <ClInclude Include="include\april\OpenKODE_main.h" />
     <ClInclude Include="include\april\PixelShader.h" />
     <ClInclude Include="include\april\Platform.h" />
     <ClInclude Include="include\april\RamTexture.h" />
+    <ClInclude Include="include\april\RenderState.h" />
     <ClInclude Include="include\april\RenderSystem.h" />
+    <ClInclude Include="include\april\Standard_main.h" />
     <ClInclude Include="include\april\SystemDelegate.h" />
     <ClInclude Include="include\april\Texture.h" />
     <ClInclude Include="include\april\Timer.h" />
     <ClInclude Include="include\april\TouchDelegate.h" />
     <ClInclude Include="include\april\UpdateDelegate.h" />
     <ClInclude Include="include\april\VertexShader.h" />
+    <ClInclude Include="include\april\Win32_main.h" />
     <ClInclude Include="include\april\Window.h" />
     <ClInclude Include="rendersystems\DirectX\9\DirectX9_PixelShader.h" />
     <ClInclude Include="rendersystems\DirectX\9\DirectX9_RenderSystem.h" />

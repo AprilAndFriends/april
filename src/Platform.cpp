@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.14
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -17,18 +17,21 @@
 
 namespace april
 {
+	SystemInfo info;
+
 	SystemInfo::SystemInfo()
 	{
 		this->name = "";
 #ifdef _ARM
 		this->architecture = "ARM";
+#elif defined(_X64)
+		this->architecture = "x64";
 #else
 		this->architecture = "x86";
 #endif
 		this->osVersion = 1.0f;
 		this->cpuCores = 1;
 		this->ram = 256;
-		this->maxTextureSize = 0;
 		this->displayDpi = 0;
 		this->locale = "";
 	}
@@ -37,18 +40,12 @@ namespace april
 	{
 	}
 
-	gvec2 getDisplayResolution()
-	{
-		return getSystemInfo().displayResolution;
-	}
-
 	void messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		MessageBoxStyle passedStyle = style;
-		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY) 
+		if (style & MESSAGE_STYLE_TERMINATE_ON_DISPLAY)
 		{
-			// TODO - move somewhere else, this file should be completely platform independent
 			if (window != NULL)
 			{
 #if !defined(_IOS) && !defined(_COCOA_WINDOW)
@@ -59,37 +56,37 @@ namespace april
 				window->destroy();
 #endif
 			}
-			passedStyle = (MessageBoxStyle)(passedStyle | AMSGSTYLE_MODAL);
+			passedStyle = (MessageBoxStyle)(passedStyle | MESSAGE_STYLE_MODAL);
 		}
 		messageBox_platform(title, text, buttonMask, passedStyle, customButtonTitles, callback);
-		if (style & AMSGSTYLE_TERMINATEAPPONDISPLAY)
+		if (style & MESSAGE_STYLE_TERMINATE_ON_DISPLAY)
 		{
-			exit(1);
+			exit(0);
 		}
 	}
 
 	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel,
 		MessageBoxButton buttonMask, hmap<MessageBoxButton, hstr> customButtonTitles)
 	{
-		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
+		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			*ok = customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK");
-			*cancel = customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel");
+			*ok = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK");
+			*cancel = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel");
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			*yes = customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes");
-			*no = customButtonTitles.try_get_by_key(AMSGBTN_NO, "No");
-			*cancel = customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel");
+			*yes = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes");
+			*no = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No");
+			*cancel = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel");
 		}
-		else if (buttonMask & AMSGBTN_OK)
+		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
-			*ok = customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK");
+			*ok = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK");
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
-			*yes = customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes");
-			*no = customButtonTitles.try_get_by_key(AMSGBTN_NO, "No");
+			*yes = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes");
+			*no = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No");
 		}
 	}
 

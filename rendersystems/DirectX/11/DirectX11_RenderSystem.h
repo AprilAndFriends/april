@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.14
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -64,9 +64,9 @@ namespace april
 		void reset();
 
 		float getPixelOffset() { return 0.0f; }
+		int getMaxTextureSize();
 		harray<DisplayMode> getSupportedDisplayModes();
-		HL_DEFINE_GET(grect, viewport, Viewport);
-		void setViewport(grect rect);
+		void setViewport(grect value);
 
 		void setTextureBlendMode(BlendMode textureBlendMode);
 		void setTextureColorMode(ColorMode textureColorMode, unsigned char alpha = 255);
@@ -96,9 +96,6 @@ namespace april
 		void presentFrame();
 
 		void updateOrientation();
-
-		// TODO - refactor
-		int getMaxTextureSize();
 
 	protected:
 		BlendMode activeTextureBlendMode;

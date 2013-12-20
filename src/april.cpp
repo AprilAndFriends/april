@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.0
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -86,7 +86,7 @@
 		#define WS_INTERNAL_DEFAULT WS_WIN32
 	#else
 		#define WS_INTERNAL_DEFAULT WS_WINRT
-	#endif r
+	#endif
 #elif defined(__APPLE__)
 	#if TARGET_OS_IPHONE
 		#ifdef _OPENGLES2
@@ -130,10 +130,10 @@
 #endif
 
 #ifndef RS_INTERNAL_DEFAULT
-#define RS_INTERNAL_DEFAULT RS_DEFAULT
+	#define RS_INTERNAL_DEFAULT RS_DEFAULT
 #endif
 #ifndef WS_INTERNAL_DEFAULT
-#define WS_INTERNAL_DEFAULT WS_DEFAULT
+	#define WS_INTERNAL_DEFAULT WS_DEFAULT
 #endif
 
 #ifdef _WIN32
@@ -160,12 +160,12 @@
 #endif
 
 #ifdef _ARM
-#define APRIL_PLATFORM_ARCHITECTURE "ARM"
+	#define APRIL_PLATFORM_ARCHITECTURE "ARM"
 #elif defined(_X64)
-#define APRIL_PLATFORM_ARCHITECTURE "x64"
+	#define APRIL_PLATFORM_ARCHITECTURE "x64"
 #endif
 #ifndef APRIL_PLATFORM_ARCHITECTURE
-#define APRIL_PLATFORM_ARCHITECTURE "x86"
+	#define APRIL_PLATFORM_ARCHITECTURE "x86"
 #endif
 
 namespace april

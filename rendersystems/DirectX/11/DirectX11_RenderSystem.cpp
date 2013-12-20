@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.14
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -26,6 +26,7 @@
 #include "Image.h"
 #include "Keys.h"
 #include "Platform.h"
+#include "RenderState.h"
 #include "Timer.h"
 #include "WinRT.h"
 #include "WinRT_Window.h"
@@ -72,13 +73,6 @@ namespace april
 	// TODO - refactor
 	harray<DirectX11_Texture*> gRenderTargets;
 
-	// TODO - refactor
-	int DirectX11_RenderSystem::getMaxTextureSize()
-	{
-		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
-		return D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
-	}
-
 	D3D11_PRIMITIVE_TOPOLOGY dx11_render_ops[]=
 	{
 		D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED,
@@ -116,6 +110,7 @@ namespace april
 		matrixDirty(true)
 	{
 		this->name = APRIL_RS_DIRECTX11;
+		this->state = new RenderState(); // TODOa
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
@@ -623,25 +618,27 @@ namespace april
 		this->matrixDirty = true;
 	}
 
+	int DirectX11_RenderSystem::getMaxTextureSize()
+	{
+		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
+		return D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
+	}
+
 	harray<DisplayMode> DirectX11_RenderSystem::getSupportedDisplayModes()
 	{
 		if (this->supportedDisplayModes.size() == 0)
 		{
 			gvec2 resolution = april::getSystemInfo().displayResolution;
-			DisplayMode displayMode;
-			displayMode.width = (int)resolution.x;
-			displayMode.height = (int)resolution.y;
-			displayMode.refreshRate = 60;
-			this->supportedDisplayModes += displayMode;
+			this->supportedDisplayModes += DisplayMode((int)resolution.x, (int)resolution.y, 60);
 		}
 		return this->supportedDisplayModes;
 	}
 
-	void DirectX11_RenderSystem::setViewport(grect rect)
+	void DirectX11_RenderSystem::setViewport(grect value)
 	{
-		this->viewport = rect;
+		RenderSystem::setViewport(value);
 #ifdef _WINP8
-		rect = WinRT::rotateViewport(rect);
+		value = WinRT::rotateViewport(value);
 #endif
 		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
 		static int w = 0;
@@ -679,10 +676,10 @@ namespace april
 		viewport.MinDepth = D3D11_MIN_DEPTH;
 		viewport.MaxDepth = D3D11_MAX_DEPTH;
 		// these double-casts are to ensure consistent behavior among rendering systems
-		viewport.TopLeftX = (float)(int)rect.x;
-		viewport.TopLeftY = (float)(int)rect.y;
-		viewport.Width = (float)(int)rect.w;
-		viewport.Height = (float)(int)rect.h;
+		viewport.TopLeftX = (float)(int)value.x;
+		viewport.TopLeftY = (float)(int)value.y;
+		viewport.Width = (float)(int)value.w;
+		viewport.Height = (float)(int)value.h;
 		this->d3dDeviceContext->RSSetViewports(1, &viewport);
 	}
 

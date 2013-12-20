@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -21,11 +21,11 @@
 
 namespace april
 {
+	extern SystemInfo info;
 	extern void (*dialogCallback)(MessageBoxButton);
-
+	
 	SystemInfo getSystemInfo()
 	{
-		static SystemInfo info;
 		if (info.locale == "")
 		{
 			info.name = "android";
@@ -58,17 +58,7 @@ namespace april
 			osVersions += minorVersion;
 			info.osVersion = (float)osVersions.join('.');
 		}
-		if (info.maxTextureSize == 0 && april::rendersys != NULL)
-		{
-			info.maxTextureSize = april::rendersys->getMaxTextureSize();
-		}
 		return info;
-	}
-	
-	DeviceType getDeviceType()
-	{
-		// TODO
-		return DEVICE_ANDROID_PHONE;
 	}
 	
 	hstr getPackageName()
@@ -111,11 +101,11 @@ namespace april
 		jstring jNo = (no != "" ? env->NewStringUTF(no.c_str()) : NULL);
 		jstring jCancel = (cancel != "" ? env->NewStringUTF(cancel.c_str()) : NULL);
 		jint jIconId = 0;
-		if ((style & AMSGSTYLE_INFORMATION) || (style & AMSGSTYLE_QUESTION))
+		if ((style & MESSAGE_STYLE_INFO) || (style & MESSAGE_STYLE_QUESTION))
 		{
 			jIconId = 1;
 		}
-		else if ((style & AMSGSTYLE_WARNING) || (style & AMSGSTYLE_CRITICAL))
+		else if ((style & MESSAGE_STYLE_WARNING) || (style & MESSAGE_STYLE_CRITICAL))
 		{
 			jIconId = 2;
 		}

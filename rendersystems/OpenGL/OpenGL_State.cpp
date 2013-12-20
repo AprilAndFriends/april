@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -38,8 +38,8 @@ namespace april
 		this->systemColor = Color::Black;
 		this->modelviewMatrixChanged = false;
 		this->projectionMatrixChanged = false;
-		this->blendMode = (BlendMode)10000;
-		this->colorMode = (ColorMode)10000;
+		this->blendMode = BLEND_MODE_UNDEFINED;
+		this->colorMode = COLOR_MODE_UNDEFINED;
 		this->colorModeAlpha = 255;
 		this->modeMatrix = 0;
 		this->strideVertex = 0;

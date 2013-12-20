@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -37,7 +37,7 @@ namespace april
 	float getMacOSVersion()
 	{
 #ifdef _DEBUG
-		//	return 10.6f; // uncomment this to test behaviour on older macs
+		//return 10.6f; // uncomment this to test behaviour on older macs
 #endif
 		static float version = 0;
 		if (version == 0)
@@ -106,10 +106,10 @@ namespace april
 		}
 	}
 	
+	extern SystemInfo info;
+	
 	SystemInfo getSystemInfo()
 	{
-		// TODO
-		static SystemInfo info;
 		if (info.locale == "")
 		{
 			// CPU cores
@@ -135,7 +135,6 @@ namespace april
 			CGSize screenSize = CGDisplayScreenSize(CGMainDisplayID());
 			info.displayDpi = 25.4f * rect.size.height / screenSize.height;
 
-			info.maxTextureSize = 0;
 			// locale
 			// This code gets the prefered locale based on user's list of prefered languages against the supported languages
 			// in the app bundle (the .lproj folders in the bundle)
@@ -147,19 +146,9 @@ namespace april
 			CFStringGetCString(lang, cstr, 64, kCFStringEncodingASCII);
 			info.locale = cstr;
 		}
-		// TODO
-		if (info.maxTextureSize == 0 && april::window != NULL && april::window->isCreated())
-		{
-			info.maxTextureSize = april::rendersys->getMaxTextureSize();
-		}
 		return info;
 	}
 	
-	DeviceType getDeviceType()
-	{
-		return DEVICE_MAC_PC;
-	}
-    
 	hstr getPackageName()
 	{
 		static hstr bundleID;
@@ -187,54 +176,50 @@ namespace april
 		// * use an array with constants for button captions etc
 		
 		NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
-		MessageBoxButton buttonTypes[] = {AMSGBTN_OK, AMSGBTN_NULL, AMSGBTN_NULL};
+		MessageBoxButton buttonTypes[] = {MESSAGE_BUTTON_OK, (MessageBoxButton)NULL, (MessageBoxButton)NULL};
         
-		if (buttonMask & AMSGBTN_OK && buttonMask & AMSGBTN_CANCEL)
+		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            
-            buttonTypes[0] = AMSGBTN_OK;
-            buttonTypes[1] = AMSGBTN_CANCEL;
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
+            buttonTypes[0] = MESSAGE_BUTTON_OK;
+            buttonTypes[1] = MESSAGE_BUTTON_CANCEL;
 		}
-		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO && buttonMask & AMSGBTN_CANCEL)
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
-			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            
-            buttonTypes[0] = AMSGBTN_YES;
-            buttonTypes[1] = AMSGBTN_NO;
-            buttonTypes[2] = AMSGBTN_CANCEL;
-
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
+			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
+            buttonTypes[0] = MESSAGE_BUTTON_YES;
+            buttonTypes[1] = MESSAGE_BUTTON_NO;
+            buttonTypes[2] = MESSAGE_BUTTON_CANCEL;
 		}
-		else if (buttonMask & AMSGBTN_YES && buttonMask & AMSGBTN_NO)
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
-            
-            buttonTypes[0] = AMSGBTN_YES;
-            buttonTypes[1] = AMSGBTN_NO;
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
+            buttonTypes[0] = MESSAGE_BUTTON_YES;
+            buttonTypes[1] = MESSAGE_BUTTON_NO;
 		}
-		else if (buttonMask & AMSGBTN_CANCEL)
+		else if (buttonMask & MESSAGE_BUTTON_CANCEL)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_CANCEL, "Cancel").c_str()];
-            buttonTypes[0] = AMSGBTN_CANCEL;
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
+            buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
 		}
-		else if (buttonMask & AMSGBTN_OK)
+		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_OK, "OK").c_str()];
-            buttonTypes[0] = AMSGBTN_OK;
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK").c_str()];
+            buttonTypes[0] = MESSAGE_BUTTON_OK;
 		}
-		else if (buttonMask & AMSGBTN_YES)
+		else if (buttonMask & MESSAGE_BUTTON_YES)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_YES, "Yes").c_str()];
-            buttonTypes[0] = AMSGBTN_YES;
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
+            buttonTypes[0] = MESSAGE_BUTTON_YES;
 		}
-		else if (buttonMask & AMSGBTN_NO)
+		else if (buttonMask & MESSAGE_BUTTON_NO)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(AMSGBTN_NO, "No").c_str()];
-            buttonTypes[0] = AMSGBTN_NO;
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
+            buttonTypes[0] = MESSAGE_BUTTON_NO;
 		}
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];

@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.11
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -13,6 +13,7 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hplatform.h>
+#include <hltypes/hresource.h>
 #include <hltypes/hthread.h>
 
 #include "april.h"
@@ -38,6 +39,8 @@ namespace april
 	{
 		this->name = APRIL_WS_WIN32;
 		this->hWnd = NULL;
+		this->cursorExtensions += ".ani";
+		this->cursorExtensions += ".cur";
 	}
 
 	Win32_Window::~Win32_Window()
@@ -54,6 +57,7 @@ namespace april
 			return false;
 		}
 		this->inputMode = MOUSE;
+		this->cursor = NULL;
 		// Win32
 		WNDCLASSEXW wc;
 		memset(&wc, 0, sizeof(WNDCLASSEX));
@@ -110,6 +114,7 @@ namespace april
 			UnregisterClassW(APRIL_WIN32_WINDOW_CLASS, GetModuleHandle(0));
 			this->hWnd = 0;
 		}
+		this->cursor = NULL;
 		return true;
 	}
 
@@ -138,9 +143,35 @@ namespace april
 	void Win32_Window::setCursorVisible(bool value)
 	{
 		Window::setCursorVisible(value);
-		this->isCursorVisible() ? SetCursor(LoadCursor(0, IDC_ARROW)) : SetCursor(0);
+		this->_refreshCursor();
 	}
 	
+	void Win32_Window::setCursorFilename(chstr value)
+	{
+		Window::setCursorFilename(value);
+		this->_refreshCursor();
+	}
+
+	void Win32_Window::_refreshCursor()
+	{
+		HCURSOR cursor = NULL;
+		if (this->isCursorVisible())
+		{
+			hstr filename = this->_findCursorFile();
+			if (filename != "")
+			{
+				this->cursor = LoadCursorFromFileW(filename.w_str().c_str());
+				cursor = this->cursor;
+			}
+			else
+			{
+				this->cursor = NULL;
+				cursor = LoadCursorW(0, IDC_ARROW);
+			}
+		}
+		SetCursor(cursor);
+	}
+
 	int Win32_Window::getWidth()
 	{
 		RECT rect;
@@ -218,15 +249,14 @@ namespace april
 	
 	bool Win32_Window::updateOneFrame()
 	{
-		static bool result;
-		static POINT w32_cursorPosition;
+		POINT w32_cursorPosition;
 		// mouse position
 		GetCursorPos(&w32_cursorPosition);
 		ScreenToClient(this->hWnd, &w32_cursorPosition);
 		this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
 		this->checkEvents();
 		// rendering
-		result = Window::updateOneFrame();
+		bool result = Window::updateOneFrame();
 		if (this->fpsCounter)
 		{
 			this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
@@ -454,8 +484,20 @@ namespace april
 		case WM_SETCURSOR:
 			if (!april::window->isCursorVisible())
 			{
-				SetCursor(0);
+				SetCursor(NULL);
 				return 1;
+			}
+			if (april::window->isCursorInside())
+			{
+				HCURSOR cursor = ((Win32_Window*)april::window)->cursor;
+				if (cursor != GetCursor())
+				{
+					SetCursor(cursor);
+				}
+				if (cursor != NULL)
+				{
+					return 1;
+				}
 			}
 			break;
 		case WM_ACTIVATE:

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -76,7 +76,7 @@ namespace april
 			img->format = FORMAT_RGB;
 			break;
 		default:
-			img->format = FORMAT_RGB; // TODO3
+			img->format = FORMAT_RGB; // TODOa
 			break;
 		}
 		// clean up
