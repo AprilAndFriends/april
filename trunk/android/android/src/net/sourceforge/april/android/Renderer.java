@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 3.1
+// version 3.2
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
@@ -10,6 +10,9 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.app.Activity;
+import android.graphics.Rect;
+import android.view.View;
+import android.view.ViewTreeObserver;
 
 public class Renderer implements android.opengl.GLSurfaceView.Renderer
 {
@@ -22,6 +25,19 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 			String args[] = {NativeInterface.ApkPath}; // adding argv[0]
 			NativeInterface.init(args);
 			NativeInterface.Running = true;
+			// needed for keyboard height
+			NativeInterface.Activity.getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+			{
+				@Override
+				public void onGlobalLayout()
+				{
+					View view = NativeInterface.AprilActivity.getView();
+					Rect r = new Rect();
+					view.getWindowVisibleDisplayFrame(r);
+					float heightRatio = 1.0f - (float)(r.bottom - r.top) / view.getRootView().getHeight();
+					NativeInterface.onVirtualKeyboardChanged((heightRatio > 0.15f), heightRatio);
+				}
+			});
 		}
 	}
 	

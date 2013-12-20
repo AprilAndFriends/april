@@ -26,9 +26,10 @@
 
 namespace april
 {
+	extern SystemInfo info;
+	
 	SystemInfo getSystemInfo()
 	{
-		static SystemInfo info;
 		if (info.locale == "")
 		{
 			// number of CPU cores
@@ -58,16 +59,7 @@ namespace april
 				}
 			}
 		}
-		if (info.maxTextureSize == 0 && april::rendersys != NULL)
-		{
-			info.maxTextureSize = april::rendersys->getMaxTextureSize();
-		}
 		return info;
-	}
-
-	DeviceType getDeviceType()
-	{
-		return DEVICE_WINDOWS_PC;
 	}
 
 	hstr getPackageName()
@@ -83,7 +75,6 @@ namespace april
 	
 	static void(*currentCallback)(MessageBoxButton) = NULL;
 
-	// TODOa - could be maybe put as a common function
 	void _messageBoxResult(int button)
 	{
 		switch (button)
@@ -91,26 +82,29 @@ namespace april
 		case IDOK:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_OK);
+				(*currentCallback)(MESSAGE_BUTTON_OK);
 			}
 			break;
 		case IDYES:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_YES);
+				(*currentCallback)(MESSAGE_BUTTON_YES);
 			}
 			break;
 		case IDNO:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_NO);
+				(*currentCallback)(MESSAGE_BUTTON_NO);
 			}
 			break;
 		case IDCANCEL:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_CANCEL);
+				(*currentCallback)(MESSAGE_BUTTON_CANCEL);
 			}
+			break;
+		default:
+			hlog::error(april::logTag, "Unknown message box callback: " + hstr(button));
 			break;
 		}
 	}
@@ -120,42 +114,42 @@ namespace april
 	{
 		currentCallback = callback;
 		int type = 0;
-		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
+		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			type |= MB_OKCANCEL;
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO) && (buttonMask & AMSGBTN_CANCEL))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			type |= MB_YESNOCANCEL;
 		}
-		else if (buttonMask & AMSGBTN_OK)
+		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
 			type |= MB_OK;
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
 			type |= MB_YESNO;
 		}
 		
-		if (style & AMSGSTYLE_INFORMATION)
+		if (style & MESSAGE_STYLE_INFO)
 		{
 			type |= MB_ICONINFORMATION;
 		}
-		else if (style & AMSGSTYLE_WARNING)
+		else if (style & MESSAGE_STYLE_WARNING)
 		{
 			type |= MB_ICONWARNING;
 		}
-		else if (style & AMSGSTYLE_CRITICAL)
+		else if (style & MESSAGE_STYLE_CRITICAL)
 		{
 			type |= MB_ICONSTOP;
 		}
-		else if (style & AMSGSTYLE_QUESTION)
+		else if (style & MESSAGE_STYLE_QUESTION)
 		{
 			type |= MB_ICONQUESTION;
 		}
 
 		HWND hwnd = 0;
-		if (april::rendersys != NULL && april::window != NULL && (style & AMSGSTYLE_MODAL))
+		if (april::window != NULL && (style & MESSAGE_STYLE_MODAL))
 		{
 			hwnd = (HWND)april::window->getBackendId();
 		}

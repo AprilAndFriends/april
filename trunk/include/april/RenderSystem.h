@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -26,6 +26,7 @@
 #include "aprilExport.h"
 #include "aprilUtil.h"
 #include "Color.h"
+#include "RenderState.h"
 #include "Texture.h"
 
 #include "Window.h" // can be removed later
@@ -68,6 +69,8 @@ namespace april
 		HL_DEFINE_GET(hstr, name, Name);
 		HL_DEFINE_GET(Options, options, Options);
 		HL_DEFINE_GET(harray<Texture*>, textures, Textures);
+		HL_DEFINE_GET(grect, viewport, Viewport);
+		virtual HL_DEFINE_SET(grect, viewport, Viewport);
 		HL_DEFINE_GET(gmat4, modelviewMatrix, ModelviewMatrix);
 		void setModelviewMatrix(gmat4 matrix);
 		HL_DEFINE_GET(gmat4, projectionMatrix, ProjectionMatrix);
@@ -76,10 +79,10 @@ namespace april
 		void setOrthoProjection(grect rect);
 		void setOrthoProjection(gvec2 size);
 
+		virtual harray<DisplayMode> getSupportedDisplayModes();
+
 		virtual float getPixelOffset() = 0;
-		virtual harray<DisplayMode> getSupportedDisplayModes() = 0;
-		virtual grect getViewport() = 0;
-		virtual void setViewport(grect value) = 0;
+		virtual int getMaxTextureSize() = 0;
 
 		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
 		virtual void setTextureColorMode(ColorMode colorMode, unsigned char alpha = 255) = 0;
@@ -94,7 +97,7 @@ namespace april
 		Texture* createTexture(chstr filename, bool loadImmediately = true);
 		Texture* createTexture(int w, int h, unsigned char* rgba);
 		Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
-		Texture* createRamTexture(chstr filename, bool loadImmediately = true);
+		Texture* createRamTexture(chstr filename, bool loadImmediately = true); // TODO - will be removed in a future version
 		virtual PixelShader* createPixelShader() = 0;
 		virtual PixelShader* createPixelShader(chstr filename) = 0;
 		virtual VertexShader* createVertexShader() = 0;
@@ -127,9 +130,6 @@ namespace april
 		virtual Image* takeScreenshot(int bpp = 3) = 0;
 		virtual void presentFrame();
 
-		// TODO - refactor
-		virtual int getMaxTextureSize() = 0;
-
 		DEPRECATED_ATTRIBUTE Texture* loadTexture(chstr filename, bool delayLoad = false) { return this->createTexture(filename, !delayLoad); }
 		DEPRECATED_ATTRIBUTE Texture* loadRamTexture(chstr filename, bool delayLoad = false) { return this->createRamTexture(filename, !delayLoad); }
 
@@ -138,6 +138,8 @@ namespace april
 		bool created;
 		Options options;
 		harray<Texture*> textures;
+		grect viewport;
+		RenderState* state;
 		Texture::Filter textureFilter;
 		Texture::AddressMode textureAddressMode;
 		gmat4 modelviewMatrix;

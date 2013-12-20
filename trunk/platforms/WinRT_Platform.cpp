@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.14
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -33,9 +33,10 @@ using namespace Windows::UI::ViewManagement;
 
 namespace april
 {
+	extern SystemInfo info;
+	
 	SystemInfo getSystemInfo()
 	{
-		static SystemInfo info;
 		if (info.locale == "")
 		{
 			info.name = "winrt";
@@ -94,20 +95,7 @@ namespace april
 				info.locale = info.locale.utf8_substr(0, 2);
 			}
 		}
-		if (info.maxTextureSize == 0 && april::rendersys != NULL)
-		{
-			info.maxTextureSize = april::rendersys->getMaxTextureSize();
-		}
 		return info;
-	}
-
-	DeviceType getDeviceType()
-	{
-#ifndef _WINP8
-		return DEVICE_WINDOWS_8;
-#else
-		return DEVICE_WINDOWS_PHONE_8;
-#endif
 	}
 
 	hstr getPackageName()
@@ -133,26 +121,29 @@ namespace april
 		case IDOK:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_OK);
+				(*currentCallback)(MESSAGE_BUTTON_OK);
 			}
 			break;
 		case IDYES:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_YES);
+				(*currentCallback)(MESSAGE_BUTTON_YES);
 			}
 			break;
 		case IDNO:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_NO);
+				(*currentCallback)(MESSAGE_BUTTON_NO);
 			}
 			break;
 		case IDCANCEL:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(AMSGBTN_CANCEL);
+				(*currentCallback)(MESSAGE_BUTTON_CANCEL);
 			}
+			break;
+		default:
+			hlog::error(april::logTag, "Unknown message box callback: " + hstr(button));
 			break;
 		}
 	}
@@ -180,14 +171,14 @@ namespace april
 		_HL_HSTR_TO_PSTR_DEF(no);
 		_HL_HSTR_TO_PSTR_DEF(cancel);
 
-		if ((buttonMask & AMSGBTN_OK) && (buttonMask & AMSGBTN_CANCEL))
+		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 			dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
 			dialog->DefaultCommandIndex = 0;
 			dialog->CancelCommandIndex = 1;
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO) && (buttonMask & AMSGBTN_CANCEL))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 			dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
@@ -195,13 +186,13 @@ namespace april
 			dialog->DefaultCommandIndex = 0;
 			dialog->CancelCommandIndex = 2;
 		}
-		else if (buttonMask & AMSGBTN_OK)
+		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
 			dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 			dialog->DefaultCommandIndex = 0;
 			dialog->CancelCommandIndex = 0;
 		}
-		else if ((buttonMask & AMSGBTN_YES) && (buttonMask & AMSGBTN_NO))
+		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
 			dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 			dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.14
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -20,7 +20,7 @@
 #include "androidUtilJNI.h"
 #include "april.h"
 #include "Keys.h"
-#include "main.h"
+#include "main_base.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
@@ -41,6 +41,8 @@ namespace april
 {
 	extern void* javaVM;
 	extern void (*dialogCallback)(MessageBoxButton);
+	void (*aprilInit)(const harray<hstr>&) = NULL;
+	void (*aprilDestroy)() = NULL;
 	extern jobject classLoader;
 	
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jDataPath, jstring jForcedArchivePath)
@@ -80,21 +82,25 @@ namespace april
 	{
 		harray<hstr> args;
 		int length = env->GetArrayLength(_args);
+		jstring jStr;
 		for_iter (i, 0, length)
 		{
-			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
+			jStr = (jstring)env->GetObjectArrayElement(_args, i);
+			args += _JSTR_TO_HSTR(jStr);
+			// TODOa - check if this is needed
+			//env->DeleteLocalRef(jStr);
 		}
 		hlog::debug(april::logTag, "Got args:");
 		foreach (hstr, it, args)
 		{
 			hlog::debug(april::logTag, "    " + (*it));
 		}
-		april_init(args);
+		(*aprilInit)(args);
 	}
 	
 	void JNICALL _JNI_destroy(JNIEnv* env, jclass classe)
 	{
-		april_destroy();
+		(*aprilDestroy)();
 	}
 	
 	bool JNICALL _JNI_render(JNIEnv* env, jclass classe)
@@ -262,9 +268,11 @@ namespace april
 		{"onDialogCancel",						_JARGS(_JVOID, ),								(void*)&april::_JNI_onDialogCancel						}
 	};
 	
-	jint JNI_OnLoad(JavaVM* vm, void* reserved)
+	jint JNI_OnLoad(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), JavaVM* vm, void* reserved)
 	{
 		april::javaVM = (void*)vm;
+		april::aprilInit = anAprilInit;
+		april::aprilDestroy = anAprilDestroy;
 		JNIEnv* env = NULL;
 		if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK)
 		{

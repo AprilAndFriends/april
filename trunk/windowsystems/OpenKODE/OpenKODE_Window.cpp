@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.14
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -307,10 +307,9 @@ namespace april
 			}
 		}
 #endif
-		static bool result;
 		this->checkEvents();
 		// rendering
-		result = Window::updateOneFrame();
+		bool result = Window::updateOneFrame();
 #ifndef _WINRT
 		this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
 #endif

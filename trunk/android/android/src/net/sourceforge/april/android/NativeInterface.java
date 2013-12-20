@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 3.1
+// version 3.2
 
 import android.content.Context;
 import android.os.Build;

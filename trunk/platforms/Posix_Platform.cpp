@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -19,10 +19,10 @@
 
 namespace april
 {
+	extern SystemInfo info;
+	
 	SystemInfo getSystemInfo()
 	{
-		// TODO
-		static SystemInfo info;
 		if (info.locale == "")
 		{
 			info.cpuCores = 1; // TODO
@@ -31,18 +31,9 @@ namespace april
 			//info.ram = 1024; // TODO
 			info.locale = "en"; // TODO
 		}
-		if (info.maxTextureSize == 0 && april::rendersys != NULL)
-		{
-			info.maxTextureSize = april::rendersys->_getMaxTextureSize();
-		}
 		return info;
 	}
 
-	DeviceType getDeviceType()
-	{
-		return DEVICE_LINUX_PC;
-	}
-	
 	hstr getPackageName()
 	{
 		hlog::warn(april::logTag, "Cannot use getPackageName() on this platform.");
@@ -51,14 +42,14 @@ namespace april
 
 	hstr getUserDataPath()
 	{
-		hlog::warn(april::logTag, "Cannot use getUserDataPath() on this platform.");
+		hlog::error(april::logTag, "Not implemented.");
 		return ".";
 	}
 	
 	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// TODO
-		return AMSGBTN_OK;
+		return MESSAGE_BUTTON_OK;
 	}
 
 }

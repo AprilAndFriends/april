@@ -1,7 +1,7 @@
 /// @file
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -13,7 +13,7 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
-#include "main.h"
+#include "main_base.h"
 #include "RenderSystem.h"
 #include "Window.h"
 

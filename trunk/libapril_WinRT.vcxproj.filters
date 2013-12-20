@@ -90,6 +90,9 @@
     <Filter Include="Source Files\windowsystems\WinRT\WinP8">
       <UniqueIdentifier>{7ebb6126-e027-4986-afb3-080940040276}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\main">
+      <UniqueIdentifier>{4b0e1a80-3383-4dd1-84f2-5adecf4999ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Color.cpp">
@@ -242,6 +245,12 @@
     <ClCompile Include="windowsystems\WinRT\WinP8_KeyboardInterface.cpp">
       <Filter>Source Files\windowsystems\WinRT\WinP8</Filter>
     </ClCompile>
+    <ClCompile Include="src\main_base.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -266,9 +275,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\april\main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\april\PixelShader.h">
@@ -384,6 +390,27 @@
     </ClInclude>
     <ClInclude Include="windowsystems\WinRT\WinP8_KeyboardInterface.h">
       <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\androidUtilJNI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\RenderState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Standard_main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\OpenKODE_main.h">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\main_base.h">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\main.h">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\WinRT_main.h">
+      <Filter>Header Files\main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

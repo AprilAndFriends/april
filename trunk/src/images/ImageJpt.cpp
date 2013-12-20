@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.0
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -14,19 +14,21 @@
 
 namespace april
 {
+	// TODOa - this could be optimized to immediately create a 4-byte JPG or with a substream or stream-reference class or
+	// by using _loadJpg() and _loadPng() implementations that take a size parameter
 	Image* Image::_loadJpt(hsbase& stream)
 	{
 		Image* jpg = NULL;
 		Image* png = NULL;
 		hstream subStream;
-		int size;
-		unsigned char bytes[4];
-		unsigned char* buffer;
+		int size = 0;
+		unsigned char bytes[4] = {0};
+		unsigned char* buffer = NULL;
 		// file header ("JPT" + 1 byte for version code)
 		stream.read_raw(bytes, 4);
 		// read JPEG
 		stream.read_raw(bytes, 4);
-		size = bytes[0] + bytes[1] * 256 + bytes[2] * 256 * 256 + bytes[3] * 256 * 256 * 256;
+		size = bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24);
 		buffer = new unsigned char[size];
 		stream.read_raw(buffer, size);
 		subStream.clear();
@@ -36,7 +38,7 @@ namespace april
 		jpg = Image::_loadJpg(subStream);
 		// read PNG
 		stream.read_raw(bytes, 4);
-		size = bytes[0] + bytes[1] * 256 + bytes[2] * 256 * 256 + bytes[3] * 256 * 256 * 256;
+		size = bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24);
 		buffer = new unsigned char[size];
 		stream.read_raw(buffer, size);
 		subStream.clear();

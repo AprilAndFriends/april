@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -49,8 +49,8 @@ namespace april
 		void assignWindow(Window* window);
 
 		float getPixelOffset() { return 0.5f; }
+		int getMaxTextureSize();
 		harray<DisplayMode> getSupportedDisplayModes();
-		grect getViewport();
 		void setViewport(grect rect);
 
 		void setTextureBlendMode(BlendMode textureBlendMode);
@@ -79,9 +79,6 @@ namespace april
 
 		Image* takeScreenshot(int bpp = 3);
 		void presentFrame();
-
-		// TODO - refactor
-		int getMaxTextureSize();
 
 	protected:
 		bool textureCoordinatesEnabled;

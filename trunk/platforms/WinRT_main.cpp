@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -13,7 +13,7 @@
 #include <hltypes/hstring.h>
 
 #include "IWinRT.h"
-#include "main.h"
+#include "main_base.h"
 #include "RenderSystem.h"
 #include "Window.h"
 #include "WinP8_AppLauncher.h"

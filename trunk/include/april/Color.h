@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.1
+/// @version 3.2
 /// 
 /// @section LICENSE
 /// 
@@ -34,13 +34,13 @@ namespace april
 		Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255);
 		Color(unsigned int color);
 		Color(chstr hex);
-		Color(Color color, unsigned char a);
+		Color(const Color& color, unsigned char a);
 
 		void set(int r, int g, int b, int a = 255);
 		void set(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255);
 		void set(unsigned int color);
 		void set(chstr hex);
-		void set(Color color, unsigned char a);
+		void set(const Color& color, unsigned char a);
 
 		float r_f() const { return this->r * 0.003921569f; } // equals r / 255, multiplication is faster than division
 		float g_f() const { return this->g * 0.003921569f; } // equals g / 255, multiplication is faster than division
@@ -51,19 +51,19 @@ namespace april
 		
 		operator unsigned int() const;
 		
-		bool operator==(Color& other);
-		bool operator!=(Color& other);
+		bool operator==(const Color& other) const;
+		bool operator!=(const Color& other) const;
 		
-		Color operator+(Color& other);
-		Color operator-(Color& other);
-		Color operator*(Color& other);
-		Color operator/(Color& other);
-		Color operator*(float value);
-		Color operator/(float value);
-		Color operator+=(Color& other);
-		Color operator-=(Color& other);
-		Color operator*=(Color& other);
-		Color operator/=(Color& other);
+		Color operator+(const Color& other) const;
+		Color operator-(const Color& other) const;
+		Color operator*(const Color& other) const;
+		Color operator/(const Color& other) const;
+		Color operator*(float value) const;
+		Color operator/(float value) const;
+		Color operator+=(const Color& other);
+		Color operator-=(const Color& other);
+		Color operator*=(const Color& other);
+		Color operator/=(const Color& other);
 		Color operator*=(float value);
 		Color operator/=(float value);
 
