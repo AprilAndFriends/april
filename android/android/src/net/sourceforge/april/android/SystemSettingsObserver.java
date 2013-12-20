@@ -1,6 +1,6 @@
 package net.sourceforge.april.android;
 
-// version 3.2
+// version 3.3
 
 import android.content.pm.ActivityInfo;
 import android.database.ContentObserver;
