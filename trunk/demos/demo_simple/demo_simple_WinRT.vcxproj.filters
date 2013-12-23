@@ -90,5 +90,16 @@
     <None Include="TemporaryKey.pfx">
       <Filter>winrt</Filter>
     </None>
+    <None Include="media\cursor.ani">
+      <Filter>winrt\media</Filter>
+    </None>
+    <None Include="media\simple.cur">
+      <Filter>winrt\media</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="winrt-cursors.rc">
+      <Filter>winrt</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

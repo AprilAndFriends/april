@@ -61,6 +61,7 @@ namespace april
 		this->allowFilledView = false;
 		this->useCustomSnappedView = false;
 		this->backButtonSystemHandling = false;
+		this->cursorMappings.clear();
 		this->inputMode = TOUCH;
 		this->setCursorVisible(true);
 		return true;
@@ -94,6 +95,15 @@ namespace april
 				return WINRT_VIEW_STATE_FILLED;
 			}
 			return WINRT_VIEW_STATE_FULLSCREEN;
+		}
+		if (param == WINRT_CURSOR_MAPPINGS)
+		{
+			harray<hstr> mappings;
+			foreach_m (unsigned int, it, this->cursorMappings)
+			{
+				mappings += hsprintf("%u %s", it->second, it->first.c_str());
+			}
+			return mappings.join('\n');
 		}
 		if (param == WINRT_DELAY_SPLASH)
 		{
@@ -142,6 +152,20 @@ namespace april
 				hlog::warn(april::logTag, "Application not in snapped view, cannot change view state!");
 			}
 		}
+		if (param == WINRT_CURSOR_MAPPINGS)
+		{
+			this->cursorMappings.clear();
+			harray<hstr> lines = value.split('\n', -1, true);
+			harray<hstr> data;
+			foreach (hstr, it, lines)
+			{
+				data = (*it).split(' ', 1);
+				if (data.size() == 2)
+				{
+					this->cursorMappings[data[1]] = (unsigned int)data[0];
+				}
+			}
+		}
 		if (param == WINRT_DELAY_SPLASH)
 		{
 			this->delaySplash = (float)value;
@@ -168,7 +192,7 @@ namespace april
 	void WinRT_Window::setCursorFilename(chstr value)
 	{
 		Window::setCursorFilename(value);
-		WinRT::Interface->setCursorFilename(_HL_HSTR_TO_PSTR(this->_findCursorFile()));
+		WinRT::Interface->setCursorResourceId((unsigned int)this->_findCursorFile());
 	}
 
 	void* WinRT_Window::getBackendId()
@@ -216,19 +240,16 @@ namespace april
 	{
 		if (this->cursorFilename == "")
 		{
-			return "";
+			return "0";
 		}
-		hstr filename;
 		foreach (hstr, it, this->cursorExtensions)
 		{
-			filename = this->cursorFilename + (*it);
-			// TODO - check if embedded resource exists
-			if (true)
+			if (this->cursorMappings.has_key(this->cursorFilename))
 			{
-				return hrdir::normalize(filename);
+				return hstr(this->cursorMappings[this->cursorFilename]);
 			}
 		}
-		return "";
+		return "0";
 	}
 	
 }

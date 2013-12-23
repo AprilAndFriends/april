@@ -51,7 +51,7 @@ namespace april
 		
 		virtual void unassignWindow();
 		virtual void setCursorVisible(bool value);
-		virtual void setCursorFilename(Platform::String^ value);
+		virtual void setCursorResourceId(unsigned int id);
 		virtual bool canSuspendResume();
 		virtual void updateViewState();
 		virtual void checkEvents();
