@@ -115,7 +115,7 @@ namespace april
 	{
 	}
 
-	void WinP8_App::setCursorFilename(Platform::String^ value)
+	void WinP8_App::setCursorResourceId(unsigned int id)
 	{
 	}
 	

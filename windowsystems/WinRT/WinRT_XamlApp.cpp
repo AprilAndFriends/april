@@ -50,6 +50,7 @@ namespace april
 		this->logoTexture = NULL;
 		this->hasStoredViewData = false;
 		this->storedCursorVisible = false;
+		this->cursorResourceId = 0;
 		this->backgroundColor = april::Color::Black;
 		this->launched = false;
 		this->activated = false;
@@ -81,9 +82,9 @@ namespace april
 		this->_refreshCursor();
 	}
 
-	void WinRT_XamlApp::setCursorFilename(Platform::String^ value)
+	void WinRT_XamlApp::setCursorResourceId(unsigned int id)
 	{
-		this->cursorFilename = _HL_PSTR_TO_HSTR(value);
+		this->cursorResourceId = id;
 		this->_refreshCursor();
 	}
 	
@@ -100,10 +101,9 @@ namespace april
 			{
 				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = nullptr;
 			}
-			else if (this->cursorFilename != "")
+			else if (this->cursorResourceId != 0)
 			{
-				// TODO
-				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = ref new CoreCursor(CoreCursorType::Custom, 101);
+				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = ref new CoreCursor(CoreCursorType::Custom, this->cursorResourceId);
 			}
 			else
 			{

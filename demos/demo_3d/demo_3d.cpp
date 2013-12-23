@@ -108,6 +108,9 @@ void april_init(const harray<hstr>& args)
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 	april::createRenderSystem();
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple 3D");
+#ifdef _WINRT
+	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
+#endif
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setCursorFilename(RESOURCE_PATH "cursor");
 	texture = april::rendersys->createTexture(RESOURCE_PATH "texture");

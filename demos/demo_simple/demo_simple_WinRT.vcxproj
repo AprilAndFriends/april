@@ -172,6 +172,8 @@
     <Image Include="media\texture.jpg" />
     <Image Include="media\x.png" />
     <Image Include="media\jpt_final.jpt" />
+    <None Include="media\cursor.ani" />
+    <None Include="media\simple.cur" />
     <None Include="TemporaryKey.pfx">
       <FileType>Document</FileType>
     </None>
@@ -181,6 +183,9 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="winrt-cursors.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Condition="'$(PlatformToolset)'=='v110_wp80'" Project="$(MSBuildExtensionsPath)\Microsoft\WindowsPhone\v$(TargetPlatformVersion)\Microsoft.Cpp.WindowsPhone.$(TargetPlatformVersion).targets" />
