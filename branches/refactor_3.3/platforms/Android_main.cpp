@@ -211,7 +211,7 @@ namespace april
 	{
 		if (dialogCallback != NULL)
 		{
-			(*dialogCallback)(AMSGBTN_OK);
+			(*dialogCallback)(MESSAGE_BUTTON_OK);
 		}
 	}
 	
@@ -219,7 +219,7 @@ namespace april
 	{
 		if (dialogCallback != NULL)
 		{
-			(*dialogCallback)(AMSGBTN_YES);
+			(*dialogCallback)(MESSAGE_BUTTON_YES);
 		}
 	}
 	
@@ -227,7 +227,7 @@ namespace april
 	{
 		if (dialogCallback != NULL)
 		{
-			(*dialogCallback)(AMSGBTN_NO);
+			(*dialogCallback)(MESSAGE_BUTTON_NO);
 		}
 	}
 	
@@ -235,7 +235,7 @@ namespace april
 	{
 		if (dialogCallback != NULL)
 		{
-			(*dialogCallback)(AMSGBTN_CANCEL);
+			(*dialogCallback)(MESSAGE_BUTTON_CANCEL);
 		}
 	}
 	

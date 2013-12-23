@@ -31,6 +31,7 @@
 #define WINRT_ALLOW_FILLED_VIEW "allow_filled_view"
 #define WINRT_USE_CUSTOM_SNAPPED_VIEW "use_custom_snapped_view"
 #define WINRT_DELAY_SPLASH "delay_splash"
+#define WINRT_CURSOR_MAPPINGS "cursor_mappings"
 #define WINRT_VIEW_STATE "view_state"
 #define WINRT_VIEW_STATE_FILLED "filled"
 #define WINRT_VIEW_STATE_SNAPPED "snapped"
@@ -55,6 +56,7 @@ namespace april
 		
 		void setTitle(chstr title);
 		void setCursorVisible(bool value);
+		void setCursorFilename(chstr value);
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId();
@@ -74,6 +76,9 @@ namespace april
 		bool allowFilledView;
 		bool useCustomSnappedView;
 		bool backButtonSystemHandling;
+		hmap<hstr, unsigned int> cursorMappings;
+
+		hstr _findCursorFile();
 		
 	};
 	
