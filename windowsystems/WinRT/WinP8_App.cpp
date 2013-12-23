@@ -114,6 +114,10 @@ namespace april
 	void WinP8_App::setCursorVisible(bool value)
 	{
 	}
+
+	void WinP8_App::setCursorResourceId(unsigned int id)
+	{
+	}
 	
 	bool WinP8_App::canSuspendResume()
 	{

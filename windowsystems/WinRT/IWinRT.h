@@ -15,6 +15,8 @@
 #ifndef APRIL_IWINRT_H
 #define APRIL_IWINRT_H
 
+#include <hltypes/hstring.h>
+
 namespace april
 {
 	public interface class IWinRT
@@ -22,6 +24,7 @@ namespace april
     public:
 		virtual void unassignWindow();
 		virtual void setCursorVisible(bool value);
+		virtual void setCursorResourceId(unsigned int id);
 		virtual bool canSuspendResume();
 		virtual void updateViewState();
 		virtual void checkEvents();

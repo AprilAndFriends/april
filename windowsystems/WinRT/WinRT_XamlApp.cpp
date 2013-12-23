@@ -50,6 +50,7 @@ namespace april
 		this->logoTexture = NULL;
 		this->hasStoredViewData = false;
 		this->storedCursorVisible = false;
+		this->cursorResourceId = 0;
 		this->backgroundColor = april::Color::Black;
 		this->launched = false;
 		this->activated = false;
@@ -78,12 +79,37 @@ namespace april
 
 	void WinRT_XamlApp::setCursorVisible(bool value)
 	{
-		Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = (value ? ref new CoreCursor(CoreCursorType::Arrow, 0) : nullptr);
+		this->_refreshCursor();
+	}
+
+	void WinRT_XamlApp::setCursorResourceId(unsigned int id)
+	{
+		this->cursorResourceId = id;
+		this->_refreshCursor();
 	}
 	
 	bool WinRT_XamlApp::canSuspendResume()
 	{
 		return (!this->snapped && !this->filled);
+	}
+
+	void WinRT_XamlApp::_refreshCursor()
+	{
+		if (april::window != NULL)
+		{
+			if (!april::window->isCursorVisible())
+			{
+				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = nullptr;
+			}
+			else if (this->cursorResourceId != 0)
+			{
+				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = ref new CoreCursor(CoreCursorType::Custom, this->cursorResourceId);
+			}
+			else
+			{
+				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
+			}
+		}
 	}
 
 	void WinRT_XamlApp::updateViewState()
