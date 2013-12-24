@@ -50,7 +50,7 @@ namespace april
 	{
 		this->load();
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		APRIL_OGL1_RENDERSYS->state.textureId = APRIL_OGL1_RENDERSYS->deviceState.textureId = this->textureId;
+		APRIL_OGL1_RENDERSYS->currentState.textureId = APRIL_OGL1_RENDERSYS->deviceState.textureId = this->textureId;
 		*output = new unsigned char[this->width * this->height * this->bpp];
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, *output);
 		return true;
