@@ -85,10 +85,7 @@ namespace april
 		jstring jStr;
 		for_iter (i, 0, length)
 		{
-			jStr = (jstring)env->GetObjectArrayElement(_args, i);
-			args += _JSTR_TO_HSTR(jStr);
-			// TODOa - check if this is needed
-			//env->DeleteLocalRef(jStr);
+			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
 		}
 		hlog::debug(april::logTag, "Got args:");
 		foreach (hstr, it, args)

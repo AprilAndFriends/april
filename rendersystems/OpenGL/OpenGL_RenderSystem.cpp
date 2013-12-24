@@ -218,7 +218,7 @@ namespace april
 	{
 		glClearColor(0, 0, 0, 1);
 		lastColor.set(0, 0, 0, 255);
-		glViewport(0, 0, april::window->getWidth(), april::window->getHeight());
+		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
 		// GL defaults
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
