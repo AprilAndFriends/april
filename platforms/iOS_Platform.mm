@@ -131,24 +131,7 @@ namespace april
 			
 			info.name = name; // defaults for unknown devices
 			info.displayDpi = 0;
-			int h = hround(info.displayResolution.y); // just to make sure there are no floating point errors
-			if (h == 320) // iPhone3GS
-			{
-				info.displayDpi = 163;
-			}
-			else if (h == 768) // iPad 1/2
-			{
-				info.displayDpi = 132;
-			}
-			else if (h == 640) // iPhone4+
-			{
-				info.displayDpi = 326;
-			}
-			else if (h == 1536) // iPad3+
-			{
-				info.displayDpi = 256;
-			}
-			
+
 			UIScreen* mainScreen = [UIScreen mainScreen];
 			float scale = 1.0f;
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
