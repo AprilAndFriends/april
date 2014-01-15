@@ -19,13 +19,6 @@
 
 namespace april
 {
-	static int _hexstr_to_int(chstr s)
-	{
-		int i;
-		sscanf(s.upper().c_str(), "%X", &i);
-		return i;
-	}
-	
 	// predefined colors
 	Color Color::Red(255, 0, 0);
 	Color Color::Green(0, 255, 0);
@@ -44,7 +37,7 @@ namespace april
 	Color Color::Black(0, 0, 0);
 	Color Color::Clear(0, 0, 0, 0);
 	Color Color::Blank(255, 255, 255, 0);
-		
+	
 	Color::Color()
 	{
 		this->r = 255;
@@ -52,32 +45,32 @@ namespace april
 		this->b = 255;
 		this->a = 255;
 	}
-
+	
 	Color::Color(int r, int g, int b, int a)
 	{
 		this->set(r, g, b, a);
 	}
-
+	
 	Color::Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 	{
 		this->set(r, g, b, a);
 	}
-
+	
 	Color::Color(unsigned int color)
 	{
 		this->set(color);
 	}
-
+	
 	Color::Color(chstr hex)
 	{
 		this->set(hex);
 	}
-
+	
 	Color::Color(const Color& color, unsigned char a)
 	{
 		this->set(color, a);
 	}
-
+	
 	void Color::set(int r, int g, int b, int a)
 	{
 		this->r = (unsigned char)r;
@@ -85,7 +78,7 @@ namespace april
 		this->b = (unsigned char)b;
 		this->a = (unsigned char)a;
 	}
-
+	
 	void Color::set(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 	{
 		this->r = r;
@@ -93,7 +86,7 @@ namespace april
 		this->b = b;
 		this->a = a;
 	}
-
+	
 	void Color::set(unsigned int color)
 	{
 		this->r = (unsigned char)((color >> 24) & 0xFF);
@@ -101,7 +94,7 @@ namespace april
 		this->b = (unsigned char)((color >> 8) & 0xFF);
 		this->a = (unsigned char)(color & 0xFF);
 	}
-
+	
 	void Color::set(chstr hex)
 	{
 		hstr value = (hex.starts_with("0x") ? hex(2, -1) : hex);
@@ -109,10 +102,10 @@ namespace april
 		{
 			throw hl_exception("Color format must be either 0xRRGGBBAA or 0xRRGGBB (with or without 0x prefix)");
 		}
-		this->r = (unsigned char)_hexstr_to_int(value(0, 2));
-		this->g = (unsigned char)_hexstr_to_int(value(2, 2));
-		this->b = (unsigned char)_hexstr_to_int(value(4, 2));
-		this->a = (value.size() == 8 ? (unsigned char)_hexstr_to_int(value(6, 2)) : 255);
+		this->r = (unsigned char)value(0, 2).unhex();
+		this->g = (unsigned char)value(2, 2).unhex();
+		this->b = (unsigned char)value(4, 2).unhex();
+		this->a = (value.size() == 8 ? (unsigned char)value(6, 2).unhex() : 255);
 	}
 	
 	void Color::set(const Color& color, unsigned char a)
@@ -122,12 +115,12 @@ namespace april
 		this->b = color.b;
 		this->a = a;
 	}
-
+	
 	hstr Color::hex(bool rgbOnly) const
 	{
 		return (!rgbOnly ? hsprintf("%02X%02X%02X%02X", this->r, this->g, this->b, this->a) : hsprintf("%02X%02X%02X", this->r, this->g, this->b));
 	}
-
+	
 	Color::operator unsigned int() const
 	{
 		return ((this->r << 24) | (this->g << 16) | (this->b << 8) | this->a);
@@ -149,42 +142,42 @@ namespace april
 		result += other;
 		return result;
 	}
-
+	
 	Color Color::operator-(const Color& other) const
 	{
 		Color result(*this);
 		result -= other;
 		return result;
 	}
-
+	
 	Color Color::operator*(const Color& other) const
 	{
 		Color result(*this);
 		result *= other;
 		return result;
 	}
-
+	
 	Color Color::operator/(const Color& other) const
 	{
 		Color result(*this);
 		result /= other;
 		return result;
 	}
-
+	
 	Color Color::operator*(float value) const
 	{
 		Color result(*this);
 		result *= value;
 		return result;
 	}
-
+	
 	Color Color::operator/(float value) const
 	{
 		Color result(*this);
 		result /= value;
 		return result;
 	}
-
+	
 	Color Color::operator+=(const Color& other)
 	{
 		this->r = (unsigned char)hclamp((int)this->r + other.r, 0, 255);
@@ -193,7 +186,7 @@ namespace april
 		this->a = (unsigned char)hclamp((int)this->a + other.a, 0, 255);
 		return (*this);
 	}
-
+	
 	Color Color::operator-=(const Color& other)
 	{
 		this->r = (unsigned char)hclamp((int)this->r - other.r, 0, 255);
@@ -202,7 +195,7 @@ namespace april
 		this->a = (unsigned char)hclamp((int)this->a - other.a, 0, 255);
 		return (*this);
 	}
-
+	
 	Color Color::operator*=(const Color& other)
 	{
 		this->r = (unsigned char)hclamp((int)(this->r_f() * other.r), 0, 255);
@@ -211,7 +204,7 @@ namespace april
 		this->a = (unsigned char)hclamp((int)(this->a_f() * other.a), 0, 255);
 		return (*this);
 	}
-
+	
 	Color Color::operator/=(const Color& other)
 	{
 		this->r = (unsigned char)hclamp((int)(this->r_f() / other.r), 0, 255);
@@ -220,7 +213,7 @@ namespace april
 		this->a = (unsigned char)hclamp((int)(this->a_f() / other.a), 0, 255);
 		return (*this);
 	}
-
+	
 	Color Color::operator*=(float value)
 	{
 		this->r = (unsigned char)hclamp((int)(this->r * value), 0, 255);
@@ -229,7 +222,7 @@ namespace april
 		this->a = (unsigned char)hclamp((int)(this->a * value), 0, 255);
 		return (*this);
 	}
-
+	
 	Color Color::operator/=(float value)
 	{
 		float val = 1.0f / value;
