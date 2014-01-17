@@ -639,7 +639,6 @@ namespace april
 
 	void DirectX11_RenderSystem::setViewport(grect value)
 	{
-
 		RenderSystem::setViewport(value);
 #ifdef _WINP8
 		value = WinRT::rotateViewport(value);
