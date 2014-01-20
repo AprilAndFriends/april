@@ -114,50 +114,11 @@ public class NativeInterface
 		return result;
 	}
 	
-	public static int getCpuCores()
-	{
-		return Runtime.getRuntime().availableProcessors();
-	}
-	
 	public static int getDisplayDpi()
 	{
 		DisplayMetrics metrics = new DisplayMetrics();
 		NativeInterface.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		return (int)Math.sqrt((metrics.xdpi * metrics.xdpi + metrics.ydpi * metrics.ydpi) / 2.0);
-	}
-	
-	public static int getDeviceRam()
-	{
-		int result = 128;
-		try
-		{
-			// it's not as nice a solution as MemoryInfo.totalMem, but this one is available before API level 16
-			ProcessBuilder builder = new ProcessBuilder(new String[] {"/system/bin/cat", "/proc/meminfo"});
-			builder.directory(new File("/system/bin/"));
-			builder.redirectErrorStream(true);
-			Process process = builder.start();
-			InputStream input = process.getInputStream();
-			byte[] buffer = new byte[1024];
-			String output = "";
-			while (input.read(buffer) != -1)
-			{
-				output += new String(buffer);
-			}
-			input.close();
-			int startIndex = output.indexOf("MemTotal:");
-			int endIndex = output.indexOf("\n", startIndex);
-			String memory = output.substring(startIndex, endIndex).replace("MemTotal:", "").replace("kB", "").replace(" ", "");
-			result = Math.round(Float.parseFloat(memory) / 1024);
-		}
-		catch (IOException e)
-		{
-			android.util.Log.e("april", e.toString());
-		}
-		catch (Exception e)
-		{
-			android.util.Log.e("april", e.toString());
-		}
-		return result;
 	}
 	
 	public static String getOsVersion()

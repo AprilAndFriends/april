@@ -118,6 +118,11 @@ namespace april
 		return result;
 	}
 	
+	void RenderSystem::setViewport(grect value)
+	{
+		this->viewport = value;
+	}
+
 	void RenderSystem::setOrthoProjection(grect rect)
 	{
 		// TODOa - change and improve this implementation

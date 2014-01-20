@@ -26,6 +26,9 @@
 #ifdef _OPENGL
 #include "OpenGL_RenderSystem.h"
 #endif
+#ifdef _EGL
+#include "egl.h"
+#endif
 
 #define APRIL_WIN32_WINDOW_CLASS L"AprilWin32Window"
 #define STYLE_FULLSCREEN WS_POPUP
@@ -99,6 +102,9 @@ namespace april
 		SetCursor(wc.hCursor);
 		this->setCursorVisible(true);
 		this->fpsCounter = options.fpsCounter;
+#ifdef _EGL
+		april::egl->create();
+#endif
 		return true;
 	}
 	
@@ -115,6 +121,9 @@ namespace april
 			this->hWnd = 0;
 		}
 		this->cursor = NULL;
+#ifdef _EGL
+		april::egl->destroy();
+#endif
 		return true;
 	}
 

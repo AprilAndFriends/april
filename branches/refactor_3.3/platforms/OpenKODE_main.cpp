@@ -15,7 +15,7 @@
 #include <hltypes/hstring.h>
 #include <hltypes/hlog.h>
 
-#include "main_internal.h"
+#include "main_base.h"
 #include "Window.h"
 #include "april.h"
 

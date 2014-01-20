@@ -39,6 +39,12 @@ namespace april
 
 	void OpenGLES_RenderSystem::assignWindow(Window* window)
 	{
+#ifdef _WIN32
+		if (!this->_initWin32(window))
+		{
+			return;
+		}
+#endif
 		OpenGL_RenderSystem::assignWindow(window);
 	}
 
