@@ -9,10 +9,12 @@
 
 #if defined(_ANDROID) && !defined(_OPENKODE)
 #include <jni.h>
+#include <unistd.h>
 
 #include <gtypes/Vector2.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hlog.h>
 
 #define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
 #include "androidUtilJNI.h"
@@ -31,21 +33,22 @@ namespace april
 			info.name = "android";
 			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 			// CPU cores
-			jmethodID methodGetCpuCores = env->GetStaticMethodID(classNativeInterface, "getCpuCores", _JARGS(_JINT, ));
-			info.cpuCores = (int)env->CallStaticIntMethod(classNativeInterface, methodGetCpuCores);
+			info.cpuCores = sysconf(_SC_NPROCESSORS_CONF);
 			// RAM
-			jmethodID methodGetDeviceRam = env->GetStaticMethodID(classNativeInterface, "getDeviceRam", _JARGS(_JINT, ));
-			info.ram = (int)env->CallStaticIntMethod(classNativeInterface, methodGetDeviceRam);
+			info.ram = (int)(((int64_t)sysconf(_SC_PAGESIZE) * sysconf(_SC_PHYS_PAGES)) / (1024 * 1024)); // in MB
 			// display resolution
+			// TODOa - maybe use direct Unix calls?
 			jmethodID methodGetDisplayResolution = env->GetStaticMethodID(classNativeInterface, "getDisplayResolution", _JARGS(_JOBJ, ));
 			jintArray jResolution = (jintArray)env->CallStaticObjectMethod(classNativeInterface, methodGetDisplayResolution);
 			jint dimensions[2];
 			env->GetIntArrayRegion(jResolution, 0, 2, dimensions);
-			info.displayResolution.set((float)(int)dimensions[0], (float)(int)dimensions[1]);
+			info.displayResolution.set(hroundf(dimensions[0]), hroundf(dimensions[1]));
 			// display DPI
+			// TODOa - maybe use direct Unix calls?
 			jmethodID methodGetDisplayDpi = env->GetStaticMethodID(classNativeInterface, "getDisplayDpi", _JARGS(_JINT, ));
 			info.displayDpi = (int)env->CallStaticIntMethod(classNativeInterface, methodGetDisplayDpi);
 			// locale
+			// TODOa - maybe use direct Unix calls?
 			jmethodID methodGetLocale = env->GetStaticMethodID(classNativeInterface, "getLocale", _JARGS(_JSTR, ));
 			info.locale = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetLocale));
 			// OS version

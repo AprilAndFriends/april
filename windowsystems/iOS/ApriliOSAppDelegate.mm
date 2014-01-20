@@ -12,7 +12,7 @@
 /// 
 /// Defines all functions used in aprilui.
 #import "ApriliOSAppDelegate.h"
-#import "main.h"
+#import "main_base.h"
 #import "AprilViewController.h"
 #import "EAGLView.h"
 #include "RenderSystem.h"

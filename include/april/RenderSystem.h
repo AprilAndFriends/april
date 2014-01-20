@@ -70,7 +70,6 @@ namespace april
 		HL_DEFINE_GET(Options, options, Options);
 		HL_DEFINE_GET(harray<Texture*>, textures, Textures);
 		HL_DEFINE_GET(grect, viewport, Viewport);
-		virtual HL_DEFINE_SET(grect, viewport, Viewport);
 		HL_DEFINE_GET(gmat4, modelviewMatrix, ModelviewMatrix);
 		void setModelviewMatrix(gmat4 matrix);
 		HL_DEFINE_GET(gmat4, projectionMatrix, ProjectionMatrix);
@@ -80,6 +79,7 @@ namespace april
 		void setOrthoProjection(gvec2 size);
 
 		virtual harray<DisplayMode> getSupportedDisplayModes();
+		virtual void setViewport(grect value);
 
 		virtual float getPixelOffset() = 0;
 		virtual int getMaxTextureSize() = 0;
