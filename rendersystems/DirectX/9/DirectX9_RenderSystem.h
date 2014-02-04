@@ -70,12 +70,12 @@ namespace april
 
 		void clear(bool useColor = true, bool depth = false);
 		void clear(bool depth, grect rect, Color color = Color::Clear);
-		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
-		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color);
-		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
-		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
 		Image* takeScreenshot(int bpp = 3);
 		void presentFrame();

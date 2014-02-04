@@ -32,7 +32,7 @@
 
 namespace april
 {
-	// optimizations
+	// optimizations, but they are not thread-safe
 	static PlainVertex pv[5];
 	static TexturedVertex tv[5];
 	
@@ -257,7 +257,7 @@ namespace april
 		pv[2].x = rect.x + rect.w;	pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
 		pv[3].x = rect.x;			pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
 		pv[4].x = rect.x;			pv[4].y = rect.y;			pv[4].z = 0.0f;
-		this->render(LineStrip, pv, 5, color);
+		this->render(RO_LINE_STRIP, pv, 5, color);
 	}
 
 	void RenderSystem::drawFilledRect(grect rect, Color color)
@@ -266,7 +266,7 @@ namespace april
 		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
 		pv[2].x = rect.x;			pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
 		pv[3].x = rect.x + rect.w;	pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
-		this->render(TriangleStrip, pv, 4, color);
+		this->render(RO_TRIANGLE_STRIP, pv, 4, color);
 	}
 	
 	void RenderSystem::drawTexturedRect(grect rect, grect src)
@@ -275,7 +275,7 @@ namespace april
 		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
 		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
 		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
-		this->render(TriangleStrip, tv, 4);
+		this->render(RO_TRIANGLE_STRIP, tv, 4);
 	}
 	
 	void RenderSystem::drawTexturedRect(grect rect, grect src, Color color)
@@ -284,7 +284,7 @@ namespace april
 		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
 		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
 		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
-		this->render(TriangleStrip, tv, 4, color);
+		this->render(RO_TRIANGLE_STRIP, tv, 4, color);
 	}
 	
 	void RenderSystem::presentFrame()
@@ -322,6 +322,20 @@ namespace april
 			}
 		}
 		return "";
+	}
+	
+	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int nVertices)
+	{
+		switch (renderOperation)
+		{
+		case RO_TRIANGLE_LIST:	return nVertices / 3;
+		case RO_TRIANGLE_STRIP:	return nVertices - 2;
+		case RO_TRIANGLE_FAN:	return nVertices - 2;
+		case RO_LINE_LIST:		return nVertices / 2;
+		case RO_LINE_STRIP:		return nVertices - 1;
+		case RO_POINT_LIST:		return nVertices;
+		}
+		return 0;
 	}
 	
 	void RenderSystem::_registerTexture(Texture* texture)

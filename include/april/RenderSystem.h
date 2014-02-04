@@ -113,12 +113,12 @@ namespace april
 
 		virtual void clear(bool useColor = true, bool depth = false) = 0;
 		virtual void clear(bool depth, grect rect, Color color = Color::Clear) = 0;
-		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices) = 0;
-		virtual void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color) = 0;
-		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices) = 0;
-		virtual void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color) = 0;
-		virtual void render(RenderOp renderOp, ColoredVertex* v, int nVertices) = 0;
-		virtual void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices) = 0;
+		virtual void render(RenderOperation renderOperation, PlainVertex* v, int nVertices) = 0;
+		virtual void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color) = 0;
+		virtual void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices) = 0;
+		virtual void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color) = 0;
+		virtual void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices) = 0;
+		virtual void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices) = 0;
 		
 		void drawRect(grect rect, Color color);
 		void drawFilledRect(grect rect, Color color);
@@ -157,6 +157,8 @@ namespace april
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;
 		
 		virtual void _setResolution(int w, int h, bool fullscreen) = 0; // TODO - main part should be in window class
+
+		unsigned int _numPrimitives(RenderOperation renderOperation, int nVertices);
 
 	};
 
