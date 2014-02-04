@@ -38,6 +38,32 @@ namespace april
 	
 	RenderSystem* rendersys = NULL;
 
+	RenderSystem::DisplayMode::DisplayMode(int width, int height, int refreshRate)
+	{
+		this->width = width;
+		this->height = height;
+		this->refreshRate = refreshRate;
+	}
+
+	RenderSystem::DisplayMode::~DisplayMode()
+	{
+	}
+	
+	bool RenderSystem::DisplayMode::operator==(const DisplayMode& other) const
+	{
+		return (this->width == other.width && this->height == other.height && this->refreshRate == other.refreshRate);
+	}
+
+	bool RenderSystem::DisplayMode::operator!=(const DisplayMode& other) const
+	{
+		return !(*this == other);
+	}
+	
+	hstr RenderSystem::DisplayMode::toString()
+	{
+		return hsprintf("%dx%d@%dHz", this->width, this->height, this->refreshRate);
+	}
+	
 	RenderSystem::Options::Options()
 	{
 		this->depthBuffer = false;
@@ -110,11 +136,11 @@ namespace april
 		hlog::write(april::logTag, "Resetting rendersystem.");
 	}
 
-	harray<DisplayMode> RenderSystem::getSupportedDisplayModes()
+	harray<RenderSystem::DisplayMode> RenderSystem::getSupportedDisplayModes()
 	{
-		harray<DisplayMode> result;
+		harray<RenderSystem::DisplayMode> result;
 		gvec2 resolution = april::getSystemInfo().displayResolution;
-		result += DisplayMode((int)resolution.x, (int)resolution.y, 60);
+		result += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
 		return result;
 	}
 	
@@ -336,6 +362,21 @@ namespace april
 		case RO_POINT_LIST:		return nVertices;
 		}
 		return 0;
+	}
+	
+	// TODOa - make protected member of RenderSystem
+	unsigned int RenderSystem::_limitPrimitives(RenderOperation renderOperation, int nVertices)
+	{
+		switch (renderOperation)
+		{
+		case RO_TRIANGLE_LIST:	return nVertices / 3 * 3;
+		case RO_TRIANGLE_STRIP:	return nVertices;
+		case RO_TRIANGLE_FAN:	return nVertices;
+		case RO_LINE_LIST:		return nVertices / 2 * 2;
+		case RO_LINE_STRIP:		return nVertices;
+		case RO_POINT_LIST:		return nVertices;
+		}
+		return nVertices;
 	}
 	
 	void RenderSystem::_registerTexture(Texture* texture)

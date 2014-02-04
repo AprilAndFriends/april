@@ -51,19 +51,6 @@ namespace april
 		CM_UNDEFINED = 0x7FFFFFFF
 	};
 
-	struct aprilExport DisplayMode
-	{
-		int width;
-		int height;
-		int refreshRate;
-
-		bool operator==(const DisplayMode& other) const;
-		bool operator!=(const DisplayMode& other) const;
-
-		DisplayMode(int width, int height, int refreshRate);
-
-	};
-	
 	struct aprilExport PlainVertex : public gvec3
 	{
 	public:

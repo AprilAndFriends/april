@@ -72,21 +72,6 @@ namespace april
 	// TODOa - put in state class
 	static Color lastColor = Color::Black;
 
-	// TODOa - make protected member of RenderSystem
-	unsigned int _limitPrimitives(RenderOperation renderOperation, int nVertices)
-	{
-		switch (renderOperation)
-		{
-		case TriangleList:	return nVertices / 3 * 3;
-		case TriangleStrip:	return nVertices;
-		case TriangleFan:	return nVertices;
-		case LineList:		return nVertices / 2 * 2;
-		case LineStrip:		return nVertices;
-		case PointList:		return nVertices;
-		}
-		return nVertices;
-	}
-	
 	// translation from abstract render ops to gl's render ops
 	int gl_render_ops[]=
 	{
@@ -401,7 +386,7 @@ namespace april
 		}
 		switch (textureColorMode)
 		{
-		case CM_BM_NORMAL:
+		case CM_DEFAULT:
 		case CM_MULTIPLY:
 			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
@@ -578,7 +563,7 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(PlainVertex), v);
 			glDrawArrays(gl_render_ops[renderOperation], 0, size);
@@ -604,7 +589,7 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(PlainVertex), v);
 			glDrawArrays(gl_render_ops[renderOperation], 0, size);
@@ -628,7 +613,7 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(TexturedVertex), v);
 			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
@@ -653,7 +638,7 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(TexturedVertex), v);
 			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
@@ -684,7 +669,7 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(ColoredVertex), v);
 			this->_setColorPointer(sizeof(ColoredVertex), &v->color);
@@ -713,7 +698,7 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(ColoredTexturedVertex), v);
 			this->_setColorPointer(sizeof(ColoredTexturedVertex), &v->color);

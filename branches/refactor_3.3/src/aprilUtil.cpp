@@ -15,23 +15,6 @@
 
 namespace april
 {
-	DisplayMode::DisplayMode(int width, int height, int refreshRate)
-	{
-		this->width = width;
-		this->height = height;
-		this->refreshRate = refreshRate;
-	}
-
-	bool DisplayMode::operator==(const DisplayMode& other) const
-	{
-		return (this->width == other.width && this->height == other.height && this->refreshRate == other.refreshRate);
-	}
-
-	bool DisplayMode::operator!=(const DisplayMode& other) const
-	{
-		return !(*this == other);
-	}
-	
 	void PlainVertex::operator=(const gvec3& v)
 	{
 		this->x = v.x;
