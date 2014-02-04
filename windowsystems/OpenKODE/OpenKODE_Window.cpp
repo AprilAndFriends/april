@@ -376,16 +376,16 @@ namespace april
 			{
 				if (evt->data.input.index < KD_IOGROUP_CHARS) // because key and char events are separate
 				{
-					this->queueKeyEvent(april::Window::AKEYEVT_DOWN, kd2april(evt->data.input.index), 0);
+					this->queueKeyEvent(april::Window::KEY_DOWN, kd2april(evt->data.input.index), 0);
 				}
 				else
 				{
-					this->queueKeyEvent(april::Window::AKEYEVT_DOWN, april::AK_NONE, evt->data.input.index - KD_IOGROUP_CHARS);
+					this->queueKeyEvent(april::Window::KEY_DOWN, april::AK_NONE, evt->data.input.index - KD_IOGROUP_CHARS);
 				}
 			}
 			else
 			{
-				this->queueKeyEvent(april::Window::AKEYEVT_UP, kd2april(evt->data.input.index), 0);
+				this->queueKeyEvent(april::Window::KEY_UP, kd2april(evt->data.input.index), 0);
 			}
 			return true;
 		case KD_EVENT_INPUT_POINTER:
@@ -397,7 +397,7 @@ namespace april
 					this->setInputMode(MOUSE);
 					if (index == KD_INPUT_POINTER_X || index == KD_INPUT_POINTER_Y)
 					{
-						this->queueMouseEvent(Window::AMOUSEEVT_MOVE, pos, AK_NONE);
+						this->queueMouseEvent(Window::MOUSE_MOVE, pos, AK_NONE);
 						this->cursorPosition = pos;
 					}
 					else if (index == KD_INPUT_POINTER_SELECT)
@@ -411,7 +411,7 @@ namespace april
 						{
 							if (state[i] != this->kdTouches[i])
 							{							
-								this->queueMouseEvent(state[i] ? Window::AMOUSEEVT_DOWN : Window::AMOUSEEVT_UP, pos, (i == 0 ? AK_LBUTTON : (i == 1 ? AK_RBUTTON : AK_MBUTTON)));
+								this->queueMouseEvent(state[i] ? Window::MOUSE_DOWN : Window::MOUSE_UP, pos, (i == 0 ? AK_LBUTTON : (i == 1 ? AK_RBUTTON : AK_MBUTTON)));
 							}
 						}
 						memcpy(this->kdTouches, state, 3 * sizeof(bool));
@@ -421,7 +421,7 @@ namespace april
 					{
 						int deltaV = -(short)(evt->data.inputpointer.select >> 16);
 						int deltaH = -(short)(evt->data.inputpointer.select & 0xFFFF);
-						this->queueMouseEvent(Window::AMOUSEEVT_SCROLL, gvec2(deltaH * 0.2f, deltaV * 0.2f), AK_NONE);
+						this->queueMouseEvent(Window::MOUSE_SCROLL, gvec2(deltaH * 0.2f, deltaV * 0.2f), AK_NONE);
 					}
 				}
 				else
@@ -437,7 +437,7 @@ namespace april
 							touchIndex = this->_getAprilTouchIndex(i);
 							if (touchIndex >= 0)
 							{
-								this->queueTouchEvent(Window::AMOUSEEVT_MOVE, pos, touchIndex);
+								this->queueTouchEvent(Window::MOUSE_MOVE, pos, touchIndex);
 							}
 							break;
 						}
@@ -449,7 +449,7 @@ namespace april
 								touchIndex = this->_getAprilTouchIndex(i);
 								if (touchIndex >= 0)
 								{
-									this->queueTouchEvent(Window::AMOUSEEVT_DOWN, pos, touchIndex);
+									this->queueTouchEvent(Window::MOUSE_DOWN, pos, touchIndex);
 								}
 							}
 							else
@@ -457,7 +457,7 @@ namespace april
 								touchIndex = this->_getAprilTouchIndex(i);
 								if (touchIndex >= 0)
 								{
-									this->queueTouchEvent(Window::AMOUSEEVT_UP, pos, touchIndex);
+									this->queueTouchEvent(Window::MOUSE_UP, pos, touchIndex);
 								}
 								this->kdTouches[i] = false;
 							}

@@ -56,14 +56,14 @@ namespace april
 		{
 			FILTER_NEAREST = 1,
 			FILTER_LINEAR = 2,
-			FILTER_UNDEFINED = 505
+			FILTER_UNDEFINED = 0x7FFFFFFF
 		};
 
 		enum AddressMode
 		{
 			ADDRESS_WRAP = 0,
 			ADDRESS_CLAMP = 1,
-			ADDRESS_UNDEFINED = 505
+			ADDRESS_UNDEFINED = 0x7FFFFFFF
 		};
 	
 		Texture();

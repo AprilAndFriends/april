@@ -222,8 +222,8 @@ namespace april
 		this->_setClientState(GL_COLOR_ARRAY, this->deviceState.colorEnabled);
 		glColor4f(this->deviceState.systemColor.r_f(), this->deviceState.systemColor.g_f(), this->deviceState.systemColor.b_f(), this->deviceState.systemColor.a_f());
 		glBindTexture(GL_TEXTURE_2D, this->deviceState.textureId);
-		this->currentState.textureFilter = april::Texture::FILTER_LINEAR;
-		this->currentState.textureAddressMode = april::Texture::ADDRESS_WRAP;
+		this->currentState.textureFilter = april::Texture::FILTER_UNDEFINED;
+		this->currentState.textureAddressMode = april::Texture::ADDRESS_UNDEFINED;
 		this->currentState.blendMode = april::BM_DEFAULT;
 		this->currentState.colorMode = april::CM_DEFAULT;
 	}
@@ -425,6 +425,7 @@ namespace april
 
 	void OpenGL_RenderSystem::_setTextureFilter(Texture::Filter textureFilter)
 	{
+		this->textureFilter = textureFilter;
 		switch (textureFilter)
 		{
 		case Texture::FILTER_LINEAR:
@@ -439,7 +440,6 @@ namespace april
 			hlog::warn(april::logTag, "Trying to set unsupported texture filter!");
 			break;
 		}
-		this->textureFilter = textureFilter;
 	}
 
 	void OpenGL_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
@@ -449,6 +449,7 @@ namespace april
 
 	void OpenGL_RenderSystem::_setTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
+		this->textureAddressMode = textureAddressMode;
 		switch (textureAddressMode)
 		{
 		case Texture::ADDRESS_WRAP:
@@ -463,7 +464,6 @@ namespace april
 			hlog::warn(april::logTag, "Trying to set unsupported texture address mode!");
 			break;
 		}
-		this->textureAddressMode = textureAddressMode;
 	}
 
 	void OpenGL_RenderSystem::setTexture(Texture* texture)
