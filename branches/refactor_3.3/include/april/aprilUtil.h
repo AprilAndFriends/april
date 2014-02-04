@@ -21,36 +21,34 @@
 
 namespace april
 {
-	// TODOa - rename
-	// render operations
-	enum RenderOp
+	enum RenderOperation
 	{
-		TriangleList = 1,
-		TriangleStrip = 2,
-		TriangleFan = 3,
-		LineList = 4,
-		LineStrip = 5,
-		PointList = 6,
-		RENDER_OP_UNDEFINED = 0x7FFFFFFF
+		RO_TRIANGLE_LIST = 1,
+		RO_TRIANGLE_STRIP = 2,
+		RO_TRIANGLE_FAN = 3,
+		RO_LINE_LIST = 4,
+		RO_LINE_STRIP = 5,
+		RO_POINT_LIST = 6,
+		RO_UNDEFINED = 0x7FFFFFFF
 	};
 
 	enum BlendMode
 	{
-		DEFAULT = 0,
-		ALPHA_BLEND = 1,
-		ADD = 2,
-		SUBTRACT = 3,
-		OVERWRITE = 4,
-		BLEND_MODE_UNDEFINED = 0x7FFFFFFF
+		BM_DEFAULT = 0,
+		BM_ALPHA = 1,
+		BM_ADD = 2,
+		BM_SUBTRACT = 3,
+		BM_OVERWRITE = 4,
+		BM_UNDEFINED = 0x7FFFFFFF
 	};
 
 	enum ColorMode
 	{
-		NORMAL = 0,
-		MULTIPLY = 1,
-		LERP = 2,
-		ALPHA_MAP = 3,
-		COLOR_MODE_UNDEFINED = 0x7FFFFFFF
+		CM_DEFAULT = 0,
+		CM_MULTIPLY = 1,
+		CM_LERP = 2,
+		CM_ALPHA_MAP = 3,
+		CM_UNDEFINED = 0x7FFFFFFF
 	};
 
 	struct aprilExport DisplayMode

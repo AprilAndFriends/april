@@ -58,21 +58,6 @@ namespace april
 		D3DPT_POINTLIST,		// ROP_POINT_LIST
 	};
 
-	// TODOa - make protected member of RenderSystem
-	unsigned int _numPrimitives(RenderOp renderOp, int nVertices)
-	{
-		switch (renderOp)
-		{
-		case TriangleList:	return nVertices / 3;
-		case TriangleStrip:	return nVertices - 2;
-		case TriangleFan:	return nVertices - 2;
-		case LineList:		return nVertices / 2;
-		case LineStrip:		return nVertices - 1;
-		case PointList:		return nVertices;
-		}
-		return 0;
-	}
-	
 	DirectX9_RenderSystem::DirectX9_RenderSystem() : DirectX_RenderSystem(),
 		textureCoordinatesEnabled(false), colorEnabled(false), d3d(NULL), d3dDevice(NULL),
 		activeTexture(NULL), renderTarget(NULL), backBuffer(NULL)
@@ -299,8 +284,8 @@ namespace april
 	{
 		switch (textureBlendMode)
 		{
-		case DEFAULT:
-		case ALPHA_BLEND:
+		case BM_DEFAULT:
+		case BM_ALPHA:
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
@@ -308,7 +293,7 @@ namespace april
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 			break;
-		case ADD:
+		case BM_ADD:
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
@@ -316,7 +301,7 @@ namespace april
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 			break;
-		case SUBTRACT:
+		case BM_SUBTRACT:
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
@@ -324,7 +309,7 @@ namespace april
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 			break;
-		case OVERWRITE:
+		case BM_OVERWRITE:
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_ZERO);
@@ -342,8 +327,8 @@ namespace april
 	{
 		switch (textureColorMode)
 		{
-		case NORMAL:
-		case MULTIPLY:
+		case CM_DEFAULT:
+		case CM_MULTIPLY:
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
@@ -351,7 +336,7 @@ namespace april
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 			break;
-		case LERP:
+		case CM_LERP:
 			this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(alpha, alpha, alpha, alpha));
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
@@ -360,7 +345,7 @@ namespace april
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
 			break;
-		case ALPHA_MAP:
+		case CM_ALPHA_MAP:
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
@@ -571,17 +556,17 @@ namespace april
 		this->d3dDevice->Clear(1, &area, flags, D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b), 1.0f, 0);
 	}
 	
-	void DirectX9_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
+	void DirectX9_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
 		if (this->activeTexture != NULL)
 		{
 			this->setTexture(NULL);
 		}
 		this->d3dDevice->SetFVF(PLAIN_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], _numPrimitives(renderOp, nVertices), v, sizeof(PlainVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(PlainVertex));
 	}
 
-	void DirectX9_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
+	void DirectX9_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
 	{
 		if (this->activeTexture != NULL)
 		{
@@ -597,20 +582,20 @@ namespace april
 			cv[i].color = colorDx9;
 		}
 		this->d3dDevice->SetFVF(COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], _numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), cv, sizeof(ColoredVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete [] cv;
 		}
 	}
 	
-	void DirectX9_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
+	void DirectX9_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
 		this->d3dDevice->SetFVF(TEX_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], _numPrimitives(renderOp, nVertices), v, sizeof(TexturedVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(TexturedVertex));
 	}
 
-	void DirectX9_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
+	void DirectX9_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
 	{
 		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
@@ -624,14 +609,14 @@ namespace april
 			ctv[i].color = colorDx9;
 		}
 		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], _numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), ctv, sizeof(ColoredTexturedVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete [] ctv;
 		}
 	}
 
-	void DirectX9_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
+	void DirectX9_RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
 		if (this->activeTexture != NULL)
 		{
@@ -644,14 +629,14 @@ namespace april
 			cv[i].color = UINT_RGBA_TO_ARGB(v[i].color);
 		}
 		this->d3dDevice->SetFVF(COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], _numPrimitives(renderOp, nVertices), cv, sizeof(ColoredVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), cv, sizeof(ColoredVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete [] cv;
 		}
 	}
 
-	void DirectX9_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
+	void DirectX9_RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
 		memcpy(ctv, v, sizeof(ColoredTexturedVertex) * nVertices);
@@ -660,7 +645,7 @@ namespace april
 			ctv[i].color = UINT_RGBA_TO_ARGB(v[i].color);
 		}
 		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOp], _numPrimitives(renderOp, nVertices), ctv, sizeof(ColoredTexturedVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), ctv, sizeof(ColoredTexturedVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete [] ctv;
