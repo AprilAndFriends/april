@@ -261,7 +261,7 @@ namespace april
 		unsigned char a1;
 		int i;
 		int j;
-		// TODOa - should be checked on different BPPs and data access better
+		// TODOaa - should be checked on different BPPs and data access better
 		// the following iteration blocks are very similar, but for performance reasons they
 		// have been duplicated instead of putting everything into one block with if branches
 		if (this->bpp == 4 && dataBpp == 4)
@@ -393,7 +393,7 @@ namespace april
 		int y1;
 		int i;
 		int j;
-		// TODOa - should be checked on different BPPs and data access better
+		// TODOaa - should be checked on different BPPs and data access better
 		// the following iteration blocks are very similar, but for performance reasons they
 		// have been duplicated instead of putting everything into one block with if branches
 		if (this->bpp == 4 && dataBpp == 4)

@@ -220,7 +220,6 @@ namespace april
 		// vertex color blending
 		this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 		this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-		this->setTextureFilter(this->textureFilter);
 	}
 
 	int DirectX9_RenderSystem::getMaxTextureSize()
@@ -361,6 +360,7 @@ namespace april
 
 	void DirectX9_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
 	{
+		this->textureFilter = textureFilter;
 		switch (textureFilter)
 		{
 		case Texture::FILTER_LINEAR:
@@ -375,11 +375,11 @@ namespace april
 			hlog::warn(april::logTag, "Trying to set unsupported texture filter!");
 			break;
 		}
-		this->textureFilter = textureFilter;
 	}
 
 	void DirectX9_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
+		this->textureAddressMode = textureAddressMode;
 		switch (textureAddressMode)
 		{
 		case Texture::ADDRESS_WRAP:
@@ -394,7 +394,6 @@ namespace april
 			hlog::warn(april::logTag, "Trying to set unsupported texture address mode!");
 			break;
 		}
-		this->textureAddressMode = textureAddressMode;
 	}
 
 	void DirectX9_RenderSystem::setTexture(Texture* texture)

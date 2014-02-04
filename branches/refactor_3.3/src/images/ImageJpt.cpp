@@ -14,7 +14,7 @@
 
 namespace april
 {
-	// TODOa - this could be optimized to immediately create a 4-byte JPG or with a substream or stream-reference class or
+	// TODOaa - this could be optimized to immediately create a 4-byte JPG or with a substream or stream-reference class or
 	// by using _loadJpg() and _loadPng() implementations that take a size parameter
 	Image* Image::_loadJpt(hsbase& stream)
 	{

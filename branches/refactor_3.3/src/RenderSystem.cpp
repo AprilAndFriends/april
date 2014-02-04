@@ -92,8 +92,8 @@ namespace april
 		this->name = "Generic";
 		this->created = false;
 		this->state = NULL;
-		this->textureFilter = Texture::FILTER_LINEAR;
-		this->textureAddressMode = Texture::ADDRESS_WRAP;
+		this->textureFilter = Texture::FILTER_UNDEFINED;
+		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
 	
 	RenderSystem::~RenderSystem()
@@ -151,7 +151,7 @@ namespace april
 
 	void RenderSystem::setOrthoProjection(grect rect)
 	{
-		// TODOa - change and improve this implementation
+		// TODOaa - change and improve this implementation
 		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
 		this->orthoProjection = rect;
 		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
@@ -364,7 +364,6 @@ namespace april
 		return 0;
 	}
 	
-	// TODOa - make protected member of RenderSystem
 	unsigned int RenderSystem::_limitPrimitives(RenderOperation renderOperation, int nVertices)
 	{
 		switch (renderOperation)
