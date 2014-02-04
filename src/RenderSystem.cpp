@@ -56,7 +56,7 @@ namespace april
 
 	bool RenderSystem::DisplayMode::operator!=(const DisplayMode& other) const
 	{
-		return !(*this == other);
+		return (this->width != other.width || this->height != other.height || this->refreshRate != other.refreshRate);
 	}
 	
 	hstr RenderSystem::DisplayMode::toString()
