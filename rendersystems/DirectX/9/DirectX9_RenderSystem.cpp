@@ -234,7 +234,7 @@ namespace april
 		return caps.MaxTextureWidth;
 	}
 
-	harray<DisplayMode> DirectX9_RenderSystem::getSupportedDisplayModes()
+	harray<RenderSystem::DisplayMode> DirectX9_RenderSystem::getSupportedDisplayModes()
 	{
 		if (this->supportedDisplayModes.size() == 0)
 		{
@@ -256,7 +256,7 @@ namespace april
 				hr = d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
 				if (hr == D3D_OK) 
 				{
-					this->supportedDisplayModes += DisplayMode(displayMode.Width, displayMode.Height, displayMode.RefreshRate);
+					this->supportedDisplayModes += RenderSystem::DisplayMode(displayMode.Width, displayMode.Height, displayMode.RefreshRate);
 				}
 			}
 			if (this->d3d == NULL)

@@ -46,6 +46,23 @@ namespace april
 		friend class Texture;
 		friend class Window;
 
+		struct aprilExport DisplayMode
+		{
+		public:
+			int width;
+			int height;
+			int refreshRate;
+
+			DisplayMode(int width, int height, int refreshRate);
+			~DisplayMode();
+
+			bool operator==(const DisplayMode& other) const;
+			bool operator!=(const DisplayMode& other) const;
+
+			hstr toString();
+
+		};
+	
 		struct aprilExport Options
 		{
 		public:
@@ -159,6 +176,7 @@ namespace april
 		virtual void _setResolution(int w, int h, bool fullscreen) = 0; // TODO - main part should be in window class
 
 		unsigned int _numPrimitives(RenderOperation renderOperation, int nVertices);
+		unsigned int _limitPrimitives(RenderOperation renderOperation, int nVertices);
 
 	};
 
