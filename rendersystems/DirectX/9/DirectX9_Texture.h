@@ -30,9 +30,7 @@ namespace april
 	public:
 		friend class DirectX9_RenderSystem;
 
-		DirectX9_Texture(chstr filename);
-		DirectX9_Texture(int w, int h, unsigned char* rgba);
-		DirectX9_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
+		DirectX9_Texture();
 		~DirectX9_Texture();
 		bool load();
 		void unload();
@@ -54,11 +52,12 @@ namespace april
 		bool copyPixelData(unsigned char** output);
 		void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 
-		void restore(); // TODO - currently only a hack for rendertarget textures
+		void restore(); // TODOa - currently only a hack for rendertarget textures
 
 	protected:
 		IDirect3DSurface9* d3dSurface;
 		IDirect3DTexture9* d3dTexture;
+		D3DFORMAT d3dFormat;
 		bool renderTarget;
 
 		enum LOCK_RESULT
@@ -67,6 +66,11 @@ namespace april
 			LR_RENDERTARGET,
 			LR_FAILED
 		};
+
+		bool _create(chstr filename, Type type);
+		bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
+		bool _create(int w, int h, Color color, Image::Format format, Type type);
+		void _assignFormat();
 
 		IDirect3DTexture9* _getTexture() { return this->d3dTexture; }
 		IDirect3DSurface9* _getSurface();

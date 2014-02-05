@@ -490,21 +490,11 @@ namespace april
 		this->reset();
 	}
 
-	Texture* DirectX9_RenderSystem::_createTexture(chstr filename)
+	Texture* DirectX9_RenderSystem::_createTexture()
 	{
-		return new DirectX9_Texture(filename);
+		return new DirectX9_Texture();
 	}
 
-	Texture* DirectX9_RenderSystem::_createTexture(int w, int h, unsigned char* rgba)
-	{
-		return new DirectX9_Texture(w, h, rgba);
-	}
-	
-	Texture* DirectX9_RenderSystem::_createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
-	{
-		return new DirectX9_Texture(w, h, format, type, color);
-	}
-	
 	PixelShader* DirectX9_RenderSystem::createPixelShader()
 	{
 		return new DirectX9_PixelShader();
@@ -659,6 +649,32 @@ namespace april
 	void DirectX9_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
 		this->d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)matrix.data);
+	}
+
+	Image::Format DirectX9_RenderSystem::getNativeTextureFormat(Image::Format format)
+	{
+		switch (format)
+		{
+		case Image::FORMAT_RGBA:
+		case Image::FORMAT_ARGB:
+		case Image::FORMAT_BGRA:
+		case Image::FORMAT_ABGR:
+			return Image::FORMAT_BGRA;
+		case Image::FORMAT_RGBX:
+		case Image::FORMAT_XRGB:
+		case Image::FORMAT_BGRX:
+		case Image::FORMAT_XBGR:
+		case Image::FORMAT_RGB:
+		case Image::FORMAT_BGR:
+			return Image::FORMAT_BGRX;
+		case Image::FORMAT_ALPHA:
+			return Image::FORMAT_ALPHA;
+		case Image::FORMAT_GRAYSCALE:
+			return Image::FORMAT_GRAYSCALE;
+		case Image::FORMAT_PALETTE:
+			return Image::FORMAT_PALETTE;
+		}
+		return Image::FORMAT_INVALID;
 	}
 
 	Image* DirectX9_RenderSystem::takeScreenshot(int bpp)

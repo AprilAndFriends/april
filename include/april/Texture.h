@@ -21,8 +21,9 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
-#include "Color.h"
 #include "aprilExport.h"
+#include "Color.h"
+#include "Image.h"
 
 namespace april
 {
@@ -35,21 +36,12 @@ namespace april
 
 		enum Type
 		{
-			TYPE_NORMAL = 1,
-			TYPE_RENDER_TARGET = 2
-		};
-
-		enum Format
-		{
-			FORMAT_INVALID = 0,
-			FORMAT_ARGB = 1,
-			FORMAT_RGB = 2,
-			//FORMAT_RGBA = 3, // TODO - WTF, this isn't supported!
-			FORMAT_ALPHA = 4,
-			FORMAT_BGRA = 5 // TODO - only supported in OpenGL for now
-			/*, // TODO
-			FORMAT_PALETTE = 5,
-			FORMAT_MONOCHROME = 6*/
+			/// @brief Cannot be modified. Texture with manual data will have a copy of the data in RAM.
+			TYPE_IMMUTABLE = 1,
+			/// @brief Resides in RAM and on GPU, can be modified. Best used for manually created textures or loaded from files which will be modified.
+			TYPE_MANAGED = 2,
+			/// @brief Used for feeding the GPU texture data constantly (e.g. video). It has no local RAM copy for when the rendering context is lost.
+			TYPE_VOLATILE = 3
 		};
 
 		enum Filter
@@ -72,7 +64,7 @@ namespace april
 		virtual void unload() = 0;
 
 		HL_DEFINE_GET(hstr, filename, Filename);
-		HL_DEFINE_GET(Format, format, Format);
+		HL_DEFINE_GET(Image::Format, format, Format);
 		HL_DEFINE_GETSET(Filter, filter, Filter);
 		HL_DEFINE_GETSET(AddressMode, addressMode, AddressMode);
 		int getWidth();
@@ -110,19 +102,25 @@ namespace april
 		void stretchBlit(grect destination, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
 
 		virtual bool copyPixelData(unsigned char** output) { return false; }
-		
+
 	protected:
 		hstr filename;
-		Format format;
+		Type type;
+		Image::Format format;
 		int width;
 		int height;
-		int bpp;
+		int bpp; // TODOaa - maybe remove this and use only "getFormatBpp(format)"?
 		Filter filter;
 		AddressMode addressMode;
+		unsigned char* data;
+
+		virtual bool _create(chstr filename, Type type);
+		virtual bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
+		virtual bool _create(int w, int h, Color color, Image::Format format, Type type);
 
 		hstr _getInternalName();
 
-		// TODO - these may currently not work well with anything else than DirectX9
+		// TODOaa - these may currently not work well with anything else than DirectX9
 		void _blit(unsigned char* thisData, int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void _stretchBlit(unsigned char* thisData, int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 

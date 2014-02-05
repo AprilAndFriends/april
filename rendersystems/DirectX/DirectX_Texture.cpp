@@ -9,7 +9,6 @@
 /// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #ifdef _DIRECTX
-
 #include "DirectX_Texture.h"
 
 namespace april

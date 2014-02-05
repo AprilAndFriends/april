@@ -44,8 +44,8 @@ namespace april
     {
         return (x > 0) && ((x & (x - 1)) == 0);
     }
-    
-	OpenGL_Texture::OpenGL_Texture(chstr filename) : Texture()
+
+	OpenGL_Texture::OpenGL_Texture(chstr filename, Type type) : Texture(type)
 	{
 		this->format = FORMAT_ARGB;
 		this->width = 0;
@@ -57,7 +57,7 @@ namespace april
 		hlog::write(april::logTag, "Creating GL texture: " + this->_getInternalName());
 	}
 
-	OpenGL_Texture::OpenGL_Texture(int w, int h, unsigned char* rgba) : Texture()
+	OpenGL_Texture::OpenGL_Texture(int w, int h, unsigned char* data, Format format, Type type) : Texture(type)
 	{
 		hlog::write(april::logTag, "Creating user-defined GL texture.");
 		this->format = FORMAT_ARGB;
@@ -80,7 +80,7 @@ namespace april
 		}
 	}
 
-	OpenGL_Texture::OpenGL_Texture(int w, int h, Format format, Type type, Color color) : Texture()
+	OpenGL_Texture::OpenGL_Texture(int w, int h, Color color, Format format, Type type) : Texture(type)
 	{
 		hlog::writef(april::logTag, "Creating empty OpenGL texture (%d x %d).", w, h);
 		this->format = format;
