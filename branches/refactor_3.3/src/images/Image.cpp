@@ -10,15 +10,43 @@
 
 #include <string.h>
 
+#include <hltypes/hstring.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
 
+#include "april.h"
+#include "Color.h"
 #include "Image.h"
 #include "RenderSystem.h"
 
 #ifdef __APPLE__
 #include <TargetConditionals.h>
 #endif
+
+#define CHECK_RIGHT_SHIFT_FORMATS(srcFormat, destFormat) \
+	(((srcFormat) == FORMAT_RGBA || (srcFormat) == FORMAT_RGBX) && ((destFormat) == FORMAT_ARGB || (destFormat) == FORMAT_XRGB) || \
+	((srcFormat) == FORMAT_BGRA || (srcFormat) == FORMAT_BGRX) && ((destFormat) == FORMAT_ABGR || (destFormat) == FORMAT_XBGR))
+#define CHECK_LEFT_SHIFT_FORMATS(srcFormat, destFormat) \
+	(((srcFormat) == FORMAT_ARGB || (srcFormat) == FORMAT_XRGB) && ((destFormat) == FORMAT_RGBA || (destFormat) == FORMAT_RGBX) || \
+	((srcFormat) == FORMAT_ABGR || (srcFormat) == FORMAT_XBGR) && ((destFormat) == FORMAT_BGRA || (destFormat) == FORMAT_BGRX))
+#define CHECK_INVERT_ORDER_FORMATS(srcFormat, destFormat) \
+	(((srcFormat) == FORMAT_RGBA || (srcFormat) == FORMAT_ARGB || (srcFormat) == FORMAT_RGBX || (srcFormat) == FORMAT_XRGB) && \
+	((destFormat) == FORMAT_BGRA || (destFormat) == FORMAT_ABGR || (destFormat) == FORMAT_BGRX || (destFormat) == FORMAT_XBGR) || \
+	((srcFormat) == FORMAT_BGRA || (srcFormat) == FORMAT_ABGR || (srcFormat) == FORMAT_BGRX || (srcFormat) == FORMAT_XBGR) && \
+	((destFormat) == FORMAT_RGBA || (destFormat) == FORMAT_ARGB || (destFormat) == FORMAT_RGBX || (destFormat) == FORMAT_XRGB))
+#define CHECK_COPY_ALPHA_FORMATS(srcFormat, destFormat) \
+	(((srcFormat) == FORMAT_RGBA || (srcFormat) == FORMAT_ARGB || (srcFormat) == FORMAT_BGRA || (srcFormat) == FORMAT_ABGR) && \
+	((destFormat) == FORMAT_RGBA || (destFormat) == FORMAT_ARGB || (destFormat) == FORMAT_BGRA || (destFormat) == FORMAT_ABGR))
+
+#define RIGHT_SHIFT(value) ((value) >> 8)
+#define RIGHT_SHIFT_WITH_ALPHA(value) (((value) >> 8) | ((value) << 24))
+#define LEFT_SHIFT(value) ((value) << 8)
+#define LEFT_SHIFT_WITH_ALPHA(value) (((value) << 8) | ((value) >> 24))
+#define INVERTED_RIGHT_SHIFT(value) (((((value) & 0xFF000000 >> 16) | ((value) & 0xFF00 << 16) | ((value) & 0xFF0000))) >> 8)
+#define INVERTED_RIGHT_SHIFT_WITH_ALPHA(value) (((((value) & 0xFF000000 >> 16) | ((value) & 0xFF00 << 16) | ((value) & 0xFF0000)) >> 8) | ((value) << 24))
+#define INVERTED_LEFT_SHIFT(value) ((((value) & 0xFF0000 >> 16) | ((value) & 0xFF << 16) | ((value) & 0xFF00)) << 8)
+#define INVERTED_LEFT_SHIFT_WITH_ALPHA(value) (((((value) & 0xFF0000 >> 16) | ((value) & 0xFF << 16) | ((value) & 0xFF00)) << 8) | ((value) >> 24))
 
 namespace april
 {
@@ -32,7 +60,7 @@ namespace april
 		this->w = 0;
 		this->h = 0;
 		this->bpp = 0;
-		this->format = april::Image::FORMAT_UNDEFINED;
+		this->format = FORMAT_INVALID;
 		this->compressedSize = 0;
 	}
 	
@@ -74,7 +102,6 @@ namespace april
 		int index = x + y * w;
 		if (this->bpp >= 3)
 		{
-
 			this->data[index * this->bpp] = c.r;
 			this->data[index * this->bpp + 1] = c.g;
 			this->data[index * this->bpp + 2] = c.b;
@@ -188,7 +215,7 @@ namespace april
 	void Image::copyPixels(void* output, Format _format)
 	{
 		// TODO - hacky. input and output formats can be different, fix this in the future
-		if (_format == Image::FORMAT_BGRA)
+		if (_format == FORMAT_BGRA)
 		{
 			unsigned char* o = (unsigned char*)output;
 			unsigned char* i = data;
@@ -204,7 +231,7 @@ namespace april
 				}
 			}
 		}
-		else if (_format == Image::FORMAT_BGR)
+		else if (_format == FORMAT_BGR)
 		{
 			unsigned char* o = (unsigned char*)output;
 			unsigned char* i = data;
@@ -453,6 +480,260 @@ namespace april
 			img->setPixels(0, 0, w, h, color);
 		}
 		return img;
+	}
+	
+	int Image::getFormatBpp(Image::Format format)
+	{
+		switch (format)
+		{
+		case FORMAT_RGBA:	return 4;
+		case FORMAT_ARGB:	return 4;
+		case FORMAT_BGRA:	return 4;
+		case FORMAT_ABGR:	return 4;
+		case FORMAT_RGBX:	return 4;
+		case FORMAT_XRGB:	return 4;
+		case FORMAT_BGRX:	return 4;
+		case FORMAT_XBGR:	return 4;
+		case FORMAT_RGB:	return 3;
+		case FORMAT_BGR:	return 3;
+		case FORMAT_ALPHA:	return 1;
+		}
+		return 0;
+	}
+	
+	bool Image::convertToFormat(unsigned char* srcData, unsigned char** destData, int w, int h, Image::Format srcFormat, Image::Format destFormat)
+	{
+		if (*destData != NULL)
+		{
+			hlog::error(april::logTag, "The destination data pointer is not NULL!");
+			return false;
+		}
+		if (srcFormat == destFormat)
+		{
+			hlog::warn(april::logTag, "The source format's and destination format's are the same!");
+			return false;
+		}
+		int srcBpp = Image::getFormatBpp(srcFormat);
+		if (srcBpp == 0)
+		{
+			hlog::error(april::logTag, "The source format's BPP is not supported!");
+			return false;
+		}
+		int destBpp = Image::getFormatBpp(destFormat);
+		if (destBpp == 0)
+		{
+			hlog::error(april::logTag, "The destination format's BPP is not supported!");
+			return false;
+		}
+		if (srcBpp != destBpp)
+		{
+			hlog::error(april::logTag, "The source format's and destination format's BPP are different!");
+			return false;
+		}
+		if (srcBpp == 1)
+		{
+			*destData = new unsigned char[w * h * srcBpp];
+			memcpy(*destData, srcData, w * h * srcBpp);
+			return true;
+		}
+		if (srcBpp == 3)
+		{
+			*destData = new unsigned char[w * h * srcBpp];
+			memcpy(*destData, srcData, w * h * srcBpp);
+			// FORMAT_RGB to FORMAT_BGR and vice versa, thus switching 2 bytes around is enough
+			int i = 0;
+			for_iter (y, 0, h)
+			{
+				for_iter (x, 0, w)
+				{
+					i = (x + y * w) * srcBpp;
+					(*destData)[i] = srcData[i + 2];
+					(*destData)[i + 2] = srcData[i];
+				}
+			}
+			return true;
+		}
+		if (srcBpp == 4)
+		{
+			*destData = new unsigned char[w * h * srcBpp];
+			memset(*destData, 255, w * h * srcBpp);
+			// shifting unsigned int's around is faster than pure assigning (like at 3 BPP)
+			unsigned int* src = (unsigned int*)srcData;
+			unsigned int* dest = (unsigned int*)*destData;
+			bool rightShift = CHECK_RIGHT_SHIFT_FORMATS(srcFormat, destFormat);
+			bool leftShift = CHECK_LEFT_SHIFT_FORMATS(srcFormat, destFormat);
+			bool invertOrder = CHECK_INVERT_ORDER_FORMATS(srcFormat, destFormat);
+			bool copyAlpha = CHECK_COPY_ALPHA_FORMATS(srcFormat, destFormat);
+			int i = 0;
+			if (invertOrder)
+			{
+				if (rightShift)
+				{
+					if (copyAlpha)
+					{
+						for_iter (y, 0, h)
+						{
+							for_iter (x, 0, w)
+							{
+								i = (x + y * w);
+								dest[i] = INVERTED_RIGHT_SHIFT_WITH_ALPHA(src[i]);
+							}
+						}
+					}
+					else
+					{
+						for_iter (y, 0, h)
+						{
+							for_iter (x, 0, w)
+							{
+								i = (x + y * w);
+								dest[i] = INVERTED_RIGHT_SHIFT(src[i]);
+							}
+						}
+					}
+				}
+				else if (copyAlpha)
+				{
+					for_iter (y, 0, h)
+					{
+						for_iter (x, 0, w)
+						{
+							i = (x + y * w);
+							dest[i] = INVERTED_LEFT_SHIFT_WITH_ALPHA(src[i]);
+						}
+					}
+				}
+				else
+				{
+					for_iter (y, 0, h)
+					{
+						for_iter (x, 0, w)
+						{
+							i = (x + y * w);
+							dest[i] = INVERTED_LEFT_SHIFT(src[i]);
+						}
+					}
+				}
+			}
+			else if (rightShift)
+			{
+				if (copyAlpha)
+				{
+					for_iter (y, 0, h)
+					{
+						for_iter (x, 0, w)
+						{
+							i = (x + y * w);
+							dest[i] = RIGHT_SHIFT_WITH_ALPHA(src[i]);
+						}
+					}
+				}
+				else
+				{
+					for_iter (y, 0, h)
+					{
+						for_iter (x, 0, w)
+						{
+							i = (x + y * w);
+							dest[i] = RIGHT_SHIFT(src[i]);
+						}
+					}
+				}
+			}
+			else if (copyAlpha)
+			{
+				for_iter (y, 0, h)
+				{
+					for_iter (x, 0, w)
+					{
+						i = (x + y * w);
+						dest[i] = LEFT_SHIFT_WITH_ALPHA(src[i]);
+					}
+				}
+			}
+			else
+			{
+				for_iter (y, 0, h)
+				{
+					for_iter (x, 0, w)
+					{
+						i = (x + y * w);
+						dest[i] = LEFT_SHIFT(src[i]);
+					}
+				}
+			}
+			return true;
+		}
+		hlog::errorf(april::logTag, "Formats' BPP of %d is not supported!", srcBpp);
+		return false;
+	}
+
+	void Image::fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat)
+	{
+		x = hclamp(x, 0, destWidth - 1);
+		y = hclamp(y, 0, destHeight - 1);
+		w = hclamp(w, 1, destWidth - x);
+		h = hclamp(h, 1, destHeight - y);
+		int destBpp = Image::getFormatBpp(destFormat);
+		int i = (x + y * destWidth) * destBpp;
+		int copyWidth = w * destBpp;
+		int size = copyWidth * destHeight;
+		if (destBpp == 1 || destBpp == 3 && color.r == color.g && color.r == color.g || destBpp == 4 && color.r == color.g && color.r == color.g && color.r == color.a)
+		{
+			if (x == 0 && w == destWidth)
+			{
+				memset(&destData[i], color.r, copyWidth * h);
+			}
+			else
+			{
+				for_iter (j, 0, h)
+				{
+					memset(&destData[(x + (y + j) * destWidth) * destBpp], color.r, copyWidth);
+				}
+			}
+			return;
+		}
+		unsigned char colorData[4] = {color.r, color.g, color.b, color.a};
+		// convert to right format first
+		Format srcFormat = (destBpp == 4 ? FORMAT_RGBA : (destBpp == 3 ? FORMAT_RGB : FORMAT_ALPHA));
+		if (srcFormat != destFormat)
+		{
+			unsigned char* c = NULL;
+			Image::convertToFormat(colorData, &c, destWidth, destHeight, srcFormat, destFormat);
+			memcpy(&destData[i], c, destBpp);
+			delete [] c;
+		}
+		else
+		{
+			memcpy(&destData[i], colorData, destBpp);
+		}
+		int currentSize = destBpp;
+		int copySize = 0;
+		// TODOaa - test if this works as intended
+		if (x == 0 && w == destWidth)
+		{
+			while (currentSize < size)
+			{
+				copySize = hmin(size - currentSize, currentSize);
+				memcpy(&destData[i + currentSize], &destData[i], copySize);
+				currentSize += copySize;
+			}
+		}
+		else
+		{
+			// copy on first line
+			while (currentSize < copyWidth)
+			{
+				copySize = hmin(copyWidth - currentSize, currentSize);
+				memcpy(&destData[i + currentSize], &destData[i], copySize);
+				currentSize += copySize;
+			}
+			// copy to all lines
+			for_iter (j, 1, h)
+			{
+				memcpy(&destData[(x + (y + j) * destWidth) * destBpp], &destData[i], currentSize);
+			}
+		}
 	}
 	
 }

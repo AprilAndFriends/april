@@ -12,8 +12,10 @@
 #include <d3d9.h>
 
 #include <hltypes/hlog.h>
+#include <hltypes/hstring.h>
 
 #include "april.h"
+#include "Color.h"
 #include "DirectX9_RenderSystem.h"
 #include "DirectX9_Texture.h"
 #include "Image.h"
@@ -31,87 +33,52 @@ namespace april
 	// TODO - refactor
 	extern harray<DirectX9_Texture*> gRenderTargets;
 
-	DirectX9_Texture::DirectX9_Texture(chstr filename) : DirectX_Texture()
+	DirectX9_Texture::DirectX9_Texture() : DirectX_Texture(), d3dTexture(NULL), d3dSurface(NULL), d3dFormat(D3DFMT_UNKNOWN), renderTarget(false)
 	{
-		this->filename = filename;
-		this->format = FORMAT_ARGB;
-		this->width = 0;
-		this->height = 0;
-		this->bpp = 4;
-		this->renderTarget = false;
-		this->d3dTexture = NULL;
-		this->d3dSurface = NULL;
-		hlog::write(april::logTag, "Creating DX9 texture: " + this->_getInternalName());
 	}
 
-	DirectX9_Texture::DirectX9_Texture(int w, int h, unsigned char* rgba) : DirectX_Texture()
+	bool DirectX9_Texture::_create(chstr filename, Type type)
 	{
-		this->filename = "";
-		this->format = FORMAT_ARGB;
-		this->width = w;
-		this->height = h;
-		this->bpp = 4;
-		this->renderTarget = false;
-		this->d3dSurface = NULL;
-		hlog::write(april::logTag, "Creating user-defined DX9 texture.");
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
+		return DirectX_Texture::_create(filename, type);
+	}
+
+	bool DirectX9_Texture::_create(int w, int h, unsigned char* data, Image::Format format, Type type)
+	{
+		if (!DirectX_Texture::_create(w, h, data, format, type))
+		{
+			return false;
+		}
+		this->_assignFormat();
+		// TODOaa - change pool to save memory
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, this->d3dFormat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
 			hlog::error(april::logTag, "Failed to create DX9 texture!");
-			return;
+			return false;
 		}
-		// TODO - this will be removed once format/native format enums have been implemented
-		unsigned char* bgra = new unsigned char[this->width * this->height * this->bpp];
-		memcpy(bgra, rgba, this->width * this->height * this->bpp); // so alpha doesn't have to be copied in each iteration
-		int offset;
-		int i;
-		int j;
-		for_iterx (j, 0, this->height)
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		// TODOaa - blit should already take into account formats
+		unsigned char* dx9Data = NULL;
+		if (!Image::convertToFormat(data, &dx9Data, this->width, this->height, this->format, nativeFormat))
 		{
-			for_iterx (i, 0, this->width)
-			{
-				offset = (i + j * this->width) * this->bpp;
-				bgra[offset + 2] = rgba[offset + 0];
-				//bgra[offset + 1] = rgba[offset + 1]; // not necessary to be executed because of previous memcpy call
-				bgra[offset + 0] = rgba[offset + 2];
-			}
+			return false;
 		}
-		this->blit(0, 0, bgra, this->width, this->height, this->bpp, 0, 0, this->width, this->height);
-		delete [] bgra;
+		this->blit(0, 0, dx9Data, this->width, this->height, this->bpp, 0, 0, this->width, this->height);
+		delete [] dx9Data;
+		return true;
 	}
 	
-	DirectX9_Texture::DirectX9_Texture(int w, int h, Texture::Format format, Texture::Type type, Color color) : DirectX_Texture()
+	bool DirectX9_Texture::_create(int w, int h, Color color, Image::Format format, Type type)
 	{
-		this->filename = "";
-		this->format = format;
-		this->width = w;
-		this->height = h;
-		this->renderTarget = false;
-		this->d3dSurface = NULL;
-		hlog::writef(april::logTag, "Creating empty DX9 texture (%d x %d).", w, h);
-		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
-		this->bpp = 3;
-		switch (format)
+		if (!DirectX_Texture::_create(w, h, color, format, type))
 		{
-		case FORMAT_ARGB:
-			d3dformat = D3DFMT_A8R8G8B8;
-			this->bpp = 4;
-			break;
-		case FORMAT_RGB:
-			d3dformat = D3DFMT_X8R8G8B8;
-			this->bpp = 3;
-			break;
-		case FORMAT_ALPHA:
-			d3dformat = D3DFMT_A8;
-			this->bpp = 1;
-			break;
-		default:
-			d3dformat = D3DFMT_X8R8G8B8;
-			this->bpp = 3;
-			break;
+			return false;
 		}
+		this->_assignFormat();
+		// TODOaa - change pool to save memory
 		D3DPOOL d3dpool = D3DPOOL_MANAGED;
 		DWORD d3dusage = 0;
+		/*
 		if (type == TYPE_RENDER_TARGET)
 		{
 			d3dusage = D3DUSAGE_RENDERTARGET;
@@ -119,20 +86,21 @@ namespace april
 			this->renderTarget = true;
 			gRenderTargets += this;
 		}
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, d3dformat, d3dpool, &this->d3dTexture, NULL);
+		*/
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, this->d3dFormat, d3dpool, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
 			hlog::error(april::logTag, "Failed to create DX9 texture!");
-			return;
+			return false;
 		}
-		if (color != Color::Clear)
-		{
-			this->fillRect(0, 0, this->width, this->height, color);
-		}
+		// TODOaa - blit should already take into account formats
+		this->fillRect(0, 0, this->width, this->height, color);
+		return true;
 	}
 	
 	void DirectX9_Texture::restore()
 	{
+		// TODOaa - needs refactoring
 		if (!this->renderTarget)
 		{
 			return;
@@ -149,7 +117,6 @@ namespace april
 		if (hr != D3D_OK)
 		{
 			hlog::error(april::logTag, "Failed to restore user-defined DX9 texture!");
-			return;
 		}
 	}
 
@@ -159,6 +126,29 @@ namespace april
 		if (this->renderTarget)
 		{
 			gRenderTargets -= this;
+		}
+	}
+
+	void DirectX9_Texture::_assignFormat()
+	{
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		switch (nativeFormat)
+		{
+		case Image::FORMAT_BGRA:
+			this->d3dFormat = D3DFMT_A8R8G8B8;
+			break;
+		case Image::FORMAT_BGRX:
+			this->d3dFormat = D3DFMT_X8R8G8B8;
+			break;
+		case Image::FORMAT_ALPHA:
+			this->d3dFormat = D3DFMT_A8;
+			break;
+		case Image::FORMAT_GRAYSCALE:
+			this->d3dFormat = D3DFMT_A8;
+			break;
+		case Image::FORMAT_PALETTE: // TODOaa - needs changing, ARGB shouldn't be here
+			this->d3dFormat = D3DFMT_A8R8G8B8;
+			break;
 		}
 	}
 
@@ -180,78 +170,34 @@ namespace april
 			}
 			this->width = image->w;
 			this->height = image->h;
-			this->bpp = image->bpp;
+			this->bpp = Image::getFormatBpp(image->format);
 		}
 		if (image == NULL)
 		{
 			hlog::error(april::logTag, "Image source does not exist!");
 			return false;
 		}
-		D3DFORMAT d3dformat = D3DFMT_X8R8G8B8;
-		switch (image->format)
-		{
-		case Image::FORMAT_RGBA:
-		case Image::FORMAT_BGRA:
-			d3dformat = D3DFMT_A8R8G8B8;
-			this->format = FORMAT_ARGB;
-			break;
-		case Image::FORMAT_RGB:
-		case Image::FORMAT_BGR:
-			d3dformat = D3DFMT_X8R8G8B8;
-			this->format = FORMAT_RGB;
-			break;
-		case Image::FORMAT_GRAYSCALE:
-			d3dformat = D3DFMT_A8;
-			this->format = FORMAT_ALPHA;
-			break;
-		case Image::FORMAT_PALETTE:
-			d3dformat = D3DFMT_A8R8G8B8;
-			this->format = FORMAT_ARGB; // TODO - should be changed
-			break;
-		default:
-			d3dformat = D3DFMT_X8R8G8B8;
-			this->format = FORMAT_ARGB;
-			break;
-		}
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, d3dformat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
+		this->format = image->format;
+		this->_assignFormat();
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, this->d3dFormat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
 		if (hr != D3D_OK)
 		{
 			hlog::error(april::logTag, "Failed to create DX9 texture!");
 			delete image;
 			return false;
 		}
-		// write texels
-		if (image != NULL)
+		// TODOaa - needs to be copied to this->data if texture type needs it
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		// TODOaa - blit should already take into account formats
+		unsigned char* dx9Data = NULL;
+		if (!Image::convertToFormat(image->data, &dx9Data, this->width, this->height, this->format, nativeFormat))
 		{
-			D3DLOCKED_RECT rect;
-			this->d3dTexture->LockRect(0, &rect, NULL, D3DLOCK_DISCARD);
-			// TODO - format handling like this has to be fixed/refactored
-			if (image->format == Image::FORMAT_RGBA)
-			{
-				image->copyPixels(rect.pBits, Image::FORMAT_BGRA);
-			}
-			else if (image->format == Image::FORMAT_RGB)
-			{
-				image->copyPixels(rect.pBits, Image::FORMAT_BGR);
-			}
-			else if (image->format  == Image::FORMAT_GRAYSCALE)
-			{
-				image->copyPixels(rect.pBits, Image::FORMAT_GRAYSCALE);
-			}
-			else
-			{
-				Image* tempImg = Image::create(image->w, image->h);
-				tempImg->copyImage(image);
-				tempImg->copyPixels(rect.pBits, Image::FORMAT_BGRA);
-				delete tempImg;
-			}
-			this->d3dTexture->UnlockRect(0);
-			delete image;
+			return false;
 		}
-		else
-		{
-			this->clear();
-		}
+		// TODOaa - write should use format
+		this->write(0, 0, dx9Data, this->width, this->height, this->bpp);
+		delete [] dx9Data;
+		delete image;
 		return true;
 	}
 
@@ -368,6 +314,7 @@ namespace april
 
 	void DirectX9_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
+		// TODOaa - change to call Image::fillRect
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
 		w = hclamp(w, 1, this->width - x);

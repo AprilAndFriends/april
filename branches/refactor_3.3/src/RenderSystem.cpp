@@ -175,35 +175,43 @@ namespace april
 		this->projectionMatrix = matrix;
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
-	
-	Texture* RenderSystem::createTexture(chstr filename, bool loadImmediately)
+
+	Texture* RenderSystem::createTexture(chstr filename, Texture::Type type, bool loadImmediately)
 	{
 		hstr name = this->findTextureFilename(filename);
 		if (name == "")
 		{
 			return NULL;
 		}
-		Texture* texture = this->_createTexture(name);
-		if (loadImmediately)
+		Texture* texture = this->_createTexture();
+		if (!texture->_create(name, type) || loadImmediately && !texture->load() && !texture->isLoaded())
 		{
-			texture->load();
-			if (!texture->isLoaded())
-			{
-				delete texture;
-				return NULL;
-			}
+			delete texture;
+			return NULL;
 		}
 		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int w, int h, unsigned char* rgba)
+	Texture* RenderSystem::createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
 	{
-		return this->_createTexture(w, h, rgba);
+		Texture* texture = this->_createTexture();
+		if (!texture->_create(w, h, data, format, type))
+		{
+			delete texture;
+			texture = NULL;
+		}
+		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
+	Texture* RenderSystem::createTexture(int w, int h, Color color, Image::Format format, Texture::Type type)
 	{
-		return this->_createTexture(w, h, format, type, color);
+		Texture* texture = this->_createTexture();
+		if (!texture->_create(w, h, color, format, type))
+		{
+			delete texture;
+			texture = NULL;
+		}
+		return texture;
 	}
 
 	Texture* RenderSystem::createRamTexture(chstr filename, bool loadImmediately)
@@ -213,15 +221,11 @@ namespace april
 		{
 			return NULL;
 		}
-		RamTexture* texture = new RamTexture(name);
-		if (loadImmediately)
+		Texture* texture = new RamTexture(name);
+		if (!texture->_create(name, Texture::TYPE_MANAGED) || loadImmediately && !texture->load() && !texture->isLoaded())
 		{
-			texture->load();
-			if (!texture->isLoaded())
-			{
-				delete texture;
-				return NULL;
-			}
+			delete texture;
+			return NULL;
 		}
 		return texture;
 	}

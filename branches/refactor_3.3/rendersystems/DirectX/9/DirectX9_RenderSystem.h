@@ -77,6 +77,7 @@ namespace april
 		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
 		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
+		Image::Format getNativeTextureFormat(Image::Format format);
 		Image* takeScreenshot(int bpp = 3);
 		void presentFrame();
 
@@ -94,9 +95,7 @@ namespace april
 		void _configureDevice();
 		void _setResolution(int w, int h, bool fullscreen);
 
-		Texture* _createTexture(chstr filename);
-		Texture* _createTexture(int w, int h, unsigned char* rgba);
-		Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
+		Texture* _createTexture();
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);

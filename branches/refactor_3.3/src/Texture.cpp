@@ -26,20 +26,80 @@ namespace april
 	Texture::Texture()
 	{
 		this->filename = "";
-		this->format = FORMAT_INVALID;
+		this->type = TYPE_IMMUTABLE;
+		this->format = Image::FORMAT_INVALID;
 		this->width = 0;
 		this->height = 0;
 		this->bpp = 4;
 		this->filter = FILTER_LINEAR;
 		this->addressMode = ADDRESS_WRAP;
+		this->data = NULL;
 		april::rendersys->_registerTexture(this);
 	}
 
 	Texture::~Texture()
 	{
 		april::rendersys->_unregisterTexture(this);
+		if (this->data != NULL)
+		{
+			delete this->data;
+		}
 	}
-	
+
+	bool Texture::_create(chstr filename, Texture::Type type)
+	{
+		this->filename = filename;
+		this->type = type;
+		this->width = 0;
+		this->height = 0;
+		this->bpp = 0;
+		this->type = type;
+		this->format = Image::FORMAT_INVALID;
+		this->data = NULL;
+		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		return true;
+	}
+
+	bool Texture::_create(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
+	{
+		if (w == 0 || h == 0)
+		{
+			hlog::errorf(april::logTag, "Cannot create texture with dimentions %d,%d!", w, h);
+			return false;
+		}
+		this->filename = "";
+		this->width = w;
+		this->height = h;
+		this->bpp = Image::getFormatBpp(format);
+		this->type = type;
+		this->format = format;
+		int size = this->getByteSize();
+		this->data = new unsigned char[size];
+		memcpy(this->data, data, size);
+		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		return true;
+	}
+
+	bool Texture::_create(int w, int h, Color color, Image::Format format, Texture::Type type)
+	{
+		if (w == 0 || h == 0)
+		{
+			hlog::errorf(april::logTag, "Cannot create texture with dimentions %d,%d!", w, h);
+			return false;
+		}
+		this->filename = "";
+		this->width = w;
+		this->height = h;
+		this->bpp = Image::getFormatBpp(format);
+		this->type = type;
+		this->format = format;
+		int size = this->getByteSize();
+		this->data = new unsigned char[size];
+		Image::fillRect(0, 0, this->width, this->height, color, this->data, this->width, this->height, format);
+		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		return true;
+	}
+
 	int Texture::getWidth()
 	{
 		if (this->width == 0)
@@ -78,7 +138,28 @@ namespace april
 
 	hstr Texture::_getInternalName()
 	{
-		return (this->filename != "" ? this->filename : "UserTexture");
+		hstr result;
+		if (this->filename != "")
+		{
+			result += "'" + this->filename + "'";
+		}
+		else
+		{
+			result += hsprintf("<0x%p>", this);
+		}
+		switch (this->type)
+		{
+		case TYPE_IMMUTABLE:
+			result += " (immutable)";
+			break;
+		case TYPE_MANAGED:
+			result += " (managed)";
+			break;
+		case TYPE_VOLATILE:
+			result += " (volatile)";
+			break;
+		}
+		return result;
 	}
 
 	void Texture::clear()
@@ -149,6 +230,7 @@ namespace april
 
 	Color Texture::getInterpolatedPixel(float x, float y)
 	{
+		// TODOaa - refactor and make faster?
 		Color result;
 		int x0 = (int) x;
 		int y0 = (int) y;
@@ -240,9 +322,9 @@ namespace april
 
 	void Texture::write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp)
 	{
-	
+		// TODOaa - implement
 	}
-	
+
 	void Texture::_blit(unsigned char* thisData, int x, int y, unsigned char* srcData, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		x = hclamp(x, 0, this->width - 1);

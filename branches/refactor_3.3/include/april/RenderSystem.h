@@ -111,10 +111,10 @@ namespace april
 		virtual void setVertexShader(VertexShader* vertexShader) = 0;
 		virtual void setPixelShader(PixelShader* pixelShader) = 0;
 
-		Texture* createTexture(chstr filename, bool loadImmediately = true);
-		Texture* createTexture(int w, int h, unsigned char* rgba);
-		Texture* createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
-		Texture* createRamTexture(chstr filename, bool loadImmediately = true); // TODO - will be removed in a future version
+		Texture* createTexture(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, bool loadImmediately = true);
+		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::TYPE_IMMUTABLE);
+		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::TYPE_IMMUTABLE);
+		Texture* createRamTexture(chstr filename, bool loadImmediately = true); // TODOaa - will be removed in a future version
 		virtual PixelShader* createPixelShader() = 0;
 		virtual PixelShader* createPixelShader(chstr filename) = 0;
 		virtual VertexShader* createVertexShader() = 0;
@@ -144,11 +144,10 @@ namespace april
 
 		hstr findTextureFilename(chstr filename);
 		void unloadTextures();
+		virtual Image::Format getNativeTextureFormat(Image::Format format) = 0;
 		virtual Image* takeScreenshot(int bpp = 3) = 0;
 		virtual void presentFrame();
-
-		DEPRECATED_ATTRIBUTE Texture* loadTexture(chstr filename, bool delayLoad = false) { return this->createTexture(filename, !delayLoad); }
-		DEPRECATED_ATTRIBUTE Texture* loadRamTexture(chstr filename, bool delayLoad = false) { return this->createRamTexture(filename, !delayLoad); }
+		/// @note This can be used for optimizuations
 
 	protected:
 		hstr name;
@@ -163,9 +162,7 @@ namespace april
 		gmat4 projectionMatrix;
 		grect orthoProjection;
 
-		virtual Texture* _createTexture(chstr filename) = 0;
-		virtual Texture* _createTexture(int w, int h, unsigned char* rgba) = 0;
-		virtual Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear) = 0;
+		virtual Texture* _createTexture() = 0;
 
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);

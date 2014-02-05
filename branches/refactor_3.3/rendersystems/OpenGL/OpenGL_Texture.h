@@ -27,9 +27,9 @@ namespace april
 	public:
 		friend class OpenGL_RenderSystem;
 
-		OpenGL_Texture(chstr filename);
-		OpenGL_Texture(int w, int h, unsigned char* rgba);
-		OpenGL_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
+		OpenGL_Texture(chstr filename, Type type);
+		OpenGL_Texture(int w, int h, unsigned char* data, Format format, Type type);
+		OpenGL_Texture(int w, int h, Color color, Format format, Type type);
 		~OpenGL_Texture();
 		bool load();
 		void unload();

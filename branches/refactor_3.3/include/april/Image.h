@@ -28,15 +28,23 @@ namespace april
 	class aprilExport Image
 	{
 	public:
+		/// @note Some formats are intended to improve speed with the underlying engine if really needed. *X* formats are always 4 BPP even if the a byte is not used.
 		enum Format
 		{
-			FORMAT_UNDEFINED = 0,
-			FORMAT_RGBA = 1,
-			FORMAT_RGB = 2,
-			FORMAT_BGRA = 3,
-			FORMAT_BGR = 4,
-			FORMAT_GRAYSCALE = 5,
-			FORMAT_PALETTE = 6
+			FORMAT_INVALID,
+			FORMAT_RGBA,
+			FORMAT_ARGB,
+			FORMAT_BGRA,
+			FORMAT_ABGR,
+			FORMAT_RGBX,
+			FORMAT_XRGB,
+			FORMAT_BGRX,
+			FORMAT_XBGR,
+			FORMAT_RGB,
+			FORMAT_BGR,
+			FORMAT_ALPHA,
+			FORMAT_GRAYSCALE,
+			FORMAT_PALETTE
 		};
 	
 		unsigned char* data;
@@ -46,7 +54,7 @@ namespace april
 		Format format;
 		int compressedSize;
 
-		Image(); // TODOa - make protected
+		Image(); // TODOaa - make protected
 		~Image();
 		
 		Color getPixel(int x, int y);
@@ -62,6 +70,10 @@ namespace april
 		
 		static Image* load(chstr filename);
 		static Image* create(int w, int h, Color fillColor = Color::Clear);
+
+		static void fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		static int getFormatBpp(Format format);
+		static bool convertToFormat(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat);
 		
 	protected:
 		static Image* _loadPng(hsbase& stream);
