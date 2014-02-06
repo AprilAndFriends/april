@@ -24,29 +24,57 @@
 #include <TargetConditionals.h>
 #endif
 
-#define CHECK_RIGHT_SHIFT_FORMATS(srcFormat, destFormat) \
-	(((srcFormat) == FORMAT_RGBA || (srcFormat) == FORMAT_RGBX) && ((destFormat) == FORMAT_ARGB || (destFormat) == FORMAT_XRGB) || \
-	((srcFormat) == FORMAT_BGRA || (srcFormat) == FORMAT_BGRX) && ((destFormat) == FORMAT_ABGR || (destFormat) == FORMAT_XBGR))
-#define CHECK_LEFT_SHIFT_FORMATS(srcFormat, destFormat) \
-	(((srcFormat) == FORMAT_ARGB || (srcFormat) == FORMAT_XRGB) && ((destFormat) == FORMAT_RGBA || (destFormat) == FORMAT_RGBX) || \
-	((srcFormat) == FORMAT_ABGR || (srcFormat) == FORMAT_XBGR) && ((destFormat) == FORMAT_BGRA || (destFormat) == FORMAT_BGRX))
-#define CHECK_INVERT_ORDER_FORMATS(srcFormat, destFormat) \
-	(((srcFormat) == FORMAT_RGBA || (srcFormat) == FORMAT_ARGB || (srcFormat) == FORMAT_RGBX || (srcFormat) == FORMAT_XRGB) && \
-	((destFormat) == FORMAT_BGRA || (destFormat) == FORMAT_ABGR || (destFormat) == FORMAT_BGRX || (destFormat) == FORMAT_XBGR) || \
-	((srcFormat) == FORMAT_BGRA || (srcFormat) == FORMAT_ABGR || (srcFormat) == FORMAT_BGRX || (srcFormat) == FORMAT_XBGR) && \
-	((destFormat) == FORMAT_RGBA || (destFormat) == FORMAT_ARGB || (destFormat) == FORMAT_RGBX || (destFormat) == FORMAT_XRGB))
-#define CHECK_COPY_ALPHA_FORMATS(srcFormat, destFormat) \
-	(((srcFormat) == FORMAT_RGBA || (srcFormat) == FORMAT_ARGB || (srcFormat) == FORMAT_BGRA || (srcFormat) == FORMAT_ABGR) && \
-	((destFormat) == FORMAT_RGBA || (destFormat) == FORMAT_ARGB || (destFormat) == FORMAT_BGRA || (destFormat) == FORMAT_ABGR))
+#define CHECK_SHIFT_FORMATS(format1, format2) (\
+	((format1) == FORMAT_RGBA || (format1) == FORMAT_RGBX || (format1) == FORMAT_BGRA || (format1) == FORMAT_BGRX) && \
+	((format2) == FORMAT_ARGB || (format2) == FORMAT_XRGB || (format2) == FORMAT_ABGR || (format2) == FORMAT_XBGR) \
+)
+#define CHECK_INVERT_ORDER_FORMATS(format1, format2) (\
+	((format1) == FORMAT_RGBA || (format1) == FORMAT_RGBX || (format1) == FORMAT_ARGB || (format1) == FORMAT_XRGB) && \
+	((format2) == FORMAT_BGRA || (format2) == FORMAT_BGRX || (format2) == FORMAT_ABGR || (format2) == FORMAT_XBGR) \
+)
+#define CHECK_LEFT_RGB(format) \
+	((format) == FORMAT_RGBA || (format) == FORMAT_RGBX || (format) == FORMAT_BGRA || (format) == FORMAT_BGRX)
+#define CHECK_ALPHA_FORMAT(format) \
+	((format) == FORMAT_RGBA || (format) == FORMAT_ARGB || (format) == FORMAT_BGRA || (format) == FORMAT_ABGR)
 
-#define RIGHT_SHIFT(value) ((value) >> 8)
-#define RIGHT_SHIFT_WITH_ALPHA(value) (((value) >> 8) | ((value) << 24))
-#define LEFT_SHIFT(value) ((value) << 8)
-#define LEFT_SHIFT_WITH_ALPHA(value) (((value) << 8) | ((value) >> 24))
-#define INVERTED_RIGHT_SHIFT(value) (((((value) & 0xFF000000 >> 16) | ((value) & 0xFF00 << 16) | ((value) & 0xFF0000))) >> 8)
-#define INVERTED_RIGHT_SHIFT_WITH_ALPHA(value) (((((value) & 0xFF000000 >> 16) | ((value) & 0xFF00 << 16) | ((value) & 0xFF0000)) >> 8) | ((value) << 24))
-#define INVERTED_LEFT_SHIFT(value) ((((value) & 0xFF0000 >> 16) | ((value) & 0xFF << 16) | ((value) & 0xFF00)) << 8)
-#define INVERTED_LEFT_SHIFT_WITH_ALPHA(value) (((((value) & 0xFF0000 >> 16) | ((value) & 0xFF << 16) | ((value) & 0xFF00)) << 8) | ((value) >> 24))
+#define FOR_EACH_4BPP_PIXEL(macro) \
+	for_iter (y, 0, h) \
+	{ \
+		for_iter (x, 0, w) \
+		{ \
+			i = (x + y * w); \
+			dest[i] = macro(src[i]); \
+		} \
+	} \
+
+// these all assume little endian
+#define _R_ALPHA 0xFF
+#define _L_ALPHA 0xFF000000
+#define _KEEP_R(value) ((value) & 0xFFFFFF00)
+#define _KEEP_L(value) ((value) & 0xFFFFFF)
+#define _RIGHT_SHIFT(value) ((value) << 8)
+#define _LEFT_SHIFT(value) ((value) >> 8)
+#define _R_SHIFT_ALPHA(value) ((value) >> 24)
+#define _L_SHIFT_ALPHA(value) ((value) << 24)
+#define _INVERTED_R(value) ((((value) & 0xFF000000) >> 16) | (((value) & 0xFF00) << 16) | ((value) & 0xFF0000))
+#define _INVERTED_L(value) ((((value) & 0xFF0000) >> 16) | (((value) & 0xFF) << 16) | ((value) & 0xFF00))
+#define _INVERTED_RIGHT_SHIFT(value) (((value) << 24) | (((value) & 0xFF00) << 8) | (((value) & 0xFF0000) >> 8))
+#define _INVERTED_LEFT_SHIFT(value) (((value) >> 24) | (((value) & 0xFF0000) >> 8) | (((value) & 0xFF00) << 8))
+
+#define KEEP_R(value) (_KEEP_R(value) | _R_ALPHA)
+#define KEEP_L(value) (_KEEP_L(value) | _L_ALPHA)
+#define RIGHT_SHIFT(value) (_RIGHT_SHIFT(value) | _R_ALPHA)
+#define RIGHT_SHIFT_WITH_ALPHA(value) (_RIGHT_SHIFT(value) | _R_SHIFT_ALPHA(value))
+#define LEFT_SHIFT(value) (_LEFT_SHIFT(value) | _L_ALPHA)
+#define LEFT_SHIFT_WITH_ALPHA(value) (_LEFT_SHIFT(value) | _L_SHIFT_ALPHA(value))
+#define INVERTED_R(value) (_INVERTED_R(value) | _R_ALPHA)
+#define INVERTED_R_WITH_ALPHA(value) (_INVERTED_R(value) | ((value) & _R_ALPHA))
+#define INVERTED_L(value) (_INVERTED_L(value) | _L_ALPHA)
+#define INVERTED_L_WITH_ALPHA(value) (_INVERTED_L(value) | ((value) & _L_ALPHA))
+#define INVERTED_RIGHT_SHIFT(value) (_INVERTED_RIGHT_SHIFT(value) | _R_ALPHA)
+#define INVERTED_RIGHT_SHIFT_WITH_ALPHA(value) (_INVERTED_RIGHT_SHIFT(value) | _R_SHIFT_ALPHA(value))
+#define INVERTED_LEFT_SHIFT(value) (_INVERTED_LEFT_SHIFT(value) | _L_ALPHA)
+#define INVERTED_LEFT_SHIFT_WITH_ALPHA(value) (_INVERTED_LEFT_SHIFT(value) | _L_SHIFT_ALPHA(value))
 
 namespace april
 {
@@ -500,7 +528,7 @@ namespace april
 		}
 		return 0;
 	}
-	
+
 	bool Image::convertToFormat(unsigned char* srcData, unsigned char** destData, int w, int h, Image::Format srcFormat, Image::Format destFormat)
 	{
 		if (*destData != NULL)
@@ -510,7 +538,7 @@ namespace april
 		}
 		if (srcFormat == destFormat)
 		{
-			hlog::warn(april::logTag, "The source format's and destination format's are the same!");
+			hlog::warn(april::logTag, "The source's and destination's formats are the same!");
 			return false;
 		}
 		int srcBpp = Image::getFormatBpp(srcFormat);
@@ -527,7 +555,7 @@ namespace april
 		}
 		if (srcBpp != destBpp)
 		{
-			hlog::error(april::logTag, "The source format's and destination format's BPP are different!");
+			hlog::error(april::logTag, "The source and destination formats' BPP are different!");
 			return false;
 		}
 		if (srcBpp == 1)
@@ -560,107 +588,104 @@ namespace april
 			// shifting unsigned int's around is faster than pure assigning (like at 3 BPP)
 			unsigned int* src = (unsigned int*)srcData;
 			unsigned int* dest = (unsigned int*)*destData;
-			bool rightShift = CHECK_RIGHT_SHIFT_FORMATS(srcFormat, destFormat);
-			bool leftShift = CHECK_LEFT_SHIFT_FORMATS(srcFormat, destFormat);
-			bool invertOrder = CHECK_INVERT_ORDER_FORMATS(srcFormat, destFormat);
-			bool copyAlpha = CHECK_COPY_ALPHA_FORMATS(srcFormat, destFormat);
+			bool rightShift = CHECK_SHIFT_FORMATS(srcFormat, destFormat);
+			bool leftShift = CHECK_SHIFT_FORMATS(destFormat, srcFormat);
+			bool invertOrder = (CHECK_INVERT_ORDER_FORMATS(srcFormat, destFormat) || CHECK_INVERT_ORDER_FORMATS(destFormat, srcFormat));
+			bool left = CHECK_LEFT_RGB(srcFormat);
+			bool invertOrderL = (invertOrder && left);
+			bool invertOrderR = (invertOrder && !left);
+			bool srcAlpha = CHECK_ALPHA_FORMAT(srcFormat);
+			bool destAlpha = CHECK_ALPHA_FORMAT(destFormat);
+			bool copyAlpha = (srcAlpha && destAlpha);
 			int i = 0;
-			if (invertOrder)
+			if (rightShift)
 			{
-				if (rightShift)
+				if (invertOrder)
 				{
 					if (copyAlpha)
 					{
-						for_iter (y, 0, h)
-						{
-							for_iter (x, 0, w)
-							{
-								i = (x + y * w);
-								dest[i] = INVERTED_RIGHT_SHIFT_WITH_ALPHA(src[i]);
-							}
-						}
+						FOR_EACH_4BPP_PIXEL(INVERTED_RIGHT_SHIFT_WITH_ALPHA);
 					}
 					else
 					{
-						for_iter (y, 0, h)
-						{
-							for_iter (x, 0, w)
-							{
-								i = (x + y * w);
-								dest[i] = INVERTED_RIGHT_SHIFT(src[i]);
-							}
-						}
-					}
-				}
-				else if (copyAlpha)
-				{
-					for_iter (y, 0, h)
-					{
-						for_iter (x, 0, w)
-						{
-							i = (x + y * w);
-							dest[i] = INVERTED_LEFT_SHIFT_WITH_ALPHA(src[i]);
-						}
+						FOR_EACH_4BPP_PIXEL(INVERTED_RIGHT_SHIFT);
 					}
 				}
 				else
 				{
-					for_iter (y, 0, h)
+					if (copyAlpha)
 					{
-						for_iter (x, 0, w)
-						{
-							i = (x + y * w);
-							dest[i] = INVERTED_LEFT_SHIFT(src[i]);
-						}
+						FOR_EACH_4BPP_PIXEL(RIGHT_SHIFT_WITH_ALPHA);
+					}
+					else
+					{
+						FOR_EACH_4BPP_PIXEL(RIGHT_SHIFT);
 					}
 				}
 			}
-			else if (rightShift)
+			else if (leftShift)
+			{
+				if (invertOrder)
+				{
+					if (copyAlpha)
+					{
+						FOR_EACH_4BPP_PIXEL(INVERTED_LEFT_SHIFT_WITH_ALPHA);
+					}
+					else
+					{
+						FOR_EACH_4BPP_PIXEL(INVERTED_LEFT_SHIFT);
+					}
+				}
+				else
+				{
+					if (copyAlpha)
+					{
+						FOR_EACH_4BPP_PIXEL(LEFT_SHIFT_WITH_ALPHA);
+					}
+					else
+					{
+						FOR_EACH_4BPP_PIXEL(LEFT_SHIFT);
+					}
+				}
+			}
+			else if (invertOrderL)
 			{
 				if (copyAlpha)
 				{
-					for_iter (y, 0, h)
-					{
-						for_iter (x, 0, w)
-						{
-							i = (x + y * w);
-							dest[i] = RIGHT_SHIFT_WITH_ALPHA(src[i]);
-						}
-					}
+					FOR_EACH_4BPP_PIXEL(INVERTED_L_WITH_ALPHA);
 				}
 				else
 				{
-					for_iter (y, 0, h)
-					{
-						for_iter (x, 0, w)
-						{
-							i = (x + y * w);
-							dest[i] = RIGHT_SHIFT(src[i]);
-						}
-					}
+					FOR_EACH_4BPP_PIXEL(INVERTED_L);
 				}
 			}
-			else if (copyAlpha)
+			else if (invertOrderR)
 			{
-				for_iter (y, 0, h)
+				if (copyAlpha)
 				{
-					for_iter (x, 0, w)
-					{
-						i = (x + y * w);
-						dest[i] = LEFT_SHIFT_WITH_ALPHA(src[i]);
-					}
+					FOR_EACH_4BPP_PIXEL(INVERTED_R_WITH_ALPHA);
+				}
+				else
+				{
+					FOR_EACH_4BPP_PIXEL(INVERTED_R);
+				}
+			}
+			else if (srcAlpha || destAlpha)
+			{
+				if (left)
+				{
+					FOR_EACH_4BPP_PIXEL(KEEP_L);
+				}
+				else
+				{
+					FOR_EACH_4BPP_PIXEL(KEEP_R);
 				}
 			}
 			else
 			{
-				for_iter (y, 0, h)
-				{
-					for_iter (x, 0, w)
-					{
-						i = (x + y * w);
-						dest[i] = LEFT_SHIFT(src[i]);
-					}
-				}
+				// this one should actually never happen
+				hlog::warnf(april::logTag, "The given formats have no conversion match! Data will be just copied!");
+				memcpy(*destData, srcData, w * h * srcBpp);
 			}
 			return true;
 		}

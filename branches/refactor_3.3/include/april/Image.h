@@ -46,7 +46,7 @@ namespace april
 			FORMAT_GRAYSCALE,
 			FORMAT_PALETTE
 		};
-	
+
 		unsigned char* data;
 		int w;
 		int h;
