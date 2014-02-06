@@ -95,7 +95,8 @@ namespace april
 		void blit(gvec2 position, Texture* texture, grect source, unsigned char alpha = 255);
 		void blit(gvec2 position, Image* image, grect source, unsigned char alpha = 255);
 		void blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
-		virtual void write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp);
+		DEPRECATED_ATTRIBUTE virtual void write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp);
+		virtual bool write(unsigned char* data, Image::Format format);
 		void stretchBlit(int x, int y, int w, int h, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(grect destination, Texture* texture, grect source, unsigned char alpha = 255);
 		void stretchBlit(grect destination, Image* image, grect source, unsigned char alpha = 255);

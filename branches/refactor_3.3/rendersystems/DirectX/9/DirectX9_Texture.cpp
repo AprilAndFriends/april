@@ -187,16 +187,10 @@ namespace april
 			return false;
 		}
 		// TODOaa - needs to be copied to this->data if texture type needs it
-		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		// TODOaa - blit should already take into account formats
-		unsigned char* dx9Data = NULL;
-		if (!Image::convertToFormat(image->data, &dx9Data, this->width, this->height, this->format, nativeFormat))
+		if (!this->write(image->data, april::rendersys->getNativeTextureFormat(this->format)))
 		{
 			return false;
 		}
-		// TODOaa - write should use format
-		this->write(0, 0, dx9Data, this->width, this->height, this->bpp);
-		delete [] dx9Data;
 		delete image;
 		return true;
 	}
@@ -426,7 +420,7 @@ namespace april
 		this->_blit((unsigned char*)lockRect.pBits, x, y, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
 		this->_unlock(buffer, result, true);
 	}
-	
+
 	void DirectX9_Texture::write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp)
 	{
 		if (this->bpp != dataBpp)
@@ -458,6 +452,22 @@ namespace april
 			}
 		}
 		this->_unlock(buffer, result, true);
+	}
+
+	bool DirectX9_Texture::write(unsigned char* data, Image::Format format)
+	{
+		D3DLOCKED_RECT lockRect;
+		_CREATE_RECT(rect, 0, 0, this->width, this->height);
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
+		if (result == LR_FAILED)
+		{
+			return false;
+		}
+		unsigned char* bits = (unsigned char*)lockRect.pBits;
+		bool converted = Image::convertToFormat(data, &bits, this->width, this->height, this->format, format, false);
+		this->_unlock(buffer, result, true);
+		return converted;
 	}
 
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)

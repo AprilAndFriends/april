@@ -322,7 +322,13 @@ namespace april
 
 	void Texture::write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp)
 	{
-		// TODOaa - implement
+		// TODOaa - implement?
+	}
+
+	bool Texture::write(unsigned char* data, Image::Format format)
+	{
+		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement insertAsAlphaMap()!", april::rendersys->getName().c_str());
+		return false;
 	}
 
 	void Texture::_blit(unsigned char* thisData, int x, int y, unsigned char* srcData, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
