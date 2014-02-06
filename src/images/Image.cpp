@@ -45,7 +45,17 @@
 			i = (x + y * w); \
 			dest[i] = macro(src[i]); \
 		} \
-	} \
+	}
+
+#define FOR_EACH_3BPP_PIXEL(exec) \
+	for_iter (y, 0, h) \
+	{ \
+		for_iter (x, 0, w) \
+		{ \
+			i = (x + y * w) * srcBpp; \
+			dest[x + y * w] = (exec); \
+		} \
+	}
 
 // these all assume little endian
 #define _R_ALPHA 0xFF
@@ -510,6 +520,74 @@ namespace april
 		return img;
 	}
 	
+	void Image::fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat)
+	{
+		x = hclamp(x, 0, destWidth - 1);
+		y = hclamp(y, 0, destHeight - 1);
+		w = hclamp(w, 1, destWidth - x);
+		h = hclamp(h, 1, destHeight - y);
+		int destBpp = Image::getFormatBpp(destFormat);
+		int i = (x + y * destWidth) * destBpp;
+		int copyWidth = w * destBpp;
+		int size = copyWidth * destHeight;
+		if (destBpp == 1 || destBpp == 3 && color.r == color.g && color.r == color.g || destBpp == 4 && color.r == color.g && color.r == color.g && color.r == color.a)
+		{
+			if (x == 0 && w == destWidth)
+			{
+				memset(&destData[i], color.r, copyWidth * h);
+			}
+			else
+			{
+				for_iter (j, 0, h)
+				{
+					memset(&destData[(x + (y + j) * destWidth) * destBpp], color.r, copyWidth);
+				}
+			}
+			return;
+		}
+		unsigned char colorData[4] = {color.r, color.g, color.b, color.a};
+		// convert to right format first
+		Format srcFormat = (destBpp == 4 ? FORMAT_RGBA : (destBpp == 3 ? FORMAT_RGB : FORMAT_ALPHA));
+		if (srcFormat != destFormat)
+		{
+			unsigned char* c = NULL;
+			Image::convertToFormat(colorData, &c, destWidth, destHeight, srcFormat, destFormat);
+			memcpy(&destData[i], c, destBpp);
+			delete [] c;
+		}
+		else
+		{
+			memcpy(&destData[i], colorData, destBpp);
+		}
+		int currentSize = destBpp;
+		int copySize = 0;
+		// TODOaa - test if this works as intended
+		if (x == 0 && w == destWidth)
+		{
+			while (currentSize < size)
+			{
+				copySize = hmin(size - currentSize, currentSize);
+				memcpy(&destData[i + currentSize], &destData[i], copySize);
+				currentSize += copySize;
+			}
+		}
+		else
+		{
+			// copy on first line
+			while (currentSize < copyWidth)
+			{
+				copySize = hmin(copyWidth - currentSize, currentSize);
+				memcpy(&destData[i + currentSize], &destData[i], copySize);
+				currentSize += copySize;
+			}
+			// copy to all lines
+			for_iter (j, 1, h)
+			{
+				memcpy(&destData[(x + (y + j) * destWidth) * destBpp], &destData[i], currentSize);
+			}
+		}
+	}
+	
 	int Image::getFormatBpp(Image::Format format)
 	{
 		switch (format)
@@ -529,14 +607,9 @@ namespace april
 		return 0;
 	}
 
-	bool Image::convertToFormat(unsigned char* srcData, unsigned char** destData, int w, int h, Image::Format srcFormat, Image::Format destFormat)
+	bool Image::convertToFormat(unsigned char* srcData, unsigned char** destData, int w, int h, Image::Format srcFormat, Image::Format destFormat, bool preventCopy)
 	{
-		if (*destData != NULL)
-		{
-			hlog::error(april::logTag, "The destination data pointer is not NULL!");
-			return false;
-		}
-		if (srcFormat == destFormat)
+		if (preventCopy && srcFormat == destFormat)
 		{
 			hlog::warn(april::logTag, "The source's and destination's formats are the same!");
 			return false;
@@ -553,45 +626,173 @@ namespace april
 			hlog::error(april::logTag, "The destination format's BPP is not supported!");
 			return false;
 		}
-		if (srcBpp != destBpp)
-		{
-			hlog::error(april::logTag, "The source and destination formats' BPP are different!");
-			return false;
-		}
 		if (srcBpp == 1)
 		{
-			*destData = new unsigned char[w * h * srcBpp];
-			memcpy(*destData, srcData, w * h * srcBpp);
+			if (Image::_convertFrom1Bpp(srcData, destData, w, h, srcFormat, destFormat))
+			{
+				return true;
+			}
+		}
+		else if (srcBpp == 3)
+		{
+			if (Image::_convertFrom3Bpp(srcData, destData, w, h, srcFormat, destFormat))
+			{
+				return true;
+			}
+		}
+		else if (srcBpp == 4)
+		{
+			if (Image::_convertFrom4Bpp(srcData, destData, w, h, srcFormat, destFormat))
+			{
+				return true;
+			}
+		}
+		hlog::errorf(april::logTag, "Conversion from %d BPP to %d BPP is not supported!", srcBpp, destBpp);
+		return false;
+	}
+
+	bool Image::_convertFrom1Bpp(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat)
+	{
+		static int srcBpp = 1;
+		int destBpp = Image::getFormatBpp(destFormat);
+		bool createData = (*destData == NULL);
+		if (createData)
+		{
+			*destData = new unsigned char[w * h * destBpp];
+		}
+		if (destBpp == 1)
+		{
+			memcpy(*destData, srcData, w * h * destBpp);
 			return true;
 		}
-		if (srcBpp == 3)
+		if (destBpp == 3 || destBpp == 4)
 		{
-			*destData = new unsigned char[w * h * srcBpp];
-			memcpy(*destData, srcData, w * h * srcBpp);
+			if (destBpp > 3)
+			{
+				memset(*destData, 255, w * h * destBpp);
+			}
+			int i = 0;
+			for_iter (y, 0, h)
+			{
+				for_iter (x, 0, w)
+				{
+					i = (x + y * w) * destBpp;
+					(*destData)[i] = (*destData)[i + 1] = (*destData)[i + 2] = srcData[x + y * w];
+				}
+			}
+			return true;
+		}
+		if (createData)
+		{
+			delete *destData;
+			*destData = NULL;
+		}
+		return false;
+	}
+
+	bool Image::_convertFrom3Bpp(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat)
+	{
+		static int srcBpp = 3;
+		int destBpp = Image::getFormatBpp(destFormat);
+		bool createData = (*destData == NULL);
+		if (createData)
+		{
+			*destData = new unsigned char[w * h * destBpp];
+		}
+		if (destBpp == 1)
+		{
+			for_iter (y, 0, h)
+			{
+				for_iter (x, 0, w)
+				{
+					// red is used as main component
+					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp];
+				}
+			}
+			return true;
+		}
+		if (destBpp == 3)
+		{
+			memcpy(*destData, srcData, w * h * destBpp);
 			// FORMAT_RGB to FORMAT_BGR and vice versa, thus switching 2 bytes around is enough
 			int i = 0;
 			for_iter (y, 0, h)
 			{
 				for_iter (x, 0, w)
 				{
-					i = (x + y * w) * srcBpp;
+					i = (x + y * w) * destBpp;
 					(*destData)[i] = srcData[i + 2];
 					(*destData)[i + 2] = srcData[i];
 				}
 			}
 			return true;
 		}
-		if (srcBpp == 4)
+		if (destBpp == 4)
 		{
-			*destData = new unsigned char[w * h * srcBpp];
-			memset(*destData, 255, w * h * srcBpp);
+			unsigned int* dest = (unsigned int*)*destData;
+			Format extended = (srcFormat == FORMAT_RGB ? FORMAT_RGBX : FORMAT_BGRX);
+			bool rightShift = CHECK_SHIFT_FORMATS(extended, destFormat);
+			bool invertOrder = (CHECK_INVERT_ORDER_FORMATS(extended, destFormat) || CHECK_INVERT_ORDER_FORMATS(destFormat, extended));
+			int i = 0;
+			if (rightShift)
+			{
+				if (invertOrder)
+				{
+					FOR_EACH_3BPP_PIXEL((srcData[i] << 24) | (srcData[i + 1] << 16) | (srcData[i + 2] << 8) | _R_ALPHA);
+				}
+				else
+				{
+					FOR_EACH_3BPP_PIXEL((srcData[i] << 8) | (srcData[i + 1] << 16) | (srcData[i + 2] << 24) | _R_ALPHA);
+				}
+			}
+			else if (invertOrder)
+			{
+				FOR_EACH_3BPP_PIXEL((srcData[i] << 16) | (srcData[i + 1] << 8) | srcData[i + 2] | _L_ALPHA);
+			}
+			else
+			{
+				FOR_EACH_3BPP_PIXEL(srcData[i] | (srcData[i + 1] << 8) | (srcData[i + 2] << 16) | _L_ALPHA);
+			}
+			return true;
+		}
+		if (createData)
+		{
+			delete *destData;
+			*destData = NULL;
+		}
+		return false;
+	}
+
+	bool Image::_convertFrom4Bpp(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat)
+	{
+		static int srcBpp = 4;
+		int destBpp = Image::getFormatBpp(destFormat);
+		bool createData = (*destData == NULL);
+		if (createData)
+		{
+			*destData = new unsigned char[w * h * destBpp];
+		}
+		if (destBpp == 1)
+		{
+			for_iter (y, 0, h)
+			{
+				for_iter (x, 0, w)
+				{
+					// red is used as main component
+					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp];
+				}
+			}
+			return true;
+		}
+		if (destBpp == 4)
+		{
 			// shifting unsigned int's around is faster than pure assigning (like at 3 BPP)
 			unsigned int* src = (unsigned int*)srcData;
 			unsigned int* dest = (unsigned int*)*destData;
 			bool rightShift = CHECK_SHIFT_FORMATS(srcFormat, destFormat);
 			bool leftShift = CHECK_SHIFT_FORMATS(destFormat, srcFormat);
 			bool invertOrder = (CHECK_INVERT_ORDER_FORMATS(srcFormat, destFormat) || CHECK_INVERT_ORDER_FORMATS(destFormat, srcFormat));
-			bool left = CHECK_LEFT_RGB(srcFormat);
+			bool left = CHECK_LEFT_RGB(destFormat);
 			bool invertOrderL = (invertOrder && left);
 			bool invertOrderR = (invertOrder && !left);
 			bool srcAlpha = CHECK_ALPHA_FORMAT(srcFormat);
@@ -685,80 +886,16 @@ namespace april
 			{
 				// this one should actually never happen
 				hlog::warnf(april::logTag, "The given formats have no conversion match! Data will be just copied!");
-				memcpy(*destData, srcData, w * h * srcBpp);
+				memcpy(*destData, srcData, w * h * destBpp);
 			}
 			return true;
 		}
-		hlog::errorf(april::logTag, "Formats' BPP of %d is not supported!", srcBpp);
+		if (createData)
+		{
+			delete *destData;
+			*destData = NULL;
+		}
 		return false;
 	}
 
-	void Image::fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat)
-	{
-		x = hclamp(x, 0, destWidth - 1);
-		y = hclamp(y, 0, destHeight - 1);
-		w = hclamp(w, 1, destWidth - x);
-		h = hclamp(h, 1, destHeight - y);
-		int destBpp = Image::getFormatBpp(destFormat);
-		int i = (x + y * destWidth) * destBpp;
-		int copyWidth = w * destBpp;
-		int size = copyWidth * destHeight;
-		if (destBpp == 1 || destBpp == 3 && color.r == color.g && color.r == color.g || destBpp == 4 && color.r == color.g && color.r == color.g && color.r == color.a)
-		{
-			if (x == 0 && w == destWidth)
-			{
-				memset(&destData[i], color.r, copyWidth * h);
-			}
-			else
-			{
-				for_iter (j, 0, h)
-				{
-					memset(&destData[(x + (y + j) * destWidth) * destBpp], color.r, copyWidth);
-				}
-			}
-			return;
-		}
-		unsigned char colorData[4] = {color.r, color.g, color.b, color.a};
-		// convert to right format first
-		Format srcFormat = (destBpp == 4 ? FORMAT_RGBA : (destBpp == 3 ? FORMAT_RGB : FORMAT_ALPHA));
-		if (srcFormat != destFormat)
-		{
-			unsigned char* c = NULL;
-			Image::convertToFormat(colorData, &c, destWidth, destHeight, srcFormat, destFormat);
-			memcpy(&destData[i], c, destBpp);
-			delete [] c;
-		}
-		else
-		{
-			memcpy(&destData[i], colorData, destBpp);
-		}
-		int currentSize = destBpp;
-		int copySize = 0;
-		// TODOaa - test if this works as intended
-		if (x == 0 && w == destWidth)
-		{
-			while (currentSize < size)
-			{
-				copySize = hmin(size - currentSize, currentSize);
-				memcpy(&destData[i + currentSize], &destData[i], copySize);
-				currentSize += copySize;
-			}
-		}
-		else
-		{
-			// copy on first line
-			while (currentSize < copyWidth)
-			{
-				copySize = hmin(copyWidth - currentSize, currentSize);
-				memcpy(&destData[i + currentSize], &destData[i], copySize);
-				currentSize += copySize;
-			}
-			// copy to all lines
-			for_iter (j, 1, h)
-			{
-				memcpy(&destData[(x + (y + j) * destWidth) * destBpp], &destData[i], currentSize);
-			}
-		}
-	}
-	
 }
