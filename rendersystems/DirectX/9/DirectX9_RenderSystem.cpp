@@ -412,7 +412,7 @@ namespace april
 				this->setTextureAddressMode(addressMode);
 			}
 			this->activeTexture->load();
-			this->d3dDevice->SetTexture(0, this->activeTexture->_getTexture());
+			this->d3dDevice->SetTexture(0, this->activeTexture->d3dTexture);
 		}
 		else
 		{

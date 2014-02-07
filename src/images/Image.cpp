@@ -548,10 +548,10 @@ namespace april
 		unsigned char colorData[4] = {color.r, color.g, color.b, color.a};
 		// convert to right format first
 		Format srcFormat = (destBpp == 4 ? FORMAT_RGBA : (destBpp == 3 ? FORMAT_RGB : FORMAT_ALPHA));
-		if (srcFormat != destFormat)
+		if (srcFormat != destFormat && destBpp > 1)
 		{
 			unsigned char* c = NULL;
-			Image::convertToFormat(colorData, &c, destWidth, destHeight, srcFormat, destFormat);
+			Image::convertToFormat(colorData, &c, 1, 1, srcFormat, destFormat);
 			memcpy(&destData[i], c, destBpp);
 			delete [] c;
 		}
@@ -884,8 +884,6 @@ namespace april
 			}
 			else
 			{
-				// this one should actually never happen
-				hlog::warnf(april::logTag, "The given formats have no conversion match! Data will be just copied!");
 				memcpy(*destData, srcData, w * h * destBpp);
 			}
 			return true;

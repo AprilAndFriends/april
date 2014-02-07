@@ -20,6 +20,7 @@
 
 namespace april
 {
+	// TODO - this entire class needs to be removed
 	RamTexture::RamTexture(chstr filename) : Texture()
 	{
 		this->filename = filename;
@@ -31,8 +32,8 @@ namespace april
 	{
 		this->width = w;
 		this->height = h;
-		this->bpp = 4;
 		this->source = Image::create(w, h);
+		this->format = this->source->format;
 	}
 
 	RamTexture::~RamTexture()
@@ -50,12 +51,12 @@ namespace april
 				this->source = Image::load(this->filename);
 				this->width = this->source->w;
 				this->height = this->source->h;
-				this->bpp = this->source->bpp;
 			}
 			else
 			{
 				this->source = Image::create(this->width, this->height);
 			}
+			this->format = this->source->format;
 			return true;
 		}
 		return false;
@@ -92,6 +93,11 @@ namespace april
 			this->load();
 		}
 		this->source->setPixel(x, y, color);
+	}
+
+	bool RamTexture::_uploadDataToGpu(int x, int y, int w, int h)
+	{
+		return true;
 	}
 	
 }
