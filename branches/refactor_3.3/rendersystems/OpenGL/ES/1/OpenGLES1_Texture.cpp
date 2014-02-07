@@ -24,16 +24,7 @@
 
 namespace april
 {
-	OpenGLES1_Texture::OpenGLES1_Texture(chstr filename) : OpenGLES_Texture(filename)
-	{
-	}
-
-	OpenGLES1_Texture::OpenGLES1_Texture(int w, int h, unsigned char* rgba) : OpenGLES_Texture(w, h, rgba)
-	{
-	}
-
-	OpenGLES1_Texture::OpenGLES1_Texture(int w, int h, Format format, Type type, Color color) :
-		OpenGLES_Texture(w, h, format, type, color)
+	OpenGLES1_Texture::OpenGLES1_Texture() : OpenGLES_Texture()
 	{
 	}
 

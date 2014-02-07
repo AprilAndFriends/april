@@ -26,12 +26,10 @@ namespace april
 	class OpenGLES_Texture : public OpenGL_Texture
 	{
 	public:
-		OpenGLES_Texture(chstr filename);
-		OpenGLES_Texture(int w, int h, unsigned char* rgba);
-		OpenGLES_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
+		OpenGLES_Texture();
 		~OpenGLES_Texture();
 
-		bool copyPixelData(unsigned char** output);
+		bool copyPixelData(unsigned char** output, Image::Format format);
 
 	};
 

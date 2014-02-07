@@ -42,7 +42,10 @@ namespace april
 	protected:
 		Image* source;
 
-		bool _uploadDataToGpu(int x, int y, int w, int h); // not used
+		// not used
+		bool _createInternalTexture();
+		void _assignFormat();
+		bool _uploadDataToGpu(int x, int y, int w, int h);
 		
 	};
 

@@ -40,9 +40,7 @@ namespace april
 	protected:
 		void _setupDefaultParameters();
 
-		Texture* _createTexture(chstr filename);
-		Texture* _createTexture(int w, int h, unsigned char* rgba);
-		Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
+		Texture* _createTexture();
 
 		void _setVertexPointer(int stride, const void* pointer);
 

@@ -38,12 +38,9 @@ namespace april
 	class OpenGL1_Texture : public OpenGL_Texture
 	{
 	public:
-		OpenGL1_Texture(chstr filename);
-		OpenGL1_Texture(int w, int h, unsigned char* rgba);
-		OpenGL1_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
 		~OpenGL1_Texture();
 
-		bool copyPixelData(unsigned char** output);
+		bool copyPixelData(unsigned char** output, Image::Format format);
 
 	};
 

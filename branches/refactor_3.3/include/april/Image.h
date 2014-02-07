@@ -74,6 +74,7 @@ namespace april
 		static void fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static int getFormatBpp(Format format);
 		static bool convertToFormat(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat, bool preventCopy = true);
+		static bool needsConversion(Format srcFormat, Format destFormat, bool preventCopy = true);
 		
 	protected:
 		static Image* _loadPng(hsbase& stream);

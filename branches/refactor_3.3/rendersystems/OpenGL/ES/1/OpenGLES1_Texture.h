@@ -26,9 +26,7 @@ namespace april
 	class OpenGLES1_Texture : public OpenGLES_Texture
 	{
 	public:
-		OpenGLES1_Texture(chstr filename);
-		OpenGLES1_Texture(int w, int h, unsigned char* rgba);
-		OpenGLES1_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
+		OpenGLES1_Texture();
 		~OpenGLES1_Texture();
 
 	};

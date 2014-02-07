@@ -530,7 +530,7 @@ namespace april
 		int i = (x + y * destWidth) * destBpp;
 		int copyWidth = w * destBpp;
 		int size = copyWidth * destHeight;
-		if (destBpp == 1 || destBpp == 3 && color.r == color.g && color.r == color.g || destBpp == 4 && color.r == color.g && color.r == color.g && color.r == color.a)
+		if (destBpp == 1 || destBpp == 3 && color.r == color.g && color.r == color.g || destBpp == 4 && color.r == color.g && color.r == color.b && color.r == color.a)
 		{
 			if (x == 0 && w == destWidth)
 			{
@@ -615,17 +615,6 @@ namespace april
 			return false;
 		}
 		int srcBpp = Image::getFormatBpp(srcFormat);
-		if (srcBpp == 0)
-		{
-			hlog::error(april::logTag, "The source format's BPP is not supported!");
-			return false;
-		}
-		int destBpp = Image::getFormatBpp(destFormat);
-		if (destBpp == 0)
-		{
-			hlog::error(april::logTag, "The destination format's BPP is not supported!");
-			return false;
-		}
 		if (srcBpp == 1)
 		{
 			if (Image::_convertFrom1Bpp(srcData, destData, w, h, srcFormat, destFormat))
@@ -647,7 +636,7 @@ namespace april
 				return true;
 			}
 		}
-		hlog::errorf(april::logTag, "Conversion from %d BPP to %d BPP is not supported!", srcBpp, destBpp);
+		hlog::errorf(april::logTag, "Conversion from %d BPP to %d BPP is not supported!", srcBpp, Image::getFormatBpp(destFormat));
 		return false;
 	}
 
@@ -892,6 +881,41 @@ namespace april
 		{
 			delete *destData;
 			*destData = NULL;
+		}
+		return false;
+	}
+
+	bool Image::needsConversion(Format srcFormat, Format destFormat, bool preventCopy)
+	{
+		if (preventCopy && srcFormat == destFormat)
+		{
+			return false;
+		}
+		int srcBpp = Image::getFormatBpp(srcFormat);
+		int destBpp = Image::getFormatBpp(destFormat);
+		if (srcBpp != destBpp)
+		{
+			return true;
+		}
+		if (srcBpp != 4)
+		{
+			return false;
+		}
+		if (CHECK_SHIFT_FORMATS(srcFormat, destFormat))
+		{
+			return true;
+		}
+		if (CHECK_SHIFT_FORMATS(destFormat, srcFormat))
+		{
+			return true;
+		}
+		if (CHECK_INVERT_ORDER_FORMATS(srcFormat, destFormat) || CHECK_INVERT_ORDER_FORMATS(destFormat, srcFormat))
+		{
+			return true;
+		}
+		if (CHECK_ALPHA_FORMAT(destFormat))
+		{
+			return true;
 		}
 		return false;
 	}

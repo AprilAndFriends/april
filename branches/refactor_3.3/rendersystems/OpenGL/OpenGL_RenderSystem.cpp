@@ -730,6 +730,55 @@ namespace april
 		this->_applyStateChanges();
 	}
 
+	Image::Format OpenGL_RenderSystem::getNativeTextureFormat(Image::Format format)
+	{
+		switch (format)
+		{
+		case Image::FORMAT_ARGB:
+		case Image::FORMAT_XRGB:
+		case Image::FORMAT_RGBA:
+		case Image::FORMAT_RGBX:
+		case Image::FORMAT_ABGR:
+		case Image::FORMAT_XBGR:
+			return Image::FORMAT_RGBA;
+		// for optimizations
+		case Image::FORMAT_BGRA:
+		case Image::FORMAT_BGRX:
+#if !defined(_ANDROID) && !defined(_WIN32)
+#ifndef __APPLE__
+			return Image::FORMAT_BGRA;
+#else
+			return Image::FORMAT_BGRA;
+#endif
+#else
+			return Image::FORMAT_RGBA;
+#endif
+		case Image::FORMAT_RGB:
+			return Image::FORMAT_RGB;
+			break;
+		// for optimizations
+		case Image::FORMAT_BGR:
+#if !defined(_ANDROID) && !defined(_WIN32)
+#ifndef __APPLE__
+			return Image::FORMAT_BGR;
+#else
+			return Image::FORMAT_BGR;
+#endif
+#else
+			return Image::FORMAT_RGB;
+#endif
+		case Image::FORMAT_ALPHA:
+			return Image::FORMAT_ALPHA;
+		case Image::FORMAT_GRAYSCALE:
+			return Image::FORMAT_GRAYSCALE;
+			break;
+		case Image::FORMAT_PALETTE: // TODOaa - does palette use RGBA?
+			return Image::FORMAT_RGBA;
+			break;
+		}
+		return Image::FORMAT_INVALID;
+	}
+
 	Image* OpenGL_RenderSystem::takeScreenshot(int bpp)
 	{
 #ifdef _DEBUG

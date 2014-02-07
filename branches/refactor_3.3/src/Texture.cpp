@@ -36,15 +36,6 @@ namespace april
 		april::rendersys->_registerTexture(this);
 	}
 
-	Texture::~Texture()
-	{
-		april::rendersys->_unregisterTexture(this);
-		if (this->data != NULL)
-		{
-			delete this->data;
-		}
-	}
-
 	bool Texture::_create(chstr filename, Texture::Type type)
 	{
 		this->filename = filename;
@@ -82,6 +73,12 @@ namespace april
 			this->format = april::rendersys->getNativeTextureFormat(format);
 		}
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		this->_assignFormat();
+		if (!this->_createInternalTexture())
+		{
+			return false;
+		}
+		this->write(0, 0, this->width, this->height, data, format);
 		return true;
 	}
 
@@ -99,17 +96,32 @@ namespace april
 		// TODOaa - don't this->data use if texture type does not support it
 		if (true)
 		{
+			this->format = format;
 			int size = this->getByteSize();
 			this->data = new unsigned char[size];
 			Image::fillRect(0, 0, this->width, this->height, color, this->data, this->width, this->height, format);
-			this->format = format;
 		}
 		else
 		{
 			this->format = april::rendersys->getNativeTextureFormat(format);
 		}
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		this->_assignFormat();
+		if (!this->_createInternalTexture())
+		{
+			return false;
+		}
+		this->write(0, 0, this->width, this->height, data, format);
 		return true;
+	}
+
+	Texture::~Texture()
+	{
+		april::rendersys->_unregisterTexture(this);
+		if (this->data != NULL)
+		{
+			delete this->data;
+		}
 	}
 
 	int Texture::getWidth()

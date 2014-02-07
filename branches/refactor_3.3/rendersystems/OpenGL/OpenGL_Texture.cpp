@@ -45,94 +45,78 @@ namespace april
         return (x > 0) && ((x & (x - 1)) == 0);
     }
 
-	OpenGL_Texture::OpenGL_Texture(chstr filename, Type type) : Texture(type)
+	OpenGL_Texture::OpenGL_Texture() : Texture(), textureId(0), glFormat(0), internalFormat(0)
 	{
-		this->format = FORMAT_ARGB;
-		this->width = 0;
-		this->height = 0;
-		this->bpp = 4;
-		this->filename = filename;
-		this->textureId = 0;
-		this->manualBuffer = NULL;
-		hlog::write(april::logTag, "Creating GL texture: " + this->_getInternalName());
 	}
 
-	OpenGL_Texture::OpenGL_Texture(int w, int h, unsigned char* data, Format format, Type type) : Texture(type)
+	bool OpenGL_Texture::_createInternalTexture()
 	{
-		hlog::write(april::logTag, "Creating user-defined GL texture.");
-		this->format = FORMAT_ARGB;
-		this->width = w;
-		this->height = h;
-		this->filename = "";
-		this->manualBuffer = NULL;
-#ifdef _ANDROID // currently user texture caching works for Android only
-		this->manualBuffer = new unsigned char[w * h * 4];
-		memcpy(this->manualBuffer, rgba, w * h * 4);
-#endif
 		glGenTextures(1, &this->textureId);
-		this->_setCurrentTexture();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
-        
         // Non power of 2 textures in OpenGL, must have addressing mode set to clamp, otherwise they won't work.
-        if (!isPower2(w) || !isPower2(h))
+        if (!isPower2(this->width) || !isPower2(this->height))
 		{
-			this->setAddressMode(ADDRESS_CLAMP);
+			this->addressMode = ADDRESS_CLAMP;
 		}
+		return true;
 	}
-
-	OpenGL_Texture::OpenGL_Texture(int w, int h, Color color, Format format, Type type) : Texture(type)
+	
+	void OpenGL_Texture::_assignFormat()
 	{
-		hlog::writef(april::logTag, "Creating empty OpenGL texture (%d x %d).", w, h);
-		this->format = format;
-		this->width = w;
-		this->height = h;
-		switch (format)
+		switch (this->format)
 		{
-		case FORMAT_ARGB:
-			this->bpp = 4;
+		case Image::FORMAT_ARGB:
+		case Image::FORMAT_XRGB:
+		case Image::FORMAT_RGBA:
+		case Image::FORMAT_RGBX:
+		case Image::FORMAT_ABGR:
+		case Image::FORMAT_XBGR:
+			this->glFormat = this->internalFormat = GL_RGBA;
 			break;
-		case FORMAT_RGB:
-			this->bpp = 3;
-			break;
-		case FORMAT_ALPHA:
-			this->bpp = 1;
-			break;
+		// for optimizations
+		case Image::FORMAT_BGRA:
+		case Image::FORMAT_BGRX:
 #if !defined(_ANDROID) && !defined(_WIN32)
-		case FORMAT_BGRA:
-			this->bpp = 4;
-			break;
+#ifndef __APPLE__
+			this->glFormat = GL_BGRA;
+#else
+			this->glFormat = GL_BGRA_EXT;
 #endif
-		default:
-			this->bpp = 3;
+#else
+			this->glFormat = GL_RGBA;
+#endif
+			this->internalFormat = GL_RGBA;
 			break;
-		}
-		this->filename = "";
-		this->manualBuffer = NULL;
-		glGenTextures(1, &this->textureId);
-		this->_setCurrentTexture();
-		if (color != Color::Clear)
-		{
-			this->fillRect(0, 0, this->width, this->height, color);
-		}
-		else
-		{
-			this->clear();
-		}
-        
-        // Non power of 2 textures in OpenGL, must have addressing mode set to clamp, otherwise they won't work.
-        if (!isPower2(w) || !isPower2(h))
-		{
-			this->setAddressMode(ADDRESS_CLAMP);
+		case Image::FORMAT_RGB:
+			this->glFormat = this->internalFormat = GL_RGB;
+			break;
+		// for optimizations
+		case Image::FORMAT_BGR:
+#if !defined(_ANDROID) && !defined(_WIN32)
+#ifndef __APPLE__
+			this->glFormat = GL_BGR;
+#else
+			this->glFormat = GL_BGR_EXT;
+#endif
+#else
+			this->glFormat = GL_RGB;
+#endif
+			this->internalFormat = GL_RGB;
+			break;
+		case Image::FORMAT_ALPHA:
+			this->glFormat = this->internalFormat = GL_ALPHA;
+			break;
+		case Image::FORMAT_GRAYSCALE:
+			this->glFormat = this->internalFormat = GL_LUMINANCE;
+			break;
+		case Image::FORMAT_PALETTE: // TODOaa - does palette use RGBA?
+			this->glFormat = this->internalFormat = GL_RGBA;
+			break;
 		}
 	}
 
 	OpenGL_Texture::~OpenGL_Texture()
 	{
 		this->unload();
-		if (this->manualBuffer != NULL)
-		{
-			delete [] this->manualBuffer;
-		}
 	}
 
 	void OpenGL_Texture::_setCurrentTexture()
@@ -154,6 +138,74 @@ namespace april
 
 	bool OpenGL_Texture::load()
 	{
+		if (this->isLoaded())
+		{
+			return true;
+		}
+		hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
+		Image* image = NULL;
+		unsigned char* currentData = NULL;
+		if (this->data != NULL) // reload from memory
+		{
+			currentData = this->data;
+		}
+		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
+		if (currentData == NULL && (type != TYPE_VOLATILE || this->width != 0 && this->height != 0))
+		{
+			if (this->filename == "")
+			{
+				hlog::error(april::logTag, "No filename for texture specified!");
+				return false;
+			}
+			image = Image::load(this->filename);
+			if (image == NULL)
+			{
+				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
+				return false;
+			}
+			this->width = image->w;
+			this->height = image->h;
+			this->format = image->format;
+			currentData = image->data;
+			image->data = NULL;
+			delete image;
+		}
+		this->_assignFormat();
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, this->d3dFormat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
+		if (hr != D3D_OK)
+		{
+			hlog::error(april::logTag, "Failed to create DX9 texture!");
+			if (currentData != NULL && this->data != currentData)
+			{
+				delete [] currentData;
+			}
+			return false;
+		}
+		if (currentData != NULL)
+		{
+			this->write(0, 0, this->width, this->height, currentData, format);
+			if (this->type != TYPE_VOLATILE && (this->type != TYPE_IMMUTABLE || this->filename == ""))
+			{
+				if (this->data != currentData)
+				{
+					if (this->data != NULL)
+					{
+						delete [] this->data;
+					}
+					this->data = currentData;
+				}
+			}
+			else
+			{
+				delete [] currentData;
+				// the used format will be the native format, because there is no intermediate data
+				this->format = april::rendersys->getNativeTextureFormat(this->format);
+			}
+		}
+		return true;
+
+
+
 		if (this->textureId != 0)
 		{
 			return true;
@@ -227,7 +279,7 @@ namespace april
         // Non power of 2 textures in OpenGL, must have addressing mode set to clamp, otherwise they won't work.
         if (!isPower2(this->width) || !isPower2(this->height))
 		{
-			setAddressMode(ADDRESS_CLAMP);
+			this->addressMode = ADDRESS_CLAMP;
 		}
 		return true;
 	}
@@ -244,38 +296,17 @@ namespace april
 
 	void OpenGL_Texture::clear()
 	{
-		// TODO - use as base for ::clear
-		int glFormat = GL_RGB;
-		int internalFormat = GL_RGB;
-		switch (this->format)
+		if (this->data != NULL)
 		{
-		case FORMAT_ARGB:
-			glFormat = internalFormat = GL_RGBA;
-			break;
-		case FORMAT_RGB:
-			glFormat = internalFormat = GL_RGB;
-			break;
-		case FORMAT_ALPHA:
-			glFormat = internalFormat = GL_ALPHA;
-			break;
-#if !defined(_ANDROID) && !defined(_WIN32)
-		case FORMAT_BGRA:
-#ifndef __APPLE__
-			glFormat = GL_BGRA;
-#else
-			glFormat = GL_BGRA_EXT;
-#endif
-			internalFormat = GL_RGBA;
-			break;
-#endif
-		default:
-			glFormat = internalFormat = GL_RGB;
-			break;
+			Texture::clear();
+			return;
 		}
-		unsigned char* clearColor = new unsigned char[this->width * this->height * this->bpp];
-		memset(clearColor, 0, this->width * this->height * this->bpp);
+		int size = this->getByteSize();
+		unsigned char* clearColor = new unsigned char[size];
+		memset(clearColor, 0, size);
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, this->width, this->height, 0, glFormat, GL_UNSIGNED_BYTE, clearColor);
+		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
+		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
 		delete [] clearColor;
 	}
 
@@ -287,6 +318,13 @@ namespace april
 
 	void OpenGL_Texture::setPixel(int x, int y, Color color)
 	{
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		if (this->data != NULL)
+		{
+			Texture::setPixel(x, y, color);
+			return;
+		}
 		unsigned char writeData[4] = {color.r, color.g, color.b, color.a};
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
@@ -295,6 +333,48 @@ namespace april
 	
 	void OpenGL_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
+		x = hclamp(x, 0, this->width - 1);
+		y = hclamp(y, 0, this->height - 1);
+		w = hclamp(w, 1, this->width - x);
+		h = hclamp(h, 1, this->height - y);
+		if (w == 1 && h == 1)
+		{
+			this->setPixel(x, y, color);
+			return;
+		}
+		if (this->data != NULL)
+		{
+			Texture::fillRect(x, y, w, h, color);
+			return;
+		}
+
+
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		unsigned char* writeData = new unsigned char[w * h * Image::getFormatBpp(nativeFormat)];
+
+
+		/*
+		D3DLOCKED_RECT lockRect;
+		_CREATE_RECT(rect, x, y, w, h);
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
+		if (lockResult == LR_FAILED)
+		{
+			return;
+		}
+		*/
+		//unsigned char* p = (unsigned char*)lockRect.pBits;
+		//p -= (x + y * this->width) * Image::getFormatBpp(nativeFormat); // Image::fillRect expects data from the beginning so this shift back was implemented, but will never be accessed
+		Image::fillRect(x, y, w, h, color, writeData, this->width, this->height, nativeFormat);
+		//this->_unlock(buffer, lockResult, true);
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
+		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, this->glFormat, GL_UNSIGNED_BYTE, writeData);
+		delete [] writeData;
+
+
+
+
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
 		w = hclamp(w, 1, this->width - x);
@@ -536,6 +616,96 @@ namespace april
 	void OpenGL_Texture::saturate(float factor)
 	{
 		// TODO
+	}
+
+	bool OpenGL_Texture::_uploadDataToGpu(int x, int y, int w, int h)
+	{
+		if (this->data == NULL)
+		{
+			return false;
+		}
+
+
+
+		int dataBpp = this->getBpp();
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		int gpuBpp = Image::getFormatBpp(nativeFormat);
+		unsigned char* writeData = ;
+		if (x == 0 && w == this->width)
+		{
+			Image::convertToFormat(&this->data[(x + y * w) * dataBpp], &p, w, h, this->format, nativeFormat, false);
+		}
+		else
+		{
+			for_iter (j, 0, h)
+			{
+				Image::convertToFormat(&this->data[(x + y * w) * dataBpp], &p, w, 1, this->format, nativeFormat, false);
+				p += this->width * gpuBpp;
+			}
+		}
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, this->glFormat, GL_UNSIGNED_BYTE, writeData);
+		return true;
+
+
+
+		if (this->bpp == 4)
+		{
+#if !defined(_ANDROID) && !defined(_WIN32)
+			if (this->format == FORMAT_BGRA)
+			{
+#ifndef __APPLE__
+				glFormat = GL_BGRA;
+#else
+				glFormat = GL_BGRA_EXT;
+#endif
+			}
+			else
+#endif
+			{
+				glFormat = GL_RGBA;
+			}
+		}
+		else if (this->bpp == 3)
+		{
+			glFormat = GL_RGB;
+		}
+		else if (this->bpp == 1)
+		{
+			glFormat = GL_ALPHA;
+		}
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, glFormat, GL_UNSIGNED_BYTE, data);
+
+
+
+
+
+
+		D3DLOCKED_RECT lockRect;
+		_CREATE_RECT(rect, x, y, w, h);
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
+		if (result == LR_FAILED)
+		{
+			return false;
+		}
+		int dataBpp = this->getBpp();
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		int gpuBpp = Image::getFormatBpp(nativeFormat);
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		if (x == 0 && w == this->width)
+		{
+			Image::convertToFormat(&this->data[(x + y * w) * dataBpp], &p, w, h, this->format, nativeFormat, false);
+		}
+		else
+		{
+			for_iter (j, 0, h)
+			{
+				Image::convertToFormat(&this->data[(x + y * w) * dataBpp], &p, w, 1, this->format, nativeFormat, false);
+				p += this->width * gpuBpp;
+			}
+		}
+		this->_unlock(buffer, result, true);
+		return true;
 	}
 
 }

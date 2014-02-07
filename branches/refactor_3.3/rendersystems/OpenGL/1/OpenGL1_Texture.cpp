@@ -29,16 +29,7 @@
 
 namespace april
 {
-	OpenGL1_Texture::OpenGL1_Texture(chstr filename) : OpenGL_Texture(filename)
-	{
-	}
-
-	OpenGL1_Texture::OpenGL1_Texture(int w, int h, unsigned char* rgba) : OpenGL_Texture(w, h, rgba)
-	{
-	}
-
-	OpenGL1_Texture::OpenGL1_Texture(int w, int h, Format format, Type type, Color color) :
-		OpenGL_Texture(w, h, format, type, color)
+	OpenGL1_Texture::OpenGL1_Texture() : OpenGL_Texture()
 	{
 	}
 
@@ -46,16 +37,35 @@ namespace april
 	{
 	}
 
-	bool OpenGL1_Texture::copyPixelData(unsigned char** output)
+	bool OpenGL1_Texture::copyPixelData(unsigned char** output, Image::Format format)
 	{
-		this->load();
+		if (this->data != NULL)
+		{
+			return Texture::copyPixelData(output);
+		}
+		if (!this->isLoaded())
+		{
+			return false;
+		}
+		int size = this->getByteSize();
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		APRIL_OGL1_RENDERSYS->currentState.textureId = APRIL_OGL1_RENDERSYS->deviceState.textureId = this->textureId;
-		*output = new unsigned char[this->width * this->height * this->bpp];
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, *output);
-		return true;
+		if (!Image::needsConversion(april::rendersys->getNativeTextureFormat(GL_NATIVE_FORMAT), format)) // to avoid unnecessary copying
+		{
+			if (*output == NULL)
+			{
+				*output = new unsigned char[size];
+			}
+			glGetTexImage(GL_TEXTURE_2D, 0, this->glFormat, GL_UNSIGNED_BYTE, *output);
+			return true;
+		}
+		unsigned char* temp = new unsigned char[size];
+		glGetTexImage(GL_TEXTURE_2D, 0, this->glFormat, GL_UNSIGNED_BYTE, temp);
+		bool result = Image::convertToFormat(temp, output, this->width, this->height, GL_NATIVE_FORMAT, format);
+		delete [] temp;
+		return result;
 	}
-	
+
 }
 
 #endif
