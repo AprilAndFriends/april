@@ -78,6 +78,7 @@ namespace april
 		virtual Color getPixel(int x, int y);
 		virtual void setPixel(int x, int y, Color color);
 		virtual void fillRect(int x, int y, int w, int h, Color color);
+		virtual void write(int x, int y, int w, int h, unsigned char* data, Image::Format format);
 		virtual void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
@@ -85,6 +86,7 @@ namespace april
 		virtual void rotateHue(float degrees);
 		virtual void saturate(float factor);
 		virtual void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
+		virtual bool copyPixelData(unsigned char** output, Image::Format format);
 
 		Color getPixel(gvec2 position);
 		void setPixel(gvec2 position, Color color);
@@ -95,14 +97,11 @@ namespace april
 		void blit(gvec2 position, Texture* texture, grect source, unsigned char alpha = 255);
 		void blit(gvec2 position, Image* image, grect source, unsigned char alpha = 255);
 		void blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
-		DEPRECATED_ATTRIBUTE virtual void write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp);
-		virtual bool write(unsigned char* data, Image::Format format);
 		void stretchBlit(int x, int y, int w, int h, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(grect destination, Texture* texture, grect source, unsigned char alpha = 255);
 		void stretchBlit(grect destination, Image* image, grect source, unsigned char alpha = 255);
 		void stretchBlit(grect destination, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
-
-		virtual bool copyPixelData(unsigned char** output) { return false; }
+		bool copyPixelData(unsigned char** output);
 
 	protected:
 		hstr filename;
@@ -110,7 +109,6 @@ namespace april
 		Image::Format format;
 		int width;
 		int height;
-		int bpp; // TODOaa - maybe remove this and use only "getFormatBpp(format)"?
 		Filter filter;
 		AddressMode addressMode;
 		unsigned char* data;
@@ -124,6 +122,8 @@ namespace april
 		// TODOaa - these may currently not work well with anything else than DirectX9
 		void _blit(unsigned char* thisData, int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void _stretchBlit(unsigned char* thisData, int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+
+		virtual bool _uploadDataToGpu(int x, int y, int w, int h) = 0;
 
 	};
 	

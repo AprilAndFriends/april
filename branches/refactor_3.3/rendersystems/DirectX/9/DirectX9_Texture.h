@@ -41,19 +41,17 @@ namespace april
 		Color getPixel(int x, int y);
 		void setPixel(int x, int y, Color color);
 		void fillRect(int x, int y, int w, int h, Color color);
+		void write(int x, int y, int w, int h, unsigned char* data, Image::Format format);
+		bool copyPixelData(unsigned char** output, Image::Format format);
 		void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		DEPRECATED_ATTRIBUTE void write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp);
-		bool write(unsigned char* data, Image::Format format);
-
 		void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void rotateHue(float degrees);
 		void saturate(float factor);
-		bool copyPixelData(unsigned char** output);
 		void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 
-		void restore(); // TODOa - currently only a hack for rendertarget textures
+		void restore(); // TODOaa - currently only a hack for rendertarget textures
 
 	protected:
 		IDirect3DSurface9* d3dSurface;
@@ -73,11 +71,11 @@ namespace april
 		bool _create(int w, int h, Color color, Image::Format format, Type type);
 		void _assignFormat();
 
-		IDirect3DTexture9* _getTexture() { return this->d3dTexture; }
 		IDirect3DSurface9* _getSurface();
 
 		LOCK_RESULT _tryLock(IDirect3DSurface9** buffer, D3DLOCKED_RECT* lockRect, RECT* rect);
 		void _unlock(IDirect3DSurface9* buffer, LOCK_RESULT lock, bool update);
+		bool _uploadDataToGpu(int x, int y, int w, int h);
 
 	};
 

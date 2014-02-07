@@ -30,7 +30,6 @@ namespace april
 		this->format = Image::FORMAT_INVALID;
 		this->width = 0;
 		this->height = 0;
-		this->bpp = 4;
 		this->filter = FILTER_LINEAR;
 		this->addressMode = ADDRESS_WRAP;
 		this->data = NULL;
@@ -52,7 +51,6 @@ namespace april
 		this->type = type;
 		this->width = 0;
 		this->height = 0;
-		this->bpp = 0;
 		this->type = type;
 		this->format = Image::FORMAT_INVALID;
 		this->data = NULL;
@@ -70,12 +68,19 @@ namespace april
 		this->filename = "";
 		this->width = w;
 		this->height = h;
-		this->bpp = Image::getFormatBpp(format);
 		this->type = type;
-		this->format = format;
-		int size = this->getByteSize();
-		this->data = new unsigned char[size];
-		memcpy(this->data, data, size);
+		// TODOaa - don't this->data use if texture type does not support it
+		if (true)
+		{
+			int size = this->getByteSize();
+			this->data = new unsigned char[size];
+			memcpy(this->data, data, size);
+			this->format = format;
+		}
+		else
+		{
+			this->format = april::rendersys->getNativeTextureFormat(format);
+		}
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
 		return true;
 	}
@@ -84,18 +89,25 @@ namespace april
 	{
 		if (w == 0 || h == 0)
 		{
-			hlog::errorf(april::logTag, "Cannot create texture with dimentions %d,%d!", w, h);
+			hlog::errorf(april::logTag, "Cannot create texture with dimensions %d,%d!", w, h);
 			return false;
 		}
 		this->filename = "";
 		this->width = w;
 		this->height = h;
-		this->bpp = Image::getFormatBpp(format);
 		this->type = type;
-		this->format = format;
-		int size = this->getByteSize();
-		this->data = new unsigned char[size];
-		Image::fillRect(0, 0, this->width, this->height, color, this->data, this->width, this->height, format);
+		// TODOaa - don't this->data use if texture type does not support it
+		if (true)
+		{
+			int size = this->getByteSize();
+			this->data = new unsigned char[size];
+			Image::fillRect(0, 0, this->width, this->height, color, this->data, this->width, this->height, format);
+			this->format = format;
+		}
+		else
+		{
+			this->format = april::rendersys->getNativeTextureFormat(format);
+		}
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
 		return true;
 	}
@@ -120,20 +132,20 @@ namespace april
 
 	int Texture::getBpp()
 	{
-		if (this->bpp == 0)
+		if (this->format == Image::FORMAT_INVALID)
 		{
 			hlog::warnf(april::logTag, "Texture '%s' has bpp = 0 (possibly not loaded yet?)", this->filename.c_str());
 		}
-		return this->bpp;
+		return Image::getFormatBpp(this->format);
 	}
 
 	int Texture::getByteSize()
 	{
-		if (this->width == 0 || this->height == 0 || this->bpp == 0)
+		if (this->width == 0 || this->height == 0 || this->format == Image::FORMAT_INVALID)
 		{
 			hlog::warnf(april::logTag, "Texture '%s' has byteSize = 0 (possibly not loaded yet?)", this->filename.c_str());
 		}
-		return (this->width * this->height * this->bpp);
+		return (this->width * this->height * Image::getFormatBpp(this->format));
 	}
 
 	hstr Texture::_getInternalName()
@@ -164,23 +176,72 @@ namespace april
 
 	void Texture::clear()
 	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement clear()!", april::rendersys->getName().c_str());
+		if (this->data != NULL)
+		{
+			// TODOaa - check if this works for palette formatting as well
+			memset(this->data, 0, this->getByteSize());
+			this->_uploadDataToGpu(0, 0, this->width, this->height);
+		}
 	}
 
 	Color Texture::getPixel(int x, int y)
 	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement getPixel()!", april::rendersys->getName().c_str());
-		return Color::Clear;
+		Color color = Color::Clear;
+		if (this->data != NULL)
+		{
+			unsigned char rgba[4] = {0};
+			if (Image::convertToFormat(this->data, (unsigned char**)&rgba, 1, 1, this->format, Image::FORMAT_RGBA, false))
+			{
+				color.r = rgba[0];
+				color.g = rgba[1];
+				color.b = rgba[2];
+				color.a = rgba[3];
+			}
+		}
+		return color;
 	}
 
 	void Texture::setPixel(int x, int y, Color color)
 	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement setPixel()!", april::rendersys->getName().c_str());
+		if (this->data != NULL)
+		{
+			unsigned char rgba[4] = {color.r, color.g, color.b, color.a};
+			Image::convertToFormat(rgba, &this->data, 1, 1, Image::FORMAT_RGBA, this->format, false);
+			this->_uploadDataToGpu(x, y, 1, 1);
+		}
 	}
 
 	void Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement fillRect()!", april::rendersys->getName().c_str());
+		if (this->data != NULL)
+		{
+			Image::fillRect(x, y, w, h, color, this->data, this->width, this->height, this->format);
+			this->_uploadDataToGpu(x, y, w, h);
+		}
+	}
+
+	void Texture::write(int x, int y, int w, int h, unsigned char* data, Image::Format format)
+	{
+		if (this->data != NULL)
+		{
+			// TODOaa - needs Image::write() with similar implementation to Image::fillRect()
+			Image::convertToFormat(data, &this->data, this->width, this->height, format, this->format, false);
+			this->_uploadDataToGpu(x, y, w, h);
+		}
+	}
+
+	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
+	{
+		if (this->data == NULL)
+		{
+			return false;
+		}
+		return Image::convertToFormat(this->data, output, this->width, this->height, this->format, format, false);
+	}
+
+	bool Texture::copyPixelData(unsigned char** output)
+	{
+		return this->copyPixelData(output, this->format);
 	}
 
 	void Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
@@ -320,17 +381,6 @@ namespace april
 			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
 	}
 
-	void Texture::write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp)
-	{
-		// TODOaa - implement?
-	}
-
-	bool Texture::write(unsigned char* data, Image::Format format)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement insertAsAlphaMap()!", april::rendersys->getName().c_str());
-		return false;
-	}
-
 	void Texture::_blit(unsigned char* thisData, int x, int y, unsigned char* srcData, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		x = hclamp(x, 0, this->width - 1);
@@ -352,7 +402,8 @@ namespace april
 		// TODOaa - should be checked on different BPPs and data access better
 		// the following iteration blocks are very similar, but for performance reasons they
 		// have been duplicated instead of putting everything into one block with if branches
-		if (this->bpp == 4 && dataBpp == 4)
+		int thisBpp = this->getBpp();
+		if (thisBpp == 4 && dataBpp == 4)
 		{
 			for_iterx (j, 0, sh)
 			{
@@ -382,7 +433,7 @@ namespace april
 				}
 			}
 		}
-		else if (this->bpp == 3 && dataBpp == 4)
+		else if (thisBpp == 3 && dataBpp == 4)
 		{
 			for_iterx (j, 0, sh)
 			{
@@ -401,7 +452,7 @@ namespace april
 				}
 			}
 		}
-		else if (this->bpp == 4 && dataBpp == 3)
+		else if (thisBpp == 4 && dataBpp == 3)
 		{
 			if (alpha > 0)
 			{
@@ -421,7 +472,7 @@ namespace april
 				}
 			}
 		}
-		else if (this->bpp == 1 && dataBpp == 1)
+		else if (thisBpp == 1 && dataBpp == 1)
 		{
 			if (alpha > 0)
 			{
@@ -484,7 +535,8 @@ namespace april
 		// TODOaa - should be checked on different BPPs and data access better
 		// the following iteration blocks are very similar, but for performance reasons they
 		// have been duplicated instead of putting everything into one block with if branches
-		if (this->bpp == 4 && dataBpp == 4)
+		int thisBpp = this->getBpp();
+		if (thisBpp == 4 && dataBpp == 4)
 		{
 			for_iterx (j, 0, h)
 			{
@@ -559,7 +611,7 @@ namespace april
 				}
 			}
 		}
-		else if (this->bpp == 3 && dataBpp == 4)
+		else if (thisBpp == 3 && dataBpp == 4)
 		{
 			for_iterx (j, 0, h)
 			{
@@ -623,7 +675,7 @@ namespace april
 				}
 			}
 		}
-		else if (this->bpp == 4 && dataBpp == 3)
+		else if (thisBpp == 4 && dataBpp == 3)
 		{
 			if (alpha > 0)
 			{
@@ -683,7 +735,7 @@ namespace april
 				}
 			}
 		}
-		else if (this->bpp == 1 && dataBpp == 1)
+		else if (thisBpp == 1 && dataBpp == 1)
 		{
 			if (alpha > 0)
 			{

@@ -41,6 +41,8 @@ namespace april
 		
 	protected:
 		Image* source;
+
+		bool _uploadDataToGpu(int x, int y, int w, int h); // not used
 		
 	};
 
