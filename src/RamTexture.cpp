@@ -95,6 +95,15 @@ namespace april
 		this->source->setPixel(x, y, color);
 	}
 
+	bool RamTexture::_createInternalTexture()
+	{
+		return true;
+	}
+
+	void RamTexture::_assignFormat()
+	{
+	}
+
 	bool RamTexture::_uploadDataToGpu(int x, int y, int w, int h)
 	{
 		return true;

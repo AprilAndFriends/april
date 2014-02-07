@@ -55,7 +55,7 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->drawFilledRect(drawRect, april::Color::Grey);
 		manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 		april::rendersys->setTexture(manualTexture);
-		april::rendersys->render(april::TriangleStrip, dv, 4);
+		april::rendersys->render(april::RO_TRIANGLE_STRIP, dv, 4);
 		april::rendersys->setTexture(texture);
 		april::rendersys->drawTexturedRect(textureRect + offset, src);
 		april::rendersys->drawFilledRect(grect(0.0f, 0.0f, 100.0f, 75.0f), april::Color::Yellow);
@@ -168,7 +168,7 @@ void april_init(const harray<hstr>& args)
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w / 2;
 	textureRect.y = -textureRect.h / 2;
-	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Texture::FORMAT_ARGB);
+	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::TYPE_MANAGED);
 	manualTexture->blit(100, 100, texture, 0, 0, texture->getWidth(), texture->getHeight());
 	manualTexture->stretchBlit(0, 100, 900, 200, texture, 0, 0, texture->getWidth() / 2, texture->getHeight() / 2);
 }

@@ -117,6 +117,9 @@ namespace april
 		virtual bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
 		virtual bool _create(int w, int h, Color color, Image::Format format, Type type);
 
+		virtual bool _createInternalTexture() = 0;
+		virtual void _assignFormat() = 0;
+
 		hstr _getInternalName();
 
 		// TODOaa - these may currently not work well with anything else than DirectX9

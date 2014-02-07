@@ -45,7 +45,7 @@ public:
 		april::rendersys->lookAt(gvec3(2.0f, 2.0f, -5.0f), gvec3(0.0f, 0.0f, 0.0f), gvec3(0.0f, 1.0f, 0.0f));
 		april::rendersys->rotate(this->angle, 0.0f, 1.0f, 0.0f);
 		april::rendersys->setTexture(texture);
-		april::rendersys->render(april::TriangleStrip, v, 4);
+		april::rendersys->render(april::RO_TRIANGLE_STRIP, v, 4);
 		return true;
 	}
 

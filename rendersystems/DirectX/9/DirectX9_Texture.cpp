@@ -30,65 +30,22 @@
 
 namespace april
 {
-	// TODO - refactor
+	// TODOaa - refactor
 	extern harray<DirectX9_Texture*> gRenderTargets;
 
 	DirectX9_Texture::DirectX9_Texture() : DirectX_Texture(), d3dTexture(NULL), d3dSurface(NULL), d3dFormat(D3DFMT_UNKNOWN), renderTarget(false)
 	{
 	}
 
-	bool DirectX9_Texture::_create(chstr filename, Type type)
+	DirectX9_Texture::~DirectX9_Texture()
 	{
-		return DirectX_Texture::_create(filename, type);
+		if (this->renderTarget)
+		{
+			gRenderTargets -= this;
+		}
+		this->unload();
 	}
 
-	bool DirectX9_Texture::_create(int w, int h, unsigned char* data, Image::Format format, Type type)
-	{
-		if (!DirectX_Texture::_create(w, h, data, format, type))
-		{
-			return false;
-		}
-		this->_assignFormat();
-		// TODOaa - change pool to save memory, depending on type
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, this->d3dFormat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
-		if (hr != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to create DX9 texture!");
-			return false;
-		}
-		this->write(0, 0, this->width, this->height, data, format);
-		return true;
-	}
-	
-	bool DirectX9_Texture::_create(int w, int h, Color color, Image::Format format, Type type)
-	{
-		if (!DirectX_Texture::_create(w, h, color, format, type))
-		{
-			return false;
-		}
-		this->_assignFormat();
-		// TODOaa - change pool to save memory
-		D3DPOOL d3dpool = D3DPOOL_MANAGED;
-		DWORD d3dusage = 0;
-		/*
-		if (type == TYPE_RENDER_TARGET)
-		{
-			d3dusage = D3DUSAGE_RENDERTARGET;
-			d3dpool = D3DPOOL_DEFAULT;
-			this->renderTarget = true;
-			gRenderTargets += this;
-		}
-		*/
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, this->d3dFormat, d3dpool, &this->d3dTexture, NULL);
-		if (hr != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to create DX9 texture!");
-			return false;
-		}
-		this->write(0, 0, this->width, this->height, data, format);
-		return true;
-	}
-	
 	void DirectX9_Texture::restore()
 	{
 		// TODOaa - needs refactoring
@@ -98,25 +55,40 @@ namespace april
 		}
 		this->unload();
 		this->_assignFormat();
-		// TODOaa - needs a new setup like in _create()
-		D3DPOOL d3dpool = D3DPOOL_DEFAULT;
-		DWORD d3dusage = D3DUSAGE_RENDERTARGET;
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, d3dusage, this->d3dFormat, d3dpool, &this->d3dTexture, NULL);
-		if (hr != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to restore user-defined DX9 texture!");
-		}
+		this->_createInternalTexture();
 	}
 
-	DirectX9_Texture::~DirectX9_Texture()
+	bool DirectX9_Texture::_createInternalTexture()
 	{
-		this->unload();
+		// TODOaa - change pool to save memory
 		if (this->renderTarget)
 		{
-			gRenderTargets -= this;
+			this->d3dPool = D3DPOOL_MANAGED;
+			this->d3dUsage = 0;
+			/*
+			if (type == TYPE_RENDER_TARGET)
+			{
+				d3dusage = D3DUSAGE_RENDERTARGET;
+				d3dpool = D3DPOOL_DEFAULT;
+				this->renderTarget = true;
+				gRenderTargets += this;
+			}
+			*/
 		}
+		else
+		{
+			this->d3dPool = D3DPOOL_DEFAULT;
+			this->d3dUsage = D3DUSAGE_RENDERTARGET;
+		}
+		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
+		if (hr != D3D_OK)
+		{
+			hlog::error(april::logTag, "Failed to create DX9 texture!");
+			return false;
+		}
+		return true;
 	}
-
+	
 	void DirectX9_Texture::_assignFormat()
 	{
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
@@ -175,8 +147,7 @@ namespace april
 			delete image;
 		}
 		this->_assignFormat();
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, this->d3dFormat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
-		if (hr != D3D_OK)
+		if (!this->_createInternalTexture())
 		{
 			hlog::error(april::logTag, "Failed to create DX9 texture!");
 			if (currentData != NULL && this->data != currentData)
@@ -296,12 +267,10 @@ namespace april
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		bool result = Image::convertToFormat(rgba, &p, 1, 1, Image::FORMAT_RGBA, april::rendersys->getNativeTextureFormat(this->format), false);
 		this->_unlock(buffer, lockResult, result);
-		Texture::setPixel(x, y, color);
 	}
 
 	void DirectX9_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		// TODOaa - change to call Image::fillRect
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
 		w = hclamp(w, 1, this->width - x);
@@ -391,6 +360,29 @@ namespace april
 		this->_unlock(buffer, lockResult, result);
 	}
 
+	bool DirectX9_Texture::copyPixelData(unsigned char** output, Image::Format format)
+	{
+		if (this->data != NULL)
+		{
+			return Texture::copyPixelData(output);
+		}
+		if (!this->isLoaded())
+		{
+			return false;
+		}
+		D3DLOCKED_RECT lockRect;
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
+		if (lockResult == LR_FAILED)
+		{
+			return false;
+		}
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		bool result = Image::convertToFormat(p, output, this->width, this->height, this->format, format, false); // will just perform a copy
+		this->_unlock(buffer, lockResult, result);
+		return result;
+	}
+
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		DirectX9_Texture* source = (DirectX9_Texture*)texture;
@@ -411,7 +403,7 @@ namespace april
 			return;
 		}
 		this->stretchBlit(x, y, w, h, (unsigned char*)lockRect.pBits, source->width, source->height, source->getBpp(), sx, sy, sw, sh, alpha);
-		source->_unlock(NULL, lockResult, false);
+		source->_unlock(buffer, lockResult, false);
 	}
 
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
@@ -445,8 +437,8 @@ namespace april
 		}
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
-		if (result == LR_FAILED)
+		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
+		if (lockResult == LR_FAILED)
 		{
 			return;
 		}
@@ -462,7 +454,7 @@ namespace april
 			april::rgbToHsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
 			april::hslToRgb(hmodf(h + range, 1.0f), s, l, &data[i + 2], &data[i + 1], &data[i]);
 		}
-		this->_unlock(buffer, result, true);
+		this->_unlock(buffer, lockResult, true);
 	}
 
 	void DirectX9_Texture::saturate(float factor)
@@ -470,8 +462,8 @@ namespace april
 		// TODOaa - optimize and improve
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
-		if (result == LR_FAILED)
+		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
+		if (lockResult == LR_FAILED)
 		{
 			return;
 		}
@@ -486,30 +478,12 @@ namespace april
 			april::rgbToHsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
 			april::hslToRgb(h, hmin(s * factor, 1.0f), l, &data[i + 2], &data[i + 1], &data[i]);
 		}
-		this->_unlock(buffer, result, true);
-	}
-
-	bool DirectX9_Texture::copyPixelData(unsigned char** output, Image::Format format)
-	{
-		if (this->data != NULL)
-		{
-			return Texture::copyPixelData(output);
-		}
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
-		if (lockResult == LR_FAILED)
-		{
-			return false;
-		}
-		unsigned char* p = (unsigned char*)lockRect.pBits;
-		bool result = Image::convertToFormat(p, output, this->width, this->height, this->format, format, false); // will just perform a copy
-		this->_unlock(buffer, lockResult, result);
-		return result;
+		this->_unlock(buffer, lockResult, true);
 	}
 
 	void DirectX9_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
 	{
+		// TODOaa - use this->data from source if available
 		if (this->width != texture->getWidth() || this->height != texture->getHeight() ||
 			this->format != Image::FORMAT_RGBA && this->format != Image::FORMAT_ARGB && this->format != Image::FORMAT_BGRA && this->format != Image::FORMAT_ABGR)
 		{
@@ -518,8 +492,8 @@ namespace april
 		DirectX9_Texture* source = (DirectX9_Texture*)texture;
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, NULL);
-		if (result == LR_FAILED)
+		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
+		if (lockResult == LR_FAILED)
 		{
 			return;
 		}
@@ -528,7 +502,7 @@ namespace april
 		LOCK_RESULT srcResult = source->_tryLock(&srcBuffer, &srcLockRect, NULL);
 		if (srcResult == LR_FAILED)
 		{
-			this->_unlock(buffer, result, false);
+			this->_unlock(buffer, lockResult, false);
 			return;
 		}
 		unsigned char* thisData = (unsigned char*)lockRect.pBits;
@@ -561,8 +535,8 @@ namespace april
 				}
 			}
 		}
-		this->_unlock(buffer, result, true);
 		source->_unlock(srcBuffer, srcResult, false);
+		this->_unlock(buffer, lockResult, true);
 	}
 
 	IDirect3DSurface9* DirectX9_Texture::_getSurface()
@@ -632,8 +606,8 @@ namespace april
 		D3DLOCKED_RECT lockRect;
 		_CREATE_RECT(rect, x, y, w, h);
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
-		if (result == LR_FAILED)
+		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
+		if (lockResult == LR_FAILED)
 		{
 			return false;
 		}
@@ -643,17 +617,17 @@ namespace april
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		if (x == 0 && w == this->width)
 		{
-			Image::convertToFormat(&this->data[(x + y * w) * dataBpp], &p, w, h, this->format, nativeFormat, false);
+			Image::convertToFormat(&this->data[(x + y * this->width) * dataBpp], &p, w, h, this->format, nativeFormat, false);
 		}
 		else
 		{
 			for_iter (j, 0, h)
 			{
-				Image::convertToFormat(&this->data[(x + y * w) * dataBpp], &p, w, 1, this->format, nativeFormat, false);
+				Image::convertToFormat(&this->data[(x + (y + j) * this->width) * dataBpp], &p, w, 1, this->format, nativeFormat, false);
 				p += this->width * gpuBpp;
 			}
 		}
-		this->_unlock(buffer, result, true);
+		this->_unlock(buffer, lockResult, true);
 		return true;
 	}
 

@@ -57,6 +57,8 @@ namespace april
 		IDirect3DSurface9* d3dSurface;
 		IDirect3DTexture9* d3dTexture;
 		D3DFORMAT d3dFormat;
+		D3DPOOL d3dPool;
+		DWORD d3dUsage;
 		bool renderTarget;
 
 		enum LOCK_RESULT
@@ -66,9 +68,7 @@ namespace april
 			LR_FAILED
 		};
 
-		bool _create(chstr filename, Type type);
-		bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
-		bool _create(int w, int h, Color color, Image::Format format, Type type);
+		bool _createInternalTexture();
 		void _assignFormat();
 
 		IDirect3DSurface9* _getSurface();

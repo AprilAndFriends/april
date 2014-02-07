@@ -145,7 +145,7 @@ namespace april
 		hstr findTextureFilename(chstr filename);
 		void unloadTextures();
 		virtual Image::Format getNativeTextureFormat(Image::Format format) = 0;
-		virtual Image* takeScreenshot(int bpp = 3) = 0;
+		virtual Image* takeScreenshot(int bpp = 3) = 0; // TODOaa - refactor to use Image::Format instead of BPP
 		virtual void presentFrame();
 		/// @note This can be used for optimizuations
 
