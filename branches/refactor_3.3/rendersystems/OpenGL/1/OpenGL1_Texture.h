@@ -38,8 +38,10 @@ namespace april
 	class OpenGL1_Texture : public OpenGL_Texture
 	{
 	public:
+		OpenGL1_Texture();
 		~OpenGL1_Texture();
 
+		Color getPixel(int x, int y);
 		bool copyPixelData(unsigned char** output, Image::Format format);
 
 	};

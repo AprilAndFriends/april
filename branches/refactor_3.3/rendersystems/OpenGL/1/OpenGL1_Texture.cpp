@@ -21,6 +21,7 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
+#include "Color.h"
 #include "Image.h"
 #include "OpenGL1_Texture.h"
 #include "OpenGL1_RenderSystem.h"
@@ -35,6 +36,30 @@ namespace april
 
 	OpenGL1_Texture::~OpenGL1_Texture()
 	{
+	}
+
+	Color OpenGL1_Texture::getPixel(int x, int y)
+	{
+		if (this->data != NULL)
+		{
+			return Texture::getPixel(x, y);
+		}
+		Color result = april::Color::Clear;
+		Image::Format format = april::rendersys->getNativeTextureFormat(GL_NATIVE_FORMAT);
+		unsigned char* pixels = NULL;
+		if (this->copyPixelData(&pixels, format)) // it's not possible to get just one pixel so the entire texture has to be retrieved (expensive!)
+		{
+			unsigned char temp[4] = {0, 0, 0, 0};
+			if (Image::convertToFormat(&pixels[(x + y * this->width) * this->getBpp()], (unsigned char**)&temp, 1, 1, format, Image::FORMAT_RGBA))
+			{
+				result.r = temp[0];
+				result.g = temp[1];
+				result.b = temp[2];
+				result.a = temp[3];
+			}
+			delete [] pixels;
+		}
+		return result;
 	}
 
 	bool OpenGL1_Texture::copyPixelData(unsigned char** output, Image::Format format)

@@ -25,7 +25,12 @@ namespace april
 	{
 	}
 
-	bool OpenGLES_Texture::copyPixelData(unsigned char** output)
+	Color OpenGLES_Texture::getPixel(int x, int y)
+	{
+		return april::Color::Clear;
+	}
+
+	bool OpenGLES_Texture::copyPixelData(unsigned char** output, Image::Format format)
 	{
 		return false;
 	}

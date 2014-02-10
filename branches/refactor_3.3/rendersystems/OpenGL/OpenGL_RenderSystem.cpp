@@ -222,8 +222,8 @@ namespace april
 		this->_setClientState(GL_COLOR_ARRAY, this->deviceState.colorEnabled);
 		glColor4f(this->deviceState.systemColor.r_f(), this->deviceState.systemColor.g_f(), this->deviceState.systemColor.b_f(), this->deviceState.systemColor.a_f());
 		glBindTexture(GL_TEXTURE_2D, this->deviceState.textureId);
-		this->currentState.textureFilter = april::Texture::FILTER_UNDEFINED;
-		this->currentState.textureAddressMode = april::Texture::ADDRESS_UNDEFINED;
+		this->currentState.textureFilter = april::Texture::FILTER_NEAREST;
+		this->currentState.textureAddressMode = april::Texture::ADDRESS_WRAP;
 		this->currentState.blendMode = april::BM_DEFAULT;
 		this->currentState.colorMode = april::CM_DEFAULT;
 	}

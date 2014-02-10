@@ -52,6 +52,7 @@ namespace april
 		int h;
 		int bpp;
 		Format format;
+		int internalFormat; // used for special platform dependent formats, usually used internally only
 		int compressedSize;
 
 		Image(); // TODOaa - make protected

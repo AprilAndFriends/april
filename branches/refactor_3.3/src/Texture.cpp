@@ -28,6 +28,7 @@ namespace april
 		this->filename = "";
 		this->type = TYPE_IMMUTABLE;
 		this->format = Image::FORMAT_INVALID;
+		this->dataFormat = 0;
 		this->width = 0;
 		this->height = 0;
 		this->filter = FILTER_LINEAR;
@@ -44,6 +45,7 @@ namespace april
 		this->height = 0;
 		this->type = type;
 		this->format = Image::FORMAT_INVALID;
+		this->dataFormat = 0;
 		this->data = NULL;
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
 		return true;
@@ -61,20 +63,23 @@ namespace april
 		this->height = h;
 		this->type = type;
 		// TODOaa - don't this->data use if texture type does not support it
+		int size = 0;
 		if (true)
 		{
-			int size = this->getByteSize();
+			this->format = format;
+			size = this->getByteSize();
 			this->data = new unsigned char[size];
 			memcpy(this->data, data, size);
-			this->format = format;
 		}
 		else
 		{
 			this->format = april::rendersys->getNativeTextureFormat(format);
+			size = this->getByteSize();
 		}
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		this->dataFormat = 0;
 		this->_assignFormat();
-		if (!this->_createInternalTexture())
+		if (!this->_createInternalTexture(data, size))
 		{
 			return false;
 		}
@@ -93,25 +98,27 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->type = type;
+		int size = 0;
 		// TODOaa - don't this->data use if texture type does not support it
 		if (true)
 		{
 			this->format = format;
-			int size = this->getByteSize();
+			size = this->getByteSize();
 			this->data = new unsigned char[size];
-			Image::fillRect(0, 0, this->width, this->height, color, this->data, this->width, this->height, format);
 		}
 		else
 		{
 			this->format = april::rendersys->getNativeTextureFormat(format);
+			size = this->getByteSize();
 		}
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		this->dataFormat = 0;
 		this->_assignFormat();
-		if (!this->_createInternalTexture())
+		if (!this->_createInternalTexture(this->data, size))
 		{
 			return false;
 		}
-		this->write(0, 0, this->width, this->height, data, format);
+		this->fillRect(0, 0, this->width, this->height, color);
 		return true;
 	}
 
@@ -184,6 +191,80 @@ namespace april
 			break;
 		}
 		return result;
+	}
+
+	bool Texture::load()
+	{
+		if (this->isLoaded())
+		{
+			return true;
+		}
+		hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
+		int size = 0;
+		unsigned char* currentData = NULL;
+		if (this->data != NULL) // reload from memory
+		{
+			currentData = this->data;
+			size = this->getByteSize();
+		}
+		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
+		if (currentData == NULL && (type != TYPE_VOLATILE || this->width != 0 && this->height != 0))
+		{
+			if (this->filename == "")
+			{
+				hlog::error(april::logTag, "No filename for texture specified!");
+				return false;
+			}
+			Image* image = Image::load(this->filename);
+			if (image == NULL)
+			{
+				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
+				return false;
+			}
+			this->width = image->w;
+			this->height = image->h;
+			this->format = image->format;
+			this->dataFormat = image->internalFormat;
+			if (this->dataFormat != 0)
+			{
+				size = image->compressedSize;
+			}
+			currentData = image->data;
+			image->data = NULL;
+			delete image;
+		}
+		this->_assignFormat();
+		if (!this->_createInternalTexture(currentData, size))
+		{
+			hlog::error(april::logTag, "Failed to create DX9 texture!");
+			if (currentData != NULL && this->data != currentData)
+			{
+				delete [] currentData;
+			}
+			return false;
+		}
+		if (currentData != NULL)
+		{
+			this->write(0, 0, this->width, this->height, currentData, format);
+			if (this->type != TYPE_VOLATILE && (this->type != TYPE_IMMUTABLE || this->filename == ""))
+			{
+				if (this->data != currentData)
+				{
+					if (this->data != NULL)
+					{
+						delete [] this->data;
+					}
+					this->data = currentData;
+				}
+			}
+			else
+			{
+				delete [] currentData;
+				// the used format will be the native format, because there is no intermediate data
+				this->format = april::rendersys->getNativeTextureFormat(this->format);
+			}
+		}
+		return true;
 	}
 
 	void Texture::clear()

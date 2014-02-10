@@ -60,7 +60,7 @@ namespace april
 	
 		Texture();
 		virtual ~Texture();
-		virtual bool load() = 0;
+		virtual bool load();
 		virtual void unload() = 0;
 
 		HL_DEFINE_GET(hstr, filename, Filename);
@@ -107,6 +107,7 @@ namespace april
 		hstr filename;
 		Type type;
 		Image::Format format;
+		unsigned int dataFormat; // used internally for special image data formatting
 		int width;
 		int height;
 		Filter filter;
@@ -117,7 +118,7 @@ namespace april
 		virtual bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
 		virtual bool _create(int w, int h, Color color, Image::Format format, Type type);
 
-		virtual bool _createInternalTexture() = 0;
+		virtual bool _createInternalTexture(unsigned char* data, int size) = 0;
 		virtual void _assignFormat() = 0;
 
 		hstr _getInternalName();
