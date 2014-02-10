@@ -29,6 +29,7 @@ namespace april
 		OpenGLES_Texture();
 		~OpenGLES_Texture();
 
+		Color getPixel(int x, int y);
 		bool copyPixelData(unsigned char** output, Image::Format format);
 
 	};

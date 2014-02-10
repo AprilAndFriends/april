@@ -49,11 +49,28 @@ namespace april
 	{
 	}
 
-	bool OpenGL_Texture::_createInternalTexture()
+	bool OpenGL_Texture::_createInternalTexture(unsigned char* data, int size)
 	{
 		glGenTextures(1, &this->textureId);
-        // Non power of 2 textures in OpenGL, must have addressing mode set to clamp, otherwise they won't work.
-        if (!isPower2(this->width) || !isPower2(this->height))
+		// required first call of glTexImage2D() to prevent problems
+#if TARGET_OS_IPHONE
+		if (this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG || this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG)
+		{
+			glCompressedTexImage2D(GL_TEXTURE_2D, 0, this->dataFormat, this->width, this->height, 0, size, data);
+		}
+		else
+#endif
+		{
+			int size = this->getByteSize();
+			unsigned char* clearColor = new unsigned char[size];
+			memset(clearColor, 0, size);
+			glBindTexture(GL_TEXTURE_2D, this->textureId);
+			APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
+			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+			delete [] clearColor;
+		}
+		// Non power of 2 textures in OpenGL, must have addressing mode set to clamp, otherwise they won't work.
+		if (!isPower2(this->width) || !isPower2(this->height))
 		{
 			this->addressMode = ADDRESS_CLAMP;
 		}
@@ -136,154 +153,6 @@ namespace april
 		return (this->textureId != 0);
 	}
 
-	bool OpenGL_Texture::load()
-	{
-		if (this->isLoaded())
-		{
-			return true;
-		}
-		hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
-		Image* image = NULL;
-		unsigned char* currentData = NULL;
-		if (this->data != NULL) // reload from memory
-		{
-			currentData = this->data;
-		}
-		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
-		if (currentData == NULL && (type != TYPE_VOLATILE || this->width != 0 && this->height != 0))
-		{
-			if (this->filename == "")
-			{
-				hlog::error(april::logTag, "No filename for texture specified!");
-				return false;
-			}
-			image = Image::load(this->filename);
-			if (image == NULL)
-			{
-				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
-				return false;
-			}
-			this->width = image->w;
-			this->height = image->h;
-			this->format = image->format;
-			currentData = image->data;
-			image->data = NULL;
-			delete image;
-		}
-		this->_assignFormat();
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, 0, this->d3dFormat, D3DPOOL_MANAGED, &this->d3dTexture, NULL);
-		if (hr != D3D_OK)
-		{
-			hlog::error(april::logTag, "Failed to create DX9 texture!");
-			if (currentData != NULL && this->data != currentData)
-			{
-				delete [] currentData;
-			}
-			return false;
-		}
-		if (currentData != NULL)
-		{
-			this->write(0, 0, this->width, this->height, currentData, format);
-			if (this->type != TYPE_VOLATILE && (this->type != TYPE_IMMUTABLE || this->filename == ""))
-			{
-				if (this->data != currentData)
-				{
-					if (this->data != NULL)
-					{
-						delete [] this->data;
-					}
-					this->data = currentData;
-				}
-			}
-			else
-			{
-				delete [] currentData;
-				// the used format will be the native format, because there is no intermediate data
-				this->format = april::rendersys->getNativeTextureFormat(this->format);
-			}
-		}
-		return true;
-
-
-
-		if (this->textureId != 0)
-		{
-			return true;
-		}
-		hlog::write(april::logTag, "Loading GL texture: " + this->_getInternalName());
-		Image* image = NULL;
-		if (this->filename != "")
-		{
-			image = Image::load(this->filename);
-			if (image == NULL)
-			{
-				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
-				return false;
-			}
-			this->width = image->w;
-			this->height = image->h;
-			this->bpp = image->bpp;
-		}
-		glGenTextures(1, &this->textureId);
-		if (this->textureId == 0)
-		{
-			hlog::error(april::logTag, "Failed to create GL texture!");
-			return false;
-		}
-		// write texels
-		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		if (image != NULL)
-		{
-#if TARGET_OS_IPHONE
-			if (((unsigned int) image->format) == GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG || ((unsigned int) image->format) == GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG)
-			{
-				glCompressedTexImage2D(GL_TEXTURE_2D, 0, image->format, image->w, image->h, 0, image->compressedSize, image->data);
-				this->format = FORMAT_ARGB; // TODO - not really a format
-			}
-			else
-#endif
-			{
-				switch (image->format)
-				{
-				case Image::FORMAT_RGBA:
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->w, image->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
-					this->format = FORMAT_ARGB;
-					break;
-				case Image::FORMAT_RGB:
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
-					this->format = FORMAT_RGB;
-					break;
-				case Image::FORMAT_GRAYSCALE:
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, image->w, image->h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, image->data);
-					this->format = FORMAT_ALPHA;
-					break;
-				default:
-					glTexImage2D(GL_TEXTURE_2D, 0, image->bpp == 4 ? GL_RGBA : GL_RGB, image->w, image->h, 0, image->format == Image::FORMAT_RGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image->data);
-					this->format = FORMAT_ARGB;
-					break;
-				}
-			}
-			delete image;
-		}
-		else if (this->manualBuffer != NULL)
-		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->manualBuffer);
-		}
-		else
-		{
-			this->clear();
-		}
-        // Non power of 2 textures in OpenGL, must have addressing mode set to clamp, otherwise they won't work.
-        if (!isPower2(this->width) || !isPower2(this->height))
-		{
-			this->addressMode = ADDRESS_CLAMP;
-		}
-		return true;
-	}
-
 	void OpenGL_Texture::unload()
 	{
 		if (this->textureId != 0)
@@ -308,12 +177,6 @@ namespace april
 		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
 		delete [] clearColor;
-	}
-
-	Color OpenGL_Texture::getPixel(int x, int y)
-	{
-		// TODO
-		return Color::Clear;
 	}
 
 	void OpenGL_Texture::setPixel(int x, int y, Color color)
@@ -347,99 +210,41 @@ namespace april
 			Texture::fillRect(x, y, w, h, color);
 			return;
 		}
-
-
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		int size = w * h * Image::getFormatBpp(nativeFormat);
 		unsigned char* writeData = new unsigned char[w * h * Image::getFormatBpp(nativeFormat)];
-
-
-		/*
-		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, x, y, w, h);
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
-		if (lockResult == LR_FAILED)
-		{
-			return;
-		}
-		*/
-		//unsigned char* p = (unsigned char*)lockRect.pBits;
-		//p -= (x + y * this->width) * Image::getFormatBpp(nativeFormat); // Image::fillRect expects data from the beginning so this shift back was implemented, but will never be accessed
-		Image::fillRect(x, y, w, h, color, writeData, this->width, this->height, nativeFormat);
-		//this->_unlock(buffer, lockResult, true);
+		Image::fillRect(0, 0, w, h, color, writeData, w, h, nativeFormat);
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, this->glFormat, GL_UNSIGNED_BYTE, writeData);
-		delete [] writeData;
-
-
-
-
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		w = hclamp(w, 1, this->width - x);
-		h = hclamp(h, 1, this->height - y);
-		// TODO - find a better and faster way to do this
-		unsigned char* writeData = new unsigned char[w * h * this->bpp];
-		memset(writeData, 0, w * h * this->bpp); // TODO: kspes: i don't think this call is redundant, check all similar situations
-		if (this->bpp == 4 || this->bpp == 3)
-		{
-			int i;
-			int j;
-			for_iterx (j, 0, h)
-			{
-				for_iterx (i, 0, w)
-				{
-					writeData[(i + j * w) * this->bpp + 0] = color.r;
-					writeData[(i + j * w) * this->bpp + 1] = color.g;
-					writeData[(i + j * w) * this->bpp + 2] = color.b;
-					if (this->bpp == 4)
-					{
-						writeData[(i + j * w) * this->bpp + 3] = color.a;
-					}
-				}
-			}
-		}
-		else if (this->bpp == 1)
-		{
-			unsigned char value = (color.r + color.g + color.b) / 3;
-			memset(writeData, value, w * h * this->bpp);
-		}
-		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
-		int glFormat = GL_RGBA;
-		if (this->bpp == 4)
-		{
-#if !defined(_ANDROID) && !defined(_WIN32)
-			if (this->format == FORMAT_BGRA)
-			{
-#ifndef __APPLE__
-				glFormat = GL_BGRA;
-#else
-				glFormat = GL_BGRA_EXT;
-#endif
-			}
-			else
-#endif
-			{
-				glFormat = GL_RGBA;
-			}
-		}
-		else if (this->bpp == 3)
-		{
-			glFormat = GL_RGB;
-		}
-		else if (this->bpp == 1)
-		{
-			glFormat = GL_ALPHA;
-		}
-		
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, glFormat, GL_UNSIGNED_BYTE, writeData);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, this->glFormat, GL_UNSIGNED_BYTE, writeData);
 		delete [] writeData;
 	}
 	
+	void OpenGL_Texture::write(int x, int y, int w, int h, unsigned char* data, Image::Format format)
+	{
+		if (this->data != NULL)
+		{
+			Texture::write(x, y, w, h, data, format);
+			return;
+		}
+		glBindTexture(GL_TEXTURE_2D, this->textureId);
+		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
+		if (!Image::needsConversion(format, april::rendersys->getNativeTextureFormat(format))) // to avoid unnecessary copying
+		{
+			glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, this->glFormat, GL_UNSIGNED_BYTE, data);
+			return;
+		}
+		unsigned char* temp = NULL;
+		if (Image::convertToFormat(data, &temp, this->width, this->height, format, GL_NATIVE_FORMAT))
+		{
+			glGetTexImage(GL_TEXTURE_2D, 0, this->glFormat, GL_UNSIGNED_BYTE, temp);
+			delete [] temp;
+		}
+	}
+
 	void OpenGL_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
+		// TODO - needs refactoring
 		OpenGL_Texture* source = (OpenGL_Texture*)texture;
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
@@ -456,7 +261,7 @@ namespace april
 		glBindTexture(GL_TEXTURE_2D, source->textureId);
 		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
-		if (source->bpp == 4)
+		if (source->getBpp() == 4)
 		{
 #if !defined(_ANDROID) && !defined(_WIN32)
 			if (this->format == FORMAT_BGRA)
@@ -473,21 +278,21 @@ namespace april
 				glFormat = GL_RGBA;
 			}
 		}
-		else if (source->bpp == 3)
+		else if (source->getBpp() == 3)
 		{
 			glFormat = GL_RGB;
 		}
-		else if (source->bpp == 1)
+		else if (source->getBpp() == 1)
 		{
 			glFormat = GL_ALPHA;
 		}
-		unsigned char* readData = new unsigned char[source->width * source->height * source->bpp];
+		unsigned char* readData = new unsigned char[source->width * source->height * source->getBpp()];
 #ifndef _OPENGLES // TODO - temp until we figure out how to handle this on OpenGLES. added by kspes on May 21st 2012
 		glGetTexImage(GL_TEXTURE_2D, 0, glFormat, GL_UNSIGNED_BYTE, readData);
 #else
-		memset(readData, 0, source->width * source->height * source->bpp);
+		memset(readData, 0, source->width * source->height * source->getBpp());
 #endif
-		this->blit(x, y, readData, source->width, source->height, source->bpp, sx, sy, sw, sh, alpha);
+		this->blit(x, y, readData, source->width, source->height, source->getBpp(), sx, sy, sw, sh, alpha);
 		delete [] readData;
 	}
 
@@ -500,13 +305,13 @@ namespace april
 		sw = hmin(sw, hmin(this->width - x, dataWidth - sx));
 		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
 		// TODO - improve this
-		unsigned char* writeData = new unsigned char[sw * sh * this->bpp];
-		memset(writeData, 255, sw * sh * this->bpp);
+		unsigned char* writeData = new unsigned char[sw * sh * this->getBpp()];
+		memset(writeData, 255, sw * sh * this->getBpp());
 		int i;
 		int j;
 		int k;
-		int minBpp = hmin(this->bpp, dataBpp);
-		if (this->bpp >= 3 && dataBpp >= 3)
+		int minBpp = hmin(this->getBpp(), dataBpp);
+		if (this->getBpp() >= 3 && dataBpp >= 3)
 		{
 			for_iterx (j, 0, sh)
 			{
@@ -514,7 +319,7 @@ namespace april
 				{
 					for_iterx (k, 0, minBpp)
 					{
-						writeData[(i + j * sw) * this->bpp + k] = data[(sx + i + (sy + j) * dataWidth) * dataBpp + k];
+						writeData[(i + j * sw) * this->getBpp() + k] = data[(sx + i + (sy + j) * dataWidth) * dataBpp + k];
 					}
 				}
 			}
@@ -532,7 +337,7 @@ namespace april
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
 		int glFormat = GL_RGBA;
-		if (this->bpp == 4)
+		if (this->getBpp() == 4)
 		{
 #if !defined(_ANDROID) && !defined(_WIN32)
 			if (this->format == FORMAT_BGRA)
@@ -549,11 +354,11 @@ namespace april
 				glFormat = GL_RGBA;
 			}
 		}
-		else if (this->bpp == 3)
+		else if (this->getBpp() == 3)
 		{
 			glFormat = GL_RGB;
 		}
-		else if (this->bpp == 1)
+		else if (this->getBpp() == 1)
 		{
 			glFormat = GL_ALPHA;
 		}
@@ -561,43 +366,6 @@ namespace april
 		delete [] writeData;
 	}
 	
-	void OpenGL_Texture::write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp)
-	{
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-
-		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		APRIL_OGL_RENDERSYS->currentState.textureId = APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
-		int glFormat = GL_RGBA;
-
-		if (this->bpp == 4)
-		{
-#if !defined(_ANDROID) && !defined(_WIN32)
-			if (this->format == FORMAT_BGRA)
-			{
-#ifndef __APPLE__
-				glFormat = GL_BGRA;
-#else
-				glFormat = GL_BGRA_EXT;
-#endif
-			}
-			else
-#endif
-			{
-				glFormat = GL_RGBA;
-			}
-		}
-		else if (this->bpp == 3)
-		{
-			glFormat = GL_RGB;
-		}
-		else if (this->bpp == 1)
-		{
-			glFormat = GL_ALPHA;
-		}
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, dataWidth, dataHeight, glFormat, GL_UNSIGNED_BYTE, data);
-	}
-
 	void OpenGL_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		// TODO
@@ -624,87 +392,25 @@ namespace april
 		{
 			return false;
 		}
-
-
-
 		int dataBpp = this->getBpp();
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		int gpuBpp = Image::getFormatBpp(nativeFormat);
-		unsigned char* writeData = ;
+		unsigned char* writeData = new unsigned char[w * h * gpuBpp];
 		if (x == 0 && w == this->width)
 		{
-			Image::convertToFormat(&this->data[(x + y * w) * dataBpp], &p, w, h, this->format, nativeFormat, false);
+			Image::convertToFormat(&this->data[(x + y * w) * dataBpp], &writeData, w, h, this->format, nativeFormat, false);
 		}
 		else
 		{
+			unsigned char* p = writeData;
 			for_iter (j, 0, h)
 			{
 				Image::convertToFormat(&this->data[(x + y * w) * dataBpp], &p, w, 1, this->format, nativeFormat, false);
-				p += this->width * gpuBpp;
+				p += w * gpuBpp;
 			}
 		}
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, this->glFormat, GL_UNSIGNED_BYTE, writeData);
-		return true;
-
-
-
-		if (this->bpp == 4)
-		{
-#if !defined(_ANDROID) && !defined(_WIN32)
-			if (this->format == FORMAT_BGRA)
-			{
-#ifndef __APPLE__
-				glFormat = GL_BGRA;
-#else
-				glFormat = GL_BGRA_EXT;
-#endif
-			}
-			else
-#endif
-			{
-				glFormat = GL_RGBA;
-			}
-		}
-		else if (this->bpp == 3)
-		{
-			glFormat = GL_RGB;
-		}
-		else if (this->bpp == 1)
-		{
-			glFormat = GL_ALPHA;
-		}
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, glFormat, GL_UNSIGNED_BYTE, data);
-
-
-
-
-
-
-		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, x, y, w, h);
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT result = this->_tryLock(&buffer, &lockRect, &rect);
-		if (result == LR_FAILED)
-		{
-			return false;
-		}
-		int dataBpp = this->getBpp();
-		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		int gpuBpp = Image::getFormatBpp(nativeFormat);
-		unsigned char* p = (unsigned char*)lockRect.pBits;
-		if (x == 0 && w == this->width)
-		{
-			Image::convertToFormat(&this->data[(x + y * w) * dataBpp], &p, w, h, this->format, nativeFormat, false);
-		}
-		else
-		{
-			for_iter (j, 0, h)
-			{
-				Image::convertToFormat(&this->data[(x + y * w) * dataBpp], &p, w, 1, this->format, nativeFormat, false);
-				p += this->width * gpuBpp;
-			}
-		}
-		this->_unlock(buffer, result, true);
+		delete [] writeData;
 		return true;
 	}
 

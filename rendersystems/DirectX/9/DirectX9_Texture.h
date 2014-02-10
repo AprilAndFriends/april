@@ -32,7 +32,6 @@ namespace april
 
 		DirectX9_Texture();
 		~DirectX9_Texture();
-		bool load();
 		void unload();
 		
 		bool isLoaded();
@@ -68,7 +67,7 @@ namespace april
 			LR_FAILED
 		};
 
-		bool _createInternalTexture();
+		bool _createInternalTexture(unsigned char* data, int sizea);
 		void _assignFormat();
 
 		IDirect3DSurface9* _getSurface();

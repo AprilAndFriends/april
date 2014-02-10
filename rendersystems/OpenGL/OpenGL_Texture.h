@@ -29,13 +29,11 @@ namespace april
 
 		OpenGL_Texture();
 		~OpenGL_Texture();
-		bool load();
 		void unload();
 
 		bool isLoaded();
 
 		void clear();
-		Color getPixel(int x, int y);
 		void setPixel(int x, int y, Color color);
 		void fillRect(int x, int y, int w, int h, Color color);
 		void write(int x, int y, int w, int h, unsigned char* data, Image::Format format);
@@ -53,7 +51,7 @@ namespace april
 
 		void _setCurrentTexture();
 
-		bool _createInternalTexture();
+		bool _createInternalTexture(unsigned char* data, int size);
 		void _assignFormat();
 
 		bool _uploadDataToGpu(int x, int y, int w, int h);

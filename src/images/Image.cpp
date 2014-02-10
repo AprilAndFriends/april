@@ -99,6 +99,7 @@ namespace april
 		this->h = 0;
 		this->bpp = 0;
 		this->format = FORMAT_INVALID;
+		this->internalFormat = 0;
 		this->compressedSize = 0;
 	}
 	

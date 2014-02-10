@@ -55,10 +55,10 @@ namespace april
 		}
 		this->unload();
 		this->_assignFormat();
-		this->_createInternalTexture();
+		this->_createInternalTexture(this->data, this->getByteSize());
 	}
 
-	bool DirectX9_Texture::_createInternalTexture()
+	bool DirectX9_Texture::_createInternalTexture(unsigned char* data, int size)
 	{
 		// TODOaa - change pool to save memory
 		if (this->renderTarget)
@@ -110,74 +110,6 @@ namespace april
 			this->d3dFormat = D3DFMT_A8R8G8B8;
 			break;
 		}
-	}
-
-	bool DirectX9_Texture::load()
-	{
-		if (this->isLoaded())
-		{
-			return true;
-		}
-		hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
-		Image* image = NULL;
-		unsigned char* currentData = NULL;
-		if (this->data != NULL) // reload from memory
-		{
-			currentData = this->data;
-		}
-		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
-		if (currentData == NULL && (type != TYPE_VOLATILE || this->width != 0 && this->height != 0))
-		{
-			if (this->filename == "")
-			{
-				hlog::error(april::logTag, "No filename for texture specified!");
-				return false;
-			}
-			image = Image::load(this->filename);
-			if (image == NULL)
-			{
-				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
-				return false;
-			}
-			this->width = image->w;
-			this->height = image->h;
-			this->format = image->format;
-			currentData = image->data;
-			image->data = NULL;
-			delete image;
-		}
-		this->_assignFormat();
-		if (!this->_createInternalTexture())
-		{
-			hlog::error(april::logTag, "Failed to create DX9 texture!");
-			if (currentData != NULL && this->data != currentData)
-			{
-				delete [] currentData;
-			}
-			return false;
-		}
-		if (currentData != NULL)
-		{
-			this->write(0, 0, this->width, this->height, currentData, format);
-			if (this->type != TYPE_VOLATILE && (this->type != TYPE_IMMUTABLE || this->filename == ""))
-			{
-				if (this->data != currentData)
-				{
-					if (this->data != NULL)
-					{
-						delete [] this->data;
-					}
-					this->data = currentData;
-				}
-			}
-			else
-			{
-				delete [] currentData;
-				// the used format will be the native format, because there is no intermediate data
-				this->format = april::rendersys->getNativeTextureFormat(this->format);
-			}
-		}
-		return true;
 	}
 
 	void DirectX9_Texture::unload()
@@ -300,6 +232,48 @@ namespace april
 		this->_unlock(buffer, lockResult, true);
 	}
 
+	void DirectX9_Texture::write(int x, int y, int w, int h, unsigned char* data, Image::Format format)
+	{
+		if (this->data != NULL)
+		{
+			DirectX_Texture::write(x, y, w, h, data, format);
+			return;
+		}
+		D3DLOCKED_RECT lockRect;
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
+		if (lockResult == LR_FAILED)
+		{
+			return;
+		}
+		unsigned char* bits = (unsigned char*)lockRect.pBits;
+		bool result = Image::convertToFormat(data, &bits, this->width, this->height, format, april::rendersys->getNativeTextureFormat(this->format), false);
+		this->_unlock(buffer, lockResult, result);
+	}
+
+	bool DirectX9_Texture::copyPixelData(unsigned char** output, Image::Format format)
+	{
+		if (this->data != NULL)
+		{
+			return Texture::copyPixelData(output);
+		}
+		if (!this->isLoaded())
+		{
+			return false;
+		}
+		D3DLOCKED_RECT lockRect;
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
+		if (lockResult == LR_FAILED)
+		{
+			return false;
+		}
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		bool result = Image::convertToFormat(p, output, this->width, this->height, this->format, format, false); // will just perform a copy
+		this->_unlock(buffer, lockResult, result);
+		return result;
+	}
+
 	void DirectX9_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		DirectX9_Texture* source = (DirectX9_Texture*)texture;
@@ -344,43 +318,6 @@ namespace april
 		}
 		this->_blit((unsigned char*)lockRect.pBits, x, y, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
 		this->_unlock(buffer, lockResult, true);
-	}
-
-	void DirectX9_Texture::write(int x, int y, int w, int h, unsigned char* data, Image::Format format)
-	{
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
-		if (lockResult == LR_FAILED)
-		{
-			return;
-		}
-		unsigned char* bits = (unsigned char*)lockRect.pBits;
-		bool result = Image::convertToFormat(data, &bits, this->width, this->height, format, april::rendersys->getNativeTextureFormat(this->format), false);
-		this->_unlock(buffer, lockResult, result);
-	}
-
-	bool DirectX9_Texture::copyPixelData(unsigned char** output, Image::Format format)
-	{
-		if (this->data != NULL)
-		{
-			return Texture::copyPixelData(output);
-		}
-		if (!this->isLoaded())
-		{
-			return false;
-		}
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
-		if (lockResult == LR_FAILED)
-		{
-			return false;
-		}
-		unsigned char* p = (unsigned char*)lockRect.pBits;
-		bool result = Image::convertToFormat(p, output, this->width, this->height, this->format, format, false); // will just perform a copy
-		this->_unlock(buffer, lockResult, result);
-		return result;
 	}
 
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
