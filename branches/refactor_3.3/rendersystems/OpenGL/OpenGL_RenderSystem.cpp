@@ -773,34 +773,31 @@ namespace april
 			return Image::FORMAT_GRAYSCALE;
 			break;
 		case Image::FORMAT_PALETTE: // TODOaa - does palette use RGBA?
-			return Image::FORMAT_RGBA;
+			return Image::FORMAT_PALETTE;
 			break;
 		}
 		return Image::FORMAT_INVALID;
 	}
 
-	Image* OpenGL_RenderSystem::takeScreenshot(int bpp)
+	Image* OpenGL_RenderSystem::takeScreenshot(Image::Format format)
 	{
 #ifdef _DEBUG
 		hlog::write(april::logTag, "Taking screenshot...");
 #endif
-		int w = april::window->getWidth();
-		int h = april::window->getHeight();
-		Image* img = new Image();
-		img->w = w;
-		img->h = h;
-		img->bpp = bpp;
-		img->format = (bpp == 4 ? Image::FORMAT_RGBA : Image::FORMAT_RGB);
-		img->data = new unsigned char[w * (h + 1) * 4]; // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
-		unsigned char* temp = img->data + w * h * 4;
-		glReadPixels(0, 0, w, h, (bpp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img->data);
-		for_iter (y, 0, h / 2)
+		Image* image = new Image();
+		image->w = april::window->getWidth();
+		image->h = april::window->getHeight();
+		image->format = format;
+		image->data = NULL;
+		unsigned char* temp = new unsigned char[image->w * image->h * 4]; // 4 BPP just in case some OpenGL implementations don't blit rgba and cause a memory leak
+		glReadPixels(0, 0, image->w, image->h, GL_RGBA, GL_UNSIGNED_BYTE, temp);
+		if (!Image::convertToFormat(image->w, image->h, temp, GL_NATIVE_FORMAT, &image->data, format, false)) // always copy, because temp is always 4 BPP!
 		{
-			memcpy(temp, img->data + y * w * bpp, w * bpp);
-			memcpy(img->data + y * w * bpp, img->data + (h - y - 1) * w * bpp, w * bpp);
-			memcpy(img->data + (h - y - 1) * w * bpp, temp, w * bpp);
+			delete image;
+			image = NULL;
 		}
-		return img;
+		delete [] temp;
+		return image;
 	}
 
 }

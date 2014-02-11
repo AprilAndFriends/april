@@ -677,7 +677,7 @@ namespace april
 		return Image::FORMAT_INVALID;
 	}
 
-	Image* DirectX9_RenderSystem::takeScreenshot(int bpp)
+	Image* DirectX9_RenderSystem::takeScreenshot(Image::Format format)
 	{
 #ifdef _DEBUG
 		hlog::write(april::logTag, "Taking screenshot...");
@@ -711,30 +711,19 @@ namespace april
 			buffer->Release();
 			return NULL;
 		}
-		
-		Image* img = new Image();
-		img->w = desc.Width;
-		img->h = desc.Height;
-		img->bpp = bpp;
-		img->format = (bpp == 4 ? Image::FORMAT_RGBA : Image::FORMAT_RGB);
-		img->data = new unsigned char[img->w * img->h * img->bpp];
-		unsigned char* p = img->data;
-		unsigned char* src = (unsigned char*)rect.pBits;
-		int x;
-		memset(p, 255, img->w * img->h * img->bpp);
-		for_iter (y, 0, img->h)
+		Image* image = new Image();
+		image->w = desc.Width;
+		image->h = desc.Height;
+		image->format = format;
+		image->data = NULL;
+		if (!Image::convertToFormat(image->w, image->h, (unsigned char*)rect.pBits, Image::FORMAT_BGRX, &image->data, format, false))
 		{
-			for (x = 0; x < img->w; x++, p += bpp)
-			{
-				p[0] = src[x * bpp + 2];
-				p[1] = src[x * bpp + 1];
-				p[2] = src[x * bpp];
-			}
-			src += rect.Pitch;
+			delete image;
+			image = NULL;
 		}
 		buffer->UnlockRect();
 		buffer->Release();
-		return img;
+		return image;
 	}
 	
 	void DirectX9_RenderSystem::presentFrame()

@@ -62,14 +62,12 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->type = type;
-		// TODOaa - don't this->data use if texture type does not support it
 		int size = 0;
-		if (true)
+		if (type != TYPE_VOLATILE)
 		{
 			this->format = format;
 			size = this->getByteSize();
 			this->data = new unsigned char[size];
-			memcpy(this->data, data, size);
 		}
 		else
 		{
@@ -83,7 +81,7 @@ namespace april
 		{
 			return false;
 		}
-		this->write(0, 0, this->width, this->height, data, format);
+		this->write(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, format);
 		return true;
 	}
 
@@ -99,8 +97,7 @@ namespace april
 		this->height = h;
 		this->type = type;
 		int size = 0;
-		// TODOaa - don't this->data use if texture type does not support it
-		if (true)
+		if (type != TYPE_VOLATILE)
 		{
 			this->format = format;
 			size = this->getByteSize();
@@ -118,7 +115,10 @@ namespace april
 		{
 			return false;
 		}
-		this->fillRect(0, 0, this->width, this->height, color);
+		if (color != april::Color::Clear)
+		{
+			this->fillRect(0, 0, this->width, this->height, color);
+		}
 		return true;
 	}
 
@@ -245,7 +245,7 @@ namespace april
 		}
 		if (currentData != NULL)
 		{
-			this->write(0, 0, this->width, this->height, currentData, format);
+			this->write(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
 			if (this->type != TYPE_VOLATILE && (this->type != TYPE_IMMUTABLE || this->filename == ""))
 			{
 				if (this->data != currentData)
@@ -282,13 +282,14 @@ namespace april
 		Color color = Color::Clear;
 		if (this->data != NULL)
 		{
-			unsigned char rgba[4] = {0};
-			if (Image::convertToFormat(this->data, (unsigned char**)&rgba, 1, 1, this->format, Image::FORMAT_RGBA, false))
+			unsigned char* rgba = NULL;
+			if (Image::convertToFormat(1, 1, this->data, this->format, &rgba, Image::FORMAT_RGBA, false))
 			{
 				color.r = rgba[0];
 				color.g = rgba[1];
 				color.b = rgba[2];
 				color.a = rgba[3];
+				delete [] rgba;
 			}
 		}
 		return color;
@@ -299,42 +300,33 @@ namespace april
 		if (this->data != NULL)
 		{
 			unsigned char rgba[4] = {color.r, color.g, color.b, color.a};
-			Image::convertToFormat(rgba, &this->data, 1, 1, Image::FORMAT_RGBA, this->format, false);
-			this->_uploadDataToGpu(x, y, 1, 1);
+			unsigned char* p = &this->data[(x + y * this->width) * Image::getFormatBpp(this->format)];
+			if (Image::convertToFormat(1, 1, rgba, Image::FORMAT_RGBA, &p, this->format, false))
+			{
+				this->_uploadDataToGpu(x, y, 1, 1);
+			}
 		}
 	}
 
 	void Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		if (this->data != NULL)
+		if (this->data != NULL && Image::fillRect(x, y, w, h, color, this->data, this->width, this->height, this->format))
 		{
-			Image::fillRect(x, y, w, h, color, this->data, this->width, this->height, this->format);
 			this->_uploadDataToGpu(x, y, w, h);
 		}
 	}
 
-	void Texture::write(int x, int y, int w, int h, unsigned char* data, Image::Format format)
+	void Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		if (this->data != NULL)
+		if (this->data != NULL && Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format))
 		{
-			// TODOaa - needs Image::write() with similar implementation to Image::fillRect()
-			Image::convertToFormat(data, &this->data, this->width, this->height, format, this->format, false);
-			this->_uploadDataToGpu(x, y, w, h);
+			this->_uploadDataToGpu(dx, dy, sw, sh);
 		}
 	}
 
 	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
 	{
-		if (this->data == NULL)
-		{
-			return false;
-		}
-		return Image::convertToFormat(this->data, output, this->width, this->height, this->format, format, false);
-	}
-
-	bool Texture::copyPixelData(unsigned char** output)
-	{
-		return this->copyPixelData(output, this->format);
+		return (this->data != NULL && Image::convertToFormat(this->width, this->height, this->data, this->format, output, format, false));
 	}
 
 	void Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
@@ -429,6 +421,16 @@ namespace april
 	void Texture::fillRect(grect rect, Color color)
 	{
 		this->fillRect(hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h), color);
+	}
+
+	void Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		this->write(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destPosition.x), hround(destPosition.y), srcData, srcWidth, srcHeight, srcFormat);
+	}
+
+	bool Texture::copyPixelData(unsigned char** output)
+	{
+		return this->copyPixelData(output, this->format);
 	}
 
 	void Texture::blit(int x, int y, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha)

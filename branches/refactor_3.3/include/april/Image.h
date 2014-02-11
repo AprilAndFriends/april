@@ -50,7 +50,7 @@ namespace april
 		unsigned char* data;
 		int w;
 		int h;
-		int bpp;
+		int bpp; // TODOaa - remove this
 		Format format;
 		int internalFormat; // used for special platform dependent formats, usually used internally only
 		int compressedSize;
@@ -58,12 +58,14 @@ namespace april
 		Image(); // TODOaa - make protected
 		~Image();
 		
+		int getBpp();
+		int getByteSize();
 		Color getPixel(int x, int y);
 		void setPixel(int x, int y, Color c);
 		Color getInterpolatedPixel(float x, float y);
-		void copyPixels(void* output, Format format);
-		void setPixels(int x, int y, int w, int h, Color c);
-		void copyImage(Image* source, bool fillAlpha = false);
+		void copyPixels(void* output, Format format); // TODOaa - use similar method like in texture
+		void setPixels(int x, int y, int w, int h, Color c); // TODOaa - use similar method like in texture, rename to write()
+		void copyImage(Image* source, bool fillAlpha = false); // TODOaa - use similar method like in texture, rename to write()
 		void clear();
 		void blit(int x, int y, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(int x, int y, int w, int h, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
@@ -72,9 +74,11 @@ namespace april
 		static Image* load(chstr filename);
 		static Image* create(int w, int h, Color fillColor = Color::Clear);
 
-		static void fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		static bool fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		static bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		static void blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static int getFormatBpp(Format format);
-		static bool convertToFormat(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat, bool preventCopy = true);
+		static bool convertToFormat(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat, bool preventCopy = true);
 		static bool needsConversion(Format srcFormat, Format destFormat, bool preventCopy = true);
 		
 	protected:
@@ -82,9 +86,9 @@ namespace april
 		static Image* _loadJpg(hsbase& stream);
 		static Image* _loadJpt(hsbase& stream);
 
-		static bool _convertFrom1Bpp(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat);
-		static bool _convertFrom3Bpp(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat);
-		static bool _convertFrom4Bpp(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat);
+		static bool _convertFrom1Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat);
+		static bool _convertFrom3Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat);
+		static bool _convertFrom4Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat);
 
 	};
 	

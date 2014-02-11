@@ -23,6 +23,7 @@
 #include "OpenGL_State.h"
 #include "RenderSystem.h"
 
+// TODOaa - check if using this makes any sense
 #define GL_NATIVE_FORMAT Image::FORMAT_RGBA
 
 namespace april
@@ -76,7 +77,7 @@ namespace april
 		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 		
 		Image::Format getNativeTextureFormat(Image::Format format);
-		Image* takeScreenshot(int bpp = 3); // TODOaa - refactor to use Image::Format instead of BPP
+		Image* takeScreenshot(Image::Format format);
 
 	protected:
 		OpenGL_State deviceState;

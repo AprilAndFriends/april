@@ -78,7 +78,7 @@ namespace april
 		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
 		Image::Format getNativeTextureFormat(Image::Format format);
-		Image* takeScreenshot(int bpp = 3); // TODOaa - refactor to use Image::Format instead of BPP
+		Image* takeScreenshot(Image::Format format);
 		void presentFrame();
 
 	protected:
