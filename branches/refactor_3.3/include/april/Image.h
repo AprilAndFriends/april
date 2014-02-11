@@ -15,6 +15,7 @@
 #ifndef APRIL_IMAGE_H
 #define APRIL_IMAGE_H
 
+#include <gtypes/Vector2.h>
 #include <hltypes/hsbase.h>
 #include <hltypes/hstring.h>
 
@@ -50,40 +51,60 @@ namespace april
 		unsigned char* data;
 		int w;
 		int h;
-		int bpp; // TODOaa - remove this
 		Format format;
 		int internalFormat; // used for special platform dependent formats, usually used internally only
 		int compressedSize;
 
-		Image(); // TODOaa - make protected
 		~Image();
 		
 		int getBpp();
 		int getByteSize();
-		Color getPixel(int x, int y);
-		void setPixel(int x, int y, Color c);
-		Color getInterpolatedPixel(float x, float y);
-		bool copyPixelData(unsigned char** output, Format format);
 
-		//void copyPixels(void* output, Format format); // TODOaa - use similar method like in texture
-		void setPixels(int x, int y, int w, int h, Color c); // TODOaa - use similar method like in texture, rename to write()
-		void copyImage(Image* source, bool fillAlpha = false); // TODOaa - use similar method like in texture, rename to write()
 		void clear();
+		Color getPixel(int x, int y);
+		void setPixel(int x, int y, Color color);
+		Color getInterpolatedPixel(float x, float y);
+		void fillRect(int x, int y, int w, int h, Color color);
+		void write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool copyPixelData(unsigned char** output, Format format);
+		void insertAlphaMap(unsigned char* srcData, Format srcFormat);
+		
+		Color getPixel(gvec2 position);
+		void setPixel(gvec2 position, Color color);
+		Color getInterpolatedPixel(gvec2 position);
+		void write(int sx, int sy, int sw, int sh, int dx, int dy, Image* other);
+		bool copyPixelData(unsigned char** output);
+		void insertAlphaMap(Image* source);
+
+
+		// TODOaa - need a new/better implementation
 		void blit(int x, int y, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(int x, int y, int w, int h, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		void insertAsAlphaMap(Image* source);
+
 		
 		static Image* load(chstr filename);
-		static Image* create(int w, int h, Color fillColor = Color::Clear);
+		// TODOaa - implement
+		//static Image* load(chstr filename, Format format);
+		static Image* create(int w, int h, unsigned char* data, Format format);
+		static Image* create(int w, int h, Color color, Format format);
+		static Image* create(Image* other);
 
+		static int getFormatBpp(Format format);
+
+		static Color getPixel(int x, int y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat);
+		static bool setPixel(int x, int y, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		static Color getInterpolatedPixel(float x, float y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat);
 		static bool fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
-		static void blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
-		static int getFormatBpp(Format format);
+		static bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat);
+
 		static bool convertToFormat(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat, bool preventCopy = true);
 		static bool needsConversion(Format srcFormat, Format destFormat, bool preventCopy = true);
 		
 	protected:
+		Image();
+
 		static Image* _loadPng(hsbase& stream);
 		static Image* _loadJpg(hsbase& stream);
 		static Image* _loadJpt(hsbase& stream);

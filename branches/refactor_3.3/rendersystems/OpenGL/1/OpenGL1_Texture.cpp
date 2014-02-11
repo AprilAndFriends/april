@@ -47,17 +47,9 @@ namespace april
 		Color result = april::Color::Clear;
 		Image::Format format = april::rendersys->getNativeTextureFormat(GL_NATIVE_FORMAT);
 		unsigned char* pixels = NULL;
-		if (this->copyPixelData(&pixels, format)) // it's not possible to get just one pixel so the entire texture has to be retrieved (expensive!)
+		if (this->copyPixelData(&pixels, format)) // it's not possible to get just one pixel on OpenGL so the entire texture has to be retrieved (expensive!)
 		{
-			unsigned char* rgba = NULL;
-			if (Image::convertToFormat(1, 1, &pixels[(x + y * this->width) * this->getBpp()], format, &rgba, Image::FORMAT_RGBA))
-			{
-				result.r = rgba[0];
-				result.g = rgba[1];
-				result.b = rgba[2];
-				result.a = rgba[3];
-				delete [] rgba;
-			}
+			result = Image::getPixel(x, y, pixels, this->width, this->height, format);
 			delete [] pixels;
 		}
 		return result;

@@ -711,15 +711,12 @@ namespace april
 			buffer->Release();
 			return NULL;
 		}
-		Image* image = new Image();
-		image->w = desc.Width;
-		image->h = desc.Height;
-		image->format = format;
-		image->data = NULL;
-		if (!Image::convertToFormat(image->w, image->h, (unsigned char*)rect.pBits, Image::FORMAT_BGRX, &image->data, format, false))
+		unsigned char* data = NULL;
+		Image* image = NULL;
+		if (Image::convertToFormat(desc.Width, desc.Height, (unsigned char*)rect.pBits, Image::FORMAT_BGRX, &data, format, false))
 		{
-			delete image;
-			image = NULL;
+			image = Image::create(desc.Width, desc.Height, data, format);
+			delete [] data;
 		}
 		buffer->UnlockRect();
 		buffer->Release();

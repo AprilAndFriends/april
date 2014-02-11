@@ -282,29 +282,16 @@ namespace april
 		Color color = Color::Clear;
 		if (this->data != NULL)
 		{
-			unsigned char* rgba = NULL;
-			if (Image::convertToFormat(1, 1, this->data, this->format, &rgba, Image::FORMAT_RGBA, false))
-			{
-				color.r = rgba[0];
-				color.g = rgba[1];
-				color.b = rgba[2];
-				color.a = rgba[3];
-				delete [] rgba;
-			}
+			color = Image::getPixel(x, y, this->data, this->width, this->height, this->format);
 		}
 		return color;
 	}
 
 	void Texture::setPixel(int x, int y, Color color)
 	{
-		if (this->data != NULL)
+		if (this->data != NULL && Image::setPixel(x, y, color, this->data, this->width, this->height, this->format))
 		{
-			unsigned char rgba[4] = {color.r, color.g, color.b, color.a};
-			unsigned char* p = &this->data[(x + y * this->width) * Image::getFormatBpp(this->format)];
-			if (Image::convertToFormat(1, 1, rgba, Image::FORMAT_RGBA, &p, this->format, false))
-			{
-				this->_uploadDataToGpu(x, y, 1, 1);
-			}
+			this->_uploadDataToGpu(x, y, 1, 1);
 		}
 	}
 
@@ -435,7 +422,7 @@ namespace april
 
 	void Texture::blit(int x, int y, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		this->blit(x, y, image->data, image->w, image->h, image->bpp, sx, sy, sw, sh, alpha);
+		this->blit(x, y, image->data, image->w, image->h, image->getBpp(), sx, sy, sw, sh, alpha);
 	}
 
 	void Texture::blit(gvec2 position, Texture* texture, grect source, unsigned char alpha)
@@ -445,7 +432,7 @@ namespace april
 
 	void Texture::blit(gvec2 position, Image* image, grect source, unsigned char alpha)
 	{
-		this->blit(hround(position.x), hround(position.y), image->data, image->w, image->h, image->bpp, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+		this->blit(hround(position.x), hround(position.y), image->data, image->w, image->h, image->getBpp(), hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
 	}
 
 	void Texture::blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha)
@@ -455,7 +442,7 @@ namespace april
 
 	void Texture::stretchBlit(int x, int y, int w, int h, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
-		this->stretchBlit(x, y, w, h, image->data, image->w, image->h, image->bpp, sx, sy, sw, sh, alpha);
+		this->stretchBlit(x, y, w, h, image->data, image->w, image->h, image->getBpp(), sx, sy, sw, sh, alpha);
 	}
 
 	void Texture::stretchBlit(grect destination, Texture* texture, grect source, unsigned char alpha)
@@ -466,7 +453,7 @@ namespace april
 
 	void Texture::stretchBlit(grect destination, Image* image, grect source, unsigned char alpha)
 	{
-		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), image->data, image->w, image->h, image->bpp,
+		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), image->data, image->w, image->h, image->getBpp(),
 			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
 	}
 

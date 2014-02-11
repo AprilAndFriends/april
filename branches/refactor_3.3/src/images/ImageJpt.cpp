@@ -47,9 +47,9 @@ namespace april
 		subStream.rewind();
 		png = Image::_loadPng(subStream);
 		// combine
-		Image* img = Image::create(jpg->w, jpg->h);
-		img->copyImage(jpg);
-		img->insertAsAlphaMap(png);
+		Image* img = Image::create(jpg->w, jpg->h, Color::Clear, FORMAT_RGBA);
+		img->write(0, 0, jpg->w, jpg->h, 0, 0, jpg);
+		img->insertAlphaMap(png);
 		delete jpg;
 		delete png;
 		return img;

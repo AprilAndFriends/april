@@ -131,208 +131,113 @@ namespace april
 		return (this->w * this->h * Image::getFormatBpp(this->format));
 	}
 
-	Color Image::getPixel(int x, int y)
-	{
-		x = hclamp(x, 0, w - 1);
-		y = hclamp(y, 0, h - 1);
-		Color c = Color::White;
-		int index = x + y * w;
-		if (this->bpp >= 3)
-		{
-			c.r = this->data[index * this->bpp];
-			c.g = this->data[index * this->bpp + 1];
-			c.b = this->data[index * this->bpp + 2];
-			if (this->bpp == 4) // RGBA
-			{
-				c.a = this->data[index * this->bpp + 3];
-			}
-		}
-		else
-		{
-			c.r = c.g = c.b = this->data[index * this->bpp];
-		}
-		return c;
-	}
-	
-	void Image::setPixel(int x, int y, Color c)
-	{
-		x = hclamp(x, 0, w - 1);
-		y = hclamp(y, 0, h - 1);
-		int index = x + y * w;
-		if (this->bpp >= 3)
-		{
-			this->data[index * this->bpp] = c.r;
-			this->data[index * this->bpp + 1] = c.g;
-			this->data[index * this->bpp + 2] = c.b;
-			if (this->bpp == 4) // RGBA
-			{
-				this->data[index * 4 + 3] = c.a;
-			}
-		}
-		else
-		{
-			this->data[index * this->bpp] = (c.r + c.g + c.b) / 3;
-		}
-	}
-
-	Color Image::getInterpolatedPixel(float x, float y)
-	{
-		return getPixel((int)x, (int)y); // TODO
-	}
-	
-	void Image::copyImage(Image* source, bool fillAlpha)
-	{
-		if (fillAlpha && this->bpp == 4 && source->bpp < 4)
-		{
-			memset(this->data, 255, this->w * this->h * this->bpp);
-		}
-		if ((this->bpp == 4 || source->bpp == 4) && this->bpp != source->bpp)
-		{
-			unsigned char* o = this->data;
-			unsigned char* i = source->data;
-			int x;
-			for_iter (y, 0, this->h)
-			{
-				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
-				{
-					o[0] = i[0];
-					o[1] = i[1];
-					o[2] = i[2];
-				}
-			}
-		}
-		else if (this->bpp == source->bpp)
-		{
-			memcpy(this->data, source->data, this->w * this->h * this->bpp * sizeof(unsigned char));
-		}
-		else
-		{
-			// not good, BPPs differ too much (one might be 4 or 3 while the other is less than 3)
-			Color c;
-			unsigned char* o = this->data;
-			unsigned char* i = source->data;
-			int x;
-			for_iter (y, 0, this->h)
-			{
-				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
-				{
-					c = source->getPixel(x, y);
-					o[0] = c.r;
-					o[1] = c.g;
-					o[2] = c.b;
-				}
-			}
-		}
-
-		if ((this->bpp == 4 || source->bpp == 4) && this->bpp != source->bpp)
-		{
-			if (this->bpp == 4)
-			{
-				memset(this->data, 255, this->w * this->h * this->bpp);
-			}
-			unsigned char* o = this->data;
-			unsigned char* i = source->data;
-			int x;
-			for_iter (y, 0, this->h)
-			{
-				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
-				{
-					o[0] = i[0];
-					o[1] = i[1];
-					o[2] = i[2];
-				}
-			}
-		}
-		else if (this->bpp == source->bpp)
-		{
-			memcpy(this->data, source->data, this->w * this->h * this->bpp * sizeof(unsigned char));
-		}
-		else
-		{
-			// not good, BPP differ too much (one might be 4 or 3 while the other is less than 3)
-			if (this->bpp == 4)
-			{
-				memset(this->data, 255, this->w * this->h * this->bpp);
-			}
-			Color c;
-			unsigned char* o = this->data;
-			unsigned char* i = source->data;
-			int x;
-			for_iter (y, 0, this->h)
-			{
-				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
-				{
-					c = source->getPixel(x, y);
-					o[0] = c.r;
-					o[1] = c.g;
-					o[2] = c.b;
-				}
-			}
-		}
-	}
-
-	void Image::insertAsAlphaMap(Image* source)
-	{
-		if (this->bpp < 4)
-		{
-			return;
-		}
-		if (source->bpp == 4 || source->bpp == 3)
-		{
-			unsigned char* o = this->data;
-			unsigned char* i = source->data;
-			int x;
-			for_iter (y, 0, this->h)
-			{
-				for (x = 0; x < this->w; x++, o += this->bpp, i += source->bpp)
-				{
-					o[3] = i[2]; // takes actually only the R component
-				}
-			}
-		}
-		else
-		{
-			unsigned char* o = this->data;
-			int x;
-			int w = source->w;
-			for_iter (y, 0, this->h)
-			{
-				for (x = 0; x < this->w; x++, o += this->bpp)
-				{
-					o[3] = source->data[x + y * w];
-				}
-			}
-		}
-	}
-
-	void Image::setPixels(int x, int y, int w, int h, Color c)
-	{
-		x = hclamp(x, 0, this->w - 1);
-		y = hclamp(y, 0, this->h - 1);
-		w = hclamp(w, 1, this->w - x);
-		h = hclamp(h, 1, this->h - y);
-		unsigned char* ptr;
-		int i;
-		for_iter (j, 0, h)
-		{
-			for_iterx (i, 0, w)
-			{
-				ptr = &this->data[((x + i) + (y + j) * this->w) * this->bpp];
-				ptr[0] = c.r;
-				ptr[1] = c.g;
-				ptr[2] = c.b;
-				ptr[3] = c.a;
-			}
-		}
-	}
-
 	void Image::clear()
 	{
-		memset(this->data, 0, this->w * this->h * this->bpp * sizeof(unsigned char));
+		memset(this->data, 0, this->getByteSize());
 	}
+
+	Color Image::getPixel(int x, int y)
+	{
+		Color color = Color::Clear;
+		if (this->data != NULL)
+		{
+			color = Image::getPixel(x, y, this->data, this->w, this->h, this->format);
+		}
+		return color;
+	}
+	
+	void Image::setPixel(int x, int y, Color color)
+	{
+		if (this->data != NULL)
+		{
+			Image::setPixel(x, y, color, this->data, this->w, this->h, this->format);
+		}
+	}
+	
+	Color Image::getInterpolatedPixel(float x, float y)
+	{
+		Color color = Color::Clear;
+		if (this->data != NULL)
+		{
+			color = Image::getInterpolatedPixel(x, y, this->data, this->w, this->h, this->format);
+		}
+		return color;
+	}
+	
+	void Image::fillRect(int x, int y, int w, int h, Color color)
+	{
+		if (this->data != NULL)
+		{
+			Image::fillRect(x, y, w, h, color, this->data, this->w, this->h, this->format);
+		}
+	}
+
+	void Image::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		if (this->data != NULL)
+		{
+			Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->w, this->h, this->format);
+		}
+	}
+
+	bool Image::copyPixelData(unsigned char** output, Format format)
+	{
+		return (this->data != NULL && Image::convertToFormat(this->w, this->h, this->data, this->format, output, format, false));
+	}
+
+	void Image::insertAlphaMap(unsigned char* srcData, Format srcFormat)
+	{
+		if (this->data != NULL)
+		{
+			Image::insertAlphaMap(this->w, this->h, srcData, srcFormat, this->data, this->format);
+		}
+	}
+
+	// TODOaa - more functions go here
+	
+
+
+
+
+	Color Image::getPixel(gvec2 position)
+	{
+		return this->getPixel((int)position.x, (int)position.y);
+	}
+	
+	void Image::setPixel(gvec2 position, Color color)
+	{
+		this->setPixel((int)position.x, (int)position.y, color);
+	}
+	
+	Color Image::getInterpolatedPixel(gvec2 position)
+	{
+		return this->getPixel((int)position.x, (int)position.y); // TODO
+	}
+	
+	void Image::write(int sx, int sy, int sw, int sh, int dx, int dy, Image* other)
+	{
+		this->write(sx, sy, sw, sh, dx, dy, other->data, other->w, other->h, other->format);
+	}
+
+	bool Image::copyPixelData(unsigned char** output)
+	{
+		return (this->data != NULL && Image::convertToFormat(this->w, this->h, this->data, this->format, output, this->format, false));
+	}
+
+	void Image::insertAlphaMap(Image* source)
+	{
+		this->insertAlphaMap(source->data, source->format);
+	}
+
+
+
+	// TODOaa - more function overloads go here
+
+
 
 	void Image::blit(int x, int y, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
+		// TODOaa - refactor this
 		x = hclamp(x, 0, this->w - 1);
 		y = hclamp(y, 0, this->h - 1);
 		sx = hclamp(sx, 0, source->w - 1);
@@ -347,8 +252,8 @@ namespace april
 		{
 			for_iterx (i, 0, sw)
 			{
-				c = &this->data[((x + i) + (y + j) * this->w) * this->bpp];
-				sc = &source->data[((sx + i) + (sy + j) * source->w) * source->bpp];
+				c = &this->data[((x + i) + (y + j) * this->w) * this->getBpp()];
+				sc = &source->data[((sx + i) + (sy + j) * source->w) * source->getBpp()];
 				a = sc[3] * alpha / 255;
 				c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
 				c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
@@ -360,6 +265,7 @@ namespace april
 
 	void Image::stretchBlit(int x, int y, int w, int h, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
+		// TODOaa - refactor this
 		x = hclamp(x, 0, this->w - 1);
 		y = hclamp(y, 0, this->h - 1);
 		w = hmin(w, this->w - x);
@@ -394,7 +300,7 @@ namespace april
 		{
 			for_iterx (i, 0, w)
 			{
-				c = &this->data[((x + i) + (y + j) * this->w) * this->bpp];
+				c = &this->data[((x + i) + (y + j) * this->w) * this->getBpp()];
 				cx = sx + i * fw;
 				cy = sy + j * fh;
 				x0 = (int)cx;
@@ -407,10 +313,10 @@ namespace april
 				ry1 = 1.0f - ry0;
 				if (rx0 != 0.0f && ry0 != 0.0f)
 				{
-					ctl = &source->data[(x0 + y0 * source->w) * source->bpp];
-					ctr = &source->data[(x1 + y0 * source->w) * source->bpp];
-					cbl = &source->data[(x0 + y1 * source->w) * source->bpp];
-					cbr = &source->data[(x1 + y1 * source->w) * source->bpp];
+					ctl = &source->data[(x0 + y0 * source->w) * source->getBpp()];
+					ctr = &source->data[(x1 + y0 * source->w) * source->getBpp()];
+					cbl = &source->data[(x0 + y1 * source->w) * source->getBpp()];
+					cbr = &source->data[(x1 + y1 * source->w) * source->getBpp()];
 					color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0);
 					color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0);
 					color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0);
@@ -419,8 +325,8 @@ namespace april
 				}
 				else if (rx0 != 0.0f)
 				{
-					ctl = &source->data[(x0 + y0 * source->w) * source->bpp];
-					ctr = &source->data[(x1 + y0 * source->w) * source->bpp];
+					ctl = &source->data[(x0 + y0 * source->w) * source->getBpp()];
+					ctr = &source->data[(x1 + y0 * source->w) * source->getBpp()];
 					color[0] = (unsigned char)(ctl[0] * rx1 + ctr[0] * rx0);
 					color[1] = (unsigned char)(ctl[1] * rx1 + ctr[1] * rx0);
 					color[2] = (unsigned char)(ctl[2] * rx1 + ctr[2] * rx0);
@@ -429,8 +335,8 @@ namespace april
 				}
 				else if (ry0 != 0.0f)
 				{
-					ctl = &source->data[(x0 + y0 * source->w) * source->bpp];
-					cbl = &source->data[(x0 + y1 * source->w) * source->bpp];
+					ctl = &source->data[(x0 + y0 * source->w) * source->getBpp()];
+					cbl = &source->data[(x0 + y1 * source->w) * source->getBpp()];
 					color[0] = (unsigned char)(ctl[0] * ry1 + cbl[0] * ry0);
 					color[1] = (unsigned char)(ctl[1] * ry1 + cbl[1] * ry0);
 					color[2] = (unsigned char)(ctl[2] * ry1 + cbl[2] * ry0);
@@ -439,7 +345,7 @@ namespace april
 				}
 				else
 				{
-					sc = &source->data[(x0 + y0 * source->w) * source->bpp];
+					sc = &source->data[(x0 + y0 * source->w) * source->getBpp()];
 				}
 				a0 = sc[3] * (int)alpha / 255;
 				a1 = 255 - a0;
@@ -453,52 +359,148 @@ namespace april
 
 	Image* Image::load(chstr filename)
 	{
-		Image* img = NULL;
-		
+		Image* image = NULL;
 		if (filename.lower().ends_with(".png"))
 		{
 			hresource res(filename);
-			img = Image::_loadPng(res);
+			image = Image::_loadPng(res);
 		}
 		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
 		{
 			hresource res(filename);
-			img = Image::_loadJpg(res);
+			image = Image::_loadJpg(res);
 		}
 		else if (filename.lower().ends_with(".jpt"))
 		{
 			hresource res(filename);
-			img = Image::_loadJpt(res);
+			image = Image::_loadJpt(res);
 		}
 #if TARGET_OS_IPHONE
 		else if (filename.lower().ends_with(".pvr"))
 		{
-			img = _tryLoadingPVR(filename);
+			image = _tryLoadingPVR(filename);
 		}
 #endif
-		return img;
+		return image;
 	}
 
-	Image* Image::create(int w, int h, Color color)
+	Image* Image::create(int w, int h, unsigned char* data, Image::Format format)
 	{
-		unsigned char* data = new unsigned char[w * h * 4];
-		bool uniColor = (color.r == color.g == color.b == color.a);
-		if (uniColor)
+		Image* image = new Image();
+		image->w = w;
+		image->h = h;
+		image->format = format;
+		image->compressedSize = 0;
+		int size = image->getByteSize();
+		image->data = new unsigned char[size];
+		memcpy(image->data, data, size);
+		return image;
+	}
+
+	Image* Image::create(int w, int h, Color color, Image::Format format)
+	{
+		Image* image = new Image();
+		image->w = w;
+		image->h = h;
+		image->format = format;
+		image->compressedSize = 0;
+		int size = image->getByteSize();
+		image->data = new unsigned char[size];
+		image->fillRect(0, 0, image->w, image->h, color);
+		return image;
+	}
+
+	Image* Image::create(Image* other)
+	{
+		Image* image = new Image();
+		image->w = other->w;
+		image->h = other->h;
+		image->format = other->format;
+		image->compressedSize = other->compressedSize;
+		int size = image->getByteSize();
+		image->data = new unsigned char[size];
+		memcpy(image->data, other->data, size);
+		return image;
+	}
+
+	int Image::getFormatBpp(Image::Format format)
+	{
+		switch (format)
 		{
-			memset(data, color.r, w * h * 4 * sizeof(unsigned char));
+		case FORMAT_RGBA:		return 4;
+		case FORMAT_ARGB:		return 4;
+		case FORMAT_BGRA:		return 4;
+		case FORMAT_ABGR:		return 4;
+		case FORMAT_RGBX:		return 4;
+		case FORMAT_XRGB:		return 4;
+		case FORMAT_BGRX:		return 4;
+		case FORMAT_XBGR:		return 4;
+		case FORMAT_RGB:		return 3;
+		case FORMAT_BGR:		return 3;
+		case FORMAT_ALPHA:		return 1;
+		case FORMAT_GRAYSCALE:	return 1;
 		}
-		Image* img = new Image();
-		img->w = w;
-		img->h = h;
-		img->bpp = 4;
-		img->format = Image::FORMAT_RGBA;
-		img->data = data;
-		img->compressedSize = 0;
-		if (!uniColor)
+		return 0;
+	}
+
+	Color Image::getPixel(int x, int y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat)
+	{
+		Color color = Color::Clear;
+		unsigned char* rgba = NULL;
+		if (Image::convertToFormat(1, 1, &srcData[(x + y * srcWidth) * Image::getFormatBpp(srcFormat)], srcFormat, &rgba, Image::FORMAT_RGBA, false))
 		{
-			img->setPixels(0, 0, w, h, color);
+			color.r = rgba[0];
+			color.g = rgba[1];
+			color.b = rgba[2];
+			color.a = rgba[3];
+			delete [] rgba;
 		}
-		return img;
+		return color;
+	}
+	
+	bool Image::setPixel(int x, int y, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat)
+	{
+		unsigned char rgba[4] = {color.r, color.g, color.b, color.a};
+		unsigned char* p = &destData[(x + y * destWidth) * Image::getFormatBpp(destFormat)];
+		return Image::convertToFormat(1, 1, rgba, Image::FORMAT_RGBA, &p, destFormat, false);
+	}
+
+	Color Image::getInterpolatedPixel(float x, float y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat)
+	{
+		Color result;
+		int x0 = (int)x;
+		int y0 = (int)y;
+		int x1 = x0 + 1;
+		int y1 = y0 + 1;
+		float rx0 = x - x0;
+		float ry0 = y - y0;
+		float rx1 = 1.0f - rx0;
+		float ry1 = 1.0f - ry0;
+		if (rx0 != 0.0f && ry0 != 0.0f)
+		{
+			Color tl = Image::getPixel(x0, y0, srcData, srcWidth, srcHeight, srcFormat);
+			Color tr = Image::getPixel(x1, y0, srcData, srcWidth, srcHeight, srcFormat);
+			Color bl = Image::getPixel(x0, y1, srcData, srcWidth, srcHeight, srcFormat);
+			Color br = Image::getPixel(x1, y1, srcData, srcWidth, srcHeight, srcFormat);
+			result = (tl * ry1 + bl * ry0) * rx1 + (tr * ry1 + br * ry0) * rx0;
+		}
+		else if (rx0 != 0.0f)
+		{
+			Color tl = Image::getPixel(x0, y0, srcData, srcWidth, srcHeight, srcFormat);
+			Color tr = Image::getPixel(x1, y0, srcData, srcWidth, srcHeight, srcFormat);
+			result = tl * rx1 + tr * rx0;
+		}
+		else if (ry0 != 0.0f)
+		{
+			Color tl = Image::getPixel(x0, y0, srcData, srcWidth, srcHeight, srcFormat);
+			Color bl = Image::getPixel(x0, y1, srcData, srcWidth, srcHeight, srcFormat);
+			result = tl * ry1 + bl * ry0;
+		}
+		else
+		{
+			result = Image::getPixel(x0, y0, srcData, srcWidth, srcHeight, srcFormat);
+		}
+		return result;
 	}
 	
 	bool Image::fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat)
@@ -606,27 +608,42 @@ namespace april
 		}
 		return true;
 	}
-	
-	int Image::getFormatBpp(Image::Format format)
-	{
-		switch (format)
-		{
-		case FORMAT_RGBA:		return 4;
-		case FORMAT_ARGB:		return 4;
-		case FORMAT_BGRA:		return 4;
-		case FORMAT_ABGR:		return 4;
-		case FORMAT_RGBX:		return 4;
-		case FORMAT_XRGB:		return 4;
-		case FORMAT_BGRX:		return 4;
-		case FORMAT_XBGR:		return 4;
-		case FORMAT_RGB:		return 3;
-		case FORMAT_BGR:		return 3;
-		case FORMAT_ALPHA:		return 1;
-		case FORMAT_GRAYSCALE:	return 1;
-		}
-		return 0;
-	}
 
+	// TODOaa - blit goes here
+
+	// TODOaa - stretchBlit goes here
+
+	bool Image::insertAlphaMap(int w, int h, unsigned char* srcData, Image::Format srcFormat, unsigned char* destData, Image::Format destFormat)
+	{
+		if (!CHECK_ALPHA_FORMAT(destFormat)) // not a format that supports an alpha channel
+		{
+			return false;
+		}
+		int srcBpp = Image::getFormatBpp(srcFormat);
+		int destBpp = Image::getFormatBpp(destFormat);
+		int destAlpha = CHECK_LEFT_RGB(destFormat) ? 3 : 0;
+		int i = 0;
+		int srcIndex = 0;
+		if (srcBpp > 1)
+		{
+			srcIndex = 1;
+		}
+		if (srcBpp == 1 || srcBpp == 3 || srcBpp == 4)
+		{
+			for_iter (y, 0, h)
+			{
+				for_iter (x, 0, w)
+				{
+					i = (x + y * w);
+					// takes second color channel for alpha value, guaranteed to always be either R, G or B, but never A
+					destData[i * destBpp + destAlpha] = srcData[i * srcBpp + srcIndex];
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
 	bool Image::convertToFormat(int w, int h, unsigned char* srcData, Image::Format srcFormat, unsigned char** destData, Image::Format destFormat, bool preventCopy)
 	{
 		if (preventCopy && srcFormat == destFormat)

@@ -165,16 +165,7 @@ namespace april
 		{
 			return color;
 		}
-		unsigned char* p = (unsigned char*)lockRect.pBits;
-		unsigned char* rgba = NULL;
-		if (Image::convertToFormat(1, 1, p, april::rendersys->getNativeTextureFormat(this->format), &rgba, Image::FORMAT_RGBA, false))
-		{
-			color.r = rgba[0];
-			color.g = rgba[1];
-			color.b = rgba[2];
-			color.a = rgba[3];
-			delete [] rgba;
-		}
+		color = Image::getPixel(x, y, (unsigned char*)lockRect.pBits, this->width, this->height, april::rendersys->getNativeTextureFormat(this->format));
 		this->_unlock(buffer, lockResult, false);
 		return color;
 	}
@@ -196,9 +187,7 @@ namespace april
 		{
 			return;
 		}
-		unsigned char rgba[4] = {color.r, color.g, color.b, color.a};
-		unsigned char* p = (unsigned char*)lockRect.pBits;
-		bool result = Image::convertToFormat(1, 1, rgba, Image::FORMAT_RGBA, &p, april::rendersys->getNativeTextureFormat(this->format), false);
+		bool result =  Image::setPixel(x, y, color, (unsigned char*)lockRect.pBits, this->width, this->height, april::rendersys->getNativeTextureFormat(this->format));
 		this->_unlock(buffer, lockResult, result);
 	}
 
@@ -229,8 +218,8 @@ namespace april
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		p -= (x + y * this->width) * Image::getFormatBpp(nativeFormat); // Image::fillRect expects data from the beginning so this shift back was implemented, but will never be accessed
-		Image::fillRect(x, y, w, h, color, p, this->width, this->height, nativeFormat);
-		this->_unlock(buffer, lockResult, true);
+		bool result = Image::fillRect(x, y, w, h, color, p, this->width, this->height, nativeFormat);
+		this->_unlock(buffer, lockResult, result);
 	}
 
 	void DirectX9_Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
@@ -241,8 +230,9 @@ namespace april
 			return;
 		}
 		D3DLOCKED_RECT lockRect;
+		_CREATE_RECT(rect, dx, dy, sw, sh);
 		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
+		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
 		if (lockResult == LR_FAILED)
 		{
 			return;

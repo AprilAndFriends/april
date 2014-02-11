@@ -53,7 +53,6 @@ namespace april
 		img->data = imageData;
 		img->w = cInfo.output_width;
 		img->h = cInfo.output_height;
-		img->bpp = 3; // JPEG is always RGB
 		img->format = Image::FORMAT_RGB; // JPEG is always RGB
 		return img;
 	}
