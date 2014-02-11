@@ -49,13 +49,14 @@ namespace april
 		unsigned char* pixels = NULL;
 		if (this->copyPixelData(&pixels, format)) // it's not possible to get just one pixel so the entire texture has to be retrieved (expensive!)
 		{
-			unsigned char temp[4] = {0, 0, 0, 0};
-			if (Image::convertToFormat(&pixels[(x + y * this->width) * this->getBpp()], (unsigned char**)&temp, 1, 1, format, Image::FORMAT_RGBA))
+			unsigned char* rgba = NULL;
+			if (Image::convertToFormat(1, 1, &pixels[(x + y * this->width) * this->getBpp()], format, &rgba, Image::FORMAT_RGBA))
 			{
-				result.r = temp[0];
-				result.g = temp[1];
-				result.b = temp[2];
-				result.a = temp[3];
+				result.r = rgba[0];
+				result.g = rgba[1];
+				result.b = rgba[2];
+				result.a = rgba[3];
+				delete [] rgba;
 			}
 			delete [] pixels;
 		}
@@ -75,7 +76,7 @@ namespace april
 		int size = this->getByteSize();
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		APRIL_OGL1_RENDERSYS->currentState.textureId = APRIL_OGL1_RENDERSYS->deviceState.textureId = this->textureId;
-		if (!Image::needsConversion(april::rendersys->getNativeTextureFormat(GL_NATIVE_FORMAT), format)) // to avoid unnecessary copying
+		if (!Image::needsConversion(GL_NATIVE_FORMAT, format)) // to avoid unnecessary copying
 		{
 			if (*output == NULL)
 			{
@@ -86,7 +87,7 @@ namespace april
 		}
 		unsigned char* temp = new unsigned char[size];
 		glGetTexImage(GL_TEXTURE_2D, 0, this->glFormat, GL_UNSIGNED_BYTE, temp);
-		bool result = Image::convertToFormat(temp, output, this->width, this->height, GL_NATIVE_FORMAT, format);
+		bool result = Image::convertToFormat(this->width, this->height, temp, GL_NATIVE_FORMAT, output, format);
 		delete [] temp;
 		return result;
 	}

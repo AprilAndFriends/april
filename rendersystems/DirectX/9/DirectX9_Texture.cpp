@@ -166,13 +166,14 @@ namespace april
 			return color;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
-		unsigned char rgba[4] = {0};
-		if (Image::convertToFormat(p, (unsigned char**)&rgba, 1, 1, april::rendersys->getNativeTextureFormat(this->format), Image::FORMAT_RGBA, false))
+		unsigned char* rgba = NULL;
+		if (Image::convertToFormat(1, 1, p, april::rendersys->getNativeTextureFormat(this->format), &rgba, Image::FORMAT_RGBA, false))
 		{
 			color.r = rgba[0];
 			color.g = rgba[1];
 			color.b = rgba[2];
 			color.a = rgba[3];
+			delete [] rgba;
 		}
 		this->_unlock(buffer, lockResult, false);
 		return color;
@@ -197,7 +198,7 @@ namespace april
 		}
 		unsigned char rgba[4] = {color.r, color.g, color.b, color.a};
 		unsigned char* p = (unsigned char*)lockRect.pBits;
-		bool result = Image::convertToFormat(rgba, &p, 1, 1, Image::FORMAT_RGBA, april::rendersys->getNativeTextureFormat(this->format), false);
+		bool result = Image::convertToFormat(1, 1, rgba, Image::FORMAT_RGBA, &p, april::rendersys->getNativeTextureFormat(this->format), false);
 		this->_unlock(buffer, lockResult, result);
 	}
 
@@ -232,11 +233,11 @@ namespace april
 		this->_unlock(buffer, lockResult, true);
 	}
 
-	void DirectX9_Texture::write(int x, int y, int w, int h, unsigned char* data, Image::Format format)
+	void DirectX9_Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		if (this->data != NULL)
 		{
-			DirectX_Texture::write(x, y, w, h, data, format);
+			DirectX_Texture::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
 			return;
 		}
 		D3DLOCKED_RECT lockRect;
@@ -246,8 +247,10 @@ namespace april
 		{
 			return;
 		}
-		unsigned char* bits = (unsigned char*)lockRect.pBits;
-		bool result = Image::convertToFormat(data, &bits, this->width, this->height, format, april::rendersys->getNativeTextureFormat(this->format), false);
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		p -= (dx + dy * this->width) * Image::getFormatBpp(nativeFormat); // Image::write expects data from the beginning so this shift back was implemented, but will never be accessed
+		bool result = Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, p, this->width, this->height, nativeFormat);
 		this->_unlock(buffer, lockResult, result);
 	}
 
@@ -269,7 +272,7 @@ namespace april
 			return false;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
-		bool result = Image::convertToFormat(p, output, this->width, this->height, this->format, format, false); // will just perform a copy
+		bool result = Image::convertToFormat(this->width, this->height, p, this->format, output, format, false); // will just perform a copy
 		this->_unlock(buffer, lockResult, result);
 		return result;
 	}
@@ -548,24 +551,12 @@ namespace april
 		{
 			return false;
 		}
-		int dataBpp = this->getBpp();
-		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		int gpuBpp = Image::getFormatBpp(nativeFormat);
 		unsigned char* p = (unsigned char*)lockRect.pBits;
-		if (x == 0 && w == this->width)
-		{
-			Image::convertToFormat(&this->data[(x + y * this->width) * dataBpp], &p, w, h, this->format, nativeFormat, false);
-		}
-		else
-		{
-			for_iter (j, 0, h)
-			{
-				Image::convertToFormat(&this->data[(x + (y + j) * this->width) * dataBpp], &p, w, 1, this->format, nativeFormat, false);
-				p += this->width * gpuBpp;
-			}
-		}
-		this->_unlock(buffer, lockResult, true);
-		return true;
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		p -= (x + y * this->width) * Image::getFormatBpp(nativeFormat); // Image::write expects data from the beginning so this shift back was implemented, but will never be accessed
+		bool result = Image::write(x, y, w, h, x, y, this->data, this->width, this->height, this->format, p, this->width, this->height, nativeFormat);
+		this->_unlock(buffer, lockResult, result);
+		return result;
 	}
 
 }

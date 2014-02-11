@@ -97,7 +97,6 @@ namespace april
 		this->data = NULL;
 		this->w = 0;
 		this->h = 0;
-		this->bpp = 0;
 		this->format = FORMAT_INVALID;
 		this->internalFormat = 0;
 		this->compressedSize = 0;
@@ -109,6 +108,16 @@ namespace april
 		{
 			delete [] this->data;
 		}
+	}
+
+	int Image::getBpp()
+	{
+		return Image::getFormatBpp(this->format);
+	}
+
+	int Image::getByteSize()
+	{
+		return (this->w * this->h * Image::getFormatBpp(this->format));
 	}
 
 	Color Image::getPixel(int x, int y)
@@ -521,12 +530,16 @@ namespace april
 		return img;
 	}
 	
-	void Image::fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat)
+	bool Image::fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat)
 	{
 		x = hclamp(x, 0, destWidth - 1);
 		y = hclamp(y, 0, destHeight - 1);
 		w = hclamp(w, 1, destWidth - x);
 		h = hclamp(h, 1, destHeight - y);
+		if (w < 1 || h < 1)
+		{
+			return false;
+		}
 		int destBpp = Image::getFormatBpp(destFormat);
 		int i = (x + y * destWidth) * destBpp;
 		int copyWidth = w * destBpp;
@@ -544,17 +557,20 @@ namespace april
 					memset(&destData[(x + (y + j) * destWidth) * destBpp], color.r, copyWidth);
 				}
 			}
-			return;
+			return true;
 		}
 		unsigned char colorData[4] = {color.r, color.g, color.b, color.a};
 		// convert to right format first
 		Format srcFormat = (destBpp == 4 ? FORMAT_RGBA : (destBpp == 3 ? FORMAT_RGB : FORMAT_ALPHA));
 		if (srcFormat != destFormat && destBpp > 1)
 		{
-			unsigned char* c = NULL;
-			Image::convertToFormat(colorData, &c, 1, 1, srcFormat, destFormat);
-			memcpy(&destData[i], c, destBpp);
-			delete [] c;
+			unsigned char* rgba = NULL;
+			if (!Image::convertToFormat(1, 1, colorData, srcFormat, &rgba, destFormat))
+			{
+				return false;
+			}
+			memcpy(&destData[i], rgba, destBpp);
+			delete [] rgba;
 		}
 		else
 		{
@@ -562,7 +578,6 @@ namespace april
 		}
 		int currentSize = destBpp;
 		int copySize = 0;
-		// TODOaa - test if this works as intended
 		if (x == 0 && w == destWidth)
 		{
 			while (currentSize < size)
@@ -587,6 +602,38 @@ namespace april
 				memcpy(&destData[(x + (y + j) * destWidth) * destBpp], &destData[i], currentSize);
 			}
 		}
+		return true;
+	}
+	
+	bool Image::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat,
+		unsigned char* destData, int destWidth, int destHeight, Format destFormat)
+	{
+		dx = hclamp(dx, 0, destWidth - 1);
+		dy = hclamp(dy, 0, destHeight - 1);
+		sx = hclamp(sx, 0, srcWidth - 1);
+		sy = hclamp(sy, 0, srcHeight - 1);
+		sw = hmin(sw, hmin(destWidth - dx, srcWidth - sx));
+		sh = hmin(sh, hmin(destHeight - dy, srcHeight - sy));
+		if (sw < 1 || sh < 1)
+		{
+			return false;
+		}
+		int srcBpp = Image::getFormatBpp(srcFormat);
+		int destBpp = Image::getFormatBpp(destFormat);
+		unsigned char* p = &destData[(dx + dy * destWidth) * destBpp];
+		if (sx == 0 && dx == 0 && srcWidth == destWidth && sw == destWidth)
+		{
+			Image::convertToFormat(sw, sh, &srcData[(sx + sy * srcWidth) * srcBpp], srcFormat, &p, destFormat, false);
+		}
+		else
+		{
+			for_iter (j, 0, sh)
+			{
+				Image::convertToFormat(sw, 1, &srcData[(sx + (sy + j) * srcWidth) * srcBpp], srcFormat, &p, destFormat, false);
+				p += destWidth * destBpp;
+			}
+		}
+		return true;
 	}
 	
 	int Image::getFormatBpp(Image::Format format)
@@ -608,31 +655,32 @@ namespace april
 		return 0;
 	}
 
-	bool Image::convertToFormat(unsigned char* srcData, unsigned char** destData, int w, int h, Image::Format srcFormat, Image::Format destFormat, bool preventCopy)
+	bool Image::convertToFormat(int w, int h, unsigned char* srcData, Image::Format srcFormat, unsigned char** destData, Image::Format destFormat, bool preventCopy)
 	{
 		if (preventCopy && srcFormat == destFormat)
 		{
 			hlog::warn(april::logTag, "The source's and destination's formats are the same!");
 			return false;
 		}
+		// TODOa - implement all 1 BPP variants
 		int srcBpp = Image::getFormatBpp(srcFormat);
 		if (srcBpp == 1)
 		{
-			if (Image::_convertFrom1Bpp(srcData, destData, w, h, srcFormat, destFormat))
+			if (Image::_convertFrom1Bpp(w, h, srcData, srcFormat, destData, destFormat))
 			{
 				return true;
 			}
 		}
 		else if (srcBpp == 3)
 		{
-			if (Image::_convertFrom3Bpp(srcData, destData, w, h, srcFormat, destFormat))
+			if (Image::_convertFrom3Bpp(w, h, srcData, srcFormat, destData, destFormat))
 			{
 				return true;
 			}
 		}
 		else if (srcBpp == 4)
 		{
-			if (Image::_convertFrom4Bpp(srcData, destData, w, h, srcFormat, destFormat))
+			if (Image::_convertFrom4Bpp(w, h, srcData, srcFormat, destData, destFormat))
 			{
 				return true;
 			}
@@ -641,7 +689,7 @@ namespace april
 		return false;
 	}
 
-	bool Image::_convertFrom1Bpp(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat)
+	bool Image::_convertFrom1Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat)
 	{
 		static int srcBpp = 1;
 		int destBpp = Image::getFormatBpp(destFormat);
@@ -680,7 +728,7 @@ namespace april
 		return false;
 	}
 
-	bool Image::_convertFrom3Bpp(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat)
+	bool Image::_convertFrom3Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat)
 	{
 		static int srcBpp = 3;
 		int destBpp = Image::getFormatBpp(destFormat);
@@ -753,7 +801,7 @@ namespace april
 		return false;
 	}
 
-	bool Image::_convertFrom4Bpp(unsigned char* srcData, unsigned char** destData, int w, int h, Format srcFormat, Format destFormat)
+	bool Image::_convertFrom4Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat)
 	{
 		static int srcBpp = 4;
 		int destBpp = Image::getFormatBpp(destFormat);
@@ -774,6 +822,7 @@ namespace april
 			}
 			return true;
 		}
+		// TODOaa - 4 BPP to 3 BPP is missing!
 		if (destBpp == 4)
 		{
 			// shifting unsigned int's around is faster than pure assigning (like at 3 BPP)
@@ -802,16 +851,13 @@ namespace april
 						FOR_EACH_4BPP_PIXEL(INVERTED_RIGHT_SHIFT);
 					}
 				}
+				else if (copyAlpha)
+				{
+					FOR_EACH_4BPP_PIXEL(RIGHT_SHIFT_WITH_ALPHA);
+				}
 				else
 				{
-					if (copyAlpha)
-					{
-						FOR_EACH_4BPP_PIXEL(RIGHT_SHIFT_WITH_ALPHA);
-					}
-					else
-					{
-						FOR_EACH_4BPP_PIXEL(RIGHT_SHIFT);
-					}
+					FOR_EACH_4BPP_PIXEL(RIGHT_SHIFT);
 				}
 			}
 			else if (leftShift)
@@ -827,16 +873,13 @@ namespace april
 						FOR_EACH_4BPP_PIXEL(INVERTED_LEFT_SHIFT);
 					}
 				}
+				else if (copyAlpha)
+				{
+					FOR_EACH_4BPP_PIXEL(LEFT_SHIFT_WITH_ALPHA);
+				}
 				else
 				{
-					if (copyAlpha)
-					{
-						FOR_EACH_4BPP_PIXEL(LEFT_SHIFT_WITH_ALPHA);
-					}
-					else
-					{
-						FOR_EACH_4BPP_PIXEL(LEFT_SHIFT);
-					}
+					FOR_EACH_4BPP_PIXEL(LEFT_SHIFT);
 				}
 			}
 			else if (invertOrderL)
