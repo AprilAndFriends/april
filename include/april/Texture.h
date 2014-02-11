@@ -77,21 +77,27 @@ namespace april
 		virtual void clear();
 		virtual Color getPixel(int x, int y);
 		virtual void setPixel(int x, int y, Color color);
+		Color getInterpolatedPixel(float x, float y);
 		virtual void fillRect(int x, int y, int w, int h, Color color);
 		virtual void write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		virtual bool copyPixelData(unsigned char** output, Image::Format format);
+		// TODOaa - blit goes here
+		// TODOaa - stretchBlit goes here
+		// TODOaa - rotateHue goes here
+		// TODOaa - saturate goes here
+		virtual void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
+
+		// TODOaa - still need refactoring
 		virtual void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void rotateHue(float degrees);
 		virtual void saturate(float factor);
-		virtual void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 
 		// TODOaa - new overloads
 		Color getPixel(gvec2 position);
 		void setPixel(gvec2 position, Color color);
-		Color getInterpolatedPixel(float x, float y);
 		Color getInterpolatedPixel(gvec2 position);
 		void fillRect(grect rect, Color color);
 		void write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);

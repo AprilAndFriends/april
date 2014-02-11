@@ -67,6 +67,10 @@ namespace april
 		void fillRect(int x, int y, int w, int h, Color color);
 		void write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		bool copyPixelData(unsigned char** output, Format format);
+		// TODOaa - blit goes here
+		// TODOaa - stretchBlit goes here
+		// TODOaa - rotateHue goes here
+		// TODOaa - saturate goes here
 		void insertAlphaMap(unsigned char* srcData, Format srcFormat);
 		
 		Color getPixel(gvec2 position);
@@ -76,15 +80,12 @@ namespace april
 		bool copyPixelData(unsigned char** output);
 		void insertAlphaMap(Image* source);
 
-
 		// TODOaa - need a new/better implementation
 		void blit(int x, int y, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(int x, int y, int w, int h, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 
-		
 		static Image* load(chstr filename);
-		// TODOaa - implement
-		//static Image* load(chstr filename, Format format);
+		static Image* load(chstr filename, Format format);
 		static Image* create(int w, int h, unsigned char* data, Format format);
 		static Image* create(int w, int h, Color color, Format format);
 		static Image* create(Image* other);
@@ -99,7 +100,11 @@ namespace april
 		static bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat);
 
+		/// @param[in] preventCopy If true, will make a copy even if source and destination formats are the same.
 		static bool convertToFormat(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat, bool preventCopy = true);
+		/// @brief Checks if an image format conversion is needed.
+		/// @param[in] preventCopy If true, will return false if source and destination formats are the same.
+		/// @note Helps to determine whether there is a need to convert an image format into another. It can be helpful to avoid conversion from e.g. RGBA to RGBX if the GPU ignores the X anyway.
 		static bool needsConversion(Format srcFormat, Format destFormat, bool preventCopy = true);
 		
 	protected:

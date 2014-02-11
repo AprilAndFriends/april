@@ -384,6 +384,22 @@ namespace april
 		return image;
 	}
 
+	Image* Image::load(chstr filename, Image::Format format)
+	{
+		Image* image = Image::load(filename);
+		if (image != NULL)
+		{
+			unsigned char* data = NULL;
+			if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, format))
+			{
+				delete [] image->data;
+				image->format = format;
+				image->data = data;
+			}
+		}
+		return image;
+	}
+
 	Image* Image::create(int w, int h, unsigned char* data, Image::Format format)
 	{
 		Image* image = new Image();
@@ -722,7 +738,7 @@ namespace april
 		}
 		if (createData)
 		{
-			delete *destData;
+			delete [] *destData;
 			*destData = NULL;
 		}
 		return false;
@@ -799,7 +815,7 @@ namespace april
 		}
 		if (createData)
 		{
-			delete *destData;
+			delete [] *destData;
 			*destData = NULL;
 		}
 		return false;
@@ -816,25 +832,25 @@ namespace april
 		}
 		if (destBpp == 1)
 		{
-			int i = 0;
+			int redIndex = 0;
 			if (srcFormat == FORMAT_ARGB || srcFormat == FORMAT_XRGB)
 			{
-				i = 1;
+				redIndex = 1;
 			}
 			if (srcFormat == FORMAT_BGRA || srcFormat == FORMAT_BGRX)
 			{
-				i = 2;
+				redIndex = 2;
 			}
 			if (srcFormat == FORMAT_ABGR || srcFormat == FORMAT_XBGR)
 			{
-				i = 3;
+				redIndex = 3;
 			}
 			for_iter (y, 0, h)
 			{
 				for_iter (x, 0, w)
 				{
 					// red is used as main component
-					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp + i];
+					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp + redIndex];
 				}
 			}
 			return true;
@@ -969,7 +985,7 @@ namespace april
 		}
 		if (createData)
 		{
-			delete *destData;
+			delete [] *destData;
 			*destData = NULL;
 		}
 		return false;
