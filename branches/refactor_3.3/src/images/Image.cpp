@@ -46,14 +46,25 @@
 			dest[i] = macro(src[i]); \
 		} \
 	}
-
-#define FOR_EACH_3BPP_PIXEL(exec) \
+#define FOR_EACH_3BPP_TO_4BPP_PIXEL(exec) \
 	for_iter (y, 0, h) \
 	{ \
 		for_iter (x, 0, w) \
 		{ \
 			i = (x + y * w) * srcBpp; \
 			dest[x + y * w] = (exec); \
+		} \
+	}
+#define FOR_EACH_4BPP_TO_3BPP_PIXEL(exec1, exec2, exec3) \
+	for_iter (y, 0, h) \
+	{ \
+		for_iter (x, 0, w) \
+		{ \
+			i = x + y * w; \
+			j = (x + y * w) * destBpp; \
+			dest[j] = (unsigned char)(exec1); \
+			dest[j + 1] = (unsigned char)(exec2); \
+			dest[j + 2] = (unsigned char)(exec3); \
 		} \
 	}
 
@@ -196,7 +207,7 @@ namespace april
 		}
 		else
 		{
-			// not good, BPP differ too much (one might be 4 or 3 while the other is less than 3)
+			// not good, BPPs differ too much (one might be 4 or 3 while the other is less than 3)
 			Color c;
 			unsigned char* o = this->data;
 			unsigned char* i = source->data;
@@ -260,46 +271,6 @@ namespace april
 		}
 	}
 
-	void Image::copyPixels(void* output, Format _format)
-	{
-		// TODO - hacky. input and output formats can be different, fix this in the future
-		if (_format == FORMAT_BGRA)
-		{
-			unsigned char* o = (unsigned char*)output;
-			unsigned char* i = data;
-			int x;
-			for_iter (y, 0, h)
-			{
-				for (x = 0; x < w; x++, o += 4, i += 4)
-				{
-					o[0] = i[2];
-					o[1] = i[1];
-					o[2] = i[0];
-					o[3] = i[3];
-				}
-			}
-		}
-		else if (_format == FORMAT_BGR)
-		{
-			unsigned char* o = (unsigned char*)output;
-			unsigned char* i = data;
-			int x;
-			for_iter (y, 0, h)
-			{
-				for (x = 0; x < w; x++, o += 4, i += 3)
-				{
-					o[0] = i[2];
-					o[1] = i[1];
-					o[2] = i[0];
-				}
-			}
-		}
-		else
-		{
-			memcpy(output, this->data, this->w * this->h * this->bpp);
-		}
-	}
-	
 	void Image::insertAsAlphaMap(Image* source)
 	{
 		if (this->bpp < 4)
@@ -640,17 +611,18 @@ namespace april
 	{
 		switch (format)
 		{
-		case FORMAT_RGBA:	return 4;
-		case FORMAT_ARGB:	return 4;
-		case FORMAT_BGRA:	return 4;
-		case FORMAT_ABGR:	return 4;
-		case FORMAT_RGBX:	return 4;
-		case FORMAT_XRGB:	return 4;
-		case FORMAT_BGRX:	return 4;
-		case FORMAT_XBGR:	return 4;
-		case FORMAT_RGB:	return 3;
-		case FORMAT_BGR:	return 3;
-		case FORMAT_ALPHA:	return 1;
+		case FORMAT_RGBA:		return 4;
+		case FORMAT_ARGB:		return 4;
+		case FORMAT_BGRA:		return 4;
+		case FORMAT_ABGR:		return 4;
+		case FORMAT_RGBX:		return 4;
+		case FORMAT_XRGB:		return 4;
+		case FORMAT_BGRX:		return 4;
+		case FORMAT_XBGR:		return 4;
+		case FORMAT_RGB:		return 3;
+		case FORMAT_BGR:		return 3;
+		case FORMAT_ALPHA:		return 1;
+		case FORMAT_GRAYSCALE:	return 1;
 		}
 		return 0;
 	}
@@ -662,7 +634,6 @@ namespace april
 			hlog::warn(april::logTag, "The source's and destination's formats are the same!");
 			return false;
 		}
-		// TODOa - implement all 1 BPP variants
 		int srcBpp = Image::getFormatBpp(srcFormat);
 		if (srcBpp == 1)
 		{
@@ -705,11 +676,23 @@ namespace april
 		}
 		if (destBpp == 3 || destBpp == 4)
 		{
+			int i = 0;
 			if (destBpp > 3)
 			{
 				memset(*destData, 255, w * h * destBpp);
+				if (!CHECK_LEFT_RGB(destFormat))
+				{
+					for_iter (y, 0, h)
+					{
+						for_iter (x, 0, w)
+						{
+							i = (x + y * w) * destBpp;
+							(*destData)[i + 1] = (*destData)[i + 2] = (*destData)[i + 3] = srcData[x + y * w];
+						}
+					}
+					return true;
+				}
 			}
-			int i = 0;
 			for_iter (y, 0, h)
 			{
 				for_iter (x, 0, w)
@@ -739,12 +722,13 @@ namespace april
 		}
 		if (destBpp == 1)
 		{
+			int i = (srcFormat == FORMAT_RGB ? 0 : 2);
 			for_iter (y, 0, h)
 			{
 				for_iter (x, 0, w)
 				{
 					// red is used as main component
-					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp];
+					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp + i];
 				}
 			}
 			return true;
@@ -753,14 +737,17 @@ namespace april
 		{
 			memcpy(*destData, srcData, w * h * destBpp);
 			// FORMAT_RGB to FORMAT_BGR and vice versa, thus switching 2 bytes around is enough
-			int i = 0;
-			for_iter (y, 0, h)
+			if (srcFormat != destFormat)
 			{
-				for_iter (x, 0, w)
+				int i = 0;
+				for_iter (y, 0, h)
 				{
-					i = (x + y * w) * destBpp;
-					(*destData)[i] = srcData[i + 2];
-					(*destData)[i + 2] = srcData[i];
+					for_iter (x, 0, w)
+					{
+						i = (x + y * w) * destBpp;
+						(*destData)[i] = srcData[i + 2];
+						(*destData)[i + 2] = srcData[i];
+					}
 				}
 			}
 			return true;
@@ -776,20 +763,20 @@ namespace april
 			{
 				if (invertOrder)
 				{
-					FOR_EACH_3BPP_PIXEL((srcData[i] << 24) | (srcData[i + 1] << 16) | (srcData[i + 2] << 8) | _R_ALPHA);
+					FOR_EACH_3BPP_TO_4BPP_PIXEL((((unsigned int)srcData[i]) << 24) | (((unsigned int)srcData[i + 1]) << 16) | (((unsigned int)srcData[i + 2]) << 8) | _R_ALPHA);
 				}
 				else
 				{
-					FOR_EACH_3BPP_PIXEL((srcData[i] << 8) | (srcData[i + 1] << 16) | (srcData[i + 2] << 24) | _R_ALPHA);
+					FOR_EACH_3BPP_TO_4BPP_PIXEL((((unsigned int)srcData[i]) << 8) | (((unsigned int)srcData[i + 1]) << 16) | (((unsigned int)srcData[i + 2]) << 24) | _R_ALPHA);
 				}
 			}
 			else if (invertOrder)
 			{
-				FOR_EACH_3BPP_PIXEL((srcData[i] << 16) | (srcData[i + 1] << 8) | srcData[i + 2] | _L_ALPHA);
+				FOR_EACH_3BPP_TO_4BPP_PIXEL((((unsigned int)srcData[i]) << 16) | (((unsigned int)srcData[i + 1]) << 8) | srcData[i + 2] | _L_ALPHA);
 			}
 			else
 			{
-				FOR_EACH_3BPP_PIXEL(srcData[i] | (srcData[i + 1] << 8) | (srcData[i + 2] << 16) | _L_ALPHA);
+				FOR_EACH_3BPP_TO_4BPP_PIXEL(srcData[i] | (((unsigned int)srcData[i + 1]) << 8) | (((unsigned int)srcData[i + 2]) << 16) | _L_ALPHA);
 			}
 			return true;
 		}
@@ -812,17 +799,59 @@ namespace april
 		}
 		if (destBpp == 1)
 		{
+			int i = 0;
+			if (srcFormat == FORMAT_ARGB || srcFormat == FORMAT_XRGB)
+			{
+				i = 1;
+			}
+			if (srcFormat == FORMAT_BGRA || srcFormat == FORMAT_BGRX)
+			{
+				i = 2;
+			}
+			if (srcFormat == FORMAT_ABGR || srcFormat == FORMAT_XBGR)
+			{
+				i = 3;
+			}
 			for_iter (y, 0, h)
 			{
 				for_iter (x, 0, w)
 				{
 					// red is used as main component
-					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp];
+					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp + i];
 				}
 			}
 			return true;
 		}
-		// TODOaa - 4 BPP to 3 BPP is missing!
+		if (destBpp == 3)
+		{
+			unsigned int* src = (unsigned int*)srcData;
+			unsigned char* dest = *destData;
+			Format extended = (destFormat == FORMAT_RGB ? FORMAT_RGBX : FORMAT_BGRX);
+			bool leftShift = CHECK_SHIFT_FORMATS(extended, srcFormat);
+			bool invertOrder = (CHECK_INVERT_ORDER_FORMATS(srcFormat, extended) || CHECK_INVERT_ORDER_FORMATS(extended, srcFormat));
+			int i = 0;
+			int j = 0;
+			if (leftShift)
+			{
+				if (invertOrder)
+				{
+					FOR_EACH_4BPP_TO_3BPP_PIXEL(src[i] >> 24, src[i] >> 16, src[i] >> 8);
+				}
+				else
+				{
+					FOR_EACH_4BPP_TO_3BPP_PIXEL(src[i] >> 8, src[i] >> 16, src[i] >> 24);
+				}
+			}
+			else if (invertOrder)
+			{
+				FOR_EACH_4BPP_TO_3BPP_PIXEL(src[i] >> 16, src[i] >> 8, src[i]);
+			}
+			else
+			{
+				FOR_EACH_4BPP_TO_3BPP_PIXEL(src[i], src[i] >> 8, src[i] >> 16);
+			}
+			return true;
+		}
 		if (destBpp == 4)
 		{
 			// shifting unsigned int's around is faster than pure assigning (like at 3 BPP)
@@ -904,7 +933,7 @@ namespace april
 					FOR_EACH_4BPP_PIXEL(INVERTED_R);
 				}
 			}
-			else if (srcAlpha || destAlpha)
+			else if (srcAlpha ^ destAlpha)
 			{
 				if (left)
 				{

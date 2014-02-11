@@ -272,7 +272,7 @@ namespace april
 			return false;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
-		bool result = Image::convertToFormat(this->width, this->height, p, this->format, output, format, false); // will just perform a copy
+		bool result = Image::convertToFormat(this->width, this->height, p, april::rendersys->getNativeTextureFormat(this->format), output, format, false); // will just perform a copy
 		this->_unlock(buffer, lockResult, result);
 		return result;
 	}
