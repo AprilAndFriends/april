@@ -63,7 +63,9 @@ namespace april
 		Color getPixel(int x, int y);
 		void setPixel(int x, int y, Color c);
 		Color getInterpolatedPixel(float x, float y);
-		void copyPixels(void* output, Format format); // TODOaa - use similar method like in texture
+		bool copyPixelData(unsigned char** output, Format format);
+
+		//void copyPixels(void* output, Format format); // TODOaa - use similar method like in texture
 		void setPixels(int x, int y, int w, int h, Color c); // TODOaa - use similar method like in texture, rename to write()
 		void copyImage(Image* source, bool fillAlpha = false); // TODOaa - use similar method like in texture, rename to write()
 		void clear();

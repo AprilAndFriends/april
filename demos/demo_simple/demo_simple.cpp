@@ -169,8 +169,22 @@ void april_init(const harray<hstr>& args)
 	textureRect.x = -textureRect.w / 2;
 	textureRect.y = -textureRect.h / 2;
 	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::TYPE_MANAGED);
-	manualTexture->blit(100, 100, texture, 0, 0, texture->getWidth(), texture->getHeight());
-	manualTexture->stretchBlit(0, 100, 900, 200, texture, 0, 0, texture->getWidth() / 2, texture->getHeight() / 2);
+	//manualTexture->blit(100, 100, texture, 0, 0, texture->getWidth(), texture->getHeight());
+	//manualTexture->stretchBlit(0, 100, 900, 200, texture, 0, 0, texture->getWidth() / 2, texture->getHeight() / 2);
+	//return
+
+	//unsigned char color[256 * 256 * 4];
+	//april::Image::fillRect(0, 0, 256, 256, april::Color(255, 0, 0, 97), color, 256, 256, april::Image::FORMAT_RGBA);
+	unsigned char* data = NULL;
+	texture->copyPixelData(&data, april::Image::FORMAT_GRAYSCALE);
+	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 100, 100, data, texture->getWidth(), texture->getHeight(), april::Image::FORMAT_GRAYSCALE);
+	
+	//memset(color, 128, 256 * 256 * 4);
+	//manualTexture->write(0, 0, 256, 256, 100, 100, color, 256, 256, april::Image::FORMAT_RGBA);
+	//manualTexture->blit(200, 200, texture, 0, 0, texture->getWidth(), texture->getHeight());
+	//manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 100, 100, data, texture->getWidth(), texture->getHeight(), april::Image::FORMAT_RGBA);
+
+
 }
 
 void april_destroy()
