@@ -784,17 +784,16 @@ namespace april
 #ifdef _DEBUG
 		hlog::write(april::logTag, "Taking screenshot...");
 #endif
-		Image* image = new Image();
-		image->w = april::window->getWidth();
-		image->h = april::window->getHeight();
-		image->format = format;
-		image->data = NULL;
-		unsigned char* temp = new unsigned char[image->w * image->h * 4]; // 4 BPP just in case some OpenGL implementations don't blit rgba and cause a memory leak
-		glReadPixels(0, 0, image->w, image->h, GL_RGBA, GL_UNSIGNED_BYTE, temp);
-		if (!Image::convertToFormat(image->w, image->h, temp, GL_NATIVE_FORMAT, &image->data, format, false)) // always copy, because temp is always 4 BPP!
+		int w = april::window->getWidth();
+		int h = april::window->getHeight();
+		unsigned char* temp = new unsigned char[w * (h + 1) * 4]; // 4 BPP and one extra row just in case some OpenGL implementations don't blit properly and cause a memory leak
+		glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, temp);
+		unsigned char* data = NULL;
+		Image* image = NULL;
+		if (Image::convertToFormat(w, h, temp, Image::FORMAT_RGBA, &data, format, false))
 		{
-			delete image;
-			image = NULL;
+			image = Image::create(w, h, data, format);
+			delete [] data;
 		}
 		delete [] temp;
 		return image;

@@ -32,7 +32,7 @@ namespace april
 	{
 		this->width = w;
 		this->height = h;
-		this->source = Image::create(w, h);
+		this->source = Image::create(w, h, Color::Clear, Image::FORMAT_RGBA);
 		this->format = this->source->format;
 	}
 
@@ -54,7 +54,7 @@ namespace april
 			}
 			else
 			{
-				this->source = Image::create(this->width, this->height);
+				this->source = Image::create(this->width, this->height, Color::Clear, Image::FORMAT_RGBA);
 			}
 			this->format = this->source->format;
 			return true;

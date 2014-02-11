@@ -66,8 +66,7 @@ namespace april
 		img->data = (unsigned char*)imageData;
 		img->w = pngPtr->width;
 		img->h = pngPtr->height;
-		img->bpp = bpp;
-		switch (img->bpp)
+		switch (bpp)
 		{
 		case 4:
 			img->format = FORMAT_RGBA;
@@ -75,8 +74,11 @@ namespace april
 		case 3:
 			img->format = FORMAT_RGB;
 			break;
+		case 1:
+			img->format = FORMAT_GRAYSCALE;
+			break;
 		default:
-			img->format = FORMAT_RGB; // TODOaa
+			img->format = FORMAT_RGBA; // TODOaa - maybe palette should go here
 			break;
 		}
 		// clean up
