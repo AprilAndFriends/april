@@ -66,6 +66,7 @@ namespace april
 		Color getInterpolatedPixel(float x, float y);
 		void fillRect(int x, int y, int w, int h, Color color);
 		void write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		void writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		bool copyPixelData(unsigned char** output, Format format);
 		// TODOaa - blit goes here
 		// TODOaa - stretchBlit goes here
@@ -97,6 +98,7 @@ namespace april
 		static Color getInterpolatedPixel(float x, float y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat);
 		static bool fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		static bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat);
 
@@ -107,6 +109,12 @@ namespace april
 		/// @note Helps to determine whether there is a need to convert an image format into another. It can be helpful to avoid conversion from e.g. RGBA to RGBX if the GPU ignores the X anyway.
 		static bool needsConversion(Format srcFormat, Format destFormat, bool preventCopy = true);
 		
+		static bool checkRect(int dx, int dy, int destWidth, int destHeight);
+		static bool checkRect(int dx, int dy, int dw, int dh, int destWidth, int destHeight);
+		static bool correctRect(int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight);
+		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int destWidth, int destHeight);
+		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight);
+
 	protected:
 		Image();
 

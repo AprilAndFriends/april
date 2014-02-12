@@ -51,24 +51,24 @@ namespace april
 		CM_UNDEFINED = 0x7FFFFFFF
 	};
 
-	DEPRECATED_ATTRIBUTE extern RenderOperation TriangleList;
-	DEPRECATED_ATTRIBUTE extern RenderOperation TriangleStrip;
-	DEPRECATED_ATTRIBUTE extern RenderOperation TriangleFan;
-	DEPRECATED_ATTRIBUTE extern RenderOperation LineList;
-	DEPRECATED_ATTRIBUTE extern RenderOperation LineStrip;
-	DEPRECATED_ATTRIBUTE extern RenderOperation PointList;
-	DEPRECATED_ATTRIBUTE extern RenderOperation RENDER_OP_UNDEFINED;
-	DEPRECATED_ATTRIBUTE extern BlendMode DEFAULT;
-	DEPRECATED_ATTRIBUTE extern BlendMode ALPHA_BLEND;
-	DEPRECATED_ATTRIBUTE extern BlendMode ADD;
-	DEPRECATED_ATTRIBUTE extern BlendMode SUBTRACT;
-	DEPRECATED_ATTRIBUTE extern BlendMode OVERWRITE;
-	DEPRECATED_ATTRIBUTE extern BlendMode BLEND_MODE_UNDEFINED;
-	DEPRECATED_ATTRIBUTE extern ColorMode NORMAL;
-	DEPRECATED_ATTRIBUTE extern ColorMode MULTIPLY;
-	DEPRECATED_ATTRIBUTE extern ColorMode LERP;
-	DEPRECATED_ATTRIBUTE extern ColorMode ALPHA_MAP;
-	DEPRECATED_ATTRIBUTE extern ColorMode COLOR_MODE_UNDEFINED;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation TriangleList;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation TriangleStrip;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation TriangleFan;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation LineList;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation LineStrip;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation PointList;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation RENDER_OP_UNDEFINED;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode DEFAULT;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode ALPHA_BLEND;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode ADD;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode SUBTRACT;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode OVERWRITE;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode BLEND_MODE_UNDEFINED;
+	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode NORMAL;
+	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode MULTIPLY;
+	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode LERP;
+	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode ALPHA_MAP;
+	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode COLOR_MODE_UNDEFINED;
 	
 	struct aprilExport PlainVertex : public gvec3
 	{

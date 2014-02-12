@@ -148,6 +148,8 @@ namespace april
 		virtual Image* takeScreenshot(Image::Format format) = 0;
 		virtual void presentFrame();
 
+		DEPRECATED_ATTRIBUTE Texture* createTexture(chstr filename, bool loadImmediately) { return this->createTexture(filename, Texture::TYPE_IMMUTABLE, loadImmediately); }
+
 	protected:
 		hstr name;
 		bool created;

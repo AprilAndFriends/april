@@ -57,7 +57,10 @@ namespace april
 			ADDRESS_CLAMP = 1,
 			ADDRESS_UNDEFINED = 0x7FFFFFFF
 		};
-	
+
+		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ALPHA;
+		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ARGB;
+
 		Texture();
 		virtual ~Texture();
 		virtual bool load();
@@ -80,6 +83,7 @@ namespace april
 		Color getInterpolatedPixel(float x, float y);
 		virtual void fillRect(int x, int y, int w, int h, Color color);
 		virtual void write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		virtual void writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		virtual bool copyPixelData(unsigned char** output, Image::Format format);
 		// TODOaa - blit goes here
 		// TODOaa - stretchBlit goes here
@@ -101,6 +105,7 @@ namespace april
 		Color getInterpolatedPixel(gvec2 position);
 		void fillRect(grect rect, Color color);
 		void write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		void writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		bool copyPixelData(unsigned char** output);
 
 		// TODOaa - old overloads

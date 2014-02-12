@@ -23,6 +23,9 @@
 
 namespace april
 {
+	Image::Format Texture::FORMAT_ALPHA = Image::FORMAT_ALPHA; // DEPRECATED
+	Image::Format Texture::FORMAT_ARGB = Image::FORMAT_RGBA; // DEPRECATED
+
 	Texture::Texture()
 	{
 		this->filename = "";
@@ -295,6 +298,16 @@ namespace april
 		}
 	}
 
+	Color Texture::getInterpolatedPixel(float x, float y)
+	{
+		Color color = Color::Clear;
+		if (this->data != NULL)
+		{
+			color = Image::getInterpolatedPixel(x, y, this->data, this->width, this->height, this->format);
+		}
+		return color;
+	}
+	
 	void Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
 		if (this->data != NULL && Image::fillRect(x, y, w, h, color, this->data, this->width, this->height, this->format))
@@ -311,10 +324,21 @@ namespace april
 		}
 	}
 
+	void Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		if (this->data != NULL && Image::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format))
+		{
+			this->_uploadDataToGpu(dx, dy, dw, dh);
+		}
+	}
+
 	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
 	{
 		return (this->data != NULL && Image::convertToFormat(this->width, this->height, this->data, this->format, output, format, false));
 	}
+
+	// TODOaa - standard implementations go here
+
 
 	void Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
@@ -346,10 +370,14 @@ namespace april
 		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement saturate()!", april::rendersys->getName().c_str());
 	}
 
+	// TODOaa - rename properly
 	void Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
 	{
 		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement insertAsAlphaMap()!", april::rendersys->getName().c_str());
 	}
+
+
+	// TODOaa - all overload go here
 
 	Color Texture::getPixel(gvec2 position)
 	{
@@ -361,45 +389,6 @@ namespace april
 		this->setPixel(hround(position.x), hround(position.y), color);
 	}
 
-	Color Texture::getInterpolatedPixel(float x, float y)
-	{
-		// TODOaa - refactor and make faster?
-		Color result;
-		int x0 = (int) x;
-		int y0 = (int) y;
-		int x1 = x0 + 1;
-		int y1 = y0 + 1;
-		float rx0 = x - x0;
-		float ry0 = y - y0;
-		float rx1 = 1.0f - rx0;
-		float ry1 = 1.0f - ry0;
-		if (rx0 != 0.0f && ry0 != 0.0f)
-		{
-			Color tl = this->getPixel(x0, y0);
-			Color tr = this->getPixel(x1, y0);
-			Color bl = this->getPixel(x0, y1);
-			Color br = this->getPixel(x1, y1);
-			result = (tl * ry1 + bl * ry0) * rx1 + (tr * ry1 + br * ry0) * rx0;
-		}
-		else if (rx0 != 0.0f)
-		{
-			Color tl = this->getPixel(x0, y0);
-			Color tr = this->getPixel(x1, y0);
-			result = tl * rx1 + tr * rx0;
-		}
-		else if (ry0 != 0.0f)
-		{
-			Color tl = this->getPixel(x0, y0);
-			Color bl = this->getPixel(x0, y1);
-			result = tl * ry1 + bl * ry0;
-		}
-		else
-		{
-			result = this->getPixel(x0, y0);
-		}
-		return result;
-	}
-	
 	Color Texture::getInterpolatedPixel(gvec2 position)
 	{
 		return this->getInterpolatedPixel(position.x, position.y);
@@ -415,10 +404,20 @@ namespace april
 		this->write(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destPosition.x), hround(destPosition.y), srcData, srcWidth, srcHeight, srcFormat);
 	}
 
+	void Texture::writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		this->writeStretch(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destRect.x), hround(destRect.y), hround(destRect.w), hround(destRect.h), srcData, srcWidth, srcHeight, srcFormat);
+	}
+
 	bool Texture::copyPixelData(unsigned char** output)
 	{
 		return this->copyPixelData(output, this->format);
 	}
+
+	// TODOaa - blit goes here
+
+
+
 
 	void Texture::blit(int x, int y, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
@@ -635,7 +634,7 @@ namespace april
 					ry0 = cy - y0;
 					rx1 = 1.0f - rx0;
 					ry1 = 1.0f - ry0;
-					if (rx0 != 0.0f || ry0 != 0.0f)
+					if (rx0 != 0.0f && ry0 != 0.0f)
 					{
 						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
 						ctr = &srcData[(x1 + y0 * dataWidth) * 4];

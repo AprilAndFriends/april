@@ -165,15 +165,16 @@ namespace april
 		{
 			return color;
 		}
-		color = Image::getPixel(x, y, (unsigned char*)lockRect.pBits, this->width, this->height, april::rendersys->getNativeTextureFormat(this->format));
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		p -= (x + y * this->width) * Image::getFormatBpp(nativeFormat); // Image::getPixel expects data from the beginning so this shift back was implemented, but will never be accessed
+		color = Image::getPixel(x, y, p, this->width, this->height, nativeFormat);
 		this->_unlock(buffer, lockResult, false);
 		return color;
 	}
 
 	void DirectX9_Texture::setPixel(int x, int y, Color color)
 	{
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
 		if (this->data != NULL)
 		{
 			Texture::setPixel(x, y, color);
@@ -187,16 +188,15 @@ namespace april
 		{
 			return;
 		}
-		bool result =  Image::setPixel(x, y, color, (unsigned char*)lockRect.pBits, this->width, this->height, april::rendersys->getNativeTextureFormat(this->format));
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		p -= (x + y * this->width) * Image::getFormatBpp(nativeFormat); // Image::setPixel expects data from the beginning so this shift back was implemented, but will never be accessed
+		bool result = Image::setPixel(x, y, color, p, this->width, this->height, nativeFormat);
 		this->_unlock(buffer, lockResult, result);
 	}
 
 	void DirectX9_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		w = hclamp(w, 1, this->width - x);
-		h = hclamp(h, 1, this->height - y);
 		if (w == 1 && h == 1)
 		{
 			this->setPixel(x, y, color);
@@ -244,6 +244,28 @@ namespace april
 		this->_unlock(buffer, lockResult, result);
 	}
 
+	void DirectX9_Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		if (this->data != NULL)
+		{
+			DirectX_Texture::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat);
+			return;
+		}
+		D3DLOCKED_RECT lockRect;
+		_CREATE_RECT(rect, dx, dy, dw, dh);
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
+		if (lockResult == LR_FAILED)
+		{
+			return;
+		}
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		p -= (dx + dy * this->width) * Image::getFormatBpp(nativeFormat); // Image::write expects data from the beginning so this shift back was implemented, but will never be accessed
+		bool result = Image::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, p, this->width, this->height, nativeFormat);
+		this->_unlock(buffer, lockResult, result);
+	}
+
 	bool DirectX9_Texture::copyPixelData(unsigned char** output, Image::Format format)
 	{
 		if (this->data != NULL)
@@ -269,6 +291,7 @@ namespace april
 
 	void DirectX9_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
+		// TODOaa - change
 		DirectX9_Texture* source = (DirectX9_Texture*)texture;
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
@@ -295,6 +318,7 @@ namespace april
 
 	void DirectX9_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
+		// TODOaa - change
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
 		sx = hclamp(sx, 0, dataWidth - 1);
@@ -315,6 +339,7 @@ namespace april
 
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
+		// TODOaa - change
 		DirectX9_Texture* source = (DirectX9_Texture*)texture;
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
@@ -338,6 +363,7 @@ namespace april
 
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
+		// TODOaa - change
 		x = hclamp(x, 0, this->width - 1);
 		y = hclamp(y, 0, this->height - 1);
 		w = hmin(w, this->width - x);
@@ -530,6 +556,10 @@ namespace april
 	bool DirectX9_Texture::_uploadDataToGpu(int x, int y, int w, int h)
 	{
 		if (this->data == NULL)
+		{
+			return false;
+		}
+		if (!Image::correctRect(x, y, w, h, this->width, this->height))
 		{
 			return false;
 		}

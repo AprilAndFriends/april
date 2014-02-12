@@ -168,14 +168,9 @@ void april_init(const harray<hstr>& args)
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w / 2;
 	textureRect.y = -textureRect.h / 2;
-	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::TYPE_MANAGED);
+	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::TYPE_VOLATILE);
 	manualTexture->blit(100, 100, texture, 0, 0, texture->getWidth(), texture->getHeight());
-	//manualTexture->stretchBlit(0, 100, 900, 200, texture, 0, 0, texture->getWidth() / 2, texture->getHeight() / 2);
-	//return
-	
-	//unsigned char* data = NULL;
-	//texture->copyPixelData(&data, april::Image::FORMAT_RGBA);
-	//manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 100, 100, data, texture->getWidth(), texture->getHeight(), april::Image::FORMAT_RGBA);
+	manualTexture->stretchBlit(0, 100, 900, 200, texture, 0, 0, texture->getWidth() / 2, texture->getHeight() / 2);
 }
 
 void april_destroy()
