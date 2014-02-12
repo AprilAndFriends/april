@@ -61,7 +61,7 @@ namespace april
 	bool DirectX9_Texture::_createInternalTexture(unsigned char* data, int size)
 	{
 		// TODOaa - change pool to save memory
-		if (this->renderTarget)
+		if (!this->renderTarget)
 		{
 			this->d3dPool = D3DPOOL_MANAGED;
 			this->d3dUsage = 0;

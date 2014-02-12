@@ -149,6 +149,7 @@ namespace april
 		virtual void presentFrame();
 
 		DEPRECATED_ATTRIBUTE Texture* createTexture(chstr filename, bool loadImmediately) { return this->createTexture(filename, Texture::TYPE_IMMUTABLE, loadImmediately); }
+		DEPRECATED_ATTRIBUTE Texture* createTexture(int w, int h, Image::Format format) { return this->createTexture(w, h, Color::Clear, format, Texture::TYPE_MANAGED); }
 
 	protected:
 		hstr name;
