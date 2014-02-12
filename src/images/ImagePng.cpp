@@ -21,7 +21,7 @@ namespace april
 		((hsbase*)png->io_ptr)->read_raw(data, size);
 	}
 
-	Image* Image::_loadPng(hsbase& stream)
+	Image* Image::_loadPng(hsbase& stream, int size)
 	{
 		png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 		png_infop infoPtr = png_create_info_struct(pngPtr);
@@ -62,29 +62,34 @@ namespace april
 		png_read_image(pngPtr, rowPointers);
 		png_read_end(pngPtr, infoPtr);
 		// assign Image data
-		Image* img = new Image();
-		img->data = (unsigned char*)imageData;
-		img->w = pngPtr->width;
-		img->h = pngPtr->height;
+		Image* image = new Image();
+		image->data = (unsigned char*)imageData;
+		image->w = pngPtr->width;
+		image->h = pngPtr->height;
 		switch (bpp)
 		{
 		case 4:
-			img->format = FORMAT_RGBA;
+			image->format = FORMAT_RGBA;
 			break;
 		case 3:
-			img->format = FORMAT_RGB;
+			image->format = FORMAT_RGB;
 			break;
 		case 1:
-			img->format = FORMAT_ALPHA;
+			image->format = FORMAT_ALPHA;
 			break;
 		default:
-			img->format = FORMAT_RGBA; // TODOaa - maybe palette should go here
+			image->format = FORMAT_RGBA; // TODOaa - maybe palette should go here
 			break;
 		}
 		// clean up
 		png_destroy_read_struct(&pngPtr, &infoPtr, &endInfo);
 		delete [] rowPointers;
-		return img;
+		return image;
+	}
+
+	Image* Image::_loadPng(hsbase& stream)
+	{
+		return Image::_loadPng(stream, stream.size());
 	}
 
 }
