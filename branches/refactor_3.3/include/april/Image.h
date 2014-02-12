@@ -118,7 +118,9 @@ namespace april
 	protected:
 		Image();
 
+		static Image* _loadPng(hsbase& stream, int size);
 		static Image* _loadPng(hsbase& stream);
+		static Image* _loadJpg(hsbase& stream, int size);
 		static Image* _loadJpg(hsbase& stream);
 		static Image* _loadJpt(hsbase& stream);
 
