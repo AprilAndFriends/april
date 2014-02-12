@@ -75,7 +75,7 @@ namespace april
 			img->format = FORMAT_RGB;
 			break;
 		case 1:
-			img->format = FORMAT_GRAYSCALE;
+			img->format = FORMAT_ALPHA;
 			break;
 		default:
 			img->format = FORMAT_RGBA; // TODOaa - maybe palette should go here

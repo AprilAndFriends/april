@@ -38,27 +38,27 @@
 	((format) == FORMAT_RGBA || (format) == FORMAT_ARGB || (format) == FORMAT_BGRA || (format) == FORMAT_ABGR)
 
 #define FOR_EACH_4BPP_PIXEL(macro) \
-	for_iter (y, 0, h) \
+	for_iterx (y, 0, h) \
 	{ \
-		for_iter (x, 0, w) \
+		for_iterx (x, 0, w) \
 		{ \
 			i = (x + y * w); \
 			dest[i] = macro(src[i]); \
 		} \
 	}
 #define FOR_EACH_3BPP_TO_4BPP_PIXEL(exec) \
-	for_iter (y, 0, h) \
+	for_iterx (y, 0, h) \
 	{ \
-		for_iter (x, 0, w) \
+		for_iterx (x, 0, w) \
 		{ \
 			i = (x + y * w) * srcBpp; \
 			dest[x + y * w] = (exec); \
 		} \
 	}
 #define FOR_EACH_4BPP_TO_3BPP_PIXEL(exec1, exec2, exec3) \
-	for_iter (y, 0, h) \
+	for_iterx (y, 0, h) \
 	{ \
-		for_iter (x, 0, w) \
+		for_iterx (x, 0, w) \
 		{ \
 			i = x + y * w; \
 			j = (x + y * w) * destBpp; \
@@ -177,6 +177,14 @@ namespace april
 		if (this->data != NULL)
 		{
 			Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->w, this->h, this->format);
+		}
+	}
+
+	void Image::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		if (this->data != NULL)
+		{
+			Image::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->w, this->h, this->format);
 		}
 	}
 
@@ -463,7 +471,7 @@ namespace april
 	{
 		Color color = Color::Clear;
 		unsigned char* rgba = NULL;
-		if (Image::convertToFormat(1, 1, &srcData[(x + y * srcWidth) * Image::getFormatBpp(srcFormat)], srcFormat, &rgba, Image::FORMAT_RGBA, false))
+		if (Image::checkRect(x, y, srcWidth, srcHeight) && Image::convertToFormat(1, 1, &srcData[(x + y * srcWidth) * Image::getFormatBpp(srcFormat)], srcFormat, &rgba, Image::FORMAT_RGBA, false))
 		{
 			color.r = rgba[0];
 			color.g = rgba[1];
@@ -476,6 +484,10 @@ namespace april
 	
 	bool Image::setPixel(int x, int y, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat)
 	{
+		if (!Image::checkRect(x, y, destWidth, destHeight))
+		{
+			return false;
+		}
 		unsigned char rgba[4] = {color.r, color.g, color.b, color.a};
 		unsigned char* p = &destData[(x + y * destWidth) * Image::getFormatBpp(destFormat)];
 		return Image::convertToFormat(1, 1, rgba, Image::FORMAT_RGBA, &p, destFormat, false);
@@ -518,14 +530,10 @@ namespace april
 		}
 		return result;
 	}
-	
+
 	bool Image::fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat)
 	{
-		x = hclamp(x, 0, destWidth - 1);
-		y = hclamp(y, 0, destHeight - 1);
-		w = hclamp(w, 1, destWidth - x);
-		h = hclamp(h, 1, destHeight - y);
-		if (w < 1 || h < 1)
+		if (!Image::correctRect(x, y, w, h, destWidth, destHeight))
 		{
 			return false;
 		}
@@ -533,7 +541,7 @@ namespace april
 		int i = (x + y * destWidth) * destBpp;
 		int copyWidth = w * destBpp;
 		int size = copyWidth * destHeight;
-		if (destBpp == 1 || destBpp == 3 && color.r == color.g && color.r == color.g || destBpp == 4 && color.r == color.g && color.r == color.b && color.r == color.a)
+		if (destBpp == 1 || destBpp == 3 && color.r == color.g && color.r == color.b || destBpp == 4 && color.r == color.g && color.r == color.b && color.r == color.a)
 		{
 			if (x == 0 && w == destWidth)
 			{
@@ -550,7 +558,7 @@ namespace april
 		}
 		unsigned char colorData[4] = {color.r, color.g, color.b, color.a};
 		// convert to right format first
-		Format srcFormat = (destBpp == 4 ? FORMAT_RGBA : (destBpp == 3 ? FORMAT_RGB : FORMAT_ALPHA));
+		Format srcFormat = (destBpp == 4 ? FORMAT_RGBA : (destBpp == 3 ? FORMAT_RGB : FORMAT_GRAYSCALE));
 		if (srcFormat != destFormat && destBpp > 1)
 		{
 			unsigned char* rgba = NULL;
@@ -597,13 +605,7 @@ namespace april
 	bool Image::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat,
 		unsigned char* destData, int destWidth, int destHeight, Format destFormat)
 	{
-		dx = hclamp(dx, 0, destWidth - 1);
-		dy = hclamp(dy, 0, destHeight - 1);
-		sx = hclamp(sx, 0, srcWidth - 1);
-		sy = hclamp(sy, 0, srcHeight - 1);
-		sw = hmin(sw, hmin(destWidth - dx, srcWidth - sx));
-		sh = hmin(sh, hmin(destHeight - dy, srcHeight - sy));
-		if (sw < 1 || sh < 1)
+		if (!Image::correctRect(sx, sy, sw, sh, srcWidth, srcHeight, dx, dy, destWidth, destHeight))
 		{
 			return false;
 		}
@@ -625,6 +627,225 @@ namespace april
 		return true;
 	}
 
+	bool Image::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat,
+		unsigned char* destData, int destWidth, int destHeight, Format destFormat)
+	{
+		if (!Image::correctRect(sx, sy, sw, sh, srcWidth, srcHeight, dx, dy, dw, dh, destWidth, destHeight))
+		{
+			return false;
+		}
+		if (sw == dw && sh == dh)
+		{
+			return Image::write(sx, sy, sw, sh, dx, dh, srcData, srcWidth, srcHeight, srcFormat, destData, destWidth, destHeight, destFormat);
+		}
+		bool createNew = Image::needsConversion(srcFormat, destFormat);
+		if (createNew)
+		{
+			unsigned char* data = srcData;
+			srcData = new unsigned char[sw * sh * Image::getFormatBpp(destFormat)];
+			if (!Image::write(sx, sy, sw, sh, 0, 0, data, srcWidth, srcHeight, srcFormat, srcData, sw, sh, destFormat))
+			{
+				delete [] srcData;
+				return false;
+			}
+			// changed size of data, needs to readjust
+			sx = 0;
+			sy = 0;
+			srcWidth = sw;
+			srcHeight = sh;
+		}
+		int bpp = Image::getFormatBpp(destFormat);
+		bool result = false;
+		float fw = (float)sw / dw;
+		float fh = (float)sh / dh;
+		unsigned char* dest = NULL;
+		unsigned char* ctl;
+		unsigned char* ctr;
+		unsigned char* cbl;
+		unsigned char* cbr;
+		float srcX;
+		float srcY;
+		int x0;
+		int y0;
+		int x1;
+		int y1;
+		float rx0;
+		float ry0;
+		float rx1;
+		float ry1;
+		int x = 0;
+		int y = 0;
+		if (bpp == 1)
+		{
+			for_iterx (y, 0, dh)
+			{
+				for_iterx (x, 0, dw)
+				{
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
+					srcX = sx + x * fw;
+					srcY = sy + y * fh;
+					x0 = (int)srcX;
+					y0 = (int)srcY;
+					rx0 = srcX - x0;
+					ry0 = srcY - y0;
+					// linear interpolation
+					ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
+					if (rx0 != 0.0f && ry0 != 0.0f)
+					{
+						x1 = hmin(x0 + 1, srcWidth - 1);
+						y1 = hmin(y0 + 1, srcHeight - 1);
+						rx1 = 1.0f - rx0;
+						ry1 = 1.0f - ry0;
+						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+						cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
+						dest[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+					}
+					else if (rx0 != 0.0f)
+					{
+						x1 = hmin(x0 + 1, srcWidth - 1);
+						rx1 = 1.0f - rx0;
+						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+					}
+					else if (ry0 != 0.0f)
+					{
+						y1 = hmin(y0 + 1, srcHeight - 1);
+						ry1 = 1.0f - ry0;
+						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+					}
+					else
+					{
+						dest[0] = ctl[0];
+					}
+				}
+			}
+			result = true;
+		}
+		else if (bpp == 3)
+		{
+			for_iterx (y, 0, dh)
+			{
+				for_iterx (x, 0, dw)
+				{
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
+					srcX = sx + x * fw;
+					srcY = sy + y * fh;
+					x0 = (int)srcX;
+					y0 = (int)srcY;
+					rx0 = srcX - x0;
+					ry0 = srcY - y0;
+					// linear interpolation
+					ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
+					if (rx0 != 0.0f && ry0 != 0.0f)
+					{
+						x1 = hmin(x0 + 1, srcWidth - 1);
+						y1 = hmin(y0 + 1, srcHeight - 1);
+						rx1 = 1.0f - rx0;
+						ry1 = 1.0f - ry0;
+						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+						cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
+						dest[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+						dest[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+						dest[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+					}
+					else if (rx0 != 0.0f)
+					{
+						x1 = hmin(x0 + 1, srcWidth - 1);
+						rx1 = 1.0f - rx0;
+						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+						dest[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+						dest[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+					}
+					else if (ry0 != 0.0f)
+					{
+						y1 = hmin(y0 + 1, srcHeight - 1);
+						ry1 = 1.0f - ry0;
+						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+						dest[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+						dest[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+					}
+					else
+					{
+						dest[0] = ctl[0];
+						dest[1] = ctl[1];
+						dest[2] = ctl[2];
+					}
+				}
+			}
+			result = true;
+		}
+		else if (bpp == 4)
+		{
+			for_iterx (y, 0, dh)
+			{
+				for_iterx (x, 0, dw)
+				{
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
+					srcX = sx + x * fw;
+					srcY = sy + y * fh;
+					x0 = (int)srcX;
+					y0 = (int)srcY;
+					rx0 = srcX - x0;
+					ry0 = srcY - y0;
+					// linear interpolation
+					ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
+					if (rx0 != 0.0f && ry0 != 0.0f)
+					{
+						x1 = hmin(x0 + 1, srcWidth - 1);
+						y1 = hmin(y0 + 1, srcHeight - 1);
+						rx1 = 1.0f - rx0;
+						ry1 = 1.0f - ry0;
+						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+						cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
+						dest[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+						dest[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+						dest[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+						dest[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
+					}
+					else if (rx0 != 0.0f)
+					{
+						x1 = hmin(x0 + 1, srcWidth - 1);
+						rx1 = 1.0f - rx0;
+						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+						dest[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+						dest[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+						dest[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
+					}
+					else if (ry0 != 0.0f)
+					{
+						y1 = hmin(y0 + 1, srcHeight - 1);
+						ry1 = 1.0f - ry0;
+						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+						dest[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+						dest[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+						dest[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
+					}
+					else
+					{
+						dest[0] = ctl[0];
+						dest[1] = ctl[1];
+						dest[2] = ctl[2];
+						dest[3] = ctl[3];
+					}
+				}
+			}
+			result = true;
+		}
+		if (createNew)
+		{
+			delete [] srcData;
+		}
+		return result;
+	}
+
 	// TODOaa - blit goes here
 
 	// TODOaa - stretchBlit goes here
@@ -644,11 +865,13 @@ namespace april
 		{
 			srcIndex = 1;
 		}
+		int x = 0;
+		int y = 0;
 		if (srcBpp == 1 || srcBpp == 3 || srcBpp == 4)
 		{
-			for_iter (y, 0, h)
+			for_iterx (y, 0, h)
 			{
-				for_iter (x, 0, w)
+				for_iterx (x, 0, w)
 				{
 					i = (x + y * w);
 					// takes second color channel for alpha value, guaranteed to always be either R, G or B, but never A
@@ -707,6 +930,8 @@ namespace april
 			memcpy(*destData, srcData, w * h * destBpp);
 			return true;
 		}
+		int x = 0;
+		int y = 0;
 		if (destBpp == 3 || destBpp == 4)
 		{
 			int i = 0;
@@ -715,9 +940,9 @@ namespace april
 				memset(*destData, 255, w * h * destBpp);
 				if (!CHECK_LEFT_RGB(destFormat))
 				{
-					for_iter (y, 0, h)
+					for_iterx (y, 0, h)
 					{
-						for_iter (x, 0, w)
+						for_iterx (x, 0, w)
 						{
 							i = (x + y * w) * destBpp;
 							(*destData)[i + 1] = (*destData)[i + 2] = (*destData)[i + 3] = srcData[x + y * w];
@@ -726,9 +951,9 @@ namespace april
 					return true;
 				}
 			}
-			for_iter (y, 0, h)
+			for_iterx (y, 0, h)
 			{
-				for_iter (x, 0, w)
+				for_iterx (x, 0, w)
 				{
 					i = (x + y * w) * destBpp;
 					(*destData)[i] = (*destData)[i + 1] = (*destData)[i + 2] = srcData[x + y * w];
@@ -753,12 +978,14 @@ namespace april
 		{
 			*destData = new unsigned char[w * h * destBpp];
 		}
+		int x = 0;
+		int y = 0;
 		if (destBpp == 1)
 		{
 			int i = (srcFormat == FORMAT_RGB ? 0 : 2);
-			for_iter (y, 0, h)
+			for_iterx (y, 0, h)
 			{
-				for_iter (x, 0, w)
+				for_iterx (x, 0, w)
 				{
 					// red is used as main component
 					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp + i];
@@ -773,9 +1000,9 @@ namespace april
 			if (srcFormat != destFormat)
 			{
 				int i = 0;
-				for_iter (y, 0, h)
+				for_iterx (y, 0, h)
 				{
-					for_iter (x, 0, w)
+					for_iterx (x, 0, w)
 					{
 						i = (x + y * w) * destBpp;
 						(*destData)[i] = srcData[i + 2];
@@ -830,6 +1057,8 @@ namespace april
 		{
 			*destData = new unsigned char[w * h * destBpp];
 		}
+		int x = 0;
+		int y = 0;
 		if (destBpp == 1)
 		{
 			int redIndex = 0;
@@ -845,9 +1074,9 @@ namespace april
 			{
 				redIndex = 3;
 			}
-			for_iter (y, 0, h)
+			for_iterx (y, 0, h)
 			{
-				for_iter (x, 0, w)
+				for_iterx (x, 0, w)
 				{
 					// red is used as main component
 					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp + redIndex];
@@ -1024,6 +1253,141 @@ namespace april
 			return true;
 		}
 		return false;
+	}
+
+	bool Image::checkRect(int dx, int dy, int destWidth, int destHeight)
+	{
+		return (dx >= 0 && dx < destWidth && dy >= 0 && dy < destHeight);
+	}
+
+	bool Image::checkRect(int dx, int dy, int dw, int dh, int destWidth, int destHeight)
+	{
+		return (Image::checkRect(dx, dy, destWidth, destHeight) && dx + dw <= destWidth && dy + dh <= destHeight);
+	}
+
+	bool Image::correctRect(int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight)
+	{
+		if (dx >= destWidth || dy >= destHeight)
+		{
+			return false;
+		}
+		if (dx < 0)
+		{
+			dw += dx;
+			dx = 0;
+		}
+		dw = hmin(dw, destWidth - dx);
+		if (dw < 0)
+		{
+			return false;
+		}
+		if (dy < 0)
+		{
+			dh += dy;
+			dy = 0;
+		}
+		dh = hmin(dh, destHeight - dy);
+		if (dh < 0)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	bool Image::correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int destWidth, int destHeight)
+	{
+		if (!Image::checkRect(sx, sy, sw, sh, srcWidth, srcHeight))
+		{
+			return false;
+		}
+		if (dx < 0)
+		{
+			sx -= dx;
+			sw += dx;
+			dx = 0;
+		}
+		if (sx >= srcWidth || sw <= 0)
+		{
+			return false;
+		}
+		sw = hmin(sw, destWidth - dx);
+		if (sw <= 0)
+		{
+			return false;
+		}
+		if (dy < 0)
+		{
+			sy -= dy;
+			sh += dy;
+			dy = 0;
+		}
+		if (sy >= srcHeight || sh <= 0)
+		{
+			return false;
+		}
+		sh = hmin(sh, destHeight - dy);
+		if (sh <= 0)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	bool Image::correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight)
+	{
+		if (!Image::checkRect(sx, sy, sw, sh, srcWidth, srcHeight))
+		{
+			return false;
+		}
+		if (dw <= 0 || dh <= 0)
+		{
+			return false;
+		}
+		float fw = (float)sw / dw;
+		if (dx < 0)
+		{
+			sx = (int)(sx - dx * fw);
+			sw = (int)(sw + dx * fw);
+			dw += dx;
+			dx = 0;
+		}
+		if (sx >= srcWidth || dw <= 0)
+		{
+			return false;
+		}
+		int ox = dw - destWidth + dx;
+		if (ox > 0)
+		{
+			sw = (int)(sw - ox * fw);
+			dw -= ox;
+		}
+		if (sw <= 0 || dw <= 0)
+		{
+			return false;
+		}
+		float fh = (float)sh / dh;
+		if (dy < 0)
+		{
+			sy = (int)(sy - dy * fh);
+			sh = (int)(sh + dy * fh);
+			dh += dy;
+			dy = 0;
+		}
+		if (sy >= srcHeight || dh <= 0)
+		{
+			return false;
+		}
+		int oy = dh - destHeight + dy;
+		if (oy > 0)
+		{
+			sh = (int)(sh - oy * fh);
+			dh -= oy;
+		}
+		if (sh <= 0 || dh <= 0)
+		{
+			return false;
+		}
+		return true;
 	}
 
 }

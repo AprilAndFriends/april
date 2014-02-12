@@ -177,11 +177,13 @@ namespace april
 
 	void OpenGL_Texture::setPixel(int x, int y, Color color)
 	{
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
 		if (this->data != NULL)
 		{
 			Texture::setPixel(x, y, color);
+			return;
+		}
+		if (!Image::checkRect(x, y, this->width, this->height))
+		{
 			return;
 		}
 		unsigned char writeData[4] = {color.r, color.g, color.b, color.a};
@@ -191,10 +193,6 @@ namespace april
 	
 	void OpenGL_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		w = hclamp(w, 1, this->width - x);
-		h = hclamp(h, 1, this->height - y);
 		if (w == 1 && h == 1)
 		{
 			this->setPixel(x, y, color);
@@ -203,6 +201,10 @@ namespace april
 		if (this->data != NULL)
 		{
 			Texture::fillRect(x, y, w, h, color);
+			return;
+		}
+		if (!Image::correctRect(x, y, w, h, this->width, this->height))
+		{
 			return;
 		}
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
@@ -223,6 +225,10 @@ namespace april
 			Texture::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
 			return;
 		}
+		if (!Image::correctRect(sx, sy, sw, sh, srcWidth, srcHeight, dx, dy, this->width, this->height))
+		{
+			return;
+		}
 		int srcBpp = Image::getFormatBpp(srcFormat);
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		int destBpp = Image::getFormatBpp(nativeFormat);
@@ -240,6 +246,31 @@ namespace april
 		}
 		delete [] data;
 	}
+
+	void OpenGL_Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		if (this->data != NULL)
+		{
+			Texture::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat);
+			return;
+		}
+		if (!Image::correctRect(sx, sy, sw, sh, srcWidth, srcHeight, dx, dy, dw, dh, this->width, this->height))
+		{
+			return;
+		}
+		int srcBpp = Image::getFormatBpp(srcFormat);
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		int destBpp = Image::getFormatBpp(nativeFormat);
+		unsigned char* data = new unsigned char[dw * dh * destBpp];
+		if (Image::writeStretch(sx, sy, sw, sh, 0, 0, dw, dh, srcData, srcWidth, srcHeight, srcFormat, data, dw, dh, nativeFormat))
+		{
+			this->_setCurrentTexture();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, dw, dh, this->glFormat, GL_UNSIGNED_BYTE, data);
+		}
+		delete [] data;
+	}
+
+	// TODOaa - writeStretch goes here
 
 	void OpenGL_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
@@ -386,6 +417,10 @@ namespace april
 	bool OpenGL_Texture::_uploadDataToGpu(int x, int y, int w, int h)
 	{
 		if (this->data == NULL)
+		{
+			return false;
+		}
+		if (!Image::correctRect(x, y, w, h, this->width, this->height))
 		{
 			return false;
 		}
