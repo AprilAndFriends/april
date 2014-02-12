@@ -45,7 +45,7 @@ namespace april
 			return Texture::getPixel(x, y);
 		}
 		Color result = april::Color::Clear;
-		Image::Format format = april::rendersys->getNativeTextureFormat(GL_NATIVE_FORMAT);
+		Image::Format format = april::rendersys->getNativeTextureFormat(this->format);
 		unsigned char* pixels = NULL;
 		if (this->copyPixelData(&pixels, format)) // it's not possible to get just one pixel on OpenGL so the entire texture has to be retrieved (expensive!)
 		{
@@ -66,9 +66,10 @@ namespace april
 			return false;
 		}
 		int size = this->getByteSize();
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		glBindTexture(GL_TEXTURE_2D, this->textureId);
 		APRIL_OGL1_RENDERSYS->currentState.textureId = APRIL_OGL1_RENDERSYS->deviceState.textureId = this->textureId;
-		if (!Image::needsConversion(GL_NATIVE_FORMAT, format)) // to avoid unnecessary copying
+		if (!Image::needsConversion(nativeFormat, format)) // to avoid unnecessary copying
 		{
 			if (*output == NULL)
 			{
@@ -79,7 +80,7 @@ namespace april
 		}
 		unsigned char* temp = new unsigned char[size];
 		glGetTexImage(GL_TEXTURE_2D, 0, this->glFormat, GL_UNSIGNED_BYTE, temp);
-		bool result = Image::convertToFormat(this->width, this->height, temp, GL_NATIVE_FORMAT, output, format);
+		bool result = Image::convertToFormat(this->width, this->height, temp, nativeFormat, output, format);
 		delete [] temp;
 		return result;
 	}

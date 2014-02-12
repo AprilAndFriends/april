@@ -23,9 +23,6 @@
 #include "OpenGL_State.h"
 #include "RenderSystem.h"
 
-// TODOaa - check if using this makes any sense
-#define GL_NATIVE_FORMAT Image::FORMAT_RGBA
-
 namespace april
 {
 	class OpenGL_Texture;
