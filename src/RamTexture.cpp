@@ -48,7 +48,7 @@ namespace april
 			hlog::writef(april::logTag, "Loading RAM texture '%s'.", this->_getInternalName().c_str());
 			if (this->filename != "")
 			{
-				this->source = Image::load(this->filename);
+				this->source = Image::create(this->filename);
 				this->width = this->source->w;
 				this->height = this->source->h;
 			}
@@ -86,13 +86,13 @@ namespace april
 		return this->source->getPixel(x, y);
 	}
 	
-	void RamTexture::setPixel(int x, int y, Color color)
+	bool RamTexture::setPixel(int x, int y, Color color)
 	{
 		if (this->source == NULL)
 		{
 			this->load();
 		}
-		this->source->setPixel(x, y, color);
+		return this->source->setPixel(x, y, color);
 	}
 
 	bool RamTexture::_createInternalTexture(unsigned char* data, int size)

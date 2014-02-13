@@ -15,6 +15,7 @@
 #ifndef APRIL_IMAGE_H
 #define APRIL_IMAGE_H
 
+#include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/hsbase.h>
 #include <hltypes/hstring.h>
@@ -29,7 +30,7 @@ namespace april
 	class aprilExport Image
 	{
 	public:
-		/// @note Some formats are intended to improve speed with the underlying engine if really needed. *X* formats are always 4 BPP even if the a byte is not used.
+		/// @note Some formats are intended to improve speed with the underlying engine if really needed. *X* formats are always 4 BPP even if that byte is not used.
 		enum Format
 		{
 			FORMAT_INVALID,
@@ -52,47 +53,53 @@ namespace april
 		int w;
 		int h;
 		Format format;
-		int internalFormat; // used for special platform dependent formats, usually used internally only
+		int internalFormat; // needed for special platform dependent formats, usually used internally only
 		int compressedSize;
 
 		~Image();
 		
 		int getBpp();
 		int getByteSize();
+		bool isValid();
 
-		void clear();
+		bool clear();
 		Color getPixel(int x, int y);
-		void setPixel(int x, int y, Color color);
+		bool setPixel(int x, int y, Color color);
 		Color getInterpolatedPixel(float x, float y);
-		void fillRect(int x, int y, int w, int h, Color color);
+		bool fillRect(int x, int y, int w, int h, Color color);
 		bool copyPixelData(unsigned char** output, Format format);
-		void write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		void writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		void blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
-		// TODOaa - stretchBlit goes here
+		bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
 		// TODOaa - rotateHue goes here
 		// TODOaa - saturate goes here
-		void insertAlphaMap(unsigned char* srcData, Format srcFormat);
+
+		// TODOaa - implement median and ambiguity
+		/// @note srcData must be the same width and height as the image
+		bool insertAlphaMap(unsigned char* srcData, Format srcFormat);
+		bool insertAlphaMap(unsigned char* srcData, Format srcFormat, unsigned char median, int ambiguity);
 		
 		Color getPixel(gvec2 position);
-		void setPixel(gvec2 position, Color color);
+		bool setPixel(gvec2 position, Color color);
 		Color getInterpolatedPixel(gvec2 position);
-		//void fillRect(grect rect, Color color);
+		bool fillRect(grect rect, Color color);
 		bool copyPixelData(unsigned char** output);
-		void write(int sx, int sy, int sw, int sh, int dx, int dy, Image* other);
-		//void write(grect srcRect, gvec2 destPosition, Image* other);
-		void writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* other);
-		//void writeStretch(grect srcRect, grect destRect, Image* other);
-		void blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* other, unsigned char alpha = 255);
-		//void blit(grect srcRect, gvec2 destPosition, Image* other, unsigned char alpha = 255);
-		void insertAlphaMap(Image* source);
+		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Image* other);
+		bool write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool write(grect srcRect, gvec2 destPosition, Image* other);
+		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* other);
+		bool writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool writeStretch(grect srcRect, grect destRect, Image* other);
+		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* other, unsigned char alpha = 255);
+		bool blit(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		bool blit(grect srcRect, gvec2 destPosition, Image* other, unsigned char alpha = 255);
+		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* other, unsigned char alpha = 255);
+		bool blitStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		bool blitStretch(grect srcRect, grect destRect, Image* other, unsigned char alpha = 255);
 
-		// TODOaa - need a new/better implementation
-		//void blit(int x, int y, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		void stretchBlit(int x, int y, int w, int h, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-
-		static Image* load(chstr filename);
-		static Image* load(chstr filename, Format format);
+		static Image* create(chstr filename);
+		static Image* create(chstr filename, Format format);
 		static Image* create(int w, int h, unsigned char* data, Format format);
 		static Image* create(int w, int h, Color color, Format format);
 		static Image* create(Image* other);
@@ -106,6 +113,7 @@ namespace april
 		static bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha = 255);
+		static bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha = 255);
 
 		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat);
 
@@ -121,6 +129,9 @@ namespace april
 		static bool correctRect(int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight);
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int destWidth, int destHeight);
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight);
+
+		DEPRECATED_ATTRIBUTE static Image* load(chstr filename) { return Image::create(filename); }
+		DEPRECATED_ATTRIBUTE static Image* load(chstr filename, Format format) { return Image::create(filename, format); }
 
 	protected:
 		Image();
