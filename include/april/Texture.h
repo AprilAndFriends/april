@@ -82,18 +82,17 @@ namespace april
 		virtual void setPixel(int x, int y, Color color);
 		Color getInterpolatedPixel(float x, float y);
 		virtual void fillRect(int x, int y, int w, int h, Color color);
+		virtual bool copyPixelData(unsigned char** output, Image::Format format);
 		virtual void write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		virtual void writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		virtual bool copyPixelData(unsigned char** output, Image::Format format);
-		// TODOaa - blit goes here
+		virtual void blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		//virtual void blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
 		// TODOaa - stretchBlit goes here
 		// TODOaa - rotateHue goes here
 		// TODOaa - saturate goes here
 		virtual void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
 
 		// TODOaa - still need refactoring
-		virtual void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		virtual void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		virtual void rotateHue(float degrees);
@@ -104,15 +103,15 @@ namespace april
 		void setPixel(gvec2 position, Color color);
 		Color getInterpolatedPixel(gvec2 position);
 		void fillRect(grect rect, Color color);
+		bool copyPixelData(unsigned char** output);
 		void write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		void writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		bool copyPixelData(unsigned char** output);
 
 		// TODOaa - old overloads
-		void blit(int x, int y, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		void blit(gvec2 position, Texture* texture, grect source, unsigned char alpha = 255);
-		void blit(gvec2 position, Image* image, grect source, unsigned char alpha = 255);
-		void blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
+		//void blit(int x, int y, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		//void blit(gvec2 position, Texture* texture, grect source, unsigned char alpha = 255);
+		//void blit(gvec2 position, Image* image, grect source, unsigned char alpha = 255);
+		//void blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
 		void stretchBlit(int x, int y, int w, int h, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(grect destination, Texture* texture, grect source, unsigned char alpha = 255);
 		void stretchBlit(grect destination, Image* image, grect source, unsigned char alpha = 255);

@@ -172,6 +172,11 @@ namespace april
 		}
 	}
 
+	bool Image::copyPixelData(unsigned char** output, Format format)
+	{
+		return (this->data != NULL && Image::convertToFormat(this->w, this->h, this->data, this->format, output, format, false));
+	}
+
 	void Image::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		if (this->data != NULL)
@@ -188,9 +193,12 @@ namespace april
 		}
 	}
 
-	bool Image::copyPixelData(unsigned char** output, Format format)
+	void Image::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
-		return (this->data != NULL && Image::convertToFormat(this->w, this->h, this->data, this->format, output, format, false));
+		if (this->data != NULL)
+		{
+			Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->w, this->h, this->format, alpha);
+		}
 	}
 
 	void Image::insertAlphaMap(unsigned char* srcData, Format srcFormat)
@@ -222,14 +230,24 @@ namespace april
 		return this->getPixel((int)position.x, (int)position.y); // TODO
 	}
 	
+	bool Image::copyPixelData(unsigned char** output)
+	{
+		return (this->data != NULL && Image::convertToFormat(this->w, this->h, this->data, this->format, output, this->format, false));
+	}
+
 	void Image::write(int sx, int sy, int sw, int sh, int dx, int dy, Image* other)
 	{
 		this->write(sx, sy, sw, sh, dx, dy, other->data, other->w, other->h, other->format);
 	}
 
-	bool Image::copyPixelData(unsigned char** output)
+	void Image::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* other)
 	{
-		return (this->data != NULL && Image::convertToFormat(this->w, this->h, this->data, this->format, output, this->format, false));
+		this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, other->data, other->w, other->h, other->format);
+	}
+
+	void Image::blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* other, unsigned char alpha)
+	{
+		this->blit(sx, sy, sw, sh, dx, dy, other->data, other->w, other->h, other->format, alpha);
 	}
 
 	void Image::insertAlphaMap(Image* source)
@@ -241,35 +259,6 @@ namespace april
 
 	// TODOaa - more function overloads go here
 
-
-
-	void Image::blit(int x, int y, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		// TODOaa - refactor this
-		x = hclamp(x, 0, this->w - 1);
-		y = hclamp(y, 0, this->h - 1);
-		sx = hclamp(sx, 0, source->w - 1);
-		sy = hclamp(sy, 0, source->h - 1);
-		sw = hmin(sw, hmin(this->w - x, source->w - sx));
-		sh = hmin(sh, hmin(this->h - y, source->h - sy));
-		unsigned char* c;
-		unsigned char* sc;
-		unsigned char a;
-		int i;
-		for_iter (j, 0, sh)
-		{
-			for_iterx (i, 0, sw)
-			{
-				c = &this->data[((x + i) + (y + j) * this->w) * this->getBpp()];
-				sc = &source->data[((sx + i) + (sy + j) * source->w) * source->getBpp()];
-				a = sc[3] * alpha / 255;
-				c[0] = (sc[0] * a + (255 - a) * c[0]) / 255;
-				c[1] = (sc[1] * a + (255 - a) * c[1]) / 255;
-				c[2] = (sc[2] * a + (255 - a) * c[2]) / 255;
-				c[3] = a + (255 - a) * c[3] / 255;
-			}
-		}
-	}
 
 	void Image::stretchBlit(int x, int y, int w, int h, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
@@ -846,7 +835,551 @@ namespace april
 		return result;
 	}
 
-	// TODOaa - blit goes here
+	bool Image::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat,
+		unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha)
+	{
+		if (!Image::correctRect(sx, sy, sw, sh, srcWidth, srcHeight, dx, dy, destWidth, destHeight))
+		{
+			return false;
+		}
+		// source format doesn't have alpha and no alpha multiplier is used, so using write() is enough
+		if (!CHECK_ALPHA_FORMAT(srcFormat) && alpha == 255)
+		{
+			return Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, destData, destWidth, destHeight, destFormat);
+		}
+		// it's invisible anyway, so let's say it's successful
+		if (alpha == 0)
+		{
+			return true;
+		}
+		int srcBpp = Image::getFormatBpp(srcFormat);
+		if (srcBpp == 1)
+		{
+			if (Image::_blitFrom1Bpp(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, destData, destWidth, destHeight, destFormat, alpha))
+			{
+				return true;
+			}
+		}
+		else if (srcBpp == 3)
+		{
+			if (Image::_blitFrom3Bpp(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, destData, destWidth, destHeight, destFormat, alpha))
+			{
+				return true;
+			}
+		}
+		else if (srcBpp == 4)
+		{
+			if (Image::_blitFrom4Bpp(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, destData, destWidth, destHeight, destFormat, alpha))
+			{
+				return true;
+			}
+		}
+		/*
+				for_iterx (y, 0, h)
+				{
+					for_iterx (x, 0, w)
+					{
+						// red is used as main component
+						(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp + redIndex];
+					}
+				}
+
+				int ri = 0;
+				if (destBpp == 3)
+				{
+					ri = (srcFormat == FORMAT_RGB ? 0 : 2);
+				}
+
+				for_iterx (y, 0, sh)
+				{
+					for_iterx (x, 0, sw)
+					{
+						src = &srcData[((sx + x) + (sy + y) * srcWidth) * bpp];
+						dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
+						if (dest[3] > 0)
+						{
+							a0 = (unsigned char)((unsigned int)src[3] * alpha / 255);
+							if (a0 > 0)
+							{
+								a1 = 255 - a0;
+								dest[0] = (src[0] * a0 + dest[0] * a1) / 255;
+								dest[1] = (src[1] * a0 + dest[1] * a1) / 255;
+								dest[2] = (src[2] * a0 + dest[2] * a1) / 255;
+								dest[3] = a0 + dest[3] * a1 / 255;
+							}
+						}
+						else
+						{
+							dest[0] = src[0];
+							dest[1] = src[1];
+							dest[2] = src[2];
+							dest[3] = (unsigned char)((unsigned int)src[3] * alpha / 255);
+						}
+					}
+				}
+				return true;
+			}
+			if (destBpp == 4)
+			{
+				for_iterx (y, 0, sh)
+				{
+					for_iterx (x, 0, sw)
+					{
+						src = &srcData[((sx + x) + (sy + y) * srcWidth) * bpp];
+						dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
+						if (dest[3] > 0)
+						{
+							a0 = (unsigned char)((unsigned int)src[3] * alpha / 255);
+							if (a0 > 0)
+							{
+								a1 = 255 - a0;
+								dest[0] = (src[0] * a0 + dest[0] * a1) / 255;
+								dest[1] = (src[1] * a0 + dest[1] * a1) / 255;
+								dest[2] = (src[2] * a0 + dest[2] * a1) / 255;
+								dest[3] = a0 + dest[3] * a1 / 255;
+							}
+						}
+						else
+						{
+							dest[0] = src[0];
+							dest[1] = src[1];
+							dest[2] = src[2];
+							dest[3] = (unsigned char)((unsigned int)src[3] * alpha / 255);
+						}
+					}
+				}
+				return true;
+			}
+			if (destBpp == 1)
+			{
+				for_iterx (y, 0, sh)
+				{
+					for_iterx (x, 0, sw)
+					{
+						src = &srcData[((sx + x) + (sy + y) * srcWidth) * bpp];
+						dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
+						if (dest[3] > 0)
+						{
+							a0 = (unsigned char)((unsigned int)src[3] * alpha / 255);
+							if (a0 > 0)
+							{
+								a1 = 255 - a0;
+								dest[0] = (src[0] * a0 + dest[0] * a1) / 255;
+								dest[1] = (src[1] * a0 + dest[1] * a1) / 255;
+								dest[2] = (src[2] * a0 + dest[2] * a1) / 255;
+								dest[3] = a0 + dest[3] * a1 / 255;
+							}
+						}
+						else
+						{
+							dest[0] = src[0];
+							dest[1] = src[1];
+							dest[2] = src[2];
+							dest[3] = (unsigned char)((unsigned int)src[3] * alpha / 255);
+						}
+					}
+				}
+				return true;
+			}
+		}
+		else if (bpp == 3)
+		{
+			for_iterx (y, 0, sh)
+			{
+				for_iterx (x, 0, sw)
+				{
+					src = &srcData[((sx + x) + (sy + y) * srcWidth) * bpp];
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
+					if (dest[3] > 0)
+					{
+						a0 = (unsigned char)((unsigned int)src[3] * alpha / 255);
+						if (a0 > 0)
+						{
+							a1 = 255 - a0;
+							dest[0] = (src[0] * a0 + dest[0] * a1) / 255;
+							dest[1] = (src[1] * a0 + dest[1] * a1) / 255;
+							dest[2] = (src[2] * a0 + dest[2] * a1) / 255;
+							dest[3] = a0 + dest[3] * a1 / 255;
+						}
+					}
+					else
+					{
+						dest[0] = src[0];
+						dest[1] = src[1];
+						dest[2] = src[2];
+						dest[3] = (unsigned char)((unsigned int)src[3] * alpha / 255);
+					}
+				}
+			}
+			result = true;
+		}
+		else if (bpp == 4)
+		{
+			for_iterx (y, 0, sh)
+			{
+				for_iterx (x, 0, sw)
+				{
+					src = &srcData[((sx + x) + (sy + y) * srcWidth) * bpp];
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
+					if (dest[3] > 0)
+					{
+						a0 = (unsigned char)((unsigned int)src[3] * alpha / 255);
+						if (a0 > 0)
+						{
+							a1 = 255 - a0;
+							dest[0] = (src[0] * a0 + dest[0] * a1) / 255;
+							dest[1] = (src[1] * a0 + dest[1] * a1) / 255;
+							dest[2] = (src[2] * a0 + dest[2] * a1) / 255;
+							dest[3] = a0 + dest[3] * a1 / 255;
+						}
+					}
+					else
+					{
+						dest[0] = src[0];
+						dest[1] = src[1];
+						dest[2] = src[2];
+						dest[3] = (unsigned char)((unsigned int)src[3] * alpha / 255);
+					}
+				}
+			}
+			result = true;
+		}
+		else if (bpp == 3)
+		{
+			for_iterx (y, 0, dh)
+			{
+				for_iterx (x, 0, dw)
+				{
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
+					srcX = sx + x * fw;
+					srcY = sy + y * fh;
+					x0 = (int)srcX;
+					y0 = (int)srcY;
+					rx0 = srcX - x0;
+					ry0 = srcY - y0;
+					// linear interpolation
+					ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
+					if (rx0 != 0.0f && ry0 != 0.0f)
+					{
+						x1 = hmin(x0 + 1, srcWidth - 1);
+						y1 = hmin(y0 + 1, srcHeight - 1);
+						rx1 = 1.0f - rx0;
+						ry1 = 1.0f - ry0;
+						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+						cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
+						dest[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+						dest[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+						dest[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+					}
+					else if (rx0 != 0.0f)
+					{
+						x1 = hmin(x0 + 1, srcWidth - 1);
+						rx1 = 1.0f - rx0;
+						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+						dest[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+						dest[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+					}
+					else if (ry0 != 0.0f)
+					{
+						y1 = hmin(y0 + 1, srcHeight - 1);
+						ry1 = 1.0f - ry0;
+						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+						dest[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+						dest[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+					}
+					else
+					{
+						dest[0] = ctl[0];
+						dest[1] = ctl[1];
+						dest[2] = ctl[2];
+					}
+				}
+			}
+			result = true;
+		}
+		else if (bpp == 4)
+		{
+			for_iterx (y, 0, dh)
+			{
+				for_iterx (x, 0, dw)
+				{
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
+					srcX = sx + x * fw;
+					srcY = sy + y * fh;
+					x0 = (int)srcX;
+					y0 = (int)srcY;
+					rx0 = srcX - x0;
+					ry0 = srcY - y0;
+					// linear interpolation
+					ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
+					if (rx0 != 0.0f && ry0 != 0.0f)
+					{
+						x1 = hmin(x0 + 1, srcWidth - 1);
+						y1 = hmin(y0 + 1, srcHeight - 1);
+						rx1 = 1.0f - rx0;
+						ry1 = 1.0f - ry0;
+						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+						cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
+						dest[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+						dest[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
+						dest[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+						dest[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
+					}
+					else if (rx0 != 0.0f)
+					{
+						x1 = hmin(x0 + 1, srcWidth - 1);
+						rx1 = 1.0f - rx0;
+						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+						dest[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
+						dest[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+						dest[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
+					}
+					else if (ry0 != 0.0f)
+					{
+						y1 = hmin(y0 + 1, srcHeight - 1);
+						ry1 = 1.0f - ry0;
+						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+						dest[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
+						dest[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+						dest[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
+					}
+					else
+					{
+						dest[0] = ctl[0];
+						dest[1] = ctl[1];
+						dest[2] = ctl[2];
+						dest[3] = ctl[3];
+					}
+				}
+			}
+			result = true;
+		}
+		*/
+		return false;
+	}
+
+	bool Image::_blitFrom1Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha)
+	{
+		static int srcBpp = 1;
+		int destBpp = Image::getFormatBpp(destFormat);
+		unsigned char* src = NULL;
+		unsigned char* dest = NULL;
+		unsigned char a1;
+		unsigned int c;
+		int x = 0;
+		int y = 0;
+		a1 = 255 - alpha;
+		if (destBpp == 1)
+		{
+			for_iterx (y, 0, sh)
+			{
+				for_iterx (x, 0, sw)
+				{
+					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+					dest[0] = (src[0] * alpha + dest[0] * a1) / 255;
+				}
+			}
+			return true;
+		}
+		int redIndex = -1;
+		int greenIndex = -1;
+		int blueIndex = -1;
+		if (destBpp == 3 || !CHECK_ALPHA_FORMAT(destFormat)) // 3 BPP and 4 BPP without alpha
+		{
+			Image::_getFormatIndices(destFormat, &redIndex, &greenIndex, &blueIndex, NULL);
+			for_iterx (y, 0, sh)
+			{
+				for_iterx (x, 0, sw)
+				{
+					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+					c = src[0] * alpha;
+					dest[redIndex] = (c + dest[redIndex] * a1) / 255;
+					dest[greenIndex] = (c + dest[greenIndex] * a1) / 255;
+					dest[blueIndex] = (c + dest[blueIndex] * a1) / 255;
+				}
+			}
+			return true;
+		}
+		int alphaIndex = -1;
+		if (destBpp == 4) // 4 BPP with alpha
+		{
+			Image::_getFormatIndices(destFormat, &redIndex, &greenIndex, &blueIndex, &alphaIndex);
+			for_iterx (y, 0, sh)
+			{
+				for_iterx (x, 0, sw)
+				{
+					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+					c = src[0] * alpha;
+					dest[redIndex] = (c + dest[redIndex] * a1) / 255;
+					dest[greenIndex] = (c + dest[greenIndex] * a1) / 255;
+					dest[blueIndex] = (c + dest[blueIndex] * a1) / 255;
+					dest[alphaIndex] = alpha + dest[alphaIndex] * a1 / 255;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	bool Image::_blitFrom3Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha)
+	{
+		static int srcBpp = 3;
+		int destBpp = Image::getFormatBpp(destFormat);
+		unsigned char* src = NULL;
+		unsigned char* dest = NULL;
+		unsigned char a1;
+		int x = 0;
+		int y = 0;
+		a1 = 255 - alpha;
+		int sr = -1;
+		if (destBpp == 1)
+		{
+			Image::_getFormatIndices(srcFormat, &sr, NULL, NULL, NULL);
+			for_iterx (y, 0, sh)
+			{
+				for_iterx (x, 0, sw)
+				{
+					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+					dest[0] = (src[sr] * alpha + dest[0] * a1) / 255;
+				}
+			}
+			return true;
+		}
+		int sg = -1;
+		int sb = -1;
+		Image::_getFormatIndices(srcFormat, &sr, &sg, &sb, NULL);
+		int dr = -1;
+		int dg = -1;
+		int db = -1;
+		if (destBpp == 3 || !CHECK_ALPHA_FORMAT(destFormat)) // 3 BPP and 4 BPP without alpha
+		{
+			Image::_getFormatIndices(destFormat, &dr, &dg, &db, NULL);
+			for_iterx (y, 0, sh)
+			{
+				for_iterx (x, 0, sw)
+				{
+					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+					dest[dr] = (src[sr] * alpha + dest[dr] * a1) / 255;
+					dest[dg] = (src[sg] * alpha + dest[dg] * a1) / 255;
+					dest[db] = (src[sb] * alpha + dest[db] * a1) / 255;
+				}
+			}
+			return true;
+		}
+		int da = -1;
+		if (destBpp == 4) // 4 BPP with alpha
+		{
+			Image::_getFormatIndices(destFormat, &dr, &dg, &db, &da);
+			for_iterx (y, 0, sh)
+			{
+				for_iterx (x, 0, sw)
+				{
+					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+					dest[dr] = (src[sr] * alpha + dest[dr] * a1) / 255;
+					dest[dg] = (src[sg] * alpha + dest[dg] * a1) / 255;
+					dest[db] = (src[sb] * alpha + dest[db] * a1) / 255;
+					dest[da] = alpha + dest[da] * a1 / 255;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	bool Image::_blitFrom4Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha)
+	{
+		static int srcBpp = 4;
+		int destBpp = Image::getFormatBpp(destFormat);
+		unsigned char* src = NULL;
+		unsigned char* dest = NULL;
+		unsigned char a0;
+		unsigned char a1;
+		int x = 0;
+		int y = 0;
+		int sr = -1;
+		int sa = -1;
+		if (destBpp == 1)
+		{
+			Image::_getFormatIndices(srcFormat, &sr, NULL, NULL, &sa);
+			for_iterx (y, 0, sh)
+			{
+				for_iterx (x, 0, sw)
+				{
+					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+					a0 = src[sa] * alpha / 255;
+					if (a0 > 0)
+					{
+						dest[0] = (src[sr] * a0 + dest[0] * (255 - a0)) / 255;
+					}
+				}
+			}
+			return true;
+		}
+		int sg = -1;
+		int sb = -1;
+		Image::_getFormatIndices(srcFormat, &sr, &sg, &sb, &sa);
+		int dr = -1;
+		int dg = -1;
+		int db = -1;
+		if (destBpp == 3 || !CHECK_ALPHA_FORMAT(destFormat)) // 3 BPP and 4 BPP without alpha
+		{
+			Image::_getFormatIndices(destFormat, &dr, &dg, &db, NULL);
+			for_iterx (y, 0, sh)
+			{
+				for_iterx (x, 0, sw)
+				{
+					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+					a0 = src[sa] * alpha / 255;
+					if (a0 > 0)
+					{
+						a1 = 255 - a0;
+						dest[dr] = (src[sr] * a0 + dest[dr] * a1) / 255;
+						dest[dg] = (src[sg] * a0 + dest[dg] * a1) / 255;
+						dest[db] = (src[sb] * a0 + dest[db] * a1) / 255;
+					}
+				}
+			}
+			return true;
+		}
+		int da = -1;
+		if (destBpp == 4) // 4 BPP with alpha
+		{
+			Image::_getFormatIndices(destFormat, &dr, &dg, &db, &da);
+			for_iterx (y, 0, sh)
+			{
+				for_iterx (x, 0, sw)
+				{
+					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+					a0 = src[sa] * alpha / 255;
+					if (a0 > 0)
+					{
+						a1 = 255 - a0;
+						dest[dr] = (src[sr] * a0 + dest[dr] * a1) / 255;
+						dest[dg] = (src[sg] * a0 + dest[dg] * a1) / 255;
+						dest[db] = (src[sb] * a0 + dest[db] * a1) / 255;
+						dest[da] = a0 + dest[da] * a1 / 255;
+					}
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 
 	// TODOaa - stretchBlit goes here
 
@@ -982,13 +1515,13 @@ namespace april
 		int y = 0;
 		if (destBpp == 1)
 		{
-			int i = (srcFormat == FORMAT_RGB ? 0 : 2);
+			int redIndex = (srcFormat == FORMAT_RGB ? 0 : 2);
 			for_iterx (y, 0, h)
 			{
 				for_iterx (x, 0, w)
 				{
 					// red is used as main component
-					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp + i];
+					(*destData)[x + y * w] = srcData[(x + y * w) * srcBpp + redIndex];
 				}
 			}
 			return true;
@@ -1066,11 +1599,11 @@ namespace april
 			{
 				redIndex = 1;
 			}
-			if (srcFormat == FORMAT_BGRA || srcFormat == FORMAT_BGRX)
+			else if (srcFormat == FORMAT_BGRA || srcFormat == FORMAT_BGRX)
 			{
 				redIndex = 2;
 			}
-			if (srcFormat == FORMAT_ABGR || srcFormat == FORMAT_XBGR)
+			else if (srcFormat == FORMAT_ABGR || srcFormat == FORMAT_XBGR)
 			{
 				redIndex = 3;
 			}
@@ -1388,6 +1921,112 @@ namespace april
 			return false;
 		}
 		return true;
+	}
+
+	void Image::_getFormatIndices(Image::Format format, int* red, int* green, int* blue, int* alpha)
+	{
+		switch (format)
+		{
+		case FORMAT_RGBA:
+		case FORMAT_RGBX:
+			if (alpha != NULL)
+			{
+				*alpha = 3;
+			}
+			// fall-through is ok here
+		case FORMAT_RGB:
+			if (red != NULL)
+			{
+				*red = 0;
+			}
+			if (green != NULL)
+			{
+				*green = 1;
+			}
+			if (blue != NULL)
+			{
+				*blue = 2;
+			}
+			break;
+		case FORMAT_BGRA:
+		case FORMAT_BGRX:
+			if (alpha != NULL)
+			{
+				*alpha = 3;
+			}
+			// fall-through is ok here
+		case FORMAT_BGR:
+			if (red != NULL)
+			{
+				*red = 2;
+			}
+			if (green != NULL)
+			{
+				*green = 1;
+			}
+			if (blue != NULL)
+			{
+				*blue = 0;
+			}
+			break;
+		case FORMAT_ARGB:
+		case FORMAT_XRGB:
+			if (alpha != NULL)
+			{
+				*alpha = 0;
+			}
+			if (red != NULL)
+			{
+				*red = 1;
+			}
+			if (green != NULL)
+			{
+				*green = 2;
+			}
+			if (blue != NULL)
+			{
+				*blue = 3;
+			}
+			break;
+		case FORMAT_ABGR:
+		case FORMAT_XBGR:
+			if (alpha != NULL)
+			{
+				*alpha = 0;
+			}
+			if (red != NULL)
+			{
+				*red = 3;
+			}
+			if (green != NULL)
+			{
+				*green = 2;
+			}
+			if (blue != NULL)
+			{
+				*blue = 1;
+			}
+			break;
+		case FORMAT_ALPHA:
+		case FORMAT_GRAYSCALE:
+			if (alpha != NULL)
+			{
+				*alpha = 0;
+			}
+			if (red != NULL)
+			{
+				*red = 0;
+			}
+			if (green != NULL)
+			{
+				*green = 0;
+			}
+			if (blue != NULL)
+			{
+				*blue = 0;
+			}
+			break;
+		}
 	}
 
 }
