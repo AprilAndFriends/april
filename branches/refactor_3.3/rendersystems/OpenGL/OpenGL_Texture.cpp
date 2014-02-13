@@ -175,6 +175,23 @@ namespace april
 		delete [] clearColor;
 	}
 
+	Color OpenGL_Texture::getPixel(int x, int y)
+	{
+		if (this->data != NULL)
+		{
+			return Texture::getPixel(x, y);
+		}
+		Color result = april::Color::Clear;
+		Image::Format format = april::rendersys->getNativeTextureFormat(this->format);
+		unsigned char* pixels = NULL;
+		if (this->copyPixelData(&pixels, format)) // it's not possible to get just one pixel on OpenGL so the entire texture has to be retrieved (expensive!)
+		{
+			result = Image::getPixel(x, y, pixels, this->width, this->height, format);
+			delete [] pixels;
+		}
+		return result;
+	}
+
 	void OpenGL_Texture::setPixel(int x, int y, Color color)
 	{
 		if (this->data != NULL)
@@ -270,130 +287,48 @@ namespace april
 		delete [] data;
 	}
 
-	// TODOaa - writeStretch goes here
-
-	void OpenGL_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
+	void OpenGL_Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
-		// TODOaa - needs refactoring
-		OpenGL_Texture* source = (OpenGL_Texture*)texture;
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		sx = hclamp(sx, 0, source->width - 1);
-		sy = hclamp(sy, 0, source->height - 1);
-		sw = hmin(sw, hmin(this->width - x, source->width - sx));
-		sh = hmin(sh, hmin(this->height - y, source->height - sy));
-		if (sw == 1 && sh == 1)
+		if (this->data != NULL)
 		{
-			this->setPixel(x, y, source->getPixel(sx, sy));
+			Texture::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, alpha);
 			return;
 		}
-		texture->load();
-		int glFormat = GL_RGBA;
-		if (source->getBpp() == 4)
+		if (!Image::correctRect(sx, sy, sw, sh, srcWidth, srcHeight, dx, dy, this->width, this->height))
 		{
-#if !defined(_ANDROID) && !defined(_WIN32)
-			if (this->format == FORMAT_BGRA)
-			{
-#ifndef __APPLE__
-				glFormat = GL_BGRA;
-#else
-				glFormat = GL_BGRA_EXT;
-#endif
-			}
-			else
-#endif
-			{
-				glFormat = GL_RGBA;
-			}
+			return;
 		}
-		else if (source->getBpp() == 3)
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		unsigned char* data = NULL;
+		if (!this->copyPixelData(&data, nativeFormat))
 		{
-			glFormat = GL_RGB;
+			return;
 		}
-		else if (source->getBpp() == 1)
+		if (!Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, data, this->width, this->height, nativeFormat, alpha))
 		{
-			glFormat = GL_ALPHA;
+			delete [] data;
+			return;
 		}
-		unsigned char* readData = new unsigned char[source->width * source->height * source->getBpp()];
-		source->_setCurrentTexture();
-#ifndef _OPENGLES // TODO - temp until we figure out how to handle this on OpenGLES. added by kspes on May 21st 2012
-		glGetTexImage(GL_TEXTURE_2D, 0, glFormat, GL_UNSIGNED_BYTE, readData);
-#else
-		memset(readData, 0, source->width * source->height * source->getBpp());
-#endif
-		this->blit(x, y, readData, source->width, source->height, source->getBpp(), sx, sy, sw, sh, alpha);
-		delete [] readData;
+		int dataBpp = Image::getFormatBpp(nativeFormat);
+		if (dx == 0 && sw == this->width)
+		{
+			this->_setCurrentTexture();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &data[(dx + dy * this->width) * dataBpp]);
+			delete [] data;
+			return;
+		}
+		unsigned char* writeData = new unsigned char[sw * sh * dataBpp];
+		if (Image::write(dx, dy, sw, sh, 0, 0, data, this->width, this->height, nativeFormat, writeData, sw, sh, nativeFormat))
+		{
+			this->_setCurrentTexture();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, writeData);
+			delete [] writeData;
+		}
+		delete [] data;
 	}
 
-	void OpenGL_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		sx = hclamp(sx, 0, dataWidth - 1);
-		sy = hclamp(sy, 0, dataHeight - 1);
-		sw = hmin(sw, hmin(this->width - x, dataWidth - sx));
-		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
-		// TODOaa - improve this
-		unsigned char* writeData = new unsigned char[sw * sh * this->getBpp()];
-		memset(writeData, 255, sw * sh * this->getBpp());
-		int i;
-		int j;
-		int k;
-		int minBpp = hmin(this->getBpp(), dataBpp);
-		if (this->getBpp() >= 3 && dataBpp >= 3)
-		{
-			for_iterx (j, 0, sh)
-			{
-				for_iterx (i, 0, sw)
-				{
-					for_iterx (k, 0, minBpp)
-					{
-						writeData[(i + j * sw) * this->getBpp() + k] = data[(sx + i + (sy + j) * dataWidth) * dataBpp + k];
-					}
-				}
-			}
-		}
-		else
-		{
-			for_iterx (j, 0, sh)
-			{
-				for_iterx (i, 0, sw)
-				{
-					writeData[i + j * sw] = data[sx + i + (sy + j) * dataWidth];
-				}
-			}
-		}
-		this->_setCurrentTexture();
-		int glFormat = GL_RGBA;
-		if (this->getBpp() == 4)
-		{
-#if !defined(_ANDROID) && !defined(_WIN32)
-			if (this->format == FORMAT_BGRA)
-			{
-#ifndef __APPLE__
-				glFormat = GL_BGRA;
-#else
-				glFormat = GL_BGRA_EXT;
-#endif
-			}
-			else
-#endif
-			{
-				glFormat = GL_RGBA;
-			}
-		}
-		else if (this->getBpp() == 3)
-		{
-			glFormat = GL_RGB;
-		}
-		else if (this->getBpp() == 1)
-		{
-			glFormat = GL_ALPHA;
-		}
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, sw, sh, glFormat, GL_UNSIGNED_BYTE, writeData);
-		delete [] writeData;
-	}
-	
+	// TODOaa - writeStretch goes here
+
 	void OpenGL_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
 		// TODO

@@ -38,23 +38,6 @@ namespace april
 	{
 	}
 
-	Color OpenGL1_Texture::getPixel(int x, int y)
-	{
-		if (this->data != NULL)
-		{
-			return Texture::getPixel(x, y);
-		}
-		Color result = april::Color::Clear;
-		Image::Format format = april::rendersys->getNativeTextureFormat(this->format);
-		unsigned char* pixels = NULL;
-		if (this->copyPixelData(&pixels, format)) // it's not possible to get just one pixel on OpenGL so the entire texture has to be retrieved (expensive!)
-		{
-			result = Image::getPixel(x, y, pixels, this->width, this->height, format);
-			delete [] pixels;
-		}
-		return result;
-	}
-
 	bool OpenGL1_Texture::copyPixelData(unsigned char** output, Image::Format format)
 	{
 		if (this->data != NULL)

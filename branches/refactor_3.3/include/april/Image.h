@@ -65,10 +65,10 @@ namespace april
 		void setPixel(int x, int y, Color color);
 		Color getInterpolatedPixel(float x, float y);
 		void fillRect(int x, int y, int w, int h, Color color);
+		bool copyPixelData(unsigned char** output, Format format);
 		void write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		void writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		bool copyPixelData(unsigned char** output, Format format);
-		// TODOaa - blit goes here
+		void blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
 		// TODOaa - stretchBlit goes here
 		// TODOaa - rotateHue goes here
 		// TODOaa - saturate goes here
@@ -77,12 +77,18 @@ namespace april
 		Color getPixel(gvec2 position);
 		void setPixel(gvec2 position, Color color);
 		Color getInterpolatedPixel(gvec2 position);
-		void write(int sx, int sy, int sw, int sh, int dx, int dy, Image* other);
+		//void fillRect(grect rect, Color color);
 		bool copyPixelData(unsigned char** output);
+		void write(int sx, int sy, int sw, int sh, int dx, int dy, Image* other);
+		//void write(grect srcRect, gvec2 destPosition, Image* other);
+		void writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* other);
+		//void writeStretch(grect srcRect, grect destRect, Image* other);
+		void blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* other, unsigned char alpha = 255);
+		//void blit(grect srcRect, gvec2 destPosition, Image* other, unsigned char alpha = 255);
 		void insertAlphaMap(Image* source);
 
 		// TODOaa - need a new/better implementation
-		void blit(int x, int y, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		//void blit(int x, int y, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 		void stretchBlit(int x, int y, int w, int h, Image* source, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 
 		static Image* load(chstr filename);
@@ -99,7 +105,8 @@ namespace april
 		static bool fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
-		static bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		static bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha = 255);
+
 		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat);
 
 		/// @param[in] preventCopy If true, will make a copy even if source and destination formats are the same.
@@ -124,9 +131,15 @@ namespace april
 		static Image* _loadJpg(hsbase& stream);
 		static Image* _loadJpt(hsbase& stream);
 
+		static void _getFormatIndices(Format format, int* red, int* green, int* blue, int* alpha);
+
 		static bool _convertFrom1Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat);
 		static bool _convertFrom3Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat);
 		static bool _convertFrom4Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat);
+
+		static bool _blitFrom1Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha);
+		static bool _blitFrom3Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha);
+		static bool _blitFrom4Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha);
 
 	};
 	

@@ -104,7 +104,7 @@ namespace april
 			this->d3dFormat = D3DFMT_A8;
 			break;
 		case Image::FORMAT_GRAYSCALE:
-			this->d3dFormat = D3DFMT_A8;
+			this->d3dFormat = D3DFMT_L8;
 			break;
 		case Image::FORMAT_PALETTE: // TODOaa - needs changing, ARGB shouldn't be here
 			this->d3dFormat = D3DFMT_A8R8G8B8;
@@ -222,6 +222,29 @@ namespace april
 		this->_unlock(buffer, lockResult, result);
 	}
 
+	bool DirectX9_Texture::copyPixelData(unsigned char** output, Image::Format format)
+	{
+		if (this->data != NULL)
+		{
+			return Texture::copyPixelData(output);
+		}
+		if (!this->isLoaded())
+		{
+			return false;
+		}
+		D3DLOCKED_RECT lockRect;
+		IDirect3DSurface9* buffer = NULL;
+		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
+		if (lockResult == LR_FAILED)
+		{
+			return false;
+		}
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		bool result = Image::convertToFormat(this->width, this->height, p, april::rendersys->getNativeTextureFormat(this->format), output, format, false); // will just perform a copy
+		this->_unlock(buffer, lockResult, result);
+		return result;
+	}
+
 	void DirectX9_Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		if (this->data != NULL)
@@ -266,75 +289,26 @@ namespace april
 		this->_unlock(buffer, lockResult, result);
 	}
 
-	bool DirectX9_Texture::copyPixelData(unsigned char** output, Image::Format format)
+	void DirectX9_Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
 		if (this->data != NULL)
 		{
-			return Texture::copyPixelData(output);
-		}
-		if (!this->isLoaded())
-		{
-			return false;
-		}
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
-		if (lockResult == LR_FAILED)
-		{
-			return false;
-		}
-		unsigned char* p = (unsigned char*)lockRect.pBits;
-		bool result = Image::convertToFormat(this->width, this->height, p, april::rendersys->getNativeTextureFormat(this->format), output, format, false); // will just perform a copy
-		this->_unlock(buffer, lockResult, result);
-		return result;
-	}
-
-	void DirectX9_Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		// TODOaa - change
-		DirectX9_Texture* source = (DirectX9_Texture*)texture;
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		sx = hclamp(sx, 0, source->width - 1);
-		sy = hclamp(sy, 0, source->height - 1);
-		sw = hmin(sw, hmin(this->width - x, source->width - sx));
-		sh = hmin(sh, hmin(this->height - y, source->height - sy));
-		if (sw == 1 && sh == 1)
-		{
-			this->setPixel(x, y, source->getPixel(sx, sy));
+			DirectX_Texture::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, alpha);
 			return;
 		}
 		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, sx, sy, sw, sh);
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT lockResult = source->_tryLock(&buffer, &lockRect, &rect);
-		if (lockResult == LR_FAILED)
-		{
-			return;
-		}
-		this->blit(x, y, (unsigned char*)lockRect.pBits, source->width, source->height, source->getBpp(), sx, sy, sw, sh, alpha);
-		source->_unlock(buffer, lockResult, false);
-	}
-
-	void DirectX9_Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		// TODOaa - change
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		sx = hclamp(sx, 0, dataWidth - 1);
-		sy = hclamp(sy, 0, dataHeight - 1);
-		sw = hmin(sw, hmin(this->width - x, dataWidth - sx));
-		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
-		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, x, y, sw, sh);
+		_CREATE_RECT(rect, dx, dy, sw, sh);
 		IDirect3DSurface9* buffer = NULL;
 		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
 		if (lockResult == LR_FAILED)
 		{
 			return;
 		}
-		this->_blit((unsigned char*)lockRect.pBits, x, y, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
-		this->_unlock(buffer, lockResult, true);
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		p -= (dx + dy * this->width) * Image::getFormatBpp(nativeFormat); // Image::blit expects data from the beginning so this shift back was implemented, but will never be accessed
+		bool result = Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, p, this->width, this->height, nativeFormat, alpha);
+		this->_unlock(buffer, lockResult, result);
 	}
 
 	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)

@@ -316,6 +316,11 @@ namespace april
 		}
 	}
 
+	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
+	{
+		return (this->data != NULL && Image::convertToFormat(this->width, this->height, this->data, this->format, output, format, false));
+	}
+
 	void Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		if (this->data != NULL && Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format))
@@ -332,23 +337,24 @@ namespace april
 		}
 	}
 
-	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
+	void Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
-		return (this->data != NULL && Image::convertToFormat(this->width, this->height, this->data, this->format, output, format, false));
+		if (this->data != NULL && Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format, alpha))
+		{
+			this->_uploadDataToGpu(dx, dy, sw, sh);
+		}
 	}
+	/*
+	void Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	{
+		if (this->data != NULL && Image::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format, alpha))
+		{
+			this->_uploadDataToGpu(dx, dy, dw, dh);
+		}
+	}
+	*/
 
 	// TODOaa - standard implementations go here
-
-
-	void Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement blit()!", april::rendersys->getName().c_str());
-	}
-
-	void Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement blit()!", april::rendersys->getName().c_str());
-	}
 
 	void Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
@@ -399,6 +405,11 @@ namespace april
 		this->fillRect(hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h), color);
 	}
 
+	bool Texture::copyPixelData(unsigned char** output)
+	{
+		return this->copyPixelData(output, this->format);
+	}
+
 	void Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		this->write(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destPosition.x), hround(destPosition.y), srcData, srcWidth, srcHeight, srcFormat);
@@ -409,35 +420,7 @@ namespace april
 		this->writeStretch(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destRect.x), hround(destRect.y), hround(destRect.w), hround(destRect.h), srcData, srcWidth, srcHeight, srcFormat);
 	}
 
-	bool Texture::copyPixelData(unsigned char** output)
-	{
-		return this->copyPixelData(output, this->format);
-	}
-
 	// TODOaa - blit goes here
-
-
-
-
-	void Texture::blit(int x, int y, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		this->blit(x, y, image->data, image->w, image->h, image->getBpp(), sx, sy, sw, sh, alpha);
-	}
-
-	void Texture::blit(gvec2 position, Texture* texture, grect source, unsigned char alpha)
-	{
-		this->blit(hround(position.x), hround(position.y), texture, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
-	}
-
-	void Texture::blit(gvec2 position, Image* image, grect source, unsigned char alpha)
-	{
-		this->blit(hround(position.x), hround(position.y), image->data, image->w, image->h, image->getBpp(), hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
-	}
-
-	void Texture::blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha)
-	{
-		this->blit(hround(position.x), hround(position.y), data, dataWidth, dataHeight, dataBpp, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
-	}
 
 	void Texture::stretchBlit(int x, int y, int w, int h, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha)
 	{
