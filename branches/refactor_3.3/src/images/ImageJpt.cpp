@@ -31,7 +31,7 @@ namespace april
 		// combine
 		Image* image = Image::create(jpg->w, jpg->h, Color::Clear, FORMAT_RGBA);
 		image->write(0, 0, jpg->w, jpg->h, 0, 0, jpg);
-		image->insertAlphaMap(png);
+		image->insertAlphaMap(png->data, png->format);
 		delete jpg;
 		delete png;
 		return image;

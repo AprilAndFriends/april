@@ -132,22 +132,22 @@ namespace april
 		return (this->d3dTexture != NULL);
 	}
 
-	void DirectX9_Texture::clear()
+	bool DirectX9_Texture::clear()
 	{
 		if (this->data != NULL)
 		{
-			Texture::clear();
-			return;
+			return Texture::clear();
 		}
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
 		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
 		if (lockResult == LR_FAILED)
 		{
-			return;
+			return false;
 		}
 		memset(lockRect.pBits, 0, this->getByteSize());
 		this->_unlock(buffer, lockResult, true);
+		return true;
 	}
 
 	Color DirectX9_Texture::getPixel(int x, int y)
@@ -173,12 +173,11 @@ namespace april
 		return color;
 	}
 
-	void DirectX9_Texture::setPixel(int x, int y, Color color)
+	bool DirectX9_Texture::setPixel(int x, int y, Color color)
 	{
 		if (this->data != NULL)
 		{
-			Texture::setPixel(x, y, color);
-			return;
+			return Texture::setPixel(x, y, color);
 		}
 		D3DLOCKED_RECT lockRect;
 		_CREATE_RECT(rect, x, y, 1, 1);
@@ -186,26 +185,25 @@ namespace april
 		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
 		if (lockResult == LR_FAILED)
 		{
-			return;
+			return false;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		p -= (x + y * this->width) * Image::getFormatBpp(nativeFormat); // Image::setPixel expects data from the beginning so this shift back was implemented, but will never be accessed
 		bool result = Image::setPixel(x, y, color, p, this->width, this->height, nativeFormat);
 		this->_unlock(buffer, lockResult, result);
+		return result;
 	}
 
-	void DirectX9_Texture::fillRect(int x, int y, int w, int h, Color color)
+	bool DirectX9_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
 		if (w == 1 && h == 1)
 		{
-			this->setPixel(x, y, color);
-			return;
+			return this->setPixel(x, y, color);
 		}
 		if (this->data != NULL)
 		{
-			Texture::fillRect(x, y, w, h, color);
-			return;
+			return Texture::fillRect(x, y, w, h, color);
 		}
 		D3DLOCKED_RECT lockRect;
 		_CREATE_RECT(rect, x, y, w, h);
@@ -213,13 +211,14 @@ namespace april
 		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
 		if (lockResult == LR_FAILED)
 		{
-			return;
+			return false;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		p -= (x + y * this->width) * Image::getFormatBpp(nativeFormat); // Image::fillRect expects data from the beginning so this shift back was implemented, but will never be accessed
 		bool result = Image::fillRect(x, y, w, h, color, p, this->width, this->height, nativeFormat);
 		this->_unlock(buffer, lockResult, result);
+		return result;
 	}
 
 	bool DirectX9_Texture::copyPixelData(unsigned char** output, Image::Format format)
@@ -245,12 +244,11 @@ namespace april
 		return result;
 	}
 
-	void DirectX9_Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool DirectX9_Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		if (this->data != NULL)
 		{
-			DirectX_Texture::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
-			return;
+			return DirectX_Texture::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
 		}
 		D3DLOCKED_RECT lockRect;
 		_CREATE_RECT(rect, dx, dy, sw, sh);
@@ -258,21 +256,21 @@ namespace april
 		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
 		if (lockResult == LR_FAILED)
 		{
-			return;
+			return false;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		p -= (dx + dy * this->width) * Image::getFormatBpp(nativeFormat); // Image::write expects data from the beginning so this shift back was implemented, but will never be accessed
 		bool result = Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, p, this->width, this->height, nativeFormat);
 		this->_unlock(buffer, lockResult, result);
+		return result;
 	}
 
-	void DirectX9_Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool DirectX9_Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		if (this->data != NULL)
 		{
-			DirectX_Texture::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat);
-			return;
+			return DirectX_Texture::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat);
 		}
 		D3DLOCKED_RECT lockRect;
 		_CREATE_RECT(rect, dx, dy, dw, dh);
@@ -280,21 +278,21 @@ namespace april
 		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
 		if (lockResult == LR_FAILED)
 		{
-			return;
+			return false;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		p -= (dx + dy * this->width) * Image::getFormatBpp(nativeFormat); // Image::write expects data from the beginning so this shift back was implemented, but will never be accessed
 		bool result = Image::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, p, this->width, this->height, nativeFormat);
 		this->_unlock(buffer, lockResult, result);
+		return result;
 	}
 
-	void DirectX9_Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	bool DirectX9_Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
 		if (this->data != NULL)
 		{
-			DirectX_Texture::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, alpha);
-			return;
+			return DirectX_Texture::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, alpha);
 		}
 		D3DLOCKED_RECT lockRect;
 		_CREATE_RECT(rect, dx, dy, sw, sh);
@@ -302,75 +300,52 @@ namespace april
 		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
 		if (lockResult == LR_FAILED)
 		{
-			return;
+			return false;
 		}
 		unsigned char* p = (unsigned char*)lockRect.pBits;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		p -= (dx + dy * this->width) * Image::getFormatBpp(nativeFormat); // Image::blit expects data from the beginning so this shift back was implemented, but will never be accessed
 		bool result = Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, p, this->width, this->height, nativeFormat, alpha);
 		this->_unlock(buffer, lockResult, result);
+		return result;
 	}
 
-	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
+	bool DirectX9_Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
-		// TODOaa - change
-		DirectX9_Texture* source = (DirectX9_Texture*)texture;
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		w = hmin(w, this->width - x);
-		h = hmin(h, this->height - y);
-		sx = hclamp(sx, 0, source->width - 1);
-		sy = hclamp(sy, 0, source->height - 1);
-		sw = hmin(sw, source->width - sx);
-		sh = hmin(sh, source->height - sy);
+		if (this->data != NULL)
+		{
+			return DirectX_Texture::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, alpha);
+		}
 		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, x, y, w, h);
+		_CREATE_RECT(rect, dx, dy, dw, dh);
 		IDirect3DSurface9* buffer = NULL;
 		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
 		if (lockResult == LR_FAILED)
 		{
-			return;
+			return false;
 		}
-		this->stretchBlit(x, y, w, h, (unsigned char*)lockRect.pBits, source->width, source->height, source->getBpp(), sx, sy, sw, sh, alpha);
-		source->_unlock(buffer, lockResult, false);
+		unsigned char* p = (unsigned char*)lockRect.pBits;
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		p -= (dx + dy * this->width) * Image::getFormatBpp(nativeFormat); // Image::write expects data from the beginning so this shift back was implemented, but will never be accessed
+		bool result = Image::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, p, this->width, this->height, nativeFormat, alpha);
+		this->_unlock(buffer, lockResult, result);
+		return result;
 	}
 
-	void DirectX9_Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
+	bool DirectX9_Texture::rotateHue(float degrees)
 	{
-		// TODOaa - change
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		w = hmin(w, this->width - x);
-		h = hmin(h, this->height - y);
-		sx = hclamp(sx, 0, dataWidth - 1);
-		sy = hclamp(sy, 0, dataHeight - 1);
-		sw = hmin(sw, dataWidth - sx);
-		sh = hmin(sh, dataHeight - sy);
-		D3DLOCKED_RECT lockRect;
-		_CREATE_RECT(rect, x, y, w, h);
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, &rect);
-		if (lockResult == LR_FAILED)
-		{
-			return;
-		}
-		this->_stretchBlit((unsigned char*)lockRect.pBits, x, y, w, h, data, dataWidth, dataHeight, dataBpp, sx, sy, sw, sh, alpha);
-		this->_unlock(buffer, lockResult, true);
-	}
-
-	void DirectX9_Texture::rotateHue(float degrees)
-	{
+		degrees = hmodf(degrees, 360.0f);
 		// TODOaa - optimize and improve
 		if (degrees == 0.0f)
 		{
-			return;
+			return true;
 		}
 		D3DLOCKED_RECT lockRect;
 		IDirect3DSurface9* buffer = NULL;
 		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
 		if (lockResult == LR_FAILED)
 		{
-			return;
+			return false;
 		}
 		int size = this->getByteSize();
 		float range = hmodf(degrees, 360.0f) / 360.0f;
@@ -385,9 +360,10 @@ namespace april
 			april::hslToRgb(hmodf(h + range, 1.0f), s, l, &data[i + 2], &data[i + 1], &data[i]);
 		}
 		this->_unlock(buffer, lockResult, true);
+		return true;
 	}
 
-	void DirectX9_Texture::saturate(float factor)
+	bool DirectX9_Texture::saturate(float factor)
 	{
 		// TODOaa - optimize and improve
 		D3DLOCKED_RECT lockRect;
@@ -395,7 +371,7 @@ namespace april
 		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
 		if (lockResult == LR_FAILED)
 		{
-			return;
+			return false;
 		}
 		int size = this->getByteSize();
 		float h;
@@ -409,15 +385,16 @@ namespace april
 			april::hslToRgb(h, hmin(s * factor, 1.0f), l, &data[i + 2], &data[i + 1], &data[i]);
 		}
 		this->_unlock(buffer, lockResult, true);
+		return true;
 	}
 
-	void DirectX9_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	bool DirectX9_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
 	{
 		// TODOaa - use this->data from source if available
 		if (this->width != texture->getWidth() || this->height != texture->getHeight() ||
 			this->format != Image::FORMAT_RGBA && this->format != Image::FORMAT_ARGB && this->format != Image::FORMAT_BGRA && this->format != Image::FORMAT_ABGR)
 		{
-			return;
+			return false;
 		}
 		DirectX9_Texture* source = (DirectX9_Texture*)texture;
 		D3DLOCKED_RECT lockRect;
@@ -425,7 +402,7 @@ namespace april
 		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
 		if (lockResult == LR_FAILED)
 		{
-			return;
+			return false;
 		}
 		D3DLOCKED_RECT srcLockRect;
 		IDirect3DSurface9* srcBuffer = NULL;
@@ -433,7 +410,7 @@ namespace april
 		if (srcResult == LR_FAILED)
 		{
 			this->_unlock(buffer, lockResult, false);
-			return;
+			return false;
 		}
 		unsigned char* thisData = (unsigned char*)lockRect.pBits;
 		unsigned char* srcData = (unsigned char*)srcLockRect.pBits;
@@ -467,6 +444,7 @@ namespace april
 		}
 		source->_unlock(srcBuffer, srcResult, false);
 		this->_unlock(buffer, lockResult, true);
+		return true;
 	}
 
 	IDirect3DSurface9* DirectX9_Texture::_getSurface()

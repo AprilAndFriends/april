@@ -173,16 +173,16 @@ void april_init(const harray<hstr>& args)
 	//manualTexture->stretchBlit(0, 100, 900, 200, texture, 0, 0, texture->getWidth() / 2, texture->getHeight() / 2);
 	//return
 	
-	april::Image::Format format = april::Image::FORMAT_BGR;
+	april::Image::Format format = april::Image::FORMAT_RGBA;
 	unsigned char* data = NULL;
 	texture->copyPixelData(&data, format);
 	
 	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 0, 0, data, texture->getWidth(), texture->getHeight(), format);
-	manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 64, 64, data, texture->getWidth(), texture->getHeight(), format, 255);
-	//manualTexture->writeStretch(0, 0, texture->getWidth() / 2, texture->getHeight() / 2, 100, 100, 700, 200, data, texture->getWidth(), texture->getHeight(), april::Image::FORMAT_RGBA);
-	//manualTexture->writeStretch(0, 100, texture->getWidth(), texture->getHeight(), 100, 100, data, texture->getWidth(), texture->getHeight(), april::Image::FORMAT_RGBA);
+	//manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 64, 64, data, texture->getWidth(), texture->getHeight(), format, 128);
+	manualTexture->blitStretch(0, 0, texture->getWidth(), texture->getHeight(), 0, 64, 700, 200, data, texture->getWidth(), texture->getHeight(), format, 192);
+	//manualTexture->writeStretch(0, 100, texture->getWidth(), texture->getHeight(), 100, 100, data, texture->getWidth(), texture->getHeight(), format);
 
-	//manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 100, 100, data, texture->getWidth(), texture->getHeight(), april::Image::FORMAT_RGBA);
+	//manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 100, 100, data, texture->getWidth(), texture->getHeight(), format);
 	delete [] data;
 }
 

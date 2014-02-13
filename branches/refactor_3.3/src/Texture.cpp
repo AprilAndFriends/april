@@ -218,7 +218,7 @@ namespace april
 				hlog::error(april::logTag, "No filename for texture specified!");
 				return false;
 			}
-			Image* image = Image::load(this->filename);
+			Image* image = Image::create(this->filename);
 			if (image == NULL)
 			{
 				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
@@ -270,14 +270,15 @@ namespace april
 		return true;
 	}
 
-	void Texture::clear()
+	bool Texture::clear()
 	{
 		if (this->data != NULL)
 		{
 			// TODOaa - check if this works for palette formatting as well
 			memset(this->data, 0, this->getByteSize());
-			this->_uploadDataToGpu(0, 0, this->width, this->height);
+			return this->_uploadDataToGpu(0, 0, this->width, this->height);
 		}
+		return false;
 	}
 
 	Color Texture::getPixel(int x, int y)
@@ -290,12 +291,9 @@ namespace april
 		return color;
 	}
 
-	void Texture::setPixel(int x, int y, Color color)
+	bool Texture::setPixel(int x, int y, Color color)
 	{
-		if (this->data != NULL && Image::setPixel(x, y, color, this->data, this->width, this->height, this->format))
-		{
-			this->_uploadDataToGpu(x, y, 1, 1);
-		}
+		return (this->data != NULL && Image::setPixel(x, y, color, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, 1, 1));
 	}
 
 	Color Texture::getInterpolatedPixel(float x, float y)
@@ -308,12 +306,9 @@ namespace april
 		return color;
 	}
 	
-	void Texture::fillRect(int x, int y, int w, int h, Color color)
+	bool Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
-		if (this->data != NULL && Image::fillRect(x, y, w, h, color, this->data, this->width, this->height, this->format))
-		{
-			this->_uploadDataToGpu(x, y, w, h);
-		}
+		return (this->data != NULL && Image::fillRect(x, y, w, h, color, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, w, h));
 	}
 
 	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
@@ -321,65 +316,44 @@ namespace april
 		return (this->data != NULL && Image::convertToFormat(this->width, this->height, this->data, this->format, output, format, false));
 	}
 
-	void Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		if (this->data != NULL && Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format))
-		{
-			this->_uploadDataToGpu(dx, dy, sw, sh);
-		}
+		return (this->data != NULL && Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(dx, dy, sw, sh));
 	}
 
-	void Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		if (this->data != NULL && Image::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format))
-		{
-			this->_uploadDataToGpu(dx, dy, dw, dh);
-		}
+		return (this->data != NULL && Image::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(dx, dy, dw, dh));
 	}
 
-	void Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	bool Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
-		if (this->data != NULL && Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format, alpha))
-		{
-			this->_uploadDataToGpu(dx, dy, sw, sh);
-		}
-	}
-	/*
-	void Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
-	{
-		if (this->data != NULL && Image::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format, alpha))
-		{
-			this->_uploadDataToGpu(dx, dy, dw, dh);
-		}
-	}
-	*/
-
-	// TODOaa - standard implementations go here
-
-	void Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement stretchBlit()!", april::rendersys->getName().c_str());
+		return (this->data != NULL && Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format, alpha) && this->_uploadDataToGpu(dx, dy, sw, sh));
 	}
 
-	void Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
+	bool Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement stretchBlit()!", april::rendersys->getName().c_str());
+		return (this->data != NULL && Image::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format, alpha) && this->_uploadDataToGpu(dx, dy, dw, dh));
 	}
 
-	void Texture::rotateHue(float degrees)
+	bool Texture::rotateHue(float degrees)
 	{
 		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement rotateHue()!", april::rendersys->getName().c_str());
+		return false;
 	}
 
-	void Texture::saturate(float factor)
+	bool Texture::saturate(float factor)
 	{
 		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement saturate()!", april::rendersys->getName().c_str());
+		return false;
 	}
 
 	// TODOaa - rename properly
-	void Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	//void Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat/*, unsigned char median, int ambiguity*/)
 	{
 		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement insertAsAlphaMap()!", april::rendersys->getName().c_str());
+		return false;
 	}
 
 
@@ -390,9 +364,9 @@ namespace april
 		return this->getPixel(hround(position.x), hround(position.y));
 	}
 
-	void Texture::setPixel(gvec2 position, Color color)
+	bool Texture::setPixel(gvec2 position, Color color)
 	{
-		this->setPixel(hround(position.x), hround(position.y), color);
+		return this->setPixel(hround(position.x), hround(position.y), color);
 	}
 
 	Color Texture::getInterpolatedPixel(gvec2 position)
@@ -400,9 +374,9 @@ namespace april
 		return this->getInterpolatedPixel(position.x, position.y);
 	}
 
-	void Texture::fillRect(grect rect, Color color)
+	bool Texture::fillRect(grect rect, Color color)
 	{
-		this->fillRect(hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h), color);
+		return this->fillRect(hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h), color);
 	}
 
 	bool Texture::copyPixelData(unsigned char** output)
@@ -410,450 +384,17 @@ namespace april
 		return this->copyPixelData(output, this->format);
 	}
 
-	void Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		this->write(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destPosition.x), hround(destPosition.y), srcData, srcWidth, srcHeight, srcFormat);
+		return this->write(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destPosition.x), hround(destPosition.y), srcData, srcWidth, srcHeight, srcFormat);
 	}
 
-	void Texture::writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool Texture::writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		this->writeStretch(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destRect.x), hround(destRect.y), hround(destRect.w), hround(destRect.h), srcData, srcWidth, srcHeight, srcFormat);
+		return this->writeStretch(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destRect.x), hround(destRect.y), hround(destRect.w), hround(destRect.h), srcData, srcWidth, srcHeight, srcFormat);
 	}
 
 	// TODOaa - blit goes here
-
-	void Texture::stretchBlit(int x, int y, int w, int h, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		this->stretchBlit(x, y, w, h, image->data, image->w, image->h, image->getBpp(), sx, sy, sw, sh, alpha);
-	}
-
-	void Texture::stretchBlit(grect destination, Texture* texture, grect source, unsigned char alpha)
-	{
-		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), texture,
-			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
-	}
-
-	void Texture::stretchBlit(grect destination, Image* image, grect source, unsigned char alpha)
-	{
-		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), image->data, image->w, image->h, image->getBpp(),
-			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
-	}
-
-	void Texture::stretchBlit(grect destination, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha)
-	{
-		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), data, dataWidth, dataHeight, dataBpp,
-			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
-	}
-
-	void Texture::_blit(unsigned char* thisData, int x, int y, unsigned char* srcData, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		sx = hclamp(sx, 0, dataWidth - 1);
-		sy = hclamp(sy, 0, dataHeight - 1);
-		sw = hmin(sw, hmin(this->width - x, dataWidth - sx));
-		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
-		if (sw < 1 || sh < 1)
-		{
-			return;
-		}
-		unsigned char* c;
-		unsigned char* sc;
-		unsigned char a0;
-		unsigned char a1;
-		int i;
-		int j;
-		// TODOaa - should be checked on different BPPs and data access better
-		// the following iteration blocks are very similar, but for performance reasons they
-		// have been duplicated instead of putting everything into one block with if branches
-		int thisBpp = this->getBpp();
-		if (thisBpp == 4 && dataBpp == 4)
-		{
-			for_iterx (j, 0, sh)
-			{
-				for_iterx (i, 0, sw)
-				{
-					c = &thisData[(i + j * this->width) * 4];
-					sc = &srcData[(i + j * dataWidth) * 4];
-					if (c[3] > 0)
-					{
-						a0 = sc[3] * alpha / 255;
-						if (a0 > 0)
-						{
-							a1 = 255 - a0;
-							c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-							c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-							c[2] = (sc[2] * a0 + c[2] * a1) / 255;
-							c[3] = a0 + c[3] * a1 / 255;
-						}
-					}
-					else
-					{
-						c[0] = sc[0];
-						c[1] = sc[1];
-						c[2] = sc[2];
-						c[3] = sc[3] * alpha / 255;
-					}
-				}
-			}
-		}
-		else if (thisBpp == 3 && dataBpp == 4)
-		{
-			for_iterx (j, 0, sh)
-			{
-				for_iterx (i, 0, sw)
-				{
-					c = &thisData[(i + j * this->width) * 4];
-					sc = &srcData[(i + j * dataWidth) * 4];
-					a0 = sc[3] * alpha / 255;
-					if (a0 > 0)
-					{
-						a1 = 255 - a0;
-						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-						c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-						c[2] = (sc[2] * a0 + c[2] * a1) / 255;
-					}
-				}
-			}
-		}
-		else if (thisBpp == 4 && dataBpp == 3)
-		{
-			if (alpha > 0)
-			{
-				a0 = alpha;
-				a1 = 255 - a0;
-				for_iterx (j, 0, sh)
-				{
-					for_iterx (i, 0, sw)
-					{
-						c = &thisData[(i + j * this->width) * 4];
-						sc = &srcData[(i + j * dataWidth) * 4];
-						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-						c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-						c[2] = (sc[2] * a0 + c[2] * a1) / 255;
-						c[3] = a0 + c[3] * a1 / 255;
-					}
-				}
-			}
-		}
-		else if (thisBpp == 1 && dataBpp == 1)
-		{
-			if (alpha > 0)
-			{
-				a0 = alpha;
-				a1 = 255 - a0;
-				for_iterx (j, 0, sh)
-				{
-					for_iterx (i, 0, sw)
-					{
-						c = &thisData[i + j * this->width];
-						sc = &srcData[i + j * dataWidth];
-						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-					}
-				}
-			}
-		}
-		else
-		{
-			hlog::error(april::logTag, "Unsupported format for blit()!");
-		}
-	}
-
-	void Texture::_stretchBlit(unsigned char* thisData, int x, int y, int w, int h, unsigned char* srcData, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		w = hmin(w, this->width - x);
-		h = hmin(h, this->height - y);
-		sx = hclamp(sx, 0, dataWidth - 1);
-		sy = hclamp(sy, 0, dataHeight - 1);
-		sw = hmin(sw, dataWidth - sx);
-		sh = hmin(sh, dataHeight - sy);
-		if (w < 1 || h < 1 || sw < 1 || sh < 1)
-		{
-			return;
-		}
-		float fw = (float)sw / w;
-		float fh = (float)sh / h;
-		unsigned char* c;
-		unsigned char* sc;
-		int a0;
-		int a1;
-		unsigned char color[4] = {0};
-		unsigned char* ctl;
-		unsigned char* ctr;
-		unsigned char* cbl;
-		unsigned char* cbr;
-		float cx;
-		float cy;
-		float rx0;
-		float ry0;
-		float rx1;
-		float ry1;
-		int x0;
-		int y0;
-		int x1;
-		int y1;
-		int i;
-		int j;
-		// TODOaa - should be checked on different BPPs and data access better
-		// the following iteration blocks are very similar, but for performance reasons they
-		// have been duplicated instead of putting everything into one block with if branches
-		int thisBpp = this->getBpp();
-		if (thisBpp == 4 && dataBpp == 4)
-		{
-			for_iterx (j, 0, h)
-			{
-				for_iterx (i, 0, w)
-				{
-					c = &thisData[(i + j * this->width) * 4];
-					cx = sx + i * fw;
-					cy = sy + j * fh;
-					x0 = (int)cx;
-					y0 = (int)cy;
-					x1 = hmin((int)cx + 1, dataWidth - 1);
-					y1 = hmin((int)cy + 1, dataHeight - 1);
-					rx0 = cx - x0;
-					ry0 = cy - y0;
-					rx1 = 1.0f - rx0;
-					ry1 = 1.0f - ry0;
-					if (rx0 != 0.0f && ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-						color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
-						sc = color;
-					}
-					else if (rx0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-						color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
-						sc = color;
-					}
-					else if (ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-						color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
-						sc = color;
-					}
-					else
-					{
-						sc = &srcData[(x0 + y0 * dataWidth) * 4];
-					}
-					a0 = sc[3] * (int)alpha / 255;
-					if (a0 > 0)
-					{
-						if (c[3] > 0)
-						{
-							a1 = 255 - a0;
-							c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
-							c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-							c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
-							c[3] = (unsigned char)(a0 + c[3] * a1 / 255);
-						}
-						else
-						{
-							c[0] = sc[0];
-							c[1] = sc[1];
-							c[2] = sc[2];
-							c[3] = a0;
-						}
-					}
-				}
-			}
-		}
-		else if (thisBpp == 3 && dataBpp == 4)
-		{
-			for_iterx (j, 0, h)
-			{
-				for_iterx (i, 0, w)
-				{
-					c = &thisData[(i + j * this->width) * 4];
-					cx = sx + i * fw;
-					cy = sy + j * fh;
-					x0 = (int)cx;
-					y0 = (int)cy;
-					x1 = hmin((int)cx + 1, dataWidth - 1);
-					y1 = hmin((int)cy + 1, dataHeight - 1);
-					rx0 = cx - x0;
-					ry0 = cy - y0;
-					rx1 = 1.0f - rx0;
-					ry1 = 1.0f - ry0;
-					if (rx0 != 0.0f || ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-						color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
-						sc = color;
-					}
-					else if (rx0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-						color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
-						sc = color;
-					}
-					else if (ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-						color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
-						sc = color;
-					}
-					else
-					{
-						sc = &srcData[(x0 + y0 * dataWidth) * 4];
-					}
-					a0 = sc[3] * (int)alpha / 255;
-					if (a0 > 0)
-					{
-						a1 = 255 - a0;
-						c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
-						c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-						c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
-					}
-				}
-			}
-		}
-		else if (thisBpp == 4 && dataBpp == 3)
-		{
-			if (alpha > 0)
-			{
-				for_iterx (j, 0, h)
-				{
-					for_iterx (i, 0, w)
-					{
-						c = &thisData[(i + j * this->width) * 4];
-						cx = sx + i * fw;
-						cy = sy + j * fh;
-						x0 = (int)cx;
-						y0 = (int)cy;
-						x1 = hmin((int)cx + 1, dataWidth - 1);
-						y1 = hmin((int)cy + 1, dataHeight - 1);
-						rx0 = cx - x0;
-						ry0 = cy - y0;
-						rx1 = 1.0f - rx0;
-						ry1 = 1.0f - ry0;
-						if (rx0 != 0.0f || ry0 != 0.0f)
-						{
-							ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-							ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-							cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-							cbr = &srcData[(x1 + y1 * dataWidth) * 4];
-							color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-							color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-							color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-							sc = color;
-						}
-						else if (rx0 != 0.0f)
-						{
-							ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-							ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-							color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-							color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-							color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-							sc = color;
-						}
-						else if (ry0 != 0.0f)
-						{
-							ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-							cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-							color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-							color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-							color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-							sc = color;
-						}
-						else
-						{
-							sc = &srcData[(x0 + y0 * dataWidth) * 4];
-						}
-						c[0] = sc[0];
-						c[1] = sc[1];
-						c[2] = sc[2];
-						c[3] = 255;
-					}
-				}
-			}
-		}
-		else if (thisBpp == 1 && dataBpp == 1)
-		{
-			if (alpha > 0)
-			{
-				for_iterx (j, 0, h)
-				{
-					for_iterx (i, 0, w)
-					{
-						c = &thisData[i + j * this->width];
-						cx = sx + i * fw;
-						cy = sy + j * fh;
-						x0 = (int)cx;
-						y0 = (int)cy;
-						x1 = hmin((int)cx + 1, dataWidth - 1);
-						y1 = hmin((int)cy + 1, dataHeight - 1);
-						rx0 = cx - x0;
-						ry0 = cy - y0;
-						rx1 = 1.0f - rx0;
-						ry1 = 1.0f - ry0;
-						if (rx0 != 0.0f || ry0 != 0.0f)
-						{
-							ctl = &srcData[x0 + y0 * dataWidth];
-							ctr = &srcData[x1 + y0 * dataWidth];
-							cbl = &srcData[x0 + y1 * dataWidth];
-							cbr = &srcData[x1 + y1 * dataWidth];
-							color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-							sc = color;
-						}
-						else if (rx0 != 0.0f)
-						{
-							ctl = &srcData[x0 + y0 * dataWidth];
-							ctr = &srcData[x1 + y0 * dataWidth];
-							color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-							sc = color;
-						}
-						else if (ry0 != 0.0f)
-						{
-							ctl = &srcData[x0 + y0 * dataWidth];
-							cbl = &srcData[x0 + y1 * dataWidth];
-							color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-							sc = color;
-						}
-						else
-						{
-							sc = &srcData[x0 + y0 * dataWidth];
-						}
-						c[0] = sc[0];
-					}
-				}
-			}
-		}
-		else
-		{
-			hlog::error(april::logTag, "Unsupported format for stretchBlit()!");
-		}
-	}
+	// TODOaa - blitStretch goes here
 
 }

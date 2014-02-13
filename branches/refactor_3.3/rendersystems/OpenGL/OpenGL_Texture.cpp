@@ -160,12 +160,11 @@ namespace april
 		}
 	}
 
-	void OpenGL_Texture::clear()
+	bool OpenGL_Texture::clear()
 	{
 		if (this->data != NULL)
 		{
-			Texture::clear();
-			return;
+			return Texture::clear();
 		}
 		int size = this->getByteSize();
 		unsigned char* clearColor = new unsigned char[size];
@@ -173,6 +172,7 @@ namespace april
 		this->_setCurrentTexture();
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, this->width, this->height, GL_RGBA, GL_UNSIGNED_BYTE, clearColor);
 		delete [] clearColor;
+		return true;
 	}
 
 	Color OpenGL_Texture::getPixel(int x, int y)
@@ -192,59 +192,58 @@ namespace april
 		return result;
 	}
 
-	void OpenGL_Texture::setPixel(int x, int y, Color color)
+	bool OpenGL_Texture::setPixel(int x, int y, Color color)
 	{
 		if (this->data != NULL)
 		{
-			Texture::setPixel(x, y, color);
-			return;
+			return Texture::setPixel(x, y, color);
 		}
 		if (!Image::checkRect(x, y, this->width, this->height))
 		{
-			return;
+			return false;
 		}
 		unsigned char writeData[4] = {color.r, color.g, color.b, color.a};
 		this->_setCurrentTexture();
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, writeData);
+		return true;
 	}
 	
-	void OpenGL_Texture::fillRect(int x, int y, int w, int h, Color color)
+	bool OpenGL_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
 		if (w == 1 && h == 1)
 		{
-			this->setPixel(x, y, color);
-			return;
+			return this->setPixel(x, y, color);
 		}
 		if (this->data != NULL)
 		{
-			Texture::fillRect(x, y, w, h, color);
-			return;
+			return Texture::fillRect(x, y, w, h, color);
 		}
 		if (!Image::correctRect(x, y, w, h, this->width, this->height))
 		{
-			return;
+			return false;
 		}
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		int size = w * h * Image::getFormatBpp(nativeFormat);
 		unsigned char* writeData = new unsigned char[size];
-		if (Image::fillRect(0, 0, w, h, color, writeData, w, h, nativeFormat))
+		bool result = Image::fillRect(0, 0, w, h, color, writeData, w, h, nativeFormat);
+		if (result)
 		{
 			this->_setCurrentTexture();
 			glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, this->glFormat, GL_UNSIGNED_BYTE, writeData);
 		}
 		delete [] writeData;
+		return result;
 	}
 	
-	void OpenGL_Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool OpenGL_Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		if (this->data != NULL)
 		{
-			Texture::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
-			return;
+			return Texture::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
 		}
 		if (!Image::correctRect(sx, sy, sw, sh, srcWidth, srcHeight, dx, dy, this->width, this->height))
 		{
-			return;
+			return false;
 		}
 		int srcBpp = Image::getFormatBpp(srcFormat);
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
@@ -253,61 +252,63 @@ namespace april
 		{
 			this->_setCurrentTexture();
 			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]);
-			return;
+			return true;
 		}
 		unsigned char* data = new unsigned char[sw * sh * destBpp];
-		if (Image::write(sx, sy, sw, sh, 0, 0, srcData, srcWidth, srcHeight, srcFormat, data, sw, sh, nativeFormat))
+		bool result = Image::write(sx, sy, sw, sh, 0, 0, srcData, srcWidth, srcHeight, srcFormat, data, sw, sh, nativeFormat);
+		if (result)
 		{
 			this->_setCurrentTexture();
 			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, data);
 		}
 		delete [] data;
+		return result;
 	}
 
-	void OpenGL_Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool OpenGL_Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		if (this->data != NULL)
 		{
-			Texture::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat);
-			return;
+			return Texture::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat);
 		}
 		if (!Image::correctRect(sx, sy, sw, sh, srcWidth, srcHeight, dx, dy, dw, dh, this->width, this->height))
 		{
-			return;
+			return false;
 		}
 		int srcBpp = Image::getFormatBpp(srcFormat);
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		int destBpp = Image::getFormatBpp(nativeFormat);
 		unsigned char* data = new unsigned char[dw * dh * destBpp];
-		if (Image::writeStretch(sx, sy, sw, sh, 0, 0, dw, dh, srcData, srcWidth, srcHeight, srcFormat, data, dw, dh, nativeFormat))
+		bool result = Image::writeStretch(sx, sy, sw, sh, 0, 0, dw, dh, srcData, srcWidth, srcHeight, srcFormat, data, dw, dh, nativeFormat);
+		if (result)
 		{
 			this->_setCurrentTexture();
 			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, dw, dh, this->glFormat, GL_UNSIGNED_BYTE, data);
 		}
 		delete [] data;
+		return result;
 	}
 
-	void OpenGL_Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	bool OpenGL_Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
 		if (this->data != NULL)
 		{
-			Texture::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, alpha);
-			return;
+			return Texture::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, alpha);
 		}
 		if (!Image::correctRect(sx, sy, sw, sh, srcWidth, srcHeight, dx, dy, this->width, this->height))
 		{
-			return;
+			return false;
 		}
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		unsigned char* data = NULL;
 		if (!this->copyPixelData(&data, nativeFormat))
 		{
-			return;
+			return false;
 		}
 		if (!Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, data, this->width, this->height, nativeFormat, alpha))
 		{
 			delete [] data;
-			return;
+			return false;
 		}
 		int dataBpp = Image::getFormatBpp(nativeFormat);
 		if (dx == 0 && sw == this->width)
@@ -315,38 +316,73 @@ namespace april
 			this->_setCurrentTexture();
 			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &data[(dx + dy * this->width) * dataBpp]);
 			delete [] data;
-			return;
+			return true;
 		}
 		unsigned char* writeData = new unsigned char[sw * sh * dataBpp];
-		if (Image::write(dx, dy, sw, sh, 0, 0, data, this->width, this->height, nativeFormat, writeData, sw, sh, nativeFormat))
+		bool result = Image::write(dx, dy, sw, sh, 0, 0, data, this->width, this->height, nativeFormat, writeData, sw, sh, nativeFormat);
+		if (result)
 		{
 			this->_setCurrentTexture();
 			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, writeData);
 			delete [] writeData;
 		}
 		delete [] data;
+		return result;
 	}
 
-	// TODOaa - writeStretch goes here
-
-	void OpenGL_Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
+	bool OpenGL_Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
-		// TODO
+		if (this->data != NULL)
+		{
+			return Texture::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, alpha);
+		}
+		if (!Image::correctRect(sx, sy, sw, sh, srcWidth, srcHeight, dx, dy, dw, dh, this->width, this->height))
+		{
+			return false;
+		}
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		unsigned char* data = NULL;
+		if (!this->copyPixelData(&data, nativeFormat))
+		{
+			return false;
+		}
+		if (!Image::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, data, this->width, this->height, nativeFormat, alpha))
+		{
+			delete [] data;
+			return false;
+		}
+		int dataBpp = Image::getFormatBpp(nativeFormat);
+		if (dx == 0 && dw == this->width)
+		{
+			this->_setCurrentTexture();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, dw, dh, this->glFormat, GL_UNSIGNED_BYTE, &data[(dx + dy * this->width) * dataBpp]);
+			delete [] data;
+			return true;
+		}
+		unsigned char* writeData = new unsigned char[dw * dh * dataBpp];
+		bool result = Image::write(dx, dy, dw, dh, 0, 0, data, this->width, this->height, nativeFormat, writeData, dw, dh, nativeFormat);
+		if (result)
+		{
+			this->_setCurrentTexture();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, dw, dh, this->glFormat, GL_UNSIGNED_BYTE, writeData);
+			delete [] writeData;
+		}
+		delete [] data;
+		return result;
 	}
 
-	void OpenGL_Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
+
+
+	bool OpenGL_Texture::rotateHue(float degrees)
 	{
-		// TODO
+		// TODOaa
+		return false;
 	}
 
-	void OpenGL_Texture::rotateHue(float degrees)
+	bool OpenGL_Texture::saturate(float factor)
 	{
-		// TODO
-	}
-
-	void OpenGL_Texture::saturate(float factor)
-	{
-		// TODO
+		// TODOaa
+		return false;
 	}
 
 	bool OpenGL_Texture::_uploadDataToGpu(int x, int y, int w, int h)

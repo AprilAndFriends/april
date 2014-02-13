@@ -37,7 +37,7 @@ namespace april
 		bool isLoaded();
 
 		Color getPixel(int x, int y);
-		void setPixel(int x, int y, Color c);
+		bool setPixel(int x, int y, Color color);
 		
 	protected:
 		Image* source;
