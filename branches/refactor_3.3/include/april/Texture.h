@@ -91,38 +91,41 @@ namespace april
 		virtual bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha = 255) = 0;
 		virtual bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
 		virtual bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha = 255) = 0;
-		// TODOaa - rotateHue goes here
-		// TODOaa - saturate goes here
-		virtual bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat);
+		virtual bool rotateHue(int x, int y, int w, int h, float degrees);
+		virtual bool saturate(int x, int y, int w, int h, float factor);
+		virtual bool invert(int x, int y, int w, int h);
+		/// @note srcData must be the same width and height as the image
 		virtual bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity);
+		virtual bool insertAlphaMap(Texture* texture, unsigned char median, int ambiguity) = 0;
 
-		virtual bool rotateHue(float degrees);
-		virtual bool saturate(float factor);
-
-		// TODOaa - new overloads
 		Color getPixel(gvec2 position);
 		bool setPixel(gvec2 position, Color color);
 		Color getInterpolatedPixel(gvec2 position);
 		bool fillRect(grect rect, Color color);
 		bool copyPixelData(unsigned char** output);
-
 		bool write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool write(grect srcRect, gvec2 destPosition, Texture* texture);
+		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Image* image);
+		bool write(grect srcRect, gvec2 destPosition, Image* image);
 		bool writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-
-		/*
-		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Image* other);
-		bool write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		bool write(grect srcRect, gvec2 destPosition, Image* other);
-		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* other);
-		bool writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		bool writeStretch(grect srcRect, grect destRect, Image* other);
-		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* other, unsigned char alpha = 255);
+		bool writeStretch(grect srcRect, grect destRect, Texture* texture);
+		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image);
+		bool writeStretch(grect srcRect, grect destRect, Image* image);
 		bool blit(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
-		bool blit(grect srcRect, gvec2 destPosition, Image* other, unsigned char alpha = 255);
-		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* other, unsigned char alpha = 255);
+		bool blit(grect srcRect, gvec2 destPosition, Texture* texture, unsigned char alpha = 255);
+		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* image, unsigned char alpha = 255);
+		bool blit(grect srcRect, gvec2 destPosition, Image* image, unsigned char alpha = 255);
 		bool blitStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
-		bool blitStretch(grect srcRect, grect destRect, Image* other, unsigned char alpha = 255);
-		*/
+		bool blitStretch(grect srcRect, grect destRect, Texture* texture, unsigned char alpha = 255);
+		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image, unsigned char alpha = 255);
+		bool blitStretch(grect srcRect, grect destRect, Image* image, unsigned char alpha = 255);
+		bool rotateHue(grect rect, float degrees);
+		bool saturate(grect rect, float factor);
+		bool invert(grect rect);
+		bool insertAlphaMap(Image* image, unsigned char median, int ambiguity);
+		bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat);
+		bool insertAlphaMap(Texture* texture);
+		bool insertAlphaMap(Image* image);
 
 	protected:
 		hstr filename;

@@ -138,7 +138,7 @@ namespace april
 	{
 		if (s == 0.0f)
 		{
-			*r = *g = *b = 255;
+			*r = *g = *b = (unsigned char)(l * 255);
 			return;
 		}
 		float q = (l < 0.5f ? l * (1 + s) : l + s - l * s);

@@ -277,7 +277,7 @@ namespace april
 				return false;
 			}
 		}
-		bool result = this->write(sx, sy, sw, sh, dx, dy, lock.data, source->width, source->height, source->format);
+		bool result = this->write(sx, sy, sw, sh, dx, dy, lock.data, source->width, source->height, april::rendersys->getNativeTextureFormat(source->format));
 		if (!lock.isFailed())
 		{
 			source->_unlock(lock, false);
@@ -316,7 +316,7 @@ namespace april
 				return false;
 			}
 		}
-		bool result = this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, lock.data, source->width, source->height, source->format);
+		bool result = this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, lock.data, source->width, source->height, april::rendersys->getNativeTextureFormat(source->format));
 		if (!lock.isFailed())
 		{
 			source->_unlock(lock, false);
@@ -355,7 +355,7 @@ namespace april
 				return false;
 			}
 		}
-		bool result = this->blit(sx, sy, sw, sh, dx, dy, lock.data, source->width, source->height, source->format, alpha);
+		bool result = this->blit(sx, sy, sw, sh, dx, dy, lock.data, source->width, source->height, april::rendersys->getNativeTextureFormat(source->format), alpha);
 		if (!lock.isFailed())
 		{
 			source->_unlock(lock, false);
@@ -394,7 +394,7 @@ namespace april
 				return false;
 			}
 		}
-		bool result = this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, lock.data, source->width, source->height, source->format, alpha);
+		bool result = this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, lock.data, source->width, source->height, april::rendersys->getNativeTextureFormat(source->format), alpha);
 		if (!lock.isFailed())
 		{
 			source->_unlock(lock, false);
@@ -402,128 +402,85 @@ namespace april
 		return result;
 	}
 
-	bool DirectX9_Texture::rotateHue(float degrees)
+	bool DirectX9_Texture::rotateHue(int x, int y, int w, int h, float degrees)
 	{
-		degrees = hmodf(degrees, 360.0f);
-		return false;
-		/*
-		// TODOaa - optimize and improve
-		if (degrees == 0.0f)
+		if (this->data != NULL)
 		{
-			return true;
+			return DirectX_Texture::rotateHue(x, y, w, h, degrees);
 		}
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
-		if (lockResult == LR_FAILED)
+		Lock lock = this->_tryLock();
+		if (lock.isFailed())
 		{
 			return false;
 		}
-		int size = this->getByteSize();
-		float range = hmodf(degrees, 360.0f) / 360.0f;
-		float h;
-		float s;
-		float l;
-		unsigned char* data = (unsigned char*)lockRect.pBits;
-		int bpp = this->getBpp();
-		for_iter_step (i, 0, size, bpp)
-		{
-			april::rgbToHsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
-			april::hslToRgb(hmodf(h + range, 1.0f), s, l, &data[i + 2], &data[i + 1], &data[i]);
-		}
-		this->_unlock(buffer, lockResult, true);
-		return true;
-		*/
+		return this->_unlock(lock, Image::rotateHue(x, y, w, h, degrees, lock.data, this->width, this->height, april::rendersys->getNativeTextureFormat(this->format)));
 	}
 
-	bool DirectX9_Texture::saturate(float factor)
+	bool DirectX9_Texture::saturate(int x, int y, int w, int h, float factor)
 	{
-		// TODOaa - optimize and improve
-		return false;
-		/*
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
-		if (lockResult == LR_FAILED)
+		if (this->data != NULL)
+		{
+			return DirectX_Texture::saturate(x, y, w, h, factor);
+		}
+		Lock lock = this->_tryLock();
+		if (lock.isFailed())
 		{
 			return false;
 		}
-		int size = this->getByteSize();
-		float h;
-		float s;
-		float l;
-		unsigned char* data = (unsigned char*)lockRect.pBits;
-		int bpp = this->getBpp();
-		for_iter_step (i, 0, size, bpp)
-		{
-			april::rgbToHsl(data[i + 2], data[i + 1], data[i], &h, &s, &l);
-			april::hslToRgb(h, hmin(s * factor, 1.0f), l, &data[i + 2], &data[i + 1], &data[i]);
-		}
-		this->_unlock(buffer, lockResult, true);
-		return true;
-		*/
+		return this->_unlock(lock, Image::saturate(x, y, w, h, factor, lock.data, this->width, this->height, april::rendersys->getNativeTextureFormat(this->format)));
 	}
 
-	bool DirectX9_Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	bool DirectX9_Texture::invert(int x, int y, int w, int h)
 	{
-		// TODOaa - use this->data from source if available
-		return false;
-		/*
-		if (this->width != texture->getWidth() || this->height != texture->getHeight() ||
-			this->format != Image::FORMAT_RGBA && this->format != Image::FORMAT_ARGB && this->format != Image::FORMAT_BGRA && this->format != Image::FORMAT_ABGR)
+		if (this->data != NULL)
+		{
+			return DirectX_Texture::invert(x, y, w, h);
+		}
+		Lock lock = this->_tryLock();
+		if (lock.isFailed())
 		{
 			return false;
 		}
-		DirectX9_Texture* source = (DirectX9_Texture*)texture;
-		D3DLOCKED_RECT lockRect;
-		IDirect3DSurface9* buffer = NULL;
-		LOCK_RESULT lockResult = this->_tryLock(&buffer, &lockRect, NULL);
-		if (lockResult == LR_FAILED)
+		return this->_unlock(lock, Image::invert(x, y, w, h, lock.data, this->width, this->height, april::rendersys->getNativeTextureFormat(this->format)));
+	}
+
+	bool DirectX9_Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity)
+	{
+		if (this->data != NULL)
+		{
+			return DirectX_Texture::insertAlphaMap(srcData, srcFormat, median, ambiguity);
+		}
+		Lock lock = this->_tryLock();
+		if (lock.isFailed())
 		{
 			return false;
 		}
-		D3DLOCKED_RECT srcLockRect;
-		IDirect3DSurface9* srcBuffer = NULL;
-		LOCK_RESULT srcResult = source->_tryLock(&srcBuffer, &srcLockRect, NULL);
-		if (srcResult == LR_FAILED)
+		return this->_unlock(lock, Image::insertAlphaMap(this->width, this->height, srcData, srcFormat, lock.data, april::rendersys->getNativeTextureFormat(this->format), median, ambiguity));
+	}
+
+	bool DirectX9_Texture::insertAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	{
+		DirectX9_Texture* source = dynamic_cast<DirectX9_Texture*>(texture);
+		if (source == NULL || !source->isLoaded() || source->width != this->width || source->height != this->height)
 		{
-			this->_unlock(buffer, lockResult, false);
 			return false;
 		}
-		unsigned char* thisData = (unsigned char*)lockRect.pBits;
-		unsigned char* srcData = (unsigned char*)srcLockRect.pBits;
-		unsigned char* c;
-		unsigned char* sc;
-		int i;
-		int j;
-		int alpha;
-		int min = (int)median - ambiguity / 2;
-		int max = (int)median + ambiguity / 2;
-		for_iterx (j, 0, this->height)
+		Lock lock;
+		lock.data = source->data;
+		if (lock.data == NULL)
 		{
-			for_iterx (i, 0, this->width)
+			lock = source->_tryLock();
+			if (lock.isFailed())
 			{
-				c = &thisData[(i + j * this->width) * 4];
-				sc = &srcData[(i + j * this->width) * 4];
-				alpha = (sc[0] + sc[1] + sc[2]) / 3;
-				if (alpha < min)
-				{
-					c[3] = 255;
-				}
-				else if (alpha >= max)
-				{
-					c[3] = 0;
-				}
-				else
-				{
-					c[3] = (max - alpha) * 255 / ambiguity;
-				}
+				return false;
 			}
 		}
-		source->_unlock(srcBuffer, srcResult, false);
-		this->_unlock(buffer, lockResult, true);
-		return true;
-		*/
+		bool result = this->insertAlphaMap(lock.data, source->format, median, ambiguity);
+		if (!lock.isFailed())
+		{
+			source->_unlock(lock, false);
+		}
+		return result;
 	}
 
 	IDirect3DSurface9* DirectX9_Texture::_getSurface()

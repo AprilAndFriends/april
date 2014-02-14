@@ -21,6 +21,9 @@
 #include "Texture.h"
 #include "RenderSystem.h"
 
+#define HROUND_GRECT(rect) hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h)
+#define HROUND_GVEC2(vec2) hround(vec2.x), hround(vec2.y)
+
 namespace april
 {
 	Image::Format Texture::FORMAT_ALPHA = Image::FORMAT_ALPHA; // DEPRECATED
@@ -336,23 +339,19 @@ namespace april
 		return (this->data != NULL && Image::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format, alpha) && this->_uploadDataToGpu(dx, dy, dw, dh));
 	}
 
-	bool Texture::rotateHue(float degrees)
+	bool Texture::rotateHue(int x, int y, int w, int h, float degrees)
 	{
-		// TODOaa - implement
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement rotateHue()!", april::rendersys->getName().c_str());
-		return false;
+		return (this->data != NULL && Image::rotateHue(x, y, w, h, degrees, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, w, h));
 	}
 
-	bool Texture::saturate(float factor)
+	bool Texture::saturate(int x, int y, int w, int h, float factor)
 	{
-		// TODOaa - implement
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement saturate()!", april::rendersys->getName().c_str());
-		return false;
+		return (this->data != NULL && Image::saturate(x, y, w, h, factor, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, w, h));
 	}
 
-	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat)
+	bool Texture::invert(int x, int y, int w, int h)
 	{
-		return (this->data != NULL && Image::insertAlphaMap(this->width, this->height, srcData, srcFormat, this->data, this->format) && this->_uploadDataToGpu(0, 0, this->width, this->height));
+		return (this->data != NULL && Image::invert(x, y, w, h, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, w, h));
 	}
 
 	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity)
@@ -364,12 +363,12 @@ namespace april
 
 	Color Texture::getPixel(gvec2 position)
 	{
-		return this->getPixel(hround(position.x), hround(position.y));
+		return this->getPixel(HROUND_GVEC2(position));
 	}
 
 	bool Texture::setPixel(gvec2 position, Color color)
 	{
-		return this->setPixel(hround(position.x), hround(position.y), color);
+		return this->setPixel(HROUND_GVEC2(position), color);
 	}
 
 	Color Texture::getInterpolatedPixel(gvec2 position)
@@ -379,7 +378,7 @@ namespace april
 
 	bool Texture::fillRect(grect rect, Color color)
 	{
-		return this->fillRect(hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h), color);
+		return this->fillRect(HROUND_GRECT(rect), color);
 	}
 
 	bool Texture::copyPixelData(unsigned char** output)
@@ -389,27 +388,121 @@ namespace april
 
 	bool Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		return this->write(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destPosition.x), hround(destPosition.y), srcData, srcWidth, srcHeight, srcFormat);
+		return this->write(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), srcData, srcWidth, srcHeight, srcFormat);
 	}
 
-	/*
-	bool Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool Texture::write(grect srcRect, gvec2 destPosition, Texture* texture)
 	{
-		return this->write(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destPosition.x), hround(destPosition.y), srcData, srcWidth, srcHeight, srcFormat);
+		return this->write(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), texture);
 	}
 
-	bool Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, Image* image)
 	{
-		return this->write(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destPosition.x), hround(destPosition.y), srcData, srcWidth, srcHeight, srcFormat);
+		return this->write(sx, sy, sw, sh, dx, dy, image->data, image->w, image->h, image->format);
 	}
-	*/
+
+	bool Texture::write(grect srcRect, gvec2 destPosition, Image* image)
+	{
+		return this->write(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), image->data, image->w, image->h, image->format);
+	}
 
 	bool Texture::writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		return this->writeStretch(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destRect.x), hround(destRect.y), hround(destRect.w), hround(destRect.h), srcData, srcWidth, srcHeight, srcFormat);
+		return this->writeStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), srcData, srcWidth, srcHeight, srcFormat);
 	}
 
-	// TODOaa - blit goes here
-	// TODOaa - blitStretch goes here
+	bool Texture::writeStretch(grect srcRect, grect destRect, Texture* texture)
+	{
+		return this->writeStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), texture);
+	}
+
+	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image)
+	{
+		return this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, image->data, image->w, image->h, image->format);
+	}
+
+	bool Texture::writeStretch(grect srcRect, grect destRect, Image* image)
+	{
+		return this->writeStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), image->data, image->w, image->h, image->format);
+	}
+
+	bool Texture::blit(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	{
+		return this->blit(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), srcData, srcWidth, srcHeight, srcFormat, alpha);
+	}
+
+	bool Texture::blit(grect srcRect, gvec2 destPosition, Texture* texture, unsigned char alpha)
+	{
+		return this->blit(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), texture, alpha);
+	}
+
+	bool Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* image, unsigned char alpha)
+	{
+		return this->blit(sx, sy, sw, sh, dx, dy, image->data, image->w, image->h, image->format, alpha);
+	}
+
+	bool Texture::blit(grect srcRect, gvec2 destPosition, Image* image, unsigned char alpha)
+	{
+		return this->blit(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), image->data, image->w, image->h, image->format, alpha);
+	}
+
+	bool Texture::blitStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	{
+		return this->blitStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), srcData, srcWidth, srcHeight, srcFormat, alpha);
+	}
+
+	bool Texture::blitStretch(grect srcRect, grect destRect, Texture* texture, unsigned char alpha)
+	{
+		return this->blitStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), texture, alpha);
+	}
+
+	bool Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image, unsigned char alpha)
+	{
+		return this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, image->data, image->w, image->h, image->format, alpha);
+	}
+
+	bool Texture::blitStretch(grect srcRect, grect destRect, Image* image, unsigned char alpha)
+	{
+		return this->blitStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), image->data, image->w, image->h, image->format, alpha);
+	}
+
+	bool Texture::rotateHue(grect rect, float degrees)
+	{
+		return this->rotateHue(HROUND_GRECT(rect), degrees);
+	}
+
+	bool Texture::saturate(grect rect, float factor)
+	{
+		return this->saturate(HROUND_GRECT(rect), factor);
+	}
+
+	bool Texture::invert(grect rect)
+	{
+		return this->invert(HROUND_GRECT(rect));
+	}
+
+	bool Texture::insertAlphaMap(Image* image, unsigned char median, int ambiguity)
+	{
+		if (image->w != this->width || image->h != this->height)
+		{
+			return false;
+		}
+		return this->insertAlphaMap(image->data, image->format, median, ambiguity);
+	}
+
+	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat)
+	{
+		return this->insertAlphaMap(srcData, srcFormat, 0, 0);
+	}
+
+	bool Texture::insertAlphaMap(Texture* texture)
+	{
+		return this->insertAlphaMap(texture, 0, 0);
+	}
+	
+	bool Texture::insertAlphaMap(Image* image)
+	{
+		return this->insertAlphaMap(image->data, image->format, 0, 0);
+	}
 
 }

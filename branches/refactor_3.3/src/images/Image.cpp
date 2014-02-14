@@ -194,11 +194,14 @@ namespace april
 		return (this->isValid() && Image::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->w, this->h, this->format, alpha));
 	}
 
-	// TODOaa - more functions go here
-
-	bool Image::insertAlphaMap(unsigned char* srcData, Format srcFormat)
+	bool Image::rotateHue(int x, int y, int w, int h, float degrees)
 	{
-		return (this->isValid() && Image::insertAlphaMap(this->w, this->h, srcData, srcFormat, this->data, this->format));
+		return (this->isValid() && Image::rotateHue(x, y, w, h, degrees, this->data, this->w, this->h, this->format));
+	}
+
+	bool Image::saturate(int x, int y, int w, int h, float factor)
+	{
+		return (this->isValid() && Image::saturate(x, y, w, h, factor, this->data, this->w, this->h, this->format));
 	}
 
 	bool Image::insertAlphaMap(unsigned char* srcData, Format srcFormat, unsigned char median, int ambiguity)
@@ -291,6 +294,31 @@ namespace april
 	bool Image::blitStretch(grect srcRect, grect destRect, Image* other, unsigned char alpha)
 	{
 		return this->blitStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), other->data, other->w, other->h, other->format, alpha);
+	}
+
+	bool Image::rotateHue(grect rect, float degrees)
+	{
+		return this->rotateHue(HROUND_GRECT(rect), degrees);
+	}
+
+	bool Image::saturate(grect rect, float factor)
+	{
+		return this->saturate(HROUND_GRECT(rect), factor);
+	}
+
+	bool Image::insertAlphaMap(Image* image, Image::Format srcFormat, unsigned char median, int ambiguity)
+	{
+		return this->insertAlphaMap(image->data, image->format, median, ambiguity);
+	}
+
+	bool Image::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat)
+	{
+		return this->insertAlphaMap(srcData, srcFormat, 0, 0);
+	}
+
+	bool Image::insertAlphaMap(Image* image)
+	{
+		return this->insertAlphaMap(image->data, image->format, 0, 0);
 	}
 
 	// loading/creating functions
@@ -1059,37 +1087,108 @@ namespace april
 		return result;
 	}
 
-	bool Image::insertAlphaMap(int w, int h, unsigned char* srcData, Image::Format srcFormat, unsigned char* destData, Image::Format destFormat)
+	bool Image::rotateHue(int x, int y, int w, int h, float degrees, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		if (!CHECK_ALPHA_FORMAT(destFormat)) // not a format that supports an alpha channel
+		if (!Image::correctRect(x, y, w, h, srcWidth, srcHeight))
 		{
 			return false;
 		}
 		int srcBpp = Image::getFormatBpp(srcFormat);
-		int destBpp = Image::getFormatBpp(destFormat);
-		int destAlpha = CHECK_LEFT_RGB(destFormat) ? 3 : 0;
-		int i = 0;
-		int srcIndex = 0;
-		if (srcBpp > 1)
+		if (srcBpp == 1)
 		{
-			srcIndex = 1;
+			return true;
 		}
-		int x = 0;
-		int y = 0;
-		if (srcBpp == 1 || srcBpp == 3 || srcBpp == 4)
+		float range = hmodf(degrees / 360.0f, 1.0f);
+		if (range == 0.0f)
 		{
-			for_iterx (y, 0, h)
+			return true;
+		}
+		int sr = -1;
+		int sg = -1;
+		int sb = -1;
+		Image::_getFormatIndices(srcFormat, &sr, &sg, &sb, NULL);
+		float _h;
+		float _s;
+		float _l;
+		int i;
+		for_iter (dy, 0, h)
+		{
+			for_iter (dx, 0, w)
 			{
-				for_iterx (x, 0, w)
+				i = ((x + dx) + (y + dy) * srcWidth) * srcBpp;
+				april::rgbToHsl(srcData[i + sr], srcData[i + sg], srcData[i + sb], &_h, &_s, &_l);
+				april::hslToRgb(hmodf(_h + range, 1.0f), _s, _l, &srcData[i + sr], &srcData[i + sg], &srcData[i + sb]);
+			}
+		}
+		return true;
+	}
+
+	bool Image::saturate(int x, int y, int w, int h, float factor, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		if (!Image::correctRect(x, y, w, h, srcWidth, srcHeight))
+		{
+			return false;
+		}
+		int srcBpp = Image::getFormatBpp(srcFormat);
+		if (srcBpp == 1)
+		{
+			return true;
+		}
+		int sr = -1;
+		int sg = -1;
+		int sb = -1;
+		Image::_getFormatIndices(srcFormat, &sr, &sg, &sb, NULL);
+		float _h;
+		float _s;
+		float _l;
+		int i;
+		for_iter (dy, 0, h)
+		{
+			for_iter (dx, 0, w)
+			{
+				i = ((x + dx) + (y + dy) * srcWidth) * srcBpp;
+				april::rgbToHsl(srcData[i + sr], srcData[i + sg], srcData[i + sb], &_h, &_s, &_l);
+				april::hslToRgb(_h, hclamp(_s * factor, 0.0f, 1.0f), _l, &srcData[i + sr], &srcData[i + sg], &srcData[i + sb]);
+			}
+		}
+		return true;
+	}
+
+	bool Image::invert(int x, int y, int w, int h, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		if (!Image::correctRect(x, y, w, h, srcWidth, srcHeight))
+		{
+			return false;
+		}
+		int i;
+		int srcBpp = Image::getFormatBpp(srcFormat);
+		if (srcBpp == 1)
+		{
+			for_iter (dy, 0, h)
+			{
+				for_iter (dx, 0, w)
 				{
-					i = (x + y * w);
-					// takes second color channel for alpha value, guaranteed to always be either R, G or B, but never A
-					destData[i * destBpp + destAlpha] = srcData[i * srcBpp + srcIndex];
+					i = ((x + dx) + (y + dy) * srcWidth);
+					srcData[i] = 255 - srcData[i];
 				}
 			}
 			return true;
 		}
-		return false;
+		int sr = -1;
+		int sg = -1;
+		int sb = -1;
+		Image::_getFormatIndices(srcFormat, &sr, &sg, &sb, NULL);
+		for_iter (dy, 0, h)
+		{
+			for_iter (dx, 0, w)
+			{
+				i = ((x + dx) + (y + dy) * srcWidth) * srcBpp;
+				srcData[i + sr] = 255 - srcData[i + sr];
+				srcData[i + sg] = 255 - srcData[i + sg];
+				srcData[i + sb] = 255 - srcData[i + sb];
+			}
+		}
+		return true;
 	}
 
 	bool Image::insertAlphaMap(int w, int h, unsigned char* srcData, Image::Format srcFormat, unsigned char* destData, Image::Format destFormat, unsigned char median, int ambiguity)
@@ -1106,31 +1205,47 @@ namespace april
 			Image::_getFormatIndices(srcFormat, &sr, NULL, NULL, NULL);
 			int da = -1;
 			Image::_getFormatIndices(destFormat, NULL, NULL, NULL, &da);
-			int min = (int)median - ambiguity / 2;
-			int max = (int)median + ambiguity / 2;
 			unsigned char* src = NULL;
 			unsigned char* dest = NULL;
 			int i = 0;
 			int x = 0;
 			int y = 0;
-			for_iterx (y, 0, h)
+			if (ambiguity == 0)
 			{
-				for_iterx (x, 0, w)
+				for_iterx (y, 0, h)
 				{
-					i = (x + y * w);
-					src = &srcData[i * srcBpp];
-					dest = &destData[i * destBpp];
-					if (src[sr] < min)
+					for_iterx (x, 0, w)
 					{
-						dest[da] = 255;
+						i = (x + y * w);
+						// takes the red second color channel for alpha value
+						destData[i * destBpp + da] = srcData[i * srcBpp + sr];
 					}
-					else if (src[sr] >= max)
+				}
+			}
+			else
+			{
+				int min = (int)median - ambiguity / 2;
+				int max = (int)median + ambiguity / 2;
+				for_iterx (y, 0, h)
+				{
+					for_iterx (x, 0, w)
 					{
-						dest[da] = 0;
-					}
-					else
-					{
-						dest[da] = (max - src[sr]) * 255 / ambiguity;
+						i = (x + y * w);
+						src = &srcData[i * srcBpp];
+						dest = &destData[i * destBpp];
+						// takes the red second color channel for alpha value
+						if (src[sr] < min)
+						{
+							dest[da] = 255;
+						}
+						else if (src[sr] >= max)
+						{
+							dest[da] = 0;
+						}
+						else
+						{
+							dest[da] = (max - src[sr]) * 255 / ambiguity;
+						}
 					}
 				}
 			}
