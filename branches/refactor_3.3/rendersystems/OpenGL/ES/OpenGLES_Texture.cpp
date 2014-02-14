@@ -25,16 +25,5 @@ namespace april
 	{
 	}
 
-	bool OpenGLES_Texture::copyPixelData(unsigned char** output, Image::Format format)
-	{
-		if (this->type != TYPE_MANAGED)
-		{
-			hlog::warn(april::logTag, "Reading texture not possible: " + this->_getInternalName());
-			return false;
-		}
-		// TODOa - there has to be a way how this could be done
-		return OpenGL_Texture::copyPixelData(output);
-	}
-	
 }
 #endif

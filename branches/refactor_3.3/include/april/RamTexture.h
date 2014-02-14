@@ -52,7 +52,7 @@ namespace april
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
 		void _assignFormat();
 		Lock _tryLockSystem(int x, int y, int w, int h);
-		bool _unlockSystem(Lock& lock);
+		bool _unlockSystem(Lock& lock, bool update);
 		
 	};
 
