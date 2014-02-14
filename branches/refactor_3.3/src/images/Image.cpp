@@ -873,12 +873,12 @@ namespace april
 			}
 			return true;
 		}
-		int redIndex = -1;
-		int greenIndex = -1;
-		int blueIndex = -1;
+		int dr = -1;
+		int dg = -1;
+		int db = -1;
 		if (destBpp == 3 || !CHECK_ALPHA_FORMAT(destFormat)) // 3 BPP and 4 BPP without alpha
 		{
-			Image::_getFormatIndices(destFormat, &redIndex, &greenIndex, &blueIndex, NULL);
+			Image::_getFormatIndices(destFormat, &dr, &dg, &db, NULL);
 			for_iterx (y, 0, sh)
 			{
 				for_iterx (x, 0, sw)
@@ -886,17 +886,17 @@ namespace april
 					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
 					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
 					c = src[0] * alpha;
-					dest[redIndex] = (c + dest[redIndex] * a1) / 255;
-					dest[greenIndex] = (c + dest[greenIndex] * a1) / 255;
-					dest[blueIndex] = (c + dest[blueIndex] * a1) / 255;
+					dest[dr] = (c + dest[dr] * a1) / 255;
+					dest[dg] = (c + dest[dg] * a1) / 255;
+					dest[db] = (c + dest[db] * a1) / 255;
 				}
 			}
 			return true;
 		}
-		int alphaIndex = -1;
+		int da = -1;
 		if (destBpp == 4) // 4 BPP with alpha
 		{
-			Image::_getFormatIndices(destFormat, &redIndex, &greenIndex, &blueIndex, &alphaIndex);
+			Image::_getFormatIndices(destFormat, &dr, &dg, &db, &da);
 			for_iterx (y, 0, sh)
 			{
 				for_iterx (x, 0, sw)
@@ -904,10 +904,10 @@ namespace april
 					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
 					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
 					c = src[0] * alpha;
-					dest[redIndex] = (c + dest[redIndex] * a1) / 255;
-					dest[greenIndex] = (c + dest[greenIndex] * a1) / 255;
-					dest[blueIndex] = (c + dest[blueIndex] * a1) / 255;
-					dest[alphaIndex] = alpha + dest[alphaIndex] * a1 / 255;
+					dest[dr] = (c + dest[dr] * a1) / 255;
+					dest[dg] = (c + dest[dg] * a1) / 255;
+					dest[db] = (c + dest[db] * a1) / 255;
+					dest[da] = alpha + dest[da] * a1 / 255;
 				}
 			}
 			return true;
@@ -1053,7 +1053,7 @@ namespace april
 					a0 = src[sa] * alpha / 255;
 					if (a0 > 0)
 					{
-						a1 = 255 - a0;
+						a1 = (255 - a0);
 						dest[dr] = (src[sr] * a0 + dest[dr] * a1) / 255;
 						dest[dg] = (src[sg] * a0 + dest[dg] * a1) / 255;
 						dest[db] = (src[sb] * a0 + dest[db] * a1) / 255;

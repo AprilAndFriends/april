@@ -49,7 +49,7 @@ namespace april
 	{
 	}
 
-	bool OpenGL_Texture::_createInternalTexture(unsigned char* data, int size)
+	bool OpenGL_Texture::_createInternalTexture(unsigned char* data, int size, Type type)
 	{
 		glGenTextures(1, &this->textureId);
 		this->_setCurrentTexture();
@@ -162,6 +162,11 @@ namespace april
 
 	bool OpenGL_Texture::clear()
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
 			return Texture::clear();
@@ -177,6 +182,11 @@ namespace april
 
 	Color OpenGL_Texture::getPixel(int x, int y)
 	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Reading texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
 			return Texture::getPixel(x, y);
@@ -194,6 +204,11 @@ namespace april
 
 	bool OpenGL_Texture::setPixel(int x, int y, Color color)
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
 			return Texture::setPixel(x, y, color);
@@ -210,6 +225,11 @@ namespace april
 	
 	bool OpenGL_Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (w == 1 && h == 1)
 		{
 			return this->setPixel(x, y, color);
@@ -234,9 +254,24 @@ namespace april
 		delete [] writeData;
 		return result;
 	}
+
+	bool OpenGL_Texture::copyPixelData(unsigned char** output, Image::Format format)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Reading texture not possible: " + this->_getInternalName());
+			return false;
+		}
+		return Texture::copyPixelData(output, format);
+	}
 	
 	bool OpenGL_Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
 			return Texture::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
@@ -272,12 +307,16 @@ namespace april
 		{
 			return false;
 		}
-		Image::Format srcFormat = april::rendersys->getNativeTextureFormat(source->format);
+		Image::Format srcFormat = source->format;
 		unsigned char* data = source->data;
 		bool fromGpu = (data == NULL);
-		if (fromGpu && !source->copyPixelData(&data, srcFormat))
+		if (fromGpu)
 		{
-			return false;
+			if (!source->copyPixelData(&data, srcFormat))
+			{
+				return false;
+			}
+			srcFormat = april::rendersys->getNativeTextureFormat(srcFormat);
 		}
 		bool result = this->write(sx, sy, sw, sh, dx, dy, data, source->width, source->height, srcFormat);
 		if (fromGpu)
@@ -289,6 +328,11 @@ namespace april
 
 	bool OpenGL_Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
 			return Texture::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat);
@@ -318,12 +362,16 @@ namespace april
 		{
 			return false;
 		}
-		Image::Format srcFormat = april::rendersys->getNativeTextureFormat(source->format);
+		Image::Format srcFormat = source->format;
 		unsigned char* data = source->data;
 		bool fromGpu = (data == NULL);
-		if (fromGpu && !source->copyPixelData(&data, srcFormat))
+		if (fromGpu)
 		{
-			return false;
+			if (!source->copyPixelData(&data, srcFormat))
+			{
+				return false;
+			}
+			srcFormat = april::rendersys->getNativeTextureFormat(srcFormat);
 		}
 		bool result = this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, data, source->width, source->height, srcFormat);
 		if (fromGpu)
@@ -335,6 +383,11 @@ namespace april
 
 	bool OpenGL_Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
 			return Texture::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, alpha);
@@ -381,12 +434,16 @@ namespace april
 		{
 			return false;
 		}
-		Image::Format srcFormat = april::rendersys->getNativeTextureFormat(source->format);
+		Image::Format srcFormat = source->format;
 		unsigned char* data = source->data;
 		bool fromGpu = (data == NULL);
-		if (fromGpu && !source->copyPixelData(&data, srcFormat))
+		if (fromGpu)
 		{
-			return false;
+			if (!source->copyPixelData(&data, srcFormat))
+			{
+				return false;
+			}
+			srcFormat = april::rendersys->getNativeTextureFormat(srcFormat);
 		}
 		bool result = this->blit(sx, sy, sw, sh, dx, dy, data, source->width, source->height, srcFormat, alpha);
 		if (fromGpu)
@@ -398,6 +455,11 @@ namespace april
 
 	bool OpenGL_Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
 			return Texture::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, alpha);
@@ -444,12 +506,16 @@ namespace april
 		{
 			return false;
 		}
-		Image::Format srcFormat = april::rendersys->getNativeTextureFormat(source->format);
+		Image::Format srcFormat = source->format;
 		unsigned char* data = source->data;
 		bool fromGpu = (data == NULL);
-		if (fromGpu && !source->copyPixelData(&data, srcFormat))
+		if (fromGpu)
 		{
-			return false;
+			if (!source->copyPixelData(&data, srcFormat))
+			{
+				return false;
+			}
+			srcFormat = april::rendersys->getNativeTextureFormat(srcFormat);
 		}
 		bool result = this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, data, source->width, source->height, srcFormat, alpha);
 		if (fromGpu)
@@ -461,6 +527,11 @@ namespace april
 
 	bool OpenGL_Texture::rotateHue(int x, int y, int w, int h, float degrees)
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
 			return Texture::rotateHue(x, y, w, h, degrees);
@@ -502,6 +573,11 @@ namespace april
 
 	bool OpenGL_Texture::saturate(int x, int y, int w, int h, float factor)
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
 			return Texture::saturate(x, y, w, h, factor);
@@ -543,6 +619,11 @@ namespace april
 
 	bool OpenGL_Texture::invert(int x, int y, int w, int h)
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
 			return Texture::invert(x, y, w, h);
@@ -584,6 +665,11 @@ namespace april
 
 	bool OpenGL_Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity)
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
 			return Texture::insertAlphaMap(srcData, srcFormat, median, ambiguity);
@@ -612,12 +698,16 @@ namespace april
 		{
 			return false;
 		}
-		Image::Format srcFormat = april::rendersys->getNativeTextureFormat(source->format);
+		Image::Format srcFormat = source->format;
 		unsigned char* data = source->data;
 		bool fromGpu = (data == NULL);
-		if (fromGpu && !source->copyPixelData(&data, srcFormat))
+		if (fromGpu)
 		{
-			return false;
+			if (!source->copyPixelData(&data, srcFormat))
+			{
+				return false;
+			}
+			srcFormat = april::rendersys->getNativeTextureFormat(srcFormat);
 		}
 		bool result = this->insertAlphaMap(data, srcFormat, median, ambiguity);
 		if (fromGpu)
@@ -626,7 +716,6 @@ namespace april
 		}
 		return result;
 	}
-
 
 	bool OpenGL_Texture::_uploadDataToGpu(int x, int y, int w, int h)
 	{

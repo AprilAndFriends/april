@@ -95,7 +95,7 @@ namespace april
 		return this->source->setPixel(x, y, color);
 	}
 
-	bool RamTexture::_createInternalTexture(unsigned char* data, int size)
+	bool RamTexture::_createInternalTexture(unsigned char* data, int size, Type type)
 	{
 		return true;
 	}

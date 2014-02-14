@@ -55,8 +55,6 @@ namespace april
 		bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity);
 		bool insertAlphaMap(Texture* texture, unsigned char median, int ambiguity);
 
-		void restore(); // TODOaa - currently only a hack for rendertarget textures
-
 	protected:
 		IDirect3DSurface9* d3dSurface;
 		IDirect3DTexture9* d3dTexture;
@@ -70,6 +68,10 @@ namespace april
 		public:
 			IDirect3DSurface9* buffer;
 			unsigned char* data;
+			int x;
+			int y;
+			int w;
+			int h;
 
 			Lock();
 			~Lock();
@@ -79,8 +81,8 @@ namespace april
 			HL_DEFINE_IS(renderTarget, RenderTarget);
 
 			void activateFail();
-			void activateLock(unsigned char* data);
-			void activateRenderTarget(unsigned char* data);
+			void activateLock(int x, int y, int w, int h, unsigned char* data);
+			void activateRenderTarget(int x, int y, int w, int h, unsigned char* data);
 
 		protected:
 			bool locked;
@@ -89,7 +91,7 @@ namespace april
 
 		};
 
-		bool _createInternalTexture(unsigned char* data, int sizea);
+		bool _createInternalTexture(unsigned char* data, int size, Type type);
 		void _assignFormat();
 
 		IDirect3DSurface9* _getSurface();

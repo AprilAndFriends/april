@@ -382,14 +382,4 @@ namespace april
 		return nVertices;
 	}
 	
-	void RenderSystem::_registerTexture(Texture* texture)
-	{
-		this->textures += texture;
-	}
-	
-	void RenderSystem::_unregisterTexture(Texture* texture)
-	{
-		this->textures -= texture;
-	}
-	
 }

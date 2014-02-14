@@ -40,7 +40,7 @@ namespace april
 		this->filter = FILTER_LINEAR;
 		this->addressMode = ADDRESS_WRAP;
 		this->data = NULL;
-		april::rendersys->_registerTexture(this);
+		april::rendersys->textures += this;
 	}
 
 	bool Texture::_create(chstr filename, Texture::Type type)
@@ -67,7 +67,7 @@ namespace april
 		this->filename = "";
 		this->width = w;
 		this->height = h;
-		this->type = type;
+		this->type = TYPE_MANAGED; // so the write call later on goes through
 		int size = 0;
 		if (type != TYPE_VOLATILE)
 		{
@@ -83,11 +83,12 @@ namespace april
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
-		if (!this->_createInternalTexture(data, size))
+		if (!this->_createInternalTexture(data, size, type))
 		{
 			return false;
 		}
 		this->write(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, format);
+		this->type = type;
 		return true;
 	}
 
@@ -101,7 +102,7 @@ namespace april
 		this->filename = "";
 		this->width = w;
 		this->height = h;
-		this->type = type;
+		this->type = TYPE_MANAGED; // so the write call later on goes through
 		int size = 0;
 		if (type != TYPE_VOLATILE)
 		{
@@ -117,20 +118,18 @@ namespace april
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
-		if (!this->_createInternalTexture(this->data, size))
+		if (!this->_createInternalTexture(this->data, size, type))
 		{
 			return false;
 		}
-		if (color != april::Color::Clear)
-		{
-			this->fillRect(0, 0, this->width, this->height, color);
-		}
+		this->fillRect(0, 0, this->width, this->height, color);
+		this->type = type;
 		return true;
 	}
 
 	Texture::~Texture()
 	{
-		april::rendersys->_unregisterTexture(this);
+		april::rendersys->textures -= this;
 		if (this->data != NULL)
 		{
 			delete this->data;
@@ -214,7 +213,7 @@ namespace april
 			size = this->getByteSize();
 		}
 		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
-		if (currentData == NULL && (type != TYPE_VOLATILE || this->width != 0 && this->height != 0))
+		if (currentData == NULL && (type != TYPE_VOLATILE || this->width == 0 || this->height == 0))
 		{
 			if (this->filename == "")
 			{
@@ -240,9 +239,8 @@ namespace april
 			delete image;
 		}
 		this->_assignFormat();
-		if (!this->_createInternalTexture(currentData, size))
+		if (!this->_createInternalTexture(currentData, size, this->type))
 		{
-			hlog::error(april::logTag, "Failed to create DX9 texture!");
 			if (currentData != NULL && this->data != currentData)
 			{
 				delete [] currentData;
@@ -251,7 +249,10 @@ namespace april
 		}
 		if (currentData != NULL)
 		{
+			Type type = this->type;
+			this->type = TYPE_MANAGED; // so the write call right below goes through
 			this->write(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
+			this->type = type;
 			if (this->type != TYPE_VOLATILE && (this->type != TYPE_IMMUTABLE || this->filename == ""))
 			{
 				if (this->data != currentData)
@@ -301,6 +302,11 @@ namespace april
 
 	Color Texture::getInterpolatedPixel(float x, float y)
 	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Reading texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		Color color = Color::Clear;
 		if (this->data != NULL)
 		{
