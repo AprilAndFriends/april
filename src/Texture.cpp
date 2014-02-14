@@ -341,7 +341,7 @@ namespace april
 	{
 		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		Lock lock = this->_tryLock();
@@ -357,7 +357,7 @@ namespace april
 	{
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Reading texture not possible: " + this->_getInternalName());
+			hlog::warn(april::logTag, "Cannot read texture: " + this->_getInternalName());
 			return false;
 		}
 		Color color = Color::Clear;
@@ -372,7 +372,7 @@ namespace april
 	{
 		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		Lock lock = this->_tryLock(x, y, 1, 1);
@@ -383,11 +383,26 @@ namespace april
 		return this->_unlock(lock, Image::setPixel(lock.x, lock.y, color, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
 	}
 
+	Color Texture::getInterpolatedPixel(float x, float y)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + this->_getInternalName());
+			return false;
+		}
+		Color color = Color::Clear;
+		if (this->data != NULL)
+		{
+			color = Image::getInterpolatedPixel(x, y, this->data, this->width, this->height, this->format);
+		}
+		return color;
+	}
+
 	bool Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
 		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		if (w == 1 && h == 1)
@@ -401,85 +416,276 @@ namespace april
 		}
 		return this->_unlock(lock, Image::fillRect(lock.x, lock.y, lock.w, lock.h, color, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
 	}
-	/*
-	bool Texture::setPixel(int x, int y, Color color)
+
+	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
 	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + this->_getInternalName());
+			return false;
+		}
+		if (!this->isLoaded())
+		{
+			return false;
+		}
 		Lock lock = this->_tryLock();
 		if (lock.failed)
 		{
 			return false;
 		}
-		memset(lock.data, 0, this->getByteSize());
-		return this->_unlock(lock, true);
-
-		return (this->data != NULL && Image::setPixel(x, y, color, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, 1, 1));
-	}
-	*/
-
-	Color Texture::getInterpolatedPixel(float x, float y)
-	{
-		if (this->type != TYPE_MANAGED)
-		{
-			hlog::warn(april::logTag, "Reading texture not possible: " + this->_getInternalName());
-			return false;
-		}
-		Color color = Color::Clear;
-		if (this->data != NULL)
-		{
-			color = Image::getInterpolatedPixel(x, y, this->data, this->width, this->height, this->format);
-		}
-		return color;
-	}
-	/*
-	bool Texture::fillRect(int x, int y, int w, int h, Color color)
-	{
-		return (this->data != NULL && Image::fillRect(x, y, w, h, color, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, w, h));
-	}
-	*/
-
-	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
-	{
-		return (this->data != NULL && Image::convertToFormat(this->width, this->height, this->data, this->format, output, format, false));
+		bool result = Image::convertToFormat(lock.dataWidth, lock.dataHeight, lock.data, lock.format, output, format, false);
+		this->_unlock(lock, false);
+		return result;
 	}
 
 	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		return (this->data != NULL && Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(dx, dy, sw, sh));
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(dx, dy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::write(sx, sy, sw, sh, lock.x, lock.y, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+	}
+
+	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		if (texture->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			return false;
+		}
+		if (texture == NULL || !texture->isLoaded())
+		{
+			return false;
+		}
+		Lock lock = texture->_tryLock(sx, sy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = this->write(lock.dx, lock.dy, lock.w, lock.h, dx, dy, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
+		texture->_unlock(lock, false);
+		return result;
 	}
 
 	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		return (this->data != NULL && Image::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(dx, dy, dw, dh));
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(dx, dy, dw, dh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::writeStretch(sx, sy, sw, sh, lock.x, lock.y, lock.w, lock.h, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+	}
+
+	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		if (texture->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			return false;
+		}
+		if (texture == NULL || !texture->isLoaded())
+		{
+			return false;
+		}
+		Lock lock = texture->_tryLock(sx, sy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = this->writeStretch(lock.dx, lock.dy, lock.w, lock.h, dx, dy, dw, dh, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
+		texture->_unlock(lock, false);
+		return result;
 	}
 
 	bool Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
-		return (this->data != NULL && Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format, alpha) && this->_uploadDataToGpu(dx, dy, sw, sh));
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(dx, dy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::blit(sx, sy, sw, sh, lock.x, lock.y, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha));
+	}
+
+	bool Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		if (texture->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			return false;
+		}
+		if (texture == NULL || !texture->isLoaded())
+		{
+			return false;
+		}
+		Lock lock = texture->_tryLock(sx, sy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = this->blit(lock.dx, lock.dy, lock.w, lock.h, dx, dy, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha);
+		texture->_unlock(lock, false);
+		return result;
 	}
 
 	bool Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
-		return (this->data != NULL && Image::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format, alpha) && this->_uploadDataToGpu(dx, dy, dw, dh));
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(dx, dy, dw, dh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::blitStretch(sx, sy, sw, sh, lock.x, lock.y, lock.w, lock.h, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha));
+	}
+
+	bool Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		if (texture->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			return false;
+		}
+		if (texture == NULL || !texture->isLoaded())
+		{
+			return false;
+		}
+		Lock lock = texture->_tryLock(sx, sy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = this->blitStretch(lock.dx, lock.dy, lock.w, lock.h, dx, dy, dw, dh, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha);
+		texture->_unlock(lock, false);
+		return result;
 	}
 
 	bool Texture::rotateHue(int x, int y, int w, int h, float degrees)
 	{
-		return (this->data != NULL && Image::rotateHue(x, y, w, h, degrees, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, w, h));
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(x, y, w, h);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::rotateHue(lock.x, lock.y, lock.w, lock.h, degrees, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
 	}
 
 	bool Texture::saturate(int x, int y, int w, int h, float factor)
 	{
-		return (this->data != NULL && Image::saturate(x, y, w, h, factor, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, w, h));
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(x, y, w, h);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::saturate(lock.x, lock.y, lock.w, lock.h, factor, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
 	}
 
 	bool Texture::invert(int x, int y, int w, int h)
 	{
-		return (this->data != NULL && Image::invert(x, y, w, h, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, w, h));
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(x, y, w, h);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::invert(lock.x, lock.y, lock.w, lock.h, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
 	}
 
 	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity)
 	{
-		return (this->data != NULL && Image::insertAlphaMap(this->width, this->height, srcData, srcFormat, this->data, this->format, median, ambiguity) && this->_uploadDataToGpu(0, 0, this->width, this->height));
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock();
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::insertAlphaMap(lock.dataWidth, lock.dataHeight, srcData, srcFormat, lock.data, lock.format, median, ambiguity));
+	}
+
+	bool Texture::insertAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		if (texture->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			return false;
+		}
+		if (texture == NULL || !texture->isLoaded() || texture->width != this->width || texture->height != this->height)
+		{
+			return false;
+		}
+		Lock lock = texture->_tryLock();
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = this->insertAlphaMap(lock.data, lock.format, median, ambiguity);
+		texture->_unlock(lock, false);
+		return result;
 	}
 
 	// overloads
@@ -628,11 +834,6 @@ namespace april
 		return this->insertAlphaMap(image->data, image->format, 0, 0);
 	}
 
-	Texture::Lock Texture::_tryLock()
-	{
-		return this->_tryLock(0, 0, this->width, this->height);
-	}
-
 	Texture::Lock Texture::_tryLock(int x, int y, int w, int h)
 	{
 		Lock lock;
@@ -647,9 +848,14 @@ namespace april
 		return lock;
 	}
 
+	Texture::Lock Texture::_tryLock()
+	{
+		return this->_tryLock(0, 0, this->width, this->height);
+	}
+
 	bool Texture::_unlock(Texture::Lock lock, bool update)
 	{
-		if (!this->_unlockSystem(lock) && !lock.failed && update)
+		if (!this->_unlockSystem(lock, update) && !lock.failed && update)
 		{
 			update = this->_uploadDataToGpu(lock.dx, lock.dy, lock.w, lock.h);
 		}
@@ -663,8 +869,8 @@ namespace april
 		{
 			return false;
 		}
-		bool result = Image::write(x, y, w, h, 0, 0, this->data, this->width, this->height, this->format, lock.data, lock.w, lock.h, april::rendersys->getNativeTextureFormat(this->format));
-		this->_unlockSystem(lock);
+		bool result = Image::write(x, y, w, h, lock.x, lock.y, this->data, this->width, this->height, this->format, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
+		this->_unlockSystem(lock, true);
 		return result;
 	}
 

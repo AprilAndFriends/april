@@ -109,9 +109,9 @@ namespace april
 		return Lock();
 	}
 
-	bool RamTexture::_unlockSystem(Lock& lock)
+	bool RamTexture::_unlockSystem(Lock& lock, bool update)
 	{
-		return false;
+		return true;
 	}
 
 	bool RamTexture::write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture)

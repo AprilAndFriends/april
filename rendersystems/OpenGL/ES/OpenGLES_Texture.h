@@ -16,9 +16,6 @@
 #ifndef APRIL_OPENGLES_TEXTURE_H
 #define APRIL_OPENGLES_TEXTURE_H
 
-#include <hltypes/hstring.h>
-
-#include "Color.h"
 #include "OpenGL_Texture.h"
 
 namespace april
@@ -28,8 +25,6 @@ namespace april
 	public:
 		OpenGLES_Texture();
 		~OpenGLES_Texture();
-
-		bool copyPixelData(unsigned char** output, Image::Format format);
 
 	};
 

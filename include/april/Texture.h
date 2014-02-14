@@ -77,51 +77,50 @@ namespace april
 
 		virtual bool isLoaded() = 0;
 		
-		virtual bool clear();
-		virtual Color getPixel(int x, int y);
-		virtual bool setPixel(int x, int y, Color color);
-		Color getInterpolatedPixel(float x, float y);
-		virtual bool fillRect(int x, int y, int w, int h, Color color);
-		virtual bool copyPixelData(unsigned char** output, Image::Format format);
-		virtual bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		virtual bool write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture) = 0;
-		virtual bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		virtual bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture) = 0;
-		virtual bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
-		virtual bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha = 255) = 0;
-		virtual bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
-		virtual bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha = 255) = 0;
-		virtual bool rotateHue(int x, int y, int w, int h, float degrees);
-		virtual bool saturate(int x, int y, int w, int h, float factor);
-		virtual bool invert(int x, int y, int w, int h);
-		/// @note srcData must be the same width and height as the image
-		virtual bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity);
-		virtual bool insertAlphaMap(Texture* texture, unsigned char median, int ambiguity) = 0;
-
+		bool clear();
+		Color getPixel(int x, int y);
 		Color getPixel(gvec2 position);
+		bool setPixel(int x, int y, Color color);
 		bool setPixel(gvec2 position, Color color);
+		Color getInterpolatedPixel(float x, float y);
 		Color getInterpolatedPixel(gvec2 position);
+		bool fillRect(int x, int y, int w, int h, Color color);
 		bool fillRect(grect rect, Color color);
+		bool copyPixelData(unsigned char** output, Image::Format format);
 		bool copyPixelData(unsigned char** output);
+		bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture);
 		bool write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		bool write(grect srcRect, gvec2 destPosition, Texture* texture);
 		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Image* image);
 		bool write(grect srcRect, gvec2 destPosition, Image* image);
+		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture);
 		bool writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		bool writeStretch(grect srcRect, grect destRect, Texture* texture);
 		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image);
 		bool writeStretch(grect srcRect, grect destRect, Image* image);
+		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha = 255);
 		bool blit(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
 		bool blit(grect srcRect, gvec2 destPosition, Texture* texture, unsigned char alpha = 255);
 		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* image, unsigned char alpha = 255);
 		bool blit(grect srcRect, gvec2 destPosition, Image* image, unsigned char alpha = 255);
+		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha = 255);
 		bool blitStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
 		bool blitStretch(grect srcRect, grect destRect, Texture* texture, unsigned char alpha = 255);
 		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image, unsigned char alpha = 255);
 		bool blitStretch(grect srcRect, grect destRect, Image* image, unsigned char alpha = 255);
+		bool rotateHue(int x, int y, int w, int h, float degrees);
 		bool rotateHue(grect rect, float degrees);
+		bool saturate(int x, int y, int w, int h, float factor);
 		bool saturate(grect rect, float factor);
+		bool invert(int x, int y, int w, int h);
 		bool invert(grect rect);
+		/// @note srcData must be the same width and height as the image
+		bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity);
+		bool insertAlphaMap(Texture* texture, unsigned char median, int ambiguity);
 		bool insertAlphaMap(Image* image, unsigned char median, int ambiguity);
 		bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat);
 		bool insertAlphaMap(Texture* texture);
@@ -145,8 +144,6 @@ namespace april
 			bool locked;
 			bool failed;
 			bool renderTarget;
-
-			HL_DEFINE_IS(failed, Failed); // TODOaa - remove
 
 			Lock();
 			~Lock();
@@ -181,7 +178,7 @@ namespace april
 		Lock _tryLock();
 		bool _unlock(Lock lock, bool update);
 		virtual Lock _tryLockSystem(int x, int y, int w, int h) = 0;
-		virtual bool _unlockSystem(Lock& lock) = 0;
+		virtual bool _unlockSystem(Lock& lock, bool update) = 0;
 		bool _uploadDataToGpu(int x, int y, int w, int h);
 
 	};
