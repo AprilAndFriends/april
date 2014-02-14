@@ -52,13 +52,14 @@ class UpdateDelegate : public april::UpdateDelegate
 	{
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);
-		april::rendersys->drawFilledRect(drawRect, april::Color::Grey);
+		april::rendersys->drawFilledRect(drawRect, april::Color(96, 96, 96));
 		manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 		april::rendersys->setTexture(manualTexture);
 		april::rendersys->render(april::RO_TRIANGLE_STRIP, dv, 4);
 		april::rendersys->setTexture(texture);
 		april::rendersys->drawTexturedRect(textureRect + offset, src);
-		april::rendersys->drawFilledRect(grect(0.0f, 0.0f, 100.0f, 75.0f), april::Color::Yellow);
+		april::rendersys->drawFilledRect(grect(0.0f, drawRect.h - 75.0f, 100.0f, 75.0f), april::Color::Yellow);
+		april::rendersys->drawFilledRect(grect(10.0f, drawRect.h - 65.0f, 80.0f, 55.0f), april::Color::Red);
 		return true;
 	}
 
@@ -170,9 +171,13 @@ void april_init(const harray<hstr>& args)
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w / 2;
 	textureRect.y = -textureRect.h / 2;
-	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::TYPE_VOLATILE);
-	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 100, 64, texture);
-	manualTexture->blitStretch(0, 0, texture->getWidth() * 0.5f, texture->getHeight() * 0.5f, 0, 64, 700, 200, texture, 224);
+	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::TYPE_MANAGED);
+	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 0, 0, texture);
+	manualTexture->invert(0, 0, 128, 256);
+	manualTexture->saturate(128, 0, 128, 128, 0.0f);
+	manualTexture->rotateHue(0, 128, 128, 128, 180.0f);
+	manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 64, 64, texture, 96);
+	manualTexture->blitStretch(0, 0, texture->getWidth() / 2, texture->getHeight(), 0, 64, 700, 200, texture, 224);
 }
 
 void april_destroy()

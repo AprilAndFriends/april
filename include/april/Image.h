@@ -72,12 +72,10 @@ namespace april
 		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
 		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
-		// TODOaa - rotateHue goes here
-		// TODOaa - saturate goes here
-
-		// TODOaa - implement median and ambiguity
+		bool rotateHue(int x, int y, int w, int h, float degrees);
+		bool saturate(int x, int y, int w, int h, float factor);
+		bool invert(int x, int y, int w, int h);
 		/// @note srcData must be the same width and height as the image
-		bool insertAlphaMap(unsigned char* srcData, Format srcFormat);
 		bool insertAlphaMap(unsigned char* srcData, Format srcFormat, unsigned char median, int ambiguity);
 		
 		Color getPixel(gvec2 position);
@@ -97,6 +95,12 @@ namespace april
 		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* other, unsigned char alpha = 255);
 		bool blitStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
 		bool blitStretch(grect srcRect, grect destRect, Image* other, unsigned char alpha = 255);
+		bool rotateHue(grect rect, float degrees);
+		bool saturate(grect rect, float factor);
+		bool invert(grect rect);
+		bool insertAlphaMap(Image* image, Format srcFormat, unsigned char median, int ambiguity);
+		bool insertAlphaMap(unsigned char* srcData, Format srcFormat);
+		bool insertAlphaMap(Image* image);
 
 		static Image* create(chstr filename);
 		static Image* create(chstr filename, Format format);
@@ -114,7 +118,9 @@ namespace april
 		static bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		static bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha = 255);
 		static bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha = 255);
-
+		static bool rotateHue(int x, int y, int w, int h, float degrees, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		static bool saturate(int x, int y, int w, int h, float factor, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		static bool invert(int x, int y, int w, int h, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat);
 		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat, unsigned char median, int ambiguity);
 

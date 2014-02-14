@@ -128,5 +128,10 @@ namespace april
 	{
 		return false;
 	}
+
+	bool RamTexture::insertAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	{
+		return false;
+	}
 		
 }

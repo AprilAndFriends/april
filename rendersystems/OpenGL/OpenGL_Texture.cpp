@@ -459,19 +459,174 @@ namespace april
 		return result;
 	}
 
-
-
-	bool OpenGL_Texture::rotateHue(float degrees)
+	bool OpenGL_Texture::rotateHue(int x, int y, int w, int h, float degrees)
 	{
-		// TODOaa
-		return false;
+		if (this->data != NULL)
+		{
+			return Texture::rotateHue(x, y, w, h, degrees);
+		}
+		if (!Image::correctRect(x, y, w, h, this->width, this->height))
+		{
+			return false;
+		}
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		unsigned char* data = NULL;
+		if (!this->copyPixelData(&data, nativeFormat))
+		{
+			return false;
+		}
+		if (!Image::rotateHue(x, y, w, h, degrees, data, this->width, this->height, nativeFormat))
+		{
+			delete [] data;
+			return false;
+		}
+		int dataBpp = Image::getFormatBpp(nativeFormat);
+		if (x == 0 && w == this->width)
+		{
+			this->_setCurrentTexture();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, this->glFormat, GL_UNSIGNED_BYTE, &data[(x + y * this->width) * dataBpp]);
+			delete [] data;
+			return true;
+		}
+		unsigned char* writeData = new unsigned char[w * h * dataBpp];
+		bool result = Image::write(x, y, w, h, 0, 0, data, this->width, this->height, nativeFormat, writeData, w, h, nativeFormat);
+		if (result)
+		{
+			this->_setCurrentTexture();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, this->glFormat, GL_UNSIGNED_BYTE, writeData);
+			delete [] writeData;
+		}
+		delete [] data;
+		return result;
 	}
 
-	bool OpenGL_Texture::saturate(float factor)
+	bool OpenGL_Texture::saturate(int x, int y, int w, int h, float factor)
 	{
-		// TODOaa
-		return false;
+		if (this->data != NULL)
+		{
+			return Texture::saturate(x, y, w, h, factor);
+		}
+		if (!Image::correctRect(x, y, w, h, this->width, this->height))
+		{
+			return false;
+		}
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		unsigned char* data = NULL;
+		if (!this->copyPixelData(&data, nativeFormat))
+		{
+			return false;
+		}
+		if (!Image::saturate(x, y, w, h, factor, data, this->width, this->height, nativeFormat))
+		{
+			delete [] data;
+			return false;
+		}
+		int dataBpp = Image::getFormatBpp(nativeFormat);
+		if (x == 0 && w == this->width)
+		{
+			this->_setCurrentTexture();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, this->glFormat, GL_UNSIGNED_BYTE, &data[(x + y * this->width) * dataBpp]);
+			delete [] data;
+			return true;
+		}
+		unsigned char* writeData = new unsigned char[w * h * dataBpp];
+		bool result = Image::write(x, y, w, h, 0, 0, data, this->width, this->height, nativeFormat, writeData, w, h, nativeFormat);
+		if (result)
+		{
+			this->_setCurrentTexture();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, this->glFormat, GL_UNSIGNED_BYTE, writeData);
+			delete [] writeData;
+		}
+		delete [] data;
+		return result;
 	}
+
+	bool OpenGL_Texture::invert(int x, int y, int w, int h)
+	{
+		if (this->data != NULL)
+		{
+			return Texture::invert(x, y, w, h);
+		}
+		if (!Image::correctRect(x, y, w, h, this->width, this->height))
+		{
+			return false;
+		}
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		unsigned char* data = NULL;
+		if (!this->copyPixelData(&data, nativeFormat))
+		{
+			return false;
+		}
+		if (!Image::invert(x, y, w, h, data, this->width, this->height, nativeFormat))
+		{
+			delete [] data;
+			return false;
+		}
+		int dataBpp = Image::getFormatBpp(nativeFormat);
+		if (x == 0 && w == this->width)
+		{
+			this->_setCurrentTexture();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, this->glFormat, GL_UNSIGNED_BYTE, &data[(x + y * this->width) * dataBpp]);
+			delete [] data;
+			return true;
+		}
+		unsigned char* writeData = new unsigned char[w * h * dataBpp];
+		bool result = Image::write(x, y, w, h, 0, 0, data, this->width, this->height, nativeFormat, writeData, w, h, nativeFormat);
+		if (result)
+		{
+			this->_setCurrentTexture();
+			glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, this->glFormat, GL_UNSIGNED_BYTE, writeData);
+			delete [] writeData;
+		}
+		delete [] data;
+		return result;
+	}
+
+	bool OpenGL_Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity)
+	{
+		if (this->data != NULL)
+		{
+			return Texture::insertAlphaMap(srcData, srcFormat, median, ambiguity);
+		}
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		unsigned char* data = NULL;
+		if (!this->copyPixelData(&data, nativeFormat))
+		{
+			return false;
+		}
+		if (!Image::insertAlphaMap(this->width, this->height, srcData, srcFormat, data, nativeFormat, median, ambiguity))
+		{
+			delete [] data;
+			return false;
+		}
+		this->_setCurrentTexture();
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, this->width, this->height, this->glFormat, GL_UNSIGNED_BYTE, data);
+		delete [] data;
+		return true;
+	}
+
+	bool OpenGL_Texture::insertAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	{
+		OpenGL_Texture* source = dynamic_cast<OpenGL_Texture*>(texture);
+		if (source == NULL || !source->isLoaded())
+		{
+			return false;
+		}
+		Image::Format srcFormat = april::rendersys->getNativeTextureFormat(source->format);
+		unsigned char* data = source->data;
+		bool fromGpu = (data == NULL);
+		if (fromGpu && !source->copyPixelData(&data, srcFormat))
+		{
+			return false;
+		}
+		bool result = this->insertAlphaMap(data, srcFormat, median, ambiguity);
+		if (fromGpu)
+		{
+			delete [] data;
+		}
+		return result;
+	}
+
 
 	bool OpenGL_Texture::_uploadDataToGpu(int x, int y, int w, int h)
 	{

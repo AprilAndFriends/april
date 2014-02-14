@@ -49,11 +49,11 @@ namespace april
 		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha = 255);
 		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
 		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha = 255);
-		
-
-		bool rotateHue(float degrees);
-		bool saturate(float factor);
-		bool insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
+		bool rotateHue(int x, int y, int w, int h, float degrees);
+		bool saturate(int x, int y, int w, int h, float factor);
+		bool invert(int x, int y, int w, int h);
+		bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity);
+		bool insertAlphaMap(Texture* texture, unsigned char median, int ambiguity);
 
 		void restore(); // TODOaa - currently only a hack for rendertarget textures
 
