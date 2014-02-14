@@ -128,6 +128,35 @@ namespace april
 		bool insertAlphaMap(Image* image);
 
 	protected:
+		struct Lock
+		{
+		public:
+			void* systemBuffer;
+			int x;
+			int y;
+			int w;
+			int h;
+			int dx;
+			int dy;
+			unsigned char* data;
+			int dataWidth;
+			int dataHeight;
+			Image::Format format;
+			bool locked;
+			bool failed;
+			bool renderTarget;
+
+			HL_DEFINE_IS(failed, Failed); // TODOaa - remove
+
+			Lock();
+			~Lock();
+
+			void activateFail();
+			void activateLock(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format);
+			void activateRenderTarget(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format);
+
+		};
+
 		hstr filename;
 		Type type;
 		Image::Format format;
@@ -148,7 +177,12 @@ namespace april
 
 		hstr _getInternalName();
 
-		virtual bool _uploadDataToGpu(int x, int y, int w, int h) = 0;
+		Lock _tryLock(int x, int y, int w, int h);
+		Lock _tryLock();
+		bool _unlock(Lock lock, bool update);
+		virtual Lock _tryLockSystem(int x, int y, int w, int h) = 0;
+		virtual bool _unlockSystem(Lock& lock) = 0;
+		bool _uploadDataToGpu(int x, int y, int w, int h);
 
 	};
 	

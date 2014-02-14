@@ -36,10 +36,6 @@ namespace april
 		
 		bool isLoaded();
 		
-		bool clear();
-		Color getPixel(int x, int y);
-		bool setPixel(int x, int y, Color color);
-		bool fillRect(int x, int y, int w, int h, Color color);
 		bool copyPixelData(unsigned char** output, Image::Format format);
 		bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture);
@@ -63,43 +59,13 @@ namespace april
 		DWORD d3dUsage;
 		bool renderTarget;
 
-		struct Lock
-		{
-		public:
-			IDirect3DSurface9* buffer;
-			unsigned char* data;
-			int x;
-			int y;
-			int w;
-			int h;
-
-			Lock();
-			~Lock();
-
-			HL_DEFINE_IS(locked, Locked);
-			HL_DEFINE_IS(failed, Failed);
-			HL_DEFINE_IS(renderTarget, RenderTarget);
-
-			void activateFail();
-			void activateLock(int x, int y, int w, int h, unsigned char* data);
-			void activateRenderTarget(int x, int y, int w, int h, unsigned char* data);
-
-		protected:
-			bool locked;
-			bool failed;
-			bool renderTarget;
-
-		};
-
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
 		void _assignFormat();
 
 		IDirect3DSurface9* _getSurface();
 
-		Lock _tryLock();
-		Lock _tryLock(int x, int y, int w, int h);
-		bool _unlock(Lock lock, bool update);
-		bool _uploadDataToGpu(int x, int y, int w, int h);
+		Lock _tryLockSystem(int x, int y, int w, int h);
+		bool _unlockSystem(Lock& lock);
 
 	};
 

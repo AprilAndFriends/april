@@ -104,11 +104,16 @@ namespace april
 	{
 	}
 
-	bool RamTexture::_uploadDataToGpu(int x, int y, int w, int h)
+	Texture::Lock RamTexture::_tryLockSystem(int x, int y, int w, int h)
 	{
-		return true;
+		return Lock();
 	}
-	
+
+	bool RamTexture::_unlockSystem(Lock& lock)
+	{
+		return false;
+	}
+
 	bool RamTexture::write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture)
 	{
 		return false;

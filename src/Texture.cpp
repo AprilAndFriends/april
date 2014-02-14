@@ -29,6 +29,69 @@ namespace april
 	Image::Format Texture::FORMAT_ALPHA = Image::FORMAT_ALPHA; // DEPRECATED
 	Image::Format Texture::FORMAT_ARGB = Image::FORMAT_RGBA; // DEPRECATED
 
+	Texture::Lock::Lock()
+	{
+		this->systemBuffer = NULL;
+		this->x = 0;
+		this->y = 0;
+		this->w = 0;
+		this->h = 0;
+		this->dx = 0;
+		this->dy = 0;
+		this->data = NULL;
+		this->dataWidth = 0;
+		this->dataHeight = 0;
+		this->format = Image::FORMAT_INVALID;
+		this->locked = false;
+		this->failed = true;
+		this->renderTarget = false;
+	}
+
+	Texture::Lock::~Lock()
+	{
+	}
+
+	void Texture::Lock::activateFail()
+	{
+		this->locked = false;
+		this->failed = true;
+		this->renderTarget = false;
+	}
+
+	void Texture::Lock::activateLock(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format)
+	{
+		this->x = x;
+		this->y = y;
+		this->w = w;
+		this->h = h;
+		this->dx = dx;
+		this->dy = dy;
+		this->data = data;
+		this->dataWidth = dataWidth;
+		this->dataHeight = dataHeight;
+		this->format = format;
+		this->locked = true;
+		this->failed = false;
+		this->renderTarget = false;
+	}
+
+	void Texture::Lock::activateRenderTarget(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format)
+	{
+		this->x = x;
+		this->y = y;
+		this->w = w;
+		this->h = h;
+		this->dx = dx;
+		this->dy = dy;
+		this->data = data;
+		this->dataWidth = dataWidth;
+		this->dataHeight = dataHeight;
+		this->format = format;
+		this->locked = false;
+		this->failed = false;
+		this->renderTarget = true;
+	}
+
 	Texture::Texture()
 	{
 		this->filename = "";
@@ -276,17 +339,27 @@ namespace april
 
 	bool Texture::clear()
 	{
-		if (this->data != NULL)
+		if (this->type == TYPE_IMMUTABLE)
 		{
-			// TODOaa - check if this works for palette formatting as well
-			memset(this->data, 0, this->getByteSize());
-			return this->_uploadDataToGpu(0, 0, this->width, this->height);
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
 		}
-		return false;
+		Lock lock = this->_tryLock();
+		if (lock.failed)
+		{
+			return false;
+		}
+		memset(lock.data, 0, this->getByteSize());
+		return this->_unlock(lock, true);
 	}
 
 	Color Texture::getPixel(int x, int y)
 	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Reading texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		Color color = Color::Clear;
 		if (this->data != NULL)
 		{
@@ -297,8 +370,51 @@ namespace april
 
 	bool Texture::setPixel(int x, int y, Color color)
 	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(x, y, 1, 1);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::setPixel(lock.x, lock.y, color, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+	}
+
+	bool Texture::fillRect(int x, int y, int w, int h, Color color)
+	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
+			return false;
+		}
+		if (w == 1 && h == 1)
+		{
+			return this->setPixel(x, y, color);
+		}
+		Lock lock = this->_tryLock(x, y, w, h);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::fillRect(lock.x, lock.y, lock.w, lock.h, color, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+	}
+	/*
+	bool Texture::setPixel(int x, int y, Color color)
+	{
+		Lock lock = this->_tryLock();
+		if (lock.failed)
+		{
+			return false;
+		}
+		memset(lock.data, 0, this->getByteSize());
+		return this->_unlock(lock, true);
+
 		return (this->data != NULL && Image::setPixel(x, y, color, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, 1, 1));
 	}
+	*/
 
 	Color Texture::getInterpolatedPixel(float x, float y)
 	{
@@ -314,11 +430,12 @@ namespace april
 		}
 		return color;
 	}
-	
+	/*
 	bool Texture::fillRect(int x, int y, int w, int h, Color color)
 	{
 		return (this->data != NULL && Image::fillRect(x, y, w, h, color, this->data, this->width, this->height, this->format) && this->_uploadDataToGpu(x, y, w, h));
 	}
+	*/
 
 	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
 	{
@@ -509,6 +626,46 @@ namespace april
 	bool Texture::insertAlphaMap(Image* image)
 	{
 		return this->insertAlphaMap(image->data, image->format, 0, 0);
+	}
+
+	Texture::Lock Texture::_tryLock()
+	{
+		return this->_tryLock(0, 0, this->width, this->height);
+	}
+
+	Texture::Lock Texture::_tryLock(int x, int y, int w, int h)
+	{
+		Lock lock;
+		if (this->data != NULL)
+		{
+			lock.activateLock(x, y, w, h, x, y, this->data, this->width, this->height, this->format);
+		}
+		else
+		{
+			lock = this->_tryLockSystem(x, y, w, h);
+		}
+		return lock;
+	}
+
+	bool Texture::_unlock(Texture::Lock lock, bool update)
+	{
+		if (!this->_unlockSystem(lock) && !lock.failed && update)
+		{
+			update = this->_uploadDataToGpu(lock.dx, lock.dy, lock.w, lock.h);
+		}
+		return update;
+	}
+
+	bool Texture::_uploadDataToGpu(int x, int y, int w, int h)
+	{
+		Lock lock = this->_tryLockSystem(x, y, w, h);
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = Image::write(x, y, w, h, 0, 0, this->data, this->width, this->height, this->format, lock.data, lock.w, lock.h, april::rendersys->getNativeTextureFormat(this->format));
+		this->_unlockSystem(lock);
+		return result;
 	}
 
 }

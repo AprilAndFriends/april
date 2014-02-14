@@ -51,7 +51,8 @@ namespace april
 		// not used
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
 		void _assignFormat();
-		bool _uploadDataToGpu(int x, int y, int w, int h);
+		Lock _tryLockSystem(int x, int y, int w, int h);
+		bool _unlockSystem(Lock& lock);
 		
 	};
 
