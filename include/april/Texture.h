@@ -84,12 +84,17 @@ namespace april
 		virtual bool fillRect(int x, int y, int w, int h, Color color);
 		virtual bool copyPixelData(unsigned char** output, Image::Format format);
 		virtual bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		virtual bool write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture) = 0;
 		virtual bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		virtual bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture) = 0;
 		virtual bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		virtual bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha = 255) = 0;
 		virtual bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		virtual bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha = 255) = 0;
 		// TODOaa - rotateHue goes here
 		// TODOaa - saturate goes here
-		virtual bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat/*, unsigned char median, int ambiguity*/);
+		virtual bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat);
+		virtual bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity);
 
 		virtual bool rotateHue(float degrees);
 		virtual bool saturate(float factor);
@@ -100,15 +105,11 @@ namespace april
 		Color getInterpolatedPixel(gvec2 position);
 		bool fillRect(grect rect, Color color);
 		bool copyPixelData(unsigned char** output);
+
 		bool write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		bool writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 
 		/*
-		Color getPixel(gvec2 position);
-		bool setPixel(gvec2 position, Color color);
-		Color getInterpolatedPixel(gvec2 position);
-		bool fillRect(grect rect, Color color);
-		bool copyPixelData(unsigned char** output);
 		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Image* other);
 		bool write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		bool write(grect srcRect, gvec2 destPosition, Image* other);
@@ -123,16 +124,6 @@ namespace april
 		bool blitStretch(grect srcRect, grect destRect, Image* other, unsigned char alpha = 255);
 		*/
 
-		// TODOaa - old overloads
-		//void blit(int x, int y, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		//void blit(gvec2 position, Texture* texture, grect source, unsigned char alpha = 255);
-		//void blit(gvec2 position, Image* image, grect source, unsigned char alpha = 255);
-		//void blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
-		//void stretchBlit(int x, int y, int w, int h, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		//void stretchBlit(grect destination, Texture* texture, grect source, unsigned char alpha = 255);
-		//void stretchBlit(grect destination, Image* image, grect source, unsigned char alpha = 255);
-		//void stretchBlit(grect destination, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
-
 	protected:
 		hstr filename;
 		Type type;
@@ -144,6 +135,7 @@ namespace april
 		AddressMode addressMode;
 		unsigned char* data;
 
+		// TODOaa - add overload with filename, format and type
 		virtual bool _create(chstr filename, Type type);
 		virtual bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
 		virtual bool _create(int w, int h, Color color, Image::Format format, Type type);
@@ -152,10 +144,6 @@ namespace april
 		virtual void _assignFormat() = 0;
 
 		hstr _getInternalName();
-
-		// TODOaa - these may currently not work well with anything else than DirectX9
-		//void _blit(unsigned char* thisData, int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		//void _stretchBlit(unsigned char* thisData, int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 
 		virtual bool _uploadDataToGpu(int x, int y, int w, int h) = 0;
 

@@ -109,4 +109,24 @@ namespace april
 		return true;
 	}
 	
+	bool RamTexture::write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture)
+	{
+		return false;
+	}
+
+	bool RamTexture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture)
+	{
+		return false;
+	}
+
+	bool RamTexture::blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha)
+	{
+		return false;
+	}
+
+	bool RamTexture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha)
+	{
+		return false;
+	}
+		
 }

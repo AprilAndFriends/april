@@ -42,12 +42,15 @@ namespace april
 		bool fillRect(int x, int y, int w, int h, Color color);
 		bool copyPixelData(unsigned char** output, Image::Format format);
 		bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture);
 		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture);
 		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha = 255);
 		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha = 255);
 		
-		void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		void stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+
 		bool rotateHue(float degrees);
 		bool saturate(float factor);
 		bool insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
@@ -62,11 +65,28 @@ namespace april
 		DWORD d3dUsage;
 		bool renderTarget;
 
-		enum LOCK_RESULT
+		struct Lock
 		{
-			LR_LOCKED,
-			LR_RENDERTARGET,
-			LR_FAILED
+		public:
+			IDirect3DSurface9* buffer;
+			unsigned char* data;
+
+			Lock();
+			~Lock();
+
+			HL_DEFINE_IS(locked, Locked);
+			HL_DEFINE_IS(failed, Failed);
+			HL_DEFINE_IS(renderTarget, RenderTarget);
+
+			void activateFail();
+			void activateLock(unsigned char* data);
+			void activateRenderTarget(unsigned char* data);
+
+		protected:
+			bool locked;
+			bool failed;
+			bool renderTarget;
+
 		};
 
 		bool _createInternalTexture(unsigned char* data, int sizea);
@@ -74,8 +94,9 @@ namespace april
 
 		IDirect3DSurface9* _getSurface();
 
-		LOCK_RESULT _tryLock(IDirect3DSurface9** buffer, D3DLOCKED_RECT* lockRect, RECT* rect);
-		void _unlock(IDirect3DSurface9* buffer, LOCK_RESULT lock, bool update);
+		Lock _tryLock();
+		Lock _tryLock(int x, int y, int w, int h);
+		bool _unlock(Lock lock, bool update);
 		bool _uploadDataToGpu(int x, int y, int w, int h);
 
 	};
