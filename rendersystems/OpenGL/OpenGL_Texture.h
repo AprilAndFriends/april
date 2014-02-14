@@ -37,6 +37,7 @@ namespace april
 		Color getPixel(int x, int y);
 		bool setPixel(int x, int y, Color color);
 		bool fillRect(int x, int y, int w, int h, Color color);
+		bool copyPixelData(unsigned char** output, Image::Format format);
 		bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture);
 		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
@@ -58,7 +59,7 @@ namespace april
 
 		void _setCurrentTexture();
 
-		bool _createInternalTexture(unsigned char* data, int size);
+		bool _createInternalTexture(unsigned char* data, int size, Type type);
 		void _assignFormat();
 
 		bool _uploadDataToGpu(int x, int y, int w, int h);

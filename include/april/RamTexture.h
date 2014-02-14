@@ -49,7 +49,7 @@ namespace april
 		Image* source;
 
 		// not used
-		bool _createInternalTexture(unsigned char* data, int size);
+		bool _createInternalTexture(unsigned char* data, int size, Type type);
 		void _assignFormat();
 		bool _uploadDataToGpu(int x, int y, int w, int h);
 		

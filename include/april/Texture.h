@@ -36,11 +36,11 @@ namespace april
 
 		enum Type
 		{
-			/// @brief Cannot be modified. Texture with manual data will have a copy of the data in RAM.
-			TYPE_IMMUTABLE = 1,
 			/// @brief Resides in RAM and on GPU, can be modified. Best used for manually created textures or loaded from files which will be modified.
-			TYPE_MANAGED = 2,
-			/// @brief Used for feeding the GPU texture data constantly (e.g. video). It has no local RAM copy for when the rendering context is lost.
+			TYPE_MANAGED = 1,
+			/// @brief Cannot be modified or read. Texture with manual data will have a copy of the data in RAM, files will be reloaded from persistent memory.
+			TYPE_IMMUTABLE = 2,
+			/// @brief Used for feeding the GPU texture data constantly (e.g. video). It has no local RAM copy for when the rendering context is lost and cannot be restored.
 			TYPE_VOLATILE = 3
 		};
 
@@ -143,7 +143,7 @@ namespace april
 		virtual bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
 		virtual bool _create(int w, int h, Color color, Image::Format format, Type type);
 
-		virtual bool _createInternalTexture(unsigned char* data, int size) = 0;
+		virtual bool _createInternalTexture(unsigned char* data, int size, Type type) = 0;
 		virtual void _assignFormat() = 0;
 
 		hstr _getInternalName();

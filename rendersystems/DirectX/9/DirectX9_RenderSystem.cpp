@@ -44,9 +44,6 @@ namespace april
 	static ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
 	static ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
 
-	// TODOa - refactor
-	harray<DirectX9_Texture*> gRenderTargets;
-
 	D3DPRIMITIVETYPE dx9_render_ops[]=
 	{
 		D3DPT_FORCE_DWORD,
@@ -58,9 +55,8 @@ namespace april
 		D3DPT_POINTLIST,		// ROP_POINT_LIST
 	};
 
-	DirectX9_RenderSystem::DirectX9_RenderSystem() : DirectX_RenderSystem(),
-		textureCoordinatesEnabled(false), colorEnabled(false), d3d(NULL), d3dDevice(NULL),
-		activeTexture(NULL), renderTarget(NULL), backBuffer(NULL)
+	DirectX9_RenderSystem::DirectX9_RenderSystem() : DirectX_RenderSystem(), textureCoordinatesEnabled(false),
+		colorEnabled(false), d3d(NULL), d3dDevice(NULL), activeTexture(NULL), renderTarget(NULL), backBuffer(NULL)
 	{
 		this->name = APRIL_RS_DIRECTX9;
 		this->state = new RenderState(); // TODOa
@@ -121,7 +117,7 @@ namespace april
 	{
 		RenderSystem::reset();
 		this->d3dDevice->EndScene();
-		foreach (DirectX9_Texture*, it, gRenderTargets)
+		foreach (Texture*, it, this->textures)
 		{
 			(*it)->unload();
 		}
@@ -136,7 +132,7 @@ namespace april
 				throw hl_exception(hsprintf("Backbuffer size is invalid: %d x %d", this->d3dpp->BackBufferWidth, this->d3dpp->BackBufferHeight));
 			}
 			hr = this->d3dDevice->Reset(this->d3dpp);
-			if (hr == D3D_OK)
+			if (!FAILED(hr))
 			{
 				break;
 			}
@@ -157,10 +153,6 @@ namespace april
 		this->_setProjectionMatrix(this->projectionMatrix);
 		this->_configureDevice();
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
-		foreach (DirectX9_Texture*, it, gRenderTargets)
-		{
-			(*it)->restore();
-		}
 		hlog::write(april::logTag, "Direct3D9 Device restored.");
 		this->d3dDevice->BeginScene();
 		// this is used to display window content while resizing window
@@ -184,10 +176,10 @@ namespace april
 		this->d3dpp->SwapEffect = D3DSWAPEFFECT_COPY; // COPY is being used here as otherwise some weird tearing manifests during rendering
 		this->d3dpp->hDeviceWindow = hWnd;
 		HRESULT hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, this->d3dpp, &d3dDevice);
-		if (hr != D3D_OK)
+		if (FAILED(hr))
 		{
 			hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, this->d3dpp, &d3dDevice);
-			if (hr != D3D_OK)
+			if (FAILED(hr))
 			{
 				throw hl_exception("Unable to create Direct3D Device!");
 			}
@@ -253,7 +245,7 @@ namespace april
 			{
 				memset(&displayMode, 0, sizeof(D3DDISPLAYMODE));
 				hr = d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
-				if (hr == D3D_OK) 
+				if (!FAILED(hr)) 
 				{
 					this->supportedDisplayModes += RenderSystem::DisplayMode(displayMode.Width, displayMode.Height, displayMode.RefreshRate);
 				}
@@ -691,13 +683,13 @@ namespace april
 		}
 		IDirect3DSurface9* buffer;
 		HRESULT hr = this->d3dDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &buffer, NULL);
-		if (hr != D3D_OK)
+		if (FAILED(hr))
 		{
 			hlog::error(april::logTag, "Failed to grab screenshot, CreateOffscreenPlainSurface() call failed.");
 			return NULL;
 		}
 		hr = this->d3dDevice->GetRenderTargetData(this->backBuffer, buffer);
-		if (hr != D3D_OK)
+		if (FAILED(hr))
 		{
 			hlog::error(april::logTag, "Failed to grab screenshot, GetRenderTargetData() call failed.");
 			buffer->Release();
@@ -705,7 +697,7 @@ namespace april
 		}		
 		D3DLOCKED_RECT rect;
 		hr = buffer->LockRect(&rect, NULL, D3DLOCK_DONOTWAIT);
-		if (hr != D3D_OK)
+		if (FAILED(hr))
 		{
 			hlog::error(april::logTag, "Failed to grab screenshot, surface lock failed.");
 			buffer->Release();
@@ -730,7 +722,7 @@ namespace april
 		if (hr == D3DERR_DEVICELOST)
 		{
 			hlog::write(april::logTag, "Direct3D9 Device lost, attempting to restore...");
-			foreach (DirectX9_Texture*, it, gRenderTargets)
+			foreach (Texture*, it, this->textures)
 			{
 				(*it)->unload();
 			}
@@ -744,7 +736,7 @@ namespace april
 					hthread::sleep(100.0f);
 				}
 				hr = this->d3dDevice->TestCooperativeLevel();
-				if (hr == D3D_OK)
+				if (!FAILED(hr))
 				{
 					break;
 				}
@@ -752,7 +744,7 @@ namespace april
 				{
 					hlog::write(april::logTag, "Resetting device...");
 					hr = this->d3dDevice->Reset(this->d3dpp);
-					if (hr == D3D_OK)
+					if (!FAILED(hr))
 					{
 						break;
 					}
@@ -778,10 +770,6 @@ namespace april
 			this->_setProjectionMatrix(this->projectionMatrix);
 			this->_configureDevice();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
-			foreach (DirectX9_Texture*, it, gRenderTargets)
-			{
-				(*it)->restore();
-			}
 			hlog::write(april::logTag, "Direct3D9 Device restored.");
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)
@@ -789,7 +777,7 @@ namespace april
 			for_iter (i, 0, 100)
 			{
 				hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
-				if (hr == D3D_OK)
+				if (!FAILED(hr))
 				{
 					break;
 				}

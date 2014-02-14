@@ -40,9 +40,14 @@ namespace april
 
 	bool OpenGL1_Texture::copyPixelData(unsigned char** output, Image::Format format)
 	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Reading texture not possible: " + this->_getInternalName());
+			return false;
+		}
 		if (this->data != NULL)
 		{
-			return Texture::copyPixelData(output);
+			return Texture::copyPixelData(output, format);
 		}
 		if (!this->isLoaded())
 		{
