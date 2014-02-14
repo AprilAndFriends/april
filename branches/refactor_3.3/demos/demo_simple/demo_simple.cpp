@@ -165,25 +165,14 @@ void april_init(const harray<hstr>& args)
 	april::window->setMouseDelegate(mouseDelegate);
 	april::window->setCursorFilename(RESOURCE_PATH "cursor");
 	texture = april::rendersys->createTexture(RESOURCE_PATH "jpt_final");
+	// TODOaa - test this, it crashes
+	//texture = april::rendersys->createTexture(RESOURCE_PATH "jpt_final", april::Texture::TYPE_VOLATILE);
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w / 2;
 	textureRect.y = -textureRect.h / 2;
 	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::TYPE_VOLATILE);
-	//manualTexture->blit(100, 100, texture, 0, 0, texture->getWidth(), texture->getHeight());
-	//manualTexture->stretchBlit(0, 100, 900, 200, texture, 0, 0, texture->getWidth() / 2, texture->getHeight() / 2);
-	//return
-	
-	april::Image::Format format = april::Image::FORMAT_RGBA;
-	unsigned char* data = NULL;
-	texture->copyPixelData(&data, format);
-	
-	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 0, 0, data, texture->getWidth(), texture->getHeight(), format);
-	//manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 64, 64, data, texture->getWidth(), texture->getHeight(), format, 128);
-	manualTexture->blitStretch(0, 0, texture->getWidth(), texture->getHeight(), 0, 64, 700, 200, data, texture->getWidth(), texture->getHeight(), format, 192);
-	//manualTexture->writeStretch(0, 100, texture->getWidth(), texture->getHeight(), 100, 100, data, texture->getWidth(), texture->getHeight(), format);
-
-	//manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 100, 100, data, texture->getWidth(), texture->getHeight(), format);
-	delete [] data;
+	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 100, 64, texture);
+	manualTexture->blitStretch(0, 0, texture->getWidth() * 0.5f, texture->getHeight() * 0.5f, 0, 64, 700, 200, texture, 224);
 }
 
 void april_destroy()

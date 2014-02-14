@@ -38,6 +38,11 @@ namespace april
 
 		Color getPixel(int x, int y);
 		bool setPixel(int x, int y, Color color);
+
+		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture);
+		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture);
+		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha = 255);
+		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha = 255);
 		
 	protected:
 		Image* source;

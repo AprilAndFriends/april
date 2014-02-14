@@ -338,26 +338,29 @@ namespace april
 
 	bool Texture::rotateHue(float degrees)
 	{
+		// TODOaa - implement
 		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement rotateHue()!", april::rendersys->getName().c_str());
 		return false;
 	}
 
 	bool Texture::saturate(float factor)
 	{
+		// TODOaa - implement
 		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement saturate()!", april::rendersys->getName().c_str());
 		return false;
 	}
 
-	// TODOaa - rename properly
-	//void Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
-	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat/*, unsigned char median, int ambiguity*/)
+	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat)
 	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement insertAsAlphaMap()!", april::rendersys->getName().c_str());
-		return false;
+		return (this->data != NULL && Image::insertAlphaMap(this->width, this->height, srcData, srcFormat, this->data, this->format) && this->_uploadDataToGpu(0, 0, this->width, this->height));
 	}
 
+	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity)
+	{
+		return (this->data != NULL && Image::insertAlphaMap(this->width, this->height, srcData, srcFormat, this->data, this->format, median, ambiguity) && this->_uploadDataToGpu(0, 0, this->width, this->height));
+	}
 
-	// TODOaa - all overload go here
+	// overloads
 
 	Color Texture::getPixel(gvec2 position)
 	{
@@ -388,6 +391,18 @@ namespace april
 	{
 		return this->write(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destPosition.x), hround(destPosition.y), srcData, srcWidth, srcHeight, srcFormat);
 	}
+
+	/*
+	bool Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		return this->write(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destPosition.x), hround(destPosition.y), srcData, srcWidth, srcHeight, srcFormat);
+	}
+
+	bool Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		return this->write(hround(srcRect.x), hround(srcRect.y), hround(srcRect.w), hround(srcRect.h), hround(destPosition.x), hround(destPosition.y), srcData, srcWidth, srcHeight, srcFormat);
+	}
+	*/
 
 	bool Texture::writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{

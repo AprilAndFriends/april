@@ -201,6 +201,11 @@ namespace april
 		return (this->isValid() && Image::insertAlphaMap(this->w, this->h, srcData, srcFormat, this->data, this->format));
 	}
 
+	bool Image::insertAlphaMap(unsigned char* srcData, Format srcFormat, unsigned char median, int ambiguity)
+	{
+		return (this->isValid() && Image::insertAlphaMap(this->w, this->h, srcData, srcFormat, this->data, this->format, median, ambiguity));
+	}
+
 	// overloads
 
 	Color Image::getPixel(gvec2 position)
@@ -1087,32 +1092,53 @@ namespace april
 		return false;
 	}
 
-	/*
-		int min = (int)median - ambiguity / 2;
-		int max = (int)median + ambiguity / 2;
-		for_iterx (j, 0, this->height)
+	bool Image::insertAlphaMap(int w, int h, unsigned char* srcData, Image::Format srcFormat, unsigned char* destData, Image::Format destFormat, unsigned char median, int ambiguity)
+	{
+		if (!CHECK_ALPHA_FORMAT(destFormat)) // not a format that supports an alpha channel
 		{
-			for_iterx (i, 0, this->width)
+			return false;
+		}
+		int srcBpp = Image::getFormatBpp(srcFormat);
+		if (srcBpp == 1 || srcBpp == 3 || srcBpp == 4)
+		{
+			int destBpp = Image::getFormatBpp(destFormat);
+			int sr = -1;
+			Image::_getFormatIndices(srcFormat, &sr, NULL, NULL, NULL);
+			int da = -1;
+			Image::_getFormatIndices(destFormat, NULL, NULL, NULL, &da);
+			int min = (int)median - ambiguity / 2;
+			int max = (int)median + ambiguity / 2;
+			unsigned char* src = NULL;
+			unsigned char* dest = NULL;
+			int i = 0;
+			int x = 0;
+			int y = 0;
+			for_iterx (y, 0, h)
 			{
-				c = &thisData[(i + j * this->width) * 4];
-				sc = &srcData[(i + j * this->width) * 4];
-				alpha = (sc[0] + sc[1] + sc[2]) / 3;
-				if (alpha < min)
+				for_iterx (x, 0, w)
 				{
-					c[3] = 255;
-				}
-				else if (alpha >= max)
-				{
-					c[3] = 0;
-				}
-				else
-				{
-					c[3] = (max - alpha) * 255 / ambiguity;
+					i = (x + y * w);
+					src = &srcData[i * srcBpp];
+					dest = &destData[i * destBpp];
+					if (src[sr] < min)
+					{
+						dest[da] = 255;
+					}
+					else if (src[sr] >= max)
+					{
+						dest[da] = 0;
+					}
+					else
+					{
+						dest[da] = (max - src[sr]) * 255 / ambiguity;
+					}
 				}
 			}
+			return true;
 		}
-		*/
-	
+		return false;
+	}
+
 	bool Image::convertToFormat(int w, int h, unsigned char* srcData, Image::Format srcFormat, unsigned char** destData, Image::Format destFormat, bool preventCopy)
 	{
 		if (preventCopy && srcFormat == destFormat)

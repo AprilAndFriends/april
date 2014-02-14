@@ -265,6 +265,28 @@ namespace april
 		return result;
 	}
 
+	bool OpenGL_Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture)
+	{
+		OpenGL_Texture* source = dynamic_cast<OpenGL_Texture*>(texture);
+		if (source == NULL || !source->isLoaded())
+		{
+			return false;
+		}
+		Image::Format srcFormat = april::rendersys->getNativeTextureFormat(source->format);
+		unsigned char* data = source->data;
+		bool fromGpu = (data == NULL);
+		if (fromGpu && !source->copyPixelData(&data, srcFormat))
+		{
+			return false;
+		}
+		bool result = this->write(sx, sy, sw, sh, dx, dy, data, source->width, source->height, srcFormat);
+		if (fromGpu)
+		{
+			delete [] data;
+		}
+		return result;
+	}
+
 	bool OpenGL_Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		if (this->data != NULL)
@@ -286,6 +308,28 @@ namespace april
 			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, dw, dh, this->glFormat, GL_UNSIGNED_BYTE, data);
 		}
 		delete [] data;
+		return result;
+	}
+
+	bool OpenGL_Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture)
+	{
+		OpenGL_Texture* source = dynamic_cast<OpenGL_Texture*>(texture);
+		if (source == NULL || !source->isLoaded())
+		{
+			return false;
+		}
+		Image::Format srcFormat = april::rendersys->getNativeTextureFormat(source->format);
+		unsigned char* data = source->data;
+		bool fromGpu = (data == NULL);
+		if (fromGpu && !source->copyPixelData(&data, srcFormat))
+		{
+			return false;
+		}
+		bool result = this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, data, source->width, source->height, srcFormat);
+		if (fromGpu)
+		{
+			delete [] data;
+		}
 		return result;
 	}
 
@@ -330,6 +374,28 @@ namespace april
 		return result;
 	}
 
+	bool OpenGL_Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha)
+	{
+		OpenGL_Texture* source = dynamic_cast<OpenGL_Texture*>(texture);
+		if (source == NULL || !source->isLoaded())
+		{
+			return false;
+		}
+		Image::Format srcFormat = april::rendersys->getNativeTextureFormat(source->format);
+		unsigned char* data = source->data;
+		bool fromGpu = (data == NULL);
+		if (fromGpu && !source->copyPixelData(&data, srcFormat))
+		{
+			return false;
+		}
+		bool result = this->blit(sx, sy, sw, sh, dx, dy, data, source->width, source->height, srcFormat, alpha);
+		if (fromGpu)
+		{
+			delete [] data;
+		}
+		return result;
+	}
+
 	bool OpenGL_Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
 		if (this->data != NULL)
@@ -368,6 +434,28 @@ namespace april
 			delete [] writeData;
 		}
 		delete [] data;
+		return result;
+	}
+
+	bool OpenGL_Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha)
+	{
+		OpenGL_Texture* source = dynamic_cast<OpenGL_Texture*>(texture);
+		if (source == NULL || !source->isLoaded())
+		{
+			return false;
+		}
+		Image::Format srcFormat = april::rendersys->getNativeTextureFormat(source->format);
+		unsigned char* data = source->data;
+		bool fromGpu = (data == NULL);
+		if (fromGpu && !source->copyPixelData(&data, srcFormat))
+		{
+			return false;
+		}
+		bool result = this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, data, source->width, source->height, srcFormat, alpha);
+		if (fromGpu)
+		{
+			delete [] data;
+		}
 		return result;
 	}
 
