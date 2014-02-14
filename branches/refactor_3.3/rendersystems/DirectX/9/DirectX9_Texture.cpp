@@ -24,54 +24,6 @@
 
 namespace april
 {
-	DirectX9_Texture::Lock::Lock()
-	{
-		this->buffer = NULL;
-		this->data = NULL;
-		this->x = 0;
-		this->y = 0;
-		this->w = 0;
-		this->h = 0;
-		this->locked = false;
-		this->failed = true;
-		this->renderTarget = false;
-	}
-
-	DirectX9_Texture::Lock::~Lock()
-	{
-	}
-
-	void DirectX9_Texture::Lock::activateFail()
-	{
-		this->locked = false;
-		this->failed = true;
-		this->renderTarget = false;
-	}
-
-	void DirectX9_Texture::Lock::activateLock(int x, int y, int w, int h, unsigned char* data)
-	{
-		this->x = x;
-		this->y = y;
-		this->w = w;
-		this->h = h;
-		this->data = data;
-		this->locked = true;
-		this->failed = false;
-		this->renderTarget = false;
-	}
-
-	void DirectX9_Texture::Lock::activateRenderTarget(int x, int y, int w, int h, unsigned char* data)
-	{
-		this->x = x;
-		this->y = y;
-		this->w = w;
-		this->h = h;
-		this->data = data;
-		this->locked = false;
-		this->failed = false;
-		this->renderTarget = true;
-	}
-
 	DirectX9_Texture::DirectX9_Texture() : DirectX_Texture(), d3dTexture(NULL), d3dSurface(NULL), d3dFormat(D3DFMT_UNKNOWN), renderTarget(false)
 	{
 	}
@@ -145,90 +97,6 @@ namespace april
 		return (this->d3dTexture != NULL);
 	}
 
-	bool DirectX9_Texture::clear()
-	{
-		if (this->type == TYPE_IMMUTABLE)
-		{
-			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
-			return false;
-		}
-		if (this->data != NULL)
-		{
-			return Texture::clear();
-		}
-		Lock lock = this->_tryLock();
-		if (lock.isFailed())
-		{
-			return false;
-		}
-		memset(lock.data, 0, this->getByteSize());
-		return this->_unlock(lock, true);
-	}
-
-	Color DirectX9_Texture::getPixel(int x, int y)
-	{
-		if (this->type != TYPE_MANAGED)
-		{
-			hlog::warn(april::logTag, "Reading texture not possible: " + this->_getInternalName());
-			return false;
-		}
-		if (this->data != NULL) // get from RAM if possible to avoid downloading from the GPU
-		{
-			return Texture::getPixel(x, y);
-		}
-		Color color = Color::Clear;
-		Lock lock = this->_tryLock(x, y, 1, 1);
-		if (lock.isFailed())
-		{
-			return color;
-		}
-		color = Image::getPixel(x, y, lock.data, lock.w, lock.h, april::rendersys->getNativeTextureFormat(this->format));
-		this->_unlock(lock, false);
-		return color;
-	}
-
-	bool DirectX9_Texture::setPixel(int x, int y, Color color)
-	{
-		if (this->type == TYPE_IMMUTABLE)
-		{
-			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
-			return false;
-		}
-		if (this->data != NULL)
-		{
-			return Texture::setPixel(x, y, color);
-		}
-		Lock lock = this->_tryLock(x, y, 1, 1);
-		if (lock.isFailed())
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::setPixel(0, 0, color, lock.data, lock.w, lock.h, april::rendersys->getNativeTextureFormat(this->format)));
-	}
-
-	bool DirectX9_Texture::fillRect(int x, int y, int w, int h, Color color)
-	{
-		if (this->type == TYPE_IMMUTABLE)
-		{
-			hlog::warn(april::logTag, "Changing texture not possible: " + this->_getInternalName());
-			return false;
-		}
-		if (w == 1 && h == 1)
-		{
-			return this->setPixel(x, y, color);
-		}
-		if (this->data != NULL)
-		{
-			return Texture::fillRect(x, y, w, h, color);
-		}
-		Lock lock = this->_tryLock(x, y, w, h);
-		if (lock.isFailed())
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::fillRect(0, 0, w, h, color, lock.data, lock.w, lock.h, april::rendersys->getNativeTextureFormat(this->format)));
-	}
-
 	bool DirectX9_Texture::copyPixelData(unsigned char** output, Image::Format format)
 	{
 		if (this->type != TYPE_MANAGED)
@@ -245,7 +113,7 @@ namespace april
 			return false;
 		}
 		Lock lock = this->_tryLock();
-		if (lock.isFailed())
+		if (lock.failed)
 		{
 			return false;
 		}
@@ -266,7 +134,7 @@ namespace april
 			return DirectX_Texture::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
 		}
 		Lock lock = this->_tryLock(dx, dy, sw, sh);
-		if (lock.isFailed())
+		if (lock.failed)
 		{
 			return false;
 		}
@@ -288,14 +156,14 @@ namespace april
 		if (lock.data == NULL)
 		{
 			lock = source->_tryLock(sx, sy, sw, sh);
-			if (lock.isFailed())
+			if (lock.failed)
 			{
 				return false;
 			}
 			srcFormat = april::rendersys->getNativeTextureFormat(srcFormat);
 		}
 		bool result = this->write(sx, sy, sw, sh, dx, dy, lock.data, lock.w, lock.h, srcFormat);
-		if (!lock.isFailed())
+		if (!lock.failed)
 		{
 			source->_unlock(lock, false);
 		}
@@ -314,7 +182,7 @@ namespace april
 			return DirectX_Texture::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat);
 		}
 		Lock lock = this->_tryLock(dx, dy, dw, dh);
-		if (lock.isFailed())
+		if (lock.failed)
 		{
 			return false;
 		}
@@ -336,14 +204,14 @@ namespace april
 		if (lock.data == NULL)
 		{
 			lock = source->_tryLock(sx, sy, sw, sh);
-			if (lock.isFailed())
+			if (lock.failed)
 			{
 				return false;
 			}
 			srcFormat = april::rendersys->getNativeTextureFormat(srcFormat);
 		}
 		bool result = this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, lock.data, lock.w, lock.h, april::rendersys->getNativeTextureFormat(source->format));
-		if (!lock.isFailed())
+		if (!lock.failed)
 		{
 			source->_unlock(lock, false);
 		}
@@ -362,7 +230,7 @@ namespace april
 			return DirectX_Texture::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, alpha);
 		}
 		Lock lock = this->_tryLock(dx, dy, sw, sh);
-		if (lock.isFailed())
+		if (lock.failed)
 		{
 			return false;
 		}
@@ -384,14 +252,14 @@ namespace april
 		if (lock.data == NULL)
 		{
 			lock = source->_tryLock(sx, sy, sw, sh);
-			if (lock.isFailed())
+			if (lock.failed)
 			{
 				return false;
 			}
 			srcFormat = april::rendersys->getNativeTextureFormat(srcFormat);
 		}
 		bool result = this->blit(sx, sy, sw, sh, dx, dy, lock.data, lock.w, lock.h, srcFormat, alpha);
-		if (!lock.isFailed())
+		if (!lock.failed)
 		{
 			source->_unlock(lock, false);
 		}
@@ -410,7 +278,7 @@ namespace april
 			return DirectX_Texture::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, alpha);
 		}
 		Lock lock = this->_tryLock(dx, dy, dw, dh);
-		if (lock.isFailed())
+		if (lock.failed)
 		{
 			return false;
 		}
@@ -432,14 +300,14 @@ namespace april
 		if (lock.data == NULL)
 		{
 			lock = source->_tryLock(sx, sy, sw, sh);
-			if (lock.isFailed())
+			if (lock.failed)
 			{
 				return false;
 			}
 			srcFormat = april::rendersys->getNativeTextureFormat(srcFormat);
 		}
 		bool result = this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, lock.data, lock.w, lock.h, srcFormat, alpha);
-		if (!lock.isFailed())
+		if (!lock.failed)
 		{
 			source->_unlock(lock, false);
 		}
@@ -458,7 +326,7 @@ namespace april
 			return DirectX_Texture::rotateHue(x, y, w, h, degrees);
 		}
 		Lock lock = this->_tryLock();
-		if (lock.isFailed())
+		if (lock.failed)
 		{
 			return false;
 		}
@@ -477,7 +345,7 @@ namespace april
 			return DirectX_Texture::saturate(x, y, w, h, factor);
 		}
 		Lock lock = this->_tryLock();
-		if (lock.isFailed())
+		if (lock.failed)
 		{
 			return false;
 		}
@@ -496,7 +364,7 @@ namespace april
 			return DirectX_Texture::invert(x, y, w, h);
 		}
 		Lock lock = this->_tryLock();
-		if (lock.isFailed())
+		if (lock.failed)
 		{
 			return false;
 		}
@@ -515,7 +383,7 @@ namespace april
 			return DirectX_Texture::insertAlphaMap(srcData, srcFormat, median, ambiguity);
 		}
 		Lock lock = this->_tryLock();
-		if (lock.isFailed())
+		if (lock.failed)
 		{
 			return false;
 		}
@@ -537,14 +405,14 @@ namespace april
 		if (lock.data == NULL)
 		{
 			lock = source->_tryLock();
-			if (lock.isFailed())
+			if (lock.failed)
 			{
 				return false;
 			}
 			srcFormat = april::rendersys->getNativeTextureFormat(srcFormat);
 		}
 		bool result = this->insertAlphaMap(lock.data, srcFormat, median, ambiguity);
-		if (!lock.isFailed())
+		if (!lock.failed)
 		{
 			source->_unlock(lock, false);
 		}
@@ -560,9 +428,25 @@ namespace april
 		return this->d3dSurface;
 	}
 
-	DirectX9_Texture::Lock DirectX9_Texture::_tryLock()
+	DirectX9_Texture::Lock DirectX9_Texture::_tryLockSystem(int x, int y, int w, int h)
 	{
-		return this->_tryLock(0, 0, this->width, this->height);
+		Lock lock;
+		IDirect3DSurface9* surface;
+		HRESULT hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
+		if (FAILED(hr))
+		{
+			return lock;
+		}
+		D3DLOCKED_RECT lockRect;
+		hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
+		if (FAILED(hr))
+		{
+			surface->Release();
+			return lock;
+		}
+		lock.systemBuffer = surface;
+		lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, w, h, april::rendersys->getNativeTextureFormat(this->format));
+		return lock;
 		// TODOaa - render target locking
 		/*
 		Lock lock;
@@ -598,70 +482,42 @@ namespace april
 		*/
 	}
 
-	DirectX9_Texture::Lock DirectX9_Texture::_tryLock(int x, int y, int w, int h)
+	bool DirectX9_Texture::_unlockSystem(Lock& lock)
 	{
-		Lock lock;
-		HRESULT hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &lock.buffer, NULL);
-		if (FAILED(hr))
+		if (lock.systemBuffer == NULL)
 		{
-			return lock;
+			return false;
 		}
-		D3DLOCKED_RECT lockRect;
-		hr = lock.buffer->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
-		if (FAILED(hr))
+		IDirect3DSurface9* surface = (IDirect3DSurface9*)lock.systemBuffer;
+		if (surface != NULL)
 		{
-			lock.buffer->Release();
-			lock.buffer = NULL;
-			return lock;
-		}
-		lock.activateLock(x, y, w, h, (unsigned char*)lockRect.pBits);
-		return lock;
-	}
-
-	bool DirectX9_Texture::_unlock(Lock lock, bool update)
-	{
-		if (lock.isLocked())
-		{
-			lock.buffer->UnlockRect();
-			POINT dest;
-			dest.x = lock.x;
-			dest.y = lock.y;
-			APRIL_D3D_DEVICE->UpdateSurface(lock.buffer, NULL, this->_getSurface(), &dest);
-			lock.buffer->Release();
-			lock.buffer = NULL;
-		}
-		else if (lock.isRenderTarget())
-		{
-			// TODOaa - implement
-			/*
-			lock.buffer->UnlockRect();
-			if (update)
+			if (lock.locked)
 			{
-				APRIL_D3D_DEVICE->UpdateSurface(lock.buffer, NULL, this->_getSurface(), NULL);
+				surface->UnlockRect();
+				RECT rect;
+				rect.left = lock.x;
+				rect.top = lock.y;
+				rect.right = lock.w;
+				rect.bottom = lock.h;
+				POINT dest;
+				dest.x = lock.dx;
+				dest.y = lock.dy;
+				APRIL_D3D_DEVICE->UpdateSurface(surface, NULL, this->_getSurface(), &dest);
 			}
-			lock.buffer->Release();
-			lock.buffer = NULL;
-			*/
+			else if (lock.renderTarget)
+			{
+				// TODOaa - implement
+				/*
+				surface->UnlockRect();
+				if (update)
+				{
+					APRIL_D3D_DEVICE->UpdateSurface(lock.buffer, NULL, this->_getSurface(), NULL);
+				}
+				*/
+			}
+			surface->Release();
 		}
-		return update;
-	}
-
-	bool DirectX9_Texture::_uploadDataToGpu(int x, int y, int w, int h)
-	{
-		if (this->data == NULL)
-		{
-			return false;
-		}
-		if (!Image::correctRect(x, y, w, h, this->width, this->height))
-		{
-			return false;
-		}
-		Lock lock = this->_tryLock(x, y, w, h);
-		if (lock.isFailed())
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::write(x, y, w, h, 0, 0, this->data, this->width, this->height, this->format, lock.data, lock.w, lock.h, april::rendersys->getNativeTextureFormat(this->format)));
+		return true;
 	}
 
 }
