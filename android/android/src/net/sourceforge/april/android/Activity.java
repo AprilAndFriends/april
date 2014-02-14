@@ -59,7 +59,7 @@ public class Activity extends android.app.Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		android.util.Log.w("april", "Initializing april Activity class");
-		android.util.Log.w("april", "Android device: " + Build.MANUFACTURER + " / " + Build.MODEL);
+		android.util.Log.w("april", "Android device: '" + Build.MANUFACTURER + "' / '" + Build.MODEL + "'");
 
 		super.onCreate(savedInstanceState);
 		NativeInterface.Activity = (android.app.Activity)this;

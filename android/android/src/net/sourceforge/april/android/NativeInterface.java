@@ -106,7 +106,7 @@ public class NativeInterface
 			width = metrics.heightPixels;
 		}
 		// fixes problem with bottom 20 pixels being covered by Kindle Fire's menu
-		if (Build.MANUFACTURER == "Amazon" && Build.MODEL == "Kindle Fire")
+		if (Build.MANUFACTURER.equals("Amazon") && Build.MODEL.equals("Kindle Fire"))
 		{
 			height -= 20;
 		}
@@ -117,9 +117,9 @@ public class NativeInterface
 	public static int getDisplayDpi()
 	{
 		// hardcoded exceptions for known devices that return wrong DPI
-		if (Build.MANUFACTURER == "HTC")
+		if (Build.MANUFACTURER.equals("HTC"))
 		{
-			if (Build.MODEL == "HTC One X" || Build.MODEL == "One X") return 312;
+			if (Build.MODEL.equals("HTC One X")) return 312;
 		}
 
 		DisplayMetrics metrics = new DisplayMetrics();
