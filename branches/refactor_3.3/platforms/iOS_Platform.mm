@@ -144,6 +144,8 @@ namespace april
 			int h = mainScreen.bounds.size.height * scale;
 			// forcing a w:h ratio where w > h
 			info.displayResolution.set((float)hmax(w, h), (float)hmin(w, h));
+			
+			info.osVersion = [[UIDevice currentDevice].systemVersion floatValue];
 
 			getStaticiOSInfo(name, info);
 		}
