@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -38,28 +38,6 @@ namespace april
 	class aprilExport Window
 	{
 	public:
-		enum MouseEventType
-		{
-			AMOUSEEVT_DOWN = 0,
-			AMOUSEEVT_UP = 1,
-			AMOUSEEVT_CANCEL = 2, // canceling a down event
-			AMOUSEEVT_MOVE = 3,
-			AMOUSEEVT_SCROLL = 4
-		};
-		
-		enum KeyEventType
-		{
-			AKEYEVT_DOWN = 0,
-			AKEYEVT_UP = 1
-		};
-
-		enum ControllerEventType
-		{
-			ACTRLEVT_DOWN = 0,
-			ACTRLEVT_UP = 1
-			// TODO - possibly add analog triggers
-		};
-
 		enum InputMode
 		{
 			MOUSE,
@@ -67,28 +45,38 @@ namespace april
 			CONTROLLER
 		};
 		
-		// TODOa - remove?
-		enum DeviceOrientation
+		enum MouseEventType
 		{
-			ADEVICEORIENTATION_NONE = 0,
-			ADEVICEORIENTATION_PORTRAIT,
-			ADEVICEORIENTATION_PORTRAIT_UPSIDEDOWN,
-			ADEVICEORIENTATION_LANDSCAPE_LEFT, // bottom of device is on the left
-			ADEVICEORIENTATION_LANDSCAPE_RIGHT, // bottom of device is on the right
-			ADEVICEORIENTATION_FACE_DOWN, // screen is facing the ground
-			ADEVICEORIENTATION_FACE_UP // screen is facing the sky
-		};
-		
-		struct KeyInputEvent
-		{
-			KeyEventType type;
-			Key keyCode;
-			unsigned int charCode;
-		
-			KeyInputEvent(KeyEventType type, Key keyCode, unsigned int charCode);
-		
+			MOUSE_DOWN = 0,
+			MOUSE_UP = 1,
+			MOUSE_CANCEL = 2, // canceling a down event
+			MOUSE_MOVE = 3,
+			MOUSE_SCROLL = 4
 		};
 
+		enum KeyEventType
+		{
+			KEY_DOWN = 0,
+			KEY_UP = 1
+		};
+
+		enum ControllerEventType
+		{
+			CONTROLLER_DOWN = 0,
+			CONTROLLER_UP = 1
+			// TODO - possibly add analog triggers
+		};
+
+		DEPRECATED_ATTRIBUTE static MouseEventType AMOUSEEVT_DOWN;
+		DEPRECATED_ATTRIBUTE static MouseEventType AMOUSEEVT_UP;
+		DEPRECATED_ATTRIBUTE static MouseEventType AMOUSEEVT_CANCEL;
+		DEPRECATED_ATTRIBUTE static MouseEventType AMOUSEEVT_MOVE;
+		DEPRECATED_ATTRIBUTE static MouseEventType AMOUSEEVT_SCROLL;
+		DEPRECATED_ATTRIBUTE static KeyEventType AKEYEVT_DOWN;
+		DEPRECATED_ATTRIBUTE static KeyEventType AKEYEVT_UP;
+		DEPRECATED_ATTRIBUTE static ControllerEventType ACTRLEVT_DOWN;
+		DEPRECATED_ATTRIBUTE static ControllerEventType ACTRLEVT_UP;
+		
 		struct MouseInputEvent
 		{
 			MouseEventType type;
@@ -96,6 +84,16 @@ namespace april
 			Key keyCode;
 		
 			MouseInputEvent(MouseEventType type, gvec2 position, Key keyCode);
+		
+		};
+
+		struct KeyInputEvent
+		{
+			KeyEventType type;
+			Key keyCode;
+			unsigned int charCode;
+		
+			KeyInputEvent(KeyEventType type, Key keyCode, unsigned int charCode);
 		
 		};
 
@@ -194,8 +192,8 @@ namespace april
 		virtual void terminateKeyboardHandling() { }
 		
 		virtual bool isRotating() { return false; } // iOS/Android devices for example
-		virtual hstr getParam(chstr param) { return ""; } // TODOa - this should be refactored
-		virtual void setParam(chstr param, chstr value) { } // TODOa - this should be refactored
+		virtual hstr getParam(chstr param) { return ""; } // TODOaa - this should be refactored
+		virtual void setParam(chstr param, chstr value) { } // TODOaa - this should be refactored
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
@@ -219,7 +217,7 @@ namespace april
 		virtual void enterMainLoop();
 		virtual bool performUpdate(float k);
 		
-		// TODO - refactor
+		// TODOaa - refactor
 		// the following functions should be temporary, it was added because I needed access to
 		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
 		static void setLaunchCallback(void (*callback)(void*)) { msLaunchCallback = callback; }
@@ -254,7 +252,7 @@ namespace april
 		Timer timer;
 		hmap<Key, Button> controllerEmulationKeys;
 
-		// TODO - refactor
+		// TODOaa - refactor
 		static void (*msLaunchCallback)(void*);
 
 		UpdateDelegate* updateDelegate;

@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -72,31 +72,16 @@ namespace april
 	// TODOa - put in state class
 	static Color lastColor = Color::Black;
 
-	// TODOa - make protected member of RenderSystem
-	unsigned int _limitPrimitives(RenderOp renderOp, int nVertices)
-	{
-		switch (renderOp)
-		{
-		case TriangleList:	return nVertices / 3 * 3;
-		case TriangleStrip:	return nVertices;
-		case TriangleFan:	return nVertices;
-		case LineList:		return nVertices / 2 * 2;
-		case LineStrip:		return nVertices;
-		case PointList:		return nVertices;
-		}
-		return nVertices;
-	}
-	
 	// translation from abstract render ops to gl's render ops
 	int gl_render_ops[]=
 	{
 		0,
-		GL_TRIANGLES,		// ROP_TRIANGLE_LIST
-		GL_TRIANGLE_STRIP,	// ROP_TRIANGLE_STRIP
-		GL_TRIANGLE_FAN,	// ROP_TRIANGLE_FAN
-		GL_LINES,			// ROP_LINE_LIST
-		GL_LINE_STRIP,		// ROP_LINE_STRIP
-		GL_POINTS,			// ROP_POINTS
+		GL_TRIANGLES,		// RO_TRIANGLE_LIST
+		GL_TRIANGLE_STRIP,	// RO_TRIANGLE_STRIP
+		GL_TRIANGLE_FAN,	// RO_TRIANGLE_FAN
+		GL_LINES,			// RO_LINE_LIST
+		GL_LINE_STRIP,		// RO_LINE_STRIP
+		GL_POINTS,			// RO_POINT_LIST
 	};
 	
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
@@ -237,10 +222,10 @@ namespace april
 		this->_setClientState(GL_COLOR_ARRAY, this->deviceState.colorEnabled);
 		glColor4f(this->deviceState.systemColor.r_f(), this->deviceState.systemColor.g_f(), this->deviceState.systemColor.b_f(), this->deviceState.systemColor.a_f());
 		glBindTexture(GL_TEXTURE_2D, this->deviceState.textureId);
-		this->currentState.textureFilter = april::Texture::FILTER_LINEAR;
+		this->currentState.textureFilter = april::Texture::FILTER_NEAREST;
 		this->currentState.textureAddressMode = april::Texture::ADDRESS_WRAP;
-		this->currentState.blendMode = april::DEFAULT;
-		this->currentState.colorMode = april::NORMAL;
+		this->currentState.blendMode = april::BM_DEFAULT;
+		this->currentState.colorMode = april::CM_DEFAULT;
 	}
 
 	int OpenGL_RenderSystem::getMaxTextureSize()
@@ -371,11 +356,11 @@ namespace april
 	
 	void OpenGL_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
 	{
-		if (textureBlendMode == ALPHA_BLEND || textureBlendMode == DEFAULT)
+		if (textureBlendMode == BM_ALPHA || textureBlendMode == BM_DEFAULT)
 		{
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		}
-		else if (textureBlendMode == ADD)
+		else if (textureBlendMode == BM_ADD)
 		{
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		}
@@ -401,8 +386,8 @@ namespace april
 		}
 		switch (textureColorMode)
 		{
-		case NORMAL:
-		case MULTIPLY:
+		case CM_DEFAULT:
+		case CM_MULTIPLY:
 			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
@@ -410,7 +395,7 @@ namespace april
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
 			break;
-		case LERP:
+		case CM_LERP:
 			glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constColor);
 			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
@@ -419,7 +404,7 @@ namespace april
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
 			break;
-		case ALPHA_MAP:
+		case CM_ALPHA_MAP:
 			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
@@ -440,6 +425,7 @@ namespace april
 
 	void OpenGL_RenderSystem::_setTextureFilter(Texture::Filter textureFilter)
 	{
+		this->textureFilter = textureFilter;
 		switch (textureFilter)
 		{
 		case Texture::FILTER_LINEAR:
@@ -454,7 +440,6 @@ namespace april
 			hlog::warn(april::logTag, "Trying to set unsupported texture filter!");
 			break;
 		}
-		this->textureFilter = textureFilter;
 	}
 
 	void OpenGL_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
@@ -464,6 +449,7 @@ namespace april
 
 	void OpenGL_RenderSystem::_setTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
+		this->textureAddressMode = textureAddressMode;
 		switch (textureAddressMode)
 		{
 		case Texture::ADDRESS_WRAP:
@@ -478,7 +464,6 @@ namespace april
 			hlog::warn(april::logTag, "Trying to set unsupported texture address mode!");
 			break;
 		}
-		this->textureAddressMode = textureAddressMode;
 	}
 
 	void OpenGL_RenderSystem::setTexture(Texture* texture)
@@ -562,7 +547,7 @@ namespace april
 		}
 	}
 
-	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
+	void OpenGL_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
 		this->currentState.textureId = 0;
 		this->currentState.textureCoordinatesEnabled = false;
@@ -578,17 +563,17 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(PlainVertex), v);
-			glDrawArrays(gl_render_ops[renderOp], 0, size);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}
 #endif
 	}
 
-	void OpenGL_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
+	void OpenGL_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
 	{
 		this->currentState.textureId = 0;
 		this->currentState.textureCoordinatesEnabled = false;
@@ -604,17 +589,17 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(PlainVertex), v);
-			glDrawArrays(gl_render_ops[renderOp], 0, size);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}
 #endif
 	}
 	
-	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
+	void OpenGL_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
 		this->currentState.textureCoordinatesEnabled = true;
 		this->currentState.colorEnabled = false;
@@ -628,18 +613,18 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(TexturedVertex), v);
 			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
-			glDrawArrays(gl_render_ops[renderOp], 0, size);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}
 #endif
 	}
 
-	void OpenGL_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
+	void OpenGL_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
 	{
 		this->currentState.textureCoordinatesEnabled = true;
 		this->currentState.colorEnabled = false;
@@ -653,18 +638,18 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(TexturedVertex), v);
 			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
-			glDrawArrays(gl_render_ops[renderOp], 0, size);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}
 #endif
 	}
 
-	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
+	void OpenGL_RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
 		this->currentState.textureId = 0;
 		this->currentState.textureCoordinatesEnabled = false;
@@ -684,18 +669,18 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(ColoredVertex), v);
 			this->_setColorPointer(sizeof(ColoredVertex), &v->color);
-			glDrawArrays(gl_render_ops[renderOp], 0, size);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}
 #endif
 	}
 	
-	void OpenGL_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
+	void OpenGL_RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
 		this->currentState.textureCoordinatesEnabled = true;
 		this->currentState.colorEnabled = true;
@@ -713,12 +698,12 @@ namespace april
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
-			size = _limitPrimitives(renderOp, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(ColoredTexturedVertex), v);
 			this->_setColorPointer(sizeof(ColoredTexturedVertex), &v->color);
 			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &v->u);
-			glDrawArrays(gl_render_ops[renderOp], 0, size);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}
@@ -745,28 +730,73 @@ namespace april
 		this->_applyStateChanges();
 	}
 
-	Image* OpenGL_RenderSystem::takeScreenshot(int bpp)
+	Image::Format OpenGL_RenderSystem::getNativeTextureFormat(Image::Format format)
+	{
+		switch (format)
+		{
+		case Image::FORMAT_ARGB:
+		case Image::FORMAT_XRGB:
+		case Image::FORMAT_RGBA:
+		case Image::FORMAT_RGBX:
+		case Image::FORMAT_ABGR:
+		case Image::FORMAT_XBGR:
+			return Image::FORMAT_RGBA;
+		// for optimizations
+		case Image::FORMAT_BGRA:
+		case Image::FORMAT_BGRX:
+#if !defined(_ANDROID) && !defined(_WIN32)
+#ifndef __APPLE__
+			return Image::FORMAT_BGRA;
+#else
+			return Image::FORMAT_BGRA;
+#endif
+#else
+			return Image::FORMAT_RGBA;
+#endif
+		case Image::FORMAT_RGB:
+			return Image::FORMAT_RGB;
+			break;
+		// for optimizations
+		case Image::FORMAT_BGR:
+#if !defined(_ANDROID) && !defined(_WIN32)
+#ifndef __APPLE__
+			return Image::FORMAT_BGR;
+#else
+			return Image::FORMAT_BGR;
+#endif
+#else
+			return Image::FORMAT_RGB;
+#endif
+		case Image::FORMAT_ALPHA:
+			return Image::FORMAT_ALPHA;
+		case Image::FORMAT_GRAYSCALE:
+			return Image::FORMAT_GRAYSCALE;
+			break;
+		case Image::FORMAT_PALETTE: // TODOaa - does palette use RGBA?
+			return Image::FORMAT_PALETTE;
+			break;
+		}
+		return Image::FORMAT_INVALID;
+	}
+
+	Image* OpenGL_RenderSystem::takeScreenshot(Image::Format format)
 	{
 #ifdef _DEBUG
 		hlog::write(april::logTag, "Taking screenshot...");
 #endif
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
-		Image* img = new Image();
-		img->w = w;
-		img->h = h;
-		img->bpp = bpp;
-		img->format = (bpp == 4 ? Image::FORMAT_RGBA : Image::FORMAT_RGB);
-		img->data = new unsigned char[w * (h + 1) * 4]; // 4 just in case some OpenGL implementations don't blit rgba and cause a memory leak
-		unsigned char* temp = img->data + w * h * 4;
-		glReadPixels(0, 0, w, h, (bpp == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, img->data);
-		for_iter (y, 0, h / 2)
+		unsigned char* temp = new unsigned char[w * (h + 1) * 4]; // 4 BPP and one extra row just in case some OpenGL implementations don't blit properly and cause a memory leak
+		glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, temp);
+		unsigned char* data = NULL;
+		Image* image = NULL;
+		if (Image::convertToFormat(w, h, temp, Image::FORMAT_RGBA, &data, format, false))
 		{
-			memcpy(temp, img->data + y * w * bpp, w * bpp);
-			memcpy(img->data + y * w * bpp, img->data + (h - y - 1) * w * bpp, w * bpp);
-			memcpy(img->data + (h - y - 1) * w * bpp, temp, w * bpp);
+			image = Image::create(w, h, data, format);
+			delete [] data;
 		}
-		return img;
+		delete [] temp;
+		return image;
 	}
 
 }

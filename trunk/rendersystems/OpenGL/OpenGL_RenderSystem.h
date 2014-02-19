@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -66,14 +66,15 @@ namespace april
 		VertexShader* createVertexShader();
 		VertexShader* createVertexShader(chstr filename);
 
-		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
-		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color);
-		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
-		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 		
-		Image* takeScreenshot(int bpp = 3);
+		Image::Format getNativeTextureFormat(Image::Format format);
+		Image* takeScreenshot(Image::Format format);
 
 	protected:
 		OpenGL_State deviceState;

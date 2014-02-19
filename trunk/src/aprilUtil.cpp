@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -15,23 +15,25 @@
 
 namespace april
 {
-	DisplayMode::DisplayMode(int width, int height, int refreshRate)
-	{
-		this->width = width;
-		this->height = height;
-		this->refreshRate = refreshRate;
-	}
+	RenderOperation TriangleList = RO_TRIANGLE_LIST; // DEPRECATED
+	RenderOperation TriangleStrip = RO_TRIANGLE_STRIP; // DEPRECATED
+	RenderOperation TriangleFan = RO_TRIANGLE_FAN; // DEPRECATED
+	RenderOperation LineList = RO_LINE_LIST; // DEPRECATED
+	RenderOperation LineStrip = RO_LINE_STRIP; // DEPRECATED
+	RenderOperation PointList = RO_POINT_LIST; // DEPRECATED
+	RenderOperation RENDER_OP_UNDEFINED = RO_UNDEFINED; // DEPRECATED
+	BlendMode DEFAULT = BM_DEFAULT; // DEPRECATED
+	BlendMode ALPHA_BLEND = BM_ALPHA; // DEPRECATED
+	BlendMode ADD = BM_ADD; // DEPRECATED
+	BlendMode SUBTRACT = BM_SUBTRACT; // DEPRECATED
+	BlendMode OVERWRITE = BM_OVERWRITE; // DEPRECATED
+	BlendMode BLEND_MODE_UNDEFINED = BM_UNDEFINED; // DEPRECATED
+	ColorMode NORMAL = CM_DEFAULT; // DEPRECATED
+	ColorMode MULTIPLY = CM_MULTIPLY; // DEPRECATED
+	ColorMode LERP = CM_LERP; // DEPRECATED
+	ColorMode ALPHA_MAP = CM_ALPHA_MAP; // DEPRECATED
+	ColorMode COLOR_MODE_UNDEFINED = CM_UNDEFINED; // DEPRECATED
 
-	bool DisplayMode::operator==(const DisplayMode& other) const
-	{
-		return (this->width == other.width && this->height == other.height && this->refreshRate == other.refreshRate);
-	}
-
-	bool DisplayMode::operator!=(const DisplayMode& other) const
-	{
-		return !(*this == other);
-	}
-	
 	void PlainVertex::operator=(const gvec3& v)
 	{
 		this->x = v.x;
@@ -136,7 +138,7 @@ namespace april
 	{
 		if (s == 0.0f)
 		{
-			*r = *g = *b = 255;
+			*r = *g = *b = (unsigned char)(l * 255);
 			return;
 		}
 		float q = (l < 0.5f ? l * (1 + s) : l + s - l * s);

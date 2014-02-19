@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -73,7 +73,7 @@ namespace april
 
 	void AndroidJNI_Window::queueTouchEvent(Window::MouseEventType type, gvec2 position, int index)
 	{
-		if (type == AMOUSEEVT_DOWN || type == AMOUSEEVT_UP)
+		if (type == MOUSE_DOWN || type == MOUSE_UP)
 		{
 			this->setInputMode(TOUCH);
 		}

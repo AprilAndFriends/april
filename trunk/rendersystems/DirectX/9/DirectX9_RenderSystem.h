@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -70,14 +70,15 @@ namespace april
 
 		void clear(bool useColor = true, bool depth = false);
 		void clear(bool depth, grect rect, Color color = Color::Clear);
-		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
-		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color);
-		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
-		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
-		Image* takeScreenshot(int bpp = 3);
+		Image::Format getNativeTextureFormat(Image::Format format);
+		Image* takeScreenshot(Image::Format format);
 		void presentFrame();
 
 	protected:
@@ -94,9 +95,7 @@ namespace april
 		void _configureDevice();
 		void _setResolution(int w, int h, bool fullscreen);
 
-		Texture* _createTexture(chstr filename);
-		Texture* _createTexture(int w, int h, unsigned char* rgba);
-		Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
+		Texture* _createTexture();
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);

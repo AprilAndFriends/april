@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -111,12 +111,12 @@ namespace april
 	
 	void JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
-		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::AKEYEVT_DOWN, android2april((int)keyCode), (unsigned int)charCode));
+		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::KEY_DOWN, android2april((int)keyCode), (unsigned int)charCode));
 	}
 	
 	void JNICALL _JNI_onKeyUp(JNIEnv* env, jclass classe, jint keyCode)
 	{
-		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::AKEYEVT_UP, android2april((int)keyCode), 0));
+		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::KEY_UP, android2april((int)keyCode), 0));
 	}
 	
 	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
@@ -126,12 +126,12 @@ namespace april
 	
 	void JNICALL _JNI_onButtonDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
-		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ACTRLEVT_DOWN, (Button)(int)keyCode));
+		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::CONTROLLER_DOWN, (Button)(int)keyCode));
 	}
 	
 	void JNICALL _JNI_onButtonUp(JNIEnv* env, jclass classe, jint keyCode)
 	{
-		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ACTRLEVT_UP, (Button)(int)keyCode));
+		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::CONTROLLER_UP, (Button)(int)keyCode));
 	}
 	
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)

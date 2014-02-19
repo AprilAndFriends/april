@@ -320,7 +320,8 @@ namespace april
 		}
 		
 		Image* img = new Image();
-		img->format = (Image::Format) pvrtex.internalFormat;
+		img->format = FORMAT_PALETTE;
+		img->internalFormat = pvrtex.internalFormat;
 		img->w = pvrtex.width;
 		img->h = pvrtex.height;
 		img->bpp = 4;

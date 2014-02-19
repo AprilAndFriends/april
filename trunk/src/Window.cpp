@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -35,7 +35,17 @@
 
 namespace april
 {
-	// TODOa - refactor
+	Window::MouseEventType Window::AMOUSEEVT_DOWN = Window::MOUSE_DOWN; // DEPRECATED
+	Window::MouseEventType Window::AMOUSEEVT_UP = Window::MOUSE_UP; // DEPRECATED
+	Window::MouseEventType Window::AMOUSEEVT_CANCEL = Window::MOUSE_CANCEL; // DEPRECATED
+	Window::MouseEventType Window::AMOUSEEVT_MOVE = Window::MOUSE_MOVE; // DEPRECATED
+	Window::MouseEventType Window::AMOUSEEVT_SCROLL = Window::MOUSE_SCROLL; // DEPRECATED
+	Window::KeyEventType Window::AKEYEVT_DOWN = Window::KEY_DOWN; // DEPRECATED
+	Window::KeyEventType Window::AKEYEVT_UP = Window::KEY_UP; // DEPRECATED
+	Window::ControllerEventType Window::ACTRLEVT_DOWN = Window::CONTROLLER_DOWN; // DEPRECATED
+	Window::ControllerEventType Window::ACTRLEVT_UP = Window::CONTROLLER_UP; // DEPRECATED
+		
+	// TODOaa - refactor
 	void (*Window::msLaunchCallback)(void*) = NULL;
 	void Window::handleLaunchCallback(void* args)
 	{
@@ -46,13 +56,6 @@ namespace april
 	}
 	//////////////////
 
-	Window::KeyInputEvent::KeyInputEvent(Window::KeyEventType type, Key keyCode, unsigned int charCode)
-	{
-		this->type = type;
-		this->keyCode = keyCode;
-		this->charCode = charCode;
-	}
-
 	Window::MouseInputEvent::MouseInputEvent(Window::MouseEventType type, gvec2 position, Key keyCode)
 	{
 		this->type = type;
@@ -60,6 +63,13 @@ namespace april
 		this->keyCode = keyCode;
 	}
 		
+	Window::KeyInputEvent::KeyInputEvent(Window::KeyEventType type, Key keyCode, unsigned int charCode)
+	{
+		this->type = type;
+		this->keyCode = keyCode;
+		this->charCode = charCode;
+	}
+
 	Window::TouchInputEvent::TouchInputEvent(harray<gvec2>& touches)
 	{
 		this->touches = touches;
@@ -314,7 +324,7 @@ namespace april
 		while (this->mouseEvents.size() > 0)
 		{
 			MouseInputEvent e = this->mouseEvents.remove_first();
-			if (e.type != Window::AMOUSEEVT_CANCEL && e.type != Window::AMOUSEEVT_SCROLL)
+			if (e.type != Window::MOUSE_CANCEL && e.type != Window::MOUSE_SCROLL)
 			{
 				this->cursorPosition = e.position;
 			}
@@ -368,16 +378,12 @@ namespace april
 	void Window::handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode)
 	{
 		this->handleKeyOnlyEvent(type, keyCode); // doesn't do anything if keyCode is AK_NONE
-		if (type == AKEYEVT_DOWN && charCode > 0) // ignores invalid chars
+		if (type == KEY_DOWN && charCode > 0) // ignores invalid chars
 		{
-			if (charCode >= 0xE000 && charCode <= 0xF8FF)
-			{
-				// according to the unicode standard, this range is undefined and reserved for system codes
-				// for example, macosx maps keys up, down, left, right to this key, inducing wrong char calls to the app.
-				// source: http://en.wikibooks.org/wiki/Unicode/Character_reference/F000-FFFF
-				charCode = 0;
-			}
-			else
+			// according to the unicode standard, this range is undefined and reserved for system codes
+			// for example, macosx maps keys up, down, left, right to this key, inducing wrong char calls to the app.
+			// source: http://en.wikibooks.org/wiki/Unicode/Character_reference/F000-FFFF
+			if (charCode < 0xE000 || charCode > 0xF8FF)
 			{
 				this->handleCharOnlyEvent(charCode);
 			}
@@ -394,17 +400,17 @@ namespace april
 		{
 			switch (type)
 			{
-			case AKEYEVT_DOWN:
+			case KEY_DOWN:
 				this->keyboardDelegate->onKeyDown(keyCode);
 				break;
-			case AKEYEVT_UP:
+			case KEY_UP:
 				this->keyboardDelegate->onKeyUp(keyCode);
 				break;
 			}
 			// emulation of buttons using keyboard
 			if (this->controllerEmulationKeys.has_key(keyCode))
 			{
-				ControllerEventType buttonType = (type == AKEYEVT_DOWN ? ACTRLEVT_DOWN : ACTRLEVT_UP);
+				ControllerEventType buttonType = (type == KEY_DOWN ? CONTROLLER_DOWN : CONTROLLER_UP);
 				this->handleControllerEvent(buttonType, this->controllerEmulationKeys[keyCode]);
 			}
 		}
@@ -424,19 +430,19 @@ namespace april
 		{
 			switch (type)
 			{
-			case AMOUSEEVT_DOWN:
+			case MOUSE_DOWN:
 				this->mouseDelegate->onMouseDown(keyCode);
 				break;
-			case AMOUSEEVT_UP:
+			case MOUSE_UP:
 				this->mouseDelegate->onMouseUp(keyCode);
 				break;
-			case AMOUSEEVT_CANCEL:
+			case MOUSE_CANCEL:
 				this->mouseDelegate->onMouseCancel(keyCode);
 				break;
-			case AMOUSEEVT_MOVE:
+			case MOUSE_MOVE:
 				this->mouseDelegate->onMouseMove();
 				break;
-			case AMOUSEEVT_SCROLL:
+			case MOUSE_SCROLL:
 				this->mouseDelegate->onMouseScroll(position.x, position.y);
 				break;
 			}
@@ -457,10 +463,10 @@ namespace april
 		{
 			switch (type)
 			{
-			case ACTRLEVT_DOWN:
+			case CONTROLLER_DOWN:
 				this->controllerDelegate->onButtonDown(buttonCode);
 				break;
-			case ACTRLEVT_UP:
+			case CONTROLLER_UP:
 				this->controllerDelegate->onButtonUp(buttonCode);
 				break;
 			}
@@ -521,28 +527,28 @@ namespace april
 		int previousTouchesSize = this->touches.size();
 		switch (type)
 		{
-		case AMOUSEEVT_DOWN:
+		case MOUSE_DOWN:
 			if (index < this->touches.size()) // DOWN event of an already indexed touch, never happened so far
 			{
 				return;
 			}
 			this->touches += position;
 			break;
-		case AMOUSEEVT_UP:
+		case MOUSE_UP:
 			if (index >= this->touches.size()) // redundant UP event, can happen
 			{
 				return;
 			}
 			this->touches.remove_at(index);
 			break;
-		case AMOUSEEVT_MOVE:
+		case MOUSE_MOVE:
 			if (index >= this->touches.size()) // MOVE event of an unindexed touch, never happened so far
 			{
 				return;
 			}
 			this->touches[index] = position;
 			break;
-		case AMOUSEEVT_CANCEL: // canceling a particular pointer, required by specific systems (e.g. WinRT)
+		case MOUSE_CANCEL: // canceling a particular pointer, required by specific systems (e.g. WinRT)
 			if (index < this->touches.size())
 			{
 				this->touches.remove_at(index);
@@ -560,7 +566,7 @@ namespace april
 			if (!this->multiTouchActive && previousTouchesSize == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->queueMouseEvent(AMOUSEEVT_CANCEL, position, AK_LBUTTON);
+				this->queueMouseEvent(MOUSE_CANCEL, position, AK_LBUTTON);
 			}
 			this->multiTouchActive = (this->touches.size() > 0);
 		}

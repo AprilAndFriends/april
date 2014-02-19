@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -26,9 +26,7 @@ namespace april
 	class OpenGLES2_Texture : public OpenGLES_Texture
 	{
 	public:
-		OpenGLES2_Texture(chstr filename);
-		OpenGLES2_Texture(int w, int h, unsigned char* rgba);
-		OpenGLES2_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
+		OpenGLES2_Texture();
 		~OpenGLES2_Texture();
 
 	};
