@@ -410,8 +410,12 @@ namespace april
 		image->format = format;
 		image->compressedSize = 0;
 		int size = image->getByteSize();
-		image->data = new unsigned char[size];
-		memcpy(image->data, data, size);
+		image->data = NULL;
+		if (data != NULL && size > 0)
+		{
+			image->data = new unsigned char[size];
+			memcpy(image->data, data, size);
+		}
 		return image;
 	}
 
@@ -436,8 +440,19 @@ namespace april
 		image->format = other->format;
 		image->compressedSize = other->compressedSize;
 		int size = image->getByteSize();
-		image->data = new unsigned char[size];
-		memcpy(image->data, other->data, size);
+		image->data = NULL;
+		if (other->data != NULL)
+		{
+			if (size == 0 && image->compressedSize > 0)
+			{
+				size = image->compressedSize;
+			}
+			if (size > 0)
+			{
+				image->data = new unsigned char[size];
+				memcpy(image->data, other->data, size);
+			}
+		}
 		return image;
 	}
 
@@ -537,7 +552,7 @@ namespace april
 		int i = (x + y * destWidth) * destBpp;
 		int copyWidth = w * destBpp;
 		int size = copyWidth * destHeight;
-		if (destBpp == 1 || destBpp == 3 && color.r == color.g && color.r == color.b || destBpp == 4 && color.r == color.g && color.r == color.b && color.r == color.a)
+		if (destBpp == 1 || (destBpp == 3 && color.r == color.g && color.r == color.b) || (destBpp == 4 && color.r == color.g && color.r == color.b && color.r == color.a))
 		{
 			if (x == 0 && w == destWidth)
 			{
@@ -1417,7 +1432,6 @@ namespace april
 
 	bool Image::_convertFrom1Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat)
 	{
-		static int srcBpp = 1;
 		int destBpp = Image::getFormatBpp(destFormat);
 		bool createData = (*destData == NULL);
 		if (createData)
