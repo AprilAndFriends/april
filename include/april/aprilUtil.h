@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -21,50 +21,54 @@
 
 namespace april
 {
-	// TODOa - rename
-	// render operations
-	enum RenderOp
+	enum RenderOperation
 	{
-		TriangleList = 1,
-		TriangleStrip = 2,
-		TriangleFan = 3,
-		LineList = 4,
-		LineStrip = 5,
-		PointList = 6,
-		RENDER_OP_UNDEFINED = 0x7FFFFFFF
+		RO_TRIANGLE_LIST = 1,
+		RO_TRIANGLE_STRIP = 2,
+		RO_TRIANGLE_FAN = 3,
+		RO_LINE_LIST = 4,
+		RO_LINE_STRIP = 5,
+		RO_POINT_LIST = 6,
+		RO_UNDEFINED = 0x7FFFFFFF
 	};
 
 	enum BlendMode
 	{
-		DEFAULT = 0,
-		ALPHA_BLEND = 1,
-		ADD = 2,
-		SUBTRACT = 3,
-		OVERWRITE = 4,
-		BLEND_MODE_UNDEFINED = 0x7FFFFFFF
+		BM_DEFAULT = 0,
+		BM_ALPHA = 1,
+		BM_ADD = 2,
+		BM_SUBTRACT = 3,
+		BM_OVERWRITE = 4,
+		BM_UNDEFINED = 0x7FFFFFFF
 	};
 
 	enum ColorMode
 	{
-		NORMAL = 0,
-		MULTIPLY = 1,
-		LERP = 2,
-		ALPHA_MAP = 3,
-		COLOR_MODE_UNDEFINED = 0x7FFFFFFF
+		CM_DEFAULT = 0,
+		CM_MULTIPLY = 1,
+		CM_LERP = 2,
+		CM_ALPHA_MAP = 3,
+		CM_UNDEFINED = 0x7FFFFFFF
 	};
 
-	struct aprilExport DisplayMode
-	{
-		int width;
-		int height;
-		int refreshRate;
-
-		bool operator==(const DisplayMode& other) const;
-		bool operator!=(const DisplayMode& other) const;
-
-		DisplayMode(int width, int height, int refreshRate);
-
-	};
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation TriangleList;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation TriangleStrip;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation TriangleFan;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation LineList;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation LineStrip;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation PointList;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation RENDER_OP_UNDEFINED;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode DEFAULT;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode ALPHA_BLEND;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode ADD;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode SUBTRACT;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode OVERWRITE;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode BLEND_MODE_UNDEFINED;
+	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode NORMAL;
+	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode MULTIPLY;
+	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode LERP;
+	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode ALPHA_MAP;
+	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode COLOR_MODE_UNDEFINED;
 	
 	struct aprilExport PlainVertex : public gvec3
 	{

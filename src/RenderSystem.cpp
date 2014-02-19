@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -32,12 +32,38 @@
 
 namespace april
 {
-	// optimizations
+	// optimizations, but they are not thread-safe
 	static PlainVertex pv[5];
 	static TexturedVertex tv[5];
 	
 	RenderSystem* rendersys = NULL;
 
+	RenderSystem::DisplayMode::DisplayMode(int width, int height, int refreshRate)
+	{
+		this->width = width;
+		this->height = height;
+		this->refreshRate = refreshRate;
+	}
+
+	RenderSystem::DisplayMode::~DisplayMode()
+	{
+	}
+	
+	bool RenderSystem::DisplayMode::operator==(const DisplayMode& other) const
+	{
+		return (this->width == other.width && this->height == other.height && this->refreshRate == other.refreshRate);
+	}
+
+	bool RenderSystem::DisplayMode::operator!=(const DisplayMode& other) const
+	{
+		return (this->width != other.width || this->height != other.height || this->refreshRate != other.refreshRate);
+	}
+	
+	hstr RenderSystem::DisplayMode::toString()
+	{
+		return hsprintf("%dx%d@%dHz", this->width, this->height, this->refreshRate);
+	}
+	
 	RenderSystem::Options::Options()
 	{
 		this->depthBuffer = false;
@@ -66,8 +92,8 @@ namespace april
 		this->name = "Generic";
 		this->created = false;
 		this->state = NULL;
-		this->textureFilter = Texture::FILTER_LINEAR;
-		this->textureAddressMode = Texture::ADDRESS_WRAP;
+		this->textureFilter = Texture::FILTER_UNDEFINED;
+		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
 	
 	RenderSystem::~RenderSystem()
@@ -110,11 +136,11 @@ namespace april
 		hlog::write(april::logTag, "Resetting rendersystem.");
 	}
 
-	harray<DisplayMode> RenderSystem::getSupportedDisplayModes()
+	harray<RenderSystem::DisplayMode> RenderSystem::getSupportedDisplayModes()
 	{
-		harray<DisplayMode> result;
+		harray<RenderSystem::DisplayMode> result;
 		gvec2 resolution = april::getSystemInfo().displayResolution;
-		result += DisplayMode((int)resolution.x, (int)resolution.y, 60);
+		result += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
 		return result;
 	}
 	
@@ -125,7 +151,7 @@ namespace april
 
 	void RenderSystem::setOrthoProjection(grect rect)
 	{
-		// TODOa - change and improve this implementation
+		// TODOaa - change and improve this implementation
 		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
 		this->orthoProjection = rect;
 		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
@@ -149,35 +175,61 @@ namespace april
 		this->projectionMatrix = matrix;
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
-	
-	Texture* RenderSystem::createTexture(chstr filename, bool loadImmediately)
+
+	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, bool loadImmediately)
 	{
+		// TODOaa
 		hstr name = this->findTextureFilename(filename);
 		if (name == "")
 		{
 			return NULL;
 		}
-		Texture* texture = this->_createTexture(name);
-		if (loadImmediately)
+		Texture* texture = this->_createTexture();
+		if (!texture->_create(name, type) || loadImmediately && !texture->load() && !texture->isLoaded())
 		{
-			texture->load();
-			if (!texture->isLoaded())
-			{
-				delete texture;
-				return NULL;
-			}
+			delete texture;
+			return NULL;
 		}
 		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int w, int h, unsigned char* rgba)
+	Texture* RenderSystem::createTextureFromFile(chstr filename, Texture::Type type, bool loadImmediately)
 	{
-		return this->_createTexture(w, h, rgba);
+		// TODOaa
+		hstr name = this->findTextureFilename(filename);
+		if (name == "")
+		{
+			return NULL;
+		}
+		Texture* texture = this->_createTexture();
+		if (!texture->_create(name, type) || loadImmediately && !texture->load() && !texture->isLoaded())
+		{
+			delete texture;
+			return NULL;
+		}
+		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
+	Texture* RenderSystem::createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
 	{
-		return this->_createTexture(w, h, format, type, color);
+		Texture* texture = this->_createTexture();
+		if (!texture->_create(w, h, data, format, type))
+		{
+			delete texture;
+			texture = NULL;
+		}
+		return texture;
+	}
+
+	Texture* RenderSystem::createTexture(int w, int h, Color color, Image::Format format, Texture::Type type)
+	{
+		Texture* texture = this->_createTexture();
+		if (!texture->_create(w, h, color, format, type))
+		{
+			delete texture;
+			texture = NULL;
+		}
+		return texture;
 	}
 
 	Texture* RenderSystem::createRamTexture(chstr filename, bool loadImmediately)
@@ -187,15 +239,11 @@ namespace april
 		{
 			return NULL;
 		}
-		RamTexture* texture = new RamTexture(name);
-		if (loadImmediately)
+		Texture* texture = new RamTexture(name);
+		if (!texture->_create(name, Texture::TYPE_MANAGED) || loadImmediately && !texture->load() && !texture->isLoaded())
 		{
-			texture->load();
-			if (!texture->isLoaded())
-			{
-				delete texture;
-				return NULL;
-			}
+			delete texture;
+			return NULL;
 		}
 		return texture;
 	}
@@ -257,7 +305,7 @@ namespace april
 		pv[2].x = rect.x + rect.w;	pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
 		pv[3].x = rect.x;			pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
 		pv[4].x = rect.x;			pv[4].y = rect.y;			pv[4].z = 0.0f;
-		this->render(LineStrip, pv, 5, color);
+		this->render(RO_LINE_STRIP, pv, 5, color);
 	}
 
 	void RenderSystem::drawFilledRect(grect rect, Color color)
@@ -266,7 +314,7 @@ namespace april
 		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
 		pv[2].x = rect.x;			pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
 		pv[3].x = rect.x + rect.w;	pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
-		this->render(TriangleStrip, pv, 4, color);
+		this->render(RO_TRIANGLE_STRIP, pv, 4, color);
 	}
 	
 	void RenderSystem::drawTexturedRect(grect rect, grect src)
@@ -275,7 +323,7 @@ namespace april
 		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
 		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
 		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
-		this->render(TriangleStrip, tv, 4);
+		this->render(RO_TRIANGLE_STRIP, tv, 4);
 	}
 	
 	void RenderSystem::drawTexturedRect(grect rect, grect src, Color color)
@@ -284,7 +332,7 @@ namespace april
 		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
 		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
 		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
-		this->render(TriangleStrip, tv, 4, color);
+		this->render(RO_TRIANGLE_STRIP, tv, 4, color);
 	}
 	
 	void RenderSystem::presentFrame()
@@ -324,14 +372,32 @@ namespace april
 		return "";
 	}
 	
-	void RenderSystem::_registerTexture(Texture* texture)
+	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int nVertices)
 	{
-		this->textures += texture;
+		switch (renderOperation)
+		{
+		case RO_TRIANGLE_LIST:	return nVertices / 3;
+		case RO_TRIANGLE_STRIP:	return nVertices - 2;
+		case RO_TRIANGLE_FAN:	return nVertices - 2;
+		case RO_LINE_LIST:		return nVertices / 2;
+		case RO_LINE_STRIP:		return nVertices - 1;
+		case RO_POINT_LIST:		return nVertices;
+		}
+		return 0;
 	}
 	
-	void RenderSystem::_unregisterTexture(Texture* texture)
+	unsigned int RenderSystem::_limitPrimitives(RenderOperation renderOperation, int nVertices)
 	{
-		this->textures -= texture;
+		switch (renderOperation)
+		{
+		case RO_TRIANGLE_LIST:	return nVertices / 3 * 3;
+		case RO_TRIANGLE_STRIP:	return nVertices;
+		case RO_TRIANGLE_FAN:	return nVertices;
+		case RO_LINE_LIST:		return nVertices / 2 * 2;
+		case RO_LINE_STRIP:		return nVertices;
+		case RO_POINT_LIST:		return nVertices;
+		}
+		return nVertices;
 	}
 	
 }

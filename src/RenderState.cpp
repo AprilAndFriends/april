@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -35,8 +35,8 @@ namespace april
 		this->systemColor = Color::Black;
 		this->modelviewMatrixChanged = false;
 		this->projectionMatrixChanged = false;
-		this->blendMode = BLEND_MODE_UNDEFINED;
-		this->colorMode = COLOR_MODE_UNDEFINED;
+		this->blendMode = BM_UNDEFINED;
+		this->colorMode = CM_UNDEFINED;
 		this->colorModeAlpha = 255;
 		this->modeMatrix = 0;
 		this->strideVertex = 0;

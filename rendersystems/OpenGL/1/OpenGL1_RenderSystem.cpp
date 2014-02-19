@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -162,19 +162,9 @@ namespace april
 		}
 	}
 	
-	Texture* OpenGL1_RenderSystem::_createTexture(chstr filename)
+	Texture* OpenGL1_RenderSystem::_createTexture()
 	{
-		return new OpenGL1_Texture(filename);
-	}
-
-	Texture* OpenGL1_RenderSystem::_createTexture(int w, int h, unsigned char* rgba)
-	{
-		return new OpenGL1_Texture(w, h, rgba);
-	}
-	
-	Texture* OpenGL1_RenderSystem::_createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
-	{
-		return new OpenGL1_Texture(w, h, format, type, color);
+		return new OpenGL1_Texture();
 	}
 
 	void OpenGL1_RenderSystem::_setVertexPointer(int stride, const void* pointer)

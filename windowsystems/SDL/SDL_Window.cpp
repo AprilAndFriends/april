@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -274,7 +274,7 @@ namespace april
 				else
 #endif
 				{
-					this->_handleSDLKeyEvent((sdlEvent.type == SDL_KEYUP ? AKEYEVT_UP : AKEYEVT_DOWN),
+					this->_handleSDLKeyEvent((sdlEvent.type == SDL_KEYUP ? KEY_UP : KEY_DOWN),
 						sdlEvent.key.keysym.sym, sdlEvent.key.keysym.unicode);
 				}
 				break;
@@ -421,11 +421,11 @@ namespace april
 		}
 		if (akeysym == AK_LCONTROL || akeysym == AK_RCONTROL)
 		{
-			if (type == AKEYEVT_DOWN)
+			if (type == KEY_DOWN)
 			{
 				this->scrollHorizontal = true;
 			}
-			else if (type == AKEYEVT_UP)
+			else if (type == KEY_UP)
 			{
 				this->scrollHorizontal = false;
 			}
@@ -442,13 +442,13 @@ namespace april
 		switch (sdlEvent.type)
 		{
 		case SDL_MOUSEBUTTONUP:
-			mouseEvent = AMOUSEEVT_UP;
+			mouseEvent = MOUSE_UP;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			mouseEvent = AMOUSEEVT_DOWN;
+			mouseEvent = MOUSE_DOWN;
 			break;
 		case SDL_MOUSEMOTION:
-			mouseEvent = AMOUSEEVT_MOVE;
+			mouseEvent = MOUSE_MOVE;
 			break;
 		default:
 			break;
@@ -471,7 +471,7 @@ namespace april
 				if (sdlEvent.type == SDL_MOUSEBUTTONDOWN)
 				{
 					mouseButton = AK_WHEELUP;
-					mouseEvent = AMOUSEEVT_SCROLL;
+					mouseEvent = MOUSE_SCROLL;
 				}
 				else return;
 				break;
@@ -479,7 +479,7 @@ namespace april
 				if (sdlEvent.type == SDL_MOUSEBUTTONDOWN)
 				{
 					mouseButton = AK_WHEELDN;
-					mouseEvent = AMOUSEEVT_SCROLL;
+					mouseEvent = MOUSE_SCROLL;
 				}
 				else return;
 				break;

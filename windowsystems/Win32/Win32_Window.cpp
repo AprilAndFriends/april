@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -295,7 +295,7 @@ namespace april
 			TranslateMessage(&msg);
 			DispatchMessageW(&msg);
 		}
-		// Win32 window cannot use event queueing properly because of split key-down and char events
+		Window::checkEvents();
 	}
 
 	void Win32_Window::_setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen)
@@ -359,14 +359,14 @@ namespace april
 				if (_doubleTapDown)
 				{ 
 					_doubleTapDown = false;
-					april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AK_DOUBLETAP);
+					april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_DOUBLETAP);
 				}
 				_touchDown = false;
 			}
 			else if (wParam == 6) // GID_TWOFINGERTAP
 			{
 				_doubleTapDown = true;
-				april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AK_DOUBLETAP);
+				april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_DOUBLETAP);
 			}
 			break;
 		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
@@ -401,7 +401,7 @@ namespace april
 			}
 			else
 			{
-				april::window->handleKeyOnlyEvent(AKEYEVT_DOWN, (april::Key)wParam);
+				april::window->queueKeyEvent(KEY_DOWN, (april::Key)wParam, 0);
 			}
 			return 0;
 		case WM_SYSKEYUP:
@@ -411,15 +411,15 @@ namespace april
 			}
 			// no break here, because this is still an input message that needs to be processed normally
 		case WM_KEYUP:
-			april::window->handleKeyOnlyEvent(AKEYEVT_UP, (april::Key)wParam);
+			april::window->queueKeyEvent(KEY_UP, (april::Key)wParam, 0);
 			return 0;
 		case WM_CHAR:
-			april::window->handleCharOnlyEvent(wParam);
+			april::window->queueKeyEvent(KEY_DOWN, AK_NONE, wParam);
 			break;
 		case WM_LBUTTONDOWN:
 			_touchDown = true;
 			_mouseMoveMessagesCount = 0;
-			april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AK_LBUTTON);
+			april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_LBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				SetCapture((HWND)april::window->getBackendId());
@@ -428,7 +428,7 @@ namespace april
 		case WM_RBUTTONDOWN:
 			_touchDown = true;
 			_mouseMoveMessagesCount = 0;
-			april::window->handleMouseEvent(AMOUSEEVT_DOWN, april::window->getCursorPosition(), AK_RBUTTON);
+			april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_RBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				SetCapture((HWND)april::window->getBackendId());
@@ -436,7 +436,7 @@ namespace april
 			break;
 		case WM_LBUTTONUP:
 			_touchDown = false;
-			april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AK_LBUTTON);
+			april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_LBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				ReleaseCapture();
@@ -444,7 +444,7 @@ namespace april
 			break;
 		case WM_RBUTTONUP:
 			_touchDown = false;
-			april::window->handleMouseEvent(AMOUSEEVT_UP, april::window->getCursorPosition(), AK_RBUTTON);
+			april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_RBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				ReleaseCapture();
@@ -466,28 +466,28 @@ namespace april
 			{
 				_mouseMoveMessagesCount = 0;
 			}
-			april::window->handleMouseEvent(AMOUSEEVT_MOVE, april::window->getCursorPosition(), AK_NONE);
+			april::window->queueMouseEvent(MOUSE_MOVE, april::window->getCursorPosition(), AK_NONE);
 			break;
 		case WM_MOUSEWHEEL:
 			_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 			{
-				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(0.0f, -(float)_wheelDelta), AK_NONE);
+				april::window->queueMouseEvent(MOUSE_SCROLL, gvec2(0.0f, -(float)_wheelDelta), AK_NONE);
 			}
 			else
 			{
-				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), AK_NONE);
+				april::window->queueMouseEvent(MOUSE_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), AK_NONE);
 			}
 			break;
 		case WM_MOUSEHWHEEL:
 			_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 			if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 			{
-				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), AK_NONE);
+				april::window->queueMouseEvent(MOUSE_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), AK_NONE);
 			}
 			else
 			{
-				april::window->handleMouseEvent(AMOUSEEVT_SCROLL, gvec2(0.0f, -(float)_wheelDelta), AK_NONE);
+				april::window->queueMouseEvent(MOUSE_SCROLL, gvec2(0.0f, -(float)_wheelDelta), AK_NONE);
 			}
 			break;
 		case WM_SETCURSOR:

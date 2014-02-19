@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -30,49 +30,27 @@ namespace april
 	public:
 		friend class DirectX9_RenderSystem;
 
-		DirectX9_Texture(chstr filename);
-		DirectX9_Texture(int w, int h, unsigned char* rgba);
-		DirectX9_Texture(int w, int h, Format format, Type type, Color color = Color::Clear);
+		DirectX9_Texture();
 		~DirectX9_Texture();
-		bool load();
 		void unload();
 		
 		bool isLoaded();
 		
-		void clear();
-		Color getPixel(int x, int y);
-		void setPixel(int x, int y, Color color);
-		void fillRect(int x, int y, int w, int h, Color color);
-		void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		void write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp);
-
-		void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		void stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
-		void rotateHue(float degrees);
-		void saturate(float factor);
-		bool copyPixelData(unsigned char** output);
-		void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
-
-		void restore(); // TODO - currently only a hack for rendertarget textures
-
 	protected:
 		IDirect3DSurface9* d3dSurface;
 		IDirect3DTexture9* d3dTexture;
+		D3DFORMAT d3dFormat;
+		D3DPOOL d3dPool;
+		DWORD d3dUsage;
 		bool renderTarget;
 
-		enum LOCK_RESULT
-		{
-			LR_LOCKED,
-			LR_RENDERTARGET,
-			LR_FAILED
-		};
+		bool _createInternalTexture(unsigned char* data, int size, Type type);
+		void _assignFormat();
 
-		IDirect3DTexture9* _getTexture() { return this->d3dTexture; }
 		IDirect3DSurface9* _getSurface();
 
-		LOCK_RESULT _tryLock(IDirect3DSurface9** buffer, D3DLOCKED_RECT* lockRect, RECT* rect);
-		void _unlock(IDirect3DSurface9* buffer, LOCK_RESULT lock, bool update);
+		Lock _tryLockSystem(int x, int y, int w, int h);
+		bool _unlockSystem(Lock& lock, bool update);
 
 	};
 

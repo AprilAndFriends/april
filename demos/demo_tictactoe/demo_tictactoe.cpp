@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -74,7 +74,7 @@ void draw_symbol(int x, int y, chstr symbol)
 	v[1].x = x2; v[1].y = y2; v[1].z = 0; v[1].u = 1; v[1].v = 0;
 	v[2].x = x3; v[2].y = y3; v[2].z = 0; v[2].u = 0; v[2].v = 1;
 	v[3].x = x4; v[3].y = y4; v[3].z = 0; v[3].u = 1; v[3].v = 1;
-	april::rendersys->render(april::TriangleStrip, v, 4);
+	april::rendersys->render(april::RO_TRIANGLE_STRIP, v, 4);
 }
 
 
@@ -110,7 +110,7 @@ void draw_line(int x_start, int y_start, int x_end, int y_end, std::string symbo
 	v[1].x = x2; v[1].y = y1; v[1].z = 0; v[1].u = 1; v[1].v = 0;
 	v[2].x = x1; v[2].y = y2; v[2].z = 0; v[2].u = 0; v[2].v = 1;
 	v[3].x = x2; v[3].y = y2; v[3].z = 0; v[3].u = 1; v[3].v = 1;
-	april::rendersys->render(april::TriangleStrip, v, 4);
+	april::rendersys->render(april::RO_TRIANGLE_STRIP, v, 4);
 }
 
 class UpdateDelegate : public april::UpdateDelegate
@@ -125,7 +125,7 @@ class UpdateDelegate : public april::UpdateDelegate
 		v[1].x = drawRect.w;	v[1].y = 0;				v[1].z = 0;	v[1].u = 1;	v[1].v = 0;
 		v[2].x = 0;				v[2].y = drawRect.h;	v[2].z = 0;	v[2].u = 0;	v[2].v = 1;
 		v[3].x = drawRect.w;	v[3].y = drawRect.h;	v[3].z = 0;	v[3].u = 1;	v[3].v = 1;
-		april::rendersys->render(april::TriangleStrip, v, 4);
+		april::rendersys->render(april::RO_TRIANGLE_STRIP, v, 4);
 	
 		april::rendersys->setTexture(NULL);
 		april::rendersys->drawFilledRect(grect(size.x, 0, 10, drawRect.h), april::Color::Magenta);

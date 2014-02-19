@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.2
+/// @version 3.3
 /// 
 /// @section LICENSE
 /// 
@@ -21,25 +21,184 @@
 #include "Texture.h"
 #include "RenderSystem.h"
 
+#define HROUND_GRECT(rect) hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h)
+#define HROUND_GVEC2(vec2) hround(vec2.x), hround(vec2.y)
+
 namespace april
 {
+	Image::Format Texture::FORMAT_ALPHA = Image::FORMAT_ALPHA; // DEPRECATED
+	Image::Format Texture::FORMAT_ARGB = Image::FORMAT_RGBA; // DEPRECATED
+
+	Texture::Lock::Lock()
+	{
+		this->systemBuffer = NULL;
+		this->x = 0;
+		this->y = 0;
+		this->w = 0;
+		this->h = 0;
+		this->dx = 0;
+		this->dy = 0;
+		this->data = NULL;
+		this->dataWidth = 0;
+		this->dataHeight = 0;
+		this->format = Image::FORMAT_INVALID;
+		this->locked = false;
+		this->failed = true;
+		this->renderTarget = false;
+	}
+
+	Texture::Lock::~Lock()
+	{
+	}
+
+	void Texture::Lock::activateFail()
+	{
+		this->locked = false;
+		this->failed = true;
+		this->renderTarget = false;
+	}
+
+	void Texture::Lock::activateLock(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format)
+	{
+		this->x = x;
+		this->y = y;
+		this->w = w;
+		this->h = h;
+		this->dx = dx;
+		this->dy = dy;
+		this->data = data;
+		this->dataWidth = dataWidth;
+		this->dataHeight = dataHeight;
+		this->format = format;
+		this->locked = true;
+		this->failed = false;
+		this->renderTarget = false;
+	}
+
+	void Texture::Lock::activateRenderTarget(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format)
+	{
+		this->x = x;
+		this->y = y;
+		this->w = w;
+		this->h = h;
+		this->dx = dx;
+		this->dy = dy;
+		this->data = data;
+		this->dataWidth = dataWidth;
+		this->dataHeight = dataHeight;
+		this->format = format;
+		this->locked = false;
+		this->failed = false;
+		this->renderTarget = true;
+	}
+
 	Texture::Texture()
 	{
 		this->filename = "";
-		this->format = FORMAT_INVALID;
+		this->type = TYPE_IMMUTABLE;
+		this->format = Image::FORMAT_INVALID;
+		this->dataFormat = 0;
 		this->width = 0;
 		this->height = 0;
-		this->bpp = 4;
 		this->filter = FILTER_LINEAR;
 		this->addressMode = ADDRESS_WRAP;
-		april::rendersys->_registerTexture(this);
+		this->data = NULL;
+		april::rendersys->textures += this;
+	}
+
+	bool Texture::_create(chstr filename, Texture::Type type)
+	{
+		this->filename = filename;
+		this->type = type;
+		this->width = 0;
+		this->height = 0;
+		this->type = type;
+		this->format = Image::FORMAT_INVALID;
+		this->dataFormat = 0;
+		this->data = NULL;
+		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		return true;
+	}
+
+	bool Texture::_create(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
+	{
+		if (w == 0 || h == 0)
+		{
+			hlog::errorf(april::logTag, "Cannot create texture with dimentions %d,%d!", w, h);
+			return false;
+		}
+		this->filename = "";
+		this->width = w;
+		this->height = h;
+		this->type = TYPE_MANAGED; // so the write call later on goes through
+		int size = 0;
+		if (type != TYPE_VOLATILE)
+		{
+			this->format = format;
+			size = this->getByteSize();
+			this->data = new unsigned char[size];
+		}
+		else
+		{
+			this->format = april::rendersys->getNativeTextureFormat(format);
+			size = this->getByteSize();
+		}
+		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		this->dataFormat = 0;
+		this->_assignFormat();
+		if (!this->_createInternalTexture(data, size, type))
+		{
+			return false;
+		}
+		this->write(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, format);
+		this->type = type;
+		return true;
+	}
+
+	bool Texture::_create(int w, int h, Color color, Image::Format format, Texture::Type type)
+	{
+		if (w == 0 || h == 0)
+		{
+			hlog::errorf(april::logTag, "Cannot create texture with dimensions %d,%d!", w, h);
+			return false;
+		}
+		this->filename = "";
+		this->width = w;
+		this->height = h;
+		this->type = TYPE_MANAGED; // so the write call later on goes through
+		int size = 0;
+		if (type != TYPE_VOLATILE)
+		{
+			this->format = format;
+			size = this->getByteSize();
+			this->data = new unsigned char[size];
+		}
+		else
+		{
+			this->format = april::rendersys->getNativeTextureFormat(format);
+			size = this->getByteSize();
+		}
+		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		this->dataFormat = 0;
+		this->_assignFormat();
+		if (!this->_createInternalTexture(this->data, size, type))
+		{
+			return false;
+		}
+		this->fillRect(0, 0, this->width, this->height, color);
+		this->type = type;
+		return true;
 	}
 
 	Texture::~Texture()
 	{
-		april::rendersys->_unregisterTexture(this);
+		april::rendersys->textures -= this;
+		if (this->data != NULL)
+		{
+			delete this->data;
+		}
 	}
-	
+
 	int Texture::getWidth()
 	{
 		if (this->width == 0)
@@ -60,596 +219,659 @@ namespace april
 
 	int Texture::getBpp()
 	{
-		if (this->bpp == 0)
+		if (this->format == Image::FORMAT_INVALID)
 		{
 			hlog::warnf(april::logTag, "Texture '%s' has bpp = 0 (possibly not loaded yet?)", this->filename.c_str());
 		}
-		return this->bpp;
+		return Image::getFormatBpp(this->format);
 	}
 
 	int Texture::getByteSize()
 	{
-		if (this->width == 0 || this->height == 0 || this->bpp == 0)
+		if (this->width == 0 || this->height == 0 || this->format == Image::FORMAT_INVALID)
 		{
 			hlog::warnf(april::logTag, "Texture '%s' has byteSize = 0 (possibly not loaded yet?)", this->filename.c_str());
 		}
-		return (this->width * this->height * this->bpp);
+		return (this->width * this->height * Image::getFormatBpp(this->format));
 	}
 
 	hstr Texture::_getInternalName()
 	{
-		return (this->filename != "" ? this->filename : "UserTexture");
+		hstr result;
+		if (this->filename != "")
+		{
+			result += "'" + this->filename + "'";
+		}
+		else
+		{
+			result += hsprintf("<0x%p>", this);
+		}
+		switch (this->type)
+		{
+		case TYPE_IMMUTABLE:
+			result += " (immutable)";
+			break;
+		case TYPE_MANAGED:
+			result += " (managed)";
+			break;
+		case TYPE_VOLATILE:
+			result += " (volatile)";
+			break;
+		}
+		return result;
 	}
 
-	void Texture::clear()
+	bool Texture::load()
 	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement clear()!", april::rendersys->getName().c_str());
+		if (this->isLoaded())
+		{
+			return true;
+		}
+		hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
+		int size = 0;
+		unsigned char* currentData = NULL;
+		if (this->data != NULL) // reload from memory
+		{
+			currentData = this->data;
+			size = this->getByteSize();
+		}
+		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
+		if (currentData == NULL && (type != TYPE_VOLATILE || this->width == 0 || this->height == 0))
+		{
+			if (this->filename == "")
+			{
+				hlog::error(april::logTag, "No filename for texture specified!");
+				return false;
+			}
+			Image* image = Image::create(this->filename);
+			if (image == NULL)
+			{
+				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
+				return false;
+			}
+			this->width = image->w;
+			this->height = image->h;
+			this->format = image->format;
+			this->dataFormat = image->internalFormat;
+			if (this->dataFormat != 0)
+			{
+				size = image->compressedSize;
+			}
+			currentData = image->data;
+			image->data = NULL;
+			delete image;
+		}
+		this->_assignFormat();
+		if (!this->_createInternalTexture(currentData, size, this->type))
+		{
+			if (currentData != NULL && this->data != currentData)
+			{
+				delete [] currentData;
+			}
+			return false;
+		}
+		if (currentData != NULL)
+		{
+			Type type = this->type;
+			this->type = TYPE_MANAGED; // so the write call right below goes through
+			this->write(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
+			this->type = type;
+			if (this->type != TYPE_VOLATILE && (this->type != TYPE_IMMUTABLE || this->filename == ""))
+			{
+				if (this->data != currentData)
+				{
+					if (this->data != NULL)
+					{
+						delete [] this->data;
+					}
+					this->data = currentData;
+				}
+			}
+			else
+			{
+				delete [] currentData;
+				// the used format will be the native format, because there is no intermediate data
+				this->format = april::rendersys->getNativeTextureFormat(this->format);
+			}
+		}
+		return true;
+	}
+
+	bool Texture::clear()
+	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock();
+		if (lock.failed)
+		{
+			return false;
+		}
+		memset(lock.data, 0, this->getByteSize());
+		return this->_unlock(lock, true);
 	}
 
 	Color Texture::getPixel(int x, int y)
 	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement getPixel()!", april::rendersys->getName().c_str());
-		return Color::Clear;
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + this->_getInternalName());
+			return false;
+		}
+		Color color = Color::Clear;
+		if (this->data != NULL)
+		{
+			color = Image::getPixel(x, y, this->data, this->width, this->height, this->format);
+		}
+		return color;
 	}
 
-	void Texture::setPixel(int x, int y, Color color)
+	bool Texture::setPixel(int x, int y, Color color)
 	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement setPixel()!", april::rendersys->getName().c_str());
-	}
-
-	void Texture::fillRect(int x, int y, int w, int h, Color color)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement fillRect()!", april::rendersys->getName().c_str());
-	}
-
-	void Texture::blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement blit()!", april::rendersys->getName().c_str());
-	}
-
-	void Texture::blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement blit()!", april::rendersys->getName().c_str());
-	}
-
-	void Texture::stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement stretchBlit()!", april::rendersys->getName().c_str());
-	}
-
-	void Texture::stretchBlit(int x, int y, int w, int h, unsigned char* data,int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement stretchBlit()!", april::rendersys->getName().c_str());
-	}
-
-	void Texture::rotateHue(float degrees)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement rotateHue()!", april::rendersys->getName().c_str());
-	}
-
-	void Texture::saturate(float factor)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement saturate()!", april::rendersys->getName().c_str());
-	}
-
-	void Texture::insertAsAlphaMap(Texture* texture, unsigned char median, int ambiguity)
-	{
-		hlog::warnf(april::logTag, "Rendersystem '%s' does not implement insertAsAlphaMap()!", april::rendersys->getName().c_str());
-	}
-
-	Color Texture::getPixel(gvec2 position)
-	{
-		return this->getPixel(hround(position.x), hround(position.y));
-	}
-
-	void Texture::setPixel(gvec2 position, Color color)
-	{
-		this->setPixel(hround(position.x), hround(position.y), color);
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(x, y, 1, 1);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::setPixel(lock.x, lock.y, color, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
 	}
 
 	Color Texture::getInterpolatedPixel(float x, float y)
 	{
-		Color result;
-		int x0 = (int) x;
-		int y0 = (int) y;
-		int x1 = x0 + 1;
-		int y1 = y0 + 1;
-		float rx0 = x - x0;
-		float ry0 = y - y0;
-		float rx1 = 1.0f - rx0;
-		float ry1 = 1.0f - ry0;
-		if (rx0 != 0.0f && ry0 != 0.0f)
+		if (this->type != TYPE_MANAGED)
 		{
-			Color tl = this->getPixel(x0, y0);
-			Color tr = this->getPixel(x1, y0);
-			Color bl = this->getPixel(x0, y1);
-			Color br = this->getPixel(x1, y1);
-			result = (tl * ry1 + bl * ry0) * rx1 + (tr * ry1 + br * ry0) * rx0;
+			hlog::warn(april::logTag, "Cannot read texture: " + this->_getInternalName());
+			return false;
 		}
-		else if (rx0 != 0.0f)
+		Color color = Color::Clear;
+		if (this->data != NULL)
 		{
-			Color tl = this->getPixel(x0, y0);
-			Color tr = this->getPixel(x1, y0);
-			result = tl * rx1 + tr * rx0;
+			color = Image::getInterpolatedPixel(x, y, this->data, this->width, this->height, this->format);
 		}
-		else if (ry0 != 0.0f)
+		return color;
+	}
+
+	bool Texture::fillRect(int x, int y, int w, int h, Color color)
+	{
+		if (this->type == TYPE_IMMUTABLE)
 		{
-			Color tl = this->getPixel(x0, y0);
-			Color bl = this->getPixel(x0, y1);
-			result = tl * ry1 + bl * ry0;
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			return false;
 		}
-		else
+		if (w == 1 && h == 1)
 		{
-			result = this->getPixel(x0, y0);
+			return this->setPixel(x, y, color);
 		}
+		Lock lock = this->_tryLock(x, y, w, h);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::fillRect(lock.x, lock.y, lock.w, lock.h, color, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+	}
+
+	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + this->_getInternalName());
+			return false;
+		}
+		if (!this->isLoaded())
+		{
+			return false;
+		}
+		Lock lock = this->_tryLock();
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = Image::convertToFormat(lock.dataWidth, lock.dataHeight, lock.data, lock.format, output, format, false);
+		this->_unlock(lock, false);
 		return result;
 	}
-	
+
+	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(dx, dy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::write(sx, sy, sw, sh, lock.x, lock.y, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+	}
+
+	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		if (texture->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			return false;
+		}
+		if (texture == NULL || !texture->isLoaded())
+		{
+			return false;
+		}
+		Lock lock = texture->_tryLock(sx, sy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = this->write(lock.dx, lock.dy, lock.w, lock.h, dx, dy, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
+		texture->_unlock(lock, false);
+		return result;
+	}
+
+	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		if (this->type == TYPE_IMMUTABLE)
+		{
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(dx, dy, dw, dh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::writeStretch(sx, sy, sw, sh, lock.x, lock.y, lock.w, lock.h, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+	}
+
+	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		if (texture->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			return false;
+		}
+		if (texture == NULL || !texture->isLoaded())
+		{
+			return false;
+		}
+		Lock lock = texture->_tryLock(sx, sy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = this->writeStretch(lock.dx, lock.dy, lock.w, lock.h, dx, dy, dw, dh, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
+		texture->_unlock(lock, false);
+		return result;
+	}
+
+	bool Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(dx, dy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::blit(sx, sy, sw, sh, lock.x, lock.y, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha));
+	}
+
+	bool Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		if (texture->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			return false;
+		}
+		if (texture == NULL || !texture->isLoaded())
+		{
+			return false;
+		}
+		Lock lock = texture->_tryLock(sx, sy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = this->blit(lock.dx, lock.dy, lock.w, lock.h, dx, dy, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha);
+		texture->_unlock(lock, false);
+		return result;
+	}
+
+	bool Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(dx, dy, dw, dh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::blitStretch(sx, sy, sw, sh, lock.x, lock.y, lock.w, lock.h, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha));
+	}
+
+	bool Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		if (texture->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			return false;
+		}
+		if (texture == NULL || !texture->isLoaded())
+		{
+			return false;
+		}
+		Lock lock = texture->_tryLock(sx, sy, sw, sh);
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = this->blitStretch(lock.dx, lock.dy, lock.w, lock.h, dx, dy, dw, dh, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha);
+		texture->_unlock(lock, false);
+		return result;
+	}
+
+	bool Texture::rotateHue(int x, int y, int w, int h, float degrees)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(x, y, w, h);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::rotateHue(lock.x, lock.y, lock.w, lock.h, degrees, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+	}
+
+	bool Texture::saturate(int x, int y, int w, int h, float factor)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(x, y, w, h);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::saturate(lock.x, lock.y, lock.w, lock.h, factor, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+	}
+
+	bool Texture::invert(int x, int y, int w, int h)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock(x, y, w, h);
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::invert(lock.x, lock.y, lock.w, lock.h, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+	}
+
+	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		Lock lock = this->_tryLock();
+		if (lock.failed)
+		{
+			return false;
+		}
+		return this->_unlock(lock, Image::insertAlphaMap(lock.dataWidth, lock.dataHeight, srcData, srcFormat, lock.data, lock.format, median, ambiguity));
+	}
+
+	bool Texture::insertAlphaMap(Texture* texture, unsigned char median, int ambiguity)
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			return false;
+		}
+		if (texture->type != TYPE_MANAGED)
+		{
+			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			return false;
+		}
+		if (texture == NULL || !texture->isLoaded() || texture->width != this->width || texture->height != this->height)
+		{
+			return false;
+		}
+		Lock lock = texture->_tryLock();
+		if (lock.failed)
+		{
+			return false;
+		}
+		bool result = this->insertAlphaMap(lock.data, lock.format, median, ambiguity);
+		texture->_unlock(lock, false);
+		return result;
+	}
+
+	// overloads
+
+	Color Texture::getPixel(gvec2 position)
+	{
+		return this->getPixel(HROUND_GVEC2(position));
+	}
+
+	bool Texture::setPixel(gvec2 position, Color color)
+	{
+		return this->setPixel(HROUND_GVEC2(position), color);
+	}
+
 	Color Texture::getInterpolatedPixel(gvec2 position)
 	{
 		return this->getInterpolatedPixel(position.x, position.y);
 	}
 
-	void Texture::fillRect(grect rect, Color color)
+	bool Texture::fillRect(grect rect, Color color)
 	{
-		this->fillRect(hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h), color);
+		return this->fillRect(HROUND_GRECT(rect), color);
 	}
 
-	void Texture::blit(int x, int y, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha)
+	bool Texture::copyPixelData(unsigned char** output)
 	{
-		this->blit(x, y, image->data, image->w, image->h, image->bpp, sx, sy, sw, sh, alpha);
+		return this->copyPixelData(output, this->format);
 	}
 
-	void Texture::blit(gvec2 position, Texture* texture, grect source, unsigned char alpha)
+	bool Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		this->blit(hround(position.x), hround(position.y), texture, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+		return this->write(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), srcData, srcWidth, srcHeight, srcFormat);
 	}
 
-	void Texture::blit(gvec2 position, Image* image, grect source, unsigned char alpha)
+	bool Texture::write(grect srcRect, gvec2 destPosition, Texture* texture)
 	{
-		this->blit(hround(position.x), hround(position.y), image->data, image->w, image->h, image->bpp, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+		return this->write(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), texture);
 	}
 
-	void Texture::blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha)
+	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, Image* image)
 	{
-		this->blit(hround(position.x), hround(position.y), data, dataWidth, dataHeight, dataBpp, hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+		return this->write(sx, sy, sw, sh, dx, dy, image->data, image->w, image->h, image->format);
 	}
 
-	void Texture::stretchBlit(int x, int y, int w, int h, Image* image, int sx, int sy, int sw, int sh, unsigned char alpha)
+	bool Texture::write(grect srcRect, gvec2 destPosition, Image* image)
 	{
-		this->stretchBlit(x, y, w, h, image->data, image->w, image->h, image->bpp, sx, sy, sw, sh, alpha);
+		return this->write(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), image->data, image->w, image->h, image->format);
 	}
 
-	void Texture::stretchBlit(grect destination, Texture* texture, grect source, unsigned char alpha)
+	bool Texture::writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), texture,
-			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+		return this->writeStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), srcData, srcWidth, srcHeight, srcFormat);
 	}
 
-	void Texture::stretchBlit(grect destination, Image* image, grect source, unsigned char alpha)
+	bool Texture::writeStretch(grect srcRect, grect destRect, Texture* texture)
 	{
-		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), image->data, image->w, image->h, image->bpp,
-			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+		return this->writeStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), texture);
 	}
 
-	void Texture::stretchBlit(grect destination, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha)
+	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image)
 	{
-		this->stretchBlit(hround(destination.x), hround(destination.y), hround(destination.w), hround(destination.h), data, dataWidth, dataHeight, dataBpp,
-			hround(source.x), hround(source.y), hround(source.w), hround(source.h), alpha);
+		return this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, image->data, image->w, image->h, image->format);
 	}
 
-	void Texture::write(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp)
+	bool Texture::writeStretch(grect srcRect, grect destRect, Image* image)
 	{
+		return this->writeStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), image->data, image->w, image->h, image->format);
+	}
+
+	bool Texture::blit(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	{
+		return this->blit(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), srcData, srcWidth, srcHeight, srcFormat, alpha);
+	}
+
+	bool Texture::blit(grect srcRect, gvec2 destPosition, Texture* texture, unsigned char alpha)
+	{
+		return this->blit(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), texture, alpha);
+	}
+
+	bool Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* image, unsigned char alpha)
+	{
+		return this->blit(sx, sy, sw, sh, dx, dy, image->data, image->w, image->h, image->format, alpha);
+	}
+
+	bool Texture::blit(grect srcRect, gvec2 destPosition, Image* image, unsigned char alpha)
+	{
+		return this->blit(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), image->data, image->w, image->h, image->format, alpha);
+	}
+
+	bool Texture::blitStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	{
+		return this->blitStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), srcData, srcWidth, srcHeight, srcFormat, alpha);
+	}
+
+	bool Texture::blitStretch(grect srcRect, grect destRect, Texture* texture, unsigned char alpha)
+	{
+		return this->blitStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), texture, alpha);
+	}
+
+	bool Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image, unsigned char alpha)
+	{
+		return this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, image->data, image->w, image->h, image->format, alpha);
+	}
+
+	bool Texture::blitStretch(grect srcRect, grect destRect, Image* image, unsigned char alpha)
+	{
+		return this->blitStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), image->data, image->w, image->h, image->format, alpha);
+	}
+
+	bool Texture::rotateHue(grect rect, float degrees)
+	{
+		return this->rotateHue(HROUND_GRECT(rect), degrees);
+	}
+
+	bool Texture::saturate(grect rect, float factor)
+	{
+		return this->saturate(HROUND_GRECT(rect), factor);
+	}
+
+	bool Texture::invert(grect rect)
+	{
+		return this->invert(HROUND_GRECT(rect));
+	}
+
+	bool Texture::insertAlphaMap(Image* image, unsigned char median, int ambiguity)
+	{
+		if (image->w != this->width || image->h != this->height)
+		{
+			return false;
+		}
+		return this->insertAlphaMap(image->data, image->format, median, ambiguity);
+	}
+
+	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat)
+	{
+		return this->insertAlphaMap(srcData, srcFormat, 0, 0);
+	}
+
+	bool Texture::insertAlphaMap(Texture* texture)
+	{
+		return this->insertAlphaMap(texture, 0, 0);
+	}
 	
-	}
-	
-	void Texture::_blit(unsigned char* thisData, int x, int y, unsigned char* srcData, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
+	bool Texture::insertAlphaMap(Image* image)
 	{
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		sx = hclamp(sx, 0, dataWidth - 1);
-		sy = hclamp(sy, 0, dataHeight - 1);
-		sw = hmin(sw, hmin(this->width - x, dataWidth - sx));
-		sh = hmin(sh, hmin(this->height - y, dataHeight - sy));
-		if (sw < 1 || sh < 1)
+		return this->insertAlphaMap(image->data, image->format, 0, 0);
+	}
+
+	Texture::Lock Texture::_tryLock(int x, int y, int w, int h)
+	{
+		Lock lock;
+		if (this->data != NULL)
 		{
-			return;
-		}
-		unsigned char* c;
-		unsigned char* sc;
-		unsigned char a0;
-		unsigned char a1;
-		int i;
-		int j;
-		// TODOa - should be checked on different BPPs and data access better
-		// the following iteration blocks are very similar, but for performance reasons they
-		// have been duplicated instead of putting everything into one block with if branches
-		if (this->bpp == 4 && dataBpp == 4)
-		{
-			for_iterx (j, 0, sh)
-			{
-				for_iterx (i, 0, sw)
-				{
-					c = &thisData[(i + j * this->width) * 4];
-					sc = &srcData[(i + j * dataWidth) * 4];
-					if (c[3] > 0)
-					{
-						a0 = sc[3] * alpha / 255;
-						if (a0 > 0)
-						{
-							a1 = 255 - a0;
-							c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-							c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-							c[2] = (sc[2] * a0 + c[2] * a1) / 255;
-							c[3] = a0 + c[3] * a1 / 255;
-						}
-					}
-					else
-					{
-						c[0] = sc[0];
-						c[1] = sc[1];
-						c[2] = sc[2];
-						c[3] = sc[3] * alpha / 255;
-					}
-				}
-			}
-		}
-		else if (this->bpp == 3 && dataBpp == 4)
-		{
-			for_iterx (j, 0, sh)
-			{
-				for_iterx (i, 0, sw)
-				{
-					c = &thisData[(i + j * this->width) * 4];
-					sc = &srcData[(i + j * dataWidth) * 4];
-					a0 = sc[3] * alpha / 255;
-					if (a0 > 0)
-					{
-						a1 = 255 - a0;
-						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-						c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-						c[2] = (sc[2] * a0 + c[2] * a1) / 255;
-					}
-				}
-			}
-		}
-		else if (this->bpp == 4 && dataBpp == 3)
-		{
-			if (alpha > 0)
-			{
-				a0 = alpha;
-				a1 = 255 - a0;
-				for_iterx (j, 0, sh)
-				{
-					for_iterx (i, 0, sw)
-					{
-						c = &thisData[(i + j * this->width) * 4];
-						sc = &srcData[(i + j * dataWidth) * 4];
-						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-						c[1] = (sc[1] * a0 + c[1] * a1) / 255;
-						c[2] = (sc[2] * a0 + c[2] * a1) / 255;
-						c[3] = a0 + c[3] * a1 / 255;
-					}
-				}
-			}
-		}
-		else if (this->bpp == 1 && dataBpp == 1)
-		{
-			if (alpha > 0)
-			{
-				a0 = alpha;
-				a1 = 255 - a0;
-				for_iterx (j, 0, sh)
-				{
-					for_iterx (i, 0, sw)
-					{
-						c = &thisData[i + j * this->width];
-						sc = &srcData[i + j * dataWidth];
-						c[0] = (sc[0] * a0 + c[0] * a1) / 255;
-					}
-				}
-			}
+			lock.activateLock(x, y, w, h, x, y, this->data, this->width, this->height, this->format);
 		}
 		else
 		{
-			hlog::error(april::logTag, "Unsupported format for blit()!");
+			lock = this->_tryLockSystem(x, y, w, h);
 		}
+		return lock;
 	}
 
-	void Texture::_stretchBlit(unsigned char* thisData, int x, int y, int w, int h, unsigned char* srcData, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha)
+	Texture::Lock Texture::_tryLock()
 	{
-		x = hclamp(x, 0, this->width - 1);
-		y = hclamp(y, 0, this->height - 1);
-		w = hmin(w, this->width - x);
-		h = hmin(h, this->height - y);
-		sx = hclamp(sx, 0, dataWidth - 1);
-		sy = hclamp(sy, 0, dataHeight - 1);
-		sw = hmin(sw, dataWidth - sx);
-		sh = hmin(sh, dataHeight - sy);
-		if (w < 1 || h < 1 || sw < 1 || sh < 1)
+		return this->_tryLock(0, 0, this->width, this->height);
+	}
+
+	bool Texture::_unlock(Texture::Lock lock, bool update)
+	{
+		if (!this->_unlockSystem(lock, update) && !lock.failed && update)
 		{
-			return;
+			update = this->_uploadDataToGpu(lock.dx, lock.dy, lock.w, lock.h);
 		}
-		float fw = (float)sw / w;
-		float fh = (float)sh / h;
-		unsigned char* c;
-		unsigned char* sc;
-		int a0;
-		int a1;
-		unsigned char color[4] = {0};
-		unsigned char* ctl;
-		unsigned char* ctr;
-		unsigned char* cbl;
-		unsigned char* cbr;
-		float cx;
-		float cy;
-		float rx0;
-		float ry0;
-		float rx1;
-		float ry1;
-		int x0;
-		int y0;
-		int x1;
-		int y1;
-		int i;
-		int j;
-		// TODOa - should be checked on different BPPs and data access better
-		// the following iteration blocks are very similar, but for performance reasons they
-		// have been duplicated instead of putting everything into one block with if branches
-		if (this->bpp == 4 && dataBpp == 4)
+		return update;
+	}
+
+	bool Texture::_uploadDataToGpu(int x, int y, int w, int h)
+	{
+		Lock lock = this->_tryLockSystem(x, y, w, h);
+		if (lock.failed)
 		{
-			for_iterx (j, 0, h)
-			{
-				for_iterx (i, 0, w)
-				{
-					c = &thisData[(i + j * this->width) * 4];
-					cx = sx + i * fw;
-					cy = sy + j * fh;
-					x0 = (int)cx;
-					y0 = (int)cy;
-					x1 = hmin((int)cx + 1, dataWidth - 1);
-					y1 = hmin((int)cy + 1, dataHeight - 1);
-					rx0 = cx - x0;
-					ry0 = cy - y0;
-					rx1 = 1.0f - rx0;
-					ry1 = 1.0f - ry0;
-					if (rx0 != 0.0f || ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-						color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
-						sc = color;
-					}
-					else if (rx0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-						color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
-						sc = color;
-					}
-					else if (ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-						color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
-						sc = color;
-					}
-					else
-					{
-						sc = &srcData[(x0 + y0 * dataWidth) * 4];
-					}
-					a0 = sc[3] * (int)alpha / 255;
-					if (a0 > 0)
-					{
-						if (c[3] > 0)
-						{
-							a1 = 255 - a0;
-							c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
-							c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-							c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
-							c[3] = (unsigned char)(a0 + c[3] * a1 / 255);
-						}
-						else
-						{
-							c[0] = sc[0];
-							c[1] = sc[1];
-							c[2] = sc[2];
-							c[3] = a0;
-						}
-					}
-				}
-			}
+			return false;
 		}
-		else if (this->bpp == 3 && dataBpp == 4)
-		{
-			for_iterx (j, 0, h)
-			{
-				for_iterx (i, 0, w)
-				{
-					c = &thisData[(i + j * this->width) * 4];
-					cx = sx + i * fw;
-					cy = sy + j * fh;
-					x0 = (int)cx;
-					y0 = (int)cy;
-					x1 = hmin((int)cx + 1, dataWidth - 1);
-					y1 = hmin((int)cy + 1, dataHeight - 1);
-					rx0 = cx - x0;
-					ry0 = cy - y0;
-					rx1 = 1.0f - rx0;
-					ry1 = 1.0f - ry0;
-					if (rx0 != 0.0f || ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						cbr = &srcData[(x1 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-						color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-						color[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
-						sc = color;
-					}
-					else if (rx0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-						color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-						color[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
-						sc = color;
-					}
-					else if (ry0 != 0.0f)
-					{
-						ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-						cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-						color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-						color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-						color[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
-						sc = color;
-					}
-					else
-					{
-						sc = &srcData[(x0 + y0 * dataWidth) * 4];
-					}
-					a0 = sc[3] * (int)alpha / 255;
-					if (a0 > 0)
-					{
-						a1 = 255 - a0;
-						c[0] = (unsigned char)((sc[0] * a0 + c[0] * a1) / 255);
-						c[1] = (unsigned char)((sc[1] * a0 + c[1] * a1) / 255);
-						c[2] = (unsigned char)((sc[2] * a0 + c[2] * a1) / 255);
-					}
-				}
-			}
-		}
-		else if (this->bpp == 4 && dataBpp == 3)
-		{
-			if (alpha > 0)
-			{
-				for_iterx (j, 0, h)
-				{
-					for_iterx (i, 0, w)
-					{
-						c = &thisData[(i + j * this->width) * 4];
-						cx = sx + i * fw;
-						cy = sy + j * fh;
-						x0 = (int)cx;
-						y0 = (int)cy;
-						x1 = hmin((int)cx + 1, dataWidth - 1);
-						y1 = hmin((int)cy + 1, dataHeight - 1);
-						rx0 = cx - x0;
-						ry0 = cy - y0;
-						rx1 = 1.0f - rx0;
-						ry1 = 1.0f - ry0;
-						if (rx0 != 0.0f || ry0 != 0.0f)
-						{
-							ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-							ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-							cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-							cbr = &srcData[(x1 + y1 * dataWidth) * 4];
-							color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-							color[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-							color[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-							sc = color;
-						}
-						else if (rx0 != 0.0f)
-						{
-							ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-							ctr = &srcData[(x1 + y0 * dataWidth) * 4];
-							color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-							color[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-							color[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-							sc = color;
-						}
-						else if (ry0 != 0.0f)
-						{
-							ctl = &srcData[(x0 + y0 * dataWidth) * 4];
-							cbl = &srcData[(x0 + y1 * dataWidth) * 4];
-							color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-							color[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-							color[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-							sc = color;
-						}
-						else
-						{
-							sc = &srcData[(x0 + y0 * dataWidth) * 4];
-						}
-						c[0] = sc[0];
-						c[1] = sc[1];
-						c[2] = sc[2];
-						c[3] = 255;
-					}
-				}
-			}
-		}
-		else if (this->bpp == 1 && dataBpp == 1)
-		{
-			if (alpha > 0)
-			{
-				for_iterx (j, 0, h)
-				{
-					for_iterx (i, 0, w)
-					{
-						c = &thisData[i + j * this->width];
-						cx = sx + i * fw;
-						cy = sy + j * fh;
-						x0 = (int)cx;
-						y0 = (int)cy;
-						x1 = hmin((int)cx + 1, dataWidth - 1);
-						y1 = hmin((int)cy + 1, dataHeight - 1);
-						rx0 = cx - x0;
-						ry0 = cy - y0;
-						rx1 = 1.0f - rx0;
-						ry1 = 1.0f - ry0;
-						if (rx0 != 0.0f || ry0 != 0.0f)
-						{
-							ctl = &srcData[x0 + y0 * dataWidth];
-							ctr = &srcData[x1 + y0 * dataWidth];
-							cbl = &srcData[x0 + y1 * dataWidth];
-							cbr = &srcData[x1 + y1 * dataWidth];
-							color[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-							sc = color;
-						}
-						else if (rx0 != 0.0f)
-						{
-							ctl = &srcData[x0 + y0 * dataWidth];
-							ctr = &srcData[x1 + y0 * dataWidth];
-							color[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-							sc = color;
-						}
-						else if (ry0 != 0.0f)
-						{
-							ctl = &srcData[x0 + y0 * dataWidth];
-							cbl = &srcData[x0 + y1 * dataWidth];
-							color[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-							sc = color;
-						}
-						else
-						{
-							sc = &srcData[x0 + y0 * dataWidth];
-						}
-						c[0] = sc[0];
-					}
-				}
-			}
-		}
-		else
-		{
-			hlog::error(april::logTag, "Unsupported format for stretchBlit()!");
-		}
+		bool result = Image::write(x, y, w, h, lock.x, lock.y, this->data, this->width, this->height, this->format, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
+		this->_unlockSystem(lock, true);
+		return result;
 	}
 
 }
