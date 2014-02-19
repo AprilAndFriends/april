@@ -61,7 +61,7 @@ namespace april
 		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ALPHA;
 		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ARGB;
 
-		Texture();
+		Texture(bool fromResource);
 		virtual ~Texture();
 		virtual bool load();
 		virtual void unload() = 0;
@@ -70,6 +70,7 @@ namespace april
 		HL_DEFINE_GET(Image::Format, format, Format);
 		HL_DEFINE_GETSET(Filter, filter, Filter);
 		HL_DEFINE_GETSET(AddressMode, addressMode, AddressMode);
+		HL_DEFINE_IS(fromResource, FromResource);
 		int getWidth();
 		int getHeight();
 		int getBpp();
@@ -160,6 +161,7 @@ namespace april
 		Filter filter;
 		AddressMode addressMode;
 		unsigned char* data;
+		bool fromResource;
 
 		// TODOaa - add overload with filename, format and type
 		virtual bool _create(chstr filename, Type type);

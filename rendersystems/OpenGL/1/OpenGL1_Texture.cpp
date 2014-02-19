@@ -1,6 +1,5 @@
 /// @file
 /// @author  Kresimir Spes
-/// @author  Ivan Vucica
 /// @author  Boris Mikic
 /// @version 3.3
 /// 
@@ -14,7 +13,7 @@
 
 namespace april
 {
-	OpenGL1_Texture::OpenGL1_Texture() : OpenGL_Texture()
+	OpenGL1_Texture::OpenGL1_Texture(bool fromResource) : OpenGL_Texture(fromResource)
 	{
 	}
 

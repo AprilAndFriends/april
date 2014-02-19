@@ -12,7 +12,6 @@
 #include <hltypes/harray.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
-#include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
 #include "april.h"
@@ -92,7 +91,7 @@ namespace april
 		this->renderTarget = true;
 	}
 
-	Texture::Texture()
+	Texture::Texture(bool fromResource)
 	{
 		this->filename = "";
 		this->type = TYPE_IMMUTABLE;
@@ -103,6 +102,7 @@ namespace april
 		this->filter = FILTER_LINEAR;
 		this->addressMode = ADDRESS_WRAP;
 		this->data = NULL;
+		this->fromResource = fromResource;
 		april::rendersys->textures += this;
 	}
 
@@ -283,7 +283,7 @@ namespace april
 				hlog::error(april::logTag, "No filename for texture specified!");
 				return false;
 			}
-			Image* image = Image::create(this->filename);
+			Image* image = (this->fromResource ? Image::createFromResource(this->filename) : Image::createFromFile(this->filename));
 			if (image == NULL)
 			{
 				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());

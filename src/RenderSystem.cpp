@@ -16,6 +16,7 @@
 #endif
 
 #include <hltypes/harray.h>
+#include <hltypes/hfile.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
@@ -178,13 +179,12 @@ namespace april
 
 	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, bool loadImmediately)
 	{
-		// TODOaa
-		hstr name = this->findTextureFilename(filename);
+		hstr name = this->findTextureResource(filename);
 		if (name == "")
 		{
 			return NULL;
 		}
-		Texture* texture = this->_createTexture();
+		Texture* texture = this->_createTexture(true);
 		if (!texture->_create(name, type) || loadImmediately && !texture->load() && !texture->isLoaded())
 		{
 			delete texture;
@@ -195,13 +195,12 @@ namespace april
 
 	Texture* RenderSystem::createTextureFromFile(chstr filename, Texture::Type type, bool loadImmediately)
 	{
-		// TODOaa
-		hstr name = this->findTextureFilename(filename);
+		hstr name = this->findTextureFile(filename);
 		if (name == "")
 		{
 			return NULL;
 		}
-		Texture* texture = this->_createTexture();
+		Texture* texture = this->_createTexture(false);
 		if (!texture->_create(name, type) || loadImmediately && !texture->load() && !texture->isLoaded())
 		{
 			delete texture;
@@ -212,7 +211,7 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
 	{
-		Texture* texture = this->_createTexture();
+		Texture* texture = this->_createTexture(true);
 		if (!texture->_create(w, h, data, format, type))
 		{
 			delete texture;
@@ -223,7 +222,7 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int w, int h, Color color, Image::Format format, Texture::Type type)
 	{
-		Texture* texture = this->_createTexture();
+		Texture* texture = this->_createTexture(true);
 		if (!texture->_create(w, h, color, format, type))
 		{
 			delete texture;
@@ -234,7 +233,7 @@ namespace april
 
 	Texture* RenderSystem::createRamTexture(chstr filename, bool loadImmediately)
 	{
-		hstr name = this->findTextureFilename(filename);
+		hstr name = this->findTextureResource(filename);
 		if (name == "")
 		{
 			return NULL;
@@ -340,7 +339,7 @@ namespace april
 		april::window->presentFrame();
 	}
 	
-	hstr RenderSystem::findTextureFilename(chstr filename)
+	hstr RenderSystem::findTextureResource(chstr filename)
 	{
 		if (hresource::exists(filename))
 		{
@@ -364,6 +363,38 @@ namespace april
 			{
 				name = noExtensionName + (*it);
 				if (hresource::exists(name))
+				{
+					return name;
+				}
+			}
+		}
+		return "";
+	}
+	
+	hstr RenderSystem::findTextureFile(chstr filename)
+	{
+		if (hfile::exists(filename))
+		{
+			return filename;
+		}
+		hstr name;
+		harray<hstr> extensions = april::getTextureExtensions();
+		foreach (hstr, it, extensions)
+		{
+			name = filename + (*it);
+			if (hfile::exists(name))
+			{
+				return name;
+			}
+		}
+		int index = filename.rfind(".");
+		if (index >= 0)
+		{
+			hstr noExtensionName = filename.substr(0, index);
+			foreach (hstr, it, extensions)
+			{
+				name = noExtensionName + (*it);
+				if (hfile::exists(name))
 				{
 					return name;
 				}

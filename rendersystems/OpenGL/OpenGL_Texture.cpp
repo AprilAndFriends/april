@@ -45,7 +45,7 @@ namespace april
         return (x > 0) && ((x & (x - 1)) == 0);
     }
 
-	OpenGL_Texture::OpenGL_Texture() : Texture(), textureId(0), glFormat(0), internalFormat(0)
+	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0)
 	{
 	}
 

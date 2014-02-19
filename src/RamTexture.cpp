@@ -21,14 +21,14 @@
 namespace april
 {
 	// TODO - this entire class needs to be removed
-	RamTexture::RamTexture(chstr filename) : Texture()
+	RamTexture::RamTexture(chstr filename) : Texture(true)
 	{
 		this->filename = filename;
 		this->source = NULL;
 		hlog::write(april::logTag, "Creating RAM texture.");
 	}
 
-	RamTexture::RamTexture(int w, int h) : Texture()
+	RamTexture::RamTexture(int w, int h) : Texture(true)
 	{
 		this->width = w;
 		this->height = h;
@@ -48,7 +48,7 @@ namespace april
 			hlog::writef(april::logTag, "Loading RAM texture '%s'.", this->_getInternalName().c_str());
 			if (this->filename != "")
 			{
-				this->source = Image::create(this->filename);
+				this->source = Image::createFromResource(this->filename);
 				this->width = this->source->w;
 				this->height = this->source->h;
 			}

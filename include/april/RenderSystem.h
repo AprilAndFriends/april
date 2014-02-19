@@ -111,6 +111,7 @@ namespace april
 		virtual void setVertexShader(VertexShader* vertexShader) = 0;
 		virtual void setPixelShader(PixelShader* pixelShader) = 0;
 
+		// TODOaa - make overloads with format for these 2 (that should work only with managed textures)
 		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, bool loadImmediately = true);
 		Texture* createTextureFromFile(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, bool loadImmediately = true);
 		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
@@ -143,12 +144,14 @@ namespace april
 		void drawTexturedRect(grect rect, grect src);
 		void drawTexturedRect(grect rect, grect src, Color color);
 
-		hstr findTextureFilename(chstr filename);
+		hstr findTextureResource(chstr filename);
+		hstr findTextureFile(chstr filename);
 		void unloadTextures();
 		virtual Image::Format getNativeTextureFormat(Image::Format format) = 0;
 		virtual Image* takeScreenshot(Image::Format format) = 0;
 		virtual void presentFrame();
 
+		DEPRECATED_ATTRIBUTE hstr findTextureFilename(chstr filename) { return this->findTextureResource(filename); }
 		DEPRECATED_ATTRIBUTE Texture* createTexture(chstr filename, bool loadImmediately) { return this->createTextureFromResource(filename, Texture::TYPE_IMMUTABLE, loadImmediately); }
 		DEPRECATED_ATTRIBUTE Texture* createTexture(int w, int h, Image::Format format) { return this->createTexture(w, h, Color::Clear, format, Texture::TYPE_MANAGED); }
 
@@ -165,7 +168,7 @@ namespace april
 		gmat4 projectionMatrix;
 		grect orthoProjection;
 
-		virtual Texture* _createTexture() = 0;
+		virtual Texture* _createTexture(bool fromResource) = 0;
 
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);

@@ -30,7 +30,7 @@ namespace april
 	public:
 		friend class DirectX9_RenderSystem;
 
-		DirectX9_Texture();
+		DirectX9_Texture(bool fromResource);
 		~DirectX9_Texture();
 		void unload();
 		
