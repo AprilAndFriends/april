@@ -311,16 +311,6 @@ namespace april
 		return this->insertAlphaMap(image->data, image->format, median, ambiguity);
 	}
 
-	bool Image::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat)
-	{
-		return this->insertAlphaMap(srcData, srcFormat, 0, 0);
-	}
-
-	bool Image::insertAlphaMap(Image* image)
-	{
-		return this->insertAlphaMap(image->data, image->format, 0, 0);
-	}
-
 	// loading/creating functions
 
 	Image* Image::create(chstr filename)
@@ -572,6 +562,25 @@ namespace april
 		}
 		int srcBpp = Image::getFormatBpp(srcFormat);
 		int destBpp = Image::getFormatBpp(destFormat);
+		if (srcFormat == FORMAT_ALPHA)
+		{
+			if (destBpp == 4 && CHECK_ALPHA_FORMAT(destFormat))
+			{
+				int x = 0;
+				int y = 0;
+				int da = -1;
+				Image::_getFormatIndices(destFormat, NULL, NULL, NULL, &da);
+				for_iterx (y, 0, sh)
+				{
+					for_iterx (x, 0, sw)
+					{
+						destData[((dx + x) + (dy + y) * destWidth) * destBpp + da] = srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+					}
+				}
+				return true;
+			}
+			return false;
+		}
 		unsigned char* p = &destData[(dx + dy * destWidth) * destBpp];
 		if (sx == 0 && dx == 0 && srcWidth == destWidth && sw == destWidth)
 		{
@@ -878,36 +887,55 @@ namespace april
 		int db = -1;
 		if (destBpp == 3 || !CHECK_ALPHA_FORMAT(destFormat)) // 3 BPP and 4 BPP without alpha
 		{
-			Image::_getFormatIndices(destFormat, &dr, &dg, &db, NULL);
-			for_iterx (y, 0, sh)
+			if (srcFormat != FORMAT_ALPHA)
 			{
-				for_iterx (x, 0, sw)
+				Image::_getFormatIndices(destFormat, &dr, &dg, &db, NULL);
+				for_iterx (y, 0, sh)
 				{
-					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
-					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
-					c = src[0] * alpha;
-					dest[dr] = (c + dest[dr] * a1) / 255;
-					dest[dg] = (c + dest[dg] * a1) / 255;
-					dest[db] = (c + dest[db] * a1) / 255;
+					for_iterx (x, 0, sw)
+					{
+						src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+						dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+						c = src[0] * alpha;
+						dest[dr] = (c + dest[dr] * a1) / 255;
+						dest[dg] = (c + dest[dg] * a1) / 255;
+						dest[db] = (c + dest[db] * a1) / 255;
+					}
 				}
+				return true;
 			}
-			return true;
+			return false;
 		}
 		int da = -1;
 		if (destBpp == 4) // 4 BPP with alpha
 		{
 			Image::_getFormatIndices(destFormat, &dr, &dg, &db, &da);
-			for_iterx (y, 0, sh)
+			if (srcFormat != FORMAT_ALPHA)
 			{
-				for_iterx (x, 0, sw)
+				for_iterx (y, 0, sh)
 				{
-					src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
-					dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
-					c = src[0] * alpha;
-					dest[dr] = (c + dest[dr] * a1) / 255;
-					dest[dg] = (c + dest[dg] * a1) / 255;
-					dest[db] = (c + dest[db] * a1) / 255;
-					dest[da] = alpha + dest[da] * a1 / 255;
+					for_iterx (x, 0, sw)
+					{
+						src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+						dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+						c = src[0] * alpha;
+						dest[dr] = (c + dest[dr] * a1) / 255;
+						dest[dg] = (c + dest[dg] * a1) / 255;
+						dest[db] = (c + dest[db] * a1) / 255;
+						dest[da] = alpha + dest[da] * a1 / 255;
+					}
+				}
+			}
+			else
+			{
+				for_iterx (y, 0, sh)
+				{
+					for_iterx (x, 0, sw)
+					{
+						src = &srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+						dest = &destData[((dx + x) + (dy + y) * destWidth) * destBpp];
+						dest[da] = (src[0] * alpha + dest[da] * a1) / 255;
+					}
 				}
 			}
 			return true;

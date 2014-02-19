@@ -99,8 +99,6 @@ namespace april
 		bool saturate(grect rect, float factor);
 		bool invert(grect rect);
 		bool insertAlphaMap(Image* image, Format srcFormat, unsigned char median, int ambiguity);
-		bool insertAlphaMap(unsigned char* srcData, Format srcFormat);
-		bool insertAlphaMap(Image* image);
 
 		static Image* create(chstr filename);
 		static Image* create(chstr filename, Format format);
@@ -121,7 +119,6 @@ namespace april
 		static bool rotateHue(int x, int y, int w, int h, float degrees, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		static bool saturate(int x, int y, int w, int h, float factor, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		static bool invert(int x, int y, int w, int h, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat);
 		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat, unsigned char median, int ambiguity);
 
 		/// @param[in] preventCopy If true, will make a copy even if source and destination formats are the same.

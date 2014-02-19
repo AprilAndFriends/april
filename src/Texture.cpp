@@ -819,21 +819,6 @@ namespace april
 		return this->insertAlphaMap(image->data, image->format, median, ambiguity);
 	}
 
-	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat)
-	{
-		return this->insertAlphaMap(srcData, srcFormat, 0, 0);
-	}
-
-	bool Texture::insertAlphaMap(Texture* texture)
-	{
-		return this->insertAlphaMap(texture, 0, 0);
-	}
-	
-	bool Texture::insertAlphaMap(Image* image)
-	{
-		return this->insertAlphaMap(image->data, image->format, 0, 0);
-	}
-
 	Texture::Lock Texture::_tryLock(int x, int y, int w, int h)
 	{
 		Lock lock;
