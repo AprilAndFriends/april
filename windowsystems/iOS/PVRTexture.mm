@@ -319,19 +319,15 @@ namespace april
 			}
 		}
 		
-		Image* img = new Image();
-		img->format = FORMAT_PALETTE;
-		img->internalFormat = pvrtex.internalFormat;
-		img->w = pvrtex.width;
-		img->h = pvrtex.height;
-		img->bpp = 4;
-		
 		NSData* data = [pvrtex.imageData objectAtIndex:0];
-		img->data = (unsigned char*) malloc(data.length);
-		memcpy(img->data,data.bytes,data.length);
-		img->compressedSize = data.length;
+		Image* image = Image::create(pvrtex.width, pvrtex.height, NULL, Image::FORMAT_INVALID);
+		image->data = new unsigned char[data.length];
+		memcpy(image->data, data.bytes, data.length);
+		image->format = Image::FORMAT_PALETTE;
+		image->internalFormat = pvrtex.internalFormat;
+		image->compressedSize = data.length;
 		
 		[arp release];
-		return img;
+		return image;
 	}
 }

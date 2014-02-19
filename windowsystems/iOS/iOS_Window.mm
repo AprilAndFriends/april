@@ -86,7 +86,7 @@ namespace april
 		
 		void execute()
 		{
-			if (this->type != Window::AMOUSEEVT_CANCEL) updateCursorPosition(this->position);
+			if (this->type != Window::MOUSE_CANCEL) updateCursorPosition(this->position);
 			this->window->handleMouseEvent(this->type, this->position, this->button);
 		}
 		
@@ -145,7 +145,7 @@ namespace april
 	
 	iOS_Window::~iOS_Window()
 	{
-		destroy();
+		this->destroy();
 	}
 		
 	void iOS_Window::enterMainLoop()
@@ -366,14 +366,14 @@ namespace april
 			if (!this->multiTouchActive && prev_len == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->addInputEvent(new iOS_MouseInputEvent(this, AMOUSEEVT_CANCEL, gvec2(), AK_LBUTTON));
+				this->addInputEvent(new iOS_MouseInputEvent(this, MOUSE_CANCEL, gvec2(), AK_LBUTTON));
 			}
 			this->multiTouchActive = true;
 		}
 		else
 		{
 			CGPoint pt = [g_touches[0] locationInView:glview];
-			this->addInputEvent(new iOS_MouseInputEvent(this, AMOUSEEVT_DOWN, gvec2(pt.x, pt.y), AK_LBUTTON));
+			this->addInputEvent(new iOS_MouseInputEvent(this, MOUSE_DOWN, gvec2(pt.x, pt.y), AK_LBUTTON));
 		}
 		this->callTouchCallback();
 	}
@@ -394,7 +394,7 @@ namespace april
 		else
 		{
 			CGPoint pt = [touches[0] locationInView:glview];
-			this->addInputEvent(new iOS_MouseInputEvent(this, AMOUSEEVT_UP, gvec2(pt.x, pt.y), AK_LBUTTON));
+			this->addInputEvent(new iOS_MouseInputEvent(this, MOUSE_UP, gvec2(pt.x, pt.y), AK_LBUTTON));
 		}
 		this->callTouchCallback();
 	}
@@ -411,7 +411,7 @@ namespace april
 		{
 			UITouch* touch = [[(NSSet*) nssetTouches allObjects] objectAtIndex:0];
 			CGPoint pt = [touch locationInView:glview];			
-			this->addInputEvent(new iOS_MouseInputEvent(this, AMOUSEEVT_MOVE, gvec2(pt.x, pt.y), AK_NONE));
+			this->addInputEvent(new iOS_MouseInputEvent(this, MOUSE_MOVE, gvec2(pt.x, pt.y), AK_NONE));
 		}
 		this->callTouchCallback();
 	}
@@ -436,8 +436,8 @@ namespace april
 		if (inputChar == 0)
 		{
 			// deploy backspace
-			this->handleKeyEvent(AKEYEVT_DOWN, AK_BACK, 8);
-			this->handleKeyEvent(AKEYEVT_UP, AK_BACK, 8);
+			this->handleKeyEvent(KEY_DOWN, AK_BACK, 8);
+			this->handleKeyEvent(KEY_UP, AK_BACK, 8);
 		}
 		if (inputChar >= 32)
 		{
@@ -446,8 +446,8 @@ namespace april
 											 // however, writing a translation table atm 
 											 // isn't the priority.
 		
-			this->handleKeyEvent(AKEYEVT_DOWN, keycode, inputChar);
-			this->handleKeyEvent(AKEYEVT_UP, keycode, inputChar);
+			this->handleKeyEvent(KEY_DOWN, keycode, inputChar);
+			this->handleKeyEvent(KEY_UP, keycode, inputChar);
 		}
 	}
 	
@@ -467,7 +467,7 @@ namespace april
 		}
 	}
 	
-	void iOS_Window::setDeviceOrientationCallback(void (*do_callback)(DeviceOrientation))
+	void iOS_Window::setDeviceOrientationCallback(void (*do_callback)())
 	{
 		if (do_callback != NULL)
 		{
@@ -575,5 +575,6 @@ namespace april
 			}
 		}
 	}
+	
 }
 

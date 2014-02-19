@@ -185,7 +185,7 @@ namespace april
 			return NULL;
 		}
 		Texture* texture = this->_createTexture(true);
-		if (!texture->_create(name, type) || loadImmediately && !texture->load() && !texture->isLoaded())
+		if (!texture->_create(name, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
 		{
 			delete texture;
 			return NULL;
@@ -201,7 +201,7 @@ namespace april
 			return NULL;
 		}
 		Texture* texture = this->_createTexture(false);
-		if (!texture->_create(name, type) || loadImmediately && !texture->load() && !texture->isLoaded())
+		if (!texture->_create(name, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
 		{
 			delete texture;
 			return NULL;
@@ -239,7 +239,7 @@ namespace april
 			return NULL;
 		}
 		Texture* texture = new RamTexture(name);
-		if (!texture->_create(name, Texture::TYPE_MANAGED) || loadImmediately && !texture->load() && !texture->isLoaded())
+		if (!texture->_create(name, Texture::TYPE_MANAGED) || (loadImmediately && !texture->load() && !texture->isLoaded()))
 		{
 			delete texture;
 			return NULL;

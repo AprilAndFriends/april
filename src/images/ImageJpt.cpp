@@ -19,7 +19,6 @@ namespace april
 		Image* jpg = NULL;
 		Image* png = NULL;
 		unsigned char bytes[4] = {0};
-		unsigned char* buffer = NULL;
 		// file header ("JPT" + 1 byte for version code)
 		stream.read_raw(bytes, 4);
 		// read JPEG

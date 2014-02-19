@@ -106,6 +106,8 @@ namespace april
 			this->glFormat = this->internalFormat = GL_RGB;
 			break;
 		// for optimizations
+		// TODOa - check this
+		/*
 		case Image::FORMAT_BGR:
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
@@ -118,6 +120,7 @@ namespace april
 #endif
 			this->internalFormat = GL_RGB;
 			break;
+		*/
 		case Image::FORMAT_ALPHA:
 			this->glFormat = this->internalFormat = GL_ALPHA;
 			break;
