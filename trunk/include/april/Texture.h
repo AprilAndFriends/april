@@ -122,9 +122,6 @@ namespace april
 		bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity);
 		bool insertAlphaMap(Texture* texture, unsigned char median, int ambiguity);
 		bool insertAlphaMap(Image* image, unsigned char median, int ambiguity);
-		bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat);
-		bool insertAlphaMap(Texture* texture);
-		bool insertAlphaMap(Image* image);
 
 	protected:
 		struct Lock
