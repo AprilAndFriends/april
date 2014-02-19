@@ -17,7 +17,7 @@
 
 namespace april
 {
-	OpenGLES_Texture::OpenGLES_Texture() : OpenGL_Texture()
+	OpenGLES_Texture::OpenGLES_Texture(bool fromResource) : OpenGL_Texture(fromResource)
 	{
 	}
 

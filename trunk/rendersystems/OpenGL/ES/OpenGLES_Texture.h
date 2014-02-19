@@ -23,7 +23,7 @@ namespace april
 	class OpenGLES_Texture : public OpenGL_Texture
 	{
 	public:
-		OpenGLES_Texture();
+		OpenGLES_Texture(bool fromResource);
 		~OpenGLES_Texture();
 
 	};

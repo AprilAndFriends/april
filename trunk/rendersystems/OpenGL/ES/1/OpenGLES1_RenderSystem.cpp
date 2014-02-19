@@ -30,9 +30,9 @@ namespace april
 		this->destroy();
 	}
 
-	Texture* OpenGLES1_RenderSystem::_createTexture()
+	Texture* OpenGLES1_RenderSystem::_createTexture(bool fromResource)
 	{
-		return new OpenGLES1_Texture();
+		return new OpenGLES1_Texture(fromResource);
 	}
 
 	void OpenGLES1_RenderSystem::_setVertexPointer(int stride, const void* pointer)

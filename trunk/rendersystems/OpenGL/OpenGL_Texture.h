@@ -27,7 +27,7 @@ namespace april
 	public:
 		friend class OpenGL_RenderSystem;
 
-		OpenGL_Texture();
+		OpenGL_Texture(bool fromResource);
 		~OpenGL_Texture();
 		void unload();
 

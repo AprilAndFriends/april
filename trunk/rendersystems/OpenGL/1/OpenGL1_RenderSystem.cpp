@@ -162,9 +162,9 @@ namespace april
 		}
 	}
 	
-	Texture* OpenGL1_RenderSystem::_createTexture()
+	Texture* OpenGL1_RenderSystem::_createTexture(bool fromResource)
 	{
-		return new OpenGL1_Texture();
+		return new OpenGL1_Texture(fromResource);
 	}
 
 	void OpenGL1_RenderSystem::_setVertexPointer(int stride, const void* pointer)

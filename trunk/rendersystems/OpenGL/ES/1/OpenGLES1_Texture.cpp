@@ -1,12 +1,5 @@
 /// @file
 /// @author  Kresimir Spes
-/// @author  Ivan Vucica
-/// @author  Boris Mikic
-/// @version 3.3
-/// 
-/// @section LICENSE/// @file
-/// @author  Kresimir Spes
-/// @author  Ivan Vucica
 /// @author  Boris Mikic
 /// @version 3.3
 /// 
@@ -20,7 +13,7 @@
 
 namespace april
 {
-	OpenGLES1_Texture::OpenGLES1_Texture() : OpenGLES_Texture()
+	OpenGLES1_Texture::OpenGLES1_Texture(bool fromResource) : OpenGLES_Texture(fromResource)
 	{
 	}
 

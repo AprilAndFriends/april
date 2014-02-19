@@ -10,10 +10,11 @@
 
 #include <string.h>
 
-#include <hltypes/hstring.h>
+#include <hltypes/hfile.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
+#include <hltypes/hstring.h>
 
 #include "april.h"
 #include "Color.h"
@@ -313,23 +314,23 @@ namespace april
 
 	// loading/creating functions
 
-	Image* Image::create(chstr filename)
+	Image* Image::createFromResource(chstr filename)
 	{
 		Image* image = NULL;
 		if (filename.lower().ends_with(".png"))
 		{
-			hresource res(filename);
-			image = Image::_loadPng(res);
+			hresource f(filename);
+			image = Image::_loadPng(f);
 		}
 		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
 		{
-			hresource res(filename);
-			image = Image::_loadJpg(res);
+			hresource f(filename);
+			image = Image::_loadJpg(f);
 		}
 		else if (filename.lower().ends_with(".jpt"))
 		{
-			hresource res(filename);
-			image = Image::_loadJpt(res);
+			hresource f(filename);
+			image = Image::_loadJpt(f);
 		}
 #if TARGET_OS_IPHONE
 		else if (filename.lower().ends_with(".pvr"))
@@ -341,9 +342,53 @@ namespace april
 		return image;
 	}
 
-	Image* Image::create(chstr filename, Image::Format format)
+	Image* Image::createFromResource(chstr filename, Image::Format format)
 	{
-		Image* image = Image::create(filename);
+		Image* image = Image::createFromResource(filename);
+		if (image != NULL)
+		{
+			unsigned char* data = NULL;
+			if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, format))
+			{
+				delete [] image->data;
+				image->format = format;
+				image->data = data;
+			}
+		}
+		return image;
+	}
+
+	Image* Image::createFromFile(chstr filename)
+	{
+		Image* image = NULL;
+		if (filename.lower().ends_with(".png"))
+		{
+			hfile f(filename);
+			image = Image::_loadPng(f);
+		}
+		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
+		{
+			hfile f(filename);
+			image = Image::_loadJpg(f);
+		}
+		else if (filename.lower().ends_with(".jpt"))
+		{
+			hfile f(filename);
+			image = Image::_loadJpt(f);
+		}
+#if TARGET_OS_IPHONE
+		else if (filename.lower().ends_with(".pvr"))
+		{
+			// TODOa - might need to be refactored
+			image = _tryLoadingPVR(filename);
+		}
+#endif
+		return image;
+	}
+
+	Image* Image::createFromFile(chstr filename, Image::Format format)
+	{
+		Image* image = Image::createFromFile(filename);
 		if (image != NULL)
 		{
 			unsigned char* data = NULL;
@@ -564,17 +609,20 @@ namespace april
 		int destBpp = Image::getFormatBpp(destFormat);
 		if (srcFormat == FORMAT_ALPHA)
 		{
-			if (destBpp == 4 && CHECK_ALPHA_FORMAT(destFormat))
+			if (destBpp == 4)
 			{
-				int x = 0;
-				int y = 0;
-				int da = -1;
-				Image::_getFormatIndices(destFormat, NULL, NULL, NULL, &da);
-				for_iterx (y, 0, sh)
+				if (CHECK_ALPHA_FORMAT(destFormat))
 				{
-					for_iterx (x, 0, sw)
+					int x = 0;
+					int y = 0;
+					int da = -1;
+					Image::_getFormatIndices(destFormat, NULL, NULL, NULL, &da);
+					for_iterx (y, 0, sh)
 					{
-						destData[((dx + x) + (dy + y) * destWidth) * destBpp + da] = srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+						for_iterx (x, 0, sw)
+						{
+							destData[((dx + x) + (dy + y) * destWidth) * destBpp + da] = srcData[((sx + x) + (sy + y) * srcWidth) * srcBpp];
+						}
 					}
 				}
 				return true;
@@ -608,24 +656,7 @@ namespace april
 		{
 			return Image::write(sx, sy, sw, sh, dx, dh, srcData, srcWidth, srcHeight, srcFormat, destData, destWidth, destHeight, destFormat);
 		}
-		bool createNew = Image::needsConversion(srcFormat, destFormat);
-		if (createNew)
-		{
-			unsigned char* data = srcData;
-			srcData = new unsigned char[sw * sh * Image::getFormatBpp(destFormat)];
-			if (!Image::write(sx, sy, sw, sh, 0, 0, data, srcWidth, srcHeight, srcFormat, srcData, sw, sh, destFormat))
-			{
-				delete [] srcData;
-				return false;
-			}
-			// changed size of data, needs to readjust
-			sx = 0;
-			sy = 0;
-			srcWidth = sw;
-			srcHeight = sh;
-		}
 		int bpp = Image::getFormatBpp(destFormat);
-		bool result = false;
 		float fw = (float)sw / dw;
 		float fh = (float)sh / dh;
 		unsigned char* dest = NULL;
@@ -645,27 +676,99 @@ namespace april
 		float ry1;
 		int x = 0;
 		int y = 0;
+		if (srcFormat == FORMAT_ALPHA)
+		{
+			if (bpp == 4)
+			{
+				if (CHECK_ALPHA_FORMAT(destFormat))
+				{
+					int da = -1;
+					Image::_getFormatIndices(destFormat, NULL, NULL, NULL, &da);
+					for_iterx (y, 0, dh)
+					{
+						srcY = sy + y * fh;
+						y0 = (int)srcY;
+						ry0 = srcY - y0;
+						y1 = hmin(y0 + 1, srcHeight - 1);
+						ry1 = 1.0f - ry0;
+						for_iterx (x, 0, dw)
+						{
+							dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
+							srcX = sx + x * fw;
+							x0 = (int)srcX;
+							rx0 = srcX - x0;
+							// linear interpolation
+							ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
+							if (rx0 != 0.0f && ry0 != 0.0f)
+							{
+								x1 = hmin(x0 + 1, srcWidth - 1);
+								rx1 = 1.0f - rx0;
+								ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+								cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+								cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
+								dest[da] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+							}
+							else if (rx0 != 0.0f)
+							{
+								x1 = hmin(x0 + 1, srcWidth - 1);
+								rx1 = 1.0f - rx0;
+								ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
+								dest[da] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+							}
+							else if (ry0 != 0.0f)
+							{
+								cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
+								dest[da] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+							}
+							else
+							{
+								dest[da] = ctl[0];
+							}
+						}
+					}
+				}
+				return true;
+			}
+			return false;
+		}
+		bool createNew = Image::needsConversion(srcFormat, destFormat);
+		if (createNew)
+		{
+			unsigned char* data = srcData;
+			srcData = new unsigned char[sw * sh * bpp];
+			if (!Image::write(sx, sy, sw, sh, 0, 0, data, srcWidth, srcHeight, srcFormat, srcData, sw, sh, destFormat))
+			{
+				delete [] srcData;
+				return false;
+			}
+			// changed size of data, needs to readjust
+			sx = 0;
+			sy = 0;
+			srcWidth = sw;
+			srcHeight = sh;
+		}
+		bool result = false;
 		if (bpp == 1)
 		{
 			for_iterx (y, 0, dh)
 			{
+				srcY = sy + y * fh;
+				y0 = (int)srcY;
+				ry0 = srcY - y0;
+				y1 = hmin(y0 + 1, srcHeight - 1);
+				ry1 = 1.0f - ry0;
 				for_iterx (x, 0, dw)
 				{
 					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
 					srcX = sx + x * fw;
-					srcY = sy + y * fh;
 					x0 = (int)srcX;
-					y0 = (int)srcY;
 					rx0 = srcX - x0;
-					ry0 = srcY - y0;
 					// linear interpolation
 					ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
 					if (rx0 != 0.0f && ry0 != 0.0f)
 					{
 						x1 = hmin(x0 + 1, srcWidth - 1);
-						y1 = hmin(y0 + 1, srcHeight - 1);
 						rx1 = 1.0f - rx0;
-						ry1 = 1.0f - ry0;
 						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
 						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
 						cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
@@ -680,8 +783,6 @@ namespace april
 					}
 					else if (ry0 != 0.0f)
 					{
-						y1 = hmin(y0 + 1, srcHeight - 1);
-						ry1 = 1.0f - ry0;
 						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
 						dest[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
 					}
@@ -697,23 +798,23 @@ namespace april
 		{
 			for_iterx (y, 0, dh)
 			{
+				srcY = sy + y * fh;
+				y0 = (int)srcY;
+				ry0 = srcY - y0;
+				y1 = hmin(y0 + 1, srcHeight - 1);
+				ry1 = 1.0f - ry0;
 				for_iterx (x, 0, dw)
 				{
 					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
 					srcX = sx + x * fw;
-					srcY = sy + y * fh;
 					x0 = (int)srcX;
-					y0 = (int)srcY;
 					rx0 = srcX - x0;
-					ry0 = srcY - y0;
 					// linear interpolation
 					ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
 					if (rx0 != 0.0f && ry0 != 0.0f)
 					{
 						x1 = hmin(x0 + 1, srcWidth - 1);
-						y1 = hmin(y0 + 1, srcHeight - 1);
 						rx1 = 1.0f - rx0;
-						ry1 = 1.0f - ry0;
 						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
 						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
 						cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
@@ -732,8 +833,6 @@ namespace april
 					}
 					else if (ry0 != 0.0f)
 					{
-						y1 = hmin(y0 + 1, srcHeight - 1);
-						ry1 = 1.0f - ry0;
 						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
 						dest[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
 						dest[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
@@ -753,23 +852,23 @@ namespace april
 		{
 			for_iterx (y, 0, dh)
 			{
+				srcY = sy + y * fh;
+				y0 = (int)srcY;
+				ry0 = srcY - y0;
+				y1 = hmin(y0 + 1, srcHeight - 1);
+				ry1 = 1.0f - ry0;
 				for_iterx (x, 0, dw)
 				{
 					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
 					srcX = sx + x * fw;
-					srcY = sy + y * fh;
 					x0 = (int)srcX;
-					y0 = (int)srcY;
 					rx0 = srcX - x0;
-					ry0 = srcY - y0;
 					// linear interpolation
 					ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
 					if (rx0 != 0.0f && ry0 != 0.0f)
 					{
 						x1 = hmin(x0 + 1, srcWidth - 1);
-						y1 = hmin(y0 + 1, srcHeight - 1);
 						rx1 = 1.0f - rx0;
-						ry1 = 1.0f - ry0;
 						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
 						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
 						cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
@@ -790,8 +889,6 @@ namespace april
 					}
 					else if (ry0 != 0.0f)
 					{
-						y1 = hmin(y0 + 1, srcHeight - 1);
-						ry1 = 1.0f - ry0;
 						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
 						dest[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
 						dest[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
@@ -862,6 +959,10 @@ namespace april
 	{
 		static int srcBpp = 1;
 		int destBpp = Image::getFormatBpp(destFormat);
+		if (srcFormat == FORMAT_ALPHA && destBpp != 4)
+		{
+			return false;
+		}
 		unsigned char* src = NULL;
 		unsigned char* dest = NULL;
 		unsigned char a1;
@@ -902,9 +1003,8 @@ namespace april
 						dest[db] = (c + dest[db] * a1) / 255;
 					}
 				}
-				return true;
 			}
-			return false;
+			return true;
 		}
 		int da = -1;
 		if (destBpp == 4) // 4 BPP with alpha

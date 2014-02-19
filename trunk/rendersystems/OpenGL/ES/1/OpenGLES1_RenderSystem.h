@@ -36,7 +36,7 @@ namespace april
 		~OpenGLES1_RenderSystem();
 
 	protected:
-		Texture* _createTexture();
+		Texture* _createTexture(bool fromResource);
 
 		void _setVertexPointer(int stride, const void* pointer);
 

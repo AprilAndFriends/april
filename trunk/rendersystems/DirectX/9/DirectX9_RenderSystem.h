@@ -95,7 +95,7 @@ namespace april
 		void _configureDevice();
 		void _setResolution(int w, int h, bool fullscreen);
 
-		Texture* _createTexture();
+		Texture* _createTexture(bool fromResource);
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);

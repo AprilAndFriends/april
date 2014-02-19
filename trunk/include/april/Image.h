@@ -100,8 +100,10 @@ namespace april
 		bool invert(grect rect);
 		bool insertAlphaMap(Image* image, Format srcFormat, unsigned char median, int ambiguity);
 
-		static Image* create(chstr filename);
-		static Image* create(chstr filename, Format format);
+		static Image* createFromResource(chstr filename);
+		static Image* createFromResource(chstr filename, Format format);
+		static Image* createFromFile(chstr filename);
+		static Image* createFromFile(chstr filename, Format format);
 		static Image* create(int w, int h, unsigned char* data, Format format);
 		static Image* create(int w, int h, Color color, Format format);
 		static Image* create(Image* other);
@@ -134,8 +136,8 @@ namespace april
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int destWidth, int destHeight);
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight);
 
-		DEPRECATED_ATTRIBUTE static Image* load(chstr filename) { return Image::create(filename); }
-		DEPRECATED_ATTRIBUTE static Image* load(chstr filename, Format format) { return Image::create(filename, format); }
+		DEPRECATED_ATTRIBUTE static Image* load(chstr filename) { return Image::createFromResource(filename); }
+		DEPRECATED_ATTRIBUTE static Image* load(chstr filename, Format format) { return Image::createFromResource(filename, format); }
 
 	protected:
 		Image();

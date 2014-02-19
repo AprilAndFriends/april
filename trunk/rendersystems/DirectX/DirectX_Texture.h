@@ -23,7 +23,7 @@ namespace april
 	class DirectX_Texture : public Texture
 	{
 	public:
-		DirectX_Texture();
+		DirectX_Texture(bool fromResource);
 		~DirectX_Texture();
 
 	};

@@ -482,9 +482,9 @@ namespace april
 		this->reset();
 	}
 
-	Texture* DirectX9_RenderSystem::_createTexture()
+	Texture* DirectX9_RenderSystem::_createTexture(bool fromResource)
 	{
-		return new DirectX9_Texture();
+		return new DirectX9_Texture(fromResource);
 	}
 
 	PixelShader* DirectX9_RenderSystem::createPixelShader()
