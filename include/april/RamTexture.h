@@ -53,6 +53,7 @@ namespace april
 		void _assignFormat();
 		Lock _tryLockSystem(int x, int y, int w, int h);
 		bool _unlockSystem(Lock& lock, bool update);
+		bool _uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		
 	};
 

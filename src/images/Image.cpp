@@ -622,7 +622,7 @@ namespace april
 		}
 		int srcBpp = Image::getFormatBpp(srcFormat);
 		int destBpp = Image::getFormatBpp(destFormat);
-		if (srcFormat == FORMAT_ALPHA)
+		if (srcFormat == FORMAT_ALPHA && destFormat != FORMAT_ALPHA)
 		{
 			if (destBpp == 4)
 			{
@@ -691,7 +691,7 @@ namespace april
 		float ry1;
 		int x = 0;
 		int y = 0;
-		if (srcFormat == FORMAT_ALPHA)
+		if (srcFormat == FORMAT_ALPHA && destFormat != FORMAT_ALPHA)
 		{
 			if (bpp == 4)
 			{
@@ -974,7 +974,7 @@ namespace april
 	{
 		static int srcBpp = 1;
 		int destBpp = Image::getFormatBpp(destFormat);
-		if (srcFormat == FORMAT_ALPHA && destBpp != 4)
+		if (srcFormat == FORMAT_ALPHA && destFormat != FORMAT_ALPHA && destBpp != 4)
 		{
 			return false;
 		}

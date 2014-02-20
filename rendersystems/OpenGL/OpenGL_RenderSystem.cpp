@@ -379,11 +379,8 @@ namespace april
 
 	void OpenGL_RenderSystem::_setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
 	{
-		float constColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-		for_iter (i, 0, 4)
-		{
-			constColor[i] = alpha / 255.0f;
-		}
+		float constColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+		constColor[3] = alpha / 255.0f;
 		switch (textureColorMode)
 		{
 		case CM_DEFAULT:

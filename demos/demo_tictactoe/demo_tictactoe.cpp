@@ -387,13 +387,13 @@ void april_init(const harray<hstr>& args)
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
 	april::window->setCursorFilename(RESOURCE_PATH "cursor");
-	background = april::rendersys->createTexture(RESOURCE_PATH "texture");
-	x_symbol = april::rendersys->createTexture(RESOURCE_PATH "x");
-	o_symbol = april::rendersys->createTexture(RESOURCE_PATH "o");
-	line_horz = april::rendersys->createTexture(RESOURCE_PATH "line_horz");
-	line_vert = april::rendersys->createTexture(RESOURCE_PATH "line_vert");
-	line45 = april::rendersys->createTexture(RESOURCE_PATH "line45");
-	line315 = april::rendersys->createTexture(RESOURCE_PATH "line315");
+	background = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
+	x_symbol = april::rendersys->createTextureFromResource(RESOURCE_PATH "x");
+	o_symbol = april::rendersys->createTextureFromResource(RESOURCE_PATH "o");
+	line_horz = april::rendersys->createTextureFromResource(RESOURCE_PATH "line_horz");
+	line_vert = april::rendersys->createTextureFromResource(RESOURCE_PATH "line_vert");
+	line45 = april::rendersys->createTextureFromResource(RESOURCE_PATH "line45");
+	line315 = april::rendersys->createTextureFromResource(RESOURCE_PATH "line315");
 }
 
 void april_destroy()

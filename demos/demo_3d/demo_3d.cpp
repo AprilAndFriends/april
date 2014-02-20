@@ -113,7 +113,7 @@ void april_init(const harray<hstr>& args)
 #endif
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setCursorFilename(RESOURCE_PATH "cursor");
-	texture = april::rendersys->createTexture(RESOURCE_PATH "texture");
+	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
 	v[0].x = -1.0f;	v[0].y = 1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
 	v[1].x = 1.0f;	v[1].y = 1.0f;	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
 	v[2].x = -1.0f;	v[2].y = -1.0f;	v[2].z = 0.0f;	v[2].u = 0.0f;	v[2].v = 1.0f;
