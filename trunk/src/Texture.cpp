@@ -130,13 +130,14 @@ namespace april
 		this->filename = "";
 		this->width = w;
 		this->height = h;
-		this->type = TYPE_MANAGED; // so the write call later on goes through
+		this->type = TYPE_VOLATILE; // so the write call later on goes through
 		int size = 0;
 		if (type != TYPE_VOLATILE)
 		{
 			this->format = format;
 			size = this->getByteSize();
 			this->data = new unsigned char[size];
+			this->type = TYPE_MANAGED;
 		}
 		else
 		{
@@ -165,13 +166,14 @@ namespace april
 		this->filename = "";
 		this->width = w;
 		this->height = h;
-		this->type = TYPE_MANAGED; // so the write call later on goes through
+		this->type = TYPE_VOLATILE; // so the write call later on goes through
 		int size = 0;
 		if (type != TYPE_VOLATILE)
 		{
 			this->format = format;
 			size = this->getByteSize();
 			this->data = new unsigned char[size];
+			this->type = TYPE_MANAGED;
 		}
 		else
 		{
@@ -313,7 +315,7 @@ namespace april
 		if (currentData != NULL)
 		{
 			Type type = this->type;
-			this->type = TYPE_MANAGED; // so the write call right below goes through
+			this->type = TYPE_VOLATILE; // so the write call right below goes through
 			this->write(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
 			this->type = type;
 			if (this->type != TYPE_VOLATILE && (this->type != TYPE_IMMUTABLE || this->filename == ""))
@@ -428,7 +430,7 @@ namespace april
 		{
 			return false;
 		}
-		Lock lock = this->_tryLock();
+		Lock lock = this->_tryLock(); // will use this->data, no need for native format checking and direct copying
 		if (lock.failed)
 		{
 			return false;
@@ -445,6 +447,10 @@ namespace april
 			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
+		if (this->type == TYPE_VOLATILE && !Image::needsConversion(srcFormat, april::rendersys->getNativeTextureFormat(this->format)))
+		{
+			return this->_uploadToGpu(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
+		}
 		Lock lock = this->_tryLock(dx, dy, sw, sh);
 		if (lock.failed)
 		{
@@ -455,9 +461,9 @@ namespace april
 
 	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture)
 	{
-		if (this->type != TYPE_MANAGED)
+		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		if (texture->type != TYPE_MANAGED)
@@ -496,9 +502,9 @@ namespace april
 
 	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture)
 	{
-		if (this->type != TYPE_MANAGED)
+		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		if (texture->type != TYPE_MANAGED)
@@ -849,6 +855,11 @@ namespace april
 
 	bool Texture::_uploadDataToGpu(int x, int y, int w, int h)
 	{
+		if (!Image::needsConversion(this->format, april::rendersys->getNativeTextureFormat(this->format)) &&
+			this->_uploadToGpu(x, y, w, h, x, y, this->data, this->width, this->height, this->format))
+		{
+			return true;
+		}
 		Lock lock = this->_tryLockSystem(x, y, w, h);
 		if (lock.failed)
 		{

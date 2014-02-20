@@ -48,27 +48,22 @@ namespace april
 
 	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0)
 	{
+		this->firstUpload = true;
 	}
 
 	bool OpenGL_Texture::_createInternalTexture(unsigned char* data, int size, Type type)
 	{
 		glGenTextures(1, &this->textureId);
+		this->firstUpload = true;
 		this->_setCurrentTexture();
 		// required first call of glTexImage2D() to prevent problems
 #if TARGET_OS_IPHONE
 		if (this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG || this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG)
 		{
 			glCompressedTexImage2D(GL_TEXTURE_2D, 0, this->dataFormat, this->width, this->height, 0, size, data);
+			this->firstUpload = false;
 		}
-		else
 #endif
-		{
-			int size = this->getByteSize();
-			unsigned char* clearColor = new unsigned char[size];
-			memset(clearColor, 0, size);
-			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
-			delete [] clearColor;
-		}
 		// Non power of 2 textures in OpenGL, must have addressing mode set to clamp, otherwise they won't work.
 		if (!isPower2(this->width) || !isPower2(this->height))
 		{
@@ -182,10 +177,60 @@ namespace april
 		if (update)
 		{
 			this->_setCurrentTexture();
-			glTexSubImage2D(GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
+			if (this->width == lock.w && this->height == lock.h)
+			{
+				glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
+			}
+			else
+			{
+				if (this->firstUpload)
+				{
+					int size = this->getByteSize();
+					unsigned char* clearColor = new unsigned char[size];
+					memset(clearColor, 0, size);
+					glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+					delete [] clearColor;
+				}
+				glTexSubImage2D(GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
+			}
 			delete [] lock.data;
+			this->firstUpload = false;
 		}
 		return update;
+	}
+
+	bool OpenGL_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		this->_setCurrentTexture();
+		if (sx == 0 && dx == 0 && sy == 0 && dy == 0 && sw == this->width && srcWidth == this->width && sh == this->height && srcHeight == this->height)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data);
+		}
+		else
+		{
+			if (this->firstUpload)
+			{
+				int size = this->getByteSize();
+				unsigned char* clearColor = new unsigned char[size];
+				memset(clearColor, 0, size);
+				glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+				delete [] clearColor;
+			}
+			int srcBpp = Image::getFormatBpp(srcFormat);
+			if (sx == 0 && dx == 0 && srcWidth == this->width && sw == this->width)
+			{
+				glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]);
+			}
+			else
+			{
+				for_iter (j, 0, sh)
+				{
+					glTexSubImage2D(GL_TEXTURE_2D, 0, dx, (dy + j), sw, 1, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + (sy + j) * srcWidth) * srcBpp]);
+				}
+			}
+		}
+		this->firstUpload = false;
+		return true;
 	}
 
 }

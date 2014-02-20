@@ -179,6 +179,7 @@ namespace april
 		virtual Lock _tryLockSystem(int x, int y, int w, int h) = 0;
 		virtual bool _unlockSystem(Lock& lock, bool update) = 0;
 		bool _uploadDataToGpu(int x, int y, int w, int h);
+		virtual bool _uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat) = 0;
 
 	};
 	
