@@ -762,7 +762,7 @@ namespace april
 #ifndef __APPLE__
 			return Image::FORMAT_BGR;
 #else
-			return Image::FORMAT_BGR;
+			return Image::FORMAT_BGRA;
 #endif
 #else
 			return Image::FORMAT_RGB;

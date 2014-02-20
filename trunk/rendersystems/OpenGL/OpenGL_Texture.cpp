@@ -11,20 +11,21 @@
 
 #ifdef _OPENGL
 #include <hltypes/hplatform.h>
+
 #ifdef __APPLE__
-#include <TargetConditionals.h>
+	#include <TargetConditionals.h>
 #endif
 #if TARGET_OS_IPHONE
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES1/glext.h>
+	#include <OpenGLES/ES1/gl.h>
+	#include <OpenGLES/ES1/glext.h>
 #elif _OPENGLES
-#include <GLES/gl.h>
+	#include <GLES/gl.h>
 #else
-#ifndef __APPLE__
-#include <gl/GL.h>
-#else
-#include <OpenGL/gl.h>
-#endif
+	#ifndef __APPLE__
+		#include <gl/GL.h>
+	#else
+		#include <OpenGL/gl.h>
+	#endif
 #endif
 
 #include <hltypes/hlog.h>
@@ -105,22 +106,18 @@ namespace april
 		case Image::FORMAT_RGB:
 			this->glFormat = this->internalFormat = GL_RGB;
 			break;
-		// for optimizations
-		// TODOa - check this
-		/*
 		case Image::FORMAT_BGR:
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
 			this->glFormat = GL_BGR;
 #else
-			this->glFormat = GL_BGR_EXT;
+			this->glFormat = GL_BGRA_EXT; // iOS doesn't accept BGR. this option hasn't been tested since the last refactor
 #endif
 #else
 			this->glFormat = GL_RGB;
 #endif
 			this->internalFormat = GL_RGB;
 			break;
-		*/
 		case Image::FORMAT_ALPHA:
 			this->glFormat = this->internalFormat = GL_ALPHA;
 			break;
@@ -128,6 +125,9 @@ namespace april
 			this->glFormat = this->internalFormat = GL_LUMINANCE;
 			break;
 		case Image::FORMAT_PALETTE: // TODOaa - does palette use RGBA?
+			this->glFormat = this->internalFormat = GL_RGBA;
+			break;
+		default:
 			this->glFormat = this->internalFormat = GL_RGBA;
 			break;
 		}

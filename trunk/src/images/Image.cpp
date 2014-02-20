@@ -1405,6 +1405,10 @@ namespace april
 			return false;
 		}
 		int srcBpp = Image::getFormatBpp(srcFormat);
+		if (srcFormat == FORMAT_PALETTE && destFormat ==  FORMAT_PALETTE)
+		{
+			return true;
+		}
 		if (srcBpp == 1)
 		{
 			if (Image::_convertFrom1Bpp(w, h, srcData, srcFormat, destData, destFormat))

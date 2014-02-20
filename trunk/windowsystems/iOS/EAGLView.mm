@@ -189,13 +189,9 @@
 		aprilWindow->keyboardWasHidden();
 }
 
-// we'll also use this objc class for getting notifications
-// when device orientation changes
-
 -(void)deviceOrientationDidChange:(id)sender
 {
-	if (april::window)
-		aprilWindow->deviceOrientationDidChange();
+
 }
 
 // ok, now other functionality of this class
