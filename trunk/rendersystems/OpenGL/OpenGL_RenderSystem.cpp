@@ -732,15 +732,16 @@ namespace april
 		switch (format)
 		{
 		case Image::FORMAT_ARGB:
-		case Image::FORMAT_XRGB:
-		case Image::FORMAT_RGBA:
-		case Image::FORMAT_RGBX:
 		case Image::FORMAT_ABGR:
-		case Image::FORMAT_XBGR:
+		case Image::FORMAT_RGBA:
 			return Image::FORMAT_RGBA;
+		case Image::FORMAT_XRGB:
+		case Image::FORMAT_RGBX:
+		case Image::FORMAT_XBGR:
+		case Image::FORMAT_BGRX:
+			return Image::FORMAT_RGBX;
 		// for optimizations
 		case Image::FORMAT_BGRA:
-		case Image::FORMAT_BGRX:
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
 			return Image::FORMAT_BGRA;

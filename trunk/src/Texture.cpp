@@ -447,9 +447,10 @@ namespace april
 			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
-		if (this->type == TYPE_VOLATILE && !Image::needsConversion(srcFormat, april::rendersys->getNativeTextureFormat(this->format)))
+		if (this->type == TYPE_VOLATILE && !Image::needsConversion(srcFormat, april::rendersys->getNativeTextureFormat(this->format)) &&
+			this->_uploadToGpu(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat))
 		{
-			return this->_uploadToGpu(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
+			return true;
 		}
 		Lock lock = this->_tryLock(dx, dy, sw, sh);
 		if (lock.failed)
