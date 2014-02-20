@@ -123,7 +123,9 @@ namespace april
 			return lock;
 		}
 		lock.systemBuffer = surface;
-		lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, w, h, april::rendersys->getNativeTextureFormat(this->format));
+		// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, lockRect.Pitch / Image::getFormatBpp(nativeFormat), h, nativeFormat);
 		return lock;
 		// TODOaa - render target locking
 		/*
