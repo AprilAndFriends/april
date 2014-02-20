@@ -132,20 +132,20 @@ namespace april
 			// blending for the new generations
 			switch (textureBlendMode)
 			{
-			case DEFAULT:
-			case ALPHA_BLEND:
+			case BM_DEFAULT:
+			case BM_ALPHA:
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				break;
-			case ADD:
+			case BM_ADD:
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				break;
-			case SUBTRACT:
+			case BM_SUBTRACT:
 				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				break;
-			case OVERWRITE:
+			case BM_OVERWRITE:
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
 				break;

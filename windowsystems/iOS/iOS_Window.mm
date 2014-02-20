@@ -467,21 +467,6 @@ namespace april
 		}
 	}
 	
-	void iOS_Window::setDeviceOrientationCallback(void (*do_callback)())
-	{
-		if (do_callback != NULL)
-		{
-			[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-		}
-		else
-		{
-			[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
-		}
-		// update mDeviceOrientationCallback
-		// TODO - refactor
-		// Window::setDeviceOrientationCallback(do_callback);
-	}
-	
 	//////////////
 	void iOS_Window::handleDisplayAndUpdate()
 	{
@@ -493,45 +478,6 @@ namespace april
 		}
 	}
 	
-	// TODO - this is actually not supported right now
-	void iOS_Window::deviceOrientationDidChange()
-	{
-		/* 		// TODO - refactor
-
-		if (this->deviceOrientationCallback != NULL)
-		{
-			DeviceOrientation newOrientation;
-			switch ([[UIDevice currentDevice] orientation])
-			{
-			case UIDeviceOrientationUnknown:
-				newOrientation = ADEVICEORIENTATION_NONE;
-				break;
-			case UIDeviceOrientationPortrait:
-				newOrientation = ADEVICEORIENTATION_PORTRAIT;
-				break;
-			case UIDeviceOrientationPortraitUpsideDown:
-				newOrientation = ADEVICEORIENTATION_PORTRAIT_UPSIDEDOWN;
-				break;
-			case UIDeviceOrientationLandscapeLeft:
-				newOrientation = ADEVICEORIENTATION_LANDSCAPE_LEFT;
-				break;
-			case UIDeviceOrientationLandscapeRight:
-				newOrientation = ADEVICEORIENTATION_LANDSCAPE_RIGHT;
-				break;
-			case UIDeviceOrientationFaceUp:
-				newOrientation = ADEVICEORIENTATION_FACE_UP;
-				break;
-			case UIDeviceOrientationFaceDown:
-				newOrientation = ADEVICEORIENTATION_FACE_DOWN;
-				break;
-			// not adding default, so we get a warning in case
-			// a new orientation is added to backing API
-			}
-			newOrientation = ADEVICEORIENTATION_NONE;
-			(*this->deviceOrientationCallback)(newOrientation);
-		}
-		 */
-	}
 	void iOS_Window::applicationWillResignActive()
 	{
 		if (!this->firstFrameDrawn)
@@ -575,6 +521,5 @@ namespace april
 			}
 		}
 	}
-	
 }
 

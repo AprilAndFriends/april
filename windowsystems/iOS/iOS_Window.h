@@ -76,8 +76,6 @@ namespace april
 		void injectiOSChar(unsigned int inputChar);
 		
 		void setDeviceOrientationCallback(void (*do_callback)());
-		void deviceOrientationDidChange();
-
 		void applicationWillResignActive();
 		void applicationDidBecomeActive();
 		

@@ -233,7 +233,7 @@ extern bool gReattachLoadingOverlay;
 {	
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
-	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_DOWN, pos, [self getMouseButtonCode:event]);
+	aprilWindow->handleMouseEvent(april::Window::MOUSE_DOWN, pos, [self getMouseButtonCode:event]);
 }
 
 - (void)rightMouseDown:(NSEvent*) event
@@ -250,7 +250,7 @@ extern bool gReattachLoadingOverlay;
 {
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
-	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_UP, pos, [self getMouseButtonCode:event]);	
+	aprilWindow->handleMouseEvent(april::Window::MOUSE_UP, pos, [self getMouseButtonCode:event]);
 }
 
 - (void)rightMouseUp:(NSEvent*) event
@@ -267,7 +267,7 @@ extern bool gReattachLoadingOverlay;
 {
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
-	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_MOVE, pos, april::AK_NONE);
+	aprilWindow->handleMouseEvent(april::Window::MOUSE_MOVE, pos, april::AK_NONE);
 	
 	// Hack for Lion fullscreen bug, when the user moves the cursor quickly to and from the dock area,
 	// the cursor gets reset to the default arrow, this hack counters that.
@@ -309,12 +309,12 @@ extern bool gReattachLoadingOverlay;
 	{
 		unichr = [unicode characterAtIndex:0];
 	}
-	aprilWindow->handleKeyEvent(april::Window::AKEYEVT_DOWN, (april::Key) keyCode, unichr);
+	aprilWindow->handleKeyEvent(april::Window::KEY_DOWN, (april::Key) keyCode, unichr);
 }
 
 - (void)onKeyUp:(unsigned int) keyCode
 {
-	aprilWindow->handleKeyEvent(april::Window::AKEYEVT_UP, (april::Key) keyCode, 0);
+	aprilWindow->handleKeyEvent(april::Window::KEY_UP, (april::Key) keyCode, 0);
 }
 
 - (unsigned int) processKeyCode:(NSEvent*) event
@@ -380,7 +380,7 @@ extern bool gReattachLoadingOverlay;
 - (void)scrollWheel:(NSEvent*) event
 {
 	gvec2 vec([event deltaX], -[event deltaY]);
-	aprilWindow->handleMouseEvent(april::Window::AMOUSEEVT_SCROLL, vec, april::AK_NONE);
+	aprilWindow->handleMouseEvent(april::Window::MOUSE_SCROLL, vec, april::AK_NONE);
 }
 
 - (void)flagsChanged:(NSEvent*) event // special NSWindow function for modifier keys
