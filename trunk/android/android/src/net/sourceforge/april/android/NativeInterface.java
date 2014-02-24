@@ -117,11 +117,10 @@ public class NativeInterface
 	public static int getDisplayDpi()
 	{
 		// hardcoded exceptions for known devices that return wrong DPI
-		if (Build.MANUFACTURER.equals("HTC"))
+		if (Build.MANUFACTURER.equals("HTC") && Build.MODEL.equals("HTC One X"))
 		{
-			if (Build.MODEL.equals("HTC One X")) return 312;
+			return 312;
 		}
-
 		DisplayMetrics metrics = new DisplayMetrics();
 		NativeInterface.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		return (int)Math.sqrt((metrics.xdpi * metrics.xdpi + metrics.ydpi * metrics.ydpi) / 2.0);
