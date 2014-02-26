@@ -100,7 +100,12 @@ namespace april
 
 	hstr getPackageName()
 	{
+#ifndef _WINP8
 		return _HL_PSTR_TO_HSTR(Windows::ApplicationModel::Package::Current->Id->FamilyName);
+#else
+		hlog::warn(april::logTag, "Cannot use getPackageName() on this platform.");
+		return "";
+#endif
 	}
 
 	hstr getUserDataPath()
