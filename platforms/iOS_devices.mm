@@ -11,6 +11,7 @@
 
 void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 {
+	// source: https://github.com/erica/uidevice-extension/blob/master/UIDevice-Hardware.m
 	if (name.starts_with("iPad"))
 	{
 		if (name.starts_with("iPad1"))
@@ -24,8 +25,11 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.name = "iPad2";
 			info.ram = 512;
 			info.cpuCores = 2;
-			if (name == "iPad2,5") // iPad mini
+			if (name == "iPad2,5" || name == "iPad2,6" || name == "iPad2,7") // iPad mini
+			{
+				info.name = "iPad Mini";
 				info.displayDpi = 163;
+			}
 			else
 				info.displayDpi = 132;
 		}
@@ -35,6 +39,19 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.ram = 1024;
 			info.cpuCores = 2;
 			info.displayDpi = 264;
+		}
+		else if (name.starts_with("iPad4"))
+		{
+			info.name = "iPad4";
+			info.ram = 1024;
+			info.cpuCores = 2;
+			if (name == "iPad4,4" || name == "iPad4,5") // iPad mini 2
+			{
+				info.name = "iPad Mini 2";
+				info.displayDpi = 326;
+			}
+			else
+				info.displayDpi = 264;
 		}
 		else
 		{
