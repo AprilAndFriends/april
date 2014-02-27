@@ -37,6 +37,10 @@ namespace april
 	{
 		this->d3dPool = D3DPOOL_DEFAULT;
 		this->d3dUsage = 0;
+		if (this->d3dFormat == D3DFMT_A8)
+		{
+			this->d3dPool = D3DPOOL_MANAGED; // some GPUs seem to have problems creating off-screen A8 surfaces when D3DPOOL_DEFAULT is used
+		}
 		// TODOaa - change pool to save memory
 		/*
 		if (type == TYPE_RENDER_TARGET)
@@ -66,7 +70,7 @@ namespace april
 			this->d3dFormat = D3DFMT_X8R8G8B8;
 			break;
 		case Image::FORMAT_ALPHA:
-			this->d3dFormat = D3DFMT_A8;
+			this->d3dFormat = D3DFMT_A8; // lots of GPUs don't support A8 (even modern ones) so we use L8
 			break;
 		case Image::FORMAT_GRAYSCALE:
 			this->d3dFormat = D3DFMT_L8;
@@ -109,14 +113,32 @@ namespace april
 	Texture::Lock DirectX9_Texture::_tryLockSystem(int x, int y, int w, int h)
 	{
 		Lock lock;
-		IDirect3DSurface9* surface;
-		HRESULT hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
+		D3DLOCKED_RECT lockRect;
+		HRESULT hr;
+		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		int nativeBpp = Image::getFormatBpp(nativeFormat);
+		if (this->d3dPool == D3DPOOL_MANAGED)
+		{
+			RECT rect;
+			rect.left = x;
+			rect.top = y;
+			rect.right = x + w;
+			rect.bottom = y + h;
+			hr = this->d3dTexture->LockRect(0, &lockRect, &rect, 0);
+			if (!FAILED(hr))
+			{
+				lock.systemBuffer = this->d3dTexture;
+				lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, h, nativeFormat);
+			}
+			return lock;
+		}
+		IDirect3DSurface9* surface = NULL;
+		hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
 		if (FAILED(hr))
 		{
 			return lock;
 		}
-		D3DLOCKED_RECT lockRect;
-		hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
+		hr = surface->LockRect(&lockRect, NULL, 0);
 		if (FAILED(hr))
 		{
 			surface->Release();
@@ -124,8 +146,7 @@ namespace april
 		}
 		lock.systemBuffer = surface;
 		// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
-		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, lockRect.Pitch / Image::getFormatBpp(nativeFormat), h, nativeFormat);
+		lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, h, nativeFormat);
 		return lock;
 		// TODOaa - render target locking
 		/*
@@ -168,9 +189,17 @@ namespace april
 		{
 			return false;
 		}
-		IDirect3DSurface9* surface = (IDirect3DSurface9*)lock.systemBuffer;
-		if (surface != NULL)
+		if (this->d3dPool == D3DPOOL_MANAGED)
 		{
+			IDirect3DTexture9* texture = (IDirect3DTexture9*)lock.systemBuffer;
+			if (lock.locked)
+			{
+				texture->UnlockRect(0);
+			}
+		}
+		else
+		{
+			IDirect3DSurface9* surface = (IDirect3DSurface9*)lock.systemBuffer;
 			if (update)
 			{
 				if (lock.locked)
