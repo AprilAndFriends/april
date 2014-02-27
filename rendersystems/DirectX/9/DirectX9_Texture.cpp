@@ -41,6 +41,10 @@ namespace april
 		{
 			this->d3dPool = D3DPOOL_MANAGED; // some GPUs seem to have problems creating off-screen A8 surfaces when D3DPOOL_DEFAULT is used
 		}
+		else if (this->type != TYPE_IMMUTABLE)
+		{
+			this->d3dUsage = D3DUSAGE_DYNAMIC;
+		}
 		// TODOaa - change pool to save memory
 		/*
 		if (type == TYPE_RENDER_TARGET)
@@ -124,7 +128,7 @@ namespace april
 			rect.top = y;
 			rect.right = x + w;
 			rect.bottom = y + h;
-			hr = this->d3dTexture->LockRect(0, &lockRect, &rect, 0);
+			hr = this->d3dTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
 			if (!FAILED(hr))
 			{
 				lock.systemBuffer = this->d3dTexture;
@@ -138,7 +142,7 @@ namespace april
 		{
 			return lock;
 		}
-		hr = surface->LockRect(&lockRect, NULL, 0);
+		hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
 		if (FAILED(hr))
 		{
 			surface->Release();
