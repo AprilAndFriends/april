@@ -100,6 +100,9 @@ namespace april
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
 		
+	private:
+		bool _supportsA8Surface; // this does not seem to be detectable via any type of device caps
+
 	};
 
 }

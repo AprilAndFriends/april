@@ -60,6 +60,7 @@ namespace april
 	{
 		this->name = APRIL_RS_DIRECTX9;
 		this->state = new RenderState(); // TODOa
+		this->_supportsA8Surface = false;
 	}
 
 	DirectX9_RenderSystem::~DirectX9_RenderSystem()
@@ -183,6 +184,16 @@ namespace april
 			{
 				throw hl_exception("Unable to create Direct3D Device!");
 			}
+		}
+		if (!this->_supportsA8Surface)
+		{
+			IDirect3DSurface9* surface = NULL;
+			HRESULT hr = this->d3dDevice->CreateOffscreenPlainSurface(16, 16, D3DFMT_A8, D3DPOOL_SYSTEMMEM, &surface, NULL);
+			if (!FAILED(hr))
+			{
+				this->_supportsA8Surface = true;
+			}
+			surface->Release();
 		}
 		// device config
 		this->_configureDevice();
