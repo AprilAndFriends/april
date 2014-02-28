@@ -37,9 +37,10 @@ namespace april
 	{
 		this->d3dPool = D3DPOOL_DEFAULT;
 		this->d3dUsage = 0;
-		if (this->d3dFormat == D3DFMT_A8)
+		// some GPUs seem to have problems creating off-screen A8 surfaces when D3DPOOL_DEFAULT is used
+		if (!((DirectX9_RenderSystem*)april::rendersys)->_supportsA8Surface && this->d3dFormat == D3DFMT_A8)
 		{
-			this->d3dPool = D3DPOOL_MANAGED; // some GPUs seem to have problems creating off-screen A8 surfaces when D3DPOOL_DEFAULT is used
+			this->d3dPool = D3DPOOL_MANAGED;
 		}
 		else if (this->type != TYPE_IMMUTABLE)
 		{
