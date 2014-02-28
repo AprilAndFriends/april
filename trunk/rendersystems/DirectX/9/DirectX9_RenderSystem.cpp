@@ -192,8 +192,8 @@ namespace april
 			if (!FAILED(hr))
 			{
 				this->_supportsA8Surface = true;
+				surface->Release();
 			}
-			surface->Release();
 		}
 		// device config
 		this->_configureDevice();
