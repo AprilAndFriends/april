@@ -176,22 +176,25 @@ namespace april
 		}
 		if (update)
 		{
-			this->_setCurrentTexture();
-			if (this->width == lock.w && this->height == lock.h)
+			if (this->format != Image::FORMAT_PALETTE)
 			{
-				glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
-			}
-			else
-			{
-				if (this->firstUpload)
+				this->_setCurrentTexture();
+				if (this->width == lock.w && this->height == lock.h)
 				{
-					int size = this->getByteSize();
-					unsigned char* clearColor = new unsigned char[size];
-					memset(clearColor, 0, size);
-					glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
-					delete [] clearColor;
+					glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
 				}
-				glTexSubImage2D(GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
+				else
+				{
+					if (this->firstUpload)
+					{
+						int size = this->getByteSize();
+						unsigned char* clearColor = new unsigned char[size];
+						memset(clearColor, 0, size);
+						glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+						delete [] clearColor;
+					}
+					glTexSubImage2D(GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
+				}
 			}
 			delete [] lock.data;
 			this->firstUpload = false;
@@ -201,6 +204,10 @@ namespace april
 
 	bool OpenGL_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
+		if (this->format == Image::FORMAT_PALETTE)
+		{
+			return false;
+		}
 		this->_setCurrentTexture();
 		if (sx == 0 && dx == 0 && sy == 0 && dy == 0 && sw == this->width && srcWidth == this->width && sh == this->height && srcHeight == this->height)
 		{
