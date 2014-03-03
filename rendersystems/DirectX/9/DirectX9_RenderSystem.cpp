@@ -150,12 +150,14 @@ namespace april
 				hlog::error(april::logTag, "Failed to reset device!");
 			}
 		}
+		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
+		this->d3dDevice->BeginScene();
+		this->_configureDevice();
+		this->setViewport(this->viewport);
+		this->setOrthoProjection(this->orthoProjection);
 		this->_setModelviewMatrix(this->modelviewMatrix);
 		this->_setProjectionMatrix(this->projectionMatrix);
-		this->_configureDevice();
-		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 		hlog::write(april::logTag, "Direct3D9 Device restored.");
-		this->d3dDevice->BeginScene();
 		// this is used to display window content while resizing window
 		april::window->updateOneFrame();
 	}
@@ -176,10 +178,10 @@ namespace april
 		}
 		this->d3dpp->SwapEffect = D3DSWAPEFFECT_COPY; // COPY is being used here as otherwise some weird tearing manifests during rendering
 		this->d3dpp->hDeviceWindow = hWnd;
-		HRESULT hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, this->d3dpp, &d3dDevice);
+		HRESULT hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, this->d3dpp, &this->d3dDevice);
 		if (FAILED(hr))
 		{
-			hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, this->d3dpp, &d3dDevice);
+			hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, this->d3dpp, &this->d3dDevice);
 			if (FAILED(hr))
 			{
 				throw hl_exception("Unable to create Direct3D Device!");
@@ -195,15 +197,15 @@ namespace april
 				surface->Release();
 			}
 		}
+		this->presentFrame();
 		// device config
+		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
+		this->d3dDevice->BeginScene();
 		this->_configureDevice();
 		this->clear(true, false);
-		this->viewport.set(0.0f, 0.0f, april::window->getSize());
-		this->presentFrame();
-		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
-		this->renderTarget = NULL;
-		this->d3dDevice->BeginScene();
+		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
 		this->orthoProjection.setSize(april::window->getSize());
+		this->renderTarget = NULL;
 	}
 	
 	void DirectX9_RenderSystem::_configureDevice()
@@ -223,6 +225,11 @@ namespace april
 		// vertex color blending
 		this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 		this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		// misc
+		this->setTextureBlendMode(april::BM_DEFAULT);
+		this->setTextureColorMode(april::CM_DEFAULT);
+		this->textureFilter = Texture::FILTER_UNDEFINED;
+		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
 
 	int DirectX9_RenderSystem::getMaxTextureSize()
@@ -777,10 +784,13 @@ namespace april
 					throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
 				}
 			}
-			this->_setModelviewMatrix(this->modelviewMatrix);
-			this->_setProjectionMatrix(this->projectionMatrix);
 			this->_configureDevice();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
+			this->d3dDevice->BeginScene();
+			this->setViewport(this->viewport);
+			this->setOrthoProjection(this->orthoProjection);
+			this->_setModelviewMatrix(this->modelviewMatrix);
+			this->_setProjectionMatrix(this->projectionMatrix);
 			hlog::write(april::logTag, "Direct3D9 Device restored.");
 		}
 		else if (hr == D3DERR_WASSTILLDRAWING)
@@ -794,8 +804,8 @@ namespace april
 				}
 				hthread::sleep(1.0f);
 			}
+			this->d3dDevice->BeginScene();
 		}
-		this->d3dDevice->BeginScene();
 	}
 
 }

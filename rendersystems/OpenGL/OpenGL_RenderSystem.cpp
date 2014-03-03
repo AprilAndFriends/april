@@ -224,8 +224,8 @@ namespace april
 		glBindTexture(GL_TEXTURE_2D, this->deviceState.textureId);
 		this->currentState.textureFilter = april::Texture::FILTER_NEAREST;
 		this->currentState.textureAddressMode = april::Texture::ADDRESS_WRAP;
-		this->currentState.blendMode = april::BM_DEFAULT;
-		this->currentState.colorMode = april::CM_DEFAULT;
+		this->currentState.blendMode = april::BM_UNDEFINED;
+		this->currentState.colorMode = april::CM_UNDEFINED;
 	}
 
 	int OpenGL_RenderSystem::getMaxTextureSize()
