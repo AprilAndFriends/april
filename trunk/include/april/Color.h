@@ -34,12 +34,14 @@ namespace april
 		Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255);
 		Color(unsigned int color);
 		Color(chstr hex);
+		Color(const char* hex);
 		Color(const Color& color, unsigned char a);
 
 		void set(int r, int g, int b, int a = 255);
 		void set(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255);
 		void set(unsigned int color);
 		void set(chstr hex);
+		void set(const char* hex);
 		void set(const Color& color, unsigned char a);
 
 		float r_f() const { return this->r * 0.003921569f; } // equals r / 255, multiplication is faster than division
