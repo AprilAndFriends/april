@@ -66,6 +66,11 @@ namespace april
 		this->set(hex);
 	}
 	
+	Color::Color(const char* hex)
+	{
+		this->set(hstr(hex));
+	}
+	
 	Color::Color(const Color& color, unsigned char a)
 	{
 		this->set(color, a);
@@ -106,6 +111,11 @@ namespace april
 		this->g = (unsigned char)value(2, 2).unhex();
 		this->b = (unsigned char)value(4, 2).unhex();
 		this->a = (value.size() == 8 ? (unsigned char)value(6, 2).unhex() : 255);
+	}
+	
+	void Color::set(const char* hex)
+	{
+		this->set(hstr(hex));
 	}
 	
 	void Color::set(const Color& color, unsigned char a)
