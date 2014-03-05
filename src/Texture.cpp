@@ -357,12 +357,12 @@ namespace april
 
 	Color Texture::getPixel(int x, int y)
 	{
+		Color color = Color::Clear;
 		if (this->type != TYPE_MANAGED)
 		{
 			hlog::warn(april::logTag, "Cannot read texture: " + this->_getInternalName());
-			return false;
+			return color;
 		}
-		Color color = Color::Clear;
 		if (this->data != NULL)
 		{
 			color = Image::getPixel(x, y, this->data, this->width, this->height, this->format);
@@ -387,12 +387,12 @@ namespace april
 
 	Color Texture::getInterpolatedPixel(float x, float y)
 	{
+		Color color = Color::Clear;
 		if (this->type != TYPE_MANAGED)
 		{
 			hlog::warn(april::logTag, "Cannot read texture: " + this->_getInternalName());
-			return false;
+			return color;
 		}
-		Color color = Color::Clear;
 		if (this->data != NULL)
 		{
 			color = Image::getInterpolatedPixel(x, y, this->data, this->width, this->height, this->format);
