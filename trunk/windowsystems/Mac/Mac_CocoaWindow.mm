@@ -18,7 +18,7 @@
 #include "april.h"
 
 extern bool gReattachLoadingOverlay;
-
+static bool gFullscreenToggleRequest = false;
 @implementation AprilCocoaWindow
 
 - (void)timerEvent:(NSTimer*) t
@@ -32,6 +32,12 @@ extern bool gReattachLoadingOverlay;
 
 	mView->mStartedDrawing = true;
 	[mView setNeedsDisplay:YES];
+	
+	if (gFullscreenToggleRequest)
+	{
+		[self toggleFullScreen:nil];
+		gFullscreenToggleRequest = 0;
+	}
 }
 
 - (void)queryUpdated:(NSNotification*) note
@@ -332,8 +338,9 @@ extern bool gReattachLoadingOverlay;
 {
 	if (isLionOrNewer())
 	{
-		[self toggleFullScreen:self];
 		aprilWindow->setFullscreenFlag([self isFullScreen]);
+		// doing it this way because direct toggling on lion+ throws some weird objc exception depending on where the call was being made from...
+		gFullscreenToggleRequest = true;
 	}
 	else
 	{
