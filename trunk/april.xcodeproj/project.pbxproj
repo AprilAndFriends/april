@@ -1620,7 +1620,6 @@
 					_OPENGL1,
 					"$(inherited)",
 				);
-				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_SHADOW = NO;
 				GCC_WARN_UNUSED_VALUE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1967,7 +1966,6 @@
 					_OPENGL1,
 					"$(inherited)",
 				);
-				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				GCC_WARN_SHADOW = NO;
 				GCC_WARN_UNUSED_VALUE = YES;
 				HEADER_SEARCH_PATHS = (
