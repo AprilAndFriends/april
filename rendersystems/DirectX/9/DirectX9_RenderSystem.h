@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.31
 /// 
 /// @section LICENSE
 /// 
@@ -91,6 +91,7 @@ namespace april
 		IDirect3DSurface9* backBuffer;
 		harray<DisplayMode> supportedDisplayModes;
 		_D3DPRESENT_PARAMETERS_* d3dpp;
+		HWND childHWnd;
 
 		void _configureDevice();
 		void _setResolution(int w, int h, bool fullscreen);

@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.31
 /// 
 /// @section LICENSE
 /// 
@@ -239,6 +239,7 @@ namespace april
 
 	bool DirectX9_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
+		this->load();
 		Lock lock = this->_tryLockSystem(dx, dy, sw, sh);
 		if (lock.failed)
 		{

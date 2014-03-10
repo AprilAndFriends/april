@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.3
+/// @version 3.31
 /// 
 /// @section LICENSE
 /// 
@@ -114,6 +114,20 @@ namespace april
 		this->height = 0;
 		this->type = type;
 		this->format = Image::FORMAT_INVALID;
+		this->dataFormat = 0;
+		this->data = NULL;
+		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		return true;
+	}
+
+	bool Texture::_create(chstr filename, Image::Format format, Texture::Type type)
+	{
+		this->filename = filename;
+		this->type = type;
+		this->width = 0;
+		this->height = 0;
+		this->type = type;
+		this->format = format;
 		this->dataFormat = 0;
 		this->data = NULL;
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
@@ -285,7 +299,15 @@ namespace april
 				hlog::error(april::logTag, "No filename for texture specified!");
 				return false;
 			}
-			Image* image = (this->fromResource ? Image::createFromResource(this->filename) : Image::createFromFile(this->filename));
+			Image* image = NULL;
+			if (this->format == Image::FORMAT_INVALID)
+			{
+				image = (this->fromResource ? Image::createFromResource(this->filename) : Image::createFromFile(this->filename));
+			}
+			else
+			{
+				image = (this->fromResource ? Image::createFromResource(this->filename, this->format) : Image::createFromFile(this->filename, this->format));
+			}
 			if (image == NULL)
 			{
 				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
@@ -835,6 +857,7 @@ namespace april
 		}
 		else
 		{
+			this->load();
 			lock = this->_tryLockSystem(x, y, w, h);
 		}
 		return lock;
@@ -861,6 +884,7 @@ namespace april
 		{
 			return true;
 		}
+		this->load();
 		Lock lock = this->_tryLockSystem(x, y, w, h);
 		if (lock.failed)
 		{

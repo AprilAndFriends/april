@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.3
+/// @version 3.31
 /// 
 /// @section LICENSE
 /// 
@@ -193,6 +193,22 @@ namespace april
 		return texture;
 	}
 
+	Texture* RenderSystem::createTextureFromResource(chstr filename, Image::Format format, Texture::Type type, bool loadImmediately)
+	{
+		hstr name = this->findTextureResource(filename);
+		if (name == "")
+		{
+			return NULL;
+		}
+		Texture* texture = this->_createTexture(true);
+		if (!texture->_create(name, format, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
+		{
+			delete texture;
+			return NULL;
+		}
+		return texture;
+	}
+
 	Texture* RenderSystem::createTextureFromFile(chstr filename, Texture::Type type, bool loadImmediately)
 	{
 		hstr name = this->findTextureFile(filename);
@@ -202,6 +218,22 @@ namespace april
 		}
 		Texture* texture = this->_createTexture(false);
 		if (!texture->_create(name, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
+		{
+			delete texture;
+			return NULL;
+		}
+		return texture;
+	}
+
+	Texture* RenderSystem::createTextureFromFile(chstr filename, Image::Format format, Texture::Type type, bool loadImmediately)
+	{
+		hstr name = this->findTextureFile(filename);
+		if (name == "")
+		{
+			return NULL;
+		}
+		Texture* texture = this->_createTexture(false);
+		if (!texture->_create(name, format, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
 		{
 			delete texture;
 			return NULL;

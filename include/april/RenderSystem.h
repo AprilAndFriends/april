@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.31
 /// 
 /// @section LICENSE
 /// 
@@ -111,9 +111,12 @@ namespace april
 		virtual void setVertexShader(VertexShader* vertexShader) = 0;
 		virtual void setPixelShader(PixelShader* pixelShader) = 0;
 
-		// TODOaa - make overloads with format for these 2 (that should work only with managed textures)
 		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, bool loadImmediately = true);
+		/// @note When a format is forced, it's best to use managed (but not necessary).
+		Texture* createTextureFromResource(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, bool loadImmediately = true);
 		Texture* createTextureFromFile(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, bool loadImmediately = true);
+		/// @note When a format is forced, it's best to use managed (but not necessary).
+		Texture* createTextureFromFile(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, bool loadImmediately = true);
 		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
 		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
 		Texture* createRamTexture(chstr filename, bool loadImmediately = true); // TODOaa - will be removed in a future version
