@@ -208,6 +208,7 @@ namespace april
 			wc.cbSize = sizeof(WNDCLASSEX);
 			wc.lpfnWndProc = &Win32_Window::processCallback;
 			wc.hInstance = hinst;
+			wc.hCursor = GetCursor();
 			wc.lpszClassName = APRIL_DX9_CHILD;
 			wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 			RegisterClassExW(&wc);
