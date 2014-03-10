@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.31
 /// 
 /// @section LICENSE
 /// 
@@ -26,10 +26,13 @@
 #include "DirectX9_VertexShader.h"
 #include "Image.h"
 #include "Keys.h"
+#include "Platform.h"
 #include "RenderState.h"
 #include "Timer.h"
+#include "Win32_Window.h"
 
 #define VERTICES_BUFFER_COUNT 65536
+#define APRIL_DX9_CHILD L"AprilDX9Child"
 
 #define PLAIN_FVF (D3DFVF_XYZ)
 #define COLOR_FVF (D3DFVF_XYZ | D3DFVF_DIFFUSE)
@@ -61,6 +64,7 @@ namespace april
 		this->name = APRIL_RS_DIRECTX9;
 		this->state = new RenderState(); // TODOa
 		this->_supportsA8Surface = false;
+		this->childHWnd = 0;
 	}
 
 	DirectX9_RenderSystem::~DirectX9_RenderSystem()
@@ -95,6 +99,12 @@ namespace april
 		if (!DirectX_RenderSystem::destroy())
 		{
 			return false;
+		}
+		if (this->childHWnd != 0)
+		{
+			DestroyWindow(this->childHWnd);
+			UnregisterClassW(APRIL_DX9_CHILD, GetModuleHandle(0));
+			this->childHWnd = 0;
 		}
 		if (this->d3dpp != NULL)
 		{
@@ -159,16 +169,25 @@ namespace april
 		this->_setProjectionMatrix(this->projectionMatrix);
 		hlog::write(april::logTag, "Direct3D9 Device restored.");
 		// this is used to display window content while resizing window
-		april::window->updateOneFrame();
+		april::window->performUpdate(0.0f);
 	}
 
 	void DirectX9_RenderSystem::assignWindow(Window* window)
 	{
 		HWND hWnd = (HWND)april::window->getBackendId();
 		memset(this->d3dpp, 0, sizeof(*this->d3dpp));
+		bool fullBackBuffer = (!april::window->isFullscreen() && window->getName() == "Win32" && window->getOptions().resizable);
 		this->d3dpp->Windowed = !april::window->isFullscreen();
-		this->d3dpp->BackBufferWidth = april::window->getWidth();
-		this->d3dpp->BackBufferHeight = april::window->getHeight();
+		int w = april::window->getWidth();
+		int h = april::window->getHeight();
+		if (fullBackBuffer)
+		{
+			SystemInfo info = april::getSystemInfo();
+			w = (int)info.displayResolution.x;
+			h = (int)info.displayResolution.y;
+		}
+		this->d3dpp->BackBufferWidth = w;
+		this->d3dpp->BackBufferHeight = h;
 		this->d3dpp->BackBufferFormat = D3DFMT_X8R8G8B8;
 		this->d3dpp->PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 		if (this->options.depthBuffer)
@@ -177,7 +196,26 @@ namespace april
 			this->d3dpp->AutoDepthStencilFormat = D3DFMT_D16;
 		}
 		this->d3dpp->SwapEffect = D3DSWAPEFFECT_COPY; // COPY is being used here as otherwise some weird tearing manifests during rendering
-		this->d3dpp->hDeviceWindow = hWnd;
+		if (!fullBackBuffer)
+		{
+			this->d3dpp->hDeviceWindow = hWnd;
+		}
+		else
+		{
+			WNDCLASSEXW wc;
+			memset(&wc, 0, sizeof(WNDCLASSEX));
+			HINSTANCE hinst = GetModuleHandle(0);
+			wc.cbSize = sizeof(WNDCLASSEX);
+			wc.lpfnWndProc = &Win32_Window::processCallback;
+			wc.hInstance = hinst;
+			wc.lpszClassName = APRIL_DX9_CHILD;
+			wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+			RegisterClassExW(&wc);
+			this->childHWnd = CreateWindowW(APRIL_DX9_CHILD, L"", WS_CHILD, 0, 0, w, h, hWnd, NULL, hinst, NULL);
+			this->d3dpp->hDeviceWindow = this->childHWnd;
+			ShowWindow(this->childHWnd, SW_SHOW);
+			UpdateWindow(this->childHWnd);
+		}
 		HRESULT hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, this->d3dpp, &this->d3dDevice);
 		if (FAILED(hr))
 		{
@@ -494,10 +532,29 @@ namespace april
 			hlog::warnf(april::logTag, "Cannot set resolution to: %d x %d", w, h);
 			return;
 		}
+		bool resizable = (april::window->getName() == "Win32" && april::window->getOptions().resizable);
+		bool oldFullscreen = (this->d3dpp->Windowed == FALSE);
 		this->d3dpp->Windowed = !fullscreen;
-		this->d3dpp->BackBufferWidth = w;
-		this->d3dpp->BackBufferHeight = h;
-		this->reset();
+		if (fullscreen != oldFullscreen || !resizable)
+		{
+			if (!fullscreen && resizable)
+			{
+				SystemInfo info = april::getSystemInfo();
+				w = (int)info.displayResolution.x;
+				h = (int)info.displayResolution.y;
+			}
+			this->d3dpp->BackBufferWidth = w;
+			this->d3dpp->BackBufferHeight = h;
+			this->reset();
+		}
+		else
+		{
+			this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
+			if (this->childHWnd != 0)
+			{
+				UpdateWindow(this->childHWnd);
+			}
+		}
 	}
 
 	Texture* DirectX9_RenderSystem::_createTexture(bool fromResource)

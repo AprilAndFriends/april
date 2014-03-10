@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.31
 /// 
 /// @section LICENSE
 /// 
@@ -163,8 +163,8 @@ namespace april
 		unsigned char* data;
 		bool fromResource;
 
-		// TODOaa - add overload with filename, format and type
 		virtual bool _create(chstr filename, Type type);
+		virtual bool _create(chstr filename, Image::Format format, Type type);
 		virtual bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
 		virtual bool _create(int w, int h, Color color, Image::Format format, Type type);
 

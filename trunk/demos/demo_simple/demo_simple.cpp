@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.31
 /// 
 /// @section LICENSE
 /// 
@@ -36,7 +36,7 @@
 april::Texture* texture = NULL;
 april::Texture* manualTexture = NULL;
 april::TexturedVertex dv[4];
-#if !defined(_ANDROID) && !defined(_WINP8)
+#if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
 grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
