@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.32
 /// 
 /// @section LICENSE
 /// 
@@ -37,7 +37,7 @@ namespace april
 		this->projectionMatrixChanged = false;
 		this->blendMode = BM_UNDEFINED;
 		this->colorMode = CM_UNDEFINED;
-		this->colorModeAlpha = 255;
+		this->colorModeFactor = 1.0f;
 		this->modeMatrix = 0;
 		this->strideVertex = 0;
 		this->pointerVertex = NULL;

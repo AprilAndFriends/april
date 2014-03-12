@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.31
+/// @version 3.32
 /// 
 /// @section LICENSE
 /// 
@@ -371,8 +371,10 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
+	void DirectX9_RenderSystem::setTextureColorMode(ColorMode textureColorMode, float factor)
 	{
+		static unsigned char color = 0;
+		color = (unsigned char)(factor * 255);
 		switch (textureColorMode)
 		{
 		case CM_DEFAULT:
@@ -385,13 +387,14 @@ namespace april
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 			break;
 		case CM_LERP:
-			this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(alpha, alpha, alpha, alpha));
+			this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, color, color, color));
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_BLENDDIFFUSEALPHA);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_LERP);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG0, D3DTA_TFACTOR);
 			break;
 		case CM_ALPHA_MAP:
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);

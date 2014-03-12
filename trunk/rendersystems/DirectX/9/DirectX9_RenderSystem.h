@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.31
+/// @version 3.32
 /// 
 /// @section LICENSE
 /// 
@@ -54,7 +54,8 @@ namespace april
 		void setViewport(grect rect);
 
 		void setTextureBlendMode(BlendMode textureBlendMode);
-		void setTextureColorMode(ColorMode textureColorMode, unsigned char alpha = 255);
+		/// @note The parameter factor is only used when the color mode is LERP.
+		void setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
 		void setTextureFilter(Texture::Filter textureFilter);
 		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
 		void setTexture(Texture* texture);
