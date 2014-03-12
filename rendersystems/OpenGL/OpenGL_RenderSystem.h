@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.32
 /// 
 /// @section LICENSE
 /// 
@@ -57,7 +57,8 @@ namespace april
 		void setPixelShader(PixelShader* pixelShader);
 		void setVertexShader(VertexShader* vertexShader);
 		void setTextureBlendMode(BlendMode mode);
-		void setTextureColorMode(ColorMode textureColorMode, unsigned char alpha = 255);
+		/// @note The parameter factor is only used when the color mode is LERP.
+		void setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
 		void setTextureFilter(Texture::Filter textureFilter);
 		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
 
@@ -90,7 +91,8 @@ namespace april
 		void _setResolution(int w, int h, bool fullscreen);
 
 		virtual void _setTextureBlendMode(BlendMode textureBlendMode);
-		virtual void _setTextureColorMode(ColorMode mode, unsigned char alpha = 255);
+		/// @note The parameter factor is only used when the color mode is LERP.
+		virtual void _setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
 		virtual void _setTextureFilter(Texture::Filter textureFilter);
 		virtual void _setTextureAddressMode(Texture::AddressMode textureAddressMode);
 

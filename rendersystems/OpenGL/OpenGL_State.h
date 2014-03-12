@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.32
 /// 
 /// @section LICENSE
 /// 
@@ -39,7 +39,7 @@ namespace april
 		gmat4 projectionMatrix;
 		BlendMode blendMode;
 		ColorMode colorMode;
-		unsigned char colorModeAlpha;
+		float colorModeFactor;
 		unsigned int modeMatrix;
 		int strideVertex;
 		const void* pointerVertex;

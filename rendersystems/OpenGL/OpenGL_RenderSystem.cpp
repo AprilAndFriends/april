@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.32
 /// 
 /// @section LICENSE
 /// 
@@ -307,11 +307,11 @@ namespace april
 			this->_setTextureBlendMode(this->currentState.blendMode);
 			this->deviceState.blendMode = this->currentState.blendMode;
 		}
-		if (this->currentState.colorMode != this->deviceState.colorMode || this->currentState.colorModeAlpha != this->deviceState.colorModeAlpha)
+		if (this->currentState.colorMode != this->deviceState.colorMode || this->currentState.colorModeFactor != this->deviceState.colorModeFactor)
 		{
-			this->_setTextureColorMode(this->currentState.colorMode, this->currentState.colorModeAlpha);
+			this->_setTextureColorMode(this->currentState.colorMode, this->currentState.colorModeFactor);
 			this->deviceState.colorMode = this->currentState.colorMode;
-			this->deviceState.colorModeAlpha = this->currentState.colorModeAlpha;
+			this->deviceState.colorModeFactor = this->currentState.colorModeFactor;
 		}
 		if (this->currentState.modelviewMatrixChanged && this->modelviewMatrix != this->deviceState.modelviewMatrix)
 		{
@@ -371,16 +371,16 @@ namespace april
 		}
 	}
 	
-	void OpenGL_RenderSystem::setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
+	void OpenGL_RenderSystem::setTextureColorMode(ColorMode textureColorMode, float factor)
 	{
 		this->currentState.colorMode = textureColorMode;
-		this->currentState.colorModeAlpha = alpha;
+		this->currentState.colorModeFactor = factor;
 	}
 
-	void OpenGL_RenderSystem::_setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
+	void OpenGL_RenderSystem::_setTextureColorMode(ColorMode textureColorMode, float factor)
 	{
-		float constColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-		constColor[3] = alpha / 255.0f;
+		static float constColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+		constColor[3] = factor;
 		switch (textureColorMode)
 		{
 		case CM_DEFAULT:
@@ -393,11 +393,12 @@ namespace april
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
 			break;
 		case CM_LERP:
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 			glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constColor);
 			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_CONSTANT);
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
+			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
 			break;

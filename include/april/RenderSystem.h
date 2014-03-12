@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.31
+/// @version 3.32
 /// 
 /// @section LICENSE
 /// 
@@ -102,7 +102,8 @@ namespace april
 		virtual int getMaxTextureSize() = 0;
 
 		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
-		virtual void setTextureColorMode(ColorMode colorMode, unsigned char alpha = 255) = 0;
+		/// @note The parameter factor is only used when the color mode is LERP.
+		virtual void setTextureColorMode(ColorMode colorMode, float factor = 1.0f) = 0;
 		virtual void setTextureFilter(Texture::Filter textureFilter) = 0;
 		virtual void setTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
 		virtual void setTexture(Texture* texture) = 0;
