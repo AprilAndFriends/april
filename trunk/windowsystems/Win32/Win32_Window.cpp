@@ -67,7 +67,7 @@ namespace april
 		HINSTANCE hinst = GetModuleHandle(0);
 		wc.cbSize = sizeof(WNDCLASSEX);
 		wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-		wc.lpfnWndProc = &Win32_Window::processCallback;
+		wc.lpfnWndProc = &Win32_Window::_mainProcessCallback;
 		wc.hInstance = hinst;
 		wc.hCursor = LoadCursor(0, IDC_ARROW);
 		wc.lpszClassName = APRIL_WIN32_WINDOW_CLASS;
@@ -334,19 +334,48 @@ namespace april
 		//this->handleVirtualKeyboardChangeEvent(false, 0.0f); // usually only used for testing
 	}
 
-	LRESULT CALLBACK Win32_Window::processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	LRESULT CALLBACK Win32_Window::_mainProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
+		if (!april::window->isCreated()) // don't run callback processing if window was "destroyed"
+		{
+			return 1;
+		}
+		static bool _sizeChanging = false;
+		static bool _initialSize = true;
+		switch (message)
+		{
+		case WM_ENTERSIZEMOVE:
+			_sizeChanging = true;
+			break;
+		case WM_EXITSIZEMOVE:
+			_sizeChanging = false;
+			break;
+		case WM_SIZE:
+			if (!april::window->isFullscreen() &&
+				(_sizeChanging || wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED && !_initialSize))
+			{
+				((Win32_Window*)april::window)->_setRenderSystemResolution();
+				UpdateWindow(hWnd);
+				april::window->performUpdate(0.0f);
+				april::rendersys->presentFrame();
+			}
+			_initialSize = false;
+			break;
+		}
+		return Win32_Window::childProcessCallback(hWnd, message, wParam, lParam);
+	}
+
+	LRESULT CALLBACK Win32_Window::childProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	{
+		if (!april::window->isCreated()) // don't run callback processing if window was "destroyed"
+		{
+			return 1;
+		}
 		static bool _touchDown = false;
 		static bool _doubleTapDown = false;
 		static int _mouseMoveMessagesCount = 0;
 		static float _wheelDelta = 0.0f;
 		static bool _altKeyDown = false;
-		static bool _sizeChanging = false;
-		static bool _initialSize = true;
-		if (!april::window->isCreated()) // don't run callback processing if window was "destroyed"
-		{
-			return 1;
-		}
 		switch (message)
 		{
 		case 0x0119: // WM_GESTURE (Win7+ only)
@@ -518,23 +547,6 @@ namespace april
 			{
 				april::window->handleFocusChangeEvent(false);
 			}
-			break;
-		case WM_ENTERSIZEMOVE:
-			_sizeChanging = true;
-			break;
-		case WM_EXITSIZEMOVE:
-			_sizeChanging = false;
-			break;
-		case WM_SIZE:
-			if (!april::window->isFullscreen() &&
-				(_sizeChanging || wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED && !_initialSize))
-			{
-				((Win32_Window*)april::window)->_setRenderSystemResolution();
-				UpdateWindow(hWnd);
-				april::window->performUpdate(0.0f);
-				april::rendersys->presentFrame();
-			}
-			_initialSize = false;
 			break;
 		}
 		return DefWindowProcW(hWnd, message, wParam, lParam);
