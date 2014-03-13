@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.31
+/// @version 3.33
 /// 
 /// @section LICENSE
 /// 
@@ -530,7 +530,7 @@ namespace april
 				(_sizeChanging || wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED && !_initialSize))
 			{
 				((Win32_Window*)april::window)->_setRenderSystemResolution();
-				UpdateWindow(((Win32_Window*)april::window)->hWnd);
+				UpdateWindow(hWnd);
 				april::window->performUpdate(0.0f);
 				april::rendersys->presentFrame();
 			}

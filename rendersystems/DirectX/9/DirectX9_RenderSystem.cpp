@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.32
+/// @version 3.33
 /// 
 /// @section LICENSE
 /// 
@@ -41,6 +41,8 @@
 #define TEX_COLOR_TONE_FVF (D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_SPECULAR)
 
 #define UINT_RGBA_TO_ARGB(c) ((((c) >> 8) & 0xFFFFFF) | (((c) & 0xFF) << 24))
+
+#define IS_WINDOW_RESIZABLE (april::window->getName() == "Win32" && april::window->getOptions().resizable)
 
 namespace april
 {
@@ -83,6 +85,7 @@ namespace april
 		this->renderTarget = NULL;
 		this->backBuffer = NULL;
 		this->activeTexture = NULL;
+		this->childHWnd = 0;
 		// Direct3D
 		this->d3d = Direct3DCreate9(D3D_SDK_VERSION);
 		if (this->d3d == NULL)
@@ -100,12 +103,6 @@ namespace april
 		{
 			return false;
 		}
-		if (this->childHWnd != 0)
-		{
-			DestroyWindow(this->childHWnd);
-			UnregisterClassW(APRIL_DX9_CHILD, GetModuleHandle(0));
-			this->childHWnd = 0;
-		}
 		if (this->d3dpp != NULL)
 		{
 			delete this->d3dpp;
@@ -120,6 +117,12 @@ namespace april
 		{
 			this->d3d->Release();
 			this->d3d = NULL;
+		}
+		if (this->childHWnd != 0)
+		{
+			DestroyWindow(this->childHWnd);
+			UnregisterClassW(APRIL_DX9_CHILD, GetModuleHandle(0));
+			this->childHWnd = 0;
 		}
 		return true;
 	}
@@ -176,11 +179,11 @@ namespace april
 	{
 		HWND hWnd = (HWND)april::window->getBackendId();
 		memset(this->d3dpp, 0, sizeof(*this->d3dpp));
-		bool fullBackBuffer = (!april::window->isFullscreen() && window->getName() == "Win32" && window->getOptions().resizable);
+		bool resizable = IS_WINDOW_RESIZABLE;
 		this->d3dpp->Windowed = !april::window->isFullscreen();
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
-		if (fullBackBuffer)
+		if (resizable)
 		{
 			SystemInfo info = april::getSystemInfo();
 			w = (int)info.displayResolution.x;
@@ -196,26 +199,23 @@ namespace april
 			this->d3dpp->AutoDepthStencilFormat = D3DFMT_D16;
 		}
 		this->d3dpp->SwapEffect = D3DSWAPEFFECT_COPY; // COPY is being used here as otherwise some weird tearing manifests during rendering
-		if (!fullBackBuffer)
-		{
-			this->d3dpp->hDeviceWindow = hWnd;
-		}
-		else
+		this->d3dpp->hDeviceWindow = hWnd;
+		if (resizable)
 		{
 			WNDCLASSEXW wc;
 			memset(&wc, 0, sizeof(WNDCLASSEX));
-			HINSTANCE hinst = GetModuleHandle(0);
 			wc.cbSize = sizeof(WNDCLASSEX);
 			wc.lpfnWndProc = &Win32_Window::processCallback;
-			wc.hInstance = hinst;
+			wc.hInstance = GetModuleHandle(0);
 			wc.hCursor = GetCursor();
 			wc.lpszClassName = APRIL_DX9_CHILD;
 			wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 			RegisterClassExW(&wc);
-			this->childHWnd = CreateWindowW(APRIL_DX9_CHILD, L"", WS_CHILD, 0, 0, w, h, hWnd, NULL, hinst, NULL);
-			this->d3dpp->hDeviceWindow = this->childHWnd;
-			ShowWindow(this->childHWnd, SW_SHOW);
-			UpdateWindow(this->childHWnd);
+			this->childHWnd = CreateWindowW(APRIL_DX9_CHILD, L"", WS_CHILD, 0, 0, w, h, hWnd, NULL, wc.hInstance, NULL);
+			if (!window->isFullscreen())
+			{
+				this->_tryAssignChildWindow();
+			}
 		}
 		HRESULT hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, this->d3dpp, &this->d3dDevice);
 		if (FAILED(hr))
@@ -245,6 +245,21 @@ namespace april
 		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
 		this->orthoProjection.setSize(april::window->getSize());
 		this->renderTarget = NULL;
+	}
+
+	void DirectX9_RenderSystem::_tryAssignChildWindow()
+	{
+		this->d3dpp->hDeviceWindow = this->childHWnd;
+		ShowWindow(this->childHWnd, SW_SHOW);
+		UpdateWindow(this->childHWnd);
+	}
+
+	void DirectX9_RenderSystem::_tryUnassignChildWindow()
+	{
+		HWND hWnd = (HWND)april::window->getBackendId();
+		this->d3dpp->hDeviceWindow = hWnd;
+		ShowWindow(hWnd, SW_SHOW);
+		UpdateWindow(hWnd);
 	}
 	
 	void DirectX9_RenderSystem::_configureDevice()
@@ -536,13 +551,22 @@ namespace april
 			hlog::warnf(april::logTag, "Cannot set resolution to: %d x %d", w, h);
 			return;
 		}
-		bool resizable = (april::window->getName() == "Win32" && april::window->getOptions().resizable);
+		bool resizable = IS_WINDOW_RESIZABLE;
 		bool oldFullscreen = (this->d3dpp->Windowed == FALSE);
 		this->d3dpp->Windowed = !fullscreen;
 		if (fullscreen != oldFullscreen || !resizable)
 		{
-			if (!fullscreen && resizable)
+			if (resizable)
 			{
+				if (!fullscreen)
+				{
+					this->_tryAssignChildWindow();
+				}
+				else
+				{
+					this->_tryUnassignChildWindow();
+				}
+				this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
 				SystemInfo info = april::getSystemInfo();
 				w = (int)info.displayResolution.x;
 				h = (int)info.displayResolution.y;
@@ -553,11 +577,11 @@ namespace april
 		}
 		else
 		{
-			this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
-			if (this->childHWnd != 0)
+			if (resizable)
 			{
-				UpdateWindow(this->childHWnd);
+				this->_tryAssignChildWindow();
 			}
+			this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
 		}
 	}
 

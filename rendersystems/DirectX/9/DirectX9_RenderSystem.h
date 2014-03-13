@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.32
+/// @version 3.33
 /// 
 /// @section LICENSE
 /// 
@@ -96,6 +96,9 @@ namespace april
 
 		void _configureDevice();
 		void _setResolution(int w, int h, bool fullscreen);
+
+		void _tryAssignChildWindow();
+		void _tryUnassignChildWindow();
 
 		Texture* _createTexture(bool fromResource);
 
