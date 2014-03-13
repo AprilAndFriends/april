@@ -205,13 +205,13 @@ namespace april
 			WNDCLASSEXW wc;
 			memset(&wc, 0, sizeof(WNDCLASSEX));
 			wc.cbSize = sizeof(WNDCLASSEX);
-			wc.lpfnWndProc = &Win32_Window::processCallback;
+			wc.lpfnWndProc = &Win32_Window::childProcessCallback;
 			wc.hInstance = GetModuleHandle(0);
 			wc.hCursor = GetCursor();
 			wc.lpszClassName = APRIL_DX9_CHILD;
 			wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 			RegisterClassExW(&wc);
-			this->childHWnd = CreateWindowW(APRIL_DX9_CHILD, L"", WS_CHILD, 0, 0, w, h, hWnd, NULL, wc.hInstance, NULL);
+			this->childHWnd = CreateWindowW(APRIL_DX9_CHILD, APRIL_DX9_CHILD, WS_CHILD, 0, 0, w, h, hWnd, NULL, wc.hInstance, NULL);
 			if (!window->isFullscreen())
 			{
 				this->_tryAssignChildWindow();

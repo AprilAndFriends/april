@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.3
+/// @version 3.33
 /// 
 /// @section LICENSE
 /// 
@@ -49,7 +49,7 @@ namespace april
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
 
-		static LRESULT CALLBACK processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+		static LRESULT CALLBACK childProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		
 	protected:
 		HWND hWnd;
@@ -61,6 +61,8 @@ namespace april
 		void _adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle);
 		void _refreshCursor();
 		
+		static LRESULT CALLBACK _mainProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
 	};
 
 }
