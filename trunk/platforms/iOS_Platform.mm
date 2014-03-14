@@ -122,8 +122,11 @@ namespace april
 		info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
 		if (info.locale == "")
 		{
-			info.locale = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];
-			
+			NSBundle * bundle   = [NSBundle mainBundle];
+			NSArray  * langs    = [bundle preferredLocalizations];
+			langs = [langs count] ? langs : [NSLocale preferredLanguages];
+			info.locale = [[langs objectAtIndex:0] UTF8String];
+
 			size_t size = 255;
 			char cname[256] = {'\0'};
 			sysctlbyname("hw.machine", cname, &size, NULL, 0);
