@@ -878,16 +878,19 @@ namespace april
 			this->_setProjectionMatrix(this->projectionMatrix);
 			hlog::write(april::logTag, "Direct3D9 Device restored.");
 		}
-		else if (hr == D3DERR_WASSTILLDRAWING)
+		else
 		{
-			for_iter (i, 0, 100)
+			if (hr == D3DERR_WASSTILLDRAWING)
 			{
-				hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
-				if (!FAILED(hr))
+				for_iter (i, 0, 100)
 				{
-					break;
+					hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
+					if (!FAILED(hr))
+					{
+						break;
+					}
+					hthread::sleep(1.0f);
 				}
-				hthread::sleep(1.0f);
 			}
 			this->d3dDevice->BeginScene();
 		}
