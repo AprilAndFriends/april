@@ -1528,7 +1528,6 @@
 					_OPENGL,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1594,7 +1593,6 @@
 					_OPENGL,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1663,7 +1661,6 @@
 					_OPENGL,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -2165,7 +2162,7 @@
 				7FC8A8A91296C768003D3931 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "april" */ = {
 			isa = XCConfigurationList;
@@ -2175,7 +2172,7 @@
 				7FC8A8A81296C768003D3931 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		D1134F11175CDA3300BFF3A2 /* Build configuration list for PBXNativeTarget "april (iOS OpenKODE)" */ = {
 			isa = XCConfigurationList;
@@ -2185,7 +2182,7 @@
 				D1134F16175CDA3300BFF3A2 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		D1534770178AD62A00151D1A /* Build configuration list for PBXNativeTarget "april (Mac Cocoa OpenGL)" */ = {
 			isa = XCConfigurationList;
@@ -2195,7 +2192,7 @@
 				D1534775178AD62A00151D1A /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		D1981C3F140F824B0057C3AF /* Build configuration list for PBXNativeTarget "april (iOS OpenGLES1)" */ = {
 			isa = XCConfigurationList;
@@ -2205,7 +2202,7 @@
 				D1981C3E140F824B0057C3AF /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		D1AF66ED170B1E5900A43743 /* Build configuration list for PBXNativeTarget "april (Cocoa OpenGL)" */ = {
 			isa = XCConfigurationList;
@@ -2215,7 +2212,7 @@
 				D1AF66F2170B1E5900A43743 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		D1F27AE9177A2DF700E5C131 /* Build configuration list for PBXNativeTarget "april (Mac OpenKODE)" */ = {
 			isa = XCConfigurationList;
@@ -2225,7 +2222,7 @@
 				D1F27AEE177A2DF700E5C131 /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
