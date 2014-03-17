@@ -11,7 +11,7 @@
 
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
-
+#include <stdlib.h>
 #include "Platform.h"
 #include "Window.h"
 
