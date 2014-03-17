@@ -398,6 +398,8 @@
 		D14BF81F158737B300D31573 /* RamTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RamTexture.h; path = include/april/RamTexture.h; sourceTree = "<group>"; };
 		D14BF96915875F3300D31573 /* aprilUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = aprilUtil.cpp; path = src/aprilUtil.cpp; sourceTree = "<group>"; };
 		D1534776178AD62A00151D1A /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1681BA618D768400088FC68 /* iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = iOS.xcconfig; path = xcconfig/iOS.xcconfig; sourceTree = "<group>"; };
+		D1681BA718D768400088FC68 /* Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Mac.xcconfig; path = xcconfig/Mac.xcconfig; sourceTree = "<group>"; };
 		D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerDelegate.cpp; path = src/delegates/ControllerDelegate.cpp; sourceTree = "<group>"; };
 		D1962A83170EC6FC0072A146 /* Mac_OpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_OpenGLView.h; path = windowsystems/Mac/Mac_OpenGLView.h; sourceTree = "<group>"; };
 		D1962A84170EC6FC0072A146 /* Mac_OpenGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_OpenGLView.mm; path = windowsystems/Mac/Mac_OpenGLView.mm; sourceTree = "<group>"; };
@@ -564,7 +566,7 @@
 		0867D691FE84028FC02AAC07 /* libapril */ = {
 			isa = PBXGroup;
 			children = (
-				8DC2EF5A0486A6940098B216 /* Info.plist */,
+				D1681B9518D7673D0088FC68 /* config */,
 				C9E60986150518D500EB077F /* Platforms */,
 				7FA3ED1111F9813E001D1DDD /* Window Systems */,
 				7F42F7AE11EB185F00B1C1DF /* Render Systems */,
@@ -765,6 +767,16 @@
 				D1134F1E175CDAC600BFF3A2 /* OpenKODE_Platform.cpp */,
 			);
 			name = OpenKODE;
+			sourceTree = "<group>";
+		};
+		D1681B9518D7673D0088FC68 /* config */ = {
+			isa = PBXGroup;
+			children = (
+				D1681BA618D768400088FC68 /* iOS.xcconfig */,
+				D1681BA718D768400088FC68 /* Mac.xcconfig */,
+				8DC2EF5A0486A6940098B216 /* Info.plist */,
+			);
+			name = config;
 			sourceTree = "<group>";
 		};
 		D1981C58140F85050057C3AF /* iOS */ = {
@@ -1535,6 +1547,7 @@
 		};
 		7FC8A8A91296C768003D3931 /* App Store */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1601,6 +1614,7 @@
 		};
 		C981CCB8132AEAE20072B5A9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1668,6 +1682,7 @@
 		};
 		C981CCBA132AEAEA0072B5A9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1699,6 +1714,7 @@
 		};
 		D1134F13175CDA3300BFF3A2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1718,7 +1734,6 @@
 					"${SRCROOT}/../khronos",
 					"$(inherited)",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = "april-kd";
@@ -1729,6 +1744,7 @@
 		};
 		D1134F15175CDA3300BFF3A2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1748,7 +1764,6 @@
 					"${SRCROOT}/../khronos",
 					"$(inherited)",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = "april-kd";
@@ -1760,6 +1775,7 @@
 		};
 		D1134F16175CDA3300BFF3A2 /* App Store */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1779,7 +1795,6 @@
 					"${SRCROOT}/../khronos",
 					"$(inherited)",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				PRODUCT_NAME = "april-kd";
@@ -1791,6 +1806,7 @@
 		};
 		D1534772178AD62A00151D1A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1817,6 +1833,7 @@
 		};
 		D1534774178AD62A00151D1A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1844,6 +1861,7 @@
 		};
 		D1534775178AD62A00151D1A /* App Store */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1871,6 +1889,7 @@
 		};
 		D1981C3B140F824B0057C3AF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1884,7 +1903,6 @@
 				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
@@ -1896,6 +1914,7 @@
 		};
 		D1981C3D140F824B0057C3AF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1909,7 +1928,6 @@
 				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
@@ -1922,6 +1940,7 @@
 		};
 		D1981C3E140F824B0057C3AF /* App Store */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1935,7 +1954,6 @@
 				);
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
@@ -1948,6 +1966,7 @@
 		};
 		D1AF66EF170B1E5900A43743 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -1984,6 +2003,7 @@
 		};
 		D1AF66F1170B1E5900A43743 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -2015,6 +2035,7 @@
 		};
 		D1AF66F2170B1E5900A43743 /* App Store */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -2046,6 +2067,7 @@
 		};
 		D1F27AEB177A2DF700E5C131 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -2074,6 +2096,7 @@
 		};
 		D1F27AED177A2DF700E5C131 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -2103,6 +2126,7 @@
 		};
 		D1F27AEE177A2DF700E5C131 /* App Store */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA718D768400088FC68 /* Mac.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
