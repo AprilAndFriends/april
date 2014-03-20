@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.33
 /// 
 /// @section LICENSE
 /// 
@@ -345,7 +345,7 @@ namespace april
 	Image* Image::createFromResource(chstr filename, Image::Format format)
 	{
 		Image* image = Image::createFromResource(filename);
-		if (image != NULL)
+		if (image != NULL && Image::needsConversion(image->format, format))
 		{
 			unsigned char* data = NULL;
 			if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, format))
@@ -389,7 +389,7 @@ namespace april
 	Image* Image::createFromFile(chstr filename, Image::Format format)
 	{
 		Image* image = Image::createFromFile(filename);
-		if (image != NULL)
+		if (image != NULL && Image::needsConversion(image->format, format))
 		{
 			unsigned char* data = NULL;
 			if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, format))
