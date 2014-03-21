@@ -352,7 +352,7 @@ namespace april
 		this->fpsTimer += k;
 		if (this->fpsTimer > 0.0f)
 		{
-			this->fpsCount++;
+			++this->fpsCount;
 			if (this->fpsTimer >= this->fpsResolution)
 			{
 				this->fps = (int)(this->fpsCount / this->fpsTimer);

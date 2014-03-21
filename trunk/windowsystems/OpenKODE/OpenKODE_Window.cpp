@@ -298,7 +298,7 @@ namespace april
 		static int timer = 0;
 		if (!this->cursorVisible)
 		{
-			timer++;
+			++timer;
 			if (timer >= 60)
 			{
 				timer = 0;
@@ -330,7 +330,7 @@ namespace april
 		{
 			if (this->kdTouches[i])
 			{
-				index++;
+				++index;
 			}
 		}
 		return index;
@@ -430,7 +430,7 @@ namespace april
 					int i = 0;
 					int j = 0;
 					int touchIndex = 0;
-					for (; i < 4; i++, j += KD_IO_POINTER_STRIDE)
+					for (; i < 4; ++i, j += KD_IO_POINTER_STRIDE)
 					{
 						if (index == KD_INPUT_POINTER_X + j || index == KD_INPUT_POINTER_Y + j)
 						{

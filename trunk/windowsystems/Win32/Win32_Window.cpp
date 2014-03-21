@@ -488,7 +488,7 @@ namespace april
 				}
 				else
 				{
-					_mouseMoveMessagesCount++;
+					++_mouseMoveMessagesCount;
 				}
 			}
 			else
