@@ -45,7 +45,7 @@ namespace april
 		if (png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS))
 		{
 			png_set_tRNS_to_alpha(pngPtr);
-			bpp++;
+			++bpp;
 		}
 		if (pngPtr->bit_depth == 16)
 		{
