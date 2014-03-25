@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.34
 /// 
 /// @section LICENSE
 /// 
@@ -83,6 +83,19 @@ namespace april
 		static Color Aqua;
 		static Color White;
 		static Color Grey;
+		static Color DarkRed;
+		static Color DarkGreen;
+		static Color DarkBlue;
+		static Color DarkYellow;
+		static Color DarkMagenta;
+		static Color DarkCyan;
+		static Color DarkOrange;
+		static Color DarkPink;
+		static Color DarkTeal;
+		static Color DarkNeon;
+		static Color DarkPurple;
+		static Color DarkAqua;
+		static Color DarkGrey;
 		static Color Black;
 		static Color Clear;
 		static Color Blank;
