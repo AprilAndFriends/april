@@ -20,6 +20,9 @@
 namespace april
 {
 	// predefined colors
+	Color Color::White(255, 255, 255);
+	Color Color::Black(0, 0, 0);
+	Color Color::Grey(127, 127, 127);
 	Color Color::Red(255, 0, 0);
 	Color Color::Green(0, 255, 0);
 	Color Color::Blue(0, 0, 255);
@@ -32,8 +35,7 @@ namespace april
 	Color Color::Neon(127, 255, 0);
 	Color Color::Purple(127, 0, 255);
 	Color Color::Aqua(0, 127, 255);
-	Color Color::White(255, 255, 255);
-	Color Color::Grey(127, 127, 127);
+	Color Color::DarkGrey(63, 63, 63);
 	Color Color::DarkRed(127, 0, 0);
 	Color Color::DarkGreen(0, 127, 0);
 	Color Color::DarkBlue(0, 0, 127);
@@ -46,8 +48,6 @@ namespace april
 	Color Color::DarkNeon(63, 127, 0);
 	Color Color::DarkPurple(63, 0, 127);
 	Color Color::DarkAqua(0, 63, 127);
-	Color Color::DarkGrey(63, 63, 63);
-	Color Color::Black(0, 0, 0);
 	Color Color::Clear(0, 0, 0, 0);
 	Color Color::Blank(255, 255, 255, 0);
 	

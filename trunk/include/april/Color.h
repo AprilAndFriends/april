@@ -69,6 +69,9 @@ namespace april
 		Color operator*=(float value);
 		Color operator/=(float value);
 
+		static Color White;
+		static Color Black;
+		static Color Grey;
 		static Color Red;
 		static Color Green;
 		static Color Blue;
@@ -81,8 +84,7 @@ namespace april
 		static Color Neon;
 		static Color Purple;
 		static Color Aqua;
-		static Color White;
-		static Color Grey;
+		static Color DarkGrey;
 		static Color DarkRed;
 		static Color DarkGreen;
 		static Color DarkBlue;
@@ -95,8 +97,6 @@ namespace april
 		static Color DarkNeon;
 		static Color DarkPurple;
 		static Color DarkAqua;
-		static Color DarkGrey;
-		static Color Black;
 		static Color Clear;
 		static Color Blank;
 		
