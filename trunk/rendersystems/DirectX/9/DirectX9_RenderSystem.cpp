@@ -236,12 +236,13 @@ namespace april
 				surface->Release();
 			}
 		}
+		this->clear();
 		this->presentFrame();
 		// device config
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
 		this->d3dDevice->BeginScene();
 		this->_configureDevice();
-		this->clear(true, false);
+		this->clear();
 		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
 		this->orthoProjection.setSize(april::window->getSize());
 		this->renderTarget = NULL;
