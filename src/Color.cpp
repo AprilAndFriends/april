@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.3
+/// @version 3.34
 /// 
 /// @section LICENSE
 /// 
@@ -34,6 +34,19 @@ namespace april
 	Color Color::Aqua(0, 127, 255);
 	Color Color::White(255, 255, 255);
 	Color Color::Grey(127, 127, 127);
+	Color Color::DarkRed(127, 0, 0);
+	Color Color::DarkGreen(0, 127, 0);
+	Color Color::DarkBlue(0, 0, 127);
+	Color Color::DarkYellow(127, 127, 0);
+	Color Color::DarkMagenta(127, 0, 127);
+	Color Color::DarkCyan(0, 127, 127);
+	Color Color::DarkOrange(127, 63, 0);
+	Color Color::DarkPink(127, 0, 63);
+	Color Color::DarkTeal(0, 127, 63);
+	Color Color::DarkNeon(63, 127, 0);
+	Color Color::DarkPurple(63, 0, 127);
+	Color Color::DarkAqua(0, 63, 127);
+	Color Color::DarkGrey(63, 63, 63);
 	Color Color::Black(0, 0, 0);
 	Color Color::Clear(0, 0, 0, 0);
 	Color Color::Blank(255, 255, 255, 0);
