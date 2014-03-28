@@ -387,7 +387,7 @@ static bool gFullscreenToggleRequest = false;
 - (void)scrollWheel:(NSEvent*) event
 {
 	gvec2 vec([event deltaX], -[event deltaY]);
-	aprilWindow->handleMouseEvent(april::Window::MOUSE_SCROLL, vec, april::AK_NONE);
+	aprilWindow->queueMouseEvent(april::Window::MOUSE_SCROLL, vec, april::AK_NONE);
 }
 
 - (void)flagsChanged:(NSEvent*) event // special NSWindow function for modifier keys

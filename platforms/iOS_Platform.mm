@@ -234,12 +234,19 @@ namespace april
 													   delegate:mbd 
 											  cancelButtonTitle:buttons[0]
 											  otherButtonTitles:buttons[1], buttons[2], nil];
-		[alert show];
-		if (style & MESSAGE_STYLE_MODAL) 
+		if (alert != nil) // just in case, hapens in some very weird situations..
 		{
-			CFRunLoopRun();
+			[alert show];
+			if (style & MESSAGE_STYLE_MODAL) 
+			{
+				CFRunLoopRun();
+			}
+			[alert release];
 		}
-		[alert release];
+		else
+		{
+			hlog::error(logTag, "Failed to display AlertView!");
+		}
 	}
 	
 }
