@@ -56,6 +56,12 @@ namespace april
 	}
 	//////////////////
 
+	Window::MouseInputEvent::MouseInputEvent()
+	{
+		this->type = MOUSE_MOVE;
+		this->keyCode = AK_NONE;
+	}
+		
 	Window::MouseInputEvent::MouseInputEvent(Window::MouseEventType type, gvec2 position, Key keyCode)
 	{
 		this->type = type;
@@ -63,6 +69,13 @@ namespace april
 		this->keyCode = keyCode;
 	}
 		
+	Window::KeyInputEvent::KeyInputEvent()
+	{
+		this->type = KEY_UP;
+		this->keyCode = AK_NONE;
+		this->charCode = 0;
+	}
+
 	Window::KeyInputEvent::KeyInputEvent(Window::KeyEventType type, Key keyCode, unsigned int charCode)
 	{
 		this->type = type;
@@ -70,11 +83,21 @@ namespace april
 		this->charCode = charCode;
 	}
 
+	Window::TouchInputEvent::TouchInputEvent()
+	{
+	}
+		
 	Window::TouchInputEvent::TouchInputEvent(harray<gvec2>& touches)
 	{
 		this->touches = touches;
 	}
 		
+	Window::ControllerInputEvent::ControllerInputEvent()
+	{
+		this->type = CONTROLLER_UP;
+		this->buttonCode = AB_NONE;
+	}
+
 	Window::ControllerInputEvent::ControllerInputEvent(Window::ControllerEventType type, Button buttonCode)
 	{
 		this->type = type;
@@ -316,29 +339,49 @@ namespace april
 	
 	void Window::checkEvents()
 	{
+		KeyInputEvent keyEvent;
 		while (this->keyEvents.size() > 0)
 		{
-			KeyInputEvent e = this->keyEvents.remove_first();
-			this->handleKeyEvent(e.type, e.keyCode, e.charCode);
+			keyEvent = this->keyEvents.remove_first();
+			this->handleKeyEvent(keyEvent.type, keyEvent.keyCode, keyEvent.charCode);
 		}
+		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
+		MouseInputEvent mouseEvent;
+		gvec2 cummulativeScroll;
 		while (this->mouseEvents.size() > 0)
 		{
-			MouseInputEvent e = this->mouseEvents.remove_first();
-			if (e.type != Window::MOUSE_CANCEL && e.type != Window::MOUSE_SCROLL)
+			mouseEvent = this->mouseEvents.remove_first();
+			if (mouseEvent.type != Window::MOUSE_CANCEL && mouseEvent.type != Window::MOUSE_SCROLL)
 			{
-				this->cursorPosition = e.position;
+				this->cursorPosition = mouseEvent.position;
 			}
-			this->handleMouseEvent(e.type, e.position, e.keyCode);
+			if (mouseEvent.type == Window::MOUSE_SCROLL)
+			{
+				cummulativeScroll += mouseEvent.position;
+				if (this->mouseEvents.size() == 0 || this->mouseEvents.first().type != Window::MOUSE_SCROLL)
+				{
+					this->handleMouseEvent(mouseEvent.type, cummulativeScroll, mouseEvent.keyCode);
+					cummulativeScroll.set(0.0f, 0.0f);
+				}
+			}
+			// if not a scroll event or final move event (because of merging)
+			else if (mouseEvent.type != Window::MOUSE_MOVE || mouseEvent.type == Window::MOUSE_MOVE &&
+				(this->mouseEvents.size() == 0 || this->mouseEvents.first().type != Window::MOUSE_MOVE))
+			{
+				this->handleMouseEvent(mouseEvent.type, mouseEvent.position, mouseEvent.keyCode);
+			}
 		}
+		TouchInputEvent touchEvent;
 		while (this->touchEvents.size() > 0)
 		{
-			TouchInputEvent e = this->touchEvents.remove_first();
-			this->handleTouchEvent(e.touches);
+			touchEvent = this->touchEvents.remove_first();
+			this->handleTouchEvent(touchEvent.touches);
 		}
+		ControllerInputEvent controllerEvent;
 		while (this->controllerEvents.size() > 0)
 		{
-			ControllerInputEvent e = this->controllerEvents.remove_first();
-			this->handleControllerEvent(e.type, e.buttonCode);
+			controllerEvent = this->controllerEvents.remove_first();
+			this->handleControllerEvent(controllerEvent.type, controllerEvent.buttonCode);
 		}
 	}
 

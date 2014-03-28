@@ -83,6 +83,7 @@ namespace april
 			gvec2 position;
 			Key keyCode;
 		
+			MouseInputEvent();
 			MouseInputEvent(MouseEventType type, gvec2 position, Key keyCode);
 		
 		};
@@ -92,7 +93,8 @@ namespace april
 			KeyEventType type;
 			Key keyCode;
 			unsigned int charCode;
-		
+			
+			KeyInputEvent();
 			KeyInputEvent(KeyEventType type, Key keyCode, unsigned int charCode);
 		
 		};
@@ -100,7 +102,8 @@ namespace april
 		struct TouchInputEvent
 		{
 			harray<gvec2> touches;
-		
+			
+			TouchInputEvent();
 			TouchInputEvent(harray<gvec2>& touches);
 		
 		};
@@ -109,7 +112,8 @@ namespace april
 		{
 			ControllerEventType type;
 			Button buttonCode;
-		
+			
+			ControllerInputEvent();
 			ControllerInputEvent(ControllerEventType type, Button buttonCode);
 		
 		};
