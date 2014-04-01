@@ -365,8 +365,8 @@ namespace april
 				}
 			}
 			// if not a scroll event or final move event (because of merging)
-			else if (mouseEvent.type != Window::MOUSE_MOVE || mouseEvent.type == Window::MOUSE_MOVE &&
-				(this->mouseEvents.size() == 0 || this->mouseEvents.first().type != Window::MOUSE_MOVE))
+			else if (mouseEvent.type != Window::MOUSE_MOVE || (mouseEvent.type == Window::MOUSE_MOVE &&
+				(this->mouseEvents.size() == 0 || this->mouseEvents.first().type != Window::MOUSE_MOVE)))
 			{
 				this->handleMouseEvent(mouseEvent.type, mouseEvent.position, mouseEvent.keyCode);
 			}
