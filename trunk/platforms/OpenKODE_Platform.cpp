@@ -39,6 +39,13 @@
 #include <jni.h>
 #define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
 #include "androidUtilJNI.h"
+#include <unistd.h>
+#endif
+
+#ifdef _ANDROID
+	#define debug_log(s) hlog::write(logTag, s)
+#else
+	#define debug_log(s) 
 #endif
 
 namespace april
@@ -49,11 +56,14 @@ namespace april
 	{
 		if (info.locale == "")
 		{
+			debug_log("Fetching OpenKODE system info");
 			// number of CPU cores
 			info.cpuCores = 1;
 			// display resolution
 			int width = 0;
 			int height = 0;
+			
+			debug_log("getting screen info");
 			kdQueryAttribi(KD_ATTRIB_WIDTH, (KDint*)&width);
 			kdQueryAttribi(KD_ATTRIB_HEIGHT, (KDint*)&height);
 			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
@@ -75,13 +85,23 @@ namespace april
 			GetNativeSystemInfo(&w32info);
 			info.cpuCores = w32info.dwNumberOfProcessors;
 #elif defined(_ANDROID)
+			debug_log("getting java stuff");
 			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 			// CPU cores
-			jmethodID methodGetCpuCores = env->GetStaticMethodID(classNativeInterface, "getCpuCores", _JARGS(_JINT, ));
-			info.cpuCores = (int)env->CallStaticIntMethod(classNativeInterface, methodGetCpuCores);
+			debug_log("getting cpu cores");
+			info.cpuCores = sysconf(_SC_NPROCESSORS_CONF);
 			// OS version
+			debug_log("getting os version");
 			jmethodID methodGetOsVersion = env->GetStaticMethodID(classNativeInterface, "getOsVersion", _JARGS(_JSTR, ));
 			harray<hstr> osVersions = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)).split('.');
+//			use this block for debugging if this starts crashing again
+//			jobject obj = env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion);
+//			debug_log(hsprintf("getting os version - 2: %p", obj));
+//			jstring jstr = (jstring) obj;
+//			hstr str = _JSTR_TO_HSTR(jstr);
+//			debug_log(hsprintf("getting os version - 3: %s", str.c_str()));
+//			harray<hstr> osVersions = str.split('.');
+	
 			hstr majorVersion = osVersions.remove_first();
 			hstr minorVersion = osVersions.join("");
 			osVersions.clear();
@@ -116,6 +136,8 @@ namespace april
 #endif
 #endif
 			// other
+			debug_log("getting locale");
+
 			info.locale = hstr(kdGetLocale());
 			if (info.locale == "")
 			{
