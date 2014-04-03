@@ -26,12 +26,14 @@ namespace april
 {
 	class aprilExport OpenKODE_Window : public Window
 	{
+		float launchDelay;
 	public:
 		OpenKODE_Window();
 		~OpenKODE_Window();
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		bool destroy();
-
+		hstr getParam(chstr param);
+		void setParam(chstr param, chstr value);
 		int getWidth();
 		int getHeight();
 		void setTitle(chstr title);
