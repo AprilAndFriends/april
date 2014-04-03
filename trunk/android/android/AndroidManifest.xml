@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="net.sourceforge.april.android"
+      package="com.googlecode.april.android"
       android:versionCode="314"
       android:versionName="3.1.4">
 

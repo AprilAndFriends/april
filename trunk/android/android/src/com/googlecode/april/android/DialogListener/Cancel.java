@@ -1,12 +1,12 @@
-package net.sourceforge.april.android.DialogListener;
+package com.googlecode.april.android.DialogListener;
 
 // version 3.3
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import net.sourceforge.april.android.NativeInterface;
+import com.googlecode.april.android.NativeInterface;
 
-public class Yes implements OnClickListener
+public class Cancel implements OnClickListener
 {
 	public void onClick(DialogInterface dialog, int id)
 	{
@@ -14,7 +14,7 @@ public class Yes implements OnClickListener
 		{
 			public void run()
 			{
-				NativeInterface.onDialogYes();
+				NativeInterface.onDialogCancel();
 			}
 		});
 	}

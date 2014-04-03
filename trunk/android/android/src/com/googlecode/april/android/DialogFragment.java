@@ -1,4 +1,4 @@
-package net.sourceforge.april.android;
+package com.googlecode.april.android;
 
 // version 3.3
 

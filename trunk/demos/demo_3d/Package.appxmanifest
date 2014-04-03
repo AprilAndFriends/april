@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="net.sourceforge.april.demo3d.winrt" Publisher="CN=April" Version="3.0.0.0" />
+  <Identity Name="com.googlecode.april.demo3d.winrt" Publisher="CN=April" Version="3.0.0.0" />
   <Properties>
     <DisplayName>April Demo 3D</DisplayName>
     <PublisherDisplayName>April</PublisherDisplayName>

@@ -1,4 +1,4 @@
-package net.sourceforge.april.android;
+package com.googlecode.april.android;
 
 // version 3.3
 
@@ -6,10 +6,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Build;
 
-import net.sourceforge.april.android.DialogListener.Cancel;
-import net.sourceforge.april.android.DialogListener.Ok;
-import net.sourceforge.april.android.DialogListener.No;
-import net.sourceforge.april.android.DialogListener.Yes;
+import com.googlecode.april.android.DialogListener.Cancel;
+import com.googlecode.april.android.DialogListener.Ok;
+import com.googlecode.april.android.DialogListener.No;
+import com.googlecode.april.android.DialogListener.Yes;
 
 public class DialogFactory
 {

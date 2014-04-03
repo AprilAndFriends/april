@@ -1,4 +1,4 @@
-package net.sourceforge.april.android;
+package com.googlecode.april.android;
 
 // version 3.3
 
@@ -11,7 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.view.View;
 import android.util.DisplayMetrics;
 
-import net.sourceforge.april.android.DialogFragment;
+import com.googlecode.april.android.DialogFragment;
 
 import java.io.File;
 import java.io.InputStream;
