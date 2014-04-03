@@ -1,4 +1,4 @@
-package net.sourceforge.april.android;
+package com.googlecode.april.android;
 
 // version 3.3
 
@@ -10,14 +10,14 @@ import android.text.InputType;
 
 public class GLSurfaceView extends android.opengl.GLSurfaceView
 {
-	protected net.sourceforge.april.android.Renderer renderer;
+	protected com.googlecode.april.android.Renderer renderer;
 	
 	public GLSurfaceView(Context context)
 	{
 		super(context);
 		this.setEGLConfigChooser(8, 8, 8, 8, 0, 0);
 		this.getHolder().setFormat(PixelFormat.RGBA_8888);
-		this.renderer = new net.sourceforge.april.android.Renderer();
+		this.renderer = new com.googlecode.april.android.Renderer();
 		this.setRenderer(this.renderer);
 		// view has to be properly focusable to be able to process input
 		this.setFocusable(true);

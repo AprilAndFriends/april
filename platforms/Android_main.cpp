@@ -5,7 +5,7 @@
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _ANDROID
 #include <jni.h>
@@ -16,7 +16,7 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
-#define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
+#define __NATIVE_INTERFACE_CLASS "com/googlecode/april/android/NativeInterface"
 #include "androidUtilJNI.h"
 #include "april.h"
 #include "Keys.h"

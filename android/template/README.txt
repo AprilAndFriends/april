@@ -36,7 +36,7 @@ almost all provided here, but some need to be generated.
 	the name of the file (it has to match the class name inside of the file!) and change all
 	the necessary definitions inside of the file (which should be package name, class name
 	and the name of the library that's being loaded). Don't change
-	"net.sourceforge.april.AprilActivity".
+	"com.googlecode.april.AprilActivity".
 
     Additional files:
 

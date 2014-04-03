@@ -1,4 +1,4 @@
-package net.sourceforge.april.android;
+package com.googlecode.april.android;
 
 // version 3.3
 
@@ -13,7 +13,7 @@ import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import net.sourceforge.april.android.DialogFactory;
+import com.googlecode.april.android.DialogFactory;
 
 import java.util.ArrayList;
 

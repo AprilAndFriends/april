@@ -5,7 +5,7 @@
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
+/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _ANDROID
 #include <jni.h>
@@ -14,7 +14,7 @@
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
-#define __NATIVE_INTERFACE_CLASS "net/sourceforge/april/android/NativeInterface"
+#define __NATIVE_INTERFACE_CLASS "com/googlecode/april/android/NativeInterface"
 #include "androidUtilJNI.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -49,7 +49,7 @@ namespace april
 	jobject getAprilActivity()
 	{
 		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
-		jfieldID fieldAprilActivity = env->GetStaticFieldID(classNativeInterface, "AprilActivity", _JCLASS("net/sourceforge/april/android/Activity"));
+		jfieldID fieldAprilActivity = env->GetStaticFieldID(classNativeInterface, "AprilActivity", _JCLASS("com/googlecode/april/android/Activity"));
 		return env->GetStaticObjectField(classNativeInterface, fieldAprilActivity);
 	}
 

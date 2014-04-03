@@ -1,4 +1,4 @@
-package net.sourceforge.april.android.ouya;
+package com.googlecode.april.android.ouya;
 
 // version 3.3
 
@@ -13,7 +13,7 @@ import android.view.MotionEvent;
 
 import tv.ouya.console.api.OuyaController;
 
-public class Activity extends net.sourceforge.april.android.Activity
+public class Activity extends com.googlecode.april.android.Activity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -64,7 +64,7 @@ public class Activity extends net.sourceforge.april.android.Activity
 			{
 				public void run()
 				{
-					net.sourceforge.april.android.NativeInterface.onButtonDown(newKeyCode);
+					com.googlecode.april.android.NativeInterface.onButtonDown(newKeyCode);
 				}
 			});
 			return true;
@@ -82,7 +82,7 @@ public class Activity extends net.sourceforge.april.android.Activity
 			{
 				public void run()
 				{
-					net.sourceforge.april.android.NativeInterface.onButtonUp(newKeyCode);
+					com.googlecode.april.android.NativeInterface.onButtonUp(newKeyCode);
 				}
 			});
 			return true;
@@ -99,7 +99,7 @@ public class Activity extends net.sourceforge.april.android.Activity
 			{
 				public void run()
 				{
-					net.sourceforge.april.android.NativeInterface.onTouch(2, event.getX(), event.getY(), 0);
+					com.googlecode.april.android.NativeInterface.onTouch(2, event.getX(), event.getY(), 0);
 				}
 			});
 			return true;
