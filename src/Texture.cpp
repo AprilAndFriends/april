@@ -116,7 +116,7 @@ namespace april
 		this->format = Image::FORMAT_INVALID;
 		this->dataFormat = 0;
 		this->data = NULL;
-		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		hlog::write(april::logTag, "Registering texture: " + this->_getInternalName());
 		return true;
 	}
 
@@ -130,7 +130,7 @@ namespace april
 		this->format = format;
 		this->dataFormat = 0;
 		this->data = NULL;
-		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		hlog::write(april::logTag, "Registering texture: " + this->_getInternalName());
 		return true;
 	}
 
