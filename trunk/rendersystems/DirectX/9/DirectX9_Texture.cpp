@@ -90,7 +90,7 @@ namespace april
 	{
 		if (this->d3dTexture != NULL)
 		{
-			hlog::write(april::logTag, "Unloading DX9 texture: " + this->_getInternalName());
+			hlog::write(april::logTag, "Unloading texture: " + this->_getInternalName());
 			if (this->d3dSurface != NULL)
 			{
 				this->d3dSurface->Release();

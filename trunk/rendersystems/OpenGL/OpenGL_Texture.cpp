@@ -152,7 +152,7 @@ namespace april
 	{
 		if (this->textureId != 0)
 		{
-			hlog::write(april::logTag, "Unloading GL texture: " + this->_getInternalName());
+			hlog::write(april::logTag, "Unloading texture: " + this->_getInternalName());
 			glDeleteTextures(1, &this->textureId);
 			this->textureId = 0;
 		}

@@ -25,7 +25,7 @@ namespace april
 	{
 		this->filename = filename;
 		this->source = NULL;
-		hlog::write(april::logTag, "Creating RAM texture.");
+		hlog::write(april::logTag, "Registering RAM texture.");
 	}
 
 	RamTexture::RamTexture(int w, int h) : Texture(true)
@@ -34,6 +34,7 @@ namespace april
 		this->height = h;
 		this->source = Image::create(w, h, Color::Clear, Image::FORMAT_RGBA);
 		this->format = this->source->format;
+		hlog::write(april::logTag, "Creating RAM texture.");
 	}
 
 	RamTexture::~RamTexture()
