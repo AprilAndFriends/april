@@ -290,8 +290,13 @@ namespace april
 	void Win32_Window::checkEvents()
 	{
 		MSG msg;
-		if (PeekMessageW(&msg, this->hWnd, 0, 0, PM_REMOVE))
+		// limiting to 100 events per frame just to be safe
+		for_iter (i, 0, 100)
 		{
+			if (!PeekMessageW(&msg, this->hWnd, 0, 0, PM_REMOVE))
+			{
+				break;
+			}
 			TranslateMessage(&msg);
 			DispatchMessageW(&msg);
 		}
