@@ -248,6 +248,7 @@ namespace april
 		AK_NONAME = 0xFC,
 		AK_PA1 = 0xFD,
 		AK_OEM_CLEAR = 0xFE
+
 	};
 
 	/// @brief Controller buttons.
@@ -280,6 +281,7 @@ namespace april
 		AB_RS_LEFT = 54,
 		AB_RS_RIGHT = 56,
 		AB_RS_UP = 58
+
 	};
 
 }

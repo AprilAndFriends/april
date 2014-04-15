@@ -73,8 +73,8 @@ namespace april
 	struct aprilExport PlainVertex : public gvec3
 	{
 	public:
-		PlainVertex() : gvec3(0.0f, 0.0f, 0.0f) { }
-		PlainVertex(float x, float y, float z) : gvec3(x, y, z) { }
+		inline PlainVertex() : gvec3(0.0f, 0.0f, 0.0f) { }
+		inline PlainVertex(float x, float y, float z) : gvec3(x, y, z) { }
 		void operator=(const gvec3& v);
 
 	};

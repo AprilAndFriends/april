@@ -31,9 +31,9 @@ namespace april
 		~AndroidJNI_Window();
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		
-		void setTitle(chstr title) { }
-		bool isCursorVisible() { return false; }
-		void setCursorVisible(bool value) { }
+		inline void setTitle(chstr title) { }
+		inline bool isCursorVisible() { return false; }
+		inline void setCursorVisible(bool value) { }
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId();

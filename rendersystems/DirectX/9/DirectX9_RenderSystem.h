@@ -48,7 +48,7 @@ namespace april
 		void reset();
 		void assignWindow(Window* window);
 
-		float getPixelOffset() { return 0.5f; }
+		inline float getPixelOffset() { return 0.5f; }
 		int getMaxTextureSize();
 		harray<DisplayMode> getSupportedDisplayModes();
 		void setViewport(grect rect);
