@@ -170,10 +170,10 @@ namespace april
 		HL_DEFINE_GETSET(SystemDelegate*, systemDelegate, SystemDelegate);
 
 		// virtual getters/setters
-		virtual void setTitle(chstr value) { this->title = value; }
-		virtual bool isCursorVisible() { return this->cursorVisible; }
-		virtual void setCursorVisible(bool value) { this->cursorVisible = value; }
-		virtual void setCursorFilename(chstr value) { this->cursorFilename = value; }
+		virtual inline void setTitle(chstr value) { this->title = value; }
+		virtual inline bool isCursorVisible() { return this->cursorVisible; }
+		virtual inline void setCursorVisible(bool value) { this->cursorVisible = value; }
+		virtual inline void setCursorFilename(chstr value) { this->cursorFilename = value; }
 		virtual bool isCursorInside();
 
 		virtual void setResolution(int w, int h);
@@ -182,7 +182,7 @@ namespace april
 		// pure virtual getters/setters (window system dependent)
 		virtual int getWidth() = 0;
 		virtual int getHeight() = 0;
-		DEPRECATED_ATTRIBUTE bool isTouchEnabled() { return (this->inputMode == TOUCH); }
+		DEPRECATED_ATTRIBUTE inline bool isTouchEnabled() { return (this->inputMode == TOUCH); }
 		virtual void* getBackendId() = 0;
 
 		// pure virtual methods (window system dependent)
@@ -192,12 +192,12 @@ namespace april
 		virtual bool updateOneFrame();
 		virtual void checkEvents();
 		virtual void terminateMainLoop();
-		virtual void beginKeyboardHandling() { }
-		virtual void terminateKeyboardHandling() { }
+		virtual inline void beginKeyboardHandling() { }
+		virtual inline void terminateKeyboardHandling() { }
 		
-		virtual bool isRotating() { return false; } // iOS/Android devices for example
-		virtual hstr getParam(chstr param) { return ""; } // TODOaa - this should be refactored
-		virtual void setParam(chstr param, chstr value) { } // TODOaa - this should be refactored
+		virtual inline bool isRotating() { return false; } // iOS/Android devices for example
+		virtual inline hstr getParam(chstr param) { return ""; } // TODOaa - this should be refactored
+		virtual inline void setParam(chstr param, chstr value) { } // TODOaa - this should be refactored
 		
 		// generic but overridable event handlers
 		virtual void handleMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
@@ -224,7 +224,7 @@ namespace april
 		// TODOaa - refactor
 		// the following functions should be temporary, it was added because I needed access to
 		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
-		static void setLaunchCallback(void (*callback)(void*)) { msLaunchCallback = callback; }
+		static inline void setLaunchCallback(void (*callback)(void*)) { msLaunchCallback = callback; }
 		static void handleLaunchCallback(void* args);
 
 	protected:

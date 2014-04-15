@@ -41,7 +41,7 @@ namespace april
 		void reset();
 		void assignWindow(Window* window);
 
-		float getPixelOffset() { return 0.0f; }
+		inline float getPixelOffset() { return 0.0f; }
 		int getMaxTextureSize();
 		void setViewport(grect value);
 
@@ -102,7 +102,7 @@ namespace april
 
 #ifdef _WIN32
 	public:
-		HDC getHDC() { return this->hDC; }
+		inline HDC getHDC() { return this->hDC; }
 		bool _initWin32(Window* window);
 
 	protected:
