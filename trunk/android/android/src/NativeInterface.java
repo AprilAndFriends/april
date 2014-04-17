@@ -136,11 +136,24 @@ public class NativeInterface
 		Locale locale = Locale.getDefault();
 		String result = locale.getLanguage();
 		String country = locale.getCountry();
+		
+		String fullLocale = result;
+		if (!country.equals(""))
+		{
+			fullLocale += "-" + country;
+		}
+		android.util.Log.i("april", "System locale: " + fullLocale);
+		
 		if (result.equals("pt") && country.equals("PT")) // Java is stupid and needs "equals" instead of "=="
 		{
-			result += "-" + country;
+			result = fullLocale;
 		}
-		return result;
+
+		if (result.equals("zh") && country.equals("HANT")) // Java is stupid and needs "equals" instead of "=="
+		{
+			result = "zh-Hant";
+		}
+return result;
 	}
 	
 	public static void showVirtualKeyboard()
