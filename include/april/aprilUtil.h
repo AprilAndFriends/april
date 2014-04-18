@@ -16,7 +16,6 @@
 #define APRIL_UTIL_H
 
 #include <gtypes/Vector3.h>
-#include <hltypes/hltypesUtil.h>
 
 #include "aprilExport.h"
 
@@ -74,8 +73,8 @@ namespace april
 	struct aprilExport PlainVertex : public gvec3
 	{
 	public:
-		HL_INLINE PlainVertex() : gvec3(0.0f, 0.0f, 0.0f) { }
-		HL_INLINE PlainVertex(float x, float y, float z) : gvec3(x, y, z) { }
+		inline PlainVertex() : gvec3(0.0f, 0.0f, 0.0f) { }
+		inline PlainVertex(float x, float y, float z) : gvec3(x, y, z) { }
 		void operator=(const gvec3& v);
 
 	};
@@ -85,10 +84,10 @@ namespace april
 	public:
 		unsigned int color;
 
-		HL_INLINE ColoredVertex() : PlainVertex() { this->color = 0xFFFFFFFF; }
-		HL_INLINE ColoredVertex(float x, float y, float z) : PlainVertex(x, y, z) { this->color = 0xFFFFFFFF; }
-		HL_INLINE ColoredVertex(unsigned int color) : PlainVertex() { this->color = color; }
-		HL_INLINE ColoredVertex(float x, float y, float z, unsigned int color) : PlainVertex(x, y, z) { this->color = color; }
+		inline ColoredVertex() : PlainVertex() { this->color = 0xFFFFFFFF; }
+		inline ColoredVertex(float x, float y, float z) : PlainVertex(x, y, z) { this->color = 0xFFFFFFFF; }
+		inline ColoredVertex(unsigned int color) : PlainVertex() { this->color = color; }
+		inline ColoredVertex(float x, float y, float z, unsigned int color) : PlainVertex(x, y, z) { this->color = color; }
 		void operator=(const gvec3& v);
 
 	};
@@ -99,10 +98,10 @@ namespace april
 		float u;
 		float v;
 
-		HL_INLINE TexturedVertex() : PlainVertex() { this->u = 0.0f; this->v = 0.0f; }
-		HL_INLINE TexturedVertex(float x, float y, float z) : PlainVertex(x, y, z) { this->u = 0.0f; this->v = 0.0f; }
-		HL_INLINE TexturedVertex(float u, float v) : PlainVertex() { this->u = u; this->v = v; }
-		HL_INLINE TexturedVertex(float x, float y, float z, float u, float v) : PlainVertex(x, y, z) { this->u = u; this->v = v; }
+		inline TexturedVertex() : PlainVertex() { this->u = 0.0f; this->v = 0.0f; }
+		inline TexturedVertex(float x, float y, float z) : PlainVertex(x, y, z) { this->u = 0.0f; this->v = 0.0f; }
+		inline TexturedVertex(float u, float v) : PlainVertex() { this->u = u; this->v = v; }
+		inline TexturedVertex(float x, float y, float z, float u, float v) : PlainVertex(x, y, z) { this->u = u; this->v = v; }
 		void operator=(const gvec3& v);
 
 	};
@@ -113,12 +112,12 @@ namespace april
 		float u;
 		float v;
 
-		HL_INLINE ColoredTexturedVertex() : ColoredVertex() { this->u = 0.0f; this->v = 0.0f; }
-		HL_INLINE ColoredTexturedVertex(float x, float y, float z) : ColoredVertex(x, y, z) { this->u = 0.0f; this->v = 0.0f; }
-		HL_INLINE ColoredTexturedVertex(float x, float y, float z, unsigned int color) : ColoredVertex(x, y, z, color) { this->u = 0.0f; this->v = 0.0f; }
-		HL_INLINE ColoredTexturedVertex(float u, float v) : ColoredVertex() { this->u = u; this->v = v; }
-		HL_INLINE ColoredTexturedVertex(float x, float y, float z, float u, float v) : ColoredVertex(x, y, z) { this->u = u; this->v = v; }
-		HL_INLINE ColoredTexturedVertex(float x, float y, float z, unsigned int color, float u, float v) : ColoredVertex(x, y, z, color) { this->u = u; this->v = v; }
+		inline ColoredTexturedVertex() : ColoredVertex() { this->u = 0.0f; this->v = 0.0f; }
+		inline ColoredTexturedVertex(float x, float y, float z) : ColoredVertex(x, y, z) { this->u = 0.0f; this->v = 0.0f; }
+		inline ColoredTexturedVertex(float x, float y, float z, unsigned int color) : ColoredVertex(x, y, z, color) { this->u = 0.0f; this->v = 0.0f; }
+		inline ColoredTexturedVertex(float u, float v) : ColoredVertex() { this->u = u; this->v = v; }
+		inline ColoredTexturedVertex(float x, float y, float z, float u, float v) : ColoredVertex(x, y, z) { this->u = u; this->v = v; }
+		inline ColoredTexturedVertex(float x, float y, float z, unsigned int color, float u, float v) : ColoredVertex(x, y, z, color) { this->u = u; this->v = v; }
 		void operator=(const gvec3& v);
 
 	};
@@ -128,14 +127,14 @@ namespace april
 	public:
 		gvec3 normal;
 
-		HL_INLINE ColoredTexturedNormalVertex() : ColoredTexturedVertex() { this->normal.set(0.0f, 0.0f, 0.0f); }
-		HL_INLINE ColoredTexturedNormalVertex(float x, float y, float z) : ColoredTexturedVertex(x, y, z) { this->normal.set(0.0f, 0.0f, 0.0f); }
-		HL_INLINE ColoredTexturedNormalVertex(float x, float y, float z, float u, float v) : ColoredTexturedVertex(x, y, z, u, v) { this->normal.set(0.0f, 0.0f, 0.0f); }
-		HL_INLINE ColoredTexturedNormalVertex(float x, float y, float z, unsigned int color, float u, float v) : ColoredTexturedVertex(x, y, z, color, u, v) { this->normal.set(0.0f, 0.0f, 0.0f); }
-		HL_INLINE ColoredTexturedNormalVertex(gvec3 normal) : ColoredTexturedVertex(x, y, z) { this->normal = normal; }
-		HL_INLINE ColoredTexturedNormalVertex(float x, float y, float z, gvec3 normal) : ColoredTexturedVertex(x, y, z) { this->normal = normal; }
-		HL_INLINE ColoredTexturedNormalVertex(float x, float y, float z, float u, float v, gvec3 normal) : ColoredTexturedVertex(x, y, z, u, v) { this->normal = normal; }
-		HL_INLINE ColoredTexturedNormalVertex(float x, float y, float z, unsigned int color, float u, float v, gvec3 normal) : ColoredTexturedVertex(x, y, z, color, u, v) { this->normal = normal; }
+		inline ColoredTexturedNormalVertex() : ColoredTexturedVertex() { this->normal.set(0.0f, 0.0f, 0.0f); }
+		inline ColoredTexturedNormalVertex(float x, float y, float z) : ColoredTexturedVertex(x, y, z) { this->normal.set(0.0f, 0.0f, 0.0f); }
+		inline ColoredTexturedNormalVertex(float x, float y, float z, float u, float v) : ColoredTexturedVertex(x, y, z, u, v) { this->normal.set(0.0f, 0.0f, 0.0f); }
+		inline ColoredTexturedNormalVertex(float x, float y, float z, unsigned int color, float u, float v) : ColoredTexturedVertex(x, y, z, color, u, v) { this->normal.set(0.0f, 0.0f, 0.0f); }
+		inline ColoredTexturedNormalVertex(gvec3 normal) : ColoredTexturedVertex(x, y, z) { this->normal = normal; }
+		inline ColoredTexturedNormalVertex(float x, float y, float z, gvec3 normal) : ColoredTexturedVertex(x, y, z) { this->normal = normal; }
+		inline ColoredTexturedNormalVertex(float x, float y, float z, float u, float v, gvec3 normal) : ColoredTexturedVertex(x, y, z, u, v) { this->normal = normal; }
+		inline ColoredTexturedNormalVertex(float x, float y, float z, unsigned int color, float u, float v, gvec3 normal) : ColoredTexturedVertex(x, y, z, color, u, v) { this->normal = normal; }
 		void operator=(const gvec3& v);
 
 	};
@@ -145,12 +144,12 @@ namespace april
 	public:
 		gvec3 normal;
 
-		HL_INLINE TexturedNormalVertex() : TexturedVertex() { this->normal.set(0.0f, 0.0f, 0.0f); }
-		HL_INLINE TexturedNormalVertex(float x, float y, float z) : TexturedVertex(x, y, z) { this->normal.set(0.0f, 0.0f, 0.0f); }
-		HL_INLINE TexturedNormalVertex(float x, float y, float z, float u, float v) : TexturedVertex(x, y, z, u, v) { this->normal.set(0.0f, 0.0f, 0.0f); }
-		HL_INLINE TexturedNormalVertex(gvec3 normal) : TexturedVertex() { this->normal = normal; }
-		HL_INLINE TexturedNormalVertex(float x, float y, float z, gvec3 normal) : TexturedVertex(x, y, z) { this->normal = normal; }
-		HL_INLINE TexturedNormalVertex(float x, float y, float z, float u, float v, gvec3 normal) : TexturedVertex(x, y, z, u, v) { this->normal = normal; }
+		inline TexturedNormalVertex() : TexturedVertex() { this->normal.set(0.0f, 0.0f, 0.0f); }
+		inline TexturedNormalVertex(float x, float y, float z) : TexturedVertex(x, y, z) { this->normal.set(0.0f, 0.0f, 0.0f); }
+		inline TexturedNormalVertex(float x, float y, float z, float u, float v) : TexturedVertex(x, y, z, u, v) { this->normal.set(0.0f, 0.0f, 0.0f); }
+		inline TexturedNormalVertex(gvec3 normal) : TexturedVertex() { this->normal = normal; }
+		inline TexturedNormalVertex(float x, float y, float z, gvec3 normal) : TexturedVertex(x, y, z) { this->normal = normal; }
+		inline TexturedNormalVertex(float x, float y, float z, float u, float v, gvec3 normal) : TexturedVertex(x, y, z, u, v) { this->normal = normal; }
 		void operator=(const gvec3& v);
 
 	};
@@ -160,10 +159,10 @@ namespace april
 	public:
 		gvec3 normal;
 
-		HL_INLINE ColoredNormalVertex() : ColoredVertex() { this->normal.set(0.0f, 0.0f, 0.0f); }
-		HL_INLINE ColoredNormalVertex(float x, float y, float z) : ColoredVertex(x, y, z) { this->normal.set(0.0f, 0.0f, 0.0f); }
-		HL_INLINE ColoredNormalVertex(gvec3 normal) : ColoredVertex(x, y, z) { this->normal = normal; }
-		HL_INLINE ColoredNormalVertex(float x, float y, float z, gvec3 normal) : ColoredVertex(x, y, z) { this->normal = normal; }
+		inline ColoredNormalVertex() : ColoredVertex() { this->normal.set(0.0f, 0.0f, 0.0f); }
+		inline ColoredNormalVertex(float x, float y, float z) : ColoredVertex(x, y, z) { this->normal.set(0.0f, 0.0f, 0.0f); }
+		inline ColoredNormalVertex(gvec3 normal) : ColoredVertex(x, y, z) { this->normal = normal; }
+		inline ColoredNormalVertex(float x, float y, float z, gvec3 normal) : ColoredVertex(x, y, z) { this->normal = normal; }
 		void operator=(const gvec3& v);
 
 	};
