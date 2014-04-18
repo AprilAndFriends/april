@@ -155,9 +155,9 @@ namespace april
 		virtual Image* takeScreenshot(Image::Format format) = 0;
 		virtual void presentFrame();
 
-		DEPRECATED_ATTRIBUTE HL_INLINE hstr findTextureFilename(chstr filename) { return this->findTextureResource(filename); }
-		DEPRECATED_ATTRIBUTE HL_INLINE Texture* createTexture(chstr filename, bool loadImmediately) { return this->createTextureFromResource(filename, Texture::TYPE_IMMUTABLE, loadImmediately); }
-		DEPRECATED_ATTRIBUTE HL_INLINE Texture* createTexture(int w, int h, Image::Format format) { return this->createTexture(w, h, Color::Clear, format, Texture::TYPE_MANAGED); }
+		DEPRECATED_ATTRIBUTE inline hstr findTextureFilename(chstr filename) { return this->findTextureResource(filename); }
+		DEPRECATED_ATTRIBUTE inline Texture* createTexture(chstr filename, bool loadImmediately) { return this->createTextureFromResource(filename, Texture::TYPE_IMMUTABLE, loadImmediately); }
+		DEPRECATED_ATTRIBUTE inline Texture* createTexture(int w, int h, Image::Format format) { return this->createTexture(w, h, Color::Clear, format, Texture::TYPE_MANAGED); }
 
 	protected:
 		hstr name;

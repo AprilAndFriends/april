@@ -136,8 +136,8 @@ namespace april
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int destWidth, int destHeight);
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight);
 
-		DEPRECATED_ATTRIBUTE static HL_INLINE Image* load(chstr filename) { return Image::createFromResource(filename); }
-		DEPRECATED_ATTRIBUTE static HL_INLINE Image* load(chstr filename, Format format) { return Image::createFromResource(filename, format); }
+		DEPRECATED_ATTRIBUTE static inline Image* load(chstr filename) { return Image::createFromResource(filename); }
+		DEPRECATED_ATTRIBUTE static inline Image* load(chstr filename, Format format) { return Image::createFromResource(filename, format); }
 
 	protected:
 		Image();

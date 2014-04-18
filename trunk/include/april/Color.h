@@ -15,7 +15,6 @@
 #ifndef APRIL_COLOR_H
 #define APRIL_COLOR_H
 
-#include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
@@ -45,10 +44,10 @@ namespace april
 		void set(const char* hex);
 		void set(const Color& color, unsigned char a);
 
-		HL_INLINE float r_f() const { return this->r * 0.003921569f; } // equals r / 255, multiplication is faster than division
-		HL_INLINE float g_f() const { return this->g * 0.003921569f; } // equals g / 255, multiplication is faster than division
-		HL_INLINE float b_f() const { return this->b * 0.003921569f; } // equals b / 255, multiplication is faster than division
-		HL_INLINE float a_f() const { return this->a * 0.003921569f; } // equals a / 255, multiplication is faster than division
+		inline float r_f() const { return this->r * 0.003921569f; } // equals r / 255, multiplication is faster than division
+		inline float g_f() const { return this->g * 0.003921569f; } // equals g / 255, multiplication is faster than division
+		inline float b_f() const { return this->b * 0.003921569f; } // equals b / 255, multiplication is faster than division
+		inline float a_f() const { return this->a * 0.003921569f; } // equals a / 255, multiplication is faster than division
 		
 		hstr hex(bool rgbOnly = false) const; // careful when using rgbOnly!
 		
