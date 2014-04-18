@@ -41,7 +41,7 @@
 
 namespace april
 {
-    static inline bool isPower2(int x)
+    static HL_INLINE bool isPower2(int x)
     {
         return (x > 0) && ((x & (x - 1)) == 0);
     }
