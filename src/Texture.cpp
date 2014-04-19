@@ -146,7 +146,7 @@ namespace april
 		this->height = h;
 		this->type = TYPE_VOLATILE; // so the write call later on goes through
 		int size = 0;
-		if (type != TYPE_VOLATILE)
+		if (type != TYPE_VOLATILE && type != TYPE_RENDER_TARGET)
 		{
 			this->format = format;
 			size = this->getByteSize();
@@ -157,6 +157,7 @@ namespace april
 		{
 			this->format = april::rendersys->getNativeTextureFormat(format);
 			size = this->getByteSize();
+			this->type = type;
 		}
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
@@ -182,7 +183,7 @@ namespace april
 		this->height = h;
 		this->type = TYPE_VOLATILE; // so the write call later on goes through
 		int size = 0;
-		if (type != TYPE_VOLATILE)
+		if (type != TYPE_VOLATILE && type != TYPE_RENDER_TARGET)
 		{
 			this->format = format;
 			size = this->getByteSize();
@@ -193,6 +194,7 @@ namespace april
 		{
 			this->format = april::rendersys->getNativeTextureFormat(format);
 			size = this->getByteSize();
+			this->type = type;
 		}
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
@@ -273,6 +275,9 @@ namespace april
 		case TYPE_VOLATILE:
 			result += " (volatile)";
 			break;
+		case TYPE_RENDER_TARGET:
+			result += " (render target)";
+			break;
 		}
 		return result;
 	}
@@ -292,7 +297,7 @@ namespace april
 			size = this->getByteSize();
 		}
 		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
-		if (currentData == NULL && (type != TYPE_VOLATILE || this->width == 0 || this->height == 0))
+		if (currentData == NULL && (type != TYPE_VOLATILE && type != TYPE_RENDER_TARGET || this->width == 0 || this->height == 0))
 		{
 			if (this->filename == "")
 			{
@@ -340,7 +345,7 @@ namespace april
 			this->type = TYPE_VOLATILE; // so the write call right below goes through
 			this->write(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
 			this->type = type;
-			if (this->type != TYPE_VOLATILE && (this->type != TYPE_IMMUTABLE || this->filename == ""))
+			if (this->type != TYPE_VOLATILE && this->type != TYPE_RENDER_TARGET && (this->type != TYPE_IMMUTABLE || this->filename == ""))
 			{
 				if (this->data != currentData)
 				{
@@ -469,7 +474,8 @@ namespace april
 			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
-		if (this->type == TYPE_VOLATILE && !Image::needsConversion(srcFormat, april::rendersys->getNativeTextureFormat(this->format)) &&
+		if ((this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET) &&
+			!Image::needsConversion(srcFormat, april::rendersys->getNativeTextureFormat(this->format)) &&
 			this->_uploadToGpu(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat))
 		{
 			return true;

@@ -47,13 +47,11 @@ namespace april
 			this->d3dUsage = D3DUSAGE_DYNAMIC;
 		}
 		// TODOaa - change pool to save memory
-		/*
 		if (type == TYPE_RENDER_TARGET)
 		{
 			this->d3dUsage = D3DUSAGE_RENDERTARGET;
 			this->renderTarget = true;
 		}
-		*/
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
 		if (FAILED(hr))
 		{
