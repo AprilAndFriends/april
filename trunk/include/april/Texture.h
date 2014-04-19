@@ -41,7 +41,10 @@ namespace april
 			/// @brief Cannot be modified or read. Texture with manual data will have a copy of the data in RAM, files will be reloaded from persistent memory.
 			TYPE_IMMUTABLE = 2,
 			/// @brief Used for feeding the GPU texture data constantly (e.g. video). It has no local RAM copy for when the rendering context is lost and cannot be restored.
-			TYPE_VOLATILE = 3
+			TYPE_VOLATILE = 3,
+			/// @brief Used for render targets. Acts like MANAGED.
+			// TODOaa - may not be implemented on all platforms yet
+			TYPE_RENDER_TARGET = 4
 		};
 
 		enum Filter
