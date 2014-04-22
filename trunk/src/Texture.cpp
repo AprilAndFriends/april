@@ -297,7 +297,7 @@ namespace april
 			size = this->getByteSize();
 		}
 		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
-		if (currentData == NULL && (type != TYPE_VOLATILE && type != TYPE_RENDER_TARGET || this->width == 0 || this->height == 0))
+		if (currentData == NULL && ((type != TYPE_VOLATILE && type != TYPE_RENDER_TARGET) || this->width == 0 || this->height == 0))
 		{
 			if (this->filename == "")
 			{
