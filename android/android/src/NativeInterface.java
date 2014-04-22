@@ -149,7 +149,7 @@ public class NativeInterface
 			result = fullLocale;
 		}
 
-		if (result.equals("zh") && country.equals("HANT")) // Java is stupid and needs "equals" instead of "=="
+		if (result.equals("zh") && (country.equals("HANT") || country.equals("TW"))) // Java is stupid and needs "equals" instead of "=="
 		{
 			result = "zh-Hant";
 		}
