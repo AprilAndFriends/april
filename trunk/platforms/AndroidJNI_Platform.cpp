@@ -53,7 +53,7 @@ namespace april
 		return env->GetStaticObjectField(classNativeInterface, fieldAprilActivity);
 	}
 
-	jclass findJNIClass(JNIEnv* env, hstr classPath)
+	jclass findJNIClass(JNIEnv* env, chstr classPath)
 	{
 		if (april::classLoader == NULL)
 		{
