@@ -26,7 +26,7 @@ namespace april
 	JNIEnv* getJNIEnv();
 	jobject getActivity();
 	jobject getAprilActivity();
-	jclass findJNIClass(JNIEnv* env, hstr classPath);
+	jclass findJNIClass(JNIEnv* env, chstr classPath);
 	hstr _jstringToHstr(JNIEnv* env, jstring string);
 }
 
