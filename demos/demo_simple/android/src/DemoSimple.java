@@ -1,4 +1,4 @@
-package com.example.april.android.demoSimple;
+package com.googlecode.april.android.demoSimple;
 
 public class DemoSimple extends com.googlecode.april.android.Activity
 {
