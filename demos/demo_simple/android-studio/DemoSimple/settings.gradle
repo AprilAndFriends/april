@@ -1,1 +1,1 @@
-include ':DemoSimple'
+include ':DemoSimple', ':../../../../android-studio/April/April'
