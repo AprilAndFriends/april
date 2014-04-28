@@ -1,1 +1,1 @@
-include ':April'
+include ':April', ':DemoSimple'
