@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/April" />
+            <option value="$PROJECT_DIR$/DemoSimple" />
           </set>
         </option>
       </GradleProjectSettings>
