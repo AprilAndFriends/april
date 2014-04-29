@@ -14,7 +14,7 @@
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
-#define __NATIVE_INTERFACE_CLASS "com/googlecode/april/android/NativeInterface"
+#define __NATIVE_INTERFACE_CLASS "com/april/NativeInterface"
 #include "androidUtilJNI.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -49,7 +49,7 @@ namespace april
 	jobject getAprilActivity()
 	{
 		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
-		jfieldID fieldAprilActivity = env->GetStaticFieldID(classNativeInterface, "AprilActivity", _JCLASS("com/googlecode/april/android/Activity"));
+		jfieldID fieldAprilActivity = env->GetStaticFieldID(classNativeInterface, "AprilActivity", _JCLASS("com/april/Activity"));
 		return env->GetStaticObjectField(classNativeInterface, fieldAprilActivity);
 	}
 

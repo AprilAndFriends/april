@@ -35,8 +35,7 @@ almost all provided here, but some need to be generated.
 	This is just an example file for using April on Android. Make a copy for yourself, change
 	the name of the file (it has to match the class name inside of the file!) and change all
 	the necessary definitions inside of the file (which should be package name, class name
-	and the name of the library that's being loaded). Don't change
-	"com.googlecode.april.AprilActivity".
+	and the name of the library that's being loaded). Don't change "com.april.AprilActivity".
 
     Additional files:
 

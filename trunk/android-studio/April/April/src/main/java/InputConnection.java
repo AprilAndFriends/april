@@ -1,4 +1,4 @@
-package com.googlecode.april.android;
+package com.april;
 
 // version 3.3
 

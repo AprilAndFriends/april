@@ -37,7 +37,7 @@
 
 #ifdef _ANDROID
 #include <jni.h>
-#define __NATIVE_INTERFACE_CLASS "com/googlecode/april/android/NativeInterface"
+#define __NATIVE_INTERFACE_CLASS "com/april/NativeInterface"
 #include "androidUtilJNI.h"
 #include <unistd.h>
 #endif

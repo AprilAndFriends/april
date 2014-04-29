@@ -16,7 +16,7 @@
 #include <hltypes/hstring.h>
 #include <hltypes/hlog.h>
 
-#define __NATIVE_INTERFACE_CLASS "com/googlecode/april/android/NativeInterface"
+#define __NATIVE_INTERFACE_CLASS "com/april/NativeInterface"
 #include "androidUtilJNI.h"
 #include "Platform.h"
 #include "RenderSystem.h"
