@@ -1,1 +1,1 @@
-include ':April', ':DemoSimple'
+include ':April', ':DemoSimple', ':../../../hltypes/android-studio/hltypes/hltypes'
