@@ -2,7 +2,7 @@
 package com.example.aprilExample;
 
 // the name of the class, make sure it matches "<activity android:name" in AndroidManifest.xml
-public class ExampleActivity extends com.googlecode.april.AprilActivity
+public class ExampleActivity extends com.april.AprilActivity
 {
 	static
 	{

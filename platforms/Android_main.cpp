@@ -16,7 +16,7 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
-#define __NATIVE_INTERFACE_CLASS "com/googlecode/april/android/NativeInterface"
+#define __NATIVE_INTERFACE_CLASS "com/april/NativeInterface"
 #include "androidUtilJNI.h"
 #include "april.h"
 #include "Keys.h"

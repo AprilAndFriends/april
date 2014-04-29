@@ -15,7 +15,7 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hthread.h>
 
-#define __NATIVE_INTERFACE_CLASS "com/googlecode/april/android/NativeInterface"
+#define __NATIVE_INTERFACE_CLASS "com/april/NativeInterface"
 #include "androidUtilJNI.h"
 #include "AndroidJNI_Window.h"
 #include "AndroidJNI_Keys.h"

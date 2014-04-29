@@ -1,10 +1,10 @@
-package com.googlecode.april.android.DialogListener;
+package com.april.DialogListener;
 
 // version 3.3
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import com.googlecode.april.android.NativeInterface;
+import com.april.NativeInterface;
 
 public class Cancel implements OnClickListener
 {
