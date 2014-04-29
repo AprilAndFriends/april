@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.34
 /// 
 /// @section LICENSE
 /// 
@@ -85,30 +85,9 @@ namespace april
 		D3D11_PRIMITIVE_TOPOLOGY_POINTLIST,		// ROP_POINT_LIST
 	};
 
-	unsigned int _numPrimitives(RenderOp renderOp, int nVertices)
-	{
-		switch (renderOp)
-		{
-		case TriangleList:
-			return nVertices / 3;
-		case TriangleStrip:
-			return nVertices - 2;
-		case TriangleFan:
-			return nVertices - 1;
-		case LineList:
-			return nVertices / 2;
-		case LineStrip:
-			return nVertices - 1;
-		case PointList:
-			return nVertices;
-		}
-		return 0;
-	}
-	
-	DirectX11_RenderSystem::DirectX11_RenderSystem() : RenderSystem(),
-		activeTextureBlendMode(DEFAULT), activeTexture(NULL), renderTarget(NULL),
-		activeTextureColorMode(NORMAL), activeTextureColorModeAlpha(255),
-		matrixDirty(true)
+	DirectX11_RenderSystem::DirectX11_RenderSystem() : DirectX_RenderSystem(), activeTextureBlendMode(BM_DEFAULT),
+		activeTexture(NULL), renderTarget(NULL), activeTextureColorMode(CM_DEFAULT),
+		activeTextureColorModeAlpha(255), matrixDirty(true)
 	{
 		this->name = APRIL_RS_DIRECTX11;
 		this->state = new RenderState(); // TODOa
@@ -141,11 +120,11 @@ namespace april
 		this->_currentVertexShader = NULL;
 		this->_currentPixelShader = NULL;
 		this->_currentTexture = NULL;
-		this->_currentTextureBlendMode = BLEND_MODE_UNDEFINED;
-		this->_currentTextureColorMode = COLOR_MODE_UNDEFINED;
+		this->_currentTextureBlendMode = BM_UNDEFINED;
+		this->_currentTextureColorMode = CM_UNDEFINED;
 		this->_currentTextureFilter = Texture::FILTER_UNDEFINED;
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
-		this->_currentRenderOp = RENDER_OP_UNDEFINED;
+		this->_currentRenderOperation = RO_UNDEFINED;
 		this->_currentVertexBuffer = NULL;
 	}
 
@@ -156,14 +135,14 @@ namespace april
 
 	bool DirectX11_RenderSystem::create(Options options)
 	{
-		if (!RenderSystem::create(options))
+		if (!DirectX_RenderSystem::create(options))
 		{
 			return false;
 		}
-		this->activeTextureBlendMode = DEFAULT;
+		this->activeTextureBlendMode = BM_DEFAULT;
 		this->activeTexture = NULL;
 		this->renderTarget = NULL;
-		this->activeTextureColorMode = NORMAL;
+		this->activeTextureColorMode = CM_DEFAULT;
 		this->activeTextureColorModeAlpha = 255;
 		this->matrixDirty = true;
 		this->d3dDevice = nullptr;
@@ -195,11 +174,11 @@ namespace april
 		this->_currentVertexShader = NULL;
 		this->_currentPixelShader = NULL;
 		this->_currentTexture = NULL;
-		this->_currentTextureBlendMode = BLEND_MODE_UNDEFINED;
-		this->_currentTextureColorMode = COLOR_MODE_UNDEFINED;
+		this->_currentTextureBlendMode = BM_UNDEFINED;
+		this->_currentTextureColorMode = CM_UNDEFINED;
 		this->_currentTextureFilter = Texture::FILTER_UNDEFINED;
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
-		this->_currentRenderOp = RENDER_OP_UNDEFINED;
+		this->_currentRenderOperation = RO_UNDEFINED;
 		this->_currentVertexBuffer = NULL;
 		this->viewport.setSize(april::getSystemInfo().displayResolution);
 		return true;
@@ -207,7 +186,7 @@ namespace april
 
 	bool DirectX11_RenderSystem::destroy()
 	{
-		if (!RenderSystem::destroy())
+		if (!DirectX_RenderSystem::destroy())
 		{
 			return false;
 		}
@@ -240,11 +219,11 @@ namespace april
 		this->_currentVertexShader = NULL;
 		this->_currentPixelShader = NULL;
 		this->_currentTexture = NULL;
-		this->_currentTextureBlendMode = BLEND_MODE_UNDEFINED;
-		this->_currentTextureColorMode = COLOR_MODE_UNDEFINED;
+		this->_currentTextureBlendMode = BM_UNDEFINED;
+		this->_currentTextureColorMode = CM_UNDEFINED;
 		this->_currentTextureFilter = Texture::FILTER_UNDEFINED;
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
-		this->_currentRenderOp = RENDER_OP_UNDEFINED;
+		this->_currentRenderOperation = RO_UNDEFINED;
 		this->_currentVertexBuffer = NULL;
 		this->viewport.setSize(april::getSystemInfo().displayResolution);
 		return true;
@@ -355,7 +334,7 @@ namespace april
 
 	void DirectX11_RenderSystem::reset()
 	{
-		RenderSystem::reset();
+		DirectX_RenderSystem::reset();
 #ifndef _WINP8
 		// possible Microsoft bug, required for SwapChainBackgroundPanel to update its layout 
 		IInspectable* panelInspectable = (IInspectable*)reinterpret_cast<IInspectable*>(WinRT::XamlOverlay);
@@ -575,8 +554,8 @@ namespace april
 		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 		this->d3dDevice->CreateSamplerState(&samplerDesc, &this->samplerNearestClamp);
 		// other
-		this->setTextureBlendMode(DEFAULT);
-		this->setTextureColorMode(NORMAL);
+		this->setTextureBlendMode(BM_DEFAULT);
+		this->setTextureColorMode(CM_DEFAULT);
 		this->setTextureAddressMode(Texture::ADDRESS_WRAP);
 		this->setTextureFilter(Texture::FILTER_LINEAR);
 		this->clear();
@@ -627,19 +606,9 @@ namespace april
 		return D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
 	}
 
-	harray<DisplayMode> DirectX11_RenderSystem::getSupportedDisplayModes()
-	{
-		if (this->supportedDisplayModes.size() == 0)
-		{
-			gvec2 resolution = april::getSystemInfo().displayResolution;
-			this->supportedDisplayModes += DisplayMode((int)resolution.x, (int)resolution.y, 60);
-		}
-		return this->supportedDisplayModes;
-	}
-
 	void DirectX11_RenderSystem::setViewport(grect value)
 	{
-		RenderSystem::setViewport(value);
+		DirectX_RenderSystem::setViewport(value);
 #ifdef _WINP8
 		value = WinRT::rotateViewport(value);
 #endif
@@ -690,11 +659,11 @@ namespace april
 	{
 		switch (textureBlendMode)
 		{
-		case DEFAULT:
-		case ALPHA_BLEND:
-		case ADD:
-		case SUBTRACT:
-		case OVERWRITE:
+		case BM_DEFAULT:
+		case BM_ALPHA:
+		case BM_ADD:
+		case BM_SUBTRACT:
+		case BM_OVERWRITE:
 			this->activeTextureBlendMode = textureBlendMode;
 			break;
 		default:
@@ -703,16 +672,16 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::setTextureColorMode(ColorMode textureColorMode, unsigned char alpha)
+	void DirectX11_RenderSystem::setTextureColorMode(ColorMode textureColorMode, float factor)
 	{
 		this->activeTextureColorModeAlpha = 255;
 		switch (textureColorMode)
 		{
-		case LERP: // LERP also needs alpha
-			this->activeTextureColorModeAlpha = alpha;
-		case NORMAL:
-		case MULTIPLY:
-		case ALPHA_MAP:
+		case CM_LERP: // LERP also needs alpha
+			this->activeTextureColorModeAlpha = (unsigned char)(factor * 255.0f);
+		case CM_DEFAULT:
+		case CM_MULTIPLY:
+		case CM_ALPHA_MAP:
 			this->activeTextureColorMode = textureColorMode;
 			break;
 		default:
@@ -813,14 +782,14 @@ namespace april
 		{
 			switch (this->activeTextureColorMode)
 			{
-			case NORMAL:
-			case MULTIPLY:
+			case CM_DEFAULT:
+			case CM_MULTIPLY:
 				pixelShader = (useTexture ? this->pixelShaderTexturedMultiply : this->pixelShaderMultiply);
 				break;
-			case ALPHA_MAP:
+			case CM_ALPHA_MAP:
 				pixelShader = (useTexture ? this->pixelShaderTexturedAlphaMap : this->pixelShaderAlphaMap);
 				break;
-			case LERP:
+			case CM_LERP:
 				pixelShader = (useTexture ? this->pixelShaderTexturedLerp : this->pixelShaderLerp);
 				break;
 			}
@@ -846,21 +815,11 @@ namespace april
 		}
 	}
 
-	Texture* DirectX11_RenderSystem::_createTexture(chstr filename)
+	Texture* DirectX11_RenderSystem::_createTexture(bool fromResource)
 	{
-		return new DirectX11_Texture(filename);
+		return new DirectX11_Texture(fromResource);
 	}
 
-	Texture* DirectX11_RenderSystem::_createTexture(int w, int h, unsigned char* rgba)
-	{
-		return new DirectX11_Texture(w, h, rgba);
-	}
-	
-	Texture* DirectX11_RenderSystem::_createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
-	{
-		return new DirectX11_Texture(w, h, format, type, color);
-	}
-	
 	PixelShader* DirectX11_RenderSystem::createPixelShader()
 	{
 		return new DirectX11_PixelShader();
@@ -969,17 +928,17 @@ namespace april
 			this->_currentTextureBlendMode = this->activeTextureBlendMode;
 			switch (this->_currentTextureBlendMode)
 			{
-			case DEFAULT:
-			case ALPHA_BLEND:
+			case BM_DEFAULT:
+			case BM_ALPHA:
 				this->d3dDeviceContext->OMSetBlendState(this->blendStateAlpha.Get(), blendFactor, 0xFFFFFFFF);
 				break;
-			case ADD:
+			case BM_ADD:
 				this->d3dDeviceContext->OMSetBlendState(this->blendStateAdd.Get(), blendFactor, 0xFFFFFFFF);
 				break;
-			case SUBTRACT:
+			case BM_SUBTRACT:
 				this->d3dDeviceContext->OMSetBlendState(this->blendStateSubtract.Get(), blendFactor, 0xFFFFFFFF);
 				break;
-			case OVERWRITE:
+			case BM_OVERWRITE:
 				this->d3dDeviceContext->OMSetBlendState(this->blendStateOverwrite.Get(), blendFactor, 0xFFFFFFFF);
 				break;
 			}
@@ -1028,21 +987,21 @@ namespace april
 		}
 	}
 	
-	void DirectX11_RenderSystem::_setRenderOp(RenderOp renderOp)
+	void DirectX11_RenderSystem::_setRenderOperation(RenderOperation renderOperation)
 	{
-		if (this->_currentRenderOp != renderOp)
+		if (this->_currentRenderOperation != renderOperation)
 		{
-			this->_currentRenderOp = renderOp;
-			this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[this->_currentRenderOp]);
+			this->_currentRenderOperation = renderOperation;
+			this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[this->_currentRenderOperation]);
 		}
 	}
 
-	void DirectX11_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices)
+	void DirectX11_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
-		this->render(renderOp, v, nVertices, april::Color::White);
+		this->render(renderOperation, v, nVertices, april::Color::White);
 	}
 
-	void DirectX11_RenderSystem::render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color)
+	void DirectX11_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
 	{
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
 		unsigned int c = (unsigned int)color;
@@ -1054,7 +1013,7 @@ namespace april
 			ctv[i].z = v[i].z;
 			ctv[i].color = c;
 		}
-		this->_setRenderOp(renderOp);
+		this->_setRenderOperation(renderOperation);
 		this->_updateVertexBuffer(nVertices, ctv);
 		this->_updateVertexShader();
 		this->_updatePixelShader(false);
@@ -1068,12 +1027,12 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices)
+	void DirectX11_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
-		this->render(renderOp, v, nVertices, april::Color::White);
+		this->render(renderOperation, v, nVertices, april::Color::White);
 	}
 
-	void DirectX11_RenderSystem::render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color)
+	void DirectX11_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
 	{
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
 		unsigned int c = (unsigned int)color;
@@ -1087,7 +1046,7 @@ namespace april
 			ctv[i].v = v[i].v;
 			ctv[i].color = c;
 		}
-		this->_setRenderOp(renderOp);
+		this->_setRenderOperation(renderOperation);
 		this->_updateVertexBuffer(nVertices, ctv);
 		this->_updateVertexShader();
 		this->_updatePixelShader(true);
@@ -1101,7 +1060,7 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::render(RenderOp renderOp, ColoredVertex* v, int nVertices)
+	void DirectX11_RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
 		for_iter (i, 0, nVertices)
@@ -1111,7 +1070,7 @@ namespace april
 			ctv[i].z = v[i].z;
 			ctv[i].color = UINT_RGBA_TO_ABGR(v[i].color);
 		}
-		this->_setRenderOp(renderOp);
+		this->_setRenderOperation(renderOperation);
 		this->_updateVertexBuffer(nVertices, ctv);
 		this->_updateVertexShader();
 		this->_updatePixelShader(false);
@@ -1125,7 +1084,7 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices)
+	void DirectX11_RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
 		memcpy(ctv, v, sizeof(ColoredTexturedVertex) * nVertices);
@@ -1133,7 +1092,7 @@ namespace april
 		{
 			ctv[i].color = UINT_RGBA_TO_ABGR(v[i].color);
 		}
-		this->_setRenderOp(renderOp);
+		this->_setRenderOperation(renderOperation);
 		this->_updateVertexBuffer(nVertices, ctv);
 		this->_updateVertexShader();
 		this->_updatePixelShader(true);
@@ -1157,9 +1116,35 @@ namespace april
 		this->matrixDirty = true;
 	}
 
-	Image* DirectX11_RenderSystem::takeScreenshot(int bpp)
+	Image::Format DirectX11_RenderSystem::getNativeTextureFormat(Image::Format format)
 	{
-		// TODO - if possible
+		switch (format)
+		{
+		case Image::FORMAT_RGBA:
+		case Image::FORMAT_ARGB:
+		case Image::FORMAT_BGRA:
+		case Image::FORMAT_ABGR:
+			return Image::FORMAT_BGRA;
+		case Image::FORMAT_RGBX:
+		case Image::FORMAT_XRGB:
+		case Image::FORMAT_BGRX:
+		case Image::FORMAT_XBGR:
+		case Image::FORMAT_RGB:
+		case Image::FORMAT_BGR:
+			return Image::FORMAT_BGRX;
+		case Image::FORMAT_ALPHA:
+			return Image::FORMAT_ALPHA;
+		case Image::FORMAT_GRAYSCALE:
+			return Image::FORMAT_GRAYSCALE;
+		case Image::FORMAT_PALETTE:
+			return Image::FORMAT_PALETTE;
+		}
+		return Image::FORMAT_INVALID;
+	}
+
+	Image* DirectX11_RenderSystem::takeScreenshot(Image::Format format)
+	{
+		// TODOa - if possible
 		hlog::warn(april::logTag, "DirectX11_RenderSystem::takeScreenshot() not implemented!");
 		return NULL;
 	}

@@ -234,6 +234,8 @@
     <ClCompile Include="rendersystems\DirectX\11\DirectX11_RenderSystem.cpp" />
     <ClCompile Include="rendersystems\DirectX\11\DirectX11_Texture.cpp" />
     <ClCompile Include="rendersystems\DirectX\11\DirectX11_VertexShader.cpp" />
+    <ClCompile Include="rendersystems\DirectX\DirectX_RenderSystem.cpp" />
+    <ClCompile Include="rendersystems\DirectX\DirectX_Texture.cpp" />
     <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp" />
     <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp" />
     <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp" />
@@ -316,6 +318,8 @@
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_RenderSystem.h" />
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_Texture.h" />
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_VertexShader.h" />
+    <ClInclude Include="rendersystems\DirectX\DirectX_RenderSystem.h" />
+    <ClInclude Include="rendersystems\DirectX\DirectX_Texture.h" />
     <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h" />
     <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h" />
     <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h" />

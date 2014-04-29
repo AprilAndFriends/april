@@ -251,6 +251,12 @@
     <ClCompile Include="src\RenderState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\DirectX_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="rendersystems\DirectX\DirectX_Texture.cpp">
+      <Filter>Source Files\rendersystems\DirectX</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -411,6 +417,12 @@
     </ClInclude>
     <ClInclude Include="include\april\WinRT_main.h">
       <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\DirectX_RenderSystem.h">
+      <Filter>Header Files\rendersystems\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="rendersystems\DirectX\DirectX_Texture.h">
+      <Filter>Header Files\rendersystems\DirectX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
