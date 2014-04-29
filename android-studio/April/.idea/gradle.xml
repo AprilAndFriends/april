@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/April" />
             <option value="$PROJECT_DIR$/DemoSimple" />
+            <option value="$PROJECT_DIR$/../../../hltypes/android-studio/hltypes/hltypes" />
           </set>
         </option>
       </GradleProjectSettings>
