@@ -24,7 +24,7 @@ namespace april
 		UpdateDelegate();
 		virtual ~UpdateDelegate();
 
-		virtual bool onUpdate(float timeSinceLastFrame);
+		virtual bool onUpdate(float timeDelta);
 
 	};
 

@@ -328,13 +328,13 @@ namespace april
 
 	bool Window::updateOneFrame()
 	{
-		float k = this->_calcTimeSinceLastFrame();
+		float timeDelta = this->_calcTimeSinceLastFrame();
 		if (!this->focused)
 		{
 			hthread::sleep(40.0f);
 		}
 		this->checkEvents();
-		return (this->performUpdate(k) && this->running);
+		return (this->performUpdate(timeDelta) && this->running);
 	}
 	
 	void Window::checkEvents()
@@ -390,9 +390,9 @@ namespace april
 		this->running = false;
 	}
 	
-	bool Window::performUpdate(float k)
+	bool Window::performUpdate(float timeDelta)
 	{
-		this->fpsTimer += k;
+		this->fpsTimer += timeDelta;
 		if (this->fpsTimer > 0.0f)
 		{
 			++this->fpsCount;
@@ -412,7 +412,7 @@ namespace april
 		// returning false: abort execution
 		if (this->updateDelegate != NULL)
 		{
-			return this->updateDelegate->onUpdate(k);
+			return this->updateDelegate->onUpdate(timeDelta);
 		}
 		april::rendersys->clear();
 		return true;
@@ -628,16 +628,16 @@ namespace april
 
 	float Window::_calcTimeSinceLastFrame()
 	{
-		float k = this->timer.diff(true);
-		if (k > 0.5f)
+		float timeDelta = this->timer.diff(true);
+		if (timeDelta > 0.5f)
 		{
-			k = 0.05f; // prevent jumps from e.g, waiting on device reset or super low framerate
+			timeDelta = 0.05f; // prevent jumps from e.g, waiting on device reset or super low framerate
 		}
 		if (!this->focused)
 		{
-			k = 0.0f;
+			timeDelta = 0.0f;
 		}
-		return k;
+		return timeDelta;
 	}
 
 	hstr Window::_findCursorFile()

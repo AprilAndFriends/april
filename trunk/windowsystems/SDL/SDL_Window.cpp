@@ -505,17 +505,17 @@ namespace april
 	float SDL_Window::_calcTimeSinceLastFrame()
 	{
 		static unsigned int x = SDL_GetTicks();
-		float k = (SDL_GetTicks() - x) * 0.001f;
+		float timeDelta = (SDL_GetTicks() - x) * 0.001f;
 		x = SDL_GetTicks();
-		if (k > 0.5f)
+		if (timeDelta > 0.5f)
 		{
-			k = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
+			timeDelta = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
 		}
 		if (!this->focused)
 		{
-			k = 0.0f;
+			timeDelta = 0.0f;
 		}
-		return k;
+		return timeDelta;
 	}
 		
 }

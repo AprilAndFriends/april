@@ -219,7 +219,7 @@ namespace april
 		virtual void queueControllerEvent(ControllerEventType type, Button buttonCode);
 
 		virtual void enterMainLoop();
-		virtual bool performUpdate(float k);
+		virtual bool performUpdate(float timeDelta);
 		
 		// TODOaa - refactor
 		// the following functions should be temporary, it was added because I needed access to
