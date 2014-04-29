@@ -276,9 +276,9 @@ namespace april
         bool result = Window::updateOneFrame();
 		if (result && mOverlayWindow != nil)
 		{
-			float k = this->timer.diff(false);
-			if (k > 0.5f) k = 0.05f;
-			updateLoadingOverlay(k);
+			float timeDelta = this->timer.diff(false);
+			if (timeDelta > 0.5f) timeDelta = 0.5f;
+			updateLoadingOverlay(timeDelta);
 		}
 		
 		if (this->fpsCounter)

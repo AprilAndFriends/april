@@ -16,7 +16,7 @@
 #import <AppKit/NSWindow.h>
 
 void createLoadingOverlay(NSWindow* parent);
-void updateLoadingOverlay(float k);
+void updateLoadingOverlay(float timeDelta);
 void reattachLoadingOverlay();
 
 extern NSWindow* mOverlayWindow;
