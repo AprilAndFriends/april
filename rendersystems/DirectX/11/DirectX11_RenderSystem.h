@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.34
 /// 
 /// @section LICENSE
 /// 
@@ -29,7 +29,7 @@ using namespace Windows::UI::Xaml::Controls;
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
-#include "RenderSystem.h"
+#include "DirectX_RenderSystem.h"
 #include "Window.h"
 
 using namespace Microsoft::WRL;
@@ -42,7 +42,7 @@ namespace april
 	class DirectX11_VertexShader;
 	class Window;
 
-	class DirectX11_RenderSystem : public RenderSystem
+	class DirectX11_RenderSystem : public DirectX_RenderSystem
 	{
 	public:
 		friend class DirectX11_PixelShader;
@@ -63,13 +63,12 @@ namespace april
 		void assignWindow(Window* window);
 		void reset();
 
-		float getPixelOffset() { return 0.0f; }
+		inline float getPixelOffset() { return 0.0f; }
 		int getMaxTextureSize();
-		harray<DisplayMode> getSupportedDisplayModes();
 		void setViewport(grect value);
 
 		void setTextureBlendMode(BlendMode textureBlendMode);
-		void setTextureColorMode(ColorMode textureColorMode, unsigned char alpha = 255);
+		void setTextureColorMode(ColorMode colorMode, float factor = 1.0f);
 		void setTextureFilter(Texture::Filter textureFilter);
 		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
 		void setTexture(Texture* texture);
@@ -85,14 +84,15 @@ namespace april
 
 		void clear(bool useColor = true, bool depth = false);
 		void clear(bool depth, grect rect, Color color = Color::Clear);
-		void render(RenderOp renderOp, PlainVertex* v, int nVertices);
-		void render(RenderOp renderOp, PlainVertex* v, int nVertices, Color color);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices);
-		void render(RenderOp renderOp, TexturedVertex* v, int nVertices, Color color);
-		void render(RenderOp renderOp, ColoredVertex* v, int nVertices);
-		void render(RenderOp renderOp, ColoredTexturedVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
-		Image* takeScreenshot(int bpp = 3);
+		Image::Format getNativeTextureFormat(Image::Format format);
+		Image* takeScreenshot(Image::Format format);
 		void presentFrame();
 
 		void updateOrientation();
@@ -123,9 +123,7 @@ namespace april
 		
 		void _setResolution(int w, int h, bool fullscreen);
 
-		Texture* _createTexture(chstr filename);
-		Texture* _createTexture(int w, int h, unsigned char* rgba);
-		Texture* _createTexture(int w, int h, Texture::Format format, Texture::Type type = Texture::TYPE_NORMAL, Color color = Color::Clear);
+		Texture* _createTexture(bool fromResource);
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
@@ -168,12 +166,12 @@ namespace april
 		ColorMode _currentTextureColorMode;
 		Texture::Filter _currentTextureFilter;
 		Texture::AddressMode _currentTextureAddressMode;
-		RenderOp _currentRenderOp;
+		RenderOperation _currentRenderOperation;
 		ID3D11Buffer** _currentVertexBuffer;
 		
 		bool matrixDirty;
 
-		void _setRenderOp(RenderOp renderOp);
+		void _setRenderOperation(RenderOperation renderOperation);
 		void _updateVertexBuffer(int nVertices, void* data);
 		void _updateConstantBuffer();
 		void _updateBlendMode();

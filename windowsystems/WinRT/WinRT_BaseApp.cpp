@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.34
 /// 
 /// @section LICENSE
 /// 
@@ -187,7 +187,7 @@ namespace april
 			{
 				this->currentButton = april::AK_MBUTTON;
 			}
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_DOWN, position, this->currentButton);
+			april::window->queueMouseEvent(april::Window::MOUSE_DOWN, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
@@ -201,7 +201,7 @@ namespace april
 				index = this->pointerIds.size();
 				this->pointerIds += id;
 			}
-			april::window->queueTouchEvent(april::Window::AMOUSEEVT_DOWN, position, index);
+			april::window->queueTouchEvent(april::Window::MOUSE_DOWN, position, index);
 #ifndef _WINP8
 			break;
 		}
@@ -223,7 +223,7 @@ namespace april
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
 			april::window->setInputMode(april::Window::MOUSE);
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_UP, position, this->currentButton);
+			april::window->queueMouseEvent(april::Window::MOUSE_UP, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
@@ -240,7 +240,7 @@ namespace april
 			{
 				this->pointerIds.remove_at(index);
 			}
-			april::window->queueTouchEvent(april::Window::AMOUSEEVT_UP, position, index);
+			april::window->queueTouchEvent(april::Window::MOUSE_UP, position, index);
 #ifndef _WINP8
 			break;
 		}
@@ -267,7 +267,7 @@ namespace april
 			{
 				april::window->setInputMode(april::Window::MOUSE);
 			}
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_MOVE, position, this->currentButton);
+			april::window->queueMouseEvent(april::Window::MOUSE_MOVE, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
@@ -280,7 +280,7 @@ namespace april
 			{
 				index = this->pointerIds.size();
 			}
-			april::window->queueTouchEvent(april::Window::AMOUSEEVT_MOVE, position, index);
+			april::window->queueTouchEvent(april::Window::MOUSE_MOVE, position, index);
 #ifndef _WINP8
 			break;
 		}
@@ -298,12 +298,12 @@ namespace april
 		float _wheelDelta = (float)args->CurrentPoint->Properties->MouseWheelDelta / WHEEL_DELTA;
 		if (this->scrollHorizontal ^ args->CurrentPoint->Properties->IsHorizontalMouseWheel)
 		{
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_SCROLL,
+			april::window->queueMouseEvent(april::Window::MOUSE_SCROLL,
 				gvec2(-(float)_wheelDelta, 0.0f), april::AK_NONE);
 		}
 		else
 		{
-			april::window->queueMouseEvent(april::Window::AMOUSEEVT_SCROLL,
+			april::window->queueMouseEvent(april::Window::MOUSE_SCROLL,
 				gvec2(0.0f, -(float)_wheelDelta), april::AK_NONE);
 		}
 		args->Handled = true;
@@ -316,7 +316,7 @@ namespace april
 			return;
 		}
 		april::Key key = (april::Key)args->VirtualKey;
-		april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, key, 0);
+		april::window->queueKeyEvent(april::Window::KEY_DOWN, key, 0);
 		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
 		{
 			this->scrollHorizontal = true;
@@ -331,7 +331,7 @@ namespace april
 			return;
 		}
 		april::Key key = (april::Key)args->VirtualKey;
-		april::window->queueKeyEvent(april::Window::AKEYEVT_UP, key, 0);
+		april::window->queueKeyEvent(april::Window::KEY_UP, key, 0);
 		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
 		{
 			this->scrollHorizontal = false;
@@ -349,7 +349,7 @@ namespace april
 		{
 			return;
 		}
-		april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, AK_NONE, args->KeyCode);
+		april::window->queueKeyEvent(april::Window::KEY_DOWN, AK_NONE, args->KeyCode);
 		args->Handled = true;
 	}
 
@@ -357,7 +357,7 @@ namespace april
 	{
 		for_iter_r (i, this->pointerIds.size(), 0)
 		{
-			april::window->queueTouchEvent(april::Window::AMOUSEEVT_CANCEL, gvec2(), i);
+			april::window->queueTouchEvent(april::Window::MOUSE_CANCEL, gvec2(), i);
 		}
 		this->pointerIds.clear();
 	}
