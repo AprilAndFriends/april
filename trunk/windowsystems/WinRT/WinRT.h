@@ -19,6 +19,7 @@
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
+#include "IWinRT.h"
 #include "WinRT_BaseApp.h"
 #ifndef _WINP8
 #include "WinRT_XamlOverlay.xaml.h"
@@ -26,7 +27,7 @@
 
 #ifndef _WINP8
 #define CHECK_SWAP(w, h)
-#else // on WinP8 the shaders may be in the root directory
+#else
 using namespace Windows::Graphics::Display;
 #define CHECK_SWAP(w, h) \
 	if (DisplayProperties::NativeOrientation == DisplayOrientations::Portrait || \

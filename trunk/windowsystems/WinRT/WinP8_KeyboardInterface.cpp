@@ -43,7 +43,7 @@ namespace april
 			{
 				if (text[i] != '\n' && text[i] != '\r')
 				{
-					april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, AK_NONE, text[i]);
+					april::window->queueKeyEvent(april::Window::KEY_DOWN, AK_NONE, text[i]);
 				}
 				else
 				{
