@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.31
+/// @version 3.35
 /// 
 /// @section LICENSE
 /// 
@@ -233,19 +233,6 @@ namespace april
 			surface->Release();
 		}
 		return true;
-	}
-
-	bool DirectX9_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
-	{
-		this->load();
-		Lock lock = this->_tryLockSystem(dx, dy, sw, sh);
-		if (lock.failed)
-		{
-			return false;
-		}
-		bool result = Image::write(sx, sy, sw, sh, lock.x, lock.y, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
-		this->_unlockSystem(lock, true);
-		return result;
 	}
 
 }

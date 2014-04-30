@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.34
+/// @version 3.35
 /// 
 /// @section LICENSE
 /// 
@@ -21,10 +21,7 @@
 
 namespace april
 {
-	// TODO - refactor
-	extern harray<DirectX11_Texture*> gRenderTargets;
-
-	DirectX11_Texture::DirectX11_Texture(bool fromResource) : DirectX_Texture(fromResource), renderTarget(false), dxgiFormat(DXGI_FORMAT_UNKNOWN)
+	DirectX11_Texture::DirectX11_Texture(bool fromResource) : DirectX_Texture(fromResource), dxgiFormat(DXGI_FORMAT_UNKNOWN)
 	{
 		this->d3dTexture = nullptr;
 		this->d3dView = nullptr;
@@ -34,33 +31,42 @@ namespace april
 	DirectX11_Texture::~DirectX11_Texture()
 	{
 		this->unload();
-		if (this->renderTarget)
-		{
-			gRenderTargets -= this;
-		}
 	}
 
 	bool DirectX11_Texture::_createInternalTexture(unsigned char* data, int size, Type type)
 	{
 		int bpp = Image::getFormatBpp(this->format);
-		// texture
 		D3D11_SUBRESOURCE_DATA textureSubresourceData = {0};
 		textureSubresourceData.pSysMem = data;
+		if (data != NULL)
+		{
+			Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+			if (Image::needsConversion(this->format, nativeFormat))
+			{
+				textureSubresourceData.pSysMem = NULL;
+				Image::convertToFormat(this->width, this->height, data, this->format, (unsigned char**)&textureSubresourceData.pSysMem, nativeFormat);
+			}
+		}
+		// texture
 		textureSubresourceData.SysMemPitch = this->width * bpp;
 		textureSubresourceData.SysMemSlicePitch = 0;
 		D3D11_TEXTURE2D_DESC textureDesc = {0};
 		textureDesc.Width = this->width;
 		textureDesc.Height = this->height;
-		textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		if (this->type == TYPE_IMMUTABLE)
 		{
-			textureDesc.Usage = D3D11_USAGE_DEFAULT;
+			textureDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			textureDesc.CPUAccessFlags = 0;
 		}
-		else // TODOaa - managed as well?
+		else if (this->type == TYPE_VOLATILE)
 		{
 			textureDesc.Usage = D3D11_USAGE_DYNAMIC;
 			textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		}
+		else
+		{
+			textureDesc.Usage = D3D11_USAGE_DEFAULT;
+			textureDesc.CPUAccessFlags = 0;
 		}
 		if (this->type == TYPE_RENDER_TARGET)
 		{
@@ -74,6 +80,10 @@ namespace april
 		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 		textureDesc.Format = this->dxgiFormat;
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
+		if (textureSubresourceData.pSysMem != data)
+		{
+			delete [] textureSubresourceData.pSysMem;
+		}
 		if (FAILED(hr))
 		{
 			hlog::error(april::logTag, "Failed to create DX11 texture!");
@@ -129,6 +139,9 @@ namespace april
 		case Image::FORMAT_PALETTE: // TODOaa - needs changing
 			this->dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
 			break;
+		default:
+			this->dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
+			break;
 		}
 	}
 
@@ -152,15 +165,23 @@ namespace april
 	{
 		Lock lock;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		int nativeBpp = Image::getFormatBpp(nativeFormat);
-		D3D11_MAPPED_SUBRESOURCE* mappedSubResource = new D3D11_MAPPED_SUBRESOURCE();
-		memset(mappedSubResource, 0, sizeof(D3D11_MAPPED_SUBRESOURCE));
-		// TODOa - maybe there is a good way to lock only part of the resource
-		HRESULT hr = APRIL_D3D_DEVICE_CONTEXT->Map(this->d3dTexture.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, mappedSubResource);
-		if (!FAILED(hr))
+		int gpuBpp = Image::getFormatBpp(nativeFormat);
+		if (this->type == TYPE_VOLATILE)
 		{
-			lock.systemBuffer = mappedSubResource;
-			lock.activateLock(x, y, w, h, x, y, (unsigned char*)mappedSubResource->pData, mappedSubResource->RowPitch / nativeBpp, this->height, nativeFormat);
+			D3D11_MAPPED_SUBRESOURCE* mappedSubResource = new D3D11_MAPPED_SUBRESOURCE();
+			memset(mappedSubResource, 0, sizeof(D3D11_MAPPED_SUBRESOURCE));
+			// TODOa - maybe there is a good way to lock only part of the resource
+			HRESULT hr = APRIL_D3D_DEVICE_CONTEXT->Map(this->d3dTexture.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, mappedSubResource);
+			if (!FAILED(hr))
+			{
+				lock.systemBuffer = mappedSubResource;
+				lock.activateLock(x, y, w, h, x, y, (unsigned char*)mappedSubResource->pData, mappedSubResource->RowPitch / gpuBpp, this->height, nativeFormat);
+			}
+		}
+		else
+		{
+			lock.activateLock(0, 0, w, h, x, y, new unsigned char[w * h * gpuBpp], w, h, nativeFormat);
+			lock.systemBuffer = lock.data;
 		}
 		return lock;
 	}
@@ -175,28 +196,38 @@ namespace april
 		{
 			if (lock.locked)
 			{
-				APRIL_D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
+				if (this->type == TYPE_VOLATILE)
+				{
+					APRIL_D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
+				}
+				else
+				{
+					int bpp = Image::getFormatBpp(lock.format);
+					D3D11_BOX box;
+					box.left = lock.dx;
+					box.right = lock.dx + lock.w;
+					box.top = lock.dy;
+					box.bottom = lock.dy + lock.h;
+					box.front = 0;
+					box.back = 1;
+					// using UpdateSubresource1() because UpdateSubresource() has problems with deferred contexts and non-NULL boxes
+					APRIL_D3D_DEVICE_CONTEXT->UpdateSubresource1(this->d3dTexture.Get(), 0, &box, lock.data, lock.w * bpp, 0, D3D11_COPY_DISCARD);
+				}
 			}
 			else if (lock.renderTarget)
 			{
 				// TODOaa - implement
 			}
 		}
-		delete (D3D11_MAPPED_SUBRESOURCE*)lock.systemBuffer;
-		return true;
-	}
-
-	bool DirectX11_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
-	{
-		this->load();
-		Lock lock = this->_tryLockSystem(dx, dy, sw, sh);
-		if (lock.failed)
+		if (this->type == TYPE_VOLATILE)
 		{
-			return false;
+			delete (D3D11_MAPPED_SUBRESOURCE*)lock.systemBuffer;
 		}
-		bool result = Image::write(sx, sy, sw, sh, lock.x, lock.y, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
-		this->_unlockSystem(lock, true);
-		return result;
+		else
+		{
+			delete [] lock.data;
+		}
+		return update;
 	}
 
 }

@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.34
+/// @version 3.35
 /// 
 /// @section LICENSE
 /// 
@@ -70,9 +70,6 @@ using namespace Windows::Graphics::Display;
 namespace april
 {
 	static ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
-
-	// TODO - refactor
-	harray<DirectX11_Texture*> gRenderTargets;
 
 	D3D11_PRIMITIVE_TOPOLOGY dx11_render_ops[]=
 	{
