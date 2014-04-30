@@ -101,8 +101,8 @@ namespace april
 	{
 		if (april::window != NULL && april::window->getParam(WINP8_BACK_BUTTON_SYSTEM_HANDLING) != "1")
 		{
-			april::window->queueKeyEvent(april::Window::AKEYEVT_DOWN, april::AK_ESCAPE, 0);
-			april::window->queueKeyEvent(april::Window::AKEYEVT_UP, april::AK_ESCAPE, 0);
+			april::window->queueKeyEvent(april::Window::KEY_DOWN, april::AK_ESCAPE, 0);
+			april::window->queueKeyEvent(april::Window::KEY_UP, april::AK_ESCAPE, 0);
 			args->Handled = true;
 		}
 	}
