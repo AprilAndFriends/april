@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.34
+/// @version 3.35
 /// 
 /// @section LICENSE
 /// 
@@ -43,15 +43,12 @@ namespace april
 		ComPtr<ID3D11ShaderResourceView> d3dView;
 		ComPtr<ID3D11RenderTargetView> d3dRenderTargetView;
 		DXGI_FORMAT dxgiFormat;
-		// TODOaa - may be unused, remove if not needed anymore
-		bool renderTarget;
 
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
 		void _assignFormat();
 
 		Lock _tryLockSystem(int x, int y, int w, int h);
 		bool _unlockSystem(Lock& lock, bool update);
-		bool _uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 
 	};
 

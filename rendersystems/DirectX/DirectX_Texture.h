@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.35
 /// 
 /// @section LICENSE
 /// 
@@ -25,6 +25,8 @@ namespace april
 	public:
 		DirectX_Texture(bool fromResource);
 		~DirectX_Texture();
+
+		bool _uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 
 	};
 
