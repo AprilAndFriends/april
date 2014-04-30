@@ -135,6 +135,36 @@
       <AntBuildType>Debug</AntBuildType>
     </AntBuild>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseS|Android'">
+    <AntBuild />
+    <AntBuild>
+      <AntBuildType>Debug</AntBuildType>
+    </AntBuild>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugS|Android'">
+    <AntBuild />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Android'">
+    <AntBuild />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Android'">
+    <AntBuild />
+    <AntBuild>
+      <AntBuildType>Debug</AntBuildType>
+    </AntBuild>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugS|Android-x86'">
+    <AntBuild />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Android-x86'">
+    <AntBuild />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Android-x86'">
+    <AntBuild />
+    <AntBuild>
+      <AntBuildType>Debug</AntBuildType>
+    </AntBuild>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\gtypes\libgtypes.vcxproj">
       <Project>{9c043b29-db40-48d5-97d8-1bc44128e3ba}</Project>

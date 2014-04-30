@@ -1,4 +1,4 @@
-package com.example.april.android.demo3d;
+package com.april.demo3d;
 
 public class Demo3d extends com.april.Activity
 {

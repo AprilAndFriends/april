@@ -1,4 +1,4 @@
-package com.example.april.android.demoTicTacToe;
+package com.april.demoTicTacToe;
 
 public class DemoTicTacToe extends com.april.Activity
 {

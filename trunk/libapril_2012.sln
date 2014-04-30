@@ -1003,7 +1003,6 @@ Global
 		{C21E5B3F-F2EF-4F4A-8F30-00A2DA05F3D9}.ReleaseS_OpenGL1|Win32.ActiveCfg = Release|Win32
 		{C21E5B3F-F2EF-4F4A-8F30-00A2DA05F3D9}.ReleaseS_OpenGLES1|Android.ActiveCfg = Release|Android
 		{C21E5B3F-F2EF-4F4A-8F30-00A2DA05F3D9}.ReleaseS_OpenGLES1|Android.Build.0 = Release|Android
-		{C21E5B3F-F2EF-4F4A-8F30-00A2DA05F3D9}.ReleaseS_OpenGLES1|Android.Deploy.0 = Release|Android
 		{C21E5B3F-F2EF-4F4A-8F30-00A2DA05F3D9}.ReleaseS_OpenGLES1|Android-x86.ActiveCfg = Release|Android-x86
 		{C21E5B3F-F2EF-4F4A-8F30-00A2DA05F3D9}.ReleaseS_OpenGLES1|Android-x86.Build.0 = Release|Android-x86
 		{C21E5B3F-F2EF-4F4A-8F30-00A2DA05F3D9}.ReleaseS_OpenGLES1|Win32.ActiveCfg = Release|Win32
