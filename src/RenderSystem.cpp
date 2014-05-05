@@ -25,7 +25,6 @@
 #include "april.h"
 #include "aprilUtil.h"
 #include "Image.h"
-#include "RamTexture.h"
 #include "RenderSystem.h"
 #include "Platform.h"
 #include "Texture.h"
@@ -263,22 +262,6 @@ namespace april
 		return texture;
 	}
 
-	Texture* RenderSystem::createRamTexture(chstr filename, bool loadImmediately)
-	{
-		hstr name = this->findTextureResource(filename);
-		if (name == "")
-		{
-			return NULL;
-		}
-		Texture* texture = new RamTexture(name);
-		if (!texture->_create(name, Texture::TYPE_MANAGED) || (loadImmediately && !texture->load() && !texture->isLoaded()))
-		{
-			delete texture;
-			return NULL;
-		}
-		return texture;
-	}
-	
 	void RenderSystem::unloadTextures()
 	{
 		foreach (Texture*, it, this->textures)

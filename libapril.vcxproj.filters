@@ -164,9 +164,6 @@
     <ClCompile Include="src\aprilUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\RamTexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="rendersystems\DirectX\DirectX_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\DirectX</Filter>
     </ClCompile>
@@ -332,9 +329,6 @@
       <Filter>Header Files\windowsystems\Win32</Filter>
     </ClInclude>
     <ClInclude Include="include\april\aprilUtil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\april\RamTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\april\androidUtilJNI.h">
