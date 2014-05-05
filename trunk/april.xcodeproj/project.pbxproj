@@ -46,7 +46,6 @@
 		D1134EF4175CDA3300BFF3A2 /* VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F9214BB109B005BD333 /* VertexShader.cpp */; };
 		D1134EF5175CDA3300BFF3A2 /* april.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9E6097C150518B400EB077F /* april.cpp */; };
 		D1134EF9175CDA3300BFF3A2 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF818158737A000D31573 /* Platform.cpp */; };
-		D1134EFA175CDA3300BFF3A2 /* RamTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF819158737A000D31573 /* RamTexture.cpp */; };
 		D1134EFB175CDA3300BFF3A2 /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
 		D1134EFC175CDA3300BFF3A2 /* EventDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */; };
 		D1134EFD175CDA3300BFF3A2 /* InputDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */; };
@@ -107,10 +106,7 @@
 		D14BF81715872B4900D31573 /* Mac_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D14BF81515872B4900D31573 /* Mac_Platform.mm */; };
 		D14BF81A158737A000D31573 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF818158737A000D31573 /* Platform.cpp */; };
 		D14BF81B158737A000D31573 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF818158737A000D31573 /* Platform.cpp */; };
-		D14BF81C158737A000D31573 /* RamTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF819158737A000D31573 /* RamTexture.cpp */; };
-		D14BF81D158737A000D31573 /* RamTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF819158737A000D31573 /* RamTexture.cpp */; };
 		D14BF820158737B300D31573 /* aprilUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D14BF81E158737B300D31573 /* aprilUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D14BF821158737B300D31573 /* RamTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = D14BF81F158737B300D31573 /* RamTexture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D14BF96A15875F3300D31573 /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
 		D14BF96B15875F3300D31573 /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
 		D153474F178AD62A00151D1A /* OpenGL_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B520C12E470B200E958D8 /* OpenGL_RenderSystem.cpp */; };
@@ -123,7 +119,6 @@
 		D1534756178AD62A00151D1A /* VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F9214BB109B005BD333 /* VertexShader.cpp */; };
 		D1534757178AD62A00151D1A /* april.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9E6097C150518B400EB077F /* april.cpp */; };
 		D1534758178AD62A00151D1A /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF818158737A000D31573 /* Platform.cpp */; };
-		D1534759178AD62A00151D1A /* RamTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF819158737A000D31573 /* RamTexture.cpp */; };
 		D153475A178AD62A00151D1A /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
 		D153475B178AD62A00151D1A /* EventDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */; };
 		D153475C178AD62A00151D1A /* InputDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */; };
@@ -182,7 +177,6 @@
 		D1AF66A9170B1E5900A43743 /* Mac_main.mm in Sources */ = {isa = PBXBuildFile; fileRef = D14BF81415872B4900D31573 /* Mac_main.mm */; };
 		D1AF66AA170B1E5900A43743 /* Mac_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D14BF81515872B4900D31573 /* Mac_Platform.mm */; };
 		D1AF66AB170B1E5900A43743 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF818158737A000D31573 /* Platform.cpp */; };
-		D1AF66AC170B1E5900A43743 /* RamTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF819158737A000D31573 /* RamTexture.cpp */; };
 		D1AF66AD170B1E5900A43743 /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
 		D1AF66AE170B1E5900A43743 /* EventDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */; };
 		D1AF66AF170B1E5900A43743 /* InputDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */; };
@@ -210,7 +204,6 @@
 		D1AF66C8170B1E5900A43743 /* VertexShader.h in Headers */ = {isa = PBXBuildFile; fileRef = C9C04F8F14BB1091005BD333 /* VertexShader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1AF66CA170B1E5900A43743 /* aprilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B522712E4710D00E958D8 /* aprilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1AF66CB170B1E5900A43743 /* aprilUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D14BF81E158737B300D31573 /* aprilUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D1AF66CC170B1E5900A43743 /* RamTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = D14BF81F158737B300D31573 /* RamTexture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1AF66CD170B1E5900A43743 /* EventDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203116D37B2700B9C9AD /* EventDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1AF66CE170B1E5900A43743 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203216D37B2700B9C9AD /* Image.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1AF66CF170B1E5900A43743 /* InputDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203316D37B2700B9C9AD /* InputDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -284,7 +277,6 @@
 		D1F27AC9177A2DF700E5C131 /* VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F9214BB109B005BD333 /* VertexShader.cpp */; };
 		D1F27ACA177A2DF700E5C131 /* april.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9E6097C150518B400EB077F /* april.cpp */; };
 		D1F27ACB177A2DF700E5C131 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF818158737A000D31573 /* Platform.cpp */; };
-		D1F27ACC177A2DF700E5C131 /* RamTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF819158737A000D31573 /* RamTexture.cpp */; };
 		D1F27ACD177A2DF700E5C131 /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
 		D1F27ACE177A2DF700E5C131 /* EventDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */; };
 		D1F27ACF177A2DF700E5C131 /* InputDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */; };
@@ -393,9 +385,7 @@
 		D14BF81415872B4900D31573 /* Mac_main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_main.mm; path = platforms/Mac_main.mm; sourceTree = "<group>"; };
 		D14BF81515872B4900D31573 /* Mac_Platform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_Platform.mm; path = platforms/Mac_Platform.mm; sourceTree = "<group>"; };
 		D14BF818158737A000D31573 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Platform.cpp; path = src/Platform.cpp; sourceTree = "<group>"; };
-		D14BF819158737A000D31573 /* RamTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RamTexture.cpp; path = src/RamTexture.cpp; sourceTree = "<group>"; };
 		D14BF81E158737B300D31573 /* aprilUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = aprilUtil.h; path = include/april/aprilUtil.h; sourceTree = "<group>"; };
-		D14BF81F158737B300D31573 /* RamTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RamTexture.h; path = include/april/RamTexture.h; sourceTree = "<group>"; };
 		D14BF96915875F3300D31573 /* aprilUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = aprilUtil.cpp; path = src/aprilUtil.cpp; sourceTree = "<group>"; };
 		D1534776178AD62A00151D1A /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1681BA618D768400088FC68 /* iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = iOS.xcconfig; path = xcconfig/iOS.xcconfig; sourceTree = "<group>"; };
@@ -626,7 +616,6 @@
 				D136818D187BFB3E00E66E32 /* RenderState.cpp */,
 				D14BF96915875F3300D31573 /* aprilUtil.cpp */,
 				D14BF818158737A000D31573 /* Platform.cpp */,
-				D14BF819158737A000D31573 /* RamTexture.cpp */,
 				C9E6097C150518B400EB077F /* april.cpp */,
 				C9C04F8A14BB106F005BD333 /* PixelShader.cpp */,
 				C9C04F9214BB109B005BD333 /* VertexShader.cpp */,
@@ -654,7 +643,6 @@
 				D13681A1187BFB6600E66E32 /* Win32_main.h */,
 				D13681A2187BFB6600E66E32 /* WinRT_main.h */,
 				D14BF81E158737B300D31573 /* aprilUtil.h */,
-				D14BF81F158737B300D31573 /* RamTexture.h */,
 				C9E6098D1505191800EB077F /* april.h */,
 				C9E6098E1505191800EB077F /* Platform.h */,
 				C9C04F8E14BB1091005BD333 /* PixelShader.h */,
@@ -1056,7 +1044,6 @@
 				C9C04F9114BB1091005BD333 /* VertexShader.h in Headers */,
 				7F1B522A12E4710D00E958D8 /* aprilExport.h in Headers */,
 				D14BF820158737B300D31573 /* aprilUtil.h in Headers */,
-				D14BF821158737B300D31573 /* RamTexture.h in Headers */,
 				D1E7203916D37B2700B9C9AD /* EventDelegate.h in Headers */,
 				D1E7203A16D37B2700B9C9AD /* Image.h in Headers */,
 				D1E7203B16D37B2700B9C9AD /* InputDelegate.h in Headers */,
@@ -1089,7 +1076,6 @@
 				D1AF66C8170B1E5900A43743 /* VertexShader.h in Headers */,
 				D1AF66CA170B1E5900A43743 /* aprilExport.h in Headers */,
 				D1AF66CB170B1E5900A43743 /* aprilUtil.h in Headers */,
-				D1AF66CC170B1E5900A43743 /* RamTexture.h in Headers */,
 				D1AF66CD170B1E5900A43743 /* EventDelegate.h in Headers */,
 				D1AF66CE170B1E5900A43743 /* Image.h in Headers */,
 				D1AF66CF170B1E5900A43743 /* InputDelegate.h in Headers */,
@@ -1258,7 +1244,6 @@
 				D14BF81615872B4900D31573 /* Mac_main.mm in Sources */,
 				D14BF81715872B4900D31573 /* Mac_Platform.mm in Sources */,
 				D14BF81A158737A000D31573 /* Platform.cpp in Sources */,
-				D14BF81C158737A000D31573 /* RamTexture.cpp in Sources */,
 				D14BF96A15875F3300D31573 /* aprilUtil.cpp in Sources */,
 				D1E7204B16D37C2300B9C9AD /* EventDelegate.cpp in Sources */,
 				D1E7204E16D37C2300B9C9AD /* InputDelegate.cpp in Sources */,
@@ -1295,7 +1280,6 @@
 				D1134EF4175CDA3300BFF3A2 /* VertexShader.cpp in Sources */,
 				D1134EF5175CDA3300BFF3A2 /* april.cpp in Sources */,
 				D1134EF9175CDA3300BFF3A2 /* Platform.cpp in Sources */,
-				D1134EFA175CDA3300BFF3A2 /* RamTexture.cpp in Sources */,
 				D1134EFB175CDA3300BFF3A2 /* aprilUtil.cpp in Sources */,
 				D1134EFC175CDA3300BFF3A2 /* EventDelegate.cpp in Sources */,
 				D1134EFD175CDA3300BFF3A2 /* InputDelegate.cpp in Sources */,
@@ -1344,7 +1328,6 @@
 				D1534756178AD62A00151D1A /* VertexShader.cpp in Sources */,
 				D1534757178AD62A00151D1A /* april.cpp in Sources */,
 				D1534758178AD62A00151D1A /* Platform.cpp in Sources */,
-				D1534759178AD62A00151D1A /* RamTexture.cpp in Sources */,
 				D153475A178AD62A00151D1A /* aprilUtil.cpp in Sources */,
 				D153475B178AD62A00151D1A /* EventDelegate.cpp in Sources */,
 				D153475C178AD62A00151D1A /* InputDelegate.cpp in Sources */,
@@ -1397,7 +1380,6 @@
 				D14BF81215872B4000D31573 /* iOS_main.mm in Sources */,
 				D14BF81315872B4000D31573 /* iOS_Platform.mm in Sources */,
 				D14BF81B158737A000D31573 /* Platform.cpp in Sources */,
-				D14BF81D158737A000D31573 /* RamTexture.cpp in Sources */,
 				D14BF96B15875F3300D31573 /* aprilUtil.cpp in Sources */,
 				D1E7204C16D37C2300B9C9AD /* EventDelegate.cpp in Sources */,
 				D1E7204F16D37C2300B9C9AD /* InputDelegate.cpp in Sources */,
@@ -1443,7 +1425,6 @@
 				D1AF66AA170B1E5900A43743 /* Mac_Platform.mm in Sources */,
 				D1AF66F6170B1E8800A43743 /* Mac_Window.mm in Sources */,
 				D1AF66AB170B1E5900A43743 /* Platform.cpp in Sources */,
-				D1AF66AC170B1E5900A43743 /* RamTexture.cpp in Sources */,
 				D1AF66AD170B1E5900A43743 /* aprilUtil.cpp in Sources */,
 				D1AF66AE170B1E5900A43743 /* EventDelegate.cpp in Sources */,
 				D136818E187BFB3E00E66E32 /* main_base.cpp in Sources */,
@@ -1484,7 +1465,6 @@
 				D1F27AC9177A2DF700E5C131 /* VertexShader.cpp in Sources */,
 				D1F27ACA177A2DF700E5C131 /* april.cpp in Sources */,
 				D1F27ACB177A2DF700E5C131 /* Platform.cpp in Sources */,
-				D1F27ACC177A2DF700E5C131 /* RamTexture.cpp in Sources */,
 				D1F27ACD177A2DF700E5C131 /* aprilUtil.cpp in Sources */,
 				D1F27ACE177A2DF700E5C131 /* EventDelegate.cpp in Sources */,
 				D1F27ACF177A2DF700E5C131 /* InputDelegate.cpp in Sources */,
