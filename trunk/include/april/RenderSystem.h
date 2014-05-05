@@ -35,7 +35,6 @@ namespace april
 {
 	class Image;
 	class PixelShader;
-	class RamTexture;
 	class Texture;
 	class VertexShader;
 	class Window;
@@ -120,7 +119,6 @@ namespace april
 		Texture* createTextureFromFile(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, bool loadImmediately = true);
 		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
 		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
-		Texture* createRamTexture(chstr filename, bool loadImmediately = true); // TODOaa - will be removed in a future version
 		virtual PixelShader* createPixelShader() = 0;
 		virtual PixelShader* createPixelShader(chstr filename) = 0;
 		virtual VertexShader* createVertexShader() = 0;
