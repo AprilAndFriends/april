@@ -37,6 +37,7 @@ public class Activity extends android.app.Activity
 	public Activity()
 	{
 		super();
+		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 		this.ignoredKeys = new ArrayList();
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_DOWN);
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_UP);
@@ -58,7 +59,7 @@ public class Activity extends android.app.Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		android.util.Log.i("april", "Initializing april Activity class");
+		android.util.Log.i("april", "Initializing april Activity class.");
 		android.util.Log.i("april", "Android device: '" + Build.MANUFACTURER + "' / '" + Build.MODEL + "'");
 		super.onCreate(savedInstanceState);
 		NativeInterface.Activity = (android.app.Activity)this;
@@ -193,13 +194,8 @@ public class Activity extends android.app.Activity
 		{
 			return false;
 		}
-		this.GlView.queueEvent(new Runnable()
-		{
-			public void run()
-			{
-				NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
-			}
-		});
+		// input events are now queued in C++ and don't require this.GlView.queueEvent() here
+		NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
 		return true;
 	}
 	
@@ -210,13 +206,8 @@ public class Activity extends android.app.Activity
 		{
 			return false;
 		}
-		this.GlView.queueEvent(new Runnable()
-		{
-			public void run()
-			{
-				NativeInterface.onKeyUp(event.getKeyCode());
-			}
-		});
+		// input events are now queued in C++ and don't require this.GlView.queueEvent() here
+		NativeInterface.onKeyUp(event.getKeyCode());
 		return true;
 	}
 	
