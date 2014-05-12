@@ -18,7 +18,7 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 {
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
-		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 		NativeInterface.onSurfaceCreated();
 		if (!NativeInterface.Running)
 		{

@@ -58,7 +58,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
 			type = 1;
 			break;
-		case MotionEvent.ACTION_MOVE: // Android batches multitouch move events into a single move event
+		case MotionEvent.ACTION_MOVE: // Android batches multi-touch move events into a single move event
 			type = 3;
 			break;
 		default:
@@ -67,12 +67,17 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		}
 		if (type >= 0)
 		{
-			// input events are now queued in C++ and don't require this.queueEvent() here
-			final int pointerCount = event.getPointerCount();
-			for (int i = 0; i < pointerCount; i++)
+			this.queueEvent(new Runnable()
 			{
-				NativeInterface.onTouch(type, event.getX(i), event.getY(i), i);
-			}
+				public void run()
+				{
+					final int pointerCount = event.getPointerCount();
+					for (int i = 0; i < pointerCount; i++)
+					{
+						NativeInterface.onTouch(type, event.getX(i), event.getY(i), i);
+					}
+				}
+			});
 			return true;
 		}
 		return false;

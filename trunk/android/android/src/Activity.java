@@ -194,8 +194,13 @@ public class Activity extends android.app.Activity
 		{
 			return false;
 		}
-		// input events are now queued in C++ and don't require this.GlView.queueEvent() here
-		NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
+		this.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
+			}
+		});
 		return true;
 	}
 	
@@ -206,8 +211,13 @@ public class Activity extends android.app.Activity
 		{
 			return false;
 		}
-		// input events are now queued in C++ and don't require this.GlView.queueEvent() here
-		NativeInterface.onKeyUp(event.getKeyCode());
+		this.GlView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onKeyUp(event.getKeyCode());
+			}
+		});
 		return true;
 	}
 	
