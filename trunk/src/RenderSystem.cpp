@@ -370,10 +370,9 @@ namespace april
 				return name;
 			}
 		}
-		int index = filename.rfind(".");
-		if (index >= 0)
+		hstr noExtensionName = hfile::no_extension(filename);
+		if (noExtensionName != filename)
 		{
-			hstr noExtensionName = filename.substr(0, index);
 			foreach (hstr, it, extensions)
 			{
 				name = noExtensionName + (*it);
@@ -402,10 +401,9 @@ namespace april
 				return name;
 			}
 		}
-		int index = filename.rfind(".");
-		if (index >= 0)
+		hstr noExtensionName = hfile::no_extension(filename);
+		if (noExtensionName != filename)
 		{
-			hstr noExtensionName = filename.substr(0, index);
 			foreach (hstr, it, extensions)
 			{
 				name = noExtensionName + (*it);

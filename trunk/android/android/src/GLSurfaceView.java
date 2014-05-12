@@ -22,7 +22,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		// view has to be properly focusable to be able to process input
 		this.setFocusable(true);
 		this.setFocusableInTouchMode(true);
-		this.setId(0x0513BEEF); // who doesn't love half a kg of beef?
+		this.setId(0x0513BEEF); // who doesn't love half a kilo of beef?
 	}
 	
 	@Override
@@ -43,6 +43,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		});
 	}
 	
+	@Override
 	public boolean onTouchEvent(final MotionEvent event)
 	{
 		final int action = event.getAction();
@@ -66,17 +67,12 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		}
 		if (type >= 0)
 		{
-			this.queueEvent(new Runnable()
+			// input events are now queued in C++ and don't require this.queueEvent() here
+			final int pointerCount = event.getPointerCount();
+			for (int i = 0; i < pointerCount; i++)
 			{
-				public void run()
-				{
-					final int pointerCount = event.getPointerCount();
-					for (int i = 0; i < pointerCount; i++)
-					{
-						NativeInterface.onTouch(type, event.getX(i), event.getY(i), i);
-					}
-				}
-			});
+				NativeInterface.onTouch(type, event.getX(i), event.getY(i), i);
+			}
 			return true;
 		}
 		return false;
