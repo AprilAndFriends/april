@@ -57,7 +57,7 @@ namespace april
 		void OnRender(_In_ Object^ sender, _In_ Object^ args);
 		
 	protected:
-		void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;
+		virtual void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;
 		
 	private:
 		WinRT_BaseApp^ app;
