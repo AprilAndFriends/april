@@ -55,7 +55,7 @@ namespace april
 		{
 			int dummySize = this->width * this->height * bpp;
 			textureSubresourceData.pSysMem = new unsigned char[dummySize];
-			memset((unsigned char*)&textureSubresourceData.pSysMem, 0, dummySize);
+			memset((unsigned char*)textureSubresourceData.pSysMem, 0, dummySize);
 		}
 		// texture
 		textureSubresourceData.SysMemPitch = this->width * bpp;
@@ -206,7 +206,7 @@ namespace april
 		{
 			if (lock.locked)
 			{
-				if (this->internalType == TYPE_VOLATILE && !this->firstUpload)
+				if (this->internalType == TYPE_VOLATILE)
 				{
 					APRIL_D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
 				}
@@ -230,7 +230,7 @@ namespace april
 			}
 			this->firstUpload = false;
 		}
-		if (this->type == TYPE_VOLATILE)
+		if (this->internalType == TYPE_VOLATILE)
 		{
 			delete (D3D11_MAPPED_SUBRESOURCE*)lock.systemBuffer;
 		}
