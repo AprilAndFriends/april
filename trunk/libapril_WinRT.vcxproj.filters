@@ -122,9 +122,6 @@
     <ClCompile Include="src\aprilUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\RamTexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="platforms\WinRT_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
@@ -299,9 +296,6 @@
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
     <ClInclude Include="include\april\aprilUtil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\april\RamTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rendersystems\DirectX\11\DirectX11_PixelShader.h">
