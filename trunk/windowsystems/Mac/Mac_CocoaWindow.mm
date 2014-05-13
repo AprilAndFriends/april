@@ -152,7 +152,7 @@ static bool gFullscreenToggleRequest = false;
 
 - (NSApplicationPresentationOptions)window:(NSWindow*) window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions) proposedOptions
 {
-	return NSApplicationPresentationFullScreen | NSApplicationPresentationAutoHideMenuBar | NSApplicationPresentationHideDock;
+	return (proposedOptions| NSApplicationPresentationAutoHideToolbar | NSApplicationPresentationAutoHideMenuBar);
 }
 
 - (void)windowWillEnterFullScreen:(NSNotification*) notification
@@ -215,6 +215,9 @@ static bool gFullscreenToggleRequest = false;
 
 	[self setWindowedStyleMask];
 	[self setFrame:mWindowedRect display:YES];
+	// for some reason, MacOSX 10.9 forgets the title after returning from fullscreen..
+	[self setTitle:[NSString stringWithUTF8String:aprilWindow->getTitle().c_str()]];
+
 
 }
 
