@@ -37,7 +37,6 @@ namespace april
 		unsigned int textureId;
 		int glFormat;
 		int internalFormat;
-		bool firstUpload;
 
 		void _setCurrentTexture();
 

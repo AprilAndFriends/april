@@ -48,7 +48,6 @@ namespace april
 
 	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0)
 	{
-		this->firstUpload = true;
 	}
 
 	bool OpenGL_Texture::_createInternalTexture(unsigned char* data, int size, Type type)

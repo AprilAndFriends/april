@@ -43,6 +43,7 @@ namespace april
 		ComPtr<ID3D11ShaderResourceView> d3dView;
 		ComPtr<ID3D11RenderTargetView> d3dRenderTargetView;
 		DXGI_FORMAT dxgiFormat;
+		Type internalType;
 
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
 		void _assignFormat();

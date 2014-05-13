@@ -35,9 +35,11 @@ namespace april
 
 	bool DirectX11_Texture::_createInternalTexture(unsigned char* data, int size, Type type)
 	{
+		this->internalType = type;
 		int bpp = Image::getFormatBpp(this->format);
 		D3D11_SUBRESOURCE_DATA textureSubresourceData = {0};
 		textureSubresourceData.pSysMem = data;
+		this->firstUpload = true;
 		if (data != NULL)
 		{
 			Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
@@ -45,7 +47,15 @@ namespace april
 			{
 				textureSubresourceData.pSysMem = NULL;
 				Image::convertToFormat(this->width, this->height, data, this->format, (unsigned char**)&textureSubresourceData.pSysMem, nativeFormat);
+				bpp = Image::getFormatBpp(nativeFormat);
 			}
+			this->firstUpload = false;
+		}
+		else
+		{
+			int dummySize = this->width * this->height * bpp;
+			textureSubresourceData.pSysMem = new unsigned char[dummySize];
+			memset((unsigned char*)&textureSubresourceData.pSysMem, 0, dummySize);
 		}
 		// texture
 		textureSubresourceData.SysMemPitch = this->width * bpp;
@@ -53,12 +63,12 @@ namespace april
 		D3D11_TEXTURE2D_DESC textureDesc = {0};
 		textureDesc.Width = this->width;
 		textureDesc.Height = this->height;
-		if (this->type == TYPE_IMMUTABLE)
+		if (type == TYPE_IMMUTABLE)
 		{
 			textureDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			textureDesc.CPUAccessFlags = 0;
 		}
-		else if (this->type == TYPE_VOLATILE)
+		else if (type == TYPE_VOLATILE)
 		{
 			textureDesc.Usage = D3D11_USAGE_DYNAMIC;
 			textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -68,7 +78,7 @@ namespace april
 			textureDesc.Usage = D3D11_USAGE_DEFAULT;
 			textureDesc.CPUAccessFlags = 0;
 		}
-		if (this->type == TYPE_RENDER_TARGET)
+		if (type == TYPE_RENDER_TARGET)
 		{
 			textureDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
 		}
@@ -82,7 +92,7 @@ namespace april
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
 		if (textureSubresourceData.pSysMem != data)
 		{
-			delete [] textureSubresourceData.pSysMem;
+			delete [] (unsigned char*)textureSubresourceData.pSysMem;
 		}
 		if (FAILED(hr))
 		{
@@ -131,7 +141,7 @@ namespace april
 			this->dxgiFormat = DXGI_FORMAT_B8G8R8X8_UNORM;
 			break;
 		case Image::FORMAT_ALPHA:
-			this->dxgiFormat = DXGI_FORMAT_A8_UNORM; // TODOaa - check if this is properly supported
+			this->dxgiFormat = DXGI_FORMAT_R8_UNORM;
 			break;
 		case Image::FORMAT_GRAYSCALE:
 			this->dxgiFormat = DXGI_FORMAT_R8_UNORM;
@@ -196,7 +206,7 @@ namespace april
 		{
 			if (lock.locked)
 			{
-				if (this->type == TYPE_VOLATILE)
+				if (this->internalType == TYPE_VOLATILE && !this->firstUpload)
 				{
 					APRIL_D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
 				}
@@ -218,6 +228,7 @@ namespace april
 			{
 				// TODOaa - implement
 			}
+			this->firstUpload = false;
 		}
 		if (this->type == TYPE_VOLATILE)
 		{

@@ -165,6 +165,7 @@ namespace april
 		AddressMode addressMode;
 		unsigned char* data;
 		bool fromResource;
+		bool firstUpload; // required because of how some rendering systems work
 
 		virtual bool _create(chstr filename, Type type);
 		virtual bool _create(chstr filename, Image::Format format, Type type);

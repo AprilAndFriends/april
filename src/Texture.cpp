@@ -103,6 +103,7 @@ namespace april
 		this->addressMode = ADDRESS_WRAP;
 		this->data = NULL;
 		this->fromResource = fromResource;
+		this->firstUpload = true;
 		april::rendersys->textures += this;
 	}
 
@@ -166,7 +167,10 @@ namespace april
 		{
 			return false;
 		}
-		this->write(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, format);
+		if (this->firstUpload)
+		{
+			this->write(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, format);
+		}
 		this->type = type;
 		return true;
 	}
@@ -341,10 +345,13 @@ namespace april
 		}
 		if (currentData != NULL)
 		{
-			Type type = this->type;
-			this->type = TYPE_VOLATILE; // so the write call right below goes through
-			this->write(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
-			this->type = type;
+			if (this->firstUpload)
+			{
+				Type type = this->type;
+				this->type = TYPE_VOLATILE; // so the write call right below goes through
+				this->write(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
+				this->type = type;
+			}
 			if (this->type != TYPE_VOLATILE && this->type != TYPE_RENDER_TARGET && (this->type != TYPE_IMMUTABLE || this->filename == ""))
 			{
 				if (this->data != currentData)
