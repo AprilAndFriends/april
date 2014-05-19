@@ -299,6 +299,17 @@
 		D1F27AE4177A2DF700E5C131 /* OpenKODE_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F1E175CDAC600BFF3A2 /* OpenKODE_Platform.cpp */; };
 		D1F27AE5177A2DF700E5C131 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F21175CDAD200BFF3A2 /* egl.cpp */; };
 		D1F27AE6177A2DF700E5C131 /* OpenKODE_Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1397A44175F32CE00DC02D7 /* OpenKODE_Keys.cpp */; };
+		D1FED152192A3AEB00BE6A6D /* Mac_Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED150192A3AEB00BE6A6D /* Mac_Cursor.cpp */; };
+		D1FED153192A3AEB00BE6A6D /* Mac_Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED150192A3AEB00BE6A6D /* Mac_Cursor.cpp */; };
+		D1FED154192A3AEB00BE6A6D /* Mac_Cursor.h in Headers */ = {isa = PBXBuildFile; fileRef = D1FED151192A3AEB00BE6A6D /* Mac_Cursor.h */; };
+		D1FED158192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
+		D1FED159192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
+		D1FED15A192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
+		D1FED15B192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
+		D1FED15C192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
+		D1FED15D192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
+		D1FED15F192A3B7B00BE6A6D /* Cursor.h in Headers */ = {isa = PBXBuildFile; fileRef = D1FED15E192A3B7B00BE6A6D /* Cursor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D1FED160192A3B7B00BE6A6D /* Cursor.h in Headers */ = {isa = PBXBuildFile; fileRef = D1FED15E192A3B7B00BE6A6D /* Cursor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -501,6 +512,12 @@
 		D1E720CB16D37E6100B9C9AD /* OpenGLES2_Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGLES2_Texture.cpp; path = rendersystems/OpenGL/ES/2/OpenGLES2_Texture.cpp; sourceTree = "<group>"; };
 		D1E720CC16D37E6100B9C9AD /* OpenGLES2_Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES2_Texture.h; path = rendersystems/OpenGL/ES/2/OpenGLES2_Texture.h; sourceTree = "<group>"; };
 		D1F27AEF177A2DF700E5C131 /* libapril-kd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libapril-kd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1FED150192A3AEB00BE6A6D /* Mac_Cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Mac_Cursor.cpp; path = windowsystems/Mac/Mac_Cursor.cpp; sourceTree = "<group>"; };
+		D1FED151192A3AEB00BE6A6D /* Mac_Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_Cursor.h; path = windowsystems/Mac/Mac_Cursor.h; sourceTree = "<group>"; };
+		D1FED155192A3B4000BE6A6D /* Win32_Cursor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Win32_Cursor.cpp; path = windowsystems/Win32/Win32_Cursor.cpp; sourceTree = "<group>"; };
+		D1FED156192A3B4000BE6A6D /* Win32_Cursor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Win32_Cursor.h; path = windowsystems/Win32/Win32_Cursor.h; sourceTree = "<group>"; };
+		D1FED157192A3B5F00BE6A6D /* Cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cursor.cpp; path = src/Cursor.cpp; sourceTree = "<group>"; };
+		D1FED15E192A3B7B00BE6A6D /* Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cursor.h; path = include/april/Cursor.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -620,6 +637,7 @@
 				C9C04F8A14BB106F005BD333 /* PixelShader.cpp */,
 				C9C04F9214BB109B005BD333 /* VertexShader.cpp */,
 				7F1B522E12E4713600E958D8 /* Color.cpp */,
+				D1FED157192A3B5F00BE6A6D /* Cursor.cpp */,
 				7F1B522F12E4713600E958D8 /* Texture.cpp */,
 				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
 				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
@@ -649,6 +667,7 @@
 				C9C04F8F14BB1091005BD333 /* VertexShader.h */,
 				7F1B522712E4710D00E958D8 /* aprilExport.h */,
 				7F1B522812E4710D00E958D8 /* Color.h */,
+				D1FED15E192A3B7B00BE6A6D /* Cursor.h */,
 				7F1B522912E4710D00E958D8 /* Texture.h */,
 				7FC8FA28122FA58F0092964C /* Timer.h */,
 				7F4D0FE911FEE6C500F2F9F5 /* main.h */,
@@ -797,6 +816,8 @@
 				D11A21621712CF9A00BA9DA8 /* Mac_Keys.mm */,
 				D1962A87170EC7A20072A146 /* Mac_CocoaWindow.h */,
 				D1962A88170EC7A20072A146 /* Mac_CocoaWindow.mm */,
+				D1FED150192A3AEB00BE6A6D /* Mac_Cursor.cpp */,
+				D1FED151192A3AEB00BE6A6D /* Mac_Cursor.h */,
 				D1962A8B170ECC400072A146 /* Mac_LoadingOverlay.h */,
 				D1962A8C170ECC400072A146 /* Mac_LoadingOverlay.mm */,
 				D1AF669B170B1E4800A43743 /* Mac_Window.h */,
@@ -808,6 +829,8 @@
 		D1BCC57B1615A2660049CEA9 /* Win32 */ = {
 			isa = PBXGroup;
 			children = (
+				D1FED155192A3B4000BE6A6D /* Win32_Cursor.cpp */,
+				D1FED156192A3B4000BE6A6D /* Win32_Cursor.h */,
 				D1BCC5791615A2620049CEA9 /* Win32_Window.cpp */,
 				D1BCC57A1615A2620049CEA9 /* Win32_Window.h */,
 			);
@@ -1052,6 +1075,7 @@
 				D1E7203E16D37B2700B9C9AD /* SystemDelegate.h in Headers */,
 				D13681B0187BFB6600E66E32 /* Standard_main.h in Headers */,
 				D13681AA187BFB6600E66E32 /* main_base.h in Headers */,
+				D1FED160192A3B7B00BE6A6D /* Cursor.h in Headers */,
 				D13681A8187BFB6600E66E32 /* ControllerDelegate.h in Headers */,
 				D13681AE187BFB6600E66E32 /* RenderState.h in Headers */,
 				D1E7203F16D37B2700B9C9AD /* TouchDelegate.h in Headers */,
@@ -1074,11 +1098,13 @@
 				D1AF66C5170B1E5900A43743 /* Timer.h in Headers */,
 				D1AF66C7170B1E5900A43743 /* PixelShader.h in Headers */,
 				D1AF66C8170B1E5900A43743 /* VertexShader.h in Headers */,
+				D1FED154192A3AEB00BE6A6D /* Mac_Cursor.h in Headers */,
 				D1AF66CA170B1E5900A43743 /* aprilExport.h in Headers */,
 				D1AF66CB170B1E5900A43743 /* aprilUtil.h in Headers */,
 				D1AF66CD170B1E5900A43743 /* EventDelegate.h in Headers */,
 				D1AF66CE170B1E5900A43743 /* Image.h in Headers */,
 				D1AF66CF170B1E5900A43743 /* InputDelegate.h in Headers */,
+				D1FED15F192A3B7B00BE6A6D /* Cursor.h in Headers */,
 				D1AF66D0170B1E5900A43743 /* KeyboardDelegate.h in Headers */,
 				D1256A2E1727F6C60089C583 /* Mac_AppDelegate.h in Headers */,
 				D1AF66D1170B1E5900A43743 /* MouseDelegate.h in Headers */,
@@ -1244,6 +1270,7 @@
 				D14BF81615872B4900D31573 /* Mac_main.mm in Sources */,
 				D14BF81715872B4900D31573 /* Mac_Platform.mm in Sources */,
 				D14BF81A158737A000D31573 /* Platform.cpp in Sources */,
+				D1FED159192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				D14BF96A15875F3300D31573 /* aprilUtil.cpp in Sources */,
 				D1E7204B16D37C2300B9C9AD /* EventDelegate.cpp in Sources */,
 				D1E7204E16D37C2300B9C9AD /* InputDelegate.cpp in Sources */,
@@ -1298,6 +1325,7 @@
 				D1134F0A175CDA3300BFF3A2 /* OpenGL1_Texture.cpp in Sources */,
 				D1134F0B175CDA3300BFF3A2 /* OpenGLES_RenderSystem.cpp in Sources */,
 				D1368199187BFB3E00E66E32 /* RenderState.cpp in Sources */,
+				D1FED15D192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				D1134F0C175CDA3300BFF3A2 /* OpenGLES_Texture.cpp in Sources */,
 				D1368193187BFB3E00E66E32 /* main_base.cpp in Sources */,
 				D1134F0D175CDA3300BFF3A2 /* OpenGLES1_RenderSystem.cpp in Sources */,
@@ -1318,6 +1346,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D153474F178AD62A00151D1A /* OpenGL_RenderSystem.cpp in Sources */,
+				D1FED153192A3AEB00BE6A6D /* Mac_Cursor.cpp in Sources */,
 				D1534750178AD62A00151D1A /* OpenGL_Texture.cpp in Sources */,
 				D1534751178AD62A00151D1A /* Color.cpp in Sources */,
 				D1534752178AD62A00151D1A /* Texture.cpp in Sources */,
@@ -1347,6 +1376,7 @@
 				D1534769178AD62A00151D1A /* OpenGL1_Texture.cpp in Sources */,
 				D153476A178AD62A00151D1A /* ControllerDelegate.cpp in Sources */,
 				D1534777178AD65F00151D1A /* Mac_AppDelegate.mm in Sources */,
+				D1FED15A192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				D1534778178AD65F00151D1A /* Mac_OpenGLView.mm in Sources */,
 				D1534779178AD65F00151D1A /* Mac_Keys.mm in Sources */,
 				D153477A178AD65F00151D1A /* Mac_CocoaWindow.mm in Sources */,
@@ -1383,6 +1413,7 @@
 				D14BF96B15875F3300D31573 /* aprilUtil.cpp in Sources */,
 				D1E7204C16D37C2300B9C9AD /* EventDelegate.cpp in Sources */,
 				D1E7204F16D37C2300B9C9AD /* InputDelegate.cpp in Sources */,
+				D1FED15C192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				D1E7205216D37C2300B9C9AD /* KeyboardDelegate.cpp in Sources */,
 				D1E7205516D37C2300B9C9AD /* MouseDelegate.cpp in Sources */,
 				D1E7205816D37C2300B9C9AD /* SystemDelegate.cpp in Sources */,
@@ -1411,6 +1442,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1A6260F170B78FF009ABE7B /* TimerPosix.cpp in Sources */,
+				D1FED152192A3AEB00BE6A6D /* Mac_Cursor.cpp in Sources */,
 				D1AF669F170B1E5900A43743 /* RenderSystem.cpp in Sources */,
 				D1AF66A0170B1E5900A43743 /* Window.cpp in Sources */,
 				D1AF66A1170B1E5900A43743 /* OpenGL_RenderSystem.cpp in Sources */,
@@ -1440,6 +1472,7 @@
 				D1AF66B8170B1E5900A43743 /* ImagePng.cpp in Sources */,
 				D1AF66BA170B1E5900A43743 /* OpenGL_State.cpp in Sources */,
 				D1AF66BB170B1E5900A43743 /* OpenGL1_RenderSystem.cpp in Sources */,
+				D1FED158192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				D1AF66BC170B1E5900A43743 /* OpenGL1_Texture.cpp in Sources */,
 				D1AF66BD170B1E5900A43743 /* ControllerDelegate.cpp in Sources */,
 				D1962A86170EC6FC0072A146 /* Mac_OpenGLView.mm in Sources */,
@@ -1463,6 +1496,7 @@
 				D1F27AC8177A2DF700E5C131 /* PixelShader.cpp in Sources */,
 				D1368191187BFB3E00E66E32 /* main_base.cpp in Sources */,
 				D1F27AC9177A2DF700E5C131 /* VertexShader.cpp in Sources */,
+				D1FED15B192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				D1F27ACA177A2DF700E5C131 /* april.cpp in Sources */,
 				D1F27ACB177A2DF700E5C131 /* Platform.cpp in Sources */,
 				D1F27ACD177A2DF700E5C131 /* aprilUtil.cpp in Sources */,
