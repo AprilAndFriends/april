@@ -278,6 +278,12 @@
     <ClCompile Include="src\main_base.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Cursor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsystems\Win32\Win32_Cursor.cpp">
+      <Filter>Source Files\windowsystems\Win32</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -435,6 +441,12 @@
     </ClInclude>
     <ClInclude Include="include\april\Standard_main.h">
       <Filter>Header Files\platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Cursor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\Win32\Win32_Cursor.h">
+      <Filter>Header Files\windowsystems\Win32</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -500,6 +500,7 @@
     <ClCompile Include="rendersystems\OpenGL\OpenGL_State.cpp" />
     <ClCompile Include="src\april.cpp" />
     <ClCompile Include="src\aprilUtil.cpp" />
+    <ClCompile Include="src\Cursor.cpp" />
     <ClCompile Include="src\delegates\ControllerDelegate.cpp" />
     <ClCompile Include="src\delegates\EventDelegate.cpp" />
     <ClCompile Include="src\delegates\InputDelegate.cpp" />
@@ -531,6 +532,7 @@
     <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Keys.cpp" />
     <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Window.cpp" />
     <ClCompile Include="windowsystems\SDL\SDL_Window.cpp" />
+    <ClCompile Include="windowsystems\Win32\Win32_Cursor.cpp" />
     <ClCompile Include="windowsystems\Win32\Win32_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -541,6 +543,7 @@
     <ClInclude Include="include\april\aprilUtil.h" />
     <ClInclude Include="include\april\Color.h" />
     <ClInclude Include="include\april\ControllerDelegate.h" />
+    <ClInclude Include="include\april\Cursor.h" />
     <ClInclude Include="include\april\EventDelegate.h" />
     <ClInclude Include="include\april\Image.h" />
     <ClInclude Include="include\april\InputDelegate.h" />
@@ -585,6 +588,7 @@
     <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Window.h" />
     <ClInclude Include="windowsystems\OpenKODE\OpenKODE_Window.h" />
     <ClInclude Include="windowsystems\SDL\SDL_Window.h" />
+    <ClInclude Include="windowsystems\Win32\Win32_Cursor.h" />
     <ClInclude Include="windowsystems\Win32\Win32_Window.h" />
   </ItemGroup>
   <ItemGroup>
