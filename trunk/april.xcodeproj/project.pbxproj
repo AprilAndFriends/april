@@ -299,8 +299,8 @@
 		D1F27AE4177A2DF700E5C131 /* OpenKODE_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F1E175CDAC600BFF3A2 /* OpenKODE_Platform.cpp */; };
 		D1F27AE5177A2DF700E5C131 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F21175CDAD200BFF3A2 /* egl.cpp */; };
 		D1F27AE6177A2DF700E5C131 /* OpenKODE_Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1397A44175F32CE00DC02D7 /* OpenKODE_Keys.cpp */; };
-		D1FED152192A3AEB00BE6A6D /* Mac_Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED150192A3AEB00BE6A6D /* Mac_Cursor.cpp */; };
-		D1FED153192A3AEB00BE6A6D /* Mac_Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED150192A3AEB00BE6A6D /* Mac_Cursor.cpp */; };
+		D1F57D3B192B629900AAC970 /* Mac_Cursor.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1F57D3A192B629900AAC970 /* Mac_Cursor.mm */; };
+		D1F57D3C192B629900AAC970 /* Mac_Cursor.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1F57D3A192B629900AAC970 /* Mac_Cursor.mm */; };
 		D1FED154192A3AEB00BE6A6D /* Mac_Cursor.h in Headers */ = {isa = PBXBuildFile; fileRef = D1FED151192A3AEB00BE6A6D /* Mac_Cursor.h */; };
 		D1FED158192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
 		D1FED159192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
@@ -512,7 +512,7 @@
 		D1E720CB16D37E6100B9C9AD /* OpenGLES2_Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGLES2_Texture.cpp; path = rendersystems/OpenGL/ES/2/OpenGLES2_Texture.cpp; sourceTree = "<group>"; };
 		D1E720CC16D37E6100B9C9AD /* OpenGLES2_Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES2_Texture.h; path = rendersystems/OpenGL/ES/2/OpenGLES2_Texture.h; sourceTree = "<group>"; };
 		D1F27AEF177A2DF700E5C131 /* libapril-kd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libapril-kd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D1FED150192A3AEB00BE6A6D /* Mac_Cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Mac_Cursor.cpp; path = windowsystems/Mac/Mac_Cursor.cpp; sourceTree = "<group>"; };
+		D1F57D3A192B629900AAC970 /* Mac_Cursor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_Cursor.mm; path = windowsystems/Mac/Mac_Cursor.mm; sourceTree = "<group>"; };
 		D1FED151192A3AEB00BE6A6D /* Mac_Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_Cursor.h; path = windowsystems/Mac/Mac_Cursor.h; sourceTree = "<group>"; };
 		D1FED155192A3B4000BE6A6D /* Win32_Cursor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Win32_Cursor.cpp; path = windowsystems/Win32/Win32_Cursor.cpp; sourceTree = "<group>"; };
 		D1FED156192A3B4000BE6A6D /* Win32_Cursor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Win32_Cursor.h; path = windowsystems/Win32/Win32_Cursor.h; sourceTree = "<group>"; };
@@ -816,7 +816,7 @@
 				D11A21621712CF9A00BA9DA8 /* Mac_Keys.mm */,
 				D1962A87170EC7A20072A146 /* Mac_CocoaWindow.h */,
 				D1962A88170EC7A20072A146 /* Mac_CocoaWindow.mm */,
-				D1FED150192A3AEB00BE6A6D /* Mac_Cursor.cpp */,
+				D1F57D3A192B629900AAC970 /* Mac_Cursor.mm */,
 				D1FED151192A3AEB00BE6A6D /* Mac_Cursor.h */,
 				D1962A8B170ECC400072A146 /* Mac_LoadingOverlay.h */,
 				D1962A8C170ECC400072A146 /* Mac_LoadingOverlay.mm */,
@@ -1346,7 +1346,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D153474F178AD62A00151D1A /* OpenGL_RenderSystem.cpp in Sources */,
-				D1FED153192A3AEB00BE6A6D /* Mac_Cursor.cpp in Sources */,
 				D1534750178AD62A00151D1A /* OpenGL_Texture.cpp in Sources */,
 				D1534751178AD62A00151D1A /* Color.cpp in Sources */,
 				D1534752178AD62A00151D1A /* Texture.cpp in Sources */,
@@ -1384,6 +1383,7 @@
 				D153477C178AD65F00151D1A /* Mac_Window.mm in Sources */,
 				D153477D178AD66700151D1A /* Mac_main.mm in Sources */,
 				D153477E178AD66700151D1A /* Mac_Platform.mm in Sources */,
+				D1F57D3C192B629900AAC970 /* Mac_Cursor.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1442,7 +1442,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1A6260F170B78FF009ABE7B /* TimerPosix.cpp in Sources */,
-				D1FED152192A3AEB00BE6A6D /* Mac_Cursor.cpp in Sources */,
 				D1AF669F170B1E5900A43743 /* RenderSystem.cpp in Sources */,
 				D1AF66A0170B1E5900A43743 /* Window.cpp in Sources */,
 				D1AF66A1170B1E5900A43743 /* OpenGL_RenderSystem.cpp in Sources */,
@@ -1480,6 +1479,7 @@
 				D1962A8E170ECC400072A146 /* Mac_LoadingOverlay.mm in Sources */,
 				D11A21631712CF9A00BA9DA8 /* Mac_Keys.mm in Sources */,
 				D1256A2F1727F6C60089C583 /* Mac_AppDelegate.mm in Sources */,
+				D1F57D3B192B629900AAC970 /* Mac_Cursor.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

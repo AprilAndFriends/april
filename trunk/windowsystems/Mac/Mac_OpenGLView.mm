@@ -36,6 +36,8 @@
 	[bmp release];
 	[image release];
 
+	mCursor = mBlankCursor;
+	
 	// set up pixel format
 	int n = 0;
 	NSOpenGLPixelFormatAttribute a[64] = {0};
@@ -106,6 +108,10 @@
 	{
 		[self addCursorRect:[self bounds] cursor:mBlankCursor];
 	}
+	else if (mCursor != NULL)
+	{
+		[self addCursorRect:[self bounds] cursor:mCursor];
+	}
 }
 
 // Apple doesn't forward rightmouse events on MacOS 10.6 and earlier for some reason, so we override the behaviour here
@@ -119,15 +125,14 @@
 	[[self nextResponder] rightMouseUp:event];
 }
 
-
-- (void) setDefaultCursor
+- (void) setUseBlankCursor:(BOOL)value
 {
-	mUseBlankCursor = false;
+	mUseBlankCursor = value;
 }
 
-- (void) setBlankCursor
+- (void) setCursor:(NSCursor*)cursor
 {
-	mUseBlankCursor = true;
+	mCursor = (cursor == NULL) ? NULL : cursor;
 }
 
 - (void) dealloc

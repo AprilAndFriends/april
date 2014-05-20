@@ -12,6 +12,7 @@
 #include <hltypes/hlog.h>
 #include "april.h"
 #include "Mac_Window.h"
+#include "Mac_Cursor.h"
 #import "Mac_OpenGLView.h"
 #import "Mac_CocoaWindow.h"
 #import "Mac_LoadingOverlay.h"
@@ -49,6 +50,8 @@ namespace april
 		this->name = APRIL_WS_MAC;
 		this->retainLoadingOverlay = fastHideLoadingOverlay = false;
 		this->splashScreenFadeout = true;
+		this->cursorExtensions += ".plist";
+		this->cursorExtensions += ".png";
 		
 		aprilWindow = this;
     }
@@ -137,12 +140,25 @@ namespace april
 		return !mView->mUseBlankCursor;
 	}
 	
+	void Mac_Window::setCursor(Cursor* value)
+	{
+		if (value != NULL)
+		{
+			Mac_Cursor* mc = (Mac_Cursor*) value;
+			[mView setCursor:mc->getNSCursor()];
+		}
+		else
+		{
+			[mView setCursor:NULL];
+		}
+		[mWindow invalidateCursorRectsForView:mView];
+	}
+
 	void Mac_Window::setCursorVisible(bool visible)
 	{
 		if (mView == NULL) return;
-		if (visible != mView->mUseBlankCursor) return;
-		if (visible) [mView setDefaultCursor];
-		else         [mView setBlankCursor];
+		if (visible == isCursorVisible()) return;
+		[mView setUseBlankCursor:!visible];
 		[mWindow invalidateCursorRectsForView:mView];
 	}
 	
@@ -297,6 +313,11 @@ namespace april
 		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.01]];
 		ignoreUpdate = false;
     }
+	
+	Cursor* Mac_Window::_createCursor()
+	{
+		return new Mac_Cursor();
+	}
 	
 	void Mac_Window::terminateMainLoop()
 	{

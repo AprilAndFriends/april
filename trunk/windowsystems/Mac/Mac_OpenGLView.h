@@ -20,11 +20,12 @@
 	bool mStartedDrawing;
 	bool mUseBlankCursor;
 	NSCursor* mBlankCursor;
+	NSCursor* mCursor;
 }
 - (void) initGL;
 - (void) presentFrame;
-- (void) setDefaultCursor;
-- (void) setBlankCursor;
+- (void) setUseBlankCursor:(BOOL)value;
+- (void) setCursor:(NSCursor*)cursor;
 - (void) updateGLViewport;
 
 @end

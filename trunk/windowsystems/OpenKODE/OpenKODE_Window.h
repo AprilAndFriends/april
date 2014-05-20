@@ -50,6 +50,7 @@ namespace april
 
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
+		Cursor* _createCursor();
 
 	protected:
 		int _getAprilTouchIndex(int kdIndex);
