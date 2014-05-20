@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.33
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -21,6 +21,7 @@
 #include "RenderSystem.h"
 #include "SystemDelegate.h"
 #include "Timer.h"
+#include "Win32_Cursor.h"
 #include "Win32_Window.h"
 
 #ifdef _OPENGL
@@ -42,6 +43,7 @@ namespace april
 	{
 		this->name = APRIL_WS_WIN32;
 		this->hWnd = NULL;
+		this->defaultCursor = LoadCursor(0, IDC_ARROW);
 		this->cursorExtensions += ".ani";
 		this->cursorExtensions += ".cur";
 	}
@@ -49,6 +51,7 @@ namespace april
 	Win32_Window::~Win32_Window()
 	{
 		this->destroy();
+		DestroyCursor(this->defaultCursor);
 	}
 
 	// Considering that Iron Man and Batman's only real superpower is being
@@ -60,7 +63,6 @@ namespace april
 			return false;
 		}
 		this->inputMode = MOUSE;
-		this->cursor = NULL;
 		// Win32
 		WNDCLASSEXW wc;
 		memset(&wc, 0, sizeof(WNDCLASSEX));
@@ -69,7 +71,7 @@ namespace april
 		wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 		wc.lpfnWndProc = &Win32_Window::_mainProcessCallback;
 		wc.hInstance = hinst;
-		wc.hCursor = LoadCursor(0, IDC_ARROW);
+		wc.hCursor = this->defaultCursor;
 		wc.lpszClassName = APRIL_WIN32_WINDOW_CLASS;
 		wc.hIcon = (HICON)LoadImage(hinst, MAKEINTRESOURCE(1), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
 		wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
@@ -120,7 +122,6 @@ namespace april
 			UnregisterClassW(APRIL_WIN32_WINDOW_CLASS, GetModuleHandle(0));
 			this->hWnd = 0;
 		}
-		this->cursor = NULL;
 #ifdef _EGL
 		april::egl->destroy();
 #endif
@@ -155,9 +156,9 @@ namespace april
 		this->_refreshCursor();
 	}
 	
-	void Win32_Window::setCursorFilename(chstr value)
+	void Win32_Window::setCursor(Cursor* value)
 	{
-		Window::setCursorFilename(value);
+		Window::setCursor(value);
 		this->_refreshCursor();
 	}
 
@@ -166,16 +167,13 @@ namespace april
 		HCURSOR cursor = NULL;
 		if (this->isCursorVisible())
 		{
-			hstr filename = this->_findCursorFile();
-			if (filename != "")
+			if (this->cursor != NULL)
 			{
-				this->cursor = LoadCursorFromFileW(filename.w_str().c_str());
-				cursor = this->cursor;
+				cursor = ((Win32_Cursor*)this->cursor)->getCursor();
 			}
-			else
+			if (this->cursor == NULL)
 			{
-				this->cursor = NULL;
-				cursor = LoadCursorW(0, IDC_ARROW);
+				cursor = this->defaultCursor;
 			}
 		}
 		SetCursor(cursor);
@@ -198,6 +196,15 @@ namespace april
 	void* Win32_Window::getBackendId()
 	{
 		return this->hWnd;
+	}
+
+	HCURSOR Win32_Window::getCursorHandle()
+	{
+		if (this->cursor != NULL)
+		{
+			return ((Win32_Cursor*)this->cursor)->getCursor();
+		}
+		return this->defaultCursor;
 	}
 
 	void Win32_Window::setResolution(int w, int h, bool fullscreen)
@@ -301,6 +308,11 @@ namespace april
 			DispatchMessageW(&msg);
 		}
 		Window::checkEvents();
+	}
+
+	Cursor* Win32_Window::_createCursor()
+	{
+		return new Win32_Cursor();
 	}
 
 	void Win32_Window::_setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen)
@@ -532,7 +544,7 @@ namespace april
 			}
 			if (april::window->isCursorInside())
 			{
-				HCURSOR cursor = ((Win32_Window*)april::window)->cursor;
+				HCURSOR cursor = ((Win32_Window*)april::window)->getCursorHandle();
 				if (cursor != GetCursor())
 				{
 					SetCursor(cursor);

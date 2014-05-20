@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.33
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -25,6 +25,8 @@
 
 namespace april
 {
+	class Cursor;
+
 	class Win32_Window : public Window
 	{
 	public:
@@ -36,11 +38,12 @@ namespace april
 		void setTitle(chstr title);
 		bool isCursorVisible();
 		void setCursorVisible(bool value);
-		void setCursorFilename(chstr value);
+		void setCursor(Cursor* value);
 		int getWidth();
 		int getHeight();
 		void* getBackendId();
 		void setResolution(int w, int h, bool fullscreen);
+		HCURSOR getCursorHandle();
 
 		bool updateOneFrame();
 		void presentFrame();
@@ -53,9 +56,11 @@ namespace april
 		
 	protected:
 		HWND hWnd;
-		HCURSOR cursor;
+		HCURSOR defaultCursor;
 		hstr fpsTitle;
 		bool fpsCounter;
+
+		Cursor* _createCursor();
 
 		void _setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen);
 		void _adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle);

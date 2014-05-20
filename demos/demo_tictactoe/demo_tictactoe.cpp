@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.31
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -19,6 +19,7 @@
 #endif
 
 #include <april/april.h>
+#include <april/Cursor.h>
 #include <april/KeyboardDelegate.h>
 #include <april/main.h>
 #include <april/MouseDelegate.h>
@@ -29,6 +30,7 @@
 #include <gtypes/Rectangle.h>
 #include <hltypes/hstring.h>
 
+april::Cursor* cursor = NULL;
 april::Texture* background = NULL;
 april::Texture* x_symbol = NULL;
 april::Texture* o_symbol = NULL;
@@ -390,7 +392,8 @@ void april_init(const harray<hstr>& args)
 #endif
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
-	april::window->setCursorFilename(RESOURCE_PATH "cursor");
+	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
+	april::window->setCursor(cursor);
 	background = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
 	x_symbol = april::rendersys->createTextureFromResource(RESOURCE_PATH "x");
 	o_symbol = april::rendersys->createTextureFromResource(RESOURCE_PATH "o");
@@ -402,6 +405,8 @@ void april_init(const harray<hstr>& args)
 
 void april_destroy()
 {
+	april::window->setCursor(NULL);
+	delete cursor;
 	delete background;
 	delete x_symbol;
 	delete o_symbol;

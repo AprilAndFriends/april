@@ -10,11 +10,11 @@
 /// 
 /// @section DESCRIPTION
 ///
-/// Defines a Win32 cursor.
+/// Defines an SDL cursor.
 
-#ifdef _WIN32_WINDOW
-#ifndef APRIL_WIN32_CURSOR_H
-#define APRIL_WIN32_CURSOR_H
+#ifdef _SDL_WINDOW
+#ifndef APRIL_SDL_CURSOR_H
+#define APRIL_SDL_CURSOR_H
 
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
@@ -23,17 +23,13 @@
 
 namespace april
 {
-	class Win32_Cursor : public Cursor
+	class SDL_Cursor : public Cursor
 	{
 	public:
-		Win32_Cursor();
-		~Win32_Cursor();
-
-		HL_DEFINE_GET(HCURSOR, cursor, Cursor);
+		SDL_Cursor();
+		~SDL_Cursor();
 
 	protected:
-		HCURSOR cursor;
-
 		bool _create(chstr filename);
 
 	};

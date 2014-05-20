@@ -8,27 +8,26 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#ifdef _WIN32_WINDOW
+#ifdef _SDL_WINDOW
+#include <SDL/SDL.h>
+
 #include <hltypes/hstring.h>
 
-#include "Win32_Cursor.h"
+#include "SDL_Cursor.h"
+#include "Image.h"
 
 namespace april
 {
-	Win32_Cursor::Win32_Cursor() : Cursor(), cursor(NULL)
+	SDL_Cursor::SDL_Cursor() : Cursor()
 	{
 	}
 
-	Win32_Cursor::~Win32_Cursor()
+	SDL_Cursor::~SDL_Cursor()
 	{
-		if (this->cursor != NULL)
-		{
-			DestroyCursor(this->cursor);
-			this->cursor = NULL;
-		}
+		// TODO
 	}
 
-	bool Win32_Cursor::_create(chstr filename)
+	bool SDL_Cursor::_create(chstr filename)
 	{
 		if (!Cursor::_create(filename))
 		{
@@ -38,8 +37,8 @@ namespace april
 		{
 			return false;
 		}
-		this->cursor = LoadCursorFromFileW(filename.w_str().c_str());
-		return true;
+		// TODO
+		return false;
 	}
 
 }

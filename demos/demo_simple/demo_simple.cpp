@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.31
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -19,6 +19,7 @@
 #endif
 
 #include <april/april.h>
+#include <april/Cursor.h>
 #include <april/main.h>
 #include <april/MouseDelegate.h>
 #include <april/Platform.h>
@@ -33,6 +34,7 @@
 
 #define LOG_TAG "demo_simple"
 
+april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
 april::Texture* manualTexture = NULL;
 april::TexturedVertex dv[4];
@@ -76,18 +78,18 @@ class MouseDelegate : public april::MouseDelegate
 
 	void onMouseUp(april::Key key)
 	{
-		gvec2 cursor = april::window->getCursorPosition();
-		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", cursor.x, cursor.y, key);
+		gvec2 position = april::window->getCursorPosition();
+		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", position.x, position.y, key);
 		mousePressed = false;
 	}
 
 	void onMouseMove()
 	{
-		gvec2 cursor = april::window->getCursorPosition();
-		hlog::writef(LOG_TAG, "- MOVE x: %4.0f y: %4.0f", cursor.x, cursor.y);
+		gvec2 position = april::window->getCursorPosition();
+		hlog::writef(LOG_TAG, "- MOVE x: %4.0f y: %4.0f", position.x, position.y);
 		if (mousePressed)
 		{
-			offset = cursor;
+			offset = position;
 		}
 	}
 
@@ -164,7 +166,8 @@ void april_init(const harray<hstr>& args)
 #endif
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
-	april::window->setCursorFilename(RESOURCE_PATH "cursor");
+	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
+	april::window->setCursor(cursor);
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::TYPE_MANAGED);
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w / 2;
@@ -181,6 +184,8 @@ void april_init(const harray<hstr>& args)
 
 void april_destroy()
 {
+	april::window->setCursor(NULL);
+	delete cursor;
 	delete texture;
 	delete manualTexture;
 	april::destroy();

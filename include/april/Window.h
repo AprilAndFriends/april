@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -27,6 +27,7 @@
 
 namespace april
 {
+	class Cursor;
 	class ControllerDelegate;
 	class KeyboardDelegate;
 	class MouseDelegate;
@@ -148,6 +149,7 @@ namespace april
 		HL_DEFINE_IS(running, Running);
 		HL_DEFINE_GETSET(int, fps, Fps);
 		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
+		HL_DEFINE_GET(Cursor*, cursor, Cursor);
 		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
 		HL_DEFINE_IS(virtualKeyboardVisible, VirtualKeyboardVisible);
 		HL_DEFINE_GET(float, virtualKeyboardHeightRatio, VirtualKeyboardHeightRatio);
@@ -155,7 +157,6 @@ namespace april
 		void setInputMode(InputMode value);
 		HL_DEFINE_GET2(hmap, InputMode, InputMode, inputModeTranslations, InputModeTranslations);
 		void setInputModeTranslations(hmap<InputMode, InputMode> value);
-		HL_DEFINE_GET(hstr, cursorFilename, CursorFilename);
 		gvec2 getSize();
 		float getAspectRatio();
 		
@@ -173,7 +174,7 @@ namespace april
 		virtual inline void setTitle(chstr value) { this->title = value; }
 		virtual inline bool isCursorVisible() { return this->cursorVisible; }
 		virtual inline void setCursorVisible(bool value) { this->cursorVisible = value; }
-		virtual inline void setCursorFilename(chstr value) { this->cursorFilename = value; }
+		virtual inline void setCursor(Cursor* value) { this->cursor = value; }
 		virtual bool isCursorInside();
 
 		virtual void setResolution(int w, int h);
@@ -194,7 +195,10 @@ namespace april
 		virtual void terminateMainLoop();
 		virtual inline void beginKeyboardHandling() { }
 		virtual inline void terminateKeyboardHandling() { }
+		virtual hstr findCursorFile(chstr filename);
 		
+		Cursor* createCursor(chstr filename);
+
 		virtual inline bool isRotating() { return false; } // iOS/Android devices for example
 		virtual inline hstr getParam(chstr param) { return ""; } // TODOaa - this should be refactored
 		virtual inline void setParam(chstr param, chstr value) { } // TODOaa - this should be refactored
@@ -240,12 +244,12 @@ namespace april
 		float fpsTimer;
 		float fpsResolution;
 		gvec2 cursorPosition;
+		Cursor* cursor;
 		bool cursorVisible;
 		bool virtualKeyboardVisible;
 		float virtualKeyboardHeightRatio;
 		InputMode inputMode;
 		hmap<InputMode, InputMode> inputModeTranslations;
-		hstr cursorFilename;
 		harray<hstr> cursorExtensions;
 		bool multiTouchActive;
 		harray<gvec2> touches;
@@ -269,7 +273,8 @@ namespace april
 		virtual float _calcTimeSinceLastFrame();
 		void _setRenderSystemResolution();
 		virtual void _setRenderSystemResolution(int w, int h, bool fullscreen);
-		virtual hstr _findCursorFile();
+
+		virtual Cursor* _createCursor() = 0;
 
 	};
 
