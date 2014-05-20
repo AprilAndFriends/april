@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -55,8 +55,6 @@ namespace april
 		void setParam(chstr param, chstr value);
 		
 		void setTitle(chstr title);
-		void setCursorVisible(bool value);
-		void setCursorFilename(chstr value);
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId();
@@ -64,6 +62,7 @@ namespace april
 		void setResolution(int w, int h, bool fullscreen);
 		void presentFrame();
 		void checkEvents();
+		hstr findCursorFile(chstr filename);
 		
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
@@ -78,8 +77,9 @@ namespace april
 		bool backButtonSystemHandling;
 		hmap<hstr, unsigned int> cursorMappings;
 
-		hstr _findCursorFile();
-		
+		Cursor* _createCursor();
+		void _refreshCursor();
+
 	};
 	
 }

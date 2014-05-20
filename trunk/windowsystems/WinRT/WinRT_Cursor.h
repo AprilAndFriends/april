@@ -1,5 +1,4 @@
 /// @file
-/// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @version 3.36
 /// 
@@ -10,24 +9,37 @@
 /// 
 /// @section DESCRIPTION
 ///
-/// Defines an Android JNI cursor.
+/// Defines a WinRT cursor.
 
-#ifdef _ANDROIDJNI_WINDOW
-#ifndef APRIL_ANDROIDJNI_CURSOR_H
-#define APRIL_ANDROIDJNI_CURSOR_H
+#ifdef _WINRT_WINDOW
+#ifndef APRIL_WINRT_CURSOR_H
+#define APRIL_WINRT_CURSOR_H
 
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
 #include "Cursor.h"
 
+#ifndef _WINP8
+using namespace Windows::UI::Core;
+#endif
+
 namespace april
 {
-	class AndroidJNI_Cursor : public Cursor
+	class WinRT_Cursor : public Cursor
 	{
 	public:
-		AndroidJNI_Cursor();
-		~AndroidJNI_Cursor();
+		WinRT_Cursor();
+		~WinRT_Cursor();
+
+#ifndef _WINP8
+		HL_DEFINE_GET(CoreCursor^, cursor, Cursor);
+
+	protected:
+		CoreCursor^ cursor;
+#endif
+
+		bool _create(chstr filename);
 
 	};
 	

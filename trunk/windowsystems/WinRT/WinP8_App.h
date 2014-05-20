@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -50,8 +50,7 @@ namespace april
 		void OnBackButtonPressed(Object^ sender, BackPressedEventArgs^ args);
 		
 		virtual void unassignWindow();
-		virtual void setCursorVisible(bool value);
-		virtual void setCursorResourceId(unsigned int id);
+		virtual void refreshCursor();
 		virtual bool canSuspendResume();
 		virtual void updateViewState();
 		virtual void checkEvents();

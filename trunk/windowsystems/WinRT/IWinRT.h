@@ -23,8 +23,7 @@ namespace april
     {
     public:
 		virtual void unassignWindow();
-		virtual void setCursorVisible(bool value);
-		virtual void setCursorResourceId(unsigned int id);
+		virtual void refreshCursor();
 		virtual bool canSuspendResume();
 		virtual void updateViewState();
 		virtual void checkEvents();

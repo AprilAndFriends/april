@@ -254,6 +254,12 @@
     <ClCompile Include="rendersystems\DirectX\DirectX_Texture.cpp">
       <Filter>Source Files\rendersystems\DirectX</Filter>
     </ClCompile>
+    <ClCompile Include="windowsystems\WinRT\WinRT_Cursor.cpp">
+      <Filter>Source Files\windowsystems\WinRT</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cursor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -391,9 +397,6 @@
     <ClInclude Include="windowsystems\WinRT\WinP8_KeyboardInterface.h">
       <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
     </ClInclude>
-    <ClInclude Include="include\april\androidUtilJNI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\april\RenderState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -417,6 +420,12 @@
     </ClInclude>
     <ClInclude Include="rendersystems\DirectX\DirectX_Texture.h">
       <Filter>Header Files\rendersystems\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\WinRT\WinRT_Cursor.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="include\april\Cursor.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

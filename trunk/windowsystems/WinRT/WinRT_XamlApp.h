@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -44,8 +44,7 @@ namespace april
 		virtual void Connect(int connectionId, Object^ target);
 		
 		virtual void unassignWindow();
-		virtual void setCursorVisible(bool value);
-		virtual void setCursorResourceId(unsigned int id);
+		virtual void refreshCursor();
 		virtual bool canSuspendResume();
 		virtual void updateViewState();
 		virtual void checkEvents();
@@ -70,7 +69,7 @@ namespace april
 		grect storedOrthoProjection;
 		gmat4 storedProjectionMatrix;
 		bool storedCursorVisible;
-		unsigned int cursorResourceId;
+		CoreCursor^ defaultCursor;
 		Color backgroundColor;
 		bool launched;
 		bool activated;
