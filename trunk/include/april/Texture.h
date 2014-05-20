@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.31
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -64,7 +64,6 @@ namespace april
 		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ALPHA;
 		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ARGB;
 
-		Texture(bool fromResource);
 		virtual ~Texture();
 		virtual bool load();
 		virtual void unload() = 0;
@@ -154,6 +153,8 @@ namespace april
 			void activateRenderTarget(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format);
 
 		};
+
+		Texture(bool fromResource);
 
 		hstr filename;
 		Type type;

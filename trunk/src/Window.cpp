@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
 /// @author  Ivan Vucica
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -18,6 +18,7 @@
 
 #include "april.h"
 #include "ControllerDelegate.h"
+#include "Cursor.h"
 #include "KeyboardDelegate.h"
 #include "Keys.h"
 #include "MouseDelegate.h"
@@ -141,6 +142,7 @@ namespace april
 		this->fpsCount = 0;
 		this->fpsTimer = 0.0f;
 		this->fpsResolution = 0.5f;
+		this->cursor = NULL;
 		this->cursorVisible = false;
 		this->virtualKeyboardVisible = false;
 		this->virtualKeyboardHeightRatio = 0.0f;
@@ -174,6 +176,7 @@ namespace april
 			this->fpsTimer = 0.0f;
 			this->fpsResolution = 0.5f;
 			this->multiTouchActive = false;
+			this->cursor = NULL;
 			this->virtualKeyboardVisible = false;
 			this->virtualKeyboardHeightRatio = 0.0f;
 			this->inputMode = MOUSE;
@@ -193,6 +196,7 @@ namespace april
 			this->fpsTimer = 0.0f;
 			this->fpsResolution = 0.5f;
 			this->multiTouchActive = false;
+			this->cursor = NULL;
 			this->virtualKeyboardVisible = false;
 			this->virtualKeyboardHeightRatio = 0.0f;
 			this->inputMode = MOUSE;
@@ -640,22 +644,34 @@ namespace april
 		return timeDelta;
 	}
 
-	hstr Window::_findCursorFile()
+	hstr Window::findCursorFile(chstr filename)
 	{
-		if (this->cursorFilename == "")
-		{
-			return "";
-		}
-		hstr filename;
+		hstr _filename;
 		foreach (hstr, it, this->cursorExtensions)
 		{
-			filename = this->cursorFilename + (*it);
-			if (hresource::exists(filename))
+			_filename = filename + (*it);
+			if (hresource::exists(_filename))
 			{
-				return filename;
+				return _filename;
 			}
 		}
 		return "";
 	}
 	
+	Cursor* Window::createCursor(chstr filename)
+	{
+		hstr name = this->findCursorFile(filename);
+		if (name == "")
+		{
+			return NULL;
+		}
+		Cursor* cursor = this->_createCursor();
+		if (!cursor->_create(name))
+		{
+			delete cursor;
+			return NULL;
+		}
+		return cursor;
+	}
+
 }

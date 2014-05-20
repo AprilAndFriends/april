@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -66,9 +66,11 @@ namespace april
 		SDL_GLES_Context* glesContext;
 #endif
 
-		float _calcTimeSinceLastFrame();
+		Cursor* _createCursor();
+
 		void _handleSDLKeyEvent(Window::KeyEventType type, SDLKey keyCode, unsigned int unicode);
-		void _handleSDLMouseEvent(SDL_Event &evt);		
+		void _handleSDLMouseEvent(SDL_Event &evt);
+		float _calcTimeSinceLastFrame();
 
 	};
 

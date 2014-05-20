@@ -2,7 +2,7 @@
 /// @author  Ivan Vucica
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -35,6 +35,7 @@
 #include "Keys.h"
 #include "Platform.h"
 #include "RenderSystem.h"
+#include "SDL_Cursor.h"
 #include "SDL_Window.h"
 #ifdef _DIRECTX
 #include "DirectX_RenderSystem.h"
@@ -70,6 +71,8 @@ namespace april
 #ifdef _OPENGLES
 		this->glesContext = NULL;
 #endif
+		this->cursorExtensions += ".png";
+		//this->cursorExtensions += ".cur";
 	}
 	
 	SDL_Window::~SDL_Window()
@@ -327,6 +330,11 @@ namespace april
 #endif
 	}
 	
+	Cursor* SDL_Window::_createCursor()
+	{
+		return new SDL_Cursor();
+	}
+
 	void SDL_Window::_handleSDLKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
 	{
 		april::Key akeysym = AK_UNKNOWN;

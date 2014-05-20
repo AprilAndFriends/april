@@ -1,7 +1,7 @@
 /// @file
 /// @author  Kresimir Spes
 /// @author  Boris Mikic
-/// @version 3.31
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -19,12 +19,14 @@
 #endif
 
 #include <april/april.h>
+#include <april/Cursor.h>
 #include <april/main.h>
 #include <april/Platform.h>
 #include <april/RenderSystem.h>
 #include <april/UpdateDelegate.h>
 #include <april/Window.h>
 
+april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
 april::TexturedVertex v[4];
 
@@ -116,7 +118,8 @@ void april_init(const harray<hstr>& args)
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
 	april::window->setUpdateDelegate(updateDelegate);
-	april::window->setCursorFilename(RESOURCE_PATH "cursor");
+	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
+	april::window->setCursor(cursor);
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
 	v[0].x = -1.0f;	v[0].y = 1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
 	v[1].x = 1.0f;	v[1].y = 1.0f;	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
@@ -126,6 +129,8 @@ void april_init(const harray<hstr>& args)
 
 void april_destroy()
 {
+	april::window->setCursor(NULL);
+	delete cursor;
 	delete texture;
 	april::destroy();
 	delete updateDelegate;
