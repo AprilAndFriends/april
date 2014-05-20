@@ -173,8 +173,8 @@ namespace april
 		// virtual getters/setters
 		virtual inline void setTitle(chstr value) { this->title = value; }
 		virtual inline bool isCursorVisible() { return this->cursorVisible; }
-		virtual inline void setCursorVisible(bool value) { this->cursorVisible = value; }
-		virtual inline void setCursor(Cursor* value) { this->cursor = value; }
+		virtual void setCursorVisible(bool value);
+		virtual void setCursor(Cursor* value);
 		virtual bool isCursorInside();
 
 		virtual void setResolution(int w, int h);
@@ -275,6 +275,7 @@ namespace april
 		virtual void _setRenderSystemResolution(int w, int h, bool fullscreen);
 
 		virtual Cursor* _createCursor() = 0;
+		virtual void _refreshCursor();
 
 	};
 

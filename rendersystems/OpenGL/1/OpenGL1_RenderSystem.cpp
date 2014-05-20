@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -74,21 +74,18 @@ namespace april
 		{
 			return;
 		}
-		if (april::window->getName() == APRIL_WS_WIN32)
+		this->hRC = wglCreateContext(this->hDC);
+		if (this->hRC == 0)
 		{
-			this->hRC = wglCreateContext(this->hDC);
-			if (this->hRC == 0)
-			{
-				hlog::error(april::logTag, "Can't create a GL rendering context!");
-				this->_releaseWindow();
-				return;
-			}
-			if (wglMakeCurrent(this->hDC, this->hRC) == 0)
-			{
-				hlog::error(april::logTag, "Can't activate the GL rendering context!");
-				this->_releaseWindow();
-				return;
-			}
+			hlog::error(april::logTag, "Can't create a GL rendering context!");
+			this->_releaseWindow();
+			return;
+		}
+		if (wglMakeCurrent(this->hDC, this->hRC) == 0)
+		{
+			hlog::error(april::logTag, "Can't activate the GL rendering context!");
+			this->_releaseWindow();
+			return;
 		}
 #endif
 		OpenGL_RenderSystem::assignWindow(window);

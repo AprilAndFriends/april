@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.31
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -53,6 +53,10 @@ namespace april
 	bool OpenGL_Texture::_createInternalTexture(unsigned char* data, int size, Type type)
 	{
 		glGenTextures(1, &this->textureId);
+		if (this->textureId == 0)
+		{
+			return false;
+		}
 		this->firstUpload = true;
 		this->_setCurrentTexture();
 		// required first call of glTexImage2D() to prevent problems

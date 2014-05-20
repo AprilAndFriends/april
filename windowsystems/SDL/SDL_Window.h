@@ -13,18 +13,16 @@
 /// 
 /// Defines an SDL window.
 
+#ifdef _SDL_WINDOW
 #ifndef APRIL_SDL_WINDOW_H
 #define APRIL_SDL_WINDOW_H
-
-#ifdef _SDL_WINDOW
-
-#include <SDL/SDL_keysym.h>
-#include <hltypes/hstring.h>
+#include <SDL/SDL.h>
 
 #ifdef _OPENGLES
-#include <SDL/SDL.h>
 #include <SDL/SDL_gles.h>
 #endif
+
+#include <hltypes/hstring.h>
 
 #include "aprilExport.h"
 #include "Window.h"
@@ -44,7 +42,6 @@ namespace april
 		
 		void setTitle(chstr title);
 		bool isCursorVisible();
-		void setCursorVisible(bool visible);
 		HL_DEFINE_IS(cursorInside, CursorInside);
 		int getWidth();
 		int getHeight();
@@ -59,16 +56,17 @@ namespace april
 	protected:
 		bool cursorInside;
 		bool scrollHorizontal;
-		SDL_Surface* screen;
-		int videoBpp;
-		unsigned int videoFlags;
+		::SDL_Window* window;
+		SDL_Renderer* renderer;
+		// TODO - is this still needed in SDL 2?
 #ifdef _OPENGLES
 		SDL_GLES_Context* glesContext;
 #endif
 
 		Cursor* _createCursor();
+		void _refreshCursor();
 
-		void _handleSDLKeyEvent(Window::KeyEventType type, SDLKey keyCode, unsigned int unicode);
+		void _handleSDLKeyEvent(Window::KeyEventType type, SDL_Keycode keyCode, unsigned int unicode);
 		void _handleSDLMouseEvent(SDL_Event &evt);
 		float _calcTimeSinceLastFrame();
 

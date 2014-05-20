@@ -158,7 +158,7 @@ void april_init(const harray<hstr>& args)
 	dv[1].x = drawRect.w;	dv[1].y = 0.0f;			dv[1].z = 0.0f;	dv[1].u = 1.0f;	dv[1].v = 0.0f;
 	dv[2].x = 0.0f;			dv[2].y = drawRect.h;	dv[2].z = 0.0f;	dv[2].u = 0.0f;	dv[2].v = 1.0f;
 	dv[3].x = drawRect.w;	dv[3].y = drawRect.h;	dv[3].z = 0.0f;	dv[3].u = 1.0f;	dv[3].v = 1.0f;
-	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
+	april::init(april::RS_DEFAULT, april::WS_SDL);
 	april::createRenderSystem();
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple Demo");
 #ifdef _WINRT

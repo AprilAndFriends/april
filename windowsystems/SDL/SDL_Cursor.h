@@ -17,6 +17,7 @@
 #define APRIL_SDL_CURSOR_H
 
 #include <hltypes/hplatform.h>
+#include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
 #include "Cursor.h"
@@ -29,7 +30,11 @@ namespace april
 		SDL_Cursor();
 		~SDL_Cursor();
 
+		HL_DEFINE_GET(::SDL_Cursor*, cursor, Cursor);
+
 	protected:
+		::SDL_Cursor* cursor;
+
 		bool _create(chstr filename);
 
 	};
