@@ -2,7 +2,7 @@
 /// @author  Kresimir Spes
 /// @author  Ivan Vucica
 /// @author  Boris Mikic
-/// @version 3.32
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -87,7 +87,7 @@ namespace april
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
 	{
 		this->state = new RenderState(); // TODOa
-#if defined(_WIN32) && defined(_WIN32_WINDOW)
+#ifdef _WIN32
 		this->hWnd = 0;
 		this->hDC = 0;
 #endif
@@ -129,51 +129,44 @@ namespace april
 #ifdef _WIN32
 	void OpenGL_RenderSystem::_releaseWindow()
 	{
-#ifdef _WIN32_WINDOW
-		if (april::window->getName() == APRIL_WS_WIN32 && this->hDC != 0)
+		if (this->hDC != 0)
 		{
 			ReleaseDC(this->hWnd, this->hDC);
 			this->hDC = 0;
 		}
-#endif
 	}
 
 	bool OpenGL_RenderSystem::_initWin32(Window* window)
 	{
-#ifdef _WIN32_WINDOW
-		if (april::window->getName() == APRIL_WS_WIN32)
+		this->hWnd = (HWND)window->getBackendId();
+		PIXELFORMATDESCRIPTOR pfd;
+		memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
+		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+		pfd.nVersion = 1;
+		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL |	PFD_DOUBLEBUFFER;
+		pfd.iPixelType = PFD_TYPE_RGBA;
+		pfd.cColorBits = 24;
+		pfd.cStencilBits = 16;
+		pfd.dwLayerMask = PFD_MAIN_PLANE;
+		this->hDC = GetDC(this->hWnd);
+		if (this->hDC == 0)
 		{
-			this->hWnd = (HWND)window->getBackendId();
-			PIXELFORMATDESCRIPTOR pfd;
-			memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
-			pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-			pfd.nVersion = 1;
-			pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL |	PFD_DOUBLEBUFFER;
-			pfd.iPixelType = PFD_TYPE_RGBA;
-			pfd.cColorBits = 24;
-			pfd.cStencilBits = 16;
-			pfd.dwLayerMask = PFD_MAIN_PLANE;
-			this->hDC = GetDC(this->hWnd);
-			if (this->hDC == 0)
-			{
-				hlog::error(april::logTag, "Can't create a GL device context!");
-				return false;
-			}
-			GLuint pixelFormat = ChoosePixelFormat(this->hDC, &pfd);
-			if (pixelFormat == 0)
-			{
-				hlog::error(april::logTag, "Can't find a suitable pixel format!");
-				this->_releaseWindow();
-				return false;
-			}
-			if (SetPixelFormat(this->hDC, pixelFormat, &pfd) == 0)
-			{
-				hlog::error(april::logTag, "Can't set the pixel format!");
-				this->_releaseWindow();
-				return false;
-			}
+			hlog::error(april::logTag, "Can't create a GL device context!");
+			return false;
 		}
-#endif
+		GLuint pixelFormat = ChoosePixelFormat(this->hDC, &pfd);
+		if (pixelFormat == 0)
+		{
+			hlog::error(april::logTag, "Can't find a suitable pixel format!");
+			this->_releaseWindow();
+			return false;
+		}
+		if (SetPixelFormat(this->hDC, pixelFormat, &pfd) == 0)
+		{
+			hlog::error(april::logTag, "Can't set the pixel format!");
+			this->_releaseWindow();
+			return false;
+		}
 		return true;
 	}
 #endif

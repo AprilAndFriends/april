@@ -37,8 +37,6 @@ namespace april
 
 		void setTitle(chstr title);
 		bool isCursorVisible();
-		void setCursorVisible(bool value);
-		void setCursor(Cursor* value);
 		int getWidth();
 		int getHeight();
 		void* getBackendId();

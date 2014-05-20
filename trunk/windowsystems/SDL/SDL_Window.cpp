@@ -59,20 +59,23 @@ namespace april
 	SDL_Window::SDL_Window() : Window()
 	{
 		this->name = APRIL_WS_SDL;
-		// centered SDL window
+		// TODO - is this still needed in SDL 2?
+		/*
 #ifndef __APPLE__
-		SDL_putenv("SDL_VIDEO_WINDOW_POS");
-		SDL_putenv("SDL_VIDEO_CENTERED=1");
+		SDL_setenv("SDL_VIDEO_WINDOW_POS", "1", 1);
+		SDL_setenv("SDL_VIDEO_CENTERED", "1", 1);
 #endif
+		*/
 		this->cursorInside = true;
 		this->scrollHorizontal = false;
-		this->screen = NULL;
+		this->window = NULL;
+		this->renderer = NULL;
 		this->created = false;
+		// TODO - is this still needed in SDL 2?
 #ifdef _OPENGLES
 		this->glesContext = NULL;
 #endif
 		this->cursorExtensions += ".png";
-		//this->cursorExtensions += ".cur";
 	}
 	
 	SDL_Window::~SDL_Window()
@@ -90,67 +93,45 @@ namespace april
 		this->cursorInside = true;
 		// initialize only SDL video subsystem
 		SDL_Init(SDL_INIT_VIDEO);
-		// and immediately set window title
-		SDL_WM_SetCaption(this->title.c_str(), this->title.c_str());
-		this->videoFlags = (fullscreen ? SDL_FULLSCREEN : 0);
+		int flags = SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_MOUSE_FOCUS;
+		if (fullscreen)
+		{
+			flags |= SDL_WINDOW_FULLSCREEN;
+		}
 		if (this->options.resizable)
 		{
-			this->videoFlags |= SDL_RESIZABLE;
+			flags |= SDL_WINDOW_RESIZABLE;
 		}
-		this->videoBpp = 0;
 #ifdef _OPENGL
-#ifdef _OPENGL1
-		if (dynamic_cast<OpenGL1_RenderSystem*>(april::rendersys) != NULL)
+		harray<hstr> renderSystems;
+		renderSystems += APRIL_RS_OPENGL1;
+		renderSystems += APRIL_RS_OPENGLES1;
+		renderSystems += APRIL_RS_OPENGLES2;
+		if (renderSystems.contains(april::rendersys->getName()))
 		{
-			// set up opengl attributes desired for the context
-			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-			SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-			this->videoFlags |= SDL_OPENGL;
-			this->screen = SDL_SetVideoMode(w, h, this->videoBpp, this->videoFlags);
+			flags |= SDL_WINDOW_OPENGL;
 		}
 #endif
-#ifdef _OPENGLES
-		if (dynamic_cast<OpenGLES_RenderSystem*>(april::rendersys) != NULL)
+		this->window = SDL_CreateWindow(this->title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, flags);
+		if (this->window == NULL)
 		{
-			SDL_GLES_Init(SDL_GLES_VERSION_1_1);
-			this->videoFlags = SDL_SWSURFACE;
-			this->videoBpp = 16;
-			this->screen = SDL_SetVideoMode(0, 0, this->videoBpp, this->videoFlags);
-			this->glesContext = SDL_GLES_CreateContext();
-			SDL_GLES_MakeCurrent(this->glesContext);
+			hlog::error(april::logTag, "SDL window could not be created!");
+			return false;
 		}
-#endif
-		glClear(GL_COLOR_BUFFER_BIT);
-#endif
-#ifdef _DIRECTX
-		if (dynamic_cast<DirectX_RenderSystem*>(april::rendersys) != NULL)
+		this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+		if (this->renderer == NULL)
 		{
-			this->screen = SDL_SetVideoMode(w, h, this->videoBpp, this->videoFlags);
+			SDL_DestroyWindow(this->window);
+			this->window = NULL;
+			hlog::error(april::logTag, "SDL renderer could not be created!");
+			return false;
 		}
-#endif
-		if (this->screen == NULL)
-		{
-#ifdef __APPLE__
-#if !TARGET_OS_IPHONE
-			// TODO elsewhere, add support for platform-specific msgbox code
-			//NSRunAlertPanel(@"Could not open display", @"Game could not set the screen resolution. Perhaps resetting game configuration will help.", @"Ok", nil, nil);
-#endif
-#endif
-			throw hl_exception("Requested display mode could not be provided!");
-		}
-#ifndef _WIN32
 		april::rendersys->clear();
 		april::rendersys->presentFrame();
-#endif
-		SDL_FillRect(SDL_GetVideoSurface(), NULL, 0);
 		// not running yet
 		this->running = false;
 		// cursor is visible by default
 		this->cursorVisible = true;
-		// key repeat
-		SDL_EnableKeyRepeat(100, 50);
-		this->checkEvents();
-		SDL_EnableUNICODE(1);
 		this->created = true;
 		return true;
 	}
@@ -161,10 +142,10 @@ namespace april
 		{
 			return false;
 		}
-#ifdef _OPENGLES
-		SDL_GLES_DeleteContext(this->glesContext);
-		SDL_GLES_Quit();
-#endif
+		SDL_DestroyRenderer(this->renderer);
+		this->renderer = NULL;
+		SDL_DestroyWindow(this->window);
+		this->window = NULL;
 		SDL_Quit();
 		return true;
 	}
@@ -172,11 +153,12 @@ namespace april
 	void SDL_Window::setTitle(chstr value)
 	{
 		Window::setTitle(value);
-		SDL_WM_SetCaption(this->title.c_str(), this->title.c_str());
+		SDL_SetWindowTitle(this->window, this->title.c_str());
 	}
 	
 	bool SDL_Window::isCursorVisible()
 	{
+		// TODO - is this still needed in SDL 2?
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 		return this->cursorVisible;
 #else
@@ -184,41 +166,43 @@ namespace april
 #endif
 	}
 	
-	void SDL_Window::setCursorVisible(bool value)
+	void SDL_Window::_refreshCursor()
 	{
-		Window::setCursorVisible(value);
-		// TODO - refactor
-#if TARGET_OS_MAC && !TARGET_OS_IPHONE
-		// intentionally do nothing; let the platform specific code take over
-		// if sdl-hidden mouse goes over the dock, then it will show again,
-		// and won't be hidden again
-#else
-		// on other platforms, SDL does a good enough job
 		SDL_ShowCursor(this->cursorVisible ? 1 : 0);
-#endif
+		::SDL_Cursor* cursor = NULL;
+		if (this->isCursorVisible() && this->cursor != NULL)
+		{
+			cursor = ((SDL_Cursor*)this->cursor)->getCursor();
+		}
+		SDL_SetCursor(cursor);
 	}
-	
+
 	int SDL_Window::getWidth()
 	{
-		return SDL_GetVideoInfo()->current_w;
+		int w = 0;
+		int h = 0;
+		SDL_GetWindowSize(this->window, &w, &h);
+		return w;
 	}
 	
 	int SDL_Window::getHeight()
 	{
-		return SDL_GetVideoInfo()->current_h;
+		int w = 0;
+		int h = 0;
+		SDL_GetWindowSize(this->window, &w, &h);
+		return h;
 	}
 	
 	void* SDL_Window::getBackendId()
 	{
-#ifdef _WIN32
 		SDL_SysWMinfo wmInfo;
 		SDL_VERSION(&wmInfo.version);
-		SDL_GetWMInfo(&wmInfo);
-		return (void*)wmInfo.window;
-#else
-		// not implemented
+		SDL_GetWindowWMInfo(this->window, &wmInfo);
+		if (wmInfo.subsystem == SDL_SYSWM_WINDOWS)
+		{
+			return (void*)wmInfo.info.win.window;
+		}
 		return NULL;
-#endif
 	}
 	
 	void SDL_Window::setResolution(int w, int h, bool fullscreen)
@@ -227,8 +211,7 @@ namespace april
 		{
 			return;
 		}
-		this->videoFlags = (fullscreen ? this->videoFlags | SDL_FULLSCREEN : this->videoFlags & ~SDL_FULLSCREEN);
-		SDL_SetVideoMode(w, h, this->videoBpp, this->videoFlags);
+		SDL_SetWindowFullscreen(this->window, fullscreen ? 1 : 0);
 	}
 	
 	bool SDL_Window::updateOneFrame()
@@ -249,13 +232,37 @@ namespace april
 	void SDL_Window::checkEvents()
 	{
 		SDL_Event sdlEvent;
+		std::basic_string<unsigned int> text;
 		while (SDL_PollEvent(&sdlEvent))
 		{
 			switch (sdlEvent.type)
 			{
-			case SDL_VIDEORESIZE:
-				SDL_SetVideoMode(sdlEvent.resize.w, sdlEvent.resize.h, this->videoBpp, this->videoFlags);
-				this->_setRenderSystemResolution(sdlEvent.resize.w, sdlEvent.resize.h, this->fullscreen);
+			case SDL_WINDOWEVENT:
+				switch (sdlEvent.window.event)
+				{
+				case SDL_WINDOWEVENT_RESIZED:
+					SDL_SetWindowSize(this->window, sdlEvent.window.data1, sdlEvent.window.data2);
+					this->_setRenderSystemResolution(sdlEvent.window.data1, sdlEvent.window.data2, this->fullscreen);
+					break;
+				case SDL_WINDOWEVENT_FOCUS_GAINED:
+					this->handleFocusChangeEvent(true);
+					break;
+				case SDL_WINDOWEVENT_FOCUS_LOST:
+					this->handleFocusChangeEvent(false);
+					break;
+				case SDL_WINDOWEVENT_ENTER:
+					if (this->isCursorVisible() && !this->cursorVisible)
+					{
+						SDL_ShowCursor(0);
+					}
+					this->cursorInside = true;
+					break;
+				case SDL_WINDOWEVENT_LEAVE:
+					this->cursorInside = false;
+					break;
+				default:
+					break;
+				}
 				break;
 			case SDL_QUIT:
 				if (this->handleQuitRequest(true))
@@ -266,6 +273,7 @@ namespace april
 			case SDL_KEYUP:
 			case SDL_KEYDOWN:
 #ifdef __APPLE__
+				// TODO - needs to be changed for SDL 2
 				// on mac os, we need to handle command+q
 				if (SDL_GetModState() & KMOD_META && (tolower(sdlEvent.key.keysym.unicode) == 'q' || sdlEvent.key.keysym.sym == SDLK_q))
 				{
@@ -277,33 +285,29 @@ namespace april
 				else
 #endif
 				{
-					this->_handleSDLKeyEvent((sdlEvent.type == SDL_KEYUP ? KEY_UP : KEY_DOWN),
-						sdlEvent.key.keysym.sym, sdlEvent.key.keysym.unicode);
+					this->_handleSDLKeyEvent((sdlEvent.type == SDL_KEYUP ? KEY_UP : KEY_DOWN), sdlEvent.key.keysym.sym, 0);
 				}
+				break;
+			case SDL_TEXTINPUT:
+				text = hstr(sdlEvent.text.text).u_str();
+				for_itert (unsigned int, i, 0, text.size())
+				{
+					this->_handleSDLKeyEvent(KEY_DOWN, 0, text[i]);
+				}
+				break;
+			case SDL_TEXTEDITING:
+				// TODO - needs to be implemented
 				break;
 			case SDL_MOUSEBUTTONUP:
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEMOTION:
 				this->_handleSDLMouseEvent(sdlEvent);
 				break;
-			case SDL_ACTIVEEVENT:
-				if (sdlEvent.active.state & SDL_APPINPUTFOCUS)
-				{
-					this->handleFocusChangeEvent(sdlEvent.active.gain != 0);
-				}
-				if (sdlEvent.active.state & SDL_APPMOUSEFOCUS)
-				{
-					if (sdlEvent.active.gain && this->isCursorVisible() && !this->cursorVisible)
-					{
-						SDL_ShowCursor(0);
-					}
-					this->cursorInside = (sdlEvent.active.gain != 0);
-				}
-				break;
 			default:
 				break;
 			}
 		}
+		// TODO - is this still needed in SDL 2?
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 		platform_cursorVisibilityUpdate();
 #endif
@@ -311,22 +315,15 @@ namespace april
 	
 	void SDL_Window::presentFrame()
 	{
-#ifdef _OPENGL
-#ifdef _OPENGL1
-		if (april::rendersys->getName() == APRIL_RS_OPENGL1)
-		{
-			SDL_GL_SwapBuffers();
-		}
-#endif
-#ifdef _OPENGLES
+#if defined(_WIN32) && defined(_OPENGL)
 		harray<hstr> renderSystems;
+		renderSystems += APRIL_RS_OPENGL1;
 		renderSystems += APRIL_RS_OPENGLES1;
 		renderSystems += APRIL_RS_OPENGLES2;
 		if (renderSystems.contains(april::rendersys->getName()))
 		{
-			SDL_GLES_SwapBuffers();
+			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
 		}
-#endif
 #endif
 	}
 	
@@ -335,7 +332,7 @@ namespace april
 		return new SDL_Cursor();
 	}
 
-	void SDL_Window::_handleSDLKeyEvent(Window::KeyEventType type, SDLKey keysym, unsigned int unicode)
+	void SDL_Window::_handleSDLKeyEvent(Window::KeyEventType type, SDL_Keycode keysym, unsigned int unicode)
 	{
 		april::Key akeysym = AK_UNKNOWN;
 	
@@ -393,27 +390,28 @@ namespace april
 			sea_u0(F11);
 			sea_u0(F12);
 			s2a(ESCAPE, ESCAPE);
-			
+
 			// keypad keys
-			s2a(KP0, NUMPAD0);
-			s2a(KP1, NUMPAD1);
-			s2a(KP2, NUMPAD2);
-			s2a(KP3, NUMPAD3);
-			s2a(KP4, NUMPAD4);
-			s2a(KP5, NUMPAD5);
-			s2a(KP6, NUMPAD6);
-			s2a(KP7, NUMPAD7);
-			s2a(KP8, NUMPAD8);
-			s2a(KP9, NUMPAD9);
+			s2a(KP_0, NUMPAD0);
+			s2a(KP_1, NUMPAD1);
+			s2a(KP_2, NUMPAD2);
+			s2a(KP_3, NUMPAD3);
+			s2a(KP_4, NUMPAD4);
+			s2a(KP_5, NUMPAD5);
+			s2a(KP_6, NUMPAD6);
+			s2a(KP_7, NUMPAD7);
+			s2a(KP_8, NUMPAD8);
+			s2a(KP_9, NUMPAD9);
 			
 			s2a(LCTRL, LCONTROL);
 			s2a(RCTRL, RCONTROL);
 			s2a(LALT, LMENU);
 			s2a(RALT, RMENU);
-			s2a(LMETA, LCOMMAND);
-			s2a(RMETA, RCOMMAND);
+			s2a(LGUI, LCOMMAND); // TODO - check if this is ok in SDL 2
+			s2a(RGUI, RCOMMAND); // TODO - check if this is ok in SDL 2
 			s2a(LSHIFT, LSHIFT);
 			s2a(RSHIFT, RSHIFT);
+
 		default:
 			break;
 		}
@@ -438,12 +436,12 @@ namespace april
 				this->scrollHorizontal = false;
 			}
 		}
-		Window::handleKeyEvent(type, akeysym, unicode);
+		Window::handleKeyEvent(type, akeysym, 0);
 	}
 		
 	void SDL_Window::_handleSDLMouseEvent(SDL_Event& sdlEvent)
 	{
-		this->cursorPosition.set(sdlEvent.button.x, sdlEvent.button.y);
+		this->cursorPosition.set((float)sdlEvent.button.x, (float)sdlEvent.button.y);
 		Window::MouseEventType mouseEvent;
 		april::Key mouseButton = AK_NONE;
 
@@ -475,25 +473,23 @@ namespace april
 			case SDL_BUTTON_MIDDLE:
 				mouseButton = AK_MBUTTON;
 				break;
-			case SDL_BUTTON_WHEELUP:
-				if (sdlEvent.type == SDL_MOUSEBUTTONDOWN)
-				{
-					mouseButton = AK_WHEELUP;
-					mouseEvent = MOUSE_SCROLL;
-				}
-				else return;
-				break;
-			case SDL_BUTTON_WHEELDOWN:
-				if (sdlEvent.type == SDL_MOUSEBUTTONDOWN)
-				{
-					mouseButton = AK_WHEELDN;
-					mouseEvent = MOUSE_SCROLL;
-				}
-				else return;
-				break;
 			default:
 				mouseButton = AK_NONE;
 				break;
+			}
+		}
+
+		if (sdlEvent.type == SDL_MOUSEWHEEL)
+		{
+			if (sdlEvent.wheel.x > 0 || sdlEvent.wheel.y > 0)
+			{
+				mouseButton = AK_WHEELDN;
+				mouseEvent = MOUSE_SCROLL;
+			}
+			else if (sdlEvent.wheel.x < 0 || sdlEvent.wheel.y < 0)
+			{
+				mouseButton = AK_WHEELUP;
+				mouseEvent = MOUSE_SCROLL;
 			}
 		}
 		

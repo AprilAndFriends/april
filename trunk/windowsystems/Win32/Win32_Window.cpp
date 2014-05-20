@@ -150,18 +150,6 @@ namespace april
 		return (Window::isCursorVisible() || !this->isCursorInside());
 	}
 	
-	void Win32_Window::setCursorVisible(bool value)
-	{
-		Window::setCursorVisible(value);
-		this->_refreshCursor();
-	}
-	
-	void Win32_Window::setCursor(Cursor* value)
-	{
-		Window::setCursor(value);
-		this->_refreshCursor();
-	}
-
 	void Win32_Window::_refreshCursor()
 	{
 		HCURSOR cursor = NULL;
@@ -171,7 +159,7 @@ namespace april
 			{
 				cursor = ((Win32_Cursor*)this->cursor)->getCursor();
 			}
-			if (this->cursor == NULL)
+			if (cursor == NULL)
 			{
 				cursor = this->defaultCursor;
 			}

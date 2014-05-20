@@ -270,6 +270,18 @@ namespace april
 		return ((float)this->getWidth() / this->getHeight());
 	}
 	
+	void Window::setCursorVisible(bool value)
+	{
+		this->cursorVisible = value;
+		this->_refreshCursor();
+	}
+
+	void Window::setCursor(Cursor* value)
+	{
+		this->cursor = value;
+		this->_refreshCursor();
+	}
+
 	bool Window::isCursorInside()
 	{
 		return grect(0.0f, 0.0f, this->getSize()).isPointInside(this->getCursorPosition());
@@ -672,6 +684,10 @@ namespace april
 			return NULL;
 		}
 		return cursor;
+	}
+
+	void Window::_refreshCursor()
+	{
 	}
 
 }
