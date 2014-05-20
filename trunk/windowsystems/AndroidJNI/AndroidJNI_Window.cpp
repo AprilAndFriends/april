@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -17,6 +17,7 @@
 
 #define __NATIVE_INTERFACE_CLASS "com/april/NativeInterface"
 #include "androidUtilJNI.h"
+#include "AndroidJNI_Cursor.h"
 #include "AndroidJNI_Window.h"
 #include "AndroidJNI_Keys.h"
 #include "april.h"
@@ -120,6 +121,11 @@ namespace april
 	{
 		this->forcedFocus = false;
 		Window::handleFocusChangeEvent(focused);
+	}
+
+	Cursor* AndroidJNI_Window::_createCursor()
+	{
+		return new AndroidJNI_Cursor();
 	}
 
 }

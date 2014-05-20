@@ -287,6 +287,9 @@
     <ClCompile Include="windowsystems\SDL\SDL_Cursor.cpp">
       <Filter>Source Files\windowsystems\SDL</Filter>
     </ClCompile>
+    <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Cursor.cpp">
+      <Filter>Source Files\windowsystems\AndroidJNI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -453,6 +456,9 @@
     </ClInclude>
     <ClInclude Include="windowsystems\SDL\SDL_Cursor.h">
       <Filter>Header Files\windowsystems\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Cursor.h">
+      <Filter>Header Files\windowsystems\AndroidJNI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
