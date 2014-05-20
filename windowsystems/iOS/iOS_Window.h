@@ -80,6 +80,7 @@ namespace april
 		void applicationDidBecomeActive();
 		
 		void _setCursorPosition(float x, float y);
+		Cursor* _createCursor();
 		float _getTouchScale();
 		
 	protected:

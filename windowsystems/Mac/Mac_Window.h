@@ -38,6 +38,7 @@ namespace april
 		
 		void updateCursorPosition(gvec2& pos);
 		bool isCursorVisible();
+		void setCursor(Cursor* value);
 		void setCursorVisible(bool visible);
 		bool isCursorInside();
 
@@ -59,6 +60,8 @@ namespace april
 		bool splashScreenFadeout;
 		bool fpsCounter;
 		hstr fpsTitle;
+	protected:
+		Cursor* _createCursor();
 	};
 	
 }

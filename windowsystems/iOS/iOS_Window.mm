@@ -217,6 +217,11 @@ namespace april
 	{
 		this->cursorPosition.set(x, y);
 	}
+	
+	Cursor* iOS_Window::_createCursor()
+	{
+		return NULL;
+	}
 
 	bool iOS_Window::isCursorVisible()
 	{

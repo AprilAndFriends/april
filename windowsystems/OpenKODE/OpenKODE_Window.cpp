@@ -544,6 +544,11 @@ namespace april
 #endif
 	}
 
+	Cursor* OpenKODE_Window::_createCursor()
+	{
+		return NULL;
+	}
+
 	bool OpenKODE_Window::_isMousePointer() 
 	{ 
 		KDint32 type; 
