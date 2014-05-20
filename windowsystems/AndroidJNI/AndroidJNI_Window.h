@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -24,6 +24,8 @@
 
 namespace april
 {
+	class Cursor;
+
 	class AndroidJNI_Window : public Window
 	{
 	public:
@@ -54,6 +56,9 @@ namespace april
 		int width;
 		int height;
 		bool forcedFocus;
+
+		Cursor* _createCursor();
+		void _refreshCursor() { }
 		
 	};
 

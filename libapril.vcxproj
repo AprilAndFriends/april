@@ -475,6 +475,24 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugS_OpenGLES1|Android-x86'">
     <ClCompile />
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9|Win32'">
+    <ClCompile />
+    <Link />
+    <Link>
+      <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <PreprocessorDefinitions>_SDL_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGL1|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_SDL_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="platforms\AndroidJNI_Platform.cpp" />
     <ClCompile Include="platforms\Android_main.cpp" />
@@ -527,6 +545,7 @@
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp" />
     <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp" />
+    <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Cursor.cpp" />
     <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Keys.cpp" />
     <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Window.cpp" />
     <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Keys.cpp" />
@@ -585,6 +604,7 @@
     <ClInclude Include="rendersystems\OpenGL\OpenGL_State.h" />
     <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h" />
     <ClInclude Include="src\egl.h" />
+    <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Cursor.h" />
     <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Keys.h" />
     <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Window.h" />
     <ClInclude Include="windowsystems\OpenKODE\OpenKODE_Window.h" />
