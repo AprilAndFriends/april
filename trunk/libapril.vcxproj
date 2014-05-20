@@ -475,24 +475,6 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugS_OpenGLES1|Android-x86'">
     <ClCompile />
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9|Win32'">
-    <ClCompile />
-    <Link />
-    <Link>
-      <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-    <ClCompile>
-      <PreprocessorDefinitions>_SDL_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGL1|Win32'">
-    <ClCompile>
-      <PreprocessorDefinitions>_SDL_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="platforms\AndroidJNI_Platform.cpp" />
     <ClCompile Include="platforms\Android_main.cpp" />
