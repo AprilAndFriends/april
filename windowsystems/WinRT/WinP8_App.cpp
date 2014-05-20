@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -111,11 +111,7 @@ namespace april
 	{
 	}
 
-	void WinP8_App::setCursorVisible(bool value)
-	{
-	}
-
-	void WinP8_App::setCursorResourceId(unsigned int id)
+	void WinP8_App::refreshCursor()
 	{
 	}
 	

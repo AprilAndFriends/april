@@ -1,6 +1,6 @@
 ﻿/// @file
 /// @author  Boris Mikic
-/// @version 3.34
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -23,6 +23,7 @@
 #include "Window.h"
 #include "WinRT.h"
 #include "WinRT_BaseApp.h"
+#include "WinRT_Cursor.h"
 #include "WinRT_Window.h"
 #include "WinRT_XamlApp.h"
 
@@ -50,7 +51,7 @@ namespace april
 		this->logoTexture = NULL;
 		this->hasStoredViewData = false;
 		this->storedCursorVisible = false;
-		this->cursorResourceId = 0;
+		this->defaultCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
 		this->backgroundColor = april::Color::Black;
 		this->launched = false;
 		this->activated = false;
@@ -77,38 +78,29 @@ namespace april
 		this->backgroundColor = april::Color::Black;
 	}
 
-	void WinRT_XamlApp::setCursorVisible(bool value)
-	{
-		this->_refreshCursor();
-	}
-
-	void WinRT_XamlApp::setCursorResourceId(unsigned int id)
-	{
-		this->cursorResourceId = id;
-		this->_refreshCursor();
-	}
-	
 	bool WinRT_XamlApp::canSuspendResume()
 	{
 		return (!this->snapped && !this->filled);
 	}
 
-	void WinRT_XamlApp::_refreshCursor()
+	void WinRT_XamlApp::refreshCursor()
 	{
 		if (april::window != NULL)
 		{
-			if (!april::window->isCursorVisible())
+			CoreCursor^ cursor = nullptr;
+			if (april::window->isCursorVisible())
 			{
-				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = nullptr;
+				Cursor* windowCursor = april::window->getCursor();
+				if (windowCursor != NULL)
+				{
+					cursor = ((WinRT_Cursor*)windowCursor)->getCursor();
+				}
+				if (cursor == nullptr)
+				{
+					cursor = this->defaultCursor;
+				}
 			}
-			else if (this->cursorResourceId != 0)
-			{
-				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = ref new CoreCursor(CoreCursorType::Custom, this->cursorResourceId);
-			}
-			else
-			{
-				Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
-			}
+			Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = cursor;
 		}
 	}
 
@@ -179,7 +171,7 @@ namespace april
 		{
 			this->launched = true;
 			this->app->assignEvents(Windows::UI::Core::CoreWindow::GetForCurrentThread());
-			this->setCursorVisible(true);
+			this->refreshCursor();
 			WinRT::XamlOverlay = ref new WinRT_XamlOverlay();
 			Windows::UI::Xaml::Window::Current->Content = WinRT::XamlOverlay;
 			Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &WinRT_XamlApp::OnWindowActivationChanged);

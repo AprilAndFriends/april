@@ -246,6 +246,7 @@
     <ClCompile Include="src\april.cpp" />
     <ClCompile Include="src\aprilUtil.cpp" />
     <ClCompile Include="src\Color.cpp" />
+    <ClCompile Include="src\Cursor.cpp" />
     <ClCompile Include="src\delegates\ControllerDelegate.cpp" />
     <ClCompile Include="src\delegates\EventDelegate.cpp" />
     <ClCompile Include="src\delegates\InputDelegate.cpp" />
@@ -275,6 +276,7 @@
     <ClCompile Include="windowsystems\WinRT\WinP8_AppLauncher.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinP8_KeyboardInterface.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_BaseApp.cpp" />
+    <ClCompile Include="windowsystems\WinRT\WinRT_Cursor.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_XamlApp.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT.cpp" />
     <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp" />
@@ -284,12 +286,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\april\androidUtilJNI.h" />
     <ClInclude Include="include\april\april.h" />
     <ClInclude Include="include\april\aprilExport.h" />
     <ClInclude Include="include\april\aprilUtil.h" />
     <ClInclude Include="include\april\Color.h" />
     <ClInclude Include="include\april\ControllerDelegate.h" />
+    <ClInclude Include="include\april\Cursor.h" />
     <ClInclude Include="include\april\EventDelegate.h" />
     <ClInclude Include="include\april\Image.h" />
     <ClInclude Include="include\april\InputDelegate.h" />
@@ -334,6 +336,7 @@
     <ClInclude Include="windowsystems\WinRT\WinP8_AppLauncher.h" />
     <ClInclude Include="windowsystems\WinRT\WinP8_KeyboardInterface.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_BaseApp.h" />
+    <ClInclude Include="windowsystems\WinRT\WinRT_Cursor.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_XamlApp.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT.h" />
     <ClInclude Include="windowsystems\WinRT\WinRT_Window.h" />

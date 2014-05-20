@@ -1,6 +1,6 @@
 /// @file
 /// @author  Boris Mikic
-/// @version 3.3
+/// @version 3.36
 /// 
 /// @section LICENSE
 /// 
@@ -19,6 +19,7 @@
 #include "SystemDelegate.h"
 #include "Timer.h"
 #include "WinRT.h"
+#include "WinRT_Cursor.h"
 #include "WinRT_Window.h"
 
 using namespace Windows::UI::ViewManagement;
@@ -183,18 +184,6 @@ namespace april
 		hlog::warn(april::logTag, "Window::setTitle() does nothing on WinRT.");
 	}
 	
-	void WinRT_Window::setCursorVisible(bool value)
-	{
-		Window::setCursorVisible(value);
-		WinRT::Interface->setCursorVisible(value);
-	}
-
-	void WinRT_Window::setCursorFilename(chstr value)
-	{
-		Window::setCursorFilename(value);
-		WinRT::Interface->setCursorResourceId((unsigned int)this->_findCursorFile());
-	}
-
 	void* WinRT_Window::getBackendId()
 	{
 		// TODO ?
@@ -236,20 +225,29 @@ namespace april
 		WinRT::Interface->hideKeyboard();
 	}
 
-	hstr WinRT_Window::_findCursorFile()
+	hstr WinRT_Window::findCursorFile(chstr filename)
 	{
-		if (this->cursorFilename == "")
+		if (filename != "")
 		{
-			return "0";
-		}
-		foreach (hstr, it, this->cursorExtensions)
-		{
-			if (this->cursorMappings.has_key(this->cursorFilename))
+			foreach (hstr, it, this->cursorExtensions)
 			{
-				return hstr(this->cursorMappings[this->cursorFilename]);
+				if (this->cursorMappings.has_key(filename))
+				{
+					return hstr(this->cursorMappings[filename]);
+				}
 			}
 		}
 		return "0";
+	}
+
+	Cursor* WinRT_Window::_createCursor()
+	{
+		return new WinRT_Cursor();
+	}
+	
+	void WinRT_Window::_refreshCursor()
+	{
+		WinRT::Interface->refreshCursor();
 	}
 	
 }
