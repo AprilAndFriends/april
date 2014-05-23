@@ -83,6 +83,7 @@ namespace april
 		{
 			path = filename;
 		}
+		path = hdir::join_path(hresource::getArchive(), path);
 		image = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.c_str()]];
 
 		if (!image)
