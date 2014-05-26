@@ -657,7 +657,7 @@
 				>
 			</File>
 			<Filter
-				Name="windowsystems"
+				Name="src\windowsystems"
 				>
 				<Filter
 					Name="Win32"
@@ -685,7 +685,7 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="rendersystems"
+				Name="src\rendersystems"
 				>
 				<Filter
 					Name="DirectX"
@@ -785,7 +785,7 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="platforms"
+				Name="src\platforms"
 				>
 				<File
 					RelativePath=".\platforms\Win32_main.cpp"
@@ -931,7 +931,7 @@
 				>
 			</File>
 			<Filter
-				Name="windowsystems"
+				Name="src\windowsystems"
 				>
 				<Filter
 					Name="Win32"
@@ -959,7 +959,7 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="rendersystems"
+				Name="src\rendersystems"
 				>
 				<Filter
 					Name="OpenGL"
