@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugS|Win32">
+      <Configuration>DebugS</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseS|Win32">
+      <Configuration>ReleaseS</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Android">
+      <Configuration>Debug</Configuration>
+      <Platform>Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugS|Android">
+      <Configuration>DebugS</Configuration>
+      <Platform>Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Android">
+      <Configuration>Release</Configuration>
+      <Platform>Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseS|Android">
+      <Configuration>ReleaseS</Configuration>
+      <Platform>Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Android-x86">
+      <Configuration>Debug</Configuration>
+      <Platform>Android-x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugS|Android-x86">
+      <Configuration>DebugS</Configuration>
+      <Platform>Android-x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Android-x86">
+      <Configuration>Release</Configuration>
+      <Platform>Android-x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseS|Android-x86">
+      <Configuration>ReleaseS</Configuration>
+      <Platform>Android-x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{019DBD2A-273D-4BA4-BF86-B5EFE2ED76B1}</ProjectGuid>
+    <ProjectName>libjpeg</ProjectName>
+    <RootNamespace>jpeg</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="props\default.props" />
+  <Import Project="..\..\..\..\..\hltypes\msvc\vs2013\props-generic\platform-$(Platform).props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS|Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS|Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Android-x86'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS|Android-x86'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Android-x86'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS|Android-x86'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="..\..\..\..\..\hltypes\msvc\vs2013\props-generic\build-defaults.props" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\jconfig.h" />
+    <ClInclude Include="..\..\jdct.h" />
+    <ClInclude Include="..\..\jerror.h" />
+    <ClInclude Include="..\..\jinclude.h" />
+    <ClInclude Include="..\..\jmemsys.h" />
+    <ClInclude Include="..\..\jmorecfg.h" />
+    <ClInclude Include="..\..\jpegint.h" />
+    <ClInclude Include="..\..\jpeglib.h" />
+    <ClInclude Include="..\..\jversion.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\jaricom.c" />
+    <ClCompile Include="..\..\jcapimin.c" />
+    <ClCompile Include="..\..\jcapistd.c" />
+    <ClCompile Include="..\..\jcarith.c" />
+    <ClCompile Include="..\..\jccoefct.c" />
+    <ClCompile Include="..\..\jccolor.c" />
+    <ClCompile Include="..\..\jcdctmgr.c" />
+    <ClCompile Include="..\..\jchuff.c" />
+    <ClCompile Include="..\..\jcinit.c" />
+    <ClCompile Include="..\..\jcmainct.c" />
+    <ClCompile Include="..\..\jcmarker.c" />
+    <ClCompile Include="..\..\jcmaster.c" />
+    <ClCompile Include="..\..\jcomapi.c" />
+    <ClCompile Include="..\..\jcparam.c" />
+    <ClCompile Include="..\..\jcprepct.c" />
+    <ClCompile Include="..\..\jcsample.c" />
+    <ClCompile Include="..\..\jctrans.c" />
+    <ClCompile Include="..\..\jdapimin.c" />
+    <ClCompile Include="..\..\jdapistd.c" />
+    <ClCompile Include="..\..\jdarith.c" />
+    <ClCompile Include="..\..\jdatadst.c" />
+    <ClCompile Include="..\..\jdatasrc.c" />
+    <ClCompile Include="..\..\jdcoefct.c" />
+    <ClCompile Include="..\..\jdcolor.c" />
+    <ClCompile Include="..\..\jddctmgr.c" />
+    <ClCompile Include="..\..\jdhuff.c" />
+    <ClCompile Include="..\..\jdinput.c" />
+    <ClCompile Include="..\..\jdmainct.c" />
+    <ClCompile Include="..\..\jdmarker.c" />
+    <ClCompile Include="..\..\jdmaster.c" />
+    <ClCompile Include="..\..\jdmerge.c" />
+    <ClCompile Include="..\..\jdpostct.c" />
+    <ClCompile Include="..\..\jdsample.c" />
+    <ClCompile Include="..\..\jdtrans.c" />
+    <ClCompile Include="..\..\jerror.c" />
+    <ClCompile Include="..\..\jfdctflt.c" />
+    <ClCompile Include="..\..\jfdctfst.c" />
+    <ClCompile Include="..\..\jfdctint.c" />
+    <ClCompile Include="..\..\jidctflt.c" />
+    <ClCompile Include="..\..\jidctfst.c" />
+    <ClCompile Include="..\..\jidctint.c" />
+    <ClCompile Include="..\..\jmemmgr.c" />
+    <ClCompile Include="..\..\jmemnobs.c" />
+    <ClCompile Include="..\..\jquant1.c" />
+    <ClCompile Include="..\..\jquant2.c">
+      <Optimization Condition="'$(Platform)'=='Win32'">Disabled</Optimization>
+      <BufferSecurityCheck Condition="'$(Platform)'=='Win32'">false</BufferSecurityCheck>
+    </ClCompile>
+    <ClCompile Include="..\..\jutils.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
