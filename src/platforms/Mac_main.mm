@@ -13,8 +13,8 @@
 #include "main_base.h"
 #ifdef _COCOA_WINDOW
 #import "Mac_Window.h"
-#import "Mac_AppDelegate.h"
 #endif
+#import "Mac_AppDelegate.h"
 
 int gArgc = 0;
 char** gArgv;
