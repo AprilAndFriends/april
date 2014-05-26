@@ -226,23 +226,23 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="platforms\OpenKODE_main.cpp" />
-    <ClCompile Include="platforms\OpenKODE_Platform.cpp" />
-    <ClCompile Include="platforms\WinRT_main.cpp" />
-    <ClCompile Include="platforms\WinRT_Platform.cpp" />
-    <ClCompile Include="rendersystems\DirectX\11\DirectX11_PixelShader.cpp" />
-    <ClCompile Include="rendersystems\DirectX\11\DirectX11_RenderSystem.cpp" />
-    <ClCompile Include="rendersystems\DirectX\11\DirectX11_Texture.cpp" />
-    <ClCompile Include="rendersystems\DirectX\11\DirectX11_VertexShader.cpp" />
-    <ClCompile Include="rendersystems\DirectX\DirectX_RenderSystem.cpp" />
-    <ClCompile Include="rendersystems\DirectX\DirectX_Texture.cpp" />
-    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp" />
-    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp" />
-    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp" />
-    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_Texture.cpp" />
-    <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp" />
-    <ClCompile Include="rendersystems\OpenGL\OpenGL_State.cpp" />
-    <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp" />
+    <ClCompile Include="src\platforms\OpenKODE_main.cpp" />
+    <ClCompile Include="src\platforms\OpenKODE_Platform.cpp" />
+    <ClCompile Include="src\platforms\WinRT_main.cpp" />
+    <ClCompile Include="src\platforms\WinRT_Platform.cpp" />
+    <ClCompile Include="src\rendersystems\DirectX\11\DirectX11_PixelShader.cpp" />
+    <ClCompile Include="src\rendersystems\DirectX\11\DirectX11_RenderSystem.cpp" />
+    <ClCompile Include="src\rendersystems\DirectX\11\DirectX11_Texture.cpp" />
+    <ClCompile Include="src\rendersystems\DirectX\11\DirectX11_VertexShader.cpp" />
+    <ClCompile Include="src\rendersystems\DirectX\DirectX_RenderSystem.cpp" />
+    <ClCompile Include="src\rendersystems\DirectX\DirectX_Texture.cpp" />
+    <ClCompile Include="src\rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp" />
+    <ClCompile Include="src\rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp" />
+    <ClCompile Include="src\rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp" />
+    <ClCompile Include="src\rendersystems\OpenGL\ES\OpenGLES_Texture.cpp" />
+    <ClCompile Include="src\rendersystems\OpenGL\OpenGL_RenderSystem.cpp" />
+    <ClCompile Include="src\rendersystems\OpenGL\OpenGL_State.cpp" />
+    <ClCompile Include="src\rendersystems\OpenGL\OpenGL_Texture.cpp" />
     <ClCompile Include="src\april.cpp" />
     <ClCompile Include="src\aprilUtil.cpp" />
     <ClCompile Include="src\Color.cpp" />
@@ -270,17 +270,17 @@
     <ClCompile Include="src\timers\TimerWin.cpp" />
     <ClCompile Include="src\VertexShader.cpp" />
     <ClCompile Include="src\Window.cpp" />
-    <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Keys.cpp" />
-    <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Window.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinP8_App.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinP8_AppLauncher.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinP8_KeyboardInterface.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinRT_BaseApp.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinRT_Cursor.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinRT_XamlApp.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinRT.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinRT_Window.cpp" />
-    <ClCompile Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
+    <ClCompile Include="src\windowsystems\OpenKODE\OpenKODE_Keys.cpp" />
+    <ClCompile Include="src\windowsystems\OpenKODE\OpenKODE_Window.cpp" />
+    <ClCompile Include="src\windowsystems\WinRT\WinP8_App.cpp" />
+    <ClCompile Include="src\windowsystems\WinRT\WinP8_AppLauncher.cpp" />
+    <ClCompile Include="src\windowsystems\WinRT\WinP8_KeyboardInterface.cpp" />
+    <ClCompile Include="src\windowsystems\WinRT\WinRT_BaseApp.cpp" />
+    <ClCompile Include="src\windowsystems\WinRT\WinRT_Cursor.cpp" />
+    <ClCompile Include="src\windowsystems\WinRT\WinRT_XamlApp.cpp" />
+    <ClCompile Include="src\windowsystems\WinRT\WinRT.cpp" />
+    <ClCompile Include="src\windowsystems\WinRT\WinRT_Window.cpp" />
+    <ClCompile Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
       <DependentUpon>windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='DebugP8_OpenKODE' or '$(Configuration)'=='ReleaseP8_OpenKODE'">true</ExcludedFromBuild>
     </ClCompile>
@@ -314,33 +314,33 @@
     <ClInclude Include="include\april\VertexShader.h" />
     <ClInclude Include="include\april\Window.h" />
     <ClInclude Include="include\april\WinRT_main.h" />
-    <ClInclude Include="rendersystems\DirectX\11\DirectX11_PixelShader.h" />
-    <ClInclude Include="rendersystems\DirectX\11\DirectX11_RenderSystem.h" />
-    <ClInclude Include="rendersystems\DirectX\11\DirectX11_Texture.h" />
-    <ClInclude Include="rendersystems\DirectX\11\DirectX11_VertexShader.h" />
-    <ClInclude Include="rendersystems\DirectX\DirectX_RenderSystem.h" />
-    <ClInclude Include="rendersystems\DirectX\DirectX_Texture.h" />
-    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h" />
-    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h" />
-    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h" />
-    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_Texture.h" />
-    <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h" />
-    <ClInclude Include="rendersystems\OpenGL\OpenGL_State.h" />
-    <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h" />
+    <ClInclude Include="src\rendersystems\DirectX\11\DirectX11_PixelShader.h" />
+    <ClInclude Include="src\rendersystems\DirectX\11\DirectX11_RenderSystem.h" />
+    <ClInclude Include="src\rendersystems\DirectX\11\DirectX11_Texture.h" />
+    <ClInclude Include="src\rendersystems\DirectX\11\DirectX11_VertexShader.h" />
+    <ClInclude Include="src\rendersystems\DirectX\DirectX_RenderSystem.h" />
+    <ClInclude Include="src\rendersystems\DirectX\DirectX_Texture.h" />
+    <ClInclude Include="src\rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h" />
+    <ClInclude Include="src\rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h" />
+    <ClInclude Include="src\rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h" />
+    <ClInclude Include="src\rendersystems\OpenGL\ES\OpenGLES_Texture.h" />
+    <ClInclude Include="src\rendersystems\OpenGL\OpenGL_RenderSystem.h" />
+    <ClInclude Include="src\rendersystems\OpenGL\OpenGL_State.h" />
+    <ClInclude Include="src\rendersystems\OpenGL\OpenGL_Texture.h" />
     <ClInclude Include="src\egl.h" />
-    <ClInclude Include="windowsystems\OpenKODE\OpenKODE_Keys.h" />
-    <ClInclude Include="windowsystems\OpenKODE\OpenKODE_Window.h" />
-    <ClInclude Include="windowsystems\WinRT\IWinRT.h" />
-    <ClInclude Include="windowsystems\WinRT\pch.h" />
-    <ClInclude Include="windowsystems\WinRT\WinP8_App.h" />
-    <ClInclude Include="windowsystems\WinRT\WinP8_AppLauncher.h" />
-    <ClInclude Include="windowsystems\WinRT\WinP8_KeyboardInterface.h" />
-    <ClInclude Include="windowsystems\WinRT\WinRT_BaseApp.h" />
-    <ClInclude Include="windowsystems\WinRT\WinRT_Cursor.h" />
-    <ClInclude Include="windowsystems\WinRT\WinRT_XamlApp.h" />
-    <ClInclude Include="windowsystems\WinRT\WinRT.h" />
-    <ClInclude Include="windowsystems\WinRT\WinRT_Window.h" />
-    <ClInclude Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
+    <ClInclude Include="src\windowsystems\OpenKODE\OpenKODE_Keys.h" />
+    <ClInclude Include="src\windowsystems\OpenKODE\OpenKODE_Window.h" />
+    <ClInclude Include="src\windowsystems\WinRT\IWinRT.h" />
+    <ClInclude Include="src\windowsystems\WinRT\pch.h" />
+    <ClInclude Include="src\windowsystems\WinRT\WinP8_App.h" />
+    <ClInclude Include="src\windowsystems\WinRT\WinP8_AppLauncher.h" />
+    <ClInclude Include="src\windowsystems\WinRT\WinP8_KeyboardInterface.h" />
+    <ClInclude Include="src\windowsystems\WinRT\WinRT_BaseApp.h" />
+    <ClInclude Include="src\windowsystems\WinRT\WinRT_Cursor.h" />
+    <ClInclude Include="src\windowsystems\WinRT\WinRT_XamlApp.h" />
+    <ClInclude Include="src\windowsystems\WinRT\WinRT.h" />
+    <ClInclude Include="src\windowsystems\WinRT\WinRT_Window.h" />
+    <ClInclude Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
       <DependentUpon>windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='DebugP8_OpenKODE' or '$(Configuration)'=='ReleaseP8_OpenKODE'">true</ExcludedFromBuild>
     </ClInclude>
@@ -367,49 +367,49 @@
     <ResourceCompile Include="fileproperties.rc" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">
+    <FxCompile Include="src\rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">
       <AdditionalIncludeDirectories>rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_Lerp.hlsl">
+    <FxCompile Include="src\rendersystems\DirectX\11\default-shaders\PixelShader_Lerp.hlsl">
       <AdditionalIncludeDirectories>rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_Multiply.hlsl">
+    <FxCompile Include="src\rendersystems\DirectX\11\default-shaders\PixelShader_Multiply.hlsl">
       <AdditionalIncludeDirectories>rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
+    <FxCompile Include="src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
       <AdditionalIncludeDirectories>rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_TexturedLerp.hlsl">
+    <FxCompile Include="src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedLerp.hlsl">
       <AdditionalIncludeDirectories>rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="rendersystems\DirectX\11\default-shaders\PixelShader_TexturedMultiply.hlsl">
+    <FxCompile Include="src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedMultiply.hlsl">
       <AdditionalIncludeDirectories>rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="rendersystems\DirectX\11\default-shaders\VertexShader_Default.hlsl">
+    <FxCompile Include="src\rendersystems\DirectX\11\default-shaders\VertexShader_Default.hlsl">
       <AdditionalIncludeDirectories>rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
       <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="windowsystems\WinRT\WinRT_XamlOverlay.xaml">
+    <Page Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='DebugP8_OpenKODE' or '$(Configuration)'=='ReleaseP8_OpenKODE'">true</ExcludedFromBuild>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="rendersystems\DirectX\11\default-shaders\Shaders.hlsli" />
+    <None Include="src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -128,10 +128,10 @@
     <ClCompile Include="src\VertexShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\OpenGL_RenderSystem.cpp">
+    <ClCompile Include="src\rendersystems\OpenGL\OpenGL_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\OpenGL_Texture.cpp">
+    <ClCompile Include="src\rendersystems\OpenGL\OpenGL_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\april.cpp">
@@ -140,67 +140,67 @@
     <ClCompile Include="src\Platform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Window.cpp">
+    <ClCompile Include="src\windowsystems\AndroidJNI\AndroidJNI_Window.cpp">
       <Filter>Source Files\windowsystems\AndroidJNI</Filter>
     </ClCompile>
-    <ClCompile Include="platforms\Android_main.cpp">
+    <ClCompile Include="src\platforms\Android_main.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
-    <ClCompile Include="platforms\Android_Platform.cpp">
+    <ClCompile Include="src\platforms\Android_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
-    <ClCompile Include="platforms\Win32_main.cpp">
+    <ClCompile Include="src\platforms\Win32_main.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
-    <ClCompile Include="platforms\Win32_Platform.cpp">
+    <ClCompile Include="src\platforms\Win32_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\SDL\SDL_Window.cpp">
+    <ClCompile Include="src\windowsystems\SDL\SDL_Window.cpp">
       <Filter>Source Files\windowsystems\SDL</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\Win32\Win32_Window.cpp">
+    <ClCompile Include="src\windowsystems\Win32\Win32_Window.cpp">
       <Filter>Source Files\windowsystems\Win32</Filter>
     </ClCompile>
     <ClCompile Include="src\aprilUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\DirectX\DirectX_RenderSystem.cpp">
+    <ClCompile Include="src\rendersystems\DirectX\DirectX_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\DirectX\DirectX_Texture.cpp">
+    <ClCompile Include="src\rendersystems\DirectX\DirectX_Texture.cpp">
       <Filter>Source Files\rendersystems\DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\DirectX\9\DirectX9_PixelShader.cpp">
+    <ClCompile Include="src\rendersystems\DirectX\9\DirectX9_PixelShader.cpp">
       <Filter>Source Files\rendersystems\DirectX\9</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\DirectX\9\DirectX9_RenderSystem.cpp">
+    <ClCompile Include="src\rendersystems\DirectX\9\DirectX9_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\DirectX\9</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\DirectX\9\DirectX9_Texture.cpp">
+    <ClCompile Include="src\rendersystems\DirectX\9\DirectX9_Texture.cpp">
       <Filter>Source Files\rendersystems\DirectX\9</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\DirectX\9\DirectX9_VertexShader.cpp">
+    <ClCompile Include="src\rendersystems\DirectX\9\DirectX9_VertexShader.cpp">
       <Filter>Source Files\rendersystems\DirectX\9</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\1\OpenGL1_RenderSystem.cpp">
+    <ClCompile Include="src\rendersystems\OpenGL\1\OpenGL1_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL\1</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\1\OpenGL1_Texture.cpp">
+    <ClCompile Include="src\rendersystems\OpenGL\1\OpenGL1_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL\1</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp">
+    <ClCompile Include="src\rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL\ES</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\ES\OpenGLES_Texture.cpp">
+    <ClCompile Include="src\rendersystems\OpenGL\ES\OpenGLES_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL\ES</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp">
+    <ClCompile Include="src\rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL\ES\1</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp">
+    <ClCompile Include="src\rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL\ES\1</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\OpenGL_State.cpp">
+    <ClCompile Include="src\rendersystems\OpenGL\OpenGL_State.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\delegates\UpdateDelegate.cpp">
@@ -242,34 +242,34 @@
     <ClCompile Include="src\delegates\TouchDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.cpp">
+    <ClCompile Include="src\rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL\ES\2</Filter>
     </ClCompile>
-    <ClCompile Include="rendersystems\OpenGL\ES\2\OpenGLES2_Texture.cpp">
+    <ClCompile Include="src\rendersystems\OpenGL\ES\2\OpenGLES2_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL\ES\2</Filter>
     </ClCompile>
     <ClCompile Include="src\delegates\ControllerDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
-    <ClCompile Include="platforms\OpenKODE_main.cpp">
+    <ClCompile Include="src\platforms\OpenKODE_main.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
-    <ClCompile Include="platforms\OpenKODE_Platform.cpp">
+    <ClCompile Include="src\platforms\OpenKODE_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Window.cpp">
+    <ClCompile Include="src\windowsystems\OpenKODE\OpenKODE_Window.cpp">
       <Filter>Source Files\windowsystems\OpenKODE</Filter>
     </ClCompile>
     <ClCompile Include="src\egl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="platforms\AndroidJNI_Platform.cpp">
+    <ClCompile Include="src\platforms\AndroidJNI_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\OpenKODE\OpenKODE_Keys.cpp">
+    <ClCompile Include="src\windowsystems\OpenKODE\OpenKODE_Keys.cpp">
       <Filter>Source Files\windowsystems\OpenKODE</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Keys.cpp">
+    <ClCompile Include="src\windowsystems\AndroidJNI\AndroidJNI_Keys.cpp">
       <Filter>Source Files\windowsystems\AndroidJNI</Filter>
     </ClCompile>
     <ClCompile Include="src\RenderState.cpp">
@@ -281,13 +281,13 @@
     <ClCompile Include="src\Cursor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\Win32\Win32_Cursor.cpp">
+    <ClCompile Include="src\windowsystems\Win32\Win32_Cursor.cpp">
       <Filter>Source Files\windowsystems\Win32</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\SDL\SDL_Cursor.cpp">
+    <ClCompile Include="src\windowsystems\SDL\SDL_Cursor.cpp">
       <Filter>Source Files\windowsystems\SDL</Filter>
     </ClCompile>
-    <ClCompile Include="windowsystems\AndroidJNI\AndroidJNI_Cursor.cpp">
+    <ClCompile Include="src\windowsystems\AndroidJNI\AndroidJNI_Cursor.cpp">
       <Filter>Source Files\windowsystems\AndroidJNI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -319,10 +319,10 @@
     <ClInclude Include="include\april\VertexShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\OpenGL_RenderSystem.h">
+    <ClInclude Include="src\rendersystems\OpenGL\OpenGL_RenderSystem.h">
       <Filter>Header Files\rendersystems\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\OpenGL_Texture.h">
+    <ClInclude Include="src\rendersystems\OpenGL\OpenGL_Texture.h">
       <Filter>Header Files\rendersystems\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Platform.h">
@@ -331,13 +331,13 @@
     <ClInclude Include="include\april\april.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Window.h">
+    <ClInclude Include="src\windowsystems\AndroidJNI\AndroidJNI_Window.h">
       <Filter>Header Files\windowsystems\AndroidJNI</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\SDL\SDL_Window.h">
+    <ClInclude Include="src\windowsystems\SDL\SDL_Window.h">
       <Filter>Header Files\windowsystems\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\Win32\Win32_Window.h">
+    <ClInclude Include="src\windowsystems\Win32\Win32_Window.h">
       <Filter>Header Files\windowsystems\Win32</Filter>
     </ClInclude>
     <ClInclude Include="include\april\aprilUtil.h">
@@ -346,43 +346,43 @@
     <ClInclude Include="include\april\androidUtilJNI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\DirectX\DirectX_RenderSystem.h">
+    <ClInclude Include="src\rendersystems\DirectX\DirectX_RenderSystem.h">
       <Filter>Header Files\rendersystems\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\DirectX\DirectX_Texture.h">
+    <ClInclude Include="src\rendersystems\DirectX\DirectX_Texture.h">
       <Filter>Header Files\rendersystems\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\DirectX\9\DirectX9_PixelShader.h">
+    <ClInclude Include="src\rendersystems\DirectX\9\DirectX9_PixelShader.h">
       <Filter>Header Files\rendersystems\DirectX\9</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\DirectX\9\DirectX9_RenderSystem.h">
+    <ClInclude Include="src\rendersystems\DirectX\9\DirectX9_RenderSystem.h">
       <Filter>Header Files\rendersystems\DirectX\9</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\DirectX\9\DirectX9_Texture.h">
+    <ClInclude Include="src\rendersystems\DirectX\9\DirectX9_Texture.h">
       <Filter>Header Files\rendersystems\DirectX\9</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\DirectX\9\DirectX9_VertexShader.h">
+    <ClInclude Include="src\rendersystems\DirectX\9\DirectX9_VertexShader.h">
       <Filter>Header Files\rendersystems\DirectX\9</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\1\OpenGL1_RenderSystem.h">
+    <ClInclude Include="src\rendersystems\OpenGL\1\OpenGL1_RenderSystem.h">
       <Filter>Header Files\rendersystems\OpenGL\1</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\1\OpenGL1_Texture.h">
+    <ClInclude Include="src\rendersystems\OpenGL\1\OpenGL1_Texture.h">
       <Filter>Header Files\rendersystems\OpenGL\1</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h">
+    <ClInclude Include="src\rendersystems\OpenGL\ES\1\OpenGLES1_Texture.h">
       <Filter>Header Files\rendersystems\OpenGL\ES\1</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h">
+    <ClInclude Include="src\rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.h">
       <Filter>Header Files\rendersystems\OpenGL\ES\1</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h">
+    <ClInclude Include="src\rendersystems\OpenGL\ES\OpenGLES_RenderSystem.h">
       <Filter>Header Files\rendersystems\OpenGL\ES</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\ES\OpenGLES_Texture.h">
+    <ClInclude Include="src\rendersystems\OpenGL\ES\OpenGLES_Texture.h">
       <Filter>Header Files\rendersystems\OpenGL\ES</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\OpenGL_State.h">
+    <ClInclude Include="src\rendersystems\OpenGL\OpenGL_State.h">
       <Filter>Header Files\rendersystems\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Timer.h">
@@ -409,22 +409,22 @@
     <ClInclude Include="include\april\TouchDelegate.h">
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.h">
+    <ClInclude Include="src\rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.h">
       <Filter>Header Files\rendersystems\OpenGL\ES\2</Filter>
     </ClInclude>
-    <ClInclude Include="rendersystems\OpenGL\ES\2\OpenGLES2_Texture.h">
+    <ClInclude Include="src\rendersystems\OpenGL\ES\2\OpenGLES2_Texture.h">
       <Filter>Header Files\rendersystems\OpenGL\ES\2</Filter>
     </ClInclude>
     <ClInclude Include="include\april\ControllerDelegate.h">
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\OpenKODE\OpenKODE_Window.h">
+    <ClInclude Include="src\windowsystems\OpenKODE\OpenKODE_Window.h">
       <Filter>Header Files\windowsystems\OpenKODE</Filter>
     </ClInclude>
     <ClInclude Include="src\egl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Keys.h">
+    <ClInclude Include="src\windowsystems\AndroidJNI\AndroidJNI_Keys.h">
       <Filter>Header Files\windowsystems\AndroidJNI</Filter>
     </ClInclude>
     <ClInclude Include="include\april\RenderState.h">
@@ -451,13 +451,13 @@
     <ClInclude Include="include\april\Cursor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\Win32\Win32_Cursor.h">
+    <ClInclude Include="src\windowsystems\Win32\Win32_Cursor.h">
       <Filter>Header Files\windowsystems\Win32</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\SDL\SDL_Cursor.h">
+    <ClInclude Include="src\windowsystems\SDL\SDL_Cursor.h">
       <Filter>Header Files\windowsystems\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="windowsystems\AndroidJNI\AndroidJNI_Cursor.h">
+    <ClInclude Include="src\windowsystems\AndroidJNI\AndroidJNI_Cursor.h">
       <Filter>Header Files\windowsystems\AndroidJNI</Filter>
     </ClInclude>
   </ItemGroup>
