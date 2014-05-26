@@ -1,6 +1,4 @@
 /// @file
-/// @author  Ivan Vucica
-/// @author  Boris Mikic
 /// @version 3.3
 /// 
 /// @section LICENSE

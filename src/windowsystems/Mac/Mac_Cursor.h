@@ -1,5 +1,4 @@
 /// @file
-/// @author  Kresimir Spes
 /// @version 3.36
 ///
 /// @section LICENSE
