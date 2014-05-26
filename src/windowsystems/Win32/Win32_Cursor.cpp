@@ -1,4 +1,6 @@
 /// @file
+/// @author  Kresimir Spes
+/// @author  Boris Mikic
 /// @version 3.36
 ///
 /// @section LICENSE
@@ -8,6 +10,8 @@
 
 #ifdef _WIN32_WINDOW
 #include <hltypes/hstring.h>
+#include <hltypes/hdir.h>
+#include <hltypes/hresource.h>
 
 #include "Win32_Cursor.h"
 
@@ -16,7 +20,7 @@ namespace april
 	Win32_Cursor::Win32_Cursor() : Cursor(), cursor(NULL)
 	{
 	}
-
+	
 	Win32_Cursor::~Win32_Cursor()
 	{
 		if (this->cursor != NULL)
@@ -25,20 +29,21 @@ namespace april
 			this->cursor = NULL;
 		}
 	}
-
+	
 	bool Win32_Cursor::_create(chstr filename)
 	{
-		if (!Cursor::_create(filename))
-		{
-			return false;
-		}
 		if (filename == "")
 		{
 			return false;
 		}
-		this->cursor = LoadCursorFromFileW(filename.w_str().c_str());
+		hstr path = hdir::join_path(hresource::getArchive(), filename);
+		if (!Cursor::_create(path))
+		{
+			return false;
+		}
+		this->cursor = LoadCursorFromFileW(path.w_str().c_str());
 		return true;
 	}
-
+	
 }
 #endif
