@@ -619,6 +619,16 @@
       <ExcludedFromBuild Condition="'$(Platform)'=='Android' or '$(ConfigurationType)'=='StaticLibrary'">true</ExcludedFromBuild>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\hltypes\lib\zlib\contrib\vstudio11\zlib\zlib.vcxproj">
+      <Project>{60f89955-91c6-3a36-8000-13c592fec2df}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

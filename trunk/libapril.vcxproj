@@ -612,6 +612,22 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
+    <ProjectReference Include="lib\jpeg\libjpeg.vcxproj">
+      <Project>{019dbd2a-273d-4ba4-bf86-b5efe2ed76b1}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="lib\png\projects\vstudio11\libpng\libpng.vcxproj">
+      <Project>{d6973076-9317-4ef2-a0b8-b7a18ac0713e}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="fileproperties.rc">
