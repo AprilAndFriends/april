@@ -32,6 +32,6 @@
 	 versions do not match.  The zlib version used in this build is recorded
 	 below:
      -->
-    <ZLibSrcDir>..\..\..\..\zlib</ZLibSrcDir>
+    <ZLibSrcDir>..\..\..\..\..\..\hltypes\lib\zlib</ZLibSrcDir>
   </PropertyGroup>
 </Project>
