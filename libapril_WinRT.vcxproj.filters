@@ -233,9 +233,6 @@
     <ClCompile Include="src\windowsystems\WinRT\WinP8_AppLauncher.cpp">
       <Filter>Source Files\windowsystems\WinRT\WinP8</Filter>
     </ClCompile>
-    <ClCompile Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\windowsystems\WinRT\WinRT_BaseApp.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
@@ -384,9 +381,6 @@
     </ClInclude>
     <ClInclude Include="src\windowsystems\WinRT\WinP8_App.h">
       <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
-    </ClInclude>
-    <ClInclude Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\windowsystems\WinRT\IWinRT.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
