@@ -114,6 +114,12 @@ namespace april
 			// RAM
 			info.name = "mac";
 			info.osVersion = getMacOSVersion();
+            
+            float scalingFactor = 1.0f;
+            if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
+            {
+                scalingFactor = [NSScreen mainScreen].backingScaleFactor;
+            }
 
 			int mib [] = { CTL_HW, HW_MEMSIZE };
 			int64_t value = 0;
@@ -127,7 +133,7 @@ namespace april
 			// display resolution
 			NSScreen* mainScreen = [NSScreen mainScreen];
 			NSRect rect = [mainScreen frame];
-			info.displayResolution.set((float)rect.size.width, (float)rect.size.height);
+			info.displayResolution.set((float)rect.size.width * scalingFactor, (float)rect.size.height * scalingFactor);
 			// display DPI
 			CGSize screenSize = CGDisplayScreenSize(CGMainDisplayID());
 			info.displayDpi = 25.4f * rect.size.height / screenSize.height;

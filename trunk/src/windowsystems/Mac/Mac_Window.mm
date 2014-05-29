@@ -51,7 +51,12 @@ namespace april
 		this->splashScreenFadeout = true;
 		this->cursorExtensions += ".plist";
 		this->cursorExtensions += ".png";
-		
+        this->scalingFactor = 1.0f;
+        if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
+        {
+            this->scalingFactor = [NSScreen mainScreen].backingScaleFactor;
+        }
+
 		aprilWindow = this;
     }
 
@@ -72,12 +77,12 @@ namespace april
 	
 	int Mac_Window::getWidth()
 	{
-		return [mWindow.contentView bounds].size.width;
+		return [mWindow.contentView bounds].size.width * this->scalingFactor;
 	}
 	
 	int Mac_Window::getHeight()
 	{
-		return [mWindow.contentView bounds].size.height;
+		return [mWindow.contentView bounds].size.height * this->scalingFactor;
 	}
 	
 	void* Mac_Window::getBackendId()
@@ -124,7 +129,7 @@ namespace april
 	
 	void Mac_Window::updateCursorPosition(gvec2& pos)
 	{
-		this->cursorPosition = pos;
+		this->cursorPosition = pos * this->scalingFactor;
 	}
 	
 	bool Mac_Window::isCursorInside()
@@ -189,6 +194,11 @@ namespace april
 			if (options.resizable) styleMask |= NSResizableWindowMask;
 		}
 
+        frame.origin.x /= this->scalingFactor;
+        frame.origin.y /= this->scalingFactor;
+        frame.size.width /= this->scalingFactor;;
+        frame.size.height /= this->scalingFactor;;
+        
 		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
 		[mWindow configure];
 		setTitle(title);
@@ -225,7 +235,12 @@ namespace april
 			}
 		}
 		mView = [[AprilMacOpenGLView alloc] init];
-		mView.frame = frame;
+        [mView initOpenGL];
+        if (NSAppKitVersionNumber >= NSAppKitVersionNumber10_7)
+        {
+            [mView setWantsBestResolutionOpenGLSurface:YES];
+        }
+ 		mView.frame = frame;
 		[mWindow setOpenGLView: mView];
 		[mWindow startRenderLoop];
 		return 1;

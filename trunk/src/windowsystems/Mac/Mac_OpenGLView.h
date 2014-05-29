@@ -20,8 +20,9 @@
 	bool mUseBlankCursor;
 	NSCursor* mBlankCursor;
 	NSCursor* mCursor;
+    NSRect mFrameRect;
 }
-- (void) initGL;
+- (void)initOpenGL;
 - (void) presentFrame;
 - (void) setUseBlankCursor:(BOOL)value;
 - (void) setCursor:(NSCursor*)cursor;

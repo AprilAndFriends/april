@@ -59,6 +59,8 @@ namespace april
 		bool splashScreenFadeout;
 		bool fpsCounter;
 		hstr fpsTitle;
+
+        float scalingFactor;
 	protected:
 		Cursor* _createCursor();
 	};
