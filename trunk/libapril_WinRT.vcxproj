@@ -281,7 +281,7 @@
     <ClCompile Include="src\windowsystems\WinRT\WinRT.cpp" />
     <ClCompile Include="src\windowsystems\WinRT\WinRT_Window.cpp" />
     <ClCompile Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
-      <DependentUpon>windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
+      <DependentUpon>src\windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='DebugP8_OpenKODE' or '$(Configuration)'=='ReleaseP8_OpenKODE'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
@@ -341,7 +341,7 @@
     <ClInclude Include="src\windowsystems\WinRT\WinRT.h" />
     <ClInclude Include="src\windowsystems\WinRT\WinRT_Window.h" />
     <ClInclude Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
-      <DependentUpon>windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
+      <DependentUpon>src\windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='DebugP8_OpenKODE' or '$(Configuration)'=='ReleaseP8_OpenKODE'">true</ExcludedFromBuild>
     </ClInclude>
   </ItemGroup>
@@ -356,6 +356,22 @@
     </ProjectReference>
     <ProjectReference Include="..\hltypes\libhltypes_WinRT.vcxproj">
       <Project>{e4d373bf-e227-48b9-99e6-84987e8674ec}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="lib\jpeg\libjpeg_WinRT.vcxproj">
+      <Project>{019dbd2a-273d-4ba4-bf86-b5efe2ed76b1}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="lib\png\projects\vstudio11-winrt\libpng\libpng.vcxproj">
+      <Project>{d6973076-9317-4ef2-a0b8-b7a18ac0713e}</Project>
       <Private>false</Private>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
@@ -404,12 +420,10 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml">
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='DebugP8_OpenKODE' or '$(Configuration)'=='ReleaseP8_OpenKODE'">true</ExcludedFromBuild>
-    </Page>
+    <None Include="src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli" />
+    <Page Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -50,10 +50,13 @@ namespace april
 #else
 			info.ram = 512;
 #endif
+			// display DPI
+			float dpi = DisplayProperties::LogicalDpi;
+			info.displayDpi = (int)dpi;
 			// display resolution
 #ifdef _WINRT_WINDOW
-			int width = (int)CoreWindow::GetForCurrentThread()->Bounds.Width;
-			int height = (int)CoreWindow::GetForCurrentThread()->Bounds.Height;
+			int width = (int)(CoreWindow::GetForCurrentThread()->Bounds.Width * dpi / 96);
+			int height = (int)(CoreWindow::GetForCurrentThread()->Bounds.Height * dpi / 96);
 #ifndef _WINP8
 			if (ApplicationView::Value == ApplicationViewState::Filled)
 			{
@@ -62,8 +65,6 @@ namespace april
 #endif
 			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
 #endif
-			// display DPI
-			info.displayDpi = (int)DisplayProperties::LogicalDpi;
 			// other
 			info.locale = "";
 #ifndef _WINP8
