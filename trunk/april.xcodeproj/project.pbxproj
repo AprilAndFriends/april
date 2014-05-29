@@ -1608,7 +1608,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../png",
-					"${SRCROOT}/../jpg",
+					"${SRCROOT}/../jpeg",
+					"${SRCROOT}/lib/png",
+					"${SRCROOT}/lib/jpeg",
 					"${SRCROOT}/../hltypes/include",
 					"${SRCROOT}/../gtypes/include",
 					"${SRCROOT}/include/april",
@@ -1660,7 +1662,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../png",
-					"${SRCROOT}/../jpg",
+					"${SRCROOT}/../jpeg",
+					"${SRCROOT}/lib/png",
+					"${SRCROOT}/lib/jpeg",
 					"${SRCROOT}/../hltypes/include",
 					"${SRCROOT}/../gtypes/include",
 					"${SRCROOT}/include/april",
@@ -1715,7 +1719,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/../png",
-					"${SRCROOT}/../jpg",
+					"${SRCROOT}/../jpeg",
+					"${SRCROOT}/lib/png",
+					"${SRCROOT}/lib/jpeg",
 					"${SRCROOT}/../hltypes/include",
 					"${SRCROOT}/../gtypes/include",
 					"${SRCROOT}/include/april",
