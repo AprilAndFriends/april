@@ -99,7 +99,7 @@ static bool gFullscreenToggleRequest = false;
 	
 	if (delegate)
 	{
-		delegate->onWindowSizeChanged(size.width, size.height, [self isFullScreen]);
+		delegate->onWindowSizeChanged(size.width * aprilWindow->scalingFactor, size.height * aprilWindow->scalingFactor, [self isFullScreen]);
 	}
 	[mView setNeedsDisplay:YES];
 }
@@ -223,7 +223,7 @@ static bool gFullscreenToggleRequest = false;
 - (gvec2)transformCocoaPoint:(NSPoint) point
 {
 	// TODO: optimize
-	gvec2 pt(point.x, aprilWindow->getHeight() - point.y);
+	gvec2 pt(point.x, [self.contentView bounds].size.height - point.y);
 	return pt;
 }
 
