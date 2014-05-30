@@ -138,7 +138,7 @@ namespace april
 			info.displayResolution.set((float)rect.size.width * scalingFactor, (float)rect.size.height * scalingFactor);
 			// display DPI
 			CGSize screenSize = CGDisplayScreenSize(CGMainDisplayID());
-			info.displayDpi = 25.4f * rect.size.height / screenSize.height;
+			info.displayDpi = 25.4f * info.displayResolution.y / screenSize.height;
 
 			// locale
 			// This code gets the prefered locale based on user's list of prefered languages against the supported languages
