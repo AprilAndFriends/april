@@ -55,6 +55,7 @@ namespace april
         if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
         {
             this->scalingFactor = [NSScreen mainScreen].backingScaleFactor;
+			hlog::writef(logTag, "Mac UI scaling factor: %.2f", this->scalingFactor);
         }
 
 		aprilWindow = this;
@@ -303,6 +304,15 @@ namespace april
 	
 	bool Mac_Window::updateOneFrame()
 	{
+		if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
+        {
+            float scalingFactor = [NSScreen mainScreen].backingScaleFactor;
+			if (scalingFactor != this->scalingFactor)
+			{
+				this->scalingFactor = scalingFactor;
+				[mWindow onWindowSizeChange];
+			}
+        }
         bool result = Window::updateOneFrame();
 		if (result && mOverlayWindow != nil)
 		{
