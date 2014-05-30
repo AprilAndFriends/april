@@ -63,7 +63,7 @@
   <Import Project="props\configuration.props" />
   <ItemGroup>
     <ClCompile Include="..\..\png.c">
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\pngerror.c" />
     <ClCompile Include="..\..\pngget.c" />
