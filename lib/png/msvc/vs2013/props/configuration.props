@@ -2,18 +2,22 @@
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemDefinitionGroup>
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
-      <PrecompiledHeaderFile>pngpriv.h</PrecompiledHeaderFile>
       <StringPooling>true</StringPooling>
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
+    <Link>
+      <Version>15</Version>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pngpriv.h</PrecompiledHeaderFile>
+    </ClCompile>
     <Link>
       <AdditionalDependencies>zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <Version>15</Version>
     </Link>
   </ItemDefinitionGroup>
 </Project>
