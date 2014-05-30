@@ -257,6 +257,9 @@
     <ClCompile Include="src\Cursor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -419,6 +422,9 @@
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
     <ClInclude Include="include\april\Cursor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
