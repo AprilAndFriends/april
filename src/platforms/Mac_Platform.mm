@@ -107,8 +107,11 @@ namespace april
 	
 	SystemInfo getSystemInfo()
 	{
-		if (info.locale == "")
+		static NSScreen* prevScreen = NULL;
+		NSScreen* mainScreen = [NSScreen mainScreen];
+		if (prevScreen != mainScreen)
 		{
+			prevScreen = mainScreen;
 			// CPU cores
 			info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
 			// RAM
@@ -116,7 +119,7 @@ namespace april
 			info.osVersion = getMacOSVersion();
             
             float scalingFactor = 1.0f;
-            if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
+            if ([mainScreen respondsToSelector:@selector(backingScaleFactor)])
             {
                 scalingFactor = [NSScreen mainScreen].backingScaleFactor;
             }
@@ -131,7 +134,6 @@ namespace april
 				info.ram = value / (1024 * 1024);
 
 			// display resolution
-			NSScreen* mainScreen = [NSScreen mainScreen];
 			NSRect rect = [mainScreen frame];
 			info.displayResolution.set((float)rect.size.width * scalingFactor, (float)rect.size.height * scalingFactor);
 			// display DPI

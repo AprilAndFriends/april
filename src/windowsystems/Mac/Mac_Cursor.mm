@@ -83,17 +83,7 @@ namespace april
 		}
 		path = hdir::join_path(hresource::getArchive(), path);
 		image = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.c_str()]];
-        NSBitmapImageRep *rep = [[image representations] objectAtIndex:0];
-        int renderedWidth = [rep pixelsWide];
-        int renderedHeight = [rep pixelsHigh];
-        
-        float x = 1.0f;
-        [rep setSize:NSMakeSize(renderedWidth / x, renderedHeight / x)];
-        [image setSize:NSMakeSize(renderedWidth / x, renderedHeight / x)];
-        
-        [image addRepresentation:rep];
-        [image removeRepresentation:[[image representations] objectAtIndex:0]];
-        
+
 		if (!image)
 		{
 			hlog::write(logTag, "Error: Unable to load cursor image, '" + filename + "' not found");
