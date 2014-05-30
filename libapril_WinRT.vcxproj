@@ -423,7 +423,9 @@
     <None Include="src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" />
+    <Page Include="src\windowsystems\WinRT\WinRT_XamlOverlay.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
