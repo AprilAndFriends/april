@@ -529,7 +529,6 @@
     <ClInclude Include="..\..\src\windowsystems\AndroidJNI\AndroidJNI_Cursor.h" />
     <ClInclude Include="..\..\src\windowsystems\AndroidJNI\AndroidJNI_Keys.h" />
     <ClInclude Include="..\..\src\windowsystems\AndroidJNI\AndroidJNI_Window.h" />
-    <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.h" />
     <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.h" />
     <ClInclude Include="..\..\src\windowsystems\SDL\SDL_Cursor.h" />
     <ClInclude Include="..\..\src\windowsystems\SDL\SDL_Window.h" />

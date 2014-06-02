@@ -418,9 +418,6 @@
     <ClInclude Include="..\..\include\april\ControllerDelegate.h">
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.h">
-      <Filter>Header Files\windowsystems\OpenKODE</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.h">
       <Filter>Header Files\windowsystems\OpenKODE</Filter>
     </ClInclude>
