@@ -14,7 +14,7 @@
 #ifndef APRIL_WINRT_XAML_OVERLAY_H
 #define APRIL_WINRT_XAML_OVERLAY_H
 
-#include "src/windowsystems/WinRT/WinRT_XamlOverlay.g.h" // auto-generated file
+#include "WinRT_XamlOverlay.g.h" // auto-generated file
 
 using namespace Windows::UI::Xaml::Controls;
 
