@@ -96,6 +96,9 @@
     <Filter Include="Header Files\windowsystems\WinRT\WinP8">
       <UniqueIdentifier>{f50eca77-8994-4aab-801d-088fa20ed88d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX\11\default-shaders">
+      <UniqueIdentifier>{ed0fb357-87c9-439b-92fa-0f3871e27272}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Color.cpp">
@@ -272,6 +275,9 @@
     <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_VertexShader.cpp">
       <Filter>Source Files\rendersystems\DirectX\11</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -439,6 +445,9 @@
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinP8_KeyboardInterface.h">
       <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">
@@ -449,5 +458,33 @@
     <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Lerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Multiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedLerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedMultiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Default.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
