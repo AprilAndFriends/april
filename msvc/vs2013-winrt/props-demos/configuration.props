@@ -5,23 +5,19 @@
       <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+  <ItemDefinitionGroup>
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libapril.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
       <SubSystem>Console</SubSystem>
     </Link>
+    <PreBuildEvent>
+      <Command>xcopy ..\..\demos\media media\ /d /y /e
+</Command>
+    </PreBuildEvent>
     <PostBuildEvent>
       <Command>xcopy $(OutDir)..\..\*.dll $(OutDir) /d /y
 </Command>
     </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">
-    <Link>
-      <AdditionalDependencies>-lapril;-lhltypes;-lgtypes;-ljpeg;-lpng;-lzip;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-    <AntBuild>
-      <AntBuildPath>$(ProjectDir)..\..\demos\$(ProjectName)\android</AntBuildPath>
-    </AntBuild>
   </ItemDefinitionGroup>
 </Project>

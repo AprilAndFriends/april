@@ -287,6 +287,49 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Lerp.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Multiply.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedLerp.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedMultiply.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Default.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Vertex</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">
       <ExcludedFromBuild Condition="'$(Platform)'=='ARM' or '$(Platform)'=='ARM-x86' or '$(ConfigurationType)'=='StaticLibrary'">true</ExcludedFromBuild>
     </ResourceCompile>
@@ -324,9 +367,6 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

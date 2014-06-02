@@ -41,6 +41,7 @@
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
+    <AppContainerApplication>true</AppContainerApplication>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props-demos\default.props" />
@@ -70,6 +71,37 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\demos\demo_tictactoe\demo_tictactoe.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="media\assets\logo_icon.png" />
+    <Image Include="media\assets\small_icon.png" />
+    <Image Include="media\assets\splash.png" />
+    <Image Include="media\assets\store_icon.png" />
+    <Image Include="media\assets\icon.png" />
+    <Image Include="media\assets\tile-medium.png" />
+    <Image Include="media\assets\tile-small.png" />
+    <Image Include="media\icon.png" />
+    <Image Include="media\jpt_raw.jpg" />
+    <Image Include="media\jpt_raw.png" />
+    <Image Include="media\line315.png" />
+    <Image Include="media\line45.png" />
+    <Image Include="media\line_horz.png" />
+    <Image Include="media\line_vert.png" />
+    <Image Include="media\o.png" />
+    <Image Include="media\texture.jpg" />
+    <Image Include="media\x.png" />
+    <Image Include="media\jpt_final.jpt" />
+    <None Include="media\cursor.ani" />
+    <None Include="media\simple.cur" />
+    <None Include="..\..\demos\demo_tictactoe\TemporaryKey.pfx">
+      <FileType>Document</FileType>
+    </None>
+    <AppxManifest Include="..\..\demos\demo_tictactoe\Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\demos\demo_tictactoe\winrt-cursors.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
