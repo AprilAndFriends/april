@@ -483,7 +483,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli">
+    <None Include="src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli">
       <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
     </None>
   </ItemGroup>
