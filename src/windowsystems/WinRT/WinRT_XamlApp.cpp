@@ -104,6 +104,7 @@ namespace april
 
 	void WinRT_XamlApp::updateViewState()
 	{
+		// TODOa - remove, deprecated by MS
 		bool newSnapped = (ApplicationView::Value == ApplicationViewState::Snapped);
 		if (this->snapped != newSnapped)
 		{
