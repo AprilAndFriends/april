@@ -31,8 +31,7 @@ namespace april
 		this->width = 0;
 		this->height = 0;
 		this->delaySplash = 0.0f;
-		this->allowFilledView = false;
-		this->useCustomSnappedView = false;
+		this->useCustomMinView = false;
 		this->backButtonSystemHandling = false;
 		this->cursorExtensions += ".ani";
 		this->cursorExtensions += ".cur";
@@ -45,12 +44,6 @@ namespace april
 
 	bool WinRT_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
-#ifndef _WINP8
-		if (ApplicationView::Value == ApplicationViewState::Filled)
-		{
-			w -= WINRT_SNAPPED_VIEW_UNUSED;
-		}
-#endif
 		if (!Window::create(w, h, fullscreen, title, options))
 		{
 			return false;
@@ -58,8 +51,7 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->delaySplash = 0.0f;
-		this->allowFilledView = false;
-		this->useCustomSnappedView = false;
+		this->useCustomMinView = false;
 		this->backButtonSystemHandling = false;
 		this->cursorMappings.clear();
 		this->inputMode = TOUCH;
@@ -76,25 +68,18 @@ namespace april
 	hstr WinRT_Window::getParam(chstr param)
 	{
 #ifndef _WINP8
-		if (param == WINRT_ALLOW_FILLED_VIEW)
+		if (param == WINRT_USE_CUSTOM_MIN_VIEW)
 		{
-			return hstr(this->allowFilledView ? "1" : "0");
+			return hstr(this->useCustomMinView ? "1" : "0");
 		}
-		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
-		{
-			return hstr(this->useCustomSnappedView ? "1" : "0");
-		}
+		// TODOa - deprecated by MS, needs to be removed/changed
 		if (param == WINRT_VIEW_STATE)
 		{
-			if (ApplicationView::Value == ApplicationViewState::Snapped)
+			if (this->getWidth() == WINRT_SNAPPED_VIEW_WIDTH)
 			{
 				return WINRT_VIEW_STATE_SNAPPED;
 			}
-			if (ApplicationView::Value == ApplicationViewState::Filled)
-			{
-				return WINRT_VIEW_STATE_FILLED;
-			}
-			return WINRT_VIEW_STATE_FULLSCREEN;
+			return WINRT_VIEW_STATE_NORMAL;
 		}
 		if (param == WINRT_CURSOR_MAPPINGS)
 		{
@@ -121,20 +106,17 @@ namespace april
 	void WinRT_Window::setParam(chstr param, chstr value)
 	{
 #ifndef _WINP8
-		if (param == WINRT_ALLOW_FILLED_VIEW)
+		if (param == WINRT_USE_CUSTOM_MIN_VIEW)
 		{
-			this->allowFilledView = (value != "0");
-		}
-		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
-		{
-			this->useCustomSnappedView = (value != "0");
+			this->useCustomMinView = (value != "0");
 		}
 		if (param == WINRT_VIEW_STATE)
 		{
-			if (ApplicationView::Value == ApplicationViewState::Snapped)
+			if (this->getWidth() == WINRT_SNAPPED_VIEW_WIDTH)
 			{
 				if (value != WINRT_VIEW_STATE_SNAPPED)
 				{
+					// TODOa - deprecated by MS, needs to be removed/changed
 					if (!ApplicationView::TryUnsnap())
 					{
 #ifdef _DEBUG

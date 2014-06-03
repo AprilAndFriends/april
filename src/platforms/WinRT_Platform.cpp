@@ -51,18 +51,13 @@ namespace april
 			info.ram = 512;
 #endif
 			// display DPI
-			float dpi = DisplayProperties::LogicalDpi;
+			DisplayInformation^ information = DisplayInformation::GetForCurrentView();
+			float dpi = information->LogicalDpi;
 			info.displayDpi = (int)dpi;
 			// display resolution
 #ifdef _WINRT_WINDOW
 			int width = (int)(CoreWindow::GetForCurrentThread()->Bounds.Width * dpi / 96);
 			int height = (int)(CoreWindow::GetForCurrentThread()->Bounds.Height * dpi / 96);
-#ifndef _WINP8
-			if (ApplicationView::Value == ApplicationViewState::Filled)
-			{
-				width += WINRT_SNAPPED_VIEW_UNUSED;
-			}
-#endif
 			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
 #endif
 			// other
