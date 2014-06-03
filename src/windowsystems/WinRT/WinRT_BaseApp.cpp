@@ -32,7 +32,7 @@ namespace april
 {
 	WinRT_BaseApp::WinRT_BaseApp()
 	{
-		DisplayInformation::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
+		DisplayProperties::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
 		this->scrollHorizontal = false;
 		this->mouseMoveMessagesCount = 0;
 		this->startTime = get_system_tick_count();
@@ -75,8 +75,8 @@ namespace april
 		window->Closed +=
 			ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
 				this, &WinRT_BaseApp::OnWindowClosed);
-		DisplayInformation::GetForCurrentView()->OrientationChanged +=
-			ref new Windows::Foundation::TypedEventHandler<DisplayInformation^, Object^>(
+		DisplayProperties::OrientationChanged +=
+			ref new DisplayPropertiesEventHandler(
 				this, &WinRT_BaseApp::OnOrientationChanged);
 		InputPane::GetForCurrentView()->Showing +=
 			ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
@@ -137,7 +137,7 @@ namespace april
 		args->Handled = true;
 	}
 
-	void WinRT_BaseApp::OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
+	void WinRT_BaseApp::OnOrientationChanged(_In_ Object^ args)
 	{
 		if (april::rendersys != NULL)
 		{
@@ -374,8 +374,16 @@ namespace april
 		}
 		int w = screenWidth;
 		int h = screenHeight;
-		//DisplayInformation::
-#ifdef _WINP8
+#ifndef _WINP8
+		if (ApplicationView::Value == ApplicationViewState::Filled)
+		{
+			w -= WINRT_SNAPPED_VIEW_UNUSED;
+		}
+		else if (ApplicationView::Value == ApplicationViewState::Snapped)
+		{
+			w = WINRT_SNAPPED_VIEW_UNUSED;
+		}
+#else
 		int rotation = WinRT::getScreenRotation();
 		if (rotation == 90)
 		{

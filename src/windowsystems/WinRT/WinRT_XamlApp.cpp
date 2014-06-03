@@ -45,6 +45,7 @@ namespace april
 	{
 		this->app = ref new WinRT_BaseApp();
 		this->running = true;
+		this->filled = false;
 		this->snapped = false;
 		this->logoTexture = NULL;
 		this->hasStoredViewData = false;
@@ -78,7 +79,7 @@ namespace april
 
 	bool WinRT_XamlApp::canSuspendResume()
 	{
-		return (!this->snapped);
+		return (!this->snapped && !this->filled);
 	}
 
 	void WinRT_XamlApp::refreshCursor()
@@ -105,11 +106,13 @@ namespace april
 	void WinRT_XamlApp::updateViewState()
 	{
 		// TODOa - remove, deprecated by MS
+		bool allowFilledView = (april::window->getParam(WINRT_ALLOW_FILLED_VIEW) != "0");
+		bool newFilled = (ApplicationView::Value == ApplicationViewState::Filled && !allowFilledView);
 		bool newSnapped = (ApplicationView::Value == ApplicationViewState::Snapped);
-		if (this->snapped != newSnapped)
+		if (this->filled != newFilled || this->snapped != newSnapped)
 		{
 			hlog::write(april::logTag, "Handling view change...");
-			if (!newSnapped)
+			if (!newFilled && !newSnapped)
 			{
 				if (this->hasStoredViewData)
 				{
@@ -131,8 +134,9 @@ namespace april
 				april::window->handleFocusChangeEvent(false);
 			}
 			this->snapped = newSnapped;
+			this->filled = newFilled;
 		}
-		if (april::window != NULL && !april::window->isFocused() && april::window->getWidth() != WINRT_SNAPPED_VIEW_WIDTH)
+		if (allowFilledView && ApplicationView::Value == ApplicationViewState::Filled && april::window != NULL && !april::window->isFocused())
 		{
 			april::window->handleFocusChangeEvent(true);
 			if (this->eventToken.Value == 0)
@@ -233,7 +237,7 @@ namespace april
 		else if (args->WindowActivationState == CoreWindowActivationState::Deactivated)
 		{
 			this->app->handleFocusChange(false);
-			if (!april::window->isFocused()) // this causes to stop rendering when out of focus
+			if (!april::window->isFocused() && april::window->getParam(WINRT_ALLOW_FILLED_VIEW) != "0") // this causes "filled view" to still keep rendering when "allow_filled_view" is used
 			{
 				CompositionTarget::Rendering::remove(this->eventToken);
 				this->eventToken.Value = 0;
@@ -257,7 +261,7 @@ namespace april
 			return;
 		}
 		this->updateViewState();
-		if (!this->snapped)
+		if (!this->filled && !this->snapped)
 		{
 			this->running = april::window->updateOneFrame();
 		}
@@ -266,20 +270,20 @@ namespace april
 			static grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
 			static grect srcRect(0.0f, 0.0f, 1.0f, 1.0f);
 			static grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
-			static bool useCustomMinView = false;
+			static bool useCustomSnappedView = false;
 			static int width = 0;
 			static int height = 0;
-			useCustomMinView = (april::window->getParam(WINRT_USE_CUSTOM_MIN_VIEW) != "0");
+			useCustomSnappedView = (april::window->getParam(WINRT_USE_CUSTOM_SNAPPED_VIEW) != "0");
 			width = april::window->getWidth();
 			height = april::window->getHeight();
 			viewport.setSize((float)width, (float)height);
-			if (!useCustomMinView)
+			if (!useCustomSnappedView)
 			{
 				this->_tryLoadLogoTexture();
 			}
 			april::rendersys->clear();
 			april::rendersys->setOrthoProjection(viewport);
-			if (!useCustomMinView)
+			if (!useCustomSnappedView)
 			{
 				april::rendersys->drawFilledRect(viewport, this->backgroundColor);
 				if (this->logoTexture != NULL)
