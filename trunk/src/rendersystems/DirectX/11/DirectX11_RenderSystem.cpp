@@ -560,7 +560,7 @@ namespace april
 
 	void DirectX11_RenderSystem::updateOrientation()
 	{
-		DisplayOrientations orientation = DisplayInformation::GetForCurrentView()->CurrentOrientation;
+		DisplayOrientations orientation = DisplayProperties::CurrentOrientation;
 		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
 		switch (orientation)
 		{
