@@ -60,7 +60,6 @@ namespace april
 	private:
 		WinRT_BaseApp^ app;
 		bool running;
-		bool filled;
 		bool snapped;
 		Texture* logoTexture;
 		Texture* splashTexture;
