@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="DebugS_OpenKODE|ARM">
       <Configuration>DebugS_OpenKODE</Configuration>
@@ -102,14 +102,14 @@
     <ProjectGuid>{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}</ProjectGuid>
     <RootNamespace>april</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ApplicationType>Windows Store</ApplicationType>
-    <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
+    <ApplicationTypeRevision>8.0</ApplicationTypeRevision>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props\default.props" />
-  <Import Project="..\..\..\hltypes\msvc\vs2013-winrt\props-generic\platform-$(Platform).props" />
-  <Import Project="..\..\..\hltypes\msvc\vs2013-winrt\props-generic\configurations.props" />
+  <Import Project="..\..\..\hltypes\msvc\vs2012-winrt\props-generic\platform-$(Platform).props" />
+  <Import Project="..\..\..\hltypes\msvc\vs2012-winrt\props-generic\configurations.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -161,7 +161,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <Import Project="..\..\..\hltypes\msvc\vs2013-winrt\props-generic\build-defaults.props" />
+  <Import Project="..\..\..\hltypes\msvc\vs2012-winrt\props-generic\build-defaults.props" />
   <Import Project="props\configuration.props" />
   <ItemGroup>
     <ClCompile Include="..\..\src\platforms\OpenKODE_main.cpp" />
@@ -220,9 +220,8 @@
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_Window.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
-      <DependentUpon>..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE'">true</ExcludedFromBuild>
+    <ClCompile Include="WinRT\WinRT_XamlOverlay.xaml.cpp">
+      <DependentUpon>WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -281,49 +280,45 @@
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_Window.h" />
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
-      <DependentUpon>..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE'">true</ExcludedFromBuild>
+    <ClInclude Include="WinRT\WinRT_XamlOverlay.xaml.h">
+      <DependentUpon>WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Lerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Multiply.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedLerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedMultiply.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Default.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v110_wp80'">4.0_level_9_1</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,42 +326,45 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">
-      <ExcludedFromBuild Condition="'$(Platform)'=='ARM' or '$(Platform)'=='ARM-x86' or '$(ConfigurationType)'=='StaticLibrary'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(ConfigurationType)'=='StaticLibrary'">true</ExcludedFromBuild>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\gtypes\msvc\vs2013-winrt\libgtypes.vcxproj">
+    <ProjectReference Include="..\..\..\gtypes\msvc\vs2012-winrt\libgtypes.vcxproj">
       <Project>{9c043b29-db40-48d5-97d8-1bc44128e3ba}</Project>
       <Private>false</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\hltypes\msvc\vs2013-winrt\libhltypes.vcxproj">
+    <ProjectReference Include="..\..\..\hltypes\msvc\vs2012-winrt\libhltypes.vcxproj">
       <Project>{e4d373bf-e227-48b9-99e6-84987e8674ec}</Project>
       <Private>false</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-    <ProjectReference Include="..\..\lib\jpeg\msvc\vs2013-winrt\libjpeg.vcxproj">
+    <ProjectReference Include="..\..\lib\jpeg\msvc\vs2012-winrt\libjpeg.vcxproj">
       <Project>{019dbd2a-273d-4ba4-bf86-b5efe2ed76b1}</Project>
       <Private>false</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-    <ProjectReference Include="..\..\lib\png\msvc\vs2013-winrt\libpng.vcxproj">
+    <ProjectReference Include="..\..\lib\png\msvc\vs2012-winrt\libpng.vcxproj">
       <Project>{d6973076-9317-4ef2-a0b8-b7a18ac0713e}</Project>
       <Private>false</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="WinRT\WinRT_XamlOverlay.xaml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
