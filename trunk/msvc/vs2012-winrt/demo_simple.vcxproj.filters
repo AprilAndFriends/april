@@ -88,7 +88,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="..\..\demos\demo_simple\Package.appxmanifest">
+    <AppxManifest Include="..\..\demos\demo_simple\Package-vs2012.appxmanifest">
       <Filter>winrt</Filter>
     </AppxManifest>
   </ItemGroup>

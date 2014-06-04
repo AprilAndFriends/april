@@ -96,7 +96,7 @@
     <None Include="..\..\demos\demo_simple\TemporaryKey.pfx">
       <FileType>Document</FileType>
     </None>
-    <AppxManifest Include="..\..\demos\demo_simple\Package.appxmanifest">
+    <AppxManifest Include="..\..\demos\demo_simple\Package-vs2012.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
   </ItemGroup>

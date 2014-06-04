@@ -21,7 +21,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="..\..\demos\demo_tictactoe\Package.appxmanifest">
+    <AppxManifest Include="..\..\demos\demo_tictactoe\Package-vs2012.appxmanifest">
       <Filter>winrt</Filter>
     </AppxManifest>
   </ItemGroup>
