@@ -327,7 +327,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli" />
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">

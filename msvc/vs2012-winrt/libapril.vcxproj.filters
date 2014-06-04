@@ -275,7 +275,7 @@
     <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_VertexShader.cpp">
       <Filter>Source Files\rendersystems\DirectX\11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
+    <ClCompile Include="april\WinRT\WinRT_XamlOverlay.xaml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -445,7 +445,7 @@
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinP8_KeyboardInterface.h">
       <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
+    <ClInclude Include="april\WinRT\WinRT_XamlOverlay.xaml.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -483,7 +483,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="WinRT\WinRT_XamlOverlay.xaml">
+    <Page Include="april\WinRT\WinRT_XamlOverlay.xaml">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </Page>
   </ItemGroup>
