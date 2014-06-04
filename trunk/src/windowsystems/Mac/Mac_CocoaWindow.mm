@@ -101,6 +101,10 @@ static bool gFullscreenToggleRequest = false;
 	{
 		delegate->onWindowSizeChanged(size.width * aprilWindow->scalingFactor, size.height * aprilWindow->scalingFactor, [self isFullScreen]);
 	}
+    else
+    {
+        NSLog(@"Mac_CocoaWindow: Ignoring onWindowSizeChange, delegate not set.");
+    }
 	[mView setNeedsDisplay:YES];
 }
 
