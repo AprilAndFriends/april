@@ -275,7 +275,7 @@
     <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_VertexShader.cpp">
       <Filter>Source Files\rendersystems\DirectX\11</Filter>
     </ClCompile>
-    <ClCompile Include="april\WinRT\WinRT_XamlOverlay.xaml.cpp">
+    <ClCompile Include="WinRT\WinRT_XamlOverlay.xaml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -391,9 +391,6 @@
     <ClInclude Include="..\..\include\april\OpenKODE_main.h">
       <Filter>Header Files\platforms</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\april\WinRT_main.h">
-      <Filter>Header Files\platforms</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\april\main_base.h">
       <Filter>Header Files\platforms</Filter>
     </ClInclude>
@@ -445,7 +442,10 @@
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinP8_KeyboardInterface.h">
       <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
     </ClInclude>
-    <ClInclude Include="april\WinRT\WinRT_XamlOverlay.xaml.h">
+    <ClInclude Include="..\..\include\WinRT_main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WinRT\WinRT_XamlOverlay.xaml.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -478,13 +478,13 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli">
-      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="april\WinRT\WinRT_XamlOverlay.xaml">
+    <Page Include="WinRT\WinRT_XamlOverlay.xaml">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
