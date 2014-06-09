@@ -365,11 +365,14 @@ namespace april
 	{
 		static int screenWidth = 0;
 		static int screenHeight = 0;
+		april::SystemInfo info = april::getSystemInfo();
+		// WinRT is dumb
+		x *= info.displayDpi / 96.0f;
+		y *= info.displayDpi / 96.0f;
 		if (screenWidth == 0 || screenHeight == 0)
 		{
-			gvec2 resolution = april::getSystemInfo().displayResolution;
-			screenWidth = hround(resolution.x);
-			screenHeight = hround(resolution.y);
+			screenWidth = hround(info.displayResolution.x);
+			screenHeight = hround(info.displayResolution.y);
 			CHECK_SWAP(screenWidth, screenHeight);
 		}
 		int w = screenWidth;
@@ -408,6 +411,7 @@ namespace april
 		{
 			return gvec2(x, y);
 		}
+		
 		return gvec2((float)(int)(x * width / w), (float)(int)(y * height / h));
 	}
 
