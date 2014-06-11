@@ -20,9 +20,4 @@
       <AdditionalDependencies>zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Platform)'=='Android'">
-    <ClCompile>
-      <PreprocessorDefinitions>PNG_ARM_NEON;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-  </ItemDefinitionGroup>
 </Project>
