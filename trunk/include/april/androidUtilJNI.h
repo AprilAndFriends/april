@@ -48,21 +48,21 @@ namespace april
 	jclass className = april::findJNIClass(env, __NATIVE_INTERFACE_CLASS); \
 	if (className == NULL) \
 	{ \
-		hlog::error("JNI", "Could not find native interface class: " __NATIVE_INTERFACE_CLASS); \
+		hlog::error("JNI", "Could not find native interface class: " + hstr(__NATIVE_INTERFACE_CLASS)); \
 	}
 #define APRIL_GET_NATIVE_INTERFACE_METHOD(className, methodName, methodString, args) \
 	APRIL_GET_NATIVE_INTERFACE_CLASS(className); \
 	jmethodID methodName = env->GetStaticMethodID(className, methodString, args); \
 	if (methodName == NULL) \
 	{ \
-		hlog::error("JNI", "Could not find method, check definition: " methodString); \
+		hlog::error("JNI", "Could not find method, check definition: " + hstr(methodString)); \
 	}
 #define APRIL_GET_NATIVE_INTERFACE_FIELD(className, fieldName, fieldString, type) \
 	APRIL_GET_NATIVE_INTERFACE_CLASS(className); \
 	jfieldID fieldName = env->GetStaticFieldID(className, fieldString, type); \
 	if (fieldName == NULL) \
 	{ \
-		hlog::error("JNI", "Could not find field, check definition: " fieldString); \
+		hlog::error("JNI", "Could not find field, check definition: " + hstr(fieldString)); \
 	}
 #endif
 
