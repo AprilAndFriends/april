@@ -1767,6 +1767,7 @@
 					_EGL,
 					_OPENKODE,
 					_OPENKODE_WINDOW,
+					_ARM,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -1792,6 +1793,7 @@
 					_EGL,
 					_OPENKODE,
 					_OPENKODE_WINDOW,
+					_ARM,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -1817,6 +1819,7 @@
 					_EGL,
 					_OPENKODE,
 					_OPENKODE_WINDOW,
+					_ARM,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -1909,6 +1912,7 @@
 					_OPENGLES,
 					_OPENGLES1,
 					_IOS,
+					_ARM,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -1929,6 +1933,7 @@
 					_OPENGLES,
 					_OPENGLES1,
 					_IOS,
+					_ARM,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -1949,6 +1954,7 @@
 					_OPENGLES,
 					_OPENGLES1,
 					_IOS,
+					_ARM,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
