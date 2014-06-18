@@ -14,7 +14,7 @@
 #define APRIL_UTIL_H
 
 #include <gtypes/Vector3.h>
-
+#include <hltypes/hstring.h>
 #include "aprilExport.h"
 
 namespace april
@@ -167,7 +167,7 @@ namespace april
 
 	aprilFnExport void rgbToHsl(unsigned char r, unsigned char g, unsigned char b, float* h, float* s, float* l);
 	aprilFnExport void hslToRgb(float h, float s, float l, unsigned char* r, unsigned char* g, unsigned char* b);
-
+	aprilFnExport hstr generateName(chstr prefix);
 }
 
 #endif
