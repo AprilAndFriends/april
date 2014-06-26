@@ -29,6 +29,22 @@ namespace april
 	{
 		if (info.locale == "")
 		{
+			info.name = "Windows";
+			OSVERSIONINFO osinfo;
+			memset(&osinfo, 0, sizeof(osinfo));
+			osinfo.dwOSVersionInfoSize = sizeof(osinfo);
+			GetVersionEx(&osinfo);
+			info.osVersion = hsprintf("%d.%d", osinfo.dwMajorVersion, osinfo.dwMinorVersion);
+			if      (osinfo.dwMajorVersion == 5) info.name += " XP";
+			else if (osinfo.dwMajorVersion == 6)
+			{
+				if      (osinfo.dwMinorVersion == 0) info.name += " Vista";
+				else if (osinfo.dwMinorVersion == 1) info.name += " 7";
+				else if (osinfo.dwMinorVersion == 2) info.name += " 8";
+				else if (osinfo.dwMinorVersion == 3) info.name += " 8.1";
+				// future and special versions of Windows will just be named "Windows" to avoid assumptions
+			}
+			info.architecture = "x86";
 			// number of CPU cores
 			SYSTEM_INFO w32info;
 			GetNativeSystemInfo(&w32info);
@@ -44,24 +60,6 @@ namespace april
 			info.displayDpi = 96;
 			// other
 			info.locale = "en"; // default is "en"
-			info.architecture = "x86";
-			info.name = "Windows";
-			OSVERSIONINFO osinfo;
-			memset(&osinfo, 0, sizeof(osinfo));
-			osinfo.dwOSVersionInfoSize = sizeof(osinfo);
-			GetVersionEx(&osinfo);
-			info.osVersion = hsprintf("%d.%d", osinfo.dwMajorVersion, osinfo.dwMinorVersion);
-			
-			if      (osinfo.dwMajorVersion == 5) info.name += " XP";
-			else if (osinfo.dwMajorVersion == 6)
-			{
-				if      (osinfo.dwMinorVersion == 0) info.name += " Vista";
-				else if (osinfo.dwMinorVersion == 1) info.name += " 7";
-				else if (osinfo.dwMinorVersion == 2) info.name += " 8";
-				else if (osinfo.dwMinorVersion == 3) info.name += " 8.1";
-				// future and special versions of Windows will just be named "Windows" to avoid assumptions
-			}
-			
 			wchar_t locale[LOCALE_NAME_MAX_LENGTH] = {0};
 			int length = GetLocaleInfoW(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME,
 				locale, (LOCALE_NAME_MAX_LENGTH - 1) * sizeof(wchar_t));

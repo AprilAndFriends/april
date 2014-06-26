@@ -30,6 +30,11 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "android";
+#ifdef _ARM
+			info.architecture = "ARM";
+#else
+			info.architecture = "x86";
+#endif
 			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 			// CPU cores
 			info.cpuCores = sysconf(_SC_NPROCESSORS_CONF);
@@ -50,6 +55,7 @@ namespace april
 			// TODO - maybe use direct Unix calls?
 			jmethodID methodGetLocale = env->GetStaticMethodID(classNativeInterface, "getLocale", _JARGS(_JSTR, ));
 			info.locale = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetLocale));
+			// architecture
 			// OS version
 			jmethodID methodGetOsVersion = env->GetStaticMethodID(classNativeInterface, "getOsVersion", _JARGS(_JSTR, ));
 			harray<hstr> osVersions = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)).split('.');
