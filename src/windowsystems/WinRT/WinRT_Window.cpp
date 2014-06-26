@@ -80,6 +80,10 @@ namespace april
 		{
 			return hstr(this->allowFilledView ? "1" : "0");
 		}
+		if (param == WINRT_USE_CUSTOM_FILLED_VIEW)
+		{
+			return hstr(this->useCustomFilledView ? "1" : "0");
+		}
 		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
 		{
 			return hstr(this->useCustomSnappedView ? "1" : "0");
@@ -124,6 +128,10 @@ namespace april
 		if (param == WINRT_ALLOW_FILLED_VIEW)
 		{
 			this->allowFilledView = (value != "0");
+		}
+		if (param == WINRT_USE_CUSTOM_FILLED_VIEW)
+		{
+			this->useCustomFilledView = (value != "0");
 		}
 		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
 		{

@@ -39,6 +39,11 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "winrt";
+#ifdef _ARM
+			info.architecture = "ARM";
+#else
+			info.architecture = "x86";
+#endif
 			// number of CPU cores
 			SYSTEM_INFO w32info;
 			GetNativeSystemInfo(&w32info);
