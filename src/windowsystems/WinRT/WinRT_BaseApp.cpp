@@ -126,7 +126,10 @@ namespace april
 		WinRT::Interface->updateViewState();
 		if (april::window != NULL)
 		{
-			((WinRT_Window*)april::window)->changeSize((int)args->Size.Width, (int)args->Size.Height);
+			april::SystemInfo info = april::getSystemInfo();
+			int width = (int)(args->Size.Width * info.displayDpi / 96.0f);
+			int height = (int)(args->Size.Height * info.displayDpi / 96.0f);
+			((WinRT_Window*)april::window)->changeSize(width, height);
 		}
 		args->Handled = true;
 	}
