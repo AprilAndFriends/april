@@ -110,7 +110,7 @@ namespace april
 	void WinRT_XamlApp::updateViewState()
 	{
 		// TODOa - remove, deprecated by MS
-		bool allowFilledView = (april::window->getParam(WINRT_ALLOW_FILLED_VIEW) != "0" && april::window->getAspectRatio() > 1.3333f);
+		bool allowFilledView = (april::window->getParam(WINRT_ALLOW_FILLED_VIEW) != "0" && april::window->getAspectRatio() > 1.3f); // this aspect ratio hack is going to be removed anyway
 		bool useCustomFilledView = (april::window->getParam(WINRT_USE_CUSTOM_FILLED_VIEW) != "0" && !allowFilledView);
 		bool useCustomSnappedView = (april::window->getParam(WINRT_USE_CUSTOM_SNAPPED_VIEW) != "0");
 		bool newFilled = (ApplicationView::Value == ApplicationViewState::Filled && !allowFilledView);
