@@ -250,7 +250,7 @@
     <ClInclude Include="..\..\include\april\TouchDelegate.h" />
     <ClInclude Include="..\..\include\april\UpdateDelegate.h" />
     <ClInclude Include="..\..\include\april\VertexShader.h" />
-    <ClInclude Include="..\..\include\WinRT_main.h" />
+    <ClInclude Include="..\..\include\april\WinRT_main.h" />
     <ClInclude Include="..\..\include\april\Window.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_RenderSystem.h" />
