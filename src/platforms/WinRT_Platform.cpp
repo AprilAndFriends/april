@@ -91,6 +91,10 @@ namespace april
 			{
 				info.locale = "en"; // default is "en"
 			}
+			else if (info.locale.starts_with("zh_hant") || info.locale.starts_with("zh-hant"))
+			{
+				info.locale = "zh-Hant";
+			}
 			else if (info.locale == "pt_pt" || info.locale == "pt-pt")
 			{
 				info.locale = "pt-PT";
