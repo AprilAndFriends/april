@@ -64,6 +64,7 @@ namespace april
 
 		inline float getPixelOffset() { return 0.0f; }
 		int getMaxTextureSize();
+		int getVRam();
 		void setViewport(grect value);
 
 		void setTextureBlendMode(BlendMode textureBlendMode);

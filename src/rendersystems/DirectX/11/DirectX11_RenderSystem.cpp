@@ -602,6 +602,37 @@ namespace april
 		return D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
 	}
 
+	int DirectX11_RenderSystem::getVRam()
+	{
+		if (this->d3dDevice == nullptr)
+		{
+			return 0;
+		}
+		HRESULT hr;
+		ComPtr<IDXGIDevice2> dxgiDevice;
+		hr = this->d3dDevice.As(&dxgiDevice);
+		if (FAILED(hr))
+		{
+			hlog::error(april::logTag, "Unable to retrieve DXGI device!");
+			return 0;
+		}
+		ComPtr<IDXGIAdapter> dxgiAdapter;
+		hr = dxgiDevice->GetAdapter(&dxgiAdapter);
+		if (FAILED(hr))
+		{
+			hlog::error(april::logTag, "Unable to get adapter from DXGI device!");
+			return 0;
+		}
+        DXGI_ADAPTER_DESC desc;
+		hr = dxgiAdapter->GetDesc(&desc);
+		if (FAILED(hr))
+		{
+			hlog::error(april::logTag, "Unable to get description from DXGI adapter!");
+			return 0;
+		}
+		return (desc.DedicatedVideoMemory / (1024 * 1024));
+	}
+
 	void DirectX11_RenderSystem::setViewport(grect value)
 	{
 		DirectX_RenderSystem::setViewport(value);
