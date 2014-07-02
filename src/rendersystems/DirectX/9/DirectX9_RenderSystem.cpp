@@ -296,6 +296,15 @@ namespace april
 		return caps.MaxTextureWidth;
 	}
 
+	int DirectX9_RenderSystem::getVRam()
+	{
+		if (this->d3dDevice == NULL)
+		{
+			return 0;
+		}
+		return (this->d3dDevice->GetAvailableTextureMem() / (1024 * 1024));
+	}
+
 	harray<RenderSystem::DisplayMode> DirectX9_RenderSystem::getSupportedDisplayModes()
 	{
 		if (this->supportedDisplayModes.size() == 0)

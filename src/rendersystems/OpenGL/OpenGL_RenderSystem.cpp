@@ -225,6 +225,11 @@ namespace april
 		return max;
 	}
 
+	int OpenGL_RenderSystem::getVRam()
+	{
+		return 0;
+	}
+
 	void OpenGL_RenderSystem::setViewport(grect rect)
 	{
 		RenderSystem::setViewport(rect);
