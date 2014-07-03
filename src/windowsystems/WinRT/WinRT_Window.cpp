@@ -14,6 +14,7 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
+#include "Platform.h"
 #include "RenderSystem.h"
 #include "SystemDelegate.h"
 #include "Timer.h"
@@ -48,7 +49,7 @@ namespace april
 #ifndef _WINP8
 		if (ApplicationView::Value == ApplicationViewState::Filled)
 		{
-			w -= WINRT_SNAPPED_VIEW_UNUSED;
+			w -= (int)(WINRT_SNAPPED_VIEW_UNUSED * april::getSystemInfo().displayDpi / 96.0f);
 		}
 #endif
 		if (!Window::create(w, h, fullscreen, title, options))
