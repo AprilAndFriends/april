@@ -188,6 +188,13 @@ namespace april
 		// don't repeat app initialization when already launched
 		if (!this->launched)
 		{
+			// TODOa - this is pre-Win 8.1 hack for Win 8.1 that needs to be removed
+			while (ApplicationView::Value == ApplicationViewState::Snapped) // if snapped view, don't launch yet
+			{
+				ApplicationView::TryUnsnap();
+				hthread::sleep(10.0f);
+			}
+
 			this->launched = true;
 			this->app->assignEvents(Windows::UI::Core::CoreWindow::GetForCurrentThread());
 			this->refreshCursor();
