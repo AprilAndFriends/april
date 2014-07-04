@@ -49,7 +49,7 @@ namespace april
 #ifndef _WINP8
 		if (ApplicationView::Value == ApplicationViewState::Filled)
 		{
-			w -= (int)(WINRT_SNAPPED_VIEW_UNUSED * april::getSystemInfo().displayDpi / 96.0f);
+			w -= WINRT_SNAPPED_VIEW_UNUSED;
 		}
 #endif
 		if (!Window::create(w, h, fullscreen, title, options))

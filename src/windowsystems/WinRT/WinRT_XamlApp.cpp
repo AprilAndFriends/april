@@ -335,8 +335,8 @@ namespace april
 			this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
 			grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
 			grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
-			int width = (int)(april::window->getWidth() * 96.0f / april::getSystemInfo().displayDpi);
-			int height = (int)(april::window->getHeight() * 96.0f / april::getSystemInfo().displayDpi);
+			int width = april::window->getWidth() * 96 / april::getSystemInfo().displayDpi;
+			int height = april::window->getHeight() * 96 / april::getSystemInfo().displayDpi;
 			viewport.setSize((float)width, (float)height);
 			april::rendersys->setOrthoProjection(viewport);
 			april::rendersys->drawFilledRect(viewport, this->backgroundColor);

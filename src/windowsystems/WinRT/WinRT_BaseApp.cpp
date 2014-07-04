@@ -370,9 +370,8 @@ namespace april
 		static int screenHeight = 0;
 		april::SystemInfo info = april::getSystemInfo();
 		// WinRT is dumb
-		float dpiRatio = (info.displayDpi / 96.0f);
-		x *= dpiRatio;
-		y *= dpiRatio;
+		x *= info.displayDpi / 96.0f;
+		y *= info.displayDpi / 96.0f;
 		if (screenWidth == 0 || screenHeight == 0)
 		{
 			screenWidth = hround(info.displayResolution.x);
@@ -384,11 +383,11 @@ namespace april
 #ifndef _WINP8
 		if (ApplicationView::Value == ApplicationViewState::Filled)
 		{
-			w -= (int)(WINRT_SNAPPED_VIEW_UNUSED * dpiRatio);
+			w -= WINRT_SNAPPED_VIEW_UNUSED;
 		}
 		else if (ApplicationView::Value == ApplicationViewState::Snapped)
 		{
-			w = (int)(WINRT_SNAPPED_VIEW_UNUSED * dpiRatio);
+			w = WINRT_SNAPPED_VIEW_UNUSED;
 		}
 #else
 		int rotation = WinRT::getScreenRotation();
