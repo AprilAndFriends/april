@@ -25,7 +25,8 @@
 #include "WinRT.h"
 
 #define _WINRT_SNAPPED_VIEW_WIDTH 320 // as defined by Microsoft
-#define WINRT_SNAPPED_VIEW_UNUSED ((_WINRT_SNAPPED_VIEW_WIDTH + 22) * april::getSystemInfo().displayDpi / 96) // as defined by Microsoft
+#define _WINRT_SNAPPED_VIEW_UNUSED (_WINRT_SNAPPED_VIEW_WIDTH + 22)
+#define WINRT_SNAPPED_VIEW_UNUSED (_WINRT_SNAPPED_VIEW_UNUSED * april::getSystemInfo().displayDpi / 96)
 
 #define WINRT_ALLOW_FILLED_VIEW "allow_filled_view"
 #define WINRT_USE_CUSTOM_FILLED_VIEW "use_custom_filled_view"
