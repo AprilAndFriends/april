@@ -60,12 +60,13 @@ namespace april
 			info.displayDpi = (int)dpi;
 			// display resolution
 #ifdef _WINRT_WINDOW
-			int width = (int)(CoreWindow::GetForCurrentThread()->Bounds.Width * dpi / 96);
-			int height = (int)(CoreWindow::GetForCurrentThread()->Bounds.Height * dpi / 96);
+			float dpiRatio = dpi / 96;
+			int width = (int)(CoreWindow::GetForCurrentThread()->Bounds.Width * dpiRatio);
+			int height = (int)(CoreWindow::GetForCurrentThread()->Bounds.Height * dpiRatio);
 #ifndef _WINP8
 			if (ApplicationView::Value == ApplicationViewState::Filled)
 			{
-				width += WINRT_SNAPPED_VIEW_UNUSED;
+				width += (int)(_WINRT_SNAPPED_VIEW_UNUSED * dpiRatio); // prevents recursion this way
 			}
 #endif
 			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
