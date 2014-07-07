@@ -640,15 +640,10 @@ namespace april
 		value = WinRT::rotateViewport(value);
 #endif
 		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
-		static int w = 0;
-		static int h = 0;
-		if (w == 0 || h == 0)
-		{
-			gvec2 resolution = april::getSystemInfo().displayResolution;
-			w = hround(resolution.x);
-			h = hround(resolution.y);
-			CHECK_SWAP(w, h);
-		}
+		gvec2 resolution = april::getSystemInfo().displayResolution;
+		int w = hround(resolution.x);
+		int h = hround(resolution.y);
+		CHECK_SWAP(w, h);
 		if (value.x < 0.0f)
 		{
 			value.w += value.x;

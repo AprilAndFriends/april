@@ -56,21 +56,7 @@ namespace april
 			info.ram = 512;
 #endif
 			// display DPI
-			float dpi = DisplayProperties::LogicalDpi;
-			info.displayDpi = (int)dpi;
-			// display resolution
-#ifdef _WINRT_WINDOW
-			float dpiRatio = dpi / 96;
-			int width = (int)(CoreWindow::GetForCurrentThread()->Bounds.Width * dpiRatio);
-			int height = (int)(CoreWindow::GetForCurrentThread()->Bounds.Height * dpiRatio);
-#ifndef _WINP8
-			if (ApplicationView::Value == ApplicationViewState::Filled)
-			{
-				width += (int)(_WINRT_SNAPPED_VIEW_UNUSED * dpiRatio); // prevents recursion this way
-			}
-#endif
-			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
-#endif
+			info.displayDpi = (int)DisplayProperties::LogicalDpi;
 			// other
 			info.locale = "";
 #ifndef _WINP8
@@ -105,6 +91,28 @@ namespace april
 				info.locale = info.locale.utf8_substr(0, 2);
 			}
 		}
+		// display resolution
+#ifdef _WINRT_WINDOW
+		float dpiRatio = DisplayProperties::LogicalDpi / 96;
+		int width = (int)(CoreWindow::GetForCurrentThread()->Bounds.Width * dpiRatio);
+		int height = (int)(CoreWindow::GetForCurrentThread()->Bounds.Height * dpiRatio);
+		if (info.displayResolution.y == 0.0f)
+		{
+#ifndef _WINP8
+			info.displayResolution.set((float)width, (float)height);
+#else
+			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
+#endif
+		}
+		else
+		{
+#ifndef _WINP8
+			info.displayResolution.set(hmax((float)width, info.displayResolution.x), hmax((float)height, info.displayResolution.y));
+#else
+			info.displayResolution.set(hmax((float)hmax(width, height), info.displayResolution.x), hmax((float)hmin(width, height), info.displayResolution.y));
+#endif
+		}
+#endif
 		return info;
 	}
 

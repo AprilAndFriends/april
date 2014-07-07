@@ -380,16 +380,7 @@ namespace april
 		}
 		int w = screenWidth;
 		int h = screenHeight;
-#ifndef _WINP8
-		if (ApplicationView::Value == ApplicationViewState::Filled)
-		{
-			w -= WINRT_SNAPPED_VIEW_UNUSED;
-		}
-		else if (ApplicationView::Value == ApplicationViewState::Snapped)
-		{
-			w = WINRT_SNAPPED_VIEW_UNUSED;
-		}
-#else
+#ifdef _WINP8
 		int rotation = WinRT::getScreenRotation();
 		if (rotation == 90)
 		{
