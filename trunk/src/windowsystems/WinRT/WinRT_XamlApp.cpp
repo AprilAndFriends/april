@@ -115,7 +115,8 @@ namespace april
 		bool useCustomSnappedView = (april::window->getParam(WINRT_USE_CUSTOM_SNAPPED_VIEW) != "0");
 		bool newFilled = (ApplicationView::Value == ApplicationViewState::Filled && !allowFilledView);
 		bool newSnapped = (ApplicationView::Value == ApplicationViewState::Snapped);
-		if (this->filled != newFilled || this->snapped != newSnapped || this->lastWidth != april::window->getWidth() || this->lastHeight != april::window->getHeight())
+		if (this->filled != newFilled && !useCustomFilledView || this->snapped != newSnapped && !useCustomSnappedView ||
+			(this->lastWidth != april::window->getWidth() || this->lastHeight != april::window->getHeight()) && !useCustomFilledView && !useCustomSnappedView)
 		{
 			hlog::write(april::logTag, "Handling view change...");
 			if (!newFilled && !newSnapped)
@@ -141,11 +142,6 @@ namespace april
 				{
 					april::window->handleFocusChangeEvent(false);
 				}
-			}
-			else if (useCustomFilledView && useCustomSnappedView && (this->filled != newFilled || this->snapped != newSnapped))
-			{
-				april::window->handleFocusChangeEvent(true);
-				april::window->handleFocusChangeEvent(false);
 			}
 			if (this->filled == newFilled && this->snapped == newSnapped)
 			{
@@ -342,8 +338,8 @@ namespace april
 			this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
 			grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
 			grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
-			int width = april::window->getWidth() * 96 / april::getSystemInfo().displayDpi;
-			int height = april::window->getHeight() * 96 / april::getSystemInfo().displayDpi;
+			int width = (int)(april::window->getWidth() * 96 / april::getSystemInfo().displayDpi);
+			int height = (int)(april::window->getHeight() * 96 / april::getSystemInfo().displayDpi);
 			viewport.setSize((float)width, (float)height);
 			april::rendersys->setOrthoProjection(viewport);
 			april::rendersys->drawFilledRect(viewport, this->backgroundColor);

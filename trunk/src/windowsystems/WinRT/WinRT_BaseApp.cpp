@@ -152,7 +152,7 @@ namespace april
 	{
 		if (april::window != NULL)
 		{
-			april::window->handleVirtualKeyboardChangeEvent(true, args->OccludedRect.Height / april::getSystemInfo().displayResolution.y);
+			april::window->handleVirtualKeyboardChangeEvent(true, args->OccludedRect.Height / CoreWindow::GetForCurrentThread()->Bounds.Height);
 		}
 		this->resetTouches();
 	}
