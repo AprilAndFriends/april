@@ -56,7 +56,7 @@ namespace april
 			info.ram = 512;
 #endif
 			// display DPI
-			info.displayDpi = (int)DisplayProperties::LogicalDpi;
+			info.displayDpi = DisplayProperties::LogicalDpi;
 			// other
 			info.locale = "";
 #ifndef _WINP8

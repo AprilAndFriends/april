@@ -57,7 +57,7 @@ namespace april
 			// display resolution
 			info.displayResolution.set((float)GetSystemMetrics(SM_CXSCREEN), (float)GetSystemMetrics(SM_CYSCREEN));
 			// display DPI
-			info.displayDpi = 96;
+			info.displayDpi = 96.0f;
 			// other
 			info.locale = "en"; // default is "en"
 			wchar_t locale[LOCALE_NAME_MAX_LENGTH] = {0};

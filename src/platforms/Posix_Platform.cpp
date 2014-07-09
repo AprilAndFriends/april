@@ -25,7 +25,7 @@ namespace april
 		{
 			info.cpuCores = 1; // TODO
 			info.displayResolution.set(1024.0f, 768.0f); // TODO
-			info.displayDpi = 96; // TODO
+			info.displayDpi = 96.0f; // TODO
 			//info.ram = 1024; // TODO
 			info.locale = "en"; // TODO
 		}
