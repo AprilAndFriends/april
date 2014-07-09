@@ -28,6 +28,7 @@
 #define WINRT_USE_CUSTOM_FILLED_VIEW "use_custom_filled_view"
 #define WINRT_USE_CUSTOM_SNAPPED_VIEW "use_custom_snapped_view"
 #define WINRT_DELAY_SPLASH "delay_splash"
+#define WINRT_RESET_LAYOUT "reset_layout"
 #define WINRT_CURSOR_MAPPINGS "cursor_mappings"
 #define WINRT_VIEW_STATE "view_state"
 #define WINRT_VIEW_STATE_FILLED "filled"

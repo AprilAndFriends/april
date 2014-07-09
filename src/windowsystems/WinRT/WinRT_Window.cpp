@@ -46,7 +46,7 @@ namespace april
 
 	bool WinRT_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
-		if (!Window::create(w, h, fullscreen, title, options))
+		if (!Window::create(w, h, true, title, options))
 		{
 			return false;
 		}
@@ -172,6 +172,13 @@ namespace april
 		if (param == WINRT_DELAY_SPLASH)
 		{
 			this->delaySplash = (float)value;
+		}
+		if (param == WINRT_RESET_LAYOUT)
+		{
+			if ((bool)value)
+			{
+				Windows::UI::Xaml::Window::Current->Content = WinRT::XamlOverlay;
+			}
 		}
 #else
 		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)

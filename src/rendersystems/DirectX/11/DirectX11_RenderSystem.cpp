@@ -228,11 +228,7 @@ namespace april
 	void DirectX11_RenderSystem::assignWindow(Window* window)
 	{
 		unsigned int creationFlags = 0;
-#if !defined(_DEBUG) || defined(_WINP8)
 		creationFlags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
-#else
-		creationFlags |= D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_DEBUGGABLE;
-#endif
 		D3D_FEATURE_LEVEL featureLevels[] =
 		{
 #ifndef _WINP8
