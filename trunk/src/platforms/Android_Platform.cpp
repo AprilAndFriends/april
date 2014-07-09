@@ -49,8 +49,8 @@ namespace april
 			info.displayResolution.set(hroundf(dimensions[0]), hroundf(dimensions[1]));
 			// display DPI
 			// TODO - maybe use direct Unix calls?
-			jmethodID methodGetDisplayDpi = env->GetStaticMethodID(classNativeInterface, "getDisplayDpi", _JARGS(_JINT, ));
-			info.displayDpi = (int)env->CallStaticIntMethod(classNativeInterface, methodGetDisplayDpi);
+			jmethodID methodGetDisplayDpi = env->GetStaticMethodID(classNativeInterface, "getDisplayDpi", _JARGS(_JFLOAT, ));
+			info.displayDpi = (float)env->CallStaticFloatMethod(classNativeInterface, methodGetDisplayDpi);
 			// locale
 			// TODO - maybe use direct Unix calls?
 			jmethodID methodGetLocale = env->GetStaticMethodID(classNativeInterface, "getLocale", _JARGS(_JSTR, ));
