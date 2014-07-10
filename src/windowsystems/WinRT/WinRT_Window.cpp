@@ -173,13 +173,6 @@ namespace april
 		{
 			this->delaySplash = (float)value;
 		}
-		if (param == WINRT_RESET_LAYOUT)
-		{
-			if ((bool)value)
-			{
-				Windows::UI::Xaml::Window::Current->Content = WinRT::XamlOverlay;
-			}
-		}
 #else
 		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
 		{

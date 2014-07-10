@@ -127,7 +127,6 @@ namespace april
 					april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
 					april::window->setCursorVisible(this->storedCursorVisible);
 					this->hasStoredViewData = false;
-					Windows::UI::Xaml::Window::Current->Content = WinRT::XamlOverlay;
 					april::window->handleFocusChangeEvent(true);
 				}
 			}
