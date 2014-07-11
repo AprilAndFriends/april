@@ -81,16 +81,12 @@ namespace april
 		{
 			path = filename;
 		}
-		hstr archive = hresource::getArchive();
-		if (archive.length() > 0)
-		{
-			path = hdir::join_path(archive, path);
-		}
+		path = hdir::join_path(hresource::getArchive(), path);
 		image = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.c_str()]];
 
 		if (!image)
 		{
-			hlog::write(logTag, "Error: Unable to load cursor image, plist found, but '" + path + "' not found.");
+			hlog::write(logTag, "Error: Unable to load cursor image, '" + filename + "' not found");
 			return false;
 		}
 		mCursor = [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];

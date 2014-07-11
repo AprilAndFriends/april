@@ -20,6 +20,7 @@
 #include "IWinRT.h"
 
 using namespace Windows::ApplicationModel;
+using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Core;
 using namespace Windows::UI::ViewManagement;
 
@@ -41,7 +42,7 @@ namespace april
 		void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
 		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
 		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
-		void OnOrientationChanged(_In_ Object^ args);
+		void OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args);
 		void OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 		void OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 		

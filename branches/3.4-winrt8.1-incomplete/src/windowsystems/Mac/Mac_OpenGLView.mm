@@ -36,7 +36,7 @@
 	[bmp release];
 	[image release];
 
-	mCursor = NULL;
+	mCursor = mBlankCursor;
     return self;
 }
 

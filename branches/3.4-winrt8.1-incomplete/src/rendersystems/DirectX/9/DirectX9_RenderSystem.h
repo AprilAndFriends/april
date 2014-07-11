@@ -48,7 +48,6 @@ namespace april
 
 		inline float getPixelOffset() { return 0.5f; }
 		int getMaxTextureSize();
-		int getVRam();
 		harray<DisplayMode> getSupportedDisplayModes();
 		void setViewport(grect rect);
 

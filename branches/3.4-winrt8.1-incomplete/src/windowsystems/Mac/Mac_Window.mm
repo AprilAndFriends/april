@@ -190,10 +190,15 @@ namespace april
 		}
 		else
 		{
-			frame = NSMakeRect(0, 0, w / this->scalingFactor, h / this->scalingFactor);
+			frame = NSMakeRect(0, 0, w, h);
 			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
 			if (options.resizable) styleMask |= NSResizableWindowMask;
 		}
+
+        frame.origin.x /= this->scalingFactor;
+        frame.origin.y /= this->scalingFactor;
+        frame.size.width /= this->scalingFactor;;
+        frame.size.height /= this->scalingFactor;;
         
 		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
 		[mWindow configure];

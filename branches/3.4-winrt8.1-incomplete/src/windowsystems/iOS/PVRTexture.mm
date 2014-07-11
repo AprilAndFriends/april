@@ -49,8 +49,6 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 
 #import "PVRTexture.h"
 #include "Image.h"
-#include <hltypes/hresource.h>
-#include <hltypes/hdir.h>
 
 // fix for NSURL not working on iPad Simulator
 #ifndef __GNUC__
@@ -296,16 +294,8 @@ namespace april
 {
 	NSURL* _getFileURLAsResource(chstr filename)
 	{
-		NSString* resources = [[NSBundle mainBundle] resourcePath];
-		NSString* file;
-		if (filename.starts_with("/"))
-		{
-			file = [NSString stringWithUTF8String:filename.c_str()];
-		}
-		else
-		{
-			file = [resources stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
-		}
+		NSString * resources = [[NSBundle mainBundle] resourcePath];
+		NSString * file = [resources stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
 		NSURL * url = [NSURL URLWithString:[@"file://" stringByAppendingString:[file stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] ]];
 		return url;
 	}
@@ -318,9 +308,7 @@ namespace april
 #else
 		NSString *pvrfilename = [NSString stringWithUTF8String:filename.c_str()];
 #endif
-		hstr path = [pvrfilename UTF8String], archive = hresource::getArchive();
-		if (archive != "") path = hdir::join_path(archive, path);
-		PVRTexture* pvrtex = [PVRTexture pvrTextureWithContentsOfURL:(NSURL*)_getFileURLAsResource(path)];
+		PVRTexture* pvrtex = [PVRTexture pvrTextureWithContentsOfURL:(NSURL*)_getFileURLAsResource([pvrfilename UTF8String])];
 		if(!pvrtex)
 		{
 			pvrtex = [PVRTexture pvrTextureWithContentsOfFile:pvrfilename];

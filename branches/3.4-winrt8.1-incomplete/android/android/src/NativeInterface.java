@@ -114,16 +114,16 @@ public class NativeInterface
 		return result;
 	}
 	
-	public static float getDisplayDpi()
+	public static int getDisplayDpi()
 	{
 		// hardcoded exceptions for known devices that return wrong DPI
 		if (Build.MANUFACTURER.equals("HTC") && Build.MODEL.equals("HTC One X"))
 		{
-			return 312.0f;
+			return 312;
 		}
 		DisplayMetrics metrics = new DisplayMetrics();
 		NativeInterface.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		return (float) Math.sqrt((metrics.xdpi * metrics.xdpi + metrics.ydpi * metrics.ydpi) / 2.0);
+		return (int)Math.sqrt((metrics.xdpi * metrics.xdpi + metrics.ydpi * metrics.ydpi) / 2.0);
 	}
 	
 	public static String getOsVersion()

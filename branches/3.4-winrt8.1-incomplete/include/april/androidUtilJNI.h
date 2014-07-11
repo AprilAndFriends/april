@@ -18,7 +18,6 @@
 #include "jni.h"
 #endif
 
-#include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
 namespace april
@@ -45,25 +44,13 @@ namespace april
 #ifdef __NATIVE_INTERFACE_CLASS
 #define APRIL_GET_NATIVE_INTERFACE_CLASS(className) \
 	JNIEnv* env = april::getJNIEnv(); \
-	jclass className = april::findJNIClass(env, __NATIVE_INTERFACE_CLASS); \
-	if (className == NULL) \
-	{ \
-		hlog::error("JNI", "Could not find native interface class: " + hstr(__NATIVE_INTERFACE_CLASS)); \
-	}
+	jclass className = april::findJNIClass(env, __NATIVE_INTERFACE_CLASS);
 #define APRIL_GET_NATIVE_INTERFACE_METHOD(className, methodName, methodString, args) \
 	APRIL_GET_NATIVE_INTERFACE_CLASS(className); \
-	jmethodID methodName = env->GetStaticMethodID(className, methodString, args); \
-	if (methodName == NULL) \
-	{ \
-		hlog::error("JNI", "Could not find method, check definition: " + hstr(methodString)); \
-	}
+	jmethodID methodName = env->GetStaticMethodID(className, methodString, args);
 #define APRIL_GET_NATIVE_INTERFACE_FIELD(className, fieldName, fieldString, type) \
 	APRIL_GET_NATIVE_INTERFACE_CLASS(className); \
-	jfieldID fieldName = env->GetStaticFieldID(className, fieldString, type); \
-	if (fieldName == NULL) \
-	{ \
-		hlog::error("JNI", "Could not find field, check definition: " + hstr(fieldString)); \
-	}
+	jfieldID fieldName = env->GetStaticFieldID(className, fieldString, type);
 #endif
 
 #endif

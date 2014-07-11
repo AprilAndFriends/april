@@ -96,7 +96,6 @@ namespace april
 		this->dataFormat = 0;
 		this->width = 0;
 		this->height = 0;
-		this->compressedSize = 0; // used in compressed textures only
 		this->filter = FILTER_LINEAR;
 		this->addressMode = ADDRESS_WRAP;
 		this->data = NULL;
@@ -252,10 +251,6 @@ namespace april
 		{
 			hlog::warnf(april::logTag, "Texture '%s' has byteSize = 0 (possibly not loaded yet?)", this->filename.c_str());
 		}
-		if (this->compressedSize > 0)
-		{
-			return this->compressedSize;
-		}
 		return (this->width * this->height * Image::getFormatBpp(this->format));
 	}
 
@@ -268,11 +263,7 @@ namespace april
 		}
 		else
 		{
-#ifdef _WIN32
 			result += hsprintf("<0x%p>", this);
-#else
-			result += hsprintf("<%p>", this); // on Unix %p adds the 0x
-#endif
 		}
 		switch (this->type)
 		{
@@ -335,7 +326,6 @@ namespace april
 			if (this->dataFormat != 0)
 			{
 				size = image->compressedSize;
-				this->compressedSize = size;
 			}
 			currentData = image->data;
 			image->data = NULL;
