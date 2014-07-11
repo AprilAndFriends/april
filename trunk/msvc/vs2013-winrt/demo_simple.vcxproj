@@ -69,9 +69,6 @@
       <AdditionalDependencies>libpng.lib;libjpeg.lib;zlib1.lib;d3d9.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Link />
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\demos\demo_simple\demo_simple.cpp" />
   </ItemGroup>
