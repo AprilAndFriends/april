@@ -1,10 +1,12 @@
 /// @file
-/// @version 3.4
+/// @author  Kresimir Spes
+/// @author  Boris Mikic
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 /// 
 /// @section DESCRIPTION
 /// 
@@ -13,7 +15,7 @@
 #ifndef APRIL_EXPORT_H
 #define APRIL_EXPORT_H
 
-	#ifdef _LIB
+	#ifdef _STATICLIB
 		#define aprilExport
 		#define aprilFnExport
 	#else
@@ -27,7 +29,7 @@
 			#endif
 		#else
 			#define aprilExport __attribute__ ((visibility("default")))
-			#define aprilFnExport __attribute__ ((visibility("default")))
+			#define aprilFnExport
 		#endif
 	#endif
 	#ifndef DEPRECATED_ATTRIBUTE

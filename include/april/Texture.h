@@ -1,10 +1,12 @@
 /// @file
-/// @version 3.4
+/// @author  Kresimir Spes
+/// @author  Boris Mikic
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 /// 
 /// @section DESCRIPTION
 /// 
@@ -19,13 +21,12 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
-#include "aprilExport.h"
 #include "Color.h"
-#include "Image.h"
+#include "aprilExport.h"
 
 namespace april
 {
-	class Image;
+	class ImageSource;
 	
 	class aprilExport Texture
 	{
@@ -34,156 +35,118 @@ namespace april
 
 		enum Type
 		{
-			/// @brief Resides in RAM and on GPU, can be modified. Best used for manually created textures or loaded from files which will be modified.
-			TYPE_MANAGED = 1,
-			/// @brief Cannot be modified or read. Texture with manual data will have a copy of the data in RAM, files will be reloaded from persistent memory.
-			TYPE_IMMUTABLE = 2,
-			/// @brief Used for feeding the GPU texture data constantly (e.g. video). It has no local RAM copy for when the rendering context is lost and cannot be restored.
-			TYPE_VOLATILE = 3,
-			/// @brief Used for render targets. Acts like MANAGED.
-			// TODOaa - may not be implemented on all platforms yet
-			TYPE_RENDER_TARGET = 4
+			TYPE_NORMAL = 1,
+			TYPE_RENDER_TARGET = 2
+		};
+
+		enum Format
+		{
+			FORMAT_INVALID = 0,
+			FORMAT_ARGB = 1,
+			FORMAT_RGB = 2,
+			//FORMAT_RGBA = 3, // TODO - WTF, this isn't supported!
+			FORMAT_ALPHA = 4/*, // TODO
+			FORMAT_PALETTE = 5,
+			FORMAT_MONOCHROME = 6*/
 		};
 
 		enum Filter
 		{
 			FILTER_NEAREST = 1,
-			FILTER_LINEAR = 2,
-			FILTER_UNDEFINED = 0x7FFFFFFF
+			FILTER_LINEAR = 2
 		};
 
 		enum AddressMode
 		{
 			ADDRESS_WRAP = 0,
-			ADDRESS_CLAMP = 1,
-			ADDRESS_UNDEFINED = 0x7FFFFFFF
+			ADDRESS_CLAMP = 1
 		};
-
-		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ALPHA;
-		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ARGB;
-
+	
+		Texture();
 		virtual ~Texture();
-		virtual bool load();
+		virtual bool load() = 0;
 		virtual void unload() = 0;
 
 		HL_DEFINE_GET(hstr, filename, Filename);
-		HL_DEFINE_GET(Image::Format, format, Format);
+		HL_DEFINE_GET(int, width, Width);
+		HL_DEFINE_GET(int, height, Height);
+		HL_DEFINE_GET(int, bpp, Bpp);
 		HL_DEFINE_GETSET(Filter, filter, Filter);
 		HL_DEFINE_GETSET(AddressMode, addressMode, AddressMode);
-		HL_DEFINE_IS(fromResource, FromResource);
-		int getWidth();
-		int getHeight();
-		int getBpp();
+		HL_DEFINE_IS(bool, dynamic, Dynamic);
+		HL_DEFINE_GET(float, unusedTime, UnusedTime);
 		int getByteSize();
 
 		virtual bool isLoaded() = 0;
 		
-		bool clear();
-		Color getPixel(int x, int y);
+		void addDynamicLink(Texture* link);
+		void removeDynamicLink(Texture* link);
+		
+		virtual void clear();
+		virtual Color getPixel(int x, int y);
+		virtual void setPixel(int x, int y, Color color);
+		virtual void fillRect(int x, int y, int w, int h, Color color);
+		virtual void blit(int x, int y, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		virtual void blit(int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		virtual void stretchBlit(int x, int y, int w, int h, Texture* texture, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		virtual void stretchBlit(int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		virtual void rotateHue(float degrees);
+		virtual void saturate(float factor);
+		virtual void insertAsAlphaMap(Texture* source, unsigned char median, int ambiguity);
+
 		Color getPixel(gvec2 position);
-		bool setPixel(int x, int y, Color color);
-		bool setPixel(gvec2 position, Color color);
+		void setPixel(gvec2 position, Color color);
 		Color getInterpolatedPixel(float x, float y);
 		Color getInterpolatedPixel(gvec2 position);
-		bool fillRect(int x, int y, int w, int h, Color color);
-		bool fillRect(grect rect, Color color);
-		bool copyPixelData(unsigned char** output, Image::Format format);
-		bool copyPixelData(unsigned char** output);
-		bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture);
-		bool write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		bool write(grect srcRect, gvec2 destPosition, Texture* texture);
-		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Image* image);
-		bool write(grect srcRect, gvec2 destPosition, Image* image);
-		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture);
-		bool writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		bool writeStretch(grect srcRect, grect destRect, Texture* texture);
-		bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image);
-		bool writeStretch(grect srcRect, grect destRect, Image* image);
-		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
-		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha = 255);
-		bool blit(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
-		bool blit(grect srcRect, gvec2 destPosition, Texture* texture, unsigned char alpha = 255);
-		bool blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* image, unsigned char alpha = 255);
-		bool blit(grect srcRect, gvec2 destPosition, Image* image, unsigned char alpha = 255);
-		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
-		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha = 255);
-		bool blitStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
-		bool blitStretch(grect srcRect, grect destRect, Texture* texture, unsigned char alpha = 255);
-		bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image, unsigned char alpha = 255);
-		bool blitStretch(grect srcRect, grect destRect, Image* image, unsigned char alpha = 255);
-		bool rotateHue(int x, int y, int w, int h, float degrees);
-		bool rotateHue(grect rect, float degrees);
-		bool saturate(int x, int y, int w, int h, float factor);
-		bool saturate(grect rect, float factor);
-		bool invert(int x, int y, int w, int h);
-		bool invert(grect rect);
-		/// @note srcData must be the same width and height as the image
-		bool insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity);
-		bool insertAlphaMap(Texture* texture, unsigned char median, int ambiguity);
-		bool insertAlphaMap(Image* image, unsigned char median, int ambiguity);
+		void fillRect(grect rect, Color color);
+		void blit(int x, int y, ImageSource* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void blit(gvec2 position, Texture* texture, grect source, unsigned char alpha = 255);
+		void blit(gvec2 position, ImageSource* image, grect source, unsigned char alpha = 255);
+		void blit(gvec2 position, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
+		void stretchBlit(int x, int y, int w, int h, ImageSource* image, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void stretchBlit(grect destination, Texture* texture, grect source, unsigned char alpha = 255);
+		void stretchBlit(grect destination, ImageSource* image, grect source, unsigned char alpha = 255);
+		void stretchBlit(grect destination, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, grect source, unsigned char alpha = 255);
+
+		void update(float k);
+		virtual bool copyPixelData(unsigned char** output) { return false; }
+		
+		DEPRECATED_ATTRIBUTE int getSizeInBytes() { return this->getByteSize(); }
+		DEPRECATED_ATTRIBUTE void setTextureFilter(Filter value) { this->setFilter(value); }
+		DEPRECATED_ATTRIBUTE void setTextureWrapping(bool wrap) { this->setAddressMode(wrap ? ADDRESS_WRAP : ADDRESS_CLAMP); }
+		DEPRECATED_ATTRIBUTE bool isTextureWrappingEnabled() { return (this->getAddressMode() == ADDRESS_WRAP); }
+		DEPRECATED_ATTRIBUTE Filter getTextureFilter() { return this->getFilter(); }
+		DEPRECATED_ATTRIBUTE bool isValid() { return this->isLoaded(); }
+		
+		// TODO - this horrible, horrible hack has to be discussed and changed
+		//! sets the filename variable, useful if you want to reload the texture from a different file
+		void _setFilename(chstr value) { this->filename = value; }
+
+		// TODO - has to be discussed
+		static void setTextureLoadingListener(void (*listener)(Texture*));
 
 	protected:
-		struct Lock
-		{
-		public:
-			void* systemBuffer;
-			int x;
-			int y;
-			int w;
-			int h;
-			int dx;
-			int dy;
-			unsigned char* data;
-			int dataWidth;
-			int dataHeight;
-			Image::Format format;
-			bool locked;
-			bool failed;
-			bool renderTarget;
-
-			Lock();
-			~Lock();
-
-			void activateFail();
-			void activateLock(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format);
-			void activateRenderTarget(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format);
-
-		};
-
-		Texture(bool fromResource);
-
 		hstr filename;
-		Type type;
-		Image::Format format;
-		unsigned int dataFormat; // used internally for special image data formatting
 		int width;
 		int height;
-		int compressedSize; // used in compressed textures only
+		int bpp;
 		Filter filter;
 		AddressMode addressMode;
-		unsigned char* data;
-		bool fromResource;
-		bool firstUpload; // required because of how some rendering systems work
-
-		virtual bool _create(chstr filename, Type type);
-		virtual bool _create(chstr filename, Image::Format format, Type type);
-		virtual bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
-		virtual bool _create(int w, int h, Color color, Image::Format format, Type type);
-
-		virtual bool _createInternalTexture(unsigned char* data, int size, Type type) = 0;
-		virtual void _assignFormat() = 0;
+		bool dynamic;
+		float unusedTime;
+		harray<Texture*> dynamicLinks;
 
 		hstr _getInternalName();
 
-		Lock _tryLock(int x, int y, int w, int h);
-		Lock _tryLock();
-		bool _unlock(Lock lock, bool update);
-		virtual Lock _tryLockSystem(int x, int y, int w, int h) = 0;
-		virtual bool _unlockSystem(Lock& lock, bool update) = 0;
-		bool _uploadDataToGpu(int x, int y, int w, int h);
-		virtual bool _uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat) = 0;
+		hstr _findTextureFilename(chstr filename);
+		void _resetUnusedTime();
+
+		// TODO - has to be discussed
+		void _notifyLoadingListener(Texture* t);
+		
+		// TODO - these may currently not work well with anything else than DirectX9
+		void _blit(unsigned char* thisData, int x, int y, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
+		void _stretchBlit(unsigned char* thisData, int x, int y, int w, int h, unsigned char* data, int dataWidth, int dataHeight, int dataBpp, int sx, int sy, int sw, int sh, unsigned char alpha = 255);
 
 	};
 	

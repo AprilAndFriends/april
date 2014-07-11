@@ -1,10 +1,12 @@
 /// @file
-/// @version 3.4
+/// @author  Kresimir Spes
+/// @author  Boris Mikic
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 /// 
 /// @section DESCRIPTION
 /// 
@@ -13,8 +15,9 @@
 #ifndef APRIL_TIMER_H
 #define APRIL_TIMER_H
 
-#include <hltypes/hplatform.h>
-#ifndef _WIN32
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <stdint.h>
 #define __int64 uint64_t
 #endif
@@ -24,16 +27,16 @@
 
 namespace april
 {
-	class aprilExport Timer
-	{
+    class aprilExport Timer
+    {
 	public:
 		Timer();
 		~Timer();
 		
 		float getTime();
 		float diff(bool update = true);
-		
-		void update();
+        
+        void update();
 		
 	protected:
 		float dt;
@@ -41,8 +44,8 @@ namespace april
 		float td2;
 		__int64 frequency;
 		float resolution;
-		__int64 mTimerStart;
-		unsigned long mTimerElapsed;
+		__int64 mmTimerStart;
+		unsigned long mmTimerElapsed;
 		bool performanceTimer;
 		__int64 performanceTimerStart;
 		__int64 performanceTimerElapsed;

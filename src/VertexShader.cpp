@@ -1,10 +1,11 @@
 /// @file
-/// @version 3.4
+/// @author  Boris Mikic
+/// @version 2.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
@@ -13,6 +14,11 @@
 
 namespace april
 {
+	VertexShader::VertexShader(chstr filename)
+	{
+		this->load(filename);
+	}
+
 	VertexShader::VertexShader()
 	{
 	}
@@ -21,17 +27,15 @@ namespace april
 	{
 	}
 
-	bool VertexShader::_loadData(chstr filename, unsigned char** data, long* size)
+	void VertexShader::load(chstr filename)
 	{
-		if (!hresource::exists(filename))
-		{
-			return false;
-		}
-		hresource stream(filename);
-		*size = stream.size();
-		*data = new unsigned char[*size];
-		stream.read_raw(*data, *size);
-		return true;
+		this->shaderCode = hresource::hread(filename);
+		this->compile(this->shaderCode);
+	}
+	
+	bool VertexShader::compile()
+	{
+		return this->compile(this->shaderCode);
 	}
 	
 }
