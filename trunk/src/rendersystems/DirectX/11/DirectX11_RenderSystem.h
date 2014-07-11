@@ -19,7 +19,7 @@
 using namespace Windows::UI::Xaml::Controls;
 #endif
 
-#include <d3d11_1.h>
+#include <d3d11_2.h>
 
 #include <gtypes/Matrix4.h>
 #include <gtypes/Quaternion.h>
@@ -97,6 +97,8 @@ namespace april
 
 		void updateOrientation();
 
+		void trim(); // needed by Win 8.1
+
 	protected:
 		BlendMode activeTextureBlendMode;
 		ColorMode activeTextureColorMode;
@@ -131,11 +133,11 @@ namespace april
 		void _updateVertexShader();
 
 	private:
-		ComPtr<ID3D11Device1> d3dDevice;
-		ComPtr<ID3D11DeviceContext1> d3dDeviceContext;
-		ComPtr<IDXGISwapChain1> swapChain;
+		ComPtr<ID3D11Device2> d3dDevice;
+		ComPtr<ID3D11DeviceContext2> d3dDeviceContext;
+		ComPtr<IDXGISwapChain2> swapChain;
 #ifndef _WINP8
-		ComPtr<ISwapChainBackgroundPanelNative>	swapChainNative;
+		ComPtr<ISwapChainPanelNative> swapChainNative;
 #endif
 
 		ComPtr<ID3D11RasterizerState> rasterState;

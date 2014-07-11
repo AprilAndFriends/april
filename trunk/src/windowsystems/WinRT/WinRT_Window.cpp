@@ -71,30 +71,6 @@ namespace april
 	hstr WinRT_Window::getParam(chstr param)
 	{
 #ifndef _WINP8
-		if (param == WINRT_ALLOW_FILLED_VIEW)
-		{
-			return hstr(this->allowFilledView ? "1" : "0");
-		}
-		if (param == WINRT_USE_CUSTOM_FILLED_VIEW)
-		{
-			return hstr(this->useCustomFilledView ? "1" : "0");
-		}
-		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
-		{
-			return hstr(this->useCustomSnappedView ? "1" : "0");
-		}
-		if (param == WINRT_VIEW_STATE)
-		{
-			if (ApplicationView::Value == ApplicationViewState::Snapped)
-			{
-				return WINRT_VIEW_STATE_SNAPPED;
-			}
-			if (ApplicationView::Value == ApplicationViewState::Filled)
-			{
-				return WINRT_VIEW_STATE_FILLED;
-			}
-			return WINRT_VIEW_STATE_FULLSCREEN;
-		}
 		if (param == WINRT_CURSOR_MAPPINGS)
 		{
 			harray<hstr> mappings;
@@ -120,41 +96,6 @@ namespace april
 	void WinRT_Window::setParam(chstr param, chstr value)
 	{
 #ifndef _WINP8
-		if (param == WINRT_ALLOW_FILLED_VIEW)
-		{
-			this->allowFilledView = (value != "0");
-		}
-		if (param == WINRT_USE_CUSTOM_FILLED_VIEW)
-		{
-			this->useCustomFilledView = (value != "0");
-		}
-		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
-		{
-			this->useCustomSnappedView = (value != "0");
-		}
-		if (param == WINRT_VIEW_STATE)
-		{
-			if (ApplicationView::Value == ApplicationViewState::Snapped)
-			{
-				if (value != WINRT_VIEW_STATE_SNAPPED)
-				{
-					if (!ApplicationView::TryUnsnap())
-					{
-#ifdef _DEBUG
-						hlog::warn(april::logTag, "Unsnapping failed!");
-#endif
-					}
-				}
-				else
-				{
-					hlog::warn(april::logTag, "Ignoring unsnap, new view state is already 'snapped'!");
-				}
-			}
-			else
-			{
-				hlog::warn(april::logTag, "Application not in snapped view, cannot change view state!");
-			}
-		}
 		if (param == WINRT_CURSOR_MAPPINGS)
 		{
 			this->cursorMappings.clear();

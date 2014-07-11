@@ -12,6 +12,7 @@
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
+#include "DirectX11_RenderSystem.h"
 #include "Keys.h"
 #include "Platform.h"
 #include "Rendersystem.h"
@@ -32,7 +33,7 @@ namespace april
 {
 	WinRT_BaseApp::WinRT_BaseApp()
 	{
-		DisplayProperties::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
+		DisplayInformation::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
 		this->scrollHorizontal = false;
 		this->mouseMoveMessagesCount = 0;
 		this->startTime = get_system_tick_count();
@@ -75,8 +76,8 @@ namespace april
 		window->Closed +=
 			ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
 				this, &WinRT_BaseApp::OnWindowClosed);
-		DisplayProperties::OrientationChanged +=
-			ref new DisplayPropertiesEventHandler(
+		DisplayInformation::GetForCurrentView()->OrientationChanged +=
+			ref new Windows::Foundation::TypedEventHandler<DisplayInformation^, Object^>(
 				this, &WinRT_BaseApp::OnOrientationChanged);
 		InputPane::GetForCurrentView()->Showing +=
 			ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
@@ -88,6 +89,7 @@ namespace april
 
 	void WinRT_BaseApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
 	{
+		DX11_RENDERSYS->trim(); // required since Win 8.1
 		this->handleFocusChange(false);
 	}
 
@@ -107,11 +109,7 @@ namespace april
 
 	void WinRT_BaseApp::handleFocusChange(bool focused)
 	{
-		if (april::rendersys != NULL && focused)
-		{
-			april::rendersys->reset();
-		}
-		if (april::window != NULL && april::window->isFocused() != focused && WinRT::Interface->canSuspendResume())
+		if (april::window != NULL && april::window->isFocused() != focused)
 		{
 			april::window->handleFocusChangeEvent(focused);
 		}
@@ -119,11 +117,6 @@ namespace april
 
 	void WinRT_BaseApp::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
-		if (april::rendersys != NULL)
-		{
-			april::rendersys->reset();
-		}
-		WinRT::Interface->updateViewState();
 		if (april::window != NULL)
 		{
 			april::SystemInfo info = april::getSystemInfo();
@@ -136,16 +129,11 @@ namespace april
 	
 	void WinRT_BaseApp::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
 	{
-		WinRT::Interface->updateViewState();
 		args->Handled = true;
 	}
 
-	void WinRT_BaseApp::OnOrientationChanged(_In_ Object^ args)
+	void WinRT_BaseApp::OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
 	{
-		if (april::rendersys != NULL)
-		{
-			april::rendersys->reset();
-		}
 	}
 	
 	void WinRT_BaseApp::OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
@@ -405,7 +393,6 @@ namespace april
 		{
 			return gvec2(x, y);
 		}
-		
 		return gvec2((float)(int)(x * width / w), (float)(int)(y * height / h));
 	}
 
