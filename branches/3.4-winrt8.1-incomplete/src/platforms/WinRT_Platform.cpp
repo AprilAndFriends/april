@@ -39,6 +39,11 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "winrt";
+#ifdef _ARM
+			info.architecture = "ARM";
+#else
+			info.architecture = "x86";
+#endif
 			// number of CPU cores
 			SYSTEM_INFO w32info;
 			GetNativeSystemInfo(&w32info);
@@ -51,15 +56,7 @@ namespace april
 			info.ram = 512;
 #endif
 			// display DPI
-			DisplayInformation^ information = DisplayInformation::GetForCurrentView();
-			float dpi = information->LogicalDpi;
-			info.displayDpi = (int)dpi;
-			// display resolution
-#ifdef _WINRT_WINDOW
-			int width = (int)(CoreWindow::GetForCurrentThread()->Bounds.Width * dpi / 96);
-			int height = (int)(CoreWindow::GetForCurrentThread()->Bounds.Height * dpi / 96);
-			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
-#endif
+			info.displayDpi = DisplayProperties::LogicalDpi;
 			// other
 			info.locale = "";
 #ifndef _WINP8
@@ -81,6 +78,10 @@ namespace april
 			{
 				info.locale = "en"; // default is "en"
 			}
+			else if (info.locale.starts_with("zh_hant") || info.locale.starts_with("zh-hant"))
+			{
+				info.locale = "zh-Hant";
+			}
 			else if (info.locale == "pt_pt" || info.locale == "pt-pt")
 			{
 				info.locale = "pt-PT";
@@ -90,6 +91,28 @@ namespace april
 				info.locale = info.locale.utf8_substr(0, 2);
 			}
 		}
+		// display resolution
+#ifdef _WINRT_WINDOW
+		float dpiRatio = DisplayProperties::LogicalDpi / 96;
+		int width = (int)(CoreWindow::GetForCurrentThread()->Bounds.Width * dpiRatio);
+		int height = (int)(CoreWindow::GetForCurrentThread()->Bounds.Height * dpiRatio);
+		if (info.displayResolution.y == 0.0f)
+		{
+#ifndef _WINP8
+			info.displayResolution.set((float)width, (float)height);
+#else
+			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
+#endif
+		}
+		else
+		{
+#ifndef _WINP8
+			info.displayResolution.set(hmax((float)width, info.displayResolution.x), hmax((float)height, info.displayResolution.y));
+#else
+			info.displayResolution.set(hmax((float)hmax(width, height), info.displayResolution.x), hmax((float)hmin(width, height), info.displayResolution.y));
+#endif
+		}
+#endif
 		return info;
 	}
 

@@ -77,7 +77,7 @@
     <ProjectReference Include="..\..\..\..\..\hltypes\lib\zlib\msvc\vs2013-winrt\zlib.vcxproj">
       <Project>{60f89955-91c6-3a36-8000-13c592fec2df}</Project>
       <Private>false</Private>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>

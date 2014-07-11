@@ -14,6 +14,7 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
+#include "Platform.h"
 #include "RenderSystem.h"
 #include "SystemDelegate.h"
 #include "Timer.h"
@@ -31,7 +32,8 @@ namespace april
 		this->width = 0;
 		this->height = 0;
 		this->delaySplash = 0.0f;
-		this->useCustomMinView = false;
+		this->allowFilledView = false;
+		this->useCustomSnappedView = false;
 		this->backButtonSystemHandling = false;
 		this->cursorExtensions += ".ani";
 		this->cursorExtensions += ".cur";
@@ -44,14 +46,15 @@ namespace april
 
 	bool WinRT_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
-		if (!Window::create(w, h, fullscreen, title, options))
+		if (!Window::create(w, h, true, title, options))
 		{
 			return false;
 		}
 		this->width = w;
 		this->height = h;
 		this->delaySplash = 0.0f;
-		this->useCustomMinView = false;
+		this->allowFilledView = false;
+		this->useCustomSnappedView = false;
 		this->backButtonSystemHandling = false;
 		this->cursorMappings.clear();
 		this->inputMode = TOUCH;
@@ -68,18 +71,29 @@ namespace april
 	hstr WinRT_Window::getParam(chstr param)
 	{
 #ifndef _WINP8
-		if (param == WINRT_USE_CUSTOM_MIN_VIEW)
+		if (param == WINRT_ALLOW_FILLED_VIEW)
 		{
-			return hstr(this->useCustomMinView ? "1" : "0");
+			return hstr(this->allowFilledView ? "1" : "0");
 		}
-		// TODOa - deprecated by MS, needs to be removed/changed
+		if (param == WINRT_USE_CUSTOM_FILLED_VIEW)
+		{
+			return hstr(this->useCustomFilledView ? "1" : "0");
+		}
+		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
+		{
+			return hstr(this->useCustomSnappedView ? "1" : "0");
+		}
 		if (param == WINRT_VIEW_STATE)
 		{
-			if (this->getWidth() == WINRT_SNAPPED_VIEW_WIDTH)
+			if (ApplicationView::Value == ApplicationViewState::Snapped)
 			{
 				return WINRT_VIEW_STATE_SNAPPED;
 			}
-			return WINRT_VIEW_STATE_NORMAL;
+			if (ApplicationView::Value == ApplicationViewState::Filled)
+			{
+				return WINRT_VIEW_STATE_FILLED;
+			}
+			return WINRT_VIEW_STATE_FULLSCREEN;
 		}
 		if (param == WINRT_CURSOR_MAPPINGS)
 		{
@@ -106,17 +120,24 @@ namespace april
 	void WinRT_Window::setParam(chstr param, chstr value)
 	{
 #ifndef _WINP8
-		if (param == WINRT_USE_CUSTOM_MIN_VIEW)
+		if (param == WINRT_ALLOW_FILLED_VIEW)
 		{
-			this->useCustomMinView = (value != "0");
+			this->allowFilledView = (value != "0");
+		}
+		if (param == WINRT_USE_CUSTOM_FILLED_VIEW)
+		{
+			this->useCustomFilledView = (value != "0");
+		}
+		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
+		{
+			this->useCustomSnappedView = (value != "0");
 		}
 		if (param == WINRT_VIEW_STATE)
 		{
-			if (this->getWidth() == WINRT_SNAPPED_VIEW_WIDTH)
+			if (ApplicationView::Value == ApplicationViewState::Snapped)
 			{
 				if (value != WINRT_VIEW_STATE_SNAPPED)
 				{
-					// TODOa - deprecated by MS, needs to be removed/changed
 					if (!ApplicationView::TryUnsnap())
 					{
 #ifdef _DEBUG
