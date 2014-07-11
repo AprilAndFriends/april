@@ -1,14 +1,15 @@
 /// @file
-/// @version 3.4
+/// @author  Boris Mikic
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a delegate for all event callbacks. One delegate to rule them all.
+/// Defines a delegate for all event callbacks.
 
 #ifndef APRIL_EVENT_DELEGATE_H
 #define APRIL_EVENT_DELEGATE_H

@@ -1,10 +1,11 @@
 /// @file
-/// @version 3.4
+/// @author  Boris Mikic
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #include <hltypes/hsbase.h>
 #include <hltypes/hstream.h>
@@ -17,23 +18,39 @@ namespace april
 	{
 		Image* jpg = NULL;
 		Image* png = NULL;
-		unsigned char bytes[4] = {0};
+		hstream subStream;
+		int size;
+		unsigned char bytes[4];
+		unsigned char* buffer;
 		// file header ("JPT" + 1 byte for version code)
 		stream.read_raw(bytes, 4);
 		// read JPEG
 		stream.read_raw(bytes, 4);
-		jpg = Image::_loadJpg(stream, bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24));
+		size = bytes[0] + bytes[1] * 256 + bytes[2] * 256 * 256 + bytes[3] * 256 * 256 * 256;
+		buffer = new unsigned char[size];
+		stream.read_raw(buffer, size);
+		subStream.clear();
+		subStream.write_raw(buffer, size);
+		delete [] buffer;
+		subStream.rewind();
+		jpg = Image::_loadJpg(subStream);
 		// read PNG
 		stream.read_raw(bytes, 4);
-		png = Image::_loadPng(stream, bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24));
-		png->format = FORMAT_ALPHA;
+		size = bytes[0] + bytes[1] * 256 + bytes[2] * 256 * 256 + bytes[3] * 256 * 256 * 256;
+		buffer = new unsigned char[size];
+		stream.read_raw(buffer, size);
+		subStream.clear();
+		subStream.write_raw(buffer, size);
+		delete [] buffer;
+		subStream.rewind();
+		png = Image::_loadPng(subStream);
 		// combine
-		Image* image = Image::create(jpg->w, jpg->h, Color::Clear, FORMAT_RGBA);
-		image->write(0, 0, jpg->w, jpg->h, 0, 0, jpg);
-		image->write(0, 0, png->w, png->h, 0, 0, png);
+		Image* img = Image::create(jpg->w, jpg->h);
+		img->copyImage(jpg);
+		img->insertAsAlphaMap(png);
 		delete jpg;
 		delete png;
-		return image;
+		return img;
 	}
 
 }

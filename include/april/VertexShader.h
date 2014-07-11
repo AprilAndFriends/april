@@ -1,10 +1,11 @@
 /// @file
-/// @version 3.4
+/// @author  Boris Mikic
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 /// 
 /// @section DESCRIPTION
 /// 
@@ -29,6 +30,8 @@ namespace april
 		virtual void setConstantsB(const int* quadVectors, unsigned int quadCount) = 0;
 		virtual void setConstantsI(const int* quadVectors, unsigned int quadCount) = 0;
 		virtual void setConstantsF(const float* quadVectors, unsigned int quadCount) = 0;
+
+		DEPRECATED_ATTRIBUTE virtual bool compile(chstr shaderCode);
 
 	protected:
 		bool _loadData(chstr filename, unsigned char** data, long* size);

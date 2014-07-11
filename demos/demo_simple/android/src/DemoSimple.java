@@ -1,6 +1,6 @@
-package com.april.demoSimple;
+package com.example.april.android.demoSimple;
 
-public class DemoSimple extends com.april.Activity
+public class DemoSimple extends net.sourceforge.april.android.Activity
 {
 	static
 	{
@@ -10,8 +10,8 @@ public class DemoSimple extends com.april.Activity
 	@Override
 	protected void onCreate(android.os.Bundle savedInstanceState)
 	{
+		this.forceArchivePath(this.getPackageResourcePath()); // forces APK as archive file
 		super.onCreate(savedInstanceState);
-		this.forceArchivePath(com.april.NativeInterface.ApkPath); // forces APK as archive file
 	}
 	
 }

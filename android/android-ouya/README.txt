@@ -1,1 +1,0 @@
-Make sure to copy first all required OUYA libraries into the libs folder.

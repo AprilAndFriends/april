@@ -1,0 +1,2 @@
+Due to usage of pixel and vertex shaders, the DirectX9 compilation configuration requires a d3dx9_XX.dll
+to be distributed with the application.

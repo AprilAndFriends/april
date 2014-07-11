@@ -1,10 +1,11 @@
 /// @file
-/// @version 3.4
+/// @author  Boris Mikic
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 /// 
 /// @section DESCRIPTION
 /// 
@@ -18,15 +19,12 @@
 #include "jni.h"
 #endif
 
-#include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
 namespace april
 {
 	JNIEnv* getJNIEnv();
 	jobject getActivity();
-	jobject getAprilActivity();
-	jclass findJNIClass(JNIEnv* env, chstr classPath);
 	hstr _jstringToHstr(JNIEnv* env, jstring string);
 }
 
@@ -45,25 +43,13 @@ namespace april
 #ifdef __NATIVE_INTERFACE_CLASS
 #define APRIL_GET_NATIVE_INTERFACE_CLASS(className) \
 	JNIEnv* env = april::getJNIEnv(); \
-	jclass className = april::findJNIClass(env, __NATIVE_INTERFACE_CLASS); \
-	if (className == NULL) \
-	{ \
-		hlog::error("JNI", "Could not find native interface class: " + hstr(__NATIVE_INTERFACE_CLASS)); \
-	}
+	jclass className = env->FindClass(__NATIVE_INTERFACE_CLASS);
 #define APRIL_GET_NATIVE_INTERFACE_METHOD(className, methodName, methodString, args) \
 	APRIL_GET_NATIVE_INTERFACE_CLASS(className); \
-	jmethodID methodName = env->GetStaticMethodID(className, methodString, args); \
-	if (methodName == NULL) \
-	{ \
-		hlog::error("JNI", "Could not find method, check definition: " + hstr(methodString)); \
-	}
+	jmethodID methodName = env->GetStaticMethodID(className, methodString, args);
 #define APRIL_GET_NATIVE_INTERFACE_FIELD(className, fieldName, fieldString, type) \
 	APRIL_GET_NATIVE_INTERFACE_CLASS(className); \
-	jfieldID fieldName = env->GetStaticFieldID(className, fieldString, type); \
-	if (fieldName == NULL) \
-	{ \
-		hlog::error("JNI", "Could not find field, check definition: " + hstr(fieldString)); \
-	}
+	jfieldID fieldName = env->GetStaticFieldID(className, fieldString, type);
 #endif
 
 #endif

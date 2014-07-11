@@ -1,10 +1,11 @@
 /// @file
-/// @version 3.4
+/// @author  Boris Mikic
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 /// 
 /// @section DESCRIPTION
 /// 
@@ -23,7 +24,7 @@ namespace april
 		UpdateDelegate();
 		virtual ~UpdateDelegate();
 
-		virtual bool onUpdate(float timeDelta);
+		virtual bool onUpdate(float timeSinceLastFrame);
 
 	};
 

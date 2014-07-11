@@ -1,14 +1,17 @@
 /// @file
-/// @version 3.4
+/// @author  Kresimir Spes
+/// @author  Boris Mikic
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#include <hltypes/hplatform.h>
 #ifndef _ANDROID
-#ifndef _WINRT
-#define RESOURCE_PATH "../../demos/media/"
+#if !_HL_WINRT
+#define RESOURCE_PATH "../media/"
 #else
 #define RESOURCE_PATH "media/"
 #endif
@@ -17,18 +20,15 @@
 #endif
 
 #include <april/april.h>
-#include <april/Cursor.h>
 #include <april/KeyboardDelegate.h>
 #include <april/main.h>
 #include <april/MouseDelegate.h>
-#include <april/Platform.h>
 #include <april/RenderSystem.h>
 #include <april/UpdateDelegate.h>
 #include <april/Window.h>
 #include <gtypes/Rectangle.h>
 #include <hltypes/hstring.h>
 
-april::Cursor* cursor = NULL;
 april::Texture* background = NULL;
 april::Texture* x_symbol = NULL;
 april::Texture* o_symbol = NULL;
@@ -41,11 +41,7 @@ int victory = 0;
 bool player = 0;
 april::TexturedVertex v[4];
 
-#if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
-#else
-grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
-#endif
 gvec2 size = drawRect.getSize() * 5 / 16;
 
 void draw_symbol(int x, int y, chstr symbol)
@@ -78,7 +74,7 @@ void draw_symbol(int x, int y, chstr symbol)
 	v[1].x = x2; v[1].y = y2; v[1].z = 0; v[1].u = 1; v[1].v = 0;
 	v[2].x = x3; v[2].y = y3; v[2].z = 0; v[2].u = 0; v[2].v = 1;
 	v[3].x = x4; v[3].y = y4; v[3].z = 0; v[3].u = 1; v[3].v = 1;
-	april::rendersys->render(april::RO_TRIANGLE_STRIP, v, 4);
+	april::rendersys->render(april::TriangleStrip, v, 4);
 }
 
 
@@ -114,7 +110,7 @@ void draw_line(int x_start, int y_start, int x_end, int y_end, std::string symbo
 	v[1].x = x2; v[1].y = y1; v[1].z = 0; v[1].u = 1; v[1].v = 0;
 	v[2].x = x1; v[2].y = y2; v[2].z = 0; v[2].u = 0; v[2].v = 1;
 	v[3].x = x2; v[3].y = y2; v[3].z = 0; v[3].u = 1; v[3].v = 1;
-	april::rendersys->render(april::RO_TRIANGLE_STRIP, v, 4);
+	april::rendersys->render(april::TriangleStrip, v, 4);
 }
 
 class UpdateDelegate : public april::UpdateDelegate
@@ -129,7 +125,7 @@ class UpdateDelegate : public april::UpdateDelegate
 		v[1].x = drawRect.w;	v[1].y = 0;				v[1].z = 0;	v[1].u = 1;	v[1].v = 0;
 		v[2].x = 0;				v[2].y = drawRect.h;	v[2].z = 0;	v[2].u = 0;	v[2].v = 1;
 		v[3].x = drawRect.w;	v[3].y = drawRect.h;	v[3].z = 0;	v[3].u = 1;	v[3].v = 1;
-		april::rendersys->render(april::RO_TRIANGLE_STRIP, v, 4);
+		april::rendersys->render(april::TriangleStrip, v, 4);
 	
 		april::rendersys->setTexture(NULL);
 		april::rendersys->drawFilledRect(grect(size.x, 0, 10, drawRect.h), april::Color::Magenta);
@@ -324,9 +320,6 @@ class MouseDelegate : public april::MouseDelegate
 			victory = 8;
 	}
 
-	void onMouseDown(april::Key button) { }
-	void onMouseMove() { }
-
 };
 
 static UpdateDelegate* updateDelegate = NULL;
@@ -379,32 +372,25 @@ void april_init(const harray<hstr>& args)
 #endif
 	updateDelegate = new UpdateDelegate();
 	mouseDelegate = new MouseDelegate();
-#if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
+#if defined(_ANDROID) || defined(_IOS)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 	april::createRenderSystem();
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Tic Tac Toe Demo");
-#ifdef _WINRT
-	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
-#endif
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
-	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
-	april::window->setCursor(cursor);
-	background = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
-	x_symbol = april::rendersys->createTextureFromResource(RESOURCE_PATH "x");
-	o_symbol = april::rendersys->createTextureFromResource(RESOURCE_PATH "o");
-	line_horz = april::rendersys->createTextureFromResource(RESOURCE_PATH "line_horz");
-	line_vert = april::rendersys->createTextureFromResource(RESOURCE_PATH "line_vert");
-	line45 = april::rendersys->createTextureFromResource(RESOURCE_PATH "line45");
-	line315 = april::rendersys->createTextureFromResource(RESOURCE_PATH "line315");
+	background = april::rendersys->createTexture(RESOURCE_PATH "texture");
+	x_symbol = april::rendersys->createTexture(RESOURCE_PATH "x");
+	o_symbol = april::rendersys->createTexture(RESOURCE_PATH "o");
+	line_horz = april::rendersys->createTexture(RESOURCE_PATH "line_horz");
+	line_vert = april::rendersys->createTexture(RESOURCE_PATH "line_vert");
+	line45 = april::rendersys->createTexture(RESOURCE_PATH "line45");
+	line315 = april::rendersys->createTexture(RESOURCE_PATH "line315");
 }
 
 void april_destroy()
 {
-	april::window->setCursor(NULL);
-	delete cursor;
 	delete background;
 	delete x_symbol;
 	delete o_symbol;

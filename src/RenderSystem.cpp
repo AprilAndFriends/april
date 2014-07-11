@@ -1,10 +1,13 @@
 /// @file
-/// @version 3.4
+/// @author  Kresimir Spes
+/// @author  Boris Mikic
+/// @author  Ivan Vucica
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #include <stdio.h>
 #include <algorithm>
@@ -13,7 +16,6 @@
 #endif
 
 #include <hltypes/harray.h>
-#include <hltypes/hfile.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
@@ -22,93 +24,36 @@
 #include "april.h"
 #include "aprilUtil.h"
 #include "Image.h"
+#include "RamTexture.h"
 #include "RenderSystem.h"
-#include "Platform.h"
 #include "Texture.h"
 #include "Window.h"
 
 namespace april
 {
-	// optimizations, but they are not thread-safe
-	static PlainVertex pv[5];
-	static TexturedVertex tv[5];
+	PlainVertex pv[5];
+	TexturedVertex tv[5];
 	
-	RenderSystem* rendersys = NULL;
-
-	RenderSystem::DisplayMode::DisplayMode(int width, int height, int refreshRate)
-	{
-		this->width = width;
-		this->height = height;
-		this->refreshRate = refreshRate;
-	}
-
-	RenderSystem::DisplayMode::~DisplayMode()
-	{
-	}
+	april::RenderSystem* rendersys = NULL;
 	
-	bool RenderSystem::DisplayMode::operator==(const DisplayMode& other) const
-	{
-		return (this->width == other.width && this->height == other.height && this->refreshRate == other.refreshRate);
-	}
-
-	bool RenderSystem::DisplayMode::operator!=(const DisplayMode& other) const
-	{
-		return (this->width != other.width || this->height != other.height || this->refreshRate != other.refreshRate);
-	}
-	
-	hstr RenderSystem::DisplayMode::toString()
-	{
-		return hsprintf("%dx%d@%dHz", this->width, this->height, this->refreshRate);
-	}
-	
-	RenderSystem::Options::Options()
-	{
-		this->depthBuffer = false;
-	}
-	
-	RenderSystem::Options::~Options()
-	{
-	}
-	
-	hstr RenderSystem::Options::toString()
-	{
-		harray<hstr> options;
-		if (this->depthBuffer)
-		{
-			options += "depth-buffer";
-		}
-		if (options.size() == 0)
-		{
-			options += "none";
-		}
-		return options.join(',');
-	}
-	
-	RenderSystem::RenderSystem()
+	RenderSystem::RenderSystem() : created(false), textureFilter(Texture::FILTER_LINEAR), textureAddressMode(Texture::ADDRESS_WRAP)
 	{
 		this->name = "Generic";
-		this->created = false;
-		this->state = NULL;
-		this->textureFilter = Texture::FILTER_UNDEFINED;
-		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
 	
 	RenderSystem::~RenderSystem()
 	{
 		this->destroy();
-		delete this->state;
 	}
 	
-	bool RenderSystem::create(RenderSystem::Options options)
+	bool RenderSystem::create(chstr options)
 	{
 		if (!this->created)
 		{
-			hlog::writef(april::logTag, "Creating rendersystem: '%s' (options: %s)", this->name.c_str(), options.toString().c_str());
+			hlog::writef(april::logTag, "Creating rendersystem: '%s' (options: '%s')", this->name.c_str(), options.c_str());
 			this->created = true;
-			this->options = options;
 			return true;
 		}
-		this->state->reset();
 		return false;
 	}
 	
@@ -121,7 +66,6 @@ namespace april
 			{
 				delete this->textures[0];
 			}
-			this->state->reset();
 			this->created = false;
 			return true;
 		}
@@ -133,25 +77,14 @@ namespace april
 		hlog::write(april::logTag, "Resetting rendersystem.");
 	}
 
-	harray<RenderSystem::DisplayMode> RenderSystem::getSupportedDisplayModes()
-	{
-		harray<RenderSystem::DisplayMode> result;
-		gvec2 resolution = april::getSystemInfo().displayResolution;
-		result += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
-		return result;
-	}
-	
-	void RenderSystem::setViewport(grect value)
-	{
-		this->viewport = value;
-	}
-
 	void RenderSystem::setOrthoProjection(grect rect)
 	{
-		// TODOaa - change and improve this implementation
-		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
 		this->orthoProjection = rect;
-		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
+		float t = this->getPixelOffset();
+		float wnd_w = (float)april::window->getWidth();
+		float wnd_h = (float)april::window->getHeight();
+		rect.x -= t * rect.w / wnd_w;
+		rect.y -= t * rect.h / wnd_h;
 		this->projectionMatrix.ortho(rect);
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
@@ -172,93 +105,63 @@ namespace april
 		this->projectionMatrix = matrix;
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
-
-	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, bool loadImmediately)
+	
+	void RenderSystem::setResolution(int w, int h)
 	{
-		hstr name = this->findTextureResource(filename);
+		hlog::writef(april::logTag, "Changing resolution: %d x %d", w, h);
+		april::window->_setResolution(w, h);
+	}
+	
+	Texture* RenderSystem::createTexture(chstr filename, bool loadImmediately)
+	{
+		hstr name = this->findTextureFilename(filename);
 		if (name == "")
 		{
 			return NULL;
 		}
-		Texture* texture = this->_createTexture(true);
-		if (!texture->_create(name, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
+		Texture* texture = this->_createTexture(name);
+		if (loadImmediately)
 		{
-			delete texture;
-			return NULL;
+			texture->load();
+			if (!texture->isLoaded())
+			{
+				delete texture;
+				return NULL;
+			}
 		}
 		return texture;
 	}
 
-	Texture* RenderSystem::createTextureFromResource(chstr filename, Image::Format format, Texture::Type type, bool loadImmediately)
+	Texture* RenderSystem::createTexture(int w, int h, unsigned char* rgba)
 	{
-		hstr name = this->findTextureResource(filename);
+		return this->_createTexture(w, h, rgba);
+	}
+
+	Texture* RenderSystem::createTexture(int w, int h, Texture::Format format, Texture::Type type, Color color)
+	{
+		return this->_createTexture(w, h, format, type, color);
+	}
+
+	Texture* RenderSystem::createRamTexture(chstr filename, bool loadImmediately)
+	{
+		hstr name = this->findTextureFilename(filename);
 		if (name == "")
 		{
 			return NULL;
 		}
-		Texture* texture = this->_createTexture(true);
-		if (!texture->_create(name, format, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
+		RamTexture* texture = new RamTexture(name);
+		if (loadImmediately)
 		{
-			delete texture;
-			return NULL;
+			texture->load();
+			if (!texture->isLoaded())
+			{
+				delete texture;
+				return NULL;
+			}
 		}
 		return texture;
 	}
-
-	Texture* RenderSystem::createTextureFromFile(chstr filename, Texture::Type type, bool loadImmediately)
-	{
-		hstr name = this->findTextureFile(filename);
-		if (name == "")
-		{
-			return NULL;
-		}
-		Texture* texture = this->_createTexture(false);
-		if (!texture->_create(name, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
-		{
-			delete texture;
-			return NULL;
-		}
-		return texture;
-	}
-
-	Texture* RenderSystem::createTextureFromFile(chstr filename, Image::Format format, Texture::Type type, bool loadImmediately)
-	{
-		hstr name = this->findTextureFile(filename);
-		if (name == "")
-		{
-			return NULL;
-		}
-		Texture* texture = this->_createTexture(false);
-		if (!texture->_create(name, format, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
-		{
-			delete texture;
-			return NULL;
-		}
-		return texture;
-	}
-
-	Texture* RenderSystem::createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
-	{
-		Texture* texture = this->_createTexture(true);
-		if (!texture->_create(w, h, data, format, type))
-		{
-			delete texture;
-			texture = NULL;
-		}
-		return texture;
-	}
-
-	Texture* RenderSystem::createTexture(int w, int h, Color color, Image::Format format, Texture::Type type)
-	{
-		Texture* texture = this->_createTexture(true);
-		if (!texture->_create(w, h, color, format, type))
-		{
-			delete texture;
-			texture = NULL;
-		}
-		return texture;
-	}
-
+	
 	void RenderSystem::unloadTextures()
 	{
 		foreach (Texture*, it, this->textures)
@@ -316,7 +219,7 @@ namespace april
 		pv[2].x = rect.x + rect.w;	pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
 		pv[3].x = rect.x;			pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
 		pv[4].x = rect.x;			pv[4].y = rect.y;			pv[4].z = 0.0f;
-		this->render(RO_LINE_STRIP, pv, 5, color);
+		this->render(LineStrip, pv, 5, color);
 	}
 
 	void RenderSystem::drawFilledRect(grect rect, Color color)
@@ -325,7 +228,7 @@ namespace april
 		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
 		pv[2].x = rect.x;			pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
 		pv[3].x = rect.x + rect.w;	pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
-		this->render(RO_TRIANGLE_STRIP, pv, 4, color);
+		this->render(TriangleStrip, pv, 4, color);
 	}
 	
 	void RenderSystem::drawTexturedRect(grect rect, grect src)
@@ -334,7 +237,7 @@ namespace april
 		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
 		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
 		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
-		this->render(RO_TRIANGLE_STRIP, tv, 4);
+		this->render(TriangleStrip, tv, 4);
 	}
 	
 	void RenderSystem::drawTexturedRect(grect rect, grect src, Color color)
@@ -343,7 +246,7 @@ namespace april
 		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
 		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
 		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
-		this->render(RO_TRIANGLE_STRIP, tv, 4, color);
+		this->render(TriangleStrip, tv, 4, color);
 	}
 	
 	void RenderSystem::presentFrame()
@@ -351,7 +254,7 @@ namespace april
 		april::window->presentFrame();
 	}
 	
-	hstr RenderSystem::findTextureResource(chstr filename)
+	hstr RenderSystem::findTextureFilename(chstr filename)
 	{
 		if (hresource::exists(filename))
 		{
@@ -367,9 +270,10 @@ namespace april
 				return name;
 			}
 		}
-		hstr noExtensionName = hfile::no_extension(filename);
-		if (noExtensionName != filename)
+		int index = filename.rfind(".");
+		if (index >= 0)
 		{
+			hstr noExtensionName = filename.substr(0, index);
 			foreach (hstr, it, extensions)
 			{
 				name = noExtensionName + (*it);
@@ -382,63 +286,14 @@ namespace april
 		return "";
 	}
 	
-	hstr RenderSystem::findTextureFile(chstr filename)
+	void RenderSystem::_registerTexture(Texture* texture)
 	{
-		if (hfile::exists(filename))
-		{
-			return filename;
-		}
-		hstr name;
-		harray<hstr> extensions = april::getTextureExtensions();
-		foreach (hstr, it, extensions)
-		{
-			name = filename + (*it);
-			if (hfile::exists(name))
-			{
-				return name;
-			}
-		}
-		hstr noExtensionName = hfile::no_extension(filename);
-		if (noExtensionName != filename)
-		{
-			foreach (hstr, it, extensions)
-			{
-				name = noExtensionName + (*it);
-				if (hfile::exists(name))
-				{
-					return name;
-				}
-			}
-		}
-		return "";
+		this->textures += texture;
 	}
 	
-	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int nVertices)
+	void RenderSystem::_unregisterTexture(Texture* texture)
 	{
-		switch (renderOperation)
-		{
-		case RO_TRIANGLE_LIST:	return nVertices / 3;
-		case RO_TRIANGLE_STRIP:	return nVertices - 2;
-		case RO_TRIANGLE_FAN:	return nVertices - 2;
-		case RO_LINE_LIST:		return nVertices / 2;
-		case RO_LINE_STRIP:		return nVertices - 1;
-		case RO_POINT_LIST:		return nVertices;
-		}
-		return 0;
-	}
-	
-	unsigned int RenderSystem::_limitPrimitives(RenderOperation renderOperation, int nVertices)
-	{
-		switch (renderOperation)
-		{
-		case RO_TRIANGLE_LIST:	return nVertices / 3 * 3;
-		case RO_TRIANGLE_STRIP:	return nVertices;
-		case RO_TRIANGLE_FAN:	return nVertices;
-		case RO_LINE_LIST:		return nVertices / 2 * 2;
-		case RO_LINE_STRIP:		return nVertices;
-		case RO_POINT_LIST:		return nVertices;
-		}
-		return nVertices;
+		this->textures -= texture;
 	}
 	
 }

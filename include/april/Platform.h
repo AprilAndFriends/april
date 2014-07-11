@@ -1,10 +1,11 @@
 /// @file
-/// @version 3.4
+/// @author  Boris Mikic
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 /// 
 /// @section DESCRIPTION
 /// 
@@ -21,73 +22,76 @@
 
 namespace april
 {
-	struct aprilExport SystemInfo
+	struct SystemInfo
 	{
 		hstr name;
-		hstr architecture;
-		float osVersion;
 		int cpuCores; // number of CPU cores or separate CPU units
 		int ram; // how many MB of RAM does the host system have in total
+		int maxTextureSize;
 		gvec2 displayResolution;
-		float displayDpi;
+		int displayDpi;
 		hstr locale; // current system locale code
-		
-		SystemInfo();
-		~SystemInfo();
-		
+		SystemInfo() : name(""), cpuCores(1), ram(256), maxTextureSize(0), displayDpi(0), locale("") { }
 	};
 	
+	enum DeviceType
+	{
+		DEVICE_IPHONE = 0,
+		DEVICE_IPAD,
+		DEVICE_ANDROID_PHONE,
+		DEVICE_ANDROID_TABLET,
+		DEVICE_WINDOWS_PC,
+		DEVICE_WINDOWS_8,
+		DEVICE_LINUX_PC,
+		DEVICE_MAC_PC,
+		DEVICE_WINDOWS_PHONE,
+		DEVICE_WINDOWS_TABLET,
+		DEVICE_UNKNOWN_LARGE,
+		DEVICE_UNKNOWN_MEDIUM,
+		DEVICE_UNKNOWN_SMALL,
+		DEVICE_UNKNOWN
+	};
+
 	enum MessageBoxButton
 	{
-		MESSAGE_BUTTON_OK = 1,
-		MESSAGE_BUTTON_CANCEL = 2,
-		MESSAGE_BUTTON_YES = 4,
-		MESSAGE_BUTTON_NO = 8,
-		MESSAGE_BUTTON_OK_CANCEL = MESSAGE_BUTTON_OK | MESSAGE_BUTTON_CANCEL,
-		MESSAGE_BUTTON_YES_NO = MESSAGE_BUTTON_YES | MESSAGE_BUTTON_NO,
-		MESSAGE_BUTTON_YES_NO_CANCEL = MESSAGE_BUTTON_YES_NO | MESSAGE_BUTTON_CANCEL
+		AMSGBTN_NULL = 0,
+
+		AMSGBTN_OK = 1,
+		AMSGBTN_CANCEL = 2,
+		AMSGBTN_YES = 4,
+		AMSGBTN_NO = 8,
+			
+		AMSGBTN_OKCANCEL = AMSGBTN_OK | AMSGBTN_CANCEL,
+		AMSGBTN_YESNO = AMSGBTN_YES | AMSGBTN_NO,
+		AMSGBTN_YESNOCANCEL = AMSGBTN_YESNO | AMSGBTN_CANCEL
 
 	};
 	
 	enum MessageBoxStyle
 	{
-		MESSAGE_STYLE_NORMAL = 0,
-		MESSAGE_STYLE_INFO = 1,
-		MESSAGE_STYLE_WARNING = 2,
-		MESSAGE_STYLE_CRITICAL = 3,
-		MESSAGE_STYLE_QUESTION = 4,
-		MESSAGE_STYLE_MODAL = 8,
-		MESSAGE_STYLE_TERMINATE_ON_DISPLAY = 16
+		AMSGSTYLE_PLAIN = 0,
+			
+		AMSGSTYLE_INFORMATION = 1,
+		AMSGSTYLE_WARNING = 2,
+		AMSGSTYLE_CRITICAL = 3,
+		AMSGSTYLE_QUESTION = 4,
+			
+		AMSGSTYLE_MODAL = 8,
+		AMSGSTYLE_TERMINATEAPPONDISPLAY = 16
 
 	};
-
-	DEPRECATED_ATTRIBUTE static const MessageBoxButton AMSGBTN_NULL = (MessageBoxButton)NULL;
-	DEPRECATED_ATTRIBUTE static const MessageBoxButton AMSGBTN_OK = MESSAGE_BUTTON_OK;
-	DEPRECATED_ATTRIBUTE static const MessageBoxButton AMSGBTN_CANCEL = MESSAGE_BUTTON_CANCEL;
-	DEPRECATED_ATTRIBUTE static const MessageBoxButton AMSGBTN_YES = MESSAGE_BUTTON_YES;
-	DEPRECATED_ATTRIBUTE static const MessageBoxButton AMSGBTN_NO = MESSAGE_BUTTON_NO;
-	DEPRECATED_ATTRIBUTE static const MessageBoxButton AMSGBTN_OKCANCEL = MESSAGE_BUTTON_OK_CANCEL;
-	DEPRECATED_ATTRIBUTE static const MessageBoxButton AMSGBTN_YESNO = MESSAGE_BUTTON_YES_NO;
-	DEPRECATED_ATTRIBUTE static const MessageBoxButton AMSGBTN_YESNOCANCEL = MESSAGE_BUTTON_YES_NO_CANCEL;
-
-	DEPRECATED_ATTRIBUTE static const MessageBoxStyle AMSGSTYLE_PLAIN = MESSAGE_STYLE_NORMAL;
-	DEPRECATED_ATTRIBUTE static const MessageBoxStyle AMSGSTYLE_INFORMATION = MESSAGE_STYLE_INFO;
-	DEPRECATED_ATTRIBUTE static const MessageBoxStyle AMSGSTYLE_WARNING = MESSAGE_STYLE_WARNING;
-	DEPRECATED_ATTRIBUTE static const MessageBoxStyle AMSGSTYLE_CRITICAL = MESSAGE_STYLE_CRITICAL;
-	DEPRECATED_ATTRIBUTE static const MessageBoxStyle AMSGSTYLE_QUESTION = MESSAGE_STYLE_QUESTION;
-	DEPRECATED_ATTRIBUTE static const MessageBoxStyle AMSGSTYLE_MODAL = MESSAGE_STYLE_MODAL;
-	DEPRECATED_ATTRIBUTE static const MessageBoxStyle AMSGSTYLE_TERMINATEAPPONDISPLAY = MESSAGE_STYLE_TERMINATE_ON_DISPLAY;
 		
 	aprilFnExport SystemInfo getSystemInfo();
+	aprilFnExport DeviceType getDeviceType();
 	aprilFnExport hstr getPackageName();
 	aprilFnExport hstr getUserDataPath();
-	aprilFnExport void messageBox(chstr title, chstr text, MessageBoxButton buttonMask = MESSAGE_BUTTON_OK, MessageBoxStyle style = MESSAGE_STYLE_NORMAL,
+	aprilFnExport void messageBox(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN,
 		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL);
 
 	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel,
 		MessageBoxButton buttonMask, hmap<MessageBoxButton, hstr> customButtonTitles);
 
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask = MESSAGE_BUTTON_OK, MessageBoxStyle style = MESSAGE_STYLE_NORMAL,
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask = AMSGBTN_OK, MessageBoxStyle style = AMSGSTYLE_PLAIN,
 		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL);
 
 }

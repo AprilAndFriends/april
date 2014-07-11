@@ -1,14 +1,21 @@
 /// @file
-/// @version 3.4
+/// @author  Boris Mikic
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#ifndef _IOS
+#include <png/png.h>
+#include <png/pngpriv.h>
+#include <png/pngstruct.h>
+#else
 #include <png.h>
 #include <pngpriv.h>
 #include <pngstruct.h>
+#endif
 #include <hltypes/hsbase.h>
 
 #include "Image.h"
@@ -17,10 +24,12 @@ namespace april
 {
 	void _pngZipRead(png_structp png, png_bytep data, png_size_t size)
 	{
-		((hsbase*)png->io_ptr)->read_raw(data, size);
+		static hsbase* file = NULL;
+		file = (hsbase*)png->io_ptr;
+		file->read_raw(data, size);
 	}
 
-	Image* Image::_loadPng(hsbase& stream, int size)
+	Image* Image::_loadPng(hsbase& stream)
 	{
 		png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 		png_infop infoPtr = png_create_info_struct(pngPtr);
@@ -44,7 +53,7 @@ namespace april
 		if (png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS))
 		{
 			png_set_tRNS_to_alpha(pngPtr);
-			++bpp;
+			bpp++;
 		}
 		if (pngPtr->bit_depth == 16)
 		{
@@ -61,34 +70,27 @@ namespace april
 		png_read_image(pngPtr, rowPointers);
 		png_read_end(pngPtr, infoPtr);
 		// assign Image data
-		Image* image = new Image();
-		image->data = (unsigned char*)imageData;
-		image->w = pngPtr->width;
-		image->h = pngPtr->height;
-		switch (bpp)
+		Image* img = new Image();
+		img->data = (unsigned char*)imageData;
+		img->w = pngPtr->width;
+		img->h = pngPtr->height;
+		img->bpp = bpp;
+		switch (img->bpp)
 		{
 		case 4:
-			image->format = FORMAT_RGBA;
+			img->format = FORMAT_RGBA;
 			break;
 		case 3:
-			image->format = FORMAT_RGB;
-			break;
-		case 1:
-			image->format = FORMAT_ALPHA;
+			img->format = FORMAT_RGB;
 			break;
 		default:
-			image->format = FORMAT_RGBA; // TODOaa - maybe palette should go here
+			img->format = FORMAT_RGB; // TODO3
 			break;
 		}
 		// clean up
 		png_destroy_read_struct(&pngPtr, &infoPtr, &endInfo);
 		delete [] rowPointers;
-		return image;
-	}
-
-	Image* Image::_loadPng(hsbase& stream)
-	{
-		return Image::_loadPng(stream, stream.size());
+		return img;
 	}
 
 }

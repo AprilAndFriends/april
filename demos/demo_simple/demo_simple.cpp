@@ -1,14 +1,17 @@
 /// @file
-/// @version 3.4
+/// @author  Kresimir Spes
+/// @author  Boris Mikic
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
+#include <hltypes/hplatform.h>
 #ifndef _ANDROID
-#ifndef _WINRT
-#define RESOURCE_PATH "../../demos/media/"
+#if !_HL_WINRT
+#define RESOURCE_PATH "../media/"
 #else
 #define RESOURCE_PATH "media/"
 #endif
@@ -17,10 +20,8 @@
 #endif
 
 #include <april/april.h>
-#include <april/Cursor.h>
 #include <april/main.h>
 #include <april/MouseDelegate.h>
-#include <april/Platform.h>
 #include <april/RenderSystem.h>
 #include <april/UpdateDelegate.h>
 #include <april/Window.h>
@@ -32,16 +33,15 @@
 
 #define LOG_TAG "demo_simple"
 
-april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
 april::Texture* manualTexture = NULL;
 april::TexturedVertex dv[4];
-#if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
+#ifndef _ANDROID
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
 grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
-gvec2 offset = drawRect.getSize() * 0.5f;
+gvec2 offset(240.0f, 128.0f);
 grect textureRect;
 grect src(0.0f, 0.0f, 1.0f, 1.0f);
 bool mousePressed = false;
@@ -52,14 +52,13 @@ class UpdateDelegate : public april::UpdateDelegate
 	{
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);
-		april::rendersys->drawFilledRect(drawRect, april::Color(96, 96, 96));
+		april::rendersys->drawFilledRect(drawRect, april::Color::Grey);
 		manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 		april::rendersys->setTexture(manualTexture);
-		april::rendersys->render(april::RO_TRIANGLE_STRIP, dv, 4);
+		april::rendersys->render(april::TriangleStrip, dv, 4);
 		april::rendersys->setTexture(texture);
 		april::rendersys->drawTexturedRect(textureRect + offset, src);
-		april::rendersys->drawFilledRect(grect(0.0f, drawRect.h - 75.0f, 100.0f, 75.0f), april::Color::Yellow);
-		april::rendersys->drawFilledRect(grect(10.0f, drawRect.h - 65.0f, 80.0f, 55.0f), april::Color::Red);
+		april::rendersys->drawFilledRect(grect(0.0f, 0.0f, 100.0f, 75.0f), april::Color::Yellow);
 		return true;
 	}
 
@@ -67,35 +66,29 @@ class UpdateDelegate : public april::UpdateDelegate
 
 class MouseDelegate : public april::MouseDelegate
 {
-	void onMouseDown(april::Key key)
+	void onMouseDown(april::Key button)
 	{
 		offset = april::window->getCursorPosition();
-		hlog::writef(LOG_TAG, "- DOWN x: %4.0f y: %4.0f button: %d", offset.x, offset.y, key);
+		hlog::writef(LOG_TAG, "- DOWN x: %4.0f y: %4.0f button: %d", offset.x, offset.y, button);
 		mousePressed = true;
 	}
 
-	void onMouseUp(april::Key key)
+	void onMouseUp(april::Key button)
 	{
-		gvec2 position = april::window->getCursorPosition();
-		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", position.x, position.y, key);
+		gvec2 cursor = april::window->getCursorPosition();
+		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", cursor.x, cursor.y, button);
 		mousePressed = false;
 	}
 
 	void onMouseMove()
 	{
-		gvec2 position = april::window->getCursorPosition();
-		hlog::writef(LOG_TAG, "- MOVE x: %4.0f y: %4.0f", position.x, position.y);
+		gvec2 cursor = april::window->getCursorPosition();
+		hlog::writef(LOG_TAG, "- MOVE x: %4.0f y: %4.0f", cursor.x, cursor.y);
 		if (mousePressed)
 		{
-			offset = position;
+			offset = cursor;
 		}
 	}
-
-	void onMouseCancel(april::Key key)
-	{
-		hlog::writef(LOG_TAG, "- CANCEL button: %d", key);
-	}
-
 };
 
 static UpdateDelegate* updateDelegate = NULL;
@@ -148,7 +141,7 @@ void april_init(const harray<hstr>& args)
 #endif
 	updateDelegate = new UpdateDelegate();
 	mouseDelegate = new MouseDelegate();
-#if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
+#if defined(_ANDROID) || defined(_IOS)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 	srand(get_system_time());
@@ -159,31 +152,19 @@ void april_init(const harray<hstr>& args)
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 	april::createRenderSystem();
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple Demo");
-#ifdef _WINRT
-	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
-#endif
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
-	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
-	april::window->setCursor(cursor);
-	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::TYPE_MANAGED);
+	texture = april::rendersys->createTexture(RESOURCE_PATH "jpt_final");
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w / 2;
 	textureRect.y = -textureRect.h / 2;
-	// demonstrating some of the image manipulation methods
-	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::TYPE_MANAGED);
-	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 0, 0, texture);
-	manualTexture->invert(0, 0, 256, 128);
-	manualTexture->saturate(0, 128, 128, 128, 0.0f);
-	manualTexture->rotateHue(128, 0, 128, 128, 180.0f);
-	manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 128, 128, texture, 96);
-	manualTexture->blitStretch(texture->getWidth() / 2, 0, texture->getWidth() / 2, texture->getHeight(), 64, 128, 700, 200, texture, 224);
+	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Texture::FORMAT_ARGB);
+	manualTexture->blit(100, 100, texture, 0, 0, texture->getWidth(), texture->getHeight());
+	manualTexture->stretchBlit(0, 100, 900, 200, texture, 0, 0, texture->getWidth() / 2, texture->getHeight() / 2);
 }
 
 void april_destroy()
 {
-	april::window->setCursor(NULL);
-	delete cursor;
 	delete texture;
 	delete manualTexture;
 	april::destroy();

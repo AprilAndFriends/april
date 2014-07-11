@@ -1,6 +1,6 @@
-package com.april.demoTicTacToe;
+package com.example.april.android.demoTicTacToe;
 
-public class DemoTicTacToe extends com.april.Activity
+public class DemoTicTacToe extends net.sourceforge.april.android.Activity
 {
 	static
 	{
@@ -10,8 +10,8 @@ public class DemoTicTacToe extends com.april.Activity
 	@Override
 	protected void onCreate(android.os.Bundle savedInstanceState)
 	{
+		this.forceArchivePath(this.getPackageResourcePath()); // forces APK as archive file
 		super.onCreate(savedInstanceState);
-		this.forceArchivePath(com.april.NativeInterface.ApkPath); // forces APK as archive file
 	}
 	
 }

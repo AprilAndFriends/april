@@ -1,10 +1,11 @@
 /// @file
-/// @version 3.4
+/// @author  Boris Mikic
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
@@ -28,7 +29,7 @@ namespace april
 		return true;
 	}
 
-	void SystemDelegate::onWindowSizeChanged(int width, int height, bool fullscreen)
+	void SystemDelegate::onWindowSizeChanged(int width, int height, Window::DeviceOrientation deviceOrientation)
 	{
 		hlog::debug(april::logTag, "Event onWindowSizeChanged() was not implemented.");
 	}
@@ -38,14 +39,15 @@ namespace april
 		hlog::debug(april::logTag, "Event onWindowFocusChanged() was not implemented.");
 	}
 
-	void SystemDelegate::onInputModeChanged(Window::InputMode inputMode)
+	void SystemDelegate::onVirtualKeyboardVisibilityChanged(bool visible)
 	{
-		hlog::debug(april::logTag, "Event onInputModeChanged() was not implemented.");
+		hlog::debug(april::logTag, "Event onVirtualKeyboardVisibilityChanged() was not implemented.");
 	}
 
-	void SystemDelegate::onVirtualKeyboardChanged(bool visible, float heightRatio)
+	bool SystemDelegate::onHandleUrl(chstr url)
 	{
-		hlog::debug(april::logTag, "Event onVirtualKeyboardChanged() was not implemented.");
+		hlog::debug(april::logTag, "Event onHandleUrl() was not implemented.");
+		return false;
 	}
 
 	void SystemDelegate::onLowMemoryWarning()

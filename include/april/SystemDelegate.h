@@ -1,10 +1,11 @@
 /// @file
-/// @version 3.4
+/// @author  Boris Mikic
+/// @version 3.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
-/// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// the terms of the BSD license: http://www.opensource.org/licenses/bsd-license.php
 /// 
 /// @section DESCRIPTION
 /// 
@@ -26,12 +27,13 @@ namespace april
 		SystemDelegate();
 		virtual ~SystemDelegate();
 
-		virtual bool onQuit(bool canCancel);
-		virtual void onWindowSizeChanged(int width, int height, bool fullscreen);
-		virtual void onWindowFocusChanged(bool focused);
-		virtual void onInputModeChanged(Window::InputMode inputMode);
-		virtual void onVirtualKeyboardChanged(bool visible, float heightRatio);
-		virtual void onLowMemoryWarning();
+		bool onQuit(bool canCancel);
+		void onWindowSizeChanged(int width, int height, Window::DeviceOrientation deviceOrientation);
+		void onWindowFocusChanged(bool focused);
+		void onVirtualKeyboardVisibilityChanged(bool visible);
+		bool onHandleUrl(chstr url);
+		void onLowMemoryWarning();
+
 	};
 
 }
