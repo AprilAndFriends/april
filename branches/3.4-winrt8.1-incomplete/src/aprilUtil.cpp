@@ -8,6 +8,7 @@
 
 #include <gtypes/Vector3.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hmap.h>
 
 #include "aprilUtil.h"
 
@@ -144,6 +145,14 @@ namespace april
 		*r = (unsigned char)hround(255.0f * _colorHueToRgb(p, q, h + 0.3333333f));
 		*g = (unsigned char)hround(255.0f * _colorHueToRgb(p, q, h));
 		*b = (unsigned char)hround(255.0f * _colorHueToRgb(p, q, h - 0.3333333f));
+	}
+	
+	hstr generateName(chstr prefix)
+	{
+		static hmap<hstr, int> counters;
+		int count = counters[prefix] + 1;
+		counters[prefix] = count;
+		return prefix + hstr(count);
 	}
 
 }

@@ -29,7 +29,7 @@ namespace april
 		int cpuCores; // number of CPU cores or separate CPU units
 		int ram; // how many MB of RAM does the host system have in total
 		gvec2 displayResolution;
-		int displayDpi;
+		float displayDpi;
 		hstr locale; // current system locale code
 		
 		SystemInfo();

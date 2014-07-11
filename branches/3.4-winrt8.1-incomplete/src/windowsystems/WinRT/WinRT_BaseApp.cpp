@@ -126,7 +126,10 @@ namespace april
 		WinRT::Interface->updateViewState();
 		if (april::window != NULL)
 		{
-			((WinRT_Window*)april::window)->changeSize((int)args->Size.Width, (int)args->Size.Height);
+			april::SystemInfo info = april::getSystemInfo();
+			int width = (int)(args->Size.Width * info.displayDpi / 96.0f);
+			int height = (int)(args->Size.Height * info.displayDpi / 96.0f);
+			((WinRT_Window*)april::window)->changeSize(width, height);
 		}
 		args->Handled = true;
 	}
@@ -149,7 +152,7 @@ namespace april
 	{
 		if (april::window != NULL)
 		{
-			april::window->handleVirtualKeyboardChangeEvent(true, args->OccludedRect.Height / april::getSystemInfo().displayResolution.y);
+			april::window->handleVirtualKeyboardChangeEvent(true, args->OccludedRect.Height / CoreWindow::GetForCurrentThread()->Bounds.Height);
 		}
 		this->resetTouches();
 	}
@@ -365,16 +368,18 @@ namespace april
 	{
 		static int screenWidth = 0;
 		static int screenHeight = 0;
+		april::SystemInfo info = april::getSystemInfo();
+		// WinRT is dumb
+		x *= info.displayDpi / 96.0f;
+		y *= info.displayDpi / 96.0f;
 		if (screenWidth == 0 || screenHeight == 0)
 		{
-			gvec2 resolution = april::getSystemInfo().displayResolution;
-			screenWidth = hround(resolution.x);
-			screenHeight = hround(resolution.y);
+			screenWidth = hround(info.displayResolution.x);
+			screenHeight = hround(info.displayResolution.y);
 			CHECK_SWAP(screenWidth, screenHeight);
 		}
 		int w = screenWidth;
 		int h = screenHeight;
-		//DisplayInformation::
 #ifdef _WINP8
 		int rotation = WinRT::getScreenRotation();
 		if (rotation == 90)
@@ -400,6 +405,7 @@ namespace april
 		{
 			return gvec2(x, y);
 		}
+		
 		return gvec2((float)(int)(x * width / w), (float)(int)(y * height / h));
 	}
 

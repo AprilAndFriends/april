@@ -160,6 +160,7 @@ namespace april
 		unsigned int dataFormat; // used internally for special image data formatting
 		int width;
 		int height;
+		int compressedSize; // used in compressed textures only
 		Filter filter;
 		AddressMode addressMode;
 		unsigned char* data;

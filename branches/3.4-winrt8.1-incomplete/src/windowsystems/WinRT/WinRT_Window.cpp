@@ -14,6 +14,7 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
+#include "Platform.h"
 #include "RenderSystem.h"
 #include "SystemDelegate.h"
 #include "Timer.h"
@@ -44,7 +45,7 @@ namespace april
 
 	bool WinRT_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
-		if (!Window::create(w, h, fullscreen, title, options))
+		if (!Window::create(w, h, true, title, options))
 		{
 			return false;
 		}
@@ -72,7 +73,14 @@ namespace april
 		{
 			return hstr(this->useCustomMinView ? "1" : "0");
 		}
-		// TODOa - deprecated by MS, needs to be removed/changed
+		if (param == WINRT_USE_CUSTOM_FILLED_VIEW)
+		{
+			return hstr(this->useCustomFilledView ? "1" : "0");
+		}
+		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
+		{
+			return hstr(this->useCustomSnappedView ? "1" : "0");
+		}
 		if (param == WINRT_VIEW_STATE)
 		{
 			if (this->getWidth() == WINRT_SNAPPED_VIEW_WIDTH)
@@ -109,6 +117,14 @@ namespace april
 		if (param == WINRT_USE_CUSTOM_MIN_VIEW)
 		{
 			this->useCustomMinView = (value != "0");
+		}
+		if (param == WINRT_USE_CUSTOM_FILLED_VIEW)
+		{
+			this->useCustomFilledView = (value != "0");
+		}
+		if (param == WINRT_USE_CUSTOM_SNAPPED_VIEW)
+		{
+			this->useCustomSnappedView = (value != "0");
 		}
 		if (param == WINRT_VIEW_STATE)
 		{

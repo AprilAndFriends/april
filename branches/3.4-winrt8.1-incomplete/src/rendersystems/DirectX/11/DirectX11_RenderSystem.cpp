@@ -228,11 +228,7 @@ namespace april
 	void DirectX11_RenderSystem::assignWindow(Window* window)
 	{
 		unsigned int creationFlags = 0;
-#if !defined(_DEBUG) || defined(_WINP8)
 		creationFlags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
-#else
-		creationFlags |= D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_DEBUGGABLE;
-#endif
 		D3D_FEATURE_LEVEL featureLevels[] =
 		{
 #ifndef _WINP8
@@ -602,6 +598,37 @@ namespace april
 		return D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
 	}
 
+	int DirectX11_RenderSystem::getVRam()
+	{
+		if (this->d3dDevice == nullptr)
+		{
+			return 0;
+		}
+		HRESULT hr;
+		ComPtr<IDXGIDevice2> dxgiDevice;
+		hr = this->d3dDevice.As(&dxgiDevice);
+		if (FAILED(hr))
+		{
+			hlog::error(april::logTag, "Unable to retrieve DXGI device!");
+			return 0;
+		}
+		ComPtr<IDXGIAdapter> dxgiAdapter;
+		hr = dxgiDevice->GetAdapter(&dxgiAdapter);
+		if (FAILED(hr))
+		{
+			hlog::error(april::logTag, "Unable to get adapter from DXGI device!");
+			return 0;
+		}
+        DXGI_ADAPTER_DESC desc;
+		hr = dxgiAdapter->GetDesc(&desc);
+		if (FAILED(hr))
+		{
+			hlog::error(april::logTag, "Unable to get description from DXGI adapter!");
+			return 0;
+		}
+		return (desc.DedicatedVideoMemory / (1024 * 1024));
+	}
+
 	void DirectX11_RenderSystem::setViewport(grect value)
 	{
 		DirectX_RenderSystem::setViewport(value);
@@ -609,15 +636,10 @@ namespace april
 		value = WinRT::rotateViewport(value);
 #endif
 		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
-		static int w = 0;
-		static int h = 0;
-		if (w == 0 || h == 0)
-		{
-			gvec2 resolution = april::getSystemInfo().displayResolution;
-			w = hround(resolution.x);
-			h = hround(resolution.y);
-			CHECK_SWAP(w, h);
-		}
+		gvec2 resolution = april::getSystemInfo().displayResolution;
+		int w = hround(resolution.x);
+		int h = hround(resolution.y);
+		CHECK_SWAP(w, h);
 		if (value.x < 0.0f)
 		{
 			value.w += value.x;

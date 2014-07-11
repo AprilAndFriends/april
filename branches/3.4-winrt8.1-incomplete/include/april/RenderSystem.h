@@ -97,6 +97,8 @@ namespace april
 
 		virtual float getPixelOffset() = 0;
 		virtual int getMaxTextureSize() = 0;
+		/// @note If the system cannot determine the available VRAM, it will return zero.
+		virtual int getVRam() = 0;
 
 		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
 		/// @note The parameter factor is only used when the color mode is LERP.
