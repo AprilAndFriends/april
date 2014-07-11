@@ -7,7 +7,7 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _DIRECTX11
-#include <d3d11_1.h>
+#include <d3d11_2.h>
 #include <stdio.h>
 
 #include <gtypes/Rectangle.h>
@@ -328,9 +328,8 @@ namespace april
 	{
 		DirectX_RenderSystem::reset();
 #ifndef _WINP8
-		// possible Microsoft bug, required for SwapChainBackgroundPanel to update its layout 
-		IInspectable* panelInspectable = (IInspectable*)reinterpret_cast<IInspectable*>(WinRT::XamlOverlay);
-		panelInspectable->QueryInterface(__uuidof(ISwapChainBackgroundPanelNative), (void**)&this->swapChainNative);
+		// possible Microsoft bug, required for SwapChainPanel to update its layout 
+		reinterpret_cast<IUnknown*>(WinRT::XamlOverlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
 #endif
 	}
@@ -340,7 +339,7 @@ namespace april
 		// Once the swap chain desc is configured, it must be
 		// created on the same adapter as the existing D3D Device.
 		HRESULT hr;
-		ComPtr<IDXGIDevice2> dxgiDevice;
+		ComPtr<IDXGIDevice3> dxgiDevice;
 		hr = this->d3dDevice.As(&dxgiDevice);
 		if (FAILED(hr))
 		{
@@ -357,7 +356,7 @@ namespace april
 		{
 			throw hl_exception("Unable to get adapter from DXGI device!");
 		}
-		ComPtr<IDXGIFactory2> dxgiFactory;
+		ComPtr<IDXGIFactory3> dxgiFactory;
 		hr = dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
 		if (FAILED(hr))
 		{
@@ -383,14 +382,15 @@ namespace april
 		swapChainDesc.SampleDesc.Quality = 0;
 		swapChainDesc.BufferCount = BACKBUFFER_COUNT;
 #ifndef _WINP8
+		ComPtr<IDXGISwapChain1> _swapChain;
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-		hr = dxgiFactory->CreateSwapChainForComposition(this->d3dDevice.Get(), &swapChainDesc, nullptr, &this->swapChain);
+		hr = dxgiFactory->CreateSwapChainForComposition(this->d3dDevice.Get(), &swapChainDesc, nullptr, &_swapChain);
 		if (FAILED(hr))
 		{
 			throw hl_exception("Unable to create swap chain!");
 		}
-		IInspectable* panelInspectable = (IInspectable*)reinterpret_cast<IInspectable*>(WinRT::XamlOverlay);
-		panelInspectable->QueryInterface(__uuidof(ISwapChainBackgroundPanelNative), (void**)&this->swapChainNative);
+		_swapChain.As(&this->swapChain);
+		reinterpret_cast<IUnknown*>(WinRT::XamlOverlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
 #else
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
@@ -556,7 +556,7 @@ namespace april
 
 	void DirectX11_RenderSystem::updateOrientation()
 	{
-		DisplayOrientations orientation = DisplayProperties::CurrentOrientation;
+		DisplayOrientations orientation = DisplayInformation::GetForCurrentView()->CurrentOrientation;
 		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
 		switch (orientation)
 		{
@@ -1169,9 +1169,20 @@ namespace april
 	
 	void DirectX11_RenderSystem::presentFrame()
 	{
-		this->swapChain->Present(2, 0);
+		this->swapChain->Present(1, 0);
 		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
 		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+	}
+
+	void DirectX11_RenderSystem::trim()
+	{
+		ComPtr<IDXGIDevice3> dxgiDevice;
+		HRESULT hr = this->d3dDevice.As(&dxgiDevice);
+		if (FAILED(hr))
+		{
+			throw hl_exception("Unable to retrieve DXGI device!");
+		}
+		dxgiDevice->Trim();
 	}
 
 }

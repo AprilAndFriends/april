@@ -409,9 +409,6 @@
     <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\IWinRT.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\windowsystems\WinRT\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -451,6 +448,9 @@
     <ClInclude Include="..\..\include\april\WinRT_main.h">
       <Filter>Header Files\platforms</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\windowsystems\WinRT\IWinRT.h">
+      <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">
@@ -486,7 +486,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli">
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli">
       <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
     </None>
   </ItemGroup>

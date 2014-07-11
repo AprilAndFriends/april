@@ -1,4 +1,4 @@
-﻿<SwapChainBackgroundPanel
+﻿<SwapChainPanel
 		x:Name="swapChainPanel"
 		x:Class="april.WinRT_XamlOverlay"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -25,4 +25,4 @@
 			Opacity="0">
 	</TextBox>
 	
-</SwapChainBackgroundPanel>
+</SwapChainPanel>

@@ -45,13 +45,6 @@ namespace april
 	{
 		this->app = ref new WinRT_BaseApp();
 		this->running = true;
-		this->filled = false;
-		this->snapped = false;
-		this->lastWidth = 0;
-		this->lastHeight = 0;
-		this->logoTexture = NULL;
-		this->hasStoredViewData = false;
-		this->storedCursorVisible = false;
 		this->defaultCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
 		this->backgroundColor = april::Color::Black;
 		this->launched = false;
@@ -68,22 +61,11 @@ namespace april
 
 	WinRT_XamlApp::~WinRT_XamlApp()
 	{
-		_HL_TRY_DELETE(this->logoTexture);
 	}
 
 	void WinRT_XamlApp::unassignWindow()
 	{
-		_HL_TRY_DELETE(this->logoTexture);
-		this->hasStoredViewData = false;
-		this->storedCursorVisible = false;
-		this->lastWidth = 0;
-		this->lastHeight = 0;
 		this->backgroundColor = april::Color::Black;
-	}
-
-	bool WinRT_XamlApp::canSuspendResume()
-	{
-		return (!this->snapped && !this->filled);
 	}
 
 	void WinRT_XamlApp::refreshCursor()
@@ -104,59 +86,6 @@ namespace april
 				}
 			}
 			Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = cursor;
-		}
-	}
-
-	void WinRT_XamlApp::updateViewState()
-	{
-		// TODOa - remove, deprecated by MS
-		bool allowFilledView = (april::window->getParam(WINRT_ALLOW_FILLED_VIEW) != "0" && april::window->getAspectRatio() > 1.3f); // this aspect ratio hack is going to be removed anyway
-		bool useCustomFilledView = (april::window->getParam(WINRT_USE_CUSTOM_FILLED_VIEW) != "0" && !allowFilledView);
-		bool useCustomSnappedView = (april::window->getParam(WINRT_USE_CUSTOM_SNAPPED_VIEW) != "0");
-		bool newFilled = (ApplicationView::Value == ApplicationViewState::Filled && !allowFilledView);
-		bool newSnapped = (ApplicationView::Value == ApplicationViewState::Snapped);
-		if (this->filled != newFilled && !useCustomFilledView || this->snapped != newSnapped && !useCustomSnappedView ||
-			(this->lastWidth != april::window->getWidth() || this->lastHeight != april::window->getHeight()) && !useCustomFilledView && !useCustomSnappedView)
-		{
-			hlog::write(april::logTag, "Handling view change...");
-			if (!newFilled && !newSnapped)
-			{
-				if (this->hasStoredViewData)
-				{
-					april::rendersys->setOrthoProjection(this->storedOrthoProjection);
-					april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
-					april::window->setCursorVisible(this->storedCursorVisible);
-					this->hasStoredViewData = false;
-					april::window->handleFocusChangeEvent(true);
-				}
-			}
-			else if (!this->hasStoredViewData)
-			{
-				this->storedOrthoProjection = april::rendersys->getOrthoProjection();
-				this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
-				this->storedCursorVisible = april::window->isCursorVisible();
-				april::window->setCursorVisible(true);
-				this->hasStoredViewData = true;
-				if (april::window->isFocused())
-				{
-					april::window->handleFocusChangeEvent(false);
-				}
-			}
-			if (this->filled == newFilled && this->snapped == newSnapped)
-			{
-				this->lastWidth = april::window->getWidth();
-				this->lastHeight = april::window->getHeight();
-			}
-			this->filled = newFilled;
-			this->snapped = newSnapped;
-		}
-		if (allowFilledView && ApplicationView::Value == ApplicationViewState::Filled && april::window != NULL && !april::window->isFocused())
-		{
-			april::window->handleFocusChangeEvent(true);
-			if (this->eventToken.Value == 0)
-			{
-				this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
-			}
 		}
 	}
 
@@ -183,13 +112,6 @@ namespace april
 		// don't repeat app initialization when already launched
 		if (!this->launched)
 		{
-			// TODOa - this is pre-Win 8.1 hack for Win 8.1 that needs to be removed
-			while (ApplicationView::Value == ApplicationViewState::Snapped) // if snapped view, don't launch yet
-			{
-				ApplicationView::TryUnsnap();
-				hthread::sleep(10.0f);
-			}
-
 			this->launched = true;
 			this->app->assignEvents(Windows::UI::Core::CoreWindow::GetForCurrentThread());
 			this->refreshCursor();
@@ -199,8 +121,6 @@ namespace april
 			(*WinRT::Init)(WinRT::Args);
 			if (april::rendersys != NULL && april::window != NULL)
 			{
-				this->lastWidth = april::window->getWidth();
-				this->lastHeight = april::window->getHeight();
 				float delaySplash = (float)april::window->getParam(WINRT_DELAY_SPLASH);
 				if (delaySplash > 0.0f && delaySplash - (get_system_tick_count() - this->app->getStartTime()) * 0.001f > 0.0f)
 				{
@@ -260,7 +180,7 @@ namespace april
 		else if (args->WindowActivationState == CoreWindowActivationState::Deactivated)
 		{
 			this->app->handleFocusChange(false);
-			if (!april::window->isFocused() && april::window->getParam(WINRT_ALLOW_FILLED_VIEW) != "0") // this causes "filled view" to still keep rendering when "allow_filled_view" is used
+			if (this->eventToken.Value != 0)
 			{
 				CompositionTarget::Rendering::remove(this->eventToken);
 				this->eventToken.Value = 0;
@@ -283,43 +203,7 @@ namespace april
 		{
 			return;
 		}
-		this->updateViewState();
-		if (!this->filled && !this->snapped)
-		{
-			this->running = april::window->updateOneFrame();
-		}
-		else
-		{
-			static grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
-			static grect srcRect(0.0f, 0.0f, 1.0f, 1.0f);
-			static grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
-			static bool useCustomFilledView = false;
-			static bool useCustomSnappedView = false;
-			static int width = 0;
-			static int height = 0;
-			useCustomFilledView = (april::window->getParam(WINRT_USE_CUSTOM_FILLED_VIEW) != "0");
-			useCustomSnappedView = (april::window->getParam(WINRT_USE_CUSTOM_SNAPPED_VIEW) != "0");
-			width = april::window->getWidth();
-			height = april::window->getHeight();
-			viewport.setSize((float)width, (float)height);
-			if (!useCustomFilledView && this->filled || !useCustomSnappedView && this->snapped)
-			{
-				this->_tryLoadLogoTexture();
-			}
-			april::rendersys->clear();
-			april::rendersys->setOrthoProjection(viewport);
-			if (!useCustomFilledView && this->filled || !useCustomSnappedView && this->snapped)
-			{
-				april::rendersys->drawFilledRect(viewport, this->backgroundColor);
-				if (this->logoTexture != NULL)
-				{
-					drawRect.set((float)((width - this->logoTexture->getWidth()) / 2), (float)((height - this->logoTexture->getHeight()) / 2),
-						(float)this->logoTexture->getWidth(), (float)this->logoTexture->getHeight());
-					april::rendersys->setTexture(this->logoTexture);
-					april::rendersys->drawTexturedRect(drawRect, srcRect);
-				}
-			}
-		}
+		this->running = april::window->updateOneFrame();
 		april::rendersys->presentFrame();
 		if (!this->running)
 		{
@@ -333,8 +217,8 @@ namespace april
 	{
 		if (this->splashTexture != NULL)
 		{
-			this->storedOrthoProjection = april::rendersys->getOrthoProjection();
-			this->storedProjectionMatrix = april::rendersys->getProjectionMatrix();
+			grect storedOrthoProjection = april::rendersys->getOrthoProjection();
+			gmat4 storedProjectionMatrix = april::rendersys->getProjectionMatrix();
 			grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
 			grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
 			int width = (int)(april::window->getWidth() * 96 / april::getSystemInfo().displayDpi);
@@ -348,8 +232,8 @@ namespace april
 			april::rendersys->drawTexturedRect(drawRect, grect(0.0f, 0.0f, 1.0f, 1.0f));
 			april::rendersys->presentFrame();
 			april::rendersys->reset();
-			april::rendersys->setOrthoProjection(this->storedOrthoProjection);
-			april::rendersys->setProjectionMatrix(this->storedProjectionMatrix);
+			april::rendersys->setOrthoProjection(storedOrthoProjection);
+			april::rendersys->setProjectionMatrix(storedProjectionMatrix);
 		}
 	}
 
@@ -400,15 +284,6 @@ namespace april
 			}
 		}
 		return NULL;
-	}
-
-	void WinRT_XamlApp::_tryLoadLogoTexture()
-	{
-		if (this->logoTexture == NULL)
-		{
-			this->logoTexture = this->_tryLoadTexture("VisualElements", "Logo");
-		}
-		this->_tryLoadBackgroundColor();
 	}
 
 	void WinRT_XamlApp::_tryLoadSplashTexture()

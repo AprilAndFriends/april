@@ -30,8 +30,6 @@ using namespace Windows::UI::ViewManagement;
 
 #define MEMORY_LIMIT 0.8f
 
-#define DX11_RENDERSYS ((DirectX11_RenderSystem*)april::rendersys)
-
 namespace april
 {
 	void WinP8_App::Initialize(_In_ CoreApplicationView^ applicationView)
@@ -114,15 +112,6 @@ namespace april
 	{
 	}
 	
-	bool WinP8_App::canSuspendResume()
-	{
-		return true;
-	}
-
-	void WinP8_App::updateViewState()
-	{
-	}
-
 	void WinP8_App::checkEvents()
 	{
 		this->window->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);

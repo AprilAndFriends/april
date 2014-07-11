@@ -23,8 +23,6 @@ namespace april
     public:
 		virtual void unassignWindow();
 		virtual void refreshCursor();
-		virtual bool canSuspendResume();
-		virtual void updateViewState();
 		virtual void checkEvents();
 		virtual void showKeyboard();
 		virtual void hideKeyboard();
