@@ -117,9 +117,9 @@ namespace april
 
 	void WinRT_BaseApp::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
+		april::SystemInfo info = april::getSystemInfo(); // outside, because the displayResolution needs to be updated every time
 		if (april::window != NULL)
 		{
-			april::SystemInfo info = april::getSystemInfo();
 			int width = (int)(args->Size.Width * info.displayDpi / 96.0f);
 			int height = (int)(args->Size.Height * info.displayDpi / 96.0f);
 			((WinRT_Window*)april::window)->changeSize(width, height);
