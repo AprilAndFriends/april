@@ -32,9 +32,6 @@ namespace april
 		this->width = 0;
 		this->height = 0;
 		this->delaySplash = 0.0f;
-		this->allowFilledView = false;
-		this->useCustomSnappedView = false;
-		this->backButtonSystemHandling = false;
 		this->cursorExtensions += ".ani";
 		this->cursorExtensions += ".cur";
 	}
@@ -53,8 +50,6 @@ namespace april
 		this->width = w;
 		this->height = h;
 		this->delaySplash = 0.0f;
-		this->allowFilledView = false;
-		this->useCustomSnappedView = false;
 		this->backButtonSystemHandling = false;
 		this->cursorMappings.clear();
 		this->inputMode = TOUCH;

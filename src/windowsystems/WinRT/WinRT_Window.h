@@ -62,9 +62,6 @@ namespace april
 		int width;
 		int height;
 		float delaySplash;
-		bool allowFilledView;
-		bool useCustomFilledView;
-		bool useCustomSnappedView;
 		bool backButtonSystemHandling;
 		hmap<hstr, unsigned int> cursorMappings;
 
