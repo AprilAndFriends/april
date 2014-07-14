@@ -109,6 +109,7 @@ namespace april
 
 	void WinRT_BaseApp::handleFocusChange(bool focused)
 	{
+		this->resetTouches();
 		if (april::window != NULL && april::window->isFocused() != focused)
 		{
 			april::window->handleFocusChangeEvent(focused);
@@ -117,6 +118,7 @@ namespace april
 
 	void WinRT_BaseApp::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
+		this->resetTouches();
 		april::SystemInfo info = april::getSystemInfo(); // outside, because the displayResolution needs to be updated every time
 		if (april::window != NULL)
 		{
@@ -129,11 +131,13 @@ namespace april
 	
 	void WinRT_BaseApp::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
 	{
+		this->resetTouches();
 		args->Handled = true;
 	}
 
 	void WinRT_BaseApp::OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
 	{
+		this->resetTouches();
 	}
 	
 	void WinRT_BaseApp::OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
