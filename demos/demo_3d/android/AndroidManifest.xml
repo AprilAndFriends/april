@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 		package="com.april.demo3d"
-		android:versionCode="3300"
-		android:versionName="3.3.0">
+		android:versionCode="3500"
+		android:versionName="3.5.0">
 		
 	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="19"/>
 	<uses-feature android:glEsVersion="0x00010001"/>

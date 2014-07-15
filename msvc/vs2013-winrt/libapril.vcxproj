@@ -212,9 +212,6 @@
     <ClCompile Include="..\..\src\Window.cpp" />
     <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.cpp" />
     <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinP8_App.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinP8_AppLauncher.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinP8_KeyboardInterface.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_BaseApp.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_Cursor.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.cpp" />
@@ -273,9 +270,6 @@
     <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\IWinRT.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\pch.h" />
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinP8_App.h" />
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinP8_AppLauncher.h" />
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinP8_KeyboardInterface.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_BaseApp.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_Cursor.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.h" />
