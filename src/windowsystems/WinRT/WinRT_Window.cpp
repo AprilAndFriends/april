@@ -75,16 +75,16 @@ namespace april
 			}
 			return mappings.join('\n');
 		}
-		if (param == WINRT_DELAY_SPLASH)
-		{
-			return hstr(this->delaySplash);
-		}
 #else
 		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
 		{
 			return hstr(this->backButtonSystemHandling ? "1" : "0");
 		}
 #endif
+		if (param == WINRT_DELAY_SPLASH)
+		{
+			return hstr(this->delaySplash);
+		}
 		return "";
 	}
 
@@ -105,16 +105,16 @@ namespace april
 				}
 			}
 		}
-		if (param == WINRT_DELAY_SPLASH)
-		{
-			this->delaySplash = (float)value;
-		}
 #else
 		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
 		{
 			this->backButtonSystemHandling = (value != "0");
 		}
 #endif
+		if (param == WINRT_DELAY_SPLASH)
+		{
+			this->delaySplash = (float)value;
+		}
 	}
 
 	void WinRT_Window::setTitle(chstr title)

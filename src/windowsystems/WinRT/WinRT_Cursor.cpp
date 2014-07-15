@@ -16,19 +16,15 @@ namespace april
 {
 	WinRT_Cursor::WinRT_Cursor() : Cursor()
 	{
-#ifndef _WINP8
 		this->cursor = nullptr;
-#endif
 	}
 
 	WinRT_Cursor::~WinRT_Cursor()
 	{
-#ifndef _WINP8
 		if (this->cursor != nullptr)
 		{
 			this->cursor = nullptr;
 		}
-#endif
 	}
 
 	bool WinRT_Cursor::_create(chstr filename)
@@ -39,8 +35,10 @@ namespace april
 		}
 #ifndef _WINP8
 		this->cursor = ref new CoreCursor(CoreCursorType::Custom, (unsigned int)filename);
-#endif
 		return true;
+#else
+		return false;
+#endif
 	}
 
 }

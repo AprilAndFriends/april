@@ -25,9 +25,7 @@
 using namespace Windows::Foundation;
 using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Core;
-#ifndef _WINP8
 using namespace Windows::UI::ViewManagement;
-#endif
 
 namespace april
 {
@@ -358,41 +356,14 @@ namespace april
 	
 	gvec2 WinRT_BaseApp::_transformPosition(float x, float y)
 	{
-		static int screenWidth = 0;
-		static int screenHeight = 0;
 		april::SystemInfo info = april::getSystemInfo();
 		// WinRT is dumb
 		x *= info.displayDpi / 96.0f;
 		y *= info.displayDpi / 96.0f;
-		if (screenWidth == 0 || screenHeight == 0)
-		{
-			screenWidth = hround(info.displayResolution.x);
-			screenHeight = hround(info.displayResolution.y);
-			CHECK_SWAP(screenWidth, screenHeight);
-		}
-		int w = screenWidth;
-		int h = screenHeight;
-#ifdef _WINP8
-		int rotation = WinRT::getScreenRotation();
-		if (rotation == 90)
-		{
-			x = w - x;
-			hswap(x, y);
-		}
-		else if (rotation == 180)
-		{
-			y = h - y;
-			x = w - x;
-		}
-		else if (rotation == 270)
-		{
-			y = h - y;
-			hswap(x, y);
-		}
-#endif
+		int w = hround(info.displayResolution.x);
+		int h = hround(info.displayResolution.y);
 		int width = april::window->getWidth();
 		int height = april::window->getHeight();
-		CHECK_SWAP(width, height);
 		if (w == width && h == height)
 		{
 			return gvec2(x, y);

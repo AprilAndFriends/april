@@ -20,21 +20,7 @@
 
 #include "IWinRT.h"
 #include "WinRT_BaseApp.h"
-#ifndef _WINP8
 #include "WinRT_XamlOverlay.xaml.h"
-#endif
-
-#ifndef _WINP8
-#define CHECK_SWAP(w, h)
-#else
-using namespace Windows::Graphics::Display;
-#define CHECK_SWAP(w, h) \
-	if (DisplayProperties::NativeOrientation == DisplayOrientations::Portrait || \
-		DisplayProperties::NativeOrientation == DisplayOrientations::PortraitFlipped) \
-	{ \
-		hswap(w, h); \
-	}
-#endif
 
 namespace april
 {
@@ -47,12 +33,7 @@ namespace april
 		static void (*Destroy)();
 		static harray<hstr> Args;
 		static IWinRT^ Interface;
-#ifndef _WINP8
 		static WinRT_XamlOverlay^ XamlOverlay;
-#else
-		static int getScreenRotation();
-		static grect rotateViewport(grect viewport);
-#endif
 
 	private:
 		WinRT() { }

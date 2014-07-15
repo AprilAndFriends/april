@@ -14,10 +14,8 @@
 #ifndef APRIL_DIRECTX11_RENDER_SYSTEM_H
 #define APRIL_DIRECTX11_RENDER_SYSTEM_H
 
-#ifndef _WINP8
 #include <windows.ui.xaml.media.dxinterop.h>
 using namespace Windows::UI::Xaml::Controls;
-#endif
 
 #include <d3d11_2.h>
 
@@ -136,9 +134,7 @@ namespace april
 		ComPtr<ID3D11Device2> d3dDevice;
 		ComPtr<ID3D11DeviceContext2> d3dDeviceContext;
 		ComPtr<IDXGISwapChain2> swapChain;
-#ifndef _WINP8
 		ComPtr<ISwapChainPanelNative> swapChainNative;
-#endif
 
 		ComPtr<ID3D11RasterizerState> rasterState;
 		ComPtr<ID3D11RenderTargetView> renderTargetView;

@@ -6,7 +6,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#if defined(_WINRT_WINDOW) && !defined(_WINP8)
+#ifdef _WINRT_WINDOW
 #include "pch.h"
 
 #include "WinRT_XamlOverlay.xaml.h"

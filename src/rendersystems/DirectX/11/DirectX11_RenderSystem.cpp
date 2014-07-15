@@ -33,35 +33,15 @@
 
 #define SHADER_PATH "april/"
 #define VERTICES_BUFFER_COUNT 65536
-#ifndef _WINP8
 #define BACKBUFFER_COUNT 2
-#else
-#define BACKBUFFER_COUNT 1
-#endif
 
 #define UINT_RGBA_TO_ABGR(c) ((((c) >> 24) & 0xFF) | (((c) << 24) & 0xFF000000) | (((c) >> 8) & 0xFF00) | (((c) << 8) & 0xFF0000))
 
-#ifndef _WINP8
 #define _LOAD_SHADER(name, type, file) \
 	if (name == NULL) \
 	{ \
 		name = (DirectX11_ ## type ## Shader*)this->create ## type ## Shader(SHADER_PATH #type "Shader_" #file ".cso"); \
 	}
-#else // on WinP8 the shaders may be in the root directory
-#define _LOAD_SHADER(name, type, file) \
-	if (name == NULL) \
-	{ \
-		hstr filename = #type "Shader_" #file ".cso"; \
-		if (hresource::exists(SHADER_PATH + filename)) \
-		{ \
-			name = (DirectX11_ ## type ## Shader*)this->create ## type ## Shader(SHADER_PATH + filename); \
-		} \
-		else \
-		{ \
-			name = (DirectX11_ ## type ## Shader*)this->create ## type ## Shader(filename); \
-		} \
-	}
-#endif
 
 using namespace Microsoft::WRL;
 using namespace Windows::Graphics::Display;
@@ -90,9 +70,7 @@ namespace april
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
-#ifndef _WINP8
 		this->swapChainNative = nullptr;
-#endif
 		this->rasterState = nullptr;
 		this->renderTargetView = nullptr;
 		this->blendStateAlpha = nullptr;
@@ -144,9 +122,7 @@ namespace april
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
-#ifndef _WINP8
 		this->swapChainNative = nullptr;
-#endif
 		this->rasterState = nullptr;
 		this->renderTargetView = nullptr;
 		this->blendStateAlpha = nullptr;
@@ -206,9 +182,7 @@ namespace april
 		this->blendStateOverwrite = nullptr;
 		this->renderTargetView = nullptr;
 		this->rasterState = nullptr;
-#ifndef _WINP8
 		this->swapChainNative = nullptr;
-#endif
 		this->swapChain = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->d3dDevice = nullptr;
@@ -231,7 +205,6 @@ namespace april
 		creationFlags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
 		D3D_FEATURE_LEVEL featureLevels[] =
 		{
-#ifndef _WINP8
 			D3D_FEATURE_LEVEL_11_1,
 			D3D_FEATURE_LEVEL_11_0,
 			D3D_FEATURE_LEVEL_10_1,
@@ -239,9 +212,6 @@ namespace april
 			D3D_FEATURE_LEVEL_9_3,
 			D3D_FEATURE_LEVEL_9_2,
 			D3D_FEATURE_LEVEL_9_1
-#else
-			D3D_FEATURE_LEVEL_9_3
-#endif
 		};
 		ComPtr<ID3D11Device> _d3dDevice;
 		ComPtr<ID3D11DeviceContext> _d3dDeviceContext;
@@ -327,11 +297,9 @@ namespace april
 	void DirectX11_RenderSystem::reset()
 	{
 		DirectX_RenderSystem::reset();
-#ifndef _WINP8
 		// possible Microsoft bug, required for SwapChainPanel to update its layout 
 		reinterpret_cast<IUnknown*>(WinRT::XamlOverlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
-#endif
 	}
 
 	void DirectX11_RenderSystem::_createSwapChain(int width, int height)
@@ -369,7 +337,6 @@ namespace april
 		{
 			hlog::warnf(april::logTag, "On WinRT the window resolution (%d,%d) should match the display resolution (%d,%d) in order to avoid problems.", width, height, w, h);
 		}
-		CHECK_SWAP(width, height);
 		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {0};
 		swapChainDesc.Stereo = false;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -381,7 +348,6 @@ namespace april
 		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.SampleDesc.Quality = 0;
 		swapChainDesc.BufferCount = BACKBUFFER_COUNT;
-#ifndef _WINP8
 		ComPtr<IDXGISwapChain1> _swapChain;
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 		hr = dxgiFactory->CreateSwapChainForComposition(this->d3dDevice.Get(), &swapChainDesc, nullptr, &_swapChain);
@@ -392,15 +358,6 @@ namespace april
 		_swapChain.As(&this->swapChain);
 		reinterpret_cast<IUnknown*>(WinRT::XamlOverlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
-#else
-		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-		hr = dxgiFactory->CreateSwapChainForCoreWindow(this->d3dDevice.Get(),
-			reinterpret_cast<IUnknown*>(Windows::UI::Core::CoreWindow::GetForCurrentThread()), &swapChainDesc, NULL, &this->swapChain);
-		if (FAILED(hr))
-		{
-			throw hl_exception("Unable to create swap chain!");
-		}
-#endif
 		this->_configureSwapChain();
 		this->updateOrientation();
 	}
@@ -468,7 +425,6 @@ namespace april
 		this->d3dDeviceContext->RSSetState(this->rasterState.Get());
 		D3D11_TEXTURE2D_DESC backBufferDesc = {0};
 		_backBuffer->GetDesc(&backBufferDesc);
-		CHECK_SWAP(backBufferDesc.Width, backBufferDesc.Height);
 		this->setViewport(grect(0.0f, 0.0f, (float)backBufferDesc.Width, (float)backBufferDesc.Height)); // just to be on the safe side and prevent floating point errors
 		// blend modes
 		D3D11_BLEND_DESC blendDesc = {0};
@@ -619,7 +575,7 @@ namespace april
 			hlog::error(april::logTag, "Unable to get adapter from DXGI device!");
 			return 0;
 		}
-        DXGI_ADAPTER_DESC desc;
+		DXGI_ADAPTER_DESC desc;
 		hr = dxgiAdapter->GetDesc(&desc);
 		if (FAILED(hr))
 		{
@@ -632,14 +588,10 @@ namespace april
 	void DirectX11_RenderSystem::setViewport(grect value)
 	{
 		DirectX_RenderSystem::setViewport(value);
-#ifdef _WINP8
-		value = WinRT::rotateViewport(value);
-#endif
 		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
 		gvec2 resolution = april::getSystemInfo().displayResolution;
 		int w = hround(resolution.x);
 		int h = hround(resolution.y);
-		CHECK_SWAP(w, h);
 		if (value.x < 0.0f)
 		{
 			value.w += value.x;
@@ -921,13 +873,6 @@ namespace april
 		{
 			this->matrixDirty = false;
 			this->constantBufferData.matrix = (this->projectionMatrix * this->modelviewMatrix).transposed();
-#ifdef _WINP8 // hahaha, Windows Phone 8 is unable to rotate the display by itself!
-			int angle = WinRT::getScreenRotation();
-			if (angle != 0)
-			{
-				this->constantBufferData.matrix.rotateZ((float)angle);
-			}
-#endif
 		}
 		if (dirty)
 		{
