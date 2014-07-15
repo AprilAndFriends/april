@@ -84,17 +84,11 @@
     <Filter Include="Header Files\platforms">
       <UniqueIdentifier>{49215b07-a2cd-4b10-ba8e-2f00612c1829}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\windowsystems\WinRT\WinP8">
-      <UniqueIdentifier>{c89c0d0d-95cb-4322-bd9e-bb2618bfe628}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\rendersystems\DirectX\11">
       <UniqueIdentifier>{edfbadb8-e07f-4516-9ad6-479af740625c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\rendersystems\DirectX\11">
       <UniqueIdentifier>{dfe5826f-1d2c-4f6d-8d5f-656d36961488}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\windowsystems\WinRT\WinP8">
-      <UniqueIdentifier>{f50eca77-8994-4aab-801d-088fa20ed88d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\rendersystems\DirectX\11\default-shaders">
       <UniqueIdentifier>{ed0fb357-87c9-439b-92fa-0f3871e27272}</UniqueIdentifier>
@@ -253,15 +247,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinP8_App.cpp">
-      <Filter>Source Files\windowsystems\WinRT\WinP8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinP8_AppLauncher.cpp">
-      <Filter>Source Files\windowsystems\WinRT\WinP8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinP8_KeyboardInterface.cpp">
-      <Filter>Source Files\windowsystems\WinRT\WinP8</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.cpp">
       <Filter>Source Files\rendersystems\DirectX\11</Filter>
@@ -432,15 +417,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinP8_App.h">
-      <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinP8_AppLauncher.h">
-      <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinP8_KeyboardInterface.h">
-      <Filter>Header Files\windowsystems\WinRT\WinP8</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
       <Filter>Header Files</Filter>
