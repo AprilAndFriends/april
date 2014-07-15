@@ -73,7 +73,7 @@
     <ClCompile Include="..\..\demos\demo_simple\demo_simple.cpp" />
   </ItemGroup>
   <ItemGroup>
-   <Image Include="media\assets\Logo.scale-100.png">
+    <Image Include="media\assets\Logo.scale-100.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="media\assets\Logo.scale-140.png">
