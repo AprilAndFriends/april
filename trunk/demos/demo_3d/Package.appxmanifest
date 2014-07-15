@@ -14,7 +14,7 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="demo_3d.App">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="april.App">
       <m2:VisualElements DisplayName="demo_3d" Square150x150Logo="media\assets\Logo.png" Square30x30Logo="media\assets\LogoTiny.png" Description="April Demo" ForegroundText="light" BackgroundColor="#464646">
         <m2:DefaultTile Wide310x150Logo="media\assets\WideLogo.png" Square310x310Logo="media\assets\LogoBig.png" DefaultSize="square150x150Logo" Square70x70Logo="media\assets\LogoSmall.png">
           <m2:ShowNameOnTiles>
