@@ -523,11 +523,7 @@ namespace april
 #ifdef _WINRT
 		if (this->inputMode == TOUCH && !this->virtualKeyboardVisible)
 		{
-#ifndef _WINP8
 			this->handleVirtualKeyboardChangeEvent(true, 0.5f);
-#else
-			this->handleVirtualKeyboardChangeEvent(true, 0.53f);
-#endif
 		}
 #endif
 	}

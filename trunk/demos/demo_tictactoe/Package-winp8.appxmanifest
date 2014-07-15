@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
+  <Identity Name="com.april.demoTicTacToe" Publisher="CN=April" Version="3.5.0.0" />
+  <mp:PhoneIdentity PhoneProductId="8F9E2D3B-60C2-4A49-88D8-238E8F5F358B" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Properties>
+    <DisplayName>April Demo Tic Tac Toe</DisplayName>
+    <PublisherDisplayName>April</PublisherDisplayName>
+    <Logo>media\assets\store_icon.png</Logo>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.3.0</OSMinVersion>
+    <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="demo_tictactoe.App">
+      <m3:VisualElements DisplayName="demo_tictactoe" Square150x150Logo="media\assets\logo_icon.png" Square44x44Logo="media\assets\square_p8_small_logo.png" Description="April Demo" ForegroundText="light" BackgroundColor="transparent">
+        <m3:DefaultTile Wide310x150Logo="media\assets\wide_logo.png" Square71x71Logo="media\assets\square_p8_logo.png">
+        </m3:DefaultTile>
+        <m3:SplashScreen Image="media\assets\splash.png" BackgroundColor="transparent" />
+        <m3:InitialRotationPreference>
+          <m3:Rotation Preference="landscape" />
+          <m3:Rotation Preference="landscapeFlipped" />
+        </m3:InitialRotationPreference>
+      </m3:VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClientServer" />
+  </Capabilities>
+</Package>

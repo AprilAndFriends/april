@@ -26,9 +26,7 @@ using namespace Windows::Foundation::Collections;
 using namespace Windows::Graphics::Display;
 using namespace Windows::Storage;
 using namespace Windows::UI::Popups;
-#ifndef WINP8
 using namespace Windows::UI::ViewManagement;
-#endif
 
 namespace april
 {
@@ -59,21 +57,11 @@ namespace april
 			info.displayDpi = DisplayInformation::GetForCurrentView()->LogicalDpi;
 			// other
 			info.locale = "";
-#ifndef _WINP8
 			IIterator<Platform::String^>^ it = Windows::Globalization::ApplicationLanguages::Languages->First();
 			if (it->HasCurrent)
 			{
 				info.locale = _HL_PSTR_TO_HSTR(it->Current).lower();
 			}
-#else
-			unsigned long count = 0;
-			unsigned long length = LOCALE_NAME_MAX_LENGTH;
-			wchar_t locale[LOCALE_NAME_MAX_LENGTH] = {0};
-			if (GetUserPreferredUILanguages(MUI_LANGUAGE_NAME, &count, locale, &length) && count > 0 && length > 0)
-			{
-				info.locale = hstr::from_unicode(locale).lower();
-			}
-#endif
 			if (info.locale == "")
 			{
 				info.locale = "en"; // default is "en"
@@ -94,8 +82,8 @@ namespace april
 		// display resolution
 #ifdef _WINRT_WINDOW
 		float dpiRatio = DisplayInformation::GetForCurrentView()->LogicalDpi / 96;
-		int width = (int)(CoreWindow::GetForCurrentThread()->Bounds.Width * dpiRatio);
-		int height = (int)(CoreWindow::GetForCurrentThread()->Bounds.Height * dpiRatio);
+		int width = hround(CoreWindow::GetForCurrentThread()->Bounds.Width * dpiRatio);
+		int height = hround(CoreWindow::GetForCurrentThread()->Bounds.Height * dpiRatio);
 		if (info.displayResolution.y == 0.0f)
 		{
 #ifndef _WINP8
@@ -118,21 +106,12 @@ namespace april
 
 	hstr getPackageName()
 	{
-#ifndef _WINP8
 		return _HL_PSTR_TO_HSTR(Windows::ApplicationModel::Package::Current->Id->FamilyName);
-#else
-		hlog::warn(april::logTag, "Cannot use getPackageName() on this platform.");
-		return "";
-#endif
 	}
 
 	hstr getUserDataPath()
 	{
-#ifndef _WINP8
 		return hdir::systemize(_HL_PSTR_TO_HSTR(ApplicationData::Current->RoamingFolder->Path));
-#else // because Windows Phone 8 is missing yet another feature
-		return hdir::systemize(_HL_PSTR_TO_HSTR(ApplicationData::Current->LocalFolder->Path));
-#endif
 	}
 	
 	static void(*currentCallback)(MessageBoxButton) = NULL;
@@ -174,7 +153,6 @@ namespace april
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
-#ifndef _WINP8
 		currentCallback = callback;
 		_HL_HSTR_TO_PSTR_DEF(text);
 		_HL_HSTR_TO_PSTR_DEF(title);
@@ -223,10 +201,6 @@ namespace april
 			dialog->CancelCommandIndex = 1;
 		}
 		dialog->ShowAsync();
-#else
-		// TODOp8 - if Microsoft ever decides to allow usage of basic features on Windows Phone 8, this has to be implemented
-		hlog::error(april::logTag, "Windows Phone 8 does not support messageBox()!)");
-#endif
 	}
 
 }

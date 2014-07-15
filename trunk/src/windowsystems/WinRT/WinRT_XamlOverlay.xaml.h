@@ -10,7 +10,7 @@
 /// 
 /// Defines a WinRT XAML Overlay for keyboard handling.
 
-#if defined(_WINRT_WINDOW) && !defined(_WINP8)
+#ifdef _WINRT_WINDOW
 #ifndef APRIL_WINRT_XAML_OVERLAY_H
 #define APRIL_WINRT_XAML_OVERLAY_H
 

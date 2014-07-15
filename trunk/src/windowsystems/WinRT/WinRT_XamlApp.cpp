@@ -6,7 +6,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#if defined(_WINRT_WINDOW) && !defined(_WINP8)
+#ifdef _WINRT_WINDOW
 #include "pch.h"
 
 #include <hltypes/hfile.h>
@@ -45,7 +45,11 @@ namespace april
 	{
 		this->app = ref new WinRT_BaseApp();
 		this->running = true;
+#ifndef _WINP8
 		this->defaultCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
+#else
+		this->defaultCursor = nullptr;
+#endif
 		this->backgroundColor = april::Color::Black;
 		this->launched = false;
 		this->activated = false;
@@ -85,7 +89,9 @@ namespace april
 					cursor = this->defaultCursor;
 				}
 			}
+#ifndef _WINP8
 			Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = cursor;
+#endif
 		}
 	}
 

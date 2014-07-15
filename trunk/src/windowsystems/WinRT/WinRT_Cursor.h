@@ -19,9 +19,7 @@
 
 #include "Cursor.h"
 
-#ifndef _WINP8
 using namespace Windows::UI::Core;
-#endif
 
 namespace april
 {
@@ -31,12 +29,10 @@ namespace april
 		WinRT_Cursor();
 		~WinRT_Cursor();
 
-#ifndef _WINP8
 		HL_DEFINE_GET(CoreCursor^, cursor, Cursor);
 
 	protected:
 		CoreCursor^ cursor;
-#endif
 
 		bool _create(chstr filename);
 
