@@ -19,13 +19,13 @@
 #include <hltypes/harray.h>
 
 #include "Color.h"
-#include "IWinRT.h"
 #include "pch.h"
-#include "WinRT_BaseApp.h"
+#include "WinRT_XamlOverlay.xaml.h"
 
 using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::Foundation;
+using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Core;
 using namespace Windows::UI::ViewManagement;
 using namespace Windows::UI::Xaml;
@@ -36,18 +36,34 @@ namespace april
 	class Texture;
 	
 	[Windows::Foundation::Metadata::WebHostHidden]
-	ref class WinRT_XamlApp sealed : public Application, public IWinRT, public IComponentConnector
+	ref class WinRT_XamlApp sealed : public Application, public IComponentConnector
 	{
 	public:
 		WinRT_XamlApp();
 		virtual void Connect(int connectionId, Object^ target);
 		
-		virtual void unassignWindow();
-		virtual void refreshCursor();
-		virtual void checkEvents();
-		virtual void showKeyboard();
-		virtual void hideKeyboard();
+		void refreshCursor();
 		
+		//HL_DEFINE_GET(unsigned int, startTime, StartTime);
+		property WinRT_XamlOverlay^ Overlay { WinRT_XamlOverlay^ get() { return this->overlay; } }
+
+		void OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args);
+		void OnResume(_In_ Object^ sender, _In_ Object^ args);
+		void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
+		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
+		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
+		void OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args);
+		void OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
+		void OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
+
+		void OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
+		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
+		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
+
 	internal:
 		void OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args);
 		void OnRender(_In_ Object^ sender, _In_ Object^ args);
@@ -56,24 +72,31 @@ namespace april
 		virtual void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;
 		
 	private:
-		WinRT_BaseApp^ app;
 		bool running;
 		Texture* splashTexture;
+		WinRT_XamlOverlay^ overlay;
 		CoreCursor^ defaultCursor;
 		Color backgroundColor;
 		bool launched;
 		bool activated;
 		Windows::Foundation::EventRegistrationToken eventToken;
-		
+		bool scrollHorizontal;
+		harray<unsigned int> pointerIds;
+		unsigned int startTime;
+		april::Key currentButton;
+
 		~WinRT_XamlApp();
 		
+		void _handleFocusChange(bool focused);
 		void _refreshCursor();
+		gvec2 _transformPosition(float x, float y);
+		void _resetTouches();
 		void _tryRenderSplashTexture();
 		april::Texture* _tryLoadTexture(chstr nodeName, chstr attributeName);
 		void _tryLoadSplashTexture();
 		void _tryLoadBackgroundColor();
 		bool _findVisualElements(chstr nodeName, hstr& data, int& index);
-		
+
 	};
 
 }

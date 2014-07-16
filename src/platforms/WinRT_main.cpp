@@ -11,7 +11,6 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
-#include "IWinRT.h"
 #include "main_base.h"
 #include "RenderSystem.h"
 #include "Window.h"
@@ -36,7 +35,7 @@ int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(
 	Application::Start(ref new ApplicationInitializationCallback(
 		[](ApplicationInitializationCallbackParams^ p)
 		{
-			april::WinRT::Interface = ref new april::WinRT_XamlApp();
+			april::WinRT::App = ref new april::WinRT_XamlApp();
 		}
 	));
 #endif

@@ -18,9 +18,7 @@
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
-#include "IWinRT.h"
-#include "WinRT_BaseApp.h"
-#include "WinRT_XamlOverlay.xaml.h"
+#include "WinRT_XamlApp.h"
 
 namespace april
 {
@@ -32,8 +30,7 @@ namespace april
 		static void (*Init)(const harray<hstr>&);
 		static void (*Destroy)();
 		static harray<hstr> Args;
-		static IWinRT^ Interface;
-		static WinRT_XamlOverlay^ XamlOverlay;
+		static WinRT_XamlApp^ App;
 
 	private:
 		WinRT() { }

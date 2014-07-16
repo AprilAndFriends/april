@@ -39,7 +39,6 @@ namespace april
 		~WinRT_Window();
 		
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
-		void unassign();
 		
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
@@ -51,7 +50,6 @@ namespace april
 
 		void setResolution(int w, int h, bool fullscreen);
 		void presentFrame();
-		void checkEvents();
 		hstr findCursorFile(chstr filename);
 		
 		void beginKeyboardHandling();

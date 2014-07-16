@@ -298,7 +298,7 @@ namespace april
 	{
 		DirectX_RenderSystem::reset();
 		// possible Microsoft bug, required for SwapChainPanel to update its layout 
-		reinterpret_cast<IUnknown*>(WinRT::XamlOverlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
+		reinterpret_cast<IUnknown*>(WinRT::App->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
 	}
 
@@ -356,7 +356,7 @@ namespace april
 			throw hl_exception("Unable to create swap chain!");
 		}
 		_swapChain.As(&this->swapChain);
-		reinterpret_cast<IUnknown*>(WinRT::XamlOverlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
+		reinterpret_cast<IUnknown*>(WinRT::App->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
 		this->_configureSwapChain();
 		this->updateOrientation();
