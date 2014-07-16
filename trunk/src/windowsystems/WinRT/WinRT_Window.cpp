@@ -22,8 +22,6 @@
 #include "WinRT_Cursor.h"
 #include "WinRT_Window.h"
 
-using namespace Windows::UI::ViewManagement;
-
 namespace april
 {
 	WinRT_Window::WinRT_Window() : Window()
@@ -57,12 +55,6 @@ namespace april
 		return true;
 	}
 	
-	void WinRT_Window::unassign()
-	{
-		WinRT::Interface->unassignWindow();
-		Window::unassign();
-	}
-
 	hstr WinRT_Window::getParam(chstr param)
 	{
 #ifndef _WINP8
@@ -147,20 +139,14 @@ namespace april
 	{
 	}
 
-	void WinRT_Window::checkEvents()
-	{
-		Window::checkEvents();
-		WinRT::Interface->checkEvents();
-	}
-	
 	void WinRT_Window::beginKeyboardHandling()
 	{
-		WinRT::Interface->showKeyboard();
+		WinRT::App->Overlay->showKeyboard();
 	}
 
 	void WinRT_Window::terminateKeyboardHandling()
 	{
-		WinRT::Interface->hideKeyboard();
+		WinRT::App->Overlay->hideKeyboard();
 	}
 
 	hstr WinRT_Window::findCursorFile(chstr filename)
@@ -185,7 +171,7 @@ namespace april
 	
 	void WinRT_Window::_refreshCursor()
 	{
-		WinRT::Interface->refreshCursor();
+		WinRT::App->refreshCursor();
 	}
 	
 }

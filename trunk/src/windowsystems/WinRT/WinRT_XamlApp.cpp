@@ -16,12 +16,12 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
-#include "IWinRT.h"
+#include "DirectX11_RenderSystem.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
 #include "WinRT.h"
-#include "WinRT_BaseApp.h"
+#include "WinRT_XamlApp.h"
 #include "WinRT_Cursor.h"
 #include "WinRT_Window.h"
 #include "WinRT_XamlApp.h"
@@ -39,12 +39,15 @@ using namespace Windows::UI::Xaml::Media;
 
 #define MANIFEST_FILENAME "AppxManifest.xml"
 
+#define DX11_RENDERSYS ((DirectX11_RenderSystem*)april::rendersys)
+
 namespace april
 {
 	WinRT_XamlApp::WinRT_XamlApp() : Application()
 	{
-		this->app = ref new WinRT_BaseApp();
+		DisplayInformation::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
 		this->running = true;
+		this->overlay = nullptr;
 #ifndef _WINP8
 		this->defaultCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
 #else
@@ -53,8 +56,11 @@ namespace april
 		this->backgroundColor = april::Color::Black;
 		this->launched = false;
 		this->activated = false;
-		this->Suspending += ref new SuspendingEventHandler(this->app, &WinRT_BaseApp::OnSuspend);
-		this->Resuming += ref new EventHandler<Object^>(this->app, &WinRT_BaseApp::OnResume);
+		this->scrollHorizontal = false;
+		this->startTime = get_system_tick_count();
+		this->currentButton = april::AK_NONE;
+		this->Suspending += ref new SuspendingEventHandler(this, &WinRT_XamlApp::OnSuspend);
+		this->Resuming += ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnResume);
 #ifdef _DEBUG
 		this->UnhandledException += ref new UnhandledExceptionEventHandler([](Object^ sender, UnhandledExceptionEventArgs^ args)
 		{
@@ -65,11 +71,6 @@ namespace april
 
 	WinRT_XamlApp::~WinRT_XamlApp()
 	{
-	}
-
-	void WinRT_XamlApp::unassignWindow()
-	{
-		this->backgroundColor = april::Color::Black;
 	}
 
 	void WinRT_XamlApp::refreshCursor()
@@ -95,20 +96,6 @@ namespace april
 		}
 	}
 
-	void WinRT_XamlApp::checkEvents()
-	{
-	}
-
-	void WinRT_XamlApp::showKeyboard()
-	{
-		WinRT::XamlOverlay->showKeyboard();
-	}
-
-	void WinRT_XamlApp::hideKeyboard()
-	{
-		WinRT::XamlOverlay->hideKeyboard();
-	}
-
 	void WinRT_XamlApp::Connect(int connectionId, Object^ target)
 	{
 	}
@@ -119,16 +106,55 @@ namespace april
 		if (!this->launched)
 		{
 			this->launched = true;
-			this->app->assignEvents(Windows::UI::Core::CoreWindow::GetForCurrentThread());
+			CoreWindow^ window = Windows::UI::Core::CoreWindow::GetForCurrentThread();
+			window->SizeChanged +=
+				ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(
+					this, &WinRT_XamlApp::OnWindowSizeChanged);
+			window->VisibilityChanged +=
+				ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(
+					this, &WinRT_XamlApp::OnVisibilityChanged);
+			window->PointerPressed +=
+				ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
+					this, &WinRT_XamlApp::OnTouchDown);
+			window->PointerReleased +=
+				ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
+					this, &WinRT_XamlApp::OnTouchUp);
+			window->PointerMoved +=
+				ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
+					this, &WinRT_XamlApp::OnTouchMove);
+			window->PointerWheelChanged +=
+				ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
+					this, &WinRT_XamlApp::OnMouseScroll);
+			window->KeyDown +=
+				ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(
+					this, &WinRT_XamlApp::OnKeyDown);
+			window->KeyUp +=
+				ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(
+					this, &WinRT_XamlApp::OnKeyUp);
+			window->CharacterReceived +=
+				ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(
+					this, &WinRT_XamlApp::OnCharacterReceived);
+			window->Closed +=
+				ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
+					this, &WinRT_XamlApp::OnWindowClosed);
+			DisplayInformation::GetForCurrentView()->OrientationChanged +=
+				ref new Windows::Foundation::TypedEventHandler<DisplayInformation^, Object^>(
+					this, &WinRT_XamlApp::OnOrientationChanged);
+			InputPane::GetForCurrentView()->Showing +=
+				ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
+					this, &WinRT_XamlApp::OnVirtualKeyboardShow);
+			InputPane::GetForCurrentView()->Hiding +=
+				ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
+					this, &WinRT_XamlApp::OnVirtualKeyboardHide);
 			this->refreshCursor();
-			WinRT::XamlOverlay = ref new WinRT_XamlOverlay();
-			Windows::UI::Xaml::Window::Current->Content = WinRT::XamlOverlay;
+			this->overlay = ref new WinRT_XamlOverlay();
+			Windows::UI::Xaml::Window::Current->Content = this->overlay;
 			Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &WinRT_XamlApp::OnWindowActivationChanged);
 			(*WinRT::Init)(WinRT::Args);
 			if (april::rendersys != NULL && april::window != NULL)
 			{
 				float delaySplash = (float)april::window->getParam(WINRT_DELAY_SPLASH);
-				if (delaySplash > 0.0f && delaySplash - (get_system_tick_count() - this->app->getStartTime()) * 0.001f > 0.0f)
+				if (delaySplash > 0.0f && delaySplash - (get_system_tick_count() - this->startTime) * 0.001f > 0.0f)
 				{
 					this->_tryLoadSplashTexture();
 					this->_tryRenderSplashTexture();
@@ -152,7 +178,7 @@ namespace april
 					float delaySplash = (float)april::window->getParam(WINRT_DELAY_SPLASH);
 					if (delaySplash > 0.0f)
 					{
-						float delay = delaySplash - (get_system_tick_count() - this->app->getStartTime()) * 0.001f;
+						float delay = delaySplash - (get_system_tick_count() - this->startTime) * 0.001f;
 						if (delay > 0.0f)
 						{
 							hlog::write(april::logTag, "Rendering splash screen for: " + hstr(delay));
@@ -162,7 +188,7 @@ namespace april
 							{
 								rendered = true;
 							}
-							delay = delaySplash - (get_system_tick_count() - this->app->getStartTime()) / 1000.0f;
+							delay = delaySplash - (get_system_tick_count() - this->startTime) / 1000.0f;
 							if (delay > 0.0f) // if there's still time left after rendering
 							{
 								hthread::sleep(delay * 1000.0f);
@@ -185,7 +211,7 @@ namespace april
 		}
 		else if (args->WindowActivationState == CoreWindowActivationState::Deactivated)
 		{
-			this->app->handleFocusChange(false);
+			this->_handleFocusChange(false);
 			if (this->eventToken.Value != 0)
 			{
 				CompositionTarget::Rendering::remove(this->eventToken);
@@ -195,7 +221,7 @@ namespace april
 		else if (args->WindowActivationState == CoreWindowActivationState::CodeActivated ||
 			args->WindowActivationState == CoreWindowActivationState::PointerActivated)
 		{
-			this->app->handleFocusChange(true);
+			this->_handleFocusChange(true);
 			if (this->eventToken.Value == 0)
 			{
 				this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
@@ -217,6 +243,274 @@ namespace april
 			CompositionTarget::Rendering::remove(this->eventToken);
 			hlog::warn(april::logTag, "Manual closing in WinRT apps should not be used!");
 		}
+	}
+
+	void WinRT_XamlApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
+	{
+		DX11_RENDERSYS->trim(); // required since Win 8.1
+		this->_handleFocusChange(false);
+	}
+
+	void WinRT_XamlApp::OnResume(_In_ Object^ sender, _In_ Object^ args)
+	{
+		this->_handleFocusChange(true);
+	}
+
+	void WinRT_XamlApp::OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
+	{
+		if (april::window != NULL)
+		{
+			april::window->handleQuitRequest(false);
+		}
+		args->Handled = true;
+	}
+
+	void WinRT_XamlApp::_handleFocusChange(bool focused)
+	{
+		this->_resetTouches();
+		if (april::window != NULL && april::window->isFocused() != focused)
+		{
+			april::window->handleFocusChangeEvent(focused);
+		}
+	}
+
+	void WinRT_XamlApp::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
+	{
+		this->_resetTouches();
+		april::SystemInfo info = april::getSystemInfo(); // outside, because the displayResolution needs to be updated every time
+		if (april::window != NULL)
+		{
+			int width = (int)(args->Size.Width * info.displayDpi / 96.0f);
+			int height = (int)(args->Size.Height * info.displayDpi / 96.0f);
+			((WinRT_Window*)april::window)->changeSize(width, height);
+		}
+		args->Handled = true;
+	}
+
+	void WinRT_XamlApp::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
+	{
+		this->_resetTouches();
+		args->Handled = true;
+	}
+
+	void WinRT_XamlApp::OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
+	{
+		this->_resetTouches();
+	}
+
+	void WinRT_XamlApp::OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
+	{
+		if (april::window != NULL)
+		{
+			april::window->handleVirtualKeyboardChangeEvent(true, args->OccludedRect.Height / CoreWindow::GetForCurrentThread()->Bounds.Height);
+		}
+		this->_resetTouches();
+	}
+
+	void WinRT_XamlApp::OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
+	{
+		if (april::window != NULL)
+		{
+			april::window->handleVirtualKeyboardChangeEvent(false, 0.0f);
+		}
+		this->_resetTouches();
+	}
+
+	void WinRT_XamlApp::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	{
+		if (april::window == NULL || !april::window->isFocused())
+		{
+			return;
+		}
+		unsigned int id;
+		int index;
+		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+#ifndef _WINP8
+		this->currentButton = april::AK_LBUTTON;
+		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
+		{
+		case Windows::Devices::Input::PointerDeviceType::Mouse:
+			april::window->setInputMode(april::Window::MOUSE);
+			if (args->CurrentPoint->Properties->IsRightButtonPressed)
+			{
+				this->currentButton = april::AK_RBUTTON;
+			}
+			else if (args->CurrentPoint->Properties->IsMiddleButtonPressed)
+			{
+				this->currentButton = april::AK_MBUTTON;
+			}
+			april::window->queueMouseEvent(april::Window::MOUSE_DOWN, position, this->currentButton);
+			break;
+		case Windows::Devices::Input::PointerDeviceType::Touch:
+		case Windows::Devices::Input::PointerDeviceType::Pen:
+#endif
+			april::window->setInputMode(april::Window::TOUCH);
+			id = args->CurrentPoint->PointerId;
+			index = this->pointerIds.index_of(id);
+			if (index < 0)
+			{
+				index = this->pointerIds.size();
+				this->pointerIds += id;
+			}
+			april::window->queueTouchEvent(april::Window::MOUSE_DOWN, position, index);
+#ifndef _WINP8
+			break;
+		}
+#endif
+		args->Handled = true;
+	}
+
+	void WinRT_XamlApp::OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	{
+		if (april::window == NULL || !april::window->isFocused())
+		{
+			return;
+		}
+		unsigned int id;
+		int index;
+		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+#ifndef _WINP8
+		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
+		{
+		case Windows::Devices::Input::PointerDeviceType::Mouse:
+			april::window->setInputMode(april::Window::MOUSE);
+			april::window->queueMouseEvent(april::Window::MOUSE_UP, position, this->currentButton);
+			break;
+		case Windows::Devices::Input::PointerDeviceType::Touch:
+		case Windows::Devices::Input::PointerDeviceType::Pen:
+#endif
+			april::window->setInputMode(april::Window::TOUCH);
+			id = args->CurrentPoint->PointerId;
+			index = this->pointerIds.index_of(id);
+			if (index < 0)
+			{
+				index = this->pointerIds.size();
+			}
+			else
+			{
+				this->pointerIds.remove_at(index);
+			}
+			april::window->queueTouchEvent(april::Window::MOUSE_UP, position, index);
+#ifndef _WINP8
+			break;
+		}
+		this->currentButton = april::AK_NONE;
+#endif
+		args->Handled = true;
+	}
+
+	void WinRT_XamlApp::OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	{
+		if (april::window == NULL || !april::window->isFocused())
+		{
+			return;
+		}
+		unsigned int id;
+		int index;
+		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+#ifndef _WINP8
+		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
+		{
+		case Windows::Devices::Input::PointerDeviceType::Mouse:
+			april::window->setInputMode(april::Window::MOUSE);
+			april::window->queueMouseEvent(april::Window::MOUSE_MOVE, position, this->currentButton);
+			break;
+		case Windows::Devices::Input::PointerDeviceType::Touch:
+		case Windows::Devices::Input::PointerDeviceType::Pen:
+#endif
+			april::window->setInputMode(april::Window::TOUCH);
+			id = args->CurrentPoint->PointerId;
+			index = this->pointerIds.index_of(id);
+			if (index < 0)
+			{
+				index = this->pointerIds.size();
+			}
+			april::window->queueTouchEvent(april::Window::MOUSE_MOVE, position, index);
+#ifndef _WINP8
+			break;
+		}
+#endif
+		args->Handled = true;
+	}
+
+	void WinRT_XamlApp::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	{
+		if (april::window == NULL || !april::window->isFocused())
+		{
+			return;
+		}
+		april::window->setInputMode(april::Window::MOUSE);
+		float _wheelDelta = (float)args->CurrentPoint->Properties->MouseWheelDelta / WHEEL_DELTA;
+		if (this->scrollHorizontal ^ args->CurrentPoint->Properties->IsHorizontalMouseWheel)
+		{
+			april::window->queueMouseEvent(april::Window::MOUSE_SCROLL,
+				gvec2(-(float)_wheelDelta, 0.0f), april::AK_NONE);
+		}
+		else
+		{
+			april::window->queueMouseEvent(april::Window::MOUSE_SCROLL,
+				gvec2(0.0f, -(float)_wheelDelta), april::AK_NONE);
+		}
+		args->Handled = true;
+	}
+
+	void WinRT_XamlApp::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
+	{
+		if (april::window == NULL || !april::window->isFocused())
+		{
+			return;
+		}
+		april::Key key = (april::Key)args->VirtualKey;
+		april::window->queueKeyEvent(april::Window::KEY_DOWN, key, 0);
+		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
+		{
+			this->scrollHorizontal = true;
+		}
+		args->Handled = true;
+	}
+
+	void WinRT_XamlApp::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
+	{
+		if (april::window == NULL || !april::window->isFocused())
+		{
+			return;
+		}
+		april::Key key = (april::Key)args->VirtualKey;
+		april::window->queueKeyEvent(april::Window::KEY_UP, key, 0);
+		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
+		{
+			this->scrollHorizontal = false;
+		}
+		if (key == AK_RETURN)
+		{
+			april::window->terminateKeyboardHandling();
+		}
+		args->Handled = true;
+	}
+
+	void WinRT_XamlApp::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
+	{
+		if (april::window == NULL || !april::window->isFocused())
+		{
+			return;
+		}
+		april::window->queueKeyEvent(april::Window::KEY_DOWN, AK_NONE, args->KeyCode);
+		args->Handled = true;
+	}
+
+	gvec2 WinRT_XamlApp::_transformPosition(float x, float y)
+	{
+		// WinRT is dumb
+		return (gvec2(x, y) * april::getSystemInfo().displayDpi / 96.0f);
+	}
+
+	void WinRT_XamlApp::_resetTouches()
+	{
+		for_iter_r (i, this->pointerIds.size(), 0)
+		{
+			april::window->queueTouchEvent(april::Window::MOUSE_CANCEL, gvec2(), i);
+		}
+		this->pointerIds.clear();
 	}
 
 	void WinRT_XamlApp::_tryRenderSplashTexture()

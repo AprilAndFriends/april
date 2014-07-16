@@ -12,7 +12,6 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
-#include "IWinRT.h"
 #include "Platform.h"
 #include "WinRT.h"
 
@@ -21,8 +20,7 @@ namespace april
 	void (*WinRT::Init)(const harray<hstr>&) = NULL;
 	void (*WinRT::Destroy)() = NULL;
 	harray<hstr> WinRT::Args;
-	IWinRT^ WinRT::Interface = nullptr;
-	WinRT_XamlOverlay^ WinRT::XamlOverlay = nullptr;
+	WinRT_XamlApp^ WinRT::App = nullptr;
 	
 }
 #endif

@@ -242,9 +242,6 @@
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_BaseApp.cpp">
-      <Filter>Source Files\windowsystems\WinRT</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.cpp">
       <Filter>Source Files\windowsystems\WinRT</Filter>
     </ClCompile>
@@ -412,9 +409,6 @@
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_BaseApp.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
@@ -423,9 +417,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\april\WinRT_main.h">
       <Filter>Header Files\platforms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\IWinRT.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
