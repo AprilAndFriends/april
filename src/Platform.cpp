@@ -29,7 +29,7 @@ namespace april
 		this->osVersion = 1.0f;
 		this->cpuCores = 1;
 		this->ram = 256;
-		this->displayDpi = 0;
+		this->displayDpi = 0.0f;
 		this->locale = "";
 	}
 	

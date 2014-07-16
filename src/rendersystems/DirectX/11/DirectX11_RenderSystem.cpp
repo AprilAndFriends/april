@@ -330,14 +330,14 @@ namespace april
 		{
 			throw hl_exception("Unable to get parent factory from DXGI adapter!");
 		}
-		gvec2 resolution = april::getSystemInfo().displayResolution;
-		int w = hround(resolution.x);
-		int h = hround(resolution.y);
+		SystemInfo info = april::getSystemInfo();
+		int w = hround(info.displayResolution.x);
+		int h = hround(info.displayResolution.y);
 		if (w != width || h != height)
 		{
 			hlog::warnf(april::logTag, "On WinRT the window resolution (%d,%d) should match the display resolution (%d,%d) in order to avoid problems.", width, height, w, h);
 		}
-		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {0};
+		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = { 0 };
 		swapChainDesc.Stereo = false;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
@@ -366,6 +366,9 @@ namespace april
 	{
 		this->d3dDeviceContext->OMSetRenderTargets(0, NULL, NULL);
 		this->renderTargetView = nullptr;
+		SystemInfo info = april::getSystemInfo();
+		width = (int)(width * 96.0f / info.displayDpi);
+		height = (int)(height * 96.0f / info.displayDpi);
 		HRESULT hr = this->swapChain->ResizeBuffers(BACKBUFFER_COUNT, width, height, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 		if (FAILED(hr))
 		{
@@ -425,6 +428,7 @@ namespace april
 		this->d3dDeviceContext->RSSetState(this->rasterState.Get());
 		D3D11_TEXTURE2D_DESC backBufferDesc = {0};
 		_backBuffer->GetDesc(&backBufferDesc);
+		SystemInfo info = april::getSystemInfo();
 		this->setViewport(grect(0.0f, 0.0f, (float)backBufferDesc.Width, (float)backBufferDesc.Height)); // just to be on the safe side and prevent floating point errors
 		// blend modes
 		D3D11_BLEND_DESC blendDesc = {0};
@@ -592,6 +596,10 @@ namespace april
 		gvec2 resolution = april::getSystemInfo().displayResolution;
 		int w = hround(resolution.x);
 		int h = hround(resolution.y);
+		/*
+		float width = backBufferDesc.Width * 96.0f / info.displayDpi;
+		float height = backBufferDesc.Height * 96.0f / info.displayDpi;
+		*/
 		if (value.x < 0.0f)
 		{
 			value.w += value.x;
@@ -618,10 +626,11 @@ namespace april
 		viewport.MinDepth = D3D11_MIN_DEPTH;
 		viewport.MaxDepth = D3D11_MAX_DEPTH;
 		// these double-casts are to ensure consistent behavior among rendering systems
-		viewport.TopLeftX = (float)(int)value.x;
-		viewport.TopLeftY = (float)(int)value.y;
-		viewport.Width = (float)(int)value.w;
-		viewport.Height = (float)(int)value.h;
+		SystemInfo info = april::getSystemInfo();
+		viewport.TopLeftX = (float)(int)(value.x * 96.0f / info.displayDpi);
+		viewport.TopLeftY = (float)(int)(value.y * 96.0f / info.displayDpi);
+		viewport.Width = (float)(int)(value.w * 96.0f / info.displayDpi);
+		viewport.Height = (float)(int)(value.h * 96.0f / info.displayDpi);
 		this->d3dDeviceContext->RSSetViewports(1, &viewport);
 	}
 

@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -23,10 +23,14 @@
 #include <april/MouseDelegate.h>
 #include <april/Platform.h>
 #include <april/RenderSystem.h>
+#include <april/SystemDelegate.h>
 #include <april/UpdateDelegate.h>
 #include <april/Window.h>
 #include <gtypes/Rectangle.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
+
+#define LOG_TAG "demo_tictactoe"
 
 april::Cursor* cursor = NULL;
 april::Texture* background = NULL;
@@ -184,6 +188,20 @@ class UpdateDelegate : public april::UpdateDelegate
 	}
 };
 
+class SystemDelegate : public april::SystemDelegate
+{
+public:
+	SystemDelegate() : april::SystemDelegate()
+	{
+	}
+
+	void onWindowSizeChanged(int width, int height, bool fullScreen)
+	{
+		hlog::writef(LOG_TAG, "window size changed: %dx%d", width, height);
+	}
+
+};
+
 class MouseDelegate : public april::MouseDelegate
 {
 	void onMouseUp(april::Key button)
@@ -331,6 +349,7 @@ class MouseDelegate : public april::MouseDelegate
 
 static UpdateDelegate* updateDelegate = NULL;
 static MouseDelegate* mouseDelegate = NULL;
+static SystemDelegate* systemDelegate = NULL;
 
 void april_init(const harray<hstr>& args)
 {
@@ -378,6 +397,7 @@ void april_init(const harray<hstr>& args)
 	}
 #endif
 	updateDelegate = new UpdateDelegate();
+	systemDelegate = new SystemDelegate();
 	mouseDelegate = new MouseDelegate();
 #if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
@@ -389,6 +409,7 @@ void april_init(const harray<hstr>& args)
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
 	april::window->setUpdateDelegate(updateDelegate);
+	april::window->setSystemDelegate(systemDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
 	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
@@ -415,6 +436,8 @@ void april_destroy()
 	april::destroy();
 	delete updateDelegate;
 	updateDelegate = NULL;
+	delete systemDelegate;
+	systemDelegate = NULL;
 	delete mouseDelegate;
 	mouseDelegate = NULL;
 }
