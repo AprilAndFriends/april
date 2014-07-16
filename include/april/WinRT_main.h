@@ -23,6 +23,20 @@
 #include "main_base.h"
 #include "aprilExport.h"
 
+// WinP8's ARM Release MF binaries have problems if there aren't any public ref classes declared
+#if defined(_WINP8) && !defined(_DEBUG) && defined(_WINARM)
+#ifdef APRIL_WINP8_ROOT_NAMESPACE_HACK
+namespace APRIL_WINP8_ROOT_NAMESPACE_HACK
+{
+	public ref class AprilWinP8Fix sealed
+	{
+	};
+}
+#else
+#error WinP8 release builds require 'APRIL_WINP8_ROOT_NAMESPACE_HACK' to be defined before including 'main.h' and set to your project's root namespace.
+#endif
+#endif
+
 [Platform::MTAThread]
 int main(Platform::Array<Platform::String^>^ args)
 {

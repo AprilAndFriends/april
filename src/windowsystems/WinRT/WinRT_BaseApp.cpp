@@ -255,7 +255,7 @@ namespace april
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
 			this->mouseMoveMessagesCount++;
-			if (this->mouseMoveMessagesCount >= 10)
+			//if (this->mouseMoveMessagesCount >= 3)
 			{
 				april::window->setInputMode(april::Window::MOUSE);
 			}
