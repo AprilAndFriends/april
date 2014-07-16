@@ -72,6 +72,7 @@ public:
 	void onWindowSizeChanged(int width, int height, bool fullScreen)
 	{
 		hlog::writef(LOG_TAG, "window size changed: %dx%d", width, height);
+		april::rendersys->setViewport(drawRect);
 	}
 
 };
