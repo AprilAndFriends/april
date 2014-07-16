@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.4
+/// @version 3.5
 /// 
 /// @section LICENSE
 /// 
@@ -21,8 +21,12 @@
 #include <april/main.h>
 #include <april/Platform.h>
 #include <april/RenderSystem.h>
+#include <april/SystemDelegate.h>
 #include <april/UpdateDelegate.h>
 #include <april/Window.h>
+#include <hltypes/hlog.h>
+
+#define LOG_TAG "demo_3d"
 
 april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
@@ -58,7 +62,22 @@ protected:
 
 };
 
+class SystemDelegate : public april::SystemDelegate
+{
+public:
+	SystemDelegate() : april::SystemDelegate()
+	{
+	}
+
+	void onWindowSizeChanged(int width, int height, bool fullScreen)
+	{
+		hlog::writef(LOG_TAG, "window size changed: %dx%d", width, height);
+	}
+
+};
+
 static UpdateDelegate* updateDelegate = NULL;
+static SystemDelegate* systemDelegate = NULL;
 
 void april_init(const harray<hstr>& args)
 {
@@ -106,6 +125,7 @@ void april_init(const harray<hstr>& args)
 	}
 #endif
 	updateDelegate = new UpdateDelegate();
+	systemDelegate = new SystemDelegate();
 #if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
@@ -116,6 +136,7 @@ void april_init(const harray<hstr>& args)
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
 	april::window->setUpdateDelegate(updateDelegate);
+	april::window->setSystemDelegate(systemDelegate);
 	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
@@ -133,4 +154,6 @@ void april_destroy()
 	april::destroy();
 	delete updateDelegate;
 	updateDelegate = NULL;
+	delete systemDelegate;
+	systemDelegate = NULL;
 }

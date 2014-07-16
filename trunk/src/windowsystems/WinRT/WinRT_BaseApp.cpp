@@ -356,19 +356,8 @@ namespace april
 	
 	gvec2 WinRT_BaseApp::_transformPosition(float x, float y)
 	{
-		april::SystemInfo info = april::getSystemInfo();
 		// WinRT is dumb
-		x *= info.displayDpi / 96.0f;
-		y *= info.displayDpi / 96.0f;
-		int w = hround(info.displayResolution.x);
-		int h = hround(info.displayResolution.y);
-		int width = april::window->getWidth();
-		int height = april::window->getHeight();
-		if (w == width && h == height)
-		{
-			return gvec2(x, y);
-		}
-		return gvec2((float)(int)(x * width / w), (float)(int)(y * height / h));
+		return (gvec2(x, y) * april::getSystemInfo().displayDpi / 96.0f);
 	}
 
 }
