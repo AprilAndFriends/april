@@ -9,6 +9,10 @@
 #ifdef _WINRT_WINDOW
 #include "pch.h"
 
+#include <hltypes/hlog.h>
+#include <hltypes/hstring.h>
+
+#include "april.h"
 #include "WinRT_XamlOverlay.xaml.h"
 
 using namespace Windows::UI::Xaml;
@@ -18,16 +22,19 @@ namespace april
 	WinRT_XamlOverlay::WinRT_XamlOverlay()
 	{
 		this->InitializeComponent();
+		this->hideKeyboard();
 	}
 
 	void WinRT_XamlOverlay::showKeyboard()
 	{
+		hlog::write(april::logTag, "Focusing XAML textbox...");
 		this->keyboardTextbox->IsEnabled = true;
 		this->keyboardTextbox->Focus(FocusState::Programmatic);
 	}
 	
 	void WinRT_XamlOverlay::hideKeyboard()
 	{
+		hlog::write(april::logTag, "Unfocusing XAML textbox...");
 		this->keyboardDisable->Focus(FocusState::Programmatic);
 	}
 	

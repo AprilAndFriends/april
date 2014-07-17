@@ -53,8 +53,6 @@ namespace april
 #else
 			info.ram = 512;
 #endif
-			// display DPI
-			info.displayDpi = DisplayInformation::GetForCurrentView()->LogicalDpi;
 			// other
 			info.locale = "";
 			IIterator<Platform::String^>^ it = Windows::Globalization::ApplicationLanguages::Languages->First();
@@ -79,9 +77,11 @@ namespace april
 				info.locale = info.locale.utf8_substr(0, 2);
 			}
 		}
-		// display resolution
+		// display DPI
+		info.displayDpi = DisplayInformation::GetForCurrentView()->LogicalDpi;
 #ifdef _WINRT_WINDOW
-		float dpiRatio = DisplayInformation::GetForCurrentView()->LogicalDpi / 96;
+		// display resolution
+		float dpiRatio = info.displayDpi / 96.0f;
 		int width = hround(CoreWindow::GetForCurrentThread()->Bounds.Width * dpiRatio);
 		int height = hround(CoreWindow::GetForCurrentThread()->Bounds.Height * dpiRatio);
 		if (info.displayResolution.y == 0.0f)

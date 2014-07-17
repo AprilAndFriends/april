@@ -44,7 +44,6 @@ namespace april
 		
 		void refreshCursor();
 		
-		//HL_DEFINE_GET(unsigned int, startTime, StartTime);
 		property WinRT_XamlOverlay^ Overlay { WinRT_XamlOverlay^ get() { return this->overlay; } }
 
 		void OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args);
@@ -53,6 +52,7 @@ namespace april
 		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
 		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
 		void OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args);
+		void OnDpiChanged(_In_ DisplayInformation^ sender, _In_ Object^ args);
 		void OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 		void OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 

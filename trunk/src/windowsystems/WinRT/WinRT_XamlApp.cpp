@@ -38,6 +38,15 @@ using namespace Windows::UI::Xaml::Controls::Primitives;
 using namespace Windows::UI::Xaml::Media;
 
 #define MANIFEST_FILENAME "AppxManifest.xml"
+#ifndef _WINP8
+#define NODE_PREFIX "m2:"
+#define SPLASH_WIDTH 620
+#define SPLASH_HEIGHT 300
+#else
+#define NODE_PREFIX "m3:"
+#define SPLASH_WIDTH 800
+#define SPLASH_HEIGHT 480
+#endif
 
 #define DX11_RENDERSYS ((DirectX11_RenderSystem*)april::rendersys)
 
@@ -140,6 +149,9 @@ namespace april
 			DisplayInformation::GetForCurrentView()->OrientationChanged +=
 				ref new Windows::Foundation::TypedEventHandler<DisplayInformation^, Object^>(
 					this, &WinRT_XamlApp::OnOrientationChanged);
+			DisplayInformation::GetForCurrentView()->DpiChanged +=
+				ref new Windows::Foundation::TypedEventHandler<DisplayInformation^, Object^>(
+					this, &WinRT_XamlApp::OnDpiChanged);
 			InputPane::GetForCurrentView()->Showing +=
 				ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
 					this, &WinRT_XamlApp::OnVirtualKeyboardShow);
@@ -296,6 +308,11 @@ namespace april
 	void WinRT_XamlApp::OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
 	{
 		this->_resetTouches();
+	}
+
+	void WinRT_XamlApp::OnDpiChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
+	{
+		april::getSystemInfo(); // so the DPI value gets updated
 	}
 
 	void WinRT_XamlApp::OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
@@ -521,13 +538,15 @@ namespace april
 			gmat4 storedProjectionMatrix = april::rendersys->getProjectionMatrix();
 			grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
 			grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
-			int width = (int)(april::window->getWidth() * 96 / april::getSystemInfo().displayDpi);
-			int height = (int)(april::window->getHeight() * 96 / april::getSystemInfo().displayDpi);
-			viewport.setSize((float)width, (float)height);
+			float width = (float)april::window->getWidth();
+			float height = (float)april::window->getHeight();
+			viewport.setSize(width, height);
 			april::rendersys->setOrthoProjection(viewport);
 			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
-			drawRect.set((float)((width - this->splashTexture->getWidth()) / 2), (float)((height - this->splashTexture->getHeight()) / 2),
-				(float)this->splashTexture->getWidth(), (float)this->splashTexture->getHeight());
+			float scale = (float)DisplayInformation::GetForCurrentView()->ResolutionScale * 0.01f;
+			float textureWidth = SPLASH_WIDTH * scale;
+			float textureHeight = SPLASH_HEIGHT * scale;
+			drawRect.set(hroundf(width - textureWidth) * 0.5f, hroundf(height - textureHeight) * 0.5f, textureWidth, textureHeight);
 			april::rendersys->setTexture(this->splashTexture);
 			april::rendersys->drawTexturedRect(drawRect, grect(0.0f, 0.0f, 1.0f, 1.0f));
 			april::rendersys->presentFrame();
@@ -560,14 +579,25 @@ namespace april
 			{
 				logoFilename = logoFilename(0, index);
 				harray<hstr> filenames;
-				filenames += logoFilename(0, index);
-				// adding that ".scale-100" thing here, because my prayers went unanswered and Microsoft decided to change the format after all
 				index = logoFilename.rfind('.');
+				// adding those ".scale-x" things here, because my prayers went unanswered and Microsoft decided to change the format after all
+				filenames += logoFilename(0, index) + ".scale-" + hstr((int)DisplayInformation::GetForCurrentView()->ResolutionScale) + logoFilename(index, -1);
+#ifndef _WINP8
+				filenames += logoFilename(0, index) + ".scale-180" + logoFilename(index, -1);
+#else
+				filenames += logoFilename(0, index) + ".scale-240" + logoFilename(index, -1);
+#endif
+				filenames += logoFilename(0, index) + ".scale-140" + logoFilename(index, -1);
 				filenames += logoFilename(0, index) + ".scale-100" + logoFilename(index, -1);
+#ifndef _WINP8
+				filenames += logoFilename(0, index) + ".scale-80" + logoFilename(index, -1);
+#endif
+				filenames += logoFilename(0, index);
+				filenames.remove_duplicates();
 				foreach (hstr, it, filenames)
 				{
 					// loading the logo file
-					april::Texture* texture = april::rendersys->createTextureFromResource(logoFilename, Texture::TYPE_IMMUTABLE, false);
+					april::Texture* texture = april::rendersys->createTextureFromResource((*it), Texture::TYPE_IMMUTABLE, false);
 					if (texture != NULL)
 					{
 						try
@@ -646,7 +676,7 @@ namespace april
 			return false;
 		}
 		data = data(index, -1);
-		index = data.find("<" + nodeName + " ");
+		index = data.find("<" NODE_PREFIX + nodeName + " ");
 		if (index < 0)
 		{
 			return false;
