@@ -560,7 +560,7 @@ namespace april
 			viewport.setSize(width, height);
 			april::rendersys->setOrthoProjection(viewport);
 			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
-			float scale = (float)DisplayInformation::GetForCurrentView()->ResolutionScale * 0.01f;
+			float scale = (float)DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
 			float textureWidth = SPLASH_WIDTH * scale;
 			float textureHeight = SPLASH_HEIGHT * scale;
 			drawRect.set(hroundf(width - textureWidth) * 0.5f, hroundf(height - textureHeight) * 0.5f, textureWidth, textureHeight);
@@ -598,7 +598,7 @@ namespace april
 				harray<hstr> filenames;
 				index = logoFilename.rfind('.');
 				// adding those ".scale-x" things here, because my prayers went unanswered and Microsoft decided to change the format after all
-				filenames += logoFilename(0, index) + ".scale-" + hstr((int)DisplayInformation::GetForCurrentView()->ResolutionScale) + logoFilename(index, -1);
+				filenames += logoFilename(0, index) + ".scale-" + hstr(hround(DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel * 100)) + logoFilename(index, -1);
 #ifndef _WINP8
 				filenames += logoFilename(0, index) + ".scale-180" + logoFilename(index, -1);
 #else
