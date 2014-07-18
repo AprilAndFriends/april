@@ -27,15 +27,18 @@ namespace april
 
 	void WinRT_XamlOverlay::showKeyboard()
 	{
-		hlog::write(april::logTag, "Focusing XAML textbox...");
-		this->keyboardTextbox->IsEnabled = true;
+		// this is required, because this method can be called from a touch-down event which will not display the keyboard
+		this->hideKeyboard();
+		this->Children->Append(this->keyboardTextbox);
 		this->keyboardTextbox->Focus(FocusState::Programmatic);
 	}
 	
 	void WinRT_XamlOverlay::hideKeyboard()
 	{
-		hlog::write(april::logTag, "Unfocusing XAML textbox...");
-		this->keyboardDisable->Focus(FocusState::Programmatic);
+		if (this->Children->Size > 0)
+		{
+			this->Children->RemoveAt(0);
+		}
 	}
 	
 }
