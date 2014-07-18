@@ -292,8 +292,8 @@ namespace april
 		april::SystemInfo info = april::getSystemInfo(); // outside, because the displayResolution needs to be updated every time
 		if (april::window != NULL)
 		{
-			int width = (int)(args->Size.Width * info.displayDpi / 96.0f);
-			int height = (int)(args->Size.Height * info.displayDpi / 96.0f);
+			int width = hround(args->Size.Width * info.displayDpi / 96.0f);
+			int height = hround(args->Size.Height * info.displayDpi / 96.0f);
 			((WinRT_Window*)april::window)->changeSize(width, height);
 		}
 		args->Handled = true;
@@ -517,8 +517,25 @@ namespace april
 
 	gvec2 WinRT_XamlApp::_transformPosition(float x, float y)
 	{
+		april::SystemInfo info = april::getSystemInfo();
 		// WinRT is dumb
-		return (gvec2(x, y) * april::getSystemInfo().displayDpi / 96.0f);
+		x *= info.displayDpi / 96.0f;
+		y *= info.displayDpi / 96.0f;
+		/*
+		int w = hround(info.displayResolution.x);
+		int h = hround(info.displayResolution.y);
+		int width = april::window->getWidth();
+		int height = april::window->getHeight();
+		if (w != width)
+		{
+			x = (float)(int)(x * w / width);
+		}
+		if (h != height)
+		{
+			y = (float)(int)(y * h / height);
+		}
+		*/
+		return gvec2(x, y);
 	}
 
 	void WinRT_XamlApp::_resetTouches()

@@ -220,7 +220,13 @@ namespace april
 			ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3dDevice, NULL, &_d3dDeviceContext);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to create DX11 device!");
+			// if hardware device is not available, try a WARP device as a fallback instead
+			hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_WARP, NULL, creationFlags, featureLevels,
+				ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3dDevice, NULL, &_d3dDeviceContext);
+			if (FAILED(hr))
+			{
+				throw hl_exception("Unable to create DX11 device!");
+			}
 		}
 		hr = _d3dDevice.As(&this->d3dDevice);
 		if (FAILED(hr))
@@ -358,6 +364,11 @@ namespace april
 		_swapChain.As(&this->swapChain);
 		reinterpret_cast<IUnknown*>(WinRT::App->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
+		// so... we have to apply an inverted scale to the swap chain?
+		DXGI_MATRIX_3X2_F inverseScale = { 0 };
+		inverseScale._11 = 1.0f / WinRT::App->Overlay->CompositionScaleX;
+		inverseScale._22 = 1.0f / WinRT::App->Overlay->CompositionScaleY;
+		this->swapChain->SetMatrixTransform(&inverseScale);
 		this->_configureSwapChain();
 		this->updateOrientation();
 	}
@@ -366,9 +377,6 @@ namespace april
 	{
 		this->d3dDeviceContext->OMSetRenderTargets(0, NULL, NULL);
 		this->renderTargetView = nullptr;
-		SystemInfo info = april::getSystemInfo();
-		width = (int)(width * 96.0f / info.displayDpi);
-		height = (int)(height * 96.0f / info.displayDpi);
 		HRESULT hr = this->swapChain->ResizeBuffers(BACKBUFFER_COUNT, width, height, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 		if (FAILED(hr))
 		{
@@ -594,8 +602,8 @@ namespace april
 		DirectX_RenderSystem::setViewport(value);
 		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
 		gvec2 resolution = april::getSystemInfo().displayResolution;
-		int w = hround(resolution.x);
-		int h = hround(resolution.y);
+		int w = april::window->getWidth();
+		int h = april::window->getHeight();
 		/*
 		float width = backBufferDesc.Width * 96.0f / info.displayDpi;
 		float height = backBufferDesc.Height * 96.0f / info.displayDpi;
@@ -626,11 +634,10 @@ namespace april
 		viewport.MinDepth = D3D11_MIN_DEPTH;
 		viewport.MaxDepth = D3D11_MAX_DEPTH;
 		// these double-casts are to ensure consistent behavior among rendering systems
-		SystemInfo info = april::getSystemInfo();
-		viewport.TopLeftX = (float)(int)(value.x * 96.0f / info.displayDpi);
-		viewport.TopLeftY = (float)(int)(value.y * 96.0f / info.displayDpi);
-		viewport.Width = (float)(int)(value.w * 96.0f / info.displayDpi);
-		viewport.Height = (float)(int)(value.h * 96.0f / info.displayDpi);
+		viewport.TopLeftX = (float)(int)value.x;
+		viewport.TopLeftY = (float)(int)value.y;
+		viewport.Width = (float)(int)value.w;
+		viewport.Height = (float)(int)value.h;
 		this->d3dDeviceContext->RSSetViewports(1, &viewport);
 	}
 
