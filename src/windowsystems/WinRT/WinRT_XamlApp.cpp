@@ -517,25 +517,8 @@ namespace april
 
 	gvec2 WinRT_XamlApp::_transformPosition(float x, float y)
 	{
-		april::SystemInfo info = april::getSystemInfo();
 		// WinRT is dumb
-		x *= info.displayDpi / 96.0f;
-		y *= info.displayDpi / 96.0f;
-		/*
-		int w = hround(info.displayResolution.x);
-		int h = hround(info.displayResolution.y);
-		int width = april::window->getWidth();
-		int height = april::window->getHeight();
-		if (w != width)
-		{
-			x = (float)(int)(x * w / width);
-		}
-		if (h != height)
-		{
-			y = (float)(int)(y * h / height);
-		}
-		*/
-		return gvec2(x, y);
+		return (gvec2(x, y) * april::getSystemInfo().displayDpi / 96.0f);
 	}
 
 	void WinRT_XamlApp::_resetTouches()
@@ -560,7 +543,11 @@ namespace april
 			viewport.setSize(width, height);
 			april::rendersys->setOrthoProjection(viewport);
 			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
+#ifndef _WINP8 // for some unknown reason, on WinP8 "ResolutionScale" keeps throwing deprecated warnings and "RawPixelsPerViewPixel" is not available on normal WinRT
+			float scale = (float)DisplayInformation::GetForCurrentView()->ResolutionScale * 0.01f;
+#else
 			float scale = (float)DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
+#endif
 			float textureWidth = SPLASH_WIDTH * scale;
 			float textureHeight = SPLASH_HEIGHT * scale;
 			drawRect.set(hroundf(width - textureWidth) * 0.5f, hroundf(height - textureHeight) * 0.5f, textureWidth, textureHeight);
@@ -598,7 +585,12 @@ namespace april
 				harray<hstr> filenames;
 				index = logoFilename.rfind('.');
 				// adding those ".scale-x" things here, because my prayers went unanswered and Microsoft decided to change the format after all
-				filenames += logoFilename(0, index) + ".scale-" + hstr(hround(DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel * 100)) + logoFilename(index, -1);
+#ifndef _WINP8 // for some unknown reason, on WinP8 "ResolutionScale" keeps throwing deprecated warnings and "RawPixelsPerViewPixel" is not available on normal WinRT
+				filenames += logoFilename(0, index) + ".scale-" + hstr((int)DisplayInformation::GetForCurrentView()->ResolutionScale) + logoFilename(index, -1);
+#else
+				filenames += logoFilename(0, index) + ".scale-" + hstr((int)(DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel * 100)) + logoFilename(index, -1);
+#endif
+				
 #ifndef _WINP8
 				filenames += logoFilename(0, index) + ".scale-180" + logoFilename(index, -1);
 #else
