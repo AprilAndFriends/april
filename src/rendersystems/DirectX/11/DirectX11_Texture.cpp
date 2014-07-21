@@ -67,15 +67,10 @@ namespace april
 			textureDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			textureDesc.CPUAccessFlags = 0;
 		}
-		else if (type == TYPE_VOLATILE)
+		else
 		{
 			textureDesc.Usage = D3D11_USAGE_DYNAMIC;
 			textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		}
-		else
-		{
-			textureDesc.Usage = D3D11_USAGE_DEFAULT;
-			textureDesc.CPUAccessFlags = 0;
 		}
 		if (type == TYPE_RENDER_TARGET)
 		{
@@ -175,22 +170,14 @@ namespace april
 		Lock lock;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		int gpuBpp = Image::getFormatBpp(nativeFormat);
-		if (this->type == TYPE_VOLATILE)
+		D3D11_MAPPED_SUBRESOURCE* mappedSubResource = new D3D11_MAPPED_SUBRESOURCE();
+		memset(mappedSubResource, 0, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		// Map() is being used for all, because UpdateSubResource() / UpdateSubResource1() seems to use Map() internally somewhere and the memory pointer can change
+		HRESULT hr = APRIL_D3D_DEVICE_CONTEXT->Map(this->d3dTexture.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, mappedSubResource);
+		if (!FAILED(hr))
 		{
-			D3D11_MAPPED_SUBRESOURCE* mappedSubResource = new D3D11_MAPPED_SUBRESOURCE();
-			memset(mappedSubResource, 0, sizeof(D3D11_MAPPED_SUBRESOURCE));
-			// TODOa - maybe there is a good way to lock only part of the resource
-			HRESULT hr = APRIL_D3D_DEVICE_CONTEXT->Map(this->d3dTexture.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, mappedSubResource);
-			if (!FAILED(hr))
-			{
-				lock.systemBuffer = mappedSubResource;
-				lock.activateLock(x, y, w, h, x, y, (unsigned char*)mappedSubResource->pData, mappedSubResource->RowPitch / gpuBpp, this->height, nativeFormat);
-			}
-		}
-		else
-		{
-			lock.activateLock(0, 0, w, h, x, y, new unsigned char[w * h * gpuBpp], w, h, nativeFormat);
-			lock.systemBuffer = lock.data;
+			lock.systemBuffer = mappedSubResource;
+			lock.activateLock(x, y, w, h, x, y, (unsigned char*)mappedSubResource->pData, mappedSubResource->RowPitch / gpuBpp, this->height, nativeFormat);
 		}
 		return lock;
 	}
@@ -205,23 +192,12 @@ namespace april
 		{
 			if (lock.locked)
 			{
-				if (this->internalType == TYPE_VOLATILE)
+				// this special hack is required because Map() with D3D11_MAP_WRITE_DISCARD can allocate any piece of memory
+				if (this->data != NULL && this->data != lock.data)
 				{
-					APRIL_D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
+					Image::write(0, 0, this->width, this->height, 0, 0, this->data, this->width, this->height, this->format, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
 				}
-				else
-				{
-					int bpp = Image::getFormatBpp(lock.format);
-					D3D11_BOX box;
-					box.left = lock.dx;
-					box.right = lock.dx + lock.w;
-					box.top = lock.dy;
-					box.bottom = lock.dy + lock.h;
-					box.front = 0;
-					box.back = 1;
-					// using UpdateSubresource1() because UpdateSubresource() has problems with deferred contexts and non-NULL boxes
-					APRIL_D3D_DEVICE_CONTEXT->UpdateSubresource1(this->d3dTexture.Get(), 0, &box, lock.data, lock.w * bpp, 0, D3D11_COPY_DISCARD);
-				}
+				APRIL_D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
 			}
 			else if (lock.renderTarget)
 			{
@@ -229,14 +205,7 @@ namespace april
 			}
 			this->firstUpload = false;
 		}
-		if (this->internalType == TYPE_VOLATILE)
-		{
-			delete (D3D11_MAPPED_SUBRESOURCE*)lock.systemBuffer;
-		}
-		else
-		{
-			delete [] lock.data;
-		}
+		delete (D3D11_MAPPED_SUBRESOURCE*)lock.systemBuffer;
 		return update;
 	}
 
