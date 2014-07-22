@@ -20,16 +20,19 @@ using namespace Windows::UI::Xaml::Controls;
 
 namespace april
 {
-    [Windows::Foundation::Metadata::WebHostHidden]
-    public ref class WinRT_XamlOverlay sealed
-    {
-    public:
-        WinRT_XamlOverlay();
+	[Windows::Foundation::Metadata::WebHostHidden]
+	public ref class WinRT_XamlOverlay sealed
+	{
+	public:
+		WinRT_XamlOverlay();
 
 		void showKeyboard();
 		void hideKeyboard();
 
-    };
+	private:
+		TextBox^ keyboardTextbox;
+
+	};
 
 }
 #endif

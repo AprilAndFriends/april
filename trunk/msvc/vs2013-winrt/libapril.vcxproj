@@ -278,7 +278,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" />
+    <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">

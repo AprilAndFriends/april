@@ -312,6 +312,7 @@ namespace april
 
 	void WinRT_XamlApp::OnDpiChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
 	{
+		this->_resetTouches();
 		april::getSystemInfo(); // so the DPI value gets updated
 	}
 
