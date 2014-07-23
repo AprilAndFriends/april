@@ -22,7 +22,7 @@ using namespace Windows::UI::Xaml::Markup;
 #define XAML_TEXT_BOX "<TextBox \
 	xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" \
 	xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" \
-	x:Name=\"keyboardTextbox\"\
+	x:Name=\"keyboardTextbox\" \
 	IsHitTestVisible=\"False\" \
 	IsTextPredictionEnabled=\"False\" \
 	Background=\"{x:Null}\" \
@@ -51,7 +51,7 @@ namespace april
 
 	void WinRT_XamlOverlay::showKeyboard()
 	{
-		this->hideKeyboard(); // this is required, because this method can be called from a touch-down event which will not display the keyboard the call after
+		this->hideKeyboard(); // first destroy the already existing textbox
 		this->keyboardTextbox = (TextBox^)_loadFromXaml(XAML_TEXT_BOX);
 		if (this->keyboardTextbox != nullptr)
 		{
@@ -64,7 +64,11 @@ namespace april
 	{
 		if (this->Children->Size > 0)
 		{
-			this->Children->RemoveAt(0);
+			unsigned int index = -1;
+			if (this->Children->IndexOf(this->keyboardTextbox, &index))
+			{
+				this->Children->RemoveAt(index);
+			}
 			this->keyboardTextbox = nullptr;
 		}
 	}
