@@ -79,6 +79,8 @@ namespace april
 		Color backgroundColor;
 		bool launched;
 		bool activated;
+		// TODOa - special temporary hack required for input blocking the first frame after focus has been returned / the window was reactivated
+		bool firstFrameAfterActivateHack;
 		Windows::Foundation::EventRegistrationToken eventToken;
 		bool scrollHorizontal;
 		harray<unsigned int> pointerIds;
