@@ -349,7 +349,6 @@ namespace april
 		unsigned int id;
 		int index;
 		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
-		hlog::writef("POS", "DOWN %6.2f %6.2f", position.x, position.y);
 #ifndef _WINP8
 		this->currentButton = april::AK_LBUTTON;
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
@@ -394,7 +393,6 @@ namespace april
 		unsigned int id;
 		int index;
 		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
-		hlog::writef("POS", "UP %6.2f %6.2f", position.x, position.y);
 #ifndef _WINP8
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
