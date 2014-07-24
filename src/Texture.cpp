@@ -98,7 +98,7 @@ namespace april
 		this->height = 0;
 		this->compressedSize = 0; // used in compressed textures only
 		this->filter = FILTER_LINEAR;
-		this->addressMode = ADDRESS_WRAP;
+		this->addressMode = ADDRESS_CLAMP;
 		this->data = NULL;
 		this->fromResource = fromResource;
 		this->firstUpload = true;

@@ -65,6 +65,7 @@ namespace april
 		this->backgroundColor = april::Color::Black;
 		this->launched = false;
 		this->activated = false;
+		this->firstFrameAfterActivateHack = false;
 		this->scrollHorizontal = false;
 		this->startTime = get_system_tick_count();
 		this->currentButton = april::AK_NONE;
@@ -233,6 +234,7 @@ namespace april
 		else if (args->WindowActivationState == CoreWindowActivationState::CodeActivated ||
 			args->WindowActivationState == CoreWindowActivationState::PointerActivated)
 		{
+			this->firstFrameAfterActivateHack = true;
 			this->_handleFocusChange(true);
 			if (this->eventToken.Value == 0)
 			{
@@ -245,10 +247,12 @@ namespace april
 	{
 		if (!this->running || april::window == NULL)
 		{
+			this->firstFrameAfterActivateHack = false;
 			return;
 		}
 		this->running = april::window->updateOneFrame();
 		april::rendersys->presentFrame();
+		this->firstFrameAfterActivateHack = false;
 		if (!this->running)
 		{
 			(*WinRT::Destroy)();
@@ -259,12 +263,14 @@ namespace april
 
 	void WinRT_XamlApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
 	{
+		hlog::write(april::logTag, "WinRT suspending...");
 		DX11_RENDERSYS->trim(); // required since Win 8.1
 		this->_handleFocusChange(false);
 	}
 
 	void WinRT_XamlApp::OnResume(_In_ Object^ sender, _In_ Object^ args)
 	{
+		hlog::write(april::logTag, "WinRT resuming...");
 		this->_handleFocusChange(true);
 	}
 
@@ -336,13 +342,14 @@ namespace april
 
 	void WinRT_XamlApp::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		if (april::window == NULL || !april::window->isFocused())
+		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
 		{
 			return;
 		}
 		unsigned int id;
 		int index;
 		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		hlog::writef("POS", "DOWN %6.2f %6.2f", position.x, position.y);
 #ifndef _WINP8
 		this->currentButton = april::AK_LBUTTON;
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
@@ -380,13 +387,14 @@ namespace april
 
 	void WinRT_XamlApp::OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		if (april::window == NULL || !april::window->isFocused())
+		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
 		{
 			return;
 		}
 		unsigned int id;
 		int index;
 		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		hlog::writef("POS", "UP %6.2f %6.2f", position.x, position.y);
 #ifndef _WINP8
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
@@ -419,7 +427,7 @@ namespace april
 
 	void WinRT_XamlApp::OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		if (april::window == NULL || !april::window->isFocused())
+		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
 		{
 			return;
 		}
