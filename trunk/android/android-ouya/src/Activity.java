@@ -15,9 +15,11 @@ import tv.ouya.console.api.OuyaController;
 
 public class Activity extends com.april.Activity
 {
+	private float oldLSX, oldLSY, oldRSX, oldRSY, oldLT, oldRT;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		this.oldLSX = this.oldLSY = this.oldRSX = this.oldRSY = this.oldLT = this.oldRT = 0;
 		this.OuyaKeyboardFix = true;
 		super.onCreate(savedInstanceState);
 		OuyaController.init(this);
@@ -104,7 +106,83 @@ public class Activity extends com.april.Activity
 			});
 			return true;
 		}
-		return super.onGenericMotionEvent(event);
+		else if ((event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) != 0)
+		{
+			final float lsx = event.getAxisValue(OuyaController.AXIS_LS_X);
+			final float lsy = event.getAxisValue(OuyaController.AXIS_LS_Y);
+			final float rsx = event.getAxisValue(OuyaController.AXIS_RS_X);
+			final float rsy = event.getAxisValue(OuyaController.AXIS_RS_Y);
+			final float lt = event.getAxisValue(OuyaController.AXIS_L2);
+			final float rt = event.getAxisValue(OuyaController.AXIS_R2);
+			
+			if (lsx != this.oldLSX)
+			{
+				this.oldLSX = lsx;
+				this.GlView.queueEvent(new Runnable()
+				{
+					public void run()
+					{
+						com.april.NativeInterface.onControllerAxis(100, lsx);
+					}
+				});
+			}
+			if (lsy != this.oldLSY)
+			{
+				this.oldLSY = lsy;
+				this.GlView.queueEvent(new Runnable()
+				{
+					public void run()
+					{
+						com.april.NativeInterface.onControllerAxis(101, lsy);
+					}
+				});
+			}
+			if (rsx != this.oldRSX)
+			{
+				this.oldRSX = rsx;
+				this.GlView.queueEvent(new Runnable()
+				{
+					public void run()
+					{
+						com.april.NativeInterface.onControllerAxis(102, rsx);
+					}
+				});
+			}
+			if (rsy != this.oldRSY)
+			{
+				this.oldRSY = rsy;
+				this.GlView.queueEvent(new Runnable()
+				{
+					public void run()
+					{
+						com.april.NativeInterface.onControllerAxis(103, rsy);
+					}
+				});
+			}
+			if (lt != this.oldLT)
+			{
+				this.oldLT = lt;
+				this.GlView.queueEvent(new Runnable()
+				{
+					public void run()
+					{
+						com.april.NativeInterface.onControllerAxis(104, lt);
+					}
+				});
+			}
+			if (rt != this.oldRT)
+			{
+				this.oldRT = rt;
+				this.GlView.queueEvent(new Runnable()
+				{
+					public void run()
+					{
+						com.april.NativeInterface.onControllerAxis(105, rt);
+					}
+				});
+			}
+            return true;
+        }
+		else return super.onGenericMotionEvent(event);
 	}
-	
 }

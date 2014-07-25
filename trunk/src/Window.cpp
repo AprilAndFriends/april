@@ -102,6 +102,20 @@ namespace april
 		this->buttonCode = buttonCode;
 	}
 
+	Window::ControllerAxisInputEvent::ControllerAxisInputEvent()
+	{
+		this->type = CONTROLLER_AXIS;
+		this->buttonCode = AB_NONE;
+		this->axisValue = 0;
+	}
+
+	Window::ControllerAxisInputEvent::ControllerAxisInputEvent(Window::ControllerEventType type, Button buttonCode, float axisValue)
+	{
+		this->type = type;
+		this->buttonCode = buttonCode;
+		this->axisValue = axisValue;
+	}
+	
 	Window* window = NULL;
 	
 	Window::Options::Options()
@@ -207,6 +221,7 @@ namespace april
 			this->mouseEvents.clear();
 			this->touchEvents.clear();
 			this->controllerEvents.clear();
+			this->controllerAxisEvents.clear();
 			this->touches.clear();
 			this->controllerEmulationKeys.clear();
 			return true;
@@ -396,6 +411,12 @@ namespace april
 			controllerEvent = this->controllerEvents.remove_first();
 			this->handleControllerEvent(controllerEvent.type, controllerEvent.buttonCode);
 		}
+		ControllerAxisInputEvent controllerAxisEvent;
+		while (this->controllerAxisEvents.size() > 0)
+		{
+			controllerAxisEvent = this->controllerAxisEvents.remove_first();
+			this->handleControllerAxisEvent(controllerAxisEvent.type, controllerAxisEvent.buttonCode, controllerAxisEvent.axisValue);
+		}
 	}
 
 	void Window::terminateMainLoop()
@@ -528,6 +549,14 @@ namespace april
 			}
 		}
 	}
+
+	void Window::handleControllerAxisEvent(ControllerEventType type, Button buttonCode, float axisValue)
+	{
+		if (this->controllerDelegate != NULL)
+		{
+			this->controllerDelegate->onControllerAxisChange(buttonCode, axisValue);
+		}
+	}
 	
 	bool Window::handleQuitRequest(bool canCancel)
 	{
@@ -637,6 +666,11 @@ namespace april
 	void Window::queueControllerEvent(ControllerEventType type, Button buttonCode)
 	{
 		this->controllerEvents += ControllerInputEvent(type, buttonCode);
+	}
+
+	void Window::queueControllerAxisEvent(ControllerEventType type, Button buttonCode, float axisValue)
+	{
+		this->controllerAxisEvents += ControllerAxisInputEvent(type, buttonCode, axisValue);
 	}
 
 	float Window::_calcTimeSinceLastFrame()

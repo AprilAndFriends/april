@@ -26,8 +26,7 @@ namespace april
 
 		virtual void onButtonDown(april::Button buttonCode);
 		virtual void onButtonUp(april::Button buttonCode);
-		// TODO - analog triggers and analog sticks
-
+		virtual void onControllerAxisChange(april::Button buttonCode, float axisValue);
 	};
 
 }

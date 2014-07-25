@@ -133,6 +133,11 @@ namespace april
 		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::CONTROLLER_UP, (Button)(int)keyCode));
 	}
 	
+	void JNICALL _JNI_onControllerAxis(JNIEnv* env, jclass classe, jint keyCode, jfloat axisValue)
+	{
+		PROTECTED_WINDOW_CALL(queueControllerAxisEvent(april::Window::CONTROLLER_AXIS, (Button)(int)keyCode, (float) axisValue));
+	}
+	
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
 	{
 		bool focused = (jFocused != JNI_FALSE);
@@ -235,7 +240,7 @@ namespace april
 		}
 	}
 	
-#define METHOD_COUNT 24 // make sure this fits
+#define METHOD_COUNT 25 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"setVariables",						_JARGS(_JVOID, _JSTR _JSTR),					(void*)&april::_JNI_setVariables						},
@@ -247,6 +252,7 @@ namespace april
 		{"onTouch",								_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),	(void*)&april::_JNI_onTouch								},
 		{"onButtonDown",						_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonDown						},
 		{"onButtonUp",							_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonUp							},
+		{"onControllerAxis",					_JARGS(_JVOID, _JINT _JFLOAT),					(bool*)&april::_JNI_onControllerAxis					},
 		{"onWindowFocusChanged",				_JARGS(_JVOID, _JBOOL),							(void*)&april::_JNI_onWindowFocusChanged				},
 		{"onVirtualKeyboardChanged",			_JARGS(_JVOID, _JBOOL _JFLOAT),					(void*)&april::_JNI_onVirtualKeyboardChanged			},
 		{"onLowMemory",							_JARGS(_JVOID, ),								(void*)&april::_JNI_onLowMemory							},

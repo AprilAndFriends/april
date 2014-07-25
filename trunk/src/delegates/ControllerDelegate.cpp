@@ -31,5 +31,9 @@ namespace april
 	{
 		hlog::debug(april::logTag, "Event onButtonUp() was not implemented.");
 	}
-
+	
+	void ControllerDelegate::onControllerAxisChange(april::Button buttonCode, float axisValue)
+	{
+		hlog::debug(april::logTag, "Event onControllerAxisChange() was not implemented.");
+	}
 }
