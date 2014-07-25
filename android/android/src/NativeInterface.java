@@ -71,6 +71,7 @@ public class NativeInterface
 	public static native void onTouch(int type, float x, float y, int index);
 	public static native void onButtonDown(int buttonCode);
 	public static native void onButtonUp(int buttonCode);
+	public static native void onControllerAxis(int buttonCode, float axisValue);
 	public static native void onWindowFocusChanged(boolean focused);
 	public static native void onVirtualKeyboardChanged(boolean visible, float heightRation);
 	public static native void onLowMemory();

@@ -61,7 +61,8 @@ namespace april
 		enum ControllerEventType
 		{
 			CONTROLLER_DOWN = 0,
-			CONTROLLER_UP = 1
+			CONTROLLER_UP = 1,
+			CONTROLLER_AXIS = 2
 			// TODO - possibly add analog triggers
 		};
 
@@ -113,7 +114,18 @@ namespace april
 			
 			ControllerInputEvent();
 			ControllerInputEvent(ControllerEventType type, Button buttonCode);
-		
+			
+		};
+
+		struct ControllerAxisInputEvent
+		{
+			ControllerEventType type;
+			Button buttonCode;
+			float axisValue;
+			
+			ControllerAxisInputEvent();
+			ControllerAxisInputEvent(ControllerEventType type, Button buttonCode, float axisValue);
+			
 		};
 
 		struct aprilExport Options
@@ -205,6 +217,7 @@ namespace april
 		virtual void handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
 		virtual void handleTouchEvent(const harray<gvec2>& touches);
 		virtual void handleControllerEvent(ControllerEventType type, Button buttonCode);
+		virtual void handleControllerAxisEvent(ControllerEventType type, Button buttonCode, float axisValue);
 		virtual bool handleQuitRequest(bool canCancel);
 		virtual void handleFocusChangeEvent(bool focused);
 		virtual void handleActivityChangeEvent(bool active);
@@ -218,6 +231,7 @@ namespace april
 		virtual void queueMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
 		virtual void queueTouchEvent(MouseEventType type, gvec2 position, int index);
 		virtual void queueControllerEvent(ControllerEventType type, Button buttonCode);
+		virtual void queueControllerAxisEvent(ControllerEventType type, Button buttonCode, float axisValue);
 
 		virtual void enterMainLoop();
 		virtual bool performUpdate(float timeDelta);
@@ -254,6 +268,7 @@ namespace april
 		harray<MouseInputEvent> mouseEvents;
 		harray<TouchInputEvent> touchEvents;
 		harray<ControllerInputEvent> controllerEvents;
+		harray<ControllerAxisInputEvent> controllerAxisEvents;
 		Timer timer;
 		hmap<Key, Button> controllerEmulationKeys;
 

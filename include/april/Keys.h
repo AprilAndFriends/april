@@ -277,8 +277,13 @@ namespace april
 		AB_RS_DOWN = 52,
 		AB_RS_LEFT = 54,
 		AB_RS_RIGHT = 56,
-		AB_RS_UP = 58
-
+		AB_RS_UP = 58,
+		AB_LSX = 100,
+		AB_LSY = 101,
+		AB_RSX = 102,
+		AB_RSY = 103,
+		AB_LT  = 104,
+		AB_RT  = 105
 	};
 
 }

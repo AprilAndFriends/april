@@ -34,6 +34,10 @@
 		C9E6097E150518B400EB077F /* april.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9E6097C150518B400EB077F /* april.cpp */; };
 		C9E6098F1505191800EB077F /* april.h in Headers */ = {isa = PBXBuildFile; fileRef = C9E6098D1505191800EB077F /* april.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9E609901505191800EB077F /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = C9E6098E1505191800EB077F /* Platform.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D10B73AF1982473800A9352D /* OpenKODE_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10B73AA1982472300A9352D /* OpenKODE_main.cpp */; };
+		D10B73B01982473900A9352D /* OpenKODE_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10B73AA1982472300A9352D /* OpenKODE_main.cpp */; };
+		D10B73B11982473B00A9352D /* OpenKODE_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */; };
+		D10B73B21982473C00A9352D /* OpenKODE_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */; };
 		D1134EEF175CDA3300BFF3A2 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522E12E4713600E958D8 /* Color.cpp */; };
 		D1134EF0175CDA3300BFF3A2 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522F12E4713600E958D8 /* Texture.cpp */; };
 		D1134EF1175CDA3300BFF3A2 /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */; };
@@ -361,6 +365,38 @@
 		C9E6097C150518B400EB077F /* april.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = april.cpp; path = src/april.cpp; sourceTree = "<group>"; };
 		C9E6098D1505191800EB077F /* april.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = april.h; path = include/april/april.h; sourceTree = "<group>"; };
 		C9E6098E1505191800EB077F /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = include/april/Platform.h; sourceTree = "<group>"; };
+		D10B73AA1982472300A9352D /* OpenKODE_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenKODE_main.cpp; path = src/platforms/OpenKODE_main.cpp; sourceTree = "<group>"; };
+		D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenKODE_Platform.cpp; path = src/platforms/OpenKODE_Platform.cpp; sourceTree = "<group>"; };
+		D10B73AC1982472300A9352D /* Posix_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Posix_main.cpp; path = src/platforms/Posix_main.cpp; sourceTree = "<group>"; };
+		D10B73AD1982472300A9352D /* Posix_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Posix_Platform.cpp; path = src/platforms/Posix_Platform.cpp; sourceTree = "<group>"; };
+		D10B73B31982477300A9352D /* DirectX_RenderSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX_RenderSystem.cpp; path = src/rendersystems/DirectX/DirectX_RenderSystem.cpp; sourceTree = "<group>"; };
+		D10B73B41982477300A9352D /* DirectX_RenderSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX_RenderSystem.h; path = src/rendersystems/DirectX/DirectX_RenderSystem.h; sourceTree = "<group>"; };
+		D10B73B51982477300A9352D /* DirectX_Texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX_Texture.cpp; path = src/rendersystems/DirectX/DirectX_Texture.cpp; sourceTree = "<group>"; };
+		D10B73B61982477300A9352D /* DirectX_Texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX_Texture.h; path = src/rendersystems/DirectX/DirectX_Texture.h; sourceTree = "<group>"; };
+		D10B73B71982478400A9352D /* DirectX9_PixelShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_PixelShader.cpp; path = src/rendersystems/DirectX/9/DirectX9_PixelShader.cpp; sourceTree = "<group>"; };
+		D10B73B81982478400A9352D /* DirectX9_PixelShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_PixelShader.h; path = src/rendersystems/DirectX/9/DirectX9_PixelShader.h; sourceTree = "<group>"; };
+		D10B73B91982478400A9352D /* DirectX9_RenderSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_RenderSystem.cpp; path = src/rendersystems/DirectX/9/DirectX9_RenderSystem.cpp; sourceTree = "<group>"; };
+		D10B73BA1982478400A9352D /* DirectX9_RenderSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_RenderSystem.h; path = src/rendersystems/DirectX/9/DirectX9_RenderSystem.h; sourceTree = "<group>"; };
+		D10B73BB1982478400A9352D /* DirectX9_Texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_Texture.cpp; path = src/rendersystems/DirectX/9/DirectX9_Texture.cpp; sourceTree = "<group>"; };
+		D10B73BC1982478400A9352D /* DirectX9_Texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_Texture.h; path = src/rendersystems/DirectX/9/DirectX9_Texture.h; sourceTree = "<group>"; };
+		D10B73BD1982478400A9352D /* DirectX9_VertexShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_VertexShader.cpp; path = src/rendersystems/DirectX/9/DirectX9_VertexShader.cpp; sourceTree = "<group>"; };
+		D10B73BE1982478400A9352D /* DirectX9_VertexShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_VertexShader.h; path = src/rendersystems/DirectX/9/DirectX9_VertexShader.h; sourceTree = "<group>"; };
+		D10B73BF1982479700A9352D /* DirectX11_PixelShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX11_PixelShader.cpp; path = src/rendersystems/DirectX/11/DirectX11_PixelShader.cpp; sourceTree = "<group>"; };
+		D10B73C01982479700A9352D /* DirectX11_PixelShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX11_PixelShader.h; path = src/rendersystems/DirectX/11/DirectX11_PixelShader.h; sourceTree = "<group>"; };
+		D10B73C11982479700A9352D /* DirectX11_RenderSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX11_RenderSystem.cpp; path = src/rendersystems/DirectX/11/DirectX11_RenderSystem.cpp; sourceTree = "<group>"; };
+		D10B73C21982479700A9352D /* DirectX11_RenderSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX11_RenderSystem.h; path = src/rendersystems/DirectX/11/DirectX11_RenderSystem.h; sourceTree = "<group>"; };
+		D10B73C31982479700A9352D /* DirectX11_Texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX11_Texture.cpp; path = src/rendersystems/DirectX/11/DirectX11_Texture.cpp; sourceTree = "<group>"; };
+		D10B73C41982479700A9352D /* DirectX11_Texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX11_Texture.h; path = src/rendersystems/DirectX/11/DirectX11_Texture.h; sourceTree = "<group>"; };
+		D10B73C51982479700A9352D /* DirectX11_VertexShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX11_VertexShader.cpp; path = src/rendersystems/DirectX/11/DirectX11_VertexShader.cpp; sourceTree = "<group>"; };
+		D10B73C61982479700A9352D /* DirectX11_VertexShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX11_VertexShader.h; path = src/rendersystems/DirectX/11/DirectX11_VertexShader.h; sourceTree = "<group>"; };
+		D10B73C8198247B900A9352D /* PixelShader_AlphaMap.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = PixelShader_AlphaMap.hlsl; path = "src/rendersystems/DirectX/11/default-shaders/PixelShader_AlphaMap.hlsl"; sourceTree = "<group>"; };
+		D10B73C9198247B900A9352D /* PixelShader_Lerp.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = PixelShader_Lerp.hlsl; path = "src/rendersystems/DirectX/11/default-shaders/PixelShader_Lerp.hlsl"; sourceTree = "<group>"; };
+		D10B73CA198247B900A9352D /* PixelShader_Multiply.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = PixelShader_Multiply.hlsl; path = "src/rendersystems/DirectX/11/default-shaders/PixelShader_Multiply.hlsl"; sourceTree = "<group>"; };
+		D10B73CB198247B900A9352D /* PixelShader_TexturedAlphaMap.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = PixelShader_TexturedAlphaMap.hlsl; path = "src/rendersystems/DirectX/11/default-shaders/PixelShader_TexturedAlphaMap.hlsl"; sourceTree = "<group>"; };
+		D10B73CC198247B900A9352D /* PixelShader_TexturedLerp.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = PixelShader_TexturedLerp.hlsl; path = "src/rendersystems/DirectX/11/default-shaders/PixelShader_TexturedLerp.hlsl"; sourceTree = "<group>"; };
+		D10B73CD198247B900A9352D /* PixelShader_TexturedMultiply.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = PixelShader_TexturedMultiply.hlsl; path = "src/rendersystems/DirectX/11/default-shaders/PixelShader_TexturedMultiply.hlsl"; sourceTree = "<group>"; };
+		D10B73CE198247B900A9352D /* Shaders.hlsli */ = {isa = PBXFileReference; lastKnownFileType = text; name = Shaders.hlsli; path = "src/rendersystems/DirectX/11/default-shaders/Shaders.hlsli"; sourceTree = "<group>"; };
+		D10B73CF198247B900A9352D /* VertexShader_Default.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = VertexShader_Default.hlsl; path = "src/rendersystems/DirectX/11/default-shaders/VertexShader_Default.hlsl"; sourceTree = "<group>"; };
 		D1134F17175CDA3300BFF3A2 /* libapril-kd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libapril-kd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1134F21175CDAD200BFF3A2 /* egl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egl.cpp; path = src/egl.cpp; sourceTree = "<group>"; };
 		D1134F22175CDAD200BFF3A2 /* egl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egl.h; path = src/egl.h; sourceTree = "<group>"; };
@@ -515,34 +551,6 @@
 		D1E7207116D37C6A00B9C9AD /* TimerSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerSDL.cpp; path = src/timers/TimerSDL.cpp; sourceTree = "<group>"; };
 		D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/timers/TimerPosix.cpp; sourceTree = "<group>"; };
 		D1E7207616D37C7800B9C9AD /* TimerWin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TimerWin.cpp; path = src/timers/TimerWin.cpp; sourceTree = "<group>"; };
-		D1E7208416D37CE300B9C9AD /* DirectX9_PixelShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_PixelShader.cpp; path = rendersystems/DirectX/9/DirectX9_PixelShader.cpp; sourceTree = "<group>"; };
-		D1E7208516D37CE300B9C9AD /* DirectX9_PixelShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_PixelShader.h; path = rendersystems/DirectX/9/DirectX9_PixelShader.h; sourceTree = "<group>"; };
-		D1E7208616D37CE300B9C9AD /* DirectX9_RenderSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_RenderSystem.cpp; path = rendersystems/DirectX/9/DirectX9_RenderSystem.cpp; sourceTree = "<group>"; };
-		D1E7208716D37CE300B9C9AD /* DirectX9_RenderSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_RenderSystem.h; path = rendersystems/DirectX/9/DirectX9_RenderSystem.h; sourceTree = "<group>"; };
-		D1E7208816D37CE300B9C9AD /* DirectX9_Texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_Texture.cpp; path = rendersystems/DirectX/9/DirectX9_Texture.cpp; sourceTree = "<group>"; };
-		D1E7208916D37CE300B9C9AD /* DirectX9_Texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_Texture.h; path = rendersystems/DirectX/9/DirectX9_Texture.h; sourceTree = "<group>"; };
-		D1E7208A16D37CE300B9C9AD /* DirectX9_VertexShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX9_VertexShader.cpp; path = rendersystems/DirectX/9/DirectX9_VertexShader.cpp; sourceTree = "<group>"; };
-		D1E7208B16D37CE300B9C9AD /* DirectX9_VertexShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX9_VertexShader.h; path = rendersystems/DirectX/9/DirectX9_VertexShader.h; sourceTree = "<group>"; };
-		D1E7208C16D37CEF00B9C9AD /* DirectX_RenderSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX_RenderSystem.cpp; path = rendersystems/DirectX/DirectX_RenderSystem.cpp; sourceTree = "<group>"; };
-		D1E7208D16D37CEF00B9C9AD /* DirectX_RenderSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX_RenderSystem.h; path = rendersystems/DirectX/DirectX_RenderSystem.h; sourceTree = "<group>"; };
-		D1E7208E16D37CEF00B9C9AD /* DirectX_Texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX_Texture.cpp; path = rendersystems/DirectX/DirectX_Texture.cpp; sourceTree = "<group>"; };
-		D1E7208F16D37CEF00B9C9AD /* DirectX_Texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX_Texture.h; path = rendersystems/DirectX/DirectX_Texture.h; sourceTree = "<group>"; };
-		D1E7209016D37CF700B9C9AD /* DirectX11_PixelShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX11_PixelShader.cpp; path = rendersystems/DirectX/11/DirectX11_PixelShader.cpp; sourceTree = "<group>"; };
-		D1E7209116D37CF700B9C9AD /* DirectX11_PixelShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX11_PixelShader.h; path = rendersystems/DirectX/11/DirectX11_PixelShader.h; sourceTree = "<group>"; };
-		D1E7209216D37CF700B9C9AD /* DirectX11_RenderSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX11_RenderSystem.cpp; path = rendersystems/DirectX/11/DirectX11_RenderSystem.cpp; sourceTree = "<group>"; };
-		D1E7209316D37CF700B9C9AD /* DirectX11_RenderSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX11_RenderSystem.h; path = rendersystems/DirectX/11/DirectX11_RenderSystem.h; sourceTree = "<group>"; };
-		D1E7209416D37CF700B9C9AD /* DirectX11_Texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX11_Texture.cpp; path = rendersystems/DirectX/11/DirectX11_Texture.cpp; sourceTree = "<group>"; };
-		D1E7209516D37CF700B9C9AD /* DirectX11_Texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX11_Texture.h; path = rendersystems/DirectX/11/DirectX11_Texture.h; sourceTree = "<group>"; };
-		D1E7209616D37CF700B9C9AD /* DirectX11_VertexShader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX11_VertexShader.cpp; path = rendersystems/DirectX/11/DirectX11_VertexShader.cpp; sourceTree = "<group>"; };
-		D1E7209716D37CF700B9C9AD /* DirectX11_VertexShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DirectX11_VertexShader.h; path = rendersystems/DirectX/11/DirectX11_VertexShader.h; sourceTree = "<group>"; };
-		D1E7209916D37D0600B9C9AD /* PixelShader_Colored.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = PixelShader_Colored.hlsl; path = "rendersystems/DirectX/11/default-shaders/PixelShader_Colored.hlsl"; sourceTree = "<group>"; };
-		D1E7209A16D37D0600B9C9AD /* PixelShader_ColoredTextured.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = PixelShader_ColoredTextured.hlsl; path = "rendersystems/DirectX/11/default-shaders/PixelShader_ColoredTextured.hlsl"; sourceTree = "<group>"; };
-		D1E7209B16D37D0600B9C9AD /* PixelShader_Plain.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = PixelShader_Plain.hlsl; path = "rendersystems/DirectX/11/default-shaders/PixelShader_Plain.hlsl"; sourceTree = "<group>"; };
-		D1E7209C16D37D0600B9C9AD /* PixelShader_Textured.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = PixelShader_Textured.hlsl; path = "rendersystems/DirectX/11/default-shaders/PixelShader_Textured.hlsl"; sourceTree = "<group>"; };
-		D1E7209D16D37D0600B9C9AD /* VertexShader_Colored.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = VertexShader_Colored.hlsl; path = "rendersystems/DirectX/11/default-shaders/VertexShader_Colored.hlsl"; sourceTree = "<group>"; };
-		D1E7209E16D37D0600B9C9AD /* VertexShader_ColoredTextured.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = VertexShader_ColoredTextured.hlsl; path = "rendersystems/DirectX/11/default-shaders/VertexShader_ColoredTextured.hlsl"; sourceTree = "<group>"; };
-		D1E7209F16D37D0600B9C9AD /* VertexShader_Plain.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = VertexShader_Plain.hlsl; path = "rendersystems/DirectX/11/default-shaders/VertexShader_Plain.hlsl"; sourceTree = "<group>"; };
-		D1E720A016D37D0600B9C9AD /* VertexShader_Textured.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = VertexShader_Textured.hlsl; path = "rendersystems/DirectX/11/default-shaders/VertexShader_Textured.hlsl"; sourceTree = "<group>"; };
 		D1F27AEF177A2DF700E5C131 /* libapril-kd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libapril-kd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1FED157192A3B5F00BE6A6D /* Cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cursor.cpp; path = src/Cursor.cpp; sourceTree = "<group>"; };
 		D1FED15E192A3B7B00BE6A6D /* Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cursor.h; path = include/april/Cursor.h; sourceTree = "<group>"; };
@@ -681,7 +689,6 @@
 				D1049F6316D39E870058C514 /* delegates */,
 				D136819A187BFB6600E66E32 /* Android_main.h */,
 				D136819B187BFB6600E66E32 /* androidUtilJNI.h */,
-				D136819C187BFB6600E66E32 /* ControllerDelegate.h */,
 				D136819D187BFB6600E66E32 /* main_base.h */,
 				D136819E187BFB6600E66E32 /* OpenKODE_main.h */,
 				D136819F187BFB6600E66E32 /* RenderState.h */,
@@ -744,6 +751,7 @@
 		C9E60986150518D500EB077F /* Platforms */ = {
 			isa = PBXGroup;
 			children = (
+				D10B73AE1982472E00A9352D /* Posix */,
 				D1BCC5851615A2BD0049CEA9 /* Android */,
 				C9E60988150518E200EB077F /* iOS */,
 				C9E60987150518DC00EB077F /* Mac */,
@@ -779,12 +787,22 @@
 				D1E7203116D37B2700B9C9AD /* EventDelegate.h */,
 				D1E7203316D37B2700B9C9AD /* InputDelegate.h */,
 				D1E7203416D37B2700B9C9AD /* KeyboardDelegate.h */,
+				D136819C187BFB6600E66E32 /* ControllerDelegate.h */,
 				D1E7203516D37B2700B9C9AD /* MouseDelegate.h */,
 				D1E7203616D37B2700B9C9AD /* SystemDelegate.h */,
 				D1E7203716D37B2700B9C9AD /* TouchDelegate.h */,
 				D1E7203816D37B2700B9C9AD /* UpdateDelegate.h */,
 			);
 			name = delegates;
+			sourceTree = "<group>";
+		};
+		D10B73AE1982472E00A9352D /* Posix */ = {
+			isa = PBXGroup;
+			children = (
+				D10B73AC1982472300A9352D /* Posix_main.cpp */,
+				D10B73AD1982472300A9352D /* Posix_Platform.cpp */,
+			);
+			name = Posix;
 			sourceTree = "<group>";
 		};
 		D1134F18175CDA4100BFF3A2 /* OpenKODE */ = {
@@ -801,6 +819,8 @@
 		D1134F1C175CDABB00BFF3A2 /* OpenKODE */ = {
 			isa = PBXGroup;
 			children = (
+				D10B73AA1982472300A9352D /* OpenKODE_main.cpp */,
+				D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */,
 			);
 			name = OpenKODE;
 			sourceTree = "<group>";
@@ -927,10 +947,10 @@
 			children = (
 				D1E7208216D37CCF00B9C9AD /* 9 */,
 				D1E7208316D37CD400B9C9AD /* 11 */,
-				D1E7208C16D37CEF00B9C9AD /* DirectX_RenderSystem.cpp */,
-				D1E7208D16D37CEF00B9C9AD /* DirectX_RenderSystem.h */,
-				D1E7208E16D37CEF00B9C9AD /* DirectX_Texture.cpp */,
-				D1E7208F16D37CEF00B9C9AD /* DirectX_Texture.h */,
+				D10B73B31982477300A9352D /* DirectX_RenderSystem.cpp */,
+				D10B73B41982477300A9352D /* DirectX_RenderSystem.h */,
+				D10B73B51982477300A9352D /* DirectX_Texture.cpp */,
+				D10B73B61982477300A9352D /* DirectX_Texture.h */,
 			);
 			name = DirectX;
 			sourceTree = "<group>";
@@ -1002,14 +1022,14 @@
 		D1E7208216D37CCF00B9C9AD /* 9 */ = {
 			isa = PBXGroup;
 			children = (
-				D1E7208416D37CE300B9C9AD /* DirectX9_PixelShader.cpp */,
-				D1E7208516D37CE300B9C9AD /* DirectX9_PixelShader.h */,
-				D1E7208616D37CE300B9C9AD /* DirectX9_RenderSystem.cpp */,
-				D1E7208716D37CE300B9C9AD /* DirectX9_RenderSystem.h */,
-				D1E7208816D37CE300B9C9AD /* DirectX9_Texture.cpp */,
-				D1E7208916D37CE300B9C9AD /* DirectX9_Texture.h */,
-				D1E7208A16D37CE300B9C9AD /* DirectX9_VertexShader.cpp */,
-				D1E7208B16D37CE300B9C9AD /* DirectX9_VertexShader.h */,
+				D10B73B71982478400A9352D /* DirectX9_PixelShader.cpp */,
+				D10B73B81982478400A9352D /* DirectX9_PixelShader.h */,
+				D10B73B91982478400A9352D /* DirectX9_RenderSystem.cpp */,
+				D10B73BA1982478400A9352D /* DirectX9_RenderSystem.h */,
+				D10B73BB1982478400A9352D /* DirectX9_Texture.cpp */,
+				D10B73BC1982478400A9352D /* DirectX9_Texture.h */,
+				D10B73BD1982478400A9352D /* DirectX9_VertexShader.cpp */,
+				D10B73BE1982478400A9352D /* DirectX9_VertexShader.h */,
 			);
 			name = 9;
 			sourceTree = "<group>";
@@ -1018,14 +1038,14 @@
 			isa = PBXGroup;
 			children = (
 				D1E7209816D37CFC00B9C9AD /* default-shaders */,
-				D1E7209016D37CF700B9C9AD /* DirectX11_PixelShader.cpp */,
-				D1E7209116D37CF700B9C9AD /* DirectX11_PixelShader.h */,
-				D1E7209216D37CF700B9C9AD /* DirectX11_RenderSystem.cpp */,
-				D1E7209316D37CF700B9C9AD /* DirectX11_RenderSystem.h */,
-				D1E7209416D37CF700B9C9AD /* DirectX11_Texture.cpp */,
-				D1E7209516D37CF700B9C9AD /* DirectX11_Texture.h */,
-				D1E7209616D37CF700B9C9AD /* DirectX11_VertexShader.cpp */,
-				D1E7209716D37CF700B9C9AD /* DirectX11_VertexShader.h */,
+				D10B73BF1982479700A9352D /* DirectX11_PixelShader.cpp */,
+				D10B73C01982479700A9352D /* DirectX11_PixelShader.h */,
+				D10B73C11982479700A9352D /* DirectX11_RenderSystem.cpp */,
+				D10B73C21982479700A9352D /* DirectX11_RenderSystem.h */,
+				D10B73C31982479700A9352D /* DirectX11_Texture.cpp */,
+				D10B73C41982479700A9352D /* DirectX11_Texture.h */,
+				D10B73C51982479700A9352D /* DirectX11_VertexShader.cpp */,
+				D10B73C61982479700A9352D /* DirectX11_VertexShader.h */,
 			);
 			name = 11;
 			sourceTree = "<group>";
@@ -1033,14 +1053,14 @@
 		D1E7209816D37CFC00B9C9AD /* default-shaders */ = {
 			isa = PBXGroup;
 			children = (
-				D1E7209916D37D0600B9C9AD /* PixelShader_Colored.hlsl */,
-				D1E7209A16D37D0600B9C9AD /* PixelShader_ColoredTextured.hlsl */,
-				D1E7209B16D37D0600B9C9AD /* PixelShader_Plain.hlsl */,
-				D1E7209C16D37D0600B9C9AD /* PixelShader_Textured.hlsl */,
-				D1E7209D16D37D0600B9C9AD /* VertexShader_Colored.hlsl */,
-				D1E7209E16D37D0600B9C9AD /* VertexShader_ColoredTextured.hlsl */,
-				D1E7209F16D37D0600B9C9AD /* VertexShader_Plain.hlsl */,
-				D1E720A016D37D0600B9C9AD /* VertexShader_Textured.hlsl */,
+				D10B73C8198247B900A9352D /* PixelShader_AlphaMap.hlsl */,
+				D10B73C9198247B900A9352D /* PixelShader_Lerp.hlsl */,
+				D10B73CA198247B900A9352D /* PixelShader_Multiply.hlsl */,
+				D10B73CB198247B900A9352D /* PixelShader_TexturedAlphaMap.hlsl */,
+				D10B73CC198247B900A9352D /* PixelShader_TexturedLerp.hlsl */,
+				D10B73CD198247B900A9352D /* PixelShader_TexturedMultiply.hlsl */,
+				D10B73CE198247B900A9352D /* Shaders.hlsli */,
+				D10B73CF198247B900A9352D /* VertexShader_Default.hlsl */,
 			);
 			name = "default-shaders";
 			sourceTree = "<group>";
@@ -1362,6 +1382,7 @@
 				D1B486941933737B004674EB /* iOS_Window.mm in Sources */,
 				D1134EEF175CDA3300BFF3A2 /* Color.cpp in Sources */,
 				D1B4874019337483004674EB /* iOS_devices.mm in Sources */,
+				D10B73AF1982473800A9352D /* OpenKODE_main.cpp in Sources */,
 				D1134EF0175CDA3300BFF3A2 /* Texture.cpp in Sources */,
 				D1B4870B193373EE004674EB /* OpenGL_State.cpp in Sources */,
 				D1134EF1175CDA3300BFF3A2 /* RenderSystem.cpp in Sources */,
@@ -1399,6 +1420,7 @@
 				D1134F10175CDA3300BFF3A2 /* ControllerDelegate.cpp in Sources */,
 				D1134F23175CDAD200BFF3A2 /* egl.cpp in Sources */,
 				D1B486921933737B004674EB /* EAGLView.mm in Sources */,
+				D10B73B11982473B00A9352D /* OpenKODE_Platform.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1574,6 +1596,7 @@
 				D1F27AD2177A2DF700E5C131 /* SystemDelegate.cpp in Sources */,
 				D1F27AD3177A2DF700E5C131 /* TouchDelegate.cpp in Sources */,
 				D1F27AD4177A2DF700E5C131 /* UpdateDelegate.cpp in Sources */,
+				D10B73B01982473900A9352D /* OpenKODE_main.cpp in Sources */,
 				D1368197187BFB3E00E66E32 /* RenderState.cpp in Sources */,
 				D1F27AD5177A2DF700E5C131 /* Image.cpp in Sources */,
 				D1F27AD6177A2DF700E5C131 /* ImageJpg.cpp in Sources */,
@@ -1582,6 +1605,7 @@
 				D1F27AD9177A2DF700E5C131 /* TimerPosix.cpp in Sources */,
 				D1B486BA19337389004674EB /* Mac_LoadingOverlay.mm in Sources */,
 				D1B486BE19337389004674EB /* Mac_OpenGLView.mm in Sources */,
+				D10B73B21982473C00A9352D /* OpenKODE_Platform.cpp in Sources */,
 				D1F27AE1177A2DF700E5C131 /* ControllerDelegate.cpp in Sources */,
 				D1B48709193373EE004674EB /* OpenGL_State.cpp in Sources */,
 				D1F27AE5177A2DF700E5C131 /* egl.cpp in Sources */,
