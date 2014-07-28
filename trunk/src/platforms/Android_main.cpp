@@ -101,9 +101,19 @@ namespace april
 	
 	bool JNICALL _JNI_render(JNIEnv* env, jclass classe)
 	{
+		bool result = true;
 		if (april::window != NULL)
 		{
-			return april::window->updateOneFrame();
+			try
+			{
+				result = april::window->updateOneFrame();
+			}
+			catch (hltypes::exception& e)
+			{
+				hlog::error("FATAL", e.getMessage());
+				result = false;
+				throw e;
+			}
 		}
 		return true;
 	}
