@@ -111,7 +111,6 @@ namespace april
 			catch (hltypes::exception& e)
 			{
 				hlog::error("FATAL", e.getMessage());
-				result = false;
 				throw e;
 			}
 		}
