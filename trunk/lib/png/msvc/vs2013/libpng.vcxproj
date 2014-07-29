@@ -61,6 +61,12 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Import Project="..\..\..\..\..\hltypes\msvc\vs2013\props-generic\build-defaults.props" />
   <Import Project="props\configuration.props" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseS|Android'">
+    <ClCompile />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugS|Android'">
+    <ClCompile />
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\png.c">
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
