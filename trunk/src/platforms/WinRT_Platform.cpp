@@ -84,6 +84,7 @@ namespace april
 		float dpiRatio = info.displayDpi / 96.0f;
 		int width = hround(CoreWindow::GetForCurrentThread()->Bounds.Width * dpiRatio);
 		int height = hround(CoreWindow::GetForCurrentThread()->Bounds.Height * dpiRatio);
+		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
 		if (DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::Portrait ||
 			DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::PortraitFlipped)
 		{
