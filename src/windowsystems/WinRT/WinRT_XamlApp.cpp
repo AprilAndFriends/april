@@ -148,10 +148,10 @@ namespace april
 				ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
 					this, &WinRT_XamlApp::OnWindowClosed);
 			DisplayInformation::GetForCurrentView()->OrientationChanged +=
-				ref new Windows::Foundation::TypedEventHandler<DisplayInformation^, Object^>(
+				ref new TypedEventHandler<DisplayInformation^, Object^>(
 					this, &WinRT_XamlApp::OnOrientationChanged);
 			DisplayInformation::GetForCurrentView()->DpiChanged +=
-				ref new Windows::Foundation::TypedEventHandler<DisplayInformation^, Object^>(
+				ref new TypedEventHandler<DisplayInformation^, Object^>(
 					this, &WinRT_XamlApp::OnDpiChanged);
 			InputPane::GetForCurrentView()->Showing +=
 				ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
