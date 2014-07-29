@@ -296,7 +296,7 @@ namespace april
 	{
 		this->_resetTouches();
 		april::SystemInfo info = april::getSystemInfo(); // outside, because the displayResolution needs to be updated every time
-		// these orientations are not supported, but Windows reports them anyway, even if the manifest says that they aren't supported
+		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
 		if (DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::Portrait ||
 			DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::PortraitFlipped)
 		{
