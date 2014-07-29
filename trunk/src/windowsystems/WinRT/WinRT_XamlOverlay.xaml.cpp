@@ -46,7 +46,6 @@ namespace april
 	{
 		this->InitializeComponent();
 		this->keyboardTextbox = nullptr;
-		this->hideKeyboard();
 	}
 
 	void WinRT_XamlOverlay::showKeyboard()
@@ -69,6 +68,7 @@ namespace april
 			{
 				this->Children->RemoveAt(index);
 			}
+			this->keyboardTextbox->IsEnabled = false;
 			this->keyboardTextbox = nullptr;
 		}
 	}
