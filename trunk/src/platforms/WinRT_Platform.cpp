@@ -84,21 +84,18 @@ namespace april
 		float dpiRatio = info.displayDpi / 96.0f;
 		int width = hround(CoreWindow::GetForCurrentThread()->Bounds.Width * dpiRatio);
 		int height = hround(CoreWindow::GetForCurrentThread()->Bounds.Height * dpiRatio);
+		if (DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::Portrait ||
+			DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::PortraitFlipped)
+		{
+			hswap(width, height);
+		}
 		if (info.displayResolution.y == 0.0f)
 		{
-#ifndef _WINP8
 			info.displayResolution.set((float)width, (float)height);
-#else
-			info.displayResolution.set((float)hmax(width, height), (float)hmin(width, height));
-#endif
 		}
 		else
 		{
-#ifndef _WINP8
-			info.displayResolution.set(hmax((float)width, info.displayResolution.x), hmax((float)height, info.displayResolution.y));
-#else
-			info.displayResolution.set(hmax((float)hmax(width, height), info.displayResolution.x), hmax((float)hmin(width, height), info.displayResolution.y));
-#endif
+			info.displayResolution.x = hmax((float)width, info.displayResolution.x);
 		}
 #endif
 		return info;
