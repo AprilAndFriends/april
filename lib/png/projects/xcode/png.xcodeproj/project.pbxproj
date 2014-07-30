@@ -53,6 +53,8 @@
 		D197C59D15ED05610017452F /* readpng2.h in Headers */ = {isa = PBXBuildFile; fileRef = D197C58D15ED05610017452F /* readpng2.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D197C59E15ED05610017452F /* resource.h in Headers */ = {isa = PBXBuildFile; fileRef = D197C58E15ED05610017452F /* resource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D197C59F15ED05610017452F /* writepng.h in Headers */ = {isa = PBXBuildFile; fileRef = D197C58F15ED05610017452F /* writepng.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D1E047D01988CDC700D3374E /* arm_init.c in Sources */ = {isa = PBXBuildFile; fileRef = D1E047CD1988CDC700D3374E /* arm_init.c */; };
+		D1E047D11988CDC700D3374E /* filter_neon_intrinsics.c in Sources */ = {isa = PBXBuildFile; fileRef = D1E047CE1988CDC700D3374E /* filter_neon_intrinsics.c */; };
 		D1F27938177A295D00E5C131 /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = D197C54715ED054B0017452F /* png.c */; };
 		D1F27939177A295D00E5C131 /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = D197C54915ED054B0017452F /* pngerror.c */; };
 		D1F2793A177A295D00E5C131 /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = D197C54B15ED054B0017452F /* pngget.c */; };
@@ -109,6 +111,8 @@
 		D197C58E15ED05610017452F /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = resource.h; path = ../../contrib/visupng/resource.h; sourceTree = "<group>"; };
 		D197C58F15ED05610017452F /* writepng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = writepng.h; path = ../../contrib/gregbook/writepng.h; sourceTree = "<group>"; };
 		D1BB6F2E150E99EE00EF9400 /* libpng.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpng.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1E047CD1988CDC700D3374E /* arm_init.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = arm_init.c; path = ../../arm/arm_init.c; sourceTree = "<group>"; };
+		D1E047CE1988CDC700D3374E /* filter_neon_intrinsics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = filter_neon_intrinsics.c; path = ../../arm/filter_neon_intrinsics.c; sourceTree = "<group>"; };
 		D1F2794E177A295D00E5C131 /* libpng.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpng.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -172,6 +176,7 @@
 		08FB77ACFE841707C02AAC07 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				D1E047D31988CDC900D3374E /* arm */,
 				D197C54715ED054B0017452F /* png.c */,
 				D197C54915ED054B0017452F /* pngerror.c */,
 				D197C54B15ED054B0017452F /* pngget.c */,
@@ -231,6 +236,15 @@
 				D197C54315ED04AB0017452F /* zlib.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D1E047D31988CDC900D3374E /* arm */ = {
+			isa = PBXGroup;
+			children = (
+				D1E047CD1988CDC700D3374E /* arm_init.c */,
+				D1E047CE1988CDC700D3374E /* filter_neon_intrinsics.c */,
+			);
+			name = arm;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -375,9 +389,11 @@
 				D197C56F15ED054B0017452F /* pngrutil.c in Sources */,
 				D197C57115ED054B0017452F /* pngset.c in Sources */,
 				D197C57515ED054B0017452F /* pngtrans.c in Sources */,
+				D1E047D11988CDC700D3374E /* filter_neon_intrinsics.c in Sources */,
 				D197C57915ED054B0017452F /* pngwio.c in Sources */,
 				D197C57B15ED054B0017452F /* pngwrite.c in Sources */,
 				D197C57D15ED054B0017452F /* pngwtran.c in Sources */,
+				D1E047D01988CDC700D3374E /* arm_init.c in Sources */,
 				D197C57F15ED054B0017452F /* pngwutil.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -494,7 +510,8 @@
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
+					__ARM_NEON__,
+					"PNG_ARM_NEON_IMPLEMENTATION=1",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
@@ -515,6 +532,11 @@
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					__ARM_NEON__,
+					"PNG_ARM_NEON_IMPLEMENTATION=1",
+					"$(inherited)",
+				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PRODUCT_NAME = png;
@@ -531,6 +553,11 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					__ARM_NEON__,
+					"PNG_ARM_NEON_IMPLEMENTATION=1",
+					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
