@@ -50,9 +50,7 @@
   <Import Project="..\..\..\..\..\hltypes\msvc\vs2013-winp8\props-generic\build-defaults.props" />
   <Import Project="props\configuration.props" />
   <ItemGroup>
-    <ClCompile Include="..\..\png.c">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="..\..\png.c"/>
     <ClCompile Include="..\..\pngerror.c" />
     <ClCompile Include="..\..\pngget.c" />
     <ClCompile Include="..\..\pngmem.c" />

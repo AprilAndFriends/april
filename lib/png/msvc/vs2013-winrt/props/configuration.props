@@ -5,14 +5,13 @@
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <StringPooling>true</StringPooling>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pngpriv.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <CompileAs>CompileAsC</CompileAs>
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
       <AdditionalDependencies>zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <Version>15</Version>
+      <Version>16</Version>
     </Link>
   </ItemDefinitionGroup>
 </Project>
