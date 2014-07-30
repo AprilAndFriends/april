@@ -114,7 +114,7 @@ namespace april
 				throw e;
 			}
 		}
-		return true;
+		return result;
 	}
 	
 	void JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
