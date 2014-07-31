@@ -122,7 +122,31 @@ namespace april
 			NSBundle * bundle   = [NSBundle mainBundle];
 			NSArray  * langs    = [bundle preferredLocalizations];
 			langs = [langs count] ? langs : [NSLocale preferredLanguages];
-			info.locale = [[langs objectAtIndex:0] UTF8String];
+			fullLocale = hstr([[langs objectAtIndex:0] UTF8String]);
+			info.locale = "en"; // default is "en"
+			if (fullLocale.contains("-"))
+			{
+				fullLocale.split("-", info.locale, info.localeVariant);
+			}
+			else if (fullLocale.contains("_"))
+			{
+				fullLocale.split("_", info.locale, info.localeVariant);
+			}
+			else
+			{
+				info.locale = fullLocale;
+			}
+			info.locale = info.locale.lower();
+			info.localeVariant = info.localeVariant.upper();
+			// TODOloc - this code needs to be removed in the future
+			if (info.locale == "pt" && info.localeVariant == "PT")
+			{
+				info.locale = info.locale + "-" + info.localeVariant;
+			}
+			if (info.locale == "zh" && (info.localeVariant == "HANT" || info.localeVariant == "TW"))
+			{
+				info.locale = "zh-Hant";
+			}
 
 			size_t size = 255;
 			char cname[256] = {'\0'};

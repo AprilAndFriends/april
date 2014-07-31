@@ -55,6 +55,19 @@ namespace april
 			// TODO - maybe use direct Unix calls?
 			jmethodID methodGetLocale = env->GetStaticMethodID(classNativeInterface, "getLocale", _JARGS(_JSTR, ));
 			info.locale = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetLocale));
+			jmethodID methodGetLocaleVariant = env->GetStaticMethodID(classNativeInterface, "getLocaleVariant", _JARGS(_JSTR, ));
+			info.localeVariant = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetLocaleVariant));
+			info.locale = info.locale.lower();
+			info.localeVariant = info.localeVariant.upper();
+			// TODOloc - this code needs to be removed in the future
+			if (info.locale == "pt" && info.localeVariant == "PT")
+			{
+				info.locale = info.locale + "-" + info.localeVariant;
+			}
+			if (info.locale == "zh" && (info.localeVariant == "HANT" || info.localeVariant == "TW"))
+			{
+				info.locale = "zh-Hant";
+			}
 			// architecture
 			// OS version
 			jmethodID methodGetOsVersion = env->GetStaticMethodID(classNativeInterface, "getOsVersion", _JARGS(_JSTR, ));

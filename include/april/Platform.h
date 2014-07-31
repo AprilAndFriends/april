@@ -30,8 +30,9 @@ namespace april
 		int ram; // how many MB of RAM does the host system have in total
 		gvec2 displayResolution;
 		float displayDpi;
-		hstr locale; // current system locale code
-		
+		hstr locale; // locale code as per ISO 639
+		hstr localeVariant; // language code as per ISO 3166
+
 		SystemInfo();
 		~SystemInfo();
 		

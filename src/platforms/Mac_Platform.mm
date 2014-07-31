@@ -149,7 +149,31 @@ namespace april
 			CFStringRef lang = CFLocaleCreateCanonicalLocaleIdentifierFromString(NULL, loc);
 			char cstr[64 + 1];
 			CFStringGetCString(lang, cstr, 64, kCFStringEncodingASCII);
-			info.locale = cstr;
+			hstr fullLocale = hstr(cstr);
+			info.locale = "en"; // default is "en"
+			if (fullLocale.contains("-"))
+			{
+				fullLocale.split("-", info.locale, info.localeVariant);
+			}
+			else if (fullLocale.contains("_"))
+			{
+				fullLocale.split("_", info.locale, info.localeVariant);
+			}
+			else
+			{
+				info.locale = fullLocale;
+			}
+			info.locale = info.locale.lower();
+			info.localeVariant = info.localeVariant.upper();
+			// TODOloc - this code needs to be removed in the future
+			if (info.locale == "pt" && info.localeVariant == "PT")
+			{
+				info.locale = info.locale + "-" + info.localeVariant;
+			}
+			if (info.locale == "zh" && (info.localeVariant == "HANT" || info.localeVariant == "TW"))
+			{
+				info.locale = "zh-Hant";
+			}
 		}
 		return info;
 	}
