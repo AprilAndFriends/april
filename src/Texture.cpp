@@ -377,6 +377,10 @@ namespace april
 				this->format = april::rendersys->getNativeTextureFormat(this->format);
 			}
 		}
+		else if (this->type == TYPE_VOLATILE) // when recreating a texture, it is important that it is created empty to avoid problems (e.g. DX9 creates a white initial texture)
+		{
+			this->clear();
+		}
 		return true;
 	}
 
