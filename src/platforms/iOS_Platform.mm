@@ -122,7 +122,7 @@ namespace april
 			NSBundle * bundle   = [NSBundle mainBundle];
 			NSArray  * langs    = [bundle preferredLocalizations];
 			langs = [langs count] ? langs : [NSLocale preferredLanguages];
-			fullLocale = hstr([[langs objectAtIndex:0] UTF8String]);
+			hstr fullLocale = hstr([[langs objectAtIndex:0] UTF8String]);
 			info.locale = "en"; // default is "en"
 			if (fullLocale.contains("-"))
 			{
