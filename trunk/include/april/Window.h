@@ -133,6 +133,7 @@ namespace april
 		public:
 			bool resizable;
 			bool fpsCounter;
+			bool hotkeyFullscreen;
 
 			Options();
 			~Options();
@@ -158,6 +159,7 @@ namespace april
 		HL_DEFINE_IS(running, Running);
 		HL_DEFINE_GETSET(int, fps, Fps);
 		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
+		HL_DEFINE_GETSET(float, timeDeltaMaxLimit, TimeDeltaMaxLimit);
 		HL_DEFINE_GET(Cursor*, cursor, Cursor);
 		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
 		HL_DEFINE_IS(virtualKeyboardVisible, VirtualKeyboardVisible);
@@ -254,6 +256,7 @@ namespace april
 		int fpsCount;
 		float fpsTimer;
 		float fpsResolution;
+		float timeDeltaMaxLimit;
 		gvec2 cursorPosition;
 		Cursor* cursor;
 		bool cursorVisible;

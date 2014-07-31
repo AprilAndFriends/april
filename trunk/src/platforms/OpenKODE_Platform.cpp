@@ -136,19 +136,30 @@ namespace april
 #endif
 			// other
 			debug_log("getting locale");
-
-			info.locale = hstr(kdGetLocale());
-			if (info.locale == "")
+			info.locale = "en"; // default is "en"
+			hstr fullLocale = hstr(kdGetLocale());
+			if (fullLocale.contains("-"))
 			{
-				info.locale = "en"; // default is "en"
+				fullLocale.split("-", info.locale, info.localeVariant);
 			}
-			else if (info.locale == "pt_PT")
+			else if (fullLocale.contains("_"))
 			{
-				info.locale = "pt-PT";
+				fullLocale.split("_", info.locale, info.localeVariant);
 			}
-			else if (info.locale.utf8_size() > 2 && info.locale != "pt-PT")
+			else
 			{
-				info.locale = info.locale.utf8_substr(0, 2);
+				info.locale = fullLocale;
+			}
+			info.locale = info.locale.lower();
+			info.localeVariant = info.localeVariant.upper();
+			// TODOloc - this code needs to be removed in the future
+			if (info.locale == "pt" && info.localeVariant == "PT")
+			{
+				info.locale = info.locale + "-" + info.localeVariant;
+			}
+			if (info.locale == "zh" && (info.localeVariant == "HANT" || info.localeVariant == "TW"))
+			{
+				info.locale = "zh-Hant";
 			}
 		}
 		return info;

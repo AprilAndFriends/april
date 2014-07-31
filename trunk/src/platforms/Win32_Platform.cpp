@@ -60,16 +60,29 @@ namespace april
 			info.displayDpi = 96.0f;
 			// other
 			info.locale = "en"; // default is "en"
-			wchar_t locale[LOCALE_NAME_MAX_LENGTH] = {0};
-			int length = GetLocaleInfoW(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME,
+			wchar_t locale[LOCALE_NAME_MAX_LENGTH] = { 0 };
+			int length = GetLocaleInfoW(LOCALE_USER_DEFAULT, LOCALE_SISO639LANGNAME,
 				locale, (LOCALE_NAME_MAX_LENGTH - 1) * sizeof(wchar_t));
 			if (length > 0)
 			{
-				info.locale = hstr::from_unicode(locale).lower();
-				if (info.locale.utf8_size() > 2)
-				{
-					info.locale = info.locale.utf8_substr(0, 2);
-				}
+				info.locale = hstr::from_unicode(locale);
+			}
+			length = GetLocaleInfoW(LOCALE_USER_DEFAULT, LOCALE_SISO3166CTRYNAME,
+				locale, (LOCALE_NAME_MAX_LENGTH - 1) * sizeof(wchar_t));
+			if (length > 0)
+			{
+				info.localeVariant = hstr::from_unicode(locale);
+			}
+			info.locale = info.locale.lower();
+			info.localeVariant = info.localeVariant.upper();
+			// TODOloc - this code needs to be removed in the future
+			if (info.locale == "pt" && info.localeVariant == "PT")
+			{
+				info.locale = info.locale + "-" + info.localeVariant;
+			}
+			if (info.locale == "zh" && (info.localeVariant == "HANT" || info.localeVariant == "TW"))
+			{
+				info.locale = "zh-Hant";
 			}
 		}
 		return info;

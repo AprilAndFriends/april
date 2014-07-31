@@ -122,6 +122,7 @@ namespace april
 	{
 		this->resizable = false;
 		this->fpsCounter = false;
+		this->hotkeyFullscreen = false;
 	}
 	
 	Window::Options::~Options()
@@ -153,6 +154,7 @@ namespace april
 		this->fpsCount = 0;
 		this->fpsTimer = 0.0f;
 		this->fpsResolution = 0.5f;
+		this->timeDeltaMaxLimit = 0.2f;
 		this->cursor = NULL;
 		this->cursorVisible = false;
 		this->virtualKeyboardVisible = false;
@@ -426,6 +428,10 @@ namespace april
 	
 	bool Window::performUpdate(float timeDelta)
 	{
+		if (this->timeDeltaMaxLimit > 0.0f)
+		{
+			timeDelta = hmin(timeDelta, this->timeDeltaMaxLimit);
+		}
 		this->fpsTimer += timeDelta;
 		if (this->fpsTimer > 0.0f)
 		{

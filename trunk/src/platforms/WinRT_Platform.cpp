@@ -54,27 +54,34 @@ namespace april
 			info.ram = 512;
 #endif
 			// other
-			info.locale = "";
+			info.locale = "en"; // default is "en"
 			IIterator<Platform::String^>^ it = Windows::Globalization::ApplicationLanguages::Languages->First();
 			if (it->HasCurrent)
 			{
-				info.locale = _HL_PSTR_TO_HSTR(it->Current).lower();
-			}
-			if (info.locale == "")
-			{
-				info.locale = "en"; // default is "en"
-			}
-			else if (info.locale.starts_with("zh_hant") || info.locale.starts_with("zh-hant"))
-			{
-				info.locale = "zh-Hant";
-			}
-			else if (info.locale == "pt_pt" || info.locale == "pt-pt")
-			{
-				info.locale = "pt-PT";
-			}
-			else if (info.locale.utf8_size() > 2 && info.locale != "pt-PT")
-			{
-				info.locale = info.locale.utf8_substr(0, 2);
+				hstr fullLocale = _HL_PSTR_TO_HSTR(it->Current);
+				if (fullLocale.contains("-"))
+				{
+					fullLocale.split("-", info.locale, info.localeVariant);
+				}
+				else if (fullLocale.contains("_"))
+				{
+					fullLocale.split("_", info.locale, info.localeVariant);
+				}
+				else
+				{
+					info.locale = fullLocale;
+				}
+				info.locale = info.locale.lower();
+				info.localeVariant = info.localeVariant.upper();
+				// TODOloc - this code needs to be removed in the future
+				if (info.locale == "pt" && info.localeVariant == "PT")
+				{
+					info.locale = info.locale + "-" + info.localeVariant;
+				}
+				if (info.locale == "zh" && (info.localeVariant == "HANT" || info.localeVariant == "TW"))
+				{
+					info.locale = "zh-Hant";
+				}
 			}
 		}
 		// display DPI

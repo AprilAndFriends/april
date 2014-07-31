@@ -9,6 +9,7 @@
 	<uses-feature android:name="android.hardware.screen.landscape"/>
 	
 	<application android:label="Demo Tic Tac Toe"
+			android:icon="@drawable/icon"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 		<activity android:name=".DemoTicTacToe"
 				android:label="Demo Tic Tac Toe"
