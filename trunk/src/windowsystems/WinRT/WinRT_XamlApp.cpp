@@ -549,6 +549,7 @@ namespace april
 		{
 			grect storedOrthoProjection = april::rendersys->getOrthoProjection();
 			gmat4 storedProjectionMatrix = april::rendersys->getProjectionMatrix();
+			gmat4 storedModelviewMatrix = april::rendersys->getModelviewMatrix();
 			grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
 			grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
 			float width = (float)april::window->getWidth();
@@ -556,20 +557,26 @@ namespace april
 			viewport.setSize(width, height);
 			april::rendersys->setOrthoProjection(viewport);
 			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
-#ifndef _WINP8 // for some unknown reason, on WinP8 "ResolutionScale" keeps throwing deprecated warnings and "RawPixelsPerViewPixel" is not available on normal WinRT
+#ifndef _WINP8
+			// for some unknown reason, on WinP8 "ResolutionScale" keeps throwing deprecated warnings and "RawPixelsPerViewPixel" is not available on normal WinRT
 			float scale = (float)DisplayInformation::GetForCurrentView()->ResolutionScale * 0.01f;
-#else
-			float scale = (float)DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel;
-#endif
 			float textureWidth = SPLASH_WIDTH * scale;
 			float textureHeight = SPLASH_HEIGHT * scale;
 			drawRect.set(hroundf(width - textureWidth) * 0.5f, hroundf(height - textureHeight) * 0.5f, textureWidth, textureHeight);
+#else
+			// on WinP8 the splash graphic is rotated by -90° and needs to be stretched over the entire screen
+			april::rendersys->translate(width * 0.5f, height * 0.5f);
+			april::rendersys->rotate(90.0f);
+			april::rendersys->translate(-height * 0.5f, -width * 0.5f);
+			drawRect.setSize(height, width);
+#endif
 			april::rendersys->setTexture(this->splashTexture);
 			april::rendersys->drawTexturedRect(drawRect, grect(0.0f, 0.0f, 1.0f, 1.0f));
 			april::rendersys->presentFrame();
 			april::rendersys->reset();
 			april::rendersys->setOrthoProjection(storedOrthoProjection);
 			april::rendersys->setProjectionMatrix(storedProjectionMatrix);
+			april::rendersys->setModelviewMatrix(storedModelviewMatrix);
 		}
 	}
 
@@ -599,20 +606,20 @@ namespace april
 				index = logoFilename.rfind('.');
 				// adding those ".scale-x" things here, because my prayers went unanswered and Microsoft decided to change the format after all
 #ifndef _WINP8 // for some unknown reason, on WinP8 "ResolutionScale" keeps throwing deprecated warnings and "RawPixelsPerViewPixel" is not available on normal WinRT
-				filenames += logoFilename(0, index) + ".scale-" + hstr((int)DisplayInformation::GetForCurrentView()->ResolutionScale) + logoFilename(index, -1);
+				filenames += logoFilename(0, index) + ".scale-" + hstr((int)DisplayInformation::GetForCurrentView()->ResolutionScale);
 #else
-				filenames += logoFilename(0, index) + ".scale-" + hstr((int)(DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel * 100)) + logoFilename(index, -1);
+				filenames += logoFilename(0, index) + ".scale-" + hstr((int)(DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel * 100));
 #endif
 				
 #ifndef _WINP8
-				filenames += logoFilename(0, index) + ".scale-180" + logoFilename(index, -1);
+				filenames += logoFilename(0, index) + ".scale-180";
 #else
-				filenames += logoFilename(0, index) + ".scale-240" + logoFilename(index, -1);
+				filenames += logoFilename(0, index) + ".scale-240";
 #endif
-				filenames += logoFilename(0, index) + ".scale-140" + logoFilename(index, -1);
-				filenames += logoFilename(0, index) + ".scale-100" + logoFilename(index, -1);
+				filenames += logoFilename(0, index) + ".scale-140";
+				filenames += logoFilename(0, index) + ".scale-100";
 #ifndef _WINP8
-				filenames += logoFilename(0, index) + ".scale-80" + logoFilename(index, -1);
+				filenames += logoFilename(0, index) + ".scale-80";
 #endif
 				filenames += logoFilename(0, index);
 				filenames.remove_duplicates();
@@ -666,7 +673,8 @@ namespace april
 			{
 				// loading the color string
 				colorString = colorString(0, index).ltrim('#');
-				if (colorString.size() >= 6)
+				this->backgroundColor = april::Color::Black;
+				if (colorString.is_hex() && colorString.size() >= 6)
 				{
 					if (colorString.size() > 6)
 					{
