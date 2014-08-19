@@ -183,7 +183,6 @@ void april_init(const harray<hstr>& args)
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
-	april::window->setParam("delay_splash", 5.0f);
 	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::TYPE_MANAGED);
