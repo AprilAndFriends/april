@@ -69,7 +69,7 @@ namespace april
 			// display DPI
 			int dpi = 0;
 			kdQueryAttribi(KD_ATTRIB_DPI, (KDint*)&dpi);
-			info.displayDpi = dpi;
+			info.displayDpi = (float)dpi;
 #if TARGET_OS_IPHONE // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
 			hstr model = kdQueryAttribcv(KD_ATTRIB_PLATFORM);
 			if (model.contains("(") && model.contains(")"))

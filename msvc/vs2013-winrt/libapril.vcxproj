@@ -154,6 +154,12 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_OpenKODE|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_OpenKODE|Win32'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_OpenKODE|ARM'">
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
@@ -278,8 +284,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='DebugS_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='ReleaseS_OpenKODE'">
-    </None>
     <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" Condition="'$(Configuration)'!='Debug_OpenKODE' and '$(Configuration)'!='DebugS_OpenKODE' and '$(Configuration)'!='Release_OpenKODE' and '$(Configuration)'!='ReleaseS_OpenKODE'">
       <SubType>Designer</SubType>
       <FileType>Document</FileType>
