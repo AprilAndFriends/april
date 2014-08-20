@@ -218,7 +218,7 @@
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_Window.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
       <DependentUpon>..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='DebugS_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='ReleaseS_OpenKODE'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -274,12 +274,15 @@
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_Window.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
       <DependentUpon>..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='Release_OpenKODE'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='DebugS_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='ReleaseS_OpenKODE'">true</ExcludedFromBuild>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml">
+    <None Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='DebugS_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='ReleaseS_OpenKODE'">
+    </None>
+    <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" Condition="'$(Configuration)'!='Debug_OpenKODE' and '$(Configuration)'!='DebugS_OpenKODE' and '$(Configuration)'!='Release_OpenKODE' and '$(Configuration)'!='ReleaseS_OpenKODE'">
       <SubType>Designer</SubType>
+      <FileType>Document</FileType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -324,7 +327,7 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">
-      <ExcludedFromBuild Condition="'$(Platform)'=='ARM' or '$(Platform)'=='ARM-x86' or '$(ConfigurationType)'=='StaticLibrary'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(ConfigurationType)'=='StaticLibrary'">true</ExcludedFromBuild>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>

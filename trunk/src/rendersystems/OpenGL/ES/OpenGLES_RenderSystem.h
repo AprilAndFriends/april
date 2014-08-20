@@ -16,25 +16,25 @@
 
 #include <hltypes/hplatform.h>
 #if __APPLE__
-#include <TargetConditionals.h>
+	#include <TargetConditionals.h>
 #endif
 #if TARGET_OS_IPHONE
-#ifdef _OPENGLES1
-#include <OpenGLES/ES1/gl.h>
-#include <OpenGLES/ES1/glext.h>
-#elif defined(_OPENGLES2)
-#include <OpenGLES/ES2/gl.h>
-#include <OpenGLES/ES2/glext.h>
-extern GLint _positionSlot;
-#endif
+	#ifdef _OPENGLES1
+		#include <OpenGLES/ES1/gl.h>
+		#include <OpenGLES/ES1/glext.h>
+	#elif defined(_OPENGLES2)
+		#include <OpenGLES/ES2/gl.h>
+		#include <OpenGLES/ES2/glext.h>
+		extern GLint _positionSlot;
+	#endif
 #else
-#include <GLES/gl.h>
-#ifdef _ANDROID
-#define GL_GLEXT_PROTOTYPES
-#include <GLES/glext.h>
-#else
-#include <EGL/egl.h>
-#endif
+	#include <GLES/gl.h>
+	#ifdef _ANDROID
+		#define GL_GLEXT_PROTOTYPES
+		#include <GLES/glext.h>
+	#else
+		#include <EGL/egl.h>
+	#endif
 #endif
 
 #include "OpenGL_RenderSystem.h"
