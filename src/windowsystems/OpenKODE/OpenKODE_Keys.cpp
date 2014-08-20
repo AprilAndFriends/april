@@ -8,7 +8,6 @@
 
 #ifdef _OPENKODE_WINDOW
 #include <KD/kd.h>
-#include <KD/kd_keyboard.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hmap.h>
 #include "april.h"

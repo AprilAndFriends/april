@@ -98,7 +98,7 @@ namespace april
 		virtual void _setTexCoordPointer(int stride, const void* pointer);
 		virtual void _setColorPointer(int stride, const void* pointer);
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WINRT)
 	public:
 		inline HDC getHDC() { return this->hDC; }
 		bool _initWin32(Window* window);

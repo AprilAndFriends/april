@@ -36,7 +36,7 @@ namespace april
 
 	void OpenGLES_RenderSystem::assignWindow(Window* window)
 	{
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WINRT)
 		if (!this->_initWin32(window))
 		{
 			return;
@@ -47,7 +47,7 @@ namespace april
 
 	int OpenGLES_RenderSystem::getMaxTextureSize()
 	{
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WINRT)
 		if (april::egl->display == NULL)
 		{
 			return 0;

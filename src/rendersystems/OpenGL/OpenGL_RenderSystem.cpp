@@ -84,7 +84,7 @@ namespace april
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
 	{
 		this->state = new RenderState(); // TODOa
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WINRT)
 		this->hWnd = 0;
 		this->hDC = 0;
 #endif
@@ -117,13 +117,13 @@ namespace april
 		this->deviceState.reset();
 		this->currentState.reset();
 		this->state->reset();
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WINRT)
 		this->_releaseWindow();
 #endif
 		return true;
 	}
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WINRT)
 	void OpenGL_RenderSystem::_releaseWindow()
 	{
 		if (this->hDC != 0)
