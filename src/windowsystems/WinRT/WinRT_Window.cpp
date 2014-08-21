@@ -41,7 +41,8 @@ namespace april
 
 	bool WinRT_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
-		if (!Window::create(w, h, true, title, options))
+		fullscreen = true; // WinRT is always fullscreen
+		if (!Window::create(w, h, fullscreen, title, options))
 		{
 			return false;
 		}

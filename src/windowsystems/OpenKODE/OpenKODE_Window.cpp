@@ -133,8 +133,7 @@ namespace april
 		hlog::warn(april::logTag, "OpenKODE Window requires EGL to be present!");
 #endif
 		initOpenKODEKeyMap();
-		
-		launchDelay = 0;
+		this->launchDelay = 0;
 	}
 
 	OpenKODE_Window::~OpenKODE_Window()
@@ -144,18 +143,30 @@ namespace april
 
 	hstr OpenKODE_Window::getParam(chstr param)
 	{
-		if (param == "launch_delay") return this->launchDelay;
-		else return Window::getParam(param);
+		if (param == "launch_delay")
+		{
+			return this->launchDelay;
+		}
+		return Window::getParam(param);
 	}
 	
 	void OpenKODE_Window::setParam(chstr param, chstr value)
 	{
-		if (param == "launch_delay") this->launchDelay = value;
-		else Window::setParam(param, value);
+		if (param == "launch_delay")
+		{
+			this->launchDelay = value;
+		}
+		else
+		{
+			Window::setParam(param, value);
+		}
 	}
 	
 	bool OpenKODE_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
+#ifdef _WINRT
+		fullscreen = true; // WinRT is always fullscreen
+#endif
 		if (!Window::create(w, h, fullscreen, title, options))
 		{
 			return false;
@@ -167,7 +178,7 @@ namespace april
 			this->destroy();
 			return false;
 		}
-#ifdef _EGL
+#ifdef _EGL // KD doesn't actually work without EGL
 		this->kdWindow = kdCreateWindow(april::egl->display, april::egl->config, NULL);
 #endif
 		if (this->kdWindow == NULL)
@@ -184,7 +195,6 @@ namespace april
 		KDint32 size[] = {w, h};
 		kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_SIZE, size);
 		kdSetWindowPropertycv(this->kdWindow, KD_WINDOWPROPERTY_CAPTION, title.c_str());
-		
 		if (this->launchDelay > 0)
 		{
 			hlog::writef(april::logTag, "launch_delay param set to %.1f, waiting", this->launchDelay);
