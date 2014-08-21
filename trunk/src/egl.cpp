@@ -20,7 +20,7 @@
 
 namespace april
 {
-	EglData* egl;
+	EglData* egl = NULL;
 
 	EglData::EglData()
 	{
