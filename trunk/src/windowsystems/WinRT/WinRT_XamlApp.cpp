@@ -21,7 +21,6 @@
 #include "RenderSystem.h"
 #include "Window.h"
 #include "WinRT.h"
-#include "WinRT_XamlApp.h"
 #include "WinRT_Cursor.h"
 #include "WinRT_Window.h"
 #include "WinRT_XamlApp.h"
@@ -36,6 +35,9 @@ using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Controls;
 using namespace Windows::UI::Xaml::Controls::Primitives;
 using namespace Windows::UI::Xaml::Media;
+#ifdef _WINP8
+using namespace Windows::Phone::UI::Input;
+#endif
 
 #define MANIFEST_FILENAME "AppxManifest.xml"
 #ifndef _WINP8
@@ -44,8 +46,6 @@ using namespace Windows::UI::Xaml::Media;
 #define SPLASH_HEIGHT 300
 #else
 #define NODE_PREFIX "m3:"
-#define SPLASH_WIDTH 800
-#define SPLASH_HEIGHT 480
 #endif
 
 #define DX11_RENDERSYS ((DirectX11_RenderSystem*)april::rendersys)
@@ -159,6 +159,12 @@ namespace april
 			InputPane::GetForCurrentView()->Hiding +=
 				ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
 					this, &WinRT_XamlApp::OnVirtualKeyboardHide);
+#ifdef _WINP8
+			HardwareButtons::BackPressed +=
+				ref new EventHandler<BackPressedEventArgs^>(
+					this, &WinRT_XamlApp::OnBackButtonPressed);
+			StatusBar::GetForCurrentView()->HideAsync();
+#endif
 			this->refreshCursor();
 			this->overlay = ref new WinRT_XamlOverlay();
 			Windows::UI::Xaml::Window::Current->Content = this->overlay;
@@ -527,6 +533,18 @@ namespace april
 		april::window->queueKeyEvent(april::Window::KEY_DOWN, AK_NONE, args->KeyCode);
 		args->Handled = true;
 	}
+
+#ifdef _WINP8
+	void WinRT_XamlApp::OnBackButtonPressed(Object^ sender, BackPressedEventArgs^ args)
+	{
+		if (april::window != NULL && april::window->getParam(WINP8_BACK_BUTTON_SYSTEM_HANDLING) != "1")
+		{
+			april::window->queueKeyEvent(april::Window::KEY_DOWN, april::AK_ESCAPE, 0);
+			april::window->queueKeyEvent(april::Window::KEY_UP, april::AK_ESCAPE, 0);
+			args->Handled = true;
+		}
+	}
+#endif
 
 	gvec2 WinRT_XamlApp::_transformPosition(float x, float y)
 	{
