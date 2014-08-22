@@ -30,6 +30,9 @@ using namespace Windows::UI::Core;
 using namespace Windows::UI::ViewManagement;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Markup;
+#ifdef _WINP8
+using namespace Windows::Phone::UI::Input;
+#endif
 
 namespace april
 {
@@ -63,6 +66,9 @@ namespace april
 		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
+#ifdef _WINP8
+		void OnBackButtonPressed(Object^ sender, BackPressedEventArgs^ args);
+#endif
 
 	internal:
 		void OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args);
