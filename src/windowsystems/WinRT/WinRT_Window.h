@@ -52,6 +52,7 @@ namespace april
 		void presentFrame();
 		hstr findCursorFile(chstr filename);
 		
+		void terminateMainLoop();
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
 		void changeSize(int w, int h); // required override instead of normal size changing

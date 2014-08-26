@@ -263,7 +263,7 @@ namespace april
 		{
 			(*WinRT::Destroy)();
 			CompositionTarget::Rendering::remove(this->eventToken);
-			hlog::warn(april::logTag, "Manual closing in WinRT apps should not be used!");
+			Application::Current->Exit();
 		}
 	}
 
