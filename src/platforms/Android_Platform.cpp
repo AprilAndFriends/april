@@ -64,7 +64,7 @@ namespace april
 			{
 				info.locale = info.locale + "-" + info.localeVariant;
 			}
-			if (info.locale == "zh" && (info.localeVariant == "HANT" || info.localeVariant == "TW"))
+			if (info.locale == "zh" && (info.localeVariant.starts_with("HANT") || info.localeVariant == "TW"))
 			{
 				info.locale = "zh-Hant";
 			}

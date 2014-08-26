@@ -31,7 +31,7 @@ namespace april
 		gvec2 displayResolution;
 		float displayDpi;
 		hstr locale; // locale code as per ISO 639
-		hstr localeVariant; // language code as per ISO 3166
+		hstr localeVariant; // locale script and region codes as per ISO 15924 (for scripts) and ISO 3166 (for regions)
 
 		SystemInfo();
 		~SystemInfo();
