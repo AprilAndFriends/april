@@ -140,6 +140,11 @@ namespace april
 	{
 	}
 
+	void WinRT_Window::terminateMainLoop()
+	{
+		this->running = false;
+	}
+
 	void WinRT_Window::beginKeyboardHandling()
 	{
 		WinRT::App->Overlay->showKeyboard();
