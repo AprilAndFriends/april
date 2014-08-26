@@ -576,18 +576,19 @@ namespace april
 			april::rendersys->setOrthoProjection(viewport);
 			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
 #ifndef _WINP8
-			// for some unknown reason, on WinP8 "ResolutionScale" keeps throwing deprecated warnings and "RawPixelsPerViewPixel" is not available on normal WinRT
 			float scale = (float)DisplayInformation::GetForCurrentView()->ResolutionScale * 0.01f;
-			float textureWidth = SPLASH_WIDTH * scale;
+			float textureWidth = SPLASH_HEIGHT * scale;
 			float textureHeight = SPLASH_HEIGHT * scale;
-			drawRect.set(hroundf(width - textureWidth) * 0.5f, hroundf(height - textureHeight) * 0.5f, textureWidth, textureHeight);
 #else
 			// on WinP8 the splash graphic is rotated by -90° and needs to be stretched over the entire screen
 			april::rendersys->translate(width * 0.5f, height * 0.5f);
 			april::rendersys->rotate(90.0f);
-			april::rendersys->translate(-height * 0.5f, -width * 0.5f);
-			drawRect.setSize(height, width);
+			hswap(width, height);
+			april::rendersys->translate(-width * 0.5f, -height * 0.5f);
+			float textureWidth = width;
+			float textureHeight = width * this->splashTexture->getHeight() / this->splashTexture->getWidth();
 #endif
+			drawRect.set(hroundf(width - textureWidth) * 0.5f, hroundf(height - textureHeight) * 0.5f, textureWidth, textureHeight);
 			april::rendersys->setTexture(this->splashTexture);
 			april::rendersys->drawTexturedRect(drawRect, grect(0.0f, 0.0f, 1.0f, 1.0f));
 			april::rendersys->presentFrame();
