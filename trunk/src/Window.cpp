@@ -150,6 +150,8 @@ namespace april
 		this->fullscreen = true;
 		this->focused = true;
 		this->running = true;
+		this->lastWidth = 0;
+		this->lastHeight = 0;
 		this->fps = 0;
 		this->fpsCount = 0;
 		this->fpsTimer = 0.0f;
@@ -184,6 +186,20 @@ namespace april
 			this->title = title;
 			this->options = options;
 			this->created = true;
+			if (options.hotkeyFullscreen)
+			{
+				if (!fullscreen)
+				{
+					this->lastWidth = w;
+					this->lastHeight = h;
+				}
+				else
+				{
+					SystemInfo info = april::getSystemInfo();
+					this->lastWidth = (int)(info.displayResolution.x * 0.6666667f);
+					this->lastHeight = (int)(info.displayResolution.y * 0.6666667f);
+				}
+			}
 			this->fps = 0;
 			this->fpsCount = 0;
 			this->fpsTimer = 0.0f;
@@ -323,6 +339,16 @@ namespace april
 	void Window::setResolution(int w, int h, bool fullscreen)
 	{
 		hlog::warnf(april::logTag, "setResolution() is not available in '%s'.", this->name.c_str());
+	}
+
+	void Window::toggleHotkeyFullscreen()
+	{
+		if (!this->fullscreen)
+		{
+			this->lastWidth = this->getWidth();
+			this->lastHeight = this->getHeight();
+		}
+		this->setResolution(this->lastWidth, this->lastHeight, !this->fullscreen);
 	}
 
 	void Window::_setRenderSystemResolution()

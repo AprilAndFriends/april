@@ -378,6 +378,8 @@ namespace april
 		static int _mouseMoveMessagesCount = 0;
 		static float _wheelDelta = 0.0f;
 		static bool _altKeyDown = false;
+		static int lastWidth = april::window->getWidth();
+		static int lastHeight = april::window->getHeight();
 		switch (message)
 		{
 		case 0x0119: // WM_GESTURE (Win7+ only)
@@ -422,18 +424,23 @@ namespace april
 			}
 			// no break here, because this is still an input message that needs to be processed normally
 		case WM_KEYDOWN:
-			if (_altKeyDown && wParam == VK_F4)
+			if (_altKeyDown)
 			{
-				if (april::window->handleQuitRequest(true))
+				if (wParam == VK_F4)
 				{
-					PostQuitMessage(0);
-					april::window->terminateMainLoop();
+					if (april::window->handleQuitRequest(true))
+					{
+						PostQuitMessage(0);
+						april::window->terminateMainLoop();
+					}
 				}
+				else if (wParam == VK_RETURN && april::window->getOptions().hotkeyFullscreen)
+				{
+					april::window->toggleHotkeyFullscreen();
+				}
+				return 0;
 			}
-			else
-			{
-				april::window->queueKeyEvent(KEY_DOWN, (april::Key)wParam, 0);
-			}
+			april::window->queueKeyEvent(KEY_DOWN, (april::Key)wParam, 0);
 			return 0;
 		case WM_SYSKEYUP:
 			if (wParam == VK_MENU)
