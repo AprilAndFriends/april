@@ -343,12 +343,15 @@ namespace april
 
 	void Window::toggleHotkeyFullscreen()
 	{
-		if (!this->fullscreen)
+		if (this->options.hotkeyFullscreen)
 		{
-			this->lastWidth = this->getWidth();
-			this->lastHeight = this->getHeight();
+			if (!this->fullscreen)
+			{
+				this->lastWidth = this->getWidth();
+				this->lastHeight = this->getHeight();
+			}
+			this->setResolution(this->lastWidth, this->lastHeight, !this->fullscreen);
 		}
-		this->setResolution(this->lastWidth, this->lastHeight, !this->fullscreen);
 	}
 
 	void Window::_setRenderSystemResolution()

@@ -123,8 +123,6 @@ namespace april
 			hlog::error(april::logTag, "SDL renderer could not be created!");
 			return false;
 		}
-		april::rendersys->clear();
-		april::rendersys->presentFrame();
 		// not running yet
 		this->running = false;
 		// cursor is visible by default
@@ -278,6 +276,12 @@ namespace april
 					{
 						this->running = false;
 					}
+				}
+				else
+#elif defined(_WIN32)
+				if (SDL_GetModState() & KMOD_ALT && sdlEvent.key.keysym.sym == SDLK_KP_ENTER)
+				{
+					this->toggleHotkeyFullscreen();
 				}
 				else
 #endif

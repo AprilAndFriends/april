@@ -434,7 +434,7 @@ namespace april
 						april::window->terminateMainLoop();
 					}
 				}
-				else if (wParam == VK_RETURN && april::window->getOptions().hotkeyFullscreen)
+				else if (wParam == VK_RETURN)
 				{
 					april::window->toggleHotkeyFullscreen();
 				}
