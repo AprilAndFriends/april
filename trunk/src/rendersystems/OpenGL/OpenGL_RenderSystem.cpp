@@ -218,18 +218,6 @@ namespace april
 		this->currentState.colorMode = april::CM_UNDEFINED;
 	}
 
-	int OpenGL_RenderSystem::getMaxTextureSize()
-	{
-		int max;
-		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
-		return max;
-	}
-
-	int OpenGL_RenderSystem::getVRam()
-	{
-		return 0;
-	}
-
 	void OpenGL_RenderSystem::setViewport(grect rect)
 	{
 		RenderSystem::setViewport(rect);
@@ -713,6 +701,11 @@ namespace april
 	{
 		this->currentState.projectionMatrix = matrix;
 		this->currentState.projectionMatrixChanged = true;
+	}
+
+	void OpenGL_RenderSystem::_setupCaps()
+	{
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &this->caps.maxTextureSize);
 	}
 
 	void OpenGL_RenderSystem::_setResolution(int w, int h, bool fullscreen)

@@ -65,11 +65,22 @@ namespace april
 	{
 		this->depthBuffer = false;
 	}
-	
+
 	RenderSystem::Options::~Options()
 	{
 	}
-	
+
+	RenderSystem::Caps::Caps()
+	{
+		this->maxTextureSize = 0;
+		this->npotTexturesLimited = false;
+		this->npotTextures = false;
+	}
+
+	RenderSystem::Caps::~Caps()
+	{
+	}
+
 	hstr RenderSystem::Options::toString()
 	{
 		harray<hstr> options;
@@ -139,6 +150,15 @@ namespace april
 		gvec2 resolution = april::getSystemInfo().displayResolution;
 		result += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
 		return result;
+	}
+
+	RenderSystem::Caps RenderSystem::getCaps()
+	{
+		if (this->caps.maxTextureSize == 0)
+		{
+			this->_setupCaps();
+		}
+		return this->caps;
 	}
 	
 	void RenderSystem::setViewport(grect value)

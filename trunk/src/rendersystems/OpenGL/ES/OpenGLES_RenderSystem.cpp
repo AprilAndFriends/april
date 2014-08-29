@@ -45,15 +45,21 @@ namespace april
 		OpenGL_RenderSystem::assignWindow(window);
 	}
 
-	int OpenGLES_RenderSystem::getMaxTextureSize()
+	void OpenGLES_RenderSystem::_setupCaps()
 	{
 #ifdef _EGL
 		if (april::egl->display == NULL)
 		{
-			return 0;
+			return;
 		}
 #endif
-		return OpenGL_RenderSystem::getMaxTextureSize();
+		if (this->caps.maxTextureSize == 0)
+		{
+			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
+			this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
+			this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
+		}
+		return OpenGL_RenderSystem::_setupCaps();
 	}
 
 	void OpenGLES_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)

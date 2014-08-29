@@ -285,26 +285,6 @@ namespace april
 		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
 
-	int DirectX9_RenderSystem::getMaxTextureSize()
-	{
-		if (this->d3dDevice == NULL)
-		{
-			return 0;
-		}
-		D3DCAPS9 caps;
-		this->d3dDevice->GetDeviceCaps(&caps);
-		return caps.MaxTextureWidth;
-	}
-
-	int DirectX9_RenderSystem::getVRam()
-	{
-		if (this->d3dDevice == NULL)
-		{
-			return 0;
-		}
-		return (this->d3dDevice->GetAvailableTextureMem() / (1024 * 1024));
-	}
-
 	harray<RenderSystem::DisplayMode> DirectX9_RenderSystem::getSupportedDisplayModes()
 	{
 		if (this->supportedDisplayModes.size() == 0)
@@ -546,6 +526,26 @@ namespace april
 		{
 			this->d3dDevice->SetVertexShader(NULL);
 		}
+	}
+
+	void DirectX9_RenderSystem::_setupCaps()
+	{
+		if (this->d3dDevice == NULL)
+		{
+			return;
+		}
+		D3DCAPS9 d3dCaps;
+		memset(&d3dCaps, 0, sizeof(D3DCAPS9));
+		HRESULT hr = this->d3dDevice->GetDeviceCaps(&d3dCaps);
+		if (FAILED(hr))
+		{
+			return;
+		}
+		this->caps.maxTextureSize = d3dCaps.MaxTextureWidth;
+		bool pow2 = ((d3dCaps.TextureCaps & D3DPTEXTURECAPS_POW2) != 0);
+		bool nonPow2conditional = ((d3dCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) != 0);
+		this->caps.npotTextures = (!pow2 && !nonPow2conditional); // this is how the docs say it is defined
+		this->caps.npotTexturesLimited = (this->caps.npotTextures || pow2 && nonPow2conditional);
 	}
 
 	void DirectX9_RenderSystem::_setResolution(int w, int h, bool fullscreen)

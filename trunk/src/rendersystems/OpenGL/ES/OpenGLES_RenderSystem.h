@@ -49,9 +49,9 @@ namespace april
 
 		void assignWindow(Window* window);
 		
-		int getMaxTextureSize();
-		
 	protected:
+		void _setupCaps();
+		
 		void _setTextureBlendMode(BlendMode mode);
 
 	};

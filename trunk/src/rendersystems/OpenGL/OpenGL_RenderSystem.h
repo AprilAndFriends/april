@@ -39,8 +39,6 @@ namespace april
 		void assignWindow(Window* window);
 
 		inline float getPixelOffset() { return 0.0f; }
-		int getMaxTextureSize();
-		int getVRam();
 		void setViewport(grect value);
 
 		void clear(bool useColor = true, bool depth = false);
@@ -86,6 +84,7 @@ namespace april
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
 
+		void _setupCaps();
 		void _setResolution(int w, int h, bool fullscreen);
 
 		virtual void _setTextureBlendMode(BlendMode textureBlendMode);

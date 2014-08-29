@@ -98,15 +98,33 @@ namespace april
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 	}
 
-	int OpenGL1_RenderSystem::getMaxTextureSize()
+	void OpenGL1_RenderSystem::_setupCaps()
 	{
 #ifdef _WIN32
 		if (this->hRC == 0)
 		{
-			return 0;
+			return;
 		}
 #endif
-		return OpenGL_RenderSystem::getMaxTextureSize();
+		if (this->caps.maxTextureSize == 0)
+		{
+			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
+			if (extensions.contains("ARB_texture_non_power_of_two"))
+			{
+				this->caps.npotTexturesLimited = true;
+				// this isn't 100% sure, but it's a pretty good indicator that NPOT textures should be fully supported on this hardware
+				if (extensions.contains("ARB_fragment_program"))
+				{
+					int value = 0;
+					glGetIntegerv(GL_MAX_TEXTURE_SIZE, &value);
+					if (value >= 8192)
+					{
+						this->caps.npotTextures = true;
+					}
+				}
+			}
+		}
+		OpenGL_RenderSystem::_setupCaps();
 	}
 
 	void OpenGL1_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
@@ -119,7 +137,7 @@ namespace april
 		{
 			// determine if blend separation is possible on first call to this function
 			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-			blendSeparationSupported = extensions.contains("GL_EXT_blend_equation_separate") && extensions.contains("GL_EXT_blend_func_separate");
+			blendSeparationSupported = extensions.contains("EXT_blend_equation_separate") && extensions.contains("EXT_blend_func_separate");
 		}
 		if (blendSeparationSupported)
 		{
