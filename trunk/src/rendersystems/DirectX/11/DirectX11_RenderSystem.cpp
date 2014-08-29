@@ -551,6 +551,8 @@ namespace april
 	{
 		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
 		this->caps.maxTextureSize = D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
+		this->caps.npotTexturesLimited = true;
+		this->caps.npotTextures = false; // because of usage of feature level 9_3
 	}
 
 	void DirectX11_RenderSystem::_setResolution(int w, int h, bool fullscreen)

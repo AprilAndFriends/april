@@ -119,6 +119,7 @@ namespace april
 		void _configureSwapChain();
 		void _configureDevice();
 		
+		void _setupCaps();
 		void _setResolution(int w, int h, bool fullscreen);
 
 		Texture* _createTexture(bool fromResource);
@@ -167,8 +168,6 @@ namespace april
 		
 		bool matrixDirty;
 		
-		void _setupCaps();
-
 		void _setRenderOperation(RenderOperation renderOperation);
 		void _updateVertexBuffer(int nVertices, void* data);
 		void _updateConstantBuffer();
