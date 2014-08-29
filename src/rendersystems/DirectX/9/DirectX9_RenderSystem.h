@@ -47,8 +47,6 @@ namespace april
 		void assignWindow(Window* window);
 
 		inline float getPixelOffset() { return 0.5f; }
-		int getMaxTextureSize();
-		int getVRam();
 		harray<DisplayMode> getSupportedDisplayModes();
 		void setViewport(grect rect);
 
@@ -94,6 +92,7 @@ namespace april
 		HWND childHWnd;
 
 		void _configureDevice();
+		void _setupCaps();
 		void _setResolution(int w, int h, bool fullscreen);
 
 		void _tryAssignChildWindow();

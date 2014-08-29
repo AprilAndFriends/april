@@ -72,6 +72,18 @@ namespace april
 
 		};
 
+		struct aprilExport Caps
+		{
+		public:
+			int maxTextureSize;
+			bool npotTexturesLimited;
+			bool npotTextures;
+
+			Caps();
+			~Caps();
+
+		};
+
 		RenderSystem();
 		virtual ~RenderSystem();
 		virtual bool create(Options options);
@@ -93,12 +105,10 @@ namespace april
 		void setOrthoProjection(gvec2 size);
 
 		virtual harray<DisplayMode> getSupportedDisplayModes();
+		virtual Caps getCaps();
 		virtual void setViewport(grect value);
 
 		virtual float getPixelOffset() = 0;
-		virtual int getMaxTextureSize() = 0;
-		/// @note If the system cannot determine the available VRAM, it will return zero.
-		virtual int getVRam() = 0;
 
 		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
 		/// @note The parameter factor is only used when the color mode is LERP.
@@ -156,6 +166,7 @@ namespace april
 		DEPRECATED_ATTRIBUTE inline hstr findTextureFilename(chstr filename) { return this->findTextureResource(filename); }
 		DEPRECATED_ATTRIBUTE inline Texture* createTexture(chstr filename, bool loadImmediately) { return this->createTextureFromResource(filename, Texture::TYPE_IMMUTABLE, loadImmediately); }
 		DEPRECATED_ATTRIBUTE inline Texture* createTexture(int w, int h, Image::Format format) { return this->createTexture(w, h, Color::Clear, format, Texture::TYPE_MANAGED); }
+		DEPRECATED_ATTRIBUTE inline int getMaxTextureSize() { return this->getCaps().maxTextureSize; }
 
 	protected:
 		hstr name;
@@ -169,6 +180,7 @@ namespace april
 		gmat4 modelviewMatrix;
 		gmat4 projectionMatrix;
 		grect orthoProjection;
+		Caps caps;
 
 		virtual Texture* _createTexture(bool fromResource) = 0;
 
@@ -178,7 +190,8 @@ namespace april
 		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;
 		
-		virtual void _setResolution(int w, int h, bool fullscreen) = 0; // TODO - main part should be in window class
+		virtual void _setupCaps() = 0;
+		virtual void _setResolution(int w, int h, bool fullscreen) = 0;
 
 		unsigned int _numPrimitives(RenderOperation renderOperation, int nVertices);
 		unsigned int _limitPrimitives(RenderOperation renderOperation, int nVertices);

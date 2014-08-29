@@ -546,6 +546,12 @@ namespace april
 			break;
 		}
 	}
+	
+	void DirectX11_RenderSystem::_setupCaps()
+	{
+		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
+		this->caps.maxTextureSize = D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
+	}
 
 	void DirectX11_RenderSystem::_setResolution(int w, int h, bool fullscreen)
 	{
@@ -558,43 +564,6 @@ namespace april
 			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
 		}
 		this->matrixDirty = true;
-	}
-
-	int DirectX11_RenderSystem::getMaxTextureSize()
-	{
-		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
-		return D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
-	}
-
-	int DirectX11_RenderSystem::getVRam()
-	{
-		if (this->d3dDevice == nullptr)
-		{
-			return 0;
-		}
-		HRESULT hr;
-		ComPtr<IDXGIDevice2> dxgiDevice;
-		hr = this->d3dDevice.As(&dxgiDevice);
-		if (FAILED(hr))
-		{
-			hlog::error(april::logTag, "Unable to retrieve DXGI device!");
-			return 0;
-		}
-		ComPtr<IDXGIAdapter> dxgiAdapter;
-		hr = dxgiDevice->GetAdapter(&dxgiAdapter);
-		if (FAILED(hr))
-		{
-			hlog::error(april::logTag, "Unable to get adapter from DXGI device!");
-			return 0;
-		}
-		DXGI_ADAPTER_DESC desc;
-		hr = dxgiAdapter->GetDesc(&desc);
-		if (FAILED(hr))
-		{
-			hlog::error(april::logTag, "Unable to get description from DXGI adapter!");
-			return 0;
-		}
-		return (desc.DedicatedVideoMemory / (1024 * 1024));
 	}
 
 	void DirectX11_RenderSystem::setViewport(grect value)

@@ -61,8 +61,6 @@ namespace april
 		void reset();
 
 		inline float getPixelOffset() { return 0.0f; }
-		int getMaxTextureSize();
-		int getVRam();
 		void setViewport(grect value);
 
 		void setTextureBlendMode(BlendMode textureBlendMode);
@@ -168,6 +166,8 @@ namespace april
 		ID3D11Buffer** _currentVertexBuffer;
 		
 		bool matrixDirty;
+		
+		void _setupCaps();
 
 		void _setRenderOperation(RenderOperation renderOperation);
 		void _updateVertexBuffer(int nVertices, void* data);

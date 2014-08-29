@@ -32,10 +32,9 @@ namespace april
 
 		void assignWindow(Window* window);
 		
-		int getMaxTextureSize();
-
 	protected:
 		void _setupDefaultParameters();
+		void _setupCaps();
 
 		Texture* _createTexture(bool fromResource);
 
