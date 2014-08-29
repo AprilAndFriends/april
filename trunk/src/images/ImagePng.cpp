@@ -9,9 +9,15 @@
 #include <png.h>
 #include <pngpriv.h>
 #include <pngstruct.h>
-#include <hltypes/hsbase.h>
 
+#include <hltypes/hlog.h>
+#include <hltypes/hsbase.h>
+#include <hltypes/hstring.h>
+
+#include "april.h"
 #include "Image.h"
+
+#define PNG_SIGNATURE_SIZE 8
 
 namespace april
 {
@@ -22,6 +28,19 @@ namespace april
 
 	Image* Image::_loadPng(hsbase& stream, int size)
 	{
+		if (size < PNG_SIGNATURE_SIZE)
+		{
+			hlog::error(april::logTag, "Not a PNG file!");
+			return NULL;
+		}
+		png_byte signature[PNG_SIGNATURE_SIZE] = { '\0' };
+		stream.read_raw(signature, PNG_SIGNATURE_SIZE);
+		if (png_sig_cmp(signature, 0, PNG_SIGNATURE_SIZE))
+		{
+			hlog::error(april::logTag, "Not a PNG file!");
+			return NULL;
+		}
+		stream.rewind();
 		png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 		png_infop infoPtr = png_create_info_struct(pngPtr);
 		png_infop endInfo = png_create_info_struct(pngPtr);
