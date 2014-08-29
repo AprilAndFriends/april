@@ -190,7 +190,9 @@ namespace april
 
 		virtual void setResolution(int w, int h);
 		virtual void setResolution(int w, int h, bool fullscreen);
-		
+		/// @note Remembers the last windowed size and returns to it
+		virtual void toggleHotkeyFullscreen();
+
 		// pure virtual getters/setters (window system dependent)
 		virtual int getWidth() = 0;
 		virtual int getHeight() = 0;
@@ -252,6 +254,8 @@ namespace april
 		Options options;
 		bool focused;
 		bool running;
+		int lastWidth;
+		int lastHeight;
 		int fps;
 		int fpsCount;
 		float fpsTimer;
