@@ -102,6 +102,8 @@ namespace april
 		static Image* createFromResource(chstr filename, Format format);
 		static Image* createFromFile(chstr filename);
 		static Image* createFromFile(chstr filename, Format format);
+		static Image* createFromStream(hsbase& stream, chstr logicalExtension);
+		static Image* createFromStream(hsbase& stream, chstr logicalExtension, Format format);
 		static Image* create(int w, int h, unsigned char* data, Format format);
 		static Image* create(int w, int h, Color color, Format format);
 		static Image* create(Image* other);

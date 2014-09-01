@@ -315,20 +315,21 @@ namespace april
 	Image* Image::createFromResource(chstr filename)
 	{
 		Image* image = NULL;
+		hresource file;
 		if (filename.lower().ends_with(".png"))
 		{
-			hresource f(filename);
-			image = Image::_loadPng(f);
+			file.open(filename);
+			image = Image::_loadPng(file);
 		}
 		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
 		{
-			hresource f(filename);
-			image = Image::_loadJpg(f);
+			file.open(filename);
+			image = Image::_loadJpg(file);
 		}
 		else if (filename.lower().ends_with(".jpt"))
 		{
-			hresource f(filename);
-			image = Image::_loadJpt(f);
+			file.open(filename);
+			image = Image::_loadJpt(file);
 		}
 #if TARGET_OS_IPHONE
 		else if (filename.lower().ends_with(".pvr"))
@@ -359,20 +360,21 @@ namespace april
 	Image* Image::createFromFile(chstr filename)
 	{
 		Image* image = NULL;
+		hfile file;
 		if (filename.lower().ends_with(".png"))
 		{
-			hfile f(filename);
-			image = Image::_loadPng(f);
+			file.open(filename);
+			image = Image::_loadPng(file);
 		}
 		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
 		{
-			hfile f(filename);
-			image = Image::_loadJpg(f);
+			file.open(filename);
+			image = Image::_loadJpg(file);
 		}
 		else if (filename.lower().ends_with(".jpt"))
 		{
-			hfile f(filename);
-			image = Image::_loadJpt(f);
+			file.open(filename);
+			image = Image::_loadJpt(file);
 		}
 #if TARGET_OS_IPHONE
 		else if (filename.lower().ends_with(".pvr"))
@@ -393,6 +395,40 @@ namespace april
 			if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, format))
 			{
 				delete [] image->data;
+				image->format = format;
+				image->data = data;
+			}
+		}
+		return image;
+	}
+
+	Image* Image::createFromStream(hsbase& stream, chstr logicalExtension)
+	{
+		Image* image = NULL;
+		if (logicalExtension.lower().ends_with("png"))
+		{
+			image = Image::_loadPng(stream);
+		}
+		else if (logicalExtension.lower().ends_with("jpg") || logicalExtension.lower().ends_with("jpeg"))
+		{
+			image = Image::_loadJpg(stream);
+		}
+		else if (logicalExtension.lower().ends_with("jpt"))
+		{
+			image = Image::_loadJpt(stream);
+		}
+		return image;
+	}
+
+	Image* Image::createFromStream(hsbase& stream, chstr logicalExtension, Image::Format format)
+	{
+		Image* image = Image::createFromStream(stream, logicalExtension);
+		if (image != NULL && Image::needsConversion(image->format, format))
+		{
+			unsigned char* data = NULL;
+			if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, format))
+			{
+				delete[] image->data;
 				image->format = format;
 				image->data = data;
 			}
