@@ -105,6 +105,7 @@ namespace april
 		void setOrthoProjection(gvec2 size);
 
 		virtual harray<DisplayMode> getSupportedDisplayModes();
+		virtual int getVRam();
 		virtual Caps getCaps();
 		virtual void setViewport(grect value);
 
