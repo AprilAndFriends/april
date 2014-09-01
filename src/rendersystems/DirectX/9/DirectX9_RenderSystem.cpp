@@ -285,6 +285,15 @@ namespace april
 		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
 
+	int DirectX9_RenderSystem::getVRam()
+	{
+		if (this->d3dDevice == NULL)
+		{
+			return 0;
+		}
+		return (this->d3dDevice->GetAvailableTextureMem() / (1024 * 1024));
+	}
+
 	harray<RenderSystem::DisplayMode> DirectX9_RenderSystem::getSupportedDisplayModes()
 	{
 		if (this->supportedDisplayModes.size() == 0)
@@ -316,15 +325,6 @@ namespace april
 			}
 		}
 		return this->supportedDisplayModes;
-	}
-
-	int DirectX9_RenderSystem::getVRam()
-	{
-		if (this->d3dDevice == NULL)
-		{
-			return 0;
-		}
-		return (this->d3dDevice->GetAvailableTextureMem() / (1024 * 1024));
 	}
 
 	void DirectX9_RenderSystem::setViewport(grect rect)
