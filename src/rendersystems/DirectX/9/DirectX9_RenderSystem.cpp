@@ -318,6 +318,15 @@ namespace april
 		return this->supportedDisplayModes;
 	}
 
+	int DirectX9_RenderSystem::getVRam()
+	{
+		if (this->d3dDevice == NULL)
+		{
+			return 0;
+		}
+		return (this->d3dDevice->GetAvailableTextureMem() / (1024 * 1024));
+	}
+
 	void DirectX9_RenderSystem::setViewport(grect rect)
 	{
 		RenderSystem::setViewport(rect);

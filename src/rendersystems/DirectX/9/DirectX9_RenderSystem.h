@@ -48,6 +48,7 @@ namespace april
 
 		inline float getPixelOffset() { return 0.5f; }
 		harray<DisplayMode> getSupportedDisplayModes();
+		virtual int getVRam();
 		void setViewport(grect rect);
 
 		void setTextureBlendMode(BlendMode textureBlendMode);

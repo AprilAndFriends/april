@@ -39,6 +39,7 @@ namespace april
 		void assignWindow(Window* window);
 
 		inline float getPixelOffset() { return 0.0f; }
+		inline int getVRam() { return 0; }
 		void setViewport(grect value);
 
 		void clear(bool useColor = true, bool depth = false);
