@@ -433,12 +433,13 @@ namespace april
 						PostQuitMessage(0);
 						april::window->terminateMainLoop();
 					}
+					return 0;
 				}
-				else if (wParam == VK_RETURN)
+				if (wParam == VK_RETURN)
 				{
 					april::window->toggleHotkeyFullscreen();
+					return 0;
 				}
-				return 0;
 			}
 			april::window->queueKeyEvent(KEY_DOWN, (april::Key)wParam, 0);
 			return 0;
