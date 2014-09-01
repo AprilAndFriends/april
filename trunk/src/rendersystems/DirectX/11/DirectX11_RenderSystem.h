@@ -61,7 +61,7 @@ namespace april
 		void reset();
 
 		inline float getPixelOffset() { return 0.0f; }
-		inline int getVRam();
+		int getVRam();
 		void setViewport(grect value);
 
 		void setTextureBlendMode(BlendMode textureBlendMode);

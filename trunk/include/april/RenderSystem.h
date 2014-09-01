@@ -104,12 +104,12 @@ namespace april
 		void setOrthoProjection(grect rect);
 		void setOrthoProjection(gvec2 size);
 
+		virtual float getPixelOffset() = 0;
+		virtual int getVRam() = 0;
+
 		virtual harray<DisplayMode> getSupportedDisplayModes();
-		virtual int getVRam();
 		virtual Caps getCaps();
 		virtual void setViewport(grect value);
-
-		virtual float getPixelOffset() = 0;
 
 		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
 		/// @note The parameter factor is only used when the color mode is LERP.
