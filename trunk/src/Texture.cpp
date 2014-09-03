@@ -456,7 +456,7 @@ namespace april
 		{
 			return false;
 		}
-		if (this->data != NULL || (this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET) && this->width > 0 && this->height > 0)
+		if (this->data != NULL || ((this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET) && this->width > 0 && this->height > 0))
 		{
 			return true;
 		}

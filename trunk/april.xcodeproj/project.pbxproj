@@ -34,6 +34,14 @@
 		C9E6097E150518B400EB077F /* april.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9E6097C150518B400EB077F /* april.cpp */; };
 		C9E6098F1505191800EB077F /* april.h in Headers */ = {isa = PBXBuildFile; fileRef = C9E6098D1505191800EB077F /* april.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9E609901505191800EB077F /* Platform.h in Headers */ = {isa = PBXBuildFile; fileRef = C9E6098E1505191800EB077F /* Platform.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D102CFF619B7284500948584 /* TextureAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D102CFF419B7284500948584 /* TextureAsync.cpp */; };
+		D102CFF719B7284500948584 /* TextureAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D102CFF419B7284500948584 /* TextureAsync.cpp */; };
+		D102CFF819B7284500948584 /* TextureAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D102CFF419B7284500948584 /* TextureAsync.cpp */; };
+		D102CFF919B7284500948584 /* TextureAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D102CFF419B7284500948584 /* TextureAsync.cpp */; };
+		D102CFFA19B7284500948584 /* TextureAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D102CFF419B7284500948584 /* TextureAsync.cpp */; };
+		D102CFFB19B7284500948584 /* TextureAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D102CFF419B7284500948584 /* TextureAsync.cpp */; };
+		D102CFFC19B7284500948584 /* TextureAsync.h in Headers */ = {isa = PBXBuildFile; fileRef = D102CFF519B7284500948584 /* TextureAsync.h */; };
+		D102CFFD19B7284500948584 /* TextureAsync.h in Headers */ = {isa = PBXBuildFile; fileRef = D102CFF519B7284500948584 /* TextureAsync.h */; };
 		D10B73AF1982473800A9352D /* OpenKODE_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10B73AA1982472300A9352D /* OpenKODE_main.cpp */; };
 		D10B73B01982473900A9352D /* OpenKODE_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10B73AA1982472300A9352D /* OpenKODE_main.cpp */; };
 		D10B73B11982473B00A9352D /* OpenKODE_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */; };
@@ -365,6 +373,8 @@
 		C9E6097C150518B400EB077F /* april.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = april.cpp; path = src/april.cpp; sourceTree = "<group>"; };
 		C9E6098D1505191800EB077F /* april.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = april.h; path = include/april/april.h; sourceTree = "<group>"; };
 		C9E6098E1505191800EB077F /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = include/april/Platform.h; sourceTree = "<group>"; };
+		D102CFF419B7284500948584 /* TextureAsync.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureAsync.cpp; path = src/TextureAsync.cpp; sourceTree = "<group>"; };
+		D102CFF519B7284500948584 /* TextureAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureAsync.h; path = src/TextureAsync.h; sourceTree = "<group>"; };
 		D10B73AA1982472300A9352D /* OpenKODE_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenKODE_main.cpp; path = src/platforms/OpenKODE_main.cpp; sourceTree = "<group>"; };
 		D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenKODE_Platform.cpp; path = src/platforms/OpenKODE_Platform.cpp; sourceTree = "<group>"; };
 		D10B73AC1982472300A9352D /* Posix_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Posix_main.cpp; path = src/platforms/Posix_main.cpp; sourceTree = "<group>"; };
@@ -675,6 +685,8 @@
 				7F1B522E12E4713600E958D8 /* Color.cpp */,
 				D1FED157192A3B5F00BE6A6D /* Cursor.cpp */,
 				7F1B522F12E4713600E958D8 /* Texture.cpp */,
+				D102CFF419B7284500948584 /* TextureAsync.cpp */,
+				D102CFF519B7284500948584 /* TextureAsync.h */,
 				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
 				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
 				D1134F21175CDAD200BFF3A2 /* egl.cpp */,
@@ -1127,6 +1139,7 @@
 				7F4D0FEA11FEE6C500F2F9F5 /* main.h in Headers */,
 				7FC8FA29122FA58F0092964C /* Timer.h in Headers */,
 				C9C04F9014BB1091005BD333 /* PixelShader.h in Headers */,
+				D102CFFD19B7284500948584 /* TextureAsync.h in Headers */,
 				C9C04F9114BB1091005BD333 /* VertexShader.h in Headers */,
 				D1B4870D193373EE004674EB /* OpenGL_State.h in Headers */,
 				7F1B522A12E4710D00E958D8 /* aprilExport.h in Headers */,
@@ -1170,6 +1183,7 @@
 				D1AF66C3170B1E5900A43743 /* Window.h in Headers */,
 				D1AF66C4170B1E5900A43743 /* main.h in Headers */,
 				D1B48714193373EE004674EB /* OpenGL_Texture.h in Headers */,
+				D102CFFC19B7284500948584 /* TextureAsync.h in Headers */,
 				D1AF66C5170B1E5900A43743 /* Timer.h in Headers */,
 				D1B486F6193373E6004674EB /* OpenGL1_Texture.h in Headers */,
 				D1AF66C7170B1E5900A43743 /* PixelShader.h in Headers */,
@@ -1365,6 +1379,7 @@
 				D1B4873919337479004674EB /* Mac_Platform.mm in Sources */,
 				D1E7206A16D37C5600B9C9AD /* ImageJpt.cpp in Sources */,
 				D1E7206D16D37C5600B9C9AD /* ImagePng.cpp in Sources */,
+				D102CFF719B7284500948584 /* TextureAsync.cpp in Sources */,
 				D1E7207216D37C6A00B9C9AD /* TimerSDL.cpp in Sources */,
 				D1B486C919337393004674EB /* SDL_Window.cpp in Sources */,
 				D136818F187BFB3E00E66E32 /* main_base.cpp in Sources */,
@@ -1386,6 +1401,7 @@
 				D1134EF0175CDA3300BFF3A2 /* Texture.cpp in Sources */,
 				D1B4870B193373EE004674EB /* OpenGL_State.cpp in Sources */,
 				D1134EF1175CDA3300BFF3A2 /* RenderSystem.cpp in Sources */,
+				D102CFFB19B7284500948584 /* TextureAsync.cpp in Sources */,
 				D1134EF2175CDA3300BFF3A2 /* Window.cpp in Sources */,
 				D1B486961933737B004674EB /* PVRTexture.mm in Sources */,
 				D1134EF3175CDA3300BFF3A2 /* PixelShader.cpp in Sources */,
@@ -1452,6 +1468,7 @@
 				D1B486BD19337389004674EB /* Mac_OpenGLView.mm in Sources */,
 				D1B486F4193373E6004674EB /* OpenGL1_Texture.cpp in Sources */,
 				D1534760178AD62A00151D1A /* TouchDelegate.cpp in Sources */,
+				D102CFF819B7284500948584 /* TextureAsync.cpp in Sources */,
 				D1B48700193373EE004674EB /* OpenGL_RenderSystem.cpp in Sources */,
 				D1534761178AD62A00151D1A /* UpdateDelegate.cpp in Sources */,
 				D1B486EE193373E6004674EB /* OpenGL1_RenderSystem.cpp in Sources */,
@@ -1510,6 +1527,7 @@
 				D1B4868D1933737B004674EB /* ApriliOSAppDelegate.mm in Sources */,
 				D1E7206E16D37C5600B9C9AD /* ImagePng.cpp in Sources */,
 				D1B4873F19337483004674EB /* iOS_devices.mm in Sources */,
+				D102CFFA19B7284500948584 /* TextureAsync.cpp in Sources */,
 				D1E7207416D37C7000B9C9AD /* TimerPosix.cpp in Sources */,
 				D1B486931933737B004674EB /* iOS_Window.mm in Sources */,
 				D1368192187BFB3E00E66E32 /* main_base.cpp in Sources */,
@@ -1546,6 +1564,7 @@
 				D1AF66B0170B1E5900A43743 /* KeyboardDelegate.cpp in Sources */,
 				D1B486FE193373EE004674EB /* OpenGL_RenderSystem.cpp in Sources */,
 				D1AF66B1170B1E5900A43743 /* MouseDelegate.cpp in Sources */,
+				D102CFF619B7284500948584 /* TextureAsync.cpp in Sources */,
 				D1B486EC193373E6004674EB /* OpenGL1_RenderSystem.cpp in Sources */,
 				D1AF66B2170B1E5900A43743 /* SystemDelegate.cpp in Sources */,
 				D1AF66B3170B1E5900A43743 /* TouchDelegate.cpp in Sources */,
@@ -1587,6 +1606,7 @@
 				D1B48701193373EE004674EB /* OpenGL_RenderSystem.cpp in Sources */,
 				D1B486B619337389004674EB /* Mac_Keys.mm in Sources */,
 				D1F27ACD177A2DF700E5C131 /* aprilUtil.cpp in Sources */,
+				D102CFF919B7284500948584 /* TextureAsync.cpp in Sources */,
 				D1B486F5193373E6004674EB /* OpenGL1_Texture.cpp in Sources */,
 				D1B4873719337479004674EB /* Mac_main.mm in Sources */,
 				D1F27ACE177A2DF700E5C131 /* EventDelegate.cpp in Sources */,
