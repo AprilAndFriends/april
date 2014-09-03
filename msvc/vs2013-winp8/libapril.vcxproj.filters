@@ -260,6 +260,9 @@
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\TextureAsync.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -417,6 +420,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\april\WinRT_main.h">
       <Filter>Header Files\platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\TextureAsync.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

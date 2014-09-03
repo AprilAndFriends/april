@@ -103,6 +103,10 @@ namespace april
 		HL_DEFINE_GET(grect, orthoProjection, OrthoProjection);
 		void setOrthoProjection(grect rect);
 		void setOrthoProjection(gvec2 size);
+		// TODOa - maybe use int64_t instead of long long
+		unsigned long long getVRamConsumption();
+		unsigned long long getRamConsumption();
+		unsigned long long getAsyncRamConsumption();
 
 		virtual float getPixelOffset() = 0;
 		virtual int getVRam() = 0;

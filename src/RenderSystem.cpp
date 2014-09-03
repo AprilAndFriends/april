@@ -193,6 +193,36 @@ namespace april
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
 
+	unsigned long long RenderSystem::getVRamConsumption()
+	{
+		unsigned long long result = 0;
+		foreach (Texture*, it, this->textures)
+		{
+			result += (*it)->getCurrentVRamSize();
+		}
+		return result;
+	}
+
+	unsigned long long RenderSystem::getRamConsumption()
+	{
+		unsigned long long result = 0;
+		foreach(Texture*, it, this->textures)
+		{
+			result += (*it)->getCurrentRamSize();
+		}
+		return result;
+	}
+
+	unsigned long long RenderSystem::getAsyncRamConsumption()
+	{
+		unsigned long long result = 0;
+		foreach(Texture*, it, this->textures)
+		{
+			result += (*it)->getCurrentAsyncRamSize();
+		}
+		return result;
+	}
+
 	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, bool loadImmediately)
 	{
 		hstr name = this->findTextureResource(filename);

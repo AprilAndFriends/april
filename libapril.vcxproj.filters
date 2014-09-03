@@ -290,6 +290,9 @@
     <ClCompile Include="src\windowsystems\AndroidJNI\AndroidJNI_Cursor.cpp">
       <Filter>Source Files\windowsystems\AndroidJNI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\TextureAsync.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\april\aprilExport.h">
@@ -459,6 +462,9 @@
     </ClInclude>
     <ClInclude Include="src\windowsystems\AndroidJNI\AndroidJNI_Cursor.h">
       <Filter>Header Files\windowsystems\AndroidJNI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureAsync.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

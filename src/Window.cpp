@@ -22,6 +22,7 @@
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "SystemDelegate.h"
+#include "TextureAsync.h"
 #include "TouchDelegate.h"
 #include "UpdateDelegate.h"
 #include "Window.h"
@@ -387,6 +388,7 @@ namespace april
 
 	bool Window::updateOneFrame()
 	{
+		TextureAsync::update();
 		float timeDelta = this->_calcTimeSinceLastFrame();
 		if (!this->focused)
 		{

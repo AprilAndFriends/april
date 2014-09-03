@@ -17,7 +17,9 @@
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hmutex.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hstream.h>
 
 #include "aprilExport.h"
 #include "Color.h"
@@ -26,11 +28,14 @@
 namespace april
 {
 	class Image;
+	class RenderSystem;
+	class TextureAsync;
 	
 	class aprilExport Texture
 	{
 	public:
 		friend class RenderSystem;
+		friend class TextureAsync;
 
 		enum Type
 		{
@@ -64,6 +69,7 @@ namespace april
 
 		virtual ~Texture();
 		virtual bool load();
+		virtual bool loadAsync();
 		virtual void unload() = 0;
 
 		HL_DEFINE_GET(hstr, filename, Filename);
@@ -71,10 +77,15 @@ namespace april
 		HL_DEFINE_GETSET(Filter, filter, Filter);
 		HL_DEFINE_GETSET(AddressMode, addressMode, AddressMode);
 		HL_DEFINE_IS(fromResource, FromResource);
+		HL_DEFINE_IS(asyncLoadQueued, AsyncLoadQueued);
 		int getWidth();
 		int getHeight();
 		int getBpp();
 		int getByteSize();
+		int getCurrentVRamSize();
+		int getCurrentRamSize();
+		int getCurrentAsyncRamSize();
+		bool isLoadedAsync();
 
 		virtual bool isLoaded() = 0;
 		
@@ -164,6 +175,9 @@ namespace april
 		Filter filter;
 		AddressMode addressMode;
 		unsigned char* data;
+		unsigned char* dataAsync;
+		bool asyncLoadQueued;
+		hmutex asyncLoadMutex;
 		bool fromResource;
 		bool firstUpload; // required because of how some rendering systems work
 
@@ -174,6 +188,9 @@ namespace april
 
 		virtual bool _createInternalTexture(unsigned char* data, int size, Type type) = 0;
 		virtual void _assignFormat() = 0;
+
+		hstream* _prepareAsyncStream();
+		void _loadFromAsyncStream(hstream* stream);
 
 		hstr _getInternalName();
 
