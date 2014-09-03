@@ -15,6 +15,7 @@
 
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
+#include <hltypes/hmap.h>
 #include <hltypes/hsbase.h>
 #include <hltypes/hstring.h>
 
@@ -136,11 +137,15 @@ namespace april
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int destWidth, int destHeight);
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight);
 
+		static void registerCustomLoader(chstr extension, Image* (*function)(hsbase&));
+
 		DEPRECATED_ATTRIBUTE static inline Image* load(chstr filename) { return Image::createFromResource(filename); }
 		DEPRECATED_ATTRIBUTE static inline Image* load(chstr filename, Format format) { return Image::createFromResource(filename, format); }
 
 	protected:
 		Image();
+
+		static hmap<hstr, Image* (*)(hsbase&)> customLoaders;
 
 		static Image* _loadPng(hsbase& stream, int size);
 		static Image* _loadPng(hsbase& stream);
