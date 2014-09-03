@@ -85,7 +85,9 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 - (void)performInit:(id)object
 {
     NSAutoreleasePool *pool = [NSAutoreleasePool new];
-    april_init(harray<hstr>());
+	harray<hstr> args;
+	args += ""; // unable to determine executable name, but due to convention, leave one argument filled
+    april_init(args);
 	[pool drain];
 
 	((EAGLView*) viewController.view)->app_started = 1;
