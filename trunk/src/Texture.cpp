@@ -7,14 +7,17 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #include <hltypes/harray.h>
+#include <hltypes/hfile.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
 #include "april.h"
 #include "Color.h"
 #include "Image.h"
 #include "Texture.h"
+#include "TextureAsync.h"
 #include "RenderSystem.h"
 
 #define HROUND_GRECT(rect) hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h)
@@ -100,6 +103,8 @@ namespace april
 		this->filter = FILTER_LINEAR;
 		this->addressMode = ADDRESS_CLAMP;
 		this->data = NULL;
+		this->dataAsync = NULL;
+		this->asyncLoadQueued = false;
 		this->fromResource = fromResource;
 		this->firstUpload = true;
 		april::rendersys->textures += this;
@@ -115,6 +120,8 @@ namespace april
 		this->format = Image::FORMAT_INVALID;
 		this->dataFormat = 0;
 		this->data = NULL;
+		this->dataAsync = NULL;
+		this->asyncLoadQueued = false;
 		hlog::write(april::logTag, "Registering texture: " + this->_getInternalName());
 		return true;
 	}
@@ -129,6 +136,8 @@ namespace april
 		this->format = format;
 		this->dataFormat = 0;
 		this->data = NULL;
+		this->dataAsync = NULL;
+		this->asyncLoadQueued = false;
 		hlog::write(april::logTag, "Registering texture: " + this->_getInternalName());
 		return true;
 	}
@@ -158,6 +167,8 @@ namespace april
 			size = this->getByteSize();
 			this->type = type;
 		}
+		this->dataAsync = NULL;
+		this->asyncLoadQueued = false;
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
@@ -198,6 +209,8 @@ namespace april
 			size = this->getByteSize();
 			this->type = type;
 		}
+		this->dataAsync = NULL;
+		this->asyncLoadQueued = false;
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
@@ -216,6 +229,10 @@ namespace april
 		if (this->data != NULL)
 		{
 			delete this->data;
+		}
+		if (this->dataAsync != NULL)
+		{
+			delete this->dataAsync;
 		}
 	}
 
@@ -259,6 +276,42 @@ namespace april
 		return (this->width * this->height * Image::getFormatBpp(this->format));
 	}
 
+	int Texture::getCurrentVRamSize()
+	{
+		if (this->width == 0 || this->height == 0 || this->format == Image::FORMAT_INVALID || !this->isLoaded())
+		{
+			return 0;
+		}
+		if (this->compressedSize > 0)
+		{
+			return this->compressedSize;
+		}
+		return (this->width * this->height * Image::getFormatBpp(this->format));
+	}
+
+	int Texture::getCurrentRamSize()
+	{
+		if (this->type == TYPE_IMMUTABLE || this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET)
+		{
+			return 0;
+		}
+		return this->getCurrentVRamSize();
+	}
+
+	int Texture::getCurrentAsyncRamSize()
+	{
+		if (!this->isLoadedAsync())
+		{
+			return 0;
+		}
+		return this->getCurrentVRamSize();
+	}
+
+	bool Texture::isLoadedAsync()
+	{
+		return (!this->asyncLoadQueued && this->dataAsync != NULL);
+	}
+
 	hstr Texture::_getInternalName()
 	{
 		hstr result;
@@ -298,6 +351,13 @@ namespace april
 		{
 			return true;
 		}
+		this->asyncLoadMutex.lock();
+		bool value = this->asyncLoadQueued;
+		this->asyncLoadMutex.unlock();
+		if (value)
+		{
+			return false;
+		}
 		hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
 		int size = 0;
 		unsigned char* currentData = NULL;
@@ -306,8 +366,14 @@ namespace april
 			currentData = this->data;
 			size = this->getByteSize();
 		}
+		else if (this->dataAsync != NULL) // reload from memory
+		{
+			currentData = this->dataAsync;
+			size = this->getByteSize();
+			this->dataAsync = NULL; // not needed anymore
+		}
 		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
-		if (currentData == NULL && ((type != TYPE_VOLATILE && type != TYPE_RENDER_TARGET) || this->width == 0 || this->height == 0))
+		if (currentData == NULL && ((this->type != TYPE_VOLATILE && this->type != TYPE_RENDER_TARGET) || this->width == 0 || this->height == 0))
 		{
 			if (this->filename == "")
 			{
@@ -382,6 +448,92 @@ namespace april
 			this->clear();
 		}
 		return true;
+	}
+
+	bool Texture::loadAsync()
+	{
+		if (this->isLoadedAsync() || this->isLoaded())
+		{
+			return false;
+		}
+		if (this->data != NULL || (this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET) && this->width > 0 && this->height > 0)
+		{
+			return true;
+		}
+		if (this->filename == "")
+		{
+			hlog::error(april::logTag, "No filename for texture specified!");
+			return false;
+		}
+		this->asyncLoadMutex.lock();
+		if (!this->asyncLoadQueued)
+		{
+			this->asyncLoadQueued = TextureAsync::queueLoad(this);
+		}
+		bool result = this->asyncLoadQueued; // this->asyncLoadQueued CAN change between the two lines below and cause problems hence this temporary result variable
+		this->asyncLoadMutex.unlock();
+		return result;
+	}
+
+	hstream* Texture::_prepareAsyncStream()
+	{
+		hstream* stream = new hstream();
+		if (this->fromResource)
+		{
+			hresource file(this->filename);
+			stream->write_raw(file);
+		}
+		else
+		{
+			hfile file(this->filename);
+			stream->write_raw(file);
+		}
+		stream->rewind();
+		return stream;
+	}
+
+	void Texture::_loadFromAsyncStream(hstream* stream)
+	{
+		this->asyncLoadMutex.lock();
+		bool queued = this->asyncLoadQueued;
+		this->asyncLoadMutex.unlock();
+		if (this->isLoaded() || this->isLoadedAsync() || !queued)
+		{
+			return;
+		}
+		hlog::write(april::logTag, "Loading texture (async): " + this->_getInternalName());
+		Image* image = NULL;
+		if (this->format == Image::FORMAT_INVALID)
+		{
+			image = Image::createFromStream(*stream, "." + hfile::extension_of(this->filename));
+		}
+		else
+		{
+			image = Image::createFromStream(*stream, "." + hfile::extension_of(this->filename), this->format);
+		}
+		if (image == NULL)
+		{
+			hlog::error(april::logTag, "Failed to load texture (async): " + this->_getInternalName());
+			this->asyncLoadMutex.lock();
+			this->asyncLoadQueued = false;
+			this->asyncLoadMutex.unlock();
+			return;
+		}
+		this->width = image->w;
+		this->height = image->h;
+		this->format = image->format;
+		this->dataFormat = image->internalFormat;
+		if (this->dataFormat != 0)
+		{
+			this->compressedSize = image->compressedSize;
+		}
+		this->_assignFormat();
+		this->asyncLoadMutex.lock();
+		this->dataAsync = image->data;
+		this->asyncLoadQueued = false;
+		this->asyncLoadMutex.unlock();
+		image->data = NULL;
+		delete image;
 	}
 
 	bool Texture::clear()
