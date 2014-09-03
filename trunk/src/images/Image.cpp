@@ -11,6 +11,7 @@
 #include <hltypes/hfile.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hmap.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
@@ -104,6 +105,8 @@ namespace april
 #if TARGET_OS_IPHONE
 	Image* _tryLoadingPVR(chstr filename);
 #endif
+
+	hmap<hstr, Image* (*)(hsbase&)> Image::customLoaders;
 
 	Image::Image()
 	{
@@ -314,31 +317,38 @@ namespace april
 
 	Image* Image::createFromResource(chstr filename)
 	{
-		Image* image = NULL;
 		hresource file;
 		if (filename.lower().ends_with(".png"))
 		{
 			file.open(filename);
-			image = Image::_loadPng(file);
+			return Image::_loadPng(file);
 		}
-		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
+		if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
 		{
 			file.open(filename);
-			image = Image::_loadJpg(file);
+			return Image::_loadJpg(file);
 		}
-		else if (filename.lower().ends_with(".jpt"))
+		if (filename.lower().ends_with(".jpt"))
 		{
 			file.open(filename);
-			image = Image::_loadJpt(file);
+			return Image::_loadJpt(file);
 		}
 #if TARGET_OS_IPHONE
-		else if (filename.lower().ends_with(".pvr"))
+		if (filename.lower().ends_with(".pvr"))
 		{
 			// TODOa - might need to be refactored
-			image = _tryLoadingPVR(filename);
+			return _tryLoadingPVR(filename);
 		}
 #endif
-		return image;
+		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
+		{
+			if (filename.lower().ends_with(it->first.lower()))
+			{
+				file.open(filename);
+				return (*it->second)(file);
+			}
+		}
+		return NULL;
 	}
 
 	Image* Image::createFromResource(chstr filename, Image::Format format)
@@ -359,31 +369,38 @@ namespace april
 
 	Image* Image::createFromFile(chstr filename)
 	{
-		Image* image = NULL;
 		hfile file;
 		if (filename.lower().ends_with(".png"))
 		{
 			file.open(filename);
-			image = Image::_loadPng(file);
+			return Image::_loadPng(file);
 		}
-		else if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
+		if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
 		{
 			file.open(filename);
-			image = Image::_loadJpg(file);
+			return Image::_loadJpg(file);
 		}
-		else if (filename.lower().ends_with(".jpt"))
+		if (filename.lower().ends_with(".jpt"))
 		{
 			file.open(filename);
-			image = Image::_loadJpt(file);
+			return Image::_loadJpt(file);
 		}
 #if TARGET_OS_IPHONE
-		else if (filename.lower().ends_with(".pvr"))
+		if (filename.lower().ends_with(".pvr"))
 		{
 			// TODOa - might need to be refactored
-			image = _tryLoadingPVR(filename);
+			return _tryLoadingPVR(filename);
 		}
 #endif
-		return image;
+		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
+		{
+			if (filename.lower().ends_with(it->first.lower()))
+			{
+				file.open(filename);
+				return (*it->second)(file);
+			}
+		}
+		return NULL;
 	}
 
 	Image* Image::createFromFile(chstr filename, Image::Format format)
@@ -404,20 +421,26 @@ namespace april
 
 	Image* Image::createFromStream(hsbase& stream, chstr logicalExtension)
 	{
-		Image* image = NULL;
-		if (logicalExtension.lower().ends_with("png"))
+		if (logicalExtension.lower().ends_with(".png"))
 		{
-			image = Image::_loadPng(stream);
+			return Image::_loadPng(stream);
 		}
-		else if (logicalExtension.lower().ends_with("jpg") || logicalExtension.lower().ends_with("jpeg"))
+		if (logicalExtension.lower().ends_with(".jpg") || logicalExtension.lower().ends_with(".jpeg"))
 		{
-			image = Image::_loadJpg(stream);
+			return Image::_loadJpg(stream);
 		}
-		else if (logicalExtension.lower().ends_with("jpt"))
+		if (logicalExtension.lower().ends_with(".jpt"))
 		{
-			image = Image::_loadJpt(stream);
+			return Image::_loadJpt(stream);
 		}
-		return image;
+		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
+		{
+			if (logicalExtension.lower().ends_with(it->first.lower()))
+			{
+				return (*it->second)(stream);
+			}
+		}
+		return NULL;
 	}
 
 	Image* Image::createFromStream(hsbase& stream, chstr logicalExtension, Image::Format format)
@@ -1939,6 +1962,11 @@ namespace april
 			return false;
 		}
 		return true;
+	}
+
+	void Image::registerCustomLoader(chstr extension, Image* (*function)(hsbase&))
+	{
+		Image::customLoaders[extension] = function;
 	}
 
 	void Image::_getFormatIndices(Image::Format format, int* red, int* green, int* blue, int* alpha)
