@@ -75,15 +75,6 @@ namespace april
 			}
 			info.locale = info.locale.lower();
 			info.localeVariant = info.localeVariant.upper();
-			// TODOloc - this code needs to be removed in the future
-			if (info.locale == "pt" && info.localeVariant == "PT")
-			{
-				info.locale = info.locale + "-" + info.localeVariant;
-			}
-			if (info.locale == "zh" && (info.localeVariant.starts_with("HANT") || info.localeVariant == "TW"))
-			{
-				info.locale = "zh-Hant";
-			}
 		}
 		return info;
 	}
