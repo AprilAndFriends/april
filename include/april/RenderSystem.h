@@ -126,12 +126,12 @@ namespace april
 		virtual void setVertexShader(VertexShader* vertexShader) = 0;
 		virtual void setPixelShader(PixelShader* pixelShader) = 0;
 
-		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, bool loadImmediately = true);
+		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
 		/// @note When a format is forced, it's best to use managed (but not necessary).
-		Texture* createTextureFromResource(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, bool loadImmediately = true);
-		Texture* createTextureFromFile(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, bool loadImmediately = true);
+		Texture* createTextureFromResource(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
+		Texture* createTextureFromFile(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
 		/// @note When a format is forced, it's best to use managed (but not necessary).
-		Texture* createTextureFromFile(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, bool loadImmediately = true);
+		Texture* createTextureFromFile(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
 		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
 		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
 		virtual PixelShader* createPixelShader() = 0;
@@ -168,9 +168,6 @@ namespace april
 		virtual Image* takeScreenshot(Image::Format format) = 0;
 		virtual void presentFrame();
 
-		DEPRECATED_ATTRIBUTE inline hstr findTextureFilename(chstr filename) { return this->findTextureResource(filename); }
-		DEPRECATED_ATTRIBUTE inline Texture* createTexture(chstr filename, bool loadImmediately) { return this->createTextureFromResource(filename, Texture::TYPE_IMMUTABLE, loadImmediately); }
-		DEPRECATED_ATTRIBUTE inline Texture* createTexture(int w, int h, Image::Format format) { return this->createTexture(w, h, Color::Clear, format, Texture::TYPE_MANAGED); }
 		DEPRECATED_ATTRIBUTE inline int getMaxTextureSize() { return this->getCaps().maxTextureSize; }
 
 	protected:
@@ -187,6 +184,7 @@ namespace april
 		grect orthoProjection;
 		Caps caps;
 
+		Texture* _createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format = Image::FORMAT_INVALID);
 		virtual Texture* _createTexture(bool fromResource) = 0;
 
 		void _registerTexture(Texture* texture);

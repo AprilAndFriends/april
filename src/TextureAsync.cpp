@@ -49,6 +49,15 @@ namespace april
 		}
 		TextureAsync::readerMutex.unlock();
 		TextureAsync::queueMutex.unlock();
+		// upload all ready textures to the GPU
+		harray<Texture*> textures = april::rendersys->getTextures();
+		foreach (Texture*, it, textures)
+		{
+			if ((*it)->getLoadMode() == Texture::LOAD_ASYNC && !(*it)->isLoaded() && (*it)->isLoadedAsync())
+			{
+				(*it)->load();
+			}
+		}
 	}
 
 	bool TextureAsync::queueLoad(Texture* texture)
@@ -89,6 +98,10 @@ namespace april
 				texture = TextureAsync::textures[TextureAsync::streams.size()];
 				TextureAsync::queueMutex.unlock();
 				stream = texture->_prepareAsyncStream();
+				if (stream == NULL) // it was canceled
+				{
+					TextureAsync::textures.remove_at(TextureAsync::streams.size());
+				}
 				TextureAsync::queueMutex.lock();
 				TextureAsync::streams += stream;
 				running = true;
