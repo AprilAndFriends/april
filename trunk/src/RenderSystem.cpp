@@ -18,6 +18,7 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hthread.h>
 
 #include "april.h"
 #include "aprilUtil.h"
@@ -25,6 +26,7 @@
 #include "RenderSystem.h"
 #include "Platform.h"
 #include "Texture.h"
+#include "TextureAsync.h"
 #include "Window.h"
 
 namespace april
@@ -221,6 +223,29 @@ namespace april
 			result += (*it)->getCurrentAsyncRamSize();
 		}
 		return result;
+	}
+
+	bool RenderSystem::hasAsyncTexturesQueued()
+	{
+		foreach (Texture*, it, this->textures)
+		{
+			if ((*it)->isAsyncLoadQueued())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void RenderSystem::waitForAsyncTextures(float timeout)
+	{
+		float time = timeout;
+		while ((time > 0.0f || timeout <= 0.0f) && this->hasAsyncTexturesQueued())
+		{
+			hthread::sleep(0.1f);
+			time -= 0.0001f;
+			TextureAsync::update();
+		}
 	}
 
 	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, Texture::LoadMode loadMode)

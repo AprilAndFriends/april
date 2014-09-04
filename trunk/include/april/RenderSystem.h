@@ -107,6 +107,9 @@ namespace april
 		unsigned long long getVRamConsumption();
 		unsigned long long getRamConsumption();
 		unsigned long long getAsyncRamConsumption();
+		bool hasAsyncTexturesQueued();
+		/// @note A timeout value of 0.0 means indefinitely.
+		void waitForAsyncTextures(float timeout = 0.0f);
 
 		virtual float getPixelOffset() = 0;
 		virtual int getVRam() = 0;

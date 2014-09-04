@@ -104,7 +104,7 @@ namespace april
 		virtual bool load();
 		virtual bool loadAsync();
 		virtual void unload();
-		/// @note A timeout value of 0 means indefinitely
+		/// @note A timeout value of 0.0 means indefinitely.
 		void waitForAsyncLoad(float timeout = 0.0f);
 
 		bool clear();
