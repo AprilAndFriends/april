@@ -98,12 +98,15 @@ namespace april
 				texture = TextureAsync::textures[TextureAsync::streams.size()];
 				TextureAsync::queueMutex.unlock();
 				stream = texture->_prepareAsyncStream();
-				if (stream == NULL) // it was canceled
-				{
-					TextureAsync::textures.remove_at(TextureAsync::streams.size());
-				}
 				TextureAsync::queueMutex.lock();
-				TextureAsync::streams += stream;
+				if (stream != NULL)
+				{
+					TextureAsync::streams += stream;
+				}
+				else // it was canceled
+				{
+					TextureAsync::textures.remove(texture);
+				}
 				running = true;
 			}
 			size = TextureAsync::streams.size();

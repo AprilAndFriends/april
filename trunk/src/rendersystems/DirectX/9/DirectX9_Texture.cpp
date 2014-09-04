@@ -29,6 +29,7 @@ namespace april
 	DirectX9_Texture::~DirectX9_Texture()
 	{
 		this->unload();
+		this->waitForAsyncLoad();
 	}
 
 	bool DirectX9_Texture::_createInternalTexture(unsigned char* data, int size, Type type)

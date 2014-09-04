@@ -236,10 +236,12 @@ namespace april
 		{
 			delete this->data;
 		}
+		this->asyncLoadMutex.lock();
 		if (this->dataAsync != NULL)
 		{
 			delete this->dataAsync;
 		}
+		this->asyncLoadMutex.unlock();
 	}
 
 	int Texture::getWidth()
@@ -315,7 +317,18 @@ namespace april
 
 	bool Texture::isLoadedAsync()
 	{
-		return (!this->asyncLoadQueued && this->dataAsync != NULL);
+		this->asyncLoadMutex.lock();
+		bool result = (!this->asyncLoadQueued && this->dataAsync != NULL);
+		this->asyncLoadMutex.unlock();
+		return result;
+	}
+
+	bool Texture::isAsyncLoadQueued()
+	{
+		this->asyncLoadMutex.lock();
+		bool result = this->asyncLoadQueued;
+		this->asyncLoadMutex.unlock();
+		return result;
 	}
 
 	hstr Texture::_getInternalName()
@@ -358,12 +371,15 @@ namespace april
 			return true;
 		}
 		this->asyncLoadMutex.lock();
-		bool value = this->asyncLoadQueued;
 		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
-		this->asyncLoadMutex.unlock();
-		if (value)
+		if (this->asyncLoadQueued)
 		{
+			this->asyncLoadMutex.unlock();
 			this->waitForAsyncLoad();
+		}
+		else
+		{
+			this->asyncLoadMutex.unlock();
 		}
 		hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
 		int size = 0;
@@ -515,14 +531,17 @@ namespace april
 			this->asyncLoadMutex.unlock();
 			hthread::sleep(0.1f);
 			time -= 0.0001f;
+			TextureAsync::update();
 		}
 	}
 
 	hstream* Texture::_prepareAsyncStream()
 	{
 		this->asyncLoadMutex.lock();
-		if (this->asyncLoadDiscarded)
+		if (!this->asyncLoadQueued || this->asyncLoadDiscarded)
 		{
+			this->asyncLoadQueued = false;
+			this->asyncLoadDiscarded = false;
 			this->asyncLoadMutex.unlock();
 			return NULL;
 		}
@@ -540,8 +559,10 @@ namespace april
 		}
 		stream->rewind();
 		this->asyncLoadMutex.lock();
-		if (this->asyncLoadDiscarded)
+		if (!this->asyncLoadQueued || this->asyncLoadDiscarded)
 		{
+			this->asyncLoadQueued = false;
+			this->asyncLoadDiscarded = false;
 			this->asyncLoadMutex.unlock();
 			delete stream;
 			return NULL;
@@ -555,6 +576,8 @@ namespace april
 		this->asyncLoadMutex.lock();
 		if (!this->asyncLoadQueued || this->asyncLoadDiscarded)
 		{
+			this->asyncLoadQueued = false;
+			this->asyncLoadDiscarded = false;
 			this->asyncLoadMutex.unlock();
 			return;
 		}
@@ -592,7 +615,7 @@ namespace april
 		}
 		this->_assignFormat();
 		this->asyncLoadMutex.lock();
-		if (!this->asyncLoadDiscarded)
+		if (this->asyncLoadQueued && !this->asyncLoadDiscarded)
 		{
 			this->dataAsync = image->data;
 			image->data = NULL;

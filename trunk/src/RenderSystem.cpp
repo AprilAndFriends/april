@@ -206,7 +206,7 @@ namespace april
 	unsigned long long RenderSystem::getRamConsumption()
 	{
 		unsigned long long result = 0;
-		foreach(Texture*, it, this->textures)
+		foreach (Texture*, it, this->textures)
 		{
 			result += (*it)->getCurrentRamSize();
 		}
@@ -216,7 +216,7 @@ namespace april
 	unsigned long long RenderSystem::getAsyncRamConsumption()
 	{
 		unsigned long long result = 0;
-		foreach(Texture*, it, this->textures)
+		foreach (Texture*, it, this->textures)
 		{
 			result += (*it)->getCurrentAsyncRamSize();
 		}
