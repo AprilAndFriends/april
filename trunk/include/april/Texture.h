@@ -89,7 +89,6 @@ namespace april
 		HL_DEFINE_GETSET(Filter, filter, Filter);
 		HL_DEFINE_GETSET(AddressMode, addressMode, AddressMode);
 		HL_DEFINE_IS(fromResource, FromResource);
-		HL_DEFINE_IS(asyncLoadQueued, AsyncLoadQueued);
 		int getWidth();
 		int getHeight();
 		int getBpp();
@@ -98,6 +97,7 @@ namespace april
 		int getCurrentRamSize();
 		int getCurrentAsyncRamSize();
 		bool isLoadedAsync();
+		bool isAsyncLoadQueued();
 
 		virtual bool isLoaded() = 0;
 
