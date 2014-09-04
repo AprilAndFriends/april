@@ -150,6 +150,7 @@ namespace april
 
 	void OpenGL_Texture::unload()
 	{
+		Texture::unload();
 		if (this->textureId != 0)
 		{
 			hlog::write(april::logTag, "Unloading texture: " + this->_getInternalName());

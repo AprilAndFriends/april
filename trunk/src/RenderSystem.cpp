@@ -223,66 +223,50 @@ namespace april
 		return result;
 	}
 
-	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, bool loadImmediately)
+	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, Texture::LoadMode loadMode)
 	{
-		hstr name = this->findTextureResource(filename);
-		if (name == "")
-		{
-			return NULL;
-		}
-		Texture* texture = this->_createTexture(true);
-		if (!texture->_create(name, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
-		{
-			delete texture;
-			return NULL;
-		}
-		return texture;
+		return this->_createTextureFromSource(true, filename, type, loadMode);
 	}
 
-	Texture* RenderSystem::createTextureFromResource(chstr filename, Image::Format format, Texture::Type type, bool loadImmediately)
+	Texture* RenderSystem::createTextureFromResource(chstr filename, Image::Format format, Texture::Type type, Texture::LoadMode loadMode)
 	{
-		hstr name = this->findTextureResource(filename);
-		if (name == "")
-		{
-			return NULL;
-		}
-		Texture* texture = this->_createTexture(true);
-		if (!texture->_create(name, format, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
-		{
-			delete texture;
-			return NULL;
-		}
-		return texture;
+		return this->_createTextureFromSource(true, filename, type, loadMode, format);
 	}
 
-	Texture* RenderSystem::createTextureFromFile(chstr filename, Texture::Type type, bool loadImmediately)
+	Texture* RenderSystem::createTextureFromFile(chstr filename, Texture::Type type, Texture::LoadMode loadMode)
+	{
+		return this->_createTextureFromSource(false, filename, type, loadMode);
+	}
+
+	Texture* RenderSystem::createTextureFromFile(chstr filename, Image::Format format, Texture::Type type, Texture::LoadMode loadMode)
+	{
+		return this->_createTextureFromSource(false, filename, type, loadMode, format);
+	}
+
+	Texture* RenderSystem::_createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format)
 	{
 		hstr name = this->findTextureFile(filename);
 		if (name == "")
 		{
 			return NULL;
 		}
-		Texture* texture = this->_createTexture(false);
-		if (!texture->_create(name, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
+		Texture* texture = this->_createTexture(fromResource);
+		bool result = (format == Image::FORMAT_INVALID ? texture->_create(name, type, loadMode) : texture->_create(name, format, type, loadMode));
+		if (result)
+		{
+			if (loadMode == Texture::LOAD_IMMEDIATE)
+			{
+				result = texture->load();
+			}
+			else if (loadMode == Texture::LOAD_ASYNC || loadMode == Texture::LOAD_ASYNC_ON_DEMAND)
+			{
+				result = texture->loadAsync();
+			}
+		}
+		if (!result)
 		{
 			delete texture;
-			return NULL;
-		}
-		return texture;
-	}
-
-	Texture* RenderSystem::createTextureFromFile(chstr filename, Image::Format format, Texture::Type type, bool loadImmediately)
-	{
-		hstr name = this->findTextureFile(filename);
-		if (name == "")
-		{
-			return NULL;
-		}
-		Texture* texture = this->_createTexture(false);
-		if (!texture->_create(name, format, type) || (loadImmediately && !texture->load() && !texture->isLoaded()))
-		{
-			delete texture;
-			return NULL;
+			texture = NULL;
 		}
 		return texture;
 	}

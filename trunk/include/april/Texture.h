@@ -64,15 +64,27 @@ namespace april
 			ADDRESS_UNDEFINED = 0x7FFFFFFF
 		};
 
+		enum LoadMode
+		{
+			/// @brief Loads the texture and uploads data to the GPU right away.
+			LOAD_IMMEDIATE = 0,
+			/// @brief Doesn't load the texture yet at all. It will be loaded and uploaded to the GPU on the first use.
+			LOAD_ON_DEMAND = 1,
+			/// @brief Loads the texture asynchronously right away and uploads the data to the GPU as soon as it is available before the next frame.
+			/// @note If the texture is used before it loaded asynchronously, it cannot be uploaded to the GPU and will not be rendered properly.
+			LOAD_ASYNC = 2,
+			/// @brief Loads the texture asynchronously right away, but it will upload the data to the GPU on the first use.
+			/// @note If the texture is used before it loaded asynchronously, it cannot be uploaded to the GPU and will not be rendered properly.
+			LOAD_ASYNC_ON_DEMAND = 3
+		};
+
 		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ALPHA;
 		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ARGB;
 
 		virtual ~Texture();
-		virtual bool load();
-		virtual bool loadAsync();
-		virtual void unload() = 0;
 
 		HL_DEFINE_GET(hstr, filename, Filename);
+		HL_DEFINE_GET(LoadMode, loadMode, LoadMode);
 		HL_DEFINE_GET(Image::Format, format, Format);
 		HL_DEFINE_GETSET(Filter, filter, Filter);
 		HL_DEFINE_GETSET(AddressMode, addressMode, AddressMode);
@@ -88,7 +100,13 @@ namespace april
 		bool isLoadedAsync();
 
 		virtual bool isLoaded() = 0;
-		
+
+		virtual bool load();
+		virtual bool loadAsync();
+		virtual void unload();
+		/// @note A timeout value of 0 means indefinitely
+		void waitForAsyncLoad(float timeout = 0.0f);
+
 		bool clear();
 		Color getPixel(int x, int y);
 		Color getPixel(gvec2 position);
@@ -167,6 +185,7 @@ namespace april
 
 		hstr filename;
 		Type type;
+		LoadMode loadMode;
 		Image::Format format;
 		unsigned int dataFormat; // used internally for special image data formatting
 		int width;
@@ -177,12 +196,13 @@ namespace april
 		unsigned char* data;
 		unsigned char* dataAsync;
 		bool asyncLoadQueued;
+		bool asyncLoadDiscarded;
 		hmutex asyncLoadMutex;
 		bool fromResource;
 		bool firstUpload; // required because of how some rendering systems work
 
-		virtual bool _create(chstr filename, Type type);
-		virtual bool _create(chstr filename, Image::Format format, Type type);
+		virtual bool _create(chstr filename, Type type, LoadMode loadMode);
+		virtual bool _create(chstr filename, Image::Format format, Type type, LoadMode loadMode);
 		virtual bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
 		virtual bool _create(int w, int h, Color color, Image::Format format, Type type);
 

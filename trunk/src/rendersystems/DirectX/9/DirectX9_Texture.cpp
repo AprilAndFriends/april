@@ -84,6 +84,7 @@ namespace april
 
 	void DirectX9_Texture::unload()
 	{
+		Texture::unload();
 		if (this->d3dTexture != NULL)
 		{
 			hlog::write(april::logTag, "Unloading texture: " + this->_getInternalName());
