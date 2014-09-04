@@ -30,6 +30,7 @@ namespace april
 	DirectX11_Texture::~DirectX11_Texture()
 	{
 		this->unload();
+		this->waitForAsyncLoad();
 	}
 
 	bool DirectX11_Texture::_createInternalTexture(unsigned char* data, int size, Type type)

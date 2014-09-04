@@ -131,6 +131,7 @@ namespace april
 	OpenGL_Texture::~OpenGL_Texture()
 	{
 		this->unload();
+		this->waitForAsyncLoad();
 	}
 
 	void OpenGL_Texture::_setCurrentTexture()
