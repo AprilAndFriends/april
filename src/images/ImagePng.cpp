@@ -58,7 +58,7 @@ namespace april
 		if (pngPtr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA && bpp > 1)
 		{
 			png_set_strip_alpha(pngPtr);
-			bpp -= 1;
+			--bpp;
 		}
 		if (png_get_valid(pngPtr, infoPtr, PNG_INFO_tRNS))
 		{
