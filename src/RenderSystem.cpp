@@ -270,7 +270,7 @@ namespace april
 
 	Texture* RenderSystem::_createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format)
 	{
-		hstr name = this->findTextureFile(filename);
+		hstr name = (fromResource ? this->findTextureResource(filename) : this->findTextureFile(filename));
 		if (name == "")
 		{
 			return NULL;
