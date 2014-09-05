@@ -517,6 +517,7 @@ namespace april
 
 	void Texture::waitForAsyncLoad(float timeout)
 	{
+		TextureAsync::prioritizeLoad(this);
 		float time = timeout;
 		while (time > 0.0f || timeout <= 0.0f)
 		{
