@@ -378,6 +378,7 @@ namespace april
 			this->waitForAsyncLoad();
 			return true; // will already call this method again through TextureAsync::update() so it does not need to continue
 		}
+		this->asyncLoadMutex.unlock();
 		hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
 		int size = 0;
 		unsigned char* currentData = NULL;
