@@ -87,15 +87,15 @@ namespace april
 		if (TextureAsync::textures.contains(texture))
 		{
 			int index = TextureAsync::textures.index_of(texture);
-			if (index >= TextureAsync::streams.size())
+			if (index >= TextureAsync::streams.size()) // if not loaded from disk yet
 			{
 				if (index > TextureAsync::streams.size()) // if not already at the front
 				{
 					TextureAsync::textures.remove(texture);
-					TextureAsync::textures.insert_at(index, texture);
+					TextureAsync::textures.insert_at(TextureAsync::streams.size(), texture);
 				}
 			}
-			else
+			else // if data was already loaded in RAM, but not decoded
 			{
 				TextureAsync::textures.remove_at(index);
 				TextureAsync::textures.push_first(texture);
