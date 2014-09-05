@@ -80,6 +80,33 @@ namespace april
 		return result;
 	}
 
+	bool TextureAsync::prioritizeLoad(Texture* texture)
+	{
+		bool result = false;
+		TextureAsync::queueMutex.lock();
+		if (TextureAsync::textures.contains(texture))
+		{
+			int index = TextureAsync::textures.index_of(texture);
+			if (index >= TextureAsync::streams.size())
+			{
+				if (index > TextureAsync::streams.size()) // if not already at the front
+				{
+					TextureAsync::textures.remove(texture);
+					TextureAsync::textures.insert_at(index, texture);
+				}
+			}
+			else
+			{
+				TextureAsync::textures.remove_at(index);
+				TextureAsync::textures.push_first(texture);
+				TextureAsync::streams.push_first(TextureAsync::streams.remove_at(index));
+			}
+			result = true;
+		}
+		TextureAsync::queueMutex.unlock();
+		return result;
+	}
+
 	void TextureAsync::_read(hthread* thread)
 	{
 		Texture* texture = NULL;
@@ -101,7 +128,9 @@ namespace april
 				TextureAsync::queueMutex.lock();
 				if (stream != NULL)
 				{
-					TextureAsync::streams += stream;
+					// it's possible that the queue was rearranged in the meantime
+					int index = TextureAsync::textures.index_of(texture);
+					TextureAsync::streams.insert_at(index, stream);
 				}
 				else // it was canceled
 				{
@@ -143,12 +172,20 @@ namespace april
 
 	void TextureAsync::_decode(hthread* thread)
 	{
-		TextureAsync::queueMutex.lock();
-		Texture* texture = TextureAsync::textures.remove_first();
-		hstream* stream = TextureAsync::streams.remove_first();
-		TextureAsync::queueMutex.unlock();
-		texture->_loadFromAsyncStream(stream);
-		delete stream;
+		while (true)
+		{
+			TextureAsync::queueMutex.lock();
+			if (TextureAsync::streams.size() == 0)
+			{
+				TextureAsync::queueMutex.unlock();
+				break;
+			}
+			Texture* texture = TextureAsync::textures.remove_first();
+			hstream* stream = TextureAsync::streams.remove_first();
+			TextureAsync::queueMutex.unlock();
+			texture->_loadFromAsyncStream(stream);
+			delete stream;
+		}
 	}
 
 }

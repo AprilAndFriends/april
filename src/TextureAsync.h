@@ -34,6 +34,7 @@ namespace april
 	public:
 		static void update();
 		static bool queueLoad(Texture* texture);
+		static bool prioritizeLoad(Texture* texture);
 
 	protected:
 		static harray<Texture*> textures;
