@@ -20,7 +20,9 @@ class PilConv:
 		origin_image.save(jpeg, quality = quality) # saves JPEG
 		if "A" in origin_image.getbands():
 			alpha = origin_image.split()[-1] # gets alpha channel
-			png_image = Image.merge("L", [alpha]) # creates PNG alpha image
+			if "icc_profile" in alpha.info:
+				alpha.info.pop("icc_profile")
+			png_image = alpha
 		else:
 			png_image = Image.new("L", origin_image.size, 255) # creates opaque PNG alpha image
 		png_image.save(png) # saves PNG
