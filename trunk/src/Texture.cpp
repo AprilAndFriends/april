@@ -20,7 +20,8 @@
 #include "TextureAsync.h"
 #include "RenderSystem.h"
 
-#define TO_NEXT_POT(x) ((int)pow(2, hceil(log2((double)x))))
+static const double __ilog2 = 1.0 / log(2);
+#define TO_NEXT_POT(value) ((int)pow(2, hceil(log(value) * __ilog2)))
 
 #define HROUND_GRECT(rect) hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h)
 #define HROUND_GVEC2(vec2) hround(vec2.x), hround(vec2.y)
