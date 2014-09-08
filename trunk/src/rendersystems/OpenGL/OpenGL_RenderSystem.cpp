@@ -269,6 +269,18 @@ namespace april
 		if (this->currentState.textureId != this->deviceState.textureId)
 		{
 			glBindTexture(GL_TEXTURE_2D, this->currentState.textureId);
+			if (this->currentState.textureId != 0 && (this->activeTexture->effectiveWidth != 1.0f || this->activeTexture->effectiveHeight != 1.0f))
+			{
+				this->setMatrixMode(GL_TEXTURE);
+				gmat4 matrix;
+				matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
+				glLoadMatrixf(matrix.data);
+			}
+			else
+			{
+				this->setMatrixMode(GL_TEXTURE);
+				glLoadIdentity();
+			}
 			this->deviceState.textureId = this->currentState.textureId;
 			// TODO - you should memorize address and filter modes per texture in opengl to avoid unnecesarry calls
 			this->deviceState.textureAddressMode = Texture::ADDRESS_UNDEFINED;
@@ -514,6 +526,28 @@ namespace april
 		{
 			this->deviceState.strideTexCoord = stride;
 			this->deviceState.pointerTexCoord = pointer;
+			/*
+			static int i = 0;
+			if (i < 10000)
+			{
+				if (pointer != NULL && this->activeTexture != NULL && (this->activeTexture->effectiveWidth != 1.0f || this->activeTexture->effectiveHeight != 1.0f))
+				{
+					glMatrixMode(GL_TEXTURE);
+					gmat4 matrix;
+					matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
+					glLoadMatrixf(matrix.data);
+				}
+				else
+				{
+					glMatrixMode(GL_TEXTURE);
+					gmat4 matrix;
+					//matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
+					glLoadMatrixf(matrix.data);
+					//glLoadIdentity();
+				}
+			}
+			++i;
+			*/
 			glTexCoordPointer(2, GL_FLOAT, stride, pointer);
 		}
 	}

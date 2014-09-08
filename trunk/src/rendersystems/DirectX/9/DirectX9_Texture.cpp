@@ -54,8 +54,29 @@ namespace april
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to create DX9 texture!");
-			return false;
+			RenderSystem::Caps caps = april::rendersys->getCaps();
+			// maybe it failed, because NPOT textures aren't supported
+			if (!caps.npotTexturesLimited && !caps.npotTextures)
+			{
+				int w = this->width;
+				int h = this->height;
+				this->_setupPot(w, h);
+				hr = APRIL_D3D_DEVICE->CreateTexture(w, h, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
+				if (!FAILED(hr) && data != NULL)
+				{
+					unsigned char* newData = this->_createPotData(w, h, data);
+					this->type = TYPE_VOLATILE; // so the write call right below goes through
+					this->write(0, 0, w, h, 0, 0, newData, w, h, this->format);
+					this->type = type;
+					delete [] newData;
+					this->firstUpload = false;
+				}
+			}
+			if (FAILED(hr))
+			{
+				hlog::error(april::logTag, "Failed to create DX9 texture!");
+				return false;
+			}
 		}
 		return true;
 	}

@@ -20,6 +20,8 @@
 #include "TextureAsync.h"
 #include "RenderSystem.h"
 
+#define TO_NEXT_POT(x) ((int)pow(2, hceil(log2((double)x))))
+
 #define HROUND_GRECT(rect) hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h)
 #define HROUND_GVEC2(vec2) hround(vec2.x), hround(vec2.y)
 
@@ -100,6 +102,8 @@ namespace april
 		this->dataFormat = 0;
 		this->width = 0;
 		this->height = 0;
+		this->effectiveWidth = 1.0f; // used only with software NPOT textures
+		this->effectiveHeight = 1.0f; // used only with software NPOT textures
 		this->compressedSize = 0; // used in compressed textures only
 		this->filter = FILTER_LINEAR;
 		this->addressMode = ADDRESS_CLAMP;
@@ -379,19 +383,24 @@ namespace april
 			return true; // will already call this method again through TextureAsync::update() so it does not need to continue
 		}
 		this->asyncLoadMutex.unlock();
-		hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
 		int size = 0;
 		unsigned char* currentData = NULL;
 		if (this->data != NULL) // reload from memory
 		{
+			hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
 			currentData = this->data;
 			size = this->getByteSize();
 		}
 		else if (this->dataAsync != NULL) // reload from memory
 		{
+			hlog::write(april::logTag, "Uploading async texture: " + this->_getInternalName());
 			currentData = this->dataAsync;
 			size = this->getByteSize();
 			this->dataAsync = NULL; // not needed anymore
+		}
+		else
+		{
+			hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
 		}
 		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
 		if (currentData == NULL && ((this->type != TYPE_VOLATILE && this->type != TYPE_RENDER_TARGET) || this->width == 0 || this->height == 0))
@@ -513,6 +522,7 @@ namespace april
 			this->dataAsync = NULL;
 		}
 		this->asyncLoadMutex.unlock();
+		this->firstUpload = true;
 	}
 
 	void Texture::waitForAsyncLoad(float timeout)
@@ -585,7 +595,7 @@ namespace april
 		{
 			return;
 		}
-		hlog::write(april::logTag, "Loading texture (async): " + this->_getInternalName());
+		hlog::write(april::logTag, "Loading async texture: " + this->_getInternalName());
 		Image* image = NULL;
 		if (this->format == Image::FORMAT_INVALID)
 		{
@@ -597,7 +607,7 @@ namespace april
 		}
 		if (image == NULL)
 		{
-			hlog::error(april::logTag, "Failed to load texture (async): " + this->_getInternalName());
+			hlog::error(april::logTag, "Failed to load async texture: " + this->_getInternalName());
 			this->asyncLoadMutex.lock();
 			this->asyncLoadQueued = false;
 			this->asyncLoadDiscarded = false;
@@ -1111,6 +1121,45 @@ namespace april
 			return false;
 		}
 		return this->insertAlphaMap(image->data, image->format, median, ambiguity);
+	}
+
+	void Texture::_setupPot(int& outWidth, int& outHeight)
+	{
+		outWidth = TO_NEXT_POT(this->width);
+		outHeight = TO_NEXT_POT(this->height);
+		if (this->width < outWidth || this->height < outHeight)
+		{
+			// software NPOT textures do not support anything other than ADDRESS_CLAMP
+			this->addressMode = ADDRESS_CLAMP;
+			// effective addressing area needs to be changed
+			this->effectiveWidth = (float)this->width / outWidth;
+			this->effectiveHeight = (float)this->height / outHeight;
+		}
+	}
+
+	unsigned char* Texture::_createPotData(int& outWidth, int& outHeight, unsigned char* data)
+	{
+		this->_setupPot(outWidth, outHeight);
+		unsigned char* newData = new unsigned char[outWidth * outHeight * Image::getFormatBpp(this->format)];
+		Image::write(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, this->format, newData, outWidth, outHeight, this->format);
+		if (this->width < outWidth)
+		{
+			Image::writeStretch(this->width - 1, 0, 1, this->height, this->width, 0, outWidth - this->width, this->height, newData, outWidth, outHeight, this->format, newData, outWidth, outHeight, this->format);
+		}
+		if (this->height < outHeight)
+		{
+			Image::writeStretch(0, this->height - 1, outWidth, 1, 0, this->height, outWidth, outHeight - this->height, newData, outWidth, outHeight, this->format, newData, outWidth, outHeight, this->format);
+		}
+		return newData;
+	}
+
+	unsigned char* Texture::_createPotClearData(int& outWidth, int& outHeight)
+	{
+		this->_setupPot(outWidth, outHeight);
+		int size = outWidth * outHeight * Image::getFormatBpp(this->format);
+		unsigned char* newData = new unsigned char[size];
+		memset(newData, 0, size);
+		return newData;
 	}
 
 	Texture::Lock Texture::_tryLock(int x, int y, int w, int h)

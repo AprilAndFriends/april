@@ -45,6 +45,9 @@ namespace april
 		bool _unlockSystem(Lock& lock, bool update);
 		bool _uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 
+		void _uploadPotSafeData(unsigned char* data);
+		void _uploadPotSafeClearData();
+
 	};
 
 }

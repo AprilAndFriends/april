@@ -38,11 +38,6 @@
 
 namespace april
 {
-    static inline bool isPower2(int x)
-    {
-        return (x > 0) && ((x & (x - 1)) == 0);
-    }
-
 	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0)
 	{
 	}
@@ -64,11 +59,6 @@ namespace april
 			this->firstUpload = false;
 		}
 #endif
-		// Non power of 2 textures in OpenGL, must have addressing mode set to clamp, otherwise they won't work.
-		if (!isPower2(this->width) || !isPower2(this->height))
-		{
-			this->addressMode = ADDRESS_CLAMP;
-		}
 		return true;
 	}
 	
@@ -183,17 +173,13 @@ namespace april
 				this->_setCurrentTexture();
 				if (this->width == lock.w && this->height == lock.h)
 				{
-					glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
+					this->_uploadPotSafeData(lock.data);
 				}
 				else
 				{
 					if (this->firstUpload)
 					{
-						int size = this->getByteSize();
-						unsigned char* clearColor = new unsigned char[size];
-						memset(clearColor, 0, size);
-						glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
-						delete [] clearColor;
+						this->_uploadPotSafeClearData();
 					}
 					glTexSubImage2D(GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
 				}
@@ -202,6 +188,38 @@ namespace april
 			this->firstUpload = false;
 		}
 		return update;
+	}
+
+	void OpenGL_Texture::_uploadPotSafeData(unsigned char* data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data);
+		RenderSystem::Caps caps = april::rendersys->getCaps();
+		if (glGetError() == GL_INVALID_VALUE && !caps.npotTexturesLimited && !caps.npotTextures)
+		{
+			int w = this->width;
+			int h = this->height;
+			unsigned char* newData = this->_createPotData(w, h, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData);
+			delete[] newData;
+		}
+	}
+
+	void OpenGL_Texture::_uploadPotSafeClearData()
+	{
+		int size = this->getByteSize();
+		unsigned char* clearColor = new unsigned char[size];
+		memset(clearColor, 0, size);
+		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+		delete[] clearColor;
+		RenderSystem::Caps caps = april::rendersys->getCaps();
+		if (glGetError() == GL_INVALID_VALUE && !caps.npotTexturesLimited && !caps.npotTextures)
+		{
+			int w = this->width;
+			int h = this->height;
+			clearColor = this->_createPotClearData(w, h); // can create POT sized data
+			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+			delete[] clearColor;
+		}
 	}
 
 	bool OpenGL_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
@@ -214,17 +232,13 @@ namespace april
 		this->_setCurrentTexture();
 		if (sx == 0 && dx == 0 && sy == 0 && dy == 0 && sw == this->width && srcWidth == this->width && sh == this->height && srcHeight == this->height)
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, srcData);
+			this->_uploadPotSafeData(srcData);
 		}
 		else
 		{
 			if (this->firstUpload)
 			{
-				int size = this->getByteSize();
-				unsigned char* clearColor = new unsigned char[size];
-				memset(clearColor, 0, size);
-				glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
-				delete [] clearColor;
+				this->_uploadPotSafeClearData();
 			}
 			int srcBpp = Image::getFormatBpp(srcFormat);
 			if (sx == 0 && dx == 0 && srcWidth == this->width && sw == this->width)

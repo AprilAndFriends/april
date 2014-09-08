@@ -190,6 +190,8 @@ namespace april
 		unsigned int dataFormat; // used internally for special image data formatting
 		int width;
 		int height;
+		float effectiveWidth; // used only with software NPOT textures
+		float effectiveHeight; // used only with software NPOT textures
 		int compressedSize; // used in compressed textures only
 		Filter filter;
 		AddressMode addressMode;
@@ -213,6 +215,10 @@ namespace april
 		void _loadFromAsyncStream(hstream* stream);
 
 		hstr _getInternalName();
+
+		void _setupPot(int& outWidth, int& outHeight);
+		unsigned char* _createPotData(int& outWidth, int& outHeight, unsigned char* data);
+		unsigned char* _createPotClearData(int& outWidth, int& outHeight);
 
 		Lock _tryLock(int x, int y, int w, int h);
 		Lock _tryLock();
