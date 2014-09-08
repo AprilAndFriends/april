@@ -283,6 +283,11 @@ namespace april
 		this->setTextureColorMode(april::CM_DEFAULT);
 		this->textureFilter = Texture::FILTER_UNDEFINED;
 		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
+		Caps caps = this->getCaps();
+		if (!caps.npotTexturesLimited && !caps.npotTextures)
+		{
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
+		}
 	}
 
 	int DirectX9_RenderSystem::getVRam()
@@ -462,7 +467,9 @@ namespace april
 
 	void DirectX9_RenderSystem::setTexture(Texture* texture)
 	{
+		Caps caps = this->getCaps();
 		this->activeTexture = (DirectX9_Texture*)texture;
+		gmat4 matrix;
 		if (this->activeTexture != NULL)
 		{
 			Texture::Filter filter = this->activeTexture->getFilter();
@@ -477,10 +484,18 @@ namespace april
 			}
 			this->activeTexture->load();
 			this->d3dDevice->SetTexture(0, this->activeTexture->d3dTexture);
+			if (!caps.npotTexturesLimited && !caps.npotTextures)
+			{
+				matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
+			}
 		}
 		else
 		{
 			this->d3dDevice->SetTexture(0, NULL);
+		}
+		if (!caps.npotTexturesLimited && !caps.npotTextures)
+		{
+			this->d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)matrix.data);
 		}
 	}
 
