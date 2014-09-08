@@ -31,6 +31,8 @@ namespace april
 
 	harray<hthread*> TextureAsync::decoderThreads;
 
+	static int cpus = 0; // needed, because certain calls are made when fetching SystemInfo that are not allowed to be made in secondary threads on some platforms
+
 	void TextureAsync::update()
 	{
 		TextureAsync::queueMutex.lock();
@@ -62,6 +64,10 @@ namespace april
 
 	bool TextureAsync::queueLoad(Texture* texture)
 	{
+		if (cpus == 0)
+		{
+			cpus = april::getSystemInfo().cpuCores;
+		}
 		bool result = false;
 		TextureAsync::queueMutex.lock();
 		if (!TextureAsync::textures.contains(texture))
@@ -112,7 +118,6 @@ namespace april
 		Texture* texture = NULL;
 		hstream* stream = NULL;
 		hthread* decoderThread = NULL;
-		int cpus = april::getSystemInfo().cpuCores;
 		int size = 0;
 		bool running = true;
 		while (running)
