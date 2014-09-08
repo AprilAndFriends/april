@@ -23,6 +23,7 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
+#include "Platform.h"
 #include "RenderSystem.h"
 #ifdef _DIRECTX9
 #include "DirectX9_RenderSystem.h"
@@ -188,6 +189,7 @@ namespace april
 	void _finishInit()
 	{
 		hlog::writef(april::logTag, "Using: %s, %s", april::rendersys->getName().c_str(), april::window->getName().c_str());
+		april::getSystemInfo(); // required to be initialized on certain platforms
 	}
 
 	void _createRenderSystem(RenderSystemType renderSystemType)
