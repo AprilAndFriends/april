@@ -227,14 +227,7 @@ namespace april
 
 	bool RenderSystem::hasAsyncTexturesQueued()
 	{
-		foreach (Texture*, it, this->textures)
-		{
-			if ((*it)->isAsyncLoadQueued())
-			{
-				return true;
-			}
-		}
-		return false;
+		return TextureAsync::isRunning();
 	}
 
 	void RenderSystem::waitForAsyncTextures(float timeout)
