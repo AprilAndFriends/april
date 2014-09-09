@@ -113,6 +113,14 @@ namespace april
 		return result;
 	}
 
+	bool TextureAsync::isRunning()
+	{
+		TextureAsync::readerMutex.lock();
+		bool result = TextureAsync::readerRunning;
+		TextureAsync::readerMutex.unlock();
+		return result;
+	}
+
 	void TextureAsync::_read(hthread* thread)
 	{
 		Texture* texture = NULL;
