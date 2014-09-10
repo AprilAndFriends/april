@@ -62,6 +62,11 @@ namespace april
 				_preventRecursion = false;
 				hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
 			}
+			if (hr == D3DERR_OUTOFVIDEOMEMORY)
+			{
+				hlog::error(april::logTag, "Failed to create DX9 texture: Not enough VRAM!");
+				return false;
+			}
 		}
 		if (FAILED(hr))
 		{
