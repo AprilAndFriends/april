@@ -52,6 +52,17 @@ namespace april
 			this->renderTarget = true;
 		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
+		if (hr == D3DERR_OUTOFVIDEOMEMORY)
+		{
+			static bool _preventRecursion = false;
+			if (!_preventRecursion)
+			{
+				_preventRecursion = true;
+				april::window->handleLowMemoryWarning();
+				_preventRecursion = false;
+				hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
+			}
+		}
 		if (FAILED(hr))
 		{
 			RenderSystem::Caps caps = april::rendersys->getCaps();
