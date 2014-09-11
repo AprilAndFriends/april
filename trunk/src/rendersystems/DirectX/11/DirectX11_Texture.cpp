@@ -85,6 +85,22 @@ namespace april
 		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 		textureDesc.Format = this->dxgiFormat;
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
+		if (hr == E_OUTOFMEMORY)
+		{
+			static bool _preventRecursion = false;
+			if (!_preventRecursion)
+			{
+				_preventRecursion = true;
+				april::window->handleLowMemoryWarning();
+				_preventRecursion = false;
+				hr = APRIL_D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
+			}
+			if (hr == E_OUTOFMEMORY)
+			{
+				hlog::error(april::logTag, "Failed to create DX11 texture: Not enough VRAM!");
+				return false;
+			}
+		}
 		if (textureSubresourceData.pSysMem != data)
 		{
 			delete [] (unsigned char*)textureSubresourceData.pSysMem;
