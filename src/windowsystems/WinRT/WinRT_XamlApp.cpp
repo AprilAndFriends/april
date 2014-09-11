@@ -185,6 +185,8 @@ namespace april
 
 	void WinRT_XamlApp::OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args)
 	{
+		args->Handled = true;
+		hlog::write(april::logTag, "WinRT window activation state changing...");
 		if (!this->activated)
 		{
 			this->activated = true;
@@ -282,11 +284,11 @@ namespace april
 
 	void WinRT_XamlApp::OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
 	{
+		args->Handled = true;
 		if (april::window != NULL)
 		{
 			april::window->handleQuitRequest(false);
 		}
-		args->Handled = true;
 	}
 
 	void WinRT_XamlApp::_handleFocusChange(bool focused)
@@ -300,6 +302,7 @@ namespace april
 
 	void WinRT_XamlApp::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
+		args->Handled = true;
 		this->_resetTouches();
 		april::SystemInfo info = april::getSystemInfo(); // outside, because the displayResolution needs to be updated every time
 		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
@@ -314,13 +317,12 @@ namespace april
 			int height = hround(args->Size.Height * info.displayDpi / 96.0f);
 			((WinRT_Window*)april::window)->changeSize(width, height);
 		}
-		args->Handled = true;
 	}
 
 	void WinRT_XamlApp::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
 	{
-		this->_resetTouches();
 		args->Handled = true;
+		this->_resetTouches();
 	}
 
 	void WinRT_XamlApp::OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
@@ -354,6 +356,7 @@ namespace april
 
 	void WinRT_XamlApp::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
+		args->Handled = true;
 		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
 		{
 			return;
@@ -393,11 +396,11 @@ namespace april
 			break;
 		}
 #endif
-		args->Handled = true;
 	}
 
 	void WinRT_XamlApp::OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
+		args->Handled = true;
 		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
 		{
 			return;
@@ -432,11 +435,11 @@ namespace april
 		}
 		this->currentButton = april::AK_NONE;
 #endif
-		args->Handled = true;
 	}
 
 	void WinRT_XamlApp::OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
+		args->Handled = true;
 		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
 		{
 			return;
@@ -466,12 +469,12 @@ namespace april
 			break;
 		}
 #endif
-		args->Handled = true;
 	}
 
 	void WinRT_XamlApp::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
-		if (april::window == NULL || !april::window->isFocused())
+		args->Handled = true;
+		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
 		{
 			return;
 		}
@@ -487,12 +490,12 @@ namespace april
 			april::window->queueMouseEvent(april::Window::MOUSE_SCROLL,
 				gvec2(0.0f, -(float)_wheelDelta), april::AK_NONE);
 		}
-		args->Handled = true;
 	}
 
 	void WinRT_XamlApp::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
-		if (april::window == NULL || !april::window->isFocused())
+		args->Handled = true;
+		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
 		{
 			return;
 		}
@@ -502,12 +505,12 @@ namespace april
 		{
 			this->scrollHorizontal = true;
 		}
-		args->Handled = true;
 	}
 
 	void WinRT_XamlApp::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
-		if (april::window == NULL || !april::window->isFocused())
+		args->Handled = true;
+		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
 		{
 			return;
 		}
@@ -521,17 +524,16 @@ namespace april
 		{
 			april::window->terminateKeyboardHandling();
 		}
-		args->Handled = true;
 	}
 
 	void WinRT_XamlApp::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
 	{
-		if (april::window == NULL || !april::window->isFocused())
+		args->Handled = true;
+		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
 		{
 			return;
 		}
 		april::window->queueKeyEvent(april::Window::KEY_DOWN, AK_NONE, args->KeyCode);
-		args->Handled = true;
 	}
 
 #ifdef _WINP8
