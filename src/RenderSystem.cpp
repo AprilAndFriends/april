@@ -108,6 +108,17 @@ namespace april
 	
 	RenderSystem::~RenderSystem()
 	{
+		if (this->hasAsyncTexturesQueued())
+		{
+			foreach(Texture*, it, this->textures)
+			{
+				if ((*it)->isAsyncLoadQueued())
+				{
+					(*it)->unload(); // to cancel all async loads
+				}
+			}
+			this->waitForAsyncTextures();
+		}
 		this->destroy();
 		delete this->state;
 	}
