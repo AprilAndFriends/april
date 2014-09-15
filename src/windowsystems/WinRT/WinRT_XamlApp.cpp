@@ -81,6 +81,7 @@ namespace april
 
 	WinRT_XamlApp::~WinRT_XamlApp()
 	{
+		this->_tryRemoveRenderToken();
 	}
 
 	void WinRT_XamlApp::refreshCursor()
@@ -233,22 +234,14 @@ namespace april
 		else if (args->WindowActivationState == CoreWindowActivationState::Deactivated)
 		{
 			this->_handleFocusChange(false);
-			if (this->eventToken.Value != 0)
-			{
-				CompositionTarget::Rendering::remove(this->eventToken);
-				this->eventToken.Value = 0;
-			}
+			this->_tryRemoveRenderToken();
 		}
 		else if (args->WindowActivationState == CoreWindowActivationState::CodeActivated ||
 			args->WindowActivationState == CoreWindowActivationState::PointerActivated)
 		{
 			this->firstFrameAfterActivateHack = true;
 			this->_handleFocusChange(true);
-			if (this->eventToken.Value == 0)
-			{
-				this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
-			}
-		}
+			this->_tryAddRenderToken();		}
 	}
 
 	void WinRT_XamlApp::OnRender(_In_ Object^ sender, _In_ Object^ args)
@@ -266,7 +259,14 @@ namespace april
 			(*WinRT::Destroy)();
 			CompositionTarget::Rendering::remove(this->eventToken);
 			Application::Current->Exit();
+			return;
 		}
+		// On WinP8 there is a weird bug where this callback stops being called if it takes too long to process at some point so it is unregistered and registered again in the main thread.
+		// There is no #ifdef _WINP8, because this bug might affect WinRT apps as well and this is a solid enough solution that shouldn't cause any problems on WinRT apps.
+		CoreWindow::GetForCurrentThread()->Dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([this]()
+		{
+			this->_tryAddRenderToken();
+		}));
 	}
 
 	void WinRT_XamlApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
@@ -547,6 +547,24 @@ namespace april
 		}
 	}
 #endif
+
+	void WinRT_XamlApp::_tryAddRenderToken()
+	{
+		if (this->eventToken.Value != 0)
+		{
+			CompositionTarget::Rendering::remove(this->eventToken);
+		}
+		this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
+	}
+
+	void WinRT_XamlApp::_tryRemoveRenderToken()
+	{
+		if (this->eventToken.Value != 0)
+		{
+			CompositionTarget::Rendering::remove(this->eventToken);
+			this->eventToken.Value = 0;
+		}
+	}
 
 	gvec2 WinRT_XamlApp::_transformPosition(float x, float y)
 	{

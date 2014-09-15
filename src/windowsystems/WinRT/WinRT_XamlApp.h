@@ -95,6 +95,8 @@ namespace april
 
 		~WinRT_XamlApp();
 		
+		void _tryAddRenderToken();
+		void _tryRemoveRenderToken();
 		void _handleFocusChange(bool focused);
 		void _refreshCursor();
 		gvec2 _transformPosition(float x, float y);

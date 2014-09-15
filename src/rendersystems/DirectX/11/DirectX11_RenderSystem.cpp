@@ -606,10 +606,6 @@ namespace april
 		gvec2 resolution = april::getSystemInfo().displayResolution;
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
-		/*
-		float width = backBufferDesc.Width * 96.0f / info.displayDpi;
-		float height = backBufferDesc.Height * 96.0f / info.displayDpi;
-		*/
 		if (value.x < 0.0f)
 		{
 			value.w += value.x;
