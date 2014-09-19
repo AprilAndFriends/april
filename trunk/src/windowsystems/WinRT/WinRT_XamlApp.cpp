@@ -241,7 +241,8 @@ namespace april
 		{
 			this->firstFrameAfterActivateHack = true;
 			this->_handleFocusChange(true);
-			this->_tryAddRenderToken();		}
+			this->_tryAddRenderToken();
+		}
 	}
 
 	void WinRT_XamlApp::OnRender(_In_ Object^ sender, _In_ Object^ args)
