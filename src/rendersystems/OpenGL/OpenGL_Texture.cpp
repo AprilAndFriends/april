@@ -36,8 +36,27 @@
 
 #define APRIL_OGL_RENDERSYS ((OpenGL_RenderSystem*)april::rendersys)
 
+#define SAFE_TEXTURE_UPLOAD_CHECK(glError, call) \
+	if (glError == GL_OUT_OF_MEMORY) \
+	{ \
+		if (!_preventRecursion) \
+		{ \
+			_preventRecursion = true; \
+			april::window->handleLowMemoryWarning(); \
+			_preventRecursion = false; \
+			call; \
+			glError = glGetError(); \
+		} \
+		if (glError == GL_OUT_OF_MEMORY) \
+		{ \
+			hlog::error(april::logTag, "Failed to upload texture data: Not enough VRAM!"); \
+		} \
+	}
+
 namespace april
 {
+	static bool _preventRecursion = false;
+
 	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0)
 	{
 	}
@@ -56,6 +75,8 @@ namespace april
 		if (this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG || this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG)
 		{
 			glCompressedTexImage2D(GL_TEXTURE_2D, 0, this->dataFormat, this->width, this->height, 0, size, data);
+			GLenum glError = glGetError();
+			SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(GL_TEXTURE_2D, 0, this->dataFormat, this->width, this->height, 0, size, data));
 			this->firstUpload = false;
 		}
 #endif
@@ -193,13 +214,17 @@ namespace april
 	void OpenGL_Texture::_uploadPotSafeData(unsigned char* data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data);
+		GLenum glError = glGetError();
+		SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data));
 		RenderSystem::Caps caps = april::rendersys->getCaps();
-		if (glGetError() == GL_INVALID_VALUE && !caps.npotTexturesLimited && !caps.npotTextures)
+		if (glError == GL_INVALID_VALUE && !caps.npotTexturesLimited && !caps.npotTextures)
 		{
 			int w = this->width;
 			int h = this->height;
 			unsigned char* newData = this->_createPotData(w, h, data);
 			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData);
+			glError = glGetError();
+			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData));
 			delete[] newData;
 		}
 	}
@@ -210,14 +235,18 @@ namespace april
 		unsigned char* clearColor = new unsigned char[size];
 		memset(clearColor, 0, size);
 		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+		GLenum glError = glGetError();
+		SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
 		delete[] clearColor;
 		RenderSystem::Caps caps = april::rendersys->getCaps();
-		if (glGetError() == GL_INVALID_VALUE && !caps.npotTexturesLimited && !caps.npotTextures)
+		if (glError == GL_INVALID_VALUE && !caps.npotTexturesLimited && !caps.npotTextures)
 		{
 			int w = this->width;
 			int h = this->height;
 			clearColor = this->_createPotClearData(w, h); // can create POT sized data
 			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+			glError = glGetError();
+			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
 			delete[] clearColor;
 		}
 	}
