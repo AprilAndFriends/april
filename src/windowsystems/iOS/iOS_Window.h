@@ -15,6 +15,7 @@
 
 #include "Timer.h"
 #include "Window.h"
+struct CGRect;
 
 namespace april
 {
@@ -92,5 +93,8 @@ namespace april
 	};
 	
 }
+
+bool isiOS8OrNewer();
+CGRect getScreenBounds();
 
 #endif

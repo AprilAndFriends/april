@@ -13,7 +13,7 @@
 
 #import "AprilViewController.h"
 #import "EAGLView.h"
-#import "iOS_Window.h"
+#include "iOS_Window.h"
 #import "RenderSystem.h"
 #import "ApriliOSAppDelegate.h"
 
@@ -230,6 +230,10 @@ namespace april
 		// TODO dont swap width and height in case display is in portrait mode
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
+		if (isiOS8OrNewer())
+		{
+			return uiwindow.bounds.size.width * caeagllayer.contentsScale;
+		}
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
 		{
 			return uiwindow.bounds.size.height * caeagllayer.contentsScale;
@@ -243,6 +247,10 @@ namespace april
 		// TODO dont swap width and height in case display is in portrait mode
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
+		if (isiOS8OrNewer())
+		{
+			return uiwindow.bounds.size.height * caeagllayer.contentsScale;
+		}
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
 		{
 			return uiwindow.bounds.size.width * caeagllayer.contentsScale;
@@ -375,6 +383,9 @@ namespace april
 		else
 		{
 			CGPoint pt = [g_touches[0] locationInView:glview];
+#ifdef _DEBUG
+			printf("KOK: %.1f %.1f\n", pt.x, pt.y);
+#endif
 			this->addInputEvent(new iOS_MouseInputEvent(this, MOUSE_DOWN, gvec2(pt.x, pt.y), AK_LBUTTON));
 		}
 		this->callTouchCallback();
@@ -525,3 +536,26 @@ namespace april
 	}
 }
 
+CGRect getScreenBounds()
+{
+	CGRect frame = [[UIScreen mainScreen] bounds];
+/*	if ([[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedAscending)
+	{
+		// iOS8 has inverted logic for landscape, so counter it...
+		float temp = frame.size.width;
+		frame.size.width = frame.size.height;
+		frame.size.height = temp;
+	}
+*/
+	return frame;
+}
+
+bool isiOS8OrNewer()
+{
+	static int value = -1;
+	if (value == -1)
+	{
+		value = [[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedAscending;
+	}
+	return value == 1;
+}

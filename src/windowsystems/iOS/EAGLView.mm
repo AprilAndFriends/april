@@ -84,7 +84,7 @@
 	{
 		app_started = 0;
         // Get the layer
-        CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
+        CAEAGLLayer* eaglLayer = (CAEAGLLayer*) self.layer;
 		
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		if ([eaglLayer respondsToSelector:@selector(setContentsScale:)])
@@ -176,7 +176,7 @@
 	{
 		NSDictionary* info = [notification userInfo];
 		CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-		CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+		CGSize screenSize = getScreenBounds().size;
 		aprilWindow->keyboardWasShown(kbSize.width / screenSize.width);
 	}
 }
@@ -219,8 +219,7 @@
     //[self swapBuffers];
 }
 
-
--(void)_paintRect:(GLfloat[])vertices
+- (void)_paintRect:(GLfloat[])vertices
 {
 	
 }
@@ -235,7 +234,6 @@
 	}
 //	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer); // commented this out on June 8th 2012, it's probably reduntant, but I'll keep it here for a while just in case. -- kspes
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];
-
 }
 
 - (void)layoutSubviews
