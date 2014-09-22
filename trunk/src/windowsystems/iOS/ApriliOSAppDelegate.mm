@@ -13,6 +13,7 @@
 #import "main_base.h"
 #import "AprilViewController.h"
 #import "EAGLView.h"
+#include "iOS_Window.h"
 #include "RenderSystem.h"
 #include "Window.h"
 #import <AVFoundation/AVFoundation.h>
@@ -55,12 +56,13 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 	// create a window.
 	// early creation so Default.png can be displayed while we're waiting for 
 	// game initialization
-	uiwnd = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    uiwnd.autoresizesSubviews = YES;
+	CGRect frame = getScreenBounds();
+	uiwnd = [[UIWindow alloc] initWithFrame:frame];
+	uiwnd.autoresizesSubviews = YES;
 
 	// viewcontroller will automatically add imageview
 	viewController = [[AprilViewController alloc] init];
-	
+
 	if ([uiwnd respondsToSelector: @selector(rootViewController)])
 		uiwnd.rootViewController = viewController; // only available on iOS4+, required on iOS6+
 	else
@@ -73,6 +75,7 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 	
 	// display the window
 	[uiwnd makeKeyAndVisible];
+
 	//////////
 	// thanks to Kyle Poole for this trick
     // also used in latest SDL
@@ -125,9 +128,13 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 
 - (NSUInteger)application:(UIApplication*)application supportedInterfaceOrientationsForWindow:(UIWindow*)window
 {
+	if (isiOS8OrNewer())
+	{
+		return UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight;
+	}
 	// this is a needed Hack to fix an iOS6 bug
 	// more info: http://stackoverflow.com/questions/12488838/game-center-login-lock-in-landscape-only-in-i-os-6/12560069#12560069
-    return UIInterfaceOrientationMaskAllButUpsideDown;
+	return UIInterfaceOrientationMaskAllButUpsideDown;
 }
 
 - (BOOL)application:(UIApplication*) application handleOpenURL:(NSURL *)url
