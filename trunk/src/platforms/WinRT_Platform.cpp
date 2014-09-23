@@ -74,6 +74,7 @@ namespace april
 				info.locale = info.locale.lower();
 				info.localeVariant = info.localeVariant.upper();
 			}
+			info.osVersion = 8.1f;
 		}
 		// display DPI
 		info.displayDpi = DisplayInformation::GetForCurrentView()->LogicalDpi;
