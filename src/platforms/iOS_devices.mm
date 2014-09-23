@@ -10,7 +10,7 @@
 
 void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 {
-	// source: https://github.com/erica/uidevice-extension/blob/master/UIDevice-Hardware.m
+	// for future reference, look here: http://www.everymac.com/ultimate-mac-lookup/?search_keywords=iPad3%2C4
 	if (name.starts_with("iPad"))
 	{
 		if (name.starts_with("iPad1"))
@@ -34,14 +34,21 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		}
 		else if (name.starts_with("iPad3"))
 		{
-			info.name = "iPad3";
+			if (name == "iPad3,4" || name == "iPad3,5" || name == "iPad3,6") // iPad4
+			{
+				info.name = "iPad4";
+			}
+			else
+			{
+				info.name = "iPad3";
+			}
 			info.ram = 1024;
 			info.cpuCores = 2;
 			info.displayDpi = 264;
 		}
 		else if (name.starts_with("iPad4"))
 		{
-			info.name = "iPad4";
+			info.name = "iPad Air";
 			info.ram = 1024;
 			info.cpuCores = 2;
 			if (name == "iPad4,4" || name == "iPad4,5") // iPad mini 2
