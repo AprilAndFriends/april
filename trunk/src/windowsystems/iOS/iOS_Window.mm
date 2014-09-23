@@ -227,36 +227,34 @@ namespace april
 	
 	int iOS_Window::getWidth()
 	{
-		// TODO dont swap width and height in case display is in portrait mode
-#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
+		float scale = 1;
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
-		if (isiOS8OrNewer())
-		{
-			return uiwindow.bounds.size.width * caeagllayer.contentsScale;
-		}
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
 		{
-			return uiwindow.bounds.size.height * caeagllayer.contentsScale;
+			scale = caeagllayer.contentsScale;
 		}
-#endif
-		return uiwindow.bounds.size.height;
+		CGRect bounds = uiwindow.bounds;
+		if (isiOS8OrNewer())
+		{
+			return bounds.size.width * scale;
+		}
+		return bounds.size.height * scale;
 	}
-	
+
 	int iOS_Window::getHeight()
 	{
-		// TODO dont swap width and height in case display is in portrait mode
-#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
+		float scale = 1;
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
-		if (isiOS8OrNewer())
-		{
-			return uiwindow.bounds.size.height * caeagllayer.contentsScale;
-		}
 		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
 		{
-			return uiwindow.bounds.size.width * caeagllayer.contentsScale;
+			scale = caeagllayer.contentsScale;
 		}
-#endif
-		return uiwindow.bounds.size.width;
+		CGRect bounds = uiwindow.bounds;
+		if (isiOS8OrNewer())
+		{
+			return bounds.size.height * scale;
+		}
+		return bounds.size.width * scale;
 	}
 
 	void iOS_Window::setTitle(chstr value)
@@ -383,9 +381,6 @@ namespace april
 		else
 		{
 			CGPoint pt = [g_touches[0] locationInView:glview];
-#ifdef _DEBUG
-			printf("KOK: %.1f %.1f\n", pt.x, pt.y);
-#endif
 			this->addInputEvent(new iOS_MouseInputEvent(this, MOUSE_DOWN, gvec2(pt.x, pt.y), AK_LBUTTON));
 		}
 		this->callTouchCallback();
