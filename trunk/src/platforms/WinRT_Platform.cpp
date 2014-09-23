@@ -76,17 +76,12 @@ namespace april
 			}
 			info.osVersion = 8.1f;
 		}
-		// display DPI
 		DisplayInformation^ displayInfo = DisplayInformation::GetForCurrentView();
-		float logicalDpi = DisplayInformation::GetForCurrentView()->LogicalDpi;
-#ifndef _WINP8
-		info.displayDpi = logicalDpi;
-#else
-		info.displayDpi = (float)(96.0 * displayInfo->RawPixelsPerViewPixel);
-#endif
+		// display DPI
+		info.displayDpi = displayInfo->RawDpiY;
 #ifdef _WINRT_WINDOW
 		// display resolution
-		float dpiRatio = logicalDpi / 96.0f; // can't use real DPI
+		float dpiRatio = WinRT::getDpiRatio();
 		CoreWindow^ window = CoreWindow::GetForCurrentThread();
 		int width = hround(window->Bounds.Width * dpiRatio);
 		int height = hround(window->Bounds.Height * dpiRatio);

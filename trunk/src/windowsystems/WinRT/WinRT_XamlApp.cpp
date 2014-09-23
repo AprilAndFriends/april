@@ -314,9 +314,9 @@ namespace april
 		}
 		if (april::window != NULL)
 		{
-			float logicalDpiRatio = DisplayInformation::GetForCurrentView()->LogicalDpi / 96.0f; // can't use real DPI
-			int width = hround(args->Size.Width * logicalDpiRatio);
-			int height = hround(args->Size.Height * logicalDpiRatio);
+			float dpiRatio = WinRT::getDpiRatio();
+			int width = hround(args->Size.Width * dpiRatio);
+			int height = hround(args->Size.Height * dpiRatio);
 			((WinRT_Window*)april::window)->changeSize(width, height);
 		}
 	}
@@ -571,7 +571,7 @@ namespace april
 	gvec2 WinRT_XamlApp::_transformPosition(float x, float y)
 	{
 		// WinRT is dumb
-		return (gvec2(x, y) * (DisplayInformation::GetForCurrentView()->LogicalDpi / 96.0f)); // can't use real DPI
+		return (gvec2(x, y) * WinRT::getDpiRatio());
 	}
 
 	void WinRT_XamlApp::_resetTouches()
