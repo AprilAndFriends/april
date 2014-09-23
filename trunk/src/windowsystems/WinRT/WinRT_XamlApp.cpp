@@ -262,12 +262,14 @@ namespace april
 			Application::Current->Exit();
 			return;
 		}
-		// On WinP8 there is a weird bug where this callback stops being called if it takes too long to process at some point so it is unregistered and registered again in the main thread.
-		// There is no #ifdef _WINP8, because this bug might affect WinRT apps as well and this is a solid enough solution that shouldn't cause any problems on WinRT apps.
+		// On WinP8 there is a weird bug where this callback stops being called if it takes too long to process at some point so it
+		// is unregistered and registered again in the main thread. Oddly enough, normal WinRT has huge problems with this code.
+#ifdef _WINP8
 		CoreWindow::GetForCurrentThread()->Dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([this]()
 		{
 			this->_tryAddRenderToken();
 		}));
+#endif
 	}
 
 	void WinRT_XamlApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
