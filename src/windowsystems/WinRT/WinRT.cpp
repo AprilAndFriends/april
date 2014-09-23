@@ -21,6 +21,6 @@ namespace april
 	void (*WinRT::Destroy)() = NULL;
 	harray<hstr> WinRT::Args;
 	WinRT_XamlApp^ WinRT::App = nullptr;
-	
+
 }
 #endif

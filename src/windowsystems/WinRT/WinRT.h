@@ -20,6 +20,8 @@
 
 #include "WinRT_XamlApp.h"
 
+using namespace Windows::Graphics::Display;
+
 namespace april
 {
 	class WinRT
@@ -31,6 +33,7 @@ namespace april
 		static void (*Destroy)();
 		static harray<hstr> Args;
 		static WinRT_XamlApp^ App;
+		static float inline getDpiRatio() { return (DisplayInformation::GetForCurrentView()->LogicalDpi / 96.0f); }
 
 	private:
 		WinRT() { }
