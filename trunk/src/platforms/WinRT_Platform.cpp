@@ -77,15 +77,22 @@ namespace april
 			info.osVersion = 8.1f;
 		}
 		// display DPI
-		info.displayDpi = DisplayInformation::GetForCurrentView()->LogicalDpi;
+		DisplayInformation^ displayInfo = DisplayInformation::GetForCurrentView();
+		float logicalDpi = DisplayInformation::GetForCurrentView()->LogicalDpi;
+#ifndef _WINP8
+		info.displayDpi = logicalDpi;
+#else
+		info.displayDpi = (float)(96.0 * displayInfo->RawPixelsPerViewPixel);
+#endif
 #ifdef _WINRT_WINDOW
 		// display resolution
-		float dpiRatio = info.displayDpi / 96.0f;
-		int width = hround(CoreWindow::GetForCurrentThread()->Bounds.Width * dpiRatio);
-		int height = hround(CoreWindow::GetForCurrentThread()->Bounds.Height * dpiRatio);
+		float dpiRatio = logicalDpi / 96.0f; // can't use real DPI
+		CoreWindow^ window = CoreWindow::GetForCurrentThread();
+		int width = hround(window->Bounds.Width * dpiRatio);
+		int height = hround(window->Bounds.Height * dpiRatio);
 		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
-		if (DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::Portrait ||
-			DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::PortraitFlipped)
+		if (displayInfo->CurrentOrientation == DisplayOrientations::Portrait ||
+			displayInfo->CurrentOrientation == DisplayOrientations::PortraitFlipped)
 		{
 			hswap(width, height);
 		}
