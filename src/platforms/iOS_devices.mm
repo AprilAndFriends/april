@@ -107,6 +107,22 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.ram = 1024;
 			info.displayDpi = 326;
 		}
+		else if (name.starts_with("iPhone7,1"))
+		{
+			// iPhone6Plus has a resolution of 2208x1242 but is downscaled to 1920x1080
+			// The physical DPI is 401, but because of this, it is better to use the upscaled equivalent DPI of 461
+			info.name = "iPhone6Plus";
+			info.cpuCores = 2;
+			info.ram = 1024;
+			info.displayDpi = 461;
+		}
+		else if (name.starts_with("iPhone7,2"))
+		{
+			info.name = "iPhone6";
+			info.cpuCores = 2;
+			info.ram = 1024;
+			info.displayDpi = 326;
+		}
 		else
 		{
 			info.name = "iPhone?";
@@ -151,9 +167,9 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 	else if (name.starts_with("x86")) // iPhone Simulator
 	{
 		int w = info.displayResolution.x, h = info.displayResolution.y;
-		if (h < 768) // iPhone
+		if ((float) w / h >= 3.0f / 2.0f) // iPhone
 		{
-			if (h < 640)
+			if (w == 480)
 			{
 				info.name = "iPhone3GS";
 				info.ram = 256;
@@ -165,12 +181,26 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 				info.ram = 512;
 				info.displayDpi = 326;
 			}
-			else
+			else if (w == 1136)
 			{
 				info.name = "iPhone5";
 				info.cpuCores = 2;
 				info.ram = 1024;
 				info.displayDpi = 326;
+			}
+			else if (w == 1334)
+			{
+				info.name = "iPhone6";
+				info.cpuCores = 2;
+				info.ram = 1024;
+				info.displayDpi = 326;
+			}
+			else if (w == 2208)
+			{
+				info.name = "iPhone6Plus";
+				info.cpuCores = 2;
+				info.ram = 1024;
+				info.displayDpi = 461;
 			}
 		}
 		else

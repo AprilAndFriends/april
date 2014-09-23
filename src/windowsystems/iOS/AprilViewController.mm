@@ -164,17 +164,37 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	}
 
 	NSString *defaultPngName = @"Default";
+	float aspect = isiOS8OrNewer() ? size.width / size.height : size.height / size.width;
 	if(idiom == UIUserInterfaceIdiomPad)
 	{
 		defaultPngName = @"Default-Landscape";
 	}
-	else if(size.height / size.width > 3.0f / 2.0f + 0.01f) // iPhone5
+	else if(aspect > 3.0f / 2.0f + 0.01f) // iPhone5
 	{
-		defaultPngName = @"Default-568h@2x";
+
+		if (isiOS8OrNewer())
+		{
+			if (size.height >= 414)
+			{
+				defaultPngName = @"Default-736h@3x";
+			}
+			else if (size.height >= 375)
+			{
+				defaultPngName = @"Default-667h@2x";
+			}
+			else
+			{
+				defaultPngName = @"Default-568h@2x";
+			}
+		}
+		else
+		{
+			defaultPngName = @"Default-568h@2x";
+		}
 	}
-	
+
 	UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"] ];
-	
+
 	if(idiom == UIUserInterfaceIdiomPhone && self.interfaceOrientation != UIInterfaceOrientationPortrait)
 	{
 		if ([UIImage instancesRespondToSelector:@selector(initWithCGImage:scale:orientation:)]) 
