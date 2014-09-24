@@ -317,7 +317,15 @@ namespace april
 		{
 			return 0;
 		}
-		return this->getCurrentVRamSize();
+		if (this->width == 0 || this->height == 0 || this->format == Image::FORMAT_INVALID)
+		{
+			return 0;
+		}
+		if (this->compressedSize > 0)
+		{
+			return this->compressedSize;
+		}
+		return (this->width * this->height * Image::getFormatBpp(this->format));
 	}
 
 	bool Texture::isLoadedAsync()
