@@ -122,10 +122,8 @@ namespace april
 
 	void DirectX9_Texture::unload()
 	{
-		Texture::unload();
 		if (this->d3dTexture != NULL)
 		{
-			hlog::write(april::logTag, "Unloading texture: " + this->_getInternalName());
 			if (this->d3dSurface != NULL)
 			{
 				this->d3dSurface->Release();
@@ -134,11 +132,7 @@ namespace april
 			this->d3dTexture->Release();
 			this->d3dTexture = NULL;
 		}
-	}
-
-	bool DirectX9_Texture::isLoaded()
-	{
-		return (this->d3dTexture != NULL);
+		Texture::unload();
 	}
 
 	IDirect3DSurface9* DirectX9_Texture::_getSurface()

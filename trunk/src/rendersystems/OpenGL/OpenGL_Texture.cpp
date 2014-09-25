@@ -155,20 +155,14 @@ namespace april
 		APRIL_OGL_RENDERSYS->_setTextureAddressMode(this->addressMode);
 	}
 
-	bool OpenGL_Texture::isLoaded()
-	{
-		return (this->textureId != 0);
-	}
-
 	void OpenGL_Texture::unload()
 	{
-		Texture::unload();
 		if (this->textureId != 0)
 		{
-			hlog::write(april::logTag, "Unloading texture: " + this->_getInternalName());
 			glDeleteTextures(1, &this->textureId);
 			this->textureId = 0;
 		}
+		Texture::unload();
 	}
 
 	Texture::Lock OpenGL_Texture::_tryLockSystem(int x, int y, int w, int h)

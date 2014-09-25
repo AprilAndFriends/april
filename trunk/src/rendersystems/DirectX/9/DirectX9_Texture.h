@@ -32,8 +32,6 @@ namespace april
 		~DirectX9_Texture();
 		void unload();
 		
-		bool isLoaded();
-		
 	protected:
 		IDirect3DSurface9* d3dSurface;
 		IDirect3DTexture9* d3dTexture;

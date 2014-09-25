@@ -170,18 +170,13 @@ namespace april
 	{
 		if (this->d3dTexture != nullptr)
 		{
-			hlog::write(april::logTag, "Unloading texture: " + this->_getInternalName());
 			this->d3dTexture = nullptr;
 			this->d3dView = nullptr;
 			this->d3dRenderTargetView = nullptr;
 		}
+		Texture::unload();
 	}
 	
-	bool DirectX11_Texture::isLoaded()
-	{
-		return (this->d3dTexture != nullptr);
-	}
-
 	Texture::Lock DirectX11_Texture::_tryLockSystem(int x, int y, int w, int h)
 	{
 		Lock lock;

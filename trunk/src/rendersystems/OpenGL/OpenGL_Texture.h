@@ -29,8 +29,6 @@ namespace april
 		~OpenGL_Texture();
 		void unload();
 
-		bool isLoaded();
-
 	protected:
 		unsigned int textureId;
 		int glFormat;

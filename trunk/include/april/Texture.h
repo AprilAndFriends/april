@@ -98,8 +98,7 @@ namespace april
 		int getCurrentAsyncRamSize();
 		bool isLoadedAsync();
 		bool isAsyncLoadQueued();
-
-		virtual bool isLoaded() = 0;
+		bool isLoaded();
 
 		virtual bool load();
 		virtual bool loadAsync();
@@ -185,6 +184,7 @@ namespace april
 
 		hstr filename;
 		Type type;
+		bool loaded;
 		LoadMode loadMode;
 		Image::Format format;
 		unsigned int dataFormat; // used internally for special image data formatting
