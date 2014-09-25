@@ -370,7 +370,7 @@ namespace april
 		}
 		else
 		{
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_OPENKODE)
 			result += hsprintf("<0x%p>", this);
 #else
 			result += hsprintf("<%p>", this); // on Unix %p adds the 0x
