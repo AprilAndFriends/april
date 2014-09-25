@@ -35,8 +35,6 @@ namespace april
 		~DirectX11_Texture();
 		void unload();
 		
-		bool isLoaded();
-		
 	protected:
 		ComPtr<ID3D11Texture2D> d3dTexture;
 		ComPtr<ID3D11ShaderResourceView> d3dView;
