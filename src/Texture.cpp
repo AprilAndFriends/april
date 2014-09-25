@@ -467,7 +467,7 @@ namespace april
 		this->asyncLoadMutex.lock();
 		this->dataAsync = NULL; // not needed anymore and makes isLoadedAsync() return false now
 		bool result = this->loaded = this->_createInternalTexture(currentData, size, this->type);
-		this->asyncLoadMutex.lock();
+		this->asyncLoadMutex.unlock();
 		if (!result)
 		{
 			if (currentData != NULL && this->data != currentData)
