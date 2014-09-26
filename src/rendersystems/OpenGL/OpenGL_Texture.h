@@ -33,8 +33,12 @@ namespace april
 		unsigned int textureId;
 		int glFormat;
 		int internalFormat;
+		unsigned int previousTextureId;
+		Filter previousFilter;
+		AddressMode perviousAddressMode;
 
 		void _setCurrentTexture();
+		void _resetCurrentTexture();
 
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
 		void _assignFormat();

@@ -44,7 +44,6 @@ namespace april
 
 		static hthread readerThread;
 		static bool readerRunning;
-		static hmutex readerMutex;
 
 		static harray<hthread*> decoderThreads;
 

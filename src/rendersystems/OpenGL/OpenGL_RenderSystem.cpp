@@ -526,28 +526,6 @@ namespace april
 		{
 			this->deviceState.strideTexCoord = stride;
 			this->deviceState.pointerTexCoord = pointer;
-			/*
-			static int i = 0;
-			if (i < 10000)
-			{
-				if (pointer != NULL && this->activeTexture != NULL && (this->activeTexture->effectiveWidth != 1.0f || this->activeTexture->effectiveHeight != 1.0f))
-				{
-					glMatrixMode(GL_TEXTURE);
-					gmat4 matrix;
-					matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
-					glLoadMatrixf(matrix.data);
-				}
-				else
-				{
-					glMatrixMode(GL_TEXTURE);
-					gmat4 matrix;
-					//matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
-					glLoadMatrixf(matrix.data);
-					//glLoadIdentity();
-				}
-			}
-			++i;
-			*/
 			glTexCoordPointer(2, GL_FLOAT, stride, pointer);
 		}
 	}
