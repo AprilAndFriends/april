@@ -627,11 +627,11 @@ namespace april
 		Image* image = NULL;
 		if (this->format == Image::FORMAT_INVALID)
 		{
-			image = Image::createFromStream(*stream, "." + hfile::extension_of(this->filename));
+			image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extension_of(this->filename));
 		}
 		else
 		{
-			image = Image::createFromStream(*stream, "." + hfile::extension_of(this->filename), this->format);
+			image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extension_of(this->filename), this->format);
 		}
 		if (image == NULL)
 		{
