@@ -201,7 +201,7 @@ namespace april
 			Texture* texture = TextureAsync::textures.remove_first();
 			hstream* stream = TextureAsync::streams.remove_first();
 			TextureAsync::queueMutex.unlock();
-			texture->_loadFromAsyncStream(stream);
+			texture->_decodeFromAsyncStream(stream);
 			delete stream;
 		}
 	}

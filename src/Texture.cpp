@@ -246,14 +246,14 @@ namespace april
 		april::rendersys->textures -= this;
 		if (this->data != NULL)
 		{
-			delete this->data;
+			delete [] this->data;
 		}
 		this->asyncLoadMutex.lock();
 		this->asyncLoadQueued = false;
 		this->asyncLoadDiscarded = false;
 		if (this->dataAsync != NULL)
 		{
-			delete this->dataAsync;
+			delete [] this->dataAsync;
 		}
 		this->asyncLoadMutex.unlock();
 	}
@@ -550,7 +550,7 @@ namespace april
 		}
 		if (this->dataAsync != NULL)
 		{
-			delete this->dataAsync;
+			delete [] this->dataAsync;
 			this->dataAsync = NULL;
 		}
 		this->asyncLoadMutex.unlock();
@@ -612,7 +612,7 @@ namespace april
 		return stream;
 	}
 
-	void Texture::_loadFromAsyncStream(hstream* stream)
+	void Texture::_decodeFromAsyncStream(hstream* stream)
 	{
 		this->asyncLoadMutex.lock();
 		if (!this->asyncLoadQueued || this->asyncLoadDiscarded || this->dataAsync != NULL || this->loaded)
