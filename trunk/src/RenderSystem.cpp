@@ -141,9 +141,11 @@ namespace april
 		if (this->created)
 		{
 			hlog::writef(april::logTag, "Destroying rendersystem '%s'.", this->name.c_str());
-			while (this->textures.size() > 0)
+			// creating a copy, because deleting a texture modifies this->textures
+			harray<Texture*> textures = this->textures;
+			foreach (Texture*, it, textures)
 			{
-				delete this->textures[0];
+				delete (*it);
 			}
 			this->state->reset();
 			this->created = false;

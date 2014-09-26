@@ -212,7 +212,7 @@ namespace april
 		virtual void _assignFormat() = 0;
 
 		hstream* _prepareAsyncStream();
-		void _loadFromAsyncStream(hstream* stream);
+		void _decodeFromAsyncStream(hstream* stream);
 
 		hstr _getInternalName();
 
