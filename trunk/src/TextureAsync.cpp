@@ -53,6 +53,7 @@ namespace april
 			if ((*it)->getLoadMode() == Texture::LOAD_ASYNC && (*it)->isLoadedAsync())
 			{
 				(*it)->load();
+				break; // only one texture per frame!
 			}
 		}
 	}
