@@ -96,9 +96,9 @@ namespace april
 		int getCurrentVRamSize();
 		int getCurrentRamSize();
 		int getCurrentAsyncRamSize();
+		bool isLoaded();
 		bool isLoadedAsync();
 		bool isAsyncLoadQueued();
-		bool isLoaded();
 
 		virtual bool load();
 		virtual bool loadAsync();
