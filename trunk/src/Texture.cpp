@@ -20,9 +20,6 @@
 #include "TextureAsync.h"
 #include "RenderSystem.h"
 
-static const double __ilog2 = 1.0 / log(2);
-#define TO_NEXT_POT(value) ((int)pow(2, hceil(log(value) * __ilog2)))
-
 #define HROUND_GRECT(rect) hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h)
 #define HROUND_GVEC2(vec2) hround(vec2.x), hround(vec2.y)
 
@@ -1153,8 +1150,8 @@ namespace april
 
 	void Texture::_setupPot(int& outWidth, int& outHeight)
 	{
-		outWidth = TO_NEXT_POT(this->width);
-		outHeight = TO_NEXT_POT(this->height);
+		outWidth = hpotceil(this->width);
+		outHeight = hpotceil(this->height);
 		if (this->width < outWidth || this->height < outHeight)
 		{
 			// software NPOT textures do not support anything other than ADDRESS_CLAMP
