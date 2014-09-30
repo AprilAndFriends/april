@@ -46,12 +46,13 @@ namespace april
 			SYSTEM_INFO w32info;
 			GetNativeSystemInfo(&w32info);
 			info.cpuCores = w32info.dwNumberOfProcessors;
-			// TODO - though, WinRT does not seem to be able to retrieve this information
 			// RAM size
 #ifndef _WINP8
+			// pure WinRT does not seem to be able to retrieve this information
 			info.ram = 1024;
 #else
-			info.ram = 512;
+			// WinP8 reports 75% of the RAM's size as available
+			info.ram = (int)(Windows::System::MemoryManager::AppMemoryUsageLimit / (1024 * 1024) * 4 / 3); // in MB
 #endif
 			// other
 			info.locale = "en"; // default is "en"
