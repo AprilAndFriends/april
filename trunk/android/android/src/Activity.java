@@ -23,12 +23,23 @@ public class Activity extends android.app.Activity
 	
 	protected boolean nookWorkaround = false; // set this to true in your activity if your are using a nook build in order to speed up new intent/activity calls
 	protected boolean useHardExit = true; // set this to false to prevent application from fully exiting
+	private boolean enabledNavigationBarHiding = true;
 	
 	protected SystemSettingsObserver systemSettingsObserver = null;
 	
 	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
 	{
 		NativeInterface.ArchivePath = archivePath;
+	}
+	
+	public void disableNavigationBarHiding() // use this code in your Activity to prevent the navigation bar from being hidden on Android 4.4+
+	{
+		this.enabledNavigationBarHiding = false;
+	}
+	
+	public boolean isEnabledNavigationBarHiding() // use this code in your Activity to prevent the navigation bar from being hidden on Android 4.4+
+	{
+		return (this.enabledNavigationBarHiding && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT);
 	}
 	
 	public GLSurfaceView GlView = null;
@@ -52,7 +63,7 @@ public class Activity extends android.app.Activity
 	
 	public String createDataPath()
 	{
-		return (Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/obb/" +
+		return (Environment.getExternalStorageDirectory() + "/Android/obb/" +
 			NativeInterface.PackageName + "/main." + NativeInterface.VersionCode + "." + NativeInterface.PackageName + ".obb");
 	}
 	
@@ -61,6 +72,7 @@ public class Activity extends android.app.Activity
 	{
 		android.util.Log.i("april", "Initializing april Activity class.");
 		android.util.Log.i("april", "Android device: '" + Build.MANUFACTURER + "' / '" + Build.MODEL + "'");
+		this.hideNavigationBar();
 		super.onCreate(savedInstanceState);
 		NativeInterface.Activity = (android.app.Activity)this;
 		NativeInterface.AprilActivity = this;
@@ -97,7 +109,29 @@ public class Activity extends android.app.Activity
 		// focusing this view allows proper input processing
 		this.GlView.requestFocus();
 		this.GlView.requestFocusFromTouch();
+		// hide navigation bar
+		this.getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
+		{
+			@Override
+			public void onSystemUiVisibilityChange(int visibility)
+			{
+				hideNavigationBar();
+			}
+		});
 		NativeInterface.activityOnCreate();
+	}
+	
+	protected void hideNavigationBar()
+	{
+		if (this.isEnabledNavigationBarHiding())
+		{
+			this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+				View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+				View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+				View.SYSTEM_UI_FLAG_FULLSCREEN |
+				View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+		}
 	}
 	
 	@Override
@@ -124,6 +158,7 @@ public class Activity extends android.app.Activity
 				NativeInterface.activityOnResume();
 			}
 		});
+		this.hideNavigationBar();
 		if (!this.nookWorkaround)
 		{
 			this.GlView.onResume();

@@ -101,10 +101,19 @@ public class NativeInterface
 		NativeInterface.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		int width = metrics.widthPixels;
 		int height = metrics.heightPixels;
+		if (NativeInterface.AprilActivity.isEnabledNavigationBarHiding())
+		{
+			// get the DecorView's size is status bar is being hidden
+			android.graphics.Rect visibleFrame = new android.graphics.Rect();
+			NativeInterface.Activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleFrame);
+			width = visibleFrame.right;
+			height = visibleFrame.bottom;
+		}
 		if (height > width)
 		{
-			height = metrics.widthPixels;
-			width = metrics.heightPixels;
+			int temp = height;
+			height = width;
+			width = temp;
 		}
 		// fixes problem with bottom 20 pixels being covered by Kindle Fire's menu
 		if (Build.MANUFACTURER.equals("Amazon") && Build.MODEL.equals("Kindle Fire"))
