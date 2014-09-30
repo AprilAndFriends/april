@@ -131,7 +131,12 @@ namespace april
 			kdQueryAttribi(KD_ATTRIB_PAGESIZE, (KDint*)&pageSize);
 			kdQueryAttribi(KD_ATTRIB_NUMPAGES, (KDint*)&pageCount);
 #ifdef _WINRT
+#ifndef _WINP8
 			info.ram = (int)((int64)pageSize * pageCount / (1024 * 1024)); // in MB
+#else
+			// WinP8 reports 75% of the RAM's size as available
+			info.ram = Windows::System::MemoryManager::AppMemoryUsageLimit / (1024 * 1024) * 4 / 3; // in MB
+#endif
 #else
 			info.ram = (int)((int64_t)pageSize * pageCount / (1024 * 1024)); // in MB
 #endif
