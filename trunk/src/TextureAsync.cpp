@@ -25,7 +25,7 @@ namespace april
 	harray<hstream*> TextureAsync::streams;
 	hmutex TextureAsync::queueMutex;
 
-	hthread TextureAsync::readerThread(&TextureAsync::_read);
+	hthread TextureAsync::readerThread(&TextureAsync::_read, "APRIL async loader");
 	bool TextureAsync::readerRunning = false;
 
 	harray<hthread*> TextureAsync::decoderThreads;
@@ -166,7 +166,7 @@ namespace april
 				size = hmin(size, cpus) - TextureAsync::decoderThreads.size();
 				for_iter (i, 0, size)
 				{
-					decoderThread = new hthread(&TextureAsync::_decode);
+					decoderThread = new hthread(&TextureAsync::_decode, "APRIL async decoder");
 					TextureAsync::decoderThreads += decoderThread;
 					decoderThread->start();
 				}
