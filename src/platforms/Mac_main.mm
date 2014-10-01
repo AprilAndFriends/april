@@ -182,7 +182,10 @@ static void CustomApplicationMain(int argc, char **argv)
 {
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	AprilAppDelegate* appDelegate;
-	
+
+	// limit GCD from spawning too much threads
+	[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];
+	[[NSOperationQueue currentQueue] setMaxConcurrentOperationCount:1];
 	/* Ensure the application object is initialised */
 	[AprilApplication sharedApplication];
 
@@ -219,9 +222,8 @@ int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(
 {
 	/* Copy the arguments into a global variable */
 	/* This is passed if we are launched by double-clicking */
-	
 	gAprilShouldInvokeQuitCallback = 0;
-	
+
 	gAprilInit = anAprilInit;
 	gAprilDestroy = anAprilDestroy;
 	
