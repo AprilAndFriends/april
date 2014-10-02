@@ -12,6 +12,7 @@
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
+#include <hltypes/hmutex.h>
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
@@ -150,57 +151,86 @@ namespace april
 		}
 	}
 
+	static harray<DispatchedHandler^> messageBoxQueue;
+	static hmutex messageBoxQueueMutex;
+
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
-		currentCallback = callback;
-		_HL_HSTR_TO_PSTR_DEF(text);
-		_HL_HSTR_TO_PSTR_DEF(title);
-		MessageDialog^ dialog = ref new MessageDialog(ptext, ptitle);
-		UICommandInvokedHandler^ commandHandler = ref new UICommandInvokedHandler(
-			[](IUICommand^ command)
+		DispatchedHandler^ handler = ref new DispatchedHandler(
+			[title, text, buttonMask, style, customButtonTitles, callback]()
 		{
-			_messageBoxResult((int)command->Id);
-		});
-		hstr ok;
-		hstr yes;
-		hstr no;
-		hstr cancel;
-		_makeButtonLabels(&ok, &yes, &no, &cancel, buttonMask, customButtonTitles);
-		_HL_HSTR_TO_PSTR_DEF(ok);
-		_HL_HSTR_TO_PSTR_DEF(yes);
-		_HL_HSTR_TO_PSTR_DEF(no);
-		_HL_HSTR_TO_PSTR_DEF(cancel);
+			currentCallback = callback;
+			_HL_HSTR_TO_PSTR_DEF(text);
+			_HL_HSTR_TO_PSTR_DEF(title);
+			MessageDialog^ dialog = ref new MessageDialog(ptext, ptitle);
+			UICommandInvokedHandler^ commandHandler = ref new UICommandInvokedHandler(
+				[](IUICommand^ command)
+			{
+				_messageBoxResult((int)command->Id);
+				DispatchedHandler^ handler = nullptr;
+				messageBoxQueueMutex.lock();
+				if (messageBoxQueue.size() > 0)
+				{
+					handler = messageBoxQueue.remove_first();
+				}
+				messageBoxQueueMutex.unlock();
+				if (handler != nullptr)
+				{
+					CoreWindow::GetForCurrentThread()->Dispatcher->RunAsync(CoreDispatcherPriority::Normal, handler);
+				}
+			});
+			hstr ok;
+			hstr yes;
+			hstr no;
+			hstr cancel;
+			_makeButtonLabels(&ok, &yes, &no, &cancel, buttonMask, customButtonTitles);
+			_HL_HSTR_TO_PSTR_DEF(ok);
+			_HL_HSTR_TO_PSTR_DEF(yes);
+			_HL_HSTR_TO_PSTR_DEF(no);
+			_HL_HSTR_TO_PSTR_DEF(cancel);
 
-		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+			if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+			{
+				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
+				dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
+				dialog->DefaultCommandIndex = 0;
+				dialog->CancelCommandIndex = 1;
+			}
+			else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+			{
+				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
+				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
+				dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
+				dialog->DefaultCommandIndex = 0;
+				dialog->CancelCommandIndex = 2;
+			}
+			else if (buttonMask & MESSAGE_BUTTON_OK)
+			{
+				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
+				dialog->DefaultCommandIndex = 0;
+				dialog->CancelCommandIndex = 0;
+			}
+			else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
+			{
+				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
+				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
+				dialog->DefaultCommandIndex = 0;
+				dialog->CancelCommandIndex = 1;
+			}
+			dialog->ShowAsync();
+		});
+		try
 		{
-			dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
-			dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
-			dialog->DefaultCommandIndex = 0;
-			dialog->CancelCommandIndex = 1;
+			handler->Invoke();
 		}
-		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+		catch (Platform::AccessDeniedException^ e)
 		{
-			dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
-			dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
-			dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
-			dialog->DefaultCommandIndex = 0;
-			dialog->CancelCommandIndex = 2;
+			hlog::warn(april::logTag, "messagebox() on WinRT called \"recursively\"! Queueing to UI thread now...");
+			messageBoxQueueMutex.lock();
+			messageBoxQueue += handler;
+			messageBoxQueueMutex.unlock();
 		}
-		else if (buttonMask & MESSAGE_BUTTON_OK)
-		{
-			dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
-			dialog->DefaultCommandIndex = 0;
-			dialog->CancelCommandIndex = 0;
-		}
-		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
-		{
-			dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
-			dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
-			dialog->DefaultCommandIndex = 0;
-			dialog->CancelCommandIndex = 1;
-		}
-		dialog->ShowAsync();
 	}
 
 }
