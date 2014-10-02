@@ -746,7 +746,7 @@ namespace april
 			return NULL;
 		}
 		Cursor* cursor = this->_createCursor();
-		if (!cursor->_create(name))
+		if (cursor != NULL && !cursor->_create(name))
 		{
 			delete cursor;
 			return NULL;
