@@ -49,20 +49,11 @@ namespace april
 
 		void setMatrixMode(unsigned int mode);
 		void setTexture(Texture* texture);
-		Texture* getRenderTarget();
-		void setRenderTarget(Texture* texture);
-		void setPixelShader(PixelShader* pixelShader);
-		void setVertexShader(VertexShader* vertexShader);
 		void setTextureBlendMode(BlendMode mode);
 		/// @note The parameter factor is only used when the color mode is LERP.
 		void setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
 		void setTextureFilter(Texture::Filter textureFilter);
 		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
-
-		PixelShader* createPixelShader();
-		PixelShader* createPixelShader(chstr filename);
-		VertexShader* createVertexShader();
-		VertexShader* createVertexShader(chstr filename);
 
 		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
 		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);

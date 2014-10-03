@@ -476,50 +476,6 @@ namespace april
 		}
 	}
 
-	Texture* OpenGL_RenderSystem::getRenderTarget()
-	{
-		return NULL;
-	}
-	
-	void OpenGL_RenderSystem::setRenderTarget(Texture* texture)
-	{
-		// TODOa
-	}
-	
-	void OpenGL_RenderSystem::setPixelShader(PixelShader* pixelShader)
-	{
-		hlog::warn(april::logTag, "Pixel shaders are not implemented!");
-	}
-
-	void OpenGL_RenderSystem::setVertexShader(VertexShader* vertexShader)
-	{
-		hlog::warn(april::logTag, "Vertex shaders are not implemented!");
-	}
-
-	PixelShader* OpenGL_RenderSystem::createPixelShader()
-	{
-		hlog::warn(april::logTag, "Pixel shaders are not implemented!");
-		return NULL;
-	}
-
-	PixelShader* OpenGL_RenderSystem::createPixelShader(chstr filename)
-	{
-		hlog::warn(april::logTag, "Pixel shaders are not implemented!");
-		return NULL;
-	}
-
-	VertexShader* OpenGL_RenderSystem::createVertexShader()
-	{
-		hlog::warn(april::logTag, "Vertex shaders are not implemented!");
-		return NULL;
-	}
-
-	VertexShader* OpenGL_RenderSystem::createVertexShader(chstr filename)
-	{
-		hlog::warn(april::logTag, "Vertex shaders are not implemented!");
-		return NULL;
-	}
-
 	void OpenGL_RenderSystem::_setTexCoordPointer(int stride, const void *pointer)
 	{
 		if (this->deviceState.strideTexCoord != stride || this->deviceState.pointerTexCoord != pointer)

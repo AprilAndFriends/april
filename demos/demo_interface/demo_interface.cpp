@@ -7,7 +7,7 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #define _CUSTOM_WINDOW
-//#define _CUSTOM_RENDER_SYSTEM
+#define _CUSTOM_RENDER_SYSTEM
 
 #include <april/april.h>
 #include <april/Cursor.h>
@@ -27,7 +27,6 @@
 #include "CustomRenderSystem.h"
 #include "CustomWindow.h"
 
-#define LOG_TAG "demo_interface"
 #define RESOURCE_PATH "../../demos/media/"
 
 static april::Texture* texture = NULL;
@@ -97,7 +96,7 @@ void april_init(const harray<hstr>& args)
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 #endif
 	april::createRenderSystem();
-	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple Demo");
+	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple Interface");
 	april::window->setUpdateDelegate(&updateDelegate);
 	april::window->setSystemDelegate(&systemDelegate);
 	april::window->setMouseDelegate(&mouseDelegate);

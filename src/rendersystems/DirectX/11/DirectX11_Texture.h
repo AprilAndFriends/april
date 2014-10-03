@@ -33,7 +33,6 @@ namespace april
 
 		DirectX11_Texture(bool fromResource);
 		~DirectX11_Texture();
-		void unload();
 		
 	protected:
 		ComPtr<ID3D11Texture2D> d3dTexture;
@@ -43,6 +42,7 @@ namespace april
 		Type internalType;
 
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
+		void _destroyInternalTexture(),
 		void _assignFormat();
 
 		Lock _tryLockSystem(int x, int y, int w, int h);
