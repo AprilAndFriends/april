@@ -293,7 +293,7 @@ namespace april
 		void _setRenderSystemResolution();
 		virtual void _setRenderSystemResolution(int w, int h, bool fullscreen);
 
-		virtual Cursor* _createCursor() = 0;
+		virtual Cursor* _createCursor();
 		virtual void _refreshCursor();
 
 	};
