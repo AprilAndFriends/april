@@ -21,10 +21,6 @@
 #include "CustomWindow.h"
 
 #define CUSTOM_WINDOW_CLASS L"AprilCustomWindow"
-#define STYLE_FULLSCREEN WS_POPUP
-#define STYLE_WINDOWED (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX)
-#define EXSTYLE_FULLSCREEN WS_EX_TOPMOST
-#define EXSTYLE_WINDOWED WS_EX_LEFT
 
 CustomWindow::CustomWindow() : april::Window()
 {
@@ -39,6 +35,11 @@ CustomWindow::~CustomWindow()
 
 bool CustomWindow::create(int w, int h, bool fullscreen, chstr title, april::Window::Options options)
 {
+	if (fullscreen)
+	{
+		hlog::warnf(LOG_TAG, "Window '%s' does not support fullscreen", this->name.c_str());
+		fullscreen = false;
+	}
 	if (!april::Window::create(w, h, fullscreen, title, options))
 	{
 		return false;
@@ -60,39 +61,23 @@ bool CustomWindow::create(int w, int h, bool fullscreen, chstr title, april::Win
 	// determine position
 	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	int x = 0;
-	int y = 0;
-	if (!this->fullscreen)
-	{
-		x = (screenWidth - w) / 2;
-		y = (screenHeight - h) / 2;
-	}
+	int x = (screenWidth - w) / 2;
+	int y = (screenHeight - h) / 2;
 	// setting the necessary styles
-	DWORD style = STYLE_WINDOWED;
-	if (this->fullscreen)
-	{
-		style = STYLE_FULLSCREEN;
-	}
-	else if (this->options.resizable)
-	{
-		style |= WS_SIZEBOX | WS_MAXIMIZEBOX;
-	}
-	DWORD exstyle = (this->fullscreen ? EXSTYLE_FULLSCREEN : EXSTYLE_WINDOWED);
-	if (!this->fullscreen)
-	{
-		// takes into account the offset from the border
-		RECT rect;
-		rect.left = x;
-		rect.top = y;
-		rect.right = x + w;
-		rect.bottom = y + h;
-		AdjustWindowRectEx(&rect, style, FALSE, exstyle);
-		w = rect.right - rect.left;
-		h = rect.bottom - rect.top;
-		// centers window
-		x = (screenWidth - w) / 2;
-		y = (screenHeight - h) / 2;
-	}
+	DWORD style = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX);
+	DWORD exstyle = WS_EX_LEFT;
+	// takes into account the offset from the border
+	RECT rect;
+	rect.left = x;
+	rect.top = y;
+	rect.right = x + w;
+	rect.bottom = y + h;
+	AdjustWindowRectEx(&rect, style, FALSE, exstyle);
+	w = rect.right - rect.left;
+	h = rect.bottom - rect.top;
+	// centers window
+	x = (screenWidth - w) / 2;
+	y = (screenHeight - h) / 2;
 	// create window
 	this->hWnd = CreateWindowExW(exstyle, CUSTOM_WINDOW_CLASS, this->title.w_str().c_str(), style, x, y, w, h, NULL, NULL, hinst, NULL);
 	// display the window on the screen
