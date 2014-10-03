@@ -67,7 +67,6 @@ namespace april
 	OpenGL_Texture::~OpenGL_Texture()
 	{
 		this->unload();
-		this->waitForAsyncLoad();
 	}
 
 	bool OpenGL_Texture::_createInternalTexture(unsigned char* data, int size, Type type)
@@ -179,14 +178,13 @@ namespace april
 		}
 	}
 
-	void OpenGL_Texture::unload()
+	void OpenGL_Texture::_destroyInternalTexture()
 	{
 		if (this->textureId != 0)
 		{
 			glDeleteTextures(1, &this->textureId);
 			this->textureId = 0;
 		}
-		Texture::unload();
 	}
 
 	Texture::Lock OpenGL_Texture::_tryLockSystem(int x, int y, int w, int h)

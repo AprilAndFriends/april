@@ -147,7 +147,8 @@ namespace april
 			{
 				delete (*it);
 			}
-			this->state->reset();
+			// TODOa - uncomment
+			//this->state->reset();
 			this->created = false;
 			return true;
 		}
@@ -241,6 +242,51 @@ namespace april
 	bool RenderSystem::hasAsyncTexturesQueued()
 	{
 		return TextureAsync::isRunning();
+	}
+
+	Texture* RenderSystem::getRenderTarget()
+	{
+		hlog::warnf(april::logTag, "Render targets are not implemented in render system '%s'!", this->name.c_str());
+		return NULL;
+	}
+
+	void RenderSystem::setRenderTarget(Texture* texture)
+	{
+		hlog::warnf(april::logTag, "Render targets are not implemented in render system '%s'!", this->name.c_str());
+	}
+
+	void RenderSystem::setPixelShader(april::PixelShader* pixelShader)
+	{
+		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.c_str());
+	}
+
+	void RenderSystem::setVertexShader(april::VertexShader* vertexShader)
+	{
+		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.c_str());
+	}
+
+	april::PixelShader* RenderSystem::createPixelShader()
+	{
+		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.c_str());
+		return NULL;
+	}
+
+	april::PixelShader* RenderSystem::createPixelShader(chstr filename)
+	{
+		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.c_str());
+		return NULL;
+	}
+
+	april::VertexShader* RenderSystem::createVertexShader()
+	{
+		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.c_str());
+		return NULL;
+	}
+
+	april::VertexShader* RenderSystem::createVertexShader(chstr filename)
+	{
+		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.c_str());
+		return NULL;
 	}
 
 	void RenderSystem::waitForAsyncTextures(float timeout)
@@ -478,6 +524,17 @@ namespace april
 		return "";
 	}
 	
+	april::Image* RenderSystem::takeScreenshot(Image::Format format)
+	{
+		hlog::warnf(april::logTag, "Screenshots are not implemented in render system '%s'!", this->name.c_str());
+		return NULL;
+	}
+
+	void RenderSystem::_setResolution(int w, int h, bool fullscreen)
+	{
+		hlog::warnf(april::logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.c_str());
+	}
+
 	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int nVertices)
 	{
 		switch (renderOperation)

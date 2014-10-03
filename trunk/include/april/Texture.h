@@ -100,9 +100,9 @@ namespace april
 		bool isLoadedAsync();
 		bool isAsyncLoadQueued();
 
-		virtual bool load();
-		virtual bool loadAsync();
-		virtual void unload();
+		bool load();
+		bool loadAsync();
+		void unload();
 		/// @note A timeout value of 0.0 means indefinitely.
 		void waitForAsyncLoad(float timeout = 0.0f);
 
@@ -153,7 +153,7 @@ namespace april
 		bool insertAlphaMap(Image* image, unsigned char median, int ambiguity);
 
 	protected:
-		struct Lock
+		struct aprilExport Lock
 		{
 		public:
 			void* systemBuffer;
@@ -209,6 +209,7 @@ namespace april
 		virtual bool _create(int w, int h, Color color, Image::Format format, Type type);
 
 		virtual bool _createInternalTexture(unsigned char* data, int size, Type type) = 0;
+		virtual void _destroyInternalTexture() = 0;
 		virtual void _assignFormat() = 0;
 
 		hstream* _prepareAsyncStream();

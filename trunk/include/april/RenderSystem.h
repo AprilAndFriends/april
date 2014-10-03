@@ -124,10 +124,11 @@ namespace april
 		virtual void setTextureFilter(Texture::Filter textureFilter) = 0;
 		virtual void setTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
 		virtual void setTexture(Texture* texture) = 0;
-		virtual Texture* getRenderTarget() = 0;
-		virtual void setRenderTarget(Texture* texture) = 0;
-		virtual void setVertexShader(VertexShader* vertexShader) = 0;
-		virtual void setPixelShader(PixelShader* pixelShader) = 0;
+
+		virtual Texture* getRenderTarget();
+		virtual void setRenderTarget(Texture* texture);
+		virtual void setVertexShader(VertexShader* vertexShader);
+		virtual void setPixelShader(PixelShader* pixelShader);
 
 		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
 		/// @note When a format is forced, it's best to use managed (but not necessary).
@@ -137,10 +138,10 @@ namespace april
 		Texture* createTextureFromFile(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
 		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
 		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
-		virtual PixelShader* createPixelShader() = 0;
-		virtual PixelShader* createPixelShader(chstr filename) = 0;
-		virtual VertexShader* createVertexShader() = 0;
-		virtual VertexShader* createVertexShader(chstr filename) = 0;
+		virtual PixelShader* createPixelShader();
+		virtual PixelShader* createPixelShader(chstr filename);
+		virtual VertexShader* createVertexShader();
+		virtual VertexShader* createVertexShader(chstr filename);
 
 		void setIdentityTransform();
 		void translate(float x, float y, float z = 0.0f);
@@ -168,7 +169,7 @@ namespace april
 		hstr findTextureFile(chstr filename);
 		void unloadTextures();
 		virtual Image::Format getNativeTextureFormat(Image::Format format) = 0;
-		virtual Image* takeScreenshot(Image::Format format) = 0;
+		virtual Image* takeScreenshot(Image::Format format);
 		virtual void presentFrame();
 
 		DEPRECATED_ATTRIBUTE inline int getMaxTextureSize() { return this->getCaps().maxTextureSize; }
@@ -197,7 +198,7 @@ namespace april
 		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;
 		
 		virtual void _setupCaps() = 0;
-		virtual void _setResolution(int w, int h, bool fullscreen) = 0;
+		virtual void _setResolution(int w, int h, bool fullscreen);
 
 		unsigned int _numPrimitives(RenderOperation renderOperation, int nVertices);
 		unsigned int _limitPrimitives(RenderOperation renderOperation, int nVertices);

@@ -240,6 +240,11 @@ namespace april
 
 	Texture::~Texture()
 	{
+		if (this->isLoaded())
+		{
+			hlog::error(april::logTag, "Texture implementation does not call unload() in destructor! This cause problems and memory leaks!");
+		}
+		this->waitForAsyncLoad(); // waiting for all async stuff to finish
 		april::rendersys->textures -= this;
 		if (this->data != NULL)
 		{
@@ -539,6 +544,7 @@ namespace april
 
 	void Texture::unload()
 	{
+		this->_destroyInternalTexture();
 		this->asyncLoadMutex.lock();
 		this->loaded = false;
 		if (this->asyncLoadQueued)

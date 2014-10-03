@@ -30,7 +30,6 @@ namespace april
 	DirectX11_Texture::~DirectX11_Texture()
 	{
 		this->unload();
-		this->waitForAsyncLoad();
 	}
 
 	bool DirectX11_Texture::_createInternalTexture(unsigned char* data, int size, Type type)
@@ -166,7 +165,7 @@ namespace april
 		}
 	}
 
-	void DirectX11_Texture::unload()
+	void DirectX11_Texture::_destroyInternalTexture()
 	{
 		if (this->d3dTexture != nullptr)
 		{
@@ -174,7 +173,6 @@ namespace april
 			this->d3dView = nullptr;
 			this->d3dRenderTargetView = nullptr;
 		}
-		Texture::unload();
 	}
 	
 	Texture::Lock DirectX11_Texture::_tryLockSystem(int x, int y, int w, int h)

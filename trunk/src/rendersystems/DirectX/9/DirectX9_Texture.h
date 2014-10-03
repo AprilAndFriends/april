@@ -30,7 +30,6 @@ namespace april
 
 		DirectX9_Texture(bool fromResource);
 		~DirectX9_Texture();
-		void unload();
 		
 	protected:
 		IDirect3DSurface9* d3dSurface;
@@ -42,6 +41,7 @@ namespace april
 		bool renderTarget;
 
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
+		void _destroyInternalTexture();
 		void _assignFormat();
 
 		IDirect3DSurface9* _getSurface();

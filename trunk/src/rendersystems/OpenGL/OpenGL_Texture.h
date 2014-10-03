@@ -27,7 +27,6 @@ namespace april
 
 		OpenGL_Texture(bool fromResource);
 		~OpenGL_Texture();
-		void unload();
 
 	protected:
 		unsigned int textureId;
@@ -41,6 +40,7 @@ namespace april
 		void _resetCurrentTexture();
 
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
+		void _destroyInternalTexture();
 		void _assignFormat();
 
 		Lock _tryLockSystem(int x, int y, int w, int h);

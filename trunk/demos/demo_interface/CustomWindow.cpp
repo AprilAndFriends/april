@@ -20,10 +20,6 @@
 #include "CustomRenderSystem.h"
 #include "CustomWindow.h"
 
-#ifdef _OPENGL
-#include "OpenGL_RenderSystem.h"
-#endif
-
 #define CUSTOM_WINDOW_CLASS L"AprilCustomWindow"
 #define STYLE_FULLSCREEN WS_POPUP
 #define STYLE_WINDOWED (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX)
@@ -34,8 +30,6 @@ CustomWindow::CustomWindow() : april::Window()
 {
 	this->name = "Custom";
 	this->hWnd = NULL;
-	this->cursorExtensions += ".ani";
-	this->cursorExtensions += ".cur";
 }
 
 CustomWindow::~CustomWindow()
@@ -86,7 +80,7 @@ bool CustomWindow::create(int w, int h, bool fullscreen, chstr title, april::Win
 	DWORD exstyle = (this->fullscreen ? EXSTYLE_FULLSCREEN : EXSTYLE_WINDOWED);
 	if (!this->fullscreen)
 	{
-		// takes into account the offset
+		// takes into account the offset from the border
 		RECT rect;
 		rect.left = x;
 		rect.top = y;
@@ -104,8 +98,6 @@ bool CustomWindow::create(int w, int h, bool fullscreen, chstr title, april::Win
 	// display the window on the screen
 	ShowWindow(this->hWnd, SW_SHOWNORMAL);
 	UpdateWindow(this->hWnd);
-	SetCursor(wc.hCursor);
-	this->setCursorVisible(true);
 	return true;
 }
 
@@ -157,16 +149,11 @@ bool CustomWindow::updateOneFrame()
 
 void CustomWindow::presentFrame()
 {
-#ifdef _OPENGL
-	harray<hstr> renderSystems;
-	renderSystems += APRIL_RS_OPENGL1;
-	renderSystems += APRIL_RS_OPENGLES1;
-	renderSystems += APRIL_RS_OPENGLES2;
-	if (renderSystems.contains(april::rendersys->getName()))
+	CustomRenderSystem* system = dynamic_cast<CustomRenderSystem*>(april::rendersys);
+	if (system != NULL)
 	{
-		SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
+		SwapBuffers(system->getHDC());
 	}
-#endif
 }
 
 void CustomWindow::checkEvents()
@@ -183,37 +170,6 @@ void CustomWindow::checkEvents()
 		DispatchMessageW(&msg);
 	}
 	april::Window::checkEvents();
-}
-
-april::Cursor* CustomWindow::_createCursor()
-{
-	return NULL; // not supporting cursors in this implementation
-}
-
-void CustomWindow::_setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen)
-{
-	style = STYLE_WINDOWED;
-	if (fullscreen)
-	{
-		style = STYLE_FULLSCREEN;
-	}
-	else if (this->options.resizable)
-	{
-		style |= WS_SIZEBOX | WS_MAXIMIZEBOX;
-	}
-	exstyle = (fullscreen ? EXSTYLE_FULLSCREEN : EXSTYLE_WINDOWED);
-}
-
-void CustomWindow::_adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle)
-{
-	RECT rect;
-	rect.left = x;
-	rect.top = y;
-	rect.right = x + w;
-	rect.bottom = y + h;
-	AdjustWindowRectEx(&rect, style, FALSE, exstyle);
-	w = rect.right - rect.left;
-	h = rect.bottom - rect.top;
 }
 
 LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
