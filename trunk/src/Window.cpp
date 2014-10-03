@@ -754,6 +754,12 @@ namespace april
 		return cursor;
 	}
 
+	april::Cursor* Window::_createCursor()
+	{
+		hlog::warnf(april::logTag, "Cursors are not available in '%s'.", this->name.c_str());
+		return NULL;
+	}
+
 	void Window::_refreshCursor()
 	{
 	}
