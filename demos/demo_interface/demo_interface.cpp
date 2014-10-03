@@ -6,9 +6,6 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#define _CUSTOM_WINDOW
-#define _CUSTOM_RENDER_SYSTEM
-
 #include <april/april.h>
 #include <april/Cursor.h>
 #include <april/main.h>
@@ -86,15 +83,7 @@ class MouseDelegate : public april::MouseDelegate
 void april_init(const harray<hstr>& args)
 {
 	srand(get_system_time());
-#if defined(_CUSTOM_WINDOW) && defined(_CUSTOM_RENDER_SYSTEM)
 	april::init(new CustomRenderSystem(), new CustomWindow());
-#elif defined(_CUSTOM_WINDOW)
-	april::init(april::RS_DEFAULT, new CustomWindow());
-#elif defined(_CUSTOM_RENDER_SYSTEM)
-	april::init(new CustomRenderSystem(), april::WS_DEFAULT);
-#else
-	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
-#endif
 	april::createRenderSystem();
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple Interface");
 	april::window->setUpdateDelegate(&updateDelegate);
