@@ -688,6 +688,7 @@ namespace april
 	{
 		switch (format)
 		{
+#ifndef _WINRT
 		case Image::FORMAT_ARGB:
 		case Image::FORMAT_ABGR:
 		case Image::FORMAT_RGBA:
@@ -721,6 +722,20 @@ namespace april
 #endif
 #else
 			return Image::FORMAT_RGB;
+#endif
+#else
+		case Image::FORMAT_RGBA:
+		case Image::FORMAT_ARGB:
+		case Image::FORMAT_BGRA:
+		case Image::FORMAT_ABGR:
+			return Image::FORMAT_BGRA;
+		case Image::FORMAT_RGBX:
+		case Image::FORMAT_XRGB:
+		case Image::FORMAT_BGRX:
+		case Image::FORMAT_XBGR:
+		case Image::FORMAT_RGB:
+		case Image::FORMAT_BGR:
+			return Image::FORMAT_BGRX;
 #endif
 		case Image::FORMAT_ALPHA:
 			return Image::FORMAT_ALPHA;
