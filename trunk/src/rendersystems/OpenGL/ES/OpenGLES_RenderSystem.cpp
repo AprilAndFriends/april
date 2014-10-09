@@ -56,7 +56,11 @@ namespace april
 		if (this->caps.maxTextureSize == 0)
 		{
 			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
+#ifndef _WINRT
 			this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
+#else
+			this->caps.npotTexturesLimited = true;
+#endif
 			this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
 		}
 		return OpenGL_RenderSystem::_setupCaps();
