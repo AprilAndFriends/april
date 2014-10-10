@@ -109,15 +109,18 @@ public class Activity extends android.app.Activity
 		// focusing this view allows proper input processing
 		this.GlView.requestFocus();
 		this.GlView.requestFocusFromTouch();
-		// hide navigation bar
-		this.getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
 		{
-			@Override
-			public void onSystemUiVisibilityChange(int visibility)
+			// hide navigation bar
+			this.getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
 			{
-				hideNavigationBar();
-			}
-		});
+				@Override
+				public void onSystemUiVisibilityChange(int visibility)
+				{
+					hideNavigationBar();
+				}
+			});
+		}
 		NativeInterface.activityOnCreate();
 	}
 	
