@@ -49,7 +49,7 @@ bool mousePressed = false;
 
 class UpdateDelegate : public april::UpdateDelegate
 {
-	bool onUpdate(float timeSinceLastFrame)
+	bool onUpdate(float timeDelta)
 	{
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);

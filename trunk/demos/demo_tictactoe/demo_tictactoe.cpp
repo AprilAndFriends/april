@@ -123,7 +123,7 @@ void draw_line(int x_start, int y_start, int x_end, int y_end, std::string symbo
 
 class UpdateDelegate : public april::UpdateDelegate
 {
-	bool onUpdate(float timeSinceLastFrame)
+	bool onUpdate(float timeDelta)
 	{	
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);

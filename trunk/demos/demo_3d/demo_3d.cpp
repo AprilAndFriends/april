@@ -45,9 +45,9 @@ public:
 	{
 	}
 
-	bool onUpdate(float timeSinceLastFrame)
+	bool onUpdate(float timeDelta)
 	{
-		this->angle += timeSinceLastFrame * 90.0f;
+		this->angle += timeDelta * 90.0f;
 		april::rendersys->clear();
 		april::rendersys->setPerspective(60.0f, 1.0f / drawRect.getAspect(), 1.0f, 1000.0f);
 		april::rendersys->lookAt(gvec3(2.0f, 2.0f, -5.0f), gvec3(0.0f, 0.0f, 0.0f), gvec3(0.0f, 1.0f, 0.0f));
