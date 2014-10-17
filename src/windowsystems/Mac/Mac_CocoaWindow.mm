@@ -392,7 +392,7 @@ static bool gFullscreenToggleRequest = false;
 
 - (void)scrollWheel:(NSEvent*) event
 {
-	gvec2 vec([event deltaX], -[event deltaY]);
+	gvec2 vec(-[event deltaX], -[event deltaY]);
 	aprilWindow->queueMouseEvent(april::Window::MOUSE_SCROLL, vec, april::AK_NONE);
 }
 
