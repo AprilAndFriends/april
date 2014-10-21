@@ -180,9 +180,9 @@ namespace april
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
-		this->asyncLoadMutex.lock();
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		bool result = this->loaded = this->_createInternalTexture(data, size, type);
-		this->asyncLoadMutex.unlock();
+		lock.release();
 		if (!result)
 		{
 			return false;
@@ -226,9 +226,9 @@ namespace april
 		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
-		this->asyncLoadMutex.lock();
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		bool result = this->loaded = this->_createInternalTexture(this->data, size, type);
-		this->asyncLoadMutex.unlock();
+		lock.release();
 		if (!result)
 		{
 			return false;
@@ -250,14 +250,13 @@ namespace april
 		{
 			delete [] this->data;
 		}
-		this->asyncLoadMutex.lock();
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->asyncLoadQueued = false;
 		this->asyncLoadDiscarded = false;
 		if (this->dataAsync != NULL)
 		{
 			delete [] this->dataAsync;
 		}
-		this->asyncLoadMutex.unlock();
 	}
 
 	int Texture::getWidth()
@@ -341,26 +340,20 @@ namespace april
 
 	bool Texture::isLoaded()
 	{
-		this->asyncLoadMutex.lock();
-		bool result = this->loaded;
-		this->asyncLoadMutex.unlock();
-		return result;
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		return this->loaded;
 	}
 
 	bool Texture::isLoadedAsync()
 	{
-		this->asyncLoadMutex.lock();
-		bool result = (!this->asyncLoadQueued && this->dataAsync != NULL && !this->loaded);
-		this->asyncLoadMutex.unlock();
-		return result;
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		return (!this->asyncLoadQueued && this->dataAsync != NULL && !this->loaded);
 	}
 
 	bool Texture::isAsyncLoadQueued()
 	{
-		this->asyncLoadMutex.lock();
-		bool result = this->asyncLoadQueued;
-		this->asyncLoadMutex.unlock();
-		return result;
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		return this->asyncLoadQueued;
 	}
 
 	hstr Texture::_getInternalName()
@@ -398,20 +391,19 @@ namespace april
 
 	bool Texture::load()
 	{
-		this->asyncLoadMutex.lock();
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->loaded)
 		{
-			this->asyncLoadMutex.unlock();
 			return true;
 		}
 		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
 		if (this->asyncLoadQueued)
 		{
-			this->asyncLoadMutex.unlock();
+			lock.release();
 			this->waitForAsyncLoad();
 			return true; // will already call this method again through TextureAsync::update() so it does not need to continue
 		}
-		this->asyncLoadMutex.unlock();
+		lock.release();
 		int size = 0;
 		unsigned char* currentData = NULL;
 		if (this->data != NULL) // reload from memory
@@ -466,10 +458,10 @@ namespace april
 			delete image;
 		}
 		this->_assignFormat();
-		this->asyncLoadMutex.lock();
+		lock.acquire(&this->asyncLoadMutex);
 		this->dataAsync = NULL; // not needed anymore and makes isLoadedAsync() return false now
 		bool result = this->loaded = this->_createInternalTexture(currentData, size, this->type);
-		this->asyncLoadMutex.unlock();
+		lock.release();
 		if (!result)
 		{
 			if (currentData != NULL && this->data != currentData)
@@ -514,22 +506,19 @@ namespace april
 
 	bool Texture::loadAsync()
 	{
-		this->asyncLoadMutex.lock();
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->dataAsync != NULL || this->loaded)
 		{
-			this->asyncLoadMutex.unlock();
 			return false;
 		}
 		if (this->data != NULL || ((this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET) && this->width > 0 && this->height > 0))
 		{
 			hlog::warn(april::logTag, "This texture type does not support async loading!");
-			this->asyncLoadMutex.unlock();
 			return true;
 		}
 		if (this->filename == "")
 		{
 			hlog::error(april::logTag, "No filename for texture specified!");
-			this->asyncLoadMutex.unlock();
 			return false;
 		}
 		this->asyncLoadDiscarded = false;
@@ -537,15 +526,13 @@ namespace april
 		{
 			this->asyncLoadQueued = TextureAsync::queueLoad(this);
 		}
-		bool result = this->asyncLoadQueued; // this->asyncLoadQueued CAN change between the two lines below and cause problems hence this temporary result variable
-		this->asyncLoadMutex.unlock();
-		return result;
+		return this->asyncLoadQueued;
 	}
 
 	void Texture::unload()
 	{
 		this->_destroyInternalTexture();
-		this->asyncLoadMutex.lock();
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->loaded = false;
 		if (this->asyncLoadQueued)
 		{
@@ -556,7 +543,6 @@ namespace april
 			delete [] this->dataAsync;
 			this->dataAsync = NULL;
 		}
-		this->asyncLoadMutex.unlock();
 		this->firstUpload = true;
 	}
 
@@ -564,15 +550,15 @@ namespace april
 	{
 		TextureAsync::prioritizeLoad(this);
 		float time = timeout;
+		hmutex::ScopeLock lock;
 		while (time > 0.0f || timeout <= 0.0f)
 		{
-			this->asyncLoadMutex.lock();
+			lock.acquire(&this->asyncLoadMutex);
 			if (!this->asyncLoadQueued)
 			{
-				this->asyncLoadMutex.unlock();
 				break;
 			}
-			this->asyncLoadMutex.unlock();
+			lock.release();
 			hthread::sleep(0.1f);
 			time -= 0.0001f;
 			TextureAsync::update();
@@ -581,15 +567,14 @@ namespace april
 
 	hstream* Texture::_prepareAsyncStream()
 	{
-		this->asyncLoadMutex.lock();
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (!this->asyncLoadQueued || this->asyncLoadDiscarded)
 		{
 			this->asyncLoadQueued = false;
 			this->asyncLoadDiscarded = false;
-			this->asyncLoadMutex.unlock();
 			return NULL;
 		}
-		this->asyncLoadMutex.unlock();
+		lock.release();
 		hstream* stream = new hstream();
 		if (this->fromResource)
 		{
@@ -602,30 +587,27 @@ namespace april
 			stream->write_raw(file);
 		}
 		stream->rewind();
-		this->asyncLoadMutex.lock();
+		lock.acquire(&this->asyncLoadMutex);
 		if (!this->asyncLoadQueued || this->asyncLoadDiscarded)
 		{
 			this->asyncLoadQueued = false;
 			this->asyncLoadDiscarded = false;
-			this->asyncLoadMutex.unlock();
 			delete stream;
 			return NULL;
 		}
-		this->asyncLoadMutex.unlock();
 		return stream;
 	}
 
 	void Texture::_decodeFromAsyncStream(hstream* stream)
 	{
-		this->asyncLoadMutex.lock();
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (!this->asyncLoadQueued || this->asyncLoadDiscarded || this->dataAsync != NULL || this->loaded)
 		{
 			this->asyncLoadQueued = false;
 			this->asyncLoadDiscarded = false;
-			this->asyncLoadMutex.unlock();
 			return;
 		}
-		this->asyncLoadMutex.unlock();
+		lock.release();
 		hlog::write(april::logTag, "Loading async texture: " + this->_getInternalName());
 		Image* image = NULL;
 		if (this->format == Image::FORMAT_INVALID)
@@ -639,10 +621,9 @@ namespace april
 		if (image == NULL)
 		{
 			hlog::error(april::logTag, "Failed to load async texture: " + this->_getInternalName());
-			this->asyncLoadMutex.lock();
+			lock.acquire(&this->asyncLoadMutex);
 			this->asyncLoadQueued = false;
 			this->asyncLoadDiscarded = false;
-			this->asyncLoadMutex.unlock();
 			return;
 		}
 		this->width = image->w;
@@ -654,7 +635,7 @@ namespace april
 			this->compressedSize = image->compressedSize;
 		}
 		this->_assignFormat();
-		this->asyncLoadMutex.lock();
+		lock.acquire(&this->asyncLoadMutex);
 		if (this->asyncLoadQueued && !this->asyncLoadDiscarded)
 		{
 			this->dataAsync = image->data;
@@ -662,7 +643,6 @@ namespace april
 		}
 		this->asyncLoadQueued = false;
 		this->asyncLoadDiscarded = false;
-		this->asyncLoadMutex.unlock();
 		delete image;
 	}
 
