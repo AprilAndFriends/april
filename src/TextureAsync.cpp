@@ -34,7 +34,7 @@ namespace april
 
 	void TextureAsync::update()
 	{
-		TextureAsync::queueMutex.lock();
+		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
 		if (TextureAsync::readerRunning && !TextureAsync::readerThread.isRunning())
 		{
 			TextureAsync::readerThread.join();
@@ -45,7 +45,7 @@ namespace april
 			TextureAsync::readerRunning = true;
 			TextureAsync::readerThread.start();
 		}
-		TextureAsync::queueMutex.unlock();
+		lock.release();
 		// upload all ready textures to the GPU
 		harray<Texture*> textures = april::rendersys->getTextures();
 		foreach (Texture*, it, textures)
@@ -64,8 +64,7 @@ namespace april
 		{
 			cpus = april::getSystemInfo().cpuCores;
 		}
-		bool result = false;
-		TextureAsync::queueMutex.lock();
+		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
 		if (!TextureAsync::textures.contains(texture))
 		{
 			TextureAsync::textures += texture;
@@ -74,16 +73,14 @@ namespace april
 				TextureAsync::readerRunning = true;
 				TextureAsync::readerThread.start();
 			}
-			result = true;
+			return true;
 		}
-		TextureAsync::queueMutex.unlock();
-		return result;
+		return false;
 	}
 
 	bool TextureAsync::prioritizeLoad(Texture* texture)
 	{
-		bool result = false;
-		TextureAsync::queueMutex.lock();
+		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
 		if (TextureAsync::textures.contains(texture))
 		{
 			int index = TextureAsync::textures.index_of(texture);
@@ -101,18 +98,15 @@ namespace april
 				TextureAsync::textures.push_first(texture);
 				TextureAsync::streams.push_first(TextureAsync::streams.remove_at(index));
 			}
-			result = true;
+			return true;
 		}
-		TextureAsync::queueMutex.unlock();
-		return result;
+		return false;
 	}
 
 	bool TextureAsync::isRunning()
 	{
-		TextureAsync::queueMutex.lock();
-		bool result = TextureAsync::readerRunning;
-		TextureAsync::queueMutex.unlock();
-		return result;
+		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
+		return TextureAsync::readerRunning;
 	}
 
 	void TextureAsync::_read(hthread* thread)
@@ -122,18 +116,19 @@ namespace april
 		hthread* decoderThread = NULL;
 		int size = 0;
 		bool running = true;
+		hmutex::ScopeLock lock;
 		while (running)
 		{
 			running = false;
 			// check for new queued textures
-			TextureAsync::queueMutex.lock();
+			lock.acquire(&TextureAsync::queueMutex);
 			if (TextureAsync::textures.size() > TextureAsync::streams.size())
 			{
 				running = true;
 				texture = TextureAsync::textures[TextureAsync::streams.size()];
-				TextureAsync::queueMutex.unlock();
+				lock.release();
 				stream = texture->_prepareAsyncStream();
-				TextureAsync::queueMutex.lock();
+				lock.acquire(&TextureAsync::queueMutex);
 				int index = TextureAsync::textures.index_of(texture); // it's possible that the queue was rearranged in the meantime
 				if (stream != NULL)
 				{
@@ -158,7 +153,7 @@ namespace april
 				}
 			}
 			size = TextureAsync::streams.size();
-			TextureAsync::queueMutex.unlock();
+			lock.release();
 			// create new worker threads if needed
 			if (size > 0)
 			{
@@ -191,17 +186,17 @@ namespace april
 
 	void TextureAsync::_decode(hthread* thread)
 	{
+		hmutex::ScopeLock lock;
 		while (true)
 		{
-			TextureAsync::queueMutex.lock();
+			lock.acquire(&TextureAsync::queueMutex);
 			if (TextureAsync::streams.size() == 0)
 			{
-				TextureAsync::queueMutex.unlock();
 				break;
 			}
 			Texture* texture = TextureAsync::textures.remove_first();
 			hstream* stream = TextureAsync::streams.remove_first();
-			TextureAsync::queueMutex.unlock();
+			lock.release();
 			texture->_decodeFromAsyncStream(stream);
 			delete stream;
 		}
