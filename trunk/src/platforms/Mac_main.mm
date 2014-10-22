@@ -7,6 +7,7 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #import <Cocoa/Cocoa.h>
+#import <AppKit/NSApplication.h>
 
 #include "RenderSystem.h"
 #include "Window.h"
@@ -206,7 +207,7 @@ static void CustomApplicationMain(int argc, char **argv)
 	
 	/* Create AprilAppDelegate and make it the app delegate */
 	appDelegate = [[AprilAppDelegate alloc] init];
-	[NSApp setDelegate:appDelegate];
+	[NSApplication sharedApplication].delegate = appDelegate;
 	[NSApp activateIgnoringOtherApps:YES];
 	
 	/* Start the main event loop */
