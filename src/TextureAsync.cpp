@@ -187,8 +187,6 @@ namespace april
 
 	void TextureAsync::_decode(hthread* thread)
 	{
-		Texture* texture = NULL;
-		hstream* stream = NULL;
 		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
 		while (TextureAsync::streams.size() > 0)
 		{
