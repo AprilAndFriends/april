@@ -159,11 +159,19 @@
 
 #ifdef _ARM
 	#define APRIL_PLATFORM_ARCHITECTURE "ARM"
-#elif defined(_X64)
-	#define APRIL_PLATFORM_ARCHITECTURE "x64"
 #endif
 #ifndef APRIL_PLATFORM_ARCHITECTURE
 	#define APRIL_PLATFORM_ARCHITECTURE "x86"
+#endif
+
+#ifdef _IOS
+	#ifdef __LP64__
+		#define APRIL_PLATFORM_ARCHITECTURE_BITS 64
+	#else
+		#define APRIL_PLATFORM_ARCHITECTURE_BITS 32
+	#endif
+#else
+	#define APRIL_PLATFORM_ARCHITECTURE_BITS 32
 #endif
 
 namespace april
@@ -174,7 +182,7 @@ namespace april
 
 	void _startInit()
 	{
-		hlog::writef(april::logTag, "Initializing APRIL. (Platform: %s %s)", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE);
+		hlog::writef(april::logTag, "Initializing APRIL. (Platform: %s %s (%d bit))", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
 		extensions += ".jpt";
 		extensions += ".png";
 		extensions += ".jpg";

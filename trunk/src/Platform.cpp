@@ -21,10 +21,15 @@ namespace april
 		this->name = "";
 #ifdef _ARM
 		this->architecture = "ARM";
-#elif defined(_X64)
-		this->architecture = "x64";
 #else
 		this->architecture = "x86";
+#endif
+		// __LP64__ - apple specific, applies to both iOS and Mac
+		// _X64     - mannual override for other platforms
+#if defined(__LP64__) || defined(_X64)
+		this->architectureBits = 64;
+#else
+		this->architectureBits = 32;
 #endif
 		this->osVersion = 1.0f;
 		this->cpuCores = 1;

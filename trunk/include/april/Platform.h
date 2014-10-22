@@ -25,6 +25,7 @@ namespace april
 	{
 		hstr name;
 		hstr architecture;
+		int architectureBits;
 		float osVersion;
 		int cpuCores; // number of CPU cores or separate CPU units
 		int ram; // how many MB of RAM does the host system have in total
