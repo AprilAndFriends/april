@@ -188,7 +188,7 @@ namespace april
 		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
 		this->orthoProjection = rect;
 		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
-		this->projectionMatrix.ortho(rect);
+		this->projectionMatrix.setOrthoProjection(rect);
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
 	
@@ -408,7 +408,7 @@ namespace april
 		this->_setModelviewMatrix(this->modelviewMatrix);
 	}
 	
-	void RenderSystem::lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up)
+	void RenderSystem::lookAt(const gvec3& eye, const gvec3& direction, const gvec3& up)
 	{
 		this->modelviewMatrix.lookAt(eye, direction, up);
 		this->_setModelviewMatrix(this->modelviewMatrix);
@@ -416,7 +416,7 @@ namespace april
 		
 	void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
 	{
-		this->projectionMatrix.perspective(fov, aspect, nearClip, farClip);
+		this->projectionMatrix.setPerspective(fov, aspect, nearClip, farClip);
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
 	
