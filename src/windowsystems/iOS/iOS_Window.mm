@@ -115,6 +115,7 @@ namespace april
 	iOS_Window::iOS_Window() : Window()
 	{
 		this->name = APRIL_WS_IOS;
+		this->exitFunction = NULL;
 	}
 	
 	bool iOS_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
@@ -339,6 +340,12 @@ namespace april
 				[viewcontroller removeImageView:(value == "0" ? false : true)];
 			}
 		}
+		if (param == "exit_function")
+		{
+			unsigned long ptr;
+			sscanf(value.c_str(), "%lu", &ptr);
+			this->exitFunction = (void (*)(int)) ptr;
+		}
 	}
 
 	float iOS_Window::_getTouchScale()
@@ -518,7 +525,6 @@ namespace april
 				g_touches.clear();
 				multiTouchActive = false;
 			}
-			
 			if (glview != NULL)
 			{
 				[glview startAnimation];
@@ -528,6 +534,20 @@ namespace april
 				this->systemDelegate->onWindowFocusChanged(true);
 			}
 		}
+	}
+
+	void iOS_Window::terminateMainLoop()
+	{
+		// apple doesn't approve apps exiting via exit() so we have to camoufluage it if we want to use it
+		if (this->exitFunction)
+		{
+			this->exitFunction(0);
+		}
+		else
+		{
+			hlog::write(logTag, "april's iOS_Window doesn't have the 'exitFunction' property set, you need to set it if you want to manually exit the app. Be warned though, apple strongly discourages this behaviour.");
+		}
+		exit(0);
 	}
 }
 

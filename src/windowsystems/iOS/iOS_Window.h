@@ -55,6 +55,7 @@ namespace april
 		bool isVirtualKeyboardVisible();
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
+		void terminateMainLoop();
 		void keyboardWasShown(float kbSize);
 		void keyboardWasHidden();
 		
@@ -87,6 +88,7 @@ namespace april
 		harray<InputEvent*> inputEvents;
 		bool inputEventsMutex;
 		bool retainLoadingOverlay;
+		void (*exitFunction)(int);
 		
 		void callTouchCallback();
 		
