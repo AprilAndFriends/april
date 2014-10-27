@@ -54,7 +54,6 @@
   <ItemDefinitionGroup Condition="'$(Configuration)'=='DebugS'">
     <ClCompile>
       <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libpng.lib;libjpeg.lib;zlib1.lib;d3d9.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -63,7 +62,6 @@
   <ItemDefinitionGroup Condition="'$(Configuration)'=='ReleaseS'">
     <ClCompile>
       <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libpng.lib;libjpeg.lib;zlib1.lib;d3d9.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
