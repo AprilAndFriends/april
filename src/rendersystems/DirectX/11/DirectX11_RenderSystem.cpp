@@ -35,8 +35,6 @@
 #define VERTICES_BUFFER_COUNT 65536
 #define BACKBUFFER_COUNT 2
 
-#define UINT_RGBA_TO_ABGR(c) ((((c) >> 24) & 0xFF) | (((c) << 24) & 0xFF000000) | (((c) >> 8) & 0xFF00) | (((c) << 8) & 0xFF0000))
-
 #define _LOAD_SHADER(name, type, file) \
 	if (name == NULL) \
 	{ \
@@ -981,8 +979,7 @@ namespace april
 	void DirectX11_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
 	{
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		unsigned int c = (unsigned int)color;
-		c = UINT_RGBA_TO_ABGR(c);
+		unsigned int c = this->getNativeColorUInt(color);
 		for_iter (i, 0, nVertices)
 		{
 			ctv[i].x = v[i].x;
@@ -1012,8 +1009,7 @@ namespace april
 	void DirectX11_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
 	{
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		unsigned int c = (unsigned int)color;
-		c = UINT_RGBA_TO_ABGR(c);
+		unsigned int c = this->getNativeColorUInt(color);
 		for_iter (i, 0, nVertices)
 		{
 			ctv[i].x = v[i].x;
@@ -1045,7 +1041,6 @@ namespace april
 			ctv[i].x = v[i].x;
 			ctv[i].y = v[i].y;
 			ctv[i].z = v[i].z;
-			ctv[i].color = UINT_RGBA_TO_ABGR(v[i].color);
 		}
 		this->_setRenderOperation(renderOperation);
 		this->_updateVertexBuffer(nVertices, ctv);
@@ -1063,24 +1058,14 @@ namespace april
 
 	void DirectX11_RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
-		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		memcpy(ctv, v, sizeof(ColoredTexturedVertex) * nVertices);
-		for_iter (i, 0, nVertices)
-		{
-			ctv[i].color = UINT_RGBA_TO_ABGR(v[i].color);
-		}
 		this->_setRenderOperation(renderOperation);
-		this->_updateVertexBuffer(nVertices, ctv);
+		this->_updateVertexBuffer(nVertices, v);
 		this->_updateVertexShader();
 		this->_updatePixelShader(true);
 		this->_updateConstantBuffer();
 		this->_updateBlendMode();
 		this->_updateTexture(true);
 		this->d3dDeviceContext->Draw(nVertices, 0);
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete [] ctv;
-		}
 	}
 
 	void DirectX11_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
@@ -1117,6 +1102,11 @@ namespace april
 			return Image::FORMAT_PALETTE;
 		}
 		return Image::FORMAT_INVALID;
+	}
+	
+	unsigned int DirectX11_RenderSystem::getNativeColorUInt(const april::Color& color)
+	{
+		return ((color.a << 24) | (color.b << 16) | (color.g << 8) | color.r);
 	}
 
 	Image* DirectX11_RenderSystem::takeScreenshot(Image::Format format)

@@ -169,6 +169,7 @@ namespace april
 		hstr findTextureFile(chstr filename);
 		void unloadTextures();
 		virtual Image::Format getNativeTextureFormat(Image::Format format) = 0;
+		virtual unsigned int getNativeColorUInt(const april::Color& color) = 0;
 		virtual Image* takeScreenshot(Image::Format format);
 		virtual void presentFrame();
 

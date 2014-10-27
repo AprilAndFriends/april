@@ -77,6 +77,7 @@ namespace april
 		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
 		Image::Format getNativeTextureFormat(Image::Format format);
+		unsigned int getNativeColorUInt(const april::Color& color);
 		Image* takeScreenshot(Image::Format format);
 		void presentFrame();
 
