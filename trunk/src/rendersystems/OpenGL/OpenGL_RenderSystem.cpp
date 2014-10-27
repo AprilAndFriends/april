@@ -62,8 +62,6 @@
 
 #define MAX_VERTEX_COUNT 65536
 
-#define UINT_RGBA_TO_ABGR(c) (((c & 0xFF000000) >> 24) | ((c & 0x00FF0000) >> 8) | ((c & 0x0000FF00) << 8) | ((c & 0x000000FF) << 24));
-
 namespace april
 {
 	// TODOa - put in state class
@@ -604,11 +602,6 @@ namespace april
 		this->currentState.textureCoordinatesEnabled = false;
 		this->currentState.colorEnabled = true;
 		this->currentState.systemColor.set(255, 255, 255, 255);
-		for_iter (i, 0, nVertices)
-		{
-			// making sure this is in AGBR order
-			v[i].color = UINT_RGBA_TO_ABGR(v[i].color);
-		}
 		this->_applyStateChanges();
 		this->_setTexCoordPointer(0, NULL);
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
@@ -634,11 +627,6 @@ namespace april
 		this->currentState.textureCoordinatesEnabled = true;
 		this->currentState.colorEnabled = true;
 		this->currentState.systemColor.set(255, 255, 255, 255);
-		for_iter (i, 0, nVertices)
-		{
-			// making sure this is in AGBR order
-			v[i].color = UINT_RGBA_TO_ABGR(v[i].color);
-		}
 		this->_applyStateChanges();
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
@@ -732,6 +720,11 @@ namespace april
 			break;
 		}
 		return Image::FORMAT_INVALID;
+	}
+
+	unsigned int OpenGL_RenderSystem::getNativeColorUInt(const april::Color& color)
+	{
+		return ((color.a << 24) | (color.b << 16) | (color.g << 8) | color.r);
 	}
 
 	Image* OpenGL_RenderSystem::takeScreenshot(Image::Format format)

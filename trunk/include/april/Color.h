@@ -30,6 +30,7 @@ namespace april
 		Color();
 		Color(int r, int g, int b, int a = 255);
 		Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255);
+		/// @note The unsigned int is in RGBA MSB order.
 		Color(unsigned int color);
 		Color(chstr hex);
 		Color(const char* hex);
@@ -37,6 +38,7 @@ namespace april
 
 		void set(int r, int g, int b, int a = 255);
 		void set(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255);
+		/// @note The unsigned int is in RGBA MSB order.
 		void set(unsigned int color);
 		void set(chstr hex);
 		void set(const char* hex);
@@ -47,8 +49,10 @@ namespace april
 		inline float b_f() const { return this->b * 0.003921569f; } // equals b / 255, multiplication is faster than division
 		inline float a_f() const { return this->a * 0.003921569f; } // equals a / 255, multiplication is faster than division
 		
-		hstr hex(bool rgbOnly = false) const; // careful when using rgbOnly!
+		/// @note Careful when using rgbOnly!
+		hstr hex(bool rgbOnly = false) const;
 		
+		/// @note The return value is in RGBA MSB order.
 		operator unsigned int() const;
 		
 		bool operator==(const Color& other) const;

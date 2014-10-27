@@ -38,8 +38,6 @@
 #define TEX_COLOR_FVF (D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE)
 #define TEX_COLOR_TONE_FVF (D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE | D3DFVF_SPECULAR)
 
-#define UINT_RGBA_TO_ARGB(c) ((((c) >> 8) & 0xFFFFFF) | (((c) & 0xFF) << 24))
-
 #define IS_WINDOW_RESIZABLE (april::window->getName() == "Win32" && april::window->getOptions().resizable)
 
 namespace april
@@ -669,7 +667,7 @@ namespace april
 		area.y1 = (int)rect.y;
 		area.x2 = (int)(rect.x + rect.w);
 		area.y2 = (int)(rect.y + rect.h);
-		this->d3dDevice->Clear(1, &area, flags, D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b), 1.0f, 0);
+		this->d3dDevice->Clear(1, &area, flags, this->getNativeColorUInt(color), 1.0f, 0);
 	}
 	
 	void DirectX9_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
@@ -688,14 +686,14 @@ namespace april
 		{
 			this->setTexture(NULL);
 		}
-		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
+		unsigned int c = this->getNativeColorUInt(color);
 		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
 		for_iter (i, 0, nVertices)
 		{
 			cv[i].x = v[i].x;
 			cv[i].y = v[i].y;
 			cv[i].z = v[i].z;
-			cv[i].color = colorDx9;
+			cv[i].color = c;
 		}
 		this->d3dDevice->SetFVF(COLOR_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), cv, sizeof(ColoredVertex));
@@ -713,7 +711,7 @@ namespace april
 
 	void DirectX9_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
 	{
-		unsigned int colorDx9 = D3DCOLOR_ARGB((int)color.a, (int)color.r, (int)color.g, (int)color.b);
+		unsigned int c = this->getNativeColorUInt(color);
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
 		for_iter (i, 0, nVertices)
 		{
@@ -722,7 +720,7 @@ namespace april
 			ctv[i].z = v[i].z;
 			ctv[i].u = v[i].u;
 			ctv[i].v = v[i].v;
-			ctv[i].color = colorDx9;
+			ctv[i].color = c;
 		}
 		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), ctv, sizeof(ColoredTexturedVertex));
@@ -738,34 +736,14 @@ namespace april
 		{
 			this->setTexture(NULL);
 		}
-		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
-		memcpy(cv, v, sizeof(ColoredVertex) * nVertices);
-		for_iter (i, 0, nVertices)
-		{
-			cv[i].color = UINT_RGBA_TO_ARGB(v[i].color);
-		}
 		this->d3dDevice->SetFVF(COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), cv, sizeof(ColoredVertex));
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete [] cv;
-		}
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredVertex));
 	}
 
 	void DirectX9_RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
-		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		memcpy(ctv, v, sizeof(ColoredTexturedVertex) * nVertices);
-		for_iter (i, 0, nVertices)
-		{
-			ctv[i].color = UINT_RGBA_TO_ARGB(v[i].color);
-		}
 		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), ctv, sizeof(ColoredTexturedVertex));
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete [] ctv;
-		}
+		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredTexturedVertex));
 	}
 
 	void DirectX9_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
@@ -802,6 +780,11 @@ namespace april
 			return Image::FORMAT_PALETTE;
 		}
 		return Image::FORMAT_INVALID;
+	}
+
+	unsigned int DirectX9_RenderSystem::getNativeColorUInt(const april::Color& color)
+	{
+		return D3DCOLOR_ARGB(color.a, color.r, color.g, color.b);
 	}
 
 	Image* DirectX9_RenderSystem::takeScreenshot(Image::Format format)
