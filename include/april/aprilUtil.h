@@ -13,6 +13,8 @@
 #ifndef APRIL_UTIL_H
 #define APRIL_UTIL_H
 
+#include <gtypes/Rectangle.h>
+#include <gtypes/Vector2.h>
 #include <gtypes/Vector3.h>
 #include <hltypes/hstring.h>
 
@@ -164,6 +166,13 @@ namespace april
 	aprilFnExport void rgbToHsl(unsigned char r, unsigned char g, unsigned char b, float* h, float* s, float* l);
 	aprilFnExport void hslToRgb(float h, float s, float l, unsigned char* r, unsigned char* g, unsigned char* b);
 	aprilFnExport hstr generateName(chstr prefix);
+	aprilFnExport hstr gvec2ToHstr(gvec2 vector);
+	aprilFnExport hstr gvec3ToHstr(gvec3 vector);
+	aprilFnExport hstr grectToHstr(grect rect);
+	aprilFnExport gvec2 hstrToGvec2(chstr string);
+	aprilFnExport gvec3 hstrToGvec3(chstr string);
+	aprilFnExport grect hstrToGrect(chstr string);
+
 }
 
 #endif
