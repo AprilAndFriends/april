@@ -6,11 +6,15 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
+#include <gtypes/Rectangle.h>
+#include <gtypes/Vector2.h>
 #include <gtypes/Vector3.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
 
 #include "aprilUtil.h"
+
+#define HSTR_SEPARATOR ','
 
 namespace april
 {
@@ -32,6 +36,8 @@ namespace april
 	ColorMode LERP = CM_LERP; // DEPRECATED
 	ColorMode ALPHA_MAP = CM_ALPHA_MAP; // DEPRECATED
 	ColorMode COLOR_MODE_UNDEFINED = CM_UNDEFINED; // DEPRECATED
+
+	const char hstrSeparator = ',';
 
 	void PlainVertex::operator=(const gvec3& v)
 	{
@@ -153,6 +159,51 @@ namespace april
 		int count = counters[prefix] + 1;
 		counters[prefix] = count;
 		return prefix + hstr(count);
+	}
+
+	hstr gvec2ToHstr(gvec2 vector)
+	{
+		return hsprintf("%f%c%f", vector.x, HSTR_SEPARATOR, vector.y);
+	}
+
+	hstr gvec3ToHstr(gvec3 vector)
+	{
+		return hsprintf("%f%c%f%c%f", vector.x, HSTR_SEPARATOR, vector.y, HSTR_SEPARATOR, vector.z);
+	}
+
+	hstr grectToHstr(grect rect)
+	{
+		return hsprintf("%f%c%f%c%f%c%f", rect.x, HSTR_SEPARATOR, rect.y, HSTR_SEPARATOR, rect.w, HSTR_SEPARATOR, rect.h);
+	}
+
+	gvec2 hstrToGvec2(chstr string)
+	{
+		harray<hstr> data = string.split(HSTR_SEPARATOR);
+		if (data.size() != 2)
+		{
+			throw hl_exception("Cannot convert string '" + string + "' to gtypes::Vector2.");
+		}
+		return gvec2(data[0].trim(), data[1].trim());
+	}
+
+	gvec3 hstrToGvec3(chstr string)
+	{
+		harray<hstr> data = string.split(HSTR_SEPARATOR);
+		if (data.size() != 3)
+		{
+			throw hl_exception("Cannot convert string '" + string + "' to gtypes::Vector3.");
+		}
+		return gvec3(data[0].trim(), data[1].trim(), data[2].trim());
+	}
+
+	grect hstrToGrect(chstr string)
+	{
+		harray<hstr> data = string.split(HSTR_SEPARATOR);
+		if (data.size() != 4)
+		{
+			throw hl_exception("Cannot convert string '" + string + "' to gtypes::Rectangle.");
+		}
+		return grect(data[0].trim(), data[1].trim(), data[2].trim(), data[3].trim());
 	}
 
 }
