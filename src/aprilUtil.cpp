@@ -37,8 +37,6 @@ namespace april
 	ColorMode ALPHA_MAP = CM_ALPHA_MAP; // DEPRECATED
 	ColorMode COLOR_MODE_UNDEFINED = CM_UNDEFINED; // DEPRECATED
 
-	const char hstrSeparator = ',';
-
 	void PlainVertex::operator=(const gvec3& v)
 	{
 		this->x = v.x;
