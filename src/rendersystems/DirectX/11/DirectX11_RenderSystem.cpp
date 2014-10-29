@@ -203,8 +203,9 @@ namespace april
 		creationFlags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
 		D3D_FEATURE_LEVEL featureLevels[] =
 		{
-			D3D_FEATURE_LEVEL_11_1,
-			D3D_FEATURE_LEVEL_11_0,
+			// Intel HD GPUs have driver problems with 11.x feature levels so they have been disabled
+			//D3D_FEATURE_LEVEL_11_1,
+			//D3D_FEATURE_LEVEL_11_0,
 			D3D_FEATURE_LEVEL_10_1,
 			D3D_FEATURE_LEVEL_10_0,
 			D3D_FEATURE_LEVEL_9_3,
