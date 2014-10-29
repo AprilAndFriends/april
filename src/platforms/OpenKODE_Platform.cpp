@@ -135,7 +135,7 @@ namespace april
 			info.ram = (int)((int64)pageSize * pageCount / (1024 * 1024)); // in MB
 #else
 			// WinP8 reports 75% of the RAM's size as available
-			info.ram = Windows::System::MemoryManager::AppMemoryUsageLimit / (1024 * 1024) * 4 / 3; // in MB
+			info.ram = (int)(Windows::System::MemoryManager::AppMemoryUsageLimit / (1024 * 1024) * 4 / 3); // in MB
 #endif
 #else
 			info.ram = (int)((int64_t)pageSize * pageCount / (1024 * 1024)); // in MB
