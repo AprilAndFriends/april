@@ -11,8 +11,8 @@
 /// Defines some methods and special macros used with April's AndroidJNI system.
 
 #ifdef _ANDROID
-#ifndef ANDROID_UTIL_JNI_H
-#define ANDROID_UTIL_JNI_H
+#ifndef APRIL_ANDROID_UTIL_JNI_H
+#define APRIL_ANDROID_UTIL_JNI_H
 
 #ifndef JNI_H_
 #include "jni.h"
