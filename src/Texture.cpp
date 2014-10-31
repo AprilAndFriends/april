@@ -514,7 +514,7 @@ namespace april
 		if (this->data != NULL || ((this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET) && this->width > 0 && this->height > 0))
 		{
 			hlog::warn(april::logTag, "This texture type does not support async loading!");
-			return true;
+			return false;
 		}
 		if (this->filename == "")
 		{
