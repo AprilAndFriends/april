@@ -24,6 +24,13 @@
 #include "main_base.h"
 #include "aprilExport.h"
 
+/// @brief Defines the main function in Win32 when not using a console application.
+/// @param[in] hInstance Handle to the instance within Windows.
+/// @param[in] hPrevInstance Handle to the instance of the calling application.
+/// @param[in] wCmdLine Command line that called this application.
+/// @param[in] wCmdShow Whether the console is displayed.
+/// @return Application result code.
+/// @note This is used internally only.
 int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCmdLine, int nCmdShow)
 {
 	// extract arguments
@@ -46,7 +53,7 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCm
 	}
 	LocalFree(wArgv);
 	// call the user specified main function
-	int result = april_main(april_init, april_destroy, argc, argv);
+	int result = __april_main(april_init, april_destroy, argc, argv);
 	// free allocated memory for arguments
 	for_iter (i, 0, argc)
 	{

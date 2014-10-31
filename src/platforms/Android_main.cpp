@@ -279,7 +279,7 @@ namespace april
 		{"onDialogCancel",						_JARGS(_JVOID, ),								(void*)&april::_JNI_onDialogCancel						}
 	};
 	
-	jint JNI_OnLoad(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), JavaVM* vm, void* reserved)
+	jint __JNI_OnLoad(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), JavaVM* vm, void* reserved)
 	{
 		april::javaVM = (void*)vm;
 		april::aprilInit = anAprilInit;
