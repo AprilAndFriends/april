@@ -20,6 +20,11 @@
 #include "main_base.h"
 #include "aprilExport.h"
 
+/// @brief Defines the main function C-standard applications.
+/// @param[in] argc Number of arguments
+/// @param[in] argv Arguments.
+/// @return Application result code.
+/// @note This is used internally only.
 int main(int argc, char** argv)
 {
 #ifdef __SINGLE_INSTANCE
@@ -28,7 +33,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 #endif
-	int result = april_main(april_init, april_destroy, argc, argv);
+	int result = __april_main(april_init, april_destroy, argc, argv);
 #ifdef __SINGLE_INSTANCE
 	april::__unlockSingleInstanceMutex();
 #endif

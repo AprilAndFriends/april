@@ -20,9 +20,14 @@
 #include "main_base.h"
 #include "aprilExport.h"
 
+/// @brief Defines the main function in OpenKODE.
+/// @param[in] argc Number of arguments
+/// @param[in] argv Arguments.
+/// @return Application result code.
+/// @note This is used internally only.
 KDint KD_APIENTRY kdMain(KDint argc, const KDchar* const* argv)
 {
-	return april_main(april_init, april_destroy, (int)argc, (char**)argv);
+	return __april_main(april_init, april_destroy, (int)argc, (char**)argv);
 }
 #endif
 #endif

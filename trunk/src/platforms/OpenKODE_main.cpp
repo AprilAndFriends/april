@@ -20,7 +20,7 @@
 
 int gAprilShouldInvokeQuitCallback = 0;
 
-int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
+int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {
 	harray<hstr> args;
 	if (argv != NULL && argv[0] != NULL)
