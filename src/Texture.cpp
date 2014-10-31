@@ -513,7 +513,28 @@ namespace april
 		}
 		if (this->data != NULL || ((this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET) && this->width > 0 && this->height > 0))
 		{
-			hlog::warn(april::logTag, "This texture type does not support async loading!");
+			hstr err = "This texture type does not support async loading! texture: '" + this->_getInternalName() + "', reason: ";
+			if (this->data != NULL)
+			{
+				err += "data isn't NULL.";
+			}
+			if (this->type == TYPE_VOLATILE)
+			{
+				err += "type is 'volatile'.";
+			}
+			if (this->type == TYPE_RENDER_TARGET)
+			{
+				err += "type is 'render target'.";
+			}
+			if (this->width > 0)
+			{
+				err += "width is larger than 0.";
+			}
+			if (this->height > 0)
+			{
+				err += "width is larger than 0.";
+			}
+			hlog::warn(april::logTag, err);
 			return false;
 		}
 		if (this->filename == "")
