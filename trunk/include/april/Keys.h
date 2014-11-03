@@ -8,17 +8,15 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a key table.
+/// Defines a key code table.
 
-#ifndef APRIL_KEYS
-#define APRIL_KEYS
+#ifndef APRIL_KEYS_H
+#define APRIL_KEYS_H
 
 namespace april
 {
-	// this enum defines Windows-specific virtual keys
-	// however, these are mostly nicely defined, so let's use them
-	// on other platforms too
-
+	/// @brief Defines virtual key codes.
+	/// @note While these are Windows-specific, they come quite in handy on other platforms as well.
 	enum Key
 	{
 		AK_UNKNOWN = -1,

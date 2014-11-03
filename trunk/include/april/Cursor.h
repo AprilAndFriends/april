@@ -22,20 +22,27 @@ namespace april
 {
 	class Window;
 
+	/// @brief Defines a cursor object.
 	class aprilExport Cursor
 	{
 	public:
 		friend class Window;
 
+		/// @brief Destructor.
 		virtual ~Cursor();
 
 		HL_DEFINE_GET(hstr, filename, Filename);
 		
 	protected:
+		/// @brief The filename of the cursor file.
 		hstr filename;
 		
+		/// @brief Basic constructor.
 		Cursor();
 
+		/// @brief Creates an internal curosr object from a filename.
+		/// @param[in] filename The filename to load.
+		/// @return True if loading was successful.
 		virtual bool _create(chstr filename);
 
 	};
