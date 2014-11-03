@@ -16,7 +16,9 @@
 #include <hltypes/hplatform.h>
 #ifndef _WIN32
 #include <stdint.h>
+#ifndef __int64
 #define __int64 uint64_t
+#endif
 #endif
 #include <stdio.h>
 
