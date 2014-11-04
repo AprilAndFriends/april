@@ -25,7 +25,7 @@ namespace april
 		this->architecture = "x86";
 #endif
 		// __LP64__ - apple specific, applies to both iOS and Mac
-		// _X64     - mannual override for other platforms
+		// _X64     - manual override for other platforms
 #if defined(__LP64__) || defined(_X64)
 		this->architectureBits = 64;
 #else
