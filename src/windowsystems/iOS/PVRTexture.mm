@@ -97,19 +97,18 @@ typedef struct _PVRTexHeader
 @synthesize hasAlpha = _hasAlpha;
 @synthesize imageData = _imageData;
 
-
-- (BOOL)unpackPVRData:(NSData *)data
+- (BOOL)unpackPVRData:(uint8_t*) data dataSize:(int) dataSize
 {
 	BOOL success = FALSE;
 	PVRTexHeader *header = NULL;
 	uint32_t flags, pvrTag;
-	uint32_t dataLength = 0, dataOffset = 0, dataSize = 0;
+	uint32_t dataLength = 0, dataOffset = 0;
 	uint32_t blockSize = 0, widthBlocks = 0, heightBlocks = 0;
 	uint32_t width = 0, height = 0, bpp = 4;
 	uint8_t *bytes = NULL;
 	uint32_t formatFlags;
-	
-	header = (PVRTexHeader *)[data bytes];
+
+	header = (PVRTexHeader*) data;
 
 	pvrTag = CFSwapInt32LittleToHost(header->pvrTag);
 
@@ -120,31 +119,31 @@ typedef struct _PVRTexHeader
 	{
 		return FALSE;
 	}
-	
+
 	flags = CFSwapInt32LittleToHost(header->flags);
 	formatFlags = flags & PVR_TEXTURE_FLAG_TYPE_MASK;
-	
+
 	if (formatFlags == kPVRTextureFlagTypePVRTC_4 || formatFlags == kPVRTextureFlagTypePVRTC_2)
 	{
 		[_imageData removeAllObjects];
-		
+
 		if (formatFlags == kPVRTextureFlagTypePVRTC_4)
 			_internalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 		else if (formatFlags == kPVRTextureFlagTypePVRTC_2)
 			_internalFormat = GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
-	
+
 		_width = width = CFSwapInt32LittleToHost(header->width);
 		_height = height = CFSwapInt32LittleToHost(header->height);
-		
+
 		if (CFSwapInt32LittleToHost(header->bitmaskAlpha))
 			_hasAlpha = TRUE;
 		else
 			_hasAlpha = FALSE;
-		
+
 		dataLength = CFSwapInt32LittleToHost(header->dataLength);
-		
-		bytes = ((uint8_t *)[data bytes]) + sizeof(PVRTexHeader);
-		
+
+		bytes = ((uint8_t *)data) + sizeof(PVRTexHeader);
+
 		// Calculate the data size for each texture level and respect the minimum number of blocks
 		while (dataOffset < dataLength)
 		{
@@ -162,7 +161,7 @@ typedef struct _PVRTexHeader
 				heightBlocks = height / 4;
 				bpp = 2;
 			}
-			
+
 			// Clamp to minimum number of blocks
 			if (widthBlocks < 2)
 				widthBlocks = 2;
@@ -170,19 +169,24 @@ typedef struct _PVRTexHeader
 				heightBlocks = 2;
 
 			dataSize = widthBlocks * heightBlocks * ((blockSize  * bpp) / 8);
-			
+
 			[_imageData addObject:[NSData dataWithBytes:bytes+dataOffset length:dataSize]];
-			
+
 			dataOffset += dataSize;
-			
+
 			width = MAX(width >> 1, 1);
 			height = MAX(height >> 1, 1);
 		}
-				  
+
 		success = TRUE;
 	}
-	
+
 	return success;
+}
+
+- (BOOL)unpackPVRNSData:(NSData *)data
+{
+	return [self unpackPVRData:(uint8_t*) [data bytes] dataSize:[data length]];
 }
 
 
@@ -228,30 +232,49 @@ typedef struct _PVRTexHeader
 	return TRUE;
 }
 
+- (id)initWithMemoryBuffer:(uint8_t*) data dataSize:(int) dataSize
+{
+	if (self = [super init])
+	{
+		_imageData = [[NSMutableArray alloc] initWithCapacity:10];
+		_name = 0;
+		_width = _height = 0;
+		_internalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+		_hasAlpha = FALSE;
+
+		if (!data || ![self unpackPVRData:data dataSize:dataSize])
+		{
+			[self release];
+			self = nil;
+		}
+	}
+
+	return self;
+}
+
 
 - (id)initWithContentsOfFile:(NSString *)path
 {
 	if (self = [super init])
 	{
 		NSData *data = [NSData dataWithContentsOfFile:path];
-		
+
 		_imageData = [[NSMutableArray alloc] initWithCapacity:10];
-		
+
 		_name = 0;
 		_width = _height = 0;
 		_internalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 		_hasAlpha = FALSE;
 
-		if (!data || ![self unpackPVRData:data]) // || ![self createGLTexture])
+		if (!data || ![self unpackPVRNSData:data])
 		{
 			[self release];
 			self = nil;
 		}
 	}
-	
+
 	return self;
 }
-
 
 - (id)initWithContentsOfURL:(NSURL *)url
 {
@@ -264,6 +287,10 @@ typedef struct _PVRTexHeader
 	return [self initWithContentsOfFile:[url path]];
 }
 
++ (id)pvrTextureWithMemoryBuffer:(uint8_t*) data dataSize:(int) dataSize
+{
+	return [[[self alloc] initWithMemoryBuffer:data dataSize:dataSize] autorelease];
+}
 
 + (id)pvrTextureWithContentsOfFile:(NSString *)path
 {
@@ -310,6 +337,40 @@ namespace april
 		return url;
 	}
 
+	Image* _tryLoadingPVR(unsigned char* data, int dataLen)
+	{
+		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
+		PVRTexture* pvrtex = [PVRTexture pvrTextureWithMemoryBuffer:data dataSize:dataLen];
+		if(!pvrtex)
+		{
+			return NULL;
+		}
+
+		NSData* imageData = [pvrtex.imageData objectAtIndex:0];
+		Image* image = Image::create(pvrtex.width, pvrtex.height, NULL, Image::FORMAT_INVALID);
+		image->data = new unsigned char[imageData.length];
+		memcpy(image->data, imageData.bytes, imageData.length);
+		image->format = Image::FORMAT_PALETTE;
+		image->internalFormat = pvrtex.internalFormat;
+		image->compressedSize = imageData.length;
+		[arp release];
+		return image;
+	}
+
+	Image* _tryLoadingPVR(hsbase& stream)
+	{
+		PVRTexHeader header;
+		int headerSize = sizeof(header);
+		stream.read_raw(&header, headerSize);
+
+		unsigned char* buffer = new unsigned char[headerSize + header.dataLength];
+		memcpy(buffer, &header, headerSize);
+		stream.read_raw(buffer + headerSize, header.dataLength);
+		Image* image = _tryLoadingPVR(buffer, headerSize + header.dataLength);
+		delete [] buffer;
+		return image;
+	}
+
 	Image* _tryLoadingPVR(chstr filename)
 	{
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
@@ -320,26 +381,11 @@ namespace april
 #endif
 		hstr path = [pvrfilename UTF8String], archive = hresource::getArchive();
 		if (archive != "") path = hdir::join_path(archive, path);
-		PVRTexture* pvrtex = [PVRTexture pvrTextureWithContentsOfURL:(NSURL*)_getFileURLAsResource(path)];
-		if(!pvrtex)
-		{
-			pvrtex = [PVRTexture pvrTextureWithContentsOfFile:pvrfilename];
-			
-			if(!pvrtex)
-			{
-				return NULL;
-			}
-		}
-		
-		NSData* data = [pvrtex.imageData objectAtIndex:0];
-		Image* image = Image::create(pvrtex.width, pvrtex.height, NULL, Image::FORMAT_INVALID);
-		image->data = new unsigned char[data.length];
-		memcpy(image->data, data.bytes, data.length);
-		image->format = Image::FORMAT_PALETTE;
-		image->internalFormat = pvrtex.internalFormat;
-		image->compressedSize = data.length;
-		
+
+		hresource res(path);
+		Image* image = _tryLoadingPVR(res);
 		[arp release];
+
 		return image;
 	}
 }

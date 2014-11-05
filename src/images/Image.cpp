@@ -104,6 +104,8 @@ namespace april
 {
 #if TARGET_OS_IPHONE
 	Image* _tryLoadingPVR(chstr filename);
+	Image* _tryLoadingPVR(hsbase& stream);
+	Image* _tryLoadingPVR(unsigned char* data, int dataLen);
 #endif
 
 	hmap<hstr, Image* (*)(hsbase&)> Image::customLoaders;
@@ -336,8 +338,8 @@ namespace april
 #if TARGET_OS_IPHONE
 		if (filename.lower().ends_with(".pvr"))
 		{
-			// TODOa - might need to be refactored
-			return _tryLoadingPVR(filename);
+			file.open(filename);
+			return _tryLoadingPVR(file);
 		}
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
@@ -388,8 +390,8 @@ namespace april
 #if TARGET_OS_IPHONE
 		if (filename.lower().ends_with(".pvr"))
 		{
-			// TODOa - might need to be refactored
-			return _tryLoadingPVR(filename);
+			file.open(filename);
+			return _tryLoadingPVR(file);
 		}
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
