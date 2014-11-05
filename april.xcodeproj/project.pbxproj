@@ -89,6 +89,8 @@
 		D13681AE187BFB6600E66E32 /* RenderState.h in Headers */ = {isa = PBXBuildFile; fileRef = D136819F187BFB6600E66E32 /* RenderState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D13681AF187BFB6600E66E32 /* Standard_main.h in Headers */ = {isa = PBXBuildFile; fileRef = D13681A0187BFB6600E66E32 /* Standard_main.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D13681B0187BFB6600E66E32 /* Standard_main.h in Headers */ = {isa = PBXBuildFile; fileRef = D13681A0187BFB6600E66E32 /* Standard_main.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D137B93D1A0A417900C4102E /* ImagePvr.mm in Sources */ = {isa = PBXBuildFile; fileRef = D137B93C1A0A417900C4102E /* ImagePvr.mm */; };
+		D137B93E1A0A417900C4102E /* ImagePvr.mm in Sources */ = {isa = PBXBuildFile; fileRef = D137B93C1A0A417900C4102E /* ImagePvr.mm */; };
 		D14BF81A158737A000D31573 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF818158737A000D31573 /* Platform.cpp */; };
 		D14BF81B158737A000D31573 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF818158737A000D31573 /* Platform.cpp */; };
 		D14BF820158737B300D31573 /* aprilUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D14BF81E158737B300D31573 /* aprilUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -182,7 +184,6 @@
 		D1B4868F1933737B004674EB /* AprilViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B486841933737B004674EB /* AprilViewController.mm */; };
 		D1B486911933737B004674EB /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B486861933737B004674EB /* EAGLView.mm */; };
 		D1B486931933737B004674EB /* iOS_Window.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B486881933737B004674EB /* iOS_Window.mm */; };
-		D1B486951933737B004674EB /* PVRTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4868A1933737B004674EB /* PVRTexture.mm */; };
 		D1B486971933737B004674EB /* WBImage.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4868C1933737B004674EB /* WBImage.mm */; };
 		D1B486A719337389004674EB /* Mac_AppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1B4869919337389004674EB /* Mac_AppDelegate.h */; };
 		D1B486A819337389004674EB /* Mac_AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4869A19337389004674EB /* Mac_AppDelegate.mm */; };
@@ -325,7 +326,6 @@
 		D1F630D219D54A5F006C6236 /* OpenKODE_Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1B486E6193373B5004674EB /* OpenKODE_Window.cpp */; };
 		D1F630D319D54A93006C6236 /* OpenKODE_Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1B486E4193373B5004674EB /* OpenKODE_Keys.cpp */; };
 		D1F630D519D54A93006C6236 /* OpenKODE_Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1B486E4193373B5004674EB /* OpenKODE_Keys.cpp */; };
-		D1F630D619D54AF8006C6236 /* PVRTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4868A1933737B004674EB /* PVRTexture.mm */; };
 		D1FED158192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
 		D1FED159192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
 		D1FED15A192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
@@ -411,6 +411,7 @@
 		D13681A0187BFB6600E66E32 /* Standard_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Standard_main.h; path = include/april/Standard_main.h; sourceTree = "<group>"; };
 		D13681A1187BFB6600E66E32 /* Win32_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Win32_main.h; path = include/april/Win32_main.h; sourceTree = "<group>"; };
 		D13681A2187BFB6600E66E32 /* WinRT_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WinRT_main.h; path = include/april/WinRT_main.h; sourceTree = "<group>"; };
+		D137B93C1A0A417900C4102E /* ImagePvr.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImagePvr.mm; path = src/images/ImagePvr.mm; sourceTree = "<group>"; };
 		D14BF818158737A000D31573 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Platform.cpp; path = src/Platform.cpp; sourceTree = "<group>"; };
 		D14BF81E158737B300D31573 /* aprilUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = aprilUtil.h; path = include/april/aprilUtil.h; sourceTree = "<group>"; };
 		D14BF96915875F3300D31573 /* aprilUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = aprilUtil.cpp; path = src/aprilUtil.cpp; sourceTree = "<group>"; };
@@ -443,8 +444,6 @@
 		D1B486861933737B004674EB /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EAGLView.mm; path = src/windowsystems/iOS/EAGLView.mm; sourceTree = "<group>"; };
 		D1B486871933737B004674EB /* iOS_Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iOS_Window.h; path = src/windowsystems/iOS/iOS_Window.h; sourceTree = "<group>"; };
 		D1B486881933737B004674EB /* iOS_Window.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_Window.mm; path = src/windowsystems/iOS/iOS_Window.mm; sourceTree = "<group>"; };
-		D1B486891933737B004674EB /* PVRTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PVRTexture.h; path = src/windowsystems/iOS/PVRTexture.h; sourceTree = "<group>"; };
-		D1B4868A1933737B004674EB /* PVRTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PVRTexture.mm; path = src/windowsystems/iOS/PVRTexture.mm; sourceTree = "<group>"; };
 		D1B4868B1933737B004674EB /* WBImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WBImage.h; path = src/windowsystems/iOS/WBImage.h; sourceTree = "<group>"; };
 		D1B4868C1933737B004674EB /* WBImage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = WBImage.mm; path = src/windowsystems/iOS/WBImage.mm; sourceTree = "<group>"; };
 		D1B4869919337389004674EB /* Mac_AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_AppDelegate.h; path = src/windowsystems/Mac/Mac_AppDelegate.h; sourceTree = "<group>"; };
@@ -848,8 +847,6 @@
 				D1B486861933737B004674EB /* EAGLView.mm */,
 				D1B486871933737B004674EB /* iOS_Window.h */,
 				D1B486881933737B004674EB /* iOS_Window.mm */,
-				D1B486891933737B004674EB /* PVRTexture.h */,
-				D1B4868A1933737B004674EB /* PVRTexture.mm */,
 				D1B4868B1933737B004674EB /* WBImage.h */,
 				D1B4868C1933737B004674EB /* WBImage.mm */,
 			);
@@ -979,6 +976,7 @@
 				D1E7206116D37C5600B9C9AD /* ImageJpg.cpp */,
 				D1E7206216D37C5600B9C9AD /* ImageJpt.cpp */,
 				D1E7206316D37C5600B9C9AD /* ImagePng.cpp */,
+				D137B93C1A0A417900C4102E /* ImagePvr.mm */,
 			);
 			name = images;
 			sourceTree = "<group>";
@@ -1389,10 +1387,10 @@
 				D1B4870B193373EE004674EB /* OpenGL_State.cpp in Sources */,
 				D1134EF1175CDA3300BFF3A2 /* RenderSystem.cpp in Sources */,
 				D102CFFB19B7284500948584 /* TextureAsync.cpp in Sources */,
-				D1F630D619D54AF8006C6236 /* PVRTexture.mm in Sources */,
 				D1134EF2175CDA3300BFF3A2 /* Window.cpp in Sources */,
 				D1134EF3175CDA3300BFF3A2 /* PixelShader.cpp in Sources */,
 				D1134EF4175CDA3300BFF3A2 /* VertexShader.cpp in Sources */,
+				D137B93E1A0A417900C4102E /* ImagePvr.mm in Sources */,
 				D1134EF5175CDA3300BFF3A2 /* april.cpp in Sources */,
 				D1B4872319337418004674EB /* OpenGLES1_RenderSystem.cpp in Sources */,
 				D1134EF9175CDA3300BFF3A2 /* Platform.cpp in Sources */,
@@ -1487,7 +1485,6 @@
 				D1981C49140F82B00057C3AF /* RenderSystem.cpp in Sources */,
 				D1981C4A140F82B00057C3AF /* Window.cpp in Sources */,
 				D1B486911933737B004674EB /* EAGLView.mm in Sources */,
-				D1B486951933737B004674EB /* PVRTexture.mm in Sources */,
 				C9C04F8C14BB106F005BD333 /* PixelShader.cpp in Sources */,
 				C9C04F9414BB109B005BD333 /* VertexShader.cpp in Sources */,
 				D1B4874319337483004674EB /* iOS_Platform.mm in Sources */,
@@ -1500,6 +1497,7 @@
 				D1B486971933737B004674EB /* WBImage.mm in Sources */,
 				D1E7204F16D37C2300B9C9AD /* InputDelegate.cpp in Sources */,
 				D1B4872219337418004674EB /* OpenGLES1_RenderSystem.cpp in Sources */,
+				D137B93D1A0A417900C4102E /* ImagePvr.mm in Sources */,
 				D1B4868F1933737B004674EB /* AprilViewController.mm in Sources */,
 				D1FED15C192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				D1E7205216D37C2300B9C9AD /* KeyboardDelegate.cpp in Sources */,
@@ -1792,6 +1790,7 @@
 					_OPENKODE,
 					_OPENKODE_WINDOW,
 					_ARM,
+					_IMAGE_PVR,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -1818,6 +1817,7 @@
 					_OPENKODE,
 					_OPENKODE_WINDOW,
 					_ARM,
+					_IMAGE_PVR,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -1844,6 +1844,7 @@
 					_OPENKODE,
 					_OPENKODE_WINDOW,
 					_ARM,
+					_IMAGE_PVR,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -1937,6 +1938,7 @@
 					_OPENGLES1,
 					_IOS,
 					_ARM,
+					_IMAGE_PVR,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -1958,6 +1960,7 @@
 					_OPENGLES1,
 					_IOS,
 					_ARM,
+					_IMAGE_PVR,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -1979,6 +1982,7 @@
 					_OPENGLES1,
 					_IOS,
 					_ARM,
+					_IMAGE_PVR,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;

@@ -25,7 +25,6 @@
 #include "iOS_Window.h"
 #include "Platform.h"
 #include "april.h"
-#include "PVRTexture.h"
 
 void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 

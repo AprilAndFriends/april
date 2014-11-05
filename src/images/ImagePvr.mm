@@ -47,10 +47,12 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 
 */
 
-#import "PVRTexture.h"
 #include "Image.h"
 #include <hltypes/hresource.h>
 #include <hltypes/hdir.h>
+#import <UIKit/UIKit.h>
+#import <OpenGLES/ES1/gl.h>
+#import <OpenGLES/ES1/glext.h>
 
 // fix for NSURL not working on iPad Simulator
 #ifndef __GNUC__
@@ -86,6 +88,36 @@ typedef struct _PVRTexHeader
 	uint32_t pvrTag;
 	uint32_t numSurfs;
 } PVRTexHeader;
+
+@interface PVRTexture : NSObject
+{
+	NSMutableArray *_imageData;
+
+	GLuint _name;
+	uint32_t _width, _height;
+	GLenum _internalFormat;
+	BOOL _hasAlpha;
+}
+
+- (id)initWithMemoryBuffer:(uint8_t*) data dataSize:(int) dataSize;
+- (id)initWithContentsOfFile:(NSString *)path;
+- (id)initWithContentsOfURL:(NSURL *)url;
++ (id)pvrTextureWithContentsOfFile:(NSString *)path;
++ (id)pvrTextureWithContentsOfURL:(NSURL *)url;
++ (id)pvrTextureWithMemoryBuffer:(uint8_t*) data dataSize:(int) dataSize;
+
+@property (readonly) GLuint name;
+@property (readonly) uint32_t width;
+@property (readonly) uint32_t height;
+@property (readonly) GLenum internalFormat;
+@property (readonly) BOOL hasAlpha;
+
+@property (readonly) NSMutableArray *imageData;
+
+@end
+
+
+
 
 
 @implementation PVRTexture
@@ -387,5 +419,10 @@ namespace april
 		[arp release];
 
 		return image;
+	}
+
+	Image* Image::_loadPvr(hsbase& stream)
+	{
+		return _tryLoadingPVR(stream);
 	}
 }
