@@ -102,12 +102,6 @@
 
 namespace april
 {
-#if TARGET_OS_IPHONE
-	Image* _tryLoadingPVR(chstr filename);
-	Image* _tryLoadingPVR(hsbase& stream);
-	Image* _tryLoadingPVR(unsigned char* data, int dataLen);
-#endif
-
 	hmap<hstr, Image* (*)(hsbase&)> Image::customLoaders;
 
 	Image::Image()
@@ -335,11 +329,11 @@ namespace april
 			file.open(filename);
 			return Image::_loadJpt(file);
 		}
-#if TARGET_OS_IPHONE
+#if _IMAGE_PVR
 		if (filename.lower().ends_with(".pvr"))
 		{
 			file.open(filename);
-			return _tryLoadingPVR(file);
+			return Image::_loadPvr(file);
 		}
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
@@ -387,11 +381,11 @@ namespace april
 			file.open(filename);
 			return Image::_loadJpt(file);
 		}
-#if TARGET_OS_IPHONE
+#if _IMAGE_PVR
 		if (filename.lower().ends_with(".pvr"))
 		{
 			file.open(filename);
-			return _tryLoadingPVR(file);
+			return Image::_loadPvr(file);
 		}
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
@@ -435,6 +429,12 @@ namespace april
 		{
 			return Image::_loadJpt(stream);
 		}
+#ifdef _IMAGE_PVR
+		if (logicalExtension.lower().ends_with(".pvr"))
+		{
+			return Image::_loadPvr(stream);
+		}
+#endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
 		{
 			if (logicalExtension.lower().ends_with(it->first.lower()))

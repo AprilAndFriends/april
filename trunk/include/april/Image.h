@@ -152,6 +152,7 @@ namespace april
 		static Image* _loadJpg(hsbase& stream, int size);
 		static Image* _loadJpg(hsbase& stream);
 		static Image* _loadJpt(hsbase& stream);
+		static Image* _loadPvr(hsbase& stream);
 
 		static void _getFormatIndices(Format format, int* red, int* green, int* blue, int* alpha);
 
