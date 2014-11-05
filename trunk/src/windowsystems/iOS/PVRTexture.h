@@ -70,10 +70,12 @@ __asm__(".weak_reference _OBJC_CLASS_$_NSURL");
 	BOOL _hasAlpha;
 }
 
+- (id)initWithMemoryBuffer:(uint8_t*) data dataSize:(int) dataSize;
 - (id)initWithContentsOfFile:(NSString *)path;
 - (id)initWithContentsOfURL:(NSURL *)url;
 + (id)pvrTextureWithContentsOfFile:(NSString *)path;
 + (id)pvrTextureWithContentsOfURL:(NSURL *)url;
++ (id)pvrTextureWithMemoryBuffer:(uint8_t*) data dataSize:(int) dataSize;
 
 @property (readonly) GLuint name;
 @property (readonly) uint32_t width;
