@@ -100,9 +100,12 @@ namespace april
 		void setModelviewMatrix(gmat4 matrix);
 		HL_DEFINE_GET(gmat4, projectionMatrix, ProjectionMatrix);
 		void setProjectionMatrix(gmat4 matrix);
+		// TODO - move below, these aren't properties
 		HL_DEFINE_GET(grect, orthoProjection, OrthoProjection);
 		void setOrthoProjection(grect rect);
+		void setOrthoProjection(grect rect, float nearZ, float farZ);
 		void setOrthoProjection(gvec2 size);
+		void setOrthoProjection(gvec2 size, float nearZ, float farZ);
 		// TODOa - maybe use int64_t instead of long long
 		unsigned long long getVRamConsumption();
 		unsigned long long getRamConsumption();
@@ -117,6 +120,8 @@ namespace april
 		virtual harray<DisplayMode> getSupportedDisplayModes();
 		virtual Caps getCaps();
 		virtual void setViewport(grect value);
+		HL_DEFINE_IS(depthBufferEnabled, DepthBufferEnabled);
+		virtual void setDepthBufferEnabled(bool value);
 
 		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
 		/// @note The parameter factor is only used when the color mode is LERP.
@@ -148,7 +153,7 @@ namespace april
 		void rotate(float angle, float ax = 0.0f, float ay = 0.0f, float az = -1.0f);
 		void scale(float s);
 		void scale(float sx, float sy, float sz);
-		void lookAt(const gvec3 &eye, const gvec3 &direction, const gvec3 &up);
+		void lookAt(const gvec3& eye, const gvec3& target, const gvec3& up);
 		void setPerspective(float fov, float aspect, float nearClip, float farClip);
 
 		virtual void clear(bool useColor = true, bool depth = false) = 0;
@@ -181,6 +186,7 @@ namespace april
 		Options options;
 		harray<Texture*> textures;
 		grect viewport;
+		bool depthBufferEnabled;
 		RenderState* state;
 		Texture::Filter textureFilter;
 		Texture::AddressMode textureAddressMode;

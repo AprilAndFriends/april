@@ -130,6 +130,7 @@ namespace april
 			hlog::writef(april::logTag, "Creating rendersystem: '%s' (options: %s)", this->name.c_str(), options.toString().c_str());
 			this->created = true;
 			this->options = options;
+			this->depthBufferEnabled = false;
 			return true;
 		}
 		this->state->reset();
@@ -150,6 +151,7 @@ namespace april
 			// TODOa - uncomment
 			//this->state->reset();
 			this->created = false;
+			this->depthBufferEnabled = false;
 			return true;
 		}
 		return false;
@@ -182,6 +184,18 @@ namespace april
 		this->viewport = value;
 	}
 
+	void RenderSystem::setDepthBufferEnabled(bool value)
+	{
+		if (this->options.depthBuffer)
+		{
+			this->depthBufferEnabled = value;
+		}
+		else
+		{
+			hlog::error(april::logTag, "Cannot change depth-buffer state, RenderSystem was not created with this option!");
+		}
+	}
+
 	void RenderSystem::setOrthoProjection(grect rect)
 	{
 		// TODOaa - change and improve this implementation
@@ -191,12 +205,27 @@ namespace april
 		this->projectionMatrix.setOrthoProjection(rect);
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
-	
+
+	void RenderSystem::setOrthoProjection(grect rect, float nearZ, float farZ)
+	{
+		// TODOaa - change and improve this implementation
+		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
+		this->orthoProjection = rect;
+		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
+		this->projectionMatrix.setOrthoProjection(rect, nearZ, farZ);
+		this->_setProjectionMatrix(this->projectionMatrix);
+	}
+
 	void RenderSystem::setOrthoProjection(gvec2 size)
 	{
 		this->setOrthoProjection(grect(0.0f, 0.0f, size));
 	}
-	
+
+	void RenderSystem::setOrthoProjection(gvec2 size, float nearZ, float farZ)
+	{
+		this->setOrthoProjection(grect(0.0f, 0.0f, size), nearZ, farZ);
+	}
+
 	void RenderSystem::setModelviewMatrix(gmat4 matrix)
 	{
 		this->modelviewMatrix = matrix;
@@ -408,9 +437,9 @@ namespace april
 		this->_setModelviewMatrix(this->modelviewMatrix);
 	}
 	
-	void RenderSystem::lookAt(const gvec3& eye, const gvec3& direction, const gvec3& up)
+	void RenderSystem::lookAt(const gvec3& eye, const gvec3& target, const gvec3& up)
 	{
-		this->modelviewMatrix.lookAt(eye, direction, up);
+		this->modelviewMatrix.lookAt(eye, target, up);
 		this->_setModelviewMatrix(this->modelviewMatrix);
 	}
 		

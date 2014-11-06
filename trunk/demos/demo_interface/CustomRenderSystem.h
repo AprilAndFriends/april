@@ -55,6 +55,7 @@ public:
 	void render(april::RenderOperation renderOperation, april::ColoredTexturedVertex* v, int nVertices);
 
 	april::Image::Format getNativeTextureFormat(april::Image::Format format);
+	unsigned int getNativeColorUInt(const april::Color& color);
 
 	inline HDC getHDC() { return this->hDC; }
 	bool _initWin32(april::Window* window);

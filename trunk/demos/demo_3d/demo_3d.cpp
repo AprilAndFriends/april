@@ -30,7 +30,7 @@
 
 april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
-april::TexturedVertex v[4];
+april::TexturedVertex v[14];
 
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
@@ -48,12 +48,12 @@ public:
 	bool onUpdate(float timeDelta)
 	{
 		this->angle += timeDelta * 90.0f;
-		april::rendersys->clear();
+		april::rendersys->clear(true, true);
 		april::rendersys->setPerspective(60.0f, 1.0f / drawRect.getAspect(), 1.0f, 1000.0f);
-		april::rendersys->lookAt(gvec3(2.0f, 2.0f, -5.0f), gvec3(0.0f, 0.0f, 0.0f), gvec3(0.0f, 1.0f, 0.0f));
+		april::rendersys->lookAt(gvec3(0.0f, 2.0f, 5.0f), gvec3(0.0f, 0.0f, 0.0f), gvec3(0.0f, 1.0f, 0.0f));
 		april::rendersys->rotate(this->angle, 0.0f, 1.0f, 0.0f);
 		april::rendersys->setTexture(texture);
-		april::rendersys->render(april::RO_TRIANGLE_STRIP, v, 4);
+		april::rendersys->render(april::RO_TRIANGLE_STRIP, v, 14);
 		return true;
 	}
 
@@ -131,20 +131,44 @@ void april_init(const harray<hstr>& args)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
-	april::createRenderSystem();
+	april::RenderSystem::Options options;
+	options.depthBuffer = true;
+	april::createRenderSystem(options);
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple 3D");
 #ifdef _WINRT
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
+	april::rendersys->setDepthBufferEnabled(true);
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
 	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
-	v[0].x = -1.0f;	v[0].y = 1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
-	v[1].x = 1.0f;	v[1].y = 1.0f;	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
-	v[2].x = -1.0f;	v[2].y = -1.0f;	v[2].z = 0.0f;	v[2].u = 0.0f;	v[2].v = 1.0f;
-	v[3].x = 1.0f;	v[3].y = -1.0f;	v[3].z = 0.0f;	v[3].u = 1.0f;	v[3].v = 1.0f;
+
+	april::TexturedVertex _v[8];
+	_v[0].x = -1.0f;	_v[0].y = -1.0f;	_v[0].z = 1.0f;		_v[0].u = 0.0f;	_v[0].v = 1.0f;
+	_v[1].x = 1.0f;		_v[1].y = -1.0f;	_v[1].z = 1.0f;		_v[1].u = 1.0f;	_v[1].v = 1.0f;
+	_v[2].x = -1.0f;	_v[2].y = 1.0f;		_v[2].z = 1.0f;		_v[2].u = 0.0f;	_v[2].v = 0.0f;
+	_v[3].x = 1.0f;		_v[3].y = 1.0f;		_v[3].z = 1.0f;		_v[3].u = 1.0f;	_v[3].v = 0.0f;
+	_v[4].x = -1.0f;	_v[4].y = -1.0f;	_v[4].z = -1.0f;	_v[4].u = 1.0f;	_v[4].v = 0.0f;
+	_v[5].x = 1.0f;		_v[5].y = -1.0f;	_v[5].z = -1.0f;	_v[5].u = 0.0f;	_v[5].v = 0.0f;
+	_v[6].x = -1.0f;	_v[6].y = 1.0f;		_v[6].z = -1.0f;	_v[6].u = 1.0f;	_v[6].v = 1.0f;
+	_v[7].x = 1.0f;		_v[7].y = 1.0f;		_v[7].z = -1.0f;	_v[7].u = 0.0f;	_v[7].v = 1.0f;
+
+	v[0] = _v[0];
+	v[1] = _v[1];
+	v[2] = _v[4];
+	v[3] = _v[5];
+	v[4] = _v[7];
+	v[5] = _v[1];
+	v[6] = _v[3];
+	v[7] = _v[0];
+	v[8] = _v[2];
+	v[9] = _v[4];
+	v[10] = _v[6];
+	v[11] = _v[7];
+	v[12] = _v[2];
+	v[13] = _v[3];
 }
 
 void april_destroy()

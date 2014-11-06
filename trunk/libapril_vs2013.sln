@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libapril", "msvc\vs2013\libapril.vcxproj", "{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}"
 EndProject
@@ -993,7 +993,6 @@ Global
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Debug_DirectX9|Android.ActiveCfg = DebugS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Debug_DirectX9|Android-x86.ActiveCfg = DebugS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Debug_DirectX9|Win32.ActiveCfg = Debug|Win32
-		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Debug_DirectX9|Win32.Build.0 = Debug|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Debug_OpenGL1|Android.ActiveCfg = DebugS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Debug_OpenGL1|Android-x86.ActiveCfg = DebugS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Debug_OpenGL1|Win32.ActiveCfg = Debug|Win32
@@ -1009,7 +1008,6 @@ Global
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.DebugS_DirectX9|Android.ActiveCfg = DebugS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.DebugS_DirectX9|Android-x86.ActiveCfg = DebugS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.DebugS_DirectX9|Win32.ActiveCfg = DebugS|Win32
-		{8469E474-67C7-457A-97BC-28FAE7085B0F}.DebugS_DirectX9|Win32.Build.0 = DebugS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.DebugS_OpenGL1|Android.ActiveCfg = DebugS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.DebugS_OpenGL1|Android-x86.ActiveCfg = DebugS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.DebugS_OpenGL1|Win32.ActiveCfg = DebugS|Win32
@@ -1025,7 +1023,6 @@ Global
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Release_DirectX9|Android.ActiveCfg = ReleaseS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Release_DirectX9|Android-x86.ActiveCfg = ReleaseS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Release_DirectX9|Win32.ActiveCfg = Release|Win32
-		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Release_DirectX9|Win32.Build.0 = Release|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Release_OpenGL1|Android.ActiveCfg = ReleaseS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Release_OpenGL1|Android-x86.ActiveCfg = ReleaseS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.Release_OpenGL1|Win32.ActiveCfg = Release|Win32
@@ -1041,7 +1038,6 @@ Global
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.ReleaseS_DirectX9|Android.ActiveCfg = ReleaseS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.ReleaseS_DirectX9|Android-x86.ActiveCfg = ReleaseS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.ReleaseS_DirectX9|Win32.ActiveCfg = ReleaseS|Win32
-		{8469E474-67C7-457A-97BC-28FAE7085B0F}.ReleaseS_DirectX9|Win32.Build.0 = ReleaseS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.ReleaseS_OpenGL1|Android.ActiveCfg = ReleaseS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.ReleaseS_OpenGL1|Android-x86.ActiveCfg = ReleaseS|Win32
 		{8469E474-67C7-457A-97BC-28FAE7085B0F}.ReleaseS_OpenGL1|Win32.ActiveCfg = ReleaseS|Win32

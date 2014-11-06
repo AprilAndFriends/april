@@ -469,3 +469,9 @@ april::Image::Format CustomRenderSystem::getNativeTextureFormat(april::Image::Fo
 	}
 	return april::Image::FORMAT_INVALID;
 }
+
+unsigned int CustomRenderSystem::getNativeColorUInt(const april::Color& color)
+{
+	return ((color.a << 24) | (color.b << 16) | (color.g << 8) | color.r);
+}
+
