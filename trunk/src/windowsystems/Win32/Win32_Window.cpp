@@ -444,7 +444,7 @@ namespace april
 			april::window->queueKeyEvent(KEY_DOWN, (april::Key)wParam, 0);
 			return 0;
 		case WM_SYSKEYUP:
-			if (wParam == VK_MENU)
+			if (wParam == VK_MENU || wParam == VK_RETURN || wParam == VK_F4)
 			{
 				_altKeyDown = false;
 			}
@@ -555,6 +555,7 @@ namespace april
 			}
 			else
 			{
+				_altKeyDown = false; // because ALT keyup isn't processed when alt-tab-ing for some reason..
 				april::window->handleFocusChangeEvent(false);
 			}
 			break;
