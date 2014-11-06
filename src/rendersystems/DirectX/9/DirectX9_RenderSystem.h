@@ -50,6 +50,7 @@ namespace april
 		int getVRam();
 		harray<DisplayMode> getSupportedDisplayModes();
 		void setViewport(grect rect);
+		void setDepthBufferEnabled(bool value);
 
 		void setTextureBlendMode(BlendMode textureBlendMode);
 		/// @note The parameter factor is only used when the color mode is LERP.

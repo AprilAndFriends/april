@@ -22,14 +22,16 @@
     <ClCompile Include="..\..\demos\demo_interface\CustomTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\demos\demo_interface\CustomRenderSystem.h">
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\demos\demo_interface\CustomRenderSystem.h">
       <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\demos\demo_interface\CustomTexture.h">
+    </ClInclude>
+    <ClInclude Include="..\..\demos\demo_interface\CustomTexture.h">
       <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\demos\demo_interface\CustomWindow.h">
+    </ClInclude>
+    <ClInclude Include="..\..\demos\demo_interface\CustomWindow.h">
       <Filter>Header Files</Filter>
-    </ClCompile>
+    </ClInclude>
   </ItemGroup>
 </Project>
