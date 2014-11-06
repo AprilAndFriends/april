@@ -144,7 +144,6 @@ void april_init(const harray<hstr>& args)
 	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
-
 	april::TexturedVertex _v[8];
 	_v[0].x = -1.0f;	_v[0].y = -1.0f;	_v[0].z = 1.0f;		_v[0].u = 0.0f;	_v[0].v = 1.0f;
 	_v[1].x = 1.0f;		_v[1].y = -1.0f;	_v[1].z = 1.0f;		_v[1].u = 1.0f;	_v[1].v = 1.0f;
@@ -154,7 +153,6 @@ void april_init(const harray<hstr>& args)
 	_v[5].x = 1.0f;		_v[5].y = -1.0f;	_v[5].z = -1.0f;	_v[5].u = 0.0f;	_v[5].v = 0.0f;
 	_v[6].x = -1.0f;	_v[6].y = 1.0f;		_v[6].z = -1.0f;	_v[6].u = 1.0f;	_v[6].v = 1.0f;
 	_v[7].x = 1.0f;		_v[7].y = 1.0f;		_v[7].z = -1.0f;	_v[7].u = 0.0f;	_v[7].v = 1.0f;
-
 	v[0] = _v[0];
 	v[1] = _v[1];
 	v[2] = _v[4];
