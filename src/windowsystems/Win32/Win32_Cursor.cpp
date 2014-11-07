@@ -35,14 +35,14 @@ namespace april
 			return false;
 		}
 		hstr path, archivePath = hresource::getArchive();
-        if (archivePath != "")
-        {
-            path = hdir::join_path(archivePath, filename);
-        }
-        else
-        {
-            path = filename;
-        }
+		if (archivePath != "")
+		{
+			path = hdir::join_path(archivePath, filename);
+		}
+		else
+		{
+			path = filename;
+		}
 		if (!Cursor::_create(path))
 		{
 			return false;

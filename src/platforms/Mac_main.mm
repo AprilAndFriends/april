@@ -135,10 +135,10 @@ static NSString* getLocalizedString(NSString* key, NSString* fallback)
 static void setApplicationMenu()
 {
 	/* warning: this code is very odd */
-	NSMenu*     appleMenu;
+	NSMenu* appleMenu;
 	NSMenuItem* menuItem;
-	NSString*   title;
-	NSString*   appName;
+	NSString* title;
+	NSString* appName;
 	
 	appName = getApplicationName();
 	appleMenu = [[NSMenu alloc] initWithTitle:@""];

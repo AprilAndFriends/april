@@ -13,11 +13,11 @@
 
 int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {	
-    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	// limit GCD from spawning too much threads
 	[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];
 	[[NSOperationQueue currentQueue] setMaxConcurrentOperationCount:1];
 	int result = UIApplicationMain(argc, argv, nil, NSStringFromClass([ApriliOSAppDelegate class]));
-    [pool release];
-    return result;
+	[pool release];
+	return result;
 }

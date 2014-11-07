@@ -45,7 +45,7 @@
 // You must implement this method
 + (Class)layerClass
 {
-    return [CAEAGLLayer class];
+	return [CAEAGLLayer class];
 }
 
 
@@ -80,11 +80,11 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    if ((self = [super initWithFrame:frame]))
+	if ((self = [super initWithFrame:frame]))
 	{
 		app_started = 0;
-        // Get the layer
-        CAEAGLLayer* eaglLayer = (CAEAGLLayer*) self.layer;
+		// Get the layer
+		CAEAGLLayer* eaglLayer = (CAEAGLLayer*) self.layer;
 		
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		if ([eaglLayer respondsToSelector:@selector(setContentsScale:)])
@@ -96,21 +96,21 @@
 		}
 #endif
 		self.multipleTouchEnabled = YES;
-        eaglLayer.opaque = YES;
-        eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        [NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
+		eaglLayer.opaque = YES;
+		eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+			[NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
 #ifdef _OPENGLES1
-        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
+		context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
 #else
-        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+		context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 #endif
-        if (!context || ![EAGLContext setCurrentContext:context])
+		if (!context || ![EAGLContext setCurrentContext:context])
 		{
-            [self release];
-            return nil;
-        }
-        
-        animationInterval = 1.0 / 60.0;
+			[self release];
+			return nil;
+		}
+		
+		animationInterval = 1.0 / 60.0;
 		
 		
 		// fake textbox
@@ -151,20 +151,20 @@
 		april::createRenderSystem();
 		april::createWindow(0, 0, 1, "iOS Window");
 		april::rendersys->assignWindow(april::window);
-    }
+	}
 	
-    return self;
+	return self;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)aTextField
 {
-    [textField resignFirstResponder];
+	[textField resignFirstResponder];
 	if (april::window)
 	{
 		aprilWindow->handleKeyEvent(april::Window::KEY_DOWN, april::AK_RETURN, 0);
 		aprilWindow->handleKeyEvent(april::Window::KEY_UP, april::AK_RETURN, 0);
 	}
-    return YES;
+	return YES;
 }
 
 // we'll also use this objc class for getting notifications
@@ -196,19 +196,19 @@
 
 - (void)beginRender
 {
-    if (!self.animationTimer)
+	if (!self.animationTimer)
 	{
 		NSLog(@"Called drawView while in background!");
 		return;
 	}
  //   glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer); // commented this out on June 8th 2012, it's probably reduntant, but I'll keep it here for a while just in case. -- kspes
-    
-    [EAGLContext setCurrentContext:context];
+	
+	[EAGLContext setCurrentContext:context];
 }
 
 - (void)drawView
 {
-    [self beginRender];
+	[self beginRender];
 	
 	//mydraw();
 	if (april::window)
@@ -216,7 +216,7 @@
 	
 
 
-    //[self swapBuffers];
+	//[self swapBuffers];
 }
 
 - (void)_paintRect:(GLfloat[])vertices
@@ -233,7 +233,7 @@
 		return;
 	}
 //	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer); // commented this out on June 8th 2012, it's probably reduntant, but I'll keep it here for a while just in case. -- kspes
-    [context presentRenderbuffer:GL_RENDERBUFFER_OES];
+	[context presentRenderbuffer:GL_RENDERBUFFER_OES];
 }
 
 - (void)layoutSubviews
@@ -242,9 +242,9 @@
 	textFrame.origin.x += textFrame.size.width;
 	textField.frame = textFrame;
 	
-    [EAGLContext setCurrentContext:context];
-    [self destroyFramebuffer];
-    [self createFramebuffer];
+	[EAGLContext setCurrentContext:context];
+	[self destroyFramebuffer];
+	[self createFramebuffer];
 }
 
 #ifdef _OPENGLES2
@@ -253,29 +253,29 @@ GLuint _colorSlot;
 
 - (GLuint)compileShader:(NSString*)shaderString withType:(GLenum)shaderType {
 	
-    // 2
-    GLuint shaderHandle = glCreateShader(shaderType);
+	// 2
+	GLuint shaderHandle = glCreateShader(shaderType);
 	
-    // 3
-    const char * shaderStringUTF8 = [shaderString UTF8String];
-    int shaderStringLength = [shaderString length];
-    glShaderSource(shaderHandle, 1, &shaderStringUTF8, &shaderStringLength);
+	// 3
+	const char * shaderStringUTF8 = [shaderString UTF8String];
+	int shaderStringLength = [shaderString length];
+	glShaderSource(shaderHandle, 1, &shaderStringUTF8, &shaderStringLength);
 	
-    // 4
-    glCompileShader(shaderHandle);
+	// 4
+	glCompileShader(shaderHandle);
 	
-    // 5
-    GLint compileSuccess;
-    glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &compileSuccess);
-    if (compileSuccess == GL_FALSE) {
-        GLchar messages[256];
-        glGetShaderInfoLog(shaderHandle, sizeof(messages), 0, &messages[0]);
-        NSString *messageString = [NSString stringWithUTF8String:messages];
-        NSLog(@"%@", messageString);
-        exit(1);
-    }
+	// 5
+	GLint compileSuccess;
+	glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &compileSuccess);
+	if (compileSuccess == GL_FALSE) {
+		GLchar messages[256];
+		glGetShaderInfoLog(shaderHandle, sizeof(messages), 0, &messages[0]);
+		NSString *messageString = [NSString stringWithUTF8String:messages];
+		NSLog(@"%@", messageString);
+		exit(1);
+	}
 	
-    return shaderHandle;
+	return shaderHandle;
 	
 }
 
@@ -289,69 +289,69 @@ void main(void) {\
 void main(void) {\
 	gl_FragColor = vec4(1,0.8,0,1);\
 }";
-    // 1
-    GLuint vertexShader = [self compileShader:[NSString stringWithUTF8String:vert]
+	// 1
+	GLuint vertexShader = [self compileShader:[NSString stringWithUTF8String:vert]
 									 withType:GL_VERTEX_SHADER];
-    GLuint fragmentShader = [self compileShader:[NSString stringWithUTF8String:frag]
+	GLuint fragmentShader = [self compileShader:[NSString stringWithUTF8String:frag]
 									   withType:GL_FRAGMENT_SHADER];
 	
-    // 2
-    GLuint programHandle = glCreateProgram();
-    glAttachShader(programHandle, vertexShader);
-    glAttachShader(programHandle, fragmentShader);
-    glLinkProgram(programHandle);
+	// 2
+	GLuint programHandle = glCreateProgram();
+	glAttachShader(programHandle, vertexShader);
+	glAttachShader(programHandle, fragmentShader);
+	glLinkProgram(programHandle);
 	
-    // 3
-    GLint linkSuccess;
-    glGetProgramiv(programHandle, GL_LINK_STATUS, &linkSuccess);
-    if (linkSuccess == GL_FALSE) {
-        GLchar messages[256];
-        glGetProgramInfoLog(programHandle, sizeof(messages), 0, &messages[0]);
-        NSString *messageString = [NSString stringWithUTF8String:messages];
-        NSLog(@"%@", messageString);
-        exit(1);
-    }
+	// 3
+	GLint linkSuccess;
+	glGetProgramiv(programHandle, GL_LINK_STATUS, &linkSuccess);
+	if (linkSuccess == GL_FALSE) {
+		GLchar messages[256];
+		glGetProgramInfoLog(programHandle, sizeof(messages), 0, &messages[0]);
+		NSString *messageString = [NSString stringWithUTF8String:messages];
+		NSLog(@"%@", messageString);
+		exit(1);
+	}
 	
-    // 4
-    glUseProgram(programHandle);
+	// 4
+	glUseProgram(programHandle);
 	
-    // 5
-    _positionSlot = glGetAttribLocation(programHandle, "Position");
+	// 5
+	_positionSlot = glGetAttribLocation(programHandle, "Position");
   //  _colorSlot = glGetAttribLocation(programHandle, "SourceColor");
-    glEnableVertexAttribArray(_positionSlot);
-    //glEnableVertexAttribArray(_colorSlot);
+	glEnableVertexAttribArray(_positionSlot);
+	//glEnableVertexAttribArray(_colorSlot);
 }
 #endif
 
 - (BOOL)createFramebuffer
 {
-    glGenFramebuffersOES(1, &viewFramebuffer);
-    glGenRenderbuffersOES(1, &viewRenderbuffer);
-    
-    glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
-    [context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:(CAEAGLLayer*)self.layer];
-    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, viewRenderbuffer);
-    
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
-    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
-    
+	glGenFramebuffersOES(1, &viewFramebuffer);
+	glGenRenderbuffersOES(1, &viewRenderbuffer);
+	
+	glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
+	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+	[context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:(CAEAGLLayer*)self.layer];
+	glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, viewRenderbuffer);
+	
+	glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
+	glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
+	
 	
 	NSString *depth = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"april_depth_buffer"];
 	
-    if (depth != nil)
+	if (depth != nil)
 	{
-        glGenRenderbuffersOES(1, &depthRenderbuffer);
-        glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
-        glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
-        glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
-    }
-    
-    if(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
+		glGenRenderbuffersOES(1, &depthRenderbuffer);
+		glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
+		glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
+		glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
+	}
+	
+	if(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
 	{
-        NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
-        return NO;
-    }
+		NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
+		return NO;
+	}
 	// clear crap from previous renders. I often got a magenta colored initial screen without this
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -360,55 +360,55 @@ void main(void) {\
 #ifdef _OPENGLES2
 	[self compileShaders];
 #endif
-    return YES;
+	return YES;
 }
 
 
 - (void)destroyFramebuffer
 {
-    glDeleteFramebuffersOES(1, &viewFramebuffer);
-    viewFramebuffer = 0;
-    glDeleteRenderbuffersOES(1, &viewRenderbuffer);
-    viewRenderbuffer = 0;
-    
-    if(depthRenderbuffer)
+	glDeleteFramebuffersOES(1, &viewFramebuffer);
+	viewFramebuffer = 0;
+	glDeleteRenderbuffersOES(1, &viewRenderbuffer);
+	viewRenderbuffer = 0;
+	
+	if(depthRenderbuffer)
 	{
-        glDeleteRenderbuffersOES(1, &depthRenderbuffer);
-        depthRenderbuffer = 0;
-    }
+		glDeleteRenderbuffersOES(1, &depthRenderbuffer);
+		depthRenderbuffer = 0;
+	}
 }
 
 
 - (void)startAnimation
 {
 	if (!app_started) return;
-    self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:animationInterval target:self selector:@selector(drawView) userInfo:nil repeats:YES];
+	self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:animationInterval target:self selector:@selector(drawView) userInfo:nil repeats:YES];
 }
 
 
 - (void)stopAnimation
 {
-    self.animationTimer = nil;
+	self.animationTimer = nil;
 }
 
 
 - (void)setAnimationTimer:(NSTimer *)newTimer
 {
-    if(animationTimer != newTimer)
+	if(animationTimer != newTimer)
 		[animationTimer invalidate];
-    animationTimer = newTimer;
+	animationTimer = newTimer;
 }
 
 
 - (void)setAnimationInterval:(NSTimeInterval)interval
 {
-    
-    animationInterval = interval;
-    if (animationTimer)
+	
+	animationInterval = interval;
+	if (animationTimer)
 	{
-        [self stopAnimation];
-        [self startAnimation];
-    }
+		[self stopAnimation];
+		[self startAnimation];
+	}
 }
 
 - (NSTimeInterval)setAnimationInterval
@@ -418,16 +418,16 @@ void main(void) {\
 
 - (void)dealloc
 {
-    
-    [self stopAnimation];
-    
-    if ([EAGLContext currentContext] == context)
+	
+	[self stopAnimation];
+	
+	if ([EAGLContext currentContext] == context)
 	{
-        [EAGLContext setCurrentContext:nil];
-    }
-    
-    [context release];  
-    [super dealloc];
+		[EAGLContext setCurrentContext:nil];
+	}
+	
+	[context release];  
+	[super dealloc];
 }
 
 - (void)beginKeyboardHandling

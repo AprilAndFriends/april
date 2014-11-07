@@ -41,7 +41,7 @@ namespace april
 		void setCursorVisible(bool visible);
 		bool isCursorInside();
 
-        void presentFrame();
+		void presentFrame();
 		bool updateOneFrame();
 		void terminateMainLoop();
 
@@ -60,7 +60,7 @@ namespace april
 		bool fpsCounter;
 		hstr fpsTitle;
 
-        float scalingFactor;
+		float scalingFactor;
 	protected:
 		Cursor* _createCursor();
 	};

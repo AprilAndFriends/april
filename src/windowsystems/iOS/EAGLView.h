@@ -22,28 +22,28 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 */
 @interface EAGLView : UIView <UITextFieldDelegate>
 {
-    
+	
 @private
-    /* The pixel dimensions of the backbuffer */
-    GLint backingWidth;
-    GLint backingHeight;
+	/* The pixel dimensions of the backbuffer */
+	GLint backingWidth;
+	GLint backingHeight;
 	
 	
-    EAGLContext *context;
-    
-    /* OpenGL names for the renderbuffer and framebuffers used to render to this view */
-    GLuint viewRenderbuffer, viewFramebuffer;
-    
-    /* OpenGL name for the depth buffer that is attached to viewFramebuffer, if it exists (0 if it does not exist) */
-    GLuint depthRenderbuffer;
-    
-    NSTimer *animationTimer;
-    NSTimeInterval animationInterval;
+	EAGLContext *context;
+	
+	/* OpenGL names for the renderbuffer and framebuffers used to render to this view */
+	GLuint viewRenderbuffer, viewFramebuffer;
+	
+	/* OpenGL name for the depth buffer that is attached to viewFramebuffer, if it exists (0 if it does not exist) */
+	GLuint depthRenderbuffer;
+	
+	NSTimer *animationTimer;
+	NSTimeInterval animationInterval;
 	
 	/* Textfield */
 	UITextField *textField;
 @public
-    bool app_started;
+	bool app_started;
 }
 
 - (void)startAnimation;
