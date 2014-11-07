@@ -23,7 +23,7 @@
 #include "main_base.h"
 #include "aprilExport.h"
 
-// WinP8's ARM Release MF binaries have problems if there aren't any public ref classes declared
+/// @brief WinP8's ARM Release MF binaries have problems if there aren't any public ref classes declared
 #if defined(_WINP8) && !defined(_DEBUG) && defined(_WINARM)
 #ifdef APRIL_WINP8_ROOT_NAMESPACE_HACK
 namespace APRIL_WINP8_ROOT_NAMESPACE_HACK
@@ -37,6 +37,10 @@ namespace APRIL_WINP8_ROOT_NAMESPACE_HACK
 #endif
 #endif
 
+/// @brief Defines the main function in WinRT.
+/// @param[in] args Arguments.
+/// @return Application result code.
+/// @note This is used internally only.
 [Platform::MTAThread]
 int main(Platform::Array<Platform::String^>^ args)
 {
@@ -51,7 +55,7 @@ int main(Platform::Array<Platform::String^>^ args)
 		memcpy(argv[i], arg.c_str(), sizeof(char) * (arg.size() + 1));
 	}
 	// call the user specified main function
-	int result = april_main(april_init, april_destroy, argc, argv);
+	int result = __april_main(april_init, april_destroy, argc, argv);
 	// free allocated memory for arguments
 	for_iter (i, 0, argc)
 	{
