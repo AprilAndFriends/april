@@ -22,7 +22,7 @@
 	bool mCustomFullscreenExitAnimation;
 @private
 	NSMetadataQuery* mMetadataQuery;
-    NSTimer* mTimer;
+	NSTimer* mTimer;
 	AprilMacOpenGLView* mView;
 }
 - (void)startRenderLoop;

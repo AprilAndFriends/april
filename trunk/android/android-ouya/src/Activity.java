@@ -181,8 +181,8 @@ public class Activity extends com.april.Activity
 					}
 				});
 			}
-            return true;
-        }
+			return true;
+		}
 		else return super.onGenericMotionEvent(event);
 	}
 }

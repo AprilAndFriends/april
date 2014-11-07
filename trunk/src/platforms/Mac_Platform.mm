@@ -117,12 +117,12 @@ namespace april
 			// RAM
 			info.name = "mac";
 			info.osVersion = getMacOSVersion();
-            
-            float scalingFactor = 1.0f;
-            if ([mainScreen respondsToSelector:@selector(backingScaleFactor)])
-            {
-                scalingFactor = [NSScreen mainScreen].backingScaleFactor;
-            }
+			
+			float scalingFactor = 1.0f;
+			if ([mainScreen respondsToSelector:@selector(backingScaleFactor)])
+			{
+				scalingFactor = [NSScreen mainScreen].backingScaleFactor;
+			}
 
 			int mib [] = { CTL_HW, HW_MEMSIZE };
 			int64_t value = 0;
@@ -197,52 +197,52 @@ namespace april
 		
 		NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[] = {MESSAGE_BUTTON_OK, (MessageBoxButton)NULL, (MessageBoxButton)NULL};
-        
+		
 		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK").c_str()];
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
-            buttonTypes[0] = MESSAGE_BUTTON_OK;
-            buttonTypes[1] = MESSAGE_BUTTON_CANCEL;
+			buttonTypes[0] = MESSAGE_BUTTON_OK;
+			buttonTypes[1] = MESSAGE_BUTTON_CANCEL;
 		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
 			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
-            buttonTypes[0] = MESSAGE_BUTTON_YES;
-            buttonTypes[1] = MESSAGE_BUTTON_NO;
-            buttonTypes[2] = MESSAGE_BUTTON_CANCEL;
+			buttonTypes[0] = MESSAGE_BUTTON_YES;
+			buttonTypes[1] = MESSAGE_BUTTON_NO;
+			buttonTypes[2] = MESSAGE_BUTTON_CANCEL;
 		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
-            buttonTypes[0] = MESSAGE_BUTTON_YES;
-            buttonTypes[1] = MESSAGE_BUTTON_NO;
+			buttonTypes[0] = MESSAGE_BUTTON_YES;
+			buttonTypes[1] = MESSAGE_BUTTON_NO;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_CANCEL)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
-            buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
+			buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK").c_str()];
-            buttonTypes[0] = MESSAGE_BUTTON_OK;
+			buttonTypes[0] = MESSAGE_BUTTON_OK;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_YES)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
-            buttonTypes[0] = MESSAGE_BUTTON_YES;
+			buttonTypes[0] = MESSAGE_BUTTON_YES;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_NO)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
-            buttonTypes[0] = MESSAGE_BUTTON_NO;
+			buttonTypes[0] = MESSAGE_BUTTON_NO;
 		}
 		
-		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
+		NSString* titlens = [NSString stringWithUTF8String:title.c_str()];
 		
 		int clicked = NSRunAlertPanel(titlens, @"%@", buttons[0], buttons[1], buttons[2], [NSString stringWithUTF8String:text.c_str()]);
 		switch (clicked)
@@ -257,10 +257,10 @@ namespace april
 			clicked = 2;
 			break;
 		}
-        
-        if (callback != NULL)
-        {
-            (*callback)(buttonTypes[clicked]);
+		
+		if (callback != NULL)
+		{
+			(*callback)(buttonTypes[clicked]);
 		}
 	}
 	

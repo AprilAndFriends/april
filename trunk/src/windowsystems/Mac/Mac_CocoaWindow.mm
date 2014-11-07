@@ -57,13 +57,13 @@ static bool gFullscreenToggleRequest = false;
 	
 	// setup screenshot listening to counter apple's bug..
 	mMetadataQuery = [[NSMetadataQuery alloc] init];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryUpdated:) name:NSMetadataQueryDidStartGatheringNotification object:mMetadataQuery];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryUpdated:) name:NSMetadataQueryDidUpdateNotification object:mMetadataQuery];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryUpdated:) name:NSMetadataQueryDidFinishGatheringNotification object:mMetadataQuery];
-    
-    [mMetadataQuery setDelegate:self];
-    [mMetadataQuery setPredicate:[NSPredicate predicateWithFormat:@"kMDItemIsScreenCapture = 1"]];
-    [mMetadataQuery startQuery];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryUpdated:) name:NSMetadataQueryDidStartGatheringNotification object:mMetadataQuery];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryUpdated:) name:NSMetadataQueryDidUpdateNotification object:mMetadataQuery];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryUpdated:) name:NSMetadataQueryDidFinishGatheringNotification object:mMetadataQuery];
+	
+	[mMetadataQuery setDelegate:self];
+	[mMetadataQuery setPredicate:[NSPredicate predicateWithFormat:@"kMDItemIsScreenCapture = 1"]];
+	[mMetadataQuery startQuery];
 }
 
 - (void)startRenderLoop
@@ -101,10 +101,10 @@ static bool gFullscreenToggleRequest = false;
 	{
 		delegate->onWindowSizeChanged(size.width * aprilWindow->scalingFactor, size.height * aprilWindow->scalingFactor, [self isFullScreen]);
 	}
-    else
-    {
-        NSLog(@"Mac_CocoaWindow: Ignoring onWindowSizeChange, delegate not set.");
-    }
+	else
+	{
+		NSLog(@"Mac_CocoaWindow: Ignoring onWindowSizeChange, delegate not set.");
+	}
 	[mView setNeedsDisplay:YES];
 }
 
@@ -428,7 +428,7 @@ static bool gFullscreenToggleRequest = false;
 
 - (BOOL)acceptsFirstResponder
 {
-    return YES;
+	return YES;
 }
 
 - (void)setOpenGLView:(AprilMacOpenGLView*) view

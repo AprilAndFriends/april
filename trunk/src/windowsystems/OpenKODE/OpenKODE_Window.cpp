@@ -11,8 +11,8 @@
 	#include <TargetConditionals.h>
 	#if TARGET_OS_IPHONE
 		#import <UIKit/UIWindow.h>
-    #else
-        #define MAC_OS
+	#else
+		#define MAC_OS
 	#endif
 #endif
 

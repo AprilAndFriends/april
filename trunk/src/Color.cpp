@@ -126,7 +126,7 @@ namespace april
 	void Color::set(chstr hex)
 	{
 		hstr value = (hex.starts_with("0x") ? hex(2, -1) : hex);
-        int size = value.size();
+		int size = value.size();
 		if ((size != 6 && size != 8) || !value.is_hex())
 		{
 			throw hl_exception("Color format must be either 0xRRGGBBAA or 0xRRGGBB (with or without 0x prefix)");

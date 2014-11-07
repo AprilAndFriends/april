@@ -32,58 +32,58 @@ bool g_wnd_rotating = 0;
 
 static inline CGFloat degreesToRadians(CGFloat degrees)
 {
-    return M_PI * (degrees / 180.0);
+	return M_PI * (degrees / 180.0);
 }
 
 static inline CGSize swapWidthAndHeight(CGSize size)
 {
-    CGFloat  swap = size.width;
+	CGFloat  swap = size.width;
 	
-    size.width  = size.height;
-    size.height = swap;
+	size.width  = size.height;
+	size.height = swap;
 	
-    return size;
+	return size;
 }
 
 -(UIImage*)rotate:(UIImage*)src to:(UIImageOrientation)orient
 {
-    CGRect             bnds = CGRectZero;
-    UIImage*           copy = nil;
-    CGContextRef       ctxt = nil;
-    CGRect             rect = CGRectZero;
-    CGAffineTransform  tran = CGAffineTransformIdentity;
+	CGRect             bnds = CGRectZero;
+	UIImage*           copy = nil;
+	CGContextRef       ctxt = nil;
+	CGRect             rect = CGRectZero;
+	CGAffineTransform  tran = CGAffineTransformIdentity;
 	
-    bnds.size = src.size;
-    rect.size = src.size;
+	bnds.size = src.size;
+	rect.size = src.size;
 	
-    switch (orient)
-    {
-        case UIImageOrientationUp:
+	switch (orient)
+	{
+		case UIImageOrientationUp:
 			return src;
 			
-        case UIImageOrientationUpMirrored:
+		case UIImageOrientationUpMirrored:
 			tran = CGAffineTransformMakeTranslation(rect.size.width, 0.0);
 			tran = CGAffineTransformScale(tran, -1.0, 1.0);
 			break;
 			
-        case UIImageOrientationDown:
+		case UIImageOrientationDown:
 			tran = CGAffineTransformMakeTranslation(rect.size.width,
 													rect.size.height);
 			tran = CGAffineTransformRotate(tran, degreesToRadians(180.0));
 			break;
 			
-        case UIImageOrientationDownMirrored:
+		case UIImageOrientationDownMirrored:
 			tran = CGAffineTransformMakeTranslation(0.0, rect.size.height);
 			tran = CGAffineTransformScale(tran, 1.0, -1.0);
 			break;
 			
-        case UIImageOrientationLeft:
+		case UIImageOrientationLeft:
 			bnds.size = swapWidthAndHeight(bnds.size);
 			tran = CGAffineTransformMakeTranslation(0.0, rect.size.width);
 			tran = CGAffineTransformRotate(tran, degreesToRadians(-90.0));
 			break;
 			
-        case UIImageOrientationLeftMirrored:
+		case UIImageOrientationLeftMirrored:
 			bnds.size = swapWidthAndHeight(bnds.size);
 			tran = CGAffineTransformMakeTranslation(rect.size.height,
 													rect.size.width);
@@ -91,50 +91,50 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 			tran = CGAffineTransformRotate(tran, degreesToRadians(-90.0));
 			break;
 			
-        case UIImageOrientationRight:
+		case UIImageOrientationRight:
 			bnds.size = swapWidthAndHeight(bnds.size);
 			tran = CGAffineTransformMakeTranslation(rect.size.height, 0.0);
 			tran = CGAffineTransformRotate(tran, degreesToRadians(90.0));
 			break;
 			
-        case UIImageOrientationRightMirrored:
+		case UIImageOrientationRightMirrored:
 			bnds.size = swapWidthAndHeight(bnds.size);
 			tran = CGAffineTransformMakeScale(-1.0, 1.0);
 			tran = CGAffineTransformRotate(tran, degreesToRadians(90.0));
 			break;
 			
-        default:
+		default:
 			// orientation value supplied is invalid
 			assert(false);
 			return nil;
-    }
+	}
 	
-    UIGraphicsBeginImageContext(bnds.size);
-    ctxt = UIGraphicsGetCurrentContext();
+	UIGraphicsBeginImageContext(bnds.size);
+	ctxt = UIGraphicsGetCurrentContext();
 	
-    switch (orient)
-    {
-        case UIImageOrientationLeft:
-        case UIImageOrientationLeftMirrored:
-        case UIImageOrientationRight:
-        case UIImageOrientationRightMirrored:
+	switch (orient)
+	{
+		case UIImageOrientationLeft:
+		case UIImageOrientationLeftMirrored:
+		case UIImageOrientationRight:
+		case UIImageOrientationRightMirrored:
 			CGContextScaleCTM(ctxt, -1.0, 1.0);
 			CGContextTranslateCTM(ctxt, -rect.size.height, 0.0);
 			break;
 			
-        default:
+		default:
 			CGContextScaleCTM(ctxt, 1.0, -1.0);
 			CGContextTranslateCTM(ctxt, 0.0, -rect.size.height);
 			break;
-    }
+	}
 	
-    CGContextConcatCTM(ctxt, tran);
-    CGContextDrawImage(ctxt, rect, src.CGImage);
+	CGContextConcatCTM(ctxt, tran);
+	CGContextDrawImage(ctxt, rect, src.CGImage);
 	
-    copy = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+	copy = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
 	
-    return copy;
+	return copy;
 }
 
 
@@ -259,7 +259,7 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+	[super viewDidLoad];
 }
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -277,26 +277,26 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation // used in iOS versions older than iOS6
 {
-    // Return YES for supported orientations
+	// Return YES for supported orientations
 	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
 -(NSUInteger) supportedInterfaceOrientations // used in iOS6+ only
 {
-    return UIInterfaceOrientationMaskLandscape;
+	return UIInterfaceOrientationMaskLandscape;
 }
 
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
+	// Releases the view if it doesn't have a superview.
+	[super didReceiveMemoryWarning];
+	
+	// Release any cached data, images, etc that aren't in use.
 }
 
 - (void)dealloc
 {
-    [super dealloc];
+	[super dealloc];
 }
 
 

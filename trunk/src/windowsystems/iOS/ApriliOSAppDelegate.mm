@@ -37,7 +37,7 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 	NSLog(@"Creating iOS window");
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
 	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0" options:NSNumericSearch] == NSOrderedAscending)
-    {
+	{
 		// less than iOS 5.0 - workarround for an apple bug where the audio sesion get's interrupted while using AVAssetReader and similar
 		AVAudioSession *audioSession = [AVAudioSession sharedInstance];
 		[audioSession setActive: NO error: nil];
@@ -47,11 +47,11 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 		UInt32 allowMixing = true;
 		AudioSessionSetProperty(kAudioSessionProperty_OverrideCategoryMixWithOthers, sizeof(allowMixing), &allowMixing);
 		[audioSession setActive: YES error: nil];
-    }
-    else
-    {
+	}
+	else
+	{
 		[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:NULL];
-    }
+	}
 
 	// create a window.
 	// early creation so Default.png can be displayed while we're waiting for 
@@ -78,19 +78,19 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 
 	//////////
 	// thanks to Kyle Poole for this trick
-    // also used in latest SDL
-    // quote:
-    // KP: using a selector gets around the "failed to launch application in time" if the startup code takes too long
+	// also used in latest SDL
+	// quote:
+	// KP: using a selector gets around the "failed to launch application in time" if the startup code takes too long
 	[self performSelector:@selector(performInit:) withObject:nil afterDelay:0.2f];
-    
+	
 }
 
 - (void)performInit:(id)object
 {
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	harray<hstr> args;
 	args += ""; // unable to determine executable name, but due to convention, leave one argument filled
-    april_init(args);
+	april_init(args);
 	[pool drain];
 
 	((EAGLView*) viewController.view)->app_started = 1;
@@ -108,22 +108,22 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    if (![[viewController.view subviews] count]) 
-    {
-        return;
-    }
+	if (![[viewController.view subviews] count]) 
+	{
+		return;
+	}
 	
 	april::window->handleFocusChangeEvent(0);
 	
-    for (EAGLView *glview in [viewController.view subviews])
-    {
-        if ([glview isKindOfClass:[EAGLView class]]) 
-        {
-            [glview stopAnimation];
-            return;
-        }
-    }
-    april_destroy();
+	for (EAGLView *glview in [viewController.view subviews])
+	{
+		if ([glview isKindOfClass:[EAGLView class]]) 
+		{
+			[glview stopAnimation];
+			return;
+		}
+	}
+	april_destroy();
 }
 
 - (NSUInteger)application:(UIApplication*)application supportedInterfaceOrientationsForWindow:(UIWindow*)window
@@ -151,10 +151,10 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    if (![[viewController.view subviews] count]) 
-    {
-        return;
-    }
+	if (![[viewController.view subviews] count]) 
+	{
+		return;
+	}
 
 	if ([viewController.view isKindOfClass:[EAGLView class]]) 
 	{
@@ -165,7 +165,7 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 
 	}
 	if ([[viewController.view subviews] count]) 
-    {
+	{
 		for (EAGLView* glview in viewController.view.subviews) 
 		{
 			if ([glview isKindOfClass:[EAGLView class]]) 
@@ -174,7 +174,7 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 				[glview stopAnimation];
 			}
 		}
-    }
+	}
 	
 }
 
@@ -187,10 +187,10 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    if (![[viewController.view subviews] count]) 
-    {
-        return;
-    }
+	if (![[viewController.view subviews] count]) 
+	{
+		return;
+	}
 	
 	if ([viewController.view isKindOfClass:[EAGLView class]]) 
 	{

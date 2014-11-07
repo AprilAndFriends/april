@@ -43,38 +43,38 @@ bool isLionOrNewer()
 
 namespace april
 {
-    Mac_Window::Mac_Window() : Window()
-    {
+	Mac_Window::Mac_Window() : Window()
+	{
 		this->ignoreUpdate = false;
 		this->name = APRIL_WS_MAC;
 		this->retainLoadingOverlay = fastHideLoadingOverlay = false;
 		this->splashScreenFadeout = true;
 		this->cursorExtensions += ".plist";
 		this->cursorExtensions += ".png";
-        this->scalingFactor = 1.0f;
-        if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
-        {
-            this->scalingFactor = [NSScreen mainScreen].backingScaleFactor;
+		this->scalingFactor = 1.0f;
+		if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
+		{
+			this->scalingFactor = [NSScreen mainScreen].backingScaleFactor;
 			hlog::writef(logTag, "Mac UI scaling factor: %.2f", this->scalingFactor);
-        }
+		}
 
 		aprilWindow = this;
-    }
+	}
 
-    Mac_Window::~Mac_Window()
-    {
+	Mac_Window::~Mac_Window()
+	{
 		if (mView)
 		{
 			[mView release];
 			mView = nil;
 		}
-        if (mWindow)
+		if (mWindow)
 		{
 			[mWindow destroy];
 			[mWindow release];
 			mWindow = nil;
 		}
-    }
+	}
 	
 	int Mac_Window::getWidth()
 	{
@@ -194,7 +194,7 @@ namespace april
 			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
 			if (options.resizable) styleMask |= NSResizableWindowMask;
 		}
-        
+		
 		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
 		[mWindow configure];
 		setTitle(title);
@@ -231,11 +231,11 @@ namespace april
 			}
 		}
 		mView = [[AprilMacOpenGLView alloc] init];
-        [mView initOpenGL];
-        if (NSAppKitVersionNumber >= NSAppKitVersionNumber10_7)
-        {
-            [mView setWantsBestResolutionOpenGLSurface:YES];
-        }
+		[mView initOpenGL];
+		if (NSAppKitVersionNumber >= NSAppKitVersionNumber10_7)
+		{
+			[mView setWantsBestResolutionOpenGLSurface:YES];
+		}
  		mView.frame = frame;
 		[mWindow setOpenGLView: mView];
 		[mWindow startRenderLoop];
@@ -300,15 +300,15 @@ namespace april
 	bool Mac_Window::updateOneFrame()
 	{
 		if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
-        {
-            float scalingFactor = [NSScreen mainScreen].backingScaleFactor;
+		{
+			float scalingFactor = [NSScreen mainScreen].backingScaleFactor;
 			if (scalingFactor != this->scalingFactor)
 			{
 				this->scalingFactor = scalingFactor;
 				[mWindow onWindowSizeChange];
 			}
-        }
-        bool result = Window::updateOneFrame();
+		}
+		bool result = Window::updateOneFrame();
 		if (result && mOverlayWindow != nil)
 		{
 			float timeDelta = this->timer.diff(false);
@@ -322,16 +322,16 @@ namespace april
 		}
 		return result;
 	}
-    
-    void Mac_Window::presentFrame()
-    {
+	
+	void Mac_Window::presentFrame()
+	{
 		// presentFrame() calls are always manually called, so let's make sure
 		// Mac can update the view contents before we continue.
 		ignoreUpdate = true;
-        [mView presentFrame];
+		[mView presentFrame];
 		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.01]];
 		ignoreUpdate = false;
-    }
+	}
 	
 	Cursor* Mac_Window::_createCursor()
 	{
@@ -345,12 +345,12 @@ namespace april
 	
 	bool Mac_Window::destroy()
 	{
-        if (mView)
+		if (mView)
 		{
 			[mView release];
 			mView = nil;
 		}
-        if (mWindow)
+		if (mWindow)
 		{
 			[mWindow release];
 			mWindow = nil;

@@ -29,8 +29,8 @@
 void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 
 @interface AprilMessageBoxDelegate : NSObject<UIAlertViewDelegate> {
-    void(*callback)(april::MessageBoxButton);
-    april::MessageBoxButton buttonTypes[3];
+	void(*callback)(april::MessageBoxButton);
+	april::MessageBoxButton buttonTypes[3];
 	
 	CFRunLoopRef runLoop;
 	BOOL isModal;
@@ -56,18 +56,18 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 }
 -(april::MessageBoxButton*)buttonTypes
 {
-    return buttonTypes;
+	return buttonTypes;
 }
 -(void)setButtonTypes:(april::MessageBoxButton*)_buttonTypes
 {
-    memcpy(buttonTypes, _buttonTypes, sizeof(april::MessageBoxButton)*3);
+	memcpy(buttonTypes, _buttonTypes, sizeof(april::MessageBoxButton)*3);
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (callback)
-    {
-        callback(buttonTypes[buttonIndex]);
-    }
+	if (callback)
+	{
+		callback(buttonTypes[buttonIndex]);
+	}
 	if (isModal)
 	{
 		CFRunLoopStop(runLoop);
@@ -118,8 +118,8 @@ namespace april
 		info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
 		if (info.locale == "")
 		{
-			NSBundle * bundle   = [NSBundle mainBundle];
-			NSArray  * langs    = [bundle preferredLocalizations];
+			NSBundle* bundle = [NSBundle mainBundle];
+			NSArray* langs = [bundle preferredLocalizations];
 			langs = [langs count] ? langs : [NSLocale preferredLanguages];
 			hstr fullLocale = hstr([[langs objectAtIndex:0] UTF8String]);
 			info.locale = "en"; // default is "en"
@@ -185,59 +185,59 @@ namespace april
 	
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
-        NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+		NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[] = {MESSAGE_BUTTON_OK, (MessageBoxButton)NULL, (MessageBoxButton)NULL};
-        
+		
 		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK").c_str()];
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
-            buttonTypes[1] = MESSAGE_BUTTON_OK;
-            buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
-        }
+			buttonTypes[1] = MESSAGE_BUTTON_OK;
+			buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
+		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
 			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
-            buttonTypes[1] = MESSAGE_BUTTON_YES;
-            buttonTypes[2] = MESSAGE_BUTTON_NO;
-            buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
+			buttonTypes[1] = MESSAGE_BUTTON_YES;
+			buttonTypes[2] = MESSAGE_BUTTON_NO;
+			buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
 		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
 			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
-            buttonTypes[1] = MESSAGE_BUTTON_YES;
-            buttonTypes[0] = MESSAGE_BUTTON_NO;
+			buttonTypes[1] = MESSAGE_BUTTON_YES;
+			buttonTypes[0] = MESSAGE_BUTTON_NO;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_CANCEL)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
-            buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
+			buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK").c_str()];
-            buttonTypes[0] = MESSAGE_BUTTON_OK;
+			buttonTypes[0] = MESSAGE_BUTTON_OK;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_YES)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes").c_str()];
-            buttonTypes[0] = MESSAGE_BUTTON_YES;
+			buttonTypes[0] = MESSAGE_BUTTON_YES;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_NO)
 		{
 			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No").c_str()];
-            buttonTypes[0] = MESSAGE_BUTTON_NO;
+			buttonTypes[0] = MESSAGE_BUTTON_NO;
 		}
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.c_str()];
 		NSString *textns = [NSString stringWithUTF8String:text.c_str()];
 
-        AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:(style & MESSAGE_STYLE_MODAL)] autorelease];
-        mbd.callback = callback;
-        mbd.buttonTypes = buttonTypes;
+		AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:(style & MESSAGE_STYLE_MODAL)] autorelease];
+		mbd.callback = callback;
+		mbd.buttonTypes = buttonTypes;
 		[mbd retain];
 
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens

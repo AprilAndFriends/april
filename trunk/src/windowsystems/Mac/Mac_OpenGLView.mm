@@ -17,7 +17,7 @@
 
 - (id) initWithFrame:(NSRect)frameRect
 {
-    mFrameRect = frameRect;
+	mFrameRect = frameRect;
 	mUseBlankCursor = false;
 	mStartedDrawing = false;
 	
@@ -37,7 +37,7 @@
 	[image release];
 
 	mCursor = NULL;
-    return self;
+	return self;
 }
 
 - (void)initOpenGL
@@ -55,24 +55,24 @@
 	}
 	a[n++] = 0;
 
-    NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:a];
+	NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:a];
 
-    if (!pf) hlog::error(april::logTag, "Unable to create requested OpenGL pixel format");
+	if (!pf) hlog::error(april::logTag, "Unable to create requested OpenGL pixel format");
 
-    if (self = [super initWithFrame:mFrameRect pixelFormat:[pf autorelease]])
+	if (self = [super initWithFrame:mFrameRect pixelFormat:[pf autorelease]])
 	{
-        NSOpenGLContext* context = [self openGLContext];
-        [context makeCurrentContext];
-        // Synchronize buffer swaps with vertical refresh rate
-        GLint swapInt = 1;
-        [context setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
-	}	
+		NSOpenGLContext* context = [self openGLContext];
+		[context makeCurrentContext];
+		// Synchronize buffer swaps with vertical refresh rate
+		GLint swapInt = 1;
+		[context setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
+	}
 }
 
 - (void)updateGLViewport
 {
-    float w = aprilWindow->getWidth(),
-          h = aprilWindow->getHeight();
+	float w = aprilWindow->getWidth();
+	float h = aprilWindow->getHeight();
 	glViewport(0, 0, w, h);
 }
 
