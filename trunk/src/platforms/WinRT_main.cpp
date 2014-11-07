@@ -19,7 +19,7 @@
 
 using namespace Windows::UI::Xaml;
 
-int april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
+int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {
 	april::WinRT::Args.clear();
 	if (argv != NULL && argv[0] != NULL)
