@@ -411,17 +411,17 @@ namespace april
 	
 	void addTextureExtension(chstr extension)
 	{
-		extensions += extension;
+		april::extensions += extension;
 	}
 	
 	harray<hstr> getTextureExtensions()
 	{
-		return extensions;
+		return april::extensions;
 	}
 	
-	void setTextureExtensions(const harray<hstr>& exts)
+	void setTextureExtensions(const harray<hstr>& extensions)
 	{
-		extensions = exts;
+		april::extensions = extensions;
 	}
 
 }
