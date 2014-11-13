@@ -102,6 +102,8 @@ namespace april
 		this->name = "Generic";
 		this->created = false;
 		this->state = NULL;
+		this->depthBufferEnabled = false;
+		this->depthBufferWriteEnabled = false;
 		this->textureFilter = Texture::FILTER_UNDEFINED;
 		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
@@ -131,6 +133,7 @@ namespace april
 			this->created = true;
 			this->options = options;
 			this->depthBufferEnabled = false;
+			this->depthBufferWriteEnabled = false;
 			return true;
 		}
 		this->state->reset();
@@ -152,6 +155,7 @@ namespace april
 			//this->state->reset();
 			this->created = false;
 			this->depthBufferEnabled = false;
+			this->depthBufferWriteEnabled = false;
 			return true;
 		}
 		return false;
@@ -184,11 +188,12 @@ namespace april
 		this->viewport = value;
 	}
 
-	void RenderSystem::setDepthBufferEnabled(bool value)
+	void RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
 	{
 		if (this->options.depthBuffer)
 		{
-			this->depthBufferEnabled = value;
+			this->depthBufferEnabled = enabled;
+			this->depthBufferWriteEnabled = writeEnabled;
 		}
 		else
 		{

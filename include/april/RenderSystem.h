@@ -121,7 +121,7 @@ namespace april
 		virtual Caps getCaps();
 		virtual void setViewport(grect value);
 		HL_DEFINE_IS(depthBufferEnabled, DepthBufferEnabled);
-		virtual void setDepthBufferEnabled(bool value);
+		HL_DEFINE_IS(depthBufferWriteEnabled, DepthBufferWriteEnabled);
 
 		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
 		/// @note The parameter factor is only used when the color mode is LERP.
@@ -134,6 +134,7 @@ namespace april
 		virtual void setRenderTarget(Texture* texture);
 		virtual void setVertexShader(VertexShader* vertexShader);
 		virtual void setPixelShader(PixelShader* pixelShader);
+		virtual void setDepthBuffer(bool enabled, bool writeEnabled = true);
 
 		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
 		/// @note When a format is forced, it's best to use managed (but not necessary).
@@ -187,6 +188,7 @@ namespace april
 		harray<Texture*> textures;
 		grect viewport;
 		bool depthBufferEnabled;
+		bool depthBufferWriteEnabled;
 		RenderState* state;
 		Texture::Filter textureFilter;
 		Texture::AddressMode textureAddressMode;

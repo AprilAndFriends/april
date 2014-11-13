@@ -343,10 +343,11 @@ namespace april
 		this->d3dDevice->SetViewport(&viewport);
 	}
 
-	void DirectX9_RenderSystem::setDepthBufferEnabled(bool value)
+	void DirectX9_RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		RenderSystem::setDepthBufferEnabled(value);
-		this->d3dDevice->SetRenderState(D3DRS_ZENABLE, value);
+		RenderSystem::setDepthBuffer(enabled, writeEnabled);
+		this->d3dDevice->SetRenderState(D3DRS_ZENABLE, enabled);
+		this->d3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, (enabled && writeEnabled));
 	}
 
 	void DirectX9_RenderSystem::setTextureBlendMode(BlendMode textureBlendMode)
