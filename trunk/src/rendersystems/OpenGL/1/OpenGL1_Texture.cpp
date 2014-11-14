@@ -17,6 +17,7 @@ namespace april
 
 	OpenGL1_Texture::~OpenGL1_Texture()
 	{
+		this->unload();
 	}
 
 }

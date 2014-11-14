@@ -17,6 +17,7 @@ namespace april
 
 	OpenGLES1_Texture::~OpenGLES1_Texture()
 	{
+		this->unload();
 	}
 
 }
