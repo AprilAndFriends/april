@@ -66,7 +66,7 @@ namespace april
 
 	OpenGL_Texture::~OpenGL_Texture()
 	{
-		this->unload();
+
 	}
 
 	bool OpenGL_Texture::_createInternalTexture(unsigned char* data, int size, Type type)

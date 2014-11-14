@@ -655,10 +655,10 @@ namespace april
 		{
 			this->compressedSize = image->compressedSize;
 		}
-		this->_assignFormat();
 		lock.acquire(&this->asyncLoadMutex);
 		if (this->asyncLoadQueued && !this->asyncLoadDiscarded)
 		{
+			this->_assignFormat();
 			this->dataAsync = image->data;
 			image->data = NULL;
 		}
