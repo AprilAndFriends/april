@@ -54,6 +54,7 @@ namespace april
 		void setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
 		void setTextureFilter(Texture::Filter textureFilter);
 		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
+		void setDepthBuffer(bool enabled, bool writeEnabled = true);
 
 		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
 		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
@@ -85,6 +86,7 @@ namespace april
 		virtual void _setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
 		virtual void _setTextureFilter(Texture::Filter textureFilter);
 		virtual void _setTextureAddressMode(Texture::AddressMode textureAddressMode);
+		virtual void _setDepthBuffer(bool enabled, bool writeEnabled = true);
 
 		virtual void _setVertexPointer(int stride, const void* pointer) = 0;
 		virtual void _setTexCoordPointer(int stride, const void* pointer);

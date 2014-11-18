@@ -39,6 +39,8 @@ namespace april
 		this->blendMode = BM_UNDEFINED;
 		this->colorMode = CM_UNDEFINED;
 		this->colorModeFactor = 1.0f;
+		this->depthBuffer = false;
+		this->depthBufferWrite = false;
 		this->modeMatrix = 0;
 		this->strideVertex = 0;
 		this->pointerVertex = NULL;
