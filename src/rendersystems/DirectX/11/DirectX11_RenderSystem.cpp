@@ -638,6 +638,15 @@ namespace april
 		this->d3dDeviceContext->RSSetViewports(1, &viewport);
 	}
 
+	void DirectX11_RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
+	{
+		RenderSystem::setDepthBuffer(enabled, writeEnabled);
+		if (this->options.depthBuffer)
+		{
+			hlog::error(april::logTag, "Not implemeneted!");
+		}
+	}
+
 	void DirectX11_RenderSystem::setTextureBlendMode(BlendMode textureBlendMode)
 	{
 		switch (textureBlendMode)

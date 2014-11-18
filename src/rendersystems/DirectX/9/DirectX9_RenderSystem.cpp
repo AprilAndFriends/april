@@ -346,8 +346,45 @@ namespace april
 	void DirectX9_RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
 	{
 		RenderSystem::setDepthBuffer(enabled, writeEnabled);
-		this->d3dDevice->SetRenderState(D3DRS_ZENABLE, enabled);
-		this->d3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, (enabled && writeEnabled));
+		if (this->options.depthBuffer)
+		{
+			this->d3dDevice->SetRenderState(D3DRS_ZENABLE, enabled);
+			this->d3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, (enabled && writeEnabled));
+		}
+	}
+
+	void DirectX9_RenderSystem::setTexture(Texture* texture)
+	{
+		Caps caps = this->getCaps();
+		this->activeTexture = (DirectX9_Texture*)texture;
+		gmat4 matrix;
+		if (this->activeTexture != NULL)
+		{
+			Texture::Filter filter = this->activeTexture->getFilter();
+			if (this->textureFilter != filter)
+			{
+				this->setTextureFilter(filter);
+			}
+			Texture::AddressMode addressMode = this->activeTexture->getAddressMode();
+			if (this->textureAddressMode != addressMode)
+			{
+				this->setTextureAddressMode(addressMode);
+			}
+			this->activeTexture->load();
+			this->d3dDevice->SetTexture(0, this->activeTexture->d3dTexture);
+			if (!caps.npotTexturesLimited && !caps.npotTextures)
+			{
+				matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
+			}
+		}
+		else
+		{
+			this->d3dDevice->SetTexture(0, NULL);
+		}
+		if (!caps.npotTexturesLimited && !caps.npotTextures)
+		{
+			this->d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)matrix.data);
+		}
 	}
 
 	void DirectX9_RenderSystem::setTextureBlendMode(BlendMode textureBlendMode)
@@ -467,40 +504,6 @@ namespace april
 		default:
 			hlog::warn(april::logTag, "Trying to set unsupported texture address mode!");
 			break;
-		}
-	}
-
-	void DirectX9_RenderSystem::setTexture(Texture* texture)
-	{
-		Caps caps = this->getCaps();
-		this->activeTexture = (DirectX9_Texture*)texture;
-		gmat4 matrix;
-		if (this->activeTexture != NULL)
-		{
-			Texture::Filter filter = this->activeTexture->getFilter();
-			if (this->textureFilter != filter)
-			{
-				this->setTextureFilter(filter);
-			}
-			Texture::AddressMode addressMode = this->activeTexture->getAddressMode();
-			if (this->textureAddressMode != addressMode)
-			{
-				this->setTextureAddressMode(addressMode);
-			}
-			this->activeTexture->load();
-			this->d3dDevice->SetTexture(0, this->activeTexture->d3dTexture);
-			if (!caps.npotTexturesLimited && !caps.npotTextures)
-			{
-				matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
-			}
-		}
-		else
-		{
-			this->d3dDevice->SetTexture(0, NULL);
-		}
-		if (!caps.npotTexturesLimited && !caps.npotTextures)
-		{
-			this->d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)matrix.data);
 		}
 	}
 
