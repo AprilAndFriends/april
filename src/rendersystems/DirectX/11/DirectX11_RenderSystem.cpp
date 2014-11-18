@@ -643,7 +643,7 @@ namespace april
 		RenderSystem::setDepthBuffer(enabled, writeEnabled);
 		if (this->options.depthBuffer)
 		{
-			hlog::error(april::logTag, "Not implemeneted!");
+			hlog::error(april::logTag, "Not implemented!");
 		}
 	}
 
