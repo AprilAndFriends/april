@@ -37,6 +37,8 @@ namespace april
 		BlendMode blendMode;
 		ColorMode colorMode;
 		float colorModeFactor;
+		bool depthBuffer;
+		bool depthBufferWrite;
 		unsigned int modeMatrix;
 		int strideVertex;
 		const void* pointerVertex;

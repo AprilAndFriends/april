@@ -223,113 +223,39 @@ namespace april
 		glViewport((int)rect.x, (int)(april::window->getHeight() - rect.h - rect.y), (int)rect.w, (int)rect.h);
 	}
 	
-	void OpenGL_RenderSystem::clear(bool useColor, bool depth)
+	void OpenGL_RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		GLbitfield mask = 0;
-		if (useColor)
-		{
-			mask |= GL_COLOR_BUFFER_BIT;
-		}
-		if (depth)
-		{
-			mask |= GL_DEPTH_BUFFER_BIT;
-		}
-		glClear(mask);
+		RenderSystem::setDepthBuffer(enabled, writeEnabled);
+		this->currentState.depthBuffer = enabled;
+		this->currentState.depthBufferWrite = writeEnabled;
 	}
 
-	void OpenGL_RenderSystem::clear(bool depth, grect rect, Color color)
+	void OpenGL_RenderSystem::_setDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		if (color != lastColor) // used to minimize redundant calls to OpenGL
-		{
-			glClearColor(color.r_f(), color.g_f(), color.b_f(), color.a_f());
-			lastColor = color;
-		}
-		this->clear(true, depth);
-	}
-	
-	void OpenGL_RenderSystem::_applyStateChanges()
-	{
-		if (this->currentState.textureCoordinatesEnabled != this->deviceState.textureCoordinatesEnabled)
-		{
-			this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->currentState.textureCoordinatesEnabled);
-			this->deviceState.textureCoordinatesEnabled = this->currentState.textureCoordinatesEnabled;
-		}
-		if (this->currentState.colorEnabled != this->deviceState.colorEnabled)
-		{
-			this->_setClientState(GL_COLOR_ARRAY, this->currentState.colorEnabled);
-			this->deviceState.colorEnabled = this->currentState.colorEnabled;
-		}
-		if (this->currentState.systemColor != this->deviceState.systemColor)
-		{
-			glColor4f(this->currentState.systemColor.r_f(), this->currentState.systemColor.g_f(), this->currentState.systemColor.b_f(), this->currentState.systemColor.a_f());
-			this->deviceState.systemColor = this->currentState.systemColor;
-		}
-		if (this->currentState.textureId != this->deviceState.textureId)
-		{
-			glBindTexture(GL_TEXTURE_2D, this->currentState.textureId);
-			if (this->currentState.textureId != 0 && (this->activeTexture->effectiveWidth != 1.0f || this->activeTexture->effectiveHeight != 1.0f))
-			{
-				this->setMatrixMode(GL_TEXTURE);
-				gmat4 matrix;
-				matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
-				glLoadMatrixf(matrix.data);
-			}
-			else
-			{
-				this->setMatrixMode(GL_TEXTURE);
-				glLoadIdentity();
-			}
-			this->deviceState.textureId = this->currentState.textureId;
-			// TODO - you should memorize address and filter modes per texture in opengl to avoid unnecesarry calls
-			this->deviceState.textureAddressMode = Texture::ADDRESS_UNDEFINED;
-			this->deviceState.textureFilter = Texture::FILTER_UNDEFINED;
-		}
-		// texture has to be bound first or else filter and address mode won't be applied afterwards
-		if (this->currentState.textureFilter != this->deviceState.textureFilter || this->deviceState.textureFilter == Texture::FILTER_UNDEFINED)
-		{
-			this->_setTextureFilter(this->currentState.textureFilter);
-			this->deviceState.textureFilter = this->currentState.textureFilter;
-		}
-		if (this->currentState.textureAddressMode != this->deviceState.textureAddressMode || this->deviceState.textureAddressMode == Texture::ADDRESS_UNDEFINED)
-		{
-			this->_setTextureAddressMode(this->currentState.textureAddressMode);
-			this->deviceState.textureAddressMode = this->currentState.textureAddressMode;
-		}
-		if (this->currentState.blendMode != this->deviceState.blendMode)
-		{
-			this->_setTextureBlendMode(this->currentState.blendMode);
-			this->deviceState.blendMode = this->currentState.blendMode;
-		}
-		if (this->currentState.colorMode != this->deviceState.colorMode || this->currentState.colorModeFactor != this->deviceState.colorModeFactor)
-		{
-			this->_setTextureColorMode(this->currentState.colorMode, this->currentState.colorModeFactor);
-			this->deviceState.colorMode = this->currentState.colorMode;
-			this->deviceState.colorModeFactor = this->currentState.colorModeFactor;
-		}
-		if (this->currentState.modelviewMatrixChanged && this->modelviewMatrix != this->deviceState.modelviewMatrix)
-		{
-			this->setMatrixMode(GL_MODELVIEW);
-			glLoadMatrixf(this->modelviewMatrix.data);
-			this->deviceState.modelviewMatrix = this->modelviewMatrix;
-			this->currentState.modelviewMatrixChanged = false;
-		}
-		if (this->currentState.projectionMatrixChanged && this->projectionMatrix != this->deviceState.projectionMatrix)
-		{
-			this->setMatrixMode(GL_PROJECTION);
-			glLoadMatrixf(this->projectionMatrix.data);
-			this->deviceState.projectionMatrix = this->projectionMatrix;
-			this->currentState.projectionMatrixChanged = false;
-		}
-	}
-
-	void OpenGL_RenderSystem::_setClientState(unsigned int type, bool enabled)
-	{
-		enabled ? glEnableClientState(type) : glDisableClientState(type);
+		this->_setClientState(GL_DEPTH_TEST, enabled);
+		glDepthMask(writeEnabled);
 	}
 
 	void OpenGL_RenderSystem::bindTexture(unsigned int textureId)
 	{
 		this->currentState.textureId = textureId;
+	}
+
+	void OpenGL_RenderSystem::setTexture(Texture* texture)
+	{
+		this->activeTexture = (OpenGL_Texture*)texture;
+		if (this->activeTexture == NULL)
+		{
+			this->bindTexture(0);
+		}
+		else
+		{
+			this->setTextureFilter(this->activeTexture->getFilter());
+			this->setTextureAddressMode(this->activeTexture->getAddressMode());
+			// filtering and wrapping applied before loading texture data, iOS OpenGL guidelines suggest it as an optimization
+			this->activeTexture->load();
+			this->bindTexture(this->activeTexture->textureId);
+		}
 	}
 
 	void OpenGL_RenderSystem::setMatrixMode(unsigned int mode)
@@ -457,23 +383,6 @@ namespace april
 		}
 	}
 
-	void OpenGL_RenderSystem::setTexture(Texture* texture)
-	{
-		this->activeTexture = (OpenGL_Texture*)texture;
-		if (this->activeTexture == NULL)
-		{
-			this->bindTexture(0);
-		}
-		else
-		{
-			this->setTextureFilter(this->activeTexture->getFilter());
-			this->setTextureAddressMode(this->activeTexture->getAddressMode());
-			// filtering and wrapping applied before loading texture data, iOS OpenGL guidelines suggest it as an optimization
-			this->activeTexture->load();
-			this->bindTexture(this->activeTexture->textureId);
-		}
-	}
-
 	void OpenGL_RenderSystem::_setTexCoordPointer(int stride, const void *pointer)
 	{
 		if (this->deviceState.strideTexCoord != stride || this->deviceState.pointerTexCoord != pointer)
@@ -492,6 +401,116 @@ namespace april
 			this->deviceState.pointerColor = pointer;
 			glColorPointer(4, GL_UNSIGNED_BYTE, stride, pointer);
 		}
+	}
+
+	void OpenGL_RenderSystem::clear(bool useColor, bool depth)
+	{
+		GLbitfield mask = 0;
+		if (useColor)
+		{
+			mask |= GL_COLOR_BUFFER_BIT;
+		}
+		if (depth)
+		{
+			mask |= GL_DEPTH_BUFFER_BIT;
+		}
+		glClear(mask);
+	}
+
+	void OpenGL_RenderSystem::clear(bool depth, grect rect, Color color)
+	{
+		if (color != lastColor) // used to minimize redundant calls to OpenGL
+		{
+			glClearColor(color.r_f(), color.g_f(), color.b_f(), color.a_f());
+			lastColor = color;
+		}
+		this->clear(true, depth);
+	}
+
+	void OpenGL_RenderSystem::_applyStateChanges()
+	{
+		if (this->currentState.textureCoordinatesEnabled != this->deviceState.textureCoordinatesEnabled)
+		{
+			this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->currentState.textureCoordinatesEnabled);
+			this->deviceState.textureCoordinatesEnabled = this->currentState.textureCoordinatesEnabled;
+		}
+		if (this->currentState.colorEnabled != this->deviceState.colorEnabled)
+		{
+			this->_setClientState(GL_COLOR_ARRAY, this->currentState.colorEnabled);
+			this->deviceState.colorEnabled = this->currentState.colorEnabled;
+		}
+		if (this->currentState.systemColor != this->deviceState.systemColor)
+		{
+			glColor4f(this->currentState.systemColor.r_f(), this->currentState.systemColor.g_f(), this->currentState.systemColor.b_f(), this->currentState.systemColor.a_f());
+			this->deviceState.systemColor = this->currentState.systemColor;
+		}
+		if (this->currentState.textureId != this->deviceState.textureId)
+		{
+			glBindTexture(GL_TEXTURE_2D, this->currentState.textureId);
+			if (this->currentState.textureId != 0 && (this->activeTexture->effectiveWidth != 1.0f || this->activeTexture->effectiveHeight != 1.0f))
+			{
+				this->setMatrixMode(GL_TEXTURE);
+				gmat4 matrix;
+				matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
+				glLoadMatrixf(matrix.data);
+			}
+			else
+			{
+				this->setMatrixMode(GL_TEXTURE);
+				glLoadIdentity();
+			}
+			this->deviceState.textureId = this->currentState.textureId;
+			// TODO - you should memorize address and filter modes per texture in opengl to avoid unnecesarry calls
+			this->deviceState.textureAddressMode = Texture::ADDRESS_UNDEFINED;
+			this->deviceState.textureFilter = Texture::FILTER_UNDEFINED;
+		}
+		// texture has to be bound first or else filter and address mode won't be applied afterwards
+		if (this->currentState.textureFilter != this->deviceState.textureFilter || this->deviceState.textureFilter == Texture::FILTER_UNDEFINED)
+		{
+			this->_setTextureFilter(this->currentState.textureFilter);
+			this->deviceState.textureFilter = this->currentState.textureFilter;
+		}
+		if (this->currentState.textureAddressMode != this->deviceState.textureAddressMode || this->deviceState.textureAddressMode == Texture::ADDRESS_UNDEFINED)
+		{
+			this->_setTextureAddressMode(this->currentState.textureAddressMode);
+			this->deviceState.textureAddressMode = this->currentState.textureAddressMode;
+		}
+		if (this->currentState.blendMode != this->deviceState.blendMode)
+		{
+			this->_setTextureBlendMode(this->currentState.blendMode);
+			this->deviceState.blendMode = this->currentState.blendMode;
+		}
+		if (this->currentState.colorMode != this->deviceState.colorMode || this->currentState.colorModeFactor != this->deviceState.colorModeFactor)
+		{
+			this->_setTextureColorMode(this->currentState.colorMode, this->currentState.colorModeFactor);
+			this->deviceState.colorMode = this->currentState.colorMode;
+			this->deviceState.colorModeFactor = this->currentState.colorModeFactor;
+		}
+		if (this->currentState.depthBuffer != this->deviceState.depthBuffer || this->currentState.depthBufferWrite != this->deviceState.depthBufferWrite)
+		{
+			this->_setDepthBuffer(this->currentState.depthBuffer, this->currentState.depthBufferWrite);
+			this->deviceState.depthBuffer = this->currentState.depthBuffer;
+			this->deviceState.depthBufferWrite = this->currentState.depthBufferWrite;
+		}
+		if (this->currentState.modelviewMatrixChanged && this->modelviewMatrix != this->deviceState.modelviewMatrix)
+		{
+			this->setMatrixMode(GL_MODELVIEW);
+			glLoadMatrixf(this->modelviewMatrix.data);
+			this->deviceState.modelviewMatrix = this->modelviewMatrix;
+			this->currentState.modelviewMatrixChanged = false;
+		}
+		if (this->currentState.projectionMatrixChanged && this->projectionMatrix != this->deviceState.projectionMatrix)
+		{
+			this->setMatrixMode(GL_PROJECTION);
+			glLoadMatrixf(this->projectionMatrix.data);
+			this->deviceState.projectionMatrix = this->projectionMatrix;
+			this->currentState.projectionMatrixChanged = false;
+		}
+	}
+
+	void OpenGL_RenderSystem::_setClientState(unsigned int type, bool enabled)
+	{
+		enabled ? glEnableClientState(type) : glDisableClientState(type);
 	}
 
 	void OpenGL_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)

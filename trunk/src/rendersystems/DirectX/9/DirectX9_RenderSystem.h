@@ -51,12 +51,12 @@ namespace april
 		harray<DisplayMode> getSupportedDisplayModes();
 		void setViewport(grect rect);
 
+		void setTexture(Texture* texture);
 		void setTextureBlendMode(BlendMode textureBlendMode);
 		/// @note The parameter factor is only used when the color mode is LERP.
 		void setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
 		void setTextureFilter(Texture::Filter textureFilter);
 		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
-		void setTexture(Texture* texture);
 		Texture* getRenderTarget();
 		void setRenderTarget(Texture* source);
 		void setPixelShader(PixelShader* pixelShader);
