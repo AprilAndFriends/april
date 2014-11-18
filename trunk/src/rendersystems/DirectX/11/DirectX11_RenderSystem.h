@@ -64,15 +64,16 @@ namespace april
 		int getVRam();
 		void setViewport(grect value);
 
+		void setTexture(Texture* texture);
 		void setTextureBlendMode(BlendMode textureBlendMode);
 		void setTextureColorMode(ColorMode colorMode, float factor = 1.0f);
 		void setTextureFilter(Texture::Filter textureFilter);
 		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
-		void setTexture(Texture* texture);
 		Texture* getRenderTarget();
 		void setRenderTarget(Texture* source);
 		void setPixelShader(PixelShader* pixelShader);
 		void setVertexShader(VertexShader* vertexShader);
+		void setDepthBuffer(bool enabled, bool writeEnabled = true);
 
 		PixelShader* createPixelShader();
 		PixelShader* createPixelShader(chstr filename);

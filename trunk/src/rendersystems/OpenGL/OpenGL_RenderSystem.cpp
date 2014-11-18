@@ -203,7 +203,6 @@ namespace april
 		// other
 		if (this->options.depthBuffer)
 		{
-			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 		}
 		this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->deviceState.textureCoordinatesEnabled);
@@ -214,6 +213,7 @@ namespace april
 		this->currentState.textureAddressMode = april::Texture::ADDRESS_WRAP;
 		this->currentState.blendMode = april::BM_UNDEFINED;
 		this->currentState.colorMode = april::CM_UNDEFINED;
+		this->_setDepthBuffer(this->deviceState.depthBuffer, this->deviceState.depthBufferWrite);
 	}
 
 	void OpenGL_RenderSystem::setViewport(grect rect)
@@ -226,13 +226,16 @@ namespace april
 	void OpenGL_RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
 	{
 		RenderSystem::setDepthBuffer(enabled, writeEnabled);
-		this->currentState.depthBuffer = enabled;
-		this->currentState.depthBufferWrite = writeEnabled;
+		if (this->options.depthBuffer)
+		{
+			this->currentState.depthBuffer = enabled;
+			this->currentState.depthBufferWrite = writeEnabled;
+		}
 	}
 
 	void OpenGL_RenderSystem::_setDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		this->_setClientState(GL_DEPTH_TEST, enabled);
+		enabled ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 		glDepthMask(writeEnabled);
 	}
 
