@@ -235,8 +235,18 @@ namespace april
 
 	void OpenGL_RenderSystem::_setDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		enabled ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+		if (enabled)
+		{
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_ALPHA_TEST);
+		}
+		else
+		{
+			glDisable(GL_DEPTH_TEST);
+			glDisable(GL_ALPHA_TEST);
+		}
 		glDepthMask(writeEnabled);
+		glAlphaFunc(GL_GREATER, 0.0f);
 	}
 
 	void OpenGL_RenderSystem::bindTexture(unsigned int textureId)

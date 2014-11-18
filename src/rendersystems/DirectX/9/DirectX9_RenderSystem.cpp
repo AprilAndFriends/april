@@ -350,6 +350,9 @@ namespace april
 		{
 			this->d3dDevice->SetRenderState(D3DRS_ZENABLE, enabled);
 			this->d3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, (enabled && writeEnabled));
+			this->d3dDevice->SetRenderState(D3DRS_ALPHATESTENABLE, enabled);
+			this->d3dDevice->SetRenderState(D3DRS_ALPHAREF, 0);
+			this->d3dDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 		}
 	}
 
