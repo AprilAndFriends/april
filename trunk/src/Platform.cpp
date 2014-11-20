@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include "Platform.h"
 #include "Window.h"
+#include "main_base.h"
 
 namespace april
 {
@@ -63,6 +64,7 @@ namespace april
 		messageBox_platform(title, text, buttonMask, passedStyle, customButtonTitles, callback);
 		if (style & MESSAGE_STYLE_TERMINATE_ON_DISPLAY)
 		{
+			april_destroy();
 			exit(0);
 		}
 	}
