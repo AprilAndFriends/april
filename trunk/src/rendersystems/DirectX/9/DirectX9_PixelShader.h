@@ -33,10 +33,11 @@ namespace april
 		DirectX9_PixelShader();
 		~DirectX9_PixelShader();
 
-		bool load(chstr filename);
-		void setConstantsB(const int* quadVectors, unsigned int quadCount);
-		void setConstantsI(const int* quadVectors, unsigned int quadCount);
-		void setConstantsF(const float* quadVectors, unsigned int quadCount);
+		bool loadFile(chstr filename);
+		bool loadResource(chstr filename);
+		void setConstantsB(const int* quads, unsigned int quadCount);
+		void setConstantsI(const int* quads, unsigned int quadCount);
+		void setConstantsF(const float* quads, unsigned int quadCount);
 
 	protected:
 		IDirect3DPixelShader9* dx9Shader;

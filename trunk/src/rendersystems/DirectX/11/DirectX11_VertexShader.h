@@ -34,10 +34,11 @@ namespace april
 		DirectX11_VertexShader();
 		~DirectX11_VertexShader();
 
-		bool load(chstr filename);
-		void setConstantsB(const int* quadVectors, unsigned int quadCount);
-		void setConstantsI(const int* quadVectors, unsigned int quadCount);
-		void setConstantsF(const float* quadVectors, unsigned int quadCount);
+		bool loadFile(chstr filename);
+		bool loadResource(chstr filename);
+		void setConstantsB(const int* quads, unsigned int quadCount);
+		void setConstantsI(const int* quads, unsigned int quadCount);
+		void setConstantsF(const float* quads, unsigned int quadCount);
 
 	protected:
 		ComPtr<ID3D11VertexShader> dx11Shader;

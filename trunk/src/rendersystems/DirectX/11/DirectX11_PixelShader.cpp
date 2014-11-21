@@ -25,7 +25,7 @@ namespace april
 {
 	DirectX11_PixelShader::DirectX11_PixelShader(chstr filename) : PixelShader(), dx11Shader(nullptr)
 	{
-		this->load(filename);
+		this->loadResource(filename);
 	}
 
 	DirectX11_PixelShader::DirectX11_PixelShader() : PixelShader(), dx11Shader(nullptr)
@@ -37,7 +37,7 @@ namespace april
 		this->dx11Shader = nullptr;
 	}
 
-	bool DirectX11_PixelShader::load(chstr filename)
+	bool DirectX11_PixelShader::loadFile(chstr filename)
 	{
 		if (this->dx11Shader != nullptr)
 		{
@@ -46,7 +46,7 @@ namespace april
 		}
 		unsigned char* data = NULL;
 		long size = 0;
-		if (!this->_loadData(filename, &data, &size))
+		if (!this->_loadFileData(filename, &data, &size))
 		{
 			hlog::error(april::logTag, "Shader file not found: " + filename);
 			return false;
@@ -61,15 +61,39 @@ namespace april
 		return true;
 	}
 
-	void DirectX11_PixelShader::setConstantsB(const int* quadVectors, unsigned int quadCount)
+	bool DirectX11_PixelShader::loadResource(chstr filename)
+	{
+		if (this->dx11Shader != nullptr)
+		{
+			hlog::error(april::logTag, "Shader already loaded.");
+			return false;
+		}
+		unsigned char* data = NULL;
+		long size = 0;
+		if (!this->_loadResourceData(filename, &data, &size))
+		{
+			hlog::error(april::logTag, "Shader file not found: " + filename);
+			return false;
+		}
+		HRESULT hr = APRIL_D3D_DEVICE->CreatePixelShader(data, size, NULL, &this->dx11Shader);
+		delete [] data;
+		if (FAILED(hr))
+		{
+			hlog::error(april::logTag, "Failed to create pixel shader!");
+			return false;
+		}
+		return true;
+	}
+
+	void DirectX11_PixelShader::setConstantsB(const int* quads, unsigned int quadCount)
 	{
 	}
 
-	void DirectX11_PixelShader::setConstantsI(const int* quadVectors, unsigned int quadCount)
+	void DirectX11_PixelShader::setConstantsI(const int* quads, unsigned int quadCount)
 	{
 	}
 
-	void DirectX11_PixelShader::setConstantsF(const float* quadVectors, unsigned int quadCount)
+	void DirectX11_PixelShader::setConstantsF(const float* quads, unsigned int quadCount)
 	{
 	}
 
