@@ -22,7 +22,7 @@ namespace april
 {
 	DirectX9_VertexShader::DirectX9_VertexShader(chstr filename) : VertexShader(), dx9Shader(NULL)
 	{
-		this->load(filename);
+		this->loadResource(filename);
 	}
 
 	DirectX9_VertexShader::DirectX9_VertexShader() : VertexShader(), dx9Shader(NULL)
@@ -38,11 +38,11 @@ namespace april
 		}
 	}
 
-	bool DirectX9_VertexShader::load(chstr filename)
+	bool DirectX9_VertexShader::loadFile(chstr filename)
 	{
 		unsigned char* data = NULL;
 		long size = 0;
-		if (!this->_loadData(filename, &data, &size))
+		if (!this->_loadFileData(filename, &data, &size))
 		{
 			hlog::error(april::logTag, "Shader file not found: " + filename);
 			return false;
@@ -56,27 +56,45 @@ namespace april
 		return true;
 	}
 
-	void DirectX9_VertexShader::setConstantsB(const int* quadVectors, unsigned int quadCount)
+	bool DirectX9_VertexShader::loadResource(chstr filename)
+	{
+		unsigned char* data = NULL;
+		long size = 0;
+		if (!this->_loadResourceData(filename, &data, &size))
+		{
+			hlog::error(april::logTag, "Shader file not found: " + filename);
+			return false;
+		}
+		HRESULT result = APRIL_D3D_DEVICE->CreateVertexShader((DWORD*)data, &this->dx9Shader);
+		if (result != D3D_OK)
+		{
+			hlog::error(april::logTag, "Failed to create vertex shader!");
+			return false;
+		}
+		return true;
+	}
+
+	void DirectX9_VertexShader::setConstantsB(const int* quads, unsigned int quadCount)
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			APRIL_D3D_DEVICE->SetVertexShaderConstantB(i, quadVectors + i * 4, 1);
+			APRIL_D3D_DEVICE->SetVertexShaderConstantB(i, quads + i * 4, 1);
 		}
 	}
 
-	void DirectX9_VertexShader::setConstantsI(const int* quadVectors, unsigned int quadCount)
+	void DirectX9_VertexShader::setConstantsI(const int* quads, unsigned int quadCount)
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			APRIL_D3D_DEVICE->SetVertexShaderConstantI(i, quadVectors + i * 4, 1);
+			APRIL_D3D_DEVICE->SetVertexShaderConstantI(i, quads + i * 4, 1);
 		}
 	}
 
-	void DirectX9_VertexShader::setConstantsF(const float* quadVectors, unsigned int quadCount)
+	void DirectX9_VertexShader::setConstantsF(const float* quads, unsigned int quadCount)
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			APRIL_D3D_DEVICE->SetVertexShaderConstantF(i, quadVectors + i * 4, 1);
+			APRIL_D3D_DEVICE->SetVertexShaderConstantF(i, quads + i * 4, 1);
 		}
 	}
 

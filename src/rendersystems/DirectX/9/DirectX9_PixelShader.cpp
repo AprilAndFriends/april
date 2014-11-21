@@ -23,7 +23,7 @@ namespace april
 {
 	DirectX9_PixelShader::DirectX9_PixelShader(chstr filename) : PixelShader(), dx9Shader(NULL)
 	{
-		this->load(filename);
+		this->loadResource(filename);
 	}
 
 	DirectX9_PixelShader::DirectX9_PixelShader() : PixelShader(), dx9Shader(NULL)
@@ -39,11 +39,11 @@ namespace april
 		}
 	}
 
-	bool DirectX9_PixelShader::load(chstr filename)
+	bool DirectX9_PixelShader::loadFile(chstr filename)
 	{
 		unsigned char* data = NULL;
 		long size = 0;
-		if (!this->_loadData(filename, &data, &size))
+		if (!this->_loadFileData(filename, &data, &size))
 		{
 			hlog::error(april::logTag, "Shader file not found: " + filename);
 			return false;
@@ -57,27 +57,45 @@ namespace april
 		return true;
 	}
 
-	void DirectX9_PixelShader::setConstantsB(const int* quadVectors, unsigned int quadCount)
+	bool DirectX9_PixelShader::loadResource(chstr filename)
+	{
+		unsigned char* data = NULL;
+		long size = 0;
+		if (!this->_loadResourceData(filename, &data, &size))
+		{
+			hlog::error(april::logTag, "Shader file not found: " + filename);
+			return false;
+		}
+		HRESULT result = APRIL_D3D_DEVICE->CreatePixelShader((DWORD*)data, &this->dx9Shader);
+		if (result != D3D_OK)
+		{
+			hlog::error(april::logTag, "Failed to create pixel shader!");
+			return false;
+		}
+		return true;
+	}
+
+	void DirectX9_PixelShader::setConstantsB(const int* quads, unsigned int quadCount)
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			APRIL_D3D_DEVICE->SetPixelShaderConstantB(i, quadVectors + i * 4, 1);
+			APRIL_D3D_DEVICE->SetPixelShaderConstantB(i, quads + i * 4, 1);
 		}
 	}
 
-	void DirectX9_PixelShader::setConstantsI(const int* quadVectors, unsigned int quadCount)
+	void DirectX9_PixelShader::setConstantsI(const int* quads, unsigned int quadCount)
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			APRIL_D3D_DEVICE->SetPixelShaderConstantI(i, quadVectors + i * 4, 1);
+			APRIL_D3D_DEVICE->SetPixelShaderConstantI(i, quads + i * 4, 1);
 		}
 	}
 
-	void DirectX9_PixelShader::setConstantsF(const float* quadVectors, unsigned int quadCount)
+	void DirectX9_PixelShader::setConstantsF(const float* quads, unsigned int quadCount)
 	{
 		for_itert (unsigned int, i, 0, quadCount)
 		{
-			APRIL_D3D_DEVICE->SetPixelShaderConstantF(i, quadVectors + i * 4, 1);
+			APRIL_D3D_DEVICE->SetPixelShaderConstantF(i, quads + i * 4, 1);
 		}
 	}
 
