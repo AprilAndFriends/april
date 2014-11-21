@@ -19,6 +19,7 @@
 
 namespace april
 {
+	/// @brief Defines a generic vertex shader.
 	class aprilExport VertexShader
 	{
 	public:

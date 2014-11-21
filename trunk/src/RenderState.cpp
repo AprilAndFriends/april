@@ -39,13 +39,6 @@ namespace april
 		this->colorModeFactor = 1.0f;
 		this->depthBuffer = false;
 		this->depthBufferWrite = false;
-		this->modeMatrix = 0;
-		this->strideVertex = 0;
-		this->pointerVertex = NULL;
-		this->strideTexCoord = 0;
-		this->pointerTexCoord = NULL;
-		this->strideColor = 0;
-		this->pointerColor = NULL;
 	}
 
 }
