@@ -19,7 +19,7 @@
 
 namespace april
 {
-	/// @brief Represents a pixel shader.
+	/// @brief Defines a generic pixel shader.
 	class aprilExport PixelShader
 	{
 	public:
