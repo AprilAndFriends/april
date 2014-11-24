@@ -118,7 +118,10 @@
 		textFrame.origin.x += frame.size.width;
 		textField = [[UITextField alloc] initWithFrame:textFrame];
 		textField.delegate = self;
-		textField.text = @" "; // something to be able to catch text edit
+		char longText[1025];
+		memset(longText, ' ', 1024);
+		longText[1024] = 0; // need to create large string because iPhone6 can move the caret manually and if it reaches the left end, backspace doesn't work anymore
+		textField.text = [NSString stringWithUTF8String:longText]; // something to be able to catch text edit
 		textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 		textField.autocorrectionType = UITextAutocorrectionTypeNo;
 		textField.keyboardAppearance = UIKeyboardAppearanceDefault;
@@ -449,7 +452,7 @@ void main(void) {\
 {
 	if (april::window == NULL) return NO;
 	hstr str = chstr([string UTF8String]);
-	if (range.location == 0 && str.size() == 0) aprilWindow->injectiOSChar(0); // backspace indicator
+	if (range.length == 1 && str.size() == 0) aprilWindow->injectiOSChar(0); // backspace indicator
 	else if (str.size() == 0) return NO;
 	unichar chars[256];
 	[string getCharacters:chars];
