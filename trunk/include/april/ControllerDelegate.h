@@ -18,15 +18,26 @@
 
 namespace april
 {
+	/// @brief Defines a delegate for the controller input callbacks.
 	class aprilExport ControllerDelegate
 	{
 	public:
+		/// @brief Basic constructor.
 		ControllerDelegate();
+		/// @brief Destructor.
 		virtual ~ControllerDelegate();
 
+		/// @brief Called when a button is pressed.
+		/// @param[in] buttonCode The button's number code.
 		virtual void onButtonDown(april::Button buttonCode);
+		/// @brief Called when a button is released.
+		/// @param[in] buttonCode The button's number code.
 		virtual void onButtonUp(april::Button buttonCode);
+		/// @brief Called when an axis' value changes.
+		/// @param[in] buttonCode The axis' number code.
+		/// @param[in] axisValue The new value of the axis.
 		virtual void onControllerAxisChange(april::Button buttonCode, float axisValue);
+
 	};
 
 }
