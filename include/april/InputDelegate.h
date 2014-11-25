@@ -21,10 +21,13 @@
 
 namespace april
 {
+	/// @brief Defines a delegate for all input callbacks.
 	class aprilExport InputDelegate : public KeyboardDelegate, public MouseDelegate, public TouchDelegate, public ControllerDelegate
 	{
 	public:
+		/// @brief Basic constructor.
 		InputDelegate();
+		/// @brief Destructor.
 		~InputDelegate();
 
 	};

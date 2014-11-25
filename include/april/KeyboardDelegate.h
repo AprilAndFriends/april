@@ -18,14 +18,23 @@
 
 namespace april
 {
+	/// @brief Defines a delegate for the keyboard input callbacks.
 	class aprilExport KeyboardDelegate
 	{
 	public:
+		/// @brief Basic constructor.
 		KeyboardDelegate();
+		/// @brief Destructor.
 		virtual ~KeyboardDelegate();
 
+		/// @brief Called when a key is pressed.
+		/// @param[in] keyCode The key's number code.
 		virtual void onKeyDown(april::Key keyCode);
+		/// @brief Called when a key is released.
+		/// @param[in] keyCode The key's number code.
 		virtual void onKeyUp(april::Key keyCode);
+		/// @brief Called when a character input value is sent from the OS.
+		/// @param[in] charCode The unicode character.
 		virtual void onChar(unsigned int charCode);
 
 	};
