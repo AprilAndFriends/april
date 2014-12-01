@@ -156,7 +156,7 @@ namespace april
 		static hmap<hstr, int> counters;
 		int count = counters[prefix] + 1;
 		counters[prefix] = count;
-		return prefix + hstr(count);
+		return prefix.replace(".", "_") + hstr(count);
 	}
 
 	hstr gvec2ToHstr(gvec2 vector)
