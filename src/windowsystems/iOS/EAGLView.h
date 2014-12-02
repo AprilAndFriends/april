@@ -28,7 +28,7 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 	GLint backingWidth;
 	GLint backingHeight;
 	
-	
+    CADisplayLink *displayLink;
 	EAGLContext *context;
 	
 	/* OpenGL names for the renderbuffer and framebuffers used to render to this view */
@@ -36,9 +36,6 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 	
 	/* OpenGL name for the depth buffer that is attached to viewFramebuffer, if it exists (0 if it does not exist) */
 	GLuint depthRenderbuffer;
-	
-	NSTimer *animationTimer;
-	NSTimeInterval animationInterval;
 	
 	/* Textfield */
 	UITextField *textField;
@@ -48,7 +45,6 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 
 - (void)startAnimation;
 - (void)stopAnimation;
-- (void)beginRender;
 - (void)drawView;
 - (void)swapBuffers;
 - (void)beginKeyboardHandling;
@@ -60,8 +56,5 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 - (void)deviceOrientationDidChange:(id)sender;
 - (void)applicationDidBecomeActive:(UIApplication*)app;
 - (void)applicationWillResignActive:(UIApplication*)app;
-- (void)setAnimationInterval:(NSTimeInterval)interval;
-- (NSTimeInterval)setAnimationInterval;
-
 
 @end

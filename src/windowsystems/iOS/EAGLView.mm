@@ -27,8 +27,8 @@
 // A class extension to declare private methods
 @interface EAGLView ()
 
-@property (nonatomic, retain) EAGLContext *context;
-@property (nonatomic, assign) NSTimer *animationTimer;
+@property (nonatomic, retain) EAGLContext* context;
+@property (nonatomic, assign) CADisplayLink* displayLink;
 
 - (BOOL) createFramebuffer;
 - (void) destroyFramebuffer;
@@ -40,7 +40,7 @@
 @implementation EAGLView
 
 @synthesize context;
-@synthesize animationTimer;
+@synthesize displayLink;
 
 // You must implement this method
 + (Class)layerClass
@@ -80,6 +80,7 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
+    self.displayLink = nil;
 	if ((self = [super initWithFrame:frame]))
 	{
 		app_started = 0;
@@ -109,9 +110,6 @@
 			[self release];
 			return nil;
 		}
-		
-		animationInterval = 1.0 / 60.0;
-		
 		
 		// fake textbox
 		CGRect textFrame = frame;
@@ -195,31 +193,20 @@
 
 }
 
-// ok, now other functionality of this class
-
-- (void)beginRender
-{
-	if (!self.animationTimer)
-	{
-		NSLog(@"Called drawView while in background!");
-		return;
-	}
- //   glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer); // commented this out on June 8th 2012, it's probably reduntant, but I'll keep it here for a while just in case. -- kspes
-	
-	[EAGLContext setCurrentContext:context];
-}
-
 - (void)drawView
 {
-	[self beginRender];
+    if (!self.displayLink)
+    {
+        NSLog(@"Called drawView while in background!");
+        return;
+    }
+
+    [EAGLContext setCurrentContext:context];
 	
-	//mydraw();
 	if (april::window)
-		aprilWindow->handleDisplayAndUpdate();
-	
-
-
-	//[self swapBuffers];
+    {
+        aprilWindow->handleDisplayAndUpdate();
+    }
 }
 
 - (void)_paintRect:(GLfloat[])vertices
@@ -230,7 +217,7 @@
 
 - (void)swapBuffers
 {
-	if (!self.animationTimer)
+	if (self.displayLink == nil)
 	{
 		NSLog(@"Warning: OpenGL swapBuffers while app in background, ignoring!");
 		return;
@@ -381,47 +368,22 @@ void main(void) {\
 	}
 }
 
-
 - (void)startAnimation
 {
 	if (!app_started) return;
-	self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:animationInterval target:self selector:@selector(drawView) userInfo:nil repeats:YES];
+    
+    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(drawView)];
+    [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 }
-
 
 - (void)stopAnimation
 {
-	self.animationTimer = nil;
-}
-
-
-- (void)setAnimationTimer:(NSTimer *)newTimer
-{
-	if(animationTimer != newTimer)
-		[animationTimer invalidate];
-	animationTimer = newTimer;
-}
-
-
-- (void)setAnimationInterval:(NSTimeInterval)interval
-{
-	
-	animationInterval = interval;
-	if (animationTimer)
-	{
-		[self stopAnimation];
-		[self startAnimation];
-	}
-}
-
-- (NSTimeInterval)setAnimationInterval
-{
-	return animationInterval;
+	[self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    self.displayLink = nil;
 }
 
 - (void)dealloc
 {
-	
 	[self stopAnimation];
 	
 	if ([EAGLContext currentContext] == context)

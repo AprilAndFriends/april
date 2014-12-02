@@ -287,11 +287,11 @@ namespace april
 
 	void iOS_Window::checkEvents()
 	{
-		SInt32 result;
-		do
-		{
-			result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE);
-		} while (result == kCFRunLoopRunHandledSource);
+	//	SInt32 result;
+	//	do
+	//	{
+	//		result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE);
+	//	} while (result == kCFRunLoopRunHandledSource);
 	}
 	
 	void iOS_Window::callTouchCallback()
@@ -489,7 +489,7 @@ namespace april
 		april::rendersys->presentFrame();
 		if (!result)
 		{
-			// TODO - should exit application here
+            this->terminateMainLoop();
 		}
 	}
 	
