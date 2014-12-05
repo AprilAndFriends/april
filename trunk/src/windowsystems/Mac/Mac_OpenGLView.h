@@ -21,12 +21,14 @@
 	NSCursor* mBlankCursor;
 	NSCursor* mCursor;
 	NSRect mFrameRect;
+    CVDisplayLinkRef mDisplayLink;
 }
-- (void)initOpenGL;
+- (void) draw;
+- (void) initOpenGL;
 - (void) presentFrame;
 - (void) setUseBlankCursor:(BOOL)value;
 - (void) setCursor:(NSCursor*)cursor;
-- (void) updateGLViewport;
+- (void) destroy;
 
 @end
 

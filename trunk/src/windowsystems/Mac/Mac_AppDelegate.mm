@@ -13,6 +13,8 @@
 #import "Mac_Window.h"
 #include "april.h"
 
+bool gAppStarted = false;
+
 extern int gArgc;
 extern char** gArgv;
 extern void (*gAprilInit)(const harray<hstr>&);
@@ -64,10 +66,22 @@ bool g_WindowFocusedBeforeSleep = false;
 	NSNotificationCenter* c = [[NSWorkspace sharedWorkspace] notificationCenter];
 	[c addObserver:self selector: @selector(receiveSleepNote:) name:NSWorkspaceWillSleepNotification object:NULL];
 	[c addObserver:self selector: @selector(receiveWakeNote:) name:NSWorkspaceDidWakeNotification object:NULL];
+    
+    if (april::isUsingCVDisplayLink())
+    {
+        hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
+        gAppStarted = true;
+    }
 }
 
 - (void) applicationWillTerminate:(NSNotification*) note
 {
+    if (april::isUsingCVDisplayLink())
+    {
+        hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
+        gAppStarted = false;
+        lock.release();
+    }
 	gAprilDestroy();
 }
 

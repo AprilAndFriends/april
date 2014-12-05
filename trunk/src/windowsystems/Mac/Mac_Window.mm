@@ -15,6 +15,8 @@
 #import "Mac_OpenGLView.h"
 #import "Mac_CocoaWindow.h"
 #import "Mac_LoadingOverlay.h"
+#include "Mac_QueuedEvents.h"
+#include "SystemDelegate.h"
 // declared here instead of as class properties because C++ doesn't play nicely with forward declared objc classes
 
 static AprilMacOpenGLView* mView = nil;
@@ -43,6 +45,11 @@ bool isLionOrNewer()
 
 namespace april
 {
+    bool isUsingCVDisplayLink()
+    {
+        return true;
+    }
+
 	Mac_Window::Mac_Window() : Window()
 	{
 		this->ignoreUpdate = false;
@@ -238,7 +245,10 @@ namespace april
 		}
  		mView.frame = frame;
 		[mWindow setOpenGLView: mView];
-		[mWindow startRenderLoop];
+        if (!isUsingCVDisplayLink())
+        {
+            [mWindow startRenderLoop];
+        }
 		return 1;
 	}
 	
@@ -264,7 +274,16 @@ namespace april
 		}
 		if (this->focused != value)
 		{
-			handleFocusChangeEvent(value);
+            this->focused = value;
+            
+            if (isUsingCVDisplayLink())
+            {
+                queueFocusChanged(value);
+            }
+            else
+            {
+                handleFocusChangeEvent(value);
+            }
 		}
 	}
 	
@@ -288,11 +307,11 @@ namespace april
 			// optimization to prevent setting title every frame
 			if (t == this->fpsTitle) return;
 			this->fpsTitle = t;
-			[mWindow setTitle:[NSString stringWithUTF8String:t.c_str()]];
+			[mWindow _setTitle:[NSString stringWithUTF8String:t.c_str()]];
 		}
 		else
 		{
-			[mWindow setTitle:[NSString stringWithUTF8String:title.c_str()]];
+			[mWindow _setTitle:[NSString stringWithUTF8String:title.c_str()]];
 		}
 		this->title = title;
 	}
@@ -333,20 +352,66 @@ namespace april
 		ignoreUpdate = false;
 	}
 	
+    void Mac_Window::dispatchQueuedEvents()
+    {
+        if (this->queuedEvents.size() > 0)
+        {
+            foreach (QueuedEvent*, it, this->queuedEvents)
+            {
+                (*it)->execute();
+                delete *it;
+            }
+            this->queuedEvents.clear();
+        }
+    }
+    
+    void Mac_Window::queueWindowSizeChanged(int w, int h, bool fullscreen)
+    {
+        hmutex::ScopeLock lock(&renderThreadSyncMutex);
+        this->queuedEvents += new WindowSizeChangedEvent(this, w, h, fullscreen);
+    }
+
+    void Mac_Window::queueFocusChanged(bool focused)
+    {
+        hmutex::ScopeLock lock(&renderThreadSyncMutex);
+        this->queuedEvents += new FocusChangedEvent(this, focused);
+    }
+
+    void Mac_Window::dispatchWindowSizeChanged(int w, int h, bool fullscreen)
+    {
+        april::SystemDelegate* delegate = aprilWindow->getSystemDelegate();
+        
+        if (delegate)
+        {
+            delegate->onWindowSizeChanged(w, h, fullscreen);
+        }
+        else
+        {
+            NSLog(@"Mac_CocoaWindow: Ignoring onWindowSizeChange, delegate not set.");
+        }
+    }
+
+    void Mac_Window::queueMessageBox(chstr title, harray<hstr> argButtons, harray<MessageBoxButton> argButtonTypes, chstr text, void (*callback)(MessageBoxButton))
+    {
+#define ns(s) [NSString stringWithUTF8String:s.c_str()]
+        [mWindow showAlertView:ns(title) button1:ns(argButtons[0]) button2:ns(argButtons[1]) button3:ns(argButtons[2]) btn1_t:argButtonTypes[0] btn2_t:argButtonTypes[1] btn3_t:argButtonTypes[2] text:ns(text) callback:callback];
+    }
+    
 	Cursor* Mac_Window::_createCursor()
 	{
 		return new Mac_Cursor();
 	}
-	
+
 	void Mac_Window::terminateMainLoop()
 	{
-		[[NSApplication sharedApplication] terminate:nil];
+        [mWindow terminateMainLoop];
 	}
-	
+
 	bool Mac_Window::destroy()
 	{
 		if (mView)
 		{
+            [mView destroy];
 			[mView release];
 			mView = nil;
 		}

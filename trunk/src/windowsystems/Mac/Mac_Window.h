@@ -13,10 +13,14 @@
 #ifndef APRIL_MAC_WINDOW_H
 #define APRIL_MAC_WINDOW_H
 
+#include <hltypes/hmutex.h>
 #include "Window.h"
+#include "Platform.h"
 
 namespace april
 {
+    class QueuedEvent;
+    
 	class Mac_Window : public Window
 	{
 	public:
@@ -52,7 +56,14 @@ namespace april
 		void OnAppLostFocus();
 		
 		void onFocusChanged(bool value);
-
+        
+        void dispatchQueuedEvents();
+        void queueWindowSizeChanged(int w, int h, bool fullscreen);
+        void queueFocusChanged(bool focused);
+        void dispatchWindowSizeChanged(int w, int h, bool fullscreen);
+        void queueMessageBox(chstr title, harray<hstr> argButtons, harray<MessageBoxButton> argButtonTypes, chstr text, void (*callback)(MessageBoxButton));
+        
+        
 		bool retainLoadingOverlay;
 		bool fastHideLoadingOverlay;
 		bool ignoreUpdate;
@@ -61,10 +72,13 @@ namespace april
 		hstr fpsTitle;
 
 		float scalingFactor;
+        hmutex renderThreadSyncMutex;
 	protected:
 		Cursor* _createCursor();
+        harray<QueuedEvent*> queuedEvents;
 	};
 	
+    bool isUsingCVDisplayLink();
 }
 extern april::Mac_Window* aprilWindow;
 

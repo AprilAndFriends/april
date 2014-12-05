@@ -267,6 +267,9 @@
 		D1B4874319337483004674EB /* iOS_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873E19337483004674EB /* iOS_Platform.mm */; };
 		D1B4874419337483004674EB /* iOS_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873E19337483004674EB /* iOS_Platform.mm */; };
 		D1CB6B6515CA905900B927BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1CB6B6415CA905900B927BC /* Foundation.framework */; };
+		D1E2447A1A3104C300586FAC /* Mac_QueuedEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E244781A3104C300586FAC /* Mac_QueuedEvents.h */; };
+		D1E2447B1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */; };
+		D1E2447C1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */; };
 		D1E7203916D37B2700B9C9AD /* EventDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203116D37B2700B9C9AD /* EventDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1E7203A16D37B2700B9C9AD /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203216D37B2700B9C9AD /* Image.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1E7203B16D37B2700B9C9AD /* InputDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203316D37B2700B9C9AD /* InputDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -528,6 +531,8 @@
 		D1B4873D19337483004674EB /* iOS_main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_main.mm; path = src/platforms/iOS_main.mm; sourceTree = "<group>"; };
 		D1B4873E19337483004674EB /* iOS_Platform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_Platform.mm; path = src/platforms/iOS_Platform.mm; sourceTree = "<group>"; };
 		D1CB6B6415CA905900B927BC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D1E244781A3104C300586FAC /* Mac_QueuedEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_QueuedEvents.h; path = src/windowsystems/Mac/Mac_QueuedEvents.h; sourceTree = "<group>"; };
+		D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_QueuedEvents.mm; path = src/windowsystems/Mac/Mac_QueuedEvents.mm; sourceTree = "<group>"; };
 		D1E7203116D37B2700B9C9AD /* EventDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventDelegate.h; path = include/april/EventDelegate.h; sourceTree = "<group>"; };
 		D1E7203216D37B2700B9C9AD /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = include/april/Image.h; sourceTree = "<group>"; };
 		D1E7203316D37B2700B9C9AD /* InputDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputDelegate.h; path = include/april/InputDelegate.h; sourceTree = "<group>"; };
@@ -860,6 +865,8 @@
 				D1B4869A19337389004674EB /* Mac_AppDelegate.mm */,
 				D1B4869B19337389004674EB /* Mac_CocoaWindow.h */,
 				D1B4869C19337389004674EB /* Mac_CocoaWindow.mm */,
+				D1E244781A3104C300586FAC /* Mac_QueuedEvents.h */,
+				D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */,
 				D1B4869D19337389004674EB /* Mac_Cursor.h */,
 				D1B4869E19337389004674EB /* Mac_Cursor.mm */,
 				D1B4869F19337389004674EB /* Mac_Keys.h */,
@@ -1173,6 +1180,7 @@
 				D1B48714193373EE004674EB /* OpenGL_Texture.h in Headers */,
 				D102CFFC19B7284500948584 /* TextureAsync.h in Headers */,
 				D1AF66C5170B1E5900A43743 /* Timer.h in Headers */,
+				D1E2447A1A3104C300586FAC /* Mac_QueuedEvents.h in Headers */,
 				D1B486F6193373E6004674EB /* OpenGL1_Texture.h in Headers */,
 				D1AF66C7170B1E5900A43743 /* PixelShader.h in Headers */,
 				D1AF66C8170B1E5900A43743 /* VertexShader.h in Headers */,
@@ -1446,6 +1454,7 @@
 				D153475C178AD62A00151D1A /* InputDelegate.cpp in Sources */,
 				D1B486C119337389004674EB /* Mac_Window.mm in Sources */,
 				D153475D178AD62A00151D1A /* KeyboardDelegate.cpp in Sources */,
+				D1E2447C1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */,
 				D153475E178AD62A00151D1A /* MouseDelegate.cpp in Sources */,
 				D153475F178AD62A00151D1A /* SystemDelegate.cpp in Sources */,
 				D1368190187BFB3E00E66E32 /* main_base.cpp in Sources */,
@@ -1542,6 +1551,7 @@
 				D1AF66AD170B1E5900A43743 /* aprilUtil.cpp in Sources */,
 				D1AF66AE170B1E5900A43743 /* EventDelegate.cpp in Sources */,
 				D136818E187BFB3E00E66E32 /* main_base.cpp in Sources */,
+				D1E2447B1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */,
 				D1AF66AF170B1E5900A43743 /* InputDelegate.cpp in Sources */,
 				D1B486BC19337389004674EB /* Mac_OpenGLView.mm in Sources */,
 				D1B486F2193373E6004674EB /* OpenGL1_Texture.cpp in Sources */,
