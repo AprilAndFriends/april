@@ -36,7 +36,7 @@ static bool gFullscreenToggleRequest = false;
 	if (gFullscreenToggleRequest)
 	{
 		[self toggleFullScreen:nil];
-		gFullscreenToggleRequest = 0;
+		gFullscreenToggleRequest = false;
 	}
 }
 
@@ -392,7 +392,14 @@ static bool gFullscreenToggleRequest = false;
 	{
 		aprilWindow->setFullscreenFlag([self isFullScreen]);
 		// doing it this way because direct toggling on lion+ throws some weird objc exception depending on where the call was being made from...
-		gFullscreenToggleRequest = true;
+		if (april::isUsingCVDisplayLink())
+		{
+			[self performSelectorOnMainThread:@selector(toggleFullScreen:) withObject:nil waitUntilDone:NO];
+		}
+		else
+		{
+			gFullscreenToggleRequest = true;
+		}
 	}
 	else
 	{
