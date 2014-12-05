@@ -18,6 +18,7 @@
 
 extern bool gReattachLoadingOverlay;
 static bool gFullscreenToggleRequest = false;
+
 @implementation AprilCocoaWindow
 
 - (void)timerEvent:(NSTimer*) t
@@ -75,8 +76,18 @@ static bool gFullscreenToggleRequest = false;
 
 - (BOOL)windowShouldClose:(NSWindow*) sender
 {
+    bool displayLink = april::isUsingCVDisplayLink();
+    hmutex::ScopeLock lock;
+    if (displayLink)
+    {
+        lock.acquire(&aprilWindow->renderThreadSyncMutex);
+    }
 	if (aprilWindow->handleQuitRequest(true))
 	{
+        if (displayLink)
+        {
+            lock.release();
+        }
 		[NSApp terminate:nil];
 		return YES;
 	}
@@ -89,23 +100,21 @@ static bool gFullscreenToggleRequest = false;
 
 - (void)onWindowSizeChange
 {
-	april::SystemDelegate* delegate = aprilWindow->getSystemDelegate();
 	NSSize size = [mView bounds].size;
-	[mView updateGLViewport];
 	if ([self inLiveResize])
 	{
 		mWindowedRect = [self frame];
 	}
-	
-	if (delegate)
-	{
-		delegate->onWindowSizeChanged(size.width * aprilWindow->scalingFactor, size.height * aprilWindow->scalingFactor, [self isFullScreen]);
-	}
-	else
-	{
-		NSLog(@"Mac_CocoaWindow: Ignoring onWindowSizeChange, delegate not set.");
-	}
-	[mView setNeedsDisplay:YES];
+    int w = size.width * aprilWindow->scalingFactor, h = size.height * aprilWindow->scalingFactor;
+    bool fullscreen = [self isFullScreen];
+    if (april::isUsingCVDisplayLink())
+    {
+        aprilWindow->queueWindowSizeChanged(w, h, fullscreen);
+    }
+    else
+    {
+        aprilWindow->dispatchWindowSizeChanged(w, h, fullscreen);
+    }
 }
 
 - (void)windowDidResize:(NSNotification*) notification
@@ -242,10 +251,18 @@ static bool gFullscreenToggleRequest = false;
 }
 
 - (void)mouseDown:(NSEvent*) event
-{	
+{
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
-	aprilWindow->handleMouseEvent(april::Window::MOUSE_DOWN, pos, [self getMouseButtonCode:event]);
+    
+    if (april::isUsingCVDisplayLink())
+    {
+        aprilWindow->queueMouseEvent(april::Window::MOUSE_DOWN, pos, [self getMouseButtonCode:event]);
+    }
+    else
+    {
+        aprilWindow->handleMouseEvent(april::Window::MOUSE_DOWN, pos, [self getMouseButtonCode:event]);
+    }
 }
 
 - (void)rightMouseDown:(NSEvent*) event
@@ -262,7 +279,15 @@ static bool gFullscreenToggleRequest = false;
 {
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
-	aprilWindow->handleMouseEvent(april::Window::MOUSE_UP, pos, [self getMouseButtonCode:event]);
+    if (april::isUsingCVDisplayLink())
+    {
+        aprilWindow->queueMouseEvent(april::Window::MOUSE_UP, pos, [self getMouseButtonCode:event]);
+    }
+    else
+    {
+        aprilWindow->handleMouseEvent(april::Window::MOUSE_UP, pos, [self getMouseButtonCode:event]);
+    
+    }
 }
 
 - (void)rightMouseUp:(NSEvent*) event
@@ -279,7 +304,14 @@ static bool gFullscreenToggleRequest = false;
 {
 	gvec2 pos = [self transformCocoaPoint:[event locationInWindow]];
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
-	aprilWindow->handleMouseEvent(april::Window::MOUSE_MOVE, pos, april::AK_NONE);
+    if (april::isUsingCVDisplayLink())
+    {
+        aprilWindow->queueMouseEvent(april::Window::MOUSE_MOVE, pos, april::AK_NONE);
+    }
+    else
+    {
+        aprilWindow->handleMouseEvent(april::Window::MOUSE_MOVE, pos, april::AK_NONE);
+    }
 	
 	// Hack for Lion fullscreen bug, when the user moves the cursor quickly to and from the dock area,
 	// the cursor gets reset to the default arrow, this hack counters that.
@@ -321,12 +353,26 @@ static bool gFullscreenToggleRequest = false;
 	{
 		unichr = [unicode characterAtIndex:0];
 	}
-	aprilWindow->handleKeyEvent(april::Window::KEY_DOWN, (april::Key) keyCode, unichr);
+    if (april::isUsingCVDisplayLink())
+    {
+        aprilWindow->queueKeyEvent(april::Window::KEY_DOWN, (april::Key) keyCode, unichr);
+    }
+    else
+    {
+        aprilWindow->handleKeyEvent(april::Window::KEY_DOWN, (april::Key) keyCode, unichr);
+    }
 }
 
 - (void)onKeyUp:(unsigned int) keyCode
 {
-	aprilWindow->handleKeyEvent(april::Window::KEY_UP, (april::Key) keyCode, 0);
+    if (april::isUsingCVDisplayLink())
+    {
+        aprilWindow->queueKeyEvent(april::Window::KEY_UP, (april::Key) keyCode, 0);
+    }
+    else
+    {
+        aprilWindow->handleKeyEvent(april::Window::KEY_UP, (april::Key) keyCode, 0);
+    }
 }
 
 - (unsigned int) processKeyCode:(NSEvent*) event
@@ -393,7 +439,14 @@ static bool gFullscreenToggleRequest = false;
 - (void)scrollWheel:(NSEvent*) event
 {
 	gvec2 vec(-[event deltaX], -[event deltaY]);
-	aprilWindow->queueMouseEvent(april::Window::MOUSE_SCROLL, vec, april::AK_NONE);
+    if (april::isUsingCVDisplayLink())
+    {
+        aprilWindow->queueMouseEvent(april::Window::MOUSE_SCROLL, vec, april::AK_NONE);
+    }
+    else
+    {
+        aprilWindow->handleMouseEvent(april::Window::MOUSE_SCROLL, vec, april::AK_NONE);
+    }
 }
 
 - (void)flagsChanged:(NSEvent*) event // special NSWindow function for modifier keys
@@ -435,6 +488,88 @@ static bool gFullscreenToggleRequest = false;
 {
 	mView = view;
 	self.contentView = view;
+}
+
+- (void)_setTitle:(NSString*) title
+{
+    if (april::isUsingCVDisplayLink())
+    {
+        [self performSelectorOnMainThread:@selector(setTitle:) withObject:title waitUntilDone:NO];
+    }
+    else
+    {
+        [self setTitle:title];
+    }
+}
+
+- (void)_showAlertView:(NSValue*) _params
+{
+    MessageBoxParams* p_params = (MessageBoxParams*)[_params pointerValue];
+    MessageBoxParams params = *p_params;
+    delete p_params;
+    NSString* title = [NSString stringWithUTF8String:params.title.c_str()];
+    NSString* text = [NSString stringWithUTF8String:params.text.c_str()];
+    NSString* button1 = [NSString stringWithUTF8String:params.button1.c_str()];
+    NSString* button2 = [NSString stringWithUTF8String:params.button2.c_str()];
+    NSString* button3 = [NSString stringWithUTF8String:params.button3.c_str()];
+
+    int clicked = NSRunAlertPanel(title, @"%@", button1, button2, button3, text);
+    switch (clicked)
+    {
+        case NSAlertDefaultReturn:
+            clicked = 0;
+            break;
+        case NSAlertAlternateReturn:
+            clicked = 1;
+            break;
+        case NSAlertOtherReturn:
+            clicked = 2;
+            break;
+    }
+    
+    if (params.callback != NULL)
+    {
+        (*params.callback)(params.btnTypes[clicked]);
+    }
+}
+
+- (void)showAlertView:(NSString*) title button1:(NSString*) btn1 button2:(NSString*) btn2 button3:(NSString*) btn3 btn1_t:(april::MessageBoxButton) btn1_t btn2_t:(april::MessageBoxButton) btn2_t btn3_t:(april::MessageBoxButton) btn3_t text:(NSString*) text callback:(MessageBoxCallback) callback
+{
+    MessageBoxParams* p = new MessageBoxParams();
+    p->title = [title UTF8String];
+    p->text = [text UTF8String];
+    p->button1 = [btn1 UTF8String];
+    p->button2 = [btn2 UTF8String];
+    p->button3 = [btn3 UTF8String];
+    p->btnTypes += btn1_t;
+    p->btnTypes += btn2_t;
+    p->btnTypes += btn3_t;
+    p->callback = callback;
+    if (april::isUsingCVDisplayLink())
+    {
+        [self performSelectorOnMainThread:@selector(_showAlertView:) withObject:[NSValue valueWithPointer:p] waitUntilDone:NO];
+    }
+    else
+    {
+        [self _showAlertView:[NSValue valueWithPointer:&p]];
+    }
+}
+
+- (void)_terminateMainLoop:(void*) param
+{
+    [[NSApplication sharedApplication] terminate:nil];
+}
+
+- (void)terminateMainLoop
+{
+    if (april::isUsingCVDisplayLink())
+    {
+        [self performSelectorOnMainThread:@selector(_terminateMainLoop:) withObject:nil waitUntilDone:NO];
+    }
+    else
+    {
+        [self _terminateMainLoop:nil];
+    }
 }
 
 - (void)destroy

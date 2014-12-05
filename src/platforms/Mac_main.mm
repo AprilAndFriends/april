@@ -45,7 +45,19 @@ int gAprilShouldInvokeQuitCallback = 0;
 	{
 		[super terminate:sender];
 	}
-	else if (april::window->handleQuitRequest(true))
+    bool result;
+    if (april::isUsingCVDisplayLink())
+    {
+        hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
+        result = april::window->handleQuitRequest(true);
+        lock.release();
+    }
+    else
+    {
+        result = april::window->handleQuitRequest(true);
+    }
+    
+    if (result)
 	{
 		[super terminate:sender];
 	}

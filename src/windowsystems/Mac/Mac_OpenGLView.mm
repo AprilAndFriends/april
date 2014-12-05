@@ -8,15 +8,28 @@
 
 #include <Cocoa/Cocoa.h>
 #include <hltypes/hlog.h>
+#include <hltypes/hmutex.h>
+#include <hltypes/hthread.h>
 #include "april.h"
 #include "Mac_Window.h"
 #import <OpenGL/gl.h>
 #import "Mac_OpenGLView.h"
 
+static AprilMacOpenGLView* view;
+extern bool gAppStarted;
+
+static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext)
+{
+    [view draw];
+    return kCVReturnSuccess;
+}
+
 @implementation AprilMacOpenGLView
 
 - (id) initWithFrame:(NSRect)frameRect
 {
+    view = self;
+    mDisplayLink = nil;
 	mFrameRect = frameRect;
 	mUseBlankCursor = false;
 	mStartedDrawing = false;
@@ -37,6 +50,7 @@
 	[image release];
 
 	mCursor = NULL;
+    
 	return self;
 }
 
@@ -57,7 +71,10 @@
 
 	NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:a];
 
-	if (!pf) hlog::error(april::logTag, "Unable to create requested OpenGL pixel format");
+	if (!pf)
+    {
+        hlog::error(april::logTag, "Unable to create requested OpenGL pixel format");
+    }
 
 	if (self = [super initWithFrame:mFrameRect pixelFormat:[pf autorelease]])
 	{
@@ -66,44 +83,88 @@
 		// Synchronize buffer swaps with vertical refresh rate
 		GLint swapInt = 1;
 		[context setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
+        
+        if (april::isUsingCVDisplayLink())
+        {
+            CGLContextObj cglContext = [[self openGLContext] CGLContextObj];
+            CGLPixelFormatObj cglPixelFormat = [[self pixelFormat] CGLPixelFormatObj];
+            CVDisplayLinkCreateWithActiveCGDisplays(&mDisplayLink);
+            CVDisplayLinkSetOutputCallback(mDisplayLink, &AprilDisplayLinkCallback, self);
+            CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(mDisplayLink, cglContext, cglPixelFormat);
+            CVDisplayLinkStart(mDisplayLink);
+        }
 	}
 }
 
-- (void)updateGLViewport
+- (void)draw
 {
-	float w = aprilWindow->getWidth();
-	float h = aprilWindow->getHeight();
-	glViewport(0, 0, w, h);
+    bool displayLink = april::isUsingCVDisplayLink();
+    hmutex::ScopeLock lock;
+    if (displayLink)
+    {
+        lock.acquire(&aprilWindow->renderThreadSyncMutex);
+        if (gAppStarted)
+        {
+            NSOpenGLContext* context = [view openGLContext];
+            [context makeCurrentContext];
+            CGLLockContext([context CGLContextObj]);
+
+            aprilWindow->dispatchQueuedEvents();
+            aprilWindow->updateOneFrame();
+            
+            CGLFlushDrawable([context CGLContextObj]);
+            CGLUnlockContext([context CGLContextObj]);
+        }
+    }
+    else
+    {
+        if (aprilWindow->ignoreUpdate)
+        {
+            mStartedDrawing = false;
+            return;
+        }
+        NSOpenGLContext* context = [self openGLContext];
+        [context makeCurrentContext];
+        if (april::window != NULL)
+        {
+            aprilWindow->updateOneFrame();
+            if (april::rendersys != NULL)
+            {
+                [[self openGLContext] makeCurrentContext];
+                [[self openGLContext] flushBuffer];
+            }
+        }
+        mStartedDrawing = false;
+    }
 }
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-	if (aprilWindow->ignoreUpdate)
-	{
-		mStartedDrawing = false;
-		return;
-	}
-	NSOpenGLContext* context = [self openGLContext];
-	[context makeCurrentContext];
-	if (april::window != NULL)
-	{
-		aprilWindow->updateOneFrame();
-		if (april::rendersys != NULL)
-		{
-			[self presentFrame];
-		}
-	}
-	mStartedDrawing = false;
+    [self draw];
 }
 
 - (void) presentFrame
 {
-	[[self openGLContext] makeCurrentContext];
-	[[self openGLContext] flushBuffer];
+    if (april::isUsingCVDisplayLink())
+    {
+        CGLFlushDrawable([[self openGLContext] CGLContextObj]);
+    }
+    else
+    {
+        [[self openGLContext] makeCurrentContext];
+        [[self openGLContext] flushBuffer];
+    }
 }
 
 - (void)resetCursorRects
 {
+    
+    hmutex::ScopeLock lock;
+    
+    if (april::isUsingCVDisplayLink())
+    {
+        lock.acquire(&aprilWindow->renderThreadSyncMutex);
+    }
 	if (mUseBlankCursor)
 	{
 		[self addCursorRect:[self bounds] cursor:mBlankCursor];
@@ -135,8 +196,19 @@
 	mCursor = (cursor == NULL) ? NULL : cursor;
 }
 
+- (void) destroy
+{
+    if (mDisplayLink)
+    {
+        CVDisplayLinkRelease(mDisplayLink);
+        mDisplayLink = NULL;
+    }
+
+}
+
 - (void) dealloc
 {
+    [self destroy];
 	[mBlankCursor release];
 	[super dealloc];
 }

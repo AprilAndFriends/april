@@ -27,7 +27,7 @@
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
-#include "Window.h"
+#include "Mac_Window.h"
 
 namespace april
 {
@@ -242,26 +242,15 @@ namespace april
 			buttonTypes[0] = MESSAGE_BUTTON_NO;
 		}
 		
-		NSString* titlens = [NSString stringWithUTF8String:title.c_str()];
-		
-		int clicked = NSRunAlertPanel(titlens, @"%@", buttons[0], buttons[1], buttons[2], [NSString stringWithUTF8String:text.c_str()]);
-		switch (clicked)
-		{
-		case NSAlertDefaultReturn:
-			clicked = 0;
-			break;
-		case NSAlertAlternateReturn:
-			clicked = 1;
-			break;
-		case NSAlertOtherReturn:
-			clicked = 2;
-			break;
-		}
-		
-		if (callback != NULL)
-		{
-			(*callback)(buttonTypes[clicked]);
-		}
+        harray<hstr> argButtons;
+        harray<MessageBoxButton> argButtonTypes;
+        argButtons += [buttons[0] UTF8String];
+        argButtons += buttons[1] == nil ? "" : [buttons[1] UTF8String];
+        argButtons += buttons[2] == nil ? "" : [buttons[2] UTF8String];
+        argButtonTypes += buttonTypes[0];
+        argButtonTypes += buttonTypes[1];
+        argButtonTypes += buttonTypes[2];
+        aprilWindow->queueMessageBox(title, argButtons, argButtonTypes, text, callback);
 	}
 	
 }
