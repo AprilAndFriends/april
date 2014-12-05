@@ -386,6 +386,20 @@ static bool gFullscreenToggleRequest = false;
 	return april::getAprilMacKeyCode([event keyCode]);
 }
 
+- (void)_preLionToggleFullscreen:(NSValue*) param
+{
+	if ([self isFullScreen])
+	{
+		[self exitFullScreen];
+		aprilWindow->setFullscreenFlag(false);
+	}
+	else
+	{
+		[self enterFullScreen];
+		aprilWindow->setFullscreenFlag(true);
+	}
+}
+
 - (void)platformToggleFullScreen
 {
 	if (isLionOrNewer())
@@ -403,19 +417,17 @@ static bool gFullscreenToggleRequest = false;
 	}
 	else
 	{
-		if ([self isFullScreen])
+		if (april::isUsingCVDisplayLink())
 		{
-			[self exitFullScreen];
-			aprilWindow->setFullscreenFlag(false);
+			[self performSelectorOnMainThread:@selector(_preLionToggleFullscreen:) withObject:nil waitUntilDone:NO];
 		}
 		else
 		{
-			[self enterFullScreen];
-			aprilWindow->setFullscreenFlag(true);
+			[self _preLionToggleFullscreen:nil];
 		}
 	}
 	// setting title again because Cocoa forgets it for some reason when swiching from fullscreen
-	[self setTitle:[NSString stringWithUTF8String:aprilWindow->getTitle().c_str()]];
+	[self _setTitle:[NSString stringWithUTF8String:aprilWindow->getTitle().c_str()]];
 }
 
 - (void)keyDown:(NSEvent*) event

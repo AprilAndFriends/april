@@ -37,6 +37,7 @@ struct MessageBoxParams
 - (void)startRenderLoop;
 - (void)configure;
 - (BOOL)isFullScreen;
+- (void)_preLionToggleFullscreen:(NSValue*) param;
 - (void)platformToggleFullScreen;
 - (void)enterFullScreen;
 - (void)exitFullScreen;
