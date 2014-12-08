@@ -15,6 +15,8 @@
 #import <OpenGL/gl.h>
 #import "Mac_OpenGLView.h"
 
+// #define _OVERDRAW_DEBUG -- uncomment this to test overdraw response times
+
 static AprilMacOpenGLView* view;
 extern bool gAppStarted;
 
@@ -102,6 +104,10 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
     hmutex::ScopeLock lock;
     if (displayLink)
     {
+#ifdef _OVERDRAW_DEBUG
+        unsigned int t1, t2;
+        t1 = get_system_tick_count();
+#endif
         lock.acquire(&aprilWindow->renderThreadSyncMutex);
         if (gAppStarted)
         {
@@ -112,6 +118,13 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
             aprilWindow->dispatchQueuedEvents();
             aprilWindow->updateOneFrame();
             
+#ifdef  _OVERDRAW_DEBUG
+            t2 = get_system_tick_count();
+            if (t2 - t1 > 16) // 16 is max render time for 60 FPS
+            {
+                printf("overdraw: %d ms\n", t2 - t1);
+            }
+#endif
             CGLFlushDrawable([context CGLContextObj]);
             CGLUnlockContext([context CGLContextObj]);
         }
