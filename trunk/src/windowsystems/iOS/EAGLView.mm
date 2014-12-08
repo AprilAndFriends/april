@@ -197,7 +197,9 @@
 {
     if (!self.displayLink)
     {
+#ifdef _DEBUG
         NSLog(@"Called drawView while in background!");
+#endif
         return;
     }
 
@@ -219,7 +221,9 @@
 {
 	if (self.displayLink == nil)
 	{
+#ifdef _DEBUG
 		NSLog(@"Warning: OpenGL swapBuffers while app in background, ignoring!");
+#endif
 		return;
 	}
 //	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer); // commented this out on June 8th 2012, it's probably reduntant, but I'll keep it here for a while just in case. -- kspes
