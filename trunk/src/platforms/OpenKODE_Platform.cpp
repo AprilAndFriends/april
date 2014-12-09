@@ -55,6 +55,7 @@ namespace april
 	{
 		if (info.locale == "")
 		{
+			info.name = "KD";
 			debug_log("Fetching OpenKODE system info");
 			// number of CPU cores
 			info.cpuCores = 1;
@@ -70,6 +71,22 @@ namespace april
 			int dpi = 0;
 			kdQueryAttribi(KD_ATTRIB_DPI, (KDint*)&dpi);
 			info.displayDpi = (float)dpi;
+			// name
+#if TARGET_OS_IPHONE // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
+			size_t size = 255;
+			char cname[256] = {'\0'};
+			sysctlbyname("hw.machine", cname, &size, NULL, 0);
+			info.name = cname; // defaults for unknown devices
+#elif defined(__APPLE__) && defined(_PC_INPUT) // mac
+			info.name = "mac";
+#elif defined(_WINRT)
+			info.name = "winrt";
+#elif defined(_ANDROID)
+			info.name = "android";
+#elif defined(_WIN32)
+			info.name = "Windows";
+#endif
+			// misc
 #if TARGET_OS_IPHONE // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
 			hstr model = kdQueryAttribcv(KD_ATTRIB_PLATFORM);
 			if (model.contains("(") && model.contains(")"))
@@ -85,6 +102,7 @@ namespace april
 			SYSTEM_INFO w32info;
 			GetNativeSystemInfo(&w32info);
 			info.cpuCores = w32info.dwNumberOfProcessors;
+			info.osVersion = 8.1f;
 #elif defined(_ANDROID)
 			debug_log("getting java stuff");
 			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
