@@ -599,12 +599,14 @@ namespace april
 		hstream* stream = new hstream();
 		if (this->fromResource)
 		{
-			hresource file(this->filename);
+			hresource file;
+			file.open(this->filename);
 			stream->write_raw(file);
 		}
 		else
 		{
-			hfile file(this->filename);
+			hfile file;
+			file.open(this->filename);
 			stream->write_raw(file);
 		}
 		stream->rewind();

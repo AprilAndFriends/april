@@ -28,7 +28,8 @@ namespace april
 		{
 			return false;
 		}
-		hfile stream(filename);
+		hfile stream;
+		stream.open(filename);
 		*size = stream.size();
 		*data = new unsigned char[*size];
 		stream.read_raw(*data, *size);
@@ -41,7 +42,8 @@ namespace april
 		{
 			return false;
 		}
-		hresource stream(filename);
+		hresource stream;
+		stream.open(filename);
 		*size = stream.size();
 		*data = new unsigned char[*size];
 		stream.read_raw(*data, *size);
