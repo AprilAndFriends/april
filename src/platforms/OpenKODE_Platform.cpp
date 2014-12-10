@@ -27,10 +27,9 @@
 
 #ifdef __APPLE__
 	#include <TargetConditionals.h>
+	#include <sys/sysctl.h>
 	#if TARGET_OS_IPHONE
 		void getStaticiOSInfo(chstr name, april::SystemInfo& info);
-	#elif TARGET_OS_MAC
-		#include <sys/sysctl.h>
 	#endif
 #endif
 
