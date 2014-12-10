@@ -45,7 +45,8 @@ namespace april
 		
 		if (filename.ends_with(".plist"))
 		{
-			hresource f(filename);
+			hresource f;
+			f.open(filename);
 			hstr contents = f.read();
 			f.close();
 			NSData* plistData = [[NSString stringWithUTF8String:contents.c_str()] dataUsingEncoding:NSUTF8StringEncoding];
