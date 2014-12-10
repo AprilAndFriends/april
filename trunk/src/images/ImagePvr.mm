@@ -414,7 +414,8 @@ namespace april
 		hstr path = [pvrfilename UTF8String], archive = hresource::getArchive();
 		if (archive != "") path = hdir::join_path(archive, path);
 
-		hresource res(path);
+		hresource res;
+		res.open(path);
 		Image* image = _tryLoadingPVR(res);
 		[arp release];
 
