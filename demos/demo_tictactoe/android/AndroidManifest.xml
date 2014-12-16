@@ -13,7 +13,7 @@
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 		<activity android:name=".DemoTicTacToe"
 				android:label="Demo Tic Tac Toe"
-				android:screenOrientation="landscape">
+				android:screenOrientation="sensorLandscape">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>

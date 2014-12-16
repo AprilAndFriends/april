@@ -13,7 +13,7 @@
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 		<activity android:name=".Demo3d"
 				android:label="Demo 3D"
-				android:screenOrientation="landscape"
+				android:screenOrientation="sensorLandscape"
 				android:launchMode="singleTask">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>

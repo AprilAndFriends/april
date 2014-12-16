@@ -90,19 +90,6 @@ public class Activity extends android.app.Activity
 		catch (NameNotFoundException e)
 		{
 		}
-		// cheap auto-rotation
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
-		{
-			int orientation = this.getRequestedOrientation();
-			if (orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-			{
-				this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-			}
-			else if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-			{
-				this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-			}
-		}
 		// creating a GL surface view
 		this.GlView = this.createGlView();
 		this.setContentView(this.GlView);
