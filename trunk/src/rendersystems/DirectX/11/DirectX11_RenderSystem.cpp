@@ -219,6 +219,7 @@ namespace april
 			ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3dDevice, NULL, &_d3dDeviceContext);
 		if (FAILED(hr))
 		{
+			hlog::write(april::logTag, "Hardware device not available. Falling back to WARP device.")
 			// if hardware device is not available, try a WARP device as a fallback instead
 			hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_WARP, NULL, creationFlags, featureLevels,
 				ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3dDevice, NULL, &_d3dDeviceContext);
