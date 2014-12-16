@@ -7,10 +7,17 @@ import android.graphics.PixelFormat;
 import android.view.inputmethod.EditorInfo;
 import android.view.MotionEvent;
 import android.text.InputType;
+import java.util.List;
+import java.util.ArrayList;
 
 public class GLSurfaceView extends android.opengl.GLSurfaceView
 {
-	protected com.april.Renderer renderer;
+	protected com.april.Renderer renderer = null;
+	protected List<Integer> pointerIds = new ArrayList<Integer>();
+	
+	private static final int MOUSE_DOWN = 0;
+	private static final int MOUSE_UP = 1;
+	private static final int MOUSE_MOVE = 3;
 	
 	public GLSurfaceView(Context context)
 	{
@@ -52,14 +59,14 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		{
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_POINTER_DOWN: // handles multi-touch
-			type = 0;
+			type = MOUSE_DOWN;
 			break;
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
-			type = 1;
+			type = MOUSE_UP;
 			break;
 		case MotionEvent.ACTION_MOVE: // Android batches multi-touch move events into a single move event
-			type = 3;
+			type = MOUSE_MOVE;
 			break;
 		default:
 			type = -1;
@@ -72,9 +79,39 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 				public void run()
 				{
 					final int pointerCount = event.getPointerCount();
+					int id = 0;
+					int index = 0;
 					for (int i = 0; i < pointerCount; i++)
 					{
-						NativeInterface.onTouch(type, event.getX(i), event.getY(i), i);
+						id = event.getPointerId(i);
+						index = pointerIds.indexOf(id);
+						switch (type)
+						{
+						case MOUSE_DOWN:
+							if (index < 0)
+							{
+								index = pointerIds.size();
+								pointerIds.add(id);
+							}
+							break;
+						case MOUSE_UP:
+							if (index < 0)
+							{
+								index = pointerIds.size();
+							}
+							else
+							{
+								pointerIds.remove(index);
+							}
+							break;
+						case MOUSE_MOVE:
+							if (index < 0)
+							{
+								index = pointerIds.size();
+							}
+							break;
+						}
+						NativeInterface.onTouch(type, event.getX(id), event.getY(id), index);
 					}
 				}
 			});
