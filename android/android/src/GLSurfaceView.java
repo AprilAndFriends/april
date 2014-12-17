@@ -12,8 +12,22 @@ import java.util.ArrayList;
 
 public class GLSurfaceView extends android.opengl.GLSurfaceView
 {
+	protected class Touch
+	{
+		public int type;
+		public float x;
+		public float y;
+		
+		public Touch(int type, float x, float y)
+		{
+			this.type = type;
+			this.x = x;
+			this.y = y;
+		}
+		
+	};
+	
 	protected com.april.Renderer renderer = null;
-	protected List<Integer> pointerIds = new ArrayList<Integer>();
 	
 	private static final int MOUSE_DOWN = 0;
 	private static final int MOUSE_UP = 1;
@@ -53,65 +67,37 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	@Override
 	public boolean onTouchEvent(final MotionEvent event)
 	{
+		// Java is broken. "final MotionEvent event" can still be modified after this method finished and hence queuing into the GLThread can cause a crash.
 		final int action = event.getAction();
-		final int type;
+		int type = -1;
 		switch (action & MotionEvent.ACTION_MASK)
 		{
 		case MotionEvent.ACTION_DOWN:
-		case MotionEvent.ACTION_POINTER_DOWN: // handles multi-touch
+		case MotionEvent.ACTION_POINTER_DOWN: // handles non-primary touches
 			type = MOUSE_DOWN;
 			break;
 		case MotionEvent.ACTION_UP:
-		case MotionEvent.ACTION_POINTER_UP: // handles multi-touch
+		case MotionEvent.ACTION_POINTER_UP: // handles non-primary touches
 			type = MOUSE_UP;
 			break;
 		case MotionEvent.ACTION_MOVE: // Android batches multi-touch move events into a single move event
 			type = MOUSE_MOVE;
 			break;
-		default:
-			type = -1;
-			break;
 		}
 		if (type >= 0)
 		{
+			final ArrayList<Touch> touches = new ArrayList<Touch>();
+			for (int i = 0; i < event.getPointerCount(); i++)
+			{
+				touches.add(new Touch(type, event.getX(i), event.getY(i)));
+			}
 			this.queueEvent(new Runnable()
 			{
 				public void run()
 				{
-					final int pointerCount = event.getPointerCount();
-					int id = 0;
-					int index = 0;
-					for (int i = 0; i < pointerCount; i++)
+					for (int i = 0; i < touches.size(); i++)
 					{
-						id = event.getPointerId(i);
-						index = pointerIds.indexOf(id);
-						switch (type)
-						{
-						case MOUSE_DOWN:
-							if (index < 0)
-							{
-								index = pointerIds.size();
-								pointerIds.add(id);
-							}
-							break;
-						case MOUSE_UP:
-							if (index < 0)
-							{
-								index = pointerIds.size();
-							}
-							else
-							{
-								pointerIds.remove(index);
-							}
-							break;
-						case MOUSE_MOVE:
-							if (index < 0)
-							{
-								index = pointerIds.size();
-							}
-							break;
-						}
-						NativeInterface.onTouch(type, event.getX(id), event.getY(id), index);
+						NativeInterface.onTouch(touches.get(i).type, touches.get(i).x, touches.get(i).y, i);
 					}
 				}
 			});
