@@ -13,17 +13,29 @@ import android.view.MotionEvent;
 import com.april.Touch;
 
 import tv.ouya.console.api.OuyaController;
+import tv.ouya.console.api.OuyaInputMapper;
 
 public class Activity extends com.april.Activity
 {
-	private float oldLSX, oldLSY, oldRSX, oldRSY, oldLT, oldRT;
+	private float oldLSX;
+	private float oldLSY;
+	private float oldRSX;
+	private float oldRSY;
+	private float oldLT;
+	private float oldRT;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		this.oldLSX = this.oldLSY = this.oldRSX = this.oldRSY = this.oldLT = this.oldRT = 0;
+		this.oldLSX = 0;
+		this.oldLSY = 0;
+		this.oldRSX = 0;
+		this.oldRSY = 0;
+		this.oldLT = 0;
+		this.oldRT = 0;
 		this.OuyaKeyboardFix = true;
 		super.onCreate(savedInstanceState);
+		OuyaInputMapper.init(this);
 		OuyaController.init(this);
 		this.registerReceiver(new BroadcastReceiver()
 		{
@@ -33,6 +45,35 @@ public class Activity extends com.april.Activity
 				GlView.onWindowFocusChanged(false);
 			}
 		}, new IntentFilter(tv.ouya.console.api.OuyaIntent.ACTION_MENUAPPEARING));
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		OuyaInputMapper.shutdown(this);
+		super.onDestroy();
+    }
+	
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent keyEvent)
+	{
+		boolean handled = false;
+		if (OuyaInputMapper.shouldHandleInputEvent(keyEvent))
+		{
+			handled = OuyaInputMapper.dispatchKeyEvent(this, keyEvent);
+		}
+		return (handled || super.dispatchKeyEvent(keyEvent));
+	}
+
+	@Override
+	public boolean dispatchGenericMotionEvent(MotionEvent motionEvent)
+	{
+		boolean handled = false;
+		if (OuyaInputMapper.shouldHandleInputEvent(motionEvent))
+		{
+			handled = OuyaInputMapper.dispatchGenericMotionEvent(this, motionEvent);
+		}
+		return (handled || super.dispatchGenericMotionEvent(motionEvent));
 	}
 	
 	protected int _convertOuyaButton(int buttonCode)
