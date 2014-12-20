@@ -7,26 +7,12 @@ import android.graphics.PixelFormat;
 import android.view.inputmethod.EditorInfo;
 import android.view.MotionEvent;
 import android.text.InputType;
+import com.april.Touch;
 import java.util.List;
 import java.util.ArrayList;
 
 public class GLSurfaceView extends android.opengl.GLSurfaceView
 {
-	protected class Touch
-	{
-		public int type;
-		public float x;
-		public float y;
-		
-		public Touch(int type, float x, float y)
-		{
-			this.type = type;
-			this.x = x;
-			this.y = y;
-		}
-		
-	};
-	
 	protected com.april.Renderer renderer = null;
 	
 	private static final int MOUSE_DOWN = 0;

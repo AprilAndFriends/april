@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import com.april.Touch;
 
 import tv.ouya.console.api.OuyaController;
 
 public class Activity extends com.april.Activity
 {
 	private float oldLSX, oldLSY, oldRSX, oldRSY, oldLT, oldRT;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -60,6 +62,7 @@ public class Activity extends com.april.Activity
 	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
 		final int newKeyCode = this._convertOuyaButton(keyCode);
+		boolean result = OuyaController.onKeyDown(keyCode, event);
 		if (newKeyCode != 0)
 		{
 			this.GlView.queueEvent(new Runnable()
@@ -71,13 +74,14 @@ public class Activity extends com.april.Activity
 			});
 			return true;
 		}
-		return super.onKeyDown(keyCode, event);
+		return (result || super.onKeyDown(keyCode, event));
 	}
 	
 	@Override
 	public boolean onKeyUp(int keyCode, final KeyEvent event)
 	{
 		final int newKeyCode = this._convertOuyaButton(keyCode);
+		boolean result = OuyaController.onKeyUp(keyCode, event);
 		if (newKeyCode != 0)
 		{
 			this.GlView.queueEvent(new Runnable()
@@ -89,24 +93,26 @@ public class Activity extends com.april.Activity
 			});
 			return true;
 		}
-		return super.onKeyUp(keyCode, event);
+		return (result || super.onKeyUp(keyCode, event));
 	}
 	
 	@Override
 	public boolean onGenericMotionEvent(final MotionEvent event)
 	{
+		boolean result = OuyaController.onGenericMotionEvent(event);
 		if ((event.getSource() & InputDevice.SOURCE_CLASS_POINTER) != 0)
 		{
+			final Touch touch = new Touch(2, event.getX(), event.getY());
 			this.GlView.queueEvent(new Runnable()
 			{
 				public void run()
 				{
-					com.april.NativeInterface.onTouch(2, event.getX(), event.getY(), 0);
+					com.april.NativeInterface.onTouch(touch.type, touch.x, touch.y, 0);
 				}
 			});
 			return true;
 		}
-		else if ((event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) != 0)
+		if ((event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) != 0)
 		{
 			final float lsx = event.getAxisValue(OuyaController.AXIS_LS_X);
 			final float lsy = event.getAxisValue(OuyaController.AXIS_LS_Y);
@@ -115,7 +121,7 @@ public class Activity extends com.april.Activity
 			final float lt = event.getAxisValue(OuyaController.AXIS_L2);
 			final float rt = event.getAxisValue(OuyaController.AXIS_R2);
 			
-			if (lsx != this.oldLSX)
+			if (this.oldLSX != lsx)
 			{
 				this.oldLSX = lsx;
 				this.GlView.queueEvent(new Runnable()
@@ -126,7 +132,7 @@ public class Activity extends com.april.Activity
 					}
 				});
 			}
-			if (lsy != this.oldLSY)
+			if (this.oldLSY != lsy)
 			{
 				this.oldLSY = lsy;
 				this.GlView.queueEvent(new Runnable()
@@ -137,7 +143,7 @@ public class Activity extends com.april.Activity
 					}
 				});
 			}
-			if (rsx != this.oldRSX)
+			if (this.oldRSX != rsx)
 			{
 				this.oldRSX = rsx;
 				this.GlView.queueEvent(new Runnable()
@@ -148,7 +154,7 @@ public class Activity extends com.april.Activity
 					}
 				});
 			}
-			if (rsy != this.oldRSY)
+			if (this.oldRSY != rsy)
 			{
 				this.oldRSY = rsy;
 				this.GlView.queueEvent(new Runnable()
@@ -159,7 +165,7 @@ public class Activity extends com.april.Activity
 					}
 				});
 			}
-			if (lt != this.oldLT)
+			if (this.oldLT != lt)
 			{
 				this.oldLT = lt;
 				this.GlView.queueEvent(new Runnable()
@@ -170,7 +176,7 @@ public class Activity extends com.april.Activity
 					}
 				});
 			}
-			if (rt != this.oldRT)
+			if (this.oldRT != rt)
 			{
 				this.oldRT = rt;
 				this.GlView.queueEvent(new Runnable()
@@ -183,6 +189,6 @@ public class Activity extends com.april.Activity
 			}
 			return true;
 		}
-		else return super.onGenericMotionEvent(event);
+		return (result || super.onGenericMotionEvent(event));
 	}
 }
