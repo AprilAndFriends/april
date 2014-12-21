@@ -257,6 +257,7 @@ static bool gFullscreenToggleRequest = false;
     
     if (april::isUsingCVDisplayLink())
     {
+        hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
         aprilWindow->queueMouseEvent(april::Window::MOUSE_DOWN, pos, [self getMouseButtonCode:event]);
     }
     else
@@ -281,6 +282,7 @@ static bool gFullscreenToggleRequest = false;
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
     if (april::isUsingCVDisplayLink())
     {
+        hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
         aprilWindow->queueMouseEvent(april::Window::MOUSE_UP, pos, [self getMouseButtonCode:event]);
     }
     else
@@ -306,6 +308,7 @@ static bool gFullscreenToggleRequest = false;
 	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
     if (april::isUsingCVDisplayLink())
     {
+        hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
         aprilWindow->queueMouseEvent(april::Window::MOUSE_MOVE, pos, april::AK_NONE);
     }
     else
@@ -355,6 +358,7 @@ static bool gFullscreenToggleRequest = false;
 	}
     if (april::isUsingCVDisplayLink())
     {
+        hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
         aprilWindow->queueKeyEvent(april::Window::KEY_DOWN, (april::Key) keyCode, unichr);
     }
     else
@@ -367,6 +371,7 @@ static bool gFullscreenToggleRequest = false;
 {
     if (april::isUsingCVDisplayLink())
     {
+        hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
         aprilWindow->queueKeyEvent(april::Window::KEY_UP, (april::Key) keyCode, 0);
     }
     else
@@ -460,6 +465,7 @@ static bool gFullscreenToggleRequest = false;
 	gvec2 vec(-[event deltaX], -[event deltaY]);
     if (april::isUsingCVDisplayLink())
     {
+        hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
         aprilWindow->queueMouseEvent(april::Window::MOUSE_SCROLL, vec, april::AK_NONE);
     }
     else
