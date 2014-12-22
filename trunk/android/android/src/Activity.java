@@ -260,6 +260,16 @@ public class Activity extends android.app.Activity
 	}
 	
 	@Override
+	public void onWindowFocusChanged(final boolean focused)
+	{
+		if (focused)
+		{
+			this.hideNavigationBar();
+		}
+		super.onWindowFocusChanged(focused);
+	}
+	
+	@Override
 	protected Dialog onCreateDialog(int id)
 	{
 		return DialogFactory.show();
