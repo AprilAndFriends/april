@@ -260,13 +260,13 @@ public class Activity extends android.app.Activity
 	}
 	
 	@Override
-	public void onWindowFocusChanged(final boolean focused)
+	public void onWindowFocusChanged(boolean focused)
 	{
+		super.onWindowFocusChanged(focused);
 		if (focused)
 		{
 			this.hideNavigationBar();
 		}
-		super.onWindowFocusChanged(focused);
 	}
 	
 	@Override
