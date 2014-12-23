@@ -12,10 +12,18 @@
 #else
 #define RESOURCE_PATH "media/"
 #endif
-#else
-#define RESOURCE_PATH "./"
 #endif
 
+#ifdef __APPLE__
+#undef RESOURCE_PATH
+#define RESOURCE_PATH "media/"
+#include <stdlib.h>
+#include <unistd.h>
+#import <Foundation/Foundation.h>
+#import <CoreFoundation/CoreFoundation.h>
+#endif
+
+#include <hltypes/hdir.h>
 #include <april/april.h>
 #include <april/Cursor.h>
 #include <april/main.h>
@@ -118,50 +126,35 @@ static UpdateDelegate* updateDelegate = NULL;
 static SystemDelegate* systemDelegate = NULL;
 static MouseDelegate* mouseDelegate = NULL;
 
+#ifdef __APPLE__
+void ObjCUtil_setCWD(const char* override_default_dir)
+{
+	static bool set = 0;
+	if (!set || override_default_dir != NULL)
+	{
+		if (override_default_dir == NULL)
+		{
+			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+			const char* dir = [[[NSBundle mainBundle] resourcePath] UTF8String];
+			hdir::chdir(dir);
+			[pool release];
+		}
+		else
+		{
+			hdir::chdir(override_default_dir);
+		}
+		set = 1;
+	}
+}
+#endif
+
 void april_init(const harray<hstr>& args)
 {
 #ifdef __APPLE__
 	// On MacOSX, the current working directory is not set by
 	// the Finder, since you are expected to use Core Foundation
 	// or ObjC APIs to find files. 
-	// So, when porting you probably want to set the current working
-	// directory to something sane (e.g. .../Resources/ in the app
-	// bundle).
-	// In this case, we set it to parent of the .app bundle.
-	{	// curly braces in order to localize variables 
-
-		CFURLRef url = CFBundleCopyBundleURL(CFBundleGetMainBundle());
-		CFStringRef path = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
-		// let's hope chdir() will be happy with utf8 encoding
-		const char* cpath = CFStringGetCStringPtr(path, kCFStringEncodingUTF8);
-		char* cpath_alloc = NULL;
-		if (cpath == NULL)
-		{
-			// CFStringGetCStringPtr is allowed to return NULL. bummer.
-			// we need to use CFStringGetCString instead.
-			cpath_alloc = (char*)malloc(CFStringGetLength(path) + 1);
-			CFStringGetCString(path, cpath_alloc, CFStringGetLength(path) + 1, kCFStringEncodingUTF8);
-		}
-		else
-		{
-			// even though it didn't return NULL, we still want to slice off bundle name.
-			cpath_alloc = (char*)malloc(CFStringGetLength(path) + 1);
-			strcpy(cpath_alloc, cpath);
-		}
-		// just in case / is appended to .app path for some reason
-		if (cpath_alloc[CFStringGetLength(path) - 1] == '/')
-		{
-			cpath_alloc[CFStringGetLength(path) - 1] = 0;
-		}
-		// replace pre-.app / with a null character, thus
-		// cutting off .app's name and getting parent of .app.
-		strrchr(cpath_alloc, '/')[0] = 0;
-		// change current dir using posix api
-		chdir(cpath_alloc);
-		free(cpath_alloc); // even if null, still ok
-		CFRelease(path);
-		CFRelease(url);
-	}
+	ObjCUtil_setCWD(NULL);
 #endif
 	updateDelegate = new UpdateDelegate();
 	systemDelegate = new SystemDelegate();

@@ -16,11 +16,13 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
+	<key>LSRequiresiPhoneOS</key>
+	<true/>
+	<key>NSMainNibFile</key>
+	<string>blackLaunchScreen</string>
 	<key>UIInterfaceOrientation</key>
 	<string>UIInterfaceOrientationLandscapeRight</string>
 	<key>UIStatusBarHidden</key>
-	<true/>
-	<key>LSRequiresiPhoneOS</key>
 	<true/>
 </dict>
 </plist>
