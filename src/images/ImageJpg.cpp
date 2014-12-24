@@ -85,7 +85,7 @@ namespace april
 
 	Image* Image::_loadJpg(hsbase& stream)
 	{
-		return Image::_loadJpg(stream, stream.size());
+		return Image::_loadJpg(stream, (int32_t)stream.size());
 	}
 
 }
