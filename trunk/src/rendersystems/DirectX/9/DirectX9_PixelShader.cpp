@@ -42,7 +42,7 @@ namespace april
 	bool DirectX9_PixelShader::loadFile(chstr filename)
 	{
 		unsigned char* data = NULL;
-		long size = 0;
+		int32_t size = 0;
 		if (!this->_loadFileData(filename, &data, &size))
 		{
 			hlog::error(april::logTag, "Shader file not found: " + filename);
@@ -60,7 +60,7 @@ namespace april
 	bool DirectX9_PixelShader::loadResource(chstr filename)
 	{
 		unsigned char* data = NULL;
-		long size = 0;
+		int32_t size = 0;
 		if (!this->_loadResourceData(filename, &data, &size))
 		{
 			hlog::error(april::logTag, "Shader file not found: " + filename);
