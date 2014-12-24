@@ -118,7 +118,7 @@ namespace april
 	{
 		if (this->data != NULL)
 		{
-			delete [] this->data;
+			delete[] this->data;
 		}
 	}
 
@@ -355,7 +355,7 @@ namespace april
 			unsigned char* data = NULL;
 			if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, format))
 			{
-				delete [] image->data;
+				delete[] image->data;
 				image->format = format;
 				image->data = data;
 			}
@@ -407,7 +407,7 @@ namespace april
 			unsigned char* data = NULL;
 			if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, format))
 			{
-				delete [] image->data;
+				delete[] image->data;
 				image->format = format;
 				image->data = data;
 			}
@@ -547,7 +547,7 @@ namespace april
 			color.g = rgba[1];
 			color.b = rgba[2];
 			color.a = rgba[3];
-			delete [] rgba;
+			delete[] rgba;
 		}
 		return color;
 	}
@@ -637,7 +637,7 @@ namespace april
 				return false;
 			}
 			memcpy(&destData[i], rgba, destBpp);
-			delete [] rgba;
+			delete[] rgba;
 		}
 		else
 		{
@@ -812,7 +812,7 @@ namespace april
 			srcData = new unsigned char[sw * sh * bpp];
 			if (!Image::write(sx, sy, sw, sh, 0, 0, data, srcWidth, srcHeight, srcFormat, srcData, sw, sh, destFormat))
 			{
-				delete [] srcData;
+				delete[] srcData;
 				return false;
 			}
 			// changed size of data, needs to readjust
@@ -982,7 +982,7 @@ namespace april
 		}
 		if (createNew)
 		{
-			delete [] srcData;
+			delete[] srcData;
 		}
 		return result;
 	}
@@ -1285,7 +1285,7 @@ namespace april
 		{
 			result = Image::blit(0, 0, dw, dh, dx, dy, stretched, dw, dh, srcFormat, destData, destWidth, destHeight, destFormat, alpha);
 		}
-		delete [] stretched;
+		delete[] stretched;
 		return result;
 	}
 
@@ -1539,7 +1539,7 @@ namespace april
 		}
 		if (createData)
 		{
-			delete [] *destData;
+			delete[] *destData;
 			*destData = NULL;
 		}
 		return false;
@@ -1618,7 +1618,7 @@ namespace april
 		}
 		if (createData)
 		{
-			delete [] *destData;
+			delete[] *destData;
 			*destData = NULL;
 		}
 		return false;
@@ -1790,7 +1790,7 @@ namespace april
 		}
 		if (createData)
 		{
-			delete [] *destData;
+			delete[] *destData;
 			*destData = NULL;
 		}
 		return false;

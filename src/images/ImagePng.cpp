@@ -101,7 +101,7 @@ namespace april
 		}
 		// clean up
 		png_destroy_read_struct(&pngPtr, &infoPtr, &endInfo);
-		delete [] rowPointers;
+		delete[] rowPointers;
 		return image;
 	}
 

@@ -248,14 +248,14 @@ namespace april
 		april::rendersys->textures -= this;
 		if (this->data != NULL)
 		{
-			delete [] this->data;
+			delete[] this->data;
 		}
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->asyncLoadQueued = false;
 		this->asyncLoadDiscarded = false;
 		if (this->dataAsync != NULL)
 		{
-			delete [] this->dataAsync;
+			delete[] this->dataAsync;
 		}
 	}
 
@@ -466,7 +466,7 @@ namespace april
 		{
 			if (currentData != NULL && this->data != currentData)
 			{
-				delete [] currentData;
+				delete[] currentData;
 			}
 			return false;
 		}
@@ -485,14 +485,14 @@ namespace april
 				{
 					if (this->data != NULL)
 					{
-						delete [] this->data;
+						delete[] this->data;
 					}
 					this->data = currentData;
 				}
 			}
 			else
 			{
-				delete [] currentData;
+				delete[] currentData;
 				// the used format will be the native format, because there is no intermediate data
 				this->format = april::rendersys->getNativeTextureFormat(this->format);
 			}
@@ -561,7 +561,7 @@ namespace april
 		}
 		if (this->dataAsync != NULL)
 		{
-			delete [] this->dataAsync;
+			delete[] this->dataAsync;
 			this->dataAsync = NULL;
 		}
 		this->firstUpload = true;
