@@ -67,7 +67,7 @@ namespace april
 		this->activated = false;
 		this->firstFrameAfterActivateHack = false;
 		this->scrollHorizontal = false;
-		this->startTime = get_system_tick_count();
+		this->startTime = (unsigned int)get_system_tick_count();
 		this->currentButton = april::AK_NONE;
 		this->Suspending += ref new SuspendingEventHandler(this, &WinRT_XamlApp::OnSuspend);
 		this->Resuming += ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnResume);

@@ -43,7 +43,7 @@ namespace april
 	protected:
 		ComPtr<ID3D11VertexShader> dx11Shader;
 		unsigned char* shaderData;
-		long shaderSize;
+		int shaderSize;
 
 	};
 
