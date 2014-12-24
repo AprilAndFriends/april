@@ -47,13 +47,19 @@ namespace april
 		}
 		lock.release();
 		// upload all ready textures to the GPU
+		int maxCount = april::getMaxAsyncTextureUploadsPerFrame();
+		int count = 0;
 		harray<Texture*> textures = april::rendersys->getTextures();
 		foreach (Texture*, it, textures)
 		{
 			if ((*it)->getLoadMode() == Texture::LOAD_ASYNC && (*it)->isLoadedAsync())
 			{
 				(*it)->load();
-				break; // only one texture per frame!
+				++count;
+				if (maxCount > 0 && count >= maxCount)
+				{
+					break; // only 'maxCount' textures per frame!
+				}
 			}
 		}
 	}
@@ -187,11 +193,13 @@ namespace april
 
 	void TextureAsync::_decode(hthread* thread)
 	{
+		Texture* texture = NULL;
+		hstream* stream = NULL;
 		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
 		while (TextureAsync::streams.size() > 0)
 		{
-			Texture* texture = TextureAsync::textures.remove_first();
-			hstream* stream = TextureAsync::streams.remove_first();
+			texture = TextureAsync::textures.remove_first();
+			stream = TextureAsync::streams.remove_first();
 			lock.release();
 			texture->_decodeFromAsyncStream(stream);
 			delete stream;

@@ -206,6 +206,13 @@ namespace april
 	/// @param[in] extensions The new extensions.
 	/// @note Extensions must always include the "." (dot) character.
 	aprilFnExport void setTextureExtensions(const harray<hstr>& extensions);
+	/// @brief Gets the max number of async textures uploaded tio the GPU per frame.
+	/// @return The max number of async textures uploaded tio the GPU per frame.
+	aprilFnExport int getMaxAsyncTextureUploadsPerFrame();
+	/// @brief Sets the max number of async textures uploaded tio the GPU per frame.
+	/// @param[in] value The max number of async textures uploaded tio the GPU per frame.
+	/// @note A value of 0 or less indicates all currently loaded textures.
+	aprilFnExport void setMaxAsyncTextureUploadsPerFrame(int value);
 
 }
 

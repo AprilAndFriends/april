@@ -179,6 +179,7 @@ namespace april
 	hstr logTag = "april";
 
 	static harray<hstr> extensions;
+	static int maxAsyncTextureUploadsPerFrame = 0;
 
 	void _startInit()
 	{
@@ -422,6 +423,16 @@ namespace april
 	void setTextureExtensions(const harray<hstr>& extensions)
 	{
 		april::extensions = extensions;
+	}
+
+	int getMaxAsyncTextureUploadsPerFrame()
+	{
+		return maxAsyncTextureUploadsPerFrame;
+	}
+	
+	void setMaxAsyncTextureUploadsPerFrame(int value)
+	{
+		maxAsyncTextureUploadsPerFrame = value;
 	}
 
 }
