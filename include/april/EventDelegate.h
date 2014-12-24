@@ -20,10 +20,13 @@
 
 namespace april
 {
+	/// @brief Defines a delegate for all event callbacks. One delegate to rule them all.
 	class aprilExport EventDelegate : public InputDelegate, public UpdateDelegate, public SystemDelegate
 	{
 	public:
+		/// @brief Basic constructor.
 		EventDelegate();
+		/// @brief Destructor.
 		~EventDelegate();
 
 	};

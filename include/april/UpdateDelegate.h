@@ -17,12 +17,17 @@
 
 namespace april
 {
+	/// @brief Defines a delegate for the update callback for the render loop.
 	class aprilExport UpdateDelegate
 	{
 	public:
+		/// @brief Basic constructor.
 		UpdateDelegate();
+		/// @brief Destructor.
 		virtual ~UpdateDelegate();
 
+		/// @brief Called every frame for rendering.
+		/// @param[in] timeDelta Time that has elapsed since the last call of this method.
 		virtual bool onUpdate(float timeDelta);
 
 	};
