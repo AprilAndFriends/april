@@ -712,7 +712,7 @@ namespace april
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), cv, sizeof(ColoredVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
-			delete [] cv;
+			delete[] cv;
 		}
 	}
 	
@@ -739,7 +739,7 @@ namespace april
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), ctv, sizeof(ColoredTexturedVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
-			delete [] ctv;
+			delete[] ctv;
 		}
 	}
 
@@ -839,7 +839,7 @@ namespace april
 		if (Image::convertToFormat(desc.Width, desc.Height, (unsigned char*)rect.pBits, Image::FORMAT_BGRX, &data, format, false))
 		{
 			image = Image::create(desc.Width, desc.Height, data, format);
-			delete [] data;
+			delete[] data;
 		}
 		buffer->UnlockRect();
 		buffer->Release();

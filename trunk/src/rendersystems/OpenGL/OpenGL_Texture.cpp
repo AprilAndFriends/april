@@ -225,7 +225,7 @@ namespace april
 				}
 				this->_resetCurrentTexture();
 			}
-			delete [] lock.data;
+			delete[] lock.data;
 			this->firstUpload = false;
 		}
 		return update;

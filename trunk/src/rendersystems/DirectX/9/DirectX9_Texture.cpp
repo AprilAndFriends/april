@@ -83,7 +83,7 @@ namespace april
 					this->type = TYPE_VOLATILE; // so the write call right below goes through
 					this->write(0, 0, w, h, 0, 0, newData, w, h, this->format);
 					this->type = type;
-					delete [] newData;
+					delete[] newData;
 					this->firstUpload = false;
 				}
 			}

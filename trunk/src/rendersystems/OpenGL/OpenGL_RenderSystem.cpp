@@ -773,9 +773,9 @@ namespace april
 		if (Image::convertToFormat(w, h, temp, Image::FORMAT_RGBA, &data, format, false))
 		{
 			image = Image::create(w, h, data, format);
-			delete [] data;
+			delete[] data;
 		}
-		delete [] temp;
+		delete[] temp;
 		return image;
 	}
 

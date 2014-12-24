@@ -57,9 +57,9 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCm
 	// free allocated memory for arguments
 	for_iter (i, 0, argc)
 	{
-		delete [] argv[i];
+		delete[] argv[i];
 	}
-	delete [] argv;
+	delete[] argv;
 #ifdef __SINGLE_INSTANCE
 	april::__unlockSingleInstanceMutex();
 #endif

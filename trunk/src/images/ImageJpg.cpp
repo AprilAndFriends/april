@@ -73,7 +73,7 @@ namespace april
 		}
 		jpeg_finish_decompress(&cInfo);
 		jpeg_destroy_decompress(&cInfo);
-		delete [] compressedData;
+		delete[] compressedData;
 		// assign Image data
 		Image* image = new Image();
 		image->data = imageData;
