@@ -20,12 +20,17 @@
 
 namespace april
 {
+	/// @brief Defines a delegate for the touch input callbacks.
 	class aprilExport TouchDelegate
 	{
 	public:
+		/// @brief Basic constructor.
 		TouchDelegate();
+		/// @brief Destructor.
 		virtual ~TouchDelegate();
 
+		/// @brief Called when the number of touches or their position changes.
+		/// @param[in] touches A list of touch coordinates.
 		virtual void onTouch(const harray<gvec2>& touches);
 
 	};
