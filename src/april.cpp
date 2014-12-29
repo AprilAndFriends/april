@@ -241,7 +241,7 @@ namespace april
 #endif
 		if (april::rendersys == NULL)
 		{
-			throw hl_exception("Could not create given rendersystem!");
+			throw Exception("Could not create given rendersystem!");
 		}
 	}
 
@@ -297,7 +297,7 @@ namespace april
 #endif
 		if (april::window == NULL)
 		{
-			throw hl_exception("Could not create given windowsystem!");
+			throw Exception("Could not create given windowsystem!");
 		}
 	}
 
