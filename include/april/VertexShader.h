@@ -58,13 +58,13 @@ namespace april
 		/// @param[out] data The loaded data.
 		/// @param[out] size The size of the loaded data.
 		/// @return True if successful.
-		bool _loadFileData(chstr filename, unsigned char** data, int32_t* size);
+		bool _loadFileData(chstr filename, unsigned char** data, int* size);
 		/// @brief Loads a precompiled shader from a resource.
 		/// @param[in] filename Filename of the resource.
 		/// @param[out] data The loaded data.
 		/// @param[out] size The size of the loaded data.
 		/// @return True if successful.
-		bool _loadResourceData(chstr filename, unsigned char** data, int32_t* size);
+		bool _loadResourceData(chstr filename, unsigned char** data, int* size);
 
 	};
 

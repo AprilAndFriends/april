@@ -22,7 +22,7 @@ namespace april
 	{
 	}
 
-	bool PixelShader::_loadFileData(chstr filename, unsigned char** data, int32_t* size)
+	bool PixelShader::_loadFileData(chstr filename, unsigned char** data, int* size)
 	{
 		if (!hfile::exists(filename))
 		{
@@ -30,13 +30,13 @@ namespace april
 		}
 		hfile stream;
 		stream.open(filename);
-		*size = (int32_t)stream.size();
+		*size = (int)stream.size();
 		*data = new unsigned char[*size];
 		stream.read_raw(*data, *size);
 		return true;
 	}
 
-	bool PixelShader::_loadResourceData(chstr filename, unsigned char** data, int32_t* size)
+	bool PixelShader::_loadResourceData(chstr filename, unsigned char** data, int* size)
 	{
 		if (!hresource::exists(filename))
 		{
@@ -44,7 +44,7 @@ namespace april
 		}
 		hresource stream;
 		stream.open(filename);
-		*size = (int32_t)stream.size();
+		*size = (int)stream.size();
 		*data = new unsigned char[*size];
 		stream.read_raw(*data, *size);
 		return true;
