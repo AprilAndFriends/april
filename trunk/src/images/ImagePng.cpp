@@ -107,7 +107,7 @@ namespace april
 
 	Image* Image::_loadPng(hsbase& stream)
 	{
-		return Image::_loadPng(stream, (int32_t)stream.size());
+		return Image::_loadPng(stream, (int)stream.size());
 	}
 
 }
