@@ -225,18 +225,18 @@ namespace april
 				ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3dDevice, NULL, &_d3dDeviceContext);
 			if (FAILED(hr))
 			{
-				throw hl_exception("Unable to create DX11 device!");
+				throw Exception("Unable to create DX11 device!");
 			}
 		}
 		hr = _d3dDevice.As(&this->d3dDevice);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to retrieve Direct3D 11.1 device interface!");
+			throw Exception("Unable to retrieve Direct3D 11.1 device interface!");
 		}
 		hr = _d3dDeviceContext.As(&this->d3dDeviceContext);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to retrieve Direct3D 11.1 device context interface!");
+			throw Exception("Unable to retrieve Direct3D 11.1 device context interface!");
 		}
 		// device config
 		this->_configureDevice();
@@ -265,7 +265,7 @@ namespace april
 		hr = this->d3dDevice->CreateBuffer(&constantBufferDesc, &constantSubresourceData, &this->constantBuffer);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to create constant buffer!");
+			throw Exception("Unable to create constant buffer!");
 		}
 		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
 		this->matrixDirty = true;
@@ -294,7 +294,7 @@ namespace april
 				this->vertexShaderDefault->shaderData, this->vertexShaderDefault->shaderSize, &this->inputLayout);
 			if (FAILED(hr))
 			{
-				throw hl_exception("Unable to create input layout for colored-textured shader!");
+				throw Exception("Unable to create input layout for colored-textured shader!");
 			}
 		}
 		this->d3dDeviceContext->IASetInputLayout(this->inputLayout.Get());
@@ -317,24 +317,24 @@ namespace april
 		hr = this->d3dDevice.As(&dxgiDevice);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to retrieve DXGI device!");
+			throw Exception("Unable to retrieve DXGI device!");
 		}
 		hr = dxgiDevice->SetMaximumFrameLatency(1);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to set MaximumFrameLatency!");
+			throw Exception("Unable to set MaximumFrameLatency!");
 		}
 		ComPtr<IDXGIAdapter> dxgiAdapter;
 		hr = dxgiDevice->GetAdapter(&dxgiAdapter);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to get adapter from DXGI device!");
+			throw Exception("Unable to get adapter from DXGI device!");
 		}
 		ComPtr<IDXGIFactory3> dxgiFactory;
 		hr = dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to get parent factory from DXGI adapter!");
+			throw Exception("Unable to get parent factory from DXGI adapter!");
 		}
 		SystemInfo info = april::getSystemInfo();
 		int w = hround(info.displayResolution.x);
@@ -359,7 +359,7 @@ namespace april
 		hr = dxgiFactory->CreateSwapChainForComposition(this->d3dDevice.Get(), &swapChainDesc, nullptr, &_swapChain);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to create swap chain!");
+			throw Exception("Unable to create swap chain!");
 		}
 		_swapChain.As(&this->swapChain);
 		reinterpret_cast<IUnknown*>(WinRT::App->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
@@ -380,7 +380,7 @@ namespace april
 		HRESULT hr = this->swapChain->ResizeBuffers(BACKBUFFER_COUNT, width, height, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to resize swap chain buffers!");
+			throw Exception("Unable to resize swap chain buffers!");
 		}
 		this->_configureSwapChain();
 		this->updateOrientation();
@@ -392,14 +392,14 @@ namespace april
 		HRESULT hr = this->swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to get swap chain back buffer!");
+			throw Exception("Unable to get swap chain back buffer!");
 		}
 		// Create a descriptor for the RenderTargetView.
 		CD3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc(D3D11_RTV_DIMENSION_TEXTURE2DARRAY, DXGI_FORMAT_B8G8R8A8_UNORM, 0, 0, 1);
 		hr = this->d3dDevice->CreateRenderTargetView(_backBuffer.Get(), &renderTargetViewDesc, &this->renderTargetView);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to create render target view!");
+			throw Exception("Unable to create render target view!");
 		}
 		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
 		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
@@ -431,7 +431,7 @@ namespace april
 		hr = this->d3dDevice->CreateRasterizerState(&rasterDesc, &this->rasterState);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to create raster state!");
+			throw Exception("Unable to create raster state!");
 		}
 		this->d3dDeviceContext->RSSetState(this->rasterState.Get());
 		D3D11_TEXTURE2D_DESC backBufferDesc = {0};
@@ -1140,7 +1140,7 @@ namespace april
 		HRESULT hr = this->d3dDevice.As(&dxgiDevice);
 		if (FAILED(hr))
 		{
-			throw hl_exception("Unable to retrieve DXGI device!");
+			throw Exception("Unable to retrieve DXGI device!");
 		}
 		dxgiDevice->Trim();
 	}

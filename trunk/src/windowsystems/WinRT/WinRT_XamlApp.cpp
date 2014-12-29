@@ -677,7 +677,7 @@ namespace april
 							texture->load();
 							return texture;
 						}
-						catch (hltypes::exception&)
+						catch (hltypes::_Exception&)
 						{
 							delete texture;
 						}
