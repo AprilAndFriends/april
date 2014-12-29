@@ -87,7 +87,7 @@ namespace april
 		if (this->d3d == NULL)
 		{
 			this->destroy();
-			throw hl_exception("Unable to create Direct3D9 object!");
+			throw Exception("Unable to create Direct3D9 object!");
 		}
 		this->d3dpp = new _D3DPRESENT_PARAMETERS_();
 		return true;
@@ -139,7 +139,7 @@ namespace april
 			hlog::write(april::logTag, "Resetting device...");
 			if (this->d3dpp->BackBufferWidth <= 0 || this->d3dpp->BackBufferHeight <= 0)
 			{
-				throw hl_exception(hsprintf("Backbuffer size is invalid: %d x %d", this->d3dpp->BackBufferWidth, this->d3dpp->BackBufferHeight));
+				throw Exception(hsprintf("Backbuffer size is invalid: %d x %d", this->d3dpp->BackBufferWidth, this->d3dpp->BackBufferHeight));
 			}
 			hr = this->d3dDevice->Reset(this->d3dpp);
 			if (!FAILED(hr))
@@ -148,11 +148,11 @@ namespace april
 			}
 			if (hr == D3DERR_DRIVERINTERNALERROR)
 			{
-				throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
+				throw Exception("Unable to reset Direct3D device, Driver Internal Error!");
 			}
 			else if (hr == D3DERR_OUTOFVIDEOMEMORY)
 			{
-				throw hl_exception("Unable to reset Direct3D device, Out of Video Memory!");
+				throw Exception("Unable to reset Direct3D device, Out of Video Memory!");
 			}
 			else
 			{
@@ -219,7 +219,7 @@ namespace april
 			hr = this->d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, this->d3dpp, &this->d3dDevice);
 			if (FAILED(hr))
 			{
-				throw hl_exception("Unable to create Direct3D Device!");
+				throw Exception("Unable to create Direct3D Device!");
 			}
 		}
 		if (!this->_supportsA8Surface)
@@ -307,7 +307,7 @@ namespace april
 				d3d = Direct3DCreate9(D3D_SDK_VERSION);
 				if (d3d == NULL)
 				{
-					throw hl_exception("Unable to create Direct3D9 object!");
+					throw Exception("Unable to create Direct3D9 object!");
 				}
 			}
 			unsigned int modeCount = d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
@@ -881,11 +881,11 @@ namespace april
 					}
 					if (hr == D3DERR_DRIVERINTERNALERROR)
 					{
-						throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
+						throw Exception("Unable to reset Direct3D device, Driver Internal Error!");
 					}
 					else if (hr == D3DERR_OUTOFVIDEOMEMORY)
 					{
-						throw hl_exception("Unable to reset Direct3D device, Out of Video Memory!");
+						throw Exception("Unable to reset Direct3D device, Out of Video Memory!");
 					}
 					else
 					{
@@ -894,7 +894,7 @@ namespace april
 				}
 				else if (hr == D3DERR_DRIVERINTERNALERROR)
 				{
-					throw hl_exception("Unable to reset Direct3D device, Driver Internal Error!");
+					throw Exception("Unable to reset Direct3D device, Driver Internal Error!");
 				}
 			}
 			this->_configureDevice();

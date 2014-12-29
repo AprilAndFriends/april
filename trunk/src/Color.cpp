@@ -129,7 +129,7 @@ namespace april
 		int size = value.size();
 		if ((size != 6 && size != 8) || !value.is_hex())
 		{
-			throw hl_exception("Color format must be either 0xRRGGBBAA or 0xRRGGBB (with or without 0x prefix)");
+			throw Exception("Color format must be either 0xRRGGBBAA or 0xRRGGBB (with or without 0x prefix)");
 		}
 		this->r = (unsigned char)value(0, 2).unhex();
 		this->g = (unsigned char)value(2, 2).unhex();

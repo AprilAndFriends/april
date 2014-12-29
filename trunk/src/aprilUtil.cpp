@@ -179,7 +179,7 @@ namespace april
 		harray<hstr> data = string.split(HSTR_SEPARATOR);
 		if (data.size() != 2)
 		{
-			throw hl_exception("Cannot convert string '" + string + "' to gtypes::Vector2.");
+			throw Exception("Cannot convert string '" + string + "' to gtypes::Vector2.");
 		}
 		return gvec2(data[0].trim(), data[1].trim());
 	}
@@ -189,7 +189,7 @@ namespace april
 		harray<hstr> data = string.split(HSTR_SEPARATOR);
 		if (data.size() != 3)
 		{
-			throw hl_exception("Cannot convert string '" + string + "' to gtypes::Vector3.");
+			throw Exception("Cannot convert string '" + string + "' to gtypes::Vector3.");
 		}
 		return gvec3(data[0].trim(), data[1].trim(), data[2].trim());
 	}
@@ -199,7 +199,7 @@ namespace april
 		harray<hstr> data = string.split(HSTR_SEPARATOR);
 		if (data.size() != 4)
 		{
-			throw hl_exception("Cannot convert string '" + string + "' to gtypes::Rectangle.");
+			throw Exception("Cannot convert string '" + string + "' to gtypes::Rectangle.");
 		}
 		return grect(data[0].trim(), data[1].trim(), data[2].trim(), data[3].trim());
 	}
