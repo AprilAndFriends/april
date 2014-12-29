@@ -108,7 +108,7 @@ namespace april
 			{
 				result = april::window->updateOneFrame();
 			}
-			catch (hltypes::exception& e)
+			catch (hexception& e)
 			{
 				hlog::error("FATAL", e.getMessage());
 				throw e;
