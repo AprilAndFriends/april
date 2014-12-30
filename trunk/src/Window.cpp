@@ -254,7 +254,7 @@ namespace april
 
 	void Window::setInputMode(InputMode value)
 	{
-		if (this->inputModeTranslations.has_key(value))
+		if (this->inputModeTranslations.hasKey(value))
 		{
 			value = this->inputModeTranslations[value];
 		}
@@ -276,7 +276,7 @@ namespace april
 	void Window::setInputModeTranslations(hmap<InputMode, InputMode> value)
 	{
 		this->inputModeTranslations = value;
-		if (this->inputModeTranslations.has_key(this->inputMode))
+		if (this->inputModeTranslations.hasKey(this->inputMode))
 		{
 			this->inputMode = this->inputModeTranslations[this->inputMode];
 			hlog::write(april::logTag, "Forcing Input Mode to: " + INPUT_MODE_NAME(this->inputMode));
@@ -522,7 +522,7 @@ namespace april
 				break;
 			}
 			// emulation of buttons using keyboard
-			if (this->controllerEmulationKeys.has_key(keyCode))
+			if (this->controllerEmulationKeys.hasKey(keyCode))
 			{
 				ControllerEventType buttonType = (type == KEY_DOWN ? CONTROLLER_DOWN : CONTROLLER_UP);
 				this->handleControllerEvent(buttonType, this->controllerEmulationKeys[keyCode]);
