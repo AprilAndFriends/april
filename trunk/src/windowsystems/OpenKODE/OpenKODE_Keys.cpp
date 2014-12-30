@@ -19,7 +19,7 @@ namespace april
 	
 	Key kd2april(int kdKeyCode)
 	{
-		if (gKeyMap.has_key(kdKeyCode))
+		if (gKeyMap.hasKey(kdKeyCode))
 		{
 			return gKeyMap[kdKeyCode];
 		}
