@@ -412,7 +412,7 @@ namespace april
 		NSString *pvrfilename = [NSString stringWithUTF8String:filename.c_str()];
 #endif
 		hstr path = [pvrfilename UTF8String], archive = hresource::getArchive();
-		if (archive != "") path = hdir::join_path(archive, path);
+		if (archive != "") path = hdir::joinPath(archive, path);
 
 		hresource res;
 		res.open(path);

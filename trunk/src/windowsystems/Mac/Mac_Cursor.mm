@@ -65,8 +65,8 @@ namespace april
 				hlog::write(logTag, "Error: invalid cursor plist, 'image' property is missing");
 				return false;
 			}
-			hstr base = hdir::basedir(filename), name = [nsname UTF8String];
-			path = hdir::join_path(base, name);
+			hstr base = hdir::baseDir(filename), name = [nsname UTF8String];
+			path = hdir::joinPath(base, name);
 			NSNumber* x = [plist objectForKey:@"hotSpotX"];
 			NSNumber* y = [plist objectForKey:@"hotSpotY"];
 			if (x)
@@ -85,7 +85,7 @@ namespace april
 		hstr archive = hresource::getArchive();
 		if (archive.length() > 0)
 		{
-			path = hdir::join_path(archive, path);
+			path = hdir::joinPath(archive, path);
 		}
 		image = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.c_str()]];
 
