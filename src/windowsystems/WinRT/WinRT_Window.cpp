@@ -161,7 +161,7 @@ namespace april
 		{
 			foreach (hstr, it, this->cursorExtensions)
 			{
-				if (this->cursorMappings.has_key(filename))
+				if (this->cursorMappings.hasKey(filename))
 				{
 					return hstr(this->cursorMappings[filename]);
 				}

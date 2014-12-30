@@ -67,7 +67,7 @@ namespace april
 		this->activated = false;
 		this->firstFrameAfterActivateHack = false;
 		this->scrollHorizontal = false;
-		this->startTime = (unsigned int)get_system_tick_count();
+		this->startTime = (unsigned int)htickCount();
 		this->currentButton = april::AK_NONE;
 		this->Suspending += ref new SuspendingEventHandler(this, &WinRT_XamlApp::OnSuspend);
 		this->Resuming += ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnResume);
@@ -174,7 +174,7 @@ namespace april
 			if (april::rendersys != NULL && april::window != NULL)
 			{
 				float delaySplash = (float)april::window->getParam(WINRT_DELAY_SPLASH);
-				if (delaySplash > 0.0f && delaySplash - (get_system_tick_count() - this->startTime) * 0.001f > 0.0f)
+				if (delaySplash > 0.0f && delaySplash - (htickCount() - this->startTime) * 0.001f > 0.0f)
 				{
 					this->_tryLoadSplashTexture();
 					this->_tryRenderSplashTexture();
@@ -200,7 +200,7 @@ namespace april
 					float delaySplash = (float)april::window->getParam(WINRT_DELAY_SPLASH);
 					if (delaySplash > 0.0f)
 					{
-						float delay = delaySplash - (get_system_tick_count() - this->startTime) * 0.001f;
+						float delay = delaySplash - (htickCount() - this->startTime) * 0.001f;
 						if (delay > 0.0f)
 						{
 							hlog::write(april::logTag, "Rendering splash screen for: " + hstr(delay));
@@ -210,7 +210,7 @@ namespace april
 							{
 								rendered = true;
 							}
-							delay = delaySplash - (get_system_tick_count() - this->startTime) / 1000.0f;
+							delay = delaySplash - (htickCount() - this->startTime) / 1000.0f;
 							if (delay > 0.0f) // if there's still time left after rendering
 							{
 								hthread::sleep(delay * 1000.0f);
