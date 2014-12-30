@@ -37,7 +37,7 @@ namespace april
 		hstr path, archivePath = hresource::getArchive();
 		if (archivePath != "")
 		{
-			path = hdir::join_path(archivePath, filename);
+			path = hdir::joinPath(archivePath, filename);
 		}
 		else
 		{
