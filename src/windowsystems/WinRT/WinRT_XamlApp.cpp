@@ -1,4 +1,4 @@
-﻿/// @file
+/// @file
 /// @version 3.5
 /// 
 /// @section LICENSE
@@ -677,7 +677,7 @@ namespace april
 							texture->load();
 							return texture;
 						}
-						catch (hltypes::_Exception&)
+						catch (hexception&)
 						{
 							delete texture;
 						}
