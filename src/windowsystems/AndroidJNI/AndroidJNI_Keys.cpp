@@ -20,7 +20,7 @@ namespace april
 	
 	Key android2april(int androidKeyCode)
 	{
-		if (gKeyMap.has_key(androidKeyCode))
+		if (gKeyMap.hasKey(androidKeyCode))
 		{
 			return gKeyMap[androidKeyCode];
 		}
