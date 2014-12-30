@@ -23,7 +23,7 @@ namespace april
 {
 	void _pngZipRead(png_structp png, png_bytep data, png_size_t size)
 	{
-		((hsbase*)png->io_ptr)->read_raw(data, size);
+		((hsbase*)png->io_ptr)->readRaw(data, size);
 	}
 
 	Image* Image::_loadPng(hsbase& stream, int size)
@@ -34,7 +34,7 @@ namespace april
 			return NULL;
 		}
 		png_byte signature[PNG_SIGNATURE_SIZE] = { '\0' };
-		stream.read_raw(signature, PNG_SIGNATURE_SIZE);
+		stream.readRaw(signature, PNG_SIGNATURE_SIZE);
 		if (png_sig_cmp(signature, 0, PNG_SIGNATURE_SIZE))
 		{
 			hlog::error(april::logTag, "Not a PNG file!");

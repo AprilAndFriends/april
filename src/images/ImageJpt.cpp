@@ -19,12 +19,12 @@ namespace april
 		Image* png = NULL;
 		unsigned char bytes[4] = {0};
 		// file header ("JPT" + 1 byte for version code)
-		stream.read_raw(bytes, 4);
+		stream.readRaw(bytes, 4);
 		// read JPEG
-		stream.read_raw(bytes, 4);
+		stream.readRaw(bytes, 4);
 		jpg = Image::_loadJpg(stream, bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24));
 		// read PNG
-		stream.read_raw(bytes, 4);
+		stream.readRaw(bytes, 4);
 		png = Image::_loadPng(stream, bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24));
 		png->format = FORMAT_ALPHA;
 		// combine

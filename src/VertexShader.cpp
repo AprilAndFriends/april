@@ -32,7 +32,7 @@ namespace april
 		stream.open(filename);
 		*size = (int)stream.size();
 		*data = new unsigned char[*size];
-		stream.read_raw(*data, *size);
+		stream.readRaw(*data, *size);
 		return true;
 	}
 
@@ -46,7 +46,7 @@ namespace april
 		stream.open(filename);
 		*size = (int)stream.size();
 		*data = new unsigned char[*size];
-		stream.read_raw(*data, *size);
+		stream.readRaw(*data, *size);
 		return true;
 	}
 

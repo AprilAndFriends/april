@@ -601,13 +601,13 @@ namespace april
 		{
 			hresource file;
 			file.open(this->filename);
-			stream->write_raw(file);
+			stream->writeRaw(file);
 		}
 		else
 		{
 			hfile file;
 			file.open(this->filename);
-			stream->write_raw(file);
+			stream->writeRaw(file);
 		}
 		stream->rewind();
 		lock.acquire(&this->asyncLoadMutex);
@@ -635,11 +635,11 @@ namespace april
 		Image* image = NULL;
 		if (this->format == Image::FORMAT_INVALID)
 		{
-			image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extension_of(this->filename));
+			image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extensionOf(this->filename));
 		}
 		else
 		{
-			image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extension_of(this->filename), this->format);
+			image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extensionOf(this->filename), this->format);
 		}
 		if (image == NULL)
 		{
