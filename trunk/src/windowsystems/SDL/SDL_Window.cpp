@@ -24,7 +24,7 @@
 #include <ctype.h> // tolower()
 #include <SDL/SDL_syswm.h>
 
-#include <hltypes/exception.h>
+#include <hltypes/hexception.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hthread.h>
 
