@@ -73,23 +73,23 @@ namespace april
 	{
 		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			*ok = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK");
-			*cancel = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel");
+			*ok = customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK");
+			*cancel = customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel");
 		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			*yes = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes");
-			*no = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No");
-			*cancel = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_CANCEL, "Cancel");
+			*yes = customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes");
+			*no = customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No");
+			*cancel = customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel");
 		}
 		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
-			*ok = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_OK, "OK");
+			*ok = customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK");
 		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
-			*yes = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_YES, "Yes");
-			*no = customButtonTitles.try_get_by_key(MESSAGE_BUTTON_NO, "No");
+			*yes = customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes");
+			*no = customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No");
 		}
 	}
 
