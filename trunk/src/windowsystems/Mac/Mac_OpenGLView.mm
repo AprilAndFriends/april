@@ -106,7 +106,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
     {
 #ifdef _OVERDRAW_DEBUG
         unsigned int t1, t2;
-        t1 = get_system_tick_count();
+        t1 = htickCount();
 #endif
         lock.acquire(&aprilWindow->renderThreadSyncMutex);
         if (gAppStarted)
@@ -119,7 +119,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
             aprilWindow->updateOneFrame();
             
 #ifdef  _OVERDRAW_DEBUG
-            t2 = get_system_tick_count();
+            t2 = htickCount();
             if (t2 - t1 > 16) // 16 is max render time for 60 FPS
             {
                 printf("overdraw: %d ms\n", t2 - t1);
