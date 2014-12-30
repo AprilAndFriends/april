@@ -87,7 +87,7 @@ namespace april
 
 	hstr getUserDataPath()
 	{
-		return get_environment_variable("APPDATA");
+		return henv("APPDATA");
 	}
 	
 	static void(*currentCallback)(MessageBoxButton) = NULL;
