@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/CAEAGLLayer.h>
-#import <hltypes/exception.h>
+#import <hltypes/hexception.h>
 #import <hltypes/hlog.h>
 
 #import "AprilViewController.h"
