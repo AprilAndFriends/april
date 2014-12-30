@@ -512,7 +512,7 @@ namespace april
 				return name;
 			}
 		}
-		hstr noExtensionName = hfile::no_extension(filename);
+		hstr noExtensionName = hfile::withoutExtension(filename);
 		if (noExtensionName != filename)
 		{
 			foreach (hstr, it, extensions)
@@ -543,7 +543,7 @@ namespace april
 				return name;
 			}
 		}
-		hstr noExtensionName = hfile::no_extension(filename);
+		hstr noExtensionName = hfile::withoutExtension(filename);
 		if (noExtensionName != filename)
 		{
 			foreach (hstr, it, extensions)

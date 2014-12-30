@@ -39,7 +39,7 @@ namespace april
 		hasError = false;
 		// first read the whole data from the resource file
 		unsigned char* compressedData = new unsigned char[size];
-		stream.read_raw(compressedData, size);
+		stream.readRaw(compressedData, size);
 		// read JPEG image from file data
 		struct jpeg_decompress_struct cInfo;
 		struct jpeg_error_mgr jErr;
