@@ -393,11 +393,11 @@ namespace april
 	{
 		PVRTexHeader header;
 		int headerSize = sizeof(header);
-		stream.read_raw(&header, headerSize);
+		stream.readRaw(&header, headerSize);
 
 		unsigned char* buffer = new unsigned char[headerSize + header.dataLength];
 		memcpy(buffer, &header, headerSize);
-		stream.read_raw(buffer + headerSize, header.dataLength);
+		stream.readRaw(buffer + headerSize, header.dataLength);
 		Image* image = _tryLoadingPVR(buffer, headerSize + header.dataLength);
 		delete [] buffer;
 		return image;
