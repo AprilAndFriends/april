@@ -142,7 +142,10 @@ namespace april
 	
 	Key getAprilMacKeyCode(unsigned int macKeyCode)
 	{
-		if (gMacKeyMap.has_key(macKeyCode)) return gMacKeyMap[macKeyCode];
+		if (gMacKeyMap.hasKey(macKeyCode))
+		{
+			return gMacKeyMap[macKeyCode];
+		}
 
 #ifdef _DEBUG
 		NSLog(@"Unknown key code: %u", macKeyCode);
