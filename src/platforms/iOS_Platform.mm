@@ -118,11 +118,13 @@ namespace april
 		info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
 		if (info.locale == "")
 		{
+			info.locale = "en"; // default is "en"
 			NSBundle* bundle = [NSBundle mainBundle];
 			NSArray* langs = [bundle preferredLocalizations];
 			langs = [langs count] ? langs : [NSLocale preferredLanguages];
-			hstr fullLocale = hstr([[langs objectAtIndex:0] UTF8String]);
-			info.locale = "en"; // default is "en"
+			NSString* locale = [langs objectAtIndex:0];
+
+			hstr fullLocale = [[NSLocale canonicalLanguageIdentifierFromString:locale] UTF8String];
 			if (fullLocale.contains("-"))
 			{
 				fullLocale.split("-", info.locale, info.localeVariant);
