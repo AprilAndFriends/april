@@ -85,12 +85,14 @@ namespace april
 	
 	int Mac_Window::getWidth()
 	{
-		return [mWindow.contentView bounds].size.width * this->scalingFactor;
+		NSRect bounds = [mWindow.contentView bounds];
+		return bounds.size.width * this->scalingFactor;
 	}
-	
+
 	int Mac_Window::getHeight()
 	{
-		return [mWindow.contentView bounds].size.height * this->scalingFactor;
+		NSRect bounds = [mWindow.contentView bounds];
+		return bounds.size.height * this->scalingFactor;
 	}
 	
 	void* Mac_Window::getBackendId()
