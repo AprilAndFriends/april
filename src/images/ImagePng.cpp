@@ -23,7 +23,7 @@ namespace april
 {
 	void _pngZipRead(png_structp png, png_bytep data, png_size_t size)
 	{
-		((hsbase*)png->io_ptr)->readRaw(data, size);
+		((hsbase*)png->io_ptr)->readRaw(data, (int)size);
 	}
 
 	Image* Image::_loadPng(hsbase& stream, int size)
@@ -70,7 +70,7 @@ namespace april
 			png_set_strip_16(pngPtr);
 		}
 		png_read_update_info(pngPtr, infoPtr);
-		int rowBytes = png_get_rowbytes(pngPtr, infoPtr);
+		int rowBytes = (int)png_get_rowbytes(pngPtr, infoPtr);
 		png_byte* imageData = new png_byte[rowBytes * pngPtr->height];
 		png_bytep* rowPointers = new png_bytep[pngPtr->height];
 		for_itert (unsigned int, i, 0, pngPtr->height)

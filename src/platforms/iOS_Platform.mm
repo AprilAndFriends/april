@@ -115,7 +115,7 @@ namespace april
 	
 	SystemInfo getSystemInfo()
 	{
-		info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
+		info.cpuCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
 		if (info.locale == "")
 		{
 			info.locale = "en"; // default is "en"

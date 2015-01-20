@@ -218,7 +218,7 @@ typedef struct _PVRTexHeader
 
 - (BOOL)unpackPVRNSData:(NSData *)data
 {
-	return [self unpackPVRData:(uint8_t*) [data bytes] dataSize:[data length]];
+	return [self unpackPVRData:(uint8_t*) [data bytes] dataSize:(int)[data length]];
 }
 
 
@@ -246,7 +246,7 @@ typedef struct _PVRTexHeader
 	for (int i=0; i < [_imageData count]; i++)
 	{
 		data = [_imageData objectAtIndex:i];
-		glCompressedTexImage2D(GL_TEXTURE_2D, i, _internalFormat, width, height, 0, [data length], [data bytes]);
+		glCompressedTexImage2D(GL_TEXTURE_2D, i, _internalFormat, width, height, 0, (int)[data length], [data bytes]);
 		
 		err = glGetError();
 		if (err != GL_NO_ERROR)
@@ -384,7 +384,7 @@ namespace april
 		memcpy(image->data, imageData.bytes, imageData.length);
 		image->format = Image::FORMAT_PALETTE;
 		image->internalFormat = pvrtex.internalFormat;
-		image->compressedSize = imageData.length;
+		image->compressedSize = (int)imageData.length;
 		[arp release];
 		return image;
 	}

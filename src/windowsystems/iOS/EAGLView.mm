@@ -422,7 +422,7 @@ void main(void) {\
 	else if (str.size() == 0) return NO;
 	unichar chars[256];
 	[string getCharacters:chars];
-	int len = [string length];
+	int len = (int)[string length];
 	
 	for (int i = 0; i < len; i++)
 	{
