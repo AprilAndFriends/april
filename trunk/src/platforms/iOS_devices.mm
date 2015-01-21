@@ -163,6 +163,12 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.ram = 256;
 			info.displayDpi = 326;
 		}
+		else if (name == "iPod5,1")
+		{
+			info.name = "iPod5";
+			info.ram = 512;
+			info.displayDpi = 326;
+		}
 		else
 		{
 			info.name = "iPod?";
