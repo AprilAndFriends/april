@@ -486,12 +486,17 @@ namespace april
 	void iOS_Window::handleDisplayAndUpdate()
 	{
 		bool result = this->updateOneFrame();
-		if (result)
+		if (this->updateDelegate != NULL)
 		{
-			april::rendersys->presentFrame();
+			this->updateDelegate->onPresentFrame();
 		}
+		if (!result)
+		{
+			this->terminateMainLoop();
+		}
+
 	}
-	
+
 	void iOS_Window::applicationWillResignActive()
 	{
 		if (!this->firstFrameDrawn)
