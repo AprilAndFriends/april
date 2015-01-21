@@ -29,6 +29,9 @@ namespace april
 		/// @brief Called every frame for rendering.
 		/// @param[in] timeDelta Time that has elapsed since the last call of this method.
 		virtual bool onUpdate(float timeDelta);
+		/// @brief Called every frame after update.
+		/// @note This should be only overriden if custom present-frame processing is needed.
+		virtual void onPresentFrame();
 
 	};
 

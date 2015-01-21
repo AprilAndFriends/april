@@ -27,5 +27,10 @@ namespace april
 		hlog::debug(april::logTag, "Event onUpdate() was not implemented.");
 		return false; // quits immediately
 	}
-	
+
+	void UpdateDelegate::onPresentFrame()
+	{
+		april::rendersys->presentFrame();
+	}
+
 }
