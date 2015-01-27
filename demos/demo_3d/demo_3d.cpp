@@ -138,7 +138,7 @@ void april_init(const harray<hstr>& args)
 #ifdef _WINRT
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
-	april::rendersys->setDepthBufferEnabled(true);
+	april::rendersys->setDepthBuffer(true, true);
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
 	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
