@@ -98,6 +98,10 @@ namespace april
 	{
 		this->set(color, a);
 	}
+
+	Color::~Color()
+	{
+	}
 	
 	void Color::set(int r, int g, int b, int a)
 	{
