@@ -84,6 +84,8 @@
 	if ((self = [super initWithFrame:frame]))
 	{
 		app_started = 0;
+		frameInterval = 1;
+		displayLinkAttached = false;
 		// Get the layer
 		CAEAGLLayer* eaglLayer = (CAEAGLLayer*) self.layer;
 		
@@ -157,7 +159,7 @@
 	return self;
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)aTextField
+- (BOOL)textFieldShouldReturn:(UITextField*)aTextField
 {
 	[textField resignFirstResponder];
 	if (april::window)
@@ -193,7 +195,7 @@
 
 }
 
-- (void)drawView
+- (void)drawView:(CADisplayLink*) link
 {
     if (!self.displayLink)
     {
@@ -209,6 +211,11 @@
     {
         aprilWindow->handleDisplayAndUpdate();
     }
+
+	if (frameInterval != link.frameInterval)
+	{
+		[link setFrameInterval:frameInterval];
+	}
 }
 
 - (void)_paintRect:(GLfloat[])vertices
@@ -375,21 +382,39 @@ void main(void) {\
 - (void)startAnimation
 {
 	if (!app_started) return;
-    
-    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(drawView)];
-    [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+
+	if (self.displayLink == nil)
+	{
+		self.displayLink = [[CADisplayLink displayLinkWithTarget:self selector:@selector(drawView:)] retain];
+	}
+	if (!displayLinkAttached)
+	{
+		displayLinkAttached = true;
+		[self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+		[self.displayLink setFrameInterval:frameInterval];
+	}
 }
 
 - (void)stopAnimation
 {
-	[self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-    self.displayLink = nil;
+	if (displayLinkAttached)
+	{
+		displayLinkAttached = false;
+		[self.displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+	}
 }
 
 - (void)dealloc
 {
 	[self stopAnimation];
-	
+
+	if (self.displayLink != nil)
+	{
+		[self.displayLink invalidate];
+		[self.displayLink release];
+		self.displayLink = nil;
+	}
+
 	if ([EAGLContext currentContext] == context)
 	{
 		[EAGLContext setCurrentContext:nil];
@@ -441,6 +466,11 @@ void main(void) {\
 {
 	if (april::window)
 		aprilWindow->applicationWillResignActive();
+}
+
+- (void)setUpdateInterval:(int)interval
+{
+	frameInterval = hmax(1, interval);
 }
 
 @end

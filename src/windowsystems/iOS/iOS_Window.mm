@@ -346,6 +346,10 @@ namespace april
 			sscanf(value.c_str(), "%lu", &ptr);
 			this->exitFunction = (void (*)(int)) ptr;
 		}
+		if (param == "CADisplayLink::updateInterval" && glview != nil)
+		{
+			[glview setUpdateInterval:(int)value];
+		}
 	}
 
 	float iOS_Window::_getTouchScale()
