@@ -41,20 +41,23 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 	UITextField *textField;
 @public
 	bool app_started;
+	bool displayLinkAttached;
+	int frameInterval;
 }
 
 - (void)startAnimation;
 - (void)stopAnimation;
-- (void)drawView;
+- (void)drawView:(CADisplayLink*)link;
 - (void)swapBuffers;
 - (void)beginKeyboardHandling;
 - (void)terminateKeyboardHandling;
 - (BOOL)isKeyboardActive;
 - (void)keyboardWasShown:(id)sender;
 - (void)keyboardWasHidden:(id)sender;
-- (BOOL)textFieldShouldReturn:(UITextField *)aTextField;
+- (BOOL)textFieldShouldReturn:(UITextField*)aTextField;
 - (void)deviceOrientationDidChange:(id)sender;
 - (void)applicationDidBecomeActive:(UIApplication*)app;
 - (void)applicationWillResignActive:(UIApplication*)app;
+- (void)setUpdateInterval:(int)interval;
 
 @end
