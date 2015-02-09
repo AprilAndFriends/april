@@ -260,7 +260,6 @@
 		D1B4873819337479004674EB /* Mac_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873319337479004674EB /* Mac_Platform.mm */; };
 		D1B4873919337479004674EB /* Mac_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873319337479004674EB /* Mac_Platform.mm */; };
 		D1B4873A19337479004674EB /* Mac_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873319337479004674EB /* Mac_Platform.mm */; };
-		D1B4873B19337479004674EB /* Mac_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873319337479004674EB /* Mac_Platform.mm */; };
 		D1B4873F19337483004674EB /* iOS_devices.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873C19337483004674EB /* iOS_devices.mm */; };
 		D1B4874019337483004674EB /* iOS_devices.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873C19337483004674EB /* iOS_devices.mm */; };
 		D1B4874119337483004674EB /* iOS_main.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873D19337483004674EB /* iOS_main.mm */; };
@@ -1585,7 +1584,6 @@
 				D1F27AC5177A2DF700E5C131 /* Texture.cpp in Sources */,
 				D1F27AC6177A2DF700E5C131 /* RenderSystem.cpp in Sources */,
 				D1F630D119D54A5F006C6236 /* OpenKODE_Window.cpp in Sources */,
-				D1B4873B19337479004674EB /* Mac_Platform.mm in Sources */,
 				D1F27AC7177A2DF700E5C131 /* Window.cpp in Sources */,
 				D1F27AC8177A2DF700E5C131 /* PixelShader.cpp in Sources */,
 				D1368191187BFB3E00E66E32 /* main_base.cpp in Sources */,
