@@ -393,13 +393,8 @@ namespace april
 			this->handleActivityChangeEvent(true);
 			return true;
 		case KD_EVENT_WINDOW_FOCUS:
-			{
-				bool active = (evt->data.windowfocus.focusstate != 0);
-				if (this->focused != active)
-				{
-					this->handleFocusChangeEvent(active);
-				}
-			}
+			hlog::writef(logTag, "OpenKODE window focus change event received: %d", evt->data.windowfocus.focusstate);
+			this->handleActivityChangeEvent(evt->data.windowfocus.focusstate != 0);
 			return true;
 		case KD_EVENT_INPUT:
 			if (evt->data.input.value.i != 0)
