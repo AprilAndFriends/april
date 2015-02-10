@@ -390,7 +390,7 @@ void main(void) {\
 	if (!displayLinkAttached)
 	{
 		displayLinkAttached = true;
-		[self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+		[self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 		[self.displayLink setFrameInterval:frameInterval];
 	}
 }
@@ -400,7 +400,7 @@ void main(void) {\
 	if (displayLinkAttached)
 	{
 		displayLinkAttached = false;
-		[self.displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+		[self.displayLink removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
 	}
 }
 
