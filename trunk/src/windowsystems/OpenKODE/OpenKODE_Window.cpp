@@ -73,38 +73,21 @@ namespace april
 	}
 #endif
 	
+	// this is required due to certain platforms requiring unloading of textures when a pause event is received
 	void KD_APIENTRY _processEventPause(const KDEvent* evt)
 	{
+#if defined(_IOS) || defined(_ANDROID)
 		switch (evt->type)
 		{
 		case KD_EVENT_PAUSE:
 			hlog::write(logTag, "OpenKODE pause event received.");
-			if (april::window != NULL)
-			{
-				april::window->handleActivityChangeEvent(false);
-			}
-#if defined(_IOS) || defined(_ANDROID)
 			if (april::rendersys != NULL)
 			{
 				april::rendersys->unloadTextures();
 			}
+			break;
+		}
 #endif
-			break;
-		}
-	}
-	
-	void KD_APIENTRY _processEventResume(const KDEvent* evt)
-	{
-		switch (evt->type)
-		{
-		case KD_EVENT_RESUME:
-			hlog::write(logTag, "OpenKODE resume event received.");
-			if (april::window != NULL)
-			{
-				april::window->handleActivityChangeEvent(true);
-			}
-			break;
-		}
 	}
 	
 	void KD_APIENTRY _processEventLowMemory(const KDEvent* evt)
@@ -213,7 +196,6 @@ namespace april
 		april::egl->create();
 #endif
 		kdInstallCallback(&_processEventPause, KD_EVENT_PAUSE, NULL);
-		kdInstallCallback(&_processEventResume, KD_EVENT_RESUME, NULL);
 		kdInstallCallback(&_processEventLowMemory, KD_EVENT_LOWMEM, NULL);
 		return true;
 	}
@@ -225,7 +207,6 @@ namespace april
 			return false;
 		}
 		kdInstallCallback(NULL, KD_EVENT_PAUSE, NULL);
-		kdInstallCallback(NULL, KD_EVENT_RESUME, NULL);
 		kdInstallCallback(NULL, KD_EVENT_LOWMEM, NULL);
 #ifdef _EGL
 		april::egl->destroy();
@@ -377,20 +358,6 @@ namespace april
 			return true;
 		case KD_EVENT_WINDOW_CLOSE:
 			this->handleQuitRequest(true);
-			return true;
-		case KD_EVENT_PAUSE:
-			hlog::write(logTag, "OpenKODE pause event received.");
-			this->handleActivityChangeEvent(false);
-#if defined(_IOS) || defined(_ANDROID)
-			if (april::rendersys != NULL)
-			{
-				april::rendersys->unloadTextures();
-			}
-#endif
-			return true;
-		case KD_EVENT_RESUME:
-			hlog::write(logTag, "OpenKODE resume event received.");
-			this->handleActivityChangeEvent(true);
 			return true;
 		case KD_EVENT_WINDOW_FOCUS:
 			hlog::writef(logTag, "OpenKODE window focus change event received: %d", evt->data.windowfocus.focusstate);
