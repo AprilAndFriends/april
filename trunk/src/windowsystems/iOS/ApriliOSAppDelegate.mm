@@ -24,17 +24,17 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 
 @synthesize uiwnd;
 @synthesize viewController;
-@synthesize onPushRegistrationSuccess;
-@synthesize onPushRegistrationFailure;
+@synthesize appLaunchOptions;
 
 - (UIWindow*)window
 {
 	return uiwnd;
 }
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application
+- (BOOL)application:(UIApplication*) application didFinishLaunchingWithOptions:(NSDictionary*) launchOptions
 {
 	NSLog(@"Creating iOS window");
+    appLaunchOptions = launchOptions;
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
 	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0" options:NSNumericSearch] == NSOrderedAscending)
 	{
@@ -83,6 +83,7 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 	// KP: using a selector gets around the "failed to launch application in time" if the startup code takes too long
 	[self performSelector:@selector(performInit:) withObject:nil afterDelay:0.2f];
 	
+    return YES;
 }
 
 - (void)performInit:(id)object
@@ -206,23 +207,6 @@ bool (*iOShandleUrlCallback)(chstr url) = NULL;
 	// for our purposes, we don't need to differentiate entering foreground
 	// from becoming active
 	[self applicationDidBecomeActive:application];
-}
-///////////////////////////
-// utils and handlers for apps 
-// that need push notifications
-///////////////////////////
-#pragma mark Push notifications
-
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
-	if(onPushRegistrationSuccess)
-		onPushRegistrationSuccess(deviceToken);
-}
-
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-{
-	if(onPushRegistrationFailure)
-		onPushRegistrationFailure(error);
 }
 
 - (void)dealloc
