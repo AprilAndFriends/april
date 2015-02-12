@@ -105,12 +105,12 @@ namespace april
 		hstr cancel;
 		_makeButtonLabels(&ok, &yes, &no, &cancel, buttonMask, customButtonTitles);
 		// create Java strings from hstr
-		jstring jTitle = (title != "" ? env->NewStringUTF(title.c_str()) : NULL);
-		jstring jText = (text != "" ? env->NewStringUTF(text.c_str()) : NULL);
-		jstring jOk = (ok != "" ? env->NewStringUTF(ok.c_str()) : NULL);
-		jstring jYes = (yes != "" ? env->NewStringUTF(yes.c_str()) : NULL);
-		jstring jNo = (no != "" ? env->NewStringUTF(no.c_str()) : NULL);
-		jstring jCancel = (cancel != "" ? env->NewStringUTF(cancel.c_str()) : NULL);
+		jstring jTitle = (title != "" ? env->NewStringUTF(title.cStr()) : NULL);
+		jstring jText = (text != "" ? env->NewStringUTF(text.cStr()) : NULL);
+		jstring jOk = (ok != "" ? env->NewStringUTF(ok.cStr()) : NULL);
+		jstring jYes = (yes != "" ? env->NewStringUTF(yes.cStr()) : NULL);
+		jstring jNo = (no != "" ? env->NewStringUTF(no.cStr()) : NULL);
+		jstring jCancel = (cancel != "" ? env->NewStringUTF(cancel.cStr()) : NULL);
 		jint jIconId = 0;
 		if ((style & MESSAGE_STYLE_INFO) || (style & MESSAGE_STYLE_QUESTION))
 		{

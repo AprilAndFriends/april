@@ -94,7 +94,7 @@ namespace april
 			y = (screenHeight - h) / 2;
 		}
 		// create window
-		this->hWnd = CreateWindowExW(exstyle, APRIL_WIN32_WINDOW_CLASS, this->title.w_str().c_str(), style, x, y, w, h, NULL, NULL, hinst, NULL);
+		this->hWnd = CreateWindowExW(exstyle, APRIL_WIN32_WINDOW_CLASS, this->title.wcStr(), style, x, y, w, h, NULL, NULL, hinst, NULL);
 		// display the window on the screen
 		ShowWindow(this->hWnd, SW_SHOWNORMAL);
 		UpdateWindow(this->hWnd);
@@ -133,11 +133,11 @@ namespace april
 			// optimization to prevent setting title every frame
 			if (t == this->fpsTitle) return;
 			this->fpsTitle = t;
-			SetWindowTextW(this->hWnd, t.w_str().c_str());
+			SetWindowTextW(this->hWnd, t.wcStr());
 		}
 		else
 		{
-			SetWindowTextW(this->hWnd, title.w_str().c_str());
+			SetWindowTextW(this->hWnd, title.wcStr());
 		}
 		this->title = title;
 	}

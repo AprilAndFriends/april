@@ -129,7 +129,7 @@ namespace april
 	{
 		if (!this->created)
 		{
-			hlog::writef(april::logTag, "Creating rendersystem: '%s' (options: %s)", this->name.c_str(), options.toString().c_str());
+			hlog::writef(april::logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
 			this->created = true;
 			this->options = options;
 			this->depthBufferEnabled = false;
@@ -144,7 +144,7 @@ namespace april
 	{
 		if (this->created)
 		{
-			hlog::writef(april::logTag, "Destroying rendersystem '%s'.", this->name.c_str());
+			hlog::writef(april::logTag, "Destroying rendersystem '%s'.", this->name.cStr());
 			// creating a copy, because deleting a texture modifies this->textures
 			harray<Texture*> textures = this->textures;
 			foreach (Texture*, it, textures)
@@ -280,46 +280,46 @@ namespace april
 
 	Texture* RenderSystem::getRenderTarget()
 	{
-		hlog::warnf(april::logTag, "Render targets are not implemented in render system '%s'!", this->name.c_str());
+		hlog::warnf(april::logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
 	void RenderSystem::setRenderTarget(Texture* texture)
 	{
-		hlog::warnf(april::logTag, "Render targets are not implemented in render system '%s'!", this->name.c_str());
+		hlog::warnf(april::logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	void RenderSystem::setPixelShader(april::PixelShader* pixelShader)
 	{
-		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.c_str());
+		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	void RenderSystem::setVertexShader(april::VertexShader* vertexShader)
 	{
-		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.c_str());
+		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	april::PixelShader* RenderSystem::createPixelShader()
 	{
-		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.c_str());
+		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
 	april::PixelShader* RenderSystem::createPixelShader(chstr filename)
 	{
-		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.c_str());
+		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
 	april::VertexShader* RenderSystem::createVertexShader()
 	{
-		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.c_str());
+		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
 	april::VertexShader* RenderSystem::createVertexShader(chstr filename)
 	{
-		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.c_str());
+		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
@@ -560,13 +560,13 @@ namespace april
 	
 	april::Image* RenderSystem::takeScreenshot(Image::Format format)
 	{
-		hlog::warnf(april::logTag, "Screenshots are not implemented in render system '%s'!", this->name.c_str());
+		hlog::warnf(april::logTag, "Screenshots are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
 	void RenderSystem::_setResolution(int w, int h, bool fullscreen)
 	{
-		hlog::warnf(april::logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.c_str());
+		hlog::warnf(april::logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int nVertices)

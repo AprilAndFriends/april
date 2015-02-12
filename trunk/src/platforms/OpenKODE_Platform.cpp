@@ -117,7 +117,7 @@ namespace april
 //			debug_log(hsprintf("getting os version - 2: %p", obj));
 //			jstring jstr = (jstring) obj;
 //			hstr str = _JSTR_TO_HSTR(jstr);
-//			debug_log(hsprintf("getting os version - 3: %s", str.c_str()));
+//			debug_log(hsprintf("getting os version - 3: %s", str.cStr()));
 //			harray<hstr> osVersions = str.split('.');
 	
 			hstr majorVersion = osVersions.remove_first();
@@ -209,17 +209,17 @@ namespace april
 		{
 			// order is reversed because libKD prefers the colored button to be at place [1], at least on iOS
 			// if this is going to be changed for a new platform, ifdef the button order for iOS
-			buttons[1] = ok.c_str();
-			buttons[0] = cancel.c_str();
+			buttons[1] = ok.cStr();
+			buttons[0] = cancel.cStr();
 			resultButtons[1] = MESSAGE_BUTTON_OK;
 			resultButtons[0] = MESSAGE_BUTTON_CANCEL;
 			indexCancel = 0;
 		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			buttons[1] = yes.c_str();
-			buttons[0] = no.c_str();
-			buttons[2] = cancel.c_str();
+			buttons[1] = yes.cStr();
+			buttons[0] = no.cStr();
+			buttons[2] = cancel.cStr();
 			resultButtons[1] = MESSAGE_BUTTON_YES;
 			resultButtons[0] = MESSAGE_BUTTON_NO;
 			resultButtons[2] = MESSAGE_BUTTON_CANCEL;
@@ -227,19 +227,19 @@ namespace april
 		}
 		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
-			buttons[0] = ok.c_str();
+			buttons[0] = ok.cStr();
 			resultButtons[0] = MESSAGE_BUTTON_OK;
 			indexCancel = 0;
 		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
-			buttons[1] = yes.c_str();
-			buttons[0] = no.c_str();
+			buttons[1] = yes.cStr();
+			buttons[0] = no.cStr();
 			resultButtons[1] = MESSAGE_BUTTON_YES;
 			resultButtons[0] = MESSAGE_BUTTON_NO;
 			indexCancel = 1;
 		}
-		int index = kdShowMessage(title.c_str(), text.c_str(), buttons);
+		int index = kdShowMessage(title.cStr(), text.cStr(), buttons);
 		if (index == -1)
 		{
 			index = indexCancel;

@@ -182,7 +182,7 @@ namespace april
 		if (!this->created)
 		{
 			hlog::writef(april::logTag, "Creating window: '%s' (%d, %d) %s, '%s', (options: %s)",
-				this->name.c_str(), w, h, fullscreen ? "fullscreen" : "windowed", title.c_str(), options.toString().c_str());
+				this->name.cStr(), w, h, fullscreen ? "fullscreen" : "windowed", title.cStr(), options.toString().cStr());
 			this->fullscreen = fullscreen;
 			this->title = title;
 			this->options = options;
@@ -219,7 +219,7 @@ namespace april
 	{
 		if (this->created)
 		{
-			hlog::writef(april::logTag, "Destroying window '%s'.", this->name.c_str());
+			hlog::writef(april::logTag, "Destroying window '%s'.", this->name.cStr());
 			this->created = false;
 			this->fps = 0;
 			this->fpsCount = 0;
@@ -339,7 +339,7 @@ namespace april
 
 	void Window::setResolution(int w, int h, bool fullscreen)
 	{
-		hlog::warnf(april::logTag, "setResolution() is not available in '%s'.", this->name.c_str());
+		hlog::warnf(april::logTag, "setResolution() is not available in '%s'.", this->name.cStr());
 	}
 
 	void Window::toggleHotkeyFullscreen()
@@ -759,7 +759,7 @@ namespace april
 
 	april::Cursor* Window::_createCursor()
 	{
-		hlog::warnf(april::logTag, "Cursors are not available in '%s'.", this->name.c_str());
+		hlog::warnf(april::logTag, "Cursors are not available in '%s'.", this->name.cStr());
 		return NULL;
 	}
 

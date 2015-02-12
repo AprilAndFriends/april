@@ -156,7 +156,7 @@ namespace april
 		static hmap<hstr, int> counters;
 		int count = counters[prefix] + 1;
 		counters[prefix] = count;
-		return prefix.replace(".", "_") + hstr(count);
+		return prefix.replaced(".", "_") + hstr(count);
 	}
 
 	hstr gvec2ToHstr(gvec2 vector)
@@ -181,7 +181,7 @@ namespace april
 		{
 			throw Exception("Cannot convert string '" + string + "' to gtypes::Vector2.");
 		}
-		return gvec2(data[0].trim(), data[1].trim());
+		return gvec2(data[0].trimmed(), data[1].trimmed());
 	}
 
 	gvec3 hstrToGvec3(chstr string)
@@ -191,7 +191,7 @@ namespace april
 		{
 			throw Exception("Cannot convert string '" + string + "' to gtypes::Vector3.");
 		}
-		return gvec3(data[0].trim(), data[1].trim(), data[2].trim());
+		return gvec3(data[0].trimmed(), data[1].trimmed(), data[2].trimmed());
 	}
 
 	grect hstrToGrect(chstr string)
@@ -201,7 +201,7 @@ namespace april
 		{
 			throw Exception("Cannot convert string '" + string + "' to gtypes::Rectangle.");
 		}
-		return grect(data[0].trim(), data[1].trim(), data[2].trim(), data[3].trim());
+		return grect(data[0].trimmed(), data[1].trimmed(), data[2].trimmed(), data[3].trimmed());
 	}
 
 }

@@ -65,16 +65,16 @@ namespace april
 				locale, (LOCALE_NAME_MAX_LENGTH - 1) * sizeof(wchar_t));
 			if (length > 0)
 			{
-				info.locale = hstr::from_unicode(locale);
+				info.locale = hstr::fromUnicode(locale);
 			}
 			length = GetLocaleInfoW(LOCALE_USER_DEFAULT, LOCALE_SISO3166CTRYNAME,
 				locale, (LOCALE_NAME_MAX_LENGTH - 1) * sizeof(wchar_t));
 			if (length > 0)
 			{
-				info.localeVariant = hstr::from_unicode(locale);
+				info.localeVariant = hstr::fromUnicode(locale);
 			}
-			info.locale = info.locale.lower();
-			info.localeVariant = info.localeVariant.upper();
+			info.locale = info.locale.lowered();
+			info.localeVariant = info.localeVariant.uppered();
 		}
 		return info;
 	}
@@ -170,7 +170,7 @@ namespace april
 		{
 			hwnd = (HWND)april::window->getBackendId();
 		}
-		int button = MessageBoxW(hwnd, text.w_str().c_str(), title.w_str().c_str(), type);
+		int button = MessageBoxW(hwnd, text.wcStr(), title.wcStr(), type);
 		_messageBoxResult(button);
 	}
 
