@@ -357,13 +357,13 @@ namespace april
 	{
 		NSString* resources = [[NSBundle mainBundle] resourcePath];
 		NSString* file;
-		if (filename.starts_with("/"))
+		if (filename.startsWith("/"))
 		{
-			file = [NSString stringWithUTF8String:filename.c_str()];
+			file = [NSString stringWithUTF8String:filename.cStr()];
 		}
 		else
 		{
-			file = [resources stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.c_str()]];
+			file = [resources stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.cStr()]];
 		}
 		NSURL * url = [NSURL URLWithString:[@"file://" stringByAppendingString:[file stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] ]];
 		return url;
@@ -409,7 +409,7 @@ namespace april
 #ifdef _OPENKODE
 		NSString *pvrfilename = [NSString stringWithUTF8String:("res/" + filename).c_str()];
 #else
-		NSString *pvrfilename = [NSString stringWithUTF8String:filename.c_str()];
+		NSString *pvrfilename = [NSString stringWithUTF8String:filename.cStr()];
 #endif
 		hstr path = [pvrfilename UTF8String], archive = hresource::getArchive();
 		if (archive != "") path = hdir::joinPath(archive, path);

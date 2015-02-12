@@ -343,7 +343,7 @@ namespace april
 		if (param == "exit_function")
 		{
 			unsigned long ptr;
-			sscanf(value.c_str(), "%lu", &ptr);
+			sscanf(value.cStr(), "%lu", &ptr);
 			this->exitFunction = (void (*)(int)) ptr;
 		}
 		if (param == "CADisplayLink::updateInterval" && glview != nil)
