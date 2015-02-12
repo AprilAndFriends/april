@@ -309,11 +309,11 @@ namespace april
 			// optimization to prevent setting title every frame
 			if (t == this->fpsTitle) return;
 			this->fpsTitle = t;
-			[mWindow _setTitle:[NSString stringWithUTF8String:t.c_str()]];
+			[mWindow _setTitle:[NSString stringWithUTF8String:t.cStr()]];
 		}
 		else
 		{
-			[mWindow _setTitle:[NSString stringWithUTF8String:title.c_str()]];
+			[mWindow _setTitle:[NSString stringWithUTF8String:title.cStr()]];
 		}
 		this->title = title;
 	}
@@ -395,7 +395,7 @@ namespace april
 
     void Mac_Window::queueMessageBox(chstr title, harray<hstr> argButtons, harray<MessageBoxButton> argButtonTypes, chstr text, void (*callback)(MessageBoxButton))
     {
-#define ns(s) [NSString stringWithUTF8String:s.c_str()]
+#define ns(s) [NSString stringWithUTF8String:s.cStr()]
         [mWindow showAlertView:ns(title) button1:ns(argButtons[0]) button2:ns(argButtons[1]) button3:ns(argButtons[2]) btn1_t:argButtonTypes[0] btn2_t:argButtonTypes[1] btn3_t:argButtonTypes[2] text:ns(text) callback:callback];
     }
     

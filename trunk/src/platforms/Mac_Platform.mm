@@ -163,8 +163,8 @@ namespace april
 			{
 				info.locale = fullLocale;
 			}
-			info.locale = info.locale.lower();
-			info.localeVariant = info.localeVariant.upper();
+			info.locale = info.locale.lowered();
+			info.localeVariant = info.localeVariant.uppered();
 		}
 		return info;
 	}
@@ -200,45 +200,45 @@ namespace april
 		
 		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK").c_str()];
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK").cStr()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").cStr()];
 			buttonTypes[0] = MESSAGE_BUTTON_OK;
 			buttonTypes[1] = MESSAGE_BUTTON_CANCEL;
 		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").c_str()];
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").c_str()];
-			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
+			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").cStr()];
 			buttonTypes[0] = MESSAGE_BUTTON_YES;
 			buttonTypes[1] = MESSAGE_BUTTON_NO;
 			buttonTypes[2] = MESSAGE_BUTTON_CANCEL;
 		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").c_str()];
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
+			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
 			buttonTypes[0] = MESSAGE_BUTTON_YES;
 			buttonTypes[1] = MESSAGE_BUTTON_NO;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_CANCEL)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").cStr()];
 			buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK").cStr()];
 			buttonTypes[0] = MESSAGE_BUTTON_OK;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_YES)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
 			buttonTypes[0] = MESSAGE_BUTTON_YES;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_NO)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").c_str()];
+			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
 			buttonTypes[0] = MESSAGE_BUTTON_NO;
 		}
 		
