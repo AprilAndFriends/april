@@ -11,15 +11,15 @@
 void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 {
 	// for future reference, look here: http://www.everymac.com/ultimate-mac-lookup/?search_keywords=iPad3%2C4
-	if (name.starts_with("iPad"))
+	if (name.startsWith("iPad"))
 	{
-		if (name.starts_with("iPad1"))
+		if (name.startsWith("iPad1"))
 		{
 			info.name = "iPad1";
 			info.ram = 256;
 			info.displayDpi = 132;
 		}
-		else if (name.starts_with("iPad2"))
+		else if (name.startsWith("iPad2"))
 		{
 			info.name = "iPad2";
 			info.ram = 512;
@@ -32,7 +32,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			else
 				info.displayDpi = 132;
 		}
-		else if (name.starts_with("iPad3"))
+		else if (name.startsWith("iPad3"))
 		{
 			if (name == "iPad3,4" || name == "iPad3,5" || name == "iPad3,6") // iPad4
 			{
@@ -46,7 +46,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.cpuCores = 2;
 			info.displayDpi = 264;
 		}
-		else if (name.starts_with("iPad4"))
+		else if (name.startsWith("iPad4"))
 		{
 			info.name = "iPad Air";
 			info.ram = 1024;
@@ -67,7 +67,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.displayDpi = 264;
 		}
 	}
-	else if (name.starts_with("iPhone"))
+	else if (name.startsWith("iPhone"))
 	{
 		if (name == "iPhone1,1")
 		{
@@ -87,34 +87,34 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.ram = 256;
 			info.displayDpi = 163;
 		}
-		else if (name.starts_with("iPhone3"))
+		else if (name.startsWith("iPhone3"))
 		{
 			info.name = "iPhone4";
 			info.ram = 512;
 			info.displayDpi = 326;
 		}
-		else if (name.starts_with("iPhone4"))
+		else if (name.startsWith("iPhone4"))
 		{
 			info.name = "iPhone4S";
 			info.cpuCores = 2;
 			info.ram = 512;
 			info.displayDpi = 326;
 		}
-		else if (name.starts_with("iPhone5"))
+		else if (name.startsWith("iPhone5"))
 		{
 			info.name = "iPhone5";
 			info.cpuCores = 2;
 			info.ram = 1024;
 			info.displayDpi = 326;
 		}
-		else if (name.starts_with("iPhone6"))
+		else if (name.startsWith("iPhone6"))
 		{
 			info.name = "iPhone5S";
 			info.cpuCores = 2;
 			info.ram = 1024;
 			info.displayDpi = 326;
 		}
-		else if (name.starts_with("iPhone7,1"))
+		else if (name.startsWith("iPhone7,1"))
 		{
 			// iPhone6Plus has a resolution of 2208x1242 but is downscaled to 1920x1080
 			// The physical DPI is 401, but because of this, it is better to use the upscaled equivalent DPI of 461
@@ -123,7 +123,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.ram = 1024;
 			info.displayDpi = 461;
 		}
-		else if (name.starts_with("iPhone7,2"))
+		else if (name.startsWith("iPhone7,2"))
 		{
 			info.name = "iPhone6";
 			info.cpuCores = 2;
@@ -137,7 +137,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.displayDpi = 326;
 		}
 	}
-	else if (name.starts_with("iPod"))
+	else if (name.startsWith("iPod"))
 	{
 		if (name == "iPod1,1")
 		{
@@ -177,7 +177,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.displayDpi = 326;
 		}
 	}
-	else if (name.starts_with("x86")) // iPhone Simulator
+	else if (name.startsWith("x86")) // iPhone Simulator
 	{
 		int w = info.displayResolution.x, h = info.displayResolution.y;
 		if ((float) w / h >= 3.0f / 2.0f) // iPhone
