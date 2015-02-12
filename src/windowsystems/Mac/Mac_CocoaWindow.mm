@@ -228,7 +228,7 @@ static bool gFullscreenToggleRequest = false;
 	[self setWindowedStyleMask];
 	[self setFrame:mWindowedRect display:YES];
 	// for some reason, MacOSX 10.9 forgets the title after returning from fullscreen..
-	[self setTitle:[NSString stringWithUTF8String:aprilWindow->getTitle().c_str()]];
+	[self setTitle:[NSString stringWithUTF8String:aprilWindow->getTitle().cStr()]];
 
 
 }
@@ -432,7 +432,7 @@ static bool gFullscreenToggleRequest = false;
 		}
 	}
 	// setting title again because Cocoa forgets it for some reason when swiching from fullscreen
-	[self _setTitle:[NSString stringWithUTF8String:aprilWindow->getTitle().c_str()]];
+	[self _setTitle:[NSString stringWithUTF8String:aprilWindow->getTitle().cStr()]];
 }
 
 - (void)keyDown:(NSEvent*) event
@@ -532,11 +532,11 @@ static bool gFullscreenToggleRequest = false;
     MessageBoxParams* p_params = (MessageBoxParams*)[_params pointerValue];
     MessageBoxParams params = *p_params;
     delete p_params;
-    NSString* title = [NSString stringWithUTF8String:params.title.c_str()];
-    NSString* text = [NSString stringWithUTF8String:params.text.c_str()];
-    NSString* button1 = [NSString stringWithUTF8String:params.button1.c_str()];
-    NSString* button2 = [NSString stringWithUTF8String:params.button2.c_str()];
-    NSString* button3 = [NSString stringWithUTF8String:params.button3.c_str()];
+    NSString* title = [NSString stringWithUTF8String:params.title.cStr()];
+    NSString* text = [NSString stringWithUTF8String:params.text.cStr()];
+    NSString* button1 = [NSString stringWithUTF8String:params.button1.cStr()];
+    NSString* button2 = [NSString stringWithUTF8String:params.button2.cStr()];
+    NSString* button3 = [NSString stringWithUTF8String:params.button3.cStr()];
 
     int clicked = NSRunAlertPanel(title, @"%@", button1, button2, button3, text);
     switch (clicked)
