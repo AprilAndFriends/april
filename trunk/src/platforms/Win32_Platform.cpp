@@ -170,7 +170,7 @@ namespace april
 		{
 			hwnd = (HWND)april::window->getBackendId();
 		}
-		int button = MessageBoxW(hwnd, text.wcStr(), title.wcStr(), type);
+		int button = MessageBoxW(hwnd, text.wStr().c_str(), title.wStr().c_str(), type);
 		_messageBoxResult(button);
 	}
 

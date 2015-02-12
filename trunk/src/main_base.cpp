@@ -25,7 +25,7 @@ namespace april
 			instanceName = fallbackName;
 		}
 		instanceName = instanceName.replaced("\\", "/");
-		lockMutex = CreateMutexW(NULL, true, instanceName.wcStr());
+		lockMutex = CreateMutexW(NULL, true, instanceName.wStr().c_str());
 		if (lockMutex != 0 && GetLastError() == ERROR_ALREADY_EXISTS)
 		{
 			CloseHandle(lockMutex);
