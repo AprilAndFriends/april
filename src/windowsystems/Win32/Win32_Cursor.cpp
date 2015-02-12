@@ -47,7 +47,7 @@ namespace april
 		{
 			return false;
 		}
-		this->cursor = LoadCursorFromFileW(path.w_str().c_str());
+		this->cursor = LoadCursorFromFileW(path.wcStr());
 		return true;
 	}
 	

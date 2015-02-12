@@ -56,11 +56,11 @@ namespace april
 	{
 		if (april::classLoader == NULL)
 		{
-			return env->FindClass(classPath.c_str());
+			return env->FindClass(classPath.cStr());
 		}
 		jclass classClassLoader = env->GetObjectClass(april::classLoader);
 		jmethodID methodLoadClass = env->GetMethodID(classClassLoader, "loadClass", _JARGS(_JCLASS("java/lang/Class"), _JSTR _JBOOL));
-		jstring jClassPath = env->NewStringUTF(classPath.c_str());
+		jstring jClassPath = env->NewStringUTF(classPath.cStr());
 		jboolean jInitialize = JNI_TRUE;
 		return (jclass)env->CallObjectMethod(april::classLoader, methodLoadClass, jClassPath, jInitialize);
 	}

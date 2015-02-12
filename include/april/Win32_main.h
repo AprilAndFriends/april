@@ -37,7 +37,7 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCm
 	int argc = 0;
 	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);
 #ifdef __SINGLE_INSTANCE
-	if (!april::__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::from_unicode(wArgv[0])))
+	if (!april::__lockSingleInstanceMutex(hstr::fromUnicode(__APRIL_SINGLE_INSTANCE_NAME), hstr::fromUnicode(wArgv[0])))
 	{
 		LocalFree(wArgv);
 		return 0;
@@ -47,9 +47,9 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCm
 	hstr arg;
 	for_iter (i, 0, argc)
 	{
-		arg = hstr::from_unicode(wArgv[i]);
+		arg = hstr::fromUnicode(wArgv[i]);
 		argv[i] = new char[arg.size() + 1];
-		memcpy(argv[i], arg.c_str(), sizeof(char) * (arg.size() + 1));
+		memcpy(argv[i], arg.cStr(), sizeof(char) * (arg.size() + 1));
 	}
 	LocalFree(wArgv);
 	// call the user specified main function

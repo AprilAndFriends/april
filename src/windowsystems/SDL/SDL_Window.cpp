@@ -109,7 +109,7 @@ namespace april
 			flags |= SDL_WINDOW_OPENGL;
 		}
 #endif
-		this->window = SDL_CreateWindow(this->title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, flags);
+		this->window = SDL_CreateWindow(this->title.cStr(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, flags);
 		if (this->window == NULL)
 		{
 			hlog::error(april::logTag, "SDL window could not be created!");
@@ -148,7 +148,7 @@ namespace april
 	void SDL_Window::setTitle(chstr value)
 	{
 		Window::setTitle(value);
-		SDL_SetWindowTitle(this->window, this->title.c_str());
+		SDL_SetWindowTitle(this->window, this->title.cStr());
 	}
 	
 	bool SDL_Window::isCursorVisible()

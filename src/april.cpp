@@ -197,7 +197,7 @@ namespace april
 
 	void _finishInit()
 	{
-		hlog::writef(april::logTag, "Using: %s, %s", april::rendersys->getName().c_str(), april::window->getName().c_str());
+		hlog::writef(april::logTag, "Using: %s, %s", april::rendersys->getName().cStr(), april::window->getName().cStr());
 		april::getSystemInfo(); // required to be initialized on certain platforms
 	}
 

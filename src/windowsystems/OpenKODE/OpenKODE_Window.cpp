@@ -177,7 +177,7 @@ namespace april
 		}
 		KDint32 size[] = {w, h};
 		kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_SIZE, size);
-		kdSetWindowPropertycv(this->kdWindow, KD_WINDOWPROPERTY_CAPTION, title.c_str());
+		kdSetWindowPropertycv(this->kdWindow, KD_WINDOWPROPERTY_CAPTION, title.cStr());
 		if (this->launchDelay > 0)
 		{
 			hlog::writef(april::logTag, "launch_delay param set to %.1f, waiting", this->launchDelay);
@@ -236,7 +236,7 @@ namespace april
 	void OpenKODE_Window::setTitle(chstr title)
 	{
 		this->title = title;
-		kdSetWindowPropertycv(this->kdWindow, KD_WINDOWPROPERTY_CAPTION, this->title.c_str());
+		kdSetWindowPropertycv(this->kdWindow, KD_WINDOWPROPERTY_CAPTION, this->title.cStr());
 	}
 	
 	bool OpenKODE_Window::isCursorVisible()

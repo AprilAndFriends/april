@@ -314,23 +314,23 @@ namespace april
 	Image* Image::createFromResource(chstr filename)
 	{
 		hresource file;
-		if (filename.lower().ends_with(".png"))
+		if (filename.lowered().endsWith(".png"))
 		{
 			file.open(filename);
 			return Image::_loadPng(file);
 		}
-		if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
+		if (filename.lowered().endsWith(".jpg") || filename.lowered().endsWith(".jpeg"))
 		{
 			file.open(filename);
 			return Image::_loadJpg(file);
 		}
-		if (filename.lower().ends_with(".jpt"))
+		if (filename.lowered().endsWith(".jpt"))
 		{
 			file.open(filename);
 			return Image::_loadJpt(file);
 		}
 #if _IMAGE_PVR
-		if (filename.lower().ends_with(".pvr"))
+		if (filename.lowered().endsWith(".pvr"))
 		{
 			file.open(filename);
 			return Image::_loadPvr(file);
@@ -338,7 +338,7 @@ namespace april
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
 		{
-			if (filename.lower().ends_with(it->first.lower()))
+			if (filename.lowered().endsWith(it->first.lowered()))
 			{
 				file.open(filename);
 				return (*it->second)(file);
@@ -366,23 +366,23 @@ namespace april
 	Image* Image::createFromFile(chstr filename)
 	{
 		hfile file;
-		if (filename.lower().ends_with(".png"))
+		if (filename.lowered().endsWith(".png"))
 		{
 			file.open(filename);
 			return Image::_loadPng(file);
 		}
-		if (filename.lower().ends_with(".jpg") || filename.lower().ends_with(".jpeg"))
+		if (filename.lowered().endsWith(".jpg") || filename.lowered().endsWith(".jpeg"))
 		{
 			file.open(filename);
 			return Image::_loadJpg(file);
 		}
-		if (filename.lower().ends_with(".jpt"))
+		if (filename.lowered().endsWith(".jpt"))
 		{
 			file.open(filename);
 			return Image::_loadJpt(file);
 		}
 #if _IMAGE_PVR
-		if (filename.lower().ends_with(".pvr"))
+		if (filename.lowered().endsWith(".pvr"))
 		{
 			file.open(filename);
 			return Image::_loadPvr(file);
@@ -390,7 +390,7 @@ namespace april
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
 		{
-			if (filename.lower().ends_with(it->first.lower()))
+			if (filename.lowered().endsWith(it->first.lowered()))
 			{
 				file.open(filename);
 				return (*it->second)(file);
@@ -417,27 +417,27 @@ namespace april
 
 	Image* Image::createFromStream(hsbase& stream, chstr logicalExtension)
 	{
-		if (logicalExtension.lower().ends_with(".png"))
+		if (logicalExtension.lowered().endsWith(".png"))
 		{
 			return Image::_loadPng(stream);
 		}
-		if (logicalExtension.lower().ends_with(".jpg") || logicalExtension.lower().ends_with(".jpeg"))
+		if (logicalExtension.lowered().endsWith(".jpg") || logicalExtension.lowered().endsWith(".jpeg"))
 		{
 			return Image::_loadJpg(stream);
 		}
-		if (logicalExtension.lower().ends_with(".jpt"))
+		if (logicalExtension.lowered().endsWith(".jpt"))
 		{
 			return Image::_loadJpt(stream);
 		}
 #ifdef _IMAGE_PVR
-		if (logicalExtension.lower().ends_with(".pvr"))
+		if (logicalExtension.lowered().endsWith(".pvr"))
 		{
 			return Image::_loadPvr(stream);
 		}
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
 		{
-			if (logicalExtension.lower().ends_with(it->first.lower()))
+			if (logicalExtension.lowered().endsWith(it->first.lowered()))
 			{
 				return (*it->second)(stream);
 			}
