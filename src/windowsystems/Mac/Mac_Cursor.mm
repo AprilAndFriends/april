@@ -43,13 +43,13 @@ namespace april
 		NSImage* image;
 		hstr path;
 		
-		if (filename.ends_with(".plist"))
+		if (filename.endsWith(".plist"))
 		{
 			hresource f;
 			f.open(filename);
 			hstr contents = f.read();
 			f.close();
-			NSData* plistData = [[NSString stringWithUTF8String:contents.c_str()] dataUsingEncoding:NSUTF8StringEncoding];
+			NSData* plistData = [[NSString stringWithUTF8String:contents.cStr()] dataUsingEncoding:NSUTF8StringEncoding];
 			NSString *error;
 			NSPropertyListFormat format;
 			NSDictionary* plist = [NSPropertyListSerialization propertyListFromData:plistData mutabilityOption:NSPropertyListImmutable format:&format errorDescription:&error];
@@ -87,7 +87,7 @@ namespace april
 		{
 			path = hdir::joinPath(archive, path);
 		}
-		image = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.c_str()]];
+		image = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.cStr()]];
 
 		if (!image)
 		{
