@@ -73,8 +73,8 @@ namespace april
 				{
 					info.locale = fullLocale;
 				}
-				info.locale = info.locale.lower();
-				info.localeVariant = info.localeVariant.upper();
+				info.locale = info.locale.lowered();
+				info.localeVariant = info.localeVariant.uppered();
 			}
 			info.osVersion = 8.1f;
 		}
