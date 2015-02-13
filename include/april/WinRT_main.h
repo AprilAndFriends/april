@@ -50,9 +50,9 @@ int main(Platform::Array<Platform::String^>^ args)
 	hstr arg;
 	for_iter (i, 0, argc)
 	{
-		arg = hstr::from_unicode(args[i]->Data());
+		arg = hstr::fromUnicode(args[i]->Data());
 		argv[i] = new char[arg.size() + 1];
-		memcpy(argv[i], arg.c_str(), sizeof(char) * (arg.size() + 1));
+		memcpy(argv[i], arg.cStr(), sizeof(char) * (arg.size() + 1));
 	}
 	// call the user specified main function
 	int result = __april_main(april_init, april_destroy, argc, argv);

@@ -715,9 +715,9 @@ namespace april
 			if (index >= 0)
 			{
 				// loading the color string
-				colorString = colorString(0, index).ltrim('#');
+				colorString = colorString(0, index).trimmedLeft('#');
 				this->backgroundColor = april::Color::Black;
-				if (colorString.is_hex() && colorString.size() >= 6)
+				if (colorString.isHex() && colorString.size() >= 6)
 				{
 					if (colorString.size() > 6)
 					{
