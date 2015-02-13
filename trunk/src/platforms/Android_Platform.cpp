@@ -57,8 +57,8 @@ namespace april
 			info.locale = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetLocale));
 			jmethodID methodGetLocaleVariant = env->GetStaticMethodID(classNativeInterface, "getLocaleVariant", _JARGS(_JSTR, ));
 			info.localeVariant = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetLocaleVariant));
-			info.locale = info.locale.lower();
-			info.localeVariant = info.localeVariant.upper();
+			info.locale = info.locale.lowered();
+			info.localeVariant = info.localeVariant.uppered();
 			// OS version
 			jmethodID methodGetOsVersion = env->GetStaticMethodID(classNativeInterface, "getOsVersion", _JARGS(_JSTR, ));
 			harray<hstr> osVersions = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)).split('.');
