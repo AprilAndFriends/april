@@ -28,7 +28,7 @@
 int main(int argc, char** argv)
 {
 #ifdef __SINGLE_INSTANCE
-	if (!april::__lockSingleInstanceMutex(hstr::from_unicode(__APRIL_SINGLE_INSTANCE_NAME), argv[0]))
+	if (!april::__lockSingleInstanceMutex(hstr::fromUnicode(__APRIL_SINGLE_INSTANCE_NAME), argv[0]))
 	{
 		return 0;
 	}
