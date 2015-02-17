@@ -636,17 +636,17 @@ namespace april
 			return NULL;
 		}
 		// finding the logo entry in XML
-		int logoIndex = data.find(attributeName + "=\"");
+		int logoIndex = data.indexOf(attributeName + "=\"");
 		if (logoIndex >= 0)
 		{
 			index = logoIndex + hstr(attributeName + "=\"").size();
 			hstr logoFilename = data(index, -1);
-			index = logoFilename.find("\"");
+			index = logoFilename.indexOf("\"");
 			if (index >= 0)
 			{
 				logoFilename = logoFilename(0, index);
 				harray<hstr> filenames;
-				index = logoFilename.rfind('.');
+				index = logoFilename.rindexOf('.');
 				// adding those ".scale-x" things here, because my prayers went unanswered and Microsoft decided to change the format after all
 #ifndef _WINP8 // for some unknown reason, on WinP8 "ResolutionScale" keeps throwing deprecated warnings and "RawPixelsPerViewPixel" is not available on normal WinRT
 				filenames += logoFilename(0, index) + ".scale-" + hstr((int)DisplayInformation::GetForCurrentView()->ResolutionScale);
@@ -705,13 +705,13 @@ namespace april
 		{
 			return;
 		}
-		// finding the color entry in XML
-		int colorIndex = data.find("BackgroundColor=\"");
+		// finding the color indexOf in XML
+		int colorIndex = data.indexOf("BackgroundColor=\"");
 		if (colorIndex >= 0)
 		{
 			index = colorIndex + hstr("BackgroundColor=\"").size();
 			hstr colorString = data(index, -1);
-			index = colorString.find("\"");
+			index = colorString.indexOf('"');
 			if (index >= 0)
 			{
 				// loading the color string
@@ -737,19 +737,19 @@ namespace april
 		}
 		data = hfile::hread(MANIFEST_FILENAME); // lets hope Microsoft does not change the format of these
 		// locating the right entry in XML
-		index = data.find("<Applications>");
+		index = data.indexOf("<Applications>");
 		if (index < 0)
 		{
 			return false;
 		}
 		data = data(index, -1);
-		index = data.find("<Application ");
+		index = data.indexOf("<Application ");
 		if (index < 0)
 		{
 			return false;
 		}
 		data = data(index, -1);
-		index = data.find("<" NODE_PREFIX + nodeName + " ");
+		index = data.indexOf("<" NODE_PREFIX + nodeName + " ");
 		if (index < 0)
 		{
 			return false;
