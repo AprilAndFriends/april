@@ -90,6 +90,17 @@ namespace april
 #endif
 	}
 	
+	void KD_APIENTRY _processEventWindowFocus(const KDEvent* evt)
+	{
+		switch (evt->type)
+		{
+		case KD_EVENT_WINDOW_FOCUS:
+			hlog::writef(logTag, "OpenKODE window focus change event received: %d", evt->data.windowfocus.focusstate);
+			april::window->handleActivityChangeEvent(evt->data.windowfocus.focusstate != 0);
+			break;
+		}
+	}
+
 	void KD_APIENTRY _processEventLowMemory(const KDEvent* evt)
 	{
 		switch (evt->type)
@@ -101,9 +112,9 @@ namespace april
 				april::window->handleLowMemoryWarning();
 			}
 			break;
-		}
 	}
-	
+}
+
 	OpenKODE_Window::OpenKODE_Window() : Window()
 	{
 #if TARGET_OS_IPHONE
@@ -196,6 +207,7 @@ namespace april
 		april::egl->create();
 #endif
 		kdInstallCallback(&_processEventPause, KD_EVENT_PAUSE, NULL);
+		kdInstallCallback(&_processEventWindowFocus, KD_EVENT_WINDOW_FOCUS, NULL);
 		kdInstallCallback(&_processEventLowMemory, KD_EVENT_LOWMEM, NULL);
 		return true;
 	}
@@ -207,6 +219,7 @@ namespace april
 			return false;
 		}
 		kdInstallCallback(NULL, KD_EVENT_PAUSE, NULL);
+		kdInstallCallback(NULL, KD_EVENT_WINDOW_FOCUS, NULL);
 		kdInstallCallback(NULL, KD_EVENT_LOWMEM, NULL);
 #ifdef _EGL
 		april::egl->destroy();
@@ -358,10 +371,6 @@ namespace april
 			return true;
 		case KD_EVENT_WINDOW_CLOSE:
 			this->handleQuitRequest(true);
-			return true;
-		case KD_EVENT_WINDOW_FOCUS:
-			hlog::writef(logTag, "OpenKODE window focus change event received: %d", evt->data.windowfocus.focusstate);
-			this->handleActivityChangeEvent(evt->data.windowfocus.focusstate != 0);
 			return true;
 		case KD_EVENT_INPUT:
 			if (evt->data.input.value.i != 0)
