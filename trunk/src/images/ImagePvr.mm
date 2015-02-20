@@ -407,7 +407,7 @@ namespace april
 	{
 		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
 #ifdef _OPENKODE
-		NSString *pvrfilename = [NSString stringWithUTF8String:("res/" + filename).c_str()];
+		NSString *pvrfilename = [NSString stringWithUTF8String:("res/" + filename).cStr()];
 #else
 		NSString *pvrfilename = [NSString stringWithUTF8String:filename.cStr()];
 #endif
