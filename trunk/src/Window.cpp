@@ -411,7 +411,7 @@ namespace april
 		}
 		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
 		MouseInputEvent mouseEvent;
-		gvec2 cummulativeScroll;
+		gvec2 cumulativeScroll;
 		while (this->mouseEvents.size() > 0)
 		{
 			mouseEvent = this->mouseEvents.remove_first();
@@ -421,11 +421,11 @@ namespace april
 			}
 			if (mouseEvent.type == Window::MOUSE_SCROLL)
 			{
-				cummulativeScroll += mouseEvent.position;
+				cumulativeScroll += mouseEvent.position;
 				if (this->mouseEvents.size() == 0 || this->mouseEvents.first().type != Window::MOUSE_SCROLL)
 				{
-					this->handleMouseEvent(mouseEvent.type, cummulativeScroll, mouseEvent.keyCode);
-					cummulativeScroll.set(0.0f, 0.0f);
+					this->handleMouseEvent(mouseEvent.type, cumulativeScroll, mouseEvent.keyCode);
+					cumulativeScroll.set(0.0f, 0.0f);
 				}
 			}
 			// if not a scroll event or final move event (because of merging)
