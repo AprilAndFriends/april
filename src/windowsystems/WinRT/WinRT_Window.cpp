@@ -64,7 +64,7 @@ namespace april
 			harray<hstr> mappings;
 			foreach_m (unsigned int, it, this->cursorMappings)
 			{
-				mappings += hsprintf("%u %s", it->second, it->first.c_str());
+				mappings += hsprintf("%u %s", it->second, it->first.cStr());
 			}
 			return mappings.join('\n');
 		}
