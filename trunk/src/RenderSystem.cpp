@@ -112,7 +112,8 @@ namespace april
 	{
 		if (this->hasAsyncTexturesQueued())
 		{
-			foreach(Texture*, it, this->textures)
+			harray<Texture*> textures = this->getTextures();
+			foreach (Texture*, it, textures)
 			{
 				if ((*it)->isAsyncLoadQueued())
 				{
@@ -146,7 +147,7 @@ namespace april
 		{
 			hlog::writef(april::logTag, "Destroying rendersystem '%s'.", this->name.cStr());
 			// creating a copy, because deleting a texture modifies this->textures
-			harray<Texture*> textures = this->textures;
+			harray<Texture*> textures = this->getTextures();
 			foreach (Texture*, it, textures)
 			{
 				delete (*it);
@@ -164,6 +165,12 @@ namespace april
 	void RenderSystem::reset()
 	{
 		hlog::write(april::logTag, "Resetting rendersystem.");
+	}
+
+	harray<Texture*> RenderSystem::getTextures()
+	{
+		hmutex::ScopeLock lock(&this->texturesMutex);
+		return this->textures;
 	}
 
 	harray<RenderSystem::DisplayMode> RenderSystem::getSupportedDisplayModes()
@@ -246,7 +253,8 @@ namespace april
 	unsigned long long RenderSystem::getVRamConsumption()
 	{
 		unsigned long long result = 0;
-		foreach (Texture*, it, this->textures)
+		harray<Texture*> textures = this->getTextures();
+		foreach (Texture*, it, textures)
 		{
 			result += (*it)->getCurrentVRamSize();
 		}
@@ -256,7 +264,8 @@ namespace april
 	unsigned long long RenderSystem::getRamConsumption()
 	{
 		unsigned long long result = 0;
-		foreach (Texture*, it, this->textures)
+		harray<Texture*> textures = this->getTextures();
+		foreach (Texture*, it, textures)
 		{
 			result += (*it)->getCurrentRamSize();
 		}
@@ -266,7 +275,8 @@ namespace april
 	unsigned long long RenderSystem::getAsyncRamConsumption()
 	{
 		unsigned long long result = 0;
-		foreach (Texture*, it, this->textures)
+		harray<Texture*> textures = this->getTextures();
+		foreach (Texture*, it, textures)
 		{
 			result += (*it)->getCurrentAsyncRamSize();
 		}
@@ -406,7 +416,8 @@ namespace april
 
 	void RenderSystem::unloadTextures()
 	{
-		foreach (Texture*, it, this->textures)
+		harray<Texture*> textures = this->getTextures();
+		foreach (Texture*, it, textures)
 		{
 			(*it)->unload();
 		}

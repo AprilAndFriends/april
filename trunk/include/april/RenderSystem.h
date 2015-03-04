@@ -94,7 +94,7 @@ namespace april
 
 		HL_DEFINE_GET(hstr, name, Name);
 		HL_DEFINE_GET(Options, options, Options);
-		HL_DEFINE_GET(harray<Texture*>, textures, Textures);
+		harray<Texture*> getTextures();
 		HL_DEFINE_GET(grect, viewport, Viewport);
 		HL_DEFINE_GET(gmat4, modelviewMatrix, ModelviewMatrix);
 		void setModelviewMatrix(gmat4 matrix);
@@ -196,6 +196,7 @@ namespace april
 		gmat4 projectionMatrix;
 		grect orthoProjection;
 		Caps caps;
+		hmutex texturesMutex;
 
 		Texture* _createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format = Image::FORMAT_INVALID);
 		virtual Texture* _createTexture(bool fromResource) = 0;
