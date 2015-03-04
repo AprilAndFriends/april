@@ -112,6 +112,7 @@ namespace april
 		this->asyncLoadDiscarded = false;
 		this->fromResource = fromResource;
 		this->firstUpload = true;
+		hmutex::ScopeLock lock(&april::rendersys->texturesMutex);
 		april::rendersys->textures += this;
 	}
 
@@ -245,12 +246,14 @@ namespace april
 			hlog::error(april::logTag, "Texture implementation does not call unload() in destructor! This cause problems and memory leaks!");
 		}
 		this->waitForAsyncLoad(); // waiting for all async stuff to finish
+		hmutex::ScopeLock lock(&april::rendersys->texturesMutex);
 		april::rendersys->textures -= this;
+		lock.release();
 		if (this->data != NULL)
 		{
 			delete[] this->data;
 		}
-		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		lock.acquire(&this->asyncLoadMutex);
 		this->asyncLoadQueued = false;
 		this->asyncLoadDiscarded = false;
 		if (this->dataAsync != NULL)
