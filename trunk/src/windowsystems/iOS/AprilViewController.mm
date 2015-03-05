@@ -18,6 +18,8 @@ static UIImageView *mImageView;
 @implementation AprilViewController
 bool g_wnd_rotating = 0;
 
+UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandscape;
+
 -(id)init
 {
 	self = [super init];
@@ -277,13 +279,12 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation // used in iOS versions older than iOS6
 {
-	// Return YES for supported orientations
-	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+    return (gSupportedOrientations & (1 << interfaceOrientation)) != 0;
 }
 
 -(NSUInteger) supportedInterfaceOrientations // used in iOS6+ only
 {
-	return UIInterfaceOrientationMaskLandscape;
+    return gSupportedOrientations;
 }
 
 - (void)didReceiveMemoryWarning
