@@ -250,6 +250,11 @@ namespace april
         argButtonTypes += buttonTypes[0];
         argButtonTypes += buttonTypes[1];
         argButtonTypes += buttonTypes[2];
+		if (aprilWindow == NULL)
+		{
+			printf("ERROR: %s\n", text.cStr());
+			exit(1);
+		}
         aprilWindow->queueMessageBox(title, argButtons, argButtonTypes, text, callback);
 	}
 	
