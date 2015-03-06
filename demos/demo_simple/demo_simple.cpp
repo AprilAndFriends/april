@@ -156,13 +156,13 @@ void april_init(const harray<hstr>& args)
 	// or ObjC APIs to find files. 
 	ObjCUtil_setCWD(NULL);
 #endif
+	srand((unsigned int)htime());
 	updateDelegate = new UpdateDelegate();
 	systemDelegate = new SystemDelegate();
 	mouseDelegate = new MouseDelegate();
 #if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
-	srand(get_system_time());
 	dv[0].x = 0.0f;			dv[0].y = 0.0f;			dv[0].z = 0.0f;	dv[0].u = 0.0f;	dv[0].v = 0.0f;
 	dv[1].x = drawRect.w;	dv[1].y = 0.0f;			dv[1].z = 0.0f;	dv[1].u = 1.0f;	dv[1].v = 0.0f;
 	dv[2].x = 0.0f;			dv[2].y = drawRect.h;	dv[2].z = 0.0f;	dv[2].u = 0.0f;	dv[2].v = 1.0f;

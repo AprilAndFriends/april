@@ -82,7 +82,7 @@ class MouseDelegate : public april::MouseDelegate
 
 void april_init(const harray<hstr>& args)
 {
-	srand(get_system_time());
+	srand((unsigned int)htime());
 	april::init(new CustomRenderSystem(), new CustomWindow());
 	april::createRenderSystem();
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple Interface");
