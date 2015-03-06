@@ -125,6 +125,7 @@ void april_init(const harray<hstr>& args)
 		CFRelease(url);
 	}
 #endif
+	srand((unsigned int)htime());
 	updateDelegate = new UpdateDelegate();
 	systemDelegate = new SystemDelegate();
 #if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
