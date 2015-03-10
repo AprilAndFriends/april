@@ -57,11 +57,11 @@ namespace april
 		{
 			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
 #ifndef _WINRT
-			this->caps.npotTexturesLimited = (extensions.has("IMG_texture_npot") || extensions.has("APPLE_texture_2D_limited_npot"));
+			this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
 #else
 			this->caps.npotTexturesLimited = true;
 #endif
-			this->caps.npotTextures = (extensions.has("OES_texture_npot") || extensions.has("ARB_texture_non_power_of_two"));
+			this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
 		}
 		return OpenGL_RenderSystem::_setupCaps();
 	}
@@ -76,7 +76,7 @@ namespace april
 		{
 			// determine if blend separation is possible on first call to this function
 			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-			blendSeparationSupported = extensions.has("OES_blend_equation_separate") && extensions.has("OES_blend_func_separate");
+			blendSeparationSupported = extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate");
 		}
 		if (blendSeparationSupported)
 		{
