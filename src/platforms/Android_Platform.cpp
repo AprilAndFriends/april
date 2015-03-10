@@ -62,12 +62,12 @@ namespace april
 			// OS version
 			jmethodID methodGetOsVersion = env->GetStaticMethodID(classNativeInterface, "getOsVersion", _JARGS(_JSTR, ));
 			harray<hstr> osVersions = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)).split('.');
-			hstr majorVersion = osVersions.remove_first();
-			hstr minorVersion = osVersions.join("");
+			hstr majorVersion = osVersions.removeFirst();
+			hstr minorVersion = osVersions.joined("");
 			osVersions.clear();
 			osVersions += majorVersion;
 			osVersions += minorVersion;
-			info.osVersion = (float)osVersions.join('.');
+			info.osVersion = (float)osVersions.joined('.');
 		}
 		return info;
 	}
