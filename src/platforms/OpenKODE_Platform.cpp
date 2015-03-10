@@ -88,7 +88,7 @@ namespace april
 			// misc
 #if TARGET_OS_IPHONE // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
 			hstr model = kdQueryAttribcv(KD_ATTRIB_PLATFORM);
-			if (model.contains("(") && model.contains(")"))
+			if (model.has("(") && model.has(")"))
 			{
 				hstr a, b;
 				model.split("(",a, b);
@@ -162,11 +162,11 @@ namespace april
 			debug_log("getting locale");
 			info.locale = "en"; // default is "en"
 			hstr fullLocale = hstr(kdGetLocale());
-			if (fullLocale.contains("-"))
+			if (fullLocale.has("-"))
 			{
 				fullLocale.split("-", info.locale, info.localeVariant);
 			}
-			else if (fullLocale.contains("_"))
+			else if (fullLocale.has("_"))
 			{
 				fullLocale.split("_", info.locale, info.localeVariant);
 			}
