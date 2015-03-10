@@ -57,7 +57,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	harray<hstr> argv;
 	for (int i = 0; i < gArgc; i++)
 	{
-		argv.push_back(gArgv[i]);
+		argv.add(gArgv[i]);
 	}
 	gAprilInit(argv);
 	// register for sleep/wake notifications, needed for proper handling

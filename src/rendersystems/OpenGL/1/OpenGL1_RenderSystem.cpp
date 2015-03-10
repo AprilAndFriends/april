@@ -109,11 +109,11 @@ namespace april
 		if (this->caps.maxTextureSize == 0)
 		{
 			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-			if (extensions.has("ARB_texture_non_power_of_two"))
+			if (extensions.contains("ARB_texture_non_power_of_two"))
 			{
 				this->caps.npotTexturesLimited = true;
 				// this isn't 100% sure, but it's a pretty good indicator that NPOT textures should be fully supported on this hardware
-				if (extensions.has("ARB_fragment_program"))
+				if (extensions.contains("ARB_fragment_program"))
 				{
 					int value = 0;
 					glGetIntegerv(GL_MAX_TEXTURE_SIZE, &value);
@@ -137,7 +137,7 @@ namespace april
 		{
 			// determine if blend separation is possible on first call to this function
 			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-			blendSeparationSupported = extensions.has("EXT_blend_equation_separate") && extensions.has("EXT_blend_func_separate");
+			blendSeparationSupported = extensions.contains("EXT_blend_equation_separate") && extensions.contains("EXT_blend_func_separate");
 		}
 		if (blendSeparationSupported)
 		{
