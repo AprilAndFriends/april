@@ -141,7 +141,7 @@ namespace april
 		{
 			options += "none";
 		}
-		return options.join(',');
+		return options.joined(',');
 	}
 	
 	Window::Window()
@@ -406,7 +406,7 @@ namespace april
 		KeyInputEvent keyEvent;
 		while (this->keyEvents.size() > 0)
 		{
-			keyEvent = this->keyEvents.remove_first();
+			keyEvent = this->keyEvents.removeFirst();
 			this->handleKeyEvent(keyEvent.type, keyEvent.keyCode, keyEvent.charCode);
 		}
 		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
@@ -414,7 +414,7 @@ namespace april
 		gvec2 cumulativeScroll;
 		while (this->mouseEvents.size() > 0)
 		{
-			mouseEvent = this->mouseEvents.remove_first();
+			mouseEvent = this->mouseEvents.removeFirst();
 			if (mouseEvent.type != Window::MOUSE_CANCEL && mouseEvent.type != Window::MOUSE_SCROLL)
 			{
 				this->cursorPosition = mouseEvent.position;
@@ -438,19 +438,19 @@ namespace april
 		TouchInputEvent touchEvent;
 		while (this->touchEvents.size() > 0)
 		{
-			touchEvent = this->touchEvents.remove_first();
+			touchEvent = this->touchEvents.removeFirst();
 			this->handleTouchEvent(touchEvent.touches);
 		}
 		ControllerInputEvent controllerEvent;
 		while (this->controllerEvents.size() > 0)
 		{
-			controllerEvent = this->controllerEvents.remove_first();
+			controllerEvent = this->controllerEvents.removeFirst();
 			this->handleControllerEvent(controllerEvent.type, controllerEvent.buttonCode);
 		}
 		ControllerAxisInputEvent controllerAxisEvent;
 		while (this->controllerAxisEvents.size() > 0)
 		{
-			controllerAxisEvent = this->controllerAxisEvents.remove_first();
+			controllerAxisEvent = this->controllerAxisEvents.removeFirst();
 			this->handleControllerAxisEvent(controllerAxisEvent.type, controllerAxisEvent.buttonCode, controllerAxisEvent.axisValue);
 		}
 	}
@@ -664,7 +664,7 @@ namespace april
 			{
 				return;
 			}
-			this->touches.remove_at(index);
+			this->touches.removeAt(index);
 			break;
 		case MOUSE_MOVE:
 			if (index >= this->touches.size()) // MOVE event of an unindexed touch, never happened so far
@@ -676,7 +676,7 @@ namespace april
 		case MOUSE_CANCEL: // canceling a particular pointer, required by specific systems (e.g. WinRT)
 			if (index < this->touches.size())
 			{
-				this->touches.remove_at(index);
+				this->touches.removeAt(index);
 				if (this->touches.size() == 0)
 				{
 					this->multiTouchActive = false;

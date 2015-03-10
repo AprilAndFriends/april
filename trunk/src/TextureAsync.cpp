@@ -92,20 +92,20 @@ namespace april
 		{
 			return false;
 		}
-		int index = TextureAsync::textures.index_of(texture);
+		int index = TextureAsync::textures.indexOf(texture);
 		if (index >= TextureAsync::streams.size()) // if not loaded from disk yet
 		{
 			if (index > TextureAsync::streams.size()) // if not already at the front
 			{
-				TextureAsync::textures.remove_at(index);
-				TextureAsync::textures.insert_at(TextureAsync::streams.size(), texture);
+				TextureAsync::textures.removeAt(index);
+				TextureAsync::textures.insertAt(TextureAsync::streams.size(), texture);
 			}
 		}
 		else if (index > 0) // if data was already loaded in RAM, but not decoded and not already at the front
 		{
-			TextureAsync::textures.remove_at(index);
-			TextureAsync::textures.push_first(texture);
-			TextureAsync::streams.push_first(TextureAsync::streams.remove_at(index));
+			TextureAsync::textures.removeAt(index);
+			TextureAsync::textures.addFirst(texture);
+			TextureAsync::streams.addFirst(TextureAsync::streams.removeAt(index));
 		}
 		return true;
 	}
@@ -137,7 +137,7 @@ namespace april
 				lock.release();
 				stream = texture->_prepareAsyncStream();
 				lock.acquire(&TextureAsync::queueMutex);
-				index = TextureAsync::textures.index_of(texture); // it's possible that the queue was rearranged in the meantime
+				index = TextureAsync::textures.indexOf(texture); // it's possible that the queue was rearranged in the meantime
 				if (stream != NULL)
 				{
 					if (index >= TextureAsync::streams.size())
@@ -145,19 +145,19 @@ namespace april
 						if (index > TextureAsync::streams.size()) // if texture was moved towards the back of the queue
 						{
 							// put it back to the current decoder position
-							TextureAsync::textures.remove_at(index);
-							TextureAsync::textures.insert_at(TextureAsync::streams.size(), texture);
+							TextureAsync::textures.removeAt(index);
+							TextureAsync::textures.insertAt(TextureAsync::streams.size(), texture);
 						}
 						TextureAsync::streams += stream;
 					}
 					else // the texture was moved forward in the queue
 					{
-						TextureAsync::streams.insert_at(index, stream);
+						TextureAsync::streams.insertAt(index, stream);
 					}
 				}
 				else // it was canceled
 				{
-					TextureAsync::textures.remove_at(index);
+					TextureAsync::textures.removeAt(index);
 				}
 			}
 			size = TextureAsync::streams.size();
@@ -182,7 +182,7 @@ namespace april
 				{
 					if (!TextureAsync::decoderThreads[i]->isRunning())
 					{
-						decoderThread = TextureAsync::decoderThreads.remove_at(i);
+						decoderThread = TextureAsync::decoderThreads.removeAt(i);
 						decoderThread->join();
 						delete decoderThread;
 						--i;
@@ -199,8 +199,8 @@ namespace april
 		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
 		while (TextureAsync::streams.size() > 0)
 		{
-			texture = TextureAsync::textures.remove_first();
-			stream = TextureAsync::streams.remove_first();
+			texture = TextureAsync::textures.removeFirst();
+			stream = TextureAsync::streams.removeFirst();
 			lock.release();
 			texture->_decodeFromAsyncStream(stream);
 			delete stream;
