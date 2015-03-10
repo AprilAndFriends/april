@@ -104,7 +104,7 @@ namespace april
 		renderSystems += APRIL_RS_OPENGL1;
 		renderSystems += APRIL_RS_OPENGLES1;
 		renderSystems += APRIL_RS_OPENGLES2;
-		if (renderSystems.contains(april::rendersys->getName()))
+		if (renderSystems.has(april::rendersys->getName()))
 		{
 			flags |= SDL_WINDOW_OPENGL;
 		}
@@ -321,7 +321,7 @@ namespace april
 		renderSystems += APRIL_RS_OPENGL1;
 		renderSystems += APRIL_RS_OPENGLES1;
 		renderSystems += APRIL_RS_OPENGLES2;
-		if (renderSystems.contains(april::rendersys->getName()))
+		if (renderSystems.has(april::rendersys->getName()))
 		{
 			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
 		}

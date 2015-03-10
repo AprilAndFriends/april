@@ -72,7 +72,7 @@ namespace april
 			cpus = april::getSystemInfo().cpuCores;
 		}
 		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
-		if (TextureAsync::textures.contains(texture))
+		if (TextureAsync::textures.has(texture))
 		{
 			return false;
 		}
@@ -88,7 +88,7 @@ namespace april
 	bool TextureAsync::prioritizeLoad(Texture* texture)
 	{
 		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
-		if (!TextureAsync::textures.contains(texture))
+		if (!TextureAsync::textures.has(texture))
 		{
 			return false;
 		}
