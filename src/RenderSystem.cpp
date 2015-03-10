@@ -94,7 +94,7 @@ namespace april
 		{
 			options += "none";
 		}
-		return options.join(',');
+		return options.joined(',');
 	}
 	
 	RenderSystem::RenderSystem()
