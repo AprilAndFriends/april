@@ -120,12 +120,12 @@ namespace april
 //			debug_log(hsprintf("getting os version - 3: %s", str.cStr()));
 //			harray<hstr> osVersions = str.split('.');
 	
-			hstr majorVersion = osVersions.remove_first();
-			hstr minorVersion = osVersions.join("");
+			hstr majorVersion = osVersions.removeFirst();
+			hstr minorVersion = osVersions.joined("");
 			osVersions.clear();
 			osVersions += majorVersion;
 			osVersions += minorVersion;
-			info.osVersion = (float)osVersions.join('.');
+			info.osVersion = (float)osVersions.joined('.');
 #endif
 			// RAM size
 #if TARGET_IPHONE_SIMULATOR
