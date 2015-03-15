@@ -258,11 +258,11 @@ static bool gFullscreenToggleRequest = false;
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueMouseEvent(april::Window::MOUSE_DOWN, pos, [self getMouseButtonCode:event]);
+        aprilWindow->queueMouseEvent(april::Window::MOUSE_DOWN, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
     }
     else
     {
-        aprilWindow->handleMouseEvent(april::Window::MOUSE_DOWN, pos, [self getMouseButtonCode:event]);
+        aprilWindow->handleMouseEvent(april::Window::MOUSE_DOWN, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
     }
 }
 
@@ -283,11 +283,11 @@ static bool gFullscreenToggleRequest = false;
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueMouseEvent(april::Window::MOUSE_UP, pos, [self getMouseButtonCode:event]);
+        aprilWindow->queueMouseEvent(april::Window::MOUSE_UP, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
     }
     else
     {
-        aprilWindow->handleMouseEvent(april::Window::MOUSE_UP, pos, [self getMouseButtonCode:event]);
+        aprilWindow->handleMouseEvent(april::Window::MOUSE_UP, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
     
     }
 }
@@ -309,11 +309,11 @@ static bool gFullscreenToggleRequest = false;
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueMouseEvent(april::Window::MOUSE_MOVE, pos, april::AK_NONE);
+        aprilWindow->queueMouseEvent(april::Window::MOUSE_MOVE, pos * aprilWindow->scalingFactor, april::AK_NONE);
     }
     else
     {
-        aprilWindow->handleMouseEvent(april::Window::MOUSE_MOVE, pos, april::AK_NONE);
+        aprilWindow->handleMouseEvent(april::Window::MOUSE_MOVE, pos * aprilWindow->scalingFactor, april::AK_NONE);
     }
 	
 	// Hack for Lion fullscreen bug, when the user moves the cursor quickly to and from the dock area,
