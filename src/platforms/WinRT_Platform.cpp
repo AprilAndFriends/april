@@ -172,7 +172,7 @@ namespace april
 				messageBoxQueueMutex.lock();
 				if (messageBoxQueue.size() > 0)
 				{
-					handler = messageBoxQueue.remove_first();
+					handler = messageBoxQueue.removeFirst();
 				}
 				messageBoxQueueMutex.unlock();
 				if (handler != nullptr)

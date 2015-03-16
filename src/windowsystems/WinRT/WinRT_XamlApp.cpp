@@ -389,7 +389,7 @@ namespace april
 #endif
 			april::window->setInputMode(april::Window::TOUCH);
 			id = args->CurrentPoint->PointerId;
-			index = this->pointerIds.index_of(id);
+			index = this->pointerIds.indexOf(id);
 			if (index < 0)
 			{
 				index = this->pointerIds.size();
@@ -424,14 +424,14 @@ namespace april
 #endif
 			april::window->setInputMode(april::Window::TOUCH);
 			id = args->CurrentPoint->PointerId;
-			index = this->pointerIds.index_of(id);
+			index = this->pointerIds.indexOf(id);
 			if (index < 0)
 			{
 				index = this->pointerIds.size();
 			}
 			else
 			{
-				this->pointerIds.remove_at(index);
+				this->pointerIds.removeAt(index);
 			}
 			april::window->queueTouchEvent(april::Window::MOUSE_UP, position, index);
 #ifndef _WINP8
@@ -463,7 +463,7 @@ namespace april
 #endif
 			april::window->setInputMode(april::Window::TOUCH);
 			id = args->CurrentPoint->PointerId;
-			index = this->pointerIds.index_of(id);
+			index = this->pointerIds.indexOf(id);
 			if (index < 0)
 			{
 				index = this->pointerIds.size();
@@ -665,7 +665,7 @@ namespace april
 				filenames += logoFilename(0, index) + ".scale-80";
 #endif
 				filenames += logoFilename(0, index);
-				filenames.remove_duplicates();
+				filenames.removeDuplicates();
 				foreach (hstr, it, filenames)
 				{
 					// loading the logo file
