@@ -32,7 +32,7 @@ namespace april
 		/// @note Some formats are intended to improve speed with the underlying engine if really needed. *X* formats are always 4 BPP even if that byte is not used.
 		enum Format
 		{
-			FORMAT_INVALID,
+			FORMAT_INVALID = 0,
 			FORMAT_RGBA,
 			FORMAT_ARGB,
 			FORMAT_BGRA,

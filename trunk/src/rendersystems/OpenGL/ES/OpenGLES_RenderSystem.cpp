@@ -63,6 +63,10 @@ namespace april
 #endif
 			this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
 		}
+#ifdef _ANDROID // Android has problems with alpha textures in some implementations
+		this->caps.textureFormats /= Image::FORMAT_ALPHA;
+		this->caps.textureFormats /= Image::FORMAT_GRAYSCALE;
+#endif
 		return OpenGL_RenderSystem::_setupCaps();
 	}
 

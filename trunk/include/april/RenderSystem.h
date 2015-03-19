@@ -24,6 +24,7 @@
 #include "aprilExport.h"
 #include "aprilUtil.h"
 #include "Color.h"
+#include "Image.h"
 #include "RenderState.h"
 #include "Texture.h"
 
@@ -78,6 +79,7 @@ namespace april
 			int maxTextureSize;
 			bool npotTexturesLimited;
 			bool npotTextures;
+			harray<Image::Format> textureFormats;
 
 			Caps();
 			~Caps();

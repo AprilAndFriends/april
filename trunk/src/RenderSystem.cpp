@@ -77,6 +77,20 @@ namespace april
 		this->maxTextureSize = 0;
 		this->npotTexturesLimited = false;
 		this->npotTextures = false;
+		this->textureFormats += Image::FORMAT_ABGR;
+		this->textureFormats += Image::FORMAT_RGBA;
+		this->textureFormats += Image::FORMAT_ARGB;
+		this->textureFormats += Image::FORMAT_BGRA;
+		this->textureFormats += Image::FORMAT_ABGR;
+		this->textureFormats += Image::FORMAT_RGBX;
+		this->textureFormats += Image::FORMAT_XRGB;
+		this->textureFormats += Image::FORMAT_BGRX;
+		this->textureFormats += Image::FORMAT_XBGR;
+		this->textureFormats += Image::FORMAT_RGB;
+		this->textureFormats += Image::FORMAT_BGR;
+		this->textureFormats += Image::FORMAT_ALPHA;
+		this->textureFormats += Image::FORMAT_GRAYSCALE;
+		this->textureFormats += Image::FORMAT_PALETTE;
 	}
 
 	RenderSystem::Caps::~Caps()
@@ -366,6 +380,11 @@ namespace april
 
 	Texture* RenderSystem::_createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format)
 	{
+		if (format != Image::FORMAT_INVALID && !this->getCaps().textureFormats.has(format))
+		{
+			hlog::errorf(april::logTag, "Cannot create texture '%s', the texture format '%d' is not supported!", filename.cStr(), format);
+			return NULL;
+		}
 		hstr name = (fromResource ? this->findTextureResource(filename) : this->findTextureFile(filename));
 		if (name == "")
 		{
