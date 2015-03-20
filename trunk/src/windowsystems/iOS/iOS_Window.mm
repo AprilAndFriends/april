@@ -206,7 +206,7 @@ namespace april
 			return NULL;
 		}
 		this->inputEventsMutex = true;
-		InputEvent* e = this->inputEvents.pop_front();
+		InputEvent* e = this->inputEvents.removeFirst();
 		this->inputEventsMutex = false;
 		return e;
 	}
