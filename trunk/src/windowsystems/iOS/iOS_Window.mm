@@ -440,6 +440,11 @@ namespace april
 		return [glview isKeyboardActive];
 	}
 	
+	bool iOS_Window::isVirtualKeyboardActive()
+	{
+		return this->isVirtualKeyboardVisible();
+	}
+	
 	void iOS_Window::beginKeyboardHandling()
 	{
 		this->keyboardRequest = 1;

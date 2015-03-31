@@ -206,6 +206,7 @@ namespace april
 		virtual bool updateOneFrame();
 		virtual void checkEvents();
 		virtual void terminateMainLoop();
+		virtual bool isVirtualKeyboardActive() { return false; }
 		virtual inline void beginKeyboardHandling() { }
 		virtual inline void terminateKeyboardHandling() { }
 		virtual hstr findCursorFile(chstr filename);
