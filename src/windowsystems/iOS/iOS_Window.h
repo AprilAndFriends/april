@@ -53,6 +53,8 @@ namespace april
 		void* getBackendId();
 		void checkEvents();
 		bool isVirtualKeyboardVisible();
+		
+		bool isVirtualKeyboardActive();
 		void beginKeyboardHandling();
 		void terminateKeyboardHandling();
 		void terminateMainLoop();
