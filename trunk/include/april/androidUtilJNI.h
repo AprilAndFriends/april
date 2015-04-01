@@ -70,6 +70,10 @@ namespace april
 #define _JBOOL "Z"
 /// @brief Utility macro to define a float argument for a JNI function.
 #define _JFLOAT "F"
+/// @brief Utility macro to define a char argument for a JNI function.
+#define _JCHAR "C"
+/// @brief Utility macro to define a byte argument for a JNI function.
+#define _JBYTE "B"
 /// @brief Utility macro to define a void argument for a JNI function.
 #define _JVOID "V"
 
