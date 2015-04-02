@@ -81,6 +81,24 @@ namespace april
 		DisplayInformation^ displayInfo = DisplayInformation::GetForCurrentView();
 		// display DPI
 		info.displayDpi = displayInfo->RawDpiY;
+		if (info.displayDpi < 0.01f)
+		{
+			static bool displayDpiLogged = false;
+			if (!displayDpiLogged)
+			{
+				hlog::warn(april::logTag, "Cannot get raw display DPI, trying logical DPI.");
+			}
+			info.displayDpi = displayInfo->LogicalDpi;
+			if (info.displayDpi < 0.01f)
+			{
+				if (!displayDpiLogged)
+				{
+					hlog::warn(april::logTag, "Cannot get logical display DPI, defaulting to 96.");
+				}
+				info.displayDpi = 96.0f;
+			}
+			displayDpiLogged = true;
+		}
 #ifdef _WINRT_WINDOW
 		// display resolution
 		float dpiRatio = WinRT::getDpiRatio();
