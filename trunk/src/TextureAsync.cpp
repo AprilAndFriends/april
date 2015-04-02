@@ -125,39 +125,50 @@ namespace april
 		int size = 0;
 		bool running = true;
 		hmutex::ScopeLock lock;
+		int maxWaitingCount = 0;
 		while (running)
 		{
 			running = false;
+			maxWaitingCount = getMaxWaitingAsyncTextures(); // keep this value up to date in every iteration
 			// check for new queued textures
 			lock.acquire(&TextureAsync::queueMutex);
 			if (TextureAsync::textures.size() > TextureAsync::streams.size())
 			{
 				running = true;
-				texture = TextureAsync::textures[TextureAsync::streams.size()];
-				lock.release();
-				stream = texture->_prepareAsyncStream();
-				lock.acquire(&TextureAsync::queueMutex);
-				index = TextureAsync::textures.indexOf(texture); // it's possible that the queue was rearranged in the meantime
-				if (stream != NULL)
+				if (maxWaitingCount <= 0 || TextureAsync::streams.size() < maxWaitingCount)
 				{
-					if (index >= TextureAsync::streams.size())
+					texture = TextureAsync::textures[TextureAsync::streams.size()];
+					lock.release();
+					stream = texture->_prepareAsyncStream();
+					lock.acquire(&TextureAsync::queueMutex);
+					index = TextureAsync::textures.indexOf(texture); // it's possible that the queue was rearranged in the meantime
+					if (stream != NULL)
 					{
-						if (index > TextureAsync::streams.size()) // if texture was moved towards the back of the queue
+						if (index >= TextureAsync::streams.size())
 						{
-							// put it back to the current decoder position
-							TextureAsync::textures.removeAt(index);
-							TextureAsync::textures.insertAt(TextureAsync::streams.size(), texture);
+							if (index > TextureAsync::streams.size()) // if texture was moved towards the back of the queue
+							{
+								// put it back to the current decoder position
+								TextureAsync::textures.removeAt(index);
+								TextureAsync::textures.insertAt(TextureAsync::streams.size(), texture);
+							}
+							TextureAsync::streams += stream;
 						}
-						TextureAsync::streams += stream;
+						else // the texture was moved forward in the queue
+						{
+							TextureAsync::streams.insertAt(index, stream);
+						}
 					}
-					else // the texture was moved forward in the queue
+					else // it was canceled
 					{
-						TextureAsync::streams.insertAt(index, stream);
+						TextureAsync::textures.removeAt(index);
 					}
 				}
-				else // it was canceled
+				else
 				{
-					TextureAsync::textures.removeAt(index);
+					lock.release();
+					hthread::sleep(0.1f);
+					lock.acquire(&TextureAsync::queueMutex);
 				}
 			}
 			size = TextureAsync::streams.size();

@@ -180,6 +180,7 @@ namespace april
 
 	static harray<hstr> extensions;
 	static int maxAsyncTextureUploadsPerFrame = 0;
+	static int maxWaitingAsyncTextures = 0;
 
 	void _startInit()
 	{
@@ -433,6 +434,16 @@ namespace april
 	void setMaxAsyncTextureUploadsPerFrame(int value)
 	{
 		maxAsyncTextureUploadsPerFrame = value;
+	}
+
+	int getMaxWaitingAsyncTextures()
+	{
+		return maxWaitingAsyncTextures;
+	}
+
+	void setMaxWaitingAsyncTextures(int value)
+	{
+		maxWaitingAsyncTextures = value;
 	}
 
 }
