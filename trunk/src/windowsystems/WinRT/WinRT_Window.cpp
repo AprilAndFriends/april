@@ -66,7 +66,7 @@ namespace april
 			{
 				mappings += hsprintf("%u %s", it->second, it->first.cStr());
 			}
-			return mappings.join('\n');
+			return mappings.joined('\n');
 		}
 #else
 		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
