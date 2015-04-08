@@ -120,6 +120,7 @@
 		D153476A178AD62A00151D1A /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
 		D16AB63E16F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
 		D16AB63F16F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
+		D18B43301AD52CDD00406310 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D18B432F1AD52CDD00406310 /* CoreVideo.framework */; };
 		D197C5A415ED05F30017452F /* jpg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A015ED05F20017452F /* jpg.framework */; };
 		D197C5A515ED05F30017452F /* png.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A115ED05F20017452F /* png.framework */; };
 		D197C5A615ED05F30017452F /* zip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A215ED05F20017452F /* zip.framework */; };
@@ -421,6 +422,7 @@
 		D1681BA618D768400088FC68 /* iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = iOS.xcconfig; path = xcconfig/iOS.xcconfig; sourceTree = "<group>"; };
 		D1681BA718D768400088FC68 /* Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Mac.xcconfig; path = xcconfig/Mac.xcconfig; sourceTree = "<group>"; };
 		D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerDelegate.cpp; path = src/delegates/ControllerDelegate.cpp; sourceTree = "<group>"; };
+		D18B432F1AD52CDD00406310 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		D197C5A015ED05F20017452F /* jpg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = jpg.framework; path = ../../__build__/products/Debug/jpg.framework; sourceTree = "<group>"; };
 		D197C5A115ED05F20017452F /* png.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = png.framework; path = ../../__build__/products/Debug/png.framework; sourceTree = "<group>"; };
 		D197C5A215ED05F20017452F /* zip.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = zip.framework; path = ../../__build__/products/Debug/zip.framework; sourceTree = "<group>"; };
@@ -581,6 +583,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D18B43301AD52CDD00406310 /* CoreVideo.framework in Frameworks */,
 				D1AF66E3170B1E5900A43743 /* jpg.framework in Frameworks */,
 				D1AF66E4170B1E5900A43743 /* png.framework in Frameworks */,
 				D1AF66E5170B1E5900A43743 /* zip.framework in Frameworks */,
@@ -627,6 +630,7 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D18B432F1AD52CDD00406310 /* CoreVideo.framework */,
 				1058C7B0FEA5585E11CA2CBB /* Mac */,
 				1058C7B2FEA5585E11CA2CBB /* iOS */,
 			);
