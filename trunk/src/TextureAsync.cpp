@@ -167,7 +167,7 @@ namespace april
 				else
 				{
 					lock.release();
-					hthread::sleep(0.1f);
+					hthread::sleep(1.0f);
 					lock.acquire(&TextureAsync::queueMutex);
 				}
 			}
