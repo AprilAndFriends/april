@@ -104,6 +104,10 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
     hmutex::ScopeLock lock;
     if (displayLink)
     {
+		if (aprilWindow->shouldIgnoreUpdate())
+		{
+			return;
+		}
 #ifdef _OVERDRAW_DEBUG
         unsigned int t1, t2;
         t1 = htickCount();
@@ -131,7 +135,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
     }
     else
     {
-        if (aprilWindow->ignoreUpdate)
+        if (aprilWindow->shouldIgnoreUpdate())
         {
             mStartedDrawing = false;
             return;

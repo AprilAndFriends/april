@@ -56,7 +56,10 @@ namespace april
 		void OnAppLostFocus();
 		
 		void onFocusChanged(bool value);
-        
+		
+		bool shouldIgnoreUpdate();
+		void setIgnoreUpdateFlag(bool value);
+		
         void dispatchQueuedEvents();
         void queueWindowSizeChanged(int w, int h, bool fullscreen);
         void queueFocusChanged(bool focused);
@@ -67,6 +70,7 @@ namespace april
 		bool retainLoadingOverlay;
 		bool fastHideLoadingOverlay;
 		bool ignoreUpdate;
+		hmutex ignoreUpdateMutex;
 		bool splashScreenFadeout;
 		bool fpsCounter;
 		hstr fpsTitle;

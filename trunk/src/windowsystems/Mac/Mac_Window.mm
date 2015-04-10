@@ -320,7 +320,7 @@ namespace april
 	
 	bool Mac_Window::updateOneFrame()
 	{
-		if (this->ignoreUpdate)
+		if (this->shouldIgnoreUpdate())
 		{
 			return true;
 		}
@@ -352,10 +352,11 @@ namespace april
 	{
 		// presentFrame() calls are always manually called, so let's make sure
 		// Mac can update the view contents before we continue.
-		this->ignoreUpdate = true;
+		hmutex::ScopeLock lock;
+		this->setIgnoreUpdateFlag(true);
 		[mView presentFrame];
 		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.01]];
-		this->ignoreUpdate = false;
+		this->setIgnoreUpdateFlag(false);
 	}
 	
     void Mac_Window::dispatchQueuedEvents()
@@ -408,6 +409,25 @@ namespace april
 		return new Mac_Cursor();
 	}
 
+	bool Mac_Window::shouldIgnoreUpdate()
+	{
+		bool ret;
+		hmutex::ScopeLock lock;
+		lock.acquire(&this->ignoreUpdateMutex);
+		ret = this->ignoreUpdate;
+		lock.release();
+		
+		return ret;
+	}
+	
+	void Mac_Window::setIgnoreUpdateFlag(bool value)
+	{
+		hmutex::ScopeLock lock;
+		lock.acquire(&this->ignoreUpdateMutex);
+		this->ignoreUpdate = value;
+		lock.release();
+	}
+	
 	void Mac_Window::terminateMainLoop()
 	{
         [mWindow terminateMainLoop];
