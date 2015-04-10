@@ -509,7 +509,6 @@ namespace april
 
 	bool Texture::loadAsync()
 	{
-		return this->load();
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->dataAsync != NULL || this->loaded)
 		{
