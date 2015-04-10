@@ -119,7 +119,7 @@ namespace april
 		}
 	}
 
-	void DirectX9_Texture::_destroyInternalTexture()
+	bool DirectX9_Texture::_destroyInternalTexture()
 	{
 		if (this->d3dTexture != NULL)
 		{
@@ -130,7 +130,9 @@ namespace april
 			}
 			this->d3dTexture->Release();
 			this->d3dTexture = NULL;
+			return true;
 		}
+		return false;
 	}
 
 	IDirect3DSurface9* DirectX9_Texture::_getSurface()

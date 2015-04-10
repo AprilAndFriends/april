@@ -178,13 +178,15 @@ namespace april
 		}
 	}
 
-	void OpenGL_Texture::_destroyInternalTexture()
+	bool OpenGL_Texture::_destroyInternalTexture()
 	{
 		if (this->textureId != 0)
 		{
 			glDeleteTextures(1, &this->textureId);
 			this->textureId = 0;
+			return true;
 		}
+		return false;
 	}
 
 	Texture::Lock OpenGL_Texture::_tryLockSystem(int x, int y, int w, int h)

@@ -41,7 +41,7 @@ namespace april
 		bool renderTarget;
 
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
-		void _destroyInternalTexture();
+		bool _destroyInternalTexture();
 		void _assignFormat();
 
 		IDirect3DSurface9* _getSurface();

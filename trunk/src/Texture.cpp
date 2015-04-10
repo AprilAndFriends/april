@@ -509,6 +509,7 @@ namespace april
 
 	bool Texture::loadAsync()
 	{
+		return this->load();
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->dataAsync != NULL || this->loaded)
 		{
@@ -535,7 +536,7 @@ namespace april
 			}
 			if (this->height > 0)
 			{
-				err += "width is larger than 0.";
+				err += "height is larger than 0.";
 			}
 			hlog::warn(april::logTag, err);
 			return false;
@@ -555,7 +556,10 @@ namespace april
 
 	void Texture::unload()
 	{
-		this->_destroyInternalTexture();
+		if (this->_destroyInternalTexture())
+		{
+			hlog::write(april::logTag, "Unloading texture: " + this->_getInternalName());
+		}
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->loaded = false;
 		if (this->asyncLoadQueued)
