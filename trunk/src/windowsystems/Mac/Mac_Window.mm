@@ -320,6 +320,10 @@ namespace april
 	
 	bool Mac_Window::updateOneFrame()
 	{
+		if (this->ignoreUpdate)
+		{
+			return true;
+		}
 		if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
 		{
 			float scalingFactor = [NSScreen mainScreen].backingScaleFactor;
@@ -348,10 +352,10 @@ namespace april
 	{
 		// presentFrame() calls are always manually called, so let's make sure
 		// Mac can update the view contents before we continue.
-		ignoreUpdate = true;
+		this->ignoreUpdate = true;
 		[mView presentFrame];
 		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.01]];
-		ignoreUpdate = false;
+		this->ignoreUpdate = false;
 	}
 	
     void Mac_Window::dispatchQueuedEvents()
