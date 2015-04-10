@@ -42,7 +42,7 @@ namespace april
 		Type internalType;
 
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
-		void _destroyInternalTexture();
+		bool _destroyInternalTexture();
 		void _assignFormat();
 
 		Lock _tryLockSystem(int x, int y, int w, int h);

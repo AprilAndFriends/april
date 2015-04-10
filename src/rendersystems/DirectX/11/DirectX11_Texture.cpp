@@ -165,14 +165,16 @@ namespace april
 		}
 	}
 
-	void DirectX11_Texture::_destroyInternalTexture()
+	bool DirectX11_Texture::_destroyInternalTexture()
 	{
 		if (this->d3dTexture != nullptr)
 		{
 			this->d3dTexture = nullptr;
 			this->d3dView = nullptr;
 			this->d3dRenderTargetView = nullptr;
+			return true;
 		}
+		return false;
 	}
 	
 	Texture::Lock DirectX11_Texture::_tryLockSystem(int x, int y, int w, int h)
