@@ -264,35 +264,35 @@ namespace april
 		this->_setProjectionMatrix(this->projectionMatrix);
 	}
 
-	unsigned long long RenderSystem::getVRamConsumption()
+	int64_t RenderSystem::getVRamConsumption()
 	{
-		unsigned long long result = 0;
+		int64_t result = 0LL;
 		harray<Texture*> textures = this->getTextures();
 		foreach (Texture*, it, textures)
 		{
-			result += (*it)->getCurrentVRamSize();
+			result += (int64_t)(*it)->getCurrentVRamSize();
 		}
 		return result;
 	}
 
-	unsigned long long RenderSystem::getRamConsumption()
+	int64_t RenderSystem::getRamConsumption()
 	{
-		unsigned long long result = 0;
+		int64_t result = 0LL;
 		harray<Texture*> textures = this->getTextures();
 		foreach (Texture*, it, textures)
 		{
-			result += (*it)->getCurrentRamSize();
+			result += (int64_t)(*it)->getCurrentRamSize();
 		}
 		return result;
 	}
 
-	unsigned long long RenderSystem::getAsyncRamConsumption()
+	int64_t RenderSystem::getAsyncRamConsumption()
 	{
-		unsigned long long result = 0;
+		int64_t result = 0LL;
 		harray<Texture*> textures = this->getTextures();
 		foreach (Texture*, it, textures)
 		{
-			result += (*it)->getCurrentAsyncRamSize();
+			result += (int64_t)(*it)->getCurrentAsyncRamSize();
 		}
 		return result;
 	}

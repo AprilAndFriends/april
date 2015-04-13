@@ -77,14 +77,16 @@ namespace april
 		}
 	}
 	
-	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray _args)
+	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray jArgs)
 	{
 		harray<hstr> args;
-		int length = env->GetArrayLength(_args);
-		jstring jStr;
+		int length = env->GetArrayLength(jArgs);
+		jstring string;
 		for_iter (i, 0, length)
 		{
-			args += _JSTR_TO_HSTR((jstring)env->GetObjectArrayElement(_args, i));
+			string = (jstring)env->GetObjectArrayElement(jArgs, i);
+			args += _JSTR_TO_HSTR(string);
+			env->DeleteLocalRef(string);
 		}
 		hlog::debug(april::logTag, "Got args:");
 		foreach (hstr, it, args)

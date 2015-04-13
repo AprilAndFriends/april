@@ -94,6 +94,12 @@ namespace april
 		return path;
 	}
 	
+	int64_t getRamConsumption()
+	{
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodGetRamConsumption, "getRamConsumption", _JARGS(_JLONG, ));
+		return (int64_t)env->CallStaticLongMethod(classNativeInterface, methodGetRamConsumption);
+	}	
+	
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{

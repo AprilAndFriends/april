@@ -7,7 +7,6 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #if defined(_WIN32) && !defined(_OPENKODE) && !defined(_WINRT)
-
 #include <gtypes/Vector2.h>
 #include <hltypes/hdir.h>
 #include <hltypes/hlog.h>
@@ -15,6 +14,8 @@
 #include <hltypes/hmap.h>
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
+
+#include <Psapi.h> // has to be here after hplatform.h that includes windows.h
 
 #include "april.h"
 #include "Platform.h"
@@ -89,6 +90,17 @@ namespace april
 	{
 		return henv("APPDATA");
 	}
+	
+	int64_t getRamConsumption()
+	{
+		int64_t result = 0LL;
+		PROCESS_MEMORY_COUNTERS counters;
+		if (GetProcessMemoryInfo(GetCurrentProcess(), &counters, sizeof(counters)))
+		{
+			result = (int64_t)counters.WorkingSetSize;
+		}
+		return result;
+	}	
 	
 	static void(*currentCallback)(MessageBoxButton) = NULL;
 

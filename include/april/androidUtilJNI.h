@@ -66,10 +66,16 @@ namespace april
 #define _JCLASS(classe) "L" classe ";"
 /// @brief Utility macro to define an int argument for a JNI function.
 #define _JINT "I"
+/// @brief Utility macro to define an short (16-bit int) argument for a JNI function.
+#define _JSHORT "S"
+/// @brief Utility macro to define a long (64-bit int) argument for a JNI function.
+#define _JLONG "J"
 /// @brief Utility macro to define a bool argument for a JNI function.
 #define _JBOOL "Z"
 /// @brief Utility macro to define a float argument for a JNI function.
 #define _JFLOAT "F"
+/// @brief Utility macro to define a double (64-bit float) argument for a JNI function.
+#define _JDOUBLE "D"
 /// @brief Utility macro to define a char argument for a JNI function.
 #define _JCHAR "C"
 /// @brief Utility macro to define a byte argument for a JNI function.

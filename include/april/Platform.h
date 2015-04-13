@@ -109,6 +109,10 @@ namespace april
 	/// @brief Get current OS's user directory path.
 	/// @return Current OS's user directory path.
 	aprilFnExport hstr getUserDataPath();
+	/// @brief Get current process' RAM consumption.
+	/// @return Current process' RAM consumption.
+	/// @note This is the RAM consumed by the entire process.
+	aprilFnExport int64_t getRamConsumption();
 	/// @brief Displays an OS message box.
 	/// @param[in] title Text displayed in the title bar.
 	/// @param[in] text Text displayed within the message box.

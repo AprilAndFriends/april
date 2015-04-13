@@ -186,6 +186,12 @@ namespace april
 		return ".";
 	}
 	
+	int64_t getRamConsumption()
+	{
+		// TODOa
+		return 0LL;
+	}	
+	
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// fugly implementation of showing messagebox on mac os

@@ -8,8 +8,11 @@
     <TargetName>$(ProjectName)-kd</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>PSAPI_VERSION=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
     <Link>
-      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;winmm.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">

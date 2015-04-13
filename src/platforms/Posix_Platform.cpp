@@ -44,6 +44,12 @@ namespace april
 		return ".";
 	}
 	
+	int64_t getRamConsumption()
+	{
+		// TODOa
+		return 0LL;
+	}	
+	
 	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// TODO
