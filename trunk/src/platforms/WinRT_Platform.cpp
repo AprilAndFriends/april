@@ -133,6 +133,12 @@ namespace april
 		return hdir::systemize(_HL_PSTR_TO_HSTR(ApplicationData::Current->RoamingFolder->Path));
 	}
 	
+	int64_t getRamConsumption()
+	{
+		// TODOa
+		return 0LL;
+	}	
+	
 	static void(*currentCallback)(MessageBoxButton) = NULL;
 
 	void _messageBoxResult(int button)

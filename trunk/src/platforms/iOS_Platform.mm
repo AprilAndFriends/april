@@ -185,6 +185,12 @@ namespace april
 		return ".";
 	}
 	
+	int64_t getRamConsumption()
+	{
+		// TODOa
+		return 0LL;
+	}	
+	
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case

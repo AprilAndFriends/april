@@ -95,6 +95,13 @@ public class NativeInterface
 		return NativeInterface.Activity.getFilesDir().getAbsolutePath();
 	}
 	
+	public static long getRamConsumption()
+	{
+		android.os.Debug.MemoryInfo info = new android.os.Debug.MemoryInfo();
+		android.os.Debug.getMemoryInfo(info);
+		return ((long)info.getTotalPrivateDirty() * 1024L); // because getTotalPrivateDirty() is in kB
+	}
+	
 	public static Object getDisplayResolution()
 	{
 		DisplayMetrics metrics = new DisplayMetrics();

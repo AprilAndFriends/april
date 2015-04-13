@@ -109,9 +109,10 @@ namespace april
 		void setOrthoProjection(gvec2 size);
 		void setOrthoProjection(gvec2 size, float nearZ, float farZ);
 		// TODOa - maybe use int64_t instead of long long
-		unsigned long long getVRamConsumption();
-		unsigned long long getRamConsumption();
-		unsigned long long getAsyncRamConsumption();
+		int64_t getVRamConsumption();
+		/// @note This is the RAM consumed by only by the textures, not the entire process.
+		int64_t getRamConsumption();
+		int64_t getAsyncRamConsumption();
 		bool hasAsyncTexturesQueued();
 		/// @note A timeout value of 0.0 means indefinitely.
 		void waitForAsyncTextures(float timeout = 0.0f);
