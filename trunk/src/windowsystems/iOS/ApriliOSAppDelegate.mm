@@ -18,7 +18,7 @@
 #include "Window.h"
 #import <AVFoundation/AVFoundation.h>
 
-bool (*iOShandleUrlCallback)(chstr url) = NULL;
+bool (*iOShandleUrlCallback)(chstr url, chstr sourceApplication, void* annotation) = NULL;
 extern UIInterfaceOrientation gSupportedOrientations;
 
 @implementation ApriliOSAppDelegate
@@ -168,14 +168,14 @@ extern UIInterfaceOrientation gSupportedOrientations;
     return gSupportedOrientations;
 }
 
-- (BOOL)application:(UIApplication*) application handleOpenURL:(NSURL *)url
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
 	NSString* str = [url absoluteString];
-	hstr urlstr = [str UTF8String];
-
+	hstr urlstr = [str UTF8String], srcAppStr = [sourceApplication UTF8String];
+	
 	if (iOShandleUrlCallback != NULL)
 	{
-		return iOShandleUrlCallback(urlstr) ? YES : NO;
+		return iOShandleUrlCallback(urlstr, srcAppStr, annotation) ? YES : NO;
 	}
 	return NO;
 }
