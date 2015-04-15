@@ -12,11 +12,13 @@
 #else
 #define RESOURCE_PATH "media/"
 #endif
+#elif defined(__APPLE__)
+#define RESOURCE_PATH "media/"
+#else
+#define RESOURCE_PATH "./"
 #endif
 
 #ifdef __APPLE__
-#undef RESOURCE_PATH
-#define RESOURCE_PATH "media/"
 #include <stdlib.h>
 #include <unistd.h>
 #import <Foundation/Foundation.h>
