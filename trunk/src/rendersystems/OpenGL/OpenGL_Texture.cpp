@@ -36,6 +36,7 @@
 
 #define APRIL_OGL_RENDERSYS ((OpenGL_RenderSystem*)april::rendersys)
 
+// the memory warning message will likely print "volatile", but that's normal
 #define SAFE_TEXTURE_UPLOAD_CHECK(glError, call) \
 	if (glError == GL_OUT_OF_MEMORY) \
 	{ \
