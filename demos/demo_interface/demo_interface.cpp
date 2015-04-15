@@ -6,6 +6,18 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
+#ifndef _ANDROID
+#ifndef _WINRT
+#define RESOURCE_PATH "../../demos/media/"
+#else
+#define RESOURCE_PATH "media/"
+#endif
+#elif defined(__APPLE__)
+#define RESOURCE_PATH "media/"
+#else
+#define RESOURCE_PATH "./"
+#endif
+
 #include <april/april.h>
 #include <april/Cursor.h>
 #include <april/main.h>
@@ -23,8 +35,6 @@
 
 #include "CustomRenderSystem.h"
 #include "CustomWindow.h"
-
-#define RESOURCE_PATH "../../demos/media/"
 
 static april::Texture* texture = NULL;
 static grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
