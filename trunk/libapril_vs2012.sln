@@ -19,7 +19,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpng", "lib\png\msvc\vs20
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "..\hltypes\lib\zlib\msvc\vs2012\zlib.vcxproj", "{60F89955-91C6-3A36-8000-13C592FEC2DF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libzip", "..\hltypes\lib\zip\msvc\vs2012\libzip.vcxproj", "{C21E5B3F-F2EF-4F4A-8F30-00A2DA05F3D9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libminiz", "..\hltypes\lib\miniz\msvc\vs2012\libminiz.vcxproj", "{C21E5B3F-F2EF-4F4A-8F30-00A2DA05F3D9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_interface", "msvc\vs2012\demo_interface.vcxproj", "{8469E474-67C7-457A-97BC-28FAE7085B0F}"
 EndProject

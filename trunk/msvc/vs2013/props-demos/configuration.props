@@ -18,7 +18,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">
     <Link>
-      <AdditionalDependencies>-lapril;-lhltypes;-lgtypes;-ljpeg;-lpng;-lzip;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lapril;-lhltypes;-lgtypes;-ljpeg;-lpng;-lminiz;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <AntBuild>
       <AntBuildPath>$(ProjectDir)..\..\demos\$(ProjectName)\android</AntBuildPath>
