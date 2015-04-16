@@ -101,6 +101,11 @@ static bool gFullscreenToggleRequest = false;
 - (void)onWindowSizeChange
 {
 	NSSize size = [mView bounds].size;
+	if (size.width == 0 || size.height == 0)
+	{
+		NSLog(@"onWindowSizeChange reported 0x0 size, ignoring");
+		return;
+	}
 	if ([self inLiveResize])
 	{
 		mWindowedRect = [self frame];
