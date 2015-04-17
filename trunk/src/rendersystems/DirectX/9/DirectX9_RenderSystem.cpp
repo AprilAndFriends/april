@@ -150,13 +150,21 @@ namespace april
 			{
 				throw Exception("Unable to reset Direct3D device, Driver Internal Error!");
 			}
+			else if (hr == D3DERR_DEVICEREMOVED)
+			{
+				throw Exception("Unable to reset Direct3D device, 'Device removed' error reported!");
+			}
 			else if (hr == D3DERR_OUTOFVIDEOMEMORY)
 			{
 				throw Exception("Unable to reset Direct3D device, Out of Video Memory!");
 			}
+			else if (hr == D3DERR_INVALIDCALL)
+			{
+				throw Exception("Unable to reset Direct3D device, device reports 'invalid call'!");
+			}
 			else
 			{
-				hlog::error(april::logTag, "Failed to reset device!");
+				hlog::errorf(april::logTag, "Failed to reset device!, context: DirectX9_RenderSystem::reset() hresult: %u", hr);
 			}
 		}
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
@@ -861,11 +869,6 @@ namespace april
 			this->backBuffer = NULL;
 			while (april::window->isRunning())
 			{
-				for_iter (i, 0, 10)
-				{
-					april::window->checkEvents();
-					hthread::sleep(100.0f);
-				}
 				hr = this->d3dDevice->TestCooperativeLevel();
 				if (!FAILED(hr))
 				{
@@ -883,18 +886,35 @@ namespace april
 					{
 						throw Exception("Unable to reset Direct3D device, Driver Internal Error!");
 					}
+					else if (hr == D3DERR_DEVICEREMOVED)
+					{
+						throw Exception("Unable to reset Direct3D device, 'Device removed' error reported!");
+					}
 					else if (hr == D3DERR_OUTOFVIDEOMEMORY)
 					{
 						throw Exception("Unable to reset Direct3D device, Out of Video Memory!");
 					}
+					else if (hr == D3DERR_DRIVERINTERNALERROR)
+					{
+						throw Exception("Unable to reset Direct3D device, Driver internal error!");
+					}
+					else if (hr == D3DERR_INVALIDCALL)
+					{
+						throw Exception("Unable to reset Direct3D device, device reports 'invalid call'!");
+					}
 					else
 					{
-						hlog::error(april::logTag, "Failed to reset device!");
+						hlog::errorf(april::logTag, "Failed to reset device!, context: DirectX9_RenderSystem::presentFrame() hresult: %u", hr);
 					}
 				}
 				else if (hr == D3DERR_DRIVERINTERNALERROR)
 				{
-					throw Exception("Unable to reset Direct3D device, Driver Internal Error!");
+					throw Exception("Unable to reset Direct3D device, Driver Internal Error while testing cooperative level!");
+				}
+				for_iter (i, 0, 10)
+				{
+					april::window->checkEvents();
+					hthread::sleep(100.0f);
 				}
 			}
 			this->_configureDevice();
