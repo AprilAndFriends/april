@@ -100,7 +100,7 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\hltypes\lib\zip\msvc\vs2013\libzip.vcxproj">
+    <ProjectReference Include="..\..\..\hltypes\lib\miniz\msvc\vs2013\libminiz.vcxproj">
       <Project>{c21e5b3f-f2ef-4f4a-8f30-00a2da05f3d9}</Project>
       <CopyLocal>false</CopyLocal>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
