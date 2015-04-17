@@ -326,8 +326,9 @@ namespace april
 		int h = hround(info.displayResolution.y);
 		if (!value)
 		{
-			w = (int)(w * 0.6666667f);
-			h = (int)(h * 0.6666667f);
+			float factor = this->getOptions().defaultWindowModeResolutionFactor;
+			w = (int)(w * factor);
+			h = (int)(h * factor);
 		}
 		this->setResolution(w, h, value);
 		this->fullscreen = value;
