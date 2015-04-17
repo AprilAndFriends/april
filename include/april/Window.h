@@ -134,6 +134,7 @@ namespace april
 			bool resizable;
 			bool fpsCounter;
 			bool hotkeyFullscreen;
+			float defaultWindowModeResolutionFactor;
 
 			Options();
 			~Options();

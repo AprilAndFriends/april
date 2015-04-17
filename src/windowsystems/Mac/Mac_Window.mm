@@ -194,7 +194,8 @@ namespace april
 		{
 			frame = [[NSScreen mainScreen] frame];
 			styleMask = NSBorderlessWindowMask;
-			float tw = frame.size.width * 2.0f / 3.0f, th = frame.size.height * 2.0f / 3.0f;
+			float factor = aprilWindow->getOptions().defaultWindowModeResolutionFactor;
+			float tw = frame.size.width * factor, th = frame.size.height * factor;
 			defaultWndFrame = NSMakeRect(frame.origin.x + (frame.size.width - tw) / 2.0f, frame.origin.y + (frame.size.height - th) / 2.0f, tw, th);
 		}
 		else
