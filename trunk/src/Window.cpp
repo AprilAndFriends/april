@@ -124,6 +124,7 @@ namespace april
 		this->resizable = false;
 		this->fpsCounter = false;
 		this->hotkeyFullscreen = false;
+		this->defaultWindowModeResolutionFactor = 0.85f;
 	}
 	
 	Window::Options::~Options()
