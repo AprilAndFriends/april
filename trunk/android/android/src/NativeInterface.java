@@ -30,6 +30,7 @@ public class NativeInterface
 	public static String DataPath = ".";
 	public static String PackageName = "";
 	public static String VersionCode = "0";
+	public static String VersionName = "";
 	public static String ApkPath = "";
 	
 	private static boolean htcKeyboardHack = false;
