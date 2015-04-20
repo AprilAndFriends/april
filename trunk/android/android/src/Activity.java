@@ -84,7 +84,7 @@ public class Activity extends android.app.Activity
 		{
 			PackageInfo info = this.getPackageManager().getPackageInfo(NativeInterface.PackageName, 0);
 			NativeInterface.VersionCode = Integer.toString(info.versionCode);
-			NativeInterface.VersionName = Integer.toString(info.versionName);
+			NativeInterface.VersionName = info.versionName;
 			NativeInterface.ApkPath = info.applicationInfo.sourceDir;
 			NativeInterface.DataPath = this.createDataPath();
 		}
