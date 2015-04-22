@@ -53,7 +53,7 @@ namespace april
 		{
 #ifndef _OPENKODE
 			// set the resources CWD
-			hresource::setCwd(dataPath + "/Android/data/" + april::getPackageName());
+			hresource::setCwd(hrdir::joinPath(hrdir::joinPath(dataPath, "Android/data"), april::getPackageName()));
 			hresource::setArchive(""); // not used anyway when hasZip() returns false
 			hlog::write(april::logTag, "Using no-zip: " + hresource::getCwd());
 #else
