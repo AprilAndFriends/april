@@ -12,6 +12,7 @@
 #include <hltypes/harray.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hrdir.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
