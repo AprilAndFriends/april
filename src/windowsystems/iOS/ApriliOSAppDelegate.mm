@@ -18,7 +18,14 @@
 #include "Window.h"
 #import <AVFoundation/AVFoundation.h>
 
-bool (*iOShandleUrlCallback)(chstr url, chstr sourceApplication, void* annotation) = NULL;
+typedef bool (*iOSUrlCallback)(chstr, chstr, void*);
+static harray<iOSUrlCallback> gUrlCallbacks;
+NSString* iOSAppStartUrl = nil;
+void april_iOS_registerUrlCallback(iOSUrlCallback ptr)
+{
+	gUrlCallbacks += ptr;
+}
+
 extern UIInterfaceOrientation gSupportedOrientations;
 
 @implementation ApriliOSAppDelegate
@@ -35,6 +42,7 @@ extern UIInterfaceOrientation gSupportedOrientations;
 - (BOOL)application:(UIApplication*) application didFinishLaunchingWithOptions:(NSDictionary*) launchOptions
 {
 	NSLog(@"Creating iOS window");
+	iOSAppStartUrl = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
     appLaunchOptions = launchOptions;
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
 	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0" options:NSNumericSearch] == NSOrderedAscending)
@@ -173,11 +181,17 @@ extern UIInterfaceOrientation gSupportedOrientations;
 	NSString* str = [url absoluteString];
 	hstr urlstr = [str UTF8String], srcAppStr = [sourceApplication UTF8String];
 	
-	if (iOShandleUrlCallback != NULL)
+	BOOL ret = NO;
+	bool r;
+	foreach (iOSUrlCallback, it, gUrlCallbacks)
 	{
-		return iOShandleUrlCallback(urlstr, srcAppStr, annotation) ? YES : NO;
+		r = (*it)(urlstr, srcAppStr, annotation);
+		if (r)
+		{
+			ret = YES;
+		}
 	}
-	return NO;
+	return ret;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
