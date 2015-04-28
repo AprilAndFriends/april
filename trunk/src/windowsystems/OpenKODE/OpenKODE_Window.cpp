@@ -41,7 +41,14 @@
 #if TARGET_OS_IPHONE
 #import <AVFoundation/AVFoundation.h>
 
-bool (*iOShandleUrlCallback)(chstr url) = NULL; // KD-TODO
+// KD-TODO
+typedef bool (*iOSUrlCallback)(chstr, chstr, void*);
+static harray<iOSUrlCallback> gUrlCallbacks;
+NSString* iOSAppStartUrl = nil;
+void april_iOS_registerUrlCallback(iOSUrlCallback ptr)
+{
+	gUrlCallbacks += ptr;
+}
 #endif
 
 namespace april
