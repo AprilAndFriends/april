@@ -27,126 +27,6 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 	return self;
 }
 
-
-#pragma mark -
-#pragma mark Portions of WBImage
-// using wbimage category did not work for some reason
-
-static inline CGFloat degreesToRadians(CGFloat degrees)
-{
-	return M_PI * (degrees / 180.0);
-}
-
-static inline CGSize swapWidthAndHeight(CGSize size)
-{
-	CGFloat  swap = size.width;
-	
-	size.width  = size.height;
-	size.height = swap;
-	
-	return size;
-}
-
--(UIImage*)rotate:(UIImage*)src to:(UIImageOrientation)orient
-{
-	CGRect             bnds = CGRectZero;
-	UIImage*           copy = nil;
-	CGContextRef       ctxt = nil;
-	CGRect             rect = CGRectZero;
-	CGAffineTransform  tran = CGAffineTransformIdentity;
-	
-	bnds.size = src.size;
-	rect.size = src.size;
-	
-	switch (orient)
-	{
-		case UIImageOrientationUp:
-			return src;
-			
-		case UIImageOrientationUpMirrored:
-			tran = CGAffineTransformMakeTranslation(rect.size.width, 0.0);
-			tran = CGAffineTransformScale(tran, -1.0, 1.0);
-			break;
-			
-		case UIImageOrientationDown:
-			tran = CGAffineTransformMakeTranslation(rect.size.width,
-													rect.size.height);
-			tran = CGAffineTransformRotate(tran, degreesToRadians(180.0));
-			break;
-			
-		case UIImageOrientationDownMirrored:
-			tran = CGAffineTransformMakeTranslation(0.0, rect.size.height);
-			tran = CGAffineTransformScale(tran, 1.0, -1.0);
-			break;
-			
-		case UIImageOrientationLeft:
-			bnds.size = swapWidthAndHeight(bnds.size);
-			tran = CGAffineTransformMakeTranslation(0.0, rect.size.width);
-			tran = CGAffineTransformRotate(tran, degreesToRadians(-90.0));
-			break;
-			
-		case UIImageOrientationLeftMirrored:
-			bnds.size = swapWidthAndHeight(bnds.size);
-			tran = CGAffineTransformMakeTranslation(rect.size.height,
-													rect.size.width);
-			tran = CGAffineTransformScale(tran, -1.0, 1.0);
-			tran = CGAffineTransformRotate(tran, degreesToRadians(-90.0));
-			break;
-			
-		case UIImageOrientationRight:
-			bnds.size = swapWidthAndHeight(bnds.size);
-			tran = CGAffineTransformMakeTranslation(rect.size.height, 0.0);
-			tran = CGAffineTransformRotate(tran, degreesToRadians(90.0));
-			break;
-			
-		case UIImageOrientationRightMirrored:
-			bnds.size = swapWidthAndHeight(bnds.size);
-			tran = CGAffineTransformMakeScale(-1.0, 1.0);
-			tran = CGAffineTransformRotate(tran, degreesToRadians(90.0));
-			break;
-			
-		default:
-			// orientation value supplied is invalid
-			assert(false);
-			return nil;
-	}
-	
-	UIGraphicsBeginImageContext(bnds.size);
-	ctxt = UIGraphicsGetCurrentContext();
-	
-	switch (orient)
-	{
-		case UIImageOrientationLeft:
-		case UIImageOrientationLeftMirrored:
-		case UIImageOrientationRight:
-		case UIImageOrientationRightMirrored:
-			CGContextScaleCTM(ctxt, -1.0, 1.0);
-			CGContextTranslateCTM(ctxt, -rect.size.height, 0.0);
-			break;
-			
-		default:
-			CGContextScaleCTM(ctxt, 1.0, -1.0);
-			CGContextTranslateCTM(ctxt, 0.0, -rect.size.height);
-			break;
-	}
-	
-	CGContextConcatCTM(ctxt, tran);
-	CGContextDrawImage(ctxt, rect, src.CGImage);
-	
-	copy = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsEndImageContext();
-	
-	return copy;
-}
-
-
-
-
-#pragma mark End WBImage portions
-#pragma mark -
-
-
-
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView
 {
@@ -164,53 +44,36 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 	{
 		idiom = UIUserInterfaceIdiomPad;
 	}
-
-	NSString *defaultPngName = @"Default";
-	float aspect = isiOS8OrNewer() ? size.width / size.height : size.height / size.width;
-	if(idiom == UIUserInterfaceIdiomPad)
+	
+	// search for default launch image and make a view controller out of it to use while loading
+	NSString *defaultPngName = @"";
+	NSArray *allPngImageNames = [[NSBundle mainBundle] pathsForResourcesOfType:@"png" inDirectory:nil];
+	
+	for (NSString* imgName in allPngImageNames)
 	{
-		defaultPngName = @"Default-Landscape";
-	}
-	else if(aspect > 3.0f / 2.0f + 0.01f) // iPhone5
-	{
-
-		if (isiOS8OrNewer())
+		if ([imgName containsString:@"LaunchImage"] || [imgName containsString:@"Default"])
 		{
-			if (size.height >= 414)
+			UIImage *img = [UIImage imageNamed:imgName];
+			// Has image same scale and dimensions as our current device's screen?
+			if (img.scale == [UIScreen mainScreen].scale && CGSizeEqualToSize(img.size, [UIScreen mainScreen].bounds.size))
 			{
-				defaultPngName = @"Default-736h@3x";
+				hstr name = [imgName UTF8String];
+				if (name.contains("/"))
+				{
+					name = name.rsplit("/", 1)[1];
+				}
+				NSLog(@"Found launch image for current device: %s: %@", name.cStr(), img.description);
+				defaultPngName = imgName;
+				break;
 			}
-			else if (size.height >= 375)
-			{
-				defaultPngName = @"Default-667h@2x";
-			}
-			else
-			{
-				defaultPngName = @"Default-568h@2x";
-			}
-		}
-		else
-		{
-			defaultPngName = @"Default-568h@2x";
 		}
 	}
 
-	UIImage *image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"] ];
+	UIImage *image = [UIImage imageWithContentsOfFile:defaultPngName];
 
 	if(idiom == UIUserInterfaceIdiomPhone && self.interfaceOrientation != UIInterfaceOrientationPortrait)
 	{
-		if ([UIImage instancesRespondToSelector:@selector(initWithCGImage:scale:orientation:)]) 
-		{
-
-			// if UIImage responds to instance method, it will respond to the class method too.
-			image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationRight];
-		}
-		else
-		{
-			// hence we added rotation implementation using WBImage by Allen Brunson and Kevin Lohman:
-			// http://www.platinumball.net/blog/2010/01/31/iphone-uiimage-rotation-and-scaling/
-			image = [self rotate:image to:UIImageOrientationRight]; // for some reason using WBImage category of UIImage did not work! code therefore copypasted to this class and called via self
-		}
+		image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationRight];
 	}
 	
 	mImageView = [[UIImageView alloc] initWithImage:image];
