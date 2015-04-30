@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.april.DialogFactory;
 
@@ -213,37 +214,49 @@ public class Activity extends android.app.Activity
 		});
 	}
 	
+	protected boolean isGlTopView()
+	{
+		try
+		{
+			View view = this.getView();
+			ViewGroup parent = (ViewGroup)view.getParent();
+			if (parent.getId() < 0)
+			{
+				return true;
+			}
+			for (int i = 0; i < parent.getChildCount(); i++)
+			{
+				if (parent.getChildAt(i) == view)
+				{
+					return (i == parent.getChildCount() - 1);
+				}
+			}
+		}
+		catch (Throwable t)
+		{
+		}
+		return false;
+	}
+	
 	@Override
 	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
-		if (this.ignoredKeys.contains(event.getKeyCode()))
+		if (this.ignoredKeys.contains(event.getKeyCode()) || !this.isGlTopView())
 		{
-			return false;
+			return super.onKeyDown(keyCode, event);
 		}
-		this.GlView.queueEvent(new Runnable()
-		{
-			public void run()
-			{
-				NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
-			}
-		});
+		NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
 		return true;
 	}
 	
 	@Override
 	public boolean onKeyUp(int keyCode, final KeyEvent event)
 	{
-		if (this.ignoredKeys.contains(event.getKeyCode()))
+		if (this.ignoredKeys.contains(event.getKeyCode()) || !this.isGlTopView())
 		{
-			return false;
+			return super.onKeyUp(keyCode, event);
 		}
-		this.GlView.queueEvent(new Runnable()
-		{
-			public void run()
-			{
-				NativeInterface.onKeyUp(event.getKeyCode());
-			}
-		});
+		NativeInterface.onKeyUp(event.getKeyCode());
 		return true;
 	}
 	
