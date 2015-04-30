@@ -48,10 +48,12 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 	// search for default launch image and make a view controller out of it to use while loading
 	NSString *defaultPngName = @"";
 	NSArray *allPngImageNames = [[NSBundle mainBundle] pathsForResourcesOfType:@"png" inDirectory:nil];
+	hstr s;
 	
 	for (NSString* imgName in allPngImageNames)
 	{
-		if ([imgName containsString:@"LaunchImage"] || [imgName containsString:@"Default"])
+		s = [imgName UTF8String];
+		if (s.contains("LaunchImage") || s.contains("Default"))
 		{
 			UIImage *img = [UIImage imageNamed:imgName];
 			// Has image same scale and dimensions as our current device's screen?
