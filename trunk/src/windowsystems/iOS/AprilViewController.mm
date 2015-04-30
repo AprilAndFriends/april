@@ -64,11 +64,15 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 				{
 					name = name.rsplit("/", 1)[1];
 				}
-				NSLog(@"Found launch image for current device: %s: %@", name.cStr(), img.description);
+				NSLog(@"Found launch image for device: %s: %@", name.cStr(), img.description);
 				defaultPngName = imgName;
 				break;
 			}
 		}
+	}
+	if ([defaultPngName isEqualToString:@""])
+	{
+		NSLog(@"Failed to find appropriate launch image for device");
 	}
 
 	UIImage *image = [UIImage imageWithContentsOfFile:defaultPngName];

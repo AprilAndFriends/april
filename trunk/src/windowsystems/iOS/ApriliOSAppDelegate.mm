@@ -73,15 +73,15 @@ extern UIInterfaceOrientation gSupportedOrientations;
             {
                 gSupportedOrientations |= UIInterfaceOrientationMaskPortrait;
             }
-            if ([orient isEqual: @"UIInterfaceOrientationPortraitUpsideDown"])
+            else if ([orient isEqual: @"UIInterfaceOrientationPortraitUpsideDown"])
             {
                 gSupportedOrientations |= UIInterfaceOrientationMaskPortraitUpsideDown;
             }
-            if ([orient isEqual: @"UIInterfaceOrientationLandscapeLeft"])
+            else if ([orient isEqual: @"UIInterfaceOrientationLandscapeLeft"])
             {
                 gSupportedOrientations |= UIInterfaceOrientationMaskLandscapeLeft;
             }
-            if ([orient isEqual: @"UIInterfaceOrientationLandscapeRight"])
+            else if ([orient isEqual: @"UIInterfaceOrientationLandscapeRight"])
             {
                 gSupportedOrientations |= UIInterfaceOrientationMaskLandscapeRight;
             }
