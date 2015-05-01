@@ -235,7 +235,7 @@ namespace april
 			scale = caeagllayer.contentsScale;
 		}
 		CGRect bounds = uiwindow.bounds;
-		if (isiOS8OrNewer())
+		if (isiOS8OrNewer() || UIInterfaceOrientationIsPortrait(viewcontroller.interfaceOrientation))
 		{
 			return bounds.size.width * scale;
 		}
@@ -251,7 +251,7 @@ namespace april
 			scale = caeagllayer.contentsScale;
 		}
 		CGRect bounds = uiwindow.bounds;
-		if (isiOS8OrNewer())
+		if (isiOS8OrNewer() || UIInterfaceOrientationIsPortrait(viewcontroller.interfaceOrientation))
 		{
 			return bounds.size.height * scale;
 		}
