@@ -490,8 +490,8 @@ Global
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.DebugS_DirectX9|Android.Build.0 = DebugS_ZipResource|Android
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.DebugS_DirectX9|Android-x86.ActiveCfg = DebugS_ZipResource|Android-x86
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.DebugS_DirectX9|Android-x86.Build.0 = DebugS_ZipResource|Android-x86
-		{E4D373BF-E227-48B9-99E6-84987E8674EC}.DebugS_DirectX9|Win32.ActiveCfg = DebugS_ZipResource|Win32
-		{E4D373BF-E227-48B9-99E6-84987E8674EC}.DebugS_DirectX9|Win32.Build.0 = DebugS_ZipResource|Win32
+		{E4D373BF-E227-48B9-99E6-84987E8674EC}.DebugS_DirectX9|Win32.ActiveCfg = DebugS|Win32
+		{E4D373BF-E227-48B9-99E6-84987E8674EC}.DebugS_DirectX9|Win32.Build.0 = DebugS|Win32
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.DebugS_OpenGL1|Android.ActiveCfg = DebugS_ZipResource|Android
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.DebugS_OpenGL1|Android.Build.0 = DebugS_ZipResource|Android
 		{E4D373BF-E227-48B9-99E6-84987E8674EC}.DebugS_OpenGL1|Android-x86.ActiveCfg = DebugS_ZipResource|Android-x86
