@@ -100,7 +100,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 		label.backgroundColor = [UIColor clearColor]; 
 		label.textColor = [UIColor whiteColor]; 
 		label.font = [UIFont systemFontOfSize:14.0f]; 
-		label.textAlignment = UITextAlignmentCenter;
+		label.textAlignment = NSTextAlignmentCenter;
 		label.text = alertView.message; 
 		[alertView addSubview:label]; 
 		[label release];
