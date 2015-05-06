@@ -20,7 +20,6 @@
 
 typedef bool (*iOSUrlCallback)(chstr, chstr, void*);
 static harray<iOSUrlCallback> gUrlCallbacks;
-NSString* iOSAppStartUrl = nil;
 void april_iOS_registerUrlCallback(iOSUrlCallback ptr)
 {
 	gUrlCallbacks += ptr;
@@ -32,7 +31,6 @@ extern UIInterfaceOrientation gSupportedOrientations;
 
 @synthesize uiwnd;
 @synthesize viewController;
-@synthesize appLaunchOptions;
 
 - (UIWindow*)window
 {
@@ -42,25 +40,7 @@ extern UIInterfaceOrientation gSupportedOrientations;
 - (BOOL)application:(UIApplication*) application didFinishLaunchingWithOptions:(NSDictionary*) launchOptions
 {
 	NSLog(@"Creating iOS window");
-	iOSAppStartUrl = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
-    appLaunchOptions = launchOptions;
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
-	if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0" options:NSNumericSearch] == NSOrderedAscending)
-	{
-		// less than iOS 5.0 - workarround for an apple bug where the audio sesion get's interrupted while using AVAssetReader and similar
-		AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-		[audioSession setActive: NO error: nil];
-		[audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
-		
-		// Modifying Playback Mixing Behavior, allow playing music in other apps
-		UInt32 allowMixing = true;
-		AudioSessionSetProperty(kAudioSessionProperty_OverrideCategoryMixWithOthers, sizeof(allowMixing), &allowMixing);
-		[audioSession setActive: YES error: nil];
-	}
-	else
-	{
-		[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:NULL];
-	}
 
     // figure out prefered app orientations
     NSArray* orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];

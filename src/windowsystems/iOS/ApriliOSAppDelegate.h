@@ -15,7 +15,6 @@
 
 @interface ApriliOSAppDelegate : NSObject<UIApplicationDelegate>
 {
-    NSDictionary* appLaunchOptions;
 	UIWindow *uiwnd;
 	AprilViewController *viewController;
 }
