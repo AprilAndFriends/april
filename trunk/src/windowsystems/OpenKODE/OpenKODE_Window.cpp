@@ -44,7 +44,6 @@
 // KD-TODO
 typedef bool (*iOSUrlCallback)(chstr, chstr, void*);
 static harray<iOSUrlCallback> gUrlCallbacks;
-NSString* iOSAppStartUrl = nil;
 void april_iOS_registerUrlCallback(iOSUrlCallback ptr)
 {
 	gUrlCallbacks += ptr;
