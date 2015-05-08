@@ -42,18 +42,18 @@ namespace april
 	{
 		if (this->dx11Shader != nullptr)
 		{
-			hlog::error(april::logTag, "Shader already loaded.");
+			hlog::error(logTag, "Shader already loaded.");
 			return false;
 		}
 		if (!this->_loadFileData(filename, &this->shaderData, &this->shaderSize))
 		{
-			hlog::error(april::logTag, "Shader file not found: " + filename);
+			hlog::error(logTag, "Shader file not found: " + filename);
 			return false;
 		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreateVertexShader(this->shaderData, this->shaderSize, NULL, &this->dx11Shader);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to create vertex shader!");
+			hlog::error(logTag, "Failed to create vertex shader!");
 			return false;
 		}
 		return true;
@@ -63,18 +63,18 @@ namespace april
 	{
 		if (this->dx11Shader != nullptr)
 		{
-			hlog::error(april::logTag, "Shader already loaded.");
+			hlog::error(logTag, "Shader already loaded.");
 			return false;
 		}
 		if (!this->_loadResourceData(filename, &this->shaderData, &this->shaderSize))
 		{
-			hlog::error(april::logTag, "Shader file not found: " + filename);
+			hlog::error(logTag, "Shader file not found: " + filename);
 			return false;
 		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreateVertexShader(this->shaderData, this->shaderSize, NULL, &this->dx11Shader);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to create vertex shader!");
+			hlog::error(logTag, "Failed to create vertex shader!");
 			return false;
 		}
 		return true;

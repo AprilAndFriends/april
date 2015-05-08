@@ -82,7 +82,7 @@ namespace april
 
 	hstr getPackageName()
 	{
-		hlog::warn(april::logTag, "Cannot use getPackageName() on this platform.");
+		hlog::warn(logTag, "Cannot use getPackageName() on this platform.");
 		return "";
 	}
 
@@ -133,7 +133,7 @@ namespace april
 			}
 			break;
 		default:
-			hlog::error(april::logTag, "Unknown message box callback: " + hstr(button));
+			hlog::error(logTag, "Unknown message box callback: " + hstr(button));
 			break;
 		}
 	}

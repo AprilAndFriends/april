@@ -130,7 +130,7 @@ namespace april
 		this->kdWindow = NULL;
 		memset(this->kdTouches, 0, 16 * sizeof(bool));
 #if defined(_WIN32) && !defined(_EGL)
-		hlog::warn(april::logTag, "OpenKODE Window requires EGL to be present!");
+		hlog::warn(logTag, "OpenKODE Window requires EGL to be present!");
 #endif
 		initOpenKODEKeyMap();
 		this->launchDelay = 0;
@@ -174,7 +174,7 @@ namespace april
 		this->inputMode = TOUCH;
 		if (w <= 0 || h <= 0)
 		{
-			hlog::errorf(april::logTag, "Cannot create window with size: %d x %d", w, h);
+			hlog::errorf(logTag, "Cannot create window with size: %d x %d", w, h);
 			this->destroy();
 			return false;
 		}
@@ -183,7 +183,7 @@ namespace april
 #endif
 		if (this->kdWindow == NULL)
 		{
-			hlog::error(april::logTag, "Can't create KD Window!");
+			hlog::error(logTag, "Can't create KD Window!");
 			this->destroy();
 			return false;
 		}
@@ -197,15 +197,15 @@ namespace april
 		kdSetWindowPropertycv(this->kdWindow, KD_WINDOWPROPERTY_CAPTION, title.cStr());
 		if (this->launchDelay > 0)
 		{
-			hlog::writef(april::logTag, "launch_delay param set to %.1f, waiting", this->launchDelay);
+			hlog::writef(logTag, "launch_delay param set to %.1f, waiting", this->launchDelay);
 			hthread::sleep(this->launchDelay * 1000);
 		}
 #ifdef _EGL // KD doesn't actually work without EGL
-		hlog::write(april::logTag, "Calling kdRealizeWindow()");
+		hlog::write(logTag, "Calling kdRealizeWindow()");
 		if (kdRealizeWindow(this->kdWindow, &april::egl->hWnd) != 0)
 #endif
 		{
-			hlog::error(april::logTag, "Can't realize KD Window!");
+			hlog::error(logTag, "Can't realize KD Window!");
 			this->destroy();
 			return false;
 		}

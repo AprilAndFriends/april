@@ -30,14 +30,14 @@ namespace april
 	{
 		if (size < PNG_SIGNATURE_SIZE)
 		{
-			hlog::error(april::logTag, "Not a PNG file!");
+			hlog::error(logTag, "Not a PNG file!");
 			return NULL;
 		}
 		png_byte signature[PNG_SIGNATURE_SIZE] = { '\0' };
 		stream.readRaw(signature, PNG_SIGNATURE_SIZE);
 		if (png_sig_cmp(signature, 0, PNG_SIGNATURE_SIZE))
 		{
-			hlog::error(april::logTag, "Not a PNG file!");
+			hlog::error(logTag, "Not a PNG file!");
 			return NULL;
 		}
 		stream.seek(-PNG_SIGNATURE_SIZE, hsbase::CURRENT);

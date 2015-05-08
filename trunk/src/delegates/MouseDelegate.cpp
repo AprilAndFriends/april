@@ -25,27 +25,27 @@ namespace april
 
 	void MouseDelegate::onMouseDown(april::Key keyCode)
 	{
-		hlog::debug(april::logTag, "Event onMouseDown() was not implemented.");
+		hlog::debug(logTag, "Event onMouseDown() was not implemented.");
 	}
 
 	void MouseDelegate::onMouseUp(april::Key keyCode)
 	{
-		hlog::debug(april::logTag, "Event onMouseUp() was not implemented.");
+		hlog::debug(logTag, "Event onMouseUp() was not implemented.");
 	}
 
 	void MouseDelegate::onMouseCancel(april::Key keyCode)
 	{
-		hlog::debug(april::logTag, "Event onMouseCancel() was not implemented.");
+		hlog::debug(logTag, "Event onMouseCancel() was not implemented.");
 	}
 
 	void MouseDelegate::onMouseMove()
 	{
-		hlog::debug(april::logTag, "Event onMouseMove() was not implemented.");
+		hlog::debug(logTag, "Event onMouseMove() was not implemented.");
 	}
 
 	void MouseDelegate::onMouseScroll(float x, float y)
 	{
-		hlog::debug(april::logTag, "Event onMouseScroll() was not implemented.");
+		hlog::debug(logTag, "Event onMouseScroll() was not implemented.");
 	}
 
 }

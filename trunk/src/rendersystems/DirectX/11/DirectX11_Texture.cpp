@@ -96,7 +96,7 @@ namespace april
 			}
 			if (hr == E_OUTOFMEMORY)
 			{
-				hlog::error(april::logTag, "Failed to create DX11 texture: Not enough VRAM!");
+				hlog::error(logTag, "Failed to create DX11 texture: Not enough VRAM!");
 				return false;
 			}
 		}
@@ -106,7 +106,7 @@ namespace april
 		}
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to create DX11 texture!");
+			hlog::error(logTag, "Failed to create DX11 texture!");
 			return false;
 		}
 		if (this->type == TYPE_RENDER_TARGET)
@@ -119,7 +119,7 @@ namespace april
 				&renderTargetViewDesc, &this->d3dRenderTargetView);
 			if (FAILED(hr))
 			{
-				hlog::error(april::logTag, "Failed to create render target view for texture with render-to-texture!");
+				hlog::error(logTag, "Failed to create render target view for texture with render-to-texture!");
 				return false;
 			}
 		}
@@ -133,7 +133,7 @@ namespace april
 		hr = APRIL_D3D_DEVICE->CreateShaderResourceView(this->d3dTexture.Get(), &textureViewDesc, &this->d3dView);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to create DX11 texture view!");
+			hlog::error(logTag, "Failed to create DX11 texture view!");
 			return false;
 		}
 		return true;

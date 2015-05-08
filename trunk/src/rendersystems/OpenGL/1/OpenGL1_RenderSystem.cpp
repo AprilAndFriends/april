@@ -74,13 +74,13 @@ namespace april
 		this->hRC = wglCreateContext(this->hDC);
 		if (this->hRC == 0)
 		{
-			hlog::error(april::logTag, "Can't create a GL rendering context!");
+			hlog::error(logTag, "Can't create a GL rendering context!");
 			this->_releaseWindow();
 			return;
 		}
 		if (wglMakeCurrent(this->hDC, this->hRC) == 0)
 		{
-			hlog::error(april::logTag, "Can't activate the GL rendering context!");
+			hlog::error(logTag, "Can't activate the GL rendering context!");
 			this->_releaseWindow();
 			return;
 		}
@@ -162,7 +162,7 @@ namespace april
 				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
 				break;
 			default:
-				hlog::warn(april::logTag, "Trying to set unsupported blend mode!");
+				hlog::warn(logTag, "Trying to set unsupported blend mode!");
 				break;
 			}
 		}

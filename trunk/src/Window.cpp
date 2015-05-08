@@ -182,7 +182,7 @@ namespace april
 	{
 		if (!this->created)
 		{
-			hlog::writef(april::logTag, "Creating window: '%s' (%d, %d) %s, '%s', (options: %s)",
+			hlog::writef(logTag, "Creating window: '%s' (%d, %d) %s, '%s', (options: %s)",
 				this->name.cStr(), w, h, fullscreen ? "fullscreen" : "windowed", title.cStr(), options.toString().cStr());
 			this->fullscreen = fullscreen;
 			this->title = title;
@@ -220,7 +220,7 @@ namespace april
 	{
 		if (this->created)
 		{
-			hlog::writef(april::logTag, "Destroying window '%s'.", this->name.cStr());
+			hlog::writef(logTag, "Destroying window '%s'.", this->name.cStr());
 			this->created = false;
 			this->fps = 0;
 			this->fpsCount = 0;
@@ -262,7 +262,7 @@ namespace april
 		if (this->inputMode != value)
 		{
 			this->inputMode = value;
-			hlog::write(april::logTag, "Changing Input Mode to: " + INPUT_MODE_NAME(this->inputMode));
+			hlog::write(logTag, "Changing Input Mode to: " + INPUT_MODE_NAME(this->inputMode));
 			if (this->inputMode == CONTROLLER)
 			{
 				this->cursorPosition.set(-10000.0f, -10000.0f);
@@ -280,7 +280,7 @@ namespace april
 		if (this->inputModeTranslations.hasKey(this->inputMode))
 		{
 			this->inputMode = this->inputModeTranslations[this->inputMode];
-			hlog::write(april::logTag, "Forcing Input Mode to: " + INPUT_MODE_NAME(this->inputMode));
+			hlog::write(logTag, "Forcing Input Mode to: " + INPUT_MODE_NAME(this->inputMode));
 			if (this->inputMode == CONTROLLER)
 			{
 				this->cursorPosition.set(-10000.0f, -10000.0f);
@@ -341,7 +341,7 @@ namespace april
 
 	void Window::setResolution(int w, int h, bool fullscreen)
 	{
-		hlog::warnf(april::logTag, "setResolution() is not available in '%s'.", this->name.cStr());
+		hlog::warnf(logTag, "setResolution() is not available in '%s'.", this->name.cStr());
 	}
 
 	void Window::toggleHotkeyFullscreen()
@@ -364,7 +364,7 @@ namespace april
 	
 	void Window::_setRenderSystemResolution(int w, int h, bool fullscreen)
 	{
-		hlog::writef(april::logTag, "Setting window resolution: (%d,%d); fullscreen: %s", w, h, fullscreen ? "yes" : "no");
+		hlog::writef(logTag, "Setting window resolution: (%d,%d); fullscreen: %s", w, h, fullscreen ? "yes" : "no");
 		april::rendersys->_setResolution(w, h, fullscreen);
 		if (this->systemDelegate != NULL)
 		{
@@ -609,7 +609,7 @@ namespace april
 	void Window::handleFocusChangeEvent(bool focused)
 	{
 		this->focused = focused;
-		hlog::write(april::logTag, "Window " + hstr(focused ? "gained focus." : "lost focus."));
+		hlog::write(logTag, "Window " + hstr(focused ? "gained focus." : "lost focus."));
 		if (this->systemDelegate != NULL)
 		{
 			this->systemDelegate->onWindowFocusChanged(focused);
@@ -618,7 +618,7 @@ namespace april
 
 	void Window::handleActivityChangeEvent(bool active)
 	{
-		hlog::warn(april::logTag, this->name + " does not implement activity change events!");
+		hlog::warn(logTag, this->name + " does not implement activity change events!");
 	}
 	
 	void Window::handleVirtualKeyboardChangeEvent(bool visible, float heightRatio)
@@ -761,7 +761,7 @@ namespace april
 
 	april::Cursor* Window::_createCursor()
 	{
-		hlog::warnf(april::logTag, "Cursors are not available in '%s'.", this->name.cStr());
+		hlog::warnf(logTag, "Cursors are not available in '%s'.", this->name.cStr());
 		return NULL;
 	}
 

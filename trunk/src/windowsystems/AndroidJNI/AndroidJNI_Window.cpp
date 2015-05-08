@@ -61,7 +61,7 @@ namespace april
 
 	void AndroidJNI_Window::enterMainLoop()
 	{
-		hlog::error(april::logTag, "Using enterMainLoop on Android JNI!");
+		hlog::error(logTag, "Using enterMainLoop on Android JNI!");
 		exit(-1);
 	}
 	

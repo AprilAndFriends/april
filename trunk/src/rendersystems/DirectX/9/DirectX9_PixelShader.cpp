@@ -45,13 +45,13 @@ namespace april
 		int size = 0;
 		if (!this->_loadFileData(filename, &data, &size))
 		{
-			hlog::error(april::logTag, "Shader file not found: " + filename);
+			hlog::error(logTag, "Shader file not found: " + filename);
 			return false;
 		}
 		HRESULT result = APRIL_D3D_DEVICE->CreatePixelShader((DWORD*)data, &this->dx9Shader);
 		if (result != D3D_OK)
 		{
-			hlog::error(april::logTag, "Failed to create pixel shader!");
+			hlog::error(logTag, "Failed to create pixel shader!");
 			return false;
 		}
 		return true;
@@ -63,13 +63,13 @@ namespace april
 		int size = 0;
 		if (!this->_loadResourceData(filename, &data, &size))
 		{
-			hlog::error(april::logTag, "Shader file not found: " + filename);
+			hlog::error(logTag, "Shader file not found: " + filename);
 			return false;
 		}
 		HRESULT result = APRIL_D3D_DEVICE->CreatePixelShader((DWORD*)data, &this->dx9Shader);
 		if (result != D3D_OK)
 		{
-			hlog::error(april::logTag, "Failed to create pixel shader!");
+			hlog::error(logTag, "Failed to create pixel shader!");
 			return false;
 		}
 		return true;

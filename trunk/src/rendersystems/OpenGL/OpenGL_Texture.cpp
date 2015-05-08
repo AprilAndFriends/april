@@ -44,7 +44,7 @@
 		{ \
 			this->_resetCurrentTexture(); \
 			_preventRecursion = true; \
-			hlog::warnf(april::logTag, "Not enough VRAM for %s! Calling low memory warning.", this->_getInternalName().cStr()); \
+			hlog::warnf(logTag, "Not enough VRAM for %s! Calling low memory warning.", this->_getInternalName().cStr()); \
 			april::window->handleLowMemoryWarning(); \
 			_preventRecursion = false; \
 			this->_setCurrentTexture(); \
@@ -53,7 +53,7 @@
 		} \
 		if (glError == GL_OUT_OF_MEMORY) \
 		{ \
-			hlog::error(april::logTag, "Failed to upload texture data: Not enough VRAM!"); \
+			hlog::error(logTag, "Failed to upload texture data: Not enough VRAM!"); \
 		} \
 	}
 

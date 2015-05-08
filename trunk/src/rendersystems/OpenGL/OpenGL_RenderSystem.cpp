@@ -146,19 +146,19 @@ namespace april
 		this->hDC = GetDC(this->hWnd);
 		if (this->hDC == 0)
 		{
-			hlog::error(april::logTag, "Can't create a GL device context!");
+			hlog::error(logTag, "Can't create a GL device context!");
 			return false;
 		}
 		GLuint pixelFormat = ChoosePixelFormat(this->hDC, &pfd);
 		if (pixelFormat == 0)
 		{
-			hlog::error(april::logTag, "Can't find a suitable pixel format!");
+			hlog::error(logTag, "Can't find a suitable pixel format!");
 			this->_releaseWindow();
 			return false;
 		}
 		if (SetPixelFormat(this->hDC, pixelFormat, &pfd) == 0)
 		{
-			hlog::error(april::logTag, "Can't set the pixel format!");
+			hlog::error(logTag, "Can't set the pixel format!");
 			this->_releaseWindow();
 			return false;
 		}
@@ -299,7 +299,7 @@ namespace april
 		else
 		{
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			hlog::warn(april::logTag, "Trying to set unsupported blend mode!");
+			hlog::warn(logTag, "Trying to set unsupported blend mode!");
 		}
 	}
 	
@@ -343,7 +343,7 @@ namespace april
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
 			break;
 		default:
-			hlog::warn(april::logTag, "Trying to set unsupported color mode!");
+			hlog::warn(logTag, "Trying to set unsupported color mode!");
 			break;
 		}
 	}
@@ -367,7 +367,7 @@ namespace april
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			break;
 		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture filter!");
+			hlog::warn(logTag, "Trying to set unsupported texture filter!");
 			break;
 		}
 	}
@@ -391,7 +391,7 @@ namespace april
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			break;
 		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture address mode!");
+			hlog::warn(logTag, "Trying to set unsupported texture address mode!");
 			break;
 		}
 	}
@@ -762,7 +762,7 @@ namespace april
 	Image* OpenGL_RenderSystem::takeScreenshot(Image::Format format)
 	{
 #ifdef _DEBUG
-		hlog::write(april::logTag, "Taking screenshot...");
+		hlog::write(logTag, "Taking screenshot...");
 #endif
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();

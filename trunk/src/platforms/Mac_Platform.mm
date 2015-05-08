@@ -182,7 +182,7 @@ namespace april
 
 	hstr getUserDataPath()
 	{
-		hlog::warn(april::logTag, "Cannot use getUserDataPath() on this platform.");
+		hlog::warn(logTag, "Cannot use getUserDataPath() on this platform.");
 		return ".";
 	}
 	

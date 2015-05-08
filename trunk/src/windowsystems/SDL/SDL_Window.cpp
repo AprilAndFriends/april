@@ -112,7 +112,7 @@ namespace april
 		this->window = SDL_CreateWindow(this->title.cStr(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, flags);
 		if (this->window == NULL)
 		{
-			hlog::error(april::logTag, "SDL window could not be created!");
+			hlog::error(logTag, "SDL window could not be created!");
 			return false;
 		}
 		this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -120,7 +120,7 @@ namespace april
 		{
 			SDL_DestroyWindow(this->window);
 			this->window = NULL;
-			hlog::error(april::logTag, "SDL renderer could not be created!");
+			hlog::error(logTag, "SDL renderer could not be created!");
 			return false;
 		}
 		// not running yet

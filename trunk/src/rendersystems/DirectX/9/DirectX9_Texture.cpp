@@ -63,7 +63,7 @@ namespace april
 			}
 			if (hr == D3DERR_OUTOFVIDEOMEMORY)
 			{
-				hlog::error(april::logTag, "Failed to create DX9 texture: Not enough VRAM!");
+				hlog::error(logTag, "Failed to create DX9 texture: Not enough VRAM!");
 				return false;
 			}
 		}
@@ -89,7 +89,7 @@ namespace april
 			}
 			if (FAILED(hr))
 			{
-				hlog::error(april::logTag, "Failed to create DX9 texture!");
+				hlog::error(logTag, "Failed to create DX9 texture!");
 				return false;
 			}
 		}
@@ -197,19 +197,19 @@ namespace april
 		hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(this->width, this->height, this->d3dFormat, D3DPOOL_SYSTEMMEM, &lock.buffer, NULL);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to get pixel data, CreateOffscreenPlainSurface() call failed!");
+			hlog::error(logTag, "Failed to get pixel data, CreateOffscreenPlainSurface() call failed!");
 			return lock;
 		}
 		hr = APRIL_D3D_DEVICE->GetRenderTargetData(this->_getSurface(), lock.buffer);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to get pixel data, GetRenderTargetData() call failed!");
+			hlog::error(logTag, "Failed to get pixel data, GetRenderTargetData() call failed!");
 			return lock;
 		}
 		hr = lock.buffer->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to get pixel data, surface lock failed!");
+			hlog::error(logTag, "Failed to get pixel data, surface lock failed!");
 			return lock;
 		}
 		lock.activateRenderTarget((unsigned char*)lockRect.pBits);

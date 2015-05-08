@@ -144,7 +144,7 @@ namespace april
 	{
 		if (!this->created)
 		{
-			hlog::writef(april::logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
+			hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
 			this->created = true;
 			this->options = options;
 			this->depthBufferEnabled = false;
@@ -159,7 +159,7 @@ namespace april
 	{
 		if (this->created)
 		{
-			hlog::writef(april::logTag, "Destroying rendersystem '%s'.", this->name.cStr());
+			hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
 			// creating a copy, because deleting a texture modifies this->textures
 			harray<Texture*> textures = this->getTextures();
 			foreach (Texture*, it, textures)
@@ -178,7 +178,7 @@ namespace april
 	
 	void RenderSystem::reset()
 	{
-		hlog::write(april::logTag, "Resetting rendersystem.");
+		hlog::write(logTag, "Resetting rendersystem.");
 	}
 
 	harray<Texture*> RenderSystem::getTextures()
@@ -218,7 +218,7 @@ namespace april
 		}
 		else
 		{
-			hlog::error(april::logTag, "Cannot change depth-buffer state, RenderSystem was not created with this option!");
+			hlog::error(logTag, "Cannot change depth-buffer state, RenderSystem was not created with this option!");
 		}
 	}
 
@@ -304,46 +304,46 @@ namespace april
 
 	Texture* RenderSystem::getRenderTarget()
 	{
-		hlog::warnf(april::logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
+		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
 	void RenderSystem::setRenderTarget(Texture* texture)
 	{
-		hlog::warnf(april::logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
+		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	void RenderSystem::setPixelShader(april::PixelShader* pixelShader)
 	{
-		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
+		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	void RenderSystem::setVertexShader(april::VertexShader* vertexShader)
 	{
-		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
+		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	april::PixelShader* RenderSystem::createPixelShader()
 	{
-		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
+		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
 	april::PixelShader* RenderSystem::createPixelShader(chstr filename)
 	{
-		hlog::warnf(april::logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
+		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
 	april::VertexShader* RenderSystem::createVertexShader()
 	{
-		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
+		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
 	april::VertexShader* RenderSystem::createVertexShader(chstr filename)
 	{
-		hlog::warnf(april::logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
+		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
@@ -382,7 +382,7 @@ namespace april
 	{
 		if (format != Image::FORMAT_INVALID && !this->getCaps().textureFormats.has(format))
 		{
-			hlog::errorf(april::logTag, "Cannot create texture '%s', the texture format '%d' is not supported!", filename.cStr(), format);
+			hlog::errorf(logTag, "Cannot create texture '%s', the texture format '%d' is not supported!", filename.cStr(), format);
 			return NULL;
 		}
 		hstr name = (fromResource ? this->findTextureResource(filename) : this->findTextureFile(filename));
@@ -590,13 +590,13 @@ namespace april
 	
 	april::Image* RenderSystem::takeScreenshot(Image::Format format)
 	{
-		hlog::warnf(april::logTag, "Screenshots are not implemented in render system '%s'!", this->name.cStr());
+		hlog::warnf(logTag, "Screenshots are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
 	void RenderSystem::_setResolution(int w, int h, bool fullscreen)
 	{
-		hlog::warnf(april::logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.cStr());
+		hlog::warnf(logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int nVertices)

@@ -271,7 +271,7 @@ namespace april
 		if (value == false && g_WindowFocusedBeforeSleep)
 		{
 #ifdef _DEBUG
-			hlog::write(april::logTag, "Application lost focus while going to sleep, canceling focus on wake.");
+			hlog::write(logTag, "Application lost focus while going to sleep, canceling focus on wake.");
 #endif
 			g_WindowFocusedBeforeSleep = false;
 		}

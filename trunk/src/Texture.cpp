@@ -129,7 +129,7 @@ namespace april
 		this->data = NULL;
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
-		hlog::write(april::logTag, "Registering texture: " + this->_getInternalName());
+		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
 		return true;
 	}
 
@@ -146,7 +146,7 @@ namespace april
 		this->data = NULL;
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
-		hlog::write(april::logTag, "Registering texture: " + this->_getInternalName());
+		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
 		return true;
 	}
 
@@ -154,7 +154,7 @@ namespace april
 	{
 		if (w == 0 || h == 0)
 		{
-			hlog::errorf(april::logTag, "Cannot create texture with dimentions %d,%d!", w, h);
+			hlog::errorf(logTag, "Cannot create texture with dimentions %d,%d!", w, h);
 			return false;
 		}
 		this->filename = "";
@@ -178,7 +178,7 @@ namespace april
 		}
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
-		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
@@ -200,7 +200,7 @@ namespace april
 	{
 		if (w == 0 || h == 0)
 		{
-			hlog::errorf(april::logTag, "Cannot create texture with dimensions %d,%d!", w, h);
+			hlog::errorf(logTag, "Cannot create texture with dimensions %d,%d!", w, h);
 			return false;
 		}
 		this->filename = "";
@@ -224,7 +224,7 @@ namespace april
 		}
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
-		hlog::write(april::logTag, "Creating texture: " + this->_getInternalName());
+		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
@@ -243,7 +243,7 @@ namespace april
 	{
 		if (this->isLoaded())
 		{
-			hlog::error(april::logTag, "Texture implementation does not call unload() in destructor! This cause problems and memory leaks!");
+			hlog::error(logTag, "Texture implementation does not call unload() in destructor! This cause problems and memory leaks!");
 		}
 		this->waitForAsyncLoad(); // waiting for all async stuff to finish
 		hmutex::ScopeLock lock(&april::rendersys->texturesMutex);
@@ -266,7 +266,7 @@ namespace april
 	{
 		if (this->width == 0)
 		{
-			hlog::warnf(april::logTag, "Texture '%s' has width = 0 (possibly not loaded yet?)", this->filename.cStr());
+			hlog::warnf(logTag, "Texture '%s' has width = 0 (possibly not loaded yet?)", this->filename.cStr());
 		}
 		return this->width;
 	}
@@ -275,7 +275,7 @@ namespace april
 	{
 		if (this->height == 0)
 		{
-			hlog::warnf(april::logTag, "Texture '%s' has height = 0 (possibly not loaded yet?)", this->filename.cStr());
+			hlog::warnf(logTag, "Texture '%s' has height = 0 (possibly not loaded yet?)", this->filename.cStr());
 		}
 		return this->height;
 	}
@@ -284,7 +284,7 @@ namespace april
 	{
 		if (this->format == Image::FORMAT_INVALID)
 		{
-			hlog::warnf(april::logTag, "Texture '%s' has bpp = 0 (possibly not loaded yet?)", this->filename.cStr());
+			hlog::warnf(logTag, "Texture '%s' has bpp = 0 (possibly not loaded yet?)", this->filename.cStr());
 		}
 		return Image::getFormatBpp(this->format);
 	}
@@ -293,7 +293,7 @@ namespace april
 	{
 		if (this->width == 0 || this->height == 0 || this->format == Image::FORMAT_INVALID)
 		{
-			hlog::warnf(april::logTag, "Texture '%s' has byteSize = 0 (possibly not loaded yet?)", this->filename.cStr());
+			hlog::warnf(logTag, "Texture '%s' has byteSize = 0 (possibly not loaded yet?)", this->filename.cStr());
 		}
 		if (this->compressedSize > 0)
 		{
@@ -411,26 +411,26 @@ namespace april
 		unsigned char* currentData = NULL;
 		if (this->data != NULL) // reload from memory
 		{
-			hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
+			hlog::write(logTag, "Loading texture: " + this->_getInternalName());
 			currentData = this->data;
 			size = this->getByteSize();
 		}
 		else if (this->dataAsync != NULL) // load from asynchronically loaded data
 		{
-			hlog::write(april::logTag, "Uploading async texture: " + this->_getInternalName());
+			hlog::write(logTag, "Uploading async texture: " + this->_getInternalName());
 			currentData = this->dataAsync;
 			size = this->getByteSize();
 		}
 		else
 		{
-			hlog::write(april::logTag, "Loading texture: " + this->_getInternalName());
+			hlog::write(logTag, "Loading texture: " + this->_getInternalName());
 		}
 		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
 		if (currentData == NULL && ((this->type != TYPE_VOLATILE && this->type != TYPE_RENDER_TARGET) || this->width == 0 || this->height == 0))
 		{
 			if (this->filename == "")
 			{
-				hlog::error(april::logTag, "No filename for texture specified!");
+				hlog::error(logTag, "No filename for texture specified!");
 				return false;
 			}
 			Image* image = NULL;
@@ -444,7 +444,7 @@ namespace april
 			}
 			if (image == NULL)
 			{
-				hlog::error(april::logTag, "Failed to load texture: " + this->_getInternalName());
+				hlog::error(logTag, "Failed to load texture: " + this->_getInternalName());
 				return false;
 			}
 			this->width = image->w;
@@ -537,12 +537,12 @@ namespace april
 			{
 				err += "height is larger than 0.";
 			}
-			hlog::warn(april::logTag, err);
+			hlog::warn(logTag, err);
 			return false;
 		}
 		if (this->filename == "")
 		{
-			hlog::error(april::logTag, "No filename for texture specified!");
+			hlog::error(logTag, "No filename for texture specified!");
 			return false;
 		}
 		this->asyncLoadDiscarded = false;
@@ -557,7 +557,7 @@ namespace april
 	{
 		if (this->_destroyInternalTexture())
 		{
-			hlog::write(april::logTag, "Unloading texture: " + this->_getInternalName());
+			hlog::write(logTag, "Unloading texture: " + this->_getInternalName());
 		}
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->loaded = false;
@@ -637,7 +637,7 @@ namespace april
 			return;
 		}
 		lock.release();
-		hlog::write(april::logTag, "Loading async texture: " + this->_getInternalName());
+		hlog::write(logTag, "Loading async texture: " + this->_getInternalName());
 		Image* image = NULL;
 		if (this->format == Image::FORMAT_INVALID)
 		{
@@ -649,7 +649,7 @@ namespace april
 		}
 		if (image == NULL)
 		{
-			hlog::error(april::logTag, "Failed to load async texture: " + this->_getInternalName());
+			hlog::error(logTag, "Failed to load async texture: " + this->_getInternalName());
 			lock.acquire(&this->asyncLoadMutex);
 			this->asyncLoadQueued = false;
 			this->asyncLoadDiscarded = false;
@@ -679,12 +679,12 @@ namespace april
 	{
 		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		Lock lock = this->_tryLock();
@@ -701,7 +701,7 @@ namespace april
 		Color color = Color::Clear;
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot read texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
 			return color;
 		}
 		if (this->data != NULL)
@@ -715,12 +715,12 @@ namespace april
 	{
 		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		Lock lock = this->_tryLock(x, y, 1, 1);
@@ -736,7 +736,7 @@ namespace april
 		Color color = Color::Clear;
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot read texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
 			return color;
 		}
 		if (this->data != NULL)
@@ -750,12 +750,12 @@ namespace april
 	{
 		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		if (w == 1 && h == 1)
@@ -774,7 +774,7 @@ namespace april
 	{
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot read texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
@@ -795,12 +795,12 @@ namespace april
 	{
 		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		if ((this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET) &&
@@ -821,17 +821,17 @@ namespace april
 	{
 		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		if (texture->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		if (texture == NULL || !texture->isLoaded())
@@ -852,12 +852,12 @@ namespace april
 	{
 		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		Lock lock = this->_tryLock(dx, dy, dw, dh);
@@ -872,17 +872,17 @@ namespace april
 	{
 		if (this->type == TYPE_IMMUTABLE)
 		{
-			hlog::warn(april::logTag, "Cannot write texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
 		if (texture->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		if (texture == NULL || !texture->isLoaded())
@@ -903,12 +903,12 @@ namespace april
 	{
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		Lock lock = this->_tryLock(dx, dy, sw, sh);
@@ -923,17 +923,17 @@ namespace april
 	{
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
 		if (texture->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		if (texture == NULL || !texture->isLoaded())
@@ -954,12 +954,12 @@ namespace april
 	{
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		Lock lock = this->_tryLock(dx, dy, dw, dh);
@@ -974,17 +974,17 @@ namespace april
 	{
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
 		if (texture->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		if (texture == NULL || !texture->isLoaded())
@@ -1005,12 +1005,12 @@ namespace april
 	{
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		Lock lock = this->_tryLock(x, y, w, h);
@@ -1025,12 +1025,12 @@ namespace april
 	{
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		Lock lock = this->_tryLock(x, y, w, h);
@@ -1045,12 +1045,12 @@ namespace april
 	{
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		Lock lock = this->_tryLock(x, y, w, h);
@@ -1065,12 +1065,12 @@ namespace april
 	{
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		Lock lock = this->_tryLock();
@@ -1085,17 +1085,17 @@ namespace april
 	{
 		if (this->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot alter texture: " + this->_getInternalName());
+			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
 		if (texture->type != TYPE_MANAGED)
 		{
-			hlog::warn(april::logTag, "Cannot read texture: " + texture->_getInternalName());
+			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
 		if (!this->isLoaded())
 		{
-			hlog::errorf(april::logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
+			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
 		if (texture == NULL || !texture->isLoaded() || texture->width != this->width || texture->height != this->height)

@@ -49,7 +49,7 @@ namespace april
 			this->display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 			if (this->display == EGL_NO_DISPLAY)
 			{
-				hlog::error(april::logTag, "Can't get EGL Display!");
+				hlog::error(logTag, "Can't get EGL Display!");
 				this->destroy();
 				return false;
 			}
@@ -57,7 +57,7 @@ namespace april
 			EGLint minorVersion;
 			if (!eglInitialize(this->display, &majorVersion, &minorVersion))
 			{
-				hlog::error(april::logTag, "Can't initialize EGL!");
+				hlog::error(logTag, "Can't initialize EGL!");
 				this->destroy();
 				return false;
 			}
@@ -65,14 +65,14 @@ namespace april
 			EGLBoolean result = eglGetConfigs(this->display, NULL, 0, &configs);
 			if (!result || configs == 0)
 			{
-				hlog::error(april::logTag, "There are no EGL configs!");
+				hlog::error(logTag, "There are no EGL configs!");
 				this->destroy();
 				return false;
 			}
 			result = eglChooseConfig(this->display, this->pi32ConfigAttribs, &this->config, 1, &configs);
 			if (!result || configs == 0)
 			{
-				hlog::error(april::logTag, "Can't choose EGL config!");
+				hlog::error(logTag, "Can't choose EGL config!");
 				this->destroy();
 				return false;
 			}
@@ -86,7 +86,7 @@ namespace april
 			this->context = eglCreateContext(this->display, this->config, NULL, NULL);
 			if (!eglMakeCurrent(this->display, this->surface, this->surface, this->context))
 			{
-				hlog::error(april::logTag, "Can't set current EGL context!");
+				hlog::error(logTag, "Can't set current EGL context!");
 				this->destroy();
 				return false;
 			}
