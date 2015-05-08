@@ -136,7 +136,7 @@ namespace april
 		HRESULT hr;
 		while (april::window->isRunning())
 		{
-			hlog::write(april::logTag, "Resetting device...");
+			hlog::write(logTag, "Resetting device...");
 			if (this->d3dpp->BackBufferWidth <= 0 || this->d3dpp->BackBufferHeight <= 0)
 			{
 				throw Exception(hsprintf("Backbuffer size is invalid: %d x %d", this->d3dpp->BackBufferWidth, this->d3dpp->BackBufferHeight));
@@ -164,7 +164,7 @@ namespace april
 			}
 			else
 			{
-				hlog::errorf(april::logTag, "Failed to reset device!, context: DirectX9_RenderSystem::reset() hresult: %u", hr);
+				hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::reset() hresult: %u", hr);
 			}
 		}
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
@@ -174,7 +174,7 @@ namespace april
 		this->setOrthoProjection(this->orthoProjection);
 		this->_setModelviewMatrix(this->modelviewMatrix);
 		this->_setProjectionMatrix(this->projectionMatrix);
-		hlog::write(april::logTag, "Direct3D9 Device restored.");
+		hlog::write(logTag, "Direct3D9 Device restored.");
 		// this is used to display window content while resizing window
 		april::window->performUpdate(0.0f);
 	}
@@ -436,7 +436,7 @@ namespace april
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 			break;
 		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture blend mode!");
+			hlog::warn(logTag, "Trying to set unsupported texture blend mode!");
 			break;
 		}
 	}
@@ -475,7 +475,7 @@ namespace april
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 			break;
 		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture color mode!");
+			hlog::warn(logTag, "Trying to set unsupported texture color mode!");
 			break;
 		}
 	}
@@ -494,7 +494,7 @@ namespace april
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 			break;
 		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture filter!");
+			hlog::warn(logTag, "Trying to set unsupported texture filter!");
 			break;
 		}
 	}
@@ -513,7 +513,7 @@ namespace april
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 			break;
 		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture address mode!");
+			hlog::warn(logTag, "Trying to set unsupported texture address mode!");
 			break;
 		}
 	}
@@ -599,7 +599,7 @@ namespace april
 		}
 		if (w <= 0 || h <= 0)
 		{
-			hlog::warnf(april::logTag, "Cannot set resolution to: %d x %d", w, h);
+			hlog::warnf(logTag, "Cannot set resolution to: %d x %d", w, h);
 			return;
 		}
 		bool resizable = IS_WINDOW_RESIZABLE;
@@ -811,26 +811,26 @@ namespace april
 	Image* DirectX9_RenderSystem::takeScreenshot(Image::Format format)
 	{
 #ifdef _DEBUG
-		hlog::write(april::logTag, "Taking screenshot...");
+		hlog::write(logTag, "Taking screenshot...");
 #endif
 		D3DSURFACE_DESC desc;
 		this->backBuffer->GetDesc(&desc);
 		if (desc.Format != D3DFMT_X8R8G8B8)
 		{
-			hlog::error(april::logTag, "Failed to grab screenshot, backbuffer format not supported, expected X8R8G8B8, got: " + hstr(desc.Format));
+			hlog::error(logTag, "Failed to grab screenshot, backbuffer format not supported, expected X8R8G8B8, got: " + hstr(desc.Format));
 			return NULL;
 		}
 		IDirect3DSurface9* buffer;
 		HRESULT hr = this->d3dDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &buffer, NULL);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to grab screenshot, CreateOffscreenPlainSurface() call failed.");
+			hlog::error(logTag, "Failed to grab screenshot, CreateOffscreenPlainSurface() call failed.");
 			return NULL;
 		}
 		hr = this->d3dDevice->GetRenderTargetData(this->backBuffer, buffer);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to grab screenshot, GetRenderTargetData() call failed.");
+			hlog::error(logTag, "Failed to grab screenshot, GetRenderTargetData() call failed.");
 			buffer->Release();
 			return NULL;
 		}		
@@ -838,7 +838,7 @@ namespace april
 		hr = buffer->LockRect(&rect, NULL, D3DLOCK_DONOTWAIT);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to grab screenshot, surface lock failed.");
+			hlog::error(logTag, "Failed to grab screenshot, surface lock failed.");
 			buffer->Release();
 			return NULL;
 		}
@@ -860,7 +860,7 @@ namespace april
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 		if (hr == D3DERR_DEVICELOST)
 		{
-			hlog::write(april::logTag, "Direct3D9 Device lost, attempting to restore...");
+			hlog::write(logTag, "Direct3D9 Device lost, attempting to restore...");
 			foreach (Texture*, it, this->textures)
 			{
 				(*it)->unload();
@@ -876,7 +876,7 @@ namespace april
 				}
 				if (hr == D3DERR_DEVICENOTRESET)
 				{
-					hlog::write(april::logTag, "Resetting device...");
+					hlog::write(logTag, "Resetting device...");
 					hr = this->d3dDevice->Reset(this->d3dpp);
 					if (!FAILED(hr))
 					{
@@ -904,7 +904,7 @@ namespace april
 					}
 					else
 					{
-						hlog::errorf(april::logTag, "Failed to reset device!, context: DirectX9_RenderSystem::presentFrame() hresult: %u", hr);
+						hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::presentFrame() hresult: %u", hr);
 					}
 				}
 				else if (hr == D3DERR_DRIVERINTERNALERROR)
@@ -924,7 +924,7 @@ namespace april
 			this->setOrthoProjection(this->orthoProjection);
 			this->_setModelviewMatrix(this->modelviewMatrix);
 			this->_setProjectionMatrix(this->projectionMatrix);
-			hlog::write(april::logTag, "Direct3D9 Device restored.");
+			hlog::write(logTag, "Direct3D9 Device restored.");
 		}
 		else
 		{

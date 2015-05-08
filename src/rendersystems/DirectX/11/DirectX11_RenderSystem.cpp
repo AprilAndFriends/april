@@ -219,7 +219,7 @@ namespace april
 			ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3dDevice, NULL, &_d3dDeviceContext);
 		if (FAILED(hr))
 		{
-			hlog::write(april::logTag, "Hardware device not available. Falling back to WARP device.");
+			hlog::write(logTag, "Hardware device not available. Falling back to WARP device.");
 			// if hardware device is not available, try a WARP device as a fallback instead
 			hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_WARP, NULL, creationFlags, featureLevels,
 				ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3dDevice, NULL, &_d3dDeviceContext);
@@ -341,7 +341,7 @@ namespace april
 		int h = hround(info.displayResolution.y);
 		if (w != width || h != height)
 		{
-			hlog::warnf(april::logTag, "On WinRT the window resolution (%d,%d) should match the display resolution (%d,%d) in order to avoid problems.", width, height, w, h);
+			hlog::warnf(logTag, "On WinRT the window resolution (%d,%d) should match the display resolution (%d,%d) in order to avoid problems.", width, height, w, h);
 		}
 		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = { 0 };
 		swapChainDesc.Stereo = false;
@@ -541,7 +541,7 @@ namespace april
 			rotation = DXGI_MODE_ROTATION_ROTATE180;
 			break;
 		default:
-			hlog::error(april::logTag, "Undefined screen orienation, using default landscape!");
+			hlog::error(logTag, "Undefined screen orienation, using default landscape!");
 			rotation = DXGI_MODE_ROTATION_ROTATE90;
 			break;
 		}
@@ -579,21 +579,21 @@ namespace april
 		hr = this->d3dDevice.As(&dxgiDevice);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Unable to retrieve DXGI device!");
+			hlog::error(logTag, "Unable to retrieve DXGI device!");
 			return 0;
 		}
 		ComPtr<IDXGIAdapter> dxgiAdapter;
 		hr = dxgiDevice->GetAdapter(&dxgiAdapter);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Unable to get adapter from DXGI device!");
+			hlog::error(logTag, "Unable to get adapter from DXGI device!");
 			return 0;
 		}
 		DXGI_ADAPTER_DESC desc;
 		hr = dxgiAdapter->GetDesc(&desc);
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Unable to get description from DXGI adapter!");
+			hlog::error(logTag, "Unable to get description from DXGI adapter!");
 			return 0;
 		}
 		return (desc.DedicatedVideoMemory / (1024 * 1024));
@@ -644,7 +644,7 @@ namespace april
 		RenderSystem::setDepthBuffer(enabled, writeEnabled);
 		if (this->options.depthBuffer)
 		{
-			hlog::error(april::logTag, "Not implemented!");
+			hlog::error(logTag, "Not implemented!");
 		}
 	}
 
@@ -660,7 +660,7 @@ namespace april
 			this->activeTextureBlendMode = textureBlendMode;
 			break;
 		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture blend mode!");
+			hlog::warn(logTag, "Trying to set unsupported texture blend mode!");
 			break;
 		}
 	}
@@ -678,7 +678,7 @@ namespace april
 			this->activeTextureColorMode = textureColorMode;
 			break;
 		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture color mode!");
+			hlog::warn(logTag, "Trying to set unsupported texture color mode!");
 			break;
 		}
 	}
@@ -692,7 +692,7 @@ namespace april
 			this->textureFilter = textureFilter;
 			break;
 		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture filter!");
+			hlog::warn(logTag, "Trying to set unsupported texture filter!");
 			break;
 		}
 	}
@@ -706,7 +706,7 @@ namespace april
 			this->textureAddressMode = textureAddressMode;
 			break;
 		default:
-			hlog::warn(april::logTag, "Trying to set unsupported texture address mode!");
+			hlog::warn(logTag, "Trying to set unsupported texture address mode!");
 			break;
 		}
 	}
@@ -751,7 +751,7 @@ namespace april
 		}
 		else
 		{
-			hlog::error(april::logTag, "Texture not created as rendertarget: " + texture->_getInternalName());
+			hlog::error(logTag, "Texture not created as rendertarget: " + texture->_getInternalName());
 			return;
 		}
 		this->renderTarget = texture;
@@ -1123,7 +1123,7 @@ namespace april
 	Image* DirectX11_RenderSystem::takeScreenshot(Image::Format format)
 	{
 		// TODOa - if possible
-		hlog::warn(april::logTag, "DirectX11_RenderSystem::takeScreenshot() not implemented!");
+		hlog::warn(logTag, "DirectX11_RenderSystem::takeScreenshot() not implemented!");
 		return NULL;
 	}
 	

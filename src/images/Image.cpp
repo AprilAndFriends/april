@@ -1460,7 +1460,7 @@ namespace april
 	{
 		if (preventCopy && srcFormat == destFormat)
 		{
-			hlog::warn(april::logTag, "The source's and destination's formats are the same!");
+			hlog::warn(logTag, "The source's and destination's formats are the same!");
 			return false;
 		}
 		int srcBpp = Image::getFormatBpp(srcFormat);
@@ -1489,7 +1489,7 @@ namespace april
 				return true;
 			}
 		}
-		hlog::errorf(april::logTag, "Conversion from %d BPP to %d BPP is not supported!", srcBpp, Image::getFormatBpp(destFormat));
+		hlog::errorf(logTag, "Conversion from %d BPP to %d BPP is not supported!", srcBpp, Image::getFormatBpp(destFormat));
 		return false;
 	}
 

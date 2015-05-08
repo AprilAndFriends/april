@@ -184,7 +184,7 @@ namespace april
 
 	void _startInit()
 	{
-		hlog::writef(april::logTag, "Initializing APRIL. (Platform: %s %s (%d bit))", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
+		hlog::writef(logTag, "Initializing APRIL. (Platform: %s %s (%d bit))", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
 		extensions += ".jpt";
 		extensions += ".png";
 		extensions += ".jpg";
@@ -198,7 +198,7 @@ namespace april
 
 	void _finishInit()
 	{
-		hlog::writef(april::logTag, "Using: %s, %s", april::rendersys->getName().cStr(), april::window->getName().cStr());
+		hlog::writef(logTag, "Using: %s, %s", april::rendersys->getName().cStr(), april::window->getName().cStr());
 		april::getSystemInfo(); // required to be initialized on certain platforms
 	}
 
@@ -381,7 +381,7 @@ namespace april
 	{
 		if (april::rendersys != NULL || april::window != NULL)
 		{
-			hlog::write(april::logTag, "Destroying APRIL.");
+			hlog::write(logTag, "Destroying APRIL.");
 		}
 		if (april::window != NULL)
 		{

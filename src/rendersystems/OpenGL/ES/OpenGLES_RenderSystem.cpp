@@ -105,7 +105,7 @@ namespace april
 				glBlendFuncSeparateOES(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);				
 				break;
 			default:
-				hlog::warn(april::logTag, "Trying to set unsupported blend mode!");
+				hlog::warn(logTag, "Trying to set unsupported blend mode!");
 				break;
 			}
 		}

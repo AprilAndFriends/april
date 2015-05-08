@@ -30,7 +30,7 @@ namespace april
 	{
 		char buffer[JMSG_LENGTH_MAX] = { '\0' };
 		(*cInfo->err->format_message)(cInfo, buffer);
-		hlog::error(april::logTag, buffer);
+		hlog::error(logTag, buffer);
 		hasError = true;
 	}
 

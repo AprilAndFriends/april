@@ -86,14 +86,14 @@ namespace april
 			static bool displayDpiLogged = false;
 			if (!displayDpiLogged)
 			{
-				hlog::warn(april::logTag, "Cannot get raw display DPI, trying logical DPI.");
+				hlog::warn(logTag, "Cannot get raw display DPI, trying logical DPI.");
 			}
 			info.displayDpi = displayInfo->LogicalDpi;
 			if (info.displayDpi < 0.01f)
 			{
 				if (!displayDpiLogged)
 				{
-					hlog::warn(april::logTag, "Cannot get logical display DPI, defaulting to 96.");
+					hlog::warn(logTag, "Cannot get logical display DPI, defaulting to 96.");
 				}
 				info.displayDpi = 96.0f;
 			}
@@ -170,7 +170,7 @@ namespace april
 			}
 			break;
 		default:
-			hlog::error(april::logTag, "Unknown message box callback: " + hstr(button));
+			hlog::error(logTag, "Unknown message box callback: " + hstr(button));
 			break;
 		}
 	}
@@ -250,7 +250,7 @@ namespace april
 		}
 		catch (Platform::AccessDeniedException^ e)
 		{
-			hlog::warn(april::logTag, "messagebox() on WinRT called \"recursively\"! Queueing to UI thread now...");
+			hlog::warn(logTag, "messagebox() on WinRT called \"recursively\"! Queueing to UI thread now...");
 			messageBoxQueueMutex.lock();
 			messageBoxQueue += handler;
 			messageBoxQueueMutex.unlock();

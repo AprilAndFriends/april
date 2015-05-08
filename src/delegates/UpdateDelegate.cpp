@@ -24,7 +24,7 @@ namespace april
 
 	bool UpdateDelegate::onUpdate(float timeDelta)
 	{
-		hlog::debug(april::logTag, "Event onUpdate() was not implemented.");
+		hlog::debug(logTag, "Event onUpdate() was not implemented.");
 		return false; // quits immediately
 	}
 

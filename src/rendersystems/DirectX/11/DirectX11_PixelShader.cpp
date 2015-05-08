@@ -41,21 +41,21 @@ namespace april
 	{
 		if (this->dx11Shader != nullptr)
 		{
-			hlog::error(april::logTag, "Shader already loaded.");
+			hlog::error(logTag, "Shader already loaded.");
 			return false;
 		}
 		unsigned char* data = NULL;
 		int32_t size = 0;
 		if (!this->_loadFileData(filename, &data, &size))
 		{
-			hlog::error(april::logTag, "Shader file not found: " + filename);
+			hlog::error(logTag, "Shader file not found: " + filename);
 			return false;
 		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreatePixelShader(data, size, NULL, &this->dx11Shader);
 		delete [] data;
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to create pixel shader!");
+			hlog::error(logTag, "Failed to create pixel shader!");
 			return false;
 		}
 		return true;
@@ -65,21 +65,21 @@ namespace april
 	{
 		if (this->dx11Shader != nullptr)
 		{
-			hlog::error(april::logTag, "Shader already loaded.");
+			hlog::error(logTag, "Shader already loaded.");
 			return false;
 		}
 		unsigned char* data = NULL;
 		int32_t size = 0;
 		if (!this->_loadResourceData(filename, &data, &size))
 		{
-			hlog::error(april::logTag, "Shader file not found: " + filename);
+			hlog::error(logTag, "Shader file not found: " + filename);
 			return false;
 		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreatePixelShader(data, size, NULL, &this->dx11Shader);
 		delete [] data;
 		if (FAILED(hr))
 		{
-			hlog::error(april::logTag, "Failed to create pixel shader!");
+			hlog::error(logTag, "Failed to create pixel shader!");
 			return false;
 		}
 		return true;

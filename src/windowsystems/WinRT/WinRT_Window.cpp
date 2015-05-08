@@ -112,7 +112,7 @@ namespace april
 
 	void WinRT_Window::setTitle(chstr title)
 	{
-		hlog::warn(april::logTag, "Window::setTitle() does nothing on WinRT.");
+		hlog::warn(logTag, "Window::setTitle() does nothing on WinRT.");
 	}
 	
 	void* WinRT_Window::getBackendId()
@@ -123,7 +123,7 @@ namespace april
 
 	void WinRT_Window::setResolution(int w, int h, bool fullscreen)
 	{
-		hlog::error(april::logTag, "Cannot change resolution on window system: " + this->name);
+		hlog::error(logTag, "Cannot change resolution on window system: " + this->name);
 	}
 
 	void WinRT_Window::changeSize(int w, int h)

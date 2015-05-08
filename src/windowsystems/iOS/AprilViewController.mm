@@ -44,17 +44,17 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 //    bool landscape = UIInterfaceOrientationIsLandscape(interfaceOrientation);
     NSString* nsDefaultPngName = [userDefaults objectForKey:@"april_LaunchImage"];
 //#ifdef _DEBUG
-//    hlog::write(april::logTag, "Debug: forcing launch image detection for debugging purposes");
+//    hlog::write(logTag, "Debug: forcing launch image detection for debugging purposes");
 //    nsDefaultPngName = nil;
 //#endif
     if (nsDefaultPngName != nil)
     {
-        hlog::writef(april::logTag, "Found cached LaunchImage: %s.png", [nsDefaultPngName UTF8String]);
+        hlog::writef(logTag, "Found cached LaunchImage: %s.png", [nsDefaultPngName UTF8String]);
         return nsDefaultPngName;
     }
     else
     {
-        hlog::write(april::logTag, "Cached LaunchImage not found, detecting...");
+        hlog::write(logTag, "Cached LaunchImage not found, detecting...");
     }
 
     hstr defaultPngName, rotatedPngName;

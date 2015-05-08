@@ -131,7 +131,7 @@ static bool gFullscreenToggleRequest = false;
 - (void)windowDidMiniaturize:(NSNotification *)notification
 {
 #ifdef _DEBUG
-	hlog::write(april::logTag, "User minimized window.");
+	hlog::write(logTag, "User minimized window.");
 #endif
 	aprilWindow->onFocusChanged(0);
 }
@@ -139,7 +139,7 @@ static bool gFullscreenToggleRequest = false;
 - (void)windowDidDeminiaturize:(NSNotification *)notification
 {
 #ifdef _DEBUG
-	hlog::write(april::logTag, "User unminimized window.");
+	hlog::write(logTag, "User unminimized window.");
 #endif
 	aprilWindow->onFocusChanged(1);
 }

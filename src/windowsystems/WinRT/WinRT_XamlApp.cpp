@@ -187,7 +187,7 @@ namespace april
 	void WinRT_XamlApp::OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args)
 	{
 		args->Handled = true;
-		hlog::write(april::logTag, "WinRT window activation state changing...");
+		hlog::write(logTag, "WinRT window activation state changing...");
 		if (!this->activated)
 		{
 			this->activated = true;
@@ -203,7 +203,7 @@ namespace april
 						float delay = delaySplash - (htickCount() - this->startTime) * 0.001f;
 						if (delay > 0.0f)
 						{
-							hlog::write(april::logTag, "Rendering splash screen for: " + hstr(delay));
+							hlog::write(logTag, "Rendering splash screen for: " + hstr(delay));
 							this->_tryLoadSplashTexture();
 							this->_tryRenderSplashTexture();
 							if (this->splashTexture != NULL)
@@ -274,14 +274,14 @@ namespace april
 
 	void WinRT_XamlApp::OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args)
 	{
-		hlog::write(april::logTag, "WinRT suspending...");
+		hlog::write(logTag, "WinRT suspending...");
 		DX11_RENDERSYS->trim(); // required since Win 8.1
 		this->_handleFocusChange(false);
 	}
 
 	void WinRT_XamlApp::OnResume(_In_ Object^ sender, _In_ Object^ args)
 	{
-		hlog::write(april::logTag, "WinRT resuming...");
+		hlog::write(logTag, "WinRT resuming...");
 		this->_handleFocusChange(true);
 	}
 

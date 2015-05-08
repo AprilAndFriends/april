@@ -34,13 +34,13 @@ namespace april
 
 	hstr getPackageName()
 	{
-		hlog::warn(april::logTag, "Cannot use getPackageName() on this platform.");
+		hlog::warn(logTag, "Cannot use getPackageName() on this platform.");
 		return "";
 	}
 
 	hstr getUserDataPath()
 	{
-		hlog::error(april::logTag, "Not implemented.");
+		hlog::error(logTag, "Not implemented.");
 		return ".";
 	}
 	

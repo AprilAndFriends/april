@@ -49,16 +49,16 @@ namespace april
 	{
 		hstr dataPath = _JSTR_TO_HSTR(jDataPath);
 		hstr archivePath = _JSTR_TO_HSTR(jForcedArchivePath);
-		hlog::write(april::logTag, "System path: " + april::getUserDataPath());
+		hlog::write(logTag, "System path: " + april::getUserDataPath());
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
 #ifndef _OPENKODE
 			// set the resources CWD
 			hresource::setCwd(hrdir::joinPath(hrdir::joinPath(dataPath, "Android/data"), april::getPackageName()));
 			hresource::setArchive(""); // not used anyway when hasZip() returns false
-			hlog::write(april::logTag, "Using no-zip: " + hresource::getCwd());
+			hlog::write(logTag, "Using no-zip: " + hresource::getCwd());
 #else
-			hlog::write(april::logTag, "Using KD file system: " + hresource::getCwd());
+			hlog::write(logTag, "Using KD file system: " + hresource::getCwd());
 #endif
 		}
 		else if (archivePath != "")
@@ -66,7 +66,7 @@ namespace april
 			// using APK file as archive
 			hresource::setCwd("assets");
 			hresource::setArchive(archivePath);
-			hlog::write(april::logTag, "Using assets: " + hresource::getArchive());
+			hlog::write(logTag, "Using assets: " + hresource::getArchive());
 		}
 		else
 		{
@@ -74,7 +74,7 @@ namespace april
 			hresource::setCwd(".");
 			// using Google Play's "Expansion File" system
 			hresource::setArchive(dataPath);
-			hlog::write(april::logTag, "Using obb: " + hresource::getArchive());
+			hlog::write(logTag, "Using obb: " + hresource::getArchive());
 		}
 	}
 	
@@ -89,10 +89,10 @@ namespace april
 			args += _JSTR_TO_HSTR(string);
 			env->DeleteLocalRef(string);
 		}
-		hlog::debug(april::logTag, "Got args:");
+		hlog::debug(logTag, "Got args:");
 		foreach (hstr, it, args)
 		{
-			hlog::debug(april::logTag, "    " + (*it));
+			hlog::debug(logTag, "    " + (*it));
 		}
 		(*aprilInit)(args);
 	}
@@ -153,7 +153,7 @@ namespace april
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
 	{
 		bool focused = (jFocused != JNI_FALSE);
-		hlog::write(april::logTag, "onWindowFocusChanged(" + hstr(focused) + ")");
+		hlog::write(logTag, "onWindowFocusChanged(" + hstr(focused) + ")");
 		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(focused));
 	}
 	
@@ -161,53 +161,53 @@ namespace april
 	{
 		bool visible = (jVisible != JNI_FALSE);
 		float heightRatio = (float)jHeightRatio;
-		hlog::write(april::logTag, "onVirtualKeyboardChanged(" + hstr(visible) + "," + hstr(heightRatio) + ")");
+		hlog::write(logTag, "onVirtualKeyboardChanged(" + hstr(visible) + "," + hstr(heightRatio) + ")");
 		PROTECTED_WINDOW_CALL(handleVirtualKeyboardChangeEvent(visible, heightRatio));
 	}
 	
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
 	{
-		hlog::write(april::logTag, "onLowMemoryWarning()");
+		hlog::write(logTag, "onLowMemoryWarning()");
 		PROTECTED_WINDOW_CALL(handleLowMemoryWarning());
 	}
 	
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
 	{
-		hlog::write(april::logTag, "Android View::onSurfaceCreated()");
+		hlog::write(logTag, "Android View::onSurfaceCreated()");
 		PROTECTED_RENDERSYS_CALL(reset());
 	}
 	
 	void JNICALL _JNI_activityOnCreate(JNIEnv* env, jclass classe)
 	{
-		hlog::write(april::logTag, "Android Activity::onCreate()");
+		hlog::write(logTag, "Android Activity::onCreate()");
 	}
 	
 	void JNICALL _JNI_activityOnStart(JNIEnv* env, jclass classe)
 	{
-		hlog::write(april::logTag, "Android Activity::onStart()");
+		hlog::write(logTag, "Android Activity::onStart()");
 	}
 	
 	void JNICALL _JNI_activityOnResume(JNIEnv* env, jclass classe)
 	{
-		hlog::write(april::logTag, "Android Activity::onResume()");
+		hlog::write(logTag, "Android Activity::onResume()");
 		PROTECTED_WINDOW_CALL(handleActivityChangeEvent(true));
 	}
 	
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
-		hlog::write(april::logTag, "Android Activity::onPause()");
+		hlog::write(logTag, "Android Activity::onPause()");
 		PROTECTED_WINDOW_CALL(handleActivityChangeEvent(false));
 		PROTECTED_RENDERSYS_CALL(unloadTextures());
 	}
 	
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
 	{
-		hlog::write(april::logTag, "Android Activity::onStop()");
+		hlog::write(logTag, "Android Activity::onStop()");
 	}
 	
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
 	{
-		hlog::write(april::logTag, "Android Activity::onDestroy()");
+		hlog::write(logTag, "Android Activity::onDestroy()");
 		if (april::classLoader != NULL)
 		{
 			env->DeleteGlobalRef(april::classLoader);
@@ -217,7 +217,7 @@ namespace april
 	
 	void JNICALL _JNI_activityOnRestart(JNIEnv* env, jclass classe)
 	{
-		hlog::write(april::logTag, "Android Activity::onRestart()");
+		hlog::write(logTag, "Android Activity::onRestart()");
 	}
 	
 	void JNICALL _JNI_onDialogOk(JNIEnv* env, jclass classe)
