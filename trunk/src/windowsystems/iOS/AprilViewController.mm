@@ -49,12 +49,12 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 //#endif
     if (nsDefaultPngName != nil)
     {
-        hlog::writef(logTag, "Found cached LaunchImage: %s.png", [nsDefaultPngName UTF8String]);
+		hlog::writef(april::logTag, "Found cached LaunchImage: %s.png", [nsDefaultPngName UTF8String]);
         return nsDefaultPngName;
     }
     else
     {
-        hlog::write(logTag, "Cached LaunchImage not found, detecting...");
+		hlog::write(april::logTag, "Cached LaunchImage not found, detecting...");
     }
 
     hstr defaultPngName, rotatedPngName;
