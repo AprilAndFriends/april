@@ -30,7 +30,7 @@ int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy
 			args += argv[i];
 		}
 	}
-	hlog::write(april::logTag, "Initializing OpenKODE: " + hstr(kdQueryAttribcv(KD_ATTRIB_VERSION)));
+	hlog::write(logTag, "Initializing OpenKODE: " + hstr(kdQueryAttribcv(KD_ATTRIB_VERSION)));
 	anAprilInit(args);
 	april::window->enterMainLoop();
 	anAprilDestroy();
