@@ -92,7 +92,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 		float w = alertView.bounds.size.width;
 		if (w < 5.0f)
 		{
-			hlog::write(logTag, "In messageBox()'s label hack, width override took place");
+			hlog::write(april::logTag, "In messageBox()'s label hack, width override took place");
 			w = 400.0f; // hardcoded width! seems to work ok
 		}
 		
