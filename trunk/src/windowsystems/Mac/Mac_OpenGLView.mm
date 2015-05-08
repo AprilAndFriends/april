@@ -75,7 +75,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 
 	if (!pf)
     {
-        hlog::error(logTag, "Unable to create requested OpenGL pixel format");
+        hlog::error(april::logTag, "Unable to create requested OpenGL pixel format");
     }
 
 	if (self = [super initWithFrame:mFrameRect pixelFormat:[pf autorelease]])

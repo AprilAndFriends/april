@@ -30,7 +30,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	if (aprilWindow && aprilWindow->isFocused())
 	{
 #ifdef _DEBUG
-		hlog::write(logTag, "Computer went to sleep while app was focused.");
+		hlog::write(april::logTag, "Computer went to sleep while app was focused.");
 #endif
 		aprilWindow->onFocusChanged(false);
 		g_WindowFocusedBeforeSleep = true;
@@ -43,7 +43,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	if (g_WindowFocusedBeforeSleep)
 	{
 #ifdef _DEBUG
-		hlog::write(logTag, "Computer waked from sleep, focusing window.");
+		hlog::write(april::logTag, "Computer waked from sleep, focusing window.");
 #endif
 		aprilWindow->onFocusChanged(true);
 		g_WindowFocusedBeforeSleep = false;
@@ -90,7 +90,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	if (mAppFocused) return; // this blocks initial app focus call
 	mAppFocused = true;
 #ifdef _DEBUG
-	hlog::write(logTag, "Application activated.");
+	hlog::write(april::logTag, "Application activated.");
 #endif
 	if (aprilWindow) aprilWindow->OnAppGainedFocus();
 }
@@ -100,7 +100,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	if (!mAppFocused) return;
 	mAppFocused = false;
 #ifdef _DEBUG
-	hlog::write(logTag, "Application deactivated.");
+	hlog::write(april::logTag, "Application deactivated.");
 #endif
 	if (aprilWindow) aprilWindow->OnAppLostFocus();
 }
