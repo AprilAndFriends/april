@@ -267,6 +267,7 @@ namespace april
 			this->setTextureAddressMode(this->activeTexture->getAddressMode());
 			// filtering and wrapping applied before loading texture data, iOS OpenGL guidelines suggest it as an optimization
 			this->activeTexture->load();
+			this->activeTexture->unlock();
 			this->bindTexture(this->activeTexture->textureId);
 		}
 	}

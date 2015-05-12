@@ -106,6 +106,8 @@ namespace april
 		this->compressedSize = 0; // used in compressed textures only
 		this->filter = FILTER_LINEAR;
 		this->addressMode = ADDRESS_CLAMP;
+		this->locked = false;
+		this->dirty = false;
 		this->data = NULL;
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
@@ -509,6 +511,7 @@ namespace april
 
 	bool Texture::loadAsync()
 	{
+		this->unlock();
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->dataAsync != NULL || this->loaded)
 		{
@@ -571,6 +574,7 @@ namespace april
 			this->dataAsync = NULL;
 		}
 		this->firstUpload = true;
+		this->unlock();
 	}
 
 	void Texture::waitForAsyncLoad(float timeout)
@@ -673,6 +677,36 @@ namespace april
 		this->asyncLoadQueued = false;
 		this->asyncLoadDiscarded = false;
 		delete image;
+	}
+
+	bool Texture::lock()
+	{
+		if (this->type != TYPE_MANAGED)
+		{
+			hlog::warn(logTag, "Cannot use locking, texture is not managed: " + this->_getInternalName());
+			return false;
+		}
+		if (this->locked)
+		{
+			return false;
+		}
+		this->locked = true;
+		return true;
+	}
+
+	bool Texture::unlock()
+	{
+		if (!this->locked)
+		{
+			return false;
+		}
+		this->locked = false;
+		if (this->isLoaded() && this->dirty)
+		{
+			this->_uploadDataToGpu(0, 0, this->getWidth(), this->getHeight());
+		}
+		this->dirty = false;
+		return true;
 	}
 
 	bool Texture::clear()
@@ -805,7 +839,7 @@ namespace april
 		}
 		if ((this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET) &&
 			!Image::needsConversion(srcFormat, april::rendersys->getNativeTextureFormat(this->format)) &&
-			this->_uploadToGpu(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat))
+			!this->locked && this->_uploadToGpu(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat))
 		{
 			return true;
 		}
@@ -1307,7 +1341,14 @@ namespace april
 	{
 		if (!this->_unlockSystem(lock, update) && !lock.failed && update)
 		{
-			update = this->_uploadDataToGpu(lock.dx, lock.dy, lock.w, lock.h);
+			if (!this->locked)
+			{
+				update = this->_uploadDataToGpu(lock.dx, lock.dy, lock.w, lock.h);
+			}
+			else
+			{
+				this->dirty = true;
+			}
 		}
 		return update;
 	}
@@ -1315,7 +1356,7 @@ namespace april
 	bool Texture::_uploadDataToGpu(int x, int y, int w, int h)
 	{
 		if (!Image::needsConversion(this->format, april::rendersys->getNativeTextureFormat(this->format)) &&
-			this->_uploadToGpu(x, y, w, h, x, y, this->data, this->width, this->height, this->format))
+			this->_uploadToGpu(x, y, w, h, x, y, this->data, this->width, this->height, this->format) || this->locked)
 		{
 			return true;
 		}
