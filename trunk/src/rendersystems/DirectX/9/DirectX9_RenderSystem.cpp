@@ -382,6 +382,7 @@ namespace april
 				this->setTextureAddressMode(addressMode);
 			}
 			this->activeTexture->load();
+			this->activeTexture->unlock();
 			this->d3dDevice->SetTexture(0, this->activeTexture->d3dTexture);
 			if (!caps.npotTexturesLimited && !caps.npotTextures)
 			{

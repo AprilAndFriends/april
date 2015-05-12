@@ -88,6 +88,8 @@ namespace april
 		HL_DEFINE_GET(Image::Format, format, Format);
 		HL_DEFINE_GETSET(Filter, filter, Filter);
 		HL_DEFINE_GETSET(AddressMode, addressMode, AddressMode);
+		HL_DEFINE_IS(locked, Locked);
+		HL_DEFINE_IS(dirty, Dirty);
 		HL_DEFINE_IS(fromResource, FromResource);
 		int getWidth();
 		int getHeight();
@@ -105,6 +107,9 @@ namespace april
 		void unload();
 		/// @note A timeout value of 0.0 means indefinitely.
 		void waitForAsyncLoad(float timeout = 0.0f);
+
+		bool lock();
+		bool unlock();
 
 		bool clear();
 		Color getPixel(int x, int y);
@@ -195,6 +200,8 @@ namespace april
 		int compressedSize; // used in compressed textures only
 		Filter filter;
 		AddressMode addressMode;
+		bool locked;
+		bool dirty;
 		unsigned char* data;
 		unsigned char* dataAsync;
 		bool asyncLoadQueued;

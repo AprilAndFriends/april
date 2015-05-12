@@ -727,6 +727,7 @@ namespace april
 				this->setTextureAddressMode(addressMode);
 			}
 			this->activeTexture->load();
+			this->activeTexture->unlock();
 		}
 	}
 
