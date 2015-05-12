@@ -574,6 +574,7 @@ namespace april
 			this->dataAsync = NULL;
 		}
 		this->firstUpload = true;
+		lock.release();
 		this->unlock();
 	}
 
