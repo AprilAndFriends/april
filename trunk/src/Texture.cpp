@@ -1356,8 +1356,8 @@ namespace april
 
 	bool Texture::_uploadDataToGpu(int x, int y, int w, int h)
 	{
-		if (!Image::needsConversion(this->format, april::rendersys->getNativeTextureFormat(this->format)) &&
-			this->_uploadToGpu(x, y, w, h, x, y, this->data, this->width, this->height, this->format) || this->locked)
+		if ((!Image::needsConversion(this->format, april::rendersys->getNativeTextureFormat(this->format)) &&
+			this->_uploadToGpu(x, y, w, h, x, y, this->data, this->width, this->height, this->format)) || this->locked)
 		{
 			return true;
 		}
