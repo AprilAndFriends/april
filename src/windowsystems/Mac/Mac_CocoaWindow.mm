@@ -559,8 +559,13 @@ static bool gFullscreenToggleRequest = false;
     
     if (params.callback != NULL)
     {
-        (*params.callback)(params.btnTypes[clicked]);
-    }
+		MessageBoxCallback callback = params.callback;
+		april::MessageBoxButton btn = params.btnTypes[clicked];
+		dispatch_async(dispatch_get_main_queue(),
+		^{
+			(*callback)(btn);
+		});
+	}
 }
 
 - (void)showAlertView:(NSString*) title button1:(NSString*) btn1 button2:(NSString*) btn2 button3:(NSString*) btn3 btn1_t:(april::MessageBoxButton) btn1_t btn2_t:(april::MessageBoxButton) btn2_t btn3_t:(april::MessageBoxButton) btn3_t text:(NSString*) text callback:(MessageBoxCallback) callback
@@ -577,7 +582,7 @@ static bool gFullscreenToggleRequest = false;
     p->callback = callback;
     if (april::isUsingCVDisplayLink())
     {
-        [self performSelectorOnMainThread:@selector(_showAlertView:) withObject:[NSValue valueWithPointer:p] waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(_showAlertView:) withObject:[NSValue valueWithPointer:p] waitUntilDone:YES];
     }
     else
     {
