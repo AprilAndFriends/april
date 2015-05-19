@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.5
+/// @version 3.51
 /// 
 /// @section LICENSE
 /// 
@@ -162,7 +162,7 @@ namespace april
 		this->filename = "";
 		this->width = w;
 		this->height = h;
-		this->type = TYPE_VOLATILE; // so the write call later on goes through
+		this->type = TYPE_VOLATILE; // so the write() call later on goes through
 		this->loadMode = LOAD_IMMEDIATE;
 		int size = 0;
 		if (type != TYPE_VOLATILE && type != TYPE_RENDER_TARGET)
@@ -183,11 +183,13 @@ namespace april
 		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
+		bool result = this->_createInternalTexture(data, size, type);
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		bool result = this->loaded = this->_createInternalTexture(data, size, type);
+		this->loaded = result;
 		lock.release();
 		if (!result)
 		{
+			this->type = type;
 			return false;
 		}
 		if (this->firstUpload)
@@ -208,7 +210,7 @@ namespace april
 		this->filename = "";
 		this->width = w;
 		this->height = h;
-		this->type = TYPE_VOLATILE; // so the write call later on goes through
+		this->type = TYPE_VOLATILE; // so the fillRect() call later on goes through
 		this->loadMode = LOAD_IMMEDIATE;
 		int size = 0;
 		if (type != TYPE_VOLATILE && type != TYPE_RENDER_TARGET)
@@ -229,11 +231,13 @@ namespace april
 		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
+		bool result = this->_createInternalTexture(this->data, size, type);
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		bool result = this->loaded = this->_createInternalTexture(this->data, size, type);
+		this->loaded = result;
 		lock.release();
 		if (!result)
 		{
+			this->type = type;
 			return false;
 		}
 		this->fillRect(0, 0, this->width, this->height, color);
@@ -463,9 +467,10 @@ namespace april
 			delete image;
 		}
 		this->_assignFormat();
+		bool result = this->_createInternalTexture(currentData, size, this->type);
 		lock.acquire(&this->asyncLoadMutex);
 		this->dataAsync = NULL; // not needed anymore and makes isLoadedAsync() return false now
-		bool result = this->loaded = this->_createInternalTexture(currentData, size, this->type);
+		this->loaded = result;
 		lock.release();
 		if (!result)
 		{
@@ -480,7 +485,7 @@ namespace april
 			if (this->firstUpload)
 			{
 				Type type = this->type;
-				this->type = TYPE_VOLATILE; // so the write call right below goes through
+				this->type = TYPE_VOLATILE; // so the write() call right below goes through
 				this->write(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
 				this->type = type;
 			}
