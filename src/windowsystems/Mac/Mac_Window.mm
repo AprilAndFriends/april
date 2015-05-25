@@ -49,6 +49,11 @@ namespace april
     {
         return true;
     }
+    
+    bool hasDisplayLinkThreadStarted()
+    {
+        return mView != NULL && mView->mDisplayLink != nil;
+    }
 
 	Mac_Window::Mac_Window() : Window()
 	{
