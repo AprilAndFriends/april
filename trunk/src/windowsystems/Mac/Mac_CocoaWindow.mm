@@ -19,6 +19,11 @@
 extern bool gReattachLoadingOverlay;
 static bool gFullscreenToggleRequest = false;
 
+namespace april
+{
+    bool hasDisplayLinkThreadStarted();
+}
+
 @implementation AprilCocoaWindow
 
 - (void)timerEvent:(NSTimer*) t
@@ -561,10 +566,18 @@ static bool gFullscreenToggleRequest = false;
     {
 		MessageBoxCallback callback = params.callback;
 		april::MessageBoxButton btn = params.btnTypes[clicked];
+        __block bool dispatched = false;
 		dispatch_async(dispatch_get_main_queue(),
 		^{
+            dispatched = true;
 			(*callback)(btn);
 		});
+        
+        while (!dispatched)
+        {
+            [[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
+            hthread::sleep(10);
+        }
 	}
 }
 
@@ -580,7 +593,7 @@ static bool gFullscreenToggleRequest = false;
     p->btnTypes += btn2_t;
     p->btnTypes += btn3_t;
     p->callback = callback;
-    if (april::isUsingCVDisplayLink())
+    if (april::isUsingCVDisplayLink() and april::hasDisplayLinkThreadStarted())
     {
         [self performSelectorOnMainThread:@selector(_showAlertView:) withObject:[NSValue valueWithPointer:p] waitUntilDone:YES];
     }
