@@ -418,7 +418,7 @@ namespace april
 		}
 
 		NSData* imageData = [pvrtex.imageData objectAtIndex:0];
-		Image* image = new Image();
+		Image* image = Image::create(pvrtex.width, pvrtex.height, NULL, Image::FORMAT_INVALID);;
 		image->w = pvrtex.width;
 		image->h = pvrtex.height;
 		image->data = NULL;
