@@ -108,7 +108,10 @@ namespace april
 		static Image* create(int w, int h, unsigned char* data, Format format);
 		static Image* create(int w, int h, Color color, Format format);
 		static Image* create(Image* other);
-
+		static Image* readMetaDataFromResource(chstr filename);
+		static Image* readMetaDataFromFile(chstr filename);
+		static Image* readMetaDataFromStream(hsbase& stream, chstr logicalExtension);
+		
 		static int getFormatBpp(Format format);
 
 		static Color getPixel(int x, int y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat);
@@ -153,6 +156,12 @@ namespace april
 		static Image* _loadJpg(hsbase& stream);
 		static Image* _loadJpt(hsbase& stream);
 		static Image* _loadPvr(hsbase& stream);
+		static Image* _readMetaDataPng(hsbase& stream, int size);
+		static Image* _readMetaDataPng(hsbase& stream);
+		static Image* _readMetaDataJpg(hsbase& stream, int size);
+		static Image* _readMetaDataJpg(hsbase& stream);
+		static Image* _readMetaDataJpt(hsbase& stream);
+		static Image* _readMetaDataPvr(hsbase& stream);
 
 		static void _getFormatIndices(Format format, int* red, int* green, int* blue, int* alpha);
 

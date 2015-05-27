@@ -403,27 +403,49 @@ namespace april
 		return image;
 	}
 
-	Image* _tryLoadingPVR(chstr filename)
-	{
-		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
-#ifdef _OPENKODE
-		NSString *pvrfilename = [NSString stringWithUTF8String:("res/" + filename).cStr()];
-#else
-		NSString *pvrfilename = [NSString stringWithUTF8String:filename.cStr()];
-#endif
-		hstr path = [pvrfilename UTF8String], archive = hresource::getArchive();
-		if (archive != "") path = hdir::joinPath(archive, path);
-
-		hresource res;
-		res.open(path);
-		Image* image = _tryLoadingPVR(res);
-		[arp release];
-
-		return image;
-	}
-
 	Image* Image::_loadPvr(hsbase& stream)
 	{
 		return _tryLoadingPVR(stream);
 	}
+
+	Image* _tryLoadingPVRMetaData(unsigned char* data, int dataLen)
+	{
+		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
+		PVRTexture* pvrtex = [PVRTexture pvrTextureWithMemoryBuffer:data dataSize:dataLen];
+		if(!pvrtex)
+		{
+			return NULL;
+		}
+
+		NSData* imageData = [pvrtex.imageData objectAtIndex:0];
+		Image* image = new Image();
+		image->w = pvrtex.width;
+		image->h = pvrtex.height;
+		image->data = NULL;
+		image->format = Image::FORMAT_PALETTE;
+		image->internalFormat = pvrtex.internalFormat;
+		image->compressedSize = (int)imageData.length;
+		[arp release];
+		return image;
+	}
+
+	Image* _tryLoadingPVRMetaData(hsbase& stream)
+	{
+		PVRTexHeader header;
+		int headerSize = sizeof(header);
+		stream.readRaw(&header, headerSize);
+
+		unsigned char* buffer = new unsigned char[headerSize + header.dataLength];
+		memcpy(buffer, &header, headerSize);
+		stream.readRaw(buffer + headerSize, header.dataLength);
+		Image* image = _tryLoadingPVRMetaData(buffer, headerSize + header.dataLength);
+		delete [] buffer;
+		return image;
+	}
+
+	Image* Image::_readMetaDataPvr(hsbase& stream)
+	{
+		return _tryLoadingPVRMetaData(stream);
+	}
+	
 }

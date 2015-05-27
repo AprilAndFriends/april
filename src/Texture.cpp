@@ -412,7 +412,6 @@ namespace april
 			this->waitForAsyncLoad();
 			return true; // will already call this method again through TextureAsync::update() so it does not need to continue
 		}
-		lock.release();
 		int size = 0;
 		unsigned char* currentData = NULL;
 		if (this->data != NULL) // reload from memory
@@ -431,6 +430,7 @@ namespace april
 		{
 			hlog::write(logTag, "Loading texture: " + this->_getInternalName());
 		}
+		lock.release();
 		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
 		if (currentData == NULL && ((this->type != TYPE_VOLATILE && this->type != TYPE_RENDER_TARGET) || this->width == 0 || this->height == 0))
 		{
@@ -581,6 +581,48 @@ namespace april
 		this->firstUpload = true;
 		lock.release();
 		this->unlock();
+	}
+
+	bool Texture::loadMetaData()
+	{
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		if (this->loaded)
+		{
+			return true;
+		}
+		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
+		if (this->asyncLoadQueued)
+		{
+			lock.release();
+			this->waitForAsyncLoad();
+			return true;
+		}
+		bool hasData = (this->data != NULL || this->dataAsync != NULL);
+		lock.release();
+		if (!hasData && ((this->type != TYPE_VOLATILE && this->type != TYPE_RENDER_TARGET) || this->width == 0 || this->height == 0))
+		{
+			if (this->filename == "")
+			{
+				hlog::error(logTag, "No filename for texture specified!");
+				return false;
+			}
+			Image* image = (this->fromResource ? Image::readMetaDataFromResource(this->filename) : Image::readMetaDataFromFile(this->filename));
+			if (image == NULL)
+			{
+				hlog::error(logTag, "Failed to load texture: " + this->_getInternalName());
+				return false;
+			}
+			this->width = image->w;
+			this->height = image->h;
+			this->format = image->format;
+			this->dataFormat = image->internalFormat;
+			if (this->dataFormat != 0)
+			{
+				this->compressedSize = image->compressedSize;
+			}
+			delete image;
+		}
+		return true;
 	}
 
 	void Texture::waitForAsyncLoad(float timeout)
