@@ -105,6 +105,7 @@ namespace april
 		bool load();
 		bool loadAsync();
 		void unload();
+		bool loadMetaData();
 		/// @note A timeout value of 0.0 means indefinitely.
 		void waitForAsyncLoad(float timeout = 0.0f);
 

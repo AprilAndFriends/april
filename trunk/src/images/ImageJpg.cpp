@@ -88,4 +88,37 @@ namespace april
 		return Image::_loadJpg(stream, (int)stream.size());
 	}
 
+	Image* Image::_readMetaDataJpg(hsbase& stream, int size)
+	{
+		hasError = false;
+		// first read the whole data from the resource file
+		unsigned char* compressedData = new unsigned char[size];
+		stream.readRaw(compressedData, size);
+		// read JPEG image from file data
+		struct jpeg_decompress_struct cInfo;
+		struct jpeg_error_mgr jErr;
+		cInfo.err = jpeg_std_error(&jErr);
+		cInfo.err->error_exit = &onError;
+		jpeg_create_decompress(&cInfo);
+		jpeg_mem_src(&cInfo, compressedData, size);
+		jpeg_read_header(&cInfo, TRUE);
+		if (hasError)
+		{
+			return NULL;
+		}
+		delete[] compressedData;
+		// assign Image data
+		Image* image = new Image();
+		image->data = NULL;
+		image->w = cInfo.output_width;
+		image->h = cInfo.output_height;
+		image->format = Image::FORMAT_RGB; // JPEG is always RGB
+		return image;
+	}
+
+	Image* Image::_readMetaDataJpg(hsbase& stream)
+	{
+		return Image::_readMetaDataJpg(stream, (int)stream.size());
+	}
+
 }

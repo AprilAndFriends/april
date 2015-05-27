@@ -17,7 +17,7 @@ namespace april
 	{
 		Image* jpg = NULL;
 		Image* png = NULL;
-		unsigned char bytes[4] = {0};
+		unsigned char bytes[4] = { 0 };
 		// file header ("JPT" + 1 byte for version code)
 		stream.readRaw(bytes, 4);
 		// read JPEG
@@ -33,6 +33,21 @@ namespace april
 		image->write(0, 0, png->w, png->h, 0, 0, png);
 		delete jpg;
 		delete png;
+		return image;
+	}
+
+	Image* Image::_readMetaDataJpt(hsbase& stream)
+	{
+		unsigned char bytes[4] = { 0 };
+		// file header ("JPT" + 1 byte for version code)
+		stream.readRaw(bytes, 4);
+		// skip JPEG
+		stream.readRaw(bytes, 4);
+		stream.seek(bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24));
+		// read PNG
+		stream.readRaw(bytes, 4);
+		Image* image = Image::_readMetaDataPng(stream, bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24));
+		image->format = FORMAT_RGBA;
 		return image;
 	}
 

@@ -515,6 +515,108 @@ namespace april
 		return image;
 	}
 
+	Image* Image::readMetaDataFromResource(chstr filename)
+	{
+		hresource file;
+		if (filename.lowered().endsWith(".png"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataPng(file);
+		}
+		if (filename.lowered().endsWith(".jpg") || filename.lowered().endsWith(".jpeg"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataJpg(file);
+		}
+		if (filename.lowered().endsWith(".jpt"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataJpt(file);
+		}
+#if _IMAGE_PVR
+		if (filename.lowered().endsWith(".pvr"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataPvr(file);
+		}
+#endif
+		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
+		{
+			if (filename.lowered().endsWith(it->first.lowered()))
+			{
+				file.open(filename);
+				return (*it->second)(file);
+			}
+		}
+		return NULL;
+	}
+
+	Image* Image::readMetaDataFromFile(chstr filename)
+	{
+		hfile file;
+		if (filename.lowered().endsWith(".png"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataPng(file);
+		}
+		if (filename.lowered().endsWith(".jpg") || filename.lowered().endsWith(".jpeg"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataJpg(file);
+		}
+		if (filename.lowered().endsWith(".jpt"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataJpt(file);
+		}
+#if _IMAGE_PVR
+		if (filename.lowered().endsWith(".pvr"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataPvr(file);
+		}
+#endif
+		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
+		{
+			if (filename.lowered().endsWith(it->first.lowered()))
+			{
+				file.open(filename);
+				return (*it->second)(file);
+			}
+		}
+		return NULL;
+	}
+
+	Image* Image::readMetaDataFromStream(hsbase& stream, chstr logicalExtension)
+	{
+		if (logicalExtension.lowered().endsWith(".png"))
+		{
+			return Image::_readMetaDataPng(stream);
+		}
+		if (logicalExtension.lowered().endsWith(".jpg") || logicalExtension.lowered().endsWith(".jpeg"))
+		{
+			return Image::_readMetaDataJpg(stream);
+		}
+		if (logicalExtension.lowered().endsWith(".jpt"))
+		{
+			return Image::_readMetaDataJpt(stream);
+		}
+#ifdef _IMAGE_PVR
+		if (logicalExtension.lowered().endsWith(".pvr"))
+		{
+			return Image::_readMetaDataPvr(stream);
+		}
+#endif
+		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
+		{
+			if (logicalExtension.lowered().endsWith(it->first.lowered()))
+			{
+				return (*it->second)(stream);
+			}
+		}
+		return NULL;
+	}
+
 	int Image::getFormatBpp(Image::Format format)
 	{
 		switch (format)
