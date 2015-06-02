@@ -8,7 +8,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines all functions used in aprilui.
+#import "TargetConditionals.h"
 #import "ApriliOSAppDelegate.h"
 #import "main_base.h"
 #import "AprilViewController.h"
@@ -40,6 +40,9 @@ extern UIInterfaceOrientation gSupportedOrientations;
 - (BOOL)application:(UIApplication*) application didFinishLaunchingWithOptions:(NSDictionary*) launchOptions
 {
 	NSLog(@"Creating iOS window");
+#if TARGET_IPHONE_SIMULATOR
+	NSLog(@"iOS Simulator document location: %@",[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject]);
+#endif
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
 
     // figure out prefered app orientations
