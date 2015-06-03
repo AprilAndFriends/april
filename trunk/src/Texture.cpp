@@ -590,13 +590,6 @@ namespace april
 		{
 			return true;
 		}
-		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
-		if (this->asyncLoadQueued)
-		{
-			lock.release();
-			this->waitForAsyncLoad();
-			return true;
-		}
 		bool hasData = (this->data != NULL || this->dataAsync != NULL);
 		lock.release();
 		if (!hasData && ((this->type != TYPE_VOLATILE && this->type != TYPE_RENDER_TARGET) || this->width == 0 || this->height == 0))
