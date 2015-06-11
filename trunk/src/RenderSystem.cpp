@@ -609,6 +609,7 @@ namespace april
 		case RO_LINE_LIST:		return nVertices / 2;
 		case RO_LINE_STRIP:		return nVertices - 1;
 		case RO_POINT_LIST:		return nVertices;
+		default:				break;
 		}
 		return 0;
 	}
@@ -623,6 +624,7 @@ namespace april
 		case RO_LINE_LIST:		return nVertices / 2 * 2;
 		case RO_LINE_STRIP:		return nVertices;
 		case RO_POINT_LIST:		return nVertices;
+		default:				break;
 		}
 		return nVertices;
 	}

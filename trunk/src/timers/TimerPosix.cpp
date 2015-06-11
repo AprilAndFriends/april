@@ -44,7 +44,7 @@ namespace april
 	float Timer::getTime()
 	{
 		timeval tv = {0, 0};
-		timeval init_tv = {this->mTimerStart >> 32, this->mTimerStart & 0xFFFFFFFF};
+		timeval init_tv = { (time_t)(this->mTimerStart >> 32), (time_t)(this->mTimerStart & 0xFFFFFFFFFFFFFFFFLL) };
 		gettimeofday(&tv, NULL);
 		return (tv.tv_usec - init_tv.tv_usec) / 1000 + (tv.tv_sec - init_tv.tv_sec) * 1000;
 	}

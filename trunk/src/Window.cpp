@@ -588,6 +588,8 @@ namespace april
 			case CONTROLLER_UP:
 				this->controllerDelegate->onButtonUp(buttonCode);
 				break;
+			default:
+				break;
 			}
 		}
 	}

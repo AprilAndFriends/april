@@ -751,6 +751,8 @@ namespace april
 		case Image::FORMAT_PALETTE: // TODOaa - does palette use RGBA?
 			return Image::FORMAT_PALETTE;
 			break;
+		default:
+			break;
 		}
 		return Image::FORMAT_INVALID;
 	}
