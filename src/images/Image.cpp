@@ -633,6 +633,7 @@ namespace april
 		case FORMAT_BGR:		return 3;
 		case FORMAT_ALPHA:		return 1;
 		case FORMAT_GRAYSCALE:	return 1;
+		default:				break;
 		}
 		return 0;
 	}
@@ -2175,6 +2176,8 @@ namespace april
 			{
 				*blue = 0;
 			}
+			break;
+		default:
 			break;
 		}
 	}
