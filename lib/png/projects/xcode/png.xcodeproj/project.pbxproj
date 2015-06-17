@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D197C54415ED04AB0017452F /* zip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C54215ED04AB0017452F /* zip.framework */; };
 		D197C54515ED04AB0017452F /* zlib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C54315ED04AB0017452F /* zlib.framework */; };
 		D197C55A15ED054B0017452F /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = D197C54715ED054B0017452F /* png.c */; };
 		D197C55B15ED054B0017452F /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = D197C54715ED054B0017452F /* png.c */; };
@@ -121,7 +120,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D197C54415ED04AB0017452F /* zip.framework in Frameworks */,
 				D197C54515ED04AB0017452F /* zlib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
