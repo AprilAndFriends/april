@@ -123,7 +123,6 @@
 		D18B43301AD52CDD00406310 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D18B432F1AD52CDD00406310 /* CoreVideo.framework */; };
 		D197C5A415ED05F30017452F /* jpg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A015ED05F20017452F /* jpg.framework */; };
 		D197C5A515ED05F30017452F /* png.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A115ED05F20017452F /* png.framework */; };
-		D197C5A615ED05F30017452F /* zip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A215ED05F20017452F /* zip.framework */; };
 		D197C5A715ED05F30017452F /* zlib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A315ED05F20017452F /* zlib.framework */; };
 		D1981C44140F82B00057C3AF /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522E12E4713600E958D8 /* Color.cpp */; };
 		D1981C45140F82B00057C3AF /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522F12E4713600E958D8 /* Texture.cpp */; };
@@ -174,7 +173,6 @@
 		D1AF66D6170B1E5900A43743 /* Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B522912E4710D00E958D8 /* Texture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1AF66E3170B1E5900A43743 /* jpg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A015ED05F20017452F /* jpg.framework */; };
 		D1AF66E4170B1E5900A43743 /* png.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A115ED05F20017452F /* png.framework */; };
-		D1AF66E5170B1E5900A43743 /* zip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A215ED05F20017452F /* zip.framework */; };
 		D1AF66E6170B1E5900A43743 /* zlib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A315ED05F20017452F /* zlib.framework */; };
 		D1AF66E7170B1E5900A43743 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1CB6B6415CA905900B927BC /* Foundation.framework */; };
 		D1AF66E9170B1E5900A43743 /* gtypes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F42F83111EB1A9700B1C1DF /* gtypes.framework */; };
@@ -568,7 +566,6 @@
 			files = (
 				D197C5A415ED05F30017452F /* jpg.framework in Frameworks */,
 				D197C5A515ED05F30017452F /* png.framework in Frameworks */,
-				D197C5A615ED05F30017452F /* zip.framework in Frameworks */,
 				D197C5A715ED05F30017452F /* zlib.framework in Frameworks */,
 				D1CB6B6515CA905900B927BC /* Foundation.framework in Frameworks */,
 				C9313EB914FE64CE003BC7AB /* SDL.framework in Frameworks */,
@@ -586,7 +583,6 @@
 				D18B43301AD52CDD00406310 /* CoreVideo.framework in Frameworks */,
 				D1AF66E3170B1E5900A43743 /* jpg.framework in Frameworks */,
 				D1AF66E4170B1E5900A43743 /* png.framework in Frameworks */,
-				D1AF66E5170B1E5900A43743 /* zip.framework in Frameworks */,
 				D1AF66E6170B1E5900A43743 /* zlib.framework in Frameworks */,
 				D1AF66E7170B1E5900A43743 /* Foundation.framework in Frameworks */,
 				D1AF66E9170B1E5900A43743 /* gtypes.framework in Frameworks */,
