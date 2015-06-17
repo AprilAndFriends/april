@@ -184,7 +184,7 @@ namespace april
 
 	void _startInit()
 	{
-		hlog::writef(logTag, "Initializing APRIL. (Platform: %s %s (%d bit))", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
+		hlog::writef(logTag, "Initializing APRIL. (Platform: %s %s, %d bit)", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
 		extensions += ".jpt";
 		extensions += ".png";
 		extensions += ".jpg";
@@ -198,8 +198,9 @@ namespace april
 
 	void _finishInit()
 	{
+		SystemInfo info = april::getSystemInfo(); // calling getSystemInfo() is required here so it's initialized on certain platforms
+		hlog::writef(logTag, "OS Version: %.2f", info.osVersion);
 		hlog::writef(logTag, "Using: %s, %s", april::rendersys->getName().cStr(), april::window->getName().cStr());
-		april::getSystemInfo(); // required to be initialized on certain platforms
 	}
 
 	void _createRenderSystem(RenderSystemType renderSystemType)
