@@ -249,6 +249,7 @@ namespace april
 		m[kVK_RightArrow] = AK_RIGHT;
 		m[kVK_DownArrow] = AK_DOWN;
 		m[kVK_UpArrow] = AK_UP;
+		m[kVK_ANSI_KeypadEnter] = AK_RETURN;
 //		m[kVK_ISO_Section] = AK_;
 //		m[kVK_JIS_Yen] = AK_;
 //		m[kVK_JIS_Underscore] = AK_;
@@ -272,7 +273,6 @@ namespace april
 //		m[kVK_ANSI_KeypadPlus] = AK_;
 //		m[kVK_ANSI_KeypadClear] = AK_;
 //		m[kVK_ANSI_KeypadDivide] = AK_;
-//		m[kVK_ANSI_KeypadEnter] = AK_;
 //		m[kVK_ANSI_KeypadMinus] = AK_;
 //		m[kVK_ANSI_KeypadEquals] = AK_;
 		m[kVK_Command] = AK_LCOMMAND;
