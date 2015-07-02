@@ -78,6 +78,15 @@ namespace april
 		GL_LINE_STRIP,		// RO_LINE_STRIP
 		GL_POINTS,			// RO_POINT_LIST
 	};
+
+	static inline void _loadIdentity()
+	{
+		static gmat4 identityMatrix(1.0f, 0.0f, 0.0f, 0.0f,
+									0.0f, 1.0f, 0.0f, 0.0f,
+									0.0f, 0.0f, 1.0f, 0.0f,
+									0.0f, 0.0f, 0.0f, 1.0f);
+		glLoadMatrixf(identityMatrix.data);
+	}
 	
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
 	{
@@ -170,9 +179,9 @@ namespace april
 	{
 		this->_setupDefaultParameters();
 		this->setMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
+		_loadIdentity();
 		this->setMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
+		_loadIdentity();
 		this->orthoProjection.setSize(window->getSize());
 	}
 
@@ -471,7 +480,7 @@ namespace april
 			else
 			{
 				this->setMatrixMode(GL_TEXTURE);
-				glLoadIdentity();
+				_loadIdentity();
 			}
 			this->deviceState.textureId = this->currentState.textureId;
 			// TODO - you should memorize address and filter modes per texture in opengl to avoid unnecesarry calls
