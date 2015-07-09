@@ -44,7 +44,11 @@ namespace april
 	float Timer::getTime()
 	{
 		timeval tv = {0, 0};
+#ifdef __APPLE__
+		timeval init_tv = { (time_t)(this->mTimerStart >> 32), (__darwin_suseconds_t)(this->mTimerStart & 0xFFFFFFFFFFFFFFFFLL) };
+#else
 		timeval init_tv = { (time_t)(this->mTimerStart >> 32), (time_t)(this->mTimerStart & 0xFFFFFFFFFFFFFFFFLL) };
+#endif
 		gettimeofday(&tv, NULL);
 		return (tv.tv_usec - init_tv.tv_usec) / 1000 + (tv.tv_sec - init_tv.tv_sec) * 1000;
 	}
