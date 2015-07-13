@@ -6,6 +6,8 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
+#pragma message("WARNING! This version of the library is deprecated! Please use the one from: http://github.com/AprilAndFriends/april")
+
 #ifdef _OPENKODE
 #include <KD/kd.h>
 #endif
