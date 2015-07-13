@@ -41,14 +41,14 @@ namespace april
 	jobject getActivity()
 	{
 		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
-		jfieldID fieldActivity = env->GetStaticFieldID(classNativeInterface, "Activity", _JCLASS("android/app/Activity"));
+		jfieldID fieldActivity = env->GetStaticFieldID(classNativeInterface, "activity", _JCLASS("android/app/Activity"));
 		return env->GetStaticObjectField(classNativeInterface, fieldActivity);
 	}
 	
 	jobject getAprilActivity()
 	{
 		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
-		jfieldID fieldAprilActivity = env->GetStaticFieldID(classNativeInterface, "AprilActivity", _JCLASS("com/april/Activity"));
+		jfieldID fieldAprilActivity = env->GetStaticFieldID(classNativeInterface, "aprilActivity", _JCLASS("com/april/Activity"));
 		return env->GetStaticObjectField(classNativeInterface, fieldAprilActivity);
 	}
 
