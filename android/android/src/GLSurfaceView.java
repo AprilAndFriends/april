@@ -5,6 +5,7 @@ package com.april;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.inputmethod.EditorInfo;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.text.InputType;
 import com.april.Touch;
@@ -41,7 +42,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 			this.requestFocusFromTouch();
 			NativeInterface.updateKeyboard();
 		}
-		NativeInterface.AprilActivity.GlView.queueEvent(new Runnable()
+		NativeInterface.aprilActivity.glView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
@@ -92,12 +93,51 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		return false;
 	}
 	
-	@Override 
+	@Override
+	public boolean onKeyDown(int keyCode, final KeyEvent event)
+	{
+		// Java is broken. "final KeyEvent event" can still be modified after this method finished and hence queuing into the GLThread can cause a crash.
+		final int eventKeyCode = event.getKeyCode();
+		if (NativeInterface.aprilActivity.ignoredKeys.contains(eventKeyCode))
+		{
+			return super.onKeyDown(keyCode, event);
+		}
+		final int eventUnicodeChar = event.getUnicodeChar();
+		this.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onKeyDown(eventKeyCode, eventUnicodeChar);
+			}
+		});
+		return true;
+	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, final KeyEvent event)
+	{
+		// Java is broken. "final KeyEvent event" can still be modified after this method finished and hence queuing into the GLThread can cause a crash.
+		final int eventKeyCode = event.getKeyCode();
+		if (NativeInterface.aprilActivity.ignoredKeys.contains(eventKeyCode))
+		{
+			return super.onKeyUp(keyCode, event);
+		}
+		this.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onKeyUp(eventKeyCode);
+			}
+		});
+		return true;
+	}
+	
+	@Override
 	public InputConnection onCreateInputConnection(EditorInfo outAttributes)  // required for creation of soft keyboard
 	{ 
 		outAttributes.actionId = EditorInfo.IME_ACTION_DONE;
 		outAttributes.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI;
-		if (NativeInterface.AprilActivity.OuyaKeyboardFix) // OUYA software keyboard doesn't appear unless TYPE_CLASS_TEXT is specified as input type
+		if (NativeInterface.aprilActivity.OuyaKeyboardFix) // OUYA software keyboard doesn't appear unless TYPE_CLASS_TEXT is specified as input type
 		{
 			outAttributes.inputType = InputType.TYPE_CLASS_TEXT;
 		}

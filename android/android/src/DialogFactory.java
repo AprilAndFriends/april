@@ -19,7 +19,7 @@ public class DialogFactory
 	
 	public static void create(String title, String text, String ok, String yes, String no, String cancel, int iconId)
 	{
-		DialogFactory.dialogBuilder = new AlertDialog.Builder(NativeInterface.Activity);
+		DialogFactory.dialogBuilder = new AlertDialog.Builder(NativeInterface.activity);
 		DialogFactory.dialogBuilder.setTitle(title != null ? title : "");
 		DialogFactory.dialogBuilder.setMessage(text != null ? text : "");
 		if (ok != null)
@@ -57,7 +57,7 @@ public class DialogFactory
 			try
 			{
 				DialogFragment dialogFragment = new DialogFragment();
-				dialogFragment.show(NativeInterface.Activity.getFragmentManager(), "april-dialog");
+				dialogFragment.show(NativeInterface.activity.getFragmentManager(), "april-dialog");
 			}
 			catch (java.lang.Throwable e)
 			{
@@ -67,11 +67,11 @@ public class DialogFactory
 		}
 		if (!DialogFactory.useDialogFragment)
 		{
-			NativeInterface.Activity.runOnUiThread(new Runnable()
+			NativeInterface.activity.runOnUiThread(new Runnable()
 			{
 				public void run()
 				{
-					NativeInterface.Activity.showDialog(DialogFactory.dialogIndex);
+					NativeInterface.activity.showDialog(DialogFactory.dialogIndex);
 					DialogFactory.dialogIndex++;
 				}
 			});

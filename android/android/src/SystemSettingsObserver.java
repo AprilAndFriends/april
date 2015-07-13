@@ -31,26 +31,26 @@ public class SystemSettingsObserver extends ContentObserver
 			return;
 		}
 		// enable auto-rotation
-		if (System.getInt(NativeInterface.Activity.getContentResolver(), System.ACCELEROMETER_ROTATION, 0) != 0)
+		if (System.getInt(NativeInterface.activity.getContentResolver(), System.ACCELEROMETER_ROTATION, 0) != 0)
 		{
-			if (NativeInterface.Activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+			if (NativeInterface.activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
 			{
-				NativeInterface.Activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+				NativeInterface.activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 			}
-			else if (NativeInterface.Activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+			else if (NativeInterface.activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 			{
-				NativeInterface.Activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+				NativeInterface.activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 			}
 		}
 		else
 		{
-			if (NativeInterface.Activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+			if (NativeInterface.activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
 			{
-				NativeInterface.Activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+				NativeInterface.activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			}
-			else if (NativeInterface.Activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
+			else if (NativeInterface.activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
 			{
-				NativeInterface.Activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+				NativeInterface.activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			}
 		}
 	}

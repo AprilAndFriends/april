@@ -20,19 +20,19 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 	{
 		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 		NativeInterface.onSurfaceCreated();
-		if (!NativeInterface.Running)
+		if (!NativeInterface.running)
 		{
-			NativeInterface.setVariables(NativeInterface.DataPath, NativeInterface.ArchivePath);
-			String args[] = {NativeInterface.ApkPath}; // adding argv[0]
+			NativeInterface.setVariables(NativeInterface.dataPath, NativeInterface.archivePath);
+			String args[] = {NativeInterface.apkPath}; // adding argv[0]
 			NativeInterface.init(args);
-			NativeInterface.Running = true;
+			NativeInterface.running = true;
 			// needed for keyboard height
-			NativeInterface.Activity.getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+			NativeInterface.activity.getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
 			{
 				@Override
 				public void onGlobalLayout()
 				{
-					View view = NativeInterface.AprilActivity.getView();
+					View view = NativeInterface.aprilActivity.getView();
 					Rect r = new Rect();
 					view.getWindowVisibleDisplayFrame(r);
 					float heightRatio = 1.0f - (float)(r.bottom - r.top) / view.getRootView().getHeight();
@@ -50,7 +50,7 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 	{
 		if (!NativeInterface.render())
 		{
-			NativeInterface.Activity.finish();
+			NativeInterface.activity.finish();
 		}
 	}
 	

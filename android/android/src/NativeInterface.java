@@ -22,16 +22,16 @@ import java.util.Locale;
 
 public class NativeInterface
 {
-	public static android.app.Activity Activity = null;
-	public static Activity AprilActivity = null;
-	public static boolean Running = false;
-	public static boolean KeyboardVisible = false;
-	public static String ArchivePath = "";
-	public static String DataPath = ".";
-	public static String PackageName = "";
-	public static String VersionCode = "0";
-	public static String VersionName = "";
-	public static String ApkPath = "";
+	public static android.app.Activity activity = null;
+	public static Activity aprilActivity = null;
+	public static boolean running = false;
+	public static boolean keyboardVisible = false;
+	public static String archivePath = "";
+	public static String dataPath = ".";
+	public static String packageName = "";
+	public static String versionCode = "0";
+	public static String versionName = "";
+	public static String apkPath = "";
 	
 	private static boolean htcKeyboardHack = false;
 	private static class KeyboardResultReceiver extends ResultReceiver
@@ -54,7 +54,7 @@ public class NativeInterface
 			{
 				NativeInterface.htcKeyboardHack = false;
 				InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
-				View view = NativeInterface.AprilActivity.getView();
+				View view = NativeInterface.aprilActivity.getView();
 				inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0, NativeInterface.keyboardResultReceiver);
 				inputMethodManager.showSoftInput(view, 0, NativeInterface.keyboardResultReceiver);
 			}
@@ -93,7 +93,7 @@ public class NativeInterface
 	
 	public static String getUserDataPath()
 	{
-		return NativeInterface.Activity.getFilesDir().getAbsolutePath();
+		return NativeInterface.activity.getFilesDir().getAbsolutePath();
 	}
 	
 	public static long getRamConsumption()
@@ -106,14 +106,14 @@ public class NativeInterface
 	public static Object getDisplayResolution()
 	{
 		DisplayMetrics metrics = new DisplayMetrics();
-		NativeInterface.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		NativeInterface.activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		int width = metrics.widthPixels;
 		int height = metrics.heightPixels;
-		if (NativeInterface.AprilActivity.isEnabledNavigationBarHiding())
+		if (NativeInterface.aprilActivity.isEnabledNavigationBarHiding())
 		{
 			// get the DecorView's size is status bar is being hidden
 			android.graphics.Rect visibleFrame = new android.graphics.Rect();
-			NativeInterface.Activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleFrame);
+			NativeInterface.activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleFrame);
 			width = visibleFrame.right;
 			height = visibleFrame.bottom;
 		}
@@ -140,7 +140,7 @@ public class NativeInterface
 			return 312.0f;
 		}
 		DisplayMetrics metrics = new DisplayMetrics();
-		NativeInterface.Activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		NativeInterface.activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		return (float) Math.sqrt((metrics.xdpi * metrics.xdpi + metrics.ydpi * metrics.ydpi) / 2.0);
 	}
 	
@@ -161,11 +161,11 @@ public class NativeInterface
 	
 	public static void showVirtualKeyboard()
 	{
-		NativeInterface.Activity.runOnUiThread(new Runnable()
+		NativeInterface.activity.runOnUiThread(new Runnable()
 		{
 			public void run()
 			{
-				View view = NativeInterface.AprilActivity.getView();
+				View view = NativeInterface.aprilActivity.getView();
 				NativeInterface._getInputMethodManager().showSoftInput(view, 0, NativeInterface.keyboardResultReceiver);
 			}
 		});
@@ -173,11 +173,11 @@ public class NativeInterface
 	
 	public static void hideVirtualKeyboard()
 	{
-		NativeInterface.Activity.runOnUiThread(new Runnable()
+		NativeInterface.activity.runOnUiThread(new Runnable()
 		{
 			public void run()
 			{
-				View view = NativeInterface.AprilActivity.getView();
+				View view = NativeInterface.aprilActivity.getView();
 				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(), 0,
 					NativeInterface.keyboardResultReceiver);
 			}
@@ -208,7 +208,7 @@ public class NativeInterface
 	
 	private static InputMethodManager _getInputMethodManager()
 	{
-		return (InputMethodManager)NativeInterface.Activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		return (InputMethodManager)NativeInterface.activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 	
 	public static void showMessageBox(String title, String text, String ok, String yes, String no, String cancel, int iconId)
@@ -218,19 +218,19 @@ public class NativeInterface
 	
 	public static void swapBuffers()
 	{
-		NativeInterface.AprilActivity.GlView.swapBuffers();
+		NativeInterface.aprilActivity.glView.swapBuffers();
 	}
 	
 	public static void reset()
 	{
-		NativeInterface.Activity = null;
-		NativeInterface.AprilActivity = null;
-		NativeInterface.Running = false;
-		NativeInterface.ArchivePath = "";
-		NativeInterface.DataPath = ".";
-		NativeInterface.PackageName = "";
-		NativeInterface.VersionCode = "0";
-		NativeInterface.ApkPath = "";
+		NativeInterface.activity = null;
+		NativeInterface.aprilActivity = null;
+		NativeInterface.running = false;
+		NativeInterface.archivePath = "";
+		NativeInterface.dataPath = ".";
+		NativeInterface.packageName = "";
+		NativeInterface.versionCode = "0";
+		NativeInterface.apkPath = "";
 	}
 	
 }

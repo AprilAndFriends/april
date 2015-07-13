@@ -23,7 +23,7 @@ public class DialogFragment extends android.app.DialogFragment
 	public void onCancel(DialogInterface dialog)
 	{
 		dialog.cancel();
-		NativeInterface.AprilActivity.GlView.queueEvent(new Runnable()
+		NativeInterface.aprilActivity.glView.queueEvent(new Runnable()
 		{
 			public void run()
 			{

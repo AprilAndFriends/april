@@ -30,7 +30,7 @@ public class Activity extends android.app.Activity
 	
 	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
 	{
-		NativeInterface.ArchivePath = archivePath;
+		NativeInterface.archivePath = archivePath;
 	}
 	
 	public void disableNavigationBarHiding() // use this code in your Activity to prevent the navigation bar from being hidden on Android 4.4+
@@ -43,8 +43,8 @@ public class Activity extends android.app.Activity
 		return (this.enabledNavigationBarHiding && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT);
 	}
 	
-	public GLSurfaceView GlView = null;
-	private ArrayList ignoredKeys = null;
+	public GLSurfaceView glView = null;
+	public ArrayList ignoredKeys = null;
 	
 	public Activity()
 	{
@@ -59,13 +59,13 @@ public class Activity extends android.app.Activity
 	
 	public View getView()
 	{
-		return this.GlView;
+		return this.glView;
 	}
 	
 	public String createDataPath()
 	{
 		return (Environment.getExternalStorageDirectory() + "/Android/obb/" +
-			NativeInterface.PackageName + "/main." + NativeInterface.VersionCode + "." + NativeInterface.PackageName + ".obb");
+			NativeInterface.packageName + "/main." + NativeInterface.versionCode + "." + NativeInterface.packageName + ".obb");
 	}
 	
 	@Override
@@ -75,29 +75,29 @@ public class Activity extends android.app.Activity
 		android.util.Log.i("april", "Android device: '" + Build.MANUFACTURER + "' / '" + Build.MODEL + "'");
 		this.hideNavigationBar();
 		super.onCreate(savedInstanceState);
-		NativeInterface.Activity = (android.app.Activity)this;
-		NativeInterface.AprilActivity = this;
+		NativeInterface.activity = (android.app.Activity)this;
+		NativeInterface.aprilActivity = this;
 		this.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), true, this.systemSettingsObserver);
 		this.systemSettingsObserver.onChange(true);
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		NativeInterface.PackageName = this.getPackageName();
+		NativeInterface.packageName = this.getPackageName();
 		try
 		{
-			PackageInfo info = this.getPackageManager().getPackageInfo(NativeInterface.PackageName, 0);
-			NativeInterface.VersionCode = Integer.toString(info.versionCode);
-			NativeInterface.VersionName = info.versionName;
-			NativeInterface.ApkPath = info.applicationInfo.sourceDir;
-			NativeInterface.DataPath = this.createDataPath();
+			PackageInfo info = this.getPackageManager().getPackageInfo(NativeInterface.packageName, 0);
+			NativeInterface.versionCode = Integer.toString(info.versionCode);
+			NativeInterface.versionName = info.versionName;
+			NativeInterface.apkPath = info.applicationInfo.sourceDir;
+			NativeInterface.dataPath = this.createDataPath();
 		}
 		catch (NameNotFoundException e)
 		{
 		}
 		// creating a GL surface view
-		this.GlView = this.createGlView();
-		this.setContentView(this.GlView);
+		this.glView = this.createGlView();
+		this.setContentView(this.glView);
 		// focusing this view allows proper input processing
-		this.GlView.requestFocus();
-		this.GlView.requestFocusFromTouch();
+		this.glView.requestFocus();
+		this.glView.requestFocusFromTouch();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
 		{
 			// hide navigation bar
@@ -145,7 +145,7 @@ public class Activity extends android.app.Activity
 	protected void onStart()
 	{
 		super.onStart();
-		this.GlView.queueEvent(new Runnable()
+		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
@@ -158,7 +158,7 @@ public class Activity extends android.app.Activity
 	protected void onResume()
 	{
 		super.onResume();
-		this.GlView.queueEvent(new Runnable()
+		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
@@ -168,7 +168,7 @@ public class Activity extends android.app.Activity
 		this.hideNavigationBar();
 		if (!this.nookWorkaround)
 		{
-			this.GlView.onResume();
+			this.glView.onResume();
 		}
 	}
 	
@@ -177,9 +177,9 @@ public class Activity extends android.app.Activity
 	{
 		if (!this.nookWorkaround)
 		{
-			this.GlView.onPause();
+			this.glView.onPause();
 		}
-		this.GlView.queueEvent(new Runnable()
+		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
@@ -192,7 +192,7 @@ public class Activity extends android.app.Activity
 	@Override
 	protected void onStop()
 	{
-		this.GlView.queueEvent(new Runnable()
+		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
@@ -220,7 +220,7 @@ public class Activity extends android.app.Activity
 	protected void onRestart()
 	{
 		super.onRestart();
-		this.GlView.queueEvent(new Runnable()
+		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
@@ -229,56 +229,10 @@ public class Activity extends android.app.Activity
 		});
 	}
 	
-	protected boolean isGlTopView()
-	{
-		try
-		{
-			View view = this.getView();
-			ViewGroup parent = (ViewGroup)view.getParent();
-			if (parent.getId() < 0)
-			{
-				return true;
-			}
-			for (int i = 0; i < parent.getChildCount(); i++)
-			{
-				if (parent.getChildAt(i) == view)
-				{
-					return (i == parent.getChildCount() - 1);
-				}
-			}
-		}
-		catch (Throwable t)
-		{
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, final KeyEvent event)
-	{
-		if (this.ignoredKeys.contains(event.getKeyCode()) || !this.isGlTopView())
-		{
-			return super.onKeyDown(keyCode, event);
-		}
-		NativeInterface.onKeyDown(event.getKeyCode(), event.getUnicodeChar());
-		return true;
-	}
-	
-	@Override
-	public boolean onKeyUp(int keyCode, final KeyEvent event)
-	{
-		if (this.ignoredKeys.contains(event.getKeyCode()) || !this.isGlTopView())
-		{
-			return super.onKeyUp(keyCode, event);
-		}
-		NativeInterface.onKeyUp(event.getKeyCode());
-		return true;
-	}
-	
 	@Override
 	public void onLowMemory()
 	{
-		this.GlView.queueEvent(new Runnable()
+		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
 			{

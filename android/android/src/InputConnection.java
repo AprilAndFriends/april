@@ -21,8 +21,8 @@ class InputConnection extends BaseInputConnection
 	public boolean deleteSurroundingText(int leftLength, int rightLength)
 	{
 		// Android SDK 16+ doesn't send key events for backspace but calls this method
-		NativeInterface.Activity.onKeyDown(KeyEvent.KEYCODE_DEL, this.delKeyDownEvent);
-		NativeInterface.Activity.onKeyUp(KeyEvent.KEYCODE_DEL, this.delKeyUpEvent);
+		NativeInterface.activity.onKeyDown(KeyEvent.KEYCODE_DEL, this.delKeyDownEvent);
+		NativeInterface.activity.onKeyUp(KeyEvent.KEYCODE_DEL, this.delKeyUpEvent);
 		return super.deleteSurroundingText(leftLength, rightLength);
 	}
 	
