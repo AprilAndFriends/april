@@ -77,7 +77,7 @@ namespace april
 		static hstr package;
 		if (package == "")
 		{
-			APRIL_GET_NATIVE_INTERFACE_FIELD(classNativeInterface, fieldPackageName, "PackageName", _JSTR);
+			APRIL_GET_NATIVE_INTERFACE_FIELD(classNativeInterface, fieldPackageName, "packageName", _JSTR);
 			package = _JSTR_TO_HSTR((jstring)env->GetStaticObjectField(classNativeInterface, fieldPackageName));
 		}
 		return package;
