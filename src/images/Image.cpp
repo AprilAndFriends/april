@@ -643,8 +643,9 @@ namespace april
 	Color Image::getPixel(int x, int y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat)
 	{
 		Color color = Color::Clear;
+		// has to create data, doesn't work with static unsigned char[4] for some reason
 		unsigned char* rgba = NULL;
-		if (Image::checkRect(x, y, srcWidth, srcHeight) && Image::convertToFormat(1, 1, &srcData[(x + y * srcWidth) * Image::getFormatBpp(srcFormat)], srcFormat, &rgba, Image::FORMAT_RGBA, false))
+		if (Image::checkRect(x, y, srcWidth, srcHeight) && Image::convertToFormat(1, 1, &srcData[(x + y * srcWidth) * Image::getFormatBpp(srcFormat)], srcFormat, (unsigned char**)&rgba, Image::FORMAT_RGBA, false))
 		{
 			color.r = rgba[0];
 			color.g = rgba[1];
@@ -713,7 +714,7 @@ namespace april
 		int destBpp = Image::getFormatBpp(destFormat);
 		int i = (x + y * destWidth) * destBpp;
 		int copyWidth = w * destBpp;
-		int size = copyWidth * destHeight;
+		int size = copyWidth * h;
 		if (destBpp == 1 || (destBpp == 3 && color.r == color.g && color.r == color.b) || (destBpp == 4 && color.r == color.g && color.r == color.b && color.r == color.a))
 		{
 			if (x == 0 && w == destWidth)
@@ -734,6 +735,7 @@ namespace april
 		Format srcFormat = (destBpp == 4 ? FORMAT_RGBA : (destBpp == 3 ? FORMAT_RGB : FORMAT_GRAYSCALE));
 		if (srcFormat != destFormat && destBpp > 1)
 		{
+			// has to create data, doesn't work with static unsigned char[4] for some reason
 			unsigned char* rgba = NULL;
 			if (!Image::convertToFormat(1, 1, colorData, srcFormat, &rgba, destFormat))
 			{
@@ -759,7 +761,7 @@ namespace april
 		}
 		else
 		{
-			// copy on first line
+			// copy only first line
 			while (currentSize < copyWidth)
 			{
 				copySize = hmin(copyWidth - currentSize, currentSize);
