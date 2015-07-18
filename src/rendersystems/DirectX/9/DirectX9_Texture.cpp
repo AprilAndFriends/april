@@ -172,6 +172,15 @@ namespace april
 		{
 			return lock;
 		}
+		if (this->renderTarget)
+		{
+			hr = APRIL_D3D_DEVICE->GetRenderTargetData(this->_getSurface(), surface);
+			if (FAILED(hr))
+			{
+				surface->Release();
+				return lock;
+			}
+		}
 		hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
 		if (FAILED(hr))
 		{
@@ -182,39 +191,6 @@ namespace april
 		// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
 		lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, h, nativeFormat);
 		return lock;
-		// TODOaa - render target locking
-		/*
-		Lock lock;
-		D3DLOCKED_RECT lockRect;
-		HRESULT hr = this->d3dTexture->LockRect(0, &lockRect, NULL, D3DLOCK_DISCARD);
-		if (!FAILED(hr))
-		{
-			lock.buffer = this->_getSurface();
-			lock.activateLock((unsigned char*)lockRect.pBits);
-			return lock;
-		}
-		// could be a render target
-		hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(this->width, this->height, this->d3dFormat, D3DPOOL_SYSTEMMEM, &lock.buffer, NULL);
-		if (FAILED(hr))
-		{
-			hlog::error(logTag, "Failed to get pixel data, CreateOffscreenPlainSurface() call failed!");
-			return lock;
-		}
-		hr = APRIL_D3D_DEVICE->GetRenderTargetData(this->_getSurface(), lock.buffer);
-		if (FAILED(hr))
-		{
-			hlog::error(logTag, "Failed to get pixel data, GetRenderTargetData() call failed!");
-			return lock;
-		}
-		hr = lock.buffer->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
-		if (FAILED(hr))
-		{
-			hlog::error(logTag, "Failed to get pixel data, surface lock failed!");
-			return lock;
-		}
-		lock.activateRenderTarget((unsigned char*)lockRect.pBits);
-		return lock;
-		*/
 	}
 
 	bool DirectX9_Texture::_unlockSystem(Lock& lock, bool update)
@@ -248,17 +224,6 @@ namespace april
 					dest.x = lock.dx;
 					dest.y = lock.dy;
 					APRIL_D3D_DEVICE->UpdateSurface(surface, &rect, this->_getSurface(), &dest);
-				}
-				else if (lock.renderTarget)
-				{
-					// TODOaa - implement
-					/*
-					surface->UnlockRect();
-					if (update)
-					{
-						APRIL_D3D_DEVICE->UpdateSurface(lock.buffer, NULL, this->_getSurface(), NULL);
-					}
-					*/
 				}
 			}
 			surface->Release();

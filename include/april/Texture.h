@@ -223,6 +223,9 @@ namespace april
 		hstream* _prepareAsyncStream();
 		void _decodeFromAsyncStream(hstream* stream);
 
+		virtual bool _isReadable();
+		virtual bool _isWritable();
+		virtual bool _isAlterable();
 		hstr _getInternalName();
 
 		void _setupPot(int& outWidth, int& outHeight);
