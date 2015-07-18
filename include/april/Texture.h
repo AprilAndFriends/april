@@ -123,6 +123,8 @@ namespace april
 		bool fillRect(grect rect, Color color);
 		bool copyPixelData(unsigned char** output, Image::Format format);
 		bool copyPixelData(unsigned char** output);
+		Image* createImage(Image::Format format);
+		Image* createImage();
 		bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		bool write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture);
 		bool write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);

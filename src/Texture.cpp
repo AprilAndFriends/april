@@ -86,7 +86,7 @@ namespace april
 		this->dataWidth = dataWidth;
 		this->dataHeight = dataHeight;
 		this->format = format;
-		this->locked = false;
+		this->locked = true;
 		this->failed = false;
 		this->renderTarget = true;
 	}
@@ -881,6 +881,33 @@ namespace april
 		return result;
 	}
 
+	Image* Texture::createImage(Image::Format format)
+	{
+		if (!this->_isReadable())
+		{
+			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
+			return NULL;
+		}
+		if (!this->isLoaded())
+		{
+			return NULL;
+		}
+		Lock lock = this->_tryLock(); // will use this->data, no need for native format checking and direct copying
+		if (lock.failed)
+		{
+			return NULL;
+		}
+		unsigned char* data = NULL;
+		Image* image = NULL;
+		if (Image::convertToFormat(lock.dataWidth, lock.dataHeight, lock.data, lock.format, &data, format, false))
+		{
+			image = Image::create(lock.dataWidth, lock.dataHeight, data, format);
+			delete[] data;
+		}
+		this->_unlock(lock, false);
+		return image;
+	}
+
 	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		if (!this->_isWritable())
@@ -1263,6 +1290,11 @@ namespace april
 	bool Texture::copyPixelData(unsigned char** output)
 	{
 		return this->copyPixelData(output, this->format);
+	}
+
+	Image* Texture::createImage()
+	{
+		return this->createImage(this->format);
 	}
 
 	bool Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)

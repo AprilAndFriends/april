@@ -151,13 +151,13 @@ namespace april
 		HRESULT hr;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		int nativeBpp = Image::getFormatBpp(nativeFormat);
+		RECT rect;
+		rect.left = x;
+		rect.top = y;
+		rect.right = x + w;
+		rect.bottom = y + h;
 		if (this->d3dPool == D3DPOOL_MANAGED)
 		{
-			RECT rect;
-			rect.left = x;
-			rect.top = y;
-			rect.right = x + w;
-			rect.bottom = y + h;
 			hr = this->d3dTexture->LockRect(0, &lockRect, &rect, D3DLOCK_DISCARD);
 			if (!FAILED(hr))
 			{
@@ -167,29 +167,45 @@ namespace april
 			return lock;
 		}
 		IDirect3DSurface9* surface = NULL;
-		hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
-		if (FAILED(hr))
-		{
-			return lock;
-		}
 		if (this->renderTarget)
 		{
+			hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(this->width, this->height, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
+			if (FAILED(hr))
+			{
+				return lock;
+			}
 			hr = APRIL_D3D_DEVICE->GetRenderTargetData(this->_getSurface(), surface);
 			if (FAILED(hr))
 			{
 				surface->Release();
 				return lock;
 			}
+			hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
+			if (FAILED(hr))
+			{
+				surface->Release();
+				return lock;
+			}
+			// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
+			lock.activateRenderTarget(x, y, w, h, 0, 0, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, this->height, nativeFormat);
 		}
-		hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
-		if (FAILED(hr))
+		else
 		{
-			surface->Release();
-			return lock;
+			hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
+			if (FAILED(hr))
+			{
+				return lock;
+			}
+			hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
+			if (FAILED(hr))
+			{
+				surface->Release();
+				return lock;
+			}
+			// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
+			lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, h, nativeFormat);
 		}
 		lock.systemBuffer = surface;
-		// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
-		lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, h, nativeFormat);
 		return lock;
 	}
 
@@ -210,20 +226,27 @@ namespace april
 		else
 		{
 			IDirect3DSurface9* surface = (IDirect3DSurface9*)lock.systemBuffer;
-			if (update)
+			if (lock.locked)
 			{
-				if (lock.locked)
+				surface->UnlockRect();
+				if (update)
 				{
-					surface->UnlockRect();
-					RECT rect;
-					rect.left = lock.x;
-					rect.top = lock.y;
-					rect.right = lock.x + lock.w;
-					rect.bottom = lock.y + lock.h;
-					POINT dest;
-					dest.x = lock.dx;
-					dest.y = lock.dy;
-					APRIL_D3D_DEVICE->UpdateSurface(surface, &rect, this->_getSurface(), &dest);
+					if (!lock.renderTarget)
+					{
+						RECT rect;
+						rect.left = lock.x;
+						rect.top = lock.y;
+						rect.right = lock.x + lock.w;
+						rect.bottom = lock.y + lock.h;
+						POINT dest;
+						dest.x = lock.dx;
+						dest.y = lock.dy;
+						APRIL_D3D_DEVICE->UpdateSurface(surface, &rect, this->_getSurface(), &dest);
+					}
+					else
+					{
+						APRIL_D3D_DEVICE->UpdateSurface(surface, NULL, this->_getSurface(), NULL);
+					}
 				}
 			}
 			surface->Release();

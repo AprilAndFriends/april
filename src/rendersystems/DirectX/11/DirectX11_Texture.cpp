@@ -204,16 +204,19 @@ namespace april
 		{
 			if (lock.locked)
 			{
-				// this special hack is required because Map() with D3D11_MAP_WRITE_DISCARD can allocate any piece of memory
-				if (this->data != NULL && this->data != lock.data)
+				if (!lock.renderTarget)
 				{
-					Image::write(0, 0, this->width, this->height, 0, 0, this->data, this->width, this->height, this->format, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
+					// this special hack is required because Map() with D3D11_MAP_WRITE_DISCARD can allocate any piece of memory
+					if (this->data != NULL && this->data != lock.data)
+					{
+						Image::write(0, 0, this->width, this->height, 0, 0, this->data, this->width, this->height, this->format, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
+					}
+					APRIL_D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
 				}
-				APRIL_D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
-			}
-			else if (lock.renderTarget)
-			{
-				// TODOaa - implement
+				else
+				{
+					// TODOaa - implement
+				}
 			}
 			this->firstUpload = false;
 		}
