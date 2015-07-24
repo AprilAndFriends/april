@@ -105,7 +105,8 @@ extern UIInterfaceOrientation gSupportedOrientations;
 
 - (void)performInit:(id)object
 {
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+	//NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	harray<hstr> args;
 	args += ""; // unable to determine executable name, but due to convention, leave one argument filled
 	april_init(args);
@@ -113,9 +114,6 @@ extern UIInterfaceOrientation gSupportedOrientations;
 
 	((EAGLView*) viewController.view)->app_started = 1;
 	[(EAGLView*)viewController.view startAnimation];
-
-	[pool release];
-	
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application

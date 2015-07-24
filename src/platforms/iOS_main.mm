@@ -18,6 +18,6 @@ int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy
 	[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];
 	[[NSOperationQueue currentQueue] setMaxConcurrentOperationCount:1];
 	int result = UIApplicationMain(argc, argv, nil, NSStringFromClass([ApriliOSAppDelegate class]));
-	[pool release];
+	[pool drain];
 	return result;
 }
