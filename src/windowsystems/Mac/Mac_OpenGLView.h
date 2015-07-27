@@ -18,6 +18,7 @@
 @public
 	bool mStartedDrawing;
 	bool mUseBlankCursor;
+    bool mDrawingFromMainThread;
 	NSCursor* mBlankCursor;
 	NSCursor* mCursor;
 	NSRect mFrameRect;

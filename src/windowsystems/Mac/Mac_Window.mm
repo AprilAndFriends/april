@@ -358,7 +358,6 @@ namespace april
 	{
 		// presentFrame() calls are always manually called, so let's make sure
 		// Mac can update the view contents before we continue.
-		hmutex::ScopeLock lock;
 		this->setIgnoreUpdateFlag(true);
 		[mView presentFrame];
 		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.01]];

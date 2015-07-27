@@ -35,6 +35,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	mFrameRect = frameRect;
 	mUseBlankCursor = false;
 	mStartedDrawing = false;
+    mDrawingFromMainThread = false;
 	
 	NSImage* image = [[NSImage alloc] initWithSize: NSMakeSize(8, 8)];
 	
@@ -157,7 +158,24 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    [self draw];
+    bool displayLink = april::isUsingCVDisplayLink();
+    if (displayLink)
+    {
+        if (aprilWindow->shouldIgnoreUpdate())
+        {
+            return;
+        }
+        hmutex::ScopeLock lock;
+        lock.acquire(&aprilWindow->renderThreadSyncMutex);
+        mDrawingFromMainThread = true;
+        lock.release();
+        [self draw];
+        mDrawingFromMainThread = false;
+    }
+    else
+    {
+        [self draw];
+    }
 }
 
 - (void) presentFrame
@@ -178,7 +196,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
     
     hmutex::ScopeLock lock;
     
-    if (april::isUsingCVDisplayLink())
+    if (april::isUsingCVDisplayLink() && !mDrawingFromMainThread)
     {
         lock.acquire(&aprilWindow->renderThreadSyncMutex);
     }
