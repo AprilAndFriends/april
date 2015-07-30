@@ -33,7 +33,7 @@ public class Activity extends com.april.Activity
 		this.oldRSY = 0;
 		this.oldLT = 0;
 		this.oldRT = 0;
-		this.OuyaKeyboardFix = true;
+		this.ouyaKeyboardFix = true;
 		super.onCreate(savedInstanceState);
 		OuyaInputMapper.init(this);
 		OuyaController.init(this);
@@ -42,7 +42,7 @@ public class Activity extends com.april.Activity
 			@Override
 			public void onReceive(Context context, Intent intent)
 			{
-				GlView.onWindowFocusChanged(false);
+				glView.onWindowFocusChanged(false);
 			}
 		}, new IntentFilter(tv.ouya.console.api.OuyaIntent.ACTION_MENUAPPEARING));
 	}
@@ -106,7 +106,7 @@ public class Activity extends com.april.Activity
 		boolean result = OuyaController.onKeyDown(keyCode, event);
 		if (newKeyCode != 0)
 		{
-			this.GlView.queueEvent(new Runnable()
+			this.glView.queueEvent(new Runnable()
 			{
 				public void run()
 				{
@@ -125,7 +125,7 @@ public class Activity extends com.april.Activity
 		boolean result = OuyaController.onKeyUp(keyCode, event);
 		if (newKeyCode != 0)
 		{
-			this.GlView.queueEvent(new Runnable()
+			this.glView.queueEvent(new Runnable()
 			{
 				public void run()
 				{
@@ -144,7 +144,7 @@ public class Activity extends com.april.Activity
 		if ((event.getSource() & InputDevice.SOURCE_CLASS_POINTER) != 0)
 		{
 			final Touch touch = new Touch(2, event.getX(), event.getY());
-			this.GlView.queueEvent(new Runnable()
+			this.glView.queueEvent(new Runnable()
 			{
 				public void run()
 				{
@@ -165,7 +165,7 @@ public class Activity extends com.april.Activity
 			if (this.oldLSX != lsx)
 			{
 				this.oldLSX = lsx;
-				this.GlView.queueEvent(new Runnable()
+				this.glView.queueEvent(new Runnable()
 				{
 					public void run()
 					{
@@ -176,7 +176,7 @@ public class Activity extends com.april.Activity
 			if (this.oldLSY != lsy)
 			{
 				this.oldLSY = lsy;
-				this.GlView.queueEvent(new Runnable()
+				this.glView.queueEvent(new Runnable()
 				{
 					public void run()
 					{
@@ -187,7 +187,7 @@ public class Activity extends com.april.Activity
 			if (this.oldRSX != rsx)
 			{
 				this.oldRSX = rsx;
-				this.GlView.queueEvent(new Runnable()
+				this.glView.queueEvent(new Runnable()
 				{
 					public void run()
 					{
@@ -198,7 +198,7 @@ public class Activity extends com.april.Activity
 			if (this.oldRSY != rsy)
 			{
 				this.oldRSY = rsy;
-				this.GlView.queueEvent(new Runnable()
+				this.glView.queueEvent(new Runnable()
 				{
 					public void run()
 					{
@@ -209,7 +209,7 @@ public class Activity extends com.april.Activity
 			if (this.oldLT != lt)
 			{
 				this.oldLT = lt;
-				this.GlView.queueEvent(new Runnable()
+				this.glView.queueEvent(new Runnable()
 				{
 					public void run()
 					{
@@ -220,7 +220,7 @@ public class Activity extends com.april.Activity
 			if (this.oldRT != rt)
 			{
 				this.oldRT = rt;
-				this.GlView.queueEvent(new Runnable()
+				this.glView.queueEvent(new Runnable()
 				{
 					public void run()
 					{
