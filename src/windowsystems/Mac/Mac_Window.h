@@ -43,7 +43,6 @@ namespace april
 		bool isCursorVisible();
 		void setCursor(Cursor* value);
 		void setCursorVisible(bool visible);
-		bool isCursorInside();
 
 		void presentFrame();
 		bool updateOneFrame();

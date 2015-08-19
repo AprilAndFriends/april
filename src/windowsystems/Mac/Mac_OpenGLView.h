@@ -23,6 +23,7 @@
 	NSCursor* mCursor;
 	NSRect mFrameRect;
     CVDisplayLinkRef mDisplayLink;
+	NSTimer* mTimer;
 }
 - (void) draw;
 - (void) initOpenGL;

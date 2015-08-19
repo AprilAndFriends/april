@@ -20,7 +20,7 @@
 // declared here instead of as class properties because C++ doesn't play nicely with forward declared objc classes
 
 static AprilMacOpenGLView* mView = nil;
-static AprilCocoaWindow* mWindow = nil;
+AprilCocoaWindow* mWindow = nil;
 bool gReattachLoadingOverlay = false;
 april::Mac_Window* aprilWindow = NULL;
 
@@ -146,13 +146,7 @@ namespace april
 	{
 		this->cursorPosition = pos * this->scalingFactor;
 	}
-	
-	bool Mac_Window::isCursorInside()
-	{
-		if (mView != NULL && mView->mUseBlankCursor) return [NSCursor currentCursor] == mView->mBlankCursor;
-		else return Window::isCursorInside();
-	}
-	
+
 	bool Mac_Window::isCursorVisible()
 	{
 		if (mView == NULL) return 1;

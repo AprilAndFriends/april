@@ -14,11 +14,13 @@
 #include "Mac_Window.h"
 #import <OpenGL/gl.h>
 #import "Mac_OpenGLView.h"
+#import "Mac_CocoaWindow.h"
 
 // #define _OVERDRAW_DEBUG -- uncomment this to test overdraw response times
 
 static AprilMacOpenGLView* view;
 extern bool gAppStarted;
+extern AprilCocoaWindow* mWindow;
 
 static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext)
 {
@@ -27,6 +29,19 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 }
 
 @implementation AprilMacOpenGLView
+
+
+- (void)cursorCheck:(NSTimer*) t
+{
+	// kspes@20150819 - Starting MacOS 10.10.5 I've noticed cursor rects getting messed up in fullscreen mode (windowed works fine). So this code here is a hack/workarround that problem
+	// Analyzing the code everything seems to be in order, regardless if I use the old cursor rect logic or newer NSTrackingArea, the effect is the same. if this is a bug in apple or our code
+	// I can't be sure, but in the lack of a better solution now, this is going to be used until and if that better solution comes.
+	NSCursor* current = [NSCursor currentCursor];
+	if ((mCursor != NULL && current != mCursor) || (mUseBlankCursor && current != mBlankCursor))
+	{
+		[mWindow invalidateCursorRectsForView:self];
+	}
+}
 
 - (id) initWithFrame:(NSRect)frameRect
 {
@@ -53,7 +68,10 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	[image release];
 
 	mCursor = NULL;
-    
+	
+	mTimer = [NSTimer timerWithTimeInterval:1 / 1000.0f target:self selector:@selector(cursorCheck:) userInfo:nil repeats:YES];
+	[[NSRunLoop currentRunLoop] addTimer:mTimer forMode:NSDefaultRunLoopMode];
+	
 	return self;
 }
 
