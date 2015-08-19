@@ -102,16 +102,16 @@ namespace april
 		jpeg_create_decompress(&cInfo);
 		jpeg_mem_src(&cInfo, compressedData, size);
 		jpeg_read_header(&cInfo, TRUE);
+		delete[] compressedData;
 		if (hasError)
 		{
 			return NULL;
 		}
-		delete[] compressedData;
 		// assign Image data
 		Image* image = new Image();
 		image->data = NULL;
-		image->w = cInfo.output_width;
-		image->h = cInfo.output_height;
+		image->w = cInfo.image_width;
+		image->h = cInfo.image_height;
 		image->format = Image::FORMAT_RGB; // JPEG is always RGB
 		return image;
 	}
