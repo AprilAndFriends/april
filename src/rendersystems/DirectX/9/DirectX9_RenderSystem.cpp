@@ -11,6 +11,7 @@
 #include <d3d9types.h>
 #include <stdio.h>
 
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <gtypes/Vector2.h>
 #include <hltypes/hexception.h>
 #include <hltypes/hlog.h>

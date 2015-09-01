@@ -14,6 +14,7 @@
 #ifndef APRIL_WIN32_CURSOR_H
 #define APRIL_WIN32_CURSOR_H
 
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 

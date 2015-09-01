@@ -7,6 +7,7 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _WIN32_WINDOW
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hplatform.h>

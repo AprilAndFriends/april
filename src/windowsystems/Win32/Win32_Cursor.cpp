@@ -7,8 +7,10 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _WIN32_WINDOW
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hstring.h>
 #include <hltypes/hdir.h>
+#include <hltypes/hplatform.h>
 #include <hltypes/hresource.h>
 
 #include "Win32_Cursor.h"

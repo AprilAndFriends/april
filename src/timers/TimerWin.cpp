@@ -7,8 +7,10 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _WIN32
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
+#include <hltypes/hplatform.h>
 
 #include "april.h"
 #include "RenderSystem.h"

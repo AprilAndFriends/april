@@ -15,6 +15,7 @@
 #include <TargetConditionals.h>
 #endif
 
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hlog.h>
