@@ -32,6 +32,7 @@
 #include <TargetConditionals.h>
 #endif
 
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
