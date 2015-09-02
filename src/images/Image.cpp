@@ -207,6 +207,11 @@ namespace april
 		return (this->isValid() && Image::insertAlphaMap(this->w, this->h, srcData, srcFormat, this->data, this->format, median, ambiguity));
 	}
 
+	bool Image::dilate(unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		return (this->isValid() && Image::dilate(srcData, srcWidth, srcHeight, srcFormat, this->data, this->w, this->h, this->format));
+	}
+
 	// overloads
 
 	Color Image::getPixel(gvec2 position)
@@ -307,6 +312,11 @@ namespace april
 	bool Image::insertAlphaMap(Image* image, Image::Format srcFormat, unsigned char median, int ambiguity)
 	{
 		return this->insertAlphaMap(image->data, image->format, median, ambiguity);
+	}
+
+	bool Image::dilate(Image* image)
+	{
+		return this->dilate(image->data, image->w, image->h, image->format);
 	}
 
 	// loading/creating functions
@@ -1559,6 +1569,53 @@ namespace april
 			return true;
 		}
 		return false;
+	}
+
+	bool Image::dilate(unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Image::Format destFormat)
+	{
+		if (srcFormat != FORMAT_ALPHA || destFormat != FORMAT_ALPHA) // both images must be alpha images, currently other formats are not supported
+		{
+			return false;
+		}
+		if (srcWidth % 2 == 0 || srcHeight % 2 == 0) // has to have odd-numbered dimensions with a central pixel
+		{
+			return false;
+		}
+		Image* original = Image::create(destWidth, destHeight, destData, destFormat);
+		memset(destData, 0, destWidth * destHeight * getFormatBpp(destFormat));
+		unsigned char* chars = srcData;
+		int i = 0;
+		int j = 0;
+		int m = 0;
+		int n = 0;
+		int ox = srcWidth / 2;
+		int oy = srcHeight / 2;
+		harray<float> pixels;
+		for_iterx (j, 0, destHeight)
+		{
+			for_iterx (i, 0, destWidth)
+			{
+				pixels.clear();
+				for_iterx (n, 0, srcHeight)
+				{
+					if (hbetweenIE(j + n - oy, 0, destHeight))
+					{
+						for_iterx(m, 0, srcWidth)
+						{
+							if (hbetweenIE(i + m - ox, 0, destWidth))
+							{
+								pixels += (float)original->data[i + m - ox + (j + n - oy) * destWidth] * srcData[m + n * srcWidth] / 255.0f;
+							}
+						}
+					}
+				}
+				if (pixels.size() > 0)
+				{
+					destData[i + j * destWidth] = (unsigned char)hmin(pixels.max(), 255.0f);
+				}
+			}
+		}
+		return true;
 	}
 
 	bool Image::convertToFormat(int w, int h, unsigned char* srcData, Image::Format srcFormat, unsigned char** destData, Image::Format destFormat, bool preventCopy)

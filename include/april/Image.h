@@ -76,7 +76,8 @@ namespace april
 		bool invert(int x, int y, int w, int h);
 		/// @note srcData must be the same width and height as the image
 		bool insertAlphaMap(unsigned char* srcData, Format srcFormat, unsigned char median, int ambiguity);
-		
+		bool dilate(unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+
 		Color getPixel(gvec2 position);
 		bool setPixel(gvec2 position, Color color);
 		Color getInterpolatedPixel(gvec2 position);
@@ -98,6 +99,7 @@ namespace april
 		bool saturate(grect rect, float factor);
 		bool invert(grect rect);
 		bool insertAlphaMap(Image* image, Format srcFormat, unsigned char median, int ambiguity);
+		bool dilate(Image* image);
 
 		static Image* createFromResource(chstr filename);
 		static Image* createFromResource(chstr filename, Format format);
@@ -126,6 +128,7 @@ namespace april
 		static bool saturate(int x, int y, int w, int h, float factor, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		static bool invert(int x, int y, int w, int h, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat, unsigned char median, int ambiguity);
+		static bool dilate(unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Image::Format destFormat);
 
 		/// @param[in] preventCopy If true, will make a copy even if source and destination formats are the same.
 		static bool convertToFormat(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat, bool preventCopy = true);
