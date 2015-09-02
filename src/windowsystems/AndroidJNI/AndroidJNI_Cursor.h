@@ -14,7 +14,6 @@
 #ifndef APRIL_ANDROIDJNI_CURSOR_H
 #define APRIL_ANDROIDJNI_CURSOR_H
 
-#include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
 #include "Cursor.h"

@@ -13,6 +13,7 @@
 #ifndef APRIL_TIMER_H
 #define APRIL_TIMER_H
 
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
 #ifndef _WIN32
 #include <stdint.h>

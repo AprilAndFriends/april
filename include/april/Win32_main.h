@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <shellapi.h>
 
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/harray.h>
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>

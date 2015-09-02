@@ -14,6 +14,7 @@
 #ifndef APRIL_OPENGLES_RENDER_SYSTEM_H
 #define APRIL_OPENGLES_RENDER_SYSTEM_H
 
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
 #if __APPLE__
 	#include <TargetConditionals.h>

@@ -9,6 +9,7 @@
 #ifdef _OPENKODE
 #include <KD/kd.h>
 
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <gtypes/Vector2.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>

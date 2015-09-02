@@ -8,6 +8,7 @@
 
 #ifdef _OPENGL
 
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
 #if __APPLE__
 	#include <TargetConditionals.h>

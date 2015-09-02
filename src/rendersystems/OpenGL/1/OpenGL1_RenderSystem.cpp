@@ -7,6 +7,7 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _OPENGL1
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
 #if __APPLE__
 #include <TargetConditionals.h>
