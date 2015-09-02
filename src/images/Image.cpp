@@ -1583,7 +1583,6 @@ namespace april
 		}
 		Image* original = Image::create(destWidth, destHeight, destData, destFormat);
 		memset(destData, 0, destWidth * destHeight * getFormatBpp(destFormat));
-		unsigned char* chars = srcData;
 		int i = 0;
 		int j = 0;
 		int m = 0;
