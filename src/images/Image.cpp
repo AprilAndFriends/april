@@ -1587,33 +1587,42 @@ namespace april
 		int j = 0;
 		int m = 0;
 		int n = 0;
+		int p = 0;
 		int ox = srcWidth / 2;
 		int oy = srcHeight / 2;
-		harray<float> pixels;
+		float* pixels = new float[srcWidth * srcHeight];
+		int index = 0;
 		for_iterx (j, 0, destHeight)
 		{
 			for_iterx (i, 0, destWidth)
 			{
-				pixels.clear();
+				index = 0;
 				for_iterx (n, 0, srcHeight)
 				{
 					if (hbetweenIE(j + n - oy, 0, destHeight))
 					{
-						for_iterx(m, 0, srcWidth)
+						for_iterx (m, 0, srcWidth)
 						{
 							if (hbetweenIE(i + m - ox, 0, destWidth))
 							{
-								pixels += (float)original->data[i + m - ox + (j + n - oy) * destWidth] * srcData[m + n * srcWidth] / 255.0f;
+								pixels[index] = (float)original->data[i + m - ox + (j + n - oy) * destWidth] * srcData[m + n * srcWidth] / 255.0f;
+								++index;
 							}
 						}
 					}
 				}
-				if (pixels.size() > 0)
+				for_iterx (p, 0, index)
 				{
-					destData[i + j * destWidth] = (unsigned char)hmin(pixels.max(), 255.0f);
+					if (pixels[p] >= 255.0f)
+					{
+						destData[i + j * destWidth] = 255;
+						break;
+					}
+					destData[i + j * destWidth] = hmax(destData[i + j * destWidth], (unsigned char)pixels[p]);
 				}
 			}
 		}
+		delete[] pixels;
 		return true;
 	}
 
