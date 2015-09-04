@@ -210,6 +210,15 @@ namespace april
 		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
 		while (TextureAsync::streams.size() > 0)
 		{
+			if (TextureAsync::textures.size() == 0) // something went terribly, terribly wrong, just abort and delete the remaining streams
+			{
+				foreach (hstream*, it, TextureAsync::streams)
+				{
+					delete (*it);
+				}
+				TextureAsync::streams.clear();
+				break;
+			}
 			texture = TextureAsync::textures.removeFirst();
 			stream = TextureAsync::streams.removeFirst();
 			lock.release();
