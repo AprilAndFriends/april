@@ -1582,47 +1582,52 @@ namespace april
 			return false;
 		}
 		Image* original = Image::create(destWidth, destHeight, destData, destFormat);
+		unsigned char* originalData = original->data;
 		memset(destData, 0, destWidth * destHeight * getFormatBpp(destFormat));
 		int i = 0;
 		int j = 0;
 		int m = 0;
 		int n = 0;
-		int p = 0;
 		int ox = srcWidth / 2;
 		int oy = srcHeight / 2;
-		float* pixels = new float[srcWidth * srcHeight];
 		int index = 0;
+		int indexOriginal = 0;
+		int indexSrc = 0;
 		for_iterx (j, 0, destHeight)
 		{
 			for_iterx (i, 0, destWidth)
 			{
-				index = 0;
+				index = i + j * destWidth;
 				for_iterx (n, 0, srcHeight)
 				{
 					if (hbetweenIE(j + n - oy, 0, destHeight))
 					{
 						for_iterx (m, 0, srcWidth)
 						{
-							if (hbetweenIE(i + m - ox, 0, destWidth))
+							indexSrc = m + n * srcWidth;
+							if (srcData[indexSrc] > 0)
 							{
-								pixels[index] = (float)original->data[i + m - ox + (j + n - oy) * destWidth] * srcData[m + n * srcWidth] / 255.0f;
-								++index;
+								indexOriginal = i + m - ox + (j + n - oy) * destWidth;
+								if (originalData[indexOriginal] > 0 && hbetweenIE(i + m - ox, 0, destWidth))
+								{
+									// multiplication is fast than dividing by 255
+									destData[index] = hmax(destData[index], (unsigned char)(0.003921569f * originalData[indexOriginal] * srcData[indexSrc]));
+									if (destData[index] == 255)
+									{
+										break;
+									}
+								}
 							}
+						}
+						if (destData[index] == 255)
+						{
+							break;
 						}
 					}
 				}
-				for_iterx (p, 0, index)
-				{
-					if (pixels[p] >= 255.0f)
-					{
-						destData[i + j * destWidth] = 255;
-						break;
-					}
-					destData[i + j * destWidth] = hmax(destData[i + j * destWidth], (unsigned char)pixels[p]);
-				}
 			}
 		}
-		delete[] pixels;
+		delete original;
 		return true;
 	}
 
