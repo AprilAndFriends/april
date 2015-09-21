@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.5
+/// @version 3.6
 /// 
 /// @section LICENSE
 /// 
@@ -37,8 +37,6 @@ namespace april
 		D3DFORMAT d3dFormat;
 		D3DPOOL d3dPool;
 		DWORD d3dUsage;
-		// TODOaa - may be unused, remove if not needed anymore
-		bool renderTarget;
 
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
 		bool _destroyInternalTexture();

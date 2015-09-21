@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.5
+/// @version 3.6
 /// 
 /// @section LICENSE
 /// 
@@ -22,13 +22,12 @@
 
 namespace april
 {
-	DirectX9_Texture::DirectX9_Texture(bool fromResource) : DirectX_Texture(fromResource), d3dTexture(NULL), d3dSurface(NULL), d3dFormat(D3DFMT_UNKNOWN), renderTarget(false)
+	DirectX9_Texture::DirectX9_Texture(bool fromResource) : DirectX_Texture(fromResource), d3dTexture(NULL), d3dSurface(NULL), d3dFormat(D3DFMT_UNKNOWN)
 	{
 	}
 
 	DirectX9_Texture::~DirectX9_Texture()
 	{
-		this->unload();
 	}
 
 	bool DirectX9_Texture::_createInternalTexture(unsigned char* data, int size, Type type)
@@ -48,7 +47,6 @@ namespace april
 		if (type == TYPE_RENDER_TARGET)
 		{
 			this->d3dUsage = D3DUSAGE_RENDERTARGET;
-			this->renderTarget = true;
 		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
 		if (hr == D3DERR_OUTOFVIDEOMEMORY)
@@ -167,7 +165,7 @@ namespace april
 			return lock;
 		}
 		IDirect3DSurface9* surface = NULL;
-		if (!this->renderTarget)
+		if (this->type != TYPE_RENDER_TARGET)
 		{
 			hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
 			if (FAILED(hr))

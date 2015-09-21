@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.5
+/// @version 3.6
 /// 
 /// @section LICENSE
 /// 
@@ -31,10 +31,10 @@ namespace april
 	public:
 		friend class DirectX11_RenderSystem;
 
+	protected:
 		DirectX11_Texture(bool fromResource);
 		~DirectX11_Texture();
 		
-	protected:
 		ComPtr<ID3D11Texture2D> d3dTexture;
 		ComPtr<ID3D11ShaderResourceView> d3dView;
 		ComPtr<ID3D11RenderTargetView> d3dRenderTargetView;

@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.5
+/// @version 3.6
 /// 
 /// @section LICENSE
 /// 
@@ -17,7 +17,6 @@ namespace april
 
 	OpenGLES1_Texture::~OpenGLES1_Texture()
 	{
-		this->unload();
 	}
 
 }

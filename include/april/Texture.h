@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.5
+/// @version 3.6
 /// 
 /// @section LICENSE
 /// 
@@ -80,8 +80,6 @@ namespace april
 
 		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ALPHA;
 		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ARGB;
-
-		virtual ~Texture();
 
 		HL_DEFINE_GET(hstr, filename, Filename);
 		HL_DEFINE_GET(LoadMode, loadMode, LoadMode);
@@ -188,8 +186,6 @@ namespace april
 
 		};
 
-		Texture(bool fromResource);
-
 		hstr filename;
 		Type type;
 		bool loaded;
@@ -212,6 +208,9 @@ namespace april
 		hmutex asyncLoadMutex;
 		bool fromResource;
 		bool firstUpload; // required because of how some rendering systems work
+
+		Texture(bool fromResource);
+		virtual ~Texture();
 
 		virtual bool _create(chstr filename, Type type, LoadMode loadMode);
 		virtual bool _create(chstr filename, Image::Format format, Type type, LoadMode loadMode);

@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.51
+/// @version 3.6
 /// 
 /// @section LICENSE
 /// 
@@ -114,8 +114,6 @@ namespace april
 		this->asyncLoadDiscarded = false;
 		this->fromResource = fromResource;
 		this->firstUpload = true;
-		hmutex::ScopeLock lock(&april::rendersys->texturesMutex);
-		april::rendersys->textures += this;
 	}
 
 	bool Texture::_create(chstr filename, Texture::Type type, Texture::LoadMode loadMode)
@@ -247,19 +245,10 @@ namespace april
 
 	Texture::~Texture()
 	{
-		if (this->isLoaded())
-		{
-			hlog::error(logTag, "Texture implementation does not call unload() in destructor! This cause problems and memory leaks!");
-		}
-		this->waitForAsyncLoad(); // waiting for all async stuff to finish
-		hmutex::ScopeLock lock(&april::rendersys->texturesMutex);
-		april::rendersys->textures -= this;
-		lock.release();
 		if (this->data != NULL)
 		{
 			delete[] this->data;
 		}
-		lock.acquire(&this->asyncLoadMutex);
 		this->asyncLoadQueued = false;
 		this->asyncLoadDiscarded = false;
 		if (this->dataAsync != NULL)

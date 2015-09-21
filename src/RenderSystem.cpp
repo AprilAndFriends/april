@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.5
+/// @version 3.6
 /// 
 /// @section LICENSE
 /// 
@@ -406,8 +406,10 @@ namespace april
 		if (!result)
 		{
 			delete texture;
-			texture = NULL;
+			return NULL;
 		}
+		hmutex::ScopeLock lock(&this->texturesMutex);
+		this->textures += texture;
 		return texture;
 	}
 
@@ -417,8 +419,10 @@ namespace april
 		if (!texture->_create(w, h, data, format, type))
 		{
 			delete texture;
-			texture = NULL;
+			return NULL;
 		}
+		hmutex::ScopeLock lock(&this->texturesMutex);
+		this->textures += texture;
 		return texture;
 	}
 
@@ -428,9 +432,21 @@ namespace april
 		if (!texture->_create(w, h, color, format, type))
 		{
 			delete texture;
-			texture = NULL;
+			return NULL;
 		}
+		hmutex::ScopeLock lock(&this->texturesMutex);
+		this->textures += texture;
 		return texture;
+	}
+
+	void RenderSystem::destroyTexture(Texture* texture)
+	{
+		texture->unload();
+		texture->waitForAsyncLoad(); // waiting for all async stuff to finish
+		hmutex::ScopeLock lock(&this->texturesMutex);
+		this->textures -= texture;
+		lock.release();
+		delete texture;
 	}
 
 	void RenderSystem::unloadTextures()

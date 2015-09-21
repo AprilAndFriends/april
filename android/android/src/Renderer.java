@@ -1,6 +1,6 @@
 package com.april;
 
-/// @version 3.5
+/// @version 3.6
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;

@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.5
+/// @version 3.6
 /// 
 /// @section LICENSE
 /// 
@@ -22,6 +22,7 @@
 #include <hltypes/hplatform.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hversion.h>
 
 #include "april.h"
 #include "Platform.h"
@@ -179,13 +180,15 @@ namespace april
 {
 	hstr logTag = "april";
 
+	static hversion version(3, 6, 0);
+
 	static harray<hstr> extensions;
 	static int maxAsyncTextureUploadsPerFrame = 0;
 	static int maxWaitingAsyncTextures = 0;
 
 	void _startInit()
 	{
-		hlog::writef(logTag, "Initializing APRIL. (Platform: %s %s, %d bit)", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
+		hlog::writef(logTag, "Initializing APRIL v%s (Platform: %s %s, %d bit)", version.toString().cStr(), APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
 		extensions += ".jpt";
 		extensions += ".png";
 		extensions += ".jpg";
