@@ -24,7 +24,9 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 -(id)init
 {
 	self = [super init];
-	self.wantsFullScreenLayout = YES;
+	#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_7_0
+		self.wantsFullScreenLayout = YES;
+	#endif
 	return self;
 }
 // helper function that scans through all png files in the root of an .app folder
