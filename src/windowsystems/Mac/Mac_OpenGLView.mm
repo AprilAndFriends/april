@@ -179,6 +179,8 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
     bool displayLink = april::isUsingCVDisplayLink();
     if (displayLink)
     {
+		glClear(GL_COLOR_BUFFER_BIT);
+		/* Temporarily commenting this to avoid thread crashing
         if (aprilWindow->shouldIgnoreUpdate())
         {
             return;
@@ -189,6 +191,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
         lock.release();
         [self draw];
         mDrawingFromMainThread = false;
+		*/
     }
     else
     {
