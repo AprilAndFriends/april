@@ -188,7 +188,8 @@ namespace april
 
 	void _startInit()
 	{
-		hlog::writef(logTag, "Initializing APRIL v%s (Platform: %s %s, %d bit)", version.toString().cStr(), APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
+		hlog::write(logTag, "Initializing APRIL: " + version.toString());
+		hlog::writef(logTag, "Platform: %s %s, %d bit", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
 		extensions += ".jpt";
 		extensions += ".png";
 		extensions += ".jpg";
