@@ -179,19 +179,20 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
     bool displayLink = april::isUsingCVDisplayLink();
     if (displayLink)
     {
-		glClear(GL_COLOR_BUFFER_BIT);
-		/* Temporarily commenting this to avoid thread crashing
-        if (aprilWindow->shouldIgnoreUpdate())
+        if (aprilWindow->getParam("displayLinkIgnoreSystemRedraw") != "1")
         {
-            return;
+            glClear(GL_COLOR_BUFFER_BIT);
+            if (aprilWindow->shouldIgnoreUpdate())
+            {
+                return;
+            }
+            hmutex::ScopeLock lock;
+            lock.acquire(&aprilWindow->renderThreadSyncMutex);
+            mDrawingFromMainThread = true;
+            lock.release();
+            [self draw];
+            mDrawingFromMainThread = false;
         }
-        hmutex::ScopeLock lock;
-        lock.acquire(&aprilWindow->renderThreadSyncMutex);
-        mDrawingFromMainThread = true;
-        lock.release();
-        [self draw];
-        mDrawingFromMainThread = false;
-		*/
     }
     else
     {
