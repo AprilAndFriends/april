@@ -55,30 +55,6 @@ namespace april
 #ifdef _ANDROID
 	extern JavaVM* javaVM;
 #endif
-
-#if TARGET_OS_IPHONE
-	static void iosSetupAudioSession()
-	{
-		// kspes: copied this from iOS app delegate code, it's needed for OpenKODE and OpenAL to play along on iOS
-		if ([[[UIDevice currentDevice] systemVersion] compare:@"5.0" options:NSNumericSearch] == NSOrderedAscending)
-		{
-			// less than iOS 5.0 - workarround for an apple bug where the audio sesion get's interrupted while using AVAssetReader and similar
-			AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-			[audioSession setActive: NO error: nil];
-			[audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
-			
-			// Modifying Playback Mixing Behavior, allow playing music in other apps
-			UInt32 allowMixing = true;
-			AudioSessionSetProperty(kAudioSessionProperty_OverrideCategoryMixWithOthers, sizeof(allowMixing), &allowMixing);
-			[audioSession setActive: YES error: nil];
-		}
-		else
-		{
-			[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:NULL];
-		}
-	}
-#endif
-	
 	// this is required due to certain platforms requiring unloading of textures when a pause event is received
 	void KD_APIENTRY _processEventPause(const KDEvent* evt)
 	{
@@ -123,9 +99,6 @@ namespace april
 
 	OpenKODE_Window::OpenKODE_Window() : Window()
 	{
-#if TARGET_OS_IPHONE
-		iosSetupAudioSession();
-#endif
 		this->name = APRIL_WS_OPENKODE;
 		this->kdWindow = NULL;
 		memset(this->kdTouches, 0, 16 * sizeof(bool));
