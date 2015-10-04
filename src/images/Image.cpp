@@ -212,6 +212,117 @@ namespace april
 		return (this->isValid() && Image::dilate(srcData, srcWidth, srcHeight, srcFormat, this->data, this->w, this->h, this->format));
 	}
 
+	Image* Image::extractRed()
+	{
+		if (this->format == FORMAT_RGBA || this->format == FORMAT_RGBX ||
+			this->format == FORMAT_RGB || this->format == FORMAT_GRAYSCALE)
+		{
+			return this->extractColor(0);
+		}
+		if (this->format == FORMAT_ARGB || this->format == FORMAT_XRGB)
+		{
+			return this->extractColor(1);
+		}
+		if (this->format == FORMAT_BGRA || this->format == FORMAT_BGRX || this->format == FORMAT_BGR)
+		{
+			return this->extractColor(2);
+		}
+		if (this->format == FORMAT_ABGR || FORMAT_XBGR)
+		{
+			return this->extractColor(3);
+		}
+		return NULL;
+	}
+
+	Image* Image::extractGreen()
+	{
+		if (this->format == FORMAT_GRAYSCALE)
+		{
+			return this->extractColor(0);
+		}
+		if (this->format == FORMAT_BGRA || this->format == FORMAT_RGBX || this->format == FORMAT_BGRX ||
+			this->format == FORMAT_RGB || this->format == FORMAT_BGR)
+		{
+			return this->extractColor(1);
+		}
+		if (this->format == FORMAT_ARGB || this->format == FORMAT_ABGR ||
+			this->format == FORMAT_XRGB || this->format == FORMAT_XBGR)
+		{
+			return this->extractColor(2);
+		}
+		return NULL;
+	}
+
+	Image* Image::extractBlue()
+	{
+		if (this->format == FORMAT_BGRA || this->format == FORMAT_BGRX ||
+			this->format == FORMAT_BGR || this->format == FORMAT_GRAYSCALE)
+		{
+			return this->extractColor(0);
+		}
+		if (this->format == FORMAT_ABGR || this->format == FORMAT_XBGR)
+		{
+			return this->extractColor(1);
+		}
+		if (this->format == FORMAT_RGBA || this->format == FORMAT_RGBX || this->format == FORMAT_RGB)
+		{
+			return this->extractColor(2);
+		}
+		if (this->format == FORMAT_ARGB || FORMAT_XRGB)
+		{
+			return this->extractColor(3);
+		}
+		return NULL;
+	}
+
+	Image* Image::extractAlpha()
+	{
+		if (!CHECK_ALPHA_FORMAT(this->format) && this->format != FORMAT_ALPHA && this->format != FORMAT_PALETTE)
+		{
+			return Image::create(this->w, this->h, april::Color::White, FORMAT_ALPHA);
+		}
+		if (this->format == FORMAT_ARGB || this->format == FORMAT_ABGR || this->format == FORMAT_ALPHA)
+		{
+			return this->extractColor(0);
+		}
+		if (this->format == FORMAT_RGBA || this->format == FORMAT_BGRA)
+		{
+			return this->extractColor(3);
+		}
+		return NULL;
+	}
+
+	Image* Image::extractColor(int index)
+	{
+		int srcBpp = Image::getFormatBpp(this->format);
+		if (index >= srcBpp)
+		{
+			return NULL;
+		}
+		Image* image = Image::create(this->w, this->h, april::Color::Clear, FORMAT_ALPHA);
+		if (srcBpp == 1)
+		{
+			memcpy(image->data, this->data, this->w * this->h);
+			return image;
+		}
+		if (srcBpp == 3 || srcBpp == 4)
+		{
+			int x = 0;
+			int y = 0;
+			for_iterx (y, 0, this->h)
+			{
+				for_iterx (x, 0, this->w)
+				{
+					// red is used as main component
+					image->data[x + y * this->w] = this->data[(x + y * this->w) * srcBpp + index];
+				}
+			}
+			return image;
+		}
+		delete image;
+		return NULL;
+	}
+
 	// overloads
 
 	Color Image::getPixel(gvec2 position)
@@ -313,7 +424,7 @@ namespace april
 	{
 		return this->insertAlphaMap(image->data, image->format, median, ambiguity);
 	}
-
+	
 	bool Image::dilate(Image* image)
 	{
 		return this->dilate(image->data, image->w, image->h, image->format);

@@ -78,6 +78,12 @@ namespace april
 		bool insertAlphaMap(unsigned char* srcData, Format srcFormat, unsigned char median, int ambiguity);
 		bool dilate(unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 
+		Image* extractRed();
+		Image* extractGreen();
+		Image* extractBlue();
+		Image* extractAlpha();
+		Image* extractColor(int index);
+
 		Color getPixel(gvec2 position);
 		bool setPixel(gvec2 position, Color color);
 		Color getInterpolatedPixel(gvec2 position);
