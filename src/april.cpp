@@ -290,7 +290,7 @@ namespace april
 			april::window = new Mac_Window();
 		}
 #endif
-#ifdef _IOS
+#if defined(_IOS) && !defined(_OPENKODE_WINDOW)
 		if (april::window == NULL && window == WS_IOS)
 		{
 			april::window = new iOS_Window();
