@@ -1694,7 +1694,7 @@ namespace april
 		}
 		Image* original = Image::create(destWidth, destHeight, destData, destFormat);
 		unsigned char* originalData = original->data;
-		memset(destData, 0, destWidth * destHeight * getFormatBpp(destFormat));
+		memset(destData, 0, destWidth * destHeight * Image::getFormatBpp(destFormat));
 		int i = 0;
 		int j = 0;
 		int m = 0;
@@ -1702,8 +1702,8 @@ namespace april
 		int ox = srcWidth / 2;
 		int oy = srcHeight / 2;
 		int index = 0;
-		int indexOriginal = 0;
 		int indexSrc = 0;
+		int indexOriginal = 0;
 		for_iterx (j, 0, destHeight)
 		{
 			for_iterx (i, 0, destWidth)
@@ -1715,17 +1715,20 @@ namespace april
 					{
 						for_iterx (m, 0, srcWidth)
 						{
-							indexSrc = m + n * srcWidth;
-							if (srcData[indexSrc] > 0)
+							if (hbetweenIE(i + m - ox, 0, destWidth))
 							{
-								indexOriginal = i + m - ox + (j + n - oy) * destWidth;
-								if (originalData[indexOriginal] > 0 && hbetweenIE(i + m - ox, 0, destWidth))
+								indexSrc = m + n * srcWidth;
+								if (srcData[indexSrc] > 0)
 								{
-									// multiplication is fast than dividing by 255
-									destData[index] = hmax(destData[index], (unsigned char)(0.003921569f * originalData[indexOriginal] * srcData[indexSrc]));
-									if (destData[index] == 255)
+									indexOriginal = i + m - ox + (j + n - oy) * destWidth;
+									if (originalData[indexOriginal] > 0)
 									{
-										break;
+										// multiplication is faster than dividing by 255
+										destData[index] = hmax(destData[index], (unsigned char)(0.003921569f * originalData[indexOriginal] * srcData[indexSrc]));
+										if (destData[index] == 255)
+										{
+											break;
+										}
 									}
 								}
 							}
