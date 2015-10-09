@@ -19,7 +19,7 @@
 #if __APPLE__
 	#include <TargetConditionals.h>
 #endif
-#if TARGET_OS_IPHONE
+#if _IOS
 	#ifdef _OPENGLES1
 		#include <OpenGLES/ES1/gl.h>
 		#include <OpenGLES/ES1/glext.h>

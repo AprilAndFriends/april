@@ -13,7 +13,7 @@
 #ifdef __APPLE__
 	#include <TargetConditionals.h>
 #endif
-#if TARGET_OS_IPHONE
+#if _IOS
 	#include <OpenGLES/ES1/gl.h>
 	#include <OpenGLES/ES1/glext.h>
 #elif _OPENGLES
@@ -79,7 +79,7 @@ namespace april
 		}
 		this->firstUpload = true;
 		// required first call of glTexImage2D() to prevent problems
-#if TARGET_OS_IPHONE
+#if _IOS
 		if (this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG || this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG)
 		{
 			this->_setCurrentTexture();

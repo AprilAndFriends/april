@@ -88,7 +88,7 @@
 		#define WS_INTERNAL_DEFAULT WS_WINRT
 	#endif
 #elif defined(__APPLE__)
-	#if TARGET_OS_IPHONE
+	#if _IOS
 		#ifdef _OPENGLES2
 			#define RS_INTERNAL_DEFAULT RS_OPENGLES2
 		#elif defined(_OPENGLES1)
@@ -147,7 +147,7 @@
 #elif defined(_ANDROID)
 	#define APRIL_PLATFORM_NAME "Android"
 #elif defined(__APPLE__)
-	#if TARGET_OS_IPHONE
+	#if _IOS
 		#define APRIL_PLATFORM_NAME "iOS"
 	#else
 		#define APRIL_PLATFORM_NAME "Mac OS X"
@@ -190,14 +190,20 @@ namespace april
 	{
 		hlog::write(logTag, "Initializing APRIL: " + version.toString());
 		hlog::writef(logTag, "Platform: %s %s, %d bit", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
-		extensions += ".jpt";
-		extensions += ".png";
-		extensions += ".jpg";
-#if TARGET_OS_IPHONE
-		extensions += ".pvr";
+		if (extensions.size() == 0)
+		{
+			extensions += ".jpt";
+			extensions += ".png";
+			extensions += ".jpg";
+#if _IOS
+			extensions += ".pvr";
 #endif
+		}
 #ifdef _EGL
-		april::egl = new EglData();
+		if (april::egl == NULL)
+		{
+			april::egl = new EglData();
+		}
 #endif
 	}
 
