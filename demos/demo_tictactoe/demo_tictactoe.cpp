@@ -430,13 +430,20 @@ void april_destroy()
 {
 	april::window->setCursor(NULL);
 	delete cursor;
-	delete background;
-	delete x_symbol;
-	delete o_symbol;
-	delete line_horz;
-	delete line_vert;
-	delete line45;
-	delete line315;
+	april::rendersys->destroyTexture(background);
+	background = NULL;
+	april::rendersys->destroyTexture(x_symbol);
+	x_symbol = NULL;
+	april::rendersys->destroyTexture(o_symbol);
+	o_symbol = NULL;
+	april::rendersys->destroyTexture(line_horz);
+	line_horz = NULL;
+	april::rendersys->destroyTexture(line_vert);
+	line_vert = NULL;
+	april::rendersys->destroyTexture(line45);
+	line45 = NULL;
+	april::rendersys->destroyTexture(line315);
+	line315 = NULL;
 	april::destroy();
 	delete updateDelegate;
 	updateDelegate = NULL;

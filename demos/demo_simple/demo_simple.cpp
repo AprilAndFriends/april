@@ -198,8 +198,10 @@ void april_destroy()
 {
 	april::window->setCursor(NULL);
 	delete cursor;
-	delete texture;
-	delete manualTexture;
+	april::rendersys->destroyTexture(texture);
+	texture = NULL;
+	april::rendersys->destroyTexture(manualTexture);
+	manualTexture = NULL;
 	april::destroy();
 	delete updateDelegate;
 	updateDelegate = NULL;
