@@ -196,48 +196,53 @@ namespace april
 		NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[] = {MESSAGE_BUTTON_OK, (MessageBoxButton)NULL, (MessageBoxButton)NULL};
 		
+		int i0 = 1, i1 = 0, i2 = 2;
+		if (NSFoundationVersionNumber < NSFoundationVersionNumber_iOS_7_0)
+		{
+			i0 = 0, i1 = 1; // we want to bold the "OK" button, but in ios7 and up, the cancel button is bolded by default
+		}
 		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK").cStr()];
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").cStr()];
-			buttonTypes[1] = MESSAGE_BUTTON_OK;
-			buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
+			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK").cStr()];
+			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").cStr()];
+			buttonTypes[i1] = MESSAGE_BUTTON_OK;
+			buttonTypes[i0] = MESSAGE_BUTTON_CANCEL;
 		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
-			buttons[2] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").cStr()];
-			buttonTypes[1] = MESSAGE_BUTTON_YES;
-			buttonTypes[2] = MESSAGE_BUTTON_NO;
-			buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
+			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
+			buttons[i2] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
+			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").cStr()];
+			buttonTypes[i1] = MESSAGE_BUTTON_YES;
+			buttonTypes[i2] = MESSAGE_BUTTON_NO;
+			buttonTypes[i0] = MESSAGE_BUTTON_CANCEL;
 		}
 		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
 		{
-			buttons[1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
-			buttonTypes[1] = MESSAGE_BUTTON_YES;
-			buttonTypes[0] = MESSAGE_BUTTON_NO;
+			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
+			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
+			buttonTypes[i1] = MESSAGE_BUTTON_YES;
+			buttonTypes[i0] = MESSAGE_BUTTON_NO;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_CANCEL)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").cStr()];
-			buttonTypes[0] = MESSAGE_BUTTON_CANCEL;
+			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").cStr()];
+			buttonTypes[i0] = MESSAGE_BUTTON_CANCEL;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_OK)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK").cStr()];
-			buttonTypes[0] = MESSAGE_BUTTON_OK;
+			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK").cStr()];
+			buttonTypes[i0] = MESSAGE_BUTTON_OK;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_YES)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
-			buttonTypes[0] = MESSAGE_BUTTON_YES;
+			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
+			buttonTypes[i0] = MESSAGE_BUTTON_YES;
 		}
 		else if (buttonMask & MESSAGE_BUTTON_NO)
 		{
-			buttons[0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
-			buttonTypes[0] = MESSAGE_BUTTON_NO;
+			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
+			buttonTypes[i0] = MESSAGE_BUTTON_NO;
 		}
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.cStr()];
