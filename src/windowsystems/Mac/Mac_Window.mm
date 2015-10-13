@@ -61,6 +61,7 @@ namespace april
 		this->name = APRIL_WS_MAC;
 		this->retainLoadingOverlay = fastHideLoadingOverlay = false;
 		this->splashScreenFadeout = true;
+		this->displayLinkIgnoreSystemRedraw = false;
 		this->cursorExtensions += ".plist";
 		this->cursorExtensions += ".png";
 		this->scalingFactor = 1.0f;
@@ -119,6 +120,10 @@ namespace april
 		{
 			return this->splashScreenFadeout ? "1" : "0";
 		}
+		if (param == "displayLinkIgnoreSystemRedraw")
+		{
+			return this->displayLinkIgnoreSystemRedraw  ? "1" : "0";
+		}
 		return "";
 	}
 	
@@ -139,6 +144,10 @@ namespace april
 		if (param == "splashscreen_fadeout")
 		{
 			this->splashScreenFadeout = (value == "1");
+		}
+		if (param == "displayLinkIgnoreSystemRedraw")
+		{
+			this->displayLinkIgnoreSystemRedraw = (value == "1");
 		}
 	}
 	
@@ -188,6 +197,7 @@ namespace april
 		bool lionFullscreen = isLionOrNewer();
 		this->fpsCounter = options.fpsCounter;
 		this->inputMode = MOUSE;
+		this->displayLinkIgnoreSystemRedraw = options.mac_displayLinkIgnoreSystemRedraw;
 
 		if (fullscreen)
 		{

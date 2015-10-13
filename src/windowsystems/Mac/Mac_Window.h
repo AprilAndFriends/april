@@ -65,7 +65,7 @@ namespace april
         void dispatchWindowSizeChanged(int w, int h, bool fullscreen);
         void queueMessageBox(chstr title, harray<hstr> argButtons, harray<MessageBoxButton> argButtonTypes, chstr text, void (*callback)(MessageBoxButton));
         
-        
+		bool displayLinkIgnoreSystemRedraw;
 		bool retainLoadingOverlay;
 		bool fastHideLoadingOverlay;
 		bool ignoreUpdate;

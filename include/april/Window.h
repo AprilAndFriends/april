@@ -135,6 +135,7 @@ namespace april
 			bool fpsCounter;
 			bool hotkeyFullscreen;
 			float defaultWindowModeResolutionFactor;
+			bool mac_displayLinkIgnoreSystemRedraw;
 
 			Options();
 			~Options();

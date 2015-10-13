@@ -124,6 +124,7 @@ namespace april
 		this->resizable = false;
 		this->fpsCounter = false;
 		this->hotkeyFullscreen = false;
+		this->mac_displayLinkIgnoreSystemRedraw = false;
 		this->defaultWindowModeResolutionFactor = 0.85f;
 	}
 	
