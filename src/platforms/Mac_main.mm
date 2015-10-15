@@ -25,6 +25,12 @@ static BOOL gFinderLaunch = NO;
 
 int gAprilShouldInvokeQuitCallback = 0;
 
+static NSString* getLocalizedString(NSString* key, NSString* fallback)
+{
+	NSString* s = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:key];
+	return (s == nil || [s length] == 0) ? fallback : s;
+}
+
 /* For some reason, Apple removed setAppleMenu from the headers in 10.4,
  but the method still is there and works. To avoid warnings, we declare
  it ourselves here. */
@@ -66,6 +72,15 @@ int gAprilShouldInvokeQuitCallback = 0;
 		NSLog(@"Aborting application quit request per app's request.");
 	}	
 #endif
+}
+
+- (void)showAprilAboutMenu
+{
+	NSString* copyright;
+	copyright = getLocalizedString(@"MenuCopyright", @"");
+	NSDictionary* aboutOptions = @{ @"Copyright": copyright };
+	
+	[NSApp orderFrontStandardAboutPanelWithOptions:aboutOptions];
 }
 
 @end
@@ -138,12 +153,6 @@ NSString* getApplicationName()
 
 #endif
 
-static NSString* getLocalizedString(NSString* key, NSString* fallback)
-{
-	NSString* s = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:key];
-	return (s == nil || [s length] == 0) ? fallback : s;
-}
-
 static void setApplicationMenu()
 {
 	/* warning: this code is very odd */
@@ -156,8 +165,10 @@ static void setApplicationMenu()
 	appleMenu = [[NSMenu alloc] initWithTitle:@""];
 	
 	/* Add menu items */
+//	[NSApp showAprilAboutMenu];
 	title = [getLocalizedString(@"MenuAbout", @"About ") stringByAppendingString:appName];
-	[appleMenu addItemWithTitle:title action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""];
+	[appleMenu addItemWithTitle:title action:@selector(showAprilAboutMenu) keyEquivalent:@""];
+
 	
 	[appleMenu addItem:[NSMenuItem separatorItem]];
 	
