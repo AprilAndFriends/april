@@ -27,6 +27,7 @@
 
 #include <hltypes/hdir.h>
 #include <april/april.h>
+#include <aprilpix/aprilpix.h>
 #include <april/Cursor.h>
 #include <april/main.h>
 #include <april/MouseDelegate.h>
@@ -172,6 +173,7 @@ void april_init(const harray<hstr>& args)
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 	april::createRenderSystem();
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple Demo");
+	aprilpix::init();
 #ifdef _WINRT
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
@@ -202,6 +204,7 @@ void april_destroy()
 	texture = NULL;
 	april::rendersys->destroyTexture(manualTexture);
 	manualTexture = NULL;
+	aprilpix::destroy();
 	april::destroy();
 	delete updateDelegate;
 	updateDelegate = NULL;
