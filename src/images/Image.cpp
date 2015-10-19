@@ -103,6 +103,7 @@
 namespace april
 {
 	hmap<hstr, Image* (*)(hsbase&)> Image::customLoaders;
+	hmap<hstr, Image* (*)(hsbase&)> Image::customMetaDataLoaders;
 
 	Image::Image()
 	{
@@ -661,7 +662,7 @@ namespace april
 			return Image::_readMetaDataPvr(file);
 		}
 #endif
-		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
+		foreach_m (Image* (*)(hsbase&), it, Image::customMetaDataLoaders)
 		{
 			if (filename.lowered().endsWith(it->first.lowered()))
 			{
@@ -697,7 +698,7 @@ namespace april
 			return Image::_readMetaDataPvr(file);
 		}
 #endif
-		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
+		foreach_m (Image* (*)(hsbase&), it, Image::customMetaDataLoaders)
 		{
 			if (filename.lowered().endsWith(it->first.lowered()))
 			{
@@ -728,7 +729,7 @@ namespace april
 			return Image::_readMetaDataPvr(stream);
 		}
 #endif
-		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
+		foreach_m (Image* (*)(hsbase&), it, Image::customMetaDataLoaders)
 		{
 			if (logicalExtension.lowered().endsWith(it->first.lowered()))
 			{
@@ -2255,9 +2256,10 @@ namespace april
 		return true;
 	}
 
-	void Image::registerCustomLoader(chstr extension, Image* (*function)(hsbase&))
+	void Image::registerCustomLoader(chstr extension, Image* (*loadFunction)(hsbase&), Image* (*metaDataLoadfunction)(hsbase&))
 	{
-		Image::customLoaders[extension] = function;
+		Image::customLoaders[extension] = loadFunction;
+		Image::customMetaDataLoaders[extension] = metaDataLoadfunction;
 	}
 
 	void Image::_getFormatIndices(Image::Format format, int* red, int* green, int* blue, int* alpha)

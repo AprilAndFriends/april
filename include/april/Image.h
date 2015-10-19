@@ -55,7 +55,7 @@ namespace april
 		int internalFormat; // needed for special platform dependent formats, usually used internally only
 		int compressedSize;
 
-		~Image();
+		virtual ~Image();
 		
 		int getBpp();
 		int getByteSize();
@@ -149,7 +149,7 @@ namespace april
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int destWidth, int destHeight);
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight);
 
-		static void registerCustomLoader(chstr extension, Image* (*function)(hsbase&));
+		static void registerCustomLoader(chstr extension, Image* (*loadFunction)(hsbase&), Image* (*metaDataLoadfunction)(hsbase&));
 
 		DEPRECATED_ATTRIBUTE static inline Image* load(chstr filename) { return Image::createFromResource(filename); }
 		DEPRECATED_ATTRIBUTE static inline Image* load(chstr filename, Format format) { return Image::createFromResource(filename, format); }
@@ -158,6 +158,7 @@ namespace april
 		Image();
 
 		static hmap<hstr, Image* (*)(hsbase&)> customLoaders;
+		static hmap<hstr, Image* (*)(hsbase&)> customMetaDataLoaders;
 
 		static Image* _loadPng(hsbase& stream, int size);
 		static Image* _loadPng(hsbase& stream);
