@@ -10,6 +10,7 @@
 /// 
 /// Defines methods for loading a PVR image.
 
+#ifdef _PVR
 #ifndef APRILPIX_IMAGE_PVR_H
 #define APRILPIX_IMAGE_PVR_H
 
@@ -36,6 +37,5 @@ namespace aprilpix
 	};
 
 };
-
 #endif
-
+#endif

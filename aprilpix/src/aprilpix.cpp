@@ -22,10 +22,12 @@ namespace aprilpix
 	void init()
 	{
 		hlog::write(logTag, "Initializing AprilPIX");
+#ifdef _WEBP
 		harray<hstr> extensions = april::getTextureExtensions();
 		extensions += ".webp";
 		april::setTextureExtensions(extensions);
 		april::Image::registerCustomLoader(".webp", &ImageWebp::load, &ImageWebp::loadMetaData);
+#endif
 	}
 
 	void destroy()

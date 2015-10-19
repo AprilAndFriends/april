@@ -52,8 +52,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\aprilpix\aprilpix.h" />
     <ClInclude Include="..\..\include\aprilpix\aprilpixExport.h" />
-    <ClInclude Include="..\..\include\aprilpix\ImagePvr.h" />
-    <ClInclude Include="..\..\include\aprilpix\ImageWebp.h" />
+    <ClInclude Include="..\..\src\ImagePvr.h" />
+    <ClInclude Include="..\..\src\ImageWebp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\aprilpix.cpp" />

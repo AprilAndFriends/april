@@ -10,6 +10,7 @@
 /// 
 /// Defines methods for loading a WEBP image.
 
+#ifdef _WEBP
 #ifndef APRILPIX_IMAGE_WEBP_H
 #define APRILPIX_IMAGE_WEBP_H
 
@@ -36,6 +37,5 @@ namespace aprilpix
 	};
 
 };
-
 #endif
-
+#endif
