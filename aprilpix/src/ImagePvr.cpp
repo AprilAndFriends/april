@@ -7,8 +7,26 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #include "aprilpix.h"
+#include "ImagePvr.h"
 
 namespace aprilpix
 {
+	ImagePvr::ImagePvr() : april::Image()
+	{
+	}
+
+	ImagePvr::~ImagePvr()
+	{
+	}
+
+	april::Image* ImagePvr::load(hsbase& stream)
+	{
+		return NULL;
+	}
+
+	april::Image* ImagePvr::loadMetaData(hsbase& stream)
+	{
+		return NULL;
+	}
 
 }

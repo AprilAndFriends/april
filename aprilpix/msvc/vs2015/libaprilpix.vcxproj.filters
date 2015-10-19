@@ -20,9 +20,21 @@
     <ClInclude Include="..\..\include\aprilpix\aprilpix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\aprilpix\ImagePvr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\aprilpix\ImageWebp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\aprilpix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ImagePvr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ImageWebp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

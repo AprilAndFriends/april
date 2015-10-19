@@ -8,18 +8,32 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines all functions for April PIX.
+/// Defines methods for loading a WEBP image.
 
 #ifndef APRILPIX_IMAGE_WEBP_H
 #define APRILPIX_IMAGE_WEBP_H
 
+#include <april/Image.h>
 #include <hltypes/harray.h>
+#include <hltypes/hsbase.h>
 #include <hltypes/hstring.h>
 
 #include "aprilpixExport.h"
 
 namespace aprilpix
 {
+	class aprilpixExport ImageWebp : public april::Image
+	{
+	public:
+		~ImageWebp();
+
+		static april::Image* load(hsbase& stream);
+		static april::Image* loadMetaData(hsbase& stream);
+
+	protected:
+		ImageWebp();
+
+	};
 
 };
 

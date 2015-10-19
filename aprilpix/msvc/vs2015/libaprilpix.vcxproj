@@ -64,9 +64,13 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\aprilpix\aprilpix.h" />
     <ClInclude Include="..\..\include\aprilpix\aprilpixExport.h" />
+    <ClInclude Include="..\..\include\aprilpix\ImagePvr.h" />
+    <ClInclude Include="..\..\include\aprilpix\ImageWebp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\aprilpix.cpp" />
+    <ClCompile Include="..\..\src\ImagePvr.cpp" />
+    <ClCompile Include="..\..\src\ImageWebp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">
