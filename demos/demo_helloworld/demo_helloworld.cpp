@@ -51,43 +51,39 @@ private:
 	gvec2 position;
 	gvec2 velocity;
 
-	const float size = 96;
-	const float speed = 256;
+	static const int size = 96;
+	static const int speed = 256;
 public:
 	Ball()
 	{
-		position.set(hrand(0, april::window->getSize().x - size), 
-			hrand(0, april::window->getSize().y - size));
-
-		velocity.set(speed, speed);
+		this->position.set((float)hrand(april::window->getSize().x - size), (float)hrand(april::window->getSize().y - size));
+		this->velocity.set((float)speed, (float)speed);
 	}
 
 	void update(float timeDelta)
 	{
-		position += velocity * timeDelta;
+		this->position += this->velocity * timeDelta;
 
-		if (position.x < 0 || position.x > april::window->getSize().x - size)
+		if (this->position.x < 0 || this->position.x > april::window->getSize().x - size)
 		{
-			position -= velocity * timeDelta;
-			velocity.x = -velocity.x;
+			this->position -= this->velocity * timeDelta;
+			this->velocity.x = -this->velocity.x;
 		}
 
-		if (position.y < 0 || position.y > april::window->getSize().y - size)
+		if (this->position.y < 0 || this->position.y > april::window->getSize().y - size)
 		{
-			position -= velocity * timeDelta;
-			velocity.y = -velocity.y;
+			this->position -= this->velocity * timeDelta;
+			this->velocity.y = -this->velocity.y;
 		}
 	}
 
 	void render()
 	{
-		float x1 = position.x;
-		float x2 = position.x + size;
-		float y1 = position.y;
-		float y2 = position.y + size;
-
+		float x1 = this->position.x;
+		float x2 = this->position.x + size;
+		float y1 = this->position.y;
+		float y2 = this->position.y + size;
 		april::rendersys->setTexture(ball);
-
 		v[0].x = x1; v[0].y = y1; v[0].z = 0; v[0].u = 0; v[0].v = 0;
 		v[1].x = x2; v[1].y = y1; v[1].z = 0; v[1].u = 1; v[1].v = 0;
 		v[2].x = x1; v[2].y = y2; v[2].z = 0; v[2].u = 0; v[2].v = 1;
@@ -104,13 +100,11 @@ class UpdateDelegate : public april::UpdateDelegate
 	{	
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);	
-
-		foreach(Ball, it, balls)
+		foreach (Ball, it, balls)
 		{
 			it->update(timeDelta);
 			it->render();
 		}
-	
 		return true;
 	}
 };
@@ -200,7 +194,6 @@ void april_init(const harray<hstr>& args)
 	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 	ball = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo");	
-
 	balls.add(Ball());
 }
 
