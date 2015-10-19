@@ -6,6 +6,9 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
+#include <hltypes/hlog.h>
+#include <hltypes/hstring.h>
+
 #include "aprilpix.h"
 
 namespace aprilpix
@@ -15,6 +18,7 @@ namespace aprilpix
 	void init()
 	{
 		hlog::write(logTag, "Initializing AprilPIX");
+
 	}
 
 	void destroy()

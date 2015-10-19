@@ -56,7 +56,7 @@ private:
 public:
 	Ball()
 	{
-		this->position.set((float)hrand(april::window->getSize().x - size), (float)hrand(april::window->getSize().y - size));
+		this->position.set((float)hrand((int)april::window->getSize().x - size), (float)hrand((int)april::window->getSize().y - size));
 		this->velocity.set((float)speed, (float)speed);
 	}
 

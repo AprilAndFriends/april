@@ -9,9 +9,5 @@
       <CompileAs>CompileAsC</CompileAs>
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
-    <Link>
-      <AdditionalDependencies>zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <Version>16</Version>
-    </Link>
   </ItemDefinitionGroup>
 </Project>
