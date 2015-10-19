@@ -42,12 +42,10 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
-#define LOG_TAG "demo_simple"
+#define LOG_TAG "demo_pix"
 
 april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
-april::Texture* manualTexture = NULL;
-april::TexturedVertex dv[4];
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
@@ -65,13 +63,8 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);
 		april::rendersys->drawFilledRect(drawRect, april::Color(96, 96, 96));
-		manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
-		april::rendersys->setTexture(manualTexture);
-		april::rendersys->render(april::RO_TRIANGLE_STRIP, dv, 4);
 		april::rendersys->setTexture(texture);
 		april::rendersys->drawTexturedRect(textureRect + offset, src);
-		april::rendersys->drawFilledRect(grect(0.0f, drawRect.h - 75.0f, 100.0f, 75.0f), april::Color::Yellow);
-		april::rendersys->drawFilledRect(grect(10.0f, drawRect.h - 65.0f, 80.0f, 55.0f), april::Color::Red);
 		return true;
 	}
 
@@ -166,10 +159,6 @@ void april_init(const harray<hstr>& args)
 #if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
-	dv[0].x = 0.0f;			dv[0].y = 0.0f;			dv[0].z = 0.0f;	dv[0].u = 0.0f;	dv[0].v = 0.0f;
-	dv[1].x = drawRect.w;	dv[1].y = 0.0f;			dv[1].z = 0.0f;	dv[1].u = 1.0f;	dv[1].v = 0.0f;
-	dv[2].x = 0.0f;			dv[2].y = drawRect.h;	dv[2].z = 0.0f;	dv[2].u = 0.0f;	dv[2].v = 1.0f;
-	dv[3].x = drawRect.w;	dv[3].y = drawRect.h;	dv[3].z = 0.0f;	dv[3].u = 1.0f;	dv[3].v = 1.0f;
 	april::init(april::RS_DEFAULT, april::WS_DEFAULT);
 	april::createRenderSystem();
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple Demo");
@@ -182,18 +171,10 @@ void april_init(const harray<hstr>& args)
 	april::window->setMouseDelegate(mouseDelegate);
 	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
-	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::TYPE_MANAGED);
+	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "pix", april::Texture::TYPE_MANAGED);
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
-	textureRect.x = -textureRect.w / 2;
-	textureRect.y = -textureRect.h / 2;
-	// demonstrating some of the image manipulation methods
-	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::TYPE_MANAGED);
-	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 0, 0, texture);
-	manualTexture->invert(0, 0, 256, 128);
-	manualTexture->saturate(0, 128, 128, 128, 0.0f);
-	manualTexture->rotateHue(128, 0, 128, 128, 180.0f);
-	manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 128, 128, texture, 96);
-	manualTexture->blitStretch(texture->getWidth() / 2, 0, texture->getWidth() / 2, texture->getHeight(), 64, 128, 700, 200, texture, 224);
+	textureRect.x = -textureRect.w * 0.5f;
+	textureRect.y = -textureRect.h * 0.5f;
 }
 
 void april_destroy()
@@ -202,8 +183,6 @@ void april_destroy()
 	delete cursor;
 	april::rendersys->destroyTexture(texture);
 	texture = NULL;
-	april::rendersys->destroyTexture(manualTexture);
-	manualTexture = NULL;
 	aprilpix::destroy();
 	april::destroy();
 	delete updateDelegate;

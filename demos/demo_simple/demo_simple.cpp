@@ -182,8 +182,8 @@ void april_init(const harray<hstr>& args)
 	april::window->setCursor(cursor);
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::TYPE_MANAGED);
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
-	textureRect.x = -textureRect.w / 2;
-	textureRect.y = -textureRect.h / 2;
+	textureRect.x = -textureRect.w * 0.5f;
+	textureRect.y = -textureRect.h * 0.5f;
 	// demonstrating some of the image manipulation methods
 	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::TYPE_MANAGED);
 	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 0, 0, texture);
@@ -191,7 +191,7 @@ void april_init(const harray<hstr>& args)
 	manualTexture->saturate(0, 128, 128, 128, 0.0f);
 	manualTexture->rotateHue(128, 0, 128, 128, 180.0f);
 	manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 128, 128, texture, 96);
-	manualTexture->blitStretch(texture->getWidth() / 2, 0, texture->getWidth() / 2, texture->getHeight(), 64, 128, 700, 200, texture, 224);
+	manualTexture->blitStretch(texture->getWidth() * 0.5f, 0, texture->getWidth() * 0.5f, texture->getHeight(), 64, 128, 700, 200, texture, 224);
 }
 
 void april_destroy()
