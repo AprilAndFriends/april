@@ -42,15 +42,12 @@ static void updateLoadingOverlaySize(NSWindow* parent, bool check)
 
 void createLoadingOverlay(NSWindow* parent)
 {
-	NSString* path = [[NSBundle mainBundle] pathForResource:@"Default" ofType:@"png"];
+	float scalingFactor = [NSScreen mainScreen].backingScaleFactor;
+	NSString* imgName = scalingFactor > 1 ? @"Default@2x" : @"Default";
+	
+	NSString* path = [[NSBundle mainBundle] pathForResource:imgName ofType:@"png"];
 	bool found = [[NSFileManager defaultManager] fileExistsAtPath:path];
-	
-	if (!found)
-	{
-		path = [[NSBundle mainBundle] pathForResource:@"Default-Mac" ofType:@"png"];
-		found = [[NSFileManager defaultManager] fileExistsAtPath:path];
-	}
-	
+
 	if (found)
 	{
 		NSRect windowFrame = parent.frame;
