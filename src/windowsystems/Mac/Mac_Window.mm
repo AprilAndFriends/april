@@ -122,6 +122,11 @@ namespace april
 		{
 			return this->splashScreenFadeout ? "1" : "0";
 		}
+		if (param == "delay_splash")
+		{
+			return this->splashScreenDelay;
+		}
+
 		if (param == "displayLinkIgnoreSystemRedraw")
 		{
 			return this->displayLinkIgnoreSystemRedraw  ? "1" : "0";
@@ -146,6 +151,10 @@ namespace april
 		if (param == "splashscreen_fadeout")
 		{
 			this->splashScreenFadeout = (value == "1");
+		}
+		if (param == "delay_splash")
+		{
+			this->splashScreenDelay = value;
 		}
 		if (param == "displayLinkIgnoreSystemRedraw")
 		{
@@ -369,7 +378,7 @@ namespace april
 			if (timeDelta > 0.5f) timeDelta = 0.5f;
 			updateLoadingOverlay(timeDelta);
 		}
-		
+
 		if (this->fpsCounter)
 		{
 			setTitle(this->title);
