@@ -47,7 +47,7 @@ namespace april
 
 	bool OpenGLES_VertexShader::_createShader(chstr filename, const hstream& stream)
 	{
-		this->glShader = glCreateShader(GL_FRAGMENT_SHADER);
+		this->glShader = glCreateShader(GL_VERTEX_SHADER);
 		if (this->glShader == 0)
 		{
 			hlog::error(logTag, "Shader could not be created!");

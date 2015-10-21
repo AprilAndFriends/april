@@ -20,12 +20,12 @@
 
 namespace april
 {
-	class OpenGLES2_RenderSystem;
+	class OpenGLES_RenderSystem;
 
 	class OpenGLES_VertexShader : public VertexShader
 	{
 	public:
-		friend class OpenGLES2_RenderSystem;
+		friend class OpenGLES_RenderSystem;
 
 		OpenGLES_VertexShader();
 		~OpenGLES_VertexShader();

@@ -82,6 +82,8 @@ namespace april
 		this->vertexBuffer = nullptr;
 		this->constantBuffer = nullptr;
 		this->inputLayout = nullptr;
+		this->activeVertexShader = NULL;
+		this->activePixelShader = NULL;
 		this->vertexShaderDefault = NULL;
 		this->pixelShaderTexturedMultiply = NULL;
 		this->pixelShaderTexturedAlphaMap = NULL;
@@ -113,6 +115,8 @@ namespace april
 		}
 		this->activeTextureBlendMode = BM_DEFAULT;
 		this->activeTexture = NULL;
+		this->activeVertexShader = NULL;
+		this->activePixelShader = NULL;
 		this->renderTarget = NULL;
 		this->activeTextureColorMode = CM_DEFAULT;
 		this->activeTextureColorModeAlpha = 255;

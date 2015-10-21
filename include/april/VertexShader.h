@@ -32,12 +32,19 @@ namespace april
 		virtual bool isLoaded() = 0;
 
 		/// @brief Loads a precompiled shader from a file.
+		/// @param[in] stream Stream with shader data.
+		/// @return True if successful.
+		/// @note Some systems use precompiled shaders while others use raw shader code.
+		bool load(const hstream& stream);
+		/// @brief Loads a shader from a file.
 		/// @param[in] filename Filename of the file.
 		/// @return True if successful.
+		/// @note Some systems use precompiled shaders while others use raw shader code.
 		bool loadFile(chstr filename);
-		/// @brief Loads a precompiled shader from a resource.
+		/// @brief Loads a shader from a resource.
 		/// @param[in] filename Filename of the resource.
 		/// @return True if successful.
+		/// @note Some systems use precompiled shaders while others use raw shader code.
 		bool loadResource(chstr filename);
 		/// @brief Sets the B-constant of the shader.
 		/// @param[in] quads The quads.

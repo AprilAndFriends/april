@@ -24,6 +24,16 @@ namespace april
 	{
 	}
 
+	bool VertexShader::load(const hstream& stream)
+	{
+		if (this->isLoaded())
+		{
+			hlog::error(logTag, "Shader already loaded.");
+			return false;
+		}
+		return this->_createShader("[raw]", stream);
+	}
+
 	bool VertexShader::loadFile(chstr filename)
 	{
 		if (this->isLoaded())

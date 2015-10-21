@@ -18,15 +18,56 @@
 
 namespace april
 {
+	class OpenGLES_PixelShader;
+	class OpenGLES_VertexShader;
+
 	class OpenGLES_RenderSystem : public OpenGL_RenderSystem
 	{
 	public:
+		class ShaderProgram
+		{
+		public:
+			friend class OpenGLES_RenderSystem;
+
+			ShaderProgram();
+			~ShaderProgram();
+
+			bool load(unsigned int pixelShaderId, unsigned int vertexShaderId);
+
+		protected:
+			unsigned int glShaderProgram;
+
+		};
+
 		OpenGLES_RenderSystem();
 		~OpenGLES_RenderSystem();
+		bool create(RenderSystem::Options options);
+		bool destroy();
 
 		void assignWindow(Window* window);
-		
+
+		void setPixelShader(PixelShader* pixelShader);
+		void setVertexShader(VertexShader* vertexShader);
+
 	protected:
+		ColorMode activeTextureColorMode;
+		unsigned char activeTextureColorModeAlpha;
+		ShaderProgram* activeShader;
+
+		OpenGLES_VertexShader* vertexShaderDefault;
+		OpenGLES_PixelShader* pixelShaderTexturedMultiply;
+		OpenGLES_PixelShader* pixelShaderTexturedAlphaMap;
+		OpenGLES_PixelShader* pixelShaderTexturedLerp;
+		OpenGLES_PixelShader* pixelShaderMultiply;
+		OpenGLES_PixelShader* pixelShaderAlphaMap;
+		OpenGLES_PixelShader* pixelShaderLerp;
+		ShaderProgram* shaderTexturedMultiply;
+		ShaderProgram* shaderTexturedAlphaMap;
+		ShaderProgram* shaderTexturedLerp;
+		ShaderProgram* shaderMultiply;
+		ShaderProgram* shaderAlphaMap;
+		ShaderProgram* shaderLerp;
+
 		void _setupCaps();
 		
 		void _setupDefaultParameters();
@@ -41,6 +82,11 @@ namespace april
 		void _setVertexPointer(int stride, const void* pointer);
 		void _setTexCoordPointer(int stride, const void *pointer);
 		void _setColorPointer(int stride, const void *pointer);
+
+		void _updateShader(bool useTexture);
+
+	private:
+		ShaderProgram* _currentShader;
 
 	};
 	
