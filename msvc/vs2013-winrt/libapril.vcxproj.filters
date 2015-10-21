@@ -278,6 +278,12 @@
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_VertexShader.cpp">
       <Filter>Source Files\rendersystems\OpenGL\GLES\2</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_PixelShader.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\GLES</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_VertexShader.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\GLES</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -453,6 +459,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_VertexShader.h">
       <Filter>Header Files\rendersystems\OpenGL\GLES\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_PixelShader.h">
+      <Filter>Header Files\rendersystems\OpenGL\GLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_VertexShader.h">
+      <Filter>Header Files\rendersystems\OpenGL\GLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_defaultShaders.h">
+      <Filter>Header Files\rendersystems\OpenGL\GLES</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

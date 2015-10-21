@@ -523,8 +523,10 @@
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_Texture.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_VertexShader.cpp" />
+    <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_PixelShader.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_Texture.cpp" />
+    <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_VertexShader.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\1\OpenGL1_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\1\OpenGL1_Texture.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\ES1\OpenGLES1_RenderSystem.cpp" />
@@ -608,8 +610,11 @@
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_Texture.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_VertexShader.h" />
+    <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_defaultShaders.h" />
+    <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_PixelShader.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_Texture.h" />
+    <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_VertexShader.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\1\OpenGL1_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\1\OpenGL1_Texture.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\ES1\OpenGLES1_RenderSystem.h" />
