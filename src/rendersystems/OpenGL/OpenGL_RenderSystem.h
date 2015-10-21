@@ -132,6 +132,7 @@ namespace april
 		virtual void _setDepthBuffer(bool enabled, bool writeEnabled = true);
 
 		virtual void _loadIdentityMatrix() = 0;
+		virtual void _setMatrixMode(unsigned int mode) = 0;
 		virtual void _setVertexPointer(int stride, const void* pointer) = 0;
 		virtual void _setTexCoordPointer(int stride, const void* pointer) = 0;
 		virtual void _setColorPointer(int stride, const void* pointer) = 0;

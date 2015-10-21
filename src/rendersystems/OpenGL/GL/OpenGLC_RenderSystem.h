@@ -37,6 +37,7 @@ namespace april
 		void _setDepthBuffer(bool enabled, bool writeEnabled);
 
 		void _loadIdentityMatrix();
+		void _setMatrixMode(unsigned int mode);
 		void _setVertexPointer(int stride, const void* pointer);
 		void _setTexCoordPointer(int stride, const void *pointer);
 		void _setColorPointer(int stride, const void *pointer);

@@ -127,11 +127,11 @@ namespace april
 			return;
 		}
 #endif
+		this->currentState.modelviewMatrix.setIdentity();
+		this->currentState.projectionMatrix.setIdentity();
+		this->currentState.modelviewMatrixChanged = true;
+		this->currentState.projectionMatrixChanged = true;
 		this->_setupDefaultParameters();
-		this->setMatrixMode(GL_PROJECTION);
-		this->_loadIdentityMatrix();
-		this->setMatrixMode(GL_MODELVIEW);
-		this->_loadIdentityMatrix();
 		this->orthoProjection.setSize(window->getSize());
 	}
 
@@ -223,7 +223,7 @@ namespace april
 		if (this->deviceState.modeMatrix != mode)
 		{
 			this->deviceState.modeMatrix = mode;
-			glMatrixMode(mode);
+			this->_setMatrixMode(mode);
 		}
 	}
 

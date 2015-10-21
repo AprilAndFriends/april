@@ -146,6 +146,11 @@ namespace april
 		glLoadMatrixf(identityMatrix.data);
 	}
 
+	void OpenGLC_RenderSystem::_setMatrixMode(unsigned int mode)
+	{
+		glMatrixMode(mode);
+	}
+
 	void OpenGLC_RenderSystem::_setVertexPointer(int stride, const void* pointer)
 	{
 		if (this->deviceState.strideVertex != stride || this->deviceState.pointerVertex != pointer)

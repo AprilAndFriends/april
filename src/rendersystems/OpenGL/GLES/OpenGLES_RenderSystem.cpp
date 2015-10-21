@@ -46,6 +46,18 @@ namespace april
 		OpenGL_RenderSystem::assignWindow(window);
 	}
 
+	void OpenGLES_RenderSystem::_setupDefaultParameters()
+	{
+		OpenGL_RenderSystem::_setupDefaultParameters();
+		// TODO
+	}
+
+	void OpenGLES_RenderSystem::_applyStateChanges()
+	{
+		OpenGL_RenderSystem::_applyStateChanges();
+		// TODO
+	}
+
 	void OpenGLES_RenderSystem::_setupCaps()
 	{
 #ifdef _EGL
@@ -86,6 +98,11 @@ namespace april
 		// TODO
 	}
 	
+	void OpenGLES_RenderSystem::_setMatrixMode(unsigned int mode)
+	{
+		// TODO
+	}
+
 	void OpenGLES_RenderSystem::_setVertexPointer(int stride, const void* pointer)
 	{
 		// TODO
