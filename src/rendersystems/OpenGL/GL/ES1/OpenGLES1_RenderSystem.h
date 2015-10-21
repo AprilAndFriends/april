@@ -36,9 +36,6 @@ namespace april
 
 		Texture* _createTexture(bool fromResource);
 
-		void _setVertexPointer(int stride, const void* pointer);
-
-		void _setDepthBuffer(bool enabled, bool writeEnabled);
 		void _setTextureBlendMode(BlendMode mode);
 
 	};

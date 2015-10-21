@@ -54,15 +54,6 @@ namespace april
 		GL_POINTS,			// RO_POINT_LIST
 	};
 
-	static inline void _loadIdentity()
-	{
-		static gmat4 identityMatrix(1.0f, 0.0f, 0.0f, 0.0f,
-									0.0f, 1.0f, 0.0f, 0.0f,
-									0.0f, 0.0f, 1.0f, 0.0f,
-									0.0f, 0.0f, 0.0f, 1.0f);
-		glLoadMatrixf(identityMatrix.data);
-	}
-	
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), activeTexture(NULL)
 	{
 		this->state = new RenderState(); // TODOa
@@ -138,9 +129,9 @@ namespace april
 #endif
 		this->_setupDefaultParameters();
 		this->setMatrixMode(GL_PROJECTION);
-		_loadIdentity();
+		this->_loadIdentityMatrix();
 		this->setMatrixMode(GL_MODELVIEW);
-		_loadIdentity();
+		this->_loadIdentityMatrix();
 		this->orthoProjection.setSize(window->getSize());
 	}
 
@@ -264,45 +255,6 @@ namespace april
 		this->currentState.colorModeFactor = factor;
 	}
 
-	void OpenGL_RenderSystem::_setTextureColorMode(ColorMode textureColorMode, float factor)
-	{
-		static float constColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-		constColor[3] = factor;
-		switch (textureColorMode)
-		{
-		case CM_DEFAULT:
-		case CM_MULTIPLY:
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
-			break;
-		case CM_LERP:
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-			glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constColor);
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
-			break;
-		case CM_ALPHA_MAP:
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
-			break;
-		default:
-			hlog::warn(logTag, "Trying to set unsupported color mode!");
-			break;
-		}
-	}
-
 	void OpenGL_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
 	{
 		this->currentState.textureFilter = textureFilter;
@@ -351,26 +303,6 @@ namespace april
 		}
 	}
 
-	void OpenGL_RenderSystem::_setTexCoordPointer(int stride, const void *pointer)
-	{
-		if (this->deviceState.strideTexCoord != stride || this->deviceState.pointerTexCoord != pointer)
-		{
-			this->deviceState.strideTexCoord = stride;
-			this->deviceState.pointerTexCoord = pointer;
-			glTexCoordPointer(2, GL_FLOAT, stride, pointer);
-		}
-	}
-	
-	void OpenGL_RenderSystem::_setColorPointer(int stride, const void *pointer)
-	{
-		if (this->deviceState.strideColor != stride || this->deviceState.pointerColor != pointer)
-		{
-			this->deviceState.strideColor = stride;
-			this->deviceState.pointerColor = pointer;
-			glColorPointer(4, GL_UNSIGNED_BYTE, stride, pointer);
-		}
-	}
-
 	void OpenGL_RenderSystem::clear(bool useColor, bool depth)
 	{
 		GLbitfield mask = 0;
@@ -397,41 +329,6 @@ namespace april
 
 	void OpenGL_RenderSystem::_applyStateChanges()
 	{
-		if (this->currentState.textureCoordinatesEnabled != this->deviceState.textureCoordinatesEnabled)
-		{
-			this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->currentState.textureCoordinatesEnabled);
-			this->deviceState.textureCoordinatesEnabled = this->currentState.textureCoordinatesEnabled;
-		}
-		if (this->currentState.colorEnabled != this->deviceState.colorEnabled)
-		{
-			this->_setClientState(GL_COLOR_ARRAY, this->currentState.colorEnabled);
-			this->deviceState.colorEnabled = this->currentState.colorEnabled;
-		}
-		if (this->currentState.systemColor != this->deviceState.systemColor)
-		{
-			glColor4f(this->currentState.systemColor.r_f(), this->currentState.systemColor.g_f(), this->currentState.systemColor.b_f(), this->currentState.systemColor.a_f());
-			this->deviceState.systemColor = this->currentState.systemColor;
-		}
-		if (this->currentState.textureId != this->deviceState.textureId)
-		{
-			glBindTexture(GL_TEXTURE_2D, this->currentState.textureId);
-			if (this->currentState.textureId != 0 && (this->activeTexture->effectiveWidth != 1.0f || this->activeTexture->effectiveHeight != 1.0f))
-			{
-				this->setMatrixMode(GL_TEXTURE);
-				gmat4 matrix;
-				matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
-				glLoadMatrixf(matrix.data);
-			}
-			else
-			{
-				this->setMatrixMode(GL_TEXTURE);
-				_loadIdentity();
-			}
-			this->deviceState.textureId = this->currentState.textureId;
-			// TODO - you should memorize address and filter modes per texture in opengl to avoid unnecesarry calls
-			this->deviceState.textureAddressMode = Texture::ADDRESS_UNDEFINED;
-			this->deviceState.textureFilter = Texture::FILTER_UNDEFINED;
-		}
 		// texture has to be bound first or else filter and address mode won't be applied afterwards
 		if (this->currentState.textureFilter != this->deviceState.textureFilter || this->deviceState.textureFilter == Texture::FILTER_UNDEFINED)
 		{
@@ -460,25 +357,6 @@ namespace april
 			this->deviceState.depthBuffer = this->currentState.depthBuffer;
 			this->deviceState.depthBufferWrite = this->currentState.depthBufferWrite;
 		}
-		if (this->currentState.modelviewMatrixChanged && this->modelviewMatrix != this->deviceState.modelviewMatrix)
-		{
-			this->setMatrixMode(GL_MODELVIEW);
-			glLoadMatrixf(this->modelviewMatrix.data);
-			this->deviceState.modelviewMatrix = this->modelviewMatrix;
-			this->currentState.modelviewMatrixChanged = false;
-		}
-		if (this->currentState.projectionMatrixChanged && this->projectionMatrix != this->deviceState.projectionMatrix)
-		{
-			this->setMatrixMode(GL_PROJECTION);
-			glLoadMatrixf(this->projectionMatrix.data);
-			this->deviceState.projectionMatrix = this->projectionMatrix;
-			this->currentState.projectionMatrixChanged = false;
-		}
-	}
-
-	void OpenGL_RenderSystem::_setClientState(unsigned int type, bool enabled)
-	{
-		enabled ? glEnableClientState(type) : glDisableClientState(type);
 	}
 
 	void OpenGL_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)

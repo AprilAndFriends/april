@@ -35,10 +35,7 @@ namespace april
 
 		Texture* _createTexture(bool fromResource);
 
-		void _setVertexPointer(int stride, const void* pointer);
-
 		void _setTextureBlendMode(BlendMode mode);
-		void _setDepthBuffer(bool enabled, bool writeEnabled);
 
 #if defined(_WIN32) && !defined(_WINRT)
 		HGLRC hRC;

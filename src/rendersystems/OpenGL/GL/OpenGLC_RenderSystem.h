@@ -29,7 +29,17 @@ namespace april
 		~OpenGLC_RenderSystem();
 
 	protected:
-		virtual void _setupDefaultParameters();
+		void _setupDefaultParameters();
+		void _applyStateChanges();
+		void _setClientState(unsigned int type, bool enabled);
+
+		void _setTextureColorMode(ColorMode textureColorMode, float factor);
+		void _setDepthBuffer(bool enabled, bool writeEnabled);
+
+		void _loadIdentityMatrix();
+		void _setVertexPointer(int stride, const void* pointer);
+		void _setTexCoordPointer(int stride, const void *pointer);
+		void _setColorPointer(int stride, const void *pointer);
 
 	};
 	

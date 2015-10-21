@@ -118,7 +118,6 @@ namespace april
 
 		virtual void _setupDefaultParameters();
 		virtual void _applyStateChanges();
-		void _setClientState(unsigned int type, bool enabled);
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
 
@@ -127,14 +126,15 @@ namespace april
 
 		virtual void _setTextureBlendMode(BlendMode textureBlendMode);
 		/// @note The parameter factor is only used when the color mode is LERP.
-		virtual void _setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
+		virtual void _setTextureColorMode(ColorMode textureColorMode, float factor) = 0;
 		virtual void _setTextureFilter(Texture::Filter textureFilter);
 		virtual void _setTextureAddressMode(Texture::AddressMode textureAddressMode);
 		virtual void _setDepthBuffer(bool enabled, bool writeEnabled = true);
 
+		virtual void _loadIdentityMatrix() = 0;
 		virtual void _setVertexPointer(int stride, const void* pointer) = 0;
-		virtual void _setTexCoordPointer(int stride, const void* pointer);
-		virtual void _setColorPointer(int stride, const void* pointer);
+		virtual void _setTexCoordPointer(int stride, const void* pointer) = 0;
+		virtual void _setColorPointer(int stride, const void* pointer) = 0;
 
 #if defined(_WIN32) && !defined(_WINRT)
 	public:

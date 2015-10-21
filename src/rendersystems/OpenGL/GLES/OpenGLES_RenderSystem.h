@@ -30,6 +30,16 @@ namespace april
 		void _setupCaps();
 		
 		void _setTextureBlendMode(BlendMode mode);
+		void _setTextureColorMode(ColorMode textureColorMode, float factor);
+
+		void _setupDefaultParameters();
+		void _applyStateChanges();
+		void _setClientState(unsigned int type, bool enabled);
+
+		void _loadIdentityMatrix();
+		void _setVertexPointer(int stride, const void* pointer);
+		void _setTexCoordPointer(int stride, const void *pointer);
+		void _setColorPointer(int stride, const void *pointer);
 
 	};
 	

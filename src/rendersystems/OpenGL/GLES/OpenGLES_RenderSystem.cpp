@@ -73,50 +73,39 @@ namespace april
 
 	void OpenGLES_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
 	{
-		// TODO - is there a way to make this work on Win32?
-#ifndef _WIN32
-		// TODO - refactor
-		static int blendSeparationSupported = -1;
-		if (blendSeparationSupported == -1)
-		{
-			// determine if blend separation is possible on first call to this function
-			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-			blendSeparationSupported = extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate");
-		}
-		if (blendSeparationSupported)
-		{
-			// blending for the new generations
-			switch (textureBlendMode)
-			{
-			case BM_DEFAULT:
-			case BM_ALPHA:
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-				break;
-			case BM_ADD:
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-				break;
-			case BM_SUBTRACT:
-				glBlendEquationSeparateOES(GL_FUNC_REVERSE_SUBTRACT_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-				break;
-			case BM_OVERWRITE:
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);				
-				break;
-			default:
-				hlog::warn(logTag, "Trying to set unsupported blend mode!");
-				break;
-			}
-		}
-		else
-#endif
-		{
-			// old-school blending mode for your dad
-			OpenGL_RenderSystem::_setTextureBlendMode(textureBlendMode);
-		}
+		// TODO
+	}
+
+	void OpenGLES_RenderSystem::_setTextureColorMode(ColorMode textureColorMode, float factor)
+	{
+		// TODO
+	}
+
+	void OpenGLES_RenderSystem::_loadIdentityMatrix()
+	{
+		// TODO
 	}
 	
+	void OpenGLES_RenderSystem::_setVertexPointer(int stride, const void* pointer)
+	{
+		// TODO
+		if (this->deviceState.strideVertex != stride || this->deviceState.pointerVertex != pointer)
+		{
+			this->deviceState.strideVertex = stride;
+			this->deviceState.pointerVertex = pointer;
+			//glVertexAttribPointer(_positionSlot, 3, GL_FLOAT, GL_FALSE, stride, pointer);
+		}
+	}
+
+	void OpenGLES_RenderSystem::_setTexCoordPointer(int stride, const void *pointer)
+	{
+		// TODO
+	}
+
+	void OpenGLES_RenderSystem::_setColorPointer(int stride, const void *pointer)
+	{
+		// TODO
+	}
+
 }
 #endif

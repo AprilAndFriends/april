@@ -58,23 +58,6 @@ namespace april
 		return new OpenGLES1_Texture(fromResource);
 	}
 
-	void OpenGLES1_RenderSystem::_setVertexPointer(int stride, const void* pointer)
-	{
-		if (this->deviceState.strideVertex != stride || this->deviceState.pointerVertex != pointer)
-		{
-			this->deviceState.strideVertex = stride;
-			this->deviceState.pointerVertex = pointer;
-			glVertexPointer(3, GL_FLOAT, stride, pointer);
-		}
-	}
-	
-	void OpenGLES1_RenderSystem::_setDepthBuffer(bool enabled, bool writeEnabled)
-	{
-		OpenGLC_RenderSystem::_setDepthBuffer(enabled, writeEnabled);
-		enabled ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.0f);
-	}
-
 	void OpenGLES1_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
 	{
 		// TODO - is there a way to make this work on Win32?
