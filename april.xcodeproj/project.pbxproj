@@ -143,6 +143,22 @@
 		B455017C1BD7A86200E75E43 /* OpenGL_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501651BD7A86200E75E43 /* OpenGL_Texture.cpp */; settings = {ASSET_TAGS = (); }; };
 		B455017D1BD7A86200E75E43 /* OpenGL_Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501661BD7A86200E75E43 /* OpenGL_Texture.h */; settings = {ASSET_TAGS = (); }; };
 		B455017E1BD7A86200E75E43 /* OpenGL_Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501661BD7A86200E75E43 /* OpenGL_Texture.h */; settings = {ASSET_TAGS = (); }; };
+		B45501841BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501801BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B45501851BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501801BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B45501861BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501801BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B45501871BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501801BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B45501881BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501801BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B45501891BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501801BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B455018A1BD7B6F200E75E43 /* OpenGLES_PixelShader.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501811BD7B6F200E75E43 /* OpenGLES_PixelShader.h */; settings = {ASSET_TAGS = (); }; };
+		B455018B1BD7B6F200E75E43 /* OpenGLES_PixelShader.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501811BD7B6F200E75E43 /* OpenGLES_PixelShader.h */; settings = {ASSET_TAGS = (); }; };
+		B455018C1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B455018D1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B455018E1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B455018F1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B45501901BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B45501911BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */; settings = {ASSET_TAGS = (); }; };
+		B45501921BD7B6F200E75E43 /* OpenGLES_VertexShader.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501831BD7B6F200E75E43 /* OpenGLES_VertexShader.h */; settings = {ASSET_TAGS = (); }; };
+		B45501931BD7B6F200E75E43 /* OpenGLES_VertexShader.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501831BD7B6F200E75E43 /* OpenGLES_VertexShader.h */; settings = {ASSET_TAGS = (); }; };
 		C9313EB914FE64CE003BC7AB /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9313EB814FE64CE003BC7AB /* SDL.framework */; };
 		C9C04F8B14BB106F005BD333 /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
 		C9C04F8C14BB106F005BD333 /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
@@ -462,6 +478,10 @@
 		B45501641BD7A86200E75E43 /* OpenGL_State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGL_State.h; path = src/rendersystems/OpenGL/OpenGL_State.h; sourceTree = "<group>"; };
 		B45501651BD7A86200E75E43 /* OpenGL_Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGL_Texture.cpp; path = src/rendersystems/OpenGL/OpenGL_Texture.cpp; sourceTree = "<group>"; };
 		B45501661BD7A86200E75E43 /* OpenGL_Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGL_Texture.h; path = src/rendersystems/OpenGL/OpenGL_Texture.h; sourceTree = "<group>"; };
+		B45501801BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGLES_PixelShader.cpp; path = src/rendersystems/OpenGL/GLES/OpenGLES_PixelShader.cpp; sourceTree = "<group>"; };
+		B45501811BD7B6F200E75E43 /* OpenGLES_PixelShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES_PixelShader.h; path = src/rendersystems/OpenGL/GLES/OpenGLES_PixelShader.h; sourceTree = "<group>"; };
+		B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGLES_VertexShader.cpp; path = src/rendersystems/OpenGL/GLES/OpenGLES_VertexShader.cpp; sourceTree = "<group>"; };
+		B45501831BD7B6F200E75E43 /* OpenGLES_VertexShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES_VertexShader.h; path = src/rendersystems/OpenGL/GLES/OpenGLES_VertexShader.h; sourceTree = "<group>"; };
 		C9313EB814FE64CE003BC7AB /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../lib/mac/SDL.framework; sourceTree = "<group>"; };
 		C9C04F8A14BB106F005BD333 /* PixelShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PixelShader.cpp; path = src/PixelShader.cpp; sourceTree = "<group>"; };
 		C9C04F8E14BB1091005BD333 /* PixelShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelShader.h; path = include/april/PixelShader.h; sourceTree = "<group>"; };
@@ -868,6 +888,10 @@
 		B45500E51BD7A77700E75E43 /* GLES */ = {
 			isa = PBXGroup;
 			children = (
+				B45501801BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp */,
+				B45501811BD7B6F200E75E43 /* OpenGLES_PixelShader.h */,
+				B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */,
+				B45501831BD7B6F200E75E43 /* OpenGLES_VertexShader.h */,
 				B455014D1BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp */,
 				B455014E1BD7A80400E75E43 /* OpenGLES_RenderSystem.h */,
 				B455014F1BD7A80400E75E43 /* OpenGLES_Texture.cpp */,
@@ -1224,6 +1248,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B455018B1BD7B6F200E75E43 /* OpenGLES_PixelShader.h in Headers */,
 				C9E6098F1505191800EB077F /* april.h in Headers */,
 				C9E609901505191800EB077F /* Platform.h in Headers */,
 				B45501581BD7A80400E75E43 /* OpenGLES_RenderSystem.h in Headers */,
@@ -1239,6 +1264,7 @@
 				7F1B522A12E4710D00E958D8 /* aprilExport.h in Headers */,
 				D14BF820158737B300D31573 /* aprilUtil.h in Headers */,
 				B45501441BD7A7DE00E75E43 /* OpenGLES2_Texture.h in Headers */,
+				B45501931BD7B6F200E75E43 /* OpenGLES_VertexShader.h in Headers */,
 				D1E7203916D37B2700B9C9AD /* EventDelegate.h in Headers */,
 				D1E7203A16D37B2700B9C9AD /* Image.h in Headers */,
 				B455016E1BD7A86200E75E43 /* OpenGL_RenderSystem.h in Headers */,
@@ -1281,6 +1307,7 @@
 				D1B486AF19337389004674EB /* Mac_Cursor.h in Headers */,
 				D1AF66C0170B1E5900A43743 /* Platform.h in Headers */,
 				B455011B1BD7A7D100E75E43 /* OpenGLC_RenderSystem.h in Headers */,
+				B455018A1BD7B6F200E75E43 /* OpenGLES_PixelShader.h in Headers */,
 				D1B486BF19337389004674EB /* Mac_Window.h in Headers */,
 				B455014B1BD7A7DE00E75E43 /* OpenGLES2_VertexShader.h in Headers */,
 				D1AF66C1170B1E5900A43743 /* Keys.h in Headers */,
@@ -1320,6 +1347,7 @@
 				D13681A7187BFB6600E66E32 /* ControllerDelegate.h in Headers */,
 				D13681AD187BFB6600E66E32 /* RenderState.h in Headers */,
 				D13681A9187BFB6600E66E32 /* main_base.h in Headers */,
+				B45501921BD7B6F200E75E43 /* OpenGLES_VertexShader.h in Headers */,
 				D1AF66D4170B1E5900A43743 /* UpdateDelegate.h in Headers */,
 				B45500FB1BD7A7BA00E75E43 /* OpenGL1_Texture.h in Headers */,
 				B455016D1BD7A86200E75E43 /* OpenGL_RenderSystem.h in Headers */,
@@ -1465,6 +1493,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B45501851BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				7F42F7AC11EB179A00B1C1DF /* RenderSystem.cpp in Sources */,
 				B455012E1BD7A7DE00E75E43 /* OpenGLES2_PixelShader.cpp in Sources */,
 				B455010A1BD7A7C500E75E43 /* OpenGLES1_Texture.cpp in Sources */,
@@ -1501,6 +1530,7 @@
 				D1E7206A16D37C5600B9C9AD /* ImageJpt.cpp in Sources */,
 				B45501461BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
 				D1E7206D16D37C5600B9C9AD /* ImagePng.cpp in Sources */,
+				B455018D1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				D102CFF719B7284500948584 /* TextureAsync.cpp in Sources */,
 				D1E7207216D37C6A00B9C9AD /* TimerSDL.cpp in Sources */,
 				D1B486C919337393004674EB /* SDL_Window.cpp in Sources */,
@@ -1562,7 +1592,9 @@
 				D1368193187BFB3E00E66E32 /* main_base.cpp in Sources */,
 				D1134F10175CDA3300BFF3A2 /* ControllerDelegate.cpp in Sources */,
 				B45501741BD7A86200E75E43 /* OpenGL_State.cpp in Sources */,
+				B45501911BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				B455014A1BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
+				B45501891BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				D1134F23175CDAD200BFF3A2 /* egl.cpp in Sources */,
 				D10B73B11982473B00A9352D /* OpenKODE_Platform.cpp in Sources */,
 				B45501561BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp in Sources */,
@@ -1590,7 +1622,9 @@
 				D1B486B519337389004674EB /* Mac_Keys.mm in Sources */,
 				D1534758178AD62A00151D1A /* Platform.cpp in Sources */,
 				D153475A178AD62A00151D1A /* aprilUtil.cpp in Sources */,
+				B455018E1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				D153475B178AD62A00151D1A /* EventDelegate.cpp in Sources */,
+				B45501861BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				D1B486B919337389004674EB /* Mac_LoadingOverlay.mm in Sources */,
 				D153475C178AD62A00151D1A /* InputDelegate.cpp in Sources */,
 				D1B486C119337389004674EB /* Mac_Window.mm in Sources */,
@@ -1635,6 +1669,7 @@
 				D1B4874119337483004674EB /* iOS_main.mm in Sources */,
 				D1981C44140F82B00057C3AF /* Color.cpp in Sources */,
 				D1981C45140F82B00057C3AF /* Texture.cpp in Sources */,
+				B45501881BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				D1981C49140F82B00057C3AF /* RenderSystem.cpp in Sources */,
 				D1981C4A140F82B00057C3AF /* Window.cpp in Sources */,
 				D1B486911933737B004674EB /* EAGLView.mm in Sources */,
@@ -1657,6 +1692,7 @@
 				D137B93D1A0A417900C4102E /* ImagePvr.mm in Sources */,
 				D1B4868F1933737B004674EB /* AprilViewController.mm in Sources */,
 				D1FED15C192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
+				B45501901BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				B45501051BD7A7C500E75E43 /* OpenGLES1_RenderSystem.cpp in Sources */,
 				B45500F11BD7A7BA00E75E43 /* OpenGL1_RenderSystem.cpp in Sources */,
 				B455010D1BD7A7C500E75E43 /* OpenGLES1_Texture.cpp in Sources */,
@@ -1705,7 +1741,9 @@
 				D1B486B419337389004674EB /* Mac_Keys.mm in Sources */,
 				D1AF66A7170B1E5900A43743 /* april.cpp in Sources */,
 				D1B486B819337389004674EB /* Mac_LoadingOverlay.mm in Sources */,
+				B455018C1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				D1AF66AB170B1E5900A43743 /* Platform.cpp in Sources */,
+				B45501841BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				D1B486C019337389004674EB /* Mac_Window.mm in Sources */,
 				D1AF66AD170B1E5900A43743 /* aprilUtil.cpp in Sources */,
 				D1AF66AE170B1E5900A43743 /* EventDelegate.cpp in Sources */,
@@ -1765,6 +1803,7 @@
 				B455016A1BD7A86200E75E43 /* OpenGL_RenderSystem.cpp in Sources */,
 				B45501721BD7A86200E75E43 /* OpenGL_State.cpp in Sources */,
 				D1F27ACD177A2DF700E5C131 /* aprilUtil.cpp in Sources */,
+				B45501871BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				B45501201BD7A7D100E75E43 /* OpenGLC_Texture.cpp in Sources */,
 				D102CFF919B7284500948584 /* TextureAsync.cpp in Sources */,
 				B45501401BD7A7DE00E75E43 /* OpenGLES2_Texture.cpp in Sources */,
@@ -1772,6 +1811,7 @@
 				D1F27ACF177A2DF700E5C131 /* InputDelegate.cpp in Sources */,
 				D1F27AD0177A2DF700E5C131 /* KeyboardDelegate.cpp in Sources */,
 				B45501541BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp in Sources */,
+				B455018F1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				D1F27AD1177A2DF700E5C131 /* MouseDelegate.cpp in Sources */,
 				D1F27AD2177A2DF700E5C131 /* SystemDelegate.cpp in Sources */,
 				D1F27AD3177A2DF700E5C131 /* TouchDelegate.cpp in Sources */,
