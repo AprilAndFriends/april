@@ -8,25 +8,28 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines an OpenGL1 specific texture.
+/// Defines a generic OpenGL "Classic" texture.
 
-#ifdef _OPENGL1
-#ifndef APRIL_OPENGL1_TEXTURE_H
-#define APRIL_OPENGL1_TEXTURE_H
+#if defined(_OPENGL) || defined(_OPENGLES1)
+#ifndef APRIL_OPENGLD_TEXTURE_H
+#define APRIL_OPENGLD_TEXTURE_H
 
 #include "OpenGL_Texture.h"
 
 namespace april
 {
-	class OpenGL1_Texture : public OpenGL_Texture
+	class OpenGLC_RenderSystem;
+
+	class OpenGLC_Texture : public OpenGL_Texture
 	{
 	public:
-		OpenGL1_Texture(bool fromResource);
-		~OpenGL1_Texture();
+		friend class OpenGLC_RenderSystem;
+
+		OpenGLC_Texture(bool fromResource);
+		~OpenGLC_Texture();
 
 	};
 
 }
-
 #endif
 #endif

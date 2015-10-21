@@ -14,8 +14,8 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
-#include "OpenGLES2_PixelShader.h"
 #include "OpenGLES2_RenderSystem.h"
+#include "OpenGLES2_VertexShader.h"
 
 #if _IOS
 	#include <OpenGLES/ES2/gl.h>
@@ -31,16 +31,16 @@
 
 namespace april
 {
-	OpenGLES2_PixelShader::OpenGLES2_PixelShader(chstr filename) : PixelShader(), glShader(0)
+	OpenGLES2_VertexShader::OpenGLES2_VertexShader(chstr filename) : VertexShader(), glShader(0)
 	{
 		this->loadResource(filename);
 	}
 
-	OpenGLES2_PixelShader::OpenGLES2_PixelShader() : PixelShader(), glShader(0)
+	OpenGLES2_VertexShader::OpenGLES2_VertexShader() : VertexShader(), glShader(0)
 	{
 	}
 
-	OpenGLES2_PixelShader::~OpenGLES2_PixelShader()
+	OpenGLES2_VertexShader::~OpenGLES2_VertexShader()
 	{
 		if (this->glShader != 0)
 		{
@@ -48,7 +48,7 @@ namespace april
 		}
 	}
 
-	bool OpenGLES2_PixelShader::loadFile(chstr filename)
+	bool OpenGLES2_VertexShader::loadFile(chstr filename)
 	{
 		if (this->glShader != 0)
 		{
@@ -65,7 +65,7 @@ namespace april
 		return this->_compileShader(filename, data, size);
 	}
 
-	bool OpenGLES2_PixelShader::loadResource(chstr filename)
+	bool OpenGLES2_VertexShader::loadResource(chstr filename)
 	{
 		if (this->glShader != 0)
 		{
@@ -82,7 +82,7 @@ namespace april
 		return this->_compileShader(filename, data, size);
 	}
 
-	bool OpenGLES2_PixelShader::_compileShader(chstr filename, unsigned char* data, int size)
+	bool OpenGLES2_VertexShader::_compileShader(chstr filename, unsigned char* data, int size)
 	{
 		this->glShader = glCreateShader(GL_FRAGMENT_SHADER);
 		if (this->glShader == 0)
@@ -111,15 +111,15 @@ namespace april
 		return true;
 	}
 
-	void OpenGLES2_PixelShader::setConstantsB(const int* quads, unsigned int quadCount)
+	void OpenGLES2_VertexShader::setConstantsB(const int* quads, unsigned int quadCount)
 	{
 	}
 
-	void OpenGLES2_PixelShader::setConstantsI(const int* quads, unsigned int quadCount)
+	void OpenGLES2_VertexShader::setConstantsI(const int* quads, unsigned int quadCount)
 	{
 	}
 
-	void OpenGLES2_PixelShader::setConstantsF(const float* quads, unsigned int quadCount)
+	void OpenGLES2_VertexShader::setConstantsF(const float* quads, unsigned int quadCount)
 	{
 	}
 

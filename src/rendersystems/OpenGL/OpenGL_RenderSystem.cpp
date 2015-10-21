@@ -16,43 +16,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#if _IOS
-	#ifdef _OPENGLES1
-		#include <OpenGLES/ES1/gl.h>
-		#include <OpenGLES/ES1/glext.h>
-	#elif defined(_OPENGLES2)
-		#include <OpenGLES/ES2/gl.h>
-		#include <OpenGLES/ES2/glext.h>
-		extern GLint _positionSlot;
-	#endif
-#elif defined(_OPENGLES)
-	#ifdef _OPENGLES1
-		#include <GLES/gl.h>
-		#ifdef _ANDROID
-			#define GL_GLEXT_PROTOTYPES
-			#include <GLES/glext.h>
-		#endif
-	#elif defined(_OPENGLES2)
-		#include <GLES2/gl2.h>
-		#ifdef _ANDROID
-			#define GL_GLEXT_PROTOTYPES
-			#include <GLES2/glext.h>
-		#endif
-	#endif
-	#ifdef _WIN32
-		#include <EGL/egl.h>
-	#endif
-#else
-	#include <stdlib.h>
-	#include <stdio.h>
-	#include <string.h>
-	#ifndef __APPLE__
-		#include <gl/GL.h>
-		#define GL_GLEXT_PROTOTYPES
-		#include <gl/glext.h>
-	#else
-		#include <OpenGL/gl.h>
-	#endif
+#if defined(_WIN32) && defined(_OPENGLES)
+	#include <EGL/egl.h>
 #endif
 
 #include <gtypes/Rectangle.h>
@@ -165,6 +130,12 @@ namespace april
 
 	void OpenGL_RenderSystem::assignWindow(Window* window)
 	{
+#if defined(_WIN32) && !defined(_WINRT)
+		if (!this->_initWin32(window))
+		{
+			return;
+		}
+#endif
 		this->_setupDefaultParameters();
 		this->setMatrixMode(GL_PROJECTION);
 		_loadIdentity();

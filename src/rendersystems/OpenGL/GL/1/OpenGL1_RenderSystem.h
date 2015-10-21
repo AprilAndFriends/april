@@ -14,15 +14,14 @@
 #ifndef APRIL_OPENGL1_RENDER_SYSTEM_H
 #define APRIL_OPENGL1_RENDER_SYSTEM_H
 
-#include "OpenGL_RenderSystem.h"
-#include "OpenGL_State.h"
+#include "OpenGLC_RenderSystem.h"
 
 namespace april
 {
 	class OpenGL1_Texture;
 	class Window;
 
-	class OpenGL1_RenderSystem : public OpenGL_RenderSystem
+	class OpenGL1_RenderSystem : public OpenGLC_RenderSystem
 	{
 	public:
 		friend class OpenGL1_Texture;
@@ -30,8 +29,6 @@ namespace april
 		OpenGL1_RenderSystem();
 		~OpenGL1_RenderSystem();
 
-		void assignWindow(Window* window);
-		
 	protected:
 		void _setupDefaultParameters();
 		void _setupCaps();
@@ -43,7 +40,7 @@ namespace april
 		void _setTextureBlendMode(BlendMode mode);
 		void _setDepthBuffer(bool enabled, bool writeEnabled);
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WINRT)
 		HGLRC hRC;
 
 		void _releaseWindow();

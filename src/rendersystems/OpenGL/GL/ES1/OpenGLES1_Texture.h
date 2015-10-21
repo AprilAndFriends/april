@@ -14,14 +14,11 @@
 #ifndef APRIL_OPENGLES1_TEXTURE_H
 #define APRIL_OPENGLES1_TEXTURE_H
 
-#include <hltypes/hstring.h>
-
-#include "Color.h"
-#include "OpenGLES_Texture.h"
+#include "OpenGLC_Texture.h"
 
 namespace april
 {
-	class OpenGLES1_Texture : public OpenGLES_Texture
+	class OpenGLES1_Texture : public OpenGLC_Texture
 	{
 	public:
 		OpenGLES1_Texture(bool fromResource);

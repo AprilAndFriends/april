@@ -16,15 +16,14 @@
 
 #include <hltypes/hstring.h>
 
-#include "Color.h"
-#include "OpenGLES_RenderSystem.h"
-#include "Texture.h"
+#include "OpenGLC_RenderSystem.h"
 
 namespace april
 {
 	class OpenGLES1_Texture;
+	class Texture;
 
-	class OpenGLES1_RenderSystem : public OpenGLES_RenderSystem
+	class OpenGLES1_RenderSystem : public OpenGLC_RenderSystem
 	{
 	public:
 		friend class OpenGLES1_Texture;
@@ -33,15 +32,17 @@ namespace april
 		~OpenGLES1_RenderSystem();
 
 	protected:
+		void _setupCaps();
+
 		Texture* _createTexture(bool fromResource);
 
 		void _setVertexPointer(int stride, const void* pointer);
 
 		void _setDepthBuffer(bool enabled, bool writeEnabled);
+		void _setTextureBlendMode(BlendMode mode);
 
 	};
 	
 }
-
 #endif
 #endif

@@ -32,10 +32,16 @@ namespace april
 		OpenGLES2_RenderSystem();
 		~OpenGLES2_RenderSystem();
 
+		void assignWindow(Window* window);
+
 	protected:
+		void _setupCaps();
+
 		Texture* _createTexture(bool fromResource);
 
 		void _setVertexPointer(int stride, const void* pointer);
+
+		void _setTextureBlendMode(BlendMode mode);
 
 	};
 	

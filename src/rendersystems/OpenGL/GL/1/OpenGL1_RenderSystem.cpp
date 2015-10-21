@@ -10,17 +10,17 @@
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
 #if __APPLE__
-#include <TargetConditionals.h>
+	#include <TargetConditionals.h>
 #endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #ifndef __APPLE__
-#include <gl/GL.h>
-#define GL_GLEXT_PROTOTYPES
-#include <gl/glext.h>
+	#include <gl/GL.h>
+	#define GL_GLEXT_PROTOTYPES
+	#include <gl/glext.h>
 #else
-#include <OpenGL/gl.h>
+	#include <OpenGL/gl.h>
 #endif
 
 #include <gtypes/Vector2.h>
@@ -39,10 +39,10 @@
 
 namespace april
 {
-	OpenGL1_RenderSystem::OpenGL1_RenderSystem() : OpenGL_RenderSystem()
+	OpenGL1_RenderSystem::OpenGL1_RenderSystem() : OpenGLC_RenderSystem()
 	{
 		this->name = APRIL_RS_OPENGL1;
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WINRT)
 		this->hRC = 0;
 #endif
 	}
@@ -52,7 +52,7 @@ namespace april
 		this->destroy();
 	}
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WINRT)
 	void OpenGL1_RenderSystem::_releaseWindow()
 	{
 		if (this->hRC != 0)
@@ -61,12 +61,12 @@ namespace april
 			wglDeleteContext(this->hRC);
 			this->hRC = 0;
 		}
-		OpenGL_RenderSystem::_releaseWindow();
+		OpenGLC_RenderSystem::_releaseWindow();
 	}
 
 	bool OpenGL1_RenderSystem::_initWin32(Window* window)
 	{
-		if (!OpenGL_RenderSystem::_initWin32(window))
+		if (!OpenGLC_RenderSystem::_initWin32(window))
 		{
 			return false;
 		}
@@ -92,37 +92,26 @@ namespace april
 			this->_releaseWindow();
 			return false;
 		}
-		return true;
-	}
-#endif
-
-	void OpenGL1_RenderSystem::assignWindow(Window* window)
-	{
-#ifdef _WIN32
-		if (!this->_initWin32(window))
-		{
-			return;
-		}
 		this->hRC = wglCreateContext(this->hDC);
 		if (this->hRC == 0)
 		{
 			hlog::error(logTag, "Can't create a GL rendering context!");
 			this->_releaseWindow();
-			return;
+			return false;
 		}
 		if (wglMakeCurrent(this->hDC, this->hRC) == 0)
 		{
 			hlog::error(logTag, "Can't activate the GL rendering context!");
 			this->_releaseWindow();
-			return;
+			return false;
 		}
-#endif
-		OpenGL_RenderSystem::assignWindow(window);
+		return true;
 	}
+#endif
 
 	void OpenGL1_RenderSystem::_setupDefaultParameters()
 	{
-		OpenGL_RenderSystem::_setupDefaultParameters();
+		OpenGLC_RenderSystem::_setupDefaultParameters();
 		// pixel data
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
@@ -132,7 +121,7 @@ namespace april
 
 	void OpenGL1_RenderSystem::_setupCaps()
 	{
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WINRT)
 		if (this->hRC == 0)
 		{
 			return;
@@ -156,7 +145,7 @@ namespace april
 				}
 			}
 		}
-		OpenGL_RenderSystem::_setupCaps();
+		OpenGLC_RenderSystem::_setupCaps();
 	}
 
 	Texture* OpenGL1_RenderSystem::_createTexture(bool fromResource)
@@ -217,13 +206,13 @@ namespace april
 #endif
 		{
 			// old-school blending mode for your dad
-			OpenGL_RenderSystem::_setTextureBlendMode(textureBlendMode);
+			OpenGLC_RenderSystem::_setTextureBlendMode(textureBlendMode);
 		}
 	}
 	
 	void OpenGL1_RenderSystem::_setDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		OpenGL_RenderSystem::_setDepthBuffer(enabled, writeEnabled);
+		OpenGLC_RenderSystem::_setDepthBuffer(enabled, writeEnabled);
 		enabled ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.0f);
 	}

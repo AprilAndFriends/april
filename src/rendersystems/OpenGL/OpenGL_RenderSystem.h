@@ -16,8 +16,51 @@
 
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
-#include <hltypes/hstring.h>
 
+#if __APPLE__
+	#include <TargetConditionals.h>
+#endif
+#ifdef _IOS
+	#ifdef _OPENGLES1
+		#include <OpenGLES/ES1/gl.h>
+		#include <OpenGLES/ES1/glext.h>
+	#elif defined(_OPENGLES2)
+		#include <OpenGLES/ES2/gl.h>
+		#include <OpenGLES/ES2/glext.h>
+		extern GLint _positionSlot;
+	#endif
+#elif defined(_OPENGLES)
+	#ifdef _OPENGLES1
+		#include <GLES/gl.h>
+		#ifdef _ANDROID
+			#define GL_GLEXT_PROTOTYPES
+			#include <GLES/glext.h>
+		#endif
+	#elif defined(_OPENGLES2)
+		#include <GLES2/gl2.h>
+		#ifdef _ANDROID
+			#define GL_GLEXT_PROTOTYPES
+			#include <GLES2/glext.h>
+		#endif
+	#endif
+#else
+	#include <stdlib.h>
+	#include <stdio.h>
+	#include <string.h>
+	#ifndef __APPLE__
+		#include <gl/GL.h>
+		#define GL_GLEXT_PROTOTYPES
+		#include <gl/glext.h>
+	#else
+		#include <OpenGL/gl.h>
+	#endif
+#endif
+
+#include <hltypes/hstring.h>
+#include <gtypes/Rectangle.h>
+#include <gtypes/Vector2.h>
+
+#include "Color.h"
 #include "OpenGL_State.h"
 #include "RenderSystem.h"
 
@@ -101,9 +144,8 @@ namespace april
 		HWND hWnd;
 		HDC hDC;
 
-		void _releaseWindow();
-		bool _initWin32(Window* window);
-
+		virtual void _releaseWindow();
+		virtual bool _initWin32(Window* window);
 #endif
 
 	};

@@ -6,16 +6,16 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#ifdef _OPENGLES1
-#include "OpenGLES1_Texture.h"
+#if defined(_OPENGL) || defined(_OPENGLES1)
+#include "OpenGLC_RenderSystem.h"
 
 namespace april
 {
-	OpenGLES1_Texture::OpenGLES1_Texture(bool fromResource) : OpenGLES_Texture(fromResource)
+	OpenGLC_RenderSystem::OpenGLC_RenderSystem() : OpenGL_RenderSystem()
 	{
 	}
 
-	OpenGLES1_Texture::~OpenGLES1_Texture()
+	OpenGLC_RenderSystem::~OpenGLC_RenderSystem()
 	{
 	}
 
