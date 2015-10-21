@@ -38,7 +38,7 @@ namespace april
 		{
 			this->deviceState.strideVertex = stride;
 			this->deviceState.pointerVertex = pointer;
-			glVertexAttribPointer(_positionSlot, 3, GL_FLOAT, GL_FALSE, stride, pointer);
+			glVertexPointer(3, GL_FLOAT, stride, pointer);
 		}
 	}
 	

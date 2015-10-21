@@ -19,11 +19,9 @@
 #include <hltypes/hsbase.h>
 #include <hltypes/hstring.h>
 
-#include "aprilpixExport.h"
-
 namespace aprilpix
 {
-	class aprilpixExport ImageWebp : public april::Image
+	class ImageWebp : public april::Image
 	{
 	public:
 		~ImageWebp();
