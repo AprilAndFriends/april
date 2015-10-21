@@ -20,12 +20,14 @@ namespace april
 {
 	class OpenGL_RenderSystem;
 	class OpenGLC_RenderSystem;
+	class OpenGLES_RenderSystem;
 
 	class OpenGL_Texture : public Texture
 	{
 	public:
 		friend class OpenGL_RenderSystem;
 		friend class OpenGLC_RenderSystem;
+		friend class OpenGLES_RenderSystem;
 
 		OpenGL_Texture(bool fromResource);
 		~OpenGL_Texture();

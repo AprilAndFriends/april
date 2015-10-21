@@ -29,12 +29,12 @@ namespace april
 	protected:
 		void _setupCaps();
 		
-		void _setTextureBlendMode(BlendMode mode);
-		void _setTextureColorMode(ColorMode textureColorMode, float factor);
-
 		void _setupDefaultParameters();
 		void _applyStateChanges();
 		void _setClientState(unsigned int type, bool enabled);
+
+		void _setTextureBlendMode(BlendMode mode);
+		void _setTextureColorMode(ColorMode textureColorMode, float factor);
 
 		void _loadIdentityMatrix();
 		void _setMatrixMode(unsigned int mode);

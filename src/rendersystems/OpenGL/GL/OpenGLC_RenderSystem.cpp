@@ -27,7 +27,7 @@ namespace april
 	void OpenGLC_RenderSystem::_setupDefaultParameters()
 	{
 		OpenGL_RenderSystem::_setupDefaultParameters();
-		glEnableClientState(GL_VERTEX_ARRAY);
+		this->_setClientState(GL_VERTEX_ARRAY, true);
 		this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->deviceState.textureCoordinatesEnabled);
 		this->_setClientState(GL_COLOR_ARRAY, this->deviceState.colorEnabled);
 		glColor4f(this->deviceState.systemColor.r_f(), this->deviceState.systemColor.g_f(), this->deviceState.systemColor.b_f(), this->deviceState.systemColor.a_f());
@@ -65,7 +65,7 @@ namespace april
 				this->_loadIdentityMatrix();
 			}
 			this->deviceState.textureId = this->currentState.textureId;
-			// TODO - should memorize address and filter modes per texture in opengl to avoid unnecesarry calls
+			// TODO - should memorize address and filter modes per texture in opengl to avoid unnecessary calls
 			this->deviceState.textureAddressMode = Texture::ADDRESS_UNDEFINED;
 			this->deviceState.textureFilter = Texture::FILTER_UNDEFINED;
 		}
