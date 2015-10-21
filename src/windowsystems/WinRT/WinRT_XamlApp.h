@@ -1,5 +1,5 @@
 ﻿/// @file
-/// @version 3.6
+/// @version 3.7
 /// 
 /// @section LICENSE
 /// 
