@@ -63,6 +63,37 @@ namespace april
 		}
 		OpenGL_RenderSystem::_releaseWindow();
 	}
+
+	bool OpenGL1_RenderSystem::_initWin32(Window* window)
+	{
+		if (!OpenGL_RenderSystem::_initWin32(window))
+		{
+			return false;
+		}
+		PIXELFORMATDESCRIPTOR pfd;
+		memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
+		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+		pfd.nVersion = 1;
+		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+		pfd.iPixelType = PFD_TYPE_RGBA;
+		pfd.cColorBits = 24;
+		pfd.cDepthBits = 16;
+		pfd.dwLayerMask = PFD_MAIN_PLANE;
+		GLuint pixelFormat = ChoosePixelFormat(this->hDC, &pfd);
+		if (pixelFormat == 0)
+		{
+			hlog::error(logTag, "Can't find a suitable pixel format!");
+			this->_releaseWindow();
+			return false;
+		}
+		if (SetPixelFormat(this->hDC, pixelFormat, &pfd) == 0)
+		{
+			hlog::error(logTag, "Can't set the pixel format!");
+			this->_releaseWindow();
+			return false;
+		}
+		return true;
+	}
 #endif
 
 	void OpenGL1_RenderSystem::assignWindow(Window* window)

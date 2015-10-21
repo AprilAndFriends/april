@@ -49,7 +49,7 @@ namespace april
 			this->display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 			if (this->display == EGL_NO_DISPLAY)
 			{
-				hlog::error(logTag, "Can't get EGL Display!");
+				hlog::error(logTag, "Can't get EGL Display! Error: " + hstr((int)eglGetError()));
 				this->destroy();
 				return false;
 			}
@@ -57,7 +57,7 @@ namespace april
 			EGLint minorVersion;
 			if (!eglInitialize(this->display, &majorVersion, &minorVersion))
 			{
-				hlog::error(logTag, "Can't initialize EGL!");
+				hlog::error(logTag, "Can't initialize EGL! Error: " + hstr((int)eglGetError()));
 				this->destroy();
 				return false;
 			}
@@ -65,28 +65,70 @@ namespace april
 			EGLBoolean result = eglGetConfigs(this->display, NULL, 0, &configs);
 			if (!result || configs == 0)
 			{
-				hlog::error(logTag, "There are no EGL configs!");
+				hlog::error(logTag, "There are no EGL configs! Error: " + hstr((int)eglGetError()));
 				this->destroy();
 				return false;
+			}
+			if (april::rendersys->getName() == APRIL_RS_OPENGLES1)
+			{
+				this->pi32ConfigAttribs[4] = EGL_RENDERABLE_TYPE;
+				this->pi32ConfigAttribs[5] = EGL_OPENGL_ES_BIT;
+				this->pi32ConfigAttribs[6] = EGL_NONE;
+			}
+			else if (april::rendersys->getName() == APRIL_RS_OPENGLES2)
+			{
+				this->pi32ConfigAttribs[4] = EGL_RENDERABLE_TYPE;
+				this->pi32ConfigAttribs[5] = EGL_OPENGL_ES2_BIT;
+				this->pi32ConfigAttribs[6] = EGL_NONE;
 			}
 			result = eglChooseConfig(this->display, this->pi32ConfigAttribs, &this->config, 1, &configs);
 			if (!result || configs == 0)
 			{
-				hlog::error(logTag, "Can't choose EGL config!");
+				hlog::error(logTag, "Can't choose EGL config! Error: " + hstr((int)eglGetError()));
 				this->destroy();
 				return false;
 			}
 		}
 		if (this->surface == NULL)
 		{
+#if defined(_WIN32) && !defined(_WINRT)
+			this->hWnd = (EGLNativeWindowType)window->getBackendId();
+#endif
 			this->surface = eglCreateWindowSurface(this->display, this->config, this->hWnd, NULL);
+			if (this->surface == NULL)
+			{
+				this->surface = eglCreateWindowSurface(this->display, this->config, NULL, NULL);
+			}
+		}
+		if (this->surface == NULL)
+		{
+			hlog::error(logTag, "Can't create EGL window surface! Error: " + hstr((int)eglGetError()));
+			return false;
 		}
 		if (this->context == NULL)
 		{
-			this->context = eglCreateContext(this->display, this->config, NULL, NULL);
+			if (april::rendersys->getName() == APRIL_RS_OPENGLES2)
+			{
+				if (!eglBindAPI(EGL_OPENGL_ES_API))
+				{
+					hlog::error(logTag, "Can't bind EGL OpenGLES API! Error: " + hstr((int)eglGetError()));
+					return false;
+				}
+				EGLint contextAttributes[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+				this->context = eglCreateContext(this->display, this->config, NULL, contextAttributes);
+			}
+			else
+			{
+				this->context = eglCreateContext(this->display, this->config, NULL, NULL);
+			}
+			if (this->context == NULL)
+			{
+				hlog::error(logTag, "Can't create EGL context! Error: " + hstr((int)eglGetError()));
+				return false;
+			}
 			if (!eglMakeCurrent(this->display, this->surface, this->surface, this->context))
 			{
-				hlog::error(logTag, "Can't set current EGL context!");
+				hlog::error(logTag, "Can't set current EGL context! Error: " + hstr((int)eglGetError()));
 				this->destroy();
 				return false;
 			}

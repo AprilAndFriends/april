@@ -51,7 +51,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E876403E-235A-48F9-B215-3921633AC385}</ProjectGuid>
+    <ProjectGuid>{115121E1-2F6F-48FF-89EF-6B530A6D59ED}</ProjectGuid>
     <RootNamespace>webp</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

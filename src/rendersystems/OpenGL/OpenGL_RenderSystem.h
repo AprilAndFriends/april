@@ -96,13 +96,13 @@ namespace april
 #if defined(_WIN32) && !defined(_WINRT)
 	public:
 		inline HDC getHDC() { return this->hDC; }
-		bool _initWin32(Window* window);
 
 	protected:
 		HWND hWnd;
 		HDC hDC;
 
 		void _releaseWindow();
+		bool _initWin32(Window* window);
 
 #endif
 

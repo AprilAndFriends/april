@@ -10,6 +10,7 @@
 /// 
 /// Defines methods for loading a PVR image.
 
+#ifdef _PVR
 #ifndef APRILPIX_IMAGE_PVR_H
 #define APRILPIX_IMAGE_PVR_H
 
@@ -18,11 +19,9 @@
 #include <hltypes/hsbase.h>
 #include <hltypes/hstring.h>
 
-#include "aprilpixExport.h"
-
 namespace aprilpix
 {
-	class aprilpixExport ImagePvr : public april::Image
+	class ImagePvr : public april::Image
 	{
 	public:
 		~ImagePvr();
@@ -36,6 +35,5 @@ namespace aprilpix
 	};
 
 };
-
 #endif
-
+#endif

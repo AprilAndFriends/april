@@ -6,12 +6,14 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
+#include <hltypes/hthread.h>
 #import <Cocoa/Cocoa.h>
 #import "Mac_LoadingOverlay.h"
 #include "Mac_Window.h"
 
 NSWindow* mOverlayWindow = nil;
 NSImageView* mImageView = nil;
+static float fadeOutDelay = -1;
 
 static void updateLoadingOverlaySize(NSWindow* parent, bool check)
 {
@@ -42,15 +44,12 @@ static void updateLoadingOverlaySize(NSWindow* parent, bool check)
 
 void createLoadingOverlay(NSWindow* parent)
 {
-	NSString* path = [[NSBundle mainBundle] pathForResource:@"Default" ofType:@"png"];
+	float scalingFactor = [NSScreen mainScreen].backingScaleFactor;
+	NSString* imgName = scalingFactor > 1 ? @"Default@2x" : @"Default";
+	
+	NSString* path = [[NSBundle mainBundle] pathForResource:imgName ofType:@"png"];
 	bool found = [[NSFileManager defaultManager] fileExistsAtPath:path];
-	
-	if (!found)
-	{
-		path = [[NSBundle mainBundle] pathForResource:@"Default-Mac" ofType:@"png"];
-		found = [[NSFileManager defaultManager] fileExistsAtPath:path];
-	}
-	
+
 	if (found)
 	{
 		NSRect windowFrame = parent.frame;
@@ -88,6 +87,24 @@ void reattachLoadingOverlay()
 void updateLoadingOverlay(float timeDelta)
 {
 	static float alpha = 505;
+	if (fadeOutDelay > 0)
+	{
+		fadeOutDelay -= timeDelta;
+		if (fadeOutDelay < 0)
+		{
+			fadeOutDelay = 0;
+		}
+		return;
+	}
+	else if (fadeOutDelay == -1)
+	{
+		hstr delay = aprilWindow->getParam("delay_splash");
+		if (delay != "")
+		{
+			fadeOutDelay = delay;
+			return;
+		}
+	}
 	if (alpha == 505)
 	{
 		alpha = aprilWindow->getParam("splashscreen_fadeout") == "0" ? -1 : 1.5f;

@@ -22,7 +22,7 @@
 		#define aprilpixFnExport
 	#else
 		#ifdef _WIN32
-			#ifdef ATRESTTF_EXPORTS
+			#ifdef APRILPIX_EXPORTS
 				#define aprilpixExport __declspec(dllexport)
 				#define aprilpixFnExport __declspec(dllexport)
 			#else

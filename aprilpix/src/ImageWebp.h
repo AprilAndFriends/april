@@ -10,6 +10,7 @@
 /// 
 /// Defines methods for loading a WEBP image.
 
+#ifdef _WEBP
 #ifndef APRILPIX_IMAGE_WEBP_H
 #define APRILPIX_IMAGE_WEBP_H
 
@@ -18,11 +19,9 @@
 #include <hltypes/hsbase.h>
 #include <hltypes/hstring.h>
 
-#include "aprilpixExport.h"
-
 namespace aprilpix
 {
-	class aprilpixExport ImageWebp : public april::Image
+	class ImageWebp : public april::Image
 	{
 	public:
 		~ImageWebp();
@@ -36,6 +35,5 @@ namespace aprilpix
 	};
 
 };
-
 #endif
-
+#endif

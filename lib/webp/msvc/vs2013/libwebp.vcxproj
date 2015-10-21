@@ -51,12 +51,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D6973076-9317-4EF2-A0B8-B7A18AC0713E}</ProjectGuid>
+    <ProjectGuid>{115121E1-2F6F-48FF-89EF-6B530A6D59ED}</ProjectGuid>
     <RootNamespace>webp</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props\default.props" />
-  <Import Project="..\..\..\..\..\hltypes\msvc\vs2012\props-generic\platform-$(Platform).props" />
+  <Import Project="..\..\..\..\..\hltypes\msvc\vs2013\props-generic\platform-$(Platform).props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
@@ -100,7 +100,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <Import Project="..\..\..\..\..\hltypes\msvc\vs2012\props-generic\build-defaults.props" />
+  <Import Project="..\..\..\..\..\hltypes\msvc\vs2013\props-generic\build-defaults.props" />
   <Import Project="props\configuration.props" />
   <ItemGroup>
     <ClInclude Include="..\..\include\webp\decode.h" />

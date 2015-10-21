@@ -122,6 +122,11 @@ namespace april
 		{
 			return this->splashScreenFadeout ? "1" : "0";
 		}
+		if (param == "delay_splash")
+		{
+			return this->splashScreenDelay;
+		}
+
 		if (param == "displayLinkIgnoreSystemRedraw")
 		{
 			return this->displayLinkIgnoreSystemRedraw  ? "1" : "0";
@@ -146,6 +151,10 @@ namespace april
 		if (param == "splashscreen_fadeout")
 		{
 			this->splashScreenFadeout = (value == "1");
+		}
+		if (param == "delay_splash")
+		{
+			this->splashScreenDelay = value;
 		}
 		if (param == "displayLinkIgnoreSystemRedraw")
 		{
@@ -188,7 +197,24 @@ namespace april
 	
 	bool Mac_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
-		if (!Window::create(w, h, fullscreen, title, options))
+		hstr windowTitle;
+		if (title == "")
+		{
+			NSString* nsTitle = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
+			if (nsTitle == nil)
+			{
+				windowTitle = "UNDEFINED TITLE";
+			}
+			else
+			{
+				windowTitle = [nsTitle UTF8String];
+			}
+		}
+		else
+		{
+			windowTitle = title;
+		}
+		if (!Window::create(w, h, fullscreen, windowTitle, options))
 		{
 			return false;
 		}
@@ -218,7 +244,7 @@ namespace april
 		
 		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
 		[mWindow configure];
-		setTitle(title);
+		setTitle(windowTitle);
 		createLoadingOverlay(mWindow);
 
 		if (fullscreen)
@@ -352,7 +378,7 @@ namespace april
 			if (timeDelta > 0.5f) timeDelta = 0.5f;
 			updateLoadingOverlay(timeDelta);
 		}
-		
+
 		if (this->fpsCounter)
 		{
 			setTitle(this->title);

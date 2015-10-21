@@ -46,6 +46,7 @@ namespace april
 		HGLRC hRC;
 
 		void _releaseWindow();
+		bool _initWin32(Window* window);
 #endif
 
 	};

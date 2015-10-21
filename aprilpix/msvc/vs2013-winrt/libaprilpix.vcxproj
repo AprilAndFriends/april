@@ -52,8 +52,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\aprilpix\aprilpix.h" />
     <ClInclude Include="..\..\include\aprilpix\aprilpixExport.h" />
-    <ClInclude Include="..\..\include\aprilpix\ImagePvr.h" />
-    <ClInclude Include="..\..\include\aprilpix\ImageWebp.h" />
+    <ClInclude Include="..\..\src\ImagePvr.h" />
+    <ClInclude Include="..\..\src\ImageWebp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\aprilpix.cpp" />
@@ -66,6 +66,14 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\lib\webp\msvc\vs2013-winrt\libwebp.vcxproj">
+      <Project>{115121e1-2f6f-48ff-89ef-6b530a6d59ed}</Project>
+      <CopyLocal>false</CopyLocal>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\msvc\vs2013-winrt\libapril.vcxproj">
       <Project>{2d053cda-686b-4b36-80eb-1da5f0cef8f9}</Project>
       <CopyLocal>false</CopyLocal>
