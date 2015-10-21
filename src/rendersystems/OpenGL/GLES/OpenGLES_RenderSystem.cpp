@@ -111,7 +111,7 @@ namespace april
 	}
 
 	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), activeTextureColorMode(CM_DEFAULT),
-		activeTextureColorModeAlpha(255)
+		activeTextureColorModeAlpha(255), _matrixDirty(true)
 	{
 		this->activeShader = NULL;
 		this->vertexShaderDefault = NULL;
@@ -143,6 +143,7 @@ namespace april
 		this->activeTextureColorMode = CM_DEFAULT;
 		this->activeTextureColorModeAlpha = 255;
 		this->activeShader = NULL;
+		this->_matrixDirty = true;
 		this->vertexShaderDefault = NULL;
 		this->pixelShaderTexturedMultiply = NULL;
 		this->pixelShaderTexturedAlphaMap = NULL;
@@ -190,17 +191,21 @@ namespace april
 		hstream data;
 		LOAD_SHADER(this->vertexShaderDefault, Vertex, Default, data);
 		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply, data);
+		/*
 		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap, data);
 		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp, data);
 		LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply, data);
 		LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap, data);
 		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp, data);
+		*/
 		LOAD_PROGRAM(this->shaderTexturedMultiply, this->pixelShaderTexturedMultiply, this->vertexShaderDefault);
+		/*
 		LOAD_PROGRAM(this->shaderTexturedAlphaMap, this->pixelShaderTexturedAlphaMap, this->vertexShaderDefault);
 		LOAD_PROGRAM(this->shaderTexturedLerp, this->pixelShaderTexturedLerp, this->vertexShaderDefault);
 		LOAD_PROGRAM(this->shaderMultiply, this->pixelShaderMultiply, this->vertexShaderDefault);
 		LOAD_PROGRAM(this->shaderAlphaMap, this->pixelShaderAlphaMap, this->vertexShaderDefault);
 		LOAD_PROGRAM(this->shaderLerp, this->pixelShaderLerp, this->vertexShaderDefault);
+		*/
 	}
 
 	void OpenGLES_RenderSystem::_setupDefaultParameters()
@@ -382,6 +387,9 @@ namespace april
 		ShaderProgram* shader = this->activeShader;
 		if (shader == NULL)
 		{
+			shader = this->shaderTexturedMultiply;
+			// TODO
+			/*
 			switch (this->activeTextureColorMode)
 			{
 			case CM_DEFAULT:
@@ -395,12 +403,49 @@ namespace april
 				shader = (useTexture ? this->shaderTexturedLerp : this->shaderLerp);
 				break;
 			}
+
+			*/
 		}
 		if (this->_currentShader != shader)
 		{
 			this->_currentShader = shader;
 			glUseProgram(this->_currentShader->glShaderProgram);
+			glUniform1i(glGetUniformLocation(this->_currentShader->glShaderProgram, "sampler2d"), 0);
 		}
+		static float currentLerpAlpha = 1.0f;
+		static gmat4 transformationMatrix;
+		static float lerpAlpha = 1.0f;
+		lerpAlpha = this->activeTextureColorModeAlpha / 255.0f;
+		bool dirty = this->_matrixDirty;
+		dirty = true; // TODO - remove
+		if (!dirty)
+		{
+			dirty = (currentLerpAlpha != lerpAlpha);
+		}
+		else // actually "if (this->_matrixDirty)"
+		{
+			this->_matrixDirty = false;
+			transformationMatrix = this->projectionMatrix * this->modelviewMatrix;
+		}
+		if (dirty)
+		{
+			int matrixLocation = glGetUniformLocation(this->_currentShader->glShaderProgram, "transformationMatrix");
+			glUniformMatrix4fv(matrixLocation, 1, GL_FALSE, transformationMatrix.data);
+			//int lerpLocation = glGetUniformLocation(this->_currentShader->glShaderProgram, "lerp");
+			//glUniform1fv(lerpLocation, 1, &currentLerpAlpha);
+		}
+	}
+
+	void OpenGLES_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
+	{
+		OpenGL_RenderSystem::_setModelviewMatrix(matrix);
+		this->_matrixDirty = true;
+	}
+
+	void OpenGLES_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
+	{
+		OpenGL_RenderSystem::_setProjectionMatrix(matrix);
+		this->_matrixDirty = true;
 	}
 
 }

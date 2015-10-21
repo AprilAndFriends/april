@@ -15,47 +15,32 @@
 #define APRIL_OPENGLES_DEFAULT_SHADERS_H
 
 #define SHADER_Include "\
-	/*struct PixelShaderInput \n\
-	{ \n\
-		attribute highp vec4 position; \n\
-		lowp vec4 color; \n\
-		mediump vec2 tex; \n\
-		lowp vec4 lerpAlpha; \n\
-	};*/ \n\
 "
 
 #define SHADER_VertexDefault SHADER_Include "\
-	/*cbuffer constantBuffer : register(b0) \n\
-	{ \n\
-		mat4 cMatrix; \n\
-		vec4 cLerpAlpha; \n\
-	}; \n\
-	struct VertexShaderInput \n\
-	{ \n\
-		vec3 position; \n\
-		vec4 color; \n\
-		vec2 tex; \n\
-	};*/ \n\
-	attribute highp vec4 position; \n\
 	uniform mediump mat4 transformationMatrix; \n\
-	/*PixelShaderInput*/ void main(void/*VertexShaderInput in*/) \n\
+	//uniform lowp float lerp; \n\
+	attribute highp vec4 position; \n\
+	attribute lowp vec4 color; \n\
+	attribute mediump vec4 tex; \n\
+	varying mediump vec2 texFrag; \n\
+	varying lowp vec4 colorFrag; \n\
+	void main(void) \n\
 	{ \n\
 		gl_Position = transformationMatrix * position; \n\
-		//PixelShaderInput vertexShaderOutput; \n\
-		//vertexShaderOutput.position =  mul(vec4(in.position, (float)1.0), cMatrix); \n\
-		//vertexShaderOutput.color = in.color; \n\
-		//vertexShaderOutput.tex = in.tex; \n\
-		//vertexShaderOutput.lerpAlpha = cLerpAlpha; \n\
-		//return vertexShaderOutput; \n\
+		texFrag = tex.st; \n\
+		colorFrag = color; \n\
 	} \n\
 "
 
 #define SHADER_PixelTexturedMultiply SHADER_Include "\
-	Texture2D<vec4> cTexture : register(t0); \n\
-	SamplerState cSampler : register(s0); \n\
-	vec4 main(PixelShaderInput in) : SV_Target \n\
+	//uniform sampler2D sampler2d; \n\
+	varying mediump vec2 texFrag; \n\
+	varying lowp vec4 colorFrag; \n\
+	void main(void) \n\
 	{ \n\
-		return (cTexture.Sample(cSampler, in.tex) * in.color); \n\
+		//gl_FragColor = texture2D(sampler2d, texFrag) * colorFrag; \n\
+		gl_FragColor = colorFrag; \n\
 	} \n\
 "
 

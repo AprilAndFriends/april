@@ -61,7 +61,7 @@ namespace april
 
 	DirectX11_RenderSystem::DirectX11_RenderSystem() : DirectX_RenderSystem(), activeTextureBlendMode(BM_DEFAULT),
 		activeTexture(NULL), renderTarget(NULL), activeTextureColorMode(CM_DEFAULT),
-		activeTextureColorModeAlpha(255), matrixDirty(true)
+		activeTextureColorModeAlpha(255), _matrixDirty(true)
 	{
 		this->name = APRIL_RS_DIRECTX11;
 		this->state = new RenderState(); // TODOa
@@ -120,7 +120,7 @@ namespace april
 		this->renderTarget = NULL;
 		this->activeTextureColorMode = CM_DEFAULT;
 		this->activeTextureColorModeAlpha = 255;
-		this->matrixDirty = true;
+		this->_matrixDirty = true;
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
@@ -272,7 +272,7 @@ namespace april
 			throw Exception("Unable to create constant buffer!");
 		}
 		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
-		this->matrixDirty = true;
+		this->_matrixDirty = true;
 		// initial calls
 		this->clear();
 		this->presentFrame();
@@ -569,7 +569,7 @@ namespace april
 		{
 			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
 		}
-		this->matrixDirty = true;
+		this->_matrixDirty = true;
 	}
 
 	int DirectX11_RenderSystem::getVRam()
@@ -760,7 +760,7 @@ namespace april
 			return;
 		}
 		this->renderTarget = texture;
-		this->matrixDirty = true;
+		this->_matrixDirty = true;
 	}
 	
 	void DirectX11_RenderSystem::setPixelShader(PixelShader* pixelShader)
@@ -882,14 +882,14 @@ namespace april
 	{
 		static float lerpAlpha = 1.0f;
 		lerpAlpha = this->activeTextureColorModeAlpha / 255.0f;
-		bool dirty = this->matrixDirty;
+		bool dirty = this->_matrixDirty;
 		if (!dirty)
 		{
 			dirty = (this->constantBufferData.lerpAlpha.w != lerpAlpha);
 		}
-		else // actually "if (this->matrixDirty)"
+		else // actually "if (this->_matrixDirty)"
 		{
-			this->matrixDirty = false;
+			this->_matrixDirty = false;
 			this->constantBufferData.matrix = (this->projectionMatrix * this->modelviewMatrix).transposed();
 		}
 		if (dirty)
@@ -1076,12 +1076,12 @@ namespace april
 
 	void DirectX11_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
 	{
-		this->matrixDirty = true;
+		this->_matrixDirty = true;
 	}
 
 	void DirectX11_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
 	{
-		this->matrixDirty = true;
+		this->_matrixDirty = true;
 	}
 
 	Image::Format DirectX11_RenderSystem::getNativeTextureFormat(Image::Format format)

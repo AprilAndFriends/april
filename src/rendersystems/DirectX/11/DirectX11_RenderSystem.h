@@ -166,7 +166,7 @@ namespace april
 		RenderOperation _currentRenderOperation;
 		ID3D11Buffer** _currentVertexBuffer;
 		
-		bool matrixDirty;
+		bool _matrixDirty;
 		
 		void _setRenderOperation(RenderOperation renderOperation);
 		void _updateVertexBuffer(int nVertices, void* data);

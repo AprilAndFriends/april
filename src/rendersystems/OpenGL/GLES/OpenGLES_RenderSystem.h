@@ -76,7 +76,6 @@ namespace april
 
 		void _setTextureBlendMode(BlendMode mode);
 		void _setTextureColorMode(ColorMode textureColorMode, float factor);
-
 		void _loadIdentityMatrix();
 		void _setMatrixMode(unsigned int mode);
 		void _setVertexPointer(int stride, const void* pointer);
@@ -85,8 +84,12 @@ namespace april
 
 		void _updateShader(bool useTexture);
 
+		void _setModelviewMatrix(const gmat4& matrix);
+		void _setProjectionMatrix(const gmat4& matrix);
+
 	private:
 		ShaderProgram* _currentShader;
+		bool _matrixDirty;
 
 	};
 	
