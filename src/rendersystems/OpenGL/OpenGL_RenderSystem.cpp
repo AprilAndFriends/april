@@ -163,7 +163,6 @@ namespace april
 		// GL defaults
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnable(GL_TEXTURE_2D);
 		// pixel data
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -173,9 +172,6 @@ namespace april
 		{
 			glDepthFunc(GL_LEQUAL);
 		}
-		this->_setClientState(GL_TEXTURE_COORD_ARRAY, this->deviceState.textureCoordinatesEnabled);
-		this->_setClientState(GL_COLOR_ARRAY, this->deviceState.colorEnabled);
-		glColor4f(this->deviceState.systemColor.r_f(), this->deviceState.systemColor.g_f(), this->deviceState.systemColor.b_f(), this->deviceState.systemColor.a_f());
 		glBindTexture(GL_TEXTURE_2D, this->deviceState.textureId);
 		this->currentState.textureFilter = april::Texture::FILTER_NEAREST;
 		this->currentState.textureAddressMode = april::Texture::ADDRESS_WRAP;

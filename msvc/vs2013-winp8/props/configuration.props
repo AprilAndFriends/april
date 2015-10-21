@@ -21,7 +21,7 @@
                                   '$(Configuration)'=='Release_OpenKODE' or
                                   '$(Configuration)'=='ReleaseS_OpenKODE'">
     <ClCompile>
-      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES1;_EGL;_OPENKODE;_OPENKODE_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_OPENGL;_OPENGLES1;_EGL;_OPENKODE;_OPENKODE_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libGLES_CM.lib;libEGL.lib;libKD.lib;%(AdditionalDependencies)</AdditionalDependencies>

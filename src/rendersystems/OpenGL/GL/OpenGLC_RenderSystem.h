@@ -10,9 +10,9 @@
 /// 
 /// Defines a generic OpenGL "Classic" render system.
 
-#if defined(_OPENGL) || defined(_OPENGLES1)
-#ifndef APRIL_OPENGLD_RENDER_SYSTEM_H
-#define APRIL_OPENGLD_RENDER_SYSTEM_H
+#if (defined(_OPENGL) || defined(_OPENGLES1)) && !defined(_OPENGLES)
+#ifndef APRIL_OPENGLC_RENDER_SYSTEM_H
+#define APRIL_OPENGLC_RENDER_SYSTEM_H
 
 #include "OpenGL_RenderSystem.h"
 
@@ -27,6 +27,9 @@ namespace april
 
 		OpenGLC_RenderSystem();
 		~OpenGLC_RenderSystem();
+
+	protected:
+		virtual void _setupDefaultParameters();
 
 	};
 	

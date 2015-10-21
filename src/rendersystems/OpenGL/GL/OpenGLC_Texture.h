@@ -10,9 +10,9 @@
 /// 
 /// Defines a generic OpenGL "Classic" texture.
 
-#if defined(_OPENGL) || defined(_OPENGLES1)
-#ifndef APRIL_OPENGLD_TEXTURE_H
-#define APRIL_OPENGLD_TEXTURE_H
+#if (defined(_OPENGL) || defined(_OPENGLES1)) && !defined(_OPENGLES)
+#ifndef APRIL_OPENGLC_TEXTURE_H
+#define APRIL_OPENGLC_TEXTURE_H
 
 #include "OpenGL_Texture.h"
 
