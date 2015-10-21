@@ -21,11 +21,6 @@
 
 namespace april
 {
-	DirectX9_PixelShader::DirectX9_PixelShader(chstr filename) : PixelShader(), dx9Shader(NULL)
-	{
-		this->loadResource(filename);
-	}
-
 	DirectX9_PixelShader::DirectX9_PixelShader() : PixelShader(), dx9Shader(NULL)
 	{
 	}
@@ -39,34 +34,14 @@ namespace april
 		}
 	}
 
-	bool DirectX9_PixelShader::loadFile(chstr filename)
+	bool DirectX9_PixelShader::isLoaded()
 	{
-		unsigned char* data = NULL;
-		int size = 0;
-		if (!this->_loadFileData(filename, &data, &size))
-		{
-			hlog::error(logTag, "Shader file not found: " + filename);
-			return false;
-		}
-		HRESULT result = APRIL_D3D_DEVICE->CreatePixelShader((DWORD*)data, &this->dx9Shader);
-		if (result != D3D_OK)
-		{
-			hlog::error(logTag, "Failed to create pixel shader!");
-			return false;
-		}
-		return true;
+		return (this->dx9Shader != NULL);
 	}
 
-	bool DirectX9_PixelShader::loadResource(chstr filename)
+	bool DirectX9_PixelShader::_createShader(chstr filename, const hstream& stream)
 	{
-		unsigned char* data = NULL;
-		int size = 0;
-		if (!this->_loadResourceData(filename, &data, &size))
-		{
-			hlog::error(logTag, "Shader file not found: " + filename);
-			return false;
-		}
-		HRESULT result = APRIL_D3D_DEVICE->CreatePixelShader((DWORD*)data, &this->dx9Shader);
+		HRESULT result = APRIL_D3D_DEVICE->CreatePixelShader((DWORD*)(unsigned char*)stream, &this->dx9Shader);
 		if (result != D3D_OK)
 		{
 			hlog::error(logTag, "Failed to create pixel shader!");

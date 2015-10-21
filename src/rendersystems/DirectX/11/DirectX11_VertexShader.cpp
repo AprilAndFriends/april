@@ -23,60 +23,29 @@ using namespace Microsoft::WRL;
 
 namespace april
 {
-	DirectX11_VertexShader::DirectX11_VertexShader(chstr filename) : VertexShader(), shaderData(NULL), shaderSize(0), dx11Shader(nullptr)
-	{
-		this->loadResource(filename);
-	}
-
-	DirectX11_VertexShader::DirectX11_VertexShader() : VertexShader(), shaderData(NULL), shaderSize(0), dx11Shader(nullptr)
+	DirectX11_VertexShader::DirectX11_VertexShader() : VertexShader(), dx11Shader(nullptr)
 	{
 	}
 
 	DirectX11_VertexShader::~DirectX11_VertexShader()
 	{
 		this->dx11Shader = nullptr;
-		_HL_TRY_DELETE_ARRAY(this->shaderData);
 	}
 
-	bool DirectX11_VertexShader::loadFile(chstr filename)
+	bool DirectX11_VertexShader::isLoaded()
 	{
-		if (this->dx11Shader != nullptr)
-		{
-			hlog::error(logTag, "Shader already loaded.");
-			return false;
-		}
-		if (!this->_loadFileData(filename, &this->shaderData, &this->shaderSize))
-		{
-			hlog::error(logTag, "Shader file not found: " + filename);
-			return false;
-		}
-		HRESULT hr = APRIL_D3D_DEVICE->CreateVertexShader(this->shaderData, this->shaderSize, NULL, &this->dx11Shader);
+		return (this->dx11Shader != nullptr);
+	}
+
+	bool DirectX11_VertexShader::_createShader(chstr filename, const hstream& stream)
+	{
+		HRESULT hr = APRIL_D3D_DEVICE->CreateVertexShader((unsigned char*)stream, stream.size(), NULL, &this->dx11Shader);
 		if (FAILED(hr))
 		{
 			hlog::error(logTag, "Failed to create vertex shader!");
 			return false;
 		}
-		return true;
-	}
-
-	bool DirectX11_VertexShader::loadResource(chstr filename)
-	{
-		if (this->dx11Shader != nullptr)
-		{
-			hlog::error(logTag, "Shader already loaded.");
-			return false;
-		}
-		if (!this->_loadResourceData(filename, &this->shaderData, &this->shaderSize))
-		{
-			hlog::error(logTag, "Shader file not found: " + filename);
-			return false;
-		}
-		HRESULT hr = APRIL_D3D_DEVICE->CreateVertexShader(this->shaderData, this->shaderSize, NULL, &this->dx11Shader);
-		if (FAILED(hr))
-		{
-			hlog::error(logTag, "Failed to create vertex shader!");
-			return false;
-		}
+		this->shaderData = stream; // copies data for later usage
 		return true;
 	}
 

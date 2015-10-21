@@ -814,24 +814,14 @@ namespace april
 		return new DirectX11_Texture(fromResource);
 	}
 
-	PixelShader* DirectX11_RenderSystem::createPixelShader()
+	PixelShader* DirectX11_RenderSystem::_createPixelShader()
 	{
 		return new DirectX11_PixelShader();
 	}
 
-	PixelShader* DirectX11_RenderSystem::createPixelShader(chstr filename)
-	{
-		return new DirectX11_PixelShader(filename);
-	}
-
-	VertexShader* DirectX11_RenderSystem::createVertexShader()
+	VertexShader* DirectX11_RenderSystem::_createVertexShader()
 	{
 		return new DirectX11_VertexShader();
-	}
-
-	VertexShader* DirectX11_RenderSystem::createVertexShader(chstr filename)
-	{
-		return new DirectX11_VertexShader(filename);
 	}
 
 	void DirectX11_RenderSystem::clear(bool useColor, bool depth)

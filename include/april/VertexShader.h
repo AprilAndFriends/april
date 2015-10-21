@@ -13,27 +13,32 @@
 #ifndef APRIL_VERTEX_SHADER_H
 #define APRIL_VERTEX_SHADER_H
 
+#include <hltypes/hstream.h>
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
 
 namespace april
 {
+	class RenderSystem;
+
 	/// @brief Defines a generic vertex shader.
 	class aprilExport VertexShader
 	{
 	public:
-		/// @brief Destructor.
-		virtual ~VertexShader();
+		friend class RenderSystem;
+
+		/// @brief Checks if the shader is loaded.
+		virtual bool isLoaded() = 0;
 
 		/// @brief Loads a precompiled shader from a file.
 		/// @param[in] filename Filename of the file.
 		/// @return True if successful.
-		virtual bool loadFile(chstr filename) = 0;
+		bool loadFile(chstr filename);
 		/// @brief Loads a precompiled shader from a resource.
 		/// @param[in] filename Filename of the resource.
 		/// @return True if successful.
-		virtual bool loadResource(chstr filename) = 0;
+		bool loadResource(chstr filename);
 		/// @brief Sets the B-constant of the shader.
 		/// @param[in] quads The quads.
 		/// @param[in] quadCount How many quads there are.
@@ -50,21 +55,14 @@ namespace april
 	protected:
 		/// @brief Basic constructor.
 		VertexShader();
+		/// @brief Destructor.
+		virtual ~VertexShader();
 
-		// TODOa - use hstream instead of data+size
-
-		/// @brief Loads a precompiled shader from a file.
-		/// @param[in] filename Filename of the file.
-		/// @param[out] data The loaded data.
-		/// @param[out] size The size of the loaded data.
+		/// @brief Creates the actual shader in the system
+		/// @param[in] filename The filename.
+		/// @param[out] stream The loaded data stream.
 		/// @return True if successful.
-		bool _loadFileData(chstr filename, unsigned char** data, int* size);
-		/// @brief Loads a precompiled shader from a resource.
-		/// @param[in] filename Filename of the resource.
-		/// @param[out] data The loaded data.
-		/// @param[out] size The size of the loaded data.
-		/// @return True if successful.
-		bool _loadResourceData(chstr filename, unsigned char** data, int* size);
+		virtual bool _createShader(chstr filename, const hstream& stream) = 0;
 
 	};
 

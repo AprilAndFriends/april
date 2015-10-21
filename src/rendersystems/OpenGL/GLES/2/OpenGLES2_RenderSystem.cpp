@@ -13,7 +13,9 @@
 #include "april.h"
 #include "egl.h"
 #include "OpenGLES2_RenderSystem.h"
+#include "OpenGLES2_PixelShader.h"
 #include "OpenGLES2_Texture.h"
+#include "OpenGLES2_VertexShader.h"
 #include "Platform.h"
 
 namespace april
@@ -31,6 +33,16 @@ namespace april
 	Texture* OpenGLES2_RenderSystem::_createTexture(bool fromResource)
 	{
 		return new OpenGLES2_Texture(fromResource);
+	}
+
+	PixelShader* OpenGLES2_RenderSystem::_createPixelShader()
+	{
+		return new OpenGLES2_PixelShader();
+	}
+
+	VertexShader* OpenGLES2_RenderSystem::_createVertexShader()
+	{
+		return new OpenGLES2_VertexShader();
 	}
 
 }

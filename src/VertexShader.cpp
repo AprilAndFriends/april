@@ -7,9 +7,11 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #include <hltypes/hfile.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
 
+#include "april.h"
 #include "VertexShader.h"
 
 namespace april
@@ -22,32 +24,46 @@ namespace april
 	{
 	}
 
-	bool VertexShader::_loadFileData(chstr filename, unsigned char** data, int* size)
+	bool VertexShader::loadFile(chstr filename)
 	{
+		if (this->isLoaded())
+		{
+			hlog::error(logTag, "Shader already loaded.");
+			return false;
+		}
 		if (!hfile::exists(filename))
 		{
+			hlog::error(logTag, "Shader file not found: " + filename);
 			return false;
 		}
-		hfile stream;
-		stream.open(filename);
-		*size = (int)stream.size();
-		*data = new unsigned char[*size];
-		stream.readRaw(*data, *size);
-		return true;
+		hstream stream;
+		hfile file;
+		file.open(filename);
+		stream.writeRaw(file);
+		file.close();
+		stream.rewind();
+		return this->_createShader(filename, stream);
 	}
 
-	bool VertexShader::_loadResourceData(chstr filename, unsigned char** data, int* size)
+	bool VertexShader::loadResource(chstr filename)
 	{
-		if (!hresource::exists(filename))
+		if (this->isLoaded())
 		{
+			hlog::error(logTag, "Shader already loaded.");
 			return false;
 		}
-		hresource stream;
-		stream.open(filename);
-		*size = (int)stream.size();
-		*data = new unsigned char[*size];
-		stream.readRaw(*data, *size);
-		return true;
+		if (!hresource::exists(filename))
+		{
+			hlog::error(logTag, "Shader file not found: " + filename);
+			return false;
+		}
+		hstream stream;
+		hresource file;
+		file.open(filename);
+		stream.writeRaw(file);
+		file.close();
+		stream.rewind();
+		return this->_createShader(filename, stream);
 	}
 
 }

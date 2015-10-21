@@ -23,11 +23,6 @@ using namespace Microsoft::WRL;
 
 namespace april
 {
-	DirectX11_PixelShader::DirectX11_PixelShader(chstr filename) : PixelShader(), dx11Shader(nullptr)
-	{
-		this->loadResource(filename);
-	}
-
 	DirectX11_PixelShader::DirectX11_PixelShader() : PixelShader(), dx11Shader(nullptr)
 	{
 	}
@@ -36,47 +31,15 @@ namespace april
 	{
 		this->dx11Shader = nullptr;
 	}
-
-	bool DirectX11_PixelShader::loadFile(chstr filename)
+	
+	bool DirectX11_PixelShader::isLoaded()
 	{
-		if (this->dx11Shader != nullptr)
-		{
-			hlog::error(logTag, "Shader already loaded.");
-			return false;
-		}
-		unsigned char* data = NULL;
-		int32_t size = 0;
-		if (!this->_loadFileData(filename, &data, &size))
-		{
-			hlog::error(logTag, "Shader file not found: " + filename);
-			return false;
-		}
-		HRESULT hr = APRIL_D3D_DEVICE->CreatePixelShader(data, size, NULL, &this->dx11Shader);
-		delete [] data;
-		if (FAILED(hr))
-		{
-			hlog::error(logTag, "Failed to create pixel shader!");
-			return false;
-		}
-		return true;
+		return (this->dx11Shader != nullptr);
 	}
 
-	bool DirectX11_PixelShader::loadResource(chstr filename)
+	bool DirectX11_VertexShader::_createShader(chstr filename, const hstream& stream)
 	{
-		if (this->dx11Shader != nullptr)
-		{
-			hlog::error(logTag, "Shader already loaded.");
-			return false;
-		}
-		unsigned char* data = NULL;
-		int32_t size = 0;
-		if (!this->_loadResourceData(filename, &data, &size))
-		{
-			hlog::error(logTag, "Shader file not found: " + filename);
-			return false;
-		}
-		HRESULT hr = APRIL_D3D_DEVICE->CreatePixelShader(data, size, NULL, &this->dx11Shader);
-		delete [] data;
+		HRESULT hr = APRIL_D3D_DEVICE->CreatePixelShader((unsigned char*)stream, stream.size(), NULL, &this->dx11Shader);
 		if (FAILED(hr))
 		{
 			hlog::error(logTag, "Failed to create pixel shader!");

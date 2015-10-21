@@ -29,18 +29,19 @@ namespace april
 	public:
 		friend class DirectX9_RenderSystem;
 
-		DirectX9_PixelShader(chstr filename);
 		DirectX9_PixelShader();
 		~DirectX9_PixelShader();
 
-		bool loadFile(chstr filename);
-		bool loadResource(chstr filename);
+		bool isLoaded();
+
 		void setConstantsB(const int* quads, unsigned int quadCount);
 		void setConstantsI(const int* quads, unsigned int quadCount);
 		void setConstantsF(const float* quads, unsigned int quadCount);
 
 	protected:
 		IDirect3DPixelShader9* dx9Shader;
+
+		bool _createShader(chstr filename, const hstream& stream);
 
 	};
 

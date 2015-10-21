@@ -30,21 +30,21 @@ namespace april
 	public:
 		friend class DirectX11_RenderSystem;
 
-		DirectX11_VertexShader(chstr filename);
 		DirectX11_VertexShader();
 		~DirectX11_VertexShader();
+		
+		bool isLoaded();
 
-		bool loadFile(chstr filename);
-		bool loadResource(chstr filename);
 		void setConstantsB(const int* quads, unsigned int quadCount);
 		void setConstantsI(const int* quads, unsigned int quadCount);
 		void setConstantsF(const float* quads, unsigned int quadCount);
 
 	protected:
 		ComPtr<ID3D11VertexShader> dx11Shader;
-		unsigned char* shaderData;
-		int shaderSize;
+		hstream shaderData;
 
+		bool _createShader(chstr filename, const hstream& stream);
+		
 	};
 
 }

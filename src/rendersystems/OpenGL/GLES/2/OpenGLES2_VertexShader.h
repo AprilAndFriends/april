@@ -8,40 +8,27 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a OpenGLES 2 vertex shader.
+/// Defines an OpenGLES 2 vertex shader.
 
 #ifdef _OPENGLES2
 #ifndef APRIL_OPENGLES2_VERTEX_SHADER_H
 #define APRIL_OPENGLES2_VERTEX_SHADER_H
 
-#include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
-#include "VertexShader.h"
+#include "OpenGLES_VertexShader.h"
 
 namespace april
 {
 	class OpenGLES2_RenderSystem;
 	
-	class OpenGLES2_VertexShader : public VertexShader
+	class OpenGLES2_VertexShader : public OpenGLES_VertexShader
 	{
 	public:
 		friend class OpenGLES2_RenderSystem;
 
-		OpenGLES2_VertexShader(chstr filename);
 		OpenGLES2_VertexShader();
 		~OpenGLES2_VertexShader();
-
-		bool loadFile(chstr filename);
-		bool loadResource(chstr filename);
-		void setConstantsB(const int* quads, unsigned int quadCount);
-		void setConstantsI(const int* quads, unsigned int quadCount);
-		void setConstantsF(const float* quads, unsigned int quadCount);
-
-	protected:
-		unsigned int glShader;
-
-		bool _compileShader(chstr filename, unsigned char* data, int size);
 
 	};
 

@@ -20,11 +20,6 @@
 
 namespace april
 {
-	DirectX9_VertexShader::DirectX9_VertexShader(chstr filename) : VertexShader(), dx9Shader(NULL)
-	{
-		this->loadResource(filename);
-	}
-
 	DirectX9_VertexShader::DirectX9_VertexShader() : VertexShader(), dx9Shader(NULL)
 	{
 	}
@@ -38,34 +33,14 @@ namespace april
 		}
 	}
 
-	bool DirectX9_VertexShader::loadFile(chstr filename)
+	bool DirectX9_VertexShader::isLoaded()
 	{
-		unsigned char* data = NULL;
-		int size = 0;
-		if (!this->_loadFileData(filename, &data, &size))
-		{
-			hlog::error(logTag, "Shader file not found: " + filename);
-			return false;
-		}
-		HRESULT result = APRIL_D3D_DEVICE->CreateVertexShader((DWORD*)data, &this->dx9Shader);
-		if (result != D3D_OK)
-		{
-			hlog::error(logTag, "Failed to create vertex shader!");
-			return false;
-		}
-		return true;
+		return (this->dx9Shader != NULL);
 	}
 
-	bool DirectX9_VertexShader::loadResource(chstr filename)
+	bool DirectX9_VertexShader::_createShader(chstr filename, const hstream& stream)
 	{
-		unsigned char* data = NULL;
-		int size = 0;
-		if (!this->_loadResourceData(filename, &data, &size))
-		{
-			hlog::error(logTag, "Shader file not found: " + filename);
-			return false;
-		}
-		HRESULT result = APRIL_D3D_DEVICE->CreateVertexShader((DWORD*)data, &this->dx9Shader);
+		HRESULT result = APRIL_D3D_DEVICE->CreateVertexShader((DWORD*)(unsigned char*)stream, &this->dx9Shader);
 		if (result != D3D_OK)
 		{
 			hlog::error(logTag, "Failed to create vertex shader!");

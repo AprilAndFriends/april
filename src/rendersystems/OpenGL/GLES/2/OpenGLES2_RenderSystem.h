@@ -34,6 +34,8 @@ namespace april
 
 	protected:
 		Texture* _createTexture(bool fromResource);
+		PixelShader* _createPixelShader();
+		VertexShader* _createVertexShader();
 
 	};
 	

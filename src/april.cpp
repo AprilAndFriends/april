@@ -88,7 +88,7 @@
 		#define WS_INTERNAL_DEFAULT WS_WINRT
 	#endif
 #elif defined(__APPLE__)
-	#if _IOS
+	#ifdef _IOS
 		#ifdef _OPENGLES2
 			#define RS_INTERNAL_DEFAULT RS_OPENGLES2
 		#elif defined(_OPENGLES1)
@@ -147,7 +147,7 @@
 #elif defined(_ANDROID)
 	#define APRIL_PLATFORM_NAME "Android"
 #elif defined(__APPLE__)
-	#if _IOS
+	#ifdef _IOS
 		#define APRIL_PLATFORM_NAME "iOS"
 	#else
 		#define APRIL_PLATFORM_NAME "Mac OS X"
@@ -195,7 +195,7 @@ namespace april
 			extensions += ".jpt";
 			extensions += ".png";
 			extensions += ".jpg";
-#if _IOS
+#ifdef _IOS
 			extensions += ".pvr";
 #endif
 		}

@@ -9,7 +9,7 @@
 #ifdef _OPENKODE_WINDOW
 #ifdef __APPLE__
 	#include <TargetConditionals.h>
-	#if _IOS
+	#ifdef _IOS
 		#import <UIKit/UIWindow.h>
 	#else
 		#define MAC_OS
@@ -38,7 +38,7 @@
 #include "OpenKODE_Window.h"
 #include "OpenKODE_Keys.h"
 
-#if _IOS
+#ifdef _IOS
 #import <AVFoundation/AVFoundation.h>
 
 // KD-TODO
@@ -250,7 +250,7 @@ namespace april
 	
 	void* OpenKODE_Window::getBackendId()
 	{
-#if _IOS
+#ifdef _IOS
 		UIWindow* window = [UIApplication sharedApplication].keyWindow;
 		if (!window)
 		{

@@ -29,12 +29,11 @@ namespace april
 	public:
 		friend class DirectX9_RenderSystem;
 
-		DirectX9_VertexShader(chstr filename);
 		DirectX9_VertexShader();
 		~DirectX9_VertexShader();
 
-		bool loadFile(chstr filename);
-		bool loadResource(chstr filename);
+		bool isLoaded();
+
 		void setConstantsB(const int* quads, unsigned int quadCount);
 		void setConstantsI(const int* quads, unsigned int quadCount);
 		void setConstantsF(const float* quads, unsigned int quadCount);
@@ -42,6 +41,8 @@ namespace april
 	protected:
 		IDirect3DVertexShader9* dx9Shader;
 
+		bool _createShader(chstr filename, const hstream& stream);
+		
 	};
 
 }

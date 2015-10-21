@@ -30,18 +30,19 @@ namespace april
 	public:
 		friend class DirectX11_RenderSystem;
 
-		DirectX11_PixelShader(chstr filename);
 		DirectX11_PixelShader();
 		~DirectX11_PixelShader();
+		
+		bool isLoaded();
 
-		bool loadFile(chstr filename);
-		bool loadResource(chstr filename);
 		void setConstantsB(const int* quads, unsigned int quadCount);
 		void setConstantsI(const int* quads, unsigned int quadCount);
 		void setConstantsF(const float* quads, unsigned int quadCount);
 
 	protected:
 		ComPtr<ID3D11PixelShader> dx11Shader;
+		
+		bool _createShader(chstr filename, const hstream& stream);
 
 	};
 

@@ -29,7 +29,7 @@
 #ifdef __APPLE__
 	#include <TargetConditionals.h>
 	#include <sys/sysctl.h>
-	#if _IOS
+	#ifdef _IOS
 		void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 	#endif
 #endif
@@ -72,7 +72,7 @@ namespace april
 			kdQueryAttribi(KD_ATTRIB_DPI, (KDint*)&dpi);
 			info.displayDpi = (float)dpi;
 			// name
-#if _IOS // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
+#ifdef _IOS // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
 			size_t size = 255;
 			char cname[256] = {'\0'};
 			sysctlbyname("hw.machine", cname, &size, NULL, 0);
@@ -87,7 +87,7 @@ namespace april
 			info.name = "Windows";
 #endif
 			// misc
-#if _IOS // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
+#ifdef _IOS // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
 			hstr model = kdQueryAttribcv(KD_ATTRIB_PLATFORM);
 			if (model.contains("(") && model.contains(")"))
 			{

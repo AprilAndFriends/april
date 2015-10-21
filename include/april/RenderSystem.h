@@ -148,10 +148,14 @@ namespace april
 		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
 		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
 		void destroyTexture(Texture* texture);
-		virtual PixelShader* createPixelShader();
-		virtual PixelShader* createPixelShader(chstr filename);
-		virtual VertexShader* createVertexShader();
-		virtual VertexShader* createVertexShader(chstr filename);
+		PixelShader* createPixelShaderFromResource(chstr filename);
+		PixelShader* createPixelShaderFromFile(chstr filename);
+		PixelShader* createPixelShader();
+		VertexShader* createVertexShaderFromResource(chstr filename);
+		VertexShader* createVertexShaderFromFile(chstr filename);
+		VertexShader* createVertexShader();
+		void destroyPixelShader(PixelShader* shader);
+		void destroyVertexShader(VertexShader* shader);
 
 		void setIdentityTransform();
 		void translate(float x, float y, float z = 0.0f);
@@ -204,6 +208,10 @@ namespace april
 
 		Texture* _createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format = Image::FORMAT_INVALID);
 		virtual Texture* _createTexture(bool fromResource) = 0;
+		PixelShader* _createPixelShaderFromSource(bool fromResource, chstr filename);
+		virtual PixelShader* _createPixelShader();
+		VertexShader* _createVertexShaderFromSource(bool fromResource, chstr filename);
+		virtual VertexShader* _createVertexShader();
 
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);

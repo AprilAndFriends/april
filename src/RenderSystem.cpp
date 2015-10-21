@@ -24,9 +24,11 @@
 #include "aprilUtil.h"
 #include "Image.h"
 #include "RenderSystem.h"
+#include "PixelShader.h"
 #include "Platform.h"
 #include "Texture.h"
 #include "TextureAsync.h"
+#include "VertexShader.h"
 #include "Window.h"
 
 namespace april
@@ -323,30 +325,6 @@ namespace april
 		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
 	}
 
-	april::PixelShader* RenderSystem::createPixelShader()
-	{
-		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
-		return NULL;
-	}
-
-	april::PixelShader* RenderSystem::createPixelShader(chstr filename)
-	{
-		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
-		return NULL;
-	}
-
-	april::VertexShader* RenderSystem::createVertexShader()
-	{
-		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
-		return NULL;
-	}
-
-	april::VertexShader* RenderSystem::createVertexShader(chstr filename)
-	{
-		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
-		return NULL;
-	}
-
 	void RenderSystem::waitForAsyncTextures(float timeout)
 	{
 		float time = timeout;
@@ -448,6 +426,90 @@ namespace april
 		lock.release();
 		delete texture;
 	}
+
+	PixelShader* RenderSystem::createPixelShaderFromResource(chstr filename)
+	{
+		return this->_createPixelShaderFromSource(true, filename);
+	}
+
+	PixelShader* RenderSystem::createPixelShaderFromFile(chstr filename)
+	{
+		return this->_createPixelShaderFromSource(false, filename);
+	}
+
+	PixelShader* RenderSystem::createPixelShader()
+	{
+		return this->_createPixelShader();
+	}
+
+	VertexShader* RenderSystem::createVertexShaderFromResource(chstr filename)
+	{
+		return this->_createVertexShaderFromSource(true, filename);
+	}
+
+	VertexShader* RenderSystem::createVertexShaderFromFile(chstr filename)
+	{
+		return this->_createVertexShaderFromSource(false, filename);
+	}
+
+	VertexShader* RenderSystem::createVertexShader()
+	{
+		return this->_createVertexShader();
+	}
+
+	PixelShader* RenderSystem::_createPixelShaderFromSource(bool fromResource, chstr filename)
+	{
+		PixelShader* shader = this->_createPixelShader();
+		if (shader != NULL)
+		{
+			bool loaded = (fromResource ? shader->loadResource(filename) : shader->loadFile(filename));
+			if (!loaded)
+			{
+				delete shader;
+				shader = NULL;
+			}
+		}
+		return shader;
+	}
+
+	VertexShader* RenderSystem::_createVertexShaderFromSource(bool fromResource, chstr filename)
+	{
+		VertexShader* shader = this->_createVertexShader();
+		if (shader != NULL)
+		{
+			bool loaded = (fromResource ? shader->loadResource(filename) : shader->loadFile(filename));
+			if (!loaded)
+			{
+				delete shader;
+				shader = NULL;
+			}
+		}
+		return shader;
+	}
+
+	PixelShader* RenderSystem::_createPixelShader()
+	{
+		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
+		return NULL;
+	}
+
+	VertexShader* RenderSystem::_createVertexShader()
+	{
+		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
+		return NULL;
+	}
+
+	void RenderSystem::destroyPixelShader(PixelShader* shader)
+	{
+		delete shader;
+	}
+
+	void RenderSystem::destroyVertexShader(VertexShader* shader)
+	{
+		delete shader;
+	}
+
+
 
 	void RenderSystem::unloadTextures()
 	{

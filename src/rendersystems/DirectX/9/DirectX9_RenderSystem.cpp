@@ -643,24 +643,14 @@ namespace april
 		return new DirectX9_Texture(fromResource);
 	}
 
-	PixelShader* DirectX9_RenderSystem::createPixelShader()
+	PixelShader* DirectX9_RenderSystem::_createPixelShader()
 	{
 		return new DirectX9_PixelShader();
 	}
 
-	PixelShader* DirectX9_RenderSystem::createPixelShader(chstr filename)
-	{
-		return new DirectX9_PixelShader(filename);
-	}
-
-	VertexShader* DirectX9_RenderSystem::createVertexShader()
+	VertexShader* DirectX9_RenderSystem::_createVertexShader()
 	{
 		return new DirectX9_VertexShader();
-	}
-
-	VertexShader* DirectX9_RenderSystem::createVertexShader(chstr filename)
-	{
-		return new DirectX9_VertexShader(filename);
 	}
 
 	void DirectX9_RenderSystem::clear(bool useColor, bool depth)

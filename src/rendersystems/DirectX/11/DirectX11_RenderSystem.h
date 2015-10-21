@@ -75,11 +75,6 @@ namespace april
 		void setVertexShader(VertexShader* vertexShader);
 		void setDepthBuffer(bool enabled, bool writeEnabled = true);
 
-		PixelShader* createPixelShader();
-		PixelShader* createPixelShader(chstr filename);
-		VertexShader* createVertexShader();
-		VertexShader* createVertexShader(chstr filename);
-
 		void clear(bool useColor = true, bool depth = false);
 		void clear(bool depth, grect rect, Color color = Color::Clear);
 		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
@@ -126,6 +121,8 @@ namespace april
 		void _setResolution(int w, int h, bool fullscreen);
 
 		Texture* _createTexture(bool fromResource);
+		PixelShader* _createPixelShader();
+		VertexShader* _createVertexShader();
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
