@@ -79,11 +79,24 @@ namespace april
 		}
 		if (this->surface == NULL)
 		{
+#if defined(_WIN32) && !defined(_WINRT)
+			this->hWnd = (EGLNativeWindowType)window->getBackendId();
+#endif
 			this->surface = eglCreateWindowSurface(this->display, this->config, this->hWnd, NULL);
+		}
+		if (this->surface == NULL)
+		{
+			hlog::error(logTag, "Can't create EGL window surface!");
+			return false;
 		}
 		if (this->context == NULL)
 		{
 			this->context = eglCreateContext(this->display, this->config, NULL, NULL);
+			if (this->context == NULL)
+			{
+				hlog::error(logTag, "Can't create EGL context!");
+				return false;
+			}
 			if (!eglMakeCurrent(this->display, this->surface, this->surface, this->context))
 			{
 				hlog::error(logTag, "Can't set current EGL context!");
