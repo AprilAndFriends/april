@@ -37,6 +37,8 @@ namespace april
 
 		void _setVertexPointer(int stride, const void* pointer);
 
+		void _setDepthBuffer(bool enabled, bool writeEnabled);
+
 	};
 	
 }

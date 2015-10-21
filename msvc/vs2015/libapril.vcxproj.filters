@@ -293,6 +293,12 @@
     <ClCompile Include="..\..\src\TextureAsync.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\OpenGL\ES\2\OpenGLES2_VertexShader.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES\2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\OpenGL\ES\2\OpenGLES2_PixelShader.cpp">
+      <Filter>Source Files\rendersystems\OpenGL\ES\2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -468,6 +474,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\TextureAsync.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\OpenGL\ES\2\OpenGLES2_PixelShader.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES\2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\OpenGL\ES\2\OpenGLES2_VertexShader.h">
+      <Filter>Header Files\rendersystems\OpenGL\ES\2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

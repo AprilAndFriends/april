@@ -26,11 +26,20 @@
 		extern GLint _positionSlot;
 	#endif
 #elif defined(_OPENGLES)
-	#include <GLES/gl.h>
-	#ifdef _ANDROID
-		#define GL_GLEXT_PROTOTYPES
-		#include <GLES/glext.h>
-	#else
+	#ifdef _OPENGLES1
+		#include <GLES/gl.h>
+		#ifdef _ANDROID
+			#define GL_GLEXT_PROTOTYPES
+			#include <GLES/glext.h>
+		#endif
+	#elif defined(_OPENGLES2)
+		#include <GLES2/gl2.h>
+		#ifdef _ANDROID
+			#define GL_GLEXT_PROTOTYPES
+			#include <GLES2/glext.h>
+		#endif
+	#endif
+	#ifdef _WIN32
 		#include <EGL/egl.h>
 	#endif
 #else
@@ -223,18 +232,8 @@ namespace april
 
 	void OpenGL_RenderSystem::_setDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		if (enabled)
-		{
-			glEnable(GL_DEPTH_TEST);
-			glEnable(GL_ALPHA_TEST);
-		}
-		else
-		{
-			glDisable(GL_DEPTH_TEST);
-			glDisable(GL_ALPHA_TEST);
-		}
+		enabled ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 		glDepthMask(writeEnabled);
-		glAlphaFunc(GL_GREATER, 0.0f);
 	}
 
 	void OpenGL_RenderSystem::bindTexture(unsigned int textureId)

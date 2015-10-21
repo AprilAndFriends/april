@@ -8,7 +8,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a DirectX1 pixel shader.
+/// Defines a DirectX11 pixel shader.
 
 #ifdef _DIRECTX11
 #ifndef APRIL_DIRECTX11_PIXEL_SHADER_H

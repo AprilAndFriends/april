@@ -159,6 +159,21 @@ namespace april
 		OpenGL_RenderSystem::_setupCaps();
 	}
 
+	Texture* OpenGL1_RenderSystem::_createTexture(bool fromResource)
+	{
+		return new OpenGL1_Texture(fromResource);
+	}
+
+	void OpenGL1_RenderSystem::_setVertexPointer(int stride, const void* pointer)
+	{
+		if (this->deviceState.strideVertex != stride || this->deviceState.pointerVertex != pointer)
+		{
+			this->deviceState.strideVertex = stride;
+			this->deviceState.pointerVertex = pointer;
+			glVertexPointer(3, GL_FLOAT, stride, pointer);
+		}
+	}
+
 	void OpenGL1_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
 	{
 		// TODO - is there a way to make this work on Win32?
@@ -206,21 +221,12 @@ namespace april
 		}
 	}
 	
-	Texture* OpenGL1_RenderSystem::_createTexture(bool fromResource)
+	void OpenGL1_RenderSystem::_setDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		return new OpenGL1_Texture(fromResource);
+		OpenGL_RenderSystem::_setDepthBuffer(enabled, writeEnabled);
+		enabled ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
 	}
 
-	void OpenGL1_RenderSystem::_setVertexPointer(int stride, const void* pointer)
-	{
-		if (this->deviceState.strideVertex != stride || this->deviceState.pointerVertex != pointer)
-		{
-			this->deviceState.strideVertex = stride;
-			this->deviceState.pointerVertex = pointer;
-			glVertexPointer(3, GL_FLOAT, stride, pointer);
-		}
-	}
-	
 }
-
 #endif

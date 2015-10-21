@@ -42,6 +42,12 @@ namespace april
 		}
 	}
 	
-}
+	void OpenGLES1_RenderSystem::_setDepthBuffer(bool enabled, bool writeEnabled)
+	{
+		OpenGLES_RenderSystem::_setDepthBuffer(enabled, writeEnabled);
+		enabled ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+	}
 
+}
 #endif

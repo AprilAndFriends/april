@@ -41,6 +41,7 @@ namespace april
 		void _setVertexPointer(int stride, const void* pointer);
 
 		void _setTextureBlendMode(BlendMode mode);
+		void _setDepthBuffer(bool enabled, bool writeEnabled);
 
 #ifdef _WIN32
 		HGLRC hRC;

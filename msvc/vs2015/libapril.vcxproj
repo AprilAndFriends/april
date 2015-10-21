@@ -523,8 +523,10 @@
     <ClCompile Include="..\..\src\rendersystems\OpenGL\1\OpenGL1_Texture.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\ES\1\OpenGLES1_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\ES\1\OpenGLES1_Texture.cpp" />
+    <ClCompile Include="..\..\src\rendersystems\OpenGL\ES\2\OpenGLES2_PixelShader.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\ES\2\OpenGLES2_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\ES\2\OpenGLES2_Texture.cpp" />
+    <ClCompile Include="..\..\src\rendersystems\OpenGL\ES\2\OpenGLES2_VertexShader.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\ES\OpenGLES_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\ES\OpenGLES_Texture.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_State.cpp" />
@@ -600,6 +602,8 @@
     <ClInclude Include="..\..\include\april\Win32_main.h" />
     <ClInclude Include="..\..\include\april\Window.h" />
     <ClInclude Include="..\..\src\egl.h" />
+    <ClInclude Include="..\..\src\rendersystems\OpenGL\ES\2\OpenGLES2_PixelShader.h" />
+    <ClInclude Include="..\..\src\rendersystems\OpenGL\ES\2\OpenGLES2_VertexShader.h" />
     <ClInclude Include="..\..\src\TextureAsync.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\9\DirectX9_PixelShader.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\9\DirectX9_RenderSystem.h" />
