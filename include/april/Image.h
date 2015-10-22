@@ -104,7 +104,10 @@ namespace april
 		bool rotateHue(grect rect, float degrees);
 		bool saturate(grect rect, float factor);
 		bool invert(grect rect);
-		bool insertAlphaMap(Image* image, Format srcFormat, unsigned char median, int ambiguity);
+		/// @note srcData must be the same width and height as the image
+		bool insertAlphaMap(unsigned char* srcData, Format srcFormat);
+		bool insertAlphaMap(Image* image, unsigned char median, int ambiguity);
+		bool insertAlphaMap(Image* image);
 		bool dilate(Image* image);
 
 		static Image* createFromResource(chstr filename);

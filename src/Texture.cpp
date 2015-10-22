@@ -452,6 +452,10 @@ namespace april
 			{
 				image = (this->fromResource ? Image::createFromResource(this->filename, this->format) : Image::createFromFile(this->filename, this->format));
 			}
+			if (image != NULL)
+			{
+				image = this->_processImageFormatSupport(image);
+			}
 			if (image == NULL)
 			{
 				hlog::error(logTag, "Failed to load texture: " + this->_getInternalName());
@@ -466,7 +470,6 @@ namespace april
 				size = image->compressedSize;
 				this->compressedSize = size;
 			}
-			//image->fillRect(0, 0, image->w, image->h, april::Color::White);
 			currentData = image->data;
 			image->data = NULL;
 			delete image;
@@ -697,6 +700,10 @@ namespace april
 		{
 			image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extensionOf(this->filename), this->format);
 		}
+		if (image != NULL)
+		{
+			image = this->_processImageFormatSupport(image);
+		}
 		if (image == NULL)
 		{
 			hlog::error(logTag, "Failed to load async texture: " + this->_getInternalName());
@@ -723,6 +730,36 @@ namespace april
 		this->asyncLoadQueued = false;
 		this->asyncLoadDiscarded = false;
 		delete image;
+	}
+
+	Image* Texture::_processImageFormatSupport(Image* image)
+	{
+		if (!april::rendersys->getCaps().textureFormats.has(image->format))
+		{
+			hlog::warn(logTag, "Texture format not supported, trying to convert to an RGBA format: " + this->_getInternalName());
+			Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(Image::FORMAT_RGBA);
+			Image* newImage = NULL;
+			bool result = false;
+			if (image->format == Image::FORMAT_ALPHA)
+			{
+				newImage = Image::create(image->w, image->h, april::Color::White, nativeFormat);
+				result = newImage->insertAlphaMap(image);
+			}
+			else
+			{
+				newImage = Image::create(image->w, image->h, april::Color::Clear, nativeFormat);
+				result = newImage->write(0, 0, image->w, image->h, 0, 0, image);
+			}
+			delete image;
+			image = newImage;
+			if (!result)
+			{
+				hlog::error(logTag, "Could not write format: " + this->_getInternalName());
+				delete image;
+				image = NULL;
+			}
+		}
+		return image;
 	}
 
 	bool Texture::lock()

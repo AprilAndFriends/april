@@ -28,7 +28,7 @@
 	void main(void) \n\
 	{ \n\
 		gl_Position = transformationMatrix * position; \n\
-		texFrag = tex.xy; \n\
+		texFrag = tex; \n\
 		colorFrag = color; \n\
 	} \n\
 "

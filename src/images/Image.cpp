@@ -421,11 +421,21 @@ namespace april
 		return this->saturate(HROUND_GRECT(rect), factor);
 	}
 
-	bool Image::insertAlphaMap(Image* image, Image::Format srcFormat, unsigned char median, int ambiguity)
+	bool Image::insertAlphaMap(unsigned char* srcData, Format srcFormat)
+	{
+		return (this->insertAlphaMap(srcData, srcFormat, 0, 0));
+	}
+
+	bool Image::insertAlphaMap(Image* image, unsigned char median, int ambiguity)
 	{
 		return this->insertAlphaMap(image->data, image->format, median, ambiguity);
 	}
-	
+
+	bool Image::insertAlphaMap(Image* image)
+	{
+		return this->insertAlphaMap(image->data, image->format, 0, 0);
+	}
+
 	bool Image::dilate(Image* image)
 	{
 		return this->dilate(image->data, image->w, image->h, image->format);

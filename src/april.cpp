@@ -387,6 +387,7 @@ namespace april
 	{
 		april::window->create(w, h, fullscreen, title, options);
 		april::rendersys->assignWindow(april::window);
+		april::rendersys->getCaps(); // calling getCaps() is required here so it's initialized on certain platforms
 	}
 
 	void destroy()

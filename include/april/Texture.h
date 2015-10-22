@@ -223,6 +223,7 @@ namespace april
 
 		hstream* _prepareAsyncStream();
 		void _decodeFromAsyncStream(hstream* stream);
+		Image* _processImageFormatSupport(Image* image);
 
 		virtual bool _isReadable();
 		virtual bool _isWritable();
