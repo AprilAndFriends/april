@@ -65,7 +65,12 @@ namespace april
 			glGetShaderiv(this->glShader, GL_INFO_LOG_LENGTH, &messageSize);
 			char* message = new char[messageSize];
 			glGetShaderInfoLog(this->glShader, messageSize, &written, message);
-			hlog::error(logTag, "Shader '" + filename + "' could not be compiled! Error:\n" + hstr(message));
+			hstr context = filename;
+			if (filename == "[raw]")
+			{
+				context = hstr((char*)data, size);
+			}
+			hlog::error(logTag, "Shader could not be compiled!\n" + context + "\n" + hstr(message));
 			delete[] message;
 			glDeleteShader(this->glShader);
 			this->glShader = 0;

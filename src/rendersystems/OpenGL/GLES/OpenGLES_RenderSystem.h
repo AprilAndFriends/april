@@ -19,6 +19,7 @@
 namespace april
 {
 	class OpenGLES_PixelShader;
+	class OpenGLES_Texture;
 	class OpenGLES_VertexShader;
 
 	class OpenGLES_RenderSystem : public OpenGL_RenderSystem
@@ -48,6 +49,13 @@ namespace april
 
 		void setPixelShader(PixelShader* pixelShader);
 		void setVertexShader(VertexShader* vertexShader);
+
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
 	protected:
 		ColorMode activeTextureColorMode;
@@ -89,6 +97,7 @@ namespace april
 
 	private:
 		ShaderProgram* _currentShader;
+		OpenGLES_Texture* _currentTexture;
 		bool _matrixDirty;
 
 	};

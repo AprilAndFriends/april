@@ -28,6 +28,13 @@ namespace april
 		OpenGLC_RenderSystem();
 		~OpenGLC_RenderSystem();
 
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
+
 	protected:
 		void _setupDefaultParameters();
 		void _applyStateChanges();

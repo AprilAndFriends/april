@@ -466,6 +466,7 @@ namespace april
 				size = image->compressedSize;
 				this->compressedSize = size;
 			}
+			//image->fillRect(0, 0, image->w, image->h, april::Color::White);
 			currentData = image->data;
 			image->data = NULL;
 			delete image;

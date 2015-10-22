@@ -181,5 +181,158 @@ namespace april
 		}
 	}
 
+	void OpenGLC_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
+	{
+		this->currentState.textureId = 0;
+		this->currentState.textureCoordinatesEnabled = false;
+		this->currentState.colorEnabled = false;
+		this->currentState.systemColor.set(255, 255, 255, 255);
+		this->_applyStateChanges();
+		this->_setColorPointer(0, NULL);
+		this->_setTexCoordPointer(0, NULL);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(PlainVertex), v);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+
+	void OpenGLC_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
+	{
+		this->currentState.textureId = 0;
+		this->currentState.textureCoordinatesEnabled = false;
+		this->currentState.colorEnabled = false;
+		this->currentState.systemColor = color;
+		this->_applyStateChanges();
+		this->_setColorPointer(0, NULL);
+		this->_setTexCoordPointer(0, NULL);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(PlainVertex), v);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+	
+	void OpenGLC_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
+	{
+		this->currentState.textureCoordinatesEnabled = true;
+		this->currentState.colorEnabled = false;
+		this->currentState.systemColor.set(255, 255, 255, 255);
+		this->_applyStateChanges();
+		this->_setColorPointer(0, NULL);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(TexturedVertex), v);
+			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+
+	void OpenGLC_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
+	{
+		this->currentState.textureCoordinatesEnabled = true;
+		this->currentState.colorEnabled = false;
+		this->currentState.systemColor = color;
+		this->_applyStateChanges();
+		this->_setColorPointer(0, NULL);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(TexturedVertex), v);
+			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+
+	void OpenGLC_RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
+	{
+		this->currentState.textureId = 0;
+		this->currentState.textureCoordinatesEnabled = false;
+		this->currentState.colorEnabled = true;
+		this->currentState.systemColor.set(255, 255, 255, 255);
+		this->_applyStateChanges();
+		this->_setTexCoordPointer(0, NULL);
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(ColoredVertex), v);
+			this->_setColorPointer(sizeof(ColoredVertex), &v->color);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+	
+	void OpenGLC_RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
+	{
+		this->currentState.textureCoordinatesEnabled = true;
+		this->currentState.colorEnabled = true;
+		this->currentState.systemColor.set(255, 255, 255, 255);
+		this->_applyStateChanges();
+		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
+		// hardware that may allow only a certain amount of vertices to be rendered at the time.
+		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
+		int size = nVertices;
+#ifdef _ANDROID
+		for_iter_step (i, 0, nVertices, size)
+		{
+			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+#endif
+			this->_setVertexPointer(sizeof(ColoredTexturedVertex), v);
+			this->_setColorPointer(sizeof(ColoredTexturedVertex), &v->color);
+			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &v->u);
+			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+#ifdef _ANDROID
+			v += size;
+		}
+#endif
+	}
+	
 }
 #endif

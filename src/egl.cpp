@@ -77,9 +77,13 @@ namespace april
 			}
 			else if (april::rendersys->getName() == APRIL_RS_OPENGLES2)
 			{
-				this->pi32ConfigAttribs[4] = EGL_RENDERABLE_TYPE;
-				this->pi32ConfigAttribs[5] = EGL_OPENGL_ES2_BIT;
-				this->pi32ConfigAttribs[6] = EGL_NONE;
+				this->pi32ConfigAttribs[0] = EGL_SURFACE_TYPE;
+				this->pi32ConfigAttribs[1] = EGL_WINDOW_BIT;
+				this->pi32ConfigAttribs[2] = EGL_RENDERABLE_TYPE;
+				this->pi32ConfigAttribs[3] = EGL_OPENGL_ES2_BIT;
+				//this->pi32ConfigAttribs[4] = EGL_RENDERABLE_TYPE;
+				//this->pi32ConfigAttribs[5] = EGL_OPENGL_ES2_BIT;
+				//this->pi32ConfigAttribs[6] = EGL_NONE;
 			}
 			result = eglChooseConfig(this->display, this->pi32ConfigAttribs, &this->config, 1, &configs);
 			if (!result || configs == 0)
@@ -93,9 +97,9 @@ namespace april
 		{
 #if defined(_WIN32) && !defined(_WINRT)
 			this->hWnd = (EGLNativeWindowType)window->getBackendId();
-#endif
 			this->surface = eglCreateWindowSurface(this->display, this->config, this->hWnd, NULL);
 			if (this->surface == NULL)
+#endif
 			{
 				this->surface = eglCreateWindowSurface(this->display, this->config, NULL, NULL);
 			}

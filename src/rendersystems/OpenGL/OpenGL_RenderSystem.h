@@ -100,13 +100,6 @@ namespace april
 		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
 		void setDepthBuffer(bool enabled, bool writeEnabled = true);
 
-		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
-		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
-		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
-		
 		Image::Format getNativeTextureFormat(Image::Format format);
 		unsigned int getNativeColorUInt(const april::Color& color);
 		Image* takeScreenshot(Image::Format format);
@@ -151,6 +144,18 @@ namespace april
 
 	};
 	
+	// translation from abstract render ops to gl's render ops
+	static int gl_render_ops[] =
+	{
+		0,
+		GL_TRIANGLES,		// RO_TRIANGLE_LIST
+		GL_TRIANGLE_STRIP,	// RO_TRIANGLE_STRIP
+		GL_TRIANGLE_FAN,	// RO_TRIANGLE_FAN
+		GL_LINES,			// RO_LINE_LIST
+		GL_LINE_STRIP,		// RO_LINE_STRIP
+		GL_POINTS,			// RO_POINT_LIST
+	};
+
 }
 #endif
 #endif
