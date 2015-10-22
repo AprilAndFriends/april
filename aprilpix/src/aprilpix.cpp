@@ -28,8 +28,8 @@ namespace aprilpix
 		april::Image::registerCustomLoader(".webp", &ImageWebp::load, &ImageWebp::loadMetaData);
 #endif
 #ifdef _PVR
-		//extensions += ".pvr";
-		//april::Image::registerCustomLoader(".pvr", &ImagePvr::load, &ImagePvr::loadMetaData);
+		extensions += ".pvr";
+		april::Image::registerCustomLoader(".pvr", &ImagePvr::load, &ImagePvr::loadMetaData);
 #endif
 		april::setTextureExtensions(extensions);
 	}
