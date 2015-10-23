@@ -60,6 +60,7 @@ namespace april
 	protected:
 		ColorMode activeTextureColorMode;
 		unsigned char activeTextureColorModeAlpha;
+		april::Color activeSystemColor;
 		ShaderProgram* activeShader;
 
 		OpenGLES_VertexShader* vertexShaderDefault;
@@ -90,7 +91,7 @@ namespace april
 		void _setTexCoordPointer(int stride, const void *pointer);
 		void _setColorPointer(int stride, const void *pointer);
 
-		void _updateShader(bool useTexture);
+		void _updateShader();
 
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
@@ -98,6 +99,9 @@ namespace april
 	private:
 		ShaderProgram* _currentShader;
 		OpenGLES_Texture* _currentTexture;
+		float _currentLerpAlpha;
+		float _currentSystemColor[4];
+
 		bool _matrixDirty;
 
 	};

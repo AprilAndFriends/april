@@ -15,13 +15,14 @@
 #define APRIL_OPENGLES_DEFAULT_SHADERS_H
 
 #ifdef _WIN32
-#define __SHADER_COLOR_MULTIPLY_FIX "		gl_FragColor.rgb *= gl_FragColor.rgb; // for some odd reason, this is required on Win32 \n\"
+#define __SHADER_COLOR_MULTIPLY_FIX "		gl_FragColor.rgb *= gl_FragColor.rgb; // for some odd reason, this is required on Win32 \n"
 #else
 #define __SHADER_COLOR_MULTIPLY_FIX
 #endif
 
 #define SHADER_Include "\
 	uniform lowp float lerpAlpha; \n\
+	uniform lowp float systemColor; \n\
 	varying mediump vec2 texFrag; \n\
 	varying lowp vec4 colorFrag; \n\
 "

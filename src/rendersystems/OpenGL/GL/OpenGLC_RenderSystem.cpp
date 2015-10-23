@@ -202,7 +202,7 @@ namespace april
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(PlainVertex), v);
-			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+			glDrawArrays(glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}
@@ -228,7 +228,7 @@ namespace april
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setVertexPointer(sizeof(PlainVertex), v);
-			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+			glDrawArrays(glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}
@@ -253,7 +253,7 @@ namespace april
 #endif
 			this->_setVertexPointer(sizeof(TexturedVertex), v);
 			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
-			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+			glDrawArrays(glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}
@@ -278,7 +278,7 @@ namespace april
 #endif
 			this->_setVertexPointer(sizeof(TexturedVertex), v);
 			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
-			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+			glDrawArrays(glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}
@@ -304,7 +304,7 @@ namespace april
 #endif
 			this->_setVertexPointer(sizeof(ColoredVertex), v);
 			this->_setColorPointer(sizeof(ColoredVertex), &v->color);
-			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+			glDrawArrays(glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}
@@ -329,7 +329,7 @@ namespace april
 			this->_setVertexPointer(sizeof(ColoredTexturedVertex), v);
 			this->_setColorPointer(sizeof(ColoredTexturedVertex), &v->color);
 			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &v->u);
-			glDrawArrays(gl_render_ops[renderOperation], 0, size);
+			glDrawArrays(glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
 		}

@@ -13,6 +13,7 @@
 
 #include "april.h"
 #include "OpenGLES_VertexShader.h"
+#include "OpenGL_RenderSystem.h"
 
 namespace april
 {

@@ -68,7 +68,7 @@ namespace april
 		{
 			// determine if blend separation is possible on first call to this function
 			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-			blendSeparationSupported = extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate");
+			blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
 		}
 		if (blendSeparationSupported)
 		{
@@ -100,7 +100,6 @@ namespace april
 		else
 #endif
 		{
-			// old-school blending mode for your dad
 			OpenGLC_RenderSystem::_setTextureBlendMode(textureBlendMode);
 		}
 	}

@@ -165,16 +165,23 @@ namespace april
 		void lookAt(const gvec3& eye, const gvec3& target, const gvec3& up);
 		void setPerspective(float fov, float aspect, float nearClip, float farClip);
 
+		/// @note Calling this will effectively set the current texture to NULL.
 		virtual void clear(bool useColor = true, bool depth = false) = 0;
+		/// @note Calling this will effectively set the current texture to NULL.
 		virtual void clear(bool depth, grect rect, Color color = Color::Clear) = 0;
+		/// @note Calling this will effectively set the current texture to NULL.
 		virtual void render(RenderOperation renderOperation, PlainVertex* v, int nVertices) = 0;
+		/// @note Calling this will effectively set the current texture to NULL.
 		virtual void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color) = 0;
 		virtual void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices) = 0;
 		virtual void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color) = 0;
+		/// @note Calling this will effectively set the current texture to NULL.
 		virtual void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices) = 0;
 		virtual void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices) = 0;
 		
+		/// @note Calling this will effectively set the current texture to NULL.
 		void drawRect(grect rect, Color color);
+		/// @note Calling this will effectively set the current texture to NULL.
 		void drawFilledRect(grect rect, Color color);
 		void drawTexturedRect(grect rect, grect src);
 		void drawTexturedRect(grect rect, grect src, Color color);

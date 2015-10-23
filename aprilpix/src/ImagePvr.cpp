@@ -71,17 +71,33 @@ namespace aprilpix
 		int numSurfaces = header.u32NumSurfaces;
 
 		int currentPixel = 0;
-		for (int i = 0; i < numMipMaps; i++)
-			for (int j = 0; j < numSurfaces; j++)
-				for (int k = 0; k < numFaces; k++)
-					for (int d = 0; d < header.u32Depth; d++)
-						for (int row = 0; row < height; row++)
-							for (int x = 0; x < width; x++)
-							{								
-								image->data[row * height + x] = (unsigned char)&data[dataOffset + currentPixel];
+		int i = 0;
+		int j = 0;
+		int k = 0;
+		unsigned int d = 0;
+		int row = 0;
+		int x = 0;
+
+		for_iterx (i, 0, numMipMaps)
+		{
+			for_iterx (j, 0, numSurfaces)
+			{
+				for_iterx (k, 0, numFaces)
+				{
+					for_iterx (d, 0, header.u32Depth)
+					{
+						for_iterx (row, 0, height)
+						{
+							for_iterx (x, 0, width)
+							{
+								image->data[row * height + x] = data[dataOffset + currentPixel];
 								currentPixel++;
 							}
-
+						}
+					}
+				}
+			}
+		}
 		return image;
 	}
 

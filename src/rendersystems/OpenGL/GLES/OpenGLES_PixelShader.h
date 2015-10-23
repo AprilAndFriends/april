@@ -14,21 +14,6 @@
 #ifndef APRIL_OPENGLES_PIXEL_SHADER_H
 #define APRIL_OPENGLES_PIXEL_SHADER_H
 
-#ifdef _IOS
-	#ifdef _OPENGLES2
-		#include <OpenGLES/ES2/gl.h>
-		#include <OpenGLES/ES2/glext.h>
-	#endif
-#else
-	#ifdef _OPENGLES2
-		#include <GLES2/gl2.h>
-		#ifdef _ANDROID
-			#define GL_GLEXT_PROTOTYPES
-			#include <GLES2/gl2ext.h>
-		#endif
-	#endif
-#endif
-
 #include <hltypes/hstream.h>
 #include <hltypes/hstring.h>
 

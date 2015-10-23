@@ -38,7 +38,7 @@
 namespace april
 {
 	// translation from abstract render ops to gl's render ops
-	int OpenGL_RenderSystem::gl_render_ops[] =
+	int OpenGL_RenderSystem::glRenderOperations[] =
 	{
 		0,
 		GL_TRIANGLES,		// RO_TRIANGLE_LIST

@@ -142,7 +142,7 @@ namespace april
 #endif
 
 		// translation from abstract render ops to gl's render ops
-		static int gl_render_ops[];
+		static int glRenderOperations[];
 
 	};
 	
