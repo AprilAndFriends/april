@@ -6,7 +6,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
-import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGL11;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.app.Activity;
@@ -56,9 +56,9 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 	
 	public void swapBuffers()
 	{
-		EGL10 egl = (EGL10)EGLContext.getEGL();
+		EGL11 egl = (EGL11)EGLContext.getEGL();
 		EGLDisplay display = egl.eglGetCurrentDisplay();
-		EGLSurface surface = egl.eglGetCurrentSurface(EGL10.EGL_READ);
+		EGLSurface surface = egl.eglGetCurrentSurface(EGL11.EGL_READ);
 		egl.eglSwapBuffers(display, surface);
 	}
 	

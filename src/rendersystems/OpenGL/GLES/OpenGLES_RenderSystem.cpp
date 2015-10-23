@@ -29,6 +29,7 @@
 #include "OpenGLES_VertexShader.h"
 #include "Window.h"
 
+#define MAX_VERTEX_COUNT 65536
 #define VERTICES_BUFFER_COUNT 65536
 
 #define VERTEX_ARRAY 0

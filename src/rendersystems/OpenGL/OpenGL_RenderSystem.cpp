@@ -35,10 +35,20 @@
 #include "Win32_Window.h"
 #endif
 
-#define MAX_VERTEX_COUNT 65536
-
 namespace april
 {
+	// translation from abstract render ops to gl's render ops
+	int OpenGL_RenderSystem::gl_render_ops[] =
+	{
+		0,
+		GL_TRIANGLES,		// RO_TRIANGLE_LIST
+		GL_TRIANGLE_STRIP,	// RO_TRIANGLE_STRIP
+		GL_TRIANGLE_FAN,	// RO_TRIANGLE_FAN
+		GL_LINES,			// RO_LINE_LIST
+		GL_LINE_STRIP,		// RO_LINE_STRIP
+		GL_POINTS,			// RO_POINT_LIST
+	};
+
 	// TODOa - put in state class
 	static Color lastColor = Color::Black;
 

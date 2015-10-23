@@ -27,7 +27,6 @@
 	#elif defined(_OPENGLES2)
 		#include <OpenGLES/ES2/gl.h>
 		#include <OpenGLES/ES2/glext.h>
-		extern GLint _positionSlot;
 	#endif
 #elif defined(_OPENGLES)
 	#ifdef _OPENGLES1
@@ -40,7 +39,7 @@
 		#include <GLES2/gl2.h>
 		#ifdef _ANDROID
 			#define GL_GLEXT_PROTOTYPES
-			#include <GLES2/glext.h>
+			#include <GLES2/gl2ext.h>
 		#endif
 	#endif
 #else
@@ -142,20 +141,11 @@ namespace april
 		virtual bool _initWin32(Window* window);
 #endif
 
+		// translation from abstract render ops to gl's render ops
+		static int gl_render_ops[];
+
 	};
 	
-	// translation from abstract render ops to gl's render ops
-	static int gl_render_ops[] =
-	{
-		0,
-		GL_TRIANGLES,		// RO_TRIANGLE_LIST
-		GL_TRIANGLE_STRIP,	// RO_TRIANGLE_STRIP
-		GL_TRIANGLE_FAN,	// RO_TRIANGLE_FAN
-		GL_LINES,			// RO_LINE_LIST
-		GL_LINE_STRIP,		// RO_LINE_STRIP
-		GL_POINTS,			// RO_POINT_LIST
-	};
-
 }
 #endif
 #endif

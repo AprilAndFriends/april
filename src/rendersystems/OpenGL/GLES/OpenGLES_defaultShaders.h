@@ -14,6 +14,12 @@
 #ifndef APRIL_OPENGLES_DEFAULT_SHADERS_H
 #define APRIL_OPENGLES_DEFAULT_SHADERS_H
 
+#ifdef _WIN32
+#define __SHADER_COLOR_MULTIPLY_FIX "		gl_FragColor.rgb *= gl_FragColor.rgb; // for some odd reason, this is required on Win32 \n\"
+#else
+#define __SHADER_COLOR_MULTIPLY_FIX
+#endif
+
 #define SHADER_Include "\
 	uniform lowp float lerpAlpha; \n\
 	varying mediump vec2 texFrag; \n\
@@ -38,6 +44,7 @@
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = texture2D(sampler2d, texFrag) * colorFrag; \n\
+" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 
@@ -47,6 +54,7 @@
 	{ \n\
 		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(colorFrag.rgb, colorFrag.a * tex.r); \n\
+" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 
@@ -56,6 +64,7 @@
 	{ \n\
 		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, colorFrag.a), tex.a * lerpAlpha); \n\
+" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 
@@ -64,6 +73,7 @@
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = colorFrag; \n\
+" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 
@@ -72,6 +82,7 @@
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = colorFrag; \n\
+" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 
@@ -80,6 +91,7 @@
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), colorFrag.rgb, colorFrag.a), lerpAlpha); \n\
+" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 

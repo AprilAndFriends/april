@@ -14,6 +14,8 @@
 #include "OpenGLC_RenderSystem.h"
 #include "OpenGLC_Texture.h"
 
+#define MAX_VERTEX_COUNT 65536
+
 namespace april
 {
 	OpenGLC_RenderSystem::OpenGLC_RenderSystem() : OpenGL_RenderSystem()

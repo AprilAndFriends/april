@@ -8,23 +8,11 @@
 
 #ifdef _OPENGLES
 #include <hltypes/hlog.h>
-#include <hltypes/hresource.h>
 #include <hltypes/hstream.h>
 #include <hltypes/hstring.h>
 
 #include "april.h"
 #include "OpenGLES_VertexShader.h"
-
-#ifdef _IOS
-	#include <OpenGLES/ES2/gl.h>
-	#include <OpenGLES/ES2/glext.h>
-#else
-	#include <GLES2/gl2.h>
-	#ifdef _ANDROID
-		#define GL_GLEXT_PROTOTYPES
-		#include <GLES2/glext.h>
-	#endif
-#endif
 
 namespace april
 {
