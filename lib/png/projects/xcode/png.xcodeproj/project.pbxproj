@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D197C54515ED04AB0017452F /* zlib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C54315ED04AB0017452F /* zlib.framework */; };
+		B45500BD1BD78ABE00E75E43 /* zlib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B45500BC1BD78ABE00E75E43 /* zlib.framework */; };
 		D197C55A15ED054B0017452F /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = D197C54715ED054B0017452F /* png.c */; };
 		D197C55B15ED054B0017452F /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = D197C54715ED054B0017452F /* png.c */; };
 		D197C55E15ED054B0017452F /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = D197C54915ED054B0017452F /* pngerror.c */; };
@@ -74,6 +74,7 @@
 /* Begin PBXFileReference section */
 		8D07F2C70486CC7A007CD1D0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D07F2C80486CC7A007CD1D0 /* png.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = png.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B45500BC1BD78ABE00E75E43 /* zlib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = zlib.framework; path = ../../../../../__build__/products/Debug/zlib.framework; sourceTree = "<group>"; };
 		D1681B8418D764220088FC68 /* iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = iOS.xcconfig; path = ../../xcconfig/iOS.xcconfig; sourceTree = "<group>"; };
 		D1681B8518D764220088FC68 /* Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Mac.xcconfig; path = ../../xcconfig/Mac.xcconfig; sourceTree = "<group>"; };
 		D197C54215ED04AB0017452F /* zip.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = zip.framework; path = ../../../../__build__/products/Debug/zip.framework; sourceTree = "<group>"; };
@@ -120,7 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D197C54515ED04AB0017452F /* zlib.framework in Frameworks */,
+				B45500BD1BD78ABE00E75E43 /* zlib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +231,7 @@
 		D197C54615ED04AE0017452F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B45500BC1BD78ABE00E75E43 /* zlib.framework */,
 				D197C54215ED04AB0017452F /* zip.framework */,
 				D197C54315ED04AB0017452F /* zlib.framework */,
 			);
