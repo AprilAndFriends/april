@@ -12,8 +12,12 @@
 #include <hltypes/hstring.h>
 
 #include "aprilpix.h"
+#ifdef _PVR
 #include "ImagePvr.h"
+#endif
+#ifdef _WEBP
 #include "ImageWebp.h"
+#endif
 
 namespace aprilpix
 {

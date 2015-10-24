@@ -460,7 +460,6 @@
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
-					_PVR,
 					_WEBP,
 					"$(inherited)",
 				);
@@ -479,7 +478,6 @@
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
-					_PVR,
 					_WEBP,
 					"$(inherited)",
 				);
@@ -498,7 +496,6 @@
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_MAC,
-					_PVR,
 					_WEBP,
 					"$(inherited)",
 				);
