@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -180,7 +180,7 @@ namespace april
 {
 	hstr logTag = "april";
 
-	static hversion version(3, 7, 0);
+	static hversion version(4, 0, 0);
 
 	static harray<hstr> extensions;
 	static int maxAsyncTextureUploadsPerFrame = 0;
