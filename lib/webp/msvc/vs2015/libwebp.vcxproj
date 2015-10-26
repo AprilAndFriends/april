@@ -110,6 +110,7 @@
     <ClInclude Include="..\..\include\webp\mux.h" />
     <ClInclude Include="..\..\include\webp\mux_types.h" />
     <ClInclude Include="..\..\include\webp\types.h" />
+    <ClInclude Include="..\..\src\cpu-features.h" />
     <ClInclude Include="..\..\src\dec\alphai.h" />
     <ClInclude Include="..\..\src\dec\decode_vp8.h" />
     <ClInclude Include="..\..\src\dec\vp8i.h" />
@@ -136,6 +137,7 @@
     <ClInclude Include="..\..\src\utils\utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\cpu-features.c" />
     <ClCompile Include="..\..\src\dec\alpha.c" />
     <ClCompile Include="..\..\src\dec\buffer.c" />
     <ClCompile Include="..\..\src\dec\frame.c" />
@@ -153,19 +155,27 @@
     <ClCompile Include="..\..\src\dsp\dec.c" />
     <ClCompile Include="..\..\src\dsp\dec_clip_tables.c" />
     <ClCompile Include="..\..\src\dsp\dec_mips32.c" />
-    <ClCompile Include="..\..\src\dsp\dec_neon.c" />
+    <ClCompile Include="..\..\src\dsp\dec_neon.c">
+      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
+    </ClCompile>
     <ClCompile Include="..\..\src\dsp\dec_sse2.c" />
     <ClCompile Include="..\..\src\dsp\enc.c" />
     <ClCompile Include="..\..\src\dsp\enc_avx2.c" />
     <ClCompile Include="..\..\src\dsp\enc_mips32.c" />
-    <ClCompile Include="..\..\src\dsp\enc_neon.c" />
+    <ClCompile Include="..\..\src\dsp\enc_neon.c">
+      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
+    </ClCompile>
     <ClCompile Include="..\..\src\dsp\enc_sse2.c" />
     <ClCompile Include="..\..\src\dsp\lossless.c" />
     <ClCompile Include="..\..\src\dsp\lossless_mips32.c" />
-    <ClCompile Include="..\..\src\dsp\lossless_neon.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_neon.c">
+      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
+    </ClCompile>
     <ClCompile Include="..\..\src\dsp\lossless_sse2.c" />
     <ClCompile Include="..\..\src\dsp\upsampling.c" />
-    <ClCompile Include="..\..\src\dsp\upsampling_neon.c" />
+    <ClCompile Include="..\..\src\dsp\upsampling_neon.c">
+      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
+    </ClCompile>
     <ClCompile Include="..\..\src\dsp\upsampling_sse2.c" />
     <ClCompile Include="..\..\src\dsp\yuv.c" />
     <ClCompile Include="..\..\src\dsp\yuv_mips32.c" />

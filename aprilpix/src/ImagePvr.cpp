@@ -7,16 +7,19 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _PVR
-#include "aprilpix.h"
-#include "ImagePvr.h"
-
-#include <hltypes/hlog.h>
 #include <algorithm>
 #include <iostream>
 
+#include <april/Image.h>
+#include <hltypes/hlog.h>
+#include <hltypes/hstream.h>
+#include <hltypes/hstring.h>
+
+#include "aprilpix.h"
+#include "ImagePvr.h"
+
 namespace aprilpix
 {
-
 	ImagePvr::ImagePvr() : april::Image()
 	{
 	}
@@ -25,6 +28,7 @@ namespace aprilpix
 	{
 	}
 
+	/*
 	PVRTextureHeaderV3 ImagePvr::pvrGetInfo(uint8_t* data, int size, int* width, int* height)
 	{
 		PVRTextureHeaderV3 header;
@@ -32,10 +36,13 @@ namespace aprilpix
 		*width = header.u32Width;
 		*height = header.u32Height;		
 		return header;
-	}	
+	}
+	*/
 
 	april::Image* ImagePvr::load(hsbase& stream)
 	{
+		return NULL;
+		/*
 		int size = (int)stream.size();
 		uint8_t* data = new uint8_t[size];
 		stream.readRaw(data, size);
@@ -99,10 +106,13 @@ namespace aprilpix
 			}
 		}
 		return image;
+		*/
 	}
 
 	april::Image* ImagePvr::loadMetaData(hsbase& stream)
 	{
+		return NULL;
+		/*
 		int size = (int)stream.size();
 		uint8_t* data = new uint8_t[size];
 		stream.readRaw(data, size);
@@ -131,8 +141,9 @@ namespace aprilpix
 		image->data = NULL;
 		image->w = width;
 		image->h = height;
-
 		return image;
+		*/
 	}
+
 }
 #endif

@@ -19,7 +19,7 @@
 #include <hltypes/hsbase.h>
 #include <hltypes/hstring.h>
 
-#include "Tools/PVRTTexture.h"
+//#include "Tools/PVRTTexture.h"
 
 #define PVR_HEADER_SIZE 52
 
@@ -31,7 +31,7 @@ namespace aprilpix
 	public:
 		~ImagePvr();
 
-		static PVRTextureHeaderV3 pvrGetInfo(uint8_t* data, int size, int* width, int* height);
+		//static PVRTextureHeaderV3 pvrGetInfo(uint8_t* data, int size, int* width, int* height);
 
 		static april::Image* load(hsbase& stream);
 		static april::Image* loadMetaData(hsbase& stream);
