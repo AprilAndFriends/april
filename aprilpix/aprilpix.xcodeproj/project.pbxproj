@@ -7,21 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D121756E1BD520B5002BA428 /* aprilpix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D12175691BD520B5002BA428 /* aprilpix.cpp */; settings = {ASSET_TAGS = (); }; };
-		D121756F1BD520B5002BA428 /* aprilpix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D12175691BD520B5002BA428 /* aprilpix.cpp */; settings = {ASSET_TAGS = (); }; };
-		D12175701BD520B5002BA428 /* aprilpix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D12175691BD520B5002BA428 /* aprilpix.cpp */; settings = {ASSET_TAGS = (); }; };
-		D12175711BD520B5002BA428 /* ImagePvr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756A1BD520B5002BA428 /* ImagePvr.cpp */; settings = {ASSET_TAGS = (); }; };
-		D12175721BD520B5002BA428 /* ImagePvr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756A1BD520B5002BA428 /* ImagePvr.cpp */; settings = {ASSET_TAGS = (); }; };
-		D12175731BD520B5002BA428 /* ImagePvr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756A1BD520B5002BA428 /* ImagePvr.cpp */; settings = {ASSET_TAGS = (); }; };
-		D12175741BD520B5002BA428 /* ImagePvr.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756B1BD520B5002BA428 /* ImagePvr.h */; settings = {ASSET_TAGS = (); }; };
-		D12175751BD520B5002BA428 /* ImagePvr.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756B1BD520B5002BA428 /* ImagePvr.h */; settings = {ASSET_TAGS = (); }; };
-		D12175761BD520B5002BA428 /* ImagePvr.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756B1BD520B5002BA428 /* ImagePvr.h */; settings = {ASSET_TAGS = (); }; };
-		D12175771BD520B5002BA428 /* ImageWebp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756C1BD520B5002BA428 /* ImageWebp.cpp */; settings = {ASSET_TAGS = (); }; };
-		D12175781BD520B5002BA428 /* ImageWebp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756C1BD520B5002BA428 /* ImageWebp.cpp */; settings = {ASSET_TAGS = (); }; };
-		D12175791BD520B5002BA428 /* ImageWebp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756C1BD520B5002BA428 /* ImageWebp.cpp */; settings = {ASSET_TAGS = (); }; };
-		D121757A1BD520B5002BA428 /* ImageWebp.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756D1BD520B5002BA428 /* ImageWebp.h */; settings = {ASSET_TAGS = (); }; };
-		D121757B1BD520B5002BA428 /* ImageWebp.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756D1BD520B5002BA428 /* ImageWebp.h */; settings = {ASSET_TAGS = (); }; };
-		D121757C1BD520B5002BA428 /* ImageWebp.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756D1BD520B5002BA428 /* ImageWebp.h */; settings = {ASSET_TAGS = (); }; };
+		D121756E1BD520B5002BA428 /* aprilpix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D12175691BD520B5002BA428 /* aprilpix.cpp */; };
+		D121756F1BD520B5002BA428 /* aprilpix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D12175691BD520B5002BA428 /* aprilpix.cpp */; };
+		D12175701BD520B5002BA428 /* aprilpix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D12175691BD520B5002BA428 /* aprilpix.cpp */; };
+		D12175711BD520B5002BA428 /* ImagePvr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756A1BD520B5002BA428 /* ImagePvr.cpp */; };
+		D12175721BD520B5002BA428 /* ImagePvr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756A1BD520B5002BA428 /* ImagePvr.cpp */; };
+		D12175731BD520B5002BA428 /* ImagePvr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756A1BD520B5002BA428 /* ImagePvr.cpp */; };
+		D12175741BD520B5002BA428 /* ImagePvr.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756B1BD520B5002BA428 /* ImagePvr.h */; };
+		D12175751BD520B5002BA428 /* ImagePvr.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756B1BD520B5002BA428 /* ImagePvr.h */; };
+		D12175761BD520B5002BA428 /* ImagePvr.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756B1BD520B5002BA428 /* ImagePvr.h */; };
+		D12175771BD520B5002BA428 /* ImageWebp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756C1BD520B5002BA428 /* ImageWebp.cpp */; };
+		D12175781BD520B5002BA428 /* ImageWebp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756C1BD520B5002BA428 /* ImageWebp.cpp */; };
+		D12175791BD520B5002BA428 /* ImageWebp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D121756C1BD520B5002BA428 /* ImageWebp.cpp */; };
+		D121757A1BD520B5002BA428 /* ImageWebp.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756D1BD520B5002BA428 /* ImageWebp.h */; };
+		D121757B1BD520B5002BA428 /* ImageWebp.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756D1BD520B5002BA428 /* ImageWebp.h */; };
+		D121757C1BD520B5002BA428 /* ImageWebp.h in Headers */ = {isa = PBXBuildFile; fileRef = D121756D1BD520B5002BA428 /* ImageWebp.h */; };
 		D121757F1BD520BE002BA428 /* aprilpix.h in Headers */ = {isa = PBXBuildFile; fileRef = D121757D1BD520BE002BA428 /* aprilpix.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D12175801BD520BE002BA428 /* aprilpixExport.h in Headers */ = {isa = PBXBuildFile; fileRef = D121757E1BD520BE002BA428 /* aprilpixExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
@@ -212,7 +212,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0710;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "aprilpix" */;
 			compatibilityVersion = "Xcode 3.2";
