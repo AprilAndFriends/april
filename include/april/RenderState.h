@@ -46,8 +46,6 @@ namespace april
 		gmat4 modelviewMatrix;
 		/// @brief The current projection matrix.
 		gmat4 projectionMatrix;
-		/// @brief The current ortho projection.
-		grect orthoProjection;
 		/// @brief The current texture blend mode.
 		BlendMode blendMode;
 		/// @brief The current texture color mode.

@@ -98,15 +98,11 @@ namespace april
 		HL_DEFINE_GET(Options, options, Options);
 		harray<Texture*> getTextures();
 		HL_DEFINE_GET(grect, viewport, Viewport);
-		inline gmat4 getModelviewMatrix() { return this->state->modelviewMatrix; }
-		//HL_DEFINE_GET(gmat4, modelviewMatrix, ModelviewMatrix);
+		gmat4 getModelviewMatrix();
 		void setModelviewMatrix(gmat4 matrix);
-		//HL_DEFINE_GET(gmat4, projectionMatrix, ProjectionMatrix);
-		inline gmat4 getProjectionMatrix() { return this->state->projectionMatrix; }
+		gmat4 getProjectionMatrix();
 		void setProjectionMatrix(gmat4 matrix);
 		// TODO - move below, these aren't properties
-		//HL_DEFINE_GET(grect, orthoProjection, OrthoProjection);
-		inline grect getOrthoProjection() { return this->state->orthoProjection; }
 		void setOrthoProjection(grect rect);
 		void setOrthoProjection(grect rect, float nearZ, float farZ);
 		void setOrthoProjection(gvec2 size);
@@ -196,6 +192,7 @@ namespace april
 		virtual void presentFrame();
 
 		DEPRECATED_ATTRIBUTE inline int getMaxTextureSize() { return this->getCaps().maxTextureSize; }
+		DEPRECATED_ATTRIBUTE grect getOrthoProjection();
 
 	protected:
 		hstr name;

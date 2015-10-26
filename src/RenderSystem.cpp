@@ -34,6 +34,21 @@
 
 namespace april
 {
+	// DEPRECATED
+	grect RenderSystem::getOrthoProjection()
+	{
+		grect result;
+		if (this->state->projectionMatrix.data[0] != 0.0f && this->state->projectionMatrix.data[5] != 0.0f)
+		{
+			result.w = 2.0f / this->state->projectionMatrix.data[0];
+			result.h = -2.0f / this->state->projectionMatrix.data[5];
+			result.x = (1.0f + this->state->projectionMatrix.data[12]) * result.w * 0.5f;
+			result.y = (1.0f - this->state->projectionMatrix.data[13]) * result.h * 0.5f;
+			result += result.getSize() * this->getPixelOffset() / april::window->getSize();
+		}
+		return result;
+	}
+
 	// optimizations, but they are not thread-safe
 	static PlainVertex pv[5];
 	static TexturedVertex tv[5];
@@ -218,24 +233,30 @@ namespace april
 		this->viewport = value;
 	}
 
-	void RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
+	gmat4 RenderSystem::getModelviewMatrix()
 	{
-		if (this->options.depthBuffer)
-		{
-			this->state->depthBuffer = enabled;
-			this->state->depthBufferWrite = writeEnabled;
-		}
-		else
-		{
-			hlog::error(logTag, "Cannot change depth-buffer state, RenderSystem was not created with this option!");
-		}
+		return this->state->modelviewMatrix;
+	}
+
+	void RenderSystem::setModelviewMatrix(gmat4 matrix)
+	{
+		this->state->modelviewMatrix = matrix;
+		this->state->modelviewMatrixChanged = true;
+	}
+
+	gmat4 RenderSystem::getProjectionMatrix()
+	{
+		return this->state->projectionMatrix;
+	}
+
+	void RenderSystem::setProjectionMatrix(gmat4 matrix)
+	{
+		this->state->projectionMatrix = matrix;
+		this->state->projectionMatrixChanged = true;
 	}
 
 	void RenderSystem::setOrthoProjection(grect rect)
 	{
-		// TODOaa - change and improve this implementation
-		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
-		this->state->orthoProjection = rect;
 		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
 		this->state->projectionMatrix.setOrthoProjection(rect);
 		this->state->projectionMatrixChanged = true;
@@ -243,9 +264,6 @@ namespace april
 
 	void RenderSystem::setOrthoProjection(grect rect, float nearZ, float farZ)
 	{
-		// TODOaa - change and improve this implementation
-		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
-		this->state->orthoProjection = rect;
 		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
 		this->state->projectionMatrix.setOrthoProjection(rect, nearZ, farZ);
 		this->state->projectionMatrixChanged = true;
@@ -261,16 +279,17 @@ namespace april
 		this->setOrthoProjection(grect(0.0f, 0.0f, size), nearZ, farZ);
 	}
 
-	void RenderSystem::setModelviewMatrix(gmat4 matrix)
+	void RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		this->state->modelviewMatrix = matrix;
-		this->state->modelviewMatrixChanged = true;
-	}
-	
-	void RenderSystem::setProjectionMatrix(gmat4 matrix)
-	{
-		this->state->projectionMatrix = matrix;
-		this->state->projectionMatrixChanged = true;
+		if (this->options.depthBuffer)
+		{
+			this->state->depthBuffer = enabled;
+			this->state->depthBufferWrite = writeEnabled;
+		}
+		else
+		{
+			hlog::error(logTag, "Cannot change depth-buffer state, RenderSystem was not created with this option!");
+		}
 	}
 
 	int64_t RenderSystem::getVRamConsumption()

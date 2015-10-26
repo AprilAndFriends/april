@@ -175,7 +175,6 @@ namespace april
 		this->d3dDevice->BeginScene();
 		this->_configureDevice();
 		this->setViewport(this->viewport);
-		this->setOrthoProjection(this->state->orthoProjection);
 		this->_updateDeviceState(true);
 		hlog::write(logTag, "Direct3D9 Device restored.");
 		// this is used to display window content while resizing window
@@ -250,9 +249,9 @@ namespace april
 		this->d3dDevice->BeginScene();
 		this->_configureDevice();
 		this->clear();
-		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
-		this->state->orthoProjection.setSize(april::window->getSize());
 		this->renderTarget = NULL;
+		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
+		this->_updateDeviceState(true);
 	}
 
 	void DirectX9_RenderSystem::_tryAssignChildWindow()
@@ -914,7 +913,6 @@ namespace april
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 			this->d3dDevice->BeginScene();
 			this->setViewport(this->viewport);
-			this->setOrthoProjection(this->state->orthoProjection);
 			this->_updateDeviceState(true);
 			hlog::write(logTag, "Direct3D9 Device restored.");
 		}
