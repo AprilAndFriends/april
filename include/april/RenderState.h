@@ -25,6 +25,18 @@ namespace april
 	class RenderState
 	{
 	public:
+		/// @brief The current modelview matrix.
+		gmat4 modelviewMatrix;
+		/// @brief Whether the modelview matrix has changed.
+		bool modelviewMatrixChanged;
+		/// @brief The current projection matrix.
+		gmat4 projectionMatrix;
+		/// @brief Whether the projection matrix has changed.
+		bool projectionMatrixChanged;
+		/// @brief The current viewport.
+		grect viewport;
+		/// @brief Whether the viewport has changed.
+		bool viewportChanged;
 		/// @brief Whether texture coordinates are used in vertices.
 		bool textureCoordinatesEnabled;
 		/// @brief Whether color is used in vertices.
@@ -38,14 +50,6 @@ namespace april
 		/// @brief The current system color.
 		/// @note Usually used when clearing a buffer.
 		Color systemColor;
-		/// @brief Whether the modelview matrix has changed.
-		bool modelviewMatrixChanged;
-		/// @brief Whether the projection matrix has changed.
-		bool projectionMatrixChanged;
-		/// @brief The current modelview matrix.
-		gmat4 modelviewMatrix;
-		/// @brief The current projection matrix.
-		gmat4 projectionMatrix;
 		/// @brief The current texture blend mode.
 		BlendMode blendMode;
 		/// @brief The current texture color mode.

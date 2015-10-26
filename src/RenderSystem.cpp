@@ -48,6 +48,16 @@ namespace april
 		}
 		return result;
 	}
+	// DEPRECATED
+	void RenderSystem::clear(bool useColor, bool depth)
+	{
+		this->clear(depth);
+	}
+	// DEPRECATED
+	void RenderSystem::clear(bool depth, grect rect, Color color)
+	{
+		this->clear(color, rect, depth);
+	}
 
 	// optimizations, but they are not thread-safe
 	static PlainVertex pv[5];
@@ -228,9 +238,15 @@ namespace april
 		return this->caps;
 	}
 	
+	grect RenderSystem::getViewport()
+	{
+		return this->state->viewport;
+	}
+
 	void RenderSystem::setViewport(grect value)
 	{
-		this->viewport = value;
+		this->state->viewport = value;
+		this->state->viewportChanged = true;
 	}
 
 	gmat4 RenderSystem::getModelviewMatrix()
@@ -591,12 +607,19 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 
-
-
-
-
 	void RenderSystem::_updateDeviceState(bool forceUpdate)
 	{
+		// viewport
+		if (forceUpdate || this->state->viewportChanged)
+		{
+			if (forceUpdate || this->deviceState->viewport != this->state->viewport)
+			{
+				this->_setDeviceViewport(this->state->viewport);
+				this->deviceState->viewport = this->state->viewport;
+			}
+			this->state->viewportChanged = false;
+		}
+		// modelview matrix
 		if (forceUpdate || this->state->modelviewMatrixChanged)
 		{
 			if (forceUpdate || this->deviceState->modelviewMatrix != this->state->modelviewMatrix)
@@ -606,6 +629,7 @@ namespace april
 			}
 			this->state->modelviewMatrixChanged = false;
 		}
+		// projection matrix
 		if (forceUpdate || this->state->projectionMatrixChanged)
 		{
 			if (forceUpdate || this->deviceState->projectionMatrix != this->state->projectionMatrix)
@@ -615,49 +639,92 @@ namespace april
 			}
 			this->state->projectionMatrixChanged = false;
 		}
+		// depth buffer
 		if (forceUpdate || this->deviceState->depthBuffer != this->state->depthBuffer || this->deviceState->depthBufferWrite != this->state->depthBufferWrite)
 		{
 			this->_setDeviceDepthBuffer(this->state->depthBuffer, this->state->depthBufferWrite);
 			this->deviceState->depthBuffer = this->state->depthBuffer;
 			this->deviceState->depthBufferWrite = this->state->depthBufferWrite;
 		}
+		// finalize by updating special variables in states
+		this->state->update();
 		this->deviceState->update();
+	}
+
+	void RenderSystem::clear(bool depth)
+	{
+		if (!this->options.depthBuffer)
+		{
+			depth = false;
+		}
+		this->_updateDeviceState();
+		this->_deviceClear(depth);
+	}
+
+	void RenderSystem::clear(april::Color color, bool depth)
+	{
+		if (!this->options.depthBuffer)
+		{
+			depth = false;
+		}
+		this->_updateDeviceState();
+		this->_deviceClear(color, depth);
+	}
+
+	void RenderSystem::clear(april::Color color, grect rect, bool depth)
+	{
+		if (!this->options.depthBuffer)
+		{
+			depth = false;
+		}
+		this->_updateDeviceState();
+		this->_deviceClear(color, rect, depth);
+	}
+
+	void RenderSystem::clearDepth()
+	{
+		if (!this->options.depthBuffer)
+		{
+			return;
+		}
+		this->_updateDeviceState();
+		this->_deviceClearDepth();
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
 		this->_updateDeviceState();
-		this->_render(renderOperation, v, nVertices);
+		this->_deviceRender(renderOperation, v, nVertices);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
 	{
 		this->_updateDeviceState();
-		this->_render(renderOperation, v, nVertices, color);
+		this->_deviceRender(renderOperation, v, nVertices, color);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
 		this->_updateDeviceState();
-		this->_render(renderOperation, v, nVertices);
+		this->_deviceRender(renderOperation, v, nVertices);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
 	{
 		this->_updateDeviceState();
-		this->_render(renderOperation, v, nVertices, color);
+		this->_deviceRender(renderOperation, v, nVertices, color);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
 		this->_updateDeviceState();
-		this->_render(renderOperation, v, nVertices);
+		this->_deviceRender(renderOperation, v, nVertices);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
 		this->_updateDeviceState();
-		this->_render(renderOperation, v, nVertices);
+		this->_deviceRender(renderOperation, v, nVertices);
 	}
 
 	void RenderSystem::drawRect(grect rect, Color color)

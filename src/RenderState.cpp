@@ -25,16 +25,18 @@ namespace april
 	
 	void RenderState::reset()
 	{
+		this->modelviewMatrixChanged = true;
+		this->modelviewMatrix.setIdentity();
+		this->projectionMatrix.setIdentity();
+		this->projectionMatrixChanged = true;
+		this->viewport.set(0.0f, 0.0f, 1.0f, 1.0f);
+		this->viewportChanged = true;
 		this->textureCoordinatesEnabled = false;
 		this->colorEnabled = false;
 		this->texture = NULL;
 		this->textureFilter = Texture::FILTER_UNDEFINED;
 		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->systemColor = Color::Black;
-		this->modelviewMatrixChanged = true;
-		this->projectionMatrixChanged = true;
-		this->projectionMatrix.setIdentity();
-		this->modelviewMatrix.setIdentity();
 		this->blendMode = BM_UNDEFINED;
 		this->colorMode = CM_UNDEFINED;
 		this->colorModeFactor = 1.0f;

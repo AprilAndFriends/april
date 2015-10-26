@@ -50,7 +50,6 @@ namespace april
 		inline float getPixelOffset() { return 0.5f; }
 		int getVRam();
 		harray<DisplayMode> getSupportedDisplayModes();
-		void setViewport(grect rect);
 
 		void setTexture(Texture* texture);
 		void setTextureBlendMode(BlendMode textureBlendMode);
@@ -62,9 +61,6 @@ namespace april
 		void setRenderTarget(Texture* source);
 		void setPixelShader(PixelShader* pixelShader);
 		void setVertexShader(VertexShader* vertexShader);
-
-		void clear(bool useColor = true, bool depth = false);
-		void clear(bool depth, grect rect, Color color = Color::Clear);
 
 		Image::Format getNativeTextureFormat(Image::Format format);
 		unsigned int getNativeColorUInt(const april::Color& color);
@@ -94,16 +90,21 @@ namespace april
 		PixelShader* _createPixelShader();
 		VertexShader* _createVertexShader();
 
+		void _setDeviceViewport(const grect& rect);
 		void _setDeviceModelviewMatrix(const gmat4& matrix);
 		void _setDeviceProjectionMatrix(const gmat4& matrix);
 		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
 		
-		void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
-		void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
-		void _render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
-		void _render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
-		void _render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
-		void _render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
+		void _deviceClear(bool depth);
+		void _deviceClear(april::Color color, bool depth);
+		void _deviceClear(april::Color color, grect rect, bool depth);
+		void _deviceClearDepth();
+		void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices);
+		void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
+		void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
+		void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
+		void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
+		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
 	private:
 		bool _supportsA8Surface; // this does not seem to be detectable via any type of device caps

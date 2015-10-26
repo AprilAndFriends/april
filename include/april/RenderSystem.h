@@ -97,7 +97,8 @@ namespace april
 		HL_DEFINE_GET(hstr, name, Name);
 		HL_DEFINE_GET(Options, options, Options);
 		harray<Texture*> getTextures();
-		HL_DEFINE_GET(grect, viewport, Viewport);
+		grect getViewport();
+		void setViewport(grect value);
 		gmat4 getModelviewMatrix();
 		void setModelviewMatrix(gmat4 matrix);
 		gmat4 getProjectionMatrix();
@@ -121,7 +122,6 @@ namespace april
 
 		virtual harray<DisplayMode> getSupportedDisplayModes();
 		virtual Caps getCaps();
-		virtual void setViewport(grect value);
 
 		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
 		/// @note The parameter factor is only used when the color mode is LERP.
@@ -162,10 +162,10 @@ namespace april
 		void lookAt(const gvec3& eye, const gvec3& target, const gvec3& up);
 		void setPerspective(float fov, float aspect, float nearClip, float farClip);
 
-		/// @note Calling this will effectively set the current texture to NULL.
-		virtual void clear(bool useColor = true, bool depth = false) = 0;
-		/// @note Calling this will effectively set the current texture to NULL.
-		virtual void clear(bool depth, grect rect, Color color = Color::Clear) = 0;
+		void clear(bool depth = false);
+		void clear(april::Color color, bool depth = false);
+		void clear(april::Color color, grect rect, bool depth = false);
+		void clearDepth();
 		/// @note Calling this will effectively set the current texture to NULL.
 		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
 		/// @note Calling this will effectively set the current texture to NULL.
@@ -193,20 +193,16 @@ namespace april
 
 		DEPRECATED_ATTRIBUTE inline int getMaxTextureSize() { return this->getCaps().maxTextureSize; }
 		DEPRECATED_ATTRIBUTE grect getOrthoProjection();
+		DEPRECATED_ATTRIBUTE void clear(bool useColor, bool depth);
+		DEPRECATED_ATTRIBUTE void clear(bool depth, grect rect, Color color = Color::Clear);
 
 	protected:
 		hstr name;
 		bool created;
 		Options options;
 		harray<Texture*> textures;
-		grect viewport;
 		RenderState* state;
 		RenderState* deviceState;
-		//Texture::Filter textureFilter;
-		//Texture::AddressMode textureAddressMode;
-		//gmat4 modelviewMatrix;
-		//gmat4 projectionMatrix;
-		//grect orthoProjection;
 		Caps caps;
 		hmutex texturesMutex;
 
@@ -225,16 +221,21 @@ namespace april
 
 		void _updateDeviceState(bool forceUpdate = false);
 
+		virtual void _setDeviceViewport(const grect& rect) = 0;
 		virtual void _setDeviceModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setDeviceProjectionMatrix(const gmat4& matrix) = 0;
 		virtual void _setDeviceDepthBuffer(bool enabled, bool writeEnabled) = 0;
 
-		virtual void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices) = 0;
-		virtual void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color) = 0;
-		virtual void _render(RenderOperation renderOperation, TexturedVertex* v, int nVertices) = 0;
-		virtual void _render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color) = 0;
-		virtual void _render(RenderOperation renderOperation, ColoredVertex* v, int nVertices) = 0;
-		virtual void _render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices) = 0;
+		virtual void _deviceClear(bool depth) = 0;
+		virtual void _deviceClear(april::Color color, bool depth) = 0;
+		virtual void _deviceClear(april::Color color, grect rect, bool depth) = 0;
+		virtual void _deviceClearDepth() = 0;
+		virtual void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices) = 0;
+		virtual void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color) = 0;
+		virtual void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices) = 0;
+		virtual void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color) = 0;
+		virtual void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices) = 0;
+		virtual void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices) = 0;
 
 		unsigned int _numPrimitives(RenderOperation renderOperation, int nVertices);
 		unsigned int _limitPrimitives(RenderOperation renderOperation, int nVertices);

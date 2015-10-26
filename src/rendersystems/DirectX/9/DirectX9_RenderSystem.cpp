@@ -174,7 +174,6 @@ namespace april
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 		this->d3dDevice->BeginScene();
 		this->_configureDevice();
-		this->setViewport(this->viewport);
 		this->_updateDeviceState(true);
 		hlog::write(logTag, "Direct3D9 Device restored.");
 		// this is used to display window content while resizing window
@@ -248,9 +247,9 @@ namespace april
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
 		this->d3dDevice->BeginScene();
 		this->_configureDevice();
-		this->clear();
 		this->renderTarget = NULL;
 		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
+		this->clear();
 		this->_updateDeviceState(true);
 	}
 
@@ -340,9 +339,8 @@ namespace april
 		return this->supportedDisplayModes;
 	}
 
-	void DirectX9_RenderSystem::setViewport(grect rect)
+	void DirectX9_RenderSystem::_setDeviceViewport(const grect& rect)
 	{
-		RenderSystem::setViewport(rect);
 		D3DVIEWPORT9 viewport;
 		viewport.MinZ = 0.0f;
 		viewport.MaxZ = 1.0f;
@@ -663,25 +661,30 @@ namespace april
 		return new DirectX9_VertexShader();
 	}
 
-	void DirectX9_RenderSystem::clear(bool useColor, bool depth)
+	void DirectX9_RenderSystem::_deviceClear(bool depth)
 	{
-		DWORD flags = 0;
-		if (useColor)
-		{
-			flags |= D3DCLEAR_TARGET;
-		}
-		if (depth && this->options.depthBuffer)
+		DWORD flags = D3DCLEAR_TARGET;
+		if (depth)
 		{
 			flags |= D3DCLEAR_ZBUFFER;
 		}
 		this->d3dDevice->Clear(0, NULL, flags, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
-	
-	void DirectX9_RenderSystem::clear(bool depth, grect rect, Color color)
+
+	void DirectX9_RenderSystem::_deviceClear(april::Color color, bool depth)
 	{
-		DWORD flags = 0;
-		flags |= D3DCLEAR_TARGET;
-		if (depth && this->options.depthBuffer)
+		DWORD flags = D3DCLEAR_TARGET;
+		if (depth)
+		{
+			flags |= D3DCLEAR_ZBUFFER;
+		}
+		this->d3dDevice->Clear(0, NULL, flags, this->getNativeColorUInt(color), 1.0f, 0);
+	}
+
+	void DirectX9_RenderSystem::_deviceClear(april::Color color, grect rect, bool depth)
+	{
+		DWORD flags = D3DCLEAR_TARGET;
+		if (depth)
 		{
 			flags |= D3DCLEAR_ZBUFFER;
 		}
@@ -693,7 +696,12 @@ namespace april
 		this->d3dDevice->Clear(1, &area, flags, this->getNativeColorUInt(color), 1.0f, 0);
 	}
 	
-	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_deviceClearDepth()
+	{
+		this->d3dDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
+	}
+
+	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
 		if (this->activeTexture != NULL)
 		{
@@ -703,7 +711,7 @@ namespace april
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(PlainVertex));
 	}
 
-	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
+	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
 	{
 		if (this->activeTexture != NULL)
 		{
@@ -726,13 +734,13 @@ namespace april
 		}
 	}
 	
-	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
 		this->d3dDevice->SetFVF(TEX_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(TexturedVertex));
 	}
 
-	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
+	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
 	{
 		unsigned int c = this->getNativeColorUInt(color);
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
@@ -753,7 +761,7 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
 		if (this->activeTexture != NULL)
 		{
@@ -763,7 +771,7 @@ namespace april
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredVertex));
 	}
 
-	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
 		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredTexturedVertex));
@@ -912,7 +920,6 @@ namespace april
 			this->_configureDevice();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 			this->d3dDevice->BeginScene();
-			this->setViewport(this->viewport);
 			this->_updateDeviceState(true);
 			hlog::write(logTag, "Direct3D9 Device restored.");
 		}
