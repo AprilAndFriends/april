@@ -94,10 +94,9 @@ namespace april
 		PixelShader* _createPixelShader();
 		VertexShader* _createVertexShader();
 
+		void _setDeviceModelviewMatrix(const gmat4& matrix);
+		void _setDeviceProjectionMatrix(const gmat4& matrix);
 		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
-
-		void _setModelviewMatrix(const gmat4& matrix);
-		void _setProjectionMatrix(const gmat4& matrix);
 		
 		void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
 		void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);

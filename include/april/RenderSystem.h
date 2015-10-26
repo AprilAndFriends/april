@@ -226,11 +226,11 @@ namespace april
 		virtual void _setupCaps() = 0;
 		virtual void _setResolution(int w, int h, bool fullscreen);
 
-		void _updateDeviceState();
+		void _updateDeviceState(bool forceUpdate = false);
 
+		virtual void _setDeviceModelviewMatrix(const gmat4& matrix) = 0;
+		virtual void _setDeviceProjectionMatrix(const gmat4& matrix) = 0;
 		virtual void _setDeviceDepthBuffer(bool enabled, bool writeEnabled) = 0;
-		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
-		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;
 
 		virtual void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices) = 0;
 		virtual void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color) = 0;

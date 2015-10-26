@@ -120,8 +120,6 @@ namespace april
 		this->created = false;
 		this->state = NULL;
 		this->deviceState = NULL;
-		//this->depthBufferEnabled = false;
-		//this->depthBufferWriteEnabled = false;
 		//this->textureFilter = Texture::FILTER_UNDEFINED;
 		//this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
@@ -151,6 +149,7 @@ namespace april
 			return true;
 		}
 		this->state->reset();
+		this->deviceState->reset();
 		return false;
 	}
 	
@@ -178,7 +177,6 @@ namespace april
 			{
 				delete (*it);
 			}
-			// TODOa - uncomment
 			this->created = false;
 			this->state->reset();
 			this->deviceState->reset();
@@ -240,7 +238,7 @@ namespace april
 		this->state->orthoProjection = rect;
 		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
 		this->state->projectionMatrix.setOrthoProjection(rect);
-		this->_setProjectionMatrix(this->state->projectionMatrix);
+		this->state->projectionMatrixChanged = true;
 	}
 
 	void RenderSystem::setOrthoProjection(grect rect, float nearZ, float farZ)
@@ -250,7 +248,7 @@ namespace april
 		this->state->orthoProjection = rect;
 		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
 		this->state->projectionMatrix.setOrthoProjection(rect, nearZ, farZ);
-		this->_setProjectionMatrix(this->state->projectionMatrix);
+		this->state->projectionMatrixChanged = true;
 	}
 
 	void RenderSystem::setOrthoProjection(gvec2 size)
@@ -266,13 +264,13 @@ namespace april
 	void RenderSystem::setModelviewMatrix(gmat4 matrix)
 	{
 		this->state->modelviewMatrix = matrix;
-		this->_setModelviewMatrix(this->state->modelviewMatrix);
+		this->state->modelviewMatrixChanged = true;
 	}
 	
 	void RenderSystem::setProjectionMatrix(gmat4 matrix)
 	{
 		this->state->projectionMatrix = matrix;
-		this->_setProjectionMatrix(this->state->projectionMatrix);
+		this->state->projectionMatrixChanged = true;
 	}
 
 	int64_t RenderSystem::getVRamConsumption()
@@ -535,57 +533,76 @@ namespace april
 	void RenderSystem::setIdentityTransform()
 	{
 		this->state->modelviewMatrix.setIdentity();
-		this->_setModelviewMatrix(this->state->modelviewMatrix);
+		this->state->modelviewMatrixChanged = true;
 	}
 	
 	void RenderSystem::translate(float x, float y, float z)
 	{
 		this->state->modelviewMatrix.translate(x, y, z);
-		this->_setModelviewMatrix(this->state->modelviewMatrix);
+		this->state->modelviewMatrixChanged = true;
 	}
 	
 	void RenderSystem::rotate(float angle, float ax, float ay, float az)
 	{
 		this->state->modelviewMatrix.rotate(ax, ay, az, angle);
-		this->_setModelviewMatrix(this->state->modelviewMatrix);
+		this->state->modelviewMatrixChanged = true;
 	}	
 	
 	void RenderSystem::scale(float s)
 	{
 		this->state->modelviewMatrix.scale(s);
-		this->_setModelviewMatrix(this->state->modelviewMatrix);
+		this->state->modelviewMatrixChanged = true;
 	}
 	
 	void RenderSystem::scale(float sx, float sy, float sz)
 	{
 		this->state->modelviewMatrix.scale(sx, sy, sz);
-		this->_setModelviewMatrix(this->state->modelviewMatrix);
+		this->state->modelviewMatrixChanged = true;
 	}
 	
 	void RenderSystem::lookAt(const gvec3& eye, const gvec3& target, const gvec3& up)
 	{
 		this->state->modelviewMatrix.lookAt(eye, target, up);
-		this->_setModelviewMatrix(this->state->modelviewMatrix);
+		this->state->modelviewMatrixChanged = true;
 	}
 		
 	void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
 	{
 		this->state->projectionMatrix.setPerspective(fov, aspect, nearClip, farClip);
-		this->_setProjectionMatrix(this->state->projectionMatrix);
+		this->state->projectionMatrixChanged = true;
 	}
 
 
 
 
 
-	void RenderSystem::_updateDeviceState()
+	void RenderSystem::_updateDeviceState(bool forceUpdate)
 	{
-		if (this->state->depthBuffer != this->deviceState->depthBuffer || this->state->depthBufferWrite != this->deviceState->depthBufferWrite)
+		if (forceUpdate || this->state->modelviewMatrixChanged)
+		{
+			if (forceUpdate || this->deviceState->modelviewMatrix != this->state->modelviewMatrix)
+			{
+				this->_setDeviceModelviewMatrix(this->state->modelviewMatrix);
+				this->deviceState->modelviewMatrix = this->state->modelviewMatrix;
+			}
+			this->state->modelviewMatrixChanged = false;
+		}
+		if (forceUpdate || this->state->projectionMatrixChanged)
+		{
+			if (forceUpdate || this->deviceState->projectionMatrix != this->state->projectionMatrix)
+			{
+				this->_setDeviceProjectionMatrix(this->state->projectionMatrix);
+				this->deviceState->projectionMatrix = this->state->projectionMatrix;
+			}
+			this->state->projectionMatrixChanged = false;
+		}
+		if (forceUpdate || this->deviceState->depthBuffer != this->state->depthBuffer || this->deviceState->depthBufferWrite != this->state->depthBufferWrite)
 		{
 			this->_setDeviceDepthBuffer(this->state->depthBuffer, this->state->depthBufferWrite);
-			this->state->depthBuffer = this->deviceState->depthBuffer;
-			this->state->depthBufferWrite = this->deviceState->depthBufferWrite;
+			this->deviceState->depthBuffer = this->state->depthBuffer;
+			this->deviceState->depthBufferWrite = this->state->depthBufferWrite;
 		}
+		this->deviceState->update();
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)

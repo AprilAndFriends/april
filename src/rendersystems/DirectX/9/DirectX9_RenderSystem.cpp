@@ -176,8 +176,7 @@ namespace april
 		this->_configureDevice();
 		this->setViewport(this->viewport);
 		this->setOrthoProjection(this->state->orthoProjection);
-		this->_setModelviewMatrix(this->state->modelviewMatrix);
-		this->_setProjectionMatrix(this->state->projectionMatrix);
+		this->_updateDeviceState(true);
 		hlog::write(logTag, "Direct3D9 Device restored.");
 		// this is used to display window content while resizing window
 		april::window->performUpdate(0.0f);
@@ -353,6 +352,16 @@ namespace april
 		viewport.Width = (int)rect.w;
 		viewport.Height = (int)rect.h;
 		this->d3dDevice->SetViewport(&viewport);
+	}
+
+	void DirectX9_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)
+	{
+		this->d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)matrix.data);
+	}
+
+	void DirectX9_RenderSystem::_setDeviceProjectionMatrix(const gmat4& matrix)
+	{
+		this->d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)matrix.data);
 	}
 
 	void DirectX9_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
@@ -761,16 +770,6 @@ namespace april
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredTexturedVertex));
 	}
 
-	void DirectX9_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
-	{
-		this->d3dDevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)matrix.data);
-	}
-
-	void DirectX9_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
-	{
-		this->d3dDevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)matrix.data);
-	}
-
 	Image::Format DirectX9_RenderSystem::getNativeTextureFormat(Image::Format format)
 	{
 		switch (format)
@@ -916,8 +915,7 @@ namespace april
 			this->d3dDevice->BeginScene();
 			this->setViewport(this->viewport);
 			this->setOrthoProjection(this->state->orthoProjection);
-			this->_setModelviewMatrix(this->state->modelviewMatrix);
-			this->_setProjectionMatrix(this->state->projectionMatrix);
+			this->_updateDeviceState(true);
 			hlog::write(logTag, "Direct3D9 Device restored.");
 		}
 		else
