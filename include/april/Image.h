@@ -24,8 +24,6 @@
 
 namespace april
 {
-	class Color;
-
 	class aprilExport Image
 	{
 	public:

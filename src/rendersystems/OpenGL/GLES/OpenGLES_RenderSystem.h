@@ -60,22 +60,36 @@ namespace april
 	protected:
 		ColorMode activeTextureColorMode;
 		unsigned char activeTextureColorModeAlpha;
-		april::Color activeSystemColor;
 		ShaderProgram* activeShader;
 
-		OpenGLES_VertexShader* vertexShaderDefault;
-		OpenGLES_PixelShader* pixelShaderTexturedMultiply;
-		OpenGLES_PixelShader* pixelShaderTexturedAlphaMap;
-		OpenGLES_PixelShader* pixelShaderTexturedLerp;
+		OpenGLES_VertexShader* vertexShaderPlain;
+		OpenGLES_VertexShader* vertexShaderTextured;
+		OpenGLES_VertexShader* vertexShaderColored;
+		OpenGLES_VertexShader* vertexShaderColoredTextured;
 		OpenGLES_PixelShader* pixelShaderMultiply;
 		OpenGLES_PixelShader* pixelShaderAlphaMap;
 		OpenGLES_PixelShader* pixelShaderLerp;
-		ShaderProgram* shaderTexturedMultiply;
-		ShaderProgram* shaderTexturedAlphaMap;
-		ShaderProgram* shaderTexturedLerp;
+		OpenGLES_PixelShader* pixelShaderTexturedMultiply;
+		OpenGLES_PixelShader* pixelShaderTexturedAlphaMap;
+		OpenGLES_PixelShader* pixelShaderTexturedLerp;
+		OpenGLES_PixelShader* pixelShaderColoredMultiply;
+		OpenGLES_PixelShader* pixelShaderColoredAlphaMap;
+		OpenGLES_PixelShader* pixelShaderColoredLerp;
+		OpenGLES_PixelShader* pixelShaderColoredTexturedMultiply;
+		OpenGLES_PixelShader* pixelShaderColoredTexturedAlphaMap;
+		OpenGLES_PixelShader* pixelShaderColoredTexturedLerp;
 		ShaderProgram* shaderMultiply;
 		ShaderProgram* shaderAlphaMap;
 		ShaderProgram* shaderLerp;
+		ShaderProgram* shaderTexturedMultiply;
+		ShaderProgram* shaderTexturedAlphaMap;
+		ShaderProgram* shaderTexturedLerp;
+		ShaderProgram* shaderColoredMultiply;
+		ShaderProgram* shaderColoredAlphaMap;
+		ShaderProgram* shaderColoredLerp;
+		ShaderProgram* shaderColoredTexturedMultiply;
+		ShaderProgram* shaderColoredTexturedAlphaMap;
+		ShaderProgram* shaderColoredTexturedLerp;
 
 		void _setupCaps();
 		

@@ -10,9 +10,6 @@
 
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
-#if __APPLE__
-#include <TargetConditionals.h>
-#endif
 
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
@@ -62,11 +59,13 @@
 		} \
 	}
 
+#define _SELECT_SHADER(useTexture, useColor, type) \
+	(useTexture ? (useColor ? this->shaderColoredTextured ## type : this->shaderTextured ## type) : (useColor ? this->shaderColored ## type : this->shader ## type));
+
+
 namespace april
 {
 	static ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
-
-	static unsigned int systemColor = 0;
 
 	OpenGLES_RenderSystem::ShaderProgram::ShaderProgram() : glShaderProgram(0)
 	{
@@ -114,7 +113,6 @@ namespace april
 			this->glShaderProgram = 0;
 			return false;
 		}
-		glUniform1i(glGetUniformLocation(this->glShaderProgram, "sampler2d"), 0);
 		return true;
 	}
 
@@ -122,19 +120,34 @@ namespace april
 		activeTextureColorModeAlpha(255), _matrixDirty(true)
 	{
 		this->activeShader = NULL;
-		this->vertexShaderDefault = NULL;
-		this->pixelShaderTexturedMultiply = NULL;
-		this->pixelShaderTexturedAlphaMap = NULL;
-		this->pixelShaderTexturedLerp = NULL;
+		this->vertexShaderPlain = NULL;
+		this->vertexShaderTextured = NULL;
+		this->vertexShaderColored = NULL;
+		this->vertexShaderColoredTextured = NULL;
 		this->pixelShaderMultiply = NULL;
 		this->pixelShaderAlphaMap = NULL;
 		this->pixelShaderLerp = NULL;
-		this->shaderTexturedMultiply = NULL;
-		this->shaderTexturedAlphaMap = NULL;
-		this->shaderTexturedLerp = NULL;
+		this->pixelShaderTexturedMultiply = NULL;
+		this->pixelShaderTexturedAlphaMap = NULL;
+		this->pixelShaderTexturedLerp = NULL;
+		this->pixelShaderColoredMultiply = NULL;
+		this->pixelShaderColoredAlphaMap = NULL;
+		this->pixelShaderColoredLerp = NULL;
+		this->pixelShaderColoredTexturedMultiply = NULL;
+		this->pixelShaderColoredTexturedAlphaMap = NULL;
+		this->pixelShaderColoredTexturedLerp = NULL;
 		this->shaderMultiply = NULL;
 		this->shaderAlphaMap = NULL;
 		this->shaderLerp = NULL;
+		this->shaderTexturedMultiply = NULL;
+		this->shaderTexturedAlphaMap = NULL;
+		this->shaderTexturedLerp = NULL;
+		this->shaderColoredMultiply = NULL;
+		this->shaderColoredAlphaMap = NULL;
+		this->shaderColoredLerp = NULL;
+		this->shaderColoredTexturedMultiply = NULL;
+		this->shaderColoredTexturedAlphaMap = NULL;
+		this->shaderColoredTexturedLerp = NULL;
 		this->_currentShader = NULL;
 		this->_currentTexture = NULL;
 		this->_currentLerpAlpha = 0.0f;
@@ -156,22 +169,36 @@ namespace april
 		}
 		this->activeTextureColorMode = CM_DEFAULT;
 		this->activeTextureColorModeAlpha = 255;
-		this->activeSystemColor = april::Color::White;
 		this->activeShader = NULL;
 		this->_matrixDirty = true;
-		this->vertexShaderDefault = NULL;
-		this->pixelShaderTexturedMultiply = NULL;
-		this->pixelShaderTexturedAlphaMap = NULL;
-		this->pixelShaderTexturedLerp = NULL;
+		this->vertexShaderPlain = NULL;
+		this->vertexShaderTextured = NULL;
+		this->vertexShaderColored = NULL;
+		this->vertexShaderColoredTextured = NULL;
 		this->pixelShaderMultiply = NULL;
 		this->pixelShaderAlphaMap = NULL;
 		this->pixelShaderLerp = NULL;
-		this->shaderTexturedMultiply = NULL;
-		this->shaderTexturedAlphaMap = NULL;
-		this->shaderTexturedLerp = NULL;
+		this->pixelShaderTexturedMultiply = NULL;
+		this->pixelShaderTexturedAlphaMap = NULL;
+		this->pixelShaderTexturedLerp = NULL;
+		this->pixelShaderColoredMultiply = NULL;
+		this->pixelShaderColoredAlphaMap = NULL;
+		this->pixelShaderColoredLerp = NULL;
+		this->pixelShaderColoredTexturedMultiply = NULL;
+		this->pixelShaderColoredTexturedAlphaMap = NULL;
+		this->pixelShaderColoredTexturedLerp = NULL;
 		this->shaderMultiply = NULL;
 		this->shaderAlphaMap = NULL;
 		this->shaderLerp = NULL;
+		this->shaderTexturedMultiply = NULL;
+		this->shaderTexturedAlphaMap = NULL;
+		this->shaderTexturedLerp = NULL;
+		this->shaderColoredMultiply = NULL;
+		this->shaderColoredAlphaMap = NULL;
+		this->shaderColoredLerp = NULL;
+		this->shaderColoredTexturedMultiply = NULL;
+		this->shaderColoredTexturedAlphaMap = NULL;
+		this->shaderColoredTexturedLerp = NULL;
 		this->_currentShader = NULL;
 		this->_currentTexture = NULL;
 		this->_currentLerpAlpha = 0.0f;
@@ -190,21 +217,35 @@ namespace april
 		}
 		this->activeTextureColorMode = CM_DEFAULT;
 		this->activeTextureColorModeAlpha = 255;
-		this->activeSystemColor = april::Color::White;
 		this->activeShader = NULL;
-		DELETE_SHADER(this->vertexShaderDefault, Vertex);
-		DELETE_SHADER(this->pixelShaderTexturedMultiply, Pixel);
-		DELETE_SHADER(this->pixelShaderTexturedAlphaMap, Pixel);
-		DELETE_SHADER(this->pixelShaderTexturedLerp, Pixel);
+		DELETE_SHADER(this->vertexShaderPlain, Vertex);
+		DELETE_SHADER(this->vertexShaderTextured, Vertex);
+		DELETE_SHADER(this->vertexShaderColored, Vertex);
+		DELETE_SHADER(this->vertexShaderColoredTextured, Vertex);
 		DELETE_SHADER(this->pixelShaderMultiply, Pixel);
 		DELETE_SHADER(this->pixelShaderAlphaMap, Pixel);
 		DELETE_SHADER(this->pixelShaderLerp, Pixel);
-		_HL_TRY_DELETE(this->shaderTexturedMultiply);
-		_HL_TRY_DELETE(this->shaderTexturedAlphaMap);
-		_HL_TRY_DELETE(this->shaderTexturedLerp);
+		DELETE_SHADER(this->pixelShaderColoredMultiply, Pixel);
+		DELETE_SHADER(this->pixelShaderColoredAlphaMap, Pixel);
+		DELETE_SHADER(this->pixelShaderColoredLerp, Pixel);
+		DELETE_SHADER(this->pixelShaderTexturedMultiply, Pixel);
+		DELETE_SHADER(this->pixelShaderTexturedAlphaMap, Pixel);
+		DELETE_SHADER(this->pixelShaderTexturedLerp, Pixel);
+		DELETE_SHADER(this->pixelShaderColoredTexturedMultiply, Pixel);
+		DELETE_SHADER(this->pixelShaderColoredTexturedAlphaMap, Pixel);
+		DELETE_SHADER(this->pixelShaderColoredTexturedLerp, Pixel);
 		_HL_TRY_DELETE(this->shaderMultiply);
 		_HL_TRY_DELETE(this->shaderAlphaMap);
 		_HL_TRY_DELETE(this->shaderLerp);
+		_HL_TRY_DELETE(this->shaderColoredMultiply);
+		_HL_TRY_DELETE(this->shaderColoredAlphaMap);
+		_HL_TRY_DELETE(this->shaderColoredLerp);
+		_HL_TRY_DELETE(this->shaderTexturedMultiply);
+		_HL_TRY_DELETE(this->shaderTexturedAlphaMap);
+		_HL_TRY_DELETE(this->shaderTexturedLerp);
+		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply);
+		_HL_TRY_DELETE(this->shaderColoredTexturedAlphaMap);
+		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
 		this->_currentShader = NULL;
 		this->_currentTexture = NULL;
 		this->_currentLerpAlpha = 0.0f;
@@ -219,19 +260,34 @@ namespace april
 	{
 		OpenGL_RenderSystem::assignWindow(window);
 		hstream data;
-		LOAD_SHADER(this->vertexShaderDefault, Vertex, Default, data);
-		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply, data);
-		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap, data);
-		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp, data);
+		LOAD_SHADER(this->vertexShaderPlain, Vertex, Plain, data);
+		LOAD_SHADER(this->vertexShaderTextured, Vertex, Textured, data);
+		LOAD_SHADER(this->vertexShaderColored, Vertex, Colored, data);
+		LOAD_SHADER(this->vertexShaderColoredTextured, Vertex, ColoredTextured, data);
 		LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply, data);
 		LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap, data);
 		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp, data);
-		LOAD_PROGRAM(this->shaderTexturedMultiply, this->pixelShaderTexturedMultiply, this->vertexShaderDefault);
-		LOAD_PROGRAM(this->shaderTexturedAlphaMap, this->pixelShaderTexturedAlphaMap, this->vertexShaderDefault);
-		LOAD_PROGRAM(this->shaderTexturedLerp, this->pixelShaderTexturedLerp, this->vertexShaderDefault);
-		LOAD_PROGRAM(this->shaderMultiply, this->pixelShaderMultiply, this->vertexShaderDefault);
-		LOAD_PROGRAM(this->shaderAlphaMap, this->pixelShaderAlphaMap, this->vertexShaderDefault);
-		LOAD_PROGRAM(this->shaderLerp, this->pixelShaderLerp, this->vertexShaderDefault);
+		LOAD_SHADER(this->pixelShaderColoredMultiply, Pixel, ColoredMultiply, data);
+		LOAD_SHADER(this->pixelShaderColoredAlphaMap, Pixel, ColoredAlphaMap, data);
+		LOAD_SHADER(this->pixelShaderColoredLerp, Pixel, ColoredLerp, data);
+		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply, data);
+		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap, data);
+		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp, data);
+		LOAD_SHADER(this->pixelShaderColoredTexturedMultiply, Pixel, ColoredTexturedMultiply, data);
+		LOAD_SHADER(this->pixelShaderColoredTexturedAlphaMap, Pixel, ColoredTexturedAlphaMap, data);
+		LOAD_SHADER(this->pixelShaderColoredTexturedLerp, Pixel, ColoredTexturedLerp, data);
+		LOAD_PROGRAM(this->shaderMultiply, this->pixelShaderMultiply, this->vertexShaderPlain);
+		LOAD_PROGRAM(this->shaderAlphaMap, this->pixelShaderAlphaMap, this->vertexShaderPlain);
+		LOAD_PROGRAM(this->shaderLerp, this->pixelShaderLerp, this->vertexShaderPlain);
+		LOAD_PROGRAM(this->shaderTexturedMultiply, this->pixelShaderTexturedMultiply, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderTexturedAlphaMap, this->pixelShaderTexturedAlphaMap, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderTexturedLerp, this->pixelShaderTexturedLerp, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderColoredMultiply, this->pixelShaderColoredMultiply, this->vertexShaderColored);
+		LOAD_PROGRAM(this->shaderColoredAlphaMap, this->pixelShaderColoredAlphaMap, this->vertexShaderColored);
+		LOAD_PROGRAM(this->shaderColoredLerp, this->pixelShaderColoredLerp, this->vertexShaderColored);
+		LOAD_PROGRAM(this->shaderColoredTexturedMultiply, this->pixelShaderColoredTexturedMultiply, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredTexturedAlphaMap, this->pixelShaderColoredTexturedAlphaMap, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredTexturedLerp, this->pixelShaderColoredTexturedLerp, this->vertexShaderColoredTextured);
 	}
 
 	void OpenGLES_RenderSystem::_setupDefaultParameters()
@@ -240,11 +296,11 @@ namespace april
 		this->_setClientState(VERTEX_ARRAY, true);
 		this->_setClientState(COLOR_ARRAY, this->deviceState.colorEnabled);
 		this->_setClientState(TEXCOORD_ARRAY, this->deviceState.textureCoordinatesEnabled);
-		this->activeSystemColor = this->deviceState.systemColor;
 	}
 
 	void OpenGLES_RenderSystem::_applyStateChanges()
 	{
+		this->deviceState.systemColor = this->currentState.systemColor;
 		if (this->currentState.textureCoordinatesEnabled != this->deviceState.textureCoordinatesEnabled)
 		{
 			this->_setClientState(TEXCOORD_ARRAY, this->currentState.textureCoordinatesEnabled);
@@ -326,20 +382,20 @@ namespace april
 			{
 			case BM_DEFAULT:
 			case BM_ALPHA:
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			case BM_ADD:
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			case BM_SUBTRACT:
-				glBlendEquationSeparateOES(GL_FUNC_REVERSE_SUBTRACT_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				break;
 			case BM_OVERWRITE:
-				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
-				glBlendFuncSeparateOES(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
+				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
 				break;
 			default:
 				hlog::warn(logTag, "Trying to set unsupported blend mode!");
@@ -426,6 +482,7 @@ namespace april
 	void OpenGLES_RenderSystem::_updateShader()
 	{
 		bool useTexture = this->deviceState.textureCoordinatesEnabled;
+		bool useColor = this->deviceState.colorEnabled;
 		ShaderProgram* shader = this->activeShader;
 		if (shader == NULL)
 		{
@@ -433,13 +490,13 @@ namespace april
 			{
 			case CM_DEFAULT:
 			case CM_MULTIPLY:
-				shader = (useTexture ? this->shaderTexturedMultiply : this->shaderMultiply);
+				shader = _SELECT_SHADER(useTexture, useColor, Multiply);
 				break;
 			case CM_ALPHA_MAP:
-				shader = (useTexture ? this->shaderTexturedAlphaMap : this->shaderAlphaMap);
+				shader = _SELECT_SHADER(useTexture, useColor, AlphaMap);
 				break;
 			case CM_LERP:
-				shader = (useTexture ? this->shaderTexturedLerp : this->shaderLerp);
+				shader = _SELECT_SHADER(useTexture, useColor, Lerp);
 				break;
 			}
 		}
@@ -448,39 +505,64 @@ namespace april
 		{
 			this->_currentShader = shader;
 			glUseProgram(this->_currentShader->glShaderProgram);
-			if (useTexture)
-			{
-				glActiveTexture(GL_TEXTURE0);
-			}
 			dirty = true;
 		}
-		static gmat4 transformationMatrix = this->projectionMatrix * this->modelviewMatrix;
+		static gmat4 transformationMatrix = this->deviceState.projectionMatrix * this->deviceState.modelviewMatrix;
 		static float lerpAlpha = 1.0f;
 		static float systemColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		lerpAlpha = this->activeTextureColorModeAlpha * 0.003921569f;
-		systemColor[0] = this->activeSystemColor.r * 0.003921569f;
-		systemColor[1] = this->activeSystemColor.g * 0.003921569f;
-		systemColor[2] = this->activeSystemColor.b * 0.003921569f;
-		systemColor[3] = this->activeSystemColor.a * 0.003921569f;
-		dirty |= this->_matrixDirty;
-		dirty |= (this->_currentLerpAlpha != lerpAlpha);
-		for_iter (i, 0, 4)
+		systemColor[0] = this->deviceState.systemColor.r_f();
+		systemColor[1] = this->deviceState.systemColor.g_f();
+		systemColor[2] = this->deviceState.systemColor.b_f();
+		systemColor[3] = this->deviceState.systemColor.a_f();
+		if (!dirty)
 		{
-			dirty |= (this->_currentSystemColor[i] != systemColor[i]);
+			dirty = this->_matrixDirty;
+		}
+		if (!dirty)
+		{
+			dirty = (this->_currentLerpAlpha != lerpAlpha);
+		}
+		if (!dirty)
+		{
+			for_iter (i, 0, 4)
+			{
+				if (this->_currentSystemColor[i] != systemColor[i])
+				{
+					dirty = true;
+					break;
+				}
+			}
 		}
 		this->_matrixDirty = false;
 		if (dirty)
 		{
-			transformationMatrix = this->projectionMatrix * this->modelviewMatrix;
-		}
-		if (dirty)
-		{
+			// set current values
+			transformationMatrix = this->deviceState.projectionMatrix * this->deviceState.modelviewMatrix;;
+			this->_currentLerpAlpha = lerpAlpha;
+			memcpy(this->_currentSystemColor, systemColor, 4 * sizeof(float));
+			// set shader values
 			int matrixLocation = glGetUniformLocation(this->_currentShader->glShaderProgram, "transformationMatrix");
 			glUniformMatrix4fv(matrixLocation, 1, GL_FALSE, transformationMatrix.data);
-			int lerpLocation = glGetUniformLocation(this->_currentShader->glShaderProgram, "lerpAlpha");
-			glUniform1fv(lerpLocation, 1, &this->_currentLerpAlpha);
+			if (useTexture)
+			{
+				glActiveTexture(GL_TEXTURE0);
+			}
+			int samplerLocation = glGetUniformLocation(this->_currentShader->glShaderProgram, "sampler2d");
+			if (samplerLocation >= 0)
+			{
+				glUniform1i(samplerLocation, 0);
+			}
 			int systemColorLocation = glGetUniformLocation(this->_currentShader->glShaderProgram, "systemColor");
-			glUniform1fv(systemColorLocation, 4, this->_currentSystemColor);
+			if (systemColorLocation >= 0)
+			{
+				glUniform4fv(systemColorLocation, 1, this->_currentSystemColor);
+			}
+			int lerpLocation = glGetUniformLocation(this->_currentShader->glShaderProgram, "lerpAlpha");
+			if (lerpLocation >= 0)
+			{
+				glUniform1fv(lerpLocation, 1, &this->_currentLerpAlpha);
+			}
 		}
 	}
 
@@ -491,43 +573,28 @@ namespace april
 
 	void OpenGLES_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
 	{
-		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		unsigned int c = this->getNativeColorUInt(color);
-		for_iter (i, 0, nVertices)
-		{
-			ctv[i].x = v[i].x;
-			ctv[i].y = v[i].y;
-			ctv[i].z = v[i].z;
-			ctv[i].color = c;
-		}
 		this->currentState.textureId = 0;
 		this->currentState.textureCoordinatesEnabled = false;
 		this->currentState.colorEnabled = false;
-		/* TODO - remove */ this->currentState.colorEnabled = true;
 		this->currentState.systemColor = color;
 		this->_applyStateChanges();
+		this->_setColorPointer(0, NULL);
+		this->_setTexCoordPointer(0, NULL);
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		ColoredTexturedVertex* dv = ctv;
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setVertexPointer(sizeof(ColoredTexturedVertex), dv);
-			this->_setColorPointer(sizeof(ColoredTexturedVertex), &dv->color);
-			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &dv->u);
+			this->_setVertexPointer(sizeof(PlainVertex), v);
 			glDrawArrays(glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
-			dv += size;
+			v += size;
 		}
 #endif
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete[] ctv;
-		}
 	}
 
 	void OpenGLES_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
@@ -537,98 +604,57 @@ namespace april
 
 	void OpenGLES_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
 	{
-		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		unsigned int c = this->getNativeColorUInt(color);
-		for_iter (i, 0, nVertices)
-		{
-			ctv[i].x = v[i].x;
-			ctv[i].y = v[i].y;
-			ctv[i].z = v[i].z;
-			ctv[i].u = v[i].u;
-			ctv[i].v = v[i].v;
-			ctv[i].color = c;
-		}
 		this->currentState.textureCoordinatesEnabled = true;
 		this->currentState.colorEnabled = false;
-		/* TODO - remove */ this->currentState.colorEnabled = true;
 		this->currentState.systemColor = color;
 		this->_applyStateChanges();
+		this->_setColorPointer(0, NULL);
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		ColoredTexturedVertex* dv = ctv;
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setVertexPointer(sizeof(ColoredTexturedVertex), dv);
-			this->_setColorPointer(sizeof(ColoredTexturedVertex), &dv->color);
-			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &dv->u);
+			this->_setVertexPointer(sizeof(TexturedVertex), v);
+			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
 			glDrawArrays(glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
-			dv += size;
+			v += size;
 		}
 #endif
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete[] ctv;
-		}
 	}
 
 	void OpenGLES_RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
-		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		for_iter (i, 0, nVertices)
-		{
-			ctv[i].x = v[i].x;
-			ctv[i].y = v[i].y;
-			ctv[i].z = v[i].z;
-			ctv[i].color = v[i].color;
-		}
 		this->currentState.textureId = 0;
 		this->currentState.textureCoordinatesEnabled = false;
 		this->currentState.colorEnabled = true;
-		/* TODO - remove */ this->currentState.colorEnabled = true;
 		this->currentState.systemColor.set(255, 255, 255, 255);
 		this->_applyStateChanges();
+		this->_setTexCoordPointer(0, NULL);
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		ColoredTexturedVertex* dv = ctv;
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setVertexPointer(sizeof(ColoredTexturedVertex), dv);
-			this->_setColorPointer(sizeof(ColoredTexturedVertex), &dv->color);
-			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &dv->u);
+			this->_setVertexPointer(sizeof(ColoredVertex), v);
+			this->_setColorPointer(sizeof(ColoredVertex), &v->color);
 			glDrawArrays(glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
-			dv += size;
+			v += size;
 		}
 #endif
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete[] ctv;
-		}
 	}
 
 	void OpenGLES_RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
-		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		for_iter (i, 0, nVertices)
-		{
-			ctv[i].x = v[i].x;
-			ctv[i].y = v[i].y;
-			ctv[i].z = v[i].z;
-			ctv[i].u = v[i].u;
-			ctv[i].v = v[i].v;
-			ctv[i].color = v[i].color;
-		}
 		this->currentState.textureCoordinatesEnabled = true;
 		this->currentState.colorEnabled = true;
 		this->currentState.systemColor.set(255, 255, 255, 255);
@@ -636,25 +662,20 @@ namespace april
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		ColoredTexturedVertex* dv = ctv;
 		int size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setVertexPointer(sizeof(ColoredTexturedVertex), dv);
-			this->_setColorPointer(sizeof(ColoredTexturedVertex), &dv->color);
-			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &dv->u);
+			this->_setVertexPointer(sizeof(ColoredTexturedVertex), v);
+			this->_setColorPointer(sizeof(ColoredTexturedVertex), &v->color);
+			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &v->u);
 			glDrawArrays(glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
-			dv += size;
+			v += size;
 		}
 #endif
-		if (nVertices > VERTICES_BUFFER_COUNT)
-		{
-			delete[] ctv;
-		}
 	}
 
 	void OpenGLES_RenderSystem::_setModelviewMatrix(const gmat4& matrix)

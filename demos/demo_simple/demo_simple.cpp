@@ -49,6 +49,11 @@ april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
 april::Texture* manualTexture = NULL;
 april::TexturedVertex dv[4];
+april::PlainVertex pv[4];
+april::TexturedVertex tv[4];
+april::ColoredVertex cv[3];
+april::ColoredTexturedVertex ctv[3];
+
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
@@ -58,11 +63,6 @@ gvec2 offset = drawRect.getSize() * 0.5f;
 grect textureRect;
 grect src(0.0f, 0.0f, 1.0f, 1.0f);
 bool mousePressed = false;
-
-april::PlainVertex pv[4];
-april::TexturedVertex tv[4];
-april::ColoredVertex cv[3];
-april::ColoredTexturedVertex ctv[3];
 
 class UpdateDelegate : public april::UpdateDelegate
 {
