@@ -61,7 +61,10 @@ namespace april
 		colorEnabled(false), d3d(NULL), d3dDevice(NULL), activeTexture(NULL), renderTarget(NULL), backBuffer(NULL)
 	{
 		this->name = APRIL_RS_DIRECTX9;
-		this->state = new RenderState(); // TODOa
+		this->state = new RenderState();
+		this->state->reset();
+		this->deviceState = new RenderState();
+		this->deviceState->reset();
 		this->_supportsA8Surface = false;
 		this->childHWnd = 0;
 	}
@@ -172,9 +175,9 @@ namespace april
 		this->d3dDevice->BeginScene();
 		this->_configureDevice();
 		this->setViewport(this->viewport);
-		this->setOrthoProjection(this->orthoProjection);
-		this->_setModelviewMatrix(this->modelviewMatrix);
-		this->_setProjectionMatrix(this->projectionMatrix);
+		this->setOrthoProjection(this->state->orthoProjection);
+		this->_setModelviewMatrix(this->state->modelviewMatrix);
+		this->_setProjectionMatrix(this->state->projectionMatrix);
 		hlog::write(logTag, "Direct3D9 Device restored.");
 		// this is used to display window content while resizing window
 		april::window->performUpdate(0.0f);
@@ -249,7 +252,7 @@ namespace april
 		this->_configureDevice();
 		this->clear();
 		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
-		this->orthoProjection.setSize(april::window->getSize());
+		this->state->orthoProjection.setSize(april::window->getSize());
 		this->renderTarget = NULL;
 	}
 
@@ -288,8 +291,8 @@ namespace april
 		// misc
 		this->setTextureBlendMode(april::BM_DEFAULT);
 		this->setTextureColorMode(april::CM_DEFAULT);
-		this->textureFilter = Texture::FILTER_UNDEFINED;
-		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
+		this->state->textureFilter = Texture::FILTER_UNDEFINED;
+		this->state->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 		Caps caps = this->getCaps();
 		if (!caps.npotTexturesLimited && !caps.npotTextures)
 		{
@@ -352,9 +355,8 @@ namespace april
 		this->d3dDevice->SetViewport(&viewport);
 	}
 
-	void DirectX9_RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
+	void DirectX9_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		RenderSystem::setDepthBuffer(enabled, writeEnabled);
 		if (this->options.depthBuffer)
 		{
 			this->d3dDevice->SetRenderState(D3DRS_ZENABLE, enabled);
@@ -373,12 +375,12 @@ namespace april
 		if (this->activeTexture != NULL)
 		{
 			Texture::Filter filter = this->activeTexture->getFilter();
-			if (this->textureFilter != filter)
+			if (this->state->textureFilter != filter)
 			{
 				this->setTextureFilter(filter);
 			}
 			Texture::AddressMode addressMode = this->activeTexture->getAddressMode();
-			if (this->textureAddressMode != addressMode)
+			if (this->state->textureAddressMode != addressMode)
 			{
 				this->setTextureAddressMode(addressMode);
 			}
@@ -484,7 +486,7 @@ namespace april
 
 	void DirectX9_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
 	{
-		this->textureFilter = textureFilter;
+		this->state->textureFilter = textureFilter;
 		switch (textureFilter)
 		{
 		case Texture::FILTER_LINEAR:
@@ -503,7 +505,7 @@ namespace april
 
 	void DirectX9_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
-		this->textureAddressMode = textureAddressMode;
+		this->state->textureAddressMode = textureAddressMode;
 		switch (textureAddressMode)
 		{
 		case Texture::ADDRESS_WRAP:
@@ -683,7 +685,7 @@ namespace april
 		this->d3dDevice->Clear(1, &area, flags, this->getNativeColorUInt(color), 1.0f, 0);
 	}
 	
-	void DirectX9_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
 		if (this->activeTexture != NULL)
 		{
@@ -693,7 +695,7 @@ namespace april
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(PlainVertex));
 	}
 
-	void DirectX9_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
+	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
 	{
 		if (this->activeTexture != NULL)
 		{
@@ -716,13 +718,13 @@ namespace april
 		}
 	}
 	
-	void DirectX9_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
 		this->d3dDevice->SetFVF(TEX_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(TexturedVertex));
 	}
 
-	void DirectX9_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
+	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
 	{
 		unsigned int c = this->getNativeColorUInt(color);
 		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
@@ -743,7 +745,7 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
 		if (this->activeTexture != NULL)
 		{
@@ -753,7 +755,7 @@ namespace april
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredVertex));
 	}
 
-	void DirectX9_RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
 		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredTexturedVertex));
@@ -913,9 +915,9 @@ namespace april
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 			this->d3dDevice->BeginScene();
 			this->setViewport(this->viewport);
-			this->setOrthoProjection(this->orthoProjection);
-			this->_setModelviewMatrix(this->modelviewMatrix);
-			this->_setProjectionMatrix(this->projectionMatrix);
+			this->setOrthoProjection(this->state->orthoProjection);
+			this->_setModelviewMatrix(this->state->modelviewMatrix);
+			this->_setProjectionMatrix(this->state->projectionMatrix);
 			hlog::write(logTag, "Direct3D9 Device restored.");
 		}
 		else

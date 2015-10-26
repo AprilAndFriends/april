@@ -62,16 +62,9 @@ namespace april
 		void setRenderTarget(Texture* source);
 		void setPixelShader(PixelShader* pixelShader);
 		void setVertexShader(VertexShader* vertexShader);
-		void setDepthBuffer(bool enabled, bool writeEnabled = true);
 
 		void clear(bool useColor = true, bool depth = false);
 		void clear(bool depth, grect rect, Color color = Color::Clear);
-		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
-		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
-		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
 		Image::Format getNativeTextureFormat(Image::Format format);
 		unsigned int getNativeColorUInt(const april::Color& color);
@@ -101,9 +94,18 @@ namespace april
 		PixelShader* _createPixelShader();
 		VertexShader* _createVertexShader();
 
+		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
+
 		void _setModelviewMatrix(const gmat4& matrix);
 		void _setProjectionMatrix(const gmat4& matrix);
 		
+		void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
+		void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
+		void _render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
+		void _render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
+		void _render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
+		void _render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
+
 	private:
 		bool _supportsA8Surface; // this does not seem to be detectable via any type of device caps
 

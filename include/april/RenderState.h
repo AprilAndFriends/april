@@ -30,7 +30,7 @@ namespace april
 		/// @brief Whether color is used in vertices.
 		bool colorEnabled;
 		/// @brief The current unique texture ID.
-		unsigned int textureId;
+		Texture* texture;
 		/// @brief The current texture filter.
 		Texture::Filter textureFilter;
 		/// @brief The current texture address mode.
@@ -46,6 +46,8 @@ namespace april
 		gmat4 modelviewMatrix;
 		/// @brief The current projection matrix.
 		gmat4 projectionMatrix;
+		/// @brief The current ortho projection.
+		grect orthoProjection;
 		/// @brief The current texture blend mode.
 		BlendMode blendMode;
 		/// @brief The current texture color mode.
@@ -57,6 +59,10 @@ namespace april
 		/// @brief Whether writing to the depth buffer is currently enabled.
 		bool depthBufferWrite;
 
+		/// @brief The current projection matrix.
+		/// @note This is a derived attribute that some systems require.
+		gmat4 transformationMatrix;
+
 		/// @brief Basic constructor.
 		RenderState();
 		/// @brief Destructor.
@@ -64,6 +70,9 @@ namespace april
 		
 		/// @brief Resets or sets up the initial state.
 		virtual void reset();
+
+		/// @brief Updates the state and derived variables
+		virtual void update();
 
 	};
 	

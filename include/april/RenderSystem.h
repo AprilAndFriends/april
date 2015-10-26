@@ -98,12 +98,15 @@ namespace april
 		HL_DEFINE_GET(Options, options, Options);
 		harray<Texture*> getTextures();
 		HL_DEFINE_GET(grect, viewport, Viewport);
-		HL_DEFINE_GET(gmat4, modelviewMatrix, ModelviewMatrix);
+		inline gmat4 getModelviewMatrix() { return this->state->modelviewMatrix; }
+		//HL_DEFINE_GET(gmat4, modelviewMatrix, ModelviewMatrix);
 		void setModelviewMatrix(gmat4 matrix);
-		HL_DEFINE_GET(gmat4, projectionMatrix, ProjectionMatrix);
+		//HL_DEFINE_GET(gmat4, projectionMatrix, ProjectionMatrix);
+		inline gmat4 getProjectionMatrix() { return this->state->projectionMatrix; }
 		void setProjectionMatrix(gmat4 matrix);
 		// TODO - move below, these aren't properties
-		HL_DEFINE_GET(grect, orthoProjection, OrthoProjection);
+		//HL_DEFINE_GET(grect, orthoProjection, OrthoProjection);
+		inline grect getOrthoProjection() { return this->state->orthoProjection; }
 		void setOrthoProjection(grect rect);
 		void setOrthoProjection(grect rect, float nearZ, float farZ);
 		void setOrthoProjection(gvec2 size);
@@ -123,8 +126,6 @@ namespace april
 		virtual harray<DisplayMode> getSupportedDisplayModes();
 		virtual Caps getCaps();
 		virtual void setViewport(grect value);
-		HL_DEFINE_IS(depthBufferEnabled, DepthBufferEnabled);
-		HL_DEFINE_IS(depthBufferWriteEnabled, DepthBufferWriteEnabled);
 
 		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
 		/// @note The parameter factor is only used when the color mode is LERP.
@@ -137,7 +138,7 @@ namespace april
 		virtual void setRenderTarget(Texture* texture);
 		virtual void setVertexShader(VertexShader* vertexShader);
 		virtual void setPixelShader(PixelShader* pixelShader);
-		virtual void setDepthBuffer(bool enabled, bool writeEnabled = true);
+		void setDepthBuffer(bool enabled, bool writeEnabled = true);
 
 		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
 		/// @note When a format is forced, it's best to use managed (but not necessary).
@@ -170,14 +171,14 @@ namespace april
 		/// @note Calling this will effectively set the current texture to NULL.
 		virtual void clear(bool depth, grect rect, Color color = Color::Clear) = 0;
 		/// @note Calling this will effectively set the current texture to NULL.
-		virtual void render(RenderOperation renderOperation, PlainVertex* v, int nVertices) = 0;
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
 		/// @note Calling this will effectively set the current texture to NULL.
-		virtual void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color) = 0;
-		virtual void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices) = 0;
-		virtual void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color) = 0;
+		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
 		/// @note Calling this will effectively set the current texture to NULL.
-		virtual void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices) = 0;
-		virtual void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices) = 0;
+		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
+		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 		
 		/// @note Calling this will effectively set the current texture to NULL.
 		void drawRect(grect rect, Color color);
@@ -202,14 +203,13 @@ namespace april
 		Options options;
 		harray<Texture*> textures;
 		grect viewport;
-		bool depthBufferEnabled;
-		bool depthBufferWriteEnabled;
 		RenderState* state;
-		Texture::Filter textureFilter;
-		Texture::AddressMode textureAddressMode;
-		gmat4 modelviewMatrix;
-		gmat4 projectionMatrix;
-		grect orthoProjection;
+		RenderState* deviceState;
+		//Texture::Filter textureFilter;
+		//Texture::AddressMode textureAddressMode;
+		//gmat4 modelviewMatrix;
+		//gmat4 projectionMatrix;
+		//grect orthoProjection;
 		Caps caps;
 		hmutex texturesMutex;
 
@@ -223,11 +223,21 @@ namespace april
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);
 
-		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
-		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;
-		
 		virtual void _setupCaps() = 0;
 		virtual void _setResolution(int w, int h, bool fullscreen);
+
+		void _updateDeviceState();
+
+		virtual void _setDeviceDepthBuffer(bool enabled, bool writeEnabled) = 0;
+		virtual void _setModelviewMatrix(const gmat4& matrix) = 0;
+		virtual void _setProjectionMatrix(const gmat4& matrix) = 0;
+
+		virtual void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices) = 0;
+		virtual void _render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color) = 0;
+		virtual void _render(RenderOperation renderOperation, TexturedVertex* v, int nVertices) = 0;
+		virtual void _render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color) = 0;
+		virtual void _render(RenderOperation renderOperation, ColoredVertex* v, int nVertices) = 0;
+		virtual void _render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices) = 0;
 
 		unsigned int _numPrimitives(RenderOperation renderOperation, int nVertices);
 		unsigned int _limitPrimitives(RenderOperation renderOperation, int nVertices);

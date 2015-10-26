@@ -24,6 +24,7 @@
 #include "aprilUtil.h"
 #include "Image.h"
 #include "RenderSystem.h"
+#include "RenderState.h"
 #include "PixelShader.h"
 #include "Platform.h"
 #include "Texture.h"
@@ -118,28 +119,24 @@ namespace april
 		this->name = "Generic";
 		this->created = false;
 		this->state = NULL;
-		this->depthBufferEnabled = false;
-		this->depthBufferWriteEnabled = false;
-		this->textureFilter = Texture::FILTER_UNDEFINED;
-		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
+		this->deviceState = NULL;
+		//this->depthBufferEnabled = false;
+		//this->depthBufferWriteEnabled = false;
+		//this->textureFilter = Texture::FILTER_UNDEFINED;
+		//this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
 	
 	RenderSystem::~RenderSystem()
 	{
-		if (this->hasAsyncTexturesQueued())
-		{
-			harray<Texture*> textures = this->getTextures();
-			foreach (Texture*, it, textures)
-			{
-				if ((*it)->isAsyncLoadQueued())
-				{
-					(*it)->unload(); // to cancel all async loads
-				}
-			}
-			this->waitForAsyncTextures();
-		}
 		this->destroy();
-		delete this->state;
+		if (this->state != NULL)
+		{
+			delete this->state;
+		}
+		if (this->deviceState != NULL)
+		{
+			delete this->deviceState;
+		}
 	}
 	
 	bool RenderSystem::create(RenderSystem::Options options)
@@ -149,8 +146,8 @@ namespace april
 			hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
 			this->created = true;
 			this->options = options;
-			this->depthBufferEnabled = false;
-			this->depthBufferWriteEnabled = false;
+			this->state->reset();
+			this->deviceState->reset();
 			return true;
 		}
 		this->state->reset();
@@ -162,17 +159,29 @@ namespace april
 		if (this->created)
 		{
 			hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
-			// creating a copy, because deleting a texture modifies this->textures
+			// first wait for queud textures to cancel
 			harray<Texture*> textures = this->getTextures();
+			if (this->hasAsyncTexturesQueued())
+			{
+				foreach (Texture*, it, textures)
+				{
+					if ((*it)->isAsyncLoadQueued())
+					{
+						(*it)->unload(); // to cancel all async loads
+					}
+				}
+				this->waitForAsyncTextures();
+			}
+			// creating a copy (again), because deleting a texture modifies this->textures
+			textures = this->getTextures();
 			foreach (Texture*, it, textures)
 			{
 				delete (*it);
 			}
 			// TODOa - uncomment
-			//this->state->reset();
 			this->created = false;
-			this->depthBufferEnabled = false;
-			this->depthBufferWriteEnabled = false;
+			this->state->reset();
+			this->deviceState->reset();
 			return true;
 		}
 		return false;
@@ -215,8 +224,8 @@ namespace april
 	{
 		if (this->options.depthBuffer)
 		{
-			this->depthBufferEnabled = enabled;
-			this->depthBufferWriteEnabled = writeEnabled;
+			this->state->depthBuffer = enabled;
+			this->state->depthBufferWrite = writeEnabled;
 		}
 		else
 		{
@@ -228,20 +237,20 @@ namespace april
 	{
 		// TODOaa - change and improve this implementation
 		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
-		this->orthoProjection = rect;
+		this->state->orthoProjection = rect;
 		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
-		this->projectionMatrix.setOrthoProjection(rect);
-		this->_setProjectionMatrix(this->projectionMatrix);
+		this->state->projectionMatrix.setOrthoProjection(rect);
+		this->_setProjectionMatrix(this->state->projectionMatrix);
 	}
 
 	void RenderSystem::setOrthoProjection(grect rect, float nearZ, float farZ)
 	{
 		// TODOaa - change and improve this implementation
 		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
-		this->orthoProjection = rect;
+		this->state->orthoProjection = rect;
 		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
-		this->projectionMatrix.setOrthoProjection(rect, nearZ, farZ);
-		this->_setProjectionMatrix(this->projectionMatrix);
+		this->state->projectionMatrix.setOrthoProjection(rect, nearZ, farZ);
+		this->_setProjectionMatrix(this->state->projectionMatrix);
 	}
 
 	void RenderSystem::setOrthoProjection(gvec2 size)
@@ -256,14 +265,14 @@ namespace april
 
 	void RenderSystem::setModelviewMatrix(gmat4 matrix)
 	{
-		this->modelviewMatrix = matrix;
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix = matrix;
+		this->_setModelviewMatrix(this->state->modelviewMatrix);
 	}
 	
 	void RenderSystem::setProjectionMatrix(gmat4 matrix)
 	{
-		this->projectionMatrix = matrix;
-		this->_setProjectionMatrix(this->projectionMatrix);
+		this->state->projectionMatrix = matrix;
+		this->_setProjectionMatrix(this->state->projectionMatrix);
 	}
 
 	int64_t RenderSystem::getVRamConsumption()
@@ -509,8 +518,6 @@ namespace april
 		delete shader;
 	}
 
-
-
 	void RenderSystem::unloadTextures()
 	{
 		harray<Texture*> textures = this->getTextures();
@@ -519,49 +526,104 @@ namespace april
 			(*it)->unload();
 		}
 	}
-	
+
+	void RenderSystem::_setResolution(int w, int h, bool fullscreen)
+	{
+		hlog::warnf(logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.cStr());
+	}
+
 	void RenderSystem::setIdentityTransform()
 	{
-		this->modelviewMatrix.setIdentity();
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.setIdentity();
+		this->_setModelviewMatrix(this->state->modelviewMatrix);
 	}
 	
 	void RenderSystem::translate(float x, float y, float z)
 	{
-		this->modelviewMatrix.translate(x, y, z);
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.translate(x, y, z);
+		this->_setModelviewMatrix(this->state->modelviewMatrix);
 	}
 	
 	void RenderSystem::rotate(float angle, float ax, float ay, float az)
 	{
-		this->modelviewMatrix.rotate(ax, ay, az, angle);
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.rotate(ax, ay, az, angle);
+		this->_setModelviewMatrix(this->state->modelviewMatrix);
 	}	
 	
 	void RenderSystem::scale(float s)
 	{
-		this->modelviewMatrix.scale(s);
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.scale(s);
+		this->_setModelviewMatrix(this->state->modelviewMatrix);
 	}
 	
 	void RenderSystem::scale(float sx, float sy, float sz)
 	{
-		this->modelviewMatrix.scale(sx, sy, sz);
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.scale(sx, sy, sz);
+		this->_setModelviewMatrix(this->state->modelviewMatrix);
 	}
 	
 	void RenderSystem::lookAt(const gvec3& eye, const gvec3& target, const gvec3& up)
 	{
-		this->modelviewMatrix.lookAt(eye, target, up);
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.lookAt(eye, target, up);
+		this->_setModelviewMatrix(this->state->modelviewMatrix);
 	}
 		
 	void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
 	{
-		this->projectionMatrix.setPerspective(fov, aspect, nearClip, farClip);
-		this->_setProjectionMatrix(this->projectionMatrix);
+		this->state->projectionMatrix.setPerspective(fov, aspect, nearClip, farClip);
+		this->_setProjectionMatrix(this->state->projectionMatrix);
 	}
-	
+
+
+
+
+
+	void RenderSystem::_updateDeviceState()
+	{
+		if (this->state->depthBuffer != this->deviceState->depthBuffer || this->state->depthBufferWrite != this->deviceState->depthBufferWrite)
+		{
+			this->_setDeviceDepthBuffer(this->state->depthBuffer, this->state->depthBufferWrite);
+			this->state->depthBuffer = this->deviceState->depthBuffer;
+			this->state->depthBufferWrite = this->deviceState->depthBufferWrite;
+		}
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
+	{
+		this->_updateDeviceState();
+		this->_render(renderOperation, v, nVertices);
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
+	{
+		this->_updateDeviceState();
+		this->_render(renderOperation, v, nVertices, color);
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
+	{
+		this->_updateDeviceState();
+		this->_render(renderOperation, v, nVertices);
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
+	{
+		this->_updateDeviceState();
+		this->_render(renderOperation, v, nVertices, color);
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
+	{
+		this->_updateDeviceState();
+		this->_render(renderOperation, v, nVertices);
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
+	{
+		this->_updateDeviceState();
+		this->_render(renderOperation, v, nVertices);
+	}
+
 	void RenderSystem::drawRect(grect rect, Color color)
 	{
 		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
@@ -598,7 +660,7 @@ namespace april
 		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
 		this->render(RO_TRIANGLE_STRIP, tv, 4, color);
 	}
-	
+
 	void RenderSystem::presentFrame()
 	{
 		april::window->presentFrame();
@@ -670,11 +732,6 @@ namespace april
 	{
 		hlog::warnf(logTag, "Screenshots are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
-	}
-
-	void RenderSystem::_setResolution(int w, int h, bool fullscreen)
-	{
-		hlog::warnf(logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int nVertices)
