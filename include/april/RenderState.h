@@ -25,6 +25,10 @@ namespace april
 	class RenderState
 	{
 	public:
+		/// @brief The current viewport.
+		grect viewport;
+		/// @brief Whether the viewport has changed.
+		bool viewportChanged;
 		/// @brief The current modelview matrix.
 		gmat4 modelviewMatrix;
 		/// @brief Whether the modelview matrix has changed.
@@ -33,35 +37,24 @@ namespace april
 		gmat4 projectionMatrix;
 		/// @brief Whether the projection matrix has changed.
 		bool projectionMatrixChanged;
-		/// @brief The current viewport.
-		grect viewport;
-		/// @brief Whether the viewport has changed.
-		bool viewportChanged;
-		/// @brief The current unique texture ID.
-		Texture* texture;
-		/*
-		/// @brief The current texture filter.
-		Texture::Filter textureFilter;
-		/// @brief The current texture address mode.
-		Texture::AddressMode textureAddressMode;
-		*/
+		/// @brief Whether the depth buffer is currently enabled.
+		bool depthBuffer;
+		/// @brief Whether writing to the depth buffer is currently enabled.
+		bool depthBufferWrite;
 		/// @brief Whether texture coordinates are used in vertices.
 		bool useTexture;
 		/// @brief Whether color is used in vertices.
 		bool useColor;
-		/// @brief The current system color.
-		/// @note Usually used when clearing a buffer.
-		Color systemColor;
+		/// @brief The current unique texture ID.
+		Texture* texture;
 		/// @brief The current texture blend mode.
 		BlendMode blendMode;
 		/// @brief The current texture color mode.
 		ColorMode colorMode;
 		/// @brief The current texture color mode factor.
 		float colorModeFactor;
-		/// @brief Whether the depth buffer is currently enabled.
-		bool depthBuffer;
-		/// @brief Whether writing to the depth buffer is currently enabled.
-		bool depthBufferWrite;
+		/// @brief The current system color.
+		Color systemColor;
 
 		/// @brief The current projection matrix.
 		/// @note This is a derived attribute that some systems require.

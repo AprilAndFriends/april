@@ -25,6 +25,7 @@
 namespace april
 {
 	class DirectX9_PixelShader;
+	class DirectX9_RenderState;
 	class DirectX9_Texture;
 	class DirectX9_VertexShader;
 	class Image;
@@ -43,31 +44,25 @@ namespace april
 		float getPixelOffset();
 		int getVRam();
 
-		//void setTextureBlendMode(BlendMode textureBlendMode);
-		/// @note The parameter factor is only used when the color mode is LERP.
-		//void setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
-		//void setTextureFilter(Texture::Filter textureFilter);
-		//void setTextureAddressMode(Texture::AddressMode textureAddressMode);
-		Texture* getRenderTarget();
-		void setRenderTarget(Texture* source);
-		void setPixelShader(PixelShader* pixelShader);
-		void setVertexShader(VertexShader* vertexShader);
-
 		Image::Format getNativeTextureFormat(Image::Format format);
 		unsigned int getNativeColorUInt(const april::Color& color);
 		Image* takeScreenshot(Image::Format format);
 		void presentFrame();
 
+		// TODOa - these need to be refactored
+		Texture* getRenderTarget();
+		void setRenderTarget(Texture* source);
+		void setPixelShader(PixelShader* pixelShader);
+		void setVertexShader(VertexShader* vertexShader);
+
 	protected:
-		bool textureCoordinatesEnabled;
-		bool colorEnabled;
-		DirectX9_Texture* activeTexture;
-		DirectX9_Texture* renderTarget;
-		IDirect3DSurface9* backBuffer;
 		IDirect3D9* d3d;
 		IDirect3DDevice9* d3dDevice;
 		_D3DPRESENT_PARAMETERS_* d3dpp;
+		IDirect3DSurface9* backBuffer;
 		HWND childHWnd;
+		// TODOa - these need to be refactored
+		DirectX9_Texture* renderTarget;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);
@@ -80,6 +75,7 @@ namespace april
 		void _tryAssignChildWindow();
 		void _tryUnassignChildWindow();
 
+		// TODOa - these need to be refactored
 		void _configureDevice();
 
 		Texture* _deviceCreateTexture(bool fromResource);
@@ -96,7 +92,7 @@ namespace april
 		void _setDeviceTextureFilter(Texture::Filter textureFilter);
 		void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode);
 		void _setDeviceBlendMode(BlendMode blendMode);
-		void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useColor, const Color& systemColor);
+		void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
 
 		void _deviceClear(bool depth);
 		void _deviceClear(april::Color color, bool depth);
@@ -109,7 +105,7 @@ namespace april
 		void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
 		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
-		static D3DPRIMITIVETYPE dx9RenderOperations[];
+		static D3DPRIMITIVETYPE _dx9RenderOperations[];
 
 	private:
 		bool _supportsA8Surface; // this does not seem to be detectable via any type of device caps

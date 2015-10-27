@@ -245,7 +245,7 @@ namespace april
 		virtual void _setDeviceTextureFilter(Texture::Filter textureFilter) = 0;
 		virtual void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
 		virtual void _setDeviceBlendMode(BlendMode blendMode) = 0;
-		virtual void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useColor, const Color& systemColor) = 0;
+		virtual void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor) = 0;
 
 		virtual void _deviceClear(bool depth) = 0;
 		virtual void _deviceClear(april::Color color, bool depth) = 0;

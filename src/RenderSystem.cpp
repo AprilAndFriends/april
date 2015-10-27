@@ -153,23 +153,20 @@ namespace april
 	{
 		this->name = "Generic";
 		this->created = false;
-		this->state = NULL;
-		this->deviceState = NULL;
+		this->state = new RenderState();
+		this->deviceState = new RenderState();
 		//this->textureFilter = Texture::FILTER_UNDEFINED;
 		//this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
 	
 	RenderSystem::~RenderSystem()
 	{
-		this->destroy();
-		if (this->state != NULL)
+		if (this->created)
 		{
-			delete this->state;
+			hlog::warn(logTag, "Deleting rendersystem before destroy() was called!");
 		}
-		if (this->deviceState != NULL)
-		{
-			delete this->deviceState;
-		}
+		delete this->state;
+		delete this->deviceState;
 	}
 
 	void RenderSystem::init()
@@ -699,7 +696,6 @@ namespace april
 			}
 			this->_setDeviceTexture(this->state->useTexture ? this->state->texture : NULL);
 			this->deviceState->texture = this->state->texture;
-			this->deviceState->useTexture = this->state->useTexture;
 		}
 		// blend mode
 		if (forceUpdate || this->deviceState->blendMode != this->state->blendMode)
@@ -709,14 +705,17 @@ namespace april
 		}
 		// color mode
 		if (forceUpdate || this->deviceState->colorMode != this->state->colorMode || this->deviceState->colorModeFactor != this->state->colorModeFactor ||
-			this->deviceState->useColor != this->state->useColor || this->deviceState->systemColor != this->state->systemColor)
+			this->deviceState->useTexture != this->state->useTexture || this->deviceState->useColor != this->state->useColor ||
+			this->deviceState->systemColor != this->state->systemColor)
 		{
-			this->_setDeviceColorMode(this->state->colorMode, this->state->colorModeFactor, this->state->useColor, this->state->systemColor);
+			this->_setDeviceColorMode(this->state->colorMode, this->state->colorModeFactor, this->state->useTexture, this->state->useColor, this->state->systemColor);
 			this->deviceState->colorMode = this->state->colorMode;
 			this->deviceState->colorModeFactor = this->state->colorModeFactor;
 			this->deviceState->useColor = this->state->useColor;
 			this->deviceState->systemColor = this->state->systemColor;
 		}
+		// shared variables
+		this->deviceState->useTexture = this->state->useTexture;
 		// finalize by updating special variables in states
 		this->state->update();
 		this->deviceState->update();

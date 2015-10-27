@@ -17,6 +17,7 @@ namespace april
 {
 	RenderState::RenderState()
 	{
+		this->reset();
 	}
 	
 	RenderState::~RenderState()
@@ -25,23 +26,21 @@ namespace april
 	
 	void RenderState::reset()
 	{
+		this->viewport.set(0.0f, 0.0f, 1.0f, 1.0f);
+		this->viewportChanged = true;
 		this->modelviewMatrixChanged = true;
 		this->modelviewMatrix.setIdentity();
 		this->projectionMatrix.setIdentity();
 		this->projectionMatrixChanged = true;
-		this->viewport.set(0.0f, 0.0f, 1.0f, 1.0f);
-		this->viewportChanged = true;
+		this->depthBuffer = false;
+		this->depthBufferWrite = false;
 		this->useTexture = false;
 		this->useColor = false;
 		this->texture = NULL;
-		//this->textureFilter = Texture::FILTER_UNDEFINED;
-		//this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
-		this->systemColor = Color::Black;
 		this->blendMode = BM_ALPHA;
 		this->colorMode = CM_MULTIPLY;
 		this->colorModeFactor = 1.0f;
-		this->depthBuffer = false;
-		this->depthBufferWrite = false;
+		this->systemColor = Color::Black;
 		// derived attributes
 		this->transformationMatrix.setIdentity();
 	}
