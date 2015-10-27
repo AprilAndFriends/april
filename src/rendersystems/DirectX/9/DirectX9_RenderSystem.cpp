@@ -464,8 +464,8 @@ namespace april
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_LERP);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG0, D3DTA_TFACTOR);
 			break;
 		case CM_ALPHA_MAP:

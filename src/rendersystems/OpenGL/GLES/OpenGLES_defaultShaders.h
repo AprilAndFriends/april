@@ -127,7 +127,7 @@
 	uniform lowp float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), systemColor.rgb, systemColor.a), lerpAlpha); \n\
+		gl_FragColor = systemColor; \n\
 " __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
@@ -152,7 +152,7 @@
 	void main(void) \n\
 	{ \n\
 		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
-		gl_FragColor = vec4(mix(tex.rgb, systemColor.rgb, systemColor.a), tex.a * lerpAlpha); \n\
+		gl_FragColor = vec4(mix(tex.rgb, systemColor.rgb, lerpAlpha), tex.a * systemColor.a); \n\
 " __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
@@ -175,7 +175,7 @@
 	uniform lowp float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), colorFrag.rgb, colorFrag.a), lerpAlpha); \n\
+		gl_FragColor = colorFrag; \n\
 " __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
@@ -200,7 +200,7 @@
 	void main(void) \n\
 	{ \n\
 		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
-		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, colorFrag.a), tex.a * lerpAlpha); \n\
+		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, lerpAlpha), tex.a * colorFrag.a); \n\
 " __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
