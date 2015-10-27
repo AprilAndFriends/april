@@ -53,7 +53,7 @@ namespace april
 		return OpenGLC_RenderSystem::_setupCaps();
 	}
 
-	Texture* OpenGLES1_RenderSystem::_createTexture(bool fromResource)
+	Texture* OpenGLES1_RenderSystem::_deviceCreateTexture(bool fromResource)
 	{
 		return new OpenGLES1_Texture(fromResource);
 	}

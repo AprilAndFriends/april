@@ -7,8 +7,6 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _DIRECTX9
-#include <d3d9.h>
-#include <d3d9types.h>
 #include <stdio.h>
 
 #define __HL_INCLUDE_PLATFORM_HEADERS
@@ -46,7 +44,7 @@ namespace april
 	static ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
 	static ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
 
-	D3DPRIMITIVETYPE dx9_render_ops[]=
+	D3DPRIMITIVETYPE DirectX9_RenderSystem::dx9RenderOperations[]=
 	{
 		D3DPT_FORCE_DWORD,
 		D3DPT_TRIANGLELIST,		// ROP_TRIANGLE_LIST
@@ -66,7 +64,7 @@ namespace april
 		this->deviceState = new RenderState();
 		this->deviceState->reset();
 		this->_supportsA8Surface = false;
-		this->childHWnd = 0;
+		this->_deviceInit();
 	}
 
 	DirectX9_RenderSystem::~DirectX9_RenderSystem()
@@ -74,115 +72,56 @@ namespace april
 		this->destroy();
 	}
 
-	bool DirectX9_RenderSystem::create(RenderSystem::Options options)
+	void DirectX9_RenderSystem::_deviceInit()
 	{
-		if (!DirectX_RenderSystem::create(options))
-		{
-			return false;
-		}
 		this->textureCoordinatesEnabled = false;
 		this->colorEnabled = false;
 		this->renderTarget = NULL;
 		this->backBuffer = NULL;
 		this->activeTexture = NULL;
+		this->d3d = NULL;
+		this->d3dDevice = NULL;
+		this->d3dpp = NULL;
 		this->childHWnd = 0;
-		// Direct3D
+	}
+
+	bool DirectX9_RenderSystem::_deviceCreate(RenderSystem::Options options)
+	{
 		this->d3d = Direct3DCreate9(D3D_SDK_VERSION);
 		if (this->d3d == NULL)
 		{
-			this->destroy();
-			throw Exception("Unable to create Direct3D9 object!");
+			hlog::error(logTag, "Unable to create Direct3D9 object!");
+			return false;
 		}
 		this->d3dpp = new _D3DPRESENT_PARAMETERS_();
 		return true;
 	}
 
-	bool DirectX9_RenderSystem::destroy()
+	bool DirectX9_RenderSystem::_deviceDestroy()
 	{
-		if (!DirectX_RenderSystem::destroy())
-		{
-			return false;
-		}
 		if (this->d3dpp != NULL)
 		{
 			delete this->d3dpp;
-			this->d3dpp = NULL;
 		}
 		if (this->d3dDevice != NULL)
 		{
 			this->d3dDevice->Release();
-			this->d3dDevice = NULL;
 		}
 		if (this->d3d != NULL)
 		{
 			this->d3d->Release();
-			this->d3d = NULL;
 		}
 		if (this->childHWnd != 0)
 		{
 			DestroyWindow(this->childHWnd);
 			UnregisterClassW(APRIL_DX9_CHILD, GetModuleHandle(0));
-			this->childHWnd = 0;
 		}
 		return true;
 	}
 
-	void DirectX9_RenderSystem::reset()
+	void DirectX9_RenderSystem::_deviceAssignWindow(Window* window)
 	{
-		RenderSystem::reset();
-		this->d3dDevice->EndScene();
-		foreach (Texture*, it, this->textures)
-		{
-			(*it)->unload();
-		}
-		this->backBuffer->Release();
-		this->backBuffer = NULL;
-		HRESULT hr;
-		while (april::window->isRunning())
-		{
-			hlog::write(logTag, "Resetting device...");
-			if (this->d3dpp->BackBufferWidth <= 0 || this->d3dpp->BackBufferHeight <= 0)
-			{
-				throw Exception(hsprintf("Backbuffer size is invalid: %d x %d", this->d3dpp->BackBufferWidth, this->d3dpp->BackBufferHeight));
-			}
-			hr = this->d3dDevice->Reset(this->d3dpp);
-			if (!FAILED(hr))
-			{
-				break;
-			}
-			if (hr == D3DERR_DRIVERINTERNALERROR)
-			{
-				throw Exception("Unable to reset Direct3D device, Driver Internal Error!");
-			}
-			else if (hr == D3DERR_DEVICEREMOVED)
-			{
-				throw Exception("Unable to reset Direct3D device, 'Device removed' error reported!");
-			}
-			else if (hr == D3DERR_OUTOFVIDEOMEMORY)
-			{
-				throw Exception("Unable to reset Direct3D device, Out of Video Memory!");
-			}
-			else if (hr == D3DERR_INVALIDCALL)
-			{
-				throw Exception("Unable to reset Direct3D device, device reports 'invalid call'!");
-			}
-			else
-			{
-				hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::reset() hresult: %u", hr);
-			}
-		}
-		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
-		this->d3dDevice->BeginScene();
-		this->_configureDevice();
-		this->_updateDeviceState(true);
-		hlog::write(logTag, "Direct3D9 Device restored.");
-		// this is used to display window content while resizing window
-		april::window->performUpdate(0.0f);
-	}
-
-	void DirectX9_RenderSystem::assignWindow(Window* window)
-	{
-		HWND hWnd = (HWND)april::window->getBackendId();
+		HWND hWnd = (HWND)window->getBackendId();
 		memset(this->d3dpp, 0, sizeof(*this->d3dpp));
 		bool resizable = IS_WINDOW_RESIZABLE;
 		this->d3dpp->Windowed = !april::window->isFullscreen();
@@ -253,6 +192,74 @@ namespace april
 		this->_updateDeviceState(true);
 	}
 
+	void DirectX9_RenderSystem::_deviceReset()
+	{
+		this->d3dDevice->EndScene();
+		foreach(Texture*, it, this->textures)
+		{
+			(*it)->unload();
+		}
+		this->backBuffer->Release();
+		this->backBuffer = NULL;
+		HRESULT hr;
+		while (april::window->isRunning())
+		{
+			hlog::write(logTag, "Resetting device...");
+			if (this->d3dpp->BackBufferWidth <= 0 || this->d3dpp->BackBufferHeight <= 0)
+			{
+				throw Exception(hsprintf("Backbuffer size is invalid: %d x %d", this->d3dpp->BackBufferWidth, this->d3dpp->BackBufferHeight));
+			}
+			hr = this->d3dDevice->Reset(this->d3dpp);
+			if (!FAILED(hr))
+			{
+				break;
+			}
+			if (hr == D3DERR_DRIVERINTERNALERROR)
+			{
+				throw Exception("Unable to reset Direct3D device, Driver Internal Error!");
+			}
+			else if (hr == D3DERR_DEVICEREMOVED)
+			{
+				throw Exception("Unable to reset Direct3D device, 'Device removed' error reported!");
+			}
+			else if (hr == D3DERR_OUTOFVIDEOMEMORY)
+			{
+				throw Exception("Unable to reset Direct3D device, Out of Video Memory!");
+			}
+			else if (hr == D3DERR_INVALIDCALL)
+			{
+				throw Exception("Unable to reset Direct3D device, device reports 'invalid call'!");
+			}
+			else
+			{
+				hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::reset() hresult: %u", hr);
+			}
+		}
+		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
+		this->d3dDevice->BeginScene();
+		this->_configureDevice();
+		this->_updateDeviceState(true);
+		hlog::write(logTag, "Direct3D9 Device restored.");
+		// this is used to display window content while resizing window
+		april::window->performUpdate(0.0f);
+	}
+
+	void DirectX9_RenderSystem::_deviceSetupCaps()
+	{
+		D3DCAPS9 d3dCaps;
+		memset(&d3dCaps, 0, sizeof(D3DCAPS9));
+		HRESULT hr = this->d3dDevice->GetDeviceCaps(&d3dCaps);
+		if (FAILED(hr))
+		{
+			return;
+		}
+		this->caps.maxTextureSize = d3dCaps.MaxTextureWidth;
+		bool pow2 = ((d3dCaps.TextureCaps & D3DPTEXTURECAPS_POW2) != 0);
+		bool nonPow2conditional = ((d3dCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) != 0);
+		this->caps.npotTextures = (!pow2 && !nonPow2conditional); // this is how the docs say it is defined
+		this->caps.npotTexturesLimited = (this->caps.npotTextures || pow2 && nonPow2conditional);
+	}
+
 	void DirectX9_RenderSystem::_tryAssignChildWindow()
 	{
 		this->d3dpp->hDeviceWindow = this->childHWnd;
@@ -267,7 +274,7 @@ namespace april
 		ShowWindow(hWnd, SW_SHOW);
 		UpdateWindow(hWnd);
 	}
-	
+
 	void DirectX9_RenderSystem::_configureDevice()
 	{
 		// calls on init and device reset
@@ -297,6 +304,41 @@ namespace april
 		}
 	}
 
+	void DirectX9_RenderSystem::_deviceSetupDisplayModes()
+	{
+		IDirect3D9* d3d = this->d3d;
+		if (this->d3d == NULL)
+		{
+			d3d = Direct3DCreate9(D3D_SDK_VERSION);
+			if (d3d == NULL)
+			{
+				hlog::error(logTag, "Unable to create Direct3D9 object!");
+				return;
+			}
+		}
+		unsigned int modeCount = d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
+		HRESULT hr;
+		D3DDISPLAYMODE displayMode;
+		for_itert (unsigned int, i, 0, modeCount)
+		{
+			memset(&displayMode, 0, sizeof(D3DDISPLAYMODE));
+			hr = d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
+			if (!FAILED(hr)) 
+			{
+				this->displayModes += RenderSystem::DisplayMode(displayMode.Width, displayMode.Height, displayMode.RefreshRate);
+			}
+		}
+		if (this->d3d == NULL)
+		{
+			d3d->Release();
+		}
+	}
+
+	float DirectX9_RenderSystem::getPixelOffset()
+	{
+		return 0.5f;
+	}
+
 	int DirectX9_RenderSystem::getVRam()
 	{
 		if (this->d3dDevice == NULL)
@@ -304,39 +346,6 @@ namespace april
 			return 0;
 		}
 		return (this->d3dDevice->GetAvailableTextureMem() / (1024 * 1024));
-	}
-
-	harray<RenderSystem::DisplayMode> DirectX9_RenderSystem::getSupportedDisplayModes()
-	{
-		if (this->supportedDisplayModes.size() == 0)
-		{
-			IDirect3D9* d3d = this->d3d;
-			if (this->d3d == NULL)
-			{
-				d3d = Direct3DCreate9(D3D_SDK_VERSION);
-				if (d3d == NULL)
-				{
-					throw Exception("Unable to create Direct3D9 object!");
-				}
-			}
-			unsigned int modeCount = d3d->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8);
-			HRESULT hr;
-			D3DDISPLAYMODE displayMode;
-			for_itert (unsigned int, i, 0, modeCount)
-			{
-				memset(&displayMode, 0, sizeof(D3DDISPLAYMODE));
-				hr = d3d->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_X8R8G8B8, i, &displayMode);
-				if (!FAILED(hr)) 
-				{
-					this->supportedDisplayModes += RenderSystem::DisplayMode(displayMode.Width, displayMode.Height, displayMode.RefreshRate);
-				}
-			}
-			if (this->d3d == NULL)
-			{
-				d3d->Release();
-			}
-		}
-		return this->supportedDisplayModes;
 	}
 
 	void DirectX9_RenderSystem::_setDeviceViewport(const grect& rect)
@@ -581,27 +590,22 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::_setupCaps()
+	Texture* DirectX9_RenderSystem::_deviceCreateTexture(bool fromResource)
 	{
-		if (this->d3dDevice == NULL)
-		{
-			return;
-		}
-		D3DCAPS9 d3dCaps;
-		memset(&d3dCaps, 0, sizeof(D3DCAPS9));
-		HRESULT hr = this->d3dDevice->GetDeviceCaps(&d3dCaps);
-		if (FAILED(hr))
-		{
-			return;
-		}
-		this->caps.maxTextureSize = d3dCaps.MaxTextureWidth;
-		bool pow2 = ((d3dCaps.TextureCaps & D3DPTEXTURECAPS_POW2) != 0);
-		bool nonPow2conditional = ((d3dCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) != 0);
-		this->caps.npotTextures = (!pow2 && !nonPow2conditional); // this is how the docs say it is defined
-		this->caps.npotTexturesLimited = (this->caps.npotTextures || pow2 && nonPow2conditional);
+		return new DirectX9_Texture(fromResource);
 	}
 
-	void DirectX9_RenderSystem::_setResolution(int w, int h, bool fullscreen)
+	PixelShader* DirectX9_RenderSystem::_deviceCreatePixelShader()
+	{
+		return new DirectX9_PixelShader();
+	}
+
+	VertexShader* DirectX9_RenderSystem::_deviceCreateVertexShader()
+	{
+		return new DirectX9_VertexShader();
+	}
+
+	void DirectX9_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
 	{
 		if (this->backBuffer == NULL)
 		{
@@ -644,21 +648,6 @@ namespace april
 			}
 			this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
 		}
-	}
-
-	Texture* DirectX9_RenderSystem::_createTexture(bool fromResource)
-	{
-		return new DirectX9_Texture(fromResource);
-	}
-
-	PixelShader* DirectX9_RenderSystem::_createPixelShader()
-	{
-		return new DirectX9_PixelShader();
-	}
-
-	VertexShader* DirectX9_RenderSystem::_createVertexShader()
-	{
-		return new DirectX9_VertexShader();
 	}
 
 	void DirectX9_RenderSystem::_deviceClear(bool depth)
@@ -708,7 +697,7 @@ namespace april
 			this->setTexture(NULL);
 		}
 		this->d3dDevice->SetFVF(PLAIN_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(PlainVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(PlainVertex));
 	}
 
 	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
@@ -727,7 +716,7 @@ namespace april
 			cv[i].color = c;
 		}
 		this->d3dDevice->SetFVF(COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), cv, sizeof(ColoredVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), cv, sizeof(ColoredVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete[] cv;
@@ -737,7 +726,7 @@ namespace april
 	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
 		this->d3dDevice->SetFVF(TEX_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(TexturedVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(TexturedVertex));
 	}
 
 	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
@@ -754,7 +743,7 @@ namespace april
 			ctv[i].color = c;
 		}
 		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), ctv, sizeof(ColoredTexturedVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), ctv, sizeof(ColoredTexturedVertex));
 		if (nVertices > VERTICES_BUFFER_COUNT)
 		{
 			delete[] ctv;
@@ -768,13 +757,13 @@ namespace april
 			this->setTexture(NULL);
 		}
 		this->d3dDevice->SetFVF(COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredVertex));
 	}
 
 	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
 		this->d3dDevice->SetFVF(TEX_COLOR_FVF);
-		this->d3dDevice->DrawPrimitiveUP(dx9_render_ops[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredTexturedVertex));
+		this->d3dDevice->DrawPrimitiveUP(dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredTexturedVertex));
 	}
 
 	Image::Format DirectX9_RenderSystem::getNativeTextureFormat(Image::Format format)

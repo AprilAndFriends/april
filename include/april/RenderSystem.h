@@ -88,40 +88,57 @@ namespace april
 
 		RenderSystem();
 		virtual ~RenderSystem();
-		virtual bool create(Options options);
-		virtual bool destroy();
 
-		virtual void assignWindow(Window* window) = 0;
-		virtual void reset();
+		void init();
+		bool create(Options options);
+		bool destroy();
+		void assignWindow(Window* window);
+		void reset();
 
 		HL_DEFINE_GET(hstr, name, Name);
 		HL_DEFINE_GET(Options, options, Options);
+		HL_DEFINE_GET(Caps, caps, Caps);
 		harray<Texture*> getTextures();
+		harray<DisplayMode> getDisplayModes();
+		int64_t getVRamConsumption();
+		/// @note This is the RAM consumed by only by the textures, not the entire process.
+		int64_t getRamConsumption();
+		int64_t getAsyncRamConsumption();
+		bool hasAsyncTexturesQueued();
 		grect getViewport();
 		void setViewport(grect value);
 		gmat4 getModelviewMatrix();
 		void setModelviewMatrix(gmat4 matrix);
 		gmat4 getProjectionMatrix();
 		void setProjectionMatrix(gmat4 matrix);
-		// TODO - move below, these aren't properties
-		void setOrthoProjection(grect rect);
-		void setOrthoProjection(grect rect, float nearZ, float farZ);
-		void setOrthoProjection(gvec2 size);
-		void setOrthoProjection(gvec2 size, float nearZ, float farZ);
-		// TODOa - maybe use int64_t instead of long long
-		int64_t getVRamConsumption();
-		/// @note This is the RAM consumed by only by the textures, not the entire process.
-		int64_t getRamConsumption();
-		int64_t getAsyncRamConsumption();
-		bool hasAsyncTexturesQueued();
-		/// @note A timeout value of 0.0 means indefinitely.
-		void waitForAsyncTextures(float timeout = 0.0f);
 
 		virtual float getPixelOffset() = 0;
 		virtual int getVRam() = 0;
 
-		virtual harray<DisplayMode> getSupportedDisplayModes();
-		virtual Caps getCaps();
+		void setOrthoProjection(grect rect);
+		void setOrthoProjection(grect rect, float nearZ, float farZ);
+		void setOrthoProjection(gvec2 size);
+		void setOrthoProjection(gvec2 size, float nearZ, float farZ);
+		void setDepthBuffer(bool enabled, bool writeEnabled = true);
+
+		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
+		/// @note When a format is forced, it's best to use managed (but not necessary).
+		Texture* createTextureFromResource(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
+		Texture* createTextureFromFile(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
+		/// @note When a format is forced, it's best to use managed (but not necessary).
+		Texture* createTextureFromFile(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
+		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
+		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
+		void destroyTexture(Texture* texture);
+
+		PixelShader* createPixelShaderFromResource(chstr filename);
+		PixelShader* createPixelShaderFromFile(chstr filename);
+		PixelShader* createPixelShader();
+		VertexShader* createVertexShaderFromResource(chstr filename);
+		VertexShader* createVertexShaderFromFile(chstr filename);
+		VertexShader* createVertexShader();
+		void destroyPixelShader(PixelShader* shader);
+		void destroyVertexShader(VertexShader* shader);
 
 		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
 		/// @note The parameter factor is only used when the color mode is LERP.
@@ -134,25 +151,6 @@ namespace april
 		virtual void setRenderTarget(Texture* texture);
 		virtual void setVertexShader(VertexShader* vertexShader);
 		virtual void setPixelShader(PixelShader* pixelShader);
-		void setDepthBuffer(bool enabled, bool writeEnabled = true);
-
-		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
-		/// @note When a format is forced, it's best to use managed (but not necessary).
-		Texture* createTextureFromResource(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
-		Texture* createTextureFromFile(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
-		/// @note When a format is forced, it's best to use managed (but not necessary).
-		Texture* createTextureFromFile(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
-		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
-		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED);
-		void destroyTexture(Texture* texture);
-		PixelShader* createPixelShaderFromResource(chstr filename);
-		PixelShader* createPixelShaderFromFile(chstr filename);
-		PixelShader* createPixelShader();
-		VertexShader* createVertexShaderFromResource(chstr filename);
-		VertexShader* createVertexShaderFromFile(chstr filename);
-		VertexShader* createVertexShader();
-		void destroyPixelShader(PixelShader* shader);
-		void destroyVertexShader(VertexShader* shader);
 
 		void setIdentityTransform();
 		void translate(float x, float y, float z = 0.0f);
@@ -186,12 +184,16 @@ namespace april
 		hstr findTextureResource(chstr filename);
 		hstr findTextureFile(chstr filename);
 		void unloadTextures();
+		/// @note A timeout value of 0.0 means indefinitely.
+		void waitForAsyncTextures(float timeout = 0.0f);
+
 		virtual Image::Format getNativeTextureFormat(Image::Format format) = 0;
 		virtual unsigned int getNativeColorUInt(const april::Color& color) = 0;
 		virtual Image* takeScreenshot(Image::Format format);
 		virtual void presentFrame();
 
 		DEPRECATED_ATTRIBUTE inline int getMaxTextureSize() { return this->getCaps().maxTextureSize; }
+		DEPRECATED_ATTRIBUTE inline harray<DisplayMode> getSupportedDisplayModes() { return this->getDisplayModes(); }
 		DEPRECATED_ATTRIBUTE grect getOrthoProjection();
 		DEPRECATED_ATTRIBUTE void clear(bool useColor, bool depth);
 		DEPRECATED_ATTRIBUTE void clear(bool depth, grect rect, Color color = Color::Clear);
@@ -200,26 +202,38 @@ namespace april
 		hstr name;
 		bool created;
 		Options options;
+		Caps caps;
 		harray<Texture*> textures;
+		harray<DisplayMode> displayModes;
 		RenderState* state;
 		RenderState* deviceState;
-		Caps caps;
 		hmutex texturesMutex;
-
-		Texture* _createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format = Image::FORMAT_INVALID);
-		virtual Texture* _createTexture(bool fromResource) = 0;
-		PixelShader* _createPixelShaderFromSource(bool fromResource, chstr filename);
-		virtual PixelShader* _createPixelShader();
-		VertexShader* _createVertexShaderFromSource(bool fromResource, chstr filename);
-		virtual VertexShader* _createVertexShader();
 
 		void _registerTexture(Texture* texture);
 		void _unregisterTexture(Texture* texture);
 
-		virtual void _setupCaps() = 0;
-		virtual void _setResolution(int w, int h, bool fullscreen);
+		Texture* _createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format = Image::FORMAT_INVALID);
+		PixelShader* _createPixelShaderFromSource(bool fromResource, chstr filename);
+		VertexShader* _createVertexShaderFromSource(bool fromResource, chstr filename);
 
 		void _updateDeviceState(bool forceUpdate = false);
+
+		unsigned int _numPrimitives(RenderOperation renderOperation, int nVertices);
+		unsigned int _limitPrimitives(RenderOperation renderOperation, int nVertices);
+
+		virtual void _deviceInit() = 0;
+		virtual bool _deviceCreate(Options options) = 0;
+		virtual bool _deviceDestroy() = 0;
+		virtual void _deviceAssignWindow(Window* window) = 0;
+		virtual void _deviceReset() = 0;
+		virtual void _deviceSetupCaps() = 0;
+		virtual void _deviceSetupDisplayModes();
+
+		virtual Texture* _deviceCreateTexture(bool fromResource) = 0;
+		virtual PixelShader* _deviceCreatePixelShader();
+		virtual VertexShader* _deviceCreateVertexShader();
+
+		virtual void _deviceChangeResolution(int w, int h, bool fullscreen);
 
 		virtual void _setDeviceViewport(const grect& rect) = 0;
 		virtual void _setDeviceModelviewMatrix(const gmat4& matrix) = 0;
@@ -236,9 +250,6 @@ namespace april
 		virtual void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color) = 0;
 		virtual void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices) = 0;
 		virtual void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices) = 0;
-
-		unsigned int _numPrimitives(RenderOperation renderOperation, int nVertices);
-		unsigned int _limitPrimitives(RenderOperation renderOperation, int nVertices);
 
 	};
 

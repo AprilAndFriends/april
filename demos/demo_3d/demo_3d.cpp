@@ -50,7 +50,7 @@ public:
 	bool onUpdate(float timeDelta)
 	{
 		this->angle += timeDelta * 90.0f;
-		april::rendersys->clear(true, true);
+		april::rendersys->clear(april::Color::Clear, true);
 		april::rendersys->setPerspective(60.0f, 1.0f / drawRect.getAspect(), 1.0f, 1000.0f);
 		april::rendersys->lookAt(gvec3(0.0f, 2.0f, 5.0f), gvec3(0.0f, 0.0f, 0.0f), gvec3(0.0f, 1.0f, 0.0f));
 		april::rendersys->rotate(this->angle, 0.0f, 1.0f, 0.0f);

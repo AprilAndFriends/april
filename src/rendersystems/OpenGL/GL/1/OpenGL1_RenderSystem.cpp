@@ -148,7 +148,7 @@ namespace april
 		OpenGLC_RenderSystem::_setupCaps();
 	}
 
-	Texture* OpenGL1_RenderSystem::_createTexture(bool fromResource)
+	Texture* OpenGL1_RenderSystem::_deviceCreateTexture(bool fromResource)
 	{
 		return new OpenGL1_Texture(fromResource);
 	}

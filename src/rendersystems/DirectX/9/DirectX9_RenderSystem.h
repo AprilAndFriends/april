@@ -14,15 +14,13 @@
 #ifndef APRIL_DIRECTX9_RENDER_SYSTEM_H
 #define APRIL_DIRECTX9_RENDER_SYSTEM_H
 
+#include <d3d9.h>
+#include <d3d9types.h>
+
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
 
 #include "DirectX_RenderSystem.h"
-
-struct _D3DPRESENT_PARAMETERS_;
-struct IDirect3D9;
-struct IDirect3DDevice9;
-struct IDirect3DSurface9;
 
 namespace april
 {
@@ -41,15 +39,9 @@ namespace april
 
 		DirectX9_RenderSystem();
 		~DirectX9_RenderSystem();
-		bool create(Options options);
-		bool destroy();
 
-		void reset();
-		void assignWindow(Window* window);
-
-		inline float getPixelOffset() { return 0.5f; }
+		float getPixelOffset();
 		int getVRam();
-		harray<DisplayMode> getSupportedDisplayModes();
 
 		void setTexture(Texture* texture);
 		void setTextureBlendMode(BlendMode textureBlendMode);
@@ -70,25 +62,32 @@ namespace april
 	protected:
 		bool textureCoordinatesEnabled;
 		bool colorEnabled;
-		IDirect3D9* d3d;
-		IDirect3DDevice9* d3dDevice;
 		DirectX9_Texture* activeTexture;
 		DirectX9_Texture* renderTarget;
 		IDirect3DSurface9* backBuffer;
-		harray<DisplayMode> supportedDisplayModes;
+		IDirect3D9* d3d;
+		IDirect3DDevice9* d3dDevice;
 		_D3DPRESENT_PARAMETERS_* d3dpp;
 		HWND childHWnd;
 
-		void _configureDevice();
-		void _setupCaps();
-		void _setResolution(int w, int h, bool fullscreen);
+		void _deviceInit();
+		bool _deviceCreate(Options options);
+		bool _deviceDestroy();
+		void _deviceAssignWindow(Window* window);
+		void _deviceReset();
+		void _deviceSetupCaps();
+		void _deviceSetupDisplayModes();
 
 		void _tryAssignChildWindow();
 		void _tryUnassignChildWindow();
 
-		Texture* _createTexture(bool fromResource);
-		PixelShader* _createPixelShader();
-		VertexShader* _createVertexShader();
+		void _configureDevice();
+
+		Texture* _deviceCreateTexture(bool fromResource);
+		PixelShader* _deviceCreatePixelShader();
+		VertexShader* _deviceCreateVertexShader();
+
+		void _deviceChangeResolution(int w, int h, bool fullscreen);
 
 		void _setDeviceViewport(const grect& rect);
 		void _setDeviceModelviewMatrix(const gmat4& matrix);
@@ -105,6 +104,8 @@ namespace april
 		void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
 		void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
 		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
+
+		static D3DPRIMITIVETYPE dx9RenderOperations[];
 
 	private:
 		bool _supportsA8Surface; // this does not seem to be detectable via any type of device caps

@@ -374,7 +374,7 @@ namespace april
 		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &this->caps.maxTextureSize);
 	}
 
-	void OpenGL_RenderSystem::_setResolution(int w, int h, bool fullscreen)
+	void OpenGL_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
 	{
 		glViewport(0, 0, w, h);
 		this->orthoProjection.setSize((float)w, (float)h);

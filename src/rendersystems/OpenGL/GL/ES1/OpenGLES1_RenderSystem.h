@@ -34,7 +34,7 @@ namespace april
 	protected:
 		void _setupCaps();
 
-		Texture* _createTexture(bool fromResource);
+		Texture* _deviceCreateTexture(bool fromResource);
 
 		void _setTextureBlendMode(BlendMode mode);
 

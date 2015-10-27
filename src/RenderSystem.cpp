@@ -161,28 +161,37 @@ namespace april
 			delete this->deviceState;
 		}
 	}
+
+	void RenderSystem::init()
+	{
+		this->_deviceInit();
+	}
 	
 	bool RenderSystem::create(RenderSystem::Options options)
 	{
 		if (!this->created)
 		{
 			hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
-			this->created = true;
 			this->options = options;
 			this->state->reset();
 			this->deviceState->reset();
-			return true;
+			// create the actual device
+			this->_deviceInit();
+			this->created = this->_deviceCreate(options);
+			if (!this->created)
+			{
+				this->destroy();
+			}
 		}
-		this->state->reset();
-		this->deviceState->reset();
-		return false;
+		return this->created;
 	}
-	
+
 	bool RenderSystem::destroy()
 	{
 		if (this->created)
 		{
 			hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
+			this->created = false;
 			// first wait for queud textures to cancel
 			harray<Texture*> textures = this->getTextures();
 			if (this->hasAsyncTexturesQueued())
@@ -202,17 +211,34 @@ namespace april
 			{
 				delete (*it);
 			}
-			this->created = false;
 			this->state->reset();
 			this->deviceState->reset();
+			if (!this->_deviceDestroy())
+			{
+				return false;
+			}
+			this->_deviceInit();
 			return true;
 		}
 		return false;
 	}
 	
+	void RenderSystem::assignWindow(Window* window)
+	{
+		this->_deviceAssignWindow(window);
+		this->_deviceSetupCaps();
+	}
+
 	void RenderSystem::reset()
 	{
 		hlog::write(logTag, "Resetting rendersystem.");
+		this->_deviceReset();
+	}
+
+	void RenderSystem::_deviceSetupDisplayModes()
+	{
+		gvec2 resolution = april::getSystemInfo().displayResolution;
+		this->displayModes += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
 	}
 
 	harray<Texture*> RenderSystem::getTextures()
@@ -221,23 +247,53 @@ namespace april
 		return this->textures;
 	}
 
-	harray<RenderSystem::DisplayMode> RenderSystem::getSupportedDisplayModes()
+	harray<RenderSystem::DisplayMode> RenderSystem::getDisplayModes()
 	{
-		harray<RenderSystem::DisplayMode> result;
-		gvec2 resolution = april::getSystemInfo().displayResolution;
-		result += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
+		if (this->displayModes.size() == 0)
+		{
+			this->_deviceSetupDisplayModes();
+		}
+		return this->displayModes;
+	}
+
+	int64_t RenderSystem::getVRamConsumption()
+	{
+		int64_t result = 0LL;
+		harray<Texture*> textures = this->getTextures();
+		foreach (Texture*, it, textures)
+		{
+			result += (int64_t)(*it)->getCurrentVRamSize();
+		}
 		return result;
 	}
 
-	RenderSystem::Caps RenderSystem::getCaps()
+	int64_t RenderSystem::getRamConsumption()
 	{
-		if (this->caps.maxTextureSize == 0)
+		int64_t result = 0LL;
+		harray<Texture*> textures = this->getTextures();
+		foreach (Texture*, it, textures)
 		{
-			this->_setupCaps();
+			result += (int64_t)(*it)->getCurrentRamSize();
 		}
-		return this->caps;
+		return result;
 	}
-	
+
+	int64_t RenderSystem::getAsyncRamConsumption()
+	{
+		int64_t result = 0LL;
+		harray<Texture*> textures = this->getTextures();
+		foreach (Texture*, it, textures)
+		{
+			result += (int64_t)(*it)->getCurrentAsyncRamSize();
+		}
+		return result;
+	}
+
+	bool RenderSystem::hasAsyncTexturesQueued()
+	{
+		return TextureAsync::isRunning();
+	}
+
 	grect RenderSystem::getViewport()
 	{
 		return this->state->viewport;
@@ -308,76 +364,6 @@ namespace april
 		}
 	}
 
-	int64_t RenderSystem::getVRamConsumption()
-	{
-		int64_t result = 0LL;
-		harray<Texture*> textures = this->getTextures();
-		foreach (Texture*, it, textures)
-		{
-			result += (int64_t)(*it)->getCurrentVRamSize();
-		}
-		return result;
-	}
-
-	int64_t RenderSystem::getRamConsumption()
-	{
-		int64_t result = 0LL;
-		harray<Texture*> textures = this->getTextures();
-		foreach (Texture*, it, textures)
-		{
-			result += (int64_t)(*it)->getCurrentRamSize();
-		}
-		return result;
-	}
-
-	int64_t RenderSystem::getAsyncRamConsumption()
-	{
-		int64_t result = 0LL;
-		harray<Texture*> textures = this->getTextures();
-		foreach (Texture*, it, textures)
-		{
-			result += (int64_t)(*it)->getCurrentAsyncRamSize();
-		}
-		return result;
-	}
-
-	bool RenderSystem::hasAsyncTexturesQueued()
-	{
-		return TextureAsync::isRunning();
-	}
-
-	Texture* RenderSystem::getRenderTarget()
-	{
-		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
-		return NULL;
-	}
-
-	void RenderSystem::setRenderTarget(Texture* texture)
-	{
-		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
-	}
-
-	void RenderSystem::setPixelShader(april::PixelShader* pixelShader)
-	{
-		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
-	}
-
-	void RenderSystem::setVertexShader(april::VertexShader* vertexShader)
-	{
-		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
-	}
-
-	void RenderSystem::waitForAsyncTextures(float timeout)
-	{
-		float time = timeout;
-		while ((time > 0.0f || timeout <= 0.0f) && this->hasAsyncTexturesQueued())
-		{
-			hthread::sleep(0.1f);
-			time -= 0.0001f;
-			TextureAsync::update();
-		}
-	}
-
 	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, Texture::LoadMode loadMode)
 	{
 		return this->_createTextureFromSource(true, filename, type, loadMode);
@@ -410,7 +396,7 @@ namespace april
 		{
 			return NULL;
 		}
-		Texture* texture = this->_createTexture(fromResource);
+		Texture* texture = this->_deviceCreateTexture(fromResource);
 		bool result = (format == Image::FORMAT_INVALID ? texture->_create(name, type, loadMode) : texture->_create(name, format, type, loadMode));
 		if (result)
 		{
@@ -435,7 +421,7 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
 	{
-		Texture* texture = this->_createTexture(true);
+		Texture* texture = this->_deviceCreateTexture(true);
 		if (!texture->_create(w, h, data, format, type))
 		{
 			delete texture;
@@ -448,7 +434,7 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int w, int h, Color color, Image::Format format, Texture::Type type)
 	{
-		Texture* texture = this->_createTexture(true);
+		Texture* texture = this->_deviceCreateTexture(true);
 		if (!texture->_create(w, h, color, format, type))
 		{
 			delete texture;
@@ -481,7 +467,7 @@ namespace april
 
 	PixelShader* RenderSystem::createPixelShader()
 	{
-		return this->_createPixelShader();
+		return this->_deviceCreatePixelShader();
 	}
 
 	VertexShader* RenderSystem::createVertexShaderFromResource(chstr filename)
@@ -496,12 +482,12 @@ namespace april
 
 	VertexShader* RenderSystem::createVertexShader()
 	{
-		return this->_createVertexShader();
+		return this->_deviceCreateVertexShader();
 	}
 
 	PixelShader* RenderSystem::_createPixelShaderFromSource(bool fromResource, chstr filename)
 	{
-		PixelShader* shader = this->_createPixelShader();
+		PixelShader* shader = this->_deviceCreatePixelShader();
 		if (shader != NULL)
 		{
 			bool loaded = (fromResource ? shader->loadResource(filename) : shader->loadFile(filename));
@@ -516,7 +502,7 @@ namespace april
 
 	VertexShader* RenderSystem::_createVertexShaderFromSource(bool fromResource, chstr filename)
 	{
-		VertexShader* shader = this->_createVertexShader();
+		VertexShader* shader = this->_deviceCreateVertexShader();
 		if (shader != NULL)
 		{
 			bool loaded = (fromResource ? shader->loadResource(filename) : shader->loadFile(filename));
@@ -529,13 +515,13 @@ namespace april
 		return shader;
 	}
 
-	PixelShader* RenderSystem::_createPixelShader()
+	PixelShader* RenderSystem::_deviceCreatePixelShader()
 	{
 		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
-	VertexShader* RenderSystem::_createVertexShader()
+	VertexShader* RenderSystem::_deviceCreateVertexShader()
 	{
 		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
@@ -551,16 +537,28 @@ namespace april
 		delete shader;
 	}
 
-	void RenderSystem::unloadTextures()
+	Texture* RenderSystem::getRenderTarget()
 	{
-		harray<Texture*> textures = this->getTextures();
-		foreach (Texture*, it, textures)
-		{
-			(*it)->unload();
-		}
+		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
+		return NULL;
 	}
 
-	void RenderSystem::_setResolution(int w, int h, bool fullscreen)
+	void RenderSystem::setRenderTarget(Texture* texture)
+	{
+		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
+	}
+
+	void RenderSystem::setPixelShader(april::PixelShader* pixelShader)
+	{
+		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
+	}
+
+	void RenderSystem::setVertexShader(april::VertexShader* vertexShader)
+	{
+		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
+	}
+
+	void RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
 	{
 		hlog::warnf(logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.cStr());
 	}
@@ -764,11 +762,6 @@ namespace april
 		this->render(RO_TRIANGLE_STRIP, tv, 4, color);
 	}
 
-	void RenderSystem::presentFrame()
-	{
-		april::window->presentFrame();
-	}
-	
 	hstr RenderSystem::findTextureResource(chstr filename)
 	{
 		if (hresource::exists(filename))
@@ -831,10 +824,35 @@ namespace april
 		return "";
 	}
 	
+	void RenderSystem::unloadTextures()
+	{
+		harray<Texture*> textures = this->getTextures();
+		foreach(Texture*, it, textures)
+		{
+			(*it)->unload();
+		}
+	}
+
+	void RenderSystem::waitForAsyncTextures(float timeout)
+	{
+		float time = timeout;
+		while ((time > 0.0f || timeout <= 0.0f) && this->hasAsyncTexturesQueued())
+		{
+			hthread::sleep(0.1f);
+			time -= 0.0001f;
+			TextureAsync::update();
+		}
+	}
+
 	april::Image* RenderSystem::takeScreenshot(Image::Format format)
 	{
 		hlog::warnf(logTag, "Screenshots are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
+	}
+
+	void RenderSystem::presentFrame()
+	{
+		april::window->presentFrame();
 	}
 
 	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int nVertices)

@@ -256,6 +256,7 @@ namespace april
 		{
 			throw Exception("Could not create given rendersystem!");
 		}
+		april::rendersys->init();
 	}
 
 	void _createWindowSystem(WindowType windowType)

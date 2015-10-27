@@ -114,7 +114,7 @@ namespace april
 		void _setProjectionMatrix(const gmat4& matrix);
 
 		void _setupCaps();
-		void _setResolution(int w, int h, bool fullscreen);
+		void _deviceChangeResolution(int w, int h, bool fullscreen);
 
 		virtual void _setTextureBlendMode(BlendMode textureBlendMode);
 		/// @note The parameter factor is only used when the color mode is LERP.
