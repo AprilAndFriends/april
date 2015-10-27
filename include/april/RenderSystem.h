@@ -141,10 +141,9 @@ namespace april
 		void setDepthBuffer(bool enabled, bool writeEnabled = true);
 
 		void setTexture(Texture* texture);
-		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
-		/// @note The parameter factor is only used when the color mode is LERP.
-		virtual void setTextureColorMode(ColorMode colorMode, float factor = 1.0f) = 0;
-		//virtual void setTexture(Texture* texture) = 0;
+		void setBlendMode(BlendMode blendMode);
+		/// @note The parameter colorModeFactor is only used when the color mode is LERP.
+		void setColorMode(ColorMode colorMode, float colorModeFactor = 1.0f);
 
 		virtual Texture* getRenderTarget();
 		virtual void setRenderTarget(Texture* texture);
@@ -198,6 +197,8 @@ namespace april
 		DEPRECATED_ATTRIBUTE void clear(bool depth, grect rect, Color color = Color::Clear);
 		DEPRECATED_ATTRIBUTE void setTextureFilter(Texture::Filter textureFilter);
 		DEPRECATED_ATTRIBUTE void setTextureAddressMode(Texture::AddressMode textureAddressMode);
+		DEPRECATED_ATTRIBUTE void setTextureBlendMode(BlendMode blendMode) { this->setBlendMode(blendMode); }
+		DEPRECATED_ATTRIBUTE void setTextureColorMode(ColorMode colorMode, float factor = 1.0f) { this->setColorMode(colorMode, factor); }
 
 	protected:
 		hstr name;
@@ -243,6 +244,8 @@ namespace april
 		virtual void _setDeviceTexture(Texture* texture) = 0;
 		virtual void _setDeviceTextureFilter(Texture::Filter textureFilter) = 0;
 		virtual void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
+		virtual void _setDeviceBlendMode(BlendMode blendMode) = 0;
+		virtual void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useColor, const Color& systemColor) = 0;
 
 		virtual void _deviceClear(bool depth) = 0;
 		virtual void _deviceClear(april::Color color, bool depth) = 0;

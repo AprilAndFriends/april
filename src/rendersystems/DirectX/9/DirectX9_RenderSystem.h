@@ -43,9 +43,9 @@ namespace april
 		float getPixelOffset();
 		int getVRam();
 
-		void setTextureBlendMode(BlendMode textureBlendMode);
+		//void setTextureBlendMode(BlendMode textureBlendMode);
 		/// @note The parameter factor is only used when the color mode is LERP.
-		void setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
+		//void setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
 		//void setTextureFilter(Texture::Filter textureFilter);
 		//void setTextureAddressMode(Texture::AddressMode textureAddressMode);
 		Texture* getRenderTarget();
@@ -95,6 +95,8 @@ namespace april
 		void _setDeviceTexture(Texture* texture);
 		void _setDeviceTextureFilter(Texture::Filter textureFilter);
 		void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode);
+		void _setDeviceBlendMode(BlendMode blendMode);
+		void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useColor, const Color& systemColor);
 
 		void _deviceClear(bool depth);
 		void _deviceClear(april::Color color, bool depth);

@@ -281,22 +281,7 @@ namespace april
 		this->d3dDevice->SetRenderState(D3DRS_LIGHTING, 0);
 		this->d3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 		this->d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, 1);
-		this->d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-		this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-		this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-		// separate alpha blending to use proper alpha blending
 		this->d3dDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, 1);
-		this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
-		this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
-		this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
-		// vertex color blending
-		this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-		this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-		// misc
-		this->setTextureBlendMode(april::BM_DEFAULT);
-		this->setTextureColorMode(april::CM_DEFAULT);
-		//this->state->textureFilter = Texture::FILTER_UNDEFINED;
-		//this->state->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 		Caps caps = this->getCaps();
 		if (!caps.npotTexturesLimited && !caps.npotTextures)
 		{
@@ -384,25 +369,8 @@ namespace april
 
 	void DirectX9_RenderSystem::_setDeviceTexture(Texture* texture)
 	{
-		
-		
-		//this->activeTexture = (DirectX9_Texture*)texture;
 		if (texture != NULL)
 		{
-			/*
-			Texture::Filter filter = this->activeTexture->getFilter();
-			if (this->state->textureFilter != filter)
-			{
-				this->setTextureFilter(filter);
-			}
-			Texture::AddressMode addressMode = this->activeTexture->getAddressMode();
-			if (this->state->textureAddressMode != addressMode)
-			{
-				this->setTextureAddressMode(addressMode);
-			}
-			*/
-			//currentTexture->load();
-			//currentTexture->unlock();
 			DirectX9_Texture* currentTexture = (DirectX9_Texture*)texture;
 			this->d3dDevice->SetTexture(0, currentTexture->d3dTexture);
 			Caps caps = this->getCaps();
@@ -417,17 +385,10 @@ namespace april
 		{
 			this->d3dDevice->SetTexture(0, NULL);
 		}
-		/*
-		if (currentTexture != NULL && !caps.npotTexturesLimited && !caps.npotTextures)
-		{
-			
-		}
-		*/
 	}
 
 	void DirectX9_RenderSystem::_setDeviceTextureFilter(Texture::Filter textureFilter)
 	{
-		//this->state->textureFilter = textureFilter;
 		switch (textureFilter)
 		{
 		case Texture::FILTER_LINEAR:
@@ -446,7 +407,6 @@ namespace april
 
 	void DirectX9_RenderSystem::_setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
-		//this->state->textureAddressMode = textureAddressMode;
 		switch (textureAddressMode)
 		{
 		case Texture::ADDRESS_WRAP:
@@ -463,9 +423,9 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::setTextureBlendMode(BlendMode textureBlendMode)
+	void DirectX9_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
 	{
-		switch (textureBlendMode)
+		switch (blendMode)
 		{
 		case BM_DEFAULT:
 		case BM_ALPHA:
@@ -506,11 +466,11 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::setTextureColorMode(ColorMode textureColorMode, float factor)
+	void DirectX9_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float factor, bool useColor, const Color& systemColor)
 	{
 		static unsigned char color = 0;
 		color = (unsigned char)(factor * 255);
-		switch (textureColorMode)
+		switch (colorMode)
 		{
 		case CM_DEFAULT:
 		case CM_MULTIPLY:
@@ -519,6 +479,14 @@ namespace april
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+			break;
+		case CM_ALPHA_MAP:
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 			break;
 		case CM_LERP:
@@ -530,14 +498,6 @@ namespace april
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG0, D3DTA_TFACTOR);
-			break;
-		case CM_ALPHA_MAP:
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 			break;
 		default:
 			hlog::warn(logTag, "Trying to set unsupported texture color mode!");

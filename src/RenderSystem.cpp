@@ -552,6 +552,17 @@ namespace april
 		this->state->texture = texture;
 	}
 
+	void RenderSystem::setBlendMode(BlendMode blendMode)
+	{
+		this->state->blendMode = blendMode;
+	}
+
+	void RenderSystem::setColorMode(ColorMode colorMode, float colorModeFactor)
+	{
+		this->state->colorMode = colorMode;
+		this->state->colorModeFactor = colorModeFactor;
+	}
+
 	Texture* RenderSystem::getRenderTarget()
 	{
 		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
@@ -690,6 +701,22 @@ namespace april
 			this->deviceState->texture = this->state->texture;
 			this->deviceState->useTexture = this->state->useTexture;
 		}
+		// blend mode
+		if (forceUpdate || this->deviceState->blendMode != this->state->blendMode)
+		{
+			this->_setDeviceBlendMode(this->state->blendMode);
+			this->deviceState->blendMode = this->state->blendMode;
+		}
+		// color mode
+		if (forceUpdate || this->deviceState->colorMode != this->state->colorMode || this->deviceState->colorModeFactor != this->state->colorModeFactor ||
+			this->deviceState->useColor != this->state->useColor || this->deviceState->systemColor != this->state->systemColor)
+		{
+			this->_setDeviceColorMode(this->state->colorMode, this->state->colorModeFactor, this->state->useColor, this->state->systemColor);
+			this->deviceState->colorMode = this->state->colorMode;
+			this->deviceState->colorModeFactor = this->state->colorModeFactor;
+			this->deviceState->useColor = this->state->useColor;
+			this->deviceState->systemColor = this->state->systemColor;
+		}
 		// finalize by updating special variables in states
 		this->state->update();
 		this->deviceState->update();
@@ -739,6 +766,7 @@ namespace april
 	{
 		this->state->useTexture = false;
 		this->state->useColor = false;
+		this->state->systemColor = april::Color::White;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices);
 	}
@@ -747,6 +775,7 @@ namespace april
 	{
 		this->state->useTexture = false;
 		this->state->useColor = false;
+		this->state->systemColor = color;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices, color);
 	}
@@ -755,6 +784,7 @@ namespace april
 	{
 		this->state->useTexture = true;
 		this->state->useColor = false;
+		this->state->systemColor = april::Color::White;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices);
 	}
@@ -763,6 +793,7 @@ namespace april
 	{
 		this->state->useTexture = true;
 		this->state->useColor = false;
+		this->state->systemColor = color;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices, color);
 	}
@@ -771,6 +802,7 @@ namespace april
 	{
 		this->state->useTexture = false;
 		this->state->useColor = true;
+		this->state->systemColor = april::Color::White;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices);
 	}
@@ -779,6 +811,7 @@ namespace april
 	{
 		this->state->useTexture = true;
 		this->state->useColor = true;
+		this->state->systemColor = april::Color::White;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices);
 	}

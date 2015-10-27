@@ -37,8 +37,8 @@ namespace april
 		//this->textureFilter = Texture::FILTER_UNDEFINED;
 		//this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->systemColor = Color::Black;
-		this->blendMode = BM_UNDEFINED;
-		this->colorMode = CM_UNDEFINED;
+		this->blendMode = BM_ALPHA;
+		this->colorMode = CM_MULTIPLY;
 		this->colorModeFactor = 1.0f;
 		this->depthBuffer = false;
 		this->depthBufferWrite = false;
