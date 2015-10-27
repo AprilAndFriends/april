@@ -56,7 +56,7 @@ namespace april
 	// DEPRECATED
 	void RenderSystem::clear(bool depth, grect rect, Color color)
 	{
-		this->clear(color, rect, depth);
+		this->clear(color, depth);
 	}
 	// DEPRECATED
 	void RenderSystem::setTextureFilter(Texture::Filter textureFilter)
@@ -234,12 +234,22 @@ namespace april
 	{
 		this->_deviceAssignWindow(window);
 		this->_deviceSetupCaps();
+		grect viewport(0.0f, 0.0f, april::window->getSize());
+		this->setViewport(viewport);
+		this->setOrthoProjection(viewport);
+		this->_updateDeviceState(true);
 	}
 
 	void RenderSystem::reset()
 	{
 		hlog::write(logTag, "Resetting rendersystem.");
 		this->_deviceReset();
+	}
+
+	void RenderSystem::_deviceReset()
+	{
+		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
+		this->_updateDeviceState(true);
 	}
 
 	void RenderSystem::_deviceSetupDisplayModes()
@@ -560,27 +570,6 @@ namespace april
 		this->state->colorModeFactor = colorModeFactor;
 	}
 
-	Texture* RenderSystem::getRenderTarget()
-	{
-		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
-		return NULL;
-	}
-
-	void RenderSystem::setRenderTarget(Texture* texture)
-	{
-		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
-	}
-
-	void RenderSystem::setPixelShader(april::PixelShader* pixelShader)
-	{
-		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
-	}
-
-	void RenderSystem::setVertexShader(april::VertexShader* vertexShader)
-	{
-		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
-	}
-
 	void RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
 	{
 		hlog::warnf(logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.cStr());
@@ -727,7 +716,6 @@ namespace april
 		{
 			depth = false;
 		}
-		this->_updateDeviceState();
 		this->_deviceClear(depth);
 	}
 
@@ -737,18 +725,7 @@ namespace april
 		{
 			depth = false;
 		}
-		this->_updateDeviceState();
 		this->_deviceClear(color, depth);
-	}
-
-	void RenderSystem::clear(april::Color color, grect rect, bool depth)
-	{
-		if (!this->options.depthBuffer)
-		{
-			depth = false;
-		}
-		this->_updateDeviceState();
-		this->_deviceClear(color, rect, depth);
 	}
 
 	void RenderSystem::clearDepth()
@@ -757,7 +734,6 @@ namespace april
 		{
 			return;
 		}
-		this->_updateDeviceState();
 		this->_deviceClearDepth();
 	}
 
@@ -975,4 +951,25 @@ namespace april
 		return nVertices;
 	}
 	
+	Texture* RenderSystem::getRenderTarget()
+	{
+		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
+		return NULL;
+	}
+
+	void RenderSystem::setRenderTarget(Texture* texture)
+	{
+		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
+	}
+
+	void RenderSystem::setPixelShader(april::PixelShader* pixelShader)
+	{
+		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
+	}
+
+	void RenderSystem::setVertexShader(april::VertexShader* vertexShader)
+	{
+		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
+	}
+
 }

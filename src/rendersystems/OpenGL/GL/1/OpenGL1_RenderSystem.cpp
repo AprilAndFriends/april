@@ -119,7 +119,7 @@ namespace april
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 	}
 
-	void OpenGL1_RenderSystem::_setupCaps()
+	void OpenGL1_RenderSystem::_deviceSetupCaps()
 	{
 #if defined(_WIN32) && !defined(_WINRT)
 		if (this->hRC == 0)
@@ -145,7 +145,7 @@ namespace april
 				}
 			}
 		}
-		OpenGLC_RenderSystem::_setupCaps();
+		OpenGLC_RenderSystem::_deviceSetupCaps();
 	}
 
 	Texture* OpenGL1_RenderSystem::_deviceCreateTexture(bool fromResource)
@@ -153,7 +153,7 @@ namespace april
 		return new OpenGL1_Texture(fromResource);
 	}
 
-	void OpenGL1_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
+	void OpenGL1_RenderSystem::_setDeviceBlendMode(BlendMode textureBlendMode)
 	{
 		// TODO - is there a way to make this work on Win32?
 #ifndef _WIN32
@@ -196,7 +196,7 @@ namespace april
 #endif
 		{
 			// old-school blending mode for your dad
-			OpenGLC_RenderSystem::_setTextureBlendMode(textureBlendMode);
+			OpenGLC_RenderSystem::_setDeviceBlendMode(textureBlendMode);
 		}
 	}
 	

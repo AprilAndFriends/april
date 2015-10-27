@@ -60,7 +60,6 @@
 #include <gtypes/Vector2.h>
 
 #include "Color.h"
-#include "OpenGL_State.h"
 #include "RenderSystem.h"
 
 namespace april
@@ -75,56 +74,73 @@ namespace april
 
 		OpenGL_RenderSystem();
 		~OpenGL_RenderSystem();
-		bool create(Options options);
-		bool destroy();
 
-		void reset();
-		void assignWindow(Window* window);
-
-		inline float getPixelOffset() { return 0.0f; }
-		inline int getVRam() { return 0; }
-		void setViewport(grect value);
-
-		void clear(bool useColor = true, bool depth = false);
-		void clear(bool depth, grect rect, Color color = Color::Clear);
-
-		void bindTexture(unsigned int textureId);
-
-		void setMatrixMode(unsigned int mode);
-		void setTexture(Texture* texture);
-		void setTextureBlendMode(BlendMode mode);
-		/// @note The parameter factor is only used when the color mode is LERP.
-		void setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
-		void setTextureFilter(Texture::Filter textureFilter);
-		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
-		void setDepthBuffer(bool enabled, bool writeEnabled = true);
+		float getPixelOffset();
+		int getVRam();
 
 		Image::Format getNativeTextureFormat(Image::Format format);
 		unsigned int getNativeColorUInt(const april::Color& color);
 		Image* takeScreenshot(Image::Format format);
 
+		//bool create(Options options);
+		//bool destroy();
+		//void reset();
+		//void assignWindow(Window* window);
+
+		//void setViewport(grect value);
+
+		//void clear(bool useColor = true, bool depth = false);
+		//void clear(bool depth, grect rect, Color color = Color::Clear);
+
+		//void bindTexture(unsigned int textureId);
+
+		//void setTexture(Texture* texture);
+		//void setTextureBlendMode(BlendMode mode);
+		/// @note The parameter factor is only used when the color mode is LERP.
+		//void setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
+		//void setTextureFilter(Texture::Filter textureFilter);
+		//void setTextureAddressMode(Texture::AddressMode textureAddressMode);
+		//void setDepthBuffer(bool enabled, bool writeEnabled = true);
+
 	protected:
-		OpenGL_State deviceState;
-		OpenGL_State currentState;
-		OpenGL_Texture* activeTexture;
+		void _deviceInit();
+		bool _deviceCreate(Options options);
+		bool _deviceDestroy();
+		void _deviceAssignWindow(Window* window);
+		void _deviceReset();
+		void _deviceSetupCaps();
 
 		virtual void _setupDefaultParameters();
-		virtual void _applyStateChanges();
-		void _setModelviewMatrix(const gmat4& matrix);
-		void _setProjectionMatrix(const gmat4& matrix);
 
-		void _setupCaps();
 		void _deviceChangeResolution(int w, int h, bool fullscreen);
 
-		virtual void _setTextureBlendMode(BlendMode textureBlendMode);
-		/// @note The parameter factor is only used when the color mode is LERP.
-		virtual void _setTextureColorMode(ColorMode textureColorMode, float factor) = 0;
-		virtual void _setTextureFilter(Texture::Filter textureFilter);
-		virtual void _setTextureAddressMode(Texture::AddressMode textureAddressMode);
-		virtual void _setDepthBuffer(bool enabled, bool writeEnabled = true);
+		void _setDeviceViewport(const grect& rect);
+		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
+		void _setDeviceTexture(Texture* texture);
+		void _setDeviceTextureFilter(Texture::Filter textureFilter);
+		void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode);
+		void _setDeviceBlendMode(BlendMode blendMode);
 
-		virtual void _loadIdentityMatrix() = 0;
-		virtual void _setMatrixMode(unsigned int mode) = 0;
+		void _deviceClear(bool depth);
+		void _deviceClear(april::Color color, bool depth);
+		void _deviceClear(april::Color color, grect rect, bool depth);
+		void _deviceClearDepth();
+
+		//virtual void _applyStateChanges();
+		//void _setModelviewMatrix(const gmat4& matrix);
+		//void _setProjectionMatrix(const gmat4& matrix);
+
+		//void _setupCaps();
+		//void _deviceChangeResolution(int w, int h, bool fullscreen);
+
+		//virtual void _setTextureBlendMode(BlendMode textureBlendMode);
+		/// @note The parameter factor is only used when the color mode is LERP.
+		//virtual void _setTextureColorMode(ColorMode textureColorMode, float factor) = 0;
+		//virtual void _setTextureFilter(Texture::Filter textureFilter);
+		//virtual void _setTextureAddressMode(Texture::AddressMode textureAddressMode);
+
+		//virtual void _loadIdentityMatrix() = 0;
+		//virtual void _setMatrixMode(unsigned int mode) = 0;
 		virtual void _setVertexPointer(int stride, const void* pointer) = 0;
 		virtual void _setTexCoordPointer(int stride, const void* pointer) = 0;
 		virtual void _setColorPointer(int stride, const void* pointer) = 0;
@@ -142,7 +158,7 @@ namespace april
 #endif
 
 		// translation from abstract render ops to gl's render ops
-		static int glRenderOperations[];
+		static int _glRenderOperations[];
 
 	};
 	

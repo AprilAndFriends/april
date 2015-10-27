@@ -31,11 +31,12 @@ namespace april
 
 	protected:
 		void _setupDefaultParameters();
-		void _setupCaps();
+
+		void _deviceSetupCaps();
 
 		Texture* _deviceCreateTexture(bool fromResource);
 
-		void _setTextureBlendMode(BlendMode mode);
+		void _setDeviceBlendMode(BlendMode mode);
 
 #if defined(_WIN32) && !defined(_WINRT)
 		HGLRC hRC;

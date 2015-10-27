@@ -96,7 +96,6 @@ namespace april
 
 		void _deviceClear(bool depth);
 		void _deviceClear(april::Color color, bool depth);
-		void _deviceClear(april::Color color, grect rect, bool depth);
 		void _deviceClearDepth();
 		void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices);
 		void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);

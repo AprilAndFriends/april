@@ -32,7 +32,6 @@
 #include "april.h"
 #include "Image.h"
 #include "OpenGL_RenderSystem.h"
-#include "OpenGL_State.h"
 #include "OpenGL_Texture.h"
 
 #define APRIL_OGL_RENDERSYS ((OpenGL_RenderSystem*)april::rendersys)
@@ -62,7 +61,7 @@ namespace april
 {
 	static bool _preventRecursion = false;
 
-	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0), previousTextureId(0)
+	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0), previousTexture(NULL)
 	{
 	}
 
@@ -151,31 +150,25 @@ namespace april
 
 	void OpenGL_Texture::_setCurrentTexture()
 	{
-		if (this->previousTextureId == 0)
+		if (this->previousTexture == NULL)
 		{
-			this->previousTextureId = APRIL_OGL_RENDERSYS->deviceState.textureId;
-			this->previousFilter = APRIL_OGL_RENDERSYS->deviceState.textureFilter;
-			this->perviousAddressMode = APRIL_OGL_RENDERSYS->deviceState.textureAddressMode;
+			this->previousTexture = APRIL_OGL_RENDERSYS->deviceState->texture;
 		}
-		APRIL_OGL_RENDERSYS->deviceState.textureId = this->textureId;
-		glBindTexture(GL_TEXTURE_2D, this->textureId);
-		APRIL_OGL_RENDERSYS->deviceState.textureFilter = this->filter;
-		APRIL_OGL_RENDERSYS->_setTextureFilter(this->filter);
-		APRIL_OGL_RENDERSYS->deviceState.textureAddressMode = this->addressMode;
-		APRIL_OGL_RENDERSYS->_setTextureAddressMode(this->addressMode);
+		APRIL_OGL_RENDERSYS->deviceState->texture = this;
+		APRIL_OGL_RENDERSYS->_setDeviceTextureFilter(this->filter);
+		APRIL_OGL_RENDERSYS->_setDeviceTextureAddressMode(this->addressMode);
+		APRIL_OGL_RENDERSYS->_setDeviceTexture(this);
 	}
 
 	void OpenGL_Texture::_resetCurrentTexture()
 	{
-		if (this->previousTextureId != 0)
+		if (this->previousTexture != NULL)
 		{
-			APRIL_OGL_RENDERSYS->deviceState.textureId = this->previousTextureId;
-			glBindTexture(GL_TEXTURE_2D, this->previousTextureId);
-			APRIL_OGL_RENDERSYS->deviceState.textureFilter = this->previousFilter;
-			APRIL_OGL_RENDERSYS->_setTextureFilter(this->previousFilter);
-			APRIL_OGL_RENDERSYS->deviceState.textureAddressMode = this->perviousAddressMode;
-			APRIL_OGL_RENDERSYS->_setTextureAddressMode(this->perviousAddressMode);
-			this->previousTextureId = 0;
+			APRIL_OGL_RENDERSYS->deviceState->texture = this->previousTexture;
+			APRIL_OGL_RENDERSYS->_setDeviceTextureFilter(this->previousTexture->getFilter());
+			APRIL_OGL_RENDERSYS->_setDeviceTextureAddressMode(this->previousTexture->getAddressMode());
+			APRIL_OGL_RENDERSYS->_setDeviceTexture(this->previousTexture);
+			this->previousTexture = NULL;
 		}
 	}
 

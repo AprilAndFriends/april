@@ -160,7 +160,6 @@ namespace april
 
 		void clear(bool depth = false);
 		void clear(april::Color color, bool depth = false);
-		void clear(april::Color color, grect rect, bool depth = false);
 		void clearDepth();
 		/// @note Calling this will effectively set the current texture to NULL.
 		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
@@ -220,14 +219,11 @@ namespace april
 
 		void _updateDeviceState(bool forceUpdate = false);
 
-		unsigned int _numPrimitives(RenderOperation renderOperation, int nVertices);
-		unsigned int _limitPrimitives(RenderOperation renderOperation, int nVertices);
-
 		virtual void _deviceInit() = 0;
 		virtual bool _deviceCreate(Options options) = 0;
 		virtual bool _deviceDestroy() = 0;
 		virtual void _deviceAssignWindow(Window* window) = 0;
-		virtual void _deviceReset() = 0;
+		virtual void _deviceReset();
 		virtual void _deviceSetupCaps() = 0;
 		virtual void _deviceSetupDisplayModes();
 
@@ -249,7 +245,6 @@ namespace april
 
 		virtual void _deviceClear(bool depth) = 0;
 		virtual void _deviceClear(april::Color color, bool depth) = 0;
-		virtual void _deviceClear(april::Color color, grect rect, bool depth) = 0;
 		virtual void _deviceClearDepth() = 0;
 		virtual void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices) = 0;
 		virtual void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color) = 0;
@@ -257,6 +252,9 @@ namespace april
 		virtual void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color) = 0;
 		virtual void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices) = 0;
 		virtual void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices) = 0;
+
+		unsigned int _numPrimitives(RenderOperation renderOperation, int nVertices);
+		unsigned int _limitPrimitives(RenderOperation renderOperation, int nVertices);
 
 	};
 

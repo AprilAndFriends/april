@@ -36,9 +36,7 @@ namespace april
 		unsigned int textureId;
 		int glFormat;
 		int internalFormat;
-		unsigned int previousTextureId;
-		Filter previousFilter;
-		AddressMode perviousAddressMode;
+		Texture* previousTexture;
 
 		void _setCurrentTexture();
 		void _resetCurrentTexture();

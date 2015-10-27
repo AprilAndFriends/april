@@ -176,11 +176,9 @@ namespace april
 		// device config
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
 		this->d3dDevice->BeginScene();
-		this->_configureDevice();
 		this->renderTarget = NULL;
-		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
+		this->_configureDevice();
 		this->clear();
-		this->_updateDeviceState(true);
 	}
 
 	void DirectX9_RenderSystem::_deviceReset()
@@ -229,7 +227,7 @@ namespace april
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 		this->d3dDevice->BeginScene();
 		this->_configureDevice();
-		this->_updateDeviceState(true);
+		DirectX_RenderSystem::_deviceReset();
 		hlog::write(logTag, "Direct3D9 Device restored.");
 		// this is used to display window content while resizing window
 		april::window->performUpdate(0.0f);
@@ -322,6 +320,66 @@ namespace april
 			return 0;
 		}
 		return (this->d3dDevice->GetAvailableTextureMem() / (1024 * 1024));
+	}
+
+	Texture* DirectX9_RenderSystem::_deviceCreateTexture(bool fromResource)
+	{
+		return new DirectX9_Texture(fromResource);
+	}
+
+	PixelShader* DirectX9_RenderSystem::_deviceCreatePixelShader()
+	{
+		return new DirectX9_PixelShader();
+	}
+
+	VertexShader* DirectX9_RenderSystem::_deviceCreateVertexShader()
+	{
+		return new DirectX9_VertexShader();
+	}
+
+	void DirectX9_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
+	{
+		if (this->backBuffer == NULL)
+		{
+			return;
+		}
+		if (w <= 0 || h <= 0)
+		{
+			hlog::warnf(logTag, "Cannot set resolution to: %d x %d", w, h);
+			return;
+		}
+		bool resizable = IS_WINDOW_RESIZABLE;
+		bool oldFullscreen = (this->d3dpp->Windowed == FALSE);
+		this->d3dpp->Windowed = !fullscreen;
+		if (fullscreen != oldFullscreen || !resizable)
+		{
+			if (resizable)
+			{
+				if (!fullscreen)
+				{
+					this->_tryAssignChildWindow();
+				}
+				else
+				{
+					this->_tryUnassignChildWindow();
+				}
+				this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
+				SystemInfo info = april::getSystemInfo();
+				w = (int)info.displayResolution.x;
+				h = (int)info.displayResolution.y;
+			}
+			this->d3dpp->BackBufferWidth = w;
+			this->d3dpp->BackBufferHeight = h;
+			this->reset();
+		}
+		else
+		{
+			if (resizable)
+			{
+				this->_tryAssignChildWindow();
+			}
+			this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
+		}
 	}
 
 	void DirectX9_RenderSystem::_setDeviceViewport(const grect& rect)
@@ -545,66 +603,6 @@ namespace april
 		}
 	}
 
-	Texture* DirectX9_RenderSystem::_deviceCreateTexture(bool fromResource)
-	{
-		return new DirectX9_Texture(fromResource);
-	}
-
-	PixelShader* DirectX9_RenderSystem::_deviceCreatePixelShader()
-	{
-		return new DirectX9_PixelShader();
-	}
-
-	VertexShader* DirectX9_RenderSystem::_deviceCreateVertexShader()
-	{
-		return new DirectX9_VertexShader();
-	}
-
-	void DirectX9_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
-	{
-		if (this->backBuffer == NULL)
-		{
-			return;
-		}
-		if (w <= 0 || h <= 0)
-		{
-			hlog::warnf(logTag, "Cannot set resolution to: %d x %d", w, h);
-			return;
-		}
-		bool resizable = IS_WINDOW_RESIZABLE;
-		bool oldFullscreen = (this->d3dpp->Windowed == FALSE);
-		this->d3dpp->Windowed = !fullscreen;
-		if (fullscreen != oldFullscreen || !resizable)
-		{
-			if (resizable)
-			{
-				if (!fullscreen)
-				{
-					this->_tryAssignChildWindow();
-				}
-				else
-				{
-					this->_tryUnassignChildWindow();
-				}
-				this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
-				SystemInfo info = april::getSystemInfo();
-				w = (int)info.displayResolution.x;
-				h = (int)info.displayResolution.y;
-			}
-			this->d3dpp->BackBufferWidth = w;
-			this->d3dpp->BackBufferHeight = h;
-			this->reset();
-		}
-		else
-		{
-			if (resizable)
-			{
-				this->_tryAssignChildWindow();
-			}
-			this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
-		}
-	}
-
 	void DirectX9_RenderSystem::_deviceClear(bool depth)
 	{
 		DWORD flags = D3DCLEAR_TARGET;
@@ -625,21 +623,6 @@ namespace april
 		this->d3dDevice->Clear(0, NULL, flags, this->getNativeColorUInt(color), 1.0f, 0);
 	}
 
-	void DirectX9_RenderSystem::_deviceClear(april::Color color, grect rect, bool depth)
-	{
-		DWORD flags = D3DCLEAR_TARGET;
-		if (depth)
-		{
-			flags |= D3DCLEAR_ZBUFFER;
-		}
-		D3DRECT area;
-		area.x1 = (int)rect.x;
-		area.y1 = (int)rect.y;
-		area.x2 = (int)(rect.x + rect.w);
-		area.y2 = (int)(rect.y + rect.h);
-		this->d3dDevice->Clear(1, &area, flags, this->getNativeColorUInt(color), 1.0f, 0);
-	}
-	
 	void DirectX9_RenderSystem::_deviceClearDepth()
 	{
 		this->d3dDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
