@@ -31,11 +31,11 @@ namespace april
 		this->projectionMatrixChanged = true;
 		this->viewport.set(0.0f, 0.0f, 1.0f, 1.0f);
 		this->viewportChanged = true;
-		this->textureCoordinatesEnabled = false;
-		this->colorEnabled = false;
+		this->useTexture = false;
+		this->useColor = false;
 		this->texture = NULL;
-		this->textureFilter = Texture::FILTER_UNDEFINED;
-		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
+		//this->textureFilter = Texture::FILTER_UNDEFINED;
+		//this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->systemColor = Color::Black;
 		this->blendMode = BM_UNDEFINED;
 		this->colorMode = CM_UNDEFINED;

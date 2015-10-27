@@ -37,16 +37,18 @@ namespace april
 		grect viewport;
 		/// @brief Whether the viewport has changed.
 		bool viewportChanged;
-		/// @brief Whether texture coordinates are used in vertices.
-		bool textureCoordinatesEnabled;
-		/// @brief Whether color is used in vertices.
-		bool colorEnabled;
 		/// @brief The current unique texture ID.
 		Texture* texture;
+		/*
 		/// @brief The current texture filter.
 		Texture::Filter textureFilter;
 		/// @brief The current texture address mode.
 		Texture::AddressMode textureAddressMode;
+		*/
+		/// @brief Whether texture coordinates are used in vertices.
+		bool useTexture;
+		/// @brief Whether color is used in vertices.
+		bool useColor;
 		/// @brief The current system color.
 		/// @note Usually used when clearing a buffer.
 		Color systemColor;

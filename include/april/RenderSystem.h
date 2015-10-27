@@ -115,12 +115,6 @@ namespace april
 		virtual float getPixelOffset() = 0;
 		virtual int getVRam() = 0;
 
-		void setOrthoProjection(grect rect);
-		void setOrthoProjection(grect rect, float nearZ, float farZ);
-		void setOrthoProjection(gvec2 size);
-		void setOrthoProjection(gvec2 size, float nearZ, float farZ);
-		void setDepthBuffer(bool enabled, bool writeEnabled = true);
-
 		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::TYPE_IMMUTABLE, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
 		/// @note When a format is forced, it's best to use managed (but not necessary).
 		Texture* createTextureFromResource(chstr filename, Image::Format format, Texture::Type type = Texture::TYPE_MANAGED, Texture::LoadMode loadMode = Texture::LOAD_IMMEDIATE);
@@ -140,12 +134,17 @@ namespace april
 		void destroyPixelShader(PixelShader* shader);
 		void destroyVertexShader(VertexShader* shader);
 
+		void setOrthoProjection(grect rect);
+		void setOrthoProjection(grect rect, float nearZ, float farZ);
+		void setOrthoProjection(gvec2 size);
+		void setOrthoProjection(gvec2 size, float nearZ, float farZ);
+		void setDepthBuffer(bool enabled, bool writeEnabled = true);
+
+		void setTexture(Texture* texture);
 		virtual void setTextureBlendMode(BlendMode blendMode) = 0;
 		/// @note The parameter factor is only used when the color mode is LERP.
 		virtual void setTextureColorMode(ColorMode colorMode, float factor = 1.0f) = 0;
-		virtual void setTextureFilter(Texture::Filter textureFilter) = 0;
-		virtual void setTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
-		virtual void setTexture(Texture* texture) = 0;
+		//virtual void setTexture(Texture* texture) = 0;
 
 		virtual Texture* getRenderTarget();
 		virtual void setRenderTarget(Texture* texture);
@@ -197,6 +196,8 @@ namespace april
 		DEPRECATED_ATTRIBUTE grect getOrthoProjection();
 		DEPRECATED_ATTRIBUTE void clear(bool useColor, bool depth);
 		DEPRECATED_ATTRIBUTE void clear(bool depth, grect rect, Color color = Color::Clear);
+		DEPRECATED_ATTRIBUTE void setTextureFilter(Texture::Filter textureFilter);
+		DEPRECATED_ATTRIBUTE void setTextureAddressMode(Texture::AddressMode textureAddressMode);
 
 	protected:
 		hstr name;
@@ -239,6 +240,9 @@ namespace april
 		virtual void _setDeviceModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setDeviceProjectionMatrix(const gmat4& matrix) = 0;
 		virtual void _setDeviceDepthBuffer(bool enabled, bool writeEnabled) = 0;
+		virtual void _setDeviceTexture(Texture* texture) = 0;
+		virtual void _setDeviceTextureFilter(Texture::Filter textureFilter) = 0;
+		virtual void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
 
 		virtual void _deviceClear(bool depth) = 0;
 		virtual void _deviceClear(april::Color color, bool depth) = 0;

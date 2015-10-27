@@ -58,6 +58,16 @@ namespace april
 	{
 		this->clear(color, rect, depth);
 	}
+	// DEPRECATED
+	void RenderSystem::setTextureFilter(Texture::Filter textureFilter)
+	{
+		hlog::error(logTag, "Manually setting a texture filter is not supported anymore since April v4.x!");
+	}
+	// DEPRECATED
+	void RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
+	{
+		hlog::error(logTag, "Manually setting a texture address-mode is not supported anymore since April v4.x!");
+	}
 
 	// optimizations, but they are not thread-safe
 	static PlainVertex pv[5];
@@ -327,43 +337,6 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 
-	void RenderSystem::setOrthoProjection(grect rect)
-	{
-		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
-		this->state->projectionMatrix.setOrthoProjection(rect);
-		this->state->projectionMatrixChanged = true;
-	}
-
-	void RenderSystem::setOrthoProjection(grect rect, float nearZ, float farZ)
-	{
-		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
-		this->state->projectionMatrix.setOrthoProjection(rect, nearZ, farZ);
-		this->state->projectionMatrixChanged = true;
-	}
-
-	void RenderSystem::setOrthoProjection(gvec2 size)
-	{
-		this->setOrthoProjection(grect(0.0f, 0.0f, size));
-	}
-
-	void RenderSystem::setOrthoProjection(gvec2 size, float nearZ, float farZ)
-	{
-		this->setOrthoProjection(grect(0.0f, 0.0f, size), nearZ, farZ);
-	}
-
-	void RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
-	{
-		if (this->options.depthBuffer)
-		{
-			this->state->depthBuffer = enabled;
-			this->state->depthBufferWrite = writeEnabled;
-		}
-		else
-		{
-			hlog::error(logTag, "Cannot change depth-buffer state, RenderSystem was not created with this option!");
-		}
-	}
-
 	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, Texture::LoadMode loadMode)
 	{
 		return this->_createTextureFromSource(true, filename, type, loadMode);
@@ -537,6 +510,48 @@ namespace april
 		delete shader;
 	}
 
+	void RenderSystem::setOrthoProjection(grect rect)
+	{
+		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
+		this->state->projectionMatrix.setOrthoProjection(rect);
+		this->state->projectionMatrixChanged = true;
+	}
+
+	void RenderSystem::setOrthoProjection(grect rect, float nearZ, float farZ)
+	{
+		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
+		this->state->projectionMatrix.setOrthoProjection(rect, nearZ, farZ);
+		this->state->projectionMatrixChanged = true;
+	}
+
+	void RenderSystem::setOrthoProjection(gvec2 size)
+	{
+		this->setOrthoProjection(grect(0.0f, 0.0f, size));
+	}
+
+	void RenderSystem::setOrthoProjection(gvec2 size, float nearZ, float farZ)
+	{
+		this->setOrthoProjection(grect(0.0f, 0.0f, size), nearZ, farZ);
+	}
+
+	void RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
+	{
+		if (this->options.depthBuffer)
+		{
+			this->state->depthBuffer = enabled;
+			this->state->depthBufferWrite = writeEnabled;
+		}
+		else
+		{
+			hlog::error(logTag, "Cannot change depth-buffer state, RenderSystem was not created with this option!");
+		}
+	}
+
+	void RenderSystem::setTexture(Texture* texture)
+	{
+		this->state->texture = texture;
+	}
+
 	Texture* RenderSystem::getRenderTarget()
 	{
 		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
@@ -644,6 +659,37 @@ namespace april
 			this->deviceState->depthBuffer = this->state->depthBuffer;
 			this->deviceState->depthBufferWrite = this->state->depthBufferWrite;
 		}
+		// texture
+		if (forceUpdate || this->deviceState->texture != this->state->texture || this->deviceState->useTexture != this->state->useTexture)
+		{
+			// filtering and wrapping applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
+			if (this->state->texture != NULL && this->state->useTexture)
+			{
+				if (forceUpdate || this->deviceState->texture == NULL)
+				{
+					this->_setDeviceTextureFilter(this->state->texture->getFilter());
+					this->_setDeviceTextureAddressMode(this->state->texture->getAddressMode());
+				}
+				else
+				{
+					Texture::Filter filter = this->state->texture->getFilter();
+					if (this->deviceState->texture->getFilter() != filter)
+					{
+						this->_setDeviceTextureFilter(filter);
+					}
+					Texture::AddressMode addressMode = this->state->texture->getAddressMode();
+					if (this->deviceState->texture->getAddressMode() != addressMode)
+					{
+						this->_setDeviceTextureAddressMode(addressMode);
+					}
+				}
+				this->state->texture->load();
+				this->state->texture->unlock();
+			}
+			this->_setDeviceTexture(this->state->useTexture ? this->state->texture : NULL);
+			this->deviceState->texture = this->state->texture;
+			this->deviceState->useTexture = this->state->useTexture;
+		}
 		// finalize by updating special variables in states
 		this->state->update();
 		this->deviceState->update();
@@ -691,36 +737,48 @@ namespace april
 
 	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
+		this->state->useTexture = false;
+		this->state->useColor = false;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
 	{
+		this->state->useTexture = false;
+		this->state->useColor = false;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices, color);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
+		this->state->useTexture = true;
+		this->state->useColor = false;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
 	{
+		this->state->useTexture = true;
+		this->state->useColor = false;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices, color);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
+		this->state->useTexture = false;
+		this->state->useColor = true;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
+		this->state->useTexture = true;
+		this->state->useColor = true;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, v, nVertices);
 	}

@@ -295,8 +295,8 @@ namespace april
 		// misc
 		this->setTextureBlendMode(april::BM_DEFAULT);
 		this->setTextureColorMode(april::CM_DEFAULT);
-		this->state->textureFilter = Texture::FILTER_UNDEFINED;
-		this->state->textureAddressMode = Texture::ADDRESS_UNDEFINED;
+		//this->state->textureFilter = Texture::FILTER_UNDEFINED;
+		//this->state->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 		Caps caps = this->getCaps();
 		if (!caps.npotTexturesLimited && !caps.npotTextures)
 		{
@@ -382,13 +382,14 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::setTexture(Texture* texture)
+	void DirectX9_RenderSystem::_setDeviceTexture(Texture* texture)
 	{
-		Caps caps = this->getCaps();
-		this->activeTexture = (DirectX9_Texture*)texture;
-		gmat4 matrix;
-		if (this->activeTexture != NULL)
+		
+		
+		//this->activeTexture = (DirectX9_Texture*)texture;
+		if (texture != NULL)
 		{
+			/*
 			Texture::Filter filter = this->activeTexture->getFilter();
 			if (this->state->textureFilter != filter)
 			{
@@ -399,21 +400,66 @@ namespace april
 			{
 				this->setTextureAddressMode(addressMode);
 			}
-			this->activeTexture->load();
-			this->activeTexture->unlock();
-			this->d3dDevice->SetTexture(0, this->activeTexture->d3dTexture);
+			*/
+			//currentTexture->load();
+			//currentTexture->unlock();
+			DirectX9_Texture* currentTexture = (DirectX9_Texture*)texture;
+			this->d3dDevice->SetTexture(0, currentTexture->d3dTexture);
+			Caps caps = this->getCaps();
 			if (!caps.npotTexturesLimited && !caps.npotTextures)
 			{
-				matrix.scale(this->activeTexture->effectiveWidth, this->activeTexture->effectiveHeight, 1.0f);
+				gmat4 matrix;
+				matrix.scale(currentTexture->effectiveWidth, currentTexture->effectiveHeight, 1.0f);
+				this->d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)matrix.data);
 			}
 		}
 		else
 		{
 			this->d3dDevice->SetTexture(0, NULL);
 		}
-		if (!caps.npotTexturesLimited && !caps.npotTextures)
+		/*
+		if (currentTexture != NULL && !caps.npotTexturesLimited && !caps.npotTextures)
 		{
-			this->d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)matrix.data);
+			
+		}
+		*/
+	}
+
+	void DirectX9_RenderSystem::_setDeviceTextureFilter(Texture::Filter textureFilter)
+	{
+		//this->state->textureFilter = textureFilter;
+		switch (textureFilter)
+		{
+		case Texture::FILTER_LINEAR:
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+			break;
+		case Texture::FILTER_NEAREST:
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+			break;
+		default:
+			hlog::warn(logTag, "Trying to set unsupported texture filter!");
+			break;
+		}
+	}
+
+	void DirectX9_RenderSystem::_setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode)
+	{
+		//this->state->textureAddressMode = textureAddressMode;
+		switch (textureAddressMode)
+		{
+		case Texture::ADDRESS_WRAP:
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+			break;
+		case Texture::ADDRESS_CLAMP:
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+			break;
+		default:
+			hlog::warn(logTag, "Trying to set unsupported texture address mode!");
+			break;
 		}
 	}
 
@@ -495,44 +541,6 @@ namespace april
 			break;
 		default:
 			hlog::warn(logTag, "Trying to set unsupported texture color mode!");
-			break;
-		}
-	}
-
-	void DirectX9_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
-	{
-		this->state->textureFilter = textureFilter;
-		switch (textureFilter)
-		{
-		case Texture::FILTER_LINEAR:
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-			break;
-		case Texture::FILTER_NEAREST:
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-			break;
-		default:
-			hlog::warn(logTag, "Trying to set unsupported texture filter!");
-			break;
-		}
-	}
-
-	void DirectX9_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
-	{
-		this->state->textureAddressMode = textureAddressMode;
-		switch (textureAddressMode)
-		{
-		case Texture::ADDRESS_WRAP:
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-			break;
-		case Texture::ADDRESS_CLAMP:
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-			break;
-		default:
-			hlog::warn(logTag, "Trying to set unsupported texture address mode!");
 			break;
 		}
 	}
@@ -692,20 +700,12 @@ namespace april
 
 	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
-		if (this->activeTexture != NULL)
-		{
-			this->setTexture(NULL);
-		}
 		this->d3dDevice->SetFVF(PLAIN_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(PlainVertex));
 	}
 
 	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
 	{
-		if (this->activeTexture != NULL)
-		{
-			this->setTexture(NULL);
-		}
 		unsigned int c = this->getNativeColorUInt(color);
 		ColoredVertex* cv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_cv : new ColoredVertex[nVertices];
 		for_iter (i, 0, nVertices)
@@ -752,10 +752,6 @@ namespace april
 
 	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
-		if (this->activeTexture != NULL)
-		{
-			this->setTexture(NULL);
-		}
 		this->d3dDevice->SetFVF(COLOR_FVF);
 		this->d3dDevice->DrawPrimitiveUP(dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredVertex));
 	}
