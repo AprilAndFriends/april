@@ -2,8 +2,11 @@ package com.april;
 
 /// @version 4.0
 
+import android.app.ActivityManager;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
@@ -75,6 +78,11 @@ public class Activity extends android.app.Activity
 		android.util.Log.i("april", "Android device: '" + Build.MANUFACTURER + "' / '" + Build.MODEL + "'");
 		this.hideNavigationBar();
 		super.onCreate(savedInstanceState);
+		ActivityManager manager = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
+		if (manager.getDeviceConfigurationInfo().reqGlEsVersion < 0x20000)
+		{
+			android.util.Log.w("april", "Minimum GLES version should be 2! Unpredictable behavior possible!");
+		}
 		NativeInterface.activity = (android.app.Activity)this;
 		NativeInterface.aprilActivity = this;
 		this.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), true, this.systemSettingsObserver);

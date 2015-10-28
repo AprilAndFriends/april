@@ -40,14 +40,51 @@
 
 #ifdef _IOS
 #import <AVFoundation/AVFoundation.h>
+#include <KD/kdprivate.h>
 
-// KD-TODO
 typedef bool (*iOSUrlCallback)(chstr, chstr, void*);
 static harray<iOSUrlCallback> gUrlCallbacks;
 void april_iOS_registerUrlCallback(iOSUrlCallback ptr)
 {
 	gUrlCallbacks += ptr;
 }
+
+@interface KDURLManager : NSObject<KDURLHandler>
++instance;
+@end
+
+@implementation KDURLManager
+
++(id)instance
+{
+	static KDURLManager* result = [[KDURLManager alloc] init];
+	return result;
+}
+
+-(BOOL)handleOpenURL:(NSURL *)url
+{
+	return [self openURL:url sourceApplication:nil annotation:nil];
+}
+
+-(BOOL)openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+	NSString* str = [url absoluteString];
+	hstr urlstr = [str UTF8String], srcAppStr = [sourceApplication UTF8String];
+	BOOL ret = NO;
+	bool r;
+	foreach (iOSUrlCallback, it, gUrlCallbacks)
+	{
+		r = (*it)(urlstr, srcAppStr, annotation);
+		if (r)
+		{
+			ret = YES;
+		}
+	}
+	return ret;
+}
+
+@end
+
 #endif
 
 namespace april
@@ -188,6 +225,10 @@ namespace april
 		kdInstallCallback(&_processEventPause, KD_EVENT_PAUSE, NULL);
 		kdInstallCallback(&_processEventWindowFocus, KD_EVENT_WINDOW_FOCUS, NULL);
 		kdInstallCallback(&_processEventLowMemory, KD_EVENT_LOWMEM, NULL);
+#ifdef _IOS
+		auto appDelegate = static_cast<id<KDAppDelegate>>([[UIApplication sharedApplication] delegate]);
+		[appDelegate addURLHandler:[KDURLManager instance]];
+#endif
 		return true;
 	}
 	

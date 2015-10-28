@@ -599,7 +599,7 @@ namespace april
     }
     else
     {
-        [self _showAlertView:[NSValue valueWithPointer:&p]];
+        [self _showAlertView:[NSValue valueWithPointer:p]];
     }
 }
 
