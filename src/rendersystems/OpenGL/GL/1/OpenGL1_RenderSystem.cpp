@@ -7,22 +7,6 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _OPENGL1
-#define __HL_INCLUDE_PLATFORM_HEADERS
-#include <hltypes/hplatform.h>
-#if __APPLE__
-	#include <TargetConditionals.h>
-#endif
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#ifndef __APPLE__
-	#include <gl/GL.h>
-	#define GL_GLEXT_PROTOTYPES
-	#include <gl/glext.h>
-#else
-	#include <OpenGL/gl.h>
-#endif
-
 #include <gtypes/Vector2.h>
 #include <hltypes/hexception.h>
 #include <hltypes/hlog.h>
@@ -50,6 +34,14 @@ namespace april
 	OpenGL1_RenderSystem::~OpenGL1_RenderSystem()
 	{
 		this->destroy();
+	}
+
+	void OpenGL1_RenderSystem::_deviceInit()
+	{
+		OpenGLC_RenderSystem::_deviceInit();
+#if defined(_WIN32) && !defined(_WINRT)
+		this->hRC = 0;
+#endif
 	}
 
 #if defined(_WIN32) && !defined(_WINRT)

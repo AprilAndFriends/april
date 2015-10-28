@@ -24,6 +24,13 @@ namespace april
 	{
 	}
 
+	void OpenGLC_RenderSystem::_deviceInit()
+	{
+		OpenGL_RenderSystem::_deviceInit();
+		this->deviceState_color = april::Color::White;
+		this->deviceState_matrixMode = 0;
+	}
+
 	void OpenGLC_RenderSystem::_deviceSetup()
 	{
 		OpenGL_RenderSystem::_deviceSetup();

@@ -34,6 +34,7 @@ namespace april
 		Color deviceState_color;
 		unsigned int deviceState_matrixMode;
 
+		void _deviceInit();
 		void _deviceSetup();
 
 		void _setDeviceModelviewMatrix(const gmat4& matrix);

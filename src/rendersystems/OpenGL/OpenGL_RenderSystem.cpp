@@ -66,6 +66,12 @@ namespace april
 
 	void OpenGL_RenderSystem::_deviceInit()
 	{
+		this->deviceState_vertexStride = 0;
+		this->deviceState_vertexPointer = NULL;
+		this->deviceState_textureStride = 0;
+		this->deviceState_texturePointer = NULL;
+		this->deviceState_colorStride = 0;
+		this->deviceState_colorPointer = NULL;
 #if defined(_WIN32) && !defined(_WINRT)
 		this->hWnd = 0;
 		this->hDC = 0;

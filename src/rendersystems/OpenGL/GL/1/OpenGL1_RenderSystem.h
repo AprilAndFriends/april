@@ -30,6 +30,7 @@ namespace april
 		~OpenGL1_RenderSystem();
 
 	protected:
+		void _deviceInit();
 		void _deviceSetupCaps();
 		void _deviceSetup();
 

@@ -37,7 +37,7 @@
 		name = NULL; \
 	}
 
-#define LOAD_SHADER(name, type, mode, data)\
+#define LOAD_SHADER(name, type, mode, data) \
 	if (name == NULL) \
 	{ \
 		data.clear(); \

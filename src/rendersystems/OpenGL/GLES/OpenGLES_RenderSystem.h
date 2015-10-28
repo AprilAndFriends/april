@@ -72,7 +72,6 @@ namespace april
 		ShaderProgram* shaderColoredTexturedMultiply;
 		ShaderProgram* shaderColoredTexturedAlphaMap;
 		ShaderProgram* shaderColoredTexturedLerp;
-
 		bool deviceState_matrixChanged;
 		bool deviceState_systemColorChanged;
 		bool deviceState_colorModeFactorChanged;
