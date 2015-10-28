@@ -28,30 +28,32 @@
 		#include <OpenGLES/ES2/gl.h>
 		#include <OpenGLES/ES2/glext.h>
 	#endif
-#elif defined(_OPENGLES)
+#elif defined(_ANDROID)
 	#ifdef _OPENGLES1
 		#include <GLES/gl.h>
-		#ifdef _ANDROID
-			#define GL_GLEXT_PROTOTYPES
-			#include <GLES/glext.h>
-		#endif
+		#define GL_GLEXT_PROTOTYPES
+		#include <GLES/glext.h>
 	#elif defined(_OPENGLES2)
 		#include <GLES2/gl2.h>
-		#ifdef _ANDROID
-			#define GL_GLEXT_PROTOTYPES
-			#include <GLES2/gl2ext.h>
-		#endif
+		#define GL_GLEXT_PROTOTYPES
+		#include <GLES2/gl2ext.h>
 	#endif
 #else
-	#include <stdlib.h>
-	#include <stdio.h>
-	#include <string.h>
-	#ifndef __APPLE__
-		#include <gl/GL.h>
-		#define GL_GLEXT_PROTOTYPES
-		#include <gl/glext.h>
+	#ifdef _OPENGLES1
+		#include <GLES/gl.h>
+	#elif defined(_OPENGLES2)
+		#include <GLES2/gl2.h>
 	#else
-		#include <OpenGL/gl.h>
+		#include <stdlib.h>
+		#include <stdio.h>
+		#include <string.h>
+		#ifndef __APPLE__
+			#include <gl/GL.h>
+			#define GL_GLEXT_PROTOTYPES
+			#include <gl/glext.h>
+		#else
+			#include <OpenGL/gl.h>
+		#endif
 	#endif
 #endif
 
@@ -83,6 +85,8 @@ namespace april
 		Image* takeScreenshot(Image::Format format);
 
 	protected:
+		bool blendSeparationSupported;
+
 		int deviceState_vertexStride;
 		const void* deviceState_vertexPointer;
 		int deviceState_textureStride;

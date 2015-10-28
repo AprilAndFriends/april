@@ -16,7 +16,7 @@
 
 namespace april
 {
-	OpenGLC_RenderSystem::OpenGLC_RenderSystem() : OpenGL_RenderSystem(), blendSeparationSupported(false), deviceState_matrixMode(0)
+	OpenGLC_RenderSystem::OpenGLC_RenderSystem() : OpenGL_RenderSystem(), deviceState_matrixMode(0)
 	{
 	}
 

@@ -29,8 +29,6 @@ namespace april
 		~OpenGLC_RenderSystem();
 
 	protected:
-		bool blendSeparationSupported;
-
 		Color deviceState_color;
 		unsigned int deviceState_matrixMode;
 
