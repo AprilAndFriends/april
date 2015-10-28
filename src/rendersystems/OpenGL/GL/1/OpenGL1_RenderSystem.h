@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -30,12 +30,12 @@ namespace april
 		~OpenGL1_RenderSystem();
 
 	protected:
-		void _setupDefaultParameters();
-		void _setupCaps();
+		void _deviceSetupCaps();
+		void _deviceSetup();
 
-		Texture* _createTexture(bool fromResource);
+		Texture* _deviceCreateTexture(bool fromResource);
 
-		void _setTextureBlendMode(BlendMode mode);
+		void _setDeviceBlendMode(BlendMode blendMode);
 
 #if defined(_WIN32) && !defined(_WINRT)
 		HGLRC hRC;

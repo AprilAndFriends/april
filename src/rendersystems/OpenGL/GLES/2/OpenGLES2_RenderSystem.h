@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -33,9 +33,9 @@ namespace april
 		~OpenGLES2_RenderSystem();
 
 	protected:
-		Texture* _createTexture(bool fromResource);
-		PixelShader* _createPixelShader();
-		VertexShader* _createVertexShader();
+		Texture* _deviceCreateTexture(bool fromResource);
+		PixelShader* _deviceCreatePixelShader();
+		VertexShader* _deviceCreateVertexShader();
 
 	};
 	

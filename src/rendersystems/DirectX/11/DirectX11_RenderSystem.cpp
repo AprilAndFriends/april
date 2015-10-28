@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -839,7 +839,11 @@ namespace april
 	{
 		if (rect.w > 0.0f && rect.h > 0.0f)
 		{
-			const float clearColor[4] = {color.b_f(), color.g_f(), color.r_f(), color.a_f()};
+			static float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+			clearColor[0] = color.b_f();
+			clearColor[1] = color.g_f();
+			clearColor[2] = color.r_f();
+			clearColor[3] = color.a_f()};
 			D3D11_RECT area;
 			area.left = (int)rect.x;
 			area.top = (int)rect.y;

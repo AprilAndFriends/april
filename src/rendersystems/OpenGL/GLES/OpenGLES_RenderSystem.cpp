@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -26,12 +26,9 @@
 #include "OpenGLES_VertexShader.h"
 #include "Window.h"
 
-#define MAX_VERTEX_COUNT 65536
-#define VERTICES_BUFFER_COUNT 65536
-
 #define VERTEX_ARRAY 0
 #define COLOR_ARRAY 1
-#define TEXCOORD_ARRAY 2
+#define TEXTURE_ARRAY 2
 
 #define DELETE_SHADER(name, type) \
 	if (name != NULL) \
@@ -45,7 +42,7 @@
 	{ \
 		data.clear(); \
 		data.write(SHADER_ ## type ## mode); \
-		name = (OpenGLES_ ## type ## Shader*)this->_create ## type ## Shader(); \
+		name = (OpenGLES_ ## type ## Shader*)this->_deviceCreate ## type ## Shader(); \
 		name->load(data); \
 	}
 
@@ -62,11 +59,8 @@
 #define _SELECT_SHADER(useTexture, useColor, type) \
 	(useTexture ? (useColor ? this->shaderColoredTextured ## type : this->shaderTextured ## type) : (useColor ? this->shaderColored ## type : this->shader ## type));
 
-
 namespace april
 {
-	static ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
-
 	OpenGLES_RenderSystem::ShaderProgram::ShaderProgram() : glShaderProgram(0)
 	{
 	}
@@ -96,7 +90,7 @@ namespace april
 		glAttachShader(this->glShaderProgram, vertexShaderId);
 		glBindAttribLocation(this->glShaderProgram, VERTEX_ARRAY, "position");
 		glBindAttribLocation(this->glShaderProgram, COLOR_ARRAY, "color");
-		glBindAttribLocation(this->glShaderProgram, TEXCOORD_ARRAY, "tex");
+		glBindAttribLocation(this->glShaderProgram, TEXTURE_ARRAY, "tex");
 		glLinkProgram(this->glShaderProgram);
 		GLint linked;
 		glGetProgramiv(this->glShaderProgram, GL_LINK_STATUS, &linked);
@@ -116,61 +110,18 @@ namespace april
 		return true;
 	}
 
-	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), activeTextureColorMode(CM_DEFAULT),
-		activeTextureColorModeAlpha(255), _matrixDirty(true)
+	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), deviceState_matrixChanged(true), 
+		deviceState_systemColorChanged(true), deviceState_colorModeFactorChanged(true)
 	{
-		this->activeShader = NULL;
-		this->vertexShaderPlain = NULL;
-		this->vertexShaderTextured = NULL;
-		this->vertexShaderColored = NULL;
-		this->vertexShaderColoredTextured = NULL;
-		this->pixelShaderMultiply = NULL;
-		this->pixelShaderAlphaMap = NULL;
-		this->pixelShaderLerp = NULL;
-		this->pixelShaderTexturedMultiply = NULL;
-		this->pixelShaderTexturedAlphaMap = NULL;
-		this->pixelShaderTexturedLerp = NULL;
-		this->pixelShaderColoredMultiply = NULL;
-		this->pixelShaderColoredAlphaMap = NULL;
-		this->pixelShaderColoredLerp = NULL;
-		this->pixelShaderColoredTexturedMultiply = NULL;
-		this->pixelShaderColoredTexturedAlphaMap = NULL;
-		this->pixelShaderColoredTexturedLerp = NULL;
-		this->shaderMultiply = NULL;
-		this->shaderAlphaMap = NULL;
-		this->shaderLerp = NULL;
-		this->shaderTexturedMultiply = NULL;
-		this->shaderTexturedAlphaMap = NULL;
-		this->shaderTexturedLerp = NULL;
-		this->shaderColoredMultiply = NULL;
-		this->shaderColoredAlphaMap = NULL;
-		this->shaderColoredLerp = NULL;
-		this->shaderColoredTexturedMultiply = NULL;
-		this->shaderColoredTexturedAlphaMap = NULL;
-		this->shaderColoredTexturedLerp = NULL;
-		this->_currentShader = NULL;
-		this->_currentTexture = NULL;
-		this->_currentLerpAlpha = 0.0f;
-		for_iter (i, 0, 4)
-		{
-			this->_currentSystemColor[i] = 1.0f;
-		}
 	}
 
 	OpenGLES_RenderSystem::~OpenGLES_RenderSystem()
 	{
 	}
 
-	bool OpenGLES_RenderSystem::create(RenderSystem::Options options)
+	void OpenGLES_RenderSystem::_deviceInit()
 	{
-		if (!OpenGL_RenderSystem::create(options))
-		{
-			return false;
-		}
-		this->activeTextureColorMode = CM_DEFAULT;
-		this->activeTextureColorModeAlpha = 255;
-		this->activeShader = NULL;
-		this->_matrixDirty = true;
+		OpenGL_RenderSystem::_deviceInit();
 		this->vertexShaderPlain = NULL;
 		this->vertexShaderTextured = NULL;
 		this->vertexShaderColored = NULL;
@@ -199,25 +150,27 @@ namespace april
 		this->shaderColoredTexturedMultiply = NULL;
 		this->shaderColoredTexturedAlphaMap = NULL;
 		this->shaderColoredTexturedLerp = NULL;
-		this->_currentShader = NULL;
-		this->_currentTexture = NULL;
-		this->_currentLerpAlpha = 0.0f;
-		for_iter (i, 0, 4)
+		this->deviceState_matrixChanged = true;
+		this->deviceState_systemColorChanged = true;
+		this->deviceState_colorModeFactorChanged = true;
+		this->deviceState_shader = NULL;
+	}
+
+	bool OpenGLES_RenderSystem::_deviceCreate(RenderSystem::Options options)
+	{
+		if (!OpenGL_RenderSystem::_deviceCreate(options))
 		{
-			this->_currentSystemColor[i] = 1.0f;
+			return false;
 		}
 		return true;
 	}
 
-	bool OpenGLES_RenderSystem::destroy()
+	bool OpenGLES_RenderSystem::_deviceDestroy()
 	{
-		if (!OpenGL_RenderSystem::destroy())
+		if (!OpenGL_RenderSystem::_deviceDestroy())
 		{
 			return false;
 		}
-		this->activeTextureColorMode = CM_DEFAULT;
-		this->activeTextureColorModeAlpha = 255;
-		this->activeShader = NULL;
 		DELETE_SHADER(this->vertexShaderPlain, Vertex);
 		DELETE_SHADER(this->vertexShaderTextured, Vertex);
 		DELETE_SHADER(this->vertexShaderColored, Vertex);
@@ -246,19 +199,12 @@ namespace april
 		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply);
 		_HL_TRY_DELETE(this->shaderColoredTexturedAlphaMap);
 		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
-		this->_currentShader = NULL;
-		this->_currentTexture = NULL;
-		this->_currentLerpAlpha = 0.0f;
-		for_iter (i, 0, 4)
-		{
-			this->_currentSystemColor[i] = 1.0f;
-		}
 		return true;
 	}
 
-	void OpenGLES_RenderSystem::assignWindow(Window* window)
+	void OpenGLES_RenderSystem::_deviceAssignWindow(Window* window)
 	{
-		OpenGL_RenderSystem::assignWindow(window);
+		OpenGL_RenderSystem::_deviceAssignWindow(window);
 		hstream data;
 		LOAD_SHADER(this->vertexShaderPlain, Vertex, Plain, data);
 		LOAD_SHADER(this->vertexShaderTextured, Vertex, Textured, data);
@@ -290,55 +236,7 @@ namespace april
 		LOAD_PROGRAM(this->shaderColoredTexturedLerp, this->pixelShaderColoredTexturedLerp, this->vertexShaderColoredTextured);
 	}
 
-	void OpenGLES_RenderSystem::_setupDefaultParameters()
-	{
-		OpenGL_RenderSystem::_setupDefaultParameters();
-		this->_setClientState(VERTEX_ARRAY, true);
-		this->_setClientState(COLOR_ARRAY, this->deviceState.colorEnabled);
-		this->_setClientState(TEXCOORD_ARRAY, this->deviceState.textureCoordinatesEnabled);
-	}
-
-	void OpenGLES_RenderSystem::_applyStateChanges()
-	{
-		this->deviceState.systemColor = this->currentState.systemColor;
-		if (this->currentState.textureCoordinatesEnabled != this->deviceState.textureCoordinatesEnabled)
-		{
-			this->_setClientState(TEXCOORD_ARRAY, this->currentState.textureCoordinatesEnabled);
-			this->deviceState.textureCoordinatesEnabled = this->currentState.textureCoordinatesEnabled;
-		}
-		if (this->currentState.colorEnabled != this->deviceState.colorEnabled)
-		{
-			this->_setClientState(COLOR_ARRAY, this->currentState.colorEnabled);
-			this->deviceState.colorEnabled = this->currentState.colorEnabled;
-		}
-		if (this->currentState.textureId != this->deviceState.textureId)
-		{
-			glBindTexture(GL_TEXTURE_2D, this->currentState.textureId);
-			this->deviceState.textureId = this->currentState.textureId;
-			// TODO - should memorize address and filter modes per texture in opengl to avoid unnecessary calls
-			this->deviceState.textureAddressMode = Texture::ADDRESS_UNDEFINED;
-			this->deviceState.textureFilter = Texture::FILTER_UNDEFINED;
-		}
-		OpenGL_RenderSystem::_applyStateChanges();
-		if (this->currentState.modelviewMatrixChanged && this->modelviewMatrix != this->deviceState.modelviewMatrix)
-		{
-			this->deviceState.modelviewMatrix = this->modelviewMatrix;
-			this->currentState.modelviewMatrixChanged = false;
-		}
-		if (this->currentState.projectionMatrixChanged && this->projectionMatrix != this->deviceState.projectionMatrix)
-		{
-			this->deviceState.projectionMatrix = this->projectionMatrix;
-			this->currentState.projectionMatrixChanged = false;
-		}
-		this->_updateShader();
-	}
-
-	void OpenGLES_RenderSystem::_setClientState(unsigned int type, bool enabled)
-	{
-		enabled ? glEnableVertexAttribArray(type) : glDisableVertexAttribArray(type);
-	}
-
-	void OpenGLES_RenderSystem::_setupCaps()
+	void OpenGLES_RenderSystem::_deviceSetupCaps()
 	{
 #ifdef _EGL
 		if (april::egl->display == NULL)
@@ -346,39 +244,57 @@ namespace april
 			return;
 		}
 #endif
-		if (this->caps.maxTextureSize == 0)
-		{
-			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
+		hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
 #ifndef _WINRT
-			this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
+		this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
 #else
-			this->caps.npotTexturesLimited = true;
+		this->caps.npotTexturesLimited = true;
 #endif
-			this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
-		}
+		this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
+		// TODO - is there a way to make this work on Win32?
+#ifndef _WIN32
+		this->blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
+#endif
 #ifndef _IOS // platforms other than iOS have problems with alpha textures, some drivers don't support them
 		this->caps.textureFormats /= Image::FORMAT_ALPHA;
 		this->caps.textureFormats /= Image::FORMAT_GRAYSCALE;
 #endif
-		return OpenGL_RenderSystem::_setupCaps();
+		return OpenGL_RenderSystem::_deviceSetupCaps();
 	}
 
-	void OpenGLES_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
+	void OpenGLES_RenderSystem::_deviceSetup()
 	{
-		// TODO - is there a way to make this work on Win32?
+		OpenGL_RenderSystem::_deviceSetup();
+		glEnableVertexAttribArray(VERTEX_ARRAY);
+		this->deviceState_matrixChanged = true;
+		this->deviceState_systemColorChanged = true;
+		this->deviceState_colorModeFactorChanged = true;
+		this->deviceState_shader = NULL;
+	}
+
+	void OpenGLES_RenderSystem::_updateDeviceState(bool forceUpdate)
+	{
+		OpenGL_RenderSystem::_updateDeviceState(forceUpdate);
+		this->_updateShader(forceUpdate);
+	}
+
+	void OpenGLES_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)
+	{
+		this->deviceState_matrixChanged = true;
+	}
+
+	void OpenGLES_RenderSystem::_setDeviceProjectionMatrix(const gmat4& matrix)
+	{
+		this->deviceState_matrixChanged = true;
+	}
+
+	void OpenGLES_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
+	{
 #ifndef _WIN32
-		// TODO - refactor
-		static int blendSeparationSupported = -1;
-		if (blendSeparationSupported == -1)
-		{
-			// determine if blend separation is possible on first call to this function
-			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-			blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
-		}
-		if (blendSeparationSupported)
+		if (this->blendSeparationSupported)
 		{
 			// blending for the new generations
-			switch (textureBlendMode)
+			switch (blendMode)
 			{
 			case BM_DEFAULT:
 			case BM_ALPHA:
@@ -405,289 +321,115 @@ namespace april
 		else
 #endif
 		{
-			// old-school blending mode for your dad
-			OpenGL_RenderSystem::_setTextureBlendMode(textureBlendMode);
+			OpenGL_RenderSystem::_setDeviceBlendMode(blendMode);
 		}
 	}
 
-	void OpenGLES_RenderSystem::_setTextureColorMode(ColorMode textureColorMode, float factor)
+	void OpenGLES_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
 	{
-		this->activeTextureColorModeAlpha = 255;
-		switch (textureColorMode)
+		if (this->deviceState->systemColor != systemColor)
 		{
-		case CM_LERP: // LERP also needs alpha
-			this->activeTextureColorModeAlpha = (unsigned char)(factor * 255.0f);
+			this->deviceState_systemColorChanged = true;
+		}
+		if (this->deviceState->colorModeFactor != colorModeFactor)
+		{
+			this->deviceState_colorModeFactorChanged = true;
+		}
+	}
+
+	void OpenGLES_RenderSystem::_updateShader(bool forceUpdate)
+	{
+		ShaderProgram* shader = NULL;
+		switch (this->deviceState->colorMode)
+		{
 		case CM_DEFAULT:
 		case CM_MULTIPLY:
+			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Multiply);
+			break;
 		case CM_ALPHA_MAP:
-			this->activeTextureColorMode = textureColorMode;
+			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, AlphaMap);
+			break;
+		case CM_LERP:
+			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Lerp);
 			break;
 		default:
-			hlog::warn(logTag, "Trying to set unsupported texture color mode!");
-			break;
+			hlog::warn(logTag, "Trying to set unsupported color mode!");
+			return;
 		}
-	}
-
-	void OpenGLES_RenderSystem::_loadIdentityMatrix()
-	{
-		// not used
-	}
-	
-	void OpenGLES_RenderSystem::_setMatrixMode(unsigned int mode)
-	{
-		// not used
-	}
-
-	void OpenGLES_RenderSystem::_setVertexPointer(int stride, const void* pointer)
-	{
-		if (this->deviceState.strideVertex != stride || this->deviceState.pointerVertex != pointer)
+		if (this->deviceState_shader != shader)
 		{
-			this->deviceState.strideVertex = stride;
-			this->deviceState.pointerVertex = pointer;
-			glVertexAttribPointer(VERTEX_ARRAY, 3, GL_FLOAT, GL_FALSE, stride, pointer);
+			forceUpdate = true;
 		}
-	}
-
-	void OpenGLES_RenderSystem::_setTexCoordPointer(int stride, const void *pointer)
-	{
-		if (this->deviceState.strideVertex != stride || this->deviceState.pointerVertex != pointer)
+		if (forceUpdate)
 		{
-			this->deviceState.strideVertex = stride;
-			this->deviceState.pointerVertex = pointer;
-			glVertexAttribPointer(TEXCOORD_ARRAY, 2, GL_FLOAT, GL_TRUE, stride, pointer);
-		}
-	}
-
-	void OpenGLES_RenderSystem::_setColorPointer(int stride, const void *pointer)
-	{
-		if (this->deviceState.strideColor != stride || this->deviceState.pointerColor != pointer)
-		{
-			this->deviceState.strideColor = stride;
-			this->deviceState.pointerColor = pointer;
-			glVertexAttribPointer(COLOR_ARRAY, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, pointer);
-		}
-	}
-
-	void OpenGLES_RenderSystem::setPixelShader(PixelShader* pixelShader)
-	{
-		// TODO
-		//this->activePixelShader = (OpenGLES_PixelShader*)pixelShader;
-	}
-
-	void OpenGLES_RenderSystem::setVertexShader(VertexShader* vertexShader)
-	{
-		//this->activeVertexShader = (OpenGLES_VertexShader*)vertexShader;
-	}
-
-	void OpenGLES_RenderSystem::_updateShader()
-	{
-		bool useTexture = this->deviceState.textureCoordinatesEnabled;
-		bool useColor = this->deviceState.colorEnabled;
-		ShaderProgram* shader = this->activeShader;
-		if (shader == NULL)
-		{
-			switch (this->activeTextureColorMode)
-			{
-			case CM_DEFAULT:
-			case CM_MULTIPLY:
-				shader = _SELECT_SHADER(useTexture, useColor, Multiply);
-				break;
-			case CM_ALPHA_MAP:
-				shader = _SELECT_SHADER(useTexture, useColor, AlphaMap);
-				break;
-			case CM_LERP:
-				shader = _SELECT_SHADER(useTexture, useColor, Lerp);
-				break;
-			}
-		}
-		bool dirty = false;
-		if (this->_currentShader != shader)
-		{
-			this->_currentShader = shader;
-			glUseProgram(this->_currentShader->glShaderProgram);
-			dirty = true;
-		}
-		static gmat4 transformationMatrix = this->deviceState.projectionMatrix * this->deviceState.modelviewMatrix;
-		static float lerpAlpha = 1.0f;
-		static float systemColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		lerpAlpha = this->activeTextureColorModeAlpha * 0.003921569f;
-		systemColor[0] = this->deviceState.systemColor.r_f();
-		systemColor[1] = this->deviceState.systemColor.g_f();
-		systemColor[2] = this->deviceState.systemColor.b_f();
-		systemColor[3] = this->deviceState.systemColor.a_f();
-		if (!dirty)
-		{
-			dirty = this->_matrixDirty;
-		}
-		if (!dirty)
-		{
-			dirty = (this->_currentLerpAlpha != lerpAlpha);
-		}
-		if (!dirty)
-		{
-			for_iter (i, 0, 4)
-			{
-				if (this->_currentSystemColor[i] != systemColor[i])
-				{
-					dirty = true;
-					break;
-				}
-			}
-		}
-		this->_matrixDirty = false;
-		if (dirty)
-		{
-			// set current values
-			transformationMatrix = this->deviceState.projectionMatrix * this->deviceState.modelviewMatrix;;
-			this->_currentLerpAlpha = lerpAlpha;
-			memcpy(this->_currentSystemColor, systemColor, 4 * sizeof(float));
-			// set shader values
-			int matrixLocation = glGetUniformLocation(this->_currentShader->glShaderProgram, "transformationMatrix");
-			glUniformMatrix4fv(matrixLocation, 1, GL_FALSE, transformationMatrix.data);
-			if (useTexture)
+			glUseProgram(shader->glShaderProgram);
+			this->deviceState_shader = shader;
+			if (this->deviceState->useTexture)
 			{
 				glActiveTexture(GL_TEXTURE0);
 			}
-			int samplerLocation = glGetUniformLocation(this->_currentShader->glShaderProgram, "sampler2d");
+			int samplerLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "sampler2d");
 			if (samplerLocation >= 0)
 			{
 				glUniform1i(samplerLocation, 0);
 			}
-			int systemColorLocation = glGetUniformLocation(this->_currentShader->glShaderProgram, "systemColor");
+		}
+		if (forceUpdate || this->deviceState_matrixChanged)
+		{
+			int matrixLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "transformationMatrix");
+			glUniformMatrix4fv(matrixLocation, 1, GL_FALSE, (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).data);
+			this->deviceState_matrixChanged = false;
+		}
+		if (forceUpdate || this->deviceState_systemColorChanged)
+		{
+			int systemColorLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "systemColor");
 			if (systemColorLocation >= 0)
 			{
-				glUniform4fv(systemColorLocation, 1, this->_currentSystemColor);
+				static float shaderSystemColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+				shaderSystemColor[0] = this->deviceState->systemColor.r_f();
+				shaderSystemColor[1] = this->deviceState->systemColor.g_f();
+				shaderSystemColor[2] = this->deviceState->systemColor.b_f();
+				shaderSystemColor[3] = this->deviceState->systemColor.a_f();
+				glUniform4fv(systemColorLocation, 1, shaderSystemColor);
 			}
-			int lerpLocation = glGetUniformLocation(this->_currentShader->glShaderProgram, "lerpAlpha");
+			this->deviceState_systemColorChanged = false;
+		}
+		if (forceUpdate || this->deviceState_colorModeFactorChanged)
+		{
+			int lerpLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "lerpAlpha");
 			if (lerpLocation >= 0)
 			{
-				glUniform1fv(lerpLocation, 1, &this->_currentLerpAlpha);
+				static float shaderColorModeFactor = 1.0f;
+				shaderColorModeFactor = this->deviceState->colorModeFactor;
+				glUniform1fv(lerpLocation, 1, &shaderColorModeFactor);
 			}
+			this->deviceState_colorModeFactorChanged = false;
 		}
 	}
 
-	void OpenGLES_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
+	void OpenGLES_RenderSystem::_setGlTextureEnabled(bool enabled)
 	{
-		this->render(renderOperation, v, nVertices, april::Color::White);
+		enabled ? glEnableVertexAttribArray(TEXTURE_ARRAY) : glDisableVertexAttribArray(TEXTURE_ARRAY);
 	}
 
-	void OpenGLES_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
+	void OpenGLES_RenderSystem::_setGlColorEnabled(bool enabled)
 	{
-		this->currentState.textureId = 0;
-		this->currentState.textureCoordinatesEnabled = false;
-		this->currentState.colorEnabled = false;
-		this->currentState.systemColor = color;
-		this->_applyStateChanges();
-		this->_setColorPointer(0, NULL);
-		this->_setTexCoordPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
-		// hardware that may allow only a certain amount of vertices to be rendered at the time.
-		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		int size = nVertices;
-#ifdef _ANDROID
-		for_iter_step (i, 0, nVertices, size)
-		{
-			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
-#endif
-			this->_setVertexPointer(sizeof(PlainVertex), v);
-			glDrawArrays(glRenderOperations[renderOperation], 0, size);
-#ifdef _ANDROID
-			v += size;
-		}
-#endif
+		enabled ? glEnableVertexAttribArray(COLOR_ARRAY) : glDisableVertexAttribArray(COLOR_ARRAY);
 	}
 
-	void OpenGLES_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
+	void OpenGLES_RenderSystem::_setGlVertexPointer(int stride, const void* pointer)
 	{
-		this->render(renderOperation, v, nVertices, april::Color::White);
+		glVertexAttribPointer(VERTEX_ARRAY, 3, GL_FLOAT, GL_FALSE, stride, pointer);
 	}
 
-	void OpenGLES_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
+	void OpenGLES_RenderSystem::_setGlTexturePointer(int stride, const void* pointer)
 	{
-		this->currentState.textureCoordinatesEnabled = true;
-		this->currentState.colorEnabled = false;
-		this->currentState.systemColor = color;
-		this->_applyStateChanges();
-		this->_setColorPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
-		// hardware that may allow only a certain amount of vertices to be rendered at the time.
-		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		int size = nVertices;
-#ifdef _ANDROID
-		for_iter_step (i, 0, nVertices, size)
-		{
-			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
-#endif
-			this->_setVertexPointer(sizeof(TexturedVertex), v);
-			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
-			glDrawArrays(glRenderOperations[renderOperation], 0, size);
-#ifdef _ANDROID
-			v += size;
-		}
-#endif
+		glVertexAttribPointer(TEXTURE_ARRAY, 2, GL_FLOAT, GL_TRUE, stride, pointer);
 	}
 
-	void OpenGLES_RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
+	void OpenGLES_RenderSystem::_setGlColorPointer(int stride, const void* pointer)
 	{
-		this->currentState.textureId = 0;
-		this->currentState.textureCoordinatesEnabled = false;
-		this->currentState.colorEnabled = true;
-		this->currentState.systemColor.set(255, 255, 255, 255);
-		this->_applyStateChanges();
-		this->_setTexCoordPointer(0, NULL);
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
-		// hardware that may allow only a certain amount of vertices to be rendered at the time.
-		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		int size = nVertices;
-#ifdef _ANDROID
-		for_iter_step (i, 0, nVertices, size)
-		{
-			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
-#endif
-			this->_setVertexPointer(sizeof(ColoredVertex), v);
-			this->_setColorPointer(sizeof(ColoredVertex), &v->color);
-			glDrawArrays(glRenderOperations[renderOperation], 0, size);
-#ifdef _ANDROID
-			v += size;
-		}
-#endif
-	}
-
-	void OpenGLES_RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
-	{
-		this->currentState.textureCoordinatesEnabled = true;
-		this->currentState.colorEnabled = true;
-		this->currentState.systemColor.set(255, 255, 255, 255);
-		this->_applyStateChanges();
-		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
-		// hardware that may allow only a certain amount of vertices to be rendered at the time.
-		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		int size = nVertices;
-#ifdef _ANDROID
-		for_iter_step (i, 0, nVertices, size)
-		{
-			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
-#endif
-			this->_setVertexPointer(sizeof(ColoredTexturedVertex), v);
-			this->_setColorPointer(sizeof(ColoredTexturedVertex), &v->color);
-			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &v->u);
-			glDrawArrays(glRenderOperations[renderOperation], 0, size);
-#ifdef _ANDROID
-			v += size;
-		}
-#endif
-	}
-
-	void OpenGLES_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
-	{
-		OpenGL_RenderSystem::_setModelviewMatrix(matrix);
-		this->_matrixDirty = true;
-	}
-
-	void OpenGLES_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
-	{
-		OpenGL_RenderSystem::_setProjectionMatrix(matrix);
-		this->_matrixDirty = true;
+		glVertexAttribPointer(COLOR_ARRAY, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, pointer);
 	}
 
 }

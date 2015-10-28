@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -26,19 +26,21 @@ namespace april
 	
 	void RenderState::reset()
 	{
-		this->textureCoordinatesEnabled = false;
-		this->colorEnabled = false;
-		this->textureId = 0;
-		this->textureFilter = Texture::FILTER_UNDEFINED;
-		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
-		this->systemColor = Color::Black;
-		this->modelviewMatrixChanged = false;
-		this->projectionMatrixChanged = false;
-		this->blendMode = BM_UNDEFINED;
-		this->colorMode = CM_UNDEFINED;
-		this->colorModeFactor = 1.0f;
+		this->viewport.set(0.0f, 0.0f, 1.0f, 1.0f);
+		this->viewportChanged = true;
+		this->modelviewMatrixChanged = true;
+		this->projectionMatrix.setIdentity();
+		this->modelviewMatrix.setIdentity();
+		this->projectionMatrixChanged = true;
 		this->depthBuffer = false;
 		this->depthBufferWrite = false;
+		this->useTexture = false;
+		this->useColor = false;
+		this->texture = NULL;
+		this->blendMode = BM_ALPHA;
+		this->colorMode = CM_MULTIPLY;
+		this->colorModeFactor = 1.0f;
+		this->systemColor = Color::Black;
 	}
 
 }

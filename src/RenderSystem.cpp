@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -24,6 +24,7 @@
 #include "aprilUtil.h"
 #include "Image.h"
 #include "RenderSystem.h"
+#include "RenderState.h"
 #include "PixelShader.h"
 #include "Platform.h"
 #include "Texture.h"
@@ -33,6 +34,41 @@
 
 namespace april
 {
+	// DEPRECATED
+	grect RenderSystem::getOrthoProjection()
+	{
+		grect result;
+		if (this->state->projectionMatrix.data[0] != 0.0f && this->state->projectionMatrix.data[5] != 0.0f)
+		{
+			result.w = 2.0f / this->state->projectionMatrix.data[0];
+			result.h = -2.0f / this->state->projectionMatrix.data[5];
+			result.x = (1.0f + this->state->projectionMatrix.data[12]) * result.w * 0.5f;
+			result.y = (1.0f - this->state->projectionMatrix.data[13]) * result.h * 0.5f;
+			result += result.getSize() * this->getPixelOffset() / april::window->getSize();
+		}
+		return result;
+	}
+	// DEPRECATED
+	void RenderSystem::clear(bool useColor, bool depth)
+	{
+		this->clear(depth);
+	}
+	// DEPRECATED
+	void RenderSystem::clear(bool depth, grect rect, Color color)
+	{
+		this->clear(color, depth);
+	}
+	// DEPRECATED
+	void RenderSystem::setTextureFilter(Texture::Filter textureFilter)
+	{
+		hlog::error(logTag, "Manually setting a texture filter is not supported anymore since April v4.x!");
+	}
+	// DEPRECATED
+	void RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
+	{
+		hlog::error(logTag, "Manually setting a texture address-mode is not supported anymore since April v4.x!");
+	}
+
 	// optimizations, but they are not thread-safe
 	static PlainVertex pv[5];
 	static TexturedVertex tv[5];
@@ -117,29 +153,25 @@ namespace april
 	{
 		this->name = "Generic";
 		this->created = false;
-		this->state = NULL;
-		this->depthBufferEnabled = false;
-		this->depthBufferWriteEnabled = false;
-		this->textureFilter = Texture::FILTER_UNDEFINED;
-		this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
+		this->state = new RenderState();
+		this->deviceState = new RenderState();
+		//this->textureFilter = Texture::FILTER_UNDEFINED;
+		//this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
 	
 	RenderSystem::~RenderSystem()
 	{
-		if (this->hasAsyncTexturesQueued())
+		if (this->created)
 		{
-			harray<Texture*> textures = this->getTextures();
-			foreach (Texture*, it, textures)
-			{
-				if ((*it)->isAsyncLoadQueued())
-				{
-					(*it)->unload(); // to cancel all async loads
-				}
-			}
-			this->waitForAsyncTextures();
+			hlog::warn(logTag, "Deleting rendersystem before destroy() was called!");
 		}
-		this->destroy();
 		delete this->state;
+		delete this->deviceState;
+	}
+
+	void RenderSystem::init()
+	{
+		this->_deviceInit();
 	}
 	
 	bool RenderSystem::create(RenderSystem::Options options)
@@ -147,40 +179,86 @@ namespace april
 		if (!this->created)
 		{
 			hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
-			this->created = true;
 			this->options = options;
-			this->depthBufferEnabled = false;
-			this->depthBufferWriteEnabled = false;
-			return true;
+			this->state->reset();
+			this->deviceState->reset();
+			// create the actual device
+			this->_deviceInit();
+			this->created = this->_deviceCreate(options);
+			if (!this->created)
+			{
+				this->destroy();
+			}
 		}
-		this->state->reset();
-		return false;
+		return this->created;
 	}
-	
+
 	bool RenderSystem::destroy()
 	{
 		if (this->created)
 		{
 			hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
-			// creating a copy, because deleting a texture modifies this->textures
+			this->created = false;
+			// first wait for queud textures to cancel
 			harray<Texture*> textures = this->getTextures();
+			if (this->hasAsyncTexturesQueued())
+			{
+				foreach (Texture*, it, textures)
+				{
+					if ((*it)->isAsyncLoadQueued())
+					{
+						(*it)->unload(); // to cancel all async loads
+					}
+				}
+				this->waitForAsyncTextures();
+			}
+			// creating a copy (again), because deleting a texture modifies this->textures
+			textures = this->getTextures();
 			foreach (Texture*, it, textures)
 			{
 				delete (*it);
 			}
-			// TODOa - uncomment
-			//this->state->reset();
-			this->created = false;
-			this->depthBufferEnabled = false;
-			this->depthBufferWriteEnabled = false;
+			this->state->reset();
+			this->deviceState->reset();
+			if (!this->_deviceDestroy())
+			{
+				return false;
+			}
+			this->_deviceInit();
 			return true;
 		}
 		return false;
 	}
 	
+	void RenderSystem::assignWindow(Window* window)
+	{
+		this->_deviceAssignWindow(window);
+		this->_deviceSetupCaps();
+		this->_deviceSetup();
+		grect viewport(0.0f, 0.0f, april::window->getSize());
+		this->setViewport(viewport);
+		this->setOrthoProjection(viewport);
+		this->_updateDeviceState(true);
+		this->clear();
+	}
+
 	void RenderSystem::reset()
 	{
 		hlog::write(logTag, "Resetting rendersystem.");
+		this->_deviceReset();
+		this->_deviceSetup();
+	}
+
+	void RenderSystem::_deviceReset()
+	{
+		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
+		this->_updateDeviceState(true);
+	}
+
+	void RenderSystem::_deviceSetupDisplayModes()
+	{
+		gvec2 resolution = april::getSystemInfo().displayResolution;
+		this->displayModes += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
 	}
 
 	harray<Texture*> RenderSystem::getTextures()
@@ -189,81 +267,13 @@ namespace april
 		return this->textures;
 	}
 
-	harray<RenderSystem::DisplayMode> RenderSystem::getSupportedDisplayModes()
+	harray<RenderSystem::DisplayMode> RenderSystem::getDisplayModes()
 	{
-		harray<RenderSystem::DisplayMode> result;
-		gvec2 resolution = april::getSystemInfo().displayResolution;
-		result += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
-		return result;
-	}
-
-	RenderSystem::Caps RenderSystem::getCaps()
-	{
-		if (this->caps.maxTextureSize == 0)
+		if (this->displayModes.size() == 0)
 		{
-			this->_setupCaps();
+			this->_deviceSetupDisplayModes();
 		}
-		return this->caps;
-	}
-	
-	void RenderSystem::setViewport(grect value)
-	{
-		this->viewport = value;
-	}
-
-	void RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
-	{
-		if (this->options.depthBuffer)
-		{
-			this->depthBufferEnabled = enabled;
-			this->depthBufferWriteEnabled = writeEnabled;
-		}
-		else
-		{
-			hlog::error(logTag, "Cannot change depth-buffer state, RenderSystem was not created with this option!");
-		}
-	}
-
-	void RenderSystem::setOrthoProjection(grect rect)
-	{
-		// TODOaa - change and improve this implementation
-		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
-		this->orthoProjection = rect;
-		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
-		this->projectionMatrix.setOrthoProjection(rect);
-		this->_setProjectionMatrix(this->projectionMatrix);
-	}
-
-	void RenderSystem::setOrthoProjection(grect rect, float nearZ, float farZ)
-	{
-		// TODOaa - change and improve this implementation
-		// also: this variable needs to be updated in ::setProjectionMatrix() as well in order to prevent a stale value when using getOrthoProjection()
-		this->orthoProjection = rect;
-		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
-		this->projectionMatrix.setOrthoProjection(rect, nearZ, farZ);
-		this->_setProjectionMatrix(this->projectionMatrix);
-	}
-
-	void RenderSystem::setOrthoProjection(gvec2 size)
-	{
-		this->setOrthoProjection(grect(0.0f, 0.0f, size));
-	}
-
-	void RenderSystem::setOrthoProjection(gvec2 size, float nearZ, float farZ)
-	{
-		this->setOrthoProjection(grect(0.0f, 0.0f, size), nearZ, farZ);
-	}
-
-	void RenderSystem::setModelviewMatrix(gmat4 matrix)
-	{
-		this->modelviewMatrix = matrix;
-		this->_setModelviewMatrix(this->modelviewMatrix);
-	}
-	
-	void RenderSystem::setProjectionMatrix(gmat4 matrix)
-	{
-		this->projectionMatrix = matrix;
-		this->_setProjectionMatrix(this->projectionMatrix);
+		return this->displayModes;
 	}
 
 	int64_t RenderSystem::getVRamConsumption()
@@ -304,36 +314,37 @@ namespace april
 		return TextureAsync::isRunning();
 	}
 
-	Texture* RenderSystem::getRenderTarget()
+	grect RenderSystem::getViewport()
 	{
-		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
-		return NULL;
+		return this->state->viewport;
 	}
 
-	void RenderSystem::setRenderTarget(Texture* texture)
+	void RenderSystem::setViewport(grect value)
 	{
-		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
+		this->state->viewport = value;
+		this->state->viewportChanged = true;
 	}
 
-	void RenderSystem::setPixelShader(april::PixelShader* pixelShader)
+	gmat4 RenderSystem::getModelviewMatrix()
 	{
-		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
+		return this->state->modelviewMatrix;
 	}
 
-	void RenderSystem::setVertexShader(april::VertexShader* vertexShader)
+	void RenderSystem::setModelviewMatrix(gmat4 matrix)
 	{
-		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
+		this->state->modelviewMatrix = matrix;
+		this->state->modelviewMatrixChanged = true;
 	}
 
-	void RenderSystem::waitForAsyncTextures(float timeout)
+	gmat4 RenderSystem::getProjectionMatrix()
 	{
-		float time = timeout;
-		while ((time > 0.0f || timeout <= 0.0f) && this->hasAsyncTexturesQueued())
-		{
-			hthread::sleep(0.1f);
-			time -= 0.0001f;
-			TextureAsync::update();
-		}
+		return this->state->projectionMatrix;
+	}
+
+	void RenderSystem::setProjectionMatrix(gmat4 matrix)
+	{
+		this->state->projectionMatrix = matrix;
+		this->state->projectionMatrixChanged = true;
 	}
 
 	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, Texture::LoadMode loadMode)
@@ -368,7 +379,7 @@ namespace april
 		{
 			return NULL;
 		}
-		Texture* texture = this->_createTexture(fromResource);
+		Texture* texture = this->_deviceCreateTexture(fromResource);
 		bool result = (format == Image::FORMAT_INVALID ? texture->_create(name, type, loadMode) : texture->_create(name, format, type, loadMode));
 		if (result)
 		{
@@ -393,7 +404,7 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
 	{
-		Texture* texture = this->_createTexture(true);
+		Texture* texture = this->_deviceCreateTexture(true);
 		if (!texture->_create(w, h, data, format, type))
 		{
 			delete texture;
@@ -406,7 +417,7 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int w, int h, Color color, Image::Format format, Texture::Type type)
 	{
-		Texture* texture = this->_createTexture(true);
+		Texture* texture = this->_deviceCreateTexture(true);
 		if (!texture->_create(w, h, color, format, type))
 		{
 			delete texture;
@@ -439,7 +450,7 @@ namespace april
 
 	PixelShader* RenderSystem::createPixelShader()
 	{
-		return this->_createPixelShader();
+		return this->_deviceCreatePixelShader();
 	}
 
 	VertexShader* RenderSystem::createVertexShaderFromResource(chstr filename)
@@ -454,12 +465,12 @@ namespace april
 
 	VertexShader* RenderSystem::createVertexShader()
 	{
-		return this->_createVertexShader();
+		return this->_deviceCreateVertexShader();
 	}
 
 	PixelShader* RenderSystem::_createPixelShaderFromSource(bool fromResource, chstr filename)
 	{
-		PixelShader* shader = this->_createPixelShader();
+		PixelShader* shader = this->_deviceCreatePixelShader();
 		if (shader != NULL)
 		{
 			bool loaded = (fromResource ? shader->loadResource(filename) : shader->loadFile(filename));
@@ -474,7 +485,7 @@ namespace april
 
 	VertexShader* RenderSystem::_createVertexShaderFromSource(bool fromResource, chstr filename)
 	{
-		VertexShader* shader = this->_createVertexShader();
+		VertexShader* shader = this->_deviceCreateVertexShader();
 		if (shader != NULL)
 		{
 			bool loaded = (fromResource ? shader->loadResource(filename) : shader->loadFile(filename));
@@ -487,13 +498,13 @@ namespace april
 		return shader;
 	}
 
-	PixelShader* RenderSystem::_createPixelShader()
+	PixelShader* RenderSystem::_deviceCreatePixelShader()
 	{
 		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
-	VertexShader* RenderSystem::_createVertexShader()
+	VertexShader* RenderSystem::_deviceCreateVertexShader()
 	{
 		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
@@ -509,59 +520,271 @@ namespace april
 		delete shader;
 	}
 
-
-
-	void RenderSystem::unloadTextures()
+	void RenderSystem::setOrthoProjection(grect rect)
 	{
-		harray<Texture*> textures = this->getTextures();
-		foreach (Texture*, it, textures)
+		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
+		this->state->projectionMatrix.setOrthoProjection(rect);
+		this->state->projectionMatrixChanged = true;
+	}
+
+	void RenderSystem::setOrthoProjection(grect rect, float nearZ, float farZ)
+	{
+		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
+		this->state->projectionMatrix.setOrthoProjection(rect, nearZ, farZ);
+		this->state->projectionMatrixChanged = true;
+	}
+
+	void RenderSystem::setOrthoProjection(gvec2 size)
+	{
+		this->setOrthoProjection(grect(0.0f, 0.0f, size));
+	}
+
+	void RenderSystem::setOrthoProjection(gvec2 size, float nearZ, float farZ)
+	{
+		this->setOrthoProjection(grect(0.0f, 0.0f, size), nearZ, farZ);
+	}
+
+	void RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
+	{
+		if (this->options.depthBuffer)
 		{
-			(*it)->unload();
+			this->state->depthBuffer = enabled;
+			this->state->depthBufferWrite = writeEnabled;
+		}
+		else
+		{
+			hlog::error(logTag, "Cannot change depth-buffer state, RenderSystem was not created with this option!");
 		}
 	}
-	
+
+	void RenderSystem::setTexture(Texture* texture)
+	{
+		this->state->texture = texture;
+	}
+
+	void RenderSystem::setBlendMode(BlendMode blendMode)
+	{
+		this->state->blendMode = blendMode;
+	}
+
+	void RenderSystem::setColorMode(ColorMode colorMode, float colorModeFactor)
+	{
+		this->state->colorMode = colorMode;
+		this->state->colorModeFactor = colorModeFactor;
+	}
+
+	void RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
+	{
+		hlog::warnf(logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.cStr());
+	}
+
 	void RenderSystem::setIdentityTransform()
 	{
-		this->modelviewMatrix.setIdentity();
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.setIdentity();
+		this->state->modelviewMatrixChanged = true;
 	}
 	
 	void RenderSystem::translate(float x, float y, float z)
 	{
-		this->modelviewMatrix.translate(x, y, z);
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.translate(x, y, z);
+		this->state->modelviewMatrixChanged = true;
 	}
 	
 	void RenderSystem::rotate(float angle, float ax, float ay, float az)
 	{
-		this->modelviewMatrix.rotate(ax, ay, az, angle);
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.rotate(ax, ay, az, angle);
+		this->state->modelviewMatrixChanged = true;
 	}	
 	
 	void RenderSystem::scale(float s)
 	{
-		this->modelviewMatrix.scale(s);
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.scale(s);
+		this->state->modelviewMatrixChanged = true;
 	}
 	
 	void RenderSystem::scale(float sx, float sy, float sz)
 	{
-		this->modelviewMatrix.scale(sx, sy, sz);
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.scale(sx, sy, sz);
+		this->state->modelviewMatrixChanged = true;
 	}
 	
 	void RenderSystem::lookAt(const gvec3& eye, const gvec3& target, const gvec3& up)
 	{
-		this->modelviewMatrix.lookAt(eye, target, up);
-		this->_setModelviewMatrix(this->modelviewMatrix);
+		this->state->modelviewMatrix.lookAt(eye, target, up);
+		this->state->modelviewMatrixChanged = true;
 	}
 		
 	void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
 	{
-		this->projectionMatrix.setPerspective(fov, aspect, nearClip, farClip);
-		this->_setProjectionMatrix(this->projectionMatrix);
+		this->state->projectionMatrix.setPerspective(fov, aspect, nearClip, farClip);
+		this->state->projectionMatrixChanged = true;
 	}
-	
+
+	void RenderSystem::_updateDeviceState(bool forceUpdate)
+	{
+		// viewport
+		if (forceUpdate || this->state->viewportChanged)
+		{
+			if (forceUpdate || this->deviceState->viewport != this->state->viewport)
+			{
+				this->_setDeviceViewport(this->state->viewport);
+				this->deviceState->viewport = this->state->viewport;
+			}
+			this->state->viewportChanged = false;
+		}
+		// modelview matrix
+		if (forceUpdate || this->state->modelviewMatrixChanged)
+		{
+			if (forceUpdate || this->deviceState->modelviewMatrix != this->state->modelviewMatrix)
+			{
+				this->_setDeviceModelviewMatrix(this->state->modelviewMatrix);
+				this->deviceState->modelviewMatrix = this->state->modelviewMatrix;
+			}
+			this->state->modelviewMatrixChanged = false;
+		}
+		// projection matrix
+		if (forceUpdate || this->state->projectionMatrixChanged)
+		{
+			if (forceUpdate || this->deviceState->projectionMatrix != this->state->projectionMatrix)
+			{
+				this->_setDeviceProjectionMatrix(this->state->projectionMatrix);
+				this->deviceState->projectionMatrix = this->state->projectionMatrix;
+			}
+			this->state->projectionMatrixChanged = false;
+		}
+		// depth buffer
+		if (forceUpdate || this->deviceState->depthBuffer != this->state->depthBuffer || this->deviceState->depthBufferWrite != this->state->depthBufferWrite)
+		{
+			this->_setDeviceDepthBuffer(this->state->depthBuffer, this->state->depthBufferWrite);
+			this->deviceState->depthBuffer = this->state->depthBuffer;
+			this->deviceState->depthBufferWrite = this->state->depthBufferWrite;
+		}
+		// device render mode
+		if (forceUpdate || this->deviceState->useTexture != this->state->useTexture || this->deviceState->useColor != this->state->useColor)
+		{
+			this->_setDeviceRenderMode(this->state->useTexture, this->state->useColor);
+		}
+		// texture
+		if (forceUpdate || this->deviceState->texture != this->state->texture || this->deviceState->useTexture != this->state->useTexture)
+		{
+			// filtering and wrapping applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
+			if (this->state->texture != NULL && this->state->useTexture)
+			{
+				this->state->texture->load();
+				this->state->texture->unlock();
+				this->_setDeviceTexture(this->state->texture);
+				this->_setDeviceTextureFilter(this->state->texture->getFilter());
+				this->_setDeviceTextureAddressMode(this->state->texture->getAddressMode());
+			}
+			else
+			{
+				this->_setDeviceTexture(NULL);
+			}
+			this->deviceState->texture = this->state->texture;
+		}
+		// blend mode
+		if (forceUpdate || this->deviceState->blendMode != this->state->blendMode)
+		{
+			this->_setDeviceBlendMode(this->state->blendMode);
+			this->deviceState->blendMode = this->state->blendMode;
+		}
+		// color mode
+		if (forceUpdate || this->deviceState->colorMode != this->state->colorMode || this->deviceState->colorModeFactor != this->state->colorModeFactor ||
+			this->deviceState->useTexture != this->state->useTexture || this->deviceState->useColor != this->state->useColor ||
+			this->deviceState->systemColor != this->state->systemColor)
+		{
+			this->_setDeviceColorMode(this->state->colorMode, this->state->colorModeFactor, this->state->useTexture, this->state->useColor, this->state->systemColor);
+			this->deviceState->colorMode = this->state->colorMode;
+			this->deviceState->colorModeFactor = this->state->colorModeFactor;
+			this->deviceState->useColor = this->state->useColor;
+			this->deviceState->systemColor = this->state->systemColor;
+		}
+		// shared variables
+		this->deviceState->useTexture = this->state->useTexture;
+		this->deviceState->useColor = this->state->useColor;
+	}
+
+	void RenderSystem::clear(bool depth)
+	{
+		if (!this->options.depthBuffer)
+		{
+			depth = false;
+		}
+		this->_deviceClear(depth);
+	}
+
+	void RenderSystem::clear(april::Color color, bool depth)
+	{
+		if (!this->options.depthBuffer)
+		{
+			depth = false;
+		}
+		this->_deviceClear(color, depth);
+	}
+
+	void RenderSystem::clearDepth()
+	{
+		if (!this->options.depthBuffer)
+		{
+			return;
+		}
+		this->_deviceClearDepth();
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
+	{
+		this->state->useTexture = false;
+		this->state->useColor = false;
+		this->state->systemColor = april::Color::White;
+		this->_updateDeviceState();
+		this->_deviceRender(renderOperation, v, nVertices);
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
+	{
+		this->state->useTexture = false;
+		this->state->useColor = false;
+		this->state->systemColor = color;
+		this->_updateDeviceState();
+		this->_deviceRender(renderOperation, v, nVertices);
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
+	{
+		this->state->useTexture = true;
+		this->state->useColor = false;
+		this->state->systemColor = april::Color::White;
+		this->_updateDeviceState();
+		this->_deviceRender(renderOperation, v, nVertices);
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
+	{
+		this->state->useTexture = true;
+		this->state->useColor = false;
+		this->state->systemColor = color;
+		this->_updateDeviceState();
+		this->_deviceRender(renderOperation, v, nVertices);
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
+	{
+		this->state->useTexture = false;
+		this->state->useColor = true;
+		this->state->systemColor = april::Color::White;
+		this->_updateDeviceState();
+		this->_deviceRender(renderOperation, v, nVertices);
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
+	{
+		this->state->useTexture = true;
+		this->state->useColor = true;
+		this->state->systemColor = april::Color::White;
+		this->_updateDeviceState();
+		this->_deviceRender(renderOperation, v, nVertices);
+	}
+
 	void RenderSystem::drawRect(grect rect, Color color)
 	{
 		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
@@ -598,12 +821,7 @@ namespace april
 		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
 		this->render(RO_TRIANGLE_STRIP, tv, 4, color);
 	}
-	
-	void RenderSystem::presentFrame()
-	{
-		april::window->presentFrame();
-	}
-	
+
 	hstr RenderSystem::findTextureResource(chstr filename)
 	{
 		if (hresource::exists(filename))
@@ -666,15 +884,35 @@ namespace april
 		return "";
 	}
 	
+	void RenderSystem::unloadTextures()
+	{
+		harray<Texture*> textures = this->getTextures();
+		foreach(Texture*, it, textures)
+		{
+			(*it)->unload();
+		}
+	}
+
+	void RenderSystem::waitForAsyncTextures(float timeout)
+	{
+		float time = timeout;
+		while ((time > 0.0f || timeout <= 0.0f) && this->hasAsyncTexturesQueued())
+		{
+			hthread::sleep(0.1f);
+			time -= 0.0001f;
+			TextureAsync::update();
+		}
+	}
+
 	april::Image* RenderSystem::takeScreenshot(Image::Format format)
 	{
 		hlog::warnf(logTag, "Screenshots are not implemented in render system '%s'!", this->name.cStr());
 		return NULL;
 	}
 
-	void RenderSystem::_setResolution(int w, int h, bool fullscreen)
+	void RenderSystem::presentFrame()
 	{
-		hlog::warnf(logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.cStr());
+		april::window->presentFrame();
 	}
 
 	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int nVertices)
@@ -707,4 +945,25 @@ namespace april
 		return nVertices;
 	}
 	
+	Texture* RenderSystem::getRenderTarget()
+	{
+		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
+		return NULL;
+	}
+
+	void RenderSystem::setRenderTarget(Texture* texture)
+	{
+		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
+	}
+
+	void RenderSystem::setPixelShader(april::PixelShader* pixelShader)
+	{
+		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
+	}
+
+	void RenderSystem::setVertexShader(april::VertexShader* vertexShader)
+	{
+		hlog::warnf(logTag, "Vertex shaders are not implemented in render system '%s'!", this->name.cStr());
+	}
+
 }

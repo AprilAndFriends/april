@@ -533,7 +533,6 @@
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\ES1\OpenGLES1_Texture.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\OpenGLC_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\OpenGLC_Texture.cpp" />
-    <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_State.cpp" />
     <ClCompile Include="..\..\src\april.cpp" />
     <ClCompile Include="..\..\src\aprilUtil.cpp" />
     <ClCompile Include="..\..\src\Cursor.cpp" />
@@ -629,7 +628,6 @@
     <ClInclude Include="..\..\src\rendersystems\DirectX\DirectX_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\DirectX_Texture.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\OpenGL_RenderSystem.h" />
-    <ClInclude Include="..\..\src\rendersystems\OpenGL\OpenGL_State.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\OpenGL_Texture.h" />
     <ClInclude Include="..\..\src\windowsystems\AndroidJNI\AndroidJNI_Cursor.h" />
     <ClInclude Include="..\..\src\windowsystems\AndroidJNI\AndroidJNI_Keys.h" />

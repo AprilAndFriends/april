@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -319,7 +319,7 @@ void CustomRenderSystem::setTexture(april::Texture* texture)
 	}
 }
 
-april::Texture* CustomRenderSystem::_createTexture(bool fromResource)
+april::Texture* CustomRenderSystem::_deviceCreateTexture(bool fromResource)
 {
 	return new CustomTexture(fromResource);
 }

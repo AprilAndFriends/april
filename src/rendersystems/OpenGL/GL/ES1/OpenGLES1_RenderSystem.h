@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -20,23 +20,20 @@
 
 namespace april
 {
-	class OpenGLES1_Texture;
 	class Texture;
 
 	class OpenGLES1_RenderSystem : public OpenGLC_RenderSystem
 	{
 	public:
-		friend class OpenGLES1_Texture;
-
 		OpenGLES1_RenderSystem();
 		~OpenGLES1_RenderSystem();
 
 	protected:
-		void _setupCaps();
+		void _deviceSetupCaps();
 
-		Texture* _createTexture(bool fromResource);
+		Texture* _deviceCreateTexture(bool fromResource);
 
-		void _setTextureBlendMode(BlendMode mode);
+		void _setDeviceBlendMode(BlendMode blendMode);
 
 	};
 	

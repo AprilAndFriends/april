@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -25,37 +25,36 @@ namespace april
 	class RenderState
 	{
 	public:
-		/// @brief Whether texture coordinates are used in vertices.
-		bool textureCoordinatesEnabled;
-		/// @brief Whether color is used in vertices.
-		bool colorEnabled;
-		/// @brief The current unique texture ID.
-		unsigned int textureId;
-		/// @brief The current texture filter.
-		Texture::Filter textureFilter;
-		/// @brief The current texture address mode.
-		Texture::AddressMode textureAddressMode;
-		/// @brief The current system color.
-		/// @note Usually used when clearing a buffer.
-		Color systemColor;
-		/// @brief Whether the modelview matrix has changed.
-		bool modelviewMatrixChanged;
-		/// @brief Whether the projection matrix has changed.
-		bool projectionMatrixChanged;
+		/// @brief The current viewport.
+		grect viewport;
+		/// @brief Whether the viewport has changed.
+		bool viewportChanged;
 		/// @brief The current modelview matrix.
 		gmat4 modelviewMatrix;
+		/// @brief Whether the modelview matrix has changed.
+		bool modelviewMatrixChanged;
 		/// @brief The current projection matrix.
 		gmat4 projectionMatrix;
-		/// @brief The current texture blend mode.
-		BlendMode blendMode;
-		/// @brief The current texture color mode.
-		ColorMode colorMode;
-		/// @brief The current texture color mode factor.
-		float colorModeFactor;
+		/// @brief Whether the projection matrix has changed.
+		bool projectionMatrixChanged;
 		/// @brief Whether the depth buffer is currently enabled.
 		bool depthBuffer;
 		/// @brief Whether writing to the depth buffer is currently enabled.
 		bool depthBufferWrite;
+		/// @brief Whether texture coordinates are used in vertices.
+		bool useTexture;
+		/// @brief Whether color is used in vertices.
+		bool useColor;
+		/// @brief The current unique texture ID.
+		Texture* texture;
+		/// @brief The current blend mode.
+		BlendMode blendMode;
+		/// @brief The current color mode.
+		ColorMode colorMode;
+		/// @brief The current color mode factor.
+		float colorModeFactor;
+		/// @brief The current system color.
+		Color systemColor;
 
 		/// @brief Basic constructor.
 		RenderState();

@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -119,7 +119,7 @@
 	uniform lowp float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		gl_FragColor = systemColor; \n\
+		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), systemColor.rgb, lerpAlpha), systemColor.a); \n\
 	} \n\
 "
 
@@ -161,7 +161,7 @@
 	uniform lowp float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		gl_FragColor = colorFrag; \n\
+		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), colorFrag.rgb, lerpAlpha), colorFrag.a); \n\
 	} \n\
 "
 

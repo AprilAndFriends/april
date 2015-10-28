@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -31,7 +31,7 @@ public:
 	void reset();
 	void assignWindow(april::Window* window);
 
-	april::Texture* _createTexture(bool fromResource);
+	april::Texture* _deviceCreateTexture(bool fromResource);
 
 	inline float getPixelOffset() { return 0.0f; }
 	inline int getVRam() { return 0; }

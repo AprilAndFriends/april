@@ -269,9 +269,6 @@
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_State.cpp">
-      <Filter>Source Files\rendersystems\OpenGL</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
     </ClCompile>
@@ -390,9 +387,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\rendersystems\DirectX\9\DirectX9_VertexShader.h">
       <Filter>Header Files\rendersystems\DirectX\9</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\rendersystems\OpenGL\OpenGL_State.h">
-      <Filter>Header Files\rendersystems\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\Timer.h">
       <Filter>Header Files</Filter>

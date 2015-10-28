@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -28,26 +28,26 @@ namespace april
 		OpenGLC_RenderSystem();
 		~OpenGLC_RenderSystem();
 
-		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
-		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
-		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
-
 	protected:
-		void _setupDefaultParameters();
-		void _applyStateChanges();
-		void _setClientState(unsigned int type, bool enabled);
+		bool blendSeparationSupported;
 
-		void _setTextureColorMode(ColorMode textureColorMode, float factor);
-		void _setDepthBuffer(bool enabled, bool writeEnabled);
+		Color deviceState_color;
+		unsigned int deviceState_matrixMode;
 
-		void _loadIdentityMatrix();
-		void _setMatrixMode(unsigned int mode);
-		void _setVertexPointer(int stride, const void* pointer);
-		void _setTexCoordPointer(int stride, const void *pointer);
-		void _setColorPointer(int stride, const void *pointer);
+		void _deviceSetup();
+
+		void _setDeviceModelviewMatrix(const gmat4& matrix);
+		void _setDeviceProjectionMatrix(const gmat4& matrix);
+		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
+		void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
+
+		void _setDeviceColor(const Color& color, bool forceUpdate = false);
+		void _setDeviceMatrixMode(unsigned int mode, bool forceUpdate = false);
+		void _setGlTextureEnabled(bool enabled);
+		void _setGlColorEnabled(bool enabled);
+		void _setGlVertexPointer(int stride, const void* pointer);
+		void _setGlTexturePointer(int stride, const void* pointer);
+		void _setGlColorPointer(int stride, const void* pointer);
 
 	};
 	

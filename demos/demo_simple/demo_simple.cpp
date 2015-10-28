@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -84,11 +84,9 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->drawFilledRect(grect(drawRect.w - 110.0f, drawRect.h - 310.0f, 110.0f, 310.0f), april::Color::Black);
 		april::rendersys->render(april::RO_TRIANGLE_LIST, pv, 3);
 		april::rendersys->render(april::RO_TRIANGLE_LIST, &pv[1], 3, april::Color::Yellow);
-		april::rendersys->setTexture(texture);
 		april::rendersys->render(april::RO_TRIANGLE_LIST, tv, 3);
 		april::rendersys->render(april::RO_TRIANGLE_LIST, &tv[1], 3, april::Color::Green);
 		april::rendersys->render(april::RO_TRIANGLE_LIST, cv, 3);
-		april::rendersys->setTexture(texture);
 		april::rendersys->render(april::RO_TRIANGLE_LIST, ctv, 3);
 #endif
 		return true;

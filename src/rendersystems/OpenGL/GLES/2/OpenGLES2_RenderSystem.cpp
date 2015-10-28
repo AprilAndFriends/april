@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -30,17 +30,17 @@ namespace april
 		this->destroy();
 	}
 
-	Texture* OpenGLES2_RenderSystem::_createTexture(bool fromResource)
+	Texture* OpenGLES2_RenderSystem::_deviceCreateTexture(bool fromResource)
 	{
 		return new OpenGLES2_Texture(fromResource);
 	}
 
-	PixelShader* OpenGLES2_RenderSystem::_createPixelShader()
+	PixelShader* OpenGLES2_RenderSystem::_deviceCreatePixelShader()
 	{
 		return new OpenGLES2_PixelShader();
 	}
 
-	VertexShader* OpenGLES2_RenderSystem::_createVertexShader()
+	VertexShader* OpenGLES2_RenderSystem::_deviceCreateVertexShader()
 	{
 		return new OpenGLES2_VertexShader();
 	}

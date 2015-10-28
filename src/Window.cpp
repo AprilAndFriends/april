@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -366,7 +366,7 @@ namespace april
 	void Window::_setRenderSystemResolution(int w, int h, bool fullscreen)
 	{
 		hlog::writef(logTag, "Setting window resolution: (%d,%d); fullscreen: %s", w, h, fullscreen ? "yes" : "no");
-		april::rendersys->_setResolution(w, h, fullscreen);
+		april::rendersys->_deviceChangeResolution(w, h, fullscreen);
 		if (this->systemDelegate != NULL)
 		{
 			this->systemDelegate->onWindowSizeChanged(w, h, fullscreen);

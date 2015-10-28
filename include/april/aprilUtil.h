@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -47,8 +47,8 @@ namespace april
 	{
 		CM_DEFAULT = 0,
 		CM_MULTIPLY = 1,
-		CM_LERP = 2,
-		CM_ALPHA_MAP = 3,
+		CM_ALPHA_MAP = 2,
+		CM_LERP = 3,
 		CM_UNDEFINED = 0x7FFFFFFF
 	};
 

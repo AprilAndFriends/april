@@ -1,5 +1,5 @@
 /// @file
-/// @version 3.7
+/// @version 4.0
 /// 
 /// @section LICENSE
 /// 
@@ -28,7 +28,7 @@ namespace april
 		this->destroy();
 	}
 
-	void OpenGLES1_RenderSystem::_setupCaps()
+	void OpenGLES1_RenderSystem::_deviceSetupCaps()
 	{
 #ifdef _EGL
 		if (april::egl->display == NULL)
@@ -36,44 +36,36 @@ namespace april
 			return;
 		}
 #endif
-		if (this->caps.maxTextureSize == 0)
-		{
-			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
+		hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
 #ifndef _WINRT
-			this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
+		this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
 #else
-			this->caps.npotTexturesLimited = true;
+		this->caps.npotTexturesLimited = true;
 #endif
-			this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
-		}
+		this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
+		// TODO - is there a way to make this work on Win32?
+#ifndef _WIN32
+		this->blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
+#endif
 #ifdef _ANDROID // Android has problems with alpha textures in some implementations
 		this->caps.textureFormats /= Image::FORMAT_ALPHA;
 		this->caps.textureFormats /= Image::FORMAT_GRAYSCALE;
 #endif
-		return OpenGLC_RenderSystem::_setupCaps();
+		return OpenGLC_RenderSystem::_deviceSetupCaps();
 	}
 
-	Texture* OpenGLES1_RenderSystem::_createTexture(bool fromResource)
+	Texture* OpenGLES1_RenderSystem::_deviceCreateTexture(bool fromResource)
 	{
 		return new OpenGLES1_Texture(fromResource);
 	}
 
-	void OpenGLES1_RenderSystem::_setTextureBlendMode(BlendMode textureBlendMode)
+	void OpenGLES1_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
 	{
-		// TODO - is there a way to make this work on Win32?
 #ifndef _WIN32
-		// TODO - refactor
-		static int blendSeparationSupported = -1;
-		if (blendSeparationSupported == -1)
-		{
-			// determine if blend separation is possible on first call to this function
-			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-			blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
-		}
-		if (blendSeparationSupported)
+		if (this->blendSeparationSupported)
 		{
 			// blending for the new generations
-			switch (textureBlendMode)
+			switch (blendMode)
 			{
 			case BM_DEFAULT:
 			case BM_ALPHA:
@@ -100,7 +92,7 @@ namespace april
 		else
 #endif
 		{
-			OpenGLC_RenderSystem::_setTextureBlendMode(textureBlendMode);
+			OpenGLC_RenderSystem::_setDeviceBlendMode(blendMode);
 		}
 	}
 
