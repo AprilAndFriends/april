@@ -112,10 +112,6 @@ namespace april
 
 	bool DirectX11_RenderSystem::_deviceCreate(Options options)
 	{
-		if (!DirectX_RenderSystem::_deviceCreate(options))
-		{
-			return false;
-		}
 		/*
 		this->activeTextureBlendMode = BM_DEFAULT;
 		this->activeTexture = NULL;
@@ -165,10 +161,6 @@ namespace april
 
 	bool DirectX11_RenderSystem::_deviceDestroy()
 	{
-		if (!DirectX_RenderSystem::_deviceDestroy())
-		{
-			return false;
-		}
 		_HL_TRY_DELETE(this->vertexShaderDefault);
 		_HL_TRY_DELETE(this->pixelShaderTexturedMultiply);
 		_HL_TRY_DELETE(this->pixelShaderTexturedAlphaMap);
@@ -307,7 +299,6 @@ namespace april
 			}
 		}
 		this->d3dDeviceContext->IASetInputLayout(this->inputLayout.Get());
-		DirectX_RenderSystem::_deviceAssignWindow(window);
 	}
 
 	void DirectX11_RenderSystem::_deviceReset()
@@ -328,7 +319,7 @@ namespace april
 
 	void DirectX11_RenderSystem::_deviceSetup()
 	{
-		// TODOa
+		// not used
 	}
 
 	void DirectX11_RenderSystem::_createSwapChain(int width, int height)
@@ -537,8 +528,7 @@ namespace april
 		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 		this->d3dDevice->CreateSamplerState(&samplerDesc, &this->samplerNearestClamp);
 		// other
-		this->setBlendMode(BM_DEFAULT);
-		this->setColorMode(CM_DEFAULT);
+		this->_updateDeviceState(true);
 		this->clear();
 		this->presentFrame();
 	}
@@ -577,35 +567,6 @@ namespace april
 			return 0;
 		}
 		return (desc.DedicatedVideoMemory / (1024 * 1024));
-	}
-
-
-
-
-
-	void DirectX11_RenderSystem::updateOrientation()
-	{
-		DisplayOrientations orientation = DisplayInformation::GetForCurrentView()->CurrentOrientation;
-		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
-		switch (orientation)
-		{
-		case DisplayOrientations::Landscape:
-			rotation = DXGI_MODE_ROTATION_ROTATE90;
-			break;
-		case DisplayOrientations::Portrait:
-			rotation = DXGI_MODE_ROTATION_IDENTITY;
-			break;
-		case DisplayOrientations::LandscapeFlipped:
-			rotation = DXGI_MODE_ROTATION_ROTATE270;
-			break;
-		case DisplayOrientations::PortraitFlipped:
-			rotation = DXGI_MODE_ROTATION_ROTATE180;
-			break;
-		default:
-			hlog::error(logTag, "Undefined screen orienation, using default landscape!");
-			rotation = DXGI_MODE_ROTATION_ROTATE90;
-			break;
-		}
 	}
 
 	Texture* DirectX11_RenderSystem::_deviceCreateTexture(bool fromResource)
@@ -1117,6 +1078,31 @@ namespace april
 		this->swapChain->Present(1, 0);
 		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
 		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+	}
+
+	void DirectX11_RenderSystem::updateOrientation()
+	{
+		DisplayOrientations orientation = DisplayInformation::GetForCurrentView()->CurrentOrientation;
+		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
+		switch (orientation)
+		{
+		case DisplayOrientations::Landscape:
+			rotation = DXGI_MODE_ROTATION_ROTATE90;
+			break;
+		case DisplayOrientations::Portrait:
+			rotation = DXGI_MODE_ROTATION_IDENTITY;
+			break;
+		case DisplayOrientations::LandscapeFlipped:
+			rotation = DXGI_MODE_ROTATION_ROTATE270;
+			break;
+		case DisplayOrientations::PortraitFlipped:
+			rotation = DXGI_MODE_ROTATION_ROTATE180;
+			break;
+		default:
+			hlog::error(logTag, "Undefined screen orienation, using default landscape!");
+			rotation = DXGI_MODE_ROTATION_ROTATE90;
+			break;
+		}
 	}
 
 	void DirectX11_RenderSystem::trim()
