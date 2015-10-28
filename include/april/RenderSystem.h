@@ -134,6 +134,7 @@ namespace april
 		void destroyPixelShader(PixelShader* shader);
 		void destroyVertexShader(VertexShader* shader);
 
+		grect getOrthoProjection();
 		void setOrthoProjection(grect rect);
 		void setOrthoProjection(grect rect, float nearZ, float farZ);
 		void setOrthoProjection(gvec2 size);
@@ -191,7 +192,6 @@ namespace april
 
 		DEPRECATED_ATTRIBUTE inline int getMaxTextureSize() { return this->getCaps().maxTextureSize; }
 		DEPRECATED_ATTRIBUTE inline harray<DisplayMode> getSupportedDisplayModes() { return this->getDisplayModes(); }
-		DEPRECATED_ATTRIBUTE grect getOrthoProjection();
 		DEPRECATED_ATTRIBUTE void clear(bool useColor, bool depth);
 		DEPRECATED_ATTRIBUTE void clear(bool depth, grect rect, Color color = Color::Clear);
 		DEPRECATED_ATTRIBUTE void setTextureFilter(Texture::Filter textureFilter);
