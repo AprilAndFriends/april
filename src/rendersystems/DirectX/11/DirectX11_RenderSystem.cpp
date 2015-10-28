@@ -41,6 +41,9 @@
 		name = (DirectX11_ ## type ## Shader*)this->create ## type ## ShaderFromResource(SHADER_PATH #type "Shader_" #file ".cso"); \
 	}
 
+#define _SELECT_SHADER(useTexture, useColor, type) \
+	(useTexture ? (useColor ? this->pixelShaderColoredTextured ## type : this->pixelShaderTextured ## type) : (useColor ? this->pixelShaderColored ## type : this->pixelShader ## type));
+
 using namespace Microsoft::WRL;
 using namespace Windows::Graphics::Display;
 
@@ -93,17 +96,23 @@ namespace april
 		//this->activeVertexShader = NULL;
 		//this->activePixelShader = NULL;
 		this->vertexShaderDefault = NULL;
-		this->pixelShaderTexturedMultiply = NULL;
-		this->pixelShaderTexturedAlphaMap = NULL;
-		this->pixelShaderTexturedLerp = NULL;
 		this->pixelShaderMultiply = NULL;
-		this->pixelShaderAlphaMap = NULL;
 		this->pixelShaderLerp = NULL;
+		this->pixelShaderAlphaMap = NULL;
+		this->pixelShaderTexturedMultiply = NULL;
+		this->pixelShaderTexturedLerp = NULL;
+		this->pixelShaderTexturedAlphaMap = NULL;
+		this->pixelShaderColoredMultiply = NULL;
+		this->pixelShaderColoredLerp = NULL;
+		this->pixelShaderColoredAlphaMap = NULL;
+		this->pixelShaderColoredTexturedMultiply = NULL;
+		this->pixelShaderColoredTexturedLerp = NULL;
+		this->pixelShaderColoredTexturedAlphaMap = NULL;
 		this->_currentVertexShader = NULL;
 		this->_currentPixelShader = NULL;
 		this->_currentTexture = NULL;
-		this->_currentTextureBlendMode = BM_UNDEFINED;
-		this->_currentTextureColorMode = CM_UNDEFINED;
+		this->_currentBlendMode = BM_UNDEFINED;
+		this->_currentColorMode = CM_UNDEFINED;
 		this->_currentTextureFilter = Texture::FILTER_UNDEFINED;
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->_currentRenderOperation = RO_UNDEFINED;
@@ -140,34 +149,46 @@ namespace april
 		this->constantBuffer = nullptr;
 		this->inputLayout = nullptr;
 		this->vertexShaderDefault = NULL;
-		this->pixelShaderTexturedMultiply = NULL;
-		this->pixelShaderTexturedAlphaMap = NULL;
-		this->pixelShaderTexturedLerp = NULL;
 		this->pixelShaderMultiply = NULL;
-		this->pixelShaderAlphaMap = NULL;
 		this->pixelShaderLerp = NULL;
+		this->pixelShaderAlphaMap = NULL;
+		this->pixelShaderTexturedMultiply = NULL;
+		this->pixelShaderTexturedLerp = NULL;
+		this->pixelShaderTexturedAlphaMap = NULL;
+		this->pixelShaderColoredMultiply = NULL;
+		this->pixelShaderColoredLerp = NULL;
+		this->pixelShaderColoredAlphaMap = NULL;
+		this->pixelShaderColoredTexturedMultiply = NULL;
+		this->pixelShaderColoredTexturedLerp = NULL;
+		this->pixelShaderColoredTexturedAlphaMap = NULL;
 		this->_currentVertexShader = NULL;
 		this->_currentPixelShader = NULL;
 		this->_currentTexture = NULL;
-		this->_currentTextureBlendMode = BM_UNDEFINED;
-		this->_currentTextureColorMode = CM_UNDEFINED;
+		this->_currentBlendMode = BM_UNDEFINED;
+		this->_currentColorMode = CM_UNDEFINED;
 		this->_currentTextureFilter = Texture::FILTER_UNDEFINED;
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->_currentRenderOperation = RO_UNDEFINED;
 		this->_currentVertexBuffer = NULL;
-		//this->viewport.setSize(april::getSystemInfo().displayResolution);
+		this->setViewport(grect(0.0f, 0.0f, april::getSystemInfo().displayResolution));
 		return true;
 	}
 
 	bool DirectX11_RenderSystem::_deviceDestroy()
 	{
 		_HL_TRY_DELETE(this->vertexShaderDefault);
-		_HL_TRY_DELETE(this->pixelShaderTexturedMultiply);
-		_HL_TRY_DELETE(this->pixelShaderTexturedAlphaMap);
-		_HL_TRY_DELETE(this->pixelShaderTexturedLerp);
 		_HL_TRY_DELETE(this->pixelShaderMultiply);
-		_HL_TRY_DELETE(this->pixelShaderAlphaMap);
 		_HL_TRY_DELETE(this->pixelShaderLerp);
+		_HL_TRY_DELETE(this->pixelShaderAlphaMap);
+		_HL_TRY_DELETE(this->pixelShaderTexturedMultiply);
+		_HL_TRY_DELETE(this->pixelShaderTexturedLerp);
+		_HL_TRY_DELETE(this->pixelShaderTexturedAlphaMap);
+		_HL_TRY_DELETE(this->pixelShaderColoredMultiply);
+		_HL_TRY_DELETE(this->pixelShaderColoredLerp);
+		_HL_TRY_DELETE(this->pixelShaderColoredAlphaMap);
+		_HL_TRY_DELETE(this->pixelShaderColoredTexturedMultiply);
+		_HL_TRY_DELETE(this->pixelShaderColoredTexturedLerp);
+		_HL_TRY_DELETE(this->pixelShaderColoredTexturedAlphaMap);
 		this->inputLayout = nullptr;
 		this->vertexBuffer = nullptr;
 		this->constantBuffer = nullptr;
@@ -188,13 +209,13 @@ namespace april
 		this->_currentVertexShader = NULL;
 		this->_currentPixelShader = NULL;
 		this->_currentTexture = NULL;
-		this->_currentTextureBlendMode = BM_UNDEFINED;
-		this->_currentTextureColorMode = CM_UNDEFINED;
+		this->_currentBlendMode = BM_UNDEFINED;
+		this->_currentColorMode = CM_UNDEFINED;
 		this->_currentTextureFilter = Texture::FILTER_UNDEFINED;
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->_currentRenderOperation = RO_UNDEFINED;
 		this->_currentVertexBuffer = NULL;
-		//this->viewport.setSize(april::getSystemInfo().displayResolution);
+		this->setViewport(grect(0.0f, 0.0f, april::getSystemInfo().displayResolution));
 		return true;
 	}
 
@@ -276,12 +297,18 @@ namespace april
 		this->setOrthoProjection(gvec2((float)window->getWidth(), (float)window->getHeight()));
 		// default shaders
 		LOAD_SHADER(this->vertexShaderDefault, Vertex, Default);
-		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply);
-		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
-		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
 		LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply);
-		LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap);
 		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp);
+		LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap);
+		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply);
+		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
+		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
+		LOAD_SHADER(this->pixelShaderColoredMultiply, Pixel, ColoredMultiply);
+		LOAD_SHADER(this->pixelShaderColoredLerp, Pixel, ColoredLerp);
+		LOAD_SHADER(this->pixelShaderColoredAlphaMap, Pixel, ColoredAlphaMap);
+		LOAD_SHADER(this->pixelShaderColoredTexturedMultiply, Pixel, ColoredTexturedMultiply);
+		LOAD_SHADER(this->pixelShaderColoredTexturedLerp, Pixel, ColoredTexturedLerp);
+		LOAD_SHADER(this->pixelShaderColoredTexturedAlphaMap, Pixel, ColoredTexturedAlphaMap);
 		// input layouts for default shaders
 		if (this->inputLayout == nullptr)
 		{
@@ -739,10 +766,10 @@ namespace april
 	void DirectX11_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
 	{
 		static float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		if (this->_currentTextureBlendMode != this->deviceState->blendMode)
+		if (this->_currentBlendMode != this->deviceState->blendMode)
 		{
-			this->_currentTextureBlendMode = this->deviceState->blendMode;
-			switch (this->_currentTextureBlendMode)
+			this->_currentBlendMode = this->deviceState->blendMode;
+			switch (this->_currentBlendMode)
 			{
 			case BM_DEFAULT:
 			case BM_ALPHA:
@@ -838,13 +865,14 @@ namespace april
 			{
 			case CM_DEFAULT:
 			case CM_MULTIPLY:
-				pixelShader = (this->deviceState->useTexture ? this->pixelShaderTexturedMultiply : this->pixelShaderMultiply);
+
+				pixelShader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Multiply);
 				break;
 			case CM_ALPHA_MAP:
-				pixelShader = (this->deviceState->useTexture ? this->pixelShaderTexturedAlphaMap : this->pixelShaderAlphaMap);
+				pixelShader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, AlphaMap);
 				break;
 			case CM_LERP:
-				pixelShader = (this->deviceState->useTexture ? this->pixelShaderTexturedLerp : this->pixelShaderLerp);
+				pixelShader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Lerp);
 				break;
 			}
 		}

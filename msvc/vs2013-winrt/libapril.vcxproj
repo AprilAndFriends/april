@@ -308,6 +308,36 @@
       <ShaderType>Pixel</ShaderType>
       <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
     </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_ColoredAlphaMap.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_ColoredLerp.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_ColoredMultiply.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_ColoredTexturedAlphaMap.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_ColoredTexturedLerp.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_ColoredTexturedMultiply.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Lerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>

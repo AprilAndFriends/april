@@ -93,12 +93,18 @@ namespace april
 
 	protected:
 		DirectX11_VertexShader* vertexShaderDefault;
-		DirectX11_PixelShader* pixelShaderTexturedMultiply;
-		DirectX11_PixelShader* pixelShaderTexturedAlphaMap;
-		DirectX11_PixelShader* pixelShaderTexturedLerp;
 		DirectX11_PixelShader* pixelShaderMultiply;
-		DirectX11_PixelShader* pixelShaderAlphaMap;
 		DirectX11_PixelShader* pixelShaderLerp;
+		DirectX11_PixelShader* pixelShaderAlphaMap;
+		DirectX11_PixelShader* pixelShaderColoredMultiply;
+		DirectX11_PixelShader* pixelShaderColoredLerp;
+		DirectX11_PixelShader* pixelShaderColoredAlphaMap;
+		DirectX11_PixelShader* pixelShaderColoredTexturedMultiply;
+		DirectX11_PixelShader* pixelShaderColoredTexturedLerp;
+		DirectX11_PixelShader* pixelShaderColoredTexturedAlphaMap;
+		DirectX11_PixelShader* pixelShaderTexturedMultiply;
+		DirectX11_PixelShader* pixelShaderTexturedLerp;
+		DirectX11_PixelShader* pixelShaderTexturedAlphaMap;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);
@@ -192,8 +198,8 @@ namespace april
 		DirectX11_VertexShader* _currentVertexShader;
 		DirectX11_PixelShader* _currentPixelShader;
 		DirectX11_Texture* _currentTexture;
-		BlendMode _currentTextureBlendMode;
-		ColorMode _currentTextureColorMode;
+		BlendMode _currentBlendMode;
+		ColorMode _currentColorMode;
 		Texture::Filter _currentTextureFilter;
 		Texture::AddressMode _currentTextureAddressMode;
 		RenderOperation _currentRenderOperation;
