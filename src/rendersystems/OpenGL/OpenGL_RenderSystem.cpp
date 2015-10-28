@@ -49,12 +49,9 @@ namespace april
 		GL_POINTS,			// RO_POINT_LIST
 	};
 
-	// TODOa - put in state class
-	static Color lastColor = Color::Black;
-
-	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem()
+	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), deviceState_vertexStride(0), deviceState_vertexPointer(NULL),
+		deviceState_textureStride(0), deviceState_texturePointer(NULL), deviceState_colorStride(0), deviceState_colorPointer(NULL)
 	{
-		this->state = new RenderState(); // TODOa
 #if defined(_WIN32) && !defined(_WINRT)
 		this->hWnd = 0;
 		this->hDC = 0;
@@ -134,7 +131,6 @@ namespace april
 	void OpenGL_RenderSystem::_setupDefaultParameters()
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		lastColor.set(0, 0, 0, 255);
 		// GL defaults
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnable(GL_BLEND);
@@ -147,6 +143,9 @@ namespace april
 		{
 			glDepthFunc(GL_LEQUAL);
 		}
+		this->_setGlVertexPointer(this->deviceState_vertexStride, this->deviceState_vertexPointer, true);
+		this->_setGlTexturePointer(this->deviceState_textureStride, this->deviceState_texturePointer, true);
+		this->_setGlColorPointer(this->deviceState_colorStride, this->deviceState_colorPointer, true);
 	}
 
 	float OpenGL_RenderSystem::getPixelOffset()
@@ -251,6 +250,7 @@ namespace april
 		{
 			mask |= GL_DEPTH_BUFFER_BIT;
 		}
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(mask);
 	}
 

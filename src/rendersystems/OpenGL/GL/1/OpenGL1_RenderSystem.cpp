@@ -39,7 +39,7 @@
 
 namespace april
 {
-	OpenGL1_RenderSystem::OpenGL1_RenderSystem() : OpenGLC_RenderSystem(), blendSeparationSupported(false)
+	OpenGL1_RenderSystem::OpenGL1_RenderSystem() : OpenGLC_RenderSystem()
 	{
 		this->name = APRIL_RS_OPENGL1;
 #if defined(_WIN32) && !defined(_WINRT)

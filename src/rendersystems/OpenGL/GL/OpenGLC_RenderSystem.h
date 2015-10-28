@@ -29,11 +29,13 @@ namespace april
 		~OpenGLC_RenderSystem();
 
 	protected:
+		bool blendSeparationSupported;
+
+		Color deviceState_color;
 		unsigned int deviceState_matrixMode;
 
 		void _setupDefaultParameters();
 
-		void _setDeviceMatrixMode(unsigned int mode);
 		void _setDeviceModelviewMatrix(const gmat4& matrix);
 		void _setDeviceProjectionMatrix(const gmat4& matrix);
 		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
@@ -46,20 +48,12 @@ namespace april
 		void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
 		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
-
-
-
-		//void _applyStateChanges();
-		void _setClientState(unsigned int type, bool enabled);
-
-		//void _setTextureColorMode(ColorMode textureColorMode, float factor);
-		//void _setDepthBuffer(bool enabled, bool writeEnabled);
-
-		//void _loadIdentityMatrix();
-		//void _setMatrixMode(unsigned int mode);
-		void _setVertexPointer(int stride, const void* pointer);
-		void _setTexCoordPointer(int stride, const void *pointer);
-		void _setColorPointer(int stride, const void *pointer);
+		void _setGlClientState(unsigned int type, bool enabled, bool forceUpdate = false);
+		void _setGlColor(const Color& color, bool forceUpdate = false);
+		void _setGlMatrixMode(unsigned int mode, bool forceUpdate = false);
+		void _setGlVertexPointer(int stride, const void* pointer, bool forceUpdate = false);
+		void _setGlTexturePointer(int stride, const void *pointer, bool forceUpdate = false);
+		void _setGlColorPointer(int stride, const void *pointer, bool forceUpdate = false);
 
 	};
 	

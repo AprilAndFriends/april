@@ -82,27 +82,14 @@ namespace april
 		unsigned int getNativeColorUInt(const april::Color& color);
 		Image* takeScreenshot(Image::Format format);
 
-		//bool create(Options options);
-		//bool destroy();
-		//void reset();
-		//void assignWindow(Window* window);
-
-		//void setViewport(grect value);
-
-		//void clear(bool useColor = true, bool depth = false);
-		//void clear(bool depth, grect rect, Color color = Color::Clear);
-
-		//void bindTexture(unsigned int textureId);
-
-		//void setTexture(Texture* texture);
-		//void setTextureBlendMode(BlendMode mode);
-		/// @note The parameter factor is only used when the color mode is LERP.
-		//void setTextureColorMode(ColorMode textureColorMode, float factor = 1.0f);
-		//void setTextureFilter(Texture::Filter textureFilter);
-		//void setTextureAddressMode(Texture::AddressMode textureAddressMode);
-		//void setDepthBuffer(bool enabled, bool writeEnabled = true);
-
 	protected:
+		int deviceState_vertexStride;
+		const void* deviceState_vertexPointer;
+		int deviceState_textureStride;
+		const void* deviceState_texturePointer;
+		int deviceState_colorStride;
+		const void* deviceState_colorPointer;
+
 		void _deviceInit();
 		bool _deviceCreate(Options options);
 		bool _deviceDestroy();
@@ -126,24 +113,9 @@ namespace april
 		void _deviceClear(april::Color color, grect rect, bool depth);
 		void _deviceClearDepth();
 
-		//virtual void _applyStateChanges();
-		//void _setModelviewMatrix(const gmat4& matrix);
-		//void _setProjectionMatrix(const gmat4& matrix);
-
-		//void _setupCaps();
-		//void _deviceChangeResolution(int w, int h, bool fullscreen);
-
-		//virtual void _setTextureBlendMode(BlendMode textureBlendMode);
-		/// @note The parameter factor is only used when the color mode is LERP.
-		//virtual void _setTextureColorMode(ColorMode textureColorMode, float factor) = 0;
-		//virtual void _setTextureFilter(Texture::Filter textureFilter);
-		//virtual void _setTextureAddressMode(Texture::AddressMode textureAddressMode);
-
-		//virtual void _loadIdentityMatrix() = 0;
-		//virtual void _setMatrixMode(unsigned int mode) = 0;
-		virtual void _setVertexPointer(int stride, const void* pointer) = 0;
-		virtual void _setTexCoordPointer(int stride, const void* pointer) = 0;
-		virtual void _setColorPointer(int stride, const void* pointer) = 0;
+		virtual void _setGlVertexPointer(int stride, const void* pointer, bool forceUpdate = false) = 0;
+		virtual void _setGlTexturePointer(int stride, const void* pointer, bool forceUpdate = false) = 0;
+		virtual void _setGlColorPointer(int stride, const void* pointer, bool forceUpdate = false) = 0;
 
 #if defined(_WIN32) && !defined(_WINRT)
 	public:

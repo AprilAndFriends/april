@@ -30,8 +30,6 @@ namespace april
 		~OpenGL1_RenderSystem();
 
 	protected:
-		bool blendSeparationSupported;
-
 		void _setupDefaultParameters();
 
 		void _deviceSetupCaps();

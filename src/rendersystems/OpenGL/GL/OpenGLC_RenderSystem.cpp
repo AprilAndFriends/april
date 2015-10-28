@@ -18,7 +18,7 @@
 
 namespace april
 {
-	OpenGLC_RenderSystem::OpenGLC_RenderSystem() : OpenGL_RenderSystem(), deviceState_matrixMode(0)
+	OpenGLC_RenderSystem::OpenGLC_RenderSystem() : OpenGL_RenderSystem(), blendSeparationSupported(false), deviceState_matrixMode(0)
 	{
 	}
 
@@ -29,29 +29,20 @@ namespace april
 	void OpenGLC_RenderSystem::_setupDefaultParameters()
 	{
 		OpenGL_RenderSystem::_setupDefaultParameters();
-		this->deviceState_matrixMode = GL_MODELVIEW;
-		glMatrixMode(this->deviceState_matrixMode);
-	}
-
-	void OpenGLC_RenderSystem::_setDeviceMatrixMode(unsigned int mode)
-	{
-		// performance call, minimize redundant calls to setMatrixMode
-		//if (this->deviceState_matrixMode != mode)
-		{
-			glMatrixMode(mode);
-			//this->deviceState_matrixMode = mode;
-		}
+		glAlphaFunc(GL_GREATER, 0.0f);
+		this->_setGlColor(this->deviceState_color, true);
+		this->_setGlMatrixMode(GL_MODELVIEW, true);
 	}
 
 	void OpenGLC_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)
 	{
-		this->_setDeviceMatrixMode(GL_MODELVIEW);
+		this->_setGlMatrixMode(GL_MODELVIEW);
 		glLoadMatrixf(matrix.data);
 	}
 
 	void OpenGLC_RenderSystem::_setDeviceProjectionMatrix(const gmat4& matrix)
 	{
-		this->_setDeviceMatrixMode(GL_PROJECTION);
+		this->_setGlMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(matrix.data);
 	}
 
@@ -59,7 +50,6 @@ namespace april
 	{
 		OpenGL_RenderSystem::_setDeviceDepthBuffer(enabled, writeEnabled);
 		enabled ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.0f);
 	}
 
 	void OpenGLC_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
@@ -132,53 +122,16 @@ namespace april
 			hlog::warn(logTag, "Trying to set unsupported color mode!");
 			break;
 		}
-		this->_setClientState(GL_TEXTURE_COORD_ARRAY, useTexture);
-		this->_setClientState(GL_COLOR_ARRAY, useColor);
+		this->_setGlClientState(GL_TEXTURE_COORD_ARRAY, useTexture);
+		this->_setGlClientState(GL_COLOR_ARRAY, useColor);
 		if (!useColor)
 		{
-			glColor4f(systemColor.r_f(), systemColor.g_f(), systemColor.b_f(), systemColor.a_f());
-		}
-	}
-
-	void OpenGLC_RenderSystem::_setClientState(unsigned int type, bool enabled)
-	{
-		enabled ? glEnableClientState(type) : glDisableClientState(type);
-	}
-
-	void OpenGLC_RenderSystem::_setVertexPointer(int stride, const void* pointer)
-	{
-		//if (this->deviceState.strideVertex != stride || this->deviceState.pointerVertex != pointer)
-		{
-			//this->deviceState.strideVertex = stride;
-			//this->deviceState.pointerVertex = pointer;
-			glVertexPointer(3, GL_FLOAT, stride, pointer);
-		}
-	}
-
-	void OpenGLC_RenderSystem::_setTexCoordPointer(int stride, const void *pointer)
-	{
-		//if (this->deviceState.strideTexCoord != stride || this->deviceState.pointerTexCoord != pointer)
-		{
-			//this->deviceState.strideTexCoord = stride;
-			//this->deviceState.pointerTexCoord = pointer;
-			glTexCoordPointer(2, GL_FLOAT, stride, pointer);
-		}
-	}
-
-	void OpenGLC_RenderSystem::_setColorPointer(int stride, const void *pointer)
-	{
-		//if (this->deviceState.strideColor != stride || this->deviceState.pointerColor != pointer)
-		{
-			//this->deviceState.strideColor = stride;
-			//this->deviceState.pointerColor = pointer;
-			glColorPointer(4, GL_UNSIGNED_BYTE, stride, pointer);
+			this->_setGlColor(systemColor);
 		}
 	}
 
 	void OpenGLC_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
-		this->_setColorPointer(0, NULL);
-		this->_setTexCoordPointer(0, NULL);
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
@@ -188,7 +141,7 @@ namespace april
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setVertexPointer(sizeof(PlainVertex), v);
+			this->_setGlVertexPointer(sizeof(PlainVertex), v);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
@@ -198,8 +151,6 @@ namespace april
 
 	void OpenGLC_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
 	{
-		this->_setColorPointer(0, NULL);
-		this->_setTexCoordPointer(0, NULL);
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
@@ -209,7 +160,7 @@ namespace april
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setVertexPointer(sizeof(PlainVertex), v);
+			this->_setGlVertexPointer(sizeof(PlainVertex), v);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
@@ -219,7 +170,6 @@ namespace april
 	
 	void OpenGLC_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
-		this->_setColorPointer(0, NULL);
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
@@ -229,8 +179,8 @@ namespace april
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setVertexPointer(sizeof(TexturedVertex), v);
-			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
+			this->_setGlVertexPointer(sizeof(TexturedVertex), v);
+			this->_setGlTexturePointer(sizeof(TexturedVertex), &v->u);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
@@ -240,7 +190,6 @@ namespace april
 
 	void OpenGLC_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
 	{
-		this->_setColorPointer(0, NULL);
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
@@ -250,8 +199,8 @@ namespace april
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setVertexPointer(sizeof(TexturedVertex), v);
-			this->_setTexCoordPointer(sizeof(TexturedVertex), &v->u);
+			this->_setGlVertexPointer(sizeof(TexturedVertex), v);
+			this->_setGlTexturePointer(sizeof(TexturedVertex), &v->u);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
@@ -261,7 +210,6 @@ namespace april
 
 	void OpenGLC_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
-		this->_setTexCoordPointer(0, NULL);
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
@@ -271,8 +219,8 @@ namespace april
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setVertexPointer(sizeof(ColoredVertex), v);
-			this->_setColorPointer(sizeof(ColoredVertex), &v->color);
+			this->_setGlVertexPointer(sizeof(ColoredVertex), v);
+			this->_setGlColorPointer(sizeof(ColoredVertex), &v->color);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
@@ -291,9 +239,9 @@ namespace april
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setVertexPointer(sizeof(ColoredTexturedVertex), v);
-			this->_setColorPointer(sizeof(ColoredTexturedVertex), &v->color);
-			this->_setTexCoordPointer(sizeof(ColoredTexturedVertex), &v->u);
+			this->_setGlVertexPointer(sizeof(ColoredTexturedVertex), v);
+			this->_setGlColorPointer(sizeof(ColoredTexturedVertex), &v->color);
+			this->_setGlTexturePointer(sizeof(ColoredTexturedVertex), &v->u);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
 #ifdef _ANDROID
 			v += size;
@@ -301,5 +249,58 @@ namespace april
 #endif
 	}
 	
+	void OpenGLC_RenderSystem::_setGlClientState(unsigned int type, bool enabled, bool forceUpdate)
+	{
+		enabled ? glEnableClientState(type) : glDisableClientState(type);
+	}
+
+	void OpenGLC_RenderSystem::_setGlColor(const Color& color, bool forceUpdate)
+	{
+		if (forceUpdate || this->deviceState_color != color)
+		{
+			glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
+			this->deviceState_color = color;
+		}
+	}
+
+	void OpenGLC_RenderSystem::_setGlMatrixMode(unsigned int mode, bool forceUpdate)
+	{
+		if (forceUpdate || this->deviceState_matrixMode != mode)
+		{
+			glMatrixMode(mode);
+			this->deviceState_matrixMode = mode;
+		}
+	}
+
+	void OpenGLC_RenderSystem::_setGlVertexPointer(int stride, const void* pointer, bool forceUpdate)
+	{
+		if (forceUpdate || this->deviceState_vertexStride != stride || this->deviceState_vertexPointer != pointer)
+		{
+			glVertexPointer(3, GL_FLOAT, stride, pointer);
+			this->deviceState_vertexStride = stride;
+			this->deviceState_vertexPointer = pointer;
+		}
+	}
+
+	void OpenGLC_RenderSystem::_setGlTexturePointer(int stride, const void* pointer, bool forceUpdate)
+	{
+		if (forceUpdate || this->deviceState_textureStride != stride || this->deviceState_texturePointer != pointer)
+		{
+			glTexCoordPointer(2, GL_FLOAT, stride, pointer);
+			this->deviceState_textureStride = stride;
+			this->deviceState_texturePointer = pointer;
+		}
+	}
+
+	void OpenGLC_RenderSystem::_setGlColorPointer(int stride, const void* pointer, bool forceUpdate)
+	{
+		if (forceUpdate || this->deviceState_colorStride != stride || this->deviceState_colorPointer != pointer)
+		{
+			glColorPointer(4, GL_UNSIGNED_BYTE, stride, pointer);
+			this->deviceState_colorStride = stride;
+			this->deviceState_colorPointer = pointer;
+		}
+	}
+
 }
 #endif

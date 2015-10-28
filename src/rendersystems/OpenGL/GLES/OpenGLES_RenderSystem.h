@@ -42,9 +42,9 @@ namespace april
 
 		OpenGLES_RenderSystem();
 		~OpenGLES_RenderSystem();
+
 		bool create(RenderSystem::Options options);
 		bool destroy();
-
 		void assignWindow(Window* window);
 
 		void setPixelShader(PixelShader* pixelShader);
@@ -95,15 +95,15 @@ namespace april
 		
 		void _setupDefaultParameters();
 		void _applyStateChanges();
-		void _setClientState(unsigned int type, bool enabled);
+		void _setGlClientState(unsigned int type, bool enabled);
 
 		void _setTextureBlendMode(BlendMode mode);
 		void _setTextureColorMode(ColorMode textureColorMode, float factor);
 		void _loadIdentityMatrix();
 		void _setMatrixMode(unsigned int mode);
-		void _setVertexPointer(int stride, const void* pointer);
-		void _setTexCoordPointer(int stride, const void *pointer);
-		void _setColorPointer(int stride, const void *pointer);
+		void _setGlVertexPointer(int stride, const void* pointer, bool forceUpdate = false);
+		void _setGlTexturePointer(int stride, const void *pointer);
+		void _setGlColorPointer(int stride, const void *pointer);
 
 		void _updateShader();
 
