@@ -43,25 +43,7 @@ namespace april
 		OpenGLES_RenderSystem();
 		~OpenGLES_RenderSystem();
 
-		bool create(RenderSystem::Options options);
-		bool destroy();
-		void assignWindow(Window* window);
-
-		void setPixelShader(PixelShader* pixelShader);
-		void setVertexShader(VertexShader* vertexShader);
-
-		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
-		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
-		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
-
 	protected:
-		ColorMode activeTextureColorMode;
-		unsigned char activeTextureColorModeAlpha;
-		ShaderProgram* activeShader;
-
 		OpenGLES_VertexShader* vertexShaderPlain;
 		OpenGLES_VertexShader* vertexShaderTextured;
 		OpenGLES_VertexShader* vertexShaderColored;
@@ -91,32 +73,31 @@ namespace april
 		ShaderProgram* shaderColoredTexturedAlphaMap;
 		ShaderProgram* shaderColoredTexturedLerp;
 
-		void _setupCaps();
-		
-		void _setupDefaultParameters();
-		void _applyStateChanges();
-		void _setGlClientState(unsigned int type, bool enabled);
+		bool deviceState_matrixChanged;
+		bool deviceState_systemColorChanged;
+		bool deviceState_colorModeFactorChanged;
+		ShaderProgram* deviceState_shader;
 
-		void _setTextureBlendMode(BlendMode mode);
-		void _setTextureColorMode(ColorMode textureColorMode, float factor);
-		void _loadIdentityMatrix();
-		void _setMatrixMode(unsigned int mode);
-		void _setGlVertexPointer(int stride, const void* pointer, bool forceUpdate = false);
-		void _setGlTexturePointer(int stride, const void *pointer);
-		void _setGlColorPointer(int stride, const void *pointer);
+		void _deviceInit();
+		bool _deviceCreate(Options options);
+		bool _deviceDestroy();
+		void _deviceAssignWindow(Window* window);
+		void _deviceSetupCaps();
+		void _deviceSetup();
 
-		void _updateShader();
+		void _updateDeviceState(bool forceUpdate = false);
 
-		void _setModelviewMatrix(const gmat4& matrix);
-		void _setProjectionMatrix(const gmat4& matrix);
+		void _setDeviceModelviewMatrix(const gmat4& matrix);
+		void _setDeviceProjectionMatrix(const gmat4& matrix);
+		void _setDeviceBlendMode(BlendMode mode);
+		void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
+		void _updateShader(bool forceUpdate);
 
-	private:
-		ShaderProgram* _currentShader;
-		OpenGLES_Texture* _currentTexture;
-		float _currentLerpAlpha;
-		float _currentSystemColor[4];
-
-		bool _matrixDirty;
+		void _setGlTextureEnabled(bool enabled);
+		void _setGlColorEnabled(bool enabled);
+		void _setGlVertexPointer(int stride, const void* pointer);
+		void _setGlTexturePointer(int stride, const void* pointer);
+		void _setGlColorPointer(int stride, const void* pointer);
 
 	};
 	

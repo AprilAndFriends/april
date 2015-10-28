@@ -31,11 +31,6 @@
 #define VERTICES_BUFFER_COUNT 65536
 #define APRIL_DX9_CHILD L"AprilDX9Child"
 
-#define PLAIN_FVF (D3DFVF_XYZ)
-#define COLORED_FVF (D3DFVF_XYZ | D3DFVF_DIFFUSE)
-#define TEXTURED_FVF (D3DFVF_XYZ | D3DFVF_TEX1)
-#define COLORED_TEXTURED_FVF (D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_DIFFUSE)
-
 #define IS_WINDOW_RESIZABLE (april::window->getName() == APRIL_WS_WIN32 && april::window->getOptions().resizable)
 
 namespace april
@@ -177,8 +172,6 @@ namespace april
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
 		this->d3dDevice->BeginScene();
 		this->renderTarget = NULL;
-		this->_configureDevice();
-		this->clear();
 	}
 
 	void DirectX9_RenderSystem::_deviceReset()
@@ -226,7 +219,6 @@ namespace april
 		}
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 		this->d3dDevice->BeginScene();
-		this->_configureDevice();
 		DirectX_RenderSystem::_deviceReset();
 		hlog::write(logTag, "Direct3D9 Device restored.");
 		// this is used to display window content while resizing window
@@ -249,6 +241,20 @@ namespace april
 		this->caps.npotTexturesLimited = (this->caps.npotTextures || pow2 && nonPow2conditional);
 	}
 
+	void DirectX9_RenderSystem::_deviceSetup()
+	{
+		// calls on init and device reset
+		this->d3dDevice->SetRenderState(D3DRS_LIGHTING, 0);
+		this->d3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+		this->d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, 1);
+		this->d3dDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, 1);
+		Caps caps = this->getCaps();
+		if (!caps.npotTexturesLimited && !caps.npotTextures)
+		{
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
+		}
+	}
+
 	void DirectX9_RenderSystem::_tryAssignChildWindow()
 	{
 		this->d3dpp->hDeviceWindow = this->childHWnd;
@@ -262,20 +268,6 @@ namespace april
 		this->d3dpp->hDeviceWindow = hWnd;
 		ShowWindow(hWnd, SW_SHOW);
 		UpdateWindow(hWnd);
-	}
-
-	void DirectX9_RenderSystem::_configureDevice()
-	{
-		// calls on init and device reset
-		this->d3dDevice->SetRenderState(D3DRS_LIGHTING, 0);
-		this->d3dDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-		this->d3dDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, 1);
-		this->d3dDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, 1);
-		Caps caps = this->getCaps();
-		if (!caps.npotTexturesLimited && !caps.npotTextures)
-		{
-			this->d3dDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
-		}
 	}
 
 	void DirectX9_RenderSystem::_deviceSetupDisplayModes()
@@ -416,6 +408,20 @@ namespace april
 		}
 	}
 
+	void DirectX9_RenderSystem::_setDeviceRenderMode(bool useTexture, bool useColor)
+	{
+		DWORD mode = D3DFVF_XYZ;
+		if (useTexture)
+		{
+			mode |= D3DFVF_TEX1;
+		}
+		if (useColor)
+		{
+			mode |= D3DFVF_DIFFUSE;
+		}
+		this->d3dDevice->SetFVF(mode);
+	}
+
 	void DirectX9_RenderSystem::_setDeviceTexture(Texture* texture)
 	{
 		if (texture != NULL)
@@ -510,7 +516,7 @@ namespace april
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
 			break;
 		default:
-			hlog::warn(logTag, "Trying to set unsupported texture blend mode!");
+			hlog::warn(logTag, "Trying to set unsupported blend mode!");
 			break;
 		}
 	}
@@ -598,7 +604,7 @@ namespace april
 			}
 			break;
 		default:
-			hlog::warn(logTag, "Trying to set unsupported texture color mode!");
+			hlog::warn(logTag, "Trying to set unsupported color mode!");
 			break;
 		}
 	}
@@ -630,37 +636,21 @@ namespace april
 
 	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
-		this->d3dDevice->SetFVF(PLAIN_FVF);
 		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(PlainVertex));
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
-	{
-		this->d3dDevice->SetFVF(PLAIN_FVF);
-		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(PlainVertex));
-	}
-	
 	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
-		this->d3dDevice->SetFVF(TEXTURED_FVF);
-		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(TexturedVertex));
-	}
-
-	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
-	{
-		this->d3dDevice->SetFVF(TEXTURED_FVF);
 		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(TexturedVertex));
 	}
 
 	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
-		this->d3dDevice->SetFVF(COLORED_FVF);
 		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredVertex));
 	}
 
 	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
-		this->d3dDevice->SetFVF(COLORED_TEXTURED_FVF);
 		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredTexturedVertex));
 	}
 
@@ -804,7 +794,7 @@ namespace april
 					hthread::sleep(100.0f);
 				}
 			}
-			this->_configureDevice();
+			this->_deviceSetup();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 			this->d3dDevice->BeginScene();
 			this->_updateDeviceState(true);

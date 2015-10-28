@@ -14,12 +14,6 @@
 #ifndef APRIL_OPENGLES_DEFAULT_SHADERS_H
 #define APRIL_OPENGLES_DEFAULT_SHADERS_H
 
-#ifdef _WIN32
-#define __SHADER_COLOR_MULTIPLY_FIX "		gl_FragColor.rgb *= gl_FragColor.rgb; // for some odd reason, this is required on Win32 \n"
-#else
-#define __SHADER_COLOR_MULTIPLY_FIX
-#endif
-
 // general header defines
 #define SHADER_Plain_Include "\
 "
@@ -113,22 +107,19 @@
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = systemColor; \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 #define SHADER_PixelAlphaMap SHADER_PIXEL_Plain_Include "\
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = systemColor; \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 #define SHADER_PixelLerp SHADER_PIXEL_Plain_Include "\
 	uniform lowp float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), systemColor.rgb, systemColor.a), lerpAlpha); \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
+		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), systemColor.rgb, lerpAlpha), systemColor.a); \n\
 	} \n\
 "
 
@@ -136,7 +127,6 @@
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = texture2D(sampler2d, texFrag) * systemColor; \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 #define SHADER_PixelTexturedAlphaMap SHADER_PIXEL_Textured_Include "\
@@ -144,7 +134,6 @@
 	{ \n\
 		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(systemColor.rgb, systemColor.a * tex.r); \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 #define SHADER_PixelTexturedLerp SHADER_PIXEL_Textured_Include "\
@@ -152,8 +141,7 @@
 	void main(void) \n\
 	{ \n\
 		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
-		gl_FragColor = vec4(mix(tex.rgb, systemColor.rgb, systemColor.a), tex.a * lerpAlpha); \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
+		gl_FragColor = vec4(mix(tex.rgb, systemColor.rgb, lerpAlpha), tex.a * systemColor.a); \n\
 	} \n\
 "
 
@@ -161,22 +149,19 @@
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = colorFrag; \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 #define SHADER_PixelColoredAlphaMap SHADER_PIXEL_Colored_Include "\
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = colorFrag; \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 #define SHADER_PixelColoredLerp SHADER_PIXEL_Colored_Include "\
 	uniform lowp float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), colorFrag.rgb, colorFrag.a), lerpAlpha); \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
+		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), colorFrag.rgb, lerpAlpha), colorFrag.a); \n\
 	} \n\
 "
 
@@ -184,7 +169,6 @@
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = texture2D(sampler2d, texFrag) * colorFrag; \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 #define SHADER_PixelColoredTexturedAlphaMap SHADER_PIXEL_ColoredTextured_Include "\
@@ -192,7 +176,6 @@
 	{ \n\
 		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(colorFrag.rgb, colorFrag.a * tex.r); \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
 	} \n\
 "
 #define SHADER_PixelColoredTexturedLerp SHADER_PIXEL_ColoredTextured_Include "\
@@ -200,8 +183,7 @@
 	void main(void) \n\
 	{ \n\
 		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
-		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, colorFrag.a), tex.a * lerpAlpha); \n\
-" __SHADER_COLOR_MULTIPLY_FIX "\
+		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, lerpAlpha), tex.a * colorFrag.a); \n\
 	} \n\
 "
 

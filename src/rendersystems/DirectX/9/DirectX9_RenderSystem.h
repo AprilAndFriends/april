@@ -70,13 +70,11 @@ namespace april
 		void _deviceAssignWindow(Window* window);
 		void _deviceReset();
 		void _deviceSetupCaps();
+		void _deviceSetup();
 		void _deviceSetupDisplayModes();
 
 		void _tryAssignChildWindow();
 		void _tryUnassignChildWindow();
-
-		// TODOa - these need to be refactored
-		void _configureDevice();
 
 		Texture* _deviceCreateTexture(bool fromResource);
 		PixelShader* _deviceCreatePixelShader();
@@ -88,6 +86,7 @@ namespace april
 		void _setDeviceModelviewMatrix(const gmat4& matrix);
 		void _setDeviceProjectionMatrix(const gmat4& matrix);
 		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
+		void _setDeviceRenderMode(bool useTexture, bool useColor);
 		void _setDeviceTexture(Texture* texture);
 		void _setDeviceTextureFilter(Texture::Filter textureFilter);
 		void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode);
@@ -98,9 +97,7 @@ namespace april
 		void _deviceClear(april::Color color, bool depth);
 		void _deviceClearDepth();
 		void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices);
-		void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
 		void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
-		void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
 		void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
 		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 

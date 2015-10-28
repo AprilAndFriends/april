@@ -47,18 +47,14 @@ namespace april
 		bool useColor;
 		/// @brief The current unique texture ID.
 		Texture* texture;
-		/// @brief The current texture blend mode.
+		/// @brief The current blend mode.
 		BlendMode blendMode;
-		/// @brief The current texture color mode.
+		/// @brief The current color mode.
 		ColorMode colorMode;
-		/// @brief The current texture color mode factor.
+		/// @brief The current color mode factor.
 		float colorModeFactor;
 		/// @brief The current system color.
 		Color systemColor;
-
-		/// @brief The current projection matrix.
-		/// @note This is a derived attribute that some systems require.
-		gmat4 transformationMatrix;
 
 		/// @brief Basic constructor.
 		RenderState();
@@ -67,9 +63,6 @@ namespace april
 		
 		/// @brief Resets or sets up the initial state.
 		virtual void reset();
-
-		/// @brief Updates the state and derived variables
-		virtual void update();
 
 	};
 	

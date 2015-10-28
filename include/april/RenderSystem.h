@@ -217,7 +217,7 @@ namespace april
 		PixelShader* _createPixelShaderFromSource(bool fromResource, chstr filename);
 		VertexShader* _createVertexShaderFromSource(bool fromResource, chstr filename);
 
-		void _updateDeviceState(bool forceUpdate = false);
+		virtual void _updateDeviceState(bool forceUpdate = false);
 
 		virtual void _deviceInit() = 0;
 		virtual bool _deviceCreate(Options options) = 0;
@@ -225,6 +225,7 @@ namespace april
 		virtual void _deviceAssignWindow(Window* window) = 0;
 		virtual void _deviceReset();
 		virtual void _deviceSetupCaps() = 0;
+		virtual void _deviceSetup() = 0;
 		virtual void _deviceSetupDisplayModes();
 
 		virtual Texture* _deviceCreateTexture(bool fromResource) = 0;
@@ -237,6 +238,7 @@ namespace april
 		virtual void _setDeviceModelviewMatrix(const gmat4& matrix) = 0;
 		virtual void _setDeviceProjectionMatrix(const gmat4& matrix) = 0;
 		virtual void _setDeviceDepthBuffer(bool enabled, bool writeEnabled) = 0;
+		virtual void _setDeviceRenderMode(bool useTexture, bool useColor) = 0;
 		virtual void _setDeviceTexture(Texture* texture) = 0;
 		virtual void _setDeviceTextureFilter(Texture::Filter textureFilter) = 0;
 		virtual void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
@@ -247,9 +249,7 @@ namespace april
 		virtual void _deviceClear(april::Color color, bool depth) = 0;
 		virtual void _deviceClearDepth() = 0;
 		virtual void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices) = 0;
-		virtual void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color) = 0;
 		virtual void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices) = 0;
-		virtual void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color) = 0;
 		virtual void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices) = 0;
 		virtual void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices) = 0;
 

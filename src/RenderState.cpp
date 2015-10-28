@@ -29,8 +29,8 @@ namespace april
 		this->viewport.set(0.0f, 0.0f, 1.0f, 1.0f);
 		this->viewportChanged = true;
 		this->modelviewMatrixChanged = true;
-		this->modelviewMatrix.setIdentity();
 		this->projectionMatrix.setIdentity();
+		this->modelviewMatrix.setIdentity();
 		this->projectionMatrixChanged = true;
 		this->depthBuffer = false;
 		this->depthBufferWrite = false;
@@ -41,13 +41,6 @@ namespace april
 		this->colorMode = CM_MULTIPLY;
 		this->colorModeFactor = 1.0f;
 		this->systemColor = Color::Black;
-		// derived attributes
-		this->transformationMatrix.setIdentity();
-	}
-
-	void RenderState::update()
-	{
-		this->transformationMatrix = this->projectionMatrix * this->modelviewMatrix;
 	}
 
 }

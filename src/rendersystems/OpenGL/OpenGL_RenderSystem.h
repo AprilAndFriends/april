@@ -94,15 +94,14 @@ namespace april
 		bool _deviceCreate(Options options);
 		bool _deviceDestroy();
 		void _deviceAssignWindow(Window* window);
-		void _deviceReset();
 		void _deviceSetupCaps();
-
-		virtual void _setupDefaultParameters();
+		void _deviceSetup();
 
 		void _deviceChangeResolution(int w, int h, bool fullscreen);
 
 		void _setDeviceViewport(const grect& rect);
 		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
+		void _setDeviceRenderMode(bool useTexture, bool useColor);
 		void _setDeviceTexture(Texture* texture);
 		void _setDeviceTextureFilter(Texture::Filter textureFilter);
 		void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode);
@@ -110,12 +109,20 @@ namespace april
 
 		void _deviceClear(bool depth);
 		void _deviceClear(april::Color color, bool depth);
-		void _deviceClear(april::Color color, grect rect, bool depth);
 		void _deviceClearDepth();
+		void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices);
+		void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
+		void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
+		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
-		virtual void _setGlVertexPointer(int stride, const void* pointer, bool forceUpdate = false) = 0;
-		virtual void _setGlTexturePointer(int stride, const void* pointer, bool forceUpdate = false) = 0;
-		virtual void _setGlColorPointer(int stride, const void* pointer, bool forceUpdate = false) = 0;
+		void _setDeviceVertexPointer(int stride, const void* pointer, bool forceUpdate = false);
+		void _setDeviceTexturePointer(int stride, const void* pointer, bool forceUpdate = false);
+		void _setDeviceColorPointer(int stride, const void* pointer, bool forceUpdate = false);
+		virtual void _setGlTextureEnabled(bool enabled) = 0;
+		virtual void _setGlColorEnabled(bool enabled) = 0;
+		virtual void _setGlVertexPointer(int stride, const void* pointer) = 0;
+		virtual void _setGlTexturePointer(int stride, const void* pointer) = 0;
+		virtual void _setGlColorPointer(int stride, const void* pointer) = 0;
 
 #if defined(_WIN32) && !defined(_WINRT)
 	public:

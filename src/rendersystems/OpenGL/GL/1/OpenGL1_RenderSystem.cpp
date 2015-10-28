@@ -109,16 +109,6 @@ namespace april
 	}
 #endif
 
-	void OpenGL1_RenderSystem::_setupDefaultParameters()
-	{
-		OpenGLC_RenderSystem::_setupDefaultParameters();
-		// pixel data
-		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
-	}
-
 	void OpenGL1_RenderSystem::_deviceSetupCaps()
 	{
 #if defined(_WIN32) && !defined(_WINRT)
@@ -147,6 +137,15 @@ namespace april
 		this->blendSeparationSupported = extensions.contains("EXT_blend_equation_separate") && extensions.contains("EXT_blend_func_separate");
 #endif
 		OpenGLC_RenderSystem::_deviceSetupCaps();
+	}
+
+	void OpenGL1_RenderSystem::_deviceSetup()
+	{
+		OpenGLC_RenderSystem::_deviceSetup();
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
 	}
 
 	Texture* OpenGL1_RenderSystem::_deviceCreateTexture(bool fromResource)
@@ -187,7 +186,6 @@ namespace april
 		else
 #endif
 		{
-			// old-school blending mode for your dad
 			OpenGLC_RenderSystem::_setDeviceBlendMode(blendMode);
 		}
 	}

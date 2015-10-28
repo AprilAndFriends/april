@@ -30,9 +30,8 @@ namespace april
 		~OpenGL1_RenderSystem();
 
 	protected:
-		void _setupDefaultParameters();
-
 		void _deviceSetupCaps();
+		void _deviceSetup();
 
 		Texture* _deviceCreateTexture(bool fromResource);
 

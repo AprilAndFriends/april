@@ -34,26 +34,20 @@ namespace april
 		Color deviceState_color;
 		unsigned int deviceState_matrixMode;
 
-		void _setupDefaultParameters();
+		void _deviceSetup();
 
 		void _setDeviceModelviewMatrix(const gmat4& matrix);
 		void _setDeviceProjectionMatrix(const gmat4& matrix);
 		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
 		void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
 
-		void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices);
-		void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
-		void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
-		void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
-		void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
-		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
-
-		void _setGlClientState(unsigned int type, bool enabled, bool forceUpdate = false);
-		void _setGlColor(const Color& color, bool forceUpdate = false);
-		void _setGlMatrixMode(unsigned int mode, bool forceUpdate = false);
-		void _setGlVertexPointer(int stride, const void* pointer, bool forceUpdate = false);
-		void _setGlTexturePointer(int stride, const void *pointer, bool forceUpdate = false);
-		void _setGlColorPointer(int stride, const void *pointer, bool forceUpdate = false);
+		void _setDeviceColor(const Color& color, bool forceUpdate = false);
+		void _setDeviceMatrixMode(unsigned int mode, bool forceUpdate = false);
+		void _setGlTextureEnabled(bool enabled);
+		void _setGlColorEnabled(bool enabled);
+		void _setGlVertexPointer(int stride, const void* pointer);
+		void _setGlTexturePointer(int stride, const void* pointer);
+		void _setGlColorPointer(int stride, const void* pointer);
 
 	};
 	

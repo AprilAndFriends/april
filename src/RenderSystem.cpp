@@ -234,16 +234,19 @@ namespace april
 	{
 		this->_deviceAssignWindow(window);
 		this->_deviceSetupCaps();
+		this->_deviceSetup();
 		grect viewport(0.0f, 0.0f, april::window->getSize());
 		this->setViewport(viewport);
 		this->setOrthoProjection(viewport);
 		this->_updateDeviceState(true);
+		this->clear();
 	}
 
 	void RenderSystem::reset()
 	{
 		hlog::write(logTag, "Resetting rendersystem.");
 		this->_deviceReset();
+		this->_deviceSetup();
 	}
 
 	void RenderSystem::_deviceReset()
@@ -656,6 +659,11 @@ namespace april
 			this->deviceState->depthBuffer = this->state->depthBuffer;
 			this->deviceState->depthBufferWrite = this->state->depthBufferWrite;
 		}
+		// device render mode
+		if (forceUpdate || this->deviceState->useTexture != this->state->useTexture || this->deviceState->useColor != this->state->useColor)
+		{
+			this->_setDeviceRenderMode(this->state->useTexture, this->state->useColor);
+		}
 		// texture
 		if (forceUpdate || this->deviceState->texture != this->state->texture || this->deviceState->useTexture != this->state->useTexture)
 		{
@@ -693,9 +701,7 @@ namespace april
 		}
 		// shared variables
 		this->deviceState->useTexture = this->state->useTexture;
-		// finalize by updating special variables in states
-		this->state->update();
-		this->deviceState->update();
+		this->deviceState->useColor = this->state->useColor;
 	}
 
 	void RenderSystem::clear(bool depth)
@@ -740,7 +746,7 @@ namespace april
 		this->state->useColor = false;
 		this->state->systemColor = color;
 		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, v, nVertices, color);
+		this->_deviceRender(renderOperation, v, nVertices);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
@@ -758,7 +764,7 @@ namespace april
 		this->state->useColor = false;
 		this->state->systemColor = color;
 		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, v, nVertices, color);
+		this->_deviceRender(renderOperation, v, nVertices);
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
