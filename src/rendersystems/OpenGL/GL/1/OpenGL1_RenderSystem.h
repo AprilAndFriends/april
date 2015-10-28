@@ -30,13 +30,15 @@ namespace april
 		~OpenGL1_RenderSystem();
 
 	protected:
+		bool blendSeparationSupported;
+
 		void _setupDefaultParameters();
 
 		void _deviceSetupCaps();
 
 		Texture* _deviceCreateTexture(bool fromResource);
 
-		void _setDeviceBlendMode(BlendMode mode);
+		void _setDeviceBlendMode(BlendMode blendMode);
 
 #if defined(_WIN32) && !defined(_WINRT)
 		HGLRC hRC;

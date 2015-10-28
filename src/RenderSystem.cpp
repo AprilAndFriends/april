@@ -662,28 +662,16 @@ namespace april
 			// filtering and wrapping applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
 			if (this->state->texture != NULL && this->state->useTexture)
 			{
-				if (forceUpdate || this->deviceState->texture == NULL)
-				{
-					this->_setDeviceTextureFilter(this->state->texture->getFilter());
-					this->_setDeviceTextureAddressMode(this->state->texture->getAddressMode());
-				}
-				else
-				{
-					Texture::Filter filter = this->state->texture->getFilter();
-					if (this->deviceState->texture->getFilter() != filter)
-					{
-						this->_setDeviceTextureFilter(filter);
-					}
-					Texture::AddressMode addressMode = this->state->texture->getAddressMode();
-					if (this->deviceState->texture->getAddressMode() != addressMode)
-					{
-						this->_setDeviceTextureAddressMode(addressMode);
-					}
-				}
 				this->state->texture->load();
 				this->state->texture->unlock();
+				this->_setDeviceTexture(this->state->texture);
+				this->_setDeviceTextureFilter(this->state->texture->getFilter());
+				this->_setDeviceTextureAddressMode(this->state->texture->getAddressMode());
 			}
-			this->_setDeviceTexture(this->state->useTexture ? this->state->texture : NULL);
+			else
+			{
+				this->_setDeviceTexture(NULL);
+			}
 			this->deviceState->texture = this->state->texture;
 		}
 		// blend mode

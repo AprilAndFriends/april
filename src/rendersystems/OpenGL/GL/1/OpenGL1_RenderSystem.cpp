@@ -39,7 +39,7 @@
 
 namespace april
 {
-	OpenGL1_RenderSystem::OpenGL1_RenderSystem() : OpenGLC_RenderSystem()
+	OpenGL1_RenderSystem::OpenGL1_RenderSystem() : OpenGLC_RenderSystem(), blendSeparationSupported(false)
 	{
 		this->name = APRIL_RS_OPENGL1;
 #if defined(_WIN32) && !defined(_WINRT)
@@ -127,24 +127,25 @@ namespace april
 			return;
 		}
 #endif
-		if (this->caps.maxTextureSize == 0)
+		hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
+		if (extensions.contains("ARB_texture_non_power_of_two"))
 		{
-			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-			if (extensions.contains("ARB_texture_non_power_of_two"))
+			this->caps.npotTexturesLimited = true;
+			// this isn't 100% sure, but it's a pretty good indicator that NPOT textures should be fully supported on this hardware
+			if (extensions.contains("ARB_fragment_program"))
 			{
-				this->caps.npotTexturesLimited = true;
-				// this isn't 100% sure, but it's a pretty good indicator that NPOT textures should be fully supported on this hardware
-				if (extensions.contains("ARB_fragment_program"))
+				int value = 0;
+				glGetIntegerv(GL_MAX_TEXTURE_SIZE, &value);
+				if (value >= 8192)
 				{
-					int value = 0;
-					glGetIntegerv(GL_MAX_TEXTURE_SIZE, &value);
-					if (value >= 8192)
-					{
-						this->caps.npotTextures = true;
-					}
+					this->caps.npotTextures = true;
 				}
 			}
 		}
+		// TODO - is there a way to make this work on Win32?
+#ifndef _WIN32
+		this->blendSeparationSupported = extensions.contains("EXT_blend_equation_separate") && extensions.contains("EXT_blend_func_separate");
+#endif
 		OpenGLC_RenderSystem::_deviceSetupCaps();
 	}
 
@@ -153,22 +154,13 @@ namespace april
 		return new OpenGL1_Texture(fromResource);
 	}
 
-	void OpenGL1_RenderSystem::_setDeviceBlendMode(BlendMode textureBlendMode)
+	void OpenGL1_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
 	{
-		// TODO - is there a way to make this work on Win32?
 #ifndef _WIN32
-		// TODO - refactor
-		static int blendSeparationSupported = -1;
-		if (blendSeparationSupported == -1)
-		{
-			// determine if blend separation is possible on first call to this function
-			hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-			blendSeparationSupported = extensions.contains("EXT_blend_equation_separate") && extensions.contains("EXT_blend_func_separate");
-		}
-		if (blendSeparationSupported)
+		if (this->blendSeparationSupported)
 		{
 			// blending for the new generations
-			switch (textureBlendMode)
+			switch (blendMode)
 			{
 			case BM_DEFAULT:
 			case BM_ALPHA:
@@ -196,7 +188,7 @@ namespace april
 #endif
 		{
 			// old-school blending mode for your dad
-			OpenGLC_RenderSystem::_setDeviceBlendMode(textureBlendMode);
+			OpenGLC_RenderSystem::_setDeviceBlendMode(blendMode);
 		}
 	}
 	
