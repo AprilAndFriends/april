@@ -35,20 +35,6 @@
 namespace april
 {
 	// DEPRECATED
-	grect RenderSystem::getOrthoProjection()
-	{
-		grect result;
-		if (this->state->projectionMatrix.data[0] != 0.0f && this->state->projectionMatrix.data[5] != 0.0f)
-		{
-			result.w = 2.0f / this->state->projectionMatrix.data[0];
-			result.h = -2.0f / this->state->projectionMatrix.data[5];
-			result.x = (1.0f + this->state->projectionMatrix.data[12]) * result.w * 0.5f;
-			result.y = (1.0f - this->state->projectionMatrix.data[13]) * result.h * 0.5f;
-			result += result.getSize() * this->getPixelOffset() / april::window->getSize();
-		}
-		return result;
-	}
-	// DEPRECATED
 	void RenderSystem::clear(bool useColor, bool depth)
 	{
 		this->clear(depth);
@@ -518,6 +504,20 @@ namespace april
 	void RenderSystem::destroyVertexShader(VertexShader* shader)
 	{
 		delete shader;
+	}
+
+	grect RenderSystem::getOrthoProjection()
+	{
+		grect result;
+		if (this->state->projectionMatrix.data[0] != 0.0f && this->state->projectionMatrix.data[5] != 0.0f)
+		{
+			result.w = 2.0f / this->state->projectionMatrix.data[0];
+			result.h = -2.0f / this->state->projectionMatrix.data[5];
+			result.x = (1.0f + this->state->projectionMatrix.data[12]) * result.w * 0.5f;
+			result.y = (1.0f - this->state->projectionMatrix.data[13]) * result.h * 0.5f;
+			result += result.getSize() * this->getPixelOffset() / april::window->getSize();
+		}
+		return result;
 	}
 
 	void RenderSystem::setOrthoProjection(grect rect)
