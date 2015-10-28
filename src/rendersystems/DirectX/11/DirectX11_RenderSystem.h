@@ -54,27 +54,18 @@ namespace april
 
 		DirectX11_RenderSystem();
 		~DirectX11_RenderSystem();
-		bool create(Options options);
-		bool destroy();
 
-		void assignWindow(Window* window);
-		void reset();
-
-		inline float getPixelOffset() { return 0.0f; }
+		float getPixelOffset();
 		int getVRam();
-		void setViewport(grect value);
+		
 
-		void setTexture(Texture* texture);
-		void setTextureBlendMode(BlendMode textureBlendMode);
-		void setTextureColorMode(ColorMode colorMode, float factor = 1.0f);
-		void setTextureFilter(Texture::Filter textureFilter);
-		void setTextureAddressMode(Texture::AddressMode textureAddressMode);
-		Texture* getRenderTarget();
-		void setRenderTarget(Texture* source);
-		void setPixelShader(PixelShader* pixelShader);
-		void setVertexShader(VertexShader* vertexShader);
-		void setDepthBuffer(bool enabled, bool writeEnabled = true);
+		//void setTexture(Texture* texture);
+		//void setTextureBlendMode(BlendMode textureBlendMode);
+		//void setTextureColorMode(ColorMode colorMode, float factor = 1.0f);
+		//void setTextureFilter(Texture::Filter textureFilter);
+		//void setTextureAddressMode(Texture::AddressMode textureAddressMode);
 
+		/*
 		void clear(bool useColor = true, bool depth = false);
 		void clear(bool depth, grect rect, Color color = Color::Clear);
 		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
@@ -83,6 +74,7 @@ namespace april
 		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
 		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
 		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
+		*/
 
 		Image::Format getNativeTextureFormat(Image::Format format);
 		unsigned int getNativeColorUInt(const april::Color& color);
@@ -93,7 +85,32 @@ namespace april
 
 		void trim(); // needed by Win 8.1
 
+		// TODOa - implement
+		Texture* getRenderTarget();
+		void setRenderTarget(Texture* source);
+		void setPixelShader(PixelShader* pixelShader);
+		void setVertexShader(VertexShader* vertexShader);
+
 	protected:
+		DirectX11_VertexShader* vertexShaderDefault;
+		DirectX11_PixelShader* pixelShaderTexturedMultiply;
+		DirectX11_PixelShader* pixelShaderTexturedAlphaMap;
+		DirectX11_PixelShader* pixelShaderTexturedLerp;
+		DirectX11_PixelShader* pixelShaderMultiply;
+		DirectX11_PixelShader* pixelShaderAlphaMap;
+		DirectX11_PixelShader* pixelShaderLerp;
+
+		void _deviceInit();
+		bool _deviceCreate(Options options);
+		bool _deviceDestroy();
+		void _deviceAssignWindow(Window* window);
+		void _deviceReset();
+		void _deviceSetupCaps();
+		void _deviceSetup();
+
+
+
+		/*
 		BlendMode activeTextureBlendMode;
 		ColorMode activeTextureColorMode;
 		unsigned char activeTextureColorModeAlpha;
@@ -103,31 +120,47 @@ namespace april
 		DirectX11_Texture* renderTarget;
 		harray<DisplayMode> supportedDisplayModes;
 		grect viewport;
-
-		DirectX11_VertexShader* vertexShaderDefault;
-		DirectX11_PixelShader* pixelShaderTexturedMultiply;
-		DirectX11_PixelShader* pixelShaderTexturedAlphaMap;
-		DirectX11_PixelShader* pixelShaderTexturedLerp;
-		DirectX11_PixelShader* pixelShaderMultiply;
-		DirectX11_PixelShader* pixelShaderAlphaMap;
-		DirectX11_PixelShader* pixelShaderLerp;
+		*/
 
 		void _createSwapChain(int width, int height);
 		void _resizeSwapChain(int width, int height);
 		void _configureSwapChain();
 		void _configureDevice();
 		
-		void _setupCaps();
-		void _setResolution(int w, int h, bool fullscreen);
+		Texture* _deviceCreateTexture(bool fromResource);
+		PixelShader* _deviceCreatePixelShader();
+		VertexShader* _deviceCreateVertexShader();
 
-		Texture* _createTexture(bool fromResource);
-		PixelShader* _createPixelShader();
-		VertexShader* _createVertexShader();
+		void _deviceChangeResolution(int w, int h, bool fullscreen);
 
-		void _setModelviewMatrix(const gmat4& matrix);
-		void _setProjectionMatrix(const gmat4& matrix);
-		void _updatePixelShader(bool useTexture);
-		void _updateVertexShader();
+		void _setDeviceViewport(const grect& rect);
+		void _setDeviceModelviewMatrix(const gmat4& matrix);
+		void _setDeviceProjectionMatrix(const gmat4& matrix);
+		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
+		void _setDeviceRenderMode(bool useTexture, bool useColor);
+		void _setDeviceTexture(Texture* texture);
+		void _setDeviceTextureFilter(Texture::Filter textureFilter);
+		void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode);
+		void _setDeviceBlendMode(BlendMode blendMode);
+		void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
+
+		void _updateDeviceState(bool forceUpdate);
+		void _updateShader(bool forceUpdate);
+
+		void _deviceClear(bool depth);
+		void _deviceClear(april::Color color, bool depth);
+		void _deviceClearDepth();
+		void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices);
+		void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
+		void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
+		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
+
+
+
+		//void _updatePixelShader(bool useTexture);
+		//void _updateVertexShader();
+
+		static D3D11_PRIMITIVE_TOPOLOGY _dx11RenderOperations[];
 
 	private:
 		ComPtr<ID3D11Device2> d3dDevice;

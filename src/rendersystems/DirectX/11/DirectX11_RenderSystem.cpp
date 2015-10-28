@@ -32,13 +32,13 @@
 #include "WinRT_Window.h"
 
 #define SHADER_PATH "april/"
-#define VERTICES_BUFFER_COUNT 65536
+#define VERTEX_BUFFER_COUNT 65536
 #define BACKBUFFER_COUNT 2
 
-#define _LOAD_SHADER(name, type, file) \
+#define LOAD_SHADER(name, type, file) \
 	if (name == NULL) \
 	{ \
-		name = (DirectX11_ ## type ## Shader*)this->create ## type ## Shader(SHADER_PATH #type "Shader_" #file ".cso"); \
+		name = (DirectX11_ ## type ## Shader*)this->create ## type ## ShaderFromResource(SHADER_PATH #type "Shader_" #file ".cso"); \
 	}
 
 using namespace Microsoft::WRL;
@@ -46,9 +46,9 @@ using namespace Windows::Graphics::Display;
 
 namespace april
 {
-	static ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
+	static ColoredTexturedVertex static_ctv[VERTEX_BUFFER_COUNT];
 
-	D3D11_PRIMITIVE_TOPOLOGY dx11_render_ops[]=
+	D3D11_PRIMITIVE_TOPOLOGY DirectX11_RenderSystem::_dx11RenderOperations[] =
 	{
 		D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED,
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,	// ROP_TRIANGLE_LIST
@@ -59,12 +59,20 @@ namespace april
 		D3D11_PRIMITIVE_TOPOLOGY_POINTLIST,		// ROP_POINT_LIST
 	};
 
-	DirectX11_RenderSystem::DirectX11_RenderSystem() : DirectX_RenderSystem(), activeTextureBlendMode(BM_DEFAULT),
+	DirectX11_RenderSystem::DirectX11_RenderSystem() : DirectX_RenderSystem()/*, activeTextureBlendMode(BM_DEFAULT),
 		activeTexture(NULL), renderTarget(NULL), activeTextureColorMode(CM_DEFAULT),
-		activeTextureColorModeAlpha(255), _matrixDirty(true)
+		activeTextureColorModeAlpha(255)*/, _matrixDirty(true)
 	{
 		this->name = APRIL_RS_DIRECTX11;
-		this->state = new RenderState(); // TODOa
+	}
+
+	DirectX11_RenderSystem::~DirectX11_RenderSystem()
+	{
+		this->destroy();
+	}
+
+	void DirectX11_RenderSystem::_deviceInit()
+	{
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
@@ -82,8 +90,8 @@ namespace april
 		this->vertexBuffer = nullptr;
 		this->constantBuffer = nullptr;
 		this->inputLayout = nullptr;
-		this->activeVertexShader = NULL;
-		this->activePixelShader = NULL;
+		//this->activeVertexShader = NULL;
+		//this->activePixelShader = NULL;
 		this->vertexShaderDefault = NULL;
 		this->pixelShaderTexturedMultiply = NULL;
 		this->pixelShaderTexturedAlphaMap = NULL;
@@ -102,17 +110,13 @@ namespace april
 		this->_currentVertexBuffer = NULL;
 	}
 
-	DirectX11_RenderSystem::~DirectX11_RenderSystem()
+	bool DirectX11_RenderSystem::_deviceCreate(Options options)
 	{
-		this->destroy();
-	}
-
-	bool DirectX11_RenderSystem::create(Options options)
-	{
-		if (!DirectX_RenderSystem::create(options))
+		if (!DirectX_RenderSystem::_deviceCreate(options))
 		{
 			return false;
 		}
+		/*
 		this->activeTextureBlendMode = BM_DEFAULT;
 		this->activeTexture = NULL;
 		this->activeVertexShader = NULL;
@@ -120,6 +124,7 @@ namespace april
 		this->renderTarget = NULL;
 		this->activeTextureColorMode = CM_DEFAULT;
 		this->activeTextureColorModeAlpha = 255;
+		*/
 		this->_matrixDirty = true;
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
@@ -154,13 +159,13 @@ namespace april
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->_currentRenderOperation = RO_UNDEFINED;
 		this->_currentVertexBuffer = NULL;
-		this->viewport.setSize(april::getSystemInfo().displayResolution);
+		//this->viewport.setSize(april::getSystemInfo().displayResolution);
 		return true;
 	}
 
-	bool DirectX11_RenderSystem::destroy()
+	bool DirectX11_RenderSystem::_deviceDestroy()
 	{
-		if (!DirectX_RenderSystem::destroy())
+		if (!DirectX_RenderSystem::_deviceDestroy())
 		{
 			return false;
 		}
@@ -197,11 +202,11 @@ namespace april
 		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
 		this->_currentRenderOperation = RO_UNDEFINED;
 		this->_currentVertexBuffer = NULL;
-		this->viewport.setSize(april::getSystemInfo().displayResolution);
+		//this->viewport.setSize(april::getSystemInfo().displayResolution);
 		return true;
 	}
 
-	void DirectX11_RenderSystem::assignWindow(Window* window)
+	void DirectX11_RenderSystem::_deviceAssignWindow(Window* window)
 	{
 		unsigned int creationFlags = 0;
 		creationFlags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
@@ -276,15 +281,15 @@ namespace april
 		// initial calls
 		this->clear();
 		this->presentFrame();
-		this->orthoProjection.setSize((float)window->getWidth(), (float)window->getHeight());
+		this->setOrthoProjection(gvec2((float)window->getWidth(), (float)window->getHeight()));
 		// default shaders
-		_LOAD_SHADER(this->vertexShaderDefault, Vertex, Default);
-		_LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply);
-		_LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
-		_LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
-		_LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply);
-		_LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap);
-		_LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp);
+		LOAD_SHADER(this->vertexShaderDefault, Vertex, Default);
+		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply);
+		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
+		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
+		LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply);
+		LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap);
+		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp);
 		// input layouts for default shaders
 		if (this->inputLayout == nullptr)
 		{
@@ -295,21 +300,35 @@ namespace april
 				{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
 			hr = this->d3dDevice->CreateInputLayout(inputLayoutDesc, ARRAYSIZE(inputLayoutDesc),
-				this->vertexShaderDefault->shaderData, this->vertexShaderDefault->shaderSize, &this->inputLayout);
+				(unsigned char*)this->vertexShaderDefault->shaderData, (unsigned int)this->vertexShaderDefault->shaderData.size(), &this->inputLayout);
 			if (FAILED(hr))
 			{
 				throw Exception("Unable to create input layout for colored-textured shader!");
 			}
 		}
 		this->d3dDeviceContext->IASetInputLayout(this->inputLayout.Get());
+		DirectX_RenderSystem::_deviceAssignWindow(window);
 	}
 
-	void DirectX11_RenderSystem::reset()
+	void DirectX11_RenderSystem::_deviceReset()
 	{
-		DirectX_RenderSystem::reset();
+		DirectX_RenderSystem::_deviceReset();
 		// possible Microsoft bug, required for SwapChainPanel to update its layout 
 		reinterpret_cast<IUnknown*>(WinRT::App->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
+	}
+
+	void DirectX11_RenderSystem::_deviceSetupCaps()
+	{
+		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
+		this->caps.maxTextureSize = D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
+		this->caps.npotTexturesLimited = true;
+		this->caps.npotTextures = false; // because of usage of feature level 9_3
+	}
+
+	void DirectX11_RenderSystem::_deviceSetup()
+	{
+		// TODOa
 	}
 
 	void DirectX11_RenderSystem::_createSwapChain(int width, int height)
@@ -518,58 +537,15 @@ namespace april
 		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 		this->d3dDevice->CreateSamplerState(&samplerDesc, &this->samplerNearestClamp);
 		// other
-		this->setTextureBlendMode(BM_DEFAULT);
-		this->setTextureColorMode(CM_DEFAULT);
-		this->setTextureAddressMode(Texture::ADDRESS_WRAP);
-		this->setTextureFilter(Texture::FILTER_LINEAR);
+		this->setBlendMode(BM_DEFAULT);
+		this->setColorMode(CM_DEFAULT);
 		this->clear();
 		this->presentFrame();
 	}
 
-	void DirectX11_RenderSystem::updateOrientation()
+	float DirectX11_RenderSystem::getPixelOffset()
 	{
-		DisplayOrientations orientation = DisplayInformation::GetForCurrentView()->CurrentOrientation;
-		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
-		switch (orientation)
-		{
-		case DisplayOrientations::Landscape:
-			rotation = DXGI_MODE_ROTATION_ROTATE90;
-			break;
-		case DisplayOrientations::Portrait:
-			rotation = DXGI_MODE_ROTATION_IDENTITY;
-			break;
-		case DisplayOrientations::LandscapeFlipped:
-			rotation = DXGI_MODE_ROTATION_ROTATE270;
-			break;
-		case DisplayOrientations::PortraitFlipped:
-			rotation = DXGI_MODE_ROTATION_ROTATE180;
-			break;
-		default:
-			hlog::error(logTag, "Undefined screen orienation, using default landscape!");
-			rotation = DXGI_MODE_ROTATION_ROTATE90;
-			break;
-		}
-	}
-	
-	void DirectX11_RenderSystem::_setupCaps()
-	{
-		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
-		this->caps.maxTextureSize = D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
-		this->caps.npotTexturesLimited = true;
-		this->caps.npotTextures = false; // because of usage of feature level 9_3
-	}
-
-	void DirectX11_RenderSystem::_setResolution(int w, int h, bool fullscreen)
-	{
-		if (this->swapChain != nullptr)
-		{
-			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
-		}
-		else
-		{
-			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
-		}
-		this->_matrixDirty = true;
+		return 0.0f;
 	}
 
 	int DirectX11_RenderSystem::getVRam()
@@ -603,57 +579,228 @@ namespace april
 		return (desc.DedicatedVideoMemory / (1024 * 1024));
 	}
 
-	void DirectX11_RenderSystem::setViewport(grect value)
+
+
+
+
+	void DirectX11_RenderSystem::updateOrientation()
 	{
-		DirectX_RenderSystem::setViewport(value);
+		DisplayOrientations orientation = DisplayInformation::GetForCurrentView()->CurrentOrientation;
+		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
+		switch (orientation)
+		{
+		case DisplayOrientations::Landscape:
+			rotation = DXGI_MODE_ROTATION_ROTATE90;
+			break;
+		case DisplayOrientations::Portrait:
+			rotation = DXGI_MODE_ROTATION_IDENTITY;
+			break;
+		case DisplayOrientations::LandscapeFlipped:
+			rotation = DXGI_MODE_ROTATION_ROTATE270;
+			break;
+		case DisplayOrientations::PortraitFlipped:
+			rotation = DXGI_MODE_ROTATION_ROTATE180;
+			break;
+		default:
+			hlog::error(logTag, "Undefined screen orienation, using default landscape!");
+			rotation = DXGI_MODE_ROTATION_ROTATE90;
+			break;
+		}
+	}
+
+	Texture* DirectX11_RenderSystem::_deviceCreateTexture(bool fromResource)
+	{
+		return new DirectX11_Texture(fromResource);
+	}
+
+	PixelShader* DirectX11_RenderSystem::_deviceCreatePixelShader()
+	{
+		return new DirectX11_PixelShader();
+	}
+
+	VertexShader* DirectX11_RenderSystem::_deviceCreateVertexShader()
+	{
+		return new DirectX11_VertexShader();
+	}
+
+	void DirectX11_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
+	{
+		DirectX_RenderSystem::_deviceChangeResolution(w, h, fullscreen);
+		if (this->swapChain != nullptr)
+		{
+			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
+		}
+		else
+		{
+			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
+		}
+	}
+
+	void DirectX11_RenderSystem::_setDeviceViewport(const grect& rect)
+	{
+		grect viewport = rect;
 		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
 		gvec2 resolution = april::getSystemInfo().displayResolution;
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
-		if (value.x < 0.0f)
+		if (viewport.x < 0.0f)
 		{
-			value.w += value.x;
-			value.x = 0.0f;
+			viewport.w += viewport.x;
+			viewport.x = 0.0f;
 		}
-		if (value.y < 0.0f)
+		if (viewport.y < 0.0f)
 		{
-			value.h += value.y;
-			value.y = 0.0f;
+			viewport.h += viewport.y;
+			viewport.y = 0.0f;
 		}
-		value.w = hclamp(value.w, 0.0f, hmax(w - value.x, 0.0f));
-		value.h = hclamp(value.h, 0.0f, hmax(h - value.y, 0.0f));
-		if (value.w > 0.0f && value.h > 0.0f)
+		viewport.w = hclamp(viewport.w, 0.0f, hmax(w - viewport.x, 0.0f));
+		viewport.h = hclamp(viewport.h, 0.0f, hmax(h - viewport.y, 0.0f));
+		if (viewport.w > 0.0f && viewport.h > 0.0f)
 		{
-			value.x = hclamp(value.x, 0.0f, (float)w);
-			value.y = hclamp(value.y, 0.0f, (float)h);
+			viewport.x = hclamp(viewport.x, 0.0f, (float)w);
+			viewport.y = hclamp(viewport.y, 0.0f, (float)h);
 		}
 		else
 		{
-			value.set((float)w, (float)h, 0.0f, 0.0f);
+			viewport.set((float)w, (float)h, 0.0f, 0.0f);
 		}
 		// setting the system viewport
-		D3D11_VIEWPORT viewport;
-		viewport.MinDepth = D3D11_MIN_DEPTH;
-		viewport.MaxDepth = D3D11_MAX_DEPTH;
+		D3D11_VIEWPORT dx11Viewport;
+		dx11Viewport.MinDepth = D3D11_MIN_DEPTH;
+		dx11Viewport.MaxDepth = D3D11_MAX_DEPTH;
 		// these double-casts are to ensure consistent behavior among rendering systems
-		viewport.TopLeftX = (float)(int)value.x;
-		viewport.TopLeftY = (float)(int)value.y;
-		viewport.Width = (float)(int)value.w;
-		viewport.Height = (float)(int)value.h;
-		this->d3dDeviceContext->RSSetViewports(1, &viewport);
+		dx11Viewport.TopLeftX = (float)(int)viewport.x;
+		dx11Viewport.TopLeftY = (float)(int)viewport.y;
+		dx11Viewport.Width = (float)(int)viewport.w;
+		dx11Viewport.Height = (float)(int)viewport.h;
+		this->d3dDeviceContext->RSSetViewports(1, &dx11Viewport);
 	}
 
-	void DirectX11_RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
+	void DirectX11_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)
 	{
-		RenderSystem::setDepthBuffer(enabled, writeEnabled);
-		if (this->options.depthBuffer)
+		this->_matrixDirty = true;
+	}
+
+	void DirectX11_RenderSystem::_setDeviceProjectionMatrix(const gmat4& matrix)
+	{
+		this->_matrixDirty = true;
+	}
+
+	void DirectX11_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
+	{
+		hlog::error(logTag, "Not implemented!");
+	}
+
+	void DirectX11_RenderSystem::_setDeviceRenderMode(bool useTexture, bool useColor)
+	{
+		// TODOb
+	}
+
+	void DirectX11_RenderSystem::_setDeviceTexture(Texture* texture)
+	{
+		if (texture == NULL)
 		{
-			hlog::error(logTag, "Not implemented!");
+			return;
+		}
+
+		//if (this->_currentTexture != this->activeTexture)
+		{
+			//this->_currentTexture = this->activeTexture;
+			DirectX11_Texture* currentTexture = (DirectX11_Texture*)texture;
+			//if (this->_currentTexture != NULL)
+			{
+				this->d3dDeviceContext->PSSetShaderResources(0, 1, currentTexture->d3dView.GetAddressOf());
+			}
+		}
+		//if (this->_currentTextureFilter != this->textureFilter ||
+		//	this->_currentTextureAddressMode != this->textureAddressMode)
+		{
+			this->_currentTextureFilter = texture->getFilter();
+			this->_currentTextureAddressMode = texture->getAddressMode();
+			if (this->_currentTextureFilter == Texture::FILTER_LINEAR &&
+				this->_currentTextureAddressMode == Texture::ADDRESS_WRAP)
+			{
+				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerLinearWrap.GetAddressOf());
+			}
+			else if (this->_currentTextureFilter == Texture::FILTER_LINEAR &&
+				this->_currentTextureAddressMode == Texture::ADDRESS_CLAMP)
+			{
+				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerLinearClamp.GetAddressOf());
+			}
+			else if (this->_currentTextureFilter == Texture::FILTER_NEAREST &&
+				this->_currentTextureAddressMode == Texture::ADDRESS_WRAP)
+			{
+				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerNearestWrap.GetAddressOf());
+			}
+			else if (this->_currentTextureFilter == Texture::FILTER_NEAREST &&
+				this->_currentTextureAddressMode == Texture::ADDRESS_CLAMP)
+			{
+				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerNearestClamp.GetAddressOf());
+			}
 		}
 	}
 
-	void DirectX11_RenderSystem::setTextureBlendMode(BlendMode textureBlendMode)
+	void DirectX11_RenderSystem::_setDeviceTextureFilter(Texture::Filter textureFilter)
 	{
+
+		// not used
+		/*
+		switch (textureFilter)
+		{
+		case Texture::FILTER_LINEAR:
+		case Texture::FILTER_NEAREST:
+			this->textureFilter = textureFilter;
+			break;
+		default:
+			hlog::warn(logTag, "Trying to set unsupported texture filter!");
+			break;
+		}
+		*/
+	}
+
+	void DirectX11_RenderSystem::_setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode)
+	{
+		// not used
+		/*
+		switch (textureAddressMode)
+		{
+		case Texture::ADDRESS_WRAP:
+		case Texture::ADDRESS_CLAMP:
+			this->textureAddressMode = textureAddressMode;
+			break;
+		default:
+			hlog::warn(logTag, "Trying to set unsupported texture address mode!");
+			break;
+		}
+		*/
+	}
+
+	void DirectX11_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
+	{
+		static float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		if (this->_currentTextureBlendMode != this->deviceState->blendMode)
+		{
+			this->_currentTextureBlendMode = this->deviceState->blendMode;
+			switch (this->_currentTextureBlendMode)
+			{
+			case BM_DEFAULT:
+			case BM_ALPHA:
+				this->d3dDeviceContext->OMSetBlendState(this->blendStateAlpha.Get(), blendFactor, 0xFFFFFFFF);
+				break;
+			case BM_ADD:
+				this->d3dDeviceContext->OMSetBlendState(this->blendStateAdd.Get(), blendFactor, 0xFFFFFFFF);
+				break;
+			case BM_SUBTRACT:
+				this->d3dDeviceContext->OMSetBlendState(this->blendStateSubtract.Get(), blendFactor, 0xFFFFFFFF);
+				break;
+			case BM_OVERWRITE:
+				this->d3dDeviceContext->OMSetBlendState(this->blendStateOverwrite.Get(), blendFactor, 0xFFFFFFFF);
+				break;
+			}
+		}
+
+		// not used
+		/*
 		switch (textureBlendMode)
 		{
 		case BM_DEFAULT:
@@ -667,10 +814,13 @@ namespace april
 			hlog::warn(logTag, "Trying to set unsupported texture blend mode!");
 			break;
 		}
+		*/
 	}
 
-	void DirectX11_RenderSystem::setTextureColorMode(ColorMode textureColorMode, float factor)
+	void DirectX11_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
 	{
+		// not used
+		/*
 		this->activeTextureColorModeAlpha = 255;
 		switch (textureColorMode)
 		{
@@ -685,110 +835,55 @@ namespace april
 			hlog::warn(logTag, "Trying to set unsupported texture color mode!");
 			break;
 		}
+		*/
 	}
 
-	void DirectX11_RenderSystem::setTextureFilter(Texture::Filter textureFilter)
+	void DirectX11_RenderSystem::_updateDeviceState(bool forceUpdate)
 	{
-		switch (textureFilter)
-		{
-		case Texture::FILTER_LINEAR:
-		case Texture::FILTER_NEAREST:
-			this->textureFilter = textureFilter;
-			break;
-		default:
-			hlog::warn(logTag, "Trying to set unsupported texture filter!");
-			break;
-		}
+		DirectX_RenderSystem::_updateDeviceState(forceUpdate);
+		this->_updateShader(forceUpdate);
 	}
 
-	void DirectX11_RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
-	{
-		switch (textureAddressMode)
-		{
-		case Texture::ADDRESS_WRAP:
-		case Texture::ADDRESS_CLAMP:
-			this->textureAddressMode = textureAddressMode;
-			break;
-		default:
-			hlog::warn(logTag, "Trying to set unsupported texture address mode!");
-			break;
-		}
-	}
 
-	void DirectX11_RenderSystem::setTexture(Texture* texture)
-	{
-		this->activeTexture = (DirectX11_Texture*)texture;
-		if (this->activeTexture != NULL)
-		{
-			Texture::Filter filter = this->activeTexture->getFilter();
-			if (this->textureFilter != filter)
-			{
-				this->setTextureFilter(filter);
-			}
-			Texture::AddressMode addressMode = this->activeTexture->getAddressMode();
-			if (this->textureAddressMode != addressMode)
-			{
-				this->setTextureAddressMode(addressMode);
-			}
-			this->activeTexture->load();
-			this->activeTexture->unlock();
-		}
-	}
 
-	Texture* DirectX11_RenderSystem::getRenderTarget()
-	{
-		return this->renderTarget;
-	}
-	
-	void DirectX11_RenderSystem::setRenderTarget(Texture* source)
-	{
-		// TODO - test, this code is experimental
-		DirectX11_Texture* texture = (DirectX11_Texture*)source;
-		if (texture == NULL)
-		{
-			// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
-			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
-		}
-		else if (texture->d3dRenderTargetView != nullptr)
-		{
-			// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
-			this->d3dDeviceContext->OMSetRenderTargets(1, texture->d3dRenderTargetView.GetAddressOf(), NULL);
-		}
-		else
-		{
-			hlog::error(logTag, "Texture not created as rendertarget: " + texture->_getInternalName());
-			return;
-		}
-		this->renderTarget = texture;
-		this->_matrixDirty = true;
-	}
-	
-	void DirectX11_RenderSystem::setPixelShader(PixelShader* pixelShader)
-	{
-		this->activePixelShader = (DirectX11_PixelShader*)pixelShader;
-	}
 
-	void DirectX11_RenderSystem::setVertexShader(VertexShader* vertexShader)
-	{
-		this->activeVertexShader = (DirectX11_VertexShader*)vertexShader;
-	}
 
-	void DirectX11_RenderSystem::_updatePixelShader(bool useTexture)
+
+
+
+
+	void DirectX11_RenderSystem::_updateShader(bool forceUpdate)
 	{
-		DirectX11_PixelShader* pixelShader = this->activePixelShader;
+
+
+
+		DirectX11_VertexShader* vertexShader = NULL;// this->activeVertexShader;
+		if (vertexShader == NULL)
+		{
+			vertexShader = this->vertexShaderDefault;
+		}
+		if (this->_currentVertexShader != vertexShader)
+		{
+			this->_currentVertexShader = vertexShader;
+			this->d3dDeviceContext->VSSetShader(this->_currentVertexShader->dx11Shader.Get(), NULL, 0);
+		}
+
+
+
+		DirectX11_PixelShader* pixelShader = NULL;// this->activePixelShader;
 		if (pixelShader == NULL)
 		{
-			switch (this->activeTextureColorMode)
+			switch (this->deviceState->colorMode)
 			{
 			case CM_DEFAULT:
 			case CM_MULTIPLY:
-				pixelShader = (useTexture ? this->pixelShaderTexturedMultiply : this->pixelShaderMultiply);
+				pixelShader = (this->deviceState->useTexture ? this->pixelShaderTexturedMultiply : this->pixelShaderMultiply);
 				break;
 			case CM_ALPHA_MAP:
-				pixelShader = (useTexture ? this->pixelShaderTexturedAlphaMap : this->pixelShaderAlphaMap);
+				pixelShader = (this->deviceState->useTexture ? this->pixelShaderTexturedAlphaMap : this->pixelShaderAlphaMap);
 				break;
 			case CM_LERP:
-				pixelShader = (useTexture ? this->pixelShaderTexturedLerp : this->pixelShaderLerp);
+				pixelShader = (this->deviceState->useTexture ? this->pixelShaderTexturedLerp : this->pixelShaderLerp);
 				break;
 			}
 		}
@@ -799,59 +894,29 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::_updateVertexShader()
-	{
-		DirectX11_VertexShader* vertexShader = this->activeVertexShader;
-		if (vertexShader == NULL)
-		{
-			vertexShader = this->vertexShaderDefault;
-		}
-		if (this->_currentVertexShader != vertexShader)
-		{
-			this->_currentVertexShader = vertexShader;
-			this->d3dDeviceContext->VSSetShader(this->_currentVertexShader->dx11Shader.Get(), NULL, 0);
-		}
-	}
-
-	Texture* DirectX11_RenderSystem::_createTexture(bool fromResource)
-	{
-		return new DirectX11_Texture(fromResource);
-	}
-
-	PixelShader* DirectX11_RenderSystem::_createPixelShader()
-	{
-		return new DirectX11_PixelShader();
-	}
-
-	VertexShader* DirectX11_RenderSystem::_createVertexShader()
-	{
-		return new DirectX11_VertexShader();
-	}
-
-	void DirectX11_RenderSystem::clear(bool useColor, bool depth)
+	void DirectX11_RenderSystem::_deviceClear(bool depth)
 	{
 		static const float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-		// TODO - should use current renderTargetView, not global one
+		// TODOa - should use current renderTargetView, not global one
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 	
-	void DirectX11_RenderSystem::clear(bool depth, grect rect, Color color)
+	void DirectX11_RenderSystem::_deviceClear(Color color, bool depth)
 	{
-		if (rect.w > 0.0f && rect.h > 0.0f)
-		{
-			static float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-			clearColor[0] = color.b_f();
-			clearColor[1] = color.g_f();
-			clearColor[2] = color.r_f();
-			clearColor[3] = color.a_f()};
-			D3D11_RECT area;
-			area.left = (int)rect.x;
-			area.top = (int)rect.y;
-			area.right = (int)(rect.x + rect.w);
-			area.bottom = (int)(rect.y + rect.h);
-			// TODO - should use current renderTargetView, not global one
-			this->d3dDeviceContext->ClearView(this->renderTargetView.Get(), clearColor, &area, 1);
-		}
+		static float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+		clearColor[0] = color.b_f();
+		clearColor[1] = color.g_f();
+		clearColor[2] = color.r_f();
+		clearColor[3] = color.a_f();
+		// TODO - should use current renderTargetView, not global one
+		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
+	}
+
+	void DirectX11_RenderSystem::_deviceClearDepth()
+	{
+		static const float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		// TODO - should use current renderTargetView, not global one
+		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 
 	void DirectX11_RenderSystem::_updateVertexBuffer(int nVertices, void* data)
@@ -885,7 +950,7 @@ namespace april
 	void DirectX11_RenderSystem::_updateConstantBuffer()
 	{
 		static float lerpAlpha = 1.0f;
-		lerpAlpha = this->activeTextureColorModeAlpha / 255.0f;
+		lerpAlpha = this->deviceState->colorModeFactor;
 		bool dirty = this->_matrixDirty;
 		if (!dirty)
 		{
@@ -894,7 +959,7 @@ namespace april
 		else // actually "if (this->_matrixDirty)"
 		{
 			this->_matrixDirty = false;
-			this->constantBufferData.matrix = (this->projectionMatrix * this->modelviewMatrix).transposed();
+			this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
 		}
 		if (dirty)
 		{
@@ -907,69 +972,10 @@ namespace april
 
 	void DirectX11_RenderSystem::_updateBlendMode()
 	{
-		static float blendFactor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-		if (this->_currentTextureBlendMode != this->activeTextureBlendMode)
-		{
-			this->_currentTextureBlendMode = this->activeTextureBlendMode;
-			switch (this->_currentTextureBlendMode)
-			{
-			case BM_DEFAULT:
-			case BM_ALPHA:
-				this->d3dDeviceContext->OMSetBlendState(this->blendStateAlpha.Get(), blendFactor, 0xFFFFFFFF);
-				break;
-			case BM_ADD:
-				this->d3dDeviceContext->OMSetBlendState(this->blendStateAdd.Get(), blendFactor, 0xFFFFFFFF);
-				break;
-			case BM_SUBTRACT:
-				this->d3dDeviceContext->OMSetBlendState(this->blendStateSubtract.Get(), blendFactor, 0xFFFFFFFF);
-				break;
-			case BM_OVERWRITE:
-				this->d3dDeviceContext->OMSetBlendState(this->blendStateOverwrite.Get(), blendFactor, 0xFFFFFFFF);
-				break;
-			}
-		}
 	}
 
 	void DirectX11_RenderSystem::_updateTexture(bool use)
 	{
-		if (!use)
-		{
-			return;
-		}
-		if (this->_currentTexture != this->activeTexture)
-		{
-			this->_currentTexture = this->activeTexture;
-			if (this->_currentTexture != NULL)
-			{
-				this->d3dDeviceContext->PSSetShaderResources(0, 1, this->_currentTexture->d3dView.GetAddressOf());
-			}
-		}
-		if (this->_currentTextureFilter != this->textureFilter ||
-			this->_currentTextureAddressMode != this->textureAddressMode)
-		{
-			this->_currentTextureFilter = this->textureFilter;
-			this->_currentTextureAddressMode = this->textureAddressMode;
-			if (this->_currentTextureFilter == Texture::FILTER_LINEAR &&
-				this->_currentTextureAddressMode == Texture::ADDRESS_WRAP)
-			{
-				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerLinearWrap.GetAddressOf());
-			}
-			else if (this->_currentTextureFilter == Texture::FILTER_LINEAR &&
-				this->_currentTextureAddressMode == Texture::ADDRESS_CLAMP)
-			{
-				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerLinearClamp.GetAddressOf());
-			}
-			else if (this->_currentTextureFilter == Texture::FILTER_NEAREST &&
-				this->_currentTextureAddressMode == Texture::ADDRESS_WRAP)
-			{
-				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerNearestWrap.GetAddressOf());
-			}
-			else if (this->_currentTextureFilter == Texture::FILTER_NEAREST &&
-				this->_currentTextureAddressMode == Texture::ADDRESS_CLAMP)
-			{
-				this->d3dDeviceContext->PSSetSamplers(0, 1, this->samplerNearestClamp.GetAddressOf());
-			}
-		}
 	}
 	
 	void DirectX11_RenderSystem::_setRenderOperation(RenderOperation renderOperation)
@@ -977,19 +983,14 @@ namespace april
 		if (this->_currentRenderOperation != renderOperation)
 		{
 			this->_currentRenderOperation = renderOperation;
-			this->d3dDeviceContext->IASetPrimitiveTopology(dx11_render_ops[this->_currentRenderOperation]);
+			this->d3dDeviceContext->IASetPrimitiveTopology(_dx11RenderOperations[this->_currentRenderOperation]);
 		}
 	}
 
-	void DirectX11_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
+	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
-		this->render(renderOperation, v, nVertices, april::Color::White);
-	}
-
-	void DirectX11_RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
-	{
-		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		unsigned int c = this->getNativeColorUInt(color);
+		ColoredTexturedVertex* ctv = (nVertices <= VERTEX_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
+		unsigned int c = this->getNativeColorUInt(this->deviceState->systemColor);
 		for_iter (i, 0, nVertices)
 		{
 			ctv[i].x = v[i].x;
@@ -999,27 +1000,22 @@ namespace april
 		}
 		this->_setRenderOperation(renderOperation);
 		this->_updateVertexBuffer(nVertices, ctv);
-		this->_updateVertexShader();
-		this->_updatePixelShader(false);
+		//this->_updateVertexShader();
+		//this->_updatePixelShader(false);
 		this->_updateConstantBuffer();
 		this->_updateBlendMode();
 		this->_updateTexture(false);
 		this->d3dDeviceContext->Draw(nVertices, 0);
-		if (nVertices > VERTICES_BUFFER_COUNT)
+		if (nVertices > VERTEX_BUFFER_COUNT)
 		{
 			delete [] ctv;
 		}
 	}
 
-	void DirectX11_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
+	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
-		this->render(renderOperation, v, nVertices, april::Color::White);
-	}
-
-	void DirectX11_RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
-	{
-		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		unsigned int c = this->getNativeColorUInt(color);
+		ColoredTexturedVertex* ctv = (nVertices <= VERTEX_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
+		unsigned int c = this->getNativeColorUInt(this->deviceState->systemColor);
 		for_iter (i, 0, nVertices)
 		{
 			ctv[i].x = v[i].x;
@@ -1031,21 +1027,21 @@ namespace april
 		}
 		this->_setRenderOperation(renderOperation);
 		this->_updateVertexBuffer(nVertices, ctv);
-		this->_updateVertexShader();
-		this->_updatePixelShader(true);
+		//this->_updateVertexShader();
+		//this->_updatePixelShader(true);
 		this->_updateConstantBuffer();
 		this->_updateBlendMode();
 		this->_updateTexture(true);
 		this->d3dDeviceContext->Draw(nVertices, 0);
-		if (nVertices > VERTICES_BUFFER_COUNT)
+		if (nVertices > VERTEX_BUFFER_COUNT)
 		{
 			delete [] ctv;
 		}
 	}
 
-	void DirectX11_RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
+	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
-		ColoredTexturedVertex* ctv = (nVertices <= VERTICES_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
+		ColoredTexturedVertex* ctv = (nVertices <= VERTEX_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
 		for_iter (i, 0, nVertices)
 		{
 			ctv[i].x = v[i].x;
@@ -1054,38 +1050,28 @@ namespace april
 		}
 		this->_setRenderOperation(renderOperation);
 		this->_updateVertexBuffer(nVertices, ctv);
-		this->_updateVertexShader();
-		this->_updatePixelShader(false);
+		//this->_updateVertexShader();
+		//this->_updatePixelShader(false);
 		this->_updateConstantBuffer();
 		this->_updateBlendMode();
 		this->_updateTexture(false);
 		this->d3dDeviceContext->Draw(nVertices, 0);
-		if (nVertices > VERTICES_BUFFER_COUNT)
+		if (nVertices > VERTEX_BUFFER_COUNT)
 		{
 			delete [] ctv;
 		}
 	}
 
-	void DirectX11_RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
+	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
 		this->_setRenderOperation(renderOperation);
 		this->_updateVertexBuffer(nVertices, v);
-		this->_updateVertexShader();
-		this->_updatePixelShader(true);
+		//this->_updateVertexShader();
+		//this->_updatePixelShader(true);
 		this->_updateConstantBuffer();
 		this->_updateBlendMode();
 		this->_updateTexture(true);
 		this->d3dDeviceContext->Draw(nVertices, 0);
-	}
-
-	void DirectX11_RenderSystem::_setModelviewMatrix(const gmat4& matrix)
-	{
-		this->_matrixDirty = true;
-	}
-
-	void DirectX11_RenderSystem::_setProjectionMatrix(const gmat4& matrix)
-	{
-		this->_matrixDirty = true;
 	}
 
 	Image::Format DirectX11_RenderSystem::getNativeTextureFormat(Image::Format format)
@@ -1142,6 +1128,49 @@ namespace april
 			throw Exception("Unable to retrieve DXGI device!");
 		}
 		dxgiDevice->Trim();
+	}
+
+	Texture* DirectX11_RenderSystem::getRenderTarget()
+	{
+		// TODOa - implement
+		return NULL;// this->renderTarget;
+	}
+
+	void DirectX11_RenderSystem::setRenderTarget(Texture* source)
+	{
+		// TODOa - implement (this code is experimental)
+		/*
+		DirectX11_Texture* texture = (DirectX11_Texture*)source;
+		if (texture == NULL)
+		{
+			// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
+			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+		}
+		else if (texture->d3dRenderTargetView != nullptr)
+		{
+			// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
+			this->d3dDeviceContext->OMSetRenderTargets(1, texture->d3dRenderTargetView.GetAddressOf(), NULL);
+		}
+		else
+		{
+			hlog::error(logTag, "Texture not created as rendertarget: " + texture->_getInternalName());
+			return;
+		}
+		this->renderTarget = texture;
+		*/
+		this->_matrixDirty = true;
+	}
+
+	void DirectX11_RenderSystem::setPixelShader(PixelShader* pixelShader)
+	{
+		// TODOa
+		//this->activePixelShader = (DirectX11_PixelShader*)pixelShader;
+	}
+
+	void DirectX11_RenderSystem::setVertexShader(VertexShader* vertexShader)
+	{
+		// TODOa
+		//this->activeVertexShader = (DirectX11_VertexShader*)vertexShader;
 	}
 
 }

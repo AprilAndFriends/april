@@ -220,7 +220,7 @@ namespace april
 				}
 				if (this->splashTexture != NULL)
 				{
-					delete this->splashTexture;
+					april::rendersys->destroyTexture(this->splashTexture);
 					this->splashTexture = NULL;
 				}
 				if (!rendered)
@@ -679,7 +679,7 @@ namespace april
 						}
 						catch (hexception&)
 						{
-							delete texture;
+							april::rendersys->destroyTexture(texture);
 						}
 					}
 				}

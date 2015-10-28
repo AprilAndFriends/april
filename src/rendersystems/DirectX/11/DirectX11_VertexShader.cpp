@@ -39,7 +39,7 @@ namespace april
 
 	bool DirectX11_VertexShader::_createShader(chstr filename, const hstream& stream)
 	{
-		HRESULT hr = APRIL_D3D_DEVICE->CreateVertexShader((unsigned char*)stream, stream.size(), NULL, &this->dx11Shader);
+		HRESULT hr = APRIL_D3D_DEVICE->CreateVertexShader((unsigned char*)stream, (unsigned int)stream.size(), NULL, &this->dx11Shader);
 		if (FAILED(hr))
 		{
 			hlog::error(logTag, "Failed to create vertex shader!");

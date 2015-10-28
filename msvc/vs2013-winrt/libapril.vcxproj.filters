@@ -335,7 +335,7 @@
       <Filter>Header Files\rendersystems\DirectX</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.h">
-      <Filter>Header Files\rendersystems\DirectX\11/Filter>
+      <Filter>Header Files\rendersystems\DirectX\11</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_RenderSystem.h">
       <Filter>Header Files\rendersystems\DirectX\11</Filter>
