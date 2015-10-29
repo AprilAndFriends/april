@@ -363,14 +363,33 @@
       <ShaderType>Pixel</ShaderType>
       <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
     </FxCompile>
-    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Default.hlsl">
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Colored.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Vertex</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_ColoredTextured.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Vertex</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Plain.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Vertex</ShaderType>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Textured.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
       <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\Shaders.hlsli" />
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\Shader_Colored.hlsli" />
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\Shader_ColoredTextured.hlsli" />
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\Shader_Plain.hlsli" />
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\Shader_Textured.hlsli" />
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">

@@ -49,6 +49,7 @@ namespace april
 		struct ConstantBuffer
 		{
 			gmat4 matrix;
+			gquat systemColor;
 			gquat lerpAlpha; // must be, because of 16 byte alignment of constant buffer size
 		};
 
@@ -92,7 +93,10 @@ namespace april
 		void setVertexShader(VertexShader* vertexShader);
 
 	protected:
-		DirectX11_VertexShader* vertexShaderDefault;
+		DirectX11_VertexShader* vertexShaderPlain;
+		DirectX11_VertexShader* vertexShaderTextured;
+		DirectX11_VertexShader* vertexShaderColored;
+		DirectX11_VertexShader* vertexShaderColoredTextured;
 		DirectX11_PixelShader* pixelShaderMultiply;
 		DirectX11_PixelShader* pixelShaderLerp;
 		DirectX11_PixelShader* pixelShaderAlphaMap;
@@ -105,6 +109,9 @@ namespace april
 		DirectX11_PixelShader* pixelShaderTexturedMultiply;
 		DirectX11_PixelShader* pixelShaderTexturedLerp;
 		DirectX11_PixelShader* pixelShaderTexturedAlphaMap;
+
+		bool deviceState_matrixChanged;
+		ComPtr<ID3D11SamplerState> deviceState_sampler;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);
@@ -193,7 +200,10 @@ namespace april
 		ComPtr<ID3D11Buffer> constantBuffer;
 		ConstantBuffer constantBufferData;
 
-		ComPtr<ID3D11InputLayout> inputLayout;
+		ComPtr<ID3D11InputLayout> inputLayoutPlain;
+		ComPtr<ID3D11InputLayout> inputLayoutTextured;
+		ComPtr<ID3D11InputLayout> inputLayoutColored;
+		ComPtr<ID3D11InputLayout> inputLayoutColoredTextured;
 
 		DirectX11_VertexShader* _currentVertexShader;
 		DirectX11_PixelShader* _currentPixelShader;
@@ -205,10 +215,10 @@ namespace april
 		RenderOperation _currentRenderOperation;
 		ID3D11Buffer** _currentVertexBuffer;
 		
-		bool _matrixDirty;
+		//bool _matrixDirty;
 		
 		void _setRenderOperation(RenderOperation renderOperation);
-		void _updateVertexBuffer(int nVertices, void* data);
+		void _updateVertexBuffer(int nVertices, unsigned int vertexSize, void* data);
 		void _updateConstantBuffer();
 		void _updateBlendMode();
 		void _updateTexture(bool use);

@@ -1,9 +1,6 @@
 /// @version 4.0
 
-#include "Shaders.hlsli"
-
-Texture2D<min16float4> cTexture : register(t0);
-SamplerState cSampler : register(s0);
+#include "Shader_Textured.hlsli"
 
 min16float4 main(PixelShaderInput input) : SV_Target
 {

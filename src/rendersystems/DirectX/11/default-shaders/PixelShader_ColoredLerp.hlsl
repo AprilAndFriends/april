@@ -1,8 +1,8 @@
 /// @version 4.0
 
-#include "Shaders.hlsli"
+#include "Shader_Colored.hlsli"
 
 min16float4 main(PixelShaderInput input) : SV_Target
 {
-	return input.color;
+	return min16float4(lerp(min16float3((min16float)1.0, (min16float)1.0, (min16float)1.0), input.color.rgb, input.lerpAlpha.a), input.color.a);
 }

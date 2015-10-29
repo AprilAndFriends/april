@@ -1,12 +1,7 @@
 /// @version 4.0
 
-#include "Shaders.hlsli"
-
-cbuffer constantBuffer : register(b0)
-{
-	min16float4x4 cMatrix;
-	min16float4 cLerpAlpha;
-};
+#include "VertexShader.hlsli"
+#include "Shader_ColoredTextured.hlsli"
 
 struct VertexShaderInput
 {

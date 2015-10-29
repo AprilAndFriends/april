@@ -1,9 +1,9 @@
 /// @version 4.0
 
-struct PixelShaderInput
+cbuffer constantBuffer : register(b0)
 {
-	min16float4 position : SV_Position;
-	min16float4 color : COLOR;
-	float2 tex : TEXCOORD0;
-	min16float4 lerpAlpha : COLOR1; // only "a" is used
+	min16float4x4 cMatrix;
+	min16float4 cSystemColor;
+	min16float4 cLerpAlpha;
 };
+

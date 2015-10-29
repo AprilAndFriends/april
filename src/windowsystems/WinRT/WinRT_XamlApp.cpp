@@ -598,6 +598,8 @@ namespace april
 			float height = (float)april::window->getHeight();
 			viewport.setSize(width, height);
 			april::rendersys->setOrthoProjection(viewport);
+			april::rendersys->setBlendMode(april::BM_DEFAULT);
+			april::rendersys->setColorMode(april::CM_DEFAULT);
 			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
 #ifndef _WINP8
 			float scale = (float)DisplayInformation::GetForCurrentView()->ResolutionScale * 0.01f;
@@ -614,6 +616,8 @@ namespace april
 #endif
 			drawRect.set(hroundf(width - textureWidth) * 0.5f, hroundf(height - textureHeight) * 0.5f, textureWidth, textureHeight);
 			april::rendersys->setTexture(this->splashTexture);
+			april::rendersys->setBlendMode(april::BM_DEFAULT);
+			april::rendersys->setColorMode(april::CM_DEFAULT);
 			april::rendersys->drawTexturedRect(drawRect, grect(0.0f, 0.0f, 1.0f, 1.0f));
 			april::rendersys->presentFrame();
 			april::rendersys->reset();
