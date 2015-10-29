@@ -19,19 +19,38 @@
 #include <hltypes/hsbase.h>
 #include <hltypes/hstring.h>
 
-//#include "Tools/PVRTTexture.h"
-
-#define PVR_HEADER_SIZE 52
-
 namespace aprilpix
 {	
+	#define PVR_HEADER_SIZE 52
 
+	struct PVRHeader
+	{
+		uint32_t	u32Version;
+		uint32_t	u32Flags;	
+		uint64_t	u64PixelFormat;
+		uint32_t	u32ColourSpace;
+		uint32_t	u32ChannelType;
+		uint32_t	u32Height;		
+		uint32_t	u32Width;		
+		uint32_t	u32Depth;		
+		uint32_t	u32NumSurfaces;	
+		uint32_t	u32NumFaces;	
+		uint32_t	u32MIPMapCount;	
+		uint32_t	u32MetaDataSize;
+	};
+	enum PVRPixelFormat
+	{
+		ePVRTPF_PVRTCI_2bpp_RGB,
+		ePVRTPF_PVRTCI_2bpp_RGBA,
+		ePVRTPF_PVRTCI_4bpp_RGB,
+		ePVRTPF_PVRTCI_4bpp_RGBA
+	};
 	class ImagePvr : public april::Image
 	{	
 	public:
 		~ImagePvr();
 
-		//static PVRTextureHeaderV3 pvrGetInfo(uint8_t* data, int size, int* width, int* height);
+		static PVRHeader pvrGetInfo(uint8_t* data, int size, int* width, int* height);
 
 		static april::Image* load(hsbase& stream);
 		static april::Image* loadMetaData(hsbase& stream);

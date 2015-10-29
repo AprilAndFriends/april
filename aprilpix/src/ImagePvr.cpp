@@ -28,27 +28,26 @@ namespace aprilpix
 	{
 	}
 
-	/*
-	PVRTextureHeaderV3 ImagePvr::pvrGetInfo(uint8_t* data, int size, int* width, int* height)
+	
+	PVRHeader ImagePvr::pvrGetInfo(uint8_t* data, int size, int* width, int* height)
 	{
-		PVRTextureHeaderV3 header;
-		memcpy(&header, data, PVR_HEADER_SIZE);
+		PVRHeader header;
+		memcpy(&header, data, sizeof(PVRHeader));
 		*width = header.u32Width;
 		*height = header.u32Height;		
+
 		return header;
 	}
-	*/
+	
 
 	april::Image* ImagePvr::load(hsbase& stream)
-	{
-		return NULL;
-		/*
+	{		
 		int size = (int)stream.size();
 		uint8_t* data = new uint8_t[size];
 		stream.readRaw(data, size);
 		int width = 0;
 		int height = 0;
-		PVRTextureHeaderV3 header = pvrGetInfo(data, size, &width, &height);
+		PVRHeader header = pvrGetInfo(data, size, &width, &height);
 		delete[] data;
 		if (width <= 0 || height <= 0)
 		{
@@ -68,7 +67,7 @@ namespace aprilpix
 			bpp = 4;
 		}
 		
-		int dataOffset = PVR_HEADER_SIZE + header.u32MetaDataSize;
+		int dataOffset = sizeof(PVRHeader) + header.u32MetaDataSize;
 		image->data = new unsigned char[width*height * bpp];
 		image->w = width;
 		image->h = height;
@@ -106,19 +105,17 @@ namespace aprilpix
 			}
 		}
 		return image;
-		*/
+		
 	}
 
 	april::Image* ImagePvr::loadMetaData(hsbase& stream)
-	{
-		return NULL;
-		/*
+	{		
 		int size = (int)stream.size();
 		uint8_t* data = new uint8_t[size];
 		stream.readRaw(data, size);
 		int width = 0;
 		int height = 0;
-		PVRTextureHeaderV3 header = pvrGetInfo(data, size, &width, &height);
+		PVRHeader header = pvrGetInfo(data, size, &width, &height);
 		delete[] data;
 		if (width <= 0 || height <= 0)
 		{
@@ -137,12 +134,12 @@ namespace aprilpix
 			image->format = FORMAT_RGBA;
 			bpp = 4;
 		}
-		int dataOffset = PVR_HEADER_SIZE + header.u32MetaDataSize;
+		int dataOffset = sizeof(PVRHeader) + header.u32MetaDataSize;
 		image->data = NULL;
 		image->w = width;
 		image->h = height;
 		return image;
-		*/
+		
 	}
 
 }
