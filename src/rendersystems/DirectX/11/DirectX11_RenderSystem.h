@@ -108,6 +108,35 @@ namespace april
 		void setVertexShader(VertexShader* vertexShader);
 
 	protected:
+		ComPtr<ID3D11Device2> d3dDevice;
+		ComPtr<ID3D11DeviceContext2> d3dDeviceContext;
+		ComPtr<IDXGISwapChain2> swapChain;
+		ComPtr<ISwapChainPanelNative> swapChainNative;
+
+		ComPtr<ID3D11RasterizerState> rasterState;
+		ComPtr<ID3D11RenderTargetView> renderTargetView;
+		ComPtr<ID3D11BlendState> blendStateAlpha;
+		ComPtr<ID3D11BlendState> blendStateAdd;
+		ComPtr<ID3D11BlendState> blendStateSubtract;
+		ComPtr<ID3D11BlendState> blendStateOverwrite;
+		ComPtr<ID3D11SamplerState> samplerLinearWrap;
+		ComPtr<ID3D11SamplerState> samplerLinearClamp;
+		ComPtr<ID3D11SamplerState> samplerNearestWrap;
+		ComPtr<ID3D11SamplerState> samplerNearestClamp;
+
+		D3D11_BUFFER_DESC vertexBufferDesc;
+		D3D11_SUBRESOURCE_DATA vertexBufferData;
+		D3D11_MAPPED_SUBRESOURCE mappedSubResource;
+		ComPtr<ID3D11Buffer> vertexBuffer;
+
+		ComPtr<ID3D11Buffer> constantBuffer;
+		ConstantBuffer constantBufferData;
+
+		ComPtr<ID3D11InputLayout> inputLayoutPlain;
+		ComPtr<ID3D11InputLayout> inputLayoutTextured;
+		ComPtr<ID3D11InputLayout> inputLayoutColored;
+		ComPtr<ID3D11InputLayout> inputLayoutColoredTextured;
+
 		DirectX11_VertexShader* vertexShaderPlain;
 		DirectX11_VertexShader* vertexShaderTextured;
 		DirectX11_VertexShader* vertexShaderColored;
@@ -196,7 +225,7 @@ namespace april
 		void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
 		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
 
-
+		void _setDX11VertexBuffer(RenderOperation renderOperation, void* data, int nVertices, unsigned int vertexSize);
 
 		//void _updatePixelShader(bool useTexture);
 		//void _updateVertexShader();
@@ -204,35 +233,7 @@ namespace april
 		static D3D11_PRIMITIVE_TOPOLOGY _dx11RenderOperations[];
 
 	private:
-		ComPtr<ID3D11Device2> d3dDevice;
-		ComPtr<ID3D11DeviceContext2> d3dDeviceContext;
-		ComPtr<IDXGISwapChain2> swapChain;
-		ComPtr<ISwapChainPanelNative> swapChainNative;
-
-		ComPtr<ID3D11RasterizerState> rasterState;
-		ComPtr<ID3D11RenderTargetView> renderTargetView;
-		ComPtr<ID3D11BlendState> blendStateAlpha;
-		ComPtr<ID3D11BlendState> blendStateAdd;
-		ComPtr<ID3D11BlendState> blendStateSubtract;
-		ComPtr<ID3D11BlendState> blendStateOverwrite;
-		ComPtr<ID3D11SamplerState> samplerLinearWrap;
-		ComPtr<ID3D11SamplerState> samplerLinearClamp;
-		ComPtr<ID3D11SamplerState> samplerNearestWrap;
-		ComPtr<ID3D11SamplerState> samplerNearestClamp;
-
-		D3D11_BUFFER_DESC vertexBufferDesc;
-		D3D11_SUBRESOURCE_DATA vertexBufferData;
-		D3D11_MAPPED_SUBRESOURCE mappedSubResource;
-		ComPtr<ID3D11Buffer> vertexBuffer;
-
-		ComPtr<ID3D11Buffer> constantBuffer;
-		ConstantBuffer constantBufferData;
-
-		ComPtr<ID3D11InputLayout> inputLayoutPlain;
-		ComPtr<ID3D11InputLayout> inputLayoutTextured;
-		ComPtr<ID3D11InputLayout> inputLayoutColored;
-		ComPtr<ID3D11InputLayout> inputLayoutColoredTextured;
-
+		/*
 		DirectX11_VertexShader* _currentVertexShader;
 		DirectX11_PixelShader* _currentPixelShader;
 		DirectX11_Texture* _currentTexture;
@@ -242,14 +243,16 @@ namespace april
 		Texture::AddressMode _currentTextureAddressMode;
 		RenderOperation _currentRenderOperation;
 		ID3D11Buffer** _currentVertexBuffer;
-		
+		*/
 		//bool _matrixDirty;
 		
+		/*
 		void _setRenderOperation(RenderOperation renderOperation);
 		void _updateVertexBuffer(int nVertices, unsigned int vertexSize, void* data);
 		void _updateConstantBuffer();
 		void _updateBlendMode();
 		void _updateTexture(bool use);
+		*/
 
 	};
 
