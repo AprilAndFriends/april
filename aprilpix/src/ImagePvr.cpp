@@ -48,7 +48,7 @@ namespace aprilpix
 		int width = 0;
 		int height = 0;
 		PVRHeader header = pvrGetInfo(data, size, &width, &height);
-		delete[] data;
+		
 		if (width <= 0 || height <= 0)
 		{
 			hlog::error(logTag, "Could not load PVR meta data!");
@@ -59,7 +59,7 @@ namespace aprilpix
 		if (header.u64PixelFormat == ePVRTPF_PVRTCI_4bpp_RGB)
 		{
 			image->format = FORMAT_RGB;
-			bpp = 3;
+			bpp = 4;
 		}
 		else if (header.u64PixelFormat == ePVRTPF_PVRTCI_4bpp_RGBA)		
 		{
@@ -70,42 +70,19 @@ namespace aprilpix
 		int dataOffset = sizeof(PVRHeader) + header.u32MetaDataSize;
 		image->data = new unsigned char[width*height * bpp];
 		image->w = width;
-		image->h = height;
+		image->h = height;			
 
-		int numMipMaps = header.u32MIPMapCount;
-		int numFaces = header.u32NumFaces;
-		int numSurfaces = header.u32NumSurfaces;
+		PVRTuint8* pCompressedData = &data[dataOffset];		
 
-		int currentPixel = 0;
-		int i = 0;
-		int j = 0;
-		int k = 0;
-		unsigned int d = 0;
-		int row = 0;
-		int x = 0;
+		PVRTDecompressPVRTC(pCompressedData,
+			0,
+			width,
+			height,
+			image->data);
 
-		for_iterx (i, 0, numMipMaps)
-		{
-			for_iterx (j, 0, numSurfaces)
-			{
-				for_iterx (k, 0, numFaces)
-				{
-					for_iterx (d, 0, header.u32Depth)
-					{
-						for_iterx (row, 0, height)
-						{
-							for_iterx (x, 0, width)
-							{
-								image->data[row * height + x] = data[dataOffset + currentPixel];
-								currentPixel++;
-							}
-						}
-					}
-				}
-			}
-		}
-		return image;
-		
+		delete[] data;
+
+		return image;		
 	}
 
 	april::Image* ImagePvr::loadMetaData(hsbase& stream)
@@ -116,30 +93,30 @@ namespace aprilpix
 		int width = 0;
 		int height = 0;
 		PVRHeader header = pvrGetInfo(data, size, &width, &height);
-		delete[] data;
+		
 		if (width <= 0 || height <= 0)
 		{
 			hlog::error(logTag, "Could not load PVR meta data!");
 			return NULL;
 		}
-		int bpp = 1;
+		
 		april::Image* image = new ImagePvr();
 		if (header.u64PixelFormat == ePVRTPF_PVRTCI_4bpp_RGB)
 		{
-			image->format = FORMAT_RGB;
-			bpp = 3;
+			image->format = FORMAT_RGB;			
 		}
 		else if (header.u64PixelFormat == ePVRTPF_PVRTCI_4bpp_RGBA)
 		{
-			image->format = FORMAT_RGBA;
-			bpp = 4;
+			image->format = FORMAT_RGBA;			
 		}
-		int dataOffset = sizeof(PVRHeader) + header.u32MetaDataSize;
+		
 		image->data = NULL;
 		image->w = width;
-		image->h = height;
-		return image;
-		
+		image->h = height;		
+
+		delete[] data;
+
+		return image;		
 	}
 
 }
