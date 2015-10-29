@@ -55,16 +55,16 @@ namespace aprilpix
 			return NULL;
 		}
 		int bpp = 4;
+		int twoBitMode = 0;
 		april::Image* image = new ImagePvr();
-		if (header.u64PixelFormat == ePVRTPF_PVRTCI_4bpp_RGB)
+		if (header.u64PixelFormat == ePVRTPF_PVRTCI_4bpp_RGB || header.u64PixelFormat == ePVRTPF_PVRTCI_4bpp_RGBA)
 		{
-			image->format = FORMAT_RGB;
-			bpp = 4;
+			image->format = FORMAT_RGBA;			
 		}
-		else if (header.u64PixelFormat == ePVRTPF_PVRTCI_4bpp_RGBA)		
+		else if (header.u64PixelFormat == ePVRTPF_PVRTCI_2bpp_RGB || header.u64PixelFormat == ePVRTPF_PVRTCI_2bpp_RGBA)
 		{
-			image->format = FORMAT_RGBA;
-			bpp = 4;
+			image->format = FORMAT_RGBA;			
+			twoBitMode = 1;
 		}
 		
 		int dataOffset = sizeof(PVRHeader) + header.u32MetaDataSize;
@@ -75,7 +75,7 @@ namespace aprilpix
 		PVRTuint8* pCompressedData = &data[dataOffset];		
 
 		PVRTDecompressPVRTC(pCompressedData,
-			0,
+			twoBitMode,
 			width,
 			height,
 			image->data);
