@@ -28,6 +28,12 @@ namespace april
 		this->destroy();
 	}
 
+	void OpenGLES1_RenderSystem::_deviceSuspend()
+	{
+		OpenGL_RenderSystem::_deviceSuspend();
+		this->unloadTextures();
+	}
+
 	void OpenGLES1_RenderSystem::_deviceSetupCaps()
 	{
 #ifdef _EGL

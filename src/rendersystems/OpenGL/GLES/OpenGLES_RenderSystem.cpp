@@ -171,69 +171,27 @@ namespace april
 		{
 			return false;
 		}
-		DELETE_SHADER(this->vertexShaderPlain, Vertex);
-		DELETE_SHADER(this->vertexShaderTextured, Vertex);
-		DELETE_SHADER(this->vertexShaderColored, Vertex);
-		DELETE_SHADER(this->vertexShaderColoredTextured, Vertex);
-		DELETE_SHADER(this->pixelShaderMultiply, Pixel);
-		DELETE_SHADER(this->pixelShaderAlphaMap, Pixel);
-		DELETE_SHADER(this->pixelShaderLerp, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredMultiply, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredAlphaMap, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredLerp, Pixel);
-		DELETE_SHADER(this->pixelShaderTexturedMultiply, Pixel);
-		DELETE_SHADER(this->pixelShaderTexturedAlphaMap, Pixel);
-		DELETE_SHADER(this->pixelShaderTexturedLerp, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredTexturedMultiply, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredTexturedAlphaMap, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredTexturedLerp, Pixel);
-		_HL_TRY_DELETE(this->shaderMultiply);
-		_HL_TRY_DELETE(this->shaderAlphaMap);
-		_HL_TRY_DELETE(this->shaderLerp);
-		_HL_TRY_DELETE(this->shaderColoredMultiply);
-		_HL_TRY_DELETE(this->shaderColoredAlphaMap);
-		_HL_TRY_DELETE(this->shaderColoredLerp);
-		_HL_TRY_DELETE(this->shaderTexturedMultiply);
-		_HL_TRY_DELETE(this->shaderTexturedAlphaMap);
-		_HL_TRY_DELETE(this->shaderTexturedLerp);
-		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply);
-		_HL_TRY_DELETE(this->shaderColoredTexturedAlphaMap);
-		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
+		this->_destroyShaders();
 		return true;
 	}
 
 	void OpenGLES_RenderSystem::_deviceAssignWindow(Window* window)
 	{
 		OpenGL_RenderSystem::_deviceAssignWindow(window);
-		hstream data;
-		LOAD_SHADER(this->vertexShaderPlain, Vertex, Plain, data);
-		LOAD_SHADER(this->vertexShaderTextured, Vertex, Textured, data);
-		LOAD_SHADER(this->vertexShaderColored, Vertex, Colored, data);
-		LOAD_SHADER(this->vertexShaderColoredTextured, Vertex, ColoredTextured, data);
-		LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply, data);
-		LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap, data);
-		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp, data);
-		LOAD_SHADER(this->pixelShaderColoredMultiply, Pixel, ColoredMultiply, data);
-		LOAD_SHADER(this->pixelShaderColoredAlphaMap, Pixel, ColoredAlphaMap, data);
-		LOAD_SHADER(this->pixelShaderColoredLerp, Pixel, ColoredLerp, data);
-		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply, data);
-		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap, data);
-		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp, data);
-		LOAD_SHADER(this->pixelShaderColoredTexturedMultiply, Pixel, ColoredTexturedMultiply, data);
-		LOAD_SHADER(this->pixelShaderColoredTexturedAlphaMap, Pixel, ColoredTexturedAlphaMap, data);
-		LOAD_SHADER(this->pixelShaderColoredTexturedLerp, Pixel, ColoredTexturedLerp, data);
-		LOAD_PROGRAM(this->shaderMultiply, this->pixelShaderMultiply, this->vertexShaderPlain);
-		LOAD_PROGRAM(this->shaderAlphaMap, this->pixelShaderAlphaMap, this->vertexShaderPlain);
-		LOAD_PROGRAM(this->shaderLerp, this->pixelShaderLerp, this->vertexShaderPlain);
-		LOAD_PROGRAM(this->shaderTexturedMultiply, this->pixelShaderTexturedMultiply, this->vertexShaderTextured);
-		LOAD_PROGRAM(this->shaderTexturedAlphaMap, this->pixelShaderTexturedAlphaMap, this->vertexShaderTextured);
-		LOAD_PROGRAM(this->shaderTexturedLerp, this->pixelShaderTexturedLerp, this->vertexShaderTextured);
-		LOAD_PROGRAM(this->shaderColoredMultiply, this->pixelShaderColoredMultiply, this->vertexShaderColored);
-		LOAD_PROGRAM(this->shaderColoredAlphaMap, this->pixelShaderColoredAlphaMap, this->vertexShaderColored);
-		LOAD_PROGRAM(this->shaderColoredLerp, this->pixelShaderColoredLerp, this->vertexShaderColored);
-		LOAD_PROGRAM(this->shaderColoredTexturedMultiply, this->pixelShaderColoredTexturedMultiply, this->vertexShaderColoredTextured);
-		LOAD_PROGRAM(this->shaderColoredTexturedAlphaMap, this->pixelShaderColoredTexturedAlphaMap, this->vertexShaderColoredTextured);
-		LOAD_PROGRAM(this->shaderColoredTexturedLerp, this->pixelShaderColoredTexturedLerp, this->vertexShaderColoredTextured);
+		this->_createShaders();
+	}
+
+	void OpenGLES_RenderSystem::_deviceReset()
+	{
+		this->_createShaders();
+		OpenGL_RenderSystem::_deviceReset();
+	}
+
+	void OpenGLES_RenderSystem::_deviceSuspend()
+	{
+		OpenGL_RenderSystem::_deviceSuspend();
+		this->unloadTextures();
+		this->_destroyShaders();
 	}
 
 	void OpenGLES_RenderSystem::_deviceSetupCaps()
@@ -270,6 +228,71 @@ namespace april
 		this->deviceState_systemColorChanged = true;
 		this->deviceState_colorModeFactorChanged = true;
 		this->deviceState_shader = NULL;
+	}
+
+	void OpenGLES_RenderSystem::_createShaders()
+	{
+		hstream data;
+		LOAD_SHADER(this->vertexShaderPlain, Vertex, Plain, data);
+		LOAD_SHADER(this->vertexShaderTextured, Vertex, Textured, data);
+		LOAD_SHADER(this->vertexShaderColored, Vertex, Colored, data);
+		LOAD_SHADER(this->vertexShaderColoredTextured, Vertex, ColoredTextured, data);
+		LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply, data);
+		LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap, data);
+		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp, data);
+		LOAD_SHADER(this->pixelShaderColoredMultiply, Pixel, ColoredMultiply, data);
+		LOAD_SHADER(this->pixelShaderColoredAlphaMap, Pixel, ColoredAlphaMap, data);
+		LOAD_SHADER(this->pixelShaderColoredLerp, Pixel, ColoredLerp, data);
+		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply, data);
+		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap, data);
+		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp, data);
+		LOAD_SHADER(this->pixelShaderColoredTexturedMultiply, Pixel, ColoredTexturedMultiply, data);
+		LOAD_SHADER(this->pixelShaderColoredTexturedAlphaMap, Pixel, ColoredTexturedAlphaMap, data);
+		LOAD_SHADER(this->pixelShaderColoredTexturedLerp, Pixel, ColoredTexturedLerp, data);
+		LOAD_PROGRAM(this->shaderMultiply, this->pixelShaderMultiply, this->vertexShaderPlain);
+		LOAD_PROGRAM(this->shaderAlphaMap, this->pixelShaderAlphaMap, this->vertexShaderPlain);
+		LOAD_PROGRAM(this->shaderLerp, this->pixelShaderLerp, this->vertexShaderPlain);
+		LOAD_PROGRAM(this->shaderTexturedMultiply, this->pixelShaderTexturedMultiply, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderTexturedAlphaMap, this->pixelShaderTexturedAlphaMap, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderTexturedLerp, this->pixelShaderTexturedLerp, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderColoredMultiply, this->pixelShaderColoredMultiply, this->vertexShaderColored);
+		LOAD_PROGRAM(this->shaderColoredAlphaMap, this->pixelShaderColoredAlphaMap, this->vertexShaderColored);
+		LOAD_PROGRAM(this->shaderColoredLerp, this->pixelShaderColoredLerp, this->vertexShaderColored);
+		LOAD_PROGRAM(this->shaderColoredTexturedMultiply, this->pixelShaderColoredTexturedMultiply, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredTexturedAlphaMap, this->pixelShaderColoredTexturedAlphaMap, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredTexturedLerp, this->pixelShaderColoredTexturedLerp, this->vertexShaderColoredTextured);
+	}
+
+	void OpenGLES_RenderSystem::_destroyShaders()
+	{
+		DELETE_SHADER(this->vertexShaderPlain, Vertex);
+		DELETE_SHADER(this->vertexShaderTextured, Vertex);
+		DELETE_SHADER(this->vertexShaderColored, Vertex);
+		DELETE_SHADER(this->vertexShaderColoredTextured, Vertex);
+		DELETE_SHADER(this->pixelShaderMultiply, Pixel);
+		DELETE_SHADER(this->pixelShaderAlphaMap, Pixel);
+		DELETE_SHADER(this->pixelShaderLerp, Pixel);
+		DELETE_SHADER(this->pixelShaderColoredMultiply, Pixel);
+		DELETE_SHADER(this->pixelShaderColoredAlphaMap, Pixel);
+		DELETE_SHADER(this->pixelShaderColoredLerp, Pixel);
+		DELETE_SHADER(this->pixelShaderTexturedMultiply, Pixel);
+		DELETE_SHADER(this->pixelShaderTexturedAlphaMap, Pixel);
+		DELETE_SHADER(this->pixelShaderTexturedLerp, Pixel);
+		DELETE_SHADER(this->pixelShaderColoredTexturedMultiply, Pixel);
+		DELETE_SHADER(this->pixelShaderColoredTexturedAlphaMap, Pixel);
+		DELETE_SHADER(this->pixelShaderColoredTexturedLerp, Pixel);
+		_HL_TRY_DELETE(this->shaderMultiply);
+		_HL_TRY_DELETE(this->shaderAlphaMap);
+		_HL_TRY_DELETE(this->shaderLerp);
+		_HL_TRY_DELETE(this->shaderColoredMultiply);
+		_HL_TRY_DELETE(this->shaderColoredAlphaMap);
+		_HL_TRY_DELETE(this->shaderColoredLerp);
+		_HL_TRY_DELETE(this->shaderTexturedMultiply);
+		_HL_TRY_DELETE(this->shaderTexturedAlphaMap);
+		_HL_TRY_DELETE(this->shaderTexturedLerp);
+		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply);
+		_HL_TRY_DELETE(this->shaderColoredTexturedAlphaMap);
+		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
 	}
 
 	void OpenGLES_RenderSystem::_updateDeviceState(bool forceUpdate)

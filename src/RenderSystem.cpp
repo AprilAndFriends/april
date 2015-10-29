@@ -141,8 +141,6 @@ namespace april
 		this->created = false;
 		this->state = new RenderState();
 		this->deviceState = new RenderState();
-		//this->textureFilter = Texture::FILTER_UNDEFINED;
-		//this->textureAddressMode = Texture::ADDRESS_UNDEFINED;
 	}
 	
 	RenderSystem::~RenderSystem()
@@ -239,6 +237,16 @@ namespace april
 	{
 		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
 		this->_updateDeviceState(true);
+	}
+
+	void RenderSystem::suspend()
+	{
+		hlog::write(logTag, "Suspending rendersystem.");
+		this->_deviceSuspend();
+	}
+
+	void RenderSystem::_deviceSuspend()
+	{
 	}
 
 	void RenderSystem::_deviceSetupDisplayModes()

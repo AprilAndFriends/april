@@ -94,6 +94,7 @@ namespace april
 		bool destroy();
 		void assignWindow(Window* window);
 		void reset();
+		void suspend();
 
 		HL_DEFINE_GET(hstr, name, Name);
 		HL_DEFINE_GET(Options, options, Options);
@@ -224,6 +225,7 @@ namespace april
 		virtual bool _deviceDestroy() = 0;
 		virtual void _deviceAssignWindow(Window* window) = 0;
 		virtual void _deviceReset();
+		virtual void _deviceSuspend();
 		virtual void _deviceSetupCaps() = 0;
 		virtual void _deviceSetup() = 0;
 		virtual void _deviceSetupDisplayModes();

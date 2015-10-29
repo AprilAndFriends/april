@@ -29,6 +29,7 @@ namespace april
 		~OpenGLES1_RenderSystem();
 
 	protected:
+		void _deviceSuspend();
 		void _deviceSetupCaps();
 
 		Texture* _deviceCreateTexture(bool fromResource);

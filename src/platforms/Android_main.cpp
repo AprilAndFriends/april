@@ -197,7 +197,7 @@ namespace april
 	{
 		hlog::write(logTag, "Android Activity::onPause()");
 		PROTECTED_WINDOW_CALL(handleActivityChangeEvent(false));
-		PROTECTED_RENDERSYS_CALL(unloadTextures());
+		PROTECTED_RENDERSYS_CALL(suspend());
 	}
 	
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
