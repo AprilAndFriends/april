@@ -93,9 +93,8 @@ namespace april
 	{
 	}
 
-	DirectX11_RenderSystem::DirectX11_RenderSystem() : DirectX_RenderSystem(),
-		deviceState_matrixChanged(true), deviceState_shader(NULL), deviceState_sampler(nullptr)
-
+	DirectX11_RenderSystem::DirectX11_RenderSystem() : DirectX_RenderSystem(), deviceState_constantBufferChanged(true),
+		deviceState_shader(NULL), deviceState_sampler(nullptr), deviceState_renderOperation(RO_UNDEFINED)
 	{
 		this->name = APRIL_RS_DIRECTX11;
 	}
@@ -155,21 +154,10 @@ namespace april
 		this->shaderColoredTexturedMultiply = NULL;
 		this->shaderColoredTexturedLerp = NULL;
 		this->shaderColoredTexturedAlphaMap = NULL;
-		this->deviceState_matrixChanged = true;
+		this->deviceState_constantBufferChanged = true;
 		this->deviceState_shader = NULL;
 		this->deviceState_sampler = nullptr;
-		// TODOa - remove
-		/*
-		this->_currentVertexShader = NULL;
-		this->_currentPixelShader = NULL;
-		this->_currentTexture = NULL;
-		this->_currentBlendMode = BM_UNDEFINED;
-		this->_currentColorMode = CM_UNDEFINED;
-		this->_currentTextureFilter = Texture::FILTER_UNDEFINED;
-		this->_currentTextureAddressMode = Texture::ADDRESS_UNDEFINED;
-		this->_currentRenderOperation = RO_UNDEFINED;
-		this->_currentVertexBuffer = NULL;
-		*/
+		this->deviceState_renderOperation = RO_UNDEFINED;
 	}
 
 	bool DirectX11_RenderSystem::_deviceCreate(Options options)
@@ -681,12 +669,12 @@ namespace april
 
 	void DirectX11_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)
 	{
-		this->deviceState_matrixChanged = true;
+		this->deviceState_constantBufferChanged = true;
 	}
 
 	void DirectX11_RenderSystem::_setDeviceProjectionMatrix(const gmat4& matrix)
 	{
-		this->deviceState_matrixChanged = true;
+		this->deviceState_constantBufferChanged = true;
 	}
 
 	void DirectX11_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
@@ -737,37 +725,12 @@ namespace april
 
 	void DirectX11_RenderSystem::_setDeviceTextureFilter(Texture::Filter textureFilter)
 	{
-
 		// not used
-		/*
-		switch (textureFilter)
-		{
-		case Texture::FILTER_LINEAR:
-		case Texture::FILTER_NEAREST:
-			this->textureFilter = textureFilter;
-			break;
-		default:
-			hlog::warn(logTag, "Trying to set unsupported texture filter!");
-			break;
-		}
-		*/
 	}
 
 	void DirectX11_RenderSystem::_setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
 		// not used
-		/*
-		switch (textureAddressMode)
-		{
-		case Texture::ADDRESS_WRAP:
-		case Texture::ADDRESS_CLAMP:
-			this->textureAddressMode = textureAddressMode;
-			break;
-		default:
-			hlog::warn(logTag, "Trying to set unsupported texture address mode!");
-			break;
-		}
-		*/
 	}
 
 	void DirectX11_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
@@ -793,23 +756,7 @@ namespace april
 
 	void DirectX11_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
 	{
-		// not used
-		/*
-		this->activeTextureColorModeAlpha = 255;
-		switch (textureColorMode)
-		{
-		case CM_LERP: // LERP also needs alpha
-			this->activeTextureColorModeAlpha = (unsigned char)(factor * 255.0f);
-		case CM_DEFAULT:
-		case CM_MULTIPLY:
-		case CM_ALPHA_MAP:
-			this->activeTextureColorMode = textureColorMode;
-			break;
-		default:
-			hlog::warn(logTag, "Trying to set unsupported texture color mode!");
-			break;
-		}
-		*/
+		this->deviceState_constantBufferChanged = true;
 	}
 
 	void DirectX11_RenderSystem::_updateDeviceState(bool forceUpdate)
@@ -870,30 +817,17 @@ namespace april
 			this->d3dDeviceContext->PSSetShader(shader->pixelShader->dx11Shader.Get(), NULL, 0);
 		}
 		// change other data
-
-
-
-		static float lerpAlpha = 1.0f;
-		lerpAlpha = this->deviceState->colorModeFactor;
-		bool dirty = true;// this->_matrixDirty;
-		if (!dirty)
-		{
-			dirty = (this->constantBufferData.lerpAlpha.w != lerpAlpha);
-		}
-		else // actually "if (this->_matrixDirty)"
-		{
-			this->deviceState_matrixChanged = false;
-			//this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
-		}
-		//if (dirty)
+		if (this->deviceState_constantBufferChanged)
 		{
 			this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
 			this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
 				this->deviceState->systemColor.b_f(), this->deviceState->systemColor.a_f());
-			this->constantBufferData.lerpAlpha.set(lerpAlpha, lerpAlpha, lerpAlpha, lerpAlpha);
+			this->constantBufferData.lerpAlpha.set(this->deviceState->colorModeFactor, this->deviceState->colorModeFactor,
+				this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
 			this->d3dDeviceContext->Map(this->constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &this->mappedSubResource);
 			memcpy(this->mappedSubResource.pData, &this->constantBufferData, sizeof(ConstantBuffer));
 			this->d3dDeviceContext->Unmap(this->constantBuffer.Get(), 0);
+			this->deviceState_constantBufferChanged = true;
 		}
 	}
 
@@ -922,147 +856,38 @@ namespace april
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 
-	/*
-	void DirectX11_RenderSystem::_updateVertexBuffer(int nVertices, unsigned int vertexSize, void* data)
-	{
-	}
-	
-	void DirectX11_RenderSystem::_updateConstantBuffer()
-	{
-	}
-
-	void DirectX11_RenderSystem::_updateBlendMode()
-	{
-	}
-
-	void DirectX11_RenderSystem::_updateTexture(bool use)
-	{
-	}
-	*/
-	
 	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices)
 	{
-		//this->_updateVertexShader();
-		//this->_updatePixelShader(false);
-		//this->_updateConstantBuffer();
-		//this->_updateBlendMode();
-		//this->_updateTexture(false);
 		this->_setDX11VertexBuffer(renderOperation, v, nVertices, sizeof(PlainVertex));
 		this->d3dDeviceContext->Draw(nVertices, 0);
-		/*
-		ColoredTexturedVertex* ctv = (nVertices <= VERTEX_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		unsigned int c = this->getNativeColorUInt(this->deviceState->systemColor);
-		for_iter (i, 0, nVertices)
-		{
-			ctv[i].x = v[i].x;
-			ctv[i].y = v[i].y;
-			ctv[i].z = v[i].z;
-			ctv[i].color = c;
-		}
-		this->_setRenderOperation(renderOperation);
-		this->_updateVertexBuffer(nVertices, ctv);
-		//this->_updateVertexShader();
-		//this->_updatePixelShader(false);
-		this->_updateConstantBuffer();
-		this->_updateBlendMode();
-		this->_updateTexture(false);
-		this->d3dDeviceContext->Draw(nVertices, 0);
-		if (nVertices > VERTEX_BUFFER_COUNT)
-		{
-			delete [] ctv;
-		}
-		*/
 	}
 
 	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
 	{
 		this->_setDX11VertexBuffer(renderOperation, v, nVertices, sizeof(TexturedVertex));
-		//this->_updateVertexShader();
-		//this->_updatePixelShader(true);
-		//this->_updateConstantBuffer();
-		//this->_updateBlendMode();
-		//this->_updateTexture(true);
 		this->d3dDeviceContext->Draw(nVertices, 0);
-		/*
-		ColoredTexturedVertex* ctv = (nVertices <= VERTEX_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		unsigned int c = this->getNativeColorUInt(this->deviceState->systemColor);
-		for_iter (i, 0, nVertices)
-		{
-			ctv[i].x = v[i].x;
-			ctv[i].y = v[i].y;
-			ctv[i].z = v[i].z;
-			ctv[i].u = v[i].u;
-			ctv[i].v = v[i].v;
-			ctv[i].color = c;
-		}
-		this->_setRenderOperation(renderOperation);
-		this->_updateVertexBuffer(nVertices, sizeof(ColoredTexturedVertex), ctv);
-		//this->_updateVertexShader();
-		//this->_updatePixelShader(true);
-		this->_updateConstantBuffer();
-		this->_updateBlendMode();
-		this->_updateTexture(true);
-		this->d3dDeviceContext->Draw(nVertices, 0);
-		if (nVertices > VERTEX_BUFFER_COUNT)
-		{
-			delete [] ctv;
-		}
-		*/
 	}
 
 	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
 	{
 		this->_setDX11VertexBuffer(renderOperation, v, nVertices, sizeof(ColoredVertex));
-		//this->_updateVertexShader();
-		//this->_updatePixelShader(false);
-		//this->_updateConstantBuffer();
-		//this->_updateBlendMode();
-		//this->_updateTexture(false);
 		this->d3dDeviceContext->Draw(nVertices, 0);
-		/*
-		ColoredTexturedVertex* ctv = (nVertices <= VERTEX_BUFFER_COUNT) ? static_ctv : new ColoredTexturedVertex[nVertices];
-		for_iter (i, 0, nVertices)
-		{
-			ctv[i].x = v[i].x;
-			ctv[i].y = v[i].y;
-			ctv[i].z = v[i].z;
-		}
-		this->_setRenderOperation(renderOperation);
-		this->_updateVertexBuffer(nVertices, ctv);
-		//this->_updateVertexShader();
-		//this->_updatePixelShader(false);
-		this->_updateConstantBuffer();
-		this->_updateBlendMode();
-		this->_updateTexture(false);
-		this->d3dDeviceContext->Draw(nVertices, 0);
-		if (nVertices > VERTEX_BUFFER_COUNT)
-		{
-			delete [] ctv;
-		}
-		*/
 	}
 
 	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
 	{
 		this->_setDX11VertexBuffer(renderOperation, v, nVertices, sizeof(ColoredTexturedVertex));
-		//this->_updateVertexShader();
-		//this->_updatePixelShader(true);
-		//this->_updateConstantBuffer();
-		//this->_updateBlendMode();
-		//this->_updateTexture(true);
 		this->d3dDeviceContext->Draw(nVertices, 0);
 	}
 
 	void DirectX11_RenderSystem::_setDX11VertexBuffer(RenderOperation renderOperation, void* data, int nVertices, unsigned int vertexSize)
 	{
-		//if (this->_currentRenderOperation != renderOperation)
+		if (this->deviceState_renderOperation != renderOperation)
 		{
-			//this->_currentRenderOperation = renderOperation;
 			this->d3dDeviceContext->IASetPrimitiveTopology(_dx11RenderOperations[renderOperation]);
+			this->deviceState_renderOperation = renderOperation;
 		}
-		static unsigned int size = 0;
-		//static unsigned int vertexSize = sizeof(ColoredTexturedVertex);
-		size = (unsigned int)(vertexSize * nVertices);
+		unsigned int size = (unsigned int)(vertexSize * nVertices);
 		if (size > this->vertexBufferDesc.ByteWidth)
 		{
 			this->vertexBuffer = nullptr;
@@ -1070,7 +895,6 @@ namespace april
 			this->vertexBufferDesc.ByteWidth = size;
 			this->vertexBufferDesc.StructureByteStride = vertexSize;
 			this->d3dDevice->CreateBuffer(&this->vertexBufferDesc, &this->vertexBufferData, &this->vertexBuffer);
-			//this->_currentVertexBuffer = NULL;
 		}
 		else
 		{
@@ -1078,14 +902,8 @@ namespace april
 			memcpy(this->mappedSubResource.pData, data, size);
 			this->d3dDeviceContext->Unmap(this->vertexBuffer.Get(), 0);
 		}
-		//if (this->_currentVertexBuffer != this->vertexBuffer.GetAddressOf())
-		{
-			static unsigned int stride = 0;
-			static unsigned int offset = 0;
-			stride = vertexSize;
-			offset = 0;
-			this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &stride, &offset);
-		}
+		static unsigned int offset = 0;
+		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &vertexSize, &offset);
 	}
 
 	Image::Format DirectX11_RenderSystem::getNativeTextureFormat(Image::Format format)
@@ -1197,7 +1015,7 @@ namespace april
 		}
 		this->renderTarget = texture;
 		*/
-		this->deviceState_matrixChanged = true;
+		this->deviceState_constantBufferChanged = true;
 	}
 
 	void DirectX11_RenderSystem::setPixelShader(PixelShader* pixelShader)

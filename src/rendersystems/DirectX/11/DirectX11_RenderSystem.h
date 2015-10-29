@@ -166,9 +166,10 @@ namespace april
 		ShaderComposition* shaderColoredTexturedLerp;
 		ShaderComposition* shaderColoredTexturedAlphaMap;
 
-		bool deviceState_matrixChanged;
+		bool deviceState_constantBufferChanged;
 		ShaderComposition* deviceState_shader;
 		ComPtr<ID3D11SamplerState> deviceState_sampler;
+		RenderOperation deviceState_renderOperation;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);
@@ -177,20 +178,6 @@ namespace april
 		void _deviceReset();
 		void _deviceSetupCaps();
 		void _deviceSetup();
-
-
-
-		/*
-		BlendMode activeTextureBlendMode;
-		ColorMode activeTextureColorMode;
-		unsigned char activeTextureColorModeAlpha;
-		DirectX11_Texture* activeTexture;
-		DirectX11_VertexShader* activeVertexShader;
-		DirectX11_PixelShader* activePixelShader;
-		DirectX11_Texture* renderTarget;
-		harray<DisplayMode> supportedDisplayModes;
-		grect viewport;
-		*/
 
 		void _createSwapChain(int width, int height);
 		void _resizeSwapChain(int width, int height);
@@ -227,9 +214,6 @@ namespace april
 
 		void _setDX11VertexBuffer(RenderOperation renderOperation, void* data, int nVertices, unsigned int vertexSize);
 
-		//void _updatePixelShader(bool useTexture);
-		//void _updateVertexShader();
-
 		static D3D11_PRIMITIVE_TOPOLOGY _dx11RenderOperations[];
 
 	private:
@@ -242,7 +226,6 @@ namespace april
 		Texture::Filter _currentTextureFilter;
 		Texture::AddressMode _currentTextureAddressMode;
 		RenderOperation _currentRenderOperation;
-		ID3D11Buffer** _currentVertexBuffer;
 		*/
 		//bool _matrixDirty;
 		
