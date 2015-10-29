@@ -66,11 +66,16 @@
     <ClInclude Include="..\..\include\aprilpix\aprilpixExport.h" />
     <ClInclude Include="..\..\src\ImagePvr.h" />
     <ClInclude Include="..\..\src\ImageWebp.h" />
+    <ClInclude Include="..\..\src\Tools\PVRTDecompress.h" />
+    <ClInclude Include="..\..\src\Tools\PVRTGlobal.h" />
+    <ClInclude Include="..\..\src\Tools\PVRTTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\aprilpix.cpp" />
     <ClCompile Include="..\..\src\ImagePvr.cpp" />
     <ClCompile Include="..\..\src\ImageWebp.cpp" />
+    <ClCompile Include="..\..\src\Tools\PVRTDecompress.cpp" />
+    <ClCompile Include="..\..\src\Tools\PVRTTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">
