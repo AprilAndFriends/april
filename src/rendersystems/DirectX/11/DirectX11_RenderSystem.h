@@ -46,6 +46,21 @@ namespace april
 		friend class DirectX11_Texture;
 		friend class DirectX11_VertexShader;
 
+		class ShaderComposition
+		{
+		public:
+			friend class DirectX11_RenderSystem;
+
+			ShaderComposition(ComPtr<ID3D11InputLayout> inputLayout, DirectX11_VertexShader* vertexShader, DirectX11_PixelShader* pixelShader);
+			~ShaderComposition();
+
+		protected:
+			ComPtr<ID3D11InputLayout> inputLayout;
+			DirectX11_VertexShader* vertexShader;
+			DirectX11_PixelShader* pixelShader;
+
+		};
+
 		struct ConstantBuffer
 		{
 			gmat4 matrix;
@@ -109,8 +124,21 @@ namespace april
 		DirectX11_PixelShader* pixelShaderTexturedMultiply;
 		DirectX11_PixelShader* pixelShaderTexturedLerp;
 		DirectX11_PixelShader* pixelShaderTexturedAlphaMap;
+		ShaderComposition* shaderMultiply;
+		ShaderComposition* shaderLerp;
+		ShaderComposition* shaderAlphaMap;
+		ShaderComposition* shaderTexturedMultiply;
+		ShaderComposition* shaderTexturedLerp;
+		ShaderComposition* shaderTexturedAlphaMap;
+		ShaderComposition* shaderColoredMultiply;
+		ShaderComposition* shaderColoredLerp;
+		ShaderComposition* shaderColoredAlphaMap;
+		ShaderComposition* shaderColoredTexturedMultiply;
+		ShaderComposition* shaderColoredTexturedLerp;
+		ShaderComposition* shaderColoredTexturedAlphaMap;
 
 		bool deviceState_matrixChanged;
+		ShaderComposition* deviceState_shader;
 		ComPtr<ID3D11SamplerState> deviceState_sampler;
 
 		void _deviceInit();
