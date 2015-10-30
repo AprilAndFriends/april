@@ -196,11 +196,12 @@ namespace april
 		NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[] = {MESSAGE_BUTTON_OK, (MessageBoxButton)NULL, (MessageBoxButton)NULL};
 		
-		int i0 = 1, i1 = 0, i2 = 2;
-//		if (NSFoundationVersionNumber < NSFoundationVersionNumber_iOS_7_0)
+		int i0 = 0, i1 = 1, i2 = 2;
+//		if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_7_0)
 //		{
-//			i0 = 0, i1 = 1; // we want to bold the "OK" button, but in ios7 and up, the cancel button is bolded by default
+//			i0 = 1, i1 = 0; // we want to bold the "OK" button, but in ios7 and up, the cancel button is bolded by default
 //		}
+
 		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
 		{
 			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK").cStr()];
