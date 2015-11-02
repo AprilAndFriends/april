@@ -431,9 +431,17 @@ namespace april
 			Caps caps = this->getCaps();
 			if (!caps.npotTexturesLimited && !caps.npotTextures)
 			{
-				gmat4 matrix;
-				matrix.scale(currentTexture->effectiveWidth, currentTexture->effectiveHeight, 1.0f);
-				this->d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)matrix.data);
+				if (currentTexture->effectiveWidth != 1.0f || currentTexture->effectiveHeight != 1.0f)
+				{
+					static gmat4 matrix;
+					matrix.setScale(currentTexture->effectiveWidth, currentTexture->effectiveHeight, 1.0f);
+					this->d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)matrix.data);
+				}
+				else
+				{
+					static gmat4 matrix;
+					this->d3dDevice->SetTransform(D3DTS_TEXTURE0, (D3DMATRIX*)matrix.data);
+				}
 			}
 		}
 		else

@@ -58,6 +58,32 @@ namespace april
 		enabled ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
 	}
 
+	void OpenGLC_RenderSystem::_setDeviceTexture(Texture* texture)
+	{
+		OpenGL_RenderSystem::_setDeviceTexture(texture);
+		if (texture != NULL)
+		{
+			// software NPOT handling if NPOT is not supported by driver
+			Caps caps = this->getCaps();
+			if (!caps.npotTexturesLimited && !caps.npotTextures)
+			{
+				OpenGLC_Texture* currentTexture = (OpenGLC_Texture*)texture;
+				this->_setDeviceMatrixMode(GL_TEXTURE);
+				if (currentTexture->effectiveWidth != 1.0f || currentTexture->effectiveHeight != 1.0f)
+				{
+					static gmat4 matrix;
+					matrix.setScale(currentTexture->effectiveWidth, currentTexture->effectiveHeight, 1.0f);
+					glLoadMatrixf(matrix.data);
+				}
+				else
+				{
+					static gmat4 matrix;
+					glLoadMatrixf(matrix.data);
+				}
+			}
+		}
+	}
+
 	void OpenGLC_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
 	{
 		static float constColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };

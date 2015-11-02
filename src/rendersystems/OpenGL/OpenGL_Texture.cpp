@@ -215,6 +215,7 @@ namespace april
 			int w = this->width;
 			int h = this->height;
 			unsigned char* newData = this->_createPotData(w, h, data);
+			this->_setCurrentTexture(); // has to call this again after _createPotData() to make sure update texture size is used
 			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData);
 			glError = glGetError();
 			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData));
@@ -237,6 +238,7 @@ namespace april
 			int w = this->width;
 			int h = this->height;
 			clearColor = this->_createPotClearData(w, h); // can create POT sized data
+			this->_setCurrentTexture(); // has to call this again after _createPotClearData() to make sure update texture size is used
 			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
 			glError = glGetError();
 			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
