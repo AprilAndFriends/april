@@ -74,24 +74,6 @@ namespace april
 		float getPixelOffset();
 		int getVRam();
 		
-
-		//void setTexture(Texture* texture);
-		//void setTextureBlendMode(BlendMode textureBlendMode);
-		//void setTextureColorMode(ColorMode colorMode, float factor = 1.0f);
-		//void setTextureFilter(Texture::Filter textureFilter);
-		//void setTextureAddressMode(Texture::AddressMode textureAddressMode);
-
-		/*
-		void clear(bool useColor = true, bool depth = false);
-		void clear(bool depth, grect rect, Color color = Color::Clear);
-		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color);
-		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color);
-		void render(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
-		void render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
-		*/
-
 		Image::Format getNativeTextureFormat(Image::Format format);
 		unsigned int getNativeColorUInt(const april::Color& color);
 		Image* takeScreenshot(Image::Format format);
@@ -144,12 +126,6 @@ namespace april
 		DirectX11_PixelShader* pixelShaderMultiply;
 		DirectX11_PixelShader* pixelShaderLerp;
 		DirectX11_PixelShader* pixelShaderAlphaMap;
-		DirectX11_PixelShader* pixelShaderColoredMultiply;
-		DirectX11_PixelShader* pixelShaderColoredLerp;
-		DirectX11_PixelShader* pixelShaderColoredAlphaMap;
-		DirectX11_PixelShader* pixelShaderColoredTexturedMultiply;
-		DirectX11_PixelShader* pixelShaderColoredTexturedLerp;
-		DirectX11_PixelShader* pixelShaderColoredTexturedAlphaMap;
 		DirectX11_PixelShader* pixelShaderTexturedMultiply;
 		DirectX11_PixelShader* pixelShaderTexturedLerp;
 		DirectX11_PixelShader* pixelShaderTexturedAlphaMap;
@@ -215,27 +191,6 @@ namespace april
 		void _setDX11VertexBuffer(RenderOperation renderOperation, void* data, int nVertices, unsigned int vertexSize);
 
 		static D3D11_PRIMITIVE_TOPOLOGY _dx11RenderOperations[];
-
-	private:
-		/*
-		DirectX11_VertexShader* _currentVertexShader;
-		DirectX11_PixelShader* _currentPixelShader;
-		DirectX11_Texture* _currentTexture;
-		BlendMode _currentBlendMode;
-		ColorMode _currentColorMode;
-		Texture::Filter _currentTextureFilter;
-		Texture::AddressMode _currentTextureAddressMode;
-		RenderOperation _currentRenderOperation;
-		*/
-		//bool _matrixDirty;
-		
-		/*
-		void _setRenderOperation(RenderOperation renderOperation);
-		void _updateVertexBuffer(int nVertices, unsigned int vertexSize, void* data);
-		void _updateConstantBuffer();
-		void _updateBlendMode();
-		void _updateTexture(bool use);
-		*/
 
 	};
 

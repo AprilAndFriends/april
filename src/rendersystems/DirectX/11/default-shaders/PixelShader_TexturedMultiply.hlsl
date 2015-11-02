@@ -1,6 +1,6 @@
 /// @version 4.0
 
-#include "Shader_Textured.hlsli"
+#include "PixelShader_Textured.hlsli"
 
 min16float4 main(PixelShaderInput input) : SV_Target
 {

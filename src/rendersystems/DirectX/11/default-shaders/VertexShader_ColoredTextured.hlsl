@@ -1,7 +1,7 @@
 /// @version 4.0
 
 #include "VertexShader.hlsli"
-#include "Shader_ColoredTextured.hlsli"
+#include "PixelShader_Textured.hlsli"
 
 struct VertexShaderInput
 {

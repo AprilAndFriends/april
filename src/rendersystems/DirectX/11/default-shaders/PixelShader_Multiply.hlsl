@@ -1,6 +1,6 @@
 /// @version 4.0
 
-#include "Shader_Plain.hlsli"
+#include "PixelShader_Plain.hlsli"
 
 min16float4 main(PixelShaderInput input) : SV_Target
 {

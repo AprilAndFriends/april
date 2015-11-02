@@ -136,12 +136,6 @@ namespace april
 		this->pixelShaderTexturedMultiply = NULL;
 		this->pixelShaderTexturedLerp = NULL;
 		this->pixelShaderTexturedAlphaMap = NULL;
-		this->pixelShaderColoredMultiply = NULL;
-		this->pixelShaderColoredLerp = NULL;
-		this->pixelShaderColoredAlphaMap = NULL;
-		this->pixelShaderColoredTexturedMultiply = NULL;
-		this->pixelShaderColoredTexturedLerp = NULL;
-		this->pixelShaderColoredTexturedAlphaMap = NULL;
 		this->shaderMultiply = NULL;
 		this->shaderLerp = NULL;
 		this->shaderAlphaMap = NULL;
@@ -178,12 +172,6 @@ namespace april
 		_HL_TRY_DELETE(this->pixelShaderTexturedMultiply);
 		_HL_TRY_DELETE(this->pixelShaderTexturedLerp);
 		_HL_TRY_DELETE(this->pixelShaderTexturedAlphaMap);
-		_HL_TRY_DELETE(this->pixelShaderColoredMultiply);
-		_HL_TRY_DELETE(this->pixelShaderColoredLerp);
-		_HL_TRY_DELETE(this->pixelShaderColoredAlphaMap);
-		_HL_TRY_DELETE(this->pixelShaderColoredTexturedMultiply);
-		_HL_TRY_DELETE(this->pixelShaderColoredTexturedLerp);
-		_HL_TRY_DELETE(this->pixelShaderColoredTexturedAlphaMap);
 		_HL_TRY_DELETE(this->shaderMultiply);
 		_HL_TRY_DELETE(this->shaderLerp);
 		_HL_TRY_DELETE(this->shaderAlphaMap);
@@ -286,12 +274,6 @@ namespace april
 		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply);
 		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
 		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
-		LOAD_SHADER(this->pixelShaderColoredMultiply, Pixel, ColoredMultiply);
-		LOAD_SHADER(this->pixelShaderColoredLerp, Pixel, ColoredLerp);
-		LOAD_SHADER(this->pixelShaderColoredAlphaMap, Pixel, ColoredAlphaMap);
-		LOAD_SHADER(this->pixelShaderColoredTexturedMultiply, Pixel, ColoredTexturedMultiply);
-		LOAD_SHADER(this->pixelShaderColoredTexturedLerp, Pixel, ColoredTexturedLerp);
-		LOAD_SHADER(this->pixelShaderColoredTexturedAlphaMap, Pixel, ColoredTexturedAlphaMap);
 		// input layouts for default shaders
 		static const D3D11_INPUT_ELEMENT_DESC inputLayoutDescPlain[] =
 		{
@@ -324,12 +306,12 @@ namespace april
 		CREATE_COMPOSITION(this->shaderTexturedMultiply, Textured, TexturedMultiply);
 		CREATE_COMPOSITION(this->shaderTexturedLerp, Textured, TexturedLerp);
 		CREATE_COMPOSITION(this->shaderTexturedAlphaMap, Textured, TexturedAlphaMap);
-		CREATE_COMPOSITION(this->shaderColoredMultiply, Colored, ColoredMultiply);
-		CREATE_COMPOSITION(this->shaderColoredLerp, Colored, ColoredLerp);
-		CREATE_COMPOSITION(this->shaderColoredAlphaMap, Colored, ColoredAlphaMap);
-		CREATE_COMPOSITION(this->shaderColoredTexturedMultiply, ColoredTextured, ColoredTexturedMultiply);
-		CREATE_COMPOSITION(this->shaderColoredTexturedLerp, ColoredTextured, ColoredTexturedLerp);
-		CREATE_COMPOSITION(this->shaderColoredTexturedAlphaMap, ColoredTextured, ColoredTexturedAlphaMap);
+		CREATE_COMPOSITION(this->shaderColoredMultiply, Colored, Multiply);
+		CREATE_COMPOSITION(this->shaderColoredLerp, Colored, Lerp);
+		CREATE_COMPOSITION(this->shaderColoredAlphaMap, Colored, AlphaMap);
+		CREATE_COMPOSITION(this->shaderColoredTexturedMultiply, ColoredTextured, TexturedMultiply);
+		CREATE_COMPOSITION(this->shaderColoredTexturedLerp, ColoredTextured, TexturedLerp);
+		CREATE_COMPOSITION(this->shaderColoredTexturedAlphaMap, ColoredTextured, TexturedAlphaMap);
 	}
 
 	void DirectX11_RenderSystem::_deviceReset()

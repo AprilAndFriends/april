@@ -24,6 +24,7 @@ namespace april
 {
 	enum RenderOperation
 	{
+		RO_UNDEFINED = 0,
 		RO_TRIANGLE_LIST = 1,
 		RO_TRIANGLE_STRIP = 2,
 		RO_TRIANGLE_FAN = 3,
@@ -56,7 +57,6 @@ namespace april
 	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation LineStrip;
 	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation PointList;
 	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation RENDER_OP_UNDEFINED;
-	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation RO_UNDEFINED;
 	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode DEFAULT;
 	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode ALPHA_BLEND;
 	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode ADD;

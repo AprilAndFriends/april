@@ -25,7 +25,6 @@ namespace april
 	RenderOperation LineStrip = RO_LINE_STRIP; // DEPRECATED
 	RenderOperation PointList = RO_POINT_LIST; // DEPRECATED
 	RenderOperation RENDER_OP_UNDEFINED = (RenderOperation)0x7FFFFFFF; // DEPRECATED
-	RenderOperation RO_UNDEFINED = (RenderOperation)0x7FFFFFFF; // DEPRECATED
 	BlendMode DEFAULT = BM_DEFAULT; // DEPRECATED
 	BlendMode ALPHA_BLEND = BM_ALPHA; // DEPRECATED
 	BlendMode ADD = BM_ADD; // DEPRECATED
