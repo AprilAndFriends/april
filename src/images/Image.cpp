@@ -1360,10 +1360,9 @@ namespace april
 		int destBpp = Image::getFormatBpp(destFormat);
 		unsigned char* src = NULL;
 		unsigned char* dest = NULL;
-		unsigned char a1;
+		unsigned char a1 = 255 - alpha;
 		int x = 0;
 		int y = 0;
-		a1 = 255 - alpha;
 		int sr = -1;
 		if (destBpp == 1)
 		{
@@ -1428,8 +1427,8 @@ namespace april
 		int destBpp = Image::getFormatBpp(destFormat);
 		unsigned char* src = NULL;
 		unsigned char* dest = NULL;
-		unsigned char a0;
-		unsigned char a1;
+		unsigned char a0 = 0;
+		unsigned char a1 = 0;
 		int x = 0;
 		int y = 0;
 		int sr = -1;
@@ -1470,7 +1469,7 @@ namespace april
 					a0 = src[sa] * alpha / 255;
 					if (a0 > 0)
 					{
-						a1 = 255 - a0;
+						a1 = (255 - a0);
 						dest[dr] = (src[sr] * a0 + dest[dr] * a1) / 255;
 						dest[dg] = (src[sg] * a0 + dest[dg] * a1) / 255;
 						dest[db] = (src[sb] * a0 + dest[db] * a1) / 255;
@@ -1492,11 +1491,11 @@ namespace april
 					a0 = src[sa] * alpha / 255;
 					if (a0 > 0)
 					{
-						a1 = (255 - a0);
-						dest[dr] = (src[sr] * a0 + dest[dr] * a1) / 255;
-						dest[dg] = (src[sg] * a0 + dest[dg] * a1) / 255;
-						dest[db] = (src[sb] * a0 + dest[db] * a1) / 255;
-						dest[da] = a0 + dest[da] * a1 / 255;
+						a1 = (255 - a0) * dest[da] / 255;
+						dest[da] = a0 + a1;
+						dest[dr] = (src[sr] * a0 + dest[dr] * a1) / dest[da];
+						dest[dg] = (src[sg] * a0 + dest[dg] * a1) / dest[da];
+						dest[db] = (src[sb] * a0 + dest[db] * a1) / dest[da];
 					}
 				}
 			}

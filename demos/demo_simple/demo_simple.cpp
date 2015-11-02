@@ -229,7 +229,7 @@ void april_init(const harray<hstr>& args)
 	manualTexture->saturate(0, 128, 128, 128, 0.0f);
 	manualTexture->rotateHue(128, 0, 128, 128, 180.0f);
 	manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 128, 128, texture, 96);
-	manualTexture->blitStretch(texture->getWidth() / 2, 0, texture->getWidth() / 2, texture->getHeight(), 64, 128, 700, 200, texture, 224);
+	manualTexture->blitStretch(texture->getWidth() / 2, 0, texture->getWidth() / 2, texture->getHeight(), 64, 128, 700, 200, texture, 208);
 }
 
 void april_destroy()
