@@ -213,10 +213,9 @@ namespace april
 #ifndef _WIN32
 		this->blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
 #endif
-#ifndef _IOS // platforms other than iOS have problems with alpha textures, some drivers don't support them
+        // OpenGLES implementations do not appear to support alpha textures
 		this->caps.textureFormats /= Image::FORMAT_ALPHA;
 		this->caps.textureFormats /= Image::FORMAT_GRAYSCALE;
-#endif
 		return OpenGL_RenderSystem::_deviceSetupCaps();
 	}
 

@@ -2008,7 +2008,8 @@
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					_OPENGLES1,
+					_OPENGLES,
+					_OPENGLES2,
 					_IOS,
 					_ARM,
 					_IMAGE_PVR,
@@ -2029,7 +2030,8 @@
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					_OPENGLES1,
+					_OPENGLES,
+					_OPENGLES2,
 					_IOS,
 					_ARM,
 					_IMAGE_PVR,
@@ -2050,7 +2052,8 @@
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					_OPENGLES1,
+					_OPENGLES,
+					_OPENGLES2,
 					_IOS,
 					_ARM,
 					_IMAGE_PVR,
