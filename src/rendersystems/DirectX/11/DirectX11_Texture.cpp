@@ -31,7 +31,7 @@ namespace april
 	{
 	}
 
-	bool DirectX11_Texture::_createInternalTexture(unsigned char* data, int size, Type type)
+	bool DirectX11_Texture::_deviceCreateTexture(unsigned char* data, int size, Type type)
 	{
 		this->internalType = type;
 		int bpp = Image::getFormatBpp(this->format);
@@ -164,7 +164,7 @@ namespace april
 		}
 	}
 
-	bool DirectX11_Texture::_destroyInternalTexture()
+	bool DirectX11_Texture::_deviceDestroyTexture()
 	{
 		if (this->d3dTexture != nullptr)
 		{

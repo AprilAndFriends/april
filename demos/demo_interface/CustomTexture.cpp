@@ -6,9 +6,12 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
 
 #include <gl/GL.h>
+#define GL_GLEXT_PROTOTYPES
+#include <gl/glext.h>
 
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
@@ -16,18 +19,17 @@
 #include "CustomRenderSystem.h"
 #include "CustomTexture.h"
 
-CustomTexture::CustomTexture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0)
+#define CUSTOM_RENDERSYS ((CustomRenderSystem*)april::rendersys)
+
+CustomTexture::CustomTexture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0)
 {
 }
 
 CustomTexture::~CustomTexture()
 {
-	// this needs to be called here to clean up the texture
-	this->unload();
 }
 
-// sometimes it's necessary to upload data right away (e.g. when using compressed textures, "data" would have to be uploaded with glCompressedTexImage2D() here)
-bool CustomTexture::_createInternalTexture(unsigned char* data, int size, Type type)
+bool CustomTexture::_deviceCreateTexture(unsigned char* data, int size, april::Texture::Type type)
 {
 	glGenTextures(1, &this->textureId);
 	if (this->textureId == 0)
@@ -38,13 +40,15 @@ bool CustomTexture::_createInternalTexture(unsigned char* data, int size, Type t
 	return true;
 }
 
-void CustomTexture::_destroyInternalTexture()
+bool CustomTexture::_deviceDestroyTexture()
 {
 	if (this->textureId != 0)
 	{
 		glDeleteTextures(1, &this->textureId);
 		this->textureId = 0;
+		return true;
 	}
+	return false;
 }
 
 void CustomTexture::_assignFormat()
@@ -57,27 +61,41 @@ void CustomTexture::_assignFormat()
 	case april::Image::FORMAT_RGBX:
 	case april::Image::FORMAT_ABGR:
 	case april::Image::FORMAT_XBGR:
+		this->glFormat = this->internalFormat = GL_RGBA;
+		break;
 	case april::Image::FORMAT_BGRA:
 	case april::Image::FORMAT_BGRX:
 		this->glFormat = GL_RGBA;
+		this->internalFormat = GL_RGBA;
 		break;
 	case april::Image::FORMAT_RGB:
+		this->glFormat = this->internalFormat = GL_RGB;
+		break;
 	case april::Image::FORMAT_BGR:
 		this->glFormat = GL_RGB;
+		this->internalFormat = GL_RGB;
 		break;
 	case april::Image::FORMAT_ALPHA:
-		this->glFormat = GL_ALPHA;
+		this->glFormat = this->internalFormat = GL_ALPHA;
 		break;
 	case april::Image::FORMAT_GRAYSCALE:
-		this->glFormat = GL_LUMINANCE;
+		this->glFormat = this->internalFormat = GL_LUMINANCE;
 		break;
-	case april::Image::FORMAT_PALETTE: // let's just say palette uses RGBA
-		this->glFormat = GL_RGBA;
+	case april::Image::FORMAT_PALETTE: // TODOaa - does palette use RGBA?
+		this->glFormat = this->internalFormat = GL_RGBA;
 		break;
 	default:
-		this->glFormat = GL_RGBA;
+		this->glFormat = this->internalFormat = GL_RGBA;
 		break;
 	}
+}
+
+void CustomTexture::_setCurrentTexture()
+{
+	CUSTOM_RENDERSYS->deviceState->texture = this;
+	CUSTOM_RENDERSYS->_setDeviceTexture(this);
+	CUSTOM_RENDERSYS->_setDeviceTextureFilter(this->filter);
+	CUSTOM_RENDERSYS->_setDeviceTextureAddressMode(this->addressMode);
 }
 
 april::Texture::Lock CustomTexture::_tryLockSystem(int x, int y, int w, int h)
@@ -100,11 +118,10 @@ bool CustomTexture::_unlockSystem(Lock& lock, bool update)
 	{
 		if (this->format != april::Image::FORMAT_PALETTE)
 		{
-			glBindTexture(GL_TEXTURE_2D, this->textureId);
-			// a few optimizations to avoid uploading all data or avoid uploading data multiple times
+			this->_setCurrentTexture();
 			if (this->width == lock.w && this->height == lock.h)
 			{
-				glTexImage2D(GL_TEXTURE_2D, 0, this->glFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data);
+				glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
 			}
 			else
 			{
@@ -115,7 +132,7 @@ bool CustomTexture::_unlockSystem(Lock& lock, bool update)
 				glTexSubImage2D(GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
 			}
 		}
-		delete [] lock.data;
+		delete[] lock.data;
 		this->firstUpload = false;
 	}
 	return update;
@@ -127,12 +144,11 @@ bool CustomTexture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy,
 	{
 		return false;
 	}
-	this->load(); // making sure the texture is loaded properly
-	glBindTexture(GL_TEXTURE_2D, this->textureId);
-	// a few optimizations to avoid uploading all data or avoid uploading data multiple times
+	this->load();
+	this->_setCurrentTexture();
 	if (sx == 0 && dx == 0 && sy == 0 && dy == 0 && sw == this->width && srcWidth == this->width && sh == this->height && srcHeight == this->height)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, this->glFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, srcData);
+		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, srcData);
 	}
 	else
 	{
@@ -141,14 +157,13 @@ bool CustomTexture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy,
 			this->_uploadClearData();
 		}
 		int srcBpp = april::Image::getFormatBpp(srcFormat);
-		// if data is sequential (uses full width of the texture)
 		if (sx == 0 && dx == 0 && srcWidth == this->width && sw == this->width)
 		{
 			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]);
 		}
 		else
 		{
-			for_iter (j, 0, sh)
+			for_iter(j, 0, sh)
 			{
 				glTexSubImage2D(GL_TEXTURE_2D, 0, dx, (dy + j), sw, 1, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + (sy + j) * srcWidth) * srcBpp]);
 			}
@@ -163,6 +178,6 @@ void CustomTexture::_uploadClearData()
 	int size = this->getByteSize();
 	unsigned char* clearColor = new unsigned char[size];
 	memset(clearColor, 0, size);
-	glBindTexture(GL_TEXTURE_2D, this->textureId);
-	glTexImage2D(GL_TEXTURE_2D, 0, this->glFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+	glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+	delete[] clearColor;
 }

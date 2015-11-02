@@ -16,8 +16,6 @@
 
 #define LOG_TAG "demo_interface"
 
-class CustomTexture;
-
 class CustomRenderSystem : public april::RenderSystem
 {
 public:
@@ -25,59 +23,53 @@ public:
 
 	CustomRenderSystem();
 	~CustomRenderSystem();
-	bool create(Options options);
-	bool destroy();
 
-	void reset();
-	void assignWindow(april::Window* window);
-
-	april::Texture* _deviceCreateTexture(bool fromResource);
+	inline HDC getHDC() { return this->hDC; }
 
 	inline float getPixelOffset() { return 0.0f; }
 	inline int getVRam() { return 0; }
-	void setViewport(grect value);
-
-	void clear(bool useColor = true, bool depth = false);
-	void clear(bool depth, grect rect, april::Color color = april::Color::Clear);
-
-	void setTexture(april::Texture* texture);
-	void setTextureBlendMode(april::BlendMode mode);
-	/// @note The parameter factor is only used when the color mode is LERP.
-	void setTextureColorMode(april::ColorMode textureColorMode, float factor = 1.0f);
-	void setTextureFilter(april::Texture::Filter textureFilter);
-	void setTextureAddressMode(april::Texture::AddressMode textureAddressMode);
-
-	void render(april::RenderOperation renderOperation, april::PlainVertex* v, int nVertices);
-	void render(april::RenderOperation renderOperation, april::PlainVertex* v, int nVertices, april::Color color);
-	void render(april::RenderOperation renderOperation, april::TexturedVertex* v, int nVertices);
-	void render(april::RenderOperation renderOperation, april::TexturedVertex* v, int nVertices, april::Color color);
-	void render(april::RenderOperation renderOperation, april::ColoredVertex* v, int nVertices);
-	void render(april::RenderOperation renderOperation, april::ColoredTexturedVertex* v, int nVertices);
 
 	april::Image::Format getNativeTextureFormat(april::Image::Format format);
 	unsigned int getNativeColorUInt(const april::Color& color);
 
-	inline HDC getHDC() { return this->hDC; }
-	bool _initWin32(april::Window* window);
-
 protected:
-	CustomTexture* activeTexture;
-
-	virtual void _setupDefaultParameters();
-	virtual void _applyTexture();
-	void _setClientState(unsigned int type, bool enabled);
-	void _setModelviewMatrix(const gmat4& matrix);
-	void _setProjectionMatrix(const gmat4& matrix);
-
-	void _setupCaps();
-
-	void _setVertexPointer(int stride, const void* pointer);
-
 	HWND hWnd;
 	HDC hDC;
 	HGLRC hRC;
 
-	void _releaseWindow();
+	virtual void _releaseWindow();
+	virtual bool _initWin32(april::Window* window);
+
+	void _deviceInit();
+	bool _deviceCreate(Options options);
+	bool _deviceDestroy();
+	void _deviceAssignWindow(april::Window* window);
+	void _deviceSetupCaps();
+	void _deviceSetup();
+
+	april::Texture* _deviceCreateTexture(bool fromResource);
+
+	void _setDeviceViewport(const grect& rect);
+	void _setDeviceModelviewMatrix(const gmat4& matrix);
+	void _setDeviceProjectionMatrix(const gmat4& matrix);
+	void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
+	void _setDeviceRenderMode(bool useTexture, bool useColor);
+	void _setDeviceTexture(april::Texture* texture);
+	void _setDeviceTextureFilter(april::Texture::Filter textureFilter);
+	void _setDeviceTextureAddressMode(april::Texture::AddressMode textureAddressMode);
+	void _setDeviceBlendMode(april::BlendMode blendMode);
+	void _setDeviceColorMode(april::ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const april::Color& systemColor);
+
+	void _deviceClear(bool depth);
+	void _deviceClear(april::Color color, bool depth);
+	void _deviceClearDepth();
+	void _deviceRender(april::RenderOperation renderOperation, april::PlainVertex* v, int nVertices);
+	void _deviceRender(april::RenderOperation renderOperation, april::TexturedVertex* v, int nVertices);
+	void _deviceRender(april::RenderOperation renderOperation, april::ColoredVertex* v, int nVertices);
+	void _deviceRender(april::RenderOperation renderOperation, april::ColoredTexturedVertex* v, int nVertices);
+
+	// translation from abstract render ops to gl's render ops
+	static int _glRenderOperations[];
 
 };
 #endif

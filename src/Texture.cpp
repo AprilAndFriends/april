@@ -183,7 +183,7 @@ namespace april
 		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
-		bool result = this->_createInternalTexture(data, size, type);
+		bool result = this->_deviceCreateTexture(data, size, type);
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->loaded = result;
 		lock.release();
@@ -231,7 +231,7 @@ namespace april
 		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
-		bool result = this->_createInternalTexture(this->data, size, type);
+		bool result = this->_deviceCreateTexture(this->data, size, type);
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->loaded = result;
 		lock.release();
@@ -477,7 +477,7 @@ namespace april
 			delete image;
 		}
 		this->_assignFormat();
-		bool result = this->_createInternalTexture(currentData, size, this->type);
+		bool result = this->_deviceCreateTexture(currentData, size, this->type);
 		lock.acquire(&this->asyncLoadMutex);
 		this->dataAsync = NULL; // not needed anymore and makes isLoadedAsync() return false now
 		this->loaded = result;
@@ -573,7 +573,7 @@ namespace april
 
 	void Texture::unload()
 	{
-		if (this->_destroyInternalTexture())
+		if (this->_deviceDestroyTexture())
 		{
 			hlog::write(logTag, "Unloading texture: " + this->_getInternalName());
 		}

@@ -217,8 +217,8 @@ namespace april
 		virtual bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
 		virtual bool _create(int w, int h, Color color, Image::Format format, Type type);
 
-		virtual bool _createInternalTexture(unsigned char* data, int size, Type type) = 0;
-		virtual bool _destroyInternalTexture() = 0;
+		virtual bool _deviceCreateTexture(unsigned char* data, int size, Type type) = 0;
+		virtual bool _deviceDestroyTexture() = 0;
 		virtual void _assignFormat() = 0;
 
 		hstream* _prepareAsyncStream();

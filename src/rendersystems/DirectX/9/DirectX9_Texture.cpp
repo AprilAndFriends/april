@@ -30,7 +30,7 @@ namespace april
 	{
 	}
 
-	bool DirectX9_Texture::_createInternalTexture(unsigned char* data, int size, Type type)
+	bool DirectX9_Texture::_deviceCreateTexture(unsigned char* data, int size, Type type)
 	{
 		this->d3dPool = D3DPOOL_DEFAULT;
 		this->d3dUsage = 0;
@@ -94,6 +94,22 @@ namespace april
 		return true;
 	}
 	
+	bool DirectX9_Texture::_deviceDestroyTexture()
+	{
+		if (this->d3dTexture != NULL)
+		{
+			if (this->d3dSurface != NULL)
+			{
+				this->d3dSurface->Release();
+				this->d3dSurface = NULL;
+			}
+			this->d3dTexture->Release();
+			this->d3dTexture = NULL;
+			return true;
+		}
+		return false;
+	}
+
 	void DirectX9_Texture::_assignFormat()
 	{
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
@@ -115,22 +131,6 @@ namespace april
 			this->d3dFormat = D3DFMT_A8R8G8B8;
 			break;
 		}
-	}
-
-	bool DirectX9_Texture::_destroyInternalTexture()
-	{
-		if (this->d3dTexture != NULL)
-		{
-			if (this->d3dSurface != NULL)
-			{
-				this->d3dSurface->Release();
-				this->d3dSurface = NULL;
-			}
-			this->d3dTexture->Release();
-			this->d3dTexture = NULL;
-			return true;
-		}
-		return false;
 	}
 
 	IDirect3DSurface9* DirectX9_Texture::_getSurface()

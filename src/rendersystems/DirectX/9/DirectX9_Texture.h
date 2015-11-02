@@ -38,8 +38,8 @@ namespace april
 		D3DPOOL d3dPool;
 		DWORD d3dUsage;
 
-		bool _createInternalTexture(unsigned char* data, int size, Type type);
-		bool _destroyInternalTexture();
+		bool _deviceCreateTexture(unsigned char* data, int size, Type type);
+		bool _deviceDestroyTexture();
 		void _assignFormat();
 
 		IDirect3DSurface9* _getSurface();

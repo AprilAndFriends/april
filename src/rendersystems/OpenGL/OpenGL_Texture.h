@@ -39,8 +39,8 @@ namespace april
 
 		void _setCurrentTexture();
 
-		bool _createInternalTexture(unsigned char* data, int size, Type type);
-		bool _destroyInternalTexture();
+		bool _deviceCreateTexture(unsigned char* data, int size, Type type);
+		bool _deviceDestroyTexture();
 		void _assignFormat();
 
 		Lock _tryLockSystem(int x, int y, int w, int h);

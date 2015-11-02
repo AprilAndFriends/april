@@ -24,13 +24,16 @@ public:
 protected:
 	unsigned int textureId;
 	int glFormat;
+	int internalFormat;
 
-	bool _createInternalTexture(unsigned char* data, int size, Type type);
-	void _destroyInternalTexture();
+	void _setCurrentTexture();
+
+	bool _deviceCreateTexture(unsigned char* data, int size, april::Texture::Type type);
+	bool _deviceDestroyTexture();
 	void _assignFormat();
 
-	Lock _tryLockSystem(int x, int y, int w, int h);
-	bool _unlockSystem(Lock& lock, bool update);
+	april::Texture::Lock _tryLockSystem(int x, int y, int w, int h);
+	bool _unlockSystem(april::Texture::Lock& lock, bool update);
 	bool _uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, april::Image::Format srcFormat);
 
 	void _uploadClearData();

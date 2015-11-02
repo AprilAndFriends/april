@@ -67,7 +67,7 @@ namespace april
 	{
 	}
 
-	bool OpenGL_Texture::_createInternalTexture(unsigned char* data, int size, Type type)
+	bool OpenGL_Texture::_deviceCreateTexture(unsigned char* data, int size, Type type)
 	{
 		glGenTextures(1, &this->textureId);
 		if (this->textureId == 0)
@@ -89,6 +89,17 @@ namespace april
 		return true;
 	}
 	
+	bool OpenGL_Texture::_deviceDestroyTexture()
+	{
+		if (this->textureId != 0)
+		{
+			glDeleteTextures(1, &this->textureId);
+			this->textureId = 0;
+			return true;
+		}
+		return false;
+	}
+
 	void OpenGL_Texture::_assignFormat()
 	{
 		switch (this->format)
@@ -101,14 +112,13 @@ namespace april
 		case Image::FORMAT_XBGR:
 			this->glFormat = this->internalFormat = GL_RGBA;
 			break;
-		// for optimizations
 		case Image::FORMAT_BGRA:
 		case Image::FORMAT_BGRX:
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
-			this->glFormat = GL_BGRA;
+			this->glFormat = GL_BGRA; // for optimizations
 #else
-			this->glFormat = GL_BGRA_EXT;
+			this->glFormat = GL_BGRA_EXT; // iOS doesn't accept BGR. This option hasn't been tested.
 #endif
 #else
 			this->glFormat = GL_RGBA;
@@ -121,9 +131,9 @@ namespace april
 		case Image::FORMAT_BGR:
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
-			this->glFormat = GL_BGR;
+			this->glFormat = GL_BGR; // for optimizations
 #else
-			this->glFormat = GL_BGRA_EXT; // iOS doesn't accept BGR. this option hasn't been tested since the last refactor
+			this->glFormat = GL_BGRA_EXT; // iOS doesn't accept BGR. This option hasn't been tested.
 #endif
 #else
 			this->glFormat = GL_RGB;
@@ -151,17 +161,6 @@ namespace april
 		APRIL_OGL_RENDERSYS->_setDeviceTexture(this);
 		APRIL_OGL_RENDERSYS->_setDeviceTextureFilter(this->filter);
 		APRIL_OGL_RENDERSYS->_setDeviceTextureAddressMode(this->addressMode);
-	}
-
-	bool OpenGL_Texture::_destroyInternalTexture()
-	{
-		if (this->textureId != 0)
-		{
-			glDeleteTextures(1, &this->textureId);
-			this->textureId = 0;
-			return true;
-		}
-		return false;
 	}
 
 	Texture::Lock OpenGL_Texture::_tryLockSystem(int x, int y, int w, int h)
@@ -204,6 +203,41 @@ namespace april
 		return update;
 	}
 
+	bool OpenGL_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
+		if (this->format == Image::FORMAT_PALETTE)
+		{
+			return false;
+		}
+		this->load();
+		this->_setCurrentTexture();
+		if (sx == 0 && dx == 0 && sy == 0 && dy == 0 && sw == this->width && srcWidth == this->width && sh == this->height && srcHeight == this->height)
+		{
+			this->_uploadPotSafeData(srcData);
+		}
+		else
+		{
+			if (this->firstUpload)
+			{
+				this->_uploadPotSafeClearData();
+			}
+			int srcBpp = Image::getFormatBpp(srcFormat);
+			if (sx == 0 && dx == 0 && srcWidth == this->width && sw == this->width)
+			{
+				glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]);
+			}
+			else
+			{
+				for_iter (j, 0, sh)
+				{
+					glTexSubImage2D(GL_TEXTURE_2D, 0, dx, (dy + j), sw, 1, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + (sy + j) * srcWidth) * srcBpp]);
+				}
+			}
+		}
+		this->firstUpload = false;
+		return true;
+	}
+
 	void OpenGL_Texture::_uploadPotSafeData(unsigned char* data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data);
@@ -244,41 +278,6 @@ namespace april
 			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
 			delete[] clearColor;
 		}
-	}
-
-	bool OpenGL_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
-	{
-		if (this->format == Image::FORMAT_PALETTE)
-		{
-			return false;
-		}
-		this->load();
-		this->_setCurrentTexture();
-		if (sx == 0 && dx == 0 && sy == 0 && dy == 0 && sw == this->width && srcWidth == this->width && sh == this->height && srcHeight == this->height)
-		{
-			this->_uploadPotSafeData(srcData);
-		}
-		else
-		{
-			if (this->firstUpload)
-			{
-				this->_uploadPotSafeClearData();
-			}
-			int srcBpp = Image::getFormatBpp(srcFormat);
-			if (sx == 0 && dx == 0 && srcWidth == this->width && sw == this->width)
-			{
-				glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]);
-			}
-			else
-			{
-				for_iter (j, 0, sh)
-				{
-					glTexSubImage2D(GL_TEXTURE_2D, 0, dx, (dy + j), sw, 1, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + (sy + j) * srcWidth) * srcBpp]);
-				}
-			}
-		}
-		this->firstUpload = false;
-		return true;
 	}
 
 }

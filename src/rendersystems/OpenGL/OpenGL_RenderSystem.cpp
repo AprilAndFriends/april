@@ -95,10 +95,7 @@ namespace april
 	void OpenGL_RenderSystem::_deviceAssignWindow(Window* window)
 	{
 #if defined(_WIN32) && !defined(_WINRT)
-		if (!this->_initWin32(window))
-		{
-			return;
-		}
+		this->_initWin32(window);
 #endif
 	}
 
@@ -409,27 +406,24 @@ namespace april
 		case Image::FORMAT_XBGR:
 		case Image::FORMAT_BGRX:
 			return Image::FORMAT_RGBX;
-		// for optimizations
 		case Image::FORMAT_BGRA:
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
-			return Image::FORMAT_BGRA;
+			return Image::FORMAT_BGRA; // for optimizations
 #else
-			return Image::FORMAT_BGRA;
+			return Image::FORMAT_BGRA; // for optimizations
 #endif
 #else
 			return Image::FORMAT_RGBA;
 #endif
 		case Image::FORMAT_RGB:
 			return Image::FORMAT_RGB;
-			break;
-		// for optimizations
 		case Image::FORMAT_BGR:
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
-			return Image::FORMAT_BGR;
+			return Image::FORMAT_BGR; // for optimizations
 #else
-			return Image::FORMAT_BGRA;
+			return Image::FORMAT_BGRA; // for optimizations
 #endif
 #else
 			return Image::FORMAT_RGB;
@@ -438,10 +432,8 @@ namespace april
 			return Image::FORMAT_ALPHA;
 		case Image::FORMAT_GRAYSCALE:
 			return Image::FORMAT_GRAYSCALE;
-			break;
 		case Image::FORMAT_PALETTE: // TODOaa - does palette use RGBA?
 			return Image::FORMAT_PALETTE;
-			break;
 		default:
 			break;
 		}

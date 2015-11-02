@@ -41,8 +41,8 @@ namespace april
 		DXGI_FORMAT dxgiFormat;
 		Type internalType;
 
-		bool _createInternalTexture(unsigned char* data, int size, Type type);
-		bool _destroyInternalTexture();
+		bool _deviceCreateTexture(unsigned char* data, int size, Type type);
+		bool _deviceDestroyTexture();
 		void _assignFormat();
 
 		Lock _tryLockSystem(int x, int y, int w, int h);

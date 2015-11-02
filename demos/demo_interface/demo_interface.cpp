@@ -107,6 +107,7 @@ void april_init(const harray<hstr>& args)
 
 void april_destroy()
 {
-	delete texture;
+	april::rendersys->destroyTexture(texture);
+	texture = NULL;
 	april::destroy();
 }

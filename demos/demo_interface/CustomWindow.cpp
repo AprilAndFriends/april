@@ -37,7 +37,7 @@ bool CustomWindow::create(int w, int h, bool fullscreen, chstr title, april::Win
 {
 	if (fullscreen)
 	{
-		hlog::warnf(LOG_TAG, "Window '%s' does not support fullscreen", this->name.c_str());
+		hlog::warnf(LOG_TAG, "Window '%s' does not support fullscreen", this->name.cStr());
 		fullscreen = false;
 	}
 	if (!april::Window::create(w, h, fullscreen, title, options))
@@ -79,7 +79,7 @@ bool CustomWindow::create(int w, int h, bool fullscreen, chstr title, april::Win
 	x = (screenWidth - w) / 2;
 	y = (screenHeight - h) / 2;
 	// create window
-	this->hWnd = CreateWindowExW(exstyle, CUSTOM_WINDOW_CLASS, this->title.w_str().c_str(), style, x, y, w, h, NULL, NULL, hinst, NULL);
+	this->hWnd = CreateWindowExW(exstyle, CUSTOM_WINDOW_CLASS, this->title.wStr().c_str(), style, x, y, w, h, NULL, NULL, hinst, NULL);
 	// display the window on the screen
 	ShowWindow(this->hWnd, SW_SHOWNORMAL);
 	UpdateWindow(this->hWnd);
