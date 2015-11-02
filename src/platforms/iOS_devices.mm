@@ -130,6 +130,20 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.ram = 1024;
 			info.displayDpi = 326;
 		}
+		else if (name.startsWith("iPhone8,1"))
+		{
+			info.name = "iPhone6S";
+			info.cpuCores = 2;
+			info.ram = 2048;
+			info.displayDpi = 326;
+		}
+		else if (name.startsWith("iPhone8,2"))
+		{
+			info.name = "iPhone6SPlus";
+			info.cpuCores = 2;
+			info.ram = 2048;
+			info.displayDpi = 461;
+		}
 		else
 		{
 			info.name = "iPhone?";
@@ -225,11 +239,18 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 				info.cpuCores = 2;
 				info.displayDpi = 132;
 			}
-			else
+			else if (h == 1536)
 			{
 				info.name = "iPad3";
 				info.ram = 1024;
 				info.cpuCores = 2;
+				info.displayDpi = 264;
+			}
+			else
+			{
+				info.name = "iPad Pro";
+				info.ram = 4096;
+				info.cpuCores = 4;
 				info.displayDpi = 264;
 			}
 		}
