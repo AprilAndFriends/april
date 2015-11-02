@@ -54,11 +54,19 @@
     <ClInclude Include="..\..\include\aprilpix\aprilpixExport.h" />
     <ClInclude Include="..\..\src\ImagePvr.h" />
     <ClInclude Include="..\..\src\ImageWebp.h" />
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTArray.h" />
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTDecompress.h" />
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTError.h" />
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTGlobal.h" />
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTMap.h" />
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\aprilpix.cpp" />
     <ClCompile Include="..\..\src\ImagePvr.cpp" />
     <ClCompile Include="..\..\src\ImageWebp.cpp" />
+    <ClCompile Include="..\..\src\PowerVR-SDK\PVRTDecompress.cpp" />
+    <ClCompile Include="..\..\src\PowerVR-SDK\PVRTTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">

@@ -12,6 +12,12 @@
     <Filter Include="Resource Files">
       <UniqueIdentifier>{b601e1d2-6415-437a-b1d9-dd99e54756db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\PowerVR-SDK">
+      <UniqueIdentifier>{83eedd7b-8e2a-48ae-99ff-04815c995712}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PowerVR-SDK">
+      <UniqueIdentifier>{202c6418-f348-42f3-9d69-7563f068b4a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\aprilpix\aprilpixExport.h">
@@ -26,6 +32,24 @@
     <ClInclude Include="..\..\src\ImageWebp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTArray.h">
+      <Filter>Header Files\PowerVR-SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTDecompress.h">
+      <Filter>Header Files\PowerVR-SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTError.h">
+      <Filter>Header Files\PowerVR-SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTGlobal.h">
+      <Filter>Header Files\PowerVR-SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTMap.h">
+      <Filter>Header Files\PowerVR-SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\PowerVR-SDK\PVRTTexture.h">
+      <Filter>Header Files\PowerVR-SDK</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\aprilpix.cpp">
@@ -36,6 +60,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\ImageWebp.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\PowerVR-SDK\PVRTDecompress.cpp">
+      <Filter>Source Files\PowerVR-SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\PowerVR-SDK\PVRTTexture.cpp">
+      <Filter>Source Files\PowerVR-SDK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

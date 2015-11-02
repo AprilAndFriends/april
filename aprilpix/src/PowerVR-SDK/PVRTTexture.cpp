@@ -1,3 +1,4 @@
+#ifdef _PVR
 /******************************************************************************
 
  @File         PVRTTexture.cpp
@@ -1907,3 +1908,4 @@ void PVRTMapLegacyTextureEnumToNewFormat(PVRTPixelType OldFormat, PVRTuint64& ne
 /*****************************************************************************
  End of file (PVRTTexture.cpp)
 *****************************************************************************/
+#endif
