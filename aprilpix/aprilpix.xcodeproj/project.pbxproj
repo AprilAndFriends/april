@@ -26,28 +26,20 @@
 		D12175801BD520BE002BA428 /* aprilpixExport.h in Headers */ = {isa = PBXBuildFile; fileRef = D121757E1BD520BE002BA428 /* aprilpixExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D18766731BE7658E00C989D2 /* PVRTArray.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666B1BE7658E00C989D2 /* PVRTArray.h */; };
 		D18766741BE7658E00C989D2 /* PVRTArray.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666B1BE7658E00C989D2 /* PVRTArray.h */; };
-		D18766751BE7658E00C989D2 /* PVRTArray.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666B1BE7658E00C989D2 /* PVRTArray.h */; };
 		D18766761BE7658E00C989D2 /* PVRTDecompress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D187666C1BE7658E00C989D2 /* PVRTDecompress.cpp */; };
 		D18766771BE7658E00C989D2 /* PVRTDecompress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D187666C1BE7658E00C989D2 /* PVRTDecompress.cpp */; };
-		D18766781BE7658E00C989D2 /* PVRTDecompress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D187666C1BE7658E00C989D2 /* PVRTDecompress.cpp */; };
 		D18766791BE7658E00C989D2 /* PVRTDecompress.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666D1BE7658E00C989D2 /* PVRTDecompress.h */; };
 		D187667A1BE7658E00C989D2 /* PVRTDecompress.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666D1BE7658E00C989D2 /* PVRTDecompress.h */; };
-		D187667B1BE7658E00C989D2 /* PVRTDecompress.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666D1BE7658E00C989D2 /* PVRTDecompress.h */; };
 		D187667C1BE7658E00C989D2 /* PVRTError.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666E1BE7658E00C989D2 /* PVRTError.h */; };
 		D187667D1BE7658E00C989D2 /* PVRTError.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666E1BE7658E00C989D2 /* PVRTError.h */; };
-		D187667E1BE7658E00C989D2 /* PVRTError.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666E1BE7658E00C989D2 /* PVRTError.h */; };
 		D187667F1BE7658E00C989D2 /* PVRTGlobal.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666F1BE7658E00C989D2 /* PVRTGlobal.h */; };
 		D18766801BE7658E00C989D2 /* PVRTGlobal.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666F1BE7658E00C989D2 /* PVRTGlobal.h */; };
-		D18766811BE7658E00C989D2 /* PVRTGlobal.h in Headers */ = {isa = PBXBuildFile; fileRef = D187666F1BE7658E00C989D2 /* PVRTGlobal.h */; };
 		D18766821BE7658E00C989D2 /* PVRTMap.h in Headers */ = {isa = PBXBuildFile; fileRef = D18766701BE7658E00C989D2 /* PVRTMap.h */; };
 		D18766831BE7658E00C989D2 /* PVRTMap.h in Headers */ = {isa = PBXBuildFile; fileRef = D18766701BE7658E00C989D2 /* PVRTMap.h */; };
-		D18766841BE7658E00C989D2 /* PVRTMap.h in Headers */ = {isa = PBXBuildFile; fileRef = D18766701BE7658E00C989D2 /* PVRTMap.h */; };
 		D18766851BE7658E00C989D2 /* PVRTTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D18766711BE7658E00C989D2 /* PVRTTexture.cpp */; };
 		D18766861BE7658E00C989D2 /* PVRTTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D18766711BE7658E00C989D2 /* PVRTTexture.cpp */; };
-		D18766871BE7658E00C989D2 /* PVRTTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D18766711BE7658E00C989D2 /* PVRTTexture.cpp */; };
 		D18766881BE7658E00C989D2 /* PVRTTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = D18766721BE7658E00C989D2 /* PVRTTexture.h */; };
 		D18766891BE7658E00C989D2 /* PVRTTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = D18766721BE7658E00C989D2 /* PVRTTexture.h */; };
-		D187668A1BE7658E00C989D2 /* PVRTTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = D18766721BE7658E00C989D2 /* PVRTTexture.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -191,14 +183,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D187668A1BE7658E00C989D2 /* PVRTTexture.h in Headers */,
 				D121757C1BD520B5002BA428 /* ImageWebp.h in Headers */,
-				D18766811BE7658E00C989D2 /* PVRTGlobal.h in Headers */,
 				D12175761BD520B5002BA428 /* ImagePvr.h in Headers */,
-				D18766751BE7658E00C989D2 /* PVRTArray.h in Headers */,
-				D187667B1BE7658E00C989D2 /* PVRTDecompress.h in Headers */,
-				D18766841BE7658E00C989D2 /* PVRTMap.h in Headers */,
-				D187667E1BE7658E00C989D2 /* PVRTError.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,11 +305,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D18766781BE7658E00C989D2 /* PVRTDecompress.cpp in Sources */,
 				D12175731BD520B5002BA428 /* ImagePvr.cpp in Sources */,
 				D12175701BD520B5002BA428 /* aprilpix.cpp in Sources */,
 				D12175791BD520B5002BA428 /* ImageWebp.cpp in Sources */,
-				D18766871BE7658E00C989D2 /* PVRTTexture.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
