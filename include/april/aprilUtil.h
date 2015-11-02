@@ -30,7 +30,6 @@ namespace april
 		RO_LINE_LIST = 4,
 		RO_LINE_STRIP = 5,
 		RO_POINT_LIST = 6,
-		RO_UNDEFINED = 0x7FFFFFFF
 	};
 
 	enum BlendMode
@@ -40,7 +39,6 @@ namespace april
 		BM_ADD = 2,
 		BM_SUBTRACT = 3,
 		BM_OVERWRITE = 4,
-		BM_UNDEFINED = 0x7FFFFFFF
 	};
 
 	enum ColorMode
@@ -49,7 +47,6 @@ namespace april
 		CM_MULTIPLY = 1,
 		CM_ALPHA_MAP = 2,
 		CM_LERP = 3,
-		CM_UNDEFINED = 0x7FFFFFFF
 	};
 
 	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation TriangleList;
@@ -59,17 +56,20 @@ namespace april
 	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation LineStrip;
 	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation PointList;
 	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation RENDER_OP_UNDEFINED;
+	DEPRECATED_ATTRIBUTE extern aprilExport RenderOperation RO_UNDEFINED;
 	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode DEFAULT;
 	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode ALPHA_BLEND;
 	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode ADD;
 	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode SUBTRACT;
 	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode OVERWRITE;
 	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode BLEND_MODE_UNDEFINED;
+	DEPRECATED_ATTRIBUTE extern aprilExport BlendMode BM_UNDEFINED;
 	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode NORMAL;
 	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode MULTIPLY;
 	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode LERP;
 	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode ALPHA_MAP;
 	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode COLOR_MODE_UNDEFINED;
+	DEPRECATED_ATTRIBUTE extern aprilExport ColorMode CM_UNDEFINED;
 	
 	struct aprilExport PlainVertex : public gvec3
 	{

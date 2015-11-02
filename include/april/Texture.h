@@ -40,28 +40,26 @@ namespace april
 		enum Type
 		{
 			/// @brief Resides in RAM and on GPU, can be modified. Best used for manually created textures or loaded from files which will be modified.
-			TYPE_MANAGED = 1,
+			TYPE_MANAGED = 0,
 			/// @brief Cannot be modified or read. Texture with manual data will have a copy of the data in RAM, files will be reloaded from persistent memory.
-			TYPE_IMMUTABLE = 2,
+			TYPE_IMMUTABLE = 1,
 			/// @brief Used for feeding the GPU texture data constantly (e.g. video). It has no local RAM copy for when the rendering context is lost and cannot be restored.
-			TYPE_VOLATILE = 3,
+			TYPE_VOLATILE = 2,
 			/// @brief Used for render targets. Acts like MANAGED.
 			// TODOaa - may not be implemented on all platforms yet
-			TYPE_RENDER_TARGET = 4
+			TYPE_RENDER_TARGET = 3
 		};
 
 		enum Filter
 		{
-			FILTER_NEAREST = 1,
-			FILTER_LINEAR = 2,
-			FILTER_UNDEFINED = 0x7FFFFFFF
+			FILTER_NEAREST = 0,
+			FILTER_LINEAR = 1,
 		};
 
 		enum AddressMode
 		{
 			ADDRESS_WRAP = 0,
 			ADDRESS_CLAMP = 1,
-			ADDRESS_UNDEFINED = 0x7FFFFFFF
 		};
 
 		enum LoadMode
@@ -80,6 +78,8 @@ namespace april
 
 		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ALPHA;
 		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ARGB;
+		DEPRECATED_ATTRIBUTE static Filter FILTER_UNDEFINED;
+		DEPRECATED_ATTRIBUTE static AddressMode ADDRESS_UNDEFINED;
 
 		HL_DEFINE_GET(hstr, filename, Filename);
 		HL_DEFINE_GET(LoadMode, loadMode, LoadMode);
