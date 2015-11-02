@@ -452,80 +452,81 @@ namespace april
 
 	void DirectX9_RenderSystem::_setDeviceTextureFilter(Texture::Filter textureFilter)
 	{
-		switch (textureFilter)
+		if (textureFilter == Texture::FILTER_LINEAR)
 		{
-		case Texture::FILTER_LINEAR:
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-			break;
-		case Texture::FILTER_NEAREST:
+		}
+		else if (textureFilter == Texture::FILTER_NEAREST)
+		{
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-			break;
-		default:
+		}
+		else
+		{
 			hlog::warn(logTag, "Trying to set unsupported texture filter!");
-			break;
 		}
 	}
 
 	void DirectX9_RenderSystem::_setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
-		switch (textureAddressMode)
+		if (textureAddressMode == Texture::ADDRESS_WRAP)
 		{
-		case Texture::ADDRESS_WRAP:
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-			break;
-		case Texture::ADDRESS_CLAMP:
+		}
+		else if (textureAddressMode == Texture::ADDRESS_CLAMP)
+		{
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-			break;
-		default:
+		}
+		else
+		{
 			hlog::warn(logTag, "Trying to set unsupported texture address mode!");
-			break;
 		}
 	}
 
 	void DirectX9_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
 	{
-		switch (blendMode)
+		if (blendMode == BM_DEFAULT || blendMode == BM_ALPHA)
 		{
-		case BM_DEFAULT:
-		case BM_ALPHA:
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-			break;
-		case BM_ADD:
+		}
+		else if (blendMode == BM_ADD)
+		{
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-			break;
-		case BM_SUBTRACT:
+		}
+		else if (blendMode == BM_SUBTRACT)
+		{
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_INVSRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-			break;
-		case BM_OVERWRITE:
+		}
+		else if (blendMode == BM_OVERWRITE)
+		{
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLENDALPHA, D3DBLEND_ZERO);
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ZERO);
-			break;
-		default:
+		}
+		else
+		{
 			hlog::warn(logTag, "Trying to set unsupported blend mode!");
-			break;
 		}
 	}
 
@@ -533,10 +534,8 @@ namespace april
 	{
 		static unsigned char colorFactor = 0;
 		colorFactor = (unsigned char)(factor * 255);
-		switch (colorMode)
+		if (colorMode == CM_DEFAULT || colorMode == CM_MULTIPLY)
 		{
-		case CM_DEFAULT:
-		case CM_MULTIPLY:
 			if (useTexture)
 			{
 				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
@@ -560,8 +559,9 @@ namespace april
 				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_CONSTANT);
 				this->d3dDevice->SetTextureStageState(0, D3DTSS_CONSTANT, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
 			}
-			break;
-		case CM_ALPHA_MAP:
+		}
+		else if (colorMode == CM_ALPHA_MAP)
+		{
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG2);
 			if (useTexture)
 			{
@@ -583,8 +583,9 @@ namespace april
 				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_CONSTANT);
 				this->d3dDevice->SetTextureStageState(0, D3DTSS_CONSTANT, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
 			}
-			break;
-		case CM_LERP:
+		}
+		else if (colorMode == CM_LERP)
+		{
 			if (useTexture)
 			{
 				this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, colorFactor, colorFactor, colorFactor));
@@ -610,10 +611,10 @@ namespace april
 				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_CONSTANT);
 				this->d3dDevice->SetTextureStageState(0, D3DTSS_CONSTANT, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
 			}
-			break;
-		default:
+		}
+		else
+		{
 			hlog::warn(logTag, "Trying to set unsupported color mode!");
-			break;
 		}
 	}
 
@@ -664,25 +665,25 @@ namespace april
 
 	Image::Format DirectX9_RenderSystem::getNativeTextureFormat(Image::Format format)
 	{
-		switch (format)
+		if (format == Image::FORMAT_RGBA || format == Image::FORMAT_ARGB || format == Image::FORMAT_BGRA || format == Image::FORMAT_ABGR)
 		{
-		case Image::FORMAT_RGBA:
-		case Image::FORMAT_ARGB:
-		case Image::FORMAT_BGRA:
-		case Image::FORMAT_ABGR:
 			return Image::FORMAT_BGRA;
-		case Image::FORMAT_RGBX:
-		case Image::FORMAT_XRGB:
-		case Image::FORMAT_BGRX:
-		case Image::FORMAT_XBGR:
-		case Image::FORMAT_RGB:
-		case Image::FORMAT_BGR:
+		}
+		if (format == Image::FORMAT_RGBX || format == Image::FORMAT_XRGB || format == Image::FORMAT_BGRX ||
+			format == Image::FORMAT_XBGR || format == Image::FORMAT_RGB || format == Image::FORMAT_BGR)
+		{
 			return Image::FORMAT_BGRX;
-		case Image::FORMAT_ALPHA:
+		}
+		if (format == Image::FORMAT_ALPHA)
+		{
 			return Image::FORMAT_ALPHA;
-		case Image::FORMAT_GRAYSCALE:
+		}
+		if (format == Image::FORMAT_GRAYSCALE)
+		{
 			return Image::FORMAT_GRAYSCALE;
-		case Image::FORMAT_PALETTE:
+		}
+		if (format == Image::FORMAT_PALETTE)
+		{
 			return Image::FORMAT_PALETTE;
 		}
 		return Image::FORMAT_INVALID;

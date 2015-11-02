@@ -101,7 +101,7 @@ namespace april
 		}
 		if (textureSubresourceData.pSysMem != data)
 		{
-			delete [] (unsigned char*)textureSubresourceData.pSysMem;
+			delete[] (unsigned char*)textureSubresourceData.pSysMem;
 		}
 		if (FAILED(hr))
 		{
@@ -141,26 +141,29 @@ namespace april
 	void DirectX11_Texture::_assignFormat()
 	{
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		switch (nativeFormat)
+		if (nativeFormat == Image::FORMAT_BGRA)
 		{
-		case Image::FORMAT_BGRA:
 			this->dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
-			break;
-		case Image::FORMAT_BGRX:
+		}
+		else if (nativeFormat == Image::FORMAT_BGRX)
+		{
 			this->dxgiFormat = DXGI_FORMAT_B8G8R8X8_UNORM;
-			break;
-		case Image::FORMAT_ALPHA:
+		}
+		else if (nativeFormat == Image::FORMAT_ALPHA)
+		{
 			this->dxgiFormat = DXGI_FORMAT_R8_UNORM;
-			break;
-		case Image::FORMAT_GRAYSCALE:
+		}
+		else if (nativeFormat == Image::FORMAT_GRAYSCALE)
+		{
 			this->dxgiFormat = DXGI_FORMAT_R8_UNORM;
-			break;
-		case Image::FORMAT_PALETTE: // TODOaa - needs changing
+		}
+		else if (nativeFormat == Image::FORMAT_PALETTE)
+		{
+			this->dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM; // TODOaa - needs changing
+		}
+		else
+		{
 			this->dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
-			break;
-		default:
-			this->dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
-			break;
 		}
 	}
 

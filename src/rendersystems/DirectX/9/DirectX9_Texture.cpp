@@ -113,23 +113,25 @@ namespace april
 	void DirectX9_Texture::_assignFormat()
 	{
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		switch (nativeFormat)
+		if (nativeFormat == Image::FORMAT_BGRA)
 		{
-		case Image::FORMAT_BGRA:
 			this->d3dFormat = D3DFMT_A8R8G8B8;
-			break;
-		case Image::FORMAT_BGRX:
+		}
+		else if (nativeFormat == Image::FORMAT_BGRX)
+		{
 			this->d3dFormat = D3DFMT_X8R8G8B8;
-			break;
-		case Image::FORMAT_ALPHA:
-			this->d3dFormat = D3DFMT_A8; // lots of GPUs don't support A8 (even modern ones) so we use L8
-			break;
-		case Image::FORMAT_GRAYSCALE:
+		}
+		else if (nativeFormat == Image::FORMAT_ALPHA)
+		{
+			this->d3dFormat = D3DFMT_A8;
+		}
+		else if (nativeFormat == Image::FORMAT_GRAYSCALE)
+		{
 			this->d3dFormat = D3DFMT_L8;
-			break;
-		case Image::FORMAT_PALETTE: // TODOaa - needs changing, ARGB shouldn't be here
-			this->d3dFormat = D3DFMT_A8R8G8B8;
-			break;
+		}
+		else if (nativeFormat == Image::FORMAT_PALETTE)
+		{
+			this->d3dFormat = D3DFMT_A8R8G8B8; // TODOaa - needs changing, ARGB shouldn't be here
 		}
 	}
 

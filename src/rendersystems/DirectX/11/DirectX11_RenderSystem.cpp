@@ -736,21 +736,25 @@ namespace april
 	void DirectX11_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
 	{
 		static const float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		switch (blendMode)
+		if (blendMode == BM_ALPHA || blendMode == BM_DEFAULT)
 		{
-		case BM_DEFAULT:
-		case BM_ALPHA:
 			this->d3dDeviceContext->OMSetBlendState(this->blendStateAlpha.Get(), blendFactor, 0xFFFFFFFF);
-			break;
-		case BM_ADD:
+		}
+		else if (blendMode == BM_ADD)
+		{
 			this->d3dDeviceContext->OMSetBlendState(this->blendStateAdd.Get(), blendFactor, 0xFFFFFFFF);
-			break;
-		case BM_SUBTRACT:
+		}
+		else if (blendMode == BM_SUBTRACT)
+		{
 			this->d3dDeviceContext->OMSetBlendState(this->blendStateSubtract.Get(), blendFactor, 0xFFFFFFFF);
-			break;
-		case BM_OVERWRITE:
+		}
+		else if (blendMode == BM_OVERWRITE)
+		{
 			this->d3dDeviceContext->OMSetBlendState(this->blendStateOverwrite.Get(), blendFactor, 0xFFFFFFFF);
-			break;
+		}
+		else
+		{
+			hlog::error(logTag, "Trying to set unsupported blend mode!");
 		}
 	}
 
@@ -769,18 +773,17 @@ namespace april
 	{
 		// select shader
 		ShaderComposition* shader = NULL;
-		switch (this->deviceState->colorMode)
+		if (this->deviceState->colorMode == CM_MULTIPLY || this->deviceState->colorMode == CM_DEFAULT)
 		{
-		case CM_DEFAULT:
-		case CM_MULTIPLY:
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Multiply);
-			break;
-		case CM_ALPHA_MAP:
+		}
+		else if (this->deviceState->colorMode == CM_ALPHA_MAP)
+		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, AlphaMap);
-			break;
-		case CM_LERP:
+		}
+		else if (this->deviceState->colorMode == CM_LERP)
+		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Lerp);
-			break;
 		}
 		// change shaders
 		bool shaderChanged = false;
@@ -908,25 +911,25 @@ namespace april
 
 	Image::Format DirectX11_RenderSystem::getNativeTextureFormat(Image::Format format)
 	{
-		switch (format)
+		if (format == Image::FORMAT_RGBA || format == Image::FORMAT_ARGB || format == Image::FORMAT_BGRA || format == Image::FORMAT_ABGR)
 		{
-		case Image::FORMAT_RGBA:
-		case Image::FORMAT_ARGB:
-		case Image::FORMAT_BGRA:
-		case Image::FORMAT_ABGR:
 			return Image::FORMAT_BGRA;
-		case Image::FORMAT_RGBX:
-		case Image::FORMAT_XRGB:
-		case Image::FORMAT_BGRX:
-		case Image::FORMAT_XBGR:
-		case Image::FORMAT_RGB:
-		case Image::FORMAT_BGR:
+		}
+		if (format == Image::FORMAT_RGBX || format == Image::FORMAT_XRGB || format == Image::FORMAT_BGRX ||
+			format == Image::FORMAT_XBGR || format == Image::FORMAT_RGB || format == Image::FORMAT_BGR)
+		{
 			return Image::FORMAT_BGRX;
-		case Image::FORMAT_ALPHA:
+		}
+		if (format == Image::FORMAT_ALPHA)
+		{
 			return Image::FORMAT_ALPHA;
-		case Image::FORMAT_GRAYSCALE:
+		}
+		if (format == Image::FORMAT_GRAYSCALE)
+		{
 			return Image::FORMAT_GRAYSCALE;
-		case Image::FORMAT_PALETTE:
+		}
+		if (format == Image::FORMAT_PALETTE)
+		{
 			return Image::FORMAT_PALETTE;
 		}
 		return Image::FORMAT_INVALID;
@@ -955,24 +958,26 @@ namespace april
 	{
 		DisplayOrientations orientation = DisplayInformation::GetForCurrentView()->CurrentOrientation;
 		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
-		switch (orientation)
+		if (orientation == DisplayOrientations::Landscape)
 		{
-		case DisplayOrientations::Landscape:
 			rotation = DXGI_MODE_ROTATION_ROTATE90;
-			break;
-		case DisplayOrientations::Portrait:
+		}
+		else if (orientation == DisplayOrientations::Portrait)
+		{
 			rotation = DXGI_MODE_ROTATION_IDENTITY;
-			break;
-		case DisplayOrientations::LandscapeFlipped:
+		}
+		else if (orientation == DisplayOrientations::LandscapeFlipped)
+		{
 			rotation = DXGI_MODE_ROTATION_ROTATE270;
-			break;
-		case DisplayOrientations::PortraitFlipped:
+		}
+		else if (orientation == DisplayOrientations::PortraitFlipped)
+		{
 			rotation = DXGI_MODE_ROTATION_ROTATE180;
-			break;
-		default:
+		}
+		else
+		{
 			hlog::error(logTag, "Undefined screen orienation, using default landscape!");
 			rotation = DXGI_MODE_ROTATION_ROTATE90;
-			break;
 		}
 	}
 

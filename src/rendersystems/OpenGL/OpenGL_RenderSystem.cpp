@@ -205,37 +205,37 @@ namespace april
 
 	void OpenGL_RenderSystem::_setDeviceTextureFilter(Texture::Filter textureFilter)
 	{
-		switch (textureFilter)
+		if (textureFilter == Texture::FILTER_LINEAR)
 		{
-		case Texture::FILTER_LINEAR:
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			break;
-		case Texture::FILTER_NEAREST:
+		}
+		else if (textureFilter == Texture::FILTER_NEAREST)
+		{
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			break;
-		default:
+		}
+		else
+		{
 			hlog::warn(logTag, "Trying to set unsupported texture filter!");
-			break;
 		}
 	}
 
 	void OpenGL_RenderSystem::_setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
-		switch (textureAddressMode)
+		if (textureAddressMode == Texture::ADDRESS_WRAP)
 		{
-		case Texture::ADDRESS_WRAP:
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			break;
-		case Texture::ADDRESS_CLAMP:
+		}
+		else if (textureAddressMode == Texture::ADDRESS_CLAMP)
+		{
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			break;
-		default:
+		}
+		else
+		{
 			hlog::warn(logTag, "Trying to set unsupported texture address mode!");
-			break;
 		}
 	}
 
@@ -395,18 +395,16 @@ namespace april
 
 	Image::Format OpenGL_RenderSystem::getNativeTextureFormat(Image::Format format)
 	{
-		switch (format)
+		if (format == Image::FORMAT_ARGB || format == Image::FORMAT_ABGR || format == Image::FORMAT_RGBA)
 		{
-		case Image::FORMAT_ARGB:
-		case Image::FORMAT_ABGR:
-		case Image::FORMAT_RGBA:
 			return Image::FORMAT_RGBA;
-		case Image::FORMAT_XRGB:
-		case Image::FORMAT_RGBX:
-		case Image::FORMAT_XBGR:
-		case Image::FORMAT_BGRX:
+		}
+		if (format == Image::FORMAT_XRGB || format == Image::FORMAT_RGBX || format == Image::FORMAT_XBGR || format == Image::FORMAT_BGRX)
+		{
 			return Image::FORMAT_RGBX;
-		case Image::FORMAT_BGRA:
+		}
+		if (format == Image::FORMAT_BGRA)
+		{
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
 			return Image::FORMAT_BGRA; // for optimizations
@@ -416,9 +414,13 @@ namespace april
 #else
 			return Image::FORMAT_RGBA;
 #endif
-		case Image::FORMAT_RGB:
+		}
+		if (format == Image::FORMAT_RGB)
+		{
 			return Image::FORMAT_RGB;
-		case Image::FORMAT_BGR:
+		}
+		if (format == Image::FORMAT_BGR)
+		{
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
 			return Image::FORMAT_BGR; // for optimizations
@@ -428,14 +430,18 @@ namespace april
 #else
 			return Image::FORMAT_RGB;
 #endif
-		case Image::FORMAT_ALPHA:
+		}
+		if (format == Image::FORMAT_ALPHA)
+		{
 			return Image::FORMAT_ALPHA;
-		case Image::FORMAT_GRAYSCALE:
+		}
+		if (format == Image::FORMAT_GRAYSCALE)
+		{
 			return Image::FORMAT_GRAYSCALE;
-		case Image::FORMAT_PALETTE: // TODOaa - does palette use RGBA?
-			return Image::FORMAT_PALETTE;
-		default:
-			break;
+		}
+		if (format == Image::FORMAT_PALETTE)
+		{
+			return Image::FORMAT_PALETTE; // TODOaa - does palette use RGBA?
 		}
 		return Image::FORMAT_INVALID;
 	}

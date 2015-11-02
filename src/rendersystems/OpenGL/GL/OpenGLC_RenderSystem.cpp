@@ -91,10 +91,8 @@ namespace april
 		constColor[1] = colorModeFactor;
 		constColor[2] = colorModeFactor;
 		constColor[3] = colorModeFactor;
-		switch (colorMode)
+		if (colorMode == CM_MULTIPLY || colorMode == CM_DEFAULT)
 		{
-		case CM_DEFAULT:
-		case CM_MULTIPLY:
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 			if (useTexture)
 			{
@@ -112,8 +110,9 @@ namespace april
 				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
 				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
 			}
-			break;
-		case CM_ALPHA_MAP:
+		}
+		else if (colorMode == CM_ALPHA_MAP)
+		{
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 			if (useTexture)
 			{
@@ -128,8 +127,9 @@ namespace april
 			}
 			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
-			break;
-		case CM_LERP:
+		}
+		else if (colorMode == CM_LERP)
+		{
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 			if (useTexture)
 			{
@@ -149,10 +149,10 @@ namespace april
 				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
 				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
 			}
-			break;
-		default:
+		}
+		else
+		{
 			hlog::warn(logTag, "Trying to set unsupported color mode!");
-			break;
 		}
 		if (!useColor)
 		{

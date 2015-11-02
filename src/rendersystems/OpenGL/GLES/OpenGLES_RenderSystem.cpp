@@ -317,28 +317,29 @@ namespace april
 		if (this->blendSeparationSupported)
 		{
 			// blending for the new generations
-			switch (blendMode)
+			if (blendMode == BM_ALPHA || blendMode == BM_DEFAULT)
 			{
-			case BM_DEFAULT:
-			case BM_ALPHA:
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-				break;
-			case BM_ADD:
+			}
+			else if (blendMode == BM_ADD)
+			{
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-				break;
-			case BM_SUBTRACT:
+			}
+			else if (blendMode == BM_SUBTRACT)
+			{
 				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-				break;
-			case BM_OVERWRITE:
+			}
+			else if (blendMode == BM_OVERWRITE)
+			{
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
-				break;
-			default:
+			}
+			else
+			{
 				hlog::warn(logTag, "Trying to set unsupported blend mode!");
-				break;
 			}
 		}
 		else
@@ -363,21 +364,21 @@ namespace april
 	void OpenGLES_RenderSystem::_updateShader(bool forceUpdate)
 	{
 		ShaderProgram* shader = NULL;
-		switch (this->deviceState->colorMode)
+		if (this->deviceState->colorMode == CM_MULTIPLY || this->deviceState->colorMode == CM_DEFAULT)
 		{
-		case CM_DEFAULT:
-		case CM_MULTIPLY:
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Multiply);
-			break;
-		case CM_ALPHA_MAP:
+		}
+		else if (this->deviceState->colorMode == CM_ALPHA_MAP)
+		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, AlphaMap);
-			break;
-		case CM_LERP:
+		}
+		else if (this->deviceState->colorMode == CM_LERP)
+		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Lerp);
-			break;
-		default:
+		}
+		else
+		{
 			hlog::warn(logTag, "Trying to set unsupported color mode!");
-			return;
 		}
 		if (this->deviceState_shader != shader)
 		{

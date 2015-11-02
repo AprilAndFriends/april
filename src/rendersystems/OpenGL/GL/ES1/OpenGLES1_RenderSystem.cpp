@@ -71,28 +71,29 @@ namespace april
 		if (this->blendSeparationSupported)
 		{
 			// blending for the new generations
-			switch (blendMode)
+			if (blendMode == BM_ALPHA || blendMode == BM_DEFAULT)
 			{
-			case BM_DEFAULT:
-			case BM_ALPHA:
 				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
 				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-				break;
-			case BM_ADD:
+			}
+			else if (blendMode == BM_ADD)
+			{
 				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
 				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-				break;
-			case BM_SUBTRACT:
+			}
+			else if (blendMode == BM_SUBTRACT)
+			{
 				glBlendEquationSeparateOES(GL_FUNC_REVERSE_SUBTRACT_OES, GL_FUNC_ADD_OES);
 				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-				break;
-			case BM_OVERWRITE:
+			}
+			else if (blendMode == BM_OVERWRITE)
+			{
 				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
 				glBlendFuncSeparateOES(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
-				break;
-			default:
+			}
+			else
+			{
 				hlog::warn(logTag, "Trying to set unsupported blend mode!");
-				break;
 			}
 		}
 		else

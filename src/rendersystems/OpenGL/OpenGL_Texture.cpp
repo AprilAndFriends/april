@@ -102,18 +102,13 @@ namespace april
 
 	void OpenGL_Texture::_assignFormat()
 	{
-		switch (this->format)
+		if (this->format == Image::FORMAT_ARGB || this->format == Image::FORMAT_XRGB || this->format == Image::FORMAT_RGBA ||
+			this->format == Image::FORMAT_RGBX || this->format == Image::FORMAT_ABGR || this->format == Image::FORMAT_XBGR)
 		{
-		case Image::FORMAT_ARGB:
-		case Image::FORMAT_XRGB:
-		case Image::FORMAT_RGBA:
-		case Image::FORMAT_RGBX:
-		case Image::FORMAT_ABGR:
-		case Image::FORMAT_XBGR:
 			this->glFormat = this->internalFormat = GL_RGBA;
-			break;
-		case Image::FORMAT_BGRA:
-		case Image::FORMAT_BGRX:
+		}
+		else if (this->format == Image::FORMAT_BGRA || this->format == Image::FORMAT_BGRX)
+		{
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
 			this->glFormat = GL_BGRA; // for optimizations
@@ -124,11 +119,13 @@ namespace april
 			this->glFormat = GL_RGBA;
 #endif
 			this->internalFormat = GL_RGBA;
-			break;
-		case Image::FORMAT_RGB:
+		}
+		else if (this->format == Image::FORMAT_RGB)
+		{
 			this->glFormat = this->internalFormat = GL_RGB;
-			break;
-		case Image::FORMAT_BGR:
+		}
+		else if (this->format == Image::FORMAT_BGR)
+		{
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
 			this->glFormat = GL_BGR; // for optimizations
@@ -139,19 +136,22 @@ namespace april
 			this->glFormat = GL_RGB;
 #endif
 			this->internalFormat = GL_RGB;
-			break;
-		case Image::FORMAT_ALPHA:
+		}
+		else if (this->format == Image::FORMAT_ALPHA)
+		{
 			this->glFormat = this->internalFormat = GL_ALPHA;
-			break;
-		case Image::FORMAT_GRAYSCALE:
+		}
+		else if (this->format == Image::FORMAT_GRAYSCALE)
+		{
 			this->glFormat = this->internalFormat = GL_LUMINANCE;
-			break;
-		case Image::FORMAT_PALETTE: // TODOaa - does palette use RGBA?
+		}
+		else if (this->format == Image::FORMAT_PALETTE)
+		{
+			this->glFormat = this->internalFormat = GL_RGBA; // TODOaa - does palette use RGBA?
+		}
+		else
+		{
 			this->glFormat = this->internalFormat = GL_RGBA;
-			break;
-		default:
-			this->glFormat = this->internalFormat = GL_RGBA;
-			break;
 		}
 	}
 
