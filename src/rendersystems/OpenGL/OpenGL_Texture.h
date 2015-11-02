@@ -36,10 +36,8 @@ namespace april
 		unsigned int textureId;
 		int glFormat;
 		int internalFormat;
-		Texture* previousTexture;
 
 		void _setCurrentTexture();
-		void _resetCurrentTexture();
 
 		bool _createInternalTexture(unsigned char* data, int size, Type type);
 		bool _destroyInternalTexture();

@@ -42,12 +42,10 @@
 	{ \
 		if (!_preventRecursion) \
 		{ \
-			this->_resetCurrentTexture(); \
 			_preventRecursion = true; \
 			hlog::warnf(logTag, "Not enough VRAM for %s! Calling low memory warning.", this->_getInternalName().cStr()); \
 			april::window->handleLowMemoryWarning(); \
 			_preventRecursion = false; \
-			this->_setCurrentTexture(); \
 			call; \
 			glError = glGetError(); \
 		} \
@@ -61,7 +59,7 @@ namespace april
 {
 	static bool _preventRecursion = false;
 
-	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0), previousTexture(NULL)
+	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0)
 	{
 	}
 
@@ -85,7 +83,6 @@ namespace april
 			glCompressedTexImage2D(GL_TEXTURE_2D, 0, this->dataFormat, this->width, this->height, 0, size, data);
 			GLenum glError = glGetError();
 			SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(GL_TEXTURE_2D, 0, this->dataFormat, this->width, this->height, 0, size, data));
-			this->_resetCurrentTexture();
 			this->firstUpload = false;
 		}
 #endif
@@ -150,26 +147,10 @@ namespace april
 
 	void OpenGL_Texture::_setCurrentTexture()
 	{
-		if (this->previousTexture == NULL)
-		{
-			this->previousTexture = APRIL_OGL_RENDERSYS->deviceState->texture;
-		}
 		APRIL_OGL_RENDERSYS->deviceState->texture = this;
+		APRIL_OGL_RENDERSYS->_setDeviceTexture(this);
 		APRIL_OGL_RENDERSYS->_setDeviceTextureFilter(this->filter);
 		APRIL_OGL_RENDERSYS->_setDeviceTextureAddressMode(this->addressMode);
-		APRIL_OGL_RENDERSYS->_setDeviceTexture(this);
-	}
-
-	void OpenGL_Texture::_resetCurrentTexture()
-	{
-		if (this->previousTexture != NULL)
-		{
-			APRIL_OGL_RENDERSYS->deviceState->texture = this->previousTexture;
-			APRIL_OGL_RENDERSYS->_setDeviceTextureFilter(this->previousTexture->getFilter());
-			APRIL_OGL_RENDERSYS->_setDeviceTextureAddressMode(this->previousTexture->getAddressMode());
-			APRIL_OGL_RENDERSYS->_setDeviceTexture(this->previousTexture);
-			this->previousTexture = NULL;
-		}
 	}
 
 	bool OpenGL_Texture::_destroyInternalTexture()
@@ -203,6 +184,7 @@ namespace april
 		{
 			if (this->format != Image::FORMAT_PALETTE)
 			{
+				this->_setCurrentTexture();
 				if (this->width == lock.w && this->height == lock.h)
 				{
 					this->_uploadPotSafeData(lock.data);
@@ -213,13 +195,8 @@ namespace april
 					{
 						this->_uploadPotSafeClearData();
 					}
-					else
-					{
-						this->_setCurrentTexture();
-					}
 					glTexSubImage2D(GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
 				}
-				this->_resetCurrentTexture();
 			}
 			delete[] lock.data;
 			this->firstUpload = false;
@@ -229,7 +206,6 @@ namespace april
 
 	void OpenGL_Texture::_uploadPotSafeData(unsigned char* data)
 	{
-		this->_setCurrentTexture();
 		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data);
 		GLenum glError = glGetError();
 		SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data));
@@ -251,7 +227,6 @@ namespace april
 		int size = this->getByteSize();
 		unsigned char* clearColor = new unsigned char[size];
 		memset(clearColor, 0, size);
-		this->_setCurrentTexture();
 		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
 		GLenum glError = glGetError();
 		SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
@@ -276,6 +251,7 @@ namespace april
 			return false;
 		}
 		this->load();
+		this->_setCurrentTexture();
 		if (sx == 0 && dx == 0 && sy == 0 && dy == 0 && sw == this->width && srcWidth == this->width && sh == this->height && srcHeight == this->height)
 		{
 			this->_uploadPotSafeData(srcData);
@@ -285,10 +261,6 @@ namespace april
 			if (this->firstUpload)
 			{
 				this->_uploadPotSafeClearData();
-			}
-			else
-			{
-				this->_setCurrentTexture();
 			}
 			int srcBpp = Image::getFormatBpp(srcFormat);
 			if (sx == 0 && dx == 0 && srcWidth == this->width && sw == this->width)
@@ -303,7 +275,6 @@ namespace april
 				}
 			}
 		}
-		this->_resetCurrentTexture();
 		this->firstUpload = false;
 		return true;
 	}
