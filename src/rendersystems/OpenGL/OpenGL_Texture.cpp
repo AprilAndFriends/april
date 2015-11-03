@@ -46,6 +46,7 @@
 			hlog::warnf(logTag, "Not enough VRAM for %s! Calling low memory warning.", this->_getInternalName().cStr()); \
 			april::window->handleLowMemoryWarning(); \
 			_preventRecursion = false; \
+			this->_setCurrentTexture(); \
 			call; \
 			glError = glGetError(); \
 		} \
@@ -75,8 +76,8 @@ namespace april
 			return false;
 		}
 		this->firstUpload = true;
-		// required first call of glTexImage2D() to prevent problems
 #ifdef _IOS
+		// data has to be uploaded right away if compressed texture
 		if (this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG || this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG)
 		{
 			this->_setCurrentTexture();
@@ -155,12 +156,15 @@ namespace april
 		}
 	}
 
-	void OpenGL_Texture::_setCurrentTexture()
+	void OpenGL_Texture::_setCurrentTexture(bool forceUpdate)
 	{
-		APRIL_OGL_RENDERSYS->deviceState->texture = this;
-		APRIL_OGL_RENDERSYS->_setDeviceTexture(this);
-		APRIL_OGL_RENDERSYS->_setDeviceTextureFilter(this->filter);
-		APRIL_OGL_RENDERSYS->_setDeviceTextureAddressMode(this->addressMode);
+		if (forceUpdate || APRIL_OGL_RENDERSYS->deviceState->texture != this)
+		{
+			APRIL_OGL_RENDERSYS->_setDeviceTexture(this);
+			APRIL_OGL_RENDERSYS->_setDeviceTextureFilter(this->filter);
+			APRIL_OGL_RENDERSYS->_setDeviceTextureAddressMode(this->addressMode);
+			APRIL_OGL_RENDERSYS->deviceState->texture = this;
+		}
 	}
 
 	Texture::Lock OpenGL_Texture::_tryLockSystem(int x, int y, int w, int h)
@@ -183,7 +187,7 @@ namespace april
 		{
 			if (this->format != Image::FORMAT_PALETTE)
 			{
-				this->_setCurrentTexture();
+				this->load();
 				if (this->width == lock.w && this->height == lock.h)
 				{
 					this->_uploadPotSafeData(lock.data);
@@ -194,12 +198,13 @@ namespace april
 					{
 						this->_uploadPotSafeClearData();
 					}
+					this->_setCurrentTexture();
 					glTexSubImage2D(GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
 				}
 			}
-			delete[] lock.data;
 			this->firstUpload = false;
 		}
+		delete[] lock.data;
 		return update;
 	}
 
@@ -210,7 +215,6 @@ namespace april
 			return false;
 		}
 		this->load();
-		this->_setCurrentTexture();
 		if (sx == 0 && dx == 0 && sy == 0 && dy == 0 && sw == this->width && srcWidth == this->width && sh == this->height && srcHeight == this->height)
 		{
 			this->_uploadPotSafeData(srcData);
@@ -222,6 +226,7 @@ namespace april
 				this->_uploadPotSafeClearData();
 			}
 			int srcBpp = Image::getFormatBpp(srcFormat);
+			this->_setCurrentTexture();
 			if (sx == 0 && dx == 0 && srcWidth == this->width && sw == this->width)
 			{
 				glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]);
@@ -240,6 +245,7 @@ namespace april
 
 	void OpenGL_Texture::_uploadPotSafeData(unsigned char* data)
 	{
+		this->_setCurrentTexture();
 		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data);
 		GLenum glError = glGetError();
 		SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data));
@@ -249,7 +255,7 @@ namespace april
 			int w = this->width;
 			int h = this->height;
 			unsigned char* newData = this->_createPotData(w, h, data);
-			this->_setCurrentTexture(); // has to call this again after _createPotData() to make sure update texture size is used
+			this->_setCurrentTexture(true); // has to call this again after _createPotData(), because some internal properties could have changed
 			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData);
 			glError = glGetError();
 			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData));
@@ -262,6 +268,7 @@ namespace april
 		int size = this->getByteSize();
 		unsigned char* clearColor = new unsigned char[size];
 		memset(clearColor, 0, size);
+		this->_setCurrentTexture();
 		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
 		GLenum glError = glGetError();
 		SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
@@ -272,7 +279,7 @@ namespace april
 			int w = this->width;
 			int h = this->height;
 			clearColor = this->_createPotClearData(w, h); // can create POT sized data
-			this->_setCurrentTexture(); // has to call this again after _createPotClearData() to make sure update texture size is used
+			this->_setCurrentTexture(true); // has to call this again after _createPotData(), because some internal properties could have changed
 			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
 			glError = glGetError();
 			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
