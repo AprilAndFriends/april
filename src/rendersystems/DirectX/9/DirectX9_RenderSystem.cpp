@@ -177,7 +177,7 @@ namespace april
 	void DirectX9_RenderSystem::_deviceReset()
 	{
 		this->d3dDevice->EndScene();
-		foreach(Texture*, it, this->textures)
+		foreach (Texture*, it, this->textures)
 		{
 			(*it)->unload();
 		}
@@ -219,11 +219,7 @@ namespace april
 		}
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 		this->d3dDevice->BeginScene();
-		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
-		this->_updateDeviceState(true);
 		hlog::write(logTag, "Direct3D9 Device restored.");
-		// this is used to display window content while resizing window
-		april::window->performUpdate(0.0f);
 	}
 
 	void DirectX9_RenderSystem::_deviceSetupCaps()

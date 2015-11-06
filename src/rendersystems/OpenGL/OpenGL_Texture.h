@@ -37,7 +37,7 @@ namespace april
 		int glFormat;
 		int internalFormat;
 
-		void _setCurrentTexture(bool forceUpdate = false);
+		void _setCurrentTexture();
 
 		bool _deviceCreateTexture(unsigned char* data, int size, Type type);
 		bool _deviceDestroyTexture();

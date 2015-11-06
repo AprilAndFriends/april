@@ -141,7 +141,6 @@ namespace april
 		void setOrthoProjection(gvec2 size);
 		void setOrthoProjection(gvec2 size, float nearZ, float farZ);
 		void setDepthBuffer(bool enabled, bool writeEnabled = true);
-
 		void setTexture(Texture* texture);
 		void setBlendMode(BlendMode blendMode);
 		/// @note The parameter colorModeFactor is only used when the color mode is LERP.

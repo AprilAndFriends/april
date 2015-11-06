@@ -1513,7 +1513,6 @@ namespace april
 		{
 			return true;
 		}
-		this->load();
 		Lock lock = this->_tryLockSystem(x, y, w, h);
 		if (lock.failed)
 		{
