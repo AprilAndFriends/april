@@ -10,22 +10,6 @@
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
 
-#ifdef __APPLE__
-	#include <TargetConditionals.h>
-#endif
-#ifdef _IOS
-	#include <OpenGLES/ES1/gl.h>
-	#include <OpenGLES/ES1/glext.h>
-#elif _OPENGLES
-	#include <GLES/gl.h>
-#else
-	#ifndef __APPLE__
-		#include <gl/GL.h>
-	#else
-		#include <OpenGL/gl.h>
-	#endif
-#endif
-
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 

@@ -33,9 +33,9 @@ namespace april
 
 	void OpenGLC_RenderSystem::_deviceSetup()
 	{
-		OpenGL_RenderSystem::_deviceSetup();
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glAlphaFunc(GL_GREATER, 0.0f);
+		OpenGL_RenderSystem::_deviceSetup();
 		this->_setDeviceColor(this->deviceState_color, true);
 		this->_setDeviceMatrixMode(GL_MODELVIEW, true);
 	}

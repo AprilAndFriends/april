@@ -164,6 +164,8 @@ namespace april
 		this->setViewport(viewport);
 		this->setOrthoProjection(viewport);
 		this->_updateDeviceState(true);
+		april::window->performUpdate(0.0f);
+		this->presentFrame();
 	}
 
 	void OpenGL_RenderSystem::_setDeviceViewport(const grect& rect)

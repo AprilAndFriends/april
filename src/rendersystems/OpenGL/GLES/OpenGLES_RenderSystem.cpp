@@ -175,18 +175,6 @@ namespace april
 		return true;
 	}
 
-	void OpenGLES_RenderSystem::_deviceAssignWindow(Window* window)
-	{
-		OpenGL_RenderSystem::_deviceAssignWindow(window);
-		this->_createShaders();
-	}
-
-	void OpenGLES_RenderSystem::_deviceReset()
-	{
-		this->_createShaders();
-		OpenGL_RenderSystem::_deviceReset();
-	}
-
 	void OpenGLES_RenderSystem::_deviceSuspend()
 	{
 		OpenGL_RenderSystem::_deviceSuspend();
@@ -221,8 +209,9 @@ namespace april
 
 	void OpenGLES_RenderSystem::_deviceSetup()
 	{
-		OpenGL_RenderSystem::_deviceSetup();
 		glEnableVertexAttribArray(VERTEX_ARRAY);
+		OpenGL_RenderSystem::_deviceSetup();
+		this->_createShaders();
 		this->deviceState_matrixChanged = true;
 		this->deviceState_systemColorChanged = true;
 		this->deviceState_colorModeFactorChanged = true;

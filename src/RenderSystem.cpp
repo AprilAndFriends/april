@@ -230,13 +230,13 @@ namespace april
 	{
 		hlog::write(logTag, "Resetting rendersystem.");
 		this->_deviceReset();
+		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
+		this->_updateDeviceState(true);
 		this->_deviceSetup();
 	}
 
 	void RenderSystem::_deviceReset()
 	{
-		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
-		this->_updateDeviceState(true);
 	}
 
 	void RenderSystem::suspend()

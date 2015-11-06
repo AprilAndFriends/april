@@ -133,11 +133,11 @@ namespace april
 
 	void OpenGL1_RenderSystem::_deviceSetup()
 	{
-		OpenGLC_RenderSystem::_deviceSetup();
 		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
+		OpenGLC_RenderSystem::_deviceSetup();
 	}
 
 	Texture* OpenGL1_RenderSystem::_deviceCreateTexture(bool fromResource)
