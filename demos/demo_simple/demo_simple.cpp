@@ -8,7 +8,11 @@
 
 #ifndef _ANDROID
 #ifndef _WINRT
+#ifdef _DEBUG
 #define RESOURCE_PATH "../../demos/media/"
+#else
+#define RESOURCE_PATH "media/"
+#endif
 #else
 #define RESOURCE_PATH "media/"
 #endif

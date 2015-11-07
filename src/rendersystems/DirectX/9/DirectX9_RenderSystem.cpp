@@ -529,9 +529,10 @@ namespace april
 
 	void DirectX9_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float factor, bool useTexture, bool useColor, const Color& systemColor)
 	{
+		// D3DRS_TEXTUREFACTOR is used for the system color due to some drivers not being able to use D3DTSS_CONSTANT properly
 		static unsigned char colorFactor = 0;
 		colorFactor = (unsigned char)(factor * 255);
-		if (colorMode == CM_DEFAULT || colorMode == CM_MULTIPLY)
+		if (colorMode == CM_MULTIPLY || colorMode == CM_DEFAULT)
 		{
 			if (useTexture)
 			{
@@ -552,9 +553,9 @@ namespace april
 			}
 			else
 			{
-				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CONSTANT);
-				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_CONSTANT);
-				this->d3dDevice->SetTextureStageState(0, D3DTSS_CONSTANT, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+				this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
 			}
 		}
 		else if (colorMode == CM_ALPHA_MAP)
@@ -576,21 +577,21 @@ namespace april
 			}
 			else
 			{
-				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CONSTANT);
-				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_CONSTANT);
-				this->d3dDevice->SetTextureStageState(0, D3DTSS_CONSTANT, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+				this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
 			}
 		}
 		else if (colorMode == CM_LERP)
 		{
 			if (useTexture)
 			{
-				this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(255, colorFactor, colorFactor, colorFactor));
 				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_LERP);
 				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
-				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG0, D3DTA_TFACTOR);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG0, D3DTA_CONSTANT);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_CONSTANT, D3DCOLOR_ARGB(255, colorFactor, colorFactor, colorFactor));
 			}
 			else
 			{
@@ -604,9 +605,9 @@ namespace april
 			}
 			else
 			{
-				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_CONSTANT);
-				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_CONSTANT);
-				this->d3dDevice->SetTextureStageState(0, D3DTSS_CONSTANT, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
+				this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
 			}
 		}
 		else

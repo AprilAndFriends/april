@@ -29,6 +29,7 @@
 #include "egl.h"
 #endif
 
+#define MOUSEEVENTF_FROMTOUCH 0xFF515700
 #define APRIL_WIN32_WINDOW_CLASS L"AprilWin32Window"
 #define STYLE_FULLSCREEN WS_POPUP
 #define STYLE_WINDOWED (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX)
@@ -37,6 +38,15 @@
 
 namespace april
 {
+	// this workaround is required to properly support WinXP
+	typedef BOOL(WINAPI *_GetTouchInputInfo)(__in HTOUCHINPUT hTouchInput, __in UINT cInputs, __out_ecount(cInputs) PTOUCHINPUT pInputs, __in int cbSize);
+	typedef BOOL(WINAPI *_CloseTouchInputHandle)(__in HTOUCHINPUT hTouchInput);
+	typedef BOOL(WINAPI *_RegisterTouchWindow)(__in HWND hwnd, __in ULONG ulFlags);
+
+	static _GetTouchInputInfo _getTouchInputInfo = NULL;
+	static _CloseTouchInputHandle _closeTouchInputHandle = NULL;
+	static _RegisterTouchWindow _registerTouchWindow = NULL;
+
 	Win32_Window::Win32_Window() : Window()
 	{
 		this->name = APRIL_WS_WIN32;
@@ -96,6 +106,21 @@ namespace april
 		}
 		// create window
 		this->hWnd = CreateWindowExW(exstyle, APRIL_WIN32_WINDOW_CLASS, this->title.wStr().c_str(), style, x, y, w, h, NULL, NULL, hinst, NULL);
+		// this workaround is required to properly support WinXP
+		if (_getTouchInputInfo == NULL && _closeTouchInputHandle == NULL && _registerTouchWindow == NULL)
+		{
+			HMODULE user32Dll = LoadLibraryW(L"user32.dll");
+			if (user32Dll != NULL)
+			{
+				_getTouchInputInfo = (_GetTouchInputInfo)GetProcAddress(user32Dll, "GetTouchInputInfo");
+				_closeTouchInputHandle = (_CloseTouchInputHandle)GetProcAddress(user32Dll, "CloseTouchInputHandle");
+				_registerTouchWindow = (_RegisterTouchWindow)GetProcAddress(user32Dll, "RegisterTouchWindow");
+				if (_registerTouchWindow != NULL)
+				{
+					_registerTouchWindow(this->hWnd, TWF_WANTPALM);
+				}
+			}
+		}
 		// display the window on the screen
 		ShowWindow(this->hWnd, SW_SHOWNORMAL);
 		UpdateWindow(this->hWnd);
@@ -374,38 +399,48 @@ namespace april
 		{
 			return 1;
 		}
-		static bool _touchDown = false;
-		static bool _doubleTapDown = false;
-		static int _mouseMoveMessagesCount = 0;
 		static float _wheelDelta = 0.0f;
 		static bool _altKeyDown = false;
 		static int lastWidth = april::window->getWidth();
 		static int lastHeight = april::window->getHeight();
+		static TOUCHINPUT touches[100];
+		static POINT w32_cursorPosition;
+		static gvec2 cursorPosition;
 		switch (message)
 		{
-		case 0x0119: // WM_GESTURE (Win7+ only)
-			if (wParam == 1) // GID_BEGIN
+		case WM_TOUCH: // (Win7+ only)
+			if (wParam > 0 && _getTouchInputInfo != NULL && _closeTouchInputHandle != NULL)
 			{
-				_touchDown = true;
-			}
-			else if (wParam == 2) // GID_END
-			{
-				if (_doubleTapDown)
-				{ 
-					_doubleTapDown = false;
-					april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_DOUBLETAP);
+				april::window->setInputMode(april::Window::TOUCH);
+				if (_getTouchInputInfo((HTOUCHINPUT)lParam, wParam, touches, sizeof(TOUCHINPUT)))
+				{
+					w32_cursorPosition.x = TOUCH_COORD_TO_PIXEL(touches[0].x);
+					w32_cursorPosition.y = TOUCH_COORD_TO_PIXEL(touches[0].y);
+					ScreenToClient(hWnd, &w32_cursorPosition);
+					cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
+					if ((touches[0].dwFlags & TOUCHEVENTF_DOWN) == TOUCHEVENTF_DOWN)
+					{
+						if (!april::window->isFullscreen())
+						{
+							SetCapture((HWND)april::window->getBackendId());
+						}
+						april::window->queueMouseEvent(MOUSE_DOWN, cursorPosition, AK_LBUTTON);
+					}
+					else if ((touches[0].dwFlags & TOUCHEVENTF_UP) == TOUCHEVENTF_UP)
+					{
+						if (!april::window->isFullscreen())
+						{
+							ReleaseCapture();
+						}
+						april::window->queueMouseEvent(MOUSE_UP, cursorPosition, AK_LBUTTON);
+					}
+					else if ((touches[0].dwFlags & TOUCHEVENTF_MOVE) == TOUCHEVENTF_MOVE)
+					{
+						april::window->queueMouseEvent(MOUSE_MOVE, cursorPosition, AK_NONE);
+					}
 				}
-				_touchDown = false;
+				_closeTouchInputHandle((HTOUCHINPUT)lParam);
 			}
-			else if (wParam == 6) // GID_TWOFINGERTAP
-			{
-				_doubleTapDown = true;
-				april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_DOUBLETAP);
-			}
-			break;
-		case 0x011A: // WM_GESTURENOTIFY (win7+ only)
-			_touchDown = true;
-			april::window->setInputMode(april::Window::TOUCH);
 			break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
@@ -457,56 +492,55 @@ namespace april
 			april::window->queueKeyEvent(KEY_DOWN, AK_NONE, wParam);
 			break;
 		case WM_LBUTTONDOWN:
-			_touchDown = true;
-			_mouseMoveMessagesCount = 0;
-			april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_LBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				SetCapture((HWND)april::window->getBackendId());
+			}
+			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
+			{
+				april::window->setInputMode(april::Window::MOUSE);
+				april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_LBUTTON);
 			}
 			break;
 		case WM_RBUTTONDOWN:
-			_touchDown = true;
-			_mouseMoveMessagesCount = 0;
-			april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_RBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				SetCapture((HWND)april::window->getBackendId());
 			}
+			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
+			{
+				april::window->setInputMode(april::Window::MOUSE);
+				april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_RBUTTON);
+			}
 			break;
 		case WM_LBUTTONUP:
-			_touchDown = false;
-			april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_LBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				ReleaseCapture();
+			}
+			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
+			{
+				april::window->setInputMode(april::Window::MOUSE);
+				april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_LBUTTON);
 			}
 			break;
 		case WM_RBUTTONUP:
-			_touchDown = false;
-			april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_RBUTTON);
 			if (!april::window->isFullscreen())
 			{
 				ReleaseCapture();
 			}
+			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
+			{
+				april::window->setInputMode(april::Window::MOUSE);
+				april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_RBUTTON);
+			}
 			break;
 		case WM_MOUSEMOVE:
-			if (!_touchDown)
+			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
 			{
-				if (_mouseMoveMessagesCount >= 10)
-				{
-					april::window->setInputMode(april::Window::MOUSE);
-				}
-				else
-				{
-					++_mouseMoveMessagesCount;
-				}
+				april::window->setInputMode(april::Window::MOUSE);
+				april::window->queueMouseEvent(MOUSE_MOVE, april::window->getCursorPosition(), AK_NONE);
 			}
-			else
-			{
-				_mouseMoveMessagesCount = 0;
-			}
-			april::window->queueMouseEvent(MOUSE_MOVE, april::window->getCursorPosition(), AK_NONE);
 			break;
 		case WM_MOUSEWHEEL:
 			_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
