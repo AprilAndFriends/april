@@ -10,6 +10,7 @@
 #include <april/Image.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hversion.h>
 
 #include "aprilpix.h"
 #ifdef _PVR
@@ -22,10 +23,11 @@
 namespace aprilpix
 {
 	hstr logTag = "aprilpix";
+	static hversion version(1, 0, 0);
 
 	void init()
 	{
-		hlog::write(logTag, "Initializing AprilPIX");
+		hlog::write(logTag, "Initializing AprilPIX: " + version.toString());
 		harray<hstr> extensions = april::getTextureExtensions();
 #ifdef _WEBP
 		extensions += ".webp";
@@ -40,7 +42,7 @@ namespace aprilpix
 
 	void destroy()
 	{
-		hlog::write(logTag, "Destroying AprilPix");
+		hlog::write(logTag, "Destroying AprilPIX.");
 	}
 
 }
