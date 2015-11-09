@@ -28,21 +28,29 @@ namespace aprilpix
 	void init()
 	{
 		hlog::write(logTag, "Initializing AprilPIX: " + version.toString());
-		harray<hstr> extensions = april::getTextureExtensions();
 #ifdef _WEBP
-		extensions += ".webp";
 		april::Image::registerCustomLoader(".webp", &ImageWebp::load, &ImageWebp::loadMetaData);
 #endif
 #ifdef _PVR
-		extensions += ".pvr";
 		april::Image::registerCustomLoader(".pvr", &ImagePvr::load, &ImagePvr::loadMetaData);
 #endif
-		april::setTextureExtensions(extensions);
 	}
 
 	void destroy()
 	{
 		hlog::write(logTag, "Destroying AprilPIX.");
+	}
+
+	harray<hstr> getExtensions()
+	{
+		harray<hstr> extensions = april::getTextureExtensions();
+#ifdef _WEBP
+		extensions += ".webp";
+#endif
+#ifdef _PVR
+		extensions += ".pvr";
+#endif
+		return extensions;
 	}
 
 }

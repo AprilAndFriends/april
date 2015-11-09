@@ -24,6 +24,7 @@ namespace aprilpix
 
 	aprilpixFnExport void init();
 	aprilpixFnExport void destroy();
+	aprilpixFnExport harray<hstr> getExtensions();
 
 };
 
