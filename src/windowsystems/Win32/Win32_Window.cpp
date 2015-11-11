@@ -354,12 +354,16 @@ namespace april
 
 	void Win32_Window::beginKeyboardHandling()
 	{
+#ifdef _DEBUG
 		//this->handleVirtualKeyboardChangeEvent(true, 0.5f); // usually only used for testing
+#endif
 	}
 
 	void Win32_Window::terminateKeyboardHandling()
 	{
+#ifdef _DEBUG
 		//this->handleVirtualKeyboardChangeEvent(false, 0.0f); // usually only used for testing
+#endif
 	}
 
 	LRESULT CALLBACK Win32_Window::_mainProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
