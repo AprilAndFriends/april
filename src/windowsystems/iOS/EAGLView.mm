@@ -180,7 +180,7 @@
 		NSDictionary* info = [notification userInfo];
 		CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
 		CGSize screenSize = getScreenBounds().size;
-		aprilWindow->keyboardWasShown(kbSize.width / screenSize.width);
+		aprilWindow->keyboardWasShown(kbSize.height / screenSize.height);
 	}
 }
 
