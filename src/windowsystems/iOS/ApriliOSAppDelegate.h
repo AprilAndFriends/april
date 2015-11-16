@@ -19,6 +19,9 @@
 	AprilViewController *viewController;
 }
 
+- (BOOL)application:(UIApplication*) application didFinishLaunchingWithOptions:(NSDictionary*) launchOptions;
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation;
+
 @property (nonatomic, retain) UIWindow *uiwnd;
 @property (nonatomic, retain) AprilViewController *viewController;
 @property (nonatomic, retain) NSDictionary *appLaunchOptions;

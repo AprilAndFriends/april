@@ -17,7 +17,14 @@ int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy
 	// limit GCD from spawning too much threads
 	[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];
 	[[NSOperationQueue currentQueue] setMaxConcurrentOperationCount:1];
-	int result = UIApplicationMain(argc, argv, nil, NSStringFromClass([ApriliOSAppDelegate class]));
+	
+	NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
+	NSString* appDelegateClassName = [userDefaults objectForKey:@"appDelegateClassName"];
+	if (appDelegateClassName == nil)
+	{
+		appDelegateClassName = NSStringFromClass([ApriliOSAppDelegate class]);
+	}
+	int result = UIApplicationMain(argc, argv, nil, appDelegateClassName);
 	[pool drain];
 	return result;
 }
