@@ -43,7 +43,7 @@ namespace aprilpix
 
 	harray<hstr> getExtensions()
 	{
-		harray<hstr> extensions = april::getTextureExtensions();
+		harray<hstr> extensions;
 #ifdef _WEBP
 		extensions += ".webp";
 #endif
