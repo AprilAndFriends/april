@@ -180,7 +180,10 @@
 		NSDictionary* info = [notification userInfo];
 		CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
 		CGSize screenSize = getScreenBounds().size;
-		aprilWindow->keyboardWasShown(kbSize.height / screenSize.height);
+		// some iOS versions use portrait for default, so in some cases height is width 
+		CGFloat kbHeight = hmin(kbSize.height, kbSize.width);
+		CGFloat screenHeight = hmin(screenSize.height, screenSize.width);
+		aprilWindow->keyboardWasShown(kbHeight / screenHeight);
 	}
 }
 
