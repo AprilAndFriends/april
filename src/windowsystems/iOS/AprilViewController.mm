@@ -49,10 +49,30 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 //    hlog::write(logTag, "Debug: forcing launch image detection for debugging purposes");
 //    nsDefaultPngName = nil;
 //#endif
+	NSArray *allPngImageNames = [[NSBundle mainBundle] pathsForResourcesOfType:@"png" inDirectory:nil];
     if (nsDefaultPngName != nil)
     {
-		hlog::writef(april::logTag, "Found cached LaunchImage: %s.png", [nsDefaultPngName UTF8String]);
-        return nsDefaultPngName;
+		bool found = false;
+		hstr s, defaultImg = [nsDefaultPngName UTF8String] + hstr(".png");
+		for (NSString* imgName in allPngImageNames)
+		{
+			s = [imgName UTF8String];
+			if (s.endsWith(defaultImg))
+			{
+				found = true;
+				break;
+			}
+		}
+		if (found)
+		{
+			hlog::writef(april::logTag, "Found cached LaunchImage: %s.png", [nsDefaultPngName UTF8String]);
+			return nsDefaultPngName;
+		}
+		else
+		{
+			hlog::writef(april::logTag, "Invalid cached LaunchImage: %s.png! Deleting cached value and searching again.", [nsDefaultPngName UTF8String]);
+			nsDefaultPngName = nil;
+		}
     }
     else
     {
@@ -60,7 +80,6 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
     }
 
     hstr defaultPngName, rotatedPngName;
-    NSArray *allPngImageNames = [[NSBundle mainBundle] pathsForResourcesOfType:@"png" inDirectory:nil];
     hstr s;
     bool iPadImage;
     harray<hstr> pnglist, primaryList, secondaryList;
@@ -167,11 +186,27 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 	
 	// search for default launch image and make a view controller out of it to use while loading
     NSString* defaultPngName = [self getLaunchImageName:idiom interfaceOrientation:self.interfaceOrientation windowSize:size];
-    UIImage* image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"]];
-
-	if(idiom == UIUserInterfaceIdiomPhone && self.interfaceOrientation != UIInterfaceOrientationPortrait)
+	UIImage* image;
+	if ([defaultPngName isEqualToString:@""])
 	{
-		image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationRight];
+		// make solid color launch screen image
+		CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+		UIGraphicsBeginImageContext(rect.size);
+		CGContextRef context = UIGraphicsGetCurrentContext();
+		
+		CGContextSetFillColorWithColor(context, [[UIColor blackColor] CGColor]);
+		CGContextFillRect(context, rect);
+		
+		image = UIGraphicsGetImageFromCurrentImageContext();
+		UIGraphicsEndImageContext();
+	}
+	else
+	{
+		image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"]];
+		if(idiom == UIUserInterfaceIdiomPhone && self.interfaceOrientation != UIInterfaceOrientationPortrait)
+		{
+			image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationRight];
+		}
 	}
 	
 	mImageView = [[UIImageView alloc] initWithImage:image];
