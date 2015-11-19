@@ -13,6 +13,8 @@
 #import "main_base.h"
 #import "AprilViewController.h"
 #import "EAGLView.h"
+#include "april.h"
+#include <hltypes/hlog.h>
 #include "iOS_Window.h"
 #include "RenderSystem.h"
 #include "Window.h"
@@ -39,9 +41,9 @@ extern UIInterfaceOrientation gSupportedOrientations;
 
 - (BOOL)application:(UIApplication*) application didFinishLaunchingWithOptions:(NSDictionary*) launchOptions
 {
-	NSLog(@"Creating iOS window");
+	hlog::write(april::logTag, "Creating iOS window");
 #if TARGET_IPHONE_SIMULATOR
-	NSLog(@"iOS Simulator document location: %@",[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject]);
+	NSLog(@"[april] iOS Simulator document location: %@",[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject]);
 #endif
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
 
@@ -118,7 +120,7 @@ extern UIInterfaceOrientation gSupportedOrientations;
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
-	NSLog(@"Received iOS memory warning!");
+	hlog::write(april::logTag, "Received iOS memory warning!");
 	april::window->handleLowMemoryWarning();
 }
 

@@ -65,18 +65,18 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 		}
 		if (found)
 		{
-			hlog::writef(april::logTag, "Found cached LaunchImage: %s.png", [nsDefaultPngName UTF8String]);
+			hlog::writef(april::logTag, "Found cached Launch Image: %s.png", [nsDefaultPngName UTF8String]);
 			return nsDefaultPngName;
 		}
 		else
 		{
-			hlog::writef(april::logTag, "Invalid cached LaunchImage: %s.png! Deleting cached value and searching again.", [nsDefaultPngName UTF8String]);
+			hlog::writef(april::logTag, "Invalid cached Launch Image: %s.png! Deleting cached value and searching again.", [nsDefaultPngName UTF8String]);
 			nsDefaultPngName = nil;
 		}
     }
     else
     {
-		hlog::write(april::logTag, "Cached LaunchImage not found, detecting...");
+		hlog::write(april::logTag, "Cached Launch Image not found, detecting...");
     }
 
     hstr defaultPngName, rotatedPngName;
@@ -87,7 +87,16 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
     CGSize screenSize = [UIScreen mainScreen].bounds.size;
     int screenHeight = screenSize.width > screenSize.height ? screenSize.width : screenSize.height;
     CGSize rotatedScreenSize = CGSizeMake(screenSize.height, screenSize.width);
-    
+	
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+	{
+		// prefer vertical images on the iphone
+		CGSize temp = screenSize;
+		screenSize = rotatedScreenSize;
+		rotatedScreenSize = temp;
+	}
+
+	
     for (NSString* imgName in allPngImageNames)
     {
         s = [imgName UTF8String];
@@ -138,30 +147,42 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
     pnglist += primaryList;
     pnglist += secondaryList;
 
-    foreach (hstr, it, pnglist)
-    {
-        s = *it;
-        if (s.contains("LaunchImage") || s.contains("Default"))
-        {
-            //UIImage *img = [UIImage imageNamed:imgName];
-            UIImage *img = [UIImage imageWithContentsOfFile:[NSString stringWithUTF8String:s.cStr()]];
-            
-            // Has image same scale and dimensions as our current device's screen?
-            if (img.scale == screenScale && (CGSizeEqualToSize(img.size, screenSize) || CGSizeEqualToSize(img.size, rotatedScreenSize)))
-            {
-                if (s.contains("/"))
-                {
-                    s = s.rsplit("/", 1)[1].replaced(".png", "");
-                }
-                NSLog(@"Found launch image for device: %s.png: %@", s.cStr(), img.description);
-                defaultPngName = s;
-                break;
-            }
-        }
-    }
+	for (int i = 0; i < 2; i++)
+	{
+		foreach (hstr, it, pnglist)
+		{
+			s = *it;
+			if (s.contains("LaunchImage") || s.contains("Default"))
+			{
+				//UIImage *img = [UIImage imageNamed:imgName];
+				UIImage *img = [UIImage imageWithContentsOfFile:[NSString stringWithUTF8String:s.cStr()]];
+				
+				// Has image same scale and dimensions as our current device's screen?
+				if (img.scale == screenScale && (CGSizeEqualToSize(img.size, screenSize)))
+				{
+					if (s.contains("/"))
+					{
+						s = s.rsplit("/", 1)[1].replaced(".png", "");
+					}
+					hlog::writef(april::logTag, "Found launch image for device: %s.png", s.cStr());
+					defaultPngName = s;
+					break;
+				}
+				[img release];
+			}
+		}
+		if (defaultPngName != "")
+		{
+			break;
+		}
+		else
+		{
+			screenSize = rotatedScreenSize; // just in case, do another pass
+		}
+	}
     if (defaultPngName == "")
     {
-        NSLog(@"Failed to find appropriate launch image for device");
+        hlog::write(april::logTag, "Failed to find appropriate launch image for device");
         return @"";
     }
     else
@@ -231,7 +252,7 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 {
 	if ([animationID isEqual: @"FadeOut"])
 	{
-		NSLog(@"Removing loading screen UIImageView from View Controller");
+		hlog::write(april::logTag, "Removing loading screen UIImageView from View Controller");
 		[mImageView removeFromSuperview];
 		[mImageView release];
 		mImageView = nil;
@@ -243,7 +264,7 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 {
 	if (mImageView != nil)
 	{
-		NSLog(@"Performing fadeout of loading screen's UIImageView");
+		hlog::write(april::logTag, "Performing fadeout of loading screen's UIImageView");
 
 		[UIView beginAnimations:@"FadeOut" context:nil];
 		[UIView setAnimationDuration:(fast ? 0.25f : 1)];
@@ -262,13 +283,13 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-	NSLog(@"Window started rotating");
+	hlog::write(april::logTag, "Window started rotating");
 	g_wnd_rotating = 1;
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-	NSLog(@"Window finished rotating");
+	hlog::write(april::logTag, "Window finished rotating");
 	g_wnd_rotating = 0;
 }
 

@@ -9,6 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import <AppKit/NSApplication.h>
 
+#include <hltypes/hlog.h>
+#include "april.h"
 #include "RenderSystem.h"
 #include "Window.h"
 #include "main_base.h"
@@ -69,7 +71,7 @@ static NSString* getLocalizedString(NSString* key, NSString* fallback)
 	}
 	else
 	{
-		NSLog(@"Aborting application quit request per app's request.");
+		hlog::write(april::logTag, "Aborting application quit request per app's request.");
 	}	
 #endif
 }

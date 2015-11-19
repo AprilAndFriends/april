@@ -14,6 +14,7 @@
 #import <OpenGLES/EAGLDrawable.h>
 
 #import "EAGLView.h"
+#include <hltypes/hlog.h>
 #include "iOS_Window.h"
 #include "RenderSystem.h"
 #include "april.h"
@@ -203,7 +204,7 @@
     if (!self.displayLink)
     {
 #ifdef _DEBUG
-        NSLog(@"Called drawView while in background!");
+        hlog::write(april::logTag, "Called drawView while in background!");
 #endif
         return;
     }
@@ -232,7 +233,7 @@
 	if (self.displayLink == nil)
 	{
 #ifdef _DEBUG
-		NSLog(@"Warning: OpenGL swapBuffers while app in background, ignoring!");
+		hlog::write(april::logTag, "Warning: OpenGL swapBuffers while app in background, ignoring!");
 #endif
 		return;
 	}
@@ -277,7 +278,7 @@
 	
 	if(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
 	{
-		NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
+		hlog::writef(april::logTag, "failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
 		return NO;
 	}
 	// clear crap from previous renders. I often got a magenta colored initial screen without this

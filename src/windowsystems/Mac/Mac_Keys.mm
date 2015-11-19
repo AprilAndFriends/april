@@ -148,7 +148,7 @@ namespace april
 		}
 
 #ifdef _DEBUG
-		NSLog(@"Unknown key code: %u", macKeyCode);
+		hlog::write(april::logTag, "Unknown key code: %u", macKeyCode);
 #endif
 		return april::AK_NONE;
 	}

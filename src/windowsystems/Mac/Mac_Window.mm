@@ -431,7 +431,7 @@ namespace april
         }
         else
         {
-            NSLog(@"Mac_CocoaWindow: Ignoring onWindowSizeChange, delegate not set.");
+            hlog::write(april::logTag, "Mac_CocoaWindow: Ignoring onWindowSizeChange, delegate not set.");
         }
     }
 

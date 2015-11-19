@@ -98,7 +98,7 @@ namespace april
 	}
 	else
 	{
-		NSLog(@"Aborting window close request per app's request.");
+		hlog::write(april::logTag, "Aborting window close request per app's request.");
 	}
 	return NO;
 }
@@ -108,7 +108,7 @@ namespace april
 	NSSize size = [mView bounds].size;
 	if (size.width == 0 || size.height == 0)
 	{
-		NSLog(@"onWindowSizeChange reported 0x0 size, ignoring");
+		hlog::write(april::logTag, "onWindowSizeChange reported 0x0 size, ignoring");
 		return;
 	}
 	if ([self inLiveResize])

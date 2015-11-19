@@ -47,6 +47,8 @@ Copyright (C) 2010 Apple Inc. All Rights Reserved.
 
 */
 
+#include <hltypes/hlog.h>
+#include "april.h"
 #include "Image.h"
 #include <hltypes/hresource.h>
 #include <hltypes/hdir.h>
@@ -251,7 +253,7 @@ typedef struct _PVRTexHeader
 		err = glGetError();
 		if (err != GL_NO_ERROR)
 		{
-			NSLog(@"Error uploading compressed texture level: %d. glError: 0x%04X", i, err);
+			hlog::writef(april::logTag, "Error uploading compressed texture level: %d. glError: 0x%04X", i, err);
 			return FALSE;
 		}
 		

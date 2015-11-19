@@ -148,7 +148,7 @@ namespace april
 		
 	void iOS_Window::enterMainLoop()
 	{
-		NSLog(@"Fatal error: Using enterMainLoop on iOS!");
+		hlog::write(april::logTag, "Fatal error: Using enterMainLoop on iOS!");
 		exit(-1);
 	}
 	
