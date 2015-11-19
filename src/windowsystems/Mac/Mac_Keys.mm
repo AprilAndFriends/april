@@ -5,10 +5,14 @@
 ///
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
-#include <hltypes/hmap.h>
-#include "Mac_Keys.h"
+
 #import <Foundation/Foundation.h>
 
+#include <hltypes/hlog.h>
+#include <hltypes/hmap.h>
+
+#include "april.h"
+#include "Mac_Keys.h"
 
 enum CarbonKeyCode
 {
@@ -148,7 +152,7 @@ namespace april
 		}
 
 #ifdef _DEBUG
-		hlog::write(april::logTag, "Unknown key code: %u", macKeyCode);
+		hlog::writef(logTag, "Unknown key code: %u", macKeyCode);
 #endif
 		return april::AK_NONE;
 	}
