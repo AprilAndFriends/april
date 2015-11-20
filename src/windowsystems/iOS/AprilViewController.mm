@@ -168,7 +168,6 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 					defaultPngName = s;
 					break;
 				}
-				[img release];
 			}
 		}
 		if (defaultPngName != "")
