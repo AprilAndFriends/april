@@ -123,7 +123,6 @@ namespace april
 
 	void WinRT_Window::setResolution(int w, int h, bool fullscreen)
 	{
-		hlog::error(logTag, "Cannot change resolution on window system: " + this->name);
 	}
 
 	void WinRT_Window::changeSize(int w, int h)
