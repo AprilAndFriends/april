@@ -654,13 +654,9 @@ namespace april
 				// adding those ".scale-x" things here, because my prayers went unanswered and Microsoft decided to change the format after all
 #ifndef _WINP8 // for some unknown reason, on WinP8 "ResolutionScale" keeps throwing deprecated warnings and "RawPixelsPerViewPixel" is not available on normal WinRT
 				filenames += logoFilename(0, index) + ".scale-" + hstr((int)DisplayInformation::GetForCurrentView()->ResolutionScale);
-#else
-				filenames += logoFilename(0, index) + ".scale-" + hstr((int)(DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel * 100));
-#endif
-				
-#ifndef _WINP8
 				filenames += logoFilename(0, index) + ".scale-180";
 #else
+				filenames += logoFilename(0, index) + ".scale-" + hstr((int)(DisplayInformation::GetForCurrentView()->RawPixelsPerViewPixel * 100));
 				filenames += logoFilename(0, index) + ".scale-240";
 #endif
 				filenames += logoFilename(0, index) + ".scale-140";
