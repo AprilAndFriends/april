@@ -55,6 +55,7 @@ namespace april
 	WinRT_XamlApp::WinRT_XamlApp() : Application()
 	{
 		DisplayInformation::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
+		Windows::Globalization::ApplicationLanguages::PrimaryLanguageOverride = ref new Platform::String(L"");
 		this->running = true;
 		this->overlay = nullptr;
 #ifndef _WINP8
