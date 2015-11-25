@@ -589,39 +589,39 @@ namespace april
 	{
 		if (this->splashTexture != NULL)
 		{
-			grect storedOrthoProjection = april::rendersys->getOrthoProjection();
-			gmat4 storedProjectionMatrix = april::rendersys->getProjectionMatrix();
-			gmat4 storedModelviewMatrix = april::rendersys->getModelviewMatrix();
-			grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
-			grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
-			float width = (float)april::window->getWidth();
-			float height = (float)april::window->getHeight();
-			viewport.setSize(width, height);
+			static gmat4 storedProjectionMatrix;
+			static gmat4 storedModelviewMatrix;
+			static grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
+			static grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
+			static grect src(0.0f, 0.0f, 1.0f, 1.0f);
+			static gvec2 windowSize;
+			static gvec2 textureSize;
+			storedProjectionMatrix = april::rendersys->getProjectionMatrix();
+			storedModelviewMatrix = april::rendersys->getModelviewMatrix();
+			windowSize = april::window->getSize();
+			viewport.setSize(windowSize);
 			april::rendersys->setOrthoProjection(viewport);
 			april::rendersys->setBlendMode(april::BM_DEFAULT);
 			april::rendersys->setColorMode(april::CM_DEFAULT);
 			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
 #ifndef _WINP8
-			float scale = (float)DisplayInformation::GetForCurrentView()->ResolutionScale * 0.01f;
-			float textureWidth = SPLASH_HEIGHT * scale;
-			float textureHeight = SPLASH_HEIGHT * scale;
+			textureSize.set(SPLASH_WIDTH, SPLASH_HEIGHT);
+			textureSize *= (float)DisplayInformation::GetForCurrentView()->ResolutionScale * 0.01f;
 #else
 			// on WinP8 the splash graphic is rotated by -90° and needs to be stretched over the entire screen
-			april::rendersys->translate(width * 0.5f, height * 0.5f);
+			april::rendersys->translate(windowSize.x * 0.5f, windowSize.y * 0.5f);
 			april::rendersys->rotate(90.0f);
-			hswap(width, height);
-			april::rendersys->translate(-width * 0.5f, -height * 0.5f);
-			float textureWidth = width;
-			float textureHeight = width * this->splashTexture->getHeight() / this->splashTexture->getWidth();
+			hswap(windowSize.x, windowSize.y);
+			april::rendersys->translate(-windowSize.x * 0.5f, -windowSize.y * 0.5f);
+			textureSize.set(windowSize.x, windowSize.x * this->splashTexture->getHeight() / this->splashTexture->getWidth());
 #endif
-			drawRect.set(hroundf(width - textureWidth) * 0.5f, hroundf(height - textureHeight) * 0.5f, textureWidth, textureHeight);
+			drawRect.set(hroundf(windowSize.x - textureSize.x) * 0.5f, hroundf(windowSize.y - textureSize.y) * 0.5f, textureSize);
 			april::rendersys->setTexture(this->splashTexture);
 			april::rendersys->setBlendMode(april::BM_DEFAULT);
 			april::rendersys->setColorMode(april::CM_DEFAULT);
-			april::rendersys->drawTexturedRect(drawRect, grect(0.0f, 0.0f, 1.0f, 1.0f));
+			april::rendersys->drawTexturedRect(drawRect, src);
 			april::rendersys->presentFrame();
 			april::rendersys->reset();
-			april::rendersys->setOrthoProjection(storedOrthoProjection);
 			april::rendersys->setProjectionMatrix(storedProjectionMatrix);
 			april::rendersys->setModelviewMatrix(storedModelviewMatrix);
 		}

@@ -433,6 +433,15 @@ namespace april
 		hmutex::ScopeLock lock(&this->texturesMutex);
 		this->textures -= texture;
 		lock.release();
+		if (this->state->texture == texture)
+		{
+			this->state->texture = NULL;
+		}
+		if (this->deviceState->texture == texture)
+		{
+			this->deviceState->texture = NULL;
+			this->_setDeviceTexture(NULL);
+		}
 		delete texture;
 	}
 

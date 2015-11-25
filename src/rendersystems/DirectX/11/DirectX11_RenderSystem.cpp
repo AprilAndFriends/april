@@ -666,7 +666,7 @@ namespace april
 
 	void DirectX11_RenderSystem::_setDeviceRenderMode(bool useTexture, bool useColor)
 	{
-		// TODOb
+		// not used
 	}
 
 	void DirectX11_RenderSystem::_setDeviceTexture(Texture* texture)
