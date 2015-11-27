@@ -3,12 +3,6 @@
 #include "VertexShader.hlsli"
 #include "PixelShader_Plain.hlsli"
 
-struct VertexShaderInput
-{
-	min16float3 position : POSITION;
-	min16float4 color : COLOR;
-};
-
 PixelShaderInput main(VertexShaderInput input)
 {
 	PixelShaderInput vertexShaderOutput;

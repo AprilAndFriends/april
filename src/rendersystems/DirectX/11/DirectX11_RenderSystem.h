@@ -51,11 +51,10 @@ namespace april
 		public:
 			friend class DirectX11_RenderSystem;
 
-			ShaderComposition(ComPtr<ID3D11InputLayout> inputLayout, DirectX11_VertexShader* vertexShader, DirectX11_PixelShader* pixelShader);
+			ShaderComposition(DirectX11_VertexShader* vertexShader, DirectX11_PixelShader* pixelShader);
 			~ShaderComposition();
 
 		protected:
-			ComPtr<ID3D11InputLayout> inputLayout;
 			DirectX11_VertexShader* vertexShader;
 			DirectX11_PixelShader* pixelShader;
 
@@ -64,7 +63,6 @@ namespace april
 		struct ConstantBuffer
 		{
 			gmat4 matrix;
-			gquat systemColor;
 			gquat lerpAlpha; // must be, because of 16 byte alignment of constant buffer size
 		};
 
@@ -114,10 +112,7 @@ namespace april
 		ComPtr<ID3D11Buffer> constantBuffer;
 		ConstantBuffer constantBufferData;
 
-		ComPtr<ID3D11InputLayout> inputLayoutPlain;
-		ComPtr<ID3D11InputLayout> inputLayoutTextured;
-		ComPtr<ID3D11InputLayout> inputLayoutColored;
-		ComPtr<ID3D11InputLayout> inputLayoutColoredTextured;
+		ComPtr<ID3D11InputLayout> inputLayout;
 
 		DirectX11_VertexShader* vertexShaderPlain;
 		DirectX11_VertexShader* vertexShaderTextured;
