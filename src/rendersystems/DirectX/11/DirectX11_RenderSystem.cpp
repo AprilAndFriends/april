@@ -810,7 +810,7 @@ namespace april
 			this->d3dDeviceContext->Map(this->constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &this->mappedSubResource);
 			memcpy(this->mappedSubResource.pData, &this->constantBufferData, sizeof(ConstantBuffer));
 			this->d3dDeviceContext->Unmap(this->constantBuffer.Get(), 0);
-			this->deviceState_constantBufferChanged = true;
+			this->deviceState_constantBufferChanged = false;
 		}
 	}
 
