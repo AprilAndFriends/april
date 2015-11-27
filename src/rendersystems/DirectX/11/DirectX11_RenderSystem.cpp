@@ -768,13 +768,11 @@ namespace april
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Lerp);
 		}
 		// change shaders
-		bool shaderChanged = false;
 		bool inputLayoutChanged = false;
 		bool vertexShaderChanged = false;
 		bool pixelShaderChanged = false;
 		if (this->deviceState_shader != shader)
 		{
-			shaderChanged = true;
 			if (this->deviceState_shader == NULL)
 			{
 				inputLayoutChanged = true;
