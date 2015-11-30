@@ -30,7 +30,7 @@ namespace april
 		void hideKeyboard();
 
 	private:
-		TextBox^ keyboardTextbox;
+		TextBox^ keyboardTextBox;
 
 	};
 
