@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -59,6 +60,8 @@ public class Activity extends android.app.Activity
 	public List<Callback<Void>> callbacksOnRestart = null;
 	public List<Callback3<Boolean, Integer, Integer, Intent>> callbacksOnActivityResult = null;
 	public List<Callback1<Void, Intent>> callbacksOnNewIntent = null;
+	public List<Callback<Boolean>> callbacksOnBackPressed = null;
+	public List<Callback1<Void, Configuration>> callbacksOnConfigurationChanged = null;
 	
 	public Activity()
 	{
@@ -80,6 +83,8 @@ public class Activity extends android.app.Activity
 		this.callbacksOnRestart = new ArrayList<Callback<Void>>();
 		this.callbacksOnActivityResult = new ArrayList<Callback3<Boolean, Integer, Integer, Intent>>();
 		this.callbacksOnNewIntent = new ArrayList<Callback1<Void, Intent>>();
+		this.callbacksOnBackPressed = new ArrayList<Callback<Boolean>>();
+		this.callbacksOnConfigurationChanged = new ArrayList<Callback1<Void, Configuration>>();
 	}
 	
 	public void registerOnCreate(Callback1<Void, Bundle> callback)
@@ -125,6 +130,16 @@ public class Activity extends android.app.Activity
 	public void registerOnNewIntent(Callback1<Void, Intent> callback)
 	{
 		this.callbacksOnNewIntent.add(callback);
+	}
+	
+	public void registerOnBackPressed(Callback<Boolean> callback)
+	{
+		this.callbacksOnBackPressed.add(callback);
+	}
+	
+	public void registerOnConfigurationChanged(Callback1<Void, Configuration> callback)
+	{
+		this.callbacksOnConfigurationChanged.add(callback);
 	}
 	
 	public View getView()
@@ -354,6 +369,33 @@ public class Activity extends android.app.Activity
 		for (int i = 0; i < this.callbacksOnNewIntent.size(); ++i)
 		{
 			this.callbacksOnNewIntent.get(i).execute(intent);
+		}
+	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		boolean handled = false;
+		for (int i = 0; i < this.callbacksOnBackPressed.size(); ++i)
+		{
+			if (this.callbacksOnBackPressed.get(i).execute())
+			{
+				handled = true;
+			}
+		}
+		if (!handled)
+		{
+			super.onBackPressed();
+		}
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfiguration)
+	{
+		super.onConfigurationChanged(newConfiguration);
+		for (int i = 0; i < this.callbacksOnConfigurationChanged.size(); ++i)
+		{
+			this.callbacksOnConfigurationChanged.get(i).execute(newConfiguration);
 		}
 	}
 	
