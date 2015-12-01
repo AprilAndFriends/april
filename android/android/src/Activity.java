@@ -5,6 +5,7 @@ package com.april;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageInfo;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.april.DialogFactory;
 
+import java.util.List;
 import java.util.ArrayList;
 
 public class Activity extends android.app.Activity
@@ -48,16 +50,81 @@ public class Activity extends android.app.Activity
 	
 	public GLSurfaceView glView = null;
 	public ArrayList ignoredKeys = null;
+	public List<Callback1<Void, Bundle>> callbacksOnCreate = null;
+	public List<Callback<Void>> callbacksOnStart = null;
+	public List<Callback<Void>> callbacksOnResume = null;
+	public List<Callback<Void>> callbacksOnPause = null;
+	public List<Callback<Void>> callbacksOnStop = null;
+	public List<Callback<Void>> callbacksOnDestroy = null;
+	public List<Callback<Void>> callbacksOnRestart = null;
+	public List<Callback3<Boolean, Integer, Integer, Intent>> callbacksOnActivityResult = null;
+	public List<Callback1<Void, Intent>> callbacksOnNewIntent = null;
 	
 	public Activity()
 	{
 		super();
+		NativeInterface.activity = (android.app.Activity)this;
+		NativeInterface.aprilActivity = this;
 		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 		this.ignoredKeys = new ArrayList();
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_DOWN);
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_UP);
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_MUTE);
 		this.systemSettingsObserver = new SystemSettingsObserver();
+		this.callbacksOnCreate = new ArrayList<Callback1<Void, Bundle>>();
+		this.callbacksOnStart = new ArrayList<Callback<Void>>();
+		this.callbacksOnResume = new ArrayList<Callback<Void>>();
+		this.callbacksOnPause = new ArrayList<Callback<Void>>();
+		this.callbacksOnStop = new ArrayList<Callback<Void>>();
+		this.callbacksOnDestroy = new ArrayList<Callback<Void>>();
+		this.callbacksOnRestart = new ArrayList<Callback<Void>>();
+		this.callbacksOnActivityResult = new ArrayList<Callback3<Boolean, Integer, Integer, Intent>>();
+		this.callbacksOnNewIntent = new ArrayList<Callback1<Void, Intent>>();
+	}
+	
+	public void registerOnCreate(Callback1<Void, Bundle> callback)
+	{
+		this.callbacksOnCreate.add(callback);
+	}
+	
+	public void registerOnStart(Callback<Void> callback)
+	{
+		this.callbacksOnStart.add(callback);
+	}
+	
+	public void registerOnResume(Callback<Void> callback)
+	{
+		this.callbacksOnResume.add(callback);
+	}
+	
+	public void registerOnPause(Callback<Void> callback)
+	{
+		this.callbacksOnPause.add(callback);
+	}
+	
+	public void registerOnStop(Callback<Void> callback)
+	{
+		this.callbacksOnStop.add(callback);
+	}
+	
+	public void registerOnDestroy(Callback<Void> callback)
+	{
+		this.callbacksOnDestroy.add(callback);
+	}
+	
+	public void registerOnRestart(Callback<Void> callback)
+	{
+		this.callbacksOnRestart.add(callback);
+	}
+	
+	public void registerOnActivityResult(Callback3<Boolean, Integer, Integer, Intent> callback)
+	{
+		this.callbacksOnActivityResult.add(callback);
+	}
+	
+	public void registerOnCreate(Callback1<Void, Intent> callback)
+	{
+		this.callbacksOnNewIntent.add(callback);
 	}
 	
 	public View getView()
@@ -83,8 +150,6 @@ public class Activity extends android.app.Activity
 		{
 			android.util.Log.w("april", "Minimum GLES version should be 2! Unpredictable behavior possible!");
 		}
-		NativeInterface.activity = (android.app.Activity)this;
-		NativeInterface.aprilActivity = this;
 		this.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), true, this.systemSettingsObserver);
 		this.systemSettingsObserver.onChange(true);
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -133,6 +198,10 @@ public class Activity extends android.app.Activity
 				View.SYSTEM_UI_FLAG_LOW_PROFILE);
 		}
 		NativeInterface.activityOnCreate();
+		for (int i = 0; i < this.callbacksOnCreate.size(); ++i)
+		{
+			this.callbacksOnCreate.get(i).execute(savedInstanceState);
+		}
 	}
 	
 	protected void hideNavigationBar()
@@ -153,6 +222,10 @@ public class Activity extends android.app.Activity
 	protected void onStart()
 	{
 		super.onStart();
+		for (int i = 0; i < this.callbacksOnStart.size(); ++i)
+		{
+			this.callbacksOnStart.get(i).execute();
+		}
 		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
@@ -166,6 +239,10 @@ public class Activity extends android.app.Activity
 	protected void onResume()
 	{
 		super.onResume();
+		for (int i = 0; i < this.callbacksOnResume.size(); ++i)
+		{
+			this.callbacksOnResume.get(i).execute();
+		}
 		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
@@ -194,6 +271,10 @@ public class Activity extends android.app.Activity
 				NativeInterface.activityOnPause();
 			}
 		});
+		for (int i = 0; i < this.callbacksOnPause.size(); ++i)
+		{
+			this.callbacksOnPause.get(i).execute();
+		}
 		super.onPause();
 	}
 	
@@ -207,12 +288,20 @@ public class Activity extends android.app.Activity
 				NativeInterface.activityOnStop();
 			}
 		});
+		for (int i = 0; i < this.callbacksOnStop.size(); ++i)
+		{
+			this.callbacksOnStop.get(i).execute();
+		}
 		super.onStop();
 	}
 	
 	@Override
 	public void onDestroy()
 	{
+		for (int i = 0; i < this.callbacksOnDestroy.size(); ++i)
+		{
+			this.callbacksOnDestroy.get(i).execute();
+		}
 		NativeInterface.activityOnDestroy();
 		NativeInterface.destroy();
 		NativeInterface.reset();
@@ -228,6 +317,10 @@ public class Activity extends android.app.Activity
 	protected void onRestart()
 	{
 		super.onRestart();
+		for (int i = 0; i < this.callbacksOnRestart.size(); ++i)
+		{
+			this.callbacksOnRestart.get(i).execute();
+		}
 		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
@@ -235,6 +328,33 @@ public class Activity extends android.app.Activity
 				NativeInterface.activityOnRestart();
 			}
 		});
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		boolean handled = false;
+		for (int i = 0; i < this.callbacksOnActivityResult.size(); ++i)
+		{
+			if (this.callbacksOnActivityResult.get(i).execute(requestCode, resultCode, data))
+			{
+				handled = true;
+			}
+		}
+		if (!handled)
+		{
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent)
+	{
+		super.onNewIntent(intent);
+		for (int i = 0; i < this.callbacksOnNewIntent.size(); ++i)
+		{
+			this.callbacksOnNewIntent.get(i).execute(intent);
+		}
 	}
 	
 	@Override
