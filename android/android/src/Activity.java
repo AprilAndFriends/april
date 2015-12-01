@@ -122,7 +122,7 @@ public class Activity extends android.app.Activity
 		this.callbacksOnActivityResult.add(callback);
 	}
 	
-	public void registerOnCreate(Callback1<Void, Intent> callback)
+	public void registerOnNewIntent(Callback1<Void, Intent> callback)
 	{
 		this.callbacksOnNewIntent.add(callback);
 	}
