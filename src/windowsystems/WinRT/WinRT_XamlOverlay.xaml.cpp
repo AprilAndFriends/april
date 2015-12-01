@@ -50,9 +50,9 @@ namespace april
 	WinRT_XamlOverlay::WinRT_XamlOverlay()
 	{
 		this->InitializeComponent();
+		this->Children->Append(_loadFromXaml(XAML_BUTTON));
 		this->keyboardTextBox = (TextBox^)_loadFromXaml(XAML_TEXT_BOX);
 		this->Children->Append(this->keyboardTextBox);
-		this->Children->Append(_loadFromXaml(XAML_BUTTON));
 	}
 
 	void WinRT_XamlOverlay::showKeyboard()
