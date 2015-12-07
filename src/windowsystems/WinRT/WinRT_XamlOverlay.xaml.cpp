@@ -23,7 +23,6 @@ using namespace Windows::UI::Xaml::Markup;
 	xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" \
 	xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" \
 	x:Name=\"keyboardTextBox\" \
-	IsHitTestVisible=\"False\" \
 	IsTextPredictionEnabled=\"False\" \
 	Background=\"{x:Null}\" \
 	BorderBrush=\"{x:Null}\" \
@@ -42,7 +41,7 @@ namespace april
 		hstr hXaml = xaml;
 		if ((unsigned char)hXaml[0] == 0xEF && (unsigned char)hXaml[1] == 0xBB && (unsigned char)hXaml[2] == 0xBF) // remove BOM
 		{
-			hXaml = hXaml(3, -1);
+			hXaml = hXaml(3, hXaml.size() - 3);
 		}
 		return (UIElement^)XamlReader::Load(_HL_HSTR_TO_PSTR(hXaml));
 	}
@@ -50,21 +49,29 @@ namespace april
 	WinRT_XamlOverlay::WinRT_XamlOverlay()
 	{
 		this->InitializeComponent();
-		this->Children->Append(_loadFromXaml(XAML_BUTTON));
+		this->keyboardButton = (::Button^)_loadFromXaml(XAML_BUTTON);
 		this->keyboardTextBox = (TextBox^)_loadFromXaml(XAML_TEXT_BOX);
-		this->Children->Append(this->keyboardTextBox);
 	}
 
 	void WinRT_XamlOverlay::showKeyboard()
 	{
 		this->hideKeyboard(); // first hide the already existing textbox
+		this->Children->Append(this->keyboardButton);
+		this->Children->Append(this->keyboardTextBox);
 		this->keyboardTextBox->Focus(FocusState::Programmatic);
 	}
 	
 	void WinRT_XamlOverlay::hideKeyboard()
 	{
-		this->keyboardTextBox->IsEnabled = false;
-		this->keyboardTextBox->IsEnabled = true;
+		unsigned int index = -1;
+		if (this->Children->IndexOf(this->keyboardTextBox, &index))
+		{
+			this->Children->RemoveAt(index);
+		}
+		if (this->Children->IndexOf(this->keyboardButton, &index))
+		{
+			this->Children->RemoveAt(index);
+		}
 	}
 	
 }

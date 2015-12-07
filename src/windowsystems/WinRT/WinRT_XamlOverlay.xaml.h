@@ -31,6 +31,7 @@ namespace april
 
 	private:
 		TextBox^ keyboardTextBox;
+		::Button^ keyboardButton;
 
 	};
 
