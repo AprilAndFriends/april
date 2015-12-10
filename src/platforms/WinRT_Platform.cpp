@@ -49,8 +49,12 @@ namespace april
 			info.cpuCores = w32info.dwNumberOfProcessors;
 			// RAM size
 #ifndef _WINP8
-			// pure WinRT does not seem to be able to retrieve this information
-			info.ram = 1024;
+			// pure WinRT can't retrieve this information so some arbitrary value is used
+#ifndef _ARM
+			info.ram = 2048;
+#else
+			info.ram = 1536;
+#endif
 #else
 			// WinP8 reports 75% of the RAM's size as available
 			info.ram = (int)(Windows::System::MemoryManager::AppMemoryUsageLimit / (1024 * 1024) * 4 / 3); // in MB
