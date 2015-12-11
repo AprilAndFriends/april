@@ -113,7 +113,7 @@ namespace april
 			}
 			catch (hexception& e)
 			{
-				hlog::error("FATAL", e.getMessage());
+				hlog::error("FATAL", e.getFullMessage());
 				throw e;
 			}
 		}

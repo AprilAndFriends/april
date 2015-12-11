@@ -16,7 +16,10 @@
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
+#define PSAPI_VERSION 1
+// needed for GetProcessMemoryInfo()
 #include <Psapi.h> // has to be here after hplatform.h that includes windows.h
+#pragma comment(lib, "psapi.lib")
 
 #include "april.h"
 #include "Platform.h"
@@ -37,14 +40,36 @@ namespace april
 			osinfo.dwOSVersionInfoSize = sizeof(osinfo);
 			GetVersionEx(&osinfo);
 			info.osVersion = hsprintf("%d.%d", osinfo.dwMajorVersion, osinfo.dwMinorVersion);
-			if      (osinfo.dwMajorVersion == 5) info.name += " XP";
+			if (osinfo.dwMajorVersion == 5)
+			{
+				info.name += " XP";
+			}
 			else if (osinfo.dwMajorVersion == 6)
 			{
-				if      (osinfo.dwMinorVersion == 0) info.name += " Vista";
-				else if (osinfo.dwMinorVersion == 1) info.name += " 7";
-				else if (osinfo.dwMinorVersion == 2) info.name += " 8";
-				else if (osinfo.dwMinorVersion == 3) info.name += " 8.1";
-				// future and special versions of Windows will just be named "Windows" to avoid assumptions
+				if (osinfo.dwMinorVersion == 0)
+				{
+					info.name += " Vista";
+				}
+				else if (osinfo.dwMinorVersion == 1)
+				{
+					info.name += " 7";
+				}
+				else if (osinfo.dwMinorVersion == 2)
+				{
+					info.name += " 8";
+				}
+				else if (osinfo.dwMinorVersion == 3)
+				{
+					info.name += " 8.1";
+				}
+				else // future 6.x versions of Windows will just be named "Windows" to avoid assumptions
+				{
+					info.name += " 8.x";
+				}
+			}
+			else if (osinfo.dwMajorVersion == 10)
+			{
+				info.name += " 10";
 			}
 			info.architecture = "x86";
 			// number of CPU cores
@@ -63,14 +88,12 @@ namespace april
 			// other
 			info.locale = "en"; // default is "en"
 			wchar_t locale[LOCALE_NAME_MAX_LENGTH] = { 0 };
-			int length = GetLocaleInfoW(LOCALE_USER_DEFAULT, LOCALE_SISO639LANGNAME,
-				locale, (LOCALE_NAME_MAX_LENGTH - 1) * sizeof(wchar_t));
+			int length = GetLocaleInfoW(LOCALE_USER_DEFAULT, LOCALE_SISO639LANGNAME, locale, (LOCALE_NAME_MAX_LENGTH - 1) * sizeof(wchar_t));
 			if (length > 0)
 			{
 				info.locale = hstr::fromUnicode(locale);
 			}
-			length = GetLocaleInfoW(LOCALE_USER_DEFAULT, LOCALE_SISO3166CTRYNAME,
-				locale, (LOCALE_NAME_MAX_LENGTH - 1) * sizeof(wchar_t));
+			length = GetLocaleInfoW(LOCALE_USER_DEFAULT, LOCALE_SISO3166CTRYNAME, locale, (LOCALE_NAME_MAX_LENGTH - 1) * sizeof(wchar_t));
 			if (length > 0)
 			{
 				info.localeVariant = hstr::fromUnicode(locale);
