@@ -608,14 +608,14 @@ namespace april
 				}
 			}
 			break;
-		case WM_ACTIVATE:
-			if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
+		case WM_ACTIVATEAPP:
+			if (wParam == TRUE)
 			{
 				april::window->handleFocusChangeEvent(true);
 			}
 			else
 			{
-				_altKeyDown = false; // because ALT keyup isn't processed when alt-tab-ing for some reason..
+				_altKeyDown = false; // because ALT keyup isn't processed when alt-tab-ing for some reason.
 				april::window->handleFocusChangeEvent(false);
 			}
 			break;
