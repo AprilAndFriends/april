@@ -18,92 +18,22 @@
 
 namespace april
 {
-	RenderOperation TriangleList = RO_TRIANGLE_LIST; // DEPRECATED
-	RenderOperation TriangleStrip = RO_TRIANGLE_STRIP; // DEPRECATED
-	RenderOperation TriangleFan = RO_TRIANGLE_FAN; // DEPRECATED
-	RenderOperation LineList = RO_LINE_LIST; // DEPRECATED
-	RenderOperation LineStrip = RO_LINE_STRIP; // DEPRECATED
-	RenderOperation PointList = RO_POINT_LIST; // DEPRECATED
-	RenderOperation RENDER_OP_UNDEFINED = (RenderOperation)0x7FFFFFFF; // DEPRECATED
-	BlendMode DEFAULT = BM_DEFAULT; // DEPRECATED
-	BlendMode ALPHA_BLEND = BM_ALPHA; // DEPRECATED
-	BlendMode ADD = BM_ADD; // DEPRECATED
-	BlendMode SUBTRACT = BM_SUBTRACT; // DEPRECATED
-	BlendMode OVERWRITE = BM_OVERWRITE; // DEPRECATED
-	BlendMode BLEND_MODE_UNDEFINED = (BlendMode)0x7FFFFFFF; // DEPRECATED
-	BlendMode BM_UNDEFINED = (BlendMode)0x7FFFFFFF; // DEPRECATED
-	ColorMode NORMAL = CM_DEFAULT; // DEPRECATED
-	ColorMode MULTIPLY = CM_MULTIPLY; // DEPRECATED
-	ColorMode LERP = CM_LERP; // DEPRECATED
-	ColorMode ALPHA_MAP = CM_ALPHA_MAP; // DEPRECATED
-	ColorMode COLOR_MODE_UNDEFINED = (ColorMode)0x7FFFFFFF; // DEPRECATED
-	ColorMode CM_UNDEFINED = (ColorMode)0x7FFFFFFF; // DEPRECATED
-
-	void PlainVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void TexturedVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredTexturedVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredTexturedNormalVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void TexturedNormalVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
-	void ColoredNormalVertex::operator=(const gvec3& v)
-	{
-		this->x = v.x;
-		this->y = v.y;
-		this->z = v.z;
-	}
-
 	void rgbToHsl(unsigned char r, unsigned char g, unsigned char b, float* h, float* s, float* l)
 	{
-		int min = hmin(hmin(r, g), b);
-		int max = hmax(hmax(r, g), b);
-		int delta = max - min;
+		unsigned char min = (unsigned char)hmin(hmin(r, g), b);
+		unsigned char max = (unsigned char)hmax(hmax(r, g), b);
+		float delta = (float)(max - min);
 		*h = *s = 0.0f;
-		*l = (max + min) / 510.0f;
-		if (delta > 0)
+		*l = ((int)max + (int)min) * 0.001960784f;
+		if (delta > 0.0f)
 		{
 			if (*l > 0.0f && *l < 1.0f)
 			{
-				*s = (delta / 255.0f) / (*l < 0.5f ? (2 * *l) : (2 - 2 * *l));
+				*s = (delta * 0.003921569f) / (*l < 0.5f ? (2.0f * *l) : (2.0f - 2.0f * *l));
 			}
 			if (max == r)
 			{
-				*h = (g - b) / (float)delta;
+				*h = ((int)g - (int)b) / delta;
 				if (g < b)
 				{
 					*h += 6.0f;
@@ -111,30 +41,30 @@ namespace april
 			}
 			else if (max == g)
 			{
-				*h += (b - r) / (float)delta + 2.0f;
+				*h += ((int)b - (int)r) / delta + 2.0f;
 			}
 			else if (max == b)
 			{
-				*h += (r - g) / (float)delta + 4.0f;
+				*h += ((int)r - (int)g) / delta + 4.0f;
 			}
 			*h *= 0.16666667f;
 		}
 	}
 
-	float _colorHueToRgb(float p, float q, float h)
+	static inline float _colorHueToRgb(float p, float q, float h)
 	{ 
-		h = (h < 0 ? h + 1 : ((h > 1) ? h - 1 : h));
-		if (h * 6 < 1)
+		h = (h < 0.0f ? h + 1.0f : ((h > 1.0f) ? h - 1.0f : h));
+		if (h * 6.0f < 1.0f)
 		{
-			return p + (q - p) * h * 6;
+			return p + (q - p) * h * 6.0f;
 		}
-		if (h * 2 < 1)
+		if (h * 2.0f < 1.0f)
 		{
 			return q;
 		}
-		if (h * 3 < 2)
+		if (h * 3.0f < 2.0f)
 		{
-			return (p + (q - p) * (0.6666667f - h) * 6);
+			return (p + (q - p) * (0.6666667f - h) * 6.0f);
 		}
 		return p;
 	}
@@ -146,8 +76,8 @@ namespace april
 			*r = *g = *b = (unsigned char)(l * 255);
 			return;
 		}
-		float q = (l < 0.5f ? l * (1 + s) : l + s - l * s);
-		float p = l * 2 - q;
+		float q = (l < 0.5f ? l * (1.0f + s) : l + s - l * s);
+		float p = l * 2.0f - q;
 		*r = (unsigned char)hround(255.0f * _colorHueToRgb(p, q, h + 0.3333333f));
 		*g = (unsigned char)hround(255.0f * _colorHueToRgb(p, q, h));
 		*b = (unsigned char)hround(255.0f * _colorHueToRgb(p, q, h - 0.3333333f));
