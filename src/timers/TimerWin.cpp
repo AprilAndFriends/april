@@ -26,8 +26,8 @@ namespace april
 		this->frequency = 0;
 		this->performanceTimerStart = 0;
 		this->resolution = 0;
-		this->mTimerStart = 0;
-		this->mTimerElapsed = 0;
+		this->start = 0;
+		this->elapsed = 0;
 		this->performanceTimerElapsed = 0;
 		this->performanceTimer = false;
 		
@@ -35,10 +35,10 @@ namespace april
 		{
 			hlog::warn(logTag, "Performance timer not available, multimedia timer will be used instead!");
 			this->performanceTimer = false;
-			this->mTimerStart = htickCount();
+			this->start = htickCount();
 			this->resolution = 0.001f;
 			this->frequency = 1000;
-			this->mTimerElapsed = (unsigned long)this->mTimerStart;
+			this->elapsed = (unsigned long)this->start;
 		}
 		else
 		{
@@ -51,7 +51,6 @@ namespace april
 	
 	Timer::~Timer()
 	{
-		
 	}
 	
 	float Timer::getTime()
@@ -62,10 +61,7 @@ namespace april
 			QueryPerformanceCounter((LARGE_INTEGER*)&time);
 			return ((float)(time - this->performanceTimerStart) * this->resolution * 1000.0f);
 		}
-		else
-		{
-			return ((float)(htickCount() - this->mTimerStart) * this->resolution * 1000.0f);
-		}
+		return ((float)(htickCount() - this->start) * this->resolution * 1000.0f);
 	}
 	
 	float Timer::diff(bool update)

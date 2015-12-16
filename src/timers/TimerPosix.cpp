@@ -22,8 +22,8 @@ namespace april
 		this->frequency = 0;
 		this->performanceTimerStart = 0;
 		this->resolution = 0; // unused in Posix timer
-		this->mTimerStart = 0;
-		this->mTimerElapsed = 0;
+		this->start = 0;
+		this->elapsed = 0;
 		this->performanceTimerElapsed = 0;
 		this->performanceTimer = 0;
 		
@@ -32,9 +32,9 @@ namespace april
 		gettimeofday(&tv, NULL);
 		
 		this->performanceTimer = 0; 
-		this->mTimerStart = ((uint64_t(tv.tv_sec)) << 32) + int64_t(tv.tv_usec);
+		this->start = ((uint64_t(tv.tv_sec)) << 32) + int64_t(tv.tv_usec);
 		this->frequency = 1;
-		this->mTimerElapsed = this->mTimerStart;
+		this->elapsed = this->start;
 	}
 	
 	Timer::~Timer()
@@ -45,9 +45,9 @@ namespace april
 	{
 		timeval tv = {0, 0};
 #ifdef __APPLE__
-		timeval init_tv = { (time_t)(this->mTimerStart >> 32), (__darwin_suseconds_t)(this->mTimerStart & 0xFFFFFFFFFFFFFFFFLL) };
+		timeval init_tv = { (time_t)(this->start >> 32), (__darwin_suseconds_t)(this->start & 0xFFFFFFFFFFFFFFFFLL) };
 #else
-		timeval init_tv = { (time_t)(this->mTimerStart >> 32), (time_t)(this->mTimerStart & 0xFFFFFFFFFFFFFFFFLL) };
+		timeval init_tv = { (time_t)(this->start >> 32), (time_t)(this->start & 0xFFFFFFFFFFFFFFFFLL) };
 #endif
 		gettimeofday(&tv, NULL);
 		return (tv.tv_usec - init_tv.tv_usec) / 1000 + (tv.tv_sec - init_tv.tv_sec) * 1000;
