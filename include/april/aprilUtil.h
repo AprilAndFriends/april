@@ -87,8 +87,6 @@ namespace april
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
 		inline PlainVertex(gvec3 position) :			x(position.x), y(position.y), z(position.z) { }
-		/// @brief Destructor.
-		inline ~PlainVertex() { }
 
 		/// @brief Assigns a position to this vertex.
 		/// @param[in] x X-coordinate.
@@ -135,8 +133,6 @@ namespace april
 		/// @param[in] color Color of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
 		inline ColoredVertex(gvec3 position, unsigned int color) :				PlainVertex(position), color(color) { }
-		/// @brief Destructor.
-		inline ~ColoredVertex() { }
 
 	};
 
@@ -188,8 +184,6 @@ namespace april
 		/// @param[in] position Position of the vertex.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
 		inline TexturedVertex(gvec3 position, gvec2 textureCoordinate) :			PlainVertex(position), u(textureCoordinate.x), v(textureCoordinate.y) { }
-		/// @brief Destructor.
-		inline ~TexturedVertex() { }
 
 	};
 
@@ -287,8 +281,6 @@ namespace april
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
 		inline ColoredTexturedVertex(gvec3 position, unsigned int color, gvec2 textureCoordiate) :				ColoredVertex(position, color), u(textureCoordiate.x), v(textureCoordiate.y) { }
-		/// @brief Destructor.
-		inline ~ColoredTexturedVertex() { }
 
 	};
 	
