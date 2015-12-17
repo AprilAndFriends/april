@@ -90,9 +90,14 @@ namespace april
 		/// @brief Destructor.
 		inline ~PlainVertex() { }
 
+		/// @brief Assigns a position to this vertex.
+		/// @param[in] x X-coordinate.
+		/// @param[in] y Y-coordinate.
+		/// @param[in] z Z-coordinate.
+		inline void set(float x, float y, float z) { this->x = x; this->y = y; this->z = z; }
 		/// @brief Assigns a gtypes::Vector3 position to this vertex.
 		/// @param[in] position Position of the vector.
-		inline void operator=(const gvec3& position) { this->x = position.x; this->y = position.y; this->z = position.z; }
+		inline void set(const gvec3& position) { this->x = position.x; this->y = position.y; this->z = position.z; }
 
 	};
 
@@ -132,10 +137,6 @@ namespace april
 		inline ColoredVertex(gvec3 position, unsigned int color) :				PlainVertex(position), color(color) { }
 		/// @brief Destructor.
 		inline ~ColoredVertex() { }
-
-		/// @brief Assigns a gtypes::Vector3 position to this vertex.
-		/// @param[in] position Position of the vector.
-		inline void operator=(const gvec3& position) { this->x = position.x; this->y = position.y; this->z = position.z; }
 
 	};
 
@@ -189,10 +190,6 @@ namespace april
 		inline TexturedVertex(gvec3 position, gvec2 textureCoordinate) :			PlainVertex(position), u(textureCoordinate.x), v(textureCoordinate.y) { }
 		/// @brief Destructor.
 		inline ~TexturedVertex() { }
-
-		/// @brief Assigns a gtypes::Vector3 position to this vertex.
-		/// @param[in] position Position of the vector.
-		inline void operator=(const gvec3& position) { this->x = position.x; this->y = position.y; this->z = position.z; }
 
 	};
 
@@ -292,10 +289,6 @@ namespace april
 		inline ColoredTexturedVertex(gvec3 position, unsigned int color, gvec2 textureCoordiate) :				ColoredVertex(position, color), u(textureCoordiate.x), v(textureCoordiate.y) { }
 		/// @brief Destructor.
 		inline ~ColoredTexturedVertex() { }
-
-		/// @brief Assigns a gtypes::Vector3 position to this vertex.
-		/// @param[in] position Position of the vector.
-		inline void operator=(const gvec3& position) { this->x = position.x; this->y = position.y; this->z = position.z; }
 
 	};
 	
