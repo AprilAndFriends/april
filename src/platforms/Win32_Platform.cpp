@@ -39,7 +39,7 @@ namespace april
 			memset(&osinfo, 0, sizeof(osinfo));
 			osinfo.dwOSVersionInfoSize = sizeof(osinfo);
 			GetVersionEx(&osinfo);
-			info.osVersion = hsprintf("%d.%d", osinfo.dwMajorVersion, osinfo.dwMinorVersion);
+			info.osVersion.set(osinfo.dwMajorVersion, osinfo.dwMinorVersion);
 			if (osinfo.dwMajorVersion == 5)
 			{
 				info.name += " XP";

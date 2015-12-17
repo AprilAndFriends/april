@@ -32,7 +32,7 @@ namespace april
 #else
 		this->architectureBits = 32;
 #endif
-		this->osVersion = 1.0f;
+		this->osVersion.set(1);
 		this->cpuCores = 1;
 		this->ram = 256;
 		this->displayDpi = 0.0f;

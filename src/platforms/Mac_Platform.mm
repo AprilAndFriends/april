@@ -33,22 +33,25 @@ namespace april
 {
 	extern SystemInfo info;
 
-	float getMacOSVersion()
+	hversion getMacOSVersion()
 	{
 #ifdef _DEBUG
-		//return 10.6f; // uncomment this to test behaviour on older macs
+		//return hversion(10, 6); // uncomment this to test behaviour on older macs
 #endif
-		static float version = 0;
-		if (version == 0)
+		static hversion version;
+		if (!version.isValid())
 		{
 			SInt32 major, minor, bugfix;
 			if (Gestalt(gestaltSystemVersionMajor, &major)   == noErr &&
 				Gestalt(gestaltSystemVersionMinor, &minor)   == noErr &&
 				Gestalt(gestaltSystemVersionBugFix, &bugfix) == noErr)
 			{
-				version = major + minor / 10.0f + bugfix / 100.0f;
+				version.set(major, minor, bugfix);
 			}
-			else version = 10.3f; // just in case. < 10.4 is not supported.
+			else
+			{
+				version.set(10, 3) // just in case. < 10.4 is not supported.
+			}
 		}
 		return version;
 	}

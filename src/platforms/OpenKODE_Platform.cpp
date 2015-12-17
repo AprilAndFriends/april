@@ -102,7 +102,7 @@ namespace april
 			SYSTEM_INFO w32info;
 			GetNativeSystemInfo(&w32info);
 			info.cpuCores = w32info.dwNumberOfProcessors;
-			info.osVersion = 8.1f;
+			info.osVersion.set(8, 1);
 #elif defined(_ANDROID)
 			debug_log("getting java stuff");
 			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
@@ -112,21 +112,7 @@ namespace april
 			// OS version
 			debug_log("getting os version");
 			jmethodID methodGetOsVersion = env->GetStaticMethodID(classNativeInterface, "getOsVersion", _JARGS(_JSTR, ));
-			harray<hstr> osVersions = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)).split('.');
-//			use this block for debugging if this starts crashing again
-//			jobject obj = env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion);
-//			debug_log(hsprintf("getting os version - 2: %p", obj));
-//			jstring jstr = (jstring) obj;
-//			hstr str = _JSTR_TO_HSTR(jstr);
-//			debug_log(hsprintf("getting os version - 3: %s", str.cStr()));
-//			harray<hstr> osVersions = str.split('.');
-	
-			hstr majorVersion = osVersions.removeFirst();
-			hstr minorVersion = osVersions.joined("");
-			osVersions.clear();
-			osVersions += majorVersion;
-			osVersions += minorVersion;
-			info.osVersion = (float)osVersions.joined('.');
+			info.osVersion.set(_JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)));
 #endif
 			// RAM size
 #if TARGET_IPHONE_SIMULATOR

@@ -16,6 +16,7 @@
 #include <gtypes/Vector2.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hversion.h>
 
 #include "aprilExport.h"
 
@@ -31,7 +32,7 @@ namespace april
 		/// @brief On how many bits the architecture operates (e.g. 32 bit or 64 bit).
 		int architectureBits;
 		/// @brief Version of the OS.
-		float osVersion;
+		hversion osVersion;
 		/// @brief Number of logical CPU cores (NOT physical!).
 		int cpuCores;
 		/// @brief How many MB of RAM the system has installed.
