@@ -210,7 +210,7 @@ namespace april
 	void _finishInit()
 	{
 		SystemInfo info = april::getSystemInfo(); // calling getSystemInfo() is required here so it's initialized on certain platforms
-		hlog::writef(logTag, "OS Version: %.2f", info.osVersion);
+		hlog::writef(logTag, "OS Version: %s", info.osVersion.toString().cStr());
 		hlog::writef(logTag, "Using: %s, %s", april::rendersys->getName().cStr(), april::window->getName().cStr());
 	}
 
