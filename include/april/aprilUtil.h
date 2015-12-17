@@ -92,10 +92,10 @@ namespace april
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
-		inline void set(float x, float y, float z) { this->x = x; this->y = y; this->z = z; }
+		inline void set(float x, float y, float z)		{ this->x = x; this->y = y; this->z = z; }
 		/// @brief Assigns a gtypes::Vector3 position to this vertex.
 		/// @param[in] position Position of the vector.
-		inline void set(const gvec3& position) { this->x = position.x; this->y = position.y; this->z = position.z; }
+		inline void set(const gvec3& position)			{ this->x = position.x; this->y = position.y; this->z = position.z; }
 
 	};
 
