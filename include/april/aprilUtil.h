@@ -78,24 +78,24 @@ namespace april
 		float z;
 
 		/// @brief Basic constructor.
-		inline PlainVertex() :							x(0.0f), y(0.0f), z(0.0f) { }
+		explicit inline PlainVertex() :								x(0.0f), y(0.0f), z(0.0f) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
-		inline PlainVertex(float x, float y, float z) :	x(x), y(y), z(z) { }
+		explicit inline PlainVertex(float x, float y, float z) :	x(x), y(y), z(z) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
-		inline PlainVertex(gvec3 position) :			x(position.x), y(position.y), z(position.z) { }
+		explicit inline PlainVertex(gvec3 position) :				x(position.x), y(position.y), z(position.z) { }
 
 		/// @brief Assigns a position to this vertex.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
-		inline void set(float x, float y, float z)		{ this->x = x; this->y = y; this->z = z; }
+		inline void set(float x, float y, float z)					{ this->x = x; this->y = y; this->z = z; }
 		/// @brief Assigns a gtypes::Vector3 position to this vertex.
 		/// @param[in] position Position of the vector.
-		inline void set(const gvec3& position)			{ this->x = position.x; this->y = position.y; this->z = position.z; }
+		inline void set(const gvec3& position)						{ this->x = position.x; this->y = position.y; this->z = position.z; }
 
 	};
 
@@ -108,31 +108,31 @@ namespace april
 		unsigned int color;
 
 		/// @brief Basic constructor.
-		inline ColoredVertex() :												PlainVertex(), color(0xFFFFFFFF) { }
+		explicit inline ColoredVertex() :												PlainVertex(), color(0xFFFFFFFF) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
-		inline ColoredVertex(float x, float y, float z) :						PlainVertex(x, y, z), color(0xFFFFFFFF) { }
+		explicit inline ColoredVertex(float x, float y, float z) :						PlainVertex(x, y, z), color(0xFFFFFFFF) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
-		inline ColoredVertex(gvec3 position) :									PlainVertex(position), color(0xFFFFFFFF) { }
+		explicit inline ColoredVertex(gvec3 position) :									PlainVertex(position), color(0xFFFFFFFF) { }
 		/// @brief Constructor.
 		/// @param[in] color Color of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
-		inline ColoredVertex(unsigned int color) :								PlainVertex(), color(color) { }
+		explicit inline ColoredVertex(unsigned int color) :								PlainVertex(), color(color) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
 		/// @param[in] color Color of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
-		inline ColoredVertex(float x, float y, float z, unsigned int color) :	PlainVertex(x, y, z), color(color) { }
+		explicit inline ColoredVertex(float x, float y, float z, unsigned int color) :	PlainVertex(x, y, z), color(color) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
 		/// @param[in] color Color of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
-		inline ColoredVertex(gvec3 position, unsigned int color) :				PlainVertex(position), color(color) { }
+		explicit inline ColoredVertex(gvec3 position, unsigned int color) :				PlainVertex(position), color(color) { }
 
 	};
 
@@ -146,44 +146,44 @@ namespace april
 		float v;
 
 		/// @brief Basic constructor.
-		inline TexturedVertex() :													PlainVertex(), u(0.0f), v(0.0f) { }
+		explicit inline TexturedVertex() :														PlainVertex(), u(0.0f), v(0.0f) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
-		inline TexturedVertex(float x, float y, float z) :							PlainVertex(x, y, z), u(0.0f), v(0.0f) { }
+		explicit inline TexturedVertex(float x, float y, float z) :								PlainVertex(x, y, z), u(0.0f), v(0.0f) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
-		inline TexturedVertex(gvec3 position) :										PlainVertex(position), u(0.0f), v(0.0f) { }
+		explicit inline TexturedVertex(gvec3 position) :										PlainVertex(position), u(0.0f), v(0.0f) { }
 		/// @brief Constructor.
 		/// @param[in] u Texture U-coordinate.
 		/// @param[in] v Texture V-coordinate.
-		inline TexturedVertex(float u, float v) :									PlainVertex(), u(u), v(v) { }
+		explicit inline TexturedVertex(float u, float v) :										PlainVertex(), u(u), v(v) { }
 		/// @brief Constructor.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
-		inline TexturedVertex(gvec2 textureCoordinate) :							PlainVertex(), u(textureCoordinate.x), v(textureCoordinate.y) { }
+		explicit inline TexturedVertex(gvec2 textureCoordinate) :								PlainVertex(), u(textureCoordinate.x), v(textureCoordinate.y) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
 		/// @param[in] u Texture U-coordinate.
 		/// @param[in] v Texture V-coordinate.
-		inline TexturedVertex(float x, float y, float z, float u, float v) :		PlainVertex(x, y, z), u(u), v(v) { }
+		explicit inline TexturedVertex(float x, float y, float z, float u, float v) :			PlainVertex(x, y, z), u(u), v(v) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
-		inline TexturedVertex(float x, float y, float z, gvec2 textureCoordinate) :	PlainVertex(x, y, z), u(textureCoordinate.x), v(textureCoordinate.y) { }
+		explicit inline TexturedVertex(float x, float y, float z, gvec2 textureCoordinate) :	PlainVertex(x, y, z), u(textureCoordinate.x), v(textureCoordinate.y) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
 		/// @param[in] u Texture U-coordinate.
 		/// @param[in] v Texture V-coordinate.
-		inline TexturedVertex(gvec3 position, float u, float v) :					PlainVertex(position), u(u), v(v) { }
+		explicit inline TexturedVertex(gvec3 position, float u, float v) :						PlainVertex(position), u(u), v(v) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
-		inline TexturedVertex(gvec3 position, gvec2 textureCoordinate) :			PlainVertex(position), u(textureCoordinate.x), v(textureCoordinate.y) { }
+		explicit inline TexturedVertex(gvec3 position, gvec2 textureCoordinate) :				PlainVertex(position), u(textureCoordinate.x), v(textureCoordinate.y) { }
 
 	};
 
@@ -197,76 +197,76 @@ namespace april
 		float v;
 
 		/// @brief Basic constructor.
-		inline ColoredTexturedVertex() :																		ColoredVertex(), u(0.0f), v(0.0f) { }
+		explicit inline ColoredTexturedVertex() :																		ColoredVertex(), u(0.0f), v(0.0f) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
-		inline ColoredTexturedVertex(float x, float y, float z) :												ColoredVertex(x, y, z), u(0.0f), v(0.0f) { }
+		explicit inline ColoredTexturedVertex(float x, float y, float z) :												ColoredVertex(x, y, z), u(0.0f), v(0.0f) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
-		inline ColoredTexturedVertex(gvec3 position) :															ColoredVertex(position), u(0.0f), v(0.0f) { }
+		explicit inline ColoredTexturedVertex(gvec3 position) :															ColoredVertex(position), u(0.0f), v(0.0f) { }
 		/// @brief Constructor.
 		/// @param[in] color Color of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
-		inline ColoredTexturedVertex(unsigned int color) :														ColoredVertex(color), u(0.0f), v(0.0f) { }
+		explicit inline ColoredTexturedVertex(unsigned int color) :														ColoredVertex(color), u(0.0f), v(0.0f) { }
 		/// @brief Constructor.
 		/// @param[in] u Texture U-coordinate.
 		/// @param[in] v Texture V-coordinate.
-		inline ColoredTexturedVertex(float u, float v) :														ColoredVertex(), u(u), v(v) { }
+		explicit inline ColoredTexturedVertex(float u, float v) :														ColoredVertex(), u(u), v(v) { }
 		/// @brief Constructor.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
-		inline ColoredTexturedVertex(gvec2 textureCoordiate) :													ColoredVertex(), u(textureCoordiate.x), v(textureCoordiate.y) { }
+		explicit inline ColoredTexturedVertex(gvec2 textureCoordiate) :													ColoredVertex(), u(textureCoordiate.x), v(textureCoordiate.y) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
 		/// @param[in] color Color of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
-		inline ColoredTexturedVertex(float x, float y, float z, unsigned int color) :							ColoredVertex(x, y, z, color), u(0.0f), v(0.0f) { }
+		explicit inline ColoredTexturedVertex(float x, float y, float z, unsigned int color) :							ColoredVertex(x, y, z, color), u(0.0f), v(0.0f) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
 		/// @param[in] color Color of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
-		inline ColoredTexturedVertex(gvec3 position, unsigned int color) :										ColoredVertex(position, color), u(0.0f), v(0.0f) { }
+		explicit inline ColoredTexturedVertex(gvec3 position, unsigned int color) :										ColoredVertex(position, color), u(0.0f), v(0.0f) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
 		/// @param[in] u Texture U-coordinate.
 		/// @param[in] v Texture V-coordinate.
-		inline ColoredTexturedVertex(float x, float y, float z, float u, float v) :								ColoredVertex(x, y, z), u(u), v(v) { }
+		explicit inline ColoredTexturedVertex(float x, float y, float z, float u, float v) :							ColoredVertex(x, y, z), u(u), v(v) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
 		/// @param[in] u Texture U-coordinate.
 		/// @param[in] v Texture V-coordinate.
-		inline ColoredTexturedVertex(gvec3 position, float u, float v) :										ColoredVertex(position), u(u), v(v) { }
+		explicit inline ColoredTexturedVertex(gvec3 position, float u, float v) :										ColoredVertex(position), u(u), v(v) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
-		inline ColoredTexturedVertex(float x, float y, float z, gvec2 textureCoordiate) :						ColoredVertex(x, y, z), u(textureCoordiate.x), v(textureCoordiate.y) { }
+		explicit inline ColoredTexturedVertex(float x, float y, float z, gvec2 textureCoordiate) :						ColoredVertex(x, y, z), u(textureCoordiate.x), v(textureCoordiate.y) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
-		inline ColoredTexturedVertex(gvec3 position, gvec2 textureCoordiate) :									ColoredVertex(position), u(textureCoordiate.x), v(textureCoordiate.y) { }
+		explicit inline ColoredTexturedVertex(gvec3 position, gvec2 textureCoordiate) :									ColoredVertex(position), u(textureCoordiate.x), v(textureCoordiate.y) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
-		/// @param[in] color Color of the vertex.
-		/// @param[in] u Texture U-coordinate.
-		/// @param[in] v Texture V-coordinate.
-		/// @note The 'color' value is in native format, not RGBA MSB!)
-		inline ColoredTexturedVertex(float x, float y, float z, unsigned int color, float u, float v) :			ColoredVertex(x, y, z, color), u(u), v(v) { }
-		/// @brief Constructor.
-		/// @param[in] position Position of the vertex.
 		/// @param[in] color Color of the vertex.
 		/// @param[in] u Texture U-coordinate.
 		/// @param[in] v Texture V-coordinate.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
-		inline ColoredTexturedVertex(gvec3 position, unsigned int color, float u, float v) :					ColoredVertex(position, color), u(u), v(v) { }
+		explicit inline ColoredTexturedVertex(float x, float y, float z, unsigned int color, float u, float v) :		ColoredVertex(x, y, z, color), u(u), v(v) { }
+		/// @brief Constructor.
+		/// @param[in] position Position of the vertex.
+		/// @param[in] color Color of the vertex.
+		/// @param[in] u Texture U-coordinate.
+		/// @param[in] v Texture V-coordinate.
+		/// @note The 'color' value is in native format, not RGBA MSB!)
+		explicit inline ColoredTexturedVertex(gvec3 position, unsigned int color, float u, float v) :					ColoredVertex(position, color), u(u), v(v) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
@@ -274,13 +274,13 @@ namespace april
 		/// @param[in] color Color of the vertex.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
-		inline ColoredTexturedVertex(float x, float y, float z, unsigned int color, gvec2 textureCoordiate) :	ColoredVertex(x, y, z, color), u(textureCoordiate.x), v(textureCoordiate.y) { }
+		explicit inline ColoredTexturedVertex(float x, float y, float z, unsigned int color, gvec2 textureCoordiate) :	ColoredVertex(x, y, z, color), u(textureCoordiate.x), v(textureCoordiate.y) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
 		/// @param[in] color Color of the vertex.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
-		inline ColoredTexturedVertex(gvec3 position, unsigned int color, gvec2 textureCoordiate) :				ColoredVertex(position, color), u(textureCoordiate.x), v(textureCoordiate.y) { }
+		explicit inline ColoredTexturedVertex(gvec3 position, unsigned int color, gvec2 textureCoordiate) :				ColoredVertex(position, color), u(textureCoordiate.x), v(textureCoordiate.y) { }
 
 	};
 	
