@@ -28,19 +28,23 @@ extern bool g_WindowFocusedBeforeSleep;
 
 namespace april
 {
-	float getMacOSVersion();
+	hversion getMacOSVersion();
 }
 
 bool isPreLion()
 {
-	static bool result = april::getMacOSVersion() < 10.7f;
-	return result;
+	return !isLionOrNewer();
 }
 
 bool isLionOrNewer()
 {
-	static bool result = april::getMacOSVersion() >= 10.7f;
-	return result;
+	static int result = -1;
+	if (result == -1)
+	{
+		hversion v = april::getMacOSVersion();
+		result = v.major >= 10 && v.minor >= 7 ? 1 : 0;
+	}
+	return result == 1;
 }
 
 namespace april
