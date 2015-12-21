@@ -115,7 +115,6 @@ namespace april
 	
 	SystemInfo getSystemInfo()
 	{
-		info.cpuCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
 		if (info.locale == "")
 		{
 			info.locale = "en"; // default is "en"
@@ -163,6 +162,13 @@ namespace april
 			info.osVersion.set(hstr::fromUnicode([[UIDevice currentDevice].systemVersion UTF8String]));
 
 			getStaticiOSInfo(name, info);
+//			Probably not needed, in order to report correct cores on simulator using static info
+//			-- commented out by kspes@20151221, remove completely if it didn't affect anything after a while
+//			int systemCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
+//			if (systemCores > info.cpuCores)
+//			{
+//				info.cpuCores = systemCores;
+//			}
 		}
 		return info;
 	}
