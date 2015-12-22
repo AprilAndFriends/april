@@ -537,7 +537,7 @@ namespace april
     }
 }
 
-- (void)_showAlertView:(NSValue*) _params
++ (void)_showAlertView:(NSValue*) _params
 {
     MessageBoxParams* p_params = (MessageBoxParams*)[_params pointerValue];
     MessageBoxParams params = *p_params;
@@ -581,7 +581,7 @@ namespace april
 	}
 }
 
-- (void)showAlertView:(NSString*) title button1:(NSString*) btn1 button2:(NSString*) btn2 button3:(NSString*) btn3 btn1_t:(april::MessageBoxButton) btn1_t btn2_t:(april::MessageBoxButton) btn2_t btn3_t:(april::MessageBoxButton) btn3_t text:(NSString*) text callback:(MessageBoxCallback) callback
++ (void)showAlertView:(NSString*) title button1:(NSString*) btn1 button2:(NSString*) btn2 button3:(NSString*) btn3 btn1_t:(april::MessageBoxButton) btn1_t btn2_t:(april::MessageBoxButton) btn2_t btn3_t:(april::MessageBoxButton) btn3_t text:(NSString*) text callback:(MessageBoxCallback) callback
 {
     MessageBoxParams* p = new MessageBoxParams();
     p->title = [title UTF8String];
@@ -593,7 +593,7 @@ namespace april
     p->btnTypes += btn2_t;
     p->btnTypes += btn3_t;
     p->callback = callback;
-    if (april::isUsingCVDisplayLink() and april::hasDisplayLinkThreadStarted())
+    if (april::isUsingCVDisplayLink() && april::hasDisplayLinkThreadStarted())
     {
         [self performSelectorOnMainThread:@selector(_showAlertView:) withObject:[NSValue valueWithPointer:p] waitUntilDone:YES];
     }

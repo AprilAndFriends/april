@@ -442,7 +442,7 @@ namespace april
     void Mac_Window::queueMessageBox(chstr title, harray<hstr> argButtons, harray<MessageBoxButton> argButtonTypes, chstr text, void (*callback)(MessageBoxButton))
     {
 #define ns(s) [NSString stringWithUTF8String:s.cStr()]
-        [mWindow showAlertView:ns(title) button1:ns(argButtons[0]) button2:ns(argButtons[1]) button3:ns(argButtons[2]) btn1_t:argButtonTypes[0] btn2_t:argButtonTypes[1] btn3_t:argButtonTypes[2] text:ns(text) callback:callback];
+        [AprilCocoaWindow showAlertView:ns(title) button1:ns(argButtons[0]) button2:ns(argButtons[1]) button3:ns(argButtons[2]) btn1_t:argButtonTypes[0] btn2_t:argButtonTypes[1] btn3_t:argButtonTypes[2] text:ns(text) callback:callback];
     }
     
 	Cursor* Mac_Window::_createCursor()

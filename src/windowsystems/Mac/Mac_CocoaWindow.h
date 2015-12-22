@@ -48,8 +48,8 @@ struct MessageBoxParams
 - (void)terminateMainLoop;
 - (void)destroy;
 - (void)_setTitle:(NSString*) title;
-- (void)_showAlertView:(NSValue*) _params;
-- (void)showAlertView:(NSString*) title button1:(NSString*) btn1 button2:(NSString*) btn2 button3:(NSString*) btn3 btn1_t:(april::MessageBoxButton) btn1_t btn2_t:(april::MessageBoxButton) btn2_t btn3_t:(april::MessageBoxButton) btn3_t text:(NSString*) text callback:(MessageBoxCallback) callback;
++ (void)_showAlertView:(NSValue*) _params;
++ (void)showAlertView:(NSString*) title button1:(NSString*) btn1 button2:(NSString*) btn2 button3:(NSString*) btn3 btn1_t:(april::MessageBoxButton) btn1_t btn2_t:(april::MessageBoxButton) btn2_t btn3_t:(april::MessageBoxButton) btn3_t text:(NSString*) text callback:(MessageBoxCallback) callback;
 
 @end
 
