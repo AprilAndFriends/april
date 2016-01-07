@@ -138,9 +138,16 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	{ 
 		outAttributes.actionId = EditorInfo.IME_ACTION_DONE;
 		outAttributes.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI;
-		if (NativeInterface.aprilActivity.ouyaKeyboardFix) // OUYA software keyboard doesn't appear unless TYPE_CLASS_TEXT is specified as input type
+		outAttributes.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
+		// required, because certain keyboards (e.g. Swype on Android 5.x on Samsung S6 and S6 Edge+) ignore TYPE_TEXT_FLAG_NO_SUGGESTIONS
+		outAttributes.inputType |= InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
+		if (!NativeInterface.aprilActivity.ouyaKeyboardFix)
 		{
-			outAttributes.inputType = InputType.TYPE_CLASS_TEXT;
+			outAttributes.inputType |= InputType.TYPE_NULL;
+		}
+		else // OUYA software keyboard doesn't appear unless TYPE_CLASS_TEXT is specified as input type
+		{
+			outAttributes.inputType |= InputType.TYPE_CLASS_TEXT;
 		}
 		return new InputConnection(this);
 	}
