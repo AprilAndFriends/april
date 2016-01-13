@@ -808,38 +808,45 @@ namespace april
 
 	void RenderSystem::drawRect(grect rect, Color color)
 	{
-		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
-		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
-		pv[2].x = rect.x + rect.w;	pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
-		pv[3].x = rect.x;			pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
-		pv[4].x = rect.x;			pv[4].y = rect.y;			pv[4].z = 0.0f;
+		pv[0].x = pv[3].x = pv[4].x = rect.x;
+		pv[0].y = pv[1].y = pv[4].y = rect.y;
+		pv[1].x = pv[2].x = rect.x + rect.w;
+		pv[2].y = pv[3].y = rect.y + rect.h;
 		this->render(RO_LINE_STRIP, pv, 5, color);
 	}
 
 	void RenderSystem::drawFilledRect(grect rect, Color color)
 	{
-		pv[0].x = rect.x;			pv[0].y = rect.y;			pv[0].z = 0.0f;
-		pv[1].x = rect.x + rect.w;	pv[1].y = rect.y;			pv[1].z = 0.0f;
-		pv[2].x = rect.x;			pv[2].y = rect.y + rect.h;	pv[2].z = 0.0f;
-		pv[3].x = rect.x + rect.w;	pv[3].y = rect.y + rect.h;	pv[3].z = 0.0f;
+		pv[0].x = pv[2].x = rect.x;
+		pv[0].y = pv[1].y = rect.y;
+		pv[1].x = pv[3].x = rect.x + rect.w;
+		pv[2].y = pv[3].y = rect.y + rect.h;
 		this->render(RO_TRIANGLE_STRIP, pv, 4, color);
 	}
 	
 	void RenderSystem::drawTexturedRect(grect rect, grect src)
 	{
-		tv[0].x = rect.x;			tv[0].y = rect.y;			tv[0].z = 0.0f;	tv[0].u = src.x;			tv[0].v = src.y;
-		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
-		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
-		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
+		tv[0].x = tv[2].x = rect.x;
+		tv[0].y = tv[1].y = rect.y;
+		tv[0].u = tv[2].u = src.x;
+		tv[0].v = tv[1].v = src.y;
+		tv[1].x = tv[3].x = rect.x + rect.w;
+		tv[1].u = tv[3].u = src.x + src.w;
+		tv[2].y = tv[3].y = rect.y + rect.h;
+		tv[2].v = tv[3].v = src.y + src.h;
 		this->render(RO_TRIANGLE_STRIP, tv, 4);
 	}
 	
 	void RenderSystem::drawTexturedRect(grect rect, grect src, Color color)
 	{
-		tv[0].x = rect.x;			tv[0].y = rect.y;			tv[0].z = 0.0f;	tv[0].u = src.x;			tv[0].v = src.y;
-		tv[1].x = rect.x + rect.w;	tv[1].y = rect.y;			tv[1].z = 0.0f;	tv[1].u = src.x + src.w;	tv[1].v = src.y;
-		tv[2].x = rect.x;			tv[2].y = rect.y + rect.h;	tv[2].z = 0.0f;	tv[2].u = src.x;			tv[2].v = src.y + src.h;
-		tv[3].x = rect.x + rect.w;	tv[3].y = rect.y + rect.h;	tv[3].z = 0.0f;	tv[3].u = src.x + src.w;	tv[3].v = src.y + src.h;
+		tv[0].x = tv[2].x = rect.x;
+		tv[0].y = tv[1].y = rect.y;
+		tv[0].u = tv[2].u = src.x;
+		tv[0].v = tv[1].v = src.y;
+		tv[1].x = tv[3].x = rect.x + rect.w;
+		tv[1].u = tv[3].u = src.x + src.w;
+		tv[2].y = tv[3].y = rect.y + rect.h;
+		tv[2].v = tv[3].v = src.y + src.h;
 		this->render(RO_TRIANGLE_STRIP, tv, 4, color);
 	}
 

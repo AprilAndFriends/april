@@ -290,7 +290,8 @@ namespace april
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		int size = nVertices;
+		static int size = 0;
+		size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
@@ -309,7 +310,8 @@ namespace april
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		int size = nVertices;
+		static int size = 0;
+		size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
@@ -329,7 +331,8 @@ namespace april
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		int size = nVertices;
+		static int size = 0;
+		size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
@@ -349,7 +352,8 @@ namespace april
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
-		int size = nVertices;
+		static int size = 0;
+		size = nVertices;
 #ifdef _ANDROID
 		for_iter_step (i, 0, nVertices, size)
 		{
