@@ -134,7 +134,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	}
 	
 	@Override
-	public InputConnection onCreateInputConnection(EditorInfo outAttributes)  // required for creation of soft keyboard
+	public InputConnection onCreateInputConnection(EditorInfo outAttributes) // required for creation of soft keyboard
 	{ 
 		outAttributes.actionId = EditorInfo.IME_ACTION_DONE;
 		outAttributes.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI;
