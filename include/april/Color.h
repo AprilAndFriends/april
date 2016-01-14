@@ -37,7 +37,7 @@ namespace april
 		/// @brief Basic constructor.
 		inline Color()
 		{
-			this->set('\255', '\255', '\255', '\255');
+			this->set((unsigned char)255, (unsigned char)255, (unsigned char)255, (unsigned char)255);
 		}
 		/// @brief Constructor.
 		/// @param[in] r The red value.
