@@ -13,6 +13,8 @@
 #ifndef APRIL_COLOR_H
 #define APRIL_COLOR_H
 
+#include <hltypes/hexception.h>
+#include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
@@ -33,66 +35,110 @@ namespace april
 		unsigned char a;
 		
 		/// @brief Basic constructor.
-		Color();
+		inline Color()
+		{
+			this->set('\255', '\255', '\255', '\255');
+		}
 		/// @brief Constructor.
 		/// @param[in] r The red value.
 		/// @param[in] g The green value.
 		/// @param[in] b The blue value.
 		/// @param[in] a The alpha value.
-		Color(int r, int g, int b, int a = 255);
+		inline Color(int r, int g, int b, int a = 255)
+		{
+			this->set(r, g, b, a);
+		}
 		/// @brief Constructor.
 		/// @param[in] r The red value.
 		/// @param[in] g The green value.
 		/// @param[in] b The blue value.
 		/// @param[in] a The alpha value.
-		Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255);
+		inline Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255)
+		{
+			this->set(r, g, b, a);
+		}
 		/// @brief Constructor.
 		/// @param[in] color The color value.
 		/// @note The unsigned int is in RGBA MSB order.
-		Color(unsigned int color);
+		inline Color(unsigned int color)
+		{
+			this->set(color);
+		}
 		/// @brief Constructor.
 		/// @param[in] hex The hex values of the color.
 		/// @note Can be RRGGBB or RRGGBBAA. The 0x prefix is optional.
-		Color(chstr hex);
-		/// @brief Constructor.
-		/// @param[in] hex The hex values of the color.
-		/// @note Can be RRGGBB or RRGGBBAA. The 0x prefix is optional.
-		Color(const char* hex);
+		inline Color(chstr hex)
+		{
+			this->set(hex);
+		}
 		/// @brief Constructor.
 		/// @param[in] color The Color to copy.
 		/// @param[in] a The replacement alpha value.
-		Color(const Color& color, unsigned char a);
-		/// @brief Destructor.
-		~Color();
+		inline Color(const Color& color, unsigned char a)
+		{
+			this->set(color, a);
+		}
 
 		/// @brief Sets the Color's values.
 		/// @param[in] r The red value.
 		/// @param[in] g The green value.
 		/// @param[in] b The blue value.
 		/// @param[in] a The alpha value.
-		void set(int r, int g, int b, int a = 255);
+		inline void set(int r, int g, int b, int a = 255)
+		{
+			this->r = (unsigned char)r;
+			this->g = (unsigned char)g;
+			this->b = (unsigned char)b;
+			this->a = (unsigned char)a;
+		}
 		/// @brief Sets the Color's values.
 		/// @param[in] r The red value.
 		/// @param[in] g The green value.
 		/// @param[in] b The blue value.
 		/// @param[in] a The alpha value.
-		void set(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255);
+		inline void set(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255)
+		{
+			this->r = r;
+			this->g = g;
+			this->b = b;
+			this->a = a;
+		}
 		/// @brief Sets the Color's values.
 		/// @param[in] color The color value.
 		/// @note The unsigned int is in RGBA MSB order.
-		void set(unsigned int color);
+		inline void set(unsigned int color)
+		{
+			this->r = (unsigned char)((color >> 24) & 0xFF);
+			this->g = (unsigned char)((color >> 16) & 0xFF);
+			this->b = (unsigned char)((color >> 8) & 0xFF);
+			this->a = (unsigned char)(color & 0xFF);
+		}
 		/// @brief Sets the Color's values.
 		/// @param[in] hex The hex values of the color.
 		/// @note Can be RRGGBB or RRGGBBAA. The 0x prefix is optional.
-		void set(chstr hex);
-		/// @brief Sets the Color's values.
-		/// @param[in] hex The hex values of the color.
-		/// @note Can be RRGGBB or RRGGBBAA. The 0x prefix is optional.
-		void set(const char* hex);
+		inline void set(chstr hex)
+		{
+			hstr value = (hex.startsWith("0x") ? hex(2, -1) : hex);
+			int size = value.size();
+			if ((size != 6 && size != 8) || !value.isHex())
+			{
+				throw Exception("Color format must be either 0xRRGGBBAA or 0xRRGGBB (with or without 0x prefix)");
+			}
+			this->r = (unsigned char)value(0, 2).unhex();
+			this->g = (unsigned char)value(2, 2).unhex();
+			this->b = (unsigned char)value(4, 2).unhex();
+			this->a = (value.size() == 8 ? (unsigned char)value(6, 2).unhex() : 255);
+		}
 		/// @brief Sets the Color's values.
 		/// @param[in] color The Color to copy.
 		/// @param[in] a The replacement alpha value.
-		void set(const Color& color, unsigned char a);
+		inline void set(const Color& color, unsigned char a)
+		{
+			this->r = color.r;
+			this->g = color.g;
+			this->b = color.b;
+			this->a = a;
+		}
 
 		/// @brief Gets the red value as float in the range of [0,1].
 		inline float r_f() const { return this->r * 0.003921569f; } // equals r / 255, multiplication is faster than division
@@ -107,60 +153,145 @@ namespace april
 		/// @param[in] rgbOnly Whether alpha should not be included.
 		/// @brief The hex string representation of the Color.
 		/// @note Careful when using rgbOnly!
-		hstr hex(bool rgbOnly = false) const;
-		
+		inline hstr hex(bool rgbOnly = false) const
+		{
+			return (!rgbOnly ? hsprintf("%02X%02X%02X%02X", this->r, this->g, this->b, this->a) : hsprintf("%02X%02X%02X", this->r, this->g, this->b));
+		}
+
 		/// @brief Gets the unsigned int representation of the Color.
 		/// @brief The unsigned int representation of the Color.
 		/// @note The return value is in RGBA MSB order.
-		operator unsigned int() const;
-		
+		inline operator unsigned int() const
+		{
+			return (((int)this->r << 24) | ((int)this->g << 16) | ((int)this->b << 8) | (int)this->a);
+		}
+
 		/// @brief Compares whether two colors are equal.
 		/// @return True if the colors are equal.
-		bool operator==(const Color& other) const;
+		inline bool operator==(const Color& other) const
+		{
+			return (this->r == other.r && this->g == other.g && this->b == other.b && this->a == other.a);
+		}
 		/// @brief Compares whether two colors are not equal.
 		/// @return True if the colors are not equal.
-		bool operator!=(const Color& other) const;
-		
+		inline bool operator!=(const Color& other) const
+		{
+			return (this->r != other.r || this->g != other.g || this->b != other.b || this->a != other.a);
+		}
+
 		/// @brief Adds two Colors.
 		/// @return The resulting Color.
-		Color operator+(const Color& other) const;
+		inline Color operator+(const Color& other) const
+		{
+			Color result(*this);
+			result += other;
+			return result;
+		}
 		/// @brief Subtracts two Colors.
 		/// @return The resulting Color.
-		Color operator-(const Color& other) const;
+		inline Color operator-(const Color& other) const
+		{
+			Color result(*this);
+			result -= other;
+			return result;
+		}
 		/// @brief Multiplies two Colors.
 		/// @return The resulting Color.
 		/// @note Multiplication is done in a [0,1] range logic.
-		Color operator*(const Color& other) const;
+		inline Color operator*(const Color& other) const
+		{
+			Color result(*this);
+			result *= other;
+			return result;
+		}
 		/// @brief Divides two Colors.
 		/// @return The resulting Color.
 		/// @note Division is done in a [0,1] range logic (beware of division with zero!).
-		Color operator/(const Color& other) const;
+		inline Color operator/(const Color& other) const
+		{
+			Color result(*this);
+			result /= other;
+			return result;
+		}
 		/// @brief Multiplies a Color with a factor.
 		/// @return The resulting Color.
-		Color operator*(float value) const;
+		inline Color operator*(float value) const
+		{
+			Color result(*this);
+			result *= value;
+			return result;
+		}
 		/// @brief Divides a Color with a factor.
 		/// @return The resulting Color.
-		Color operator/(float value) const;
+		inline Color operator/(float value) const
+		{
+			Color result(*this);
+			result /= value;
+			return result;
+		}
 		/// @brief Adds another Color to this one.
 		/// @return This modified Color.
-		Color operator+=(const Color& other);
+		inline Color operator+=(const Color& other)
+		{
+			this->r = (unsigned char)hclamp((int)this->r + other.r, 0, 255);
+			this->g = (unsigned char)hclamp((int)this->g + other.g, 0, 255);
+			this->b = (unsigned char)hclamp((int)this->b + other.b, 0, 255);
+			this->a = (unsigned char)hclamp((int)this->a + other.a, 0, 255);
+			return (*this);
+		}
 		/// @brief Subtracts another Color from this one.
 		/// @return This modified Color.
-		Color operator-=(const Color& other);
+		inline Color operator-=(const Color& other)
+		{
+			this->r = (unsigned char)hclamp((int)this->r - other.r, 0, 255);
+			this->g = (unsigned char)hclamp((int)this->g - other.g, 0, 255);
+			this->b = (unsigned char)hclamp((int)this->b - other.b, 0, 255);
+			this->a = (unsigned char)hclamp((int)this->a - other.a, 0, 255);
+			return (*this);
+		}
 		/// @brief Multiplies this Color with another one.
 		/// @return This modified Color.
 		/// @note Multiplication is done in a [0,1] range logic.
-		Color operator*=(const Color& other);
+		inline Color operator*=(const Color& other)
+		{
+			this->r = (unsigned char)hclamp((int)(this->r_f() * other.r), 0, 255);
+			this->g = (unsigned char)hclamp((int)(this->g_f() * other.g), 0, 255);
+			this->b = (unsigned char)hclamp((int)(this->b_f() * other.b), 0, 255);
+			this->a = (unsigned char)hclamp((int)(this->a_f() * other.a), 0, 255);
+			return (*this);
+		}
 		/// @brief Divides this Color with another one.
 		/// @return This modified Color.
 		/// @note Division is done in a [0,1] range logic (beware of division with zero!).
-		Color operator/=(const Color& other);
+		inline Color operator/=(const Color& other)
+		{
+			this->r = (unsigned char)hclamp((int)(this->r_f() / other.r), 0, 255);
+			this->g = (unsigned char)hclamp((int)(this->g_f() / other.g), 0, 255);
+			this->b = (unsigned char)hclamp((int)(this->b_f() / other.b), 0, 255);
+			this->a = (unsigned char)hclamp((int)(this->a_f() / other.a), 0, 255);
+			return (*this);
+		}
 		/// @brief Multiplies this Color with a factor.
 		/// @return This modified Color.
-		Color operator*=(float value);
+		inline Color operator*=(float value)
+		{
+			this->r = (unsigned char)hclamp((int)(this->r * value), 0, 255);
+			this->g = (unsigned char)hclamp((int)(this->g * value), 0, 255);
+			this->b = (unsigned char)hclamp((int)(this->b * value), 0, 255);
+			this->a = (unsigned char)hclamp((int)(this->a * value), 0, 255);
+			return (*this);
+		}
 		/// @brief Divides this Color with a factor.
 		/// @return This modified Color.
-		Color operator/=(float value);
+		inline Color operator/=(float value)
+		{
+			float val = 1.0f / value;
+			this->r = (unsigned char)hclamp((int)(this->r * val), 0, 255);
+			this->g = (unsigned char)hclamp((int)(this->g * val), 0, 255);
+			this->b = (unsigned char)hclamp((int)(this->b * val), 0, 255);
+			this->a = (unsigned char)hclamp((int)(this->a * val), 0, 255);
+			return (*this);
+		}
 
 		/// @brief Provides a commonly used white Color.
 		static Color White;
