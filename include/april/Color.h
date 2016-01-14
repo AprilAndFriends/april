@@ -72,6 +72,13 @@ namespace april
 			this->set(hex);
 		}
 		/// @brief Constructor.
+		/// @param[in] hex The hex values of the color.
+		/// @note Can be RRGGBB or RRGGBBAA. The 0x prefix is optional.
+		inline Color(const char* hex)
+		{
+			this->set(hex);
+		}
+		/// @brief Constructor.
 		/// @param[in] color The Color to copy.
 		/// @param[in] a The replacement alpha value.
 		inline Color(const Color& color, unsigned char a)
@@ -128,6 +135,13 @@ namespace april
 			this->g = (unsigned char)value(2, 2).unhex();
 			this->b = (unsigned char)value(4, 2).unhex();
 			this->a = (value.size() == 8 ? (unsigned char)value(6, 2).unhex() : 255);
+		}
+		/// @brief Sets the Color's values.
+		/// @param[in] hex The hex values of the color.
+		/// @note Can be RRGGBB or RRGGBBAA. The 0x prefix is optional.
+		inline void set(const char* hex)
+		{
+			this->set(hstr(hex));
 		}
 		/// @brief Sets the Color's values.
 		/// @param[in] color The Color to copy.
