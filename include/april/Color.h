@@ -35,27 +35,24 @@ namespace april
 		unsigned char a;
 		
 		/// @brief Basic constructor.
-		inline Color()
+		inline Color() : r(255), g(255), b(255), a(255)
 		{
-			this->set((unsigned char)255, (unsigned char)255, (unsigned char)255, (unsigned char)255);
 		}
 		/// @brief Constructor.
 		/// @param[in] r The red value.
 		/// @param[in] g The green value.
 		/// @param[in] b The blue value.
 		/// @param[in] a The alpha value.
-		inline Color(int r, int g, int b, int a = 255)
+		inline Color(int r, int g, int b, int a = 255) : r(r), g(g), b(b), a(a)
 		{
-			this->set(r, g, b, a);
 		}
 		/// @brief Constructor.
 		/// @param[in] r The red value.
 		/// @param[in] g The green value.
 		/// @param[in] b The blue value.
 		/// @param[in] a The alpha value.
-		inline Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255)
+		inline Color(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255) : r(r), g(g), b(b), a(a)
 		{
-			this->set(r, g, b, a);
 		}
 		/// @brief Constructor.
 		/// @param[in] color The color value.
@@ -81,9 +78,8 @@ namespace april
 		/// @brief Constructor.
 		/// @param[in] color The Color to copy.
 		/// @param[in] a The replacement alpha value.
-		inline Color(const Color& color, unsigned char a)
+		inline Color(const Color& color, unsigned char a) : r(color.r), g(color.g), b(color.b), a(a)
 		{
-			this->set(color, a);
 		}
 
 		/// @brief Sets the Color's values.
