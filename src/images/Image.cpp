@@ -968,8 +968,8 @@ namespace april
 			return Image::write(sx, sy, sw, sh, dx, dh, srcData, srcWidth, srcHeight, srcFormat, destData, destWidth, destHeight, destFormat);
 		}
 		int bpp = Image::getFormatBpp(destFormat);
-		float fw = (float)sw / dw;
-		float fh = (float)sh / dh;
+		float fw = (dw > sw ? (sw + 1.0f) / dw : (float)sw / dw);
+		float fh = (dh > sh ? (sh + 1.0f) / dh : (float)sh / dh);
 		unsigned char* dest = NULL;
 		unsigned char* ctl;
 		unsigned char* ctr;
