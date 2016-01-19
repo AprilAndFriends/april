@@ -36,10 +36,34 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	// kspes@20150819 - Starting MacOS 10.10.5 I've noticed cursor rects getting messed up in fullscreen mode (windowed works fine). So this code here is a hack/workarround that problem
 	// Analyzing the code everything seems to be in order, regardless if I use the old cursor rect logic or newer NSTrackingArea, the effect is the same. if this is a bug in apple or our code
 	// I can't be sure, but in the lack of a better solution now, this is going to be used until and if that better solution comes.
+	
+	// update@20160119 - Had problems with cursors not showing up so I update the if below to force set the cursors in this case, while still not 100% perfect, it works better and more reliable
+	// now I even got cursors not showing up properly in windowed mode, bah..
 	NSCursor* current = [NSCursor currentCursor];
-	if ((mCursor != NULL && current != mCursor) || (mUseBlankCursor && current != mBlankCursor))
+	if (mCursor != NULL)
 	{
-		[mWindow invalidateCursorRectsForView:self];
+		
+		if (current != mCursor)
+		{
+			[mWindow invalidateCursorRectsForView:self];
+			[mCursor set];
+		}
+	}
+	else if (mUseBlankCursor)
+	{
+		if (current != mBlankCursor)
+		{
+			[mWindow invalidateCursorRectsForView:self];
+			[mBlankCursor set];
+		}
+	}
+	else if (mCursor == NULL)
+	{
+		if (current != [NSCursor arrowCursor])
+		{
+			[mWindow invalidateCursorRectsForView:self];
+			[[NSCursor arrowCursor] set];
+		}
 	}
 }
 
@@ -215,7 +239,6 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 
 - (void)resetCursorRects
 {
-    
     hmutex::ScopeLock lock;
     
     if (april::isUsingCVDisplayLink() && !mDrawingFromMainThread)
@@ -229,6 +252,10 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	else if (mCursor != NULL)
 	{
 		[self addCursorRect:[self bounds] cursor:mCursor];
+	}
+	else
+	{
+		[self addCursorRect:[self bounds] cursor:[NSCursor arrowCursor]];
 	}
 }
 
