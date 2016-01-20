@@ -49,7 +49,7 @@ bool isLionOrNewer()
 
 namespace april
 {
-	bool usingCvDisplayLink = true; // purposely exposed like this so it can be overrided as extern in other porjects if needed. for now without an api.
+	bool usingCvDisplayLink = false; // purposely exposed like this so it can be overrided as extern in other porjects if needed. for now without an api.
 	
     bool isUsingCVDisplayLink()
     {

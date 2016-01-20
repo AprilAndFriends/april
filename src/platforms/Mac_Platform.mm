@@ -98,6 +98,7 @@ namespace april
 			CFArrayRef preferred = CFBundleCopyPreferredLocalizationsFromArray(locs);
 			CFStringRef loc = (CFStringRef) CFArrayGetValueAtIndex(preferred, 0);
 			CFStringRef lang = CFLocaleCreateCanonicalLocaleIdentifierFromString(NULL, loc);
+			CFRelease(preferred);
 			char cstr[64 + 1];
 			CFStringGetCString(lang, cstr, 64, kCFStringEncodingASCII);
 			hstr fullLocale = hstr(cstr);
