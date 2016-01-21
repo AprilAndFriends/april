@@ -915,7 +915,7 @@ namespace april
 	void RenderSystem::unloadTextures()
 	{
 		harray<Texture*> textures = this->getTextures();
-		foreach(Texture*, it, textures)
+		foreach (Texture*, it, textures)
 		{
 			(*it)->unload();
 		}
