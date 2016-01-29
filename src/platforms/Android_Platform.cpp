@@ -17,6 +17,7 @@
 
 #define __NATIVE_INTERFACE_CLASS "com/april/NativeInterface"
 #include "androidUtilJNI.h"
+#include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 
