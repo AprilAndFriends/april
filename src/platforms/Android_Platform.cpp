@@ -92,8 +92,16 @@ namespace april
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodGetRamConsumption, "getRamConsumption", _JARGS(_JLONG, ));
 		return (int64_t)env->CallStaticLongMethod(classNativeInterface, methodGetRamConsumption);
-	}	
+	}
 	
+	bool openUrl(chstr url)
+	{
+		hlog::write(logTag, "Opening URL: " + url);
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodOpenUrl, "openUrl", _JARGS(_JVOID, _JSTR));
+		env->CallStaticVoidMethod(classNativeInterface, methodOpenUrl, env->NewStringUTF(url.cStr()));
+		return true;
+	}
+
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{

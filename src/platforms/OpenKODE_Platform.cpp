@@ -8,6 +8,7 @@
 
 #ifdef _OPENKODE
 #include <KD/kd.h>
+#include <stdio.h>
 
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <gtypes/Vector2.h>
@@ -20,7 +21,7 @@
 #include "april.h"
 
 #ifdef _EGL
-#include "egl.h"
+	#include "egl.h"
 #endif
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -35,10 +36,10 @@
 #endif
 
 #ifdef _ANDROID
-#include <jni.h>
-#define __NATIVE_INTERFACE_CLASS "com/april/NativeInterface"
-#include "androidUtilJNI.h"
-#include <unistd.h>
+	#include <jni.h>
+	#define __NATIVE_INTERFACE_CLASS "com/april/NativeInterface"
+	#include "androidUtilJNI.h"
+	#include <unistd.h>
 #endif
 
 #ifdef _ANDROID
@@ -186,6 +187,34 @@ namespace april
 		// TODOa
 		return 0LL;
 	}	
+	
+	bool openUrl(chstr url)
+	{
+		hlog::write(logTag, "Opening URL: " + url);
+#ifdef __APPLE__
+#if _IOS
+		if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]])
+		{
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]];
+		}
+		else
+		{
+			hlog::write(logTag, "Failed to open URL");
+			return false;
+		}
+#else
+		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]];
+#endif
+#elif defined(_ANDROID)
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodOpenUrl, "openUrl", _JARGS(_JVOID, _JSTR));
+		env->CallStaticObjectMethod(classNativeInterface, methodOpenUrl, env->NewStringUTF(url.cStr()));
+#elif defined(_WIN32) && !defined(_WINRT)
+		ShellExecuteW(NULL, L"open", url.wStr().c_str(), NULL, NULL, SW_SHOWNORMAL);
+#else
+		kdSystem((KDchar*)url.cStr());
+#endif
+		return true;
+	}
 	
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))

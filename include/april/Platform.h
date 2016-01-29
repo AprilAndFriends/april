@@ -114,6 +114,11 @@ namespace april
 	/// @return Current process' RAM consumption.
 	/// @note This is the RAM consumed by the entire process.
 	aprilFnExport int64_t getRamConsumption();
+	/// @brief Opens a URL.
+	/// @param[in] url The URL to open.
+	/// @return True if the system call was successful.
+	/// @note The return value might be true even if a URL couldn't be opened due to problems, e.g. Internet connectivity.
+	aprilFnExport bool openUrl(chstr url);
 	/// @brief Displays an OS message box.
 	/// @param[in] title Text displayed in the title bar.
 	/// @param[in] text Text displayed within the message box.

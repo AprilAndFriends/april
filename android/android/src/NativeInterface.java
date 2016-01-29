@@ -3,6 +3,7 @@ package com.april;
 /// @version 4.0
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -91,18 +92,6 @@ public class NativeInterface
 	public static native void onDialogNo();
 	public static native void onDialogCancel();
 	
-	public static String getUserDataPath()
-	{
-		return NativeInterface.activity.getFilesDir().getAbsolutePath();
-	}
-	
-	public static long getRamConsumption()
-	{
-		android.os.Debug.MemoryInfo info = new android.os.Debug.MemoryInfo();
-		android.os.Debug.getMemoryInfo(info);
-		return ((long)info.getTotalPrivateDirty() * 1024L); // because getTotalPrivateDirty() is in kB
-	}
-	
 	public static Object getDisplayResolution()
 	{
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -157,6 +146,23 @@ public class NativeInterface
 	public static String getLocaleVariant()
 	{
 		return Locale.getDefault().getCountry();
+	}
+	
+	public static String getUserDataPath()
+	{
+		return NativeInterface.activity.getFilesDir().getAbsolutePath();
+	}
+	
+	public static long getRamConsumption()
+	{
+		android.os.Debug.MemoryInfo info = new android.os.Debug.MemoryInfo();
+		android.os.Debug.getMemoryInfo(info);
+		return ((long)info.getTotalPrivateDirty() * 1024L); // because getTotalPrivateDirty() is in kB
+	}
+	
+	public static void openUrl(String url)
+	{
+		NativeInterface.activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 	}
 	
 	public static void showVirtualKeyboard()

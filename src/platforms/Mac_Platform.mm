@@ -144,6 +144,12 @@ namespace april
 		return 0LL;
 	}	
 	
+	bool openUrl(chstr url)
+	{
+		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]];
+		return true;
+	}
+	
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// fugly implementation of showing messagebox on mac os

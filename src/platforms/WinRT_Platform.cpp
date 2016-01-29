@@ -7,6 +7,7 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #if defined(_WINRT) && !defined(_OPENKODE)
+#define __HL_INCLUDE_PLATFORM_HEADERS
 #include <gtypes/Vector2.h>
 #include <hltypes/hdir.h>
 #include <hltypes/hlog.h>
@@ -143,6 +144,13 @@ namespace april
 		return 0LL;
 	}	
 	
+	bool openUrl(chstr url)
+	{
+		hlog::write(logTag, "Opening URL: " + url);
+		Windows::System::Launcher::LaunchUriAsync(ref new Windows::Foundation::Uri(_HL_HSTR_TO_PSTR(url)));
+		return true;
+	}
+
 	static void(*currentCallback)(MessageBoxButton) = NULL;
 
 	void _messageBoxResult(int button)
