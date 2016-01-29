@@ -126,7 +126,7 @@ namespace april
 			result = (int64_t)counters.WorkingSetSize;
 		}
 		return result;
-	}	
+	}
 	
 	bool openUrl(chstr url)
 	{
