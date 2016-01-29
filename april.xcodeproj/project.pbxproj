@@ -538,7 +538,7 @@
 		D102CFF419B7284500948584 /* TextureAsync.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureAsync.cpp; path = src/TextureAsync.cpp; sourceTree = "<group>"; };
 		D102CFF519B7284500948584 /* TextureAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureAsync.h; path = src/TextureAsync.h; sourceTree = "<group>"; };
 		D10B73AA1982472300A9352D /* OpenKODE_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenKODE_main.cpp; path = src/platforms/OpenKODE_main.cpp; sourceTree = "<group>"; };
-		D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenKODE_Platform.cpp; path = src/platforms/OpenKODE_Platform.cpp; sourceTree = "<group>"; };
+		D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; name = OpenKODE_Platform.cpp; path = src/platforms/OpenKODE_Platform.cpp; sourceTree = "<group>"; };
 		D10B73AC1982472300A9352D /* Posix_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Posix_main.cpp; path = src/platforms/Posix_main.cpp; sourceTree = "<group>"; };
 		D10B73AD1982472300A9352D /* Posix_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Posix_Platform.cpp; path = src/platforms/Posix_Platform.cpp; sourceTree = "<group>"; };
 		D10B73B31982477300A9352D /* DirectX_RenderSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX_RenderSystem.cpp; path = src/rendersystems/DirectX/DirectX_RenderSystem.cpp; sourceTree = "<group>"; };

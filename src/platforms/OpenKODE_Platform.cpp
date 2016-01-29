@@ -31,6 +31,7 @@
 	#include <TargetConditionals.h>
 	#include <sys/sysctl.h>
 	#ifdef _IOS
+		#import <UIKit/UIKit.h>
 		void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 	#endif
 #endif
