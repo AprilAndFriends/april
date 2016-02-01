@@ -24,6 +24,8 @@
 #include <TargetConditionals.h>
 #endif
 
+#define MAX_WRITE_SIZE 65536
+
 #define CHECK_SHIFT_FORMATS(format1, format2) (\
 	((format1) == FORMAT_RGBA || (format1) == FORMAT_RGBX || (format1) == FORMAT_BGRA || (format1) == FORMAT_BGRX) && \
 	((format2) == FORMAT_ARGB || (format2) == FORMAT_XRGB || (format2) == FORMAT_ABGR || (format2) == FORMAT_XBGR) \
@@ -956,6 +958,18 @@ namespace april
 		return true;
 	}
 
+	static float _srcXs[MAX_WRITE_SIZE];
+	static int _x0s[MAX_WRITE_SIZE];
+	static int _x1s[MAX_WRITE_SIZE];
+	static float _rx0s[MAX_WRITE_SIZE];
+	static float _rx1s[MAX_WRITE_SIZE];
+	static float _srcYs[MAX_WRITE_SIZE];
+	static int _y0s[MAX_WRITE_SIZE];
+	static int _y1s[MAX_WRITE_SIZE];
+	static float _ry0s[MAX_WRITE_SIZE];
+	static float _ry1s[MAX_WRITE_SIZE];
+
+
 	bool Image::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat,
 		unsigned char* destData, int destWidth, int destHeight, Format destFormat)
 	{
@@ -967,6 +981,11 @@ namespace april
 		{
 			return Image::write(sx, sy, sw, sh, dx, dh, srcData, srcWidth, srcHeight, srcFormat, destData, destWidth, destHeight, destFormat);
 		}
+		if (dw > MAX_WRITE_SIZE || dh > MAX_WRITE_SIZE)
+		{
+			hlog::errorf(logTag, "Cannot call Image::writeStretch() with dimensions bigger than %d!", MAX_WRITE_SIZE);
+			return false;
+		}
 		int bpp = Image::getFormatBpp(destFormat);
 		float fw = (dw > sw ? (sw + 1.0f) / dw : (float)sw / dw);
 		float fh = (dh > sh ? (sh + 1.0f) / dh : (float)sh / dh);
@@ -975,6 +994,7 @@ namespace april
 		unsigned char* ctr;
 		unsigned char* cbl;
 		unsigned char* cbr;
+		/*
 		float srcX;
 		float srcY;
 		int x0;
@@ -985,8 +1005,27 @@ namespace april
 		float ry0;
 		float rx1;
 		float ry1;
+		*/
+		// preparing some data first
 		int x = 0;
 		int y = 0;
+		for_iterx (y, 0, dh)
+		{
+			_srcYs[y] = sy + y * fh;
+			_y0s[y] = (int)_srcYs[y];
+			_ry0s[y] = _srcYs[y] - _y0s[y];
+			_y1s[y] = hmin(_y0s[y] + 1, srcHeight - 1);
+			_ry1s[y] = 1.0f - _ry0s[y];
+		}
+		for_iterx (x, 0, dw)
+		{
+			_srcXs[x] = sx + x * fw;
+			_x0s[x] = (int)_srcXs[x];
+			_rx0s[x] = _srcXs[x] - _x0s[x];
+			_x1s[x] = hmin(_x0s[x] + 1, srcWidth - 1);
+			_rx1s[x] = 1.0f - _rx0s[x];
+		}
+		// the interpolated writing
 		if (srcFormat == FORMAT_ALPHA && destFormat != FORMAT_ALPHA)
 		{
 			if (bpp == 4)
@@ -997,39 +1036,27 @@ namespace april
 					Image::_getFormatIndices(destFormat, NULL, NULL, NULL, &da);
 					for_iterx (y, 0, dh)
 					{
-						srcY = sy + y * fh;
-						y0 = (int)srcY;
-						ry0 = srcY - y0;
-						y1 = hmin(y0 + 1, srcHeight - 1);
-						ry1 = 1.0f - ry0;
 						for_iterx (x, 0, dw)
 						{
 							dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
-							srcX = sx + x * fw;
-							x0 = (int)srcX;
-							rx0 = srcX - x0;
 							// linear interpolation
-							ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
-							if (rx0 != 0.0f && ry0 != 0.0f)
+							ctl = &srcData[(_x0s[x] + _y0s[y] * srcWidth) * bpp];
+							if (_rx0s[x] != 0.0f && _ry0s[y] != 0.0f)
 							{
-								x1 = hmin(x0 + 1, srcWidth - 1);
-								rx1 = 1.0f - rx0;
-								ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
-								cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
-								cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
-								dest[da] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+								ctr = &srcData[(_x1s[x] + _y0s[y] * srcWidth) * bpp];
+								cbl = &srcData[(_x0s[x] + _y1s[y] * srcWidth) * bpp];
+								cbr = &srcData[(_x1s[x] + _y1s[y] * srcWidth) * bpp];
+								dest[da] = (unsigned char)(((ctl[0] * _ry1s[y] + cbl[0] * _ry0s[y]) * _rx1s[x] + (ctr[0] * _ry1s[y] + cbr[0] * _ry0s[y]) * _rx0s[x]));
 							}
-							else if (rx0 != 0.0f)
+							else if (_rx0s[x] != 0.0f)
 							{
-								x1 = hmin(x0 + 1, srcWidth - 1);
-								rx1 = 1.0f - rx0;
-								ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
-								dest[da] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+								ctr = &srcData[(_x1s[x] + _y0s[y] * srcWidth) * bpp];
+								dest[da] = (unsigned char)((ctl[0] * _rx1s[x] + ctr[0] * _rx0s[x]));
 							}
-							else if (ry0 != 0.0f)
+							else if (_ry0s[y] != 0.0f)
 							{
-								cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
-								dest[da] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+								cbl = &srcData[(_x0s[x] + _y1s[y] * srcWidth) * bpp];
+								dest[da] = (unsigned char)((ctl[0] * _ry1s[y] + cbl[0] * _ry0s[y]));
 							}
 							else
 							{
@@ -1063,39 +1090,27 @@ namespace april
 		{
 			for_iterx (y, 0, dh)
 			{
-				srcY = sy + y * fh;
-				y0 = (int)srcY;
-				ry0 = srcY - y0;
-				y1 = hmin(y0 + 1, srcHeight - 1);
-				ry1 = 1.0f - ry0;
 				for_iterx (x, 0, dw)
 				{
 					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
-					srcX = sx + x * fw;
-					x0 = (int)srcX;
-					rx0 = srcX - x0;
 					// linear interpolation
-					ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
-					if (rx0 != 0.0f && ry0 != 0.0f)
+					ctl = &srcData[(_x0s[x] + _y0s[y] * srcWidth) * bpp];
+					if (_rx0s[x] != 0.0f && _ry0s[y] != 0.0f)
 					{
-						x1 = hmin(x0 + 1, srcWidth - 1);
-						rx1 = 1.0f - rx0;
-						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
-						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
-						cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
-						dest[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
+						ctr = &srcData[(_x1s[x] + _y0s[y] * srcWidth) * bpp];
+						cbl = &srcData[(_x0s[x] + _y1s[y] * srcWidth) * bpp];
+						cbr = &srcData[(_x1s[x] + _y1s[y] * srcWidth) * bpp];
+						dest[0] = (unsigned char)(((ctl[0] * _ry1s[y] + cbl[0] * _ry0s[y]) * _rx1s[x] + (ctr[0] * _ry1s[y] + cbr[0] * _ry0s[y]) * _rx0s[x]));
 					}
-					else if (rx0 != 0.0f)
+					else if (_rx0s[x] != 0.0f)
 					{
-						x1 = hmin(x0 + 1, srcWidth - 1);
-						rx1 = 1.0f - rx0;
-						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
-						dest[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
+						ctr = &srcData[(_x1s[x] + _y0s[y] * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * _rx1s[x] + ctr[0] * _rx0s[x]));
 					}
-					else if (ry0 != 0.0f)
+					else if (_ry0s[y] != 0.0f)
 					{
-						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
-						dest[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
+						cbl = &srcData[(_x0s[x] + _y1s[y] * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * _ry1s[y] + cbl[0] * _ry0s[y]));
 					}
 					else
 					{
@@ -1109,45 +1124,33 @@ namespace april
 		{
 			for_iterx (y, 0, dh)
 			{
-				srcY = sy + y * fh;
-				y0 = (int)srcY;
-				ry0 = srcY - y0;
-				y1 = hmin(y0 + 1, srcHeight - 1);
-				ry1 = 1.0f - ry0;
 				for_iterx (x, 0, dw)
 				{
 					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
-					srcX = sx + x * fw;
-					x0 = (int)srcX;
-					rx0 = srcX - x0;
 					// linear interpolation
-					ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
-					if (rx0 != 0.0f && ry0 != 0.0f)
+					ctl = &srcData[(_x0s[x] + _y0s[y] * srcWidth) * bpp];
+					if (_rx0s[x] != 0.0f && _ry0s[y] != 0.0f)
 					{
-						x1 = hmin(x0 + 1, srcWidth - 1);
-						rx1 = 1.0f - rx0;
-						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
-						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
-						cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
-						dest[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						dest[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-						dest[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
+						ctr = &srcData[(_x1s[x] + _y0s[y] * srcWidth) * bpp];
+						cbl = &srcData[(_x0s[x] + _y1s[y] * srcWidth) * bpp];
+						cbr = &srcData[(_x1s[x] + _y1s[y] * srcWidth) * bpp];
+						dest[0] = (unsigned char)(((ctl[0] * _ry1s[y] + cbl[0] * _ry0s[y]) * _rx1s[x] + (ctr[0] * _ry1s[y] + cbr[0] * _ry0s[y]) * _rx0s[x]));
+						dest[1] = (unsigned char)(((ctl[1] * _ry1s[y] + cbl[1] * _ry0s[y]) * _rx1s[x] + (ctr[1] * _ry1s[y] + cbr[1] * _ry0s[y]) * _rx0s[x]));
+						dest[2] = (unsigned char)(((ctl[2] * _ry1s[y] + cbl[2] * _ry0s[y]) * _rx1s[x] + (ctr[2] * _ry1s[y] + cbr[2] * _ry0s[y]) * _rx0s[x]));
 					}
-					else if (rx0 != 0.0f)
+					else if (_rx0s[x] != 0.0f)
 					{
-						x1 = hmin(x0 + 1, srcWidth - 1);
-						rx1 = 1.0f - rx0;
-						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
-						dest[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						dest[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-						dest[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
+						ctr = &srcData[(_x1s[x] + _y0s[y] * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * _rx1s[x] + ctr[0] * _rx0s[x]));
+						dest[1] = (unsigned char)((ctl[1] * _rx1s[x] + ctr[1] * _rx0s[x]));
+						dest[2] = (unsigned char)((ctl[2] * _rx1s[x] + ctr[2] * _rx0s[x]));
 					}
-					else if (ry0 != 0.0f)
+					else if (_ry0s[y] != 0.0f)
 					{
-						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
-						dest[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						dest[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-						dest[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
+						cbl = &srcData[(_x0s[x] + _y1s[y] * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * _ry1s[y] + cbl[0] * _ry0s[y]));
+						dest[1] = (unsigned char)((ctl[1] * _ry1s[y] + cbl[1] * _ry0s[y]));
+						dest[2] = (unsigned char)((ctl[2] * _ry1s[y] + cbl[2] * _ry0s[y]));
 					}
 					else
 					{
@@ -1163,48 +1166,36 @@ namespace april
 		{
 			for_iterx (y, 0, dh)
 			{
-				srcY = sy + y * fh;
-				y0 = (int)srcY;
-				ry0 = srcY - y0;
-				y1 = hmin(y0 + 1, srcHeight - 1);
-				ry1 = 1.0f - ry0;
 				for_iterx (x, 0, dw)
 				{
 					dest = &destData[((dx + x) + (dy + y) * destWidth) * bpp];
-					srcX = sx + x * fw;
-					x0 = (int)srcX;
-					rx0 = srcX - x0;
 					// linear interpolation
-					ctl = &srcData[(x0 + y0 * srcWidth) * bpp];
-					if (rx0 != 0.0f && ry0 != 0.0f)
+					ctl = &srcData[(_x0s[x] + _y0s[y] * srcWidth) * bpp];
+					if (_rx0s[x] != 0.0f && _ry0s[y] != 0.0f)
 					{
-						x1 = hmin(x0 + 1, srcWidth - 1);
-						rx1 = 1.0f - rx0;
-						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
-						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
-						cbr = &srcData[(x1 + y1 * srcWidth) * bpp];
-						dest[0] = (unsigned char)(((ctl[0] * ry1 + cbl[0] * ry0) * rx1 + (ctr[0] * ry1 + cbr[0] * ry0) * rx0));
-						dest[1] = (unsigned char)(((ctl[1] * ry1 + cbl[1] * ry0) * rx1 + (ctr[1] * ry1 + cbr[1] * ry0) * rx0));
-						dest[2] = (unsigned char)(((ctl[2] * ry1 + cbl[2] * ry0) * rx1 + (ctr[2] * ry1 + cbr[2] * ry0) * rx0));
-						dest[3] = (unsigned char)(((ctl[3] * ry1 + cbl[3] * ry0) * rx1 + (ctr[3] * ry1 + cbr[3] * ry0) * rx0));
+						ctr = &srcData[(_x1s[x] + _y0s[y] * srcWidth) * bpp];
+						cbl = &srcData[(_x0s[x] + _y1s[y] * srcWidth) * bpp];
+						cbr = &srcData[(_x1s[x] + _y1s[y] * srcWidth) * bpp];
+						dest[0] = (unsigned char)(((ctl[0] * _ry1s[y] + cbl[0] * _ry0s[y]) * _rx1s[x] + (ctr[0] * _ry1s[y] + cbr[0] * _ry0s[y]) * _rx0s[x]));
+						dest[1] = (unsigned char)(((ctl[1] * _ry1s[y] + cbl[1] * _ry0s[y]) * _rx1s[x] + (ctr[1] * _ry1s[y] + cbr[1] * _ry0s[y]) * _rx0s[x]));
+						dest[2] = (unsigned char)(((ctl[2] * _ry1s[y] + cbl[2] * _ry0s[y]) * _rx1s[x] + (ctr[2] * _ry1s[y] + cbr[2] * _ry0s[y]) * _rx0s[x]));
+						dest[3] = (unsigned char)(((ctl[3] * _ry1s[y] + cbl[3] * _ry0s[y]) * _rx1s[x] + (ctr[3] * _ry1s[y] + cbr[3] * _ry0s[y]) * _rx0s[x]));
 					}
-					else if (rx0 != 0.0f)
+					else if (_rx0s[x] != 0.0f)
 					{
-						x1 = hmin(x0 + 1, srcWidth - 1);
-						rx1 = 1.0f - rx0;
-						ctr = &srcData[(x1 + y0 * srcWidth) * bpp];
-						dest[0] = (unsigned char)((ctl[0] * rx1 + ctr[0] * rx0));
-						dest[1] = (unsigned char)((ctl[1] * rx1 + ctr[1] * rx0));
-						dest[2] = (unsigned char)((ctl[2] * rx1 + ctr[2] * rx0));
-						dest[3] = (unsigned char)((ctl[3] * rx1 + ctr[3] * rx0));
+						ctr = &srcData[(_x1s[x] + _y0s[y] * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * _rx1s[x] + ctr[0] * _rx0s[x]));
+						dest[1] = (unsigned char)((ctl[1] * _rx1s[x] + ctr[1] * _rx0s[x]));
+						dest[2] = (unsigned char)((ctl[2] * _rx1s[x] + ctr[2] * _rx0s[x]));
+						dest[3] = (unsigned char)((ctl[3] * _rx1s[x] + ctr[3] * _rx0s[x]));
 					}
-					else if (ry0 != 0.0f)
+					else if (_ry0s[y] != 0.0f)
 					{
-						cbl = &srcData[(x0 + y1 * srcWidth) * bpp];
-						dest[0] = (unsigned char)((ctl[0] * ry1 + cbl[0] * ry0));
-						dest[1] = (unsigned char)((ctl[1] * ry1 + cbl[1] * ry0));
-						dest[2] = (unsigned char)((ctl[2] * ry1 + cbl[2] * ry0));
-						dest[3] = (unsigned char)((ctl[3] * ry1 + cbl[3] * ry0));
+						cbl = &srcData[(_x0s[x] + _y1s[y] * srcWidth) * bpp];
+						dest[0] = (unsigned char)((ctl[0] * _ry1s[y] + cbl[0] * _ry0s[y]));
+						dest[1] = (unsigned char)((ctl[1] * _ry1s[y] + cbl[1] * _ry0s[y]));
+						dest[2] = (unsigned char)((ctl[2] * _ry1s[y] + cbl[2] * _ry0s[y]));
+						dest[3] = (unsigned char)((ctl[3] * _ry1s[y] + cbl[3] * _ry0s[y]));
 					}
 					else
 					{
