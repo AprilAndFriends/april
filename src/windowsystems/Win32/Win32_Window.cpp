@@ -608,10 +608,13 @@ namespace april
 				}
 			}
 			break;
-		case WM_ACTIVATEAPP:
-			if (wParam == TRUE)
+		case WM_ACTIVATE:
+			if ((wParam & 0xFFFF) != 0)
 			{
-				april::window->handleFocusChangeEvent(true);
+				if ((wParam & 0xFFFF0000) == 0) // only respond to activation if window is not minimized
+				{
+					april::window->handleFocusChangeEvent(true);
+				}
 			}
 			else
 			{
