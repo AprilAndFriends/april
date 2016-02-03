@@ -986,13 +986,13 @@ namespace april
 			return false;
 		}
 		int bpp = Image::getFormatBpp(destFormat);
-		float fw = (dw > sw ? (sw + 1.0f) / dw : (float)sw / dw);
-		float fh = (dh > sh ? (sh + 1.0f) / dh : (float)sh / dh);
+		float fw = (dw > sw ? (sw - 1.0f) / dw : (float)sw / dw);
+		float fh = (dh > sh ? (sh - 1.0f) / dh : (float)sh / dh);
 		unsigned char* dest = NULL;
-		unsigned char* ctl;
-		unsigned char* ctr;
-		unsigned char* cbl;
-		unsigned char* cbr;
+		unsigned char* ctl = NULL;
+		unsigned char* ctr = NULL;
+		unsigned char* cbl = NULL;
+		unsigned char* cbr = NULL;
 		// preparing some data first
 		int x = 0;
 		int y = 0;
