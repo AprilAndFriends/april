@@ -33,6 +33,8 @@
 	#ifdef _IOS
 		#import <UIKit/UIKit.h>
 		void getStaticiOSInfo(chstr name, april::SystemInfo& info);
+	#else
+		#import <AppKit/AppKit.h>
 	#endif
 #endif
 
@@ -204,7 +206,7 @@ namespace april
 			return false;
 		}
 #else
-		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]];
+		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]];
 #endif
 #elif defined(_ANDROID)
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodOpenUrl, "openUrl", _JARGS(_JVOID, _JSTR));
