@@ -1001,7 +1001,7 @@ namespace april
 			_srcYs[y] = sy + y * fh;
 			_y0s[y] = (int)_srcYs[y];
 			_ry0s[y] = _srcYs[y] - _y0s[y];
-			_y1s[y] = hmin(_y0s[y] + 1, srcHeight - 1);
+			_y1s[y] = hmin(_y0s[y] + 1, sy + sh - 1);
 			_ry1s[y] = 1.0f - _ry0s[y];
 		}
 		for_iterx (x, 0, dw)
@@ -1009,7 +1009,7 @@ namespace april
 			_srcXs[x] = sx + x * fw;
 			_x0s[x] = (int)_srcXs[x];
 			_rx0s[x] = _srcXs[x] - _x0s[x];
-			_x1s[x] = hmin(_x0s[x] + 1, srcWidth - 1);
+			_x1s[x] = hmin(_x0s[x] + 1, sx + sw - 1);
 			_rx1s[x] = 1.0f - _rx0s[x];
 		}
 		// the interpolated writing
