@@ -969,7 +969,6 @@ namespace april
 	static float _ry0s[MAX_WRITE_SIZE];
 	static float _ry1s[MAX_WRITE_SIZE];
 
-
 	bool Image::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat,
 		unsigned char* destData, int destWidth, int destHeight, Format destFormat)
 	{
@@ -994,18 +993,6 @@ namespace april
 		unsigned char* ctr;
 		unsigned char* cbl;
 		unsigned char* cbr;
-		/*
-		float srcX;
-		float srcY;
-		int x0;
-		int y0;
-		int x1;
-		int y1;
-		float rx0;
-		float ry0;
-		float rx1;
-		float ry1;
-		*/
 		// preparing some data first
 		int x = 0;
 		int y = 0;
