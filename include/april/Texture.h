@@ -82,6 +82,7 @@ namespace april
 		DEPRECATED_ATTRIBUTE static AddressMode ADDRESS_UNDEFINED;
 
 		HL_DEFINE_GET(hstr, filename, Filename);
+		HL_DEFINE_GET(Type, type, Type);
 		HL_DEFINE_GET(LoadMode, loadMode, LoadMode);
 		HL_DEFINE_GET(Image::Format, format, Format);
 		HL_DEFINE_GETSET(Filter, filter, Filter);
