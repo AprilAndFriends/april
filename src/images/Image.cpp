@@ -649,6 +649,17 @@ namespace april
 		return image;
 	}
 
+	bool Image::save(Image* image, chstr filename, Image::FileFormat format)
+	{
+		if (format != FILE_FORMAT_PNG)
+		{
+			return false;
+		}
+		hfile file;
+		file.open(filename, hfile::WRITE);
+		return Image::_savePng(file, image);
+	}
+
 	Image* Image::readMetaDataFromResource(chstr filename)
 	{
 		hresource file;

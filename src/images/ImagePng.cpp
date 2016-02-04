@@ -24,9 +24,18 @@
 
 namespace april
 {
-	void _pngZipRead(png_structp png, png_bytep data, png_size_t size)
+	void _pngRead(png_structp png, png_bytep data, png_size_t size)
 	{
 		((hsbase*)png->io_ptr)->readRaw(data, (int)size);
+	}
+
+	void _pngWrite(png_structp png, png_bytep data, png_size_t size)
+	{
+		((hsbase*)png->io_ptr)->writeRaw(data, (int)size);
+	}
+
+	void _pngFlush(png_structp png)
+	{
 	}
 
 	Image* Image::_loadPng(hsbase& stream, int size)
@@ -48,7 +57,7 @@ namespace april
 		png_infop infoPtr = png_create_info_struct(pngPtr);
 		png_infop endInfo = png_create_info_struct(pngPtr);
 		setjmp(png_jmpbuf(pngPtr));
-		png_set_read_fn(pngPtr, &stream, &_pngZipRead);
+		png_set_read_fn(pngPtr, &stream, &_pngRead);
 		png_read_info(pngPtr, infoPtr);
 		png_get_IHDR(pngPtr, infoPtr, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 		png_set_interlace_handling(pngPtr);
@@ -113,6 +122,50 @@ namespace april
 		return Image::_loadPng(stream, (int)stream.size());
 	}
 
+	bool Image::_savePng(hsbase& stream, Image* image)
+	{
+		bool result = false;
+		png_structp pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+		if (pngPtr != NULL)
+		{
+			png_infop infoPtr = png_create_info_struct(pngPtr);
+			if (infoPtr != NULL)
+			{
+				if (!setjmp(png_jmpbuf(pngPtr)))
+				{
+					int bpp = image->getBpp();
+					int format = 0;
+					if (bpp == 1)
+					{
+						format = PNG_COLOR_TYPE_GRAY;
+					}
+					else if (bpp == 3)
+					{
+						format = PNG_COLOR_TYPE_RGB;
+					}
+					else if (bpp == 4)
+					{
+						format = PNG_COLOR_TYPE_RGBA;
+					}
+					png_set_write_fn(pngPtr, &stream, &_pngWrite, &_pngFlush);
+					png_set_IHDR(pngPtr, infoPtr, image->w, image->h,
+						8, format, PNG_INTERLACE_NONE,
+						PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+					png_write_info(pngPtr, infoPtr);
+					for_iter (j, 0, image->h)
+					{
+						png_write_row(pngPtr, &image->data[j * image->w * bpp]);
+					}
+					png_write_end(pngPtr, infoPtr);
+					result = true;
+				}
+				png_free_data(pngPtr, infoPtr, PNG_FREE_ALL, -1);
+			}
+			png_destroy_write_struct(&pngPtr, (png_infopp)NULL);
+		}
+		return result;
+	}
+
 	Image* Image::_readMetaDataPng(hsbase& stream, int size)
 	{
 		if (size < PNG_SIGNATURE_SIZE)
@@ -132,7 +185,7 @@ namespace april
 		png_infop infoPtr = png_create_info_struct(pngPtr);
 		png_infop endInfo = png_create_info_struct(pngPtr);
 		setjmp(png_jmpbuf(pngPtr));
-		png_set_read_fn(pngPtr, &stream, &_pngZipRead);
+		png_set_read_fn(pngPtr, &stream, &_pngRead);
 		png_read_info(pngPtr, infoPtr);
 		png_get_IHDR(pngPtr, infoPtr, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 		png_set_interlace_handling(pngPtr);

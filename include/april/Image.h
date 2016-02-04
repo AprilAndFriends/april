@@ -46,6 +46,12 @@ namespace april
 			FORMAT_PALETTE
 		};
 
+		/// @note Some formats are intended to improve speed with the underlying engine if really needed. *X* formats are always 4 BPP even if that byte is not used.
+		enum FileFormat
+		{
+			FILE_FORMAT_PNG = 0
+		};
+
 		unsigned char* data;
 		int w;
 		int h;
@@ -117,10 +123,11 @@ namespace april
 		static Image* create(int w, int h, unsigned char* data, Format format);
 		static Image* create(int w, int h, Color color, Format format);
 		static Image* create(Image* other);
+		static bool save(Image* image, chstr filename, FileFormat format);
 		static Image* readMetaDataFromResource(chstr filename);
 		static Image* readMetaDataFromFile(chstr filename);
 		static Image* readMetaDataFromStream(hsbase& stream, chstr logicalExtension);
-		
+
 		static int getFormatBpp(Format format);
 
 		static Color getPixel(int x, int y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat);
@@ -167,6 +174,7 @@ namespace april
 		static Image* _loadJpg(hsbase& stream);
 		static Image* _loadJpt(hsbase& stream);
 		static Image* _loadPvr(hsbase& stream);
+		static bool _savePng(hsbase& stream, Image* image);
 		static Image* _readMetaDataPng(hsbase& stream, int size);
 		static Image* _readMetaDataPng(hsbase& stream);
 		static Image* _readMetaDataJpg(hsbase& stream, int size);
