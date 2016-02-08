@@ -77,6 +77,10 @@ namespace april
 	{
 		this->td2 = this->getTime();
 		this->dt = (this->td2 - this->td) * 0.001f;
+		if (this->dt < 0)
+		{
+			this->dt = 0; // in case user has moved the clock back, don't allow negative increments
+		}
 		this->td = this->td2;
 	}
 	
