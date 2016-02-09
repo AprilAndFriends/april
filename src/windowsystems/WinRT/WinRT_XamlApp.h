@@ -101,7 +101,7 @@ namespace april
 		void _refreshCursor();
 		gvec2 _transformPosition(float x, float y);
 		void _resetTouches();
-		void _tryRenderSplashTexture();
+		void _tryRenderSplashTexture(int count = 1);
 		april::Texture* _tryLoadTexture(chstr nodeName, chstr attributeName);
 		void _tryLoadSplashTexture();
 		void _tryLoadBackgroundColor();
