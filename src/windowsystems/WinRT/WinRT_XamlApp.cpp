@@ -612,11 +612,12 @@ namespace april
 		textureSize.set(SPLASH_WIDTH, SPLASH_HEIGHT);
 		textureSize *= (float)DisplayInformation::GetForCurrentView()->ResolutionScale * 0.01f;
 #else // on WinP8 the splash graphic is rotated by -90° and needs to be stretched over the entire screen
+		april::rendersys->translate(windowSize.x * 0.5f, windowSize.y * 0.5f);
 		hswap(windowSize.x, windowSize.y);
-		textureSize.set(windowSize.x, windowSize.x * this->splashTexture->getHeight() / this->splashTexture->getWidth());
-		april::rendersys->translate(windowSize.y * 0.5f, windowSize.x * 0.5f);
+		hswap(viewport.w, viewport.h);
 		april::rendersys->rotate(90.0f);
 		april::rendersys->translate(-windowSize.x * 0.5f, -windowSize.y * 0.5f);
+		textureSize.set(windowSize.x, windowSize.x * this->splashTexture->getHeight() / this->splashTexture->getWidth());
 #endif
 		drawRect.set(hroundf(windowSize.x - textureSize.x) * 0.5f, hroundf(windowSize.y - textureSize.y) * 0.5f, textureSize);
 		april::rendersys->setBlendMode(april::BM_DEFAULT);
