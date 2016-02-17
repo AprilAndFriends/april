@@ -1433,8 +1433,8 @@ namespace april
 
 	void Texture::_setupPot(int& outWidth, int& outHeight)
 	{
-		outWidth = hpotceil(this->width);
-		outHeight = hpotceil(this->height);
+		outWidth = hpotCeil(this->width);
+		outHeight = hpotCeil(this->height);
 		if (this->width < outWidth || this->height < outHeight)
 		{
 			// software NPOT textures do not support anything other than ADDRESS_CLAMP
