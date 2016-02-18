@@ -159,9 +159,6 @@ namespace april
 
 		static void registerCustomLoader(chstr extension, Image* (*loadFunction)(hsbase&), Image* (*metaDataLoadfunction)(hsbase&));
 
-		DEPRECATED_ATTRIBUTE static inline Image* load(chstr filename) { return Image::createFromResource(filename); }
-		DEPRECATED_ATTRIBUTE static inline Image* load(chstr filename, Format format) { return Image::createFromResource(filename, format); }
-
 	protected:
 		Image();
 

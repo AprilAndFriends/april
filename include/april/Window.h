@@ -66,16 +66,6 @@ namespace april
 			// TODO - possibly add analog triggers
 		};
 
-		DEPRECATED_ATTRIBUTE static MouseEventType AMOUSEEVT_DOWN;
-		DEPRECATED_ATTRIBUTE static MouseEventType AMOUSEEVT_UP;
-		DEPRECATED_ATTRIBUTE static MouseEventType AMOUSEEVT_CANCEL;
-		DEPRECATED_ATTRIBUTE static MouseEventType AMOUSEEVT_MOVE;
-		DEPRECATED_ATTRIBUTE static MouseEventType AMOUSEEVT_SCROLL;
-		DEPRECATED_ATTRIBUTE static KeyEventType AKEYEVT_DOWN;
-		DEPRECATED_ATTRIBUTE static KeyEventType AKEYEVT_UP;
-		DEPRECATED_ATTRIBUTE static ControllerEventType ACTRLEVT_DOWN;
-		DEPRECATED_ATTRIBUTE static ControllerEventType ACTRLEVT_UP;
-		
 		struct MouseInputEvent
 		{
 			MouseEventType type;

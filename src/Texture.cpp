@@ -25,11 +25,6 @@
 
 namespace april
 {
-	Image::Format Texture::FORMAT_ALPHA = Image::FORMAT_ALPHA; // DEPRECATED
-	Image::Format Texture::FORMAT_ARGB = Image::FORMAT_RGBA; // DEPRECATED
-	Texture::Filter FILTER_UNDEFINED = (Texture::Filter)0x7FFFFFFF; // DEPRECATED
-	Texture::AddressMode ADDRESS_UNDEFINED = (Texture::AddressMode)0x7FFFFFFF; // DEPRECATED
-
 	Texture::Lock::Lock()
 	{
 		this->systemBuffer = NULL;

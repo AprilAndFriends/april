@@ -190,15 +190,6 @@ namespace april
 		virtual Image* takeScreenshot(Image::Format format);
 		virtual void presentFrame();
 
-		DEPRECATED_ATTRIBUTE inline int getMaxTextureSize() { return this->getCaps().maxTextureSize; }
-		DEPRECATED_ATTRIBUTE inline harray<DisplayMode> getSupportedDisplayModes() { return this->getDisplayModes(); }
-		DEPRECATED_ATTRIBUTE void clear(bool useColor, bool depth);
-		DEPRECATED_ATTRIBUTE void clear(bool depth, grect rect, Color color = Color::Clear);
-		DEPRECATED_ATTRIBUTE void setTextureFilter(Texture::Filter textureFilter);
-		DEPRECATED_ATTRIBUTE void setTextureAddressMode(Texture::AddressMode textureAddressMode);
-		DEPRECATED_ATTRIBUTE void setTextureBlendMode(BlendMode blendMode) { this->setBlendMode(blendMode); }
-		DEPRECATED_ATTRIBUTE void setTextureColorMode(ColorMode colorMode, float factor = 1.0f) { this->setColorMode(colorMode, factor); }
-
 	protected:
 		hstr name;
 		bool created;

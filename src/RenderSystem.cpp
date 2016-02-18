@@ -34,27 +34,6 @@
 
 namespace april
 {
-	// DEPRECATED
-	void RenderSystem::clear(bool useColor, bool depth)
-	{
-		this->clear(depth);
-	}
-	// DEPRECATED
-	void RenderSystem::clear(bool depth, grect rect, Color color)
-	{
-		this->clear(color, depth);
-	}
-	// DEPRECATED
-	void RenderSystem::setTextureFilter(Texture::Filter textureFilter)
-	{
-		hlog::error(logTag, "Manually setting a texture filter is not supported anymore since April v4.x!");
-	}
-	// DEPRECATED
-	void RenderSystem::setTextureAddressMode(Texture::AddressMode textureAddressMode)
-	{
-		hlog::error(logTag, "Manually setting a texture address-mode is not supported anymore since April v4.x!");
-	}
-
 	// optimizations, but they are not thread-safe
 	static PlainVertex pv[5];
 	static TexturedVertex tv[5];

@@ -34,16 +34,6 @@
 
 namespace april
 {
-	Window::MouseEventType Window::AMOUSEEVT_DOWN = Window::MOUSE_DOWN; // DEPRECATED
-	Window::MouseEventType Window::AMOUSEEVT_UP = Window::MOUSE_UP; // DEPRECATED
-	Window::MouseEventType Window::AMOUSEEVT_CANCEL = Window::MOUSE_CANCEL; // DEPRECATED
-	Window::MouseEventType Window::AMOUSEEVT_MOVE = Window::MOUSE_MOVE; // DEPRECATED
-	Window::MouseEventType Window::AMOUSEEVT_SCROLL = Window::MOUSE_SCROLL; // DEPRECATED
-	Window::KeyEventType Window::AKEYEVT_DOWN = Window::KEY_DOWN; // DEPRECATED
-	Window::KeyEventType Window::AKEYEVT_UP = Window::KEY_UP; // DEPRECATED
-	Window::ControllerEventType Window::ACTRLEVT_DOWN = Window::CONTROLLER_DOWN; // DEPRECATED
-	Window::ControllerEventType Window::ACTRLEVT_UP = Window::CONTROLLER_UP; // DEPRECATED
-		
 	// TODOaa - refactor
 	void (*Window::msLaunchCallback)(void*) = NULL;
 	void Window::handleLaunchCallback(void* args)

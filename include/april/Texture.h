@@ -76,11 +76,6 @@ namespace april
 			LOAD_ASYNC_ON_DEMAND = 3
 		};
 
-		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ALPHA;
-		DEPRECATED_ATTRIBUTE static Image::Format FORMAT_ARGB;
-		DEPRECATED_ATTRIBUTE static Filter FILTER_UNDEFINED;
-		DEPRECATED_ATTRIBUTE static AddressMode ADDRESS_UNDEFINED;
-
 		HL_DEFINE_GET(hstr, filename, Filename);
 		HL_DEFINE_GET(Type, type, Type);
 		HL_DEFINE_GET(LoadMode, loadMode, LoadMode);
