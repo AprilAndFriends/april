@@ -21,6 +21,7 @@
 #include <april/april.h>
 #include <april/Cursor.h>
 #include <april/main.h>
+#include <april/MouseDelegate.h>
 #include <april/Platform.h>
 #include <april/RenderSystem.h>
 #include <april/SystemDelegate.h>
@@ -30,9 +31,16 @@
 
 #define LOG_TAG "demo_3d"
 
+#define _COPY_VERTICES(dest, src, start) \
+	memcpy(&dest[start], &src[0], 3 * sizeof(april::TexturedVertex)); \
+	memcpy(&dest[start + 3], &src[1], 3 * sizeof(april::TexturedVertex));
+
 april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
-april::TexturedVertex v[14];
+april::Texture* logo = NULL;
+april::TexturedVertex v[36];
+gvec2 cameraPosition(90.0f, 60.0f);
+gvec2 clickPosition;
 
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
 grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
@@ -40,27 +48,67 @@ grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
 
+class MouseDelegate : public april::MouseDelegate
+{
+public:
+	MouseDelegate() : april::MouseDelegate(), pressed(false)
+	{
+	}
+
+	HL_DEFINE_IS(pressed, Pressed);
+
+	void onMouseDown(april::Key keyCode)
+	{
+		this->pressed = true;
+		clickPosition = april::window->getCursorPosition();
+	}
+
+	void onMouseUp(april::Key keyCode)
+	{
+		this->pressed = false;
+		cameraPosition += april::window->getCursorPosition() - clickPosition;
+		cameraPosition.y = hclamp(cameraPosition.y, -90.0f, 90.0f);
+	}
+
+	void onMouseMove()
+	{
+	}
+
+protected:
+	bool pressed;
+
+};
+
+static MouseDelegate* mouseDelegate = NULL;
+
 class UpdateDelegate : public april::UpdateDelegate
 {
 public:
-	UpdateDelegate() : april::UpdateDelegate(), angle(0.0f)
+	UpdateDelegate() : april::UpdateDelegate()
 	{
 	}
 
 	bool onUpdate(float timeDelta)
 	{
-		this->angle += timeDelta * 90.0f;
+		static gvec3 eye(0.0f, 0.0f, 6.0f);
+		static gvec3 target(0.0f, 0.0f, 0.0f);
+		static gvec3 up(0.0f, 1.0f, 0.0f);
 		april::rendersys->clear(april::Color::Clear, true);
+		april::rendersys->lookAt(eye, target, up);
 		april::rendersys->setPerspective(60.0f, 1.0f / drawRect.getAspect(), 1.0f, 1000.0f);
-		april::rendersys->lookAt(gvec3(0.0f, 2.0f, 5.0f), gvec3(0.0f, 0.0f, 0.0f), gvec3(0.0f, 1.0f, 0.0f));
-		april::rendersys->rotate(this->angle, 0.0f, 1.0f, 0.0f);
+		gvec2 position = cameraPosition;
+		if (mouseDelegate->isPressed())
+		{
+			position += april::window->getCursorPosition() - clickPosition;
+		}
+		april::rendersys->rotate(hclamp(position.y * 0.5f, -90.0f, 90.0f), 1.0f, 0.0f, 0.0f);
+		april::rendersys->rotate(position.x * 0.5f, 0.0f, 1.0f, 0.0f);
 		april::rendersys->setTexture(texture);
-		april::rendersys->render(april::RO_TRIANGLE_STRIP, v, 14);
+		april::rendersys->render(april::RO_TRIANGLE_LIST, v, 36);
+		april::rendersys->setTexture(logo);
+		april::rendersys->render(april::RO_TRIANGLE_LIST, v, 36);
 		return true;
 	}
-
-protected:
-	float angle;
 
 };
 
@@ -130,6 +178,7 @@ void april_init(const harray<hstr>& args)
 	srand((unsigned int)htime());
 	updateDelegate = new UpdateDelegate();
 	systemDelegate = new SystemDelegate();
+	mouseDelegate = new MouseDelegate();
 #if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
@@ -144,32 +193,37 @@ void april_init(const harray<hstr>& args)
 	april::rendersys->setDepthBuffer(true, true);
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
+	april::window->setMouseDelegate(mouseDelegate);
 	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
-	april::TexturedVertex _v[8];
-	_v[0].x = -1.0f;	_v[0].y = -1.0f;	_v[0].z = 1.0f;		_v[0].u = 0.0f;	_v[0].v = 1.0f;
-	_v[1].x = 1.0f;		_v[1].y = -1.0f;	_v[1].z = 1.0f;		_v[1].u = 1.0f;	_v[1].v = 1.0f;
-	_v[2].x = -1.0f;	_v[2].y = 1.0f;		_v[2].z = 1.0f;		_v[2].u = 0.0f;	_v[2].v = 0.0f;
-	_v[3].x = 1.0f;		_v[3].y = 1.0f;		_v[3].z = 1.0f;		_v[3].u = 1.0f;	_v[3].v = 0.0f;
-	_v[4].x = -1.0f;	_v[4].y = -1.0f;	_v[4].z = -1.0f;	_v[4].u = 1.0f;	_v[4].v = 0.0f;
-	_v[5].x = 1.0f;		_v[5].y = -1.0f;	_v[5].z = -1.0f;	_v[5].u = 0.0f;	_v[5].v = 0.0f;
-	_v[6].x = -1.0f;	_v[6].y = 1.0f;		_v[6].z = -1.0f;	_v[6].u = 1.0f;	_v[6].v = 1.0f;
-	_v[7].x = 1.0f;		_v[7].y = 1.0f;		_v[7].z = -1.0f;	_v[7].u = 0.0f;	_v[7].v = 1.0f;
-	v[0] = _v[0];
-	v[1] = _v[1];
-	v[2] = _v[4];
-	v[3] = _v[5];
-	v[4] = _v[7];
-	v[5] = _v[1];
-	v[6] = _v[3];
-	v[7] = _v[0];
-	v[8] = _v[2];
-	v[9] = _v[4];
-	v[10] = _v[6];
-	v[11] = _v[7];
-	v[12] = _v[2];
-	v[13] = _v[3];
+	logo = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo");
+	gvec3 _v[8];
+	_v[0].x = -1.0f;	_v[0].y = -1.0f;	_v[0].z = 1.0f;
+	_v[1].x = 1.0f;		_v[1].y = -1.0f;	_v[1].z = 1.0f;
+	_v[2].x = -1.0f;	_v[2].y = 1.0f;		_v[2].z = 1.0f;
+	_v[3].x = 1.0f;		_v[3].y = 1.0f;		_v[3].z = 1.0f;
+	_v[4].x = -1.0f;	_v[4].y = -1.0f;	_v[4].z = -1.0f;
+	_v[5].x = 1.0f;		_v[5].y = -1.0f;	_v[5].z = -1.0f;
+	_v[6].x = -1.0f;	_v[6].y = 1.0f;		_v[6].z = -1.0f;
+	_v[7].x = 1.0f;		_v[7].y = 1.0f;		_v[7].z = -1.0f;
+	april::TexturedVertex _side[4];
+	_side[0].u = 0.0f;	_side[0].v = 0.0f;
+	_side[1].u = 1.0f;	_side[1].v = 0.0f;
+	_side[2].u = 0.0f;	_side[2].v = 1.0f;
+	_side[3].u = 1.0f;	_side[3].v = 1.0f;
+	// front
+	_side[0].set(_v[0]);	_side[1].set(_v[1]);	_side[2].set(_v[2]);	_side[3].set(_v[3]);	_COPY_VERTICES(v, _side, 0);
+	// back
+	_side[0].set(_v[5]);	_side[1].set(_v[4]);	_side[2].set(_v[7]);	_side[3].set(_v[6]);	_COPY_VERTICES(v, _side, 6);
+	// top
+	_side[0].set(_v[4]);	_side[1].set(_v[5]);	_side[2].set(_v[0]);	_side[3].set(_v[1]);	_COPY_VERTICES(v, _side, 12);
+	// bottom
+	_side[0].set(_v[6]);	_side[1].set(_v[7]);	_side[2].set(_v[2]);	_side[3].set(_v[3]);	_COPY_VERTICES(v, _side, 18);
+	// left
+	_side[0].set(_v[4]);	_side[1].set(_v[0]);	_side[2].set(_v[6]);	_side[3].set(_v[2]);	_COPY_VERTICES(v, _side, 24);
+	// right
+	_side[0].set(_v[5]);	_side[1].set(_v[1]);	_side[2].set(_v[7]);	_side[3].set(_v[3]);	_COPY_VERTICES(v, _side, 30);
 }
 
 void april_destroy()
@@ -178,6 +232,8 @@ void april_destroy()
 	delete cursor;
 	april::rendersys->destroyTexture(texture);
 	texture = NULL;
+	april::rendersys->destroyTexture(logo);
+	logo = NULL;
 	april::destroy();
 	delete updateDelegate;
 	updateDelegate = NULL;
