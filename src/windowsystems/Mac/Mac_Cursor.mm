@@ -83,7 +83,7 @@ namespace april
 			path = filename;
 		}
 		hstr archive = hresource::getArchive();
-		if (archive.length() > 0)
+		if (archive.size() > 0)
 		{
 			path = hdir::joinPath(archive, path);
 		}
