@@ -36,6 +36,9 @@
 #endif
 
 #define MAX_VERTEX_COUNT 65536
+#ifdef _ANDROID
+#define _SEGMENTED_RENDERING
+#endif
 
 namespace april
 {
@@ -292,14 +295,14 @@ namespace april
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		static int size = 0;
 		size = nVertices;
-#ifdef _ANDROID
+#ifdef _SEGMENTED_RENDERING
 		for_iter_step (i, 0, nVertices, size)
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setDeviceVertexPointer(sizeof(PlainVertex), v);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
-#ifdef _ANDROID
+#ifdef _SEGMENTED_RENDERING
 			v += size;
 		}
 #endif
@@ -312,7 +315,7 @@ namespace april
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		static int size = 0;
 		size = nVertices;
-#ifdef _ANDROID
+#ifdef _SEGMENTED_RENDERING
 		for_iter_step (i, 0, nVertices, size)
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
@@ -320,7 +323,7 @@ namespace april
 			this->_setDeviceVertexPointer(sizeof(TexturedVertex), v);
 			this->_setDeviceTexturePointer(sizeof(TexturedVertex), &v->u);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
-#ifdef _ANDROID
+#ifdef _SEGMENTED_RENDERING
 			v += size;
 		}
 #endif
@@ -333,7 +336,7 @@ namespace april
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		static int size = 0;
 		size = nVertices;
-#ifdef _ANDROID
+#ifdef _SEGMENTED_RENDERING
 		for_iter_step (i, 0, nVertices, size)
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
@@ -341,7 +344,7 @@ namespace april
 			this->_setDeviceVertexPointer(sizeof(ColoredVertex), v);
 			this->_setDeviceColorPointer(sizeof(ColoredVertex), &v->color);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
-#ifdef _ANDROID
+#ifdef _SEGMENTED_RENDERING
 			v += size;
 		}
 #endif
@@ -354,7 +357,7 @@ namespace april
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		static int size = 0;
 		size = nVertices;
-#ifdef _ANDROID
+#ifdef _SEGMENTED_RENDERING
 		for_iter_step (i, 0, nVertices, size)
 		{
 			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
@@ -363,7 +366,7 @@ namespace april
 			this->_setDeviceColorPointer(sizeof(ColoredTexturedVertex), &v->color);
 			this->_setDeviceTexturePointer(sizeof(ColoredTexturedVertex), &v->u);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
-#ifdef _ANDROID
+#ifdef _SEGMENTED_RENDERING
 			v += size;
 		}
 #endif
