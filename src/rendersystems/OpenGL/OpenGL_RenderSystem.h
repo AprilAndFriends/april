@@ -77,7 +77,6 @@ namespace april
 		OpenGL_RenderSystem();
 		~OpenGL_RenderSystem();
 
-		float getPixelOffset();
 		int getVRam();
 
 		Image::Format getNativeTextureFormat(Image::Format format);
@@ -114,10 +113,10 @@ namespace april
 		void _deviceClear(bool depth);
 		void _deviceClear(april::Color color, bool depth);
 		void _deviceClearDepth();
-		void _deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices);
-		void _deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices);
-		void _deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices);
-		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices);
+		void _deviceRender(RenderOperation renderOperation, PlainVertex* vertices, int count);
+		void _deviceRender(RenderOperation renderOperation, TexturedVertex* vertices, int count);
+		void _deviceRender(RenderOperation renderOperation, ColoredVertex* vertices, int count);
+		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
 
 		void _setDeviceVertexPointer(int stride, const void* pointer, bool forceUpdate = false);
 		void _setDeviceTexturePointer(int stride, const void* pointer, bool forceUpdate = false);

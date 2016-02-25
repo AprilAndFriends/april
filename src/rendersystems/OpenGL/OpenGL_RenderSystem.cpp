@@ -151,11 +151,6 @@ namespace april
 		this->_setGlColorPointer(this->deviceState_colorStride, this->deviceState_colorPointer);
 	}
 
-	float OpenGL_RenderSystem::getPixelOffset()
-	{
-		return 0.0f;
-	}
-
 	int OpenGL_RenderSystem::getVRam()
 	{
 		return 0;
@@ -288,86 +283,86 @@ namespace april
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGL_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices)
+	void OpenGL_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* vertices, int count)
 	{
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		static int size = 0;
-		size = nVertices;
+		size = count;
 #ifdef _SEGMENTED_RENDERING
-		for_iter_step (i, 0, nVertices, size)
+		for_iter_step (i, 0, count, size)
 		{
-			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitVertices(renderOperation, hmin(count - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setDeviceVertexPointer(sizeof(PlainVertex), v);
+			this->_setDeviceVertexPointer(sizeof(PlainVertex), vertices);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
 #ifdef _SEGMENTED_RENDERING
-			v += size;
+			vertices += size;
 		}
 #endif
 	}
 
-	void OpenGL_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
+	void OpenGL_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* vertices, int count)
 	{
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		static int size = 0;
-		size = nVertices;
+		size = count;
 #ifdef _SEGMENTED_RENDERING
-		for_iter_step (i, 0, nVertices, size)
+		for_iter_step (i, 0, count, size)
 		{
-			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitVertices(renderOperation, hmin(count - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setDeviceVertexPointer(sizeof(TexturedVertex), v);
-			this->_setDeviceTexturePointer(sizeof(TexturedVertex), &v->u);
+			this->_setDeviceVertexPointer(sizeof(TexturedVertex), vertices);
+			this->_setDeviceTexturePointer(sizeof(TexturedVertex), &vertices->u);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
 #ifdef _SEGMENTED_RENDERING
-			v += size;
+			vertices += size;
 		}
 #endif
 	}
 
-	void OpenGL_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
+	void OpenGL_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* vertices, int count)
 	{
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		static int size = 0;
-		size = nVertices;
+		size = count;
 #ifdef _SEGMENTED_RENDERING
-		for_iter_step (i, 0, nVertices, size)
+		for_iter_step (i, 0, count, size)
 		{
-			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitVertices(renderOperation, hmin(count - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setDeviceVertexPointer(sizeof(ColoredVertex), v);
-			this->_setDeviceColorPointer(sizeof(ColoredVertex), &v->color);
+			this->_setDeviceVertexPointer(sizeof(ColoredVertex), vertices);
+			this->_setDeviceColorPointer(sizeof(ColoredVertex), &vertices->color);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
 #ifdef _SEGMENTED_RENDERING
-			v += size;
+			vertices += size;
 		}
 #endif
 	}
 
-	void OpenGL_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
+	void OpenGL_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
 	{
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
 		// Apparently that number is 65536 on HTC Evo 3D so this is used for MAX_VERTEX_COUNT by default.
 		static int size = 0;
-		size = nVertices;
+		size = count;
 #ifdef _SEGMENTED_RENDERING
-		for_iter_step (i, 0, nVertices, size)
+		for_iter_step (i, 0, count, size)
 		{
-			size = this->_limitPrimitives(renderOperation, hmin(nVertices - i, MAX_VERTEX_COUNT));
+			size = this->_limitVertices(renderOperation, hmin(count - i, MAX_VERTEX_COUNT));
 #endif
-			this->_setDeviceVertexPointer(sizeof(ColoredTexturedVertex), v);
-			this->_setDeviceColorPointer(sizeof(ColoredTexturedVertex), &v->color);
-			this->_setDeviceTexturePointer(sizeof(ColoredTexturedVertex), &v->u);
+			this->_setDeviceVertexPointer(sizeof(ColoredTexturedVertex), vertices);
+			this->_setDeviceColorPointer(sizeof(ColoredTexturedVertex), &vertices->color);
+			this->_setDeviceTexturePointer(sizeof(ColoredTexturedVertex), &vertices->u);
 			glDrawArrays(_glRenderOperations[renderOperation], 0, size);
 #ifdef _SEGMENTED_RENDERING
-			v += size;
+			vertices += size;
 		}
 #endif
 	}

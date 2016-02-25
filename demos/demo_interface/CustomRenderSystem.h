@@ -26,7 +26,6 @@ public:
 
 	inline HDC getHDC() { return this->hDC; }
 
-	inline float getPixelOffset() { return 0.0f; }
 	inline int getVRam() { return 0; }
 
 	april::Image::Format getNativeTextureFormat(april::Image::Format format);

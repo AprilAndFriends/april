@@ -52,6 +52,7 @@ namespace april
 	DirectX9_RenderSystem::DirectX9_RenderSystem() : DirectX_RenderSystem(), d3d(NULL), d3dDevice(NULL), d3dpp(NULL), backBuffer(NULL), childHWnd(0), renderTarget(NULL)
 	{
 		this->name = APRIL_RS_DIRECTX9;
+		this->pixelOffset = 0.5f;
 		this->_supportsA8Surface = false;
 		this->_deviceInit();
 	}
@@ -295,11 +296,6 @@ namespace april
 		{
 			d3d->Release();
 		}
-	}
-
-	float DirectX9_RenderSystem::getPixelOffset()
-	{
-		return 0.5f;
 	}
 
 	int DirectX9_RenderSystem::getVRam()
@@ -641,24 +637,24 @@ namespace april
 		this->d3dDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* vertices, int count)
 	{
-		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(PlainVertex));
+		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, count), vertices, sizeof(PlainVertex));
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* vertices, int count)
 	{
-		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(TexturedVertex));
+		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, count), vertices, sizeof(TexturedVertex));
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* vertices, int count)
 	{
-		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredVertex));
+		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, count), vertices, sizeof(ColoredVertex));
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
+	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
 	{
-		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, nVertices), v, sizeof(ColoredTexturedVertex));
+		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, count), vertices, sizeof(ColoredTexturedVertex));
 	}
 
 	Image::Format DirectX9_RenderSystem::getNativeTextureFormat(Image::Format format)

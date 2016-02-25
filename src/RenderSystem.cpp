@@ -118,6 +118,7 @@ namespace april
 	{
 		this->name = "Generic";
 		this->created = false;
+		this->pixelOffset = 0.0f;
 		this->state = new RenderState();
 		this->deviceState = new RenderState();
 	}
@@ -296,7 +297,7 @@ namespace april
 		return this->state->viewport;
 	}
 
-	void RenderSystem::setViewport(grect value)
+	void RenderSystem::setViewport(const grect& value)
 	{
 		this->state->viewport = value;
 		this->state->viewportChanged = true;
@@ -307,9 +308,9 @@ namespace april
 		return this->state->modelviewMatrix;
 	}
 
-	void RenderSystem::setModelviewMatrix(gmat4 matrix)
+	void RenderSystem::setModelviewMatrix(const gmat4& value)
 	{
-		this->state->modelviewMatrix = matrix;
+		this->state->modelviewMatrix = value;
 		this->state->modelviewMatrixChanged = true;
 	}
 
@@ -318,9 +319,9 @@ namespace april
 		return this->state->projectionMatrix;
 	}
 
-	void RenderSystem::setProjectionMatrix(gmat4 matrix)
+	void RenderSystem::setProjectionMatrix(const gmat4& value)
 	{
-		this->state->projectionMatrix = matrix;
+		this->state->projectionMatrix = value;
 		this->state->projectionMatrixChanged = true;
 	}
 
@@ -515,21 +516,21 @@ namespace april
 			result.h = -2.0f / this->state->projectionMatrix.data[5];
 			result.x = (1.0f + this->state->projectionMatrix.data[12]) * result.w * 0.5f;
 			result.y = (1.0f - this->state->projectionMatrix.data[13]) * result.h * 0.5f;
-			result += result.getSize() * this->getPixelOffset() / april::window->getSize();
+			result += result.getSize() * this->pixelOffset / april::window->getSize();
 		}
 		return result;
 	}
 
 	void RenderSystem::setOrthoProjection(grect rect)
 	{
-		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
+		rect -= rect.getSize() * this->pixelOffset / april::window->getSize();
 		this->state->projectionMatrix.setOrthoProjection(rect);
 		this->state->projectionMatrixChanged = true;
 	}
 
 	void RenderSystem::setOrthoProjection(grect rect, float nearZ, float farZ)
 	{
-		rect -= rect.getSize() * this->getPixelOffset() / april::window->getSize();
+		rect -= rect.getSize() * this->pixelOffset / april::window->getSize();
 		this->state->projectionMatrix.setOrthoProjection(rect, nearZ, farZ);
 		this->state->projectionMatrixChanged = true;
 	}
@@ -590,33 +591,69 @@ namespace april
 		this->state->modelviewMatrixChanged = true;
 	}
 	
-	void RenderSystem::rotate(float angle, float ax, float ay, float az)
+	void RenderSystem::translate(const gvec3& vector)
+	{
+		this->state->modelviewMatrix.translate(vector);
+		this->state->modelviewMatrixChanged = true;
+	}
+
+	void RenderSystem::translate(const gvec2& vector)
+	{
+		this->state->modelviewMatrix.translate(vector.x, vector.y, 0.0f);
+		this->state->modelviewMatrixChanged = true;
+	}
+
+	void RenderSystem::rotate(float angle)
+	{
+		this->state->modelviewMatrix.rotate(0.0f, 0.0f, -1.0f, angle);
+		this->state->modelviewMatrixChanged = true;
+	}
+
+	void RenderSystem::rotate(float ax, float ay, float az, float angle)
 	{
 		this->state->modelviewMatrix.rotate(ax, ay, az, angle);
 		this->state->modelviewMatrixChanged = true;
 	}	
 	
-	void RenderSystem::scale(float s)
+	void RenderSystem::rotate(const gvec3& axis, float angle)
 	{
-		this->state->modelviewMatrix.scale(s);
+		this->state->modelviewMatrix.rotate(axis, angle);
+		this->state->modelviewMatrixChanged = true;
+	}
+
+	void RenderSystem::scale(float factor)
+	{
+		this->state->modelviewMatrix.scale(factor);
 		this->state->modelviewMatrixChanged = true;
 	}
 	
-	void RenderSystem::scale(float sx, float sy, float sz)
+	void RenderSystem::scale(float factorX, float factorY, float factorZ)
 	{
-		this->state->modelviewMatrix.scale(sx, sy, sz);
+		this->state->modelviewMatrix.scale(factorX, factorY, factorZ);
 		this->state->modelviewMatrixChanged = true;
 	}
 	
+	void RenderSystem::scale(const gvec3& vector)
+	{
+		this->state->modelviewMatrix.scale(vector);
+		this->state->modelviewMatrixChanged = true;
+	}
+
+	void RenderSystem::scale(const gvec2& vector)
+	{
+		this->state->modelviewMatrix.scale(vector.x, vector.y, 1.0f);
+		this->state->modelviewMatrixChanged = true;
+	}
+
 	void RenderSystem::lookAt(const gvec3& eye, const gvec3& target, const gvec3& up)
 	{
 		this->state->modelviewMatrix.lookAt(eye, target, up);
 		this->state->modelviewMatrixChanged = true;
 	}
 		
-	void RenderSystem::setPerspective(float fov, float aspect, float nearClip, float farClip)
+	void RenderSystem::setPerspective(float fov, float aspect, float nearZ, float farZ)
 	{
-		this->state->projectionMatrix.setPerspective(fov, aspect, nearClip, farClip);
+		this->state->projectionMatrix.setPerspective(fov, aspect, nearZ, farZ);
 		this->state->projectionMatrixChanged = true;
 	}
 
@@ -731,58 +768,58 @@ namespace april
 		this->_deviceClearDepth();
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices)
+	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* vertices, int count)
 	{
 		this->state->useTexture = false;
 		this->state->useColor = false;
 		this->state->systemColor = april::Color::White;
 		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, v, nVertices);
+		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* v, int nVertices, Color color)
+	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color)
 	{
 		this->state->useTexture = false;
 		this->state->useColor = false;
 		this->state->systemColor = color;
 		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, v, nVertices);
+		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices)
+	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* vertices, int count)
 	{
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = april::Color::White;
 		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, v, nVertices);
+		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* v, int nVertices, Color color)
+	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color)
 	{
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = color;
 		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, v, nVertices);
+		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, ColoredVertex* v, int nVertices)
+	void RenderSystem::render(RenderOperation renderOperation, ColoredVertex* vertices, int count)
 	{
 		this->state->useTexture = false;
 		this->state->useColor = true;
 		this->state->systemColor = april::Color::White;
 		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, v, nVertices);
+		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* v, int nVertices)
+	void RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
 	{
 		this->state->useTexture = true;
 		this->state->useColor = true;
 		this->state->systemColor = april::Color::White;
 		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, v, nVertices);
+		this->_deviceRender(renderOperation, vertices, count);
 	}
 
 	void RenderSystem::drawRect(grect rect, Color color)
@@ -922,34 +959,34 @@ namespace april
 		april::window->presentFrame();
 	}
 
-	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int nVertices)
+	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int count)
 	{
 		switch (renderOperation)
 		{
-		case RO_TRIANGLE_LIST:	return nVertices / 3;
-		case RO_TRIANGLE_STRIP:	return nVertices - 2;
-		case RO_TRIANGLE_FAN:	return nVertices - 2;
-		case RO_LINE_LIST:		return nVertices / 2;
-		case RO_LINE_STRIP:		return nVertices - 1;
-		case RO_POINT_LIST:		return nVertices;
+		case RO_TRIANGLE_LIST:	return count / 3;
+		case RO_TRIANGLE_STRIP:	return count - 2;
+		case RO_TRIANGLE_FAN:	return count - 2;
+		case RO_LINE_LIST:		return count / 2;
+		case RO_LINE_STRIP:		return count - 1;
+		case RO_POINT_LIST:		return count;
 		default:				break;
 		}
 		return 0;
 	}
 	
-	unsigned int RenderSystem::_limitPrimitives(RenderOperation renderOperation, int nVertices)
+	unsigned int RenderSystem::_limitVertices(RenderOperation renderOperation, int count)
 	{
 		switch (renderOperation)
 		{
-		case RO_TRIANGLE_LIST:	return nVertices / 3 * 3;
-		case RO_TRIANGLE_STRIP:	return nVertices;
-		case RO_TRIANGLE_FAN:	return nVertices;
-		case RO_LINE_LIST:		return nVertices / 2 * 2;
-		case RO_LINE_STRIP:		return nVertices;
-		case RO_POINT_LIST:		return nVertices;
+		case RO_TRIANGLE_LIST:	return count / 3 * 3;
+		case RO_TRIANGLE_STRIP:	return count;
+		case RO_TRIANGLE_FAN:	return count;
+		case RO_LINE_LIST:		return count / 2 * 2;
+		case RO_LINE_STRIP:		return count;
+		case RO_POINT_LIST:		return count;
 		default:				break;
 		}
-		return nVertices;
+		return count;
 	}
 	
 	Texture* RenderSystem::getRenderTarget()
