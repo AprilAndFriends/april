@@ -86,13 +86,13 @@ namespace april
 		Window::queueControllerEvent(type, buttonCode);
 	}
 
-	void AndroidJNI_Window::beginKeyboardHandling()
+	void AndroidJNI_Window::showVirtualKeyboard()
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowVirtualKeyboard, "showVirtualKeyboard", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodShowVirtualKeyboard);
 	}
 	
-	void AndroidJNI_Window::terminateKeyboardHandling()
+	void AndroidJNI_Window::hideVirtualKeyboard()
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodHideVirtualKeyboard, "hideVirtualKeyboard", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodHideVirtualKeyboard);
@@ -122,9 +122,9 @@ namespace april
 		Window::handleFocusChangeEvent(focused);
 	}
 
-	Cursor* AndroidJNI_Window::_createCursor()
+	Cursor* AndroidJNI_Window::_createCursor(bool fromResource)
 	{
-		return new AndroidJNI_Cursor();
+		return new AndroidJNI_Cursor(fromResource);
 	}
 
 }

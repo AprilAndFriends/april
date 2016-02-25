@@ -43,10 +43,10 @@ namespace april
 		void presentFrame();
 		
 		void queueTouchEvent(MouseEventType type, gvec2 position, int index);
-		void queueControllerEvent(ControllerEventType type, Button buttonCode);
+		void queueControllerEvent(ControllerEventType type, Button buttonCode, float axisValue);
 
-		void beginKeyboardHandling();
-		void terminateKeyboardHandling();
+		void showVirtualKeyboard();
+		void hideVirtualKeyboard();
 
 		void handleFocusChangeEvent(bool focused);
 		void handleActivityChangeEvent(bool active);
@@ -56,7 +56,7 @@ namespace april
 		int height;
 		bool forcedFocus;
 
-		Cursor* _createCursor();
+		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor() { }
 		
 	};

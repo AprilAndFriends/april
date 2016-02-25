@@ -77,9 +77,11 @@ namespace april
 
 		float scalingFactor;
         hmutex renderThreadSyncMutex;
+		
 	protected:
-		Cursor* _createCursor();
+		Cursor* _createCursor(bool fromResource);
         harray<QueuedEvent*> queuedEvents;
+		
 	};
 	
     bool isUsingCVDisplayLink();

@@ -531,7 +531,7 @@ namespace april
 		}
 		if (key == AK_RETURN)
 		{
-			april::window->terminateKeyboardHandling();
+			april::window->hideVirtualKeyboard();
 		}
 	}
 

@@ -54,9 +54,8 @@ namespace april
 		void checkEvents();
 		bool isVirtualKeyboardVisible();
 		
-		bool isVirtualKeyboardActive();
-		void beginKeyboardHandling();
-		void terminateKeyboardHandling();
+		void showVirtualKeyboard();
+		void hideVirtualKeyboard();
 		void terminateMainLoop();
 		void keyboardWasShown(float kbSize);
 		void keyboardWasHidden();
@@ -81,7 +80,7 @@ namespace april
 		void applicationDidBecomeActive();
 		
 		void _setCursorPosition(float x, float y);
-		Cursor* _createCursor();
+		Cursor* _createCursor(bool fromResource);
 		float _getTouchScale();
 		
 	protected:

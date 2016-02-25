@@ -12,8 +12,9 @@
 
 namespace april
 {
-	Cursor::Cursor()
+	Cursor::Cursor(bool fromResource)
 	{
+		this->fromResource = fromResource;
 	}
 	
 	Cursor::~Cursor()

@@ -329,9 +329,9 @@ namespace april
 #endif
 	}
 	
-	Cursor* SDL_Window::_createCursor()
+	Cursor* SDL_Window::_createCursor(bool fromResource)
 	{
-		return new SDL_Cursor();
+		return new SDL_Cursor(fromResource);
 	}
 
 	void SDL_Window::_handleSDLKeyEvent(Window::KeyEventType type, SDL_Keycode keysym, unsigned int unicode)

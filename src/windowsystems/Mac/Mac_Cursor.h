@@ -22,13 +22,17 @@ namespace april
 {
 	class Mac_Cursor : public Cursor
 	{
-		NSCursor* mCursor;
 	public:
-		Mac_Cursor();
+		Mac_Cursor(bool fromResource);
 		~Mac_Cursor();
-		NSCursor* getNSCursor() { return mCursor; }
+		
+		inline NSCursor* getNSCursor() { return systemCursor; }
+		
 	protected:
+		NSCursor* systemCursor;
+		
 		bool _create(chstr filename);
+		
 	};
 }
 

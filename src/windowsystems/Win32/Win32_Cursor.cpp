@@ -17,7 +17,7 @@
 
 namespace april
 {
-	Win32_Cursor::Win32_Cursor() : Cursor(), cursor(NULL)
+	Win32_Cursor::Win32_Cursor(bool fromResource) : Cursor(fromResource), cursor(NULL)
 	{
 	}
 	
@@ -36,8 +36,9 @@ namespace april
 		{
 			return false;
 		}
-		hstr path, archivePath = hresource::getArchive();
-		if (archivePath != "")
+		hstr path;
+		hstr archivePath = hresource::getArchive();
+		if (this->fromResource && archivePath != "")
 		{
 			path = hdir::joinPath(archivePath, filename);
 		}
@@ -49,6 +50,7 @@ namespace april
 		{
 			return false;
 		}
+		// does not actually differ between hresource and hfile
 		this->cursor = LoadCursorFromFileW(path.wStr().c_str());
 		return true;
 	}

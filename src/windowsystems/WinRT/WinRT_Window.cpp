@@ -144,12 +144,12 @@ namespace april
 		this->running = false;
 	}
 
-	void WinRT_Window::beginKeyboardHandling()
+	void WinRT_Window::showVirtualKeyboard()
 	{
 		WinRT::App->Overlay->showKeyboard();
 	}
 
-	void WinRT_Window::terminateKeyboardHandling()
+	void WinRT_Window::hideVirtualKeyboard()
 	{
 		WinRT::App->Overlay->hideKeyboard();
 	}
@@ -169,9 +169,9 @@ namespace april
 		return "0";
 	}
 
-	Cursor* WinRT_Window::_createCursor()
+	Cursor* WinRT_Window::_createCursor(bool fromResource)
 	{
-		return new WinRT_Cursor();
+		return new WinRT_Cursor(fromResource);
 	}
 	
 	void WinRT_Window::_refreshCursor()

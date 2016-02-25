@@ -324,9 +324,9 @@ namespace april
 		Window::checkEvents();
 	}
 
-	Cursor* Win32_Window::_createCursor()
+	Cursor* Win32_Window::_createCursor(bool fromResource)
 	{
-		return new Win32_Cursor();
+		return new Win32_Cursor(fromResource);
 	}
 
 	void Win32_Window::_setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen)
@@ -355,14 +355,14 @@ namespace april
 		h = rect.bottom - rect.top;
 	}
 
-	void Win32_Window::beginKeyboardHandling()
+	void Win32_Window::showVirtualKeyboard()
 	{
 #ifdef _DEBUG
 		//this->handleVirtualKeyboardChangeEvent(true, 0.5f); // usually only used for testing
 #endif
 	}
 
-	void Win32_Window::terminateKeyboardHandling()
+	void Win32_Window::hideVirtualKeyboard()
 	{
 #ifdef _DEBUG
 		//this->handleVirtualKeyboardChangeEvent(false, 0.0f); // usually only used for testing

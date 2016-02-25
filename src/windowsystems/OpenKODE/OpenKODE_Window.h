@@ -47,9 +47,9 @@ namespace april
 		void presentFrame();
 		void checkEvents();
 
-		void beginKeyboardHandling();
-		void terminateKeyboardHandling();
-		Cursor* _createCursor();
+		void showVirtualKeyboard();
+		void hideVirtualKeyboard();
+		Cursor* _createCursor(bool fromResource);
 
 	protected:
 		int _getAprilTouchIndex(int kdIndex);

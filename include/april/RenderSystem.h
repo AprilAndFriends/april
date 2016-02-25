@@ -467,7 +467,8 @@ namespace april
 		/// @param[in] format The format to convert in which the screenshot should be returned.
 		/// @return An Image that contains a capture of the screen.
 		virtual Image* takeScreenshot(Image::Format format);
-		/// @brief Flushes the currently rendered data to the backbuffer.
+		/// @brief Flushes the currently rendered data to the backbuffer for display.
+		/// @note Usually this doesn't need to be called manually.
 		virtual void presentFrame();
 
 	protected:

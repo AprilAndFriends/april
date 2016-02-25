@@ -348,17 +348,17 @@
 	[super dealloc];
 }
 
-- (void)beginKeyboardHandling
+- (void)showVirtualKeyboard
 {
 	[textField becomeFirstResponder];
 }
 
-- (BOOL)isKeyboardActive
+- (BOOL)isVirtualKeyboardVisible
 {
 	return [textField isFirstResponder];
 }
 
-- (void)terminateKeyboardHandling
+- (void)hideVirtualKeyboard
 {
 	[textField endEditing:YES];
 }

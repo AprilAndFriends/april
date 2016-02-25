@@ -518,7 +518,7 @@ namespace april
 		Window::checkEvents();
 	}
 	
-	void OpenKODE_Window::beginKeyboardHandling()
+	void OpenKODE_Window::showVirtualKeyboard()
 	{
 		kdKeyboardShow(this->kdWindow, 1);
 #ifdef _WINRT
@@ -529,7 +529,7 @@ namespace april
 #endif
 	}
 	
-	void OpenKODE_Window::terminateKeyboardHandling()
+	void OpenKODE_Window::hideVirtualKeyboard()
 	{
 		kdKeyboardShow(this->kdWindow, 0);
 #ifdef _WINRT
@@ -540,7 +540,7 @@ namespace april
 #endif
 	}
 
-	Cursor* OpenKODE_Window::_createCursor()
+	Cursor* OpenKODE_Window::_createCursor(bool fromResource)
 	{
 		return NULL;
 	}

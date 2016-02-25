@@ -23,7 +23,7 @@ namespace april
 	class AndroidJNI_Cursor : public Cursor
 	{
 	public:
-		AndroidJNI_Cursor();
+		AndroidJNI_Cursor(bool fromResource);
 		~AndroidJNI_Cursor();
 
 	};

@@ -33,177 +33,318 @@ namespace april
 	class TouchDelegate;
 	class UpdateDelegate;
 
+	/// @brief Defines a generic window.
 	class aprilExport Window
 	{
 	public:
+		/// @brief Defines the input mode.
 		enum InputMode
 		{
+			/// @brief Using a mouse for input.
 			MOUSE,
+			/// @brief Using a touch-based interface for input.
 			TOUCH,
+			/// @brief Using a controller for input.
 			CONTROLLER
 		};
-		
+
+		/// @brief Defines mouse event types.
 		enum MouseEventType
 		{
+			/// @brief Mouse button was pressed.
 			MOUSE_DOWN = 0,
+			/// @brief Mouse button was released.
 			MOUSE_UP = 1,
-			MOUSE_CANCEL = 2, // canceling a down event
+			/// @brief Mouse button was canceled without an "up" event.
+			MOUSE_CANCEL = 2,
+			/// @brief Mouse was moved.
 			MOUSE_MOVE = 3,
+			/// @brief Mouse scroll was changed (usually a scroll wheel).
 			MOUSE_SCROLL = 4
 		};
 
+		/// @brief Defines keyboard key event types.
 		enum KeyEventType
 		{
+			/// @brief Key was pressed.
 			KEY_DOWN = 0,
+			/// @brief Key was released.
 			KEY_UP = 1
 		};
 
+		/// @brief Defines controller input event types.
 		enum ControllerEventType
 		{
+			/// @brief Controller button was pressed.
 			CONTROLLER_DOWN = 0,
+			/// @brief Controller button was released.
 			CONTROLLER_UP = 1,
+			/// @brief Controller axis position was changed.
 			CONTROLLER_AXIS = 2
-			// TODO - possibly add analog triggers
+			// TODOa - add analog triggers
 		};
 
+		/// @brief Defines mouse input event data.
 		struct MouseInputEvent
 		{
+			/// @brief The event type.
 			MouseEventType type;
+			/// @brief The pointer position.
 			gvec2 position;
+			/// @brief The key code.
 			Key keyCode;
-		
+			
+			/// @brief Basic constructor.
 			MouseInputEvent();
+			/// @brief Constructor.
+			/// @param[in] type The event type.
+			/// @param[in] position The pointer position.
+			/// @param[in] keyCode The key code.
 			MouseInputEvent(MouseEventType type, gvec2 position, Key keyCode);
 		
 		};
 
+		/// @brief Defines keyboard input event data.
 		struct KeyInputEvent
 		{
+			/// @brief The event type.
 			KeyEventType type;
+			/// @brief The key code.
 			Key keyCode;
+			/// @brief The character Unicode value.
 			unsigned int charCode;
 			
+			/// @brief Basic constructor.
 			KeyInputEvent();
+			/// @brief Constructor.
+			/// @param[in] type The event type.
+			/// @param[in] position The pointer position.
+			/// @param[in] keyCode The key code.
 			KeyInputEvent(KeyEventType type, Key keyCode, unsigned int charCode);
 		
 		};
 
+		/// @brief Defines touch-interface input event data.
 		struct TouchInputEvent
 		{
+			/// @brief Active touch pointers.
 			harray<gvec2> touches;
 			
+			/// @brief Basic constructor.
 			TouchInputEvent();
+			/// @brief Constructor.
+			/// @param[in] touches Active touch pointers.
 			TouchInputEvent(harray<gvec2>& touches);
 		
 		};
 
+		/// @brief Defines controller input event data.
 		struct ControllerInputEvent
 		{
+			/// @brief The event type.
 			ControllerEventType type;
+			/// @brief The button code.
 			Button buttonCode;
-			
-			ControllerInputEvent();
-			ControllerInputEvent(ControllerEventType type, Button buttonCode);
-			
-		};
-
-		struct ControllerAxisInputEvent
-		{
-			ControllerEventType type;
-			Button buttonCode;
+			/// @brief axisValue The axis value.
 			float axisValue;
 			
-			ControllerAxisInputEvent();
-			ControllerAxisInputEvent(ControllerEventType type, Button buttonCode, float axisValue);
+			/// @brief Basic constructor.
+			ControllerInputEvent();
+			/// @brief Constructor.
+			/// @param[in] type The event type.
+			/// @param[in] buttonCode The button code.
+			/// @param[in] axisValue The axis value.
+			ControllerInputEvent(ControllerEventType type, Button buttonCode, float axisValue);
 			
 		};
 
+		/// @brief Defines options for creation of the window.
 		struct aprilExport Options
 		{
 		public:
+			/// @brief Whether the window is resizable.
 			bool resizable;
+			/// @brief Whether the FPS counter should be displayed in the window title.
 			bool fpsCounter;
+			/// @brief Whether the fullscreen hotkey should be allowed.
 			bool hotkeyFullscreen;
+			/// @brief The factor used for downscaling a window size when not running in fullscreen.
 			float defaultWindowModeResolutionFactor;
-			bool mac_displayLinkIgnoreSystemRedraw;
+			/// @brief Special hack for Mac implementations.
+			bool mac_displayLinkIgnoreSystemRedraw; // TODOa - probably should be refactored or removed
 
+			/// @brief Basic constructor.
 			Options();
+			/// @brief Destructor.
 			~Options();
 
+			/// @brief Creates a string representation of the object.
+			/// @return A string representation of the object.
 			hstr toString();
 
 		};
 
+		/// @brief Basic constructor.
 		Window();
+		/// @brief Destructor.
 		virtual ~Window();
+		/// @brief Creates the Window.
+		/// @param[in] w Width of the window's rendering area.
+		/// @param[in] h Height of the window's rendering area.
+		/// @param[in] fullscreen Whether the window should be created in fullscreen or not.
+		/// @param[in] title The title to be displayed on the window title bar.
+		/// @param[in] options The Options object.
+		/// @return True if successful.
 		virtual bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		/// @brief Destroys the Window.
+		/// @return True if successful.
 		virtual bool destroy();
+		/// @brief Unassigns the Window from a RenderSystem.
+		/// @note This is usually used only internally and is needed for some internal call ordering purposes.
 		virtual void unassign();
 
-		// generic getters/setters
+		/// @brief Window name.
 		HL_DEFINE_GET(hstr, name, Name);
+		/// @brief Window creation options.
 		HL_DEFINE_GET(Options, options, Options);
+		/// @brief Whether the Window was created.
 		HL_DEFINE_IS(created, Created);
+		/// @brief The title.
 		HL_DEFINE_GET(hstr, title, Title);
+		/// @brief Whether the Window is displayed in fullscreen or not.
 		HL_DEFINE_IS(fullscreen, Fullscreen);
+		/// @brief Sets the Window fullscreen display.
+		/// @param[in] value Whether the Window should switch to fullscreen (true) or windowed (false).
 		void setFullscreen(bool value);
+		/// @brief Whether the Window is focused.
 		HL_DEFINE_IS(focused, Focused);
+		/// @brief Whether the Window is running.
 		HL_DEFINE_IS(running, Running);
+		/// @brief The current FPS.
 		HL_DEFINE_GETSET(int, fps, Fps);
+		/// @brief The FPS resolution.
 		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
+		/// @brief The maximum allowed time-delta between frames.
+		/// @note Limiting this makes sense on weak hardware configurations as it allows that large frameskips don't result in too large time skips.
 		HL_DEFINE_GETSET(float, timeDeltaMaxLimit, TimeDeltaMaxLimit);
+		/// @brief The system cursor.
 		HL_DEFINE_GET(Cursor*, cursor, Cursor);
+		/// @brief The cursor position.
 		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
+		/// @brief Whether the virtual keyboard is visible.
 		HL_DEFINE_IS(virtualKeyboardVisible, VirtualKeyboardVisible);
+		/// @brief The ratio of how much height of the Window the virtual keyboard takes up.
 		HL_DEFINE_GET(float, virtualKeyboardHeightRatio, VirtualKeyboardHeightRatio);
+		/// @brief Gets the current input mode.
 		HL_DEFINE_GET(InputMode, inputMode, InputMode);
+		/// @brief Sets the input mode.
+		/// @param[in] value The new input mode.
 		void setInputMode(InputMode value);
+		/// @brief Gets the input mode translation map.
 		HL_DEFINE_GET2(hmap, InputMode, InputMode, inputModeTranslations, InputModeTranslations);
+		/// @brief Sets the input mode translation map.
+		/// @param[in] value The new input mode translation map.
 		void setInputModeTranslations(hmap<InputMode, InputMode> value);
+		/// @brief Gets the Window size.
+		/// @return The Window size.
 		gvec2 getSize();
+		/// @brief Gets the Window size aspect ratio.
+		/// @return The Window size aspect ratio.
 		float getAspectRatio();
-		
+		/// @brief The controller emulation keys.
+		/// @note This is useful when testing controller input functionality without actually using a controller.
 		HL_DEFINE_GETSET2(hmap, Key, Button, controllerEmulationKeys, ControllerEmulationKeys);
 
-		// callbacks
+		/// @brief The update delegate.
 		HL_DEFINE_GETSET(UpdateDelegate*, updateDelegate, UpdateDelegate);
+		/// @brief The keyboard input delegate.
 		HL_DEFINE_GETSET(KeyboardDelegate*, keyboardDelegate, KeyboardDelegate);
+		/// @brief The mouse input delegate.
 		HL_DEFINE_GETSET(MouseDelegate*, mouseDelegate, MouseDelegate);
+		/// @brief The touch input delegate.
 		HL_DEFINE_GETSET(TouchDelegate*, touchDelegate, TouchDelegate);
+		/// @brief The controller input delegate.
 		HL_DEFINE_GETSET(ControllerDelegate*, controllerDelegate, ControllerDelegate);
+		/// @brief The system handling delegate.
 		HL_DEFINE_GETSET(SystemDelegate*, systemDelegate, SystemDelegate);
 
-		// virtual getters/setters
+		/// @brief Sets the Window title.
+		/// @param[in] value The new title.
 		virtual inline void setTitle(chstr value) { this->title = value; }
+		/// @brief Gets the cursor visibility flag.
+		/// @return The cursor visibility flag.
 		virtual inline bool isCursorVisible() { return this->cursorVisible; }
+		/// @brief Sets the cursor visibility flag.
+		/// @param[in] value The new cursor visibility flag.
 		virtual void setCursorVisible(bool value);
+		/// @brief Sets the system cursor.
+		/// @param[in] value The new system cursor.
 		virtual void setCursor(Cursor* value);
+		/// @brief Checks if the cursor is inside the client/rendering area of the Window.
+		/// @return True if the cursor is inside the client/rendering area of the Window.
 		virtual bool isCursorInside();
 
+		/// @brief Sets the Window resolution/size.
+		/// @param[in] w Width of the window's rendering area.
+		/// @param[in] h Height of the window's rendering area.
 		virtual void setResolution(int w, int h);
+		/// @brief Sets the Window resolution/size with fullscreen manipulation.
+		/// @param[in] w Width of the window's rendering area.
+		/// @param[in] h Height of the window's rendering area.
+		/// @param[in] fullscreen Whether the window should be switched to fullscreen or windowed.
 		virtual void setResolution(int w, int h, bool fullscreen);
-		/// @note Remembers the last windowed size and returns to it
+		/// @brief Toggles fullscreen/window mode.
+		/// @note Remembers the last windowed size and returns to it. Useful when using directly with a fullscreen hotkey.
+		/// @see setFullscreen
 		virtual void toggleHotkeyFullscreen();
 
-		// pure virtual getters/setters (window system dependent)
+		/// @brief Gets the Window's rendering area width.
+		/// @return The Window's rendering area width.
 		virtual int getWidth() = 0;
+		/// @brief Gets the Window's rendering area height.
+		/// @return The Window's rendering area height.
 		virtual int getHeight() = 0;
-		DEPRECATED_ATTRIBUTE inline bool isTouchEnabled() { return (this->inputMode == TOUCH); }
+		/// @brief Gets the Window's internal backend ID.
+		/// @return The Window's internal backend ID.
 		virtual void* getBackendId() = 0;
 
-		// pure virtual methods (window system dependent)
+		/// @brief Flushes the currently rendered data to the backbuffer for display.
+		/// @note Usually this doesn't need to be called manually.
 		virtual void presentFrame() = 0;
 
-		// misc virtuals
+		/// @brief Updates the entire application by one frame.
+		/// @return True if the application should continue to run.
 		virtual bool updateOneFrame();
+		/// @brief Processed queued system events.
 		virtual void checkEvents();
+		/// @brief Aborts execution and forces the application to exit after the current frame is complete.
+		/// @note It is safer to return false in your implementation of UpdateDelegate::onUpdate().
 		virtual void terminateMainLoop();
-		virtual bool isVirtualKeyboardActive() { return false; }
-		virtual inline void beginKeyboardHandling() { }
-		virtual inline void terminateKeyboardHandling() { }
+		/// @brief Displays a virtual keyboard if necessary.
+		/// @note Some systems don't support this while on other this is the only way to handle any kind of keyboard input.
+		virtual inline void showVirtualKeyboard() { }
+		/// @brief Hides the virtual keyboard if necessary.
+		virtual inline void hideVirtualKeyboard() { }
+		/// @brief Finds the actual filename of a texture resource file.
+		/// @param[in] filename Resource filename without the extension.
+		/// @return The detected resource filename or an empty string if no resource file could be found.
+		virtual hstr findCursorResource(chstr filename);
+		/// @brief Finds the actual filename of a texture file.
+		/// @param[in] filename Filename without the extension.
+		/// @return The detected filename or an empty string if no file could be found.
 		virtual hstr findCursorFile(chstr filename);
-		
-		Cursor* createCursor(chstr filename);
+
+		/// @brief Creates a Cursor object from a resource file.
+		/// @param[in] filename The filename of the resource.
+		/// @return The created Cursor object or NULL if failed.
+		Cursor* createCursorFromResource(chstr filename);
+		/// @brief Creates a Cursor object from a file.
+		/// @param[in] filename The filename of the file.
+		/// @return The created Cursor object or NULL if failed.
+		Cursor* createCursorFromFile(chstr filename);
+		/// @brief Destroys a Cursor object from a file.
+		/// @param[in] cursor The cursor to be destroyed.
+		void destroyCursor(Cursor* cursor);
 
 		virtual inline bool isRotating() { return false; } // iOS/Android devices for example
 		virtual inline hstr getParam(chstr param) { return ""; } // TODOaa - this should be refactored
@@ -213,8 +354,7 @@ namespace april
 		virtual void handleMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
 		virtual void handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
 		virtual void handleTouchEvent(const harray<gvec2>& touches);
-		virtual void handleControllerEvent(ControllerEventType type, Button buttonCode);
-		virtual void handleControllerAxisEvent(ControllerEventType type, Button buttonCode, float axisValue);
+		virtual void handleControllerEvent(ControllerEventType type, Button buttonCode, float axisValue);
 		virtual bool handleQuitRequest(bool canCancel);
 		virtual void handleFocusChangeEvent(bool focused);
 		virtual void handleActivityChangeEvent(bool active);
@@ -227,8 +367,7 @@ namespace april
 		virtual void queueKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
 		virtual void queueMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
 		virtual void queueTouchEvent(MouseEventType type, gvec2 position, int index);
-		virtual void queueControllerEvent(ControllerEventType type, Button buttonCode);
-		virtual void queueControllerAxisEvent(ControllerEventType type, Button buttonCode, float axisValue);
+		virtual void queueControllerEvent(ControllerEventType type, Button buttonCode, float axisValue);
 
 		virtual void enterMainLoop();
 		virtual bool performUpdate(float timeDelta);
@@ -238,6 +377,14 @@ namespace april
 		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
 		static inline void setLaunchCallback(void (*callback)(void*)) { msLaunchCallback = callback; }
 		static void handleLaunchCallback(void* args);
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+		DEPRECATED_ATTRIBUTE inline Cursor* createCursor(chstr filename) { return this->createCursorFromResource(filename); }
+		DEPRECATED_ATTRIBUTE inline bool isTouchEnabled() { return (this->inputMode == TOUCH); }
+		DEPRECATED_ATTRIBUTE inline bool isVirtualKeyboardActive() { return this->isVirtualKeyboardVisible(); }
+		DEPRECATED_ATTRIBUTE inline void beginKeyboardHandling() { this->showVirtualKeyboard(); }
+		DEPRECATED_ATTRIBUTE inline void terminateKeyboardHandling() { this->hideVirtualKeyboard(); }
+#endif
 
 	protected:
 		bool created;
@@ -268,11 +415,10 @@ namespace april
 		harray<MouseInputEvent> mouseEvents;
 		harray<TouchInputEvent> touchEvents;
 		harray<ControllerInputEvent> controllerEvents;
-		harray<ControllerAxisInputEvent> controllerAxisEvents;
 		Timer timer;
 		hmap<Key, Button> controllerEmulationKeys;
 
-		// TODOaa - refactor
+		// TODOaa - refactor, remove
 		static void (*msLaunchCallback)(void*);
 
 		UpdateDelegate* updateDelegate;
@@ -282,11 +428,17 @@ namespace april
 		ControllerDelegate* controllerDelegate;
 		SystemDelegate* systemDelegate;
 
+		/// @brief Internally safe method for creating a Cursor object.
+		/// @param[in] fromResource Whether the Cursor should be created from a resource file or a normal file.
+		/// @param[in] filename The filename of the cursor.
+		/// @return The created Cursor object or NULL if failed.
+		Cursor* _createCursorFromSource(bool fromResource, chstr filename);
+
 		virtual float _calcTimeSinceLastFrame();
 		void _setRenderSystemResolution();
 		virtual void _setRenderSystemResolution(int w, int h, bool fullscreen);
 
-		virtual Cursor* _createCursor();
+		virtual Cursor* _createCursor(bool fromResource);
 		virtual void _refreshCursor();
 
 	};

@@ -14,7 +14,7 @@
 
 namespace april
 {
-	WinRT_Cursor::WinRT_Cursor() : Cursor()
+	WinRT_Cursor::WinRT_Cursor(bool fromResource) : Cursor(fromResource)
 	{
 		this->cursor = nullptr;
 	}
@@ -33,6 +33,7 @@ namespace april
 		{
 			return false;
 		}
+		// does not actually differ between hresource and hfile as only internal .exe resources can be cursors
 #ifndef _WINP8
 		this->cursor = ref new CoreCursor(CoreCursorType::Custom, (unsigned int)filename);
 		return true;

@@ -26,7 +26,7 @@ namespace april
 	class WinRT_Cursor : public Cursor
 	{
 	public:
-		WinRT_Cursor();
+		WinRT_Cursor(bool fromResource);
 		~WinRT_Cursor();
 
 		HL_DEFINE_GET(CoreCursor^, cursor, Cursor);

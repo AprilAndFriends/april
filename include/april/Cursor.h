@@ -28,17 +28,19 @@ namespace april
 	public:
 		friend class Window;
 
-		/// @brief Destructor.
-		virtual ~Cursor();
-
 		HL_DEFINE_GET(hstr, filename, Filename);
 		
 	protected:
 		/// @brief The filename of the cursor file.
 		hstr filename;
+		/// @brief Whether loaded from a resource file or a normal file.
+		bool fromResource;
 		
 		/// @brief Basic constructor.
-		Cursor();
+		/// @param[in] fromResource Whether loaded from a resource file or a normal file.
+		Cursor(bool fromResource);
+		/// @brief Destructor.
+		virtual ~Cursor();
 
 		/// @brief Creates an internal curosr object from a filename.
 		/// @param[in] filename The filename to load.

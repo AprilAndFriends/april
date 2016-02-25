@@ -16,7 +16,7 @@
 
 namespace april
 {
-	SDL_Cursor::SDL_Cursor() : Cursor(), cursor(NULL)
+	SDL_Cursor::SDL_Cursor(bool fromResource) : Cursor(fromResource), cursor(NULL)
 	{
 	}
 
@@ -39,7 +39,15 @@ namespace april
 		{
 			return false;
 		}
-		Image* image = Image::createFromResource(filename, Image::FORMAT_RGBA);
+		Image* image = NULL;
+		if (this->fromResource)
+		{
+			image = Image::createFromResource(filename, Image::FORMAT_RGBA);
+		}
+		else
+		{
+			image = Image::createFromFile(filename, Image::FORMAT_RGBA);
+		}
 		SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(image->data, image->w, image->h, image->getBpp() * 8, image->w * image->getBpp(), 0xFF, 0xFF00, 0xFF0000, 0xFF000000);
 		this->cursor = SDL_CreateColorCursor(surface, 0, 0);
 		SDL_FreeSurface(surface);

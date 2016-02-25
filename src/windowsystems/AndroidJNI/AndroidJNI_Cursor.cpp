@@ -11,7 +11,7 @@
 
 namespace april
 {
-	AndroidJNI_Cursor::AndroidJNI_Cursor() : Cursor()
+	AndroidJNI_Cursor::AndroidJNI_Cursor(bool fromResource) : Cursor(fromResource)
 	{
 	}
 

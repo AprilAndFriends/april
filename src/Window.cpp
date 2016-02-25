@@ -8,6 +8,7 @@
 
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
+#include <hltypes/hfile.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstring.h>
@@ -87,26 +88,13 @@ namespace april
 		this->buttonCode = AB_NONE;
 	}
 
-	Window::ControllerInputEvent::ControllerInputEvent(Window::ControllerEventType type, Button buttonCode)
-	{
-		this->type = type;
-		this->buttonCode = buttonCode;
-	}
-
-	Window::ControllerAxisInputEvent::ControllerAxisInputEvent()
-	{
-		this->type = CONTROLLER_AXIS;
-		this->buttonCode = AB_NONE;
-		this->axisValue = 0;
-	}
-
-	Window::ControllerAxisInputEvent::ControllerAxisInputEvent(Window::ControllerEventType type, Button buttonCode, float axisValue)
+	Window::ControllerInputEvent::ControllerInputEvent(Window::ControllerEventType type, Button buttonCode, float axisValue)
 	{
 		this->type = type;
 		this->buttonCode = buttonCode;
 		this->axisValue = axisValue;
 	}
-	
+
 	Window* window = NULL;
 	
 	Window::Options::Options()
@@ -232,7 +220,6 @@ namespace april
 			this->mouseEvents.clear();
 			this->touchEvents.clear();
 			this->controllerEvents.clear();
-			this->controllerAxisEvents.clear();
 			this->touches.clear();
 			this->controllerEmulationKeys.clear();
 			return true;
@@ -438,13 +425,7 @@ namespace april
 		while (this->controllerEvents.size() > 0)
 		{
 			controllerEvent = this->controllerEvents.removeFirst();
-			this->handleControllerEvent(controllerEvent.type, controllerEvent.buttonCode);
-		}
-		ControllerAxisInputEvent controllerAxisEvent;
-		while (this->controllerAxisEvents.size() > 0)
-		{
-			controllerAxisEvent = this->controllerAxisEvents.removeFirst();
-			this->handleControllerAxisEvent(controllerAxisEvent.type, controllerAxisEvent.buttonCode, controllerAxisEvent.axisValue);
+			this->handleControllerEvent(controllerEvent.type, controllerEvent.buttonCode, controllerEvent.axisValue);
 		}
 	}
 
@@ -521,7 +502,7 @@ namespace april
 			if (this->controllerEmulationKeys.hasKey(keyCode))
 			{
 				ControllerEventType buttonType = (type == KEY_DOWN ? CONTROLLER_DOWN : CONTROLLER_UP);
-				this->handleControllerEvent(buttonType, this->controllerEmulationKeys[keyCode]);
+				this->handleControllerEvent(buttonType, this->controllerEmulationKeys[keyCode], 0.0f);
 			}
 		}
 	}
@@ -567,7 +548,7 @@ namespace april
 		}
 	}
 
-	void Window::handleControllerEvent(ControllerEventType type, Button buttonCode)
+	void Window::handleControllerEvent(ControllerEventType type, Button buttonCode, float axisValue)
 	{
 		if (this->controllerDelegate != NULL && buttonCode != AB_NONE)
 		{
@@ -585,14 +566,6 @@ namespace april
 		}
 	}
 
-	void Window::handleControllerAxisEvent(ControllerEventType type, Button buttonCode, float axisValue)
-	{
-		if (this->controllerDelegate != NULL)
-		{
-			this->controllerDelegate->onControllerAxisChange(buttonCode, axisValue);
-		}
-	}
-	
 	bool Window::handleQuitRequest(bool canCancel)
 	{
 		// returns whether or not the windowing system is permitted to close the window
@@ -698,14 +671,9 @@ namespace april
 		this->touchEvents += TouchInputEvent(this->touches);
 	}
 
-	void Window::queueControllerEvent(ControllerEventType type, Button buttonCode)
+	void Window::queueControllerEvent(ControllerEventType type, Button buttonCode, float axisValue)
 	{
-		this->controllerEvents += ControllerInputEvent(type, buttonCode);
-	}
-
-	void Window::queueControllerAxisEvent(ControllerEventType type, Button buttonCode, float axisValue)
-	{
-		this->controllerAxisEvents += ControllerAxisInputEvent(type, buttonCode, axisValue);
+		this->controllerEvents += ControllerInputEvent(type, buttonCode, axisValue);
 	}
 
 	float Window::_calcTimeSinceLastFrame()
@@ -722,7 +690,7 @@ namespace april
 		return timeDelta;
 	}
 
-	hstr Window::findCursorFile(chstr filename)
+	hstr Window::findCursorResource(chstr filename)
 	{
 		hstr _filename;
 		foreach (hstr, it, this->cursorExtensions)
@@ -736,14 +704,38 @@ namespace april
 		return "";
 	}
 	
-	Cursor* Window::createCursor(chstr filename)
+	hstr Window::findCursorFile(chstr filename)
 	{
-		hstr name = this->findCursorFile(filename);
+		hstr _filename;
+		foreach (hstr, it, this->cursorExtensions)
+		{
+			_filename = filename + (*it);
+			if (hfile::exists(_filename))
+			{
+				return _filename;
+			}
+		}
+		return "";
+	}
+
+	Cursor* Window::createCursorFromResource(chstr filename)
+	{
+		return this->_createCursorFromSource(true, filename);
+	}
+
+	Cursor* Window::createCursorFromFile(chstr filename)
+	{
+		return this->_createCursorFromSource(false, filename);
+	}
+
+	Cursor* Window::_createCursorFromSource(bool fromResource, chstr filename)
+	{
+		hstr name = (fromResource ? this->findCursorResource(filename) : this->findCursorFile(filename));
 		if (name == "")
 		{
 			return NULL;
 		}
-		Cursor* cursor = this->_createCursor();
+		Cursor* cursor = this->_createCursor(fromResource);
 		if (cursor != NULL && !cursor->_create(name))
 		{
 			delete cursor;
@@ -752,10 +744,15 @@ namespace april
 		return cursor;
 	}
 
-	april::Cursor* Window::_createCursor()
+	april::Cursor* Window::_createCursor(bool fromResource)
 	{
 		hlog::warnf(logTag, "Cursors are not available in '%s'.", this->name.cStr());
 		return NULL;
+	}
+
+	void Window::destroyCursor(Cursor* cursor)
+	{
+		delete this->cursor;
 	}
 
 	void Window::_refreshCursor()

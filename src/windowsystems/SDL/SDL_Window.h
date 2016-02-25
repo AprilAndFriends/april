@@ -60,7 +60,7 @@ namespace april
 		SDL_GLES_Context* glesContext;
 #endif
 
-		Cursor* _createCursor();
+		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();
 
 		void _handleSDLKeyEvent(Window::KeyEventType type, SDL_Keycode keyCode, unsigned int unicode);

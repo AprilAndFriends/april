@@ -25,7 +25,7 @@ namespace april
 	class Win32_Cursor : public Cursor
 	{
 	public:
-		Win32_Cursor();
+		Win32_Cursor(bool fromResource);
 		~Win32_Cursor();
 
 		HL_DEFINE_GET(HCURSOR, cursor, Cursor);

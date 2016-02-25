@@ -5,27 +5,31 @@
 ///
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+
 #import <Cocoa/Cocoa.h>
-#include <hltypes/hstring.h>
-#include <hltypes/hresource.h>
+
 #include <hltypes/hdir.h>
+#include <hltypes/hfile.h>
 #include <hltypes/hlog.h>
-#include "Mac_Cursor.h"
+#include <hltypes/hresource.h>
+#include <hltypes/hstring.h>
+
 #include "april.h"
+#include "Mac_Cursor.h"
 
 namespace april
 {
-	Mac_Cursor::Mac_Cursor() : Cursor()
+	Mac_Cursor::Mac_Cursor(bool fromResource) : Cursor(fromResource)
 	{
-		mCursor = NULL;
+		systemCursor = NULL;
 	}
 	
 	Mac_Cursor::~Mac_Cursor()
 	{
-		if (mCursor)
+		if (systemCursor)
 		{
-			[mCursor release];
-			mCursor = NULL;
+			[systemCursor release];
+			systemCursor = NULL;
 		}
 	}
 	
@@ -45,10 +49,19 @@ namespace april
 		
 		if (filename.endsWith(".plist"))
 		{
-			hresource f;
-			f.open(filename);
-			hstr contents = f.read();
-			f.close();
+			hstr contents;
+			if (this->fromResource)
+			{
+				hresource f;
+				f.open(filename);
+				contents = f.read();
+			}
+			else
+			{
+				hfile f;
+				f.open(filename);
+				contents = f.read();
+			}
 			NSData* plistData = [[NSString stringWithUTF8String:contents.cStr()] dataUsingEncoding:NSUTF8StringEncoding];
 			NSString *error;
 			NSPropertyListFormat format;
@@ -82,10 +95,13 @@ namespace april
 		{
 			path = filename;
 		}
-		hstr archive = hresource::getArchive();
-		if (archive.size() > 0)
+		if (this->fromResource)
 		{
-			path = hdir::joinPath(archive, path);
+			hstr archive = hresource::getArchive();
+			if (archive.size() > 0)
+			{
+				path = hdir::joinPath(archive, path);
+			}
 		}
 		image = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.cStr()]];
 
@@ -94,8 +110,9 @@ namespace april
 			hlog::write(logTag, "Error: Unable to load cursor image, plist found, but '" + path + "' not found.");
 			return false;
 		}
-		mCursor = [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];
+		systemCursor = [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];
 		[image release];
 		return true;
 	}
+	
 }

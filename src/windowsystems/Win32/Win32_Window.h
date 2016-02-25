@@ -46,8 +46,8 @@ namespace april
 		void presentFrame();
 		void checkEvents();
 
-		void beginKeyboardHandling();
-		void terminateKeyboardHandling();
+		void showVirtualKeyboard();
+		void hideVirtualKeyboard();
 
 		static LRESULT CALLBACK childProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		
@@ -57,7 +57,7 @@ namespace april
 		hstr fpsTitle;
 		bool fpsCounter;
 
-		Cursor* _createCursor();
+		Cursor* _createCursor(bool fromResource);
 
 		void _setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen);
 		void _adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle);

@@ -26,7 +26,7 @@ namespace april
 	class SDL_Cursor : public Cursor
 	{
 	public:
-		SDL_Cursor();
+		SDL_Cursor(bool fromResource);
 		~SDL_Cursor();
 
 		HL_DEFINE_GET(::SDL_Cursor*, cursor, Cursor);

@@ -166,11 +166,11 @@ namespace april
 			bool visible = this->isVirtualKeyboardVisible();
 			if (visible && this->keyboardRequest == -1)
 			{
-				[glview terminateKeyboardHandling];
+				[glview hideVirtualKeyboard];
 			}
 			else if (!visible && this->keyboardRequest == 1)
 			{
-				[glview beginKeyboardHandling];
+				[glview showVirtualKeyboard];
 			}
 			this->keyboardRequest = 0;
 		}
@@ -216,7 +216,7 @@ namespace april
 		this->cursorPosition.set(x, y);
 	}
 	
-	Cursor* iOS_Window::_createCursor()
+	Cursor* iOS_Window::_createCursor(bool fromResource)
 	{
 		return NULL;
 	}
@@ -435,22 +435,18 @@ namespace april
 		this->callTouchCallback();
 	}
 	
+	// TODOa - maybe this should be handle here and instead the Window superclass should keep handling this like in other implementations
 	bool iOS_Window::isVirtualKeyboardVisible()
 	{
-		return [glview isKeyboardActive];
+		return [glview isVirtualKeyboardVisible];
 	}
 	
-	bool iOS_Window::isVirtualKeyboardActive()
-	{
-		return this->isVirtualKeyboardVisible();
-	}
-	
-	void iOS_Window::beginKeyboardHandling()
+	void iOS_Window::showVirtualKeyboard()
 	{
 		this->keyboardRequest = 1;
 	}
 	
-	void iOS_Window::terminateKeyboardHandling()
+	void iOS_Window::hideVirtualKeyboard()
 	{
 		this->keyboardRequest = -1;
 	}

@@ -53,8 +53,8 @@ namespace april
 		hstr findCursorFile(chstr filename);
 		
 		void terminateMainLoop();
-		void beginKeyboardHandling();
-		void terminateKeyboardHandling();
+		void showVirtualKeyboard();
+		void hideVirtualKeyboard();
 		void changeSize(int w, int h); // required override instead of normal size changing
 		
 	protected:
@@ -64,7 +64,7 @@ namespace april
 		bool backButtonSystemHandling;
 		hmap<hstr, unsigned int> cursorMappings;
 
-		Cursor* _createCursor();
+		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();
 
 	};
