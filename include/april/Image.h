@@ -549,66 +549,466 @@ namespace april
 		/// @note This is usually called internally only.
 		static Image* readMetaDataFromStream(hsbase& stream, chstr logicalExtension);
 
+		/// @brief Gets the byte-per-pixel value for a given pixel format.
+		/// @param[in] format The pixel format.
+		/// @return The byte-per-pixel value.
 		static int getFormatBpp(Format format);
 
+		/// @brief Gets the color of a specific pixel in raw image data.
+		/// @param[in] x X-coordinate.
+		/// @param[in] y Y-coordinate.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @return The Color of the pixel.
+		/// @note This is usually called internally only.
 		static Color getPixel(int x, int y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat);
+		/// @brief Sets the color of a specific pixel in raw image data.
+		/// @param[in] x X-coordinate.
+		/// @param[in] y Y-coordinate.
+		/// @param[in] color The new Color of the pixel.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destHeight The height of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @return True if successful.
+		/// @note This is usually called internally only.
 		static bool setPixel(int x, int y, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		/// @brief Gets the linearly interpolated color between two pixels in raw image data.
+		/// @param[in] x Decimal X-coordinate.
+		/// @param[in] y Decimal Y-coordinate.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @return The interpolated Color of the pixel.
+		/// @note This is usually called internally only.
 		static Color getInterpolatedPixel(float x, float y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat);
+		/// @brief Fills a rectangle area with one color in raw image data.
+		/// @param[in] x X-coordinate.
+		/// @param[in] y Y-coordinate.
+		/// @param[in] w Width of the area.
+		/// @param[in] h Height of the area.
+		/// @param[in] color The Color used for filling.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destHeight The height of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @return True if successful.
+		/// @note This is usually called internally only.
 		static bool fillRect(int x, int y, int w, int h, Color color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		/// @brief Writes image data directly onto raw image data.
+		/// @param[in] sx Source data X-coordinate.
+		/// @param[in] sy Source data Y-coordinate.
+		/// @param[in] sw Width of the area on the source to be copied.
+		/// @param[in] sh Height of the area on the source to be copied.
+		/// @param[in] dx Destination X-coordinate.
+		/// @param[in] dy Destination Y-coordinate.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destHeight The height of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @return True if successful.
+		/// @note Pixels on the destination will be overwritten.
+		/// @note This is usually called internally only.
 		static bool write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		/// @brief Writes image data directly onto the raw image data while trying to stretch the pixels. Stretched pixels will be linearly interpolated.
+		/// @param[in] sx Source data X-coordinate.
+		/// @param[in] sy Source data Y-coordinate.
+		/// @param[in] sw Width of the area on the source to be copied.
+		/// @param[in] sh Height of the area on the source to be copied.
+		/// @param[in] dx Destination X-coordinate.
+		/// @param[in] dy Destination Y-coordinate.
+		/// @param[in] dw Width of the destination area.
+		/// @param[in] dh Height of the destination area.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destHeight The height of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @return True if successful.
+		/// @note Pixels on the destination will be overwritten.
+		/// @note This is usually called internally only.
 		static bool writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		/// @brief Does an image data block transfer onto the raw image data.
+		/// @param[in] sx Source data X-coordinate.
+		/// @param[in] sy Source data Y-coordinate.
+		/// @param[in] sw Width of the area on the source to be copied.
+		/// @param[in] sh Height of the area on the source to be copied.
+		/// @param[in] dx Destination X-coordinate.
+		/// @param[in] dy Destination Y-coordinate.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destHeight The height of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @param[in] alpha Alpha multiplier on the entire source image.
+		/// @return True if successful.
+		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
+		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
+		/// @note This is usually called internally only.
 		static bool blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha = 255);
+		/// @brief Does a stretched image data block transfer onto the raw image data.
+		/// @param[in] sx Source data X-coordinate.
+		/// @param[in] sy Source data Y-coordinate.
+		/// @param[in] sw Width of the area on the source to be copied.
+		/// @param[in] sh Height of the area on the source to be copied.
+		/// @param[in] dx Destination X-coordinate.
+		/// @param[in] dy Destination Y-coordinate.
+		/// @param[in] dw Width of the destination area.
+		/// @param[in] dh Height of the destination area.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destHeight The height of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @param[in] alpha Alpha multiplier on the entire source image.
+		/// @return True if successful.
+		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
+		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
+		/// @note This is usually called internally only.
 		static bool blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha = 255);
+		/// @brief Rotates the pixel hue of a rectangle area on the raw image data.
+		/// @param[in] x X-coordinate of the area to change.
+		/// @param[in] y Y-coordinate of the area to change.
+		/// @param[in] w Width of the area to change.
+		/// @param[in] h Height of the area to change.
+		/// @param[in] degrees By how many degrees the the should be rotated.
+		/// @return True if successful.
+		/// @note This is lossy operation.
+		/// @note This is an expensive operation and should be used sparingly.
+		/// @note This is usually called internally only.
 		static bool rotateHue(int x, int y, int w, int h, float degrees, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		/// @brief Changes the saturation level of pixels of a rectangle area on the raw image data.
+		/// @param[in] x X-coordinate of the area to change.
+		/// @param[in] y Y-coordinate of the area to change.
+		/// @param[in] w Width of the area to change.
+		/// @param[in] h Height of the area to change.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in] factor The saturation multiplier factor.
+		/// @return True if successful.
+		/// @note This is lossy operation.
+		/// @note This is an expensive operation and should be used sparingly.
+		/// @note This is usually called internally only.
 		static bool saturate(int x, int y, int w, int h, float factor, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		/// @brief Inverts the pixel colors of a rectangle area on the raw image data.
+		/// @param[in] x X-coordinate of the area to change.
+		/// @param[in] y Y-coordinate of the area to change.
+		/// @param[in] w Width of the area to change.
+		/// @param[in] h Height of the area to change.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @return True if successful.
+		/// @note This is usually called internally only.
 		static bool invert(int x, int y, int w, int h, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
-		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat, unsigned char median, int ambiguity);
+		/// @brief Inserts raw image data as alpha channel into other raw image data.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] median The median value for insertion.
+		/// @param[in] ambiguity How "hard" the alpha channel transition should be.
+		/// @return True if successful.
+		/// @note The data in srcData must be the same width and height as the image.
+		/// @note This is an expensive operation and should be used sparingly.
+		/// @note This is usually called internally only.
+		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat, unsigned char median, int ambiguity);  // TODOa - this functionality might be removed since shaders are much faster
+		/// @brief Dilates the raw image data.
+		/// @param[in] srcData The constructing image's raw image data.
+		/// @param[in] srcWidth The width of the constructing image's raw image data.
+		/// @param[in] srcHeight The height of the constructing image's raw image data.
+		/// @param[in] srcFormat The pixel format of the constructing image's raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destHeight The height of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @return True if successful.
+		/// @note This is an expensive operation and should be used sparingly.
+		/// @note Currently this operation is only supported for single-channel 8-bit images.
+		/// @note This is usually called internally only.
 		static bool dilate(unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Image::Format destFormat);
 
-		/// @param[in] preventCopy If true, will make a copy even if source and destination formats are the same.
+		/// @brief Converts raw image data from one format into another.
+		/// @param[in] w Width of the raw image data.
+		/// @param[in] h Height of the raw image data.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @param[in] preventCopy If true, it will make a copy even if source and destination formats are the same.
+		/// @return True if successful.
+		/// @note If destData has not been allocated yet, it will be allocated with the new operator.
+		/// @note Data loss can occur when converting from a format that contains more pixel information into a format with less pixel information.
 		static bool convertToFormat(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat, bool preventCopy = true);
 		/// @brief Checks if an image format conversion is needed.
-		/// @param[in] preventCopy If true, will return false if source and destination formats are the same.
-		/// @note Helps to determine whether there is a need to convert an image format into another. It can be helpful to avoid conversion from e.g. RGBA to RGBX if the GPU ignores the X anyway.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @param[in] preventCopy If true, it will return false if source and destination formats are the same.
+		/// @return True if successful.
+		/// @note Helps to determine whether there is a need to convert an image format into another. It can be helpful to avoid conversions from e.g. RGBA to RGBX if the GPU ignores the X anyway.
 		static bool needsConversion(Format srcFormat, Format destFormat, bool preventCopy = true);
 		
-		static bool checkRect(int dx, int dy, int destWidth, int destHeight);
-		static bool checkRect(int dx, int dy, int dw, int dh, int destWidth, int destHeight);
-		static bool correctRect(int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight);
+		/// @brief Checks if the coordinates are out of bounds.
+		/// @param[in] x Position X-coordinate.
+		/// @param[in] y Position Y-coordinate.
+		/// @param[in] destWidth Destination image data width.
+		/// @param[in] destHeight Destination image data height.
+		/// @return True if it is in bounds.
+		static bool checkRect(int x, int y, int destWidth, int destHeight);
+		/// @brief Checks if the rect is out of bounds.
+		/// @param[in] x Rectangle X-coordinate.
+		/// @param[in] y Rectangle Y-coordinate.
+		/// @param[in] w Rectangle width.
+		/// @param[in] h Rectangle height.
+		/// @param[in] destWidth Destination image data width.
+		/// @param[in] destHeight Destination image data height.
+		/// @return True if it is in bounds.
+		static bool checkRect(int x, int y, int w, int h, int destWidth, int destHeight);
+		/// @brief Corrects rectangle to stay in bounds of the image data.
+		/// @param[in,out] x Rectangle X-coordinate.
+		/// @param[in,out] y Rectangle Y-coordinate.
+		/// @param[in,out] w Rectangle width.
+		/// @param[in,out] h Rectangle height.
+		/// @param[in] dataWidth Image data width.
+		/// @param[in] dataHeight Image data height.
+		/// @return True if correction could be made successfully or no correction was required. If false is returned, the values are not guaranteed to be unmodified.
+		/// @note This is usually called internally only.
+		static bool correctRect(int& x, int& y, int& w, int& h, int dataWidth, int dataHeight);
+		/// @brief Corrects the source rectangle and destination coordinates to stay in bounds of the source and destination image data.
+		/// @param[in,out] sx Source rectangle X-coordinate.
+		/// @param[in,out] sy Source rectangle Y-coordinate.
+		/// @param[in,out] sw Source rectangle width.
+		/// @param[in,out] sh Source rectangle height.
+		/// @param[in] srcWidth Source image data width.
+		/// @param[in] srcHeight Source image data height.
+		/// @param[in,out] dx Destination position X-coordinate.
+		/// @param[in,out] dy Destination position Y-coordinate.
+		/// @param[in] destWidth Destination image data width.
+		/// @param[in] destHeight Destination image data height.
+		/// @return True if correction could be made successfully or no correction was required. If false is returned, the values are not guaranteed to be unmodified.
+		/// @note This is usually called internally only.
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int destWidth, int destHeight);
+		/// @brief Corrects source and destination rectangles to stay in bounds of the source and destination image data.
+		/// @param[in,out] sx Source rectangle X-coordinate.
+		/// @param[in,out] sy Source rectangle Y-coordinate.
+		/// @param[in,out] sw Source rectangle width.
+		/// @param[in,out] sh Source rectangle height.
+		/// @param[in] srcWidth Source image data width.
+		/// @param[in] srcHeight Source image data height.
+		/// @param[in,out] dx Destination rectangle X-coordinate.
+		/// @param[in,out] dy Destination rectangle Y-coordinate.
+		/// @param[in,out] dw Destination rectangle width.
+		/// @param[in,out] dh Destination rectangle height.
+		/// @param[in] destWidth Destination image data width.
+		/// @param[in] destHeight Destination image data height.
+		/// @return True if correction could be made successfully or no correction was required. If false is returned, the values are not guaranteed to be unmodified.
+		/// @note This is usually called internally only.
 		static bool correctRect(int& sx, int& sy, int& sw, int& sh, int srcWidth, int srcHeight, int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight);
 
+		/// @brief Registers a custom image loader for custom image formats.
+		/// @param[in] extension Filename extension.
+		/// @param[in] loadFunction The function pointer to use for loading the Image.
+		/// @param[in] metaDataLoadfunction The function pointer to use for loading the Image meta-data.
+		/// @note The loading function will only be triggered if the extension is added with april::setTextureExtensions as well.
+		/// @see setTextureExtensions
 		static void registerCustomLoader(chstr extension, Image* (*loadFunction)(hsbase&), Image* (*metaDataLoadfunction)(hsbase&));
 
 	protected:
+		/// @brief Basic constructor.
 		Image();
+		/// @brief Copy constructor.
+		/// @param[in] other Other Image object.
 		Image(const Image& other);
 
+		/// @brief Custom image format loaders.
 		static hmap<hstr, Image* (*)(hsbase&)> customLoaders;
+		/// @brief Custom image format meta data loaders.
 		static hmap<hstr, Image* (*)(hsbase&)> customMetaDataLoaders;
 
+		/// @brief Loads and decodes PNG file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @param[in] size The size within the data stream that actually belongs to this encoded file.
+		/// @return The created Image object or NULL if failed.
 		static Image* _loadPng(hsbase& stream, int size);
+		/// @brief Loads and decodes PNG file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
 		static Image* _loadPng(hsbase& stream);
+		/// @brief Loads and decodes JPG file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @param[in] size The size within the data stream that actually belongs to this encoded file.
+		/// @return The created Image object or NULL if failed.
 		static Image* _loadJpg(hsbase& stream, int size);
+		/// @brief Loads and decodes JPG file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
 		static Image* _loadJpg(hsbase& stream);
+		/// @brief Loads and decodes JPT file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
 		static Image* _loadJpt(hsbase& stream);
+		/// @brief Loads and decodes PVR file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
 		static Image* _loadPvr(hsbase& stream);
+		/// @brief Saves image data into a stream encoded as PNG file.
+		/// @param[in,out] stream The destination image data stream.
+		/// @param[in] image The Image object to save.
+		/// @return True if successful.
 		static bool _savePng(hsbase& stream, Image* image);
+		/// @brief Loads and decodes meta data from PNG file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @param[in] size The size within the data stream that actually belongs to this encoded file.
+		/// @return The created Image object or NULL if failed.
 		static Image* _readMetaDataPng(hsbase& stream, int size);
+		/// @brief Loads and decodes meta data from PNG file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
 		static Image* _readMetaDataPng(hsbase& stream);
+		/// @brief Loads and decodes meta data from JPG file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @param[in] size The size within the data stream that actually belongs to this encoded file.
+		/// @return The created Image object or NULL if failed.
 		static Image* _readMetaDataJpg(hsbase& stream, int size);
+		/// @brief Loads and decodes meta data from JPG file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
 		static Image* _readMetaDataJpg(hsbase& stream);
+		/// @brief Loads and decodes meta data from JPT file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
 		static Image* _readMetaDataJpt(hsbase& stream);
+		/// @brief Loads and decodes meta data from PVR file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
 		static Image* _readMetaDataPvr(hsbase& stream);
 
+		/// @brief Gets the color channel byte incides for pixel format data.
+		/// @param[in] format The format to check.
+		/// @param[out] red The index of the red color channel.
+		/// @param[out] green The index of the green color channel.
+		/// @param[out] blue The index of the blue color channel.
+		/// @param[out] alpha The index of the alpha channel.
 		static void _getFormatIndices(Format format, int* red, int* green, int* blue, int* alpha);
 
+		/// @brief Converts raw image data from a source pixel format with 1 byte-per-pixel to a raw image data destination.
+		/// @param[in] w Width of the data to convert.
+		/// @param[in] h Height of the data to convert.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @return True if successful.
+		/// @note This is a utility method called by convertToFormat to split a large method into a few smaller ones.
+		/// @see convertToFormat
 		static bool _convertFrom1Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat);
+		/// @brief Converts raw image data from a source pixel format with 3 byte-per-pixel to a raw image data destination.
+		/// @param[in] w Width of the data to convert.
+		/// @param[in] h Height of the data to convert.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @return True if successful.
+		/// @note This is a utility method called by convertToFormat to split a large method into a few smaller ones.
+		/// @see convertToFormat
 		static bool _convertFrom3Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat);
+		/// @brief Converts raw image data from a source pixel format with 4 byte-per-pixel to a raw image data destination.
+		/// @param[in] w Width of the data to convert.
+		/// @param[in] h Height of the data to convert.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @return True if successful.
+		/// @note This is a utility method called by convertToFormat to split a large method into a few smaller ones.
+		/// @see convertToFormat
 		static bool _convertFrom4Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat);
 
+		/// @brief Executes a raw image data block transfer from a source pixel format with 1 byte-per-pixel to a raw image data destination.
+		/// @param[in] sx Source data X-coordinate.
+		/// @param[in] sy Source data Y-coordinate.
+		/// @param[in] sw Width of the area on the source to be copied.
+		/// @param[in] sh Height of the area on the source to be copied.
+		/// @param[in] dx Destination X-coordinate.
+		/// @param[in] dy Destination Y-coordinate.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destHeight The height of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @param[in] alpha Alpha multiplier on the entire source image.
+		/// @return True if successful.
+		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
+		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
+		/// @note This is a utility method called by convertToFormat to split a large method into a few smaller ones.
+		/// @see blit
 		static bool _blitFrom1Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha);
+		/// @brief Executes a raw image data block transfer from a source pixel format with 3 byte-per-pixel to a raw image data destination.
+		/// @param[in] sx Source data X-coordinate.
+		/// @param[in] sy Source data Y-coordinate.
+		/// @param[in] sw Width of the area on the source to be copied.
+		/// @param[in] sh Height of the area on the source to be copied.
+		/// @param[in] dx Destination X-coordinate.
+		/// @param[in] dy Destination Y-coordinate.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destHeight The height of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @param[in] alpha Alpha multiplier on the entire source image.
+		/// @return True if successful.
+		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
+		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
+		/// @note This is a utility method called by convertToFormat to split a large method into a few smaller ones.
+		/// @see blit
 		static bool _blitFrom3Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha);
+		/// @brief Executes a raw image data block transfer from a source pixel format with 4 byte-per-pixel to a raw image data destination.
+		/// @param[in] sx Source data X-coordinate.
+		/// @param[in] sy Source data Y-coordinate.
+		/// @param[in] sw Width of the area on the source to be copied.
+		/// @param[in] sh Height of the area on the source to be copied.
+		/// @param[in] dx Destination X-coordinate.
+		/// @param[in] dy Destination Y-coordinate.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destHeight The height of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @param[in] alpha Alpha multiplier on the entire source image.
+		/// @return True if successful.
+		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
+		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
+		/// @note This is a utility method called by convertToFormat to split a large method into a few smaller ones.
+		/// @see blit
 		static bool _blitFrom4Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha);
 
 	};

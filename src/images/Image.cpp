@@ -2131,39 +2131,39 @@ namespace april
 		return false;
 	}
 
-	bool Image::checkRect(int dx, int dy, int destWidth, int destHeight)
+	bool Image::checkRect(int x, int y, int destWidth, int destHeight)
 	{
-		return (dx >= 0 && dx < destWidth && dy >= 0 && dy < destHeight);
+		return (hbetweenIE(x, 0, destWidth) && hbetweenIE(y, 0, destHeight));
 	}
 
-	bool Image::checkRect(int dx, int dy, int dw, int dh, int destWidth, int destHeight)
+	bool Image::checkRect(int x, int y, int w, int h, int destWidth, int destHeight)
 	{
-		return (Image::checkRect(dx, dy, destWidth, destHeight) && dx + dw <= destWidth && dy + dh <= destHeight);
+		return (Image::checkRect(x, y, destWidth, destHeight) && x + w <= destWidth && y + h <= destHeight);
 	}
 
-	bool Image::correctRect(int& dx, int& dy, int& dw, int& dh, int destWidth, int destHeight)
+	bool Image::correctRect(int& x, int& y, int& w, int& h, int dataWidth, int dataHeight)
 	{
-		if (dx >= destWidth || dy >= destHeight)
+		if (x >= dataWidth || y >= dataHeight)
 		{
 			return false;
 		}
-		if (dx < 0)
+		if (x < 0)
 		{
-			dw += dx;
-			dx = 0;
+			w += x;
+			x = 0;
 		}
-		dw = hmin(dw, destWidth - dx);
-		if (dw < 0)
+		w = hmin(w, dataWidth - x);
+		if (w < 0)
 		{
 			return false;
 		}
-		if (dy < 0)
+		if (y < 0)
 		{
-			dh += dy;
-			dy = 0;
+			h += y;
+			y = 0;
 		}
-		dh = hmin(dh, destHeight - dy);
-		if (dh < 0)
+		h = hmin(h, dataHeight - y);
+		if (h < 0)
 		{
 			return false;
 		}
