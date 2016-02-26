@@ -117,6 +117,17 @@ namespace april
 		this->compressedSize = 0;
 	}
 	
+	Image::Image(const Image& other)
+	{
+		this->data = NULL;
+		this->w = 0;
+		this->h = 0;
+		this->format = FORMAT_INVALID;
+		this->internalFormat = 0;
+		this->compressedSize = 0;
+		hlog::error(logTag, "Creating april::Image instances using copy-constructor is not allowed! Use april::Image::create() instead.");
+	}
+
 	Image::~Image()
 	{
 		if (this->data != NULL)
@@ -1683,7 +1694,8 @@ namespace april
 
 	bool Image::dilate(unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Image::Format destFormat)
 	{
-		if (srcFormat != FORMAT_ALPHA || destFormat != FORMAT_ALPHA) // both images must be alpha images, currently other formats are not supported
+		// both images must be single-channel 8-bit images, currently other formats are not supported
+		if (srcFormat != FORMAT_ALPHA && srcFormat != FORMAT_GRAYSCALE || destFormat != FORMAT_ALPHA && destFormat != FORMAT_GRAYSCALE)
 		{
 			return false;
 		}
