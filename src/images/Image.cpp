@@ -1695,7 +1695,7 @@ namespace april
 	bool Image::dilate(unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Image::Format destFormat)
 	{
 		// both images must be single-channel 8-bit images, currently other formats are not supported
-		if (srcFormat != FORMAT_ALPHA && srcFormat != FORMAT_GRAYSCALE || destFormat != FORMAT_ALPHA && destFormat != FORMAT_GRAYSCALE)
+		if ((srcFormat != FORMAT_ALPHA && srcFormat != FORMAT_GRAYSCALE) || (destFormat != FORMAT_ALPHA && destFormat != FORMAT_GRAYSCALE))
 		{
 			return false;
 		}
