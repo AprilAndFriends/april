@@ -98,7 +98,13 @@ namespace april
 		env->CallStaticVoidMethod(classNativeInterface, methodHideVirtualKeyboard);
 	}
 
-	void AndroidJNI_Window::handleActivityChangeEvent(bool active)
+	void AndroidJNI_Window::handleFocusChangeEvent(bool focused)
+	{
+		this->forcedFocus = false;
+		Window::handleFocusChangeEvent(focused);
+	}
+
+	void AndroidJNI_Window::handleActivityChange(bool active)
 	{
 		if (!active)
 		{
@@ -114,12 +120,6 @@ namespace april
 			this->forcedFocus = false;
 			Window::handleFocusChangeEvent(true);
 		}
-	}
-
-	void AndroidJNI_Window::handleFocusChangeEvent(bool focused)
-	{
-		this->forcedFocus = false;
-		Window::handleFocusChangeEvent(focused);
 	}
 
 	Cursor* AndroidJNI_Window::_createCursor(bool fromResource)

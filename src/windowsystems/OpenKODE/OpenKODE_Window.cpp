@@ -115,7 +115,7 @@ namespace april
 		{
 		case KD_EVENT_WINDOW_FOCUS:
 			hlog::writef(logTag, "OpenKODE window focus change event received: %d", evt->data.windowfocus.focusstate);
-			april::window->handleActivityChangeEvent(evt->data.windowfocus.focusstate != 0);
+			april::window->handleActivityChange(evt->data.windowfocus.focusstate != 0);
 			break;
 		}
 	}
@@ -128,7 +128,7 @@ namespace april
 			hlog::write(logTag, "Received libKD memory warning!");
 			if (april::window != NULL)
 			{
-				april::window->handleLowMemoryWarning();
+				april::window->handleLowMemoryWarningEvent();
 			}
 			break;
 	}
@@ -325,7 +325,7 @@ namespace april
 		}
 	}
 
-	void OpenKODE_Window::handleActivityChangeEvent(bool active)
+	void OpenKODE_Window::handleActivityChange(bool active)
 	{
 		if (this->focused != active)
 		{
@@ -386,11 +386,11 @@ namespace april
 		switch (evt->type)
 		{
 		case KD_EVENT_QUIT:
-			this->handleQuitRequest(false);
+			this->handleQuitRequestEvent(false);
 			this->terminateMainLoop();
 			return true;
 		case KD_EVENT_WINDOW_CLOSE:
-			this->handleQuitRequest(true);
+			this->handleQuitRequestEvent(true);
 			return true;
 		case KD_EVENT_INPUT:
 			if (evt->data.input.value.i != 0)

@@ -261,7 +261,7 @@ namespace april
 				}
 				break;
 			case SDL_QUIT:
-				if (this->handleQuitRequest(true))
+				if (this->handleQuitRequestEvent(true))
 				{
 					this->running = false;
 				}
@@ -273,7 +273,7 @@ namespace april
 				// on mac os, we need to handle command+q
 				if (SDL_GetModState() & KMOD_META && (tolower(sdlEvent.key.keysym.unicode) == 'q' || sdlEvent.key.keysym.sym == SDLK_q))
 				{
-					if (this->handleQuitRequest(true))
+					if (this->handleQuitRequestEvent(true))
 					{
 						this->running = false;
 					}

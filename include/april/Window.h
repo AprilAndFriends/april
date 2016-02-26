@@ -225,7 +225,7 @@ namespace april
 		/// @brief The FPS resolution.
 		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
 		/// @brief The maximum allowed time-delta between frames.
-		/// @note Limiting this makes sense on weak hardware configurations as it allows that large frameskips don't result in too large time skips.
+		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
 		HL_DEFINE_GETSET(float, timeDeltaMaxLimit, TimeDeltaMaxLimit);
 		/// @brief The system cursor.
 		HL_DEFINE_GET(Cursor*, cursor, Cursor);
@@ -257,10 +257,10 @@ namespace april
 
 		/// @brief The update delegate.
 		HL_DEFINE_GETSET(UpdateDelegate*, updateDelegate, UpdateDelegate);
-		/// @brief The keyboard input delegate.
-		HL_DEFINE_GETSET(KeyboardDelegate*, keyboardDelegate, KeyboardDelegate);
 		/// @brief The mouse input delegate.
 		HL_DEFINE_GETSET(MouseDelegate*, mouseDelegate, MouseDelegate);
+		/// @brief The keyboard input delegate.
+		HL_DEFINE_GETSET(KeyboardDelegate*, keyboardDelegate, KeyboardDelegate);
 		/// @brief The touch input delegate.
 		HL_DEFINE_GETSET(TouchDelegate*, touchDelegate, TouchDelegate);
 		/// @brief The controller input delegate.
@@ -346,39 +346,111 @@ namespace april
 		/// @param[in] cursor The cursor to be destroyed.
 		void destroyCursor(Cursor* cursor);
 
+		/// @brief Gets the screen rotation flag.
+		/// @return The screen rotation flag.
+		/// @note This is mostly used internally.
+		// TODOa - this doesn't seem to be used anywhere, maybe it should be removed
 		virtual inline bool isRotating() { return false; } // iOS/Android devices for example
-		virtual inline hstr getParam(chstr param) { return ""; } // TODOaa - this should be refactored
-		virtual inline void setParam(chstr param, chstr value) { } // TODOaa - this should be refactored
+		/// @brief Gets an internal system parameter.
+		/// @param[in] parameter Name of the parameter.
+		/// @return Internal system parameter.
+		// TODOaa - this should be refactored to have all parameters available in the header
+		virtual inline hstr getParam(chstr parameter) { return ""; }
+		/// @brief Sets an internal system parameter.
+		/// @param[in] parameter Name of the parameter.
+		/// @param[in] value Value to be set.
+		// TODOaa - this should be refactored to have all parameters available in the header
+		virtual inline void setParam(chstr parameter, chstr value) { }
 		
-		// generic but overridable event handlers
+		/// @brief Handles a mouse event and propagates it to the delegate.
+		/// @param[in] type The event type.
+		/// @param[in] position The pointer position.
+		/// @param[in] keyCode The key code.
 		virtual void handleMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
+		/// @brief Handles a keyboard event and propagates it to the delegate.
+		/// @param[in] type The event type.
+		/// @param[in] keyCode The key code.
+		/// @param[in] charCode The character Unicode value.
 		virtual void handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
+		/// @brief Handles a touch event and propagates it to the delegate.
+		/// @param[in] touches Active touch pointers.
 		virtual void handleTouchEvent(const harray<gvec2>& touches);
+		/// @brief Handles a controller event and propagates it to the delegate.
+		/// @param[in] type The event type.
+		/// @param[in] buttonCode The button code.
+		/// @param[in] axisValue The axis value.
 		virtual void handleControllerEvent(ControllerEventType type, Button buttonCode, float axisValue);
-		virtual bool handleQuitRequest(bool canCancel);
+		/// @brief Handles a quit event and propagates it to the delegate.
+		/// @param[in] canCancel Whether the window quitting can be canceled.
+		/// @return True if the system is allowed to actually close the window.
+		virtual bool handleQuitRequestEvent(bool canCancel);
+		/// @brief Handles a focus-change event and propagates it to the delegate.
+		/// @param[in] focused Whether the window is focused now.
 		virtual void handleFocusChangeEvent(bool focused);
-		virtual void handleActivityChangeEvent(bool active);
+		/// @brief Handles a virtual-keyboard-change event and propagates it to the delegate.
+		/// @param[in] focused Whether the virtual keyboard is visible.
+		/// @param[in] heightRatio The ratio of the screen height that the keyboard takes up.
 		virtual void handleVirtualKeyboardChangeEvent(bool visible, float heightRatio);
-		virtual void handleLowMemoryWarning();
+		/// @brief Handles a low memory warning event and propagates it to the delegate.
+		virtual void handleLowMemoryWarningEvent();
 
+		/// @brief Handles a keyboard key press event and propagates it to the delegate.
+		/// @param[in] type The event type.
+		/// @param[in] keyCode The key code.
+		/// @note This is a utility function.
+		/// @see handleKeyEvent
 		void handleKeyOnlyEvent(KeyEventType type, Key keyCode);
+		/// @brief Handles a keyboard character event and propagates it to the delegate.
+		/// @param[in] charCode The character Unicode value.
+		/// @note This is a utility function.
+		/// @see handleKeyEvent
 		void handleCharOnlyEvent(unsigned int charCode);
 
-		virtual void queueKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
+		/// @brief Handles a activity-change event.
+		/// @param[in] active Whether the window is active now.
+		/// @note This is a different concept from focus-change that is usually only used in certain implementations.
+		virtual void handleActivityChange(bool active);
+
+		/// @brief Queues a mouse event for processing before the start of the next frame.
+		/// @param[in] type The event type.
+		/// @param[in] position The pointer position.
+		/// @param[in] keyCode The key code.
+		/// @note This is mostly used internally, but it can also be used to simulate input.
 		virtual void queueMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
+		/// @brief Queues a keyboard event for processing before the start of the next frame.
+		/// @param[in] type The event type.
+		/// @param[in] keyCode The key code.
+		/// @param[in] charCode The character Unicode value.
+		/// @note This is mostly used internally, but it can also be used to simulate input.
+		virtual void queueKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
+		/// @brief Queues a touch event for processing before the start of the next frame.
+		/// @param[in] type The event type.
+		/// @param[in] position The pointer position.
+		/// @param[in] index The pointer index.
+		/// @note This is mostly used internally, but it can also be used to simulate input.
 		virtual void queueTouchEvent(MouseEventType type, gvec2 position, int index);
+		/// @brief Queues a controller event for processing before the start of the next frame.
+		/// @param[in] type The event type.
+		/// @param[in] buttonCode The button code.
+		/// @param[in] axisValue The axis value.
+		/// @note This is mostly used internally, but it can also be used to simulate input.
 		virtual void queueControllerEvent(ControllerEventType type, Button buttonCode, float axisValue);
 
+		/// @brief Starts the main loop.
+		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april_main implementation is used.
 		virtual void enterMainLoop();
+		/// @brief Performs the update of one frame.
+		/// @param[in] timeDelta Time that has passed since the last frame.
+		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april_main implementation is used.
 		virtual bool performUpdate(float timeDelta);
 		
-		// TODOaa - refactor
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+		// TODOaa - refactor or maybe even remove this
 		// the following functions should be temporary, it was added because I needed access to
 		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
 		static inline void setLaunchCallback(void (*callback)(void*)) { msLaunchCallback = callback; }
 		static void handleLaunchCallback(void* args);
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 		DEPRECATED_ATTRIBUTE inline Cursor* createCursor(chstr filename) { return this->createCursorFromResource(filename); }
 		DEPRECATED_ATTRIBUTE inline bool isTouchEnabled() { return (this->inputMode == TOUCH); }
 		DEPRECATED_ATTRIBUTE inline bool isVirtualKeyboardActive() { return this->isVirtualKeyboardVisible(); }
@@ -387,45 +459,82 @@ namespace april
 #endif
 
 	protected:
+		/// @brief Whether the Window was created.
 		bool created;
+		/// @brief The name.
 		hstr name;
+		/// @brief The text in the window title bar.
 		hstr title;
+		/// @brief Whether the Window is fullscreen or windowed.
 		bool fullscreen;
+		/// @brief The options used to create the Window.
 		Options options;
+		/// @brief Whether the Window is focused.
 		bool focused;
+		/// @brief Whether the Window system is running.
 		bool running;
+		/// @brief Previous width.
+		/// @note Used when restoring the window size after switching from fullscreen to windowed.
 		int lastWidth;
+		/// @brief Previous height.
+		/// @note Used when restoring the window size after switching from fullscreen to windowed.
 		int lastHeight;
+		/// @brief FPS of the last mesaure.
 		int fps;
+		/// @brief Current counter for FPS calculation.
 		int fpsCount;
+		/// @brief Current timer for FPS calculation.
 		float fpsTimer;
+		/// @brief FPS update resolution.
 		float fpsResolution;
+		/// @brief Maximum allowed time-delta that are propagated into the UpdateDelegate.
+		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
 		float timeDeltaMaxLimit;
+		/// @brief Current cursor position.
 		gvec2 cursorPosition;
+		/// @brief Current system cursor.
 		Cursor* cursor;
+		/// @brief Whether the system cursor is visible.
 		bool cursorVisible;
+		/// @brief Whether the virtual keyboard is currently visible.
 		bool virtualKeyboardVisible;
+		/// @brief The ratio of how much screen height the virtual keyboard is currently taking up.
 		float virtualKeyboardHeightRatio;
+		/// @brief The current input mode.
 		InputMode inputMode;
+		/// @brief The input mode translation map.
 		hmap<InputMode, InputMode> inputModeTranslations;
+		/// @brief The filename extensions supported for cursor image files.
 		harray<hstr> cursorExtensions;
+		/// @brief Whether multi-touch mode is currently active.
 		bool multiTouchActive;
+		/// @brief The current active touch pointers.
 		harray<gvec2> touches;
-		harray<KeyInputEvent> keyEvents;
+		/// @brief Queued mouse events.
 		harray<MouseInputEvent> mouseEvents;
+		/// @brief Queued keyboard events.
+		harray<KeyInputEvent> keyEvents;
+		/// @brief Queued touch events.
 		harray<TouchInputEvent> touchEvents;
+		/// @brief Queued controller events.
 		harray<ControllerInputEvent> controllerEvents;
+		/// @brief The Timer object used for timing purposes.
 		Timer timer;
+		/// @brief The controller emulation keys.
+		/// @note This is useful when testing controller input functionality without actually using a controller.
 		hmap<Key, Button> controllerEmulationKeys;
 
-		// TODOaa - refactor, remove
-		static void (*msLaunchCallback)(void*);
-
+		/// @brief The current update delegate.
 		UpdateDelegate* updateDelegate;
-		KeyboardDelegate* keyboardDelegate;
+		/// @brief The current mouse delegate.
 		MouseDelegate* mouseDelegate;
+		/// @brief The current keyboard delegate.
+		KeyboardDelegate* keyboardDelegate;
+		/// @brief The current touch delegate.
 		TouchDelegate* touchDelegate;
+		/// @brief The current controller delegate.
 		ControllerDelegate* controllerDelegate;
+		/// @brief The current system delegate.
 		SystemDelegate* systemDelegate;
 
 		/// @brief Internally safe method for creating a Cursor object.
@@ -434,13 +543,31 @@ namespace april
 		/// @return The created Cursor object or NULL if failed.
 		Cursor* _createCursorFromSource(bool fromResource, chstr filename);
 
+		/// @brief Calculates the time passed since the render of the last frame using a Timer.
+		/// @return The time passed since the render of the last frame.
 		virtual float _calcTimeSinceLastFrame();
+		/// @brief Calls _setRenderSystemResolution() with the current Window parameters.
+		/// @sett _setRenderSystemResolution(int w, int h, bool fullscreen)
 		void _setRenderSystemResolution();
+		/// @brief Calls the RenderSystem method for changing the resolution to synchronize Window and RenderSystem.
+		/// @param[in] w New width of the resolutin.
+		/// @param[in] h New height of the resolutin.
+		/// @param[in] fullscreen Whether the display is now fullscreen or windowed.
 		virtual void _setRenderSystemResolution(int w, int h, bool fullscreen);
 
+		/// @brief Creates the actual system Cursor.
+		/// @param[in] fromResource Whether the Cursor is created from a resource file or a normal file.
+		/// @return The created Cursor object or NULL if not supported on this Window implementation.
 		virtual Cursor* _createCursor(bool fromResource);
+		/// @brief Sets the internal system cursor.
 		virtual void _refreshCursor();
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+		// TODOaa - refactor or maybe even remove this
+		// the following functions should be temporary, it was added because I needed access to
+		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
+		static void(*msLaunchCallback)(void*);
+#endif
 	};
 
 	// global window shortcut variable

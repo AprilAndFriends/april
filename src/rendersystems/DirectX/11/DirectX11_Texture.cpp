@@ -89,7 +89,7 @@ namespace april
 			if (!_preventRecursion)
 			{
 				_preventRecursion = true;
-				april::window->handleLowMemoryWarning();
+				april::window->handleLowMemoryWarningEvent();
 				_preventRecursion = false;
 				hr = APRIL_D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
 			}

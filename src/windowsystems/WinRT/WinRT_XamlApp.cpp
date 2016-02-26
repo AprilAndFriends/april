@@ -295,7 +295,7 @@ namespace april
 		args->Handled = true;
 		if (april::window != NULL)
 		{
-			april::window->handleQuitRequest(false);
+			april::window->handleQuitRequestEvent(false);
 		}
 	}
 

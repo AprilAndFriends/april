@@ -55,7 +55,7 @@ namespace april
 			if (!_preventRecursion)
 			{
 				_preventRecursion = true;
-				april::window->handleLowMemoryWarning();
+				april::window->handleLowMemoryWarningEvent();
 				_preventRecursion = false;
 				hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
 			}

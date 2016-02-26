@@ -49,7 +49,7 @@ namespace april
 		void hideVirtualKeyboard();
 
 		void handleFocusChangeEvent(bool focused);
-		void handleActivityChangeEvent(bool active);
+		void handleActivityChange(bool active);
 		
 	protected:
 		int width;

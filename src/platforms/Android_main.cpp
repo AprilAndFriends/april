@@ -168,7 +168,7 @@ namespace april
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "onLowMemoryWarning()");
-		PROTECTED_WINDOW_CALL(handleLowMemoryWarning());
+		PROTECTED_WINDOW_CALL(handleLowMemoryWarningEvent());
 	}
 	
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
@@ -190,13 +190,13 @@ namespace april
 	void JNICALL _JNI_activityOnResume(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onResume()");
-		PROTECTED_WINDOW_CALL(handleActivityChangeEvent(true));
+		PROTECTED_WINDOW_CALL(handleActivityChange(true));
 	}
 	
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onPause()");
-		PROTECTED_WINDOW_CALL(handleActivityChangeEvent(false));
+		PROTECTED_WINDOW_CALL(handleActivityChange(false));
 		PROTECTED_RENDERSYS_CALL(suspend());
 	}
 	

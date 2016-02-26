@@ -145,8 +145,8 @@ namespace april
 		this->multiTouchActive = false;
 		this->inputMode = MOUSE;
 		this->updateDelegate = NULL;
-		this->keyboardDelegate = NULL;
 		this->mouseDelegate = NULL;
+		this->keyboardDelegate = NULL;
 		this->touchDelegate = NULL;
 		this->controllerDelegate = NULL;
 		this->systemDelegate = NULL;
@@ -211,13 +211,13 @@ namespace april
 			this->virtualKeyboardHeightRatio = 0.0f;
 			this->inputMode = MOUSE;
 			this->updateDelegate = NULL;
-			this->keyboardDelegate = NULL;
 			this->mouseDelegate = NULL;
+			this->keyboardDelegate = NULL;
 			this->touchDelegate = NULL;
 			this->controllerDelegate = NULL;
 			this->systemDelegate = NULL;
-			this->keyEvents.clear();
 			this->mouseEvents.clear();
+			this->keyEvents.clear();
 			this->touchEvents.clear();
 			this->controllerEvents.clear();
 			this->touches.clear();
@@ -383,12 +383,6 @@ namespace april
 	
 	void Window::checkEvents()
 	{
-		KeyInputEvent keyEvent;
-		while (this->keyEvents.size() > 0)
-		{
-			keyEvent = this->keyEvents.removeFirst();
-			this->handleKeyEvent(keyEvent.type, keyEvent.keyCode, keyEvent.charCode);
-		}
 		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
 		MouseInputEvent mouseEvent;
 		gvec2 cumulativeScroll;
@@ -414,6 +408,12 @@ namespace april
 			{
 				this->handleMouseEvent(mouseEvent.type, mouseEvent.position, mouseEvent.keyCode);
 			}
+		}
+		KeyInputEvent keyEvent;
+		while (this->keyEvents.size() > 0)
+		{
+			keyEvent = this->keyEvents.removeFirst();
+			this->handleKeyEvent(keyEvent.type, keyEvent.keyCode, keyEvent.charCode);
 		}
 		TouchInputEvent touchEvent;
 		while (this->touchEvents.size() > 0)
@@ -466,55 +466,6 @@ namespace april
 		return true;
 	}
 	
-	void Window::handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode)
-	{
-		this->handleKeyOnlyEvent(type, keyCode); // doesn't do anything if keyCode is AK_NONE
-		if (type == KEY_DOWN && charCode > 0) // ignores invalid chars
-		{
-			// according to the unicode standard, this range is undefined and reserved for system codes
-			// for example, macosx maps keys up, down, left, right to this key, inducing wrong char calls to the app.
-			// source: http://en.wikibooks.org/wiki/Unicode/Character_reference/F000-FFFF
-			if (charCode < 0xE000 || charCode > 0xF8FF)
-			{
-				this->handleCharOnlyEvent(charCode);
-			}
-		}
-	}
-	
-	void Window::handleKeyOnlyEvent(KeyEventType type, Key keyCode)
-	{
-		if (keyCode == AK_UNKNOWN)
-		{
-			keyCode = AK_NONE;
-		}
-		if (this->keyboardDelegate != NULL && keyCode != AK_NONE)
-		{
-			switch (type)
-			{
-			case KEY_DOWN:
-				this->keyboardDelegate->onKeyDown(keyCode);
-				break;
-			case KEY_UP:
-				this->keyboardDelegate->onKeyUp(keyCode);
-				break;
-			}
-			// emulation of buttons using keyboard
-			if (this->controllerEmulationKeys.hasKey(keyCode))
-			{
-				ControllerEventType buttonType = (type == KEY_DOWN ? CONTROLLER_DOWN : CONTROLLER_UP);
-				this->handleControllerEvent(buttonType, this->controllerEmulationKeys[keyCode], 0.0f);
-			}
-		}
-	}
-	
-	void Window::handleCharOnlyEvent(unsigned int charCode)
-	{
-		if (this->keyboardDelegate != NULL && charCode >= 32 && charCode != 127) // special hack, backspace induces a character in some implementations
-		{
-			this->keyboardDelegate->onChar(charCode);
-		}
-	}
-	
 	void Window::handleMouseEvent(MouseEventType type, gvec2 position, Key keyCode)
 	{
 		if (this->mouseDelegate != NULL)
@@ -540,6 +491,55 @@ namespace april
 		}
 	}
 	
+	void Window::handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode)
+	{
+		this->handleKeyOnlyEvent(type, keyCode); // doesn't do anything if keyCode is AK_NONE
+		if (type == KEY_DOWN && charCode > 0) // ignores invalid chars
+		{
+			// according to the unicode standard, this range is undefined and reserved for system codes
+			// for example, Mac OSX maps keys up, down, left, right to this key, inducing wrong char calls to the app.
+			// source: http://en.wikibooks.org/wiki/Unicode/Character_reference/F000-FFFF
+			if (charCode < 0xE000 || charCode > 0xF8FF)
+			{
+				this->handleCharOnlyEvent(charCode);
+			}
+		}
+	}
+
+	void Window::handleKeyOnlyEvent(KeyEventType type, Key keyCode)
+	{
+		if (keyCode == AK_UNKNOWN)
+		{
+			keyCode = AK_NONE;
+		}
+		if (this->keyboardDelegate != NULL && keyCode != AK_NONE)
+		{
+			switch (type)
+			{
+			case KEY_DOWN:
+				this->keyboardDelegate->onKeyDown(keyCode);
+				break;
+			case KEY_UP:
+				this->keyboardDelegate->onKeyUp(keyCode);
+				break;
+			}
+			// emulation of buttons using keyboard
+			if (this->controllerEmulationKeys.hasKey(keyCode))
+			{
+				ControllerEventType buttonType = (type == KEY_DOWN ? CONTROLLER_DOWN : CONTROLLER_UP);
+				this->handleControllerEvent(buttonType, this->controllerEmulationKeys[keyCode], 0.0f);
+			}
+		}
+	}
+
+	void Window::handleCharOnlyEvent(unsigned int charCode)
+	{
+		if (this->keyboardDelegate != NULL && charCode >= 32 && charCode != 127) // special hack, backspace induces a character in some implementations
+		{
+			this->keyboardDelegate->onChar(charCode);
+		}
+	}
+
 	void Window::handleTouchEvent(const harray<gvec2>& touches)
 	{
 		if (this->touchDelegate != NULL)
@@ -566,7 +566,7 @@ namespace april
 		}
 	}
 
-	bool Window::handleQuitRequest(bool canCancel)
+	bool Window::handleQuitRequestEvent(bool canCancel)
 	{
 		// returns whether or not the windowing system is permitted to close the window
 		return (this->systemDelegate == NULL || this->systemDelegate->onQuit(canCancel));
@@ -582,7 +582,7 @@ namespace april
 		}
 	}
 
-	void Window::handleActivityChangeEvent(bool active)
+	void Window::handleActivityChange(bool active)
 	{
 		hlog::warn(logTag, this->name + " does not implement activity change events!");
 	}
@@ -597,7 +597,7 @@ namespace april
 		}
 	}
 
-	void Window::handleLowMemoryWarning()
+	void Window::handleLowMemoryWarningEvent()
 	{
 		if (this->systemDelegate != NULL)
 		{
@@ -605,14 +605,14 @@ namespace april
 		}
 	}
 
-	void Window::queueKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode)
-	{
-		this->keyEvents += KeyInputEvent(type, keyCode, charCode);
-	}
-
 	void Window::queueMouseEvent(MouseEventType type, gvec2 position, Key keyCode)
 	{
 		this->mouseEvents += MouseInputEvent(type, position, keyCode);
+	}
+
+	void Window::queueKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode)
+	{
+		this->keyEvents += KeyInputEvent(type, keyCode, charCode);
 	}
 
 	void Window::queueTouchEvent(MouseEventType type, gvec2 position, int index)

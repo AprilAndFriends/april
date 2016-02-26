@@ -41,7 +41,7 @@ namespace april
 		void* getBackendId();
 		void setResolution(int w, int h, bool fullscreen);
 
-		void handleActivityChangeEvent(bool active);
+		void handleActivityChange(bool active);
 
 		bool updateOneFrame();
 		void presentFrame();

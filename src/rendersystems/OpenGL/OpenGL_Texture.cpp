@@ -28,7 +28,7 @@
 		{ \
 			_preventRecursion = true; \
 			hlog::warnf(logTag, "Not enough VRAM for %s! Calling low memory warning.", this->_getInternalName().cStr()); \
-			april::window->handleLowMemoryWarning(); \
+			april::window->handleLowMemoryWarningEvent(); \
 			_preventRecursion = false; \
 			this->_setCurrentTexture(); \
 			call; \

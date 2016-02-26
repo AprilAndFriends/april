@@ -57,12 +57,12 @@ static NSString* getLocalizedString(NSString* key, NSString* fallback)
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        result = april::window->handleQuitRequest(true);
+        result = april::window->handleQuitRequestEvent(true);
         lock.release();
     }
     else
     {
-        result = april::window->handleQuitRequest(true);
+        result = april::window->handleQuitRequestEvent(true);
     }
     
     if (result)

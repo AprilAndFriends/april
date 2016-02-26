@@ -455,7 +455,7 @@ namespace april
 			april::window->terminateMainLoop();
 			break;
 		case WM_CLOSE:
-			if (april::window->handleQuitRequest(true))
+			if (april::window->handleQuitRequestEvent(true))
 			{
 				PostQuitMessage(0);
 				april::window->terminateMainLoop();
@@ -472,7 +472,7 @@ namespace april
 			{
 				if (wParam == VK_F4)
 				{
-					if (april::window->handleQuitRequest(true))
+					if (april::window->handleQuitRequestEvent(true))
 					{
 						PostQuitMessage(0);
 						april::window->terminateMainLoop();
