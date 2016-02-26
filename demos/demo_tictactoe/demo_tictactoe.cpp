@@ -415,7 +415,7 @@ void april_init(const harray<hstr>& args)
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
-	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
+	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 	background = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
 	x_symbol = april::rendersys->createTextureFromResource(RESOURCE_PATH "x");
@@ -429,7 +429,8 @@ void april_init(const harray<hstr>& args)
 void april_destroy()
 {
 	april::window->setCursor(NULL);
-	delete cursor;
+	april::window->destroyCursor(cursor);
+	cursor = NULL;
 	april::rendersys->destroyTexture(background);
 	background = NULL;
 	april::rendersys->destroyTexture(x_symbol);

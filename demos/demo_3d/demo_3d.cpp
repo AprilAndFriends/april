@@ -101,12 +101,12 @@ public:
 		{
 			position += april::window->getCursorPosition() - clickPosition;
 		}
-		april::rendersys->rotate(hclamp(position.y * 0.5f, -90.0f, 90.0f), 1.0f, 0.0f, 0.0f);
-		april::rendersys->rotate(position.x * 0.5f, 0.0f, 1.0f, 0.0f);
+		april::rendersys->rotate(1.0f, 0.0f, 0.0f, hclamp(position.y * 0.5f, -90.0f, 90.0f));
+		april::rendersys->rotate(0.0f, 1.0f, 0.0f, position.x * 0.5f);
 		april::rendersys->setTexture(texture);
 		april::rendersys->render(april::RO_TRIANGLE_LIST, v, 36);
 		april::rendersys->setTexture(logo);
-		april::rendersys->render(april::RO_TRIANGLE_LIST, v, 36);
+		//april::rendersys->render(april::RO_TRIANGLE_LIST, v, 36);
 		return true;
 	}
 
@@ -194,7 +194,7 @@ void april_init(const harray<hstr>& args)
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
-	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
+	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
 	logo = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo");
@@ -229,7 +229,7 @@ void april_init(const harray<hstr>& args)
 void april_destroy()
 {
 	april::window->setCursor(NULL);
-	delete cursor;
+	april::window->destroyCursor(cursor);
 	april::rendersys->destroyTexture(texture);
 	texture = NULL;
 	april::rendersys->destroyTexture(logo);

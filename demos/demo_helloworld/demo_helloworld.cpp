@@ -191,7 +191,7 @@ void april_init(const harray<hstr>& args)
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
 	
-	cursor = april::window->createCursor(RESOURCE_PATH "cursor");
+	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 	ball = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo");	
 	balls.add(Ball());
@@ -200,7 +200,8 @@ void april_init(const harray<hstr>& args)
 void april_destroy()
 {
 	april::window->setCursor(NULL);
-	delete cursor;
+	april::window->destroyCursor(cursor);
+	cursor = NULL;
 	april::rendersys->destroyTexture(ball);
 	ball = NULL;
 	
