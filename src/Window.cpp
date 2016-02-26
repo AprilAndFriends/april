@@ -752,7 +752,11 @@ namespace april
 
 	void Window::destroyCursor(Cursor* cursor)
 	{
-		delete this->cursor;
+		if (this->cursor == cursor)
+		{
+			this->setCursor(NULL);
+		}
+		delete cursor;
 	}
 
 	void Window::_refreshCursor()
