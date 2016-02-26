@@ -22,9 +22,10 @@
 
 namespace april
 {
+	/// @brief Defines render operations.
 	enum RenderOperation
 	{
-		/// @brief Undefined blend mode.
+		/// @brief Undefined render operation.
 		RO_UNDEFINED = 0,
 		/// @brief Triangle-list.
 		RO_TRIANGLE_LIST = 1,
@@ -40,6 +41,7 @@ namespace april
 		RO_POINT_LIST = 6,
 	};
 
+	/// @brief Defines blending modes.
 	enum BlendMode
 	{
 		/// @brief Default blend mode.
@@ -54,6 +56,7 @@ namespace april
 		BM_OVERWRITE = 4,
 	};
 
+	/// @brief Defines color modes.
 	enum ColorMode
 	{
 		/// @brief Default color mode.

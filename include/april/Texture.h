@@ -31,6 +31,7 @@ namespace april
 	class RenderSystem;
 	class TextureAsync;
 	
+	/// @brief Defines a generic texture.
 	class aprilExport Texture
 	{
 	public:

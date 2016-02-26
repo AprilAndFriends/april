@@ -51,6 +51,7 @@ namespace april
 	class RenderSystem;
 	class Window;
 
+	/// @brief Used for logging display.
 	extern hstr logTag;
 
 	/// @brief Defines render system types.
@@ -93,14 +94,14 @@ namespace april
 
 	/// @brief Initializes APRIL.
 	/// @param[in] renderSystemType Which render system should be used.
-	/// @param[in] windowSystemType Which window system should be used.
+	/// @param[in] windowType Which window system should be used.
 	/// @note After this, you still have to call createRenderSystem() and createWindow().
 	/// @see createRenderSystem()
 	/// @see createWindow()
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowType windowType);
 	/// @brief Initializes APRIL.
 	/// @param[in] customRenderSystem Custom implementation for RenderSystem.
-	/// @param[in] windowSystemType Which window system should be used.
+	/// @param[in] windowType Which window system should be used.
 	/// @note After this, you still have to call createRenderSystem() and createWindow().
 	/// @see createRenderSystem()
 	/// @see createWindow()
@@ -121,7 +122,7 @@ namespace april
 	aprilFnExport void init(RenderSystem* customRenderSystem, Window* customWindow);
 	/// @brief Initializes APRIL.
 	/// @param[in] renderSystemType Which render system should be used.
-	/// @param[in] windowSystemType Which window system should be used.
+	/// @param[in] windowType Which window system should be used.
 	/// @param[in] renderSystemOptions Define any special options you need for the render system.
 	/// @param[in] w Window width.
 	/// @param[in] h Winnow height.
@@ -135,7 +136,7 @@ namespace april
 		RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions);
 	/// @brief Initializes APRIL.
 	/// @param[in] customRenderSystem Custom implementation for RenderSystem.
-	/// @param[in] windowSystemType Which window system should be used.
+	/// @param[in] windowType Which window system should be used.
 	/// @param[in] renderSystemOptions Define any special options you need for the render system.
 	/// @param[in] w Window width.
 	/// @param[in] h Winnow height.
@@ -198,7 +199,6 @@ namespace april
 	/// @note Extensions must always include the "." (dot) character.
 	aprilFnExport void addTextureExtension(chstr extension);
 	/// @brief Gets the list of all file extensions for extension-insensitive texture filenames.
-	/// @param[in] extension The new extension.
 	/// @return The list of all file extensions for extension-insensitive texture filenames.
 	/// @note Extensions must always include the "." (dot) character.
 	aprilFnExport harray<hstr> getTextureExtensions();
