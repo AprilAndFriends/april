@@ -132,7 +132,6 @@ namespace april
 		/// @param[in] format In what format the output should be done.
 		/// @return True if successful.
 		/// @note If output has not been allocated yet, it will be allocated with the new operator.
-		/// @note When using a different format that the image's actual format, conversion will be done automatically and can be slower.
 		bool copyPixelData(unsigned char** output, Format format);
 		/// @brief Writes image data directly onto the image.
 		/// @param[in] sx Source data X-coordinate.
@@ -231,7 +230,7 @@ namespace april
 		/// @param[in] median The median value for insertion.
 		/// @param[in] ambiguity How "hard" the alpha channel transition should be.
 		/// @return True if successful.
-		/// @note The data in srcData must be the same width and height as the image.
+		/// @note The image data in srcData must be the same width and height as the image.
 		/// @note This is an expensive operation and should be used sparingly.
 		bool insertAlphaMap(unsigned char* srcData, Format srcFormat, unsigned char median, int ambiguity); // TODOa - this functionality might be removed since shaders are much faster
 		/// @brief Dilates the image.
@@ -456,7 +455,7 @@ namespace april
 		/// @param[in] srcData The source raw image data.
 		/// @param[in] srcFormat The pixel format of source raw image data.
 		/// @return True if successful.
-		/// @note The data in srcData must be the same width and height as the image.
+		/// @note The image data in srcData must be the same width and height as the image.
 		/// @note This is an expensive operation and should be used sparingly.
 		bool insertAlphaMap(unsigned char* srcData, Format srcFormat); // TODOa - this functionality might be removed since shaders are much faster
 		/// @brief Inserts image data as alpha channel into this image.
@@ -728,7 +727,7 @@ namespace april
 		/// @param[in] median The median value for insertion.
 		/// @param[in] ambiguity How "hard" the alpha channel transition should be.
 		/// @return True if successful.
-		/// @note The data in srcData must be the same width and height as the image.
+		/// @note The image data in srcData must be the same width and height as the image.
 		/// @note This is an expensive operation and should be used sparingly.
 		/// @note This is usually called internally only.
 		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat, unsigned char median, int ambiguity);  // TODOa - this functionality might be removed since shaders are much faster

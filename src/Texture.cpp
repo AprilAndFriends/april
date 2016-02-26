@@ -1321,6 +1321,11 @@ namespace april
 		return this->createImage(this->format);
 	}
 
+	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, Image* image)
+	{
+		return this->write(sx, sy, sw, sh, dx, dy, image->data, image->w, image->h, image->format);
+	}
+
 	bool Texture::write(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		return this->write(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), srcData, srcWidth, srcHeight, srcFormat);
@@ -1331,14 +1336,14 @@ namespace april
 		return this->write(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), texture);
 	}
 
-	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, Image* image)
-	{
-		return this->write(sx, sy, sw, sh, dx, dy, image->data, image->w, image->h, image->format);
-	}
-
 	bool Texture::write(grect srcRect, gvec2 destPosition, Image* image)
 	{
 		return this->write(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), image->data, image->w, image->h, image->format);
+	}
+
+	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image)
+	{
+		return this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, image->data, image->w, image->h, image->format);
 	}
 
 	bool Texture::writeStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
@@ -1351,14 +1356,14 @@ namespace april
 		return this->writeStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), texture);
 	}
 
-	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image)
-	{
-		return this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, image->data, image->w, image->h, image->format);
-	}
-
 	bool Texture::writeStretch(grect srcRect, grect destRect, Image* image)
 	{
 		return this->writeStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), image->data, image->w, image->h, image->format);
+	}
+
+	bool Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* image, unsigned char alpha)
+	{
+		return this->blit(sx, sy, sw, sh, dx, dy, image->data, image->w, image->h, image->format, alpha);
 	}
 
 	bool Texture::blit(grect srcRect, gvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
@@ -1371,14 +1376,14 @@ namespace april
 		return this->blit(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), texture, alpha);
 	}
 
-	bool Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* image, unsigned char alpha)
-	{
-		return this->blit(sx, sy, sw, sh, dx, dy, image->data, image->w, image->h, image->format, alpha);
-	}
-
 	bool Texture::blit(grect srcRect, gvec2 destPosition, Image* image, unsigned char alpha)
 	{
 		return this->blit(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), image->data, image->w, image->h, image->format, alpha);
+	}
+
+	bool Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image, unsigned char alpha)
+	{
+		return this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, image->data, image->w, image->h, image->format, alpha);
 	}
 
 	bool Texture::blitStretch(grect srcRect, grect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
@@ -1389,11 +1394,6 @@ namespace april
 	bool Texture::blitStretch(grect srcRect, grect destRect, Texture* texture, unsigned char alpha)
 	{
 		return this->blitStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), texture, alpha);
-	}
-
-	bool Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* image, unsigned char alpha)
-	{
-		return this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, image->data, image->w, image->h, image->format, alpha);
 	}
 
 	bool Texture::blitStretch(grect srcRect, grect destRect, Image* image, unsigned char alpha)
