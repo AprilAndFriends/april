@@ -110,7 +110,7 @@ public class Activity extends com.april.Activity
 			{
 				public void run()
 				{
-					com.april.NativeInterface.onButtonDown(newKeyCode);
+					com.april.NativeInterface.onButtonDown(newKeyCode, 0.0f);
 				}
 			});
 			return true;
@@ -129,7 +129,7 @@ public class Activity extends com.april.Activity
 			{
 				public void run()
 				{
-					com.april.NativeInterface.onButtonUp(newKeyCode);
+					com.april.NativeInterface.onButtonUp(newKeyCode, 0.0f);
 				}
 			});
 			return true;
@@ -169,7 +169,8 @@ public class Activity extends com.april.Activity
 				{
 					public void run()
 					{
-						com.april.NativeInterface.onControllerAxis(100, lsx);
+						com.april.NativeInterface.onButtonDown(100, lsx);
+						com.april.NativeInterface.onButtonUp(100, lsx);
 					}
 				});
 			}
@@ -180,7 +181,8 @@ public class Activity extends com.april.Activity
 				{
 					public void run()
 					{
-						com.april.NativeInterface.onControllerAxis(101, lsy);
+						com.april.NativeInterface.onButtonDown(101, lsy);
+						com.april.NativeInterface.onButtonUp(101, lsy);
 					}
 				});
 			}
@@ -191,7 +193,8 @@ public class Activity extends com.april.Activity
 				{
 					public void run()
 					{
-						com.april.NativeInterface.onControllerAxis(102, rsx);
+						com.april.NativeInterface.onButtonDown(102, rsx);
+						com.april.NativeInterface.onButtonUp(102, rsx);
 					}
 				});
 			}
@@ -202,7 +205,8 @@ public class Activity extends com.april.Activity
 				{
 					public void run()
 					{
-						com.april.NativeInterface.onControllerAxis(103, rsy);
+						com.april.NativeInterface.onButtonDown(103, rsy);
+						com.april.NativeInterface.onButtonUp(103, rsy);
 					}
 				});
 			}
@@ -213,7 +217,8 @@ public class Activity extends com.april.Activity
 				{
 					public void run()
 					{
-						com.april.NativeInterface.onControllerAxis(104, lt);
+						com.april.NativeInterface.onButtonDown(104, lt);
+						com.april.NativeInterface.onButtonUp(104, lt);
 					}
 				});
 			}
@@ -224,7 +229,8 @@ public class Activity extends com.april.Activity
 				{
 					public void run()
 					{
-						com.april.NativeInterface.onControllerAxis(105, rt);
+						com.april.NativeInterface.onButtonDown(105, rt);
+						com.april.NativeInterface.onButtonUp(105, rt);
 					}
 				});
 			}
