@@ -1939,7 +1939,7 @@ The parameter alpha is especially useful when blitting source images that don't 
     <tr><td class="paramdir">[in]</td><td class="paramname">sh</td><td>Height of the area on the source to be copied. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">dx</td><td>Destination X-coordinate. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">dy</td><td>Destination Y-coordinate. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">other</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">alpha</td><td>Alpha multiplier on the entire source image. </td></tr>
   </table>
   </dd>
@@ -2068,7 +2068,7 @@ The parameter alpha is especially useful when blitting source images that don't 
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">srcRect</td><td>Source data rectangle. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">destPosition</td><td>Destination coordinates. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">other</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">alpha</td><td>Alpha multiplier on the entire source image. </td></tr>
   </table>
   </dd>
@@ -2420,7 +2420,7 @@ The parameter alpha is especially useful when blitting source images that don't 
     <tr><td class="paramdir">[in]</td><td class="paramname">dy</td><td>Destination Y-coordinate. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">dw</td><td>Width of the destination area. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">dh</td><td>Height of the destination area. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">other</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">alpha</td><td>Alpha multiplier on the entire source image. </td></tr>
   </table>
   </dd>
@@ -2549,7 +2549,7 @@ The parameter alpha is especially useful when blitting source images that don't 
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">srcRect</td><td>Source data rectangle. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">destRect</td><td>Destination rectangle. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">other</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">alpha</td><td>Alpha multiplier on the entire source image. </td></tr>
   </table>
   </dd>
@@ -4742,10 +4742,12 @@ This is an expensive operation and should be used sparingly. </dd></dl>
 <p>Inserts raw image data as alpha channel into other raw image data. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">w</td><td>Width of the raw image data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">h</td><td>Height of the raw image data. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">srcData</td><td>The source raw image data. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">srcFormat</td><td>The pixel format of source raw image data. </td></tr>
     <tr><td class="paramdir">[in,out]</td><td class="paramname">destData</td><td>The destination raw image data. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">destWidth</td><td>The width of destination raw image data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">destFormat</td><td>The pixel format of destination raw image data. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">median</td><td>The median value for insertion. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">ambiguity</td><td>How "hard" the alpha channel transition should be. </td></tr>
   </table>
@@ -5335,6 +5337,10 @@ This is an expensive operation and should be used sparingly. </dd></dl>
     <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>Y-coordinate of the area to change. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">w</td><td>Width of the area to change. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">h</td><td>Height of the area to change. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">srcData</td><td>The source raw image data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">srcWidth</td><td>The width of source raw image data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">srcHeight</td><td>The height of source raw image data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">srcFormat</td><td>The pixel format of source raw image data. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">degrees</td><td>By how many degrees the the should be rotated. </td></tr>
   </table>
   </dd>
@@ -5912,7 +5918,7 @@ This is usually called internally only. </dd></dl>
     <tr><td class="paramdir">[in]</td><td class="paramname">sh</td><td>Height of the area on the source to be copied. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">dx</td><td>Destination X-coordinate. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">dy</td><td>Destination Y-coordinate. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">other</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -6023,7 +6029,7 @@ This is usually called internally only. </dd></dl>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">srcRect</td><td>Source data rectangle. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">destPosition</td><td>Destination coordinates. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">other</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -6348,7 +6354,7 @@ This is usually called internally only. </dd></dl>
     <tr><td class="paramdir">[in]</td><td class="paramname">dy</td><td>Destination Y-coordinate. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">dw</td><td>Width of the destination area. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">dh</td><td>Height of the destination area. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">other</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -6459,7 +6465,7 @@ This is usually called internally only. </dd></dl>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">srcRect</td><td>Source data rectangle. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">destRect</td><td>Destination rectangle. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">other</td><td>The source <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -6636,7 +6642,7 @@ This is usually called internally only. </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 26 2016 15:28:39 for Awesome Portable Rendering Interface Library by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Feb 29 2016 08:12:45 for Awesome Portable Rendering Interface Library by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.11
 </small></address>

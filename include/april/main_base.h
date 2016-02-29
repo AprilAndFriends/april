@@ -59,7 +59,10 @@ namespace april
 
 #if !defined(_ANDROID) || defined(_OPENKODE)
 /// @brief A special main loop function that serves as general entry point.
-/// @param[in] A special main loop function that serves as general entry point.
+/// @param[in] anAprilInit Initialization function.
+/// @param[in] anAprilDestroy Cleanup function.
+/// @param[in] argc Number of arguments the application was run with.
+/// @param[in] argv The arguments the application was run with.
 /// @note This is used internally only.
 aprilExport int __april_main(void(*anAprilInit)(const harray<hstr>&), void(*anAprilDestroy)(), int argc, char** argv);
 #endif

@@ -326,7 +326,7 @@ namespace april
 		void translate(const gvec3& vector);
 		/// @brief Translates the modelview matrix.
 		/// @param[in] vector The 2D translation vector.
-		/// @node This ignores the Z-coordinate.
+		/// @note This ignores the Z-coordinate.
 		void translate(const gvec2& vector);
 		/// @brief Rotates the modelview matrix around the -Z axis.
 		/// @param[in] angle Angle to rotate.
@@ -336,7 +336,7 @@ namespace april
 		/// @param[in] ay Rotation axis Y-coordinate.
 		/// @param[in] az Rotation axis Z-coordinate.
 		/// @param[in] angle Angle to rotate.
-		/// @node This ignores the Z-coordinate.
+		/// @note This ignores the Z-coordinate.
 		void rotate(float ax, float ay, float az, float angle);
 		/// @brief Rotates the modelview matrix around an axis.
 		/// @param[in] axis The rotation axis.
@@ -355,7 +355,7 @@ namespace april
 		void scale(const gvec3& vector);
 		/// @brief Scales the modelview matrix by a certain factor.
 		/// @param[in] vector The 2D scaling vector.
-		/// @node This ignores the Z-coordinate.
+		/// @note This ignores the Z-coordinate.
 		void scale(const gvec2& vector);
 		/// @brief Sets the modelview matrix up to look toward a certain point.
 		/// @param[in] eye The origin position of the camera.
@@ -389,6 +389,7 @@ namespace april
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
+		/// @param[in] color Color to apply globally on all vertices.
 		/// @note Calling this will effectively set the current texture to NULL.
 		void render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color);
 		/// @brief Renders an array of vertices to the backbuffer.
@@ -400,6 +401,7 @@ namespace april
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
+		/// @param[in] color Color to apply globally on all vertices.
 		void render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
@@ -414,23 +416,23 @@ namespace april
 		void render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
 		
 		/// @brief Renders a rectangle.
-		/// @param[in] grect Position and size of the rectangle.
+		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] color Color of the rectangle.
 		/// @note Calling this will effectively set the current texture to NULL.
 		void drawRect(grect rect, Color color);
 		/// @brief Renders a rectangle filled with a color.
-		/// @param[in] grect Position and size of the rectangle.
+		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] color Color of the rectangle.
 		/// @note Calling this will effectively set the current texture to NULL.
 		void drawFilledRect(grect rect, Color color);
 		/// @brief Renders a textured rectangle.
-		/// @param[in] grect Position and size of the rectangle.
+		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] src UV rectangle on the currently set Texture.
 		/// @note Remember to call setTexture() before calling this.
 		/// @see setTexture
 		void drawTexturedRect(grect rect, grect src);
 		/// @brief Renders a textured rectangle.
-		/// @param[in] grect Position and size of the rectangle.
+		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] src UV rectangle on the currently set Texture.
 		/// @param[in] color Color that should be applied to the texture.
 		/// @note Remember to call setTexture() before calling this.
@@ -522,7 +524,7 @@ namespace april
 
 		/// @brief Updates the device state based on the current render system state. This method only updates things tha have changed to improve performance.
 		/// @param[in] forceUpdate If true, will force an update of the entire device state, regardless of the current state.
-		/// @ntoe The parameter forceUpdate is useful when the device is in an unknown or inconsistent state, but should be used with care as it invalidates all optimizations.
+		/// @note The parameter forceUpdate is useful when the device is in an unknown or inconsistent state, but should be used with care as it invalidates all optimizations.
 		virtual void _updateDeviceState(bool forceUpdate = false);
 
 		/// @brief Initializes everything internal for the RenderSystem
@@ -567,10 +569,10 @@ namespace april
 		/// @param[in] rect The viewport rectangle.
 		virtual void _setDeviceViewport(const grect& rect) = 0;
 		/// @brief Sets the device modelview matrix.
-		/// @param[in] value The current modelview matrix.
+		/// @param[in] matrix The current modelview matrix.
 		virtual void _setDeviceModelviewMatrix(const gmat4& matrix) = 0;
 		/// @brief Sets the device projection matrix.
-		/// @param[in] value The current projection matrix.
+		/// @param[in] matrix The current projection matrix.
 		virtual void _setDeviceProjectionMatrix(const gmat4& matrix) = 0;
 		/// @brief Sets the device depth-buffer state.
 		/// @param[in] enabled Whether to enable or disable the device depth-buffer itself.
@@ -644,8 +646,8 @@ namespace april
 
 	};
 
-	// global rendersys shortcut variable
-	aprilFnExport extern april::RenderSystem* rendersys;
+	/// @brief The global RenderSystem instance.
+	aprilExport extern april::RenderSystem* rendersys;
 	
 }
 

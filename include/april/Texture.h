@@ -391,7 +391,6 @@ namespace april
 		/// @note The data will be copied in the same pixel format as this Image.
 		bool copyPixelData(unsigned char** output);
 		/// @brief Creates an Image object from the image data.
-		/// @param[in] format In what format the output should be done.
 		/// @return The created Image object or NULL if failed.
 		Image* createImage();
 		/// @brief Writes image data directly onto the image.

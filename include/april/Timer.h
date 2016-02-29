@@ -18,7 +18,9 @@
 #ifndef _WIN32
 #include <stdint.h>
 #ifndef __int64
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define __int64 uint64_t
+#endif
 #endif
 #endif
 #include <stdio.h>

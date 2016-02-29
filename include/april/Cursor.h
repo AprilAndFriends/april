@@ -28,6 +28,7 @@ namespace april
 	public:
 		friend class Window;
 
+		/// @brief The filename of the cursor file.
 		HL_DEFINE_GET(hstr, filename, Filename);
 		
 	protected:

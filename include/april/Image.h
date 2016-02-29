@@ -300,7 +300,7 @@ namespace april
 		/// @param[in] sh Height of the area on the source to be copied.
 		/// @param[in] dx Destination X-coordinate.
 		/// @param[in] dy Destination Y-coordinate.
-		/// @param[in] image The source Image.
+		/// @param[in] other The source Image.
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten.
 		/// @see write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
@@ -319,7 +319,7 @@ namespace april
 		/// @brief Writes image data directly onto the image.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destPosition Destination coordinates.
-		/// @param[in] image The source Image.
+		/// @param[in] other The source Image.
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten.
 		/// @see write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
@@ -333,7 +333,7 @@ namespace april
 		/// @param[in] dy Destination Y-coordinate.
 		/// @param[in] dw Width of the destination area.
 		/// @param[in] dh Height of the destination area.
-		/// @param[in] image The source Image.
+		/// @param[in] other The source Image.
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten.
 		/// @see writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
@@ -352,7 +352,7 @@ namespace april
 		/// @brief Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destRect Destination rectangle.
-		/// @param[in] image The source Image.
+		/// @param[in] other The source Image.
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten.
 		/// @see writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
@@ -364,7 +364,7 @@ namespace april
 		/// @param[in] sh Height of the area on the source to be copied.
 		/// @param[in] dx Destination X-coordinate.
 		/// @param[in] dy Destination Y-coordinate.
-		/// @param[in] image The source Image.
+		/// @param[in] other The source Image.
 		/// @param[in] alpha Alpha multiplier on the entire source image.
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
@@ -387,7 +387,7 @@ namespace april
 		/// @brief Does an image data block transfer onto the image.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destPosition Destination coordinates.
-		/// @param[in] image The source Image.
+		/// @param[in] other The source Image.
 		/// @param[in] alpha Alpha multiplier on the entire source image.
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
@@ -403,7 +403,7 @@ namespace april
 		/// @param[in] dy Destination Y-coordinate.
 		/// @param[in] dw Width of the destination area.
 		/// @param[in] dh Height of the destination area.
-		/// @param[in] image The source Image.
+		/// @param[in] other The source Image.
 		/// @param[in] alpha Alpha multiplier on the entire source image.
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
@@ -426,7 +426,7 @@ namespace april
 		/// @brief Does a stretched image data block transfer onto the image.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destRect Destination rectangle.
-		/// @param[in] image The source Image.
+		/// @param[in] other The source Image.
 		/// @param[in] alpha Alpha multiplier on the entire source image.
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
@@ -686,6 +686,10 @@ namespace april
 		/// @param[in] y Y-coordinate of the area to change.
 		/// @param[in] w Width of the area to change.
 		/// @param[in] h Height of the area to change.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
 		/// @param[in] degrees By how many degrees the the should be rotated.
 		/// @return True if successful.
 		/// @note This is lossy operation.
@@ -720,17 +724,19 @@ namespace april
 		/// @note This is usually called internally only.
 		static bool invert(int x, int y, int w, int h, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		/// @brief Inserts raw image data as alpha channel into other raw image data.
+		/// @param[in] w Width of the raw image data.
+		/// @param[in] h Height of the raw image data.
 		/// @param[in] srcData The source raw image data.
 		/// @param[in] srcFormat The pixel format of source raw image data.
 		/// @param[in,out] destData The destination raw image data.
-		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
 		/// @param[in] median The median value for insertion.
 		/// @param[in] ambiguity How "hard" the alpha channel transition should be.
 		/// @return True if successful.
 		/// @note The image data in srcData must be the same width and height as the image.
 		/// @note This is an expensive operation and should be used sparingly.
 		/// @note This is usually called internally only.
-		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat, unsigned char median, int ambiguity);  // TODOa - this functionality might be removed since shaders are much faster
+		static bool insertAlphaMap(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char* destData, Format destFormat, unsigned char median, int ambiguity); // TODOa - this functionality might be removed since shaders are much faster
 		/// @brief Dilates the raw image data.
 		/// @param[in] srcData The constructing image's raw image data.
 		/// @param[in] srcWidth The width of the constructing image's raw image data.

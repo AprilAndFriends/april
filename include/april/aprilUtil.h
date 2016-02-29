@@ -219,7 +219,7 @@ namespace april
 		explicit inline ColoredTexturedVertex(float u, float v) :														ColoredVertex(), u(u), v(v) { }
 		/// @brief Constructor.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
-		explicit inline ColoredTexturedVertex(gvec2 textureCoordiate) :													ColoredVertex(), u(textureCoordiate.x), v(textureCoordiate.y) { }
+		explicit inline ColoredTexturedVertex(gvec2 textureCoordinate) :												ColoredVertex(), u(textureCoordinate.x), v(textureCoordinate.y) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
@@ -249,11 +249,11 @@ namespace april
 		/// @param[in] y Y-coordinate.
 		/// @param[in] z Z-coordinate.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
-		explicit inline ColoredTexturedVertex(float x, float y, float z, gvec2 textureCoordiate) :						ColoredVertex(x, y, z), u(textureCoordiate.x), v(textureCoordiate.y) { }
+		explicit inline ColoredTexturedVertex(float x, float y, float z, gvec2 textureCoordinate) :						ColoredVertex(x, y, z), u(textureCoordinate.x), v(textureCoordinate.y) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
-		explicit inline ColoredTexturedVertex(gvec3 position, gvec2 textureCoordiate) :									ColoredVertex(position), u(textureCoordiate.x), v(textureCoordiate.y) { }
+		explicit inline ColoredTexturedVertex(gvec3 position, gvec2 textureCoordinate) :								ColoredVertex(position), u(textureCoordinate.x), v(textureCoordinate.y) { }
 		/// @brief Constructor.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
@@ -277,13 +277,13 @@ namespace april
 		/// @param[in] color Color of the vertex.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
-		explicit inline ColoredTexturedVertex(float x, float y, float z, unsigned int color, gvec2 textureCoordiate) :	ColoredVertex(x, y, z, color), u(textureCoordiate.x), v(textureCoordiate.y) { }
+		explicit inline ColoredTexturedVertex(float x, float y, float z, unsigned int color, gvec2 textureCoordinate) :	ColoredVertex(x, y, z, color), u(textureCoordinate.x), v(textureCoordinate.y) { }
 		/// @brief Constructor.
 		/// @param[in] position Position of the vertex.
 		/// @param[in] color Color of the vertex.
 		/// @param[in] textureCoordinate Texture coordinate of the vertex.
 		/// @note The 'color' value is in native format, not RGBA MSB!)
-		explicit inline ColoredTexturedVertex(gvec3 position, unsigned int color, gvec2 textureCoordiate) :				ColoredVertex(position, color), u(textureCoordiate.x), v(textureCoordiate.y) { }
+		explicit inline ColoredTexturedVertex(gvec3 position, unsigned int color, gvec2 textureCoordinate) :			ColoredVertex(position, color), u(textureCoordinate.x), v(textureCoordinate.y) { }
 
 	};
 	
@@ -311,32 +311,32 @@ namespace april
 	aprilFnExport hstr generateName(chstr prefix);
 	/// @brief Creates a string representation for a gtypes::Vector2.
 	/// @param[in] vector The gtypes::Vector2 to convert.
-	/// @brief A string.
+	/// @return A string.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
 	aprilFnExport hstr gvec2ToHstr(gvec2 vector);
-	/// @param[in] vector The gtypes::Vector3 to convert.
 	/// @brief Creates a string representation for a gtypes::Vector3.
-	/// @brief A string.
+	/// @param[in] vector The gtypes::Vector3 to convert.
+	/// @return A string.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
 	aprilFnExport hstr gvec3ToHstr(gvec3 vector);
-	/// @param[in] vector The gtypes::Rectangle to convert.
 	/// @brief Creates a string representation for a gtypes::Rectangle.
-	/// @brief A string.
+	/// @param[in] rect The gtypes::Rectangle to convert.
+	/// @return A string.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
 	aprilFnExport hstr grectToHstr(grect rect);
 	/// @brief Creates gtypes::Vector2 from a string representation.
 	/// @param[in] string The string to use for conversion.
-	/// @brief A gtypes::Vector2.
+	/// @return A gtypes::Vector2.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
 	aprilFnExport gvec2 hstrToGvec2(chstr string);
 	/// @brief Creates gtypes::Vector3 from a string representation.
 	/// @param[in] string The string to use for conversion.
-	/// @brief A gtypes::Vector3.
+	/// @return A gtypes::Vector3.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
 	aprilFnExport gvec3 hstrToGvec3(chstr string);
 	/// @brief Creates gtypes::Rectangle from a string representation.
 	/// @param[in] string The string to use for conversion.
-	/// @brief A gtypes::Rectangle.
+	/// @return A gtypes::Rectangle.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
 	aprilFnExport grect hstrToGrect(chstr string);
 

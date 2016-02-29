@@ -118,8 +118,8 @@ namespace april
 			KeyInputEvent();
 			/// @brief Constructor.
 			/// @param[in] type The event type.
-			/// @param[in] position The pointer position.
 			/// @param[in] keyCode The key code.
+			/// @param[in] charCode The character Unicode value.
 			KeyInputEvent(KeyEventType type, Key keyCode, unsigned int charCode);
 		
 		};
@@ -388,7 +388,7 @@ namespace april
 		/// @param[in] focused Whether the window is focused now.
 		virtual void handleFocusChangeEvent(bool focused);
 		/// @brief Handles a virtual-keyboard-change event and propagates it to the delegate.
-		/// @param[in] focused Whether the virtual keyboard is visible.
+		/// @param[in] visible Whether the virtual keyboard is visible.
 		/// @param[in] heightRatio The ratio of the screen height that the keyboard takes up.
 		virtual void handleVirtualKeyboardChangeEvent(bool visible, float heightRatio);
 		/// @brief Handles a low memory warning event and propagates it to the delegate.
@@ -547,7 +547,7 @@ namespace april
 		/// @return The time passed since the render of the last frame.
 		virtual float _calcTimeSinceLastFrame();
 		/// @brief Calls _setRenderSystemResolution() with the current Window parameters.
-		/// @sett _setRenderSystemResolution(int w, int h, bool fullscreen)
+		/// @see _setRenderSystemResolution(int w, int h, bool fullscreen)
 		void _setRenderSystemResolution();
 		/// @brief Calls the RenderSystem method for changing the resolution to synchronize Window and RenderSystem.
 		/// @param[in] w New width of the resolutin.
@@ -570,8 +570,8 @@ namespace april
 #endif
 	};
 
-	// global window shortcut variable
-	aprilFnExport extern april::Window* window;
+	/// @brief The global Window instance.
+	aprilExport extern april::Window* window;
 
 }
 #endif
