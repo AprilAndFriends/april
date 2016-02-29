@@ -80,10 +80,10 @@ namespace april
 		Window::queueTouchEvent(type, position, index);
 	}
 
-	void AndroidJNI_Window::queueControllerEvent(Window::ControllerEventType type, Button buttonCode)
+	void AndroidJNI_Window::queueControllerEvent(Window::ControllerEventType type, Button buttonCode, float axisValue)
 	{
 		this->setInputMode(CONTROLLER);
-		Window::queueControllerEvent(type, buttonCode);
+		Window::queueControllerEvent(type, buttonCode, axisValue);
 	}
 
 	void AndroidJNI_Window::showVirtualKeyboard()
