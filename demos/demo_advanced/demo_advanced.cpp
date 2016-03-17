@@ -100,6 +100,8 @@ public:
 	{
 		gvec2 direction = point - position;
 		direction.normalize();
+		if (direction.length() == 0)
+			direction = gvec2(1, 0);
 		direction *= length;
 
 		this->lineVertices[0].x = this->position.x; 
