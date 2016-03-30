@@ -103,7 +103,7 @@ namespace april
 		this->fpsCounter = false;
 		this->hotkeyFullscreen = false;
 		this->mac_displayLinkIgnoreSystemRedraw = false;
-		this->defaultWindowModeResolutionFactor = 0.85f;
+		this->defaultWindowModeResolutionFactor = 0.8f;
 	}
 	
 	Window::Options::~Options()
