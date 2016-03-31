@@ -52,7 +52,9 @@
 april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
 april::Texture* texture2 = NULL;
+april::Texture* texture3 = NULL;
 
+// vertices for render test
 april::TexturedVertex dv[4];
 april::PlainVertex pv[4];
 april::TexturedVertex tv[4];
@@ -61,8 +63,14 @@ april::ColoredTexturedVertex ctv[3];
 
 #define SHAPE_VERTICES 8
 #define SHAPE_POLYGONS 6
+
+// shape vertices for demonstrating different
+// rendering methods
 april::TexturedVertex sf[8];
 april::TexturedVertex sw[SHAPE_POLYGONS*6];
+
+//quad vertices for demonstrating blend-modes
+april::ColoredTexturedVertex ctv_quad[4];
 
 #define STAR_VERTICES 9
 april::TexturedVertex starStrip[10];
@@ -160,34 +168,101 @@ class UpdateDelegate : public april::UpdateDelegate
 {
 	bool onUpdate(float timeDelta)
 	{
+		// clear the screen and set orthographic projection
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);
 
+		// reset the blend mode
+		april::rendersys->setBlendMode(april::BlendMode::BM_DEFAULT);
+
+		// save the default matrices so they can be restored later
 		gmat4 modelviewMatrix = april::rendersys->getModelviewMatrix();
 		gmat4 projectionMatrix = april::rendersys->getProjectionMatrix();
 
+		// line list polygon
 		april::rendersys->setTexture(0);
 
 		april::rendersys->translate(gvec2(256, 128));
 		april::rendersys->render(april::RO_LINE_LIST, sw, SHAPE_POLYGONS * 6);
 
+		// filled polygon
 		april::rendersys->setTexture(0);
 
 		april::rendersys->translate(gvec2(64, 0));
 		april::rendersys->render(april::RO_TRIANGLE_STRIP, sf, SHAPE_VERTICES);
 
+		// textured polygon
 		april::rendersys->setTexture(texture2);
 
 		april::rendersys->translate(gvec2(64, 0));
 		april::rendersys->render(april::RO_TRIANGLE_STRIP, sf, SHAPE_VERTICES);
 
+		// line strip polygon
 		april::rendersys->setTexture(0);
+		static float rot = 0;
+		rot += timeDelta*512;
 
 		april::rendersys->translate(gvec2(96, 32));
+		april::rendersys->rotate(rot);
 		april::rendersys->render(april::RO_LINE_STRIP, starStrip, STAR_VERTICES);
+
+		// reset the modelview matrix
+		april::rendersys->setModelviewMatrix(modelviewMatrix);
+
+		// blending examples
+		april::rendersys->translate(gvec2(-50, 300));
+		for (int i = 0; i < 4; i++)
+		{
+			april::rendersys->setTexture(texture2);
+			april::rendersys->setBlendMode(april::BlendMode::BM_DEFAULT);
+
+			april::rendersys->translate(gvec2(0, -32));
+			april::rendersys->translate(gvec2(90, 0));
+			april::rendersys->render(april::RO_TRIANGLE_STRIP, ctv_quad, 4);
+			april::rendersys->translate(gvec2(32, 32));
+
+			april::rendersys->setTexture(texture3);
+			if (i == 0)
+				april::rendersys->setBlendMode(april::BlendMode::BM_ADD);
+			else if (i == 1)
+				april::rendersys->setBlendMode(april::BlendMode::BM_SUBTRACT);
+			else if (i == 2)
+				april::rendersys->setBlendMode(april::BlendMode::BM_ALPHA);
+			else if (i == 3)
+				april::rendersys->setBlendMode(april::BlendMode::BM_OVERWRITE);
+
+			april::rendersys->render(april::RO_TRIANGLE_STRIP, ctv_quad, 4);
+		}
+
+		april::rendersys->setModelviewMatrix(modelviewMatrix);
+		april::rendersys->setBlendMode(april::BlendMode::BM_DEFAULT);
+
+		//color mode examples
+		april::rendersys->translate(gvec2(-50, 450));
+		for (int i = 0; i < 3; i++)
+		{
+			april::rendersys->setTexture(texture2);
+			april::rendersys->setColorMode(april::ColorMode::CM_DEFAULT, 1.0f);
+
+			april::rendersys->translate(gvec2(0, -32));
+			april::rendersys->translate(gvec2(90, 0));
+			april::rendersys->render(april::RO_TRIANGLE_STRIP, ctv_quad, 4);
+			april::rendersys->translate(gvec2(32, 32));
+
+			april::rendersys->setTexture(texture3);
+			if (i == 0)
+				april::rendersys->setColorMode(april::ColorMode::CM_ALPHA_MAP, 0.5f);
+			else if (i == 1)
+				april::rendersys->setColorMode(april::ColorMode::CM_LERP, 0.5f);
+			else if (i == 2)
+				april::rendersys->setColorMode(april::ColorMode::CM_MULTIPLY, 0.5f);
+
+			april::rendersys->render(april::RO_TRIANGLE_STRIP, ctv_quad, 4);
+		}
 
 		april::rendersys->setTexture(0);
 
+		// reset the matrices
 		april::rendersys->setModelviewMatrix(modelviewMatrix);
 		april::rendersys->setProjectionMatrix(projectionMatrix);
 
@@ -205,10 +280,8 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->render(april::RO_TRIANGLE_LIST, cv, 3);
 		april::rendersys->render(april::RO_TRIANGLE_LIST, ctv, 3);
 #endif
-
 		return true;
 	}
-
 };
 
 class SystemDelegate : public april::SystemDelegate
@@ -255,12 +328,21 @@ class MouseDelegate : public april::MouseDelegate
 	void onMouseCancel(april::Key key)
 	{
 	}
+};
 
+class KeyboardDelegate : public april::KeyboardDelegate
+{
+	void onKeyUp(april::Key keyCode)
+	{
+		if(keyCode == april::Key::AK_F4)
+			april::window->setFullscreen(!april::window->isFullscreen());
+	}
 };
 
 static UpdateDelegate* updateDelegate = NULL;
 static SystemDelegate* systemDelegate = NULL;
 static MouseDelegate* mouseDelegate = NULL;
+static KeyboardDelegate* keyboardDelegate = NULL;
 
 #ifdef __APPLE__
 void ObjCUtil_setCWD(const char* override_default_dir)
@@ -296,6 +378,8 @@ void april_init(const harray<hstr>& args)
 	updateDelegate = new UpdateDelegate();
 	systemDelegate = new SystemDelegate();
 	mouseDelegate = new MouseDelegate();
+	keyboardDelegate = new KeyboardDelegate();
+
 #if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
@@ -308,6 +392,7 @@ void april_init(const harray<hstr>& args)
 #endif
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::TYPE_MANAGED);
 	texture2 = april::rendersys->createTextureFromResource(RESOURCE_PATH "camo", april::Texture::TYPE_MANAGED);
+	texture3 = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo", april::Texture::TYPE_MANAGED);
 	// background
 	dv[0].x = 0.0f;			dv[0].y = 0.0f;			dv[0].z = 0.0f;	dv[0].u = 0.0f;	dv[0].v = 0.0f;
 	dv[1].x = drawRect.w;	dv[1].y = 0.0f;			dv[1].z = 0.0f;	dv[1].u = 1.0f;	dv[1].v = 0.0f;
@@ -331,9 +416,41 @@ void april_init(const harray<hstr>& args)
 	ctv[0].x = drawRect.w;			ctv[0].y = drawRect.h - 100.0f;	ctv[0].z = 0.0f;	ctv[0].u = 1.0f;	ctv[0].v = 0.0f;	ctv[0].color = april::rendersys->getNativeColorUInt(april::Color::Red);
 	ctv[1].x = drawRect.w - 100.0f;	ctv[1].y = drawRect.h - 0.0f;	ctv[1].z = 0.0f;	ctv[1].u = 0.0f;	ctv[1].v = 1.0f;	ctv[1].color = april::rendersys->getNativeColorUInt(april::Color::Green);
 	ctv[2].x = drawRect.w;			ctv[2].y = drawRect.h - 0.0f;	ctv[2].z = 0.0f;	ctv[2].u = 1.0f;	ctv[2].v = 1.0f;	ctv[2].color = april::rendersys->getNativeColorUInt(april::Color::White);
+
+	//color-textured quad (for blending and color examples)
+	ctv_quad[0].x = 0;			
+	ctv_quad[0].y = 0;	
+	ctv_quad[0].z = 0.0f;	
+	ctv_quad[0].u = 0.0f;	
+	ctv_quad[0].v = 0.0f;	
+	ctv_quad[0].color = april::rendersys->getNativeColorUInt(april::Color::Red);
+
+	ctv_quad[1].x = 100;
+	ctv_quad[1].y = 0;
+	ctv_quad[1].z = 0.0f;
+	ctv_quad[1].u = 1.0f;
+	ctv_quad[1].v = 0.0f;
+	ctv_quad[1].color = april::rendersys->getNativeColorUInt(april::Color::White);
+
+	ctv_quad[2].x = 0;
+	ctv_quad[2].y = 100;
+	ctv_quad[2].z = 0.0f;
+	ctv_quad[2].u = 0.0f;
+	ctv_quad[2].v = 1.0f;
+	ctv_quad[2].color = april::rendersys->getNativeColorUInt(april::Color::White);
+
+	ctv_quad[3].x = 100.0f;	
+	ctv_quad[3].y = 100;	
+	ctv_quad[3].z = 0.0f;	
+	ctv_quad[3].u = 1.0f;	
+	ctv_quad[3].v = 1.0f;	
+	ctv_quad[3].color = april::rendersys->getNativeColorUInt(april::Color::Green);
+
+	// set delegates
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
+	april::window->setKeyboardDelegate(keyboardDelegate);
 	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 
@@ -382,4 +499,6 @@ void april_destroy()
 	systemDelegate = NULL;
 	delete mouseDelegate;
 	mouseDelegate = NULL;
+	delete keyboardDelegate;
+	keyboardDelegate = NULL;
 }
