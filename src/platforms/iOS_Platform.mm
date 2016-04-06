@@ -148,15 +148,12 @@ namespace april
 			info.displayDpi = 0;
 
 			UIScreen* mainScreen = [UIScreen mainScreen];
-			float scale = 1.0f;
-#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
-			if ([mainScreen respondsToSelector:@selector(scale)])
-			{
-				scale = [mainScreen scale];
-			}
-#endif
+			float scale = [mainScreen scale];
+			float nativeScale = [mainScreen nativeScale];
+			
 			int w = mainScreen.bounds.size.width * scale;
 			int h = mainScreen.bounds.size.height * scale;
+			hlog::writef(logTag, "iOS screen dimensions: %.0f x %.0f points, %d x %d pixes, scale: %.2f, nativeScale: %.2f", mainScreen.bounds.size.width, mainScreen.bounds.size.height, w, h, scale, nativeScale);
 			// forcing a w:h ratio where w > h
 			info.displayResolution.set((float)hmax(w, h), (float)hmin(w, h));
 			info.osVersion.set(hstr::fromUnicode([[UIDevice currentDevice].systemVersion UTF8String]));

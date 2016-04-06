@@ -7,10 +7,14 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #include "Platform.h"
+#import <UIKit/UIKit.h>
 
 void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 {
+	int w = info.displayResolution.x, h = info.displayResolution.y;
 	// for future reference, look here: http://www.everymac.com/ultimate-mac-lookup/?search_keywords=iPad3%2C4
+	// and here: http://www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions
+	
 	if (name.startsWith("iPad"))
 	{
 		if (name.startsWith("iPad1"))
@@ -118,31 +122,87 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		{
 			// iPhone6Plus has a resolution of 2208x1242 but is downscaled to 1920x1080
 			// The physical DPI is 401, but because of this, it is better to use the upscaled equivalent DPI of 461
-			info.name = "iPhone6Plus";
-			info.cpuCores = 2;
-			info.ram = 1024;
-			info.displayDpi = 461;
+			// we also need to account for possible zoomed mode. there can be 2 zoomed modes, one for compatibility upscaling iphone5 resolution
+			// and one as a feature, upscaling iphone6 resolution
+			if (w == 1704)
+			{
+				info.name = "iPhone6Plus_Zoomed_4inch";
+				info.cpuCores = 2;
+				info.ram = 1024;
+				info.displayDpi = 355;
+			}
+			else if (w == 2001)
+			{
+				info.name = "iPhone6Plus_Zoomed_4.7inch";
+				info.cpuCores = 2;
+				info.ram = 1024;
+				info.displayDpi = 417;
+			}
+			else
+			{
+				info.name = "iPhone6Plus";
+				info.cpuCores = 2;
+				info.ram = 1024;
+				info.displayDpi = 461;
+			}
 		}
 		else if (name.startsWith("iPhone7,2"))
 		{
-			info.name = "iPhone6";
-			info.cpuCores = 2;
-			info.ram = 1024;
-			info.displayDpi = 326;
+			if ([[UIScreen mainScreen] nativeScale] != 2)
+			{
+				info.name = "iPhone6_Zoomed_4inch";
+				info.cpuCores = 2;
+				info.ram = 1024;
+				info.displayDpi = 326;
+			}
+			else
+			{
+				info.name = "iPhone6";
+				info.cpuCores = 2;
+				info.ram = 1024;
+				info.displayDpi = 326;
+			}
 		}
 		else if (name.startsWith("iPhone8,1"))
 		{
-			info.name = "iPhone6S";
-			info.cpuCores = 2;
-			info.ram = 2048;
-			info.displayDpi = 326;
+			if ([[UIScreen mainScreen] nativeScale] != 2)
+			{
+				info.name = "iPhone6S_Zoomed_4inch";
+				info.cpuCores = 2;
+				info.ram = 2048;
+				info.displayDpi = 316;
+			}
+			else
+			{
+				info.name = "iPhone6S";
+				info.cpuCores = 2;
+				info.ram = 2048;
+				info.displayDpi = 326;
+			}
 		}
 		else if (name.startsWith("iPhone8,2"))
 		{
-			info.name = "iPhone6SPlus";
-			info.cpuCores = 2;
-			info.ram = 2048;
-			info.displayDpi = 461;
+			if (w == 1704)
+			{
+				info.name = "iPhone6SPlus_Zoomed_4inch";
+				info.cpuCores = 2;
+				info.ram = 2048;
+				info.displayDpi = 355;
+			}
+			else if (w == 2001)
+			{
+				info.name = "iPhone6SPlus_Zoomed_4.7inch";
+				info.cpuCores = 2;
+				info.ram = 2048;
+				info.displayDpi = 417;
+			}
+			else
+			{
+				info.name = "iPhone6SPlus";
+				info.cpuCores = 2;
+				info.ram = 2048;
+				info.displayDpi = 461;
+			}
 		}
 		else
 		{
@@ -193,7 +253,6 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 	}
 	else if (name.startsWith("x86")) // iPhone Simulator
 	{
-		int w = info.displayResolution.x, h = info.displayResolution.y;
 		if ((float) w / h >= 3.0f / 2.0f) // iPhone
 		{
 			if (w == 480)
@@ -210,10 +269,20 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			}
 			else if (w == 1136)
 			{
-				info.name = "iPhone5";
-				info.cpuCores = 2;
-				info.ram = 1024;
-				info.displayDpi = 326;
+				if ([[UIScreen mainScreen] nativeScale] != 2)
+				{
+					info.name = "iPhone6_Zoomed_4inch";
+					info.cpuCores = 2;
+					info.ram = 1024;
+					info.displayDpi = 316;
+				}
+				else
+				{
+					info.name = "iPhone5";
+					info.cpuCores = 2;
+					info.ram = 1024;
+					info.displayDpi = 326;
+				}
 			}
 			else if (w == 1334)
 			{
@@ -228,6 +297,20 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 				info.cpuCores = 2;
 				info.ram = 1024;
 				info.displayDpi = 461;
+			}
+			else if (w == 1704)
+			{
+				info.name = "iPhone6Plus_Zoomed_4inch";
+				info.cpuCores = 2;
+				info.ram = 1024;
+				info.displayDpi = 355;
+			}
+			else if (w == 2001)
+			{
+				info.name = "iPhone6Plus_Zoomed_4.7inch";
+				info.cpuCores = 2;
+				info.ram = 1024;
+				info.displayDpi = 417;
 			}
 		}
 		else
