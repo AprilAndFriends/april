@@ -53,6 +53,7 @@ april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
 april::Texture* texture2 = NULL;
 april::Texture* texture3 = NULL;
+april::Texture* texture4 = NULL;
 
 // vertices for render test
 april::TexturedVertex dv[4];
@@ -262,6 +263,23 @@ class UpdateDelegate : public april::UpdateDelegate
 			april::rendersys->render(april::RO_TRIANGLE_STRIP, ctv_quad, 4);
 		}
 
+		april::rendersys->setModelviewMatrix(modelviewMatrix);
+		
+		april::rendersys->setTexture(texture4);
+
+		april::rendersys->translate(gvec2(0, 0));
+		april::rendersys->render(april::RO_TRIANGLE_STRIP, ctv_quad, 4);
+		april::rendersys->translate(gvec2(200, 0));
+		april::rendersys->scale(gvec2(-1, 1));		
+		april::rendersys->render(april::RO_TRIANGLE_STRIP, ctv_quad, 4);
+		april::rendersys->translate(gvec2(0, 200));
+		april::rendersys->scale(gvec2(1, -1));
+		april::rendersys->render(april::RO_TRIANGLE_STRIP, ctv_quad, 4);
+		april::rendersys->translate(gvec2(200, 0));
+		april::rendersys->scale(gvec2(-1, 1));
+		april::rendersys->render(april::RO_TRIANGLE_STRIP, ctv_quad, 4);
+
+
 		april::rendersys->setTexture(0);
 
 		// reset the matrices
@@ -395,6 +413,7 @@ void april_init(const harray<hstr>& args)
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::TYPE_MANAGED);
 	texture2 = april::rendersys->createTextureFromResource(RESOURCE_PATH "camo", april::Texture::TYPE_MANAGED);
 	texture3 = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo", april::Texture::TYPE_MANAGED);
+	texture4 = april::rendersys->createTextureFromResource(RESOURCE_PATH "bloom", april::Texture::TYPE_MANAGED);
 	
 	//april::rendersys->createTexture(100, 100, april::Color::White, april::Image::Format::FORMAT_ARGB, april::Texture::Type::)
 	// background
