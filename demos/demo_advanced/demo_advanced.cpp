@@ -199,15 +199,17 @@ class UpdateDelegate : public april::UpdateDelegate
 
 		// line strip polygon
 		april::rendersys->setTexture(0);
-		static float rot = 0;
-		rot += timeDelta*512;
+		static float rotationAngle = 0;
+		rotationAngle += timeDelta*512;
 
 		april::rendersys->translate(gvec2(96, 32));
-		april::rendersys->rotate(rot);
+		april::rendersys->rotate(rotationAngle);
 		april::rendersys->render(april::RO_LINE_STRIP, starStrip, STAR_VERTICES);
 
 		// reset the modelview matrix
 		april::rendersys->setModelviewMatrix(modelviewMatrix);
+
+		april::rendersys->setColorMode(april::ColorMode::CM_DEFAULT, 1.0f);
 
 		// blending examples
 		april::rendersys->translate(gvec2(-50, 300));
@@ -393,6 +395,8 @@ void april_init(const harray<hstr>& args)
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::TYPE_MANAGED);
 	texture2 = april::rendersys->createTextureFromResource(RESOURCE_PATH "camo", april::Texture::TYPE_MANAGED);
 	texture3 = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo", april::Texture::TYPE_MANAGED);
+	
+	//april::rendersys->createTexture(100, 100, april::Color::White, april::Image::Format::FORMAT_ARGB, april::Texture::Type::)
 	// background
 	dv[0].x = 0.0f;			dv[0].y = 0.0f;			dv[0].z = 0.0f;	dv[0].u = 0.0f;	dv[0].v = 0.0f;
 	dv[1].x = drawRect.w;	dv[1].y = 0.0f;			dv[1].z = 0.0f;	dv[1].u = 1.0f;	dv[1].v = 0.0f;
@@ -423,7 +427,7 @@ void april_init(const harray<hstr>& args)
 	ctv_quad[0].z = 0.0f;	
 	ctv_quad[0].u = 0.0f;	
 	ctv_quad[0].v = 0.0f;	
-	ctv_quad[0].color = april::rendersys->getNativeColorUInt(april::Color::Red);
+	ctv_quad[0].color = april::rendersys->getNativeColorUInt(april::Color::White);
 
 	ctv_quad[1].x = 100;
 	ctv_quad[1].y = 0;
@@ -444,7 +448,7 @@ void april_init(const harray<hstr>& args)
 	ctv_quad[3].z = 0.0f;	
 	ctv_quad[3].u = 1.0f;	
 	ctv_quad[3].v = 1.0f;	
-	ctv_quad[3].color = april::rendersys->getNativeColorUInt(april::Color::Green);
+	ctv_quad[3].color = april::rendersys->getNativeColorUInt(april::Color::White);
 
 	// set delegates
 	april::window->setUpdateDelegate(updateDelegate);
@@ -482,8 +486,8 @@ void april_init(const harray<hstr>& args)
 	v[8] = v[0];
 	for (int i = 0; i < STAR_VERTICES; i++)
 	{
-		starStrip[i].x = v[i].x;
-		starStrip[i].y = v[i].y;
+		starStrip[i].x = v[i].x - v[1].x;
+		starStrip[i].y = v[i].y - v[3].y;
 	}
 }
 
