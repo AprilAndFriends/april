@@ -23,8 +23,6 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	public GLSurfaceView(Context context)
 	{
 		super(context);
-		this.LOG_THREADS = true;
-		this.LOG_PAUSE_RESUME = true;
 		this.setEGLContextClientVersion(2);
 		this.setPreserveEGLContextOnPause(true);
 		this.setEGLConfigChooser(8, 8, 8, 8, 0, 0);
