@@ -47,8 +47,7 @@ public class NativeInterface
 		protected void onReceiveResult(int resultCode, Bundle resultData)
 		{
 			boolean keyboardVisible = true;
-			if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN ||
-				resultCode == InputMethodManager.RESULT_HIDDEN)
+			if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN || resultCode == InputMethodManager.RESULT_HIDDEN)
 			{
 				keyboardVisible = false;
 			}

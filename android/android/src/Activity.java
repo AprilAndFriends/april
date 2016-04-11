@@ -28,7 +28,6 @@ public class Activity extends android.app.Activity
 {
 	public boolean ouyaKeyboardFix = false; // used directly by the OUYA portion of the code to fix the software keyboard
 	
-	protected boolean nookWorkaround = false; // set this to true in your activity if your are using a nook build in order to speed up new intent/activity calls
 	protected boolean useHardExit = true; // set this to false to prevent application from fully exiting
 	private boolean enabledNavigationBarHiding = true;
 	
@@ -241,6 +240,7 @@ public class Activity extends android.app.Activity
 		{
 			this.callbacksOnStart.get(i).execute();
 		}
+		// native call is queued into render thread
 		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
@@ -254,10 +254,13 @@ public class Activity extends android.app.Activity
 	protected void onResume()
 	{
 		super.onResume();
+		this.glView.onResume();
 		for (int i = 0; i < this.callbacksOnResume.size(); ++i)
 		{
 			this.callbacksOnResume.get(i).execute();
 		}
+		this.hideNavigationBar();
+		// native call is queued into render thread
 		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
@@ -265,20 +268,18 @@ public class Activity extends android.app.Activity
 				NativeInterface.activityOnResume();
 			}
 		});
-		this.hideNavigationBar();
-		if (!this.nookWorkaround)
-		{
-			this.glView.onResume();
-		}
 	}
 	
 	@Override
 	protected void onPause()
 	{
-		if (!this.nookWorkaround)
+		for (int i = 0; i < this.callbacksOnPause.size(); ++i)
 		{
-			this.glView.onPause();
+			this.callbacksOnPause.get(i).execute();
 		}
+		this.glView.onPause();
+		super.onPause();
+		// native call is queued into render thread
 		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
@@ -286,16 +287,17 @@ public class Activity extends android.app.Activity
 				NativeInterface.activityOnPause();
 			}
 		});
-		for (int i = 0; i < this.callbacksOnPause.size(); ++i)
-		{
-			this.callbacksOnPause.get(i).execute();
-		}
-		super.onPause();
 	}
 	
 	@Override
 	protected void onStop()
 	{
+		for (int i = 0; i < this.callbacksOnStop.size(); ++i)
+		{
+			this.callbacksOnStop.get(i).execute();
+		}
+		super.onStop();
+		// native call is queued into render thread
 		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
@@ -303,11 +305,6 @@ public class Activity extends android.app.Activity
 				NativeInterface.activityOnStop();
 			}
 		});
-		for (int i = 0; i < this.callbacksOnStop.size(); ++i)
-		{
-			this.callbacksOnStop.get(i).execute();
-		}
-		super.onStop();
 	}
 	
 	@Override
@@ -336,6 +333,7 @@ public class Activity extends android.app.Activity
 		{
 			this.callbacksOnRestart.get(i).execute();
 		}
+		// native call is queued into render thread
 		this.glView.queueEvent(new Runnable()
 		{
 			public void run()

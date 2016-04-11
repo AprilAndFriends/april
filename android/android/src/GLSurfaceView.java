@@ -23,7 +23,10 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	public GLSurfaceView(Context context)
 	{
 		super(context);
+		this.LOG_THREADS = true;
+		this.LOG_PAUSE_RESUME = true;
 		this.setEGLContextClientVersion(2);
+		this.setPreserveEGLContextOnPause(true);
 		this.setEGLConfigChooser(8, 8, 8, 8, 0, 0);
 		this.getHolder().setFormat(PixelFormat.RGBA_8888);
 		this.renderer = new com.april.Renderer();
@@ -31,7 +34,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		// view has to be properly focusable to be able to process input
 		this.setFocusable(true);
 		this.setFocusableInTouchMode(true);
-		this.setId(0x0513BEEF); // who doesn't love half a kilo of beef?
+		this.setId(0x0513BEEF); // who doesn't love half a kilogram of beef?
 	}
 	
 	@Override

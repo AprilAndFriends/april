@@ -36,7 +36,12 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 					Rect r = new Rect();
 					view.getWindowVisibleDisplayFrame(r);
 					float heightRatio = 1.0f - (float)(r.bottom - r.top) / view.getRootView().getHeight();
-					NativeInterface.onVirtualKeyboardChanged((heightRatio > 0.15f), heightRatio);
+					// on some devices heightRatio is werid and gives 0.0666667 or something like that
+					if (heightRatio < 0.1f)
+					{
+						heightRatio = 0.0f;
+					}
+					NativeInterface.onVirtualKeyboardChanged((heightRatio >= 0.15f), heightRatio);
 				}
 			});
 		}
