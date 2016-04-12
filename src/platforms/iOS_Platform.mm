@@ -149,7 +149,16 @@ namespace april
 
 			UIScreen* mainScreen = [UIScreen mainScreen];
 			float scale = [mainScreen scale];
-			float nativeScale = [mainScreen nativeScale];
+			float nativeScale;
+			if ([mainScreen respondsToSelector:@selector(nativeScale:)])
+			{
+				nativeScale = [mainScreen nativeScale];
+			}
+			else // older than iOS8
+			{
+				nativeScale = scale;
+			}
+			
 			
 			int w = mainScreen.bounds.size.width * scale;
 			int h = mainScreen.bounds.size.height * scale;
