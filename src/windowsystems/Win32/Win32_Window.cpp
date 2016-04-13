@@ -190,6 +190,15 @@ namespace april
 		SetCursor(cursor);
 	}
 
+	void Win32_Window::_updateCursorPosition()
+	{
+		// Win32 mouse position
+		static POINT w32_cursorPosition;
+		GetCursorPos(&w32_cursorPosition);
+		ScreenToClient(this->hWnd, &w32_cursorPosition);
+		this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
+	}
+
 	int Win32_Window::getWidth()
 	{
 		RECT rect;
@@ -278,11 +287,7 @@ namespace april
 	{
 		if (this->inputMode != InputMode::TOUCH)
 		{
-			// Win32 mouse position
-			static POINT w32_cursorPosition;
-			GetCursorPos(&w32_cursorPosition);
-			ScreenToClient(this->hWnd, &w32_cursorPosition);
-			this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
+			this->_updateCursorPosition();
 		}
 		this->checkEvents();
 		// rendering
@@ -508,6 +513,11 @@ namespace april
 					SetCapture((HWND)april::window->getBackendId());
 				}
 				april::window->setInputMode(april::Window::MOUSE);
+				// some sort of touch simulation going on, update cursor position
+				if (april::window->getInputMode() == april::Window::TOUCH)
+				{
+					((Win32_Window*)april::window)->_updateCursorPosition();
+				}
 				april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_LBUTTON);
 			}
 			break;
@@ -520,6 +530,11 @@ namespace april
 					SetCapture((HWND)april::window->getBackendId());
 				}
 				april::window->setInputMode(april::Window::MOUSE);
+				// some sort of touch simulation going on, update cursor position
+				if (april::window->getInputMode() == april::Window::TOUCH)
+				{
+					((Win32_Window*)april::window)->_updateCursorPosition();
+				}
 				april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_RBUTTON);
 			}
 			break;
@@ -532,6 +547,11 @@ namespace april
 					ReleaseCapture();
 				}
 				april::window->setInputMode(april::Window::MOUSE);
+				// some sort of touch simulation going on, update cursor position
+				if (april::window->getInputMode() == april::Window::TOUCH)
+				{
+					((Win32_Window*)april::window)->_updateCursorPosition();
+				}
 				april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_LBUTTON);
 			}
 			break;
@@ -544,6 +564,11 @@ namespace april
 					ReleaseCapture();
 				}
 				april::window->setInputMode(april::Window::MOUSE);
+				// some sort of touch simulation going on, update cursor position
+				if (april::window->getInputMode() == april::Window::TOUCH)
+				{
+					((Win32_Window*)april::window)->_updateCursorPosition();
+				}
 				april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_RBUTTON);
 			}
 			break;
