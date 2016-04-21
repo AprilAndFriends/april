@@ -82,9 +82,10 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
     hstr defaultPngName, rotatedPngName;
     hstr s;
     bool iPadImage;
-    harray<hstr> pnglist, primaryList, secondaryList;
+    harray<hstr> pnglist, secondaryList;
     float screenScale = [UIScreen mainScreen].scale;
     CGSize screenSize = [UIScreen mainScreen].bounds.size;
+	CGSize originalScreenSize = screenSize;
     int screenHeight = screenSize.width > screenSize.height ? screenSize.width : screenSize.height;
     CGSize rotatedScreenSize = CGSizeMake(screenSize.height, screenSize.width);
 	
@@ -93,6 +94,7 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 		// prefer vertical images on the iphone
 		CGSize temp = screenSize;
 		screenSize = rotatedScreenSize;
+		originalScreenSize = rotatedScreenSize;
 		rotatedScreenSize = temp;
 	}
 
@@ -116,7 +118,7 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
                 }
                 else
                 {
-                    primaryList += s;
+                    secondaryList += s;
                 }
             }
             else if (idiom == UIUserInterfaceIdiomPad && iPadImage) // ipad
@@ -128,46 +130,37 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
                 }
                 else
                 {
-                    primaryList += s;
+                    secondaryList += s;
                 }
             }
             else
             {
-                primaryList += s;
+                secondaryList += s;
             }
-        }
-        else
-        {
-            // secondary list contains all other png images, if the user uses a non standard naming convention, search
-            // these as well, but search them last
-            secondaryList += s;
         }
     }
 
-    pnglist += primaryList;
     pnglist += secondaryList;
+	hmap<hstr, gvec2> imageProps;
 
 	for (int i = 0; i < 2; i++)
 	{
 		foreach (hstr, it, pnglist)
 		{
 			s = *it;
-			if (s.contains("LaunchImage") || s.contains("Default"))
+			UIImage *img = [UIImage imageWithContentsOfFile:[NSString stringWithUTF8String:s.cStr()]];
+			if (s.contains("/"))
 			{
-				//UIImage *img = [UIImage imageNamed:imgName];
-				UIImage *img = [UIImage imageWithContentsOfFile:[NSString stringWithUTF8String:s.cStr()]];
-				
-				// Has image same scale and dimensions as our current device's screen?
-				if (img.scale == screenScale && (CGSizeEqualToSize(img.size, screenSize)))
-				{
-					if (s.contains("/"))
-					{
-						s = s.rsplit("/", 1)[1].replaced(".png", "");
-					}
-					hlog::writef(april::logTag, "Found launch image for device: %s.png", s.cStr());
-					defaultPngName = s;
-					break;
-				}
+				s = s.rsplit("/", 1)[1].replaced(".png", "");
+			}
+			imageProps[s] = gvec2(img.size.width, img.size.height);
+			
+			// Has image same scale and dimensions as our current device's screen?
+			if (img.scale == screenScale && (CGSizeEqualToSize(img.size, screenSize)))
+			{
+				hlog::writef(april::logTag, "Found launch image for device: %s.png", s.cStr());
+				defaultPngName = s;
+				break;
 			}
 		}
 		if (defaultPngName != "")
@@ -179,18 +172,61 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 			screenSize = rotatedScreenSize; // just in case, do another pass
 		}
 	}
+	
     if (defaultPngName == "")
     {
-        hlog::write(april::logTag, "Failed to find appropriate launch image for device");
-        return @"";
+		// assuming all the xcassets files are correct, this can happen on scaled screens on iphone6 and 6+
+		// so let's try to find the most fitting image
+		hlog::write(april::logTag, "Failed to find exact launch image for device, trying search by nearest aspect ratio");
+		screenSize = originalScreenSize;
+		gvec2 size;
+		float aspect, diff, bestFit, screenDiagonal;
+		
+		for (int i = 0; i < 2; i++)
+		{
+			bestFit = 10000.0f;
+			aspect = screenSize.width / screenSize.height;
+			screenDiagonal = gvec2(screenSize.width, screenSize.height).squaredLength();
+			foreach_m (gvec2, it, imageProps)
+			{
+				s = it->first;
+				size = it->second;
+				
+				if (habs(size.x / size.y - aspect) < 0.001f)
+				{
+					diff = habs(screenDiagonal - size.squaredLength());
+					if (diff < bestFit)
+					{
+						bestFit = diff;
+						defaultPngName = s;
+					}
+				}
+			}
+			if (defaultPngName != "")
+			{
+				break;
+			}
+			else
+			{
+				screenSize = rotatedScreenSize; // just in case, do another pass
+			}
+		}
+		
+		if (defaultPngName != "")
+		{
+			hlog::writef(april::logTag, "Found aproximate launch image: %s", defaultPngName.cStr());
+		}
+		else
+		{
+			hlog::write(april::logTag, "Failed to find aproximate launch image for device");
+			return @"";
+		}
     }
-    else
-    {
-        nsDefaultPngName = [NSString stringWithUTF8String:defaultPngName.cStr()];
-        [userDefaults setObject:nsDefaultPngName forKey:@"april_LaunchImage"];
-        [userDefaults synchronize];
-        return nsDefaultPngName;
-    }
+
+	nsDefaultPngName = [NSString stringWithUTF8String:defaultPngName.cStr()];
+	[userDefaults setObject:nsDefaultPngName forKey:@"april_LaunchImage"];
+	[userDefaults synchronize];
+	return nsDefaultPngName;
 }
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
