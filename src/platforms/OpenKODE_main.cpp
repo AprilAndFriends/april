@@ -14,9 +14,9 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
+#include "april.h"
 #include "main_base.h"
 #include "Window.h"
-#include "april.h"
 
 int gAprilShouldInvokeQuitCallback = 0;
 
