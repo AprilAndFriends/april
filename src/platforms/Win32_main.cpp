@@ -8,9 +8,11 @@
 
 #if defined(_WIN32) && !defined(_OPENKODE) && !defined(_WINRT)
 #include <hltypes/harray.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
+#include "april.h"
 #include "main_base.h"
 #include "RenderSystem.h"
 #include "Window.h"
@@ -28,11 +30,15 @@ int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy
 		}
 	}
 	anAprilInit(args);
-	if (april::window != NULL)
+	if (april::window != NULL && april::rendersys != NULL)
 	{
 		april::window->enterMainLoop();
+		anAprilDestroy();
 	}
-	anAprilDestroy();
+	else
+	{
+		hlog::write(april::logTag, "APRIL not initialized, exiting now.");
+	}
 	return 0;
 }
 #endif

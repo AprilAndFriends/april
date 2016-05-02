@@ -10,9 +10,9 @@
 #include <KD/kd.h>
 
 #include <hltypes/harray.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
-#include <hltypes/hlog.h>
 
 #include "main_base.h"
 #include "Window.h"
@@ -32,8 +32,15 @@ int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy
 	}
 	hlog::write(april::logTag, "Initializing OpenKODE: " + hstr(kdQueryAttribcv(KD_ATTRIB_VERSION)));
 	anAprilInit(args);
-	april::window->enterMainLoop();
-	anAprilDestroy();
+	if (april::window != NULL && april::rendersys != NULL)
+	{
+		april::window->enterMainLoop();
+		anAprilDestroy();
+	}
+	else
+	{
+		hlog::write(april::logTag, "APRIL not initialized, exiting now.");
+	}
 	return 0;
 }
 #endif
