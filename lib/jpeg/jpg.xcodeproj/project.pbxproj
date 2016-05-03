@@ -6,6 +6,19 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		B444CA481CD8B83100A61F97 /* iOS Dependencies */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = B444CA4C1CD8B83100A61F97 /* Build configuration list for PBXAggregateTarget "iOS Dependencies" */;
+			buildPhases = (
+			);
+			dependencies = (
+			);
+			name = "iOS Dependencies";
+			productName = "iOS Dependencies";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		D197C36015ECF7DD0017452F /* jaricom.c in Sources */ = {isa = PBXBuildFile; fileRef = D197C31115ECF7DC0017452F /* jaricom.c */; };
 		D197C36115ECF7DD0017452F /* jaricom.c in Sources */ = {isa = PBXBuildFile; fileRef = D197C31115ECF7DC0017452F /* jaricom.c */; };
@@ -417,6 +430,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0730;
+				TargetAttributes = {
+					B444CA481CD8B83100A61F97 = {
+						CreatedOnToolsVersion = 7.3;
+					};
+				};
 			};
 			buildConfigurationList = 730F235809181A3A00AB638C /* Build configuration list for PBXProject "jpg" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -433,6 +451,7 @@
 				8D07F2BC0486CC7A007CD1D0 /* jpg */,
 				D1F278FF177A292A00E5C131 /* jpg (Mac) */,
 				D1BB6F2D150E99EE00EF9400 /* jpg (iOS) */,
+				B444CA481CD8B83100A61F97 /* iOS Dependencies */,
 			);
 		};
 /* End PBXProject section */
@@ -600,6 +619,27 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		B444CA491CD8B83100A61F97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		B444CA4A1CD8B83100A61F97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		B444CA4B1CD8B83100A61F97 /* App Store */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "App Store";
+		};
 		D186223114F9589A00639D7C /* App Store */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -800,6 +840,15 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		B444CA4C1CD8B83100A61F97 /* Build configuration list for PBXAggregateTarget "iOS Dependencies" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B444CA491CD8B83100A61F97 /* Debug */,
+				B444CA4A1CD8B83100A61F97 /* Release */,
+				B444CA4B1CD8B83100A61F97 /* App Store */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		D1BB6F3D150E99EE00EF9400 /* Build configuration list for PBXNativeTarget "jpg (iOS)" */ = {
 			isa = XCConfigurationList;
