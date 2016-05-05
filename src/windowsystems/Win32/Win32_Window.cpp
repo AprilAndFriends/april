@@ -582,6 +582,11 @@ namespace april
 				if (_mouseMessages == 0)
 				{
 					april::window->setInputMode(april::Window::MOUSE);
+					// some sort of touch simulation going on, update cursor position
+					if (april::window->getInputMode() == april::Window::TOUCH)
+					{
+						((Win32_Window*)april::window)->_updateCursorPosition();
+					}
 					april::window->queueMouseEvent(MOUSE_MOVE, april::window->getCursorPosition(), AK_NONE);
 				}
 			}
