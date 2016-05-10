@@ -161,15 +161,36 @@ namespace april
 		
 		/// @brief Gets the hex string representation of the Color.
 		/// @param[in] rgbOnly Whether alpha should not be included.
-		/// @brief The hex string representation of the Color.
+		/// @return The hex string representation of the Color.
 		/// @note Careful when using rgbOnly!
 		inline hstr hex(bool rgbOnly = false) const
 		{
 			return (!rgbOnly ? hsprintf("%02X%02X%02X%02X", this->r, this->g, this->b, this->a) : hsprintf("%02X%02X%02X", this->r, this->g, this->b));
 		}
+		/// @brief Creates a linearly interpolated Color between this and a given Color.
+		/// @param[in] other Color to interpolate with.
+		/// @param[in] factor Interpolation factor.
+		/// @note A factor of 0 or less will result in this Color while a factor of 1 or more will result in other.
+		inline april::Color lerp(const april::Color& other, float factor) const
+		{
+			if (factor <= 0.0f)
+			{
+				return (*this);
+			}
+			if (factor >= 1.0f)
+			{
+				return other;
+			}
+			april::Color result;
+			result.r = (unsigned char)hclamp((int)(this->r + ((int)other.r - this->r) * factor), 0, 255);
+			result.g = (unsigned char)hclamp((int)(this->g + ((int)other.g - this->g) * factor), 0, 255);
+			result.b = (unsigned char)hclamp((int)(this->b + ((int)other.b - this->b) * factor), 0, 255);
+			result.a = (unsigned char)hclamp((int)(this->a + ((int)other.a - this->a) * factor), 0, 255);
+			return result;
+		}
 
 		/// @brief Gets the unsigned int representation of the Color.
-		/// @brief The unsigned int representation of the Color.
+		/// @return The unsigned int representation of the Color.
 		/// @note The return value is in RGBA MSB order.
 		inline operator unsigned int() const
 		{
