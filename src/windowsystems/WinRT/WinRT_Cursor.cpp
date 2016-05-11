@@ -7,6 +7,7 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _WINRT_WINDOW
+#include <hltypes/hfbase.h>
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
@@ -42,7 +43,8 @@ namespace april
 				cursorMappings[data[1]] = (unsigned int)data[0];
 			}
 		}
-		if (!cursorMappings.hasKey(filename))
+		int id = (cursorMappings.hasKey(filename) ? cursorMappings[filename] : cursorMappings.tryGet(hfbase::withoutExtension(filename), -1));
+		if (id < 0)
 		{
 			return false;
 		}
@@ -53,8 +55,8 @@ namespace april
 		}
 		// does not actually differ between hresource and hfile as only internal .exe resources can be cursors
 #ifndef _WINP8
-		this->cursor = ref new CoreCursor(CoreCursorType::Custom, cursorMappings[filename]);
-		return true;
+		this->cursor = ref new CoreCursor(CoreCursorType::Custom, id);
+		return (this->cursor != nullptr);
 #else
 		return false;
 #endif
