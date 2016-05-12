@@ -44,6 +44,7 @@ namespace april
 	void (*aprilInit)(const harray<hstr>&) = NULL;
 	void (*aprilDestroy)() = NULL;
 	extern jobject classLoader;
+	extern harray<hstr> args;
 	
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jDataPath, jstring jForcedArchivePath)
 	{
@@ -80,7 +81,6 @@ namespace april
 	
 	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray jArgs)
 	{
-		harray<hstr> args;
 		int length = env->GetArrayLength(jArgs);
 		jstring string;
 		for_iter (i, 0, length)

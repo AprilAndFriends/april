@@ -14,6 +14,7 @@
 #define APRIL_PLATFORM_H
 
 #include <gtypes/Vector2.h>
+#include <hltypes/harray.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 #include <hltypes/hversion.h>
@@ -102,6 +103,9 @@ namespace april
 	/// @brief Get current OS's info.
 	/// @return Current OS's info.
 	aprilFnExport SystemInfo getSystemInfo();
+	/// @brief Get arguments with which the app was started.
+	/// @return Arguments with which the app was started.
+	aprilFnExport harray<hstr> getArgs();
 	/// @brief Get current app's "package name".
 	/// @return Current app's "package name".
 	/// @note This is not available on all platforms.

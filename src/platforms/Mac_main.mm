@@ -19,6 +19,11 @@
 #endif
 #import "Mac_AppDelegate.h"
 
+namespace april
+{
+	extern harray<hstr> args;
+}
+
 int gArgc = 0;
 char** gArgv;
 void (*gAprilInit)(const harray<hstr>&);
@@ -119,12 +124,11 @@ NSString* getApplicationName()
 {
 	/* Hand off to main application code */
 	//gCalledAppMainline = TRUE;
-	harray<hstr> args;
 	for (int i = 0; i < gArgc; i++)
 	{
-		args.push_back(gArgv[i]);
+		april::args += gArgv[i];
 	}
-	gAprilInit(args);
+	gAprilInit(april::args);
 #ifdef _SDL
 	april::window->enterMainLoop();
 	gAprilDestroy();
@@ -266,8 +270,10 @@ int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy
 		int i;
 		gArgc = argc;
 		gArgv = (char**) malloc(sizeof(char*) * (argc + 1));
-		for (i = 0; i <= argc; i++)
+		for (i = 0; i <= argc; ++i)
+		{
 			gArgv[i] = argv[i];
+		}
 		gFinderLaunch = NO;
 	}
 	CustomApplicationMain(argc, argv);

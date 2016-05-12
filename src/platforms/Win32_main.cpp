@@ -19,17 +19,21 @@
 
 int gAprilShouldInvokeQuitCallback = 0;
 
+namespace april
+{
+	extern harray<hstr> args;
+}
+
 int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {
-	harray<hstr> args;
 	if (argv != NULL && argv[0] != NULL)
 	{
 		for_iter (i, 0, argc)
 		{
-			args += argv[i];
+			april::args += argv[i];
 		}
 	}
-	anAprilInit(args);
+	anAprilInit(april::args);
 	if (april::window != NULL && april::rendersys != NULL)
 	{
 		april::window->enterMainLoop();

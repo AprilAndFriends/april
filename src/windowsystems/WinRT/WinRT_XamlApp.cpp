@@ -171,7 +171,7 @@ namespace april
 			this->overlay = ref new WinRT_XamlOverlay();
 			Windows::UI::Xaml::Window::Current->Content = this->overlay;
 			Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &WinRT_XamlApp::OnWindowActivationChanged);
-			(*WinRT::Init)(WinRT::Args);
+			(*WinRT::Init)(april::getArgs());
 			if (april::rendersys != NULL && april::window != NULL)
 			{
 				float delaySplash = (float)april::window->getParam(WINRT_DELAY_SPLASH);

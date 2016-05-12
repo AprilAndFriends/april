@@ -19,14 +19,18 @@
 
 using namespace Windows::UI::Xaml;
 
+namespace april
+{
+	extern harray<hstr> args;
+}
+
 int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {
-	april::WinRT::Args.clear();
 	if (argv != NULL && argv[0] != NULL)
 	{
 		for_iter (i, 0, argc)
 		{
-			april::WinRT::Args += argv[i];
+			april::args += argv[i];
 		}
 	}
 	april::WinRT::Init = anAprilInit;

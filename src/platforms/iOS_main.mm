@@ -11,8 +11,20 @@
 
 #import "main_base.h"
 
+namespace april
+{
+	extern harray<hstr> args;
+}
+
 int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
 {	
+	if (argv != NULL && argv[0] != NULL)
+	{
+		for_iter (i, 0, argc)
+		{
+			april::args += argv[i];
+		}
+	}
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	// limit GCD from spawning too much threads
 	[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];

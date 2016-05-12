@@ -6,9 +6,12 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
+#include <stdlib.h>
+
+#include <hltypes/harray.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
-#include <stdlib.h>
+
 #include "Platform.h"
 #include "Window.h"
 #include "main_base.h"
@@ -16,6 +19,7 @@
 namespace april
 {
 	SystemInfo info;
+	harray<hstr> args;
 
 	SystemInfo::SystemInfo()
 	{
@@ -41,6 +45,11 @@ namespace april
 	
 	SystemInfo::~SystemInfo()
 	{
+	}
+
+	harray<hstr> getArgs()
+	{
+		return args;
 	}
 
 	void messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
