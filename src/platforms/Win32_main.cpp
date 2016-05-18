@@ -37,12 +37,8 @@ int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy
 	if (april::window != NULL && april::rendersys != NULL)
 	{
 		april::window->enterMainLoop();
-		anAprilDestroy();
 	}
-	else
-	{
-		hlog::write(april::logTag, "APRIL not initialized, exiting now.");
-	}
+	anAprilDestroy();
 	return 0;
 }
 #endif
