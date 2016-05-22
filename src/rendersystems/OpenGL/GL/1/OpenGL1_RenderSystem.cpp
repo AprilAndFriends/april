@@ -156,17 +156,17 @@ namespace april
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_ALPHA || BM_ADD)
+			else if (blendMode == BM_ADD)
 			{
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_ALPHA || BM_SUBTRACT)
+			else if (blendMode == BM_SUBTRACT)
 			{
 				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_ALPHA || BM_OVERWRITE)
+			else if (blendMode == BM_OVERWRITE)
 			{
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
