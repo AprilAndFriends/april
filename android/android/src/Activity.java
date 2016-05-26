@@ -26,8 +26,6 @@ import java.util.ArrayList;
 
 public class Activity extends android.app.Activity
 {
-	public boolean ouyaKeyboardFix = false; // used directly by the OUYA portion of the code to fix the software keyboard
-	
 	protected boolean useHardExit = true; // set this to false to prevent application from fully exiting
 	private boolean enabledNavigationBarHiding = true;
 	
