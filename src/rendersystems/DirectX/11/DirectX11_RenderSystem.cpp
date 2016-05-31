@@ -391,11 +391,6 @@ namespace april
 		_swapChain.As(&this->swapChain);
 		reinterpret_cast<IUnknown*>(WinRT::App->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
-		// so... we have to apply an inverted scale to the swap chain?
-		DXGI_MATRIX_3X2_F inverseScale = { 0 };
-		inverseScale._11 = 1.0f / WinRT::App->Overlay->CompositionScaleX;
-		inverseScale._22 = 1.0f / WinRT::App->Overlay->CompositionScaleY;
-		this->swapChain->SetMatrixTransform(&inverseScale);
 		this->_configureSwapChain();
 		this->updateOrientation();
 	}
@@ -415,6 +410,12 @@ namespace april
 
 	void DirectX11_RenderSystem::_configureSwapChain()
 	{
+		// so... we have to apply an inverted scale to the swap chain?
+		DXGI_MATRIX_3X2_F inverseScale = { 0 };
+		inverseScale._11 = 1.0f / WinRT::App->Overlay->CompositionScaleX;
+		inverseScale._22 = 1.0f / WinRT::App->Overlay->CompositionScaleY;
+		this->swapChain->SetMatrixTransform(&inverseScale);
+		// get the back buffer
 		ComPtr<ID3D11Texture2D> _backBuffer;
 		HRESULT hr = this->swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
 		if (FAILED(hr))

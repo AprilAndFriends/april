@@ -13,8 +13,10 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
+#include "WinRT_Window.h"
 #include "WinRT_XamlOverlay.xaml.h"
 
+using namespace Windows::Foundation;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Markup;
 
@@ -51,6 +53,17 @@ namespace april
 		this->InitializeComponent();
 		this->keyboardButton = (::Button^)_loadFromXaml(XAML_BUTTON);
 		this->keyboardTextBox = (TextBox^)_loadFromXaml(XAML_TEXT_BOX);
+		this->CompositionScaleChanged += ref new TypedEventHandler<SwapChainPanel^, Object^>(
+			this, &WinRT_XamlOverlay::OnCompositionScaleChanged);
+	}
+
+	void WinRT_XamlOverlay::OnCompositionScaleChanged(_In_ SwapChainPanel^ sender, _In_ Object^ args)
+	{
+		if (april::window != NULL)
+		{
+			// so the size is updated
+			((WinRT_Window*)april::window)->changeSize(april::window->getWidth(), april::window->getHeight());
+		}
 	}
 
 	void WinRT_XamlOverlay::showKeyboard()

@@ -26,6 +26,8 @@ namespace april
 	public:
 		WinRT_XamlOverlay();
 
+		void OnCompositionScaleChanged(_In_ SwapChainPanel^ sender, _In_ Object^ args);
+
 		void showKeyboard();
 		void hideKeyboard();
 
