@@ -312,7 +312,7 @@ namespace april
 	{
 		args->Handled = true;
 		this->_resetTouches();
-		april::SystemInfo info = april::getSystemInfo(); // outside, because the displayResolution needs to be updated every time
+		april::getSystemInfo(); // so the displayResolution value gets updated
 		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
 		if (DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::Portrait ||
 			DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::PortraitFlipped)
@@ -331,7 +331,7 @@ namespace april
 	void WinRT_XamlApp::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
 	{
 		args->Handled = true;
-		this->_resetTouches();
+		this->_handleFocusChange(args->Visible);
 	}
 
 	void WinRT_XamlApp::OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
