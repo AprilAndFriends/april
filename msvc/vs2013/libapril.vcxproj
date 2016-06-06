@@ -513,6 +513,8 @@
     <ClCompile Include="..\..\src\platforms\OpenKODE_Platform.cpp" />
     <ClCompile Include="..\..\src\platforms\Win32_main.cpp" />
     <ClCompile Include="..\..\src\platforms\Win32_Platform.cpp" />
+    <ClCompile Include="..\..\src\RenderHelper.cpp" />
+    <ClCompile Include="..\..\src\RenderHelperLayered2D.cpp" />
     <ClCompile Include="..\..\src\rendersystems\DirectX\9\DirectX9_PixelShader.cpp" />
     <ClCompile Include="..\..\src\rendersystems\DirectX\9\DirectX9_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\DirectX\9\DirectX9_Texture.cpp" />
@@ -605,6 +607,8 @@
     <ClInclude Include="..\..\include\april\Win32_main.h" />
     <ClInclude Include="..\..\include\april\Window.h" />
     <ClInclude Include="..\..\src\egl.h" />
+    <ClInclude Include="..\..\src\RenderHelper.h" />
+    <ClInclude Include="..\..\src\RenderHelperLayered2D.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_PixelShader.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_Texture.h" />

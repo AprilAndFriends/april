@@ -32,6 +32,7 @@ namespace april
 {
 	class Image;
 	class PixelShader;
+	class RenderHelper;
 	class Texture;
 	class VertexShader;
 	class Window;
@@ -40,6 +41,8 @@ namespace april
 	class aprilExport RenderSystem
 	{
 	public:
+		friend class RenderHelper;
+		friend class RenderHelperLayered2D;
 		friend class Texture;
 		friend class Window;
 
@@ -79,6 +82,8 @@ namespace april
 		public:
 			/// @brief Whether to use a depth buffer.
 			bool depthBuffer;
+			/// @brief Whether to use a special layered renderer optimized for 2D rendering.
+			bool layeredRenderer2D;
 
 			/// @brief Basic constructor.
 			Options();
@@ -142,6 +147,14 @@ namespace april
 		HL_DEFINE_GET(Options, options, Options);
 		/// @return The capabilities of the RenderSystem.
 		HL_DEFINE_GET(Caps, caps, Caps);
+		/// @return How many times a render call was called during this frame.
+		HL_DEFINE_GET(int, statCurrentFrameRenderCalls, StatCurrentFrameRenderCalls);
+		/// @return How many times a render call was called during the last frame.
+		HL_DEFINE_GET(int, statLastFrameRenderCalls, StatLastFrameRenderCalls);
+		/// @return How many times the texture was switched during this frame.
+		HL_DEFINE_GET(int, statCurrentFrameTextureSwitches, StatCurrentFrameTextureSwitches);
+		/// @return How many times the texture was switched during the last frame.
+		HL_DEFINE_GET(int, statLastFrameTextureSwitches, StatLastFrameTextureSwitches);
 		/// @return All currently existing textures in the RenderSystem.
 		harray<Texture*> getTextures();
 		/// @brief Gets a list of all supported display modes.
@@ -495,6 +508,16 @@ namespace april
 		RenderState* deviceState;
 		/// @brief Mutex required for registering and unregistering of textures that allows for multi-threaded access.
 		hmutex texturesMutex;
+		/// @brief Special helper object that can handle rendering in a different way.
+		RenderHelper* renderHelper;
+		/// @brief How many times a render call was called during this frame.
+		int statCurrentFrameRenderCalls;
+		/// @brief How many times a render call was called during the last frame.
+		int statLastFrameRenderCalls;
+		/// @brief How many times the texture was switched during this frame.
+		int statCurrentFrameTextureSwitches;
+		/// @brief How many times the texture was switched during the last frame.
+		int statLastFrameTextureSwitches;
 
 		/// @brief Registers a created Texture in the system.
 		/// @param[in] texture The Texture to be registered.
@@ -601,6 +624,75 @@ namespace april
 		/// @param[in] useColor Whether the vertices support separate color values.
 		/// @param[in] systemColor The global color for all vertices if useColor is set to false.
 		virtual void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor) = 0;
+
+		/// @brief Renders an array of vertices to the backbuffer.
+		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
+		/// @param[in] vertices An array of vertices.
+		/// @param[in] count How many vertices from the array should be rendered.
+		/// @note Calling this will effectively set the current texture to NULL.
+		/// @see render()
+		void _renderInternal(RenderOperation renderOperation, PlainVertex* vertices, int count);
+		/// @brief Renders an array of vertices to the backbuffer.
+		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
+		/// @param[in] vertices An array of vertices.
+		/// @param[in] count How many vertices from the array should be rendered.
+		/// @param[in] color Color to apply globally on all vertices.
+		/// @note Calling this will effectively set the current texture to NULL.
+		/// @see render()
+		void _renderInternal(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color);
+		/// @brief Renders an array of vertices to the backbuffer.
+		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
+		/// @param[in] vertices An array of vertices.
+		/// @param[in] count How many vertices from the array should be rendered.
+		/// @see render()
+		void _renderInternal(RenderOperation renderOperation, TexturedVertex* vertices, int count);
+		/// @brief Renders an array of vertices to the backbuffer.
+		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
+		/// @param[in] vertices An array of vertices.
+		/// @param[in] count How many vertices from the array should be rendered.
+		/// @param[in] color Color to apply globally on all vertices.
+		/// @see render()
+		void _renderInternal(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color);
+		/// @brief Renders an array of vertices to the backbuffer.
+		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
+		/// @param[in] vertices An array of vertices.
+		/// @param[in] count How many vertices from the array should be rendered.
+		/// @note Calling this will effectively set the current texture to NULL.
+		/// @see render()
+		void _renderInternal(RenderOperation renderOperation, ColoredVertex* vertices, int count);
+		/// @brief Renders an array of vertices to the backbuffer.
+		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
+		/// @param[in] vertices An array of vertices.
+		/// @param[in] count How many vertices from the array should be rendered.
+		/// @see render()
+		void _renderInternal(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
+		/// @brief Renders a rectangle.
+		/// @param[in] rect Position and size of the rectangle.
+		/// @param[in] color Color of the rectangle.
+		/// @note Calling this will effectively set the current texture to NULL.
+		/// @see drawRect()
+		void _drawRectInternal(grect rect, Color color);
+		/// @brief Renders a rectangle filled with a color.
+		/// @param[in] rect Position and size of the rectangle.
+		/// @param[in] color Color of the rectangle.
+		/// @note Calling this will effectively set the current texture to NULL.
+		/// @see drawFilledRect()
+		void _drawFilledRectInternal(grect rect, Color color);
+		/// @brief Renders a textured rectangle.
+		/// @param[in] rect Position and size of the rectangle.
+		/// @param[in] src UV rectangle on the currently set Texture.
+		/// @note Remember to call setTexture() before calling this.
+		/// @see setTexture
+		/// @see drawTexturedRect()
+		void _drawTexturedRectInternal(grect rect, grect src);
+		/// @brief Renders a textured rectangle.
+		/// @param[in] rect Position and size of the rectangle.
+		/// @param[in] src UV rectangle on the currently set Texture.
+		/// @param[in] color Color that should be applied to the texture.
+		/// @note Remember to call setTexture() before calling this.
+		/// @see setTexture
+		/// @see drawTexturedRect()
+		void _drawTexturedRectInternal(grect rect, grect src, Color color);
 
 		/// @brief Clears the device backbuffer.
 		/// @param[in] depth If true, clears the depth-buffer as well.

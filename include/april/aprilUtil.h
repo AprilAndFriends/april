@@ -100,6 +100,10 @@ namespace april
 		/// @param[in] position Position of the vector.
 		inline void set(const gvec3& position)						{ this->x = position.x; this->y = position.y; this->z = position.z; }
 
+		/// @brief Returns the position as gtypes::Vector3.
+		/// @return The position as gtypes::Vector3.
+		inline gvec3 toGvec3()										{ return gvec3(this->x, this->y, this->z); }
+
 	};
 
 	/// @brief Represents a vertex with a color component.

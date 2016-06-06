@@ -736,6 +736,7 @@ namespace april
 	
 	void DirectX9_RenderSystem::presentFrame()
 	{
+		RenderSystem::presentFrame();
 		this->d3dDevice->EndScene();
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 		if (hr == D3DERR_DEVICELOST)

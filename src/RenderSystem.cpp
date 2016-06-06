@@ -23,6 +23,7 @@
 #include "april.h"
 #include "aprilUtil.h"
 #include "Image.h"
+#include "RenderHelperLayered2D.h"
 #include "RenderSystem.h"
 #include "RenderState.h"
 #include "PixelShader.h"
@@ -69,6 +70,7 @@ namespace april
 	RenderSystem::Options::Options()
 	{
 		this->depthBuffer = false;
+		this->layeredRenderer2D = false;
 	}
 
 	RenderSystem::Options::~Options()
@@ -107,6 +109,10 @@ namespace april
 		{
 			options += "depth-buffer";
 		}
+		if (this->layeredRenderer2D)
+		{
+			options += "layered-2D";
+		}
 		if (options.size() == 0)
 		{
 			options += "none";
@@ -114,13 +120,17 @@ namespace april
 		return options.joined(',');
 	}
 	
-	RenderSystem::RenderSystem()
+	RenderSystem::RenderSystem() : renderHelper(NULL)
 	{
 		this->name = "Generic";
 		this->created = false;
 		this->pixelOffset = 0.0f;
 		this->state = new RenderState();
 		this->deviceState = new RenderState();
+		this->statCurrentFrameRenderCalls = 0;
+		this->statLastFrameRenderCalls = 0;
+		this->statCurrentFrameTextureSwitches = 0;
+		this->statLastFrameTextureSwitches = 0;
 	}
 	
 	RenderSystem::~RenderSystem()
@@ -131,6 +141,10 @@ namespace april
 		}
 		delete this->state;
 		delete this->deviceState;
+		if (this->renderHelper != NULL)
+		{
+			delete this->renderHelper;
+		}
 	}
 
 	void RenderSystem::init()
@@ -144,8 +158,16 @@ namespace april
 		{
 			hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
 			this->options = options;
+			if (this->options.layeredRenderer2D)
+			{
+				this->renderHelper = new RenderHelperLayered2D();
+			}
 			this->state->reset();
 			this->deviceState->reset();
+			this->statCurrentFrameRenderCalls = 0;
+			this->statLastFrameRenderCalls = 0;
+			this->statCurrentFrameTextureSwitches = 0;
+			this->statLastFrameTextureSwitches = 0;
 			// create the actual device
 			this->_deviceInit();
 			this->created = this->_deviceCreate(options);
@@ -163,6 +185,11 @@ namespace april
 		{
 			hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
 			this->created = false;
+			if (this->renderHelper != NULL)
+			{
+				delete this->renderHelper;
+				this->renderHelper = NULL;
+			}
 			// first wait for queud textures to cancel
 			harray<Texture*> textures = this->getTextures();
 			if (this->hasAsyncTexturesQueued())
@@ -184,6 +211,10 @@ namespace april
 			}
 			this->state->reset();
 			this->deviceState->reset();
+			this->statCurrentFrameRenderCalls = 0;
+			this->statLastFrameRenderCalls = 0;
+			this->statCurrentFrameTextureSwitches = 0;
+			this->statLastFrameTextureSwitches = 0;
 			if (!this->_deviceDestroy())
 			{
 				return false;
@@ -209,6 +240,10 @@ namespace april
 	void RenderSystem::reset()
 	{
 		hlog::write(logTag, "Resetting rendersystem.");
+		this->statCurrentFrameRenderCalls = 0;
+		this->statLastFrameRenderCalls = 0;
+		this->statCurrentFrameTextureSwitches = 0;
+		this->statLastFrameTextureSwitches = 0;
 		this->_deviceReset();
 		this->_deviceSetup();
 		if (this->deviceState->texture != NULL)
@@ -408,6 +443,10 @@ namespace april
 
 	void RenderSystem::destroyTexture(Texture* texture)
 	{
+		if (this->renderHelper != NULL)
+		{
+			this->renderHelper->flush();
+		}
 		texture->unload();
 		texture->waitForAsyncLoad(); // waiting for all async stuff to finish
 		hmutex::ScopeLock lock(&this->texturesMutex);
@@ -707,6 +746,7 @@ namespace april
 			// filtering and wrapping applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
 			if (this->state->texture != NULL && this->state->useTexture)
 			{
+				++this->statCurrentFrameTextureSwitches;
 				this->state->texture->load();
 				this->state->texture->unlock();
 				this->_setDeviceTexture(this->state->texture);
@@ -743,6 +783,10 @@ namespace april
 
 	void RenderSystem::clear(bool depth)
 	{
+		if (this->renderHelper != NULL)
+		{
+			this->renderHelper->clear();
+		}
 		if (!this->options.depthBuffer)
 		{
 			depth = false;
@@ -761,33 +805,115 @@ namespace april
 
 	void RenderSystem::clearDepth()
 	{
-		if (!this->options.depthBuffer)
+		if (this->options.depthBuffer)
 		{
-			return;
+			this->_deviceClearDepth();
 		}
-		this->_deviceClearDepth();
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* vertices, int count)
 	{
-		this->state->useTexture = false;
-		this->state->useColor = false;
-		this->state->systemColor = april::Color::White;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
+		{
+			this->_renderInternal(renderOperation, vertices, count);
+		}
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color)
 	{
-		this->state->useTexture = false;
-		this->state->useColor = false;
-		this->state->systemColor = color;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count, color))
+		{
+			this->_renderInternal(renderOperation, vertices, count, color);
+		}
 	}
 
 	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* vertices, int count)
 	{
+		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
+		{
+			this->_renderInternal(renderOperation, vertices, count);
+		}
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color)
+	{
+		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count, color))
+		{
+			this->_renderInternal(renderOperation, vertices, count, color);
+		}
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, ColoredVertex* vertices, int count)
+	{
+		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
+		{
+			this->_renderInternal(renderOperation, vertices, count);
+		}
+	}
+
+	void RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
+	{
+		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
+		{
+			this->_renderInternal(renderOperation, vertices, count);
+		}
+	}
+
+	void RenderSystem::drawRect(grect rect, Color color)
+	{
+		if (this->renderHelper == NULL || !this->renderHelper->drawRect(rect, color))
+		{
+			this->_drawRectInternal(rect, color);
+		}
+	}
+
+	void RenderSystem::drawFilledRect(grect rect, Color color)
+	{
+		if (this->renderHelper == NULL || !this->renderHelper->drawFilledRect(rect, color))
+		{
+			this->_drawFilledRectInternal(rect, color);
+		}
+	}
+
+	void RenderSystem::drawTexturedRect(grect rect, grect src)
+	{
+		if (this->renderHelper == NULL || !this->renderHelper->drawTexturedRect(rect, src))
+		{
+			this->_drawTexturedRectInternal(rect, src);
+		}
+	}
+
+	void RenderSystem::drawTexturedRect(grect rect, grect src, Color color)
+	{
+		if (this->renderHelper == NULL || !this->renderHelper->drawTexturedRect(rect, src, color))
+		{
+			this->_drawTexturedRectInternal(rect, src, color);
+		}
+	}
+
+	void RenderSystem::_renderInternal(RenderOperation renderOperation, PlainVertex* vertices, int count)
+	{
+		++this->statCurrentFrameRenderCalls;
+		this->state->useTexture = false;
+		this->state->useColor = false;
+		this->state->systemColor = april::Color::White;
+		this->_updateDeviceState();
+		this->_deviceRender(renderOperation, vertices, count);
+	}
+
+	void RenderSystem::_renderInternal(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color)
+	{
+		++this->statCurrentFrameRenderCalls;
+		this->state->useTexture = false;
+		this->state->useColor = false;
+		this->state->systemColor = color;
+		this->_updateDeviceState();
+		this->_deviceRender(renderOperation, vertices, count);
+	}
+
+	void RenderSystem::_renderInternal(RenderOperation renderOperation, TexturedVertex* vertices, int count)
+	{
+		++this->statCurrentFrameRenderCalls;
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = april::Color::White;
@@ -795,8 +921,9 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color)
+	void RenderSystem::_renderInternal(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color)
 	{
+		++this->statCurrentFrameRenderCalls;
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = color;
@@ -804,8 +931,9 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, ColoredVertex* vertices, int count)
+	void RenderSystem::_renderInternal(RenderOperation renderOperation, ColoredVertex* vertices, int count)
 	{
+		++this->statCurrentFrameRenderCalls;
 		this->state->useTexture = false;
 		this->state->useColor = true;
 		this->state->systemColor = april::Color::White;
@@ -813,8 +941,9 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
+	void RenderSystem::_renderInternal(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
 	{
+		++this->statCurrentFrameRenderCalls;
 		this->state->useTexture = true;
 		this->state->useColor = true;
 		this->state->systemColor = april::Color::White;
@@ -822,25 +951,25 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::drawRect(grect rect, Color color)
+	void RenderSystem::_drawRectInternal(grect rect, Color color)
 	{
 		pv[0].x = pv[3].x = pv[4].x = rect.x;
 		pv[0].y = pv[1].y = pv[4].y = rect.y;
 		pv[1].x = pv[2].x = rect.x + rect.w;
 		pv[2].y = pv[3].y = rect.y + rect.h;
-		this->render(RO_LINE_STRIP, pv, 5, color);
+		this->_renderInternal(RO_LINE_STRIP, pv, 5, color);
 	}
 
-	void RenderSystem::drawFilledRect(grect rect, Color color)
+	void RenderSystem::_drawFilledRectInternal(grect rect, Color color)
 	{
 		pv[0].x = pv[2].x = rect.x;
 		pv[0].y = pv[1].y = rect.y;
 		pv[1].x = pv[3].x = rect.x + rect.w;
 		pv[2].y = pv[3].y = rect.y + rect.h;
-		this->render(RO_TRIANGLE_STRIP, pv, 4, color);
+		this->_renderInternal(RO_TRIANGLE_STRIP, pv, 4, color);
 	}
 	
-	void RenderSystem::drawTexturedRect(grect rect, grect src)
+	void RenderSystem::_drawTexturedRectInternal(grect rect, grect src)
 	{
 		tv[0].x = tv[2].x = rect.x;
 		tv[0].y = tv[1].y = rect.y;
@@ -850,10 +979,10 @@ namespace april
 		tv[1].u = tv[3].u = src.x + src.w;
 		tv[2].y = tv[3].y = rect.y + rect.h;
 		tv[2].v = tv[3].v = src.y + src.h;
-		this->render(RO_TRIANGLE_STRIP, tv, 4);
+		this->_renderInternal(RO_TRIANGLE_STRIP, tv, 4);
 	}
 	
-	void RenderSystem::drawTexturedRect(grect rect, grect src, Color color)
+	void RenderSystem::_drawTexturedRectInternal(grect rect, grect src, Color color)
 	{
 		tv[0].x = tv[2].x = rect.x;
 		tv[0].y = tv[1].y = rect.y;
@@ -863,7 +992,7 @@ namespace april
 		tv[1].u = tv[3].u = src.x + src.w;
 		tv[2].y = tv[3].y = rect.y + rect.h;
 		tv[2].v = tv[3].v = src.y + src.h;
-		this->render(RO_TRIANGLE_STRIP, tv, 4, color);
+		this->_renderInternal(RO_TRIANGLE_STRIP, tv, 4, color);
 	}
 
 	hstr RenderSystem::findTextureResource(chstr filename)
@@ -956,7 +1085,15 @@ namespace april
 
 	void RenderSystem::presentFrame()
 	{
+		if (this->renderHelper != NULL)
+		{
+			this->renderHelper->flush();
+		}
 		april::window->presentFrame();
+		this->statLastFrameRenderCalls = this->statCurrentFrameRenderCalls;
+		this->statCurrentFrameRenderCalls = 0;
+		this->statLastFrameTextureSwitches = this->statCurrentFrameTextureSwitches;
+		this->statCurrentFrameTextureSwitches = 0;
 	}
 
 	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int count)

@@ -314,6 +314,12 @@
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_VertexShader.cpp">
       <Filter>Source Files\rendersystems\OpenGL\GLES</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\RenderHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\RenderHelperLayered2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -507,6 +513,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_defaultShaders.h">
       <Filter>Header Files\rendersystems\OpenGL\GLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\RenderHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\RenderHelperLayered2D.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
