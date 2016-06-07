@@ -56,8 +56,8 @@ namespace april
 			harray<ColoredVertex> coloredVertices;
 			harray<ColoredTexturedVertex> coloredTexturedVertices;
 
-			Layer(grect rect, RenderOperation renderOperation, const harray<ColoredVertex>& coloredVertices);
-			Layer(grect rect, RenderOperation renderOperation, const harray<ColoredTexturedVertex>& coloredTexturedVertices);
+			Layer(grect rect, RenderOperation renderOperation, ColoredVertex* vertices, int count);
+			Layer(grect rect, RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
 			~Layer();
 
 		};
@@ -65,8 +65,23 @@ namespace april
 		harray<Layer*> layers;
 
 		bool _tryForcedFlush(RenderOperation renderOperation);
-		bool _renderColoredVertices(RenderOperation renderOperation, const gmat4& transformationMatrix, const harray<ColoredVertex>& vertices);
-		bool _renderColoredTexturedVertices(RenderOperation renderOperation, const gmat4& transformationMatrix, const harray<ColoredTexturedVertex>& vertices);
+		bool _renderColoredVertices(RenderOperation renderOperation, const gmat4& transformationMatrix);
+		bool _renderColoredTexturedVertices(RenderOperation renderOperation, const gmat4& transformationMatrix);
+
+	private:
+		ColoredVertex* _coloredVertices;
+		int _coloredVerticesCount;
+		int _coloredVerticesCapacity;
+		ColoredTexturedVertex* _coloredTexturedVertices;
+		int _coloredTexturedVerticesCount;
+		int _coloredTexturedVerticesCapacity;
+
+		void _updateVertices(PlainVertex* vertices, int count, april::Color color);
+		void _updateVertices(TexturedVertex* vertices, int count, april::Color color);
+		void _updateVertices(ColoredVertex* vertices, int count);
+		void _updateVertices(ColoredTexturedVertex* vertices, int count);
+		void _updateColoredVerticesSize(int count);
+		void _updateColoredTexturedVerticesSize(int count);
 
 	};
 

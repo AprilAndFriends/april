@@ -21,19 +21,28 @@ namespace april
 	static PlainVertex pv[8];
 	static TexturedVertex tv[6];
 
-	RenderHelperLayered2D::RenderHelperLayered2D() : RenderHelper()
+	RenderHelperLayered2D::RenderHelperLayered2D() : RenderHelper(), _coloredVertices(NULL), _coloredVerticesCount(0),
+		_coloredVerticesCapacity(0), _coloredTexturedVertices(NULL), _coloredTexturedVerticesCount(0), _coloredTexturedVerticesCapacity(0)
 	{
 	}
 
 	RenderHelperLayered2D::~RenderHelperLayered2D()
 	{
+		if (this->_coloredVertices != NULL)
+		{
+			delete[] this->_coloredVertices;
+		}
+		if (this->_coloredTexturedVertices != NULL)
+		{
+			delete[] this->_coloredTexturedVertices;
+		}
 	}
 
-	RenderHelperLayered2D::Layer::Layer(grect rect, RenderOperation renderOperation, const harray<ColoredVertex>& coloredVertices)
+	RenderHelperLayered2D::Layer::Layer(grect rect, RenderOperation renderOperation, ColoredVertex* vertices, int count)
 	{
 		this->rects += rect;
 		this->renderOperation = renderOperation;
-		this->coloredVertices = coloredVertices;
+		this->coloredVertices.add(vertices, count);
 		this->state.viewport = april::rendersys->state->viewport;
 		this->state.useTexture = false;
 		this->state.useColor = true;
@@ -42,11 +51,11 @@ namespace april
 		this->state.colorModeFactor = april::rendersys->state->colorModeFactor;
 	}
 
-	RenderHelperLayered2D::Layer::Layer(grect rect, RenderOperation renderOperation, const harray<ColoredTexturedVertex>& coloredTexturedVertices)
+	RenderHelperLayered2D::Layer::Layer(grect rect, RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
 	{
 		this->rects += rect;
 		this->renderOperation = renderOperation;
-		this->coloredTexturedVertices = coloredTexturedVertices;
+		this->coloredTexturedVertices.add(vertices, count);
 		this->state.viewport = april::rendersys->state->viewport;
 		this->state.useTexture = true;
 		this->state.useColor = true;
@@ -71,6 +80,74 @@ namespace april
 		return false;
 	}
 
+	void RenderHelperLayered2D::_updateVertices(PlainVertex* vertices, int count, april::Color color)
+	{
+		this->_updateColoredVerticesSize(count);
+		unsigned int nativeColor = april::rendersys->getNativeColorUInt(color);
+		for_iter (i, 0, count)
+		{
+			this->_coloredVertices[i].color = nativeColor;
+		}
+	}
+
+	void RenderHelperLayered2D::_updateVertices(TexturedVertex* vertices, int count, april::Color color)
+	{
+		this->_updateColoredTexturedVerticesSize(count);
+		unsigned int nativeColor = april::rendersys->getNativeColorUInt(color);
+		for_iter (i, 0, count)
+		{
+			this->_coloredTexturedVertices[i].u = vertices[i].u;
+			this->_coloredTexturedVertices[i].v = vertices[i].v;
+			this->_coloredTexturedVertices[i].color = nativeColor;
+		}
+	}
+
+	void RenderHelperLayered2D::_updateVertices(ColoredVertex* vertices, int count)
+	{
+		this->_updateColoredVerticesSize(count);
+		memcpy(this->_coloredVertices, vertices, count * sizeof(ColoredVertex));
+	}
+
+	void RenderHelperLayered2D::_updateVertices(ColoredTexturedVertex* vertices, int count)
+	{
+		this->_updateColoredTexturedVerticesSize(count);
+		memcpy(this->_coloredTexturedVertices, vertices, count * sizeof(ColoredTexturedVertex));
+	}
+
+	void RenderHelperLayered2D::_updateColoredVerticesSize(int count)
+	{
+		this->_coloredVerticesCount = count;
+		int potCount = hpotCeil(count);
+		if (this->_coloredVertices == NULL)
+		{
+			this->_coloredVerticesCapacity = potCount;
+			this->_coloredVertices = new ColoredVertex[this->_coloredVerticesCapacity];
+		}
+		else if (this->_coloredVerticesCapacity < potCount)
+		{
+			delete[] this->_coloredVertices;
+			this->_coloredVerticesCapacity = potCount;
+			this->_coloredVertices = new ColoredVertex[this->_coloredVerticesCapacity];
+		}
+	}
+
+	void RenderHelperLayered2D::_updateColoredTexturedVerticesSize(int count)
+	{
+		this->_coloredTexturedVerticesCount = count;
+		int potCount = hpotCeil(count);
+		if (this->_coloredTexturedVertices == NULL)
+		{
+			this->_coloredTexturedVerticesCapacity = potCount;
+			this->_coloredTexturedVertices = new ColoredTexturedVertex[this->_coloredTexturedVerticesCapacity];
+		}
+		else if (this->_coloredTexturedVerticesCapacity < potCount)
+		{
+			delete[] this->_coloredTexturedVertices;
+			this->_coloredTexturedVerticesCapacity = potCount;
+			this->_coloredTexturedVertices = new ColoredTexturedVertex[this->_coloredTexturedVerticesCapacity];
+		}
+	}
+
 	bool RenderHelperLayered2D::render(RenderOperation renderOperation, PlainVertex* vertices, int count)
 	{
 		return this->render(renderOperation, vertices, count, april::Color::White);
@@ -82,14 +159,14 @@ namespace april
 		{
 			return false;
 		}
+		this->_updateVertices(vertices, count, color);
 		// transform all positions
 		gmat4 transformationMatrix = april::rendersys->state->projectionMatrix * april::rendersys->state->modelviewMatrix;
-		harray<ColoredVertex> v(ColoredVertex(april::rendersys->getNativeColorUInt(color)), count);
 		for_iter (i, 0, count)
 		{
-			v[i].set(transformationMatrix * vertices[i].toGvec3());
+			this->_coloredVertices[i].set(transformationMatrix * vertices[i].toGvec3());
 		}
-		return this->_renderColoredVertices(renderOperation, transformationMatrix, v);
+		return this->_renderColoredVertices(renderOperation, transformationMatrix);
 	}
 
 	bool RenderHelperLayered2D::render(RenderOperation renderOperation, TexturedVertex* vertices, int count)
@@ -103,16 +180,14 @@ namespace april
 		{
 			return false;
 		}
+		this->_updateVertices(vertices, count, color);
 		// transform all positions
 		gmat4 transformationMatrix = april::rendersys->state->projectionMatrix * april::rendersys->state->modelviewMatrix;
-		harray<ColoredTexturedVertex> v(ColoredTexturedVertex(april::rendersys->getNativeColorUInt(color)), count);
 		for_iter (i, 0, count)
 		{
-			v[i].set(transformationMatrix * vertices[i].toGvec3());
-			v[i].u = vertices[i].u;
-			v[i].v = vertices[i].v;
+			this->_coloredTexturedVertices[i].set(transformationMatrix * vertices[i].toGvec3());
 		}
-		return this->_renderColoredTexturedVertices(renderOperation, transformationMatrix, v);
+		return this->_renderColoredTexturedVertices(renderOperation, transformationMatrix);
 	}
 
 	bool RenderHelperLayered2D::render(RenderOperation renderOperation, ColoredVertex* vertices, int count)
@@ -121,14 +196,14 @@ namespace april
 		{
 			return false;
 		}
+		this->_updateVertices(vertices, count);
 		// transform all positions
 		gmat4 transformationMatrix = april::rendersys->state->projectionMatrix * april::rendersys->state->modelviewMatrix;
-		harray<ColoredVertex> v(vertices, count);
 		for_iter (i, 0, count)
 		{
-			v[i].set(transformationMatrix * vertices[i].toGvec3());
+			this->_coloredVertices[i].set(transformationMatrix * vertices[i].toGvec3());
 		}
-		return this->_renderColoredVertices(renderOperation, transformationMatrix, v);
+		return this->_renderColoredVertices(renderOperation, transformationMatrix);
 	}
 
 	bool RenderHelperLayered2D::render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
@@ -137,14 +212,14 @@ namespace april
 		{
 			return false;
 		}
+		this->_updateVertices(vertices, count);
 		// transform all positions
 		gmat4 transformationMatrix = april::rendersys->state->projectionMatrix * april::rendersys->state->modelviewMatrix;
-		harray<ColoredTexturedVertex> v(vertices, count);
 		for_iter (i, 0, count)
 		{
-			v[i].set(transformationMatrix * vertices[i].toGvec3());
+			this->_coloredTexturedVertices[i].set(transformationMatrix * vertices[i].toGvec3());
 		}
-		return this->_renderColoredTexturedVertices(renderOperation, transformationMatrix, v);
+		return this->_renderColoredTexturedVertices(renderOperation, transformationMatrix);
 	}
 
 	bool RenderHelperLayered2D::drawRect(grect rect, Color color)
@@ -191,17 +266,17 @@ namespace april
 		return this->render(RO_TRIANGLE_LIST, tv, 6, color);
 	}
 
-	bool RenderHelperLayered2D::_renderColoredVertices(RenderOperation renderOperation, const gmat4& transformationMatrix, const harray<ColoredVertex>& vertices)
+	bool RenderHelperLayered2D::_renderColoredVertices(RenderOperation renderOperation, const gmat4& transformationMatrix)
 	{
 		// find bounding rect
-		gvec2 min(vertices[0].x, vertices[0].y);
+		gvec2 min(this->_coloredVertices[0].x, this->_coloredVertices[0].y);
 		gvec2 max = min;
-		for_iter (i, 1, vertices.size())
+		for_iter (i, 1, this->_coloredVerticesCount)
 		{
-			min.x = hmin(min.x, vertices[i].x);
-			min.y = hmin(min.y, vertices[i].y);
-			max.x = hmax(max.x, vertices[i].x);
-			max.y = hmax(max.y, vertices[i].y);
+			min.x = hmin(min.x, this->_coloredVertices[i].x);
+			min.y = hmin(min.y, this->_coloredVertices[i].y);
+			max.x = hmax(max.x, this->_coloredVertices[i].x);
+			max.y = hmax(max.y, this->_coloredVertices[i].y);
 		}
 		grect boundingRect(min, max - min);
 		if (april::rendersys->state->viewport.x != 0.0f || april::rendersys->state->viewport.y != 0.0f)
@@ -236,27 +311,27 @@ namespace april
 		}
 		if (validLayer == NULL)
 		{
-			this->layers += new Layer(boundingRect, renderOperation, vertices);
+			this->layers += new Layer(boundingRect, renderOperation, this->_coloredVertices, this->_coloredVerticesCount);
 		}
 		else
 		{
-			validLayer->coloredVertices += vertices;
+			validLayer->coloredVertices.add(this->_coloredVertices, this->_coloredVerticesCount);
 			validLayer->rects += boundingRect;
 		}
 		return true;
 	}
 
-	bool RenderHelperLayered2D::_renderColoredTexturedVertices(RenderOperation renderOperation, const gmat4& transformationMatrix, const harray<ColoredTexturedVertex>& vertices)
+	bool RenderHelperLayered2D::_renderColoredTexturedVertices(RenderOperation renderOperation, const gmat4& transformationMatrix)
 	{
 		// find bounding rect
-		gvec2 min(vertices[0].x, vertices[0].y);
+		gvec2 min(this->_coloredTexturedVertices[0].x, this->_coloredTexturedVertices[0].y);
 		gvec2 max = min;
-		for_iter (i, 1, vertices.size())
+		for_iter (i, 1, this->_coloredTexturedVerticesCount)
 		{
-			min.x = hmin(min.x, vertices[i].x);
-			min.y = hmin(min.y, vertices[i].y);
-			max.x = hmax(max.x, vertices[i].x);
-			max.y = hmax(max.y, vertices[i].y);
+			min.x = hmin(min.x, this->_coloredTexturedVertices[i].x);
+			min.y = hmin(min.y, this->_coloredTexturedVertices[i].y);
+			max.x = hmax(max.x, this->_coloredTexturedVertices[i].x);
+			max.y = hmax(max.y, this->_coloredTexturedVertices[i].y);
 		}
 		grect boundingRect(min, max - min);
 		if (april::rendersys->state->viewport.x != 0.0f || april::rendersys->state->viewport.y != 0.0f)
@@ -291,11 +366,11 @@ namespace april
 		}
 		if (validLayer == NULL)
 		{
-			this->layers += new Layer(boundingRect, renderOperation, vertices);
+			this->layers += new Layer(boundingRect, renderOperation, this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
 		}
 		else
 		{
-			validLayer->coloredTexturedVertices += vertices;
+			validLayer->coloredTexturedVertices.add(this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
 			validLayer->rects += boundingRect;
 		}
 		return true;
@@ -315,7 +390,7 @@ namespace april
 		RenderState* state = april::rendersys->state;
 		bool anyViewportChanged = false;
 #ifdef _DEBUG_TESTING
-		int count = 15;
+		int count = 150;
 #endif
 		foreach (Layer*, it, this->layers)
 		{
