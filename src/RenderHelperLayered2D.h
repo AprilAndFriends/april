@@ -24,7 +24,9 @@
 #include "RenderHelper.h"
 #include "RenderState.h"
 
-#define MAX_LAYER_RECTS 10
+#ifdef _DEBUG
+//#define _DEBUG_TESTING
+#endif
 
 namespace april
 {
@@ -78,12 +80,14 @@ namespace april
 			RenderState state;
 			RenderOperation renderOperation;
 			harray<grect> rects;
+#ifdef _DEBUG_TESTING
+			harray<gvec2> offsets;
+#endif
 			harray<ColoredVertex> coloredVertices;
 			harray<ColoredTexturedVertex> coloredTexturedVertices;
-			harray<gmat4> transformationMatrices;
 
-			Layer(RenderCall* renderCall, const grect& rect, const gmat4& transformationMatrix, ColoredVertex* vertices, int count);
-			Layer(RenderCall* renderCall, const grect& rect, const gmat4& transformationMatrix, ColoredTexturedVertex* vertices, int count);
+			Layer(RenderCall* renderCall, const grect& rect, ColoredVertex* vertices, int count);
+			Layer(RenderCall* renderCall, const grect& rect, ColoredTexturedVertex* vertices, int count);
 			~Layer();
 
 		};
