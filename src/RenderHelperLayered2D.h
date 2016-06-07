@@ -100,7 +100,7 @@ namespace april
 		void _calculateRenderCall(RenderCall* renderCall);
 		void _addRenderLayerNonTextured(RenderCall* renderCall);
 		void _addRenderLayerTextured(RenderCall* renderCall);
-		void _solveIntersection(RenderCall* renderCall, Layer** validLayer, int& intersectionIndex);
+		void _solveIntersection(RenderCall* renderCall, Layer** currentValidLayer, Layer** lastValidLayer, int& intersectionIndex);
 
 		static void _threadUpdate(hthread* thread);
 
