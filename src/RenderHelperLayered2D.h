@@ -16,7 +16,9 @@
 #include <gtypes/Rectangle.h>
 #include <hltypes/harray.h>
 #include <hltypes/hmap.h>
+#include <hltypes/hmutex.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hthread.h>
 
 #include "aprilUtil.h"
 #include "RenderHelper.h"
@@ -32,6 +34,11 @@ namespace april
 		RenderHelperLayered2D();
 		~RenderHelperLayered2D();
 
+		bool create();
+		bool destroy();
+		void clear();
+		void flush();
+
 		bool render(RenderOperation renderOperation, PlainVertex* vertices, int count);
 		bool render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color);
 		bool render(RenderOperation renderOperation, TexturedVertex* vertices, int count);
@@ -43,10 +50,28 @@ namespace april
 		bool drawTexturedRect(grect rect, grect src);
 		bool drawTexturedRect(grect rect, grect src, Color color);
 		
-		void flush();
-		void clear();
-
 	protected:
+		class RenderCall
+		{
+		public:
+			RenderState state;
+			RenderOperation renderOperation;
+			PlainVertex* plainVertices;
+			TexturedVertex* texturedVertices;
+			ColoredVertex* coloredVertices;
+			ColoredTexturedVertex* coloredTexturedVertices;
+			int count;
+			Color color;
+			bool useTexture;
+
+			RenderCall(RenderOperation renderOperation, PlainVertex* vertices, int count, april::Color color);
+			RenderCall(RenderOperation renderOperation, TexturedVertex* vertices, int count, april::Color color);
+			RenderCall(RenderOperation renderOperation, ColoredVertex* vertices, int count);
+			RenderCall(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
+			~RenderCall();
+
+		};
+
 		class Layer
 		{
 		public:
@@ -55,18 +80,29 @@ namespace april
 			harray<grect> rects;
 			harray<ColoredVertex> coloredVertices;
 			harray<ColoredTexturedVertex> coloredTexturedVertices;
+			harray<gmat4> transformationMatrices;
 
-			Layer(grect rect, RenderOperation renderOperation, ColoredVertex* vertices, int count);
-			Layer(grect rect, RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
+			Layer(RenderCall* renderCall, const grect& rect, const gmat4& transformationMatrix, ColoredVertex* vertices, int count);
+			Layer(RenderCall* renderCall, const grect& rect, const gmat4& transformationMatrix, ColoredTexturedVertex* vertices, int count);
 			~Layer();
 
 		};
 
+		harray<RenderCall*> renderCalls;
+		hmutex renderCallsMutex;
 		harray<Layer*> layers;
+		hmutex layersMutex;
+		hmutex layeringMutex;
+		hthread layeringThread;
 
+		void _waitForCalculations();
 		bool _tryForcedFlush(RenderOperation renderOperation);
-		bool _renderColoredVertices(RenderOperation renderOperation);
-		bool _renderColoredTexturedVertices(RenderOperation renderOperation);
+		void _calculateRenderCall(RenderCall* renderCall);
+		void _addRenderLayerNonTextured(RenderCall* renderCall);
+		void _addRenderLayerTextured(RenderCall* renderCall);
+		void _solveIntersection(RenderCall* renderCall, Layer** validLayer, int& intersectionIndex);
+
+		static void _threadUpdate(hthread* thread);
 
 	private:
 		ColoredVertex* _coloredVertices;
@@ -83,10 +119,10 @@ namespace april
 		gvec2 _max;
 		grect _boundingRect;
 
-		void _updateVertices(PlainVertex* vertices, int count, april::Color color);
-		void _updateVertices(TexturedVertex* vertices, int count, april::Color color);
-		void _updateVertices(ColoredVertex* vertices, int count);
-		void _updateVertices(ColoredTexturedVertex* vertices, int count);
+		void _updateVertices(RenderCall* renderCall, PlainVertex* vertices, int count, april::Color color);
+		void _updateVertices(RenderCall* renderCall, TexturedVertex* vertices, int count, april::Color color);
+		void _updateVertices(RenderCall* renderCall, ColoredVertex* vertices, int count);
+		void _updateVertices(RenderCall* renderCall, ColoredTexturedVertex* vertices, int count);
 		void _updateColoredVerticesSize(int count);
 		void _updateColoredTexturedVerticesSize(int count);
 

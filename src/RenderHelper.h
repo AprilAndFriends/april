@@ -28,6 +28,11 @@ namespace april
 		RenderHelper();
 		virtual ~RenderHelper();
 
+		virtual bool create();
+		virtual bool destroy();
+		virtual void clear();
+		virtual void flush();
+
 		virtual bool render(RenderOperation renderOperation, PlainVertex* vertices, int count);
 		virtual bool render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color);
 		virtual bool render(RenderOperation renderOperation, TexturedVertex* vertices, int count);
@@ -39,8 +44,9 @@ namespace april
 		virtual bool drawTexturedRect(grect rect, grect src);
 		virtual bool drawTexturedRect(grect rect, grect src, Color color);
 
-		virtual void flush();
-		virtual void clear();
+	protected:
+		bool created;
+
 
 	};
 

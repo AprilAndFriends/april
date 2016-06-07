@@ -18,16 +18,117 @@
 namespace april
 {
 	// optimizations, but they are not thread-safe
-	static gvec3 corners[4];
+	static PlainVertex pv[8];
+	static TexturedVertex tv[6];
 
-	RenderHelperLayered2D::RenderHelperLayered2D() : RenderHelper(), _coloredVertices(NULL), _coloredVerticesCount(0),
-		_coloredVerticesCapacity(0), _coloredTexturedVertices(NULL), _coloredTexturedVerticesCount(0), _coloredTexturedVerticesCapacity(0),
-		_nativeColor(0), _potCount(0)
+	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, PlainVertex* vertices, int count, april::Color color) :
+		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(false)
+	{
+		this->renderOperation = renderOperation;
+		this->plainVertices = new PlainVertex[count];
+		memcpy(this->plainVertices, vertices, count * sizeof(PlainVertex));
+		this->count = count;
+		this->color = color;
+	}
+
+	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, TexturedVertex* vertices, int count, april::Color color) :
+		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(true)
+	{
+		this->renderOperation = renderOperation;
+		this->texturedVertices = new TexturedVertex[count];
+		memcpy(this->texturedVertices, vertices, count * sizeof(TexturedVertex));
+		this->count = count;
+		this->color = color;
+	}
+
+	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, ColoredVertex* vertices, int count) :
+		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(false)
+	{
+		this->renderOperation = renderOperation;
+		this->coloredVertices = new ColoredVertex[count];
+		memcpy(this->coloredVertices, vertices, count * sizeof(ColoredVertex));
+		this->count = count;
+	}
+
+	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count) :
+		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(true)
+	{
+		this->renderOperation = renderOperation;
+		this->coloredTexturedVertices = new ColoredTexturedVertex[count];
+		memcpy(this->coloredTexturedVertices, vertices, count * sizeof(ColoredTexturedVertex));
+		this->count = count;
+	}
+
+	RenderHelperLayered2D::RenderCall::~RenderCall()
+	{
+		if (this->plainVertices != NULL)
+		{
+			delete[] this->plainVertices;
+		}
+		if (this->texturedVertices != NULL)
+		{
+			delete[] this->texturedVertices;
+		}
+		if (this->coloredVertices != NULL)
+		{
+			delete[] this->coloredVertices;
+		}
+		if (this->coloredTexturedVertices != NULL)
+		{
+			delete[] this->coloredTexturedVertices;
+		}
+	}
+
+	RenderHelperLayered2D::Layer::Layer(RenderCall* renderCall, const grect& rect, const gmat4& transformationMatrix, ColoredVertex* vertices, int count)
+	{
+		this->rects += rect;
+		this->transformationMatrices += transformationMatrix;
+		this->renderOperation = renderCall->renderOperation;
+		this->coloredVertices.add(vertices, count);
+		this->state.modelviewMatrixChanged = false;
+		this->state.projectionMatrixChanged = false;
+		this->state.viewportChanged = false;
+		this->state.useTexture = false;
+		this->state.useColor = true;
+		this->state.viewport = renderCall->state.viewport;
+		this->state.texture = NULL;
+		this->state.blendMode = renderCall->state.blendMode;
+		this->state.colorMode = renderCall->state.colorMode;
+		this->state.colorModeFactor = renderCall->state.colorModeFactor;
+	}
+
+	RenderHelperLayered2D::Layer::Layer(RenderCall* renderCall, const grect& rect, const gmat4& transformationMatrix, ColoredTexturedVertex* vertices, int count)
+	{
+		this->rects += rect;
+		this->transformationMatrices += transformationMatrix;
+		this->renderOperation = renderCall->renderOperation;
+		this->coloredTexturedVertices.add(vertices, count);
+		this->state.modelviewMatrixChanged = false;
+		this->state.projectionMatrixChanged = false;
+		this->state.viewportChanged = false;
+		this->state.useTexture = true;
+		this->state.useColor = true;
+		this->state.viewport = renderCall->state.viewport;
+		this->state.texture = renderCall->state.texture;
+		this->state.blendMode = renderCall->state.blendMode;
+		this->state.colorMode = renderCall->state.colorMode;
+		this->state.colorModeFactor = renderCall->state.colorModeFactor;
+	}
+
+	RenderHelperLayered2D::Layer::~Layer()
 	{
 	}
 
+	RenderHelperLayered2D::RenderHelperLayered2D() : RenderHelper(), layeringThread(&_threadUpdate, "APRIL layered 2D renderer"), _coloredVertices(NULL),
+		_coloredVerticesCount(0), _coloredVerticesCapacity(0), _coloredTexturedVertices(NULL), _coloredTexturedVerticesCount(0),
+		_coloredTexturedVerticesCapacity(0), _nativeColor(0), _potCount(0)
+	{
+	}
+
+
 	RenderHelperLayered2D::~RenderHelperLayered2D()
 	{
+		this->destroy();
 		if (this->_coloredVertices != NULL)
 		{
 			delete[] this->_coloredVertices;
@@ -38,35 +139,148 @@ namespace april
 		}
 	}
 
-	RenderHelperLayered2D::Layer::Layer(grect rect, RenderOperation renderOperation, ColoredVertex* vertices, int count)
+	bool RenderHelperLayered2D::create()
 	{
-		this->rects += rect;
-		this->renderOperation = renderOperation;
-		this->coloredVertices.add(vertices, count);
-		this->state.viewport = april::rendersys->state->viewport;
-		this->state.useTexture = false;
-		this->state.useColor = true;
-		this->state.blendMode = april::rendersys->state->blendMode;
-		this->state.colorMode = april::rendersys->state->colorMode;
-		this->state.colorModeFactor = april::rendersys->state->colorModeFactor;
+		if (!RenderHelper::create())
+		{
+			return false;
+		}
+		this->layeringThread.start();
+		return true;
 	}
 
-	RenderHelperLayered2D::Layer::Layer(grect rect, RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
+	bool RenderHelperLayered2D::destroy()
 	{
-		this->rects += rect;
-		this->renderOperation = renderOperation;
-		this->coloredTexturedVertices.add(vertices, count);
-		this->state.viewport = april::rendersys->state->viewport;
-		this->state.useTexture = true;
-		this->state.useColor = true;
-		this->state.texture = april::rendersys->state->texture;
-		this->state.blendMode = april::rendersys->state->blendMode;
-		this->state.colorMode = april::rendersys->state->colorMode;
-		this->state.colorModeFactor = april::rendersys->state->colorModeFactor;
+		if (this->created)
+		{
+			this->layeringThread.join();
+		}
+		return RenderHelper::destroy();
 	}
 
-	RenderHelperLayered2D::Layer::~Layer()
+	void RenderHelperLayered2D::clear()
 	{
+		hmutex::ScopeLock layersLock(&this->layersMutex);
+		hmutex::ScopeLock renderCallsLock(&this->renderCallsMutex);
+		foreach (Layer*, it, this->layers)
+		{
+			delete (*it);
+		}
+		this->layers.clear();
+		foreach (RenderCall*, it, this->renderCalls)
+		{
+			delete (*it);
+		}
+		this->renderCalls.clear();
+	}
+
+	void RenderHelperLayered2D::flush()
+	{
+		this->_waitForCalculations();
+		hmutex::ScopeLock lock(&this->layersMutex);
+		if (this->layers.size() == 0)
+		{
+			return;
+		}
+#ifdef _DEBUG_TESTING
+		hlog::debug("OK", this->layers.size());
+		if (this->layers.size() == 215)
+		{
+			int a = 0;
+		}
+#endif
+		harray<Layer*> layers = this->layers;
+		this->layers.clear();
+		lock.release();
+		layers.first()->state.modelviewMatrixChanged = true;
+		layers.first()->state.projectionMatrixChanged = true;
+		RenderState* state = april::rendersys->state;
+		bool anyViewportChanged = false;
+#ifdef _DEBUG_TESTING
+		gvec2 rectOffset;
+		gvec3 offset;
+		int count = 5;
+#endif
+		foreach (Layer*, it, layers)
+		{
+#ifdef _DEBUG_TESTING
+			if (count <= 0)
+			{
+				delete (*it);
+				continue;
+			}
+			--count;
+#endif
+			april::rendersys->state = &(*it)->state;
+			if (april::rendersys->state->viewport != april::rendersys->deviceState->viewport)
+			{
+				anyViewportChanged = april::rendersys->state->viewportChanged = true;
+			}
+			if ((*it)->coloredVertices.size() > 0)
+			{
+				april::rendersys->_renderInternal((*it)->renderOperation, (april::ColoredVertex*)(*it)->coloredVertices, (*it)->coloredVertices.size());
+			}
+			else if ((*it)->coloredTexturedVertices.size() > 0)
+			{
+				april::rendersys->_renderInternal((*it)->renderOperation, (april::ColoredTexturedVertex*)(*it)->coloredTexturedVertices, (*it)->coloredTexturedVertices.size());
+			}
+#ifdef _DEBUG_TESTING
+			for_iter (i, 0, (*it)->rects.size())
+			{
+				rectOffset.set(0.0f, 0.0f);
+				if (april::rendersys->state->viewport.x != 0.0f || april::rendersys->state->viewport.y != 0.0f)
+				{
+					offset = (*it)->transformationMatrices[i] * gvec3(april::rendersys->state->viewport.x, april::rendersys->state->viewport.y, 0.0f);
+					rectOffset.set(offset.x, offset.y);
+				}
+				april::rendersys->_drawRectInternal((*it)->rects[i] - rectOffset, april::Color::Cyan);
+			}
+#endif
+			delete (*it);
+		}
+		april::rendersys->state = state;
+		if (anyViewportChanged)
+		{
+			april::rendersys->state->viewportChanged = true;
+		}
+		april::rendersys->state->modelviewMatrixChanged = true;
+		april::rendersys->state->projectionMatrixChanged = true;
+	}
+
+	void RenderHelperLayered2D::_threadUpdate(hthread* thread)
+	{
+		RenderHelperLayered2D* self = dynamic_cast<RenderHelperLayered2D*>(april::rendersys->renderHelper);
+		hmutex::ScopeLock layeringLock;
+		hmutex::ScopeLock renderCallslock;
+		RenderCall* renderCall = NULL;
+		while (thread->isRunning())
+		{
+			layeringLock.acquire(&self->layeringMutex);
+			renderCallslock.acquire(&self->renderCallsMutex);
+			if (self->renderCalls.size() == 0)
+			{
+				renderCallslock.release();
+				layeringLock.release();
+				hthread::sleep(0.01f);
+				continue;
+			}
+			renderCall = self->renderCalls.removeFirst();
+			renderCallslock.release();
+			self->_calculateRenderCall(renderCall);
+			layeringLock.release();
+			delete renderCall;
+		}
+	}
+
+	void RenderHelperLayered2D::_waitForCalculations()
+	{
+		hmutex::ScopeLock lock(&this->layeringMutex);
+		while (this->renderCalls.size() > 0)
+		{
+			lock.release();
+			hthread::sleep(0.01f);
+			lock.acquire(&this->layeringMutex);
+		}
 	}
 
 	bool RenderHelperLayered2D::_tryForcedFlush(RenderOperation renderOperation)
@@ -80,53 +294,51 @@ namespace april
 		return false;
 	}
 
-	void RenderHelperLayered2D::_updateVertices(PlainVertex* vertices, int count, april::Color color)
+	void RenderHelperLayered2D::_updateVertices(RenderCall* renderCall, PlainVertex* vertices, int count, april::Color color)
 	{
 		this->_updateColoredVerticesSize(count);
 		this->_nativeColor = april::rendersys->getNativeColorUInt(color);
+		this->_transformationMatrix = renderCall->state.projectionMatrix * renderCall->state.modelviewMatrix;
 		for_iter (i, 0, count)
 		{
+			this->_coloredVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
 			this->_coloredVertices[i].color = this->_nativeColor;
 		}
 	}
 
-	void RenderHelperLayered2D::_updateVertices(TexturedVertex* vertices, int count, april::Color color)
+	void RenderHelperLayered2D::_updateVertices(RenderCall* renderCall, TexturedVertex* vertices, int count, april::Color color)
 	{
 		this->_updateColoredTexturedVerticesSize(count);
 		this->_nativeColor = april::rendersys->getNativeColorUInt(color);
-		if (vertices != NULL)
+		this->_transformationMatrix = renderCall->state.projectionMatrix * renderCall->state.modelviewMatrix;
+		for_iter (i, 0, count)
 		{
-			for_iter (i, 0, count)
-			{
-				this->_coloredTexturedVertices[i].u = vertices[i].u;
-				this->_coloredTexturedVertices[i].v = vertices[i].v;
-				this->_coloredTexturedVertices[i].color = this->_nativeColor;
-			}
-		}
-		else
-		{
-			for_iter (i, 0, count)
-			{
-				this->_coloredTexturedVertices[i].color = this->_nativeColor;
-			}
+			this->_coloredTexturedVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
+			this->_coloredTexturedVertices[i].u = vertices[i].u;
+			this->_coloredTexturedVertices[i].v = vertices[i].v;
+			this->_coloredTexturedVertices[i].color = this->_nativeColor;
 		}
 	}
 
-	void RenderHelperLayered2D::_updateVertices(ColoredVertex* vertices, int count)
+	void RenderHelperLayered2D::_updateVertices(RenderCall* renderCall, ColoredVertex* vertices, int count)
 	{
 		this->_updateColoredVerticesSize(count);
-		if (vertices != NULL)
+		memcpy(this->_coloredVertices, vertices, count * sizeof(ColoredVertex));
+		this->_transformationMatrix = renderCall->state.projectionMatrix * renderCall->state.modelviewMatrix;
+		for_iter (i, 0, count)
 		{
-			memcpy(this->_coloredVertices, vertices, count * sizeof(ColoredVertex));
+			this->_coloredVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
 		}
 	}
 
-	void RenderHelperLayered2D::_updateVertices(ColoredTexturedVertex* vertices, int count)
+	void RenderHelperLayered2D::_updateVertices(RenderCall* renderCall, ColoredTexturedVertex* vertices, int count)
 	{
 		this->_updateColoredTexturedVerticesSize(count);
-		if (vertices != NULL)
+		memcpy(this->_coloredTexturedVertices, vertices, count * sizeof(ColoredTexturedVertex));
+		this->_transformationMatrix = renderCall->state.projectionMatrix * renderCall->state.modelviewMatrix;
+		for_iter (i, 0, count)
 		{
-			memcpy(this->_coloredTexturedVertices, vertices, count * sizeof(ColoredTexturedVertex));
+			this->_coloredTexturedVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
 		}
 	}
 
@@ -175,14 +387,10 @@ namespace april
 		{
 			return false;
 		}
-		this->_updateVertices(vertices, count, color);
-		// transform all positions
-		this->_transformationMatrix = april::rendersys->state->projectionMatrix * april::rendersys->state->modelviewMatrix;
-		for_iter (i, 0, count)
-		{
-			this->_coloredVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
-		}
-		return this->_renderColoredVertices(renderOperation);
+		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count, color);
+		hmutex::ScopeLock lock(&this->renderCallsMutex);
+		this->renderCalls += renderCall;
+		return true;
 	}
 
 	bool RenderHelperLayered2D::render(RenderOperation renderOperation, TexturedVertex* vertices, int count)
@@ -196,14 +404,10 @@ namespace april
 		{
 			return false;
 		}
-		this->_updateVertices(vertices, count, color);
-		// transform all positions
-		this->_transformationMatrix = april::rendersys->state->projectionMatrix * april::rendersys->state->modelviewMatrix;
-		for_iter (i, 0, count)
-		{
-			this->_coloredTexturedVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
-		}
-		return this->_renderColoredTexturedVertices(renderOperation);
+		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count, color);
+		hmutex::ScopeLock lock(&this->renderCallsMutex);
+		this->renderCalls += renderCall;
+		return true;
 	}
 
 	bool RenderHelperLayered2D::render(RenderOperation renderOperation, ColoredVertex* vertices, int count)
@@ -212,14 +416,10 @@ namespace april
 		{
 			return false;
 		}
-		this->_updateVertices(vertices, count);
-		// transform all positions
-		this->_transformationMatrix = april::rendersys->state->projectionMatrix * april::rendersys->state->modelviewMatrix;
-		for_iter (i, 0, count)
-		{
-			this->_coloredVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
-		}
-		return this->_renderColoredVertices(renderOperation);
+		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count);
+		hmutex::ScopeLock lock(&this->renderCallsMutex);
+		this->renderCalls += renderCall;
+		return true;
 	}
 
 	bool RenderHelperLayered2D::render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
@@ -228,58 +428,28 @@ namespace april
 		{
 			return false;
 		}
-		this->_updateVertices(vertices, count);
-		// transform all positions
-		this->_transformationMatrix = april::rendersys->state->projectionMatrix * april::rendersys->state->modelviewMatrix;
-		for_iter (i, 0, count)
-		{
-			this->_coloredTexturedVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
-		}
-		return this->_renderColoredTexturedVertices(renderOperation);
+		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count);
+		hmutex::ScopeLock lock(&this->renderCallsMutex);
+		this->renderCalls += renderCall;
+		return true;
 	}
 
 	bool RenderHelperLayered2D::drawRect(grect rect, Color color)
 	{
-		this->_updateVertices((PlainVertex*)NULL, 8, color);
-		corners[0].x = corners[2].x = rect.x;
-		corners[0].y = corners[1].y = rect.y;
-		corners[1].x = corners[3].x = rect.x + rect.w;
-		corners[2].y = corners[3].y = rect.y + rect.h;
-		this->_transformationMatrix = april::rendersys->state->projectionMatrix * april::rendersys->state->modelviewMatrix;
-		for_iter (i, 0, 4)
-		{
-			corners[i] = this->_transformationMatrix * corners[i];
-		}
-		this->_coloredVertices[0].set(corners[0]);
-		this->_coloredVertices[1].set(corners[1]);
-		this->_coloredVertices[2].set(corners[2]);
-		this->_coloredVertices[3].set(corners[3]);
-		this->_coloredVertices[4].set(corners[0]);
-		this->_coloredVertices[5].set(corners[2]);
-		this->_coloredVertices[6].set(corners[1]);
-		this->_coloredVertices[7].set(corners[3]);
-		return this->_renderColoredVertices(RO_LINE_LIST);
+		pv[0].x = pv[2].x = pv[4].x = pv[5].x = rect.x;
+		pv[0].y = pv[1].y = pv[4].y = pv[6].y = rect.y;
+		pv[1].x = pv[3].x = pv[6].x = pv[7].x = rect.x + rect.w;
+		pv[2].y = pv[3].y = pv[5].y = pv[7].y = rect.y + rect.h;
+		return this->render(RO_LINE_LIST, pv, 8, color);
 	}
 
 	bool RenderHelperLayered2D::drawFilledRect(grect rect, Color color)
 	{
-		this->_updateVertices((PlainVertex*)NULL, 6, color);
-		corners[0].x = corners[2].x = rect.x;
-		corners[0].y = corners[1].y = rect.y;
-		corners[1].x = corners[3].x = rect.x + rect.w;
-		corners[2].y = corners[3].y = rect.y + rect.h;
-		this->_transformationMatrix = april::rendersys->state->projectionMatrix * april::rendersys->state->modelviewMatrix;
-		for_iter (i, 0, 4)
-		{
-			corners[i] = this->_transformationMatrix * corners[i];
-		}
-		this->_coloredVertices[0].set(corners[0]);
-		this->_coloredVertices[1].set(corners[1]);
-		this->_coloredVertices[2].set(corners[2]);
-		this->_coloredVertices[3].set(corners[1]);
-		this->_coloredVertices[4].set(corners[2]);
-		this->_coloredVertices[5].set(corners[3]);
-		return this->_renderColoredVertices(RO_TRIANGLE_LIST);
+		pv[0].x = pv[2].x = pv[4].x = rect.x;
+		pv[0].y = pv[1].y = pv[3].y = rect.y;
+		pv[1].x = pv[3].x = pv[5].x = rect.x + rect.w;
+		pv[2].y = pv[4].y = pv[5].y = rect.y + rect.h;
+		return this->render(RO_TRIANGLE_LIST, pv, 6, color);
 	}
 
 	bool RenderHelperLayered2D::drawTexturedRect(grect rect, grect src)
@@ -289,30 +459,46 @@ namespace april
 
 	bool RenderHelperLayered2D::drawTexturedRect(grect rect, grect src, Color color)
 	{
-		this->_updateVertices((TexturedVertex*)NULL, 6, color);
-		corners[0].x = corners[2].x = rect.x;
-		corners[0].y = corners[1].y = rect.y;
-		corners[1].x = corners[3].x = rect.x + rect.w;
-		corners[2].y = corners[3].y = rect.y + rect.h;
-		this->_transformationMatrix = april::rendersys->state->projectionMatrix * april::rendersys->state->modelviewMatrix;
-		for_iter (i, 0, 4)
-		{
-			corners[i] = this->_transformationMatrix * corners[i];
-		}
-		this->_coloredTexturedVertices[0].set(corners[0]);
-		this->_coloredTexturedVertices[1].set(corners[1]);
-		this->_coloredTexturedVertices[2].set(corners[2]);
-		this->_coloredTexturedVertices[3].set(corners[1]);
-		this->_coloredTexturedVertices[4].set(corners[2]);
-		this->_coloredTexturedVertices[5].set(corners[3]);
-		this->_coloredTexturedVertices[0].u = this->_coloredTexturedVertices[2].u = this->_coloredTexturedVertices[4].u = src.x;
-		this->_coloredTexturedVertices[0].v = this->_coloredTexturedVertices[1].v = this->_coloredTexturedVertices[3].v = src.y;
-		this->_coloredTexturedVertices[1].u = this->_coloredTexturedVertices[3].u = this->_coloredTexturedVertices[5].u = src.x + src.w;
-		this->_coloredTexturedVertices[2].v = this->_coloredTexturedVertices[4].v = this->_coloredTexturedVertices[5].v = src.y + src.h;
-		return this->_renderColoredTexturedVertices(RO_TRIANGLE_LIST);
+		tv[0].x = tv[2].x = tv[4].x = rect.x;
+		tv[0].y = tv[1].y = tv[3].y = rect.y;
+		tv[0].u = tv[2].u = tv[4].u = src.x;
+		tv[0].v = tv[1].v = tv[3].v = src.y;
+		tv[1].x = tv[3].x = tv[5].x = rect.x + rect.w;
+		tv[2].y = tv[4].y = tv[5].y = rect.y + rect.h;
+		tv[1].u = tv[3].u = tv[5].u = src.x + src.w;
+		tv[2].v = tv[4].v = tv[5].v = src.y + src.h;
+		return this->render(RO_TRIANGLE_LIST, tv, 6, color);
 	}
 
-	bool RenderHelperLayered2D::_renderColoredVertices(RenderOperation renderOperation)
+	void RenderHelperLayered2D::_calculateRenderCall(RenderCall* renderCall)
+	{
+		if (!renderCall->useTexture)
+		{
+			if (renderCall->plainVertices != NULL)
+			{
+				this->_updateVertices(renderCall, renderCall->plainVertices, renderCall->count, renderCall->color);
+			}
+			else
+			{
+				this->_updateVertices(renderCall, renderCall->coloredVertices, renderCall->count);
+			}
+			this->_addRenderLayerNonTextured(renderCall);
+		}
+		else
+		{
+			if (renderCall->texturedVertices != NULL)
+			{
+				this->_updateVertices(renderCall, renderCall->texturedVertices, renderCall->count, renderCall->color);
+			}
+			else
+			{
+				this->_updateVertices(renderCall, renderCall->coloredTexturedVertices, renderCall->count);
+			}
+			this->_addRenderLayerTextured(renderCall);
+		}
+	}
+
+	void RenderHelperLayered2D::_addRenderLayerNonTextured(RenderCall* renderCall)
 	{
 		// find bounding rect
 		this->_min.set(this->_coloredVertices[0].x, this->_coloredVertices[0].y);
@@ -325,49 +511,33 @@ namespace april
 			this->_max.y = hmax(this->_max.y, this->_coloredVertices[i].y);
 		}
 		this->_boundingRect.set(this->_min, this->_max - this->_min);
-		if (april::rendersys->state->viewport.x != 0.0f || april::rendersys->state->viewport.y != 0.0f)
+		if (renderCall->state.viewport.x != 0.0f || renderCall->state.viewport.y != 0.0f)
 		{
-			gvec3 offset = this->_transformationMatrix * gvec3(april::rendersys->state->viewport.x, april::rendersys->state->viewport.y, 0.0f);
+			gvec3 offset = this->_transformationMatrix * gvec3(renderCall->state.viewport.x, renderCall->state.viewport.y, 0.0f);
 			this->_boundingRect += gvec2(offset.x, offset.y);
 		}
 		// check existing rects
-		bool intersection = false;
 		Layer* validLayer = NULL;
-		foreach_r (Layer*, it, this->layers)
-		{
-			if ((*it)->coloredVertices.size() > 0 && (*it)->renderOperation == renderOperation && (*it)->state.blendMode == april::rendersys->state->blendMode &&
-				(*it)->state.colorMode == april::rendersys->state->colorMode && (*it)->state.colorModeFactor == april::rendersys->state->colorModeFactor &&
-				(*it)->state.texture == april::rendersys->state->texture && (*it)->state.viewport == april::rendersys->state->viewport)
-			{
-				validLayer = (*it);
-			}
-			intersection = false;
-			foreach (grect, it2, (*it)->rects)
-			{
-				if (this->_boundingRect.intersects(*it2))
-				{
-					intersection = true;
-					break;
-				}
-			}
-			if (intersection)
-			{
-				break;
-			}
-		}
+		int intersectionIndex = -1;
+		hmutex::ScopeLock lock(&this->layersMutex);
+		this->_solveIntersection(renderCall, &validLayer, intersectionIndex);
 		if (validLayer == NULL)
 		{
-			this->layers += new Layer(this->_boundingRect, renderOperation, this->_coloredVertices, this->_coloredVerticesCount);
+			this->layers += new Layer(renderCall, this->_boundingRect, this->_transformationMatrix, this->_coloredVertices, this->_coloredVerticesCount);
+		}
+		else if (intersectionIndex >= 0 && validLayer == this->layers[intersectionIndex])
+		{
+			this->layers.insertAt(intersectionIndex + 1, new Layer(renderCall, this->_boundingRect, this->_transformationMatrix, this->_coloredVertices, this->_coloredVerticesCount));
 		}
 		else
 		{
 			validLayer->coloredVertices.add(this->_coloredVertices, this->_coloredVerticesCount);
 			validLayer->rects += this->_boundingRect;
+			validLayer->transformationMatrices += this->_transformationMatrix;
 		}
-		return true;
 	}
 
-	bool RenderHelperLayered2D::_renderColoredTexturedVertices(RenderOperation renderOperation)
+	void RenderHelperLayered2D::_addRenderLayerTextured(RenderCall* renderCall)
 	{
 		// find bounding rect
 		this->_min.set(this->_coloredTexturedVertices[0].x, this->_coloredTexturedVertices[0].y);
@@ -380,112 +550,54 @@ namespace april
 			this->_max.y = hmax(this->_max.y, this->_coloredTexturedVertices[i].y);
 		}
 		this->_boundingRect.set(this->_min, this->_max - this->_min);
-		if (april::rendersys->state->viewport.x != 0.0f || april::rendersys->state->viewport.y != 0.0f)
+		if (renderCall->state.viewport.x != 0.0f || renderCall->state.viewport.y != 0.0f)
 		{
-			gvec3 offset = this->_transformationMatrix * gvec3(april::rendersys->state->viewport.x, april::rendersys->state->viewport.y, 0.0f);
+			gvec3 offset = this->_transformationMatrix * gvec3(renderCall->state.viewport.x, renderCall->state.viewport.y, 0.0f);
 			this->_boundingRect += gvec2(offset.x, offset.y);
 		}
 		// check existing rects
-		bool intersection = false;
 		Layer* validLayer = NULL;
-		foreach_r (Layer*, it, this->layers)
-		{
-			if ((*it)->coloredTexturedVertices.size() > 0 && (*it)->renderOperation == renderOperation && (*it)->state.blendMode == april::rendersys->state->blendMode &&
-				(*it)->state.colorMode == april::rendersys->state->colorMode && (*it)->state.colorModeFactor == april::rendersys->state->colorModeFactor &&
-				(*it)->state.texture == april::rendersys->state->texture && (*it)->state.viewport == april::rendersys->state->viewport)
-			{
-				validLayer = (*it);
-			}
-			intersection = false;
-			foreach (grect, it2, (*it)->rects)
-			{
-				if (this->_boundingRect.intersects(*it2))
-				{
-					intersection = true;
-					break;
-				}
-			}
-			if (intersection)
-			{
-				break;
-			}
-		}
+		int intersectionIndex = -1;
+		hmutex::ScopeLock lock(&this->layersMutex);
+		this->_solveIntersection(renderCall, &validLayer, intersectionIndex);
 		if (validLayer == NULL)
 		{
-			this->layers += new Layer(this->_boundingRect, renderOperation, this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
+			this->layers += new Layer(renderCall, this->_boundingRect, this->_transformationMatrix, this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
+		}
+		else if (intersectionIndex >= 0 && validLayer == this->layers[intersectionIndex])
+		{
+			this->layers.insertAt(intersectionIndex + 1, new Layer(renderCall, this->_boundingRect, this->_transformationMatrix, this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount));
 		}
 		else
 		{
 			validLayer->coloredTexturedVertices.add(this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
 			validLayer->rects += this->_boundingRect;
+			validLayer->transformationMatrices += this->_transformationMatrix;
 		}
-		return true;
 	}
 
-	void RenderHelperLayered2D::flush()
+	void RenderHelperLayered2D::_solveIntersection(RenderCall* renderCall, Layer** validLayer, int& intersectionIndex)
 	{
-		if (this->layers.size() == 0)
+		Layer* layer = NULL;
+		for_iter_r (i, this->layers.size(), 0)
 		{
-			return;
+			layer = this->layers[i];
+			if (layer->state.useTexture == renderCall->useTexture && layer->renderOperation == renderCall->renderOperation &&
+				layer->state.blendMode == renderCall->state.blendMode && layer->state.colorMode == renderCall->state.colorMode &&
+				layer->state.colorModeFactor == renderCall->state.colorModeFactor &&
+				layer->state.texture == renderCall->state.texture && layer->state.viewport == renderCall->state.viewport)
+			{
+				*validLayer = layer;
+			}
+			foreach (grect, it, layer->rects)
+			{
+				if (this->_boundingRect.intersects(*it))
+				{
+					intersectionIndex = i;
+					return;
+				}
+			}
 		}
-#ifdef _DEBUG_TESTING
-		hlog::debug("OK", this->layers.size());
-#endif
-		this->layers.last()->state.modelviewMatrixChanged = true;
-		this->layers.last()->state.projectionMatrixChanged = true;
-		RenderState* state = april::rendersys->state;
-		bool anyViewportChanged = false;
-#ifdef _DEBUG_TESTING
-		int count = 150;
-#endif
-		foreach (Layer*, it, this->layers)
-		{
-#ifdef _DEBUG_TESTING
-			if (count <= 0)
-			{
-				delete (*it);
-				continue;
-			}
-			--count;
-#endif
-			april::rendersys->state = &(*it)->state;
-			if (april::rendersys->state->viewport != april::rendersys->deviceState->viewport)
-			{
-				anyViewportChanged = april::rendersys->state->viewportChanged = true;
-			}
-			if ((*it)->coloredVertices.size() > 0)
-			{
-				april::rendersys->_renderInternal((*it)->renderOperation, (april::ColoredVertex*)(*it)->coloredVertices, (*it)->coloredVertices.size());
-			}
-			else if ((*it)->coloredTexturedVertices.size() > 0)
-			{
-				april::rendersys->_renderInternal((*it)->renderOperation, (april::ColoredTexturedVertex*)(*it)->coloredTexturedVertices, (*it)->coloredTexturedVertices.size());
-			}
-#ifdef _DEBUG_TESTING
-			foreach (grect, it2, (*it)->rects)
-			{
-				april::rendersys->_drawRectInternal((*it2), april::Color::Cyan);
-			}
-#endif
-			delete (*it);
-		}
-		this->layers.clear();
-		april::rendersys->state = state;
-		if (anyViewportChanged)
-		{
-			april::rendersys->state->viewportChanged = true;
-		}
-		april::rendersys->state->modelviewMatrixChanged = true;
-		april::rendersys->state->projectionMatrixChanged = true;
-	}
-
-	void RenderHelperLayered2D::clear()
-	{
-		foreach (Layer*, it, this->layers)
-		{
-			delete (*it);
-		}
-		this->layers.clear();
 	}
 
 }

@@ -70,7 +70,6 @@ namespace april
 	RenderSystem::Options::Options()
 	{
 		this->depthBuffer = false;
-		this->layeredRenderer2D = false;
 	}
 
 	RenderSystem::Options::~Options()
@@ -108,10 +107,6 @@ namespace april
 		if (this->depthBuffer)
 		{
 			options += "depth-buffer";
-		}
-		if (this->layeredRenderer2D)
-		{
-			options += "layered-2D";
 		}
 		if (options.size() == 0)
 		{
@@ -158,10 +153,6 @@ namespace april
 		{
 			hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
 			this->options = options;
-			if (this->options.layeredRenderer2D)
-			{
-				this->renderHelper = new RenderHelperLayered2D();
-			}
 			this->state->reset();
 			this->deviceState->reset();
 			this->statCurrentFrameRenderCalls = 0;
@@ -358,6 +349,27 @@ namespace april
 	{
 		this->state->projectionMatrix = value;
 		this->state->projectionMatrixChanged = true;
+	}
+
+	void RenderSystem::setLayeredRenderer2dEnabled(bool value)
+	{
+		bool isLayeredRenderer = (dynamic_cast<RenderHelperLayered2D*>(this->renderHelper) != NULL);
+		if (value)
+		{
+			if (this->renderHelper != NULL && !isLayeredRenderer)
+			{
+				this->renderHelper->destroy();
+				delete this->renderHelper;
+			}
+			this->renderHelper = new RenderHelperLayered2D();
+			this->renderHelper->create();
+		}
+		else if (isLayeredRenderer)
+		{
+			this->renderHelper->destroy();
+			delete this->renderHelper;
+			this->renderHelper = NULL;
+		}
 	}
 
 	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, Texture::LoadMode loadMode)

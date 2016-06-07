@@ -82,8 +82,6 @@ namespace april
 		public:
 			/// @brief Whether to use a depth buffer.
 			bool depthBuffer;
-			/// @brief Whether to use a special layered renderer optimized for 2D rendering.
-			bool layeredRenderer2D;
 
 			/// @brief Basic constructor.
 			Options();
@@ -191,6 +189,9 @@ namespace april
 		/// @brief Sets the current projection matrix.
 		/// @param[in] value The new projection matrix.
 		void setProjectionMatrix(const gmat4& value);
+		/// @brief Sets layered 2D renderer to enabled or disabled.
+		/// @param[in] value The new value.
+		void setLayeredRenderer2dEnabled(bool value);
 
 		/// @brief Gets the amount of video RAM available.
 		/// @return The amount of video RAM available.

@@ -10,11 +10,41 @@
 
 namespace april
 {
-	RenderHelper::RenderHelper()
+	RenderHelper::RenderHelper() : created(false)
 	{
 	}
 	
 	RenderHelper::~RenderHelper()
+	{
+	}
+
+	bool RenderHelper::create()
+	{
+		if (!this->created)
+		{
+			this->created = true;
+			return true;
+		}
+		return false;
+	}
+
+	bool RenderHelper::destroy()
+	{
+		if (this->created)
+		{
+			this->created = false;
+			this->flush();
+			this->clear();
+			return true;
+		}
+		return false;
+	}
+
+	void RenderHelper::clear()
+	{
+	}
+
+	void RenderHelper::flush()
 	{
 	}
 
@@ -76,14 +106,6 @@ namespace april
 	{
 		this->flush();
 		return false;
-	}
-
-	void RenderHelper::flush()
-	{
-	}
-
-	void RenderHelper::clear()
-	{
 	}
 
 }
