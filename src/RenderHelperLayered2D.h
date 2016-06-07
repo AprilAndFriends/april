@@ -65,8 +65,8 @@ namespace april
 		harray<Layer*> layers;
 
 		bool _tryForcedFlush(RenderOperation renderOperation);
-		bool _renderColoredVertices(RenderOperation renderOperation, const gmat4& transformationMatrix);
-		bool _renderColoredTexturedVertices(RenderOperation renderOperation, const gmat4& transformationMatrix);
+		bool _renderColoredVertices(RenderOperation renderOperation);
+		bool _renderColoredTexturedVertices(RenderOperation renderOperation);
 
 	private:
 		ColoredVertex* _coloredVertices;
@@ -75,6 +75,13 @@ namespace april
 		ColoredTexturedVertex* _coloredTexturedVertices;
 		int _coloredTexturedVerticesCount;
 		int _coloredTexturedVerticesCapacity;
+
+		unsigned int _nativeColor;
+		int _potCount;
+		gmat4 _transformationMatrix;
+		gvec2 _min;
+		gvec2 _max;
+		grect _boundingRect;
 
 		void _updateVertices(PlainVertex* vertices, int count, april::Color color);
 		void _updateVertices(TexturedVertex* vertices, int count, april::Color color);
