@@ -806,7 +806,7 @@ namespace april
 		this->_deviceClear(depth);
 	}
 
-	void RenderSystem::clear(april::Color color, bool depth)
+	void RenderSystem::clear(Color color, bool depth)
 	{
 		if (!this->options.depthBuffer)
 		{
@@ -833,6 +833,10 @@ namespace april
 
 	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color)
 	{
+		if (color.a == 0)
+		{
+			return;
+		}
 		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count, color))
 		{
 			this->_renderInternal(renderOperation, vertices, count, color);
@@ -849,6 +853,10 @@ namespace april
 
 	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color)
 	{
+		if (color.a == 0)
+		{
+			return;
+		}
 		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count, color))
 		{
 			this->_renderInternal(renderOperation, vertices, count, color);
@@ -873,6 +881,10 @@ namespace april
 
 	void RenderSystem::drawRect(grect rect, Color color)
 	{
+		if (color.a == 0)
+		{
+			return;
+		}
 		if (this->renderHelper == NULL || !this->renderHelper->drawRect(rect, color))
 		{
 			this->_drawRectInternal(rect, color);
@@ -881,6 +893,10 @@ namespace april
 
 	void RenderSystem::drawFilledRect(grect rect, Color color)
 	{
+		if (color.a == 0)
+		{
+			return;
+		}
 		if (this->renderHelper == NULL || !this->renderHelper->drawFilledRect(rect, color))
 		{
 			this->_drawFilledRectInternal(rect, color);
@@ -897,6 +913,10 @@ namespace april
 
 	void RenderSystem::drawTexturedRect(grect rect, grect src, Color color)
 	{
+		if (color.a == 0)
+		{
+			return;
+		}
 		if (this->renderHelper == NULL || !this->renderHelper->drawTexturedRect(rect, src, color))
 		{
 			this->_drawTexturedRectInternal(rect, src, color);
@@ -908,7 +928,7 @@ namespace april
 		++this->statCurrentFrameRenderCalls;
 		this->state->useTexture = false;
 		this->state->useColor = false;
-		this->state->systemColor = april::Color::White;
+		this->state->systemColor = Color::White;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, vertices, count);
 	}
@@ -928,7 +948,7 @@ namespace april
 		++this->statCurrentFrameRenderCalls;
 		this->state->useTexture = true;
 		this->state->useColor = false;
-		this->state->systemColor = april::Color::White;
+		this->state->systemColor = Color::White;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, vertices, count);
 	}
@@ -948,7 +968,7 @@ namespace april
 		++this->statCurrentFrameRenderCalls;
 		this->state->useTexture = false;
 		this->state->useColor = true;
-		this->state->systemColor = april::Color::White;
+		this->state->systemColor = Color::White;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, vertices, count);
 	}
@@ -958,7 +978,7 @@ namespace april
 		++this->statCurrentFrameRenderCalls;
 		this->state->useTexture = true;
 		this->state->useColor = true;
-		this->state->systemColor = april::Color::White;
+		this->state->systemColor = Color::White;
 		this->_updateDeviceState();
 		this->_deviceRender(renderOperation, vertices, count);
 	}

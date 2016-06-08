@@ -390,7 +390,7 @@ namespace april
 		/// @param[in] color Color that is used to fill the backbuffer.
 		/// @param[in] depth If true, clears the depth buffer as well.
 		/// @note The parameter color is not applied to the depth-buffer.
-		void clear(april::Color color, bool depth = false);
+		void clear(Color color, bool depth = false);
 		/// @brief Clears the depth-buffer.
 		void clearDepth();
 		/// @brief Renders an array of vertices to the backbuffer.
@@ -478,7 +478,7 @@ namespace april
 		/// @brief Converts a Color into a system native unsigned int value used for colors internally.
 		/// @param[in] color The Color to convert.
 		/// @return A system native unsigned int value used for colors internally.
-		virtual unsigned int getNativeColorUInt(const april::Color& color) = 0;
+		virtual unsigned int getNativeColorUInt(const Color& color) = 0;
 		/// @brief Takes a screenshot aka captures the image data of the backbuffer.
 		/// @param[in] format The format to convert in which the screenshot should be returned.
 		/// @return An Image that contains a capture of the screen.
@@ -702,7 +702,7 @@ namespace april
 		/// @param[in] color Color that is used to fill the backbuffer.
 		/// @param[in] depth If true, clears the depth buffer as well.
 		/// @note The parameter color is not applied to the depth-buffer.
-		virtual void _deviceClear(april::Color color, bool depth) = 0;
+		virtual void _deviceClear(Color color, bool depth) = 0;
 		/// @brief Clears the device depth-buffer.
 		virtual void _deviceClearDepth() = 0;
 		/// @brief Executes the final renders call for a vertex array.

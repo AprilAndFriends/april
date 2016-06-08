@@ -17,7 +17,7 @@ namespace april
 	static PlainVertex pv[8];
 	static TexturedVertex tv[6];
 
-	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, PlainVertex* vertices, int count, april::Color color) :
+	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(false)
 	{
 		this->renderOperation = renderOperation;
@@ -27,7 +27,7 @@ namespace april
 		this->color = color;
 	}
 
-	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, TexturedVertex* vertices, int count, april::Color color) :
+	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(true)
 	{
 		this->renderOperation = renderOperation;
@@ -188,16 +188,16 @@ namespace april
 			}
 			if ((*it)->coloredVertices.size() > 0)
 			{
-				april::rendersys->_renderInternal((*it)->renderOperation, (april::ColoredVertex*)(*it)->coloredVertices, (*it)->coloredVertices.size());
+				april::rendersys->_renderInternal((*it)->renderOperation, (ColoredVertex*)(*it)->coloredVertices, (*it)->coloredVertices.size());
 			}
 			else if ((*it)->coloredTexturedVertices.size() > 0)
 			{
-				april::rendersys->_renderInternal((*it)->renderOperation, (april::ColoredTexturedVertex*)(*it)->coloredTexturedVertices, (*it)->coloredTexturedVertices.size());
+				april::rendersys->_renderInternal((*it)->renderOperation, (ColoredTexturedVertex*)(*it)->coloredTexturedVertices, (*it)->coloredTexturedVertices.size());
 			}
 #ifdef _DEBUG_TESTING
 			for_iter (i, 0, (*it)->rects.size())
 			{
-				april::rendersys->_drawRectInternal((*it)->rects[i] - (*it)->offsets[i], april::Color::Cyan);
+				april::rendersys->_drawRectInternal((*it)->rects[i] - (*it)->offsets[i], Color::Cyan);
 			}
 #endif
 			delete (*it);
@@ -566,7 +566,7 @@ namespace april
 #endif
 	}
 
-	void RenderHelperLayered2D::_updateVertices(RenderCall* renderCall, PlainVertex* vertices, int count, april::Color color)
+	void RenderHelperLayered2D::_updateVertices(RenderCall* renderCall, PlainVertex* vertices, int count, Color color)
 	{
 		this->_updateColoredVerticesSize(count);
 		this->_nativeColor = april::rendersys->getNativeColorUInt(color);
@@ -578,7 +578,7 @@ namespace april
 		}
 	}
 
-	void RenderHelperLayered2D::_updateVertices(RenderCall* renderCall, TexturedVertex* vertices, int count, april::Color color)
+	void RenderHelperLayered2D::_updateVertices(RenderCall* renderCall, TexturedVertex* vertices, int count, Color color)
 	{
 		this->_updateColoredTexturedVerticesSize(count);
 		this->_nativeColor = april::rendersys->getNativeColorUInt(color);
@@ -650,7 +650,7 @@ namespace april
 
 	bool RenderHelperLayered2D::render(RenderOperation renderOperation, PlainVertex* vertices, int count)
 	{
-		return this->render(renderOperation, vertices, count, april::Color::White);
+		return this->render(renderOperation, vertices, count, Color::White);
 	}
 
 	bool RenderHelperLayered2D::render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color)
@@ -673,7 +673,7 @@ namespace april
 
 	bool RenderHelperLayered2D::render(RenderOperation renderOperation, TexturedVertex* vertices, int count)
 	{
-		return this->render(renderOperation, vertices, count, april::Color::White);
+		return this->render(renderOperation, vertices, count, Color::White);
 	}
 
 	bool RenderHelperLayered2D::render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color)
@@ -750,7 +750,7 @@ namespace april
 
 	bool RenderHelperLayered2D::drawTexturedRect(grect rect, grect src)
 	{
-		return this->drawTexturedRect(rect, src, april::Color::White);
+		return this->drawTexturedRect(rect, src, Color::White);
 	}
 
 	bool RenderHelperLayered2D::drawTexturedRect(grect rect, grect src, Color color)

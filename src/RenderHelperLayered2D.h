@@ -71,8 +71,8 @@ namespace april
 			Color color;
 			bool useTexture;
 
-			RenderCall(RenderOperation renderOperation, PlainVertex* vertices, int count, april::Color color);
-			RenderCall(RenderOperation renderOperation, TexturedVertex* vertices, int count, april::Color color);
+			RenderCall(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color);
+			RenderCall(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color);
 			RenderCall(RenderOperation renderOperation, ColoredVertex* vertices, int count);
 			RenderCall(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
 			~RenderCall();
@@ -130,8 +130,8 @@ namespace april
 		gvec2 _max;
 		grect _boundingRect;
 
-		void _updateVertices(RenderCall* renderCall, PlainVertex* vertices, int count, april::Color color);
-		void _updateVertices(RenderCall* renderCall, TexturedVertex* vertices, int count, april::Color color);
+		void _updateVertices(RenderCall* renderCall, PlainVertex* vertices, int count, Color color);
+		void _updateVertices(RenderCall* renderCall, TexturedVertex* vertices, int count, Color color);
 		void _updateVertices(RenderCall* renderCall, ColoredVertex* vertices, int count);
 		void _updateVertices(RenderCall* renderCall, ColoredTexturedVertex* vertices, int count);
 		void _updateColoredVerticesSize(int count);
