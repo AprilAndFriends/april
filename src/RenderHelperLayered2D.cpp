@@ -538,7 +538,8 @@ namespace april
 		}
 		return layer;
 #else
-		for_iter_r (i, this->layers.size(), 0)
+		int zero = hmax(this->layers.size() - MAX_LAYER_CHECKS, 0);
+		for_iter_r (i, this->layers.size(), zero)
 		{
 			if (*currentValidLayer != NULL)
 			{
@@ -658,10 +659,12 @@ namespace april
 		{
 			return false;
 		}
+#ifdef MAX_LAYERS
 		if (this->layers.size() > MAX_LAYERS)
 		{
 			this->flush();
 		}
+#endif
 		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count, color);
 		hmutex::ScopeLock lock(&this->renderCallsMutex);
 		this->renderCalls += renderCall;
@@ -679,10 +682,12 @@ namespace april
 		{
 			return false;
 		}
+#ifdef MAX_LAYERS
 		if (this->layers.size() > MAX_LAYERS)
 		{
 			this->flush();
 		}
+#endif
 		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count, color);
 		hmutex::ScopeLock lock(&this->renderCallsMutex);
 		this->renderCalls += renderCall;
@@ -695,10 +700,12 @@ namespace april
 		{
 			return false;
 		}
+#ifdef MAX_LAYERS
 		if (this->layers.size() > MAX_LAYERS)
 		{
 			this->flush();
 		}
+#endif
 		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count);
 		hmutex::ScopeLock lock(&this->renderCallsMutex);
 		this->renderCalls += renderCall;
@@ -711,10 +718,12 @@ namespace april
 		{
 			return false;
 		}
+#ifdef MAX_LAYERS
 		if (this->layers.size() > MAX_LAYERS)
 		{
 			this->flush();
 		}
+#endif
 		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count);
 		hmutex::ScopeLock lock(&this->renderCallsMutex);
 		this->renderCalls += renderCall;

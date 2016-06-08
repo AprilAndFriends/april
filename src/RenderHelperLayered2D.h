@@ -29,7 +29,8 @@
 //#define _DEBUG_TESTING
 #endif
 
-#define MAX_LAYERS 150
+//#define MAX_LAYERS 150
+#define MAX_LAYER_CHECKS 10
 #define SIMPLE_ALGORITHM
 
 namespace april
