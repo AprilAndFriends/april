@@ -24,9 +24,13 @@
 #include "RenderHelper.h"
 #include "RenderState.h"
 
+
 #ifdef _DEBUG
 //#define _DEBUG_TESTING
 #endif
+
+#define MAX_LAYERS 150
+#define SIMPLE_ALGORITHM
 
 namespace april
 {
@@ -85,9 +89,11 @@ namespace april
 #endif
 			harray<ColoredVertex> coloredVertices;
 			harray<ColoredTexturedVertex> coloredTexturedVertices;
+#ifndef SIMPLE_ALGORITHM
+			harray<Layer*> parallelLayers;
+#endif
 
-			Layer(RenderCall* renderCall, const grect& rect, ColoredVertex* vertices, int count);
-			Layer(RenderCall* renderCall, const grect& rect, ColoredTexturedVertex* vertices, int count);
+			Layer(RenderCall* renderCall, const grect& rect);
 			~Layer();
 
 		};
@@ -104,7 +110,7 @@ namespace april
 		void _calculateRenderCall(RenderCall* renderCall);
 		void _addRenderLayerNonTextured(RenderCall* renderCall);
 		void _addRenderLayerTextured(RenderCall* renderCall);
-		void _solveIntersection(RenderCall* renderCall, Layer** currentValidLayer, Layer** lastValidLayer, int& intersectionIndex);
+		Layer* _processIntersection(RenderCall* renderCall, Layer** currentValidLayer, Layer** lastValidLayer, int& intersectionIndex);
 
 		static void _threadUpdate(hthread* thread);
 
