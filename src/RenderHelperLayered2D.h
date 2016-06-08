@@ -24,13 +24,12 @@
 #include "RenderHelper.h"
 #include "RenderState.h"
 
-
 #ifdef _DEBUG
 //#define _DEBUG_TESTING
 #endif
 
-//#define MAX_LAYERS 150
-#define MAX_LAYER_CHECKS 10
+//#define MAX_LAYERS 100
+#define MAX_LAYER_CHECKS 1000
 #define SIMPLE_ALGORITHM
 
 namespace april
