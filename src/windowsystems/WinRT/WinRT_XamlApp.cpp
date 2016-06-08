@@ -185,10 +185,23 @@ namespace april
 		Windows::UI::Xaml::Window::Current->Activate();
 	}
 
-	void WinRT_XamlApp::OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args)
+	void WinRT_XamlApp::OnWindowActivationChanged(_In_ Object^ sender, _In_ WindowActivatedEventArgs^ args)
 	{
 		args->Handled = true;
-		hlog::write(logTag, "WinRT window activation state changing...");
+		hstr state = "unknown";
+		if (args->WindowActivationState == CoreWindowActivationState::Deactivated)
+		{
+			state = "deactivated";
+		}
+		else if (args->WindowActivationState == CoreWindowActivationState::CodeActivated)
+		{
+			state = "code-activated";
+		}
+		else if (args->WindowActivationState == CoreWindowActivationState::PointerActivated)
+		{
+			state = "pointer-activated";
+		}
+		hlog::write(logTag, "WinRT window activation state changing: " + state);
 		if (!this->activated)
 		{
 			this->activated = true;
@@ -239,14 +252,11 @@ namespace april
 		else if (args->WindowActivationState == CoreWindowActivationState::Deactivated)
 		{
 			this->_handleFocusChange(false);
-			this->_tryRemoveRenderToken();
 		}
 		else if (args->WindowActivationState == CoreWindowActivationState::CodeActivated ||
 			args->WindowActivationState == CoreWindowActivationState::PointerActivated)
 		{
-			this->firstFrameAfterActivateHack = true;
 			this->_handleFocusChange(true);
-			this->_tryAddRenderToken();
 		}
 	}
 
@@ -302,9 +312,21 @@ namespace april
 	void WinRT_XamlApp::_handleFocusChange(bool focused)
 	{
 		this->_resetTouches();
-		if (april::window != NULL && april::window->isFocused() != focused)
+		if (april::window != NULL)
 		{
-			april::window->handleFocusChangeEvent(focused);
+			if (april::window->isFocused() != focused)
+			{
+				april::window->handleFocusChangeEvent(focused);
+			}
+		}
+		if (focused)
+		{
+			this->firstFrameAfterActivateHack = true;
+			this->_tryAddRenderToken();
+		}
+		else
+		{
+			this->_tryRemoveRenderToken();
 		}
 	}
 
@@ -330,6 +352,7 @@ namespace april
 
 	void WinRT_XamlApp::OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args)
 	{
+		hlog::write(logTag, "WinRT visibility change: " + hstr(args->Visible ? "true" : "false"));
 		args->Handled = true;
 		this->_handleFocusChange(args->Visible);
 	}
