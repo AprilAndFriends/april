@@ -24,6 +24,8 @@
 #include "RenderHelper.h"
 #include "RenderState.h"
 
+#define MAX_VERTEX_POOL 32768
+
 #ifdef _DEBUG
 //#define _DEBUG_TESTING
 #endif
@@ -53,9 +55,66 @@ namespace april
 		bool drawTexturedRect(grect rect, grect src, Color color);
 		
 	protected:
+		class VertexPool
+		{
+		public:
+			VertexPool();
+			~VertexPool();
+
+			PlainVertex* allocate(PlainVertex* data, int count);
+			TexturedVertex* allocate(TexturedVertex* data, int count);
+			ColoredVertex* allocate(ColoredVertex* data, int count);
+			ColoredTexturedVertex* allocate(ColoredTexturedVertex* data, int count);
+			void release(PlainVertex* data);
+			void release(TexturedVertex* data);
+			void release(ColoredVertex* data);
+			void release(ColoredTexturedVertex* data);
+
+		protected:
+			template <typename T>
+			class Allocation
+			{
+			public:
+				T* data;
+				int index;
+				int count;
+
+				Allocation(T* data, int index, int count)
+				{
+					this->data = data;
+					this->index = index;
+					this->count = count;
+				}
+
+				~Allocation()
+				{
+					if (this->index < 0) // indicates dynamic allocation
+					{
+						delete[] this->data;
+					}
+				}
+
+			};
+
+			PlainVertex plainVertices[MAX_VERTEX_POOL];
+			TexturedVertex texturedVertices[MAX_VERTEX_POOL];
+			ColoredVertex coloredVertices[MAX_VERTEX_POOL];
+			ColoredTexturedVertex coloredTexturedVertices[MAX_VERTEX_POOL];
+			harray<Allocation<PlainVertex>* > plainAllocations;
+			harray<Allocation<TexturedVertex>* > texturedAllocations;
+			harray<Allocation<ColoredVertex>* > coloredAllocations;
+			harray<Allocation<ColoredTexturedVertex>* > coloredTexturedAllocations;
+			hmutex plainMutex;
+			hmutex texturedMutex;
+			hmutex coloredMutex;
+			hmutex coloredTexturedMutex;
+
+		};
+
 		class RenderCall
 		{
 		public:
+			VertexPool* vertexPool;
 			RenderState state;
 			RenderOperation renderOperation;
 			PlainVertex* plainVertices;
@@ -66,10 +125,10 @@ namespace april
 			Color color;
 			bool useTexture;
 
-			RenderCall(RenderOperation renderOperation, PlainVertex* vertices, int count, april::Color color);
-			RenderCall(RenderOperation renderOperation, TexturedVertex* vertices, int count, april::Color color);
-			RenderCall(RenderOperation renderOperation, ColoredVertex* vertices, int count);
-			RenderCall(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
+			RenderCall(VertexPool* vertexPool, RenderOperation renderOperation, PlainVertex* vertices, int count, april::Color color);
+			RenderCall(VertexPool* vertexPool, RenderOperation renderOperation, TexturedVertex* vertices, int count, april::Color color);
+			RenderCall(VertexPool* vertexPool, RenderOperation renderOperation, ColoredVertex* vertices, int count);
+			RenderCall(VertexPool* vertexPool, RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
 			~RenderCall();
 
 		};
@@ -92,6 +151,7 @@ namespace april
 
 		};
 
+		VertexPool vertexPool;
 		harray<RenderCall*> renderCalls;
 		hmutex renderCallsMutex;
 		harray<Layer*> layers;

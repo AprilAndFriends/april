@@ -17,41 +17,261 @@ namespace april
 	static PlainVertex pv[8];
 	static TexturedVertex tv[6];
 
-	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, PlainVertex* vertices, int count, april::Color color) :
+	RenderHelperLayered2D::VertexPool::VertexPool()
+	{
+	}
+
+	RenderHelperLayered2D::VertexPool::~VertexPool()
+	{
+		foreach (Allocation<PlainVertex>*, it, this->plainAllocations)
+		{
+			delete (*it);
+		}
+		foreach (Allocation<TexturedVertex>*, it, this->texturedAllocations)
+		{
+			delete (*it);
+		}
+		foreach (Allocation<ColoredVertex>*, it, this->coloredAllocations)
+		{
+			delete (*it);
+		}
+		foreach (Allocation<ColoredTexturedVertex>*, it, this->coloredTexturedAllocations)
+		{
+			delete (*it);
+		}
+	}
+
+	PlainVertex* RenderHelperLayered2D::VertexPool::allocate(PlainVertex* data, int count)
+	{
+		PlainVertex* result = NULL;
+		int index = 0;
+		hmutex::ScopeLock lock(&this->plainMutex);
+		for_iter (i, 0, this->plainAllocations.size())
+		{
+			if (index + count < this->plainAllocations[i]->index)
+			{
+				result = &this->plainVertices[index];
+				this->plainAllocations.insertAt(i, new Allocation<PlainVertex>(result, index, count));
+				break;
+			}
+			index = this->plainAllocations[i]->index + this->plainAllocations[i]->count;
+		}
+		if (result == NULL)
+		{
+			if (index + count < MAX_VERTEX_POOL)
+			{
+				result = &this->plainVertices[index];
+			}
+			else
+			{
+				result = new PlainVertex[count];
+				index = -1;
+			}
+			this->plainAllocations += new Allocation<PlainVertex>(result, index, count);
+		}
+		lock.release();
+		if (data != NULL)
+		{
+			memcpy(result, data, count * sizeof(PlainVertex));
+		}
+		return result;
+	}
+
+	TexturedVertex* RenderHelperLayered2D::VertexPool::allocate(TexturedVertex* data, int count)
+	{
+		TexturedVertex* result = NULL;
+		int index = 0;
+		hmutex::ScopeLock lock(&this->texturedMutex);
+		for_iter (i, 0, this->texturedAllocations.size())
+		{
+			if (index + count < this->texturedAllocations[i]->index)
+			{
+				result = &this->texturedVertices[index];
+				this->texturedAllocations.insertAt(i, new Allocation<TexturedVertex>(result, index, count));
+				break;
+			}
+			index = this->texturedAllocations[i]->index + this->texturedAllocations[i]->count;
+		}
+		if (result == NULL)
+		{
+			if (index + count < MAX_VERTEX_POOL)
+			{
+				result = &this->texturedVertices[index];
+			}
+			else
+			{
+				result = new TexturedVertex[count];
+				index = -1;
+			}
+			this->texturedAllocations += new Allocation<TexturedVertex>(result, index, count);
+		}
+		lock.release();
+		if (data != NULL)
+		{
+			memcpy(result, data, count * sizeof(TexturedVertex));
+		}
+		return result;
+	}
+
+	ColoredVertex* RenderHelperLayered2D::VertexPool::allocate(ColoredVertex* data, int count)
+	{
+		ColoredVertex* result = NULL;
+		int index = 0;
+		hmutex::ScopeLock lock(&this->coloredMutex);
+		for_iter (i, 0, this->coloredAllocations.size())
+		{
+			if (index + count < this->coloredAllocations[i]->index)
+			{
+				result = &this->coloredVertices[index];
+				this->coloredAllocations.insertAt(i, new Allocation<ColoredVertex>(result, index, count));
+				break;
+			}
+			index = this->coloredAllocations[i]->index + this->coloredAllocations[i]->count;
+		}
+		if (result == NULL)
+		{
+			if (index + count < MAX_VERTEX_POOL)
+			{
+				result = &this->coloredVertices[index];
+			}
+			else
+			{
+				result = new ColoredVertex[count];
+				index = -1;
+			}
+			this->coloredAllocations += new Allocation<ColoredVertex>(result, index, count);
+		}
+		lock.release();
+		if (data != NULL)
+		{
+			memcpy(result, data, count * sizeof(ColoredVertex));
+		}
+		return result;
+	}
+
+	ColoredTexturedVertex* RenderHelperLayered2D::VertexPool::allocate(ColoredTexturedVertex* data, int count)
+	{
+		ColoredTexturedVertex* result = NULL;
+		int index = 0;
+		hmutex::ScopeLock lock(&this->coloredTexturedMutex);
+		for_iter (i, 0, this->coloredTexturedAllocations.size())
+		{
+			if (index + count < this->coloredTexturedAllocations[i]->index)
+			{
+				result = &this->coloredTexturedVertices[index];
+				this->coloredTexturedAllocations.insertAt(i, new Allocation<ColoredTexturedVertex>(result, index, count));
+				break;
+			}
+			index = this->coloredTexturedAllocations[i]->index + this->coloredTexturedAllocations[i]->count;
+		}
+		if (result == NULL)
+		{
+			if (index + count < MAX_VERTEX_POOL)
+			{
+				result = &this->coloredTexturedVertices[index];
+			}
+			else
+			{
+				result = new ColoredTexturedVertex[count];
+				index = -1;
+			}
+			this->coloredTexturedAllocations += new Allocation<ColoredTexturedVertex>(result, index, count);
+		}
+		lock.release();
+		if (data != NULL)
+		{
+			memcpy(result, data, count * sizeof(ColoredTexturedVertex));
+		}
+		return result;
+	}
+
+	void RenderHelperLayered2D::VertexPool::release(PlainVertex* data)
+	{
+		hmutex::ScopeLock lock(&this->plainMutex);
+		for_iter (i, 0, this->plainAllocations.size())
+		{
+			if (this->plainAllocations[i]->data == data)
+			{
+				delete this->plainAllocations.removeAt(i);
+				break;
+			}
+		}
+	}
+
+	void RenderHelperLayered2D::VertexPool::release(TexturedVertex* data)
+	{
+		hmutex::ScopeLock lock(&this->texturedMutex);
+		for_iter (i, 0, this->texturedAllocations.size())
+		{
+			if (this->texturedAllocations[i]->data == data)
+			{
+				delete this->texturedAllocations.removeAt(i);
+				break;
+			}
+		}
+	}
+
+	void RenderHelperLayered2D::VertexPool::release(ColoredVertex* data)
+	{
+		hmutex::ScopeLock lock(&this->coloredMutex);
+		for_iter (i, 0, this->coloredAllocations.size())
+		{
+			if (this->coloredAllocations[i]->data == data)
+			{
+				delete this->coloredAllocations.removeAt(i);
+				break;
+			}
+		}
+	}
+
+	void RenderHelperLayered2D::VertexPool::release(ColoredTexturedVertex* data)
+	{
+		hmutex::ScopeLock lock(&this->coloredTexturedMutex);
+		for_iter (i, 0, this->coloredTexturedAllocations.size())
+		{
+			if (this->coloredTexturedAllocations[i]->data == data)
+			{
+				delete this->coloredTexturedAllocations.removeAt(i);
+				break;
+			}
+		}
+	}
+
+	RenderHelperLayered2D::RenderCall::RenderCall(VertexPool* vertexPool, RenderOperation renderOperation, PlainVertex* vertices, int count, april::Color color) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(false)
 	{
+		this->vertexPool = vertexPool;
 		this->renderOperation = renderOperation;
-		this->plainVertices = new PlainVertex[count];
-		memcpy(this->plainVertices, vertices, count * sizeof(PlainVertex));
+		this->plainVertices = this->vertexPool->allocate(vertices, count);
 		this->count = count;
 		this->color = color;
 	}
 
-	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, TexturedVertex* vertices, int count, april::Color color) :
+	RenderHelperLayered2D::RenderCall::RenderCall(VertexPool* vertexPool, RenderOperation renderOperation, TexturedVertex* vertices, int count, april::Color color) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(true)
 	{
+		this->vertexPool = vertexPool;
 		this->renderOperation = renderOperation;
-		this->texturedVertices = new TexturedVertex[count];
-		memcpy(this->texturedVertices, vertices, count * sizeof(TexturedVertex));
+		this->texturedVertices = this->vertexPool->allocate(vertices, count);
 		this->count = count;
 		this->color = color;
 	}
 
-	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, ColoredVertex* vertices, int count) :
+	RenderHelperLayered2D::RenderCall::RenderCall(VertexPool* vertexPool, RenderOperation renderOperation, ColoredVertex* vertices, int count) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(false)
 	{
+		this->vertexPool = vertexPool;
 		this->renderOperation = renderOperation;
-		this->coloredVertices = new ColoredVertex[count];
-		memcpy(this->coloredVertices, vertices, count * sizeof(ColoredVertex));
+		this->coloredVertices = this->vertexPool->allocate(vertices, count);
 		this->count = count;
 	}
 
-	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count) :
+	RenderHelperLayered2D::RenderCall::RenderCall(VertexPool* vertexPool, RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(true)
 	{
+		this->vertexPool = vertexPool;
 		this->renderOperation = renderOperation;
-		this->coloredTexturedVertices = new ColoredTexturedVertex[count];
-		memcpy(this->coloredTexturedVertices, vertices, count * sizeof(ColoredTexturedVertex));
+		this->coloredTexturedVertices = this->vertexPool->allocate(vertices, count);
 		this->count = count;
 	}
 
@@ -59,19 +279,19 @@ namespace april
 	{
 		if (this->plainVertices != NULL)
 		{
-			delete[] this->plainVertices;
+			this->vertexPool->release(this->plainVertices);
 		}
 		if (this->texturedVertices != NULL)
 		{
-			delete[] this->texturedVertices;
+			this->vertexPool->release(this->texturedVertices);
 		}
 		if (this->coloredVertices != NULL)
 		{
-			delete[] this->coloredVertices;
+			this->vertexPool->release(this->coloredVertices);
 		}
 		if (this->coloredTexturedVertices != NULL)
 		{
-			delete[] this->coloredTexturedVertices;
+			this->vertexPool->release(this->coloredTexturedVertices);
 		}
 	}
 
@@ -540,7 +760,7 @@ namespace april
 		{
 			return false;
 		}
-		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count, color);
+		RenderCall* renderCall = new RenderCall(&this->vertexPool, renderOperation, vertices, count, color);
 		hmutex::ScopeLock lock(&this->renderCallsMutex);
 		this->renderCalls += renderCall;
 		return true;
@@ -557,7 +777,7 @@ namespace april
 		{
 			return false;
 		}
-		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count, color);
+		RenderCall* renderCall = new RenderCall(&this->vertexPool, renderOperation, vertices, count, color);
 		hmutex::ScopeLock lock(&this->renderCallsMutex);
 		this->renderCalls += renderCall;
 		return true;
@@ -569,7 +789,7 @@ namespace april
 		{
 			return false;
 		}
-		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count);
+		RenderCall* renderCall = new RenderCall(&this->vertexPool, renderOperation, vertices, count);
 		hmutex::ScopeLock lock(&this->renderCallsMutex);
 		this->renderCalls += renderCall;
 		return true;
@@ -581,7 +801,7 @@ namespace april
 		{
 			return false;
 		}
-		RenderCall* renderCall = new RenderCall(renderOperation, vertices, count);
+		RenderCall* renderCall = new RenderCall(&this->vertexPool, renderOperation, vertices, count);
 		hmutex::ScopeLock lock(&this->renderCallsMutex);
 		this->renderCalls += renderCall;
 		return true;
