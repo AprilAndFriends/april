@@ -333,6 +333,11 @@ namespace april
 	void WinRT_XamlApp::OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args)
 	{
 		args->Handled = true;
+		this->_updateWindowSize(args->Size.Width, args->Size.Height);
+	}
+
+	void WinRT_XamlApp::_updateWindowSize(float width, float height)
+	{
 		this->_resetTouches();
 		april::getSystemInfo(); // so the displayResolution value gets updated
 		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
@@ -344,9 +349,9 @@ namespace april
 		if (april::window != NULL)
 		{
 			float dpiRatio = WinRT::getDpiRatio();
-			int width = hround(args->Size.Width * dpiRatio);
-			int height = hround(args->Size.Height * dpiRatio);
-			((WinRT_Window*)april::window)->changeSize(width, height);
+			int correctedWidth = hround(width * dpiRatio);
+			int correctedHeight = hround(height * dpiRatio);
+			((WinRT_Window*)april::window)->changeSize(correctedWidth, correctedHeight);
 		}
 	}
 
@@ -364,8 +369,8 @@ namespace april
 
 	void WinRT_XamlApp::OnDpiChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
 	{
-		this->_resetTouches();
-		april::getSystemInfo(); // so the DPI value gets updated
+		CoreWindow^ window = CoreWindow::GetForCurrentThread();
+		this->_updateWindowSize(window->Bounds.Width, window->Bounds.Height);
 	}
 
 	void WinRT_XamlApp::OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)

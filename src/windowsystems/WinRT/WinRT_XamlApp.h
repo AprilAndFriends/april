@@ -76,6 +76,7 @@ namespace april
 		
 	protected:
 		virtual void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;
+		void _updateWindowSize(float width, float height);
 		
 	private:
 		bool running;
