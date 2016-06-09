@@ -25,12 +25,13 @@
 #include "RenderState.h"
 
 #ifdef _DEBUG
-//#define _DEBUG_TESTING
+//#define _DEBUG_TESTING 300
+//#define _DEBUG_BOUNDING_RECTS
 #endif
 
-//#define MAX_LAYERS 100
-#define MAX_LAYER_CHECKS 1000
-#define SIMPLE_ALGORITHM
+//#define MAX_LAYERS 10000
+//#define MAX_LAYER_CHECKS 100
+//#define SIMPLE_ALGORITHM
 
 namespace april
 {
@@ -55,7 +56,7 @@ namespace april
 		bool drawFilledRect(grect rect, Color color);
 		bool drawTexturedRect(grect rect, grect src);
 		bool drawTexturedRect(grect rect, grect src, Color color);
-		
+
 	protected:
 		class RenderCall
 		{
@@ -81,10 +82,11 @@ namespace april
 		class Layer
 		{
 		public:
+			int index;
 			RenderState state;
 			RenderOperation renderOperation;
 			harray<grect> rects;
-#ifdef _DEBUG_TESTING
+#ifdef _DEBUG_BOUNDING_RECTS
 			harray<gvec2> offsets;
 #endif
 			harray<ColoredVertex> coloredVertices;
@@ -93,7 +95,7 @@ namespace april
 			harray<Layer*> parallelLayers;
 #endif
 
-			Layer(RenderCall* renderCall, const grect& rect);
+			Layer(int index, RenderCall* renderCall, const grect& rect);
 			~Layer();
 
 		};
@@ -112,6 +114,7 @@ namespace april
 		void _addRenderLayerTextured(RenderCall* renderCall);
 		Layer* _processIntersection(RenderCall* renderCall, Layer** currentValidLayer, Layer** lastValidLayer, int& intersectionIndex);
 
+		static bool _sortLayers(RenderHelperLayered2D::Layer* a, RenderHelperLayered2D::Layer* b);
 		static void _threadUpdate(hthread* thread);
 
 	private:

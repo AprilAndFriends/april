@@ -16,6 +16,7 @@ namespace april
 	// optimizations, but they are not thread-safe
 	static PlainVertex pv[8];
 	static TexturedVertex tv[6];
+	static grect screenRect(-1.0f, -1.0f, 2.0f, 2.0f);
 
 	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(false)
@@ -75,8 +76,9 @@ namespace april
 		}
 	}
 
-	RenderHelperLayered2D::Layer::Layer(RenderCall* renderCall, const grect& rect)
+	RenderHelperLayered2D::Layer::Layer(int index, RenderCall* renderCall, const grect& rect)
 	{
+		this->index = index;
 		this->rects += rect;
 		this->renderOperation = renderCall->renderOperation;
 		this->state.modelviewMatrixChanged = false;
@@ -89,6 +91,7 @@ namespace april
 		this->state.blendMode = renderCall->state.blendMode;
 		this->state.colorMode = renderCall->state.colorMode;
 		this->state.colorModeFactor = renderCall->state.colorModeFactor;
+		this->state.systemColor = Color::White;
 	}
 
 	RenderHelperLayered2D::Layer::~Layer()
@@ -169,7 +172,7 @@ namespace april
 		RenderState* state = april::rendersys->state;
 		bool anyViewportChanged = false;
 #ifdef _DEBUG_TESTING
-		int count = 5;
+		int count = _DEBUG_TESTING;
 #endif
 		foreach (Layer*, it, layers)
 		{
@@ -194,7 +197,7 @@ namespace april
 			{
 				april::rendersys->_renderInternal((*it)->renderOperation, (ColoredTexturedVertex*)(*it)->coloredTexturedVertices, (*it)->coloredTexturedVertices.size());
 			}
-#ifdef _DEBUG_TESTING
+#ifdef _DEBUG_BOUNDING_RECTS
 			for_iter (i, 0, (*it)->rects.size())
 			{
 				april::rendersys->_drawRectInternal((*it)->rects[i] - (*it)->offsets[i], Color::Cyan);
@@ -255,6 +258,11 @@ namespace april
 			this->flush();
 			return true;
 		}
+		if (april::rendersys->state->viewportChanged)
+		{
+			this->flush();
+			april::rendersys->state->viewportChanged = false;
+		}
 		return false;
 	}
 
@@ -299,29 +307,29 @@ namespace april
 			this->_max.y = hmax(this->_max.y, this->_coloredVertices[i].y);
 		}
 		this->_boundingRect.set(this->_min, this->_max - this->_min);
-		gvec2 viewportOffset;
-		//if (renderCall->state.viewport.x != 0.0f || renderCall->state.viewport.y != 0.0f)
-		{
-			gvec3 offset = renderCall->state.projectionMatrix * gvec3(renderCall->state.viewport.x, renderCall->state.viewport.y, 0.0f);
-			viewportOffset.set(offset.x, offset.y);
-			this->_boundingRect += viewportOffset;
-		}
-		/*
-		this->_boundingRect.clip(grect(0.0f, 0.0f, renderCall->state.viewport.getSize()));
-		if (this->_boundingRect.w <= 0.0f || this->_boundingRect.h <= 0.0f)
+		if (!this->_boundingRect.intersects(screenRect))
 		{
 			return;
 		}
-		*/
+#ifdef _DEBUG_BOUNDING_RECTS
+		gvec3 offset = renderCall->state.projectionMatrix * gvec3(renderCall->state.viewport.centerX(), renderCall->state.viewport.centerY(), 0.0f);
+		gvec2 viewportOffset(offset.x, offset.y);
+#endif
 		// check existing rects
 		Layer* currentValidLayer = NULL;
 		Layer* lastValidLayer = NULL;
 		int intersectionIndex = -1;
 		hmutex::ScopeLock lock(&this->layersMutex);
 		Layer* layer = this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
+		//*
+		for_iter (i, 0, this->layers.size())
+		{
+			this->layers[i]->index = i;
+		}
+		//*/
 #ifndef SIMPLE_ALGORITHM
 		layer->coloredVertices.add(this->_coloredVertices, this->_coloredVerticesCount);
-#ifdef _DEBUG_TESTING
+#ifdef _DEBUG_BOUNDING_RECTS
 		layer->offsets += viewportOffset;
 #endif
 #else
@@ -329,23 +337,23 @@ namespace april
 		{
 			lastValidLayer->coloredVertices.add(this->_coloredVertices, this->_coloredVerticesCount);
 			lastValidLayer->rects += this->_boundingRect;
-#ifdef _DEBUG_TESTING
+#ifdef _DEBUG_BOUNDING_RECTS
 			lastValidLayer->offsets += viewportOffset;
 #endif
 		}
 		else if (intersectionIndex >= 0 && currentValidLayer == this->layers[intersectionIndex])
 		{
-			this->layers.insertAt(intersectionIndex + 1, new Layer(renderCall, this->_boundingRect));
+			this->layers.insertAt(intersectionIndex + 1, new Layer(-1, renderCall, this->_boundingRect));
 			this->layers[intersectionIndex + 1]->coloredVertices.add(this->_coloredVertices, this->_coloredVerticesCount);
-#ifdef _DEBUG_TESTING
+#ifdef _DEBUG_BOUNDING_RECTS
 			this->layers[intersectionIndex + 1]->offsets += viewportOffset;
 #endif
 		}
 		else
 		{
-			this->layers += new Layer(renderCall, this->_boundingRect);
+			this->layers += new Layer(-1, renderCall, this->_boundingRect);
 			this->layers.last()->coloredVertices.add(this->_coloredVertices, this->_coloredVerticesCount);
-#ifdef _DEBUG_TESTING
+#ifdef _DEBUG_BOUNDING_RECTS
 			this->layers.last()->offsets += viewportOffset;
 #endif
 		}
@@ -365,29 +373,29 @@ namespace april
 			this->_max.y = hmax(this->_max.y, this->_coloredTexturedVertices[i].y);
 		}
 		this->_boundingRect.set(this->_min, this->_max - this->_min);
-		gvec2 viewportOffset;
-		//if (renderCall->state.viewport.x != 0.0f || renderCall->state.viewport.y != 0.0f)
-		{
-			gvec3 offset = renderCall->state.projectionMatrix * gvec3(renderCall->state.viewport.x, renderCall->state.viewport.y, 0.0f);
-			viewportOffset.set(offset.x, offset.y);
-			this->_boundingRect += viewportOffset;
-		}
-		/*
-		this->_boundingRect.clip(grect(0.0f, 0.0f, renderCall->state.viewport.getSize()));
-		if (this->_boundingRect.w <= 0.0f || this->_boundingRect.h <= 0.0f)
+		if (!this->_boundingRect.intersects(screenRect))
 		{
 			return;
 		}
-		*/
+#ifdef _DEBUG_BOUNDING_RECTS
+		gvec3 offset = renderCall->state.projectionMatrix * gvec3(renderCall->state.viewport.centerX(), renderCall->state.viewport.centerY(), 0.0f);
+		gvec2 viewportOffset(offset.x, offset.y);
+#endif
 		// check existing rects
 		Layer* currentValidLayer = NULL;
 		Layer* lastValidLayer = NULL;
 		int intersectionIndex = -1;
 		hmutex::ScopeLock lock(&this->layersMutex);
 		Layer* layer = this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
+		//*
+		for_iter (i, 0, this->layers.size())
+		{
+			this->layers[i]->index = i;
+		}
+		//*/
 #ifndef SIMPLE_ALGORITHM
 		layer->coloredTexturedVertices.add(this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
-#ifdef _DEBUG_TESTING
+#ifdef _DEBUG_BOUNDING_RECTS
 		layer->offsets += viewportOffset;
 #endif
 #else
@@ -395,23 +403,23 @@ namespace april
 		{
 			lastValidLayer->coloredTexturedVertices.add(this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
 			lastValidLayer->rects += this->_boundingRect;
-#ifdef _DEBUG_TESTING
+#ifdef _DEBUG_BOUNDING_RECTS
 			lastValidLayer->offsets += viewportOffset;
 #endif
 		}
 		else if (intersectionIndex >= 0 && currentValidLayer == this->layers[intersectionIndex])
 		{
-			this->layers.insertAt(intersectionIndex + 1, new Layer(renderCall, this->_boundingRect));
+			this->layers.insertAt(intersectionIndex + 1, new Layer(-1, renderCall, this->_boundingRect));
 			this->layers[intersectionIndex + 1]->coloredTexturedVertices.add(this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
-#ifdef _DEBUG_TESTING
+#ifdef _DEBUG_BOUNDING_RECTS
 			this->layers[intersectionIndex + 1]->offsets += viewportOffset;
 #endif
 		}
 		else
 		{
-			this->layers += new Layer(renderCall, this->_boundingRect);
+			this->layers += new Layer(-1, renderCall, this->_boundingRect);
 			this->layers.last()->coloredTexturedVertices.add(this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
-#ifdef _DEBUG_TESTING
+#ifdef _DEBUG_BOUNDING_RECTS
 			this->layers.last()->offsets += viewportOffset;
 #endif
 		}
@@ -421,6 +429,7 @@ namespace april
 	RenderHelperLayered2D::Layer* RenderHelperLayered2D::_processIntersection(RenderCall* renderCall, Layer** currentValidLayer, Layer** lastValidLayer, int& intersectionIndex)
 	{
 #ifndef SIMPLE_ALGORITHM
+		// find first intersection
 		int intersectedIndex = -1;
 		for_iter_r (i, this->layers.size(), 0)
 		{
@@ -432,113 +441,120 @@ namespace april
 					break;
 				}
 			}
+			if (intersectedIndex >= 0)
+			{
+				break;
+			}
 		}
 		if (intersectedIndex >= 0)
 		{
-			Layer* validLayer = NULL;
-			Layer* parallelLayer = NULL;
-			int validIndex = NULL;
-			foreach (Layer*, it, this->layers[intersectedIndex]->parallelLayers)
+			// find matching layers located below the intersected layer
+			Layer* intersectedLayer = this->layers[intersectedIndex];
+			harray<Layer*> validLayers;
+			harray<Layer*> validAboveLayers;
+			foreach (Layer*, it, intersectedLayer->parallelLayers)
 			{
-				if ((*it)->state.useTexture == renderCall->useTexture && (*it)->renderOperation == renderCall->renderOperation &&
-					(*it)->state.blendMode == renderCall->state.blendMode && (*it)->state.colorMode == renderCall->state.colorMode &&
+				if ((*it)->state.useTexture == renderCall->useTexture &&
+					(*it)->renderOperation == renderCall->renderOperation &&
+					(*it)->state.blendMode == renderCall->state.blendMode &&
+					(*it)->state.colorMode == renderCall->state.colorMode &&
 					(*it)->state.colorModeFactor == renderCall->state.colorModeFactor &&
-					(*it)->state.texture == renderCall->state.texture && (*it)->state.viewport == renderCall->state.viewport)
+					(*it)->state.texture == renderCall->state.texture)
 				{
-					validLayer = (*it);
-					validIndex = this->layers.indexOf(validLayer);
-					parallelLayer = this->layers[intersectedIndex];
-					this->layers[intersectedIndex]->parallelLayers -= validLayer;
-					break;
-				}
-			}
-			if (validLayer == NULL)
-			{
-				for_iter (i, intersectedIndex + 1, this->layers.size())
-				{
-					if (this->layers[i]->state.useTexture == renderCall->useTexture && this->layers[i]->renderOperation == renderCall->renderOperation &&
-						this->layers[i]->state.blendMode == renderCall->state.blendMode && this->layers[i]->state.colorMode == renderCall->state.colorMode &&
-						this->layers[i]->state.colorModeFactor == renderCall->state.colorModeFactor &&
-						this->layers[i]->state.texture == renderCall->state.texture && this->layers[i]->state.viewport == renderCall->state.viewport)
+					if ((*it)->index < intersectedIndex)
 					{
-						validLayer = this->layers[i];
-						validIndex = i;
-						break;
+						validLayers += (*it);
+					}
+					else
+					{
+						validAboveLayers += (*it);
 					}
 				}
 			}
-			if (validLayer != NULL)
+			if ((intersectedLayer->state.useTexture != renderCall->useTexture ||
+				intersectedLayer->renderOperation != renderCall->renderOperation ||
+				intersectedLayer->state.blendMode != renderCall->state.blendMode ||
+				intersectedLayer->state.colorMode != renderCall->state.colorMode ||
+				intersectedLayer->state.colorModeFactor != renderCall->state.colorModeFactor ||
+				intersectedLayer->state.texture != renderCall->state.texture) &&
+				validLayers.size() > 0)
 			{
-				harray<Layer*> removed;
-				validLayer->rects += this->_boundingRect;
-				if (parallelLayer != NULL)
+				// check below layers for a matching layer
+				bool valid = false;
+				foreach_r (Layer*, it, validLayers)
 				{
-					validLayer->parallelLayers -= parallelLayer;
-				}
-				foreach (Layer*, it, validLayer->parallelLayers)
-				{
-					foreach (grect, it2, (*it)->rects)
+					valid = true;
+					for_iter (i, (*it)->index + 1, intersectedIndex - 1)
 					{
-						if (this->_boundingRect.intersects(*it2))
+						if (!(*it)->parallelLayers.has(this->layers[i]) || !intersectedLayer->parallelLayers.has(this->layers[i]))
 						{
-							removed += (*it);
-							(*it)->parallelLayers -= validLayer;
+							valid = false;
 							break;
 						}
 					}
-				}
-				if (removed.size() > 0 || parallelLayer != NULL)
-				{
-					validLayer->parallelLayers -= removed;
-					if (parallelLayer != NULL)
+					if (valid)
 					{
-						removed += parallelLayer;
-					}
-					harray<int> removedIndexes;
-					foreach (Layer*, it, removed)
-					{
-						removedIndexes += this->layers.indexOf(*it);
-					}
-					int maxIndex = removedIndexes.max();
-					if (validIndex < maxIndex)
-					{
-						int currentIndex = validIndex;
-						for_iter (i, 0, removedIndexes.size())
+						(*it)->rects += this->_boundingRect;
+						intersectedLayer->parallelLayers -= (*it);
+						(*it)->parallelLayers -= intersectedLayer;
+						this->layers.removeAt((*it)->index);
+						this->layers.insertAt(intersectedIndex, (*it));
+						for_iter (i, (*it)->index, intersectedIndex + 1)
 						{
-							if (validIndex < removedIndexes[i])
-							{
-								if (removedIndexes[i] - currentIndex > 1)
-								{
-									this->layers.removeAt(validIndex);
-									this->layers.insertAt(currentIndex, validLayer);
-									break;
-								}
-								currentIndex = removedIndexes[i];
-							}
+							this->layers[i]->index = i;
 						}
+						return (*it);
 					}
 				}
+			}
+			if (validAboveLayers.size() > 0)
+			{
+				Layer* validLayer = validAboveLayers.first();
+				validLayer->rects += this->_boundingRect;
 				return validLayer;
 			}
 		}
-		Layer* layer = new Layer(renderCall, this->_boundingRect);
-		if (intersectedIndex >= 0)
+		Layer* layer = new Layer(intersectedIndex + 1, renderCall, this->_boundingRect);
+		if (hbetweenIE(intersectedIndex, 0, this->layers.size() - 1))
 		{
 			layer->parallelLayers = this->layers(intersectedIndex + 1, this->layers.size() - intersectedIndex - 1);
 			this->layers.insertAt(intersectedIndex + 1, layer);
+			for_iter (i, intersectedIndex + 2, this->layers.size())
+			{
+				this->layers[i]->index = i;
+			}
 		}
 		else
 		{
+			layer->index = this->layers.size();
 			layer->parallelLayers = this->layers;
 			this->layers += layer;
 		}
+		bool added = false;
 		foreach (Layer*, it, layer->parallelLayers)
 		{
-			(*it)->parallelLayers += layer;
+			added = false;
+			for_iter (i, 0, (*it)->parallelLayers.size())
+			{
+				if (layer->index > (*it)->parallelLayers[i]->index)
+				{
+					(*it)->parallelLayers.insertAt(i, layer);
+					added = true;
+					break;
+				}
+			}
+			if (!added)
+			{
+				(*it)->parallelLayers += layer;
+			}
 		}
 		return layer;
 #else
+#ifdef MAX_LAYER_CHECKS
 		int zero = hmax(this->layers.size() - MAX_LAYER_CHECKS, 0);
+#else
+		int zero = 0;
+#endif
 		for_iter_r (i, this->layers.size(), zero)
 		{
 			if (*currentValidLayer != NULL)
@@ -764,6 +780,11 @@ namespace april
 		tv[1].u = tv[3].u = tv[5].u = src.x + src.w;
 		tv[2].v = tv[4].v = tv[5].v = src.y + src.h;
 		return this->render(RO_TRIANGLE_LIST, tv, 6, color);
+	}
+
+	bool RenderHelperLayered2D::_sortLayers(RenderHelperLayered2D::Layer* a, RenderHelperLayered2D::Layer* b)
+	{
+		return (a->index < b->index);
 	}
 
 }
