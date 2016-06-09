@@ -96,29 +96,29 @@ namespace april
 	/// @param[in] renderSystemType Which render system should be used.
 	/// @param[in] windowType Which window system should be used.
 	/// @note After this, you still have to call createRenderSystem() and createWindow().
-	/// @see createRenderSystem()
-	/// @see createWindow()
+	/// @see createRenderSystem
+	/// @see createWindow
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowType windowType);
 	/// @brief Initializes APRIL.
 	/// @param[in] customRenderSystem Custom implementation for RenderSystem.
 	/// @param[in] windowType Which window system should be used.
 	/// @note After this, you still have to call createRenderSystem() and createWindow().
-	/// @see createRenderSystem()
-	/// @see createWindow()
+	/// @see createRenderSystem
+	/// @see createWindow
 	aprilFnExport void init(RenderSystem* customRenderSystem, WindowType windowType);
 	/// @brief Initializes APRIL.
 	/// @param[in] renderSystemType Which render system should be used.
 	/// @param[in] customWindow Custom implementation for Window.
 	/// @note After this, you still have to call createRenderSystem() and createWindow().
-	/// @see createRenderSystem()
-	/// @see createWindow()
+	/// @see createRenderSystem
+	/// @see createWindow
 	aprilFnExport void init(RenderSystemType renderSystemType, Window* customWindow);
 	/// @brief Initializes APRIL.
 	/// @param[in] customRenderSystem Custom implementation for RenderSystem.
 	/// @param[in] customWindow Custom implementation for Window.
 	/// @note After this, you still have to call createRenderSystem() and createWindow().
-	/// @see createRenderSystem()
-	/// @see createWindow()
+	/// @see createRenderSystem
+	/// @see createWindow
 	aprilFnExport void init(RenderSystem* customRenderSystem, Window* customWindow);
 	/// @brief Initializes APRIL.
 	/// @param[in] renderSystemType Which render system should be used.
@@ -130,8 +130,8 @@ namespace april
 	/// @param[in] title Window title (usually displayed in title bar if platform supports).
 	/// @param[in] windowOptions Define any special options you need for the window.
 	/// @note After this, you mustn't call createRenderSystem() or createWindow() anymore.
-	/// @see createRenderSystem()
-	/// @see createWindow()
+	/// @see createRenderSystem
+	/// @see createWindow
 	aprilFnExport void init(RenderSystemType renderSystemType, WindowType windowType,
 		RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions);
 	/// @brief Initializes APRIL.
@@ -144,8 +144,8 @@ namespace april
 	/// @param[in] title Window title (usually displayed in title bar if platform supports).
 	/// @param[in] windowOptions Define any special options you need for the window.
 	/// @note After this, you still have to call createRenderSystem() and createWindow().
-	/// @see createRenderSystem()
-	/// @see createWindow()
+	/// @see createRenderSystem
+	/// @see createWindow
 	aprilFnExport void init(RenderSystem* customRenderSystem, WindowType windowType,
 		RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions);
 	/// @brief Initializes APRIL.
@@ -158,8 +158,8 @@ namespace april
 	/// @param[in] title Window title (usually displayed in title bar if platform supports).
 	/// @param[in] windowOptions Define any special options you need for the window.
 	/// @note After this, you still have to call createRenderSystem() and createWindow().
-	/// @see createRenderSystem()
-	/// @see createWindow()
+	/// @see createRenderSystem
+	/// @see createWindow
 	aprilFnExport void init(RenderSystemType renderSystemType, Window* customWindow,
 		RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions);
 	/// @brief Initializes APRIL.
@@ -172,14 +172,14 @@ namespace april
 	/// @param[in] title Window title (usually displayed in title bar if platform supports).
 	/// @param[in] windowOptions Define any special options you need for the window.
 	/// @note After this, you still have to call createRenderSystem() and createWindow().
-	/// @see createRenderSystem()
-	/// @see createWindow()
+	/// @see createRenderSystem
+	/// @see createWindow
 	aprilFnExport void init(RenderSystem* customRenderSystem, Window* customWindow,
 		RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions);
 	/// @brief Creates the actual render system.
 	/// @param[in] options Define any special options you need for the render system.
 	/// @note This should be called after init().
-	/// @see init()
+	/// @see init
 	aprilFnExport void createRenderSystem(RenderSystem::Options options = RenderSystem::Options());
 	/// @brief Creates the actual window.
 	/// @param[in] w Window width.
@@ -190,7 +190,7 @@ namespace april
 	/// @note "fullscreen" works only on certain platforms.
 	/// @note "title" works only on platforms where this is supported and usually displays the name in the title bar.
 	/// @note This should be called after createRenderSystem().
-	/// @see createRenderSystem()
+	/// @see createRenderSystem
 	aprilFnExport void createWindow(int w, int h, bool fullscreen, chstr title, Window::Options options = Window::Options());
 	/// @brief Destroys APRIL.
 	aprilFnExport void destroy();

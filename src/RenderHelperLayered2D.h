@@ -31,7 +31,8 @@
 
 //#define MAX_LAYERS 10000
 //#define MAX_LAYER_CHECKS 100
-//#define SIMPLE_ALGORITHM
+#define SIMPLE_ALGORITHM
+//#define SAFE_INDEXES
 
 namespace april
 {

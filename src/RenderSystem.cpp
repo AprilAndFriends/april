@@ -126,6 +126,12 @@ namespace april
 		this->statLastFrameRenderCalls = 0;
 		this->statCurrentFrameTextureSwitches = 0;
 		this->statLastFrameTextureSwitches = 0;
+		this->statCurrentFrameVertexCount = 0;
+		this->statLastFrameVertexCount = 0;
+		this->statCurrentFrameTriangleCount = 0;
+		this->statLastFrameTriangleCount = 0;
+		this->statCurrentFrameLineCount = 0;
+		this->statLastFrameLineCount = 0;
 	}
 	
 	RenderSystem::~RenderSystem()
@@ -159,6 +165,12 @@ namespace april
 			this->statLastFrameRenderCalls = 0;
 			this->statCurrentFrameTextureSwitches = 0;
 			this->statLastFrameTextureSwitches = 0;
+			this->statCurrentFrameVertexCount = 0;
+			this->statLastFrameVertexCount = 0;
+			this->statCurrentFrameTriangleCount = 0;
+			this->statLastFrameTriangleCount = 0;
+			this->statCurrentFrameLineCount = 0;
+			this->statLastFrameLineCount = 0;
 			// create the actual device
 			this->_deviceInit();
 			this->created = this->_deviceCreate(options);
@@ -206,6 +218,12 @@ namespace april
 			this->statLastFrameRenderCalls = 0;
 			this->statCurrentFrameTextureSwitches = 0;
 			this->statLastFrameTextureSwitches = 0;
+			this->statCurrentFrameVertexCount = 0;
+			this->statLastFrameVertexCount = 0;
+			this->statCurrentFrameTriangleCount = 0;
+			this->statLastFrameTriangleCount = 0;
+			this->statCurrentFrameLineCount = 0;
+			this->statLastFrameLineCount = 0;
 			if (!this->_deviceDestroy())
 			{
 				return false;
@@ -235,6 +253,12 @@ namespace april
 		this->statLastFrameRenderCalls = 0;
 		this->statCurrentFrameTextureSwitches = 0;
 		this->statLastFrameTextureSwitches = 0;
+		this->statCurrentFrameVertexCount = 0;
+		this->statLastFrameVertexCount = 0;
+		this->statCurrentFrameTriangleCount = 0;
+		this->statLastFrameTriangleCount = 0;
+		this->statCurrentFrameLineCount = 0;
+		this->statLastFrameLineCount = 0;
 		this->_deviceReset();
 		this->_deviceSetup();
 		if (this->deviceState->texture != NULL)
@@ -925,7 +949,7 @@ namespace april
 
 	void RenderSystem::_renderInternal(RenderOperation renderOperation, PlainVertex* vertices, int count)
 	{
-		++this->statCurrentFrameRenderCalls;
+		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = false;
 		this->state->useColor = false;
 		this->state->systemColor = Color::White;
@@ -935,7 +959,11 @@ namespace april
 
 	void RenderSystem::_renderInternal(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color)
 	{
-		++this->statCurrentFrameRenderCalls;
+		if (color.a == 0)
+		{
+			return;
+		}
+		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = false;
 		this->state->useColor = false;
 		this->state->systemColor = color;
@@ -945,7 +973,7 @@ namespace april
 
 	void RenderSystem::_renderInternal(RenderOperation renderOperation, TexturedVertex* vertices, int count)
 	{
-		++this->statCurrentFrameRenderCalls;
+		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = Color::White;
@@ -955,7 +983,11 @@ namespace april
 
 	void RenderSystem::_renderInternal(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color)
 	{
-		++this->statCurrentFrameRenderCalls;
+		if (color.a == 0)
+		{
+			return;
+		}
+		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = color;
@@ -965,7 +997,7 @@ namespace april
 
 	void RenderSystem::_renderInternal(RenderOperation renderOperation, ColoredVertex* vertices, int count)
 	{
-		++this->statCurrentFrameRenderCalls;
+		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = false;
 		this->state->useColor = true;
 		this->state->systemColor = Color::White;
@@ -975,7 +1007,7 @@ namespace april
 
 	void RenderSystem::_renderInternal(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
 	{
-		++this->statCurrentFrameRenderCalls;
+		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = true;
 		this->state->useColor = true;
 		this->state->systemColor = Color::White;
@@ -985,6 +1017,10 @@ namespace april
 
 	void RenderSystem::_drawRectInternal(grect rect, Color color)
 	{
+		if (color.a == 0)
+		{
+			return;
+		}
 		pv[0].x = pv[3].x = pv[4].x = rect.x;
 		pv[0].y = pv[1].y = pv[4].y = rect.y;
 		pv[1].x = pv[2].x = rect.x + rect.w;
@@ -994,6 +1030,10 @@ namespace april
 
 	void RenderSystem::_drawFilledRectInternal(grect rect, Color color)
 	{
+		if (color.a == 0)
+		{
+			return;
+		}
 		pv[0].x = pv[2].x = rect.x;
 		pv[0].y = pv[1].y = rect.y;
 		pv[1].x = pv[3].x = rect.x + rect.w;
@@ -1016,6 +1056,10 @@ namespace april
 	
 	void RenderSystem::_drawTexturedRectInternal(grect rect, grect src, Color color)
 	{
+		if (color.a == 0)
+		{
+			return;
+		}
 		tv[0].x = tv[2].x = rect.x;
 		tv[0].y = tv[1].y = rect.y;
 		tv[0].u = tv[2].u = src.x;
@@ -1025,6 +1069,20 @@ namespace april
 		tv[2].y = tv[3].y = rect.y + rect.h;
 		tv[2].v = tv[3].v = src.y + src.h;
 		this->_renderInternal(RO_TRIANGLE_STRIP, tv, 4, color);
+	}
+
+	void RenderSystem::_increaseStats(RenderOperation renderOperation, int count)
+	{
+		++this->statCurrentFrameRenderCalls;
+		this->statCurrentFrameVertexCount += count;
+		if (renderOperation == RO_TRIANGLE_LIST || renderOperation == RO_TRIANGLE_STRIP || renderOperation == RO_TRIANGLE_FAN)
+		{
+			this->statCurrentFrameTriangleCount += this->_numPrimitives(renderOperation, count);
+		}
+		else if (renderOperation == RO_LINE_LIST || renderOperation == RO_LINE_STRIP)
+		{
+			this->statCurrentFrameLineCount += this->_numPrimitives(renderOperation, count);
+		}
 	}
 
 	hstr RenderSystem::findTextureResource(chstr filename)
@@ -1115,17 +1173,28 @@ namespace april
 		return NULL;
 	}
 
-	void RenderSystem::presentFrame()
+	void RenderSystem::flushFrame()
 	{
 		if (this->renderHelper != NULL)
 		{
 			this->renderHelper->flush();
 		}
-		april::window->presentFrame();
 		this->statLastFrameRenderCalls = this->statCurrentFrameRenderCalls;
 		this->statCurrentFrameRenderCalls = 0;
 		this->statLastFrameTextureSwitches = this->statCurrentFrameTextureSwitches;
 		this->statCurrentFrameTextureSwitches = 0;
+		this->statLastFrameVertexCount = this->statCurrentFrameVertexCount;
+		this->statCurrentFrameVertexCount = 0;
+		this->statLastFrameTriangleCount = this->statCurrentFrameTriangleCount;
+		this->statCurrentFrameTriangleCount = 0;
+		this->statLastFrameLineCount = this->statCurrentFrameLineCount;
+		this->statCurrentFrameLineCount = 0;
+	}
+
+	void RenderSystem::presentFrame()
+	{
+		this->flushFrame();
+		april::window->presentFrame();
 	}
 
 	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int count)

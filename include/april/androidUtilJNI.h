@@ -45,7 +45,7 @@ namespace april
 	/// @param[in] env JNI environment.
 	/// @param[in] string The Java string.
 	/// @return A hstr created from the Java string.
-	/// @see _JSTR_TO_HSTR()
+	/// @see _JSTR_TO_HSTR
 	hstr _jstringToHstr(JNIEnv* env, jstring string);
 }
 
@@ -87,8 +87,8 @@ namespace april
 /// @param[in] string The Java string.
 /// @return A hstr created from the Java string.
 /// @note Make sure to get the JNI environment first.
-/// @see getJNIEnv()
-/// @see _jstringToHstr()
+/// @see getJNIEnv
+/// @see _jstringToHstr
 #define _JSTR_TO_HSTR(string) april::_jstringToHstr(env, string)
 
 // If this macro is defined before header inclusion, it will automatically generate macros for easier access to a general purpose JNI class.

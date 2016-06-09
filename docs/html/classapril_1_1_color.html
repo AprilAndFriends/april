@@ -124,6 +124,9 @@ float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cla
 <tr class="memitem:a96b46ec212a516cb7436fc02031d3387"><td class="memItemLeft" align="right" valign="top">hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_color.html#a96b46ec212a516cb7436fc02031d3387">hex</a> (bool rgbOnly=false) const </td></tr>
 <tr class="memdesc:a96b46ec212a516cb7436fc02031d3387"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the hex string representation of the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>.  <a href="#a96b46ec212a516cb7436fc02031d3387">More...</a><br /></td></tr>
 <tr class="separator:a96b46ec212a516cb7436fc02031d3387"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a4e6743275fec3e2ecdce0bfe5b87f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">april::Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_color.html#a7a4e6743275fec3e2ecdce0bfe5b87f8">lerp</a> (const <a class="el" href="classapril_1_1_color.html">april::Color</a> &amp;other, float factor) const </td></tr>
+<tr class="memdesc:a7a4e6743275fec3e2ecdce0bfe5b87f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a linearly interpolated <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> between this and a given <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>.  <a href="#a7a4e6743275fec3e2ecdce0bfe5b87f8">More...</a><br /></td></tr>
+<tr class="separator:a7a4e6743275fec3e2ecdce0bfe5b87f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7353f38cb2f978e7eb44bd7e60871215"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_color.html#a7353f38cb2f978e7eb44bd7e60871215">operator unsigned int</a> () const </td></tr>
 <tr class="memdesc:a7353f38cb2f978e7eb44bd7e60871215"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the unsigned int representation of the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>.  <a href="#a7353f38cb2f978e7eb44bd7e60871215">More...</a><br /></td></tr>
 <tr class="separator:a7353f38cb2f978e7eb44bd7e60871215"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -649,11 +652,56 @@ static <a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td cl
 <p>Gets the hex string representation of the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">rgbOnly</td><td>Whether alpha should not be included. The hex string representation of the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">rgbOnly</td><td>Whether alpha should not be included. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>The hex string representation of the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Careful when using rgbOnly! </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a7a4e6743275fec3e2ecdce0bfe5b87f8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classapril_1_1_color.html">april::Color</a> april::Color::lerp </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classapril_1_1_color.html">april::Color</a> &amp;&#160;</td>
+          <td class="paramname"><em>other</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>factor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates a linearly interpolated <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> between this and a given <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">other</td><td><a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> to interpolate with. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">factor</td><td>Interpolation factor. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>A factor of 0 or less will result in this <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> while a factor of 1 or more will result in other. </dd></dl>
 
 </div>
 </div>
@@ -679,7 +727,8 @@ static <a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td cl
 </div><div class="memdoc">
 
 <p>Gets the unsigned int representation of the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>. </p>
-<p>The unsigned int representation of the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>. </p><dl class="section note"><dt>Note</dt><dd>The return value is in RGBA MSB order. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The unsigned int representation of the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The return value is in RGBA MSB order. </dd></dl>
 
 </div>
 </div>

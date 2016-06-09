@@ -320,19 +320,20 @@ namespace april
 		Layer* lastValidLayer = NULL;
 		int intersectionIndex = -1;
 		hmutex::ScopeLock lock(&this->layersMutex);
-		Layer* layer = this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
-		//*
-		for_iter (i, 0, this->layers.size())
+#ifdef SAFE_INDEXES
+		for_iter(i, 0, this->layers.size())
 		{
 			this->layers[i]->index = i;
 		}
-		//*/
+#endif
 #ifndef SIMPLE_ALGORITHM
+		Layer* layer = this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
 		layer->coloredVertices.add(this->_coloredVertices, this->_coloredVerticesCount);
 #ifdef _DEBUG_BOUNDING_RECTS
 		layer->offsets += viewportOffset;
 #endif
 #else
+		this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
 		if (lastValidLayer != NULL)
 		{
 			lastValidLayer->coloredVertices.add(this->_coloredVertices, this->_coloredVerticesCount);
@@ -386,19 +387,20 @@ namespace april
 		Layer* lastValidLayer = NULL;
 		int intersectionIndex = -1;
 		hmutex::ScopeLock lock(&this->layersMutex);
-		Layer* layer = this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
-		//*
+#ifdef SAFE_INDEXES
 		for_iter (i, 0, this->layers.size())
 		{
 			this->layers[i]->index = i;
 		}
-		//*/
+#endif
 #ifndef SIMPLE_ALGORITHM
+		Layer* layer = this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
 		layer->coloredTexturedVertices.add(this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
 #ifdef _DEBUG_BOUNDING_RECTS
 		layer->offsets += viewportOffset;
 #endif
 #else
+		this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
 		if (lastValidLayer != NULL)
 		{
 			lastValidLayer->coloredTexturedVertices.add(this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
@@ -471,13 +473,7 @@ namespace april
 					}
 				}
 			}
-			if ((intersectedLayer->state.useTexture != renderCall->useTexture ||
-				intersectedLayer->renderOperation != renderCall->renderOperation ||
-				intersectedLayer->state.blendMode != renderCall->state.blendMode ||
-				intersectedLayer->state.colorMode != renderCall->state.colorMode ||
-				intersectedLayer->state.colorModeFactor != renderCall->state.colorModeFactor ||
-				intersectedLayer->state.texture != renderCall->state.texture) &&
-				validLayers.size() > 0)
+			if (validLayers.size() > 0)
 			{
 				// check below layers for a matching layer
 				bool valid = false;

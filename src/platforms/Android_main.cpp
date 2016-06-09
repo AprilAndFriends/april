@@ -110,6 +110,10 @@ namespace april
 			try
 			{
 				result = april::window->updateOneFrame();
+				if (april::rendersys != NULL)
+				{
+					april::rendersys->flushFrame();
+				}
 			}
 			catch (hexception& e)
 			{
