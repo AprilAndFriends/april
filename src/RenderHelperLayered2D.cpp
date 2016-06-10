@@ -451,11 +451,14 @@ namespace april
 		layer = new Layer(intersectedIndex + 1, renderCall, this->_boundingRect);
 		if (hbetweenIE(intersectedIndex, 0, this->layers.size()))
 		{
-			for_iter (i, 0, intersectedIndex)
+			if (this->layerPullUpMerge)
 			{
-				if (!this->_checkCurrentIntersection(this->layers[i]))
+				for_iter (i, 0, intersectedIndex)
 				{
-					layer->parallelLayers += this->layers[i];
+					if (!this->_checkCurrentIntersection(this->layers[i]))
+					{
+						layer->parallelLayers += this->layers[i];
+					}
 				}
 			}
 			if (intersectedIndex < this->layers.size() - 1)

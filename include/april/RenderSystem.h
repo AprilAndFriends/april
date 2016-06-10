@@ -47,12 +47,21 @@ namespace april
 		friend class Texture;
 		friend class Window;
 
+		/// @class RenderMode
 		/// @brief Defines possible rendering methods.
 		HL_ENUM_CLASS_DECLARE(RenderMode,
 		(
+			/// @var static const RenderMode RenderMode::Normal
 			/// @brief Normal rendering.
 			HL_ENUM_DECLARE(RenderMode, Normal);
+			/// @var static const RenderMode RenderMode::Layered2D
 			/// @brief Optimized layered rendering for 2D.
+			/// @note The Layered 2D mode has a few limitations and rules.
+			/// 1. Only RO_TRIANGLE_LIST and RO_LINE_LIST are supported. Using others will cause a flush.
+			/// 2. Using depth buffer is not supported and will cause a flush.
+			/// 3. Changing the viewport will cause a flush, but it is supported.
+			/// 4. The additional option "max_layers" will cause to flush when that number of layers is exceeded. Omit option to disable this feature.
+			/// 5. The additional option "layer_pull_up_merge" will cause layers below the intersected layer to be merged. It optimizes layers better, but heavier on the CPU. Enabled by default.
 			HL_ENUM_DECLARE(RenderMode, Layered2D);
 		));
 
@@ -792,5 +801,4 @@ namespace april
 	aprilExport extern april::RenderSystem* rendersys;
 	
 }
-
 #endif

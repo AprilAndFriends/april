@@ -76,6 +76,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structapril_1_1_render_system_1_1_options.html">Options</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines options for render system creation.  <a href="structapril_1_1_render_system_1_1_options.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines possible rendering methods.  <a href="classapril_1_1_render_system_1_1_render_mode.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -112,6 +115,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:a263deea9dd66d0291a61ca11a79b6ff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9f8ada6b77560c8bf5aea58284fc60f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae9f8ada6b77560c8bf5aea58284fc60f">HL_DEFINE_GET</a> (<a class="el" href="structapril_1_1_render_system_1_1_caps.html">Caps</a>, <a class="el" href="classapril_1_1_render_system.html#a331eb7b81570da0624e5e83c5da2aaee">caps</a>, <a class="el" href="structapril_1_1_render_system_1_1_caps.html">Caps</a>)</td></tr>
 <tr class="separator:ae9f8ada6b77560c8bf5aea58284fc60f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7098e1f6bab8b67801a58e61a845096"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae7098e1f6bab8b67801a58e61a845096">HL_DEFINE_GET</a> (<a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a>, <a class="el" href="classapril_1_1_render_system.html#a18f7e7e8f1ac5d159846bb249a4f85fc">renderMode</a>, <a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a>)</td></tr>
+<tr class="separator:ae7098e1f6bab8b67801a58e61a845096"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fc02a266fd27b3411c6ad6813392cab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a4fc02a266fd27b3411c6ad6813392cab">HL_DEFINE_GET</a> (int, <a class="el" href="classapril_1_1_render_system.html#ab1eec2d11c5ba510f4fdee87fff8bca6">statCurrentFrameRenderCalls</a>, StatCurrentFrameRenderCalls)</td></tr>
 <tr class="separator:a4fc02a266fd27b3411c6ad6813392cab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a534dddc3cac4b5761167e4cc6c366bf6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a534dddc3cac4b5761167e4cc6c366bf6">HL_DEFINE_GET</a> (int, <a class="el" href="classapril_1_1_render_system.html#a794a72d24c12b76f7956ba2d7f54593c">statLastFrameRenderCalls</a>, StatLastFrameRenderCalls)</td></tr>
@@ -166,12 +171,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a16b1af4a0d5ff33bd2db638f1e5869ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a16b1af4a0d5ff33bd2db638f1e5869ff">setProjectionMatrix</a> (const gmat4 &amp;value)</td></tr>
 <tr class="memdesc:a16b1af4a0d5ff33bd2db638f1e5869ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current projection matrix.  <a href="#a16b1af4a0d5ff33bd2db638f1e5869ff">More...</a><br /></td></tr>
 <tr class="separator:a16b1af4a0d5ff33bd2db638f1e5869ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4442512be774ecb1e4efd383dd2a02b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ad4442512be774ecb1e4efd383dd2a02b">setLayeredRenderer2dEnabled</a> (bool value)</td></tr>
-<tr class="memdesc:ad4442512be774ecb1e4efd383dd2a02b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets layered 2D renderer to enabled or disabled.  <a href="#ad4442512be774ecb1e4efd383dd2a02b">More...</a><br /></td></tr>
-<tr class="separator:ad4442512be774ecb1e4efd383dd2a02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afed512c0a7cf47449fba0e5066e471c2"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#afed512c0a7cf47449fba0e5066e471c2">getVRam</a> ()=0</td></tr>
 <tr class="memdesc:afed512c0a7cf47449fba0e5066e471c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the amount of video RAM available.  <a href="#afed512c0a7cf47449fba0e5066e471c2">More...</a><br /></td></tr>
 <tr class="separator:afed512c0a7cf47449fba0e5066e471c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a622cdbbd9b94ac49ac3ad64aa7b065"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0a622cdbbd9b94ac49ac3ad64aa7b065"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a0a622cdbbd9b94ac49ac3ad64aa7b065">setRenderMode</a> (<a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a> <a class="el" href="classapril_1_1_render_system.html#a18f7e7e8f1ac5d159846bb249a4f85fc">renderMode</a>, const hmap&lt; hstr, hstr &gt; &amp;<a class="el" href="classapril_1_1_render_system.html#ad29fb1f6aa2b0595c365506633f20c3a">options</a>=hmap&lt; hstr, hstr &gt;())</td></tr>
+<tr class="memdesc:a0a622cdbbd9b94ac49ac3ad64aa7b065"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current <a class="el" href="classapril_1_1_render_system_1_1_render_mode.html" title="Defines possible rendering methods. ">RenderMode</a>. <br /></td></tr>
+<tr class="separator:a0a622cdbbd9b94ac49ac3ad64aa7b065"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0de77275b4ba25ea9979b4bdccbc1c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae0de77275b4ba25ea9979b4bdccbc1c3">createTextureFromResource</a> (chstr filename, <a class="el" href="classapril_1_1_texture.html#ae50855ea9d2a8ee63e12470c2f836ed8">Texture::Type</a> type=<a class="el" href="classapril_1_1_texture.html#ae50855ea9d2a8ee63e12470c2f836ed8a591e88887107aa46d4a9949f33d6cf4a">Texture::TYPE_IMMUTABLE</a>, <a class="el" href="classapril_1_1_texture.html#ab30e6a4d02d6e655214ae079ff2a2747">Texture::LoadMode</a> loadMode=<a class="el" href="classapril_1_1_texture.html#ab30e6a4d02d6e655214ae079ff2a2747af91f82ef3a6f8a69d14afc9e8ddcc753">Texture::LOAD_IMMEDIATE</a>)</td></tr>
 <tr class="memdesc:ae0de77275b4ba25ea9979b4bdccbc1c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a> object from a resource file.  <a href="#ae0de77275b4ba25ea9979b4bdccbc1c3">More...</a><br /></td></tr>
 <tr class="separator:ae0de77275b4ba25ea9979b4bdccbc1c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -357,9 +363,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:abb763146da6a91a74aaa7cf8ed9d33cb"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classapril_1_1_image.html">Image</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#abb763146da6a91a74aaa7cf8ed9d33cb">takeScreenshot</a> (<a class="el" href="classapril_1_1_image.html#a42d85c13950ed671a28bc790638753b0">Image::Format</a> format)</td></tr>
 <tr class="memdesc:abb763146da6a91a74aaa7cf8ed9d33cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a screenshot aka captures the image data of the backbuffer.  <a href="#abb763146da6a91a74aaa7cf8ed9d33cb">More...</a><br /></td></tr>
 <tr class="separator:abb763146da6a91a74aaa7cf8ed9d33cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06e2f53619434286b2c1f734cbc1b6a0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a06e2f53619434286b2c1f734cbc1b6a0">flushFrame</a> ()</td></tr>
-<tr class="memdesc:a06e2f53619434286b2c1f734cbc1b6a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes the currently rendered data.  <a href="#a06e2f53619434286b2c1f734cbc1b6a0">More...</a><br /></td></tr>
-<tr class="separator:a06e2f53619434286b2c1f734cbc1b6a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76bb6093013ff2fad282a771a4985cb2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a76bb6093013ff2fad282a771a4985cb2">flushFrame</a> (bool updateStats=false)</td></tr>
+<tr class="memdesc:a76bb6093013ff2fad282a771a4985cb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes the currently rendered data.  <a href="#a76bb6093013ff2fad282a771a4985cb2">More...</a><br /></td></tr>
+<tr class="separator:a76bb6093013ff2fad282a771a4985cb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4aad430563b48f614d5e777b99ace621"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a4aad430563b48f614d5e777b99ace621">presentFrame</a> ()</td></tr>
 <tr class="memdesc:a4aad430563b48f614d5e777b99ace621"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes the currently rendered data to the backbuffer for display.  <a href="#a4aad430563b48f614d5e777b99ace621">More...</a><br /></td></tr>
 <tr class="separator:a4aad430563b48f614d5e777b99ace621"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -539,6 +545,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <a class="el" href="structapril_1_1_render_system_1_1_caps.html">Caps</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a331eb7b81570da0624e5e83c5da2aaee">caps</a></td></tr>
 <tr class="memdesc:a331eb7b81570da0624e5e83c5da2aaee"><td class="mdescLeft">&#160;</td><td class="mdescRight">The capabilities of the <a class="el" href="classapril_1_1_render_system.html" title="Defines a generic render system. ">RenderSystem</a>. <br /></td></tr>
 <tr class="separator:a331eb7b81570da0624e5e83c5da2aaee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18f7e7e8f1ac5d159846bb249a4f85fc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a18f7e7e8f1ac5d159846bb249a4f85fc"></a>
+<a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a18f7e7e8f1ac5d159846bb249a4f85fc">renderMode</a></td></tr>
+<tr class="memdesc:a18f7e7e8f1ac5d159846bb249a4f85fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current <a class="el" href="classapril_1_1_render_system_1_1_render_mode.html" title="Defines possible rendering methods. ">RenderMode</a>. <br /></td></tr>
+<tr class="separator:a18f7e7e8f1ac5d159846bb249a4f85fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e74812eac7596b5ef832b115ab4aca2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a7e74812eac7596b5ef832b115ab4aca2">pixelOffset</a></td></tr>
 <tr class="memdesc:a7e74812eac7596b5ef832b115ab4aca2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The pixel offset when rendering.  <a href="#a7e74812eac7596b5ef832b115ab4aca2">More...</a><br /></td></tr>
 <tr class="separator:a7e74812eac7596b5ef832b115ab4aca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3201,7 +3211,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a06e2f53619434286b2c1f734cbc1b6a0"></a>
+<a class="anchor" id="a76bb6093013ff2fad282a771a4985cb2"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -3211,7 +3221,8 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">virtual void april::RenderSystem::flushFrame </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>updateStats</em> = <code>false</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -3625,6 +3636,39 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ae7098e1f6bab8b67801a58e61a845096"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">april::RenderSystem::HL_DEFINE_GET </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_render_system.html#a18f7e7e8f1ac5d159846bb249a4f85fc">renderMode</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="classapril_1_1_render_system_1_1_render_mode.html" title="Defines possible rendering methods. ">RenderMode</a>. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a4fc02a266fd27b3411c6ad6813392cab"></a>
 <div class="memitem">
 <div class="memproto">
@@ -4019,8 +4063,8 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 </div><div class="memdoc">
 
 <p>Flushes the currently rendered data to the backbuffer for display. </p>
-<dl class="section note"><dt>Note</dt><dd>Usually this doesn't need to be called manually. Calls <a class="el" href="classapril_1_1_render_system.html#a06e2f53619434286b2c1f734cbc1b6a0" title="Flushes the currently rendered data. ">flushFrame()</a>. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classapril_1_1_render_system.html#a06e2f53619434286b2c1f734cbc1b6a0" title="Flushes the currently rendered data. ">flushFrame</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Usually this doesn't need to be called manually. Calls <a class="el" href="classapril_1_1_render_system.html#a76bb6093013ff2fad282a771a4985cb2" title="Flushes the currently rendered data. ">flushFrame()</a>. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classapril_1_1_render_system.html#a76bb6093013ff2fad282a771a4985cb2" title="Flushes the currently rendered data. ">flushFrame</a> </dd></dl>
 
 </div>
 </div>
@@ -4624,30 +4668,6 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">enabled</td><td>Whether to enable or disable the depth-buffer itself. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">writeEnabled</td><td>Whether writing to the depth-buffer is enabled. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="ad4442512be774ecb1e4efd383dd2a02b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void april::RenderSystem::setLayeredRenderer2dEnabled </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>value</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Sets layered 2D renderer to enabled or disabled. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>The new value. </td></tr>
   </table>
   </dd>
 </dl>
