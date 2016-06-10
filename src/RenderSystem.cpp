@@ -35,6 +35,12 @@
 
 namespace april
 {
+	HL_ENUM_CLASS_DEFINE(RenderSystem::RenderMode,
+	(
+		HL_ENUM_DEFINE(RenderSystem::RenderMode, Normal);
+		HL_ENUM_DEFINE(RenderSystem::RenderMode, Layered2D);
+	));
+
 	// optimizations, but they are not thread-safe
 	static PlainVertex pv[5];
 	static TexturedVertex tv[5];
@@ -115,7 +121,7 @@ namespace april
 		return options.joined(',');
 	}
 	
-	RenderSystem::RenderSystem() : renderHelper(NULL)
+	RenderSystem::RenderSystem() : renderMode(RenderMode::Normal), renderHelper(NULL)
 	{
 		this->name = "Generic";
 		this->created = false;
@@ -188,6 +194,7 @@ namespace april
 		{
 			hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
 			this->created = false;
+			this->renderMode = RenderMode::Normal;
 			if (this->renderHelper != NULL)
 			{
 				delete this->renderHelper;
@@ -289,6 +296,25 @@ namespace april
 		this->displayModes += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
 	}
 
+	void RenderSystem::setRenderMode(RenderMode value, const hmap<hstr, hstr>& options)
+	{
+		if (this->renderMode != value)
+		{
+			this->renderMode = value;
+			if (this->renderHelper != NULL)
+			{
+				this->renderHelper->destroy();
+				delete this->renderHelper;
+				this->renderHelper = NULL;
+			}
+			if (this->renderMode == RenderMode::Layered2D)
+			{
+				this->renderHelper = new RenderHelperLayered2D(options);
+				this->renderHelper->create();
+			}
+		}
+	}
+
 	harray<Texture*> RenderSystem::getTextures()
 	{
 		hmutex::ScopeLock lock(&this->texturesMutex);
@@ -375,32 +401,6 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 	
-	bool RenderSystem::isLayeredRenderer2dEnabled()
-	{
-		return (dynamic_cast<RenderHelperLayered2D*>(this->renderHelper) != NULL);
-	}
-	
-	void RenderSystem::setLayeredRenderer2dEnabled(bool value)
-	{
-		bool isLayeredRenderer = (dynamic_cast<RenderHelperLayered2D*>(this->renderHelper) != NULL);
-		if (value)
-		{
-			if (this->renderHelper != NULL && !isLayeredRenderer)
-			{
-				this->renderHelper->destroy();
-				delete this->renderHelper;
-			}
-			this->renderHelper = new RenderHelperLayered2D();
-			this->renderHelper->create();
-		}
-		else if (isLayeredRenderer)
-		{
-			this->renderHelper->destroy();
-			delete this->renderHelper;
-			this->renderHelper = NULL;
-		}
-	}
-
 	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, Texture::LoadMode loadMode)
 	{
 		return this->_createTextureFromSource(true, filename, type, loadMode);

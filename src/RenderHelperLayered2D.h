@@ -32,15 +32,13 @@
 //#define MAX_LAYERS 10000
 //#define MAX_LAYER_CHECKS 100
 //#define SIMPLE_ALGORITHM
-//#define SAFE_INDEXES
-//#define MANUAL_INDEXES
 
 namespace april
 {
 	class RenderHelperLayered2D : public RenderHelper
 	{
 	public:
-		RenderHelperLayered2D();
+		RenderHelperLayered2D(const hmap<hstr, hstr>& options);
 		~RenderHelperLayered2D();
 
 		bool create();
@@ -88,20 +86,17 @@ namespace april
 			RenderState state;
 			RenderOperation renderOperation;
 			harray<grect> rects;
-#ifdef _DEBUG_BOUNDING_RECTS
-			harray<gvec2> offsets;
-#endif
 			harray<ColoredVertex> coloredVertices;
 			harray<ColoredTexturedVertex> coloredTexturedVertices;
-#ifndef SIMPLE_ALGORITHM
 			harray<Layer*> parallelLayers;
-#endif
 
 			Layer(int index, RenderCall* renderCall, const grect& rect);
 			~Layer();
 
 		};
 
+		int maxLayers;
+		bool layerPullUpMerge;
 		harray<RenderCall*> renderCalls;
 		hmutex renderCallsMutex;
 		harray<Layer*> layers;

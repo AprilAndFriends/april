@@ -14,6 +14,7 @@
 #define APRIL_RENDER_HELPER_H
 
 #include <hltypes/harray.h>
+#include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
@@ -25,7 +26,7 @@ namespace april
 	class aprilExport RenderHelper
 	{
 	public:
-		RenderHelper();
+		RenderHelper(const hmap<hstr, hstr>& options);
 		virtual ~RenderHelper();
 
 		virtual bool create();

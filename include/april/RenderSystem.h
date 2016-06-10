@@ -14,6 +14,7 @@
 #define APRIL_RENDER_SYSTEM_H
 
 #include <hltypes/harray.h>
+#include <hltypes/henum.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 #include <gtypes/Matrix4.h>
@@ -45,6 +46,15 @@ namespace april
 		friend class RenderHelperLayered2D;
 		friend class Texture;
 		friend class Window;
+
+		/// @brief Defines possible rendering methods.
+		HL_ENUM_CLASS_DECLARE(RenderMode,
+		(
+			/// @brief Normal rendering.
+			HL_ENUM_DECLARE(RenderMode, Normal);
+			/// @brief Optimized layered rendering for 2D.
+			HL_ENUM_DECLARE(RenderMode, Layered2D);
+		));
 
 		/// @brief Defines a possible display mode for the screen.
 		struct aprilExport DisplayMode
@@ -145,6 +155,8 @@ namespace april
 		HL_DEFINE_GET(Options, options, Options);
 		/// @return The capabilities of the RenderSystem.
 		HL_DEFINE_GET(Caps, caps, Caps);
+		/// @return The current RenderMode.
+		HL_DEFINE_GET(RenderMode, renderMode, RenderMode);
 		/// @return How many times a render call was called during this frame.
 		HL_DEFINE_GET(int, statCurrentFrameRenderCalls, StatCurrentFrameRenderCalls);
 		/// @return How many times a render call was called during the last frame.
@@ -201,16 +213,14 @@ namespace april
 		/// @brief Sets the current projection matrix.
 		/// @param[in] value The new projection matrix.
 		void setProjectionMatrix(const gmat4& value);
-		/// @brief Returns whether the layered 2D render is enabled
-		bool isLayeredRenderer2dEnabled();
-		/// @brief Sets layered 2D renderer to enabled or disabled.
-		/// @param[in] value The new value.
-		void setLayeredRenderer2dEnabled(bool value);
 
 		/// @brief Gets the amount of video RAM available.
 		/// @return The amount of video RAM available.
 		/// @note This value is in MB (1 MB = 1024 kB, 1 kB = 1024 B).
 		virtual int getVRam() = 0;
+
+		/// @brief Sets the current RenderMode.
+		void setRenderMode(RenderMode renderMode, const hmap<hstr, hstr>& options = hmap<hstr, hstr>());
 
 		/// @brief Creates a Texture object from a resource file.
 		/// @param[in] filename The filename of the resource.
@@ -515,6 +525,8 @@ namespace april
 		Options options;
 		/// @brief The capabilities of the RenderSystem.
 		Caps caps;
+		/// @brief The current RenderMode
+		RenderMode renderMode;
 		/// @brief The pixel offset when rendering.
 		/// @note Some implementations don't take the upper left corner of a pixel as pivot rendering coordinate and need this special fix.
 		float pixelOffset;
