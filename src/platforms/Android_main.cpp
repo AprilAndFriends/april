@@ -112,7 +112,7 @@ namespace april
 				result = april::window->updateOneFrame();
 				if (april::rendersys != NULL)
 				{
-					april::rendersys->flushFrame();
+					april::rendersys->flushFrame(true);
 				}
 			}
 			catch (hexception& e)

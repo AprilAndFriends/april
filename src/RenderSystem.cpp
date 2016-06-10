@@ -1178,27 +1178,30 @@ namespace april
 		return NULL;
 	}
 
-	void RenderSystem::flushFrame()
+	void RenderSystem::flushFrame(bool updateStats)
 	{
 		if (this->renderHelper != NULL)
 		{
 			this->renderHelper->flush();
 		}
-		this->statLastFrameRenderCalls = this->statCurrentFrameRenderCalls;
-		this->statCurrentFrameRenderCalls = 0;
-		this->statLastFrameTextureSwitches = this->statCurrentFrameTextureSwitches;
-		this->statCurrentFrameTextureSwitches = 0;
-		this->statLastFrameVertexCount = this->statCurrentFrameVertexCount;
-		this->statCurrentFrameVertexCount = 0;
-		this->statLastFrameTriangleCount = this->statCurrentFrameTriangleCount;
-		this->statCurrentFrameTriangleCount = 0;
-		this->statLastFrameLineCount = this->statCurrentFrameLineCount;
-		this->statCurrentFrameLineCount = 0;
+		if (updateStats)
+		{
+			this->statLastFrameRenderCalls = this->statCurrentFrameRenderCalls;
+			this->statCurrentFrameRenderCalls = 0;
+			this->statLastFrameTextureSwitches = this->statCurrentFrameTextureSwitches;
+			this->statCurrentFrameTextureSwitches = 0;
+			this->statLastFrameVertexCount = this->statCurrentFrameVertexCount;
+			this->statCurrentFrameVertexCount = 0;
+			this->statLastFrameTriangleCount = this->statCurrentFrameTriangleCount;
+			this->statCurrentFrameTriangleCount = 0;
+			this->statLastFrameLineCount = this->statCurrentFrameLineCount;
+			this->statCurrentFrameLineCount = 0;
+		}
 	}
 
 	void RenderSystem::presentFrame()
 	{
-		this->flushFrame();
+		this->flushFrame(true);
 		april::window->presentFrame();
 	}
 

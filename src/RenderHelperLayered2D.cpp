@@ -278,7 +278,7 @@ namespace april
 			{
 				this->_updateVertices(renderCall, renderCall->coloredVertices, renderCall->count);
 			}
-			this->_addRenderLayerNonTextured(renderCall);
+			this->_addRenderLayer(renderCall);
 		}
 		else
 		{
@@ -294,9 +294,8 @@ namespace april
 		}
 	}
 
-	void RenderHelperLayered2D::_addRenderLayerNonTextured(RenderCall* renderCall)
+	void RenderHelperLayered2D::_makeBoundingRectColoredVertices()
 	{
-		// find bounding rect
 		this->_min.set(this->_coloredVertices[0].x, this->_coloredVertices[0].y);
 		this->_max = this->_min;
 		for_iter (i, 1, this->_coloredVerticesCount)
@@ -307,6 +306,25 @@ namespace april
 			this->_max.y = hmax(this->_max.y, this->_coloredVertices[i].y);
 		}
 		this->_boundingRect.set(this->_min, this->_max - this->_min);
+	}
+
+	void RenderHelperLayered2D::_makeBoundingRectColoredTexturedVertices()
+	{
+		this->_min.set(this->_coloredTexturedVertices[0].x, this->_coloredTexturedVertices[0].y);
+		this->_max = this->_min;
+		for_iter (i, 1, this->_coloredTexturedVerticesCount)
+		{
+			this->_min.x = hmin(this->_min.x, this->_coloredTexturedVertices[i].x);
+			this->_min.y = hmin(this->_min.y, this->_coloredTexturedVertices[i].y);
+			this->_max.x = hmax(this->_max.x, this->_coloredTexturedVertices[i].x);
+			this->_max.y = hmax(this->_max.y, this->_coloredTexturedVertices[i].y);
+		}
+		this->_boundingRect.set(this->_min, this->_max - this->_min);
+	}
+
+	void RenderHelperLayered2D::_addRenderLayer(RenderCall* renderCall)
+	{
+		this->_makeBoundingRectColoredVertices();
 		if (!this->_boundingRect.intersects(screenRect))
 		{
 			return;
@@ -320,20 +338,26 @@ namespace april
 		Layer* lastValidLayer = NULL;
 		int intersectionIndex = -1;
 		hmutex::ScopeLock lock(&this->layersMutex);
-#ifdef SAFE_INDEXES
-		for_iter(i, 0, this->layers.size())
-		{
-			this->layers[i]->index = i;
-		}
-#endif
 #ifndef SIMPLE_ALGORITHM
 		Layer* layer = this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
 		layer->coloredVertices.add(this->_coloredVertices, this->_coloredVerticesCount);
 #ifdef _DEBUG_BOUNDING_RECTS
 		layer->offsets += viewportOffset;
 #endif
+#ifdef SAFE_INDEXES
+		for_iter (i, 0, this->layers.size())
+		{
+			this->layers[i]->index = i;
+		}
+#endif
 #else
 		this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
+#ifdef SAFE_INDEXES
+		for_iter (i, 0, this->layers.size())
+		{
+			this->layers[i]->index = i;
+		}
+#endif
 		if (lastValidLayer != NULL)
 		{
 			lastValidLayer->coloredVertices.add(this->_coloredVertices, this->_coloredVerticesCount);
@@ -363,17 +387,7 @@ namespace april
 
 	void RenderHelperLayered2D::_addRenderLayerTextured(RenderCall* renderCall)
 	{
-		// find bounding rect
-		this->_min.set(this->_coloredTexturedVertices[0].x, this->_coloredTexturedVertices[0].y);
-		this->_max = this->_min;
-		for_iter (i, 1, this->_coloredTexturedVerticesCount)
-		{
-			this->_min.x = hmin(this->_min.x, this->_coloredTexturedVertices[i].x);
-			this->_min.y = hmin(this->_min.y, this->_coloredTexturedVertices[i].y);
-			this->_max.x = hmax(this->_max.x, this->_coloredTexturedVertices[i].x);
-			this->_max.y = hmax(this->_max.y, this->_coloredTexturedVertices[i].y);
-		}
-		this->_boundingRect.set(this->_min, this->_max - this->_min);
+		this->_makeBoundingRectColoredTexturedVertices();
 		if (!this->_boundingRect.intersects(screenRect))
 		{
 			return;
@@ -387,20 +401,26 @@ namespace april
 		Layer* lastValidLayer = NULL;
 		int intersectionIndex = -1;
 		hmutex::ScopeLock lock(&this->layersMutex);
-#ifdef SAFE_INDEXES
-		for_iter (i, 0, this->layers.size())
-		{
-			this->layers[i]->index = i;
-		}
-#endif
 #ifndef SIMPLE_ALGORITHM
 		Layer* layer = this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
 		layer->coloredTexturedVertices.add(this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
 #ifdef _DEBUG_BOUNDING_RECTS
 		layer->offsets += viewportOffset;
 #endif
+#ifdef SAFE_INDEXES
+		for_iter (i, 0, this->layers.size())
+		{
+			this->layers[i]->index = i;
+		}
+#endif
 #else
 		this->_processIntersection(renderCall, &currentValidLayer, &lastValidLayer, intersectionIndex);
+#ifdef SAFE_INDEXES
+		for_iter (i, 0, this->layers.size())
+		{
+			this->layers[i]->index = i;
+		}
+#endif
 		if (lastValidLayer != NULL)
 		{
 			lastValidLayer->coloredTexturedVertices.add(this->_coloredTexturedVertices, this->_coloredTexturedVerticesCount);
@@ -428,31 +448,37 @@ namespace april
 #endif
 	}
 
+	bool RenderHelperLayered2D::_checkCurrentIntersection(Layer* layer)
+	{
+		foreach (grect, it, layer->rects)
+		{
+			if (this->_boundingRect.intersects(*it))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	RenderHelperLayered2D::Layer* RenderHelperLayered2D::_processIntersection(RenderCall* renderCall, Layer** currentValidLayer, Layer** lastValidLayer, int& intersectionIndex)
 	{
 #ifndef SIMPLE_ALGORITHM
 		// find first intersection
 		int intersectedIndex = -1;
+		Layer* intersectedLayer = NULL;
 		for_iter_r (i, this->layers.size(), 0)
 		{
-			foreach (grect, it, this->layers[i]->rects)
+			if (this->_checkCurrentIntersection(this->layers[i]))
 			{
-				if (this->_boundingRect.intersects(*it))
-				{
-					intersectedIndex = i;
-					break;
-				}
-			}
-			if (intersectedIndex >= 0)
-			{
+				intersectedIndex = i;
+				intersectedLayer = this->layers[i];
 				break;
 			}
 		}
 		if (intersectedIndex >= 0)
 		{
 			// find matching layers located below the intersected layer
-			Layer* intersectedLayer = this->layers[intersectedIndex];
-			harray<Layer*> validLayers;
+			harray<Layer*> validBelowLayers;
 			harray<Layer*> validAboveLayers;
 			foreach (Layer*, it, intersectedLayer->parallelLayers)
 			{
@@ -461,11 +487,12 @@ namespace april
 					(*it)->state.blendMode == renderCall->state.blendMode &&
 					(*it)->state.colorMode == renderCall->state.colorMode &&
 					(*it)->state.colorModeFactor == renderCall->state.colorModeFactor &&
-					(*it)->state.texture == renderCall->state.texture)
+					(*it)->state.texture == renderCall->state.texture &&
+					!this->_checkCurrentIntersection(*it))
 				{
 					if ((*it)->index < intersectedIndex)
 					{
-						validLayers += (*it);
+						validBelowLayers += (*it);
 					}
 					else
 					{
@@ -473,16 +500,24 @@ namespace april
 					}
 				}
 			}
-			if (validLayers.size() > 0)
+			if (validBelowLayers.size() > 0)
 			{
+#ifdef SAFE_INDEXES
+				validBelowLayers.sort(&_sortLayers);
+#endif
 				// check below layers for a matching layer
 				bool valid = false;
-				foreach_r (Layer*, it, validLayers)
+				foreach_r (Layer*, it, validBelowLayers)
 				{
 					valid = true;
-					for_iter (i, (*it)->index + 1, intersectedIndex - 1)
+#ifdef MANUAL_INDEXES
+					int index = this->layers.indexOf(*it);
+					for_iter (i, index + 1, intersectedIndex)
+#else
+					for_iter (i, (*it)->index + 1, intersectedIndex)
+#endif
 					{
-						if (!(*it)->parallelLayers.has(this->layers[i]) || !intersectedLayer->parallelLayers.has(this->layers[i]))
+						if (!(*it)->parallelLayers.has(this->layers[i]) || !intersectedLayer->parallelLayers.has(this->layers[i]) || this->_checkCurrentIntersection(this->layers[i]))
 						{
 							valid = false;
 							break;
@@ -493,9 +528,27 @@ namespace april
 						(*it)->rects += this->_boundingRect;
 						intersectedLayer->parallelLayers -= (*it);
 						(*it)->parallelLayers -= intersectedLayer;
+						harray<Layer*> parallelLayers = (*it)->parallelLayers;
+						foreach (Layer*, it2, parallelLayers)
+						{
+							if ((*it2)->index < (*it)->index && this->_checkCurrentIntersection(*it2))
+							{
+								(*it2)->parallelLayers -= (*it);
+								(*it)->parallelLayers -= (*it2);
+							}
+						}
+#ifdef MANUAL_INDEXES
+						int index = this->layers.indexOf(*it);
+						this->layers.removeAt(index);
+#else
 						this->layers.removeAt((*it)->index);
+#endif
 						this->layers.insertAt(intersectedIndex, (*it));
+#ifdef MANUAL_INDEXES
+						for_iter (i, index, intersectedIndex + 1)
+#else
 						for_iter (i, (*it)->index, intersectedIndex + 1)
+#endif
 						{
 							this->layers[i]->index = i;
 						}
@@ -505,15 +558,38 @@ namespace april
 			}
 			if (validAboveLayers.size() > 0)
 			{
+#ifdef SAFE_INDEXES
+				Layer* validLayer = validAboveLayers.min(&_sortLayers);
+#else
 				Layer* validLayer = validAboveLayers.first();
+#endif
 				validLayer->rects += this->_boundingRect;
+				harray<Layer*> parallelLayers = validLayer->parallelLayers;
+				foreach (Layer*, it, parallelLayers)
+				{
+					if ((*it)->index < validLayer->index && this->_checkCurrentIntersection(*it))
+					{
+						(*it)->parallelLayers -= validLayer;
+						validLayer->parallelLayers -= (*it);
+					}
+				}
 				return validLayer;
 			}
 		}
 		Layer* layer = new Layer(intersectedIndex + 1, renderCall, this->_boundingRect);
-		if (hbetweenIE(intersectedIndex, 0, this->layers.size() - 1))
+		if (hbetweenIE(intersectedIndex, 0, this->layers.size()))
 		{
-			layer->parallelLayers = this->layers(intersectedIndex + 1, this->layers.size() - intersectedIndex - 1);
+			for_iter (i, 0, intersectedIndex)
+			{
+				if (!this->_checkCurrentIntersection(this->layers[i]))
+				{
+					layer->parallelLayers += this->layers[i];
+				}
+			}
+			if (intersectedIndex < this->layers.size() - 1)
+			{
+				layer->parallelLayers += this->layers(intersectedIndex + 1, this->layers.size() - intersectedIndex - 1);
+			}
 			this->layers.insertAt(intersectedIndex + 1, layer);
 			for_iter (i, intersectedIndex + 2, this->layers.size())
 			{
@@ -526,24 +602,16 @@ namespace april
 			layer->parallelLayers = this->layers;
 			this->layers += layer;
 		}
-		bool added = false;
 		foreach (Layer*, it, layer->parallelLayers)
 		{
-			added = false;
-			for_iter (i, 0, (*it)->parallelLayers.size())
-			{
-				if (layer->index > (*it)->parallelLayers[i]->index)
-				{
-					(*it)->parallelLayers.insertAt(i, layer);
-					added = true;
-					break;
-				}
-			}
-			if (!added)
-			{
-				(*it)->parallelLayers += layer;
-			}
+			(*it)->parallelLayers += layer;
 		}
+#ifdef SAFE_INDEXES
+		for_iter (i, 0, this->layers.size())
+		{
+			this->layers[i]->index = i;
+		}
+#endif
 		return layer;
 #else
 #ifdef MAX_LAYER_CHECKS

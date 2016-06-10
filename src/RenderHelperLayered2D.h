@@ -31,8 +31,9 @@
 
 //#define MAX_LAYERS 10000
 //#define MAX_LAYER_CHECKS 100
-#define SIMPLE_ALGORITHM
+//#define SIMPLE_ALGORITHM
 //#define SAFE_INDEXES
+//#define MANUAL_INDEXES
 
 namespace april
 {
@@ -111,9 +112,12 @@ namespace april
 		void _waitForCalculations();
 		bool _tryForcedFlush(RenderOperation renderOperation);
 		void _calculateRenderCall(RenderCall* renderCall);
-		void _addRenderLayerNonTextured(RenderCall* renderCall);
+		void _makeBoundingRectColoredVertices();
+		void _makeBoundingRectColoredTexturedVertices();
+		void _addRenderLayer(RenderCall* renderCall);
 		void _addRenderLayerTextured(RenderCall* renderCall);
 		Layer* _processIntersection(RenderCall* renderCall, Layer** currentValidLayer, Layer** lastValidLayer, int& intersectionIndex);
+		bool _checkCurrentIntersection(Layer* layer);
 
 		static bool _sortLayers(RenderHelperLayered2D::Layer* a, RenderHelperLayered2D::Layer* b);
 		static void _threadUpdate(hthread* thread);

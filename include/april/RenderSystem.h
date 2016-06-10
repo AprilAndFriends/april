@@ -500,7 +500,7 @@ namespace april
 		/// @brief Flushes the currently rendered data.
 		/// @note Usually this doesn't need to be called manually. This is needed for some implemenations that don't call presentFrame() within C++ at all.
 		/// @see presentFrame
-		virtual void flushFrame();
+		virtual void flushFrame(bool updateStats = false);
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
 		/// @note Usually this doesn't need to be called manually. Calls flushFrame().
 		/// @see flushFrame
