@@ -172,7 +172,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
                 printf("overdraw: %d ms\n", t2 - t1);
             }
 #endif
-			april::rendersys->flushFrame();
+			april::rendersys->flushFrame(true);
             CGLFlushDrawable([context CGLContextObj]);
             CGLUnlockContext([context CGLContextObj]);
         }
@@ -191,9 +191,9 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
             aprilWindow->updateOneFrame();
             if (april::rendersys != NULL)
             {
+				april::rendersys->flushFrame(true);
                 [[self openGLContext] makeCurrentContext];
                 [[self openGLContext] flushBuffer];
-				april::rendersys->flushFrame();
             }
         }
         mStartedDrawing = false;
