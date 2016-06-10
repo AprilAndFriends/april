@@ -835,8 +835,6 @@
 		7F42F79F11EB177B00B1C1DF /* src */ = {
 			isa = PBXGroup;
 			children = (
-				B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */,
-				B436D2DE1D05AE8800DA2C15 /* RenderHelperLayered2D.cpp */,
 				D1E7204116D37BF900B9C9AD /* delegates */,
 				D1E7204216D37C0200B9C9AD /* images */,
 				D1E7204316D37C0B00B9C9AD /* timers */,
@@ -853,6 +851,8 @@
 				D102CFF419B7284500948584 /* TextureAsync.cpp */,
 				D102CFF519B7284500948584 /* TextureAsync.h */,
 				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
+				B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */,
+				B436D2DE1D05AE8800DA2C15 /* RenderHelperLayered2D.cpp */,
 				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
 				D1134F21175CDAD200BFF3A2 /* egl.cpp */,
 				D1134F22175CDAD200BFF3A2 /* egl.h */,

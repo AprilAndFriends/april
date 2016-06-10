@@ -374,7 +374,12 @@ namespace april
 		this->state->projectionMatrix = value;
 		this->state->projectionMatrixChanged = true;
 	}
-
+	
+	bool RenderSystem::isLayeredRenderer2dEnabled()
+	{
+		return (dynamic_cast<RenderHelperLayered2D*>(this->renderHelper) != NULL);
+	}
+	
 	void RenderSystem::setLayeredRenderer2dEnabled(bool value)
 	{
 		bool isLayeredRenderer = (dynamic_cast<RenderHelperLayered2D*>(this->renderHelper) != NULL);

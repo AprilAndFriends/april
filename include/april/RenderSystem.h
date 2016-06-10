@@ -201,6 +201,8 @@ namespace april
 		/// @brief Sets the current projection matrix.
 		/// @param[in] value The new projection matrix.
 		void setProjectionMatrix(const gmat4& value);
+		/// @brief Returns whether the layered 2D render is enabled
+		bool isLayeredRenderer2dEnabled();
 		/// @brief Sets layered 2D renderer to enabled or disabled.
 		/// @param[in] value The new value.
 		void setLayeredRenderer2dEnabled(bool value);
