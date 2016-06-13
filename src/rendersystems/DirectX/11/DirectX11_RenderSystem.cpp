@@ -594,7 +594,6 @@ namespace april
 
 	void DirectX11_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
 	{
-		DirectX_RenderSystem::_deviceChangeResolution(w, h, fullscreen);
 		if (this->swapChain != nullptr)
 		{
 			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
