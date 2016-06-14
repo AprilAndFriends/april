@@ -46,7 +46,7 @@ namespace april
 		void setTitle(chstr title);
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
-		void* getBackendId();
+		void* getBackendId() const;
 
 		void setResolution(int w, int h, bool fullscreen);
 		void presentFrame();

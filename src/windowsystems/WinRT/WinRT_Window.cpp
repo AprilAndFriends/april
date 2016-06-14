@@ -115,7 +115,7 @@ namespace april
 		hlog::warn(logTag, "Window::setTitle() does nothing on WinRT.");
 	}
 	
-	void* WinRT_Window::getBackendId()
+	void* WinRT_Window::getBackendId() const
 	{
 		// TODO ?
 		return 0;
