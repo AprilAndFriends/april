@@ -44,15 +44,15 @@ namespace april
 		bool updateOneFrame();
 		void destroyWindow();
 		void setCursorVisible(bool value);
-		bool isCursorVisible();
-		int getWidth();
-		int getHeight();
+		bool isCursorVisible() const;
+		int getWidth() const;
+		int getHeight() const;
 		void setTitle(chstr value);
-		gtypes::Vector2 getCursorPosition();
+		gtypes::Vector2 getCursorPosition() const;
 		void presentFrame();
-		void* getBackendId();
+		void* getBackendId() const;
 		void checkEvents();
-		bool isVirtualKeyboardVisible();
+		bool isVirtualKeyboardVisible() const;
 		
 		void showVirtualKeyboard();
 		void hideVirtualKeyboard();
@@ -60,7 +60,7 @@ namespace april
 		void keyboardWasShown(float kbSize);
 		void keyboardWasHidden();
 		
-		bool isRotating();
+		bool isRotating() const;
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
 		
@@ -81,7 +81,7 @@ namespace april
 		
 		void _setCursorPosition(float x, float y);
 		Cursor* _createCursor(bool fromResource);
-		float _getTouchScale();
+		float _getTouchScale() const;
 		
 	protected:
 		int keyboardRequest;

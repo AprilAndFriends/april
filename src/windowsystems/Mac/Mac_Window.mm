@@ -95,19 +95,19 @@ namespace april
 		}
 	}
 	
-	int Mac_Window::getWidth()
+	int Mac_Window::getWidth() const
 	{
 		NSRect bounds = [mWindow.contentView bounds];
 		return bounds.size.width * this->scalingFactor;
 	}
 
-	int Mac_Window::getHeight()
+	int Mac_Window::getHeight() const
 	{
 		NSRect bounds = [mWindow.contentView bounds];
 		return bounds.size.height * this->scalingFactor;
 	}
 	
-	void* Mac_Window::getBackendId()
+	void* Mac_Window::getBackendId() const
 	{
 		return (void*)mWindow;
 	}
@@ -171,7 +171,7 @@ namespace april
 		this->cursorPosition = pos * this->scalingFactor;
 	}
 
-	bool Mac_Window::isCursorVisible()
+	bool Mac_Window::isCursorVisible() const
 	{
 		if (mView == NULL) return 1;
 		return !mView->mUseBlankCursor;

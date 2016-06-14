@@ -221,12 +221,12 @@ namespace april
 		return NULL;
 	}
 
-	bool iOS_Window::isCursorVisible()
+	bool iOS_Window::isCursorVisible() const
 	{
 		return false; // iOS never shows system cursor
 	}
 	
-	int iOS_Window::getWidth()
+	int iOS_Window::getWidth() const
 	{
 		float scale = 1;
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
@@ -242,7 +242,7 @@ namespace april
 		return bounds.size.height * scale;
 	}
 
-	int iOS_Window::getHeight()
+	int iOS_Window::getHeight() const
 	{
 		float scale = 1;
 		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
@@ -280,7 +280,7 @@ namespace april
 		}
 	}
 
-	void* iOS_Window::getBackendId()
+	void* iOS_Window::getBackendId() const
 	{
 		return viewcontroller;
 	}
@@ -315,7 +315,7 @@ namespace april
 		this->inputEvents += new iOS_TouchInputEvent(this, coordinates);
 	}
 	
-	bool iOS_Window::isRotating()
+	bool iOS_Window::isRotating() const
 	{
 		return g_wnd_rotating;
 	}
@@ -352,7 +352,7 @@ namespace april
 		}
 	}
 
-	float iOS_Window::_getTouchScale()
+	float iOS_Window::_getTouchScale() const
 	{
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		static float scale = -1;
@@ -436,7 +436,7 @@ namespace april
 	}
 	
 	// TODOa - maybe this should be handle here and instead the Window superclass should keep handling this like in other implementations
-	bool iOS_Window::isVirtualKeyboardVisible()
+	bool iOS_Window::isVirtualKeyboardVisible() const
 	{
 		return [glview isVirtualKeyboardVisible];
 	}

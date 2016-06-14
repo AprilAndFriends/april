@@ -27,20 +27,19 @@ namespace april
 		Mac_Window();
 		~Mac_Window();
 
-		virtual int getWidth();
-		virtual int getHeight();
-		virtual void* getBackendId();
+		int getWidth() const;
+		int getHeight() const;
+		void* getBackendId() const;
 		
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		bool destroy();
 		
 		void setTitle(chstr title);
-		gvec2 getCursorPosition();
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
 		
 		void updateCursorPosition(gvec2& pos);
-		bool isCursorVisible();
+		bool isCursorVisible() const;
 		void setCursor(Cursor* value);
 		void setCursorVisible(bool visible);
 
