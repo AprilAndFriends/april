@@ -33,12 +33,12 @@ namespace april
 		bool destroy();
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
-		int getWidth();
-		int getHeight();
+		int getWidth() const;
+		int getHeight() const;
 		void setTitle(chstr title);
-		bool isCursorVisible();
+		bool isCursorVisible() const;
 		void setCursorVisible(bool value);
-		void* getBackendId();
+		void* getBackendId() const;
 		void setResolution(int w, int h, bool fullscreen);
 
 		void handleActivityChange(bool active);
@@ -52,12 +52,12 @@ namespace april
 		Cursor* _createCursor(bool fromResource);
 
 	protected:
-		int _getAprilTouchIndex(int kdIndex);
+		int _getAprilTouchIndex(int kdIndex) const;
 		
 		bool kdTouches[16];
 		KDWindow* kdWindow;
 
-		bool _isMousePointer();
+		bool _isMousePointer() const;
 		bool _processEvent(const KDEvent* evt);
 
 	};

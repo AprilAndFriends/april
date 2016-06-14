@@ -252,14 +252,14 @@ namespace april
 		return true;
 	}
 
-	int OpenKODE_Window::getWidth()
+	int OpenKODE_Window::getWidth() const
 	{
 		KDint32 size[] = {0, 0};
 		kdGetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_SIZE, size);
 		return size[0];
 	}
 	
-	int OpenKODE_Window::getHeight()
+	int OpenKODE_Window::getHeight() const
 	{
 		KDint32 size[] = {0, 0};
 		kdGetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_SIZE, size);
@@ -272,7 +272,7 @@ namespace april
 		kdSetWindowPropertycv(this->kdWindow, KD_WINDOWPROPERTY_CAPTION, this->title.cStr());
 	}
 	
-	bool OpenKODE_Window::isCursorVisible()
+	bool OpenKODE_Window::isCursorVisible() const
 	{
 		return (Window::isCursorVisible() || !this->isCursorInside());
 	}
@@ -289,7 +289,7 @@ namespace april
 #endif
 	}
 	
-	void* OpenKODE_Window::getBackendId()
+	void* OpenKODE_Window::getBackendId() const
 	{
 #ifdef _IOS
 		UIWindow* window = [UIApplication sharedApplication].keyWindow;
@@ -367,7 +367,7 @@ namespace april
 #endif
 	}
 	
-	int OpenKODE_Window::_getAprilTouchIndex(int kdIndex)
+	int OpenKODE_Window::_getAprilTouchIndex(int kdIndex) const
 	{
 		int index = -1;
 		for_iter (i, 0, kdIndex + 1)
@@ -545,7 +545,7 @@ namespace april
 		return NULL;
 	}
 
-	bool OpenKODE_Window::_isMousePointer() 
+	bool OpenKODE_Window::_isMousePointer() const
 	{ 
 		KDint32 type; 
 		kdStateGeti(KD_INPUT_POINTER_TYPE + 0 * KD_IO_POINTER_STRIDE, 1, &type); 

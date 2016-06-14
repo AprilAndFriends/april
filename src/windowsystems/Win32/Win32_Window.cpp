@@ -168,7 +168,7 @@ namespace april
 		this->title = title;
 	}
 	
-	bool Win32_Window::isCursorVisible()
+	bool Win32_Window::isCursorVisible() const
 	{
 		return (Window::isCursorVisible() || !this->isCursorInside());
 	}
@@ -199,26 +199,26 @@ namespace april
 		this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
 	}
 
-	int Win32_Window::getWidth()
+	int Win32_Window::getWidth() const
 	{
 		RECT rect;
 		GetClientRect(this->hWnd, &rect);
 		return (rect.right - rect.left);
 	}
 	
-	int Win32_Window::getHeight()
+	int Win32_Window::getHeight() const
 	{
 		RECT rect;
 		GetClientRect(this->hWnd, &rect);
 		return (rect.bottom - rect.top);
 	}
 
-	void* Win32_Window::getBackendId()
+	void* Win32_Window::getBackendId() const
 	{
 		return this->hWnd;
 	}
 
-	HCURSOR Win32_Window::getCursorHandle()
+	HCURSOR Win32_Window::getCursorHandle() const
 	{
 		if (this->cursor != NULL)
 		{

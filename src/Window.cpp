@@ -270,12 +270,12 @@ namespace april
 		}
 	}
 
-	gvec2 Window::getSize()
+	gvec2 Window::getSize() const
 	{
 		return gvec2((float)this->getWidth(), (float)this->getHeight());
 	}
 	
-	float Window::getAspectRatio()
+	float Window::getAspectRatio() const
 	{
 		return ((float)this->getWidth() / this->getHeight());
 	}
@@ -292,7 +292,7 @@ namespace april
 		this->_refreshCursor();
 	}
 
-	bool Window::isCursorInside()
+	bool Window::isCursorInside() const
 	{
 		return grect(0.0f, 0.0f, this->getSize()).isPointInside(this->getCursorPosition());
 	}

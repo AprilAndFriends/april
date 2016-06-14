@@ -33,11 +33,11 @@ namespace april
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		
 		inline void setTitle(chstr title) { }
-		inline bool isCursorVisible() { return false; }
+		inline bool isCursorVisible() const { return false; }
 		inline void setCursorVisible(bool value) { }
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
-		void* getBackendId();
+		void* getBackendId() const;
 		
 		void enterMainLoop();
 		void presentFrame();

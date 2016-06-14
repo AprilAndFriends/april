@@ -54,7 +54,7 @@ namespace april
 		return true;
 	}
 	
-	void* AndroidJNI_Window::getBackendId()
+	void* AndroidJNI_Window::getBackendId() const
 	{
 		return javaVM;
 	}

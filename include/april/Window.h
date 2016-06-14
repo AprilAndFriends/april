@@ -247,10 +247,10 @@ namespace april
 		void setInputModeTranslations(hmap<InputMode, InputMode> value);
 		/// @brief Gets the Window size.
 		/// @return The Window size.
-		gvec2 getSize();
+		gvec2 getSize() const;
 		/// @brief Gets the Window size aspect ratio.
 		/// @return The Window size aspect ratio.
-		float getAspectRatio();
+		float getAspectRatio() const;
 		/// @brief The controller emulation keys.
 		/// @note This is useful when testing controller input functionality without actually using a controller.
 		HL_DEFINE_GETSET2(hmap, Key, Button, controllerEmulationKeys, ControllerEmulationKeys);
@@ -273,7 +273,7 @@ namespace april
 		virtual inline void setTitle(chstr value) { this->title = value; }
 		/// @brief Gets the cursor visibility flag.
 		/// @return The cursor visibility flag.
-		virtual inline bool isCursorVisible() { return this->cursorVisible; }
+		virtual inline bool isCursorVisible() const { return this->cursorVisible; }
 		/// @brief Sets the cursor visibility flag.
 		/// @param[in] value The new cursor visibility flag.
 		virtual void setCursorVisible(bool value);
@@ -282,7 +282,7 @@ namespace april
 		virtual void setCursor(Cursor* value);
 		/// @brief Checks if the cursor is inside the client/rendering area of the Window.
 		/// @return True if the cursor is inside the client/rendering area of the Window.
-		virtual bool isCursorInside();
+		virtual bool isCursorInside() const;
 
 		/// @brief Sets the Window resolution/size.
 		/// @param[in] w Width of the window's rendering area.
@@ -300,13 +300,13 @@ namespace april
 
 		/// @brief Gets the Window's rendering area width.
 		/// @return The Window's rendering area width.
-		virtual int getWidth() = 0;
+		virtual int getWidth() const = 0;
 		/// @brief Gets the Window's rendering area height.
 		/// @return The Window's rendering area height.
-		virtual int getHeight() = 0;
+		virtual int getHeight() const = 0;
 		/// @brief Gets the Window's internal backend ID.
 		/// @return The Window's internal backend ID.
-		virtual void* getBackendId() = 0;
+		virtual void* getBackendId() const = 0;
 
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
 		/// @note Usually this doesn't need to be called manually.

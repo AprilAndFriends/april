@@ -35,12 +35,12 @@ namespace april
 		bool destroy();
 
 		void setTitle(chstr title);
-		bool isCursorVisible();
-		int getWidth();
-		int getHeight();
-		void* getBackendId();
+		bool isCursorVisible() const;
+		int getWidth() const;
+		int getHeight() const;
+		void* getBackendId() const;
 		void setResolution(int w, int h, bool fullscreen);
-		HCURSOR getCursorHandle();
+		HCURSOR getCursorHandle() const;
 
 		bool updateOneFrame();
 		void presentFrame();
