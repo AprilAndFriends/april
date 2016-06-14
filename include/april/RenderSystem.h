@@ -49,7 +49,7 @@ namespace april
 
 		/// @class RenderMode
 		/// @brief Defines possible rendering methods.
-		HL_ENUM_CLASS_DECLARE(RenderMode,
+		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, RenderMode,
 		(
 			/// @var static const RenderMode RenderMode::Normal
 			/// @brief Normal rendering.
