@@ -351,6 +351,7 @@ namespace april
 
 	RenderHelperLayered2D::Layer* RenderHelperLayered2D::_processIntersection(RenderCall* renderCall, Layer** currentValidLayer, Layer** lastValidLayer, int& intersectionIndex)
 	{
+		HL_LAMBDA_CLASS(_sortLayers, bool, ((RenderHelperLayered2D::Layer* const& a, RenderHelperLayered2D::Layer* const& b) { return (a->index < b->index); }));
 		// find first intersection
 		int intersectedIndex = -1;
 		Layer* intersectedLayer = NULL;
@@ -394,7 +395,7 @@ namespace april
 			}
 			if (belowLayers.size() > 0)
 			{
-				belowLayers.sort(&_sortLayers);
+				belowLayers.sort(&_sortLayers::lambda);
 				// check below matching layers for a matching layer
 				bool valid = false;
 				foreach_r (Layer*, it, belowLayers)
@@ -434,7 +435,7 @@ namespace april
 			}
 			if (aboveLayers.size() > 0)
 			{
-				layer = aboveLayers.min(&_sortLayers);
+				layer = aboveLayers.min(&_sortLayers::lambda);
 				layer->rects += this->_boundingRect;
 				harray<Layer*> parallelLayers = layer->parallelLayers;
 				foreach (Layer*, it, parallelLayers)
@@ -674,11 +675,6 @@ namespace april
 		tv[1].u = tv[3].u = tv[5].u = src.x + src.w;
 		tv[2].v = tv[4].v = tv[5].v = src.y + src.h;
 		return this->render(RO_TRIANGLE_LIST, tv, TRIANGLE_VERTEX_POOL_SIZE, color);
-	}
-
-	bool RenderHelperLayered2D::_sortLayers(RenderHelperLayered2D::Layer* a, RenderHelperLayered2D::Layer* b)
-	{
-		return (a->index < b->index);
 	}
 
 }

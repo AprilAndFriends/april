@@ -114,7 +114,6 @@ namespace april
 		Layer* _processIntersection(RenderCall* renderCall, Layer** currentValidLayer, Layer** lastValidLayer, int& intersectionIndex);
 		bool _checkCurrentIntersection(Layer* layer);
 
-		static bool _sortLayers(RenderHelperLayered2D::Layer* a, RenderHelperLayered2D::Layer* b);
 		static void _threadUpdate(hthread* thread);
 
 	private:
