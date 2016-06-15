@@ -123,7 +123,7 @@ namespace april
 		this->d3dpp->BackBufferWidth = w;
 		this->d3dpp->BackBufferHeight = h;
 		this->d3dpp->BackBufferFormat = D3DFMT_X8R8G8B8;
-		this->d3dpp->PresentationInterval = D3DPRESENT_INTERVAL_ONE;
+		this->d3dpp->PresentationInterval = (this->options.vSync ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE);
 		if (this->options.depthBuffer)
 		{
 			this->d3dpp->EnableAutoDepthStencil = TRUE;

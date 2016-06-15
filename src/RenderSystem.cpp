@@ -76,6 +76,7 @@ namespace april
 	RenderSystem::Options::Options()
 	{
 		this->depthBuffer = false;
+		this->vSync = true;
 	}
 
 	RenderSystem::Options::~Options()

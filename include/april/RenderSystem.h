@@ -101,6 +101,8 @@ namespace april
 		public:
 			/// @brief Whether to use a depth buffer.
 			bool depthBuffer;
+			/// @brief Vertical Sync.
+			bool vSync;
 
 			/// @brief Basic constructor.
 			Options();
