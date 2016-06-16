@@ -126,7 +126,12 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 		NSOpenGLContext* context = [self openGLContext];
 		[context makeCurrentContext];
 		// Synchronize buffer swaps with vertical refresh rate
+		
 		GLint swapInt = 1;
+		if (april::rendersys->getOptions().vSync == false)
+		{
+			swapInt = 0;
+		}
 		[context setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
         
         if (april::isUsingCVDisplayLink())
