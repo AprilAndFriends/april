@@ -192,6 +192,11 @@ namespace april
 	{
 		unsigned int creationFlags = 0;
 		creationFlags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
+		if (this->options.debugInfo)
+		{
+			creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+			creationFlags |= D3D11_CREATE_DEVICE_DEBUGGABLE;
+		}
 		D3D_FEATURE_LEVEL featureLevels[] =
 		{
 			// Intel HD GPUs have driver problems with 11.x feature levels so they have been disabled
@@ -399,7 +404,7 @@ namespace april
 	{
 		this->d3dDeviceContext->OMSetRenderTargets(0, NULL, NULL);
 		this->renderTargetView = nullptr;
-		HRESULT hr = this->swapChain->ResizeBuffers(BACKBUFFER_COUNT, width, height, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+		HRESULT hr = this->swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 		if (FAILED(hr))
 		{
 			throw Exception("Unable to resize swap chain buffers!");

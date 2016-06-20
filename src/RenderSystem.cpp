@@ -77,6 +77,7 @@ namespace april
 	{
 		this->depthBuffer = false;
 		this->vSync = true;
+		this->debugInfo = false;
 	}
 
 	RenderSystem::Options::~Options()
@@ -113,7 +114,15 @@ namespace april
 		harray<hstr> options;
 		if (this->depthBuffer)
 		{
-			options += "depth-buffer";
+			options += "Depth-Buffer";
+		}
+		if (this->vSync)
+		{
+			options += "V-Sync";
+		}
+		if (this->debugInfo)
+		{
+			options += "Debug Info";
 		}
 		if (options.size() == 0)
 		{
