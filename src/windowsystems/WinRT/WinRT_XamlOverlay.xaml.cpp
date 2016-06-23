@@ -59,10 +59,14 @@ namespace april
 
 	void WinRT_XamlOverlay::OnCompositionScaleChanged(_In_ SwapChainPanel^ sender, _In_ Object^ args)
 	{
+		april::getSystemInfo(); // so the displayResolution value gets updated
 		if (april::window != NULL)
 		{
 			// so the size is updated
-			((WinRT_Window*)april::window)->changeSize(april::window->getWidth(), april::window->getHeight());
+			float dpiRatio = WinRT::getDpiRatio();
+			int correctedWidth = hround(april::window->getWidth() * dpiRatio);
+			int correctedHeight = hround(april::window->getHeight() * dpiRatio);
+			((WinRT_Window*)april::window)->changeSize(correctedWidth, correctedHeight);
 		}
 	}
 
