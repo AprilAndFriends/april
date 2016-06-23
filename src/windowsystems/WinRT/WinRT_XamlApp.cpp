@@ -171,6 +171,7 @@ namespace april
 			this->overlay = ref new WinRT_XamlOverlay();
 			Windows::UI::Xaml::Window::Current->Content = this->overlay;
 			Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &WinRT_XamlApp::OnWindowActivationChanged);
+			Windows::UI::Input::PointerVisualizationSettings::GetForCurrentView()->IsContactFeedbackEnabled = false;
 			(*WinRT::Init)(april::getArgs());
 			if (april::rendersys != NULL && april::window != NULL)
 			{

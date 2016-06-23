@@ -194,8 +194,7 @@ namespace april
 		creationFlags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
 		if (this->options.debugInfo)
 		{
-			creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
-			creationFlags |= D3D11_CREATE_DEVICE_DEBUGGABLE;
+			//creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 		}
 		D3D_FEATURE_LEVEL featureLevels[] =
 		{
