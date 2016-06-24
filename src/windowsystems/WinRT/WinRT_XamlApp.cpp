@@ -340,19 +340,16 @@ namespace april
 	void WinRT_XamlApp::_updateWindowSize(float width, float height)
 	{
 		this->_resetTouches();
-		april::getSystemInfo(); // so the displayResolution value gets updated
 		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
 		if (DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::Portrait ||
 			DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::PortraitFlipped)
 		{
+			april::getSystemInfo(); // so the displayResolution value gets updated
 			return;
 		}
 		if (april::window != NULL)
 		{
-			float dpiRatio = WinRT::getDpiRatio();
-			int correctedWidth = hround(width * dpiRatio);
-			int correctedHeight = hround(height * dpiRatio);
-			((WinRT_Window*)april::window)->changeSize(correctedWidth, correctedHeight);
+			((WinRT_Window*)april::window)->changeSize(width, height);
 		}
 	}
 

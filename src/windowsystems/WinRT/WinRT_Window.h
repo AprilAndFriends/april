@@ -55,7 +55,7 @@ namespace april
 		void terminateMainLoop();
 		void showVirtualKeyboard();
 		void hideVirtualKeyboard();
-		void changeSize(int w, int h); // required override instead of normal size changing
+		void changeSize(float w, float h); // required override instead of normal size changing
 		
 	protected:
 		int width;

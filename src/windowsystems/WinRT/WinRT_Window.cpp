@@ -125,13 +125,17 @@ namespace april
 	{
 	}
 
-	void WinRT_Window::changeSize(int w, int h)
+	void WinRT_Window::changeSize(float w, float h)
 	{
-		if (this->width != w || this->height != h)
+		april::getSystemInfo(); // so the displayResolution value gets updated
+		float dpiRatio = WinRT::getDpiRatio();
+		int correctedWidth = hround(w * dpiRatio);
+		int correctedHeight = hround(h * dpiRatio);
+		if (this->width != correctedWidth || this->height != correctedHeight)
 		{
-			this->width = w;
-			this->height = h;
-			this->_setRenderSystemResolution(w, h, this->fullscreen);
+			this->width = correctedWidth;
+			this->height = correctedHeight;
+			this->_setRenderSystemResolution();
 		}
 	}
 	
