@@ -129,14 +129,9 @@ namespace april
 	{
 		april::getSystemInfo(); // so the displayResolution value gets updated
 		float dpiRatio = WinRT::getDpiRatio();
-		int correctedWidth = hround(w * dpiRatio);
-		int correctedHeight = hround(h * dpiRatio);
-		if (this->width != correctedWidth || this->height != correctedHeight)
-		{
-			this->width = correctedWidth;
-			this->height = correctedHeight;
-			this->_setRenderSystemResolution();
-		}
+		this->width = hround(w * dpiRatio);
+		this->height = hround(h * dpiRatio);
+		this->_setRenderSystemResolution();
 	}
 	
 	void WinRT_Window::presentFrame()
