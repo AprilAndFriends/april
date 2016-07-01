@@ -4,6 +4,7 @@ package com.april;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.view.InputDevice;
 import android.view.inputmethod.EditorInfo;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -19,6 +20,12 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	private static final int MOUSE_DOWN = 0;
 	private static final int MOUSE_UP = 1;
 	private static final int MOUSE_MOVE = 3;
+	private static final int CONTROLLER_AXIS_LX = 100;
+	private static final int CONTROLLER_AXIS_LY = 101;
+	private static final int CONTROLLER_AXIS_RX = 102;
+	private static final int CONTROLLER_AXIS_RY = 103;
+	private static final int CONTROLLER_TRIGGER_L = 111;
+	private static final int CONTROLLER_TRIGGER_R = 112;
 	
 	public GLSurfaceView(Context context)
 	{
@@ -104,6 +111,10 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		{
 			return super.onKeyDown(keyCode, event);
 		}
+		if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)
+		{
+			return this.onButtonDown(keyCode, event);
+		}
 		final int eventUnicodeChar = event.getUnicodeChar();
 		this.queueEvent(new Runnable()
 		{
@@ -124,6 +135,10 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		{
 			return super.onKeyUp(keyCode, event);
 		}
+		if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)
+		{
+			return this.onButtonUp(keyCode, event);
+		}
 		this.queueEvent(new Runnable()
 		{
 			public void run()
@@ -133,6 +148,102 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		});
 		return true;
 	}
+	
+	private boolean onButtonDown(int keyCode, final KeyEvent event)
+	{
+		// Java is broken. "final KeyEvent event" can still be modified after this method finished and hence queuing into the GLThread can cause a crash.
+		final int eventKeyCode = event.getKeyCode();
+		this.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onButtonDown(eventKeyCode);
+			}
+		});
+		return true;
+	}
+	
+	private boolean onButtonUp(int keyCode, final KeyEvent event)
+	{
+		// Java is broken. "final KeyEvent event" can still be modified after this method finished and hence queuing into the GLThread can cause a crash.
+		final int eventKeyCode = event.getKeyCode();
+		this.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onButtonUp(eventKeyCode);
+			}
+		});
+		return true;
+	}
+	
+	@Override
+	public boolean onGenericMotionEvent(final MotionEvent event)
+	{
+		if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK && event.getAction() == MotionEvent.ACTION_MOVE)
+		{
+			final float axisLX = event.getAxisValue(MotionEvent.AXIS_X);
+			final float axisLY = event.getAxisValue(MotionEvent.AXIS_Y);
+			final float axisRX = event.getAxisValue(MotionEvent.AXIS_RX);
+			final float axisRY = event.getAxisValue(MotionEvent.AXIS_RY);
+			final float triggerL = event.getAxisValue(MotionEvent.AXIS_LTRIGGER);
+			final float triggerR = event.getAxisValue(MotionEvent.AXIS_RTRIGGER);
+			this.queueEvent(new Runnable()
+			{
+				public void run()
+				{
+					NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_LX, axisLX);
+					NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_LY, axisLY);
+					NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_RX, axisRX);
+					NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_RY, axisRY);
+					NativeInterface.onControllerAxisChange(CONTROLLER_TRIGGER_L, triggerL);
+					NativeInterface.onControllerAxisChange(CONTROLLER_TRIGGER_R, triggerR);
+				}
+			});
+			return true;
+		}
+		return super.onGenericMotionEvent(event);
+	}
+	
+	/*
+	private void processJoystickInput(MotionEvent event, int historyPosition)
+	{
+		InputDevice inputDevice = event.getDevice();
+
+		// Calculate the horizontal distance to move by
+		// using the input value from one of these physical controls:
+		// the left control stick, hat axis, or the right control stick.
+		float x = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_X, historyPosition);
+		if (x == 0.0)
+		{
+			x = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_HAT_X, historyPosition);
+		}
+		if (x == 0.0)
+		{
+			x = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_Z, historyPosition);
+		}
+		// Calculate the vertical distance to move by
+		// using the input value from one of these physical controls:
+		// the left control stick, hat switch, or the right control stick.
+		float y = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_Y, historyPosition);
+		if (y == 0)
+		{
+			y = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_HAT_Y, historyPosition);
+		}
+		if (y == 0)
+		{
+			y = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_RZ, historyPosition);
+		}
+		this.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onButtonUp(eventKeyCode);
+			}
+		});
+		// Update the ship object based on the new x and y values
+	}
+	*/
 	
 	@Override
 	public InputConnection onCreateInputConnection(EditorInfo outAttributes) // required for creation of soft keyboard

@@ -258,10 +258,12 @@ namespace april
 		AB_Y = 14,
 		AB_L1 = 21,
 		AB_R1 = 22,
-		AB_DPAD_DOWN = 32,
-		AB_DPAD_LEFT = 34,
-		AB_DPAD_RIGHT = 36,
-		AB_DPAD_UP = 38,
+		AB_LS = 31,
+		AB_RS = 32,
+		AB_DPAD_DOWN = 42,
+		AB_DPAD_LEFT = 44,
+		AB_DPAD_RIGHT = 46,
+		AB_DPAD_UP = 48,
 		AB_AXIS_LX = 100,
 		AB_AXIS_LY = 101,
 		AB_AXIS_RX = 102,
@@ -271,5 +273,4 @@ namespace april
 	};
 
 }
-
 #endif
