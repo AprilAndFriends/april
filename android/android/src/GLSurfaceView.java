@@ -113,7 +113,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		}
 		if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)
 		{
-			return this.onButtonDown(keyCode, event);
+			return this._onButtonDown(keyCode, event);
 		}
 		final int eventUnicodeChar = event.getUnicodeChar();
 		this.queueEvent(new Runnable()
@@ -137,7 +137,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		}
 		if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)
 		{
-			return this.onButtonUp(keyCode, event);
+			return this._onButtonUp(keyCode, event);
 		}
 		this.queueEvent(new Runnable()
 		{
@@ -149,10 +149,33 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		return true;
 	}
 	
-	private boolean onButtonDown(int keyCode, final KeyEvent event)
+	private int _convertControllerButton(int buttonCode)
+	{
+		switch (buttonCode)
+		{
+		// as declared in Keys.h
+		case KeyEvent.KEYCODE_BUTTON_START:		return 1;
+		case KeyEvent.KEYCODE_BUTTON_SELECT:	return 2;
+		case KeyEvent.KEYCODE_BUTTON_A:			return 11;
+		case KeyEvent.KEYCODE_BUTTON_B:			return 12;
+		case KeyEvent.KEYCODE_BUTTON_X:			return 13;
+		case KeyEvent.KEYCODE_BUTTON_Y:			return 14;
+		case KeyEvent.KEYCODE_BUTTON_L1:		return 21;
+		case KeyEvent.KEYCODE_BUTTON_R1:		return 22;
+		case KeyEvent.KEYCODE_BUTTON_THUMBL:	return 31;
+		case KeyEvent.KEYCODE_BUTTON_THUMBR:	return 32;
+		case KeyEvent.KEYCODE_DPAD_DOWN:		return 42;
+		case KeyEvent.KEYCODE_DPAD_LEFT:		return 44;
+		case KeyEvent.KEYCODE_DPAD_RIGHT:		return 46;
+		case KeyEvent.KEYCODE_DPAD_UP:			return 48;
+		}
+		return 0;
+	}
+	
+	private boolean _onButtonDown(int keyCode, final KeyEvent event)
 	{
 		// Java is broken. "final KeyEvent event" can still be modified after this method finished and hence queuing into the GLThread can cause a crash.
-		final int eventKeyCode = event.getKeyCode();
+		final int eventKeyCode = this._convertControllerButton(event.getKeyCode());
 		this.queueEvent(new Runnable()
 		{
 			public void run()
@@ -163,10 +186,10 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		return true;
 	}
 	
-	private boolean onButtonUp(int keyCode, final KeyEvent event)
+	private boolean _onButtonUp(int keyCode, final KeyEvent event)
 	{
 		// Java is broken. "final KeyEvent event" can still be modified after this method finished and hence queuing into the GLThread can cause a crash.
-		final int eventKeyCode = event.getKeyCode();
+		final int eventKeyCode = this._convertControllerButton(event.getKeyCode());
 		this.queueEvent(new Runnable()
 		{
 			public void run()

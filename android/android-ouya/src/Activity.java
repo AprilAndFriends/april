@@ -76,7 +76,7 @@ public class Activity extends com.april.Activity
 		return (handled || super.dispatchGenericMotionEvent(motionEvent));
 	}
 	
-	protected int _convertOuyaButton(int buttonCode)
+	protected int _convertControllerButton(int buttonCode)
 	{
 		switch (buttonCode)
 		{
@@ -86,15 +86,13 @@ public class Activity extends com.april.Activity
 		case OuyaController.BUTTON_Y:		return 13;
 		case OuyaController.BUTTON_A:		return 14;
 		case OuyaController.BUTTON_L1:		return 21;
-		case OuyaController.BUTTON_L2:		return 22;
-		case OuyaController.BUTTON_L3:		return 23;
-		case OuyaController.BUTTON_R1:		return 24;
-		case OuyaController.BUTTON_R2:		return 25;
-		case OuyaController.BUTTON_R3:		return 26;
-		case KeyEvent.KEYCODE_DPAD_DOWN:	return 32;
-		case KeyEvent.KEYCODE_DPAD_LEFT:	return 34;
-		case KeyEvent.KEYCODE_DPAD_RIGHT:	return 36;
-		case KeyEvent.KEYCODE_DPAD_UP:		return 38;
+		case OuyaController.BUTTON_L2:		return 31;
+		case OuyaController.BUTTON_R1:		return 22;
+		case OuyaController.BUTTON_R2:		return 32;
+		case KeyEvent.KEYCODE_DPAD_DOWN:	return 42;
+		case KeyEvent.KEYCODE_DPAD_LEFT:	return 44;
+		case KeyEvent.KEYCODE_DPAD_RIGHT:	return 46;
+		case KeyEvent.KEYCODE_DPAD_UP:		return 48;
 		}
 		return 0;
 	}
@@ -102,7 +100,7 @@ public class Activity extends com.april.Activity
 	@Override
 	public boolean onKeyDown(int keyCode, final KeyEvent event)
 	{
-		final int newKeyCode = this._convertOuyaButton(keyCode);
+		final int newKeyCode = this._convertControllerButton(keyCode);
 		boolean result = OuyaController.onKeyDown(keyCode, event);
 		if (newKeyCode != 0)
 		{
@@ -121,7 +119,7 @@ public class Activity extends com.april.Activity
 	@Override
 	public boolean onKeyUp(int keyCode, final KeyEvent event)
 	{
-		final int newKeyCode = this._convertOuyaButton(keyCode);
+		final int newKeyCode = this._convertControllerButton(keyCode);
 		boolean result = OuyaController.onKeyUp(keyCode, event);
 		if (newKeyCode != 0)
 		{
