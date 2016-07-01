@@ -184,8 +184,8 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		{
 			final float axisLX = event.getAxisValue(MotionEvent.AXIS_X);
 			final float axisLY = event.getAxisValue(MotionEvent.AXIS_Y);
-			final float axisRX = event.getAxisValue(MotionEvent.AXIS_RX);
-			final float axisRY = event.getAxisValue(MotionEvent.AXIS_RY);
+			final float axisRX = event.getAxisValue(MotionEvent.AXIS_Z);
+			final float axisRY = event.getAxisValue(MotionEvent.AXIS_RZ);
 			final float triggerL = event.getAxisValue(MotionEvent.AXIS_LTRIGGER);
 			final float triggerR = event.getAxisValue(MotionEvent.AXIS_RTRIGGER);
 			this.queueEvent(new Runnable()
