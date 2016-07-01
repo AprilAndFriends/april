@@ -254,6 +254,12 @@ namespace april
 		/// @brief The controller emulation keys.
 		/// @note This is useful when testing controller input functionality without actually using a controller.
 		HL_DEFINE_GETSET2(hmap, Key, Button, controllerEmulationKeys, ControllerEmulationKeys);
+		/// @brief The controller emulation keys for positive axis values.
+		/// @note This is useful when testing controller input functionality without actually using a controller.
+		HL_DEFINE_GETSET2(hmap, Key, Button, controllerEmulationAxisesPositive, ControllerEmulationAxisesPositive);
+		/// @brief The controller emulation keys for negative axis values.
+		/// @note This is useful when testing controller input functionality without actually using a controller.
+		HL_DEFINE_GETSET2(hmap, Key, Button, controllerEmulationAxisesNegative, ControllerEmulationAxisesNegative);
 
 		/// @brief The update delegate.
 		HL_DEFINE_GETSET(UpdateDelegate*, updateDelegate, UpdateDelegate);
@@ -523,6 +529,12 @@ namespace april
 		/// @brief The controller emulation keys.
 		/// @note This is useful when testing controller input functionality without actually using a controller.
 		hmap<Key, Button> controllerEmulationKeys;
+		/// @brief The controller emulation keys for positive axis values.
+		/// @note This is useful when testing controller input functionality without actually using a controller.
+		hmap<Key, Button> controllerEmulationAxisesPositive;
+		/// @brief The controller emulation keys for negative axis values.
+		/// @note This is useful when testing controller input functionality without actually using a controller.
+		hmap<Key, Button> controllerEmulationAxisesNegative;
 
 		/// @brief The current update delegate.
 		UpdateDelegate* updateDelegate;

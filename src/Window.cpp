@@ -523,11 +523,36 @@ namespace april
 				this->keyboardDelegate->onKeyUp(keyCode);
 				break;
 			}
+			bool processed = false;
 			// emulation of buttons using keyboard
 			if (this->controllerEmulationKeys.hasKey(keyCode))
 			{
-				ControllerEventType buttonType = (type == KEY_DOWN ? CONTROLLER_DOWN : CONTROLLER_UP);
-				this->handleControllerEvent(buttonType, this->controllerEmulationKeys[keyCode], 0.0f);
+				Button button = this->controllerEmulationKeys[keyCode];
+				if (button != AB_AXIS_LX && button != AB_AXIS_LY && button != AB_AXIS_RX && button != AB_AXIS_RY && button != AB_TRIGGER_L && button != AB_TRIGGER_R)
+				{
+					this->handleControllerEvent((type == KEY_DOWN ? CONTROLLER_DOWN : CONTROLLER_UP), button, 0.0f);
+					processed = true;
+				}
+			}
+			// emulation of positive axis values using keyboard
+			if (!processed && this->controllerEmulationAxisesPositive.hasKey(keyCode))
+			{
+				Button button = this->controllerEmulationAxisesPositive[keyCode];
+				if (button == AB_AXIS_LX || button == AB_AXIS_LY || button == AB_AXIS_RX || button == AB_AXIS_RY || button == AB_TRIGGER_L || button == AB_TRIGGER_R)
+				{
+					this->handleControllerEvent(CONTROLLER_AXIS, button, (type == KEY_DOWN ? 1.0f : 0.0f));
+					processed = true;
+				}
+			}
+			// emulation of negative axis values using keyboard
+			if (!processed && this->controllerEmulationAxisesNegative.hasKey(keyCode))
+			{
+				Button button = this->controllerEmulationAxisesNegative[keyCode];
+				if (button == AB_AXIS_LX || button == AB_AXIS_LY || button == AB_AXIS_RX || button == AB_AXIS_RY)
+				{
+					this->handleControllerEvent(CONTROLLER_AXIS, button, (type == KEY_DOWN ? -1.0f : 0.0f));
+					processed = true;
+				}
 			}
 		}
 	}
@@ -559,6 +584,9 @@ namespace april
 				break;
 			case CONTROLLER_UP:
 				this->controllerDelegate->onButtonUp(buttonCode);
+				break;
+			case CONTROLLER_AXIS:
+				this->controllerDelegate->onControllerAxisChange(buttonCode, axisValue);
 				break;
 			default:
 				break;
