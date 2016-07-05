@@ -258,6 +258,8 @@ namespace april
 		AB_Y = 14,
 		AB_L1 = 21,
 		AB_R1 = 22,
+		AB_L2 = 23,
+		AB_R2 = 24,
 		AB_LS = 31,
 		AB_RS = 32,
 		AB_DPAD_DOWN = 42,
