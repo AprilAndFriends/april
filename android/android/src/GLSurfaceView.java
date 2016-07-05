@@ -173,6 +173,19 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		case KeyEvent.KEYCODE_DPAD_LEFT:		return 44;
 		case KeyEvent.KEYCODE_DPAD_RIGHT:		return 46;
 		case KeyEvent.KEYCODE_DPAD_UP:			return 48;
+		// generic buttons
+		case KeyEvent.KEYCODE_BUTTON_1:			return 14;
+		case KeyEvent.KEYCODE_BUTTON_2:			return 11;
+		case KeyEvent.KEYCODE_BUTTON_3:			return 12;
+		case KeyEvent.KEYCODE_BUTTON_4:			return 15;
+		case KeyEvent.KEYCODE_BUTTON_5:			return 21;
+		case KeyEvent.KEYCODE_BUTTON_6:			return 22;
+		case KeyEvent.KEYCODE_BUTTON_7:			return 23;
+		case KeyEvent.KEYCODE_BUTTON_8:			return 24;
+		case KeyEvent.KEYCODE_BUTTON_9:			return 1;
+		case KeyEvent.KEYCODE_BUTTON_10:		return 2;
+		case KeyEvent.KEYCODE_BUTTON_11:		return 31;
+		case KeyEvent.KEYCODE_BUTTON_12:		return 32;
 		}
 		return 0;
 	}
