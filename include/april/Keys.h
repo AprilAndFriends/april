@@ -251,10 +251,11 @@ namespace april
 	{
 		AB_NONE = 0,
 		AB_START = 1,
-		AB_BACK = 2,
+		AB_SELECT = 2,
+		AB_MODE = 3,
 		AB_A = 11,
 		AB_B = 12,
-		AB_B = 13,
+		AB_C = 13,
 		AB_X = 14,
 		AB_Y = 15,
 		AB_Z = 16,
