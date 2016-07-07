@@ -33,7 +33,7 @@ namespace april
 		DirectX11_VertexShader();
 		~DirectX11_VertexShader();
 		
-		bool isLoaded();
+		bool isLoaded() const;
 
 		void setConstantsB(const int* quads, unsigned int quadCount);
 		void setConstantsI(const int* quads, unsigned int quadCount);

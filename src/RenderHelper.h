@@ -48,7 +48,6 @@ namespace april
 	protected:
 		bool created;
 
-
 	};
 
 }

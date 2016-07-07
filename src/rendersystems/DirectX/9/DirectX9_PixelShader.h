@@ -32,7 +32,7 @@ namespace april
 		DirectX9_PixelShader();
 		~DirectX9_PixelShader();
 
-		bool isLoaded();
+		bool isLoaded() const;
 
 		void setConstantsB(const int* quads, unsigned int quadCount);
 		void setConstantsI(const int* quads, unsigned int quadCount);

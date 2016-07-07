@@ -32,7 +32,7 @@ namespace april
 		this->dx11Shader = nullptr;
 	}
 
-	bool DirectX11_VertexShader::isLoaded()
+	bool DirectX11_VertexShader::isLoaded() const
 	{
 		return (this->dx11Shader != nullptr);
 	}

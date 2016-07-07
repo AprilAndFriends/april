@@ -53,7 +53,7 @@ namespace april
 	{
 	}
 	
-	float Timer::getTime()
+	float Timer::getTime() const
 	{
 		__int64 time;
 		if (this->performanceTimer)

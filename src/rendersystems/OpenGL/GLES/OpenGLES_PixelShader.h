@@ -31,7 +31,7 @@ namespace april
 		OpenGLES_PixelShader();
 		~OpenGLES_PixelShader();
 
-		bool isLoaded();
+		bool isLoaded() const;
 
 		void setConstantsB(const int* quads, unsigned int quadCount);
 		void setConstantsI(const int* quads, unsigned int quadCount);

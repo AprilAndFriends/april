@@ -153,11 +153,11 @@ namespace april
 		WinRT::App->Overlay->hideKeyboard();
 	}
 
-	hstr WinRT_Window::findCursorFile(chstr filename)
+	hstr WinRT_Window::findCursorFile(chstr filename) const
 	{
 		if (filename != "")
 		{
-			foreach (hstr, it, this->cursorExtensions)
+			foreachc (hstr, it, this->cursorExtensions)
 			{
 				if (this->cursorMappings.hasKey(filename))
 				{

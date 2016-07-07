@@ -550,7 +550,7 @@ namespace april
 		this->presentFrame();
 	}
 
-	int DirectX11_RenderSystem::getVRam()
+	int DirectX11_RenderSystem::getVRam() const
 	{
 		if (this->d3dDevice == nullptr)
 		{
@@ -888,7 +888,7 @@ namespace april
 		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &vertexSize, &offset);
 	}
 
-	Image::Format DirectX11_RenderSystem::getNativeTextureFormat(Image::Format format)
+	Image::Format DirectX11_RenderSystem::getNativeTextureFormat(Image::Format format) const
 	{
 		if (format == Image::FORMAT_RGBA || format == Image::FORMAT_ARGB || format == Image::FORMAT_BGRA || format == Image::FORMAT_ABGR)
 		{
@@ -914,7 +914,7 @@ namespace april
 		return Image::FORMAT_INVALID;
 	}
 	
-	unsigned int DirectX11_RenderSystem::getNativeColorUInt(const april::Color& color)
+	unsigned int DirectX11_RenderSystem::getNativeColorUInt(const april::Color& color) const
 	{
 		return ((color.a << 24) | (color.b << 16) | (color.g << 8) | color.r);
 	}

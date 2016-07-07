@@ -31,8 +31,7 @@ namespace april
 		~OpenKODE_Window();
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		bool destroy();
-		hstr getParam(chstr param);
-		void setParam(chstr param, chstr value);
+
 		int getWidth() const;
 		int getHeight() const;
 		void setTitle(chstr title);
@@ -40,6 +39,9 @@ namespace april
 		void setCursorVisible(bool value);
 		void* getBackendId() const;
 		void setResolution(int w, int h, bool fullscreen);
+
+		hstr getParam(chstr param);
+		void setParam(chstr param, chstr value);
 
 		void handleActivityChange(bool active);
 

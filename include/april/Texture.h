@@ -104,18 +104,18 @@ namespace april
 		HL_DEFINE_IS(fromResource, FromResource);
 		/// @brief Gets the width of the texture in pixels.
 		/// @return Width of the texture in pixels.
-		int getWidth();
+		int getWidth() const;
 		/// @brief Gets the height of the texture in pixels.
 		/// @return Height of the texture in pixels.
-		int getHeight();
+		int getHeight() const;
 		/// @brief Gets the byte-per-pixel value.
 		/// @return The byte-per-pixel value.
 		/// @note e.g. a value of 3 means that one pixels uses 3 bytes.
-		int getBpp();
+		int getBpp() const;
 		/// @brief Gets the size of the image data in bytes.
 		/// @return Size of the image data in bytes.
 		/// @note The calculation is basically "w * h * getBpp()".
-		int getByteSize();
+		int getByteSize() const;
 		/// @brief Gets the current VRAM consumption.
 		/// @return The current VRAM consumption.
 		int getCurrentVRamSize();
@@ -170,7 +170,7 @@ namespace april
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @return The Color of the pixel.
-		Color getPixel(int x, int y);
+		Color getPixel(int x, int y) const;
 		/// @brief Sets the color of a specific pixel.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
@@ -181,7 +181,7 @@ namespace april
 		/// @param[in] x Decimal X-coordinate.
 		/// @param[in] y Decimal Y-coordinate.
 		/// @return The interpolated Color of the pixel.
-		Color getInterpolatedPixel(float x, float y);
+		Color getInterpolatedPixel(float x, float y) const;
 		/// @brief Fills a rectangle area with one color.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
@@ -366,7 +366,7 @@ namespace april
 		/// @param[in] position Pixel coordinate.
 		/// @return The Color of the pixel.
 		/// @see getPixel(int x, int y)
-		Color getPixel(gvec2 position);
+		Color getPixel(gvec2 position) const;
 		/// @brief Sets the color of a specific pixel.
 		/// @param[in] position Pixel coordinate.
 		/// @param[in] color The new Color of the pixel.
@@ -377,7 +377,7 @@ namespace april
 		/// @param[in] position Pixel coordinate.
 		/// @return The interpolated Color of the pixel.
 		/// @see getInterpolatedPixel(float x, float y)
-		Color getInterpolatedPixel(gvec2 position);
+		Color getInterpolatedPixel(gvec2 position) const;
 		/// @brief Fills a rectangle area with one color.
 		/// @param[in] rect The rectangle area.
 		/// @param[in] color The Color used for filling.
@@ -761,17 +761,17 @@ namespace april
 
 		/// @brief Gets the readable flag.
 		/// @return True if the image data from the texture can be read.
-		virtual bool _isReadable();
+		virtual bool _isReadable() const;
 		/// @brief Gets the writable flag.
 		/// @return True if the image data from the texture can be written.
-		virtual bool _isWritable();
+		virtual bool _isWritable() const;
 		/// @brief Gets the alterable flag.
 		/// @return True if the image data from the texture can be both read and written.
-		virtual bool _isAlterable();
+		virtual bool _isAlterable() const;
 		/// @brief Gets the internal texture name.
 		/// @return The internal texture name.
 		/// @note This is usually used for debugging and logging purposes.
-		hstr _getInternalName();
+		hstr _getInternalName() const;
 
 		/// @brief Sets up dimensions and internal state of the texture to be power-of-two compliant.
 		/// @param[out] outWidth Power-of-two width.

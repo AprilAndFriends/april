@@ -33,7 +33,7 @@ namespace april
 		}
 	}
 
-	bool DirectX9_VertexShader::isLoaded()
+	bool DirectX9_VertexShader::isLoaded() const
 	{
 		return (this->dx9Shader != NULL);
 	}

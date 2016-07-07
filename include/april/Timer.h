@@ -39,7 +39,7 @@ namespace april
 		~Timer();
 		
 		/// @brief Gets current time.
-		float getTime();
+		float getTime() const;
 
 		/// @brief Calculates the difference since the last measurement.
 		/// @param[in] update Whether to update the measurement before retrieving.

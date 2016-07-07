@@ -254,7 +254,7 @@ namespace april
 		}
 	}
 
-	int Texture::getWidth()
+	int Texture::getWidth() const
 	{
 		if (this->width == 0)
 		{
@@ -263,7 +263,7 @@ namespace april
 		return this->width;
 	}
 
-	int Texture::getHeight()
+	int Texture::getHeight() const
 	{
 		if (this->height == 0)
 		{
@@ -272,7 +272,7 @@ namespace april
 		return this->height;
 	}
 
-	int Texture::getBpp()
+	int Texture::getBpp() const
 	{
 		if (this->format == Image::FORMAT_INVALID)
 		{
@@ -281,7 +281,7 @@ namespace april
 		return Image::getFormatBpp(this->format);
 	}
 
-	int Texture::getByteSize()
+	int Texture::getByteSize() const
 	{
 		if (this->width == 0 || this->height == 0 || this->format == Image::FORMAT_INVALID)
 		{
@@ -351,22 +351,22 @@ namespace april
 		return this->asyncLoadQueued;
 	}
 
-	bool Texture::_isReadable()
+	bool Texture::_isReadable() const
 	{
 		return (this->type == TYPE_MANAGED || this->type == TYPE_RENDER_TARGET);
 	}
 
-	bool Texture::_isWritable()
+	bool Texture::_isWritable() const
 	{
 		return (this->type != TYPE_IMMUTABLE);
 	}
 
-	bool Texture::_isAlterable()
+	bool Texture::_isAlterable() const
 	{
 		return (this->_isReadable() && this->_isWritable());
 	}
 
-	hstr Texture::_getInternalName()
+	hstr Texture::_getInternalName() const
 	{
 		hstr result;
 		if (this->filename != "")
@@ -810,7 +810,7 @@ namespace april
 		return this->_unlock(lock, true);
 	}
 
-	Color Texture::getPixel(int x, int y)
+	Color Texture::getPixel(int x, int y) const
 	{
 		Color color = Color::Clear;
 		if (!this->_isReadable())
@@ -845,7 +845,7 @@ namespace april
 		return this->_unlock(lock, Image::setPixel(lock.x, lock.y, color, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
 	}
 
-	Color Texture::getInterpolatedPixel(float x, float y)
+	Color Texture::getInterpolatedPixel(float x, float y) const
 	{
 		Color color = Color::Clear;
 		if (!this->_isReadable())
@@ -1291,7 +1291,7 @@ namespace april
 
 	// overloads
 
-	Color Texture::getPixel(gvec2 position)
+	Color Texture::getPixel(gvec2 position) const
 	{
 		return this->getPixel(HROUND_GVEC2(position));
 	}
@@ -1301,7 +1301,7 @@ namespace april
 		return this->setPixel(HROUND_GVEC2(position), color);
 	}
 
-	Color Texture::getInterpolatedPixel(gvec2 position)
+	Color Texture::getInterpolatedPixel(gvec2 position) const
 	{
 		return this->getInterpolatedPixel(position.x, position.y);
 	}

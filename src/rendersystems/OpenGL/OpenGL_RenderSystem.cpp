@@ -151,7 +151,7 @@ namespace april
 		this->_setGlColorPointer(this->deviceState_colorStride, this->deviceState_colorPointer);
 	}
 
-	int OpenGL_RenderSystem::getVRam()
+	int OpenGL_RenderSystem::getVRam() const
 	{
 		return 0;
 	}
@@ -397,7 +397,7 @@ namespace april
 		}
 	}
 
-	Image::Format OpenGL_RenderSystem::getNativeTextureFormat(Image::Format format)
+	Image::Format OpenGL_RenderSystem::getNativeTextureFormat(Image::Format format) const
 	{
 		if (format == Image::FORMAT_ARGB || format == Image::FORMAT_ABGR || format == Image::FORMAT_RGBA)
 		{
@@ -450,7 +450,7 @@ namespace april
 		return Image::FORMAT_INVALID;
 	}
 
-	unsigned int OpenGL_RenderSystem::getNativeColorUInt(const april::Color& color)
+	unsigned int OpenGL_RenderSystem::getNativeColorUInt(const april::Color& color) const
 	{
 		return ((color.a << 24) | (color.b << 16) | (color.g << 8) | color.r);
 	}

@@ -50,7 +50,7 @@ namespace april
 
 		void setResolution(int w, int h, bool fullscreen);
 		void presentFrame();
-		hstr findCursorFile(chstr filename);
+		hstr findCursorFile(chstr filename) const;
 		
 		void terminateMainLoop();
 		void showVirtualKeyboard();

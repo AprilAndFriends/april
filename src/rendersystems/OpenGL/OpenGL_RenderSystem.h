@@ -77,10 +77,10 @@ namespace april
 		OpenGL_RenderSystem();
 		~OpenGL_RenderSystem();
 
-		int getVRam();
+		int getVRam() const;
 
-		Image::Format getNativeTextureFormat(Image::Format format);
-		unsigned int getNativeColorUInt(const april::Color& color);
+		Image::Format getNativeTextureFormat(Image::Format format) const;
+		unsigned int getNativeColorUInt(const april::Color& color) const;
 		Image* takeScreenshot(Image::Format format);
 
 	protected:

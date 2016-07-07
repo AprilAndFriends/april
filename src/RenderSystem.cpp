@@ -373,12 +373,12 @@ namespace april
 		return result;
 	}
 
-	bool RenderSystem::hasAsyncTexturesQueued()
+	bool RenderSystem::hasAsyncTexturesQueued() const
 	{
 		return TextureAsync::isRunning();
 	}
 
-	grect RenderSystem::getViewport()
+	grect RenderSystem::getViewport() const
 	{
 		return this->state->viewport;
 	}
@@ -389,7 +389,7 @@ namespace april
 		this->state->viewportChanged = true;
 	}
 
-	gmat4 RenderSystem::getModelviewMatrix()
+	gmat4 RenderSystem::getModelviewMatrix() const
 	{
 		return this->state->modelviewMatrix;
 	}
@@ -400,7 +400,7 @@ namespace april
 		this->state->modelviewMatrixChanged = true;
 	}
 
-	gmat4 RenderSystem::getProjectionMatrix()
+	gmat4 RenderSystem::getProjectionMatrix() const
 	{
 		return this->state->projectionMatrix;
 	}
@@ -597,7 +597,7 @@ namespace april
 		delete shader;
 	}
 
-	grect RenderSystem::getOrthoProjection()
+	grect RenderSystem::getOrthoProjection() const
 	{
 		grect result;
 		if (this->state->projectionMatrix.data[0] != 0.0f && this->state->projectionMatrix.data[5] != 0.0f)
@@ -1100,7 +1100,7 @@ namespace april
 		}
 	}
 
-	hstr RenderSystem::findTextureResource(chstr filename)
+	hstr RenderSystem::findTextureResource(chstr filename) const
 	{
 		if (hresource::exists(filename))
 		{
@@ -1131,7 +1131,7 @@ namespace april
 		return "";
 	}
 	
-	hstr RenderSystem::findTextureFile(chstr filename)
+	hstr RenderSystem::findTextureFile(chstr filename) const
 	{
 		if (hfile::exists(filename))
 		{
@@ -1171,7 +1171,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::waitForAsyncTextures(float timeout)
+	void RenderSystem::waitForAsyncTextures(float timeout) const
 	{
 		float time = timeout;
 		while ((time > 0.0f || timeout <= 0.0f) && this->hasAsyncTexturesQueued())
@@ -1215,7 +1215,7 @@ namespace april
 		april::window->presentFrame();
 	}
 
-	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int count)
+	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int count) const
 	{
 		switch (renderOperation)
 		{
@@ -1230,7 +1230,7 @@ namespace april
 		return 0;
 	}
 	
-	unsigned int RenderSystem::_limitVertices(RenderOperation renderOperation, int count)
+	unsigned int RenderSystem::_limitVertices(RenderOperation renderOperation, int count) const
 	{
 		switch (renderOperation)
 		{

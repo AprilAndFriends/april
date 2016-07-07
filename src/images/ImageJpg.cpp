@@ -29,7 +29,7 @@ namespace april
 {
 	static bool hasError = false;
 
-	static void onError(j_common_ptr cInfo)
+	static void _onError(j_common_ptr cInfo)
 	{
 		char buffer[JMSG_LENGTH_MAX] = { '\0' };
 		(*cInfo->err->format_message)(cInfo, buffer);
@@ -47,7 +47,7 @@ namespace april
 		struct jpeg_decompress_struct cInfo;
 		struct jpeg_error_mgr jErr;
 		cInfo.err = jpeg_std_error(&jErr);
-		cInfo.err->error_exit = &onError;
+		cInfo.err->error_exit = &_onError;
 		jpeg_create_decompress(&cInfo);
 		jpeg_mem_src(&cInfo, compressedData, size);
 		jpeg_read_header(&cInfo, TRUE);
@@ -101,7 +101,7 @@ namespace april
 		struct jpeg_decompress_struct cInfo;
 		struct jpeg_error_mgr jErr;
 		cInfo.err = jpeg_std_error(&jErr);
-		cInfo.err->error_exit = &onError;
+		cInfo.err->error_exit = &_onError;
 		jpeg_create_decompress(&cInfo);
 		jpeg_mem_src(&cInfo, compressedData, size);
 		jpeg_read_header(&cInfo, TRUE);

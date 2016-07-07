@@ -91,14 +91,14 @@ namespace april
 		/// @brief Gets the byte-per-pixel value.
 		/// @return The byte-per-pixel value.
 		/// @note e.g. a value of 3 means that one pixels uses 3 bytes.
-		int getBpp();
+		int getBpp() const;
 		/// @brief Gets the size of the image data in bytes.
 		/// @return Size of the image data in bytes.
 		/// @note The calculation is basically "w * h * getBpp()".
-		int getByteSize();
+		int getByteSize() const;
 		/// @brief Checks if the image is a valid image data construct with appropriate meta data.
 		/// @return True if the image is a valid image data construct with appropriate meta data.
-		bool isValid();
+		bool isValid() const;
 
 		/// @brief Clears the entire image and sets all image data to zeroes.
 		/// @return True if successful.
@@ -107,7 +107,7 @@ namespace april
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @return The Color of the pixel.
-		Color getPixel(int x, int y);
+		Color getPixel(int x, int y) const;
 		/// @brief Sets the color of a specific pixel.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
@@ -118,7 +118,7 @@ namespace april
 		/// @param[in] x Decimal X-coordinate.
 		/// @param[in] y Decimal Y-coordinate.
 		/// @return The interpolated Color of the pixel.
-		Color getInterpolatedPixel(float x, float y);
+		Color getInterpolatedPixel(float x, float y) const;
 		/// @brief Fills a rectangle area with one color.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
@@ -132,7 +132,7 @@ namespace april
 		/// @param[in] format In what format the output should be done.
 		/// @return True if successful.
 		/// @note If output has not been allocated yet, it will be allocated with the new operator.
-		bool copyPixelData(unsigned char** output, Format format);
+		bool copyPixelData(unsigned char** output, Format format) const;
 		/// @brief Writes image data directly onto the image.
 		/// @param[in] sx Source data X-coordinate.
 		/// @param[in] sy Source data Y-coordinate.
@@ -245,16 +245,16 @@ namespace april
 
 		/// @brief Extracts the red color channel of the image.
 		/// @return Extracted image as FORMAT_ALPHA or NULL if channel cannot be extracted.
-		Image* extractRed();
+		Image* extractRed() const;
 		/// @brief Extracts the greeb color channel of the image.
 		/// @return Extracted image as FORMAT_ALPHA or NULL if channel cannot be extracted.
-		Image* extractGreen();
+		Image* extractGreen() const;
 		/// @brief Extracts the blue color channel of the image.
 		/// @return Extracted image as FORMAT_ALPHA or NULL if channel cannot be extracted.
-		Image* extractBlue();
+		Image* extractBlue() const;
 		/// @brief Extracts the alpha channel of the image.
 		/// @return Extracted image as FORMAT_ALPHA or NULL if channel cannot be extracted.
-		Image* extractAlpha();
+		Image* extractAlpha() const;
 		/// @brief Extracts the color channel at the given index of the image.
 		/// @param[in] index Index of the color channel.
 		/// @return Extracted image as FORMAT_ALPHA or NULL if channel cannot be extracted.
@@ -263,13 +263,13 @@ namespace april
 		/// @see extractGreen
 		/// @see extractBlue
 		/// @see extractAlpha
-		Image* extractColor(int index);
+		Image* extractColor(int index) const;
 
 		/// @brief Gets the color of a specific pixel.
 		/// @param[in] position Pixel coordinate.
 		/// @return The Color of the pixel.
 		/// @see getPixel(int x, int y)
-		Color getPixel(gvec2 position);
+		Color getPixel(gvec2 position) const;
 		/// @brief Sets the color of a specific pixel.
 		/// @param[in] position Pixel coordinate.
 		/// @param[in] color The new Color of the pixel.
@@ -280,7 +280,7 @@ namespace april
 		/// @param[in] position Pixel coordinate.
 		/// @return The interpolated Color of the pixel.
 		/// @see getInterpolatedPixel(float x, float y)
-		Color getInterpolatedPixel(gvec2 position);
+		Color getInterpolatedPixel(gvec2 position) const;
 		/// @brief Fills a rectangle area with one color.
 		/// @param[in] rect The rectangle area.
 		/// @param[in] color The Color used for filling.
@@ -292,7 +292,7 @@ namespace april
 		/// @return True if successful.
 		/// @note If output has not been allocated yet, it will be allocated with the new operator.
 		/// @note The data will be copied in the same pixel format as this Image.
-		bool copyPixelData(unsigned char** output);
+		bool copyPixelData(unsigned char** output) const;
 		/// @brief Writes image data directly onto the image.
 		/// @param[in] sx Source data X-coordinate.
 		/// @param[in] sy Source data Y-coordinate.

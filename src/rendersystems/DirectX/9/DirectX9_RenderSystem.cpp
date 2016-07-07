@@ -298,7 +298,7 @@ namespace april
 		}
 	}
 
-	int DirectX9_RenderSystem::getVRam()
+	int DirectX9_RenderSystem::getVRam() const
 	{
 		if (this->d3dDevice == NULL)
 		{
@@ -657,7 +657,7 @@ namespace april
 		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, count), vertices, sizeof(ColoredTexturedVertex));
 	}
 
-	Image::Format DirectX9_RenderSystem::getNativeTextureFormat(Image::Format format)
+	Image::Format DirectX9_RenderSystem::getNativeTextureFormat(Image::Format format) const
 	{
 		if (format == Image::FORMAT_RGBA || format == Image::FORMAT_ARGB || format == Image::FORMAT_BGRA || format == Image::FORMAT_ABGR)
 		{
@@ -683,7 +683,7 @@ namespace april
 		return Image::FORMAT_INVALID;
 	}
 
-	unsigned int DirectX9_RenderSystem::getNativeColorUInt(const april::Color& color)
+	unsigned int DirectX9_RenderSystem::getNativeColorUInt(const april::Color& color) const
 	{
 		return D3DCOLOR_ARGB(color.a, color.r, color.g, color.b);
 	}

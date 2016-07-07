@@ -34,7 +34,7 @@ namespace april
 		}
 	}
 
-	bool DirectX9_PixelShader::isLoaded()
+	bool DirectX9_PixelShader::isLoaded() const
 	{
 		return (this->dx9Shader != NULL);
 	}

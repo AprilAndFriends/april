@@ -159,7 +159,7 @@ namespace april
 		void reset();
 		/// @brief Suspends the RenderSystem.
 		/// @note Some systems require this call when the application loses focus. It ensures that textures and other resources can be recreated with the context.
-		///       April attempts to reset the RenderSystem internally when needed so external calls should be unneccessary.
+		/// April attempts to reset the RenderSystem internally when needed so external calls should be unneccessary.
 		void suspend();
 
 		/// @return The RenderSystem name.
@@ -207,22 +207,22 @@ namespace april
 		int64_t getAsyncRamConsumption();
 		/// @brief Checks if there are any textures queued to be loaded asynchronously.
 		/// @return True if there are any textures queued to be loaded asynchronously.
-		bool hasAsyncTexturesQueued();
+		bool hasAsyncTexturesQueued() const;
 		/// @brief Gets the render viewport.
 		/// @return The render viewport.
-		grect getViewport();
+		grect getViewport() const;
 		/// @brief Sets the render viewport.
 		/// @param[in] value The viewport rectangle.
 		void setViewport(const grect& value);
 		/// @brief Gets the current modelview matrix.
 		/// @return The current modelview matrix.
-		gmat4 getModelviewMatrix();
+		gmat4 getModelviewMatrix() const;
 		/// @brief Sets the current modelview matrix.
 		/// @param[in] value The new modelview matrix.
 		void setModelviewMatrix(const gmat4& value);
 		/// @brief Gets the projection matrix.
 		/// @return The current projection matrix.
-		gmat4 getProjectionMatrix();
+		gmat4 getProjectionMatrix() const;
 		/// @brief Sets the current projection matrix.
 		/// @param[in] value The new projection matrix.
 		void setProjectionMatrix(const gmat4& value);
@@ -230,7 +230,7 @@ namespace april
 		/// @brief Gets the amount of video RAM available.
 		/// @return The amount of video RAM available.
 		/// @note This value is in MB (1 MB = 1024 kB, 1 kB = 1024 B).
-		virtual int getVRam() = 0;
+		virtual int getVRam() const = 0;
 
 		/// @brief Sets the current RenderMode.
 		void setRenderMode(RenderMode renderMode, const hmap<hstr, hstr>& options = hmap<hstr, hstr>());
@@ -317,7 +317,7 @@ namespace april
 
 		/// @brief Gets the ortho-projection rectangle.
 		/// @return The ortho-projection rectangle.
-		grect getOrthoProjection();
+		grect getOrthoProjection() const;
 		/// @brief Activate ortho-projection using a rectangle.
 		/// @param[in] rect The ortho-projection rectangle.
 		void setOrthoProjection(grect rect);
@@ -493,29 +493,29 @@ namespace april
 		/// @brief Finds the actual filename of a texture resource file.
 		/// @param[in] filename Resource filename without the extension.
 		/// @return The detected resource filename or an empty string if no resource file could be found.
-		hstr findTextureResource(chstr filename);
+		hstr findTextureResource(chstr filename) const;
 		/// @brief Finds the actual filename of a texture file.
 		/// @param[in] filename Filename without the extension.
 		/// @return The detected filename or an empty string if no file could be found.
-		hstr findTextureFile(chstr filename);
+		hstr findTextureFile(chstr filename) const;
 		/// @brief Unloads all textures.
 		/// @note Useful for clearing all memory or if something invalidates textures and cannot guarantee that they are loaded anymore.
 		void unloadTextures();
 		/// @brief Waits for all currently queued textures to load asynchronously.
 		/// @param[in] timeout How long to wait maximally in seconds.
 		/// @note A timeout value of 0.0 means indefinitely.
-		void waitForAsyncTextures(float timeout = 0.0f);
+		void waitForAsyncTextures(float timeout = 0.0f) const;
 
 		/// @brief Converts a pixel format into the system native pixel format while keeping the number of colors intact.
 		/// @param[in] format The format to convert.
 		/// @return The system native pixel format.
 		/// @note This is usually used for optimizations when deciding on texture formats to avoid additional conversions.
 		///       e.g. Volatile textures can be sped up significantly if they use the system native format.
-		virtual Image::Format getNativeTextureFormat(Image::Format format) = 0;
+		virtual Image::Format getNativeTextureFormat(Image::Format format) const = 0;
 		/// @brief Converts a Color into a system native unsigned int value used for colors internally.
 		/// @param[in] color The Color to convert.
 		/// @return A system native unsigned int value used for colors internally.
-		virtual unsigned int getNativeColorUInt(const Color& color) = 0;
+		virtual unsigned int getNativeColorUInt(const Color& color) const = 0;
 		/// @brief Takes a screenshot aka captures the image data of the backbuffer.
 		/// @param[in] format The format to convert in which the screenshot should be returned.
 		/// @return An Image that contains a capture of the screen.
@@ -792,12 +792,12 @@ namespace april
 		/// @param[in] renderOperation The RenderOperation that is used for rendering
 		/// @param[in] count How many vertices are expected to be rendered.
 		/// @return How many primitives the given vertices represent.
-		unsigned int _numPrimitives(RenderOperation renderOperation, int count);
+		unsigned int _numPrimitives(RenderOperation renderOperation, int count) const;
 		/// @brief Corrects the number of vertices allowed to be used in the given RenderOperation to avoid glitches and crashes.
 		/// @param[in] renderOperation The RenderOperation that is used for rendering
 		/// @param[in] count How many vertices are expected to be rendered.
 		/// @return How many vertices are allowed to be used in the given RenderOperation.
-		unsigned int _limitVertices(RenderOperation renderOperation, int count);
+		unsigned int _limitVertices(RenderOperation renderOperation, int count) const;
 
 	};
 

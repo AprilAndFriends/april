@@ -31,7 +31,7 @@ namespace april
 		OpenGLES_VertexShader();
 		~OpenGLES_VertexShader();
 
-		bool isLoaded();
+		bool isLoaded() const;
 
 		void setConstantsB(const int* quads, unsigned int quadCount);
 		void setConstantsI(const int* quads, unsigned int quadCount);

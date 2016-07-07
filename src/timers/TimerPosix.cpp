@@ -41,7 +41,7 @@ namespace april
 	{
 	}
 	
-	float Timer::getTime()
+	float Timer::getTime() const
 	{
 		timeval tv = {0, 0};
 #ifdef __APPLE__

@@ -29,7 +29,7 @@ namespace april
 		}
 	}
 
-	bool OpenGLES_PixelShader::isLoaded()
+	bool OpenGLES_PixelShader::isLoaded() const
 	{
 		return (this->glShader != 0);
 	}

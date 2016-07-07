@@ -110,7 +110,7 @@ namespace april
 	{
 	}
 
-	hstr Window::Options::toString()
+	hstr Window::Options::toString() const
 	{
 		harray<hstr> options;
 		if (this->resizable)
@@ -718,10 +718,10 @@ namespace april
 		return timeDelta;
 	}
 
-	hstr Window::findCursorResource(chstr filename)
+	hstr Window::findCursorResource(chstr filename) const
 	{
 		hstr _filename;
-		foreach (hstr, it, this->cursorExtensions)
+		foreachc (hstr, it, this->cursorExtensions)
 		{
 			_filename = filename + (*it);
 			if (hresource::exists(_filename))
@@ -732,10 +732,10 @@ namespace april
 		return "";
 	}
 	
-	hstr Window::findCursorFile(chstr filename)
+	hstr Window::findCursorFile(chstr filename) const
 	{
 		hstr _filename;
-		foreach (hstr, it, this->cursorExtensions)
+		foreachc (hstr, it, this->cursorExtensions)
 		{
 			_filename = filename + (*it);
 			if (hfile::exists(_filename))

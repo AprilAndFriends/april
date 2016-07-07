@@ -29,7 +29,7 @@ namespace april
 		friend class RenderSystem;
 
 		/// @brief Checks if the shader is loaded.
-		virtual bool isLoaded() = 0;
+		virtual bool isLoaded() const = 0;
 
 		/// @brief Loads a precompiled shader from a file.
 		/// @param[in] stream Stream with shader data.

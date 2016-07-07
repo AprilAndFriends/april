@@ -180,7 +180,7 @@ namespace april
 
 			/// @brief Creates a string representation of the object.
 			/// @return A string representation of the object.
-			hstr toString();
+			hstr toString() const;
 
 		};
 
@@ -334,11 +334,11 @@ namespace april
 		/// @brief Finds the actual filename of a texture resource file.
 		/// @param[in] filename Resource filename without the extension.
 		/// @return The detected resource filename or an empty string if no resource file could be found.
-		virtual hstr findCursorResource(chstr filename);
+		virtual hstr findCursorResource(chstr filename) const;
 		/// @brief Finds the actual filename of a texture file.
 		/// @param[in] filename Filename without the extension.
 		/// @return The detected filename or an empty string if no file could be found.
-		virtual hstr findCursorFile(chstr filename);
+		virtual hstr findCursorFile(chstr filename) const;
 
 		/// @brief Creates a Cursor object from a resource file.
 		/// @param[in] filename The filename of the resource.
@@ -356,7 +356,7 @@ namespace april
 		/// @return The screen rotation flag.
 		/// @note This is mostly used internally.
 		// TODOa - this doesn't seem to be used anywhere, maybe it should be removed
-		virtual inline bool isRotating() { return false; } // iOS/Android devices for example
+		virtual inline bool isRotating() const { return false; } // iOS/Android devices for example
 		/// @brief Gets an internal system parameter.
 		/// @param[in] parameter Name of the parameter.
 		/// @return Internal system parameter.

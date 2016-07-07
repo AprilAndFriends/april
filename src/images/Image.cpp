@@ -136,17 +136,17 @@ namespace april
 		}
 	}
 
-	int Image::getBpp()
+	int Image::getBpp() const
 	{
 		return Image::getFormatBpp(this->format);
 	}
 
-	int Image::getByteSize()
+	int Image::getByteSize() const
 	{
 		return (this->w * this->h * Image::getFormatBpp(this->format));
 	}
 
-	bool Image::isValid()
+	bool Image::isValid() const
 	{
 		return (this->data != NULL && this->getByteSize() > 0);
 	}
@@ -161,7 +161,7 @@ namespace april
 		return (result);
 	}
 
-	Color Image::getPixel(int x, int y)
+	Color Image::getPixel(int x, int y) const
 	{
 		return (this->isValid() ? Image::getPixel(x, y, this->data, this->w, this->h, this->format) : Color::Clear);
 	}
@@ -171,7 +171,7 @@ namespace april
 		return (this->isValid() && Image::setPixel(x, y, color, this->data, this->w, this->h, this->format));
 	}
 	
-	Color Image::getInterpolatedPixel(float x, float y)
+	Color Image::getInterpolatedPixel(float x, float y) const
 	{
 		return (this->isValid() ? Image::getInterpolatedPixel(x, y, this->data, this->w, this->h, this->format) : Color::Clear);
 	}
@@ -181,7 +181,7 @@ namespace april
 		return (this->isValid() && Image::fillRect(x, y, w, h, color, this->data, this->w, this->h, this->format));
 	}
 
-	bool Image::copyPixelData(unsigned char** output, Format format)
+	bool Image::copyPixelData(unsigned char** output, Format format) const
 	{
 		return (this->isValid() && Image::convertToFormat(this->w, this->h, this->data, this->format, output, format, false));
 	}
@@ -226,7 +226,7 @@ namespace april
 		return (this->isValid() && Image::dilate(srcData, srcWidth, srcHeight, srcFormat, this->data, this->w, this->h, this->format));
 	}
 
-	Image* Image::extractRed()
+	Image* Image::extractRed() const
 	{
 		if (this->format == FORMAT_RGBA || this->format == FORMAT_RGBX ||
 			this->format == FORMAT_RGB || this->format == FORMAT_GRAYSCALE)
@@ -248,7 +248,7 @@ namespace april
 		return NULL;
 	}
 
-	Image* Image::extractGreen()
+	Image* Image::extractGreen() const
 	{
 		if (this->format == FORMAT_GRAYSCALE)
 		{
@@ -267,7 +267,7 @@ namespace april
 		return NULL;
 	}
 
-	Image* Image::extractBlue()
+	Image* Image::extractBlue() const
 	{
 		if (this->format == FORMAT_BGRA || this->format == FORMAT_BGRX ||
 			this->format == FORMAT_BGR || this->format == FORMAT_GRAYSCALE)
@@ -289,7 +289,7 @@ namespace april
 		return NULL;
 	}
 
-	Image* Image::extractAlpha()
+	Image* Image::extractAlpha() const
 	{
 		if (!CHECK_ALPHA_FORMAT(this->format) && this->format != FORMAT_ALPHA && this->format != FORMAT_PALETTE)
 		{
@@ -306,7 +306,7 @@ namespace april
 		return NULL;
 	}
 
-	Image* Image::extractColor(int index)
+	Image* Image::extractColor(int index) const
 	{
 		int srcBpp = Image::getFormatBpp(this->format);
 		if (index >= srcBpp)
@@ -339,7 +339,7 @@ namespace april
 
 	// overloads
 
-	Color Image::getPixel(gvec2 position)
+	Color Image::getPixel(gvec2 position) const
 	{
 		return this->getPixel(hround(position.x), hround(position.y));
 	}
@@ -349,12 +349,12 @@ namespace april
 		return this->setPixel(hround(position.x), hround(position.y), color);
 	}
 	
-	Color Image::getInterpolatedPixel(gvec2 position)
+	Color Image::getInterpolatedPixel(gvec2 position) const
 	{
 		return this->getInterpolatedPixel(position.x, position.y);
 	}
 	
-	bool Image::copyPixelData(unsigned char** output)
+	bool Image::copyPixelData(unsigned char** output) const
 	{
 		return (this->data != NULL && Image::convertToFormat(this->w, this->h, this->data, this->format, output, this->format, false));
 	}
