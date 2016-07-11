@@ -161,7 +161,7 @@ namespace april
 			{
 				if (this->cursorMappings.hasKey(filename))
 				{
-					return hstr(this->cursorMappings[filename]);
+					return hstr(this->cursorMappings.tryGet(filename, 0));
 				}
 			}
 		}
