@@ -38,8 +38,8 @@ namespace april
 		/// @brief Destructor.
 		~Timer();
 		
-		/// @brief Gets current time.
-		float getTime() const;
+		/// @brief Gets current time of timer.
+		double getTime() const;
 
 		/// @brief Calculates the difference since the last measurement.
 		/// @param[in] update Whether to update the measurement before retrieving.
@@ -50,25 +50,23 @@ namespace april
 		
 	protected:
 		/// @brief Current difference.
-		float dt;
+		float difference;
 		/// @brief Previous time.
-		float td;
+		double td1;
 		/// @brief Current time.
-		float td2;
+		double td2;
 		/// @brief Frequency of the timer.
-		__int64 frequency;
+		int64_t frequency;
 		/// @brief Resolution of the timer.
-		float resolution;
+		double resolution;
 		/// @brief When the timer started.
-		__int64 start;
-		/// @brief How much time elapsed.
-		unsigned long elapsed;
+		int64_t start;
 		/// @brief Whether the internal performance timer is used.
 		bool performanceTimer;
 		/// @brief Start time of performance timer.
-		__int64 performanceTimerStart;
+		int64_t performanceTimerStart;
 		/// @brief Elapsed time of performance timer.
-		__int64 performanceTimerElapsed;
+		int64_t performanceTimerElapsed;
 		
 	};
 

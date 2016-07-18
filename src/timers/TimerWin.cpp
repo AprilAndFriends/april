@@ -20,31 +20,27 @@ namespace april
 {
 	Timer::Timer()
 	{
-		this->dt = 0;
-		this->td = 0;
-		this->td2 = 0;
-		this->frequency = 0;
-		this->performanceTimerStart = 0;
+		this->difference = 0.0f;
+		this->td1 = 0.0;
+		this->td2 = 0.0;
+		this->frequency = 0LL;
 		this->resolution = 0;
-		this->start = 0;
-		this->elapsed = 0;
-		this->performanceTimerElapsed = 0;
+		this->start = 0LL;
 		this->performanceTimer = false;
-		
+		this->performanceTimerStart = 0;
+		this->performanceTimerElapsed = 0;
 		if (!QueryPerformanceFrequency((LARGE_INTEGER*)&this->frequency))
 		{
 			hlog::warn(logTag, "Performance timer not available, multimedia timer will be used instead!");
-			this->performanceTimer = false;
-			this->start = htickCount();
-			this->resolution = 0.001f;
-			this->frequency = 1000;
-			this->elapsed = (unsigned long)this->start;
+			this->start = (int64_t)htickCount();
+			this->resolution = 0.001;
+			this->frequency = 1000LL;
 		}
 		else
 		{
 			QueryPerformanceCounter((LARGE_INTEGER*)&this->performanceTimerStart);
 			this->performanceTimer = true;
-			this->resolution = (float)(1.0 / this->frequency);
+			this->resolution = 1.0 / this->frequency;
 			this->performanceTimerElapsed = this->performanceTimerStart;
 		}
 	}
@@ -53,15 +49,15 @@ namespace april
 	{
 	}
 	
-	float Timer::getTime() const
+	double Timer::getTime() const
 	{
-		__int64 time;
 		if (this->performanceTimer)
 		{
+			int64_t time;
 			QueryPerformanceCounter((LARGE_INTEGER*)&time);
-			return ((float)(time - this->performanceTimerStart) * this->resolution * 1000.0f);
+			return ((double)(time - this->performanceTimerStart) * this->resolution * 1000.0);
 		}
-		return ((float)(htickCount() - this->start) * this->resolution * 1000.0f);
+		return ((double)((int64_t)htickCount() - this->start) * this->resolution * 1000.0);
 	}
 	
 	float Timer::diff(bool update)
@@ -70,19 +66,19 @@ namespace april
 		{
 			this->update();
 		}
-		return this->dt;
+		return this->difference;
 	}
-	
+
 	void Timer::update()
 	{
 		this->td2 = this->getTime();
-		this->dt = (this->td2 - this->td) * 0.001f;
-		if (this->dt < 0)
+		this->difference = (float)((this->td2 - this->td1) * 0.001);
+		if (this->difference < 0)
 		{
-			this->dt = 0; // in case user has moved the clock back, don't allow negative increments
+			this->difference = 0; // in case user has moved the clock back, don't allow negative increments
 		}
-		this->td = this->td2;
+		this->td1 = this->td2;
 	}
-	
+
 }
 #endif

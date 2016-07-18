@@ -707,10 +707,6 @@ namespace april
 	float Window::_calcTimeSinceLastFrame()
 	{
 		float timeDelta = this->timer.diff(true);
-		if (timeDelta > 0.5f)
-		{
-			timeDelta = 0.05f; // prevent jumps from e.g, waiting on device reset or super low framerate
-		}
 		if (!this->focused)
 		{
 			timeDelta = 0.0f;

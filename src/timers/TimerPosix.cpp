@@ -8,6 +8,8 @@
 
 #if defined(_UNIX) || defined(_ANDROID)
 #include <sys/time.h>
+#include <hltypes/hlog.h>
+#include <hltypes/hstring.h>
 
 #include "RenderSystem.h"
 #include "Timer.h"
@@ -16,41 +18,24 @@ namespace april
 {
 	Timer::Timer()
 	{
-		this->dt = 0;
-		this->td = 0;
-		this->td2 = 0;
-		this->frequency = 0;
+		this->difference = 0.0f;
+		this->td1 = 0.0;
+		this->td2 = 0.0;
+		this->frequency = 1LL;
+		this->resolution = 0.001;
+		this->start = (int64_t)htickCount();
+		this->performanceTimer = false;
 		this->performanceTimerStart = 0;
-		this->resolution = 0; // unused in Posix timer
-		this->start = 0;
-		this->elapsed = 0;
 		this->performanceTimerElapsed = 0;
-		this->performanceTimer = 0;
-		
-		// for posix:
-		timeval tv = {0, 0};
-		gettimeofday(&tv, NULL);
-		
-		this->performanceTimer = 0; 
-		this->start = ((uint64_t(tv.tv_sec)) << 32) + int64_t(tv.tv_usec);
-		this->frequency = 1;
-		this->elapsed = this->start;
 	}
 	
 	Timer::~Timer()
 	{
 	}
 	
-	float Timer::getTime() const
+	double Timer::getTime() const
 	{
-		timeval tv = {0, 0};
-#ifdef __APPLE__
-		timeval init_tv = { (time_t)(this->start >> 32), (__darwin_suseconds_t)(this->start & 0xFFFFFFFFFFFFFFFFLL) };
-#else
-		timeval init_tv = { (time_t)(this->start >> 32), (time_t)(this->start & 0xFFFFFFFFFFFFFFFFLL) };
-#endif
-		gettimeofday(&tv, NULL);
-		return (tv.tv_usec - init_tv.tv_usec) / 1000 + (tv.tv_sec - init_tv.tv_sec) * 1000;
+		return ((double)((int64_t)htickCount() - this->start) * this->resolution * 1000.0);
 	}
 	
 	float Timer::diff(bool update)
@@ -59,18 +44,18 @@ namespace april
 		{
 			this->update();
 		}
-		return this->dt;
+		return this->difference;
 	}
 	
 	void Timer::update()
 	{
 		this->td2 = this->getTime();
-		this->dt = (this->td2 - this->td) * 0.001f;
-		if (this->dt < 0)
+		this->difference = (float)((this->td2 - this->td1) * 0.001);
+		if (this->difference < 0)
 		{
-			this->dt = 0; // in case user has moved the clock back, don't allow negative increments
+			this->difference = 0; // in case user has moved the clock back, don't allow negative increments
 		}
-		this->td = this->td2;
+		this->td1 = this->td2;
 	}
 
 }
