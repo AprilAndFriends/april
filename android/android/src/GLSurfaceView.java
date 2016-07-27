@@ -17,6 +17,13 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 {
 	protected com.april.Renderer renderer = null;
 	
+	protected float lastAxisLX;
+	protected float lastAxisLY;
+	protected float lastAxisRX;
+	protected float lastAxisRY;
+	protected float lastTriggerL;
+	protected float lastTriggerR;
+	
 	private static final int MOUSE_DOWN = 0;
 	private static final int MOUSE_UP = 1;
 	private static final int MOUSE_MOVE = 3;
@@ -40,6 +47,12 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		this.setFocusable(true);
 		this.setFocusableInTouchMode(true);
 		this.setId(0x0513BEEF); // who doesn't love half a kilogram of beef?
+		this.lastAxisLX = 0.0f;
+		this.lastAxisLY = 0.0f;
+		this.lastAxisRX = 0.0f;
+		this.lastAxisRY = 0.0f;
+		this.lastTriggerL = 0.0f;
+		this.lastTriggerR = 0.0f;
 	}
 	
 	@Override
@@ -111,9 +124,16 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		{
 			return super.onKeyDown(keyCode, event);
 		}
-		if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)
+		if (eventKeyCode != KeyEvent.KEYCODE_BACK)
 		{
-			return this._onButtonDown(keyCode, event);
+			final int source = event.getSource();
+			// some controllers send InputDevice.SOURCE_JOYSTICK even though the D-Pad buttons are used
+			// some controllers send 0x501 instead of InputDevice.SOURCE_GAMEPAD (which is 0x401)
+			if ((source & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD || (source & InputDevice.SOURCE_DPAD) == InputDevice.SOURCE_DPAD ||
+				(source & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK || (source & 0x501) == 0x501)
+			{
+				return this._onButtonDown(eventKeyCode);
+			}
 		}
 		final int eventUnicodeChar = event.getUnicodeChar();
 		this.queueEvent(new Runnable()
@@ -135,9 +155,16 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		{
 			return super.onKeyUp(keyCode, event);
 		}
-		if ((event.getSource() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)
+		if (eventKeyCode != KeyEvent.KEYCODE_BACK)
 		{
-			return this._onButtonUp(keyCode, event);
+			final int source = event.getSource();
+			// some controllers send InputDevice.SOURCE_JOYSTICK even though the D-Pad buttons are used
+			// some controllers send 0x501 instead of InputDevice.SOURCE_GAMEPAD (which is 0x401)
+			if ((source & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD || (source & InputDevice.SOURCE_DPAD) == InputDevice.SOURCE_DPAD ||
+				(source & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK || (source & 0x501) == 0x501)
+			{
+				return this._onButtonUp(eventKeyCode);
+			}
 		}
 		this.queueEvent(new Runnable()
 		{
@@ -190,29 +217,27 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		return 0;
 	}
 	
-	private boolean _onButtonDown(int keyCode, final KeyEvent event)
+	private boolean _onButtonDown(final int keyCode)
 	{
-		// Java is broken. "final KeyEvent event" can still be modified after this method finished and hence queuing into the GLThread can cause a crash.
-		final int eventKeyCode = this._convertControllerButton(event.getKeyCode());
+		final int buttonCode = this._convertControllerButton(keyCode);
 		this.queueEvent(new Runnable()
 		{
 			public void run()
 			{
-				NativeInterface.onButtonDown(eventKeyCode);
+				NativeInterface.onButtonDown(buttonCode);
 			}
 		});
 		return true;
 	}
 	
-	private boolean _onButtonUp(int keyCode, final KeyEvent event)
+	private boolean _onButtonUp(final int keyCode)
 	{
-		// Java is broken. "final KeyEvent event" can still be modified after this method finished and hence queuing into the GLThread can cause a crash.
-		final int eventKeyCode = this._convertControllerButton(event.getKeyCode());
+		final int buttonCode = this._convertControllerButton(keyCode);
 		this.queueEvent(new Runnable()
 		{
 			public void run()
 			{
-				NativeInterface.onButtonUp(eventKeyCode);
+				NativeInterface.onButtonUp(buttonCode);
 			}
 		});
 		return true;
@@ -221,7 +246,8 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	@Override
 	public boolean onGenericMotionEvent(final MotionEvent event)
 	{
-		if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK && event.getAction() == MotionEvent.ACTION_MOVE)
+		final int source = event.getSource();
+		if ((source & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK && event.getAction() == MotionEvent.ACTION_MOVE)
 		{
 			final float axisLX = event.getAxisValue(MotionEvent.AXIS_X);
 			final float axisLY = event.getAxisValue(MotionEvent.AXIS_Y);
@@ -229,62 +255,86 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 			final float axisRY = event.getAxisValue(MotionEvent.AXIS_RZ);
 			final float triggerL = event.getAxisValue(MotionEvent.AXIS_LTRIGGER);
 			final float triggerR = event.getAxisValue(MotionEvent.AXIS_RTRIGGER);
-			this.queueEvent(new Runnable()
+			boolean handled = false;
+			if (this.lastAxisLX != axisLX)
 			{
-				public void run()
+				this.lastAxisLX = axisLX;
+				this.queueEvent(new Runnable()
 				{
-					NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_LX, axisLX);
-					NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_LY, axisLY);
-					NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_RX, axisRX);
-					NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_RY, axisRY);
-					NativeInterface.onControllerAxisChange(CONTROLLER_TRIGGER_L, triggerL);
-					NativeInterface.onControllerAxisChange(CONTROLLER_TRIGGER_R, triggerR);
-				}
-			});
-			return true;
+					public void run()
+					{
+						NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_LX, axisLX);
+					}
+				});
+				handled = true;
+			}
+			if (this.lastAxisLY != axisLY)
+			{
+				this.lastAxisLY = axisLY;
+				this.queueEvent(new Runnable()
+				{
+					public void run()
+					{
+						NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_LY, axisLY);
+					}
+				});
+				handled = true;
+			}
+			if (this.lastAxisRX != axisRX)
+			{
+				this.lastAxisRX = axisRX;
+				this.queueEvent(new Runnable()
+				{
+					public void run()
+					{
+						NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_RX, axisRX);
+					}
+				});
+				handled = true;
+			}
+			if (this.lastAxisRY != axisRY)
+			{
+				this.lastAxisRY = axisRY;
+				this.queueEvent(new Runnable()
+				{
+					public void run()
+					{
+						NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_RY, axisRY);
+					}
+				});
+				handled = true;
+			}
+			if (this.lastTriggerL != triggerL)
+			{
+				this.lastTriggerL = triggerL;
+				this.queueEvent(new Runnable()
+				{
+					public void run()
+					{
+						NativeInterface.onControllerAxisChange(CONTROLLER_TRIGGER_L, triggerL);
+					}
+				});
+				handled = true;
+			}
+			if (this.lastTriggerR != triggerR)
+			{
+				this.lastTriggerR = triggerR;
+				this.queueEvent(new Runnable()
+				{
+					public void run()
+					{
+						NativeInterface.onControllerAxisChange(CONTROLLER_TRIGGER_R, triggerR);
+					}
+				});
+				handled = true;
+			}
+			if (handled)
+			{
+				return true;
+			}
 		}
 		return super.onGenericMotionEvent(event);
 	}
-	
-	/*
-	private void processJoystickInput(MotionEvent event, int historyPosition)
-	{
-		InputDevice inputDevice = event.getDevice();
-
-		// Calculate the horizontal distance to move by
-		// using the input value from one of these physical controls:
-		// the left control stick, hat axis, or the right control stick.
-		float x = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_X, historyPosition);
-		if (x == 0.0)
-		{
-			x = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_HAT_X, historyPosition);
-		}
-		if (x == 0.0)
-		{
-			x = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_Z, historyPosition);
-		}
-		// Calculate the vertical distance to move by
-		// using the input value from one of these physical controls:
-		// the left control stick, hat switch, or the right control stick.
-		float y = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_Y, historyPosition);
-		if (y == 0)
-		{
-			y = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_HAT_Y, historyPosition);
-		}
-		if (y == 0)
-		{
-			y = this.getCenteredAxis(event, inputDevice, MotionEvent.AXIS_RZ, historyPosition);
-		}
-		this.queueEvent(new Runnable()
-		{
-			public void run()
-			{
-				NativeInterface.onButtonUp(eventKeyCode);
-			}
-		});
-		// Update the ship object based on the new x and y values
-	}
-	*/
 	
 	@Override
 	public InputConnection onCreateInputConnection(EditorInfo outAttributes) // required for creation of soft keyboard
