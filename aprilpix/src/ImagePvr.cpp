@@ -30,32 +30,32 @@ namespace aprilpix
 	april::Image* ImagePvr::load(hsbase& stream)
 	{
 		int size = (int)stream.size();
-		if (size < sizeof(PVRTextureHeaderV3))
+		if (size < sizeof(PVR_Texture_Header))
 		{
+			hlog::error(logTag, "PVR v1 not supported!");
 			return NULL;
 		}
 		uint8_t* data = new uint8_t[size];
 		stream.readRaw(data, size);
-		PVRTextureHeaderV3* header = (PVRTextureHeaderV3*)data;
-		if (header->u32Width <= 0 || header->u32Height <= 0)
+		PVR_Texture_Header* header = (PVR_Texture_Header*)data;
+		if (header->dwWidth <= 0 || header->dwHeight <= 0)
 		{
 			delete[] data;
 			hlog::error(logTag, "Could not load PVR meta data!");
 			return NULL;
 		}
-		if (header->u64PixelFormat != ePVRTPF_PVRTCI_4bpp_RGB && header->u64PixelFormat != ePVRTPF_PVRTCI_2bpp_RGB &&
-			header->u64PixelFormat != ePVRTPF_PVRTCI_4bpp_RGBA && header->u64PixelFormat != ePVRTPF_PVRTCI_2bpp_RGBA)
+		if (header->dwBitCount != 4 && header->dwBitCount != 2 && header->dwpfFlags != MGLPT_PVRTC4 && header->dwpfFlags != OGL_PVRTC4)
 		{
 			hlog::error(logTag, "Unsupported pixel format!");
 			return NULL;
 		}
 		april::Image* image = new ImagePvr();
 		image->format = FORMAT_RGBA;
-		image->w = header->u32Width;
-		image->h = header->u32Height;
+		image->w = header->dwWidth;
+		image->h = header->dwHeight;
 		image->data = new unsigned char[image->getByteSize()];
-		int twoBitMode = (header->u64PixelFormat == ePVRTPF_PVRTCI_2bpp_RGB || header->u64PixelFormat == ePVRTPF_PVRTCI_2bpp_RGBA ? 1 : 0);
-		int result = PVRTDecompressPVRTC(&data[sizeof(PVRTextureHeaderV3) + header->u32MetaDataSize], twoBitMode, image->w, image->h, image->data);
+		int twoBitMode = (header->dwBitCount == 2);
+		int result = PVRTDecompressPVRTC(&data[sizeof(PVR_Texture_Header)], twoBitMode, image->w, image->h, image->data);
 		if (result == 0)
 		{
 			hlog::warn(logTag, "PVR reported 0 bytes decompressed!");
@@ -66,20 +66,19 @@ namespace aprilpix
 
 	april::Image* ImagePvr::loadMetaData(hsbase& stream)
 	{
-		int size = sizeof(PVRTextureHeaderV3);
+		int size = sizeof(PVR_Texture_Header);
 		if ((int)stream.size() < size)
 		{
 			return NULL;
 		}
-		PVRTextureHeaderV3 header;
+		PVR_Texture_Header header;
 		stream.readRaw(&header, size);
-		if (header.u32Width <= 0 || header.u32Height <= 0)
+		if (header.dwWidth <= 0 || header.dwHeight <= 0)
 		{
 			hlog::error(logTag, "Could not load PVR meta data!");
 			return NULL;
 		}
-		if (header.u64PixelFormat != ePVRTPF_PVRTCI_4bpp_RGB && header.u64PixelFormat != ePVRTPF_PVRTCI_2bpp_RGB &&
-			header.u64PixelFormat != ePVRTPF_PVRTCI_4bpp_RGBA && header.u64PixelFormat != ePVRTPF_PVRTCI_2bpp_RGBA)
+		if (header.dwBitCount != 4 && header.dwBitCount != 2 && header.dwpfFlags != MGLPT_PVRTC4 && header.dwpfFlags != OGL_PVRTC4)
 		{
 			hlog::error(logTag, "Unsupported pixel format!");
 			return NULL;
@@ -87,8 +86,8 @@ namespace aprilpix
 		april::Image* image = new ImagePvr();
 		image->data = NULL;
 		image->format = FORMAT_RGBA;
-		image->w = header.u32Width;
-		image->h = header.u32Height;
+		image->w = header.dwWidth;
+		image->h = header.dwHeight;
 		return image;		
 	}
 
