@@ -20,7 +20,7 @@
 
 namespace aprilpix
 {
-	extern hstr logTag;
+	aprilpixExport extern hstr logTag;
 
 	aprilpixFnExport void init();
 	aprilpixFnExport void destroy();

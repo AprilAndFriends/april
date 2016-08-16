@@ -52,7 +52,7 @@ namespace april
 	class Window;
 
 	/// @brief Used for logging display.
-	extern hstr logTag;
+	aprilExport extern hstr logTag;
 
 	/// @brief Defines render system types.
 	enum RenderSystemType
