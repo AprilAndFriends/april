@@ -578,19 +578,36 @@ namespace april
 	{
 		if (this->controllerDelegate != NULL && buttonCode != AB_NONE)
 		{
-			switch (type)
+			if (buttonCode != AB_NONE)
 			{
-			case CONTROLLER_DOWN:
-				this->controllerDelegate->onButtonDown(controllerIndex, buttonCode);
-				break;
-			case CONTROLLER_UP:
-				this->controllerDelegate->onButtonUp(controllerIndex, buttonCode);
-				break;
-			case CONTROLLER_AXIS:
-				this->controllerDelegate->onControllerAxisChange(controllerIndex, buttonCode, axisValue);
-				break;
-			default:
-				break;
+				switch (type)
+				{
+				case CONTROLLER_DOWN:
+					this->controllerDelegate->onButtonDown(controllerIndex, buttonCode);
+					break;
+				case CONTROLLER_UP:
+					this->controllerDelegate->onButtonUp(controllerIndex, buttonCode);
+					break;
+				case CONTROLLER_AXIS:
+					this->controllerDelegate->onControllerAxisChange(controllerIndex, buttonCode, axisValue);
+					break;
+				default:
+					break;
+				}
+			}
+			else // connection change always used AB_NONE
+			{
+				switch (type)
+				{
+				case CONTROLLER_CONNECTED:
+					this->controllerDelegate->onControllerConnectionChanged(controllerIndex, true);
+					break;
+				case CONTROLLER_DISCONNECTED:
+					this->controllerDelegate->onControllerConnectionChanged(controllerIndex, false);
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}

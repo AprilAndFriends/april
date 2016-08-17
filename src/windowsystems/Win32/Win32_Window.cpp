@@ -29,12 +29,20 @@
 #include "egl.h"
 #endif
 
+#define ONE_BY_255 0.003921569f
+#define ONE_BY_32767 0.00003051851f
+#define ONE_BY_32768 0.00003051757f
+
 #define MOUSEEVENTF_FROMTOUCH 0xFF515700
 #define APRIL_WIN32_WINDOW_CLASS L"AprilWin32Window"
 #define STYLE_FULLSCREEN WS_POPUP
 #define STYLE_WINDOWED (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX)
 #define EXSTYLE_FULLSCREEN WS_EX_TOPMOST
 #define EXSTYLE_WINDOWED WS_EX_LEFT
+
+#ifdef _WIN32_XINPUT
+#pragma comment(lib, "XInput.lib")
+#endif
 
 namespace april
 {
@@ -54,6 +62,10 @@ namespace april
 		this->defaultCursor = LoadCursor(0, IDC_ARROW);
 		this->cursorExtensions += ".ani";
 		this->cursorExtensions += ".cur";
+#ifdef _WIN32_XINPUT
+		memset(&this->xinputStates, 0, sizeof(XINPUT_STATE) * XUSER_MAX_COUNT);
+		memset(&this->connectedControllers, 0, sizeof(bool) * XUSER_MAX_COUNT);
+#endif
 	}
 
 	Win32_Window::~Win32_Window()
@@ -326,6 +338,9 @@ namespace april
 			TranslateMessage(&msg);
 			DispatchMessageW(&msg);
 		}
+#ifdef _WIN32_XINPUT
+		this->_checkXInputControllerStates();
+#endif
 		Window::checkEvents();
 	}
 
@@ -333,6 +348,220 @@ namespace april
 	{
 		return new Win32_Cursor(fromResource);
 	}
+
+#ifdef _WIN32_XINPUT
+	void Win32_Window::_checkXInputControllerStates()
+	{
+		XINPUT_STATE states[XUSER_MAX_COUNT];
+		memset(&states, 0, sizeof(XINPUT_STATE) * XUSER_MAX_COUNT);
+		DWORD result = 0;
+		harray<int> disconnectedControllers;
+		// first the connection state
+		for_iter (i, 0, XUSER_MAX_COUNT)
+		{
+			result = XInputGetState(i, &states[i]);
+			if (result != ERROR_DEVICE_NOT_CONNECTED)
+			{
+				if (!this->connectedControllers[i])
+				{
+					this->connectedControllers[i] = true;
+					this->queueControllerEvent(CONTROLLER_CONNECTED, i, AB_NONE, 0.0f);
+				}
+			}
+			else if (this->connectedControllers[i])
+			{
+				this->connectedControllers[i] = false;
+				disconnectedControllers += i; // disconnection events go after releasing all buttons and resetting all axises
+				memset(&states[i], 0, sizeof(XINPUT_STATE));
+			}
+		}
+		int newButtonState = 0;
+		bool oldTriggerState = false;
+		bool newTriggerState = false;
+		float oldAxisX = 0.0f;
+		float oldAxisY = 0.0f;
+		float newAxisX = 0.0f;
+		float newAxisY = 0.0f;
+		bool oldAxisState = false;
+		bool newAxisState = false;
+		// now check the input (disconnected controllers release all buttons and reset all axises)
+		for_iter (i, 0, XUSER_MAX_COUNT)
+		{
+			if (this->connectedControllers[i] || disconnectedControllers.has(i))
+			{
+				// basic buttons
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_START;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_START))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_START, 0.0f);
+				}
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_BACK;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_BACK))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_SELECT, 0.0f);
+				}
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_A;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_A))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_A, 0.0f);
+				}
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_B;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_B))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_B, 0.0f);
+				}
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_X;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_X))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_X, 0.0f);
+				}
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_Y;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_Y))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_Y, 0.0f);
+				}
+				// special buttons
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_L1, 0.0f);
+				}
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_R1, 0.0f);
+				}
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_LS, 0.0f);
+				}
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_RS, 0.0f);
+				}
+				// D-Pad
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_DPAD_UP, 0.0f);
+				}
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_DPAD_DOWN, 0.0f);
+				}
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_DPAD_LEFT, 0.0f);
+				}
+				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT;
+				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT))
+				{
+					this->queueControllerEvent((newButtonState != 0 ? CONTROLLER_DOWN : CONTROLLER_UP), i, AB_DPAD_RIGHT, 0.0f);
+				}
+				// triggers
+				oldTriggerState = (this->xinputStates[i].Gamepad.bLeftTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+				newTriggerState = (states[i].Gamepad.bLeftTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+				if (newTriggerState != oldTriggerState || newTriggerState && oldTriggerState && states[i].Gamepad.bLeftTrigger != this->xinputStates[i].Gamepad.bLeftTrigger)
+				{
+					if (newTriggerState)
+					{
+						if (!oldTriggerState)
+						{
+							this->queueControllerEvent(CONTROLLER_DOWN, i, AB_L2, 0.0f);
+						}
+						this->queueControllerEvent(CONTROLLER_AXIS, i, AB_TRIGGER_L, (float)states[i].Gamepad.bLeftTrigger * ONE_BY_255);
+					}
+					else
+					{
+						if (oldTriggerState)
+						{
+							this->queueControllerEvent(CONTROLLER_UP, i, AB_L2, 0.0f);
+						}
+						this->queueControllerEvent(CONTROLLER_AXIS, i, AB_TRIGGER_L, 0.0f);
+					}
+				}
+				oldTriggerState = (this->xinputStates[i].Gamepad.bRightTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+				newTriggerState = (states[i].Gamepad.bRightTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+				if (newTriggerState != oldTriggerState || newTriggerState && oldTriggerState && states[i].Gamepad.bRightTrigger != this->xinputStates[i].Gamepad.bRightTrigger)
+				{
+					if (newTriggerState)
+					{
+						if (!oldTriggerState)
+						{
+							this->queueControllerEvent(CONTROLLER_DOWN, i, AB_R2, 0.0f);
+						}
+						this->queueControllerEvent(CONTROLLER_AXIS, i, AB_TRIGGER_R, (float)states[i].Gamepad.bRightTrigger  * 0.003921569f);
+					}
+					else
+					{
+						if (oldTriggerState)
+						{
+							this->queueControllerEvent(CONTROLLER_UP, i, AB_R2, 0.0f);
+						}
+						this->queueControllerEvent(CONTROLLER_AXIS, i, AB_TRIGGER_R, 0.0f);
+					}
+				}
+				// axises
+				oldAxisX = (float)this->xinputStates[i].Gamepad.sThumbLX;
+				oldAxisY = (float)this->xinputStates[i].Gamepad.sThumbLY;
+				newAxisX = (float)states[i].Gamepad.sThumbLX;
+				newAxisY = (float)states[i].Gamepad.sThumbLY;
+				oldAxisState = ((int)hsqrt(oldAxisX * oldAxisX + oldAxisY * oldAxisY) >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+				newAxisState = ((int)hsqrt(newAxisX * newAxisX + newAxisY * newAxisY) >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+				if (!newAxisState && oldAxisState)
+				{
+					this->queueControllerEvent(CONTROLLER_AXIS, i, AB_AXIS_LX, 0.0f);
+					this->queueControllerEvent(CONTROLLER_AXIS, i, AB_AXIS_LY, 0.0f);
+				}
+				else if (newAxisState)
+				{
+					if (!oldAxisState || states[i].Gamepad.sThumbLX != this->xinputStates[i].Gamepad.sThumbLX)
+					{
+						this->queueControllerEvent(CONTROLLER_AXIS, i, AB_AXIS_LX, (states[i].Gamepad.sThumbLX > 0 ? newAxisX * ONE_BY_32767 : newAxisX * ONE_BY_32768));
+					}
+					if (!oldAxisState || states[i].Gamepad.sThumbLY != this->xinputStates[i].Gamepad.sThumbLY)
+					{
+						// negative, because XBox uses physics logic rather than screen logic for Y
+						this->queueControllerEvent(CONTROLLER_AXIS, i, AB_AXIS_LY, -(states[i].Gamepad.sThumbLY > 0 ? newAxisY * ONE_BY_32767 : newAxisY * ONE_BY_32768));
+					}
+				}
+				oldAxisX = (float)this->xinputStates[i].Gamepad.sThumbRX;
+				oldAxisY = (float)this->xinputStates[i].Gamepad.sThumbRY;
+				newAxisX = (float)states[i].Gamepad.sThumbRX;
+				newAxisY = (float)states[i].Gamepad.sThumbRY;
+				oldAxisState = ((int)hsqrt(oldAxisX * oldAxisX + oldAxisY * oldAxisY) >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+				newAxisState = ((int)hsqrt(newAxisX * newAxisX + newAxisY * newAxisY) >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+				if (!newAxisState && oldAxisState)
+				{
+					this->queueControllerEvent(CONTROLLER_AXIS, i, AB_AXIS_RX, 0.0f);
+					this->queueControllerEvent(CONTROLLER_AXIS, i, AB_AXIS_RY, 0.0f);
+				}
+				else if (newAxisState)
+				{
+					if (!oldAxisState || states[i].Gamepad.sThumbRX != this->xinputStates[i].Gamepad.sThumbRX)
+					{
+						this->queueControllerEvent(CONTROLLER_AXIS, i, AB_AXIS_RX, (states[i].Gamepad.sThumbRX > 0 ? newAxisX * ONE_BY_32767 : newAxisX * ONE_BY_32768));
+					}
+					if (!oldAxisState || states[i].Gamepad.sThumbRY != this->xinputStates[i].Gamepad.sThumbRY)
+					{
+						// negative, because XBox uses physics logic rather than screen logic for Y
+						this->queueControllerEvent(CONTROLLER_AXIS, i, AB_AXIS_RY, -(states[i].Gamepad.sThumbRY > 0 ? newAxisY * ONE_BY_32767 : newAxisY * ONE_BY_32768));
+					}
+				}
+			}
+		}
+		memcpy(&this->xinputStates, &states, sizeof(XINPUT_STATE) * XUSER_MAX_COUNT);
+		// disconnection events go after releasing all buttons and resetting all axises
+		foreach (int, it, disconnectedControllers)
+		{
+			this->queueControllerEvent(CONTROLLER_DISCONNECTED, (*it), AB_NONE, 0.0f);
+		}
+	}
+#endif
 
 	void Win32_Window::_setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen)
 	{

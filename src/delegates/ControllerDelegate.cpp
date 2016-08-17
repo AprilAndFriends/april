@@ -36,4 +36,10 @@ namespace april
 	{
 		hlog::debug(logTag, "Event onControllerAxisChange() was not implemented.");
 	}
+
+	void ControllerDelegate::onControllerConnectionChanged(int controllerIndex, bool connected)
+	{
+		hlog::debug(logTag, "Event onControllerConnectionChanged() was not implemented.");
+	}
+
 }

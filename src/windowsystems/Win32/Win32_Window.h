@@ -22,6 +22,14 @@
 #include "Timer.h"
 #include "Window.h"
 
+#ifdef _WIN32_XINPUT
+#define XINPUT_USE_9_1_0
+#include <XInput.h>
+#ifndef XUSER_MAX_COUNT
+#define XUSER_MAX_COUNT 4
+#endif
+#endif
+
 namespace april
 {
 	class Cursor;
@@ -56,9 +64,16 @@ namespace april
 		HCURSOR defaultCursor;
 		hstr fpsTitle;
 		bool fpsCounter;
+#ifdef _WIN32_XINPUT
+		XINPUT_STATE xinputStates[XUSER_MAX_COUNT];
+		bool connectedControllers[XUSER_MAX_COUNT];
+#endif
 
 		Cursor* _createCursor(bool fromResource);
 
+#ifdef _WIN32_XINPUT
+		void _checkXInputControllerStates();
+#endif
 		void _setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen);
 		void _adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle);
 		void _refreshCursor();

@@ -40,6 +40,10 @@ namespace april
 		/// @param[in] buttonCode The axis' number code.
 		/// @param[in] axisValue The new value of the axis.
 		virtual void onControllerAxisChange(int controllerIndex, april::Button buttonCode, float axisValue);
+		/// @brief Called when a controller is connected or disconnected.
+		/// @param[in] controllerIndex Index of the controller sending the event.
+		/// @param[in] connected The controller's current connected state.
+		virtual void onControllerConnectionChanged(int controllerIndex, bool connected);
 
 	};
 

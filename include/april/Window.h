@@ -80,8 +80,11 @@ namespace april
 			/// @brief Controller button was released.
 			CONTROLLER_UP = 1,
 			/// @brief Controller axis position was changed.
-			CONTROLLER_AXIS = 2
-			// TODOa - add analog triggers
+			CONTROLLER_AXIS = 2,
+			/// @brief Controller connected.
+			CONTROLLER_CONNECTED = 3,
+			/// @brief Controller disconnected.
+			CONTROLLER_DISCONNECTED = 4
 		};
 
 		/// @brief Defines mouse input event data.
