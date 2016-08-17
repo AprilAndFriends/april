@@ -451,7 +451,7 @@ namespace april
 			{
 				result = texture->load();
 			}
-			else if (loadMode == Texture::LOAD_ASYNC || loadMode == Texture::LOAD_ASYNC_ON_DEMAND)
+			else if (loadMode == Texture::LOAD_ASYNC || loadMode == Texture::LOAD_ASYNC_DEFERRED_UPLOAD)
 			{
 				result = texture->loadAsync();
 			}

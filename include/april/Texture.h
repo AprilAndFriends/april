@@ -81,7 +81,7 @@ namespace april
 			LOAD_ASYNC = 2,
 			/// @brief Loads the texture asynchronously right away, but it will upload the data to the GPU on the first use.
 			/// @note If the texture is used before it loaded asynchronously, it cannot be uploaded to the GPU and will not be rendered properly.
-			LOAD_ASYNC_ON_DEMAND = 3
+			LOAD_ASYNC_DEFERRED_UPLOAD = 3
 		};
 
 		/// @brief The texture filename if available.
