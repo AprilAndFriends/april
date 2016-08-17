@@ -28,15 +28,18 @@ namespace april
 		virtual ~ControllerDelegate();
 
 		/// @brief Called when a button is pressed.
+		/// @param[in] controllerIndex Index of the controller sending the event.
 		/// @param[in] buttonCode The button's number code.
-		virtual void onButtonDown(april::Button buttonCode);
+		virtual void onButtonDown(int controllerIndex, april::Button buttonCode);
 		/// @brief Called when a button is released.
+		/// @param[in] controllerIndex Index of the controller sending the event.
 		/// @param[in] buttonCode The button's number code.
-		virtual void onButtonUp(april::Button buttonCode);
+		virtual void onButtonUp(int controllerIndex, april::Button buttonCode);
 		/// @brief Called when an axis' value changes.
+		/// @param[in] controllerIndex Index of the controller sending the event.
 		/// @param[in] buttonCode The axis' number code.
 		/// @param[in] axisValue The new value of the axis.
-		virtual void onControllerAxisChange(april::Button buttonCode, float axisValue);
+		virtual void onControllerAxisChange(int controllerIndex, april::Button buttonCode, float axisValue);
 
 	};
 

@@ -224,7 +224,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		{
 			public void run()
 			{
-				NativeInterface.onButtonDown(buttonCode);
+				NativeInterface.onButtonDown(0, buttonCode);
 			}
 		});
 		return true;
@@ -237,7 +237,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		{
 			public void run()
 			{
-				NativeInterface.onButtonUp(buttonCode);
+				NativeInterface.onButtonUp(0, buttonCode);
 			}
 		});
 		return true;
@@ -263,7 +263,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 				{
 					public void run()
 					{
-						NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_LX, axisLX);
+						NativeInterface.onControllerAxisChange(0, CONTROLLER_AXIS_LX, axisLX);
 					}
 				});
 				handled = true;
@@ -275,7 +275,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 				{
 					public void run()
 					{
-						NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_LY, axisLY);
+						NativeInterface.onControllerAxisChange(0, CONTROLLER_AXIS_LY, axisLY);
 					}
 				});
 				handled = true;
@@ -287,7 +287,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 				{
 					public void run()
 					{
-						NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_RX, axisRX);
+						NativeInterface.onControllerAxisChange(0, CONTROLLER_AXIS_RX, axisRX);
 					}
 				});
 				handled = true;
@@ -299,7 +299,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 				{
 					public void run()
 					{
-						NativeInterface.onControllerAxisChange(CONTROLLER_AXIS_RY, axisRY);
+						NativeInterface.onControllerAxisChange(0, CONTROLLER_AXIS_RY, axisRY);
 					}
 				});
 				handled = true;
@@ -311,7 +311,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 				{
 					public void run()
 					{
-						NativeInterface.onControllerAxisChange(CONTROLLER_TRIGGER_L, triggerL);
+						NativeInterface.onControllerAxisChange(0, CONTROLLER_TRIGGER_L, triggerL);
 					}
 				});
 				handled = true;
@@ -323,7 +323,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 				{
 					public void run()
 					{
-						NativeInterface.onControllerAxisChange(CONTROLLER_TRIGGER_R, triggerR);
+						NativeInterface.onControllerAxisChange(0, CONTROLLER_TRIGGER_R, triggerR);
 					}
 				});
 				handled = true;

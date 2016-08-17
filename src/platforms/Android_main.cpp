@@ -139,19 +139,19 @@ namespace april
 		PROTECTED_WINDOW_CALL(queueTouchEvent((april::Window::MouseEventType)type, gvec2((float)x, (float)y), (int)index));
 	}
 	
-	void JNICALL _JNI_onButtonDown(JNIEnv* env, jclass classe, jint buttonCode)
+	void JNICALL _JNI_onButtonDown(JNIEnv* env, jclass classe, jint controllerIndex, jint buttonCode)
 	{
-		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::CONTROLLER_DOWN, (Button)(int)buttonCode, 0.0f));
+		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::CONTROLLER_DOWN, (int)controllerIndex, (Button)(int)buttonCode, 0.0f));
 	}
 	
-	void JNICALL _JNI_onButtonUp(JNIEnv* env, jclass classe, jint buttonCode)
+	void JNICALL _JNI_onButtonUp(JNIEnv* env, jclass classe, jint controllerIndex, jint buttonCode)
 	{
-		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::CONTROLLER_UP, (Button)(int)buttonCode, 0.0f));
+		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::CONTROLLER_UP, (int)controllerIndex, (Button)(int)buttonCode, 0.0f));
 	}
 	
-	void JNICALL _JNI_onControllerAxisChange(JNIEnv* env, jclass classe, jint buttonCode, jfloat axisValue)
+	void JNICALL _JNI_onControllerAxisChange(JNIEnv* env, jclass classe, jint controllerIndex, jint buttonCode, jfloat axisValue)
 	{
-		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::CONTROLLER_AXIS, (Button)(int)buttonCode, axisValue));
+		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::CONTROLLER_AXIS, (int)controllerIndex, (Button)(int)buttonCode, axisValue));
 	}
 
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
@@ -266,9 +266,9 @@ namespace april
 		{"onKeyDown",							_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onKeyDown					},
 		{"onKeyUp",								_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onKeyUp						},
 		{"onTouch",								_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),	(void*)&april::_JNI_onTouch						},
-		{"onButtonDown",						_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonDown				},
-		{"onButtonUp",							_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onButtonUp					},
-		{"onControllerAxisChange",				_JARGS(_JVOID, _JINT _JFLOAT),					(bool*)&april::_JNI_onControllerAxisChange		},
+		{"onButtonDown",						_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onButtonDown				},
+		{"onButtonUp",							_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onButtonUp					},
+		{"onControllerAxisChange",				_JARGS(_JVOID, _JINT _JINT _JFLOAT),			(bool*)&april::_JNI_onControllerAxisChange		},
 		{"onWindowFocusChanged",				_JARGS(_JVOID, _JBOOL),							(void*)&april::_JNI_onWindowFocusChanged		},
 		{"onVirtualKeyboardChanged",			_JARGS(_JVOID, _JBOOL _JFLOAT),					(void*)&april::_JNI_onVirtualKeyboardChanged	},
 		{"onLowMemory",							_JARGS(_JVOID, ),								(void*)&april::_JNI_onLowMemory					},

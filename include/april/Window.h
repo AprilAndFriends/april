@@ -143,6 +143,8 @@ namespace april
 		{
 			/// @brief The event type.
 			ControllerEventType type;
+			/// @brief Index of the controller.
+			int controllerIndex;
 			/// @brief The button code.
 			Button buttonCode;
 			/// @brief axisValue The axis value.
@@ -154,7 +156,7 @@ namespace april
 			/// @param[in] type The event type.
 			/// @param[in] buttonCode The button code.
 			/// @param[in] axisValue The axis value.
-			ControllerInputEvent(ControllerEventType type, Button buttonCode, float axisValue);
+			ControllerInputEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue);
 			
 		};
 
@@ -383,9 +385,10 @@ namespace april
 		virtual void handleTouchEvent(const harray<gvec2>& touches);
 		/// @brief Handles a controller event and propagates it to the delegate.
 		/// @param[in] type The event type.
+		/// @param[in] controllerIndex Index of the controller.
 		/// @param[in] buttonCode The button code.
 		/// @param[in] axisValue The axis value.
-		virtual void handleControllerEvent(ControllerEventType type, Button buttonCode, float axisValue);
+		virtual void handleControllerEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue);
 		/// @brief Handles a quit event and propagates it to the delegate.
 		/// @param[in] canCancel Whether the window quitting can be canceled.
 		/// @return True if the system is allowed to actually close the window.
@@ -437,10 +440,11 @@ namespace april
 		virtual void queueTouchEvent(MouseEventType type, gvec2 position, int index);
 		/// @brief Queues a controller event for processing before the start of the next frame.
 		/// @param[in] type The event type.
+		/// @param[in] controllerIndex Index of the controller.
 		/// @param[in] buttonCode The button code.
 		/// @param[in] axisValue The axis value.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueControllerEvent(ControllerEventType type, Button buttonCode, float axisValue);
+		virtual void queueControllerEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue);
 
 		/// @brief Starts the main loop.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april_main implementation is used.

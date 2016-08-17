@@ -71,9 +71,9 @@ public class NativeInterface
 	public static native void onKeyDown(int keyCode, int charCode);
 	public static native void onKeyUp(int keyCode);
 	public static native void onTouch(int type, float x, float y, int index);
-	public static native void onButtonDown(int buttonCode);
-	public static native void onButtonUp(int buttonCode);
-	public static native void onControllerAxisChange(int buttonCode, float axisValue);
+	public static native void onButtonDown(int controllerIndex, int buttonCode);
+	public static native void onButtonUp(int controllerIndex, int buttonCode);
+	public static native void onControllerAxisChange(int controllerIndex, int buttonCode, float axisValue);
 	public static native void onWindowFocusChanged(boolean focused);
 	public static native void onVirtualKeyboardChanged(boolean visible, float heightRation);
 	public static native void onLowMemory();

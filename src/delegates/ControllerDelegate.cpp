@@ -22,17 +22,17 @@ namespace april
 	{
 	}
 
-	void ControllerDelegate::onButtonDown(Button buttonCode)
+	void ControllerDelegate::onButtonDown(int controllerIndex, Button buttonCode)
 	{
 		hlog::debug(logTag, "Event onButtonDown() was not implemented.");
 	}
 
-	void ControllerDelegate::onButtonUp(Button buttonCode)
+	void ControllerDelegate::onButtonUp(int controllerIndex, Button buttonCode)
 	{
 		hlog::debug(logTag, "Event onButtonUp() was not implemented.");
 	}
 	
-	void ControllerDelegate::onControllerAxisChange(april::Button buttonCode, float axisValue)
+	void ControllerDelegate::onControllerAxisChange(int controllerIndex, april::Button buttonCode, float axisValue)
 	{
 		hlog::debug(logTag, "Event onControllerAxisChange() was not implemented.");
 	}

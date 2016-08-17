@@ -88,9 +88,10 @@ namespace april
 		this->buttonCode = AB_NONE;
 	}
 
-	Window::ControllerInputEvent::ControllerInputEvent(Window::ControllerEventType type, Button buttonCode, float axisValue)
+	Window::ControllerInputEvent::ControllerInputEvent(Window::ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue)
 	{
 		this->type = type;
+		this->controllerIndex = controllerIndex;
 		this->buttonCode = buttonCode;
 		this->axisValue = axisValue;
 	}
@@ -386,7 +387,7 @@ namespace april
 		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
 		MouseInputEvent mouseEvent;
 		gvec2 cumulativeScroll;
-		while (this->mouseEvents.size() > 0)
+		while (this->mouseEvents.size() > 0) // required while instead of for, because this loop could modify this->mouseEvents when the event is propagated
 		{
 			mouseEvent = this->mouseEvents.removeFirst();
 			if (mouseEvent.type != Window::MOUSE_CANCEL && mouseEvent.type != Window::MOUSE_SCROLL)
@@ -410,22 +411,22 @@ namespace april
 			}
 		}
 		KeyInputEvent keyEvent;
-		while (this->keyEvents.size() > 0)
+		while (this->keyEvents.size() > 0) // required while instead of for, because this loop could modify this->keyEvents when the event is propagated
 		{
 			keyEvent = this->keyEvents.removeFirst();
 			this->handleKeyEvent(keyEvent.type, keyEvent.keyCode, keyEvent.charCode);
 		}
 		TouchInputEvent touchEvent;
-		while (this->touchEvents.size() > 0)
+		while (this->touchEvents.size() > 0) // required while instead of for, because this loop could modify this->touchEvents when the event is propagated
 		{
 			touchEvent = this->touchEvents.removeFirst();
 			this->handleTouchEvent(touchEvent.touches);
 		}
 		ControllerInputEvent controllerEvent;
-		while (this->controllerEvents.size() > 0)
+		while (this->controllerEvents.size() > 0) // required while instead of for, because this loop could modify this->controllerEvents when the event is propagated
 		{
 			controllerEvent = this->controllerEvents.removeFirst();
-			this->handleControllerEvent(controllerEvent.type, controllerEvent.buttonCode, controllerEvent.axisValue);
+			this->handleControllerEvent(controllerEvent.type, controllerEvent.controllerIndex, controllerEvent.buttonCode, controllerEvent.axisValue);
 		}
 	}
 
@@ -530,7 +531,7 @@ namespace april
 				Button button = this->controllerEmulationKeys[keyCode];
 				if (button != AB_AXIS_LX && button != AB_AXIS_LY && button != AB_AXIS_RX && button != AB_AXIS_RY && button != AB_TRIGGER_L && button != AB_TRIGGER_R)
 				{
-					this->handleControllerEvent((type == KEY_DOWN ? CONTROLLER_DOWN : CONTROLLER_UP), button, 0.0f);
+					this->handleControllerEvent((type == KEY_DOWN ? CONTROLLER_DOWN : CONTROLLER_UP), 0, button, 0.0f);
 					processed = true;
 				}
 			}
@@ -540,7 +541,7 @@ namespace april
 				Button button = this->controllerEmulationAxisesPositive[keyCode];
 				if (button == AB_AXIS_LX || button == AB_AXIS_LY || button == AB_AXIS_RX || button == AB_AXIS_RY || button == AB_TRIGGER_L || button == AB_TRIGGER_R)
 				{
-					this->handleControllerEvent(CONTROLLER_AXIS, button, (type == KEY_DOWN ? 1.0f : 0.0f));
+					this->handleControllerEvent(CONTROLLER_AXIS, 0, button, (type == KEY_DOWN ? 1.0f : 0.0f));
 					processed = true;
 				}
 			}
@@ -550,7 +551,7 @@ namespace april
 				Button button = this->controllerEmulationAxisesNegative[keyCode];
 				if (button == AB_AXIS_LX || button == AB_AXIS_LY || button == AB_AXIS_RX || button == AB_AXIS_RY)
 				{
-					this->handleControllerEvent(CONTROLLER_AXIS, button, (type == KEY_DOWN ? -1.0f : 0.0f));
+					this->handleControllerEvent(CONTROLLER_AXIS, 0, button, (type == KEY_DOWN ? -1.0f : 0.0f));
 					processed = true;
 				}
 			}
@@ -573,20 +574,20 @@ namespace april
 		}
 	}
 
-	void Window::handleControllerEvent(ControllerEventType type, Button buttonCode, float axisValue)
+	void Window::handleControllerEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue)
 	{
 		if (this->controllerDelegate != NULL && buttonCode != AB_NONE)
 		{
 			switch (type)
 			{
 			case CONTROLLER_DOWN:
-				this->controllerDelegate->onButtonDown(buttonCode);
+				this->controllerDelegate->onButtonDown(controllerIndex, buttonCode);
 				break;
 			case CONTROLLER_UP:
-				this->controllerDelegate->onButtonUp(buttonCode);
+				this->controllerDelegate->onButtonUp(controllerIndex, buttonCode);
 				break;
 			case CONTROLLER_AXIS:
-				this->controllerDelegate->onControllerAxisChange(buttonCode, axisValue);
+				this->controllerDelegate->onControllerAxisChange(controllerIndex, buttonCode, axisValue);
 				break;
 			default:
 				break;
@@ -699,9 +700,9 @@ namespace april
 		this->touchEvents += TouchInputEvent(this->touches);
 	}
 
-	void Window::queueControllerEvent(ControllerEventType type, Button buttonCode, float axisValue)
+	void Window::queueControllerEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue)
 	{
-		this->controllerEvents += ControllerInputEvent(type, buttonCode, axisValue);
+		this->controllerEvents += ControllerInputEvent(type, controllerIndex, buttonCode, axisValue);
 	}
 
 	float Window::_calcTimeSinceLastFrame()
