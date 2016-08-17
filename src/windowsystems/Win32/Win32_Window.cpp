@@ -40,10 +40,6 @@
 #define EXSTYLE_FULLSCREEN WS_EX_TOPMOST
 #define EXSTYLE_WINDOWED WS_EX_LEFT
 
-#ifdef _WIN32_XINPUT
-#pragma comment(lib, "XInput.lib")
-#endif
-
 namespace april
 {
 	// this workaround is required to properly support WinXP

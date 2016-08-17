@@ -22,10 +22,21 @@
                                   '$(Configuration)|$(Platform)'=='Release_DirectX9|Win32' or
                                   '$(Configuration)|$(Platform)'=='ReleaseS_DirectX9|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>_DIRECTX;_DIRECTX9;_WIN32_WINDOW;_WIN32_XINPUT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DIRECTX;_DIRECTX9;_WIN32_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9_XInput|Win32' or
+                                  '$(Configuration)|$(Platform)'=='DebugS_DirectX9_XInput|Win32' or
+                                  '$(Configuration)|$(Platform)'=='Release_DirectX9_XInput|Win32' or
+                                  '$(Configuration)|$(Platform)'=='ReleaseS_DirectX9_XInput|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DIRECTX;_DIRECTX9;_WIN32_WINDOW;_WIN32_XINPUT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>d3d9.lib;XInput.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGL1|Win32' or
@@ -33,7 +44,7 @@
                                   '$(Configuration)|$(Platform)'=='Release_OpenGL1|Win32' or
                                   '$(Configuration)|$(Platform)'=='ReleaseS_OpenGL1|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>_OPENGL;_OPENGL1;_WIN32_WINDOW;_WIN32_XINPUT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_OPENGL;_OPENGL1;_WIN32_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -44,7 +55,7 @@
                                   '$(Configuration)|$(Platform)'=='Release_OpenGLES1|Win32' or
                                   '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES1|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>_OPENGL;_OPENGLES1;_EGL;_WIN32_WINDOW;_WIN32_XINPUT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_OPENGL;_OPENGLES1;_EGL;_WIN32_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libEGL.lib;libGLES_CM.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -55,7 +66,7 @@
                                   '$(Configuration)|$(Platform)'=='Release_OpenGLES2|Win32' or
                                   '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES2|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES2;_EGL;_WIN32_WINDOW;_WIN32_XINPUT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES2;_EGL;_WIN32_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>

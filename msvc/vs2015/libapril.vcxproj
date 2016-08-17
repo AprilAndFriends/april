@@ -5,6 +5,10 @@
       <Configuration>DebugS_DirectX9</Configuration>
       <Platform>Android-x86</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugS_DirectX9_XInput|Android-x86">
+      <Configuration>DebugS_DirectX9_XInput</Configuration>
+      <Platform>Android-x86</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="DebugS_OpenGL1|Android-x86">
       <Configuration>DebugS_OpenGL1</Configuration>
       <Platform>Android-x86</Platform>
@@ -53,20 +57,40 @@
       <Configuration>Debug_DirectX9</Configuration>
       <Platform>Android</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_DirectX9_XInput|Android">
+      <Configuration>Debug_DirectX9_XInput</Configuration>
+      <Platform>Android</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_DirectX9|Android-x86">
       <Configuration>Debug_DirectX9</Configuration>
+      <Platform>Android-x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_DirectX9_XInput|Android-x86">
+      <Configuration>Debug_DirectX9_XInput</Configuration>
       <Platform>Android-x86</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_DirectX9|Win32">
       <Configuration>Debug_DirectX9</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_DirectX9_XInput|Win32">
+      <Configuration>Debug_DirectX9_XInput</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="DebugS_DirectX9|Android">
       <Configuration>DebugS_DirectX9</Configuration>
       <Platform>Android</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugS_DirectX9_XInput|Android">
+      <Configuration>DebugS_DirectX9_XInput</Configuration>
+      <Platform>Android</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="DebugS_DirectX9|Win32">
       <Configuration>DebugS_DirectX9</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugS_DirectX9_XInput|Win32">
+      <Configuration>DebugS_DirectX9_XInput</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="DebugS_OpenGL1|Android">
@@ -131,6 +155,18 @@
     </ProjectConfiguration>
     <ProjectConfiguration Include="ReleaseS_DirectX9|Win32">
       <Configuration>ReleaseS_DirectX9</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseS_DirectX9_XInput|Android">
+      <Configuration>ReleaseS_DirectX9_XInput</Configuration>
+      <Platform>Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseS_DirectX9_XInput|Android-x86">
+      <Configuration>ReleaseS_DirectX9_XInput</Configuration>
+      <Platform>Android-x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseS_DirectX9_XInput|Win32">
+      <Configuration>ReleaseS_DirectX9_XInput</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="ReleaseS_OpenGL1|Android">
@@ -203,6 +239,18 @@
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release_DirectX9|Win32">
       <Configuration>Release_DirectX9</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_DirectX9_XInput|Android">
+      <Configuration>Release_DirectX9_XInput</Configuration>
+      <Platform>Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_DirectX9_XInput|Android-x86">
+      <Configuration>Release_DirectX9_XInput</Configuration>
+      <Platform>Android-x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_DirectX9_XInput|Win32">
+      <Configuration>Release_DirectX9_XInput</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_OpenGLES1|Android">
@@ -322,6 +370,30 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_DirectX9_XInput|Win32'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS_DirectX9_XInput|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_DirectX9_XInput|Android'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_DirectX9_XInput|Android-x86'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS_DirectX9_XInput|Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS_DirectX9_XInput|Android-x86'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9|Win32'">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
@@ -338,6 +410,24 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_DirectX9|Android-x86'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9_XInput|Win32'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_DirectX9_XInput|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9_XInput|Android'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9_XInput|Android-x86'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_DirectX9_XInput|Android'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_DirectX9_XInput|Android-x86'">
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_OpenGL1|Win32'">
