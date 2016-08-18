@@ -94,7 +94,7 @@ Public Types</h2></td></tr>
 <tr class="memitem:ab30e6a4d02d6e655214ae079ff2a2747"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ab30e6a4d02d6e655214ae079ff2a2747">LoadMode</a> { <a class="el" href="classapril_1_1_texture.html#ab30e6a4d02d6e655214ae079ff2a2747af91f82ef3a6f8a69d14afc9e8ddcc753">LOAD_IMMEDIATE</a> = 0, 
 <a class="el" href="classapril_1_1_texture.html#ab30e6a4d02d6e655214ae079ff2a2747a9e4ddddeb810220b3a07b2547eb0acac">LOAD_ON_DEMAND</a> = 1, 
 <a class="el" href="classapril_1_1_texture.html#ab30e6a4d02d6e655214ae079ff2a2747a8464bf17da1d7abe186c51d422cc873c">LOAD_ASYNC</a> = 2, 
-<a class="el" href="classapril_1_1_texture.html#ab30e6a4d02d6e655214ae079ff2a2747a5790d08a2c29b87f21c6698b05cd4faa">LOAD_ASYNC_ON_DEMAND</a> = 3
+<a class="el" href="classapril_1_1_texture.html#ab30e6a4d02d6e655214ae079ff2a2747a0f93c56c6d99cfa4d954a6ba800fd76a">LOAD_ASYNC_DEFERRED_UPLOAD</a> = 3
  }<tr class="memdesc:ab30e6a4d02d6e655214ae079ff2a2747"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines how and when textures should be loaded into VRAM.  <a href="classapril_1_1_texture.html#ab30e6a4d02d6e655214ae079ff2a2747">More...</a><br /></td></tr>
 </td></tr>
 <tr class="separator:ab30e6a4d02d6e655214ae079ff2a2747"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,18 +137,18 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a1fc77c86fe0560469d8650303a06b5ff">HL_DEFINE_IS</a> (<a class="el" href="classapril_1_1_texture.html#a367dc9d9332912dae4bc73093ec69a16">fromResource</a>, FromResource)</td></tr>
 <tr class="memdesc:a1fc77c86fe0560469d8650303a06b5ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the texture was loaded from a resource file or a normal file. <br /></td></tr>
 <tr class="separator:a1fc77c86fe0560469d8650303a06b5ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a905499f89cebec556e51a760207e8c21"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a905499f89cebec556e51a760207e8c21">getWidth</a> ()</td></tr>
-<tr class="memdesc:a905499f89cebec556e51a760207e8c21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the width of the texture in pixels.  <a href="#a905499f89cebec556e51a760207e8c21">More...</a><br /></td></tr>
-<tr class="separator:a905499f89cebec556e51a760207e8c21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb21fb42621f45d548ebb9f102be7b2d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#afb21fb42621f45d548ebb9f102be7b2d">getHeight</a> ()</td></tr>
-<tr class="memdesc:afb21fb42621f45d548ebb9f102be7b2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the height of the texture in pixels.  <a href="#afb21fb42621f45d548ebb9f102be7b2d">More...</a><br /></td></tr>
-<tr class="separator:afb21fb42621f45d548ebb9f102be7b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add3956dd8043bde28fba0f4fb83c969e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#add3956dd8043bde28fba0f4fb83c969e">getBpp</a> ()</td></tr>
-<tr class="memdesc:add3956dd8043bde28fba0f4fb83c969e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the byte-per-pixel value.  <a href="#add3956dd8043bde28fba0f4fb83c969e">More...</a><br /></td></tr>
-<tr class="separator:add3956dd8043bde28fba0f4fb83c969e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedc0231a240b3d1a183b9f0ed68843b0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aedc0231a240b3d1a183b9f0ed68843b0">getByteSize</a> ()</td></tr>
-<tr class="memdesc:aedc0231a240b3d1a183b9f0ed68843b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the image data in bytes.  <a href="#aedc0231a240b3d1a183b9f0ed68843b0">More...</a><br /></td></tr>
-<tr class="separator:aedc0231a240b3d1a183b9f0ed68843b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa794167db8688a670b3557535921fdf5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aa794167db8688a670b3557535921fdf5">getWidth</a> () const </td></tr>
+<tr class="memdesc:aa794167db8688a670b3557535921fdf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the width of the texture in pixels.  <a href="#aa794167db8688a670b3557535921fdf5">More...</a><br /></td></tr>
+<tr class="separator:aa794167db8688a670b3557535921fdf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f58fd03986f216dcc6592eabcfe48fb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a3f58fd03986f216dcc6592eabcfe48fb">getHeight</a> () const </td></tr>
+<tr class="memdesc:a3f58fd03986f216dcc6592eabcfe48fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the height of the texture in pixels.  <a href="#a3f58fd03986f216dcc6592eabcfe48fb">More...</a><br /></td></tr>
+<tr class="separator:a3f58fd03986f216dcc6592eabcfe48fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3182439d70b95c7e3221649d21cee81e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a3182439d70b95c7e3221649d21cee81e">getBpp</a> () const </td></tr>
+<tr class="memdesc:a3182439d70b95c7e3221649d21cee81e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the byte-per-pixel value.  <a href="#a3182439d70b95c7e3221649d21cee81e">More...</a><br /></td></tr>
+<tr class="separator:a3182439d70b95c7e3221649d21cee81e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a47c2b5e81596018faac4bbb23a569a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a2a47c2b5e81596018faac4bbb23a569a">getByteSize</a> () const </td></tr>
+<tr class="memdesc:a2a47c2b5e81596018faac4bbb23a569a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the image data in bytes.  <a href="#a2a47c2b5e81596018faac4bbb23a569a">More...</a><br /></td></tr>
+<tr class="separator:a2a47c2b5e81596018faac4bbb23a569a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab13fe79bb23d1051f1bc56a2509fa794"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ab13fe79bb23d1051f1bc56a2509fa794">getCurrentVRamSize</a> ()</td></tr>
 <tr class="memdesc:ab13fe79bb23d1051f1bc56a2509fa794"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current VRAM consumption.  <a href="#ab13fe79bb23d1051f1bc56a2509fa794">More...</a><br /></td></tr>
 <tr class="separator:ab13fe79bb23d1051f1bc56a2509fa794"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -191,15 +191,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa202f90cba5b4ca3a966a9a89eb9579e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aa202f90cba5b4ca3a966a9a89eb9579e">clear</a> ()</td></tr>
 <tr class="memdesc:aa202f90cba5b4ca3a966a9a89eb9579e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the entire image and sets all image data to zeroes.  <a href="#aa202f90cba5b4ca3a966a9a89eb9579e">More...</a><br /></td></tr>
 <tr class="separator:aa202f90cba5b4ca3a966a9a89eb9579e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a759ac40cf8ab5082a02f84426dd1e1c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a759ac40cf8ab5082a02f84426dd1e1c3">getPixel</a> (int x, int y)</td></tr>
-<tr class="memdesc:a759ac40cf8ab5082a02f84426dd1e1c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the color of a specific pixel.  <a href="#a759ac40cf8ab5082a02f84426dd1e1c3">More...</a><br /></td></tr>
-<tr class="separator:a759ac40cf8ab5082a02f84426dd1e1c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95ec0b4ce1ac6bf0fff61bc1d477bb67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a95ec0b4ce1ac6bf0fff61bc1d477bb67">getPixel</a> (int x, int y) const </td></tr>
+<tr class="memdesc:a95ec0b4ce1ac6bf0fff61bc1d477bb67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the color of a specific pixel.  <a href="#a95ec0b4ce1ac6bf0fff61bc1d477bb67">More...</a><br /></td></tr>
+<tr class="separator:a95ec0b4ce1ac6bf0fff61bc1d477bb67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f1d17bd46fafde8c28d904210b21e9d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a1f1d17bd46fafde8c28d904210b21e9d">setPixel</a> (int x, int y, <a class="el" href="classapril_1_1_color.html">Color</a> color)</td></tr>
 <tr class="memdesc:a1f1d17bd46fafde8c28d904210b21e9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the color of a specific pixel.  <a href="#a1f1d17bd46fafde8c28d904210b21e9d">More...</a><br /></td></tr>
 <tr class="separator:a1f1d17bd46fafde8c28d904210b21e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30d936d9e23e8aab42c80d70b6df34e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a30d936d9e23e8aab42c80d70b6df34e3">getInterpolatedPixel</a> (float x, float y)</td></tr>
-<tr class="memdesc:a30d936d9e23e8aab42c80d70b6df34e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the linearly interpolated color between two pixels.  <a href="#a30d936d9e23e8aab42c80d70b6df34e3">More...</a><br /></td></tr>
-<tr class="separator:a30d936d9e23e8aab42c80d70b6df34e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a227de49fe08b6dfe7473857ab1459a3c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a227de49fe08b6dfe7473857ab1459a3c">getInterpolatedPixel</a> (float x, float y) const </td></tr>
+<tr class="memdesc:a227de49fe08b6dfe7473857ab1459a3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the linearly interpolated color between two pixels.  <a href="#a227de49fe08b6dfe7473857ab1459a3c">More...</a><br /></td></tr>
+<tr class="separator:a227de49fe08b6dfe7473857ab1459a3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d0e4f1a32b23c10cb47dd9036999b76"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a5d0e4f1a32b23c10cb47dd9036999b76">fillRect</a> (int x, int y, int w, int h, <a class="el" href="classapril_1_1_color.html">Color</a> color)</td></tr>
 <tr class="memdesc:a5d0e4f1a32b23c10cb47dd9036999b76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills a rectangle area with one color.  <a href="#a5d0e4f1a32b23c10cb47dd9036999b76">More...</a><br /></td></tr>
 <tr class="separator:a5d0e4f1a32b23c10cb47dd9036999b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -248,15 +248,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3f1010ab55a2038b823351aa0966605c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a3f1010ab55a2038b823351aa0966605c">insertAlphaMap</a> (<a class="el" href="classapril_1_1_texture.html">Texture</a> *texture, unsigned char median, int ambiguity)</td></tr>
 <tr class="memdesc:a3f1010ab55a2038b823351aa0966605c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts image data as alpha channel into this image.  <a href="#a3f1010ab55a2038b823351aa0966605c">More...</a><br /></td></tr>
 <tr class="separator:a3f1010ab55a2038b823351aa0966605c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa969dfa9974b31d37f52d219adf54319"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aa969dfa9974b31d37f52d219adf54319">getPixel</a> (gvec2 position)</td></tr>
-<tr class="memdesc:aa969dfa9974b31d37f52d219adf54319"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the color of a specific pixel.  <a href="#aa969dfa9974b31d37f52d219adf54319">More...</a><br /></td></tr>
-<tr class="separator:aa969dfa9974b31d37f52d219adf54319"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa456cd9a190ea097952761cacd21b3c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aa456cd9a190ea097952761cacd21b3c9">getPixel</a> (gvec2 position) const </td></tr>
+<tr class="memdesc:aa456cd9a190ea097952761cacd21b3c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the color of a specific pixel.  <a href="#aa456cd9a190ea097952761cacd21b3c9">More...</a><br /></td></tr>
+<tr class="separator:aa456cd9a190ea097952761cacd21b3c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b7c28fe5d1d5e130d2f8b2cc455dcb5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a8b7c28fe5d1d5e130d2f8b2cc455dcb5">setPixel</a> (gvec2 position, <a class="el" href="classapril_1_1_color.html">Color</a> color)</td></tr>
 <tr class="memdesc:a8b7c28fe5d1d5e130d2f8b2cc455dcb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the color of a specific pixel.  <a href="#a8b7c28fe5d1d5e130d2f8b2cc455dcb5">More...</a><br /></td></tr>
 <tr class="separator:a8b7c28fe5d1d5e130d2f8b2cc455dcb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a254da40d43289dd382dc0cccfaef88ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a254da40d43289dd382dc0cccfaef88ac">getInterpolatedPixel</a> (gvec2 position)</td></tr>
-<tr class="memdesc:a254da40d43289dd382dc0cccfaef88ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the linearly interpolated color between two pixels.  <a href="#a254da40d43289dd382dc0cccfaef88ac">More...</a><br /></td></tr>
-<tr class="separator:a254da40d43289dd382dc0cccfaef88ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac77865140616f39f3abe0140f1d11864"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ac77865140616f39f3abe0140f1d11864">getInterpolatedPixel</a> (gvec2 position) const </td></tr>
+<tr class="memdesc:ac77865140616f39f3abe0140f1d11864"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the linearly interpolated color between two pixels.  <a href="#ac77865140616f39f3abe0140f1d11864">More...</a><br /></td></tr>
+<tr class="separator:ac77865140616f39f3abe0140f1d11864"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a354cdd2951c77651d8afe86004457b0f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a354cdd2951c77651d8afe86004457b0f">fillRect</a> (grect rect, <a class="el" href="classapril_1_1_color.html">Color</a> color)</td></tr>
 <tr class="memdesc:a354cdd2951c77651d8afe86004457b0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills a rectangle area with one color.  <a href="#a354cdd2951c77651d8afe86004457b0f">More...</a><br /></td></tr>
 <tr class="separator:a354cdd2951c77651d8afe86004457b0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -366,18 +366,18 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a379a7029460c5136510485e70ea44100"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_image.html">Image</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a379a7029460c5136510485e70ea44100">_processImageFormatSupport</a> (<a class="el" href="classapril_1_1_image.html">Image</a> *image)</td></tr>
 <tr class="memdesc:a379a7029460c5136510485e70ea44100"><td class="mdescLeft">&#160;</td><td class="mdescRight">If necessary, converts to image the a format supported by the <a class="el" href="classapril_1_1_render_system.html" title="Defines a generic render system. ">RenderSystem</a>.  <a href="#a379a7029460c5136510485e70ea44100">More...</a><br /></td></tr>
 <tr class="separator:a379a7029460c5136510485e70ea44100"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6525c09295d60dab146a6c902c3d915a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a6525c09295d60dab146a6c902c3d915a">_isReadable</a> ()</td></tr>
-<tr class="memdesc:a6525c09295d60dab146a6c902c3d915a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the readable flag.  <a href="#a6525c09295d60dab146a6c902c3d915a">More...</a><br /></td></tr>
-<tr class="separator:a6525c09295d60dab146a6c902c3d915a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89001e0f20681df388f9008948224575"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a89001e0f20681df388f9008948224575">_isWritable</a> ()</td></tr>
-<tr class="memdesc:a89001e0f20681df388f9008948224575"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the writable flag.  <a href="#a89001e0f20681df388f9008948224575">More...</a><br /></td></tr>
-<tr class="separator:a89001e0f20681df388f9008948224575"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbf0f3cf490b9be6e0a0fab97d7e6919"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#afbf0f3cf490b9be6e0a0fab97d7e6919">_isAlterable</a> ()</td></tr>
-<tr class="memdesc:afbf0f3cf490b9be6e0a0fab97d7e6919"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the alterable flag.  <a href="#afbf0f3cf490b9be6e0a0fab97d7e6919">More...</a><br /></td></tr>
-<tr class="separator:afbf0f3cf490b9be6e0a0fab97d7e6919"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b9a6d533733a097c1752ab3cc9b591f"><td class="memItemLeft" align="right" valign="top">hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a8b9a6d533733a097c1752ab3cc9b591f">_getInternalName</a> ()</td></tr>
-<tr class="memdesc:a8b9a6d533733a097c1752ab3cc9b591f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the internal texture name.  <a href="#a8b9a6d533733a097c1752ab3cc9b591f">More...</a><br /></td></tr>
-<tr class="separator:a8b9a6d533733a097c1752ab3cc9b591f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a830a97756e970a742dde26a9e4399301"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a830a97756e970a742dde26a9e4399301">_isReadable</a> () const </td></tr>
+<tr class="memdesc:a830a97756e970a742dde26a9e4399301"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the readable flag.  <a href="#a830a97756e970a742dde26a9e4399301">More...</a><br /></td></tr>
+<tr class="separator:a830a97756e970a742dde26a9e4399301"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ff13f6499e36835d15bf6d529cf4964"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a3ff13f6499e36835d15bf6d529cf4964">_isWritable</a> () const </td></tr>
+<tr class="memdesc:a3ff13f6499e36835d15bf6d529cf4964"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the writable flag.  <a href="#a3ff13f6499e36835d15bf6d529cf4964">More...</a><br /></td></tr>
+<tr class="separator:a3ff13f6499e36835d15bf6d529cf4964"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae23436222c39d26f61acda9ee50342f"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aae23436222c39d26f61acda9ee50342f">_isAlterable</a> () const </td></tr>
+<tr class="memdesc:aae23436222c39d26f61acda9ee50342f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the alterable flag.  <a href="#aae23436222c39d26f61acda9ee50342f">More...</a><br /></td></tr>
+<tr class="separator:aae23436222c39d26f61acda9ee50342f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46cde3f7265bbbd9de6cb1fef0ac1fa5"><td class="memItemLeft" align="right" valign="top">hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a46cde3f7265bbbd9de6cb1fef0ac1fa5">_getInternalName</a> () const </td></tr>
+<tr class="memdesc:a46cde3f7265bbbd9de6cb1fef0ac1fa5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the internal texture name.  <a href="#a46cde3f7265bbbd9de6cb1fef0ac1fa5">More...</a><br /></td></tr>
+<tr class="separator:a46cde3f7265bbbd9de6cb1fef0ac1fa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaa3bd07b92854dd75f9f33ffa985b48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aeaa3bd07b92854dd75f9f33ffa985b48">_setupPot</a> (int &amp;outWidth, int &amp;outHeight)</td></tr>
 <tr class="memdesc:aeaa3bd07b92854dd75f9f33ffa985b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up dimensions and internal state of the texture to be power-of-two compliant.  <a href="#aeaa3bd07b92854dd75f9f33ffa985b48">More...</a><br /></td></tr>
 <tr class="separator:aeaa3bd07b92854dd75f9f33ffa985b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -572,7 +572,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TextureAsync</b></td
 <p>Loads the texture asynchronously right away and uploads the data to the GPU as soon as it is available before the next frame. </p>
 <dl class="section note"><dt>Note</dt><dd>If the texture is used before it loaded asynchronously, it cannot be uploaded to the GPU and will not be rendered properly. </dd></dl>
 </td></tr>
-<tr><td class="fieldname"><a class="anchor" id="ab30e6a4d02d6e655214ae079ff2a2747a5790d08a2c29b87f21c6698b05cd4faa"></a>LOAD_ASYNC_ON_DEMAND&#160;</td><td class="fielddoc">
+<tr><td class="fieldname"><a class="anchor" id="ab30e6a4d02d6e655214ae079ff2a2747a0f93c56c6d99cfa4d954a6ba800fd76a"></a>LOAD_ASYNC_DEFERRED_UPLOAD&#160;</td><td class="fielddoc">
 <p>Loads the texture asynchronously right away, but it will upload the data to the GPU on the first use. </p>
 <dl class="section note"><dt>Note</dt><dd>If the texture is used before it loaded asynchronously, it cannot be uploaded to the GPU and will not be rendered properly. </dd></dl>
 </td></tr>
@@ -1109,7 +1109,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TextureAsync</b></td
 
 </div>
 </div>
-<a class="anchor" id="a8b9a6d533733a097c1752ab3cc9b591f"></a>
+<a class="anchor" id="a46cde3f7265bbbd9de6cb1fef0ac1fa5"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1120,7 +1120,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TextureAsync</b></td
           <td class="memname">hstr april::Texture::_getInternalName </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1136,7 +1136,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TextureAsync</b></td
 
 </div>
 </div>
-<a class="anchor" id="afbf0f3cf490b9be6e0a0fab97d7e6919"></a>
+<a class="anchor" id="aae23436222c39d26f61acda9ee50342f"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1147,7 +1147,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TextureAsync</b></td
           <td class="memname">virtual bool april::Texture::_isAlterable </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1162,7 +1162,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TextureAsync</b></td
 
 </div>
 </div>
-<a class="anchor" id="a6525c09295d60dab146a6c902c3d915a"></a>
+<a class="anchor" id="a830a97756e970a742dde26a9e4399301"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1173,7 +1173,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TextureAsync</b></td
           <td class="memname">virtual bool april::Texture::_isReadable </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1188,7 +1188,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TextureAsync</b></td
 
 </div>
 </div>
-<a class="anchor" id="a89001e0f20681df388f9008948224575"></a>
+<a class="anchor" id="a3ff13f6499e36835d15bf6d529cf4964"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1199,7 +1199,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TextureAsync</b></td
           <td class="memname">virtual bool april::Texture::_isWritable </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -2865,7 +2865,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
 
 </div>
 </div>
-<a class="anchor" id="add3956dd8043bde28fba0f4fb83c969e"></a>
+<a class="anchor" id="a3182439d70b95c7e3221649d21cee81e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -2873,7 +2873,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
           <td class="memname">int april::Texture::getBpp </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2884,7 +2884,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
 
 </div>
 </div>
-<a class="anchor" id="aedc0231a240b3d1a183b9f0ed68843b0"></a>
+<a class="anchor" id="a2a47c2b5e81596018faac4bbb23a569a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -2892,7 +2892,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
           <td class="memname">int april::Texture::getByteSize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2957,7 +2957,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
 
 </div>
 </div>
-<a class="anchor" id="afb21fb42621f45d548ebb9f102be7b2d"></a>
+<a class="anchor" id="a3f58fd03986f216dcc6592eabcfe48fb"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -2965,7 +2965,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
           <td class="memname">int april::Texture::getHeight </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2975,7 +2975,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
 
 </div>
 </div>
-<a class="anchor" id="a30d936d9e23e8aab42c80d70b6df34e3"></a>
+<a class="anchor" id="a227de49fe08b6dfe7473857ab1459a3c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -2994,7 +2994,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -3011,7 +3011,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
 
 </div>
 </div>
-<a class="anchor" id="a254da40d43289dd382dc0cccfaef88ac"></a>
+<a class="anchor" id="ac77865140616f39f3abe0140f1d11864"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -3020,7 +3020,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
           <td>(</td>
           <td class="paramtype">gvec2&#160;</td>
           <td class="paramname"><em>position</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -3033,11 +3033,11 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The interpolated <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> of the pixel. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classapril_1_1_texture.html#a30d936d9e23e8aab42c80d70b6df34e3" title="Gets the linearly interpolated color between two pixels. ">getInterpolatedPixel(float x, float y)</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>getInterpolatedPixel(float x, float y) </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a759ac40cf8ab5082a02f84426dd1e1c3"></a>
+<a class="anchor" id="a95ec0b4ce1ac6bf0fff61bc1d477bb67"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -3056,7 +3056,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -3073,7 +3073,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
 
 </div>
 </div>
-<a class="anchor" id="aa969dfa9974b31d37f52d219adf54319"></a>
+<a class="anchor" id="aa456cd9a190ea097952761cacd21b3c9"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -3082,7 +3082,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
           <td>(</td>
           <td class="paramtype">gvec2&#160;</td>
           <td class="paramname"><em>position</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -3095,11 +3095,11 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> of the pixel. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classapril_1_1_texture.html#a759ac40cf8ab5082a02f84426dd1e1c3" title="Gets the color of a specific pixel. ">getPixel(int x, int y)</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>getPixel(int x, int y) </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a905499f89cebec556e51a760207e8c21"></a>
+<a class="anchor" id="aa794167db8688a670b3557535921fdf5"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -3107,7 +3107,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
           <td class="memname">int april::Texture::getWidth </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">

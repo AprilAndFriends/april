@@ -157,6 +157,7 @@ namespace april
 			ControllerInputEvent();
 			/// @brief Constructor.
 			/// @param[in] type The event type.
+			/// @param[in] controllerIndex Index of the controller.
 			/// @param[in] buttonCode The button code.
 			/// @param[in] axisValue The axis value.
 			ControllerInputEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue);

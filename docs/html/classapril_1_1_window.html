@@ -107,9 +107,14 @@ Public Types</h2></td></tr>
  }<tr class="memdesc:a74e129227fa7cb25ed06224789d77cea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines keyboard key event types.  <a href="classapril_1_1_window.html#a74e129227fa7cb25ed06224789d77cea">More...</a><br /></td></tr>
 </td></tr>
 <tr class="separator:a74e129227fa7cb25ed06224789d77cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa59abd3ea74322367b1883afc4d69104"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104">ControllerEventType</a> { <a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104a92af25991ec913a7a3c3d1cd290a6770">CONTROLLER_DOWN</a> = 0, 
+<tr class="memitem:aa59abd3ea74322367b1883afc4d69104"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104">ControllerEventType</a> { <br />
+&#160;&#160;<a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104a92af25991ec913a7a3c3d1cd290a6770">CONTROLLER_DOWN</a> = 0, 
 <a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104af564645c9b18e5e4e72f5ce47de6319b">CONTROLLER_UP</a> = 1, 
-<a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104ac75bcfa48a24cff6887277c34eb42ab1">CONTROLLER_AXIS</a> = 2
+<a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104ac75bcfa48a24cff6887277c34eb42ab1">CONTROLLER_AXIS</a> = 2, 
+<a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104a0493bdf13a8634d384dd08c140ec1cca">CONTROLLER_CONNECTED</a> = 3, 
+<br />
+&#160;&#160;<a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104a8e03bd8a3ded5ba4bd31aafe71bd698e">CONTROLLER_DISCONNECTED</a> = 4
+<br />
  }<tr class="memdesc:aa59abd3ea74322367b1883afc4d69104"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines controller input event types.  <a href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104">More...</a><br /></td></tr>
 </td></tr>
 <tr class="separator:aa59abd3ea74322367b1883afc4d69104"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -214,6 +219,12 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a55db93d9a9f9be98b1763fd513118ee3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a55db93d9a9f9be98b1763fd513118ee3">HL_DEFINE_GETSET2</a> (hmap, <a class="el" href="_keys_8h.html#ac64be38cad3f503a2ded3f9940bdc8b9">Key</a>, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a>, <a class="el" href="classapril_1_1_window.html#a8457faa3dade0b5283f2964cd1bf94ef">controllerEmulationKeys</a>, ControllerEmulationKeys)</td></tr>
 <tr class="memdesc:a55db93d9a9f9be98b1763fd513118ee3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The controller emulation keys.  <a href="#a55db93d9a9f9be98b1763fd513118ee3">More...</a><br /></td></tr>
 <tr class="separator:a55db93d9a9f9be98b1763fd513118ee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a992501648a631dfb5307936d8ac61080"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a992501648a631dfb5307936d8ac61080">HL_DEFINE_GETSET2</a> (hmap, <a class="el" href="_keys_8h.html#ac64be38cad3f503a2ded3f9940bdc8b9">Key</a>, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a>, <a class="el" href="classapril_1_1_window.html#a73479ba31ab508a8fa924470d369d974">controllerEmulationAxisesPositive</a>, ControllerEmulationAxisesPositive)</td></tr>
+<tr class="memdesc:a992501648a631dfb5307936d8ac61080"><td class="mdescLeft">&#160;</td><td class="mdescRight">The controller emulation keys for positive axis values.  <a href="#a992501648a631dfb5307936d8ac61080">More...</a><br /></td></tr>
+<tr class="separator:a992501648a631dfb5307936d8ac61080"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff9a6c0b50b4d753574e380d14ca63fd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#aff9a6c0b50b4d753574e380d14ca63fd">HL_DEFINE_GETSET2</a> (hmap, <a class="el" href="_keys_8h.html#ac64be38cad3f503a2ded3f9940bdc8b9">Key</a>, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a>, <a class="el" href="classapril_1_1_window.html#a91b4bc6576e802e81d78a4af0cb16668">controllerEmulationAxisesNegative</a>, ControllerEmulationAxisesNegative)</td></tr>
+<tr class="memdesc:aff9a6c0b50b4d753574e380d14ca63fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The controller emulation keys for negative axis values.  <a href="#aff9a6c0b50b4d753574e380d14ca63fd">More...</a><br /></td></tr>
+<tr class="separator:aff9a6c0b50b4d753574e380d14ca63fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ed1eed247f4cbe9eb1841ae9a072013"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4ed1eed247f4cbe9eb1841ae9a072013"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a4ed1eed247f4cbe9eb1841ae9a072013">HL_DEFINE_GETSET</a> (<a class="el" href="classapril_1_1_update_delegate.html">UpdateDelegate</a> *, <a class="el" href="classapril_1_1_window.html#ac193e3134e043e3cd9b4056baf3916a6">updateDelegate</a>, <a class="el" href="classapril_1_1_update_delegate.html">UpdateDelegate</a>)</td></tr>
 <tr class="memdesc:a4ed1eed247f4cbe9eb1841ae9a072013"><td class="mdescLeft">&#160;</td><td class="mdescRight">The update delegate. <br /></td></tr>
@@ -291,12 +302,12 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a5bf3ed251fb24a47eb9a4f8619ea1587">hideVirtualKeyboard</a> ()</td></tr>
 <tr class="memdesc:a5bf3ed251fb24a47eb9a4f8619ea1587"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hides the virtual keyboard if necessary. <br /></td></tr>
 <tr class="separator:a5bf3ed251fb24a47eb9a4f8619ea1587"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0eaf356de467a335b641702ef197dfcb"><td class="memItemLeft" align="right" valign="top">virtual hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a0eaf356de467a335b641702ef197dfcb">findCursorResource</a> (chstr filename)</td></tr>
-<tr class="memdesc:a0eaf356de467a335b641702ef197dfcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the actual filename of a texture resource file.  <a href="#a0eaf356de467a335b641702ef197dfcb">More...</a><br /></td></tr>
-<tr class="separator:a0eaf356de467a335b641702ef197dfcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a316d9c6e80e00994659535db4892fc7a"><td class="memItemLeft" align="right" valign="top">virtual hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a316d9c6e80e00994659535db4892fc7a">findCursorFile</a> (chstr filename)</td></tr>
-<tr class="memdesc:a316d9c6e80e00994659535db4892fc7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the actual filename of a texture file.  <a href="#a316d9c6e80e00994659535db4892fc7a">More...</a><br /></td></tr>
-<tr class="separator:a316d9c6e80e00994659535db4892fc7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a704e90e483aa867f7024d8045a18c300"><td class="memItemLeft" align="right" valign="top">virtual hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a704e90e483aa867f7024d8045a18c300">findCursorResource</a> (chstr filename) const </td></tr>
+<tr class="memdesc:a704e90e483aa867f7024d8045a18c300"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the actual filename of a texture resource file.  <a href="#a704e90e483aa867f7024d8045a18c300">More...</a><br /></td></tr>
+<tr class="separator:a704e90e483aa867f7024d8045a18c300"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad228861767626de2bd2c0f108fda16f3"><td class="memItemLeft" align="right" valign="top">virtual hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#ad228861767626de2bd2c0f108fda16f3">findCursorFile</a> (chstr filename) const </td></tr>
+<tr class="memdesc:ad228861767626de2bd2c0f108fda16f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the actual filename of a texture file.  <a href="#ad228861767626de2bd2c0f108fda16f3">More...</a><br /></td></tr>
+<tr class="separator:ad228861767626de2bd2c0f108fda16f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01a20b7e0fabd56450691be6585e1374"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_cursor.html">Cursor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a01a20b7e0fabd56450691be6585e1374">createCursorFromResource</a> (chstr filename)</td></tr>
 <tr class="memdesc:a01a20b7e0fabd56450691be6585e1374"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classapril_1_1_cursor.html" title="Defines a cursor object. ">Cursor</a> object from a resource file.  <a href="#a01a20b7e0fabd56450691be6585e1374">More...</a><br /></td></tr>
 <tr class="separator:a01a20b7e0fabd56450691be6585e1374"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -306,9 +317,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:ab30e044a4d3ddc9ee87b043cab1f51d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#ab30e044a4d3ddc9ee87b043cab1f51d9">destroyCursor</a> (<a class="el" href="classapril_1_1_cursor.html">Cursor</a> *<a class="el" href="classapril_1_1_window.html#a4ad37ce9d37959be8ffd08b5b621b8e6">cursor</a>)</td></tr>
 <tr class="memdesc:ab30e044a4d3ddc9ee87b043cab1f51d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys a <a class="el" href="classapril_1_1_cursor.html" title="Defines a cursor object. ">Cursor</a> object from a file.  <a href="#ab30e044a4d3ddc9ee87b043cab1f51d9">More...</a><br /></td></tr>
 <tr class="separator:ab30e044a4d3ddc9ee87b043cab1f51d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a776706a5cc207fcd6976fa5cc9453343"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a776706a5cc207fcd6976fa5cc9453343">isRotating</a> ()</td></tr>
-<tr class="memdesc:a776706a5cc207fcd6976fa5cc9453343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the screen rotation flag.  <a href="#a776706a5cc207fcd6976fa5cc9453343">More...</a><br /></td></tr>
-<tr class="separator:a776706a5cc207fcd6976fa5cc9453343"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7963203d41d46bc7a23e5bbaa1aa3b17"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a7963203d41d46bc7a23e5bbaa1aa3b17">isRotating</a> () const </td></tr>
+<tr class="memdesc:a7963203d41d46bc7a23e5bbaa1aa3b17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the screen rotation flag.  <a href="#a7963203d41d46bc7a23e5bbaa1aa3b17">More...</a><br /></td></tr>
+<tr class="separator:a7963203d41d46bc7a23e5bbaa1aa3b17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb9e87abbb9c8f63b4c158597f9427e9"><td class="memItemLeft" align="right" valign="top">virtual hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#afb9e87abbb9c8f63b4c158597f9427e9">getParam</a> (chstr parameter)</td></tr>
 <tr class="memdesc:afb9e87abbb9c8f63b4c158597f9427e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets an internal system parameter.  <a href="#afb9e87abbb9c8f63b4c158597f9427e9">More...</a><br /></td></tr>
 <tr class="separator:afb9e87abbb9c8f63b4c158597f9427e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -324,9 +335,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a9e18a94a7ff934c5918b6d064193d6c2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a9e18a94a7ff934c5918b6d064193d6c2">handleTouchEvent</a> (const harray&lt; gvec2 &gt; &amp;<a class="el" href="classapril_1_1_window.html#a1e5881c785e79572d4604c8c53dd7591">touches</a>)</td></tr>
 <tr class="memdesc:a9e18a94a7ff934c5918b6d064193d6c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a touch event and propagates it to the delegate.  <a href="#a9e18a94a7ff934c5918b6d064193d6c2">More...</a><br /></td></tr>
 <tr class="separator:a9e18a94a7ff934c5918b6d064193d6c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a496118b3791c61ebe84d754aaf94ae"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a2a496118b3791c61ebe84d754aaf94ae">handleControllerEvent</a> (<a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104">ControllerEventType</a> type, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a> buttonCode, float axisValue)</td></tr>
-<tr class="memdesc:a2a496118b3791c61ebe84d754aaf94ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a controller event and propagates it to the delegate.  <a href="#a2a496118b3791c61ebe84d754aaf94ae">More...</a><br /></td></tr>
-<tr class="separator:a2a496118b3791c61ebe84d754aaf94ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f44c45332a63954b5fb0e354d7060c6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a9f44c45332a63954b5fb0e354d7060c6">handleControllerEvent</a> (<a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104">ControllerEventType</a> type, int controllerIndex, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a> buttonCode, float axisValue)</td></tr>
+<tr class="memdesc:a9f44c45332a63954b5fb0e354d7060c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a controller event and propagates it to the delegate.  <a href="#a9f44c45332a63954b5fb0e354d7060c6">More...</a><br /></td></tr>
+<tr class="separator:a9f44c45332a63954b5fb0e354d7060c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4053fa3c3aba2cfa2bc492a7c69c1b89"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a4053fa3c3aba2cfa2bc492a7c69c1b89">handleQuitRequestEvent</a> (bool canCancel)</td></tr>
 <tr class="memdesc:a4053fa3c3aba2cfa2bc492a7c69c1b89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a quit event and propagates it to the delegate.  <a href="#a4053fa3c3aba2cfa2bc492a7c69c1b89">More...</a><br /></td></tr>
 <tr class="separator:a4053fa3c3aba2cfa2bc492a7c69c1b89"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -358,9 +369,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:aa1f48eb3d682c43490cde4d69bed55f1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#aa1f48eb3d682c43490cde4d69bed55f1">queueTouchEvent</a> (<a class="el" href="classapril_1_1_window.html#adb23d6e6f06449e36df21b765699e118">MouseEventType</a> type, gvec2 position, int index)</td></tr>
 <tr class="memdesc:aa1f48eb3d682c43490cde4d69bed55f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a touch event for processing before the start of the next frame.  <a href="#aa1f48eb3d682c43490cde4d69bed55f1">More...</a><br /></td></tr>
 <tr class="separator:aa1f48eb3d682c43490cde4d69bed55f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24850cf299cdc6e95e8d34e838c6ff87"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a24850cf299cdc6e95e8d34e838c6ff87">queueControllerEvent</a> (<a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104">ControllerEventType</a> type, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a> buttonCode, float axisValue)</td></tr>
-<tr class="memdesc:a24850cf299cdc6e95e8d34e838c6ff87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a controller event for processing before the start of the next frame.  <a href="#a24850cf299cdc6e95e8d34e838c6ff87">More...</a><br /></td></tr>
-<tr class="separator:a24850cf299cdc6e95e8d34e838c6ff87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb171d1bce898e5194bf798f7b724214"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#adb171d1bce898e5194bf798f7b724214">queueControllerEvent</a> (<a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104">ControllerEventType</a> type, int controllerIndex, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a> buttonCode, float axisValue)</td></tr>
+<tr class="memdesc:adb171d1bce898e5194bf798f7b724214"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a controller event for processing before the start of the next frame.  <a href="#adb171d1bce898e5194bf798f7b724214">More...</a><br /></td></tr>
+<tr class="separator:adb171d1bce898e5194bf798f7b724214"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac05822f7d353047560f38de394f56dfd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#ac05822f7d353047560f38de394f56dfd">enterMainLoop</a> ()</td></tr>
 <tr class="memdesc:ac05822f7d353047560f38de394f56dfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the main loop.  <a href="#ac05822f7d353047560f38de394f56dfd">More...</a><br /></td></tr>
 <tr class="separator:ac05822f7d353047560f38de394f56dfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -508,6 +519,12 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
 <tr class="memitem:a8457faa3dade0b5283f2964cd1bf94ef"><td class="memItemLeft" align="right" valign="top">hmap&lt; <a class="el" href="_keys_8h.html#ac64be38cad3f503a2ded3f9940bdc8b9">Key</a>, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a8457faa3dade0b5283f2964cd1bf94ef">controllerEmulationKeys</a></td></tr>
 <tr class="memdesc:a8457faa3dade0b5283f2964cd1bf94ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">The controller emulation keys.  <a href="#a8457faa3dade0b5283f2964cd1bf94ef">More...</a><br /></td></tr>
 <tr class="separator:a8457faa3dade0b5283f2964cd1bf94ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73479ba31ab508a8fa924470d369d974"><td class="memItemLeft" align="right" valign="top">hmap&lt; <a class="el" href="_keys_8h.html#ac64be38cad3f503a2ded3f9940bdc8b9">Key</a>, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a73479ba31ab508a8fa924470d369d974">controllerEmulationAxisesPositive</a></td></tr>
+<tr class="memdesc:a73479ba31ab508a8fa924470d369d974"><td class="mdescLeft">&#160;</td><td class="mdescRight">The controller emulation keys for positive axis values.  <a href="#a73479ba31ab508a8fa924470d369d974">More...</a><br /></td></tr>
+<tr class="separator:a73479ba31ab508a8fa924470d369d974"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91b4bc6576e802e81d78a4af0cb16668"><td class="memItemLeft" align="right" valign="top">hmap&lt; <a class="el" href="_keys_8h.html#ac64be38cad3f503a2ded3f9940bdc8b9">Key</a>, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a91b4bc6576e802e81d78a4af0cb16668">controllerEmulationAxisesNegative</a></td></tr>
+<tr class="memdesc:a91b4bc6576e802e81d78a4af0cb16668"><td class="mdescLeft">&#160;</td><td class="mdescRight">The controller emulation keys for negative axis values.  <a href="#a91b4bc6576e802e81d78a4af0cb16668">More...</a><br /></td></tr>
+<tr class="separator:a91b4bc6576e802e81d78a4af0cb16668"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac193e3134e043e3cd9b4056baf3916a6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac193e3134e043e3cd9b4056baf3916a6"></a>
 <a class="el" href="classapril_1_1_update_delegate.html">UpdateDelegate</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#ac193e3134e043e3cd9b4056baf3916a6">updateDelegate</a></td></tr>
 <tr class="memdesc:ac193e3134e043e3cd9b4056baf3916a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current update delegate. <br /></td></tr>
@@ -556,6 +573,12 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
 </td></tr>
 <tr><td class="fieldname"><a class="anchor" id="aa59abd3ea74322367b1883afc4d69104ac75bcfa48a24cff6887277c34eb42ab1"></a>CONTROLLER_AXIS&#160;</td><td class="fielddoc">
 <p>Controller axis position was changed. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa59abd3ea74322367b1883afc4d69104a0493bdf13a8634d384dd08c140ec1cca"></a>CONTROLLER_CONNECTED&#160;</td><td class="fielddoc">
+<p>Controller connected. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa59abd3ea74322367b1883afc4d69104a8e03bd8a3ded5ba4bd31aafe71bd698e"></a>CONTROLLER_DISCONNECTED&#160;</td><td class="fielddoc">
+<p>Controller disconnected. </p>
 </td></tr>
 </table>
 
@@ -1010,7 +1033,7 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
 
 </div>
 </div>
-<a class="anchor" id="a316d9c6e80e00994659535db4892fc7a"></a>
+<a class="anchor" id="ad228861767626de2bd2c0f108fda16f3"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1022,7 +1045,7 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
           <td>(</td>
           <td class="paramtype">chstr&#160;</td>
           <td class="paramname"><em>filename</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1043,7 +1066,7 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
 
 </div>
 </div>
-<a class="anchor" id="a0eaf356de467a335b641702ef197dfcb"></a>
+<a class="anchor" id="a704e90e483aa867f7024d8045a18c300"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1055,7 +1078,7 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
           <td>(</td>
           <td class="paramtype">chstr&#160;</td>
           <td class="paramname"><em>filename</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1282,7 +1305,7 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
 
 </div>
 </div>
-<a class="anchor" id="a2a496118b3791c61ebe84d754aaf94ae"></a>
+<a class="anchor" id="a9f44c45332a63954b5fb0e354d7060c6"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1294,6 +1317,12 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
           <td>(</td>
           <td class="paramtype"><a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104">ControllerEventType</a>&#160;</td>
           <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>controllerIndex</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1324,6 +1353,7 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>The event type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">controllerIndex</td><td>Index of the controller. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">buttonCode</td><td>The button code. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">axisValue</td><td>The axis value. </td></tr>
   </table>
@@ -1691,6 +1721,100 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
 
 </div>
 </div>
+<a class="anchor" id="a992501648a631dfb5307936d8ac61080"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">april::Window::HL_DEFINE_GETSET2 </td>
+          <td>(</td>
+          <td class="paramtype">hmap&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_keys_8h.html#ac64be38cad3f503a2ded3f9940bdc8b9">Key</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_window.html#a73479ba31ab508a8fa924470d369d974">controllerEmulationAxisesPositive</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ControllerEmulationAxisesPositive&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The controller emulation keys for positive axis values. </p>
+<dl class="section note"><dt>Note</dt><dd>This is useful when testing controller input functionality without actually using a controller. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aff9a6c0b50b4d753574e380d14ca63fd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">april::Window::HL_DEFINE_GETSET2 </td>
+          <td>(</td>
+          <td class="paramtype">hmap&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_keys_8h.html#ac64be38cad3f503a2ded3f9940bdc8b9">Key</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_window.html#a91b4bc6576e802e81d78a4af0cb16668">controllerEmulationAxisesNegative</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ControllerEmulationAxisesNegative&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The controller emulation keys for negative axis values. </p>
+<dl class="section note"><dt>Note</dt><dd>This is useful when testing controller input functionality without actually using a controller. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ac27011d70d2a0db1f077cf62c544122c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1743,7 +1867,7 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
 
 </div>
 </div>
-<a class="anchor" id="a776706a5cc207fcd6976fa5cc9453343"></a>
+<a class="anchor" id="a7963203d41d46bc7a23e5bbaa1aa3b17"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1754,7 +1878,7 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
           <td class="memname">virtual bool april::Window::isRotating </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1829,7 +1953,7 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
 
 </div>
 </div>
-<a class="anchor" id="a24850cf299cdc6e95e8d34e838c6ff87"></a>
+<a class="anchor" id="adb171d1bce898e5194bf798f7b724214"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1841,6 +1965,12 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
           <td>(</td>
           <td class="paramtype"><a class="el" href="classapril_1_1_window.html#aa59abd3ea74322367b1883afc4d69104">ControllerEventType</a>&#160;</td>
           <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>controllerIndex</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1871,6 +2001,7 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>The event type. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">controllerIndex</td><td>Index of the controller. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">buttonCode</td><td>The button code. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">axisValue</td><td>The axis value. </td></tr>
   </table>
@@ -2469,6 +2600,52 @@ harray&lt; <a class="el" href="structapril_1_1_window_1_1_controller_input_event
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a91b4bc6576e802e81d78a4af0cb16668"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">hmap&lt;<a class="el" href="_keys_8h.html#ac64be38cad3f503a2ded3f9940bdc8b9">Key</a>, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a>&gt; april::Window::controllerEmulationAxisesNegative</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The controller emulation keys for negative axis values. </p>
+<dl class="section note"><dt>Note</dt><dd>This is useful when testing controller input functionality without actually using a controller. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a73479ba31ab508a8fa924470d369d974"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">hmap&lt;<a class="el" href="_keys_8h.html#ac64be38cad3f503a2ded3f9940bdc8b9">Key</a>, <a class="el" href="_keys_8h.html#ae46d9db875171ea2fc509e43935e073c">Button</a>&gt; april::Window::controllerEmulationAxisesPositive</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The controller emulation keys for positive axis values. </p>
+<dl class="section note"><dt>Note</dt><dd>This is useful when testing controller input functionality without actually using a controller. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a8457faa3dade0b5283f2964cd1bf94ef"></a>
 <div class="memitem">
 <div class="memproto">
