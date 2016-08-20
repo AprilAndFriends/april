@@ -102,7 +102,11 @@ namespace april
 			hlog::write(logTag, "OpenKODE pause event received.");
 			if (april::rendersys != NULL)
 			{
+				// kspes@20160820 - there was an unloadTextures() call here before, but I'm not sure why this is needed? There's another defocus call that usually unloads resources
+				// every time you defocus the window. I'm going to play it safe and just disable this on iOS for now.
+#ifndef _IOS
 				april::rendersys->unloadTextures();
+#endif
 			}
 			break;
 		}
