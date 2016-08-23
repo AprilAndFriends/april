@@ -24,7 +24,7 @@ import com.april.DialogFactory;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Activity extends android.app.Activity
+public class Activity extends android.app.Activity implements IActivityEvents
 {
 	protected boolean useHardExit = true; // set this to false to prevent application from fully exiting
 	private boolean enabledNavigationBarHiding = true;
