@@ -351,6 +351,12 @@ namespace april
 		return this->asyncLoadQueued;
 	}
 
+	bool Texture::isLoadedAny()
+	{
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		return (this->loaded || this->asyncLoadQueued || this->dataAsync != NULL);
+	}
+
 	bool Texture::_isReadable() const
 	{
 		return (this->type == TYPE_MANAGED || this->type == TYPE_RENDER_TARGET);

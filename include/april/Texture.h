@@ -134,6 +134,12 @@ namespace april
 		/// @brief Checks whether the texture is waiting to be loaded asynchronously.
 		/// @return True if the texture is waiting to be loaded asynchronously.
 		bool isAsyncLoadQueued();
+		/// @brief Checks whether the texture is loaded in any way, is being loaded or queued to be loaded.
+		/// @return True if the texture is loaded in any way, is being loaded or queued to be loaded.
+		/// @see isLoaded()
+		/// @see isLoadedAsync()
+		/// @see isAsyncLoadQueued()
+		bool isLoadedAny();
 
 		/// @brief Loads the texture immediately. If the texture was queued to be loaded asynchronously, this method will wait until it's loaded and return true.
 		/// @return True if successful or already loaded.
