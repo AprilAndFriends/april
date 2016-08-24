@@ -167,6 +167,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a81a5e3a3e75111d9d07976365b639107"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a81a5e3a3e75111d9d07976365b639107">isAsyncLoadQueued</a> ()</td></tr>
 <tr class="memdesc:a81a5e3a3e75111d9d07976365b639107"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the texture is waiting to be loaded asynchronously.  <a href="#a81a5e3a3e75111d9d07976365b639107">More...</a><br /></td></tr>
 <tr class="separator:a81a5e3a3e75111d9d07976365b639107"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16f8b76c1dbb9eb835fa4414785c4f78"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a16f8b76c1dbb9eb835fa4414785c4f78">isLoadedAny</a> ()</td></tr>
+<tr class="memdesc:a16f8b76c1dbb9eb835fa4414785c4f78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the texture is loaded in any way, is being loaded or queued to be loaded.  <a href="#a16f8b76c1dbb9eb835fa4414785c4f78">More...</a><br /></td></tr>
+<tr class="separator:a16f8b76c1dbb9eb835fa4414785c4f78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f1f9c9bb312e1b24fe6c4f4358af5be"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a3f1f9c9bb312e1b24fe6c4f4358af5be">load</a> ()</td></tr>
 <tr class="memdesc:a3f1f9c9bb312e1b24fe6c4f4358af5be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the texture immediately. If the texture was queued to be loaded asynchronously, this method will wait until it's loaded and return true.  <a href="#a3f1f9c9bb312e1b24fe6c4f4358af5be">More...</a><br /></td></tr>
 <tr class="separator:a3f1f9c9bb312e1b24fe6c4f4358af5be"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3370,6 +3373,29 @@ This is an expensive operation and should be used sparingly. </dd></dl>
 
 <p>Checks whether the texture has been loaded and uploaded to the GPU. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the texture has been loaded and uploaded to the GPU. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a16f8b76c1dbb9eb835fa4414785c4f78"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool april::Texture::isLoadedAny </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks whether the texture is loaded in any way, is being loaded or queued to be loaded. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if the texture is loaded in any way, is being loaded or queued to be loaded. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classapril_1_1_texture.html#a0a68207f2466569e1f2afd4adca51fd2" title="Checks whether the texture has been loaded and uploaded to the GPU. ">isLoaded()</a> </dd>
+<dd>
+<a class="el" href="classapril_1_1_texture.html#a5be2063bbfba9a4dab22ac9b1bcfec38" title="Checks whether the texture has been loaded asynchronously and is waiting for the upload to the GPU...">isLoadedAsync()</a> </dd>
+<dd>
+<a class="el" href="classapril_1_1_texture.html#a81a5e3a3e75111d9d07976365b639107" title="Checks whether the texture is waiting to be loaded asynchronously. ">isAsyncLoadQueued()</a> </dd></dl>
 
 </div>
 </div>
