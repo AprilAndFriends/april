@@ -26,19 +26,19 @@
 namespace april
 {
 	// DEPRECATED
-	Texture::Type TYPE_MANAGED = Texture::Type::Managed; // DEPRECATED
-	Texture::Type TYPE_IMMUTABLE = Texture::Type::Immutable; // DEPRECATED
-	Texture::Type TYPE_VOLATILE = Texture::Type::Volatile; // DEPRECATED
-	Texture::Type TYPE_RENDER_TARGET = Texture::Type::RenderTarget; // DEPRECATED
-	Texture::Filter FILTER_NEAREST = Texture::Filter::Nearest; // DEPRECATED
-	Texture::Filter FILTER_LINEAR = Texture::Filter::Linear; // DEPRECATED
-	Texture::AddressMode ADDRESS_WRAP = Texture::AddressMode::Wrap; // DEPRECATED
-	Texture::AddressMode ADDRESS_CLAMP = Texture::AddressMode::Clamp; // DEPRECATED
-	Texture::LoadMode LOAD_IMMEDIATE = Texture::LoadMode::Immediate; // DEPRECATED
-	Texture::LoadMode LOAD_ON_DEMAND = Texture::LoadMode::OnDemand; // DEPRECATED
-	Texture::LoadMode LOAD_ASYNC = Texture::LoadMode::Async; // DEPRECATED
-	Texture::LoadMode LOAD_ASYNC_DEFERRED_UPLOAD = Texture::LoadMode::AsyncDeferredUpload; // DEPRECATED
-
+	Texture::Type Texture::TYPE_MANAGED = Texture::Type::Managed; // DEPRECATED
+	Texture::Type Texture::TYPE_IMMUTABLE = Texture::Type::Immutable; // DEPRECATED
+	Texture::Type Texture::TYPE_VOLATILE = Texture::Type::Volatile; // DEPRECATED
+	Texture::Type Texture::TYPE_RENDER_TARGET = Texture::Type::RenderTarget; // DEPRECATED
+	Texture::Filter Texture::FILTER_NEAREST = Texture::Filter::Nearest; // DEPRECATED
+	Texture::Filter Texture::FILTER_LINEAR = Texture::Filter::Linear; // DEPRECATED
+	Texture::AddressMode Texture::ADDRESS_WRAP = Texture::AddressMode::Wrap; // DEPRECATED
+	Texture::AddressMode Texture::ADDRESS_CLAMP = Texture::AddressMode::Clamp; // DEPRECATED
+	Texture::LoadMode Texture::LOAD_IMMEDIATE = Texture::LoadMode::Immediate; // DEPRECATED
+	Texture::LoadMode Texture::LOAD_ON_DEMAND = Texture::LoadMode::OnDemand; // DEPRECATED
+	Texture::LoadMode Texture::LOAD_ASYNC = Texture::LoadMode::Async; // DEPRECATED
+	Texture::LoadMode Texture::LOAD_ASYNC_DEFERRED_UPLOAD = Texture::LoadMode::AsyncDeferredUpload; // DEPRECATED
+	
 	HL_ENUM_CLASS_DEFINE(Texture::Type,
 	(
 		HL_ENUM_DEFINE(Texture::Type, Managed);
