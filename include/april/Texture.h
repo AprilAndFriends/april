@@ -621,6 +621,10 @@ namespace april
 		bool insertAlphaMap(Image* image, unsigned char median, int ambiguity); // TODOa - this functionality might be removed since shaders are much faster
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
+#if defined(_WINRT) && defined(DEPRECATED_ATTRIBUTE)
+#undef DEPRECATED_ATTRIBUTE
+#define DEPRECATED_ATTRIBUTE
+#endif
 		DEPRECATED_ATTRIBUTE static Type TYPE_MANAGED;
 		DEPRECATED_ATTRIBUTE static Type TYPE_IMMUTABLE;
 		DEPRECATED_ATTRIBUTE static Type TYPE_VOLATILE;

@@ -177,10 +177,6 @@
 #endif
 
 // DEPRECATED
-#ifdef DEPRECATED_ATTRIBUTE
-#define __DEPRECATED_ATTRIBUTE DEPRECATED_ATTRIBUTE
-#undef DEPRECATED_ATTRIBUTE
-#endif
 hstr APRIL_RS_DIRECTX9 = april::RenderSystemType::DirectX9.getName(); // DEPRECATED
 hstr APRIL_RS_DIRECTX11 = april::RenderSystemType::DirectX11.getName(); // DEPRECATED
 hstr APRIL_RS_OPENGL1 = april::RenderSystemType::OpenGL1.getName(); // DEPRECATED
@@ -211,10 +207,6 @@ namespace april
 	WindowType WS_ANDROIDJNI = WindowType::AndroidJNI; // DEPRECATED
 	WindowType WS_OPENKODE = WindowType::OpenKODE; // DEPRECATED
 }
-#ifdef __DEPRECATED_ATTRIBUTE
-#define DEPRECATED_ATTRIBUTE __DEPRECATED_ATTRIBUTE
-#undef __DEPRECATED_ATTRIBUTE
-#endif
 
 namespace april
 {
@@ -291,7 +283,7 @@ namespace april
 		}
 #endif
 #ifdef _DIRECTX11
-		if (april::rendersys == NULL && renderSystem == RenderSystemType::Direct11)
+		if (april::rendersys == NULL && renderSystem == RenderSystemType::DirectX11)
 		{
 			april::rendersys = new DirectX11_RenderSystem();
 		}

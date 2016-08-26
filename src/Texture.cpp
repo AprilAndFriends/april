@@ -26,10 +26,6 @@
 namespace april
 {
 	// DEPRECATED
-#ifdef DEPRECATED_ATTRIBUTE
-#define __DEPRECATED_ATTRIBUTE DEPRECATED_ATTRIBUTE
-#undef DEPRECATED_ATTRIBUTE
-#endif
 	Texture::Type TYPE_MANAGED = Texture::Type::Managed; // DEPRECATED
 	Texture::Type TYPE_IMMUTABLE = Texture::Type::Immutable; // DEPRECATED
 	Texture::Type TYPE_VOLATILE = Texture::Type::Volatile; // DEPRECATED
@@ -42,10 +38,6 @@ namespace april
 	Texture::LoadMode LOAD_ON_DEMAND = Texture::LoadMode::OnDemand; // DEPRECATED
 	Texture::LoadMode LOAD_ASYNC = Texture::LoadMode::Async; // DEPRECATED
 	Texture::LoadMode LOAD_ASYNC_DEFERRED_UPLOAD = Texture::LoadMode::AsyncDeferredUpload; // DEPRECATED
-#ifdef __DEPRECATED_ATTRIBUTE
-#define DEPRECATED_ATTRIBUTE __DEPRECATED_ATTRIBUTE
-#undef __DEPRECATED_ATTRIBUTE
-#endif
 
 	HL_ENUM_CLASS_DEFINE(Texture::Type,
 	(

@@ -21,6 +21,10 @@
 #include "Window.h"
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
+#if defined(_WINRT) && defined(DEPRECATED_ATTRIBUTE)
+#undef DEPRECATED_ATTRIBUTE
+#define DEPRECATED_ATTRIBUTE
+#endif
 DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_DIRECTX9;
 DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_DIRECTX11;
 DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_OPENGL1;
