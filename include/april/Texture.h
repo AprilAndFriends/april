@@ -620,25 +620,6 @@ namespace april
 		/// @note This is an expensive operation and should be used sparingly.
 		bool insertAlphaMap(Image* image, unsigned char median, int ambiguity); // TODOa - this functionality might be removed since shaders are much faster
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-#if defined(_WINRT) && defined(DEPRECATED_ATTRIBUTE)
-#undef DEPRECATED_ATTRIBUTE
-#define DEPRECATED_ATTRIBUTE
-#endif
-		DEPRECATED_ATTRIBUTE static Type TYPE_MANAGED;
-		DEPRECATED_ATTRIBUTE static Type TYPE_IMMUTABLE;
-		DEPRECATED_ATTRIBUTE static Type TYPE_VOLATILE;
-		DEPRECATED_ATTRIBUTE static Type TYPE_RENDER_TARGET;
-		DEPRECATED_ATTRIBUTE static Filter FILTER_NEAREST;
-		DEPRECATED_ATTRIBUTE static Filter FILTER_LINEAR;
-		DEPRECATED_ATTRIBUTE static AddressMode ADDRESS_WRAP;
-		DEPRECATED_ATTRIBUTE static AddressMode ADDRESS_CLAMP;
-		DEPRECATED_ATTRIBUTE static LoadMode LOAD_IMMEDIATE;
-		DEPRECATED_ATTRIBUTE static LoadMode LOAD_ON_DEMAND;
-		DEPRECATED_ATTRIBUTE static LoadMode LOAD_ASYNC;
-		DEPRECATED_ATTRIBUTE static LoadMode LOAD_ASYNC_DEFERRED_UPLOAD;
-#endif
-
 	protected:
 		/// @brief Defines a texture read lock for reading and writing to improve performance.
 		struct Lock

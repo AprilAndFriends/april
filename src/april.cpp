@@ -176,38 +176,6 @@
 	#define APRIL_PLATFORM_ARCHITECTURE_BITS 32
 #endif
 
-// DEPRECATED
-hstr APRIL_RS_DIRECTX9 = april::RenderSystemType::DirectX9.getName(); // DEPRECATED
-hstr APRIL_RS_DIRECTX11 = april::RenderSystemType::DirectX11.getName(); // DEPRECATED
-hstr APRIL_RS_OPENGL1 = april::RenderSystemType::OpenGL1.getName(); // DEPRECATED
-hstr APRIL_RS_OPENGLES1 = april::RenderSystemType::OpenGLES1.getName(); // DEPRECATED
-hstr APRIL_RS_OPENGLES2 = april::RenderSystemType::OpenGLES2.getName(); // DEPRECATED
-hstr APRIL_WS_WIN32 = april::WindowType::Win32.getName(); // DEPRECATED
-hstr APRIL_WS_WINRT = april::WindowType::WinRT.getName(); // DEPRECATED
-hstr APRIL_WS_SDL = april::WindowType::SDL.getName(); // DEPRECATED
-hstr APRIL_WS_MAC = april::WindowType::Mac.getName(); // DEPRECATED
-hstr APRIL_WS_IOS = april::WindowType::iOS.getName(); // DEPRECATED
-hstr APRIL_WS_ANDROIDJNI = april::WindowType::AndroidJNI.getName(); // DEPRECATED
-hstr APRIL_WS_OPENKODE = april::WindowType::OpenKODE.getName(); // DEPRECATED
-
-namespace april
-{
-	RenderSystemType RS_DEFAULT = RenderSystemType::Default; // DEPRECATED
-	RenderSystemType RS_DIRECTX9 = RenderSystemType::DirectX9; // DEPRECATED
-	RenderSystemType RS_DIRECTX11 = RenderSystemType::DirectX11; // DEPRECATED
-	RenderSystemType RS_OPENGL1 = RenderSystemType::OpenGL1; // DEPRECATED
-	RenderSystemType RS_OPENGLES1 = RenderSystemType::OpenGLES1; // DEPRECATED
-	RenderSystemType RS_OPENGLES2 = RenderSystemType::OpenGLES2; // DEPRECATED
-	WindowType WS_DEFAULT = WindowType::Default; // DEPRECATED
-	WindowType WS_WIN32 = WindowType::Win32; // DEPRECATED
-	WindowType WS_WINRT = WindowType::WinRT; // DEPRECATED
-	WindowType WS_SDL = WindowType::SDL; // DEPRECATED
-	WindowType WS_MAC = WindowType::Mac; // DEPRECATED
-	WindowType WS_IOS = WindowType::iOS; // DEPRECATED
-	WindowType WS_ANDROIDJNI = WindowType::AndroidJNI; // DEPRECATED
-	WindowType WS_OPENKODE = WindowType::OpenKODE; // DEPRECATED
-}
-
 namespace april
 {
 	hstr logTag = "april";

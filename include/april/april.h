@@ -20,25 +20,6 @@
 #include "RenderSystem.h"
 #include "Window.h"
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-#if defined(_WINRT) && defined(DEPRECATED_ATTRIBUTE)
-#undef DEPRECATED_ATTRIBUTE
-#define DEPRECATED_ATTRIBUTE
-#endif
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_DIRECTX9;
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_DIRECTX11;
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_OPENGL1;
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_OPENGLES1;
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_OPENGLES2;
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_WIN32;
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_WINRT;
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_SDL;
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_MAC;
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_IOS;
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_ANDROIDJNI;
-DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_OPENKODE;
-#endif
-
 namespace april
 {
 	class RenderSystem;
@@ -229,23 +210,6 @@ namespace april
 	/// @param[in] value The max number of async textures concurrently loaded in RAM and waiting for upload.
 	/// @note A value of 0 or less indicates no limit.
 	aprilFnExport void setMaxWaitingAsyncTextures(int value);
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_DEFAULT;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_DIRECTX9;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_DIRECTX11;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_OPENGL1;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_OPENGLES1;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_OPENGLES2;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_DEFAULT;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_WIN32;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_WINRT;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_SDL;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_MAC;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_IOS;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_ANDROIDJNI;
-	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_OPENKODE;
-#endif
 
 }
 #endif
