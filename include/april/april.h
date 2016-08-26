@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -20,31 +20,20 @@
 #include "RenderSystem.h"
 #include "Window.h"
 
-/// @brief Defines the name for the OpenGL 1 render system.
-#define APRIL_RS_OPENGL1 "OpenGL1"
-/// @brief Defines the name for the OpenGLES 1 render system.
-#define APRIL_RS_OPENGLES1 "OpenGLES1"
-/// @brief Defines the name for the OpenGLES 2 render system.
-#define APRIL_RS_OPENGLES2 "OpenGLES2"
-/// @brief Defines the name for the DirectX 9 render system.
-#define APRIL_RS_DIRECTX9 "DirectX9"
-/// @brief Defines the name for the DirectX 11 render system.
-#define APRIL_RS_DIRECTX11 "DirectX11"
-
-/// @brief Defines the name for Win32 window system.
-#define APRIL_WS_WIN32 "Win32"
-/// @brief Defines the name for WinRT window system.
-#define APRIL_WS_WINRT "WinRT"
-/// @brief Defines the name for SDL window system.
-#define APRIL_WS_SDL "SDL"
-/// @brief Defines the name for Mac window system.
-#define APRIL_WS_MAC "Mac"
-/// @brief Defines the name for iOS window system.
-#define APRIL_WS_IOS "iOS"
-/// @brief Defines the name for Android window system.
-#define APRIL_WS_ANDROIDJNI "AndroidJNI"
-/// @brief Defines the name for OpenKODE window system.
-#define APRIL_WS_OPENKODE "OpenKODE"
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_DIRECTX9;
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_DIRECTX11;
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_OPENGL1;
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_OPENGLES1;
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_RS_OPENGLES2;
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_WIN32;
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_WINRT;
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_SDL;
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_MAC;
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_IOS;
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_ANDROIDJNI;
+DEPRECATED_ATTRIBUTE aprilFnExport extern hstr APRIL_WS_OPENKODE;
+#endif
 
 namespace april
 {
@@ -54,43 +43,59 @@ namespace april
 	/// @brief Used for logging display.
 	aprilExport extern hstr logTag;
 
+	/// @class RenderSystemType
 	/// @brief Defines render system types.
-	enum RenderSystemType
-	{
+	HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, RenderSystemType,
+	(
+		/// @var static const RenderSystemType RenderSystemType::Default
 		/// @brief Use platform default render system if available.
-		RS_DEFAULT = 0,
+		HL_ENUM_DECLARE(RenderSystemType, Default);
+		/// @var static const RenderSystemType RenderSystemType::DirectX9
 		/// @brief Use DirectX 9 render system if available.
-		RS_DIRECTX9 = 1,
+		HL_ENUM_DECLARE(RenderSystemType, DirectX9);
+		/// @var static const RenderSystemType RenderSystemType::DirectX11
 		/// @brief Use DirectX 11 render system if available.
-		RS_DIRECTX11 = 2,
+		HL_ENUM_DECLARE(RenderSystemType, DirectX11);
+		/// @var static const RenderSystemType RenderSystemType::OpenGL1
 		/// @brief Use OpenGL 1 render system if available.
-		RS_OPENGL1 = 3,
+		HL_ENUM_DECLARE(RenderSystemType, OpenGL1);
+		/// @var static const RenderSystemType RenderSystemType::OpenGLES1
 		/// @brief Use OpenGLES 1 render system if available.
-		RS_OPENGLES1 = 4,
+		HL_ENUM_DECLARE(RenderSystemType, OpenGLES1);
+		/// @var static const RenderSystemType RenderSystemType::OpenGLES2
 		/// @brief Use OpenGLES 2 render system if available.
-		RS_OPENGLES2 = 5
-	};
+		HL_ENUM_DECLARE(RenderSystemType, OpenGLES2);
+	));
 
+	/// @class WindowType
 	/// @brief Defines window system types.
-	enum WindowType
-	{
+	HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, WindowType,
+	(
+		/// @var static const WindowType WindowType::Default
 		/// @brief Use platform default window system if available.
-		WS_DEFAULT = 0,
+		HL_ENUM_DECLARE(WindowType, Default);
+		/// @var static const WindowType WindowType::Win32
 		/// @brief Use Win32 window system if available.
-		WS_WIN32 = 1,
+		HL_ENUM_DECLARE(WindowType, Win32);
+		/// @var static const WindowType WindowType::WinRT
 		/// @brief Use WinRT window system if available.
-		WS_WINRT = 2,
+		HL_ENUM_DECLARE(WindowType, WinRT);
+		/// @var static const WindowType WindowType::SDL
 		/// @brief Use SDL window system if available.
-		WS_SDL = 3,
+		HL_ENUM_DECLARE(WindowType, SDL);
+		/// @var static const WindowType WindowType::Mac
 		/// @brief Use Mac window system if available.
-		WS_MAC = 4,
+		HL_ENUM_DECLARE(WindowType, Mac);
+		/// @var static const WindowType WindowType::iOS
 		/// @brief Use iOS window system if available.
-		WS_IOS = 5,
+		HL_ENUM_DECLARE(WindowType, iOS);
+		/// @var static const WindowType WindowType::AndroidJNI
 		/// @brief Use Android window system if available.
-		WS_ANDROIDJNI = 6,
+		HL_ENUM_DECLARE(WindowType, AndroidJNI);
+		/// @var static const WindowType WindowType::OpenKODE
 		/// @brief Use OpenKODE window system if available.
-		WS_OPENKODE = 7
-	};
+		HL_ENUM_DECLARE(WindowType, OpenKODE);
+	));
 
 	/// @brief Initializes APRIL.
 	/// @param[in] renderSystemType Which render system should be used.
@@ -221,6 +226,22 @@ namespace april
 	/// @note A value of 0 or less indicates no limit.
 	aprilFnExport void setMaxWaitingAsyncTextures(int value);
 
-}
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_DEFAULT;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_DIRECTX9;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_DIRECTX11;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_OPENGL1;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_OPENGLES1;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern RenderSystemType RS_OPENGLES2;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_DEFAULT;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_WIN32;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_WINRT;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_SDL;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_MAC;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_IOS;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_ANDROIDJNI;
+	DEPRECATED_ATTRIBUTE aprilFnExport extern WindowType WS_OPENKODE;
+#endif
 
+}
 #endif

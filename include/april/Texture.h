@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -16,6 +16,7 @@
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
+#include <hltypes/henum.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmutex.h>
 #include <hltypes/hstring.h>
@@ -38,51 +39,67 @@ namespace april
 		friend class RenderSystem;
 		friend class TextureAsync;
 
+		/// @class Type
 		/// @brief Defines texture types in order to control their behavior and certain features.
-		enum Type
-		{
+		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Type,
+		(
+			/// @var static const Type Type::Managed
 			/// @brief Resides in RAM and on GPU, can be modified. Best used for manually created textures or loaded from files which will be modified.
-			TYPE_MANAGED = 0,
+			HL_ENUM_DECLARE(Type, Managed);
+			/// @var static const Type Type::Immutable
 			/// @brief Cannot be modified or read. Texture with manual data will have a copy of the data in RAM, files will be reloaded from persistent memory.
-			TYPE_IMMUTABLE = 1,
+			HL_ENUM_DECLARE(Type, Immutable);
+			/// @var static const Type Type::Volatile
 			/// @brief Used for feeding the GPU texture data constantly (e.g. video). It has no local RAM copy for when the rendering context is lost and cannot be restored.
-			TYPE_VOLATILE = 2,
-			/// @brief Used for render targets. Acts like MANAGED.
-			TYPE_RENDER_TARGET = 3 // TODOaa - may not be implemented on all platforms yet
-		};
+			HL_ENUM_DECLARE(Type, Volatile);
+			/// @var static const Type Type::RenderTarget
+			/// @brief Used for render targets. Acts like Type::Managed.
+			HL_ENUM_DECLARE(Type, RenderTarget);
+		));
 
+		/// @class Filter
 		/// @brief Defines texture filtering modes.
-		enum Filter
-		{
+		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Filter,
+		(
+			/// @var static const Filter Filter::Nearest
 			/// @brief Nearest neighbor.
-			FILTER_NEAREST = 0,
+			HL_ENUM_DECLARE(Filter, Nearest);
+			/// @var static const Filter Filter::Linear
 			/// @brief Linear interpolation.
-			FILTER_LINEAR = 1,
-		};
+			HL_ENUM_DECLARE(Filter, Linear);
+		));
 
+		/// @class AddressMode
 		/// @brief Defines UV address mode.
-		enum AddressMode
-		{
+		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, AddressMode,
+		(
+			/// @var static const AddressMode AddressMode::Normal
 			/// @brief Wrapping UV coordinates.
-			ADDRESS_WRAP = 0,
+			HL_ENUM_DECLARE(AddressMode, Wrap);
+			/// @var static const AddressMode AddressMode::Layered2D
 			/// @brief Clamping UV coordinates to the edge pixel.
-			ADDRESS_CLAMP = 1,
-		};
+			HL_ENUM_DECLARE(AddressMode, Clamp);
+		));
 
+		/// @class LoadMode
 		/// @brief Defines how and when textures should be loaded into VRAM.
-		enum LoadMode
-		{
+		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, LoadMode,
+		(
+			/// @var static const LoadMode LoadMode::Normal
 			/// @brief Loads the texture and uploads data to the GPU right away.
-			LOAD_IMMEDIATE = 0,
+			HL_ENUM_DECLARE(LoadMode, Immediate);
+			/// @var static const LoadMode LoadMode::OnDemand
 			/// @brief Doesn't load the texture yet at all. It will be loaded and uploaded to the GPU on the first use.
-			LOAD_ON_DEMAND = 1,
+			HL_ENUM_DECLARE(LoadMode, OnDemand);
+			/// @var static const LoadMode LoadMode::Async
 			/// @brief Loads the texture asynchronously right away and uploads the data to the GPU as soon as it is available before the next frame.
 			/// @note If the texture is used before it loaded asynchronously, it cannot be uploaded to the GPU and will not be rendered properly.
-			LOAD_ASYNC = 2,
+			HL_ENUM_DECLARE(LoadMode, Async);
+			/// @var static const LoadMode LoadMode::AsyncDeferredUpload
 			/// @brief Loads the texture asynchronously right away, but it will upload the data to the GPU on the first use.
 			/// @note If the texture is used before it loaded asynchronously, it cannot be uploaded to the GPU and will not be rendered properly.
-			LOAD_ASYNC_DEFERRED_UPLOAD = 3
-		};
+			HL_ENUM_DECLARE(LoadMode, AsyncDeferredUpload);
+		));
 
 		/// @brief The texture filename if available.
 		HL_DEFINE_GET(hstr, filename, Filename);
@@ -602,6 +619,21 @@ namespace april
 		/// @note The pixel format of image must be the same this image's.
 		/// @note This is an expensive operation and should be used sparingly.
 		bool insertAlphaMap(Image* image, unsigned char median, int ambiguity); // TODOa - this functionality might be removed since shaders are much faster
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+		DEPRECATED_ATTRIBUTE static Type TYPE_MANAGED;
+		DEPRECATED_ATTRIBUTE static Type TYPE_IMMUTABLE;
+		DEPRECATED_ATTRIBUTE static Type TYPE_VOLATILE;
+		DEPRECATED_ATTRIBUTE static Type TYPE_RENDER_TARGET;
+		DEPRECATED_ATTRIBUTE static Filter FILTER_NEAREST;
+		DEPRECATED_ATTRIBUTE static Filter FILTER_LINEAR;
+		DEPRECATED_ATTRIBUTE static AddressMode ADDRESS_WRAP;
+		DEPRECATED_ATTRIBUTE static AddressMode ADDRESS_CLAMP;
+		DEPRECATED_ATTRIBUTE static LoadMode LOAD_IMMEDIATE;
+		DEPRECATED_ATTRIBUTE static LoadMode LOAD_ON_DEMAND;
+		DEPRECATED_ATTRIBUTE static LoadMode LOAD_ASYNC;
+		DEPRECATED_ATTRIBUTE static LoadMode LOAD_ASYNC_DEFERRED_UPLOAD;
+#endif
 
 	protected:
 		/// @brief Defines a texture read lock for reading and writing to improve performance.

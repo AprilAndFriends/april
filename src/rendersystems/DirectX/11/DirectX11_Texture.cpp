@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -61,7 +61,7 @@ namespace april
 		D3D11_TEXTURE2D_DESC textureDesc = {0};
 		textureDesc.Width = this->width;
 		textureDesc.Height = this->height;
-		if (type == TYPE_IMMUTABLE)
+		if (type == Type::Immutable)
 		{
 			textureDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			textureDesc.CPUAccessFlags = 0;
@@ -71,7 +71,7 @@ namespace april
 			textureDesc.Usage = D3D11_USAGE_DYNAMIC;
 			textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		}
-		if (type == TYPE_RENDER_TARGET)
+		if (type == Type::RenderTarget)
 		{
 			textureDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
 		}
@@ -108,7 +108,7 @@ namespace april
 			hlog::error(logTag, "Failed to create DX11 texture!");
 			return false;
 		}
-		if (this->type == TYPE_RENDER_TARGET)
+		if (this->type == Type::RenderTarget)
 		{
 			D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
 			renderTargetViewDesc.Format = textureDesc.Format;

@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -25,7 +25,7 @@ namespace april
 {
 	OpenGL1_RenderSystem::OpenGL1_RenderSystem() : OpenGLC_RenderSystem()
 	{
-		this->name = APRIL_RS_OPENGL1;
+		this->name = april::RenderSystemType::OpenGL1.getName();
 #if defined(_WIN32) && !defined(_WINRT)
 		this->hRC = 0;
 #endif

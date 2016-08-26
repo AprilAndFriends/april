@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -96,7 +96,7 @@ namespace april
 	DirectX11_RenderSystem::DirectX11_RenderSystem() : DirectX_RenderSystem(), deviceState_constantBufferChanged(true),
 		deviceState_shader(NULL), deviceState_sampler(nullptr), deviceState_renderOperation(RO_UNDEFINED)
 	{
-		this->name = APRIL_RS_DIRECTX11;
+		this->name = april::RenderSystemType::DirectX11.getName();
 	}
 
 	DirectX11_RenderSystem::~DirectX11_RenderSystem()
@@ -676,19 +676,19 @@ namespace april
 			Texture::Filter filter = texture->getFilter();
 			Texture::AddressMode addressMode = texture->getAddressMode();
 			ComPtr<ID3D11SamplerState> sampler = nullptr;
-			if (filter == Texture::FILTER_LINEAR && addressMode == Texture::ADDRESS_WRAP)
+			if (filter == Texture::Filter::Linear && addressMode == Texture::AddressMode::Wrap)
 			{
 				sampler = this->samplerLinearWrap;
 			}
-			else if (filter == Texture::FILTER_LINEAR && addressMode == Texture::ADDRESS_CLAMP)
+			else if (filter == Texture::Filter::Linear && addressMode == Texture::AddressMode::Clamp)
 			{
 				sampler = this->samplerLinearClamp;
 			}
-			else if (filter == Texture::FILTER_NEAREST && addressMode == Texture::ADDRESS_WRAP)
+			else if (filter == Texture::Filter::Nearest && addressMode == Texture::AddressMode::Wrap)
 			{
 				sampler = this->samplerNearestWrap;
 			}
-			else if (filter == Texture::FILTER_NEAREST && addressMode == Texture::ADDRESS_CLAMP)
+			else if (filter == Texture::Filter::Nearest && addressMode == Texture::AddressMode::Clamp)
 			{
 				sampler = this->samplerNearestClamp;
 			}

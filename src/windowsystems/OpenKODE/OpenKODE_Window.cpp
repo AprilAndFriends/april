@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -140,7 +140,7 @@ namespace april
 
 	OpenKODE_Window::OpenKODE_Window() : Window()
 	{
-		this->name = APRIL_WS_OPENKODE;
+		this->name = april::WindowType::OpenKODE.getName();
 		this->kdWindow = NULL;
 		memset(this->kdTouches, 0, 16 * sizeof(bool));
 #if defined(_WIN32) && !defined(_EGL)

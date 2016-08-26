@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -32,7 +32,7 @@ namespace april
 	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0),
 		forcedFocus(false)
 	{
-		this->name = APRIL_WS_ANDROIDJNI;
+		this->name = april::WindowType::AndroidJNI.getName();
 		initAndroidKeyMap();
 	}
 

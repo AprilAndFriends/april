@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -53,7 +53,7 @@ namespace april
 
 	Win32_Window::Win32_Window() : Window()
 	{
-		this->name = APRIL_WS_WIN32;
+		this->name = april::WindowType::Win32.getName();
 		this->hWnd = NULL;
 		this->defaultCursor = LoadCursor(0, IDC_ARROW);
 		this->cursorExtensions += ".ani";
@@ -311,9 +311,9 @@ namespace april
 	{
 #ifdef _OPENGL
 		harray<hstr> renderSystems;
-		renderSystems += APRIL_RS_OPENGL1;
-		renderSystems += APRIL_RS_OPENGLES1;
-		renderSystems += APRIL_RS_OPENGLES2;
+		renderSystems += april::RenderSystemType::OpenGL1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES2.getName();
 		if (renderSystems.has(april::rendersys->getName()))
 		{
 			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());

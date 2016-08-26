@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -69,13 +69,13 @@ namespace april
 				this->destroy();
 				return false;
 			}
-			if (april::rendersys->getName() == APRIL_RS_OPENGLES1)
+			if (april::rendersys->getName() == april::RenderSystemType::OpenGLES1.getName())
 			{
 				this->pi32ConfigAttribs[4] = EGL_RENDERABLE_TYPE;
 				this->pi32ConfigAttribs[5] = EGL_OPENGL_ES_BIT;
 				this->pi32ConfigAttribs[6] = EGL_NONE;
 			}
-			else if (april::rendersys->getName() == APRIL_RS_OPENGLES2)
+			else if (april::rendersys->getName() == april::RenderSystemType::OpenGLES2.getName())
 			{
 				this->pi32ConfigAttribs[4] = EGL_RENDERABLE_TYPE;
 				this->pi32ConfigAttribs[5] = EGL_OPENGL_ES2_BIT;
@@ -108,7 +108,7 @@ namespace april
 		}
 		if (this->context == NULL)
 		{
-			if (april::rendersys->getName() == APRIL_RS_OPENGLES2)
+			if (april::rendersys->getName() == april::RenderSystemType::OpenGLES2.getName())
 			{
 				if (!eglBindAPI(EGL_OPENGL_ES_API))
 				{

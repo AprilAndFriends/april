@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -25,6 +25,56 @@
 
 namespace april
 {
+	// DEPRECATED
+#ifdef DEPRECATED_ATTRIBUTE
+#define __DEPRECATED_ATTRIBUTE DEPRECATED_ATTRIBUTE
+#undef DEPRECATED_ATTRIBUTE
+#endif
+	Texture::Type TYPE_MANAGED = Texture::Type::Managed; // DEPRECATED
+	Texture::Type TYPE_IMMUTABLE = Texture::Type::Immutable; // DEPRECATED
+	Texture::Type TYPE_VOLATILE = Texture::Type::Volatile; // DEPRECATED
+	Texture::Type TYPE_RENDER_TARGET = Texture::Type::RenderTarget; // DEPRECATED
+	Texture::Filter FILTER_NEAREST = Texture::Filter::Nearest; // DEPRECATED
+	Texture::Filter FILTER_LINEAR = Texture::Filter::Linear; // DEPRECATED
+	Texture::AddressMode ADDRESS_WRAP = Texture::AddressMode::Wrap; // DEPRECATED
+	Texture::AddressMode ADDRESS_CLAMP = Texture::AddressMode::Clamp; // DEPRECATED
+	Texture::LoadMode LOAD_IMMEDIATE = Texture::LoadMode::Immediate; // DEPRECATED
+	Texture::LoadMode LOAD_ON_DEMAND = Texture::LoadMode::OnDemand; // DEPRECATED
+	Texture::LoadMode LOAD_ASYNC = Texture::LoadMode::Async; // DEPRECATED
+	Texture::LoadMode LOAD_ASYNC_DEFERRED_UPLOAD = Texture::LoadMode::AsyncDeferredUpload; // DEPRECATED
+#ifdef __DEPRECATED_ATTRIBUTE
+#define DEPRECATED_ATTRIBUTE __DEPRECATED_ATTRIBUTE
+#undef __DEPRECATED_ATTRIBUTE
+#endif
+
+	HL_ENUM_CLASS_DEFINE(Texture::Type,
+	(
+		HL_ENUM_DEFINE(Texture::Type, Managed);
+		HL_ENUM_DEFINE(Texture::Type, Immutable);
+		HL_ENUM_DEFINE(Texture::Type, Volatile);
+		HL_ENUM_DEFINE(Texture::Type, RenderTarget);
+	));
+
+	HL_ENUM_CLASS_DEFINE(Texture::Filter,
+	(
+		HL_ENUM_DEFINE(Texture::Filter, Nearest);
+		HL_ENUM_DEFINE(Texture::Filter, Linear);
+	));
+
+	HL_ENUM_CLASS_DEFINE(Texture::AddressMode,
+	(
+		HL_ENUM_DEFINE(Texture::AddressMode, Wrap);
+		HL_ENUM_DEFINE(Texture::AddressMode, Clamp);
+	));
+
+	HL_ENUM_CLASS_DEFINE(Texture::LoadMode,
+	(
+		HL_ENUM_DEFINE(Texture::LoadMode, Immediate);
+		HL_ENUM_DEFINE(Texture::LoadMode, OnDemand);
+		HL_ENUM_DEFINE(Texture::LoadMode, Async);
+		HL_ENUM_DEFINE(Texture::LoadMode, AsyncDeferredUpload);
+	));
+
 	Texture::Lock::Lock()
 	{
 		this->systemBuffer = NULL;
@@ -91,9 +141,9 @@ namespace april
 	Texture::Texture(bool fromResource)
 	{
 		this->filename = "";
-		this->type = TYPE_IMMUTABLE;
+		this->type = Type::Immutable;
 		this->loaded = false;
-		this->loadMode = LOAD_IMMEDIATE;
+		this->loadMode = LoadMode::Immediate;
 		this->format = Image::FORMAT_INVALID;
 		this->dataFormat = 0;
 		this->width = 0;
@@ -101,8 +151,8 @@ namespace april
 		this->effectiveWidth = 1.0f; // used only with software NPOT textures
 		this->effectiveHeight = 1.0f; // used only with software NPOT textures
 		this->compressedSize = 0; // used in compressed textures only
-		this->filter = FILTER_LINEAR;
-		this->addressMode = ADDRESS_CLAMP;
+		this->filter = Filter::Linear;
+		this->addressMode = AddressMode::Clamp;
 		this->locked = false;
 		this->dirty = false;
 		this->data = NULL;
@@ -157,15 +207,15 @@ namespace april
 		this->filename = "";
 		this->width = w;
 		this->height = h;
-		this->type = TYPE_VOLATILE; // so the write() call later on goes through
-		this->loadMode = LOAD_IMMEDIATE;
+		this->type = Type::Volatile; // so the write() call later on goes through
+		this->loadMode = LoadMode::Immediate;
 		int size = 0;
-		if (type != TYPE_VOLATILE && type != TYPE_RENDER_TARGET)
+		if (type != Type::Volatile && type != Type::RenderTarget)
 		{
 			this->format = format;
 			size = this->getByteSize();
 			this->data = new unsigned char[size];
-			this->type = TYPE_MANAGED;
+			this->type = Type::Managed;
 		}
 		else
 		{
@@ -205,15 +255,15 @@ namespace april
 		this->filename = "";
 		this->width = w;
 		this->height = h;
-		this->type = TYPE_VOLATILE; // so the fillRect() call later on goes through
-		this->loadMode = LOAD_IMMEDIATE;
+		this->type = Type::Volatile; // so the fillRect() call later on goes through
+		this->loadMode = LoadMode::Immediate;
 		int size = 0;
-		if (type != TYPE_VOLATILE && type != TYPE_RENDER_TARGET)
+		if (type != Type::Volatile && type != Type::RenderTarget)
 		{
 			this->format = format;
 			size = this->getByteSize();
 			this->data = new unsigned char[size];
-			this->type = TYPE_MANAGED;
+			this->type = Type::Managed;
 		}
 		else
 		{
@@ -309,7 +359,7 @@ namespace april
 
 	int Texture::getCurrentRamSize()
 	{
-		if (this->type == TYPE_IMMUTABLE || this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET)
+		if (this->type == Type::Immutable || this->type == Type::Volatile || this->type == Type::RenderTarget)
 		{
 			return 0;
 		}
@@ -359,12 +409,12 @@ namespace april
 
 	bool Texture::_isReadable() const
 	{
-		return (this->type == TYPE_MANAGED || this->type == TYPE_RENDER_TARGET);
+		return (this->type == Type::Managed || this->type == Type::RenderTarget);
 	}
 
 	bool Texture::_isWritable() const
 	{
-		return (this->type != TYPE_IMMUTABLE);
+		return (this->type != Type::Immutable);
 	}
 
 	bool Texture::_isAlterable() const
@@ -387,21 +437,7 @@ namespace april
 			result += hsprintf("<%p>", this); // on Unix %p adds the 0x
 #endif
 		}
-		switch (this->type)
-		{
-		case TYPE_IMMUTABLE:
-			result += " (immutable)";
-			break;
-		case TYPE_MANAGED:
-			result += " (managed)";
-			break;
-		case TYPE_VOLATILE:
-			result += " (volatile)";
-			break;
-		case TYPE_RENDER_TARGET:
-			result += " (render target)";
-			break;
-		}
+		result += " (" + this->type.getName() + ")";
 		return result;
 	}
 
@@ -439,7 +475,7 @@ namespace april
 		}
 		lock.release();
 		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
-		if (currentData == NULL && ((this->type != TYPE_VOLATILE && this->type != TYPE_RENDER_TARGET) || this->width == 0 || this->height == 0))
+		if (currentData == NULL && ((this->type != Type::Volatile && this->type != Type::RenderTarget) || this->width == 0 || this->height == 0))
 		{
 			if (this->filename == "")
 			{
@@ -496,11 +532,11 @@ namespace april
 			if (this->firstUpload)
 			{
 				Type type = this->type;
-				this->type = TYPE_VOLATILE; // so the write() call right below goes through
+				this->type = Type::Volatile; // so the write() call right below goes through
 				this->write(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
 				this->type = type;
 			}
-			if (this->type != TYPE_VOLATILE && this->type != TYPE_RENDER_TARGET && (this->type != TYPE_IMMUTABLE || this->filename == ""))
+			if (this->type != Type::Volatile && this->type != Type::RenderTarget && (this->type != Type::Immutable || this->filename == ""))
 			{
 				if (this->data != currentData)
 				{
@@ -518,7 +554,7 @@ namespace april
 				this->format = april::rendersys->getNativeTextureFormat(this->format);
 			}
 		}
-		else if (this->type == TYPE_VOLATILE) // when recreating a texture, it is important that it is created empty to avoid problems (e.g. DX9 creates a white initial texture)
+		else if (this->type == Type::Volatile) // when recreating a texture, it is important that it is created empty to avoid problems (e.g. DX9 creates a white initial texture)
 		{
 			this->clear();
 		}
@@ -533,18 +569,18 @@ namespace april
 		{
 			return false;
 		}
-		if (this->data != NULL || ((this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET) && this->width > 0 && this->height > 0))
+		if (this->data != NULL || ((this->type == Type::Volatile || this->type == Type::RenderTarget) && this->width > 0 && this->height > 0))
 		{
 			hstr err = "This texture type does not support async loading! texture: '" + this->_getInternalName() + "', reason: ";
 			if (this->data != NULL)
 			{
 				err += "data isn't NULL.";
 			}
-			if (this->type == TYPE_VOLATILE)
+			if (this->type == Type::Volatile)
 			{
 				err += "type is 'volatile'.";
 			}
-			if (this->type == TYPE_RENDER_TARGET)
+			if (this->type == Type::RenderTarget)
 			{
 				err += "type is 'render target'.";
 			}
@@ -603,7 +639,7 @@ namespace april
 		}
 		bool hasData = (this->data != NULL || this->dataAsync != NULL);
 		lock.release();
-		if (!hasData && ((this->type != TYPE_VOLATILE && this->type != TYPE_RENDER_TARGET) || this->width == 0 || this->height == 0))
+		if (!hasData && ((this->type != Type::Volatile && this->type != Type::RenderTarget) || this->width == 0 || this->height == 0))
 		{
 			if (this->filename == "")
 			{
@@ -950,7 +986,7 @@ namespace april
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		if ((this->type == TYPE_VOLATILE || this->type == TYPE_RENDER_TARGET) &&
+		if ((this->type == Type::Volatile || this->type == Type::RenderTarget) &&
 			!Image::needsConversion(srcFormat, april::rendersys->getNativeTextureFormat(this->format)) &&
 			!this->locked && this->_uploadToGpu(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat))
 		{
@@ -1438,8 +1474,8 @@ namespace april
 		outHeight = hpotCeil(this->height);
 		if (this->width < outWidth || this->height < outHeight)
 		{
-			// software NPOT textures do not support anything other than ADDRESS_CLAMP
-			this->addressMode = ADDRESS_CLAMP;
+			// software NPOT textures do not support anything other than AddressMode::Clamp
+			this->addressMode = AddressMode::Clamp;
 			// effective addressing area needs to be changed
 			this->effectiveWidth = (float)this->width / outWidth;
 			this->effectiveHeight = (float)this->height / outHeight;

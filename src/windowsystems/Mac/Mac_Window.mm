@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 ///
 /// @section LICENSE
 ///
@@ -64,7 +64,7 @@ namespace april
 	Mac_Window::Mac_Window() : Window()
 	{
 		this->ignoreUpdate = false;
-		this->name = APRIL_WS_MAC;
+		this->name = april::WindowType::Mac.getName();
 		this->retainLoadingOverlay = fastHideLoadingOverlay = false;
 		this->splashScreenFadeout = true;
 		this->displayLinkIgnoreSystemRedraw = false;

@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -114,7 +114,7 @@ namespace april
 	
 	iOS_Window::iOS_Window() : Window()
 	{
-		this->name = APRIL_WS_IOS;
+		this->name = april::WindowType::iOS.getName();
 		this->exitFunction = NULL;
 	}
 	

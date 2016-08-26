@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -447,11 +447,11 @@ namespace april
 		bool result = (format == Image::FORMAT_INVALID ? texture->_create(name, type, loadMode) : texture->_create(name, format, type, loadMode));
 		if (result)
 		{
-			if (loadMode == Texture::LOAD_IMMEDIATE)
+			if (loadMode == Texture::LoadMode::Immediate)
 			{
 				result = texture->load();
 			}
-			else if (loadMode == Texture::LOAD_ASYNC || loadMode == Texture::LOAD_ASYNC_DEFERRED_UPLOAD)
+			else if (loadMode == Texture::LoadMode::Async || loadMode == Texture::LoadMode::AsyncDeferredUpload)
 			{
 				result = texture->loadAsync();
 			}

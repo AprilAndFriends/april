@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -205,12 +205,12 @@ namespace april
 
 	void OpenGL_RenderSystem::_setDeviceTextureFilter(Texture::Filter textureFilter)
 	{
-		if (textureFilter == Texture::FILTER_LINEAR)
+		if (textureFilter == Texture::Filter::Linear)
 		{
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		}
-		else if (textureFilter == Texture::FILTER_NEAREST)
+		else if (textureFilter == Texture::Filter::Nearest)
 		{
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -223,12 +223,12 @@ namespace april
 
 	void OpenGL_RenderSystem::_setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
-		if (textureAddressMode == Texture::ADDRESS_WRAP)
+		if (textureAddressMode == Texture::AddressMode::Wrap)
 		{
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		}
-		else if (textureAddressMode == Texture::ADDRESS_CLAMP)
+		else if (textureAddressMode == Texture::AddressMode::Clamp)
 		{
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

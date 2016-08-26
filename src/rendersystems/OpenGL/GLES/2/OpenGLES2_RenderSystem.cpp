@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -22,7 +22,7 @@ namespace april
 {
 	OpenGLES2_RenderSystem::OpenGLES2_RenderSystem() : OpenGLES_RenderSystem()
 	{
-		this->name = APRIL_RS_OPENGLES2;
+		this->name = april::RenderSystemType::OpenGLES2.getName();
 	}
 
 	OpenGLES2_RenderSystem::~OpenGLES2_RenderSystem()

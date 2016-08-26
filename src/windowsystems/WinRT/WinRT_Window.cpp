@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -26,7 +26,7 @@ namespace april
 {
 	WinRT_Window::WinRT_Window() : Window()
 	{
-		this->name = APRIL_WS_WINRT;
+		this->name = april::WindowType::WinRT.getName();
 		this->width = 0;
 		this->height = 0;
 		this->delaySplash = 0.0f;

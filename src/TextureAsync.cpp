@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -53,7 +53,7 @@ namespace april
 		foreach (Texture*, it, textures)
 		{
 			// only async on-demand textures shouldn't be loaded
-			if ((*it)->getLoadMode() != Texture::LOAD_ASYNC_DEFERRED_UPLOAD && (*it)->isLoadedAsync())
+			if ((*it)->getLoadMode() != Texture::LoadMode::AsyncDeferredUpload && (*it)->isLoadedAsync())
 			{
 				(*it)->load();
 				++count;

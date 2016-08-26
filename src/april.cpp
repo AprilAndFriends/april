@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -70,70 +70,70 @@
 
 #ifdef _WIN32
 	#ifdef _DIRECTX9
-		#define RS_INTERNAL_DEFAULT RS_DIRECTX9
+		#define RS_INTERNAL_DEFAULT RenderSystemType::DirectX9
 	#elif defined(_DIRECTX11)
-		#define RS_INTERNAL_DEFAULT RS_DIRECTX11
+		#define RS_INTERNAL_DEFAULT RenderSystemType::DirectX11
 	#elif defined(_OPENGL1)
-		#define RS_INTERNAL_DEFAULT RS_OPENGL1
+		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGL1
 	#elif defined(_OPENGLES1)
-		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES1
 	#elif defined(_OPENGLES2)
-		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
+		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
 	#endif
 	#ifdef _OPENKODE_WINDOW
-		#define WS_INTERNAL_DEFAULT WS_OPENKODE
+		#define WS_INTERNAL_DEFAULT WindowType::OpenKODE
 	#elif !defined(_WINRT)
-		#define WS_INTERNAL_DEFAULT WS_WIN32
+		#define WS_INTERNAL_DEFAULT WindowType::Win32
 	#else
-		#define WS_INTERNAL_DEFAULT WS_WINRT
+		#define WS_INTERNAL_DEFAULT WindowType::WinRT
 	#endif
 #elif defined(__APPLE__)
 	#ifdef _IOS
 		#ifdef _OPENGLES2
-			#define RS_INTERNAL_DEFAULT RS_OPENGLES2
+			#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
 		#elif defined(_OPENGLES1)
-			#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+			#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES1
 		#endif
 		#ifdef _OPENKODE_WINDOW
-			#define WS_INTERNAL_DEFAULT WS_OPENKODE
+			#define WS_INTERNAL_DEFAULT WindowType::OpenKODE
 		#else
-			#define WS_INTERNAL_DEFAULT WS_IOS
+			#define WS_INTERNAL_DEFAULT WindowType::iOS
 		#endif
 	#else
-		#define RS_INTERNAL_DEFAULT RS_OPENGL1
+		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGL1
 		#ifdef _OPENKODE_WINDOW
-			#define WS_INTERNAL_DEFAULT WS_OPENKODE
+			#define WS_INTERNAL_DEFAULT WindowType::OpenKODE
 		#elif defined(_SDL_WINDOW)
-			#define WS_INTERNAL_DEFAULT WS_SDL
+			#define WS_INTERNAL_DEFAULT WindowType::SDL
 		#else
-			#define WS_INTERNAL_DEFAULT WS_MAC
+			#define WS_INTERNAL_DEFAULT WindowType::Mac
 		#endif
 	#endif
 #elif defined(_UNIX)
-	#define RS_INTERNAL_DEFAULT RS_OPENGL1
+	#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGL1
 	#ifdef _OPENKODE_WINDOW
-		#define WS_INTERNAL_DEFAULT WS_OPENKODE
+		#define WS_INTERNAL_DEFAULT WindowType::OpenKODE
 	#else
-		#define WS_INTERNAL_DEFAULT WS_SDL
+		#define WS_INTERNAL_DEFAULT WindowType::SDL
 	#endif
 #elif defined(_ANDROID)
 	#ifdef _OPENGLES1
-		#define RS_INTERNAL_DEFAULT RS_OPENGLES1
+		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES1
 	#elif defined(_OPENGLES2)
-		#define RS_INTERNAL_DEFAULT RS_OPENGLES2
+		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
 	#endif
 	#ifdef _OPENKODE_WINDOW
-		#define WS_INTERNAL_DEFAULT WS_OPENKODE
+		#define WS_INTERNAL_DEFAULT WindowType::OpenKODE
 	#elif defined(_ANDROIDJNI_WINDOW)
-		#define WS_INTERNAL_DEFAULT WS_ANDROIDJNI
+		#define WS_INTERNAL_DEFAULT WindowType::AndroidJNI
 	#endif
 #endif
 
 #ifndef RS_INTERNAL_DEFAULT
-	#define RS_INTERNAL_DEFAULT RS_DEFAULT
+	#define RS_INTERNAL_DEFAULT RenderSystemType::Default
 #endif
 #ifndef WS_INTERNAL_DEFAULT
-	#define WS_INTERNAL_DEFAULT WS_DEFAULT
+	#define WS_INTERNAL_DEFAULT WindowType::Default
 #endif
 
 #ifdef _WIN32
@@ -176,15 +176,77 @@
 	#define APRIL_PLATFORM_ARCHITECTURE_BITS 32
 #endif
 
+// DEPRECATED
+#ifdef DEPRECATED_ATTRIBUTE
+#define __DEPRECATED_ATTRIBUTE DEPRECATED_ATTRIBUTE
+#undef DEPRECATED_ATTRIBUTE
+#endif
+hstr APRIL_RS_DIRECTX9 = april::RenderSystemType::DirectX9.getName(); // DEPRECATED
+hstr APRIL_RS_DIRECTX11 = april::RenderSystemType::DirectX11.getName(); // DEPRECATED
+hstr APRIL_RS_OPENGL1 = april::RenderSystemType::OpenGL1.getName(); // DEPRECATED
+hstr APRIL_RS_OPENGLES1 = april::RenderSystemType::OpenGLES1.getName(); // DEPRECATED
+hstr APRIL_RS_OPENGLES2 = april::RenderSystemType::OpenGLES2.getName(); // DEPRECATED
+hstr APRIL_WS_WIN32 = april::WindowType::Win32.getName(); // DEPRECATED
+hstr APRIL_WS_WINRT = april::WindowType::WinRT.getName(); // DEPRECATED
+hstr APRIL_WS_SDL = april::WindowType::SDL.getName(); // DEPRECATED
+hstr APRIL_WS_MAC = april::WindowType::Mac.getName(); // DEPRECATED
+hstr APRIL_WS_IOS = april::WindowType::iOS.getName(); // DEPRECATED
+hstr APRIL_WS_ANDROIDJNI = april::WindowType::AndroidJNI.getName(); // DEPRECATED
+hstr APRIL_WS_OPENKODE = april::WindowType::OpenKODE.getName(); // DEPRECATED
+
+namespace april
+{
+	RenderSystemType RS_DEFAULT = RenderSystemType::Default; // DEPRECATED
+	RenderSystemType RS_DIRECTX9 = RenderSystemType::DirectX9; // DEPRECATED
+	RenderSystemType RS_DIRECTX11 = RenderSystemType::DirectX11; // DEPRECATED
+	RenderSystemType RS_OPENGL1 = RenderSystemType::OpenGL1; // DEPRECATED
+	RenderSystemType RS_OPENGLES1 = RenderSystemType::OpenGLES1; // DEPRECATED
+	RenderSystemType RS_OPENGLES2 = RenderSystemType::OpenGLES2; // DEPRECATED
+	WindowType WS_DEFAULT = WindowType::Default; // DEPRECATED
+	WindowType WS_WIN32 = WindowType::Win32; // DEPRECATED
+	WindowType WS_WINRT = WindowType::WinRT; // DEPRECATED
+	WindowType WS_SDL = WindowType::SDL; // DEPRECATED
+	WindowType WS_MAC = WindowType::Mac; // DEPRECATED
+	WindowType WS_IOS = WindowType::iOS; // DEPRECATED
+	WindowType WS_ANDROIDJNI = WindowType::AndroidJNI; // DEPRECATED
+	WindowType WS_OPENKODE = WindowType::OpenKODE; // DEPRECATED
+}
+#ifdef __DEPRECATED_ATTRIBUTE
+#define DEPRECATED_ATTRIBUTE __DEPRECATED_ATTRIBUTE
+#undef __DEPRECATED_ATTRIBUTE
+#endif
+
 namespace april
 {
 	hstr logTag = "april";
 
-	static hversion version(4, 0, 0);
+	static hversion version(4, 1, 0);
 
 	static harray<hstr> extensions;
 	static int maxAsyncTextureUploadsPerFrame = 0;
 	static int maxWaitingAsyncTextures = 0;
+
+	HL_ENUM_CLASS_DEFINE(RenderSystemType,
+	(
+		HL_ENUM_DEFINE(RenderSystemType, Default);
+		HL_ENUM_DEFINE(RenderSystemType, DirectX9);
+		HL_ENUM_DEFINE(RenderSystemType, DirectX11);
+		HL_ENUM_DEFINE(RenderSystemType, OpenGL1);
+		HL_ENUM_DEFINE(RenderSystemType, OpenGLES1);
+		HL_ENUM_DEFINE(RenderSystemType, OpenGLES2);
+	));
+
+	HL_ENUM_CLASS_DEFINE(WindowType,
+	(
+		HL_ENUM_DEFINE(WindowType, Default);
+		HL_ENUM_DEFINE(WindowType, Win32);
+		HL_ENUM_DEFINE(WindowType, WinRT);
+		HL_ENUM_DEFINE(WindowType, SDL);
+		HL_ENUM_DEFINE(WindowType, Mac);
+		HL_ENUM_DEFINE(WindowType, iOS);
+		HL_ENUM_DEFINE(WindowType, AndroidJNI);
+		HL_ENUM_DEFINE(WindowType, OpenKODE);
+	));
 
 	void _startInit()
 	{
@@ -218,36 +280,36 @@ namespace april
 	{
 		// creating the rendersystem
 		RenderSystemType renderSystem = renderSystemType;
-		if (renderSystem == RS_DEFAULT)
+		if (renderSystem == RenderSystemType::Default)
 		{
 			renderSystem = RS_INTERNAL_DEFAULT;
 		}
 #ifdef _DIRECTX9
-		if (april::rendersys == NULL && renderSystem == RS_DIRECTX9)
+		if (april::rendersys == NULL && renderSystem == RenderSystemType::DirectX9)
 		{
 			april::rendersys = new DirectX9_RenderSystem();
 		}
 #endif
 #ifdef _DIRECTX11
-		if (april::rendersys == NULL && renderSystem == RS_DIRECTX11)
+		if (april::rendersys == NULL && renderSystem == RenderSystemType::Direct11)
 		{
 			april::rendersys = new DirectX11_RenderSystem();
 		}
 #endif
 #ifdef _OPENGL1
-		if (april::rendersys == NULL && renderSystem == RS_OPENGL1)
+		if (april::rendersys == NULL && renderSystem == RenderSystemType::OpenGL1)
 		{
 			april::rendersys = new OpenGL1_RenderSystem();
 		}
 #endif
 #ifdef _OPENGLES1
-		if (april::rendersys == NULL && renderSystem == RS_OPENGLES1)
+		if (april::rendersys == NULL && renderSystem == RenderSystemType::OpenGLES1)
 		{
 			april::rendersys = new OpenGLES1_RenderSystem();
 		}
 #endif
 #ifdef _OPENGLES2
-		if (april::rendersys == NULL && renderSystem == RS_OPENGLES2)
+		if (april::rendersys == NULL && renderSystem == RenderSystemType::OpenGLES2)
 		{
 			april::rendersys = new OpenGLES2_RenderSystem();
 		}
@@ -263,48 +325,48 @@ namespace april
 	{
 		// creating the windowsystem
 		WindowType window = windowType;
-		if (window == WS_DEFAULT)
+		if (window == WindowType::Default)
 		{
 			window = WS_INTERNAL_DEFAULT;
 		}
 #ifdef _WIN32_WINDOW
-		if (april::window == NULL && window == WS_WIN32)
+		if (april::window == NULL && window == WindowType::Win32)
 		{
 			april::window = new Win32_Window();
 		}
 #endif
 #ifdef _WINRT_WINDOW
-		if (april::window == NULL && window == WS_WINRT)
+		if (april::window == NULL && window == WindowType::WinRT)
 		{
 			april::window = new WinRT_Window();
 		}
 #endif
 #ifdef _SDL_WINDOW
-		if (april::window == NULL && window == WS_SDL)
+		if (april::window == NULL && window == WindowType::SDL)
 		{
 			april::window = new SDL_Window();
 		}
 #endif
 #ifdef _COCOA_WINDOW
-		if (april::window == NULL && window == WS_MAC)
+		if (april::window == NULL && window == WindowType::Mac)
 		{
 			april::window = new Mac_Window();
 		}
 #endif
 #if defined(_IOS) && !defined(_OPENKODE_WINDOW)
-		if (april::window == NULL && window == WS_IOS)
+		if (april::window == NULL && window == WindowType::iOS)
 		{
 			april::window = new iOS_Window();
 		}
 #endif
 #ifdef _ANDROIDJNI_WINDOW
-		if (april::window == NULL && window == WS_ANDROIDJNI)
+		if (april::window == NULL && window == WindowType::AndroidJNI)
 		{
 			april::window = new AndroidJNI_Window();
 		}
 #endif
 #ifdef _OPENKODE_WINDOW
-		if (april::window == NULL && window == WS_OPENKODE)
+		if (april::window == NULL && window == WindowType::OpenKODE)
 		{
 			april::window = new OpenKODE_Window();
 		}

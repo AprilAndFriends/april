@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -56,7 +56,7 @@ namespace april
 	
 	SDL_Window::SDL_Window() : Window()
 	{
-		this->name = APRIL_WS_SDL;
+		this->name = april::WindowType::SDL.getName();
 		// TODO - is this still needed in SDL 2?
 		/*
 #ifndef __APPLE__
@@ -102,9 +102,9 @@ namespace april
 		}
 #ifdef _OPENGL
 		harray<hstr> renderSystems;
-		renderSystems += APRIL_RS_OPENGL1;
-		renderSystems += APRIL_RS_OPENGLES1;
-		renderSystems += APRIL_RS_OPENGLES2;
+		renderSystems += april::RenderSystemType::OpenGL1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES2.getName();
 		if (renderSystems.has(april::rendersys->getName()))
 		{
 			flags |= SDL_WINDOW_OPENGL;
@@ -319,9 +319,9 @@ namespace april
 	{
 #if defined(_WIN32) && defined(_OPENGL)
 		harray<hstr> renderSystems;
-		renderSystems += APRIL_RS_OPENGL1;
-		renderSystems += APRIL_RS_OPENGLES1;
-		renderSystems += APRIL_RS_OPENGLES2;
+		renderSystems += april::RenderSystemType::OpenGL1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES2.getName();
 		if (renderSystems.has(april::rendersys->getName()))
 		{
 			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());

@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -706,7 +706,7 @@ namespace april
 				foreach (hstr, it, filenames)
 				{
 					// loading the logo file
-					april::Texture* texture = april::rendersys->createTextureFromResource((*it), Texture::TYPE_IMMUTABLE, Texture::LoadMode::LOAD_ASYNC);
+					april::Texture* texture = april::rendersys->createTextureFromResource((*it), Texture::Type::Immutable, Texture::LoadMode::LoadMode::Async);
 					if (texture != NULL)
 					{
 						try

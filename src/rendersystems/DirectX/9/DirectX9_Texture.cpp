@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -39,12 +39,12 @@ namespace april
 		{
 			this->d3dPool = D3DPOOL_MANAGED;
 		}
-		else if (this->type != TYPE_IMMUTABLE)
+		else if (this->type != Type::Immutable)
 		{
 			this->d3dUsage = D3DUSAGE_DYNAMIC;
 		}
 		// TODOaa - change pool to save memory
-		if (type == TYPE_RENDER_TARGET)
+		if (type == Type::RenderTarget)
 		{
 			this->d3dUsage = D3DUSAGE_RENDERTARGET;
 		}
@@ -78,7 +78,7 @@ namespace april
 				if (!FAILED(hr) && data != NULL)
 				{
 					unsigned char* newData = this->_createPotData(w, h, data);
-					this->type = TYPE_VOLATILE; // so the write() call right below goes through
+					this->type = Type::Volatile; // so the write() call right below goes through
 					this->write(0, 0, w, h, 0, 0, newData, w, h, this->format);
 					this->type = type;
 					delete[] newData;
@@ -167,7 +167,7 @@ namespace april
 			return lock;
 		}
 		IDirect3DSurface9* surface = NULL;
-		if (this->type != TYPE_RENDER_TARGET)
+		if (this->type != Type::RenderTarget)
 		{
 			hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
 			if (FAILED(hr))

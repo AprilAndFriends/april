@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.0
+/// @version 4.1
 /// 
 /// @section LICENSE
 /// 
@@ -31,7 +31,7 @@
 #define VERTICES_BUFFER_COUNT 65536
 #define APRIL_DX9_CHILD L"AprilDX9Child"
 
-#define IS_WINDOW_RESIZABLE (april::window->getName() == APRIL_WS_WIN32 && april::window->getOptions().resizable)
+#define IS_WINDOW_RESIZABLE (april::window->getName() == april::WindowType::Win32.getName() && april::window->getOptions().resizable)
 
 namespace april
 {
@@ -51,7 +51,7 @@ namespace april
 
 	DirectX9_RenderSystem::DirectX9_RenderSystem() : DirectX_RenderSystem(), d3d(NULL), d3dDevice(NULL), d3dpp(NULL), backBuffer(NULL), childHWnd(0), renderTarget(NULL)
 	{
-		this->name = APRIL_RS_DIRECTX9;
+		this->name = april::RenderSystemType::DirectX9.getName();
 		this->pixelOffset = 0.5f;
 		this->_supportsA8Surface = false;
 		this->_deviceInit();
@@ -445,12 +445,12 @@ namespace april
 
 	void DirectX9_RenderSystem::_setDeviceTextureFilter(Texture::Filter textureFilter)
 	{
-		if (textureFilter == Texture::FILTER_LINEAR)
+		if (textureFilter == Texture::Filter::Linear)
 		{
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 		}
-		else if (textureFilter == Texture::FILTER_NEAREST)
+		else if (textureFilter == Texture::Filter::Nearest)
 		{
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
@@ -463,12 +463,12 @@ namespace april
 
 	void DirectX9_RenderSystem::_setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode)
 	{
-		if (textureAddressMode == Texture::ADDRESS_WRAP)
+		if (textureAddressMode == Texture::AddressMode::Wrap)
 		{
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
 		}
-		else if (textureAddressMode == Texture::ADDRESS_CLAMP)
+		else if (textureAddressMode == Texture::AddressMode::Clamp)
 		{
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
 			this->d3dDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
