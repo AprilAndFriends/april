@@ -151,7 +151,7 @@
 						   action:@selector(textFieldFinished:)
 							forControlEvents:UIControlEventEditingDidEndOnExit];
 		// create ios window object
-		april::init(april::RS_DEFAULT, april::WS_DEFAULT);
+		april::init(april::RenderSystemType::Default, april::WindowType::Default);
 		april::createRenderSystem();
 		april::createWindow(0, 0, 1, "iOS Window");
 		april::rendersys->assignWindow(april::window);
