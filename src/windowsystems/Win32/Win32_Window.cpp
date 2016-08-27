@@ -599,6 +599,15 @@ namespace april
 #endif
 	}
 
+	void Win32_Window::queueControllerEvent(Window::ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue)
+	{
+		if (type != CONTROLLER_CONNECTED && type != CONTROLLER_DISCONNECTED)
+		{
+			this->setInputMode(CONTROLLER);
+		}
+		Window::queueControllerEvent(type, controllerIndex, buttonCode, axisValue);
+	}
+
 	LRESULT CALLBACK Win32_Window::_mainProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		if (!april::window->isCreated()) // don't run callback processing if window was "destroyed"
