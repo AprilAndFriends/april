@@ -178,7 +178,7 @@ namespace april
 	
 	bool Win32_Window::isCursorVisible() const
 	{
-		return (Window::isCursorVisible() || !this->isCursorInside());
+		return (Window::isCursorVisible() || this->inputMode == MOUSE && !this->isCursorInside());
 	}
 	
 	void Win32_Window::_refreshCursor()
@@ -293,7 +293,7 @@ namespace april
 	
 	bool Win32_Window::updateOneFrame()
 	{
-		if (this->inputMode != InputMode::TOUCH)
+		if (this->inputMode == InputMode::MOUSE)
 		{
 			this->_updateCursorPosition();
 		}
