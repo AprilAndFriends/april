@@ -599,10 +599,13 @@ namespace april
 #endif
 	}
 
+	static int _mouseMessages = 0;
+
 	void Win32_Window::queueControllerEvent(Window::ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue)
 	{
-		if (type != CONTROLLER_CONNECTED && type != CONTROLLER_DISCONNECTED)
+		if (type != CONTROLLER_DISCONNECTED)
 		{
+			_mouseMessages = 5;
 			this->setInputMode(CONTROLLER);
 		}
 		Window::queueControllerEvent(type, controllerIndex, buttonCode, axisValue);
@@ -651,7 +654,6 @@ namespace april
 		static int lastHeight = april::window->getHeight();
 		static TOUCHINPUT touches[100];
 		static POINT w32_cursorPosition;
-		static int _mouseMessages = 0;
 		switch (message)
 		{
 		case WM_TOUCH: // (Win7+ only)
