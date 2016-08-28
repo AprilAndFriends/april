@@ -23,7 +23,8 @@
 #include "Window.h"
 
 #ifdef _WIN32_XINPUT
-#include <XInput.h>
+#define XINPUT_USE_9_1_0
+#include <Xinput.h>
 #ifndef XUSER_MAX_COUNT
 #define XUSER_MAX_COUNT 4
 #endif
