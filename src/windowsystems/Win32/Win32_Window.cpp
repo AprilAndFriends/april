@@ -603,7 +603,7 @@ namespace april
 
 	void Win32_Window::queueControllerEvent(Window::ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue)
 	{
-		if (type != CONTROLLER_DISCONNECTED)
+		if (type != CONTROLLER_CONNECTED && type != CONTROLLER_DISCONNECTED)
 		{
 			_mouseMessages = 5;
 			this->setInputMode(CONTROLLER);
