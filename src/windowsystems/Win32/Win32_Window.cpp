@@ -29,6 +29,10 @@
 #include "egl.h"
 #endif
 
+#ifdef _WIN32_XINPUT
+#include <XInput.h>
+#endif
+
 #define ONE_BY_255 0.003921569f
 #define ONE_BY_32767 0.00003051851f
 #define ONE_BY_32768 0.00003051757f

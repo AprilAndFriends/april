@@ -33,7 +33,7 @@
                                   '$(Configuration)|$(Platform)'=='Release_DirectX9_XInput|Win32' or
                                   '$(Configuration)|$(Platform)'=='ReleaseS_DirectX9_XInput|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>_DIRECTX;_DIRECTX9;_WIN32_WINDOW;_WIN32_XINPUT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DIRECTX;_DIRECTX9;_WIN32_WINDOW;_WIN32_XINPUT;XINPUT_USE_9_1_0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>d3d9.lib;XInput.lib;%(AdditionalDependencies)</AdditionalDependencies>
