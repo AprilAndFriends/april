@@ -85,6 +85,14 @@ namespace april
 	
 	hstr generateName(chstr prefix)
 	{
+		if (prefix != "")
+		{
+			std::basic_string<unsigned int> characters = prefix.uStr();
+			if (hbetweenII(characters[(int)characters.size() - 1], (unsigned int)'0', (unsigned int)'9'))
+			{
+				throw Exception("Called april::generateName() with an illegal string, cannot end with a number character: " + prefix);
+			}
+		}
 		static hmap<hstr, int> counters;
 		int count = counters[prefix] + 1;
 		counters[prefix] = count;
