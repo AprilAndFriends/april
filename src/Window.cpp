@@ -213,6 +213,11 @@ namespace april
 			this->virtualKeyboardVisible = false;
 			this->virtualKeyboardHeightRatio = 0.0f;
 			this->inputMode = MOUSE;
+			if (this->virtualKeyboard != NULL)
+			{
+				this->virtualKeyboard->hideKeyboard();
+				this->virtualKeyboard = NULL;
+			}
 			this->updateDelegate = NULL;
 			this->mouseDelegate = NULL;
 			this->keyboardDelegate = NULL;
@@ -455,7 +460,7 @@ namespace april
 		if (this->virtualKeyboard != NULL)
 		{
 			bool visible = this->virtualKeyboard->isVisible();
-			this->virtualKeyboard->show();
+			this->virtualKeyboard->showKeyboard();
 			if (!visible && this->virtualKeyboard->isVisible())
 			{
 				this->handleVirtualKeyboardChangeEvent(true, this->virtualKeyboard->getHeightRatio());
@@ -468,7 +473,7 @@ namespace april
 		if (this->virtualKeyboard != NULL)
 		{
 			bool visible = this->virtualKeyboard->isVisible();
-			this->virtualKeyboard->hide();
+			this->virtualKeyboard->hideKeyboard();
 			if (visible && !this->virtualKeyboard->isVisible())
 			{
 				this->handleVirtualKeyboardChangeEvent(false, 0.0f);
@@ -506,7 +511,7 @@ namespace april
 			{
 				if (this->virtualKeyboard != NULL && this->virtualKeyboard->isVisible())
 				{
-					this->virtualKeyboard->draw();
+					this->virtualKeyboard->drawKeyboard();
 				}
 				return true;
 			}

@@ -28,23 +28,27 @@ namespace april
 		/// @brief Destructor.
 		virtual ~VirtualKeyboard();
 
+		/// @brief Visibility flag.
 		HL_DEFINE_IS(visible, Visible);
+		/// @brief Height ratio of the screen.
 		HL_DEFINE_GET(float, heightRatio, HeightRatio);
 
-		void show();
-		void hide();
+		/// @brief Shows the virtual keyboard.
+		void showKeyboard();
+		/// @brief Hides the virtual keyboard.
+		void hideKeyboard();
 
-		void draw();
+		/// @brief Renders the virtual keyboard.
+		void drawKeyboard();
 
 	protected:
 		bool visible;
 		float heightRatio;
 
-		virtual float _show() = 0;
-		virtual bool _hide() = 0;
+		virtual float _showKeyboard() = 0;
+		virtual bool _hideKeyboard() = 0;
 
-		virtual void _draw() = 0;
-
+		virtual void _drawKeyboard() = 0;
 
 	};
 

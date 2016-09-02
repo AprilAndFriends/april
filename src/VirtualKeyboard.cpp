@@ -18,11 +18,11 @@ namespace april
 	{
 	}
 
-	void VirtualKeyboard::show()
+	void VirtualKeyboard::showKeyboard()
 	{
 		if (!this->visible)
 		{
-			this->heightRatio = this->_show();
+			this->heightRatio = this->_showKeyboard();
 			if (this->heightRatio > 0.0f)
 			{
 				this->visible = true;
@@ -30,17 +30,17 @@ namespace april
 		}
 	}
 
-	void VirtualKeyboard::hide()
+	void VirtualKeyboard::hideKeyboard()
 	{
-		if (this->visible && this->_hide())
+		if (this->visible && this->_hideKeyboard())
 		{
 			this->visible = false;
 		}
 	}
 
-	void VirtualKeyboard::draw()
+	void VirtualKeyboard::drawKeyboard()
 	{
-		this->_draw();
+		this->_drawKeyboard();
 	}
 
 }
