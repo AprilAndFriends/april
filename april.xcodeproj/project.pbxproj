@@ -317,6 +317,14 @@
 		D153476A178AD62A00151D1A /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
 		D16AB63E16F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
 		D16AB63F16F1F8E000E971B0 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
+		D17F3E941D79D4F60045F39D /* VirtualKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */; };
+		D17F3E961D79D5010045F39D /* VirtualKeyboard.h in Headers */ = {isa = PBXBuildFile; fileRef = D17F3E951D79D5010045F39D /* VirtualKeyboard.h */; };
+		D17F3E971D79D5730045F39D /* VirtualKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */; };
+		D17F3E981D79D5740045F39D /* VirtualKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */; };
+		D17F3E991D79D5740045F39D /* VirtualKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */; };
+		D17F3E9A1D79D5740045F39D /* VirtualKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */; };
+		D17F3E9B1D79D5750045F39D /* VirtualKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */; };
+		D17F3E9C1D79D5750045F39D /* VirtualKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */; };
 		D18B43301AD52CDD00406310 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D18B432F1AD52CDD00406310 /* CoreVideo.framework */; };
 		D197C5A415ED05F30017452F /* jpg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A015ED05F20017452F /* jpg.framework */; };
 		D197C5A515ED05F30017452F /* png.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D197C5A115ED05F20017452F /* png.framework */; };
@@ -611,6 +619,8 @@
 		D1681BA618D768400088FC68 /* iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = iOS.xcconfig; path = xcconfig/iOS.xcconfig; sourceTree = "<group>"; };
 		D1681BA718D768400088FC68 /* Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Mac.xcconfig; path = xcconfig/Mac.xcconfig; sourceTree = "<group>"; };
 		D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerDelegate.cpp; path = src/delegates/ControllerDelegate.cpp; sourceTree = "<group>"; };
+		D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VirtualKeyboard.cpp; path = src/VirtualKeyboard.cpp; sourceTree = "<group>"; };
+		D17F3E951D79D5010045F39D /* VirtualKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VirtualKeyboard.h; path = include/april/VirtualKeyboard.h; sourceTree = "<group>"; };
 		D18B432F1AD52CDD00406310 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		D197C5A015ED05F20017452F /* jpg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = jpg.framework; path = ../../__build__/products/Debug/jpg.framework; sourceTree = "<group>"; };
 		D197C5A115ED05F20017452F /* png.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = png.framework; path = ../../__build__/products/Debug/png.framework; sourceTree = "<group>"; };
@@ -839,6 +849,7 @@
 				D1E7204216D37C0200B9C9AD /* images */,
 				D1E7204316D37C0B00B9C9AD /* timers */,
 				D136818C187BFB3E00E66E32 /* main_base.cpp */,
+				D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */,
 				D136818D187BFB3E00E66E32 /* RenderState.cpp */,
 				D14BF96915875F3300D31573 /* aprilUtil.cpp */,
 				D14BF818158737A000D31573 /* Platform.cpp */,
@@ -863,9 +874,10 @@
 		7F42F7A011EB177F00B1C1DF /* include */ = {
 			isa = PBXGroup;
 			children = (
+				D1049F6316D39E870058C514 /* delegates */,
+				D17F3E951D79D5010045F39D /* VirtualKeyboard.h */,
 				B436D2ED1D05AEB000DA2C15 /* RenderHelper.h */,
 				B436D2EE1D05AEB000DA2C15 /* RenderHelperLayered2D.h */,
-				D1049F6316D39E870058C514 /* delegates */,
 				D136819A187BFB6600E66E32 /* Android_main.h */,
 				D136819B187BFB6600E66E32 /* androidUtilJNI.h */,
 				D136819D187BFB6600E66E32 /* main_base.h */,
@@ -1384,6 +1396,7 @@
 				D1AF66C3170B1E5900A43743 /* Window.h in Headers */,
 				D1AF66C4170B1E5900A43743 /* main.h in Headers */,
 				D102CFFC19B7284500948584 /* TextureAsync.h in Headers */,
+				D17F3E961D79D5010045F39D /* VirtualKeyboard.h in Headers */,
 				D1AF66C5170B1E5900A43743 /* Timer.h in Headers */,
 				D1E2447A1A3104C300586FAC /* Mac_QueuedEvents.h in Headers */,
 				D1AF66C7170B1E5900A43743 /* PixelShader.h in Headers */,
@@ -1610,6 +1623,7 @@
 				D1E7205716D37C2300B9C9AD /* SystemDelegate.cpp in Sources */,
 				D1E7205A16D37C2300B9C9AD /* TouchDelegate.cpp in Sources */,
 				D1B4873519337479004674EB /* Mac_main.mm in Sources */,
+				D17F3E971D79D5730045F39D /* VirtualKeyboard.cpp in Sources */,
 				D1E7205D16D37C2300B9C9AD /* UpdateDelegate.cpp in Sources */,
 				D1E7206416D37C5600B9C9AD /* Image.cpp in Sources */,
 				D1E7206716D37C5600B9C9AD /* ImageJpg.cpp in Sources */,
@@ -1683,6 +1697,7 @@
 				B44FBDB91BE0E44A00DD8995 /* iOS_devices.mm in Sources */,
 				B44FBDBA1BE0E44A00DD8995 /* TextureAsync.cpp in Sources */,
 				B44FBDBB1BE0E44A00DD8995 /* TimerPosix.cpp in Sources */,
+				D17F3E9B1D79D5750045F39D /* VirtualKeyboard.cpp in Sources */,
 				B44FBDBC1BE0E44A00DD8995 /* OpenGLES_Texture.cpp in Sources */,
 				B44FBDBD1BE0E44A00DD8995 /* iOS_Window.mm in Sources */,
 				B44FBDBE1BE0E44A00DD8995 /* main_base.cpp in Sources */,
@@ -1725,6 +1740,7 @@
 				D1134F00175CDA3300BFF3A2 /* SystemDelegate.cpp in Sources */,
 				D1134F01175CDA3300BFF3A2 /* TouchDelegate.cpp in Sources */,
 				B455017C1BD7A86200E75E43 /* OpenGL_Texture.cpp in Sources */,
+				D17F3E9C1D79D5750045F39D /* VirtualKeyboard.cpp in Sources */,
 				B455011A1BD7A7D100E75E43 /* OpenGLC_RenderSystem.cpp in Sources */,
 				B436D2EB1D05AE9300DA2C15 /* RenderHelper.cpp in Sources */,
 				D1134F02175CDA3300BFF3A2 /* UpdateDelegate.cpp in Sources */,
@@ -1764,6 +1780,7 @@
 				D1534752178AD62A00151D1A /* Texture.cpp in Sources */,
 				D1534753178AD62A00151D1A /* RenderSystem.cpp in Sources */,
 				D1534754178AD62A00151D1A /* Window.cpp in Sources */,
+				D17F3E981D79D5740045F39D /* VirtualKeyboard.cpp in Sources */,
 				D1534755178AD62A00151D1A /* PixelShader.cpp in Sources */,
 				D1368196187BFB3E00E66E32 /* RenderState.cpp in Sources */,
 				D1534756178AD62A00151D1A /* VertexShader.cpp in Sources */,
@@ -1863,6 +1880,7 @@
 				D1B4873F19337483004674EB /* iOS_devices.mm in Sources */,
 				D102CFFA19B7284500948584 /* TextureAsync.cpp in Sources */,
 				D1E7207416D37C7000B9C9AD /* TimerPosix.cpp in Sources */,
+				D17F3E9A1D79D5740045F39D /* VirtualKeyboard.cpp in Sources */,
 				B455015D1BD7A80400E75E43 /* OpenGLES_Texture.cpp in Sources */,
 				D1B486931933737B004674EB /* iOS_Window.mm in Sources */,
 				D1368192187BFB3E00E66E32 /* main_base.cpp in Sources */,
@@ -1885,6 +1903,7 @@
 				D1AF669F170B1E5900A43743 /* RenderSystem.cpp in Sources */,
 				D1AF66A0170B1E5900A43743 /* Window.cpp in Sources */,
 				D1AF66A3170B1E5900A43743 /* Color.cpp in Sources */,
+				D17F3E941D79D4F60045F39D /* VirtualKeyboard.cpp in Sources */,
 				D1AF66A4170B1E5900A43743 /* Texture.cpp in Sources */,
 				D1368194187BFB3E00E66E32 /* RenderState.cpp in Sources */,
 				D1AF66A5170B1E5900A43743 /* PixelShader.cpp in Sources */,
@@ -1966,6 +1985,7 @@
 				B455018F1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				D1F27AD1177A2DF700E5C131 /* MouseDelegate.cpp in Sources */,
 				D1F27AD2177A2DF700E5C131 /* SystemDelegate.cpp in Sources */,
+				D17F3E991D79D5740045F39D /* VirtualKeyboard.cpp in Sources */,
 				D1F27AD3177A2DF700E5C131 /* TouchDelegate.cpp in Sources */,
 				D1F27AD4177A2DF700E5C131 /* UpdateDelegate.cpp in Sources */,
 				D10B73B01982473900A9352D /* OpenKODE_main.cpp in Sources */,
