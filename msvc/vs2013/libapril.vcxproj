@@ -652,6 +652,7 @@
     <ClCompile Include="..\..\src\timers\TimerPosix.cpp" />
     <ClCompile Include="..\..\src\timers\TimerWin.cpp" />
     <ClCompile Include="..\..\src\VertexShader.cpp" />
+    <ClCompile Include="..\..\src\VirtualKeyboard.cpp" />
     <ClCompile Include="..\..\src\Window.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_Texture.cpp" />
@@ -694,6 +695,7 @@
     <ClInclude Include="..\..\include\april\TouchDelegate.h" />
     <ClInclude Include="..\..\include\april\UpdateDelegate.h" />
     <ClInclude Include="..\..\include\april\VertexShader.h" />
+    <ClInclude Include="..\..\include\april\VirtualKeyboard.h" />
     <ClInclude Include="..\..\include\april\Win32_main.h" />
     <ClInclude Include="..\..\include\april\Window.h" />
     <ClInclude Include="..\..\src\egl.h" />

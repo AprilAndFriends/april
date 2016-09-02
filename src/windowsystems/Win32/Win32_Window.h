@@ -54,9 +54,6 @@ namespace april
 		void presentFrame();
 		void checkEvents();
 
-		void showVirtualKeyboard();
-		void hideVirtualKeyboard();
-
 		void queueControllerEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue);
 
 		static LRESULT CALLBACK childProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

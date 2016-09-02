@@ -585,20 +585,6 @@ namespace april
 		h = rect.bottom - rect.top;
 	}
 
-	void Win32_Window::showVirtualKeyboard()
-	{
-#ifdef _DEBUG
-		//this->handleVirtualKeyboardChangeEvent(true, 0.5f); // usually only used for testing
-#endif
-	}
-
-	void Win32_Window::hideVirtualKeyboard()
-	{
-#ifdef _DEBUG
-		//this->handleVirtualKeyboardChangeEvent(false, 0.0f); // usually only used for testing
-#endif
-	}
-
 	static int _mouseMessages = 0;
 
 	void Win32_Window::queueControllerEvent(Window::ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue)

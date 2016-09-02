@@ -320,6 +320,9 @@
     <ClCompile Include="..\..\src\RenderHelperLayered2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\VirtualKeyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -518,6 +521,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\RenderHelperLayered2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\VirtualKeyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -32,6 +32,7 @@ namespace april
 	class SystemDelegate;
 	class TouchDelegate;
 	class UpdateDelegate;
+	class VirtualKeyboard;
 
 	/// @brief Defines a generic window.
 	class aprilExport Window
@@ -267,6 +268,10 @@ namespace april
 		/// @note This is useful when testing controller input functionality without actually using a controller.
 		HL_DEFINE_GETSET2(hmap, Key, Button, controllerEmulationAxisesNegative, ControllerEmulationAxisesNegative);
 
+		/// @brief Gets custom virtual keyboard implementation.
+		HL_DEFINE_GET(VirtualKeyboard*, virtualKeyboard, VirtualKeyboard);
+		/// @brief Sets custom virtual keyboard implementation.
+		void setVirtualKeyboard(VirtualKeyboard* value);
 		/// @brief The update delegate.
 		HL_DEFINE_GETSET(UpdateDelegate*, updateDelegate, UpdateDelegate);
 		/// @brief The mouse input delegate.
@@ -334,9 +339,9 @@ namespace april
 		virtual void terminateMainLoop();
 		/// @brief Displays a virtual keyboard if necessary.
 		/// @note Some systems don't support this while on other this is the only way to handle any kind of keyboard input.
-		virtual inline void showVirtualKeyboard() { }
+		virtual void showVirtualKeyboard();
 		/// @brief Hides the virtual keyboard if necessary.
-		virtual inline void hideVirtualKeyboard() { }
+		virtual void hideVirtualKeyboard();
 		/// @brief Finds the actual filename of a texture resource file.
 		/// @param[in] filename Resource filename without the extension.
 		/// @return The detected resource filename or an empty string if no resource file could be found.
@@ -544,6 +549,8 @@ namespace april
 		/// @note This is useful when testing controller input functionality without actually using a controller.
 		hmap<Key, Button> controllerEmulationAxisesNegative;
 
+		/// @brief A custom virtual keyboard.
+		VirtualKeyboard* virtualKeyboard;
 		/// @brief The current update delegate.
 		UpdateDelegate* updateDelegate;
 		/// @brief The current mouse delegate.

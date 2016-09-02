@@ -26,6 +26,7 @@
 #include "TextureAsync.h"
 #include "TouchDelegate.h"
 #include "UpdateDelegate.h"
+#include "VirtualKeyboard.h"
 #include "Window.h"
 
 #define INPUT_MODE_NAME(value) \
@@ -145,6 +146,7 @@ namespace april
 		this->virtualKeyboardHeightRatio = 0.0f;
 		this->multiTouchActive = false;
 		this->inputMode = MOUSE;
+		this->virtualKeyboard = NULL;
 		this->updateDelegate = NULL;
 		this->mouseDelegate = NULL;
 		this->keyboardDelegate = NULL;
@@ -280,6 +282,15 @@ namespace april
 	{
 		return ((float)this->getWidth() / this->getHeight());
 	}
+
+	void Window::setVirtualKeyboard(VirtualKeyboard* value)
+	{
+		if (value == NULL && this->virtualKeyboard != NULL && this->virtualKeyboard->isVisible())
+		{
+			this->hideVirtualKeyboard();
+		}
+		this->virtualKeyboard = value;
+	}
 	
 	void Window::setCursorVisible(bool value)
 	{
@@ -384,6 +395,10 @@ namespace april
 	
 	void Window::checkEvents()
 	{
+		if (this->virtualKeyboard != NULL)
+		{
+			//this->virtualKeyboard->
+		}
 		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
 		MouseInputEvent mouseEvent;
 		gvec2 cumulativeScroll;
@@ -434,7 +449,33 @@ namespace april
 	{
 		this->running = false;
 	}
+
+	void Window::showVirtualKeyboard()
+	{
+		if (this->virtualKeyboard != NULL)
+		{
+			bool visible = this->virtualKeyboard->isVisible();
+			this->virtualKeyboard->show();
+			if (!visible && this->virtualKeyboard->isVisible())
+			{
+				this->handleVirtualKeyboardChangeEvent(true, this->virtualKeyboard->getHeightRatio());
+			}
+		}
+	}
 	
+	void Window::hideVirtualKeyboard()
+	{
+		if (this->virtualKeyboard != NULL)
+		{
+			bool visible = this->virtualKeyboard->isVisible();
+			this->virtualKeyboard->hide();
+			if (visible && !this->virtualKeyboard->isVisible())
+			{
+				this->handleVirtualKeyboardChangeEvent(false, 0.0f);
+			}
+		}
+	}
+
 	bool Window::performUpdate(float timeDelta)
 	{
 		if (this->timeDeltaMaxLimit > 0.0f)
@@ -461,7 +502,15 @@ namespace april
 		// returning false: abort execution
 		if (this->updateDelegate != NULL)
 		{
-			return this->updateDelegate->onUpdate(timeDelta);
+			if (this->updateDelegate->onUpdate(timeDelta))
+			{
+				if (this->virtualKeyboard != NULL && this->virtualKeyboard->isVisible())
+				{
+					this->virtualKeyboard->draw();
+				}
+				return true;
+			}
+			return false;
 		}
 		april::rendersys->clear();
 		return true;
