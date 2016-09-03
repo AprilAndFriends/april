@@ -203,6 +203,7 @@ namespace april
 		if (this->created)
 		{
 			hlog::writef(logTag, "Destroying window '%s'.", this->name.cStr());
+			this->setVirtualKeyboard(NULL);
 			this->created = false;
 			this->fps = 0;
 			this->fpsCount = 0;
@@ -213,11 +214,7 @@ namespace april
 			this->virtualKeyboardVisible = false;
 			this->virtualKeyboardHeightRatio = 0.0f;
 			this->inputMode = MOUSE;
-			if (this->virtualKeyboard != NULL)
-			{
-				this->virtualKeyboard->hideKeyboard();
-				this->virtualKeyboard = NULL;
-			}
+			this->virtualKeyboard = NULL;
 			this->updateDelegate = NULL;
 			this->mouseDelegate = NULL;
 			this->keyboardDelegate = NULL;
@@ -290,9 +287,14 @@ namespace april
 
 	void Window::setVirtualKeyboard(VirtualKeyboard* value)
 	{
-		if (value == NULL && this->virtualKeyboard != NULL && this->virtualKeyboard->isVisible())
+		if (value == NULL && this->virtualKeyboard != NULL)
 		{
-			this->hideVirtualKeyboard();
+			bool visible = this->virtualKeyboard->isVisible();
+			this->virtualKeyboard->hideKeyboard(true);
+			if (visible && !this->virtualKeyboard->isVisible())
+			{
+				this->handleVirtualKeyboardChangeEvent(false, 0.0f);
+			}
 		}
 		this->virtualKeyboard = value;
 	}
@@ -400,10 +402,6 @@ namespace april
 	
 	void Window::checkEvents()
 	{
-		if (this->virtualKeyboard != NULL)
-		{
-			//this->virtualKeyboard->
-		}
 		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
 		MouseInputEvent mouseEvent;
 		gvec2 cumulativeScroll;
@@ -460,7 +458,7 @@ namespace april
 		if (this->virtualKeyboard != NULL)
 		{
 			bool visible = this->virtualKeyboard->isVisible();
-			this->virtualKeyboard->showKeyboard();
+			this->virtualKeyboard->showKeyboard(false);
 			if (!visible && this->virtualKeyboard->isVisible())
 			{
 				this->handleVirtualKeyboardChangeEvent(true, this->virtualKeyboard->getHeightRatio());
@@ -473,7 +471,7 @@ namespace april
 		if (this->virtualKeyboard != NULL)
 		{
 			bool visible = this->virtualKeyboard->isVisible();
-			this->virtualKeyboard->hideKeyboard();
+			this->virtualKeyboard->hideKeyboard(false);
 			if (visible && !this->virtualKeyboard->isVisible())
 			{
 				this->handleVirtualKeyboardChangeEvent(false, 0.0f);

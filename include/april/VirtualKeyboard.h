@@ -13,9 +13,11 @@
 #ifndef APRIL_VIRTUAL_KEYBOARD_H
 #define APRIL_VIRTUAL_KEYBOARD_H
 
+#include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
 
 #include "aprilExport.h"
+#include "Keys.h"
 
 namespace april
 {
@@ -34,9 +36,9 @@ namespace april
 		HL_DEFINE_GET(float, heightRatio, HeightRatio);
 
 		/// @brief Shows the virtual keyboard.
-		void showKeyboard();
+		void showKeyboard(bool forced);
 		/// @brief Hides the virtual keyboard.
-		void hideKeyboard();
+		void hideKeyboard(bool forced);
 
 		/// @brief Renders the virtual keyboard.
 		void drawKeyboard();
@@ -45,8 +47,8 @@ namespace april
 		bool visible;
 		float heightRatio;
 
-		virtual float _showKeyboard() = 0;
-		virtual bool _hideKeyboard() = 0;
+		virtual float _showKeyboard(bool forced) = 0;
+		virtual bool _hideKeyboard(bool forced) = 0;
 
 		virtual void _drawKeyboard() = 0;
 
