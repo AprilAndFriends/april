@@ -134,6 +134,7 @@ namespace april
 		this->fullscreen = true;
 		this->focused = true;
 		this->running = true;
+		this->paused = false;
 		this->lastWidth = 0;
 		this->lastHeight = 0;
 		this->fps = 0;
@@ -171,6 +172,7 @@ namespace april
 			this->title = title;
 			this->options = options;
 			this->created = true;
+			this->paused = false;
 			if (options.hotkeyFullscreen)
 			{
 				if (!fullscreen)
@@ -206,6 +208,7 @@ namespace april
 			hlog::writef(logTag, "Destroying window '%s'.", this->name.cStr());
 			this->setVirtualKeyboard(NULL);
 			this->created = false;
+			this->paused = false;
 			this->fps = 0;
 			this->fpsCount = 0;
 			this->fpsTimer = 0.0f;
