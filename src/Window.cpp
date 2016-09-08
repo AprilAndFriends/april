@@ -104,6 +104,7 @@ namespace april
 		this->resizable = false;
 		this->fpsCounter = false;
 		this->hotkeyFullscreen = false;
+		this->keyPause = april::AK_NONE;
 		this->mac_displayLinkIgnoreSystemRedraw = false;
 		this->defaultWindowModeResolutionFactor = 0.8f;
 	}
@@ -481,6 +482,10 @@ namespace april
 
 	bool Window::performUpdate(float timeDelta)
 	{
+		if (this->paused)
+		{
+			timeDelta = 0.0f;
+		}
 		if (this->timeDeltaMaxLimit > 0.0f)
 		{
 			timeDelta = hmin(timeDelta, this->timeDeltaMaxLimit);
@@ -570,6 +575,10 @@ namespace april
 			switch (type)
 			{
 			case KEY_DOWN:
+				if (this->options.keyPause == keyCode)
+				{
+					this->paused = !this->paused;
+				}
 				this->keyboardDelegate->onKeyDown(keyCode);
 				break;
 			case KEY_UP:

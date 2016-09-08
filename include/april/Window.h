@@ -175,6 +175,8 @@ namespace april
 			bool fpsCounter;
 			/// @brief Whether the fullscreen hotkey should be allowed.
 			bool hotkeyFullscreen;
+			/// @brief Whether the fullscreen hotkey should be allowed.
+			april::Key keyPause;
 			/// @brief The factor used for downscaling a window size when not running in fullscreen.
 			float defaultWindowModeResolutionFactor;
 			/// @brief Special hack for Mac implementations.
@@ -492,6 +494,8 @@ namespace april
 		bool focused;
 		/// @brief Whether the Window system is running.
 		bool running;
+		/// @brief Whether execution is currently paused.
+		bool paused;
 		/// @brief Previous width.
 		/// @note Used when restoring the window size after switching from fullscreen to windowed.
 		int lastWidth;
