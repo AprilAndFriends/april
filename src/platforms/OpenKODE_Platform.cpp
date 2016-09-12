@@ -195,7 +195,7 @@ namespace april
 	{
 		hlog::write(logTag, "Opening URL: " + url);
 #ifdef __APPLE__
-#if _IOS
+#ifdef _IOS
 		if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]])
 		{
 			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]];
