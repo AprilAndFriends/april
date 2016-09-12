@@ -127,7 +127,7 @@ namespace april
 			size_t length = sizeof(value);
 			if (sysctl(mib, 2, &value, &length, NULL, 0) != -1)
 			{
-				info.ram = value / (1024 * 1024);
+				info.ram = (int)value / (1024 * 1024);
 			}
 			else
 			{

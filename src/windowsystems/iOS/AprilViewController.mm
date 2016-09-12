@@ -228,6 +228,10 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 	[userDefaults synchronize];
 	return nsDefaultPngName;
 }
+- (UIInterfaceOrientation)getDeviceOrientation
+{
+	return [[UIApplication sharedApplication] statusBarOrientation];
+}
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView
@@ -241,7 +245,7 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 	idiom = [UIDevice currentDevice].userInterfaceIdiom;
 	
 	// search for default launch image and make a view controller out of it to use while loading
-    NSString* defaultPngName = [self getLaunchImageName:idiom interfaceOrientation:self.interfaceOrientation windowSize:size];
+    NSString* defaultPngName = [self getLaunchImageName:idiom interfaceOrientation:[self getDeviceOrientation] windowSize:size];
 	UIImage* image;
 	if ([defaultPngName isEqualToString:@""])
 	{
@@ -259,14 +263,14 @@ UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandsc
 	else
 	{
 		image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:defaultPngName ofType:@"png"]];
-		if(idiom == UIUserInterfaceIdiomPhone && self.interfaceOrientation != UIInterfaceOrientationPortrait)
+		if(idiom == UIUserInterfaceIdiomPhone && [self getDeviceOrientation] != UIInterfaceOrientationPortrait)
 		{
 			image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationRight];
 		}
 	}
 	
 	mImageView = [[UIImageView alloc] initWithImage:image];
-	if (isiOS8OrNewer() || UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+	if (isiOS8OrNewer() || UIInterfaceOrientationIsPortrait([self getDeviceOrientation]))
 	{
 		mImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
 	}
