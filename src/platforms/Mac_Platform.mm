@@ -82,7 +82,7 @@ namespace april
 			if (sysctl(mib, 2, &value, &length, NULL, 0) == -1)
 				info.ram = 2048;
 			else
-				info.ram = value / (1024 * 1024);
+				info.ram = (int)value / (1024 * 1024);
 
 			// display resolution
 			NSRect rect = [mainScreen frame];
