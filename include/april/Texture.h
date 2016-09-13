@@ -166,7 +166,7 @@ namespace april
 		/// @note Using a texture before it is uploaded to the GPU will cause undefined behavior. Always call load() before using it, because this ensures that it's loaded.
 		bool loadAsync();
 		/// @brief Unloads the texture from the GPU.
-		/// @note When type is TYPE_MANAGED, the raw image data remains in RAM.
+		/// @note When type is Type::Managed, the raw image data remains in RAM.
 		void unload();
 		/// @brief Loads the texture's meta data only.
 		/// @return True if successful or already loaded.

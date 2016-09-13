@@ -39,6 +39,7 @@ _timer_8h_source.html
 _touch_delegate_8h_source.html
 _update_delegate_8h_source.html
 _vertex_shader_8h_source.html
+_virtual_keyboard_8h_source.html
 _win32__main_8h_source.html
 _window_8h_source.html
 _win_r_t__main_8h_source.html
@@ -69,6 +70,7 @@ _timer_8h.html
 _touch_delegate_8h.html
 _update_delegate_8h.html
 _vertex_shader_8h.html
+_virtual_keyboard_8h.html
 _win32__main_8h.html
 _window_8h.html
 _win_r_t__main_8h.html
@@ -136,6 +138,8 @@ classapril_1_1_update_delegate.html
 classapril_1_1_update_delegate-members.html
 classapril_1_1_vertex_shader.html
 classapril_1_1_vertex_shader-members.html
+classapril_1_1_virtual_keyboard.html
+classapril_1_1_virtual_keyboard-members.html
 classapril_1_1_window.html
 classapril_1_1_window-members.html
 structapril_1_1_window_1_1_controller_input_event.html
