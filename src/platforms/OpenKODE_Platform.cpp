@@ -60,6 +60,11 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "KD";
+#ifdef _IOS
+			info.deviceName = [[UIDevice currentDevice] name];
+#else
+			info.deviceName = "unnamedOpenKODEDevice";
+#endif
 			debug_log("Fetching OpenKODE system info");
 			// number of CPU cores
 			info.cpuCores = 1;

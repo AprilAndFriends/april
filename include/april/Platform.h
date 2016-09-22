@@ -28,6 +28,8 @@ namespace april
 	{
 		/// @brief Name of the OS.
 		hstr name;
+		/// @brief Device name
+		hstr deviceName;
 		/// @brief CPU architecture.
 		hstr architecture;
 		/// @brief On how many bits the architecture operates (e.g. 32 bit or 64 bit).

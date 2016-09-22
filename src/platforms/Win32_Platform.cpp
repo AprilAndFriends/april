@@ -37,6 +37,7 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "Windows";
+			info.deviceName = "unnamedWindowsDevice";
 			OSVERSIONINFO osinfo;
 			memset(&osinfo, 0, sizeof(osinfo));
 			osinfo.dwOSVersionInfoSize = sizeof(osinfo);

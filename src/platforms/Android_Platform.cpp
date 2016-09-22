@@ -31,6 +31,7 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "android";
+			info.deviceName = "unnamedAndroidDevice";
 #ifdef _ARM
 			info.architecture = "ARM";
 #else

@@ -39,6 +39,7 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "winrt";
+			info.deviceName = "unnamedWinRTDevice";
 #ifdef _ARM
 			info.architecture = "ARM";
 #else
