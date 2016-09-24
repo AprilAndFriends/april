@@ -146,7 +146,7 @@ namespace april
 			
 			info.name = name; // defaults for unknown devices
 			
-			info.deviceName = [[UIDevice currentDevice] name];
+			info.deviceName = [[[UIDevice currentDevice] name] UTF8String];
 			info.displayDpi = 0;
 
 			UIScreen* mainScreen = [UIScreen mainScreen];
