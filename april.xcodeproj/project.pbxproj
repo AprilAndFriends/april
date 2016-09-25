@@ -2079,9 +2079,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_OPENGLES,
 					_OPENGLES2,
@@ -2091,7 +2088,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = april;
 				SKIP_INSTALL = YES;
 			};
@@ -2101,9 +2097,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_OPENGLES,
 					_OPENGLES2,
@@ -2113,7 +2106,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = april;
 				SKIP_INSTALL = YES;
 			};
@@ -2123,9 +2115,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_OPENGLES,
 					_OPENGLES2,
@@ -2135,7 +2124,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = april;
 				SKIP_INSTALL = YES;
 			};
@@ -2280,9 +2268,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_OPENGLES1,
 					_IOS,
@@ -2294,10 +2279,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../khronos",
-					"$(inherited)",
-				);
 				PRODUCT_NAME = "april-kd";
 				SKIP_INSTALL = YES;
 			};
@@ -2307,9 +2288,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_OPENGLES1,
 					_IOS,
@@ -2321,10 +2299,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../khronos",
-					"$(inherited)",
-				);
 				PRODUCT_NAME = "april-kd";
 				SKIP_INSTALL = YES;
 			};
@@ -2334,9 +2308,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_OPENGLES1,
 					_IOS,
@@ -2348,10 +2319,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/../khronos",
-					"$(inherited)",
-				);
 				PRODUCT_NAME = "april-kd";
 				SKIP_INSTALL = YES;
 			};
@@ -2430,9 +2397,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_OPENGLES1,
 					_IOS,
@@ -2441,7 +2405,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = april;
 				SKIP_INSTALL = YES;
 			};
@@ -2451,9 +2414,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_OPENGLES1,
 					_IOS,
@@ -2462,7 +2422,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = april;
 				SKIP_INSTALL = YES;
 			};
@@ -2472,9 +2431,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = YES;
-				DSTROOT = /tmp/libapril_ios.dst;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_OPENGLES1,
 					_IOS,
@@ -2483,7 +2439,6 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = april;
 				SKIP_INSTALL = YES;
 			};
