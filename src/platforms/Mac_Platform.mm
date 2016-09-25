@@ -64,7 +64,7 @@ namespace april
 		{
 			prevScreen = mainScreen;
 			// CPU cores
-			info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
+			info.cpuCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
 			// RAM
 			info.name = "mac";
 			info.deviceName = "unnamedMacDevice";

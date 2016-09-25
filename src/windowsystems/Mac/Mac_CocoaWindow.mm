@@ -151,7 +151,7 @@ namespace april
 
 - (BOOL)isFullScreen
 {
-	int style = [self styleMask];
+	int style = (int)[self styleMask];
 	return (style == NSBorderlessWindowMask || style == NSFullScreenWindowMask); // this covers both 10.7 and older macs
 }
 
@@ -253,7 +253,7 @@ namespace april
 - (april::Key)getMouseButtonCode:(NSEvent*) event
 {
 	april::Key button;
-	int n = event.buttonNumber;
+	int n = (int)event.buttonNumber;
 	if      (n == 0) button = april::AK_LBUTTON;
 	else if (n == 1) button = april::AK_RBUTTON;
 	else             button = april::AK_MBUTTON;
@@ -487,7 +487,7 @@ namespace april
 - (void)flagsChanged:(NSEvent*) event // special NSWindow function for modifier keys
 {
 	static unsigned int prevFlags = 0;
-	unsigned int flags = [event modifierFlags];
+	unsigned int flags = (unsigned int)[event modifierFlags];
 	unsigned int keyCode = april::getAprilMacKeyCode([event keyCode]);
 	
 #define processFlag(mask) if      ((flags & mask)     == mask && (prevFlags & mask) == 0) [self onKeyDown:keyCode unicode:@""];\
@@ -548,7 +548,7 @@ namespace april
     NSString* button2 = [NSString stringWithUTF8String:params.button2.cStr()];
     NSString* button3 = [NSString stringWithUTF8String:params.button3.cStr()];
 
-    int clicked = NSRunAlertPanel(title, @"%@", button1, button2, button3, text);
+	int clicked = (int)NSRunAlertPanel(title, @"%@", button1, button2, button3, text);
     switch (clicked)
     {
         case NSAlertDefaultReturn:
