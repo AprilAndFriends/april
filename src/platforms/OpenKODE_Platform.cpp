@@ -106,7 +106,7 @@ namespace april
 				getStaticiOSInfo(model, info);
 			}
 #elif defined(__APPLE__) && defined(_PC_INPUT) // mac
-			info.cpuCores = sysconf(_SC_NPROCESSORS_ONLN);
+			info.cpuCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
 #elif defined(_WINRT)
 			SYSTEM_INFO w32info;
 			GetNativeSystemInfo(&w32info);
