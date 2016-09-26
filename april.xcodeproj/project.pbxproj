@@ -2279,6 +2279,10 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../khronos",
+					"$(inherited)",
+				);
 				PRODUCT_NAME = "april-kd";
 				SKIP_INSTALL = YES;
 			};
@@ -2299,6 +2303,10 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../khronos",
+					"$(inherited)",
+				);
 				PRODUCT_NAME = "april-kd";
 				SKIP_INSTALL = YES;
 			};
@@ -2319,6 +2327,10 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/../khronos",
+					"$(inherited)",
+				);
 				PRODUCT_NAME = "april-kd";
 				SKIP_INSTALL = YES;
 			};
