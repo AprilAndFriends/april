@@ -93,7 +93,7 @@ public:
 	gvec2 point;
 	float length;
 
-	bool dragging = false;
+	bool dragging;
 
 	april::PlainVertex lineVertices[2];
 	april::PlainVertex circleVertices[CIRCLE_VERTEX_COUNT*3];
@@ -101,6 +101,7 @@ public:
 	Bone(gvec2 position, float length)
 	{
 		this->position = position;
+		this->dragging = false;
 		this->length = length;
 		this->point = this->position + gvec2(this->length, 0);
 	};
@@ -123,11 +124,11 @@ public:
 			circleVertices[i].x = this->lineVertices[1].x;
 			circleVertices[i].y = this->lineVertices[1].y;
 
-			circleVertices[i + 1].x = this->lineVertices[1].x + hcos((360.0f / CIRCLE_VERTEX_COUNT) * j) * CIRCLE_RADIUS;
-			circleVertices[i + 1].y = this->lineVertices[1].y + hsin((360.0f / CIRCLE_VERTEX_COUNT) * j) * CIRCLE_RADIUS;
+			circleVertices[i + 1].x = this->lineVertices[1].x + (float)hcos((360.0f / CIRCLE_VERTEX_COUNT) * j) * CIRCLE_RADIUS;
+			circleVertices[i + 1].y = this->lineVertices[1].y + (float)hsin((360.0f / CIRCLE_VERTEX_COUNT) * j) * CIRCLE_RADIUS;
 
-			circleVertices[i + 2].x = this->lineVertices[1].x + hcos((360.0f / CIRCLE_VERTEX_COUNT) * (j + 1)) * CIRCLE_RADIUS;
-			circleVertices[i + 2].y = this->lineVertices[1].y + hsin((360.0f / CIRCLE_VERTEX_COUNT) * (j + 1)) * CIRCLE_RADIUS;
+			circleVertices[i + 2].x = this->lineVertices[1].x + (float)hcos((360.0f / CIRCLE_VERTEX_COUNT) * (j + 1)) * CIRCLE_RADIUS;
+			circleVertices[i + 2].y = this->lineVertices[1].y + (float)hsin((360.0f / CIRCLE_VERTEX_COUNT) * (j + 1)) * CIRCLE_RADIUS;
 		}
 	}
 
@@ -410,10 +411,10 @@ void april_init(const harray<hstr>& args)
 #ifdef _WINRT
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
-	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::TYPE_MANAGED);
-	texture2 = april::rendersys->createTextureFromResource(RESOURCE_PATH "camo", april::Texture::TYPE_MANAGED);
-	texture3 = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo", april::Texture::TYPE_MANAGED);
-	texture4 = april::rendersys->createTextureFromResource(RESOURCE_PATH "bloom", april::Texture::TYPE_MANAGED);
+	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::Type::Managed);
+	texture2 = april::rendersys->createTextureFromResource(RESOURCE_PATH "camo", april::Texture::Type::Managed);
+	texture3 = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo", april::Texture::Type::Managed);
+	texture4 = april::rendersys->createTextureFromResource(RESOURCE_PATH "bloom", april::Texture::Type::Managed);
 	
 	//april::rendersys->createTexture(100, 100, april::Color::White, april::Image::Format::FORMAT_ARGB, april::Texture::Type::)
 	// background

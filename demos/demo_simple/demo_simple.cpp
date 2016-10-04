@@ -218,12 +218,12 @@ void april_init(const harray<hstr>& args)
 	april::window->setMouseDelegate(mouseDelegate);
 	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
-	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::TYPE_MANAGED);
+	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::Type::Managed);
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w * 0.5f;
 	textureRect.y = -textureRect.h * 0.5f;
 	// demonstrating some of the image manipulation methods
-	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::TYPE_MANAGED);
+	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::Type::Managed);
 	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 0, 0, texture);
 	manualTexture->invert(0, 0, 256, 128);
 	manualTexture->saturate(0, 128, 128, 128, 0.0f);
