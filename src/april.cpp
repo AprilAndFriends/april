@@ -151,6 +151,9 @@
 		#define APRIL_PLATFORM_NAME "iOS"
 	#else
 		#define APRIL_PLATFORM_NAME "Mac OS X"
+		#ifdef __LP64__
+			#define APRIL_PLATFORM_ARCHITECTURE "x64"
+		#endif
 	#endif
 #elif defined(_UNIX)
 	#define APRIL_PLATFORM_NAME "Unix"
@@ -166,7 +169,9 @@
 	#define APRIL_PLATFORM_ARCHITECTURE "x86"
 #endif
 
-#ifdef _IOS
+
+
+#if defined(_IOS) || defined(_MAC)
 	#ifdef __LP64__
 		#define APRIL_PLATFORM_ARCHITECTURE_BITS 64
 	#else
