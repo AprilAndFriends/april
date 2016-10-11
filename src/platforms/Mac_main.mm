@@ -111,54 +111,6 @@ NSString* getApplicationName()
 	return appName;
 }
 
-#ifdef _SDL // should be refactored for SDL
-
-@interface AprilAppDelegate : NSObject<NSApplicationDelegate>
-@end
-
-/* The main class of the application, the application's delegate */
-@implementation AprilAppDelegate
-
-/* Called when the internal event loop has just started running */
-- (void) applicationDidFinishLaunching: (NSNotification*) note
-{
-	/* Hand off to main application code */
-	//gCalledAppMainline = TRUE;
-	for (int i = 0; i < gArgc; i++)
-	{
-		april::args += gArgv[i];
-	}
-	gAprilInit(april::args);
-#ifdef _SDL
-	april::window->enterMainLoop();
-	gAprilDestroy();
-	exit(0);
-#endif
-}
-
-- (void) applicationWillTerminate:(NSNotification*) note
-{
-	gAprilDestroy();
-}
-
-#ifdef _COCOA_WINDOW
-
-- (void)applicationDidBecomeActive:(NSNotification *)aNotification
-{
-	aprilWindow->OnAppGainedFocus();
-}
-
-- (void)applicationDidResignActive:(NSNotification *)aNotification
-{
-	aprilWindow->OnAppLostFocus();
-}
-
-#endif
-
-@end
-
-#endif
-
 static void setApplicationMenu()
 {
 	/* warning: this code is very odd */

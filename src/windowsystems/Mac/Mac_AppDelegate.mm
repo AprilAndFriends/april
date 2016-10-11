@@ -52,6 +52,7 @@ bool g_WindowFocusedBeforeSleep = false;
 
 - (void) applicationDidFinishLaunching: (NSNotification*) note
 {
+	NSLog(@"april::applicationDidFinishLaunching");
 	mAppFocused = true;
 
 	harray<hstr> argv;
