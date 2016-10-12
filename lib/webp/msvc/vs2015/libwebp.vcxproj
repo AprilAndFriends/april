@@ -106,21 +106,26 @@
     <ClInclude Include="..\..\include\webp\decode.h" />
     <ClInclude Include="..\..\include\webp\demux.h" />
     <ClInclude Include="..\..\include\webp\encode.h" />
+    <ClInclude Include="..\..\include\webp\extras.h" />
     <ClInclude Include="..\..\include\webp\format_constants.h" />
     <ClInclude Include="..\..\include\webp\mux.h" />
     <ClInclude Include="..\..\include\webp\mux_types.h" />
     <ClInclude Include="..\..\include\webp\types.h" />
     <ClInclude Include="..\..\src\cpu-features.h" />
     <ClInclude Include="..\..\src\dec\alphai.h" />
+    <ClInclude Include="..\..\src\dec\common.h" />
     <ClInclude Include="..\..\src\dec\decode_vp8.h" />
     <ClInclude Include="..\..\src\dec\vp8i.h" />
     <ClInclude Include="..\..\src\dec\vp8li.h" />
     <ClInclude Include="..\..\src\dec\webpi.h" />
+    <ClInclude Include="..\..\src\dsp\common_sse2.h" />
     <ClInclude Include="..\..\src\dsp\dsp.h" />
     <ClInclude Include="..\..\src\dsp\lossless.h" />
+    <ClInclude Include="..\..\src\dsp\mips_macro.h" />
+    <ClInclude Include="..\..\src\dsp\msa_macro.h" />
     <ClInclude Include="..\..\src\dsp\neon.h" />
     <ClInclude Include="..\..\src\dsp\yuv.h" />
-    <ClInclude Include="..\..\src\dsp\yuv_tables_sse2.h" />
+    <ClInclude Include="..\..\src\enc\delta_palettization.h" />
     <ClInclude Include="..\..\src\utils\bit_reader.h" />
     <ClInclude Include="..\..\src\utils\bit_reader_inl.h" />
     <ClInclude Include="..\..\src\utils\bit_writer.h" />
@@ -148,50 +153,112 @@
     <ClCompile Include="..\..\src\dec\vp8.c" />
     <ClCompile Include="..\..\src\dec\vp8l.c" />
     <ClCompile Include="..\..\src\dec\webp.c" />
+    <ClCompile Include="..\..\src\demux\anim_decode.c" />
     <ClCompile Include="..\..\src\demux\demux.c" />
     <ClCompile Include="..\..\src\dsp\alpha_processing.c" />
+    <ClCompile Include="..\..\src\dsp\alpha_processing_mips_dsp_r2.c" />
     <ClCompile Include="..\..\src\dsp\alpha_processing_sse2.c" />
+    <ClCompile Include="..\..\src\dsp\alpha_processing_sse41.c" />
+    <ClCompile Include="..\..\src\dsp\argb.c" />
+    <ClCompile Include="..\..\src\dsp\argb_mips_dsp_r2.c" />
+    <ClCompile Include="..\..\src\dsp\argb_sse2.c" />
+    <ClCompile Include="..\..\src\dsp\cost.c" />
+    <ClCompile Include="..\..\src\dsp\cost_mips32.c" />
+    <ClCompile Include="..\..\src\dsp\cost_mips_dsp_r2.c" />
+    <ClCompile Include="..\..\src\dsp\cost_sse2.c" />
     <ClCompile Include="..\..\src\dsp\cpu.c" />
     <ClCompile Include="..\..\src\dsp\dec.c" />
     <ClCompile Include="..\..\src\dsp\dec_clip_tables.c" />
     <ClCompile Include="..\..\src\dsp\dec_mips32.c" />
+    <ClCompile Include="..\..\src\dsp\dec_mips_dsp_r2.c" />
+    <ClCompile Include="..\..\src\dsp\dec_msa.c" />
     <ClCompile Include="..\..\src\dsp\dec_neon.c">
       <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
     </ClCompile>
     <ClCompile Include="..\..\src\dsp\dec_sse2.c" />
+    <ClCompile Include="..\..\src\dsp\dec_sse41.c" />
     <ClCompile Include="..\..\src\dsp\enc.c" />
     <ClCompile Include="..\..\src\dsp\enc_avx2.c" />
     <ClCompile Include="..\..\src\dsp\enc_mips32.c" />
+    <ClCompile Include="..\..\src\dsp\enc_mips_dsp_r2.c" />
     <ClCompile Include="..\..\src\dsp\enc_neon.c">
       <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
     </ClCompile>
     <ClCompile Include="..\..\src\dsp\enc_sse2.c" />
+    <ClCompile Include="..\..\src\dsp\enc_sse41.c" />
+    <ClCompile Include="..\..\src\dsp\filters.c" />
+    <ClCompile Include="..\..\src\dsp\filters_mips_dsp_r2.c" />
+    <ClCompile Include="..\..\src\dsp\filters_sse2.c" />
     <ClCompile Include="..\..\src\dsp\lossless.c" />
-    <ClCompile Include="..\..\src\dsp\lossless_mips32.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc_mips32.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc_mips_dsp_r2.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc_neon.c">
+      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dsp\lossless_enc_sse2.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc_sse41.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_mips_dsp_r2.c" />
     <ClCompile Include="..\..\src\dsp\lossless_neon.c">
       <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
     </ClCompile>
     <ClCompile Include="..\..\src\dsp\lossless_sse2.c" />
+    <ClCompile Include="..\..\src\dsp\rescaler.c" />
+    <ClCompile Include="..\..\src\dsp\rescaler_mips32.c" />
+    <ClCompile Include="..\..\src\dsp\rescaler_mips_dsp_r2.c" />
+    <ClCompile Include="..\..\src\dsp\rescaler_neon.c">
+      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dsp\rescaler_sse2.c" />
     <ClCompile Include="..\..\src\dsp\upsampling.c" />
+    <ClCompile Include="..\..\src\dsp\upsampling_mips_dsp_r2.c" />
     <ClCompile Include="..\..\src\dsp\upsampling_neon.c">
       <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
     </ClCompile>
     <ClCompile Include="..\..\src\dsp\upsampling_sse2.c" />
     <ClCompile Include="..\..\src\dsp\yuv.c" />
     <ClCompile Include="..\..\src\dsp\yuv_mips32.c" />
+    <ClCompile Include="..\..\src\dsp\yuv_mips_dsp_r2.c" />
     <ClCompile Include="..\..\src\dsp\yuv_sse2.c" />
-    <ClCompile Include="..\..\src\utils\bit_reader.c" />
-    <ClCompile Include="..\..\src\utils\bit_writer.c" />
-    <ClCompile Include="..\..\src\utils\color_cache.c" />
-    <ClCompile Include="..\..\src\utils\filters.c" />
-    <ClCompile Include="..\..\src\utils\huffman.c" />
-    <ClCompile Include="..\..\src\utils\huffman_encode.c" />
-    <ClCompile Include="..\..\src\utils\quant_levels.c" />
-    <ClCompile Include="..\..\src\utils\quant_levels_dec.c" />
-    <ClCompile Include="..\..\src\utils\random.c" />
-    <ClCompile Include="..\..\src\utils\rescaler.c" />
-    <ClCompile Include="..\..\src\utils\thread.c" />
-    <ClCompile Include="..\..\src\utils\utils.c" />
+    <ClCompile Include="..\..\src\enc\delta_palettization.c" />
+    <ClCompile Include="..\..\src\enc\near_lossless.c" />
+    <ClCompile Include="..\..\src\mux\anim_encode.c" />
+    <ClCompile Include="..\..\src\utils\bit_reader.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\bit_writer.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\color_cache.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\filters.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\huffman.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\huffman_encode.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\quant_levels.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\quant_levels_dec.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\random.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\rescaler.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\thread.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\utils.c">
+      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
