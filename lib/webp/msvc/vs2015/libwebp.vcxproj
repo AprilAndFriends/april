@@ -140,6 +140,14 @@
     <ClInclude Include="..\..\src\utils\rescaler.h" />
     <ClInclude Include="..\..\src\utils\thread.h" />
     <ClInclude Include="..\..\src\utils\utils.h" />
+    <ClInclude Include="..\..\src\webp\decode.h" />
+    <ClInclude Include="..\..\src\webp\demux.h" />
+    <ClInclude Include="..\..\src\webp\encode.h" />
+    <ClInclude Include="..\..\src\webp\extras.h" />
+    <ClInclude Include="..\..\src\webp\format_constants.h" />
+    <ClInclude Include="..\..\src\webp\mux.h" />
+    <ClInclude Include="..\..\src\webp\mux_types.h" />
+    <ClInclude Include="..\..\src\webp\types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\cpu-features.c" />
@@ -225,39 +233,51 @@
     <ClCompile Include="..\..\src\mux\anim_encode.c" />
     <ClCompile Include="..\..\src\utils\bit_reader.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\bit_writer.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\color_cache.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\filters.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\huffman.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\huffman_encode.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\quant_levels.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\quant_levels_dec.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\random.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\rescaler.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\thread.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\utils.c">
       <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
     </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
