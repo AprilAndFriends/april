@@ -39,6 +39,10 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	
 	// update@20160119 - Had problems with cursors not showing up so I update the if below to force set the cursors in this case, while still not 100% perfect, it works better and more reliable
 	// now I even got cursors not showing up properly in windowed mode, bah..
+	if (april::window->getParam("disableCursorCheck") == "1")
+	{
+		return;
+	}
 	NSCursor* current = [NSCursor currentCursor];
 	if (mCursor != NULL)
 	{

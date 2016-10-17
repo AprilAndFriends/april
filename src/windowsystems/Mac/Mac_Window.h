@@ -71,6 +71,7 @@ namespace april
 		hmutex ignoreUpdateMutex;
 		bool splashScreenFadeout;
 		hstr splashScreenDelay;
+		bool disableCursorCheck;
 		bool fpsCounter;
 		hstr fpsTitle;
 

@@ -67,6 +67,7 @@ namespace april
 		this->name = april::WindowType::Mac.getName();
 		this->retainLoadingOverlay = fastHideLoadingOverlay = false;
 		this->splashScreenFadeout = true;
+		this->disableCursorCheck = false;
 		this->displayLinkIgnoreSystemRedraw = false;
 		this->cursorExtensions += ".plist";
 		this->cursorExtensions += ".png";
@@ -130,6 +131,10 @@ namespace april
 		{
 			return this->splashScreenDelay;
 		}
+		if (param == "disableCursorCheck")
+		{
+			return this->disableCursorCheck ? "1" : "0";
+		}
 
 		if (param == "displayLinkIgnoreSystemRedraw")
 		{
@@ -159,6 +164,18 @@ namespace april
 		if (param == "delay_splash")
 		{
 			this->splashScreenDelay = value;
+		}
+		if (param == "disableCursorCheck")
+		{
+			this->disableCursorCheck = (value == "1");
+			if (this->disableCursorCheck)
+			{
+				hlog::write(logTag, "Disabling Mac Cursor Check");
+			}
+			else
+			{
+				hlog::write(logTag, "Enabling Mac Cursor Check");
+			}
 		}
 		if (param == "displayLinkIgnoreSystemRedraw")
 		{
