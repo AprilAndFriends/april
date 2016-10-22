@@ -176,6 +176,34 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		return true;
 	}
 	
+	// non-ASCII characters aren't sent as normal key codes
+	@Override
+	public boolean onKeyMultiple(final int keyCode, int repeatCount, KeyEvent event)
+	{
+		if (keyCode != 0 || event.getAction() != MotionEvent.ACTION_DOWN)
+		{
+			return super.onKeyMultiple(keyCode, repeatCount, event);
+		}
+		String chars = event.getCharacters();
+		if (chars == null || chars.length() == 0)
+		{
+			return super.onKeyMultiple(keyCode, repeatCount, event);
+		}
+		final int eventUnicodeChar = chars.codePointAt(0);
+		if (eventUnicodeChar == 0)
+		{
+			return super.onKeyMultiple(keyCode, repeatCount, event);
+		}
+		this.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.onChar(eventUnicodeChar);
+			}
+		});
+		return true;
+	}
+	
 	private int _convertControllerButton(int buttonCode)
 	{
 		switch (buttonCode)

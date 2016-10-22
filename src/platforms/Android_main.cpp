@@ -134,6 +134,11 @@ namespace april
 		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::KEY_UP, android2april((int)keyCode), 0));
 	}
 	
+	void JNICALL _JNI_onChar(JNIEnv* env, jclass classe, jint charCode)
+	{
+		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::KEY_DOWN, april::AK_NONE, (unsigned int)charCode));
+	}
+
 	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
 	{
 		PROTECTED_WINDOW_CALL(queueTouchEvent((april::Window::MouseEventType)type, gvec2((float)x, (float)y), (int)index));
@@ -256,7 +261,7 @@ namespace april
 		}
 	}
 	
-#define METHOD_COUNT 25 // make sure this fits
+#define METHOD_COUNT 26 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"setVariables",						_JARGS(_JVOID, _JSTR _JSTR),					(void*)&april::_JNI_setVariables				},
@@ -265,6 +270,7 @@ namespace april
 		{"render",								_JARGS(_JBOOL, ),								(void*)&april::_JNI_render						},
 		{"onKeyDown",							_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onKeyDown					},
 		{"onKeyUp",								_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onKeyUp						},
+		{"onChar",								_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onChar						},
 		{"onTouch",								_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),	(void*)&april::_JNI_onTouch						},
 		{"onButtonDown",						_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onButtonDown				},
 		{"onButtonUp",							_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onButtonUp					},

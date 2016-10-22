@@ -22,7 +22,7 @@ class InputConnection extends BaseInputConnection
 	@Override
 	public boolean deleteSurroundingText(int leftLength, int rightLength)
 	{
-		// Android SDK 16+ doesn't send key events for backspace but calls this method, so calls aare sent manually
+		// Android SDK 16+ doesn't send key events for backspace but calls this method, so calls are sent manually
 		this.view.onKeyDown(KeyEvent.KEYCODE_DEL, this.delKeyDownEvent);
 		this.view.onKeyUp(KeyEvent.KEYCODE_DEL, this.delKeyUpEvent);
 		return super.deleteSurroundingText(leftLength, rightLength);
