@@ -9,7 +9,7 @@
 #ifdef _WIN32_WINDOW
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hstring.h>
-#include <hltypes/hdir.h>
+#include <hltypes/hrdir.h>
 #include <hltypes/hplatform.h>
 #include <hltypes/hresource.h>
 
@@ -36,15 +36,11 @@ namespace april
 		{
 			return false;
 		}
-		hstr path;
-		hstr archivePath = hresource::getArchive();
+		hstr path = filename;
+		hstr archivePath = hresource::getMountedArchives().tryGet("", "");
 		if (this->fromResource && archivePath != "")
 		{
-			path = hdir::joinPath(archivePath, filename);
-		}
-		else
-		{
-			path = filename;
+			path = hrdir::joinPath(archivePath, filename);
 		}
 		if (!Cursor::_create(path))
 		{

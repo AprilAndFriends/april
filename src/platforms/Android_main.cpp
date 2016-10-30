@@ -54,28 +54,28 @@ namespace april
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
 #ifndef _OPENKODE
-			// set the resources CWD
-			hresource::setCwd(hrdir::joinPath(hrdir::joinPath(dataPath, "Android/data"), april::getPackageName()));
-			hresource::setArchive(""); // not used anyway when hasZip() returns false
-			hlog::write(logTag, "Using no-zip: " + hresource::getCwd());
+			// using user data directory for resources
+			harray<hstr> segments;
+			segments += dataPath;
+			segments += "Android/data";
+			segments += april::getPackageName();
+			hresource::mountArchive("", hrdir::joinPaths(segments));
+			hlog::write(logTag, "Using user data directory for resources.");
 #else
-			hlog::write(logTag, "Using KD file system: " + hresource::getCwd());
+			hlog::write(logTag, "Using KD file system for resources.");
 #endif
 		}
 		else if (archivePath != "")
 		{
-			// using APK file as archive
-			hresource::setCwd("assets");
-			hresource::setArchive(archivePath);
-			hlog::write(logTag, "Using assets: " + hresource::getArchive());
+			// using APK file's "assets" directory for resources
+			hresource::mountArchive("", archivePath, "assets");
+			hlog::write(logTag, "Using assets for resources: " + archivePath);
 		}
 		else
 		{
-			// using OBB file as archive
-			hresource::setCwd(".");
-			// using Google Play's "Expansion File" system
-			hresource::setArchive(dataPath);
-			hlog::write(logTag, "Using obb: " + hresource::getArchive());
+			// using Google Play's "Expansion File" system for resources
+			hresource::mountArchive("", dataPath);
+			hlog::write(logTag, "Using obb for resources: " + dataPath);
 		}
 	}
 	
