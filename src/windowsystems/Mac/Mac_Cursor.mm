@@ -97,7 +97,7 @@ namespace april
 		}
 		if (this->fromResource)
 		{
-			hstr archive = hresource::getArchive();
+			hstr archive = hresource::getMountedArchives().tryGet("", "");
 			if (archive.size() > 0)
 			{
 				path = hdir::joinPath(archive, path);
