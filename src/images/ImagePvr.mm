@@ -384,7 +384,7 @@ namespace april
 		Image* image = Image::create(pvrtex.width, pvrtex.height, NULL, Image::FORMAT_INVALID);
 		image->data = new unsigned char[imageData.length];
 		memcpy(image->data, imageData.bytes, imageData.length);
-		image->format = Image::FORMAT_PALETTE;
+		image->format = Image::FORMAT_COMPRESSED;
 		image->internalFormat = pvrtex.internalFormat;
 		image->compressedSize = (int)imageData.length;
 		[arp release];
@@ -424,7 +424,7 @@ namespace april
 		image->w = pvrtex.width;
 		image->h = pvrtex.height;
 		image->data = NULL;
-		image->format = Image::FORMAT_PALETTE;
+		image->format = Image::FORMAT_COMPRESSED;
 		image->internalFormat = pvrtex.internalFormat;
 		image->compressedSize = (int)imageData.length;
 		[arp release];

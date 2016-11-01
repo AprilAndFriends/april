@@ -81,8 +81,11 @@ void CustomTexture::_assignFormat()
 	case april::Image::FORMAT_GRAYSCALE:
 		this->glFormat = this->internalFormat = GL_LUMINANCE;
 		break;
-	case april::Image::FORMAT_PALETTE: // TODOaa - does palette use RGBA?
-		this->glFormat = this->internalFormat = GL_RGBA;
+	case april::Image::FORMAT_COMPRESSED:
+		this->glFormat = this->internalFormat = 0;
+		break;
+	case april::Image::FORMAT_PALETTE:
+		this->glFormat = this->internalFormat = 0;
 		break;
 	default:
 		this->glFormat = this->internalFormat = GL_RGBA;
@@ -116,7 +119,7 @@ bool CustomTexture::_unlockSystem(Lock& lock, bool update)
 	}
 	if (update)
 	{
-		if (this->format != april::Image::FORMAT_PALETTE)
+		if (this->format != april::Image::FORMAT_COMPRESSED && this->format != april::Image::FORMAT_PALETTE)
 		{
 			this->_setCurrentTexture();
 			if (this->width == lock.w && this->height == lock.h)
@@ -140,7 +143,7 @@ bool CustomTexture::_unlockSystem(Lock& lock, bool update)
 
 bool CustomTexture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, april::Image::Format srcFormat)
 {
-	if (this->format == april::Image::FORMAT_PALETTE)
+	if (this->format == april::Image::FORMAT_COMPRESSED || this->format == april::Image::FORMAT_PALETTE)
 	{
 		return false;
 	}

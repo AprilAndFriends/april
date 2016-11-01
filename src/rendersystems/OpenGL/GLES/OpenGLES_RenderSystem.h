@@ -48,6 +48,10 @@ namespace april
 		OpenGLES_VertexShader* vertexShaderTextured;
 		OpenGLES_VertexShader* vertexShaderColored;
 		OpenGLES_VertexShader* vertexShaderColoredTextured;
+#ifdef _ANDROID
+		OpenGLES_VertexShader* vertexShaderTextured_AlphaHack;
+		OpenGLES_VertexShader* vertexShaderColoredTextured_AlphaHack;
+#endif
 		OpenGLES_PixelShader* pixelShaderMultiply;
 		OpenGLES_PixelShader* pixelShaderAlphaMap;
 		OpenGLES_PixelShader* pixelShaderLerp;
@@ -60,6 +64,12 @@ namespace april
 		OpenGLES_PixelShader* pixelShaderColoredTexturedMultiply;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedAlphaMap;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedLerp;
+#ifdef _ANDROID
+		OpenGLES_PixelShader* pixelShaderTexturedMultiply_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderTexturedLerp_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderColoredTexturedMultiply_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderColoredTexturedLerp_AlphaHack;
+#endif
 		ShaderProgram* shaderMultiply;
 		ShaderProgram* shaderAlphaMap;
 		ShaderProgram* shaderLerp;
@@ -72,6 +82,12 @@ namespace april
 		ShaderProgram* shaderColoredTexturedMultiply;
 		ShaderProgram* shaderColoredTexturedAlphaMap;
 		ShaderProgram* shaderColoredTexturedLerp;
+#ifdef _ANDROID
+		ShaderProgram* shaderTexturedMultiply_AlphaHack;
+		ShaderProgram* shaderTexturedLerp_AlphaHack;
+		ShaderProgram* shaderColoredTexturedMultiply_AlphaHack;
+		ShaderProgram* shaderColoredTexturedLerp_AlphaHack;
+#endif
 		bool deviceState_matrixChanged;
 		bool deviceState_systemColorChanged;
 		bool deviceState_colorModeFactorChanged;

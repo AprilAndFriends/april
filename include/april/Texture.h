@@ -692,7 +692,7 @@ namespace april
 		/// @brief Effective width of the texture in pixels.
 		/// @note Used only with software NPOT textures internally.
 		float effectiveHeight;
-		/// @brief The byte size of the image data when handling compressed formats (e.g. FORMAT_PALETTE).
+		/// @brief The byte size of the image data when handling compressed formats (e.g. FORMAT_COMPRESSED or FORMAT_PALETTE).
 		int compressedSize;
 		/// @brief The texture's filtering mode.
 		Filter filter;

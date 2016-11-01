@@ -60,8 +60,10 @@ namespace april
 			/// @brief Defines a single-color-channel image, the context being a grayscale image.
 			/// @see FORMAT_ALPHA
 			FORMAT_GRAYSCALE,
+			/// @brief Defines a compressed image.
+			FORMAT_COMPRESSED,
 			/// @brief Defines an image with palette colors.
-			FORMAT_PALETTE // TODOa - this is msotly unsupported right now
+			FORMAT_PALETTE // TODOa - this is mostly unsupported right now
 		};
 
 		/// @brief Defines image file formats.
@@ -875,6 +877,17 @@ namespace april
 		/// @param[in] stream The encoded image data stream.
 		/// @return The created Image object or NULL if failed.
 		static Image* _loadPvr(hsbase& stream);
+
+		/// @brief Loads and decodes ETCX file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @param[in] size The size within the data stream that actually belongs to this encoded file.
+		/// @return The created Image object or NULL if failed.
+		static Image* _loadEtcx(hsbase& stream, int size);
+		/// @brief Loads and decodes ETCX file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
+		static Image* _loadEtcx(hsbase& stream);
+
 		/// @brief Saves image data into a stream encoded as PNG file.
 		/// @param[in,out] stream The destination image data stream.
 		/// @param[in] image The Image object to save.
@@ -906,6 +919,16 @@ namespace april
 		/// @param[in] stream The encoded image data stream.
 		/// @return The created Image object or NULL if failed.
 		static Image* _readMetaDataPvr(hsbase& stream);
+
+		/// @brief Loads and decodes meta data from ETCX file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @param[in] size The size within the data stream that actually belongs to this encoded file.
+		/// @return The created Image object or NULL if failed.
+		static Image* _readMetaDataEtcx(hsbase& stream, int size);
+		/// @brief Loads and decodes meta data from ETCX file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
+		static Image* _readMetaDataEtcx(hsbase& stream);
 
 		/// @brief Gets the color channel byte incides for pixel format data.
 		/// @param[in] format The format to check.

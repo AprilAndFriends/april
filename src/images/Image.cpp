@@ -291,7 +291,7 @@ namespace april
 
 	Image* Image::extractAlpha() const
 	{
-		if (!CHECK_ALPHA_FORMAT(this->format) && this->format != FORMAT_ALPHA && this->format != FORMAT_PALETTE)
+		if (!CHECK_ALPHA_FORMAT(this->format) && this->format != FORMAT_ALPHA && this->format != FORMAT_COMPRESSED && this->format != FORMAT_PALETTE)
 		{
 			return Image::create(this->w, this->h, april::Color::White, FORMAT_ALPHA);
 		}
@@ -474,11 +474,18 @@ namespace april
 			file.open(filename);
 			return Image::_loadJpt(file);
 		}
-#if _IMAGE_PVR
+#ifdef _IMAGE_PVR
 		if (filename.lowered().endsWith(".pvr"))
 		{
 			file.open(filename);
 			return Image::_loadPvr(file);
+		}
+#endif
+#ifdef _ANDROID
+		if (filename.lowered().endsWith(".etcx"))
+		{
+			file.open(filename);
+			return Image::_loadEtcx(file);
 		}
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
@@ -526,11 +533,18 @@ namespace april
 			file.open(filename);
 			return Image::_loadJpt(file);
 		}
-#if _IMAGE_PVR
+#ifdef _IMAGE_PVR
 		if (filename.lowered().endsWith(".pvr"))
 		{
 			file.open(filename);
 			return Image::_loadPvr(file);
+		}
+#endif
+#ifdef _ANDROID
+		if (filename.lowered().endsWith(".etcx"))
+		{
+			file.open(filename);
+			return Image::_loadEtcx(file);
 		}
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
@@ -578,6 +592,12 @@ namespace april
 		if (logicalExtension.lowered().endsWith(".pvr"))
 		{
 			return Image::_loadPvr(stream);
+		}
+#endif
+#ifdef _ANDROID
+		if (logicalExtension.lowered().endsWith(".etcx"))
+		{
+			return Image::_loadEtcx(stream);
 		}
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customLoaders)
@@ -689,11 +709,18 @@ namespace april
 			file.open(filename);
 			return Image::_readMetaDataJpt(file);
 		}
-#if _IMAGE_PVR
+#ifdef _IMAGE_PVR
 		if (filename.lowered().endsWith(".pvr"))
 		{
 			file.open(filename);
 			return Image::_readMetaDataPvr(file);
+		}
+#endif
+#ifdef _ANDROID
+		if (filename.lowered().endsWith(".etcx"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataEtcx(file);
 		}
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customMetaDataLoaders)
@@ -725,11 +752,18 @@ namespace april
 			file.open(filename);
 			return Image::_readMetaDataJpt(file);
 		}
-#if _IMAGE_PVR
+#ifdef _IMAGE_PVR
 		if (filename.lowered().endsWith(".pvr"))
 		{
 			file.open(filename);
 			return Image::_readMetaDataPvr(file);
+		}
+#endif
+#ifdef _ANDROID
+		if (filename.lowered().endsWith(".etcx"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataEtcx(file);
 		}
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customMetaDataLoaders)
@@ -761,6 +795,12 @@ namespace april
 		if (logicalExtension.lowered().endsWith(".pvr"))
 		{
 			return Image::_readMetaDataPvr(stream);
+		}
+#endif
+#ifdef _ANDROID
+		if (logicalExtension.lowered().endsWith(".etcx"))
+		{
+			return Image::_readMetaDataEtcx(stream);
 		}
 #endif
 		foreach_m (Image* (*)(hsbase&), it, Image::customMetaDataLoaders)
@@ -1764,7 +1804,7 @@ namespace april
 			return false;
 		}
 		int srcBpp = Image::getFormatBpp(srcFormat);
-		if (srcFormat == FORMAT_PALETTE && destFormat == FORMAT_PALETTE)
+		if ((srcFormat == FORMAT_COMPRESSED || srcFormat == FORMAT_PALETTE) && (destFormat == FORMAT_COMPRESSED || destFormat == FORMAT_PALETTE))
 		{
 			return true;
 		}

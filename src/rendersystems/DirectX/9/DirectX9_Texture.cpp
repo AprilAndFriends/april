@@ -129,6 +129,10 @@ namespace april
 		{
 			this->d3dFormat = D3DFMT_L8;
 		}
+		else if (nativeFormat == Image::FORMAT_COMPRESSED)
+		{
+			this->d3dFormat = D3DFMT_A8R8G8B8; // TODOaa - needs changing, ARGB shouldn't be here
+		}
 		else if (nativeFormat == Image::FORMAT_PALETTE)
 		{
 			this->d3dFormat = D3DFMT_A8R8G8B8; // TODOaa - needs changing, ARGB shouldn't be here

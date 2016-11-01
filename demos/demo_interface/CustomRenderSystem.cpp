@@ -436,6 +436,10 @@ april::Image::Format CustomRenderSystem::getNativeTextureFormat(april::Image::Fo
 	{
 		return april::Image::FORMAT_GRAYSCALE;
 	}
+	if (format == april::Image::FORMAT_COMPRESSED)
+	{
+		return april::Image::FORMAT_COMPRESSED;
+	}
 	if (format == april::Image::FORMAT_PALETTE)
 	{
 		return april::Image::FORMAT_PALETTE;

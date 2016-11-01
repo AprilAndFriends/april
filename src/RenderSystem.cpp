@@ -102,6 +102,7 @@ namespace april
 		this->textureFormats += Image::FORMAT_BGR;
 		this->textureFormats += Image::FORMAT_ALPHA;
 		this->textureFormats += Image::FORMAT_GRAYSCALE;
+		this->textureFormats += Image::FORMAT_COMPRESSED;
 		this->textureFormats += Image::FORMAT_PALETTE;
 	}
 

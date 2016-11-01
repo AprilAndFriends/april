@@ -72,6 +72,19 @@
 	uniform sampler2D sampler2d; \n\
 "
 
+// pixel header defines (ALPHA-HACK)
+#define SHADER_PIXEL_Textured_AlphaHack_Include "\
+" SHADER_Textured_Include "\
+	uniform lowp vec4 systemColor; \n\
+	uniform sampler2D sampler2d; \n\
+	uniform sampler2D sampler2dAlpha; \n\
+"
+#define SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
+" SHADER_ColoredTextured_Include "\
+	uniform sampler2D sampler2d; \n\
+	uniform sampler2D sampler2dAlpha; \n\
+"
+
 // vertex shaders
 #define SHADER_VertexPlain SHADER_VERTEX_Plain_Include "\
 	void main(void) \n\
@@ -184,6 +197,37 @@
 	{ \n\
 		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, lerpAlpha), tex.a * colorFrag.a); \n\
+	} \n\
+"
+
+// pixel shaders (ALPHA-HACK)
+#define SHADER_PixelTexturedMultiply_AlphaHack SHADER_PIXEL_Textured_AlphaHack_Include "\
+	void main(void) \n\
+	{ \n\
+		gl_FragColor = vec4(texture2D(sampler2d, texFrag).rgb, texture2D(sampler2dAlpha, texFrag).r) * systemColor; \n\
+	} \n\
+"
+#define SHADER_PixelTexturedLerp_AlphaHack SHADER_PIXEL_Textured_AlphaHack_Include "\
+	uniform lowp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		gl_FragColor = vec4(mix(tex.rgb, systemColor.rgb, lerpAlpha), tex.a * systemColor.a); \n\
+	} \n\
+"
+
+#define SHADER_PixelColoredTexturedMultiply_AlphaHack SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
+	void main(void) \n\
+	{ \n\
+		gl_FragColor = vec4(texture2D(sampler2d, texFrag).rgb, texture2D(sampler2dAlpha, texFrag).r) * colorFrag; \n\
+	} \n\
+"
+#define SHADER_PixelColoredTexturedLerp_AlphaHack SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
+	uniform lowp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * colorFrag.a); \n\
 	} \n\
 "
 

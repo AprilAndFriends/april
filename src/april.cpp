@@ -225,6 +225,9 @@ namespace april
 #ifdef _IOS
 			extensions += ".pvr";
 #endif
+#ifdef _ANDROID
+			extensions += ".etcx";
+#endif
 		}
 #ifdef _EGL
 		if (april::egl == NULL)

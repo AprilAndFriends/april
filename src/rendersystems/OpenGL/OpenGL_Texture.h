@@ -36,6 +36,9 @@ namespace april
 		unsigned int textureId;
 		int glFormat;
 		int internalFormat;
+#ifdef _ANDROID
+		unsigned int alphaTextureId;
+#endif
 
 		void _setCurrentTexture();
 

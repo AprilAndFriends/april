@@ -30,14 +30,17 @@
 #define COLOR_ARRAY 1
 #define TEXTURE_ARRAY 2
 
-#define DELETE_SHADER(name, type) \
+#define DELETE_SHADER(type, name) \
 	if (name != NULL) \
 	{ \
 		this->destroy ## type ## Shader(name); \
 		name = NULL; \
 	}
 
-#define LOAD_SHADER(name, type, mode, data) \
+#define DELETE_VERTEX_SHADER(name) DELETE_SHADER(Vertex, name)
+#define DELETE_PIXEL_SHADER(name) DELETE_SHADER(Pixel, name)
+
+#define LOAD_SHADER(type, name, mode, data) \
 	if (name == NULL) \
 	{ \
 		data.clear(); \
@@ -45,6 +48,9 @@
 		name = (OpenGLES_ ## type ## Shader*)this->_deviceCreate ## type ## Shader(); \
 		name->load(data); \
 	}
+
+#define LOAD_VERTEX_SHADER(name, mode, data) LOAD_SHADER(Vertex, name, mode, data)
+#define LOAD_PIXEL_SHADER(name, mode, data) LOAD_SHADER(Pixel, name, mode, data)
 
 #define LOAD_PROGRAM(name, pixelShader, vertexShader)\
 	if (name == NULL) \
@@ -126,6 +132,10 @@ namespace april
 		this->vertexShaderTextured = NULL;
 		this->vertexShaderColored = NULL;
 		this->vertexShaderColoredTextured = NULL;
+#ifdef _ANDROID
+		this->vertexShaderTextured_AlphaHack = NULL;
+		this->vertexShaderColoredTextured_AlphaHack = NULL;
+#endif
 		this->pixelShaderMultiply = NULL;
 		this->pixelShaderAlphaMap = NULL;
 		this->pixelShaderLerp = NULL;
@@ -138,6 +148,12 @@ namespace april
 		this->pixelShaderColoredTexturedMultiply = NULL;
 		this->pixelShaderColoredTexturedAlphaMap = NULL;
 		this->pixelShaderColoredTexturedLerp = NULL;
+#ifdef _ANDROID
+		this->pixelShaderTexturedMultiply_AlphaHack = NULL;
+		this->pixelShaderTexturedLerp_AlphaHack = NULL;
+		this->pixelShaderColoredTexturedMultiply_AlphaHack = NULL;
+		this->pixelShaderColoredTexturedLerp_AlphaHack = NULL;
+#endif
 		this->shaderMultiply = NULL;
 		this->shaderAlphaMap = NULL;
 		this->shaderLerp = NULL;
@@ -150,6 +166,12 @@ namespace april
 		this->shaderColoredTexturedMultiply = NULL;
 		this->shaderColoredTexturedAlphaMap = NULL;
 		this->shaderColoredTexturedLerp = NULL;
+#ifdef _ANDROID
+		this->shaderTexturedMultiply_AlphaHack = NULL;
+		this->shaderTexturedLerp_AlphaHack = NULL;
+		this->shaderColoredTexturedMultiply_AlphaHack = NULL;
+		this->shaderColoredTexturedLerp_AlphaHack = NULL;
+#endif
 		this->deviceState_matrixChanged = true;
 		this->deviceState_systemColorChanged = true;
 		this->deviceState_colorModeFactorChanged = true;
@@ -221,22 +243,32 @@ namespace april
 	void OpenGLES_RenderSystem::_createShaders()
 	{
 		hstream data;
-		LOAD_SHADER(this->vertexShaderPlain, Vertex, Plain, data);
-		LOAD_SHADER(this->vertexShaderTextured, Vertex, Textured, data);
-		LOAD_SHADER(this->vertexShaderColored, Vertex, Colored, data);
-		LOAD_SHADER(this->vertexShaderColoredTextured, Vertex, ColoredTextured, data);
-		LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply, data);
-		LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap, data);
-		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp, data);
-		LOAD_SHADER(this->pixelShaderColoredMultiply, Pixel, ColoredMultiply, data);
-		LOAD_SHADER(this->pixelShaderColoredAlphaMap, Pixel, ColoredAlphaMap, data);
-		LOAD_SHADER(this->pixelShaderColoredLerp, Pixel, ColoredLerp, data);
-		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply, data);
-		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap, data);
-		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp, data);
-		LOAD_SHADER(this->pixelShaderColoredTexturedMultiply, Pixel, ColoredTexturedMultiply, data);
-		LOAD_SHADER(this->pixelShaderColoredTexturedAlphaMap, Pixel, ColoredTexturedAlphaMap, data);
-		LOAD_SHADER(this->pixelShaderColoredTexturedLerp, Pixel, ColoredTexturedLerp, data);
+		LOAD_VERTEX_SHADER(this->vertexShaderPlain, Plain, data);
+		LOAD_VERTEX_SHADER(this->vertexShaderTextured, Textured, data);
+		LOAD_VERTEX_SHADER(this->vertexShaderColored, Colored, data);
+		LOAD_VERTEX_SHADER(this->vertexShaderColoredTextured, ColoredTextured, data);
+#ifdef _ANDROID
+		LOAD_VERTEX_SHADER(this->vertexShaderTextured_AlphaHack, Textured_AlphaHack, data);
+		LOAD_VERTEX_SHADER(this->vertexShaderColoredTextured_AlphaHack, ColoredTextured_AlphaHack, data);
+#endif
+		LOAD_PIXEL_SHADER(this->pixelShaderMultiply, Multiply, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderAlphaMap, AlphaMap, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderLerp, Lerp, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredMultiply, ColoredMultiply, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredAlphaMap, ColoredAlphaMap, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredLerp, ColoredLerp, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderTexturedMultiply, TexturedMultiply, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderTexturedAlphaMap, TexturedAlphaMap, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderTexturedLerp, TexturedLerp, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply, ColoredTexturedMultiply, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedAlphaMap, ColoredTexturedAlphaMap, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedLerp, ColoredTexturedLerp, data);
+#ifdef _ANDROID
+		LOAD_PIXEL_SHADER(this->pixelShaderTexturedMultiply_AlphaHack, TexturedMultiply_AlphaHack, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderTexturedLerp_AlphaHack, TexturedLerp_AlphaHack, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply_AlphaHack, ColoredTexturedMultiply_AlphaHack, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedLerp_AlphaHack, ColoredTexturedLerp_AlphaHack, data);
+#endif
 		LOAD_PROGRAM(this->shaderMultiply, this->pixelShaderMultiply, this->vertexShaderPlain);
 		LOAD_PROGRAM(this->shaderAlphaMap, this->pixelShaderAlphaMap, this->vertexShaderPlain);
 		LOAD_PROGRAM(this->shaderLerp, this->pixelShaderLerp, this->vertexShaderPlain);
@@ -249,26 +281,42 @@ namespace april
 		LOAD_PROGRAM(this->shaderColoredTexturedMultiply, this->pixelShaderColoredTexturedMultiply, this->vertexShaderColoredTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedAlphaMap, this->pixelShaderColoredTexturedAlphaMap, this->vertexShaderColoredTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedLerp, this->pixelShaderColoredTexturedLerp, this->vertexShaderColoredTextured);
+#ifdef _ANDROID
+		LOAD_PROGRAM(this->shaderTexturedMultiply_AlphaHack, this->pixelShaderTexturedMultiply_AlphaHack, this->vertexShaderTextured_AlphaHack);
+		LOAD_PROGRAM(this->shaderTexturedLerp_AlphaHack, this->pixelShaderTexturedLerp_AlphaHack, this->vertexShaderTextured_AlphaHack);
+		LOAD_PROGRAM(this->shaderColoredTexturedMultiply_AlphaHack, this->pixelShaderColoredTexturedMultiply_AlphaHack, this->vertexShaderColoredTextured_AlphaHack);
+		LOAD_PROGRAM(this->shaderColoredTexturedLerp_AlphaHack, this->pixelShaderColoredTexturedLerp_AlphaHack, this->vertexShaderColoredTextured_AlphaHack);
+#endif
 	}
 
 	void OpenGLES_RenderSystem::_destroyShaders()
 	{
-		DELETE_SHADER(this->vertexShaderPlain, Vertex);
-		DELETE_SHADER(this->vertexShaderTextured, Vertex);
-		DELETE_SHADER(this->vertexShaderColored, Vertex);
-		DELETE_SHADER(this->vertexShaderColoredTextured, Vertex);
-		DELETE_SHADER(this->pixelShaderMultiply, Pixel);
-		DELETE_SHADER(this->pixelShaderAlphaMap, Pixel);
-		DELETE_SHADER(this->pixelShaderLerp, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredMultiply, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredAlphaMap, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredLerp, Pixel);
-		DELETE_SHADER(this->pixelShaderTexturedMultiply, Pixel);
-		DELETE_SHADER(this->pixelShaderTexturedAlphaMap, Pixel);
-		DELETE_SHADER(this->pixelShaderTexturedLerp, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredTexturedMultiply, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredTexturedAlphaMap, Pixel);
-		DELETE_SHADER(this->pixelShaderColoredTexturedLerp, Pixel);
+		DELETE_VERTEX_SHADER(this->vertexShaderPlain);
+		DELETE_VERTEX_SHADER(this->vertexShaderTextured);
+		DELETE_VERTEX_SHADER(this->vertexShaderColored);
+		DELETE_VERTEX_SHADER(this->vertexShaderColoredTextured);
+#ifdef _ANDROID
+		DELETE_VERTEX_SHADER(this->vertexShaderTextured_AlphaHack);
+		DELETE_VERTEX_SHADER(this->vertexShaderColoredTextured_AlphaHack);
+#endif
+		DELETE_PIXEL_SHADER(this->pixelShaderMultiply);
+		DELETE_PIXEL_SHADER(this->pixelShaderAlphaMap);
+		DELETE_PIXEL_SHADER(this->pixelShaderLerp);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredMultiply);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredAlphaMap);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredLerp);
+		DELETE_PIXEL_SHADER(this->pixelShaderTexturedMultiply);
+		DELETE_PIXEL_SHADER(this->pixelShaderTexturedAlphaMap);
+		DELETE_PIXEL_SHADER(this->pixelShaderTexturedLerp);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedAlphaMap);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedLerp);
+#ifdef _ANDROID
+		DELETE_PIXEL_SHADER(this->pixelShaderTexturedMultiply_AlphaHack);
+		DELETE_PIXEL_SHADER(this->pixelShaderTexturedLerp_AlphaHack);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply_AlphaHack);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedLerp_AlphaHack);
+#endif
 		_HL_TRY_DELETE(this->shaderMultiply);
 		_HL_TRY_DELETE(this->shaderAlphaMap);
 		_HL_TRY_DELETE(this->shaderLerp);
@@ -281,6 +329,12 @@ namespace april
 		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply);
 		_HL_TRY_DELETE(this->shaderColoredTexturedAlphaMap);
 		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
+#ifdef _ANDROID
+		_HL_TRY_DELETE(this->shaderTexturedMultiply_AlphaHack);
+		_HL_TRY_DELETE(this->shaderTexturedLerp_AlphaHack);
+		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply_AlphaHack);
+		_HL_TRY_DELETE(this->shaderColoredTexturedLerp_AlphaHack);
+#endif
 	}
 
 	void OpenGLES_RenderSystem::_updateDeviceState(bool forceUpdate)
@@ -368,6 +422,29 @@ namespace april
 		{
 			hlog::warn(logTag, "Trying to set unsupported color mode!");
 		}
+#ifdef _ANDROID
+		OpenGLES_Texture* currentTexture = (OpenGLES_Texture*)this->deviceState->texture;
+		bool useAlphaHack = (this->deviceState->useTexture && currentTexture->alphaTextureId != 0);
+		if (useAlphaHack)
+		{
+			if (shader == this->shaderTexturedMultiply)
+			{
+				shader = this->shaderTexturedMultiply_AlphaHack;
+			}
+			else if (shader == this->shaderTexturedLerp)
+			{
+				shader = this->shaderTexturedLerp_AlphaHack;
+			}
+			else if (shader == this->shaderColoredTexturedMultiply)
+			{
+				shader = this->shaderColoredTexturedMultiply_AlphaHack;
+			}
+			else if (shader == this->shaderColoredTexturedLerp)
+			{
+				shader = this->shaderColoredTexturedLerp_AlphaHack;
+			}
+		}
+#endif
 		if (this->deviceState_shader != shader)
 		{
 			forceUpdate = true;
@@ -385,6 +462,16 @@ namespace april
 			{
 				glUniform1i(samplerLocation, 0);
 			}
+#ifdef _ANDROID
+			if (useAlphaHack) // will only be true if this->deviceState->useTexture is true
+			{
+				samplerLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "sampler2dAlpha");
+				if (samplerLocation >= 0)
+				{
+					glUniform1i(samplerLocation, 1);
+				}
+			}
+#endif
 		}
 		if (forceUpdate || this->deviceState_matrixChanged)
 		{

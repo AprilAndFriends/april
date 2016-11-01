@@ -57,6 +57,10 @@
 	#endif
 #endif
 
+#ifdef _ANDROID
+#define GL_ETCX_RGBA8_OES_HACK (GL_ETC1_RGB8_OES | (1u << 31))
+#endif
+
 #include <hltypes/hstring.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>

@@ -676,6 +676,10 @@ namespace april
 		{
 			return Image::FORMAT_GRAYSCALE;
 		}
+		if (format == Image::FORMAT_COMPRESSED)
+		{
+			return Image::FORMAT_COMPRESSED;
+		}
 		if (format == Image::FORMAT_PALETTE)
 		{
 			return Image::FORMAT_PALETTE;

@@ -185,6 +185,9 @@
     <ClCompile Include="..\..\src\delegates\UpdateDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\images\ImageEtcx.cpp">
+      <Filter>Source Files\images</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\images\ImageJpg.cpp">
       <Filter>Source Files\images</Filter>
     </ClCompile>

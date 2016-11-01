@@ -195,7 +195,16 @@ namespace april
 	{
 		if (texture != NULL)
 		{
-			glBindTexture(GL_TEXTURE_2D, ((OpenGL_Texture*)texture)->textureId);
+			OpenGL_Texture* currentTexture = (OpenGL_Texture*)texture;
+#ifdef _ANDROID
+			if (currentTexture->alphaTextureId != 0)
+			{
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, currentTexture->alphaTextureId);
+				glActiveTexture(GL_TEXTURE0);
+			}
+#endif
+			glBindTexture(GL_TEXTURE_2D, currentTexture->textureId);
 		}
 		else
 		{
@@ -442,6 +451,10 @@ namespace april
 		if (format == Image::FORMAT_GRAYSCALE)
 		{
 			return Image::FORMAT_GRAYSCALE;
+		}
+		if (format == Image::FORMAT_COMPRESSED)
+		{
+			return Image::FORMAT_COMPRESSED;
 		}
 		if (format == Image::FORMAT_PALETTE)
 		{

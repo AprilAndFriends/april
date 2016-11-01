@@ -46,6 +46,9 @@ namespace april
 
 	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0)
 	{
+#ifdef _ANDROID
+		this->alphaTextureId = 0;
+#endif
 	}
 
 	OpenGL_Texture::~OpenGL_Texture()
@@ -60,8 +63,8 @@ namespace april
 			return false;
 		}
 		this->firstUpload = true;
-#ifdef _IOS
 		// data has to be uploaded right away if compressed texture
+#ifdef _IOS
 		if (this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG || this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG)
 		{
 			this->_setCurrentTexture();
@@ -71,11 +74,50 @@ namespace april
 			this->firstUpload = false;
 		}
 #endif
+#ifdef _ANDROID
+		if ((this->dataFormat & GL_ETC1_RGB8_OES) == GL_ETC1_RGB8_OES)
+		{
+			GLenum glError = 0;
+			if (this->dataFormat == GL_ETCX_RGBA8_OES_HACK)
+			{
+				size /= 2;
+				glGenTextures(1, &this->alphaTextureId);
+				if (this->alphaTextureId == 0)
+				{
+					hlog::warn(logTag, "Could not create alpha texture hack: " + this->_getInternalName());
+				}
+				else
+				{
+					unsigned int originalTextureId = this->textureId;
+					this->textureId = this->alphaTextureId;
+					this->alphaTextureId = 0;
+					this->_setCurrentTexture();
+					glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, &data[size]);
+					glError = glGetError();
+					SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, &data[size]));
+					this->alphaTextureId = this->textureId;
+					this->textureId = originalTextureId;
+				}
+			}
+			this->_setCurrentTexture();
+			glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, data);
+			glError = glGetError();
+			SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, data));
+			this->firstUpload = false;
+		}
+#endif
 		return true;
 	}
 	
 	bool OpenGL_Texture::_deviceDestroyTexture()
 	{
+#ifdef _ANDROID
+		if (this->alphaTextureId != 0)
+		{
+			glDeleteTextures(1, &this->alphaTextureId);
+			this->alphaTextureId = 0;
+		}
+#endif
 		if (this->textureId != 0)
 		{
 			glDeleteTextures(1, &this->textureId);
@@ -131,9 +173,13 @@ namespace april
 		{
 			this->glFormat = this->internalFormat = GL_LUMINANCE;
 		}
+		else if (this->format == Image::FORMAT_COMPRESSED)
+		{
+			this->glFormat = this->internalFormat = 0; // compressed image formats will set these values as they need to
+		}
 		else if (this->format == Image::FORMAT_PALETTE)
 		{
-			this->glFormat = this->internalFormat = GL_RGBA; // TODOaa - does palette use RGBA?
+			this->glFormat = this->internalFormat = 0; // paletted image formats will set these values as they need to
 		}
 		else
 		{
@@ -167,7 +213,7 @@ namespace april
 		}
 		if (update)
 		{
-			if (this->format != Image::FORMAT_PALETTE)
+			if (this->format != Image::FORMAT_COMPRESSED && this->format != Image::FORMAT_PALETTE)
 			{
 				this->_setCurrentTexture();
 				if (this->width == lock.w && this->height == lock.h)
@@ -191,7 +237,7 @@ namespace april
 
 	bool OpenGL_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		if (this->format == Image::FORMAT_PALETTE)
+		if (this->format == Image::FORMAT_COMPRESSED || this->format == Image::FORMAT_PALETTE)
 		{
 			return false;
 		}
