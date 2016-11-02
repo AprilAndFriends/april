@@ -54,7 +54,7 @@ namespace april
 		GL_POINTS,			// RO_POINT_LIST
 	};
 
-	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(),
+	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), blendSeparationSupported(false),
 		deviceState_vertexStride(0), deviceState_vertexPointer(NULL), deviceState_textureStride(0),
 		deviceState_texturePointer(NULL), deviceState_colorStride(0), deviceState_colorPointer(NULL)
 	{
@@ -64,7 +64,7 @@ namespace april
 #endif
 	}
 
-	OpenGL_RenderSystem::~OpenGL_RenderSystem() : blendSeparationSupported(false)
+	OpenGL_RenderSystem::~OpenGL_RenderSystem()
 	{
 	}
 
