@@ -163,7 +163,6 @@ namespace april
 		}	
 		if (this->keyboardRequest != 0 && g_touches.size() == 0) // only process keyboard when there is no interaction with the screen
 		{
-			bool visible = this->isVirtualKeyboardVisible();
 			if (visible && this->keyboardRequest == -1)
 			{
 				[glview hideVirtualKeyboard];
@@ -174,6 +173,8 @@ namespace april
 			}
 			this->keyboardRequest = 0;
 		}
+		bool visible = this->isVirtualKeyboardVisible();
+		this->virtualKeyboardVisible = visible;
 		return Window::updateOneFrame();
 	}
 

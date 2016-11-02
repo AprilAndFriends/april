@@ -354,6 +354,8 @@ namespace april
 				kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_CURSOR, &param);
 			}
 		}
+#else
+		this->virtualKeyboardVisible = kdKeyboardIsShown(this->kdWindow);
 #endif
 		this->checkEvents();
 		// rendering
