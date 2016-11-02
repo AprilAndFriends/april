@@ -161,6 +161,8 @@ namespace april
 			e->execute();
 			delete e;
 		}	
+		bool visible = this->isVirtualKeyboardVisible();
+		this->virtualKeyboardVisible = visible;
 		if (this->keyboardRequest != 0 && g_touches.size() == 0) // only process keyboard when there is no interaction with the screen
 		{
 			if (visible && this->keyboardRequest == -1)
@@ -173,8 +175,6 @@ namespace april
 			}
 			this->keyboardRequest = 0;
 		}
-		bool visible = this->isVirtualKeyboardVisible();
-		this->virtualKeyboardVisible = visible;
 		return Window::updateOneFrame();
 	}
 

@@ -27,7 +27,7 @@ void april_iOS_registerUrlCallback(iOSUrlCallback ptr)
 	gUrlCallbacks += ptr;
 }
 
-extern UIInterfaceOrientation gSupportedOrientations;
+extern UIInterfaceOrientationMask gSupportedOrientations;
 
 @implementation ApriliOSAppDelegate
 

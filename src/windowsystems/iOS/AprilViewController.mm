@@ -19,7 +19,7 @@ static UIImageView *mImageView;
 @implementation AprilViewController
 bool g_wnd_rotating = 0;
 
-UIInterfaceOrientation gSupportedOrientations = UIInterfaceOrientationMaskLandscape;
+UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLandscape;
 
 -(id)init
 {
