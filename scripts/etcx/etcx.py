@@ -15,8 +15,8 @@ def _read_file(filename):
 class Etcx:
 	
 	Version = 1
-	HEADER_HAS_ALPHA_BIT 0x1
-	HEADER_IS_ZLIB_COMPRESSED_BIT 0x2
+	HEADER_HAS_ALPHA_BIT = 0x1
+	HEADER_IS_ZLIB_COMPRESSED_BIT = 0x2
 	
 	HEADER_SIZE = 13 * 4
 	# etcpak has the w/h order reversed for some reason
