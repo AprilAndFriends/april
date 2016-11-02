@@ -195,8 +195,6 @@ namespace april
 	static int maxWaitingAsyncTextures = 0;
 #endif
 
-
-
 	HL_ENUM_CLASS_DEFINE(RenderSystemType,
 	(
 		HL_ENUM_DEFINE(RenderSystemType, Default);

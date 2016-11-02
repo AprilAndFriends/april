@@ -60,7 +60,6 @@ namespace april
 			image->internalFormat = GL_ETCX_RGBA8_OES_HACK;
 		}
 		image->format = Image::FORMAT_COMPRESSED;
-		hlog::errorf("OK", "%d %d %d %d", image->w, image->h, image->compressedSize, header.compressedSize);
 		if ((header.flags & ETCX_HEADER_IS_ZLIB_COMPRESSED_BIT) == 0)
 		{
 			image->data = new unsigned char[image->compressedSize];
@@ -97,12 +96,6 @@ namespace april
 			delete image;
 			image = NULL;
 		}
-		/*
-		zlibStream.next_in = 0;
-		zlibStream.avail_in = Z_NULL;
-		zlibStream.next_out = 0;
-		zlibStream.avail_out = Z_NULL;
-		*/
 		inflateEnd(&zlibStream);
 		delete[] input;
 		return image;
