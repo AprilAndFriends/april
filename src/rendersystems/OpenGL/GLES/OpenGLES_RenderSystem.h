@@ -86,7 +86,6 @@ namespace april
 		ShaderProgram* shaderColoredTexturedMultiply_AlphaHack;
 		ShaderProgram* shaderColoredTexturedLerp_AlphaHack;
 #endif
-		bool blendSeparationSupported;
 #ifdef _ANDROID
 		bool etc1Supported;
 #endif

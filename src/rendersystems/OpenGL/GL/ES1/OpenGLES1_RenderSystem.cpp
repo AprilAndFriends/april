@@ -43,6 +43,7 @@ namespace april
 		}
 #endif
 		hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
+		hlog::write(logTag, "Extensions supported: " + extensions);
 #ifndef _WINRT
 		this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
 #else
@@ -52,8 +53,12 @@ namespace april
 		// TODO - is there a way to make this work on Win32?
 #ifndef _WIN32
 		this->blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
+		hlog::write(logTag, "Blend-separate supported: " + hstr(this->blendSeparationSupported ? "yes" : "no"));
 #endif
-#ifdef _ANDROID // Android has problems with alpha textures in some implementations
+#ifdef _ANDROID
+		this->etc1Supported = extensions.contains("OES_compressed_ETC1_RGB8_texture");
+		hlog::write(logTag, "ETC1 supported: " + hstr(this->etc1Supported ? "yes" : "no"));
+		// Android has problems with alpha textures in some implementations
 		this->caps.textureFormats /= Image::FORMAT_ALPHA;
 		this->caps.textureFormats /= Image::FORMAT_GRAYSCALE;
 #endif

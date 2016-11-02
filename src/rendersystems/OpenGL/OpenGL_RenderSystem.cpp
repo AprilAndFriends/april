@@ -64,7 +64,7 @@ namespace april
 #endif
 	}
 
-	OpenGL_RenderSystem::~OpenGL_RenderSystem()
+	OpenGL_RenderSystem::~OpenGL_RenderSystem() : blendSeparationSupported(false)
 	{
 	}
 

@@ -88,6 +88,8 @@ namespace april
 		Image* takeScreenshot(Image::Format format);
 
 	protected:
+		bool blendSeparationSupported;
+
 		int deviceState_vertexStride;
 		const void* deviceState_vertexPointer;
 		int deviceState_textureStride;
