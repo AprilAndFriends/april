@@ -69,6 +69,7 @@ namespace april
 {
 	OpenGLES_RenderSystem::ShaderProgram::ShaderProgram() : glShaderProgram(0)
 	{
+		
 	}
 
 	OpenGLES_RenderSystem::ShaderProgram::~ShaderProgram()
@@ -116,9 +117,12 @@ namespace april
 		return true;
 	}
 
-	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), deviceState_matrixChanged(true), 
-		deviceState_systemColorChanged(true), deviceState_colorModeFactorChanged(true)
+	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), blendSeparationSupported(false),
+		deviceState_matrixChanged(true), deviceState_systemColorChanged(true), deviceState_colorModeFactorChanged(true)
 	{
+#ifdef _ANDROID
+		this->etc1Supported = false;
+#endif
 	}
 
 	OpenGLES_RenderSystem::~OpenGLES_RenderSystem()
@@ -132,10 +136,6 @@ namespace april
 		this->vertexShaderTextured = NULL;
 		this->vertexShaderColored = NULL;
 		this->vertexShaderColoredTextured = NULL;
-#ifdef _ANDROID
-		this->vertexShaderTextured_AlphaHack = NULL;
-		this->vertexShaderColoredTextured_AlphaHack = NULL;
-#endif
 		this->pixelShaderMultiply = NULL;
 		this->pixelShaderAlphaMap = NULL;
 		this->pixelShaderLerp = NULL;
@@ -213,6 +213,7 @@ namespace april
 		}
 #endif
 		hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
+		hlog::write(logTag, "Extensions supported: " + extensions);
 #ifndef _WINRT
 		this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
 #else
@@ -222,8 +223,13 @@ namespace april
 		// TODO - is there a way to make this work on Win32?
 #ifndef _WIN32
 		this->blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
+		hlog::write(logTag, "Blend-separate supported: " + hstr(this->blendSeparationSupported ? "yes" : "no"));
 #endif
-        // OpenGLES implementations do not appear to support alpha textures
+#ifdef _ANDROID
+		this->etc1Supported = extensions.contains("OES_compressed_ETC1_RGB8_texture");
+		hlog::write(logTag, "ETC1 supported: " + hstr(this->etc1Supported ? "yes" : "no"));
+#endif
+        // OpenGLES implementations do not appear to support alpha textures by default
 		this->caps.textureFormats /= Image::FORMAT_ALPHA;
 		this->caps.textureFormats /= Image::FORMAT_GRAYSCALE;
 		return OpenGL_RenderSystem::_deviceSetupCaps();
@@ -247,10 +253,6 @@ namespace april
 		LOAD_VERTEX_SHADER(this->vertexShaderTextured, Textured, data);
 		LOAD_VERTEX_SHADER(this->vertexShaderColored, Colored, data);
 		LOAD_VERTEX_SHADER(this->vertexShaderColoredTextured, ColoredTextured, data);
-#ifdef _ANDROID
-		LOAD_VERTEX_SHADER(this->vertexShaderTextured_AlphaHack, Textured_AlphaHack, data);
-		LOAD_VERTEX_SHADER(this->vertexShaderColoredTextured_AlphaHack, ColoredTextured_AlphaHack, data);
-#endif
 		LOAD_PIXEL_SHADER(this->pixelShaderMultiply, Multiply, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderAlphaMap, AlphaMap, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderLerp, Lerp, data);
@@ -282,10 +284,10 @@ namespace april
 		LOAD_PROGRAM(this->shaderColoredTexturedAlphaMap, this->pixelShaderColoredTexturedAlphaMap, this->vertexShaderColoredTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedLerp, this->pixelShaderColoredTexturedLerp, this->vertexShaderColoredTextured);
 #ifdef _ANDROID
-		LOAD_PROGRAM(this->shaderTexturedMultiply_AlphaHack, this->pixelShaderTexturedMultiply_AlphaHack, this->vertexShaderTextured_AlphaHack);
-		LOAD_PROGRAM(this->shaderTexturedLerp_AlphaHack, this->pixelShaderTexturedLerp_AlphaHack, this->vertexShaderTextured_AlphaHack);
-		LOAD_PROGRAM(this->shaderColoredTexturedMultiply_AlphaHack, this->pixelShaderColoredTexturedMultiply_AlphaHack, this->vertexShaderColoredTextured_AlphaHack);
-		LOAD_PROGRAM(this->shaderColoredTexturedLerp_AlphaHack, this->pixelShaderColoredTexturedLerp_AlphaHack, this->vertexShaderColoredTextured_AlphaHack);
+		LOAD_PROGRAM(this->shaderTexturedMultiply_AlphaHack, this->pixelShaderTexturedMultiply_AlphaHack, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderTexturedLerp_AlphaHack, this->pixelShaderTexturedLerp_AlphaHack, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderColoredTexturedMultiply_AlphaHack, this->pixelShaderColoredTexturedMultiply_AlphaHack, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredTexturedLerp_AlphaHack, this->pixelShaderColoredTexturedLerp_AlphaHack, this->vertexShaderColoredTextured);
 #endif
 	}
 
@@ -295,10 +297,6 @@ namespace april
 		DELETE_VERTEX_SHADER(this->vertexShaderTextured);
 		DELETE_VERTEX_SHADER(this->vertexShaderColored);
 		DELETE_VERTEX_SHADER(this->vertexShaderColoredTextured);
-#ifdef _ANDROID
-		DELETE_VERTEX_SHADER(this->vertexShaderTextured_AlphaHack);
-		DELETE_VERTEX_SHADER(this->vertexShaderColoredTextured_AlphaHack);
-#endif
 		DELETE_PIXEL_SHADER(this->pixelShaderMultiply);
 		DELETE_PIXEL_SHADER(this->pixelShaderAlphaMap);
 		DELETE_PIXEL_SHADER(this->pixelShaderLerp);
@@ -356,7 +354,7 @@ namespace april
 	void OpenGLES_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
 	{
 #ifndef _WIN32
-		if (this->blendSeparationSupported)
+		if (true || this->blendSeparationSupported)
 		{
 			// blending for the new generations
 			if (blendMode == BM_ALPHA || blendMode == BM_DEFAULT)
@@ -389,6 +387,23 @@ namespace april
 		{
 			OpenGL_RenderSystem::_setDeviceBlendMode(blendMode);
 		}
+	}
+
+	void OpenGLES_RenderSystem::_setDeviceTexture(Texture* texture)
+	{
+#ifdef _ANDROID
+		if (texture != NULL)
+		{
+			OpenGLES_Texture* currentTexture = (OpenGLES_Texture*)texture;
+			if (currentTexture->alphaTextureId != 0)
+			{
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, currentTexture->alphaTextureId);
+				glActiveTexture(GL_TEXTURE0);
+			}
+		}
+#endif
+		OpenGL_RenderSystem::_setDeviceTexture(texture);
 	}
 
 	void OpenGLES_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)

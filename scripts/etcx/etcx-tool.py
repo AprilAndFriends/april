@@ -15,41 +15,38 @@ def process():
 		info()
 	elif sys.argv[1].lower() in ("help", "-h", "/h", "-?", "/?"):
 		help()
-	elif sys.argv[1].lower() == "merge":
-		if len(sys.argv) != 5:
+	elif sys.argv[1].lower() == "create":
+		if len(sys.argv) != 5 and len(sys.argv) != 6:
 			info()
 			return
-		merge(sys.argv[2:len(sys.argv)])
+		create(sys.argv[2:len(sys.argv)])
 	else:
 		info()
 
-def merge(args):
-	print Etcx.merge(args[0], args[1], args[2])
+def create(args):
+	if len(args) == 3:
+		print Etcx.create(args[0], args[1], args[2])
+	else:
+		print Etcx.create(args[0], args[1], args[2], int(args[3]))
 	
 def info():
 	print ""
-	print "usage: etcx-tool.py merge ETCX_FILENAME ETC1_FILENAME ETC1A_FILNAME"
-	print "       etcx-tool.py split ETCX_FILENAME ETC1_FILENAME ETC1A_FILNAME"
-	print "       etcx-tool.py prepare FILENAME ETC1_FILENAME ETC1A_FILNAME [ETC1_QUALITY]"
-	print "       etcx-tool.py convert FILENAME ETCX_FILENAME [ETC1_QUALITY]"
-	print "       use 'etcx-tool.py -h' for more information"
+	print "usage: etcx-tool.py create ETCX_FILENAME ETC1_FILENAME ETC1A_FILNAME [ZLIB_COMPRESSION_LEVEL]"
 	print ""
 	if os.name != 'posix':
 		os.system("pause")
 
 def help():
 	print ""
-	print "usage: etcx-tool.py merge ETCX_FILENAME ETC1_FILENAME ETC1A_FILNAME"
-	print "       etcx-tool.py split ETCX_FILENAME ETC1_FILENAME ETC1A_FILNAME"
-	print "       etcx-tool.py prepare FILENAME ETC1_FILENAME ETC1A_FILNAME [ETC1_QUALITY]"
-	print "       etcx-tool.py convert FILENAME ETCX_FILENAME [ETC1_QUALITY]"
+	print "usage: etcx-tool.py create ETCX_FILENAME ETC1_FILENAME ETC1A_FILNAME [ZLIB_COMPRESSION_LEVEL]"
 	print ""
 	print "commands:"
-	print "merge            - merges a ETC1 and a ETC1A file into a ETCX file"
+	print "create                 - creates an ETCX file from an ETC1 and an ETC1A file"
 	print ""
-	print "ETCX_FILENAME    - ETCX filename to use in the process"
-	print "ETC1_FILENAME    - ETC1 filename to use in the process"
-	print "ETC1A_FILENAME   - ETC1A filename to use in the process"
+	print "ETCX_FILENAME          - ETCX filename to use in the process"
+	print "ETC1_FILENAME          - ETC1 filename to use in the process"
+	print "ETC1A_FILENAME         - ETC1A filename to use in the process"
+	print "ZLIB_COMPRESSION_LEVEL - ETC1A filename to use in the process"
 	print ""
 	os.system("pause")
 

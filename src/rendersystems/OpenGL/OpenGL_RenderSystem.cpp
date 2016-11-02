@@ -54,7 +54,7 @@ namespace april
 		GL_POINTS,			// RO_POINT_LIST
 	};
 
-	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), blendSeparationSupported(false),
+	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(),
 		deviceState_vertexStride(0), deviceState_vertexPointer(NULL), deviceState_textureStride(0),
 		deviceState_texturePointer(NULL), deviceState_colorStride(0), deviceState_colorPointer(NULL)
 	{
@@ -195,16 +195,7 @@ namespace april
 	{
 		if (texture != NULL)
 		{
-			OpenGL_Texture* currentTexture = (OpenGL_Texture*)texture;
-#ifdef _ANDROID
-			if (currentTexture->alphaTextureId != 0)
-			{
-				glActiveTexture(GL_TEXTURE1);
-				glBindTexture(GL_TEXTURE_2D, currentTexture->alphaTextureId);
-				glActiveTexture(GL_TEXTURE0);
-			}
-#endif
-			glBindTexture(GL_TEXTURE_2D, currentTexture->textureId);
+			glBindTexture(GL_TEXTURE_2D, ((OpenGL_Texture*)texture)->textureId);
 		}
 		else
 		{

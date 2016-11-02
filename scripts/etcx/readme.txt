@@ -6,18 +6,20 @@ contained within the ETCX header container.
 
 	Format specification:
 
-16 bytes			HEADER
-4 bytes + X bytes	IMAGE DEFINITION (JPEG, RGB of the image)
-4 bytes + X bytes	IMAGE DEFINITION (PNG, alpha of the image)
+20 bytes			HEADER
+X bytes				IMAGE DEFINITION (either 2 raw ETC1 images or zlib-compressed data that contains 2 raw ETC1 images)
 
 Header:
 4 bytes			"ETCX"
 4 bytes			flags
 4 bytes			width
 4 bytes			height
+4 bytes			data size in bytes
+4 bytes			compressed data size in bytes
 
 Supported flags:
 bit 1 - has alpha channel
+bit 2 - data is zlib-compressed
 
 	ETCX Tool
 

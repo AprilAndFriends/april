@@ -25,6 +25,8 @@ namespace april
 	class OpenGLES_RenderSystem : public OpenGL_RenderSystem
 	{
 	public:
+		friend class OpenGLES_Texture;
+
 		class ShaderProgram
 		{
 		public:
@@ -48,10 +50,6 @@ namespace april
 		OpenGLES_VertexShader* vertexShaderTextured;
 		OpenGLES_VertexShader* vertexShaderColored;
 		OpenGLES_VertexShader* vertexShaderColoredTextured;
-#ifdef _ANDROID
-		OpenGLES_VertexShader* vertexShaderTextured_AlphaHack;
-		OpenGLES_VertexShader* vertexShaderColoredTextured_AlphaHack;
-#endif
 		OpenGLES_PixelShader* pixelShaderMultiply;
 		OpenGLES_PixelShader* pixelShaderAlphaMap;
 		OpenGLES_PixelShader* pixelShaderLerp;
@@ -88,6 +86,11 @@ namespace april
 		ShaderProgram* shaderColoredTexturedMultiply_AlphaHack;
 		ShaderProgram* shaderColoredTexturedLerp_AlphaHack;
 #endif
+		bool blendSeparationSupported;
+#ifdef _ANDROID
+		bool etc1Supported;
+#endif
+
 		bool deviceState_matrixChanged;
 		bool deviceState_systemColorChanged;
 		bool deviceState_colorModeFactorChanged;
@@ -108,6 +111,7 @@ namespace april
 		void _setDeviceModelviewMatrix(const gmat4& matrix);
 		void _setDeviceProjectionMatrix(const gmat4& matrix);
 		void _setDeviceBlendMode(BlendMode mode);
+		void _setDeviceTexture(Texture* texture);
 		void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
 		void _updateShader(bool forceUpdate);
 

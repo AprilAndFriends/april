@@ -20,35 +20,12 @@
 
 #define APRIL_OGL_RENDERSYS ((OpenGL_RenderSystem*)april::rendersys)
 
-// the memory warning message will likely print "volatile", but that's normal
-#define SAFE_TEXTURE_UPLOAD_CHECK(glError, call) \
-	if (glError == GL_OUT_OF_MEMORY) \
-	{ \
-		if (!_preventRecursion) \
-		{ \
-			_preventRecursion = true; \
-			hlog::warnf(logTag, "Not enough VRAM for %s! Calling low memory warning.", this->_getInternalName().cStr()); \
-			april::window->handleLowMemoryWarningEvent(); \
-			_preventRecursion = false; \
-			this->_setCurrentTexture(); \
-			call; \
-			glError = glGetError(); \
-		} \
-		if (glError == GL_OUT_OF_MEMORY) \
-		{ \
-			hlog::error(logTag, "Failed to upload texture data: Not enough VRAM!"); \
-		} \
-	}
-
 namespace april
 {
-	static bool _preventRecursion = false;
+	bool OpenGL_Texture::_preventRecursion = false;
 
 	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0)
 	{
-#ifdef _ANDROID
-		this->alphaTextureId = 0;
-#endif
 	}
 
 	OpenGL_Texture::~OpenGL_Texture()
@@ -63,61 +40,11 @@ namespace april
 			return false;
 		}
 		this->firstUpload = true;
-		// data has to be uploaded right away if compressed texture
-#ifdef _IOS
-		if (this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG || this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG)
-		{
-			this->_setCurrentTexture();
-			glCompressedTexImage2D(GL_TEXTURE_2D, 0, this->dataFormat, this->width, this->height, 0, size, data);
-			GLenum glError = glGetError();
-			SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(GL_TEXTURE_2D, 0, this->dataFormat, this->width, this->height, 0, size, data));
-			this->firstUpload = false;
-		}
-#endif
-#ifdef _ANDROID
-		if ((this->dataFormat & GL_ETC1_RGB8_OES) == GL_ETC1_RGB8_OES)
-		{
-			GLenum glError = 0;
-			if (this->dataFormat == GL_ETCX_RGBA8_OES_HACK)
-			{
-				size /= 2;
-				glGenTextures(1, &this->alphaTextureId);
-				if (this->alphaTextureId == 0)
-				{
-					hlog::warn(logTag, "Could not create alpha texture hack: " + this->_getInternalName());
-				}
-				else
-				{
-					unsigned int originalTextureId = this->textureId;
-					this->textureId = this->alphaTextureId;
-					this->alphaTextureId = 0;
-					this->_setCurrentTexture();
-					glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, &data[size]);
-					glError = glGetError();
-					SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, &data[size]));
-					this->alphaTextureId = this->textureId;
-					this->textureId = originalTextureId;
-				}
-			}
-			this->_setCurrentTexture();
-			glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, data);
-			glError = glGetError();
-			SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, data));
-			this->firstUpload = false;
-		}
-#endif
 		return true;
 	}
 	
 	bool OpenGL_Texture::_deviceDestroyTexture()
 	{
-#ifdef _ANDROID
-		if (this->alphaTextureId != 0)
-		{
-			glDeleteTextures(1, &this->alphaTextureId);
-			this->alphaTextureId = 0;
-		}
-#endif
 		if (this->textureId != 0)
 		{
 			glDeleteTextures(1, &this->textureId);

@@ -18,11 +18,23 @@
 
 namespace april
 {
+	class OpenGLES_RenderSystem;
+
 	class OpenGLES_Texture : public OpenGL_Texture
 	{
 	public:
+		friend class OpenGLES_RenderSystem;
+
 		OpenGLES_Texture(bool fromResource);
 		~OpenGLES_Texture();
+
+	protected:
+#ifdef _ANDROID
+		unsigned int alphaTextureId;
+#endif
+
+		bool _deviceCreateTexture(unsigned char* data, int size, Type type);
+		bool _deviceDestroyTexture();
 
 	};
 

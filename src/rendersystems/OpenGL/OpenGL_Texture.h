@@ -16,6 +16,26 @@
 
 #include "Texture.h"
 
+// the memory warning message will likely print "volatile", but that's normal
+#define SAFE_TEXTURE_UPLOAD_CHECK(glError, call) \
+	if (glError == GL_OUT_OF_MEMORY) \
+	{ \
+		if (!_preventRecursion) \
+		{ \
+			OpenGL_Texture::_preventRecursion = true; \
+			hlog::warnf(logTag, "Not enough VRAM for %s! Calling low memory warning.", this->_getInternalName().cStr()); \
+			april::window->handleLowMemoryWarningEvent(); \
+			OpenGL_Texture::_preventRecursion = false; \
+			this->_setCurrentTexture(); \
+			call; \
+			glError = glGetError(); \
+		} \
+		if (glError == GL_OUT_OF_MEMORY) \
+		{ \
+			hlog::error(logTag, "Failed to upload texture data: Not enough VRAM!"); \
+		} \
+	}
+
 namespace april
 {
 	class OpenGL_RenderSystem;
@@ -36,9 +56,6 @@ namespace april
 		unsigned int textureId;
 		int glFormat;
 		int internalFormat;
-#ifdef _ANDROID
-		unsigned int alphaTextureId;
-#endif
 
 		void _setCurrentTexture();
 
@@ -52,6 +69,8 @@ namespace april
 
 		void _uploadPotSafeData(unsigned char* data);
 		void _uploadPotSafeClearData();
+
+		static bool _preventRecursion;
 
 	};
 

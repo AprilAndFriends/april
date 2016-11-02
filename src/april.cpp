@@ -189,7 +189,13 @@ namespace april
 
 	static harray<hstr> extensions;
 	static int maxAsyncTextureUploadsPerFrame = 0;
+#if defined(_ANDROID) || defined(_IOS) || defined(_WINRT) && defined(_WINP8)
+	static int maxWaitingAsyncTextures = 8; // to limit RAM consumption
+#else
 	static int maxWaitingAsyncTextures = 0;
+#endif
+
+
 
 	HL_ENUM_CLASS_DEFINE(RenderSystemType,
 	(
