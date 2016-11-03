@@ -117,7 +117,7 @@ namespace april
 		return true;
 	}
 
-	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), blendSeparationSupported(false),
+	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(),
 		deviceState_matrixChanged(true), deviceState_systemColorChanged(true), deviceState_colorModeFactorChanged(true)
 	{
 #ifdef _ANDROID
