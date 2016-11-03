@@ -439,7 +439,7 @@ namespace april
 		}
 #ifdef _ANDROID
 		OpenGLES_Texture* currentTexture = (OpenGLES_Texture*)this->deviceState->texture;
-		bool useAlphaHack = (this->deviceState->useTexture && currentTexture->alphaTextureId != 0);
+		bool useAlphaHack = (this->deviceState->useTexture && currentTexture != NULL && currentTexture->alphaTextureId != 0);
 		if (useAlphaHack)
 		{
 			if (shader == this->shaderTexturedMultiply)
