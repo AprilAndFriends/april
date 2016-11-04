@@ -228,11 +228,7 @@ namespace april
 
 	HCURSOR Win32_Window::getCursorHandle() const
 	{
-		if (this->cursor != NULL)
-		{
-			return ((Win32_Cursor*)this->cursor)->getCursor();
-		}
-		return this->defaultCursor;
+		return (this->cursor != NULL ? ((Win32_Cursor*)this->cursor)->getCursor() : this->defaultCursor);
 	}
 
 	void Win32_Window::setResolution(int w, int h, bool fullscreen)
