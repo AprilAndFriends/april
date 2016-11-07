@@ -27,7 +27,7 @@
 
 namespace april
 {
-	extern JavaVM* javaVM;
+	extern void* javaVM;
 
 	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0),
 		forcedFocus(false)

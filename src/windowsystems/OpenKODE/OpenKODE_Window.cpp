@@ -90,7 +90,7 @@ void april_iOS_registerUrlCallback(iOSUrlCallback ptr)
 namespace april
 {
 #ifdef _ANDROID
-	extern JavaVM* javaVM;
+	extern void* javaVM;
 #endif
 	// this is required due to certain platforms requiring unloading of textures when a pause event is received
 	void KD_APIENTRY _processEventPause(const KDEvent* evt)
