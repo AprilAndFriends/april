@@ -69,6 +69,7 @@ namespace april
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodSwapBuffers, "swapBuffers", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodSwapBuffers);
+		env->PopLocalFrame(NULL);
 	}
 
 	void AndroidJNI_Window::queueTouchEvent(Window::MouseEventType type, gvec2 position, int index)
@@ -90,12 +91,14 @@ namespace april
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowVirtualKeyboard, "showVirtualKeyboard", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodShowVirtualKeyboard);
+		env->PopLocalFrame(NULL);
 	}
 	
 	void AndroidJNI_Window::hideVirtualKeyboard()
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodHideVirtualKeyboard, "hideVirtualKeyboard", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodHideVirtualKeyboard);
+		env->PopLocalFrame(NULL);
 	}
 
 	void AndroidJNI_Window::handleFocusChangeEvent(bool focused)

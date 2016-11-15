@@ -37,16 +37,16 @@ namespace april
 #else
 			info.architecture = "x86";
 #endif
-			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 			// CPU cores
 			info.cpuCores = sysconf(_SC_NPROCESSORS_CONF);
 			// RAM
 			info.ram = (int)(((int64_t)sysconf(_SC_PAGESIZE) * sysconf(_SC_PHYS_PAGES)) / (1024 * 1024)); // in MB
 			// display resolution
+			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 			// TODO - maybe use direct Unix calls?
 			jmethodID methodGetDisplayResolution = env->GetStaticMethodID(classNativeInterface, "getDisplayResolution", _JARGS(_JOBJ, ));
 			jintArray jResolution = (jintArray)env->CallStaticObjectMethod(classNativeInterface, methodGetDisplayResolution);
-			jint dimensions[2];
+			jint dimensions[2] = {0, 0};
 			env->GetIntArrayRegion(jResolution, 0, 2, dimensions);
 			info.displayResolution.set(hroundf(dimensions[0]), hroundf(dimensions[1]));
 			// display DPI
@@ -64,6 +64,7 @@ namespace april
 			// OS version
 			jmethodID methodGetOsVersion = env->GetStaticMethodID(classNativeInterface, "getOsVersion", _JARGS(_JSTR, ));
 			info.osVersion.set(_JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)));
+			env->PopLocalFrame(NULL);
 		}
 		return info;
 	}
@@ -75,6 +76,7 @@ namespace april
 		{
 			APRIL_GET_NATIVE_INTERFACE_FIELD(classNativeInterface, fieldPackageName, "packageName", _JSTR);
 			package = _JSTR_TO_HSTR((jstring)env->GetStaticObjectField(classNativeInterface, fieldPackageName));
+			env->PopLocalFrame(NULL);
 		}
 		return package;
 	}
@@ -86,6 +88,7 @@ namespace april
 		{
 			APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodGetUserDataPath, "getUserDataPath", _JARGS(_JSTR, ));
 			path = _JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetUserDataPath));
+			env->PopLocalFrame(NULL);
 		}
 		return path;
 	}
@@ -93,7 +96,9 @@ namespace april
 	int64_t getRamConsumption()
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodGetRamConsumption, "getRamConsumption", _JARGS(_JLONG, ));
-		return (int64_t)env->CallStaticLongMethod(classNativeInterface, methodGetRamConsumption);
+		int64_t result = (int64_t)env->CallStaticLongMethod(classNativeInterface, methodGetRamConsumption);
+		env->PopLocalFrame(NULL);
+		return result;
 	}
 	
 	bool openUrl(chstr url)
@@ -101,6 +106,7 @@ namespace april
 		hlog::write(logTag, "Opening URL: " + url);
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodOpenUrl, "openUrl", _JARGS(_JVOID, _JSTR));
 		env->CallStaticVoidMethod(classNativeInterface, methodOpenUrl, env->NewStringUTF(url.cStr()));
+		env->PopLocalFrame(NULL);
 		return true;
 	}
 
@@ -133,6 +139,7 @@ namespace april
 		april::dialogCallback = callback;
 		// call Java AprilJNI
 		env->CallStaticVoidMethod(classNativeInterface, methodShowMessageBox, jTitle, jText, jOk, jYes, jNo, jCancel, jIconId);
+		env->PopLocalFrame(NULL);
 	}
 
 }

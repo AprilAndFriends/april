@@ -26,6 +26,7 @@ namespace april
 {
 	/// @brief Gets the JNI environment.
 	/// @return The JNI environment.
+	/// @note For every call of this function, call JNIEnv::PopLocalFrame(NULL) afterwards when it's no longer needed.
 	JNIEnv* getJNIEnv();
 	/// @brief Gets the main activity.
 	/// @return The main activity.
@@ -48,6 +49,11 @@ namespace april
 	/// @see _JSTR_TO_HSTR
 	hstr _jstringToHstr(JNIEnv* env, jstring string);
 }
+
+/// @brief JNI local frame size.
+#define APRIL_JNI_DEFAULT_LOCAL_FRAME_SIZE 64
+/// @brief JNI log tag, separate from april's normal log tag.
+#define APRIL_JNI_LOG_TAG "JNI"
 
 /// @brief Utility macro to get a definition for a JNI function formatted how Java needs it.
 /// @param[in] returnType The return type of the JNI function.
@@ -95,38 +101,41 @@ namespace april
 #ifdef __NATIVE_INTERFACE_CLASS
 /// @brief Gets the defined native interface class' Java object.
 /// @param[in] className Name of the variable to contain the JNI class object.
+/// @note This pushes a local JNIEnv frame onto the stack that needs to be popped later!
 #define APRIL_GET_NATIVE_INTERFACE_CLASS(className) \
 	JNIEnv* env = april::getJNIEnv(); \
 	jclass className = april::findJNIClass(env, __NATIVE_INTERFACE_CLASS); \
 	if (className == NULL) \
 	{ \
-		hlog::error("JNI", "Could not find native interface class: " + hstr(__NATIVE_INTERFACE_CLASS)); \
+		hlog::error(APRIL_JNI_LOG_TAG, "Could not find native interface class: " + hstr(__NATIVE_INTERFACE_CLASS)); \
 	}
 /// @brief Gets the defined native interface class' Java object.
 /// @param[in] className Name of the variable to contain the JNI class object.
 /// @param[in] methodName Name of the variable to contain the JNI method object.
 /// @param[in] methodString String name of the method.
 /// @param[in] args Arguments of the method.
+/// @note This pushes a local JNIEnv frame onto the stack that needs to be popped later!
 /// @see _JARGS
 #define APRIL_GET_NATIVE_INTERFACE_METHOD(className, methodName, methodString, args) \
 	APRIL_GET_NATIVE_INTERFACE_CLASS(className); \
 	jmethodID methodName = env->GetStaticMethodID(className, methodString, args); \
 	if (methodName == NULL) \
 	{ \
-		hlog::error("JNI", "Could not find method, check definition: " + hstr(methodString)); \
+		hlog::error(APRIL_JNI_LOG_TAG, "Could not find method, check definition: " + hstr(methodString)); \
 	}
 /// @brief Gets the defined native interface class' Java object.
 /// @param[in] className Name of the variable to contain the JNI class object.
 /// @param[in] fieldName Name of the variable to contain the JNI field object.
 /// @param[in] fieldString String name of the field.
 /// @param[in] type Type of the field.
+/// @note This pushes a local JNIEnv frame onto the stack that needs to be popped later!
 /// @see _JARGS
 #define APRIL_GET_NATIVE_INTERFACE_FIELD(className, fieldName, fieldString, type) \
 	APRIL_GET_NATIVE_INTERFACE_CLASS(className); \
 	jfieldID fieldName = env->GetStaticFieldID(className, fieldString, type); \
 	if (fieldName == NULL) \
 	{ \
-		hlog::error("JNI", "Could not find field, check definition: " + hstr(fieldString)); \
+		hlog::error(APRIL_JNI_LOG_TAG, "Could not find field, check definition: " + hstr(fieldString)); \
 	}
 #endif
 

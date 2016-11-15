@@ -113,12 +113,12 @@ namespace april
 			info.cpuCores = w32info.dwNumberOfProcessors;
 			info.osVersion.set(8, 1);
 #elif defined(_ANDROID)
-			debug_log("getting java stuff");
-			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 			// CPU cores
 			debug_log("getting cpu cores");
 			info.cpuCores = sysconf(_SC_NPROCESSORS_CONF);
 			// OS version
+			debug_log("getting java stuff");
+			APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 			debug_log("getting os version");
 			jmethodID methodGetOsVersion = env->GetStaticMethodID(classNativeInterface, "getOsVersion", _JARGS(_JSTR, ));
 			info.osVersion.set(_JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)));
@@ -172,6 +172,9 @@ namespace april
 			}
 			info.locale = info.locale.lowered();
 			info.localeVariant = info.localeVariant.uppered();
+#ifdef _ANDROID
+			env->PopLocalFrame(NULL);
+#endif
 		}
 		return info;
 	}
@@ -216,6 +219,7 @@ namespace april
 #elif defined(_ANDROID)
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodOpenUrl, "openUrl", _JARGS(_JVOID, _JSTR));
 		env->CallStaticObjectMethod(classNativeInterface, methodOpenUrl, env->NewStringUTF(url.cStr()));
+		env->PopLocalFrame(NULL);
 #elif defined(_WIN32) && !defined(_WINRT)
 		ShellExecuteW(NULL, L"open", url.wStr().c_str(), NULL, NULL, SW_SHOWNORMAL);
 #else

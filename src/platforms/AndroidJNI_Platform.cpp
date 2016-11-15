@@ -35,21 +35,31 @@ namespace april
 	JNIEnv* getJNIEnv()
 	{
 		JNIEnv* env = NULL;
-		return (((JavaVM*)april::javaVM)->AttachCurrentThread(&env, NULL) == JNI_OK ? env : NULL);
+		if (((JavaVM*)april::javaVM)->AttachCurrentThread(&env, NULL) == JNI_OK)
+		{
+			env->PushLocalFrame(APRIL_JNI_DEFAULT_LOCAL_FRAME_SIZE);
+		}
+		return env;
 	}
 	
 	jobject getActivity()
 	{
+		jobject result = NULL;
 		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 		jfieldID fieldActivity = env->GetStaticFieldID(classNativeInterface, "activity", _JCLASS("android/app/Activity"));
-		return env->GetStaticObjectField(classNativeInterface, fieldActivity);
+		result = env->GetStaticObjectField(classNativeInterface, fieldActivity);
+		env->PopLocalFrame(NULL);
+		return result;
 	}
 	
 	jobject getAprilActivity()
 	{
+		jobject result = NULL;
 		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 		jfieldID fieldAprilActivity = env->GetStaticFieldID(classNativeInterface, "aprilActivity", _JCLASS("com/april/Activity"));
-		return env->GetStaticObjectField(classNativeInterface, fieldAprilActivity);
+		result = env->GetStaticObjectField(classNativeInterface, fieldAprilActivity);
+		env->PopLocalFrame(NULL);
+		return result;
 	}
 
 	jclass findJNIClass(JNIEnv* env, chstr classPath)
@@ -58,11 +68,15 @@ namespace april
 		{
 			return env->FindClass(classPath.cStr());
 		}
+		jclass result = NULL;
+		env->PushLocalFrame(APRIL_JNI_DEFAULT_LOCAL_FRAME_SIZE);
 		jclass classClassLoader = env->GetObjectClass(april::classLoader);
 		jmethodID methodLoadClass = env->GetMethodID(classClassLoader, "loadClass", _JARGS(_JCLASS("java/lang/Class"), _JSTR _JBOOL));
 		jstring jClassPath = env->NewStringUTF(classPath.cStr());
 		jboolean jInitialize = JNI_TRUE;
-		return (jclass)env->CallObjectMethod(april::classLoader, methodLoadClass, jClassPath, jInitialize);
+		result = (jclass)env->CallObjectMethod(april::classLoader, methodLoadClass, jClassPath, jInitialize);
+		env->PopLocalFrame(NULL);
+		return result;
 	}
 
 }
