@@ -29,13 +29,15 @@ namespace april
 	/// @note For every call of this function, call JNIEnv::PopLocalFrame(NULL) afterwards when it's no longer needed.
 	JNIEnv* getJNIEnv();
 	/// @brief Gets the main activity.
+	/// @param[in] env JNI environment.
 	/// @return The main activity.
 	/// @note This Java object does not necessarily have to be a "com.april.Activity", but is never NULL.
-	jobject getActivity();
+	jobject getActivity(JNIEnv* env);
 	/// @brief Gets the main APRIL activity.
+	/// @param[in] env JNI environment.
 	/// @return The main APRIL activity.
 	/// @note This Java object is always a "com.april.Activity", but it can be NULL if "com.april.Activity" is not used.
-	jobject getAprilActivity();
+	jobject getAprilActivity(JNIEnv* env);
 	/// @brief Finds a JNI class.
 	/// @param[in] env JNI environment.
 	/// @param[in] classPath Full package path of the class.

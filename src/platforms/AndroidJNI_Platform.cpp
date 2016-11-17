@@ -42,24 +42,26 @@ namespace april
 		return env;
 	}
 	
-	jobject getActivity()
+	jobject getActivity(JNIEnv* env)
 	{
-		jobject result = NULL;
-		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
+		jclass classNativeInterface = april::findJNIClass(env, __NATIVE_INTERFACE_CLASS);
+		if (classNativeInterface == NULL)
+		{
+			hlog::error(APRIL_JNI_LOG_TAG, "Could not find native interface class: " + hstr(__NATIVE_INTERFACE_CLASS));
+		}
 		jfieldID fieldActivity = env->GetStaticFieldID(classNativeInterface, "activity", _JCLASS("android/app/Activity"));
-		result = env->GetStaticObjectField(classNativeInterface, fieldActivity);
-		env->PopLocalFrame(NULL);
-		return result;
+		return env->GetStaticObjectField(classNativeInterface, fieldActivity);
 	}
 	
-	jobject getAprilActivity()
+	jobject getAprilActivity(JNIEnv* env)
 	{
-		jobject result = NULL;
-		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
+		jclass classNativeInterface = april::findJNIClass(env, __NATIVE_INTERFACE_CLASS);
+		if (classNativeInterface == NULL)
+		{
+			hlog::error(APRIL_JNI_LOG_TAG, "Could not find native interface class: " + hstr(__NATIVE_INTERFACE_CLASS));
+		}
 		jfieldID fieldAprilActivity = env->GetStaticFieldID(classNativeInterface, "aprilActivity", _JCLASS("com/april/Activity"));
-		result = env->GetStaticObjectField(classNativeInterface, fieldAprilActivity);
-		env->PopLocalFrame(NULL);
-		return result;
+		return env->GetStaticObjectField(classNativeInterface, fieldAprilActivity);
 	}
 
 	jclass findJNIClass(JNIEnv* env, chstr classPath)
@@ -68,15 +70,11 @@ namespace april
 		{
 			return env->FindClass(classPath.cStr());
 		}
-		jclass result = NULL;
-		env->PushLocalFrame(APRIL_JNI_DEFAULT_LOCAL_FRAME_SIZE);
 		jclass classClassLoader = env->GetObjectClass(april::classLoader);
 		jmethodID methodLoadClass = env->GetMethodID(classClassLoader, "loadClass", _JARGS(_JCLASS("java/lang/Class"), _JSTR _JBOOL));
 		jstring jClassPath = env->NewStringUTF(classPath.cStr());
 		jboolean jInitialize = JNI_TRUE;
-		result = (jclass)env->CallObjectMethod(april::classLoader, methodLoadClass, jClassPath, jInitialize);
-		env->PopLocalFrame(NULL);
-		return result;
+		return (jclass)env->CallObjectMethod(april::classLoader, methodLoadClass, jClassPath, jInitialize);
 	}
 
 }
