@@ -158,9 +158,10 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		this.hideNavigationBar();
 		super.onCreate(savedInstanceState);
 		ActivityManager manager = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
-		if (manager.getDeviceConfigurationInfo().reqGlEsVersion < 0x20000)
+		int glesVersion = manager.getDeviceConfigurationInfo().reqGlEsVersion;
+		if (glesVersion < 0x20000)
 		{
-			android.util.Log.w("april", "Minimum GLES version should be 2! Unpredictable behavior possible!");
+			android.util.Log.w("april", "Minimum GLES version is " + glesVersion + ", but it should be 0x00020000! Unpredictable behavior possible!");
 		}
 		this.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), true, this.systemSettingsObserver);
 		this.systemSettingsObserver.onChange(true);
