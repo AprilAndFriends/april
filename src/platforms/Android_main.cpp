@@ -82,7 +82,7 @@ namespace april
 	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray jArgs)
 	{
 		int length = env->GetArrayLength(jArgs);
-		jstring string;
+		jstring string = NULL;
 		for_iter (i, 0, length)
 		{
 			string = (jstring)env->GetObjectArrayElement(jArgs, i);
