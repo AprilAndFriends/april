@@ -89,7 +89,7 @@ namespace april
 		};
 
 		/// @brief Defines mouse input event data.
-		struct MouseInputEvent
+		struct aprilExport MouseInputEvent
 		{
 			/// @brief The event type.
 			MouseEventType type;
@@ -109,7 +109,7 @@ namespace april
 		};
 
 		/// @brief Defines keyboard input event data.
-		struct KeyInputEvent
+		struct aprilExport KeyInputEvent
 		{
 			/// @brief The event type.
 			KeyEventType type;
@@ -129,7 +129,7 @@ namespace april
 		};
 
 		/// @brief Defines touch-interface input event data.
-		struct TouchInputEvent
+		struct aprilExport TouchInputEvent
 		{
 			/// @brief Active touch pointers.
 			harray<gvec2> touches;
@@ -143,7 +143,7 @@ namespace april
 		};
 
 		/// @brief Defines controller input event data.
-		struct ControllerInputEvent
+		struct aprilExport ControllerInputEvent
 		{
 			/// @brief The event type.
 			ControllerEventType type;
