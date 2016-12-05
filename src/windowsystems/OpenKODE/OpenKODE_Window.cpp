@@ -355,7 +355,7 @@ namespace april
 			}
 		}
 #else
-		this->virtualKeyboardVisible = kdKeyboardIsShown(this->kdWindow);
+		this->virtualKeyboardVisible = (kdKeyboardIsShown(this->kdWindow) != 0);
 #endif
 		this->checkEvents();
 		// rendering

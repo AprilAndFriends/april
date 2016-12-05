@@ -232,9 +232,8 @@
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_Window.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
+    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp" Condition="'$(Configuration)'!='Debug_OpenKODE' and '$(Configuration)'!='DebugS_OpenKODE' and '$(Configuration)'!='Release_OpenKODE' and '$(Configuration)'!='ReleaseS_OpenKODE'">
       <DependentUpon>..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='DebugS_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='ReleaseS_OpenKODE'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -298,9 +297,8 @@
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_Window.h" />
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
+    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h" Condition="'$(Configuration)'!='Debug_OpenKODE' and '$(Configuration)'!='DebugS_OpenKODE' and '$(Configuration)'!='Release_OpenKODE' and '$(Configuration)'!='ReleaseS_OpenKODE'">
       <DependentUpon>..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
-      <ExcludedFromBuild Condition="'$(Configuration)'=='Debug_OpenKODE' or '$(Configuration)'=='DebugS_OpenKODE' or '$(Configuration)'=='Release_OpenKODE' or '$(Configuration)'=='ReleaseS_OpenKODE'">true</ExcludedFromBuild>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -309,7 +307,7 @@
       <FileType>Document</FileType>
     </Page>
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(Configuration)'=='Debug_DirectX11' or '$(Configuration)'=='DebugS_DirectX11' or '$(Configuration)'=='Release_DirectX11' or '$(Configuration)'=='ReleaseS_DirectX11'">
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
@@ -361,7 +359,7 @@
       <ShaderModel Condition="'$(PlatformToolset)'!='v120_wp81'">4.0_level_9_1</ShaderModel>
     </FxCompile>
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(Configuration)'=='Debug_DirectX11' or '$(Configuration)'=='DebugS_DirectX11' or '$(Configuration)'=='Release_DirectX11' or '$(Configuration)'=='ReleaseS_DirectX11'">
     <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Plain.hlsli" />
     <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Textured.hlsli" />
     <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader.hlsli" />
