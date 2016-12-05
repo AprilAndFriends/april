@@ -95,7 +95,7 @@
     <ProjectReference Include="..\..\aprilpix\msvc\vs2013-winrt\libaprilpix.vcxproj">
       <Project>{35fe2927-8530-406c-a49b-5f54ea4b80cb}</Project>
       <Private>false</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
@@ -103,7 +103,7 @@
     <ProjectReference Include="..\..\lib\webp\msvc\vs2013-winrt\libwebp.vcxproj">
       <Project>{e876403e-235a-48f9-b215-3921633ac385}</Project>
       <Private>false</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
