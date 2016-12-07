@@ -38,6 +38,7 @@ namespace april
 		bool isCursorVisible() const;
 		void setCursorVisible(bool value);
 		void* getBackendId() const;
+		KDWindow* _getKDWindow() const;
 		void setResolution(int w, int h, bool fullscreen);
 
 		hstr getParam(chstr param);
