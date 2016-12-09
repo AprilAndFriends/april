@@ -61,9 +61,9 @@ namespace april
 				this->destroy();
 				return false;
 			}
-			EGLint configs = 0;
-			EGLBoolean result = eglGetConfigs(this->display, NULL, 0, &configs);
-			if (!result || configs == 0)
+			EGLint nConfigs = 0;
+			EGLBoolean result = eglGetConfigs(this->display, NULL, 0, &nConfigs);
+			if (!result || nConfigs == 0)
 			{
 				hlog::error(logTag, "There are no EGL configs! Error: " + hstr((int)eglGetError()));
 				this->destroy();
@@ -81,15 +81,49 @@ namespace april
 				this->pi32ConfigAttribs[5] = EGL_OPENGL_ES2_BIT;
 				this->pi32ConfigAttribs[6] = EGL_NONE;
 			}
-			result = eglChooseConfig(this->display, this->pi32ConfigAttribs, &this->config, 1, &configs);
-			if (!result || configs == 0)
+            EGLConfig* configs = new EGLConfig[nConfigs];
+			result = eglChooseConfig(this->display, this->pi32ConfigAttribs, configs, nConfigs, &nConfigs);
+			if (!result || nConfigs == 0)
 			{
 				hlog::error(logTag, "Can't choose EGL config! Error: " + hstr((int)eglGetError()));
 				this->destroy();
 				return false;
 			}
-		}
-		if (this->surface == NULL)
+            // prefer RGB888, android choses RGB565 by default
+            this->config = configs[0];
+            for (EGLint i = 0; i < nConfigs; i++)
+            {
+                EGLint size[3] = {0};
+                // A == 0
+                if (!eglGetConfigAttrib(this->display, configs[i], EGL_ALPHA_SIZE, &size[0]))
+                {
+                    continue;
+                }
+                if (size[0] != 0)
+                {
+                    continue;
+                }
+                
+                this->config = configs[i];
+                
+                // RGB == 888
+                if (!eglGetConfigAttrib(this->display, configs[i], EGL_RED_SIZE,   &size[0]) ||
+                    !eglGetConfigAttrib(this->display, configs[i], EGL_GREEN_SIZE, &size[1]) ||
+                    !eglGetConfigAttrib(this->display, configs[i], EGL_BLUE_SIZE,  &size[2]))
+                {
+                    continue;
+                }
+
+                if (size[0] == 8 && size[1] == 8 && size[2] == 8)
+                {
+                    this->config = configs[i];
+                    hlog::write(logTag, "Found RGB888 EGL Config!");
+                    break;
+                }
+            }
+            delete [] configs;
+        }
+        if (this->surface == NULL)
 		{
 			// hWnd is assigned outside of this code on some non-win32 platforms, so we have to use it.
 #if defined(_WIN32) && !defined(_WINRT)
