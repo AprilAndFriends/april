@@ -115,25 +115,12 @@ namespace april
 	
 	void KD_APIENTRY _processEventWindowFocus(const KDEvent* evt)
 	{
-		static bool prevVirtualKeyboardActive = false;
-		
 		switch (evt->type)
 		{
 		case KD_EVENT_WINDOW_FOCUS:
 			hlog::writef(logTag, "OpenKODE window focus change event received: %d", evt->data.windowfocus.focusstate);
 			bool focused = evt->data.windowfocus.focusstate != 0;
-			if (!focused)
-			{
-				KDWindow* wnd = ((OpenKODE_Window*)april::window)->_getKDWindow();
-				prevVirtualKeyboardActive = kdKeyboardIsShown(wnd);
-			}
 			april::window->handleActivityChange(focused);
-			if (focused && prevVirtualKeyboardActive)
-			{
-				prevVirtualKeyboardActive = false;
-				KDWindow* wnd = ((OpenKODE_Window*)april::window)->_getKDWindow();
-				kdKeyboardShow(wnd, true);
-			}
 			break;
 		}
 	}
