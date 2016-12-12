@@ -783,13 +783,9 @@ namespace april
 					{
 						throw Exception("Unable to reset Direct3D device, Driver internal error!");
 					}
-					else if (hr == D3DERR_INVALIDCALL)
-					{
-						throw Exception("Unable to reset Direct3D device, device reports 'invalid call'!");
-					}
 					else
 					{
-						hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::presentFrame() hresult: %u", hr);
+						hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::presentFrame() hresult: %08X", hr);
 					}
 				}
 				else if (hr == D3DERR_DRIVERINTERNALERROR)
