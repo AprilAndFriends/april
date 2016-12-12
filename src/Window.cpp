@@ -709,9 +709,11 @@ namespace april
 
 	void Window::handleLowMemoryWarningEvent()
 	{
+		hlog::writef(logTag, "Processing low memory warning. Current RAM: %lld B; Current VRAM: %lld B", april::getRamConsumption(), april::rendersys->getVRamConsumption());
 		if (this->systemDelegate != NULL)
 		{
 			this->systemDelegate->onLowMemoryWarning();
+			hlog::writef(logTag, "Low memory warning processed. Current RAM: %lld B; Current VRAM: %lld B", april::getRamConsumption(), april::rendersys->getVRamConsumption());
 		}
 	}
 
