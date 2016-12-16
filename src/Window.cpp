@@ -183,8 +183,8 @@ namespace april
 				else
 				{
 					SystemInfo info = april::getSystemInfo();
-					this->lastWidth = (int)(info.displayResolution.x * 0.6666667f);
-					this->lastHeight = (int)(info.displayResolution.y * 0.6666667f);
+					this->lastWidth = hround(info.displayResolution.x * 0.6666667f);
+					this->lastHeight = hround(info.displayResolution.y * 0.6666667f);
 				}
 			}
 			this->fps = 0;
@@ -349,12 +349,20 @@ namespace april
 	{
 		if (this->options.hotkeyFullscreen)
 		{
+			SystemInfo info = april::getSystemInfo();
+			int width = hround(info.displayResolution.x);
+			int height = hround(info.displayResolution.y);
 			if (!this->fullscreen)
 			{
 				this->lastWidth = this->getWidth();
 				this->lastHeight = this->getHeight();
 			}
-			this->setResolution(this->lastWidth, this->lastHeight, !this->fullscreen);
+			else
+			{
+				width = this->lastWidth;
+				height = this->lastHeight;
+			}
+			this->setResolution(width, height, !this->fullscreen);
 		}
 	}
 
