@@ -60,7 +60,15 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "KD";
-			info.deviceName = kdGetenv("COMPUTERNAME");
+            const char* env = kdGetenv("COMPUTERNAME");
+            if (env != NULL)
+            {
+                info.deviceName = env;
+            }
+            else
+            {
+                info.deviceName = "Unknown";
+            }
 			debug_log("Fetching OpenKODE system info");
 			// number of CPU cores
 			info.cpuCores = 1;
