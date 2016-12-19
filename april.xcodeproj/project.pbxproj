@@ -424,7 +424,6 @@
 		D1B4874019337483004674EB /* iOS_devices.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873C19337483004674EB /* iOS_devices.mm */; };
 		D1B4874119337483004674EB /* iOS_main.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873D19337483004674EB /* iOS_main.mm */; };
 		D1B4874319337483004674EB /* iOS_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873E19337483004674EB /* iOS_Platform.mm */; };
-		D1B4874419337483004674EB /* iOS_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873E19337483004674EB /* iOS_Platform.mm */; };
 		D1CB6B6515CA905900B927BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1CB6B6415CA905900B927BC /* Foundation.framework */; };
 		D1E2447A1A3104C300586FAC /* Mac_QueuedEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E244781A3104C300586FAC /* Mac_QueuedEvents.h */; };
 		D1E2447B1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */; };
@@ -1727,7 +1726,6 @@
 				D137B93E1A0A417900C4102E /* ImagePvr.mm in Sources */,
 				D1134EF5175CDA3300BFF3A2 /* april.cpp in Sources */,
 				D1134EF9175CDA3300BFF3A2 /* Platform.cpp in Sources */,
-				D1B4874419337483004674EB /* iOS_Platform.mm in Sources */,
 				D1134EFB175CDA3300BFF3A2 /* aprilUtil.cpp in Sources */,
 				D1134EFC175CDA3300BFF3A2 /* EventDelegate.cpp in Sources */,
 				B45501221BD7A7D100E75E43 /* OpenGLC_Texture.cpp in Sources */,
