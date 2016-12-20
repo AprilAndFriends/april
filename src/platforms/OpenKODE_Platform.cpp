@@ -60,10 +60,10 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "KD";
-            const char* env = kdGetenv("COMPUTERNAME");
-            if (env != NULL)
+            const char* envName = kdGetenv("COMPUTERNAME");
+            if (envName != NULL)
             {
-                info.deviceName = env;
+                info.deviceName = envName;
             }
             else
             {
