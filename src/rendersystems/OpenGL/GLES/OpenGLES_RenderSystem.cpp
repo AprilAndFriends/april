@@ -354,7 +354,7 @@ namespace april
 	void OpenGLES_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
 	{
 #ifndef _WIN32
-		if (true || this->blendSeparationSupported)
+		if (this->blendSeparationSupported)
 		{
 			// blending for the new generations
 			if (blendMode == BM_ALPHA || blendMode == BM_DEFAULT)
