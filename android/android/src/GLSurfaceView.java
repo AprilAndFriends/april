@@ -180,7 +180,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	@Override
 	public boolean onKeyMultiple(final int keyCode, int repeatCount, KeyEvent event)
 	{
-		if (keyCode != 0 || event.getAction() != MotionEvent.ACTION_DOWN)
+		if (keyCode != 0 || event.getAction() != MotionEvent.ACTION_MOVE)
 		{
 			return super.onKeyMultiple(keyCode, repeatCount, event);
 		}
