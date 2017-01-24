@@ -26,7 +26,7 @@
 #include "Platform.h"
 #include "zlibUtil.h"
 
-#define READ_LITTLE_ENDIAN_UINT32(location, offset) ((location)[offset] | ((location)[offset + 1] << 8) | ((location)[offset + 2] << 16) | ((location)[offset + 3] << 24))
+#define READ_LITTLE_ENDIAN_UINT32(location, offset) (location[offset] | (location[offset + 1] << 8) | (location[offset + 2] << 16) | (location[offset + 3] << 24))
 
 #ifndef PVR_Texture_Header
 struct PVR_Texture_Header
@@ -69,12 +69,19 @@ namespace april
 		{
 			return NULL;
 		}
+		int headerSize = sizeof(struct PVR_Texture_Header);
 		unsigned char* pvrData = zlibDecompress(header.size, header.compressedSize, stream);
 		if (pvrData == NULL)
 		{
 			return NULL;
 		}
 		struct PVR_Texture_Header pvrHeader;
+		harray<unsigned char> pvrDataArray;
+		for_iter (i, 0, 12)
+		{
+			pvrDataArray += pvrData[i];
+		}
+		int a = 0;
 		pvrHeader.dwHeaderSize = READ_LITTLE_ENDIAN_UINT32(pvrData, 0);
 		pvrHeader.dwHeight = READ_LITTLE_ENDIAN_UINT32(pvrData, 4);
 		pvrHeader.dwWidth = READ_LITTLE_ENDIAN_UINT32(pvrData, 8);
@@ -92,10 +99,10 @@ namespace april
 		image->w = header.width;
 		image->h = header.height;
 		image->internalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
-		image->compressedSize = header.size;
+		image->compressedSize = header.size - headerSize;
 		image->format = Image::FORMAT_COMPRESSED;
 		image->data = new unsigned char[image->compressedSize];
-		memcpy(image->data, pvrData + sizeof(struct PVR_Texture_Header), image->compressedSize);
+		memcpy(image->data, &pvrData[headerSize], image->compressedSize);
 		delete[] pvrData;
 		return image;
 	}
