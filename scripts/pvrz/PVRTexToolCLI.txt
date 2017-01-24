@@ -1,0 +1,2 @@
+PVRTexToolCLI.exe is property of (C) Imagination Technologies Limited.
+Please visit https://www.imgtec.com/ for more information.

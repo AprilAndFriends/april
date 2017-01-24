@@ -46,7 +46,7 @@ def help():
 	print "ETCX_FILENAME          - ETCX filename to use in the process"
 	print "ETC1_FILENAME          - ETC1 filename to use in the process"
 	print "ETC1A_FILENAME         - ETC1A filename to use in the process"
-	print "ZLIB_COMPRESSION_LEVEL - ETC1A filename to use in the process"
+	print "ZLIB_COMPRESSION_LEVEL - zlib compression level"
 	print ""
 	os.system("pause")
 
