@@ -48,7 +48,7 @@ namespace april
 		{
 			return NULL;
 		}
-		int headerSize = sizeof(struct PVR_Texture_Header);
+		int headerSize = 0;//sizeof(struct PVR_Texture_Header);
 		unsigned char* pvrData = zlibDecompress(header.size, header.compressedSize, stream);
 		if (pvrData == NULL)
 		{
