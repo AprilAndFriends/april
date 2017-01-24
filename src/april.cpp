@@ -227,6 +227,7 @@ namespace april
 			extensions += ".png";
 			extensions += ".jpg";
 #ifdef _IOS
+			extensions += ".pvrz";
 			extensions += ".pvr";
 #endif
 #ifdef _ANDROID

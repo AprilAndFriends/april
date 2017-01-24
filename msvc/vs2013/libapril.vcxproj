@@ -641,6 +641,7 @@
     <ClCompile Include="..\..\src\images\ImageJpg.cpp" />
     <ClCompile Include="..\..\src\images\ImageJpt.cpp" />
     <ClCompile Include="..\..\src\images\ImagePng.cpp" />
+    <ClCompile Include="..\..\src\images\ImagePvrz.cpp" />
     <ClCompile Include="..\..\src\Color.cpp" />
     <ClCompile Include="..\..\src\images\Image.cpp" />
     <ClCompile Include="..\..\src\main_base.cpp" />
@@ -666,6 +667,7 @@
     <ClCompile Include="..\..\src\windowsystems\SDL\SDL_Window.cpp" />
     <ClCompile Include="..\..\src\windowsystems\Win32\Win32_Cursor.cpp" />
     <ClCompile Include="..\..\src\windowsystems\Win32\Win32_Window.cpp" />
+    <ClCompile Include="..\..\src\zlibUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\androidUtilJNI.h" />
@@ -735,6 +737,7 @@
     <ClInclude Include="..\..\src\windowsystems\SDL\SDL_Window.h" />
     <ClInclude Include="..\..\src\windowsystems\Win32\Win32_Cursor.h" />
     <ClInclude Include="..\..\src\windowsystems\Win32\Win32_Window.h" />
+    <ClInclude Include="..\..\src\zlibUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">

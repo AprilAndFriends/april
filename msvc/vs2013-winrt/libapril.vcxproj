@@ -210,6 +210,7 @@
     <ClCompile Include="..\..\src\images\ImageJpg.cpp" />
     <ClCompile Include="..\..\src\images\ImageJpt.cpp" />
     <ClCompile Include="..\..\src\images\ImagePng.cpp" />
+    <ClCompile Include="..\..\src\images\ImagePvrz.cpp" />
     <ClCompile Include="..\..\src\Color.cpp" />
     <ClCompile Include="..\..\src\images\Image.cpp" />
     <ClCompile Include="..\..\src\main_base.cpp" />
@@ -224,6 +225,7 @@
     <ClCompile Include="..\..\src\VertexShader.cpp" />
     <ClCompile Include="..\..\src\VirtualKeyboard.cpp" />
     <ClCompile Include="..\..\src\Window.cpp" />
+    <ClCompile Include="..\..\src\zlibUtil.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_Texture.cpp" />
     <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.cpp" />
@@ -282,6 +284,7 @@
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\OpenGLC_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\OpenGLC_Texture.h" />
     <ClInclude Include="..\..\src\TextureAsync.h" />
+    <ClInclude Include="..\..\src\zlibUtil.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_Texture.h" />

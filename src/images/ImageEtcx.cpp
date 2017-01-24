@@ -24,6 +24,7 @@
 #include "OpenGL_RenderSystem.h"
 #include "Image.h"
 #include "Platform.h"
+#include "zlibUtil.h"
 
 #define ETCX_HEADER_HAS_ALPHA_BIT 0x1
 #define ETCX_HEADER_IS_ZLIB_COMPRESSED_BIT 0x2
@@ -39,8 +40,6 @@ namespace april
 		unsigned int size;
 		unsigned int compressedSize;
 	};
-
-	static hmutex mutex;
 
 	Image* Image::_loadEtcx(hsbase& stream, int size)
 	{
@@ -66,38 +65,12 @@ namespace april
 			stream.readRaw(image->data, image->compressedSize);
 			return image;
 		}
-		// zlib inflate init
-		z_stream zlibStream;
-		zlibStream.zalloc = Z_NULL;
-		zlibStream.zfree = Z_NULL;
-		zlibStream.opaque = Z_NULL;
-		zlibStream.avail_in = 0;
-		zlibStream.next_in = Z_NULL;
-		zlibStream.avail_out = 0;
-		zlibStream.next_out = Z_NULL;
-		hmutex::ScopeLock lock(&mutex);
-		int result = inflateInit(&zlibStream);
-		if (result != Z_OK)
-		{
-			hlog::error(logTag, "zlib Error: " + hstr(result));
-			delete image;
-			return NULL;
-		}
-		image->data = new unsigned char[image->compressedSize];
-		unsigned char* input = new unsigned char[header.compressedSize];
-		stream.readRaw(input, header.compressedSize);
-		// decompress
-		zlibStream.next_in = input;
-		zlibStream.avail_in = header.compressedSize;
-		zlibStream.next_out = image->data;
-		zlibStream.avail_out = image->compressedSize;
-		if (inflate(&zlibStream, Z_FINISH) == Z_STREAM_ERROR)
+		image->data = zlibDecompress(header.size, header.compressedSize, stream);
+		if (image->data == NULL)
 		{
 			delete image;
 			image = NULL;
 		}
-		inflateEnd(&zlibStream);
-		delete[] input;
 		return image;
 	}
 

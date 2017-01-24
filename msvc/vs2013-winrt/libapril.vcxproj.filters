@@ -152,6 +152,9 @@
     <ClCompile Include="..\..\src\images\ImagePng.cpp">
       <Filter>Source Files\images</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\images\ImagePvrz.cpp">
+      <Filter>Source Files\images</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\images\Image.cpp">
       <Filter>Source Files\images</Filter>
     </ClCompile>
@@ -288,6 +291,9 @@
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\main_base.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\zlibUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -437,6 +443,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\RenderHelperLayered2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\zlibUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\VirtualKeyboard.h">

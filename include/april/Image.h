@@ -887,6 +887,15 @@ namespace april
 		/// @param[in] stream The encoded image data stream.
 		/// @return The created Image object or NULL if failed.
 		static Image* _loadEtcx(hsbase& stream);
+		/// @brief Loads and decodes PVRZ file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @param[in] size The size within the data stream that actually belongs to this encoded file.
+		/// @return The created Image object or NULL if failed.
+		static Image* _loadPvrz(hsbase& stream, int size);
+		/// @brief Loads and decodes PVRZ file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
+		static Image* _loadPvrz(hsbase& stream);
 
 		/// @brief Saves image data into a stream encoded as PNG file.
 		/// @param[in,out] stream The destination image data stream.
@@ -929,6 +938,15 @@ namespace april
 		/// @param[in] stream The encoded image data stream.
 		/// @return The created Image object or NULL if failed.
 		static Image* _readMetaDataEtcx(hsbase& stream);
+		/// @brief Loads and decodes meta data from PVRZ file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @param[in] size The size within the data stream that actually belongs to this encoded file.
+		/// @return The created Image object or NULL if failed.
+		static Image* _readMetaDataPvrz(hsbase& stream, int size);
+		/// @brief Loads and decodes meta data from PVRZ file data.
+		/// @param[in] stream The encoded image data stream.
+		/// @return The created Image object or NULL if failed.
+		static Image* _readMetaDataPvrz(hsbase& stream);
 
 		/// @brief Gets the color channel byte incides for pixel format data.
 		/// @param[in] format The format to check.

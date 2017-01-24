@@ -480,6 +480,11 @@ namespace april
 			file.open(filename);
 			return Image::_loadPvr(file);
 		}
+		if (filename.lowered().endsWith(".pvrz"))
+		{
+			file.open(filename);
+			return Image::_loadPvrz(file);
+		}
 #endif
 #ifdef _ANDROID
 		if (filename.lowered().endsWith(".etcx"))
@@ -539,6 +544,11 @@ namespace april
 			file.open(filename);
 			return Image::_loadPvr(file);
 		}
+		if (filename.lowered().endsWith(".pvrz"))
+		{
+			file.open(filename);
+			return Image::_loadPvrz(file);
+		}
 #endif
 #ifdef _ANDROID
 		if (filename.lowered().endsWith(".etcx"))
@@ -592,6 +602,10 @@ namespace april
 		if (logicalExtension.lowered().endsWith(".pvr"))
 		{
 			return Image::_loadPvr(stream);
+		}
+		if (logicalExtension.lowered().endsWith(".pvrz"))
+		{
+			return Image::_loadPvrz(stream);
 		}
 #endif
 #ifdef _ANDROID
@@ -715,6 +729,11 @@ namespace april
 			file.open(filename);
 			return Image::_readMetaDataPvr(file);
 		}
+		if (filename.lowered().endsWith(".pvrz"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataPvrz(file);
+		}
 #endif
 #ifdef _ANDROID
 		if (filename.lowered().endsWith(".etcx"))
@@ -758,6 +777,11 @@ namespace april
 			file.open(filename);
 			return Image::_readMetaDataPvr(file);
 		}
+		if (filename.lowered().endsWith(".pvrz"))
+		{
+			file.open(filename);
+			return Image::_readMetaDataPvrz(file);
+		}
 #endif
 #ifdef _ANDROID
 		if (filename.lowered().endsWith(".etcx"))
@@ -795,6 +819,10 @@ namespace april
 		if (logicalExtension.lowered().endsWith(".pvr"))
 		{
 			return Image::_readMetaDataPvr(stream);
+		}
+		if (logicalExtension.lowered().endsWith(".pvrz"))
+		{
+			return Image::_readMetaDataPvrz(stream);
 		}
 #endif
 #ifdef _ANDROID

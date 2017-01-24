@@ -326,6 +326,12 @@
     <ClCompile Include="..\..\src\VirtualKeyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\images\ImagePvrz.cpp">
+      <Filter>Source Files\images</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\zlibUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -527,6 +533,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\VirtualKeyboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\zlibUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
