@@ -36,7 +36,8 @@ class Pvrz:
 		f.write(struct.pack(UINT_PACK_FORMAT, flags))
 		f.write(header[Pvrz.WIDTH_HEADER_OFFSET : Pvrz.WIDTH_HEADER_OFFSET + 4])
 		f.write(header[Pvrz.HEIGHT_HEADER_OFFSET : Pvrz.HEIGHT_HEADER_OFFSET + 4])
-		f.write(struct.pack(UINT_PACK_FORMAT, len(pvr_data) + len(header)))
+		pvr_data = header + pvr_data # merge back together with header
+		f.write(struct.pack(UINT_PACK_FORMAT, len(pvr_data)))
 		data = zlib.compress(pvr_data, zlibCompressionLevel)
 		f.write(struct.pack(UINT_PACK_FORMAT, len(data)))
 		f.write(data)
