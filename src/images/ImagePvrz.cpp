@@ -26,6 +26,8 @@
 #include "Platform.h"
 #include "zlibUtil.h"
 
+#define READ_LITTLE_ENDIAN_UINT32(location, offset) ((location)[offset] | ((location)[offset + 1] << 8) | ((location)[offset + 2] << 16) | ((location)[offset + 3] << 24))
+
 #ifndef PVR_Texture_Header
 struct PVR_Texture_Header
 {
@@ -73,8 +75,19 @@ namespace april
 			return NULL;
 		}
 		struct PVR_Texture_Header pvrHeader;
-		int headerSize = sizeof(struct PVR_Texture_Header);
-		memcpy(&pvrHeader, pvrData, headerSize);
+		pvrHeader.dwHeaderSize = READ_LITTLE_ENDIAN_UINT32(pvrData, 0);
+		pvrHeader.dwHeight = READ_LITTLE_ENDIAN_UINT32(pvrData, 4);
+		pvrHeader.dwWidth = READ_LITTLE_ENDIAN_UINT32(pvrData, 8);
+		pvrHeader.dwMipMapCount = READ_LITTLE_ENDIAN_UINT32(pvrData, 12);
+		pvrHeader.dwpfFlags = READ_LITTLE_ENDIAN_UINT32(pvrData, 16);
+		pvrHeader.dwTextureDataSize = READ_LITTLE_ENDIAN_UINT32(pvrData, 20);
+		pvrHeader.dwBitCount = READ_LITTLE_ENDIAN_UINT32(pvrData, 24);
+		pvrHeader.dwRBitMask = READ_LITTLE_ENDIAN_UINT32(pvrData, 28);
+		pvrHeader.dwGBitMask = READ_LITTLE_ENDIAN_UINT32(pvrData, 32);
+		pvrHeader.dwBBitMask = READ_LITTLE_ENDIAN_UINT32(pvrData, 36);
+		pvrHeader.dwAlphaBitMask = READ_LITTLE_ENDIAN_UINT32(pvrData, 40);
+		pvrHeader.dwPVR = READ_LITTLE_ENDIAN_UINT32(pvrData, 44);
+		pvrHeader.dwNumSurfs = READ_LITTLE_ENDIAN_UINT32(pvrData, 48);
 		Image* image = new Image();
 		image->w = header.width;
 		image->h = header.height;
@@ -82,7 +95,7 @@ namespace april
 		image->compressedSize = header.size;
 		image->format = Image::FORMAT_COMPRESSED;
 		image->data = new unsigned char[image->compressedSize];
-		memcpy(image->data, pvrData + headerSize, image->compressedSize);
+		memcpy(image->data, pvrData + sizeof(struct PVR_Texture_Header), image->compressedSize);
 		delete[] pvrData;
 		return image;
 	}
