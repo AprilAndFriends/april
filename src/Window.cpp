@@ -539,6 +539,7 @@ namespace april
 	{
 		if (this->mouseDelegate != NULL)
 		{
+			this->mouseDelegate->setCurrentCursorPosition(position);
 			switch (type)
 			{
 			case MOUSE_DOWN:

@@ -13,6 +13,9 @@
 #ifndef APRIL_MOUSE_DELEGATE_H
 #define APRIL_MOUSE_DELEGATE_H
 
+#include <gtypes/Vector2.h>
+#include <hltypes/hltypesUtil.h>
+
 #include "aprilExport.h"
 #include "Keys.h"
 
@@ -26,6 +29,9 @@ namespace april
 		MouseDelegate();
 		/// @brief Destructor.
 		virtual ~MouseDelegate();
+
+		/// @brief The cursor position in the current callback.
+		HL_DEFINE_GETSET(gvec2, currentCursorPosition, CurrentCursorPosition);
 
 		/// @brief Called when a mouse button is pressed.
 		/// @param[in] keyCode The key's number code.
@@ -42,6 +48,10 @@ namespace april
 		/// @param[in] x The scroll wheel value change on the x-axis.
 		/// @param[in] y The scroll wheel value change on the y-axis.
 		virtual void onMouseScroll(float x, float y);
+
+	protected:
+		/// @brief The cursor position in the current callback.
+		gvec2 currentCursorPosition;
 
 	};
 
