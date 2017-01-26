@@ -131,7 +131,7 @@ public class NativeInterface
 		}
 		DisplayMetrics metrics = new DisplayMetrics();
 		NativeInterface.activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		return (float) Math.sqrt((metrics.xdpi * metrics.xdpi + metrics.ydpi * metrics.ydpi) / 2.0);
+		return (float)Math.sqrt((metrics.xdpi * metrics.xdpi + metrics.ydpi * metrics.ydpi) / 2.0);
 	}
 	
 	public static String getOsVersion()
