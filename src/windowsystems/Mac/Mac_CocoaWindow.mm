@@ -1,3 +1,4 @@
+
 /// @file
 /// @version 4.2
 ///
@@ -8,8 +9,14 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Mac_CocoaWindow.h"
+
+#include <Carbon/Carbon.h>
+#include <CoreServices/CoreServices.h>
+#include <Foundation/Foundation.h>
+
 #include <hltypes/hlog.h>
 #include <hltypes/hthread.h>
+
 #include "SystemDelegate.h"
 #include "Mac_LoadingOverlay.h"
 #include "Mac_Window.h"
@@ -393,10 +400,13 @@ namespace april
 - (unsigned int) processKeyCode:(NSEvent*) event
 {
 	NSString* chr = [event characters];
-	if ([chr length] == 1)
+	if ([chr length] > 0)
 	{
 		unichar c = [chr characterAtIndex:0];
-		if (c >= 'a' && c <= 'z') return toupper(c);
+		if (c >= 'a' && c <= 'z')
+		{
+			return toupper(c);
+		}
 	}
 	return april::getAprilMacKeyCode([event keyCode]);
 }
@@ -445,8 +455,42 @@ namespace april
 	[self _setTitle:[NSString stringWithUTF8String:aprilWindow->getTitle().cStr()]];
 }
 
+static UInt32 _deadKeyState = 0;
+
+NSString* translateInputForKeyDown(NSEvent* event)
+{
+	const size_t unicodeStringLength = 4;
+	UniChar unicodeString[unicodeStringLength] = { 0, };
+	UniCharCount realLength= 0;
+	NSString* result= @"";
+	
+	TISInputSourceRef fkis= TISCopyCurrentKeyboardInputSource();
+	if (fkis)
+	{
+		CFDataRef cflayoutData= (CFDataRef)TISGetInputSourceProperty(fkis, kTISPropertyUnicodeKeyLayoutData);
+		const UCKeyboardLayout* keyboardLayout= (const UCKeyboardLayout*)CFDataGetBytePtr(cflayoutData);
+		CGEventFlags flags = [event modifierFlags];
+		UInt32 keyModifiers = (flags >> 16) & 0xFF;
+		
+		UCKeyTranslate(keyboardLayout, [event keyCode], kUCKeyActionDown, keyModifiers, LMGetKbdType(), 0, &_deadKeyState, unicodeStringLength, &realLength, unicodeString);
+		::CFRelease(fkis);
+	}
+	
+	
+	if (realLength > 0)
+	{
+		result= (NSString *)CFStringCreateWithCharacters(kCFAllocatorDefault, unicodeString, realLength);
+	}
+	if (result == nil)
+	{
+		result = @"";
+	}
+	return result;
+}
+
 - (void)keyDown:(NSEvent*) event
 {
+	NSString* realString = translateInputForKeyDown(event);
 	if ((event.modifierFlags & (NSCommandKeyMask | NSControlKeyMask)) == (NSCommandKeyMask | NSControlKeyMask))
 	{
 		NSString* s = [event charactersIgnoringModifiers];
@@ -456,7 +500,7 @@ namespace april
 			return;
 		}
 	}
-	[self onKeyDown:[self processKeyCode:event] unicode:[event characters]];
+	[self onKeyDown:[self processKeyCode:event] unicode:realString];
 }
 
 - (void)keyUp:(NSEvent*) event
