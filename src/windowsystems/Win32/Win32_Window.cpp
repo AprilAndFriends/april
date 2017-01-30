@@ -14,6 +14,8 @@
 #include <hltypes/hresource.h>
 #include <hltypes/hthread.h>
 
+#include <WindowsX.h>
+
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -201,10 +203,10 @@ namespace april
 	void Win32_Window::_updateCursorPosition()
 	{
 		// Win32 mouse position
-		static POINT w32_cursorPosition;
-		GetCursorPos(&w32_cursorPosition);
-		ScreenToClient(this->hWnd, &w32_cursorPosition);
-		this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
+		static POINT _systemCursorPosition;
+		GetCursorPos(&_systemCursorPosition);
+		ScreenToClient(this->hWnd, &_systemCursorPosition);
+		this->cursorPosition.set((float)_systemCursorPosition.x, (float)_systemCursorPosition.y);
 	}
 
 	int Win32_Window::getWidth() const
@@ -624,6 +626,23 @@ namespace april
 		return Win32_Window::childProcessCallback(hWnd, message, wParam, lParam);
 	}
 
+	static inline april::Key _getKeyFromMessage(UINT message)
+	{
+		if (message == WM_LBUTTONDOWN || message == WM_LBUTTONUP)
+		{
+			return AK_LBUTTON;
+		}
+		if (message == WM_MBUTTONDOWN || message == WM_MBUTTONUP)
+		{
+			return AK_MBUTTON;
+		}
+		if (message == WM_RBUTTONDOWN || message == WM_RBUTTONUP)
+		{
+			return AK_RBUTTON;
+		}
+		return AK_NONE;
+	}
+
 	LRESULT CALLBACK Win32_Window::childProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		if (!april::window->isCreated()) // don't run callback processing if window was "destroyed"
@@ -634,8 +653,8 @@ namespace april
 		static bool _altKeyDown = false;
 		static int lastWidth = april::window->getWidth();
 		static int lastHeight = april::window->getHeight();
-		static TOUCHINPUT touches[100];
-		static POINT w32_cursorPosition;
+		static TOUCHINPUT touches[1000];
+		static POINT _systemCursorPosition;
 		switch (message)
 		{
 		case WM_TOUCH: // (Win7+ only)
@@ -645,10 +664,10 @@ namespace april
 				_mouseMessages = 5;
 				if (_getTouchInputInfo((HTOUCHINPUT)lParam, wParam, touches, sizeof(TOUCHINPUT)))
 				{
-					w32_cursorPosition.x = TOUCH_COORD_TO_PIXEL(touches[0].x);
-					w32_cursorPosition.y = TOUCH_COORD_TO_PIXEL(touches[0].y);
-					ScreenToClient(hWnd, &w32_cursorPosition);
-					((Win32_Window*)april::window)->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
+					_systemCursorPosition.x = TOUCH_COORD_TO_PIXEL(touches[0].x);
+					_systemCursorPosition.y = TOUCH_COORD_TO_PIXEL(touches[0].y);
+					ScreenToClient(hWnd, &_systemCursorPosition);
+					((Win32_Window*)april::window)->cursorPosition.set((float)_systemCursorPosition.x, (float)_systemCursorPosition.y);
 					if ((touches[0].dwFlags & TOUCHEVENTF_DOWN) == TOUCHEVENTF_DOWN)
 					{
 						if (!april::window->isFullscreen())
@@ -722,23 +741,9 @@ namespace april
 		case WM_CHAR:
 			april::window->queueKeyEvent(KEY_DOWN, AK_NONE, wParam);
 			break;
+			// oh no, it's LMR!
 		case WM_LBUTTONDOWN:
-			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
-			{
-				_mouseMessages = 0;
-				if (!april::window->isFullscreen())
-				{
-					SetCapture((HWND)april::window->getBackendId());
-				}
-				april::window->setInputMode(april::Window::MOUSE);
-				// some sort of touch simulation going on, update cursor position
-				if (april::window->getInputMode() == april::Window::TOUCH)
-				{
-					((Win32_Window*)april::window)->_updateCursorPosition();
-				}
-				april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_LBUTTON);
-			}
-			break;
+		case WM_MBUTTONDOWN:
 		case WM_RBUTTONDOWN:
 			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
 			{
@@ -753,26 +758,11 @@ namespace april
 				{
 					((Win32_Window*)april::window)->_updateCursorPosition();
 				}
-				april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), AK_RBUTTON);
+				april::window->queueMouseEvent(MOUSE_DOWN, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
 			}
 			break;
 		case WM_LBUTTONUP:
-			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
-			{
-				_mouseMessages = 0;
-				if (!april::window->isFullscreen())
-				{
-					ReleaseCapture();
-				}
-				april::window->setInputMode(april::Window::MOUSE);
-				// some sort of touch simulation going on, update cursor position
-				if (april::window->getInputMode() == april::Window::TOUCH)
-				{
-					((Win32_Window*)april::window)->_updateCursorPosition();
-				}
-				april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_LBUTTON);
-			}
-			break;
+		case WM_MBUTTONUP:
 		case WM_RBUTTONUP:
 			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
 			{
@@ -787,7 +777,7 @@ namespace april
 				{
 					((Win32_Window*)april::window)->_updateCursorPosition();
 				}
-				april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), AK_RBUTTON);
+				april::window->queueMouseEvent(MOUSE_UP, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
 			}
 			break;
 		case WM_MOUSEMOVE:
@@ -805,7 +795,7 @@ namespace april
 					{
 						((Win32_Window*)april::window)->_updateCursorPosition();
 					}
-					april::window->queueMouseEvent(MOUSE_MOVE, april::window->getCursorPosition(), AK_NONE);
+					april::window->queueMouseEvent(MOUSE_MOVE, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), AK_NONE);
 				}
 			}
 			break;
