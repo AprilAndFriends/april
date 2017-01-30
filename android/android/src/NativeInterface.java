@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.view.inputmethod.InputMethodManager;
+import android.view.Display;
 import android.view.View;
 import android.util.DisplayMetrics;
 
@@ -95,17 +96,30 @@ public class NativeInterface
 	
 	public static Object getDisplayResolution()
 	{
+		boolean enabledNavigationBarHiding = NativeInterface.aprilActivity.isEnabledNavigationBarHiding();
 		DisplayMetrics metrics = new DisplayMetrics();
-		NativeInterface.activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		int width = metrics.widthPixels;
-		int height = metrics.heightPixels;
-		if (NativeInterface.aprilActivity.isEnabledNavigationBarHiding())
+		int width = 0;
+		int height = 0;
+		Display display = NativeInterface.activity.getWindowManager().getDefaultDisplay();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && enabledNavigationBarHiding)
 		{
-			// get the DecorView's size is status bar is being hidden
-			android.graphics.Rect visibleFrame = new android.graphics.Rect();
-			NativeInterface.activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleFrame);
-			width = visibleFrame.right;
-			height = visibleFrame.bottom;
+			display.getRealMetrics(metrics);
+			width = metrics.widthPixels;
+			height = metrics.heightPixels;
+		}
+		else // older Android versions
+		{
+			display.getMetrics(metrics);
+			width = metrics.widthPixels;
+			height = metrics.heightPixels;
+			if (enabledNavigationBarHiding)
+			{
+				// get the DecorView's size if navigation bar can be hidden
+				android.graphics.Rect visibleFrame = new android.graphics.Rect();
+				NativeInterface.activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleFrame);
+				width = visibleFrame.right - visibleFrame.left;
+				height = visibleFrame.bottom - visibleFrame.top;
+			}
 		}
 		if (height > width)
 		{
@@ -130,7 +144,15 @@ public class NativeInterface
 			return 312.0f;
 		}
 		DisplayMetrics metrics = new DisplayMetrics();
-		NativeInterface.activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		Display display = NativeInterface.activity.getWindowManager().getDefaultDisplay();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+		{
+			display.getRealMetrics(metrics);
+		}
+		else // older Android versions
+		{
+			display.getMetrics(metrics);
+		}
 		return (float)Math.sqrt((metrics.xdpi * metrics.xdpi + metrics.ydpi * metrics.ydpi) / 2.0);
 	}
 	
@@ -193,20 +215,9 @@ public class NativeInterface
 	
 	public static void updateKeyboard()
 	{
-		// TODO - detect broken versions of com.htc.android.htcime
 		if (Build.BOARD.equals("mecha") ||		// Thunderbolt
 			Build.BOARD.equals("marvel") ||		// Wildfire S
-			Build.BOARD.equals("marvelc"))		// Wildfire S
-		{
-			htcKeyboardHack = true;
-		}
-		else if (Build.VERSION.SDK_INT < 10 &&
-			Build.BOARD.equals("shooteru") ||	// EVO 3D
-			Build.BOARD.equals("supersonic"))	// EVO 4G
-		{
-			htcKeyboardHack = true;
-		}
-		else if (Build.VERSION.SDK_INT >= 10 &&
+			Build.BOARD.equals("marvelc") ||	// Wildfire S
 			Build.BOARD.equals("inc"))			// Droid Incredible
 		{
 			htcKeyboardHack = true;

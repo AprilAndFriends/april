@@ -26,6 +26,8 @@ import java.util.ArrayList;
 
 public class Activity extends android.app.Activity implements IActivityEvents
 {
+	private static final String LOG_TAG = "april";
+	
 	protected boolean useHardExit = true; // set this to false to prevent application from fully exiting
 	private boolean enabledNavigationBarHiding = true;
 	
@@ -153,15 +155,15 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		android.util.Log.i("april", "Initializing april Activity class.");
-		android.util.Log.i("april", "Android device: '" + Build.MANUFACTURER + "' / '" + Build.MODEL + "'");
+		android.util.Log.i(LOG_TAG, "Creating APRIL Activity class.");
+		android.util.Log.i(LOG_TAG, "Android device: '" + Build.MANUFACTURER + "' / '" + Build.MODEL + "'");
 		this.hideNavigationBar();
 		super.onCreate(savedInstanceState);
 		ActivityManager manager = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
 		int glesVersion = manager.getDeviceConfigurationInfo().reqGlEsVersion;
 		if (glesVersion < 0x20000)
 		{
-			android.util.Log.w("april", "Minimum GLES version is " + glesVersion + ", but it should be 0x00020000! Unpredictable behavior possible!");
+			android.util.Log.w(LOG_TAG, "Minimum GLES version is " + glesVersion + ", but it should be 0x00020000! Unpredictable behavior possible!");
 		}
 		this.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), true, this.systemSettingsObserver);
 		this.systemSettingsObserver.onChange(true);
