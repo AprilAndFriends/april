@@ -38,7 +38,7 @@ namespace april
 		float scale = ((iOS_Window*) window)->_getTouchScale();
 		// return value stored in cursorX and cursorY		
 		//For "primary" landscape orientation, this is how we calc it
-		hlog::errorf("OK", "%4.0f %4.0f", touch.x * scale, touch.y * scale);
+		//hlog::errorf("OK", "%4.0f %4.0f", touch.x * scale, touch.y * scale);	// for debugging
 		((iOS_Window*) window)->_setCursorPosition(touch.x * scale, touch.y * scale);
 	}
 	
