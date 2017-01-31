@@ -38,7 +38,8 @@ namespace april
 		float scale = ((iOS_Window*) window)->_getTouchScale();
 		// return value stored in cursorX and cursorY		
 		//For "primary" landscape orientation, this is how we calc it
-		((iOS_Window*) window)->_setCursorPosition(touch.x * scale, touch.y * scale);		
+		hlog::errorf("OK", "%4.0f %4.0f", touch.x * scale, touch.y * scale);
+		((iOS_Window*) window)->_setCursorPosition(touch.x * scale, touch.y * scale);
 	}
 	
 	static harray<UITouch*> _convertTouchesToCoordinates(void* nssetTouches)
@@ -84,7 +85,7 @@ namespace april
 		void execute()
 		{
 			if (this->type != Window::MOUSE_CANCEL) updateCursorPosition(this->position);
-			this->window->handleMouseEvent(this->type, this->position, this->button);
+			this->window->handleMouseEvent(this->type, this->position * ((iOS_Window*) window)->_getTouchScale(), this->button);
 		}
 		
 	protected:
@@ -99,7 +100,11 @@ namespace april
 	public:
 		iOS_TouchInputEvent(Window* window, harray<gvec2>& touches) : InputEvent(window)
 		{
-			this->touches = touches;
+			float scale = ((iOS_Window*)window)->_getTouchScale();
+			foreach (gvec2, it, touches)
+			{
+				this->touches += (*it) * scale;
+			}
 		}
 		
 		void execute()
