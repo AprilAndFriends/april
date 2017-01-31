@@ -26,6 +26,8 @@
 #include "Platform.h"
 #include "zlibUtil.h"
 
+#define PVR_HEADER_SIZE 52
+
 namespace april
 {
 	struct PvrzHeader
@@ -48,7 +50,6 @@ namespace april
 		{
 			return NULL;
 		}
-		int headerSize = 0;//sizeof(struct PVR_Texture_Header);
 		unsigned char* pvrData = zlibDecompress(header.size, header.compressedSize, stream);
 		if (pvrData == NULL)
 		{
@@ -58,10 +59,10 @@ namespace april
 		image->w = header.width;
 		image->h = header.height;
 		image->internalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
-		image->compressedSize = header.size - headerSize;
+		image->compressedSize = header.size - PVR_HEADER_SIZE;
 		image->format = Image::FORMAT_COMPRESSED;
 		image->data = new unsigned char[image->compressedSize];
-		memcpy(image->data, &pvrData[headerSize], image->compressedSize);
+		memcpy(image->data, &pvrData[PVR_HEADER_SIZE], image->compressedSize);
 		delete[] pvrData;
 		return image;
 	}
@@ -83,7 +84,7 @@ namespace april
 		image->w = header.width;
 		image->h = header.height;
 		image->internalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
-		image->compressedSize = header.size;
+		image->compressedSize = header.size - PVR_HEADER_SIZE;
 		image->format = Image::FORMAT_COMPRESSED;
 		image->data = NULL;
 		return image;
