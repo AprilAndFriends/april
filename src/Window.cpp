@@ -539,19 +539,22 @@ namespace april
 	{
 		if (this->mouseDelegate != NULL)
 		{
-			this->mouseDelegate->setCurrentCursorPosition(position);
 			switch (type)
 			{
 			case MOUSE_DOWN:
+				this->mouseDelegate->setCurrentCursorPosition(position);
 				this->mouseDelegate->onMouseDown(keyCode);
 				break;
 			case MOUSE_UP:
+				this->mouseDelegate->setCurrentCursorPosition(position);
 				this->mouseDelegate->onMouseUp(keyCode);
 				break;
 			case MOUSE_CANCEL:
+				this->mouseDelegate->setCurrentCursorPosition(position);
 				this->mouseDelegate->onMouseCancel(keyCode);
 				break;
 			case MOUSE_MOVE:
+				this->mouseDelegate->setCurrentCursorPosition(position);
 				this->mouseDelegate->onMouseMove();
 				break;
 			case MOUSE_SCROLL:
