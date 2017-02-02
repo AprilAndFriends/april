@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.2
+/// @version 4.3
 /// 
 /// @section LICENSE
 /// 
@@ -15,8 +15,6 @@
 
 #include "april.h"
 #include "egl.h"
-
-#define METERS_TO_INCHES_FACTOR (EGL_DISPLAY_SCALING * 0.0254f)
 
 namespace april
 {
