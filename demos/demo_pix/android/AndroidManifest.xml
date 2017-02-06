@@ -13,7 +13,7 @@
 			android:theme="@style/AprilSplashScreen">
 		<activity android:name=".DemoPix"
 				android:label="Demo Pix"
-				android:screenOrientation="sensorLandscape"
+				android:screenOrientation="landscape"
 				android:launchMode="singleTask">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
