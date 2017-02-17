@@ -289,7 +289,7 @@ namespace april
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
 		if (this->kdWindow != NULL)
 		{
-			KDint param = value ? KD_CURSOR_ARROW : KD_CURSOR_NONE;
+			KDint param = value ? KD_CURSOR_ARROW : KD_CURSOR_CUSTOM; // TODO kspes@20170217: was KD_CURSOR_NONE before, but it got removed from API, not sure how to proceed
 			kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_CURSOR, &param);
 		}
 #endif
@@ -357,7 +357,7 @@ namespace april
 			if (timer >= 60)
 			{
 				timer = 0;
-				KDint param = KD_CURSOR_NONE;
+				KDint param = KD_CURSOR_CUSTOM; // TODO kspes@20170217: was KD_CURSOR_NONE before, but it got removed from API, not sure how to proceed
 				kdSetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_CURSOR, &param);
 			}
 		}
