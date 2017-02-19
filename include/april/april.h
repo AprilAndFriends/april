@@ -210,6 +210,21 @@ namespace april
 	/// @param[in] value The max number of async textures concurrently loaded in RAM and waiting for upload.
 	/// @note A value of 0 or less indicates no limit.
 	aprilFnExport void setMaxWaitingAsyncTextures(int value);
+	/// @brief Adds a new symbolic Color.
+	/// @param[in] symbolicName The name of the Color.
+	/// @param[in] color The Color object.
+	/// @note If a symbolic Color with the same name already exists, it will be overwritten.
+	aprilFnExport void addSymbolicColor(chstr symbolicName, const april::Color& color);
+	/// @brief Finds the Color with the given symbolic name.
+	/// @param[in] symbolicName The name of the Color.
+	/// @param[out] color The output Color object.
+	/// @return True if Color exists and return succeeded. False if Color under symbolicName does not exist.
+	aprilFnExport bool findSymbolicColor(chstr symbolicName, april::Color& color);
+	/// @brief Finds the Color with the given symbolic name.
+	/// @param[in] symbolicName The name of the Color.
+	/// @param[out] hexColor The output hex string for the color.
+	/// @return True if Color exists and return succeeded. False if Color under symbolicName does not exist.
+	aprilFnExport bool findSymbolicColor(chstr symbolicName, hstr& hexColor);
 
 }
 #endif
