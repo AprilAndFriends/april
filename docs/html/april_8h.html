@@ -128,6 +128,15 @@ aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <tr class="memitem:a96d0b6e3e724ec0d412f9f24e7e3ae4e"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a96d0b6e3e724ec0d412f9f24e7e3ae4e">april::setMaxWaitingAsyncTextures</a> (int value)</td></tr>
 <tr class="memdesc:a96d0b6e3e724ec0d412f9f24e7e3ae4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the max number of async textures concurrently loaded in RAM and waiting for upload.  <a href="april_8h.html#a96d0b6e3e724ec0d412f9f24e7e3ae4e">More...</a><br /></td></tr>
 <tr class="separator:a96d0b6e3e724ec0d412f9f24e7e3ae4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a666f61065cf5a7b88e583eb438a8d612"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a666f61065cf5a7b88e583eb438a8d612">april::addSymbolicColor</a> (chstr symbolicName, const <a class="el" href="classapril_1_1_color.html">april::Color</a> &amp;color)</td></tr>
+<tr class="memdesc:a666f61065cf5a7b88e583eb438a8d612"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new symbolic <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>.  <a href="april_8h.html#a666f61065cf5a7b88e583eb438a8d612">More...</a><br /></td></tr>
+<tr class="separator:a666f61065cf5a7b88e583eb438a8d612"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f65b7d96dd2299ca5aa479aa2ee0a57"><td class="memItemLeft" align="right" valign="top">aprilFnExport bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a0f65b7d96dd2299ca5aa479aa2ee0a57">april::findSymbolicColor</a> (chstr symbolicName, <a class="el" href="classapril_1_1_color.html">april::Color</a> &amp;color)</td></tr>
+<tr class="memdesc:a0f65b7d96dd2299ca5aa479aa2ee0a57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> with the given symbolic name.  <a href="april_8h.html#a0f65b7d96dd2299ca5aa479aa2ee0a57">More...</a><br /></td></tr>
+<tr class="separator:a0f65b7d96dd2299ca5aa479aa2ee0a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a145e856d8e24b0eaaa0192b330d422c2"><td class="memItemLeft" align="right" valign="top">aprilFnExport bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a145e856d8e24b0eaaa0192b330d422c2">april::findSymbolicColor</a> (chstr symbolicName, hstr &amp;hexColor)</td></tr>
+<tr class="memdesc:a145e856d8e24b0eaaa0192b330d422c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> with the given symbolic name.  <a href="april_8h.html#a145e856d8e24b0eaaa0192b330d422c2">More...</a><br /></td></tr>
+<tr class="separator:a145e856d8e24b0eaaa0192b330d422c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -137,7 +146,7 @@ aprilExport hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 <tr class="separator:a211c77086f1c3a69f7781e6456216451"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><dl class="section version"><dt>Version</dt><dd>4.1</dd></dl>
+<div class="textblock"><dl class="section version"><dt>Version</dt><dd>4.3</dd></dl>
 <h1><a class="anchor" id="LICENSE"></a>
 LICENSE</h1>
 <p>This program is free software; you can redistribute it and/or modify it under the terms of the BSD license: <a href="http://opensource.org/licenses/BSD-3-Clause">http://opensource.org/licenses/BSD-3-Clause</a></p>
@@ -145,6 +154,42 @@ LICENSE</h1>
 DESCRIPTION</h1>
 <p>Defines a generic render system. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="file_a666f61065cf5a7b88e583eb438a8d612"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">aprilFnExport void april::addSymbolicColor </td>
+          <td>(</td>
+          <td class="paramtype">chstr&#160;</td>
+          <td class="paramname"><em>symbolicName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classapril_1_1_color.html">april::Color</a> &amp;&#160;</td>
+          <td class="paramname"><em>color</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a new symbolic <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">symbolicName</td><td>The name of the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">color</td><td>The <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>If a symbolic <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> with the same name already exists, it will be overwritten. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="file_a0995e5df7a864fd05c2e84473720effd"></a>
 <div class="memitem">
 <div class="memproto">
@@ -255,6 +300,78 @@ DESCRIPTION</h1>
 <dd>
 This should be called after <a class="el" href="april_8h.html#aa1b2a943c5860fdd2e9b53a3e0c9ef79" title="Creates the actual render system. ">createRenderSystem()</a>. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd>createRenderSystem </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="file_a0f65b7d96dd2299ca5aa479aa2ee0a57"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">aprilFnExport bool april::findSymbolicColor </td>
+          <td>(</td>
+          <td class="paramtype">chstr&#160;</td>
+          <td class="paramname"><em>symbolicName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_color.html">april::Color</a> &amp;&#160;</td>
+          <td class="paramname"><em>color</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finds the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> with the given symbolic name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">symbolicName</td><td>The name of the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">color</td><td>The output <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> exists and return succeeded. False if <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> under symbolicName does not exist. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="file_a145e856d8e24b0eaaa0192b330d422c2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">aprilFnExport bool april::findSymbolicColor </td>
+          <td>(</td>
+          <td class="paramtype">chstr&#160;</td>
+          <td class="paramname"><em>symbolicName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">hstr &amp;&#160;</td>
+          <td class="paramname"><em>hexColor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finds the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> with the given symbolic name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">symbolicName</td><td>The name of the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">hexColor</td><td>The output hex string for the color. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> exists and return succeeded. False if <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> under symbolicName does not exist. </dd></dl>
 
 </div>
 </div>
