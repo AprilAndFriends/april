@@ -701,7 +701,7 @@ namespace april
 			return false;
 		}
 		hfile file;
-		file.open(filename, hfile::WRITE);
+		file.open(filename, hfaccess::Write);
 		return Image::_savePng(file, image);
 	}
 
