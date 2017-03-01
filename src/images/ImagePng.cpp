@@ -52,7 +52,7 @@ namespace april
 			hlog::error(logTag, "Not a PNG file!");
 			return NULL;
 		}
-		stream.seek(-PNG_SIGNATURE_SIZE, hsbase::CURRENT);
+		stream.seek(-PNG_SIGNATURE_SIZE, hseek::Current);
 		png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 		png_infop infoPtr = png_create_info_struct(pngPtr);
 		png_infop endInfo = png_create_info_struct(pngPtr);
@@ -180,7 +180,7 @@ namespace april
 			hlog::error(logTag, "Not a PNG file!");
 			return NULL;
 		}
-		stream.seek(-PNG_SIGNATURE_SIZE, hsbase::CURRENT);
+		stream.seek(-PNG_SIGNATURE_SIZE, hseek::Current);
 		png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 		png_infop infoPtr = png_create_info_struct(pngPtr);
 		png_infop endInfo = png_create_info_struct(pngPtr);
