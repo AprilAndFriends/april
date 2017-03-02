@@ -54,7 +54,7 @@ namespace april
 		void presentFrame();
 		void checkEvents();
 
-		void queueControllerEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue);
+		void queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
 
 		static LRESULT CALLBACK childProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		

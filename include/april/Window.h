@@ -14,11 +14,13 @@
 #define APRIL_WINDOW_H
 
 #include <gtypes/Vector2.h>
+#include <hltypes/henum.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
+#include "InputMode.h"
 #include "Keys.h"
 #include "Timer.h"
 
@@ -38,61 +40,32 @@ namespace april
 	class aprilExport Window
 	{
 	public:
-		/// @brief Defines the input mode.
-		enum InputMode
-		{
-			/// @brief Using a mouse for input.
-			MOUSE,
-			/// @brief Using a touch-based interface for input.
-			TOUCH,
-			/// @brief Using a controller for input.
-			CONTROLLER
-		};
-
-		/// @brief Defines mouse event types.
-		enum MouseEventType
-		{
-			/// @brief Mouse button was pressed.
-			MOUSE_DOWN = 0,
-			/// @brief Mouse button was released.
-			MOUSE_UP = 1,
-			/// @brief Mouse button was canceled without an "up" event.
-			MOUSE_CANCEL = 2,
-			/// @brief Mouse was moved.
-			MOUSE_MOVE = 3,
-			/// @brief Mouse scroll was changed (usually a scroll wheel).
-			MOUSE_SCROLL = 4
-		};
-
-		/// @brief Defines keyboard key event types.
-		enum KeyEventType
-		{
-			/// @brief Key was pressed.
-			KEY_DOWN = 0,
-			/// @brief Key was released.
-			KEY_UP = 1
-		};
-
-		/// @brief Defines controller input event types.
-		enum ControllerEventType
-		{
-			/// @brief Controller button was pressed.
-			CONTROLLER_DOWN = 0,
-			/// @brief Controller button was released.
-			CONTROLLER_UP = 1,
-			/// @brief Controller axis position was changed.
-			CONTROLLER_AXIS = 2,
-			/// @brief Controller connected.
-			CONTROLLER_CONNECTED = 3,
-			/// @brief Controller disconnected.
-			CONTROLLER_DISCONNECTED = 4
-		};
-
 		/// @brief Defines mouse input event data.
 		struct aprilExport MouseInputEvent
 		{
+			/// @class Type
+			/// @brief Defines mouse event types.
+			HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Type,
+			(
+				/// @var static const Type Type::Down
+				/// @brief Mouse button was pressed.
+				HL_ENUM_DECLARE(Type, Down);
+				/// @var static const Type Type::Up
+				/// @brief Mouse button was released.
+				HL_ENUM_DECLARE(Type, Up);
+				/// @var static const Type Type::Cancel
+				/// @brief Mouse button was canceled without an Up event.
+				HL_ENUM_DECLARE(Type, Cancel);
+				/// @var static const Type Type::Move
+				/// @brief Mouse was moved.
+				HL_ENUM_DECLARE(Type, Move);
+				/// @var static const Type Type::Scroll
+				/// @brief Mouse scroll was changed (usually a scroll wheel).
+				HL_ENUM_DECLARE(Type, Scroll);
+			));
+
 			/// @brief The event type.
-			MouseEventType type;
+			Type type;
 			/// @brief The pointer position.
 			gvec2 position;
 			/// @brief The key code.
@@ -104,15 +77,27 @@ namespace april
 			/// @param[in] type The event type.
 			/// @param[in] position The pointer position.
 			/// @param[in] keyCode The key code.
-			MouseInputEvent(MouseEventType type, gvec2 position, Key keyCode);
+			MouseInputEvent(Type type, gvec2 position, Key keyCode);
 		
 		};
 
 		/// @brief Defines keyboard input event data.
 		struct aprilExport KeyInputEvent
 		{
+			/// @class Type
+			/// @brief Defines keyboard key event types.
+			HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Type,
+			(
+				/// @var static const Type Type::Down
+				/// @brief Key was pressed.
+				HL_ENUM_DECLARE(Type, Down);
+				/// @var static const Type Type::Up
+				/// @brief Key was released.
+				HL_ENUM_DECLARE(Type, Up);
+			));
+
 			/// @brief The event type.
-			KeyEventType type;
+			Type type;
 			/// @brief The key code.
 			Key keyCode;
 			/// @brief The character Unicode value.
@@ -124,7 +109,7 @@ namespace april
 			/// @param[in] type The event type.
 			/// @param[in] keyCode The key code.
 			/// @param[in] charCode The character Unicode value.
-			KeyInputEvent(KeyEventType type, Key keyCode, unsigned int charCode);
+			KeyInputEvent(Type type, Key keyCode, unsigned int charCode);
 		
 		};
 
@@ -145,8 +130,29 @@ namespace april
 		/// @brief Defines controller input event data.
 		struct aprilExport ControllerInputEvent
 		{
+			/// @class Type
+			/// @brief Defines controller input event types.
+			HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Type,
+			(
+				/// @var static const Type Type::Down
+				/// @brief Controller button was pressed.
+				HL_ENUM_DECLARE(Type, Down);
+				/// @var static const Type Type::Up
+				/// @brief Controller button was released.
+				HL_ENUM_DECLARE(Type, Up);
+				/// @var static const Type Type::Axis
+				/// @brief Controller axis position was changed.
+				HL_ENUM_DECLARE(Type, Axis);
+				/// @var static const Type Type::Connected
+				/// @brief Controller connected.
+				HL_ENUM_DECLARE(Type, Connected);
+				/// @var static const Type Type::Disconnected
+				/// @brief Controller disconnected.
+				HL_ENUM_DECLARE(Type, Disconnected);
+			));
+
 			/// @brief The event type.
-			ControllerEventType type;
+			Type type;
 			/// @brief Index of the controller.
 			int controllerIndex;
 			/// @brief The button code.
@@ -161,7 +167,7 @@ namespace april
 			/// @param[in] controllerIndex Index of the controller.
 			/// @param[in] buttonCode The button code.
 			/// @param[in] axisValue The axis value.
-			ControllerInputEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue);
+			ControllerInputEvent(Type type, int controllerIndex, Button buttonCode, float axisValue);
 			
 		};
 
@@ -385,12 +391,12 @@ namespace april
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
 		/// @param[in] keyCode The key code.
-		virtual void handleMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
+		virtual void handleMouseEvent(MouseInputEvent::Type type, gvec2 position, Key keyCode);
 		/// @brief Handles a keyboard event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
 		/// @param[in] charCode The character Unicode value.
-		virtual void handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
+		virtual void handleKeyEvent(KeyInputEvent::Type type, Key keyCode, unsigned int charCode);
 		/// @brief Handles a touch event and propagates it to the delegate.
 		/// @param[in] touches Active touch pointers.
 		virtual void handleTouchEvent(const harray<gvec2>& touches);
@@ -399,7 +405,7 @@ namespace april
 		/// @param[in] controllerIndex Index of the controller.
 		/// @param[in] buttonCode The button code.
 		/// @param[in] axisValue The axis value.
-		virtual void handleControllerEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue);
+		virtual void handleControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
 		/// @brief Handles a quit event and propagates it to the delegate.
 		/// @param[in] canCancel Whether the window quitting can be canceled.
 		/// @return True if the system is allowed to actually close the window.
@@ -419,7 +425,7 @@ namespace april
 		/// @param[in] keyCode The key code.
 		/// @note This is a utility function.
 		/// @see handleKeyEvent
-		void handleKeyOnlyEvent(KeyEventType type, Key keyCode);
+		void handleKeyOnlyEvent(KeyInputEvent::Type type, Key keyCode);
 		/// @brief Handles a keyboard character event and propagates it to the delegate.
 		/// @param[in] charCode The character Unicode value.
 		/// @note This is a utility function.
@@ -436,26 +442,26 @@ namespace april
 		/// @param[in] position The pointer position.
 		/// @param[in] keyCode The key code.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueMouseEvent(MouseEventType type, gvec2 position, Key keyCode);
+		virtual void queueMouseEvent(MouseInputEvent::Type type, gvec2 position, Key keyCode);
 		/// @brief Queues a keyboard event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
 		/// @param[in] charCode The character Unicode value.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode);
+		virtual void queueKeyEvent(KeyInputEvent::Type type, Key keyCode, unsigned int charCode);
 		/// @brief Queues a touch event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
 		/// @param[in] index The pointer index.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueTouchEvent(MouseEventType type, gvec2 position, int index);
+		virtual void queueTouchEvent(MouseInputEvent::Type type, gvec2 position, int index);
 		/// @brief Queues a controller event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] controllerIndex Index of the controller.
 		/// @param[in] buttonCode The button code.
 		/// @param[in] axisValue The axis value.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueControllerEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue);
+		virtual void queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
 
 		/// @brief Starts the main loop.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april_main implementation is used.
@@ -473,7 +479,7 @@ namespace april
 		static void handleLaunchCallback(void* args);
 
 		DEPRECATED_ATTRIBUTE inline Cursor* createCursor(chstr filename) { return this->createCursorFromResource(filename); }
-		DEPRECATED_ATTRIBUTE inline bool isTouchEnabled() { return (this->inputMode == TOUCH); }
+		DEPRECATED_ATTRIBUTE inline bool isTouchEnabled() { return (this->inputMode == InputMode::Touch); }
 		DEPRECATED_ATTRIBUTE inline bool isVirtualKeyboardActive() { return this->isVirtualKeyboardVisible(); }
 		DEPRECATED_ATTRIBUTE inline void beginKeyboardHandling() { this->showVirtualKeyboard(); }
 		DEPRECATED_ATTRIBUTE inline void terminateKeyboardHandling() { this->hideVirtualKeyboard(); }

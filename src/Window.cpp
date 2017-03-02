@@ -29,11 +29,6 @@
 #include "VirtualKeyboard.h"
 #include "Window.h"
 
-#define INPUT_MODE_NAME(value) \
-	hstr(value == MOUSE ? "MOUSE" : \
-	(value == TOUCH ? "TOUCH" : \
-	(value == CONTROLLER ? "CONTROLLER" : "UNDEFINED")))
-
 namespace april
 {
 	// TODOaa - refactor
@@ -47,13 +42,37 @@ namespace april
 	}
 	//////////////////
 
+	HL_ENUM_CLASS_DEFINE(Window::MouseInputEvent::Type,
+	(
+		HL_ENUM_DEFINE_VALUE(Window::MouseInputEvent::Type, Down, 0);
+		HL_ENUM_DEFINE_VALUE(Window::MouseInputEvent::Type, Up, 1);
+		HL_ENUM_DEFINE_VALUE(Window::MouseInputEvent::Type, Cancel, 2);
+		HL_ENUM_DEFINE_VALUE(Window::MouseInputEvent::Type, Move, 3);
+		HL_ENUM_DEFINE_VALUE(Window::MouseInputEvent::Type, Scroll, 4);
+	));
+
+	HL_ENUM_CLASS_DEFINE(Window::KeyInputEvent::Type,
+	(
+		HL_ENUM_DEFINE_VALUE(Window::KeyInputEvent::Type, Down, 0);
+		HL_ENUM_DEFINE_VALUE(Window::KeyInputEvent::Type, Up, 1);
+	));
+
+	HL_ENUM_CLASS_DEFINE(Window::ControllerInputEvent::Type,
+	(
+		HL_ENUM_DEFINE_VALUE(Window::ControllerInputEvent::Type, Down, 0);
+		HL_ENUM_DEFINE_VALUE(Window::ControllerInputEvent::Type, Up, 1);
+		HL_ENUM_DEFINE_VALUE(Window::ControllerInputEvent::Type, Axis, 2);
+		HL_ENUM_DEFINE_VALUE(Window::ControllerInputEvent::Type, Connected, 3);
+		HL_ENUM_DEFINE_VALUE(Window::ControllerInputEvent::Type, Disconnected, 4);
+	));
+
 	Window::MouseInputEvent::MouseInputEvent()
 	{
-		this->type = MOUSE_MOVE;
+		this->type = Type::Move;
 		this->keyCode = AK_NONE;
 	}
 		
-	Window::MouseInputEvent::MouseInputEvent(Window::MouseEventType type, gvec2 position, Key keyCode)
+	Window::MouseInputEvent::MouseInputEvent(Window::MouseInputEvent::Type type, gvec2 position, Key keyCode)
 	{
 		this->type = type;
 		this->position = position;
@@ -62,12 +81,12 @@ namespace april
 		
 	Window::KeyInputEvent::KeyInputEvent()
 	{
-		this->type = KEY_UP;
+		this->type = Type::Up;
 		this->keyCode = AK_NONE;
 		this->charCode = 0;
 	}
 
-	Window::KeyInputEvent::KeyInputEvent(Window::KeyEventType type, Key keyCode, unsigned int charCode)
+	Window::KeyInputEvent::KeyInputEvent(Window::KeyInputEvent::Type type, Key keyCode, unsigned int charCode)
 	{
 		this->type = type;
 		this->keyCode = keyCode;
@@ -85,11 +104,11 @@ namespace april
 		
 	Window::ControllerInputEvent::ControllerInputEvent()
 	{
-		this->type = CONTROLLER_UP;
+		this->type = Type::Up;
 		this->buttonCode = AB_NONE;
 	}
 
-	Window::ControllerInputEvent::ControllerInputEvent(Window::ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue)
+	Window::ControllerInputEvent::ControllerInputEvent(Window::ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
 	{
 		this->type = type;
 		this->controllerIndex = controllerIndex;
@@ -147,7 +166,7 @@ namespace april
 		this->virtualKeyboardVisible = false;
 		this->virtualKeyboardHeightRatio = 0.0f;
 		this->multiTouchActive = false;
-		this->inputMode = MOUSE;
+		this->inputMode = InputMode::Mouse;
 		this->virtualKeyboard = NULL;
 		this->updateDelegate = NULL;
 		this->mouseDelegate = NULL;
@@ -195,7 +214,7 @@ namespace april
 			this->cursor = NULL;
 			this->virtualKeyboardVisible = false;
 			this->virtualKeyboardHeightRatio = 0.0f;
-			this->inputMode = MOUSE;
+			this->inputMode = InputMode::Mouse;
 			return true;
 		}
 		return false;
@@ -217,7 +236,7 @@ namespace april
 			this->cursor = NULL;
 			this->virtualKeyboardVisible = false;
 			this->virtualKeyboardHeightRatio = 0.0f;
-			this->inputMode = MOUSE;
+			this->inputMode = InputMode::Mouse;
 			this->virtualKeyboard = NULL;
 			this->updateDelegate = NULL;
 			this->mouseDelegate = NULL;
@@ -249,8 +268,8 @@ namespace april
 		if (this->inputMode != value)
 		{
 			this->inputMode = value;
-			hlog::write(logTag, "Changing Input Mode to: " + INPUT_MODE_NAME(this->inputMode));
-			if (this->inputMode == CONTROLLER)
+			hlog::write(logTag, "Changing Input Mode to: " + this->inputMode.getName());
+			if (this->inputMode == InputMode::Controller)
 			{
 				this->cursorPosition.set(-10000.0f, -10000.0f);
 			}
@@ -267,8 +286,8 @@ namespace april
 		if (this->inputModeTranslations.hasKey(this->inputMode))
 		{
 			this->inputMode = this->inputModeTranslations[this->inputMode];
-			hlog::write(logTag, "Forcing Input Mode to: " + INPUT_MODE_NAME(this->inputMode));
-			if (this->inputMode == CONTROLLER)
+			hlog::write(logTag, "Forcing Input Mode to: " + this->inputMode.getName());
+			if (this->inputMode == InputMode::Controller)
 			{
 				this->cursorPosition.set(-10000.0f, -10000.0f);
 			}
@@ -420,22 +439,22 @@ namespace april
 		while (this->mouseEvents.size() > 0) // required while instead of for, because this loop could modify this->mouseEvents when the event is propagated
 		{
 			mouseEvent = this->mouseEvents.removeFirst();
-			if (mouseEvent.type != Window::MOUSE_CANCEL && mouseEvent.type != Window::MOUSE_SCROLL)
+			if (mouseEvent.type != MouseInputEvent::Type::Cancel && mouseEvent.type != MouseInputEvent::Type::Scroll)
 			{
 				this->cursorPosition = mouseEvent.position;
 			}
-			if (mouseEvent.type == Window::MOUSE_SCROLL)
+			if (mouseEvent.type == MouseInputEvent::Type::Scroll)
 			{
 				cumulativeScroll += mouseEvent.position;
-				if (this->mouseEvents.size() == 0 || this->mouseEvents.first().type != Window::MOUSE_SCROLL)
+				if (this->mouseEvents.size() == 0 || this->mouseEvents.first().type != MouseInputEvent::Type::Scroll)
 				{
 					this->handleMouseEvent(mouseEvent.type, cumulativeScroll, mouseEvent.keyCode);
 					cumulativeScroll.set(0.0f, 0.0f);
 				}
 			}
 			// if not a scroll event or final move event (because of merging)
-			else if (mouseEvent.type != Window::MOUSE_MOVE || (mouseEvent.type == Window::MOUSE_MOVE &&
-				(this->mouseEvents.size() == 0 || this->mouseEvents.first().type != Window::MOUSE_MOVE)))
+			else if (mouseEvent.type != MouseInputEvent::Type::Move || (mouseEvent.type == MouseInputEvent::Type::Move &&
+				(this->mouseEvents.size() == 0 || this->mouseEvents.first().type != MouseInputEvent::Type::Move)))
 			{
 				this->handleMouseEvent(mouseEvent.type, mouseEvent.position, mouseEvent.keyCode);
 			}
@@ -535,39 +554,41 @@ namespace april
 		return true;
 	}
 	
-	void Window::handleMouseEvent(MouseEventType type, gvec2 position, Key keyCode)
+	void Window::handleMouseEvent(MouseInputEvent::Type type, gvec2 position, Key keyCode)
 	{
 		if (this->mouseDelegate != NULL)
 		{
-			switch (type)
+			if (type == MouseInputEvent::Type::Down)
 			{
-			case MOUSE_DOWN:
 				this->mouseDelegate->setCurrentCursorPosition(position);
 				this->mouseDelegate->onMouseDown(keyCode);
-				break;
-			case MOUSE_UP:
+			}
+			else if (type == MouseInputEvent::Type::Up)
+			{
 				this->mouseDelegate->setCurrentCursorPosition(position);
 				this->mouseDelegate->onMouseUp(keyCode);
-				break;
-			case MOUSE_CANCEL:
+			}
+			else if (type == MouseInputEvent::Type::Cancel)
+			{
 				this->mouseDelegate->setCurrentCursorPosition(position);
 				this->mouseDelegate->onMouseCancel(keyCode);
-				break;
-			case MOUSE_MOVE:
+			}
+			else if (type == MouseInputEvent::Type::Move)
+			{
 				this->mouseDelegate->setCurrentCursorPosition(position);
 				this->mouseDelegate->onMouseMove();
-				break;
-			case MOUSE_SCROLL:
+			}
+			else if (type == MouseInputEvent::Type::Scroll)
+			{
 				this->mouseDelegate->onMouseScroll(position.x, position.y);
-				break;
 			}
 		}
 	}
 	
-	void Window::handleKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode)
+	void Window::handleKeyEvent(KeyInputEvent::Type type, Key keyCode, unsigned int charCode)
 	{
 		this->handleKeyOnlyEvent(type, keyCode); // doesn't do anything if keyCode is AK_NONE
-		if (type == KEY_DOWN && charCode > 0) // ignores invalid chars
+		if (type == KeyInputEvent::Type::Down && charCode > 0) // ignores invalid chars
 		{
 			// according to the unicode standard, this range is undefined and reserved for system codes
 			// for example, Mac OSX maps keys up, down, left, right to this key, inducing wrong char calls to the app.
@@ -579,7 +600,7 @@ namespace april
 		}
 	}
 
-	void Window::handleKeyOnlyEvent(KeyEventType type, Key keyCode)
+	void Window::handleKeyOnlyEvent(KeyInputEvent::Type type, Key keyCode)
 	{
 		if (keyCode == AK_UNKNOWN)
 		{
@@ -587,18 +608,17 @@ namespace april
 		}
 		if (this->keyboardDelegate != NULL && keyCode != AK_NONE)
 		{
-			switch (type)
+			if (type == KeyInputEvent::Type::Down)
 			{
-			case KEY_DOWN:
 				if (this->options.keyPause == keyCode)
 				{
 					this->paused = !this->paused;
 				}
 				this->keyboardDelegate->onKeyDown(keyCode);
-				break;
-			case KEY_UP:
+			}
+			else if (type == KeyInputEvent::Type::Up)
+			{
 				this->keyboardDelegate->onKeyUp(keyCode);
-				break;
 			}
 			bool processed = false;
 			// emulation of buttons using keyboard
@@ -607,7 +627,7 @@ namespace april
 				Button button = this->controllerEmulationKeys[keyCode];
 				if (button != AB_AXIS_LX && button != AB_AXIS_LY && button != AB_AXIS_RX && button != AB_AXIS_RY && button != AB_TRIGGER_L && button != AB_TRIGGER_R)
 				{
-					this->handleControllerEvent((type == KEY_DOWN ? CONTROLLER_DOWN : CONTROLLER_UP), 0, button, 0.0f);
+					this->handleControllerEvent((type == KeyInputEvent::Type::Down ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), 0, button, 0.0f);
 					processed = true;
 				}
 			}
@@ -617,7 +637,7 @@ namespace april
 				Button button = this->controllerEmulationAxisesPositive[keyCode];
 				if (button == AB_AXIS_LX || button == AB_AXIS_LY || button == AB_AXIS_RX || button == AB_AXIS_RY || button == AB_TRIGGER_L || button == AB_TRIGGER_R)
 				{
-					this->handleControllerEvent(CONTROLLER_AXIS, 0, button, (type == KEY_DOWN ? 1.0f : 0.0f));
+					this->handleControllerEvent(ControllerInputEvent::Type::Axis, 0, button, (type == KeyInputEvent::Type::Down ? 1.0f : 0.0f));
 					processed = true;
 				}
 			}
@@ -627,7 +647,7 @@ namespace april
 				Button button = this->controllerEmulationAxisesNegative[keyCode];
 				if (button == AB_AXIS_LX || button == AB_AXIS_LY || button == AB_AXIS_RX || button == AB_AXIS_RY)
 				{
-					this->handleControllerEvent(CONTROLLER_AXIS, 0, button, (type == KEY_DOWN ? -1.0f : 0.0f));
+					this->handleControllerEvent(ControllerInputEvent::Type::Axis, 0, button, (type == KeyInputEvent::Type::Down ? -1.0f : 0.0f));
 					processed = true;
 				}
 			}
@@ -650,39 +670,34 @@ namespace april
 		}
 	}
 
-	void Window::handleControllerEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue)
+	void Window::handleControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
 	{
-		if (this->controllerDelegate != NULL && buttonCode != AB_NONE)
+		if (this->controllerDelegate != NULL)
 		{
 			if (buttonCode != AB_NONE)
 			{
-				switch (type)
+				if (type == ControllerInputEvent::Type::Down)
 				{
-				case CONTROLLER_DOWN:
 					this->controllerDelegate->onButtonDown(controllerIndex, buttonCode);
-					break;
-				case CONTROLLER_UP:
+				}
+				else if (type == ControllerInputEvent::Type::Up)
+				{
 					this->controllerDelegate->onButtonUp(controllerIndex, buttonCode);
-					break;
-				case CONTROLLER_AXIS:
+				}
+				else if (type == ControllerInputEvent::Type::Axis)
+				{
 					this->controllerDelegate->onControllerAxisChange(controllerIndex, buttonCode, axisValue);
-					break;
-				default:
-					break;
 				}
 			}
-			else // connection change always used AB_NONE
+			else // connection change always uses AB_NONE
 			{
-				switch (type)
+				if (type == ControllerInputEvent::Type::Connected)
 				{
-				case CONTROLLER_CONNECTED:
 					this->controllerDelegate->onControllerConnectionChanged(controllerIndex, true);
-					break;
-				case CONTROLLER_DISCONNECTED:
+				}
+				else if (type == ControllerInputEvent::Type::Disconnected)
+				{
 					this->controllerDelegate->onControllerConnectionChanged(controllerIndex, false);
-					break;
-				default:
-					break;
 				}
 			}
 		}
@@ -729,43 +744,45 @@ namespace april
 		}
 	}
 
-	void Window::queueMouseEvent(MouseEventType type, gvec2 position, Key keyCode)
+	void Window::queueMouseEvent(MouseInputEvent::Type type, gvec2 position, Key keyCode)
 	{
 		this->mouseEvents += MouseInputEvent(type, position, keyCode);
 	}
 
-	void Window::queueKeyEvent(KeyEventType type, Key keyCode, unsigned int charCode)
+	void Window::queueKeyEvent(KeyInputEvent::Type type, Key keyCode, unsigned int charCode)
 	{
 		this->keyEvents += KeyInputEvent(type, keyCode, charCode);
 	}
 
-	void Window::queueTouchEvent(MouseEventType type, gvec2 position, int index)
+	void Window::queueTouchEvent(MouseInputEvent::Type type, gvec2 position, int index)
 	{
 		int previousTouchesSize = this->touches.size();
-		switch (type)
+		if (type == MouseInputEvent::Type::Down)
 		{
-		case MOUSE_DOWN:
 			if (index < this->touches.size()) // DOWN event of an already indexed touch, never happened so far
 			{
 				return;
 			}
 			this->touches += position;
-			break;
-		case MOUSE_UP:
+		}
+		else if (type == MouseInputEvent::Type::Up)
+		{
 			if (index >= this->touches.size()) // redundant UP event, can happen
 			{
 				return;
 			}
 			this->touches.removeAt(index);
-			break;
-		case MOUSE_MOVE:
+		}
+		else if (type == MouseInputEvent::Type::Move)
+		{
 			if (index >= this->touches.size()) // MOVE event of an unindexed touch, never happened so far
 			{
 				return;
 			}
 			this->touches[index] = position;
-			break;
-		case MOUSE_CANCEL: // canceling a particular pointer, required by specific systems (e.g. WinRT)
+		}
+		else if (type == MouseInputEvent::Type::Cancel) // canceling a particular pointer, required by specific systems (e.g. WinRT)
+		{
 			if (index < this->touches.size())
 			{
 				this->touches.removeAt(index);
@@ -775,15 +792,13 @@ namespace april
 				}
 			}
 			return;
-		default:
-			break;
 		}
 		if (this->multiTouchActive || this->touches.size() > 1)
 		{
 			if (!this->multiTouchActive && previousTouchesSize == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->queueMouseEvent(MOUSE_CANCEL, position, AK_LBUTTON);
+				this->queueMouseEvent(MouseInputEvent::Type::Cancel, position, AK_LBUTTON);
 			}
 			this->multiTouchActive = (this->touches.size() > 0);
 		}
@@ -795,7 +810,7 @@ namespace april
 		this->touchEvents += TouchInputEvent(this->touches);
 	}
 
-	void Window::queueControllerEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue)
+	void Window::queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
 	{
 		this->controllerEvents += ControllerInputEvent(type, controllerIndex, buttonCode, axisValue);
 	}

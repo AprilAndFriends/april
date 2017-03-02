@@ -206,6 +206,7 @@
     <ClCompile Include="..\..\src\delegates\TouchDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\UpdateDelegate.cpp" />
     <ClCompile Include="..\..\src\egl.cpp" />
+    <ClCompile Include="..\..\src\InputMode.cpp" />
     <ClCompile Include="..\..\src\images\ImageEtcx.cpp" />
     <ClCompile Include="..\..\src\images\ImageJpg.cpp" />
     <ClCompile Include="..\..\src\images\ImageJpt.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="..\..\include\april\EventDelegate.h" />
     <ClInclude Include="..\..\include\april\Image.h" />
     <ClInclude Include="..\..\include\april\InputDelegate.h" />
+    <ClInclude Include="..\..\include\april\InputMode.h" />
     <ClInclude Include="..\..\include\april\KeyboardDelegate.h" />
     <ClInclude Include="..\..\include\april\Keys.h" />
     <ClInclude Include="..\..\include\april\main.h" />

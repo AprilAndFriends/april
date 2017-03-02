@@ -200,12 +200,14 @@
     <ClCompile Include="..\..\src\delegates\ControllerDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\EventDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\InputDelegate.cpp" />
+    <ClInclude Include="..\..\include\april\InputMode.h" />
     <ClCompile Include="..\..\src\delegates\KeyboardDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\MouseDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\SystemDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\TouchDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\UpdateDelegate.cpp" />
     <ClCompile Include="..\..\src\egl.cpp" />
+    <ClCompile Include="..\..\src\InputMode.cpp" />
     <ClCompile Include="..\..\src\images\ImageEtcx.cpp" />
     <ClCompile Include="..\..\src\images\ImageJpg.cpp" />
     <ClCompile Include="..\..\src\images\ImageJpt.cpp" />

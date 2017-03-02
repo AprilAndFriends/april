@@ -296,6 +296,9 @@
     <ClCompile Include="..\..\src\zlibUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\InputMode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -480,6 +483,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\windowsystems\WinRT\pch.h">
       <Filter>Header Files\windowsystems\WinRT</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\InputMode.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

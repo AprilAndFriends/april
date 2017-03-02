@@ -43,7 +43,7 @@ namespace april
 		virtual void onWindowFocusChanged(bool focused);
 		/// @brief Called after input mode has changed.
 		/// @param[in] inputMode Which InputMode is currently active.
-		virtual void onInputModeChanged(Window::InputMode inputMode);
+		virtual void onInputModeChanged(InputMode inputMode);
 		/// @brief Called after virtual keyboard visibility has changed.
 		/// @param[in] visible Whether the virtual keyboard is currently visible.
 		/// @param[in] heightRatio Range of [0, 1] defining how much of the window-height the virtual keyboard takes up.

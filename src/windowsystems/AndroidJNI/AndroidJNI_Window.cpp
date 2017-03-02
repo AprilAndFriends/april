@@ -29,8 +29,7 @@ namespace april
 {
 	extern void* javaVM;
 
-	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0),
-		forcedFocus(false)
+	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), forcedFocus(false)
 	{
 		this->name = april::WindowType::AndroidJNI.getName();
 		initAndroidKeyMap();
@@ -49,7 +48,7 @@ namespace april
 		}
 		this->width = w;
 		this->height = h;
-		this->inputMode = TOUCH;
+		this->inputMode = InputMode::Touch;
 		this->forcedFocus = false;
 		return true;
 	}
@@ -72,18 +71,18 @@ namespace april
 		env->PopLocalFrame(NULL);
 	}
 
-	void AndroidJNI_Window::queueTouchEvent(Window::MouseEventType type, gvec2 position, int index)
+	void AndroidJNI_Window::queueTouchEvent(MouseInputEvent::Type type, gvec2 position, int index)
 	{
-		if (type == MOUSE_DOWN || type == MOUSE_UP)
+		if (type == MouseInputEvent::Type::Down || type == MouseInputEvent::Type::Up)
 		{
-			this->setInputMode(TOUCH);
+			this->setInputMode(InputMode::Touch);
 		}
 		Window::queueTouchEvent(type, position, index);
 	}
 
-	void AndroidJNI_Window::queueControllerEvent(Window::ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue)
+	void AndroidJNI_Window::queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
 	{
-		this->setInputMode(CONTROLLER);
+		this->setInputMode(InputMode::Controller);
 		Window::queueControllerEvent(type, controllerIndex, buttonCode, axisValue);
 	}
 

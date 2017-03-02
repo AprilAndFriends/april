@@ -42,8 +42,8 @@ namespace april
 		void enterMainLoop();
 		void presentFrame();
 		
-		void queueTouchEvent(MouseEventType type, gvec2 position, int index);
-		void queueControllerEvent(ControllerEventType type, int controllerIndex, Button buttonCode, float axisValue);
+		void queueTouchEvent(MouseInputEvent::Type type, gvec2 position, int index);
+		void queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
 
 		void showVirtualKeyboard();
 		void hideVirtualKeyboard();
