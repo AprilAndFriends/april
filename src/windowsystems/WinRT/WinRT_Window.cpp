@@ -51,7 +51,7 @@ namespace april
 		this->delaySplash = 0.0f;
 		this->backButtonSystemHandling = false;
 		this->cursorMappings.clear();
-		this->inputMode = TOUCH;
+		this->inputMode = InputMode::Touch;
 		this->setCursorVisible(true);
 		return true;
 	}
