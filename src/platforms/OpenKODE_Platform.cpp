@@ -232,52 +232,52 @@ namespace april
 		return true;
 	}
 	
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, bool modal,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
+		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
 	{
 		hstr ok;
 		hstr yes;
 		hstr no;
 		hstr cancel;
 		_makeButtonLabels(&ok, &yes, &no, &cancel, buttons, customButtonTitles);
-		const char* buttons[4] = {"", NULL, NULL, NULL};
-		MessageBoxButton resultButtons[4] = {(MessageBoxButton)NULL, (MessageBoxButton)NULL, (MessageBoxButton)NULL, (MessageBoxButton)NULL};
+		const char* kdButtons[4] = {"", NULL, NULL, NULL};
+		MessageBoxButton resultButtons[4] = { MessageBoxButton::Ok, MessageBoxButton::Ok, MessageBoxButton::Ok, MessageBoxButton::Ok };
 		int indexCancel = -1;
-		if ((buttons & MESSAGE_BUTTON_OK) && (buttons & MESSAGE_BUTTON_CANCEL))
+		if (buttons == MessageBoxButton::OkCancel)
 		{
 			// order is reversed because libKD prefers the colored button to be at place [1], at least on iOS
 			// if this is going to be changed for a new platform, ifdef the button order for iOS
-			buttons[1] = ok.cStr();
-			buttons[0] = cancel.cStr();
-			resultButtons[1] = MESSAGE_BUTTON_OK;
-			resultButtons[0] = MESSAGE_BUTTON_CANCEL;
+			kdButtons[1] = ok.cStr();
+			kdButtons[0] = cancel.cStr();
+			resultButtons[1] = MessageBoxButton::Ok;
+			resultButtons[0] = MessageBoxButton::Cancel;
 			indexCancel = 0;
 		}
-		else if ((buttons & MESSAGE_BUTTON_YES) && (buttons & MESSAGE_BUTTON_NO) && (buttons & MESSAGE_BUTTON_CANCEL))
+		else if (buttons == MessageBoxButton::YesNoCancel)
 		{
-			buttons[1] = yes.cStr();
-			buttons[0] = no.cStr();
-			buttons[2] = cancel.cStr();
-			resultButtons[1] = MESSAGE_BUTTON_YES;
-			resultButtons[0] = MESSAGE_BUTTON_NO;
-			resultButtons[2] = MESSAGE_BUTTON_CANCEL;
+			kdButtons[1] = yes.cStr();
+			kdButtons[0] = no.cStr();
+			kdButtons[2] = cancel.cStr();
+			resultButtons[1] = MessageBoxButton::Yes;
+			resultButtons[0] = MessageBoxButton::No;
+			resultButtons[2] = MessageBoxButton::Cancel;
 			indexCancel = 2;
 		}
-		else if (buttons & MESSAGE_BUTTON_OK)
+		else if (buttons == MessageBoxButton::Ok)
 		{
-			buttons[0] = ok.cStr();
-			resultButtons[0] = MESSAGE_BUTTON_OK;
+			kdButtons[0] = ok.cStr();
+			resultButtons[0] = MessageBoxButton::Ok;
 			indexCancel = 0;
 		}
-		else if ((buttons & MESSAGE_BUTTON_YES) && (buttons & MESSAGE_BUTTON_NO))
+		else if (buttons == MessageBoxButton::YesNo)
 		{
-			buttons[1] = yes.cStr();
-			buttons[0] = no.cStr();
-			resultButtons[1] = MESSAGE_BUTTON_YES;
-			resultButtons[0] = MESSAGE_BUTTON_NO;
+			kdButtons[1] = yes.cStr();
+			kdButtons[0] = no.cStr();
+			resultButtons[1] = MessageBoxButton::Yes;
+			resultButtons[0] = MessageBoxButton::No;
 			indexCancel = 1;
 		}
-		int index = kdShowMessage(title.cStr(), text.cStr(), buttons);
+		int index = kdShowMessage(title.cStr(), text.cStr(), kdButtons);
 		if (index == -1)
 		{
 			index = indexCancel;
