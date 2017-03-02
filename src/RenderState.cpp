@@ -37,8 +37,8 @@ namespace april
 		this->useTexture = false;
 		this->useColor = false;
 		this->texture = NULL;
-		this->blendMode = BM_ALPHA;
-		this->colorMode = CM_MULTIPLY;
+		this->blendMode = BlendMode::Alpha;
+		this->colorMode = ColorMode::Multiply;
 		this->colorModeFactor = 1.0f;
 		this->systemColor = Color::Black;
 	}

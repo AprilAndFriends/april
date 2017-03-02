@@ -236,7 +236,8 @@ namespace april
 
 	bool RenderHelperLayered2D::_tryForcedFlush(RenderOperation renderOperation)
 	{
-		if ((renderOperation != RO_TRIANGLE_LIST && renderOperation != RO_LINE_LIST) || april::rendersys->state->depthBuffer || april::rendersys->state->depthBufferWrite)
+		if ((renderOperation != RenderOperation::TriangleList && renderOperation != RenderOperation::LineList) ||
+			april::rendersys->state->depthBuffer || april::rendersys->state->depthBufferWrite)
 		{
 			this->flush();
 			return true;
@@ -647,7 +648,7 @@ namespace april
 		pv[0].y = pv[1].y = pv[4].y = pv[6].y = rect.y;
 		pv[1].x = pv[3].x = pv[6].x = pv[7].x = rect.x + rect.w;
 		pv[2].y = pv[3].y = pv[5].y = pv[7].y = rect.y + rect.h;
-		return this->render(RO_LINE_LIST, pv, LINE_VERTEX_POOL_SIZE, color);
+		return this->render(RenderOperation::LineList, pv, LINE_VERTEX_POOL_SIZE, color);
 	}
 
 	bool RenderHelperLayered2D::drawFilledRect(grect rect, Color color)
@@ -656,7 +657,7 @@ namespace april
 		pv[0].y = pv[1].y = pv[3].y = rect.y;
 		pv[1].x = pv[3].x = pv[5].x = rect.x + rect.w;
 		pv[2].y = pv[4].y = pv[5].y = rect.y + rect.h;
-		return this->render(RO_TRIANGLE_LIST, pv, TRIANGLE_VERTEX_POOL_SIZE, color);
+		return this->render(RenderOperation::TriangleList, pv, TRIANGLE_VERTEX_POOL_SIZE, color);
 	}
 
 	bool RenderHelperLayered2D::drawTexturedRect(grect rect, grect src)
@@ -674,7 +675,7 @@ namespace april
 		tv[2].y = tv[4].y = tv[5].y = rect.y + rect.h;
 		tv[1].u = tv[3].u = tv[5].u = src.x + src.w;
 		tv[2].v = tv[4].v = tv[5].v = src.y + src.h;
-		return this->render(RO_TRIANGLE_LIST, tv, TRIANGLE_VERTEX_POOL_SIZE, color);
+		return this->render(RenderOperation::TriangleList, tv, TRIANGLE_VERTEX_POOL_SIZE, color);
 	}
 
 }

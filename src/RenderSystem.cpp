@@ -654,12 +654,12 @@ namespace april
 		this->state->texture = texture;
 	}
 
-	void RenderSystem::setBlendMode(BlendMode blendMode)
+	void RenderSystem::setBlendMode(const BlendMode& blendMode)
 	{
 		this->state->blendMode = blendMode;
 	}
 
-	void RenderSystem::setColorMode(ColorMode colorMode, float colorModeFactor)
+	void RenderSystem::setColorMode(const ColorMode& colorMode, float colorModeFactor)
 	{
 		this->state->colorMode = colorMode;
 		this->state->colorModeFactor = colorModeFactor;
@@ -863,7 +863,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* vertices, int count)
+	void RenderSystem::render(const RenderOperation& renderOperation, PlainVertex* vertices, int count)
 	{
 		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
 		{
@@ -871,7 +871,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color)
+	void RenderSystem::render(const RenderOperation& renderOperation, PlainVertex* vertices, int count, Color color)
 	{
 		if (color.a == 0)
 		{
@@ -883,7 +883,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* vertices, int count)
+	void RenderSystem::render(const RenderOperation& renderOperation, TexturedVertex* vertices, int count)
 	{
 		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
 		{
@@ -891,7 +891,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color)
+	void RenderSystem::render(const RenderOperation& renderOperation, TexturedVertex* vertices, int count, Color color)
 	{
 		if (color.a == 0)
 		{
@@ -903,7 +903,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, ColoredVertex* vertices, int count)
+	void RenderSystem::render(const RenderOperation& renderOperation, ColoredVertex* vertices, int count)
 	{
 		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
 		{
@@ -911,7 +911,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
+	void RenderSystem::render(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count)
 	{
 		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
 		{
@@ -963,7 +963,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::_renderInternal(RenderOperation renderOperation, PlainVertex* vertices, int count)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, PlainVertex* vertices, int count)
 	{
 		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = false;
@@ -973,7 +973,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, PlainVertex* vertices, int count, Color color)
 	{
 		if (color.a == 0)
 		{
@@ -987,7 +987,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(RenderOperation renderOperation, TexturedVertex* vertices, int count)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, TexturedVertex* vertices, int count)
 	{
 		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = true;
@@ -997,7 +997,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, TexturedVertex* vertices, int count, Color color)
 	{
 		if (color.a == 0)
 		{
@@ -1011,7 +1011,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(RenderOperation renderOperation, ColoredVertex* vertices, int count)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, ColoredVertex* vertices, int count)
 	{
 		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = false;
@@ -1021,7 +1021,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count)
 	{
 		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = true;
@@ -1041,7 +1041,7 @@ namespace april
 		pv[0].y = pv[1].y = pv[4].y = rect.y;
 		pv[1].x = pv[2].x = rect.x + rect.w;
 		pv[2].y = pv[3].y = rect.y + rect.h;
-		this->_renderInternal(RO_LINE_STRIP, pv, 5, color);
+		this->_renderInternal(RenderOperation::LineStrip, pv, 5, color);
 	}
 
 	void RenderSystem::_drawFilledRectInternal(grect rect, Color color)
@@ -1054,7 +1054,7 @@ namespace april
 		pv[0].y = pv[1].y = rect.y;
 		pv[1].x = pv[3].x = rect.x + rect.w;
 		pv[2].y = pv[3].y = rect.y + rect.h;
-		this->_renderInternal(RO_TRIANGLE_STRIP, pv, 4, color);
+		this->_renderInternal(RenderOperation::TriangleStrip, pv, 4, color);
 	}
 	
 	void RenderSystem::_drawTexturedRectInternal(grect rect, grect src)
@@ -1067,7 +1067,7 @@ namespace april
 		tv[1].u = tv[3].u = src.x + src.w;
 		tv[2].y = tv[3].y = rect.y + rect.h;
 		tv[2].v = tv[3].v = src.y + src.h;
-		this->_renderInternal(RO_TRIANGLE_STRIP, tv, 4);
+		this->_renderInternal(RenderOperation::TriangleStrip, tv, 4);
 	}
 	
 	void RenderSystem::_drawTexturedRectInternal(grect rect, grect src, Color color)
@@ -1084,18 +1084,18 @@ namespace april
 		tv[1].u = tv[3].u = src.x + src.w;
 		tv[2].y = tv[3].y = rect.y + rect.h;
 		tv[2].v = tv[3].v = src.y + src.h;
-		this->_renderInternal(RO_TRIANGLE_STRIP, tv, 4, color);
+		this->_renderInternal(RenderOperation::TriangleStrip, tv, 4, color);
 	}
 
-	void RenderSystem::_increaseStats(RenderOperation renderOperation, int count)
+	void RenderSystem::_increaseStats(const RenderOperation& renderOperation, int count)
 	{
 		++this->statCurrentFrameRenderCalls;
 		this->statCurrentFrameVertexCount += count;
-		if (renderOperation == RO_TRIANGLE_LIST || renderOperation == RO_TRIANGLE_STRIP || renderOperation == RO_TRIANGLE_FAN)
+		if (renderOperation == RenderOperation::TriangleList || renderOperation == RenderOperation::TriangleStrip || renderOperation == RenderOperation::TriangleFan)
 		{
 			this->statCurrentFrameTriangleCount += this->_numPrimitives(renderOperation, count);
 		}
-		else if (renderOperation == RO_LINE_LIST || renderOperation == RO_LINE_STRIP)
+		else if (renderOperation == RenderOperation::LineList || renderOperation == RenderOperation::LineStrip)
 		{
 			this->statCurrentFrameLineCount += this->_numPrimitives(renderOperation, count);
 		}
@@ -1216,33 +1216,25 @@ namespace april
 		april::window->presentFrame();
 	}
 
-	unsigned int RenderSystem::_numPrimitives(RenderOperation renderOperation, int count) const
+	unsigned int RenderSystem::_numPrimitives(const RenderOperation& renderOperation, int count) const
 	{
-		switch (renderOperation)
-		{
-		case RO_TRIANGLE_LIST:	return count / 3;
-		case RO_TRIANGLE_STRIP:	return count - 2;
-		case RO_TRIANGLE_FAN:	return count - 2;
-		case RO_LINE_LIST:		return count / 2;
-		case RO_LINE_STRIP:		return count - 1;
-		case RO_POINT_LIST:		return count;
-		default:				break;
-		}
+		if (renderOperation == RenderOperation::TriangleList)	return count / 3;
+		if (renderOperation == RenderOperation::TriangleStrip)	return count - 2;
+		if (renderOperation == RenderOperation::TriangleFan)	return count - 2;
+		if (renderOperation == RenderOperation::LineList)		return count / 2;
+		if (renderOperation == RenderOperation::LineStrip)		return count - 1;
+		if (renderOperation == RenderOperation::PointList)		return count;
 		return 0;
 	}
 	
-	unsigned int RenderSystem::_limitVertices(RenderOperation renderOperation, int count) const
+	unsigned int RenderSystem::_limitVertices(const RenderOperation& renderOperation, int count) const
 	{
-		switch (renderOperation)
-		{
-		case RO_TRIANGLE_LIST:	return count / 3 * 3;
-		case RO_TRIANGLE_STRIP:	return count;
-		case RO_TRIANGLE_FAN:	return count;
-		case RO_LINE_LIST:		return count / 2 * 2;
-		case RO_LINE_STRIP:		return count;
-		case RO_POINT_LIST:		return count;
-		default:				break;
-		}
+		if (renderOperation == RenderOperation::TriangleList)	return count / 3 * 3;
+		if (renderOperation == RenderOperation::TriangleStrip)	return count;
+		if (renderOperation == RenderOperation::TriangleFan)	return count;
+		if (renderOperation == RenderOperation::LineList)		return count / 2 * 2;
+		if (renderOperation == RenderOperation::LineStrip)		return count;
+		if (renderOperation == RenderOperation::PointList)		return count;
 		return count;
 	}
 	

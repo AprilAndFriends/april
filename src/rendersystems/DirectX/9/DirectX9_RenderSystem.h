@@ -89,16 +89,16 @@ namespace april
 		void _setDeviceTexture(Texture* texture);
 		void _setDeviceTextureFilter(Texture::Filter textureFilter);
 		void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode);
-		void _setDeviceBlendMode(BlendMode blendMode);
-		void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
+		void _setDeviceBlendMode(const BlendMode& blendMode);
+		void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
 
 		void _deviceClear(bool depth);
 		void _deviceClear(april::Color color, bool depth);
 		void _deviceClearDepth();
-		void _deviceRender(RenderOperation renderOperation, PlainVertex* vertices, int count);
-		void _deviceRender(RenderOperation renderOperation, TexturedVertex* vertices, int count);
-		void _deviceRender(RenderOperation renderOperation, ColoredVertex* vertices, int count);
-		void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
+		void _deviceRender(const RenderOperation& renderOperation, PlainVertex* vertices, int count);
+		void _deviceRender(const RenderOperation& renderOperation, TexturedVertex* vertices, int count);
+		void _deviceRender(const RenderOperation& renderOperation, ColoredVertex* vertices, int count);
+		void _deviceRender(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count);
 
 		static D3DPRIMITIVETYPE _dx9RenderOperations[];
 

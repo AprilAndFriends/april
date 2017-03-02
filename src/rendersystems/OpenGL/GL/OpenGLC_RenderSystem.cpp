@@ -84,14 +84,14 @@ namespace april
 		}
 	}
 
-	void OpenGLC_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
+	void OpenGLC_RenderSystem::_setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
 	{
 		static float constColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		constColor[0] = colorModeFactor;
 		constColor[1] = colorModeFactor;
 		constColor[2] = colorModeFactor;
 		constColor[3] = colorModeFactor;
-		if (colorMode == CM_MULTIPLY || colorMode == CM_DEFAULT)
+		if (colorMode == ColorMode::Multiply)
 		{
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 			if (useTexture)
@@ -111,7 +111,7 @@ namespace april
 				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
 			}
 		}
-		else if (colorMode == CM_ALPHA_MAP)
+		else if (colorMode == ColorMode::AlphaMap)
 		{
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 			if (useTexture)
@@ -128,7 +128,7 @@ namespace april
 			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
 		}
-		else if (colorMode == CM_LERP)
+		else if (colorMode == ColorMode::Lerp)
 		{
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 			if (useTexture)

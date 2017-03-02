@@ -145,28 +145,28 @@ namespace april
 		return new OpenGL1_Texture(fromResource);
 	}
 
-	void OpenGL1_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
+	void OpenGL1_RenderSystem::_setDeviceBlendMode(const BlendMode& blendMode)
 	{
 #ifndef _WIN32
 		if (this->blendSeparationSupported)
 		{
 			// blending for the new generations
-			if (blendMode == BM_ALPHA || blendMode == BM_DEFAULT)
+			if (blendMode == BlendMode::Alpha)
 			{
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_ADD)
+			else if (blendMode == BlendMode::Add)
 			{
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_SUBTRACT)
+			else if (blendMode == BlendMode::Subtract)
 			{
 				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_OVERWRITE)
+			else if (blendMode == BlendMode::Overwrite)
 			{
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);

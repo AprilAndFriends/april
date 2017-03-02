@@ -72,13 +72,12 @@ namespace april
 
 	D3D11_PRIMITIVE_TOPOLOGY DirectX11_RenderSystem::_dx11RenderOperations[] =
 	{
-		D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED,
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,	// ROP_TRIANGLE_LIST
 		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,	// ROP_TRIANGLE_STRIP
-		D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED,		// triangle fans are deprecated in DX11
 		D3D11_PRIMITIVE_TOPOLOGY_LINELIST,		// ROP_LINE_LIST
 		D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,		// ROP_LINE_STRIP
 		D3D11_PRIMITIVE_TOPOLOGY_POINTLIST,		// ROP_POINT_LIST
+		D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED,		// triangle fans are deprecated in DX11
 	};
 
 	DirectX11_RenderSystem::ShaderComposition::ShaderComposition(ComPtr<ID3D11InputLayout> inputLayout,
@@ -714,22 +713,22 @@ namespace april
 		// not used
 	}
 
-	void DirectX11_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
+	void DirectX11_RenderSystem::_setDeviceBlendMode(const BlendMode& blendMode)
 	{
 		static const float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		if (blendMode == BM_ALPHA || blendMode == BM_DEFAULT)
+		if (blendMode == BlendMode::Alpha)
 		{
 			this->d3dDeviceContext->OMSetBlendState(this->blendStateAlpha.Get(), blendFactor, 0xFFFFFFFF);
 		}
-		else if (blendMode == BM_ADD)
+		else if (blendMode == BlendMode::Add)
 		{
 			this->d3dDeviceContext->OMSetBlendState(this->blendStateAdd.Get(), blendFactor, 0xFFFFFFFF);
 		}
-		else if (blendMode == BM_SUBTRACT)
+		else if (blendMode == BlendMode::Subtract)
 		{
 			this->d3dDeviceContext->OMSetBlendState(this->blendStateSubtract.Get(), blendFactor, 0xFFFFFFFF);
 		}
-		else if (blendMode == BM_OVERWRITE)
+		else if (blendMode == BlendMode::Overwrite)
 		{
 			this->d3dDeviceContext->OMSetBlendState(this->blendStateOverwrite.Get(), blendFactor, 0xFFFFFFFF);
 		}
@@ -739,7 +738,7 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
+	void DirectX11_RenderSystem::_setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
 	{
 		this->deviceState_constantBufferChanged = true;
 	}
@@ -754,15 +753,15 @@ namespace april
 	{
 		// select shader
 		ShaderComposition* shader = NULL;
-		if (this->deviceState->colorMode == CM_MULTIPLY || this->deviceState->colorMode == CM_DEFAULT)
+		if (this->deviceState->colorMode == ColorMode::Multiply)
 		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Multiply);
 		}
-		else if (this->deviceState->colorMode == CM_ALPHA_MAP)
+		else if (this->deviceState->colorMode == ColorMode::AlphaMap)
 		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, AlphaMap);
 		}
-		else if (this->deviceState->colorMode == CM_LERP)
+		else if (this->deviceState->colorMode == ColorMode::MultiplyLerp)
 		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Lerp);
 		}
@@ -827,46 +826,46 @@ namespace april
 		clearColor[1] = color.g_f();
 		clearColor[2] = color.r_f();
 		clearColor[3] = color.a_f();
-		// TODO - should use current renderTargetView, not global one
+		// TODOa - should use current renderTargetView, not global one
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 
 	void DirectX11_RenderSystem::_deviceClearDepth()
 	{
 		static const float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		// TODO - should use current renderTargetView, not global one
+		// TODOa - should use current renderTargetView, not global one
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 
-	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* vertices, int count)
+	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, PlainVertex* vertices, int count)
 	{
 		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(PlainVertex));
 		this->d3dDeviceContext->Draw(count, 0);
 	}
 
-	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* vertices, int count)
+	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, TexturedVertex* vertices, int count)
 	{
 		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(TexturedVertex));
 		this->d3dDeviceContext->Draw(count, 0);
 	}
 
-	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* vertices, int count)
+	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, ColoredVertex* vertices, int count)
 	{
 		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(ColoredVertex));
 		this->d3dDeviceContext->Draw(count, 0);
 	}
 
-	void DirectX11_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
+	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count)
 	{
 		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(ColoredTexturedVertex));
 		this->d3dDeviceContext->Draw(count, 0);
 	}
 
-	void DirectX11_RenderSystem::_setDX11VertexBuffer(RenderOperation renderOperation, void* data, int count, unsigned int vertexSize)
+	void DirectX11_RenderSystem::_setDX11VertexBuffer(const RenderOperation& renderOperation, void* data, int count, unsigned int vertexSize)
 	{
 		if (this->deviceState_renderOperation != renderOperation)
 		{
-			this->d3dDeviceContext->IASetPrimitiveTopology(_dx11RenderOperations[renderOperation]);
+			this->d3dDeviceContext->IASetPrimitiveTopology(_dx11RenderOperations[renderOperation.value]);
 			this->deviceState_renderOperation = renderOperation;
 		}
 		unsigned int size = (unsigned int)(vertexSize * count);

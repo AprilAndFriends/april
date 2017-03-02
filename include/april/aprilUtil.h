@@ -16,58 +16,74 @@
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <gtypes/Vector3.h>
+#include <hltypes/henum.h>
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
 
 namespace april
 {
-	/// @brief Defines render operations.
-	enum RenderOperation
-	{
-		/// @brief Undefined render operation.
-		RO_UNDEFINED = 0,
+	/// @class RenderOperation
+	/// @brief Defines possible rendering methods.
+	HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, RenderOperation,
+	(
+		/// @var static const RenderOperation RenderOperation::TriangleList
 		/// @brief Triangle-list.
-		RO_TRIANGLE_LIST = 1,
+		HL_ENUM_DECLARE(RenderOperation, TriangleList);
+		/// @var static const RenderOperation RenderOperation::TriangleStrip
 		/// @brief Triangle-strip.
-		RO_TRIANGLE_STRIP = 2,
+		HL_ENUM_DECLARE(RenderOperation, TriangleStrip);
+		/// @var static const RenderOperation RenderOperation::TriangleFan
 		/// @brief Triangle-fan.
-		RO_TRIANGLE_FAN = 3,
+		/// @note This will be deprecated soon.
+		HL_ENUM_DECLARE(RenderOperation, TriangleFan);
+		/// @var static const RenderOperation RenderOperation::LineList
 		/// @brief Line-list.
-		RO_LINE_LIST = 4,
+		HL_ENUM_DECLARE(RenderOperation, LineList);
+		/// @var static const RenderOperation RenderOperation::LineStrip
 		/// @brief Line-strip.
-		RO_LINE_STRIP = 5,
+		HL_ENUM_DECLARE(RenderOperation, LineStrip);
+		/// @var static const RenderOperation RenderOperation::PointList
 		/// @brief Point-list.
-		RO_POINT_LIST = 6,
-	};
+		HL_ENUM_DECLARE(RenderOperation, PointList);
+	));
 
+	/// @class BlendMode
 	/// @brief Defines blending modes.
-	enum BlendMode
-	{
-		/// @brief Default blend mode.
-		BM_DEFAULT = 0,
+	HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, BlendMode,
+	(
+		/// @var static const BlendMode BlendMode::Alpha
 		/// @brief Alpha blending.
-		BM_ALPHA = 1,
+		/// @note This is the default.
+		HL_ENUM_DECLARE(BlendMode, Alpha);
+		/// @var static const BlendMode BlendMode::Add
 		/// @brief Additive blending.
-		BM_ADD = 2,
+		HL_ENUM_DECLARE(BlendMode, Add);
+		/// @var static const BlendMode BlendMode::Subtract
 		/// @brief Subtractive blending.
-		BM_SUBTRACT = 3,
-		/// @brief Overwrite data.
-		BM_OVERWRITE = 4,
-	};
+		/// @note This might not work on all platforms.
+		HL_ENUM_DECLARE(BlendMode, Subtract);
+		/// @var static const BlendMode BlendMode::Overwrite
+		/// @brief Overwrite data blending.
+		HL_ENUM_DECLARE(BlendMode, Overwrite);
+	));
 
+	/// @class ColorMode
 	/// @brief Defines color modes.
-	enum ColorMode
-	{
-		/// @brief Default color mode.
-		CM_DEFAULT = 0,
+	HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, ColorMode,
+	(
+		/// @var static const ColorMode ColorMode::Multiply
 		/// @brief Multiply.
-		CM_MULTIPLY = 1,
+		/// @note This is the default.
+		HL_ENUM_DECLARE(ColorMode, Multiply);
+		/// @var static const ColorMode ColorMode::AlphaMap
 		/// @brief Alpha Map.
-		CM_ALPHA_MAP = 2,
+		HL_ENUM_DECLARE(ColorMode, AlphaMap);
+		/// @var static const ColorMode ColorMode::Lerp
 		/// @brief Linear Interpolation.
-		CM_LERP = 3,
-	};
+		/// @note Requires usage of additional lerp-factor when setting the ColorMode.
+		HL_ENUM_DECLARE(ColorMode, Lerp);
+	));
 
 	/// @brief Represents a plain vertex.
 	class aprilExport PlainVertex

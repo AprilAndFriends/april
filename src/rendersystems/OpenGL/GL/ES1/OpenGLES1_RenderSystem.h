@@ -34,7 +34,7 @@ namespace april
 
 		Texture* _deviceCreateTexture(bool fromResource);
 
-		void _setDeviceBlendMode(BlendMode blendMode);
+		void _setDeviceBlendMode(const BlendMode& blendMode);
 
 	};
 	

@@ -18,6 +18,31 @@
 
 namespace april
 {
+	HL_ENUM_CLASS_DEFINE(RenderOperation,
+	(
+		HL_ENUM_DEFINE_VALUE(RenderOperation, TriangleList, 0);
+		HL_ENUM_DEFINE_VALUE(RenderOperation, TriangleStrip, 1);
+		HL_ENUM_DEFINE_VALUE(RenderOperation, LineList, 2);
+		HL_ENUM_DEFINE_VALUE(RenderOperation, LineStrip, 3);
+		HL_ENUM_DEFINE_VALUE(RenderOperation, PointList, 4);
+		HL_ENUM_DEFINE_VALUE(RenderOperation, TriangleFan, 5);
+	));
+
+	HL_ENUM_CLASS_DEFINE(BlendMode,
+	(
+		HL_ENUM_DEFINE(BlendMode, Alpha);
+		HL_ENUM_DEFINE(BlendMode, Add);
+		HL_ENUM_DEFINE(BlendMode, Subtract);
+		HL_ENUM_DEFINE(BlendMode, Overwrite);
+	));
+
+	HL_ENUM_CLASS_DEFINE(ColorMode,
+	(
+		HL_ENUM_DEFINE(ColorMode, Multiply);
+		HL_ENUM_DEFINE(ColorMode, AlphaMap);
+		HL_ENUM_DEFINE(ColorMode, Lerp);
+	));
+
 	void rgbToHsl(unsigned char r, unsigned char g, unsigned char b, float* h, float* s, float* l)
 	{
 		unsigned char min = (unsigned char)hmin(hmin(r, g), b);

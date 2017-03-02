@@ -70,28 +70,28 @@ namespace april
 		return new OpenGLES1_Texture(fromResource);
 	}
 
-	void OpenGLES1_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
+	void OpenGLES1_RenderSystem::_setDeviceBlendMode(const BlendMode& blendMode)
 	{
 #ifndef _WIN32
 		if (this->blendSeparationSupported)
 		{
 			// blending for the new generations
-			if (blendMode == BM_ALPHA || blendMode == BM_DEFAULT)
+			if (blendMode == BlendMode::Alpha)
 			{
 				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
 				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_ADD)
+			else if (blendMode == BlendMode::Add)
 			{
 				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
 				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_SUBTRACT)
+			else if (blendMode == BlendMode::Subtract)
 			{
 				glBlendEquationSeparateOES(GL_FUNC_REVERSE_SUBTRACT_OES, GL_FUNC_ADD_OES);
 				glBlendFuncSeparateOES(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_OVERWRITE)
+			else if (blendMode == BlendMode::Overwrite)
 			{
 				glBlendEquationSeparateOES(GL_FUNC_ADD_OES, GL_FUNC_ADD_OES);
 				glBlendFuncSeparateOES(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);

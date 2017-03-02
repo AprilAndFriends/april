@@ -40,13 +40,12 @@ namespace april
 
 	D3DPRIMITIVETYPE DirectX9_RenderSystem::_dx9RenderOperations[]=
 	{
-		D3DPT_FORCE_DWORD,
-		D3DPT_TRIANGLELIST,		// ROP_TRIANGLE_LIST
-		D3DPT_TRIANGLESTRIP,	// ROP_TRIANGLE_STRIP
-		D3DPT_TRIANGLEFAN,		// ROP_TRIANGLE_FAN
-		D3DPT_LINELIST,			// ROP_LINE_LIST
-		D3DPT_LINESTRIP,		// ROP_LINE_STRIP
-		D3DPT_POINTLIST,		// ROP_POINT_LIST
+		D3DPT_TRIANGLELIST,
+		D3DPT_TRIANGLESTRIP,
+		D3DPT_LINELIST,
+		D3DPT_LINESTRIP,
+		D3DPT_POINTLIST,
+		D3DPT_TRIANGLEFAN,
 	};
 
 	DirectX9_RenderSystem::DirectX9_RenderSystem() : DirectX_RenderSystem(), d3d(NULL), d3dDevice(NULL), d3dpp(NULL), backBuffer(NULL), childHWnd(0), renderTarget(NULL)
@@ -479,9 +478,9 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
+	void DirectX9_RenderSystem::_setDeviceBlendMode(const BlendMode& blendMode)
 	{
-		if (blendMode == BM_DEFAULT || blendMode == BM_ALPHA)
+		if (blendMode == BlendMode::Alpha)
 		{
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
@@ -490,7 +489,7 @@ namespace april
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 		}
-		else if (blendMode == BM_ADD)
+		else if (blendMode == BlendMode::Add)
 		{
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
@@ -499,7 +498,7 @@ namespace april
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 		}
-		else if (blendMode == BM_SUBTRACT)
+		else if (blendMode == BlendMode::Subtract)
 		{
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
@@ -508,7 +507,7 @@ namespace april
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			this->d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 		}
-		else if (blendMode == BM_OVERWRITE)
+		else if (blendMode == BlendMode::Overwrite)
 		{
 			this->d3dDevice->SetRenderState(D3DRS_BLENDOPALPHA, D3DBLENDOP_ADD);
 			this->d3dDevice->SetRenderState(D3DRS_SRCBLENDALPHA, D3DBLEND_ONE);
@@ -523,12 +522,12 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float factor, bool useTexture, bool useColor, const Color& systemColor)
+	void DirectX9_RenderSystem::_setDeviceColorMode(const ColorMode& colorMode, float factor, bool useTexture, bool useColor, const Color& systemColor)
 	{
 		// D3DRS_TEXTUREFACTOR is used for the system color due to some drivers not being able to use D3DTSS_CONSTANT properly
 		static unsigned char colorFactor = 0;
 		colorFactor = (unsigned char)(factor * 255);
-		if (colorMode == CM_MULTIPLY || colorMode == CM_DEFAULT)
+		if (colorMode == ColorMode::Multiply)
 		{
 			if (useTexture)
 			{
@@ -554,7 +553,7 @@ namespace april
 				this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
 			}
 		}
-		else if (colorMode == CM_ALPHA_MAP)
+		else if (colorMode == ColorMode::AlphaMap)
 		{
 			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG2);
 			if (useTexture)
@@ -578,7 +577,7 @@ namespace april
 				this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
 			}
 		}
-		else if (colorMode == CM_LERP)
+		else if (colorMode == ColorMode::Lerp)
 		{
 			if (useTexture)
 			{
@@ -637,24 +636,24 @@ namespace april
 		this->d3dDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, PlainVertex* vertices, int count)
+	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, PlainVertex* vertices, int count)
 	{
-		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, count), vertices, sizeof(PlainVertex));
+		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation.value], this->_numPrimitives(renderOperation, count), vertices, sizeof(PlainVertex));
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, TexturedVertex* vertices, int count)
+	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, TexturedVertex* vertices, int count)
 	{
-		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, count), vertices, sizeof(TexturedVertex));
+		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation.value], this->_numPrimitives(renderOperation, count), vertices, sizeof(TexturedVertex));
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredVertex* vertices, int count)
+	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, ColoredVertex* vertices, int count)
 	{
-		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, count), vertices, sizeof(ColoredVertex));
+		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation.value], this->_numPrimitives(renderOperation, count), vertices, sizeof(ColoredVertex));
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
+	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count)
 	{
-		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation], this->_numPrimitives(renderOperation, count), vertices, sizeof(ColoredTexturedVertex));
+		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation.value], this->_numPrimitives(renderOperation, count), vertices, sizeof(ColoredTexturedVertex));
 	}
 
 	Image::Format DirectX9_RenderSystem::getNativeTextureFormat(Image::Format format) const

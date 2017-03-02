@@ -345,12 +345,12 @@ namespace april
 		void setTexture(Texture* texture);
 		/// @brief Sets the current blending mode for rendering.
 		/// @param[in] blendMode The blending mode to be set for rendering.
-		void setBlendMode(BlendMode blendMode);
+		void setBlendMode(const BlendMode& blendMode);
 		/// @brief Sets the current color mode for rendering.
 		/// @param[in] colorMode The color mode to be set for rendering.
 		/// @param[in] colorModeFactor The additioanl color mode factor.
 		/// @note The parameter colorModeFactor is only used when the color mode is LERP.
-		void setColorMode(ColorMode colorMode, float colorModeFactor = 1.0f);
+		void setColorMode(const ColorMode& colorMode, float colorModeFactor = 1.0f);
 
 		/// @brief Gets the Texture render target.
 		/// @return The Texture render target.
@@ -435,36 +435,36 @@ namespace april
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @note Calling this will effectively set the current texture to NULL.
-		void render(RenderOperation renderOperation, PlainVertex* vertices, int count);
+		void render(const RenderOperation& renderOperation, PlainVertex* vertices, int count);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @param[in] color Color to apply globally on all vertices.
 		/// @note Calling this will effectively set the current texture to NULL.
-		void render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color);
+		void render(const RenderOperation& renderOperation, PlainVertex* vertices, int count, Color color);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
-		void render(RenderOperation renderOperation, TexturedVertex* vertices, int count);
+		void render(const RenderOperation& renderOperation, TexturedVertex* vertices, int count);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @param[in] color Color to apply globally on all vertices.
-		void render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color);
+		void render(const RenderOperation& renderOperation, TexturedVertex* vertices, int count, Color color);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @note Calling this will effectively set the current texture to NULL.
-		void render(RenderOperation renderOperation, ColoredVertex* vertices, int count);
+		void render(const RenderOperation& renderOperation, ColoredVertex* vertices, int count);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
-		void render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
+		void render(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count);
 		
 		/// @brief Renders a rectangle.
 		/// @param[in] rect Position and size of the rectangle.
@@ -674,14 +674,14 @@ namespace april
 		virtual void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
 		/// @brief Sets the device blending mode for rendering.
 		/// @param[in] blendMode The blending mode to be set for rendering.
-		virtual void _setDeviceBlendMode(BlendMode blendMode) = 0;
+		virtual void _setDeviceBlendMode(const BlendMode& blendMode) = 0;
 		/// @brief Sets the device color mode for rendering.
 		/// @param[in] colorMode The color mode to be set for rendering.
 		/// @param[in] colorModeFactor The additioanl color mode factor.
 		/// @param[in] useTexture Whether the vertices support UV coordinates.
 		/// @param[in] useColor Whether the vertices support separate color values.
 		/// @param[in] systemColor The global color for all vertices if useColor is set to false.
-		virtual void _setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor) = 0;
+		virtual void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor) = 0;
 
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
@@ -689,7 +689,7 @@ namespace april
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @note Calling this will effectively set the current texture to NULL.
 		/// @see render
-		void _renderInternal(RenderOperation renderOperation, PlainVertex* vertices, int count);
+		void _renderInternal(const RenderOperation& renderOperation, PlainVertex* vertices, int count);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
@@ -697,33 +697,33 @@ namespace april
 		/// @param[in] color Color to apply globally on all vertices.
 		/// @note Calling this will effectively set the current texture to NULL.
 		/// @see render
-		void _renderInternal(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color);
+		void _renderInternal(const RenderOperation& renderOperation, PlainVertex* vertices, int count, Color color);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @see render
-		void _renderInternal(RenderOperation renderOperation, TexturedVertex* vertices, int count);
+		void _renderInternal(const RenderOperation& renderOperation, TexturedVertex* vertices, int count);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @param[in] color Color to apply globally on all vertices.
 		/// @see render
-		void _renderInternal(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color);
+		void _renderInternal(const RenderOperation& renderOperation, TexturedVertex* vertices, int count, Color color);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @note Calling this will effectively set the current texture to NULL.
 		/// @see render
-		void _renderInternal(RenderOperation renderOperation, ColoredVertex* vertices, int count);
+		void _renderInternal(const RenderOperation& renderOperation, ColoredVertex* vertices, int count);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @see render
-		void _renderInternal(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
+		void _renderInternal(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count);
 		/// @brief Renders a rectangle.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] color Color of the rectangle.
@@ -755,7 +755,7 @@ namespace april
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] count How many vertices will be rendered.
 		/// @see render
-		void _increaseStats(RenderOperation renderOperation, int count);
+		void _increaseStats(const RenderOperation& renderOperation, int count);
 
 		/// @brief Clears the device backbuffer.
 		/// @param[in] depth If true, clears the depth-buffer as well.
@@ -771,33 +771,33 @@ namespace april
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
-		virtual void _deviceRender(RenderOperation renderOperation, PlainVertex* vertices, int count) = 0;
+		virtual void _deviceRender(const RenderOperation& renderOperation, PlainVertex* vertices, int count) = 0;
 		/// @brief Executes the final renders call for a vertex array.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
-		virtual void _deviceRender(RenderOperation renderOperation, TexturedVertex* vertices, int count) = 0;
+		virtual void _deviceRender(const RenderOperation& renderOperation, TexturedVertex* vertices, int count) = 0;
 		/// @brief Executes the final renders call for a vertex array.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
-		virtual void _deviceRender(RenderOperation renderOperation, ColoredVertex* vertices, int count) = 0;
+		virtual void _deviceRender(const RenderOperation& renderOperation, ColoredVertex* vertices, int count) = 0;
 		/// @brief Executes the final renders call for a vertex array.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
-		virtual void _deviceRender(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count) = 0;
+		virtual void _deviceRender(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count) = 0;
 
 		/// @brief Calculates the number of primitives based on the number of vertices.
 		/// @param[in] renderOperation The RenderOperation that is used for rendering
 		/// @param[in] count How many vertices are expected to be rendered.
 		/// @return How many primitives the given vertices represent.
-		unsigned int _numPrimitives(RenderOperation renderOperation, int count) const;
+		unsigned int _numPrimitives(const RenderOperation& renderOperation, int count) const;
 		/// @brief Corrects the number of vertices allowed to be used in the given RenderOperation to avoid glitches and crashes.
 		/// @param[in] renderOperation The RenderOperation that is used for rendering
 		/// @param[in] count How many vertices are expected to be rendered.
 		/// @return How many vertices are allowed to be used in the given RenderOperation.
-		unsigned int _limitVertices(RenderOperation renderOperation, int count) const;
+		unsigned int _limitVertices(const RenderOperation& renderOperation, int count) const;
 
 	};
 

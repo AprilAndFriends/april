@@ -351,28 +351,28 @@ namespace april
 		this->deviceState_matrixChanged = true;
 	}
 
-	void OpenGLES_RenderSystem::_setDeviceBlendMode(BlendMode blendMode)
+	void OpenGLES_RenderSystem::_setDeviceBlendMode(const BlendMode& blendMode)
 	{
 #ifndef _WIN32
 		if (this->blendSeparationSupported)
 		{
 			// blending for the new generations
-			if (blendMode == BM_ALPHA || blendMode == BM_DEFAULT)
+			if (blendMode == BlendMode::Alpha)
 			{
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_ADD)
+			else if (blendMode == BlendMode::Add)
 			{
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_SUBTRACT)
+			else if (blendMode == BlendMode::Subtract)
 			{
 				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			}
-			else if (blendMode == BM_OVERWRITE)
+			else if (blendMode == BlendMode::Overwrite)
 			{
 				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
 				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
@@ -406,7 +406,7 @@ namespace april
 		OpenGL_RenderSystem::_setDeviceTexture(texture);
 	}
 
-	void OpenGLES_RenderSystem::_setDeviceColorMode(ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
+	void OpenGLES_RenderSystem::_setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
 	{
 		if (this->deviceState->systemColor != systemColor)
 		{
@@ -421,15 +421,15 @@ namespace april
 	void OpenGLES_RenderSystem::_updateShader(bool forceUpdate)
 	{
 		ShaderProgram* shader = NULL;
-		if (this->deviceState->colorMode == CM_MULTIPLY || this->deviceState->colorMode == CM_DEFAULT)
+		if (this->deviceState->colorMode == ColorMode::Multiply)
 		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Multiply);
 		}
-		else if (this->deviceState->colorMode == CM_ALPHA_MAP)
+		else if (this->deviceState->colorMode == ColorMode::AlphaMap)
 		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, AlphaMap);
 		}
-		else if (this->deviceState->colorMode == CM_LERP)
+		else if (this->deviceState->colorMode == ColorMode::Lerp)
 		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Lerp);
 		}
