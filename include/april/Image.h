@@ -22,56 +22,101 @@
 #include "aprilExport.h"
 #include "Color.h"
 
+// reguired, because some system headers have this defined
+#ifdef RGB
+#undef RGB
+#endif
+
 namespace april
 {
 	/// @brief Defines a generic image data source.
 	class aprilExport Image
 	{
 	public:
+		/// @class Format
 		/// @brief Defines the pixel format of image data.
 		/// @note Some formats are intended to improve speed with the underlying engine if really needed. *X* formats are always 4 BPP even if that byte is not used.
-		enum Format
-		{
+		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Format,
+		(
+			/// @var static const Format Format::Invalid
 			/// @brief Invalid format definition.
-			FORMAT_INVALID = 0,
+			HL_ENUM_DECLARE(Format, Invalid);
+			/// @var static const Format Format::RGBA
 			/// @brief Defines RGBA.
-			FORMAT_RGBA,
+			HL_ENUM_DECLARE(Format, RGBA);
+			/// @var static const Format Format::ARGB
 			/// @brief Defines ARGB.
-			FORMAT_ARGB,
+			HL_ENUM_DECLARE(Format, ARGB);
+			/// @var static const Format Format::BGRA
 			/// @brief Defines BGRA.
-			FORMAT_BGRA,
+			HL_ENUM_DECLARE(Format, BGRA);
+			/// @var static const Format Format::ABGR
 			/// @brief Defines ABGR.
-			FORMAT_ABGR,
+			HL_ENUM_DECLARE(Format, ABGR);
+			/// @var static const Format Format::RGBX
 			/// @brief Defines RGBX.
-			FORMAT_RGBX,
+			HL_ENUM_DECLARE(Format, RGBX);
+			/// @var static const Format Format::XRGB
 			/// @brief Defines XRGB.
-			FORMAT_XRGB,
+			HL_ENUM_DECLARE(Format, XRGB);
+			/// @var static const Format Format::BGRX
 			/// @brief Defines BGRX.
-			FORMAT_BGRX,
+			HL_ENUM_DECLARE(Format, BGRX);
+			/// @var static const Format Format::XBGR
 			/// @brief Defines XBGR.
-			FORMAT_XBGR,
+			HL_ENUM_DECLARE(Format, XBGR);
+			/// @var static const Format Format::RGB
 			/// @brief Defines RGB.
-			FORMAT_RGB,
+			HL_ENUM_DECLARE(Format, RGB);
+			/// @var static const Format Format::BGR
 			/// @brief Defines BGR.
-			FORMAT_BGR,
+			HL_ENUM_DECLARE(Format, BGR);
+			/// @var static const Format Format::Alpha
 			/// @brief Defines a single-color-channel image, the context being the alpha channel.
-			/// @see FORMAT_GRAYSCALE
-			FORMAT_ALPHA,
-			/// @brief Defines a single-color-channel image, the context being a grayscale image.
-			/// @see FORMAT_ALPHA
-			FORMAT_GRAYSCALE,
+			HL_ENUM_DECLARE(Format, Alpha);
+			/// @var static const Format Format::Greyscale
+			/// @brief Defines a single-color-channel image, the context being a greyscale image.
+			HL_ENUM_DECLARE(Format, Greyscale);
+			/// @var static const Format Format::Compressed
 			/// @brief Defines a compressed image.
-			FORMAT_COMPRESSED,
+			HL_ENUM_DECLARE(Format, Compressed);
+			/// @var static const Format Format::Palette
 			/// @brief Defines an image with palette colors.
-			FORMAT_PALETTE // TODOa - this is mostly unsupported right now
-		};
+			HL_ENUM_DECLARE(Format, Palette);
 
+			/// @brief Gets the BPP.
+			/// @return The BPP.
+			int getBpp() const;
+			/// @brief Gets the index of the red channel.
+			/// @return The index of the red channel.
+			int getIndexRed() const;
+			/// @brief Gets the index of the green channel.
+			/// @return The index of the green channel.
+			int getIndexGreen() const;
+			/// @brief Gets the index of the blue channel.
+			/// @return The index of the blue channel.
+			int getIndexBlue() const;
+			/// @brief Gets the index of the alpha channel.
+			/// @return The index of the alpha channel.
+			int getIndexAlpha() const;
+			/// @brief Gets all channel's indices.
+			/// @param[out] red Index of red channel.
+			/// @param[out] green Index of green channel.
+			/// @param[out] blue Index of blue channel.
+			/// @param[out] alpha Index of alpha channel.
+			void getChannelIndices(int* red, int* green, int* blue, int* alpha) const;
+
+		));
+
+		/// @class FileFormat
 		/// @brief Defines image file formats.
 		/// @note Usually only used for file writing.
-		enum FileFormat
-		{
-			FILE_FORMAT_PNG = 0
-		};
+		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, FileFormat,
+		(
+			/// @var static const FileFormat FileFormat::Png
+			/// @brief Defined PNG.
+			HL_ENUM_DECLARE(FileFormat, Png);
+		));
 
 		/// @brief The raw image data.
 		unsigned char* data;
@@ -246,20 +291,20 @@ namespace april
 		bool dilate(unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 
 		/// @brief Extracts the red color channel of the image.
-		/// @return Extracted image as FORMAT_ALPHA or NULL if channel cannot be extracted.
+		/// @return Extracted image as Format::Alpha or NULL if channel cannot be extracted.
 		Image* extractRed() const;
 		/// @brief Extracts the greeb color channel of the image.
-		/// @return Extracted image as FORMAT_ALPHA or NULL if channel cannot be extracted.
+		/// @return Extracted image as Format::Alpha or NULL if channel cannot be extracted.
 		Image* extractGreen() const;
 		/// @brief Extracts the blue color channel of the image.
-		/// @return Extracted image as FORMAT_ALPHA or NULL if channel cannot be extracted.
+		/// @return Extracted image as Format::Alpha or NULL if channel cannot be extracted.
 		Image* extractBlue() const;
 		/// @brief Extracts the alpha channel of the image.
-		/// @return Extracted image as FORMAT_ALPHA or NULL if channel cannot be extracted.
+		/// @return Extracted image as Format::Alpha or NULL if channel cannot be extracted.
 		Image* extractAlpha() const;
 		/// @brief Extracts the color channel at the given index of the image.
 		/// @param[in] index Index of the color channel.
-		/// @return Extracted image as FORMAT_ALPHA or NULL if channel cannot be extracted.
+		/// @return Extracted image as Format::Alpha or NULL if channel cannot be extracted.
 		/// @note The index is different in different pixel formats so this methods isn't usually used directly, but is still public for completeness.
 		/// @see extractRed
 		/// @see extractGreen
@@ -549,11 +594,6 @@ namespace april
 		/// @return The loaded Image object or NULL if failed.
 		/// @note This is usually called internally only.
 		static Image* readMetaDataFromStream(hsbase& stream, chstr logicalExtension);
-
-		/// @brief Gets the byte-per-pixel value for a given pixel format.
-		/// @param[in] format The pixel format.
-		/// @return The byte-per-pixel value.
-		static int getFormatBpp(Format format);
 
 		/// @brief Gets the color of a specific pixel in raw image data.
 		/// @param[in] x X-coordinate.
@@ -947,14 +987,6 @@ namespace april
 		/// @param[in] stream The encoded image data stream.
 		/// @return The created Image object or NULL if failed.
 		static Image* _readMetaDataPvrz(hsbase& stream);
-
-		/// @brief Gets the color channel byte incides for pixel format data.
-		/// @param[in] format The format to check.
-		/// @param[out] red The index of the red color channel.
-		/// @param[out] green The index of the green color channel.
-		/// @param[out] blue The index of the blue color channel.
-		/// @param[out] alpha The index of the alpha channel.
-		static void _getFormatIndices(Format format, int* red, int* green, int* blue, int* alpha);
 
 		/// @brief Converts raw image data from a source pixel format with 1 byte-per-pixel to a raw image data destination.
 		/// @param[in] w Width of the data to convert.

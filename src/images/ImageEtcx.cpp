@@ -58,7 +58,7 @@ namespace april
 		{
 			image->internalFormat = GL_ETCX_RGBA8_OES_HACK;
 		}
-		image->format = Image::FORMAT_COMPRESSED;
+		image->format = Image::Format::Compressed;
 		if ((header.flags & ETCX_HEADER_IS_ZLIB_COMPRESSED_BIT) == 0)
 		{
 			image->data = new unsigned char[image->compressedSize];
@@ -96,7 +96,7 @@ namespace april
 		{
 			image->internalFormat = GL_ETCX_RGBA8_OES_HACK;
 		}
-		image->format = Image::FORMAT_COMPRESSED;
+		image->format = Image::Format::Compressed;
 		image->data = NULL;
 		return image;
 	}

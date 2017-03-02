@@ -57,12 +57,12 @@ namespace april
 
 	void OpenGL_Texture::_assignFormat()
 	{
-		if (this->format == Image::FORMAT_ARGB || this->format == Image::FORMAT_XRGB || this->format == Image::FORMAT_RGBA ||
-			this->format == Image::FORMAT_RGBX || this->format == Image::FORMAT_ABGR || this->format == Image::FORMAT_XBGR)
+		if (this->format == Image::Format::ARGB || this->format == Image::Format::XRGB || this->format == Image::Format::RGBA ||
+			this->format == Image::Format::RGBX || this->format == Image::Format::ABGR || this->format == Image::Format::XBGR)
 		{
 			this->glFormat = this->internalFormat = GL_RGBA;
 		}
-		else if (this->format == Image::FORMAT_BGRA || this->format == Image::FORMAT_BGRX)
+		else if (this->format == Image::Format::BGRA || this->format == Image::Format::BGRX)
 		{
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
@@ -75,11 +75,11 @@ namespace april
 #endif
 			this->internalFormat = GL_RGBA;
 		}
-		else if (this->format == Image::FORMAT_RGB)
+		else if (this->format == Image::Format::RGB)
 		{
 			this->glFormat = this->internalFormat = GL_RGB;
 		}
-		else if (this->format == Image::FORMAT_BGR)
+		else if (this->format == Image::Format::BGR)
 		{
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
@@ -92,19 +92,19 @@ namespace april
 #endif
 			this->internalFormat = GL_RGB;
 		}
-		else if (this->format == Image::FORMAT_ALPHA)
+		else if (this->format == Image::Format::Alpha)
 		{
 			this->glFormat = this->internalFormat = GL_ALPHA;
 		}
-		else if (this->format == Image::FORMAT_GRAYSCALE)
+		else if (this->format == Image::Format::Greyscale)
 		{
 			this->glFormat = this->internalFormat = GL_LUMINANCE;
 		}
-		else if (this->format == Image::FORMAT_COMPRESSED)
+		else if (this->format == Image::Format::Compressed)
 		{
 			this->glFormat = this->internalFormat = 0; // compressed image formats will set these values as they need to
 		}
-		else if (this->format == Image::FORMAT_PALETTE)
+		else if (this->format == Image::Format::Palette)
 		{
 			this->glFormat = this->internalFormat = 0; // paletted image formats will set these values as they need to
 		}
@@ -126,8 +126,7 @@ namespace april
 	{
 		Lock lock;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		int gpuBpp = Image::getFormatBpp(nativeFormat);
-		lock.activateLock(0, 0, w, h, x, y, new unsigned char[w * h * gpuBpp], w, h, nativeFormat);
+		lock.activateLock(0, 0, w, h, x, y, new unsigned char[w * h * nativeFormat.getBpp()], w, h, nativeFormat);
 		lock.systemBuffer = lock.data;
 		return lock;
 	}
@@ -140,7 +139,7 @@ namespace april
 		}
 		if (update)
 		{
-			if (this->format != Image::FORMAT_COMPRESSED && this->format != Image::FORMAT_PALETTE)
+			if (this->format != Image::Format::Compressed && this->format != Image::Format::Palette)
 			{
 				this->_setCurrentTexture();
 				if (this->width == lock.w && this->height == lock.h)
@@ -164,7 +163,7 @@ namespace april
 
 	bool OpenGL_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		if (this->format == Image::FORMAT_COMPRESSED || this->format == Image::FORMAT_PALETTE)
+		if (this->format == Image::Format::Compressed || this->format == Image::Format::Palette)
 		{
 			return false;
 		}
@@ -179,7 +178,7 @@ namespace april
 			{
 				this->_uploadPotSafeClearData();
 			}
-			int srcBpp = Image::getFormatBpp(srcFormat);
+			int srcBpp = srcFormat.getBpp();
 			if (sx == 0 && dx == 0 && srcWidth == this->width && sw == this->width)
 			{
 				glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]);

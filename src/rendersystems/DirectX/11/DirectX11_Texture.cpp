@@ -141,23 +141,23 @@ namespace april
 	void DirectX11_Texture::_assignFormat()
 	{
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		if (nativeFormat == Image::FORMAT_BGRA)
+		if (nativeFormat == Image::Format::BGRA)
 		{
 			this->dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
 		}
-		else if (nativeFormat == Image::FORMAT_BGRX)
+		else if (nativeFormat == Image::Format::BGRX)
 		{
 			this->dxgiFormat = DXGI_FORMAT_B8G8R8X8_UNORM;
 		}
-		else if (nativeFormat == Image::FORMAT_ALPHA)
+		else if (nativeFormat == Image::Format::Alpha)
 		{
 			this->dxgiFormat = DXGI_FORMAT_R8_UNORM;
 		}
-		else if (nativeFormat == Image::FORMAT_GRAYSCALE)
+		else if (nativeFormat == Image::Format::Greyscale)
 		{
 			this->dxgiFormat = DXGI_FORMAT_R8_UNORM;
 		}
-		else if (nativeFormat == Image::FORMAT_PALETTE)
+		else if (nativeFormat == Image::Format::Palette)
 		{
 			this->dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM; // TODOaa - needs changing
 		}

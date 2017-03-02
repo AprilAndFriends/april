@@ -113,30 +113,12 @@ namespace april
 	void DirectX9_Texture::_assignFormat()
 	{
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		if (nativeFormat == Image::FORMAT_BGRA)
-		{
-			this->d3dFormat = D3DFMT_A8R8G8B8;
-		}
-		else if (nativeFormat == Image::FORMAT_BGRX)
-		{
-			this->d3dFormat = D3DFMT_X8R8G8B8;
-		}
-		else if (nativeFormat == Image::FORMAT_ALPHA)
-		{
-			this->d3dFormat = D3DFMT_A8;
-		}
-		else if (nativeFormat == Image::FORMAT_GRAYSCALE)
-		{
-			this->d3dFormat = D3DFMT_L8;
-		}
-		else if (nativeFormat == Image::FORMAT_COMPRESSED)
-		{
-			this->d3dFormat = D3DFMT_A8R8G8B8; // TODOaa - needs changing, ARGB shouldn't be here
-		}
-		else if (nativeFormat == Image::FORMAT_PALETTE)
-		{
-			this->d3dFormat = D3DFMT_A8R8G8B8; // TODOaa - needs changing, ARGB shouldn't be here
-		}
+		if (nativeFormat == Image::Format::BGRA)			this->d3dFormat = D3DFMT_A8R8G8B8;
+		else if (nativeFormat == Image::Format::BGRX)		this->d3dFormat = D3DFMT_X8R8G8B8;
+		else if (nativeFormat == Image::Format::Alpha)		this->d3dFormat = D3DFMT_A8;
+		else if (nativeFormat == Image::Format::Greyscale)	this->d3dFormat = D3DFMT_L8;
+		else if (nativeFormat == Image::Format::Compressed)	this->d3dFormat = D3DFMT_A8R8G8B8; // TODOaa - needs changing, ARGB shouldn't be here
+		else if (nativeFormat == Image::Format::Palette)	this->d3dFormat = D3DFMT_A8R8G8B8; // TODOaa - needs changing, ARGB shouldn't be here
 	}
 
 	IDirect3DSurface9* DirectX9_Texture::_getSurface()
@@ -154,7 +136,7 @@ namespace april
 		D3DLOCKED_RECT lockRect;
 		HRESULT hr;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		int nativeBpp = Image::getFormatBpp(nativeFormat);
+		int nativeBpp = nativeFormat.getBpp();
 		RECT rect;
 		rect.left = x;
 		rect.top = y;

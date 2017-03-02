@@ -24,20 +24,25 @@
 #include <TargetConditionals.h>
 #endif
 
+// reguired, because some system headers have this defined
+#ifdef RGB
+#undef RGB
+#endif
+
 #define MAX_WRITE_SIZE 65536
 
 #define CHECK_SHIFT_FORMATS(format1, format2) (\
-	((format1) == FORMAT_RGBA || (format1) == FORMAT_RGBX || (format1) == FORMAT_BGRA || (format1) == FORMAT_BGRX) && \
-	((format2) == FORMAT_ARGB || (format2) == FORMAT_XRGB || (format2) == FORMAT_ABGR || (format2) == FORMAT_XBGR) \
+	((format1) == Format::RGBA || (format1) == Format::RGBX || (format1) == Format::BGRA || (format1) == Format::BGRX) && \
+	((format2) == Format::ARGB || (format2) == Format::XRGB || (format2) == Format::ABGR || (format2) == Format::XBGR) \
 )
 #define CHECK_INVERT_ORDER_FORMATS(format1, format2) (\
-	((format1) == FORMAT_RGBA || (format1) == FORMAT_RGBX || (format1) == FORMAT_ARGB || (format1) == FORMAT_XRGB) && \
-	((format2) == FORMAT_BGRA || (format2) == FORMAT_BGRX || (format2) == FORMAT_ABGR || (format2) == FORMAT_XBGR) \
+	((format1) == Format::RGBA || (format1) == Format::RGBX || (format1) == Format::ARGB || (format1) == Format::XRGB) && \
+	((format2) == Format::BGRA || (format2) == Format::BGRX || (format2) == Format::ABGR || (format2) == Format::XBGR) \
 )
 #define CHECK_LEFT_RGB(format) \
-	((format) == FORMAT_RGBA || (format) == FORMAT_RGBX || (format) == FORMAT_BGRA || (format) == FORMAT_BGRX)
+	((format) == Format::RGBA || (format) == Format::RGBX || (format) == Format::BGRA || (format) == Format::BGRX)
 #define CHECK_ALPHA_FORMAT(format) \
-	((format) == FORMAT_RGBA || (format) == FORMAT_ARGB || (format) == FORMAT_BGRA || (format) == FORMAT_ABGR)
+	((format) == Format::RGBA || (format) == Format::ARGB || (format) == Format::BGRA || (format) == Format::ABGR)
 
 #define FOR_EACH_4BPP_PIXEL(macro) \
 	for_iterx (y, 0, h) \
@@ -104,6 +109,141 @@
 
 namespace april
 {
+	HL_ENUM_CLASS_DEFINE(Image::Format,
+	(
+		HL_ENUM_DEFINE(Image::Format, Invalid);
+		HL_ENUM_DEFINE(Image::Format, RGBA);
+		HL_ENUM_DEFINE(Image::Format, ARGB);
+		HL_ENUM_DEFINE(Image::Format, BGRA);
+		HL_ENUM_DEFINE(Image::Format, ABGR);
+		HL_ENUM_DEFINE(Image::Format, RGBX);
+		HL_ENUM_DEFINE(Image::Format, XRGB);
+		HL_ENUM_DEFINE(Image::Format, BGRX);
+		HL_ENUM_DEFINE(Image::Format, XBGR);
+		HL_ENUM_DEFINE(Image::Format, RGB);
+		HL_ENUM_DEFINE(Image::Format, BGR);
+		HL_ENUM_DEFINE(Image::Format, Alpha);
+		HL_ENUM_DEFINE(Image::Format, Greyscale);
+		HL_ENUM_DEFINE(Image::Format, Compressed);
+		HL_ENUM_DEFINE(Image::Format, Palette);
+
+		int Image::Format::getBpp() const
+		{
+			if ((*this) == RGBA)		return 4;
+			if ((*this) == ARGB)		return 4;
+			if ((*this) == BGRA)		return 4;
+			if ((*this) == ABGR)		return 4;
+			if ((*this) == RGBX)		return 4;
+			if ((*this) == XRGB)		return 4;
+			if ((*this) == BGRX)		return 4;
+			if ((*this) == XBGR)		return 4;
+			if ((*this) == RGB)			return 3;
+			if ((*this) == BGR)			return 3;
+			if ((*this) == Alpha)		return 1;
+			if ((*this) == Greyscale)	return 1;
+			return 0;
+		}
+
+		int Image::Format::getIndexRed() const
+		{
+			if ((*this) == RGBA || (*this) == RGBX || (*this) == RGB || (*this) == Greyscale)	return 0;
+			if ((*this) == ARGB || (*this) == XRGB)												return 1;
+			if ((*this) == BGRA || (*this) == BGRX || (*this) == BGR)							return 2;
+			if ((*this) == ABGR || (*this) == XBGR)												return 3;
+			return -1;
+		}
+
+		int Image::Format::getIndexGreen() const
+		{
+			if ((*this) == Greyscale)																		return 0;
+			if ((*this) == BGRA || (*this) == RGBX || (*this) == BGRX || (*this) == RGB || (*this) == BGR)	return 1;
+			if ((*this) == ARGB || (*this) == ABGR || (*this) == XRGB || (*this) == XBGR)					return 2;
+			return -1;
+		}
+
+		int Image::Format::getIndexBlue() const
+		{
+			if ((*this) == BGRA || (*this) == BGRX || (*this) == BGR || (*this) == Greyscale)	return 0;
+			if ((*this) == ABGR || (*this) == XBGR)												return 1;
+			if ((*this) == RGBA || (*this) == RGBX || (*this) == RGB)							return 2;
+			if ((*this) == ARGB || (*this) == XRGB)												return 3;
+			return -1;
+		}
+
+		int Image::Format::getIndexAlpha() const
+		{
+			if ((*this) == ARGB || (*this) == ABGR || (*this) == Alpha)	return 0;
+			if ((*this) == RGBA || (*this) == BGRA)						return 3;
+			return -1;
+		}
+
+		void Image::Format::getChannelIndices(int* red, int* green, int* blue, int* alpha) const
+		{
+			if ((*this) == RGBA || (*this) == RGBX)
+			{
+				if (red != NULL)	*red = 0;
+				if (green != NULL)	*green = 1;
+				if (blue != NULL)	*blue = 2;
+				if (alpha != NULL)	*alpha = 3;
+			}
+			else if ((*this) == BGRA || (*this) == BGRX)
+			{
+				if (red != NULL)	*red = 2;
+				if (green != NULL)	*green = 1;
+				if (blue != NULL)	*blue = 0;
+				if (alpha != NULL)	*alpha = 3;
+			}
+			else if ((*this) == ARGB || (*this) == XRGB)
+			{
+				if (red != NULL)	*red = 1;
+				if (green != NULL)	*green = 2;
+				if (blue != NULL)	*blue = 3;
+				if (alpha != NULL)	*alpha = 0;
+			}
+			else if ((*this) == ABGR || (*this) == XBGR)
+			{
+				if (red != NULL)	*red = 3;
+				if (green != NULL)	*green = 2;
+				if (blue != NULL)	*blue = 1;
+				if (alpha != NULL)	*alpha = 0;
+			}
+			else if ((*this) == RGB)
+			{
+				if (red != NULL)	*red = 0;
+				if (green != NULL)	*green = 1;
+				if (blue != NULL)	*blue = 2;
+				if (alpha != NULL)	*alpha = -1;
+			}
+			else if ((*this) == BGR)
+			{
+				if (red != NULL)	*red = 2;
+				if (green != NULL)	*green = 1;
+				if (blue != NULL)	*blue = 0;
+				if (alpha != NULL)	*alpha = -1;
+			}
+			else if ((*this) == Alpha || (*this) == Greyscale)
+			{
+				if (red != NULL)	*red = 0;
+				if (green != NULL)	*green = 0;
+				if (blue != NULL)	*blue = 0;
+				if (alpha != NULL)	*alpha = 0;
+			}
+			else
+			{
+				if (red != NULL)	*red = -1;
+				if (green != NULL)	*green = -1;
+				if (blue != NULL)	*blue = -1;
+				if (alpha != NULL)	*alpha = -1;
+			}
+		}
+
+	));
+
+	HL_ENUM_CLASS_DEFINE(Image::FileFormat,
+	(
+		HL_ENUM_DEFINE(Image::FileFormat, Png);
+	));
+
 	hmap<hstr, Image* (*)(hsbase&)> Image::customLoaders;
 	hmap<hstr, Image* (*)(hsbase&)> Image::customMetaDataLoaders;
 
@@ -112,7 +252,7 @@ namespace april
 		this->data = NULL;
 		this->w = 0;
 		this->h = 0;
-		this->format = FORMAT_INVALID;
+		this->format = Format::Invalid;
 		this->internalFormat = 0;
 		this->compressedSize = 0;
 	}
@@ -122,7 +262,7 @@ namespace april
 		this->data = NULL;
 		this->w = 0;
 		this->h = 0;
-		this->format = FORMAT_INVALID;
+		this->format = Format::Invalid;
 		this->internalFormat = 0;
 		this->compressedSize = 0;
 		hlog::error(logTag, "Creating april::Image instances using copy-constructor is not allowed! Use april::Image::create() instead.");
@@ -138,12 +278,12 @@ namespace april
 
 	int Image::getBpp() const
 	{
-		return Image::getFormatBpp(this->format);
+		return this->format.getBpp();
 	}
 
 	int Image::getByteSize() const
 	{
-		return (this->w * this->h * Image::getFormatBpp(this->format));
+		return (this->w * this->h * this->format.getBpp());
 	}
 
 	bool Image::isValid() const
@@ -228,92 +368,40 @@ namespace april
 
 	Image* Image::extractRed() const
 	{
-		if (this->format == FORMAT_RGBA || this->format == FORMAT_RGBX ||
-			this->format == FORMAT_RGB || this->format == FORMAT_GRAYSCALE)
-		{
-			return this->extractColor(0);
-		}
-		if (this->format == FORMAT_ARGB || this->format == FORMAT_XRGB)
-		{
-			return this->extractColor(1);
-		}
-		if (this->format == FORMAT_BGRA || this->format == FORMAT_BGRX || this->format == FORMAT_BGR)
-		{
-			return this->extractColor(2);
-		}
-		if (this->format == FORMAT_ABGR || FORMAT_XBGR)
-		{
-			return this->extractColor(3);
-		}
-		return NULL;
+		return this->extractColor(this->format.getIndexRed());
 	}
 
 	Image* Image::extractGreen() const
 	{
-		if (this->format == FORMAT_GRAYSCALE)
-		{
-			return this->extractColor(0);
-		}
-		if (this->format == FORMAT_BGRA || this->format == FORMAT_RGBX || this->format == FORMAT_BGRX ||
-			this->format == FORMAT_RGB || this->format == FORMAT_BGR)
-		{
-			return this->extractColor(1);
-		}
-		if (this->format == FORMAT_ARGB || this->format == FORMAT_ABGR ||
-			this->format == FORMAT_XRGB || this->format == FORMAT_XBGR)
-		{
-			return this->extractColor(2);
-		}
-		return NULL;
+		return this->extractColor(this->format.getIndexGreen());
 	}
 
 	Image* Image::extractBlue() const
 	{
-		if (this->format == FORMAT_BGRA || this->format == FORMAT_BGRX ||
-			this->format == FORMAT_BGR || this->format == FORMAT_GRAYSCALE)
-		{
-			return this->extractColor(0);
-		}
-		if (this->format == FORMAT_ABGR || this->format == FORMAT_XBGR)
-		{
-			return this->extractColor(1);
-		}
-		if (this->format == FORMAT_RGBA || this->format == FORMAT_RGBX || this->format == FORMAT_RGB)
-		{
-			return this->extractColor(2);
-		}
-		if (this->format == FORMAT_ARGB || FORMAT_XRGB)
-		{
-			return this->extractColor(3);
-		}
-		return NULL;
+		return this->extractColor(this->format.getIndexBlue());
 	}
 
 	Image* Image::extractAlpha() const
 	{
-		if (!CHECK_ALPHA_FORMAT(this->format) && this->format != FORMAT_ALPHA && this->format != FORMAT_COMPRESSED && this->format != FORMAT_PALETTE)
+		if (!CHECK_ALPHA_FORMAT(this->format) && this->format != Format::Alpha && this->format != Format::Compressed && this->format != Format::Palette)
 		{
-			return Image::create(this->w, this->h, april::Color::White, FORMAT_ALPHA);
+			return Image::create(this->w, this->h, april::Color::White, Format::Alpha);
 		}
-		if (this->format == FORMAT_ARGB || this->format == FORMAT_ABGR || this->format == FORMAT_ALPHA)
-		{
-			return this->extractColor(0);
-		}
-		if (this->format == FORMAT_RGBA || this->format == FORMAT_BGRA)
-		{
-			return this->extractColor(3);
-		}
-		return NULL;
+		return this->extractColor(this->format.getIndexAlpha());
 	}
 
 	Image* Image::extractColor(int index) const
 	{
-		int srcBpp = Image::getFormatBpp(this->format);
+		if (index < 0)
+		{
+			return NULL;
+		}
+		int srcBpp = this->format.getBpp();
 		if (index >= srcBpp)
 		{
 			return NULL;
 		}
-		Image* image = Image::create(this->w, this->h, april::Color::Clear, FORMAT_ALPHA);
+		Image* image = Image::create(this->w, this->h, april::Color::Clear, Format::Alpha);
 		if (srcBpp == 1)
 		{
 			memcpy(image->data, this->data, this->w * this->h);
@@ -696,7 +784,7 @@ namespace april
 
 	bool Image::save(Image* image, chstr filename, Image::FileFormat format)
 	{
-		if (format != FILE_FORMAT_PNG)
+		if (format != FileFormat::Png)
 		{
 			return false;
 		}
@@ -841,27 +929,6 @@ namespace april
 		return NULL;
 	}
 
-	int Image::getFormatBpp(Image::Format format)
-	{
-		switch (format)
-		{
-		case FORMAT_RGBA:		return 4;
-		case FORMAT_ARGB:		return 4;
-		case FORMAT_BGRA:		return 4;
-		case FORMAT_ABGR:		return 4;
-		case FORMAT_RGBX:		return 4;
-		case FORMAT_XRGB:		return 4;
-		case FORMAT_BGRX:		return 4;
-		case FORMAT_XBGR:		return 4;
-		case FORMAT_RGB:		return 3;
-		case FORMAT_BGR:		return 3;
-		case FORMAT_ALPHA:		return 1;
-		case FORMAT_GRAYSCALE:	return 1;
-		default:				break;
-		}
-		return 0;
-	}
-
 	// image data manipulation functions
 
 	Color Image::getPixel(int x, int y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat)
@@ -869,7 +936,7 @@ namespace april
 		Color color = Color::Clear;
 		// has to create data, doesn't work with static unsigned char[4] for some reason
 		unsigned char* rgba = NULL;
-		if (Image::checkRect(x, y, srcWidth, srcHeight) && Image::convertToFormat(1, 1, &srcData[(x + y * srcWidth) * Image::getFormatBpp(srcFormat)], srcFormat, (unsigned char**)&rgba, Image::FORMAT_RGBA, false))
+		if (Image::checkRect(x, y, srcWidth, srcHeight) && Image::convertToFormat(1, 1, &srcData[(x + y * srcWidth) * srcFormat.getBpp()], srcFormat, (unsigned char**)&rgba, Image::Format::RGBA, false))
 		{
 			color.r = rgba[0];
 			color.g = rgba[1];
@@ -887,8 +954,8 @@ namespace april
 			return false;
 		}
 		unsigned char rgba[4] = {color.r, color.g, color.b, color.a};
-		unsigned char* p = &destData[(x + y * destWidth) * Image::getFormatBpp(destFormat)];
-		return Image::convertToFormat(1, 1, rgba, Image::FORMAT_RGBA, &p, destFormat, false);
+		unsigned char* p = &destData[(x + y * destWidth) * destFormat.getBpp()];
+		return Image::convertToFormat(1, 1, rgba, Image::Format::RGBA, &p, destFormat, false);
 	}
 
 	Color Image::getInterpolatedPixel(float x, float y, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat)
@@ -935,7 +1002,7 @@ namespace april
 		{
 			return false;
 		}
-		int destBpp = Image::getFormatBpp(destFormat);
+		int destBpp = destFormat.getBpp();
 		int i = (x + y * destWidth) * destBpp;
 		int copyWidth = w * destBpp;
 		int size = copyWidth * h;
@@ -956,7 +1023,7 @@ namespace april
 		}
 		unsigned char colorData[4] = {color.r, color.g, color.b, color.a};
 		// convert to right format first
-		Format srcFormat = (destBpp == 4 ? FORMAT_RGBA : (destBpp == 3 ? FORMAT_RGB : FORMAT_GRAYSCALE));
+		Format srcFormat = (destBpp == 4 ? Format::RGBA : (destBpp == 3 ? Format::RGB : Format::Greyscale));
 		if (srcFormat != destFormat && destBpp > 1)
 		{
 			// has to create data, doesn't work with static unsigned char[4] for some reason
@@ -1008,9 +1075,9 @@ namespace april
 		{
 			return false;
 		}
-		int srcBpp = Image::getFormatBpp(srcFormat);
-		int destBpp = Image::getFormatBpp(destFormat);
-		if (srcFormat == FORMAT_ALPHA && destFormat != FORMAT_ALPHA)
+		int srcBpp = srcFormat.getBpp();
+		int destBpp = destFormat.getBpp();
+		if (srcFormat == Format::Alpha && destFormat != Format::Alpha)
 		{
 			if (destBpp == 4)
 			{
@@ -1019,7 +1086,7 @@ namespace april
 					int x = 0;
 					int y = 0;
 					int da = -1;
-					Image::_getFormatIndices(destFormat, NULL, NULL, NULL, &da);
+					destFormat.getChannelIndices(NULL, NULL, NULL, &da);
 					for_iterx (y, 0, sh)
 					{
 						for_iterx (x, 0, sw)
@@ -1075,7 +1142,7 @@ namespace april
 			hlog::errorf(logTag, "Cannot call Image::writeStretch() with dimensions bigger than %d!", MAX_WRITE_SIZE);
 			return false;
 		}
-		int bpp = Image::getFormatBpp(destFormat);
+		int bpp = destFormat.getBpp();
 		float fw = (dw > sw ? (sw - 1.0f) / dw : (float)sw / dw);
 		float fh = (dh > sh ? (sh - 1.0f) / dh : (float)sh / dh);
 		unsigned char* dest = NULL;
@@ -1103,14 +1170,14 @@ namespace april
 			_rx1s[x] = 1.0f - _rx0s[x];
 		}
 		// the interpolated writing
-		if (srcFormat == FORMAT_ALPHA && destFormat != FORMAT_ALPHA)
+		if (srcFormat == Format::Alpha && destFormat != Format::Alpha)
 		{
 			if (bpp == 4)
 			{
 				if (CHECK_ALPHA_FORMAT(destFormat))
 				{
 					int da = -1;
-					Image::_getFormatIndices(destFormat, NULL, NULL, NULL, &da);
+					destFormat.getChannelIndices(NULL, NULL, NULL, &da);
 					for_iterx (y, 0, dh)
 					{
 						for_iterx (x, 0, dw)
@@ -1309,7 +1376,7 @@ namespace april
 		{
 			return true;
 		}
-		int srcBpp = Image::getFormatBpp(srcFormat);
+		int srcBpp = srcFormat.getBpp();
 		if (srcBpp == 1)
 		{
 			if (Image::_blitFrom1Bpp(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, destData, destWidth, destHeight, destFormat, alpha))
@@ -1337,8 +1404,8 @@ namespace april
 	bool Image::_blitFrom1Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha)
 	{
 		static int srcBpp = 1;
-		int destBpp = Image::getFormatBpp(destFormat);
-		if (srcFormat == FORMAT_ALPHA && destFormat != FORMAT_ALPHA && destBpp != 4)
+		int destBpp = destFormat.getBpp();
+		if (srcFormat == Format::Alpha && destFormat != Format::Alpha && destBpp != 4)
 		{
 			return false;
 		}
@@ -1367,9 +1434,9 @@ namespace april
 		int db = -1;
 		if (destBpp == 3 || !CHECK_ALPHA_FORMAT(destFormat)) // 3 BPP and 4 BPP without alpha
 		{
-			if (srcFormat != FORMAT_ALPHA)
+			if (srcFormat != Format::Alpha)
 			{
-				Image::_getFormatIndices(destFormat, &dr, &dg, &db, NULL);
+				destFormat.getChannelIndices(&dr, &dg, &db, NULL);
 				for_iterx (y, 0, sh)
 				{
 					for_iterx (x, 0, sw)
@@ -1388,8 +1455,8 @@ namespace april
 		int da = -1;
 		if (destBpp == 4) // 4 BPP with alpha
 		{
-			Image::_getFormatIndices(destFormat, &dr, &dg, &db, &da);
-			if (srcFormat != FORMAT_ALPHA)
+			destFormat.getChannelIndices(&dr, &dg, &db, &da);
+			if (srcFormat != Format::Alpha)
 			{
 				for_iterx (y, 0, sh)
 				{
@@ -1425,7 +1492,7 @@ namespace april
 	bool Image::_blitFrom3Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha)
 	{
 		static int srcBpp = 3;
-		int destBpp = Image::getFormatBpp(destFormat);
+		int destBpp = destFormat.getBpp();
 		unsigned char* src = NULL;
 		unsigned char* dest = NULL;
 		unsigned char a1 = 255 - alpha;
@@ -1434,7 +1501,7 @@ namespace april
 		int sr = -1;
 		if (destBpp == 1)
 		{
-			Image::_getFormatIndices(srcFormat, &sr, NULL, NULL, NULL);
+			srcFormat.getChannelIndices(&sr, NULL, NULL, NULL);
 			for_iterx (y, 0, sh)
 			{
 				for_iterx (x, 0, sw)
@@ -1448,13 +1515,13 @@ namespace april
 		}
 		int sg = -1;
 		int sb = -1;
-		Image::_getFormatIndices(srcFormat, &sr, &sg, &sb, NULL);
+		srcFormat.getChannelIndices(&sr, &sg, &sb, NULL);
 		int dr = -1;
 		int dg = -1;
 		int db = -1;
 		if (destBpp == 3 || !CHECK_ALPHA_FORMAT(destFormat)) // 3 BPP and 4 BPP without alpha
 		{
-			Image::_getFormatIndices(destFormat, &dr, &dg, &db, NULL);
+			destFormat.getChannelIndices(&dr, &dg, &db, NULL);
 			for_iterx (y, 0, sh)
 			{
 				for_iterx (x, 0, sw)
@@ -1471,7 +1538,7 @@ namespace april
 		int da = -1;
 		if (destBpp == 4) // 4 BPP with alpha
 		{
-			Image::_getFormatIndices(destFormat, &dr, &dg, &db, &da);
+			destFormat.getChannelIndices(&dr, &dg, &db, &da);
 			for_iterx (y, 0, sh)
 			{
 				for_iterx (x, 0, sw)
@@ -1492,7 +1559,7 @@ namespace april
 	bool Image::_blitFrom4Bpp(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Format destFormat, unsigned char alpha)
 	{
 		static int srcBpp = 4;
-		int destBpp = Image::getFormatBpp(destFormat);
+		int destBpp = destFormat.getBpp();
 		unsigned char* src = NULL;
 		unsigned char* dest = NULL;
 		unsigned char a0 = 0;
@@ -1503,7 +1570,7 @@ namespace april
 		int sa = -1;
 		if (destBpp == 1)
 		{
-			Image::_getFormatIndices(srcFormat, &sr, NULL, NULL, &sa);
+			srcFormat.getChannelIndices(&sr, NULL, NULL, &sa);
 			for_iterx (y, 0, sh)
 			{
 				for_iterx (x, 0, sw)
@@ -1521,13 +1588,13 @@ namespace april
 		}
 		int sg = -1;
 		int sb = -1;
-		Image::_getFormatIndices(srcFormat, &sr, &sg, &sb, &sa);
+		srcFormat.getChannelIndices(&sr, &sg, &sb, &sa);
 		int dr = -1;
 		int dg = -1;
 		int db = -1;
 		if (destBpp == 3 || !CHECK_ALPHA_FORMAT(destFormat)) // 3 BPP and 4 BPP without alpha
 		{
-			Image::_getFormatIndices(destFormat, &dr, &dg, &db, NULL);
+			destFormat.getChannelIndices(&dr, &dg, &db, NULL);
 			for_iterx (y, 0, sh)
 			{
 				for_iterx (x, 0, sw)
@@ -1549,7 +1616,7 @@ namespace april
 		int da = -1;
 		if (destBpp == 4) // 4 BPP with alpha
 		{
-			Image::_getFormatIndices(destFormat, &dr, &dg, &db, &da);
+			destFormat.getChannelIndices(&dr, &dg, &db, &da);
 			for_iterx (y, 0, sh)
 			{
 				for_iterx (x, 0, sw)
@@ -1583,7 +1650,7 @@ namespace april
 		{
 			return Image::blit(sx, sy, sw, sh, dx, dh, srcData, srcWidth, srcHeight, srcFormat, destData, destWidth, destHeight, destFormat, alpha);
 		}
-		unsigned char* stretched = new unsigned char[dw * dh * Image::getFormatBpp(srcFormat)];
+		unsigned char* stretched = new unsigned char[dw * dh * srcFormat.getBpp()];
 		bool result = Image::writeStretch(sx, sy, sw, sh, 0, 0, dw, dh, srcData, srcWidth, srcHeight, srcFormat, stretched, dw, dh, srcFormat);
 		if (result)
 		{
@@ -1599,7 +1666,7 @@ namespace april
 		{
 			return false;
 		}
-		int srcBpp = Image::getFormatBpp(srcFormat);
+		int srcBpp = srcFormat.getBpp();
 		if (srcBpp == 1)
 		{
 			return true;
@@ -1612,7 +1679,7 @@ namespace april
 		int sr = -1;
 		int sg = -1;
 		int sb = -1;
-		Image::_getFormatIndices(srcFormat, &sr, &sg, &sb, NULL);
+		srcFormat.getChannelIndices(&sr, &sg, &sb, NULL);
 		float _h;
 		float _s;
 		float _l;
@@ -1635,7 +1702,7 @@ namespace april
 		{
 			return false;
 		}
-		int srcBpp = Image::getFormatBpp(srcFormat);
+		int srcBpp = srcFormat.getBpp();
 		if (srcBpp == 1)
 		{
 			return true;
@@ -1643,7 +1710,7 @@ namespace april
 		int sr = -1;
 		int sg = -1;
 		int sb = -1;
-		Image::_getFormatIndices(srcFormat, &sr, &sg, &sb, NULL);
+		srcFormat.getChannelIndices(&sr, &sg, &sb, NULL);
 		float _h;
 		float _s;
 		float _l;
@@ -1667,7 +1734,7 @@ namespace april
 			return false;
 		}
 		int i;
-		int srcBpp = Image::getFormatBpp(srcFormat);
+		int srcBpp = srcFormat.getBpp();
 		if (srcBpp == 1)
 		{
 			for_iter (dy, 0, h)
@@ -1683,7 +1750,7 @@ namespace april
 		int sr = -1;
 		int sg = -1;
 		int sb = -1;
-		Image::_getFormatIndices(srcFormat, &sr, &sg, &sb, NULL);
+		srcFormat.getChannelIndices(&sr, &sg, &sb, NULL);
 		for_iter (dy, 0, h)
 		{
 			for_iter (dx, 0, w)
@@ -1703,14 +1770,14 @@ namespace april
 		{
 			return false;
 		}
-		int srcBpp = Image::getFormatBpp(srcFormat);
+		int srcBpp = srcFormat.getBpp();
 		if (srcBpp == 1 || srcBpp == 3 || srcBpp == 4)
 		{
-			int destBpp = Image::getFormatBpp(destFormat);
+			int destBpp = destFormat.getBpp();
 			int sr = -1;
-			Image::_getFormatIndices(srcFormat, &sr, NULL, NULL, NULL);
+			srcFormat.getChannelIndices(&sr, NULL, NULL, NULL);
 			int da = -1;
-			Image::_getFormatIndices(destFormat, NULL, NULL, NULL, &da);
+			destFormat.getChannelIndices(NULL, NULL, NULL, &da);
 			unsigned char* src = NULL;
 			unsigned char* dest = NULL;
 			int i = 0;
@@ -1763,7 +1830,7 @@ namespace april
 	bool Image::dilate(unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Image::Format destFormat)
 	{
 		// both images must be single-channel 8-bit images, currently other formats are not supported
-		if ((srcFormat != FORMAT_ALPHA && srcFormat != FORMAT_GRAYSCALE) || (destFormat != FORMAT_ALPHA && destFormat != FORMAT_GRAYSCALE))
+		if ((srcFormat != Format::Alpha && srcFormat != Format::Greyscale) || (destFormat != Format::Alpha && destFormat != Format::Greyscale))
 		{
 			return false;
 		}
@@ -1773,7 +1840,7 @@ namespace april
 		}
 		Image* original = Image::create(destWidth, destHeight, destData, destFormat);
 		unsigned char* originalData = original->data;
-		memset(destData, 0, destWidth * destHeight * Image::getFormatBpp(destFormat));
+		memset(destData, 0, destWidth * destHeight * destFormat.getBpp());
 		int i = 0;
 		int j = 0;
 		int m = 0;
@@ -1831,8 +1898,8 @@ namespace april
 			hlog::warn(logTag, "The source's and destination's formats are the same!");
 			return false;
 		}
-		int srcBpp = Image::getFormatBpp(srcFormat);
-		if ((srcFormat == FORMAT_COMPRESSED || srcFormat == FORMAT_PALETTE) && (destFormat == FORMAT_COMPRESSED || destFormat == FORMAT_PALETTE))
+		int srcBpp = srcFormat.getBpp();
+		if ((srcFormat == Format::Compressed || srcFormat == Format::Palette) && (destFormat == Format::Compressed || destFormat == Format::Palette))
 		{
 			return true;
 		}
@@ -1857,13 +1924,13 @@ namespace april
 				return true;
 			}
 		}
-		hlog::errorf(logTag, "Conversion from %d BPP to %d BPP is not supported!", srcBpp, Image::getFormatBpp(destFormat));
+		hlog::errorf(logTag, "Conversion from %d BPP to %d BPP is not supported!", srcBpp, destFormat.getBpp());
 		return false;
 	}
 
 	bool Image::_convertFrom1Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat)
 	{
-		int destBpp = Image::getFormatBpp(destFormat);
+		int destBpp = destFormat.getBpp();
 		bool createData = (*destData == NULL);
 		if (createData)
 		{
@@ -1916,7 +1983,7 @@ namespace april
 	bool Image::_convertFrom3Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat)
 	{
 		static int srcBpp = 3;
-		int destBpp = Image::getFormatBpp(destFormat);
+		int destBpp = destFormat.getBpp();
 		bool createData = (*destData == NULL);
 		if (createData)
 		{
@@ -1926,7 +1993,7 @@ namespace april
 		int y = 0;
 		if (destBpp == 1)
 		{
-			int redIndex = (srcFormat == FORMAT_RGB ? 0 : 2);
+			int redIndex = (srcFormat == Format::RGB ? 0 : 2);
 			for_iterx (y, 0, h)
 			{
 				for_iterx (x, 0, w)
@@ -1940,7 +2007,7 @@ namespace april
 		if (destBpp == 3)
 		{
 			memcpy(*destData, srcData, w * h * destBpp);
-			// FORMAT_RGB to FORMAT_BGR and vice versa, thus switching 2 bytes around is enough
+			// Format::RGB to Format::BGR and vice versa, thus switching 2 bytes around is enough
 			if (srcFormat != destFormat)
 			{
 				int i = 0;
@@ -1959,7 +2026,7 @@ namespace april
 		if (destBpp == 4)
 		{
 			unsigned int* dest = (unsigned int*)*destData;
-			Format extended = (srcFormat == FORMAT_RGB ? FORMAT_RGBX : FORMAT_BGRX);
+			Format extended = (srcFormat == Format::RGB ? Format::RGBX : Format::BGRX);
 			bool rightShift = CHECK_SHIFT_FORMATS(extended, destFormat);
 			bool invertOrder = (CHECK_INVERT_ORDER_FORMATS(extended, destFormat) || CHECK_INVERT_ORDER_FORMATS(destFormat, extended));
 			int i = 0;
@@ -1995,7 +2062,7 @@ namespace april
 	bool Image::_convertFrom4Bpp(int w, int h, unsigned char* srcData, Format srcFormat, unsigned char** destData, Format destFormat)
 	{
 		static int srcBpp = 4;
-		int destBpp = Image::getFormatBpp(destFormat);
+		int destBpp = destFormat.getBpp();
 		bool createData = (*destData == NULL);
 		if (createData)
 		{
@@ -2006,15 +2073,15 @@ namespace april
 		if (destBpp == 1)
 		{
 			int redIndex = 0;
-			if (srcFormat == FORMAT_ARGB || srcFormat == FORMAT_XRGB)
+			if (srcFormat == Format::ARGB || srcFormat == Format::XRGB)
 			{
 				redIndex = 1;
 			}
-			else if (srcFormat == FORMAT_BGRA || srcFormat == FORMAT_BGRX)
+			else if (srcFormat == Format::BGRA || srcFormat == Format::BGRX)
 			{
 				redIndex = 2;
 			}
-			else if (srcFormat == FORMAT_ABGR || srcFormat == FORMAT_XBGR)
+			else if (srcFormat == Format::ABGR || srcFormat == Format::XBGR)
 			{
 				redIndex = 3;
 			}
@@ -2032,7 +2099,7 @@ namespace april
 		{
 			unsigned int* src = (unsigned int*)srcData;
 			unsigned char* dest = *destData;
-			Format extended = (destFormat == FORMAT_RGB ? FORMAT_RGBX : FORMAT_BGRX);
+			Format extended = (destFormat == Format::RGB ? Format::RGBX : Format::BGRX);
 			bool leftShift = CHECK_SHIFT_FORMATS(extended, srcFormat);
 			bool invertOrder = (CHECK_INVERT_ORDER_FORMATS(srcFormat, extended) || CHECK_INVERT_ORDER_FORMATS(extended, srcFormat));
 			int i = 0;
@@ -2170,8 +2237,8 @@ namespace april
 		{
 			return false;
 		}
-		int srcBpp = Image::getFormatBpp(srcFormat);
-		int destBpp = Image::getFormatBpp(destFormat);
+		int srcBpp = srcFormat.getBpp();
+		int destBpp = destFormat.getBpp();
 		if (srcBpp != destBpp)
 		{
 			return true;
@@ -2338,114 +2405,6 @@ namespace april
 	{
 		Image::customLoaders[extension] = loadFunction;
 		Image::customMetaDataLoaders[extension] = metaDataLoadfunction;
-	}
-
-	void Image::_getFormatIndices(Image::Format format, int* red, int* green, int* blue, int* alpha)
-	{
-		switch (format)
-		{
-		case FORMAT_RGBA:
-		case FORMAT_RGBX:
-			if (alpha != NULL)
-			{
-				*alpha = 3;
-			}
-			// fall-through is ok here
-		case FORMAT_RGB:
-			if (red != NULL)
-			{
-				*red = 0;
-			}
-			if (green != NULL)
-			{
-				*green = 1;
-			}
-			if (blue != NULL)
-			{
-				*blue = 2;
-			}
-			break;
-		case FORMAT_BGRA:
-		case FORMAT_BGRX:
-			if (alpha != NULL)
-			{
-				*alpha = 3;
-			}
-			// fall-through is ok here
-		case FORMAT_BGR:
-			if (red != NULL)
-			{
-				*red = 2;
-			}
-			if (green != NULL)
-			{
-				*green = 1;
-			}
-			if (blue != NULL)
-			{
-				*blue = 0;
-			}
-			break;
-		case FORMAT_ARGB:
-		case FORMAT_XRGB:
-			if (alpha != NULL)
-			{
-				*alpha = 0;
-			}
-			if (red != NULL)
-			{
-				*red = 1;
-			}
-			if (green != NULL)
-			{
-				*green = 2;
-			}
-			if (blue != NULL)
-			{
-				*blue = 3;
-			}
-			break;
-		case FORMAT_ABGR:
-		case FORMAT_XBGR:
-			if (alpha != NULL)
-			{
-				*alpha = 0;
-			}
-			if (red != NULL)
-			{
-				*red = 3;
-			}
-			if (green != NULL)
-			{
-				*green = 2;
-			}
-			if (blue != NULL)
-			{
-				*blue = 1;
-			}
-			break;
-		case FORMAT_ALPHA:
-		case FORMAT_GRAYSCALE:
-			if (alpha != NULL)
-			{
-				*alpha = 0;
-			}
-			if (red != NULL)
-			{
-				*red = 0;
-			}
-			if (green != NULL)
-			{
-				*green = 0;
-			}
-			if (blue != NULL)
-			{
-				*blue = 0;
-			}
-			break;
-		default:
-			break;
-		}
 	}
 
 }

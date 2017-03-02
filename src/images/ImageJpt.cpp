@@ -26,9 +26,9 @@ namespace april
 		// read PNG
 		stream.readRaw(bytes, 4);
 		png = Image::_loadPng(stream, bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24));
-		png->format = FORMAT_ALPHA;
+		png->format = Format::Alpha;
 		// combine
-		Image* image = Image::create(jpg->w, jpg->h, Color::Clear, FORMAT_RGBA);
+		Image* image = Image::create(jpg->w, jpg->h, Color::Clear, Format::RGBA);
 		image->write(0, 0, jpg->w, jpg->h, 0, 0, jpg);
 		image->write(0, 0, png->w, png->h, 0, 0, png);
 		delete jpg;
@@ -47,7 +47,7 @@ namespace april
 		// read PNG
 		stream.readRaw(bytes, 4);
 		Image* image = Image::_readMetaDataPng(stream, bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24));
-		image->format = FORMAT_RGBA;
+		image->format = Format::RGBA;
 		return image;
 	}
 

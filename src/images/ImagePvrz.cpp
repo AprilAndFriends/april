@@ -60,7 +60,7 @@ namespace april
 		image->h = header.height;
 		image->internalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 		image->compressedSize = header.size - PVR_HEADER_SIZE;
-		image->format = Image::FORMAT_COMPRESSED;
+		image->format = Image::Format::Compressed;
 		image->data = new unsigned char[image->compressedSize];
 		memcpy(image->data, &pvrData[PVR_HEADER_SIZE], image->compressedSize);
 		delete[] pvrData;
@@ -85,7 +85,7 @@ namespace april
 		image->h = header.height;
 		image->internalFormat = GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 		image->compressedSize = header.size - PVR_HEADER_SIZE;
-		image->format = Image::FORMAT_COMPRESSED;
+		image->format = Image::Format::Compressed;
 		image->data = NULL;
 		return image;
 	}

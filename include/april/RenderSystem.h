@@ -591,7 +591,7 @@ namespace april
 		/// @param[in] loadMode How and when the Texture should be loaded.
 		/// @param[in] format To which pixel format the loaded data should be converted.
 		/// @return The created Texture object or NULL if failed.
-		Texture* _createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format = Image::FORMAT_INVALID);
+		Texture* _createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format = Image::Format::Invalid);
 		/// @brief Internally safe method for creating a PixelShader object.
 		/// @param[in] fromResource Whether the PixelShader should be created from a resource file or a normal file.
 		/// @param[in] filename The filename of the pixel shader.

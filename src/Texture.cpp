@@ -65,7 +65,7 @@ namespace april
 		this->data = NULL;
 		this->dataWidth = 0;
 		this->dataHeight = 0;
-		this->format = Image::FORMAT_INVALID;
+		this->format = Image::Format::Invalid;
 		this->locked = false;
 		this->failed = true;
 		this->renderTarget = false;
@@ -122,7 +122,7 @@ namespace april
 		this->type = Type::Immutable;
 		this->loaded = false;
 		this->loadMode = LoadMode::Immediate;
-		this->format = Image::FORMAT_INVALID;
+		this->format = Image::Format::Invalid;
 		this->dataFormat = 0;
 		this->width = 0;
 		this->height = 0;
@@ -149,7 +149,7 @@ namespace april
 		this->height = 0;
 		this->type = type;
 		this->loadMode = loadMode;
-		this->format = Image::FORMAT_INVALID;
+		this->format = Image::Format::Invalid;
 		this->dataFormat = 0;
 		this->data = NULL;
 		this->dataAsync = NULL;
@@ -302,16 +302,16 @@ namespace april
 
 	int Texture::getBpp() const
 	{
-		if (this->format == Image::FORMAT_INVALID)
+		if (this->format == Image::Format::Invalid)
 		{
 			hlog::warnf(logTag, "Texture '%s' has bpp = 0 (possibly not loaded yet?)", this->filename.cStr());
 		}
-		return Image::getFormatBpp(this->format);
+		return this->format.getBpp();
 	}
 
 	int Texture::getByteSize() const
 	{
-		if (this->width == 0 || this->height == 0 || this->format == Image::FORMAT_INVALID)
+		if (this->width == 0 || this->height == 0 || this->format == Image::Format::Invalid)
 		{
 			hlog::warnf(logTag, "Texture '%s' has byteSize = 0 (possibly not loaded yet?)", this->filename.cStr());
 		}
@@ -319,12 +319,12 @@ namespace april
 		{
 			return this->compressedSize;
 		}
-		return (this->width * this->height * Image::getFormatBpp(this->format));
+		return (this->width * this->height * this->format.getBpp());
 	}
 
 	int Texture::getCurrentVRamSize()
 	{
-		if (this->width == 0 || this->height == 0 || this->format == Image::FORMAT_INVALID || !this->isLoaded())
+		if (this->width == 0 || this->height == 0 || this->format == Image::Format::Invalid || !this->isLoaded())
 		{
 			return 0;
 		}
@@ -332,7 +332,7 @@ namespace april
 		{
 			return this->compressedSize;
 		}
-		return (this->width * this->height * Image::getFormatBpp(this->format));
+		return (this->width * this->height * this->format.getBpp());
 	}
 
 	int Texture::getCurrentRamSize()
@@ -350,7 +350,7 @@ namespace april
 		{
 			return 0;
 		}
-		if (this->width == 0 || this->height == 0 || this->format == Image::FORMAT_INVALID)
+		if (this->width == 0 || this->height == 0 || this->format == Image::Format::Invalid)
 		{
 			return 0;
 		}
@@ -358,7 +358,7 @@ namespace april
 		{
 			return this->compressedSize;
 		}
-		return (this->width * this->height * Image::getFormatBpp(this->format));
+		return (this->width * this->height * this->format.getBpp());
 	}
 
 	bool Texture::isLoaded()
@@ -461,7 +461,7 @@ namespace april
 				return false;
 			}
 			Image* image = NULL;
-			if (this->format == Image::FORMAT_INVALID)
+			if (this->format == Image::Format::Invalid)
 			{
 				image = (this->fromResource ? Image::createFromResource(this->filename) : Image::createFromFile(this->filename));
 			}
@@ -709,7 +709,7 @@ namespace april
 		lock.release();
 		hlog::write(logTag, "Loading async texture: " + this->_getInternalName());
 		Image* image = NULL;
-		if (this->format == Image::FORMAT_INVALID)
+		if (this->format == Image::Format::Invalid)
 		{
 			image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extensionOf(this->filename));
 		}
@@ -754,10 +754,10 @@ namespace april
 		if (!april::rendersys->getCaps().textureFormats.has(image->format))
 		{
 			hlog::warn(logTag, "Texture format not supported, trying to convert to an RGBA format: " + this->_getInternalName());
-			Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(Image::FORMAT_RGBA);
+			Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(Image::Format::RGBA);
 			Image* newImage = NULL;
 			bool result = false;
-			if (image->format == Image::FORMAT_ALPHA)
+			if (image->format == Image::Format::Alpha)
 			{
 				newImage = Image::create(image->w, image->h, april::Color::White, nativeFormat);
 				result = newImage->insertAlphaMap(image);
@@ -1463,7 +1463,7 @@ namespace april
 	unsigned char* Texture::_createPotData(int& outWidth, int& outHeight, unsigned char* data)
 	{
 		this->_setupPot(outWidth, outHeight);
-		unsigned char* newData = new unsigned char[outWidth * outHeight * Image::getFormatBpp(this->format)];
+		unsigned char* newData = new unsigned char[outWidth * outHeight * this->format.getBpp()];
 		Image::write(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, this->format, newData, outWidth, outHeight, this->format);
 		if (this->width < outWidth)
 		{
@@ -1479,7 +1479,7 @@ namespace april
 	unsigned char* Texture::_createPotClearData(int& outWidth, int& outHeight)
 	{
 		this->_setupPot(outWidth, outHeight);
-		int size = outWidth * outHeight * Image::getFormatBpp(this->format);
+		int size = outWidth * outHeight * this->format.getBpp();
 		unsigned char* newData = new unsigned char[size];
 		memset(newData, 0, size);
 		return newData;

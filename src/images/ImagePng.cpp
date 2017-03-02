@@ -99,16 +99,16 @@ namespace april
 		switch (bpp)
 		{
 		case 4:
-			image->format = FORMAT_RGBA;
+			image->format = Format::RGBA;
 			break;
 		case 3:
-			image->format = FORMAT_RGB;
+			image->format = Format::RGB;
 			break;
 		case 1:
-			image->format = FORMAT_ALPHA;
+			image->format = Format::Alpha;
 			break;
 		default:
-			image->format = FORMAT_RGBA; // TODOaa - maybe palette should go here
+			image->format = Format::RGBA; // TODOaa - maybe palette should go here
 			break;
 		}
 		// clean up
@@ -219,16 +219,16 @@ namespace april
 		switch (bpp)
 		{
 		case 4:
-			image->format = FORMAT_RGBA;
+			image->format = Format::RGBA;
 			break;
 		case 3:
-			image->format = FORMAT_RGB;
+			image->format = Format::RGB;
 			break;
 		case 1:
-			image->format = FORMAT_ALPHA;
+			image->format = Format::Alpha;
 			break;
 		default:
-			image->format = FORMAT_RGBA; // TODOaa - maybe palette should go here
+			image->format = Format::RGBA; // TODOaa - maybe palette should go here
 			break;
 		}
 		// clean up

@@ -230,8 +230,8 @@ namespace april
 		hlog::write(logTag, "ETC1 supported: " + hstr(this->etc1Supported ? "yes" : "no"));
 #endif
         // OpenGLES implementations do not appear to support alpha textures by default
-		this->caps.textureFormats /= Image::FORMAT_ALPHA;
-		this->caps.textureFormats /= Image::FORMAT_GRAYSCALE;
+		this->caps.textureFormats /= Image::Format::Alpha;
+		this->caps.textureFormats /= Image::Format::Greyscale;
 		return OpenGL_RenderSystem::_deviceSetupCaps();
 	}
 

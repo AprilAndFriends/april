@@ -658,32 +658,20 @@ namespace april
 
 	Image::Format DirectX9_RenderSystem::getNativeTextureFormat(Image::Format format) const
 	{
-		if (format == Image::FORMAT_RGBA || format == Image::FORMAT_ARGB || format == Image::FORMAT_BGRA || format == Image::FORMAT_ABGR)
+		if (format == Image::Format::RGBA || format == Image::Format::ARGB || format == Image::Format::BGRA || format == Image::Format::ABGR)
 		{
-			return Image::FORMAT_BGRA;
+			return Image::Format::BGRA;
 		}
-		if (format == Image::FORMAT_RGBX || format == Image::FORMAT_XRGB || format == Image::FORMAT_BGRX ||
-			format == Image::FORMAT_XBGR || format == Image::FORMAT_RGB || format == Image::FORMAT_BGR)
+		if (format == Image::Format::RGBX || format == Image::Format::XRGB || format == Image::Format::BGRX ||
+			format == Image::Format::XBGR || format == Image::Format::RGB || format == Image::Format::BGR)
 		{
-			return Image::FORMAT_BGRX;
+			return Image::Format::BGRX;
 		}
-		if (format == Image::FORMAT_ALPHA)
+		if (format == Image::Format::Alpha || format == Image::Format::Greyscale || format == Image::Format::Compressed || format == Image::Format::Palette)
 		{
-			return Image::FORMAT_ALPHA;
+			return format;
 		}
-		if (format == Image::FORMAT_GRAYSCALE)
-		{
-			return Image::FORMAT_GRAYSCALE;
-		}
-		if (format == Image::FORMAT_COMPRESSED)
-		{
-			return Image::FORMAT_COMPRESSED;
-		}
-		if (format == Image::FORMAT_PALETTE)
-		{
-			return Image::FORMAT_PALETTE;
-		}
-		return Image::FORMAT_INVALID;
+		return Image::Format::Invalid;
 	}
 
 	unsigned int DirectX9_RenderSystem::getNativeColorUInt(const april::Color& color) const
@@ -727,7 +715,7 @@ namespace april
 		}
 		unsigned char* data = NULL;
 		Image* image = NULL;
-		if (Image::convertToFormat(desc.Width, desc.Height, (unsigned char*)rect.pBits, Image::FORMAT_BGRX, &data, format, false))
+		if (Image::convertToFormat(desc.Width, desc.Height, (unsigned char*)rect.pBits, Image::Format::BGRX, &data, format, false))
 		{
 			image = Image::create(desc.Width, desc.Height, data, format);
 			delete[] data;

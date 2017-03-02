@@ -59,8 +59,8 @@ namespace april
 		this->etc1Supported = extensions.contains("OES_compressed_ETC1_RGB8_texture");
 		hlog::write(logTag, "ETC1 supported: " + hstr(this->etc1Supported ? "yes" : "no"));
 		// Android has problems with alpha textures in some implementations
-		this->caps.textureFormats /= Image::FORMAT_ALPHA;
-		this->caps.textureFormats /= Image::FORMAT_GRAYSCALE;
+		this->caps.textureFormats /= Image::Format::Alpha;
+		this->caps.textureFormats /= Image::Format::Greyscale;
 #endif
 		return OpenGLC_RenderSystem::_deviceSetupCaps();
 	}

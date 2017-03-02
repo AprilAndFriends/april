@@ -82,7 +82,7 @@ namespace april
 		image->data = imageData;
 		image->w = cInfo.output_width;
 		image->h = cInfo.output_height;
-		image->format = Image::FORMAT_RGB; // JPEG is always RGB
+		image->format = Image::Format::RGB; // JPEG is always RGB
 		return image;
 	}
 
@@ -115,7 +115,7 @@ namespace april
 		image->data = NULL;
 		image->w = cInfo.image_width;
 		image->h = cInfo.image_height;
-		image->format = Image::FORMAT_RGB; // JPEG is always RGB
+		image->format = Image::Format::RGB; // JPEG is always RGB
 		return image;
 	}
 

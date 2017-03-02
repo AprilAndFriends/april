@@ -381,10 +381,10 @@ namespace april
 		}
 
 		NSData* imageData = [pvrtex.imageData objectAtIndex:0];
-		Image* image = Image::create(pvrtex.width, pvrtex.height, NULL, Image::FORMAT_INVALID);
+		Image* image = Image::create(pvrtex.width, pvrtex.height, NULL, Image::Format::Invalid);
 		image->data = new unsigned char[imageData.length];
 		memcpy(image->data, imageData.bytes, imageData.length);
-		image->format = Image::FORMAT_COMPRESSED;
+		image->format = Image::Format::Compressed;
 		image->internalFormat = pvrtex.internalFormat;
 		image->compressedSize = (int)imageData.length;
 		[arp release];
@@ -420,11 +420,11 @@ namespace april
 		}
 
 		NSData* imageData = [pvrtex.imageData objectAtIndex:0];
-		Image* image = Image::create(pvrtex.width, pvrtex.height, NULL, Image::FORMAT_INVALID);
+		Image* image = Image::create(pvrtex.width, pvrtex.height, NULL, Image::Format::Invalid);
 		image->w = pvrtex.width;
 		image->h = pvrtex.height;
 		image->data = NULL;
-		image->format = Image::FORMAT_COMPRESSED;
+		image->format = Image::Format::Compressed;
 		image->internalFormat = pvrtex.internalFormat;
 		image->compressedSize = (int)imageData.length;
 		[arp release];

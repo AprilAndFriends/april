@@ -398,59 +398,47 @@ namespace april
 
 	Image::Format OpenGL_RenderSystem::getNativeTextureFormat(Image::Format format) const
 	{
-		if (format == Image::FORMAT_ARGB || format == Image::FORMAT_ABGR || format == Image::FORMAT_RGBA)
+		if (format == Image::Format::ARGB || format == Image::Format::ABGR || format == Image::Format::RGBA)
 		{
-			return Image::FORMAT_RGBA;
+			return Image::Format::RGBA;
 		}
-		if (format == Image::FORMAT_XRGB || format == Image::FORMAT_RGBX || format == Image::FORMAT_XBGR || format == Image::FORMAT_BGRX)
+		if (format == Image::Format::XRGB || format == Image::Format::RGBX || format == Image::Format::XBGR || format == Image::Format::BGRX)
 		{
-			return Image::FORMAT_RGBX;
+			return Image::Format::RGBX;
 		}
-		if (format == Image::FORMAT_BGRA)
-		{
-#if !defined(_ANDROID) && !defined(_WIN32)
-#ifndef __APPLE__
-			return Image::FORMAT_BGRA; // for optimizations
-#else
-			return Image::FORMAT_BGRA; // for optimizations
-#endif
-#else
-			return Image::FORMAT_RGBA;
-#endif
-		}
-		if (format == Image::FORMAT_RGB)
-		{
-			return Image::FORMAT_RGB;
-		}
-		if (format == Image::FORMAT_BGR)
+		if (format == Image::Format::BGRA)
 		{
 #if !defined(_ANDROID) && !defined(_WIN32)
 #ifndef __APPLE__
-			return Image::FORMAT_BGR; // for optimizations
+			return Image::Format::BGRA; // for optimizations
 #else
-			return Image::FORMAT_BGRA; // for optimizations
+			return Image::Format::BGRA; // for optimizations
 #endif
 #else
-			return Image::FORMAT_RGB;
+			return Image::Format::RGBA;
 #endif
 		}
-		if (format == Image::FORMAT_ALPHA)
+		if (format == Image::Format::RGB)
 		{
-			return Image::FORMAT_ALPHA;
+			return Image::Format::RGB;
 		}
-		if (format == Image::FORMAT_GRAYSCALE)
+		if (format == Image::Format::BGR)
 		{
-			return Image::FORMAT_GRAYSCALE;
+#if !defined(_ANDROID) && !defined(_WIN32)
+#ifndef __APPLE__
+			return Image::Format::BGR; // for optimizations
+#else
+			return Image::Format::BGRA; // for optimizations
+#endif
+#else
+			return Image::Format::RGB;
+#endif
 		}
-		if (format == Image::FORMAT_COMPRESSED)
+		if (format == Image::Format::Alpha || format == Image::Format::Greyscale || format == Image::Format::Compressed || format == Image::Format::Palette)
 		{
-			return Image::FORMAT_COMPRESSED;
+			return format;
 		}
-		if (format == Image::FORMAT_PALETTE)
-		{
-			return Image::FORMAT_PALETTE; // TODOaa - does palette use RGBA?
-		}
-		return Image::FORMAT_INVALID;
+		return Image::Format::Invalid;
 	}
 
 	unsigned int OpenGL_RenderSystem::getNativeColorUInt(const april::Color& color) const
@@ -469,7 +457,7 @@ namespace april
 		glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, temp);
 		unsigned char* data = NULL;
 		Image* image = NULL;
-		if (Image::convertToFormat(w, h, temp, Image::FORMAT_RGBA, &data, format, false))
+		if (Image::convertToFormat(w, h, temp, Image::Format::RGBA, &data, format, false))
 		{
 			image = Image::create(w, h, data, format);
 			delete[] data;

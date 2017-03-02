@@ -50,7 +50,7 @@ namespace aprilpix
 			return NULL;
 		}
 		april::Image* image = new ImagePvr();
-		image->format = FORMAT_RGBA;
+		image->format = Format::RGBA;
 		image->w = header->dwWidth;
 		image->h = header->dwHeight;
 		image->data = new unsigned char[image->getByteSize()];
@@ -85,7 +85,7 @@ namespace aprilpix
 		}
 		april::Image* image = new ImagePvr();
 		image->data = NULL;
-		image->format = FORMAT_RGBA;
+		image->format = Format::RGBA;
 		image->w = header.dwWidth;
 		image->h = header.dwHeight;
 		return image;		

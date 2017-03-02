@@ -44,12 +44,12 @@ namespace aprilpix
 		int bpp = 0;
 		if (features.has_alpha)
 		{
-			image->format = FORMAT_RGBA;
+			image->format = Format::RGBA;
 			bpp = 4;
 		}
 		else
 		{
-			image->format = FORMAT_RGB;
+			image->format = Format::RGB;
 			bpp = 3;
 		}
 		int imageDataSize = image->w * image->h * bpp;
