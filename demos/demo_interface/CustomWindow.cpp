@@ -192,7 +192,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		break;
 	case 0x011A: // WM_GESTURENOTIFY (win7+ only)
 		_touchDown = true;
-		april::window->setInputMode(april::Window::TOUCH);
+		april::window->setInputMode(april::InputMode::Touch);
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
@@ -282,7 +282,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		{
 			if (_mouseMoveMessagesCount >= 10)
 			{
-				april::window->setInputMode(april::Window::MOUSE);
+				april::window->setInputMode(april::InputMode::Mouse);
 			}
 			else
 			{
