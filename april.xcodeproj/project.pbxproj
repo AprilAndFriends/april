@@ -289,6 +289,15 @@
 		D1134F07175CDA3300BFF3A2 /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */; };
 		D1134F10175CDA3300BFF3A2 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
 		D1134F23175CDAD200BFF3A2 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F21175CDAD200BFF3A2 /* egl.cpp */; };
+		D11FB8F31E6866D0001A7E9A /* InputMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D11FB8F21E6866D0001A7E9A /* InputMode.cpp */; };
+		D11FB8F41E6866D0001A7E9A /* InputMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D11FB8F21E6866D0001A7E9A /* InputMode.cpp */; };
+		D11FB8F51E6866D0001A7E9A /* InputMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D11FB8F21E6866D0001A7E9A /* InputMode.cpp */; };
+		D11FB8F61E6866D0001A7E9A /* InputMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D11FB8F21E6866D0001A7E9A /* InputMode.cpp */; };
+		D11FB8F71E6866D0001A7E9A /* InputMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D11FB8F21E6866D0001A7E9A /* InputMode.cpp */; };
+		D11FB8F81E6866D0001A7E9A /* InputMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D11FB8F21E6866D0001A7E9A /* InputMode.cpp */; };
+		D11FB8F91E6866D0001A7E9A /* InputMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D11FB8F21E6866D0001A7E9A /* InputMode.cpp */; };
+		D11FB8FB1E6866DD001A7E9A /* InputMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D11FB8FA1E6866DD001A7E9A /* InputMode.h */; };
+		D11FB8FC1E6866DD001A7E9A /* InputMode.h in Headers */ = {isa = PBXBuildFile; fileRef = D11FB8FA1E6866DD001A7E9A /* InputMode.h */; };
 		D136818E187BFB3E00E66E32 /* main_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D136818C187BFB3E00E66E32 /* main_base.cpp */; };
 		D136818F187BFB3E00E66E32 /* main_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D136818C187BFB3E00E66E32 /* main_base.cpp */; };
 		D1368190187BFB3E00E66E32 /* main_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D136818C187BFB3E00E66E32 /* main_base.cpp */; };
@@ -626,6 +635,8 @@
 		D1134F17175CDA3300BFF3A2 /* libapril-kd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libapril-kd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1134F21175CDAD200BFF3A2 /* egl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egl.cpp; path = src/egl.cpp; sourceTree = "<group>"; };
 		D1134F22175CDAD200BFF3A2 /* egl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egl.h; path = src/egl.h; sourceTree = "<group>"; };
+		D11FB8F21E6866D0001A7E9A /* InputMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InputMode.cpp; path = src/InputMode.cpp; sourceTree = "<group>"; };
+		D11FB8FA1E6866DD001A7E9A /* InputMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputMode.h; path = include/april/InputMode.h; sourceTree = "<group>"; };
 		D136818C187BFB3E00E66E32 /* main_base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main_base.cpp; path = src/main_base.cpp; sourceTree = "<group>"; };
 		D136818D187BFB3E00E66E32 /* RenderState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderState.cpp; path = src/RenderState.cpp; sourceTree = "<group>"; };
 		D136819A187BFB6600E66E32 /* Android_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Android_main.h; path = include/april/Android_main.h; sourceTree = "<group>"; };
@@ -871,15 +882,16 @@
 		7F42F79F11EB177B00B1C1DF /* src */ = {
 			isa = PBXGroup;
 			children = (
-				B4DF80751E375E6A00307767 /* zlibUtil.h */,
-				B4DF806D1E375E4D00307767 /* zlibUtil.cpp */,
 				D1E7204116D37BF900B9C9AD /* delegates */,
 				D1E7204216D37C0200B9C9AD /* images */,
 				D1E7204316D37C0B00B9C9AD /* timers */,
+				B4DF80751E375E6A00307767 /* zlibUtil.h */,
+				B4DF806D1E375E4D00307767 /* zlibUtil.cpp */,
 				D136818C187BFB3E00E66E32 /* main_base.cpp */,
 				D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */,
 				D136818D187BFB3E00E66E32 /* RenderState.cpp */,
 				D14BF96915875F3300D31573 /* aprilUtil.cpp */,
+				D11FB8F21E6866D0001A7E9A /* InputMode.cpp */,
 				D14BF818158737A000D31573 /* Platform.cpp */,
 				C9E6097C150518B400EB077F /* april.cpp */,
 				C9C04F8A14BB106F005BD333 /* PixelShader.cpp */,
@@ -905,6 +917,7 @@
 				D1049F6316D39E870058C514 /* delegates */,
 				D17F3E951D79D5010045F39D /* VirtualKeyboard.h */,
 				B436D2ED1D05AEB000DA2C15 /* RenderHelper.h */,
+				D11FB8FA1E6866DD001A7E9A /* InputMode.h */,
 				B436D2EE1D05AEB000DA2C15 /* RenderHelperLayered2D.h */,
 				D136819A187BFB6600E66E32 /* Android_main.h */,
 				D136819B187BFB6600E66E32 /* androidUtilJNI.h */,
@@ -1365,6 +1378,7 @@
 				B45501581BD7A80400E75E43 /* OpenGLES_RenderSystem.h in Headers */,
 				7F42F7A711EB178C00B1C1DF /* Keys.h in Headers */,
 				B45500F41BD7A7BA00E75E43 /* OpenGL1_RenderSystem.h in Headers */,
+				D11FB8FC1E6866DD001A7E9A /* InputMode.h in Headers */,
 				7F42F7A811EB178C00B1C1DF /* RenderSystem.h in Headers */,
 				7FA3ED1811F9817A001D1DDD /* Window.h in Headers */,
 				7F4D0FEA11FEE6C500F2F9F5 /* main.h in Headers */,
@@ -1431,6 +1445,7 @@
 				B4DF80761E375E6A00307767 /* zlibUtil.h in Headers */,
 				D1AF66C5170B1E5900A43743 /* Timer.h in Headers */,
 				D1E2447A1A3104C300586FAC /* Mac_QueuedEvents.h in Headers */,
+				D11FB8FB1E6866DD001A7E9A /* InputMode.h in Headers */,
 				D1AF66C7170B1E5900A43743 /* PixelShader.h in Headers */,
 				B45501071BD7A7C500E75E43 /* OpenGLES1_RenderSystem.h in Headers */,
 				D1AF66C8170B1E5900A43743 /* VertexShader.h in Headers */,
@@ -1648,6 +1663,7 @@
 				D14BF96A15875F3300D31573 /* aprilUtil.cpp in Sources */,
 				D1E7204B16D37C2300B9C9AD /* EventDelegate.cpp in Sources */,
 				D1E7204E16D37C2300B9C9AD /* InputDelegate.cpp in Sources */,
+				D11FB8F41E6866D0001A7E9A /* InputMode.cpp in Sources */,
 				B455011E1BD7A7D100E75E43 /* OpenGLC_Texture.cpp in Sources */,
 				B45501161BD7A7D100E75E43 /* OpenGLC_RenderSystem.cpp in Sources */,
 				D1E7205116D37C2300B9C9AD /* KeyboardDelegate.cpp in Sources */,
@@ -1685,6 +1701,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B44FBD8D1BE0E44A00DD8995 /* RenderState.cpp in Sources */,
+				D11FB8F81E6866D0001A7E9A /* InputMode.cpp in Sources */,
 				B44FBD8E1BE0E44A00DD8995 /* iOS_main.mm in Sources */,
 				B44FBD8F1BE0E44A00DD8995 /* Color.cpp in Sources */,
 				B44FBD901BE0E44A00DD8995 /* Texture.cpp in Sources */,
@@ -1759,6 +1776,7 @@
 				D1134EF0175CDA3300BFF3A2 /* Texture.cpp in Sources */,
 				D1134EF1175CDA3300BFF3A2 /* RenderSystem.cpp in Sources */,
 				D102CFFB19B7284500948584 /* TextureAsync.cpp in Sources */,
+				D11FB8F91E6866D0001A7E9A /* InputMode.cpp in Sources */,
 				B436D2EC1D05AE9300DA2C15 /* RenderHelperLayered2D.cpp in Sources */,
 				D1134EF2175CDA3300BFF3A2 /* Window.cpp in Sources */,
 				D1134EF3175CDA3300BFF3A2 /* PixelShader.cpp in Sources */,
@@ -1823,6 +1841,7 @@
 				D17F3E981D79D5740045F39D /* VirtualKeyboard.cpp in Sources */,
 				D1534755178AD62A00151D1A /* PixelShader.cpp in Sources */,
 				D1368196187BFB3E00E66E32 /* RenderState.cpp in Sources */,
+				D11FB8F51E6866D0001A7E9A /* InputMode.cpp in Sources */,
 				D1534756178AD62A00151D1A /* VertexShader.cpp in Sources */,
 				B436D2E31D05AE9100DA2C15 /* RenderHelper.cpp in Sources */,
 				D1534757178AD62A00151D1A /* april.cpp in Sources */,
@@ -1876,6 +1895,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1368198187BFB3E00E66E32 /* RenderState.cpp in Sources */,
+				D11FB8F71E6866D0001A7E9A /* InputMode.cpp in Sources */,
 				D1B4874119337483004674EB /* iOS_main.mm in Sources */,
 				D1981C44140F82B00057C3AF /* Color.cpp in Sources */,
 				D1981C45140F82B00057C3AF /* Texture.cpp in Sources */,
@@ -1952,6 +1972,7 @@
 				D17F3E941D79D4F60045F39D /* VirtualKeyboard.cpp in Sources */,
 				D1AF66A4170B1E5900A43743 /* Texture.cpp in Sources */,
 				D1368194187BFB3E00E66E32 /* RenderState.cpp in Sources */,
+				D11FB8F31E6866D0001A7E9A /* InputMode.cpp in Sources */,
 				D1AF66A5170B1E5900A43743 /* PixelShader.cpp in Sources */,
 				B436D2DF1D05AE8800DA2C15 /* RenderHelper.cpp in Sources */,
 				D1AF66A6170B1E5900A43743 /* VertexShader.cpp in Sources */,
@@ -2025,6 +2046,7 @@
 				B4DF80801E375F0700307767 /* ImageEtcx.cpp in Sources */,
 				B455016A1BD7A86200E75E43 /* OpenGL_RenderSystem.cpp in Sources */,
 				D1F27ACD177A2DF700E5C131 /* aprilUtil.cpp in Sources */,
+				D11FB8F61E6866D0001A7E9A /* InputMode.cpp in Sources */,
 				B45501871BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				B45501201BD7A7D100E75E43 /* OpenGLC_Texture.cpp in Sources */,
 				D102CFF919B7284500948584 /* TextureAsync.cpp in Sources */,

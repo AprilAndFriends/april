@@ -75,7 +75,7 @@ namespace april
 	class iOS_MouseInputEvent : public InputEvent
 	{
 	public:
-		iOS_MouseInputEvent(Window* window, Window::MouseEventType type, gvec2 position, april::Key button) : InputEvent(window)
+		iOS_MouseInputEvent(Window* window, Window::MouseInputEvent::Type type, gvec2 position, april::Key button) : InputEvent(window)
 		{
 			this->type = type;
 			this->position = position;
@@ -84,12 +84,12 @@ namespace april
 		
 		void execute()
 		{
-			if (this->type != Window::MOUSE_CANCEL) updateCursorPosition(this->position);
+			if (this->type != Window::MouseInputEvent::Type::Cancel) updateCursorPosition(this->position);
 			this->window->handleMouseEvent(this->type, this->position * ((iOS_Window*) window)->_getTouchScale(), this->button);
 		}
 		
 	protected:
-		Window::MouseEventType type;
+		Window::MouseInputEvent::Type type;
 		gvec2 position;
 		april::Key button;
 		
@@ -132,7 +132,7 @@ namespace april
 		this->firstFrameDrawn = false; // show window after drawing first frame
 		this->keyboardRequest = 0;
 		this->retainLoadingOverlay = false;
-		this->inputMode = TOUCH;
+		this->inputMode = InputMode::Touch;
 		this->focused = true;
 		this->inputEventsMutex = false;
 		this->multiTouchActive = false;
@@ -391,14 +391,14 @@ namespace april
 			if (!this->multiTouchActive && prev_len == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->addInputEvent(new iOS_MouseInputEvent(this, MOUSE_CANCEL, gvec2(), AK_LBUTTON));
+				this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Cancel, gvec2(), AK_LBUTTON));
 			}
 			this->multiTouchActive = true;
 		}
 		else
 		{
 			CGPoint pt = [g_touches[0] locationInView:glview];
-			this->addInputEvent(new iOS_MouseInputEvent(this, MOUSE_DOWN, gvec2(pt.x, pt.y), AK_LBUTTON));
+			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Down, gvec2(pt.x, pt.y), AK_LBUTTON));
 		}
 		this->callTouchCallback();
 	}
@@ -419,7 +419,7 @@ namespace april
 		else
 		{
 			CGPoint pt = [touches[0] locationInView:glview];
-			this->addInputEvent(new iOS_MouseInputEvent(this, MOUSE_UP, gvec2(pt.x, pt.y), AK_LBUTTON));
+			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Up, gvec2(pt.x, pt.y), AK_LBUTTON));
 		}
 		this->callTouchCallback();
 	}
@@ -436,7 +436,7 @@ namespace april
 		{
 			UITouch* touch = [[(NSSet*) nssetTouches allObjects] objectAtIndex:0];
 			CGPoint pt = [touch locationInView:glview];			
-			this->addInputEvent(new iOS_MouseInputEvent(this, MOUSE_MOVE, gvec2(pt.x, pt.y), AK_NONE));
+			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Move, gvec2(pt.x, pt.y), AK_NONE));
 		}
 		this->callTouchCallback();
 	}
@@ -462,8 +462,8 @@ namespace april
 		if (inputChar == 0)
 		{
 			// deploy backspace
-			this->handleKeyEvent(KEY_DOWN, AK_BACK, 8);
-			this->handleKeyEvent(KEY_UP, AK_BACK, 8);
+			this->handleKeyEvent(Window::KeyInputEvent::Type::Down, AK_BACK, 8);
+			this->handleKeyEvent(Window::KeyInputEvent::Type::Up, AK_BACK, 8);
 		}
 		if (inputChar >= 32)
 		{
@@ -472,8 +472,8 @@ namespace april
 											 // however, writing a translation table atm 
 											 // isn't the priority.
 		
-			this->handleKeyEvent(KEY_DOWN, keycode, inputChar);
-			this->handleKeyEvent(KEY_UP, keycode, inputChar);
+			this->handleKeyEvent(Window::KeyInputEvent::Type::Down, keycode, inputChar);
+			this->handleKeyEvent(Window::KeyInputEvent::Type::Up, keycode, inputChar);
 		}
 	}
 	

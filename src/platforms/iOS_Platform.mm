@@ -60,8 +60,11 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 }
 -(void)setButtonTypes:(april::MessageBoxButton*)_buttonTypes
 {
-	memcpy(buttonTypes, _buttonTypes, sizeof(april::MessageBoxButton)*3);
+	buttonTypes[0] = buttonTypes[0];
+	buttonTypes[1] = buttonTypes[1];
+	buttonTypes[2] = buttonTypes[2];
 }
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
 	if (callback)
@@ -83,7 +86,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
 	BOOL isFourOh = ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending);
 	
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && buttonTypes[2] && isFourOh) 
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && buttonTypes[2].value != 0 && isFourOh)
 	{
 		// landscape sucks on 4.0+ phones when we have three buttons.
 		// it doesnt show hint message.
@@ -216,8 +219,8 @@ namespace april
 	
 	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
 	{
-		NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
-		MessageBoxButton buttonTypes[3] = {1, 0, 0};
+		NSString *nsButtons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+		MessageBoxButton buttonTypes[3] = {MessageBoxButton::Ok, MessageBoxButton::Ok, MessageBoxButton::Ok};
 		
 		int i0 = 0, i1 = 1, i2 = 2;
 //		if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_7_0)
@@ -227,46 +230,46 @@ namespace april
 
 		if (buttons == MessageBoxButton::OkCancel)
 		{
-			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
-			buttonTypes[i1] = 1;
-			buttonTypes[i0] = 2;
+			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			buttonTypes[i1] = MessageBoxButton::Ok;
+			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
 		else if (buttons == MessageBoxButton::YesNoCancel)
 		{
-			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
-			buttons[i2] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
-			buttonTypes[i1] = 4;
-			buttonTypes[i2] = 8;
-			buttonTypes[i0] = 2;
+			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			nsButtons[i2] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			buttonTypes[i1] = MessageBoxButton::Yes;
+			buttonTypes[i2] = MessageBoxButton::No;
+			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
 		else if (buttons == MessageBoxButton::YesNo)
 		{
-			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
-			buttonTypes[i1] = 4;
-			buttonTypes[i0] = 8;
+			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			buttonTypes[i1] = MessageBoxButton::Yes;
+			buttonTypes[i0] = MessageBoxButton::No;
 		}
 		else if (buttons == MessageBoxButton::Cancel)
 		{
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
-			buttonTypes[i0] = 2;
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
 		else if (buttons == MessageBoxButton::Ok)
 		{
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
-			buttonTypes[i0] = 1;
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
+			buttonTypes[i0] = MessageBoxButton::Ok;
 		}
 		else if (buttons == MessageBoxButton::Yes)
 		{
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
-			buttonTypes[i0] = 4;
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			buttonTypes[i0] = MessageBoxButton::Yes;
 		}
 		else if (buttons == MessageBoxButton::No)
 		{
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
-			buttonTypes[i0] = 8;
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			buttonTypes[i0] = MessageBoxButton::No;
 		}
 		
 		NSString *titlens = [NSString stringWithUTF8String:title.cStr()];
@@ -280,8 +283,8 @@ namespace april
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens
 														message:textns
 													   delegate:mbd 
-											  cancelButtonTitle:buttons[i0]
-											  otherButtonTitles:buttons[i1], buttons[i2], nil];
+											  cancelButtonTitle:nsButtons[i0]
+											  otherButtonTitles:nsButtons[i1], nsButtons[i2], nil];
 		if (alert != nil) // just in case, hapens in some very weird situations..
 		{
 			[alert show];

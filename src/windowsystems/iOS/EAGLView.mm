@@ -165,8 +165,8 @@
 	[textField resignFirstResponder];
 	if (april::window)
 	{
-		aprilWindow->handleKeyEvent(april::Window::KEY_DOWN, april::AK_RETURN, 0);
-		aprilWindow->handleKeyEvent(april::Window::KEY_UP, april::AK_RETURN, 0);
+		aprilWindow->handleKeyEvent(april::Window::KeyInputEvent::Type::Down, april::AK_RETURN, 0);
+		aprilWindow->handleKeyEvent(april::Window::KeyInputEvent::Type::Up, april::AK_RETURN, 0);
 	}
 	return YES;
 }
