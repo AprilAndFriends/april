@@ -187,7 +187,7 @@ namespace april
 		{
 			return false;
 		}
-		this->inputMode = TOUCH;
+		this->inputMode = InputMode::Touch;
 		if (w <= 0 || h <= 0)
 		{
 			hlog::errorf(logTag, "Cannot create window with size: %d x %d", w, h);
@@ -410,16 +410,16 @@ namespace april
 			{
 				if (evt->data.input.index < KD_IOGROUP_CHARS) // because key and char events are separate
 				{
-					this->queueKeyEvent(april::Window::KEY_DOWN, kd2april(evt->data.input.index), 0);
+					this->queueKeyEvent(april::Window::KeyInputEvent::Type::Down, kd2april(evt->data.input.index), 0);
 				}
 				else
 				{
-					this->queueKeyEvent(april::Window::KEY_DOWN, april::AK_NONE, evt->data.input.index - KD_IOGROUP_CHARS);
+					this->queueKeyEvent(april::Window::KeyInputEvent::Type::Down, april::AK_NONE, evt->data.input.index - KD_IOGROUP_CHARS);
 				}
 			}
 			else
 			{
-				this->queueKeyEvent(april::Window::KEY_UP, kd2april(evt->data.input.index), 0);
+				this->queueKeyEvent(april::Window::KeyInputEvent::Type::Up, kd2april(evt->data.input.index), 0);
 			}
 			return true;
 		case KD_EVENT_INPUT_POINTER:
@@ -428,10 +428,10 @@ namespace april
 				gvec2 pos((float)evt->data.inputpointer.x, (float)evt->data.inputpointer.y);
 				if (this->_isMousePointer())
 				{
-					this->setInputMode(MOUSE);
+					this->setInputMode(InputMode::Mouse);
 					if (index == KD_INPUT_POINTER_X || index == KD_INPUT_POINTER_Y)
 					{
-						this->queueMouseEvent(Window::MOUSE_MOVE, pos, AK_NONE);
+						this->queueMouseEvent(Window::MouseInputEvent::Type::Move, pos, AK_NONE);
 						this->cursorPosition = pos;
 					}
 					else if (index == KD_INPUT_POINTER_SELECT)
@@ -445,7 +445,7 @@ namespace april
 						{
 							if (state[i] != this->kdTouches[i])
 							{							
-								this->queueMouseEvent(state[i] ? Window::MOUSE_DOWN : Window::MOUSE_UP, pos, (i == 0 ? AK_LBUTTON : (i == 1 ? AK_RBUTTON : AK_MBUTTON)));
+								this->queueMouseEvent(state[i] ? Window::MouseInputEvent::Type::Down : Window::MouseInputEvent::Type::Up, pos, (i == 0 ? AK_LBUTTON : (i == 1 ? AK_RBUTTON : AK_MBUTTON)));
 							}
 						}
 						memcpy(this->kdTouches, state, 3 * sizeof(bool));
@@ -455,12 +455,12 @@ namespace april
 					{
 						int deltaV = -(short)(evt->data.inputpointer.select >> 16);
 						int deltaH = -(short)(evt->data.inputpointer.select & 0xFFFF);
-						this->queueMouseEvent(Window::MOUSE_SCROLL, gvec2(deltaH * 0.2f, deltaV * 0.2f), AK_NONE);
+						this->queueMouseEvent(Window::MouseInputEvent::Type::Scroll, gvec2(deltaH * 0.2f, deltaV * 0.2f), AK_NONE);
 					}
 				}
 				else
 				{
-					this->setInputMode(TOUCH);
+					this->setInputMode(InputMode::Touch);
 					int i = 0;
 					int j = 0;
 					int touchIndex = 0;
@@ -471,7 +471,7 @@ namespace april
 							touchIndex = this->_getAprilTouchIndex(i);
 							if (touchIndex >= 0)
 							{
-								this->queueTouchEvent(Window::MOUSE_MOVE, pos, touchIndex);
+								this->queueTouchEvent(Window::MouseInputEvent::Type::Move, pos, touchIndex);
 							}
 							break;
 						}
@@ -483,7 +483,7 @@ namespace april
 								touchIndex = this->_getAprilTouchIndex(i);
 								if (touchIndex >= 0)
 								{
-									this->queueTouchEvent(Window::MOUSE_DOWN, pos, touchIndex);
+									this->queueTouchEvent(Window::MouseInputEvent::Type::Down, pos, touchIndex);
 								}
 							}
 							else
@@ -491,7 +491,7 @@ namespace april
 								touchIndex = this->_getAprilTouchIndex(i);
 								if (touchIndex >= 0)
 								{
-									this->queueTouchEvent(Window::MOUSE_UP, pos, touchIndex);
+									this->queueTouchEvent(Window::MouseInputEvent::Type::Up, pos, touchIndex);
 								}
 								this->kdTouches[i] = false;
 							}
@@ -535,7 +535,7 @@ namespace april
 	{
 		kdKeyboardShow(this->kdWindow, 1);
 #ifdef _WINRT
-		if (this->inputMode == TOUCH && !this->virtualKeyboardVisible)
+		if (this->inputMode == InputMode::Touch && !this->virtualKeyboardVisible)
 		{
 			this->handleVirtualKeyboardChangeEvent(true, 0.5f);
 		}
