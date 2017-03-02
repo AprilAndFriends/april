@@ -34,7 +34,7 @@ namespace april
 	bool DirectX11_Texture::_deviceCreateTexture(unsigned char* data, int size, Type type)
 	{
 		this->internalType = type;
-		int bpp = Image::getFormatBpp(this->format);
+		int bpp = this->format.getBpp();
 		D3D11_SUBRESOURCE_DATA textureSubresourceData = {0};
 		textureSubresourceData.pSysMem = data;
 		this->firstUpload = true;
@@ -45,7 +45,7 @@ namespace april
 			{
 				textureSubresourceData.pSysMem = NULL;
 				Image::convertToFormat(this->width, this->height, data, this->format, (unsigned char**)&textureSubresourceData.pSysMem, nativeFormat);
-				bpp = Image::getFormatBpp(nativeFormat);
+				bpp = nativeFormat.getBpp();
 			}
 			this->firstUpload = false;
 		}
@@ -183,7 +183,6 @@ namespace april
 	{
 		Lock lock;
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		int gpuBpp = Image::getFormatBpp(nativeFormat);
 		D3D11_MAPPED_SUBRESOURCE* mappedSubResource = new D3D11_MAPPED_SUBRESOURCE();
 		memset(mappedSubResource, 0, sizeof(D3D11_MAPPED_SUBRESOURCE));
 		// Map() is being used for all, because UpdateSubResource() / UpdateSubResource1() seems to use Map() internally somewhere and the memory pointer can change
@@ -191,7 +190,7 @@ namespace april
 		if (!FAILED(hr))
 		{
 			lock.systemBuffer = mappedSubResource;
-			lock.activateLock(x, y, w, h, x, y, (unsigned char*)mappedSubResource->pData, mappedSubResource->RowPitch / gpuBpp, this->height, nativeFormat);
+			lock.activateLock(x, y, w, h, x, y, (unsigned char*)mappedSubResource->pData, mappedSubResource->RowPitch / nativeFormat.getBpp(), this->height, nativeFormat);
 		}
 		return lock;
 	}
