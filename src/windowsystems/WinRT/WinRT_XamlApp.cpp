@@ -646,8 +646,8 @@ namespace april
 		textureSize.set(windowSize.x, windowSize.x * this->splashTexture->getHeight() / this->splashTexture->getWidth());
 #endif
 		drawRect.set(hroundf(windowSize.x - textureSize.x) * 0.5f, hroundf(windowSize.y - textureSize.y) * 0.5f, textureSize);
-		april::rendersys->setBlendMode(april::BM_DEFAULT);
-		april::rendersys->setColorMode(april::CM_DEFAULT);
+		april::rendersys->setBlendMode(april::BlendMode::Alpha);
+		april::rendersys->setColorMode(april::ColorMode::Multiply);
 		// rendering X times to avoid buffer swap problems
 		for_iter (i, 0, count)
 		{

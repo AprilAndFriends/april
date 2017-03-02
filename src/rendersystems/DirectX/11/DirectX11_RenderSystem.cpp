@@ -93,7 +93,7 @@ namespace april
 	}
 
 	DirectX11_RenderSystem::DirectX11_RenderSystem() : DirectX_RenderSystem(), deviceState_constantBufferChanged(true),
-		deviceState_shader(NULL), deviceState_sampler(nullptr), deviceState_renderOperation(RO_UNDEFINED)
+		deviceState_shader(NULL), deviceState_sampler(nullptr), deviceState_renderOperation(RenderOperation::PointList)
 	{
 		this->name = april::RenderSystemType::DirectX11.getName();
 	}
@@ -150,7 +150,7 @@ namespace april
 		this->deviceState_constantBufferChanged = true;
 		this->deviceState_shader = NULL;
 		this->deviceState_sampler = nullptr;
-		this->deviceState_renderOperation = RO_UNDEFINED;
+		this->deviceState_renderOperation = RenderOperation::PointList;
 	}
 
 	bool DirectX11_RenderSystem::_deviceCreate(Options options)
@@ -761,7 +761,7 @@ namespace april
 		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, AlphaMap);
 		}
-		else if (this->deviceState->colorMode == ColorMode::MultiplyLerp)
+		else if (this->deviceState->colorMode == ColorMode::Lerp)
 		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Lerp);
 		}
