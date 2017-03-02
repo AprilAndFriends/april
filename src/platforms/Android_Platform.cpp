@@ -110,8 +110,8 @@ namespace april
 		return true;
 	}
 
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
+		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowMessageBox, "showMessageBox", _JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR _JSTR _JINT));
 		// determine ok/yes/no/cancel texts
@@ -119,7 +119,7 @@ namespace april
 		hstr yes;
 		hstr no;
 		hstr cancel;
-		_makeButtonLabels(&ok, &yes, &no, &cancel, buttonMask, customButtonTitles);
+		_makeButtonLabels(&ok, &yes, &no, &cancel, buttons, customButtonTitles);
 		// create Java strings from hstr
 		jstring jTitle = (title != "" ? env->NewStringUTF(title.cStr()) : NULL);
 		jstring jText = (text != "" ? env->NewStringUTF(text.cStr()) : NULL);
@@ -128,11 +128,11 @@ namespace april
 		jstring jNo = (no != "" ? env->NewStringUTF(no.cStr()) : NULL);
 		jstring jCancel = (cancel != "" ? env->NewStringUTF(cancel.cStr()) : NULL);
 		jint jIconId = 0;
-		if ((style & MESSAGE_STYLE_INFO) || (style & MESSAGE_STYLE_QUESTION))
+		if (style == MessageBoxStyle::Info || style == MessageBoxStyle::Question)
 		{
 			jIconId = 1;
 		}
-		else if ((style & MESSAGE_STYLE_WARNING) || (style & MESSAGE_STYLE_CRITICAL))
+		else if (style == MessageBoxStyle::Warning || style == MessageBoxStyle::Critical)
 		{
 			jIconId = 2;
 		}

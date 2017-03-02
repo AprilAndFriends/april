@@ -31,7 +31,7 @@ namespace april
 		if (lockMutex != 0 && GetLastError() == ERROR_ALREADY_EXISTS)
 		{
 			CloseHandle(lockMutex);
-			april::messageBox("Warning", "Cannot launch '" + instanceName + "', already running!", april::MESSAGE_BUTTON_OK, april::MESSAGE_STYLE_WARNING);
+			april::messageBox("Warning", "Cannot launch '" + instanceName + "', already running!", april::MessageBoxButton::Ok, april::MessageBoxStyle::Warning);
 			return false;
 		}
 #endif
@@ -49,4 +49,3 @@ namespace april
 	}
 
 }
-

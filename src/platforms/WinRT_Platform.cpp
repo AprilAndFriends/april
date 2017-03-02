@@ -192,11 +192,11 @@ namespace april
 	static harray<DispatchedHandler^> messageBoxQueue;
 	static hmutex messageBoxQueueMutex;
 
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, bool modal
+		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(MessageBoxButton))
 	{
 		DispatchedHandler^ handler = ref new DispatchedHandler(
-			[title, text, buttonMask, style, customButtonTitles, callback]()
+			[title, text, buttons, style, customButtonTitles, callback]()
 		{
 			currentCallback = callback;
 			_HL_HSTR_TO_PSTR_DEF(text);
@@ -222,20 +222,20 @@ namespace april
 			hstr yes;
 			hstr no;
 			hstr cancel;
-			_makeButtonLabels(&ok, &yes, &no, &cancel, buttonMask, customButtonTitles);
+			_makeButtonLabels(&ok, &yes, &no, &cancel, buttons, customButtonTitles);
 			_HL_HSTR_TO_PSTR_DEF(ok);
 			_HL_HSTR_TO_PSTR_DEF(yes);
 			_HL_HSTR_TO_PSTR_DEF(no);
 			_HL_HSTR_TO_PSTR_DEF(cancel);
 
-			if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+			if ((buttons & MESSAGE_BUTTON_OK) && (buttons & MESSAGE_BUTTON_CANCEL))
 			{
 				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 				dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 1;
 			}
-			else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+			else if ((buttons & MESSAGE_BUTTON_YES) && (buttons & MESSAGE_BUTTON_NO) && (buttons & MESSAGE_BUTTON_CANCEL))
 			{
 				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
@@ -243,13 +243,13 @@ namespace april
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 2;
 			}
-			else if (buttonMask & MESSAGE_BUTTON_OK)
+			else if (buttons & MESSAGE_BUTTON_OK)
 			{
 				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 0;
 			}
-			else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
+			else if ((buttons & MESSAGE_BUTTON_YES) && (buttons & MESSAGE_BUTTON_NO))
 			{
 				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));

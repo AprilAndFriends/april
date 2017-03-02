@@ -136,7 +136,7 @@ namespace april
 		return true;
 	}
 
-	static void(*currentCallback)(MessageBoxButton) = NULL;
+	static void (*currentCallback)(MessageBoxButton) = NULL;
 
 	void _messageBoxResult(int button)
 	{
@@ -145,25 +145,25 @@ namespace april
 		case IDOK:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(MESSAGE_BUTTON_OK);
+				(*currentCallback)(MessageBoxButton::Ok);
 			}
 			break;
 		case IDYES:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(MESSAGE_BUTTON_YES);
+				(*currentCallback)(MessageBoxButton::Yes);
 			}
 			break;
 		case IDNO:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(MESSAGE_BUTTON_NO);
+				(*currentCallback)(MessageBoxButton::No);
 			}
 			break;
 		case IDCANCEL:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(MESSAGE_BUTTON_CANCEL);
+				(*currentCallback)(MessageBoxButton::Cancel);
 			}
 			break;
 		default:
@@ -172,47 +172,45 @@ namespace april
 		}
 	}
 
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
+		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
 	{
 		currentCallback = callback;
 		int type = 0;
-		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+		if (buttons == MessageBoxButton::OkCancel)
 		{
 			type |= MB_OKCANCEL;
 		}
-		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+		else if (buttons == MessageBoxButton::YesNoCancel)
 		{
 			type |= MB_YESNOCANCEL;
 		}
-		else if (buttonMask & MESSAGE_BUTTON_OK)
+		else if (buttons == MessageBoxButton::Ok)
 		{
 			type |= MB_OK;
 		}
-		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
+		else if (buttons == MessageBoxButton::YesNo)
 		{
 			type |= MB_YESNO;
 		}
-		
-		if (style & MESSAGE_STYLE_INFO)
+		if (style == MessageBoxStyle::Info)
 		{
 			type |= MB_ICONINFORMATION;
 		}
-		else if (style & MESSAGE_STYLE_WARNING)
+		else if (style == MessageBoxStyle::Warning)
 		{
 			type |= MB_ICONWARNING;
 		}
-		else if (style & MESSAGE_STYLE_CRITICAL)
+		else if (style == MessageBoxStyle::Critical)
 		{
 			type |= MB_ICONSTOP;
 		}
-		else if (style & MESSAGE_STYLE_QUESTION)
+		else if (style == MessageBoxStyle::Question)
 		{
 			type |= MB_ICONQUESTION;
 		}
-
 		HWND hwnd = 0;
-		if (april::window != NULL && (style & MESSAGE_STYLE_MODAL))
+		if (april::window != NULL && modal)
 		{
 			hwnd = (HWND)april::window->getBackendId();
 		}

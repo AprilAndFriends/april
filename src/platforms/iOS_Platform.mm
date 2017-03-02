@@ -214,7 +214,7 @@ namespace april
 		return false;
 	}
 	
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, bool modal, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[] = {MESSAGE_BUTTON_OK, (MessageBoxButton)NULL, (MessageBoxButton)NULL};
@@ -225,14 +225,14 @@ namespace april
 //			i0 = 1, i1 = 0; // we want to bold the "OK" button, but in ios7 and up, the cancel button is bolded by default
 //		}
 
-		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+		if ((buttons & MESSAGE_BUTTON_OK) && (buttons & MESSAGE_BUTTON_CANCEL))
 		{
 			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK").cStr()];
 			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").cStr()];
 			buttonTypes[i1] = MESSAGE_BUTTON_OK;
 			buttonTypes[i0] = MESSAGE_BUTTON_CANCEL;
 		}
-		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+		else if ((buttons & MESSAGE_BUTTON_YES) && (buttons & MESSAGE_BUTTON_NO) && (buttons & MESSAGE_BUTTON_CANCEL))
 		{
 			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
 			buttons[i2] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
@@ -241,29 +241,29 @@ namespace april
 			buttonTypes[i2] = MESSAGE_BUTTON_NO;
 			buttonTypes[i0] = MESSAGE_BUTTON_CANCEL;
 		}
-		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
+		else if ((buttons & MESSAGE_BUTTON_YES) && (buttons & MESSAGE_BUTTON_NO))
 		{
 			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
 			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
 			buttonTypes[i1] = MESSAGE_BUTTON_YES;
 			buttonTypes[i0] = MESSAGE_BUTTON_NO;
 		}
-		else if (buttonMask & MESSAGE_BUTTON_CANCEL)
+		else if (buttons & MESSAGE_BUTTON_CANCEL)
 		{
 			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel").cStr()];
 			buttonTypes[i0] = MESSAGE_BUTTON_CANCEL;
 		}
-		else if (buttonMask & MESSAGE_BUTTON_OK)
+		else if (buttons & MESSAGE_BUTTON_OK)
 		{
 			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK").cStr()];
 			buttonTypes[i0] = MESSAGE_BUTTON_OK;
 		}
-		else if (buttonMask & MESSAGE_BUTTON_YES)
+		else if (buttons & MESSAGE_BUTTON_YES)
 		{
 			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes").cStr()];
 			buttonTypes[i0] = MESSAGE_BUTTON_YES;
 		}
-		else if (buttonMask & MESSAGE_BUTTON_NO)
+		else if (buttons & MESSAGE_BUTTON_NO)
 		{
 			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No").cStr()];
 			buttonTypes[i0] = MESSAGE_BUTTON_NO;

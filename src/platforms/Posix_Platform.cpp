@@ -50,10 +50,10 @@ namespace april
 		return 0LL;
 	}	
 	
-	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, bool modal, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		// TODO
-		return MESSAGE_BUTTON_OK;
+		return MessageBoxButton::Ok;
 	}
 
 }

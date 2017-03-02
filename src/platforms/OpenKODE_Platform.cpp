@@ -232,18 +232,18 @@ namespace april
 		return true;
 	}
 	
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, bool modal,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
 	{
 		hstr ok;
 		hstr yes;
 		hstr no;
 		hstr cancel;
-		_makeButtonLabels(&ok, &yes, &no, &cancel, buttonMask, customButtonTitles);
+		_makeButtonLabels(&ok, &yes, &no, &cancel, buttons, customButtonTitles);
 		const char* buttons[4] = {"", NULL, NULL, NULL};
 		MessageBoxButton resultButtons[4] = {(MessageBoxButton)NULL, (MessageBoxButton)NULL, (MessageBoxButton)NULL, (MessageBoxButton)NULL};
 		int indexCancel = -1;
-		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+		if ((buttons & MESSAGE_BUTTON_OK) && (buttons & MESSAGE_BUTTON_CANCEL))
 		{
 			// order is reversed because libKD prefers the colored button to be at place [1], at least on iOS
 			// if this is going to be changed for a new platform, ifdef the button order for iOS
@@ -253,7 +253,7 @@ namespace april
 			resultButtons[0] = MESSAGE_BUTTON_CANCEL;
 			indexCancel = 0;
 		}
-		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+		else if ((buttons & MESSAGE_BUTTON_YES) && (buttons & MESSAGE_BUTTON_NO) && (buttons & MESSAGE_BUTTON_CANCEL))
 		{
 			buttons[1] = yes.cStr();
 			buttons[0] = no.cStr();
@@ -263,13 +263,13 @@ namespace april
 			resultButtons[2] = MESSAGE_BUTTON_CANCEL;
 			indexCancel = 2;
 		}
-		else if (buttonMask & MESSAGE_BUTTON_OK)
+		else if (buttons & MESSAGE_BUTTON_OK)
 		{
 			buttons[0] = ok.cStr();
 			resultButtons[0] = MESSAGE_BUTTON_OK;
 			indexCancel = 0;
 		}
-		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
+		else if ((buttons & MESSAGE_BUTTON_YES) && (buttons & MESSAGE_BUTTON_NO))
 		{
 			buttons[1] = yes.cStr();
 			buttons[0] = no.cStr();

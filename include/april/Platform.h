@@ -15,6 +15,7 @@
 
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
+#include <hltypes/henum.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 #include <hltypes/hversion.h>
@@ -58,49 +59,63 @@ namespace april
 		
 	};
 	
+	/// @class MessageBoxButton
 	/// @brief Defines possible button combinations in a message box.
-	enum MessageBoxButton
-	{
-		/// @brief Just an "OK" button.
-		MESSAGE_BUTTON_OK = 1,
-		/// @brief Just a "CANCEL" button.
-		MESSAGE_BUTTON_CANCEL = 2,
-		/// @brief Just a "YES" button.
-		MESSAGE_BUTTON_YES = 4,
-		/// @brief Just a "NO" button.
-		MESSAGE_BUTTON_NO = 8,
-		/// @brief An "OK" button with a "CANCEL" button.
-		MESSAGE_BUTTON_OK_CANCEL = MESSAGE_BUTTON_OK | MESSAGE_BUTTON_CANCEL,
-		/// @brief A "YES" button with a "NO" button.
-		MESSAGE_BUTTON_YES_NO = MESSAGE_BUTTON_YES | MESSAGE_BUTTON_NO,
-		/// @brief A "YES" button with a "NO" and a "CANCEL" button.
-		MESSAGE_BUTTON_YES_NO_CANCEL = MESSAGE_BUTTON_YES_NO | MESSAGE_BUTTON_CANCEL
+	HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, MessageBoxButton,
+	(
+		/// @var static const MessageBoxButton MessageBoxButton::Ok
+		/// @brief Only an "OK" button.
+		HL_ENUM_DECLARE(MessageBoxButton, Ok);
+		/// @var static const MessageBoxButton MessageBoxButton::Cancel
+		/// @brief Only a "CANCEL" button.
+		HL_ENUM_DECLARE(MessageBoxButton, Cancel);
+		/// @var static const MessageBoxButton MessageBoxButton::Yes
+		/// @brief Only a "YES" button.
+		HL_ENUM_DECLARE(MessageBoxButton, Yes);
+		/// @var static const MessageBoxButton MessageBoxButton::No
+		/// @brief Only a "NO" button.
+		HL_ENUM_DECLARE(MessageBoxButton, No);
+		/// @var static const MessageBoxButton MessageBoxButton::OkCancel
+		/// @brief Mouse button was pressed.
+		HL_ENUM_DECLARE(MessageBoxButton, OkCancel);
+		/// @var static const MessageBoxButton MessageBoxButton::YesNo
+		/// @brief Mouse button was pressed.
+		HL_ENUM_DECLARE(MessageBoxButton, YesNo);
+		/// @var static const MessageBoxButton MessageBoxButton::YesNoCancel
+		/// @brief Mouse button was pressed.
+		HL_ENUM_DECLARE(MessageBoxButton, YesNoCancel);
 
-	};
-	
+		/// @brief Checks if button "YES" is used.
+		bool hasOk() const;
+		/// @brief Checks if button "YES" is used.
+		bool hasCancel() const;
+		/// @brief Checks if button "YES" is used.
+		bool hasYes() const;
+		/// @brief Checks if button "YES" is used.
+		bool hasNo() const;
+	));
+
+	/// @class MessageBoxStyle
 	/// @brief Defines possible display styles of a message box.
 	/// @note On some OSes this affects what icon is displayed within the message box.
-	enum MessageBoxStyle
-	{
+	HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, MessageBoxStyle,
+	(
+		/// @var static const MessageBoxStyle MessageBoxStyle::Normal
 		/// @brief The standard display.
-		MESSAGE_STYLE_NORMAL = 0,
+		HL_ENUM_DECLARE(MessageBoxStyle, Normal);
+		/// @var static const MessageBoxStyle MessageBoxStyle::Info
 		/// @brief Special informational display.
-		MESSAGE_STYLE_INFO = 1,
+		HL_ENUM_DECLARE(MessageBoxStyle, Info);
+		/// @var static const MessageBoxStyle MessageBoxStyle::Warning
 		/// @brief Display as warning.
-		MESSAGE_STYLE_WARNING = 2,
+		HL_ENUM_DECLARE(MessageBoxStyle, Warning);
+		/// @var static const MessageBoxStyle MessageBoxStyle::Critical
 		/// @brief Display as critical.
-		MESSAGE_STYLE_CRITICAL = 3,
+		HL_ENUM_DECLARE(MessageBoxStyle, Critical);
+		/// @var static const MessageBoxStyle MessageBoxStyle::Question
 		/// @brief Display as question.
-		MESSAGE_STYLE_QUESTION = 4,
-		/// @brief Force modal message box.
-		/// @note Modal means that the user cannot interact with the underlying window until the message box is closed.
-		/// @note Not available on all OSes and some OSes have always-modal message boxes.
-		MESSAGE_STYLE_MODAL = 8,
-		/// @brief Close underlying application before showing the message box.
-		/// @note This might not work the same way in all OSes.
-		MESSAGE_STYLE_TERMINATE_ON_DISPLAY = 16
-
-	};
+		HL_ENUM_DECLARE(MessageBoxStyle, Question);
+	));
 
 	/// @brief Get current OS's info.
 	/// @return Current OS's info.
@@ -128,22 +143,26 @@ namespace april
 	/// @brief Displays an OS message box.
 	/// @param[in] title Text displayed in the title bar.
 	/// @param[in] text Text displayed within the message box.
-	/// @param[in] buttonMask Buttons which should be displayed.
+	/// @param[in] buttons Buttons which should be displayed.
 	/// @param[in] style Style of the message box.
 	/// @param[in] customButtonTitles Custom texts for the buttons.
 	/// @param[in] callback Callback function to call once the message box was dismissed. Can be NULL if not needed.
+	/// @param[in] modal Force modal message box.
+	/// @param[in] terminateOnDisplay Close underlying application before showing the message box.
+	/// @note Modal means that the user cannot interact with the underlying window until the message box is closed. It's not available on all OSes and some OSes have always-modal message boxes.
+	/// @note terminateOnDisplay may not work the same way in all OSes.
 	/// @note "customButtonTitles" may not work on all OSes.
 	/// @note Depending on the OS, this function may return immediately. Write your code to assume that this function is asynchronous to avoid problems.
 	/// @note Expect that "callback" will be called asynchrously once the message box is dismissed.
-	aprilFnExport void messageBox(chstr title, chstr text, MessageBoxButton buttonMask = MESSAGE_BUTTON_OK, MessageBoxStyle style = MESSAGE_STYLE_NORMAL,
-		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL);
+	aprilFnExport void messageBox(chstr title, chstr text, MessageBoxButton buttons = MessageBoxButton::Ok, MessageBoxStyle style = MessageBoxStyle::Normal,
+		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL, bool modal = false, bool terminateOnDisplay = false);
 
 	/// @brief Used internally only.
 	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel,
-		MessageBoxButton buttonMask, hmap<MessageBoxButton, hstr> customButtonTitles);
+		MessageBoxButton buttons, hmap<MessageBoxButton, hstr> customButtonTitles);
 	/// @brief Used internally only.
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttonMask = MESSAGE_BUTTON_OK, MessageBoxStyle style = MESSAGE_STYLE_NORMAL,
-		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL);
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons = MessageBoxButton::Ok, MessageBoxStyle style = MessageBoxStyle::Normal,
+		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL, bool modal = false);
 
 }
 

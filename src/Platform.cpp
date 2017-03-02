@@ -18,6 +18,47 @@
 
 namespace april
 {
+	HL_ENUM_CLASS_DEFINE(MessageBoxButton,
+	(
+		HL_ENUM_DEFINE(MessageBoxButton, Ok);
+		HL_ENUM_DEFINE(MessageBoxButton, Cancel);
+		HL_ENUM_DEFINE(MessageBoxButton, Yes);
+		HL_ENUM_DEFINE(MessageBoxButton, No);
+		HL_ENUM_DEFINE(MessageBoxButton, OkCancel);
+		HL_ENUM_DEFINE(MessageBoxButton, YesNo);
+		HL_ENUM_DEFINE(MessageBoxButton, YesNoCancel);
+
+		bool MessageBoxButton::hasOk() const
+		{
+			return ((*this) == Ok || (*this) == OkCancel);
+		}
+
+		bool MessageBoxButton::hasCancel() const
+		{
+			return ((*this) == Cancel || (*this) == OkCancel || (*this) == YesNoCancel);
+		}
+
+		bool MessageBoxButton::hasYes() const
+		{
+			return ((*this) == Yes || (*this) == YesNo || (*this) == YesNoCancel);
+		}
+
+		bool MessageBoxButton::hasNo() const
+		{
+			return ((*this) == No || (*this) == YesNo || (*this) == YesNoCancel);
+		}
+
+	));
+
+	HL_ENUM_CLASS_DEFINE(MessageBoxStyle,
+	(
+		HL_ENUM_DEFINE(MessageBoxStyle, Normal);
+		HL_ENUM_DEFINE(MessageBoxStyle, Info);
+		HL_ENUM_DEFINE(MessageBoxStyle, Warning);
+		HL_ENUM_DEFINE(MessageBoxStyle, Critical);
+		HL_ENUM_DEFINE(MessageBoxStyle, Question);
+	));
+
 	SystemInfo info;
 	harray<hstr> args;
 
@@ -52,11 +93,10 @@ namespace april
 		return args;
 	}
 
-	void messageBox(chstr title, chstr text, MessageBoxButton buttonMask, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	void messageBox(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
+		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(MessageBoxButton), bool modal, bool terminateOnDisplay)
 	{
-		MessageBoxStyle passedStyle = style;
-		if (style & MESSAGE_STYLE_TERMINATE_ON_DISPLAY)
+		if (terminateOnDisplay)
 		{
 			if (window != NULL)
 			{
@@ -68,37 +108,32 @@ namespace april
 				window->destroy();
 #endif
 			}
-			passedStyle = (MessageBoxStyle)(passedStyle | MESSAGE_STYLE_MODAL);
+			modal = true;
 		}
-		messageBox_platform(title, text, buttonMask, passedStyle, customButtonTitles, callback);
-		if (style & MESSAGE_STYLE_TERMINATE_ON_DISPLAY)
+		messageBox_platform(title, text, buttons, style, customButtonTitles, callback, modal);
+		if (terminateOnDisplay)
 		{
 			exit(0);
 		}
 	}
 
-	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel,
-		MessageBoxButton buttonMask, hmap<MessageBoxButton, hstr> customButtonTitles)
+	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel, MessageBoxButton buttons, hmap<MessageBoxButton, hstr> customButtonTitles)
 	{
-		if ((buttonMask & MESSAGE_BUTTON_OK) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+		if (buttons.hasOk())
 		{
-			*ok = customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK");
-			*cancel = customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel");
+			*ok = customButtonTitles.tryGet(MessageBoxButton::Ok, "OK");
 		}
-		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO) && (buttonMask & MESSAGE_BUTTON_CANCEL))
+		if (buttons.hasCancel())
 		{
-			*yes = customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes");
-			*no = customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No");
-			*cancel = customButtonTitles.tryGet(MESSAGE_BUTTON_CANCEL, "Cancel");
+			*cancel = customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel");
 		}
-		else if (buttonMask & MESSAGE_BUTTON_OK)
+		if (buttons.hasYes())
 		{
-			*ok = customButtonTitles.tryGet(MESSAGE_BUTTON_OK, "OK");
+			*yes = customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes");
 		}
-		else if ((buttonMask & MESSAGE_BUTTON_YES) && (buttonMask & MESSAGE_BUTTON_NO))
+		if (buttons.hasNo())
 		{
-			*yes = customButtonTitles.tryGet(MESSAGE_BUTTON_YES, "Yes");
-			*no = customButtonTitles.tryGet(MESSAGE_BUTTON_NO, "No");
+			*no = customButtonTitles.tryGet(MessageBoxButton::No, "No");
 		}
 	}
 
