@@ -162,25 +162,25 @@ namespace april
 		case IDOK:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(MESSAGE_BUTTON_OK);
+				(*currentCallback)(MessageBoxButton::Ok);
 			}
 			break;
 		case IDYES:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(MESSAGE_BUTTON_YES);
+				(*currentCallback)(MessageBoxButton::Yes);
 			}
 			break;
 		case IDNO:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(MESSAGE_BUTTON_NO);
+				(*currentCallback)(MessageBoxButton::No);
 			}
 			break;
 		case IDCANCEL:
 			if (currentCallback != NULL)
 			{
-				(*currentCallback)(MESSAGE_BUTTON_CANCEL);
+				(*currentCallback)(MessageBoxButton::Cancel);
 			}
 			break;
 		default:
@@ -192,8 +192,8 @@ namespace april
 	static harray<DispatchedHandler^> messageBoxQueue;
 	static hmutex messageBoxQueueMutex;
 
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, bool modal
-		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(MessageBoxButton))
+	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
+		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(MessageBoxButton), bool modal)
 	{
 		DispatchedHandler^ handler = ref new DispatchedHandler(
 			[title, text, buttons, style, customButtonTitles, callback]()
@@ -228,14 +228,14 @@ namespace april
 			_HL_HSTR_TO_PSTR_DEF(no);
 			_HL_HSTR_TO_PSTR_DEF(cancel);
 
-			if ((buttons & MESSAGE_BUTTON_OK) && (buttons & MESSAGE_BUTTON_CANCEL))
+			if (buttons == MessageBoxButton::OkCancel)
 			{
 				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 				dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 1;
 			}
-			else if ((buttons & MESSAGE_BUTTON_YES) && (buttons & MESSAGE_BUTTON_NO) && (buttons & MESSAGE_BUTTON_CANCEL))
+			else if (buttons == MessageBoxButton::YesNoCancel)
 			{
 				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
@@ -243,13 +243,13 @@ namespace april
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 2;
 			}
-			else if (buttons & MESSAGE_BUTTON_OK)
+			else if (buttons == MessageBoxButton::Ok)
 			{
 				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 0;
 			}
-			else if ((buttons & MESSAGE_BUTTON_YES) && (buttons & MESSAGE_BUTTON_NO))
+			else if (buttons == MessageBoxButton::YesNo)
 			{
 				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
