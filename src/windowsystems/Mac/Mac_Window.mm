@@ -245,7 +245,7 @@ namespace april
 
 		bool lionFullscreen = isLionOrNewer();
 		this->fpsCounter = options.fpsCounter;
-		this->inputMode = MOUSE;
+		this->inputMode = InputMode::Mouse;
 		this->displayLinkIgnoreSystemRedraw = options.mac_displayLinkIgnoreSystemRedraw;
 
 		if (fullscreen)

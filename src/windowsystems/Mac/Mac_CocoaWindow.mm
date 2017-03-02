@@ -275,11 +275,11 @@ namespace april
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueMouseEvent(april::Window::MOUSE_DOWN, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
+		aprilWindow->queueMouseEvent(april::Window::MouseInputEvent::Type::Down, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
     }
     else
     {
-        aprilWindow->handleMouseEvent(april::Window::MOUSE_DOWN, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
+        aprilWindow->handleMouseEvent(april::Window::MouseInputEvent::Type::Down, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
     }
 }
 
@@ -300,11 +300,11 @@ namespace april
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueMouseEvent(april::Window::MOUSE_UP, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
+        aprilWindow->queueMouseEvent(april::Window::MouseInputEvent::Type::Up, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
     }
     else
     {
-        aprilWindow->handleMouseEvent(april::Window::MOUSE_UP, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
+        aprilWindow->handleMouseEvent(april::Window::MouseInputEvent::Type::Up, pos * aprilWindow->scalingFactor, [self getMouseButtonCode:event]);
     
     }
 }
@@ -326,11 +326,11 @@ namespace april
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueMouseEvent(april::Window::MOUSE_MOVE, pos * aprilWindow->scalingFactor, april::AK_NONE);
+        aprilWindow->queueMouseEvent(april::Window::MouseInputEvent::Type::Move, pos * aprilWindow->scalingFactor, april::AK_NONE);
     }
     else
     {
-        aprilWindow->handleMouseEvent(april::Window::MOUSE_MOVE, pos * aprilWindow->scalingFactor, april::AK_NONE);
+        aprilWindow->handleMouseEvent(april::Window::MouseInputEvent::Type::Move, pos * aprilWindow->scalingFactor, april::AK_NONE);
     }
 	
 	// Hack for Lion fullscreen bug, when the user moves the cursor quickly to and from the dock area,
@@ -376,11 +376,11 @@ namespace april
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueKeyEvent(april::Window::KEY_DOWN, (april::Key) keyCode, unichr);
+        aprilWindow->queueKeyEvent(april::Window::KeyInputEvent::Type::Down, (april::Key) keyCode, unichr);
     }
     else
     {
-        aprilWindow->handleKeyEvent(april::Window::KEY_DOWN, (april::Key) keyCode, unichr);
+        aprilWindow->handleKeyEvent(april::Window::KeyInputEvent::Type::Down, (april::Key) keyCode, unichr);
     }
 }
 
@@ -389,11 +389,11 @@ namespace april
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueKeyEvent(april::Window::KEY_UP, (april::Key) keyCode, 0);
+        aprilWindow->queueKeyEvent(april::Window::KeyInputEvent::Type::Up, (april::Key) keyCode, 0);
     }
     else
     {
-        aprilWindow->handleKeyEvent(april::Window::KEY_UP, (april::Key) keyCode, 0);
+        aprilWindow->handleKeyEvent(april::Window::KeyInputEvent::Type::Up, (april::Key) keyCode, 0);
     }
 }
 
@@ -520,11 +520,11 @@ NSString* translateInputForKeyDown(NSEvent* event)
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueMouseEvent(april::Window::MOUSE_SCROLL, vec, april::AK_NONE);
+        aprilWindow->queueMouseEvent(april::Window::MouseInputEvent::Type::Scroll, vec, april::AK_NONE);
     }
     else
     {
-        aprilWindow->handleMouseEvent(april::Window::MOUSE_SCROLL, vec, april::AK_NONE);
+        aprilWindow->handleMouseEvent(april::Window::MouseInputEvent::Type::Scroll, vec, april::AK_NONE);
     }
 }
 

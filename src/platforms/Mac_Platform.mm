@@ -160,59 +160,64 @@ namespace april
 		// * use constants for button captions
 		// * use an array with constants for button captions etc
 		
-		NSString *buttons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
-		MessageBoxButton buttonTypes[3] = {1, 0, 0};
+		NSString *nsButtons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+		MessageBoxButton buttonTypes[3] = {MessageBoxButton::Ok, MessageBoxButton::Ok, MessageBoxButton::Ok};
+		
 		int i0 = 0, i1 = 1, i2 = 2;
+		//		if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_7_0)
+		//		{
+		//			i0 = 1, i1 = 0; // we want to bold the "OK" button, but in ios7 and up, the cancel button is bolded by default
+		//		}
 		
 		if (buttons == MessageBoxButton::OkCancel)
 		{
-			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
-			buttonTypes[i1] = 1;
-			buttonTypes[i0] = 2;
+			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			buttonTypes[i1] = MessageBoxButton::Ok;
+			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
 		else if (buttons == MessageBoxButton::YesNoCancel)
 		{
-			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
-			buttons[i2] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
-			buttonTypes[i1] = 4;
-			buttonTypes[i2] = 8;
-			buttonTypes[i0] = 2;
+			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			nsButtons[i2] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			buttonTypes[i1] = MessageBoxButton::Yes;
+			buttonTypes[i2] = MessageBoxButton::No;
+			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
 		else if (buttons == MessageBoxButton::YesNo)
 		{
-			buttons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
-			buttonTypes[i1] = 4;
-			buttonTypes[i0] = 8;
+			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			buttonTypes[i1] = MessageBoxButton::Yes;
+			buttonTypes[i0] = MessageBoxButton::No;
 		}
 		else if (buttons == MessageBoxButton::Cancel)
 		{
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
-			buttonTypes[i0] = 2;
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
 		else if (buttons == MessageBoxButton::Ok)
 		{
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
-			buttonTypes[i0] = 1;
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
+			buttonTypes[i0] = MessageBoxButton::Ok;
 		}
 		else if (buttons == MessageBoxButton::Yes)
 		{
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
-			buttonTypes[i0] = 4;
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			buttonTypes[i0] = MessageBoxButton::Yes;
 		}
 		else if (buttons == MessageBoxButton::No)
 		{
-			buttons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
-			buttonTypes[i0] = 8;
+			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			buttonTypes[i0] = MessageBoxButton::No;
 		}
 		
         harray<hstr> argButtons;
         harray<MessageBoxButton> argButtonTypes;
-        argButtons += [buttons[i0] UTF8String];
-        argButtons += buttons[i1] == 0 ? "" : [buttons[i1] UTF8String];
-        argButtons += buttons[i2] == 0 ? "" : [buttons[i2] UTF8String];
+        argButtons += [nsButtons[i0] UTF8String];
+        argButtons += nsButtons[i1] == 0 ? "" : [nsButtons[i1] UTF8String];
+        argButtons += nsButtons[i2] == 0 ? "" : [nsButtons[i2] UTF8String];
         argButtonTypes += buttonTypes[i0];
         argButtonTypes += buttonTypes[i1];
         argButtonTypes += buttonTypes[i2];
