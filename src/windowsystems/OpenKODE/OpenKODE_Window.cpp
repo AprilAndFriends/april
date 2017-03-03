@@ -414,7 +414,7 @@ namespace april
 				}
 				else
 				{
-					this->queueKeyEvent(april::Window::KeyInputEvent::Type::Down, april::AK_NONE, evt->data.input.index - KD_IOGROUP_CHARS);
+					this->queueKeyEvent(april::Window::KeyInputEvent::Type::Down, april::Key::None, evt->data.input.index - KD_IOGROUP_CHARS);
 				}
 			}
 			else
@@ -431,7 +431,7 @@ namespace april
 					this->setInputMode(InputMode::Mouse);
 					if (index == KD_INPUT_POINTER_X || index == KD_INPUT_POINTER_Y)
 					{
-						this->queueMouseEvent(Window::MouseInputEvent::Type::Move, pos, AK_NONE);
+						this->queueMouseEvent(Window::MouseInputEvent::Type::Move, pos, Key::None);
 						this->cursorPosition = pos;
 					}
 					else if (index == KD_INPUT_POINTER_SELECT)
@@ -445,7 +445,7 @@ namespace april
 						{
 							if (state[i] != this->kdTouches[i])
 							{							
-								this->queueMouseEvent(state[i] ? Window::MouseInputEvent::Type::Down : Window::MouseInputEvent::Type::Up, pos, (i == 0 ? AK_LBUTTON : (i == 1 ? AK_RBUTTON : AK_MBUTTON)));
+								this->queueMouseEvent(state[i] ? Window::MouseInputEvent::Type::Down : Window::MouseInputEvent::Type::Up, pos, (i == 0 ? Key::MouseL : (i == 1 ? Key::MouseR : Key::MouseM)));
 							}
 						}
 						memcpy(this->kdTouches, state, 3 * sizeof(bool));
@@ -455,7 +455,7 @@ namespace april
 					{
 						int deltaV = -(short)(evt->data.inputpointer.select >> 16);
 						int deltaH = -(short)(evt->data.inputpointer.select & 0xFFFF);
-						this->queueMouseEvent(Window::MouseInputEvent::Type::Scroll, gvec2(deltaH * 0.2f, deltaV * 0.2f), AK_NONE);
+						this->queueMouseEvent(Window::MouseInputEvent::Type::Scroll, gvec2(deltaH * 0.2f, deltaV * 0.2f), Key::None);
 					}
 				}
 				else

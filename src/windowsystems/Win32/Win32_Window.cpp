@@ -359,7 +359,7 @@ namespace april
 				if (!this->connectedControllers[i])
 				{
 					this->connectedControllers[i] = true;
-					this->queueControllerEvent(ControllerInputEvent::Type::Connected, i, AB_NONE, 0.0f);
+					this->queueControllerEvent(ControllerInputEvent::Type::Connected, i, Button::None, 0.0f);
 				}
 			}
 			else if (this->connectedControllers[i])
@@ -387,74 +387,74 @@ namespace april
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_START;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_START))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_START, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::Start, 0.0f);
 				}
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_BACK;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_BACK))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_SELECT, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::Select, 0.0f);
 				}
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_A;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_A))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_A, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::A, 0.0f);
 				}
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_B;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_B))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_B, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::B, 0.0f);
 				}
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_X;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_X))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_X, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::X, 0.0f);
 				}
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_Y;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_Y))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_Y, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::Y, 0.0f);
 				}
 				// special buttons
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_L1, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::L1, 0.0f);
 				}
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_R1, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::R1, 0.0f);
 				}
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_LS, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::LS, 0.0f);
 				}
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_RS, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::RS, 0.0f);
 				}
 				// D-Pad
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_DPAD_UP, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::DPadUp, 0.0f);
 				}
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_DPAD_DOWN, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::DPadDown, 0.0f);
 				}
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_DPAD_LEFT, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::DPadLeft, 0.0f);
 				}
 				newButtonState = states[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT;
 				if (newButtonState != (this->xinputStates[i].Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT))
 				{
-					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, AB_DPAD_RIGHT, 0.0f);
+					this->queueControllerEvent((newButtonState != 0 ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), i, Button::DPadRight, 0.0f);
 				}
 				// triggers
 				oldTriggerState = (this->xinputStates[i].Gamepad.bLeftTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
@@ -465,17 +465,17 @@ namespace april
 					{
 						if (!oldTriggerState)
 						{
-							this->queueControllerEvent(ControllerInputEvent::Type::Down, i, AB_L2, 0.0f);
+							this->queueControllerEvent(ControllerInputEvent::Type::Down, i, Button::L2, 0.0f);
 						}
-						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_TRIGGER_L, (float)states[i].Gamepad.bLeftTrigger * ONE_BY_255);
+						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::TriggerL, (float)states[i].Gamepad.bLeftTrigger * ONE_BY_255);
 					}
 					else
 					{
 						if (oldTriggerState)
 						{
-							this->queueControllerEvent(ControllerInputEvent::Type::Up, i, AB_L2, 0.0f);
+							this->queueControllerEvent(ControllerInputEvent::Type::Up, i, Button::L2, 0.0f);
 						}
-						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_TRIGGER_L, 0.0f);
+						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::TriggerL, 0.0f);
 					}
 				}
 				oldTriggerState = (this->xinputStates[i].Gamepad.bRightTrigger >= XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
@@ -486,17 +486,17 @@ namespace april
 					{
 						if (!oldTriggerState)
 						{
-							this->queueControllerEvent(ControllerInputEvent::Type::Down, i, AB_R2, 0.0f);
+							this->queueControllerEvent(ControllerInputEvent::Type::Down, i, Button::R2, 0.0f);
 						}
-						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_TRIGGER_R, (float)states[i].Gamepad.bRightTrigger  * 0.003921569f);
+						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::TriggerR, (float)states[i].Gamepad.bRightTrigger  * 0.003921569f);
 					}
 					else
 					{
 						if (oldTriggerState)
 						{
-							this->queueControllerEvent(ControllerInputEvent::Type::Up, i, AB_R2, 0.0f);
+							this->queueControllerEvent(ControllerInputEvent::Type::Up, i, Button::R2, 0.0f);
 						}
-						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_TRIGGER_R, 0.0f);
+						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::TriggerR, 0.0f);
 					}
 				}
 				// axises
@@ -508,19 +508,19 @@ namespace april
 				newAxisState = ((int)hsqrt(newAxisX * newAxisX + newAxisY * newAxisY) >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
 				if (!newAxisState && oldAxisState)
 				{
-					this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_AXIS_LX, 0.0f);
-					this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_AXIS_LY, 0.0f);
+					this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::AxisLX, 0.0f);
+					this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::AxisLY, 0.0f);
 				}
 				else if (newAxisState)
 				{
 					if (!oldAxisState || states[i].Gamepad.sThumbLX != this->xinputStates[i].Gamepad.sThumbLX)
 					{
-						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_AXIS_LX, (states[i].Gamepad.sThumbLX > 0 ? newAxisX * ONE_BY_32767 : newAxisX * ONE_BY_32768));
+						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::AxisLX, (states[i].Gamepad.sThumbLX > 0 ? newAxisX * ONE_BY_32767 : newAxisX * ONE_BY_32768));
 					}
 					if (!oldAxisState || states[i].Gamepad.sThumbLY != this->xinputStates[i].Gamepad.sThumbLY)
 					{
 						// negative, because XBox uses physics logic rather than screen logic for Y
-						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_AXIS_LY, -(states[i].Gamepad.sThumbLY > 0 ? newAxisY * ONE_BY_32767 : newAxisY * ONE_BY_32768));
+						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::AxisLY, -(states[i].Gamepad.sThumbLY > 0 ? newAxisY * ONE_BY_32767 : newAxisY * ONE_BY_32768));
 					}
 				}
 				oldAxisX = (float)this->xinputStates[i].Gamepad.sThumbRX;
@@ -531,19 +531,19 @@ namespace april
 				newAxisState = ((int)hsqrt(newAxisX * newAxisX + newAxisY * newAxisY) >= XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
 				if (!newAxisState && oldAxisState)
 				{
-					this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_AXIS_RX, 0.0f);
-					this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_AXIS_RY, 0.0f);
+					this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::AxisRX, 0.0f);
+					this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::AxisRY, 0.0f);
 				}
 				else if (newAxisState)
 				{
 					if (!oldAxisState || states[i].Gamepad.sThumbRX != this->xinputStates[i].Gamepad.sThumbRX)
 					{
-						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_AXIS_RX, (states[i].Gamepad.sThumbRX > 0 ? newAxisX * ONE_BY_32767 : newAxisX * ONE_BY_32768));
+						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::AxisRX, (states[i].Gamepad.sThumbRX > 0 ? newAxisX * ONE_BY_32767 : newAxisX * ONE_BY_32768));
 					}
 					if (!oldAxisState || states[i].Gamepad.sThumbRY != this->xinputStates[i].Gamepad.sThumbRY)
 					{
 						// negative, because XBox uses physics logic rather than screen logic for Y
-						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, AB_AXIS_RY, -(states[i].Gamepad.sThumbRY > 0 ? newAxisY * ONE_BY_32767 : newAxisY * ONE_BY_32768));
+						this->queueControllerEvent(ControllerInputEvent::Type::Axis, i, Button::AxisRY, -(states[i].Gamepad.sThumbRY > 0 ? newAxisY * ONE_BY_32767 : newAxisY * ONE_BY_32768));
 					}
 				}
 			}
@@ -552,7 +552,7 @@ namespace april
 		// disconnection events go after releasing all buttons and resetting all axises
 		foreach (int, it, disconnectedControllers)
 		{
-			this->queueControllerEvent(ControllerInputEvent::Type::Disconnected, (*it), AB_NONE, 0.0f);
+			this->queueControllerEvent(ControllerInputEvent::Type::Disconnected, (*it), Button::None, 0.0f);
 		}
 	}
 #endif
@@ -630,17 +630,17 @@ namespace april
 	{
 		if (message == WM_LBUTTONDOWN || message == WM_LBUTTONUP)
 		{
-			return AK_LBUTTON;
-		}
-		if (message == WM_MBUTTONDOWN || message == WM_MBUTTONUP)
-		{
-			return AK_MBUTTON;
+			return Key::MouseL;
 		}
 		if (message == WM_RBUTTONDOWN || message == WM_RBUTTONUP)
 		{
-			return AK_RBUTTON;
+			return Key::MouseR;
 		}
-		return AK_NONE;
+		if (message == WM_MBUTTONDOWN || message == WM_MBUTTONUP)
+		{
+			return Key::MouseM;
+		}
+		return Key::None;
 	}
 
 	LRESULT CALLBACK Win32_Window::childProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -674,7 +674,7 @@ namespace april
 						{
 							SetCapture((HWND)april::window->getBackendId());
 						}
-						april::window->queueMouseEvent(MouseInputEvent::Type::Down, april::window->getCursorPosition(), AK_LBUTTON);
+						april::window->queueMouseEvent(MouseInputEvent::Type::Down, april::window->getCursorPosition(), Key::MouseL);
 					}
 					else if ((touches[0].dwFlags & TOUCHEVENTF_UP) == TOUCHEVENTF_UP)
 					{
@@ -682,11 +682,11 @@ namespace april
 						{
 							ReleaseCapture();
 						}
-						april::window->queueMouseEvent(MouseInputEvent::Type::Up, april::window->getCursorPosition(), AK_LBUTTON);
+						april::window->queueMouseEvent(MouseInputEvent::Type::Up, april::window->getCursorPosition(), Key::MouseL);
 					}
 					else if ((touches[0].dwFlags & TOUCHEVENTF_MOVE) == TOUCHEVENTF_MOVE)
 					{
-						april::window->queueMouseEvent(MouseInputEvent::Type::Move, april::window->getCursorPosition(), AK_NONE);
+						april::window->queueMouseEvent(MouseInputEvent::Type::Move, april::window->getCursorPosition(), Key::None);
 					}
 				}
 				_closeTouchInputHandle((HTOUCHINPUT)lParam);
@@ -727,7 +727,7 @@ namespace april
 					return 0;
 				}
 			}
-			april::window->queueKeyEvent(KeyInputEvent::Type::Down, (april::Key)wParam, 0);
+			april::window->queueKeyEvent(KeyInputEvent::Type::Down, april::Key::fromInt((int)wParam), 0);
 			return 0;
 		case WM_SYSKEYUP:
 			if (wParam == VK_MENU || wParam == VK_RETURN || wParam == VK_F4)
@@ -736,10 +736,10 @@ namespace april
 			}
 			// no break here, because this is still an input message that needs to be processed normally
 		case WM_KEYUP:
-			april::window->queueKeyEvent(KeyInputEvent::Type::Up, (april::Key)wParam, 0);
+			april::window->queueKeyEvent(KeyInputEvent::Type::Up, april::Key::fromInt((int)wParam), 0);
 			return 0;
 		case WM_CHAR:
-			april::window->queueKeyEvent(KeyInputEvent::Type::Down, AK_NONE, wParam);
+			april::window->queueKeyEvent(KeyInputEvent::Type::Down, Key::None, wParam);
 			break;
 			// oh no, it's LMR!
 		case WM_LBUTTONDOWN:
@@ -795,7 +795,7 @@ namespace april
 					{
 						((Win32_Window*)april::window)->_updateCursorPosition();
 					}
-					april::window->queueMouseEvent(MouseInputEvent::Type::Move, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), AK_NONE);
+					april::window->queueMouseEvent(MouseInputEvent::Type::Move, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), Key::None);
 				}
 			}
 			break;
@@ -805,11 +805,11 @@ namespace april
 				_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 				if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 				{
-					april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), AK_NONE);
+					april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), Key::None);
 				}
 				else
 				{
-					april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), AK_NONE);
+					april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), Key::None);
 				}
 			}
 			break;
@@ -819,11 +819,11 @@ namespace april
 				_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 				if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 				{
-					april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), AK_NONE);
+					april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), Key::None);
 				}
 				else
 				{
-					april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), AK_NONE);
+					april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), Key::None);
 				}
 			}
 			break;

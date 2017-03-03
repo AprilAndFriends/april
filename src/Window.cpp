@@ -69,7 +69,7 @@ namespace april
 	Window::MouseInputEvent::MouseInputEvent()
 	{
 		this->type = Type::Move;
-		this->keyCode = AK_NONE;
+		this->keyCode = Key::None;
 	}
 		
 	Window::MouseInputEvent::MouseInputEvent(Window::MouseInputEvent::Type type, gvec2 position, Key keyCode)
@@ -82,7 +82,7 @@ namespace april
 	Window::KeyInputEvent::KeyInputEvent()
 	{
 		this->type = Type::Up;
-		this->keyCode = AK_NONE;
+		this->keyCode = Key::None;
 		this->charCode = 0;
 	}
 
@@ -105,7 +105,7 @@ namespace april
 	Window::ControllerInputEvent::ControllerInputEvent()
 	{
 		this->type = Type::Up;
-		this->buttonCode = AB_NONE;
+		this->buttonCode = Button::None;
 	}
 
 	Window::ControllerInputEvent::ControllerInputEvent(Window::ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
@@ -123,7 +123,7 @@ namespace april
 		this->resizable = false;
 		this->fpsCounter = false;
 		this->hotkeyFullscreen = false;
-		this->keyPause = april::AK_NONE;
+		this->keyPause = april::Key::None;
 		this->mac_displayLinkIgnoreSystemRedraw = false;
 		this->defaultWindowModeResolutionFactor = 0.8f;
 	}
@@ -587,7 +587,7 @@ namespace april
 	
 	void Window::handleKeyEvent(KeyInputEvent::Type type, Key keyCode, unsigned int charCode)
 	{
-		this->handleKeyOnlyEvent(type, keyCode); // doesn't do anything if keyCode is AK_NONE
+		this->handleKeyOnlyEvent(type, keyCode); // doesn't do anything if keyCode is Key::None
 		if (type == KeyInputEvent::Type::Down && charCode > 0) // ignores invalid chars
 		{
 			// according to the unicode standard, this range is undefined and reserved for system codes
@@ -602,11 +602,7 @@ namespace april
 
 	void Window::handleKeyOnlyEvent(KeyInputEvent::Type type, Key keyCode)
 	{
-		if (keyCode == AK_UNKNOWN)
-		{
-			keyCode = AK_NONE;
-		}
-		if (this->keyboardDelegate != NULL && keyCode != AK_NONE)
+		if (this->keyboardDelegate != NULL && keyCode != Key::None)
 		{
 			if (type == KeyInputEvent::Type::Down)
 			{
@@ -625,7 +621,7 @@ namespace april
 			if (this->controllerEmulationKeys.hasKey(keyCode))
 			{
 				Button button = this->controllerEmulationKeys[keyCode];
-				if (button != AB_AXIS_LX && button != AB_AXIS_LY && button != AB_AXIS_RX && button != AB_AXIS_RY && button != AB_TRIGGER_L && button != AB_TRIGGER_R)
+				if (button != Button::AxisLX && button != Button::AxisLY && button != Button::AxisRX && button != Button::AxisRY && button != Button::TriggerL && button != Button::TriggerR)
 				{
 					this->handleControllerEvent((type == KeyInputEvent::Type::Down ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), 0, button, 0.0f);
 					processed = true;
@@ -635,7 +631,7 @@ namespace april
 			if (!processed && this->controllerEmulationAxisesPositive.hasKey(keyCode))
 			{
 				Button button = this->controllerEmulationAxisesPositive[keyCode];
-				if (button == AB_AXIS_LX || button == AB_AXIS_LY || button == AB_AXIS_RX || button == AB_AXIS_RY || button == AB_TRIGGER_L || button == AB_TRIGGER_R)
+				if (button == Button::AxisLX || button == Button::AxisLY || button == Button::AxisRX || button == Button::AxisRY || button == Button::TriggerL || button == Button::TriggerR)
 				{
 					this->handleControllerEvent(ControllerInputEvent::Type::Axis, 0, button, (type == KeyInputEvent::Type::Down ? 1.0f : 0.0f));
 					processed = true;
@@ -645,7 +641,7 @@ namespace april
 			if (!processed && this->controllerEmulationAxisesNegative.hasKey(keyCode))
 			{
 				Button button = this->controllerEmulationAxisesNegative[keyCode];
-				if (button == AB_AXIS_LX || button == AB_AXIS_LY || button == AB_AXIS_RX || button == AB_AXIS_RY)
+				if (button == Button::AxisLX || button == Button::AxisLY || button == Button::AxisRX || button == Button::AxisRY)
 				{
 					this->handleControllerEvent(ControllerInputEvent::Type::Axis, 0, button, (type == KeyInputEvent::Type::Down ? -1.0f : 0.0f));
 					processed = true;
@@ -674,7 +670,7 @@ namespace april
 	{
 		if (this->controllerDelegate != NULL)
 		{
-			if (buttonCode != AB_NONE)
+			if (buttonCode != Button::None)
 			{
 				if (type == ControllerInputEvent::Type::Down)
 				{
@@ -689,7 +685,7 @@ namespace april
 					this->controllerDelegate->onControllerAxisChange(controllerIndex, buttonCode, axisValue);
 				}
 			}
-			else // connection change always uses AB_NONE
+			else // connection change always uses Button::None
 			{
 				if (type == ControllerInputEvent::Type::Connected)
 				{
@@ -798,13 +794,13 @@ namespace april
 			if (!this->multiTouchActive && previousTouchesSize == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->queueMouseEvent(MouseInputEvent::Type::Cancel, position, AK_LBUTTON);
+				this->queueMouseEvent(MouseInputEvent::Type::Cancel, position, Key::MouseL);
 			}
 			this->multiTouchActive = (this->touches.size() > 0);
 		}
 		else
 		{
-			this->queueMouseEvent(type, position, AK_LBUTTON);
+			this->queueMouseEvent(type, position, Key::MouseL);
 		}
 		this->touchEvents.clear();
 		this->touchEvents += TouchInputEvent(this->touches);

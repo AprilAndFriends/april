@@ -445,7 +445,7 @@ namespace april
 	{
 		this->cursorPosition.set((float)sdlEvent.button.x, (float)sdlEvent.button.y);
 		Window::MouseEventType mouseEvent;
-		april::Key mouseButton = AK_NONE;
+		april::Key mouseButton = Key::None;
 
 		switch (sdlEvent.type)
 		{
@@ -467,16 +467,16 @@ namespace april
 			switch (sdlEvent.button.button)
 			{
 			case SDL_BUTTON_LEFT:
-				mouseButton = AK_LBUTTON;
+				mouseButton = Key::MouseL;
 				break;
 			case SDL_BUTTON_RIGHT:
-				mouseButton = AK_RBUTTON;
+				mouseButton = Key::MouseR;
 				break;
 			case SDL_BUTTON_MIDDLE:
-				mouseButton = AK_MBUTTON;
+				mouseButton = Key::MouseM;
 				break;
 			default:
-				mouseButton = AK_NONE;
+				mouseButton = Key::None;
 				break;
 			}
 		}

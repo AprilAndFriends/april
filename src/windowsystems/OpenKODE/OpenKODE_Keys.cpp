@@ -26,19 +26,19 @@ namespace april
 #ifdef _DEBUG
 		hlog::writef(logTag, "Unknown key code: %u", kdKeyCode);
 #endif
-		return april::AK_NONE;
+		return april::Key::None;
 	}
 	
 	void initOpenKODEKeyMap()
 	{
 		hmap<int, Key>& m = gKeyMap;
-		m[KD_INPUT_KEYS_LBUTTON] = AK_LBUTTON;
-		m[KD_INPUT_KEYS_RBUTTON] = AK_RBUTTON;
-		m[KD_INPUT_KEYS_MBUTTON] = AK_MBUTTON;
-		m[KD_INPUT_KEYS_ESCAPE] = AK_ESCAPE;
+		m[KD_INPUT_KEYS_LBUTTON] = Key::MouseL;
+		m[KD_INPUT_KEYS_RBUTTON] = Key::MouseR;
+		m[KD_INPUT_KEYS_MBUTTON] = Key::MouseM;
+		m[KD_INPUT_KEYS_ESCAPE] = Key::Escape;
 		m[KD_INPUT_KEYS_BACKSPACE] = AK_BACK;
 		m[KD_INPUT_KEYS_TAB] = AK_TAB;
-		m[KD_INPUT_KEYS_ENTER] = AK_RETURN;
+		m[KD_INPUT_KEYS_ENTER] = Key::Return;
 		m[KD_INPUT_KEYS_SPACE] = AK_SPACE;
 		m[KD_INPUT_KEYS_SHIFT] = AK_SHIFT;
 		m[KD_INPUT_KEYS_CTRL] = AK_CONTROL;

@@ -136,7 +136,7 @@ namespace april
 	
 	void JNICALL _JNI_onChar(JNIEnv* env, jclass classe, jint charCode)
 	{
-		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::KeyInputEvent::Type::Down, april::AK_NONE, (unsigned int)charCode));
+		PROTECTED_WINDOW_CALL(queueKeyEvent(april::Window::KeyInputEvent::Type::Down, april::Key::None, (unsigned int)charCode));
 	}
 
 	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
@@ -146,17 +146,17 @@ namespace april
 	
 	void JNICALL _JNI_onButtonDown(JNIEnv* env, jclass classe, jint controllerIndex, jint buttonCode)
 	{
-		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ControllerInputEvent::Type::Down, (int)controllerIndex, (Button)(int)buttonCode, 0.0f));
+		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ControllerInputEvent::Type::Down, (int)controllerIndex, Button::fromInt((int)buttonCode), 0.0f));
 	}
 	
 	void JNICALL _JNI_onButtonUp(JNIEnv* env, jclass classe, jint controllerIndex, jint buttonCode)
 	{
-		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ControllerInputEvent::Type::Up, (int)controllerIndex, (Button)(int)buttonCode, 0.0f));
+		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ControllerInputEvent::Type::Up, (int)controllerIndex, Button::fromInt((int)buttonCode), 0.0f));
 	}
 	
 	void JNICALL _JNI_onControllerAxisChange(JNIEnv* env, jclass classe, jint controllerIndex, jint buttonCode, jfloat axisValue)
 	{
-		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ControllerInputEvent::Type::Axis, (int)controllerIndex, (Button)(int)buttonCode, axisValue));
+		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ControllerInputEvent::Type::Axis, (int)controllerIndex, Button::fromInt((int)buttonCode), axisValue));
 	}
 
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
@@ -307,7 +307,7 @@ namespace april
 		{
 			return -1;
 		}
-#ifdef _OPENKODE // not really needed when OpenKODE isn't used
+#ifdef _OPENKODE // needed when OpenKODE is used
 		jclass classClass = env->FindClass("java/lang/Class");
 		jmethodID methodGetClassLoader = env->GetMethodID(classClass, "getClassLoader", _JARGS(_JCLASS("java/lang/ClassLoader"), ));
 		jobject classLoader = env->CallObjectMethod(classNativeInterface, methodGetClassLoader);

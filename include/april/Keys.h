@@ -13,269 +13,220 @@
 #ifndef APRIL_KEYS_H
 #define APRIL_KEYS_H
 
+#include <hltypes/henum.h>
+
+#include "aprilExport.h"
+
 namespace april
 {
+	/// @class Key
 	/// @brief Defines virtual key codes.
-	/// @note While these are Windows-specific, they come quite in handy on other platforms as well.
-	enum Key
-	{
-		AK_UNKNOWN = -1,
-		AK_NONE = 0,
-	
-		// first several VKs are unneeded
-		// they are mouse related, or ctrl+break
-		AK_LBUTTON = 1,
-		AK_RBUTTON = 2,
-		AK_CANCEL = 3,
-		AK_MBUTTON = 6,
-		AK_WHEELUP = 4,
-		AK_WHEELDN = 5,
-		AK_DOUBLETAP = 7, // touchscreen only
+	HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Key,
+	(
+		HL_ENUM_DECLARE(Key, None);
+		HL_ENUM_DECLARE(Key, MouseL);
+		HL_ENUM_DECLARE(Key, MouseR);
+		HL_ENUM_DECLARE(Key, Cancel);
+		HL_ENUM_DECLARE(Key, ScrollUp);
+		HL_ENUM_DECLARE(Key, ScrollDown);
+		HL_ENUM_DECLARE(Key, MouseM);
+		HL_ENUM_DECLARE(Key, DoubleTap);
+		HL_ENUM_DECLARE(Key, Backspace);
+		HL_ENUM_DECLARE(Key, Tab);
+		HL_ENUM_DECLARE(Key, Clear);
+		HL_ENUM_DECLARE(Key, Return);
+		HL_ENUM_DECLARE(Key, Shift);
+		HL_ENUM_DECLARE(Key, Control);
+		HL_ENUM_DECLARE(Key, Menu);
+		HL_ENUM_DECLARE(Key, Pause);
+		HL_ENUM_DECLARE(Key, Capital);
+		HL_ENUM_DECLARE(Key, Kana);
+		HL_ENUM_DECLARE(Key, Hangeul);
+		HL_ENUM_DECLARE(Key, Hangul);
+		HL_ENUM_DECLARE(Key, Junja);
+		HL_ENUM_DECLARE(Key, Final);
+		HL_ENUM_DECLARE(Key, Hanja);
+		HL_ENUM_DECLARE(Key, Kanji);
+		HL_ENUM_DECLARE(Key, Escape);
+		HL_ENUM_DECLARE(Key, Convert);
+		HL_ENUM_DECLARE(Key, NonConvert);
+		HL_ENUM_DECLARE(Key, Accept);
+		HL_ENUM_DECLARE(Key, ModeChange);
+		HL_ENUM_DECLARE(Key, CommandL);
+		HL_ENUM_DECLARE(Key, CommandR);
+		HL_ENUM_DECLARE(Key, Space);
+		HL_ENUM_DECLARE(Key, Prior);
+		HL_ENUM_DECLARE(Key, Next);
+		HL_ENUM_DECLARE(Key, End);
+		HL_ENUM_DECLARE(Key, Home);
+		HL_ENUM_DECLARE(Key, ArrowLeft);
+		HL_ENUM_DECLARE(Key, ArrowUp);
+		HL_ENUM_DECLARE(Key, ArrowRight);
+		HL_ENUM_DECLARE(Key, ArrowDown);
+		HL_ENUM_DECLARE(Key, Select);
+		HL_ENUM_DECLARE(Key, Print);
+		HL_ENUM_DECLARE(Key, Execute);
+		HL_ENUM_DECLARE(Key, PrintScreen);
+		HL_ENUM_DECLARE(Key, Insert);
+		HL_ENUM_DECLARE(Key, Delete);
+		HL_ENUM_DECLARE(Key, Help);
+		HL_ENUM_DECLARE(Key, Num0);
+		HL_ENUM_DECLARE(Key, Num1);
+		HL_ENUM_DECLARE(Key, Num2);
+		HL_ENUM_DECLARE(Key, Num3);
+		HL_ENUM_DECLARE(Key, Num4);
+		HL_ENUM_DECLARE(Key, Num5);
+		HL_ENUM_DECLARE(Key, Num6);
+		HL_ENUM_DECLARE(Key, Num7);
+		HL_ENUM_DECLARE(Key, Num8);
+		HL_ENUM_DECLARE(Key, Num9);
+		HL_ENUM_DECLARE(Key, A);
+		HL_ENUM_DECLARE(Key, B);
+		HL_ENUM_DECLARE(Key, C);
+		HL_ENUM_DECLARE(Key, D);
+		HL_ENUM_DECLARE(Key, E);
+		HL_ENUM_DECLARE(Key, F);
+		HL_ENUM_DECLARE(Key, G);
+		HL_ENUM_DECLARE(Key, H);
+		HL_ENUM_DECLARE(Key, I);
+		HL_ENUM_DECLARE(Key, J);
+		HL_ENUM_DECLARE(Key, K);
+		HL_ENUM_DECLARE(Key, L);
+		HL_ENUM_DECLARE(Key, M);
+		HL_ENUM_DECLARE(Key, N);
+		HL_ENUM_DECLARE(Key, O);
+		HL_ENUM_DECLARE(Key, P);
+		HL_ENUM_DECLARE(Key, Q);
+		HL_ENUM_DECLARE(Key, R);
+		HL_ENUM_DECLARE(Key, S);
+		HL_ENUM_DECLARE(Key, T);
+		HL_ENUM_DECLARE(Key, U);
+		HL_ENUM_DECLARE(Key, V);
+		HL_ENUM_DECLARE(Key, W);
+		HL_ENUM_DECLARE(Key, X);
+		HL_ENUM_DECLARE(Key, Y);
+		HL_ENUM_DECLARE(Key, Z);
+		HL_ENUM_DECLARE(Key, WindowsL);
+		HL_ENUM_DECLARE(Key, WindowsR);
+		HL_ENUM_DECLARE(Key, Apps);
+		HL_ENUM_DECLARE(Key, Sleep);
+		HL_ENUM_DECLARE(Key, NumPad0);
+		HL_ENUM_DECLARE(Key, NumPad1);
+		HL_ENUM_DECLARE(Key, NumPad2);
+		HL_ENUM_DECLARE(Key, NumPad3);
+		HL_ENUM_DECLARE(Key, NumPad4);
+		HL_ENUM_DECLARE(Key, NumPad5);
+		HL_ENUM_DECLARE(Key, NumPad6);
+		HL_ENUM_DECLARE(Key, NumPad7);
+		HL_ENUM_DECLARE(Key, NumPad8);
+		HL_ENUM_DECLARE(Key, NumPad9);
+		HL_ENUM_DECLARE(Key, Multiply);
+		HL_ENUM_DECLARE(Key, Add);
+		HL_ENUM_DECLARE(Key, Separator);
+		HL_ENUM_DECLARE(Key, Subtract);
+		HL_ENUM_DECLARE(Key, Decimal);
+		HL_ENUM_DECLARE(Key, Divide);
+		HL_ENUM_DECLARE(Key, F1);
+		HL_ENUM_DECLARE(Key, F2);
+		HL_ENUM_DECLARE(Key, F3);
+		HL_ENUM_DECLARE(Key, F4);
+		HL_ENUM_DECLARE(Key, F5);
+		HL_ENUM_DECLARE(Key, F6);
+		HL_ENUM_DECLARE(Key, F7);
+		HL_ENUM_DECLARE(Key, F8);
+		HL_ENUM_DECLARE(Key, F9);
+		HL_ENUM_DECLARE(Key, F10);
+		HL_ENUM_DECLARE(Key, F11);
+		HL_ENUM_DECLARE(Key, F12);
+		HL_ENUM_DECLARE(Key, F13);
+		HL_ENUM_DECLARE(Key, F14);
+		HL_ENUM_DECLARE(Key, F15);
+		HL_ENUM_DECLARE(Key, F16);
+		HL_ENUM_DECLARE(Key, F17);
+		HL_ENUM_DECLARE(Key, F18);
+		HL_ENUM_DECLARE(Key, F19);
+		HL_ENUM_DECLARE(Key, F20);
+		HL_ENUM_DECLARE(Key, F21);
+		HL_ENUM_DECLARE(Key, F22);
+		HL_ENUM_DECLARE(Key, F23);
+		HL_ENUM_DECLARE(Key, F24);
+		HL_ENUM_DECLARE(Key, NumLock);
+		HL_ENUM_DECLARE(Key, Scroll);
+		HL_ENUM_DECLARE(Key, ShiftL);
+		HL_ENUM_DECLARE(Key, ShiftR);
+		HL_ENUM_DECLARE(Key, ControlL);
+		HL_ENUM_DECLARE(Key, ControlR);
+		HL_ENUM_DECLARE(Key, MenuL);
+		HL_ENUM_DECLARE(Key, MenuR);
+		HL_ENUM_DECLARE(Key, BrowserBack);
+		HL_ENUM_DECLARE(Key, BrowserForward);
+		HL_ENUM_DECLARE(Key, BrowserRefresh);
+		HL_ENUM_DECLARE(Key, BrowserStop);
+		HL_ENUM_DECLARE(Key, BrowserSearch);
+		HL_ENUM_DECLARE(Key, BrowserFavorites);
+		HL_ENUM_DECLARE(Key, BrowserHome);
+		HL_ENUM_DECLARE(Key, VolumeMute);
+		HL_ENUM_DECLARE(Key, VolumeDown);
+		HL_ENUM_DECLARE(Key, VolumeUp);
+		HL_ENUM_DECLARE(Key, MediaNextTrack);
+		HL_ENUM_DECLARE(Key, MediaPreviousTrack);
+		HL_ENUM_DECLARE(Key, MediaStop);
+		HL_ENUM_DECLARE(Key, MediaPlayPause);
+		HL_ENUM_DECLARE(Key, LaunchMail);
+		HL_ENUM_DECLARE(Key, LaunchMediaSelect);
+		HL_ENUM_DECLARE(Key, LaunchApp1);
+		HL_ENUM_DECLARE(Key, LaunchApp2);
+		HL_ENUM_DECLARE(Key, Oem2);
+		HL_ENUM_DECLARE(Key, Oem3);
+		HL_ENUM_DECLARE(Key, Oem4);
+		HL_ENUM_DECLARE(Key, Oem5);
+		HL_ENUM_DECLARE(Key, Oem6);
+		HL_ENUM_DECLARE(Key, Oem7);
+		HL_ENUM_DECLARE(Key, Oem8);
+		HL_ENUM_DECLARE(Key, Oem102);
+		HL_ENUM_DECLARE(Key, Packet);
+		HL_ENUM_DECLARE(Key, Attn);
+		HL_ENUM_DECLARE(Key, Crsel);
+		HL_ENUM_DECLARE(Key, Exsel);
+		HL_ENUM_DECLARE(Key, Ereof);
+		HL_ENUM_DECLARE(Key, Play);
+		HL_ENUM_DECLARE(Key, Zoom);
+		HL_ENUM_DECLARE(Key, NoName);
+		HL_ENUM_DECLARE(Key, Pa1);
+		HL_ENUM_DECLARE(Key, OemClear);
+	));
 
-		// most common keys
-		AK_BACK = 8,
-		AK_TAB = 9,
-		AK_CLEAR = 12,
-		AK_RETURN = 13,
-		AK_SHIFT = 16,
-		AK_CONTROL = 17,
-		AK_MENU = 18, // alt key 
-		AK_PAUSE = 19, // multimedia pause key 
-		AK_CAPITAL = 20, // caps lock
-
-		// various keys needed for asian keyboards
-		AK_KANA = 0x15,
-		AK_HANGEUL = 0x15,
-		AK_HANGUL = 0x15,
-		AK_JUNJA = 0x17,
-		AK_FINAL = 0x18,
-		AK_HANJA = 0x19,
-		AK_KANJI = 0x19,
-		AK_ESCAPE = 0x1B,
-		AK_CONVERT = 0x1C,
-		AK_NONCONVERT = 0x1D,
-		AK_ACCEPT = 0x1E,
-		AK_MODECHANGE = 0x1F,
-
-		// Mac CMD keys
-		AK_LCOMMAND = 1117,
-		AK_RCOMMAND = 1118,
-		
-		// space
-		AK_SPACE = 0x20,
-
-		// right side of the "control block"
-		// commonly above cursor keys
-		AK_PRIOR = 0x21, // page up
-		AK_NEXT = 0x22, // page down
-		AK_END = 0x23, 
-		AK_HOME = 0x24,
-
-		// cursor keys
-		AK_LEFT = 0x25,
-		AK_UP = 0x26,
-		AK_RIGHT = 0x27,
-		AK_DOWN = 0x28,
-
-		// some less common keys
-		AK_SELECT = 0x29, // select key
-		AK_PRINT = 0x2A, // print key
-		AK_EXECUTE = 0x2B, // execute key
-		AK_SNAPSHOT = 0x2C, // print screen key
-
-		// left side of "control block" commonly
-		// above cursor keys, plus the help key
-		// help key is NOT F1
-		AK_INSERT = 0x2D,
-		AK_DELETE = 0x2E,
-		AK_HELP = 0x2F,
-	
-		// '0'-'9'
-		AK_0 = '0',
-		AK_1 = '1',
-		AK_2 = '2',
-		AK_3 = '3',
-		AK_4 = '4',
-		AK_5 = '5',
-		AK_6 = '6',
-		AK_7 = '7',
-		AK_8 = '8',
-		AK_9 = '9',
-
-		// 'A'-'Z'	
-		AK_A = 'A',
-		AK_B = 'B',
-		AK_C = 'C',
-		AK_D = 'D',
-		AK_E = 'E',
-		AK_F = 'F',
-		AK_G = 'G',
-		AK_H = 'H',
-		AK_I = 'I',
-		AK_J = 'J',
-		AK_K = 'K',
-		AK_L = 'L',
-		AK_M = 'M',
-		AK_N = 'N',
-		AK_O = 'O',
-		AK_P = 'P',
-		AK_Q = 'Q',
-		AK_R = 'R',
-		AK_S = 'S',
-		AK_T = 'T',
-		AK_U = 'U',
-		AK_V = 'V',
-		AK_W = 'W',
-		AK_X = 'X',
-		AK_Y = 'Y',
-		AK_Z = 'Z',
-
-		// special but mostly common VKs
-		AK_LWIN = 0x5B,
-		AK_RWIN = 0x5C,
-		AK_APPS = 0x5D,
-		AK_SLEEP = 0x5F,
-
-		// numpad
-		AK_NUMPAD0 = 0x60,
-		AK_NUMPAD1 = 0x61,
-		AK_NUMPAD2 = 0x62,
-		AK_NUMPAD3 = 0x63,
-		AK_NUMPAD4 = 0x64,
-		AK_NUMPAD5 = 0x65,
-		AK_NUMPAD6 = 0x66,
-		AK_NUMPAD7 = 0x67,
-		AK_NUMPAD8 = 0x68,
-		AK_NUMPAD9 = 0x69,
-		AK_MULTIPLY = 0x6A,
-		AK_ADD = 0x6B,
-		AK_SEPARATOR = 0x6C,
-		AK_SUBTRACT = 0x6D,
-		AK_DECIMAL = 0x6E,
-		AK_DIVIDE = 0x6F,
-		
-		// F-keys
-		AK_F1 = 0x70,
-		AK_F2 = 0x71,
-		AK_F3 = 0x72,
-		AK_F4 = 0x73,
-		AK_F5 = 0x74,
-		AK_F6 = 0x75,
-		AK_F7 = 0x76,
-		AK_F8 = 0x77,
-		AK_F9 = 0x78,
-		AK_F10 = 0x79,
-		AK_F11 = 0x7A,
-		AK_F12 = 0x7B,
-		AK_F13 = 0x7C,
-		AK_F14 = 0x7D,
-		AK_F15 = 0x7E,
-		AK_F16 = 0x7F,
-		AK_F17 = 0x80,
-		AK_F18 = 0x81,
-		AK_F19 = 0x82,
-		AK_F20 = 0x83,
-		AK_F21 = 0x84,
-		AK_F22 = 0x85,
-		AK_F23 = 0x86,
-		AK_F24 = 0x87,
-
-		// some more lock keys
-		AK_NUMLOCK = 0x90,
-		AK_SCROLL = 0x91,
-
-		// specific left-and-right-shift keys
-		AK_LSHIFT = 0xA0,
-		AK_RSHIFT = 0xA1,
-		AK_LCONTROL = 0xA2,
-		AK_RCONTROL = 0xA3,
-		AK_LMENU = 0xA4,
-		AK_RMENU = 0xA5,
-		
-		// browser control keys
-		AK_BROWSER_BACK = 0xA6,
-		AK_BROWSER_FORWARD = 0xA7,
-		AK_BROWSER_REFRESH = 0xA8,
-		AK_BROWSER_STOP = 0xA9,
-		AK_BROWSER_SEARCH = 0xAA,
-		AK_BROWSER_FAVORITES = 0xAB,
-		AK_BROWSER_HOME = 0xAC,
-
-		// volume keys
-		AK_VOLUME_MUTE = 0xAD,
-		AK_VOLUME_DOWN = 0xAE,
-		AK_VOLUME_UP = 0xAF,
-
-		// more multimedia keys
-		AK_MEDIA_NEXT_TRACK = 0xB0,
-		AK_MEDIA_PREV_TRACK = 0xB1,
-		AK_MEDIA_STOP = 0xB2,
-		AK_MEDIA_PLAY_PAUSE = 0xB3,
-
-		// app launching keys
-		AK_LAUNCH_MAIL = 0xB4,
-		AK_LAUNCH_MEDIA_SELECT = 0xB5,
-		AK_LAUNCH_APP1 = 0xB6,
-		AK_LAUNCH_APP2 = 0xB7,
-
-		// oem keys
-		AK_OEM_2 = 0xBF,
-		AK_OEM_3 = 0xC0,
-		AK_OEM_4 = 0xDB,
-		AK_OEM_5 = 0xDC,
-		AK_OEM_6 = 0xDD,
-		AK_OEM_7 = 0xDE,
-		AK_OEM_8 = 0xDF,
-		AK_OEM_102 = 0xE2,
-
-		// uncommon keys
-		AK_PACKET = 0xE7,
-		AK_ATTN = 0xF6,
-		AK_CRSEL = 0xF7,
-		AK_EXSEL = 0xF8,
-		AK_EREOF = 0xF9,
-
-		// multimedia keys
-		AK_PLAY = 0xFA,
-		AK_ZOOM = 0xFB,
-
-		// uncommon and oem keys
-		AK_NONAME = 0xFC,
-		AK_PA1 = 0xFD,
-		AK_OEM_CLEAR = 0xFE
-
-	};
-
+	/// @class Button
 	/// @brief Controller buttons.
-	enum Button
-	{
-		AB_NONE = 0,
-		AB_START = 1,
-		AB_SELECT = 2,
-		AB_MODE = 3,
-		AB_A = 11,
-		AB_B = 12,
-		AB_C = 13,
-		AB_X = 14,
-		AB_Y = 15,
-		AB_Z = 16,
-		AB_L1 = 21,
-		AB_R1 = 22,
-		AB_L2 = 23,
-		AB_R2 = 24,
-		AB_LS = 31,
-		AB_RS = 32,
-		AB_DPAD_DOWN = 42,
-		AB_DPAD_LEFT = 44,
-		AB_DPAD_RIGHT = 46,
-		AB_DPAD_UP = 48,
-		AB_AXIS_LX = 100,
-		AB_AXIS_LY = 101,
-		AB_AXIS_RX = 102,
-		AB_AXIS_RY = 103,
-		AB_TRIGGER_L = 111,
-		AB_TRIGGER_R = 112
-	};
+	HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Button,
+	(
+		HL_ENUM_DECLARE(Button, None);
+		HL_ENUM_DECLARE(Button, Start);
+		HL_ENUM_DECLARE(Button, Select);
+		HL_ENUM_DECLARE(Button, Mode);
+		HL_ENUM_DECLARE(Button, A);
+		HL_ENUM_DECLARE(Button, B);
+		HL_ENUM_DECLARE(Button, C);
+		HL_ENUM_DECLARE(Button, X);
+		HL_ENUM_DECLARE(Button, Y);
+		HL_ENUM_DECLARE(Button, Z);
+		HL_ENUM_DECLARE(Button, L1);
+		HL_ENUM_DECLARE(Button, R1);
+		HL_ENUM_DECLARE(Button, L2);
+		HL_ENUM_DECLARE(Button, R2);
+		HL_ENUM_DECLARE(Button, LS);
+		HL_ENUM_DECLARE(Button, RS);
+		HL_ENUM_DECLARE(Button, DPadDown);
+		HL_ENUM_DECLARE(Button, DPadLeft);
+		HL_ENUM_DECLARE(Button, DPadRight);
+		HL_ENUM_DECLARE(Button, DPadUp);
+		HL_ENUM_DECLARE(Button, AxisLX);
+		HL_ENUM_DECLARE(Button, AxisLY);
+		HL_ENUM_DECLARE(Button, AxisRX);
+		HL_ENUM_DECLARE(Button, AxisRY);
+		HL_ENUM_DECLARE(Button, TriggerL);
+		HL_ENUM_DECLARE(Button, TriggerR);
+	));
 
 }
 #endif
