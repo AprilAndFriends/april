@@ -48,7 +48,7 @@ using namespace Windows::Phone::UI::Input;
 #define NODE_PREFIX "m3:"
 #endif
 
-#define DX11_RENDERSYS ((DirectX11_RenderSystem*)april::rendersys)
+#define DX11_RENDERSYS ((DirectX11_RenderSystem*)rendersys)
 
 namespace april
 {
@@ -63,13 +63,13 @@ namespace april
 #else
 		this->defaultCursor = nullptr;
 #endif
-		this->backgroundColor = april::Color::Black;
+		this->backgroundColor = Color::Black;
 		this->launched = false;
 		this->activated = false;
 		this->firstFrameAfterActivateHack = false;
 		this->scrollHorizontal = false;
 		this->startTime = (unsigned int)htickCount();
-		this->currentButton = april::AK_NONE;
+		this->currentButton = Key::None;
 		this->Suspending += ref new SuspendingEventHandler(this, &WinRT_XamlApp::OnSuspend);
 		this->Resuming += ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnResume);
 #ifdef _DEBUG
@@ -172,8 +172,8 @@ namespace april
 			Windows::UI::Xaml::Window::Current->Content = this->overlay;
 			Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &WinRT_XamlApp::OnWindowActivationChanged);
 			Windows::UI::Input::PointerVisualizationSettings::GetForCurrentView()->IsContactFeedbackEnabled = false;
-			(*WinRT::Init)(april::getArgs());
-			if (april::rendersys != NULL && april::window != NULL)
+			(*WinRT::Init)(getArgs());
+			if (rendersys != NULL && april::window != NULL)
 			{
 				float delaySplash = (float)april::window->getParam(WINRT_DELAY_SPLASH);
 				if (delaySplash > 0.0f && delaySplash - (htickCount() - this->startTime) * 0.001f > 0.0f)
@@ -207,7 +207,7 @@ namespace april
 		{
 			this->activated = true;
 			this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
-			if (april::rendersys != NULL)
+			if (rendersys != NULL)
 			{
 				bool rendered = false;
 				if (april::window != NULL)
@@ -235,7 +235,7 @@ namespace april
 				}
 				if (this->splashTexture != NULL)
 				{
-					april::rendersys->destroyTexture(this->splashTexture);
+					rendersys->destroyTexture(this->splashTexture);
 					this->splashTexture = NULL;
 				}
 				if (!rendered)
@@ -243,10 +243,10 @@ namespace april
 					// clearing all backbuffers, just in case
 					for_iter (i, 0, 3)
 					{
-						april::rendersys->clear();
-						april::rendersys->presentFrame();
+						rendersys->clear();
+						rendersys->presentFrame();
 					}
-					april::rendersys->reset();
+					rendersys->reset();
 				}
 			}
 		}
@@ -269,7 +269,7 @@ namespace april
 			return;
 		}
 		this->running = april::window->updateOneFrame();
-		april::rendersys->presentFrame();
+		rendersys->presentFrame();
 		this->firstFrameAfterActivateHack = false;
 		if (!this->running)
 		{
@@ -344,7 +344,7 @@ namespace april
 		if (DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::Portrait ||
 			DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::PortraitFlipped)
 		{
-			april::getSystemInfo(); // so the displayResolution value gets updated
+			getSystemInfo(); // so the displayResolution value gets updated
 			return;
 		}
 		if (april::window != NULL)
@@ -400,25 +400,25 @@ namespace april
 		int index;
 		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 #ifndef _WINP8
-		this->currentButton = april::AK_LBUTTON;
+		this->currentButton = Key::MouseL;
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			april::window->setInputMode(april::InputMode::Mouse);
+			april::window->setInputMode(InputMode::Mouse);
 			if (args->CurrentPoint->Properties->IsRightButtonPressed)
 			{
-				this->currentButton = april::AK_RBUTTON;
+				this->currentButton = Key::MouseR;
 			}
 			else if (args->CurrentPoint->Properties->IsMiddleButtonPressed)
 			{
-				this->currentButton = april::AK_MBUTTON;
+				this->currentButton = Key::MouseM;
 			}
-			april::window->queueMouseEvent(april::Window::MouseInputEvent::Type::Down, position, this->currentButton);
+			april::window->queueMouseEvent(Window::MouseInputEvent::Type::Down, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 #endif
-			april::window->setInputMode(april::InputMode::Touch);
+			april::window->setInputMode(InputMode::Touch);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.indexOf(id);
 			if (index < 0)
@@ -426,7 +426,7 @@ namespace april
 				index = this->pointerIds.size();
 				this->pointerIds += id;
 			}
-			april::window->queueTouchEvent(april::Window::MouseInputEvent::Type::Down, position, index);
+			april::window->queueTouchEvent(Window::MouseInputEvent::Type::Down, position, index);
 #ifndef _WINP8
 			break;
 		}
@@ -447,13 +447,13 @@ namespace april
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			april::window->setInputMode(april::InputMode::Mouse);
-			april::window->queueMouseEvent(april::Window::MouseInputEvent::Type::Up, position, this->currentButton);
+			april::window->setInputMode(InputMode::Mouse);
+			april::window->queueMouseEvent(Window::MouseInputEvent::Type::Up, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 #endif
-			april::window->setInputMode(april::InputMode::Touch);
+			april::window->setInputMode(InputMode::Touch);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.indexOf(id);
 			if (index < 0)
@@ -464,11 +464,11 @@ namespace april
 			{
 				this->pointerIds.removeAt(index);
 			}
-			april::window->queueTouchEvent(april::Window::MouseInputEvent::Type::Up, position, index);
+			april::window->queueTouchEvent(Window::MouseInputEvent::Type::Up, position, index);
 #ifndef _WINP8
 			break;
 		}
-		this->currentButton = april::AK_NONE;
+		this->currentButton = Key::None;
 #endif
 	}
 
@@ -486,20 +486,20 @@ namespace april
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			april::window->setInputMode(april::InputMode::Mouse);
-			april::window->queueMouseEvent(april::Window::MouseInputEvent::Type::Move, position, this->currentButton);
+			april::window->setInputMode(InputMode::Mouse);
+			april::window->queueMouseEvent(Window::MouseInputEvent::Type::Move, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 #endif
-			april::window->setInputMode(april::InputMode::Touch);
+			april::window->setInputMode(InputMode::Touch);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.indexOf(id);
 			if (index < 0)
 			{
 				index = this->pointerIds.size();
 			}
-			april::window->queueTouchEvent(april::Window::MouseInputEvent::Type::Move, position, index);
+			april::window->queueTouchEvent(Window::MouseInputEvent::Type::Move, position, index);
 #ifndef _WINP8
 			break;
 		}
@@ -513,15 +513,15 @@ namespace april
 		{
 			return;
 		}
-		april::window->setInputMode(april::InputMode::Mouse);
+		april::window->setInputMode(InputMode::Mouse);
 		float _wheelDelta = (float)args->CurrentPoint->Properties->MouseWheelDelta / WHEEL_DELTA;
 		if (this->scrollHorizontal ^ args->CurrentPoint->Properties->IsHorizontalMouseWheel)
 		{
-			april::window->queueMouseEvent(april::Window::MouseInputEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), april::AK_NONE);
+			april::window->queueMouseEvent(Window::MouseInputEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), Key::None);
 		}
 		else
 		{
-			april::window->queueMouseEvent(april::Window::MouseInputEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), april::AK_NONE);
+			april::window->queueMouseEvent(Window::MouseInputEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), Key::None);
 		}
 	}
 
@@ -532,9 +532,9 @@ namespace april
 		{
 			return;
 		}
-		april::Key key = (april::Key)args->VirtualKey;
-		april::window->queueKeyEvent(april::Window::KeyInputEvent::Type::Down, key, 0);
-		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
+		Key key = Key::fromInt((int)args->VirtualKey);
+		april::window->queueKeyEvent(Window::KeyInputEvent::Type::Down, key, 0);
+		if (key == Key::Control || key == Key::ControlL || key == Key::ControlR)
 		{
 			this->scrollHorizontal = true;
 		}
@@ -547,13 +547,13 @@ namespace april
 		{
 			return;
 		}
-		april::Key key = (april::Key)args->VirtualKey;
-		april::window->queueKeyEvent(april::Window::KeyInputEvent::Type::Up, key, 0);
-		if (key == AK_CONTROL || key == AK_LCONTROL || key == AK_RCONTROL)
+		Key key = Key::fromInt((int)args->VirtualKey);
+		april::window->queueKeyEvent(Window::KeyInputEvent::Type::Up, key, 0);
+		if (key == Key::Control || key == Key::ControlL || key == Key::ControlR)
 		{
 			this->scrollHorizontal = false;
 		}
-		if (key == AK_RETURN)
+		else if (key == Key::Return)
 		{
 			april::window->hideVirtualKeyboard();
 		}
@@ -566,7 +566,7 @@ namespace april
 		{
 			return;
 		}
-		april::window->queueKeyEvent(april::Window::KeyInputEvent::Type::Down, AK_NONE, args->KeyCode);
+		april::window->queueKeyEvent(Window::KeyInputEvent::Type::Down, Key::None, args->KeyCode);
 	}
 
 #ifdef _WINP8
@@ -574,8 +574,8 @@ namespace april
 	{
 		if (april::window != NULL && april::window->getParam(WINP8_BACK_BUTTON_SYSTEM_HANDLING) != "1")
 		{
-			april::window->queueKeyEvent(april::Window::KeyInputEvent::Type::Down, april::AK_ESCAPE, 0);
-			april::window->queueKeyEvent(april::Window::KeyInputEvent::Type::Up, april::AK_ESCAPE, 0);
+			april::window->queueKeyEvent(Window::KeyInputEvent::Type::Down, AK_ESCAPE, 0);
+			april::window->queueKeyEvent(Window::KeyInputEvent::Type::Up, AK_ESCAPE, 0);
 			args->Handled = true;
 		}
 	}
@@ -609,7 +609,7 @@ namespace april
 	{
 		for_iter_r (i, this->pointerIds.size(), 0)
 		{
-			april::window->queueTouchEvent(april::Window::MouseInputEvent::Type::Cancel, gvec2(), i);
+			april::window->queueTouchEvent(Window::MouseInputEvent::Type::Cancel, gvec2(), i);
 		}
 		this->pointerIds.clear();
 	}
@@ -627,44 +627,44 @@ namespace april
 		static grect src(0.0f, 0.0f, 1.0f, 1.0f);
 		static gvec2 windowSize;
 		static gvec2 textureSize;
-		storedProjectionMatrix = april::rendersys->getProjectionMatrix();
-		storedModelviewMatrix = april::rendersys->getModelviewMatrix();
+		storedProjectionMatrix = rendersys->getProjectionMatrix();
+		storedModelviewMatrix = rendersys->getModelviewMatrix();
 		windowSize = april::window->getSize();
 		viewport.setSize(windowSize);
-		april::rendersys->setOrthoProjection(viewport);
+		rendersys->setOrthoProjection(viewport);
 #ifndef _WINP8
 		textureSize.set(SPLASH_WIDTH, SPLASH_HEIGHT);
 		textureSize *= (float)DisplayInformation::GetForCurrentView()->ResolutionScale * 0.01f;
 #else // on WinP8 the splash graphic is rotated by -90° and needs to be stretched over the entire screen
-		april::rendersys->translate(windowSize.x * 0.5f, windowSize.y * 0.5f);
+		rendersys->translate(windowSize.x * 0.5f, windowSize.y * 0.5f);
 		hswap(windowSize.x, windowSize.y);
 		hswap(viewport.w, viewport.h);
-		april::rendersys->rotate(90.0f);
-		april::rendersys->translate(-windowSize.x * 0.5f, -windowSize.y * 0.5f);
+		rendersys->rotate(90.0f);
+		rendersys->translate(-windowSize.x * 0.5f, -windowSize.y * 0.5f);
 		textureSize.set(windowSize.x, windowSize.x * this->splashTexture->getHeight() / this->splashTexture->getWidth());
 #endif
 		drawRect.set(hroundf(windowSize.x - textureSize.x) * 0.5f, hroundf(windowSize.y - textureSize.y) * 0.5f, textureSize);
-		april::rendersys->setBlendMode(april::BlendMode::Alpha);
-		april::rendersys->setColorMode(april::ColorMode::Multiply);
+		rendersys->setBlendMode(BlendMode::Alpha);
+		rendersys->setColorMode(ColorMode::Multiply);
 		// rendering X times to avoid buffer swap problems
 		for_iter (i, 0, count)
 		{
-			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
+			rendersys->drawFilledRect(viewport, this->backgroundColor);
 			if (this->splashTexture != NULL)
 			{
-				april::rendersys->setTexture(this->splashTexture);
-				april::rendersys->drawTexturedRect(drawRect, src);
+				rendersys->setTexture(this->splashTexture);
+				rendersys->drawTexturedRect(drawRect, src);
 			}
-			april::rendersys->presentFrame();
+			rendersys->presentFrame();
 		}
-		april::rendersys->reset();
-		april::rendersys->setProjectionMatrix(storedProjectionMatrix);
-		april::rendersys->setModelviewMatrix(storedModelviewMatrix);
+		rendersys->reset();
+		rendersys->setProjectionMatrix(storedProjectionMatrix);
+		rendersys->setModelviewMatrix(storedModelviewMatrix);
 	}
 
-	april::Texture* WinRT_XamlApp::_tryLoadTexture(chstr nodeName, chstr attributeName)
+	Texture* WinRT_XamlApp::_tryLoadTexture(chstr nodeName, chstr attributeName)
 	{
-		if (april::rendersys == NULL)
+		if (rendersys == NULL)
 		{
 			return NULL;
 		}
@@ -704,7 +704,7 @@ namespace april
 				foreach (hstr, it, filenames)
 				{
 					// loading the logo file
-					april::Texture* texture = april::rendersys->createTextureFromResource((*it), Texture::Type::Immutable, Texture::LoadMode::Async);
+					Texture* texture = rendersys->createTextureFromResource((*it), Texture::Type::Immutable, Texture::LoadMode::Async);
 					if (texture != NULL)
 					{
 						try
@@ -714,7 +714,7 @@ namespace april
 						}
 						catch (hexception&)
 						{
-							april::rendersys->destroyTexture(texture);
+							rendersys->destroyTexture(texture);
 						}
 					}
 				}
@@ -751,7 +751,7 @@ namespace april
 			{
 				// loading the color string
 				colorString = colorString(0, index).trimmedLeft('#');
-				this->backgroundColor = april::Color::Black;
+				this->backgroundColor = Color::Black;
 				if (colorString.isHex() && colorString.size() >= 6)
 				{
 					if (colorString.size() > 6)
