@@ -243,6 +243,13 @@
 		B4DF80851E375F0700307767 /* ImagePvrz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF80791E375F0200307767 /* ImagePvrz.cpp */; };
 		B4DF80861E375F0800307767 /* ImageEtcx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF80781E375F0200307767 /* ImageEtcx.cpp */; };
 		B4DF80871E375F0800307767 /* ImagePvrz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF80791E375F0200307767 /* ImagePvrz.cpp */; };
+		B4E4CE091E69A1CA00DB4C31 /* Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */; };
+		B4E4CE0A1E69A1D500DB4C31 /* Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */; };
+		B4E4CE0B1E69A1D600DB4C31 /* Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */; };
+		B4E4CE0C1E69A1D600DB4C31 /* Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */; };
+		B4E4CE0D1E69A1D700DB4C31 /* Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */; };
+		B4E4CE0E1E69A1D700DB4C31 /* Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */; };
+		B4E4CE0F1E69A1D700DB4C31 /* Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */; };
 		C9313EB914FE64CE003BC7AB /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9313EB814FE64CE003BC7AB /* SDL.framework */; };
 		C9C04F8B14BB106F005BD333 /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
 		C9C04F8C14BB106F005BD333 /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
@@ -590,6 +597,7 @@
 		B4DF80751E375E6A00307767 /* zlibUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlibUtil.h; path = src/zlibUtil.h; sourceTree = "<group>"; };
 		B4DF80781E375F0200307767 /* ImageEtcx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageEtcx.cpp; path = src/images/ImageEtcx.cpp; sourceTree = "<group>"; };
 		B4DF80791E375F0200307767 /* ImagePvrz.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImagePvrz.cpp; path = src/images/ImagePvrz.cpp; sourceTree = "<group>"; };
+		B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Keys.cpp; path = src/Keys.cpp; sourceTree = "<group>"; };
 		C9313EB814FE64CE003BC7AB /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL.framework; path = ../lib/mac/SDL.framework; sourceTree = "<group>"; };
 		C9C04F8A14BB106F005BD333 /* PixelShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PixelShader.cpp; path = src/PixelShader.cpp; sourceTree = "<group>"; };
 		C9C04F8E14BB1091005BD333 /* PixelShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelShader.h; path = include/april/PixelShader.h; sourceTree = "<group>"; };
@@ -898,6 +906,7 @@
 				C9C04F9214BB109B005BD333 /* VertexShader.cpp */,
 				7F1B522E12E4713600E958D8 /* Color.cpp */,
 				D1FED157192A3B5F00BE6A6D /* Cursor.cpp */,
+				B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */,
 				7F1B522F12E4713600E958D8 /* Texture.cpp */,
 				D102CFF419B7284500948584 /* TextureAsync.cpp */,
 				D102CFF519B7284500948584 /* TextureAsync.h */,
@@ -1667,6 +1676,7 @@
 				B455011E1BD7A7D100E75E43 /* OpenGLC_Texture.cpp in Sources */,
 				B45501161BD7A7D100E75E43 /* OpenGLC_RenderSystem.cpp in Sources */,
 				D1E7205116D37C2300B9C9AD /* KeyboardDelegate.cpp in Sources */,
+				B4E4CE0A1E69A1D500DB4C31 /* Keys.cpp in Sources */,
 				D1E7205416D37C2300B9C9AD /* MouseDelegate.cpp in Sources */,
 				D1E7205716D37C2300B9C9AD /* SystemDelegate.cpp in Sources */,
 				D1E7205A16D37C2300B9C9AD /* TouchDelegate.cpp in Sources */,
@@ -1703,6 +1713,7 @@
 				B44FBD8D1BE0E44A00DD8995 /* RenderState.cpp in Sources */,
 				D11FB8F81E6866D0001A7E9A /* InputMode.cpp in Sources */,
 				B44FBD8E1BE0E44A00DD8995 /* iOS_main.mm in Sources */,
+				B4E4CE0E1E69A1D700DB4C31 /* Keys.cpp in Sources */,
 				B44FBD8F1BE0E44A00DD8995 /* Color.cpp in Sources */,
 				B44FBD901BE0E44A00DD8995 /* Texture.cpp in Sources */,
 				B44FBD911BE0E44A00DD8995 /* OpenGLES_PixelShader.cpp in Sources */,
@@ -1795,6 +1806,7 @@
 				D1F630D519D54A93006C6236 /* OpenKODE_Keys.cpp in Sources */,
 				B455016C1BD7A86200E75E43 /* OpenGL_RenderSystem.cpp in Sources */,
 				D1134F00175CDA3300BFF3A2 /* SystemDelegate.cpp in Sources */,
+				B4E4CE0F1E69A1D700DB4C31 /* Keys.cpp in Sources */,
 				D1134F01175CDA3300BFF3A2 /* TouchDelegate.cpp in Sources */,
 				B455017C1BD7A86200E75E43 /* OpenGL_Texture.cpp in Sources */,
 				D17F3E9C1D79D5750045F39D /* VirtualKeyboard.cpp in Sources */,
@@ -1837,6 +1849,7 @@
 				B455010B1BD7A7C500E75E43 /* OpenGLES1_Texture.cpp in Sources */,
 				D1534752178AD62A00151D1A /* Texture.cpp in Sources */,
 				D1534753178AD62A00151D1A /* RenderSystem.cpp in Sources */,
+				B4E4CE0B1E69A1D600DB4C31 /* Keys.cpp in Sources */,
 				D1534754178AD62A00151D1A /* Window.cpp in Sources */,
 				D17F3E981D79D5740045F39D /* VirtualKeyboard.cpp in Sources */,
 				D1534755178AD62A00151D1A /* PixelShader.cpp in Sources */,
@@ -1897,6 +1910,7 @@
 				D1368198187BFB3E00E66E32 /* RenderState.cpp in Sources */,
 				D11FB8F71E6866D0001A7E9A /* InputMode.cpp in Sources */,
 				D1B4874119337483004674EB /* iOS_main.mm in Sources */,
+				B4E4CE0D1E69A1D700DB4C31 /* Keys.cpp in Sources */,
 				D1981C44140F82B00057C3AF /* Color.cpp in Sources */,
 				D1981C45140F82B00057C3AF /* Texture.cpp in Sources */,
 				B45501881BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
@@ -1968,6 +1982,7 @@
 				B45501091BD7A7C500E75E43 /* OpenGLES1_Texture.cpp in Sources */,
 				D1AF669F170B1E5900A43743 /* RenderSystem.cpp in Sources */,
 				D1AF66A0170B1E5900A43743 /* Window.cpp in Sources */,
+				B4E4CE091E69A1CA00DB4C31 /* Keys.cpp in Sources */,
 				D1AF66A3170B1E5900A43743 /* Color.cpp in Sources */,
 				D17F3E941D79D4F60045F39D /* VirtualKeyboard.cpp in Sources */,
 				D1AF66A4170B1E5900A43743 /* Texture.cpp in Sources */,
@@ -2044,6 +2059,7 @@
 				D1F27ACB177A2DF700E5C131 /* Platform.cpp in Sources */,
 				B455015C1BD7A80400E75E43 /* OpenGLES_Texture.cpp in Sources */,
 				B4DF80801E375F0700307767 /* ImageEtcx.cpp in Sources */,
+				B4E4CE0C1E69A1D600DB4C31 /* Keys.cpp in Sources */,
 				B455016A1BD7A86200E75E43 /* OpenGL_RenderSystem.cpp in Sources */,
 				D1F27ACD177A2DF700E5C131 /* aprilUtil.cpp in Sources */,
 				D11FB8F61E6866D0001A7E9A /* InputMode.cpp in Sources */,
