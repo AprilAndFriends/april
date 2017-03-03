@@ -148,7 +148,7 @@ namespace april
 		HL_ENUM_DECLARE(Key, F23);
 		HL_ENUM_DECLARE(Key, F24);
 		HL_ENUM_DECLARE(Key, NumLock);
-		HL_ENUM_DECLARE(Key, Scroll);
+		HL_ENUM_DECLARE(Key, ScrollLock);
 		HL_ENUM_DECLARE(Key, ShiftL);
 		HL_ENUM_DECLARE(Key, ShiftR);
 		HL_ENUM_DECLARE(Key, ControlL);

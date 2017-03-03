@@ -131,7 +131,7 @@ namespace april
 		
 		// don't exist on Android
 		m[143] = Key::NumLock;
-		m[116] = Key::Scroll;
+		m[116] = Key::ScrollLock;
 		
 		// specific left-and-right-shift keys
 		m[59] = Key::ShiftL;

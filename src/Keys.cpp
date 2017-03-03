@@ -137,7 +137,7 @@ namespace april
 		HL_ENUM_DEFINE_VALUE(Key, F23, 0x86);
 		HL_ENUM_DEFINE_VALUE(Key, F24, 0x87);
 		HL_ENUM_DEFINE_VALUE(Key, NumLock, 0x90);
-		HL_ENUM_DEFINE_VALUE(Key, Scroll, 0x91);
+		HL_ENUM_DEFINE_VALUE(Key, ScrollLock, 0x91);
 		HL_ENUM_DEFINE_VALUE(Key, ShiftL, 0xA0);
 		HL_ENUM_DEFINE_VALUE(Key, ShiftR, 0xA1);
 		HL_ENUM_DEFINE_VALUE(Key, ControlL, 0xA2);
