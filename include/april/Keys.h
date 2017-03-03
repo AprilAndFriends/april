@@ -40,13 +40,10 @@ namespace april
 		HL_ENUM_DECLARE(Key, Menu);
 		HL_ENUM_DECLARE(Key, Pause);
 		HL_ENUM_DECLARE(Key, CapsLock);
-		HL_ENUM_DECLARE(Key, Kana);
-		HL_ENUM_DECLARE(Key, Hangeul);
-		HL_ENUM_DECLARE(Key, Hangul);
+		HL_ENUM_DECLARE(Key, KanaHangul);
 		HL_ENUM_DECLARE(Key, Junja);
 		HL_ENUM_DECLARE(Key, Final);
-		HL_ENUM_DECLARE(Key, Hanja);
-		HL_ENUM_DECLARE(Key, Kanji);
+		HL_ENUM_DECLARE(Key, HanjaKanji);
 		HL_ENUM_DECLARE(Key, Escape);
 		HL_ENUM_DECLARE(Key, Convert);
 		HL_ENUM_DECLARE(Key, NonConvert);

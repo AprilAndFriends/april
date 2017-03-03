@@ -29,13 +29,10 @@ namespace april
 		HL_ENUM_DEFINE_VALUE(Key, Menu, 18);
 		HL_ENUM_DEFINE_VALUE(Key, Pause, 19);
 		HL_ENUM_DEFINE_VALUE(Key, CapsLock, 20);
-		HL_ENUM_DEFINE_VALUE(Key, Kana, 0x15);
-		HL_ENUM_DEFINE_VALUE(Key, Hangeul, 0x15);
-		HL_ENUM_DEFINE_VALUE(Key, Hangul, 0x15);
+		HL_ENUM_DEFINE_VALUE(Key, KanaHangul, 0x15);
 		HL_ENUM_DEFINE_VALUE(Key, Junja, 0x17);
 		HL_ENUM_DEFINE_VALUE(Key, Final, 0x18);
-		HL_ENUM_DEFINE_VALUE(Key, Hanja, 0x19);
-		HL_ENUM_DEFINE_VALUE(Key, Kanji, 0x19);
+		HL_ENUM_DEFINE_VALUE(Key, HanjaKanji, 0x19);
 		HL_ENUM_DEFINE_VALUE(Key, Escape, 0x1B);
 		HL_ENUM_DEFINE_VALUE(Key, Convert, 0x1C);
 		HL_ENUM_DEFINE_VALUE(Key, NonConvert, 0x1D);
