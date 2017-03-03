@@ -39,7 +39,7 @@ namespace april
 		HL_ENUM_DECLARE(Key, Control);
 		HL_ENUM_DECLARE(Key, Menu);
 		HL_ENUM_DECLARE(Key, Pause);
-		HL_ENUM_DECLARE(Key, Capital);
+		HL_ENUM_DECLARE(Key, CapsLock);
 		HL_ENUM_DECLARE(Key, Kana);
 		HL_ENUM_DECLARE(Key, Hangeul);
 		HL_ENUM_DECLARE(Key, Hangul);

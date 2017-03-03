@@ -28,7 +28,7 @@ namespace april
 		HL_ENUM_DEFINE_VALUE(Key, Control, 17);
 		HL_ENUM_DEFINE_VALUE(Key, Menu, 18);
 		HL_ENUM_DEFINE_VALUE(Key, Pause, 19);
-		HL_ENUM_DEFINE_VALUE(Key, Capital, 20);
+		HL_ENUM_DEFINE_VALUE(Key, CapsLock, 20);
 		HL_ENUM_DEFINE_VALUE(Key, Kana, 0x15);
 		HL_ENUM_DEFINE_VALUE(Key, Hangeul, 0x15);
 		HL_ENUM_DEFINE_VALUE(Key, Hangul, 0x15);

@@ -7,7 +7,6 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _ANDROID
-
 #include <hltypes/hlog.h>
 #include <hltypes/hmap.h>
 
@@ -47,7 +46,7 @@ namespace april
 		m[28] = Key::Clear;
 		m[66] = Key::Return;
 		m[82] = Key::Menu;
-		m[115] = Key::Capital;
+		m[115] = Key::CapsLock;
 		
 		// various keys for asian keyboards not supported
 		m[4] = Key::Escape; // using Android's back button for this
