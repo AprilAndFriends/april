@@ -261,9 +261,9 @@ namespace april
 {
 	april::Key button;
 	int n = (int)event.buttonNumber;
-	if      (n == 0) button = april::AK_LBUTTON;
-	else if (n == 1) button = april::AK_RBUTTON;
-	else             button = april::AK_MBUTTON;
+	if      (n == 0) button = april::Key::MouseL;
+	else if (n == 1) button = april::Key::MouseR;
+	else             button = april::Key::MouseM;
 	return button;
 }
 
@@ -326,11 +326,11 @@ namespace april
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueMouseEvent(april::Window::MouseInputEvent::Type::Move, pos * aprilWindow->scalingFactor, april::AK_NONE);
+		aprilWindow->queueMouseEvent(april::Window::MouseInputEvent::Type::Move, pos * aprilWindow->scalingFactor, april::Key::None);
     }
     else
     {
-        aprilWindow->handleMouseEvent(april::Window::MouseInputEvent::Type::Move, pos * aprilWindow->scalingFactor, april::AK_NONE);
+		aprilWindow->handleMouseEvent(april::Window::MouseInputEvent::Type::Move, pos * aprilWindow->scalingFactor, april::Key::None);
     }
 	
 	// Hack for Lion fullscreen bug, when the user moves the cursor quickly to and from the dock area,
@@ -376,11 +376,11 @@ namespace april
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueKeyEvent(april::Window::KeyInputEvent::Type::Down, (april::Key) keyCode, unichr);
+		aprilWindow->queueKeyEvent(april::Window::KeyInputEvent::Type::Down, april::Key::fromInt(keyCode), unichr);
     }
     else
     {
-        aprilWindow->handleKeyEvent(april::Window::KeyInputEvent::Type::Down, (april::Key) keyCode, unichr);
+        aprilWindow->handleKeyEvent(april::Window::KeyInputEvent::Type::Down, april::Key::fromInt(keyCode), unichr);
     }
 }
 
@@ -389,11 +389,11 @@ namespace april
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueKeyEvent(april::Window::KeyInputEvent::Type::Up, (april::Key) keyCode, 0);
+        aprilWindow->queueKeyEvent(april::Window::KeyInputEvent::Type::Up, april::Key::fromInt(keyCode), 0);
     }
     else
     {
-        aprilWindow->handleKeyEvent(april::Window::KeyInputEvent::Type::Up, (april::Key) keyCode, 0);
+        aprilWindow->handleKeyEvent(april::Window::KeyInputEvent::Type::Up, april::Key::fromInt(keyCode), 0);
     }
 }
 
@@ -408,7 +408,7 @@ namespace april
 			return toupper(c);
 		}
 	}
-	return april::getAprilMacKeyCode([event keyCode]);
+	return april::getAprilMacKeyCode([event keyCode]).value;
 }
 
 - (void)_preLionToggleFullscreen:(NSValue*) param
@@ -520,11 +520,11 @@ NSString* translateInputForKeyDown(NSEvent* event)
     if (april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-        aprilWindow->queueMouseEvent(april::Window::MouseInputEvent::Type::Scroll, vec, april::AK_NONE);
+		aprilWindow->queueMouseEvent(april::Window::MouseInputEvent::Type::Scroll, vec, april::Key::None);
     }
     else
     {
-        aprilWindow->handleMouseEvent(april::Window::MouseInputEvent::Type::Scroll, vec, april::AK_NONE);
+		aprilWindow->handleMouseEvent(april::Window::MouseInputEvent::Type::Scroll, vec, april::Key::None);
     }
 }
 
@@ -532,7 +532,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 {
 	static unsigned int prevFlags = 0;
 	unsigned int flags = (unsigned int)[event modifierFlags];
-	unsigned int keyCode = april::getAprilMacKeyCode([event keyCode]);
+	unsigned int keyCode = april::getAprilMacKeyCode([event keyCode]).value;
 	
 #define processFlag(mask) if      ((flags & mask)     == mask && (prevFlags & mask) == 0) [self onKeyDown:keyCode unicode:@""];\
 					      else if ((prevFlags & mask) == mask &&     (flags & mask) == 0) [self onKeyUp:keyCode];

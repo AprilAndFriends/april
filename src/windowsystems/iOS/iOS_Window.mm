@@ -391,14 +391,14 @@ namespace april
 			if (!this->multiTouchActive && prev_len == 1)
 			{
 				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Cancel, gvec2(), AK_LBUTTON));
+				this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Cancel, gvec2(), april::Key::MouseL));
 			}
 			this->multiTouchActive = true;
 		}
 		else
 		{
 			CGPoint pt = [g_touches[0] locationInView:glview];
-			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Down, gvec2(pt.x, pt.y), AK_LBUTTON));
+			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Down, gvec2(pt.x, pt.y), april::Key::MouseL));
 		}
 		this->callTouchCallback();
 	}
@@ -419,7 +419,7 @@ namespace april
 		else
 		{
 			CGPoint pt = [touches[0] locationInView:glview];
-			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Up, gvec2(pt.x, pt.y), AK_LBUTTON));
+			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Up, gvec2(pt.x, pt.y), april::Key::MouseL));
 		}
 		this->callTouchCallback();
 	}
@@ -436,7 +436,7 @@ namespace april
 		{
 			UITouch* touch = [[(NSSet*) nssetTouches allObjects] objectAtIndex:0];
 			CGPoint pt = [touch locationInView:glview];			
-			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Move, gvec2(pt.x, pt.y), AK_NONE));
+			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Move, gvec2(pt.x, pt.y), april::Key::None));
 		}
 		this->callTouchCallback();
 	}
@@ -462,15 +462,15 @@ namespace april
 		if (inputChar == 0)
 		{
 			// deploy backspace
-			this->handleKeyEvent(Window::KeyInputEvent::Type::Down, AK_BACK, 8);
-			this->handleKeyEvent(Window::KeyInputEvent::Type::Up, AK_BACK, 8);
+			this->handleKeyEvent(Window::KeyInputEvent::Type::Down, april::Key::Backspace, 8);
+			this->handleKeyEvent(Window::KeyInputEvent::Type::Up, april::Key::Backspace, 8);
 		}
 		if (inputChar >= 32)
 		{
 			// deploy keypress
-			april::Key keycode = AK_NONE; // TODO - FIXME incorrect, might cause a nasty bug. 
-											 // however, writing a translation table atm 
-											 // isn't the priority.
+			april::Key keycode = april::Key::None; // TODO - FIXME incorrect, might cause a nasty bug.
+											       // however, writing a translation table atm
+											       // isn't the priority.
 		
 			this->handleKeyEvent(Window::KeyInputEvent::Type::Down, keycode, inputChar);
 			this->handleKeyEvent(Window::KeyInputEvent::Type::Up, keycode, inputChar);
