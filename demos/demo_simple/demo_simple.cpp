@@ -68,13 +68,15 @@ class UpdateDelegate : public april::UpdateDelegate
 {
 	bool onUpdate(float timeDelta)
 	{
+		harray<int> a;
+		a.randomize();
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);
 		/// some general texture testing
 		april::rendersys->drawFilledRect(drawRect, april::Color(96, 96, 96));
 		manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 		april::rendersys->setTexture(manualTexture);
-		april::rendersys->render(april::RO_TRIANGLE_STRIP, dv, 4);
+		april::rendersys->render(april::RenderOperation::TriangleStrip, dv, 4);
 		april::rendersys->setTexture(texture);
 		april::rendersys->drawTexturedRect(textureRect + offset, src);
 		april::rendersys->drawFilledRect(grect(0.0f, drawRect.h - 75.0f, 100.0f, 75.0f), april::Color::Yellow);
@@ -82,12 +84,12 @@ class UpdateDelegate : public april::UpdateDelegate
 #ifdef _ENGINE_RENDER_TEST
 		// testing all render methods
 		april::rendersys->drawFilledRect(grect(drawRect.w - 110.0f, drawRect.h - 310.0f, 110.0f, 310.0f), april::Color::Black);
-		april::rendersys->render(april::RO_TRIANGLE_LIST, pv, 3);
-		april::rendersys->render(april::RO_TRIANGLE_LIST, &pv[1], 3, april::Color::Yellow);
-		april::rendersys->render(april::RO_TRIANGLE_LIST, tv, 3);
-		april::rendersys->render(april::RO_TRIANGLE_LIST, &tv[1], 3, april::Color::Green);
-		april::rendersys->render(april::RO_TRIANGLE_LIST, cv, 3);
-		april::rendersys->render(april::RO_TRIANGLE_LIST, ctv, 3);
+		april::rendersys->render(april::RenderOperation::TriangleList, pv, 3);
+		april::rendersys->render(april::RenderOperation::TriangleList, &pv[1], 3, april::Color::Yellow);
+		april::rendersys->render(april::RenderOperation::TriangleList, tv, 3);
+		april::rendersys->render(april::RenderOperation::TriangleList, &tv[1], 3, april::Color::Green);
+		april::rendersys->render(april::RenderOperation::TriangleList, cv, 3);
+		april::rendersys->render(april::RenderOperation::TriangleList, ctv, 3);
 #endif
 		return true;
 	}
@@ -223,7 +225,7 @@ void april_init(const harray<hstr>& args)
 	textureRect.x = -textureRect.w * 0.5f;
 	textureRect.y = -textureRect.h * 0.5f;
 	// demonstrating some of the image manipulation methods
-	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::FORMAT_RGBA, april::Texture::Type::Managed);
+	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::Format::RGBA, april::Texture::Type::Managed);
 	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 0, 0, texture);
 	manualTexture->invert(0, 0, 256, 128);
 	manualTexture->saturate(0, 128, 128, 128, 0.0f);

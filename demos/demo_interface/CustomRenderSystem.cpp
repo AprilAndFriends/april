@@ -416,9 +416,9 @@ void CustomRenderSystem::_deviceRender(april::RenderOperation renderOperation, a
 
 april::Image::Format CustomRenderSystem::getNativeTextureFormat(april::Image::Format format)
 {
-	if (format == april::Image::FORMAT_ARGB || format == april::Image::FORMAT_ABGR || format == april::Image::FORMAT_RGBA || format == april::Image::FORMAT_BGRA)
+	if (format == april::Image::FORMAT_ARGB || format == april::Image::FORMAT_ABGR || format == april::Image::Format::RGBA || format == april::Image::FORMAT_BGRA)
 	{
-		return april::Image::FORMAT_RGBA;
+		return april::Image::Format::RGBA;
 	}
 	if (format == april::Image::FORMAT_XRGB || format == april::Image::FORMAT_RGBX || format == april::Image::FORMAT_XBGR || format == april::Image::FORMAT_BGRX)
 	{

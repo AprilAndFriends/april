@@ -104,9 +104,9 @@ public:
 		april::rendersys->rotate(1.0f, 0.0f, 0.0f, hclamp(position.y * 0.5f, -90.0f, 90.0f));
 		april::rendersys->rotate(0.0f, 1.0f, 0.0f, position.x * 0.5f);
 		april::rendersys->setTexture(texture);
-		april::rendersys->render(april::RO_TRIANGLE_LIST, v, 36);
+		april::rendersys->render(april::RenderOperation::TriangleList, v, 36);
 		april::rendersys->setTexture(logo);
-		//april::rendersys->render(april::RO_TRIANGLE_LIST, v, 36);
+		//april::rendersys->render(april::RenderOperation::TriangleList, v, 36);
 		return true;
 	}
 

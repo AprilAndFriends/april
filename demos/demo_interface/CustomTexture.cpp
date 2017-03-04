@@ -57,7 +57,7 @@ void CustomTexture::_assignFormat()
 	{
 	case april::Image::FORMAT_ARGB:
 	case april::Image::FORMAT_XRGB:
-	case april::Image::FORMAT_RGBA:
+	case april::Image::Format::RGBA:
 	case april::Image::FORMAT_RGBX:
 	case april::Image::FORMAT_ABGR:
 	case april::Image::FORMAT_XBGR:
