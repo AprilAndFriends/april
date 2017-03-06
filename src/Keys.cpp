@@ -10,7 +10,7 @@
 
 namespace april
 {
-	HL_ENUM_CLASS_DEFINE(Key,
+	HL_ENUM_CLASS_DEFINE_LOOSE(Key, 0,
 	(
 		HL_ENUM_DEFINE_VALUE(Key, None, 0);
 		HL_ENUM_DEFINE_VALUE(Key, MouseL, 1);
@@ -182,7 +182,7 @@ namespace april
 		HL_ENUM_DEFINE_VALUE(Key, OemClear, 0xFE);
 	));
 	
-	HL_ENUM_CLASS_DEFINE(Button,
+	HL_ENUM_CLASS_DEFINE_LOOSE(Button, 0,
 	(
 		HL_ENUM_DEFINE_VALUE(Button, None, 0);
 		HL_ENUM_DEFINE_VALUE(Button, Start, 1);
