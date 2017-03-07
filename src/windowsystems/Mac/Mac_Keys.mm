@@ -211,7 +211,7 @@ namespace april
 		m[kVK_Return] = april::Key::Return;
 		m[kVK_Tab] = april::Key::Tab;
 		m[kVK_Space] = april::Key::Space;
-		m[kVK_Delete] = april::Key::Delete;
+		m[kVK_Delete] = april::Key::Backspace;
 		m[kVK_Escape] = april::Key::Escape;
 		m[kVK_Shift] = april::Key::Shift;
 		m[kVK_CapsLock] = april::Key::CapsLock;
@@ -247,6 +247,7 @@ namespace april
 		m[kVK_Home] = april::Key::Home;
 		m[kVK_PageUp] = april::Key::Prior;
 		m[kVK_ForwardDelete] = april::Key::Delete;
+		
 		m[kVK_End] = april::Key::E;
 		m[kVK_PageDown] = april::Key::Next;
 		m[kVK_LeftArrow] = april::Key::ArrowLeft;
