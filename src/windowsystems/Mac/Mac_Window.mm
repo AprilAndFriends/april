@@ -411,10 +411,23 @@ namespace april
 	{
 		// presentFrame() calls are always manually called, so let's make sure
 		// Mac can update the view contents before we continue.
-		this->setIgnoreUpdateFlag(true);
+		bool displayLink = isUsingCVDisplayLink();
+		if (displayLink)
+		{
+			// kspes@20170319 - Honestly, I don't remember why we needed to do 'ignore-update' functionality
+			// it works fine without it. it may have been related to cvdisplay link, but we stopped using it since
+			// Sooo, leaving it here like this for now. I need this to be able to draw a loading screen as early as
+			// possible.
+			this->setIgnoreUpdateFlag(true);
+		}
 		[mView presentFrame];
+		[mView setNeedsDisplay:YES];
+		[mView display];
 		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.01]];
-		this->setIgnoreUpdateFlag(false);
+		if (displayLink)
+		{
+			this->setIgnoreUpdateFlag(false);
+		}
 	}
 	
     void Mac_Window::dispatchQueuedEvents()
@@ -469,6 +482,7 @@ namespace april
 
 	bool Mac_Window::shouldIgnoreUpdate()
 	{
+		return false;
 		bool ret;
 		hmutex::ScopeLock lock;
 		lock.acquire(&this->ignoreUpdateMutex);

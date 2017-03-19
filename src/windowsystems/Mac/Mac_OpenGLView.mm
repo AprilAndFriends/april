@@ -201,8 +201,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
             if (april::rendersys != NULL)
             {
 				april::rendersys->flushFrame(true);
-                [[self openGLContext] makeCurrentContext];
-                [[self openGLContext] flushBuffer];
+                [context flushBuffer];
             }
         }
         mStartedDrawing = false;
