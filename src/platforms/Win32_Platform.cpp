@@ -38,30 +38,30 @@ namespace april
 		{
 			info.name = "Windows";
 			info.deviceName = "WindowsDevice";
-			OSVERSIONINFOW osinfo;
-			memset(&osinfo, 0, sizeof(osinfo));
-			osinfo.dwOSVersionInfoSize = sizeof(osinfo);
-			GetVersionExW(&osinfo);
-			info.osVersion.set(osinfo.dwMajorVersion, osinfo.dwMinorVersion);
-			if (osinfo.dwMajorVersion == 5)
+			OSVERSIONINFOW osVersionInfo;
+			memset(&osVersionInfo, 0, sizeof(osVersionInfo));
+			osVersionInfo.dwOSVersionInfoSize = sizeof(osVersionInfo);
+			GetVersionExW(&osVersionInfo);
+			info.osVersion.set(osVersionInfo.dwMajorVersion, osVersionInfo.dwMinorVersion);
+			if (osVersionInfo.dwMajorVersion == 5)
 			{
 				info.name += " XP";
 			}
-			else if (osinfo.dwMajorVersion == 6)
+			else if (osVersionInfo.dwMajorVersion == 6)
 			{
-				if (osinfo.dwMinorVersion == 0)
+				if (osVersionInfo.dwMinorVersion == 0)
 				{
 					info.name += " Vista";
 				}
-				else if (osinfo.dwMinorVersion == 1)
+				else if (osVersionInfo.dwMinorVersion == 1)
 				{
 					info.name += " 7";
 				}
-				else if (osinfo.dwMinorVersion == 2)
+				else if (osVersionInfo.dwMinorVersion == 2)
 				{
 					info.name += " 8";
 				}
-				else if (osinfo.dwMinorVersion == 3)
+				else if (osVersionInfo.dwMinorVersion == 3)
 				{
 					info.name += " 8.1";
 				}
@@ -70,7 +70,7 @@ namespace april
 					info.name += " 8.x";
 				}
 			}
-			else if (osinfo.dwMajorVersion == 10)
+			else if (osVersionInfo.dwMajorVersion == 10)
 			{
 				info.name += " 10";
 			}
