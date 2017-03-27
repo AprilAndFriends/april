@@ -38,7 +38,7 @@ namespace april
 		{
 			info.name = "Windows";
 			info.deviceName = "WindowsDevice";
-			OSVERSIONINFO osinfo;
+			OSVERSIONINFOW osinfo;
 			memset(&osinfo, 0, sizeof(osinfo));
 			osinfo.dwOSVersionInfoSize = sizeof(osinfo);
 			GetVersionExW(&osinfo);
