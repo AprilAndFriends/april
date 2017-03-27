@@ -31,49 +31,60 @@
 namespace april
 {
 	extern SystemInfo info;
+
+	static hstr _getWindowsName()
+	{
+		OSVERSIONINFOEX osVersionInfo;
+		memset(&osVersionInfo, 0, sizeof(OSVERSIONINFOEX));
+		osVersionInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+		osVersionInfo.dwMajorVersion = 5;
+		osVersionInfo.dwMajorVersion = 0;
+		DWORDLONG conditionMask = 0;
+		VER_SET_CONDITION(conditionMask, VER_MAJORVERSION, VER_EQUAL);
+		VER_SET_CONDITION(conditionMask, VER_MINORVERSION, VER_EQUAL);
+		if (VerifyVersionInfoW(&osVersionInfo, VER_MAJORVERSION, conditionMask) != 0)
+		{
+			return " XP";
+		}
+		osVersionInfo.dwMajorVersion = 6;
+		if (VerifyVersionInfoW(&osVersionInfo, VER_MAJORVERSION, conditionMask) != 0)
+		{
+			if (VerifyVersionInfoW(&osVersionInfo, VER_MINORVERSION, conditionMask) != 0)
+			{
+				return " Vista";
+			}
+			osVersionInfo.dwMajorVersion = 1;
+			if (VerifyVersionInfoW(&osVersionInfo, VER_MINORVERSION, conditionMask) != 0)
+			{
+				return " 7";
+			}
+			osVersionInfo.dwMajorVersion = 2;
+			if (VerifyVersionInfoW(&osVersionInfo, VER_MINORVERSION, conditionMask) != 0)
+			{
+				return " 8";
+			}
+			osVersionInfo.dwMajorVersion = 3;
+			if (VerifyVersionInfoW(&osVersionInfo, VER_MINORVERSION, conditionMask) != 0)
+			{
+				return " 8.1";
+			}
+			// all future 6.x Windows versions will be labeled as "8.x" to avoid assumptions
+			return " 8.x";
+		}
+		osVersionInfo.dwMajorVersion = 10;
+		if (VerifyVersionInfoW(&osVersionInfo, VER_MAJORVERSION, conditionMask) != 0)
+		{
+			return " 10";
+		}
+		return "";
+	}
 	
 	SystemInfo getSystemInfo()
 	{
 		if (info.locale == "")
 		{
-			info.name = "Windows";
+			info.name = "Windows" + _getWindowsName();
 			info.deviceName = "WindowsDevice";
-			OSVERSIONINFOW osVersionInfo;
-			memset(&osVersionInfo, 0, sizeof(osVersionInfo));
-			osVersionInfo.dwOSVersionInfoSize = sizeof(osVersionInfo);
-			GetVersionExW(&osVersionInfo);
-			info.osVersion.set(osVersionInfo.dwMajorVersion, osVersionInfo.dwMinorVersion);
-			if (osVersionInfo.dwMajorVersion == 5)
-			{
-				info.name += " XP";
-			}
-			else if (osVersionInfo.dwMajorVersion == 6)
-			{
-				if (osVersionInfo.dwMinorVersion == 0)
-				{
-					info.name += " Vista";
-				}
-				else if (osVersionInfo.dwMinorVersion == 1)
-				{
-					info.name += " 7";
-				}
-				else if (osVersionInfo.dwMinorVersion == 2)
-				{
-					info.name += " 8";
-				}
-				else if (osVersionInfo.dwMinorVersion == 3)
-				{
-					info.name += " 8.1";
-				}
-				else // future 6.x versions of Windows will just be named "Windows" to avoid assumptions
-				{
-					info.name += " 8.x";
-				}
-			}
-			else if (osVersionInfo.dwMajorVersion == 10)
-			{
-				info.name += " 10";
-			}
 			info.architecture = "x86";
 			// number of CPU cores
 			SYSTEM_INFO w32info;
@@ -83,7 +94,7 @@ namespace april
 			MEMORYSTATUSEX status;
 			status.dwLength = sizeof(status);
 			GlobalMemoryStatusEx(&status);
-			info.ram = (int)(status.ullTotalPhys / 1048576);
+			info.ram = (int)(status.ullTotalPhys / 1048576LL);
 			// display resolution
 			info.displayResolution.set((float)GetSystemMetrics(SM_CXSCREEN), (float)GetSystemMetrics(SM_CYSCREEN));
 			// display DPI
