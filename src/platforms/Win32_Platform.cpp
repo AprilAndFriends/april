@@ -37,11 +37,11 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "Windows";
-			info.deviceName = "unnamedWindowsDevice";
+			info.deviceName = "WindowsDevice";
 			OSVERSIONINFO osinfo;
 			memset(&osinfo, 0, sizeof(osinfo));
 			osinfo.dwOSVersionInfoSize = sizeof(osinfo);
-			GetVersionEx(&osinfo);
+			GetVersionExW(&osinfo);
 			info.osVersion.set(osinfo.dwMajorVersion, osinfo.dwMinorVersion);
 			if (osinfo.dwMajorVersion == 5)
 			{

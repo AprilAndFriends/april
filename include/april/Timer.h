@@ -15,6 +15,8 @@
 
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/hplatform.h>
+
+#include <stdint.h>
 #include <stdio.h>
 
 #include "aprilExport.h"
