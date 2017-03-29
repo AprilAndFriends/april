@@ -422,7 +422,6 @@ namespace april
 		}
 		[mView presentFrame];
 		[mView setNeedsDisplay:YES];
-		[mView display];
 		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.01]];
 		if (displayLink)
 		{
