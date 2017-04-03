@@ -518,7 +518,7 @@ namespace april
 	
 	void OpenKODE_Window::checkEvents()
 	{
-		kdPumpEventsEx(100000L); // 0.1 millisecond
+		kdPumpEvents();
 		const KDEvent* evt;
 		// 0.1 milisecond as timeout
 		while (this->running && (evt = kdWaitEvent(100000L)) != NULL)
