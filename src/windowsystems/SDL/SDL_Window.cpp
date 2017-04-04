@@ -228,7 +228,7 @@ namespace april
 	void SDL_Window::checkEvents()
 	{
 		SDL_Event sdlEvent;
-		std::basic_string<unsigned int> text;
+		std::ustring text;
 		while (SDL_PollEvent(&sdlEvent))
 		{
 			switch (sdlEvent.type)
