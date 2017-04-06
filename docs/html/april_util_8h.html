@@ -48,7 +48,6 @@
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">aprilUtil.h File Reference</div>  </div>
@@ -57,6 +56,7 @@
 <div class="textblock"><code>#include &lt;gtypes/Rectangle.h&gt;</code><br />
 <code>#include &lt;gtypes/Vector2.h&gt;</code><br />
 <code>#include &lt;gtypes/Vector3.h&gt;</code><br />
+<code>#include &lt;hltypes/henum.h&gt;</code><br />
 <code>#include &lt;hltypes/hstring.h&gt;</code><br />
 <code>#include &quot;aprilExport.h&quot;</code><br />
 </div>
@@ -64,6 +64,15 @@
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_operation.html">april::RenderOperation</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines possible rendering methods.  <a href="classapril_1_1_render_operation.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_blend_mode.html">april::BlendMode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines blending modes.  <a href="classapril_1_1_blend_mode.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_color_mode.html">april::ColorMode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines color modes.  <a href="classapril_1_1_color_mode.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_plain_vertex.html">april::PlainVertex</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a plain vertex.  <a href="classapril_1_1_plain_vertex.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -76,40 +85,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_colored_textured_vertex.html">april::ColoredTexturedVertex</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a vertex with a UV-coordinate component and a color component.  <a href="classapril_1_1_colored_textured_vertex.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:ab56da2d8fada469ccf4a43bc04bdee54"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#ab56da2d8fada469ccf4a43bc04bdee54">april::RenderOperation</a> { <br />
-&#160;&#160;<a class="el" href="april_util_8h.html#ab56da2d8fada469ccf4a43bc04bdee54ade40d63ea42e8b777fc8300a3da0033a">april::RO_UNDEFINED</a> = 0, 
-<a class="el" href="april_util_8h.html#ab56da2d8fada469ccf4a43bc04bdee54a235fb31e8ea90dc1dc22e6a16d336996">april::RO_TRIANGLE_LIST</a> = 1, 
-<a class="el" href="april_util_8h.html#ab56da2d8fada469ccf4a43bc04bdee54a6c76dfe1f7b5dd0463e2b530ba83b150">april::RO_TRIANGLE_STRIP</a> = 2, 
-<a class="el" href="april_util_8h.html#ab56da2d8fada469ccf4a43bc04bdee54ad773de0a40f6444eadba3e7eb350b394">april::RO_TRIANGLE_FAN</a> = 3, 
-<br />
-&#160;&#160;<a class="el" href="april_util_8h.html#ab56da2d8fada469ccf4a43bc04bdee54aca46ec768b6101f16dfeda5ece6cad42">april::RO_LINE_LIST</a> = 4, 
-<a class="el" href="april_util_8h.html#ab56da2d8fada469ccf4a43bc04bdee54a1dec5c002426998c8d964e7e4990888e">april::RO_LINE_STRIP</a> = 5, 
-<a class="el" href="april_util_8h.html#ab56da2d8fada469ccf4a43bc04bdee54a203c3da8acf061acd86fbc843aba4052">april::RO_POINT_LIST</a> = 6
-<br />
- }<tr class="memdesc:ab56da2d8fada469ccf4a43bc04bdee54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines render operations.  <a href="april_util_8h.html#ab56da2d8fada469ccf4a43bc04bdee54">More...</a><br /></td></tr>
-</td></tr>
-<tr class="separator:ab56da2d8fada469ccf4a43bc04bdee54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af415a4154b799c235134560514d1f6e4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#af415a4154b799c235134560514d1f6e4">april::BlendMode</a> { <br />
-&#160;&#160;<a class="el" href="april_util_8h.html#af415a4154b799c235134560514d1f6e4ac861ce4100b643b2593176ff537d06dd">april::BM_DEFAULT</a> = 0, 
-<a class="el" href="april_util_8h.html#af415a4154b799c235134560514d1f6e4a525456d8fe8ee497de2a4539e6336f1b">april::BM_ALPHA</a> = 1, 
-<a class="el" href="april_util_8h.html#af415a4154b799c235134560514d1f6e4af1a7b7315c774ff57941878b2a55e424">april::BM_ADD</a> = 2, 
-<a class="el" href="april_util_8h.html#af415a4154b799c235134560514d1f6e4a4d29e32436dab8e4dcc947c2323b68d4">april::BM_SUBTRACT</a> = 3, 
-<br />
-&#160;&#160;<a class="el" href="april_util_8h.html#af415a4154b799c235134560514d1f6e4ad1a3fc0b90f875ee9e4c78c6c73df503">april::BM_OVERWRITE</a> = 4
-<br />
- }<tr class="memdesc:af415a4154b799c235134560514d1f6e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines blending modes.  <a href="april_util_8h.html#af415a4154b799c235134560514d1f6e4">More...</a><br /></td></tr>
-</td></tr>
-<tr class="separator:af415a4154b799c235134560514d1f6e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf1e4eae9cea688400a4474824e1d07b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#adf1e4eae9cea688400a4474824e1d07b">april::ColorMode</a> { <a class="el" href="april_util_8h.html#adf1e4eae9cea688400a4474824e1d07baf5ac581c3efc15ae5d3e03ff2e6fa819">april::CM_DEFAULT</a> = 0, 
-<a class="el" href="april_util_8h.html#adf1e4eae9cea688400a4474824e1d07babff0031900ceb56907464ce69efb19fc">april::CM_MULTIPLY</a> = 1, 
-<a class="el" href="april_util_8h.html#adf1e4eae9cea688400a4474824e1d07ba7abea90beb2b57af6eb5ac037b409ef8">april::CM_ALPHA_MAP</a> = 2, 
-<a class="el" href="april_util_8h.html#adf1e4eae9cea688400a4474824e1d07ba65a39006a312a8d156e47372a67adf72">april::CM_LERP</a> = 3
- }<tr class="memdesc:adf1e4eae9cea688400a4474824e1d07b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines color modes.  <a href="april_util_8h.html#adf1e4eae9cea688400a4474824e1d07b">More...</a><br /></td></tr>
-</td></tr>
-<tr class="separator:adf1e4eae9cea688400a4474824e1d07b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -149,104 +124,7 @@ LICENSE</h1>
 <h1><a class="anchor" id="DESCRIPTION"></a>
 DESCRIPTION</h1>
 <p>Defines utility enums and structs. </p>
-</div><h2 class="groupheader">Enumeration Type Documentation</h2>
-<a class="anchor" id="file_af415a4154b799c235134560514d1f6e4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="april_util_8h.html#af415a4154b799c235134560514d1f6e4">april::BlendMode</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines blending modes. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="af415a4154b799c235134560514d1f6e4ac861ce4100b643b2593176ff537d06dd"></a>BM_DEFAULT&#160;</td><td class="fielddoc">
-<p>Default blend mode. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="af415a4154b799c235134560514d1f6e4a525456d8fe8ee497de2a4539e6336f1b"></a>BM_ALPHA&#160;</td><td class="fielddoc">
-<p>Alpha blending. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="af415a4154b799c235134560514d1f6e4af1a7b7315c774ff57941878b2a55e424"></a>BM_ADD&#160;</td><td class="fielddoc">
-<p>Additive blending. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="af415a4154b799c235134560514d1f6e4a4d29e32436dab8e4dcc947c2323b68d4"></a>BM_SUBTRACT&#160;</td><td class="fielddoc">
-<p>Subtractive blending. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="af415a4154b799c235134560514d1f6e4ad1a3fc0b90f875ee9e4c78c6c73df503"></a>BM_OVERWRITE&#160;</td><td class="fielddoc">
-<p>Overwrite data. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a class="anchor" id="file_adf1e4eae9cea688400a4474824e1d07b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="april_util_8h.html#adf1e4eae9cea688400a4474824e1d07b">april::ColorMode</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines color modes. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="adf1e4eae9cea688400a4474824e1d07baf5ac581c3efc15ae5d3e03ff2e6fa819"></a>CM_DEFAULT&#160;</td><td class="fielddoc">
-<p>Default color mode. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="adf1e4eae9cea688400a4474824e1d07babff0031900ceb56907464ce69efb19fc"></a>CM_MULTIPLY&#160;</td><td class="fielddoc">
-<p>Multiply. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="adf1e4eae9cea688400a4474824e1d07ba7abea90beb2b57af6eb5ac037b409ef8"></a>CM_ALPHA_MAP&#160;</td><td class="fielddoc">
-<p>Alpha Map. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="adf1e4eae9cea688400a4474824e1d07ba65a39006a312a8d156e47372a67adf72"></a>CM_LERP&#160;</td><td class="fielddoc">
-<p>Linear Interpolation. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a class="anchor" id="file_ab56da2d8fada469ccf4a43bc04bdee54"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="april_util_8h.html#ab56da2d8fada469ccf4a43bc04bdee54">april::RenderOperation</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines render operations. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="ab56da2d8fada469ccf4a43bc04bdee54ade40d63ea42e8b777fc8300a3da0033a"></a>RO_UNDEFINED&#160;</td><td class="fielddoc">
-<p>Undefined render operation. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="ab56da2d8fada469ccf4a43bc04bdee54a235fb31e8ea90dc1dc22e6a16d336996"></a>RO_TRIANGLE_LIST&#160;</td><td class="fielddoc">
-<p>Triangle-list. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="ab56da2d8fada469ccf4a43bc04bdee54a6c76dfe1f7b5dd0463e2b530ba83b150"></a>RO_TRIANGLE_STRIP&#160;</td><td class="fielddoc">
-<p>Triangle-strip. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="ab56da2d8fada469ccf4a43bc04bdee54ad773de0a40f6444eadba3e7eb350b394"></a>RO_TRIANGLE_FAN&#160;</td><td class="fielddoc">
-<p>Triangle-fan. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="ab56da2d8fada469ccf4a43bc04bdee54aca46ec768b6101f16dfeda5ece6cad42"></a>RO_LINE_LIST&#160;</td><td class="fielddoc">
-<p>Line-list. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="ab56da2d8fada469ccf4a43bc04bdee54a1dec5c002426998c8d964e7e4990888e"></a>RO_LINE_STRIP&#160;</td><td class="fielddoc">
-<p>Line-strip. </p>
-</td></tr>
-<tr><td class="fieldname"><a class="anchor" id="ab56da2d8fada469ccf4a43bc04bdee54a203c3da8acf061acd86fbc843aba4052"></a>RO_POINT_LIST&#160;</td><td class="fielddoc">
-<p>Point-list. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="file_ab2cc15ff60cd7b47dc48a072f9626aec"></a>
 <div class="memitem">
 <div class="memproto">
