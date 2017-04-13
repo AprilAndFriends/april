@@ -82,7 +82,7 @@ namespace aprilpix
 		int height = 0;
 		int result = WebPGetInfo(data, size, &width, &height);
 		delete[] data;
-		if (result != 0 || width <= 0 || height <= 0)
+		if (result == 0 || width <= 0 || height <= 0)
 		{
 			hlog::error(logTag, "Could not load WEBP meta data!");
 			return NULL;
