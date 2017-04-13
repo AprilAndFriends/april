@@ -52,10 +52,10 @@ namespace april
 		bool render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color);
 		bool render(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
 		bool render(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
-		bool drawRect(grect rect, Color color);
-		bool drawFilledRect(grect rect, Color color);
-		bool drawTexturedRect(grect rect, grect src);
-		bool drawTexturedRect(grect rect, grect src, Color color);
+		bool drawRect(cgrect rect, const Color& color);
+		bool drawFilledRect(cgrect rect, const Color& color);
+		bool drawTexturedRect(cgrect rect, cgrect src);
+		bool drawTexturedRect(cgrect rect, cgrect src, const Color& color);
 
 	protected:
 		class RenderCall

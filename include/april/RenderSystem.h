@@ -329,13 +329,13 @@ namespace april
 		/// @brief Activate ortho-projection using just the size.
 		/// @param[in] size The ortho-projection size.
 		/// @note This assumes the coordinates of the ortho-projection is (0,0).
-		void setOrthoProjection(gvec2 size);
+		void setOrthoProjection(cgvec2 size);
 		/// @brief Activate ortho-projection using just the size.
 		/// @param[in] size The ortho-projection size.
 		/// @param[in] nearZ The near clipping plane Z coordinate.
 		/// @param[in] farZ The far clipping plane Z coordinate.
 		/// @note This assumes the coordinates of the ortho-projection is (0,0).
-		void setOrthoProjection(gvec2 size, float nearZ, float farZ);
+		void setOrthoProjection(cgvec2 size, float nearZ, float farZ);
 		/// @brief Sets the current depth-buffer state.
 		/// @param[in] enabled Whether to enable or disable the depth-buffer itself.
 		/// @param[in] writeEnabled Whether writing to the depth-buffer is enabled.
@@ -442,7 +442,7 @@ namespace april
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @param[in] color Color to apply globally on all vertices.
 		/// @note Calling this will effectively set the current texture to NULL.
-		void render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color);
+		void render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, const Color& color);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
@@ -453,7 +453,7 @@ namespace april
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @param[in] color Color to apply globally on all vertices.
-		void render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color);
+		void render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, const Color& color);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
@@ -470,25 +470,25 @@ namespace april
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] color Color of the rectangle.
 		/// @note Calling this will effectively set the current texture to NULL.
-		void drawRect(grect rect, Color color);
+		void drawRect(cgrect rect, const Color& color);
 		/// @brief Renders a rectangle filled with a color.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] color Color of the rectangle.
 		/// @note Calling this will effectively set the current texture to NULL.
-		void drawFilledRect(grect rect, Color color);
+		void drawFilledRect(cgrect rect, const Color& color);
 		/// @brief Renders a textured rectangle.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] src UV rectangle on the currently set Texture.
 		/// @note Remember to call setTexture() before calling this.
 		/// @see setTexture
-		void drawTexturedRect(grect rect, grect src);
+		void drawTexturedRect(cgrect rect, cgrect src);
 		/// @brief Renders a textured rectangle.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] src UV rectangle on the currently set Texture.
 		/// @param[in] color Color that should be applied to the texture.
 		/// @note Remember to call setTexture() before calling this.
 		/// @see setTexture
-		void drawTexturedRect(grect rect, grect src, Color color);
+		void drawTexturedRect(cgrect rect, cgrect src, const Color& color);
 
 		/// @brief Finds the actual filename of a texture resource file.
 		/// @param[in] filename Resource filename without the extension.
@@ -697,7 +697,7 @@ namespace april
 		/// @param[in] color Color to apply globally on all vertices.
 		/// @note Calling this will effectively set the current texture to NULL.
 		/// @see render
-		void _renderInternal(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color);
+		void _renderInternal(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, const Color& color);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
@@ -710,7 +710,7 @@ namespace april
 		/// @param[in] count How many vertices from the array should be rendered.
 		/// @param[in] color Color to apply globally on all vertices.
 		/// @see render
-		void _renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color);
+		void _renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, const Color& color);
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] vertices An array of vertices.
@@ -729,20 +729,20 @@ namespace april
 		/// @param[in] color Color of the rectangle.
 		/// @note Calling this will effectively set the current texture to NULL.
 		/// @see drawRect
-		void _drawRectInternal(grect rect, Color color);
+		void _drawRectInternal(cgrect rect, const Color& color);
 		/// @brief Renders a rectangle filled with a color.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] color Color of the rectangle.
 		/// @note Calling this will effectively set the current texture to NULL.
 		/// @see drawFilledRect
-		void _drawFilledRectInternal(grect rect, Color color);
+		void _drawFilledRectInternal(cgrect rect, const Color& color);
 		/// @brief Renders a textured rectangle.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] src UV rectangle on the currently set Texture.
 		/// @note Remember to call setTexture() before calling this.
 		/// @see setTexture
 		/// @see drawTexturedRect
-		void _drawTexturedRectInternal(grect rect, grect src);
+		void _drawTexturedRectInternal(cgrect rect, cgrect src);
 		/// @brief Renders a textured rectangle.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] src UV rectangle on the currently set Texture.
@@ -750,7 +750,7 @@ namespace april
 		/// @note Remember to call setTexture() before calling this.
 		/// @see setTexture
 		/// @see drawTexturedRect
-		void _drawTexturedRectInternal(grect rect, grect src, Color color);
+		void _drawTexturedRectInternal(cgrect rect, cgrect src, const Color& color);
 		/// @brief Increases all relevant rendering stats.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] count How many vertices will be rendered.

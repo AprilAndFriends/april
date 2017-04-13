@@ -381,7 +381,7 @@ namespace april
 		return this->state->modelviewMatrix;
 	}
 
-	void RenderSystem::setModelviewMatrix(const gmat4& value)
+	void RenderSystem::setModelviewMatrix(cgmat4 value)
 	{
 		this->state->modelviewMatrix = value;
 		this->state->modelviewMatrixChanged = true;
@@ -392,7 +392,7 @@ namespace april
 		return this->state->projectionMatrix;
 	}
 
-	void RenderSystem::setProjectionMatrix(const gmat4& value)
+	void RenderSystem::setProjectionMatrix(cgmat4 value)
 	{
 		this->state->projectionMatrix = value;
 		this->state->projectionMatrixChanged = true;
@@ -612,12 +612,12 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 
-	void RenderSystem::setOrthoProjection(gvec2 size)
+	void RenderSystem::setOrthoProjection(cgvec2 size)
 	{
 		this->setOrthoProjection(grect(0.0f, 0.0f, size));
 	}
 
-	void RenderSystem::setOrthoProjection(gvec2 size, float nearZ, float farZ)
+	void RenderSystem::setOrthoProjection(cgvec2 size, float nearZ, float farZ)
 	{
 		this->setOrthoProjection(grect(0.0f, 0.0f, size), nearZ, farZ);
 	}
@@ -857,7 +857,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color)
+	void RenderSystem::render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -877,7 +877,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color)
+	void RenderSystem::render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -905,7 +905,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::drawRect(grect rect, Color color)
+	void RenderSystem::drawRect(cgrect rect, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -917,7 +917,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::drawFilledRect(grect rect, Color color)
+	void RenderSystem::drawFilledRect(cgrect rect, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -929,7 +929,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::drawTexturedRect(grect rect, grect src)
+	void RenderSystem::drawTexturedRect(cgrect rect, cgrect src)
 	{
 		if (this->renderHelper == NULL || !this->renderHelper->drawTexturedRect(rect, src))
 		{
@@ -937,7 +937,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::drawTexturedRect(grect rect, grect src, Color color)
+	void RenderSystem::drawTexturedRect(cgrect rect, cgrect src, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -959,7 +959,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -983,7 +983,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -1017,7 +1017,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_drawRectInternal(grect rect, Color color)
+	void RenderSystem::_drawRectInternal(cgrect rect, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -1030,7 +1030,7 @@ namespace april
 		this->_renderInternal(RenderOperation::LineStrip, pv, 5, color);
 	}
 
-	void RenderSystem::_drawFilledRectInternal(grect rect, Color color)
+	void RenderSystem::_drawFilledRectInternal(cgrect rect, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -1043,7 +1043,7 @@ namespace april
 		this->_renderInternal(RenderOperation::TriangleStrip, pv, 4, color);
 	}
 	
-	void RenderSystem::_drawTexturedRectInternal(grect rect, grect src)
+	void RenderSystem::_drawTexturedRectInternal(cgrect rect, cgrect src)
 	{
 		tv[0].x = tv[2].x = rect.x;
 		tv[0].y = tv[1].y = rect.y;
@@ -1056,7 +1056,7 @@ namespace april
 		this->_renderInternal(RenderOperation::TriangleStrip, tv, 4);
 	}
 	
-	void RenderSystem::_drawTexturedRectInternal(grect rect, grect src, Color color)
+	void RenderSystem::_drawTexturedRectInternal(cgrect rect, cgrect src, const Color& color)
 	{
 		if (color.a == 0)
 		{

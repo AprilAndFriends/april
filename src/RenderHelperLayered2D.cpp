@@ -642,7 +642,7 @@ namespace april
 		return true;
 	}
 
-	bool RenderHelperLayered2D::drawRect(grect rect, Color color)
+	bool RenderHelperLayered2D::drawRect(cgrect rect, const Color& color)
 	{
 		pv[0].x = pv[2].x = pv[4].x = pv[5].x = rect.x;
 		pv[0].y = pv[1].y = pv[4].y = pv[6].y = rect.y;
@@ -651,7 +651,7 @@ namespace april
 		return this->render(RenderOperation::LineList, pv, LINE_VERTEX_POOL_SIZE, color);
 	}
 
-	bool RenderHelperLayered2D::drawFilledRect(grect rect, Color color)
+	bool RenderHelperLayered2D::drawFilledRect(cgrect rect, const Color& color)
 	{
 		pv[0].x = pv[2].x = pv[4].x = rect.x;
 		pv[0].y = pv[1].y = pv[3].y = rect.y;
@@ -660,12 +660,12 @@ namespace april
 		return this->render(RenderOperation::TriangleList, pv, TRIANGLE_VERTEX_POOL_SIZE, color);
 	}
 
-	bool RenderHelperLayered2D::drawTexturedRect(grect rect, grect src)
+	bool RenderHelperLayered2D::drawTexturedRect(cgrect rect, cgrect src)
 	{
 		return this->drawTexturedRect(rect, src, Color::White);
 	}
 
-	bool RenderHelperLayered2D::drawTexturedRect(grect rect, grect src, Color color)
+	bool RenderHelperLayered2D::drawTexturedRect(cgrect rect, cgrect src, const Color& color)
 	{
 		tv[0].x = tv[2].x = tv[4].x = rect.x;
 		tv[0].y = tv[1].y = tv[3].y = rect.y;

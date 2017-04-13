@@ -40,10 +40,10 @@ namespace april
 		virtual bool render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color);
 		virtual bool render(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
 		virtual bool render(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
-		virtual bool drawRect(grect rect, Color color);
-		virtual bool drawFilledRect(grect rect, Color color);
-		virtual bool drawTexturedRect(grect rect, grect src);
-		virtual bool drawTexturedRect(grect rect, grect src, Color color);
+		virtual bool drawRect(cgrect rect, const Color& color);
+		virtual bool drawFilledRect(cgrect rect, const Color& color);
+		virtual bool drawTexturedRect(cgrect rect, cgrect src);
+		virtual bool drawTexturedRect(cgrect rect, cgrect src, const Color& color);
 
 	protected:
 		bool created;
