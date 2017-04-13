@@ -21,7 +21,7 @@ namespace april
 	static TexturedVertex tv[LINE_VERTEX_POOL_SIZE];
 	static const grect screenRect(-1.0f, -1.0f, 2.0f, 2.0f);
 
-	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color) :
+	RenderHelperLayered2D::RenderCall::RenderCall(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(false)
 	{
 		this->renderOperation = renderOperation;
@@ -31,7 +31,7 @@ namespace april
 		this->color = color;
 	}
 
-	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color) :
+	RenderHelperLayered2D::RenderCall::RenderCall(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(true)
 	{
 		this->renderOperation = renderOperation;
@@ -41,7 +41,7 @@ namespace april
 		this->color = color;
 	}
 
-	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, ColoredVertex* vertices, int count) :
+	RenderHelperLayered2D::RenderCall::RenderCall(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(false)
 	{
 		this->renderOperation = renderOperation;
@@ -50,7 +50,7 @@ namespace april
 		this->count = count;
 	}
 
-	RenderHelperLayered2D::RenderCall::RenderCall(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count) :
+	RenderHelperLayered2D::RenderCall::RenderCall(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(true)
 	{
 		this->renderOperation = renderOperation;
@@ -568,12 +568,12 @@ namespace april
 		}
 	}
 
-	bool RenderHelperLayered2D::render(RenderOperation renderOperation, PlainVertex* vertices, int count)
+	bool RenderHelperLayered2D::render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
 	{
 		return this->render(renderOperation, vertices, count, Color::White);
 	}
 
-	bool RenderHelperLayered2D::render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color)
+	bool RenderHelperLayered2D::render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color)
 	{
 		if (this->_tryForcedFlush(renderOperation) || count == 0)
 		{
@@ -589,12 +589,12 @@ namespace april
 		return true;
 	}
 
-	bool RenderHelperLayered2D::render(RenderOperation renderOperation, TexturedVertex* vertices, int count)
+	bool RenderHelperLayered2D::render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
 	{
 		return this->render(renderOperation, vertices, count, Color::White);
 	}
 
-	bool RenderHelperLayered2D::render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color)
+	bool RenderHelperLayered2D::render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color)
 	{
 		if (this->_tryForcedFlush(renderOperation) || count == 0)
 		{
@@ -610,7 +610,7 @@ namespace april
 		return true;
 	}
 
-	bool RenderHelperLayered2D::render(RenderOperation renderOperation, ColoredVertex* vertices, int count)
+	bool RenderHelperLayered2D::render(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
 	{
 		if (this->_tryForcedFlush(renderOperation) || count == 0)
 		{
@@ -626,7 +626,7 @@ namespace april
 		return true;
 	}
 
-	bool RenderHelperLayered2D::render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
+	bool RenderHelperLayered2D::render(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
 	{
 		if (this->_tryForcedFlush(renderOperation) || count == 0)
 		{

@@ -46,12 +46,12 @@ namespace april
 		void clear();
 		void flush();
 
-		bool render(RenderOperation renderOperation, PlainVertex* vertices, int count);
-		bool render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color);
-		bool render(RenderOperation renderOperation, TexturedVertex* vertices, int count);
-		bool render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color);
-		bool render(RenderOperation renderOperation, ColoredVertex* vertices, int count);
-		bool render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
+		bool render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count);
+		bool render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color);
+		bool render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count);
+		bool render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color);
+		bool render(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
+		bool render(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
 		bool drawRect(grect rect, Color color);
 		bool drawFilledRect(grect rect, Color color);
 		bool drawTexturedRect(grect rect, grect src);
@@ -71,10 +71,10 @@ namespace april
 			Color color;
 			bool useTexture;
 
-			RenderCall(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color);
-			RenderCall(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color);
-			RenderCall(RenderOperation renderOperation, ColoredVertex* vertices, int count);
-			RenderCall(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
+			RenderCall(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color);
+			RenderCall(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color);
+			RenderCall(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
+			RenderCall(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
 			~RenderCall();
 
 		};

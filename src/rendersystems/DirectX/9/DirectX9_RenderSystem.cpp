@@ -636,22 +636,22 @@ namespace april
 		this->d3dDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, PlainVertex* vertices, int count)
+	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
 	{
 		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation.value], this->_numPrimitives(renderOperation, count), vertices, sizeof(PlainVertex));
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, TexturedVertex* vertices, int count)
+	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
 	{
 		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation.value], this->_numPrimitives(renderOperation, count), vertices, sizeof(TexturedVertex));
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, ColoredVertex* vertices, int count)
+	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
 	{
 		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation.value], this->_numPrimitives(renderOperation, count), vertices, sizeof(ColoredVertex));
 	}
 
-	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count)
+	void DirectX9_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
 	{
 		this->d3dDevice->DrawPrimitiveUP(_dx9RenderOperations[renderOperation.value], this->_numPrimitives(renderOperation, count), vertices, sizeof(ColoredTexturedVertex));
 	}

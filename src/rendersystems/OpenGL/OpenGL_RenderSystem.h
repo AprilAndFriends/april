@@ -117,10 +117,10 @@ namespace april
 		void _deviceClear(bool depth);
 		void _deviceClear(april::Color color, bool depth);
 		void _deviceClearDepth();
-		void _deviceRender(const RenderOperation& renderOperation, PlainVertex* vertices, int count);
-		void _deviceRender(const RenderOperation& renderOperation, TexturedVertex* vertices, int count);
-		void _deviceRender(const RenderOperation& renderOperation, ColoredVertex* vertices, int count);
-		void _deviceRender(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count);
+		void _deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count);
+		void _deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count);
+		void _deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
+		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
 
 		void _setDeviceVertexPointer(int stride, const void* pointer, bool forceUpdate = false);
 		void _setDeviceTexturePointer(int stride, const void* pointer, bool forceUpdate = false);

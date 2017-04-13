@@ -386,27 +386,27 @@ void CustomRenderSystem::_deviceClearDepth()
 	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-void CustomRenderSystem::_deviceRender(april::RenderOperation renderOperation, april::PlainVertex* v, int nVertices)
+void CustomRenderSystem::_deviceRender(const april::RenderOperation& renderOperation, const april::PlainVertex* v, int nVertices)
 {
 	glVertexPointer(3, GL_FLOAT, sizeof(april::PlainVertex), v);
 	glDrawArrays(_glRenderOperations[renderOperation], 0, nVertices);
 }
 
-void CustomRenderSystem::_deviceRender(april::RenderOperation renderOperation, april::TexturedVertex* v, int nVertices)
+void CustomRenderSystem::_deviceRender(const april::RenderOperation& renderOperation, const april::TexturedVertex* v, int nVertices)
 {
 	glVertexPointer(3, GL_FLOAT, sizeof(april::TexturedVertex), v);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(april::TexturedVertex), &v->u);
 	glDrawArrays(_glRenderOperations[renderOperation], 0, nVertices);
 }
 
-void CustomRenderSystem::_deviceRender(april::RenderOperation renderOperation, april::ColoredVertex* v, int nVertices)
+void CustomRenderSystem::_deviceRender(const april::RenderOperation& renderOperation, const april::ColoredVertex* v, int nVertices)
 {
 	glVertexPointer(3, GL_FLOAT, sizeof(april::ColoredVertex), v);
 	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(april::ColoredVertex), &v->color);
 	glDrawArrays(_glRenderOperations[renderOperation], 0, nVertices);
 }
 
-void CustomRenderSystem::_deviceRender(april::RenderOperation renderOperation, april::ColoredTexturedVertex* v, int nVertices)
+void CustomRenderSystem::_deviceRender(const april::RenderOperation& renderOperation, const april::ColoredTexturedVertex* v, int nVertices)
 {
 	glVertexPointer(3, GL_FLOAT, sizeof(april::ColoredTexturedVertex), v);
 	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(april::ColoredTexturedVertex), &v->color);

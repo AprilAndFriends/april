@@ -62,10 +62,10 @@ protected:
 	void _deviceClear(bool depth);
 	void _deviceClear(april::Color color, bool depth);
 	void _deviceClearDepth();
-	void _deviceRender(april::RenderOperation renderOperation, april::PlainVertex* v, int nVertices);
-	void _deviceRender(april::RenderOperation renderOperation, april::TexturedVertex* v, int nVertices);
-	void _deviceRender(april::RenderOperation renderOperation, april::ColoredVertex* v, int nVertices);
-	void _deviceRender(april::RenderOperation renderOperation, april::ColoredTexturedVertex* v, int nVertices);
+	void _deviceRender(const april::RenderOperation& renderOperation, const april::PlainVertex* v, int nVertices);
+	void _deviceRender(const april::RenderOperation& renderOperation, const april::TexturedVertex* v, int nVertices);
+	void _deviceRender(const april::RenderOperation& renderOperation, const april::ColoredVertex* v, int nVertices);
+	void _deviceRender(const april::RenderOperation& renderOperation, const april::ColoredTexturedVertex* v, int nVertices);
 
 	// translation from abstract render ops to gl's render ops
 	static int _glRenderOperations[];

@@ -282,7 +282,7 @@ namespace april
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGL_RenderSystem::_deviceRender(const RenderOperation& renderOperation, PlainVertex* vertices, int count)
+	void OpenGL_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
 	{
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
@@ -302,7 +302,7 @@ namespace april
 #endif
 	}
 
-	void OpenGL_RenderSystem::_deviceRender(const RenderOperation& renderOperation, TexturedVertex* vertices, int count)
+	void OpenGL_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
 	{
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
@@ -323,7 +323,7 @@ namespace april
 #endif
 	}
 
-	void OpenGL_RenderSystem::_deviceRender(const RenderOperation& renderOperation, ColoredVertex* vertices, int count)
+	void OpenGL_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
 	{
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.
@@ -344,7 +344,7 @@ namespace april
 #endif
 	}
 
-	void OpenGL_RenderSystem::_deviceRender(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count)
+	void OpenGL_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
 	{
 		// This kind of approach to render chunks of vertices is caused by problems on OpenGLES
 		// hardware that may allow only a certain amount of vertices to be rendered at the time.

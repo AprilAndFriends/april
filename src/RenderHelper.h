@@ -34,12 +34,12 @@ namespace april
 		virtual void clear();
 		virtual void flush();
 
-		virtual bool render(RenderOperation renderOperation, PlainVertex* vertices, int count);
-		virtual bool render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color);
-		virtual bool render(RenderOperation renderOperation, TexturedVertex* vertices, int count);
-		virtual bool render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color);
-		virtual bool render(RenderOperation renderOperation, ColoredVertex* vertices, int count);
-		virtual bool render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count);
+		virtual bool render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count);
+		virtual bool render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color);
+		virtual bool render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count);
+		virtual bool render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color);
+		virtual bool render(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
+		virtual bool render(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
 		virtual bool drawRect(grect rect, Color color);
 		virtual bool drawFilledRect(grect rect, Color color);
 		virtual bool drawTexturedRect(grect rect, grect src);

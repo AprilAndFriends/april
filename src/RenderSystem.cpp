@@ -849,7 +849,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(const RenderOperation& renderOperation, PlainVertex* vertices, int count)
+	void RenderSystem::render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
 	{
 		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
 		{
@@ -857,7 +857,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(const RenderOperation& renderOperation, PlainVertex* vertices, int count, Color color)
+	void RenderSystem::render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color)
 	{
 		if (color.a == 0)
 		{
@@ -869,7 +869,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(const RenderOperation& renderOperation, TexturedVertex* vertices, int count)
+	void RenderSystem::render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
 	{
 		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
 		{
@@ -877,7 +877,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(const RenderOperation& renderOperation, TexturedVertex* vertices, int count, Color color)
+	void RenderSystem::render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color)
 	{
 		if (color.a == 0)
 		{
@@ -889,7 +889,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(const RenderOperation& renderOperation, ColoredVertex* vertices, int count)
+	void RenderSystem::render(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
 	{
 		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
 		{
@@ -897,7 +897,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::render(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count)
+	void RenderSystem::render(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
 	{
 		if (this->renderHelper == NULL || !this->renderHelper->render(renderOperation, vertices, count))
 		{
@@ -949,7 +949,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, PlainVertex* vertices, int count)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
 	{
 		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = false;
@@ -959,7 +959,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, PlainVertex* vertices, int count, Color color)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color)
 	{
 		if (color.a == 0)
 		{
@@ -973,7 +973,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, TexturedVertex* vertices, int count)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
 	{
 		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = true;
@@ -983,7 +983,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, TexturedVertex* vertices, int count, Color color)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color)
 	{
 		if (color.a == 0)
 		{
@@ -997,7 +997,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, ColoredVertex* vertices, int count)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
 	{
 		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = false;
@@ -1007,7 +1007,7 @@ namespace april
 		this->_deviceRender(renderOperation, vertices, count);
 	}
 
-	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count)
+	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
 	{
 		this->_increaseStats(renderOperation, count);
 		this->state->useTexture = true;

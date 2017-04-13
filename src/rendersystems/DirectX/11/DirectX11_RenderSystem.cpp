@@ -837,25 +837,25 @@ namespace april
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 
-	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, PlainVertex* vertices, int count)
+	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
 	{
 		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(PlainVertex));
 		this->d3dDeviceContext->Draw(count, 0);
 	}
 
-	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, TexturedVertex* vertices, int count)
+	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
 	{
 		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(TexturedVertex));
 		this->d3dDeviceContext->Draw(count, 0);
 	}
 
-	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, ColoredVertex* vertices, int count)
+	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
 	{
 		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(ColoredVertex));
 		this->d3dDeviceContext->Draw(count, 0);
 	}
 
-	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, ColoredTexturedVertex* vertices, int count)
+	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
 	{
 		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(ColoredTexturedVertex));
 		this->d3dDeviceContext->Draw(count, 0);

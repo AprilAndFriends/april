@@ -48,37 +48,37 @@ namespace april
 	{
 	}
 
-	bool RenderHelper::render(RenderOperation renderOperation, PlainVertex* vertices, int count)
+	bool RenderHelper::render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
 	{
 		this->flush();
 		return false;
 	}
 
-	bool RenderHelper::render(RenderOperation renderOperation, PlainVertex* vertices, int count, Color color)
+	bool RenderHelper::render(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color)
 	{
 		this->flush();
 		return false;
 	}
 
-	bool RenderHelper::render(RenderOperation renderOperation, TexturedVertex* vertices, int count)
+	bool RenderHelper::render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
 	{
 		this->flush();
 		return false;
 	}
 
-	bool RenderHelper::render(RenderOperation renderOperation, TexturedVertex* vertices, int count, Color color)
+	bool RenderHelper::render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color)
 	{
 		this->flush();
 		return false;
 	}
 
-	bool RenderHelper::render(RenderOperation renderOperation, ColoredVertex* vertices, int count)
+	bool RenderHelper::render(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
 	{
 		this->flush();
 		return false;
 	}
 
-	bool RenderHelper::render(RenderOperation renderOperation, ColoredTexturedVertex* vertices, int count)
+	bool RenderHelper::render(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
 	{
 		this->flush();
 		return false;
