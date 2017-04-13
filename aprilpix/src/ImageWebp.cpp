@@ -78,19 +78,19 @@ namespace aprilpix
 		int size = (int)stream.size();
 		uint8_t* data = new uint8_t[size];
 		stream.readRaw(data, size);
-		int width = 0;
-		int height = 0;
-		int result = WebPGetInfo(data, size, &width, &height);
+		WebPBitstreamFeatures features;
+		VP8StatusCode code = WebPGetFeatures(data, size, &features);
 		delete[] data;
-		if (result == 0 || width <= 0 || height <= 0)
+		if (code != VP8_STATUS_OK || features.width <= 0 || features.height <= 0)
 		{
 			hlog::error(logTag, "Could not load WEBP meta data!");
 			return NULL;
 		}
 		april::Image* image = new ImageWebp();
 		image->data = NULL;
-		image->w = width;
-		image->h = height;
+		image->w = features.width;
+		image->h = features.height;
+		image->format = (features.has_alpha ? Format::RGBA : Format::RGB);
 		return image;
 	}
 
