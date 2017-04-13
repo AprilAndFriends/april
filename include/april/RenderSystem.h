@@ -213,7 +213,7 @@ namespace april
 		grect getViewport() const;
 		/// @brief Sets the render viewport.
 		/// @param[in] value The viewport rectangle.
-		void setViewport(const grect& value);
+		void setViewport(cgrect value);
 		/// @brief Gets the current modelview matrix.
 		/// @return The current modelview matrix.
 		gmat4 getModelviewMatrix() const;
@@ -374,11 +374,11 @@ namespace april
 		void translate(float x, float y, float z = 0.0f);
 		/// @brief Translates the modelview matrix.
 		/// @param[in] vector The translation vector.
-		void translate(const gvec3& vector);
+		void translate(cgvec3 vector);
 		/// @brief Translates the modelview matrix.
 		/// @param[in] vector The 2D translation vector.
 		/// @note This ignores the Z-coordinate.
-		void translate(const gvec2& vector);
+		void translate(cgvec2 vector);
 		/// @brief Rotates the modelview matrix around the -Z axis.
 		/// @param[in] angle Angle to rotate.
 		void rotate(float angle);
@@ -392,7 +392,7 @@ namespace april
 		/// @brief Rotates the modelview matrix around an axis.
 		/// @param[in] axis The rotation axis.
 		/// @param[in] angle Angle to rotate.
-		void rotate(const gvec3& axis, float angle);
+		void rotate(cgvec3 axis, float angle);
 		/// @brief Scales the modelview matrix by a certain factor.
 		/// @param[in] factor The scaling factor.
 		void scale(float factor);
@@ -403,16 +403,16 @@ namespace april
 		void scale(float factorX, float factorY, float factorZ);
 		/// @brief Scales the modelview matrix by a certain factor.
 		/// @param[in] vector The scaling vector.
-		void scale(const gvec3& vector);
+		void scale(cgvec3 vector);
 		/// @brief Scales the modelview matrix by a certain factor.
 		/// @param[in] vector The 2D scaling vector.
 		/// @note This ignores the Z-coordinate.
-		void scale(const gvec2& vector);
+		void scale(cgvec2 vector);
 		/// @brief Sets the modelview matrix up to look toward a certain point.
 		/// @param[in] eye The origin position of the camera.
 		/// @param[in] target The target position where to look.
 		/// @param[in] up The up-vector to decide the roll angle of the camera.
-		void lookAt(const gvec3& eye, const gvec3& target, const gvec3& up);
+		void lookAt(cgvec3 eye, cgvec3 target, cgvec3 up);
 		/// @brief Sets the perspective of the modelview matrix.
 		/// @param[in] fov The angle of the field of view.
 		/// @param[in] aspect The aspect ratio of the viewport.
@@ -648,7 +648,7 @@ namespace april
 
 		/// @brief Sets the device viewport.
 		/// @param[in] rect The viewport rectangle.
-		virtual void _setDeviceViewport(const grect& rect) = 0;
+		virtual void _setDeviceViewport(cgrect rect) = 0;
 		/// @brief Sets the device modelview matrix.
 		/// @param[in] matrix The current modelview matrix.
 		virtual void _setDeviceModelviewMatrix(const gmat4& matrix) = 0;

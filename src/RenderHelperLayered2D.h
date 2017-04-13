@@ -90,7 +90,7 @@ namespace april
 			harray<ColoredTexturedVertex> coloredTexturedVertices;
 			harray<Layer*> parallelLayers;
 
-			Layer(int index, RenderCall* renderCall, const grect& rect);
+			Layer(int index, RenderCall* renderCall, cgrect rect);
 			~Layer();
 
 		};

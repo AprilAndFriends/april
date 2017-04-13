@@ -370,7 +370,7 @@ namespace april
 		return this->state->viewport;
 	}
 
-	void RenderSystem::setViewport(const grect& value)
+	void RenderSystem::setViewport(cgrect value)
 	{
 		this->state->viewport = value;
 		this->state->viewportChanged = true;
@@ -668,13 +668,13 @@ namespace april
 		this->state->modelviewMatrixChanged = true;
 	}
 	
-	void RenderSystem::translate(const gvec3& vector)
+	void RenderSystem::translate(cgvec3 vector)
 	{
 		this->state->modelviewMatrix.translate(vector);
 		this->state->modelviewMatrixChanged = true;
 	}
 
-	void RenderSystem::translate(const gvec2& vector)
+	void RenderSystem::translate(cgvec2 vector)
 	{
 		this->state->modelviewMatrix.translate(vector.x, vector.y, 0.0f);
 		this->state->modelviewMatrixChanged = true;
@@ -692,7 +692,7 @@ namespace april
 		this->state->modelviewMatrixChanged = true;
 	}	
 	
-	void RenderSystem::rotate(const gvec3& axis, float angle)
+	void RenderSystem::rotate(cgvec3 axis, float angle)
 	{
 		this->state->modelviewMatrix.rotate(axis, angle);
 		this->state->modelviewMatrixChanged = true;
@@ -710,19 +710,19 @@ namespace april
 		this->state->modelviewMatrixChanged = true;
 	}
 	
-	void RenderSystem::scale(const gvec3& vector)
+	void RenderSystem::scale(cgvec3 vector)
 	{
 		this->state->modelviewMatrix.scale(vector);
 		this->state->modelviewMatrixChanged = true;
 	}
 
-	void RenderSystem::scale(const gvec2& vector)
+	void RenderSystem::scale(cgvec2 vector)
 	{
 		this->state->modelviewMatrix.scale(vector.x, vector.y, 1.0f);
 		this->state->modelviewMatrixChanged = true;
 	}
 
-	void RenderSystem::lookAt(const gvec3& eye, const gvec3& target, const gvec3& up)
+	void RenderSystem::lookAt(cgvec3 eye, cgvec3 target, cgvec3 up)
 	{
 		this->state->modelviewMatrix.lookAt(eye, target, up);
 		this->state->modelviewMatrixChanged = true;

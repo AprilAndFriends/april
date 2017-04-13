@@ -366,7 +366,7 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::_setDeviceViewport(const grect& rect)
+	void DirectX9_RenderSystem::_setDeviceViewport(cgrect rect)
 	{
 		D3DVIEWPORT9 viewport;
 		viewport.MinZ = 0.0f;

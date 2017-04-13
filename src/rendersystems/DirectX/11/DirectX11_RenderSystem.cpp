@@ -607,7 +607,7 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::_setDeviceViewport(const grect& rect)
+	void DirectX11_RenderSystem::_setDeviceViewport(cgrect rect)
 	{
 		grect viewport = rect;
 		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8

@@ -165,7 +165,7 @@ namespace april
 		this->presentFrame();
 	}
 
-	void OpenGL_RenderSystem::_setDeviceViewport(const grect& rect)
+	void OpenGL_RenderSystem::_setDeviceViewport(cgrect rect)
 	{
 		// because GL has to defy screen logic and has (0,0) in the bottom left corner
 		glViewport((int)rect.x, (int)(april::window->getHeight() - rect.h - rect.y), (int)rect.w, (int)rect.h);

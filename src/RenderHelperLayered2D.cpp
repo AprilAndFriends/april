@@ -79,7 +79,7 @@ namespace april
 		}
 	}
 
-	RenderHelperLayered2D::Layer::Layer(int index, RenderCall* renderCall, const grect& rect)
+	RenderHelperLayered2D::Layer::Layer(int index, RenderCall* renderCall, cgrect rect)
 	{
 		this->index = index;
 		this->rects += rect;
