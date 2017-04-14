@@ -442,7 +442,7 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::_setDeviceTextureFilter(Texture::Filter textureFilter)
+	void DirectX9_RenderSystem::_setDeviceTextureFilter(const Texture::Filter& textureFilter)
 	{
 		if (textureFilter == Texture::Filter::Linear)
 		{
@@ -460,7 +460,7 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::_setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode)
+	void DirectX9_RenderSystem::_setDeviceTextureAddressMode(const Texture::AddressMode& textureAddressMode)
 	{
 		if (textureAddressMode == Texture::AddressMode::Wrap)
 		{
@@ -621,7 +621,7 @@ namespace april
 		this->d3dDevice->Clear(0, NULL, flags, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
 
-	void DirectX9_RenderSystem::_deviceClear(april::Color color, bool depth)
+	void DirectX9_RenderSystem::_deviceClear(const Color& color, bool depth)
 	{
 		DWORD flags = D3DCLEAR_TARGET;
 		if (depth)

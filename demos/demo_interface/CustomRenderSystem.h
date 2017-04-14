@@ -54,13 +54,13 @@ protected:
 	void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
 	void _setDeviceRenderMode(bool useTexture, bool useColor);
 	void _setDeviceTexture(april::Texture* texture);
-	void _setDeviceTextureFilter(april::Texture::Filter textureFilter);
-	void _setDeviceTextureAddressMode(april::Texture::AddressMode textureAddressMode);
+	void _setDeviceTextureFilter(const april::Texture::Filter& textureFilter);
+	void _setDeviceTextureAddressMode(const april::Texture::AddressMode& textureAddressMode);
 	void _setDeviceBlendMode(april::BlendMode blendMode);
 	void _setDeviceColorMode(april::ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const april::Color& systemColor);
 
 	void _deviceClear(bool depth);
-	void _deviceClear(april::Color color, bool depth);
+	void _deviceClear(const april::Color& color, bool depth);
 	void _deviceClearDepth();
 	void _deviceRender(const april::RenderOperation& renderOperation, const april::PlainVertex* v, int nVertices);
 	void _deviceRender(const april::RenderOperation& renderOperation, const april::TexturedVertex* v, int nVertices);

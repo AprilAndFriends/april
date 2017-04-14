@@ -703,12 +703,12 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::_setDeviceTextureFilter(Texture::Filter textureFilter)
+	void DirectX11_RenderSystem::_setDeviceTextureFilter(const Texture::Filter& textureFilter)
 	{
 		// not used
 	}
 
-	void DirectX11_RenderSystem::_setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode)
+	void DirectX11_RenderSystem::_setDeviceTextureAddressMode(const Texture::AddressMode& textureAddressMode)
 	{
 		// not used
 	}
@@ -819,7 +819,7 @@ namespace april
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 	
-	void DirectX11_RenderSystem::_deviceClear(Color color, bool depth)
+	void DirectX11_RenderSystem::_deviceClear(const Color& color, bool depth)
 	{
 		static float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 		clearColor[0] = color.b_f();

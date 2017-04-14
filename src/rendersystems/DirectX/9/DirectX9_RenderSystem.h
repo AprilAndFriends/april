@@ -87,13 +87,13 @@ namespace april
 		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
 		void _setDeviceRenderMode(bool useTexture, bool useColor);
 		void _setDeviceTexture(Texture* texture);
-		void _setDeviceTextureFilter(Texture::Filter textureFilter);
-		void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode);
+		void _setDeviceTextureFilter(const Texture::Filter& textureFilter);
+		void _setDeviceTextureAddressMode(const Texture::AddressMode& textureAddressMode);
 		void _setDeviceBlendMode(const BlendMode& blendMode);
 		void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
 
 		void _deviceClear(bool depth);
-		void _deviceClear(april::Color color, bool depth);
+		void _deviceClear(const Color& color, bool depth);
 		void _deviceClearDepth();
 		void _deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count);

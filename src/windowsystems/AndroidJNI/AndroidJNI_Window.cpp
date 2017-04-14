@@ -73,7 +73,7 @@ namespace april
 		env->PopLocalFrame(NULL);
 	}
 
-	void AndroidJNI_Window::queueTouchEvent(MouseInputEvent::Type type, gvec2 position, int index)
+	void AndroidJNI_Window::queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index)
 	{
 		if (type == MouseInputEvent::Type::Down || type == MouseInputEvent::Type::Up)
 		{

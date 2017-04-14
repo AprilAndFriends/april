@@ -320,12 +320,12 @@ namespace april
 		grect getOrthoProjection() const;
 		/// @brief Activate ortho-projection using a rectangle.
 		/// @param[in] rect The ortho-projection rectangle.
-		void setOrthoProjection(grect rect);
+		void setOrthoProjection(cgrect rect);
 		/// @brief Activate ortho-projection using a rectangle.
 		/// @param[in] rect The ortho-projection rectangle.
 		/// @param[in] nearZ The near clipping plane Z coordinate.
 		/// @param[in] farZ The far clipping plane Z coordinate.
-		void setOrthoProjection(grect rect, float nearZ, float farZ);
+		void setOrthoProjection(cgrect rect, float nearZ, float farZ);
 		/// @brief Activate ortho-projection using just the size.
 		/// @param[in] size The ortho-projection size.
 		/// @note This assumes the coordinates of the ortho-projection is (0,0).
@@ -668,10 +668,10 @@ namespace april
 		virtual void _setDeviceTexture(Texture* texture) = 0;
 		/// @brief Sets the current Texture's filter.
 		/// @param[in] textureFilter The current texture filter.
-		virtual void _setDeviceTextureFilter(Texture::Filter textureFilter) = 0;
+		virtual void _setDeviceTextureFilter(const Texture::Filter& textureFilter) = 0;
 		/// @brief Sets the current Texture's address mode.
 		/// @param[in] textureAddressMode The current texture address mode.
-		virtual void _setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode) = 0;
+		virtual void _setDeviceTextureAddressMode(const Texture::AddressMode& textureAddressMode) = 0;
 		/// @brief Sets the device blending mode for rendering.
 		/// @param[in] blendMode The blending mode to be set for rendering.
 		virtual void _setDeviceBlendMode(const BlendMode& blendMode) = 0;
@@ -764,7 +764,7 @@ namespace april
 		/// @param[in] color Color that is used to fill the backbuffer.
 		/// @param[in] depth If true, clears the depth buffer as well.
 		/// @note The parameter color is not applied to the depth-buffer.
-		virtual void _deviceClear(Color color, bool depth) = 0;
+		virtual void _deviceClear(const Color& color, bool depth) = 0;
 		/// @brief Clears the device depth-buffer.
 		virtual void _deviceClearDepth() = 0;
 		/// @brief Executes the final renders call for a vertex array.

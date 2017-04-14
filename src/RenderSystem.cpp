@@ -598,17 +598,15 @@ namespace april
 		return result;
 	}
 
-	void RenderSystem::setOrthoProjection(grect rect)
+	void RenderSystem::setOrthoProjection(cgrect rect)
 	{
-		rect -= rect.getSize() * this->pixelOffset / april::window->getSize();
-		this->state->projectionMatrix.setOrthoProjection(rect);
+		this->state->projectionMatrix.setOrthoProjection(rect - rect.getSize() * this->pixelOffset / april::window->getSize());
 		this->state->projectionMatrixChanged = true;
 	}
 
-	void RenderSystem::setOrthoProjection(grect rect, float nearZ, float farZ)
+	void RenderSystem::setOrthoProjection(cgrect rect, float nearZ, float farZ)
 	{
-		rect -= rect.getSize() * this->pixelOffset / april::window->getSize();
-		this->state->projectionMatrix.setOrthoProjection(rect, nearZ, farZ);
+		this->state->projectionMatrix.setOrthoProjection(rect - rect.getSize() * this->pixelOffset / april::window->getSize(), nearZ, farZ);
 		this->state->projectionMatrixChanged = true;
 	}
 

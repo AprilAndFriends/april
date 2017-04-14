@@ -202,7 +202,7 @@ namespace april
 		}
 	}
 
-	void OpenGL_RenderSystem::_setDeviceTextureFilter(Texture::Filter textureFilter)
+	void OpenGL_RenderSystem::_setDeviceTextureFilter(const Texture::Filter& textureFilter)
 	{
 		if (textureFilter == Texture::Filter::Linear)
 		{
@@ -220,7 +220,7 @@ namespace april
 		}
 	}
 
-	void OpenGL_RenderSystem::_setDeviceTextureAddressMode(Texture::AddressMode textureAddressMode)
+	void OpenGL_RenderSystem::_setDeviceTextureAddressMode(const Texture::AddressMode& textureAddressMode)
 	{
 		if (textureAddressMode == Texture::AddressMode::Wrap)
 		{
@@ -266,7 +266,7 @@ namespace april
 		glClear(mask);
 	}
 
-	void OpenGL_RenderSystem::_deviceClear(april::Color color, bool depth)
+	void OpenGL_RenderSystem::_deviceClear(const Color& color, bool depth)
 	{
 		GLbitfield mask = GL_COLOR_BUFFER_BIT;
 		if (depth)

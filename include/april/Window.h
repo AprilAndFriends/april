@@ -77,7 +77,7 @@ namespace april
 			/// @param[in] type The event type.
 			/// @param[in] position The pointer position.
 			/// @param[in] keyCode The key code.
-			MouseInputEvent(Type type, gvec2 position, Key keyCode);
+			MouseInputEvent(Type type, cgvec2 position, Key keyCode);
 		
 		};
 
@@ -391,7 +391,7 @@ namespace april
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
 		/// @param[in] keyCode The key code.
-		virtual void handleMouseEvent(MouseInputEvent::Type type, gvec2 position, Key keyCode);
+		virtual void handleMouseEvent(MouseInputEvent::Type type, cgvec2 position, Key keyCode);
 		/// @brief Handles a keyboard event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
@@ -442,7 +442,7 @@ namespace april
 		/// @param[in] position The pointer position.
 		/// @param[in] keyCode The key code.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueMouseEvent(MouseInputEvent::Type type, gvec2 position, Key keyCode);
+		virtual void queueMouseEvent(MouseInputEvent::Type type, cgvec2 position, Key keyCode);
 		/// @brief Queues a keyboard event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
@@ -454,7 +454,7 @@ namespace april
 		/// @param[in] position The pointer position.
 		/// @param[in] index The pointer index.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueTouchEvent(MouseInputEvent::Type type, gvec2 position, int index);
+		virtual void queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index);
 		/// @brief Queues a controller event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] controllerIndex Index of the controller.

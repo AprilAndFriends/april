@@ -72,7 +72,7 @@ namespace april
 		this->keyCode = Key::None;
 	}
 		
-	Window::MouseInputEvent::MouseInputEvent(Window::MouseInputEvent::Type type, gvec2 position, Key keyCode)
+	Window::MouseInputEvent::MouseInputEvent(Window::MouseInputEvent::Type type, cgvec2 position, Key keyCode)
 	{
 		this->type = type;
 		this->position = position;
@@ -554,7 +554,7 @@ namespace april
 		return true;
 	}
 	
-	void Window::handleMouseEvent(MouseInputEvent::Type type, gvec2 position, Key keyCode)
+	void Window::handleMouseEvent(MouseInputEvent::Type type, cgvec2 position, Key keyCode)
 	{
 		if (this->mouseDelegate != NULL)
 		{
@@ -740,7 +740,7 @@ namespace april
 		}
 	}
 
-	void Window::queueMouseEvent(MouseInputEvent::Type type, gvec2 position, Key keyCode)
+	void Window::queueMouseEvent(MouseInputEvent::Type type, cgvec2 position, Key keyCode)
 	{
 		this->mouseEvents += MouseInputEvent(type, position, keyCode);
 	}
@@ -750,7 +750,7 @@ namespace april
 		this->keyEvents += KeyInputEvent(type, keyCode, charCode);
 	}
 
-	void Window::queueTouchEvent(MouseInputEvent::Type type, gvec2 position, int index)
+	void Window::queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index)
 	{
 		int previousTouchesSize = this->touches.size();
 		if (type == MouseInputEvent::Type::Down)

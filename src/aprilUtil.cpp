@@ -124,17 +124,17 @@ namespace april
 		return prefix.replaced(".", "_") + hstr(count);
 	}
 
-	hstr gvec2ToHstr(gvec2 vector)
+	hstr gvec2ToHstr(cgvec2 vector)
 	{
 		return hsprintf("%f%c%f", vector.x, HSTR_SEPARATOR, vector.y);
 	}
 
-	hstr gvec3ToHstr(gvec3 vector)
+	hstr gvec3ToHstr(cgvec3 vector)
 	{
 		return hsprintf("%f%c%f%c%f", vector.x, HSTR_SEPARATOR, vector.y, HSTR_SEPARATOR, vector.z);
 	}
 
-	hstr grectToHstr(grect rect)
+	hstr grectToHstr(cgrect rect)
 	{
 		return hsprintf("%f%c%f%c%f%c%f", rect.x, HSTR_SEPARATOR, rect.y, HSTR_SEPARATOR, rect.w, HSTR_SEPARATOR, rect.h);
 	}

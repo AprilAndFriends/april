@@ -230,7 +230,7 @@ void CustomRenderSystem::_setDeviceTexture(april::Texture* texture)
 	}
 }
 
-void CustomRenderSystem::_setDeviceTextureFilter(april::Texture::Filter textureFilter)
+void CustomRenderSystem::_setDeviceTextureFilter(const april::Texture::Filter& textureFilter)
 {
 	if (textureFilter == april::Texture::FILTER_LINEAR)
 	{
@@ -248,7 +248,7 @@ void CustomRenderSystem::_setDeviceTextureFilter(april::Texture::Filter textureF
 	}
 }
 
-void CustomRenderSystem::_setDeviceTextureAddressMode(april::Texture::AddressMode textureAddressMode)
+void CustomRenderSystem::_setDeviceTextureAddressMode(const april::Texture::AddressMode& textureAddressMode)
 {
 	if (textureAddressMode == april::Texture::ADDRESS_WRAP)
 	{
@@ -370,7 +370,7 @@ void CustomRenderSystem::_deviceClear(bool depth)
 	glClear(mask);
 }
 
-void CustomRenderSystem::_deviceClear(april::Color color, bool depth)
+void CustomRenderSystem::_deviceClear(const april::Color& color, bool depth)
 {
 	GLbitfield mask = GL_COLOR_BUFFER_BIT;
 	if (depth)
