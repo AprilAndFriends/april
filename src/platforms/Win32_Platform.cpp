@@ -38,7 +38,7 @@ namespace april
 		memset(&osVersionInfo, 0, sizeof(OSVERSIONINFOEX));
 		osVersionInfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 		osVersionInfo.dwMajorVersion = 5;
-		osVersionInfo.dwMajorVersion = 0;
+		osVersionInfo.dwMinorVersion = 0;
 		DWORDLONG conditionMask = 0;
 		VER_SET_CONDITION(conditionMask, VER_MAJORVERSION, VER_EQUAL);
 		VER_SET_CONDITION(conditionMask, VER_MINORVERSION, VER_EQUAL);
@@ -53,17 +53,17 @@ namespace april
 			{
 				return " Vista";
 			}
-			osVersionInfo.dwMajorVersion = 1;
+			osVersionInfo.dwMinorVersion = 1;
 			if (VerifyVersionInfoW(&osVersionInfo, VER_MINORVERSION, conditionMask) != 0)
 			{
 				return " 7";
 			}
-			osVersionInfo.dwMajorVersion = 2;
+			osVersionInfo.dwMinorVersion = 2;
 			if (VerifyVersionInfoW(&osVersionInfo, VER_MINORVERSION, conditionMask) != 0)
 			{
 				return " 8";
 			}
-			osVersionInfo.dwMajorVersion = 3;
+			osVersionInfo.dwMinorVersion = 3;
 			if (VerifyVersionInfoW(&osVersionInfo, VER_MINORVERSION, conditionMask) != 0)
 			{
 				return " 8.1";
