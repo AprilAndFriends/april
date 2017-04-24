@@ -861,7 +861,7 @@ namespace april
 		this->d3dDeviceContext->Draw(count, 0);
 	}
 
-	void DirectX11_RenderSystem::_setDX11VertexBuffer(const RenderOperation& renderOperation, void* data, int count, unsigned int vertexSize)
+	void DirectX11_RenderSystem::_setDX11VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize)
 	{
 		if (this->deviceState_renderOperation != renderOperation)
 		{

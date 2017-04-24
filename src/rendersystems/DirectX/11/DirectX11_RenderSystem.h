@@ -187,7 +187,7 @@ namespace april
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
 
-		void _setDX11VertexBuffer(const RenderOperation& renderOperation, void* data, int count, unsigned int vertexSize);
+		void _setDX11VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize);
 
 		static D3D11_PRIMITIVE_TOPOLOGY _dx11RenderOperations[];
 
