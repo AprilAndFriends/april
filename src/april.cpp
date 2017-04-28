@@ -262,6 +262,9 @@ namespace april
 		symbolicColors["dark_neon"] = april::Color::DarkNeon;
 		symbolicColors["dark_purple"] = april::Color::DarkPurple;
 		symbolicColors["dark_aqua"] = april::Color::DarkAqua;
+        symbolicColors["clear"] = april::Color::Clear;
+        symbolicColors["blank"] = april::Color::Blank;
+        
 		// extensions
 		if (extensions.size() == 0)
 		{
