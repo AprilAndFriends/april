@@ -92,44 +92,15 @@ namespace april
 #ifdef _ANDROID
 	extern void* javaVM;
 #endif
-	// this is required due to certain platforms requiring unloading of textures when a pause event is received
-	void KD_APIENTRY _processEventPause(const KDEvent* evt)
-	{
-#if defined(_IOS) || defined(_ANDROID)
-		switch (evt->type)
-		{
-		case KD_EVENT_PAUSE:
-			hlog::write(logTag, "OpenKODE pause event received.");
-// kspes@20161210 - this code caused problems on android too, disabling it. still not sure why it is needed. let's give it some more time then get rid of it.
-//			if (april::rendersys != NULL)
-//			{
-//				// kspes@20160820 - there was an unloadTextures() call here before, but I'm not sure why this is needed? There's another defocus call that usually unloads resources
-//				// every time you defocus the window. I'm going to play it safe and just disable this on iOS for now.
-//#ifndef _IOS
-//				april::rendersys->unloadTextures();
-//#endif
-//			}
-			break;
-		}
-#endif
-	}
-	
-	void KD_APIENTRY _processEventWindowFocus(const KDEvent* evt)
+
+	void KD_APIENTRY _processEvents(const KDEvent* evt)
 	{
 		switch (evt->type)
 		{
 		case KD_EVENT_WINDOW_FOCUS:
 			hlog::writef(logTag, "OpenKODE window focus change event received: %d", evt->data.windowfocus.focusstate);
-			bool focused = evt->data.windowfocus.focusstate != 0;
-			april::window->handleActivityChange(focused);
+			april::window->handleActivityChange(evt->data.windowfocus.focusstate != 0);
 			break;
-		}
-	}
-
-	void KD_APIENTRY _processEventLowMemory(const KDEvent* evt)
-	{
-		switch (evt->type)
-		{
 		case KD_EVENT_LOWMEM:
 			hlog::write(logTag, "Received libKD memory warning!");
 			if (april::window != NULL)
@@ -137,8 +108,10 @@ namespace april
 				april::window->handleLowMemoryWarningEvent();
 			}
 			break;
+		default:
+			break;
+		}
 	}
-}
 
 	OpenKODE_Window::OpenKODE_Window() : Window()
 	{
@@ -228,9 +201,8 @@ namespace april
 #ifdef _EGL
 		april::egl->create();
 #endif
-		kdInstallCallback(&_processEventPause, KD_EVENT_PAUSE, NULL);
-		kdInstallCallback(&_processEventWindowFocus, KD_EVENT_WINDOW_FOCUS, NULL);
-		kdInstallCallback(&_processEventLowMemory, KD_EVENT_LOWMEM, NULL);
+		kdInstallCallback(&_processEvents, KD_EVENT_WINDOW_FOCUS, NULL);
+		kdInstallCallback(&_processEvents, KD_EVENT_LOWMEM, NULL);
 #ifdef _IOS
 		auto appDelegate = static_cast<id<KDAppDelegate>>([[UIApplication sharedApplication] delegate]);
 		[appDelegate addURLHandler:[KDURLManager instance]];
@@ -244,7 +216,6 @@ namespace april
 		{
 			return false;
 		}
-		kdInstallCallback(NULL, KD_EVENT_PAUSE, NULL);
 		kdInstallCallback(NULL, KD_EVENT_WINDOW_FOCUS, NULL);
 		kdInstallCallback(NULL, KD_EVENT_LOWMEM, NULL);
 #ifdef _EGL
