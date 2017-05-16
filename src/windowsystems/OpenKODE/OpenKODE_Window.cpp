@@ -489,7 +489,7 @@ namespace april
 	
 	void OpenKODE_Window::checkEvents()
 	{
-		const KDEvent* evt;
+		const KDEvent* evt = NULL;
 		// removed timeout due to "TWNMNPG-8947"
 		while (this->running && (evt = kdWaitEvent(0L)) != NULL)
 		{
