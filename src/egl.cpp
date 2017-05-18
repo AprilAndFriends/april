@@ -13,7 +13,7 @@
 #include <hltypes/hstring.h>
 #include <hltypes/hlog.h>
 
-#ifdef _BUILDING_APRIL
+#ifdef BUILDING_APRIL
 #include "april.h"
 #include "RenderSystem.h"
 #include "Window.h"
