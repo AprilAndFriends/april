@@ -19,41 +19,42 @@ namespace april
 {
 	extern SystemInfo info;
 	
-	SystemInfo getSystemInfo()
+	void _setupSystemInfo_platform(SystemInfo& info)
 	{
-		if (info.locale == "")
-		{
-			info.cpuCores = 1; // TODO
-			info.displayResolution.set(1024.0f, 768.0f); // TODO
-			info.displayDpi = 96.0f; // TODO
-			//info.ram = 1024; // TODO
-			info.locale = "en"; // TODO
-		}
-		return info;
+		info.cpuCores = 1; // TODO
+		info.displayResolution.set(1024.0f, 768.0f); // TODO
+		info.displayDpi = 96.0f; // TODO
+		//info.ram = 1024; // TODO
+		info.locale = "en"; // TODO
 	}
 
-	hstr getPackageName()
+	hstr _getPackageName_platform()
 	{
 		hlog::warn(logTag, "Cannot use getPackageName() on this platform.");
 		return "";
 	}
 
-	hstr getUserDataPath()
+	hstr _getUserDataPath_platform()
 	{
-		hlog::error(logTag, "Not implemented.");
+		hlog::warn(logTag, "Cannot use getUserDataPath() on this platform.");
 		return ".";
 	}
 	
-	int64_t getRamConsumption()
+	int64_t _getRamConsumption_platform()
 	{
-		// TODOa
+		hlog::warn(logTag, "Cannot use getRamConsumption() on this platform.");
 		return 0LL;
-	}	
+	}
 	
-	MessageBoxButton messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, bool modal, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton))
+	bool _openUrl_platform(chstr url)
 	{
-		// TODO
-		return MessageBoxButton::Ok;
+		hlog::warn(logTag, "Cannot use openUrl() on this platform.");
+		return false;
+	}
+	
+	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(MessageBoxButton), bool modal)
+	{
+		hlog::warn(logTag, "Cannot use showMessageBox() on this platform.");
 	}
 
 }

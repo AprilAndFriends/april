@@ -23,10 +23,9 @@
 
 namespace april
 {
-	extern SystemInfo info;
 	extern void (*dialogCallback)(MessageBoxButton);
 	
-	SystemInfo getSystemInfo()
+	void _setupSystemInfo_platform(SystemInfo& info)
 	{
 		if (info.locale == "")
 		{
@@ -46,7 +45,7 @@ namespace april
 			// TODO - maybe use direct Unix calls?
 			jmethodID methodGetDisplayResolution = env->GetStaticMethodID(classNativeInterface, "getDisplayResolution", _JARGS(_JOBJ, ));
 			jintArray jResolution = (jintArray)env->CallStaticObjectMethod(classNativeInterface, methodGetDisplayResolution);
-			jint dimensions[2] = {0, 0};
+			jint dimensions[2] = { 0, 0 };
 			env->GetIntArrayRegion(jResolution, 0, 2, dimensions);
 			info.displayResolution.set(hroundf(dimensions[0]), hroundf(dimensions[1]));
 			// display DPI
@@ -66,10 +65,9 @@ namespace april
 			info.osVersion.set(_JSTR_TO_HSTR((jstring)env->CallStaticObjectMethod(classNativeInterface, methodGetOsVersion)));
 			env->PopLocalFrame(NULL);
 		}
-		return info;
 	}
 	
-	hstr getPackageName()
+	hstr _getPackageName_platform()
 	{
 		static hstr package;
 		if (package == "")
@@ -81,7 +79,7 @@ namespace april
 		return package;
 	}
 	
-	hstr getUserDataPath()
+	hstr _getUserDataPath_platform()
 	{
 		static hstr path;
 		if (path == "")
@@ -93,7 +91,7 @@ namespace april
 		return path;
 	}
 	
-	int64_t getRamConsumption()
+	int64_t _getRamConsumption_platform()
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodGetRamConsumption, "getRamConsumption", _JARGS(_JLONG, ));
 		int64_t result = (int64_t)env->CallStaticLongMethod(classNativeInterface, methodGetRamConsumption);
@@ -101,16 +99,15 @@ namespace april
 		return result;
 	}
 	
-	bool openUrl(chstr url)
+	bool _openUrl_platform(chstr url)
 	{
-		hlog::write(logTag, "Opening URL: " + url);
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodOpenUrl, "openUrl", _JARGS(_JVOID, _JSTR));
 		env->CallStaticVoidMethod(classNativeInterface, methodOpenUrl, env->NewStringUTF(url.cStr()));
 		env->PopLocalFrame(NULL);
 		return true;
 	}
 
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
+	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowMessageBox, "showMessageBox", _JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR _JSTR _JINT));

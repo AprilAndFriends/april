@@ -154,16 +154,17 @@ namespace april
 	/// @note "customButtonTitles" may not work on all OSes.
 	/// @note Depending on the OS, this function may return immediately. Write your code to assume that this function is asynchronous to avoid problems.
 	/// @note Expect that "callback" will be called asynchrously once the message box is dismissed.
-	aprilFnExport void messageBox(chstr title, chstr text, MessageBoxButton buttons = MessageBoxButton::Ok, MessageBoxStyle style = MessageBoxStyle::Normal,
+	aprilFnExport void showMessageBox(chstr title, chstr text, MessageBoxButton buttons = MessageBoxButton::Ok, MessageBoxStyle style = MessageBoxStyle::Normal,
 		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL, bool modal = false, bool terminateOnDisplay = false);
 
-	/// @brief Used internally only.
-	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel,
-		MessageBoxButton buttons, hmap<MessageBoxButton, hstr> customButtonTitles);
-	/// @brief Used internally only.
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons = MessageBoxButton::Ok, MessageBoxStyle style = MessageBoxStyle::Normal,
-		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL, bool modal = false);
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+	DEPRECATED_ATTRIBUTE aprilFnExport void messageBox(chstr title, chstr text, MessageBoxButton buttons = MessageBoxButton::Ok, MessageBoxStyle style = MessageBoxStyle::Normal,
+		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL, bool modal = false, bool terminateOnDisplay = false);
+#endif
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel, MessageBoxButton buttons, hmap<MessageBoxButton, hstr> customButtonTitles);
+#endif
 
 }
-
 #endif

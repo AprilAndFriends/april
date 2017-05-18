@@ -31,32 +31,27 @@
 
 namespace april
 {
-	extern SystemInfo info;
-	static hversion osVersion;
-	
-	hversion getMacOSVersion()
+	static hversion _getMaxOsVersion()
 	{
 #ifdef _DEBUG
 		//return hversion(10, 6); // uncomment this to test behaviour on older macs
 #endif
-		if (osVersion.major == 0)
+		hversion result;
+		SInt32 major, minor, bugfix;
+		if (Gestalt(gestaltSystemVersionMajor, &major)   == noErr &&
+			Gestalt(gestaltSystemVersionMinor, &minor)   == noErr &&
+			Gestalt(gestaltSystemVersionBugFix, &bugfix) == noErr)
 		{
-			SInt32 major, minor, bugfix;
-			if (Gestalt(gestaltSystemVersionMajor, &major)   == noErr &&
-				Gestalt(gestaltSystemVersionMinor, &minor)   == noErr &&
-				Gestalt(gestaltSystemVersionBugFix, &bugfix) == noErr)
-			{
-				osVersion.set(major, minor, bugfix);
-			}
-			else
-			{
-				osVersion.set(10, 3); // just in case. < 10.4 is not supported.
-			}
+			result.set(major, minor, bugfix);
 		}
-		return osVersion;
+		else
+		{
+			result.set(10, 3); // just in case. < 10.4 is not supported.
+		}
+		return result;
 	}
 	
-	SystemInfo getSystemInfo()
+	void _setupSystemInfo_platform(SystemInfo& info)
 	{
 		static NSScreen* prevScreen = NULL;
 		NSScreen* mainScreen = [NSScreen mainScreen];
@@ -68,7 +63,7 @@ namespace april
 			// RAM
 			info.name = "mac";
 			info.deviceName = "unnamedMacDevice";
-			info.osVersion = getMacOSVersion();
+			info.osVersion = _getMaxOsVersion();
 			
 			float scalingFactor = 1.0f;
 			if ([mainScreen respondsToSelector:@selector(backingScaleFactor)])
@@ -81,9 +76,13 @@ namespace april
 			size_t length = sizeof(value);
 
 			if (sysctl(mib, 2, &value, &length, NULL, 0) == -1)
+			{
 				info.ram = 2048;
+			}
 			else
+			{
 				info.ram = (int)(value / (1024 * 1024));
+			}
 
 			// display resolution
 			NSRect rect = [mainScreen frame];
@@ -119,10 +118,9 @@ namespace april
 			info.locale = info.locale.lowered();
 			info.localeVariant = info.localeVariant.uppered();
 		}
-		return info;
 	}
 	
-	hstr getPackageName()
+	hstr _getPackageName_platform()
 	{
 		static hstr bundleID;
 		if (bundleID == "")
@@ -133,25 +131,26 @@ namespace april
 		return bundleID;
 	}
 
-	hstr getUserDataPath()
+	hstr _getUserDataPath_platform()
 	{
 		hlog::warn(logTag, "Cannot use getUserDataPath() on this platform.");
 		return ".";
 	}
 	
-	int64_t getRamConsumption()
+	int64_t _getRamConsumption_platform()
 	{
 		// TODOa
+		hlog::warn(logTag, "Cannot use getRamConsumption() on this platform.");
 		return 0LL;
 	}	
 	
-	bool openUrl(chstr url)
+	bool _openUrl_platform(chstr url)
 	{
 		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]];
 		return true;
 	}
 	
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
+	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
 	{
 		// fugly implementation of showing messagebox on mac os
 		// ideas:

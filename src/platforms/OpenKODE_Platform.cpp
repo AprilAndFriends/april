@@ -53,29 +53,26 @@
 
 namespace april
 {
-	extern SystemInfo info;
-
-	SystemInfo getSystemInfo()
+	void _setupSystemInfo_platform(SystemInfo& info)
 	{
 		if (info.locale == "")
 		{
 			info.name = "KD";
-            const char* envName = kdGetenv("COMPUTERNAME");
-            if (envName != NULL)
-            {
-                info.deviceName = envName;
-            }
-            else
-            {
-                info.deviceName = "Unknown";
-            }
+			const char* envName = kdGetenv("COMPUTERNAME");
+			if (envName != NULL)
+			{
+				info.deviceName = envName;
+			}
+			else
+			{
+				info.deviceName = "Unknown";
+			}
 			debug_log("Fetching OpenKODE system info");
 			// number of CPU cores
 			info.cpuCores = 1;
 			// display resolution
 			int width = 0;
 			int height = 0;
-			
 			debug_log("getting screen info");
 			kdQueryAttribi(KD_ATTRIB_WIDTH, (KDint*)&width);
 			kdQueryAttribi(KD_ATTRIB_HEIGHT, (KDint*)&height);
@@ -87,7 +84,7 @@ namespace april
 			// name
 #ifdef _IOS // On iOS, april prefers to use hardcoded device info than OpenKODE's info, it's more accurate
 			size_t size = 255;
-			char cname[256] = {'\0'};
+			char cname[256] = { '\0' };
 			sysctlbyname("hw.machine", cname, &size, NULL, 0);
 			info.name = cname; // defaults for unknown devices
 #elif defined(__APPLE__) && defined(_PC_INPUT) // mac
@@ -105,7 +102,7 @@ namespace april
 			if (model.contains("(") && model.contains(")"))
 			{
 				hstr a, b;
-				model.split("(",a, b);
+				model.split("(", a, b);
 				b.split(")", model, a);
 				getStaticiOSInfo(model, info);
 			}
@@ -117,7 +114,7 @@ namespace april
 			info.cpuCores = w32info.dwNumberOfProcessors;
 			info.osVersion.set(8, 1);
 #elif defined(_ANDROID)
-			// CPU cores
+		// CPU cores
 			debug_log("getting cpu cores");
 			info.cpuCores = sysconf(_SC_NPROCESSORS_CONF);
 			// OS version
@@ -131,7 +128,7 @@ namespace april
 #if TARGET_IPHONE_SIMULATOR
 			info.ram = 1024;
 #elif defined(__APPLE__) && defined(_PC_INPUT) // mac
-			int mib [] = {CTL_HW, HW_MEMSIZE};
+			int mib[] = { CTL_HW, HW_MEMSIZE };
 			int64_t value = 0;
 			size_t length = sizeof(value);
 			if (sysctl(mib, 2, &value, &length, NULL, 0) != -1)
@@ -158,7 +155,7 @@ namespace april
 			info.ram = (int)((int64_t)pageSize * pageCount / (1024 * 1024)); // in MB
 #endif
 #endif
-			// other
+		// other
 			debug_log("getting locale");
 			info.locale = "en"; // default is "en"
 			hstr fullLocale = hstr(kdGetLocale());
@@ -180,10 +177,9 @@ namespace april
 			env->PopLocalFrame(NULL);
 #endif
 		}
-		return info;
 	}
 
-	hstr getPackageName()
+	hstr _getPackageName_platform()
 	{
 #ifndef _WINRT
 		return hstr(kdGetenv("KD_APP_ID"));
@@ -192,18 +188,18 @@ namespace april
 #endif
 	}
 
-	hstr getUserDataPath()
+	hstr _getUserDataPath_platform()
 	{
 		return "data";
 	}
 	
-	int64_t getRamConsumption()
+	int64_t _getRamConsumption_platform()
 	{
 		// TODOa
 		return 0LL;
 	}	
 	
-	bool openUrl(chstr url)
+	bool _openUrl_platform(chstr url)
 	{
 		hlog::write(logTag, "Opening URL: " + url);
 #ifdef __APPLE__
@@ -232,8 +228,8 @@ namespace april
 		return true;
 	}
 	
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
+	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
+		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(MessageBoxButton), bool modal)
 	{
 		hstr ok;
 		hstr yes;

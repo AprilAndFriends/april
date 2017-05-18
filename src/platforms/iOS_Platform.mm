@@ -114,9 +114,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 
 namespace april
 {
-	extern SystemInfo info;
-	
-	SystemInfo getSystemInfo()
+	void _setupSystemInfo_platform(SystemInfo& info)
 	{
 		if (info.locale == "")
 		{
@@ -181,10 +179,9 @@ namespace april
 //				info.cpuCores = systemCores;
 //			}
 		}
-		return info;
 	}
 
-	hstr getPackageName()
+	hstr _getPackageName_platform()
 	{
 		static hstr bundleId;
 		if (bundleId == "")
@@ -195,19 +192,20 @@ namespace april
 		return bundleId;
 	}
 
-	hstr getUserDataPath()
+	hstr _getUserDataPath_platform()
 	{
 		hlog::warn(logTag, "Cannot use getUserDataPath() on this platform.");
 		return ".";
 	}
 	
-	int64_t getRamConsumption()
+	int64_t _getRamConsumption_platform()
 	{
 		// TODOa
+		hlog::warn(logTag, "Cannot use getRamConsumption() on this platform.");
 		return 0LL;
 	}	
 	
-	bool openUrl(chstr url)
+	bool _openUrl_platform(chstr url)
 	{
 		if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]])
 		{
@@ -217,7 +215,7 @@ namespace april
 		return false;
 	}
 	
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
+	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
 	{
 		NSString *nsButtons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[3] = {MessageBoxButton::Ok, MessageBoxButton::Ok, MessageBoxButton::Ok};

@@ -8,7 +8,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a generic render system.
+/// Defines API functions.
 
 #ifndef APRIL_H
 #define APRIL_H

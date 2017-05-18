@@ -30,8 +30,6 @@
 
 namespace april
 {
-	extern SystemInfo info;
-
 	static hstr _getWindowsName()
 	{
 		OSVERSIONINFOEX osVersionInfo;
@@ -79,7 +77,7 @@ namespace april
 		return "";
 	}
 	
-	SystemInfo getSystemInfo()
+	void _setupSystemInfo_platform(SystemInfo& info)
 	{
 		if (info.locale == "")
 		{
@@ -115,21 +113,21 @@ namespace april
 			info.locale = info.locale.lowered();
 			info.localeVariant = info.localeVariant.uppered();
 		}
-		return info;
 	}
 
-	hstr getPackageName()
+	hstr _getPackageName_platform()
 	{
 		hlog::warn(logTag, "Cannot use getPackageName() on this platform.");
 		return "";
 	}
 
-	hstr getUserDataPath()
+	hstr _getUserDataPath_platform()
 	{
-		return henv("APPDATA");
+		hlog::warn(logTag, "Cannot use getUserDataPath() on this platform.");
+		return "";
 	}
-	
-	int64_t getRamConsumption()
+
+	int64_t _getRamConsumption_platform()
 	{
 		int64_t result = 0LL;
 		PROCESS_MEMORY_COUNTERS counters;
@@ -140,41 +138,40 @@ namespace april
 		return result;
 	}
 	
-	bool openUrl(chstr url)
+	bool _openUrl_platform(chstr url)
 	{
-		hlog::write(logTag, "Opening URL: " + url);
 		ShellExecuteW(NULL, L"open", url.wStr().c_str(), NULL, NULL, SW_SHOWNORMAL);
 		return true;
 	}
 
-	static void (*currentCallback)(MessageBoxButton) = NULL;
+	static void (*_currentMessageBoxCallback)(MessageBoxButton) = NULL;
 
-	void _messageBoxResult(int button)
+	void _showMessageBoxResult(int button)
 	{
 		switch (button)
 		{
 		case IDOK:
-			if (currentCallback != NULL)
+			if (_currentMessageBoxCallback != NULL)
 			{
-				(*currentCallback)(MessageBoxButton::Ok);
+				(*_currentMessageBoxCallback)(MessageBoxButton::Ok);
 			}
 			break;
 		case IDYES:
-			if (currentCallback != NULL)
+			if (_currentMessageBoxCallback != NULL)
 			{
-				(*currentCallback)(MessageBoxButton::Yes);
+				(*_currentMessageBoxCallback)(MessageBoxButton::Yes);
 			}
 			break;
 		case IDNO:
-			if (currentCallback != NULL)
+			if (_currentMessageBoxCallback != NULL)
 			{
-				(*currentCallback)(MessageBoxButton::No);
+				(*_currentMessageBoxCallback)(MessageBoxButton::No);
 			}
 			break;
 		case IDCANCEL:
-			if (currentCallback != NULL)
+			if (_currentMessageBoxCallback != NULL)
 			{
-				(*currentCallback)(MessageBoxButton::Cancel);
+				(*_currentMessageBoxCallback)(MessageBoxButton::Cancel);
 			}
 			break;
 		default:
@@ -183,10 +180,10 @@ namespace april
 		}
 	}
 
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
+	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
 	{
-		currentCallback = callback;
+		_currentMessageBoxCallback = callback;
 		int type = 0;
 		if (buttons == MessageBoxButton::OkCancel)
 		{
@@ -226,7 +223,7 @@ namespace april
 			hwnd = (HWND)april::window->getBackendId();
 		}
 		int button = MessageBoxW(hwnd, text.wStr().c_str(), title.wStr().c_str(), type);
-		_messageBoxResult(button);
+		_showMessageBoxResult(button);
 	}
 
 }

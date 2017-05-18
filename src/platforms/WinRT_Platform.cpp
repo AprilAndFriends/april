@@ -32,9 +32,7 @@ using namespace Windows::UI::ViewManagement;
 
 namespace april
 {
-	extern SystemInfo info;
-	
-	SystemInfo getSystemInfo()
+	void _setupSystemInfo_platform(SystemInfo& info)
 	{
 		if (info.locale == "")
 		{
@@ -130,23 +128,24 @@ namespace april
 		return info;
 	}
 
-	hstr getPackageName()
+	hstr _getPackageName_platform()
 	{
 		return _HL_PSTR_TO_HSTR(Windows::ApplicationModel::Package::Current->Id->FamilyName);
 	}
 
-	hstr getUserDataPath()
+	hstr _getUserDataPath_platform()
 	{
 		return hdir::systemize(_HL_PSTR_TO_HSTR(ApplicationData::Current->RoamingFolder->Path));
 	}
 	
-	int64_t getRamConsumption()
+	int64_t _getRamConsumption_platform()
 	{
 		// TODOa
+		hlog::warn(logTag, "Cannot use getRamConsumption() on this platform.");
 		return 0LL;
 	}	
 	
-	bool openUrl(chstr url)
+	bool _openUrl_platform(chstr url)
 	{
 		hlog::write(logTag, "Opening URL: " + url);
 		Windows::System::Launcher::LaunchUriAsync(ref new Windows::Foundation::Uri(_HL_HSTR_TO_PSTR(url)));
@@ -155,7 +154,7 @@ namespace april
 
 	static void(*currentCallback)(MessageBoxButton) = NULL;
 
-	void _messageBoxResult(int button)
+	void _showMessageBoxResult(int button)
 	{
 		switch (button)
 		{
@@ -192,7 +191,7 @@ namespace april
 	static harray<DispatchedHandler^> messageBoxQueue;
 	static hmutex messageBoxQueueMutex;
 
-	void messageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
+	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(MessageBoxButton), bool modal)
 	{
 		DispatchedHandler^ handler = ref new DispatchedHandler(
@@ -205,7 +204,7 @@ namespace april
 			UICommandInvokedHandler^ commandHandler = ref new UICommandInvokedHandler(
 				[](IUICommand^ command)
 			{
-				_messageBoxResult((int)command->Id);
+				_showMessageBoxResult((int)command->Id);
 				DispatchedHandler^ handler = nullptr;
 				messageBoxQueueMutex.lock();
 				if (messageBoxQueue.size() > 0)

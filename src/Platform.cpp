@@ -9,15 +9,25 @@
 #include <stdlib.h>
 
 #include <hltypes/harray.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
+#include "april.h"
+#include "main_base.h"
 #include "Platform.h"
 #include "Window.h"
-#include "main_base.h"
 
 namespace april
 {
+	// DEPRECATED
+	void messageBox(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
+		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal, bool terminateOnDisplay)
+	{
+		showMessageBox(title, text, buttons, style, customButtonTitles, callback, modal, terminateOnDisplay);
+	}
+
+
 	HL_ENUM_CLASS_DEFINE(MessageBoxButton,
 	(
 		HL_ENUM_DEFINE(MessageBoxButton, Ok);
@@ -59,7 +69,21 @@ namespace april
 		HL_ENUM_DEFINE(MessageBoxStyle, Question);
 	));
 
-	SystemInfo info;
+	extern void _setupSystemInfo_platform(SystemInfo& info);
+	extern hstr _getPackageName_platform();
+	extern hstr _getUserDataPath_platform();
+	extern int64_t _getRamConsumption_platform();
+	extern bool _openUrl_platform(chstr url);
+	extern void _showMessageBox_platform(chstr, chstr, MessageBoxButton, MessageBoxStyle, hmap<MessageBoxButton, hstr>, void(*)(MessageBoxButton), bool);
+
+	void (*_setupSystemInfo)(SystemInfo& info) = &_setupSystemInfo_platform;
+	hstr (*_getPackageName)() = &_getPackageName_platform;
+	hstr (*_getUserDataPath)() = &_getUserDataPath_platform;
+	int64_t (*_getRamConsumption)() = &_getRamConsumption_platform;
+	bool (*_openUrl)(chstr) = &_openUrl_platform;
+	void (*_showMessageBox)(chstr, chstr, MessageBoxButton, MessageBoxStyle, hmap<MessageBoxButton, hstr>, void (*)(MessageBoxButton), bool) = &_showMessageBox_platform;
+
+	static SystemInfo info;
 	harray<hstr> args;
 
 	SystemInfo::SystemInfo()
@@ -93,7 +117,61 @@ namespace april
 		return args;
 	}
 
-	void messageBox(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
+	SystemInfo getSystemInfo()
+	{
+		if (_setupSystemInfo != NULL)
+		{
+			(*_setupSystemInfo)(info);
+		}
+		else if (info.locale == "")
+		{
+			hlog::warn(logTag, "_setupSystemInfo() has not been set up on this platform.");
+		}
+		return info;
+	}
+
+	hstr getPackageName()
+	{
+		if (_getPackageName != NULL)
+		{
+			return (*_getPackageName)();
+		}
+		hlog::warn(logTag, "Cannot use getPackageName() on this platform.");
+		return "";
+	}
+
+	hstr getUserDataPath()
+	{
+		if (_getUserDataPath != NULL)
+		{
+			return (*_getUserDataPath)();
+		}
+		hlog::warn(logTag, "Cannot use getUserDataPath() on this platform.");
+		return ".";
+	}
+
+	int64_t getRamConsumption()
+	{
+		if (_getRamConsumption != NULL)
+		{
+			return (*_getRamConsumption)();
+		}
+		hlog::warn(logTag, "Cannot use getRamConsumption() on this platform.");
+		return 0LL;
+	}
+
+	bool openUrl(chstr url)
+	{
+		hlog::write(logTag, "Opening URL: " + url);
+		if (_openUrl != NULL)
+		{
+			return (*_openUrl)(url);
+		}
+		hlog::warn(logTag, "Cannot use openUrl() on this platform.");
+		return false;
+	}
+
+	void showMessageBox(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
 		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(MessageBoxButton), bool modal, bool terminateOnDisplay)
 	{
 		if (terminateOnDisplay)
@@ -110,7 +188,14 @@ namespace april
 			}
 			modal = true;
 		}
-		messageBox_platform(title, text, buttons, style, customButtonTitles, callback, modal);
+		if (_showMessageBox != NULL)
+		{
+			(*_showMessageBox)(title, text, buttons, style, customButtonTitles, callback, modal);
+		}
+		else
+		{
+			hlog::warn(logTag, "Cannot use showMessageBox() on this platform.");
+		}
 		if (terminateOnDisplay)
 		{
 			exit(0);
