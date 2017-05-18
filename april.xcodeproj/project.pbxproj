@@ -23,6 +23,20 @@
 		7FA3ED1811F9817A001D1DDD /* Window.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA3ED1711F9817A001D1DDD /* Window.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
 		7FC8FA29122FA58F0092964C /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8FA28122FA58F0092964C /* Timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B4046B361ECDCA3C00F85550 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
+		B4046B371ECDCA3C00F85550 /* egl.h in Headers */ = {isa = PBXBuildFile; fileRef = B4046B331ECDCA3C00F85550 /* egl.h */; };
+		B4046B381ECDCA3C00F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
+		B4046B391ECDCA3C00F85550 /* zlibUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = B4046B351ECDCA3C00F85550 /* zlibUtil.h */; };
+		B4046B3A1ECDCB8900F85550 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
+		B4046B3B1ECDCB8900F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
+		B4046B3C1ECDCB8900F85550 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
+		B4046B3D1ECDCB8900F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
+		B4046B3E1ECDCB8900F85550 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
+		B4046B3F1ECDCB8900F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
+		B4046B401ECDCB8A00F85550 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
+		B4046B411ECDCB8A00F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
+		B4046B421ECDCB8A00F85550 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
+		B4046B431ECDCB8A00F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
 		B436D2DF1D05AE8800DA2C15 /* RenderHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */; };
 		B436D2E01D05AE8800DA2C15 /* RenderHelperLayered2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B436D2DE1D05AE8800DA2C15 /* RenderHelperLayered2D.cpp */; };
 		B436D2E11D05AE9100DA2C15 /* RenderHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */; };
@@ -202,14 +216,6 @@
 		B45501931BD7B6F200E75E43 /* OpenGLES_VertexShader.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501831BD7B6F200E75E43 /* OpenGLES_VertexShader.h */; };
 		B45501FC1BD7C84700E75E43 /* OpenGLES_defaultShaders.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501FB1BD7C84700E75E43 /* OpenGLES_defaultShaders.h */; };
 		B45501FD1BD7C84700E75E43 /* OpenGLES_defaultShaders.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501FB1BD7C84700E75E43 /* OpenGLES_defaultShaders.h */; };
-		B4DF806E1E375E4D00307767 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF806D1E375E4D00307767 /* zlibUtil.cpp */; };
-		B4DF806F1E375E5000307767 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF806D1E375E4D00307767 /* zlibUtil.cpp */; };
-		B4DF80701E375E5000307767 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF806D1E375E4D00307767 /* zlibUtil.cpp */; };
-		B4DF80721E375E5100307767 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF806D1E375E4D00307767 /* zlibUtil.cpp */; };
-		B4DF80731E375E5100307767 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF806D1E375E4D00307767 /* zlibUtil.cpp */; };
-		B4DF80741E375E5200307767 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF806D1E375E4D00307767 /* zlibUtil.cpp */; };
-		B4DF80761E375E6A00307767 /* zlibUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = B4DF80751E375E6A00307767 /* zlibUtil.h */; };
-		B4DF80771E375E6D00307767 /* zlibUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = B4DF80751E375E6A00307767 /* zlibUtil.h */; };
 		B4DF807A1E375F0200307767 /* ImageEtcx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF80781E375F0200307767 /* ImageEtcx.cpp */; };
 		B4DF807B1E375F0200307767 /* ImagePvrz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF80791E375F0200307767 /* ImagePvrz.cpp */; };
 		B4DF807C1E375F0600307767 /* ImageEtcx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF80781E375F0200307767 /* ImageEtcx.cpp */; };
@@ -269,7 +275,6 @@
 		D1134F06175CDA3300BFF3A2 /* ImagePng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7206316D37C5600B9C9AD /* ImagePng.cpp */; };
 		D1134F07175CDA3300BFF3A2 /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */; };
 		D1134F10175CDA3300BFF3A2 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
-		D1134F23175CDAD200BFF3A2 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F21175CDAD200BFF3A2 /* egl.cpp */; };
 		D11FB8F31E6866D0001A7E9A /* InputMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D11FB8F21E6866D0001A7E9A /* InputMode.cpp */; };
 		D11FB8F41E6866D0001A7E9A /* InputMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D11FB8F21E6866D0001A7E9A /* InputMode.cpp */; };
 		D11FB8F51E6866D0001A7E9A /* InputMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D11FB8F21E6866D0001A7E9A /* InputMode.cpp */; };
@@ -463,7 +468,6 @@
 		D1F27AD8177A2DF700E5C131 /* ImagePng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7206316D37C5600B9C9AD /* ImagePng.cpp */; };
 		D1F27AD9177A2DF700E5C131 /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */; };
 		D1F27AE1177A2DF700E5C131 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
-		D1F27AE5177A2DF700E5C131 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1134F21175CDAD200BFF3A2 /* egl.cpp */; };
 		D1F630D119D54A5F006C6236 /* OpenKODE_Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1B486E6193373B5004674EB /* OpenKODE_Window.cpp */; };
 		D1F630D219D54A5F006C6236 /* OpenKODE_Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1B486E6193373B5004674EB /* OpenKODE_Window.cpp */; };
 		D1F630D319D54A93006C6236 /* OpenKODE_Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1B486E4193373B5004674EB /* OpenKODE_Keys.cpp */; };
@@ -496,6 +500,10 @@
 		7FC8FA28122FA58F0092964C /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4046B321ECDCA3C00F85550 /* egl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egl.cpp; path = src/util/egl.cpp; sourceTree = "<group>"; };
+		B4046B331ECDCA3C00F85550 /* egl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egl.h; path = src/util/egl.h; sourceTree = "<group>"; };
+		B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zlibUtil.cpp; path = src/util/zlibUtil.cpp; sourceTree = "<group>"; };
+		B4046B351ECDCA3C00F85550 /* zlibUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlibUtil.h; path = src/util/zlibUtil.h; sourceTree = "<group>"; };
 		B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderHelper.cpp; path = src/RenderHelper.cpp; sourceTree = "<group>"; };
 		B436D2DE1D05AE8800DA2C15 /* RenderHelperLayered2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderHelperLayered2D.cpp; path = src/RenderHelperLayered2D.cpp; sourceTree = "<group>"; };
 		B436D2ED1D05AEB000DA2C15 /* RenderHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderHelper.h; path = src/RenderHelper.h; sourceTree = "<group>"; };
@@ -534,8 +542,6 @@
 		B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGLES_VertexShader.cpp; path = src/rendersystems/OpenGL/GLES/OpenGLES_VertexShader.cpp; sourceTree = "<group>"; };
 		B45501831BD7B6F200E75E43 /* OpenGLES_VertexShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES_VertexShader.h; path = src/rendersystems/OpenGL/GLES/OpenGLES_VertexShader.h; sourceTree = "<group>"; };
 		B45501FB1BD7C84700E75E43 /* OpenGLES_defaultShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES_defaultShaders.h; path = src/rendersystems/OpenGL/GLES/OpenGLES_defaultShaders.h; sourceTree = "<group>"; };
-		B4DF806D1E375E4D00307767 /* zlibUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zlibUtil.cpp; path = src/utit/zlibUtil.cpp; sourceTree = "<group>"; };
-		B4DF80751E375E6A00307767 /* zlibUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlibUtil.h; path = src/utit/zlibUtil.h; sourceTree = "<group>"; };
 		B4DF80781E375F0200307767 /* ImageEtcx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageEtcx.cpp; path = src/images/ImageEtcx.cpp; sourceTree = "<group>"; };
 		B4DF80791E375F0200307767 /* ImagePvrz.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImagePvrz.cpp; path = src/images/ImagePvrz.cpp; sourceTree = "<group>"; };
 		B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Keys.cpp; path = src/Keys.cpp; sourceTree = "<group>"; };
@@ -582,8 +588,6 @@
 		D10B73CE198247B900A9352D /* Shaders.hlsli */ = {isa = PBXFileReference; lastKnownFileType = text; name = Shaders.hlsli; path = "src/rendersystems/DirectX/11/default-shaders/Shaders.hlsli"; sourceTree = "<group>"; };
 		D10B73CF198247B900A9352D /* VertexShader_Default.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = VertexShader_Default.hlsl; path = "src/rendersystems/DirectX/11/default-shaders/VertexShader_Default.hlsl"; sourceTree = "<group>"; };
 		D1134F17175CDA3300BFF3A2 /* libapril-kd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libapril-kd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D1134F21175CDAD200BFF3A2 /* egl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egl.cpp; path = src/utit/egl.cpp; sourceTree = "<group>"; };
-		D1134F22175CDAD200BFF3A2 /* egl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egl.h; path = src/utit/egl.h; sourceTree = "<group>"; };
 		D11FB8F21E6866D0001A7E9A /* InputMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InputMode.cpp; path = src/InputMode.cpp; sourceTree = "<group>"; };
 		D11FB8FA1E6866DD001A7E9A /* InputMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputMode.h; path = include/april/InputMode.h; sourceTree = "<group>"; };
 		D136818C187BFB3E00E66E32 /* main_base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main_base.cpp; path = src/main_base.cpp; sourceTree = "<group>"; };
@@ -829,11 +833,10 @@
 		7F42F79F11EB177B00B1C1DF /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B4046B311ECDCA1800F85550 /* util */,
 				D1E7204116D37BF900B9C9AD /* delegates */,
 				D1E7204216D37C0200B9C9AD /* images */,
 				D1E7204316D37C0B00B9C9AD /* timers */,
-				B4DF80751E375E6A00307767 /* zlibUtil.h */,
-				B4DF806D1E375E4D00307767 /* zlibUtil.cpp */,
 				D136818C187BFB3E00E66E32 /* main_base.cpp */,
 				D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */,
 				D136818D187BFB3E00E66E32 /* RenderState.cpp */,
@@ -853,8 +856,6 @@
 				B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */,
 				B436D2DE1D05AE8800DA2C15 /* RenderHelperLayered2D.cpp */,
 				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
-				D1134F21175CDAD200BFF3A2 /* egl.cpp */,
-				D1134F22175CDAD200BFF3A2 /* egl.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -926,6 +927,17 @@
 				D1B486C619337393004674EB /* SDL_Window.h */,
 			);
 			name = SDL;
+			sourceTree = "<group>";
+		};
+		B4046B311ECDCA1800F85550 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				B4046B321ECDCA3C00F85550 /* egl.cpp */,
+				B4046B331ECDCA3C00F85550 /* egl.h */,
+				B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */,
+				B4046B351ECDCA3C00F85550 /* zlibUtil.h */,
+			);
+			name = util;
 			sourceTree = "<group>";
 		};
 		B45500E31BD7A74100E75E43 /* OpenGL */ = {
@@ -1334,7 +1346,6 @@
 				B45501FD1BD7C84700E75E43 /* OpenGLES_defaultShaders.h in Headers */,
 				C9C04F9014BB1091005BD333 /* PixelShader.h in Headers */,
 				D102CFFD19B7284500948584 /* TextureAsync.h in Headers */,
-				B4DF80771E375E6D00307767 /* zlibUtil.h in Headers */,
 				C9C04F9114BB1091005BD333 /* VertexShader.h in Headers */,
 				7F1B522A12E4710D00E958D8 /* aprilExport.h in Headers */,
 				D14BF820158737B300D31573 /* aprilUtil.h in Headers */,
@@ -1390,7 +1401,6 @@
 				D1AF66C4170B1E5900A43743 /* main.h in Headers */,
 				D102CFFC19B7284500948584 /* TextureAsync.h in Headers */,
 				D17F3E961D79D5010045F39D /* VirtualKeyboard.h in Headers */,
-				B4DF80761E375E6A00307767 /* zlibUtil.h in Headers */,
 				D1AF66C5170B1E5900A43743 /* Timer.h in Headers */,
 				D1E2447A1A3104C300586FAC /* Mac_QueuedEvents.h in Headers */,
 				D11FB8FB1E6866DD001A7E9A /* InputMode.h in Headers */,
@@ -1409,6 +1419,7 @@
 				B45501231BD7A7D100E75E43 /* OpenGLC_Texture.h in Headers */,
 				D1FED15F192A3B7B00BE6A6D /* Cursor.h in Headers */,
 				B455010F1BD7A7C500E75E43 /* OpenGLES1_Texture.h in Headers */,
+				B4046B371ECDCA3C00F85550 /* egl.h in Headers */,
 				B45501331BD7A7DE00E75E43 /* OpenGLES2_PixelShader.h in Headers */,
 				D1AF66D0170B1E5900A43743 /* KeyboardDelegate.h in Headers */,
 				D1B486AB19337389004674EB /* Mac_CocoaWindow.h in Headers */,
@@ -1420,6 +1431,7 @@
 				D1AF66D3170B1E5900A43743 /* TouchDelegate.h in Headers */,
 				B455015F1BD7A80400E75E43 /* OpenGLES_Texture.h in Headers */,
 				B436D2F01D05AEB000DA2C15 /* RenderHelperLayered2D.h in Headers */,
+				B4046B391ECDCA3C00F85550 /* zlibUtil.h in Headers */,
 				D1B486A719337389004674EB /* Mac_AppDelegate.h in Headers */,
 				B45501431BD7A7DE00E75E43 /* OpenGLES2_Texture.h in Headers */,
 				D13681AF187BFB6600E66E32 /* Standard_main.h in Headers */,
@@ -1590,6 +1602,7 @@
 				B45501681BD7A86200E75E43 /* OpenGL_RenderSystem.cpp in Sources */,
 				D14BF81A158737A000D31573 /* Platform.cpp in Sources */,
 				B455013E1BD7A7DE00E75E43 /* OpenGLES2_Texture.cpp in Sources */,
+				B4046B421ECDCB8A00F85550 /* egl.cpp in Sources */,
 				B45501361BD7A7DE00E75E43 /* OpenGLES2_RenderSystem.cpp in Sources */,
 				D1FED159192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				D14BF96A15875F3300D31573 /* aprilUtil.cpp in Sources */,
@@ -1613,10 +1626,10 @@
 				B436D2E11D05AE9100DA2C15 /* RenderHelper.cpp in Sources */,
 				B45501461BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
 				D1E7206D16D37C5600B9C9AD /* ImagePng.cpp in Sources */,
+				B4046B431ECDCB8A00F85550 /* zlibUtil.cpp in Sources */,
 				B455018D1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				D102CFF719B7284500948584 /* TextureAsync.cpp in Sources */,
 				D1E7207216D37C6A00B9C9AD /* TimerSDL.cpp in Sources */,
-				B4DF80741E375E5200307767 /* zlibUtil.cpp in Sources */,
 				D1B486C919337393004674EB /* SDL_Window.cpp in Sources */,
 				D136818F187BFB3E00E66E32 /* main_base.cpp in Sources */,
 				B45501021BD7A7C500E75E43 /* OpenGLES1_RenderSystem.cpp in Sources */,
@@ -1635,6 +1648,7 @@
 			files = (
 				B44FBD8D1BE0E44A00DD8995 /* RenderState.cpp in Sources */,
 				D11FB8F81E6866D0001A7E9A /* InputMode.cpp in Sources */,
+				B4046B3C1ECDCB8900F85550 /* egl.cpp in Sources */,
 				B44FBD8E1BE0E44A00DD8995 /* iOS_main.mm in Sources */,
 				B4E4CE0E1E69A1D700DB4C31 /* Keys.cpp in Sources */,
 				B44FBD8F1BE0E44A00DD8995 /* Color.cpp in Sources */,
@@ -1664,6 +1678,7 @@
 				B44FBDA41BE0E44A00DD8995 /* OpenGLC_RenderSystem.cpp in Sources */,
 				B44FBDA51BE0E44A00DD8995 /* ImagePvr.mm in Sources */,
 				B44FBDA61BE0E44A00DD8995 /* AprilViewController.mm in Sources */,
+				B4046B3D1ECDCB8900F85550 /* zlibUtil.cpp in Sources */,
 				B44FBDA71BE0E44A00DD8995 /* Cursor.cpp in Sources */,
 				B4DF80841E375F0700307767 /* ImageEtcx.cpp in Sources */,
 				B44FBDA81BE0E44A00DD8995 /* OpenGLES_VertexShader.cpp in Sources */,
@@ -1679,7 +1694,6 @@
 				B44FBDB31BE0E44A00DD8995 /* OpenGLES2_PixelShader.cpp in Sources */,
 				B44FBDB41BE0E44A00DD8995 /* Image.cpp in Sources */,
 				B44FBDB51BE0E44A00DD8995 /* ImageJpg.cpp in Sources */,
-				B4DF80701E375E5000307767 /* zlibUtil.cpp in Sources */,
 				B44FBDB61BE0E44A00DD8995 /* ImageJpt.cpp in Sources */,
 				B44FBDB71BE0E44A00DD8995 /* ApriliOSAppDelegate.mm in Sources */,
 				B44FBDB81BE0E44A00DD8995 /* ImagePng.cpp in Sources */,
@@ -1702,7 +1716,6 @@
 				D1134EEF175CDA3300BFF3A2 /* Color.cpp in Sources */,
 				B45501421BD7A7DE00E75E43 /* OpenGLES2_Texture.cpp in Sources */,
 				B45501321BD7A7DE00E75E43 /* OpenGLES2_PixelShader.cpp in Sources */,
-				B4DF806F1E375E5000307767 /* zlibUtil.cpp in Sources */,
 				B45501061BD7A7C500E75E43 /* OpenGLES1_RenderSystem.cpp in Sources */,
 				D1B4874019337483004674EB /* iOS_devices.mm in Sources */,
 				D10B73AF1982473800A9352D /* OpenKODE_main.cpp in Sources */,
@@ -1714,8 +1727,10 @@
 				B436D2EC1D05AE9300DA2C15 /* RenderHelperLayered2D.cpp in Sources */,
 				D1134EF2175CDA3300BFF3A2 /* Window.cpp in Sources */,
 				D1134EF3175CDA3300BFF3A2 /* PixelShader.cpp in Sources */,
+				B4046B3B1ECDCB8900F85550 /* zlibUtil.cpp in Sources */,
 				D1134EF4175CDA3300BFF3A2 /* VertexShader.cpp in Sources */,
 				D137B93E1A0A417900C4102E /* ImagePvr.mm in Sources */,
+				B4046B3A1ECDCB8900F85550 /* egl.cpp in Sources */,
 				D1134EF5175CDA3300BFF3A2 /* april.cpp in Sources */,
 				D1134EF9175CDA3300BFF3A2 /* Platform.cpp in Sources */,
 				D1134EFB175CDA3300BFF3A2 /* aprilUtil.cpp in Sources */,
@@ -1753,7 +1768,6 @@
 				B45501911BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				B455014A1BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
 				B45501891BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
-				D1134F23175CDAD200BFF3A2 /* egl.cpp in Sources */,
 				D10B73B11982473B00A9352D /* OpenKODE_Platform.cpp in Sources */,
 				B45501561BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp in Sources */,
 			);
@@ -1775,6 +1789,7 @@
 				B4E4CE0B1E69A1D600DB4C31 /* Keys.cpp in Sources */,
 				D1534754178AD62A00151D1A /* Window.cpp in Sources */,
 				D17F3E981D79D5740045F39D /* VirtualKeyboard.cpp in Sources */,
+				B4046B401ECDCB8A00F85550 /* egl.cpp in Sources */,
 				D1534755178AD62A00151D1A /* PixelShader.cpp in Sources */,
 				D1368196187BFB3E00E66E32 /* RenderState.cpp in Sources */,
 				D11FB8F51E6866D0001A7E9A /* InputMode.cpp in Sources */,
@@ -1809,6 +1824,7 @@
 				B45500F71BD7A7BA00E75E43 /* OpenGL1_Texture.cpp in Sources */,
 				D1534761178AD62A00151D1A /* UpdateDelegate.cpp in Sources */,
 				D1534762178AD62A00151D1A /* Image.cpp in Sources */,
+				B4046B411ECDCB8A00F85550 /* zlibUtil.cpp in Sources */,
 				D1534763178AD62A00151D1A /* ImageJpg.cpp in Sources */,
 				B455015B1BD7A80400E75E43 /* OpenGLES_Texture.cpp in Sources */,
 				D1534764178AD62A00151D1A /* ImageJpt.cpp in Sources */,
@@ -1819,7 +1835,6 @@
 				D153476A178AD62A00151D1A /* ControllerDelegate.cpp in Sources */,
 				D1B4873A19337479004674EB /* Mac_Platform.mm in Sources */,
 				D1FED15A192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
-				B4DF80731E375E5100307767 /* zlibUtil.cpp in Sources */,
 				B45501471BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
 				D1B486AD19337389004674EB /* Mac_CocoaWindow.mm in Sources */,
 				B45501531BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp in Sources */,
@@ -1842,6 +1857,7 @@
 				B4E4CE091E69A1CA00DB4C31 /* Keys.cpp in Sources */,
 				D1AF66A3170B1E5900A43743 /* Color.cpp in Sources */,
 				D17F3E941D79D4F60045F39D /* VirtualKeyboard.cpp in Sources */,
+				B4046B361ECDCA3C00F85550 /* egl.cpp in Sources */,
 				D1AF66A4170B1E5900A43743 /* Texture.cpp in Sources */,
 				D1368194187BFB3E00E66E32 /* RenderState.cpp in Sources */,
 				D11FB8F31E6866D0001A7E9A /* InputMode.cpp in Sources */,
@@ -1876,6 +1892,7 @@
 				D1AF66B2170B1E5900A43743 /* SystemDelegate.cpp in Sources */,
 				D1AF66B3170B1E5900A43743 /* TouchDelegate.cpp in Sources */,
 				D1AF66B4170B1E5900A43743 /* UpdateDelegate.cpp in Sources */,
+				B4046B381ECDCA3C00F85550 /* zlibUtil.cpp in Sources */,
 				D1AF66B5170B1E5900A43743 /* Image.cpp in Sources */,
 				B45501591BD7A80400E75E43 /* OpenGLES_Texture.cpp in Sources */,
 				D1AF66B6170B1E5900A43743 /* ImageJpg.cpp in Sources */,
@@ -1886,7 +1903,6 @@
 				D1FED158192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				D1B4873819337479004674EB /* Mac_Platform.mm in Sources */,
 				D1B486AC19337389004674EB /* Mac_CocoaWindow.mm in Sources */,
-				B4DF806E1E375E4D00307767 /* zlibUtil.cpp in Sources */,
 				B45501451BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
 				D1AF66BD170B1E5900A43743 /* ControllerDelegate.cpp in Sources */,
 				B45501511BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp in Sources */,
@@ -1915,6 +1931,7 @@
 				D1F27ACA177A2DF700E5C131 /* april.cpp in Sources */,
 				D1F27ACB177A2DF700E5C131 /* Platform.cpp in Sources */,
 				B455015C1BD7A80400E75E43 /* OpenGLES_Texture.cpp in Sources */,
+				B4046B3E1ECDCB8900F85550 /* egl.cpp in Sources */,
 				B4DF80801E375F0700307767 /* ImageEtcx.cpp in Sources */,
 				B4E4CE0C1E69A1D600DB4C31 /* Keys.cpp in Sources */,
 				B455016A1BD7A86200E75E43 /* OpenGL_RenderSystem.cpp in Sources */,
@@ -1938,6 +1955,7 @@
 				B45501181BD7A7D100E75E43 /* OpenGLC_RenderSystem.cpp in Sources */,
 				B436D2E51D05AE9200DA2C15 /* RenderHelper.cpp in Sources */,
 				B45501301BD7A7DE00E75E43 /* OpenGLES2_PixelShader.cpp in Sources */,
+				B4046B3F1ECDCB8900F85550 /* zlibUtil.cpp in Sources */,
 				D1368197187BFB3E00E66E32 /* RenderState.cpp in Sources */,
 				D1F27AD5177A2DF700E5C131 /* Image.cpp in Sources */,
 				D1F27AD6177A2DF700E5C131 /* ImageJpg.cpp in Sources */,
@@ -1948,10 +1966,8 @@
 				B45500F81BD7A7BA00E75E43 /* OpenGL1_Texture.cpp in Sources */,
 				D1F27AD9177A2DF700E5C131 /* TimerPosix.cpp in Sources */,
 				D10B73B21982473C00A9352D /* OpenKODE_Platform.cpp in Sources */,
-				B4DF80721E375E5100307767 /* zlibUtil.cpp in Sources */,
 				B45501041BD7A7C500E75E43 /* OpenGLES1_RenderSystem.cpp in Sources */,
 				D1F27AE1177A2DF700E5C131 /* ControllerDelegate.cpp in Sources */,
-				D1F27AE5177A2DF700E5C131 /* egl.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
