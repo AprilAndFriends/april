@@ -637,7 +637,7 @@
     <ClCompile Include="..\..\src\delegates\SystemDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\TouchDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\UpdateDelegate.cpp" />
-    <ClCompile Include="..\..\src\egl.cpp" />
+    <ClCompile Include="..\..\src\util\egl.cpp" />
     <ClCompile Include="..\..\src\InputMode.cpp" />
     <ClCompile Include="..\..\src\images\ImageEtcx.cpp" />
     <ClCompile Include="..\..\src\images\ImageJpg.cpp" />
@@ -669,7 +669,7 @@
     <ClCompile Include="..\..\src\windowsystems\SDL\SDL_Window.cpp" />
     <ClCompile Include="..\..\src\windowsystems\Win32\Win32_Cursor.cpp" />
     <ClCompile Include="..\..\src\windowsystems\Win32\Win32_Window.cpp" />
-    <ClCompile Include="..\..\src\zlibUtil.cpp" />
+    <ClCompile Include="..\..\src\util\zlibUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\androidUtilJNI.h" />
@@ -704,7 +704,7 @@
     <ClInclude Include="..\..\include\april\VirtualKeyboard.h" />
     <ClInclude Include="..\..\include\april\Win32_main.h" />
     <ClInclude Include="..\..\include\april\Window.h" />
-    <ClInclude Include="..\..\src\egl.h" />
+    <ClInclude Include="..\..\src\util\egl.h" />
     <ClInclude Include="..\..\src\RenderHelper.h" />
     <ClInclude Include="..\..\src\RenderHelperLayered2D.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_PixelShader.h" />
@@ -740,7 +740,7 @@
     <ClInclude Include="..\..\src\windowsystems\SDL\SDL_Window.h" />
     <ClInclude Include="..\..\src\windowsystems\Win32\Win32_Cursor.h" />
     <ClInclude Include="..\..\src\windowsystems\Win32\Win32_Window.h" />
-    <ClInclude Include="..\..\src\zlibUtil.h" />
+    <ClInclude Include="..\..\src\util\zlibUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">

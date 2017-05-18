@@ -534,8 +534,8 @@
 		B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGLES_VertexShader.cpp; path = src/rendersystems/OpenGL/GLES/OpenGLES_VertexShader.cpp; sourceTree = "<group>"; };
 		B45501831BD7B6F200E75E43 /* OpenGLES_VertexShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES_VertexShader.h; path = src/rendersystems/OpenGL/GLES/OpenGLES_VertexShader.h; sourceTree = "<group>"; };
 		B45501FB1BD7C84700E75E43 /* OpenGLES_defaultShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES_defaultShaders.h; path = src/rendersystems/OpenGL/GLES/OpenGLES_defaultShaders.h; sourceTree = "<group>"; };
-		B4DF806D1E375E4D00307767 /* zlibUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zlibUtil.cpp; path = src/zlibUtil.cpp; sourceTree = "<group>"; };
-		B4DF80751E375E6A00307767 /* zlibUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlibUtil.h; path = src/zlibUtil.h; sourceTree = "<group>"; };
+		B4DF806D1E375E4D00307767 /* zlibUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zlibUtil.cpp; path = src/utit/zlibUtil.cpp; sourceTree = "<group>"; };
+		B4DF80751E375E6A00307767 /* zlibUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlibUtil.h; path = src/utit/zlibUtil.h; sourceTree = "<group>"; };
 		B4DF80781E375F0200307767 /* ImageEtcx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageEtcx.cpp; path = src/images/ImageEtcx.cpp; sourceTree = "<group>"; };
 		B4DF80791E375F0200307767 /* ImagePvrz.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImagePvrz.cpp; path = src/images/ImagePvrz.cpp; sourceTree = "<group>"; };
 		B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Keys.cpp; path = src/Keys.cpp; sourceTree = "<group>"; };
@@ -582,8 +582,8 @@
 		D10B73CE198247B900A9352D /* Shaders.hlsli */ = {isa = PBXFileReference; lastKnownFileType = text; name = Shaders.hlsli; path = "src/rendersystems/DirectX/11/default-shaders/Shaders.hlsli"; sourceTree = "<group>"; };
 		D10B73CF198247B900A9352D /* VertexShader_Default.hlsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = VertexShader_Default.hlsl; path = "src/rendersystems/DirectX/11/default-shaders/VertexShader_Default.hlsl"; sourceTree = "<group>"; };
 		D1134F17175CDA3300BFF3A2 /* libapril-kd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libapril-kd.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D1134F21175CDAD200BFF3A2 /* egl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egl.cpp; path = src/egl.cpp; sourceTree = "<group>"; };
-		D1134F22175CDAD200BFF3A2 /* egl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egl.h; path = src/egl.h; sourceTree = "<group>"; };
+		D1134F21175CDAD200BFF3A2 /* egl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egl.cpp; path = src/utit/egl.cpp; sourceTree = "<group>"; };
+		D1134F22175CDAD200BFF3A2 /* egl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egl.h; path = src/utit/egl.h; sourceTree = "<group>"; };
 		D11FB8F21E6866D0001A7E9A /* InputMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InputMode.cpp; path = src/InputMode.cpp; sourceTree = "<group>"; };
 		D11FB8FA1E6866DD001A7E9A /* InputMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputMode.h; path = include/april/InputMode.h; sourceTree = "<group>"; };
 		D136818C187BFB3E00E66E32 /* main_base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main_base.cpp; path = src/main_base.cpp; sourceTree = "<group>"; };

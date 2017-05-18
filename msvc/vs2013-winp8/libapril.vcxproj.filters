@@ -194,7 +194,7 @@
     <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.cpp">
       <Filter>Source Files\windowsystems\OpenKODE</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\egl.cpp">
+    <ClCompile Include="..\..\src\util\egl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.cpp">
@@ -293,7 +293,7 @@
     <ClCompile Include="..\..\src\main_base.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\zlibUtil.cpp">
+    <ClCompile Include="..\..\src\util\zlibUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\InputMode.cpp">
@@ -385,7 +385,7 @@
     <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.h">
       <Filter>Header Files\windowsystems\OpenKODE</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\egl.h">
+    <ClInclude Include="..\..\src\util\egl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\RenderState.h">
@@ -451,7 +451,7 @@
     <ClInclude Include="..\..\src\RenderHelperLayered2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\zlibUtil.h">
+    <ClInclude Include="..\..\src\util\zlibUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\VirtualKeyboard.h">

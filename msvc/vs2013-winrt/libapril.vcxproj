@@ -207,7 +207,7 @@
     <ClCompile Include="..\..\src\delegates\SystemDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\TouchDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\UpdateDelegate.cpp" />
-    <ClCompile Include="..\..\src\egl.cpp" />
+    <ClCompile Include="..\..\src\util\egl.cpp" />
     <ClCompile Include="..\..\src\InputMode.cpp" />
     <ClCompile Include="..\..\src\images\ImageEtcx.cpp" />
     <ClCompile Include="..\..\src\images\ImageJpg.cpp" />
@@ -228,7 +228,7 @@
     <ClCompile Include="..\..\src\VertexShader.cpp" />
     <ClCompile Include="..\..\src\VirtualKeyboard.cpp" />
     <ClCompile Include="..\..\src\Window.cpp" />
-    <ClCompile Include="..\..\src\zlibUtil.cpp" />
+    <ClCompile Include="..\..\src\util\zlibUtil.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_Texture.cpp" />
     <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.cpp" />
@@ -270,7 +270,7 @@
     <ClInclude Include="..\..\include\april\VirtualKeyboard.h" />
     <ClInclude Include="..\..\include\april\WinRT_main.h" />
     <ClInclude Include="..\..\include\april\Window.h" />
-    <ClInclude Include="..\..\src\egl.h" />
+    <ClInclude Include="..\..\src\util\egl.h" />
     <ClInclude Include="..\..\src\RenderHelper.h" />
     <ClInclude Include="..\..\src\RenderHelperLayered2D.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_PixelShader.h" />
@@ -287,7 +287,7 @@
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\OpenGLC_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\OpenGLC_Texture.h" />
     <ClInclude Include="..\..\src\TextureAsync.h" />
-    <ClInclude Include="..\..\src\zlibUtil.h" />
+    <ClInclude Include="..\..\src\util\zlibUtil.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_Texture.h" />

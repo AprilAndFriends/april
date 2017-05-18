@@ -236,7 +236,7 @@
     <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.cpp">
       <Filter>Source Files\windowsystems\OpenKODE</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\egl.cpp">
+    <ClCompile Include="..\..\src\util\egl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\platforms\AndroidJNI_Platform.cpp">
@@ -329,7 +329,7 @@
     <ClCompile Include="..\..\src\images\ImagePvrz.cpp">
       <Filter>Source Files\images</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\zlibUtil.cpp">
+    <ClCompile Include="..\..\src\util\zlibUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\InputMode.cpp">
@@ -445,7 +445,7 @@
     <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.h">
       <Filter>Header Files\windowsystems\OpenKODE</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\egl.h">
+    <ClInclude Include="..\..\src\util\egl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\windowsystems\AndroidJNI\AndroidJNI_Keys.h">
@@ -541,7 +541,7 @@
     <ClInclude Include="..\..\include\april\VirtualKeyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\zlibUtil.h">
+    <ClInclude Include="..\..\src\util\zlibUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\InputMode.h">
