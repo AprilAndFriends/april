@@ -13,11 +13,22 @@
 #include <hltypes/hstring.h>
 #include <hltypes/hlog.h>
 
+#ifdef _BUILDING_APRIL
 #include "april.h"
+#include "RenderSystem.h"
+#include "Window.h"
+#else
+#include <april/april.h>
+#include <april/RenderSystem.h>
+#include <april/Window.h>
+#endif
+
 #include "egl.h"
 
 namespace april
 {
+	extern hstr logTag;
+
 	EglData* egl = NULL;
 
 	EglData::EglData()
@@ -87,7 +98,7 @@ namespace april
 				this->destroy();
 				return false;
 			}
-            // prefer RGB888, android choses RGB565 by default
+            // prefer RGB888, android chooses RGB565 by default
             this->config = configs[0];
             for (EGLint i = 0; i < nConfigs; i++)
             {
@@ -101,9 +112,7 @@ namespace april
                 {
                     continue;
                 }
-                
                 this->config = configs[i];
-                
                 // RGB == 888
                 if (!eglGetConfigAttrib(this->display, configs[i], EGL_RED_SIZE,   &size[0]) ||
                     !eglGetConfigAttrib(this->display, configs[i], EGL_GREEN_SIZE, &size[1]) ||
@@ -125,7 +134,7 @@ namespace april
 		{
 			// hWnd is assigned outside of this code on some non-win32 platforms, so we have to use it.
 #if defined(_WIN32) && !defined(_WINRT)
-			this->hWnd = (EGLNativeWindowType)window->getBackendId();
+			this->hWnd = (EGLNativeWindowType)april::window->getBackendId();
 #endif
 			this->surface = eglCreateWindowSurface(this->display, this->config, this->hWnd, NULL);
 			if (this->surface == NULL)

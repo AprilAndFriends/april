@@ -17,8 +17,6 @@
 #include <EGL/egl.h>
 #include <gtypes/Vector3.h>
 
-#include "aprilExport.h"
-
 namespace april
 {
 	class EglData
