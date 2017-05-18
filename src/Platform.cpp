@@ -162,13 +162,21 @@ namespace april
 
 	bool openUrl(chstr url)
 	{
+		bool result = false;
 		hlog::write(logTag, "Opening URL: " + url);
 		if (_openUrl != NULL)
 		{
-			return (*_openUrl)(url);
+			result = (*_openUrl)(url);
 		}
-		hlog::warn(logTag, "Cannot use openUrl() on this platform.");
-		return false;
+		else
+		{
+			hlog::warn(logTag, "Cannot use openUrl() on this platform.");
+		}
+		if (result)
+		{
+			hlog::warn(logTag, "Could not open URL!");
+		}
+		return result;
 	}
 
 	void showMessageBox(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,

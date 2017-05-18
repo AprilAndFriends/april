@@ -201,7 +201,6 @@ namespace april
 	
 	bool _openUrl_platform(chstr url)
 	{
-		hlog::write(logTag, "Opening URL: " + url);
 #ifdef __APPLE__
 #ifdef _IOS
 		if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]])
