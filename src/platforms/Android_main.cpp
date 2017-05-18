@@ -307,12 +307,10 @@ namespace april
 		{
 			return -1;
 		}
-#ifdef _OPENKODE // needed when OpenKODE is used
 		jclass classClass = env->FindClass("java/lang/Class");
 		jmethodID methodGetClassLoader = env->GetMethodID(classClass, "getClassLoader", _JARGS(_JCLASS("java/lang/ClassLoader"), ));
 		jobject classLoader = env->CallObjectMethod(classNativeInterface, methodGetClassLoader);
 		april::classLoader = env->NewGlobalRef(classLoader);
-#endif
 		return JNI_VERSION_1_6;
 	}
 
