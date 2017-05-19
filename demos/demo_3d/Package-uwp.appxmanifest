@@ -15,8 +15,8 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="april.App">
-      <uap:VisualElements DisplayName="App" Square150x150Logo="media\assets\Logo.png" Square44x44Logo="media\assets\LogoTiny.png" Description="April Demo" ForegroundText="light" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="media\assets\WideLogoUWP.png" BackgroundColor="transparent"/>
+      <uap:VisualElements DisplayName="App" Square150x150Logo="media\assets\Logo.png" Square44x44Logo="media\assets\LogoTiny.png" Description="April Demo" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="media\assets\WideLogoUWP.png"/>
         <uap:SplashScreen Image="media\assets\Splash.png" BackgroundColor="transparent"/>
       </uap:VisualElements>
     </Application>
