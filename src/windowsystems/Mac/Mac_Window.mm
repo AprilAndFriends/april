@@ -26,11 +26,6 @@ april::Mac_Window* aprilWindow = NULL;
 
 extern bool g_WindowFocusedBeforeSleep;
 
-namespace april
-{
-	hversion getMacOSVersion();
-}
-
 bool isPreLion()
 {
 	return !isLionOrNewer();
@@ -41,7 +36,7 @@ bool isLionOrNewer()
 	static int result = -1;
 	if (result == -1)
 	{
-		hversion v = april::getMacOSVersion();
+		hversion v = april::getSystemInfo().osVersion;
 		result = v.major >= 10 && v.minor >= 7 ? 1 : 0;
 	}
 	return result == 1;

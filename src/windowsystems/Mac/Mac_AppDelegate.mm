@@ -52,7 +52,7 @@ bool g_WindowFocusedBeforeSleep = false;
 
 - (void) applicationDidFinishLaunching: (NSNotification*) note
 {
-	NSLog(@"april::applicationDidFinishLaunching");
+    NSLog(@"april::applicationDidFinishLaunching");
 	mAppFocused = true;
 
 	harray<hstr> argv;
@@ -63,7 +63,11 @@ bool g_WindowFocusedBeforeSleep = false;
 	gAprilInit(argv);
 	// register for sleep/wake notifications, needed for proper handling
 	// of focus/unfocus events
-	
+    if (april::window == NULL)
+    {
+        [NSApp terminate:nil];
+        return;
+    }
 	NSNotificationCenter* c = [[NSWorkspace sharedWorkspace] notificationCenter];
 	[c addObserver:self selector: @selector(receiveSleepNote:) name:NSWorkspaceWillSleepNotification object:NULL];
 	[c addObserver:self selector: @selector(receiveWakeNote:) name:NSWorkspaceDidWakeNotification object:NULL];
@@ -77,7 +81,7 @@ bool g_WindowFocusedBeforeSleep = false;
 
 - (void) applicationWillTerminate:(NSNotification*) note
 {
-    if (april::isUsingCVDisplayLink())
+    if (april::window != NULL && april::isUsingCVDisplayLink())
     {
         hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
         gAppStarted = false;
@@ -88,22 +92,34 @@ bool g_WindowFocusedBeforeSleep = false;
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
 {
-	if (mAppFocused) return; // this blocks initial app focus call
+	if (mAppFocused)
+    {
+        return; // this blocks initial app focus call
+    }
 	mAppFocused = true;
 #ifdef _DEBUG
 	hlog::write(april::logTag, "Application activated.");
 #endif
-	if (aprilWindow) aprilWindow->OnAppGainedFocus();
+	if (aprilWindow != NULL)
+    {
+        aprilWindow->OnAppGainedFocus();
+    }
 }
 
 - (void)applicationDidResignActive:(NSNotification *)aNotification
 {
-	if (!mAppFocused) return;
+	if (!mAppFocused)
+    {
+        return;
+    }
 	mAppFocused = false;
 #ifdef _DEBUG
 	hlog::write(april::logTag, "Application deactivated.");
 #endif
-	if (aprilWindow) aprilWindow->OnAppLostFocus();
+    if (aprilWindow != NULL)
+    {
+        aprilWindow->OnAppLostFocus();
+    }
 }
 
 @end

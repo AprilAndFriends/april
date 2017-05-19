@@ -152,6 +152,10 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 
 - (void)draw
 {
+    if (april::window == NULL)
+    {
+        return;
+    }
     bool displayLink = april::isUsingCVDisplayLink();
     hmutex::ScopeLock lock;
     if (displayLink)
