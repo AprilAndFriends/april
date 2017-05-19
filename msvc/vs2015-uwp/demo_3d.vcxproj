@@ -116,13 +116,10 @@
     <Image Include="media\assets\LogoSmall.scale-100.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\LogoSmall.scale-140.png">
+    <Image Include="media\assets\LogoSmall.scale-125.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\LogoSmall.scale-180.png">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="media\assets\LogoSmall.scale-80.png">
+    <Image Include="media\assets\LogoSmall.scale-150.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="media\assets\LogoTiny.scale-100.png">
@@ -170,13 +167,10 @@
     <Image Include="media\assets\WideLogo.scale-100.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\WideLogo.scale-140.png">
+    <Image Include="media\assets\WideLogo.scale-125.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\WideLogo.scale-180.png">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="media\assets\WideLogo.scale-80.png">
+    <Image Include="media\assets\WideLogo.scale-150.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="media\icon.png" />
@@ -195,7 +189,7 @@
     <None Include="..\..\demos\demo_3d\TemporaryKey.pfx">
       <FileType>Document</FileType>
     </None>
-    <AppxManifest Include="..\..\demos\demo_3d\Package.appxmanifest">
+    <AppxManifest Include="..\..\demos\demo_3d\Package-uwp.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
   </ItemGroup>

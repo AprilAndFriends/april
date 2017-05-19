@@ -17,9 +17,6 @@
     <Filter Include="winrt\media\assets\Logo">
       <UniqueIdentifier>{df6315b6-fa7d-4aef-a55d-0ab1d950dd04}</UniqueIdentifier>
     </Filter>
-    <Filter Include="winrt\media\assets\WideLogo">
-      <UniqueIdentifier>{b13550d9-3dd8-4b26-9a29-a90d31b7897d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="winrt\media\assets\LogoBig">
       <UniqueIdentifier>{9d3df410-95d1-4b13-9b64-57ae49abc4fc}</UniqueIdentifier>
     </Filter>
@@ -34,6 +31,9 @@
     </Filter>
     <Filter Include="winrt\media\assets\LogoTiny">
       <UniqueIdentifier>{025f072d-66d5-4e92-878f-268be7554ecf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="winrt\media\assets\WideLogo">
+      <UniqueIdentifier>{b13550d9-3dd8-4b26-9a29-a90d31b7897d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -53,18 +53,6 @@
     </Image>
     <Image Include="media\assets\Logo.scale-180.png">
       <Filter>winrt\media\assets\Logo</Filter>
-    </Image>
-    <Image Include="media\assets\WideLogo.scale-80.png">
-      <Filter>winrt\media\assets\WideLogo</Filter>
-    </Image>
-    <Image Include="media\assets\WideLogo.scale-100.png">
-      <Filter>winrt\media\assets\WideLogo</Filter>
-    </Image>
-    <Image Include="media\assets\WideLogo.scale-140.png">
-      <Filter>winrt\media\assets\WideLogo</Filter>
-    </Image>
-    <Image Include="media\assets\WideLogo.scale-180.png">
-      <Filter>winrt\media\assets\WideLogo</Filter>
     </Image>
     <Image Include="media\assets\LogoBig.scale-80.png">
       <Filter>winrt\media\assets\LogoBig</Filter>
@@ -96,16 +84,7 @@
     <Image Include="media\assets\StoreLogo.scale-180.png">
       <Filter>winrt\media\assets\StoreLogo</Filter>
     </Image>
-    <Image Include="media\assets\LogoSmall.scale-80.png">
-      <Filter>winrt\media\assets\LogoSmall</Filter>
-    </Image>
     <Image Include="media\assets\LogoSmall.scale-100.png">
-      <Filter>winrt\media\assets\LogoSmall</Filter>
-    </Image>
-    <Image Include="media\assets\LogoSmall.scale-140.png">
-      <Filter>winrt\media\assets\LogoSmall</Filter>
-    </Image>
-    <Image Include="media\assets\LogoSmall.scale-180.png">
       <Filter>winrt\media\assets\LogoSmall</Filter>
     </Image>
     <Image Include="media\assets\LogoTiny.scale-80.png">
@@ -165,6 +144,21 @@
     <Image Include="media\jpt_final.jpt">
       <Filter>winrt\media</Filter>
     </Image>
+    <Image Include="media\assets\WideLogo.scale-100.png">
+      <Filter>winrt\media\assets\WideLogo</Filter>
+    </Image>
+    <Image Include="media\assets\WideLogo.scale-125.png">
+      <Filter>winrt\media\assets\WideLogo</Filter>
+    </Image>
+    <Image Include="media\assets\WideLogo.scale-150.png">
+      <Filter>winrt\media\assets\WideLogo</Filter>
+    </Image>
+    <Image Include="media\assets\LogoSmall.scale-125.png">
+      <Filter>winrt\media\assets\LogoSmall</Filter>
+    </Image>
+    <Image Include="media\assets\LogoSmall.scale-150.png">
+      <Filter>winrt\media\assets\LogoSmall</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="media\cursor.ani">
@@ -178,9 +172,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="..\..\demos\demo_3d\Package.appxmanifest">
-      <Filter>winrt</Filter>
-    </AppxManifest>
+    <AppxManifest Include="..\..\demos\demo_3d\Package-uwp.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\demos\demo_3d\winrt-cursors.rc">
