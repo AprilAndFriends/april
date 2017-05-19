@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -16,6 +16,22 @@
     <ProjectConfiguration Include="ReleaseS|Win32">
       <Configuration>ReleaseS</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugS|x64">
+      <Configuration>DebugS</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseS|x64">
+      <Configuration>ReleaseS</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -35,20 +51,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8ED4EDB5-7C0E-411F-BCC6-E96882CC73F3}</ProjectGuid>
-    <RootNamespace>demo_simple</RootNamespace>
+    <ProjectGuid>{E0BA09D4-16F6-495D-8497-C7FC6BA2C7B7}</ProjectGuid>
+    <RootNamespace>demo_tictactoe</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <ApplicationType>Windows Store</ApplicationType>
-    <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <AppContainerApplication>true</AppContainerApplication>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props-demos\default.props" />
-  <Import Project="..\..\..\hltypes\msvc\vs2013-winrt\props-generic\platform-$(Platform).props" />
+  <Import Project="..\..\..\hltypes\msvc\vs2015-uwp\props-generic\platform-$(Platform).props" />
   <Import Project="props-demos\configurations.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <Import Project="..\..\..\hltypes\msvc\vs2013-winrt\props-generic\build-defaults.props" />
+  <Import Project="..\..\..\hltypes\msvc\vs2015-uwp\props-generic\build-defaults.props" />
   <Import Project="props-demos\build-defaults.props" />
   <Import Project="props-demos\configuration.props" />
   <ItemDefinitionGroup Condition="'$(Configuration)'=='DebugS'">
@@ -68,7 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\demos\demo_simple\demo_simple.cpp" />
+    <ClCompile Include="..\..\demos\demo_tictactoe\demo_tictactoe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="media\assets\Logo.scale-100.png">
@@ -174,15 +192,15 @@
     <Image Include="media\jpt_final.jpt" />
     <None Include="media\cursor.ani" />
     <None Include="media\simple.cur" />
-    <None Include="..\..\demos\demo_simple\TemporaryKey.pfx">
+    <None Include="..\..\demos\demo_tictactoe\TemporaryKey.pfx">
       <FileType>Document</FileType>
     </None>
-    <AppxManifest Include="..\..\demos\demo_simple\Package.appxmanifest">
+    <AppxManifest Include="..\..\demos\demo_tictactoe\Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\demos\demo_simple\winrt-cursors.rc" />
+    <ResourceCompile Include="..\..\demos\demo_tictactoe\winrt-cursors.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

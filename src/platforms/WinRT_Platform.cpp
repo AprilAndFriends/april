@@ -125,7 +125,6 @@ namespace april
 			info.displayResolution.x = hmax((float)width, info.displayResolution.x);
 		}
 #endif
-		return info;
 	}
 
 	hstr _getPackageName_platform()

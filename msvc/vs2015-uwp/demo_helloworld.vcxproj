@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -16,6 +16,22 @@
     <ProjectConfiguration Include="ReleaseS|Win32">
       <Configuration>ReleaseS</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugS|x64">
+      <Configuration>DebugS</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseS|x64">
+      <Configuration>ReleaseS</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|ARM">
       <Configuration>Debug</Configuration>
@@ -38,17 +54,19 @@
     <ProjectGuid>{E0BA09D4-16F6-495D-8497-C7FC5BA2C7B7}</ProjectGuid>
     <RootNamespace>demo_helloworld</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
-    <ApplicationType>Windows Phone</ApplicationType>
-    <ApplicationTypeRevision>8.1</ApplicationTypeRevision>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <AppContainerApplication>true</AppContainerApplication>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props-demos\default.props" />
-  <Import Project="..\..\..\hltypes\msvc\vs2013-winp8\props-generic\platform-$(Platform).props" />
+  <Import Project="..\..\..\hltypes\msvc\vs2015-uwp\props-generic\platform-$(Platform).props" />
   <Import Project="props-demos\configurations.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <Import Project="..\..\..\hltypes\msvc\vs2013-winp8\props-generic\build-defaults.props" />
+  <Import Project="..\..\..\hltypes\msvc\vs2015-uwp\props-generic\build-defaults.props" />
   <Import Project="props-demos\build-defaults.props" />
   <Import Project="props-demos\configuration.props" />
   <ItemDefinitionGroup Condition="'$(Configuration)'=='DebugS'">
@@ -77,34 +95,67 @@
     <Image Include="media\assets\Logo.scale-140.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\Logo.scale-240.png">
+    <Image Include="media\assets\Logo.scale-180.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\LogoSmallP8.scale-100.png">
+    <Image Include="media\assets\Logo.scale-80.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\LogoSmallP8.scale-140.png">
+    <Image Include="media\assets\LogoBig.scale-100.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\LogoSmallP8.scale-240.png">
+    <Image Include="media\assets\LogoBig.scale-140.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\LogoTinyP8.scale-100.png">
+    <Image Include="media\assets\LogoBig.scale-180.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\LogoTinyP8.scale-140.png">
+    <Image Include="media\assets\LogoBig.scale-80.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\LogoTinyP8.scale-240.png">
+    <Image Include="media\assets\LogoSmall.scale-100.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\SplashP8.scale-100.png">
+    <Image Include="media\assets\LogoSmall.scale-140.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\SplashP8.scale-140.png">
+    <Image Include="media\assets\LogoSmall.scale-180.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\SplashP8.scale-240.png">
+    <Image Include="media\assets\LogoSmall.scale-80.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\LogoTiny.scale-100.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\LogoTiny.scale-140.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\LogoTiny.scale-180.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\LogoTiny.scale-80.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\LogoTiny.targetsize-16.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\LogoTiny.targetsize-256.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\LogoTiny.targetsize-32.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\LogoTiny.targetsize-48.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\Splash.scale-100.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\Splash.scale-140.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\Splash.scale-180.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="media\assets\StoreLogo.scale-100.png">
@@ -113,7 +164,7 @@
     <Image Include="media\assets\StoreLogo.scale-140.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\StoreLogo.scale-240.png">
+    <Image Include="media\assets\StoreLogo.scale-180.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="media\assets\WideLogo.scale-100.png">
@@ -122,7 +173,10 @@
     <Image Include="media\assets\WideLogo.scale-140.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="media\assets\WideLogo.scale-240.png">
+    <Image Include="media\assets\WideLogo.scale-180.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="media\assets\WideLogo.scale-80.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="media\icon.png" />
@@ -141,9 +195,12 @@
     <None Include="..\..\demos\demo_helloworld\TemporaryKey.pfx">
       <FileType>Document</FileType>
     </None>
-    <AppxManifest Include="..\..\demos\demo_helloworld\Package-winp8.appxmanifest">
+    <AppxManifest Include="..\..\demos\demo_helloworld\Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\demos\demo_helloworld\winrt-cursors.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
