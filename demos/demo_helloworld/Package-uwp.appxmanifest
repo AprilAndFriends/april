@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="com.april.demo3d" Publisher="CN=April" Version="5.0.0.0" />
+  <Identity Name="com.april.demoHelloworld" Publisher="CN=April" Version="5.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="6afa13ff-2b98-4e9b-ac0d-b7bbd29329ab" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>April Demo 3D</DisplayName>
+    <DisplayName>April Demo Hello World</DisplayName>
     <PublisherDisplayName>April</PublisherDisplayName>
     <Logo>media\assets\StoreLogo.png</Logo>
   </Properties>

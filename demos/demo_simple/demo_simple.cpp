@@ -182,7 +182,7 @@ void april_init(const harray<hstr>& args)
 	updateDelegate = new UpdateDelegate();
 	systemDelegate = new SystemDelegate();
 	mouseDelegate = new MouseDelegate();
-#if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
+#if defined(_ANDROID) || defined(_IOS)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 	// init

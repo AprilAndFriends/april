@@ -156,12 +156,12 @@ void april_init(const harray<hstr>& args)
 	updateDelegate = new UpdateDelegate();
 	systemDelegate = new SystemDelegate();
 	mouseDelegate = new MouseDelegate();
-#if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
+#if defined(_ANDROID) || defined(_IOS)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 	april::init(april::RenderSystemType::Default, april::WindowType::Default);
 	april::createRenderSystem();
-	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Simple Demo");
+	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Pix Demo");
 	aprilpix::init();
 #ifdef _WINRT
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
