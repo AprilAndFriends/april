@@ -5,15 +5,15 @@
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_DirectX11' or
-                                  '$(Configuration)'=='DebugS_DirectX11' or
-                                  '$(Configuration)'=='Release_DirectX11' or
-                                  '$(Configuration)'=='ReleaseS_DirectX11'">
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_DirectX12' or
+                                  '$(Configuration)'=='DebugS_DirectX12' or
+                                  '$(Configuration)'=='Release_DirectX12' or
+                                  '$(Configuration)'=='ReleaseS_DirectX12'">
     <ClCompile>
-      <PreprocessorDefinitions>_DIRECTX;_DIRECTX11;_WINRT_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DIRECTX;_DIRECTX12;_WINUWP_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d12.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_OpenKODE' or

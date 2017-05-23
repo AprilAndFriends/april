@@ -33,6 +33,9 @@
 #ifdef _DIRECTX11
 #include "DirectX11_RenderSystem.h"
 #endif
+#ifdef _DIRECTX12
+#include "DirectX12_RenderSystem.h"
+#endif
 #ifdef _OPENGL1
 #include "OpenGL1_RenderSystem.h"
 #endif
@@ -64,6 +67,9 @@
 #ifdef _WINRT_WINDOW
 #include "WinRT_Window.h"
 #endif
+#ifdef _WINUWP_WINDOW
+#include "WinUWP_Window.h"
+#endif
 #ifdef _EGL
 #include "egl.h"
 #endif
@@ -73,6 +79,8 @@
 		#define RS_INTERNAL_DEFAULT RenderSystemType::DirectX9
 	#elif defined(_DIRECTX11)
 		#define RS_INTERNAL_DEFAULT RenderSystemType::DirectX11
+	#elif defined(_DIRECTX12)
+		#define RS_INTERNAL_DEFAULT RenderSystemType::DirectX12
 	#elif defined(_OPENGL1)
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGL1
 	#elif defined(_OPENGLES1)
@@ -314,6 +322,12 @@ namespace april
 			april::rendersys = new DirectX11_RenderSystem();
 		}
 #endif
+#ifdef _DIRECTX12
+		if (april::rendersys == NULL && renderSystem == RenderSystemType::DirectX12)
+		{
+			april::rendersys = new DirectX12_RenderSystem();
+		}
+#endif
 #ifdef _OPENGL1
 		if (april::rendersys == NULL && renderSystem == RenderSystemType::OpenGL1)
 		{
@@ -357,6 +371,12 @@ namespace april
 		if (april::window == NULL && window == WindowType::WinRT)
 		{
 			april::window = new WinRT_Window();
+		}
+#endif
+#ifdef _WINUWP_WINDOW
+		if (april::window == NULL && window == WindowType::WinUWP)
+		{
+			april::window = new WinUWP_Window();
 		}
 #endif
 #ifdef _SDL_WINDOW

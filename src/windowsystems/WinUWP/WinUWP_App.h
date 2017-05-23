@@ -8,49 +8,59 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a WinRT XAML App.
+/// Defines a WinUWP App.
 
-#ifdef _WINRT_WINDOW
-#ifndef APRIL_WINRT_XAML_APP_H
-#define APRIL_WINRT_XAML_APP_H
+#ifdef _WINUWP_WINDOW
+#ifndef APRIL_WINUWP_APP_H
+#define APRIL_WINUWP_APP_H
 
-#include <gtypes/Matrix4.h>
-#include <gtypes/Vector2.h>
-#include <hltypes/harray.h>
+//#include <gtypes/Matrix4.h>
+//#include <gtypes/Vector2.h>
+//#include <hltypes/harray.h>
 
-#include "Color.h"
-#include "pch.h"
-#include "WinRT_XamlOverlay.xaml.h"
+//#include "Color.h"
+//#include "pch.h"
+//#include "WinRT_XamlOverlay.xaml.h"
 
 using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
-using namespace Windows::Foundation;
+using namespace Windows::ApplicationModel::Core;
 using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Core;
+/*
+using namespace Windows::Foundation;
+using namespace Windows::Graphics::Display;
 using namespace Windows::UI::ViewManagement;
 using namespace Windows::UI::Xaml;
 using namespace Windows::UI::Xaml::Markup;
 #ifdef _WINP8
 using namespace Windows::Phone::UI::Input;
 #endif
+*/
 
 namespace april
 {
 	class Texture;
 	
-	[Windows::Foundation::Metadata::WebHostHidden]
-	ref class WinRT_XamlApp sealed : public Application, public IComponentConnector
+	ref class WinUWP_App sealed : public Core::IFrameworkView
 	{
 	public:
-		WinRT_XamlApp();
+		WinUWP_App();
 		virtual void Connect(int connectionId, Object^ target);
-		
+
+		// IFrameworkView methods.
+		virtual void Initialize(Core::CoreApplicationView^ applicationView);
+		virtual void SetWindow(CoreWindow^ window);
+		virtual void Load(Platform::String^ entryPoint);
+		virtual void Run();
+		virtual void Uninitialize();
+
+
+		/*
 		void refreshCursor();
 		
-		property WinRT_XamlOverlay^ Overlay { WinRT_XamlOverlay^ get() { return this->overlay; } }
+		//property WinRT_XamlOverlay^ Overlay { WinRT_XamlOverlay^ get() { return this->overlay; } }
 
-		void OnSuspend(_In_ Object^ sender, _In_ SuspendingEventArgs^ args);
-		void OnResume(_In_ Object^ sender, _In_ Object^ args);
 		void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
 		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
 		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
@@ -73,12 +83,30 @@ namespace april
 	internal:
 		void OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args);
 		void OnRender(_In_ Object^ sender, _In_ Object^ args);
-		
+		*/
 	protected:
+
+		// Application lifecycle events
+		void OnActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args);
+		void OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args);
+		void OnResuming(Platform::Object^ sender, Platform::Object^ args);
+
+		// CoreWindow events
+		void OnWindowSizeChanged(CoreWindow^ sender, WindowSizeChangedEventArgs^ args);
+		void OnVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args);
+		void OnWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args);
+
+		// DisplayInformation events
+		void OnDpiChanged(DisplayInformation^ sender, Platform::Object^ args);
+		void OnOrientationChanged(DisplayInformation^ sender, Platform::Object^ args);
+		void OnDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args);
+
+		/*
 		virtual void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;
+		*/
 		void _updateWindowSize(float width, float height);
-		
 	private:
+		/*
 		bool running;
 		Texture* splashTexture;
 		WinRT_XamlOverlay^ overlay;
@@ -90,7 +118,9 @@ namespace april
 		bool firstFrameAfterActivateHack;
 		Windows::Foundation::EventRegistrationToken eventToken;
 		bool scrollHorizontal;
+		*/
 		harray<unsigned int> pointerIds;
+		/*
 		int64_t startTime;
 		april::Key currentButton;
 
@@ -98,15 +128,27 @@ namespace april
 		
 		void _tryAddRenderToken();
 		void _tryRemoveRenderToken();
+		*/
 		void _handleFocusChange(bool focused);
+		/*
 		void _refreshCursor();
 		gvec2 _transformPosition(float x, float y);
+		*/
 		void _resetTouches();
+		/*
 		void _tryRenderSplashTexture(int count = 1);
 		april::Texture* _tryLoadTexture(chstr nodeName, chstr attributeName);
 		void _tryLoadSplashTexture();
 		void _tryLoadBackgroundColor();
 		bool _findVisualElements(chstr nodeName, hstr& data, int& index);
+		*/
+
+	};
+
+	ref class FrameworkViewSource sealed : IFrameworkViewSource
+	{
+	public:
+		virtual IFrameworkView^ CreateView();
 
 	};
 

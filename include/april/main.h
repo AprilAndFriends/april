@@ -18,6 +18,7 @@
 ///
 /// - Windows native: _WIN32
 /// - Windows with console: _WIN32 _CONSOLE
+/// - WinUWP: _WINUWP
 /// - WinRT: _WINRT
 /// - Android: _ANDROID
 /// - Mac: __APPLE__
@@ -45,6 +46,8 @@
 	#include "OpenKODE_main.h"
 #elif defined(_ANDROID)
 	#include "Android_main.h"
+#elif defined(_WINUWP)
+	#include "WinUWP_main.h"
 #elif defined(_WINRT)
 	#include "WinRT_main.h"
 #elif defined(_WIN32) && !defined(_CONSOLE)

@@ -90,17 +90,20 @@
     <Filter Include="Source Files\rendersystems\OpenGL\GL\1">
       <UniqueIdentifier>{9928026c-27fb-4619-aa07-f9c4c33d2e8b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\rendersystems\DirectX\11">
+    <Filter Include="Source Files\windowsystems\WinUWP">
+      <UniqueIdentifier>{e647382e-0091-47bf-ac9f-821f16340f38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\windowsystems\WinUWP">
+      <UniqueIdentifier>{e56a9fcb-3b2a-4934-88e9-222a629e8139}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX\12">
       <UniqueIdentifier>{edfbadb8-e07f-4516-9ad6-479af740625c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\rendersystems\DirectX\11">
+    <Filter Include="Header Files\rendersystems\DirectX\12">
       <UniqueIdentifier>{dfe5826f-1d2c-4f6d-8d5f-656d36961488}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\windowsystems\WinRT">
-      <UniqueIdentifier>{ca32f0eb-a1ce-4b6d-9803-4dcbec60d895}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\windowsystems\WinRT">
-      <UniqueIdentifier>{fc3c2db0-d18e-4947-a5ff-518b26111c1e}</UniqueIdentifier>
+    <Filter Include="Source Files\rendersystems\DirectX\12\default-shaders">
+      <UniqueIdentifier>{bc2e7e6b-099a-4c0c-9e03-da50d973abee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -260,36 +263,6 @@
     <ClCompile Include="..\..\src\VirtualKeyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.cpp">
-      <Filter>Source Files\rendersystems\DirectX\11</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_RenderSystem.cpp">
-      <Filter>Source Files\rendersystems\DirectX\11</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_Texture.cpp">
-      <Filter>Source Files\rendersystems\DirectX\11</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_VertexShader.cpp">
-      <Filter>Source Files\rendersystems\DirectX\11</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT.cpp">
-      <Filter>Source Files\windowsystems\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_Cursor.cpp">
-      <Filter>Source Files\windowsystems\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_Window.cpp">
-      <Filter>Source Files\windowsystems\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.cpp">
-      <Filter>Source Files\windowsystems\WinRT</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\platforms\WinRT_main.cpp">
-      <Filter>Source Files\platforms</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\platforms\WinRT_Platform.cpp">
-      <Filter>Source Files\platforms</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\main_base.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -301,6 +274,39 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Keys.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP_App.cpp">
+      <Filter>Source Files\windowsystems\WinUWP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\DirectX\12\DirectX12_PixelShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX\12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\DirectX\12\DirectX12_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\DirectX\12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\DirectX\12\DirectX12_Texture.cpp">
+      <Filter>Source Files\rendersystems\DirectX\12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\DirectX\12\DirectX12_VertexShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX\12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP_Cursor.cpp">
+      <Filter>Source Files\windowsystems\WinUWP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP_Window.cpp">
+      <Filter>Source Files\windowsystems\WinUWP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP.cpp">
+      <Filter>Source Files\windowsystems\WinUWP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\platforms\WinUWP_main.cpp">
+      <Filter>Source Files\platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\platforms\WinUWP_Platform.cpp">
+      <Filter>Source Files\platforms</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -457,43 +463,89 @@
     <ClInclude Include="..\..\include\april\VirtualKeyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.h">
-      <Filter>Header Files\rendersystems\DirectX\11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_RenderSystem.h">
-      <Filter>Header Files\rendersystems\DirectX\11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_Texture.h">
-      <Filter>Header Files\rendersystems\DirectX\11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_VertexShader.h">
-      <Filter>Header Files\rendersystems\DirectX\11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_Cursor.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_Window.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\april\WinRT_main.h">
-      <Filter>Header Files\platforms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\pch.h">
-      <Filter>Header Files\windowsystems\WinRT</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\april\InputMode.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP_App.h">
+      <Filter>Header Files\windowsystems\WinUWP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\DirectX\12\DirectX12_PixelShader.h">
+      <Filter>Header Files\rendersystems\DirectX\12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\DirectX\12\DirectX12_RenderSystem.h">
+      <Filter>Header Files\rendersystems\DirectX\12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\DirectX\12\DirectX12_Texture.h">
+      <Filter>Header Files\rendersystems\DirectX\12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\DirectX\12\DirectX12_VertexShader.h">
+      <Filter>Header Files\rendersystems\DirectX\12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP.h">
+      <Filter>Header Files\windowsystems\WinUWP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP_Cursor.h">
+      <Filter>Header Files\windowsystems\WinUWP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP_Window.h">
+      <Filter>Header Files\windowsystems\WinUWP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\WinUWP_main.h">
+      <Filter>Header Files\platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\windowsystems\WinUWP\pch.h">
+      <Filter>Header Files\windowsystems\WinUWP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_AlphaMap.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Lerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Multiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedLerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedMultiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Colored.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_ColoredTextured.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Plain.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Textured.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Plain.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </None>
+    <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Textured.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </None>
+    <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

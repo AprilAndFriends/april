@@ -41,6 +41,9 @@ namespace april
 		/// @var static const RenderSystemType RenderSystemType::DirectX11
 		/// @brief Use DirectX 11 render system if available.
 		HL_ENUM_DECLARE(RenderSystemType, DirectX11);
+		/// @var static const RenderSystemType RenderSystemType::DirectX12
+		/// @brief Use DirectX 12 render system if available.
+		HL_ENUM_DECLARE(RenderSystemType, DirectX12);
 		/// @var static const RenderSystemType RenderSystemType::OpenGL1
 		/// @brief Use OpenGL 1 render system if available.
 		HL_ENUM_DECLARE(RenderSystemType, OpenGL1);
@@ -65,6 +68,9 @@ namespace april
 		/// @var static const WindowType WindowType::WinRT
 		/// @brief Use WinRT window system if available.
 		HL_ENUM_DECLARE(WindowType, WinRT);
+		/// @var static const WindowType WindowType::WinUWP
+		/// @brief Use WinUWP window system if available.
+		HL_ENUM_DECLARE(WindowType, WinUWP);
 		/// @var static const WindowType WindowType::SDL
 		/// @brief Use SDL window system if available.
 		HL_ENUM_DECLARE(WindowType, SDL);
