@@ -245,7 +245,7 @@ namespace april
 
 		void _waitForGpu();
 
-		static D3D12_PRIMITIVE_TOPOLOGY _dx11RenderOperations[];
+		static D3D_PRIMITIVE_TOPOLOGY _dx12RenderOperations[];
 
 	};
 
