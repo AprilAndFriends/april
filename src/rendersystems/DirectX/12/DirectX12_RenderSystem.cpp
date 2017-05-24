@@ -280,21 +280,21 @@ namespace april
 		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
 		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
 		// input layouts for default shaders
-		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescPlain[] =
+		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescriptorPlain[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		};
-		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescTextured[] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		};
-		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescColored[] =
+		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescriptorColored[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		};
-		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescColoredTextured[] =
+		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescriptorTextured[] =
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		};
+		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescriptorColoredTextured[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -341,6 +341,33 @@ namespace april
 		renderTargetOverwrite.SrcBlend = D3D12_BLEND_SRC_ALPHA;
 		renderTargetOverwrite.DestBlend = D3D12_BLEND_ZERO;
 		const D3D12_DEPTH_STENCILOP_DESC defaultStencilOperation = { D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS };
+		// indexed data
+		harray<D3D12_INPUT_LAYOUT_DESC> inputLayoutDescriptors;
+		inputLayoutDescriptors += { inputLayoutDescriptorPlain, _countof(inputLayoutDescriptorPlain) };
+		inputLayoutDescriptors += { inputLayoutDescriptorColored, _countof(inputLayoutDescriptorColored) };
+		inputLayoutDescriptors += { inputLayoutDescriptorTextured, _countof(inputLayoutDescriptorTextured) };
+		inputLayoutDescriptors += { inputLayoutDescriptorColoredTextured, _countof(inputLayoutDescriptorColoredTextured) };
+		harray<DirectX12_VertexShader*> vertexShaders;
+		vertexShaders += this->vertexShaderPlain;
+		vertexShaders += this->vertexShaderColored;
+		vertexShaders += this->vertexShaderTextured;
+		vertexShaders += this->vertexShaderColoredTextured;
+		harray<DirectX12_PixelShader*> pixelShaders;
+		pixelShaders += this->pixelShaderMultiply;
+		pixelShaders += this->pixelShaderLerp;
+		pixelShaders += this->pixelShaderAlphaMap;
+		pixelShaders += this->pixelShaderTexturedMultiply;
+		pixelShaders += this->pixelShaderTexturedLerp;
+		pixelShaders += this->pixelShaderTexturedAlphaMap;
+		harray<D3D12_RENDER_TARGET_BLEND_DESC> blendStateRenderTargets;
+		blendStateRenderTargets += renderTargetAlpha;
+		blendStateRenderTargets += renderTargetAdd;
+		blendStateRenderTargets += renderTargetSubtract;
+		blendStateRenderTargets += renderTargetOverwrite;
+		harray<D3D12_PRIMITIVE_TOPOLOGY_TYPE> primitiveTopologyTypes;
+		primitiveTopologyTypes += D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		primitiveTopologyTypes += D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+		primitiveTopologyTypes += D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 		// pipeline states
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC state = {};
 		state.pRootSignature = this->rootSignature.Get();
@@ -350,7 +377,7 @@ namespace april
 		state.RasterizerState.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
 		state.RasterizerState.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
 		state.RasterizerState.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
-		state.RasterizerState.DepthClipEnable = false;
+		state.RasterizerState.DepthClipEnable = true;
 		state.RasterizerState.MultisampleEnable = false;
 		state.RasterizerState.AntialiasedLineEnable = false;
 		state.RasterizerState.ForcedSampleCount = 0;
@@ -364,19 +391,9 @@ namespace april
 		state.SampleMask = UINT_MAX;
 		state.NumRenderTargets = 1;
 		state.SampleDesc.Count = 1;
-		// dynamic properties
-		state.InputLayout = { inputLayoutDescPlain, _countof(inputLayoutDescPlain) };
-		state.VS.pShaderBytecode = (unsigned char*)this->vertexShaderPlain->shaderData;
-		state.VS.BytecodeLength = (SIZE_T)this->vertexShaderPlain->shaderData.size();
-		state.PS.pShaderBytecode = (unsigned char*)this->pixelShaderMultiply->shaderData;
-		state.PS.BytecodeLength = (SIZE_T)this->pixelShaderMultiply->shaderData.size();
+		state.SampleDesc.Quality = 0;
 		state.BlendState.AlphaToCoverageEnable = false;
 		state.BlendState.IndependentBlendEnable = false;
-		for_iter (i, 0, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT)
-		{
-			state.BlendState.RenderTarget[i] = renderTargetAlpha;
-		}
-		state.DepthStencilState.DepthEnable = false;
 		state.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 		state.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 		state.DepthStencilState.StencilEnable = false;
@@ -384,15 +401,38 @@ namespace april
 		state.DepthStencilState.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
 		state.DepthStencilState.FrontFace = defaultStencilOperation;
 		state.DepthStencilState.BackFace = defaultStencilOperation;
-
-
-		//state.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-		state.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-
-		_TRY_UNSAFE(this->d3dDevice->CreateGraphicsPipelineState(&state, IID_PPV_ARGS(&this->pipelineState)), "Unable to create graphics pipeline state!");
+		// dynamic properties
+		int pixelIndex = -1;
+		for_iter (i, 0, 2)//inputLayoutDescriptors.size())
+		{
+			state.InputLayout = inputLayoutDescriptors[i];
+			state.VS.pShaderBytecode = (unsigned char*)vertexShaders[i]->shaderData;
+			state.VS.BytecodeLength = (SIZE_T)vertexShaders[i]->shaderData.size();
+			for_iter (j, 0, pixelShaders.size() / 2)
+			{
+				pixelIndex = j + (i / (inputLayoutDescriptors.size() / 2)) * (pixelShaders.size() / 2);
+				state.PS.pShaderBytecode = (unsigned char*)pixelShaders[pixelIndex]->shaderData;
+				state.PS.BytecodeLength = (SIZE_T)pixelShaders[pixelIndex]->shaderData.size();
+				for_iter (k, 0, blendStateRenderTargets.size())
+				{
+					for_iter (m, 0, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT)
+					{
+						state.BlendState.RenderTarget[m] = blendStateRenderTargets[k];
+					}
+					for_iter (m, 0, primitiveTopologyTypes.size())
+					{
+						state.PrimitiveTopologyType = primitiveTopologyTypes[m];
+						state.DepthStencilState.DepthEnable = false;
+						_TRY_UNSAFE(this->d3dDevice->CreateGraphicsPipelineState(&state, IID_PPV_ARGS(&this->pipelineStates[i][j][k][m][0])), "Unable to create graphics pipeline state!");
+						state.DepthStencilState.DepthEnable = true;
+						_TRY_UNSAFE(this->d3dDevice->CreateGraphicsPipelineState(&state, IID_PPV_ARGS(&this->pipelineStates[i][j][k][m][1])), "Unable to create graphics pipeline state!");
+					}
+				}
+			}
+		}
+		
 		_TRY_UNSAFE(this->d3dDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, this->commandAllocators[this->currentFrame].Get(),
-			this->pipelineState.Get(), IID_PPV_ARGS(&this->commandList)), "Unable to create command allocators state!");
-
+			this->pipelineStates[0][0][0][0][0].Get(), IID_PPV_ARGS(&this->commandList)), "Unable to create command allocators state!");
 		this->uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
 		this->uploadHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
 		this->uploadHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
@@ -488,7 +528,8 @@ namespace april
 		this->_waitForGpu();
 		// initial calls
 		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
-		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->pipelineState.Get()), "Unable to reset command list!");
+		// TODOpipe
+		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->pipelineStates[0][0][0][0][0].Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		this->_deviceClear(true);
 		this->presentFrame();
@@ -999,7 +1040,8 @@ namespace april
 
 		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
 		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
-		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->pipelineState.Get()), "Unable to reset command list!");
+		// TODOpipe
+		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->pipelineStates[0][0][0][0][0].Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		this->commandList->SetGraphicsRootSignature(this->rootSignature.Get());
 		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };
@@ -1322,7 +1364,8 @@ namespace april
 
 		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
 		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
-		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->pipelineState.Get()), "Unable to reset command list!");
+		// TODOpipe
+		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->pipelineStates[0][0][0][0][0].Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		this->commandList->SetGraphicsRootSignature(this->rootSignature.Get());
 		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };

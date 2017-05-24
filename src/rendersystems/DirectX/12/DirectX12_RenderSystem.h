@@ -32,6 +32,11 @@
 
 #define FRAME_COUNT 3
 #define ALIGNED_CONSTANT_BUFFER_SIZE ((sizeof(ConstantBuffer) + 255) & ~255)
+#define PIPELINE_INPUT_LAYOUT_COUNT 4
+#define PIPELINE_PIXEL_SHADER_COUNT 3
+#define PIPELINE_BLEND_STATE_COUNT 4
+#define PIPELINE_PRIMITIVE_TOPOLOGY_COUNT 3
+#define PIPELINE_DEPTH_ENABLED_COUNT 2
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
@@ -114,7 +119,7 @@ namespace april
 		D3D12_VIEWPORT screenViewport;
 
 		//PipelineState pipelineStates[4];
-		ComPtr<ID3D12PipelineState> pipelineState;
+		ComPtr<ID3D12PipelineState> pipelineStates[PIPELINE_INPUT_LAYOUT_COUNT][PIPELINE_PIXEL_SHADER_COUNT][PIPELINE_BLEND_STATE_COUNT][PIPELINE_PRIMITIVE_TOPOLOGY_COUNT][PIPELINE_DEPTH_ENABLED_COUNT];
 
 		// CPU/GPU synchronization
 		ComPtr<ID3D12Fence> fence;
