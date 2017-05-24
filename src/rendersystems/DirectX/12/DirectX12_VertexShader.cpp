@@ -23,18 +23,17 @@ using namespace Microsoft::WRL;
 
 namespace april
 {
-	DirectX12_VertexShader::DirectX12_VertexShader() : VertexShader(), dx11Shader(nullptr)
+	DirectX12_VertexShader::DirectX12_VertexShader() : VertexShader()
 	{
 	}
 
 	DirectX12_VertexShader::~DirectX12_VertexShader()
 	{
-		this->dx11Shader = nullptr;
 	}
 
 	bool DirectX12_VertexShader::isLoaded() const
 	{
-		return (this->dx11Shader != nullptr);
+		return (this->shaderData.size() > 0);
 	}
 
 	bool DirectX12_VertexShader::_createShader(chstr filename, const hstream& stream)

@@ -275,9 +275,6 @@
     <ClCompile Include="..\..\src\Keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP_App.cpp">
       <Filter>Source Files\windowsystems\WinUWP</Filter>
     </ClCompile>
@@ -466,9 +463,6 @@
     <ClInclude Include="..\..\include\april\InputMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP_App.h">
       <Filter>Header Files\windowsystems\WinUWP</Filter>
     </ClInclude>
@@ -498,6 +492,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\windowsystems\WinUWP\pch.h">
       <Filter>Header Files\windowsystems\WinUWP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\DirectX\12\d3dx12.h">
+      <Filter>Header Files\rendersystems\DirectX\12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

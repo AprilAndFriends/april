@@ -92,6 +92,8 @@
 		#define WS_INTERNAL_DEFAULT WindowType::OpenKODE
 	#elif !defined(_WINRT)
 		#define WS_INTERNAL_DEFAULT WindowType::Win32
+	#elif defined(_WINUWP)
+		#define WS_INTERNAL_DEFAULT WindowType::WinUWP
 	#else
 		#define WS_INTERNAL_DEFAULT WindowType::WinRT
 	#endif
@@ -147,6 +149,8 @@
 #ifdef _WIN32
 	#ifndef _WINRT
 		#define APRIL_PLATFORM_NAME "Win32"
+	#elif defined(_WINUWP)
+		#define APRIL_PLATFORM_NAME "WinUWP"
 	#elif !defined(_WINP8)
 		#define APRIL_PLATFORM_NAME "WinRT"
 	#else
@@ -207,6 +211,7 @@ namespace april
 		HL_ENUM_DEFINE(RenderSystemType, Default);
 		HL_ENUM_DEFINE(RenderSystemType, DirectX9);
 		HL_ENUM_DEFINE(RenderSystemType, DirectX11);
+		HL_ENUM_DEFINE(RenderSystemType, DirectX12);
 		HL_ENUM_DEFINE(RenderSystemType, OpenGL1);
 		HL_ENUM_DEFINE(RenderSystemType, OpenGLES1);
 		HL_ENUM_DEFINE(RenderSystemType, OpenGLES2);
@@ -217,6 +222,7 @@ namespace april
 		HL_ENUM_DEFINE(WindowType, Default);
 		HL_ENUM_DEFINE(WindowType, Win32);
 		HL_ENUM_DEFINE(WindowType, WinRT);
+		HL_ENUM_DEFINE(WindowType, WinUWP);
 		HL_ENUM_DEFINE(WindowType, SDL);
 		HL_ENUM_DEFINE(WindowType, Mac);
 		HL_ENUM_DEFINE(WindowType, iOS);

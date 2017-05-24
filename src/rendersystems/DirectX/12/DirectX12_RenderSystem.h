@@ -17,6 +17,8 @@
 #include <agile.h>
 #include <dxgi1_4.h>
 #include <d3d12.h>
+#include "d3dx12.h"
+#include <pix.h>
 
 #include <gtypes/Matrix4.h>
 #include <gtypes/Quaternion.h>
@@ -76,6 +78,7 @@ namespace april
 		~DirectX12_RenderSystem();
 
 		int getVRam() const;
+		ID3D12CommandQueue* getCommandQueue() const { return this->commandQueue.Get(); }
 		
 		Image::Format getNativeTextureFormat(Image::Format format) const;
 		unsigned int getNativeColorUInt(const april::Color& color) const;
@@ -105,6 +108,7 @@ namespace april
 		ComPtr<ID3D12CommandQueue> commandQueue;
 		ComPtr<ID3D12DescriptorHeap> rtvHeap; // render target view heap
 		ComPtr<ID3D12DescriptorHeap> dsvHeap; // depth stencil view heap
+		ComPtr<ID3D12DescriptorHeap> cbvHeap; // constant buffer view heap
 		ComPtr<ID3D12CommandAllocator> commandAllocators[FRAME_COUNT];
 		ComPtr<ID3D12GraphicsCommandList> commandList;
 		D3D12_VIEWPORT screenViewport;
@@ -119,6 +123,7 @@ namespace april
 
 		unsigned int currentFrame;
 		unsigned int rtvDescriptorSize;
+		unsigned int cbvDescriptorSize;
 
 		// cached device properties
 		Size d3dRenderTargetSize;
@@ -145,11 +150,12 @@ namespace april
 		ComPtr<ID3D12SamplerState> samplerNearestClamp;
 		*/
 		D3D12_HEAP_PROPERTIES uploadHeapProperties;
-		D3D12_RESOURCE_DESC vertexBufferDesc;
+		D3D12_RESOURCE_DESC vertexBufferDescriptor;
 		D3D12_SUBRESOURCE_DATA vertexBufferData;
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 		//D3D12_MAPPED_SUBRESOURCE mappedSubResource;
 		ComPtr<ID3D12Resource> vertexBuffer;
-		D3D12_RESOURCE_DESC constantBufferDesc;
+		D3D12_RESOURCE_DESC constantBufferDescriptor;
 		ComPtr<ID3D12Resource> constantBuffer;
 		ConstantBuffer constantBufferData;
 		unsigned char* mappedConstantBuffer;

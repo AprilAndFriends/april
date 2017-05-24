@@ -317,6 +317,7 @@
     <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.cpp" />
     <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.cpp" />
     <ClInclude Include="..\..\include\april\WinUWP_main.h" />
+    <ClInclude Include="..\..\src\rendersystems\DirectX\12\d3dx12.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\12\DirectX12_PixelShader.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\12\DirectX12_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\12\DirectX12_Texture.h" />
@@ -384,52 +385,52 @@
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_AlphaMap.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_3</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Lerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_3</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Multiply.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_3</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_3</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedLerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_3</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedMultiply.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_3</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Colored.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_3</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_ColoredTextured.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_3</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Plain.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_3</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Textured.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_1</ShaderModel>
+      <ShaderModel Condition="'$(PlatformToolset)'!='v140_wp10'">4.0_level_9_3</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'=='Debug_DirectX12' or '$(Configuration)'=='DebugS_DirectX12' or '$(Configuration)'=='Release_DirectX12' or '$(Configuration)'=='ReleaseS_DirectX12'">

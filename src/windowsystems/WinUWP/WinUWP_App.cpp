@@ -59,10 +59,10 @@ namespace april
 {
 	WinUWP_App::WinUWP_App()
 	{
+		this->running = true;
 		/*
 		DisplayInformation::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
 		Windows::Globalization::ApplicationLanguages::PrimaryLanguageOverride = ref new Platform::String(L"");
-		this->running = true;
 		this->overlay = nullptr;
 #ifndef _WINP8
 		this->defaultCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
@@ -121,10 +121,42 @@ namespace april
 
 	void WinUWP_App::Load(Platform::String^ entryPoint)
 	{
+		(*WinUWP::Init)(WinUWP::Args);
 	}
 
 	void WinUWP_App::Run()
 	{
+		if (april::window != NULL)
+		{
+			april::window->enterMainLoop();
+			(*WinUWP::Destroy)();
+		}
+		/*
+		if (!this->running || april::window == NULL)
+		{
+			//this->firstFrameAfterActivateHack = false;
+			return;
+		}
+		this->running = april::window->updateOneFrame();
+		april::rendersys->presentFrame();
+		//this->firstFrameAfterActivateHack = false;
+		if (!this->running)
+		{
+			(*WinUWP::Destroy)();
+			//CompositionTarget::Rendering::remove(this->eventToken);
+			//Application::Current->Exit();
+			CoreApplication::Exit();
+			return;
+		}
+		*/
+		// On WinP8 there is a weird bug where this callback stops being called if it takes too long to process at some point so it
+		// is unregistered and registered again in the main thread. Oddly enough, normal WinRT has huge problems with this code.
+#ifdef _WINP8
+		CoreWindow::GetForCurrentThread()->Dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([this]()
+		{
+			this->_tryAddRenderToken();
+		}));
+#endif
 	}
 
 	void WinUWP_App::Uninitialize()

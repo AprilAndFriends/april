@@ -19,6 +19,7 @@ namespace april
 {
 	void (*WinUWP::Init)(const harray<hstr>&) = NULL;
 	void (*WinUWP::Destroy)() = NULL;
+	harray<hstr> WinUWP::Args;
 	WinUWP_App^ WinUWP::App = nullptr;
 
 }

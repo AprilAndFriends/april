@@ -50,6 +50,8 @@ namespace april
 
 		void setResolution(int w, int h, bool fullscreen);
 		void presentFrame();
+		bool updateOneFrame();
+		void checkEvents();
 		hstr findCursorFile(chstr filename) const;
 		
 		void terminateMainLoop();

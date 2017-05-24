@@ -23,18 +23,17 @@ using namespace Microsoft::WRL;
 
 namespace april
 {
-	DirectX12_PixelShader::DirectX12_PixelShader() : PixelShader(), dx11Shader(nullptr)
+	DirectX12_PixelShader::DirectX12_PixelShader() : PixelShader()
 	{
 	}
 
 	DirectX12_PixelShader::~DirectX12_PixelShader()
 	{
-		this->dx11Shader = nullptr;
 	}
 	
 	bool DirectX12_PixelShader::isLoaded() const
 	{
-		return (this->dx11Shader != nullptr);
+		return (this->shaderData.size() > 0);
 	}
 
 	bool DirectX12_PixelShader::_createShader(chstr filename, const hstream& stream)

@@ -22,9 +22,11 @@ namespace april
 {
 	DirectX12_Texture::DirectX12_Texture(bool fromResource) : DirectX_Texture(fromResource), dxgiFormat(DXGI_FORMAT_UNKNOWN)
 	{
+		/*
 		this->d3dTexture = nullptr;
 		this->d3dView = nullptr;
 		this->d3dRenderTargetView = nullptr;
+		*/
 	}
 
 	DirectX12_Texture::~DirectX12_Texture()
@@ -33,6 +35,7 @@ namespace april
 
 	bool DirectX12_Texture::_deviceCreateTexture(unsigned char* data, int size, Type type)
 	{
+		/*
 		this->internalType = type;
 		int bpp = this->format.getBpp();
 		D3D11_SUBRESOURCE_DATA textureSubresourceData = {0};
@@ -135,6 +138,7 @@ namespace april
 			hlog::error(logTag, "Failed to create DX11 texture view!");
 			return false;
 		}
+		*/
 		return true;
 	}
 	
@@ -169,6 +173,7 @@ namespace april
 
 	bool DirectX12_Texture::_deviceDestroyTexture()
 	{
+		/*
 		if (this->d3dTexture != nullptr)
 		{
 			this->d3dTexture = nullptr;
@@ -176,12 +181,14 @@ namespace april
 			this->d3dRenderTargetView = nullptr;
 			return true;
 		}
+		*/
 		return false;
 	}
 	
 	Texture::Lock DirectX12_Texture::_tryLockSystem(int x, int y, int w, int h)
 	{
 		Lock lock;
+		/*
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		D3D11_MAPPED_SUBRESOURCE* mappedSubResource = new D3D11_MAPPED_SUBRESOURCE();
 		memset(mappedSubResource, 0, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -192,6 +199,7 @@ namespace april
 			lock.systemBuffer = mappedSubResource;
 			lock.activateLock(x, y, w, h, x, y, (unsigned char*)mappedSubResource->pData, mappedSubResource->RowPitch / nativeFormat.getBpp(), this->height, nativeFormat);
 		}
+		*/
 		return lock;
 	}
 
@@ -201,6 +209,7 @@ namespace april
 		{
 			return false;
 		}
+		/*
 		if (update)
 		{
 			if (lock.locked)
@@ -222,6 +231,7 @@ namespace april
 			this->firstUpload = false;
 		}
 		delete (D3D11_MAPPED_SUBRESOURCE*)lock.systemBuffer;
+		*/
 		return update;
 	}
 

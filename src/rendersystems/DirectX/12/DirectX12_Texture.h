@@ -35,9 +35,9 @@ namespace april
 		DirectX12_Texture(bool fromResource);
 		~DirectX12_Texture();
 		
-		ComPtr<ID3D11Texture2D> d3dTexture;
-		ComPtr<ID3D11ShaderResourceView> d3dView;
-		ComPtr<ID3D11RenderTargetView> d3dRenderTargetView;
+		//ComPtr<ID3D11Texture2D> d3dTexture;
+		//ComPtr<ID3D11ShaderResourceView> d3dView;
+		//ComPtr<ID3D11RenderTargetView> d3dRenderTargetView;
 		DXGI_FORMAT dxgiFormat;
 		Type internalType;
 

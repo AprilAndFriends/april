@@ -14,6 +14,7 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
+#include "DirectX12_RenderSystem.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "SystemDelegate.h"
@@ -22,11 +23,13 @@
 #include "WinUWP_Cursor.h"
 #include "WinUWP_Window.h"
 
+#define DX12_RENDERSYS ((DirectX12_RenderSystem*)rendersys)
+
 namespace april
 {
 	WinUWP_Window::WinUWP_Window() : Window()
 	{
-		this->name = april::WindowType::WinRT.getName();
+		this->name = april::WindowType::WinUWP.getName();
 		this->width = 0;
 		this->height = 0;
 		this->delaySplash = 0.0f;
@@ -136,6 +139,32 @@ namespace april
 	
 	void WinUWP_Window::presentFrame()
 	{
+	}
+
+	bool WinUWP_Window::updateOneFrame()
+	{
+		ID3D12CommandQueue* commandQueue = DX12_RENDERSYS->getCommandQueue();
+		PIXBeginEvent(commandQueue, 0, L"updateOneFrame()");
+		bool result = Window::updateOneFrame();
+		PIXEndEvent(commandQueue);
+		return result;
+		//return 
+	}
+
+	void WinUWP_Window::checkEvents()
+	{
+		// TODOuwp - implement this
+		/*
+		if (this->visible)
+		{
+			CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
+		}
+		else
+		{
+			CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessOneAndAllPending);
+		}
+		*/
+		CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
 	}
 
 	void WinUWP_Window::terminateMainLoop()

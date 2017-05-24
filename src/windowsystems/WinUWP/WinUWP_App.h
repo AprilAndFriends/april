@@ -46,7 +46,7 @@ namespace april
 	{
 	public:
 		WinUWP_App();
-		virtual void Connect(int connectionId, Object^ target);
+		//virtual void Connect(int connectionId, Object^ target);
 
 		// IFrameworkView methods.
 		virtual void Initialize(Core::CoreApplicationView^ applicationView);
@@ -106,8 +106,8 @@ namespace april
 		*/
 		void _updateWindowSize(float width, float height);
 	private:
-		/*
 		bool running;
+		/*
 		Texture* splashTexture;
 		WinRT_XamlOverlay^ overlay;
 		CoreCursor^ defaultCursor;
