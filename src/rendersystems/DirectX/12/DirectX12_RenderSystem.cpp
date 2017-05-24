@@ -100,6 +100,7 @@ namespace april
 		/*deviceState_shader(NULL), deviceState_sampler(nullptr),*/ deviceState_renderOperation(RenderOperation::PointList)
 	{
 		this->name = april::RenderSystemType::DirectX12.getName();
+		this->vertexBuffersIndex = 0;
 	}
 
 	DirectX12_RenderSystem::~DirectX12_RenderSystem()
@@ -127,7 +128,8 @@ namespace april
 		this->samplerNearestWrap = nullptr;
 		this->samplerNearestClamp = nullptr;
 		*/
-		this->vertexBuffer = nullptr;
+		this->vertexBuffers[0] = nullptr;
+		this->vertexBuffers[1] = nullptr;
 		this->constantBuffer = nullptr;
 		/*
 		this->inputLayoutPlain = nullptr;
@@ -514,7 +516,9 @@ namespace april
 		defaultHeapProperties.VisibleNodeMask = 1;
 
 		hr = d3dDevice->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexBufferDescriptor,
-			D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->vertexBuffer));
+			D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->vertexBuffers[0]));
+		hr = d3dDevice->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexBufferDescriptor,
+			D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->vertexBuffers[1]));
 		if (FAILED(hr))
 		{
 			throw Exception("Unable to create vertex buffer!");
@@ -523,7 +527,9 @@ namespace april
 
 		//ComPtr<ID3D12Resource> vertexBufferUpload;
 		hr = this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDescriptor,
-			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->vertexBufferUpload));
+			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->vertexBufferUploads[0]));
+		hr = this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDescriptor,
+			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->vertexBufferUploads[1]));
 		if (FAILED(hr))
 		{
 			throw Exception("Unable to create vertex buffer upload!");
@@ -814,7 +820,6 @@ namespace april
 		// initial calls
 		//this->commandList->EndEvent();
 		//this->commandList->Close();
-		/*
 		hr = this->commandAllocators[this->currentFrame]->Reset();
 		if (FAILED(hr))
 		{
@@ -825,8 +830,7 @@ namespace april
 		{
 			throw Exception("Unable to reset command list!");
 		}
-		this->commandList->BeginEvent(0, L"", 0);
-		*/
+		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		this->_deviceClear(true);
 		this->presentFrame();
 		this->setOrthoProjection(gvec2((float)window->getWidth(), (float)window->getHeight()));
@@ -1378,6 +1382,48 @@ namespace april
 	void DirectX12_RenderSystem::_updateDeviceState(bool forceUpdate)
 	{
 		DirectX_RenderSystem::_updateDeviceState(forceUpdate);
+		PIXEndEvent(this->commandList.Get());
+		this->commandList->Close();
+		// Execute the command list.
+		ID3D12CommandList* ppCommandLists[] = { this->commandList.Get() };
+		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+		const UINT64 currentFenceValue = this->fenceValues[this->currentFrame];
+		HRESULT hr = this->commandQueue->Signal(this->fence.Get(), currentFenceValue);
+		if (FAILED(hr))
+		{
+			throw Exception("Unable to signal command queue!");
+		}
+		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
+		if (this->fence->GetCompletedValue() < this->fenceValues[this->currentFrame])
+		{
+			hr = this->fence->SetEventOnCompletion(this->fenceValues[this->currentFrame], this->fenceEvent);
+			if (FAILED(hr))
+			{
+				throw Exception("Unable to set even on completion!");
+			}
+			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
+		}
+
+		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
+		hr = this->commandAllocators[this->currentFrame]->Reset();
+		if (FAILED(hr))
+		{
+			throw Exception(hsprintf("Unable to reset command allocator %d!", this->currentFrame));
+		}
+		hr = this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->pipelineState.Get());
+		if (FAILED(hr))
+		{
+			throw Exception("Unable to reset command list!");
+		}
+		PIXBeginEvent(this->commandList.Get(), 0, L"");
+		this->commandList->SetGraphicsRootSignature(this->rootSignature.Get());
+		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };
+		this->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+		// Bind the current frame's constant buffer to the pipeline.
+		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(this->cbvHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvDescriptorSize);
+		this->commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
+
 		this->_updateShader(forceUpdate);
 	}
 
@@ -1478,7 +1524,7 @@ namespace april
 		static const float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 		D3D12_CPU_DESCRIPTOR_HANDLE handle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		handle.ptr += this->currentFrame * this->rtvDescriptorSize;
-		//this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
+		this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 	}
 	
 	void DirectX12_RenderSystem::_deviceClear(const Color& color, bool depth)
@@ -1500,7 +1546,7 @@ namespace april
 		clearColor[3] = color.a_f();
 		D3D12_CPU_DESCRIPTOR_HANDLE handle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		handle.ptr += this->currentFrame * this->rtvDescriptorSize;
-		//this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
+		this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 	}
 
 	void DirectX12_RenderSystem::_deviceClearDepth()
@@ -1516,7 +1562,7 @@ namespace april
 		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
 		*/
 		static const float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		//this->commandList->ClearDepthStencilView(this->dsvHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+		this->commandList->ClearDepthStencilView(this->dsvHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	}
 
 	void DirectX12_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
@@ -1545,8 +1591,8 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDX11VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize)
 	{
-		this->_waitForGpu();
-		//*
+		//this->_waitForGpu();
+		/*
 		HRESULT hr = this->commandAllocators[this->currentFrame]->Reset();
 		if (FAILED(hr))
 		{
@@ -1606,12 +1652,12 @@ namespace april
 		*/
 
 
-		UpdateSubresources(this->commandList.Get(), this->vertexBuffer.Get(), this->vertexBufferUpload.Get(), 0, 0, 1, &vertexData);
+		UpdateSubresources(this->commandList.Get(), this->vertexBuffers[this->vertexBuffersIndex].Get(), this->vertexBufferUploads[this->vertexBuffersIndex].Get(), 0, 0, 1, &vertexData);
 		
 		D3D12_RESOURCE_BARRIER vertexBufferResourceBarrier = {};
 		vertexBufferResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		vertexBufferResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        vertexBufferResourceBarrier.Transition.pResource = this->vertexBuffer.Get();
+        vertexBufferResourceBarrier.Transition.pResource = this->vertexBuffers[this->vertexBuffersIndex].Get();
         vertexBufferResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
         vertexBufferResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
         vertexBufferResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
@@ -1619,8 +1665,7 @@ namespace april
 		this->commandList->ResourceBarrier(1, &vertexBufferResourceBarrier);
 
 
-
-
+		/*
 		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };
 		this->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
@@ -1628,6 +1673,7 @@ namespace april
 		D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = this->cbvHeap->GetGPUDescriptorHandleForHeapStart();
 		gpuHandle.ptr += this->currentFrame * this->cbvDescriptorSize;
 		this->commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
+		*/
 
 		grect viewport = this->getViewport();
 		// Set the viewport and scissor rectangle.
@@ -1644,6 +1690,7 @@ namespace april
 			D3D12_RECT scissorRect = { 0, 0, static_cast<LONG>(dx12Viewport.Width), static_cast<LONG>(dx12Viewport.Height) };
 			this->commandList->RSSetScissorRects(1, &scissorRect);
 
+			/*
 			// Indicate this resource will be in use as a render target.
 			D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
 			renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -1658,7 +1705,8 @@ namespace april
 			D3D12_CPU_DESCRIPTOR_HANDLE handle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
 			handle.ptr += this->currentFrame * this->rtvDescriptorSize;
 			static float clearColor[4] = { 1.000000000f, 0.498039246f, 0.313725501f, 1.000000000f };
-			this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
+			//this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
+			*/
 
 			// Record drawing commands.
 			D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -1672,33 +1720,37 @@ namespace april
 
 			this->commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 			//this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &vertexSize, &offset);
-			this->vertexBufferView.BufferLocation = this->vertexBuffer->GetGPUVirtualAddress();
-			this->vertexBufferView.StrideInBytes = vertexSize;
-			this->vertexBufferView.SizeInBytes = count * vertexSize;
+			this->vertexBufferViews[this->vertexBuffersIndex].BufferLocation = this->vertexBuffers[this->vertexBuffersIndex]->GetGPUVirtualAddress();
+			this->vertexBufferViews[this->vertexBuffersIndex].StrideInBytes = vertexSize;
+			this->vertexBufferViews[this->vertexBuffersIndex].SizeInBytes = count * vertexSize;
 
-			this->commandList->IASetVertexBuffers(0, 1, &this->vertexBufferView);
+			this->commandList->IASetVertexBuffers(0, 1, &this->vertexBufferViews[this->vertexBuffersIndex]);
 			//this->commandList->IASetIndexBuffer(&m_indexBufferView);
 			//this->commandList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 			this->commandList->DrawInstanced(count, 1, 0, 0);
+
+			/*
+			D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
+			renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+			renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+			renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
+			renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+			renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+			renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+			this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
+			*/
+			//*/
 			//this->commandList->DrawIndexedInstanced()
 
-			// Indicate that the render target will now be used to present when the command list is done executing.
-			// Indicate this resource will be in use as a render target.
-			D3D12_RESOURCE_BARRIER presentResourceBarrier = {};
-			presentResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-			presentResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-			presentResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
-			presentResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-			presentResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-			presentResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-
-			this->commandList->ResourceBarrier(1, &presentResourceBarrier);
+			/*
 			this->commandList->EndEvent();
 			this->commandList->Close();
 
 		// Execute the command list.
 		ID3D12CommandList* ppCommandLists[] = { this->commandList.Get() };
 		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+		*/
 
 		/*
 		if (this->deviceState_renderOperation != renderOperation)
@@ -1724,6 +1776,7 @@ namespace april
 		static unsigned int offset = 0;
 		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &vertexSize, &offset);
 		*/
+			this->vertexBuffersIndex = (this->vertexBuffersIndex + 1) % 2;
 	}
 
 	Image::Format DirectX12_RenderSystem::getNativeTextureFormat(Image::Format format) const
@@ -1758,13 +1811,26 @@ namespace april
 	
 	void DirectX12_RenderSystem::presentFrame()
 	{
-		/*
-		this->commandList->EndEvent();
+		// Indicate that the render target will now be used to present when the command list is done executing.
+		// Indicate this resource will be in use as a render target.
+		D3D12_RESOURCE_BARRIER presentResourceBarrier = {};
+		presentResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		presentResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		presentResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
+		presentResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		presentResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+		presentResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+		this->commandList->ResourceBarrier(1, &presentResourceBarrier);
+
+		PIXEndEvent(this->commandList.Get());
 		this->commandList->Close();
 		// Execute the command list.
 		ID3D12CommandList* ppCommandLists[] = { this->commandList.Get() };
 		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-		*/
+		//this->_waitForGpu();
+
+
 
 		HRESULT hr = this->swapChain->Present(1, 0);
 		// If the device was removed either by a disconnection or a driver upgrade, we 
@@ -1795,8 +1861,8 @@ namespace april
 			}
 			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
 		}
+
 		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
-		/*
 		hr = this->commandAllocators[this->currentFrame]->Reset();
 		if (FAILED(hr))
 		{
@@ -1807,8 +1873,21 @@ namespace april
 		{
 			throw Exception("Unable to reset command list!");
 		}
-		this->commandList->BeginEvent(0, L"", 0);
+		PIXBeginEvent(this->commandList.Get(), 0, L"");
+		this->commandList->SetGraphicsRootSignature(this->rootSignature.Get());
+		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };
+		this->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+		// Bind the current frame's constant buffer to the pipeline.
+		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(this->cbvHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvDescriptorSize);
+		this->commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
+		/*
+		// Indicate this resource will be in use as a render target.
+		CD3DX12_RESOURCE_BARRIER renderTargetResourceBarrier =
+			CD3DX12_RESOURCE_BARRIER::Transition(this->renderTargets[this->currentFrame].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
 		*/
+		this->vertexBuffersIndex = 0;
 	}
 
 	void DirectX12_RenderSystem::updateDeviceReset()

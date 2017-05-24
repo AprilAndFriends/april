@@ -151,16 +151,18 @@ namespace april
 		*/
 		D3D12_HEAP_PROPERTIES uploadHeapProperties;
 		D3D12_RESOURCE_DESC vertexBufferDescriptor;
-		D3D12_SUBRESOURCE_DATA vertexBufferData;
-		D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
+		//D3D12_SUBRESOURCE_DATA vertexBufferDatas[2];
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[2];
 		//D3D12_MAPPED_SUBRESOURCE mappedSubResource;
-		ComPtr<ID3D12Resource> vertexBuffer;
-		ComPtr<ID3D12Resource> vertexBufferUpload;
+		int vertexBuffersIndex;
+		ComPtr<ID3D12Resource> vertexBuffers[2];
+		ComPtr<ID3D12Resource> vertexBufferUploads[2];
 		D3D12_RESOURCE_DESC constantBufferDescriptor;
 		ComPtr<ID3D12Resource> constantBuffer;
 		ConstantBuffer constantBufferData;
 		unsigned char* mappedConstantBuffer;
 
+		D3D12_RESOURCE_BARRIER resourceBarrier = {};
 		/*
 		ComPtr<ID3D12InputLayout> inputLayoutPlain;
 		ComPtr<ID3D12InputLayout> inputLayoutTextured;
