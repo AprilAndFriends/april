@@ -155,6 +155,7 @@ namespace april
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 		//D3D12_MAPPED_SUBRESOURCE mappedSubResource;
 		ComPtr<ID3D12Resource> vertexBuffer;
+		ComPtr<ID3D12Resource> vertexBufferUpload;
 		D3D12_RESOURCE_DESC constantBufferDescriptor;
 		ComPtr<ID3D12Resource> constantBuffer;
 		ConstantBuffer constantBufferData;

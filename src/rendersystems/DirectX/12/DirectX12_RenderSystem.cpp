@@ -521,9 +521,9 @@ namespace april
 		}
 
 
-		ComPtr<ID3D12Resource> vertexBufferUpload;
+		//ComPtr<ID3D12Resource> vertexBufferUpload;
 		hr = this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDescriptor,
-			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexBufferUpload));
+			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->vertexBufferUpload));
 		if (FAILED(hr))
 		{
 			throw Exception("Unable to create vertex buffer upload!");
@@ -595,6 +595,12 @@ namespace april
 			cbvGpuAddress += descriptor.SizeInBytes;
 			cbvCpuHandle.ptr += this->cbvDescriptorSize;
 		}
+
+		D3D12_RANGE readRange = {};
+		readRange.Begin = 0;
+		readRange.End = 0;
+		this->constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&this->mappedConstantBuffer));
+
 
 		hr = this->commandList->Close();
 		if (FAILED(hr))
@@ -1426,7 +1432,7 @@ namespace april
 		}
 		*/
 		// change other data
-		if (this->deviceState_constantBufferChanged)
+		if (this->deviceState_constantBufferChanged || true)
 		{
 			this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
 			this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
@@ -1440,16 +1446,18 @@ namespace april
 
 
 
+			/*
 			D3D12_RANGE readRange = {};
 			readRange.Begin = 0;
 			readRange.End = 0;
-			unsigned char* mappedConstantBuffer = NULL;
-			this->constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&mappedConstantBuffer));
 			
+			this->constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&mappedConstantBuffer));
+			*/
+			unsigned char* mappedConstantBuffer = this->mappedConstantBuffer + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
 
 			//this->d3dDeviceContext->Map(this->constantBuffer.Get(), 0, D3D12_MAP_WRITE_DISCARD, 0, &this->mappedSubResource);
 			memcpy(mappedConstantBuffer, &this->constantBufferData, sizeof(ConstantBuffer));
-			this->constantBuffer->Unmap(0, nullptr);
+			//this->constantBuffer->Unmap(0, &readRange);
 			//this->d3dDeviceContext->Unmap(this->constantBuffer.Get(), 0);
 			this->deviceState_constantBufferChanged = false;
 		}
@@ -1589,18 +1597,17 @@ namespace april
 
 		/*
 		ComPtr<ID3D12Resource> vertexBufferUpload;
-		HRESULT hr = this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDescriptor,
+		hr = this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDescriptor,
 			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexBufferUpload));
 		if (FAILED(hr))
 		{
 			throw Exception("Unable to create vertex buffer!");
 		}
-
-
-
-		UpdateSubresources(this->commandList.Get(), this->vertexBuffer.Get(), vertexBufferUpload.Get(), 0, 0, 1, &vertexData);
 		*/
 
+
+		UpdateSubresources(this->commandList.Get(), this->vertexBuffer.Get(), this->vertexBufferUpload.Get(), 0, 0, 1, &vertexData);
+		
 		D3D12_RESOURCE_BARRIER vertexBufferResourceBarrier = {};
 		vertexBufferResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		vertexBufferResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
@@ -1663,7 +1670,7 @@ namespace april
 			//this->commandList->OMSetRenderTargets(1, &renderTargetView, false, &depthStencilView);
 			this->commandList->OMSetRenderTargets(1, &renderTargetView, false, NULL);
 
-			this->commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			this->commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 			//this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &vertexSize, &offset);
 			this->vertexBufferView.BufferLocation = this->vertexBuffer->GetGPUVirtualAddress();
 			this->vertexBufferView.StrideInBytes = vertexSize;
