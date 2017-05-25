@@ -172,7 +172,7 @@ namespace april
 		{
 			hlog::warn(logTag, "Cannot use openUrl() on this platform.");
 		}
-		if (result)
+		if (!result)
 		{
 			hlog::warn(logTag, "Could not open URL!");
 		}
