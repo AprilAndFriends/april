@@ -167,14 +167,14 @@ namespace april
 		if (_openUrl != NULL)
 		{
 			result = (*_openUrl)(url);
+			if (!result)
+			{
+				hlog::warn(logTag, "Could not open URL!");
+			}
 		}
 		else
 		{
 			hlog::warn(logTag, "Cannot use openUrl() on this platform.");
-		}
-		if (!result)
-		{
-			hlog::warn(logTag, "Could not open URL!");
 		}
 		return result;
 	}
