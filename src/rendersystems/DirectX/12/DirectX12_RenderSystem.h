@@ -35,6 +35,7 @@
 #define PIPELINE_INPUT_LAYOUT_COUNT 4
 #define PIPELINE_PIXEL_SHADER_COUNT 3
 #define PIPELINE_BLEND_STATE_COUNT 4
+#define PIPELINE_TEXTURE_STATE_COUNT 2
 #define PIPELINE_PRIMITIVE_TOPOLOGY_COUNT 3
 #define PIPELINE_DEPTH_ENABLED_COUNT 2
 
@@ -106,7 +107,7 @@ namespace april
 		ComPtr<ID3D12Device> d3dDevice;
 		ComPtr<IDXGISwapChain3> swapChain;
 		Platform::Agile<CoreWindow> coreWindow;
-		ComPtr<ID3D12RootSignature> rootSignature;
+		ComPtr<ID3D12RootSignature> rootSignatures[PIPELINE_TEXTURE_STATE_COUNT];
 
 		ComPtr<ID3D12Resource> renderTargets[FRAME_COUNT];
 		ComPtr<ID3D12Resource> depthStencil;
@@ -125,6 +126,7 @@ namespace april
 		harray<D3D12_RENDER_TARGET_BLEND_DESC> blendStateRenderTargets;
 		harray<D3D12_PRIMITIVE_TOPOLOGY_TYPE> primitiveTopologyTypes;
 		ComPtr<ID3D12PipelineState> pipelineStates[PIPELINE_INPUT_LAYOUT_COUNT][PIPELINE_PIXEL_SHADER_COUNT][PIPELINE_BLEND_STATE_COUNT][PIPELINE_PRIMITIVE_TOPOLOGY_COUNT][PIPELINE_DEPTH_ENABLED_COUNT];
+		ComPtr<ID3D12PipelineState> device_pipelineState;
 
 		// CPU/GPU synchronization
 		ComPtr<ID3D12Fence> fence;
@@ -251,7 +253,8 @@ namespace april
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
 
-		void _setDX11VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize);
+		void _updatePipelineState(const RenderOperation& renderOperation);
+		void _setDX12VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize);
 
 		void _waitForGpu();
 

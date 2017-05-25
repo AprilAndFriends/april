@@ -131,11 +131,11 @@ namespace april
 		this->vertexShaderColored = NULL;
 		this->vertexShaderColoredTextured = NULL;
 		this->pixelShaderMultiply = NULL;
-		this->pixelShaderLerp = NULL;
 		this->pixelShaderAlphaMap = NULL;
+		this->pixelShaderLerp = NULL;
 		this->pixelShaderTexturedMultiply = NULL;
-		this->pixelShaderTexturedLerp = NULL;
 		this->pixelShaderTexturedAlphaMap = NULL;
+		this->pixelShaderTexturedLerp = NULL;
 		/*
 		this->shaderMultiply = NULL;
 		this->shaderLerp = NULL;
@@ -171,11 +171,11 @@ namespace april
 		_HL_TRY_DELETE(this->vertexShaderColored);
 		_HL_TRY_DELETE(this->vertexShaderColoredTextured);
 		_HL_TRY_DELETE(this->pixelShaderMultiply);
-		_HL_TRY_DELETE(this->pixelShaderLerp);
 		_HL_TRY_DELETE(this->pixelShaderAlphaMap);
+		_HL_TRY_DELETE(this->pixelShaderLerp);
 		_HL_TRY_DELETE(this->pixelShaderTexturedMultiply);
-		_HL_TRY_DELETE(this->pixelShaderTexturedLerp);
 		_HL_TRY_DELETE(this->pixelShaderTexturedAlphaMap);
+		_HL_TRY_DELETE(this->pixelShaderTexturedLerp);
 		/*
 		_HL_TRY_DELETE(this->shaderMultiply);
 		_HL_TRY_DELETE(this->shaderLerp);
@@ -274,11 +274,11 @@ namespace april
 		LOAD_SHADER(this->vertexShaderColored, Vertex, Colored);
 		LOAD_SHADER(this->vertexShaderColoredTextured, Vertex, ColoredTextured);
 		LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply);
-		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp);
 		LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap);
+		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp);
 		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply);
-		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
 		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
+		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
 		// input layouts for default shaders
 		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescriptorPlain[] =
 		{
@@ -354,11 +354,11 @@ namespace april
 		this->vertexShaders += this->vertexShaderColoredTextured;
 		this->pixelShaders.clear();
 		this->pixelShaders += this->pixelShaderMultiply;
-		this->pixelShaders += this->pixelShaderLerp;
 		this->pixelShaders += this->pixelShaderAlphaMap;
+		this->pixelShaders += this->pixelShaderLerp;
 		this->pixelShaders += this->pixelShaderTexturedMultiply;
-		this->pixelShaders += this->pixelShaderTexturedLerp;
 		this->pixelShaders += this->pixelShaderTexturedAlphaMap;
+		this->pixelShaders += this->pixelShaderTexturedLerp;
 		this->blendStateRenderTargets.clear();
 		this->blendStateRenderTargets += renderTargetAlpha;
 		this->blendStateRenderTargets += renderTargetAdd;
@@ -370,7 +370,6 @@ namespace april
 		this->primitiveTopologyTypes += D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 		// pipeline states
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC state = {};
-		state.pRootSignature = this->rootSignature.Get();
 		state.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
 		state.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 		state.RasterizerState.FrontCounterClockwise = false;
@@ -403,7 +402,7 @@ namespace april
 		state.DepthStencilState.BackFace = defaultStencilOperation;
 		// dynamic properties
 		int pixelIndex = -1;
-		for_iter (i, 0, 2)//this->inputLayoutDescriptors.size())
+		for_iter (i, 0, this->inputLayoutDescriptors.size())
 		{
 			state.InputLayout = this->inputLayoutDescriptors[i];
 			state.VS.pShaderBytecode = (unsigned char*)this->vertexShaders[i]->shaderData;
@@ -411,6 +410,7 @@ namespace april
 			for_iter (j, 0, pixelShaders.size() / 2)
 			{
 				pixelIndex = j + (i / (this->inputLayoutDescriptors.size() / 2)) * (this->pixelShaders.size() / 2);
+				state.pRootSignature = this->rootSignatures[pixelIndex / (pixelShaders.size() / 2)].Get();
 				state.PS.pShaderBytecode = (unsigned char*)this->pixelShaders[pixelIndex]->shaderData;
 				state.PS.BytecodeLength = (SIZE_T)this->pixelShaders[pixelIndex]->shaderData.size();
 				for_iter (k, 0, this->blendStateRenderTargets.size())
@@ -431,8 +431,9 @@ namespace april
 			}
 		}
 		
+		this->device_pipelineState = this->pipelineStates[0][0][0][0][0];
 		_TRY_UNSAFE(this->d3dDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, this->commandAllocators[this->currentFrame].Get(),
-			this->pipelineStates[0][0][0][0][0].Get(), IID_PPV_ARGS(&this->commandList)), "Unable to create command allocators state!");
+			this->device_pipelineState.Get(), IID_PPV_ARGS(&this->commandList)), "Unable to create command allocators state!");
 		this->uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
 		this->uploadHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
 		this->uploadHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
@@ -528,8 +529,7 @@ namespace april
 		this->_waitForGpu();
 		// initial calls
 		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
-		// TODOpipe
-		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->pipelineStates[0][0][0][0][0].Get()), "Unable to reset command list!");
+		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->device_pipelineState.Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		this->_deviceClear(true);
 		this->presentFrame();
@@ -609,30 +609,26 @@ namespace april
 		CD3DX12_DESCRIPTOR_RANGE range;
 		range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
 		CD3DX12_ROOT_PARAMETER parameter;
-		/*
-		parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_PIXEL);
-		CD3DX12_STATIC_SAMPLER_DESC sampler = {};
-		sampler.Init(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, 0, 0,
-			D3D12_COMPARISON_FUNC_NEVER, D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK, 0.0f, D3D12_FLOAT32_MAX, D3D12_SHADER_VISIBILITY_PIXEL);
-		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDescriptor;
-		rootSignatureDescriptor.Init(1, &parameter, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
-			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
-			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS);
-		*/
-		//*
 		parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_VERTEX);
 		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDescriptor;
 		rootSignatureDescriptor.Init(1, &parameter, 0, NULL, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
 			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
 			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS);
-		//*/
-
-
 		ComPtr<ID3DBlob> pSignature;
 		ComPtr<ID3DBlob> pError;
 		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDescriptor, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
-		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignature)), "Unable to create root signature!");
-		//*/
+		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[0])), "Unable to create root signature!");
+		// other
+		range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+		parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_PIXEL);
+		CD3DX12_STATIC_SAMPLER_DESC sampler = {};
+		sampler.Init(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, 0, 0,
+		D3D12_COMPARISON_FUNC_NEVER, D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK, 0.0f, D3D12_FLOAT32_MAX, D3D12_SHADER_VISIBILITY_PIXEL);
+		rootSignatureDescriptor.Init(1, &parameter, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS);
+		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDescriptor, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
+		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[1])), "Unable to create root signature!");
 
 		/*
 		D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
@@ -1067,30 +1063,6 @@ namespace april
 	void DirectX12_RenderSystem::_updateDeviceState(bool forceUpdate)
 	{
 		DirectX_RenderSystem::_updateDeviceState(forceUpdate);
-		PIXEndEvent(this->commandList.Get());
-		this->commandList->Close();
-		// Execute the command list.
-		ID3D12CommandList* ppCommandLists[] = { this->commandList.Get() };
-		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-		const UINT64 currentFenceValue = this->fenceValues[this->currentFrame];
-		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), currentFenceValue), "Unable to signal command queue!");
-		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
-		if (this->fence->GetCompletedValue() < this->fenceValues[this->currentFrame])
-		{
-			_TRY_UNSAFE(this->fence->SetEventOnCompletion(this->fenceValues[this->currentFrame], this->fenceEvent), "Unable to set even on completion!");
-			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
-		}
-
-		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
-		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
-		// TODOpipe
-		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->pipelineStates[0][0][0][0][0].Get()), "Unable to reset command list!");
-		PIXBeginEvent(this->commandList.Get(), 0, L"");
-		this->commandList->SetGraphicsRootSignature(this->rootSignature.Get());
-		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };
-		this->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(this->cbvHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvDescriptorSize);
-		this->commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
 		this->_updateShader(forceUpdate);
 	}
 
@@ -1145,35 +1117,6 @@ namespace april
 		}
 		*/
 		// change other data
-		if (this->deviceState_constantBufferChanged || true)
-		{
-			this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
-			this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
-				this->deviceState->systemColor.b_f(), this->deviceState->systemColor.a_f());
-			this->constantBufferData.lerpAlpha.set(this->deviceState->colorModeFactor, this->deviceState->colorModeFactor,
-				this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
-
-
-			//UINT8* destination = this->mappedConstantBuffer + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
-			//memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
-
-
-
-			/*
-			D3D12_RANGE readRange = {};
-			readRange.Begin = 0;
-			readRange.End = 0;
-			
-			this->constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&mappedConstantBuffer));
-			*/
-			unsigned char* mappedConstantBuffer = this->mappedConstantBuffer + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
-
-			//this->d3dDeviceContext->Map(this->constantBuffer.Get(), 0, D3D12_MAP_WRITE_DISCARD, 0, &this->mappedSubResource);
-			memcpy(mappedConstantBuffer, &this->constantBufferData, sizeof(ConstantBuffer));
-			//this->constantBuffer->Unmap(0, &readRange);
-			//this->d3dDeviceContext->Unmap(this->constantBuffer.Get(), 0);
-			this->deviceState_constantBufferChanged = false;
-		}
 	}
 
 	void DirectX12_RenderSystem::_deviceClear(bool depth)
@@ -1211,9 +1154,9 @@ namespace april
 		clearColor[1] = color.g_f();
 		clearColor[2] = color.r_f();
 		clearColor[3] = color.a_f();
-		D3D12_CPU_DESCRIPTOR_HANDLE handle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		handle.ptr += this->currentFrame * this->rtvDescriptorSize;
-		this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
+D3D12_CPU_DESCRIPTOR_HANDLE handle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
+handle.ptr += this->currentFrame * this->rtvDescriptorSize;
+this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 	}
 
 	void DirectX12_RenderSystem::_deviceClearDepth()
@@ -1234,30 +1177,125 @@ namespace april
 
 	void DirectX12_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
 	{
-		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(PlainVertex));
+		this->_setDX12VertexBuffer(renderOperation, vertices, count, sizeof(PlainVertex));
 		//this->d3dDeviceContext->Draw(count, 0);
 	}
 
 	void DirectX12_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
 	{
-		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(TexturedVertex));
+		this->_setDX12VertexBuffer(renderOperation, vertices, count, sizeof(TexturedVertex));
 		//this->d3dDeviceContext->Draw(count, 0);
 	}
 
 	void DirectX12_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
 	{
-		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(ColoredVertex));
+		this->_setDX12VertexBuffer(renderOperation, vertices, count, sizeof(ColoredVertex));
 		//this->d3dDeviceContext->Draw(count, 0);
 	}
 
 	void DirectX12_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
 	{
-		this->_setDX11VertexBuffer(renderOperation, vertices, count, sizeof(ColoredTexturedVertex));
+		this->_setDX12VertexBuffer(renderOperation, vertices, count, sizeof(ColoredTexturedVertex));
 		//this->d3dDeviceContext->Draw(count, 0);
 	}
 
-	void DirectX12_RenderSystem::_setDX11VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize)
+	void DirectX12_RenderSystem::_updatePipelineState(const RenderOperation& renderOperation)
 	{
+		int r = 0;
+		int i = 0;
+		int j = this->state->colorMode.value;
+		int k = this->state->blendMode.value;
+		int l = 0;
+		int m = 0;
+		if (this->state->useTexture)
+		{
+			i += 2;
+			++r;
+		}
+		if (this->state->useColor)
+		{
+			++i;
+		}
+		if (renderOperation.isLine())
+		{
+			++l;
+		}
+		else if (renderOperation.isPoint())
+		{
+			l += 2;
+		}
+		if (this->state->depthBuffer)
+		{
+			++m;
+		}
+		bool changed = false;
+		if (this->deviceState_constantBufferChanged)
+		{
+			this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
+			this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
+				this->deviceState->systemColor.b_f(), this->deviceState->systemColor.a_f());
+			this->constantBufferData.lerpAlpha.set(this->deviceState->colorModeFactor, this->deviceState->colorModeFactor,
+				this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
+
+
+			//UINT8* destination = this->mappedConstantBuffer + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
+			//memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
+
+
+
+			/*
+			D3D12_RANGE readRange = {};
+			readRange.Begin = 0;
+			readRange.End = 0;
+
+			this->constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&mappedConstantBuffer));
+			*/
+			unsigned char* mappedConstantBuffer = this->mappedConstantBuffer + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
+
+			//this->d3dDeviceContext->Map(this->constantBuffer.Get(), 0, D3D12_MAP_WRITE_DISCARD, 0, &this->mappedSubResource);
+			memcpy(mappedConstantBuffer, &this->constantBufferData, sizeof(ConstantBuffer));
+			//this->constantBuffer->Unmap(0, &readRange);
+			//this->d3dDeviceContext->Unmap(this->constantBuffer.Get(), 0);
+			this->deviceState_constantBufferChanged = false;
+			changed = true;
+		}
+
+		if (!changed && this->device_pipelineState != this->pipelineStates[i][j][k][l][m])
+		{
+			changed = true;
+		}
+		if (!changed)
+		{
+			return;
+		}
+		this->device_pipelineState = this->pipelineStates[i][j][k][l][m];
+		PIXEndEvent(this->commandList.Get());
+		this->commandList->Close();
+		// Execute the command list.
+		ID3D12CommandList* ppCommandLists[] = { this->commandList.Get() };
+		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+		const UINT64 currentFenceValue = this->fenceValues[this->currentFrame];
+		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), currentFenceValue), "Unable to signal command queue!");
+		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
+		if (this->fence->GetCompletedValue() < this->fenceValues[this->currentFrame])
+		{
+			_TRY_UNSAFE(this->fence->SetEventOnCompletion(this->fenceValues[this->currentFrame], this->fenceEvent), "Unable to set even on completion!");
+			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
+		}
+		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
+		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
+		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->device_pipelineState.Get()), "Unable to reset command list!");
+		PIXBeginEvent(this->commandList.Get(), 0, L"");
+		this->commandList->SetGraphicsRootSignature(this->rootSignatures[r].Get());
+		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };
+		this->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(this->cbvHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvDescriptorSize);
+		this->commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
+	}
+
+	void DirectX12_RenderSystem::_setDX12VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize)
+	{
+		this->_updatePipelineState(renderOperation);
 		/*
 		if (this->deviceState_renderOperation != renderOperation)
 		{
@@ -1407,10 +1445,16 @@ namespace april
 
 		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
 		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
-		// TODOpipe
-		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->pipelineStates[0][0][0][0][0].Get()), "Unable to reset command list!");
+		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->device_pipelineState.Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
-		this->commandList->SetGraphicsRootSignature(this->rootSignature.Get());
+		if (!this->state->useTexture)
+		{
+			this->commandList->SetGraphicsRootSignature(this->rootSignatures[0].Get());
+		}
+		else
+		{
+			this->commandList->SetGraphicsRootSignature(this->rootSignatures[1].Get());
+		}
 		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };
 		this->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 

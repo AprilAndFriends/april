@@ -25,7 +25,25 @@ namespace april
 		HL_ENUM_DEFINE_VALUE(RenderOperation, LineList, 2);
 		HL_ENUM_DEFINE_VALUE(RenderOperation, LineStrip, 3);
 		HL_ENUM_DEFINE_VALUE(RenderOperation, PointList, 4);
+
+		bool RenderOperation::isTriangle() const
+		{
+			return (*this == TriangleList || *this == TriangleStrip || *this == TriangleFan);
+		}
+		
+		bool RenderOperation::isLine() const
+		{
+			return (*this == LineList || *this == LineStrip);
+		}
+
+		bool RenderOperation::isPoint() const
+		{
+			return (*this == PointList);
+		}
+
+		/// DEPRECATED!
 		HL_ENUM_DEFINE_VALUE(RenderOperation, TriangleFan, 5);
+
 	));
 
 	HL_ENUM_CLASS_DEFINE(BlendMode,

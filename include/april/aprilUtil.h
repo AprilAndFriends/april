@@ -33,10 +33,6 @@ namespace april
 		/// @var static const RenderOperation RenderOperation::TriangleStrip
 		/// @brief Triangle-strip.
 		HL_ENUM_DECLARE(RenderOperation, TriangleStrip);
-		/// @var static const RenderOperation RenderOperation::TriangleFan
-		/// @brief Triangle-fan.
-		/// @note This will be deprecated soon.
-		HL_ENUM_DECLARE(RenderOperation, TriangleFan);
 		/// @var static const RenderOperation RenderOperation::LineList
 		/// @brief Line-list.
 		HL_ENUM_DECLARE(RenderOperation, LineList);
@@ -46,6 +42,20 @@ namespace april
 		/// @var static const RenderOperation RenderOperation::PointList
 		/// @brief Point-list.
 		HL_ENUM_DECLARE(RenderOperation, PointList);
+
+		/// @brief Checks if this is a triangle-based RenderOperation.
+		/// @return True if triangle-based RenderOperation.
+		bool isTriangle() const;
+		/// @brief Checks if this is a triangle-based RenderOperation.
+		/// @return True if triangle-based RenderOperation.
+		bool isLine() const;
+		/// @brief Checks if this is a triangle-based RenderOperation.
+		/// @return True if triangle-based RenderOperation.
+		bool isPoint() const;
+
+		// DEPRECATED!
+		HL_ENUM_DECLARE(RenderOperation, TriangleFan);
+
 	));
 
 	/// @class BlendMode

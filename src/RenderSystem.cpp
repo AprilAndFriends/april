@@ -1075,11 +1075,11 @@ namespace april
 	{
 		++this->statCurrentFrameRenderCalls;
 		this->statCurrentFrameVertexCount += count;
-		if (renderOperation == RenderOperation::TriangleList || renderOperation == RenderOperation::TriangleStrip || renderOperation == RenderOperation::TriangleFan)
+		if (renderOperation.isTriangle())
 		{
 			this->statCurrentFrameTriangleCount += this->_numPrimitives(renderOperation, count);
 		}
-		else if (renderOperation == RenderOperation::LineList || renderOperation == RenderOperation::LineStrip)
+		else if (renderOperation.isLine())
 		{
 			this->statCurrentFrameLineCount += this->_numPrimitives(renderOperation, count);
 		}
@@ -1204,7 +1204,6 @@ namespace april
 	{
 		if (renderOperation == RenderOperation::TriangleList)	return count / 3;
 		if (renderOperation == RenderOperation::TriangleStrip)	return count - 2;
-		if (renderOperation == RenderOperation::TriangleFan)	return count - 2;
 		if (renderOperation == RenderOperation::LineList)		return count / 2;
 		if (renderOperation == RenderOperation::LineStrip)		return count - 1;
 		if (renderOperation == RenderOperation::PointList)		return count;
@@ -1215,7 +1214,6 @@ namespace april
 	{
 		if (renderOperation == RenderOperation::TriangleList)	return count / 3 * 3;
 		if (renderOperation == RenderOperation::TriangleStrip)	return count;
-		if (renderOperation == RenderOperation::TriangleFan)	return count;
 		if (renderOperation == RenderOperation::LineList)		return count / 2 * 2;
 		if (renderOperation == RenderOperation::LineStrip)		return count;
 		if (renderOperation == RenderOperation::PointList)		return count;
