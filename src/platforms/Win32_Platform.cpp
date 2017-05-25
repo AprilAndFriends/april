@@ -123,8 +123,7 @@ namespace april
 
 	hstr _getUserDataPath_platform()
 	{
-		hlog::warn(logTag, "Cannot use getUserDataPath() on this platform.");
-		return "";
+		return henv("APPDATA");
 	}
 
 	int64_t _getRamConsumption_platform()
