@@ -342,32 +342,32 @@ namespace april
 		renderTargetOverwrite.DestBlend = D3D12_BLEND_ZERO;
 		const D3D12_DEPTH_STENCILOP_DESC defaultStencilOperation = { D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS };
 		// indexed data
-		harray<D3D12_INPUT_LAYOUT_DESC> inputLayoutDescriptors;
-		inputLayoutDescriptors += { inputLayoutDescriptorPlain, _countof(inputLayoutDescriptorPlain) };
-		inputLayoutDescriptors += { inputLayoutDescriptorColored, _countof(inputLayoutDescriptorColored) };
-		inputLayoutDescriptors += { inputLayoutDescriptorTextured, _countof(inputLayoutDescriptorTextured) };
-		inputLayoutDescriptors += { inputLayoutDescriptorColoredTextured, _countof(inputLayoutDescriptorColoredTextured) };
-		harray<DirectX12_VertexShader*> vertexShaders;
-		vertexShaders += this->vertexShaderPlain;
-		vertexShaders += this->vertexShaderColored;
-		vertexShaders += this->vertexShaderTextured;
-		vertexShaders += this->vertexShaderColoredTextured;
-		harray<DirectX12_PixelShader*> pixelShaders;
-		pixelShaders += this->pixelShaderMultiply;
-		pixelShaders += this->pixelShaderLerp;
-		pixelShaders += this->pixelShaderAlphaMap;
-		pixelShaders += this->pixelShaderTexturedMultiply;
-		pixelShaders += this->pixelShaderTexturedLerp;
-		pixelShaders += this->pixelShaderTexturedAlphaMap;
-		harray<D3D12_RENDER_TARGET_BLEND_DESC> blendStateRenderTargets;
-		blendStateRenderTargets += renderTargetAlpha;
-		blendStateRenderTargets += renderTargetAdd;
-		blendStateRenderTargets += renderTargetSubtract;
-		blendStateRenderTargets += renderTargetOverwrite;
-		harray<D3D12_PRIMITIVE_TOPOLOGY_TYPE> primitiveTopologyTypes;
-		primitiveTopologyTypes += D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		primitiveTopologyTypes += D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
-		primitiveTopologyTypes += D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+		this->inputLayoutDescriptors.clear();
+		this->inputLayoutDescriptors += { inputLayoutDescriptorPlain, _countof(inputLayoutDescriptorPlain) };
+		this->inputLayoutDescriptors += { inputLayoutDescriptorColored, _countof(inputLayoutDescriptorColored) };
+		this->inputLayoutDescriptors += { inputLayoutDescriptorTextured, _countof(inputLayoutDescriptorTextured) };
+		this->inputLayoutDescriptors += { inputLayoutDescriptorColoredTextured, _countof(inputLayoutDescriptorColoredTextured) };
+		this->vertexShaders.clear();
+		this->vertexShaders += this->vertexShaderPlain;
+		this->vertexShaders += this->vertexShaderColored;
+		this->vertexShaders += this->vertexShaderTextured;
+		this->vertexShaders += this->vertexShaderColoredTextured;
+		this->pixelShaders.clear();
+		this->pixelShaders += this->pixelShaderMultiply;
+		this->pixelShaders += this->pixelShaderLerp;
+		this->pixelShaders += this->pixelShaderAlphaMap;
+		this->pixelShaders += this->pixelShaderTexturedMultiply;
+		this->pixelShaders += this->pixelShaderTexturedLerp;
+		this->pixelShaders += this->pixelShaderTexturedAlphaMap;
+		this->blendStateRenderTargets.clear();
+		this->blendStateRenderTargets += renderTargetAlpha;
+		this->blendStateRenderTargets += renderTargetAdd;
+		this->blendStateRenderTargets += renderTargetSubtract;
+		this->blendStateRenderTargets += renderTargetOverwrite;
+		this->primitiveTopologyTypes.clear();
+		this->primitiveTopologyTypes += D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		this->primitiveTopologyTypes += D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+		this->primitiveTopologyTypes += D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 		// pipeline states
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC state = {};
 		state.pRootSignature = this->rootSignature.Get();
@@ -403,25 +403,25 @@ namespace april
 		state.DepthStencilState.BackFace = defaultStencilOperation;
 		// dynamic properties
 		int pixelIndex = -1;
-		for_iter (i, 0, 2)//inputLayoutDescriptors.size())
+		for_iter (i, 0, 2)//this->inputLayoutDescriptors.size())
 		{
-			state.InputLayout = inputLayoutDescriptors[i];
-			state.VS.pShaderBytecode = (unsigned char*)vertexShaders[i]->shaderData;
-			state.VS.BytecodeLength = (SIZE_T)vertexShaders[i]->shaderData.size();
+			state.InputLayout = this->inputLayoutDescriptors[i];
+			state.VS.pShaderBytecode = (unsigned char*)this->vertexShaders[i]->shaderData;
+			state.VS.BytecodeLength = (SIZE_T)this->vertexShaders[i]->shaderData.size();
 			for_iter (j, 0, pixelShaders.size() / 2)
 			{
-				pixelIndex = j + (i / (inputLayoutDescriptors.size() / 2)) * (pixelShaders.size() / 2);
-				state.PS.pShaderBytecode = (unsigned char*)pixelShaders[pixelIndex]->shaderData;
-				state.PS.BytecodeLength = (SIZE_T)pixelShaders[pixelIndex]->shaderData.size();
-				for_iter (k, 0, blendStateRenderTargets.size())
+				pixelIndex = j + (i / (this->inputLayoutDescriptors.size() / 2)) * (this->pixelShaders.size() / 2);
+				state.PS.pShaderBytecode = (unsigned char*)this->pixelShaders[pixelIndex]->shaderData;
+				state.PS.BytecodeLength = (SIZE_T)this->pixelShaders[pixelIndex]->shaderData.size();
+				for_iter (k, 0, this->blendStateRenderTargets.size())
 				{
 					for_iter (m, 0, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT)
 					{
-						state.BlendState.RenderTarget[m] = blendStateRenderTargets[k];
+						state.BlendState.RenderTarget[m] = this->blendStateRenderTargets[k];
 					}
-					for_iter (m, 0, primitiveTopologyTypes.size())
+					for_iter (m, 0, this->primitiveTopologyTypes.size())
 					{
-						state.PrimitiveTopologyType = primitiveTopologyTypes[m];
+						state.PrimitiveTopologyType = this->primitiveTopologyTypes[m];
 						state.DepthStencilState.DepthEnable = false;
 						_TRY_UNSAFE(this->d3dDevice->CreateGraphicsPipelineState(&state, IID_PPV_ARGS(&this->pipelineStates[i][j][k][m][0])), "Unable to create graphics pipeline state!");
 						state.DepthStencilState.DepthEnable = true;
@@ -606,32 +606,75 @@ namespace april
 			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
 		}
 		// other
-		D3D12_DESCRIPTOR_RANGE range;
-		range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-		range.NumDescriptors = 1;
-		range.BaseShaderRegister = 0;
-		range.RegisterSpace = 0;
-		range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-		D3D12_ROOT_PARAMETER parameter;
-		parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		parameter.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		parameter.DescriptorTable.NumDescriptorRanges = 1;
-		parameter.DescriptorTable.pDescriptorRanges = &range;
-		D3D12_ROOT_SIGNATURE_DESC rootSignatureDescriptor;
-		rootSignatureDescriptor.NumParameters = 1;
-		rootSignatureDescriptor.pParameters = &parameter;
-		rootSignatureDescriptor.NumStaticSamplers = 0;
-		rootSignatureDescriptor.pStaticSamplers = nullptr;
-		rootSignatureDescriptor.Flags = 
-			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | // Only the input assembler stage needs access to the constant buffer.
-			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
-			D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
-			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
-			D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+		CD3DX12_DESCRIPTOR_RANGE range;
+		range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+		CD3DX12_ROOT_PARAMETER parameter;
+		/*
+		parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_PIXEL);
+		CD3DX12_STATIC_SAMPLER_DESC sampler = {};
+		sampler.Init(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, 0, 0,
+			D3D12_COMPARISON_FUNC_NEVER, D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK, 0.0f, D3D12_FLOAT32_MAX, D3D12_SHADER_VISIBILITY_PIXEL);
+		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDescriptor;
+		rootSignatureDescriptor.Init(1, &parameter, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS);
+		*/
+		//*
+		parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_VERTEX);
+		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDescriptor;
+		rootSignatureDescriptor.Init(1, &parameter, 0, NULL, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS);
+		//*/
+
+
 		ComPtr<ID3DBlob> pSignature;
 		ComPtr<ID3DBlob> pError;
 		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDescriptor, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
 		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignature)), "Unable to create root signature!");
+		//*/
+
+		/*
+		D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
+
+		// This is the highest version the sample supports. If CheckFeatureSupport succeeds, the HighestVersion returned will not be greater than this.
+		featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+
+		if (FAILED(m_device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
+		{
+			featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+		}
+		*/
+		/*
+		//CD3DX12_DESCRIPTOR_RANGE ranges[1];
+		range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+
+		//CD3DX12_ROOT_PARAMETER1 rootParameter;
+		parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_PIXEL);
+
+		D3D12_STATIC_SAMPLER_DESC sampler = {};
+		sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+		sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+		sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+		sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+		sampler.MipLODBias = 0;
+		sampler.MaxAnisotropy = 0;
+		sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+		sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+		sampler.MinLOD = 0.0f;
+		sampler.MaxLOD = D3D12_FLOAT32_MAX;
+		sampler.ShaderRegister = 0;
+		sampler.RegisterSpace = 0;
+		sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+		rootSignatureDesc.Init_1_1(_countof(rootParameters), rootParameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		ComPtr<ID3DBlob> signature;
+		ComPtr<ID3DBlob> error;
+		ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, featureData.HighestVersion, &signature, &error));
+		ThrowIfFailed(m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature)));
+		*/
 
 		/*
 		ComPtr<ID3D12Texture2D> _backBuffer;

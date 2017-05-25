@@ -119,6 +119,11 @@ namespace april
 		D3D12_VIEWPORT screenViewport;
 
 		//PipelineState pipelineStates[4];
+		harray<D3D12_INPUT_LAYOUT_DESC> inputLayoutDescriptors;
+		harray<DirectX12_VertexShader*> vertexShaders;
+		harray<DirectX12_PixelShader*> pixelShaders;
+		harray<D3D12_RENDER_TARGET_BLEND_DESC> blendStateRenderTargets;
+		harray<D3D12_PRIMITIVE_TOPOLOGY_TYPE> primitiveTopologyTypes;
 		ComPtr<ID3D12PipelineState> pipelineStates[PIPELINE_INPUT_LAYOUT_COUNT][PIPELINE_PIXEL_SHADER_COUNT][PIPELINE_BLEND_STATE_COUNT][PIPELINE_PRIMITIVE_TOPOLOGY_COUNT][PIPELINE_DEPTH_ENABLED_COUNT];
 
 		// CPU/GPU synchronization
