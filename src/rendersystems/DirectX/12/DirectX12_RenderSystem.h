@@ -32,12 +32,12 @@
 
 #define FRAME_COUNT 3
 #define ALIGNED_CONSTANT_BUFFER_SIZE ((sizeof(ConstantBuffer) + 255) & ~255)
-#define PIPELINE_INPUT_LAYOUT_COUNT 4
-#define PIPELINE_PIXEL_SHADER_COUNT 3
-#define PIPELINE_BLEND_STATE_COUNT 4
-#define PIPELINE_TEXTURE_STATE_COUNT 2
-#define PIPELINE_PRIMITIVE_TOPOLOGY_COUNT 3
-#define PIPELINE_DEPTH_ENABLED_COUNT 2
+#define INPUT_LAYOUT_COUNT 4
+#define PIXEL_SHADER_COUNT 3
+#define BLEND_STATE_COUNT 4
+#define TEXTURE_STATE_COUNT 2
+#define PRIMITIVE_TOPOLOGY_COUNT 3
+#define DEPTH_ENABLED_COUNT 2
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
@@ -58,21 +58,6 @@ namespace april
 		friend class DirectX12_Texture;
 		friend class DirectX12_VertexShader;
 
-		class PipelineState
-		{
-		public:
-			friend class DirectX12_RenderSystem;
-
-			PipelineState();// ComPtr<ID3D12InputLayout> inputLayout, DirectX12_VertexShader* vertexShader, DirectX12_PixelShader* pixelShader);
-			~PipelineState();
-
-		protected:
-			//ComPtr<ID3D12InputLayout> inputLayout;
-			//DirectX12_VertexShader* vertexShader;
-			//DirectX12_PixelShader* pixelShader;
-
-		};
-
 		struct ConstantBuffer
 		{
 			gmat4 matrix;
@@ -84,7 +69,12 @@ namespace april
 		~DirectX12_RenderSystem();
 
 		int getVRam() const;
-		ID3D12CommandQueue* getCommandQueue() const { return this->commandQueue.Get(); }
+		HL_DEFINE_GET(ID3D12CommandQueue*, commandQueue.Get(), CommandQueue);
+		HL_DEFINE_GET(ComPtr<ID3D12GraphicsCommandList>, commandList, CommandList);
+		HL_DEFINE_GET(ComPtr<ID3D12DescriptorHeap>, srvHeap, SrvHeap);
+		HL_DEFINE_GET(CD3DX12_HEAP_PROPERTIES, uploadHeapProperties, UploadHeapProperties);
+		
+		//ID3D12CommandQueue* getCommandQueue() const { return this->commandQueue.Get(); }
 		
 		Image::Format getNativeTextureFormat(Image::Format format) const;
 		unsigned int getNativeColorUInt(const april::Color& color) const;
@@ -94,7 +84,9 @@ namespace april
 		void updateWindowSize(bool reconfigureIfChanged = true);
 		void updateDeviceReset();
 
-		void trim(); // needed by Win 8.1
+		void executeCurrentCommands();
+		void waitForCommands();
+		void prepareNewCommands();
 
 		// TODOa - implement
 		Texture* getRenderTarget();
@@ -107,26 +99,25 @@ namespace april
 		ComPtr<ID3D12Device> d3dDevice;
 		ComPtr<IDXGISwapChain3> swapChain;
 		Platform::Agile<CoreWindow> coreWindow;
-		ComPtr<ID3D12RootSignature> rootSignatures[PIPELINE_TEXTURE_STATE_COUNT];
+		ComPtr<ID3D12RootSignature> rootSignatures[TEXTURE_STATE_COUNT];
 
 		ComPtr<ID3D12Resource> renderTargets[FRAME_COUNT];
 		ComPtr<ID3D12Resource> depthStencil;
 		ComPtr<ID3D12CommandQueue> commandQueue;
 		ComPtr<ID3D12DescriptorHeap> rtvHeap; // render target view heap
+		ComPtr<ID3D12DescriptorHeap> srvHeap; // shader resource view heap
 		ComPtr<ID3D12DescriptorHeap> dsvHeap; // depth stencil view heap
 		ComPtr<ID3D12DescriptorHeap> cbvHeap; // constant buffer view heap
 		ComPtr<ID3D12CommandAllocator> commandAllocators[FRAME_COUNT];
 		ComPtr<ID3D12GraphicsCommandList> commandList;
 		D3D12_VIEWPORT screenViewport;
 
-		//PipelineState pipelineStates[4];
-		harray<D3D12_INPUT_LAYOUT_DESC> inputLayoutDescriptors;
+		harray<D3D12_INPUT_LAYOUT_DESC> inputLayoutDescs;
 		harray<DirectX12_VertexShader*> vertexShaders;
 		harray<DirectX12_PixelShader*> pixelShaders;
 		harray<D3D12_RENDER_TARGET_BLEND_DESC> blendStateRenderTargets;
 		harray<D3D12_PRIMITIVE_TOPOLOGY_TYPE> primitiveTopologyTypes;
-		ComPtr<ID3D12PipelineState> pipelineStates[PIPELINE_INPUT_LAYOUT_COUNT][PIPELINE_PIXEL_SHADER_COUNT][PIPELINE_BLEND_STATE_COUNT][PIPELINE_PRIMITIVE_TOPOLOGY_COUNT][PIPELINE_DEPTH_ENABLED_COUNT];
-		ComPtr<ID3D12PipelineState> device_pipelineState;
+		ComPtr<ID3D12PipelineState> pipelineStates[INPUT_LAYOUT_COUNT][PIXEL_SHADER_COUNT][BLEND_STATE_COUNT][PRIMITIVE_TOPOLOGY_COUNT][DEPTH_ENABLED_COUNT];
 
 		// CPU/GPU synchronization
 		ComPtr<ID3D12Fence> fence;
@@ -134,8 +125,8 @@ namespace april
 		HANDLE fenceEvent;
 
 		unsigned int currentFrame;
-		unsigned int rtvDescriptorSize;
-		unsigned int cbvDescriptorSize;
+		unsigned int rtvDescSize;
+		unsigned int cbvDescSize;
 
 		// cached device properties
 		Size d3dRenderTargetSize;
@@ -148,28 +139,20 @@ namespace april
 		DXGI_MODE_ROTATION _getDxgiRotation() const;
 
 		/*
-		ComPtr<ID3D12DeviceContext2> d3dDeviceContext;
-
-		ComPtr<ID3D12RasterizerState> rasterState;
-		ComPtr<ID3D12RenderTargetView> renderTargetView;
-		ComPtr<ID3D12BlendState> blendStateAlpha;
-		ComPtr<ID3D12BlendState> blendStateAdd;
-		ComPtr<ID3D12BlendState> blendStateSubtract;
-		ComPtr<ID3D12BlendState> blendStateOverwrite;
 		ComPtr<ID3D12SamplerState> samplerLinearWrap;
 		ComPtr<ID3D12SamplerState> samplerLinearClamp;
 		ComPtr<ID3D12SamplerState> samplerNearestWrap;
 		ComPtr<ID3D12SamplerState> samplerNearestClamp;
 		*/
-		D3D12_HEAP_PROPERTIES uploadHeapProperties;
-		D3D12_RESOURCE_DESC vertexBufferDescriptor;
+		CD3DX12_HEAP_PROPERTIES uploadHeapProperties;
+		D3D12_RESOURCE_DESC vertexBufferDesc;
 		//D3D12_SUBRESOURCE_DATA vertexBufferDatas[2];
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[2];
 		//D3D12_MAPPED_SUBRESOURCE mappedSubResource;
 		int vertexBuffersIndex;
 		ComPtr<ID3D12Resource> vertexBuffers[2];
 		ComPtr<ID3D12Resource> vertexBufferUploads[2];
-		D3D12_RESOURCE_DESC constantBufferDescriptor;
+		D3D12_RESOURCE_DESC constantBufferDesc;
 		ComPtr<ID3D12Resource> constantBuffer;
 		ConstantBuffer constantBufferData;
 		unsigned char* mappedConstantBuffer;
@@ -192,25 +175,10 @@ namespace april
 		DirectX12_PixelShader* pixelShaderTexturedMultiply;
 		DirectX12_PixelShader* pixelShaderTexturedLerp;
 		DirectX12_PixelShader* pixelShaderTexturedAlphaMap;
-		/*
-		ShaderComposition* shaderMultiply;
-		ShaderComposition* shaderLerp;
-		ShaderComposition* shaderAlphaMap;
-		ShaderComposition* shaderTexturedMultiply;
-		ShaderComposition* shaderTexturedLerp;
-		ShaderComposition* shaderTexturedAlphaMap;
-		ShaderComposition* shaderColoredMultiply;
-		ShaderComposition* shaderColoredLerp;
-		ShaderComposition* shaderColoredAlphaMap;
-		ShaderComposition* shaderColoredTexturedMultiply;
-		ShaderComposition* shaderColoredTexturedLerp;
-		ShaderComposition* shaderColoredTexturedAlphaMap;
-		*/
 
 		bool deviceState_constantBufferChanged;
-		//ShaderComposition* deviceState_shader;
-		//ComPtr<ID3D12SamplerState> deviceState_sampler;
-		RenderOperation deviceState_renderOperation;
+		ComPtr<ID3D12PipelineState> deviceState_pipelineState;
+		ComPtr<ID3D12RootSignature> deviceState_rootSignature;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);
@@ -241,9 +209,6 @@ namespace april
 		void _setDeviceTextureAddressMode(const Texture::AddressMode& textureAddressMode);
 		void _setDeviceBlendMode(const BlendMode& blendMode);
 		void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
-
-		void _updateDeviceState(bool forceUpdate);
-		void _updateShader(bool forceUpdate);
 
 		void _deviceClear(bool depth);
 		void _deviceClear(const Color& color, bool depth);

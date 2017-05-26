@@ -51,8 +51,6 @@ using namespace Windows::Graphics::Display;
 
 namespace april
 {
-	static ColoredTexturedVertex static_ctv[VERTEX_BUFFER_COUNT];
-
 	static inline void _TRY_UNSAFE(HRESULT hr, chstr errorMessage)
 	{
 		if (FAILED(hr))
@@ -60,6 +58,8 @@ namespace april
 			throw Exception(hsprintf("%s - HRESULT: 0x%08X", errorMessage.cStr(), hr));
 		}
 	}
+
+	static ColoredTexturedVertex static_ctv[VERTEX_BUFFER_COUNT];
 
 	D3D_PRIMITIVE_TOPOLOGY DirectX12_RenderSystem::_dx12RenderOperations[] =
 	{
@@ -85,8 +85,7 @@ namespace april
 	}
 	*/
 
-	DirectX12_RenderSystem::DirectX12_RenderSystem() : DirectX_RenderSystem(), deviceState_constantBufferChanged(true),
-		/*deviceState_shader(NULL), deviceState_sampler(nullptr),*/ deviceState_renderOperation(RenderOperation::PointList)
+	DirectX12_RenderSystem::DirectX12_RenderSystem() : DirectX_RenderSystem(), deviceState_constantBufferChanged(true)
 	{
 		this->name = april::RenderSystemType::DirectX12.getName();
 		this->vertexBuffersIndex = 0;
@@ -100,18 +99,8 @@ namespace april
 	void DirectX12_RenderSystem::_deviceInit()
 	{
 		this->d3dDevice = nullptr;
-		/*
-		this->d3dDeviceContext = nullptr;
-		*/
 		this->swapChain = nullptr;
 		/*
-		this->swapChainNative = nullptr;
-		this->rasterState = nullptr;
-		this->renderTargetView = nullptr;
-		this->blendStateAlpha = nullptr;
-		this->blendStateAdd = nullptr;
-		this->blendStateSubtract = nullptr;
-		this->blendStateOverwrite = nullptr;
 		this->samplerLinearWrap = nullptr;
 		this->samplerLinearClamp = nullptr;
 		this->samplerNearestWrap = nullptr;
@@ -120,12 +109,6 @@ namespace april
 		this->vertexBuffers[0] = nullptr;
 		this->vertexBuffers[1] = nullptr;
 		this->constantBuffer = nullptr;
-		/*
-		this->inputLayoutPlain = nullptr;
-		this->inputLayoutTextured = nullptr;
-		this->inputLayoutColored = nullptr;
-		this->inputLayoutColoredTextured = nullptr;
-		*/
 		this->vertexShaderPlain = NULL;
 		this->vertexShaderTextured = NULL;
 		this->vertexShaderColored = NULL;
@@ -136,26 +119,7 @@ namespace april
 		this->pixelShaderTexturedMultiply = NULL;
 		this->pixelShaderTexturedAlphaMap = NULL;
 		this->pixelShaderTexturedLerp = NULL;
-		/*
-		this->shaderMultiply = NULL;
-		this->shaderLerp = NULL;
-		this->shaderAlphaMap = NULL;
-		this->shaderTexturedMultiply = NULL;
-		this->shaderTexturedLerp = NULL;
-		this->shaderTexturedAlphaMap = NULL;
-		this->shaderColoredMultiply = NULL;
-		this->shaderColoredLerp = NULL;
-		this->shaderColoredAlphaMap = NULL;
-		this->shaderColoredTexturedMultiply = NULL;
-		this->shaderColoredTexturedLerp = NULL;
-		this->shaderColoredTexturedAlphaMap = NULL;
-		*/
 		this->deviceState_constantBufferChanged = true;
-		/*
-		this->deviceState_shader = NULL;
-		this->deviceState_sampler = nullptr;
-		*/
-		this->deviceState_renderOperation = RenderOperation::PointList;
 	}
 
 	bool DirectX12_RenderSystem::_deviceCreate(Options options)
@@ -176,26 +140,13 @@ namespace april
 		_HL_TRY_DELETE(this->pixelShaderTexturedMultiply);
 		_HL_TRY_DELETE(this->pixelShaderTexturedAlphaMap);
 		_HL_TRY_DELETE(this->pixelShaderTexturedLerp);
-		/*
-		_HL_TRY_DELETE(this->shaderMultiply);
-		_HL_TRY_DELETE(this->shaderLerp);
-		_HL_TRY_DELETE(this->shaderAlphaMap);
-		_HL_TRY_DELETE(this->shaderTexturedMultiply);
-		_HL_TRY_DELETE(this->shaderTexturedLerp);
-		_HL_TRY_DELETE(this->shaderTexturedAlphaMap);
-		_HL_TRY_DELETE(this->shaderColoredMultiply);
-		_HL_TRY_DELETE(this->shaderColoredLerp);
-		_HL_TRY_DELETE(this->shaderColoredAlphaMap);
-		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply);
-		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
-		_HL_TRY_DELETE(this->shaderColoredTexturedAlphaMap);
-		*/
 		this->setViewport(grect(0.0f, 0.0f, april::getSystemInfo().displayResolution));
 		return true;
 	}
 
 	void DirectX12_RenderSystem::_deviceAssignWindow(Window* window)
 	{
+		unsigned int dxgiFactoryFlags = 0;
 #ifndef _DEBUG
 		if (this->options.debugInfo)
 #endif
@@ -205,16 +156,17 @@ namespace april
 			{
 				debugController->EnableDebugLayer();
 			}
+			dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG;
 		}
-		_TRY_UNSAFE(CreateDXGIFactory1(IID_PPV_ARGS(&this->dxgiFactory)), "Unable to create DXGI factor!");
+		_TRY_UNSAFE(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&this->dxgiFactory)), "Unable to create DXGI factor!");
 		// get DX12-capable hardware adapter
 		ComPtr<IDXGIAdapter1> adapter = nullptr;
-		DXGI_ADAPTER_DESC1 adapterDescriptor;
+		DXGI_ADAPTER_DESC1 adapterDesc;
 		UINT adapterIndex = 0;
 		while (this->dxgiFactory->EnumAdapters1(adapterIndex, &adapter) != DXGI_ERROR_NOT_FOUND)
 		{
-			adapter->GetDesc1(&adapterDescriptor);
-			if ((adapterDescriptor.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) == 0 && SUCCEEDED(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr)))
+			adapter->GetDesc1(&adapterDesc);
+			if ((adapterDesc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) == 0 && SUCCEEDED(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr)))
 			{
 				break;
 			}
@@ -242,21 +194,26 @@ namespace april
 			hr = D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&this->d3dDevice));
 		}
 		_TRY_UNSAFE(hr, "Unable to create DX12 device!");
-		D3D12_COMMAND_QUEUE_DESC queueDescriptor = {};
-		queueDescriptor.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-		queueDescriptor.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-		_TRY_UNSAFE(this->d3dDevice->CreateCommandQueue(&queueDescriptor, IID_PPV_ARGS(&this->commandQueue)), "Unable to create command queue!");
-		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDescriptor = {};
-		rtvHeapDescriptor.NumDescriptors = FRAME_COUNT;
-		rtvHeapDescriptor.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-		rtvHeapDescriptor.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&rtvHeapDescriptor, IID_PPV_ARGS(&this->rtvHeap)), "Unable to create RTV heap!");
-		this->rtvDescriptorSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-		D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDescriptor = {};
-		dsvHeapDescriptor.NumDescriptors = 1;
-		dsvHeapDescriptor.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-		dsvHeapDescriptor.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&dsvHeapDescriptor, IID_PPV_ARGS(&this->dsvHeap)), "Unable to create DSV heap!");
+		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+		_TRY_UNSAFE(this->d3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&this->commandQueue)), "Unable to create command queue!");
+		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
+		rtvHeapDesc.NumDescriptors = FRAME_COUNT;
+		rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+		rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&this->rtvHeap)), "Unable to create RTV heap!");
+		this->rtvDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+		srvHeapDesc.NumDescriptors = 1;
+		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&this->srvHeap)), "Unable to create SRV heap!");
+		D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+		dsvHeapDesc.NumDescriptors = 1;
+		dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+		dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&this->dsvHeap)), "Unable to create DSV heap!");
 		for_iter (i, 0, FRAME_COUNT)
 		{
 			_TRY_UNSAFE(this->d3dDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&this->commandAllocators[i])), hsprintf("Unable to create command allocator %d!", i));
@@ -280,21 +237,21 @@ namespace april
 		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
 		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
 		// input layouts for default shaders
-		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescriptorPlain[] =
+		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescPlain[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		};
-		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescriptorColored[] =
+		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescColored[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		};
-		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescriptorTextured[] =
+		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescTextured[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		};
-		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescriptorColoredTextured[] =
+		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescColoredTextured[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -342,11 +299,11 @@ namespace april
 		renderTargetOverwrite.DestBlend = D3D12_BLEND_ZERO;
 		const D3D12_DEPTH_STENCILOP_DESC defaultStencilOperation = { D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS };
 		// indexed data
-		this->inputLayoutDescriptors.clear();
-		this->inputLayoutDescriptors += { inputLayoutDescriptorPlain, _countof(inputLayoutDescriptorPlain) };
-		this->inputLayoutDescriptors += { inputLayoutDescriptorColored, _countof(inputLayoutDescriptorColored) };
-		this->inputLayoutDescriptors += { inputLayoutDescriptorTextured, _countof(inputLayoutDescriptorTextured) };
-		this->inputLayoutDescriptors += { inputLayoutDescriptorColoredTextured, _countof(inputLayoutDescriptorColoredTextured) };
+		this->inputLayoutDescs.clear();
+		this->inputLayoutDescs += { inputLayoutDescPlain, _countof(inputLayoutDescPlain) };
+		this->inputLayoutDescs += { inputLayoutDescColored, _countof(inputLayoutDescColored) };
+		this->inputLayoutDescs += { inputLayoutDescTextured, _countof(inputLayoutDescTextured) };
+		this->inputLayoutDescs += { inputLayoutDescColoredTextured, _countof(inputLayoutDescColoredTextured) };
 		this->vertexShaders.clear();
 		this->vertexShaders += this->vertexShaderPlain;
 		this->vertexShaders += this->vertexShaderColored;
@@ -402,14 +359,14 @@ namespace april
 		state.DepthStencilState.BackFace = defaultStencilOperation;
 		// dynamic properties
 		int pixelIndex = -1;
-		for_iter (i, 0, this->inputLayoutDescriptors.size())
+		for_iter (i, 0, this->inputLayoutDescs.size())
 		{
-			state.InputLayout = this->inputLayoutDescriptors[i];
+			state.InputLayout = this->inputLayoutDescs[i];
 			state.VS.pShaderBytecode = (unsigned char*)this->vertexShaders[i]->shaderData;
 			state.VS.BytecodeLength = (SIZE_T)this->vertexShaders[i]->shaderData.size();
 			for_iter (j, 0, pixelShaders.size() / 2)
 			{
-				pixelIndex = j + (i / (this->inputLayoutDescriptors.size() / 2)) * (this->pixelShaders.size() / 2);
+				pixelIndex = j + (i / (this->inputLayoutDescs.size() / 2)) * (this->pixelShaders.size() / 2);
 				state.pRootSignature = this->rootSignatures[pixelIndex / (pixelShaders.size() / 2)].Get();
 				state.PS.pShaderBytecode = (unsigned char*)this->pixelShaders[pixelIndex]->shaderData;
 				state.PS.BytecodeLength = (SIZE_T)this->pixelShaders[pixelIndex]->shaderData.size();
@@ -430,10 +387,11 @@ namespace april
 				}
 			}
 		}
-		
-		this->device_pipelineState = this->pipelineStates[0][0][0][0][0];
+		this->deviceState_pipelineState = this->pipelineStates[0][0][0][0][0];
+		this->deviceState_rootSignature = this->rootSignatures[0];
 		_TRY_UNSAFE(this->d3dDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, this->commandAllocators[this->currentFrame].Get(),
-			this->device_pipelineState.Get(), IID_PPV_ARGS(&this->commandList)), "Unable to create command allocators state!");
+			this->deviceState_pipelineState.Get(), IID_PPV_ARGS(&this->commandList)), "Unable to create command allocators state!");
+		this->uploadHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 		this->uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
 		this->uploadHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
 		this->uploadHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
@@ -442,29 +400,24 @@ namespace april
 		//this->vertexBufferData.pSysMem = NULL;
 		//this->vertexBufferData.SysMemPitch = 0;
 		//this->vertexBufferData.SysMemSlicePitch = 0;
-		this->vertexBufferDescriptor.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-		this->vertexBufferDescriptor.Alignment = 0;
-		this->vertexBufferDescriptor.Width = 10000;
-		this->vertexBufferDescriptor.Height = 1;
-		this->vertexBufferDescriptor.DepthOrArraySize = 1;
-		this->vertexBufferDescriptor.MipLevels = 1;
-		this->vertexBufferDescriptor.Format = DXGI_FORMAT_UNKNOWN;
-		this->vertexBufferDescriptor.SampleDesc.Count = 1;
-		this->vertexBufferDescriptor.SampleDesc.Quality = 0;
-		this->vertexBufferDescriptor.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-		this->vertexBufferDescriptor.Flags = D3D12_RESOURCE_FLAG_NONE;
+		this->vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+		this->vertexBufferDesc.Alignment = 0;
+		this->vertexBufferDesc.Width = 10000;
+		this->vertexBufferDesc.Height = 1;
+		this->vertexBufferDesc.DepthOrArraySize = 1;
+		this->vertexBufferDesc.MipLevels = 1;
+		this->vertexBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
+		this->vertexBufferDesc.SampleDesc.Count = 1;
+		this->vertexBufferDesc.SampleDesc.Quality = 0;
+		this->vertexBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+		this->vertexBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
 
-		D3D12_HEAP_PROPERTIES defaultHeapProperties = {};
-		defaultHeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-		defaultHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-		defaultHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-		defaultHeapProperties.CreationNodeMask = 1;
-		defaultHeapProperties.VisibleNodeMask = 1;
+		CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
 
-		hr = d3dDevice->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexBufferDescriptor,
+		hr = d3dDevice->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexBufferDesc,
 			D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->vertexBuffers[0]));
-		hr = d3dDevice->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexBufferDescriptor,
+		hr = d3dDevice->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexBufferDesc,
 			D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->vertexBuffers[1]));
 		if (FAILED(hr))
 		{
@@ -473,48 +426,48 @@ namespace april
 
 
 		//ComPtr<ID3D12Resource> vertexBufferUpload;
-		hr = this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDescriptor,
+		hr = this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->vertexBufferUploads[0]));
-		hr = this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDescriptor,
+		hr = this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->vertexBufferUploads[1]));
 		if (FAILED(hr))
 		{
 			throw Exception("Unable to create vertex buffer upload!");
 		}
-		D3D12_DESCRIPTOR_HEAP_DESC heapDescriptor = {};
-		heapDescriptor.NumDescriptors = FRAME_COUNT;
-		heapDescriptor.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-		heapDescriptor.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&heapDescriptor, IID_PPV_ARGS(&this->cbvHeap)), "Unable to create constant buffer view!");
-		this->constantBufferDescriptor.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-		this->constantBufferDescriptor.Alignment = 0;
-		this->constantBufferDescriptor.Width = FRAME_COUNT * ALIGNED_CONSTANT_BUFFER_SIZE;
-		this->constantBufferDescriptor.Height = 1;
-		this->constantBufferDescriptor.DepthOrArraySize = 1;
-		this->constantBufferDescriptor.MipLevels = 1;
-		this->constantBufferDescriptor.Format = DXGI_FORMAT_UNKNOWN;
-		this->constantBufferDescriptor.SampleDesc.Count = 1;
-		this->constantBufferDescriptor.SampleDesc.Quality = 0;
-		this->constantBufferDescriptor.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-		this->constantBufferDescriptor.Flags = D3D12_RESOURCE_FLAG_NONE;
+		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+		heapDesc.NumDescriptors = FRAME_COUNT;
+		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&this->cbvHeap)), "Unable to create constant buffer view!");
+		this->constantBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+		this->constantBufferDesc.Alignment = 0;
+		this->constantBufferDesc.Width = FRAME_COUNT * ALIGNED_CONSTANT_BUFFER_SIZE;
+		this->constantBufferDesc.Height = 1;
+		this->constantBufferDesc.DepthOrArraySize = 1;
+		this->constantBufferDesc.MipLevels = 1;
+		this->constantBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
+		this->constantBufferDesc.SampleDesc.Count = 1;
+		this->constantBufferDesc.SampleDesc.Quality = 0;
+		this->constantBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+		this->constantBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
 
 
-		_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->constantBufferDescriptor,
+		_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->constantBufferDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->constantBuffer)), "Unable to create constant buffer!");
 
 		// Create constant buffer views to access the upload buffer.
 		D3D12_GPU_VIRTUAL_ADDRESS cbvGpuAddress = this->constantBuffer->GetGPUVirtualAddress();
 		D3D12_CPU_DESCRIPTOR_HANDLE cbvCpuHandle = this->cbvHeap->GetCPUDescriptorHandleForHeapStart();
-		this->cbvDescriptorSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-		D3D12_CONSTANT_BUFFER_VIEW_DESC descriptor;
-		descriptor.SizeInBytes = ALIGNED_CONSTANT_BUFFER_SIZE;
+		this->cbvDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
+		desc.SizeInBytes = ALIGNED_CONSTANT_BUFFER_SIZE;
 		for_iter (i, 0, FRAME_COUNT)
 		{
-			descriptor.BufferLocation = cbvGpuAddress;
-			d3dDevice->CreateConstantBufferView(&descriptor, cbvCpuHandle);
-			cbvGpuAddress += descriptor.SizeInBytes;
-			cbvCpuHandle.ptr += this->cbvDescriptorSize;
+			desc.BufferLocation = cbvGpuAddress;
+			d3dDevice->CreateConstantBufferView(&desc, cbvCpuHandle);
+			cbvGpuAddress += desc.SizeInBytes;
+			cbvCpuHandle.ptr += this->cbvDescSize;
 		}
 
 		D3D12_RANGE readRange = {};
@@ -529,7 +482,7 @@ namespace april
 		this->_waitForGpu();
 		// initial calls
 		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
-		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->device_pipelineState.Get()), "Unable to reset command list!");
+		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		this->_deviceClear(true);
 		this->presentFrame();
@@ -606,134 +559,31 @@ namespace april
 			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
 		}
 		// other
-		CD3DX12_DESCRIPTOR_RANGE range;
-		range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-		CD3DX12_ROOT_PARAMETER parameter;
-		parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_VERTEX);
-		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDescriptor;
-		rootSignatureDescriptor.Init(1, &parameter, 0, NULL, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+		CD3DX12_DESCRIPTOR_RANGE ranges[2];
+		ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+		CD3DX12_ROOT_PARAMETER parameters[2];
+		parameters[0].InitAsDescriptorTable(1, ranges, D3D12_SHADER_VISIBILITY_VERTEX);
+		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
+		rootSignatureDesc.Init(1, parameters, 0, NULL, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
 			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
 			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS);
 		ComPtr<ID3DBlob> pSignature;
 		ComPtr<ID3DBlob> pError;
-		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDescriptor, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
+		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
 		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[0])), "Unable to create root signature!");
 		// other
-		range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
-		parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_PIXEL);
+		ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+		parameters[1].InitAsDescriptorTable(1, &ranges[1], D3D12_SHADER_VISIBILITY_PIXEL);
 		CD3DX12_STATIC_SAMPLER_DESC sampler = {};
 		sampler.Init(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, 0, 0,
 		D3D12_COMPARISON_FUNC_NEVER, D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK, 0.0f, D3D12_FLOAT32_MAX, D3D12_SHADER_VISIBILITY_PIXEL);
-		rootSignatureDescriptor.Init(1, &parameter, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+		rootSignatureDesc.Init(2, parameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
 			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
-			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS);
-		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDescriptor, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS);
+		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
 		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[1])), "Unable to create root signature!");
 
 		/*
-		D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
-
-		// This is the highest version the sample supports. If CheckFeatureSupport succeeds, the HighestVersion returned will not be greater than this.
-		featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
-
-		if (FAILED(m_device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
-		{
-			featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
-		}
-		*/
-		/*
-		//CD3DX12_DESCRIPTOR_RANGE ranges[1];
-		range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
-
-		//CD3DX12_ROOT_PARAMETER1 rootParameter;
-		parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_PIXEL);
-
-		D3D12_STATIC_SAMPLER_DESC sampler = {};
-		sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
-		sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-		sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-		sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-		sampler.MipLODBias = 0;
-		sampler.MaxAnisotropy = 0;
-		sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-		sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
-		sampler.MinLOD = 0.0f;
-		sampler.MaxLOD = D3D12_FLOAT32_MAX;
-		sampler.ShaderRegister = 0;
-		sampler.RegisterSpace = 0;
-		sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
-		rootSignatureDesc.Init_1_1(_countof(rootParameters), rootParameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-		ComPtr<ID3DBlob> signature;
-		ComPtr<ID3DBlob> error;
-		ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, featureData.HighestVersion, &signature, &error));
-		ThrowIfFailed(m_device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature)));
-		*/
-
-		/*
-		ComPtr<ID3D12Texture2D> _backBuffer;
-		HRESULT hr = this->swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
-		D3D12_RASTERIZER_DESC rasterDesc;
-		rasterDesc.AntialiasedLineEnable = false;
-		rasterDesc.CullMode = D3D12_CULL_NONE;
-		rasterDesc.DepthBias = 0;
-		rasterDesc.DepthBiasClamp = 0.0f;
-		rasterDesc.DepthClipEnable = true;
-		rasterDesc.FillMode = D3D12_FILL_SOLID;
-		rasterDesc.FrontCounterClockwise = false;
-		rasterDesc.MultisampleEnable = false;
-		rasterDesc.ScissorEnable = false;
-		rasterDesc.SlopeScaledDepthBias = 0.0f;
-		hr = this->d3dDevice->CreateRasterizerState(&rasterDesc, &this->rasterState);
-		if (FAILED(hr))
-		{
-			throw Exception("Unable to create raster state!");
-		}
-		this->d3dDeviceContext->RSSetState(this->rasterState.Get());
-		D3D12_TEXTURE2D_DESC backBufferDesc = { 0 };
-		_backBuffer->GetDesc(&backBufferDesc);
-		SystemInfo info = april::getSystemInfo();
-		this->setViewport(grect(0.0f, 0.0f, (float)backBufferDesc.Width, (float)backBufferDesc.Height)); // just to be on the safe side and prevent floating point errors
-		// blend modes
-		D3D12_BLEND_DESC blendDesc = { 0 };
-		blendDesc.AlphaToCoverageEnable = false;
-		blendDesc.IndependentBlendEnable = false;
-		blendDesc.RenderTarget[0].BlendEnable = true;
-		blendDesc.RenderTarget[0].RenderTargetWriteMask = (D3D12_COLOR_WRITE_ENABLE_RED | D3D12_COLOR_WRITE_ENABLE_GREEN | D3D12_COLOR_WRITE_ENABLE_BLUE);
-		// alpha
-		blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-		blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
-		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-		this->d3dDevice->CreateBlendState(&blendDesc, &this->blendStateAlpha);
-		// add
-		blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-		blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
-		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
-		this->d3dDevice->CreateBlendState(&blendDesc, &this->blendStateAdd);
-		// subtract
-		blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-		blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
-		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
-		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
-		this->d3dDevice->CreateBlendState(&blendDesc, &this->blendStateSubtract);
-		// overwrite
-		blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-		blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
-		blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-		blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ZERO;
-		this->d3dDevice->CreateBlendState(&blendDesc, &this->blendStateOverwrite);
 		// texture samplers
 		D3D12_SAMPLER_DESC samplerDesc;
 		memset(&samplerDesc, 0, sizeof(samplerDesc));
@@ -778,22 +628,22 @@ namespace april
 
 	void DirectX12_RenderSystem::_createSwapChain(int width, int height)
 	{
-		DXGI_SWAP_CHAIN_DESC1 swapChainDescriptor = {};
-		swapChainDescriptor.Width = width;
-		swapChainDescriptor.Height = height;
-		swapChainDescriptor.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-		swapChainDescriptor.Stereo = false;
-		swapChainDescriptor.SampleDesc.Count = 1;
-		swapChainDescriptor.SampleDesc.Quality = 0;
-		swapChainDescriptor.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDescriptor.BufferCount = FRAME_COUNT;
-		swapChainDescriptor.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // UWP apps MUST use _FLIP_
-		swapChainDescriptor.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-		swapChainDescriptor.Scaling = DXGI_SCALING_STRETCH;
-		swapChainDescriptor.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
+		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
+		swapChainDesc.Width = width;
+		swapChainDesc.Height = height;
+		swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		swapChainDesc.Stereo = false;
+		swapChainDesc.SampleDesc.Count = 1;
+		swapChainDesc.SampleDesc.Quality = 0;
+		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swapChainDesc.BufferCount = FRAME_COUNT;
+		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // UWP apps MUST use _FLIP_
+		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
+		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 		ComPtr<IDXGISwapChain1> swapChain;
 		_TRY_UNSAFE(this->dxgiFactory->CreateSwapChainForCoreWindow(this->commandQueue.Get(), reinterpret_cast<IUnknown*>(this->coreWindow.Get()),
-			&swapChainDescriptor, nullptr, &swapChain), "Unable to create swap chain!");
+			&swapChainDesc, nullptr, &swapChain), "Unable to create swap chain!");
 		_TRY_UNSAFE(swapChain.As(&this->swapChain), "Unable to cast swap chain to non-COM object!");
 		this->_configureSwapChain(width, height);
 	}
@@ -818,12 +668,12 @@ namespace april
 	{
 		_TRY_UNSAFE(this->swapChain->SetRotation(this->_getDxgiRotation()), "Unable to set rotation on swap chain!");
 		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvDescriptor = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvDesc = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		for_iter (i, 0, FRAME_COUNT)
 		{
 			_TRY_UNSAFE(this->swapChain->GetBuffer(i, IID_PPV_ARGS(&this->renderTargets[i])), hsprintf("Unable to get buffer %d from swap chain!", i));
-			this->d3dDevice->CreateRenderTargetView(this->renderTargets[i].Get(), nullptr, rtvDescriptor);
-			rtvDescriptor.ptr += this->rtvDescriptorSize;
+			this->d3dDevice->CreateRenderTargetView(this->renderTargets[i].Get(), nullptr, rtvDesc);
+			rtvDesc.ptr += this->rtvDescSize;
 		}
 		if (this->options.depthBuffer)
 		{
@@ -833,31 +683,31 @@ namespace april
 			depthHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
 			depthHeapProperties.CreationNodeMask = 1;
 			depthHeapProperties.VisibleNodeMask = 1;
-			D3D12_RESOURCE_DESC depthResourceDescriptor = {};
-			depthResourceDescriptor.Format = DXGI_FORMAT_D16_UNORM;
-			depthResourceDescriptor.Alignment = 0;
-			depthResourceDescriptor.Width = width;
-			depthResourceDescriptor.Height = height;
-			depthResourceDescriptor.DepthOrArraySize = 1;
-			depthResourceDescriptor.MipLevels = 1;
-			depthResourceDescriptor.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-			depthResourceDescriptor.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-			depthResourceDescriptor.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-			depthResourceDescriptor.SampleDesc.Count = 1;
-			depthResourceDescriptor.SampleDesc.Quality = 0;
+			D3D12_RESOURCE_DESC depthResourceDesc = {};
+			depthResourceDesc.Format = DXGI_FORMAT_D16_UNORM;
+			depthResourceDesc.Alignment = 0;
+			depthResourceDesc.Width = width;
+			depthResourceDesc.Height = height;
+			depthResourceDesc.DepthOrArraySize = 1;
+			depthResourceDesc.MipLevels = 1;
+			depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+			depthResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+			depthResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+			depthResourceDesc.SampleDesc.Count = 1;
+			depthResourceDesc.SampleDesc.Quality = 0;
 			D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
 			float depth = 1.0f;
 			depthOptimizedClearValue.Format = DXGI_FORMAT_D16_UNORM;
 			// using memcpy to preserve NAN values
 			memcpy(&depthOptimizedClearValue.DepthStencil.Depth, &depth, sizeof(depth));
 			depthOptimizedClearValue.DepthStencil.Stencil = 0;
-			_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&depthHeapProperties, D3D12_HEAP_FLAG_NONE, &depthResourceDescriptor, D3D12_RESOURCE_STATE_DEPTH_WRITE,
+			_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&depthHeapProperties, D3D12_HEAP_FLAG_NONE, &depthResourceDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE,
 				&depthOptimizedClearValue, IID_PPV_ARGS(&this->depthStencil)), "Unable to create depth buffer!");
-			D3D12_DEPTH_STENCIL_VIEW_DESC dsvDescriptor = {};
-			dsvDescriptor.Format = DXGI_FORMAT_D16_UNORM;
-			dsvDescriptor.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-			dsvDescriptor.Flags = D3D12_DSV_FLAG_NONE;
-			this->d3dDevice->CreateDepthStencilView(this->depthStencil.Get(), &dsvDescriptor, this->dsvHeap->GetCPUDescriptorHandleForHeapStart());
+			D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+			dsvDesc.Format = DXGI_FORMAT_D16_UNORM;
+			dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+			dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+			this->d3dDevice->CreateDepthStencilView(this->depthStencil.Get(), &dsvDesc, this->dsvHeap->GetCPUDescriptorHandleForHeapStart());
 		}
 		//this->screenViewport = { 0.0f, 0.0f, this->d3dRenderTargetSize.Width, this->d3dRenderTargetSize.Height, 0.0f, 1.0f };
 	}
@@ -1060,65 +910,6 @@ namespace april
 		this->deviceState_constantBufferChanged = true;
 	}
 
-	void DirectX12_RenderSystem::_updateDeviceState(bool forceUpdate)
-	{
-		DirectX_RenderSystem::_updateDeviceState(forceUpdate);
-		this->_updateShader(forceUpdate);
-	}
-
-	void DirectX12_RenderSystem::_updateShader(bool forceUpdate)
-	{
-		/*
-		// select shader
-		ShaderComposition* shader = NULL;
-		if (this->deviceState->colorMode == ColorMode::Multiply)
-		{
-			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Multiply);
-		}
-		else if (this->deviceState->colorMode == ColorMode::AlphaMap)
-		{
-			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, AlphaMap);
-		}
-		else if (this->deviceState->colorMode == ColorMode::Lerp)
-		{
-			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Lerp);
-		}
-		// change shaders
-		bool inputLayoutChanged = false;
-		bool vertexShaderChanged = false;
-		bool pixelShaderChanged = false;
-		if (this->deviceState_shader != shader)
-		{
-			if (this->deviceState_shader == NULL)
-			{
-				inputLayoutChanged = true;
-				vertexShaderChanged = true;
-				pixelShaderChanged = true;
-			}
-			else
-			{
-				inputLayoutChanged = (this->deviceState_shader->inputLayout != shader->inputLayout);
-				vertexShaderChanged = (this->deviceState_shader->vertexShader != shader->vertexShader);
-				pixelShaderChanged = (this->deviceState_shader->pixelShader != shader->pixelShader);
-			}
-			this->deviceState_shader = shader;
-		}
-		if (inputLayoutChanged)
-		{
-			this->d3dDeviceContext->IASetInputLayout(shader->inputLayout.Get());
-		}
-		if (vertexShaderChanged)
-		{
-			this->d3dDeviceContext->VSSetShader(shader->vertexShader->dx11Shader.Get(), NULL, 0);
-		}
-		if (pixelShaderChanged)
-		{
-			this->d3dDeviceContext->PSSetShader(shader->pixelShader->dx11Shader.Get(), NULL, 0);
-		}
-		*/
-		// change other data
-	}
-
 	void DirectX12_RenderSystem::_deviceClear(bool depth)
 	{
 		/*
@@ -1133,7 +924,7 @@ namespace april
 		*/
 		static const float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 		D3D12_CPU_DESCRIPTOR_HANDLE handle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		handle.ptr += this->currentFrame * this->rtvDescriptorSize;
+		handle.ptr += this->currentFrame * this->rtvDescSize;
 		this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 	}
 	
@@ -1154,9 +945,9 @@ namespace april
 		clearColor[1] = color.g_f();
 		clearColor[2] = color.r_f();
 		clearColor[3] = color.a_f();
-D3D12_CPU_DESCRIPTOR_HANDLE handle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
-handle.ptr += this->currentFrame * this->rtvDescriptorSize;
-this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
+		D3D12_CPU_DESCRIPTOR_HANDLE handle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
+		handle.ptr += this->currentFrame * this->rtvDescSize;
+		this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 	}
 
 	void DirectX12_RenderSystem::_deviceClearDepth()
@@ -1229,38 +1020,7 @@ this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 			++m;
 		}
 		bool changed = false;
-		if (this->deviceState_constantBufferChanged)
-		{
-			this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
-			this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
-				this->deviceState->systemColor.b_f(), this->deviceState->systemColor.a_f());
-			this->constantBufferData.lerpAlpha.set(this->deviceState->colorModeFactor, this->deviceState->colorModeFactor,
-				this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
-
-
-			//UINT8* destination = this->mappedConstantBuffer + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
-			//memcpy(destination, &m_constantBufferData, sizeof(m_constantBufferData));
-
-
-
-			/*
-			D3D12_RANGE readRange = {};
-			readRange.Begin = 0;
-			readRange.End = 0;
-
-			this->constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&mappedConstantBuffer));
-			*/
-			unsigned char* mappedConstantBuffer = this->mappedConstantBuffer + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
-
-			//this->d3dDeviceContext->Map(this->constantBuffer.Get(), 0, D3D12_MAP_WRITE_DISCARD, 0, &this->mappedSubResource);
-			memcpy(mappedConstantBuffer, &this->constantBufferData, sizeof(ConstantBuffer));
-			//this->constantBuffer->Unmap(0, &readRange);
-			//this->d3dDeviceContext->Unmap(this->constantBuffer.Get(), 0);
-			this->deviceState_constantBufferChanged = false;
-			changed = true;
-		}
-
-		if (!changed && this->device_pipelineState != this->pipelineStates[i][j][k][l][m])
+		if (this->deviceState_constantBufferChanged || this->deviceState_pipelineState != this->pipelineStates[i][j][k][l][m])
 		{
 			changed = true;
 		}
@@ -1268,12 +1028,34 @@ this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 		{
 			return;
 		}
-		this->device_pipelineState = this->pipelineStates[i][j][k][l][m];
+		this->deviceState_pipelineState = this->pipelineStates[i][j][k][l][m];
+		this->deviceState_rootSignature = this->rootSignatures[r];
+		this->executeCurrentCommands();
+		this->waitForCommands();
+		this->prepareNewCommands();
+		if (this->deviceState_constantBufferChanged)
+		{
+			this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
+			this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
+				this->deviceState->systemColor.b_f(), this->deviceState->systemColor.a_f());
+			this->constantBufferData.lerpAlpha.set(this->deviceState->colorModeFactor, this->deviceState->colorModeFactor,
+				this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
+			unsigned char* mappedConstantBuffer = this->mappedConstantBuffer + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
+			memcpy(mappedConstantBuffer, &this->constantBufferData, sizeof(ConstantBuffer));
+			this->deviceState_constantBufferChanged = false;
+		}
+	}
+
+	void DirectX12_RenderSystem::executeCurrentCommands()
+	{
 		PIXEndEvent(this->commandList.Get());
 		this->commandList->Close();
-		// Execute the command list.
 		ID3D12CommandList* ppCommandLists[] = { this->commandList.Get() };
 		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+	}
+
+	void DirectX12_RenderSystem::waitForCommands()
+	{
 		const UINT64 currentFenceValue = this->fenceValues[this->currentFrame];
 		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), currentFenceValue), "Unable to signal command queue!");
 		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
@@ -1283,13 +1065,35 @@ this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
 		}
 		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
+	}
+
+	void DirectX12_RenderSystem::prepareNewCommands()
+	{
 		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
-		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->device_pipelineState.Get()), "Unable to reset command list!");
+		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
-		this->commandList->SetGraphicsRootSignature(this->rootSignatures[r].Get());
-		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };
+		this->commandList->SetGraphicsRootSignature(this->deviceState_rootSignature.Get());
+		harray<ID3D12DescriptorHeap*> heaps;
+		heaps += this->cbvHeap.Get();
+		if (this->deviceState->useTexture)
+		{
+			//heaps += this->srvHeap.Get();
+		}
+		this->commandList->SetDescriptorHeaps(heaps.size(), (ID3D12DescriptorHeap**)heaps);
+
+		//this->commandList->SetGraphicsRootDescriptorTable(0, this->cbvHeap->GetGPUDescriptorHandleForHeapStart());
+		/*
 		this->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(this->cbvHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvDescriptorSize);
+
+		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };
+
+		ID3D12DescriptorHeap* ppHeaps[] = { m_srvHeap.Get() };
+		m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+		m_commandList->SetGraphicsRootDescriptorTable(0, m_srvHeap->GetGPUDescriptorHandleForHeapStart());
+		this->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+		*/
+		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(this->cbvHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvDescSize);
 		this->commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
 	}
 
@@ -1303,7 +1107,7 @@ this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 			this->deviceState_renderOperation = renderOperation;
 		}
 		unsigned int size = (unsigned int)(vertexSize * count);
-		if (size > this->vertexBufferDescriptor.ByteWidth)
+		if (size > this->vertexBufferDesc.ByteWidth)
 		{
 			this->vertexBuffer = nullptr;
 			this->vertexBufferData.pSysMem = data;
@@ -1321,11 +1125,6 @@ this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &vertexSize, &offset);
 		*/
 
-
-
-		//ID3D12GraphicsCommandList* commandList = this->commandList.Get();
-		//commandList->BeginEvent(0, L"", 0);
-		//commandList->SetGraphicsRootSignature(this->rootSignature.Get());
 
 		D3D12_SUBRESOURCE_DATA vertexData = {};
 		vertexData.pData = data;
@@ -1359,7 +1158,7 @@ this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 		this->commandList->RSSetScissorRects(1, &scissorRect);
 
 		D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		renderTargetView.ptr += this->currentFrame * this->rtvDescriptorSize;
+		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
 		D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = this->dsvHeap->GetCPUDescriptorHandleForHeapStart();
 		//this->commandList->OMSetRenderTargets(1, &renderTargetView, false, &depthStencilView);
 		this->commandList->OMSetRenderTargets(1, &renderTargetView, false, NULL);
@@ -1379,12 +1178,12 @@ this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 	{
 		if (format == Image::Format::RGBA || format == Image::Format::ARGB || format == Image::Format::BGRA || format == Image::Format::ABGR)
 		{
-			return Image::Format::BGRA;
+			return Image::Format::RGBA;
 		}
 		if (format == Image::Format::RGBX || format == Image::Format::XRGB || format == Image::Format::BGRX ||
 			format == Image::Format::XBGR || format == Image::Format::RGB || format == Image::Format::BGR)
 		{
-			return Image::Format::BGRX;
+			return Image::Format::RGBX;
 		}
 		if (format == Image::Format::Alpha || format == Image::Format::Greyscale || format == Image::Format::Palette)
 		{
@@ -1407,8 +1206,6 @@ this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 	
 	void DirectX12_RenderSystem::presentFrame()
 	{
-		// Indicate that the render target will now be used to present when the command list is done executing.
-		// Indicate this resource will be in use as a render target.
 		D3D12_RESOURCE_BARRIER presentResourceBarrier = {};
 		presentResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		presentResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
@@ -1417,50 +1214,17 @@ this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 		presentResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 		presentResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		this->commandList->ResourceBarrier(1, &presentResourceBarrier);
-
-		PIXEndEvent(this->commandList.Get());
-		this->commandList->Close();
-		ID3D12CommandList* ppCommandLists[] = { this->commandList.Get() };
-		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-
-
+		this->executeCurrentCommands();
 		HRESULT hr = this->swapChain->Present(1, 0);
-		// If the device was removed either by a disconnection or a driver upgrade, we 
-		// must recreate all device resources.
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
 			//m_deviceRemoved = true;
 			return;
 		}
 		_TRY_UNSAFE(hr, "Unable to present swap chain!");
-		// Schedule a Signal command in the queue.
-		const UINT64 currentFenceValue = this->fenceValues[this->currentFrame];
-		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), currentFenceValue), "Unable to signal command queue!");
-		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
-		if (this->fence->GetCompletedValue() < this->fenceValues[this->currentFrame])
-		{
-			_TRY_UNSAFE(this->fence->SetEventOnCompletion(this->fenceValues[this->currentFrame], this->fenceEvent), "Unable to set even on completion!");
-			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
-		}
-
-		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
-		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
-		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->device_pipelineState.Get()), "Unable to reset command list!");
-		PIXBeginEvent(this->commandList.Get(), 0, L"");
-		if (!this->state->useTexture)
-		{
-			this->commandList->SetGraphicsRootSignature(this->rootSignatures[0].Get());
-		}
-		else
-		{
-			this->commandList->SetGraphicsRootSignature(this->rootSignatures[1].Get());
-		}
-		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };
-		this->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-		// Bind the current frame's constant buffer to the pipeline.
-		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(this->cbvHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvDescriptorSize);
-		this->commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
+		this->deviceState_rootSignature = (!this->state->useTexture ? this->rootSignatures[0] : this->rootSignatures[1]);
+		this->waitForCommands();
+		this->prepareNewCommands();
 		this->vertexBuffersIndex = 0;
 	}
 
@@ -1536,20 +1300,6 @@ this->commandList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 			break;
 		}
 		return DXGI_MODE_ROTATION_UNSPECIFIED;
-	}
-
-	void DirectX12_RenderSystem::trim()
-	{
-		// TODOuwp - is this still needed?
-		/*
-		ComPtr<IDXGIDevice3> dxgiDevice;
-		HRESULT hr = this->d3dDevice.As(&dxgiDevice);
-		if (FAILED(hr))
-		{
-			throw Exception("Unable to retrieve DXGI device!");
-		}
-		dxgiDevice->Trim();
-		*/
 	}
 
 	Texture* DirectX12_RenderSystem::getRenderTarget()

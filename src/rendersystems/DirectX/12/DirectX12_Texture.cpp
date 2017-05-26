@@ -15,15 +15,23 @@
 #include "DirectX12_Texture.h"
 #include "Image.h"
 
-#define APRIL_D3D_DEVICE (((DirectX12_RenderSystem*)april::rendersys)->d3dDevice)
-#define APRIL_D3D_DEVICE_CONTEXT (((DirectX12_RenderSystem*)april::rendersys)->d3dDeviceContext)
+#define DX12_RENDERSYS ((DirectX12_RenderSystem*)april::rendersys)
+#define D3D_DEVICE (((DirectX12_RenderSystem*)april::rendersys)->d3dDevice)
 
 namespace april
 {
+	static inline void _TRY_UNSAFE(HRESULT hr, chstr errorMessage)
+	{
+		if (FAILED(hr))
+		{
+			throw Exception(hsprintf("%s - HRESULT: 0x%08X", errorMessage.cStr(), hr));
+		}
+	}
+
 	DirectX12_Texture::DirectX12_Texture(bool fromResource) : DirectX_Texture(fromResource), dxgiFormat(DXGI_FORMAT_UNKNOWN)
 	{
-		/*
 		this->d3dTexture = nullptr;
+		/*
 		this->d3dView = nullptr;
 		this->d3dRenderTargetView = nullptr;
 		*/
@@ -35,19 +43,19 @@ namespace april
 
 	bool DirectX12_Texture::_deviceCreateTexture(unsigned char* data, int size, Type type)
 	{
-		/*
+		return true;
 		this->internalType = type;
 		int bpp = this->format.getBpp();
-		D3D11_SUBRESOURCE_DATA textureSubresourceData = {0};
-		textureSubresourceData.pSysMem = data;
+		D3D12_SUBRESOURCE_DATA textureData = {};
+		textureData.pData = data;
 		this->firstUpload = true;
 		if (data != NULL)
 		{
 			Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 			if (Image::needsConversion(this->format, nativeFormat))
 			{
-				textureSubresourceData.pSysMem = NULL;
-				Image::convertToFormat(this->width, this->height, data, this->format, (unsigned char**)&textureSubresourceData.pSysMem, nativeFormat);
+				textureData.pData = NULL;
+				Image::convertToFormat(this->width, this->height, data, this->format, (unsigned char**)&textureData.pData, nativeFormat);
 				bpp = nativeFormat.getBpp();
 			}
 			this->firstUpload = false;
@@ -55,12 +63,64 @@ namespace april
 		else
 		{
 			int dummySize = this->width * this->height * bpp;
-			textureSubresourceData.pSysMem = new unsigned char[dummySize];
-			memset((unsigned char*)textureSubresourceData.pSysMem, 0, dummySize);
+			textureData.pData = new unsigned char[dummySize];
+			memset((unsigned char*)textureData.pData, 0, dummySize);
 		}
 		// texture
-		textureSubresourceData.SysMemPitch = this->width * bpp;
-		textureSubresourceData.SysMemSlicePitch = 0;
+		textureData.RowPitch = this->width * this->getBpp();
+		textureData.SlicePitch = textureData.RowPitch * this->height;
+		CD3DX12_RESOURCE_DESC textureDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, this->width, this->height);
+		CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
+		HRESULT hr = D3D_DEVICE->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &textureDesc,
+			D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->d3dTexture));
+		if (hr == E_OUTOFMEMORY)
+		{
+			static bool _preventRecursion = false;
+			if (!_preventRecursion)
+			{
+				_preventRecursion = true;
+				april::window->handleLowMemoryWarningEvent();
+				_preventRecursion = false;
+				hr = D3D_DEVICE->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &textureDesc,
+					D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->d3dTexture));
+			}
+			if (hr == E_OUTOFMEMORY)
+			{
+				hlog::error(logTag, "Failed to create DX12 texture: Not enough VRAM!");
+				return false;
+			}
+		}
+		const UINT64 uploadBufferSize = GetRequiredIntermediateSize(this->d3dTexture.Get(), 0, 1);
+		ComPtr<ID3D12Resource> textureUploadHeap;
+		CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
+		CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
+		hr = D3D_DEVICE->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &bufferDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&textureUploadHeap));
+		if (FAILED(hr))
+		{
+			hlog::error(logTag, "Failed to create DX12 texture!");
+			return false;
+		}
+		ComPtr<ID3D12GraphicsCommandList> commandList = DX12_RENDERSYS->getCommandList();
+		UpdateSubresources(commandList.Get(), this->d3dTexture.Get(), textureUploadHeap.Get(), 0, 0, 1, &textureData);
+		commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		srvDesc.Format = textureDesc.Format;
+		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = 1;
+		D3D_DEVICE->CreateShaderResourceView(this->d3dTexture.Get(), &srvDesc, DX12_RENDERSYS->getSrvHeap()->GetCPUDescriptorHandleForHeapStart());
+		DX12_RENDERSYS->executeCurrentCommands();
+		DX12_RENDERSYS->waitForCommands();
+		DX12_RENDERSYS->prepareNewCommands();
+
+
+
+
+
+
+
+		/*
 		D3D11_TEXTURE2D_DESC textureDesc = {0};
 		textureDesc.Width = this->width;
 		textureDesc.Height = this->height;
@@ -85,7 +145,7 @@ namespace april
 		textureDesc.SampleDesc.Quality = 0;
 		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 		textureDesc.Format = this->dxgiFormat;
-		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
+		HRESULT hr = D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
 		if (hr == E_OUTOFMEMORY)
 		{
 			static bool _preventRecursion = false;
@@ -94,7 +154,7 @@ namespace april
 				_preventRecursion = true;
 				april::window->handleLowMemoryWarningEvent();
 				_preventRecursion = false;
-				hr = APRIL_D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
+				hr = D3D_DEVICE->CreateTexture2D(&textureDesc, &textureSubresourceData, &this->d3dTexture);
 			}
 			if (hr == E_OUTOFMEMORY)
 			{
@@ -117,7 +177,7 @@ namespace april
 			renderTargetViewDesc.Format = textureDesc.Format;
 			renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 			renderTargetViewDesc.Texture2D.MipSlice = 0;
-			hr = APRIL_D3D_DEVICE->CreateRenderTargetView(this->d3dTexture.Get(),
+			hr = D3D_DEVICE->CreateRenderTargetView(this->d3dTexture.Get(),
 				&renderTargetViewDesc, &this->d3dRenderTargetView);
 			if (FAILED(hr))
 			{
@@ -132,7 +192,7 @@ namespace april
 		textureViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		textureViewDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 		textureViewDesc.Texture2D.MostDetailedMip = 0;
-		hr = APRIL_D3D_DEVICE->CreateShaderResourceView(this->d3dTexture.Get(), &textureViewDesc, &this->d3dView);
+		hr = D3D_DEVICE->CreateShaderResourceView(this->d3dTexture.Get(), &textureViewDesc, &this->d3dView);
 		if (FAILED(hr))
 		{
 			hlog::error(logTag, "Failed to create DX11 texture view!");
@@ -173,27 +233,28 @@ namespace april
 
 	bool DirectX12_Texture::_deviceDestroyTexture()
 	{
-		/*
 		if (this->d3dTexture != nullptr)
 		{
 			this->d3dTexture = nullptr;
+			/*
 			this->d3dView = nullptr;
 			this->d3dRenderTargetView = nullptr;
+			*/
 			return true;
 		}
-		*/
 		return false;
 	}
 	
 	Texture::Lock DirectX12_Texture::_tryLockSystem(int x, int y, int w, int h)
 	{
 		Lock lock;
-		/*
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
+		lock.activateLock(x, y, w, h, y, x, NULL, this->width, this->height, nativeFormat);
+		/*
 		D3D11_MAPPED_SUBRESOURCE* mappedSubResource = new D3D11_MAPPED_SUBRESOURCE();
 		memset(mappedSubResource, 0, sizeof(D3D11_MAPPED_SUBRESOURCE));
 		// Map() is being used for all, because UpdateSubResource() / UpdateSubResource1() seems to use Map() internally somewhere and the memory pointer can change
-		HRESULT hr = APRIL_D3D_DEVICE_CONTEXT->Map(this->d3dTexture.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, mappedSubResource);
+		HRESULT hr = D3D_DEVICE_CONTEXT->Map(this->d3dTexture.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, mappedSubResource);
 		if (!FAILED(hr))
 		{
 			lock.systemBuffer = mappedSubResource;
@@ -205,6 +266,7 @@ namespace april
 
 	bool DirectX12_Texture::_unlockSystem(Lock& lock, bool update)
 	{
+		return true;
 		if (lock.systemBuffer == NULL)
 		{
 			return false;
@@ -221,7 +283,7 @@ namespace april
 					{
 						Image::write(0, 0, this->width, this->height, 0, 0, this->data, this->width, this->height, this->format, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
 					}
-					APRIL_D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
+					D3D_DEVICE_CONTEXT->Unmap(this->d3dTexture.Get(), 0);
 				}
 				else
 				{
