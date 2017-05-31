@@ -39,6 +39,9 @@
 #define PRIMITIVE_TOPOLOGY_COUNT 3
 #define DEPTH_ENABLED_COUNT 2
 
+// TODOuwp - needs refactoring
+#define MAX_VERTEX_BUFFERS 100
+
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
 using namespace Windows::Graphics::Display;
@@ -146,24 +149,14 @@ namespace april
 		*/
 		CD3DX12_HEAP_PROPERTIES uploadHeapProperties;
 		D3D12_RESOURCE_DESC vertexBufferDesc;
-		//D3D12_SUBRESOURCE_DATA vertexBufferDatas[2];
-		D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[2];
-		//D3D12_MAPPED_SUBRESOURCE mappedSubResource;
-		int vertexBuffersIndex;
-		ComPtr<ID3D12Resource> vertexBuffers[2];
-		ComPtr<ID3D12Resource> vertexBufferUploads[2];
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[MAX_VERTEX_BUFFERS];
+		int vertexBufferIndex;
+		ComPtr<ID3D12Resource> vertexBuffers[MAX_VERTEX_BUFFERS];
+		ComPtr<ID3D12Resource> vertexBufferUploads[MAX_VERTEX_BUFFERS];
 		D3D12_RESOURCE_DESC constantBufferDesc;
 		ComPtr<ID3D12Resource> constantBuffer;
 		ConstantBuffer constantBufferData;
 		unsigned char* mappedConstantBuffer;
-
-		D3D12_RESOURCE_BARRIER resourceBarrier = {};
-		/*
-		ComPtr<ID3D12InputLayout> inputLayoutPlain;
-		ComPtr<ID3D12InputLayout> inputLayoutTextured;
-		ComPtr<ID3D12InputLayout> inputLayoutColored;
-		ComPtr<ID3D12InputLayout> inputLayoutColoredTextured;
-		//*/
 
 		DirectX12_VertexShader* vertexShaderPlain;
 		DirectX12_VertexShader* vertexShaderTextured;
@@ -219,7 +212,7 @@ namespace april
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
 
 		void _updatePipelineState(const RenderOperation& renderOperation);
-		void _setDX12VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize);
+		void _renderDX12VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize);
 
 		void _waitForGpu();
 

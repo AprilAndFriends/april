@@ -71,24 +71,10 @@ namespace april
 		D3D_PRIMITIVE_TOPOLOGY_UNDEFINED,		// triangle fans are deprecated in DX12
 	};
 
-	/*
-	DirectX12_RenderSystem::ShaderComposition::ShaderComposition(ComPtr<ID3D12InputLayout> inputLayout,
-		DirectX12_VertexShader* vertexShader, DirectX12_PixelShader* pixelShader)
-	{
-		this->inputLayout = inputLayout;
-		this->vertexShader = vertexShader;
-		this->pixelShader = pixelShader;
-	}
-
-	DirectX12_RenderSystem::ShaderComposition::~ShaderComposition()
-	{
-	}
-	*/
-
 	DirectX12_RenderSystem::DirectX12_RenderSystem() : DirectX_RenderSystem(), deviceState_constantBufferChanged(true)
 	{
 		this->name = april::RenderSystemType::DirectX12.getName();
-		this->vertexBuffersIndex = 0;
+		this->vertexBufferIndex = 0;
 	}
 
 	DirectX12_RenderSystem::~DirectX12_RenderSystem()
@@ -106,8 +92,10 @@ namespace april
 		this->samplerNearestWrap = nullptr;
 		this->samplerNearestClamp = nullptr;
 		*/
-		this->vertexBuffers[0] = nullptr;
-		this->vertexBuffers[1] = nullptr;
+		for_iter (i, 0, MAX_VERTEX_BUFFERS)
+		{
+			this->vertexBuffers[MAX_VERTEX_BUFFERS] = nullptr;
+		}
 		this->constantBuffer = nullptr;
 		this->vertexShaderPlain = NULL;
 		this->vertexShaderTextured = NULL;
@@ -203,7 +191,7 @@ namespace april
 		rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&this->rtvHeap)), "Unable to create RTV heap!");
-		this->rtvDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		this->rtvDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
 		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
 		srvHeapDesc.NumDescriptors = 1;
 		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -559,9 +547,9 @@ namespace april
 			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
 		}
 		// other
-		CD3DX12_DESCRIPTOR_RANGE ranges[2];
+		CD3DX12_DESCRIPTOR_RANGE ranges[3];
 		ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-		CD3DX12_ROOT_PARAMETER parameters[2];
+		CD3DX12_ROOT_PARAMETER parameters[3];
 		parameters[0].InitAsDescriptorTable(1, ranges, D3D12_SHADER_VISIBILITY_VERTEX);
 		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
 		rootSignatureDesc.Init(1, parameters, 0, NULL, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
@@ -572,17 +560,17 @@ namespace april
 		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
 		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[0])), "Unable to create root signature!");
 		// other
-		ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+		ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 		parameters[1].InitAsDescriptorTable(1, &ranges[1], D3D12_SHADER_VISIBILITY_PIXEL);
 		CD3DX12_STATIC_SAMPLER_DESC sampler = {};
 		sampler.Init(0, D3D12_FILTER_MIN_MAG_MIP_LINEAR, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, 0, 0,
-		D3D12_COMPARISON_FUNC_NEVER, D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK, 0.0f, D3D12_FLOAT32_MAX, D3D12_SHADER_VISIBILITY_PIXEL);
+			D3D12_COMPARISON_FUNC_NEVER, D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK, 0.0f, D3D12_FLOAT32_MAX, D3D12_SHADER_VISIBILITY_PIXEL);
 		rootSignatureDesc.Init(2, parameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
 			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
 			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS);
 		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
 		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[1])), "Unable to create root signature!");
-
+		// TODOuwp - create more than one sampler
 		/*
 		// texture samplers
 		D3D12_SAMPLER_DESC samplerDesc;
@@ -832,40 +820,7 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceTexture(Texture* texture)
 	{
-		/*
-		if (texture != NULL)
-		{
-			this->d3dDeviceContext->PSSetShaderResources(0, 1, ((DirectX12_Texture*)texture)->d3dView.GetAddressOf());
-			Texture::Filter filter = texture->getFilter();
-			Texture::AddressMode addressMode = texture->getAddressMode();
-			ComPtr<ID3D12SamplerState> sampler = nullptr;
-			if (filter == Texture::Filter::Linear && addressMode == Texture::AddressMode::Wrap)
-			{
-				sampler = this->samplerLinearWrap;
-			}
-			else if (filter == Texture::Filter::Linear && addressMode == Texture::AddressMode::Clamp)
-			{
-				sampler = this->samplerLinearClamp;
-			}
-			else if (filter == Texture::Filter::Nearest && addressMode == Texture::AddressMode::Wrap)
-			{
-				sampler = this->samplerNearestWrap;
-			}
-			else if (filter == Texture::Filter::Nearest && addressMode == Texture::AddressMode::Clamp)
-			{
-				sampler = this->samplerNearestClamp;
-			}
-			if (this->deviceState_sampler != sampler)
-			{
-				this->d3dDeviceContext->PSSetSamplers(0, 1, sampler.GetAddressOf());
-				this->deviceState_sampler = sampler;
-			}
-		}
-		else
-		{
-			this->d3dDeviceContext->PSSetShaderResources(0, 0, NULL);
-		}
-		*/
+		// not used
 	}
 
 	void DirectX12_RenderSystem::_setDeviceTextureFilter(const Texture::Filter& textureFilter)
@@ -880,29 +835,7 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceBlendMode(const BlendMode& blendMode)
 	{
-		/*
-		static const float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		if (blendMode == BlendMode::Alpha)
-		{
-			this->d3dDeviceContext->OMSetBlendState(this->blendStateAlpha.Get(), blendFactor, 0xFFFFFFFF);
-		}
-		else if (blendMode == BlendMode::Add)
-		{
-			this->d3dDeviceContext->OMSetBlendState(this->blendStateAdd.Get(), blendFactor, 0xFFFFFFFF);
-		}
-		else if (blendMode == BlendMode::Subtract)
-		{
-			this->d3dDeviceContext->OMSetBlendState(this->blendStateSubtract.Get(), blendFactor, 0xFFFFFFFF);
-		}
-		else if (blendMode == BlendMode::Overwrite)
-		{
-			this->d3dDeviceContext->OMSetBlendState(this->blendStateOverwrite.Get(), blendFactor, 0xFFFFFFFF);
-		}
-		else
-		{
-			hlog::error(logTag, "Trying to set unsupported blend mode!");
-		}
-		*/
+		// not used
 	}
 
 	void DirectX12_RenderSystem::_setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
@@ -912,16 +845,6 @@ namespace april
 
 	void DirectX12_RenderSystem::_deviceClear(bool depth)
 	{
-		/*
-		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
-		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
-		renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
-		*/
 		static const float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 		D3D12_CPU_DESCRIPTOR_HANDLE handle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		handle.ptr += this->currentFrame * this->rtvDescSize;
@@ -930,16 +853,6 @@ namespace april
 	
 	void DirectX12_RenderSystem::_deviceClear(const Color& color, bool depth)
 	{
-		/*
-		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
-		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
-		renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
-		*/
 		static float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 		clearColor[0] = color.b_f();
 		clearColor[1] = color.g_f();
@@ -952,42 +865,28 @@ namespace april
 
 	void DirectX12_RenderSystem::_deviceClearDepth()
 	{
-		/*
-		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
-		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
-		renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
-		*/
 		static const float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		this->commandList->ClearDepthStencilView(this->dsvHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	}
 
 	void DirectX12_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
 	{
-		this->_setDX12VertexBuffer(renderOperation, vertices, count, sizeof(PlainVertex));
-		//this->d3dDeviceContext->Draw(count, 0);
+		this->_renderDX12VertexBuffer(renderOperation, vertices, count, sizeof(PlainVertex));
 	}
 
 	void DirectX12_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
 	{
-		this->_setDX12VertexBuffer(renderOperation, vertices, count, sizeof(TexturedVertex));
-		//this->d3dDeviceContext->Draw(count, 0);
+		this->_renderDX12VertexBuffer(renderOperation, vertices, count, sizeof(TexturedVertex));
 	}
 
 	void DirectX12_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
 	{
-		this->_setDX12VertexBuffer(renderOperation, vertices, count, sizeof(ColoredVertex));
-		//this->d3dDeviceContext->Draw(count, 0);
+		this->_renderDX12VertexBuffer(renderOperation, vertices, count, sizeof(ColoredVertex));
 	}
 
 	void DirectX12_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
 	{
-		this->_setDX12VertexBuffer(renderOperation, vertices, count, sizeof(ColoredTexturedVertex));
-		//this->d3dDeviceContext->Draw(count, 0);
+		this->_renderDX12VertexBuffer(renderOperation, vertices, count, sizeof(ColoredTexturedVertex));
 	}
 
 	void DirectX12_RenderSystem::_updatePipelineState(const RenderOperation& renderOperation)
@@ -1073,74 +972,38 @@ namespace april
 		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		this->commandList->SetGraphicsRootSignature(this->deviceState_rootSignature.Get());
-		harray<ID3D12DescriptorHeap*> heaps;
-		heaps += this->cbvHeap.Get();
-		if (this->deviceState->useTexture)
-		{
-			//heaps += this->srvHeap.Get();
-		}
-		this->commandList->SetDescriptorHeaps(heaps.size(), (ID3D12DescriptorHeap**)heaps);
-
-		//this->commandList->SetGraphicsRootDescriptorTable(0, this->cbvHeap->GetGPUDescriptorHandleForHeapStart());
-		/*
-		this->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-		ID3D12DescriptorHeap* ppHeaps[] = { this->cbvHeap.Get() };
-
-		ID3D12DescriptorHeap* ppHeaps[] = { m_srvHeap.Get() };
-		m_commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-		m_commandList->SetGraphicsRootDescriptorTable(0, m_srvHeap->GetGPUDescriptorHandleForHeapStart());
-		this->commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-		*/
+		ID3D12DescriptorHeap* heaps[] = { this->cbvHeap.Get() };
+		this->commandList->SetDescriptorHeaps(_countof(heaps), heaps);
 		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(this->cbvHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvDescSize);
 		this->commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
 	}
 
-	void DirectX12_RenderSystem::_setDX12VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize)
+	void DirectX12_RenderSystem::_renderDX12VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize)
 	{
 		this->_updatePipelineState(renderOperation);
-		/*
-		if (this->deviceState_renderOperation != renderOperation)
-		{
-			this->d3dDeviceContext->IASetPrimitiveTopology(_dx12RenderOperations[renderOperation.value]);
-			this->deviceState_renderOperation = renderOperation;
-		}
-		unsigned int size = (unsigned int)(vertexSize * count);
-		if (size > this->vertexBufferDesc.ByteWidth)
-		{
-			this->vertexBuffer = nullptr;
-			this->vertexBufferData.pSysMem = data;
-			this->vertexBufferDesc.ByteWidth = size;
-			this->vertexBufferDesc.StructureByteStride = vertexSize;
-			this->d3dDevice->CreateBuffer(&this->vertexBufferDesc, &this->vertexBufferData, &this->vertexBuffer);
-		}
-		else
-		{
-			this->d3dDeviceContext->Map(this->vertexBuffer.Get(), 0, D3D12_MAP_WRITE_DISCARD, 0, &this->mappedSubResource);
-			memcpy(this->mappedSubResource.pData, data, size);
-			this->d3dDeviceContext->Unmap(this->vertexBuffer.Get(), 0);
-		}
-		static unsigned int offset = 0;
-		this->d3dDeviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), &vertexSize, &offset);
-		*/
-
-
 		D3D12_SUBRESOURCE_DATA vertexData = {};
 		vertexData.pData = data;
 		vertexData.RowPitch = (count * vertexSize);
 		vertexData.SlicePitch = vertexData.RowPitch;
-		UpdateSubresources(this->commandList.Get(), this->vertexBuffers[this->vertexBuffersIndex].Get(), this->vertexBufferUploads[this->vertexBuffersIndex].Get(), 0, 0, 1, &vertexData);
+		UpdateSubresources(this->commandList.Get(), this->vertexBuffers[this->vertexBufferIndex].Get(), this->vertexBufferUploads[this->vertexBufferIndex].Get(), 0, 0, 1, &vertexData);
 		
 		D3D12_RESOURCE_BARRIER vertexBufferResourceBarrier = {};
 		vertexBufferResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		vertexBufferResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        vertexBufferResourceBarrier.Transition.pResource = this->vertexBuffers[this->vertexBuffersIndex].Get();
+        vertexBufferResourceBarrier.Transition.pResource = this->vertexBuffers[this->vertexBufferIndex].Get();
         vertexBufferResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
         vertexBufferResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
         vertexBufferResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
 		this->commandList->ResourceBarrier(1, &vertexBufferResourceBarrier);
+
+		D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
+		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
+		if (this->deviceState->useTexture && this->deviceState->texture != NULL)
+		{
+			this->commandList->SetGraphicsRootDescriptorTable(1, ((DirectX12_Texture*)this->deviceState->texture)->srvHeap->GetGPUDescriptorHandleForHeapStart());
+		}
+
 
 		grect viewport = this->getViewport();
 		// Set the viewport and scissor rectangle.
@@ -1157,21 +1020,19 @@ namespace april
 		D3D12_RECT scissorRect = { 0, 0, static_cast<LONG>(dx12Viewport.Width), static_cast<LONG>(dx12Viewport.Height) };
 		this->commandList->RSSetScissorRects(1, &scissorRect);
 
-		D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
 		D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = this->dsvHeap->GetCPUDescriptorHandleForHeapStart();
 		//this->commandList->OMSetRenderTargets(1, &renderTargetView, false, &depthStencilView);
 		this->commandList->OMSetRenderTargets(1, &renderTargetView, false, NULL);
-
+		
 		this->commandList->IASetPrimitiveTopology(_dx12RenderOperations[renderOperation.value]);
-		this->vertexBufferViews[this->vertexBuffersIndex].BufferLocation = this->vertexBuffers[this->vertexBuffersIndex]->GetGPUVirtualAddress();
-		this->vertexBufferViews[this->vertexBuffersIndex].StrideInBytes = vertexSize;
-		this->vertexBufferViews[this->vertexBuffersIndex].SizeInBytes = count * vertexSize;
+		this->vertexBufferViews[this->vertexBufferIndex].BufferLocation = this->vertexBuffers[this->vertexBufferIndex]->GetGPUVirtualAddress();
+		this->vertexBufferViews[this->vertexBufferIndex].StrideInBytes = vertexSize;
+		this->vertexBufferViews[this->vertexBufferIndex].SizeInBytes = count * vertexSize;
 
-		this->commandList->IASetVertexBuffers(0, 1, &this->vertexBufferViews[this->vertexBuffersIndex]);
+		this->commandList->IASetVertexBuffers(0, 1, &this->vertexBufferViews[this->vertexBufferIndex]);
 		this->commandList->DrawInstanced(count, 1, 0, 0);
 
-		this->vertexBuffersIndex = (this->vertexBuffersIndex + 1) % 2;
+		this->vertexBufferIndex = (this->vertexBufferIndex + 1) % MAX_VERTEX_BUFFERS;
 	}
 
 	Image::Format DirectX12_RenderSystem::getNativeTextureFormat(Image::Format format) const
@@ -1225,7 +1086,15 @@ namespace april
 		this->deviceState_rootSignature = (!this->state->useTexture ? this->rootSignatures[0] : this->rootSignatures[1]);
 		this->waitForCommands();
 		this->prepareNewCommands();
-		this->vertexBuffersIndex = 0;
+		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
+		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
+		renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
+		this->vertexBufferIndex = 0;
 	}
 
 	void DirectX12_RenderSystem::updateDeviceReset()
