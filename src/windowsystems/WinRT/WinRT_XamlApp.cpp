@@ -339,6 +339,7 @@ namespace april
 
 	void WinRT_XamlApp::_updateWindowSize(float width, float height)
 	{
+		hlog::writef(logTag, "WinRT size change: %g,%g", width, height);
 		this->_resetTouches();
 		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
 		if (DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::Portrait ||
@@ -363,6 +364,8 @@ namespace april
 	void WinRT_XamlApp::OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
 	{
 		this->_resetTouches();
+		CoreWindow^ window = CoreWindow::GetForCurrentThread();
+		this->_updateWindowSize(window->Bounds.Width, window->Bounds.Height);
 	}
 
 	void WinRT_XamlApp::OnDpiChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
