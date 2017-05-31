@@ -148,7 +148,6 @@ namespace april
 		bool result = Window::updateOneFrame();
 		PIXEndEvent(commandQueue);
 		return result;
-		//return 
 	}
 
 	void WinUWP_Window::checkEvents()
@@ -165,6 +164,7 @@ namespace april
 		}
 		*/
 		CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
+		Window::checkEvents();
 	}
 
 	void WinUWP_Window::terminateMainLoop()

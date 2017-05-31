@@ -68,6 +68,7 @@ namespace april
 		void OnDpiChanged(_In_ DisplayInformation^ sender, _In_ Object^ args);
 		void OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 		void OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
+		*/
 
 		void OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
@@ -76,34 +77,21 @@ namespace april
 		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
-#ifdef _WINP8
-		void OnBackButtonPressed(Object^ sender, BackPressedEventArgs^ args);
-#endif
 
-	internal:
-		void OnWindowActivationChanged( _In_ Object^ sender, _In_ WindowActivatedEventArgs^ args);
-		void OnRender(_In_ Object^ sender, _In_ Object^ args);
-		*/
 	protected:
-
 		// Application lifecycle events
 		void OnActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args);
 		void OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args);
 		void OnResuming(Platform::Object^ sender, Platform::Object^ args);
-
 		// CoreWindow events
 		void OnWindowSizeChanged(CoreWindow^ sender, WindowSizeChangedEventArgs^ args);
 		void OnVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args);
 		void OnWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args);
-
 		// DisplayInformation events
 		void OnDpiChanged(DisplayInformation^ sender, Platform::Object^ args);
 		void OnOrientationChanged(DisplayInformation^ sender, Platform::Object^ args);
 		void OnDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args);
 
-		/*
-		virtual void OnLaunched(_In_ LaunchActivatedEventArgs^ args) override;
-		*/
 		void _updateWindowSize(float width, float height);
 	private:
 		bool running;
@@ -114,26 +102,22 @@ namespace april
 		Color backgroundColor;
 		bool launched;
 		bool activated;
+		*/
 		// TODOa - special temporary hack required for input blocking the first frame after focus has been returned / the window was reactivated
 		bool firstFrameAfterActivateHack;
-		Windows::Foundation::EventRegistrationToken eventToken;
 		bool scrollHorizontal;
-		*/
 		harray<unsigned int> pointerIds;
-		/*
 		int64_t startTime;
 		april::Key currentButton;
 
+		/*
 		~WinRT_XamlApp();
-		
-		void _tryAddRenderToken();
-		void _tryRemoveRenderToken();
 		*/
 		void _handleFocusChange(bool focused);
 		/*
 		void _refreshCursor();
-		gvec2 _transformPosition(float x, float y);
 		*/
+		gvec2 _transformPosition(float x, float y);
 		void _resetTouches();
 		/*
 		void _tryRenderSplashTexture(int count = 1);

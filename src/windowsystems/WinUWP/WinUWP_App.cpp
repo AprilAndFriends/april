@@ -72,19 +72,11 @@ namespace april
 		this->backgroundColor = Color::Black;
 		this->launched = false;
 		this->activated = false;
+		*/
 		this->firstFrameAfterActivateHack = false;
 		this->scrollHorizontal = false;
 		this->startTime = (unsigned int)htickCount();
 		this->currentButton = Key::None;
-		this->Suspending += ref new SuspendingEventHandler(this, &WinUWP_App::OnSuspend);
-		this->Resuming += ref new EventHandler<Object^>(this, &WinUWP_App::OnResume);
-#ifdef _DEBUG
-		this->UnhandledException += ref new UnhandledExceptionEventHandler([](Object^ sender, UnhandledExceptionEventArgs^ args)
-		{
-			hlog::error("FATAL", _HL_PSTR_TO_HSTR(args->Message));
-		});
-#endif
-*/
 	}
 
 	void WinUWP_App::Initialize(Core::CoreApplicationView^ applicationView)
@@ -113,6 +105,13 @@ namespace april
 		window->SizeChanged += ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(this, &WinUWP_App::OnWindowSizeChanged);
 		window->VisibilityChanged += ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(this, &WinUWP_App::OnVisibilityChanged);
 		window->Closed += ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(this, &WinUWP_App::OnWindowClosed);
+		window->PointerPressed += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &WinUWP_App::OnTouchDown);
+		window->PointerReleased += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &WinUWP_App::OnTouchUp);
+		window->PointerMoved += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &WinUWP_App::OnTouchMove);
+		window->PointerWheelChanged += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &WinUWP_App::OnMouseScroll);
+		window->KeyDown += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &WinUWP_App::OnKeyDown);
+		window->KeyUp += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &WinUWP_App::OnKeyUp);
+		window->CharacterReceived += ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(this, &WinUWP_App::OnCharacterReceived);
 		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();
 		displayInformation->DpiChanged += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &WinUWP_App::OnDpiChanged);
 		displayInformation->OrientationChanged += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &WinUWP_App::OnOrientationChanged);
@@ -328,27 +327,6 @@ namespace april
 			window->VisibilityChanged +=
 				ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(
 					this, &WinUWP_App::OnVisibilityChanged);
-			window->PointerPressed +=
-				ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
-					this, &WinUWP_App::OnTouchDown);
-			window->PointerReleased +=
-				ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
-					this, &WinUWP_App::OnTouchUp);
-			window->PointerMoved +=
-				ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
-					this, &WinUWP_App::OnTouchMove);
-			window->PointerWheelChanged +=
-				ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(
-					this, &WinUWP_App::OnMouseScroll);
-			window->KeyDown +=
-				ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(
-					this, &WinUWP_App::OnKeyDown);
-			window->KeyUp +=
-				ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(
-					this, &WinUWP_App::OnKeyUp);
-			window->CharacterReceived +=
-				ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(
-					this, &WinUWP_App::OnCharacterReceived);
 			window->Closed +=
 				ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
 					this, &WinUWP_App::OnWindowClosed);
@@ -517,6 +495,7 @@ namespace april
 		}
 		this->_resetTouches();
 	}
+	*/
 
 	void WinUWP_App::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
@@ -528,15 +507,6 @@ namespace april
 		unsigned int id;
 		int index;
 		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
-		//DisplayInformation^ info = DisplayInformation::GetForCurrentView();
-		//float logicalDpi = info->LogicalDpi;
-		//float rawDpiX = info->RawDpiX;
-		//float rawDpiY = info->RawDpiY;
-		//Platform::IBox<double>^ dSize = info->DiagonalSizeInInches;
-		//double rawPixelsPerViewPixel = info->RawPixelsPerViewPixel;
-		//float height = info->ScreenHeightInRawPixels;
-		//float width = info->ScreenWidthInRawPixels;
-		//ResolutionScale scale = info->ResolutionScale;
 #ifndef _WINP8
 		this->currentButton = Key::MouseL;
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
@@ -707,42 +677,13 @@ namespace april
 		april::window->queueKeyEvent(Window::KeyInputEvent::Type::Down, Key::None, args->KeyCode);
 	}
 
-#ifdef _WINP8
-	void WinUWP_App::OnBackButtonPressed(Object^ sender, BackPressedEventArgs^ args)
-	{
-		if (april::window != NULL && april::window->getParam(WINP8_BACK_BUTTON_SYSTEM_HANDLING) != "1")
-		{
-			april::window->queueKeyEvent(Window::KeyInputEvent::Type::Down, AK_ESCAPE, 0);
-			april::window->queueKeyEvent(Window::KeyInputEvent::Type::Up, AK_ESCAPE, 0);
-			args->Handled = true;
-		}
-	}
-#endif
-
-	void WinUWP_App::_tryAddRenderToken()
-	{
-		if (this->eventToken.Value != 0)
-		{
-			CompositionTarget::Rendering::remove(this->eventToken);
-		}
-		this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinUWP_App::OnRender));
-	}
-
-	void WinUWP_App::_tryRemoveRenderToken()
-	{
-		if (this->eventToken.Value != 0)
-		{
-			CompositionTarget::Rendering::remove(this->eventToken);
-			this->eventToken.Value = 0;
-		}
-	}
-
 	gvec2 WinUWP_App::_transformPosition(float x, float y)
 	{
-		// WinRT is dumb
-		return (gvec2(x, y) * WinRT::getDpiRatio());
+		// WinUWP is dumb
+		return (gvec2(x, y) * WinUWP::getDpiRatio());
 	}
 
+	/*
 	void WinUWP_App::_tryRenderSplashTexture(int count)
 	{
 		if (this->splashTexture == NULL)
