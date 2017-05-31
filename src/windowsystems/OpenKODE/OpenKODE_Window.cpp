@@ -480,6 +480,7 @@ namespace april
 			if (evt->data.windowproperty.pname == KD_WINDOWPROPERTY_SIZE)
 			{
 				kdGetWindowPropertyiv(this->kdWindow, KD_WINDOWPROPERTY_SIZE, kdSize);
+				hlog::writef(logTag, "Window Size Change: %d,%d", kdSize[0], kdSize[1]);
 				this->_setRenderSystemResolution(kdSize[0], kdSize[1], this->fullscreen);
 			}
 			return true;
