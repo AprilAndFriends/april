@@ -40,7 +40,7 @@
 #define DEPTH_ENABLED_COUNT 2
 
 // TODOuwp - needs refactoring
-#define MAX_VERTEX_BUFFERS 100
+#define MAX_VERTEX_BUFFERS 10
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;

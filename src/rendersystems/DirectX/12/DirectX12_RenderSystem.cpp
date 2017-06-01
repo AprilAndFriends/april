@@ -33,7 +33,7 @@
 #include "WinUWP_Window.h"
 
 #define SHADER_PATH "april/"
-#define VERTEX_BUFFER_COUNT 65536
+#define VERTEX_BUFFER_COUNT 32768
 
 #define __EXPAND(x) x
 
@@ -316,7 +316,7 @@ namespace april
 		// pipeline states
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC state = {};
 		state.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
-		state.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
+		state.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
 		state.RasterizerState.FrontCounterClockwise = false;
 		state.RasterizerState.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
 		state.RasterizerState.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
@@ -390,7 +390,7 @@ namespace april
 		//this->vertexBufferData.SysMemSlicePitch = 0;
 		this->vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 		this->vertexBufferDesc.Alignment = 0;
-		this->vertexBufferDesc.Width = 10000;
+		this->vertexBufferDesc.Width = VERTEX_BUFFER_COUNT;
 		this->vertexBufferDesc.Height = 1;
 		this->vertexBufferDesc.DepthOrArraySize = 1;
 		this->vertexBufferDesc.MipLevels = 1;
@@ -405,7 +405,7 @@ namespace april
 
 		for_iter (i, 0, MAX_VERTEX_BUFFERS)
 		{
-			_TRY_UNSAFE(d3dDevice->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexBufferDesc,
+			_TRY_UNSAFE(d3dDevice->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDesc,
 				D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->vertexBuffers[i])), "Unable to create vertex buffer!");
 		}
 
