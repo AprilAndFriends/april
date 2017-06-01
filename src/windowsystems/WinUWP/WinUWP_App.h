@@ -55,17 +55,9 @@ namespace april
 		virtual void Run();
 		virtual void Uninitialize();
 
-
-		/*
 		void refreshCursor();
 		
-		//property WinRT_XamlOverlay^ Overlay { WinRT_XamlOverlay^ get() { return this->overlay; } }
-
-		void OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args);
-		void OnWindowSizeChanged(_In_ CoreWindow^ sender, _In_ WindowSizeChangedEventArgs^ args);
-		void OnVisibilityChanged(_In_ CoreWindow^ sender, _In_ VisibilityChangedEventArgs^ args);
-		void OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args);
-		void OnDpiChanged(_In_ DisplayInformation^ sender, _In_ Object^ args);
+		/*
 		void OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 		void OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 		*/
@@ -98,8 +90,9 @@ namespace april
 		bool running;
 		/*
 		Texture* splashTexture;
-		WinRT_XamlOverlay^ overlay;
+		*/
 		CoreCursor^ defaultCursor;
+		/*
 		Color backgroundColor;
 		bool launched;
 		bool activated;
@@ -111,13 +104,7 @@ namespace april
 		int64_t startTime;
 		april::Key currentButton;
 
-		/*
-		~WinRT_XamlApp();
-		*/
 		void _handleFocusChange(bool focused);
-		/*
-		void _refreshCursor();
-		*/
 		gvec2 _transformPosition(float x, float y);
 		void _resetTouches();
 		/*

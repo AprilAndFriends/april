@@ -21,7 +21,7 @@
 #include "RenderSystem.h"
 #include "Window.h"
 #include "WinUWP.h"
-//#include "WinUWP_Cursor.h"
+#include "WinUWP_Cursor.h"
 #include "WinUWP_Window.h"
 #include "WinUWP_App.h"
 
@@ -38,20 +38,16 @@ namespace april
 	WinUWP_App::WinUWP_App()
 	{
 		this->running = true;
-		/*
-		DisplayInformation::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
-		Windows::Globalization::ApplicationLanguages::PrimaryLanguageOverride = ref new Platform::String(L"");
-		this->overlay = nullptr;
 #ifndef _WINP8
 		this->defaultCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
 #else
 		this->defaultCursor = nullptr;
 #endif
+		/*
 		this->backgroundColor = Color::Black;
 		this->launched = false;
 		this->activated = false;
 		*/
-		this->firstFrameAfterActivateHack = false;
 		this->scrollHorizontal = false;
 		this->startTime = (unsigned int)htickCount();
 		this->currentButton = Key::None;
@@ -108,24 +104,6 @@ namespace april
 			april::window->enterMainLoop();
 			(*WinUWP::Destroy)();
 		}
-		/*
-		if (!this->running || april::window == NULL)
-		{
-			//this->firstFrameAfterActivateHack = false;
-			return;
-		}
-		this->running = april::window->updateOneFrame();
-		april::rendersys->presentFrame();
-		//this->firstFrameAfterActivateHack = false;
-		if (!this->running)
-		{
-			(*WinUWP::Destroy)();
-			//CompositionTarget::Rendering::remove(this->eventToken);
-			//Application::Current->Exit();
-			CoreApplication::Exit();
-			return;
-		}
-		*/
 		// On WinP8 there is a weird bug where this callback stops being called if it takes too long to process at some point so it
 		// is unregistered and registered again in the main thread. Oddly enough, normal WinRT has huge problems with this code.
 #ifdef _WINP8
@@ -180,7 +158,10 @@ namespace april
 	void WinUWP_App::OnWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args)
 	{
 		args->Handled = true;
-		//m_windowClosed = true;
+		if (april::window != NULL)
+		{
+			april::window->handleQuitRequestEvent(false);
+		}
 	}
 
 	// DisplayInformation events
@@ -222,17 +203,6 @@ namespace april
 				april::window->handleFocusChangeEvent(focused);
 			}
 		}
-		/*
-		if (focused)
-		{
-			this->firstFrameAfterActivateHack = true;
-			this->_tryAddRenderToken();
-		}
-		else
-		{
-			this->_tryRemoveRenderToken();
-		}
-		*/
 	}
 
 	void WinUWP_App::_resetTouches()
@@ -242,19 +212,6 @@ namespace april
 			april::window->queueTouchEvent(Window::MouseInputEvent::Type::Cancel, gvec2(), i);
 		}
 		this->pointerIds.clear();
-	}
-
-
-
-
-
-
-
-
-	/*
-	WinUWP_App::~WinUWP_App()
-	{
-		this->_tryRemoveRenderToken();
 	}
 
 	void WinUWP_App::refreshCursor()
@@ -267,7 +224,7 @@ namespace april
 				Cursor* windowCursor = april::window->getCursor();
 				if (windowCursor != NULL)
 				{
-					cursor = ((WinRT_Cursor*)windowCursor)->getCursor();
+					cursor = ((WinUWP_Cursor*)windowCursor)->getCursor();
 				}
 				if (cursor == nullptr)
 				{
@@ -275,15 +232,12 @@ namespace april
 				}
 			}
 #ifndef _WINP8
-			Windows::UI::Xaml::Window::Current->CoreWindow->PointerCursor = cursor;
+			CoreWindow::GetForCurrentThread()->PointerCursor = cursor;
 #endif
 		}
 	}
 
-	void WinUWP_App::Connect(int connectionId, Object^ target)
-	{
-	}
-
+	/*
 	void WinUWP_App::OnLaunched(LaunchActivatedEventArgs^ args)
 	{
 		// don't repeat app initialization when already launched
@@ -291,21 +245,6 @@ namespace april
 		{
 			this->launched = true;
 			CoreWindow^ window = Windows::UI::Core::CoreWindow::GetForCurrentThread();
-			window->SizeChanged +=
-				ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(
-					this, &WinUWP_App::OnWindowSizeChanged);
-			window->VisibilityChanged +=
-				ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(
-					this, &WinUWP_App::OnVisibilityChanged);
-			window->Closed +=
-				ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(
-					this, &WinUWP_App::OnWindowClosed);
-			DisplayInformation::GetForCurrentView()->OrientationChanged +=
-				ref new TypedEventHandler<DisplayInformation^, Object^>(
-					this, &WinUWP_App::OnOrientationChanged);
-			DisplayInformation::GetForCurrentView()->DpiChanged +=
-				ref new TypedEventHandler<DisplayInformation^, Object^>(
-					this, &WinUWP_App::OnDpiChanged);
 			InputPane::GetForCurrentView()->Showing +=
 				ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
 					this, &WinUWP_App::OnVirtualKeyboardShow);
@@ -470,7 +409,7 @@ namespace april
 	void WinUWP_App::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		args->Handled = true;
-		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -514,7 +453,7 @@ namespace april
 	void WinUWP_App::OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		args->Handled = true;
-		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -553,7 +492,7 @@ namespace april
 	void WinUWP_App::OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		args->Handled = true;
-		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -587,7 +526,7 @@ namespace april
 	void WinUWP_App::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		args->Handled = true;
-		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -606,7 +545,7 @@ namespace april
 	void WinUWP_App::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
 		args->Handled = true;
-		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -621,7 +560,7 @@ namespace april
 	void WinUWP_App::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
 		args->Handled = true;
-		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}
@@ -640,7 +579,7 @@ namespace april
 	void WinUWP_App::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
 	{
 		args->Handled = true;
-		if (april::window == NULL || !april::window->isFocused() || this->firstFrameAfterActivateHack)
+		if (april::window == NULL || !april::window->isFocused())
 		{
 			return;
 		}

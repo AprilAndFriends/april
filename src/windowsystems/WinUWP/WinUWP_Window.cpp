@@ -203,7 +203,7 @@ namespace april
 	
 	void WinUWP_Window::_refreshCursor()
 	{
-		//WinUWP::App->refreshCursor();
+		WinUWP::App->refreshCursor();
 	}
 	
 }
