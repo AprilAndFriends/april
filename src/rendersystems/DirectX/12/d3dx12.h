@@ -1364,7 +1364,7 @@ inline void MemcpySubresource(
         {
             memcpy(pDestSlice + pDest->RowPitch * y,
                    pSrcSlice + pSrc->RowPitch * y,
-                   RowSizeInBytes);
+                   pSrc->RowPitch);
         }
     }
 }
@@ -1430,7 +1430,6 @@ inline UINT64 UpdateSubresources(
     
     if (DestinationDesc.Dimension == D3D12_RESOURCE_DIMENSION_BUFFER)
     {
-        CD3DX12_BOX SrcBox( UINT( pLayouts[0].Offset ), UINT( pLayouts[0].Offset + pLayouts[0].Footprint.Width ) );
         pCmdList->CopyBufferRegion(
             pDestinationResource, 0, pIntermediate, pLayouts[0].Offset, pLayouts[0].Footprint.Width);
     }
@@ -1468,6 +1467,12 @@ inline UINT64 UpdateSubresources(
     {
        return 0;
     }
+	static int x = 0;
+	if (x == 12)
+	{
+		int a = 0;
+	}
+	++x;
     D3D12_PLACED_SUBRESOURCE_FOOTPRINT* pLayouts = reinterpret_cast<D3D12_PLACED_SUBRESOURCE_FOOTPRINT*>(pMem);
     UINT64* pRowSizesInBytes = reinterpret_cast<UINT64*>(pLayouts + NumSubresources);
     UINT* pNumRows = reinterpret_cast<UINT*>(pRowSizesInBytes + NumSubresources);

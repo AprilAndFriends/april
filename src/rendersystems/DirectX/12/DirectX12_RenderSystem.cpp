@@ -936,6 +936,7 @@ namespace april
 			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
 		}
 		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
+		this->vertexBufferIndex = 0;
 	}
 
 	void DirectX12_RenderSystem::prepareNewCommands()
@@ -966,7 +967,6 @@ namespace april
         vertexBufferResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
         vertexBufferResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
         vertexBufferResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-
 		this->commandList->ResourceBarrier(1, &vertexBufferResourceBarrier);
 
 		D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -1091,7 +1091,6 @@ namespace april
 		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
-		this->vertexBufferIndex = 0;
 	}
 
 	void DirectX12_RenderSystem::updateDeviceReset()
