@@ -184,7 +184,6 @@ namespace april
 
 	void WinUWP_App::_updateWindowSize(float width, float height)
 	{
-		hlog::errorf("OK", "%g %g", width, height);
 		getSystemInfo(); // so the displayResolution value gets updated
 		this->_resetTouches();
 		if (april::window != NULL)
