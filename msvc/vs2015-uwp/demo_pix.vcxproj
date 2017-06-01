@@ -179,6 +179,9 @@
     <Image Include="media\assets\WideLogo.scale-150.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="media\bloom.png" />
+    <Image Include="media\camo.jpg" />
+    <Image Include="media\cursor.png" />
     <Image Include="media\icon.png" />
     <Image Include="media\jpt_raw.jpg" />
     <Image Include="media\jpt_raw.png" />
@@ -191,8 +194,33 @@
     <Image Include="media\texture.jpg" />
     <Image Include="media\x.png" />
     <Image Include="media\jpt_final.jpt" />
-    <None Include="media\cursor.ani" />
-    <None Include="media\simple.cur" />
+    <None Include="media\cursor.ani">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\etc1.etcx">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\pix.webp">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\pvr_RGB2.pvr">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\pvr_RGB4.pvr">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\pvr_RGBA2.pvr">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\pvr_RGBA4.pvr">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\rgb_only.etcx">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\simple.cur">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="..\..\demos\demo_pix\TemporaryKey.pfx">
       <FileType>Document</FileType>
     </None>
@@ -207,7 +235,7 @@
     <ProjectReference Include="..\..\aprilpix\msvc\vs2015-uwp\libaprilpix.vcxproj">
       <Project>{35fe2927-8530-406c-a49b-5f54ea4b80cb}</Project>
       <Private>false</Private>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
@@ -215,7 +243,7 @@
     <ProjectReference Include="..\..\lib\webp\msvc\vs2015-uwp\libwebp.vcxproj">
       <Project>{e876403e-235a-48f9-b215-3921633ac385}</Project>
       <Private>false</Private>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>

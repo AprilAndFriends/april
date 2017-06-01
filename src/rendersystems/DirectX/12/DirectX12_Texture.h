@@ -37,9 +37,6 @@ namespace april
 		
 		ComPtr<ID3D12Resource> d3dTexture;
 		ComPtr<ID3D12DescriptorHeap> srvHeap;
-		//ComPtr<ID3D12DescriptorHeap> d3dTextureView;
-		//ComPtr<ID3D11ShaderResourceView> d3dView;
-		//ComPtr<ID3D11RenderTargetView> d3dRenderTargetView;
 		DXGI_FORMAT dxgiFormat;
 		Type internalType;
 

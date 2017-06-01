@@ -23,6 +23,8 @@
 #include "WinUWP_Cursor.h"
 #include "WinUWP_Window.h"
 
+using namespace Windows::UI::ViewManagement;
+
 #define DX12_RENDERSYS ((DirectX12_RenderSystem*)rendersys)
 
 namespace april
@@ -44,7 +46,10 @@ namespace april
 
 	bool WinUWP_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
-		fullscreen = true; // WinUWP is always fullscreen
+		Rect rect = CoreWindow::GetForCurrentThread()->Bounds;
+		w = (int)rect.Width;
+		h = (int)rect.Height;
+		fullscreen = ApplicationView::GetForCurrentView()->IsFullScreenMode; // WinUWP is always fullscreen
 		if (!Window::create(w, h, fullscreen, title, options))
 		{
 			return false;
@@ -126,17 +131,11 @@ namespace april
 
 	void WinUWP_Window::setResolution(int w, int h, bool fullscreen)
 	{
+		this->width = w;
+		this->height = h;
+		this->_setRenderSystemResolution(w, h, fullscreen);
 	}
 
-	void WinUWP_Window::changeSize(float w, float h)
-	{
-		april::getSystemInfo(); // so the displayResolution value gets updated
-		float dpiRatio = WinUWP::getDpiRatio();
-		this->width = hround(w * dpiRatio);
-		this->height = hround(h * dpiRatio);
-		this->_setRenderSystemResolution();
-	}
-	
 	void WinUWP_Window::presentFrame()
 	{
 	}

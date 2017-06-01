@@ -93,6 +93,7 @@ namespace april
 		void OnDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args);
 
 		void _updateWindowSize(float width, float height);
+
 	private:
 		bool running;
 		/*

@@ -494,6 +494,10 @@ namespace april
 	{
 		april::window->create(w, h, fullscreen, title, options);
 		april::rendersys->assignWindow(april::window);
+		// one special hack for one special backend
+#ifdef _WINUWP
+		april::rendersys->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
+#endif
 		april::rendersys->getCaps(); // calling getCaps() is required here so it's initialized on certain platforms
 		april::rendersys->clear(); // initial clear backbuffer
 	}

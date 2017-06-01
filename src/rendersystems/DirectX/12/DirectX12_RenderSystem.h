@@ -77,14 +77,11 @@ namespace april
 		HL_DEFINE_GET(ComPtr<ID3D12DescriptorHeap>, srvHeap, SrvHeap);
 		HL_DEFINE_GET(CD3DX12_HEAP_PROPERTIES, uploadHeapProperties, UploadHeapProperties);
 		
-		//ID3D12CommandQueue* getCommandQueue() const { return this->commandQueue.Get(); }
-		
 		Image::Format getNativeTextureFormat(Image::Format format) const;
 		unsigned int getNativeColorUInt(const april::Color& color) const;
 		Image* takeScreenshot(Image::Format format);
 		void presentFrame();
 
-		void updateWindowSize(bool reconfigureIfChanged = true);
 		void updateDeviceReset();
 
 		void executeCurrentCommands();
@@ -132,8 +129,6 @@ namespace april
 		unsigned int cbvDescSize;
 
 		// cached device properties
-		Size d3dRenderTargetSize;
-		Size outputSize;
 		Size logicalSize;
 		DisplayOrientations nativeOrientation;
 		DisplayOrientations currentOrientation;

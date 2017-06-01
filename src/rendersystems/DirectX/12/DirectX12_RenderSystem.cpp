@@ -43,9 +43,6 @@
 		name = (DirectX12_ ## type ## Shader*)this->create ## type ## ShaderFromResource(SHADER_PATH #type "Shader_" #file ".cso"); \
 	}
 
-#define _SELECT_SHADER(useTexture, useColor, type) \
-	(useTexture ? (useColor ? this->shaderColoredTextured ## type : this->shaderTextured ## type) : (useColor ? this->shaderColored ## type : this->shader ## type));
-
 using namespace Microsoft::WRL;
 using namespace Windows::Graphics::Display;
 
@@ -112,7 +109,6 @@ namespace april
 
 	bool DirectX12_RenderSystem::_deviceCreate(Options options)
 	{
-		this->setViewport(grect(0.0f, 0.0f, april::getSystemInfo().displayResolution));
 		return true;
 	}
 
@@ -211,7 +207,12 @@ namespace april
 		++this->fenceValues[this->currentFrame];
 		this->fenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
 		// configure device
-		this->updateWindowSize(false);
+		this->coreWindow = CoreWindow::GetForCurrentThread();
+		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();
+		this->nativeOrientation = displayInformation->NativeOrientation;
+		this->logicalSize = Windows::Foundation::Size((float)((WinUWP_Window*)window)->getWidth(), (float)((WinUWP_Window*)window)->getHeight());
+		this->currentOrientation = displayInformation->CurrentOrientation;
+		this->dpi = displayInformation->LogicalDpi;
 		this->_configureDevice();
 		// default shaders
 		LOAD_SHADER(this->vertexShaderPlain, Vertex, Plain);
@@ -326,7 +327,7 @@ namespace april
 		state.RasterizerState.AntialiasedLineEnable = false;
 		state.RasterizerState.ForcedSampleCount = 0;
 		state.RasterizerState.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
-		state.RTVFormats[0] = DXGI_FORMAT_B8G8R8A8_UNORM;
+		state.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 		for_iter (i, 1, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT)
 		{
 			state.RTVFormats[i] = DXGI_FORMAT_UNKNOWN;
@@ -465,8 +466,11 @@ namespace april
 		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		this->_deviceClear(true);
+		this->setOrthoProjection(gvec2((float)window->getWidth(), (float)window->getHeight()));
+		this->setViewport(grect(0.0f, 0.0f, (float)window->getWidth(), (float)window->getHeight()));
 		this->presentFrame();
 		this->setOrthoProjection(gvec2((float)window->getWidth(), (float)window->getHeight()));
+		this->setViewport(grect(0.0f, 0.0f, (float)window->getWidth(), (float)window->getHeight()));
 	}
 
 	void DirectX12_RenderSystem::_deviceReset()
@@ -509,34 +513,21 @@ namespace april
 
 	void DirectX12_RenderSystem::_configureDevice()
 	{
-		this->_waitForGpu();
-		for_iter (i, 0, FRAME_COUNT)
-		{
-			this->renderTargets[i] = nullptr;
-			this->fenceValues[i] = this->fenceValues[this->currentFrame];
-		}
 		// swap chain
 		float dpiRatio = WinUWP::getDpiRatio(this->dpi);
-		this->outputSize.Width = (float)hmax(hround(this->logicalSize.Width * dpiRatio), 1);
-		this->outputSize.Height = (float)hmax(hround(this->logicalSize.Width * dpiRatio), 1);
+		Size outputSize((float)hmax(hround(this->logicalSize.Width * dpiRatio), 1), (float)hmax(hround(this->logicalSize.Height * dpiRatio), 1));
 		DXGI_MODE_ROTATION displayRotation = this->_getDxgiRotation();
-		if (displayRotation != DXGI_MODE_ROTATION_ROTATE90 && displayRotation != DXGI_MODE_ROTATION_ROTATE270)
+		if (displayRotation == DXGI_MODE_ROTATION_ROTATE90 || displayRotation == DXGI_MODE_ROTATION_ROTATE270)
 		{
-			this->d3dRenderTargetSize.Width = this->outputSize.Width;
-			this->d3dRenderTargetSize.Height = this->outputSize.Height;
-		}
-		else
-		{
-			this->d3dRenderTargetSize.Width = this->outputSize.Height;
-			this->d3dRenderTargetSize.Height = this->outputSize.Width;
+			hswap(outputSize.Width, outputSize.Height);
 		}
 		if (this->swapChain != nullptr)
 		{
-			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
+			this->_resizeSwapChain((int)outputSize.Width, (int)outputSize.Height);
 		}
 		else
 		{
-			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
+			this->_createSwapChain((int)outputSize.Width, (int)outputSize.Height);
 		}
 		// other
 		CD3DX12_DESCRIPTOR_RANGE ranges[3];
@@ -611,7 +602,7 @@ namespace april
 		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
 		swapChainDesc.Width = width;
 		swapChainDesc.Height = height;
-		swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		swapChainDesc.Stereo = false;
 		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.SampleDesc.Quality = 0;
@@ -630,8 +621,15 @@ namespace april
 
 	void DirectX12_RenderSystem::_resizeSwapChain(int width, int height)
 	{
-		// If the swap chain already exists, resize it.
-		HRESULT hr = this->swapChain->ResizeBuffers(FRAME_COUNT, width, height, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+		this->executeCurrentCommands();
+		this->waitForCommands();
+		this->_waitForGpu();
+		for_iter (i, 0, FRAME_COUNT)
+		{
+			this->renderTargets[i] = nullptr;
+			this->fenceValues[i] = this->fenceValues[this->currentFrame];
+		}
+		HRESULT hr = this->swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
 			// If the device was removed for any reason, a new device and swap chain will need to be created.
@@ -642,6 +640,7 @@ namespace april
 		}
 		_TRY_UNSAFE(hr, "Unable to resize swap chain buffers!");
 		this->_configureSwapChain(width, height);
+		this->prepareNewCommands();
 	}
 
 	void DirectX12_RenderSystem::_configureSwapChain(int width, int height)
@@ -739,55 +738,35 @@ namespace april
 
 	void DirectX12_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
 	{
-		if (this->swapChain != nullptr)
+		this->coreWindow = CoreWindow::GetForCurrentThread();
+		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();
+		this->nativeOrientation = displayInformation->NativeOrientation;
+		bool changed = false;
+		Size newLogicalSize(this->coreWindow->Bounds.Width, this->coreWindow->Bounds.Height);
+		if (this->logicalSize != newLogicalSize)
 		{
-			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
+			this->logicalSize = newLogicalSize;
+			changed = true;
 		}
-		else
+		if (this->currentOrientation != displayInformation->CurrentOrientation)
 		{
-			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
+			this->currentOrientation = displayInformation->CurrentOrientation;
+			changed = true;
+		}
+		if (this->dpi != displayInformation->LogicalDpi)
+		{
+			this->dpi = displayInformation->LogicalDpi;
+			changed = true;
+		}
+		if (changed)
+		{
+			this->_configureDevice();
 		}
 	}
 
 	void DirectX12_RenderSystem::_setDeviceViewport(cgrect rect)
 	{
-		grect viewport = rect;
-		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
-		gvec2 resolution = april::getSystemInfo().displayResolution;
-		int w = april::window->getWidth();
-		int h = april::window->getHeight();
-		if (viewport.x < 0.0f)
-		{
-			viewport.w += viewport.x;
-			viewport.x = 0.0f;
-		}
-		if (viewport.y < 0.0f)
-		{
-			viewport.h += viewport.y;
-			viewport.y = 0.0f;
-		}
-		viewport.w = hclamp(viewport.w, 0.0f, hmax(w - viewport.x, 0.0f));
-		viewport.h = hclamp(viewport.h, 0.0f, hmax(h - viewport.y, 0.0f));
-		if (viewport.w > 0.0f && viewport.h > 0.0f)
-		{
-			viewport.x = hclamp(viewport.x, 0.0f, (float)w);
-			viewport.y = hclamp(viewport.y, 0.0f, (float)h);
-		}
-		else
-		{
-			viewport.set((float)w, (float)h, 0.0f, 0.0f);
-		}
-		// setting the system viewport
-		D3D12_VIEWPORT dx12Viewport;
-		dx12Viewport.MinDepth = D3D12_MIN_DEPTH;
-		dx12Viewport.MaxDepth = D3D12_MAX_DEPTH;
-		// these double-casts are to ensure consistent behavior among rendering systems
-		dx12Viewport.TopLeftX = (float)(int)viewport.x;
-		dx12Viewport.TopLeftY = (float)(int)viewport.y;
-		dx12Viewport.Width = (float)(int)viewport.w;
-		dx12Viewport.Height = (float)(int)viewport.h;
-		// TODOuwp
-		//this->d3dDeviceContext->RSSetViewports(1, &dx12Viewport);
+		// not used
 	}
 
 	void DirectX12_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)
@@ -812,7 +791,8 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceTexture(Texture* texture)
 	{
-		// not used
+		// not really the constant buffer, but the texture update
+		this->deviceState_constantBufferChanged = true;
 	}
 
 	void DirectX12_RenderSystem::_setDeviceTextureFilter(const Texture::Filter& textureFilter)
@@ -995,10 +975,36 @@ namespace april
 		{
 			this->commandList->SetGraphicsRootDescriptorTable(1, ((DirectX12_Texture*)this->deviceState->texture)->srvHeap->GetGPUDescriptorHandleForHeapStart());
 		}
-
-
 		grect viewport = this->getViewport();
-		// Set the viewport and scissor rectangle.
+		// this used to be needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
+		// maybe it will be needed for WinUWP as well
+		/*
+		gvec2 resolution = april::getSystemInfo().displayResolution;
+		int w = april::window->getWidth();
+		int h = april::window->getHeight();
+		if (viewport.x < 0.0f)
+		{
+			viewport.w += viewport.x;
+			viewport.x = 0.0f;
+		}
+		if (viewport.y < 0.0f)
+		{
+			viewport.h += viewport.y;
+			viewport.y = 0.0f;
+		}
+		viewport.w = hclamp(viewport.w, 0.0f, hmax(w - viewport.x, 0.0f));
+		viewport.h = hclamp(viewport.h, 0.0f, hmax(h - viewport.y, 0.0f));
+		if (viewport.w > 0.0f && viewport.h > 0.0f)
+		{
+			viewport.x = hclamp(viewport.x, 0.0f, (float)w);
+			viewport.y = hclamp(viewport.y, 0.0f, (float)h);
+		}
+		else
+		{
+			viewport.set((float)w, (float)h, 0.0f, 0.0f);
+		}
+		*/
+		// setting the system viewport
 		D3D12_VIEWPORT dx12Viewport;
 		dx12Viewport.MinDepth = D3D12_MIN_DEPTH;
 		dx12Viewport.MaxDepth = D3D12_MAX_DEPTH;
@@ -1007,9 +1013,8 @@ namespace april
 		dx12Viewport.TopLeftY = (float)(int)viewport.y;
 		dx12Viewport.Width = (float)(int)viewport.w;
 		dx12Viewport.Height = (float)(int)viewport.h;
-
 		this->commandList->RSSetViewports(1, &dx12Viewport);
-		D3D12_RECT scissorRect = { 0, 0, static_cast<LONG>(dx12Viewport.Width), static_cast<LONG>(dx12Viewport.Height) };
+		D3D12_RECT scissorRect = { (LONG)dx12Viewport.TopLeftX, (LONG)dx12Viewport.TopLeftY, (LONG)dx12Viewport.Width, (LONG)dx12Viewport.Height };
 		this->commandList->RSSetScissorRects(1, &scissorRect);
 
 		D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = this->dsvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -1098,43 +1103,6 @@ namespace april
 			// do stuff
 		}
 		*/
-	}
-
-	void DirectX12_RenderSystem::updateWindowSize(bool reconfigureIfChanged)
-	{
-		this->coreWindow = CoreWindow::GetForCurrentThread();
-		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();
-		this->nativeOrientation = displayInformation->NativeOrientation;
-		if (reconfigureIfChanged)
-		{
-			bool changed = false;
-			Size newLogicalSize(this->coreWindow->Bounds.Width, this->coreWindow->Bounds.Height);
-			if (this->logicalSize != newLogicalSize)
-			{
-				this->logicalSize != newLogicalSize;
-				changed = true;
-			}
-			if (this->currentOrientation != displayInformation->CurrentOrientation)
-			{
-				this->currentOrientation = displayInformation->CurrentOrientation;
-				changed = true;
-			}
-			if (this->dpi != displayInformation->LogicalDpi)
-			{
-				this->dpi = displayInformation->LogicalDpi;
-				changed = true;
-			}
-			if (changed)
-			{
-				this->_configureDevice();
-			}
-		}
-		else
-		{
-			this->logicalSize = Windows::Foundation::Size(this->coreWindow->Bounds.Width, this->coreWindow->Bounds.Height);
-			this->currentOrientation = displayInformation->CurrentOrientation;
-			this->dpi = displayInformation->LogicalDpi;
-		}
 	}
 
 	DXGI_MODE_ROTATION DirectX12_RenderSystem::_getDxgiRotation() const

@@ -44,6 +44,7 @@ grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
 gvec2 size = drawRect.getSize() * 5 / 16;
+april::Color backgroundColor = april::Color::Aqua;
 
 class Ball
 {
@@ -56,7 +57,7 @@ private:
 public:
 	Ball()
 	{
-		this->position.set((float)hrand((int)april::window->getSize().x - size), (float)hrand((int)april::window->getSize().y - size));
+		this->position.set((float)hrand((int)drawRect.w - size), (float)hrand((int)drawRect.h - size));
 		this->velocity.set((float)speed, (float)speed);
 	}
 
@@ -64,13 +65,13 @@ public:
 	{
 		this->position += this->velocity * timeDelta;
 
-		if (this->position.x < 0 || this->position.x > april::window->getSize().x - size)
+		if (this->position.x < 0 || this->position.x > drawRect.w - size)
 		{
 			this->position -= this->velocity * timeDelta;
 			this->velocity.x = -this->velocity.x;
 		}
 
-		if (this->position.y < 0 || this->position.y > april::window->getSize().y - size)
+		if (this->position.y < 0 || this->position.y > drawRect.h - size)
 		{
 			this->position -= this->velocity * timeDelta;
 			this->velocity.y = -this->velocity.y;
@@ -100,6 +101,7 @@ class UpdateDelegate : public april::UpdateDelegate
 	{	
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);	
+		april::rendersys->drawFilledRect(drawRect, backgroundColor);
 		foreach (Ball, it, balls)
 		{
 			it->update(timeDelta);

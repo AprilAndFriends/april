@@ -63,9 +63,9 @@ namespace april
 			memset((unsigned char*)textureData.pData, 0, dummySize);
 		}
 		// texture
-		textureData.RowPitch = this->width * this->getBpp();
+		textureData.RowPitch = this->width * bpp;
 		textureData.SlicePitch = textureData.RowPitch * this->height;
-		CD3DX12_RESOURCE_DESC textureDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, this->width, this->height);
+		CD3DX12_RESOURCE_DESC textureDesc = CD3DX12_RESOURCE_DESC::Tex2D(this->dxgiFormat, this->width, this->height);
 		CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
 		HRESULT hr = D3D_DEVICE->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &textureDesc,
 			D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->d3dTexture));
@@ -134,17 +134,17 @@ namespace april
 	void DirectX12_Texture::_assignFormat()
 	{
 		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-		if (nativeFormat == Image::Format::BGRA)
+		if (nativeFormat == Image::Format::RGBA)
 		{
-			this->dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
+			this->dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 		}
-		else if (nativeFormat == Image::Format::BGRX)
+		else if (nativeFormat == Image::Format::RGBX)
 		{
-			this->dxgiFormat = DXGI_FORMAT_B8G8R8X8_UNORM;
+			this->dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 		}
 		else if (nativeFormat == Image::Format::Alpha)
 		{
-			this->dxgiFormat = DXGI_FORMAT_R8_UNORM;
+			this->dxgiFormat = DXGI_FORMAT_A8_UNORM;
 		}
 		else if (nativeFormat == Image::Format::Greyscale)
 		{
@@ -152,11 +152,11 @@ namespace april
 		}
 		else if (nativeFormat == Image::Format::Palette)
 		{
-			this->dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM; // TODOaa - needs changing
+			this->dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM; // TODOaa - needs changing
 		}
 		else
 		{
-			this->dxgiFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
+			this->dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 		}
 	}
 
@@ -207,7 +207,7 @@ namespace april
 					textureData.pData = this->data;
 					textureData.RowPitch = this->width * this->getBpp();
 					textureData.SlicePitch = textureData.RowPitch * this->height;
-					CD3DX12_RESOURCE_DESC textureDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, this->width, this->height);
+					CD3DX12_RESOURCE_DESC textureDesc = CD3DX12_RESOURCE_DESC::Tex2D(this->dxgiFormat, this->width, this->height);
 					ComPtr<ID3D12GraphicsCommandList> commandList = DX12_RENDERSYS->getCommandList();
 					UpdateSubresources(commandList.Get(), this->d3dTexture.Get(), textureUploadHeap.Get(), 0, 0, 1, &textureData);
 					commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));

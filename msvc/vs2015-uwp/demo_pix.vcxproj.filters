@@ -165,6 +165,15 @@
     <Image Include="media\logo.png">
       <Filter>winrt\media</Filter>
     </Image>
+    <Image Include="media\bloom.png">
+      <Filter>winrt\media</Filter>
+    </Image>
+    <Image Include="media\camo.jpg">
+      <Filter>winrt\media</Filter>
+    </Image>
+    <Image Include="media\cursor.png">
+      <Filter>winrt\media</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="media\cursor.ani">
@@ -175,6 +184,27 @@
     </None>
     <None Include="..\..\demos\demo_pix\TemporaryKey.pfx">
       <Filter>winrt</Filter>
+    </None>
+    <None Include="media\etc1.etcx">
+      <Filter>winrt\media</Filter>
+    </None>
+    <None Include="media\pix.webp">
+      <Filter>winrt\media</Filter>
+    </None>
+    <None Include="media\pvr_RGB2.pvr">
+      <Filter>winrt\media</Filter>
+    </None>
+    <None Include="media\pvr_RGB4.pvr">
+      <Filter>winrt\media</Filter>
+    </None>
+    <None Include="media\pvr_RGBA2.pvr">
+      <Filter>winrt\media</Filter>
+    </None>
+    <None Include="media\pvr_RGBA4.pvr">
+      <Filter>winrt\media</Filter>
+    </None>
+    <None Include="media\rgb_only.etcx">
+      <Filter>winrt\media</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -27,31 +27,9 @@
 
 using namespace concurrency;
 using namespace Windows::ApplicationModel;
-/*
-using namespace Windows::ApplicationModel::Activation;
-using namespace Windows::ApplicationModel::Core;
-*/
 using namespace Windows::Foundation;
 using namespace Windows::UI::Core;
-/*
 using namespace Windows::UI::ViewManagement;
-using namespace Windows::UI::Xaml;
-using namespace Windows::UI::Xaml::Controls;
-using namespace Windows::UI::Xaml::Controls::Primitives;
-using namespace Windows::UI::Xaml::Media;
-#ifdef _WINP8
-using namespace Windows::Phone::UI::Input;
-#endif
-
-#define MANIFEST_FILENAME "AppxManifest.xml"
-#ifndef _WINP8
-#define NODE_PREFIX "m2:"
-#define SPLASH_WIDTH 620
-#define SPLASH_HEIGHT 300
-#else
-#define NODE_PREFIX "m3:"
-#endif
-*/
 
 #define DX12_RENDERSYS ((DirectX12_RenderSystem*)rendersys)
 
@@ -87,9 +65,9 @@ namespace april
 		applicationView->Activated += ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &WinUWP_App::OnActivated);
 		CoreApplication::Suspending += ref new EventHandler<SuspendingEventArgs^>(this, &WinUWP_App::OnSuspending);
 		CoreApplication::Resuming += ref new EventHandler<Platform::Object^>(this, &WinUWP_App::OnResuming);
+
+
 		/*
-		this->Suspending += ref new SuspendingEventHandler(this, &WinUWP_App::OnSuspend);
-		this->Resuming += ref new EventHandler<Object^>(this, &WinUWP_App::OnResume);
 #ifdef _DEBUG
 		this->UnhandledException += ref new UnhandledExceptionEventHandler([](Object^ sender, UnhandledExceptionEventArgs^ args)
 		{
@@ -216,7 +194,6 @@ namespace april
 	{
 		CoreWindow^ window = CoreWindow::GetForCurrentThread();
 		this->_updateWindowSize(window->Bounds.Width, window->Bounds.Height);
-		this->_resetTouches();
 	}
 
 	void WinUWP_App::OnDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args)
@@ -224,21 +201,14 @@ namespace april
 		//GetDeviceResources()->ValidateDevice();
 	}
 
-
-
-
-
 	void WinUWP_App::_updateWindowSize(float width, float height)
 	{
-		if (april::rendersys != NULL)
-		{
-			DX12_RENDERSYS->updateWindowSize();
-		}
-		this->_resetTouches();
+		hlog::errorf("OK", "%g %g", width, height);
 		getSystemInfo(); // so the displayResolution value gets updated
+		this->_resetTouches();
 		if (april::window != NULL)
 		{
-			((WinUWP_Window*)april::window)->changeSize(width, height);
+			april::window->setResolution((int)width, (int)height, ApplicationView::GetForCurrentView()->IsFullScreenMode);
 		}
 	}
 

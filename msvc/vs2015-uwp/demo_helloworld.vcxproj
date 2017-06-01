@@ -174,6 +174,9 @@
     <Image Include="media\assets\WideLogo.scale-150.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="media\bloom.png" />
+    <Image Include="media\camo.jpg" />
+    <Image Include="media\cursor.png" />
     <Image Include="media\icon.png" />
     <Image Include="media\jpt_raw.jpg" />
     <Image Include="media\jpt_raw.png" />
@@ -186,8 +189,33 @@
     <Image Include="media\texture.jpg" />
     <Image Include="media\x.png" />
     <Image Include="media\jpt_final.jpt" />
-    <None Include="media\cursor.ani" />
-    <None Include="media\simple.cur" />
+    <None Include="media\cursor.ani">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\etc1.etcx">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\pix.webp">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\pvr_RGB2.pvr">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\pvr_RGB4.pvr">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\pvr_RGBA2.pvr">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\pvr_RGBA4.pvr">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\rgb_only.etcx">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="media\simple.cur">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="..\..\demos\demo_helloworld\TemporaryKey.pfx">
       <FileType>Document</FileType>
     </None>
