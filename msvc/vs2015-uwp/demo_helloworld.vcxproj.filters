@@ -183,7 +183,7 @@
       <Filter>winuwp\media</Filter>
     </None>
     <None Include="..\..\demos\demo_helloworld\TemporaryKey.pfx">
-      <Filter>winrt</Filter>
+      <Filter>winuwp</Filter>
     </None>
     <None Include="media\etc1.etcx">
       <Filter>winuwp\media</Filter>
@@ -212,7 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\demos\demo_helloworld\winrt-cursors.rc">
-      <Filter>winrt</Filter>
+      <Filter>winuwp</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>
