@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="april.App">
-      <uap:VisualElements DisplayName="App" Square150x150Logo="media\assets\Logo.png" Square44x44Logo="media\assets\LogoTiny.png" Description="April Demo" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="App" Square150x150Logo="media\assets\Logo.png" Square44x44Logo="media\assets\LogoTiny.png" Description="April Demo Tic Tac Toe" BackgroundColor="transparent">
         <uap:LockScreen Notification="badge" BadgeLogo="media\assets\LogoBadge.png" />
         <uap:DefaultTile Wide310x150Logo="media\assets\WideLogo.png" Square71x71Logo="media\assets\LogoSmall.png" Square310x310Logo="media\assets\LogoBig.png">
           <uap:ShowNameOnTiles>

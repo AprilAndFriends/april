@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="com.april.demoHelloworld" Publisher="CN=April" Version="5.0.0.0" />
+  <Identity Name="com.april.demoHelloWorld" Publisher="CN=April" Version="5.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="6afa13ff-2b98-4e9b-ac0d-b7bbd29329ab" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>April Demo Hello World</DisplayName>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="april.App">
-      <uap:VisualElements DisplayName="App" Square150x150Logo="media\assets\Logo.png" Square44x44Logo="media\assets\LogoTiny.png" Description="April Demo" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="App" Square150x150Logo="media\assets\Logo.png" Square44x44Logo="media\assets\LogoTiny.png" Description="April Demo Hello World" BackgroundColor="transparent">
         <uap:LockScreen Notification="badge" BadgeLogo="media\assets\LogoBadge.png" />
         <uap:DefaultTile Wide310x150Logo="media\assets\WideLogo.png" Square71x71Logo="media\assets\LogoSmall.png" Square310x310Logo="media\assets\LogoBig.png">
           <uap:ShowNameOnTiles>

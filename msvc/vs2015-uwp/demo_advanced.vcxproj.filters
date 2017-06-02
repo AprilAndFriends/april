@@ -40,7 +40,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\demos\demo_simple\demo_simple.cpp">
+    <ClCompile Include="..\..\demos\demo_advanced\demo_advanced.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -182,7 +182,7 @@
     <None Include="media\simple.cur">
       <Filter>winuwp\media</Filter>
     </None>
-    <None Include="..\..\demos\demo_simple\TemporaryKey.pfx">
+    <None Include="..\..\demos\demo_advanced\TemporaryKey.pfx">
       <Filter>winrt</Filter>
     </None>
     <None Include="media\etc1.etcx">
@@ -208,10 +208,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="..\..\demos\demo_simple\Package-uwp.appxmanifest" />
+    <AppxManifest Include="..\..\demos\demo_advanced\Package-uwp.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\demos\demo_simple\winrt-cursors.rc">
+    <ResourceCompile Include="..\..\demos\demo_advanced\winrt-cursors.rc">
       <Filter>winrt</Filter>
     </ResourceCompile>
   </ItemGroup>

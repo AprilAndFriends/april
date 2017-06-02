@@ -54,8 +54,8 @@
     <ClCompile Include="..\..\demos\demo_advanced\demo_advanced.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8ED4EDB5-7C0A-411F-BCC6-E96882CC73F3}</ProjectGuid>
-    <RootNamespace>demo_simple</RootNamespace>
+    <ProjectGuid>{220BF603-2D51-41BA-BE06-3064985A9944}</ProjectGuid>
+    <RootNamespace>demo_advanced</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props-demos\default.props" />
