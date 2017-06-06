@@ -24,6 +24,8 @@ using namespace Windows::Graphics::Display;
 
 namespace april
 {
+	ref class WinUWP_App;
+
 	class WinUWP
 	{
 	public:
@@ -33,7 +35,7 @@ namespace april
 		static void (*Destroy)();
 		static harray<hstr> Args;
 		static WinUWP_App^ App;
-		static float inline getDpiRatio() { return (DisplayInformation::GetForCurrentView()->LogicalDpi / 96.0f); }
+		static float inline getDpiRatio() { return getDpiRatio(DisplayInformation::GetForCurrentView()->LogicalDpi); }
 		static float inline getDpiRatio(float dpi) { return (dpi / 96.0f); }
 
 	private:
