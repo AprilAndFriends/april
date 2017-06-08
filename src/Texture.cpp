@@ -617,7 +617,7 @@ namespace april
 		}
 		bool hasData = (this->data != NULL || this->dataAsync != NULL);
 		lock.release();
-		if (!hasData && ((this->type != Type::Volatile && this->type != Type::RenderTarget) || this->width == 0 || this->height == 0))
+		if (!hasData && this->type != Type::Volatile && this->type != Type::RenderTarget && (this->width == 0 || this->height == 0))
 		{
 			if (this->filename == "")
 			{
