@@ -91,5 +91,12 @@ namespace aprilpix
 		return image;		
 	}
 
+	/*
+	bool ImagePvr::save(hsbase& stream, april::Image* image)
+	{
+		return false;
+	}
+	*/
+
 }
 #endif

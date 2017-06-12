@@ -242,10 +242,12 @@ namespace april
 	HL_ENUM_CLASS_DEFINE(Image::FileFormat,
 	(
 		HL_ENUM_DEFINE(Image::FileFormat, Png);
+		HL_ENUM_DEFINE(Image::FileFormat, Custom);
 	));
 
 	hmap<hstr, Image* (*)(hsbase&)> Image::customLoaders;
 	hmap<hstr, Image* (*)(hsbase&)> Image::customMetaDataLoaders;
+	hmap<hstr, bool (*)(hsbase&, Image*)> Image::customSavers;
 
 	Image::Image()
 	{
@@ -782,15 +784,21 @@ namespace april
 		return image;
 	}
 
-	bool Image::save(Image* image, chstr filename, Image::FileFormat format)
+	bool Image::save(Image* image, chstr filename, Image::FileFormat format, chstr customExtension)
 	{
-		if (format != FileFormat::Png)
+		if (format == FileFormat::Png)
 		{
-			return false;
+			hfile file;
+			file.open(filename, hfaccess::Write);
+			return Image::_savePng(file, image);
 		}
-		hfile file;
-		file.open(filename, hfaccess::Write);
-		return Image::_savePng(file, image);
+		if (format == FileFormat::Custom && Image::customSavers.hasKey(customExtension))
+		{
+			hfile file;
+			file.open(filename, hfaccess::Write);
+			return (*Image::customSavers[customExtension])(file, image);
+		}
+		return false;
 	}
 
 	Image* Image::readMetaDataFromResource(chstr filename)
@@ -2405,6 +2413,11 @@ namespace april
 	{
 		Image::customLoaders[extension] = loadFunction;
 		Image::customMetaDataLoaders[extension] = metaDataLoadfunction;
+	}
+
+	void Image::registerCustomSaver(chstr extension, bool (*saveFunction)(hsbase&, Image*))
+	{
+		Image::customSavers[extension] = saveFunction;
 	}
 
 }

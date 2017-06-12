@@ -26,6 +26,7 @@ namespace aprilpix
 
 		static april::Image* load(hsbase& stream);
 		static april::Image* loadMetaData(hsbase& stream);
+		//static bool save(hsbase& stream, april::Image*);
 	
 	protected:
 		ImagePvr();

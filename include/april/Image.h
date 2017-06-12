@@ -114,8 +114,11 @@ namespace april
 		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, FileFormat,
 		(
 			/// @var static const FileFormat FileFormat::Png
-			/// @brief Defined PNG.
+			/// @brief Defines PNG.
 			HL_ENUM_DECLARE(FileFormat, Png);
+			/// @var static const FileFormat FileFormat::Custom
+			/// @brief Defines a custom format.
+			HL_ENUM_DECLARE(FileFormat, Custom);
 		));
 
 		/// @brief The raw image data.
@@ -578,8 +581,9 @@ namespace april
 		/// @param[in] image The Image to be saved.
 		/// @param[in] filename The filename.
 		/// @param[in] format The file format of the file.
+		/// @param[in] customExtension Used when format is Customto determine which custom format should be saved.
 		/// @return True if successful.
-		static bool save(Image* image, chstr filename, FileFormat format);
+		static bool save(Image* image, chstr filename, FileFormat format, chstr customExtension = "");
 		/// @brief Creates an Image without image data, but with meta-data from a resource file.
 		/// @param[in] filename The filename of the resource file.
 		/// @return The loaded Image object or NULL if failed.
@@ -878,6 +882,12 @@ namespace april
 		/// @note The loading function will only be triggered if the extension is added with april::setTextureExtensions as well.
 		/// @see setTextureExtensions
 		static void registerCustomLoader(chstr extension, Image* (*loadFunction)(hsbase&), Image* (*metaDataLoadfunction)(hsbase&));
+		/// @brief Registers a custom image saver for custom image formats.
+		/// @param[in] extension Filename extension.
+		/// @param[in] saveFunction The function pointer to use for loading the Image.
+		/// @note The saving function will only be triggered if the extension is added with april::setTextureExtensions as well.
+		/// @see setTextureExtensions
+		static void registerCustomSaver(chstr extension, bool (*saveFunction)(hsbase&, Image*));
 
 	protected:
 		/// @brief Basic constructor.
@@ -890,6 +900,8 @@ namespace april
 		static hmap<hstr, Image* (*)(hsbase&)> customLoaders;
 		/// @brief Custom image format meta data loaders.
 		static hmap<hstr, Image* (*)(hsbase&)> customMetaDataLoaders;
+		/// @brief Custom image format savers.
+		static hmap<hstr, bool (*)(hsbase&, Image*)> customSavers;
 
 		/// @brief Loads and decodes PNG file data.
 		/// @param[in] stream The encoded image data stream.

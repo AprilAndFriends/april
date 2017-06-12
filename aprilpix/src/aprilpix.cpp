@@ -33,6 +33,7 @@ namespace aprilpix
 #endif
 #ifdef _PVR
 		april::Image::registerCustomLoader(".pvr", &ImagePvr::load, &ImagePvr::loadMetaData);
+		//april::Image::registerCustomSaver(".pvr", &ImagePvr::save);
 #endif
 	}
 
