@@ -44,7 +44,7 @@ bool CustomWindow::create(int w, int h, bool fullscreen, chstr title, april::Win
 	{
 		return false;
 	}
-	this->inputMode = MOUSE;
+	this->inputMode = april::InputMode::Mouse;
 	// Win32
 	WNDCLASSEXW wc;
 	memset(&wc, 0, sizeof(WNDCLASSEX));
@@ -101,21 +101,21 @@ bool CustomWindow::destroy()
 	return true;
 }
 
-int CustomWindow::getWidth()
+int CustomWindow::getWidth() const
 {
 	RECT rect;
 	GetClientRect(this->hWnd, &rect);
 	return (rect.right - rect.left);
 }
 
-int CustomWindow::getHeight()
+int CustomWindow::getHeight() const
 {
 	RECT rect;
 	GetClientRect(this->hWnd, &rect);
 	return (rect.bottom - rect.top);
 }
 
-void* CustomWindow::getBackendId()
+void* CustomWindow::getBackendId() const
 {
 	return this->hWnd;
 }
@@ -180,14 +180,14 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 			if (_doubleTapDown)
 			{
 				_doubleTapDown = false;
-				april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), april::AK_DOUBLETAP);
+				april::window->queueMouseEvent(MouseInputEvent::Type::Up, april::window->getCursorPosition(), april::Key::DoubleTap);
 			}
 			_touchDown = false;
 		}
 		else if (wParam == 6) // GID_TWOFINGERTAP
 		{
 			_doubleTapDown = true;
-			april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), april::AK_DOUBLETAP);
+			april::window->queueMouseEvent(MouseInputEvent::Type::Down, april::window->getCursorPosition(), april::Key::DoubleTap);
 		}
 		break;
 	case 0x011A: // WM_GESTURENOTIFY (win7+ only)
@@ -229,7 +229,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 				return 0;
 			}
 		}
-		april::window->queueKeyEvent(KEY_DOWN, (april::Key)wParam, 0);
+		april::window->queueKeyEvent(KeyInputEvent::Type::Down, april::Key::fromInt(wParam), 0);
 		return 0;
 	case WM_SYSKEYUP:
 		if (wParam == VK_MENU)
@@ -238,15 +238,15 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		}
 		// no break here, because this is still an input message that needs to be processed normally
 	case WM_KEYUP:
-		april::window->queueKeyEvent(KEY_UP, (april::Key)wParam, 0);
+		april::window->queueKeyEvent(KeyInputEvent::Type::Up, april::Key::fromInt((int)wParam), 0);
 		return 0;
 	case WM_CHAR:
-		april::window->queueKeyEvent(KEY_DOWN, april::AK_NONE, wParam);
+		april::window->queueKeyEvent(KeyInputEvent::Type::Down, april::Key::None, wParam);
 		break;
 	case WM_LBUTTONDOWN:
 		_touchDown = true;
 		_mouseMoveMessagesCount = 0;
-		april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), april::AK_LBUTTON);
+		april::window->queueMouseEvent(MouseInputEvent::Type::Down, april::window->getCursorPosition(), april::Key::MouseL);
 		if (!april::window->isFullscreen())
 		{
 			SetCapture((HWND)april::window->getBackendId());
@@ -255,7 +255,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 	case WM_RBUTTONDOWN:
 		_touchDown = true;
 		_mouseMoveMessagesCount = 0;
-		april::window->queueMouseEvent(MOUSE_DOWN, april::window->getCursorPosition(), april::AK_RBUTTON);
+		april::window->queueMouseEvent(MouseInputEvent::Type::Down, april::window->getCursorPosition(), april::Key::MouseR);
 		if (!april::window->isFullscreen())
 		{
 			SetCapture((HWND)april::window->getBackendId());
@@ -263,7 +263,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		break;
 	case WM_LBUTTONUP:
 		_touchDown = false;
-		april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), april::AK_LBUTTON);
+		april::window->queueMouseEvent(MouseInputEvent::Type::Up, april::window->getCursorPosition(), april::Key::MouseL);
 		if (!april::window->isFullscreen())
 		{
 			ReleaseCapture();
@@ -271,7 +271,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		break;
 	case WM_RBUTTONUP:
 		_touchDown = false;
-		april::window->queueMouseEvent(MOUSE_UP, april::window->getCursorPosition(), april::AK_RBUTTON);
+		april::window->queueMouseEvent(MouseInputEvent::Type::Up, april::window->getCursorPosition(), april::Key::MouseR);
 		if (!april::window->isFullscreen())
 		{
 			ReleaseCapture();
@@ -293,28 +293,28 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		{
 			_mouseMoveMessagesCount = 0;
 		}
-		april::window->queueMouseEvent(MOUSE_MOVE, april::window->getCursorPosition(), april::AK_NONE);
+		april::window->queueMouseEvent(MouseInputEvent::Type::Move, april::window->getCursorPosition(), april::Key::None);
 		break;
 	case WM_MOUSEWHEEL:
 		_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 		if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 		{
-			april::window->queueMouseEvent(MOUSE_SCROLL, gvec2(0.0f, -(float)_wheelDelta), april::AK_NONE);
+			april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), april::Key::None);
 		}
 		else
 		{
-			april::window->queueMouseEvent(MOUSE_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), april::AK_NONE);
+			april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), april::Key::None);
 		}
 		break;
 	case WM_MOUSEHWHEEL:
 		_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 		if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 		{
-			april::window->queueMouseEvent(MOUSE_SCROLL, gvec2(-(float)_wheelDelta, 0.0f), april::AK_NONE);
+			april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), april::Key::None);
 		}
 		else
 		{
-			april::window->queueMouseEvent(MOUSE_SCROLL, gvec2(0.0f, -(float)_wheelDelta), april::AK_NONE);
+			april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), april::Key::None);
 		}
 		break;
 	case WM_ACTIVATE:

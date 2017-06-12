@@ -232,12 +232,12 @@ void CustomRenderSystem::_setDeviceTexture(april::Texture* texture)
 
 void CustomRenderSystem::_setDeviceTextureFilter(const april::Texture::Filter& textureFilter)
 {
-	if (textureFilter == april::Texture::FILTER_LINEAR)
+	if (textureFilter == april::Texture::Filter::Linear)
 	{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	}
-	else if (textureFilter == april::Texture::FILTER_NEAREST)
+	else if (textureFilter == april::Texture::Filter::Nearest)
 	{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -250,12 +250,12 @@ void CustomRenderSystem::_setDeviceTextureFilter(const april::Texture::Filter& t
 
 void CustomRenderSystem::_setDeviceTextureAddressMode(const april::Texture::AddressMode& textureAddressMode)
 {
-	if (textureAddressMode == april::Texture::ADDRESS_WRAP)
+	if (textureAddressMode == april::Texture::AddressMode::Wrap)
 	{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
-	else if (textureAddressMode == april::Texture::ADDRESS_CLAMP)
+	else if (textureAddressMode == april::Texture::AddressMode::Clamp)
 	{
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -266,13 +266,13 @@ void CustomRenderSystem::_setDeviceTextureAddressMode(const april::Texture::Addr
 	}
 }
 
-void CustomRenderSystem::_setDeviceBlendMode(april::BlendMode blendMode)
+void CustomRenderSystem::_setDeviceBlendMode(const april::BlendMode& blendMode)
 {
-	if (blendMode == april::BM_ALPHA || blendMode == april::BM_DEFAULT)
+	if (blendMode == april::BlendMode::Alpha)
 	{
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
-	else if (blendMode == april::BM_ADD)
+	else if (blendMode == april::BlendMode::Add)
 	{
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	}
@@ -283,14 +283,14 @@ void CustomRenderSystem::_setDeviceBlendMode(april::BlendMode blendMode)
 	}
 }
 
-void CustomRenderSystem::_setDeviceColorMode(april::ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const april::Color& systemColor)
+void CustomRenderSystem::_setDeviceColorMode(const april::ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const april::Color& systemColor)
 {
 	static float constColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	constColor[0] = colorModeFactor;
 	constColor[1] = colorModeFactor;
 	constColor[2] = colorModeFactor;
 	constColor[3] = colorModeFactor;
-	if (colorMode == april::CM_DEFAULT || colorMode == april::CM_MULTIPLY)
+	if (colorMode == april::ColorMode::Multiply)
 	{
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 		if (useTexture)
@@ -310,7 +310,7 @@ void CustomRenderSystem::_setDeviceColorMode(april::ColorMode colorMode, float c
 			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
 		}
 	}
-	else if (colorMode == april::CM_ALPHA_MAP)
+	else if (colorMode == april::ColorMode::AlphaMap)
 	{
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 		if (useTexture)
@@ -327,7 +327,7 @@ void CustomRenderSystem::_setDeviceColorMode(april::ColorMode colorMode, float c
 		glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
 		glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
 	}
-	else if (colorMode == april::CM_LERP)
+	else if (colorMode == april::ColorMode::Lerp)
 	{
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
 		if (useTexture)
@@ -389,21 +389,21 @@ void CustomRenderSystem::_deviceClearDepth()
 void CustomRenderSystem::_deviceRender(const april::RenderOperation& renderOperation, const april::PlainVertex* v, int nVertices)
 {
 	glVertexPointer(3, GL_FLOAT, sizeof(april::PlainVertex), v);
-	glDrawArrays(_glRenderOperations[renderOperation], 0, nVertices);
+	glDrawArrays(_glRenderOperations[renderOperation.value], 0, nVertices);
 }
 
 void CustomRenderSystem::_deviceRender(const april::RenderOperation& renderOperation, const april::TexturedVertex* v, int nVertices)
 {
 	glVertexPointer(3, GL_FLOAT, sizeof(april::TexturedVertex), v);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(april::TexturedVertex), &v->u);
-	glDrawArrays(_glRenderOperations[renderOperation], 0, nVertices);
+	glDrawArrays(_glRenderOperations[renderOperation.value], 0, nVertices);
 }
 
 void CustomRenderSystem::_deviceRender(const april::RenderOperation& renderOperation, const april::ColoredVertex* v, int nVertices)
 {
 	glVertexPointer(3, GL_FLOAT, sizeof(april::ColoredVertex), v);
 	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(april::ColoredVertex), &v->color);
-	glDrawArrays(_glRenderOperations[renderOperation], 0, nVertices);
+	glDrawArrays(_glRenderOperations[renderOperation.value], 0, nVertices);
 }
 
 void CustomRenderSystem::_deviceRender(const april::RenderOperation& renderOperation, const april::ColoredTexturedVertex* v, int nVertices)
@@ -411,40 +411,40 @@ void CustomRenderSystem::_deviceRender(const april::RenderOperation& renderOpera
 	glVertexPointer(3, GL_FLOAT, sizeof(april::ColoredTexturedVertex), v);
 	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(april::ColoredTexturedVertex), &v->color);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(april::ColoredTexturedVertex), &v->u);
-	glDrawArrays(_glRenderOperations[renderOperation], 0, nVertices);
+	glDrawArrays(_glRenderOperations[renderOperation.value], 0, nVertices);
 }
 
 april::Image::Format CustomRenderSystem::getNativeTextureFormat(april::Image::Format format)
 {
-	if (format == april::Image::FORMAT_ARGB || format == april::Image::FORMAT_ABGR || format == april::Image::Format::RGBA || format == april::Image::FORMAT_BGRA)
+	if (format == april::Image::Format::ARGB || format == april::Image::Format::ABGR || format == april::Image::Format::RGBA || format == april::Image::Format::BGRA)
 	{
 		return april::Image::Format::RGBA;
 	}
-	if (format == april::Image::FORMAT_XRGB || format == april::Image::FORMAT_RGBX || format == april::Image::FORMAT_XBGR || format == april::Image::FORMAT_BGRX)
+	if (format == april::Image::Format::XRGB || format == april::Image::Format::RGBX || format == april::Image::Format::XBGR || format == april::Image::Format::BGRX)
 	{
-		return april::Image::FORMAT_RGBX;
+		return april::Image::Format::RGBX;
 	}
-	if (format == april::Image::FORMAT_RGB || format == april::Image::FORMAT_BGR)
+	if (format == april::Image::Format::RGB || format == april::Image::Format::BGR)
 	{
-		return april::Image::FORMAT_RGB;
+		return april::Image::Format::RGB;
 	}
-	if (format == april::Image::FORMAT_ALPHA)
+	if (format == april::Image::Format::Alpha)
 	{
-		return april::Image::FORMAT_ALPHA;
+		return april::Image::Format::Alpha;
 	}
-	if (format == april::Image::FORMAT_GRAYSCALE)
+	if (format == april::Image::Format::Greyscale)
 	{
-		return april::Image::FORMAT_GRAYSCALE;
+		return april::Image::Format::Greyscale;
 	}
-	if (format == april::Image::FORMAT_COMPRESSED)
+	if (format == april::Image::Format::Compressed)
 	{
-		return april::Image::FORMAT_COMPRESSED;
+		return april::Image::Format::Compressed;
 	}
-	if (format == april::Image::FORMAT_PALETTE)
+	if (format == april::Image::Format::Palette)
 	{
-		return april::Image::FORMAT_PALETTE;
+		return april::Image::Format::Palette;
 	}
-	return april::Image::FORMAT_INVALID;
+	return april::Image::Format::Invalid;
 }
 
 unsigned int CustomRenderSystem::getNativeColorUInt(const april::Color& color)

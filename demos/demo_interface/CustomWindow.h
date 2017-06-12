@@ -21,9 +21,9 @@ public:
 	bool create(int w, int h, bool fullscreen, chstr title, april::Window::Options options);
 	bool destroy();
 
-	int getWidth();
-	int getHeight();
-	void* getBackendId();
+	int getWidth() const;
+	int getHeight() const;
+	void* getBackendId() const;
 
 	bool updateOneFrame();
 	void presentFrame();

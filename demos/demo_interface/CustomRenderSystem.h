@@ -24,12 +24,12 @@ public:
 	CustomRenderSystem();
 	~CustomRenderSystem();
 
-	inline HDC getHDC() { return this->hDC; }
+	inline HDC getHDC() const { return this->hDC; }
 
-	inline int getVRam() { return 0; }
+	inline int getVRam() const { return 0; }
 
-	april::Image::Format getNativeTextureFormat(april::Image::Format format);
-	unsigned int getNativeColorUInt(const april::Color& color);
+	april::Image::Format getNativeTextureFormat(april::Image::Format format) const;
+	unsigned int getNativeColorUInt(const april::Color& color) const;
 
 protected:
 	HWND hWnd;
@@ -56,8 +56,8 @@ protected:
 	void _setDeviceTexture(april::Texture* texture);
 	void _setDeviceTextureFilter(const april::Texture::Filter& textureFilter);
 	void _setDeviceTextureAddressMode(const april::Texture::AddressMode& textureAddressMode);
-	void _setDeviceBlendMode(april::BlendMode blendMode);
-	void _setDeviceColorMode(april::ColorMode colorMode, float colorModeFactor, bool useTexture, bool useColor, const april::Color& systemColor);
+	void _setDeviceBlendMode(const april::BlendMode& blendMode);
+	void _setDeviceColorMode(const april::ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const april::Color& systemColor);
 
 	void _deviceClear(bool depth);
 	void _deviceClear(const april::Color& color, bool depth);
