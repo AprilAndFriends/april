@@ -22,13 +22,7 @@ namespace april
 	{
 		// zlib inflate init
 		z_stream zlibStream;
-		zlibStream.zalloc = Z_NULL;
-		zlibStream.zfree = Z_NULL;
-		zlibStream.opaque = Z_NULL;
-		zlibStream.avail_in = 0;
-		zlibStream.next_in = Z_NULL;
-		zlibStream.avail_out = 0;
-		zlibStream.next_out = Z_NULL;
+		memset(&zlibStream, 0, sizeof(zlibStream));
 		hmutex::ScopeLock lock(&zlibMutex);
 		int result = inflateInit(&zlibStream);
 		if (result != Z_OK)
