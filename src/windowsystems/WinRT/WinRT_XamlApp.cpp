@@ -341,13 +341,6 @@ namespace april
 	{
 		hlog::writef(logTag, "WinRT size change: %g,%g", width, height);
 		this->_resetTouches();
-		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
-		if (DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::Portrait ||
-			DisplayInformation::GetForCurrentView()->CurrentOrientation == DisplayOrientations::PortraitFlipped)
-		{
-			getSystemInfo(); // so the displayResolution value gets updated
-			return;
-		}
 		if (april::window != NULL)
 		{
 			((WinRT_Window*)april::window)->changeSize(width, height);

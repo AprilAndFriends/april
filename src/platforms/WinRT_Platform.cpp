@@ -116,14 +116,7 @@ namespace april
 		{
 			hswap(width, height);
 		}
-		if (info.displayResolution.y == 0.0f)
-		{
-			info.displayResolution.set((float)width, (float)height);
-		}
-		else
-		{
-			info.displayResolution.x = hmax((float)width, info.displayResolution.x);
-		}
+		info.displayResolution.set((float)width, (float)height);
 #endif
 	}
 

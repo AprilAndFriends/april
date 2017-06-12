@@ -102,6 +102,9 @@
     <Filter Include="Source Files\windowsystems\WinRT">
       <UniqueIdentifier>{fc3c2db0-d18e-4947-a5ff-518b26111c1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX\11\default-shaders">
+      <UniqueIdentifier>{f6cc9b23-5f90-4733-85de-08aec4fce53c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Color.cpp">
@@ -302,6 +305,9 @@
     <ClCompile Include="..\..\src\Keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -490,10 +496,59 @@
     <ClInclude Include="..\..\include\april\InputMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Lerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Multiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedLerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedMultiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Colored.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_ColoredTextured.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Plain.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Textured.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Plain.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </None>
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Textured.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </None>
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" />
   </ItemGroup>
 </Project>
