@@ -80,8 +80,7 @@ namespace april
 				info.locale = info.locale.lowered();
 				info.localeVariant = info.localeVariant.uppered();
 			}
-			info.osVersion.set(6, 3);
-			//info.osVersion.set(10, 0); // sooooooon...
+			info.osVersion.set(6, 3); // can't detect if Windows 10 maybe
 		}
 		DisplayInformation^ displayInfo = DisplayInformation::GetForCurrentView();
 		// display DPI
