@@ -18,8 +18,8 @@
 #define RESOURCE_PATH "./"
 #endif
 
-#ifdef __APPLE__
 #include <stdlib.h>
+#ifdef __APPLE__
 #include <unistd.h>
 #import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
@@ -116,14 +116,14 @@ class MouseDelegate : public april::MouseDelegate
 	void onMouseDown(april::Key key)
 	{
 		offset = april::window->getCursorPosition();
-		hlog::writef(LOG_TAG, "- DOWN x: %4.0f y: %4.0f button: %d", offset.x, offset.y, key);
+		hlog::writef(LOG_TAG, "- DOWN x: %4.0f y: %4.0f button: %d", offset.x, offset.y, key.value);
 		mousePressed = true;
 	}
 
 	void onMouseUp(april::Key key)
 	{
 		gvec2 position = april::window->getCursorPosition();
-		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", position.x, position.y, key);
+		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", position.x, position.y, key.value);
 		mousePressed = false;
 	}
 
@@ -139,7 +139,7 @@ class MouseDelegate : public april::MouseDelegate
 
 	void onMouseCancel(april::Key key)
 	{
-		hlog::writef(LOG_TAG, "- CANCEL button: %d", key);
+		hlog::writef(LOG_TAG, "- CANCEL button: %d", key.value);
 	}
 
 };
@@ -220,7 +220,7 @@ void april_init(const harray<hstr>& args)
 	april::window->setMouseDelegate(mouseDelegate);
 	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
-	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::Type::Managed);
+	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "etc1", april::Texture::Type::Managed);
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w * 0.5f;
 	textureRect.y = -textureRect.h * 0.5f;

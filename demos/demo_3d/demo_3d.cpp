@@ -18,6 +18,8 @@
 #define RESOURCE_PATH "./"
 #endif
 
+#include <stdlib.h>
+
 #include <april/april.h>
 #include <april/Cursor.h>
 #include <april/main.h>

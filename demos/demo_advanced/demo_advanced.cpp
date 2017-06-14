@@ -18,8 +18,8 @@
 #define RESOURCE_PATH "./"
 #endif
 
-#ifdef __APPLE__
 #include <stdlib.h>
+#ifdef __APPLE__
 #include <unistd.h>
 #import <Foundation/Foundation.h>
 #import <CoreFoundation/CoreFoundation.h>
@@ -331,7 +331,6 @@ class MouseDelegate : public april::MouseDelegate
 
 	void onMouseUp(april::Key key)
 	{
-		gvec2 position = april::window->getCursorPosition();
 		bone.onRelease();
 		mousePressed = false;
 	}
