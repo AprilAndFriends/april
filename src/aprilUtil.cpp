@@ -14,8 +14,6 @@
 
 #include "aprilUtil.h"
 
-#define HSTR_SEPARATOR ','
-
 namespace april
 {
 	HL_ENUM_CLASS_DEFINE(RenderOperation,
@@ -140,51 +138,6 @@ namespace april
 		int count = counters[prefix] + 1;
 		counters[prefix] = count;
 		return prefix.replaced(".", "_") + hstr(count);
-	}
-
-	hstr gvec2ToHstr(cgvec2 vector)
-	{
-		return hsprintf("%f%c%f", vector.x, HSTR_SEPARATOR, vector.y);
-	}
-
-	hstr gvec3ToHstr(cgvec3 vector)
-	{
-		return hsprintf("%f%c%f%c%f", vector.x, HSTR_SEPARATOR, vector.y, HSTR_SEPARATOR, vector.z);
-	}
-
-	hstr grectToHstr(cgrect rect)
-	{
-		return hsprintf("%f%c%f%c%f%c%f", rect.x, HSTR_SEPARATOR, rect.y, HSTR_SEPARATOR, rect.w, HSTR_SEPARATOR, rect.h);
-	}
-
-	gvec2 hstrToGvec2(chstr string)
-	{
-		harray<hstr> data = string.split(HSTR_SEPARATOR);
-		if (data.size() != 2)
-		{
-			throw Exception("Cannot convert string '" + string + "' to gtypes::Vector2.");
-		}
-		return gvec2(data[0].trimmed(), data[1].trimmed());
-	}
-
-	gvec3 hstrToGvec3(chstr string)
-	{
-		harray<hstr> data = string.split(HSTR_SEPARATOR);
-		if (data.size() != 3)
-		{
-			throw Exception("Cannot convert string '" + string + "' to gtypes::Vector3.");
-		}
-		return gvec3(data[0].trimmed(), data[1].trimmed(), data[2].trimmed());
-	}
-
-	grect hstrToGrect(chstr string)
-	{
-		harray<hstr> data = string.split(HSTR_SEPARATOR);
-		if (data.size() != 4)
-		{
-			throw Exception("Cannot convert string '" + string + "' to gtypes::Rectangle.");
-		}
-		return grect(data[0].trimmed(), data[1].trimmed(), data[2].trimmed(), data[3].trimmed());
 	}
 
 }

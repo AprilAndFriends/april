@@ -21,6 +21,8 @@
 
 #include "aprilExport.h"
 
+#define APRIL_HSTR_SEPARATOR ','
+
 namespace april
 {
 	/// @class RenderOperation
@@ -343,33 +345,65 @@ namespace april
 	/// @param[in] vector The gtypes::Vector2 to convert.
 	/// @return A string.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport hstr gvec2ToHstr(cgvec2 vector);
+	aprilFnExport inline hstr gvec2ToHstr(cgvec2 vector)
+	{
+		return hsprintf("%f%c%f", vector.x, APRIL_HSTR_SEPARATOR, vector.y);
+	}
 	/// @brief Creates a string representation for a gtypes::Vector3.
 	/// @param[in] vector The gtypes::Vector3 to convert.
 	/// @return A string.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport hstr gvec3ToHstr(cgvec3 vector);
+	aprilFnExport inline hstr gvec3ToHstr(cgvec3 vector)
+	{
+		return hsprintf("%f%c%f%c%f", vector.x, APRIL_HSTR_SEPARATOR, vector.y, APRIL_HSTR_SEPARATOR, vector.z);
+	}
 	/// @brief Creates a string representation for a gtypes::Rectangle.
 	/// @param[in] rect The gtypes::Rectangle to convert.
 	/// @return A string.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport hstr grectToHstr(cgrect rect);
+	aprilFnExport inline hstr grectToHstr(cgrect rect)
+	{
+		return hsprintf("%f%c%f%c%f%c%f", rect.x, APRIL_HSTR_SEPARATOR, rect.y, APRIL_HSTR_SEPARATOR, rect.w, APRIL_HSTR_SEPARATOR, rect.h);
+	}
 	/// @brief Creates gtypes::Vector2 from a string representation.
 	/// @param[in] string The string to use for conversion.
 	/// @return A gtypes::Vector2.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport gvec2 hstrToGvec2(chstr string);
+	aprilFnExport inline gvec2 hstrToGvec2(chstr string)
+	{
+		harray<hstr> data = string.split(APRIL_HSTR_SEPARATOR);
+		if (data.size() != 2)
+		{
+			throw Exception("Cannot convert string '" + string + "' to gtypes::Vector2.");
+		}
+		return gvec2(data[0].trimmed(), data[1].trimmed());
+	}
 	/// @brief Creates gtypes::Vector3 from a string representation.
 	/// @param[in] string The string to use for conversion.
 	/// @return A gtypes::Vector3.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport gvec3 hstrToGvec3(chstr string);
+	aprilFnExport inline gvec3 hstrToGvec3(chstr string)
+	{
+		harray<hstr> data = string.split(APRIL_HSTR_SEPARATOR);
+		if (data.size() != 3)
+		{
+			throw Exception("Cannot convert string '" + string + "' to gtypes::Vector3.");
+		}
+		return gvec3(data[0].trimmed(), data[1].trimmed(), data[2].trimmed());
+	}
 	/// @brief Creates gtypes::Rectangle from a string representation.
 	/// @param[in] string The string to use for conversion.
 	/// @return A gtypes::Rectangle.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport grect hstrToGrect(chstr string);
+	aprilFnExport inline grect hstrToGrect(chstr string)
+	{
+		harray<hstr> data = string.split(APRIL_HSTR_SEPARATOR);
+		if (data.size() != 4)
+		{
+			throw Exception("Cannot convert string '" + string + "' to gtypes::Rectangle.");
+		}
+		return grect(data[0].trimmed(), data[1].trimmed(), data[2].trimmed(), data[3].trimmed());
+	}
 
 }
-
 #endif
