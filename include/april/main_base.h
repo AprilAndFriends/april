@@ -57,7 +57,7 @@ namespace april
 #endif
 }
 
-#if !defined(_ANDROID) || defined(_OPENKODE)
+#ifndef _ANDROID
 /// @brief A special main loop function that serves as general entry point.
 /// @param[in] anAprilInit Initialization function.
 /// @param[in] anAprilDestroy Cleanup function.

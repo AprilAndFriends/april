@@ -6,7 +6,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#if defined(_WIN32) && !defined(_OPENKODE) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_WINRT)
 #include <hltypes/harray.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>

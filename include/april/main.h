@@ -24,7 +24,6 @@
 /// - Mac: __APPLE__
 /// - iOS: __APPLE__
 /// - Linux: _UNIX
-/// - OpenKODE: _OPENKODE
 
 #ifndef APRIL_MAIN_H
 #define APRIL_MAIN_H
@@ -41,10 +40,7 @@
 #include "main_base.h"
 #include "aprilExport.h"
 
-#ifdef _OPENKODE
-	#include "Android_main.h" // required because of JNI
-	#include "OpenKODE_main.h"
-#elif defined(_ANDROID)
+#ifdef _ANDROID
 	#include "Android_main.h"
 #elif defined(_WINUWP)
 	#include "WinUWP_main.h"

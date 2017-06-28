@@ -53,7 +53,6 @@ namespace april
 		hlog::write(logTag, "System path: " + april::getUserDataPath());
 		if (!hresource::hasZip()) // if not using APK as data file archive
 		{
-#ifndef _OPENKODE
 			// using user data directory for resources
 			harray<hstr> segments;
 			segments += dataPath;
@@ -61,9 +60,6 @@ namespace april
 			segments += april::getPackageName();
 			hresource::mountArchive("", hrdir::joinPaths(segments));
 			hlog::write(logTag, "Using user data directory for resources.");
-#else
-			hlog::write(logTag, "Using KD file system for resources.");
-#endif
 		}
 		else if (archivePath != "")
 		{

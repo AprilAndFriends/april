@@ -16,15 +16,15 @@
       <AdditionalDependencies>d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_OpenKODE' or
-                                  '$(Configuration)'=='DebugS_OpenKODE' or
-                                  '$(Configuration)'=='Release_OpenKODE' or
-                                  '$(Configuration)'=='ReleaseS_OpenKODE'">
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_OpenGLES2' or
+                                  '$(Configuration)'=='DebugS_OpenGLES2' or
+                                  '$(Configuration)'=='Release_OpenGLES2' or
+                                  '$(Configuration)'=='ReleaseS_OpenGLES2'">
     <ClCompile>
-      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES2;_EGL;_OPENKODE;_OPENKODE_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES2;_EGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libGLESv2.lib;libEGL.lib;libKD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libGLESv2.lib;libEGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
 </Project>

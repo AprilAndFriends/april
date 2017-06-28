@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="DebugS_OpenKODE|ARM">
-      <Configuration>DebugS_OpenKODE</Configuration>
+    <ProjectConfiguration Include="DebugS_OpenGLES2|ARM">
+      <Configuration>DebugS_OpenGLES2</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugS_OpenKODE|Win32">
-      <Configuration>DebugS_OpenKODE</Configuration>
+    <ProjectConfiguration Include="DebugS_OpenGLES2|Win32">
+      <Configuration>DebugS_OpenGLES2</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_DirectX11|ARM">
@@ -49,12 +49,12 @@
       <Configuration>ReleaseS_DirectX11</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseS_OpenKODE|ARM">
-      <Configuration>ReleaseS_OpenKODE</Configuration>
+    <ProjectConfiguration Include="ReleaseS_OpenGLES2|ARM">
+      <Configuration>ReleaseS_OpenGLES2</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseS_OpenKODE|Win32">
-      <Configuration>ReleaseS_OpenKODE</Configuration>
+    <ProjectConfiguration Include="ReleaseS_OpenGLES2|Win32">
+      <Configuration>ReleaseS_OpenGLES2</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="ReleaseS|ARM">
@@ -73,20 +73,20 @@
       <Configuration>Release_DirectX11</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug_OpenKODE|ARM">
-      <Configuration>Debug_OpenKODE</Configuration>
+    <ProjectConfiguration Include="Debug_OpenGLES2|ARM">
+      <Configuration>Debug_OpenGLES2</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug_OpenKODE|Win32">
-      <Configuration>Debug_OpenKODE</Configuration>
+    <ProjectConfiguration Include="Debug_OpenGLES2|Win32">
+      <Configuration>Debug_OpenGLES2</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_OpenKODE|ARM">
-      <Configuration>Release_OpenKODE</Configuration>
+    <ProjectConfiguration Include="Release_OpenGLES2|ARM">
+      <Configuration>Release_OpenGLES2</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_OpenKODE|Win32">
-      <Configuration>Release_OpenKODE</Configuration>
+    <ProjectConfiguration Include="Release_OpenGLES2|Win32">
+      <Configuration>Release_OpenGLES2</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|ARM">
@@ -138,40 +138,38 @@
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_DirectX11|ARM'">
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_OpenKODE|Win32'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_OpenGLES2|Win32'">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS_OpenKODE|Win32'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES2|Win32'">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_OpenKODE|ARM'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_OpenGLES2|ARM'">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS_OpenKODE|ARM'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES2|ARM'">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_OpenKODE|Win32'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_OpenGLES2|Win32'">
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_OpenKODE|Win32'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES2|Win32'">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_OpenKODE|ARM'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_OpenGLES2|ARM'">
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_OpenKODE|ARM'">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES2|ARM'">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Import Project="..\..\..\hltypes\msvc\vs2013-winrt\props-generic\build-defaults.props" />
   <Import Project="props\configuration.props" />
   <ItemGroup>
-    <ClCompile Include="..\..\src\platforms\OpenKODE_main.cpp" />
-    <ClCompile Include="..\..\src\platforms\OpenKODE_Platform.cpp" />
     <ClCompile Include="..\..\src\platforms\WinRT_main.cpp" />
     <ClCompile Include="..\..\src\platforms\WinRT_Platform.cpp" />
     <ClCompile Include="..\..\src\RenderHelper.cpp" />
@@ -231,13 +229,11 @@
     <ClCompile Include="..\..\src\util\zlibUtil.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_Texture.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_Cursor.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT.cpp" />
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_Window.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp" Condition="'$(Configuration)'!='Debug_OpenKODE' and '$(Configuration)'!='DebugS_OpenKODE' and '$(Configuration)'!='Release_OpenKODE' and '$(Configuration)'!='ReleaseS_OpenKODE'">
+    <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp" Condition="'$(Configuration)'!='Debug_OpenGLES2' and '$(Configuration)'!='DebugS_OpenGLES2' and '$(Configuration)'!='Release_OpenGLES2' and '$(Configuration)'!='ReleaseS_OpenGLES2'">
       <DependentUpon>..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
     </ClCompile>
   </ItemGroup>
@@ -256,7 +252,6 @@
     <ClInclude Include="..\..\include\april\main.h" />
     <ClInclude Include="..\..\include\april\main_base.h" />
     <ClInclude Include="..\..\include\april\MouseDelegate.h" />
-    <ClInclude Include="..\..\include\april\OpenKODE_main.h" />
     <ClInclude Include="..\..\include\april\PixelShader.h" />
     <ClInclude Include="..\..\include\april\Platform.h" />
     <ClInclude Include="..\..\include\april\RenderState.h" />
@@ -296,19 +291,17 @@
     <ClInclude Include="..\..\src\rendersystems\DirectX\DirectX_Texture.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\OpenGL_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\OpenGL_Texture.h" />
-    <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.h" />
-    <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\pch.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_Cursor.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlApp.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT.h" />
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_Window.h" />
-    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h" Condition="'$(Configuration)'!='Debug_OpenKODE' and '$(Configuration)'!='DebugS_OpenKODE' and '$(Configuration)'!='Release_OpenKODE' and '$(Configuration)'!='ReleaseS_OpenKODE'">
+    <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h" Condition="'$(Configuration)'!='Debug_OpenGLES2' and '$(Configuration)'!='DebugS_OpenGLES2' and '$(Configuration)'!='Release_OpenGLES2' and '$(Configuration)'!='ReleaseS_OpenGLES2'">
       <DependentUpon>..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml</DependentUpon>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" Condition="'$(Configuration)'!='Debug_OpenKODE' and '$(Configuration)'!='DebugS_OpenKODE' and '$(Configuration)'!='Release_OpenKODE' and '$(Configuration)'!='ReleaseS_OpenKODE'">
+    <Page Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml" Condition="'$(Configuration)'!='Debug_OpenGLES2' and '$(Configuration)'!='DebugS_OpenGLES2' and '$(Configuration)'!='Release_OpenGLES2' and '$(Configuration)'!='ReleaseS_OpenGLES2'">
       <SubType>Designer</SubType>
       <FileType>Document</FileType>
     </Page>

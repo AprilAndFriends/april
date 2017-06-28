@@ -75,12 +75,6 @@
     <Filter Include="Source Files\timers">
       <UniqueIdentifier>{606d267a-8075-4528-a50e-ff0afd0dae93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\windowsystems\OpenKODE">
-      <UniqueIdentifier>{e8678d13-8901-45bf-ba94-1c0b0edb3b20}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\windowsystems\OpenKODE">
-      <UniqueIdentifier>{ab78e32a-7c18-4409-8201-c0a814275841}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\platforms">
       <UniqueIdentifier>{49215b07-a2cd-4b10-ba8e-2f00612c1829}</UniqueIdentifier>
     </Filter>
@@ -227,23 +221,11 @@
     <ClCompile Include="..\..\src\delegates\ControllerDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\platforms\OpenKODE_main.cpp">
-      <Filter>Source Files\platforms</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\platforms\OpenKODE_Platform.cpp">
-      <Filter>Source Files\platforms</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.cpp">
-      <Filter>Source Files\windowsystems\OpenKODE</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\util\egl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\platforms\AndroidJNI_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.cpp">
-      <Filter>Source Files\windowsystems\OpenKODE</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\windowsystems\AndroidJNI\AndroidJNI_Keys.cpp">
       <Filter>Source Files\windowsystems\AndroidJNI</Filter>
@@ -439,12 +421,6 @@
     <ClInclude Include="..\..\include\april\ControllerDelegate.h">
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Keys.h">
-      <Filter>Header Files\windowsystems\OpenKODE</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\OpenKODE\OpenKODE_Window.h">
-      <Filter>Header Files\windowsystems\OpenKODE</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\util\egl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -455,9 +431,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\Android_main.h">
-      <Filter>Header Files\platforms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\april\OpenKODE_main.h">
       <Filter>Header Files\platforms</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\Win32_main.h">

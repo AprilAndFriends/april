@@ -6,10 +6,6 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#ifdef _OPENKODE
-#include <KD/kd.h>
-#endif
-
 #include <stdio.h>
 #ifdef __APPLE__
 #include <TargetConditionals.h>
@@ -44,9 +40,6 @@
 #endif
 #ifdef _OPENGLES2
 #include "OpenGLES2_RenderSystem.h"
-#endif
-#ifdef _OPENKODE_WINDOW
-#include "OpenKODE_Window.h"
 #endif
 #include "Window.h"
 #ifdef _ANDROID
@@ -88,9 +81,7 @@
 	#elif defined(_OPENGLES2)
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
 	#endif
-	#ifdef _OPENKODE_WINDOW
-		#define WS_INTERNAL_DEFAULT WindowType::OpenKODE
-	#elif !defined(_WINRT)
+	#ifndef !defined(_WINRT)
 		#define WS_INTERNAL_DEFAULT WindowType::Win32
 	#elif defined(_WINUWP)
 		#define WS_INTERNAL_DEFAULT WindowType::WinUWP
@@ -104,16 +95,10 @@
 		#elif defined(_OPENGLES1)
 			#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES1
 		#endif
-		#ifdef _OPENKODE_WINDOW
-			#define WS_INTERNAL_DEFAULT WindowType::OpenKODE
-		#else
-			#define WS_INTERNAL_DEFAULT WindowType::iOS
-		#endif
+		#define WS_INTERNAL_DEFAULT WindowType::iOS
 	#else
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGL1
-		#ifdef _OPENKODE_WINDOW
-			#define WS_INTERNAL_DEFAULT WindowType::OpenKODE
-		#elif defined(_SDL_WINDOW)
+		#ifdef _SDL_WINDOW
 			#define WS_INTERNAL_DEFAULT WindowType::SDL
 		#else
 			#define WS_INTERNAL_DEFAULT WindowType::Mac
@@ -121,20 +106,14 @@
 	#endif
 #elif defined(_UNIX)
 	#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGL1
-	#ifdef _OPENKODE_WINDOW
-		#define WS_INTERNAL_DEFAULT WindowType::OpenKODE
-	#else
-		#define WS_INTERNAL_DEFAULT WindowType::SDL
-	#endif
+	#define WS_INTERNAL_DEFAULT WindowType::SDL
 #elif defined(_ANDROID)
 	#ifdef _OPENGLES1
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES1
 	#elif defined(_OPENGLES2)
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
 	#endif
-	#ifdef _OPENKODE_WINDOW
-		#define WS_INTERNAL_DEFAULT WindowType::OpenKODE
-	#elif defined(_ANDROIDJNI_WINDOW)
+	#ifdef _ANDROIDJNI_WINDOW
 		#define WS_INTERNAL_DEFAULT WindowType::AndroidJNI
 	#endif
 #endif
@@ -397,7 +376,7 @@ namespace april
 			april::window = new Mac_Window();
 		}
 #endif
-#if defined(_IOS) && !defined(_OPENKODE_WINDOW)
+#ifdef _IOS
 		if (april::window == NULL && window == WindowType::iOS)
 		{
 			april::window = new iOS_Window();
@@ -407,12 +386,6 @@ namespace april
 		if (april::window == NULL && window == WindowType::AndroidJNI)
 		{
 			april::window = new AndroidJNI_Window();
-		}
-#endif
-#ifdef _OPENKODE_WINDOW
-		if (april::window == NULL && window == WindowType::OpenKODE)
-		{
-			april::window = new OpenKODE_Window();
 		}
 #endif
 		if (april::window == NULL)
