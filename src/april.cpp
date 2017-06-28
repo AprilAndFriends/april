@@ -81,7 +81,7 @@
 	#elif defined(_OPENGLES2)
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
 	#endif
-	#ifndef !defined(_WINRT)
+	#ifndef _WINRT
 		#define WS_INTERNAL_DEFAULT WindowType::Win32
 	#elif defined(_WINUWP)
 		#define WS_INTERNAL_DEFAULT WindowType::WinUWP
