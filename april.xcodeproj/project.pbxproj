@@ -249,10 +249,6 @@
 		D102CFFB19B7284500948584 /* TextureAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D102CFF419B7284500948584 /* TextureAsync.cpp */; };
 		D102CFFC19B7284500948584 /* TextureAsync.h in Headers */ = {isa = PBXBuildFile; fileRef = D102CFF519B7284500948584 /* TextureAsync.h */; };
 		D102CFFD19B7284500948584 /* TextureAsync.h in Headers */ = {isa = PBXBuildFile; fileRef = D102CFF519B7284500948584 /* TextureAsync.h */; };
-		D10B73AF1982473800A9352D /* OpenKODE_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10B73AA1982472300A9352D /* OpenKODE_main.cpp */; };
-		D10B73B01982473900A9352D /* OpenKODE_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10B73AA1982472300A9352D /* OpenKODE_main.cpp */; };
-		D10B73B11982473B00A9352D /* OpenKODE_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */; };
-		D10B73B21982473C00A9352D /* OpenKODE_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */; };
 		D1134EEF175CDA3300BFF3A2 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522E12E4713600E958D8 /* Color.cpp */; };
 		D1134EF0175CDA3300BFF3A2 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522F12E4713600E958D8 /* Texture.cpp */; };
 		D1134EF1175CDA3300BFF3A2 /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */; };
@@ -468,10 +464,6 @@
 		D1F27AD8177A2DF700E5C131 /* ImagePng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7206316D37C5600B9C9AD /* ImagePng.cpp */; };
 		D1F27AD9177A2DF700E5C131 /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */; };
 		D1F27AE1177A2DF700E5C131 /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
-		D1F630D119D54A5F006C6236 /* OpenKODE_Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1B486E6193373B5004674EB /* OpenKODE_Window.cpp */; };
-		D1F630D219D54A5F006C6236 /* OpenKODE_Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1B486E6193373B5004674EB /* OpenKODE_Window.cpp */; };
-		D1F630D319D54A93006C6236 /* OpenKODE_Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1B486E4193373B5004674EB /* OpenKODE_Keys.cpp */; };
-		D1F630D519D54A93006C6236 /* OpenKODE_Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1B486E4193373B5004674EB /* OpenKODE_Keys.cpp */; };
 		D1FED158192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
 		D1FED159192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
 		D1FED15A192A3B5F00BE6A6D /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
@@ -555,8 +547,6 @@
 		C9E6098E1505191800EB077F /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = include/april/Platform.h; sourceTree = "<group>"; };
 		D102CFF419B7284500948584 /* TextureAsync.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureAsync.cpp; path = src/TextureAsync.cpp; sourceTree = "<group>"; };
 		D102CFF519B7284500948584 /* TextureAsync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureAsync.h; path = src/TextureAsync.h; sourceTree = "<group>"; };
-		D10B73AA1982472300A9352D /* OpenKODE_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenKODE_main.cpp; path = src/platforms/OpenKODE_main.cpp; sourceTree = "<group>"; };
-		D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; name = OpenKODE_Platform.cpp; path = src/platforms/OpenKODE_Platform.cpp; sourceTree = "<group>"; };
 		D10B73AC1982472300A9352D /* Posix_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Posix_main.cpp; path = src/platforms/Posix_main.cpp; sourceTree = "<group>"; };
 		D10B73AD1982472300A9352D /* Posix_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Posix_Platform.cpp; path = src/platforms/Posix_Platform.cpp; sourceTree = "<group>"; };
 		D10B73B31982477300A9352D /* DirectX_RenderSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = DirectX_RenderSystem.cpp; path = src/rendersystems/DirectX/DirectX_RenderSystem.cpp; sourceTree = "<group>"; };
@@ -681,10 +671,6 @@
 		D1B486E1193373AC004674EB /* WinRT_XamlOverlay.xaml.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinRT_XamlOverlay.xaml.h; path = src/windowsystems/WinRT/WinRT_XamlOverlay.xaml.h; sourceTree = "<group>"; };
 		D1B486E2193373AC004674EB /* WinRT.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = WinRT.cpp; path = src/windowsystems/WinRT/WinRT.cpp; sourceTree = "<group>"; };
 		D1B486E3193373AC004674EB /* WinRT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WinRT.h; path = src/windowsystems/WinRT/WinRT.h; sourceTree = "<group>"; };
-		D1B486E4193373B5004674EB /* OpenKODE_Keys.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = OpenKODE_Keys.cpp; path = src/windowsystems/OpenKODE/OpenKODE_Keys.cpp; sourceTree = "<group>"; };
-		D1B486E5193373B5004674EB /* OpenKODE_Keys.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OpenKODE_Keys.h; path = src/windowsystems/OpenKODE/OpenKODE_Keys.h; sourceTree = "<group>"; };
-		D1B486E6193373B5004674EB /* OpenKODE_Window.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; name = OpenKODE_Window.cpp; path = src/windowsystems/OpenKODE/OpenKODE_Window.cpp; sourceTree = "<group>"; };
-		D1B486E7193373B5004674EB /* OpenKODE_Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OpenKODE_Window.h; path = src/windowsystems/OpenKODE/OpenKODE_Window.h; sourceTree = "<group>"; };
 		D1B4872A19337455004674EB /* Android_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Android_main.cpp; path = src/platforms/Android_main.cpp; sourceTree = "<group>"; };
 		D1B4872B19337455004674EB /* Android_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Android_Platform.cpp; path = src/platforms/Android_Platform.cpp; sourceTree = "<group>"; };
 		D1B4872C19337455004674EB /* AndroidJNI_Platform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AndroidJNI_Platform.cpp; path = src/platforms/AndroidJNI_Platform.cpp; sourceTree = "<group>"; };
@@ -913,7 +899,6 @@
 				7FA3ED1211F98145001D1DDD /* SDL */,
 				D1BCC57B1615A2660049CEA9 /* Win32 */,
 				D1E7207716D37C9500B9C9AD /* WinRT */,
-				D1134F18175CDA4100BFF3A2 /* OpenKODE */,
 			);
 			name = "Window Systems";
 			sourceTree = "<group>";
@@ -1029,7 +1014,6 @@
 				C9E60987150518DC00EB077F /* Mac */,
 				D1BCC5861615A2DD0049CEA9 /* Win32 */,
 				D1B4872F19337464004674EB /* WinRT */,
-				D1134F1C175CDABB00BFF3A2 /* OpenKODE */,
 			);
 			name = Platforms;
 			sourceTree = "<group>";
@@ -1075,26 +1059,6 @@
 				D10B73AD1982472300A9352D /* Posix_Platform.cpp */,
 			);
 			name = Posix;
-			sourceTree = "<group>";
-		};
-		D1134F18175CDA4100BFF3A2 /* OpenKODE */ = {
-			isa = PBXGroup;
-			children = (
-				D1B486E4193373B5004674EB /* OpenKODE_Keys.cpp */,
-				D1B486E5193373B5004674EB /* OpenKODE_Keys.h */,
-				D1B486E6193373B5004674EB /* OpenKODE_Window.cpp */,
-				D1B486E7193373B5004674EB /* OpenKODE_Window.h */,
-			);
-			name = OpenKODE;
-			sourceTree = "<group>";
-		};
-		D1134F1C175CDABB00BFF3A2 /* OpenKODE */ = {
-			isa = PBXGroup;
-			children = (
-				D10B73AA1982472300A9352D /* OpenKODE_main.cpp */,
-				D10B73AB1982472300A9352D /* OpenKODE_Platform.cpp */,
-			);
-			name = OpenKODE;
 			sourceTree = "<group>";
 		};
 		D1681B9518D7673D0088FC68 /* config */ = {
@@ -1718,7 +1682,6 @@
 				B45501321BD7A7DE00E75E43 /* OpenGLES2_PixelShader.cpp in Sources */,
 				B45501061BD7A7C500E75E43 /* OpenGLES1_RenderSystem.cpp in Sources */,
 				D1B4874019337483004674EB /* iOS_devices.mm in Sources */,
-				D10B73AF1982473800A9352D /* OpenKODE_main.cpp in Sources */,
 				B455010E1BD7A7C500E75E43 /* OpenGLES1_Texture.cpp in Sources */,
 				D1134EF0175CDA3300BFF3A2 /* Texture.cpp in Sources */,
 				D1134EF1175CDA3300BFF3A2 /* RenderSystem.cpp in Sources */,
@@ -1741,7 +1704,6 @@
 				D1134EFE175CDA3300BFF3A2 /* KeyboardDelegate.cpp in Sources */,
 				D1134EFF175CDA3300BFF3A2 /* MouseDelegate.cpp in Sources */,
 				B4DF80871E375F0800307767 /* ImagePvrz.cpp in Sources */,
-				D1F630D519D54A93006C6236 /* OpenKODE_Keys.cpp in Sources */,
 				B455016C1BD7A86200E75E43 /* OpenGL_RenderSystem.cpp in Sources */,
 				D1134F00175CDA3300BFF3A2 /* SystemDelegate.cpp in Sources */,
 				B4E4CE0F1E69A1D700DB4C31 /* Keys.cpp in Sources */,
@@ -1754,7 +1716,6 @@
 				D1134F03175CDA3300BFF3A2 /* Image.cpp in Sources */,
 				B45500FA1BD7A7BA00E75E43 /* OpenGL1_Texture.cpp in Sources */,
 				D1134F04175CDA3300BFF3A2 /* ImageJpg.cpp in Sources */,
-				D1F630D219D54A5F006C6236 /* OpenKODE_Window.cpp in Sources */,
 				B455015E1BD7A80400E75E43 /* OpenGLES_Texture.cpp in Sources */,
 				D1134F05175CDA3300BFF3A2 /* ImageJpt.cpp in Sources */,
 				D1134F06175CDA3300BFF3A2 /* ImagePng.cpp in Sources */,
@@ -1768,7 +1729,6 @@
 				B45501911BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				B455014A1BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
 				B45501891BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
-				D10B73B11982473B00A9352D /* OpenKODE_Platform.cpp in Sources */,
 				B45501561BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1918,7 +1878,6 @@
 				D1F27AC5177A2DF700E5C131 /* Texture.cpp in Sources */,
 				B45501481BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
 				D1F27AC6177A2DF700E5C131 /* RenderSystem.cpp in Sources */,
-				D1F630D119D54A5F006C6236 /* OpenKODE_Window.cpp in Sources */,
 				B455010C1BD7A7C500E75E43 /* OpenGLES1_Texture.cpp in Sources */,
 				D1F27AC7177A2DF700E5C131 /* Window.cpp in Sources */,
 				B45500F01BD7A7BA00E75E43 /* OpenGL1_RenderSystem.cpp in Sources */,
@@ -1926,7 +1885,6 @@
 				D1368191187BFB3E00E66E32 /* main_base.cpp in Sources */,
 				D1F27AC9177A2DF700E5C131 /* VertexShader.cpp in Sources */,
 				D1FED15B192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
-				D1F630D319D54A93006C6236 /* OpenKODE_Keys.cpp in Sources */,
 				B4DF80811E375F0700307767 /* ImagePvrz.cpp in Sources */,
 				D1F27ACA177A2DF700E5C131 /* april.cpp in Sources */,
 				D1F27ACB177A2DF700E5C131 /* Platform.cpp in Sources */,
@@ -1951,7 +1909,6 @@
 				D17F3E991D79D5740045F39D /* VirtualKeyboard.cpp in Sources */,
 				D1F27AD3177A2DF700E5C131 /* TouchDelegate.cpp in Sources */,
 				D1F27AD4177A2DF700E5C131 /* UpdateDelegate.cpp in Sources */,
-				D10B73B01982473900A9352D /* OpenKODE_main.cpp in Sources */,
 				B45501181BD7A7D100E75E43 /* OpenGLC_RenderSystem.cpp in Sources */,
 				B436D2E51D05AE9200DA2C15 /* RenderHelper.cpp in Sources */,
 				B45501301BD7A7DE00E75E43 /* OpenGLES2_PixelShader.cpp in Sources */,
@@ -1965,7 +1922,6 @@
 				D1F27AD8177A2DF700E5C131 /* ImagePng.cpp in Sources */,
 				B45500F81BD7A7BA00E75E43 /* OpenGL1_Texture.cpp in Sources */,
 				D1F27AD9177A2DF700E5C131 /* TimerPosix.cpp in Sources */,
-				D10B73B21982473C00A9352D /* OpenKODE_Platform.cpp in Sources */,
 				B45501041BD7A7C500E75E43 /* OpenGLES1_RenderSystem.cpp in Sources */,
 				D1F27AE1177A2DF700E5C131 /* ControllerDelegate.cpp in Sources */,
 			);
