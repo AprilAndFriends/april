@@ -517,15 +517,18 @@ NSString* translateInputForKeyDown(NSEvent* event)
 - (void)scrollWheel:(NSEvent*) event
 {
 	gvec2 vec(-[event deltaX], -[event deltaY]);
-    if (april::isUsingCVDisplayLink())
-    {
-        hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
-		aprilWindow->queueMouseEvent(april::Window::MouseInputEvent::Type::Scroll, vec, april::Key::None);
-    }
-    else
-    {
-		aprilWindow->handleMouseEvent(april::Window::MouseInputEvent::Type::Scroll, vec, april::Key::None);
-    }
+	if (vec.squaredLength() > 0.0f)
+	{
+		if (april::isUsingCVDisplayLink())
+		{
+			hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
+			aprilWindow->queueMouseEvent(april::Window::MouseInputEvent::Type::Scroll, vec, april::Key::None);
+		}
+		else
+		{
+			aprilWindow->handleMouseEvent(april::Window::MouseInputEvent::Type::Scroll, vec, april::Key::None);
+		}
+	}
 }
 
 - (void)flagsChanged:(NSEvent*) event // special NSWindow function for modifier keys
