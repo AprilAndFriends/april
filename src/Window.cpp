@@ -752,7 +752,7 @@ namespace april
 
 	void Window::queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index)
 	{
-		int previousTouchesSize = this->touches.size();
+		harray<gvec2> previousTouches = this->touches;
 		if (type == MouseInputEvent::Type::Down)
 		{
 			if (index < this->touches.size()) // DOWN event of an already indexed touch, never happened so far
@@ -791,10 +791,10 @@ namespace april
 		}
 		if (this->multiTouchActive || this->touches.size() > 1)
 		{
-			if (!this->multiTouchActive && previousTouchesSize == 1)
+			if (!this->multiTouchActive && previousTouches.size() == 1)
 			{
-				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->queueMouseEvent(MouseInputEvent::Type::Cancel, position, Key::MouseL);
+				// cancel (notify the app) that the previously called mouse-down event is canceled so multi-touch can be properly processed
+				this->queueMouseEvent(MouseInputEvent::Type::Cancel, previousTouches.first(), Key::MouseL);
 			}
 			this->multiTouchActive = (this->touches.size() > 0);
 		}
