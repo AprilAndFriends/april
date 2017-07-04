@@ -40,7 +40,7 @@ namespace april
 			data = (*it).split(' ', 1);
 			if (data.size() == 2)
 			{
-				cursorMappings[data[1]] = (unsigned int)data[0];
+				cursorMappings[data[1]] = (int)data[0];
 			}
 		}
 		int id = (cursorMappings.hasKey(filename) ? cursorMappings[filename] : cursorMappings.tryGet(hfbase::withoutExtension(filename), -1));

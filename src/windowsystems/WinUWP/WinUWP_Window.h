@@ -64,7 +64,7 @@ namespace april
 		int height;
 		float delaySplash;
 		bool backButtonSystemHandling;
-		hmap<hstr, unsigned int> cursorMappings;
+		hmap<hstr, int> cursorMappings;
 
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();

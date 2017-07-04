@@ -70,7 +70,7 @@ namespace april
 		if (param == WINUWP_CURSOR_MAPPINGS)
 		{
 			harray<hstr> mappings;
-			foreach_m (unsigned int, it, this->cursorMappings)
+			foreach_m (int, it, this->cursorMappings)
 			{
 				mappings += hsprintf("%u %s", it->second, it->first.cStr());
 			}
@@ -102,7 +102,7 @@ namespace april
 				data = (*it).split(' ', 1);
 				if (data.size() == 2)
 				{
-					this->cursorMappings[data[1]] = (unsigned int)data[0];
+					this->cursorMappings[data[1]] = (int)data[0];
 				}
 			}
 		}
