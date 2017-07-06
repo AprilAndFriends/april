@@ -77,6 +77,9 @@ namespace april
 	[mMetadataQuery setDelegate:self];
 	[mMetadataQuery setPredicate:[NSPredicate predicateWithFormat:@"kMDItemIsScreenCapture = 1"]];
 	[mMetadataQuery startQuery];
+	
+	gvec2 pos = gvec2(self.frame.size.width / 2, self.frame.size.height / 2);
+	((april::Mac_Window*) april::window)->updateCursorPosition(pos);
 }
 
 - (void)startRenderLoop
